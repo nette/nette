@@ -1,0 +1,86 @@
+<h1>Nette::Collections::Set test</h1>
+
+<pre>
+Adding Jack
+bool(true)
+
+Adding Mary
+bool(true)
+
+Adding Mary second time
+bool(false)
+
+Adding Larry
+bool(true)
+
+Adding foo
+InvalidArgumentException: Item must be 'Person' object.
+Removing Larry
+bool(true)
+
+Removing Larry second time
+bool(false)
+
+Removing foo
+bool(false)
+
+Contains Jack?
+bool(true)
+
+Contains Larry?
+bool(false)
+
+Contains foo?
+bool(false)
+
+Count: 2
+Count: 2
+Get Interator:
+My name is Jack
+My name is Mary
+array(2) {
+  [0] => object(Person)#2 (1) {
+    ["name:private"] => string(4) "Jack"
+  }
+  [1] => object(Person)#3 (1) {
+    ["name:private"] => string(4) "Mary"
+  }
+}
+
+Clearing
+Adding 'Jack'
+bool(true)
+
+Adding 'Mary'
+bool(true)
+
+Adding 'Mary' second time
+bool(false)
+
+Adding 'Larry'
+bool(true)
+
+Removing 'Larry'
+bool(true)
+
+Removing 'Larry' second time
+bool(false)
+
+array(2) {
+  [0] => string(4) "Jack"
+  [1] => string(4) "Mary"
+}
+
+Construct from collection
+InvalidArgumentException: Item must be 'Person' object.
+Construct from array
+InvalidArgumentException: Item must be 'Person' object.
+Construct as readonly
+bool(true)
+
+Adding Jack
+NotSupportedException: Collection is read-only.
+Removing Jack
+NotSupportedException: Collection is read-only.
+Clearing
+NotSupportedException: Collection is read-only.

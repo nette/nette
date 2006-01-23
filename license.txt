@@ -1,0 +1,61 @@
+The Nette License, Version 1
+============================
+
+Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+All rights reserved.
+
+This license is a legal agreement between you and David Grudl for the use
+of Nette (the "Software"). By obtaining the Software you agree to comply
+with the terms and conditions of this license.
+
+
+PERMITTED USE
+-------------
+
+You are permitted to use, copy, modify, and distribute the Software and its
+documentation, with or without modification, for any purpose, provided that
+the following conditions are met:
+
+1. A copy of this license agreement must be included with the distribution.
+
+2. Redistributions of source code must retain the above copyright notice in
+   all source code files.
+
+3. Redistributions in binary form must reproduce the above copyright notice
+   in the documentation and/or other materials provided with the distribution.
+
+4. Products derived from the Software must include an acknowledgment that
+   they are derived from Nette in their documentation and/or other
+   materials provided with the distribution.
+
+5. The name "Nette" must not be used to endorse or promote products derived
+   from the Software without prior written permission from David Grudl.
+
+6. Products derived from the Software may not be called "Nette",
+   nor may "Nette" appear in their name, without prior written
+   permission from David Grudl.
+
+
+INDEMNITY
+---------
+
+You agree to indemnify and hold harmless the authors of the Software and
+any contributors for any direct, indirect, incidental, or consequential
+third-party claims, actions or suits, as well as any related expenses,
+liabilities, damages, settlements or fees arising from your use or misuse
+of the Software, or a violation of any terms of this license.
+
+
+DISCLAIMER OF WARRANTY
+----------------------
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

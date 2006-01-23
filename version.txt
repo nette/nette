@@ -1,0 +1,4 @@
+Nette Framework version 0.7
+
+Revision: $WCREV$
+Date: $WCDATE$

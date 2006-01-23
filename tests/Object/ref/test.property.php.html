@@ -1,0 +1,40 @@
+<h1>Nette::Object property test</h1><pre>
+
+
+<h2>String property</h2>
+$obj->name = hello worlds
+$obj->Name = hello worlds
+
+
+
+<h2>Array property</h2>
+two
+
+object(Test)#1 (2) {
+  ["name:private"] => string(12) "hello worlds"
+  ["items:private"] => object(ArrayObject)#3 (2) {
+    [0] => string(3) "one"
+    [1] => string(3) "two"
+  }
+}
+
+
+
+<h2>Reference test</h2>
+
+Notice: Indirect modification of overloaded property Test::$name has no effect in D:\Web\nette\_trunk\tests\Object\test.property.php on line 100
+hello worlds
+
+
+
+<h2>Read-only property</h2>
+read: OK
+write: MemberAccessException: Cannot assign to a read-only property Test::$readOnly.
+
+
+<h2>Undeclared property</h2>
+read: MemberAccessException: Cannot read an undeclared property Test::$s.
+
+write: MemberAccessException: Cannot assign to an undeclared property Test::$S.
+
+

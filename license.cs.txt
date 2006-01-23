@@ -1,0 +1,69 @@
+----------------------------------------------------------------------------------
+Tento text je NEOFICIÁLNÍM pøekladem "Nette license". Nevyjadøuje právní podstatu
+podmínek pro šíøení tohoto softwaru - k tomuto úèelu slouí vıhradnì pùvodní
+anglická verze licence.
+----------------------------------------------------------------------------------
+
+
+Nette Licence, verze 1
+======================
+
+Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+Všechna práva vyhrazena.
+
+Tato licence je právní ujednání mezi vámi a Davidem Grudlem pro potøeby
+pouití Nette (dále "Software"). By obtaining the Software you agree to comply
+with the terms and conditions of this license.
+
+
+POVOLENÉ POUITÍ
+----------------
+
+Mùete pouívat, kopírovat, modifikovat a distribuovat Software a jeho
+dokumentaci, v pùvodním i upravovaném tvaru, k jakémukoliv úèelu, a to
+za následujících podmínek:
+
+1. Kopie tohoto licenèního ujednání musí bıt pøiloena v distribuci.
+
+2. Šíøenı zdrojovı kód musí obsahovat vıše uvedenou informaci o copyrightu
+   ve všech souborech zdrojového kódu.
+
+3. Šíøenı binární tvar musí nést vıše uvedenou informaci o copyrightu ve své
+   dokumentaci a/nebo dalších materiálech poskytovanıch s distribucí.
+
+4. Produkty odvozené od tohoto Software musí ve své dokumentaci a/nebo
+   dalších materiálech poskytovanıch s distribucí obsahovat zmínku, e jsou
+   odvozené od Nette.
+
+5. Název "Nette" nesmí bıt pouit pøi podpoøe nebo právních aktech
+   souvisejících s produkty odvozenımi z tohoto Software bez pøedchozího
+   písemného souhlasu Davida Grudla.
+
+6. Produkty odvozené od tohoto Software nesmí bıt nazvány "Nette",
+   ani se nesmí "Nette" objevovat v jejich názvu bez pøedchozího
+   písemného souhlasu Davida Grudla.
+
+
+INDEMNITY
+---------
+
+You agree to indemnify and hold harmless the authors of the Software and
+any contributors for any direct, indirect, incidental, or consequential
+third-party claims, actions or suits, as well as any related expenses,
+liabilities, damages, settlements or fees arising from your use or misuse
+of the Software, or a violation of any terms of this license.
+
+
+ZÁRUKA SE NEPOSKYTUJE
+---------------------
+
+TENTO SOFTWARE JE POSKYTOVÁN DRITELEM LICENCE A JEHO PØISPÌVATELI "JAK STOJÍ A LEÍ"
+A JAKÉKOLIV VİSLOVNÉ NEBO PØEDPOKLÁDANÉ ZÁRUKY VÈETNÌ, ALE NEJEN, PØEDPOKLÁDANİCH
+OBCHODNÍCH ZÁRUK A ZÁRUKY VHODNOSTI PRO JAKİKOLIV ÚÈEL JSOU POPØENY.
+DRITEL, ANI PØISPÌVATELÉ NEBUDOU V ÁDNÉM PØÍPADÌ ODPOVÌDNI ZA JAKÉKOLIV PØÍMÉ,
+NEPØÍMÉ, NÁHODNÉ, ZVLÁŠTNÍ, PØÍKLADNÉ NEBO VYPLİVAJÍCÍ ŠKODY (VÈETNÌ, ALE NEJEN,
+ŠKOD VZNIKLİCH NARUŠENÍM DODÁVEK ZBOÍ NEBO SLUEB; ZTRÁTOU POUITELNOSTI,
+DAT NEBO ZISKÙ; NEBO PØERUŠENÍM OBCHODNÍ ÈINNOSTI) JAKKOLIV ZPÙSOBENÉ NA ZÁKLADÌ
+JAKÉKOLIV TEORIE O ZODPOVÌDNOSTI, A U PLYNOUCÍ Z JINÉHO SMLUVNÍHO VZTAHU,
+URÈITÉ ZODPOVÌDNOSTI NEBO PØEÈINU (VÈETNÌ NEDBALOSTI) NA JAKÉMKOLIV ZPÙSOBU POUITÍ
+TOHOTO SOFTWARE, I V PØÍPADÌ, E DRITEL PRÁV BYL UPOZORNÌN NA MONOST TAKOVİCH ŠKOD.
