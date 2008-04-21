@@ -80,6 +80,10 @@ final class Debug
         if (!defined('E_RECOVERABLE_ERROR')) {
             define('E_RECOVERABLE_ERROR', 4096);
         }
+
+        if (!defined('E_DEPRECATED')) {
+            define('E_DEPRECATED', 8192);
+        }
     }
 
 
@@ -252,7 +256,7 @@ final class Debug
      *
      * @param  int    level of the error raised
      * @param  string error message
-     * @param  string filename that the error was raised in
+     * @param  string file that the error was raised in
      * @param  int    line number the error was raised at
      * @param  array  an array of variables that existed in the scope the error was triggered in
      * @return void
@@ -293,6 +297,7 @@ final class Debug
                 E_NOTICE => 'Notice',
                 E_USER_NOTICE => 'Notice',
                 E_STRICT => 'Strict standards',
+                E_DEPRECATED => 'Deprecated',
             );
             $type = isset($types[$code]) ? $types[$code] : 'Unknown error';
 

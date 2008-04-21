@@ -1,16 +1,19 @@
-<h1>Nette::Loaders::RobotLoader test</h1>
+<h1>Nette::Loaders::RobotLoader & Caching test</h1>
 
 <pre>
 <?php
 
+
+require_once '../../Nette/Environment.php';
 require_once '../../Nette/Loaders/RobotLoader.php';
 /*use Nette::Debug;*/
+/*use Nette::Environment;*/
 
-$cache = dirname(__FILE__) . '/tmp/autoload.cache';
-@unlink($cache);
+Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
+Environment::getCache()->offsetUnset('RobotLoader');
+
 
 $loader = new /*Nette::Loaders::*/RobotLoader;
-$loader->cacheFile = $cache;
 $loader->addDirectory(dirname(__FILE__));
 $loader->register();
 

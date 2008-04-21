@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
 class RobotLoader extends AutoLoader
 {
     /** @var array  */
-    public $scanDirs = array();
+    public $scanDirs;
 
     /** @var string  comma separated wildcards */
     public $ignoreDirs = '.svn, .cvs, *.old, *.bak, *.tmp';
@@ -44,7 +44,7 @@ class RobotLoader extends AutoLoader
     public $acceptFiles = '*.php, *.php5';
 
     /** @var string  */
-    public $cacheFile = '%tempDir%/nette_autoload.bin';  // or 'safe://%tempDir%/nette_autoload.bin' ???
+    public $cacheFile;
 
     /** @var array */
     private $list = NULL;
@@ -57,6 +57,13 @@ class RobotLoader extends AutoLoader
 
 
 
+    public function __construct()
+    {
+        $this->addDirectory(dirname(__FILE__) . '/..');
+    }
+
+
+
     /**
      * Handles autoloading of classes or interfaces.
      * @param  string
@@ -66,7 +73,31 @@ class RobotLoader extends AutoLoader
     {
         // is initialized?
         if ($this->list === NULL) {
-            $this->loadCache();
+            if ($this->cacheFile) {
+                // back-compatibility mode
+                $data = @unserialize(file_get_contents($this->cacheFile)); // intentionally @
+            } else {
+                $cache = /*Nette::*/Environment::getCache();
+                $data = $cache[__CLASS__];
+            }
+
+            $opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
+            if (is_array($data) && $data['opt'] === $opt) {
+                $this->list = $data['list'];
+
+            } else {
+                $this->rebuild();
+                $data = array(
+                    'list' => $this->list,
+                    'opt' => $opt,
+                );
+
+                if ($this->cacheFile) {
+                    file_put_contents($this->cacheFile, serialize($data)); // intentionally @
+                } else {
+                    $cache[__CLASS__] = $data;
+                }
+            }
         }
 
         /**/// fix for namespaced classes/interfaces in PHP < 5.3
@@ -91,10 +122,24 @@ class RobotLoader extends AutoLoader
         $this->list = array();
 
         foreach ($this->scanDirs as $dir) {
-            $dir = realpath($dir);
-            if ($dir) $this->scanDir($dir);
+            $this->scanDirectory($dir);
         }
-        $this->saveCache();
+
+        //$this->saveCache();
+    }
+
+
+
+    /**
+     * Add directory (or directories) to list.
+     * @param  string|array
+     * @return void
+     */
+    public function addDirectory($path)
+    {
+        foreach ((array) $path as $val) {
+            $this->scanDirs[] = realpath($val);
+        }
     }
 
 
@@ -105,7 +150,7 @@ class RobotLoader extends AutoLoader
      * @param  string
      * @return void
      */
-    public function add($class, $file)
+    public function addClass($class, $file)
     {
         $class = strtolower($class);
         if (isset($this->list[$class]) && $this->list[$class] !== $file) {
@@ -118,130 +163,119 @@ class RobotLoader extends AutoLoader
 
 
     /**
-     * Loads cache.
-     * @return void
-     */
-    protected function loadCache()
-    {
-        // require_once dirname(__FILE__) . '/SafeStream.php';
-        //$file = Environment::expand($this->cacheFile);
-        $file = $this->cacheFile;
-        $data = @unserialize(file_get_contents($file));
-
-        if (is_array($data) &&
-            $data['scanDirs'] === $this->scanDirs &&
-            $data['ignoreDirs'] === $this->ignoreDirs &&
-            $data['acceptFiles'] === $this->acceptFiles) {
-            $this->list = $data['list'];
-        } else {
-            $this->rebuild();
-        }
-    }
-
-
-
-    /**
-     * Saves cache.
-     * @return void
-     */
-    protected function saveCache()
-    {
-        //file_put_contents('temp', var_export($this->list, true));;
-
-        $data = serialize(array(
-            'list' => $this->list,
-            'scanDirs' => $this->scanDirs,
-            'acceptFiles' => $this->acceptFiles,
-            'ignoreDirs' => $this->ignoreDirs,
-        ));
-
-        //$file = Environment::expand($this->cacheFile);
-        $file = $this->cacheFile;
-        $len = file_put_contents($file, $data);
-        if ($len !== strlen($data)) {
-            // throwing exception is not possible
-            trigger_error("Unable to save autoload list to file '$file'.", E_USER_ERROR);
-        }
-    }
-
-
-
-    /**
-     * Scan one directory for PHP files and subdirectories.
+     * Scan a directory for PHP files, subdirectories and 'netterobots.txt' file
      * @param  string
      * @return void
      */
-    private function scanDir($dir)
+    private function scanDirectory($dir)
     {
-        // scan directory
-        $d = dir($dir);
-        if (!$d) return;
+        $dir = realpath($dir);
+        if (!$dir) return;
+        $iterator = dir($dir);
+        if (!$iterator) return;
 
         if (!defined('T_NAMESPACE')) {
             define('T_NAMESPACE', -1);
         }
 
-        while (FALSE !== ($entry = $d->read())) {
-            if ($entry == '.' || $entry == '..') continue;
+        $disallow = array();
+        if (is_file($dir . '/netterobots.txt')) {
+            foreach (file($dir . '/netterobots.txt') as $s) {
+                if (preg_match('#^disallow\\s*:\\s*(\\S+)#i', $s, $m)) {
+                    $disallow[trim($m[1], '/')] = TRUE;
+                }
+            }
+            if (isset($disallow[''])) return;
+        }
 
-            $path = $dir . DIRECTORY_SEPARATOR . $entry;
+        while (FALSE !== ($entry = $iterator->read())) {
+            if ($entry == '.' || $entry == '..' || isset($disallow[$entry])) continue;
+
+            $path = $dir . '/' . $entry;
             if (!is_readable($path)) continue;
 
             // process subdirectories
             if (is_dir($path)) {
                 // check ignore mask
                 if (!preg_match($this->ignoreMask, $entry)) {
-                    $this->scanDir($path);
+                    $this->scanDirectory($path);
                 }
                 continue;
             }
 
-            if (is_file($path)) {
-                // check include mask
-                if (!preg_match($this->acceptMask, $entry)) continue;
+            if (is_file($path) && preg_match($this->acceptMask, $entry)) {
+                $this->scanScript($path);
+            }
+        }
 
-                $expected = FALSE;
-                $namespace = '';
+        $iterator->close();
+    }
 
-                foreach (token_get_all(file_get_contents($path)) as $token)
-                {
-                    if (is_array($token)) {
-                        switch ($token[0]) {
-                        case T_NAMESPACE:
-                        case T_CLASS:
-                        case T_INTERFACE:
-                            $expected = $token[0];
-                            $name = '';
-                            continue 2;
 
-                        case T_COMMENT:
-                        case T_DOC_COMMENT:
-                        case T_WHITESPACE:
-                            continue 2;
 
-                        case T_DOUBLE_COLON:
-                        case T_STRING:
-                            if ($expected) {
-                                $name .= $token[1];
-                            }
-                            continue 2;
-                        }
+    /**
+     * Analyse PHP file.
+     * @param  string
+     * @return void
+     */
+    private function scanScript($file)
+    {
+        if (!defined('T_NAMESPACE')) {
+            define('T_NAMESPACE', -1);
+        }
+
+        $expected = FALSE;
+        $namespace = '';
+        $level = 0;
+
+        foreach (token_get_all(file_get_contents($file)) as $token)
+        {
+            if (is_array($token)) {
+                switch ($token[0]) {
+                case T_NAMESPACE:
+                case T_CLASS:
+                case T_INTERFACE:
+                    $expected = $token[0];
+                    $name = '';
+                    continue 2;
+
+                case T_COMMENT:
+                case T_DOC_COMMENT:
+                case T_WHITESPACE:
+                    continue 2;
+
+                case T_DOUBLE_COLON:
+                case T_STRING:
+                    if ($expected) {
+                        $name .= $token[1];
+
+                    } elseif ($token[1] === 'namespace') { // PHP < 5.3
+                        $expected = T_NAMESPACE;
+                        $name = '';
                     }
-
-                    if ($expected === T_NAMESPACE) {
-                        $namespace = $name . '::';
-                        $expected = FALSE;
-
-                    } elseif ($expected) {
-                        $this->add($namespace . $name, $path);
-                        $expected = FALSE;
-                    }
+                    continue 2;
                 }
             }
 
-        } // while
+            if ($expected) {
+                if ($expected === T_NAMESPACE) {
+                    $namespace = $name . '::';
+                } elseif ($level === 0) {
+                    $this->addClass($namespace . $name, $file);
+                }
+                $expected = FALSE;
+            }
 
-        $d->close();
+            if (is_array($token)) {
+                if ($token[0] === T_CURLY_OPEN || $token[0] === T_DOLLAR_OPEN_CURLY_BRACES) {
+                    $level++;
+                }
+            } elseif ($token === '{') {
+                $level++;
+            } elseif ($token === '}') {
+                $level--;
+            }
+        }
     }
 
 

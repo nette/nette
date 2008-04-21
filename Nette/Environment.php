@@ -20,6 +20,8 @@
 /*namespace Nette;*/
 
 
+/**/define('__DIR__', dirname(__FILE__));/**/
+
 
 /**
  * Nette environment and configuration.
@@ -51,15 +53,17 @@ final class Environment
 
     /** @var array */
     private static $vars = array(
-        'encoding' => array('UTF-8', 0),
-        'lang' => array('en', 0),
-        'tempDir' => array('%appDir%/temp', 1),
-        'logDir' => array('%appDir%/log', 1),
-        'libsDir' => array('%appDir%/libs', 1),
-        'templatesDir' => array('%appDir%/templates', 1),
-        'presentersDir' => array('%appDir%/presenters', 1),
-        'componentsDir' => array('%appDir%/components', 1),
-        'modelsDir' => array('%appDir%/models', 1),
+        'encoding' => array('UTF-8', FALSE),
+        'lang' => array('en', FALSE),
+        'netteDir' => array(__DIR__, FALSE),
+        'tempDir' => array('%appDir%/temp', TRUE),
+        'cacheDir' => array('safe://%tempDir%', TRUE),
+        'logDir' => array('%appDir%/log', TRUE),
+        'libsDir' => array('%appDir%/libs', TRUE),
+        'templatesDir' => array('%appDir%/templates', TRUE),
+        'presentersDir' => array('%appDir%/presenters', TRUE),
+        'componentsDir' => array('%appDir%/components', TRUE),
+        'modelsDir' => array('%appDir%/models', TRUE),
     );
 
     public static $defaultServices = array(
@@ -67,6 +71,7 @@ final class Environment
         'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
         'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
         'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
+        'Nette::Caching::Cache' => 'Nette::Caching::Cache',
     );
 
 
@@ -91,6 +96,8 @@ final class Environment
     {
         if (self::$name === NULL) {
             self::$name = (string) $name;
+            self::setVariable('envName', self::$name, FALSE);
+
         } else {
             throw new /*::*/InvalidStateException('Environment name has been already set.');
         }
@@ -106,21 +113,21 @@ final class Environment
     {
         if (self::$name === NULL) {
             if (defined('ENVIRONMENT')) {
-                self::$name = ENVIRONMENT;
+                self::setName(ENVIRONMENT);
 
             } elseif (self::isConsole()) {
-                self::$name = self::CONSOLE;
+                self::setName(self::CONSOLE);
 
             } elseif (isset($_SERVER['REMOTE_ADDR'])) {
                 // detect by IP address
                 $oct = explode('.', $_SERVER['REMOTE_ADDR']);
-                self::$name = (count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
+                self::setName((count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
                     || ($oct[0] === '169' && $oct[1] === '254') || ($oct[0] === '192' && $oct[1] === '168'))
                     ? self::DEVELOPMENT
-                    : self::PRODUCTION;
+                    : self::PRODUCTION);
 
             } else {
-                self::$name = self::PRODUCTION;
+                self::setName(self::PRODUCTION);
             }
         }
 
@@ -152,7 +159,7 @@ final class Environment
      */
     public static function setVariable($name, $value, $expand = TRUE)
     {
-        self::$vars[$name] = array($value, $expand ? 1 : 0);
+        self::$vars[$name] = array($value, (bool) $expand);
     }
 
 
@@ -169,16 +176,16 @@ final class Environment
             list($var, $exp) = self::$vars[$name];
             if ($exp) {
                 $var = self::expand($var);
-                self::$vars[$name] = array($var, 0);
+                self::$vars[$name] = array($var, FALSE);
             }
             return $var;
 
         } else {
-            // convert from camelCaps (PascalCaps) to ALL_CAPS
+            // convert from camelCaps (or PascalCaps) to ALL_CAPS
             $const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $name));
             $list = get_defined_constants(TRUE);
             if (isset($list['user'][$const])) {
-                self::$vars[$name] = array($list['user'][$const], 0);
+                self::$vars[$name] = array($list['user'][$const], FALSE);
                 return $list['user'][$const];
             } else {
                 return $default;
@@ -199,12 +206,12 @@ final class Environment
 
         static $infLoop;
         if (isset($infLoop[$var])) {
-            throw new Exception("Infinite loop detected for variables "
+            throw new InvalidStateException("Infinite loop detected for variables "
                 . implode(', ', array_keys($infLoop)) . ".");
         }
 
         $infLoop[$var] = TRUE;
-        $res = preg_replace_callback('#%([a-zA-Z0-9_-]+)%#', array(__CLASS__, 'expandCb'), $var);
+        $res = preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var);
         unset($infLoop[$var]);
 
         return $res;
@@ -219,9 +226,11 @@ final class Environment
      */
     private static function expandCb($m)
     {
+        if ($m[1] === '') return '%';
+
         $val = self::getVariable($m[1]);
         if ($val === NULL) {
-            throw new Exception("Unknown environment variable $m[0].");
+            throw new InvalidStateException("Unknown environment variable $m[0].");
         }
         return $val;
     }
@@ -240,9 +249,12 @@ final class Environment
     {
         if (self::$locator === NULL) {
             $type = self::$defaultServices['Nette::IServiceLocator'];
-            if ($type === 'Nette::ServiceLocator') { // default one
-                $type = 'ServiceLocator'; // PHP < 5.3
-            }
+
+            /**/// fix for namespaced classes/interfaces in PHP < 5.3
+            if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+
+            require_once dirname(__FILE__) . '/ServiceLocator.php';
+
             self::$locator = new $type;
 
             foreach (self::$defaultServices as $type => $service) {
@@ -309,6 +321,17 @@ final class Environment
 
 
 
+    /**
+     * @return Nette::Caching::Cache
+     */
+    public static function getCache()
+    {
+        require_once dirname(__FILE__) . '/Caching/Cache.php';
+        return self::getServiceLocator()->getService('Nette::Caching::Cache');
+    }
+
+
+
     /********************* global configuration ****************d*g**/
 
 
@@ -316,27 +339,66 @@ final class Environment
     /**
      * Loads global configuration from file and process it.
      * @param  string|Config  file name or Config object
-     * @return void
+     * @return Config
      */
-    public static function loadConfig($fileName = '%appDir%/config.ini')
+    public static function loadConfig($file = '%appDir%/config.ini')
     {
-        if ($fileName instanceof Config) {
-            self::$config = $fileName;
+        require_once dirname(__FILE__) . '/Config.php';
+        $useCache = FALSE;
 
+        if ($useCache) {
+            $cache = self::getCache();
+            $cacheKey = __CLASS__ . '-' . self::getName();
         } else {
-            require_once dirname(__FILE__) . '/Config.php';
-            self::$config = Config::fromFile(self::expand($fileName), self::getName(), TRUE);
+            $cache = $cacheKey = NULL;
         }
 
-        $cfg = self::$config;
+        if (isset($cache[$cacheKey])) {
+            list(self::$vars, self::$config, self::$locator) = $cache[$cacheKey];
+            $cfg = self::$config;
 
-        // process environment variables
-        if ($cfg->var instanceof Config) {
-            foreach ($cfg->var as $key => $value) {
-                self::setVariable($key, $value);
+        } else {
+            /* DISCUSS
+            if ($file instanceof Config) {
+                self::$config = $file;
+
+            } else*/ {
+                // do not expand, do not make read-only
+                self::$config = Config::fromFile(self::expand($file), self::getName(), 0);
+            }
+
+            $cfg = self::$config;
+
+            // process environment variables
+            if ($cfg->variable instanceof Config) {
+                foreach ($cfg->variable as $key => $value) {
+                    self::setVariable($key, $value);
+                }
+            }
+
+            if (isset($cfg->set->include_path)) {
+                $cfg->set->include_path = strtr($cfg->set->include_path, ';', PATH_SEPARATOR);
+            }
+
+            $cfg->expand();
+            $cfg->setReadOnly();
+
+            // process services
+            $locator = self::getServiceLocator();
+            if ($cfg->service instanceof Config) {
+                foreach ($cfg->service as $key => $value) {
+                    $locator->addService($value, $key);
+                }
+            }
+
+            // save cache
+            if ($useCache) {
+                $cache[$cacheKey] = array(self::$vars, self::$config, self::$locator);
             }
         }
 
+
+        // check temporary directory
         $dir = self::getVariable('tempDir');
         if ($dir && !(is_dir($dir) && is_writable($dir))) {
             trigger_error("Temporary directory '$dir' is not writable", E_USER_NOTICE);
@@ -345,7 +407,7 @@ final class Environment
         // process ini settings
         if ($cfg->set instanceof Config) {
             if (!function_exists('ini_set')) {
-                throw Exception('Function ini_set() is not enabled.');
+                throw new NotSupportedException('Function ini_set() is not enabled.');
 
                 /* or try to use workaround?
                 "date.timezone" => "date_default_timezone_set($value);",
@@ -356,29 +418,18 @@ final class Environment
                 if (isset($wa[$key])) {
                     eval($wa[$key]);
                 } else {
-                    throw Exception('');
+                    throw new NotSupportedException(...);
                 }
                 */
             }
 
             foreach ($cfg->set as $key => $value) {
-                if ($key === 'include_path') {
-                    ini_set($key, self::expand(strtr($value, ';', PATH_SEPARATOR)));
-                } else {
-                    ini_set($key, self::expand($value));
-                }
-            }
-        }
-
-        // process services
-        $locator = self::getServiceLocator();
-        if ($cfg->service instanceof Config) {
-            foreach ($cfg->service as $key => $value) {
-                $locator->addService($value, $key);
+                ini_set($key, $value);
             }
         }
 
         // execute services
+        /*
         if ($cfg->run) {
             $run = $cfg->run->toArray();
             ksort($run);
@@ -390,6 +441,9 @@ final class Environment
                 $service->$method();
             }
         }
+        */
+
+        return $cfg;
     }
 
 

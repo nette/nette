@@ -54,8 +54,8 @@ final class SafeStream
     /**
      * Renaming of temporary file.
      */
-    private $fileName;
-    private $tempName;
+    private $filePath;
+    private $tempFile;
 
     /**
      * Starting position in file (for appending).
@@ -93,7 +93,7 @@ final class SafeStream
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        $fileName = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
+        $path = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
 
         $flag = trim($mode, 'rwax+');  // text | binary mode
         $mode = trim($mode, 'tb');     // mode
@@ -105,7 +105,7 @@ final class SafeStream
         case 'r':
         case 'r+':
             // enter critical section: open and lock EXISTING file for reading/writing
-            $handle = @fopen($fileName, $mode.$flag, $use_path); // @ is needed
+            $handle = @fopen($path, $mode.$flag, $use_path); // @ is needed
             if (!$handle) return FALSE;
             if (flock($handle, $mode == 'r' ? LOCK_SH : LOCK_EX)) {
                 $this->handle = $handle;
@@ -119,7 +119,7 @@ final class SafeStream
         case 'w':
         case 'w+':
             // try enter critical section: open and lock EXISTING file for rewriting
-            $handle = @fopen($fileName, 'r+'.$flag, $use_path); // @ is needed
+            $handle = @fopen($path, 'r+'.$flag, $use_path); // @ is needed
 
             if ($handle) {
                 if (flock($handle, LOCK_EX)) {
@@ -139,25 +139,25 @@ final class SafeStream
 
         case 'x':
         case 'x+':
-            if (file_exists($fileName)) return FALSE;
+            if (file_exists($path)) return FALSE;
 
             // create temporary file in the same directory
             $tmp = '~~' . time() . '.tmp';
 
             // enter critical section: create temporary file
-            $handle = @fopen($fileName.$tmp, $mode.$flag, $use_path); // @ is needed
+            $handle = @fopen($path.$tmp, $mode.$flag, $use_path); // @ is needed
             if ($handle) {
                 if (flock($handle, LOCK_EX)) {
                     $this->handle = $handle;
-                    if (!@rename($fileName.$tmp, $fileName)) { // @ is needed
+                    if (!@rename($path.$tmp, $path)) { // @ is needed
                         // rename later - for windows
-                        $this->tempName = realpath($fileName.$tmp);
-                        $this->fileName = substr($this->tempName, 0, -strlen($tmp));
+                        $this->tempFile = realpath($path.$tmp);
+                        $this->filePath = substr($this->tempFile, 0, -strlen($tmp));
                     }
                     return TRUE;
                 }
                 fclose($handle);
-                unlink($fileName.$tmp);
+                unlink($path.$tmp);
             }
             return FALSE;
 
@@ -184,10 +184,10 @@ final class SafeStream
         fclose($this->handle);
 
         // are we working with temporary file?
-        if ($this->tempName) {
+        if ($this->tempFile) {
             // try to rename temp file, otherwise delete temp file
-            if (!@rename($this->tempName, $this->fileName)) { // @ is needed
-                unlink($this->tempName);
+            if (!@rename($this->tempFile, $this->filePath)) { // @ is needed
+                unlink($this->tempFile);
             }
         }
     }
@@ -302,8 +302,8 @@ final class SafeStream
      */
     public function unlink($path)
     {
-        $fileName = substr($path, strlen(self::PROTOCOL)+3);
-        return unlink($fileName);
+        $path = substr($path, strlen(self::PROTOCOL)+3);
+        return unlink($path);
     }
 
 }

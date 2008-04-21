@@ -181,3 +181,9 @@ try {
 } catch (Exception $e) {
     echo get_class($e), ': ', $e->getMessage(), "\n";
 }
+
+foreach ($collection2 as $key => & $val) {
+    $val = FALSE;
+}
+echo "Contains Jack?\n";
+Debug::dump($collection2->contains($jack));

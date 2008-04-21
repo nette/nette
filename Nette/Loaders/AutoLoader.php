@@ -89,9 +89,7 @@ abstract class AutoLoader extends /*Nette::*/Object
      */
     public static function factory($config = NULL/**/, $class = NULL/**/)
     {
-        /**/// PHP < 5.3 compatibility
-        if ($class === NULL)/**/ $class = get_called_class();
-        $loader = new $class;
+        $loader = new /**/$class/**//*static*/;
 
         if (is_array($config) || $config instanceof Traversable) {
             foreach ($config as $key => $value) {

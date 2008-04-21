@@ -58,7 +58,7 @@ class Hashtable extends Collection implements IMap
      * @param  mixed
      * @param  mixed
      * @return bool
-     * @throws ::InvalidArgumentException
+     * @throws ::InvalidArgumentException, ::InvalidStateException
      */
     public function add($key, $item = NULL)
     {
@@ -68,7 +68,7 @@ class Hashtable extends Collection implements IMap
         }
 
         if (array_key_exists($key, $this->data)) {
-            throw new /*::*/InvalidArgumentException('An element with the same key already exists.');
+            throw new /*::*/InvalidStateException('An element with the same key already exists.');
         }
 
         $this->beforeAdd($item);
@@ -124,7 +124,7 @@ class Hashtable extends Collection implements IMap
 
     /**
      * Returns variable or $default if there is no element.
-     * @param  int index
+     * @param  string key
      * @return mixed
      * @throws ::InvalidArgumentException
      */
@@ -149,7 +149,7 @@ class Hashtable extends Collection implements IMap
 
     /**
      * Inserts (replaces) item (::ArrayAccess implementation).
-     * @param  int index
+     * @param  string key
      * @param  object
      * @return void
      * @throws ::NotSupportedException, ::InvalidArgumentException
@@ -168,7 +168,7 @@ class Hashtable extends Collection implements IMap
 
     /**
      * Returns item (::ArrayAccess implementation).
-     * @param  int index
+     * @param  string key
      * @return mixed
      * @throws KeyNotFoundException, ::InvalidArgumentException
      */
@@ -193,7 +193,7 @@ class Hashtable extends Collection implements IMap
 
     /**
      * Exists item? (::ArrayAccess implementation).
-     * @param  int index
+     * @param  string key
      * @return bool
      * @throws ::InvalidArgumentException
      */
@@ -210,7 +210,7 @@ class Hashtable extends Collection implements IMap
 
     /**
      * Removes the element at the specified position in this list.
-     * @param  int index
+     * @param  string key
      * @return void
      * @throws ::NotSupportedException, ::InvalidArgumentException
      */

@@ -1,5 +1,7 @@
-wget.exe http://localhost/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php -O output\test.httpRequest.php.wget.html
+call ../config.bat
 
-for %%f in (test.*.php) do C:\PHP\versions\php-5.2.5-Win32\php.exe -q "%%f" > "output\%%f.html"
+"%wget%" "%testUrl%/Web.HttpRequest/test.httpRequest.php" -O output\test.httpRequest.php.wget.html
 
-start "" diff output ref
+for %%f in (test.*.php) do "%php%" -q "%%f" > "output\%%f.html"
+
+IF NOT "%diff%"=="" ( start "" %diff% output ref )

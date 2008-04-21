@@ -1,3 +1,5 @@
-for %%f in (test.*.php) do C:\PHP\versions\php-5.2.5-Win32\php.exe -q "%%f" > "output\%%f.html"
+call ../config.bat
 
-start "" diff output ref
+for %%f in (test.*.php) do "%php%" -q "%%f" > "output\%%f.html"
+
+IF NOT "%diff%"=="" ( start "" %diff% output ref )

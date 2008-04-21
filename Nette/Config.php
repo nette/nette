@@ -34,6 +34,10 @@ require_once dirname(__FILE__) . '/Collections/Hashtable.php';
  */
 class Config extends /*Nette::Collections::*/Hashtable
 {
+    /** flags: */
+    const READONLY = 1;
+    const EXPAND = 2;
+
     /** @var bool */
     protected $strict = FALSE;
 
@@ -46,12 +50,18 @@ class Config extends /*Nette::Collections::*/Hashtable
      * @param  array to wrap
      * @throws ::InvalidArgumentException
      */
-    public function __construct($arr = NULL)
+    public function __construct($arr = NULL, $flags = self::READONLY)
     {
         parent::__construct($arr);
 
         if ($arr !== NULL) {
-            $this->setReadOnly();
+            if ($flags & self::EXPAND) {
+                $this->expand();
+            }
+
+            if ($flags & self::READONLY) {
+                $this->setReadOnly();
+            }
         }
     }
 
@@ -61,16 +71,17 @@ class Config extends /*Nette::Collections::*/Hashtable
      * Factory new configuration object from file.
      * @param  string  file name
      * @param  string  section to load
-     * @param  bool    autoexpand variables
+     * @param  int     flags (readOnly, autoexpand variables)
      * @return Config
      */
-    public static function fromFile($file, $section = NULL, $expand = FALSE)
+    public static function fromFile($file, $section = NULL, $flags = self::READONLY)
     {
         require_once dirname(__FILE__) . '/ConfigAdapters.php';
 
         $class = /*Nette::*/'ConfigAdapter_' . strtoupper(pathinfo($file, PATHINFO_EXTENSION));
         if (class_exists($class)) {
-            return new self(call_user_func(array($class, 'load'), $file, $section, $expand));
+            $arr = call_user_func(array($class, 'load'), $file, $section);
+            return new /**/self/**//*static*/($arr, $flags);
 
         } else {
             throw new /*::*/InvalidArgumentException("Unknown file '$file' extension.");
@@ -105,6 +116,43 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 
     /**
+     * Expand all variables.
+     * @return void
+     */
+    public function expand()
+    {
+        if ($this->readOnly) {
+            throw new /*::*/NotSupportedException('Configuration is read-only.');
+        }
+
+        foreach ($this->data as $key => $val) {
+            if (is_string($val)) {
+                $this->data[$key] = Environment::expand($val);
+            } elseif ($val instanceof self) {
+                $val->expand();
+            }
+        }
+    }
+
+
+
+    /**
+     * Prevent any more modifications.
+     * @return void
+     */
+    public function setReadOnly()
+    {
+        $this->readOnly = TRUE;
+        foreach ($this->data as $val) {
+            if ($val instanceof /*Nette::Collections::*/Collection) {
+                $val->setReadOnly();
+            }
+        }
+    }
+
+
+
+    /**
      * Import from array or any traversable object.
      * @param  array|Traversable
      * @return void
@@ -133,7 +181,7 @@ class Config extends /*Nette::Collections::*/Hashtable
     {
         $res = $this->data;
         foreach ($res as $key => $val) {
-            if ($val instanceof self) {
+            if ($val instanceof /*Nette::Collections::*/ICollection) {
                 $res[$key] = $val->toArray();
             }
         }

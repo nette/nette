@@ -214,7 +214,7 @@ class Collection extends /*Nette::*/Object implements ICollection
      */
     public function getIterator()
     {
-        return new /*::*/ArrayIterator($this->toArray());
+        return new /*::*/ArrayIterator($this->data);
     }
 
 
