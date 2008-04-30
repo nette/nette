@@ -55,6 +55,7 @@ class SimpleLoader extends AutoLoader
         */
 
         @self::includeOnce($file);
+        self::$count++;
     }
 
 }

@@ -34,7 +34,7 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  */
 class RobotLoader extends AutoLoader
 {
-    /** @var array  */
+    /** @var array */
     public $scanDirs;
 
     /** @var string  comma separated wildcards */
@@ -43,8 +43,11 @@ class RobotLoader extends AutoLoader
     /** @var string  comma separated wildcards */
     public $acceptFiles = '*.php, *.php5';
 
-    /** @var string  */
-    public $cacheFile;
+    /** @var bool  experimental */
+    public $displaceNetteLoader = TRUE;
+
+    /** @var Nette::Caching::Cache  */
+    private $cache;
 
     /** @var array */
     private $list = NULL;
@@ -57,8 +60,9 @@ class RobotLoader extends AutoLoader
 
 
 
-    public function __construct()
+    public function __construct(/*Nette::Caching::*/Cache $cache = NULL)
     {
+        $this->cache = $cache;
         $this->addDirectory(dirname(__FILE__) . '/..');
     }
 
@@ -71,31 +75,28 @@ class RobotLoader extends AutoLoader
      */
     public function tryLoad($type)
     {
-        // is initialized?
         if ($this->list === NULL) {
-            if ($this->cacheFile) {
-                // back-compatibility mode
-                $data = @unserialize(file_get_contents($this->cacheFile)); // intentionally @
-            } else {
-                $cache = /*Nette::*/Environment::getCache();
-                $data = $cache[__CLASS__];
-            }
+            $this->list = array(); // prevents cycling
 
+            $cache = $this->cache ? $this->cache : /*Nette::*/Environment::getCache('Nette:RobotLoader');
+            $data = $cache['data'];
             $opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
-            if (is_array($data) && $data['opt'] === $opt) {
-                $this->list = $data['list'];
 
+            if ($data['opt'] === $opt) {
+                $this->list = $data['list'];
             } else {
                 $this->rebuild();
-                $data = array(
+                $cache['data'] = array(
                     'list' => $this->list,
                     'opt' => $opt,
                 );
+            }
 
-                if ($this->cacheFile) {
-                    file_put_contents($this->cacheFile, serialize($data)); // intentionally @
-                } else {
-                    $cache[__CLASS__] = $data;
+            if ($this->displaceNetteLoader) {
+                foreach (self::getLoaders() as $loader) {
+                    if ($loader instanceof NetteLoader) {
+                        $loader->unregister();
+                    }
                 }
             }
         }
@@ -106,6 +107,7 @@ class RobotLoader extends AutoLoader
         $type = strtolower($type);
         if (isset($this->list[$type])) {
             self::includeOnce($this->list[$type]);
+            self::$count++;
         }
     }
 
@@ -121,7 +123,7 @@ class RobotLoader extends AutoLoader
         $this->ignoreMask = self::wildcards2re($this->ignoreDirs);
         $this->list = array();
 
-        foreach ($this->scanDirs as $dir) {
+        foreach (array_unique($this->scanDirs) as $dir) {
             $this->scanDirectory($dir);
         }
 
@@ -296,14 +298,5 @@ class RobotLoader extends AutoLoader
         }
         return '#^(' . implode('|', $mask) . ')$#i';
     }
-
-
-
-    /**/
-    public static function factory($config = NULL, $class = NULL)
-    {
-        parent::factory($config, __CLASS__);
-    }
-    /**/
 
 }

@@ -2,8 +2,7 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Collections/ArrayList.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Collections::ArrayList;*/
 /*use Nette::Debug;*/
@@ -51,7 +50,7 @@ try {
     echo "Adding foo\n";
     $list->add($foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -63,7 +62,7 @@ try {
     echo "Adding foo using []\n";
     $list[] = $foo;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -84,7 +83,7 @@ try {
     echo "Adding Larry using insertAt()\n";
     Debug::dump($list->insertAt(6, $larry));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -106,7 +105,7 @@ try {
     echo "Contains foo?\n";
     Debug::dump($list->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -127,14 +126,14 @@ try {
     echo "Getting #-1\n";
     Debug::dump($list[-1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Getting #0\n";
     Debug::dump($list[0]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -154,14 +153,14 @@ try {
     echo "Removing using unset\n";
     unset($list[-1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Removing using unset\n";
     unset($list[1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -203,7 +202,7 @@ try {
     echo "Construct from array\n";
     $list2 = new ArrayList($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 echo "Construct from array II.\n";
@@ -222,26 +221,26 @@ try {
     echo "Adding Jack using []\n";
     $list2[] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding Jack using insertAt\n";
     $list2->insertAt(0, $jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Removing using unset\n";
     unset($list2[1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Changing using []\n";
     $list2[1] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

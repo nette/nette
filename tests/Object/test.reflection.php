@@ -1,7 +1,6 @@
 <?php
 
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Object.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Debug;*/
 

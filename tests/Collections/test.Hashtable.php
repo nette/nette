@@ -2,8 +2,7 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Collections/Hashtable.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Collections::Hashtable;*/
 /*use Nette::Debug;*/
@@ -48,21 +47,21 @@ try {
     echo "Adding invalid key\n";
     $hashtable->add($foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding foo\n";
     $hashtable->add('foo', $foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding Mary using []\n";
     $hashtable[] = $mary;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -74,21 +73,21 @@ try {
     echo "Adding Mary twice using ['mary']\n";
     $hashtable['mary'] = $mary;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding Mary twice using add()\n";
     $hashtable->add('mary', $mary);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding Mary twice using __set()\n";
     $hashtable->mary = $mary;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -116,7 +115,7 @@ try {
     echo "Contains foo?\n";
     Debug::dump($hashtable->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -149,14 +148,14 @@ try {
     echo "Getting ['jim']\n";
     Debug::dump($hashtable['jim']);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Getting ['mary']\n";
     Debug::dump($hashtable['mary']);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -165,21 +164,21 @@ try {
     echo "Getting ->jim\n";
     Debug::dump($hashtable->jim);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Getting ->mary\n";
     Debug::dump($hashtable->mary);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Calling getKeys() via Nette::Object'\n";
     Debug::dump($hashtable->keys);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -189,14 +188,14 @@ try {
     echo "Getting get('jim')\n";
     Debug::dump($hashtable->get('jim', 'default'));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Getting get('mary')\n";
     Debug::dump($hashtable->get('mary', 'default'));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -228,7 +227,7 @@ try {
     echo "Removing using unset(['unknown'])\n";
     unset($hashtable['unknown']);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -237,7 +236,7 @@ try {
     echo "Removing using unset(->unknown)\n";
     unset($hashtable->unknown);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -264,7 +263,7 @@ try {
     echo "Construct from array\n";
     $hashtable2 = new Hashtable($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 echo "Construct from array II.\n";
@@ -283,26 +282,26 @@ try {
     echo "Adding Jack using []\n";
     $hashtable2['new'] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Adding Jack using add\n";
     $hashtable2->add('new', $jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Removing using unset\n";
     unset($hashtable2['jack']);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Changing using []\n";
     $hashtable2['jack'] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

@@ -4,22 +4,27 @@
 Adding Jack
 Adding invalid key
 InvalidArgumentException: Key must be either a string or an integer.
+
 Adding foo
 InvalidArgumentException: Item must be 'Person' object.
+
 Adding Mary using []
 InvalidArgumentException: Key must be either a string or an integer.
+
 Adding Mary using ['mary']
 Adding Mary twice using ['mary']
 Adding Mary twice using add()
 InvalidStateException: An element with the same key already exists.
+
 Adding Mary twice using __set()
 MemberAccessException: Cannot assign to an undeclared property Hashtable::$mary.
+
 toArray:
 array(2) {
-  ["jack"] => object(Person)#2 (1) {
+  ["jack"] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  ["mary"] => object(Person)#3 (1) {
+  ["mary"] => object(Person)#4 (1) {
     ["name:private"] => string(4) "Mary"
   }
 }
@@ -59,15 +64,18 @@ bool(false)
 
 Getting ['jim']
 KeyNotFoundException: 
+
 Getting ['mary']
-object(Person)#3 (1) {
+object(Person)#4 (1) {
   ["name:private"] => string(4) "Mary"
 }
 
 Getting ->jim
 MemberAccessException: Cannot read an undeclared property Hashtable::$jim.
+
 Getting ->mary
 MemberAccessException: Cannot read an undeclared property Hashtable::$mary.
+
 Calling getKeys() via Nette::Object'
 array(2) {
   [0] => string(4) "jack"
@@ -78,7 +86,7 @@ Getting get('jim')
 string(7) "default"
 
 Getting get('mary')
-object(Person)#3 (1) {
+object(Person)#4 (1) {
   ["name:private"] => string(4) "Mary"
 }
 
@@ -96,6 +104,7 @@ bool(false)
 Removing using unset(['unknown'])
 Removing using unset(->unknown)
 MemberAccessException: Cannot unset an property Hashtable::$unknown.
+
 search Jack:
 bool(false)
 
@@ -105,15 +114,16 @@ string(4) "mary"
 Clearing
 Construct from array
 InvalidArgumentException: Item must be 'Person' object.
+
 Construct from array II.
 array(3) {
-  ["a"] => object(Person)#2 (1) {
+  ["a"] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  ["b"] => object(Person)#3 (1) {
+  ["b"] => object(Person)#4 (1) {
     ["name:private"] => string(4) "Mary"
   }
-  ["c"] => object(ArrayObject)#5 (0) {
+  ["c"] => object(ArrayObject)#6 (0) {
   }
 }
 
@@ -122,9 +132,13 @@ bool(true)
 
 Adding Jack using []
 NotSupportedException: Collection is read-only.
+
 Adding Jack using add
 NotSupportedException: Collection is read-only.
+
 Removing using unset
 NotSupportedException: Collection is read-only.
+
 Changing using []
 NotSupportedException: Collection is read-only.
+

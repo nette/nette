@@ -1,7 +1,6 @@
 <?php
 
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Object.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Debug;*/
 
@@ -112,7 +111,7 @@ try {
     $obj->readOnly = 'value';
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -124,7 +123,7 @@ try {
     $val = $obj->s;
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 echo "\n";
@@ -134,6 +133,6 @@ try {
     $obj->S = 'value';
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 echo "\n\n";

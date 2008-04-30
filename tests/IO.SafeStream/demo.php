@@ -4,7 +4,7 @@
 <?php
 
 
-require_once '../../Nette/IO/SafeStream.php';
+require_once '../../Nette/loader.php';
 
 
 // actually it creates temporary file

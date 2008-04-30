@@ -1,0 +1,25 @@
+<h1>Nette::Environment config without cache test</h1>
+
+<pre>
+Loading config:
+Variable foo:
+string(11) "hello world"
+
+php.ini config:
+array(3) {
+  ["date.timezone"] => string(13) "Europe/Prague"
+  ["iconv.internal_encoding"] => string(5) "UTF-8"
+  ["mbstring.internal_encoding"] => string(5) "UTF-8"
+}
+
+Database config:
+array(2) {
+  ["adapter"] => string(9) "pdo_mysql"
+  ["params"] => array(4) {
+    ["host"] => string(14) "db.example.com"
+    ["username"] => string(6) "dbuser"
+    ["password"] => string(6) "secret"
+    ["dbname"] => string(6) "dbname"
+  }
+}
+

@@ -34,6 +34,13 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 abstract class AutoLoader extends /*Nette::*/Object
 {
+    /** @var array  list of registered loaders */
+    static private $loaders = array();
+
+    /** @var int  for profiling purposes */
+    static public $count = 0;
+
+
 
     /**
      * Try to load the requested class.
@@ -53,13 +60,14 @@ abstract class AutoLoader extends /*Nette::*/Object
      */
     final public static function getLoaders()
     {
-        return spl_autoload_functions();
+        //return spl_autoload_functions();
+        return self::$loaders;
     }
 
 
 
     /**
-     * Register object as autoloader.
+     * Register autoloader.
      * @return void
      */
     public function register()
@@ -69,6 +77,22 @@ abstract class AutoLoader extends /*Nette::*/Object
         }
 
         spl_autoload_register(array($this, 'tryLoad'));
+        self::$loaders[] = $this;
+    }
+
+
+
+    /**
+     * Unregister autoloader.
+     * @return void
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister(array($this, 'tryLoad'));
+
+        foreach (self::$loaders as $key => $loader) {
+            if ($loader === $this) unset(self::$loaders[$key]);
+        }
     }
 
 
@@ -79,27 +103,6 @@ abstract class AutoLoader extends /*Nette::*/Object
      * @return void
      */
     abstract public function tryLoad($type);
-
-
-
-    /**
-     * Factory autoloader from configuration.
-     * @param  configuration
-     * @return AutoLoader
-     */
-    public static function factory($config = NULL/**/, $class = NULL/**/)
-    {
-        $loader = new /**/$class/**//*static*/;
-
-        if (is_array($config) || $config instanceof Traversable) {
-            foreach ($config as $key => $value) {
-                $loader->$key = $value;
-            }
-        }
-
-        $loader->register();
-        return $loader;
-    }
 
 
 

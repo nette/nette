@@ -2,15 +2,17 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Environment.php';
-require_once '../../Nette/Caching/Cache.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Caching::Cache;*/
 /*use Nette::Environment;*/
 /*use Nette::Debug;*/
 
-Environment::setVariable('cacheDir', dirname(__FILE__) . '/tmp');
+$tmpDir = dirname(__FILE__) . '/tmp';
+
+foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
+
+Environment::setVariable('tempDir', $tmpDir);
 
 $key = '';
 $value = array();
@@ -19,7 +21,7 @@ for($i=0;$i<32;$i++) {
     $value[] = chr($i) . chr(255 - $i);
 }
 
-$cache = new Cache;
+$cache = Environment::getCache();
 
 
 echo "Is cached?\n";
@@ -31,18 +33,18 @@ Debug::dump($cache[$key]);
 echo "Writing cache...\n";
 $cache[$key] = $value;
 
-$cache['flush'];
+$cache->release();
 
 echo "Is cached?\n";
 Debug::dump(isset($cache[$key]));
 
-echo "Cache is ok:\n";
+echo "Is cache ok?\n";
 Debug::dump($cache[$key] === $value);
 
 echo "Removing from cache using unset()...\n";
 unset($cache[$key]);
 
-$cache['flush'];
+$cache->release();
 
 echo "Is cached?\n";
 Debug::dump(isset($cache[$key]));
@@ -52,7 +54,7 @@ $cache[$key] = $value;
 echo "Removing from cache using set NULL...\n";
 $cache[$key] = NULL;
 
-$cache['flush'];
+$cache->release();
 
 echo "Is cached?\n";
 Debug::dump(isset($cache[$key]));

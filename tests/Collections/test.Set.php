@@ -2,8 +2,7 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Collections/Set.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Collections::Set;*/
 /*use Nette::Debug;*/
@@ -54,7 +53,7 @@ try {
     echo "Adding foo\n";
     Debug::dump($set->add($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -70,7 +69,7 @@ try {
     echo "Removing foo\n";
     Debug::dump($set->remove($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -85,7 +84,7 @@ try {
     echo "Contains foo?\n";
     Debug::dump($set->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -151,7 +150,7 @@ try {
     $set = new Set(array($jack, $mary, $foo));
     $set2 = new Set($set, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -160,7 +159,7 @@ try {
     $arr = array($jack, $mary, $foo);
     $set2 = new Set($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -174,19 +173,19 @@ try {
     echo "Adding Jack\n";
     Debug::dump($set2->add($jack));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Removing Jack\n";
     $set2->remove($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Clearing\n";
     $set2->clear();
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

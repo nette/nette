@@ -5,11 +5,13 @@ Adding numeric
 Adding numeric
 Adding non-numeric
 InvalidArgumentException: Item must be numeric.
+
 Adding Jack
 Adding Mary
 Adding Larry
 Adding foo
 InvalidArgumentException: Item must be 'Person' object.
+
 Removing Larry
 bool(true)
 
@@ -34,10 +36,10 @@ Get Interator:
 My name is Jack
 My name is Mary
 array(2) {
-  [0] => object(Person)#1 (1) {
+  [0] => object(Person)#2 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  [1] => object(Person)#4 (1) {
+  [1] => object(Person)#5 (1) {
     ["name:private"] => string(4) "Mary"
   }
 }
@@ -45,17 +47,22 @@ array(2) {
 Clearing
 Construct from collection
 InvalidArgumentException: Item must be 'Person' object.
+
 Construct from array
 InvalidArgumentException: Item must be 'Person' object.
+
 Construct as readonly
 bool(true)
 
 Adding Jack
 NotSupportedException: Collection is read-only.
+
 Removing Jack
 NotSupportedException: Collection is read-only.
+
 Clearing
 NotSupportedException: Collection is read-only.
+
 Contains Jack?
 bool(true)
 

@@ -38,44 +38,10 @@ interface IHttpRequest
     function getMethod();
 
     /**
-     * Returns URL scheme name (http or https).
-     * @return string
-     */
-    function getScheme();
-
-    /**
-     * Returns host name with optional port.
-     * @return string
-     */
-    function getHost();
-
-    /**
-     * Returns the REQUEST URI-path taking into account platform differences.
-     * @return string
-     */
-    function getRawUrl();
-
-    /**
      * Returns the full URL.
-     * @return string
+     * @return Uri
      */
-    function getUrl();
-
-    /**
-     * Get the base URL-path of the request; i.e., the segment leading to the script name.
-     * It is determined from the environment using SCRIPT_FILENAME, SCRIPT_NAME etc.
-     *
-     * @return string
-     */
-    function getBaseUrl();
-
-    /**
-     * Everything in REQUEST_URI before PATH_INFO not including the filename.
-     * <img src="<?=$basePath?>/images/image.png">
-     *
-     * @return string
-     */
-    function getBasePath();
+    function getUri();
 
     /**
      * Returns variable provided to the script via URL query ($_GET).

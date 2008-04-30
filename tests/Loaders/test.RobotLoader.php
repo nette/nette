@@ -3,15 +3,18 @@
 <pre>
 <?php
 
-require_once '../../Nette/Loaders/RobotLoader.php';
+require_once '../../Nette/loader.php';
 /*use Nette::Debug;*/
+/*use Nette::Environment;*/
 
-$cache = dirname(__FILE__) . '/tmp/autoload.cache';
-@unlink($cache);
+Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
+
+foreach (glob(Environment::expand('%tempDir%/*')) as $file) unlink($file); // delete all files
+
 
 $loader = new /*Nette::Loaders::*/RobotLoader;
-$loader->cacheFile = $cache;
 $loader->addDirectory(dirname(__FILE__));
+$loader->addDirectory(dirname(__FILE__)); // doubled
 $loader->register();
 
-Debug::dump('class Nette::Debug successfully loaded');
+if (class_exists(/*Nette::*/'TestClass')) echo 'class TestClass successfully loaded';

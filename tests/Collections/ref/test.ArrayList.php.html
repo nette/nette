@@ -5,18 +5,20 @@ Adding Jack
 Adding Mary
 Adding foo
 InvalidArgumentException: Item must be 'Person' object.
+
 Adding Jack using []
 Adding foo using []
 InvalidArgumentException: Item must be 'Person' object.
+
 toArray:
 array(3) {
-  [0] => object(Person)#2 (1) {
+  [0] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  [1] => object(Person)#3 (1) {
+  [1] => object(Person)#4 (1) {
     ["name:private"] => string(4) "Mary"
   }
-  [2] => object(Person)#2 (1) {
+  [2] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
 }
@@ -29,21 +31,22 @@ bool(true)
 
 Adding Larry using insertAt()
 ArgumentOutOfRangeException: 
+
 toArray:
 array(5) {
-  [0] => object(Person)#4 (1) {
+  [0] => object(Person)#5 (1) {
     ["name:private"] => string(5) "Larry"
   }
-  [1] => object(Person)#2 (1) {
+  [1] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  [2] => object(Person)#3 (1) {
+  [2] => object(Person)#4 (1) {
     ["name:private"] => string(4) "Mary"
   }
-  [3] => object(Person)#2 (1) {
+  [3] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  [4] => object(Person)#4 (1) {
+  [4] => object(Person)#5 (1) {
     ["name:private"] => string(5) "Larry"
   }
 }
@@ -68,8 +71,9 @@ bool(false)
 
 Getting #-1
 ArgumentOutOfRangeException: 
+
 Getting #0
-object(Person)#4 (1) {
+object(Person)#5 (1) {
   ["name:private"] => string(5) "Larry"
 }
 
@@ -81,6 +85,7 @@ bool(true)
 
 Removing using unset
 ArgumentOutOfRangeException: 
+
 Removing using unset
 indexOf Jack:
 int(0)
@@ -96,15 +101,16 @@ Get Interator:
 Clearing
 Construct from array
 InvalidArgumentException: Item must be 'Person' object.
+
 Construct from array II.
 array(3) {
-  [0] => object(Person)#2 (1) {
+  [0] => object(Person)#3 (1) {
     ["name:private"] => string(4) "Jack"
   }
-  [1] => object(Person)#3 (1) {
+  [1] => object(Person)#4 (1) {
     ["name:private"] => string(4) "Mary"
   }
-  [2] => object(ArrayObject)#5 (0) {
+  [2] => object(ArrayObject)#6 (0) {
   }
 }
 
@@ -113,9 +119,13 @@ bool(true)
 
 Adding Jack using []
 NotSupportedException: Collection is read-only.
+
 Adding Jack using insertAt
 NotSupportedException: Collection is read-only.
+
 Removing using unset
 NotSupportedException: Collection is read-only.
+
 Changing using []
 NotSupportedException: Collection is read-only.
+

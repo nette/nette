@@ -1,10 +1,16 @@
 <?php
 
+/*namespace Nette;*/
+
 $a = 1;
 ${'a'} = "{$a} ${a}";
 
-if ($a) {
-    class /*Nette::*/Object
+if (FALSE) {
+    class Object
     {
     }
+}
+
+class TestClass
+{
 }

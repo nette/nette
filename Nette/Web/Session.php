@@ -78,8 +78,6 @@ final class Session
         // session configuration
         if (self::$resetNeeded) self::reset();
 
-        // try to start session
-        require_once dirname(__FILE__) . '/../Tools.php';
         /*Nette::*/Tools::tryError();
         session_start();
         if (/*Nette::*/Tools::catchError($msg)) {
@@ -310,7 +308,6 @@ final class Session
         }
 
         if (!isset(self::$instances[$name])) {
-            require_once dirname(__FILE__) . '/SessionNamespace.php';
             self::$instances[$name] = new SessionNamespace($_SESSION['__NS'][$name], $_SESSION['__NM'][$name]);
         }
 

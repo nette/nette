@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../Nette/Object.php';
+require_once '../../Nette/loader.php';
 
 echo "<h1>Nette::Object extension method example</h1>";
 echo "<pre>\n";
@@ -37,7 +37,7 @@ try {
     echo '$obj->join: ', $obj->join('***');
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -48,5 +48,5 @@ try {
     echo '$obj->test: ', $obj->test();
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

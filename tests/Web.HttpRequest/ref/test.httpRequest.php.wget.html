@@ -1,19 +1,47 @@
+<h1>Nette::Web::HttpRequest test</h1>
+
 <pre>
 HttpRequest::getMethod() = <pre class="dump"><span>string</span>(3) "GET"
 </pre>
-HttpRequest::getScheme() = <pre class="dump"><span>string</span>(4) "http"
+HttpRequest::getUri() = <pre class="dump"><span>object</span>(Uri)#5 (10) {
+  ["scheme"] => <span>string</span>(4) "http"
+  ["user"] => <span>string</span>(0) ""
+  ["pass"] => <span>string</span>(0) ""
+  ["host"] => <span>string</span>(9) "localhost"
+  ["port"] => <span>int</span>(80)
+  ["path"] => <span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+  ["query"] => <span>string</span>(21) "param=val2&amp;xparam=val"
+  ["fragment"] => <span>string</span>(0) ""
+  ["baseScript"] => <span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+  ["basePath"] => <span>string</span>(35) "/nette/_trunk/tests/Web.HttpRequest"
+}
 </pre>
-HttpRequest::getHost() = <pre class="dump"><span>string</span>(9) "localhost"
+HttpRequest::getUri()->authority = <pre class="dump"><span>string</span>(9) "localhost"
 </pre>
-HttpRequest::getRawUrl() = <pre class="dump"><span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+HttpRequest::getUri()->hostUri = <pre class="dump"><span>string</span>(16) "http://localhost"
 </pre>
-HttpRequest::getBaseUrl() = <pre class="dump"><span>string</span>(52) "http://localhost/nette/_trunk/tests/Web.HttpRequest/"
+HttpRequest::getUri()->baseUri = <pre class="dump"><span>string</span>(51) "http://localhost/nette/_trunk/tests/Web.HttpRequest"
 </pre>
-HttpRequest::getBasePath() = <pre class="dump"><span>string</span>(36) "/nette/_trunk/tests/Web.HttpRequest/"
+HttpRequest::getUri()->relativeUri = <pre class="dump"><span>string</span>(21) "/test.httpRequest.php"
 </pre>
-HttpRequest::getBaseScript() = <pre class="dump"><span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+HttpRequest::getUri()->absoluteUri = <pre class="dump"><span>string</span>(94) "http://localhost/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php?param=val2&amp;xparam=val"
 </pre>
-HttpRequest::getQuery() = <pre class="dump"><span>array</span>(0) {
+HttpRequest::getOriginalUri() = <pre class="dump"><span>object</span>(Uri)#5 (10) {
+  ["scheme"] => <span>string</span>(4) "http"
+  ["user"] => <span>string</span>(0) ""
+  ["pass"] => <span>string</span>(0) ""
+  ["host"] => <span>string</span>(9) "localhost"
+  ["port"] => <span>int</span>(80)
+  ["path"] => <span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+  ["query"] => <span>string</span>(21) "xparam=val&amp;param=val2"
+  ["fragment"] => <span>string</span>(0) ""
+  ["baseScript"] => <span>string</span>(0) ""
+  ["basePath"] => <span>string</span>(0) ""
+}
+</pre>
+HttpRequest::getQuery() = <pre class="dump"><span>array</span>(2) {
+  ["xparam"] => <span>string</span>(3) "val"
+  ["param"] => <span>string</span>(4) "val2"
 }
 </pre>
 HttpRequest::getPost() = <pre class="dump"><span>array</span>(0) {
@@ -43,11 +71,28 @@ HttpRequest::isEqual() = <pre class="dump"><span>bool</span>(false)
 </pre>
 HttpRequest::isEqual() = <pre class="dump"><span>bool</span>(false)
 </pre>
-HttpRequest::getRawUrl() = <pre class="dump"><span>string</span>(5) "/test"
+HttpRequest::getUri() = <pre class="dump"><span>object</span>(Uri)#4 (10) {
+  ["scheme"] => <span>string</span>(4) "http"
+  ["user"] => <span>string</span>(0) ""
+  ["pass"] => <span>string</span>(0) ""
+  ["host"] => <span>string</span>(9) "localhost"
+  ["port"] => <span>int</span>(80)
+  ["path"] => <span>string</span>(5) "/test"
+  ["query"] => <span>string</span>(21) "param=val2&amp;xparam=val"
+  ["fragment"] => <span>string</span>(0) ""
+  ["baseScript"] => <span>string</span>(56) "/nette/_trunk/tests/Web.HttpRequest/test.httpRequest.php"
+  ["basePath"] => <span>string</span>(7) "/second"
+}
 </pre>
-HttpRequest::getBaseUrl() = <pre class="dump"><span>string</span>(17) "http://localhost/"
+HttpRequest::getUri()->authority = <pre class="dump"><span>string</span>(9) "localhost"
 </pre>
-HttpRequest::getBasePath() = <pre class="dump"><span>string</span>(1) "/"
+HttpRequest::getUri()->hostUri = <pre class="dump"><span>string</span>(16) "http://localhost"
+</pre>
+HttpRequest::getUri()->baseUri = <pre class="dump"><span>string</span>(23) "http://localhost/second"
+</pre>
+HttpRequest::getUri()->relativeUri = <pre class="dump"><span>bool</span>(false)
+</pre>
+HttpRequest::getUri()->absoluteUri = <pre class="dump"><span>string</span>(43) "http://localhost/test?param=val2&amp;xparam=val"
 </pre>
 HttpRequest::isLocal() = <pre class="dump"><span>bool</span>(true)
 </pre>

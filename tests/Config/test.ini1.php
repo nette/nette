@@ -2,8 +2,7 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Config.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Config;*/
 /*use Nette::Debug;*/

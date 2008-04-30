@@ -70,7 +70,7 @@ class User extends /*Nette::*/Object
     public function __construct($name = NULL)
     {
         $this->namespace = $name === NULL ? $this->getClass() : $name;
-        $this->cookiePath = Environment::getHttpRequest()->getBasePath();
+        $this->cookiePath = Environment::getHttpRequest()->getUri()->basePath;
         $this->initSession();
     }
 
@@ -231,7 +231,6 @@ class User extends /*Nette::*/Object
         $session->authenticated = $value;
         if ($value) {
             if (!$session->authkey) {
-                require_once dirname(__FILE__) . '/../Tools.php';
                 $session->authkey = /*Nette::*/Tools::uniqueId();
             }
         } else {

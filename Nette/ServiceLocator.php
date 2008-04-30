@@ -63,18 +63,18 @@ class ServiceLocator extends Object implements IServiceLocator
      * @param  string optional service name (for factories is not optional)
      * @param  bool   promote to higher level?
      * @return void
-     * @throws ::InvalidArgumentException, Exception
+     * @throws ::InvalidArgumentException, AmbiguousServiceException
      */
-    public function addService($service, $type = NULL, $promote = FALSE)
+    public function addService($service, $name = NULL, $promote = FALSE)
     {
         if (is_object($service)) {
-            if ($type === NULL) $type = get_class($service);
+            if ($name === NULL) $name = get_class($service);
 
         } elseif (is_string($service)) {
-            if ($type === NULL) $type = $service;
+            if ($name === NULL) $name = $service;
 
         } elseif (is_callable($service, TRUE)) {
-            if (empty($type)) {
+            if (empty($name)) {
                 throw new /*::*/InvalidArgumentException('Missing service name.');
             }
 
@@ -82,29 +82,17 @@ class ServiceLocator extends Object implements IServiceLocator
             throw new /*::*/InvalidArgumentException('Service must be class/interface name, object or factory callback.');
         }
 
-
         /**/// fix for namespaced classes/interfaces in PHP < 5.3
-        if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+        if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
 
-        if (class_exists($type)) {
-            foreach (class_implements($type) as $class) {
-                $this->registry[strtolower($class)][] = $service;
-            }
-
-            foreach (class_parents($type) as $class) {
-                $this->registry[strtolower($class)][] = $service;
-            }
+        $lower = strtolower($name);
+        if (isset($this->registry[$lower]) && is_object($this->registry[$lower])) {
+            throw new AmbiguousServiceException("Ambiguous service '$name'.");
         }
-
-        $lType = strtolower($type);
-        if (!empty($this->registry[$lType])) {
-            throw new AmbiguousServiceException("Ambiguous service '$type'.");
-        }
-        $this->registry[$lType][] = $service;
-
+        $this->registry[$lower] = $service;
 
         if ($promote && $this->parent !== NULL) {
-            $this->parent->addService($service, $type, TRUE);
+            $this->parent->addService($service, $name, TRUE);
         }
     }
 
@@ -113,16 +101,16 @@ class ServiceLocator extends Object implements IServiceLocator
     /**
      * Removes the specified service type from the service container.
      */
-    public function removeService($type, $promote = FALSE)
+    public function removeService($name, $promote = FALSE)
     {
-        if (!is_string($type)) {
-            throw new /*::*/InvalidArgumentException('Service must be class/interface name.');
+        if (!is_string($name) || $name === '') {
+            throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
         }
 
         // not implemented yet
 
         if ($promote && $this->parent !== NULL) {
-            $this->parent->removeService($type, TRUE);
+            $this->parent->removeService($name, TRUE);
         }
     }
 
@@ -131,43 +119,38 @@ class ServiceLocator extends Object implements IServiceLocator
     /**
      * Gets the service object of the specified type.
      */
-    public function getService($type)
+    public function getService($name)
     {
-        if (!is_string($type) || $type === '') {
-            throw new /*::*/InvalidArgumentException('Service must be class/interface name.');
+        if (!is_string($name) || $name === '') {
+            throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
         }
 
         /**/// fix for namespaced classes/interfaces in PHP < 5.3
-        if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+        if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
 
-        $lType = strtolower($type);
+        $lower = strtolower($name);
 
-        if (isset($this->registry[$lType])) {
-            if (count($this->registry[$lType]) > 1) {
-                throw new AmbiguousServiceException("Ambiguous service '$type' resolution.");
-            }
+        if (isset($this->registry[$lower])) {
+            $service = $this->registry[$lower];
+            if (is_object($service)) {
+                return $service;
 
-            $obj = $this->registry[$lType][0];
-            if (is_object($obj)) {
-                return $obj;
-
-            } elseif (is_string($obj)) {
+            } elseif (is_string($service)) {
                 /**/// fix for namespaced classes/interfaces in PHP < 5.3
-                if ($a = strrpos($obj, ':')) $obj = substr($obj, $a + 1);/**/
-
-                return $this->registry[$lType][0] = new $obj;
+                if ($a = strrpos($service, ':')) $service = substr($service, $a + 1);/**/
+                return $this->registry[$lower] = new $service;
 
             } else {
-                return $this->registry[$lType][0] = call_user_func($obj);
+                return $this->registry[$lower] = call_user_func($service);
             }
 
         } elseif ($this->autoDiscovery) {
-            if (class_exists($type)) {
-                return $this->registry[$lType][0] = new $type;
+            if (class_exists($name)) {
+                return $this->registry[$lower] = new $name;
             }
 
         } elseif ($this->parent !== NULL) {
-            return $this->parent->getService($type);
+            return $this->parent->getService($name);
         }
 
         return NULL;

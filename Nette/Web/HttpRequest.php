@@ -36,26 +36,148 @@ require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
  */
 class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 {
+    /** @var Uri  @see self::getUri() */
+    private $uri;
+
+    /** @var Uri  @see self::getOriginalUri() */
+    private $originalUri;
+
     /** @var array  @see self::getHeader() */
     private $headers;
 
-    /** @var array  @see self::isLocal() */
+    /** @var bool  @see self::isLocal() */
     private $isLocal;
 
-    /** @var string  @see self::getRawUrl() */
-    private $rawUrl;
 
-    /** @var array  @see self::isEqual() */
-    private $normalizedUrl;
 
-    /** @var string  @see self::getBaseScript() */
-    private $baseScript;
+    /**
+     * Sets URL object
+     * @param  Uri
+     * @return void
+     */
+    public function setUri(Uri $uri)
+    {
+        $this->uri = $this->originalUri = $uri;
+    }
 
-    /** @var string  @see self::getBaseUrl() */
-    private $baseUrl;
 
-    /** @var string  @see self::getBasePath() */
-    private $basePath;
+
+    /**
+     * Returns URL object
+     * @return Uri
+     */
+    public function getUri()
+    {
+        if ($this->uri === NULL) {
+            $this->detectUri();
+        }
+        return clone $this->uri;
+    }
+
+
+
+    /**
+     * Returns URL object
+     * @return Uri
+     */
+    public function getOriginalUri()
+    {
+        if ($this->originalUri === NULL) {
+            $this->detectUri();
+        }
+        return clone $this->originalUri;
+    }
+
+
+
+    /**
+     * Detects uri, base path and script path of the request.
+     * @return void
+     */
+    protected function detectUri()
+    {
+        $origUri = $this->originalUri = new Uri;
+        $origUri->scheme = $this->isSecured() ? 'https' : 'http';
+        $origUri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+        $origUri->pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+        $origUri->port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
+        $origUri->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+
+        // path
+        if (isset($_SERVER['REQUEST_URI'])) { // Apache, IIS 6.0
+            $origUri->path = (string) strtok($_SERVER['REQUEST_URI'], '?');
+        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 (PHP as CGI ?)
+            $origUri->path = $_SERVER['ORIG_PATH_INFO'];
+        }
+
+        // host
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $origUri->host = (string) strtok($_SERVER['HTTP_HOST'], ':');
+        } elseif (isset($_SERVER['SERVER_NAME'])) {
+            $origUri->host = (string) strtok($_SERVER['SERVER_NAME'], ':');
+        }
+
+        // normalized uri
+        $uri = $this->uri = clone $origUri;
+        // TODO: add ability to use URI filters
+        $uri->canonicalize();
+
+
+        // detect base URI-path - inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
+        $filename = basename($_SERVER['SCRIPT_FILENAME']);
+
+        if (basename($_SERVER['SCRIPT_NAME']) === $filename) {
+            $baseScript = $_SERVER['SCRIPT_NAME'];
+        } elseif (basename($_SERVER['PHP_SELF']) === $filename) {
+            $baseScript = $_SERVER['PHP_SELF'];
+        } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
+            $baseScript = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
+        } else {
+            // Backtrack up the script_filename to find the portion matching php_self
+            $path = $_SERVER['PHP_SELF'];
+            $segs = explode('/', trim($_SERVER['SCRIPT_FILENAME'], '/'));
+            $segs = array_reverse($segs);
+            $index = 0;
+            $last = count($segs);
+            $baseScript = '';
+            do {
+                $seg = $segs[$index];
+                $baseScript = '/' . $seg . $baseScript;
+                $index++;
+            } while (($last > $index) && (FALSE !== ($pos = strpos($path, $baseScript))) && (0 != $pos));
+        }
+
+        // Does the baseScript have anything in common with the request_uri?
+        $basePath = substr($baseScript, 0, strrpos($baseScript, '/')); // do not use dirinfo!
+
+        if (strpos($uri->path, $baseScript) === 0) {
+            // full $baseScript matches
+            $uri->baseScript = $baseScript;
+            $uri->basePath = $basePath;
+
+        } elseif (strpos($uri->path, $basePath . '/') === 0) {
+            // directory portion of $baseScript matches
+            $uri->baseScript = $uri->basePath = $basePath;
+
+        } elseif (strpos($uri->path, basename($baseScript)) === FALSE) {
+            // no match whatsoever; set it blank
+            $uri->baseScript = '/';
+            $uri->basePath = '/';
+
+        } elseif ((strlen($uri->path) >= strlen($baseScript))
+            && ((false !== ($pos = strpos($uri->path, $baseScript))) && ($pos !== 0))) {
+            // If using mod_rewrite or ISAPI_Rewrite strip the script filename
+            // out of baseScript. $pos !== 0 makes sure it is not matching a value
+            // from PATH_INFO or QUERY_STRING
+            $uri->baseScript = substr($uri->path, 0, $pos + strlen($baseScript));
+            // do not use dirinfo!
+            $uri->basePath = substr($baseScript, 0, strrpos($baseScript, '/') + 1);
+
+        } else {
+            $uri->baseScript = rtrim($baseScript, '/');
+            $uri->basePath = $basePath;
+        }
+    }
 
 
 
@@ -66,281 +188,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
     public function getMethod()
     {
         return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
-    }
-
-
-
-    /**
-     * Is HTTP method GET?
-     * @return boolean
-     */
-    public function isGet()
-    {
-        return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET';
-    }
-
-
-
-    /**
-     * Is HTTP method POST?
-     * @return boolean
-     */
-    public function isPost()
-    {
-        return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
-    }
-
-
-
-    /**
-     * Is HTTP method HEAD?
-     * @return boolean
-     */
-    public function isHead()
-    {
-        return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'HEAD';
-    }
-
-
-
-    /**
-     * Returns URL scheme name (http or https).
-     * @return string
-     */
-    public function getScheme()
-    {
-        return $this->isSecured() ? 'https' : 'http';
-    }
-
-
-
-    /**
-     * Returns host name with optional port.
-     * @return string
-     */
-    public function getHost()
-    {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            return $_SERVER['HTTP_HOST'];
-        }
-
-        if (isset($_SERVER['SERVER_NAME'])) {
-            return $_SERVER['SERVER_NAME'];
-        }
-
-        return NULL;
-    }
-
-
-
-    /**
-     * Changes the REQUEST URI-path (for cases when autodetection fails).
-     * @param  string
-     * @return void
-     */
-    public function setRawUrl($value)
-    {
-        if (!is_string($value)) {
-            return;
-        }
-
-        $this->rawUrl = '/' . ltrim($value, '/');
-        $this->normalizedUrl = NULL;
-
-        $_GET = array();
-        if (($pos = strpos($value, '?')) !== FALSE) {
-            parse_str(substr($values, $pos + 1), $_GET);
-            self::fuckingQuotes(array(&$_GET));
-        }
-    }
-
-
-
-    /**
-     * Returns the REQUEST URI-path taking into account platform differences.
-     * @return string
-     */
-    public function getRawUrl()
-    {
-        if ($this->rawUrl === NULL) {
-            // request URI autodetection
-            if (isset($_SERVER['REQUEST_URI'])) { // Apache, IIS 6.0
-                $this->rawUrl = $_SERVER['REQUEST_URI'];
-            } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 (PHP as CGI ?)
-                $this->rawUrl = $_SERVER['ORIG_PATH_INFO'];
-                if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] !== '') {
-                    $this->rawUrl .= '?' . $_SERVER['QUERY_STRING'];
-                }
-            } else {
-                $this->rawUrl = ''; // can't detect
-            }
-        }
-
-        return $this->rawUrl;
-    }
-
-
-
-    /**
-     * Returns the full URL.
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->getScheme() . '://' . $this->getHost() . $this->getRawUrl();
-    }
-
-
-
-    /**
-     * Returns the URL-path.
-     * @return string
-     */
-    public function getUrlPath()
-    {
-        // TODO: chybi v interface
-        $path = strtok($_SERVER['REQUEST_URI'], '?');
-        $path = rawurldecode(preg_replace('#%(40|3[ABDF]|2[46BCF])#i', '%25$1', $path)); // decode %XX (@see RFC 2616 - 3.2.3 URI Comparison
-        return $path;
-    }
-
-
-
-    /**
-     * Detects base URL-path and script path of the request.
-     * @return void
-     */
-    public function detectPaths()
-    {
-        $filename = basename($_SERVER['SCRIPT_FILENAME']);
-
-        // inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
-        if (basename($_SERVER['SCRIPT_NAME']) === $filename) {
-            $baseScript = $_SERVER['SCRIPT_NAME'];
-        } elseif (basename($_SERVER['PHP_SELF']) === $filename) {
-            $baseScript = $_SERVER['PHP_SELF'];
-        } elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
-            $baseScript = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
-        } else {
-            // Backtrack up the script_filename to find the portion matching
-            // php_self
-            $path = $_SERVER['PHP_SELF'];
-            $segs = explode('/', trim($_SERVER['SCRIPT_FILENAME'], '/'));
-            $segs = array_reverse($segs);
-            $index = 0;
-            $last = count($segs);
-            $baseScript = '';
-            do {
-                $seg = $segs[$index];
-                $baseScript = '/' . $seg . $baseScript;
-                ++$index;
-            } while (($last > $index) && (FALSE !== ($pos = strpos($path, $baseScript))) && (0 != $pos));
-        }
-
-        // Does the baseScript have anything in common with the request_uri?
-        $requestUrl = $this->getRawUrl();
-
-        // do not use dirinfo!
-        $basePath = substr($baseScript, 0, strrpos($baseScript, '/') + 1);
-
-        if (0 === strpos($requestUrl, $baseScript)) {
-            // full $baseScript matches
-            $this->baseScript = $baseScript;
-            $this->basePath = $basePath;
-            return;
-        }
-
-
-        if (0 === strpos($requestUrl, $basePath)) {
-            // directory portion of $baseScript matches
-            $this->baseScript = $this->basePath = $basePath;
-            return;
-        }
-
-        if (strpos($requestUrl, basename($baseScript)) === FALSE) {
-            // no match whatsoever; set it blank
-            $this->baseScript = '';
-            $this->basePath = '/';
-            return;
-        }
-
-        // If using mod_rewrite or ISAPI_Rewrite strip the script filename
-        // out of baseScript. $pos !== 0 makes sure it is not matching a value
-        // from PATH_INFO or QUERY_STRING
-        if ((strlen($requestUrl) >= strlen($baseScript))
-            && ((false !== ($pos = strpos($requestUrl, $baseScript))) && ($pos !== 0)))
-        {
-            $baseScript = substr($requestUrl, 0, $pos + strlen($baseScript));
-            // do not use dirinfo!
-            $basePath = substr($baseScript, 0, strrpos($baseScript, '/') + 1);
-        }
-
-        $this->baseScript = rtrim($baseScript, '/');
-        $this->basePath = $basePath;
-    }
-
-
-
-    /**
-     * Returns the URL-path for the root of your site.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        if ($this->basePath === NULL) {
-            $this->detectPaths();
-        }
-        return $this->basePath;
-    }
-
-
-
-    /**
-     * Returns the absolute URL for the root of your site.
-     *
-     * @return string
-     */
-    public function getBaseUrl()
-    {
-        if ($this->basePath === NULL) {
-            $this->detectPaths();
-        }
-        return $this->getScheme() . '://' . $this->getHost() . $this->basePath;
-    }
-
-
-
-    /**
-     * Returns the URL-path of the request with the script name.
-     *
-     * @return string
-     */
-    public function getBaseScript()
-    {
-        if ($this->baseScript === NULL) {
-            $this->detectPaths();
-        }
-        return $this->baseScript;
-    }
-
-
-
-    /**
-     * Changes the URL-path of the request.
-     * @param  string
-     * @return void
-     */
-    public function setBaseUrl($value)
-    {
-        // TODO: predelat
-        if (!is_string($value)) {
-            return;
-        }
-        $value = '/' . ltrim($value, '/');
-        $this->baseScript = $value;
-        // do not use dirinfo!
-        $this->basePath = substr($value, 0, strrpos($value, '/') + 1);
     }
 
 
@@ -487,6 +334,21 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
     /**
+     * Returns URL object
+     * @return Uri
+     */
+    public function getReferer()
+    {
+        static $uri;
+        if ($uri === NULL) {
+            $uri = new Uri(self::getHeader('referer'));
+        }
+        return clone $uri;
+    }
+
+
+
+    /**
      * Is the request is sent via secure channel (https).
      * @return boolean
      */
@@ -503,7 +365,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
      */
     public function isAjax()
     {
-        return $this->isPost() && $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
+        return ($this->getMethod() === 'POST') && ($this->getHeader('X-Requested-With') === 'XMLHttpRequest');
     }
 
 
@@ -534,11 +396,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
      */
     public function detectLanguage(/*array*/ $langs)
     {
-        if (!isset($this->headers['accept-language'])) {
-            return NULL;
-        }
+        $header = $this->getHeader('accept-language');
+        if (!$header) return NULL;
 
-        $s = strtolower($this->headers['accept-language']);  // case insensitive
+        $s = strtolower($header);  // case insensitive
         $s = strtr($s, '_', '-');  // cs_CZ means cs-CZ
         rsort($langs);             // first more specific
         preg_match_all('#('.implode('|', $langs).')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
@@ -562,21 +423,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
     /**
-     * Similar to rawurldecode, but preserve reserved chars encoded.
-     * @param  string to decode
-     * @return string
-     */
-    public static function urldecode($s)
-    {
-        // reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
-        // within a path segment, the characters "/", ";", "=", "?" are reserved
-        // within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-        return rawurldecode(preg_replace('#%(40|3[ABDF]|2[46BCF])#i', '%25$1', $s));
-    }
-
-
-
-    /**
      * Generates hash from all used IP & host names from request headers.
      * @return string
      */
@@ -595,59 +441,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
         }
 
         return sha1(implode('|', $ip));
-    }
-
-
-
-    /**
-     * URL comparing.
-     * @param  string
-     * @return bool
-     */
-    public function isEqual($url)
-    {
-        if ($this->normalizedUrl === NULL) {
-            $parts = explode('?', $this->getRawUrl(), 2);
-            $this->normalizedUrl['path'] = self::urldecode($parts[0]);
-            $this->normalizedUrl['host'] = strtolower($this->getHost());
-
-            if (isset($parts[1])) {
-                $tmp = explode('&', $parts[1]);
-                sort($tmp);
-                $this->normalizedUrl['query'] = implode('&', $tmp);
-            } else {
-                $this->normalizedUrl['query'] = '';
-            }
-        }
-
-        if (strncmp($url, '//', 2) === 0) { // absolute URI without scheme
-            $origUrl = '//' . $this->normalizedUrl['host'] . $this->normalizedUrl['path'];
-
-        } elseif (strncmp($url, '/', 1) === 0) { // absolute path
-            $origUrl = $this->normalizedUrl['path'];
-
-        } else {
-            $origUrl = $this->getScheme() . '://' . $this->normalizedUrl['host'] . $this->normalizedUrl['path'];
-        }
-
-        // first test
-        $parts = explode('?', $url, 2);
-        if (self::urldecode($parts[0]) !== $origUrl) {
-            return FALSE;
-        }
-
-        // compare query strings
-        if (isset($parts[1])) {
-            $tmp = explode('#', $parts[1], 2); // but there shouldn't be any fragment...
-            $tmp = explode('&', $tmp[0]);
-            sort($tmp);
-            if (implode('&', $tmp) !== $this->normalizedUrl['query']) {
-                return FALSE;
-            }
-        }
-
-        // URIs are the same
-        return TRUE;
     }
 
 

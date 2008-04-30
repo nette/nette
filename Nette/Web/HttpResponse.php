@@ -110,6 +110,12 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 
+    /**
+     * Send a raw HTTP header.
+     * @param  string  header
+     * @param  bool    replace?
+     * @return void
+     */
     public function setHeader($header, $replace = FALSE)
     {
         // prevent header injection

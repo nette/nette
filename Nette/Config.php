@@ -76,8 +76,6 @@ class Config extends /*Nette::Collections::*/Hashtable
      */
     public static function fromFile($file, $section = NULL, $flags = self::READONLY)
     {
-        require_once dirname(__FILE__) . '/ConfigAdapters.php';
-
         $class = /*Nette::*/'ConfigAdapter_' . strtoupper(pathinfo($file, PATHINFO_EXTENSION));
         if (class_exists($class)) {
             $arr = call_user_func(array($class, 'load'), $file, $section);
@@ -98,8 +96,6 @@ class Config extends /*Nette::Collections::*/Hashtable
      */
     public function save($file, $section = NULL)
     {
-        require_once dirname(__FILE__) . '/ConfigAdapters.php';
-
         $class = /*Nette::*/'ConfigAdapter_' . strtoupper(pathinfo($file, PATHINFO_EXTENSION));
         if (class_exists($class)) {
             return call_user_func(array($class, 'save'), $this, $file, $section);

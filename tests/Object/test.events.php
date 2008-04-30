@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../Nette/Object.php';
+require_once '../../Nette/loader.php';
 
 echo '<h1>Nette::Object events test</h1>';
 echo "<pre>\n";
@@ -40,7 +40,7 @@ try {
     echo "SUCCESS\n";
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -51,7 +51,7 @@ try {
     echo "SUCCESS\n";
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -62,7 +62,7 @@ try {
     echo "SUCCESS\n";
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -73,7 +73,7 @@ try {
     echo "SUCCESS\n";
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -84,7 +84,7 @@ try {
     echo "SUCCESS\n";
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 

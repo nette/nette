@@ -73,7 +73,7 @@ class ComponentContainer extends Component implements IComponentContainer
             throw new /*::*/InvalidStateException("Component with name '$name' already exists.");
         }
 
-        // check infinite recursion
+        // check circular reference
         $obj = $this;
         do {
             if ($obj === $component) {

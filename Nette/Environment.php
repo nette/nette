@@ -39,11 +39,20 @@ final class Environment
     const CONSOLE = 'console';
     const LAB = 'lab';
 
+    /** modes: */
+    const NORMAL_MODE = 0;
+    const OFF_MODE = 1;
+    const DEBUG_MODE = 2;
+    const PERFORMANCE_MODE = 4;
+
     /** variables */
     const LANG = 'lang';
 
     /** @var string */
     private static $name;
+
+    /** @var string  the mode of current application */
+    private $mode = self::NORMAL_MODE;
 
     /** @var Config */
     private static $config;
@@ -56,8 +65,8 @@ final class Environment
         'encoding' => array('UTF-8', FALSE),
         'lang' => array('en', FALSE),
         'netteDir' => array(__DIR__, FALSE),
+        'cacheBase' => array('%tempDir%/cache-', TRUE),
         'tempDir' => array('%appDir%/temp', TRUE),
-        'cacheDir' => array('safe://%tempDir%', TRUE),
         'logDir' => array('%appDir%/log', TRUE),
         'libsDir' => array('%appDir%/libs', TRUE),
         'templatesDir' => array('%appDir%/templates', TRUE),
@@ -67,11 +76,11 @@ final class Environment
     );
 
     public static $defaultServices = array(
-        'Nette::IServiceLocator' => 'Nette::ServiceLocator',
+        'Nette::IServiceLocator' => /*Nette::*/'ServiceLocator',
         'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
         'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
         'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
-        'Nette::Caching::Cache' => 'Nette::Caching::Cache',
+        'Nette::Caching::ICacheStorage' => array(__CLASS__, 'factoryCacheStorage'),
     );
 
 
@@ -137,6 +146,32 @@ final class Environment
 
 
     /**
+     * Sets the mode.
+     *
+     * @param  int mode
+     * @return void
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+    }
+
+
+
+    /**
+     * Returns the mode.
+     *
+     * @param  int mode mask
+     * @return int|bool
+     */
+    final public function getMode($mask = NULL)
+    {
+        return $mask === NULL ? $this->mode : (bool) $this->mode & $mask;
+    }
+
+
+
+    /**
      * Detects console (non-HTTP) mode.
      * @return bool
      */
@@ -148,6 +183,7 @@ final class Environment
 
 
     /********************* environment variables ****************d*g**/
+
 
 
     /**
@@ -202,19 +238,10 @@ final class Environment
      */
     public static function expand($var)
     {
-        if (!is_string($var) || strpos($var, '%') === FALSE) return $var;
-
-        static $infLoop;
-        if (isset($infLoop[$var])) {
-            throw new InvalidStateException("Infinite loop detected for variables "
-                . implode(', ', array_keys($infLoop)) . ".");
+        if (is_string($var) && strpos($var, '%') !== FALSE) {
+            return preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var);
         }
-
-        $infLoop[$var] = TRUE;
-        $res = preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var);
-        unset($infLoop[$var]);
-
-        return $res;
+        return $var;
     }
 
 
@@ -226,11 +253,26 @@ final class Environment
      */
     private static function expandCb($m)
     {
-        if ($m[1] === '') return '%';
+        list(, $var) = $m;
+        if ($var === '') return '%';
 
-        $val = self::getVariable($m[1]);
+        static $livelock;
+        if (isset($livelock[$var])) {
+            throw new /*::*/InvalidStateException("Circular reference detected for variables: "
+                . implode(', ', array_keys($livelock)) . ".");
+        }
+
+        try {
+            $livelock[$var] = TRUE;
+            $val = self::getVariable($var);
+            unset($livelock[$var]);
+        } catch (Exception $e) {
+            $livelock = array();
+            throw $e;
+        }
+
         if ($val === NULL) {
-            throw new InvalidStateException("Unknown environment variable $m[0].");
+            throw new /*::*/InvalidStateException("Unknown environment variable '$var'.");
         }
         return $val;
     }
@@ -248,20 +290,11 @@ final class Environment
     public static function getServiceLocator()
     {
         if (self::$locator === NULL) {
-            $type = self::$defaultServices['Nette::IServiceLocator'];
-
-            /**/// fix for namespaced classes/interfaces in PHP < 5.3
-            if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
-
-            require_once dirname(__FILE__) . '/ServiceLocator.php';
-
-            self::$locator = new $type;
-
-            foreach (self::$defaultServices as $type => $service) {
-                self::$locator->addService($service/*, $type*/);
+            self::$locator = new self::$defaultServices['Nette::IServiceLocator'];
+            foreach (self::$defaultServices as $name => $service) {
+                self::$locator->addService($service, $name);
             }
         }
-
         return self::$locator;
     }
 
@@ -272,9 +305,9 @@ final class Environment
      * @param  string
      * @return object
      */
-    static public function getService($type)
+    static public function getService($name)
     {
-        return self::getServiceLocator()->getService($type);
+        return self::getServiceLocator()->getService($name);
     }
 
 
@@ -284,8 +317,7 @@ final class Environment
      */
     public static function getHttpRequest()
     {
-        //return self::getServiceLocator()->getService('Nette::Web::IHttpRequest');
-        return self::getServiceLocator()->getService('Nette::Web::HttpRequest');
+        return self::getServiceLocator()->getService('Nette::Web::IHttpRequest');
     }
 
 
@@ -295,8 +327,7 @@ final class Environment
      */
     public static function getHttpResponse()
     {
-        //return self::getServiceLocator()->getService('Nette::Web::IHttpResponse');
-        return self::getServiceLocator()->getService('Nette::Web::HttpResponse');
+        return self::getServiceLocator()->getService('Nette::Web::IHttpResponse');
     }
 
 
@@ -321,13 +352,31 @@ final class Environment
 
 
 
+    /********************* service factories ****************d*g**/
+
+
+
     /**
+     * @param  string
      * @return Nette::Caching::Cache
      */
-    public static function getCache()
+    public static function getCache($namespace = '')
     {
-        require_once dirname(__FILE__) . '/Caching/Cache.php';
-        return self::getServiceLocator()->getService('Nette::Caching::Cache');
+        return new /*Nette::Caching::*/Cache(
+            self::getService('Nette::Caching::ICacheStorage'),
+            $namespace
+        );
+    }
+
+
+
+    /**
+     * @param  string
+     * @return Nette::Caching::ICacheStorage
+     */
+    public static function factoryCacheStorage()
+    {
+        return new /*Nette::Caching::*/FileStorage(self::getVariable('cacheBase'));
     }
 
 
@@ -339,32 +388,34 @@ final class Environment
     /**
      * Loads global configuration from file and process it.
      * @param  string|Config  file name or Config object
+     * @param  bool
      * @return Config
      */
-    public static function loadConfig($file = '%appDir%/config.ini')
+    public static function loadConfig($file = NULL, $useCache = NULL)
     {
-        require_once dirname(__FILE__) . '/Config.php';
-        $useCache = FALSE;
-
-        if ($useCache) {
-            $cache = self::getCache();
-            $cacheKey = __CLASS__ . '-' . self::getName();
-        } else {
-            $cache = $cacheKey = NULL;
+        if ($file === NULL) {
+            $file = '%appDir%/config.ini';
         }
 
-        if (isset($cache[$cacheKey])) {
-            list(self::$vars, self::$config, self::$locator) = $cache[$cacheKey];
+        $name = self::getName();
+
+        if ($useCache === NULL) {
+            $useCache = $name === self::PRODUCTION;
+        }
+
+        $cache = $useCache ? self::getCache('Nette:Environment') : NULL;
+
+        if (isset($cache[$name])) {
+            list(self::$vars, self::$config, self::$locator) = $cache[$name];
             $cfg = self::$config;
 
         } else {
-            /* DISCUSS
             if ($file instanceof Config) {
                 self::$config = $file;
-
-            } else*/ {
-                // do not expand, do not make read-only
-                self::$config = Config::fromFile(self::expand($file), self::getName(), 0);
+                $file = NULL;
+            } else {
+                $file = self::expand($file);
+                self::$config = Config::fromFile($file, $name, 0);
             }
 
             $cfg = self::$config;
@@ -392,34 +443,29 @@ final class Environment
             }
 
             // save cache
-            if ($useCache) {
-                $cache[$cacheKey] = array(self::$vars, self::$config, self::$locator);
+            if ($cache) {
+                $cache->save($name, array(self::$vars, self::$config, self::$locator), array('files' => $file));
             }
         }
 
 
-        // check temporary directory
+        // check temporary directory - TODO: discuss
+        /*
         $dir = self::getVariable('tempDir');
         if ($dir && !(is_dir($dir) && is_writable($dir))) {
             trigger_error("Temporary directory '$dir' is not writable", E_USER_NOTICE);
         }
+        */
 
         // process ini settings
         if ($cfg->set instanceof Config) {
             if (!function_exists('ini_set')) {
-                throw new NotSupportedException('Function ini_set() is not enabled.');
-
+                throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
                 /* or try to use workaround?
                 "date.timezone" => "date_default_timezone_set($value);",
                 "iconv.internal_encoding" => "iconv_set_encoding('internal_encoding', $value);",
                 "mbstring.internal_encoding" => "mb_internal_encoding($value);",
                 "include_path" => "set_include_path(strtr($value, ';', PATH_SEPARATOR));",
-
-                if (isset($wa[$key])) {
-                    eval($wa[$key]);
-                } else {
-                    throw new NotSupportedException(...);
-                }
                 */
             }
 
@@ -428,7 +474,7 @@ final class Environment
             }
         }
 
-        // execute services
+        // execute services - TODO: discuss
         /*
         if ($cfg->run) {
             $run = $cfg->run->toArray();

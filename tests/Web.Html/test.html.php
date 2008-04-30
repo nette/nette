@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../Nette/Web/Html.php';
+require_once '../../Nette/loader.php';
 /*use Nette::Web::Html;*/
 
 Html::$xhtml = FALSE;

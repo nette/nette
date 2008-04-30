@@ -2,8 +2,7 @@
 
 <pre>
 <?php
-require_once '../../Nette/Debug.php';
-require_once '../../Nette/Collections/Collection.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette::Collections::Collection;*/
 /*use Nette::Debug;*/
@@ -44,7 +43,7 @@ try {
     echo "Adding non-numeric\n";
     $collection->add('hello');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -72,7 +71,7 @@ try {
     echo "Adding foo\n";
     $collection->add($foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -88,7 +87,7 @@ try {
     echo "Removing foo\n";
     Debug::dump($collection->remove($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -103,7 +102,7 @@ try {
     echo "Contains foo?\n";
     Debug::dump($collection->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -142,7 +141,7 @@ try {
     $collection = new Collection(array($jack, $mary, $foo));
     $collection2 = new Collection($collection, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -151,7 +150,7 @@ try {
     $arr = array($jack, $mary, $foo);
     $collection2 = new Collection($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -165,21 +164,21 @@ try {
     echo "Adding Jack\n";
     $collection2->add($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Removing Jack\n";
     $collection2->remove($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
     echo "Clearing\n";
     $collection2->clear();
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n";
+    echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 foreach ($collection2 as $key => & $val) {

@@ -1,0 +1,22 @@
+<h1>Nette::Web::Uri test</h1>
+
+<pre>
+$uri = object(Uri)#2 (10) {
+  ["scheme"] => string(4) "http"
+  ["user"] => string(8) "username"
+  ["pass"] => string(8) "password"
+  ["host"] => string(8) "hostname"
+  ["port"] => int(60)
+  ["path"] => string(5) "/path"
+  ["query"] => string(9) "arg=value"
+  ["fragment"] => string(6) "anchor"
+  ["baseScript"] => string(0) ""
+  ["basePath"] => string(0) ""
+}
+
+$uri->authority = string(29) "username:password@hostname:60"
+
+$uri->hostUri = string(36) "http://username:password@hostname:60"
+
+$uri->absoluteUri = string(58) "http://username:password@hostname:60/path?arg=value#anchor"
+

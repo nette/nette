@@ -30,7 +30,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette
+ * @package    Nette::Caching
  * @version    $Revision$ $Date$
  */
 class Cache extends /*Nette::*/Object implements ArrayAccess
@@ -38,64 +38,94 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
     /** @var ICacheStorage */
     private $storage;
 
+    /** @var string */
+    private $namespace;
+
+    /** @var string  last query cache */
+    private $key;
+
+    /** @var mixed  last query cache */
+    private $data;
 
 
-    public function __construct(ICacheStorage $storage = NULL)
+
+    public function __construct(ICacheStorage $storage, $namespace = NULL)
     {
-        if ($storage === NULL) {
-            require_once dirname(__FILE__) . '/../Caching/FileCache.php';
-            $this->storage = new FileCache;
-        } else {
-            $this->storage = $storage;
-        }
+        $this->storage = $storage;
+        $this->namespace = $namespace == NULL ? '' : $namespace . "\x00";
     }
 
 
 
     /**
-     * Inserts (replaces) item into the cache.
-     * @param  string key
-     * @param  mixed
-     * @param  array
-     * @param  int
-     * @return void
-     * @throws ::InvalidArgumentException
+     * Returns cache storage.
+     * @return ICacheStorage
      */
-    public function add($key, $data, $tags = NULL, $lifeTime = 0)
+    public function getStorage()
     {
-        if (!is_string($key)) { // prevents NULL
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
-
-        $cache = $this->offsetGet($key);
-        if ($cache === NULL) {
-            $this->storage->write($key, $data, $tags, $lifeTime, NULL);
-            return NULL;
-
-        } else {
-            return $cache;
-        }
+        return $this->storage;
     }
 
 
 
     /**
-     * Inserts (replaces) item into the cache.
+     * Returns cache namespace.
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+
+
+    /**
+     * Discards the internal cache.
+     * @return void
+     */
+    public function release()
+    {
+        $this->key = $this->data = NULL;
+    }
+
+
+
+    /**
+     * Writes item into the cache.
      * @param  string key
      * @param  mixed
      * @param  array
-     * @param  int
+     * @param  bool
      * @return void
      * @throws ::InvalidArgumentException
      */
-    public function insert($key, $data, $tags = NULL, $lifeTime = 0)
+    public function save($key, $data, array $dependencies = NULL, $rewrite = TRUE)
     {
         if (!is_string($key)) {
             throw new /*::*/InvalidArgumentException('Key must be a string.');
         }
 
-        $this->storage->write($key, $data, $tags, $lifeTime, NULL);
+        $this->key = NULL;
+
+        if (!$rewrite && $this->offsetGet($key) !== NULL) return;
+
+        if ($dependencies === NULL) $dependencies = array();
+        $this->storage->write($this->namespace . $key, $data, $dependencies);
     }
+
+
+
+    /**
+     * Removes items from the cache by conditions.
+     * @param  array
+     * @return void
+     */
+    public function clean(array $conds = NULL)
+    {
+        if ($conds === NULL) $conds = array();
+        $this->storage->clean($conds);
+    }
+
 
 
     /********************* interface ::ArrayAccess ****************d*g**/
@@ -115,7 +145,12 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
             throw new /*::*/InvalidArgumentException('Key must be a string.');
         }
 
-        $this->storage->write($key, $data, NULL, 0, NULL);
+        $this->key = $this->data = NULL;
+        if ($data === NULL) {
+            $this->storage->remove($this->namespace . $key);
+        } else {
+            $this->storage->write($this->namespace . $key, $data, array());
+        }
     }
 
 
@@ -132,7 +167,12 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
             throw new /*::*/InvalidArgumentException('Key must be a string.');
         }
 
-        return $this->storage->read($key);
+        if ($this->key === $key) {
+            return $this->data;
+        }
+        $this->key = $key;
+        $this->data = $this->storage->read($this->namespace . $key);
+        return $this->data;
     }
 
 
@@ -149,7 +189,9 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
             throw new /*::*/InvalidArgumentException('Key must be a string.');
         }
 
-        return $this->storage->read($key) !== NULL;
+        $this->key = $key;
+        $this->data = $this->storage->read($this->namespace . $key);
+        return $this->data !== NULL;
     }
 
 
@@ -166,7 +208,8 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
             throw new /*::*/InvalidArgumentException('Key must be a string.');
         }
 
-        $this->storage->remove($key);
+        $this->key = $this->data = NULL;
+        $this->storage->remove($this->namespace . $key);
     }
 
 }
