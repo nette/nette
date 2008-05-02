@@ -334,16 +334,13 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
     /**
-     * Returns URL object
-     * @return Uri
+     * Returns referrer
+     * @return Uri|NULL
      */
     public function getReferer()
     {
-        static $uri;
-        if ($uri === NULL) {
-            $uri = new Uri(self::getHeader('referer'));
-        }
-        return clone $uri;
+        $uri = self::getHeader('referer');
+        return $uri ? new Uri($uri) : NULL;
     }
 
 

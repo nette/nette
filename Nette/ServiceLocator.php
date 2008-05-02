@@ -82,9 +82,6 @@ class ServiceLocator extends Object implements IServiceLocator
             throw new /*::*/InvalidArgumentException('Service must be class/interface name, object or factory callback.');
         }
 
-        /**/// fix for namespaced classes/interfaces in PHP < 5.3
-        if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
-
         $lower = strtolower($name);
         if (isset($this->registry[$lower]) && is_object($this->registry[$lower])) {
             throw new AmbiguousServiceException("Ambiguous service '$name'.");
@@ -100,6 +97,8 @@ class ServiceLocator extends Object implements IServiceLocator
 
     /**
      * Removes the specified service type from the service container.
+     * @param  bool   promote to higher level?
+     * @return void
      */
     public function removeService($name, $promote = FALSE)
     {
@@ -118,6 +117,8 @@ class ServiceLocator extends Object implements IServiceLocator
 
     /**
      * Gets the service object of the specified type.
+     * @param  string service name
+     * @return void
      */
     public function getService($name)
     {
@@ -125,26 +126,36 @@ class ServiceLocator extends Object implements IServiceLocator
             throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
         }
 
-        /**/// fix for namespaced classes/interfaces in PHP < 5.3
-        if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
-
         $lower = strtolower($name);
 
         if (isset($this->registry[$lower])) {
             $service = $this->registry[$lower];
             if (is_object($service)) {
                 return $service;
-
-            } elseif (is_string($service)) {
-                /**/// fix for namespaced classes/interfaces in PHP < 5.3
-                if ($a = strrpos($service, ':')) $service = substr($service, $a + 1);/**/
-                return $this->registry[$lower] = new $service;
-
-            } else {
-                return $this->registry[$lower] = call_user_func($service);
             }
 
+            if (is_string($service)) {
+                if (substr($service, -2) === '()') {
+                    // trick to pass callback as string
+                    $service = substr($service, 0, -2);
+
+                } else {
+                    /**/// fix for namespaced classes/interfaces in PHP < 5.3
+                    if ($a = strrpos($service, ':')) $service = substr($service, $a + 1);/**/
+
+                    if (!class_exists($service)) {
+                        throw new AmbiguousServiceException("Class '$service' not found.");
+                    }
+                    return $this->registry[$lower] = new $service;
+                }
+            }
+
+            return $this->registry[$lower] = call_user_func($service);
+
         } elseif ($this->autoDiscovery) {
+            /**/// fix for namespaced classes/interfaces in PHP < 5.3
+            if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
+
             if (class_exists($name)) {
                 return $this->registry[$lower] = new $name;
             }

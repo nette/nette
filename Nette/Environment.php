@@ -381,6 +381,18 @@ final class Environment
 
 
 
+    /**
+     * Returns instance of session namespace.
+     * @param  string
+     * @return Nette::Web::SessionNamespace
+     */
+    public static function getSession($name = 'default')
+    {
+        return /*Nette::*/Session::getNamespace($name);
+    }
+
+
+
     /********************* global configuration ****************d*g**/
 
 

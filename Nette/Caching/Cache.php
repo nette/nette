@@ -92,6 +92,14 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 
     /**
      * Writes item into the cache.
+     * Dependencies are:
+     *       priority => (int) priority
+     *       expire => (timestamp) expiration
+     *       refresh => (bool) use sliding expiration?
+     *       tags => (array) tags
+     *       files => (array|string) file names
+     *       items => (array|string) cache items
+     *
      * @param  string key
      * @param  mixed
      * @param  array

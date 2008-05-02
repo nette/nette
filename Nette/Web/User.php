@@ -70,7 +70,7 @@ class User extends /*Nette::*/Object
     public function __construct($name = NULL)
     {
         $this->namespace = $name === NULL ? $this->getClass() : $name;
-        $this->cookiePath = Environment::getHttpRequest()->getUri()->basePath;
+        $this->cookiePath = Environment::getHttpRequest()->getUri()->basePath . '/';
         $this->initSession();
     }
 
@@ -130,7 +130,7 @@ class User extends /*Nette::*/Object
      */
     protected function initSession()
     {
-        $this->session = $session = Session::getNamespace($this->namespace);
+        $this->session = $session = Environment::getSession($this->namespace);
 
         if (!($session->identity instanceof /*Nette::Security::*/IIdentity)) {
             $session->identity = NULL;
