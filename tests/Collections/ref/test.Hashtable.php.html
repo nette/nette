@@ -21,53 +21,53 @@ MemberAccessException: Cannot assign to an undeclared property Hashtable::$mary.
 
 toArray:
 array(2) {
-  ["jack"] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  "jack" => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  ["mary"] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  "mary" => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
 }
 
 getKeys:
 array(2) {
-  [0] => string(4) "jack"
-  [1] => string(4) "mary"
+  0 => string(4) "jack"
+  1 => string(4) "mary"
 }
 
 Contains Jack?
-bool(true)
+bool(TRUE)
 
 Contains Mary?
-bool(true)
+bool(TRUE)
 
 Contains foo?
-bool(false)
+bool(FALSE)
 
 Contains ['jim']?
-bool(false)
+bool(FALSE)
 
 Contains ['jack']?
-bool(true)
+bool(TRUE)
 
 Contains ['mary']?
-bool(true)
+bool(TRUE)
 
 Contains ->jim?
-bool(false)
+bool(FALSE)
 
 Contains ->jack?
-bool(false)
+bool(FALSE)
 
 Contains ->mary?
-bool(false)
+bool(FALSE)
 
 Getting ['jim']
 KeyNotFoundException: 
 
 Getting ['mary']
-object(Person)#4 (1) {
-  ["name:private"] => string(4) "Mary"
+object(Person) (1) {
+  "name" private => string(4) "Mary"
 }
 
 Getting ->jim
@@ -78,16 +78,16 @@ MemberAccessException: Cannot read an undeclared property Hashtable::$mary.
 
 Calling getKeys() via Nette::Object'
 array(2) {
-  [0] => string(4) "jack"
-  [1] => string(4) "mary"
+  0 => string(4) "jack"
+  1 => string(4) "mary"
 }
 
 Getting get('jim')
 string(7) "default"
 
 Getting get('mary')
-object(Person)#4 (1) {
-  ["name:private"] => string(4) "Mary"
+object(Person) (1) {
+  "name" private => string(4) "Mary"
 }
 
 Count: 2
@@ -96,17 +96,17 @@ Get Interator:
 jack => My name is Jack
 mary => My name is Mary
 Removing Jack
-bool(true)
+bool(TRUE)
 
 Removing Jack second time
-bool(false)
+bool(FALSE)
 
 Removing using unset(['unknown'])
 Removing using unset(->unknown)
 MemberAccessException: Cannot unset an property Hashtable::$unknown.
 
 search Jack:
-bool(false)
+bool(FALSE)
 
 search Mary:
 string(4) "mary"
@@ -117,18 +117,18 @@ InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 array(3) {
-  ["a"] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  "a" => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  ["b"] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  "b" => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
-  ["c"] => object(ArrayObject)#6 (0) {
+  "c" => object(ArrayObject) (0) {
   }
 }
 
 Construct as readonly
-bool(true)
+bool(TRUE)
 
 Adding Jack using []
 NotSupportedException: Collection is read-only.

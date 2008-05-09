@@ -3,32 +3,32 @@
 <pre>
 Load INI
 array(2) {
-  ["production"] => array(2) {
-    ["webname"] => string(11) "the example"
-    ["database"] => array(2) {
-      ["adapter"] => string(9) "pdo_mysql"
-      ["params"] => array(4) {
-        ["host"] => string(14) "db.example.com"
-        ["username"] => string(6) "dbuser"
-        ["password"] => string(6) "secret"
-        ["dbname"] => string(6) "dbname"
+  "production" => array(2) {
+    "webname" => string(11) "the example"
+    "database" => array(2) {
+      "adapter" => string(9) "pdo_mysql"
+      "params" => array(4) {
+        "host" => string(14) "db.example.com"
+        "username" => string(6) "dbuser"
+        "password" => string(6) "secret"
+        "dbname" => string(6) "dbname"
       }
     }
   }
-  ["development"] => array(5) {
-    ["database"] => array(2) {
-      ["params"] => array(4) {
-        ["host"] => string(15) "dev.example.com"
-        ["username"] => string(7) "devuser"
-        ["password"] => string(9) "devsecret"
-        ["dbname"] => string(6) "dbname"
+  "development" => array(5) {
+    "database" => array(2) {
+      "params" => array(4) {
+        "host" => string(15) "dev.example.com"
+        "username" => string(7) "devuser"
+        "password" => string(9) "devsecret"
+        "dbname" => string(6) "dbname"
       }
-      ["adapter"] => string(9) "pdo_mysql"
+      "adapter" => string(9) "pdo_mysql"
     }
-    ["timeout"] => string(2) "10"
-    ["display_errors"] => string(1) "1"
-    ["html_errors"] => string(0) ""
-    ["webname"] => string(11) "the example"
+    "timeout" => string(2) "10"
+    "display_errors" => string(1) "1"
+    "html_errors" => string(0) ""
+    "webname" => string(11) "the example"
   }
 }
 
@@ -76,19 +76,19 @@ development> webname = "the example"
 
 Load section from INI
 array(5) {
-  ["database"] => array(2) {
-    ["params"] => array(4) {
-      ["host"] => string(15) "dev.example.com"
-      ["username"] => string(7) "devuser"
-      ["password"] => string(9) "devsecret"
-      ["dbname"] => string(6) "dbname"
+  "database" => array(2) {
+    "params" => array(4) {
+      "host" => string(15) "dev.example.com"
+      "username" => string(7) "devuser"
+      "password" => string(9) "devsecret"
+      "dbname" => string(6) "dbname"
     }
-    ["adapter"] => string(9) "pdo_mysql"
+    "adapter" => string(9) "pdo_mysql"
   }
-  ["timeout"] => string(2) "10"
-  ["display_errors"] => string(1) "1"
-  ["html_errors"] => string(0) ""
-  ["webname"] => string(11) "the example"
+  "timeout" => string(2) "10"
+  "display_errors" => string(1) "1"
+  "html_errors" => string(0) ""
+  "webname" => string(11) "the example"
 }
 
 Save INI

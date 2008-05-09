@@ -1,0 +1,28 @@
+<h1>Nette::Callback test</h1>
+
+<pre>
+new Callback('myFunc')
+invoke(...)
+Hello Jim and Mary from myFunc
+invokeArgs(...)
+Hello Jim and Mary from myFunc
+isCallable?
+bool(TRUE)
+
+getNative()
+string(6) "myFunc"
+
+
+new Callback('myClass', 'myStaticFunc')
+Hello Jim and Mary from myClass::myStaticFunc
+
+new Callback($obj, 'myFunc')
+Hello Jim and Mary from myClass::myFunc
+
+new Callback($nativeCallback)
+Hello from myClass::mySimpleFunc
+check getNative
+bool(TRUE)
+
+toString:
+HELLO FROM MYCLASS::MYSIMPLEFUNC

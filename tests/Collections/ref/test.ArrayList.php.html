@@ -12,76 +12,76 @@ InvalidArgumentException: Item must be 'Person' object.
 
 toArray:
 array(3) {
-  [0] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  0 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  [1] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  1 => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
-  [2] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  2 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
 }
 
 Adding Larry using insertAt()
-bool(true)
+bool(TRUE)
 
 Adding Larry using insertAt()
-bool(true)
+bool(TRUE)
 
 Adding Larry using insertAt()
 ArgumentOutOfRangeException: 
 
 toArray:
 array(5) {
-  [0] => object(Person)#5 (1) {
-    ["name:private"] => string(5) "Larry"
+  0 => object(Person) (1) {
+    "name" private => string(5) "Larry"
   }
-  [1] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  1 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  [2] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  2 => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
-  [3] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  3 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  [4] => object(Person)#5 (1) {
-    ["name:private"] => string(5) "Larry"
+  4 => object(Person) (1) {
+    "name" private => string(5) "Larry"
   }
 }
 
 Contains Jack?
-bool(true)
+bool(TRUE)
 
 Contains Mary?
-bool(true)
+bool(TRUE)
 
 Contains foo?
-bool(false)
+bool(FALSE)
 
 Contains #-1?
-bool(false)
+bool(FALSE)
 
 Contains #0?
-bool(true)
+bool(TRUE)
 
 Contains #5?
-bool(false)
+bool(FALSE)
 
 Getting #-1
 ArgumentOutOfRangeException: 
 
 Getting #0
-object(Person)#5 (1) {
-  ["name:private"] => string(5) "Larry"
+object(Person) (1) {
+  "name" private => string(5) "Larry"
 }
 
 Removing Larry
-bool(true)
+bool(TRUE)
 
 Removing Larry second time
-bool(true)
+bool(TRUE)
 
 Removing using unset
 ArgumentOutOfRangeException: 
@@ -91,7 +91,7 @@ indexOf Jack:
 int(0)
 
 indexOf Mary:
-bool(false)
+bool(FALSE)
 
 Count: 2
 Count: 2
@@ -104,18 +104,18 @@ InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 array(3) {
-  [0] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  0 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  [1] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  1 => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
-  [2] => object(ArrayObject)#6 (0) {
+  2 => object(ArrayObject) (0) {
   }
 }
 
 Construct as readonly
-bool(true)
+bool(TRUE)
 
 Adding Jack using []
 NotSupportedException: Collection is read-only.

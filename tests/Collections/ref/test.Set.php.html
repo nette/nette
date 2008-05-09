@@ -2,37 +2,37 @@
 
 <pre>
 Adding Jack
-bool(true)
+bool(TRUE)
 
 Adding Mary
-bool(true)
+bool(TRUE)
 
 Adding Mary second time
-bool(false)
+bool(FALSE)
 
 Adding Larry
-bool(true)
+bool(TRUE)
 
 Adding foo
 InvalidArgumentException: Item must be 'Person' object.
 
 Removing Larry
-bool(true)
+bool(TRUE)
 
 Removing Larry second time
-bool(false)
+bool(FALSE)
 
 Removing foo
-bool(false)
+bool(FALSE)
 
 Contains Jack?
-bool(true)
+bool(TRUE)
 
 Contains Larry?
-bool(false)
+bool(FALSE)
 
 Contains foo?
-bool(false)
+bool(FALSE)
 
 Count: 2
 Count: 2
@@ -40,36 +40,36 @@ Get Interator:
 My name is Jack
 My name is Mary
 array(2) {
-  [0] => object(Person)#3 (1) {
-    ["name:private"] => string(4) "Jack"
+  0 => object(Person) (1) {
+    "name" private => string(4) "Jack"
   }
-  [1] => object(Person)#4 (1) {
-    ["name:private"] => string(4) "Mary"
+  1 => object(Person) (1) {
+    "name" private => string(4) "Mary"
   }
 }
 
 Clearing
 Adding 'Jack'
-bool(true)
+bool(TRUE)
 
 Adding 'Mary'
-bool(true)
+bool(TRUE)
 
 Adding 'Mary' second time
-bool(false)
+bool(FALSE)
 
 Adding 'Larry'
-bool(true)
+bool(TRUE)
 
 Removing 'Larry'
-bool(true)
+bool(TRUE)
 
 Removing 'Larry' second time
-bool(false)
+bool(FALSE)
 
 array(2) {
-  [0] => string(4) "Jack"
-  [1] => string(4) "Mary"
+  0 => string(4) "Jack"
+  1 => string(4) "Mary"
 }
 
 Construct from collection
@@ -79,7 +79,7 @@ Construct from array
 InvalidArgumentException: Item must be 'Person' object.
 
 Construct as readonly
-bool(true)
+bool(TRUE)
 
 Adding Jack
 NotSupportedException: Collection is read-only.
