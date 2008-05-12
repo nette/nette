@@ -18,13 +18,13 @@ $cache = new Cache(new /*Nette::Caching::*/FileStorage("$tmpDir/prefix-"));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'expire' => time() + 2,
+	'expire' => time() + 2,
 ));
 
 
 for($i = 0; $i < 4; $i++) {
-    echo "Sleeping 1 second\n";
-    sleep(1);
-    echo "Is cached?";
-    Debug::dump(isset($cache[$key]));
+	echo "Sleeping 1 second\n";
+	sleep(1);
+	echo "Is cached?";
+	Debug::dump(isset($cache[$key]));
 }

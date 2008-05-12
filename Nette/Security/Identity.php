@@ -36,62 +36,62 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Identity extends /*Nette::*/Object implements IIdentity
 {
-    /** @var string */
-    private $name;
+	/** @var string */
+	private $name;
 
-    /** @var array */
-    private $roles;
+	/** @var array */
+	private $roles;
 
-    /** @var array */
-    private $data;
-
-
-    /**
-     * @param  string  identity name
-     * @param  array   roles
-     * @param  array   user data
-     */
-    public function __construct($name, array $roles = NULL, $data = NULL)
-    {
-        $this->name = (string) $name;
-        $this->roles = $roles;
-        $this->data = (array) $data;
-    }
+	/** @var array */
+	private $data;
 
 
-
-    /**
-     * Returns the name of user.
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+	/**
+	 * @param  string  identity name
+	 * @param  array   roles
+	 * @param  array   user data
+	 */
+	public function __construct($name, array $roles = NULL, $data = NULL)
+	{
+		$this->name = (string) $name;
+		$this->roles = $roles;
+		$this->data = (array) $data;
+	}
 
 
 
-    /**
-     * Returns a list of roles that the user is a member of.
-     * @return array
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
+	/**
+	 * Returns the name of user.
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
 
 
 
-    /**
-     * @return array
-     */
-    protected function &__get($key)
-    {
-        if (array_key_exists($key, $this->data)) {
-            return $this->data[$key];
-        } else {
-            return parent::__get($key);
-        }
-    }
+	/**
+	 * Returns a list of roles that the user is a member of.
+	 * @return array
+	 */
+	public function getRoles()
+	{
+		return $this->roles;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	protected function &__get($key)
+	{
+		if (array_key_exists($key, $this->data)) {
+			return $this->data[$key];
+		} else {
+			return parent::__get($key);
+		}
+	}
 
 }

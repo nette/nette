@@ -37,141 +37,141 @@ require_once dirname(__FILE__) . '/../Collections/IList.php';
  */
 class ArrayList extends Collection implements IList
 {
-    /** @var int */
-    protected $base = 0;
+	/** @var int */
+	protected $base = 0;
 
 
-    /**
-     * Inserts the specified element at the specified position in this list.
-     * @param  int
-     * @param  mixed
-     * @return bool
-     * @throws ::ArgumentOutOfRangeException
-     */
-    public function insertAt($index, $item)
-    {
-        $index -= $this->base;
-        if ($index < 0 || $index > count($this->data)) {
-            throw new /*::*/ArgumentOutOfRangeException;
-        }
+	/**
+	 * Inserts the specified element at the specified position in this list.
+	 * @param  int
+	 * @param  mixed
+	 * @return bool
+	 * @throws ::ArgumentOutOfRangeException
+	 */
+	public function insertAt($index, $item)
+	{
+		$index -= $this->base;
+		if ($index < 0 || $index > count($this->data)) {
+			throw new /*::*/ArgumentOutOfRangeException;
+		}
 
-        $this->beforeAdd($item);
-        array_splice($this->data, (int) $index, 0, array($item));
-        return TRUE;
-    }
-
-
-
-    /**
-     * Removes the first occurrence of the specified element.
-     * @param  mixed
-     * @return bool  true if this list changed as a result of the call
-     * @throws ::NotSupportedException
-     */
-    public function remove($item)
-    {
-        $this->beforeRemove();
-
-        $index = $this->search($item);
-        if ($index === FALSE) {
-            return FALSE;
-        } else {
-            array_splice($this->data, $index, 1);
-            return TRUE;
-        }
-    }
+		$this->beforeAdd($item);
+		array_splice($this->data, (int) $index, 0, array($item));
+		return TRUE;
+	}
 
 
 
-    /**
-     * Returns the index of the first occurrence of the specified element,.
-     * or FALSE if this list does not contain this element.
-     * @param  mixed
-     * @return int|FALSE
-     */
-    public function indexOf($item)
-    {
-        $index = $this->search($item);
-        return $index === FALSE ? FALSE : $this->base + $index;
-    }
+	/**
+	 * Removes the first occurrence of the specified element.
+	 * @param  mixed
+	 * @return bool  true if this list changed as a result of the call
+	 * @throws ::NotSupportedException
+	 */
+	public function remove($item)
+	{
+		$this->beforeRemove();
+
+		$index = $this->search($item);
+		if ($index === FALSE) {
+			return FALSE;
+		} else {
+			array_splice($this->data, $index, 1);
+			return TRUE;
+		}
+	}
 
 
 
-    /********************* interface ::ArrayAccess ****************d*g**/
+	/**
+	 * Returns the index of the first occurrence of the specified element,.
+	 * or FALSE if this list does not contain this element.
+	 * @param  mixed
+	 * @return int|FALSE
+	 */
+	public function indexOf($item)
+	{
+		$index = $this->search($item);
+		return $index === FALSE ? FALSE : $this->base + $index;
+	}
 
 
 
-    /**
-     * Replaces (or appends) the item (::ArrayAccess implementation).
-     * @param  int index
-     * @param  object
-     * @return void
-     * @throws ::InvalidArgumentException, ::NotSupportedException, ::ArgumentOutOfRangeException
-     */
-    public function offsetSet($index, $item)
-    {
-        $this->beforeAdd($item);
-
-        if ($index === NULL)  { // append
-            $this->data[] = $item;
-
-        } else { // replace
-            $index -= $this->base;
-            if ($index < 0 || $index >= count($this->data)) {
-                throw new /*::*/ArgumentOutOfRangeException;
-            }
-            $this->data[$index] = $item;
-        }
-    }
+	/********************* interface ::ArrayAccess ****************d*g**/
 
 
 
-    /**
-     * Returns item (::ArrayAccess implementation).
-     * @param  int index
-     * @return mixed
-     * @throws ::ArgumentOutOfRangeException
-     */
-    public function offsetGet($index)
-    {
-        $index -= $this->base;
-        if ($index < 0 || $index >= count($this->data)) {
-            throw new /*::*/ArgumentOutOfRangeException;
-        }
+	/**
+	 * Replaces (or appends) the item (::ArrayAccess implementation).
+	 * @param  int index
+	 * @param  object
+	 * @return void
+	 * @throws ::InvalidArgumentException, ::NotSupportedException, ::ArgumentOutOfRangeException
+	 */
+	public function offsetSet($index, $item)
+	{
+		$this->beforeAdd($item);
 
-        return $this->data[$index];
-    }
+		if ($index === NULL)  { // append
+			$this->data[] = $item;
 
-
-
-    /**
-     * Exists item? (::ArrayAccess implementation).
-     * @param  int index
-     * @return bool
-     */
-    public function offsetExists($index)
-    {
-        $index -= $this->base;
-        return $index >= 0 && $index < count($this->data);
-    }
+		} else { // replace
+			$index -= $this->base;
+			if ($index < 0 || $index >= count($this->data)) {
+				throw new /*::*/ArgumentOutOfRangeException;
+			}
+			$this->data[$index] = $item;
+		}
+	}
 
 
 
-    /**
-     * Removes the element at the specified position in this list.
-     * @param  int index
-     * @return void
-     * @throws ::NotSupportedException, ::ArgumentOutOfRangeException
-     */
-    public function offsetUnset($index)
-    {
-        $index -= $this->base;
-        if ($index < 0 || $index >= count($this->data)) {
-            throw new /*::*/ArgumentOutOfRangeException;
-        }
+	/**
+	 * Returns item (::ArrayAccess implementation).
+	 * @param  int index
+	 * @return mixed
+	 * @throws ::ArgumentOutOfRangeException
+	 */
+	public function offsetGet($index)
+	{
+		$index -= $this->base;
+		if ($index < 0 || $index >= count($this->data)) {
+			throw new /*::*/ArgumentOutOfRangeException;
+		}
 
-        $this->beforeRemove();
-        array_splice($this->data, (int) $index, 1);
-    }
+		return $this->data[$index];
+	}
+
+
+
+	/**
+	 * Exists item? (::ArrayAccess implementation).
+	 * @param  int index
+	 * @return bool
+	 */
+	public function offsetExists($index)
+	{
+		$index -= $this->base;
+		return $index >= 0 && $index < count($this->data);
+	}
+
+
+
+	/**
+	 * Removes the element at the specified position in this list.
+	 * @param  int index
+	 * @return void
+	 * @throws ::NotSupportedException, ::ArgumentOutOfRangeException
+	 */
+	public function offsetUnset($index)
+	{
+		$index -= $this->base;
+		if ($index < 0 || $index >= count($this->data)) {
+			throw new /*::*/ArgumentOutOfRangeException;
+		}
+
+		$this->beforeRemove();
+		array_splice($this->data, (int) $index, 1);
+	}
 
 }

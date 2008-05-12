@@ -11,20 +11,20 @@ require_once '../../Nette/loader.php';
 
 class Person
 {
-    private $name;
+	private $name;
 
 
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
+	public function __construct($name)
+	{
+		$this->name = $name;
+	}
 
 
 
-    public function sayHi()
-    {
-        echo "My name is $this->name\n";
-    }
+	public function sayHi()
+	{
+		echo "My name is $this->name\n";
+	}
 
 }
 
@@ -50,10 +50,10 @@ echo "Adding Larry\n";
 Debug::dump($set->add($larry));
 
 try {
-    echo "Adding foo\n";
-    Debug::dump($set->add($foo));
+	echo "Adding foo\n";
+	Debug::dump($set->add($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -66,10 +66,10 @@ echo "Removing Larry second time\n";
 Debug::dump($set->remove($larry));
 
 try {
-    echo "Removing foo\n";
-    Debug::dump($set->remove($foo));
+	echo "Removing foo\n";
+	Debug::dump($set->remove($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -81,10 +81,10 @@ echo "Contains Larry?\n";
 Debug::dump($set->contains($larry));
 
 try {
-    echo "Contains foo?\n";
-    Debug::dump($set->contains($foo));
+	echo "Contains foo?\n";
+	Debug::dump($set->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -97,7 +97,7 @@ echo "Count: ", count($set), "\n";
 // ISet::getIterator
 echo "Get Interator:\n";
 foreach ($set as $person) {
-    $person->sayHi();
+	$person->sayHi();
 }
 
 
@@ -111,7 +111,7 @@ echo "Clearing\n";
 $set->clear();
 
 foreach ($set as $person) {
-    $person->sayHi();
+	$person->sayHi();
 }
 
 
@@ -146,20 +146,20 @@ Debug::dump($set->toArray());
 
 // Set::__construct()
 try {
-    echo "Construct from collection\n";
-    $set = new Set(array($jack, $mary, $foo));
-    $set2 = new Set($set, 'Person');
+	echo "Construct from collection\n";
+	$set = new Set(array($jack, $mary, $foo));
+	$set2 = new Set($set, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
 try {
-    echo "Construct from array\n";
-    $arr = array($jack, $mary, $foo);
-    $set2 = new Set($arr, 'Person');
+	echo "Construct from array\n";
+	$arr = array($jack, $mary, $foo);
+	$set2 = new Set($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -170,22 +170,22 @@ $set2->setReadOnly();
 Debug::dump($set2->isReadOnly());
 
 try {
-    echo "Adding Jack\n";
-    Debug::dump($set2->add($jack));
+	echo "Adding Jack\n";
+	Debug::dump($set2->add($jack));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Removing Jack\n";
-    $set2->remove($jack);
+	echo "Removing Jack\n";
+	$set2->remove($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Clearing\n";
-    $set2->clear();
+	echo "Clearing\n";
+	$set2->clear();
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

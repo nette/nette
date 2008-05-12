@@ -36,31 +36,31 @@ require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
 class TemplateStorage extends FileStorage
 {
 
-    /**
-     * Reads cache data from disk.
-     * @param  array
-     * @return mixed
-     */
-    protected function readData($meta)
-    {
-        return array(
-            'file' => $meta['file'],
-            'handle' => $meta['handle'],
-        );
-    }
+	/**
+	 * Reads cache data from disk.
+	 * @param  array
+	 * @return mixed
+	 */
+	protected function readData($meta)
+	{
+		return array(
+			'file' => $meta['file'],
+			'handle' => $meta['handle'],
+		);
+	}
 
 
 
-    /**
-     * Returns file name.
-     * @param  string
-     * @return string
-     */
-    protected function getDataFile($key)
-    {
-        $path = $this->base . urlencode($key);
-        if (substr($path, -5) !== '.phtml') $path .= '.phtml';
-        return $path;
-    }
+	/**
+	 * Returns file name.
+	 * @param  string
+	 * @return string
+	 */
+	protected function getDataFile($key)
+	{
+		$path = $this->base . urlencode($key);
+		if (substr($path, -5) !== '.phtml') $path .= '.phtml';
+		return $path;
+	}
 
 }

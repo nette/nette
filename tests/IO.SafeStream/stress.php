@@ -15,28 +15,28 @@ set_time_limit(0);
 
 function timer()
 {
-    static $lastTime = 0;
-    list($usec, $sec) = explode(" ",microtime(false));
-    $delta = ((float) $usec + (float) $sec) - $lastTime;
-    $lastTime += $delta;
-    return $delta;
+	static $lastTime = 0;
+	list($usec, $sec) = explode(" ",microtime(false));
+	$delta = ((float) $usec + (float) $sec) - $lastTime;
+	$lastTime += $delta;
+	return $delta;
 }
 
 
 
 function randomStr()
 {
-    $s = str_repeat('LaTrine', rand(100, 20000));
-    $hash = sha1($s);
-    return serialize(array($s, $hash));
+	$s = str_repeat('LaTrine', rand(100, 20000));
+	$hash = sha1($s);
+	return serialize(array($s, $hash));
 }
 
 
 
 function checkStr($s)
 {
-    @list($s, $hash) = unserialize($s);
-    return $hash === sha1($s);
+	@list($s, $hash) = unserialize($s);
+	return $hash === sha1($s);
 }
 
 
@@ -47,7 +47,7 @@ define('COUNT_FILES', 3);
 
 // clear playground
 for ($i=0; $i<=COUNT_FILES; $i++)
-    file_put_contents('safe://tmp/testfile'.$i, randomStr());
+	file_put_contents('safe://tmp/testfile'.$i, randomStr());
 
 
 // test loop
@@ -56,21 +56,21 @@ timer();
 
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
-    // write
-    $ok = @file_put_contents('safe://tmp/testfile'.rand(0, COUNT_FILES), randomStr());
-    if ($ok === FALSE) $hits['cantwrite']++;
+	// write
+	$ok = @file_put_contents('safe://tmp/testfile'.rand(0, COUNT_FILES), randomStr());
+	if ($ok === FALSE) $hits['cantwrite']++;
 
-    // delete
+	// delete
 //    $ok = @unlink('safe://testfile'.rand(0, COUNT_FILES));
 //    if (!$ok) $hits['cantdelete']++;
 
-    // read
-    $res = @file_get_contents('safe://tmp/testfile'.rand(0, COUNT_FILES));
+	// read
+	$res = @file_get_contents('safe://tmp/testfile'.rand(0, COUNT_FILES));
 
-    // compare
-    if ($res === FALSE)  $hits['notfound']++;
-    elseif (checkStr($res)) $hits['ok']++;
-    else $hits['error']++;
+	// compare
+	if ($res === FALSE)  $hits['notfound']++;
+	elseif (checkStr($res)) $hits['ok']++;
+	else $hits['error']++;
 }
 $time = timer();
 

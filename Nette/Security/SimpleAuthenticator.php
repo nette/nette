@@ -40,43 +40,43 @@ require_once dirname(__FILE__) . '/../Security/AuthenticationException.php';
  */
 class SimpleAuthenticator extends /*Nette::*/Object implements IAuthenticator
 {
-    /** @var array */
-    private $userlist;
+	/** @var array */
+	private $userlist;
 
 
-    /**
-     * @param  array  list of usernames and passwords
-     */
-    public function __construct(array $userlist)
-    {
-        $this->userlist = $userlist;
-    }
+	/**
+	 * @param  array  list of usernames and passwords
+	 */
+	public function __construct(array $userlist)
+	{
+		$this->userlist = $userlist;
+	}
 
 
 
-    /**
-     * Performs an authentication against e.g. database.
-     * and returns IIdentity on success or throws AuthenticationException
-     *
-     * @param  array
-     * @return IIdentity
-     * @throws AuthenticationException
-     */
-    public function authenticate(array $credentials)
-    {
-        $username = $credentials['username'];
-        foreach ($this->userlist as $name => $pass) {
-            if (strcasecmp($name, $credentials['username']) === 0) {
-                if (strcasecmp($pass, $credentials['password']) === 0) {
-                    // matched!
-                    return new Identity($name);
-                }
+	/**
+	 * Performs an authentication against e.g. database.
+	 * and returns IIdentity on success or throws AuthenticationException
+	 *
+	 * @param  array
+	 * @return IIdentity
+	 * @throws AuthenticationException
+	 */
+	public function authenticate(array $credentials)
+	{
+		$username = $credentials['username'];
+		foreach ($this->userlist as $name => $pass) {
+			if (strcasecmp($name, $credentials['username']) === 0) {
+				if (strcasecmp($pass, $credentials['password']) === 0) {
+					// matched!
+					return new Identity($name);
+				}
 
-                throw new AuthenticationException('Invalid password', AuthenticationException::INVALID_CREDENTIAL);
-            }
-        }
+				throw new AuthenticationException('Invalid password', AuthenticationException::INVALID_CREDENTIAL);
+			}
+		}
 
-        throw new AuthenticationException('User not found', AuthenticationException::IDENTITY_NOT_FOUND);
-    }
+		throw new AuthenticationException('User not found', AuthenticationException::IDENTITY_NOT_FOUND);
+	}
 
 }

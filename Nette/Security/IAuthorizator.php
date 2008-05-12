@@ -33,13 +33,13 @@
 interface IAuthorizator
 {
 
-    /**
-     * Performs an role-based authorization.
-     * @param  string  role
-     * @param  string  resource
-     * @param  string  privilege
-     * @return bool
-     */
-    function isAllowed();
+	/**
+	 * Performs an role-based authorization.
+	 * @param  string  role
+	 * @param  string  resource
+	 * @param  string  privilege
+	 * @return bool
+	 */
+	function isAllowed();
 
 }

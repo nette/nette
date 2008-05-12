@@ -32,10 +32,10 @@
 interface ICausedException
 {
 
-    /**
-     * Gets the Exception instance that caused the current exception.
-     * @return ::Exception
-     */
-    function getCause();
+	/**
+	 * Gets the Exception instance that caused the current exception.
+	 * @return ::Exception
+	 */
+	function getCause();
 
 }

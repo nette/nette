@@ -68,9 +68,9 @@ echo $el[1]->getParent()->count(), "\n";
 
 // add child
 try {
-    $el->add($child);
+	$el->add($child);
 } catch (Exception $e) {
-    echo $e->getMessage(), "\n";
+	echo $e->getMessage(), "\n";
 }
 
 $child = clone $el[1];

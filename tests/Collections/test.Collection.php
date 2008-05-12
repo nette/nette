@@ -11,20 +11,20 @@ require_once '../../Nette/loader.php';
 
 class Person
 {
-    private $name;
+	private $name;
 
 
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
+	public function __construct($name)
+	{
+		$this->name = $name;
+	}
 
 
 
-    public function sayHi()
-    {
-        echo "My name is $this->name\n";
-    }
+	public function sayHi()
+	{
+		echo "My name is $this->name\n";
+	}
 
 }
 
@@ -40,10 +40,10 @@ echo "Adding numeric\n";
 $collection->add(12.2);
 
 try {
-    echo "Adding non-numeric\n";
-    $collection->add('hello');
+	echo "Adding non-numeric\n";
+	$collection->add('hello');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -68,10 +68,10 @@ echo "Adding Larry\n";
 $collection->add($larry);
 
 try {
-    echo "Adding foo\n";
-    $collection->add($foo);
+	echo "Adding foo\n";
+	$collection->add($foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -84,10 +84,10 @@ echo "Removing Larry second time\n";
 Debug::dump($collection->remove($larry));
 
 try {
-    echo "Removing foo\n";
-    Debug::dump($collection->remove($foo));
+	echo "Removing foo\n";
+	Debug::dump($collection->remove($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -99,10 +99,10 @@ echo "Contains Larry?\n";
 Debug::dump($collection->contains($larry));
 
 try {
-    echo "Contains foo?\n";
-    Debug::dump($collection->contains($foo));
+	echo "Contains foo?\n";
+	Debug::dump($collection->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -115,8 +115,8 @@ echo "Count: ", count($collection), "\n";
 // ICollection::getIterator
 echo "Get Interator:\n";
 foreach ($collection as & $person) {
-    $person->sayHi();
-    $person = 10; // try modify
+	$person->sayHi();
+	$person = 10; // try modify
 }
 
 
@@ -130,27 +130,27 @@ echo "Clearing\n";
 $collection->clear();
 
 foreach ($collection as $person) {
-    $person->sayHi();
+	$person->sayHi();
 }
 
 
 
 // Collection::__construct()
 try {
-    echo "Construct from collection\n";
-    $collection = new Collection(array($jack, $mary, $foo));
-    $collection2 = new Collection($collection, 'Person');
+	echo "Construct from collection\n";
+	$collection = new Collection(array($jack, $mary, $foo));
+	$collection2 = new Collection($collection, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
 try {
-    echo "Construct from array\n";
-    $arr = array($jack, $mary, $foo);
-    $collection2 = new Collection($arr, 'Person');
+	echo "Construct from array\n";
+	$arr = array($jack, $mary, $foo);
+	$collection2 = new Collection($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -161,28 +161,28 @@ $collection2->setReadOnly();
 Debug::dump($collection2->isReadOnly());
 
 try {
-    echo "Adding Jack\n";
-    $collection2->add($jack);
+	echo "Adding Jack\n";
+	$collection2->add($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Removing Jack\n";
-    $collection2->remove($jack);
+	echo "Removing Jack\n";
+	$collection2->remove($jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Clearing\n";
-    $collection2->clear();
+	echo "Clearing\n";
+	$collection2->clear();
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 foreach ($collection2 as $key => & $val) {
-    $val = FALSE;
+	$val = FALSE;
 }
 echo "Contains Jack?\n";
 Debug::dump($collection2->contains($jack));

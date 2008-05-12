@@ -30,43 +30,43 @@
  */
 interface IHttpResponse
 {
-    /**
-     * Sets HTTP response code.
-     * @param  int
-     * @return void
-     */
-    function setCode($code);
+	/**
+	 * Sets HTTP response code.
+	 * @param  int
+	 * @return void
+	 */
+	function setCode($code);
 
-    /**
-     * Returns HTTP response code.
-     * @return int
-     */
-    function getCode();
+	/**
+	 * Returns HTTP response code.
+	 * @return int
+	 */
+	function getCode();
 
-    function setHeader($header, $replace = FALSE);
+	function setHeader($header, $replace = FALSE);
 
-    function getHeader($header);
+	function getHeader($header);
 
-    /**
-     * Defines a new cookie.
-     * @param  string name of the cookie.
-     * @param  string value
-     * @param  int expiration as unix timestamp
-     * @param  string
-     * @param  string
-     * @param  bool
-     * @return void
-     */
-    function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL);
+	/**
+	 * Defines a new cookie.
+	 * @param  string name of the cookie.
+	 * @param  string value
+	 * @param  int expiration as unix timestamp
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @return void
+	 */
+	function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL);
 
-    /**
-     * Deletes a cookie.
-     * @param  string name of the cookie.
-     * @param  string
-     * @param  string
-     * @param  bool
-     * @return void
-     */
-    function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL);
+	/**
+	 * Deletes a cookie.
+	 * @param  string name of the cookie.
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @return void
+	 */
+	function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL);
 
 }

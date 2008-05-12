@@ -32,24 +32,24 @@
 interface IServiceLocator
 {
 
-    /**
-     * Adds the specified service to the service container.
-     */
-    function addService($service, $promote = FALSE);
+	/**
+	 * Adds the specified service to the service container.
+	 */
+	function addService($service, $promote = FALSE);
 
-    /**
-     * Removes the specified service type from the service container.
-     */
-    function removeService($type, $promote = FALSE);
+	/**
+	 * Removes the specified service type from the service container.
+	 */
+	function removeService($type, $promote = FALSE);
 
-    /**
-     * Gets the service object of the specified type.
-     */
-    function getService($type);
+	/**
+	 * Gets the service object of the specified type.
+	 */
+	function getService($type);
 
-    /**
-     * Returns the container if any.
-     * @return IServiceLocator|NULL
-     */
-    function getParent();
+	/**
+	 * Returns the container if any.
+	 * @return IServiceLocator|NULL
+	 */
+	function getParent();
 }

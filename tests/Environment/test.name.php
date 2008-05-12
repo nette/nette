@@ -16,10 +16,10 @@ Debug::dump(Environment::getName());
 
 
 try {
-    echo "Setting name:\n";
-    Environment::setName('lab2');
-    Debug::dump(Environment::getName());
+	echo "Setting name:\n";
+	Environment::setName('lab2');
+	Debug::dump(Environment::getName());
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

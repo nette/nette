@@ -35,189 +35,189 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Cache extends /*Nette::*/Object implements ArrayAccess
 {
-    /** @var ICacheStorage */
-    private $storage;
+	/** @var ICacheStorage */
+	private $storage;
 
-    /** @var string */
-    private $namespace;
+	/** @var string */
+	private $namespace;
 
-    /** @var string  last query cache */
-    private $key;
+	/** @var string  last query cache */
+	private $key;
 
-    /** @var mixed  last query cache */
-    private $data;
-
-
-
-    public function __construct(ICacheStorage $storage, $namespace = NULL)
-    {
-        $this->storage = $storage;
-        $this->namespace = $namespace == NULL ? '' : $namespace . "\x00";
-    }
+	/** @var mixed  last query cache */
+	private $data;
 
 
 
-    /**
-     * Returns cache storage.
-     * @return ICacheStorage
-     */
-    public function getStorage()
-    {
-        return $this->storage;
-    }
+	public function __construct(ICacheStorage $storage, $namespace = NULL)
+	{
+		$this->storage = $storage;
+		$this->namespace = $namespace == NULL ? '' : $namespace . "\x00";
+	}
 
 
 
-    /**
-     * Returns cache namespace.
-     * @return string
-     */
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
+	/**
+	 * Returns cache storage.
+	 * @return ICacheStorage
+	 */
+	public function getStorage()
+	{
+		return $this->storage;
+	}
 
 
 
-    /**
-     * Discards the internal cache.
-     * @return void
-     */
-    public function release()
-    {
-        $this->key = $this->data = NULL;
-    }
+	/**
+	 * Returns cache namespace.
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		return $this->namespace;
+	}
 
 
 
-    /**
-     * Writes item into the cache.
-     * Dependencies are:
-     *       priority => (int) priority
-     *       expire => (timestamp) expiration
-     *       refresh => (bool) use sliding expiration?
-     *       tags => (array) tags
-     *       files => (array|string) file names
-     *       items => (array|string) cache items
-     *
-     * @param  string key
-     * @param  mixed
-     * @param  array
-     * @param  bool
-     * @return void
-     * @throws ::InvalidArgumentException
-     */
-    public function save($key, $data, array $dependencies = NULL, $rewrite = TRUE)
-    {
-        if (!is_string($key)) {
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
-
-        $this->key = NULL;
-
-        if (!$rewrite && $this->offsetGet($key) !== NULL) return;
-
-        if ($dependencies === NULL) $dependencies = array();
-        $this->storage->write($this->namespace . $key, $data, $dependencies);
-    }
+	/**
+	 * Discards the internal cache.
+	 * @return void
+	 */
+	public function release()
+	{
+		$this->key = $this->data = NULL;
+	}
 
 
 
-    /**
-     * Removes items from the cache by conditions.
-     * @param  array
-     * @return void
-     */
-    public function clean(array $conds = NULL)
-    {
-        if ($conds === NULL) $conds = array();
-        $this->storage->clean($conds);
-    }
+	/**
+	 * Writes item into the cache.
+	 * Dependencies are:
+	 *       priority => (int) priority
+	 *       expire => (timestamp) expiration
+	 *       refresh => (bool) use sliding expiration?
+	 *       tags => (array) tags
+	 *       files => (array|string) file names
+	 *       items => (array|string) cache items
+	 *
+	 * @param  string key
+	 * @param  mixed
+	 * @param  array
+	 * @param  bool
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	public function save($key, $data, array $dependencies = NULL, $rewrite = TRUE)
+	{
+		if (!is_string($key)) {
+			throw new /*::*/InvalidArgumentException('Key must be a string.');
+		}
+
+		$this->key = NULL;
+
+		if (!$rewrite && $this->offsetGet($key) !== NULL) return;
+
+		if ($dependencies === NULL) $dependencies = array();
+		$this->storage->write($this->namespace . $key, $data, $dependencies);
+	}
 
 
 
-    /********************* interface ::ArrayAccess ****************d*g**/
+	/**
+	 * Removes items from the cache by conditions.
+	 * @param  array
+	 * @return void
+	 */
+	public function clean(array $conds = NULL)
+	{
+		if ($conds === NULL) $conds = array();
+		$this->storage->clean($conds);
+	}
 
 
 
-    /**
-     * Inserts (replaces) item into the cache (::ArrayAccess implementation).
-     * @param  string key
-     * @param  mixed
-     * @return void
-     * @throws ::InvalidArgumentException
-     */
-    public function offsetSet($key, $data)
-    {
-        if (!is_string($key)) { // prevents NULL
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
-
-        $this->key = $this->data = NULL;
-        if ($data === NULL) {
-            $this->storage->remove($this->namespace . $key);
-        } else {
-            $this->storage->write($this->namespace . $key, $data, array());
-        }
-    }
+	/********************* interface ::ArrayAccess ****************d*g**/
 
 
 
-    /**
-     * Retrieves the specified item from the cache or NULL if the key is not found (::ArrayAccess implementation).
-     * @param  string key
-     * @return mixed|NULL
-     * @throws ::InvalidArgumentException
-     */
-    public function offsetGet($key)
-    {
-        if (!is_string($key)) {
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
+	/**
+	 * Inserts (replaces) item into the cache (::ArrayAccess implementation).
+	 * @param  string key
+	 * @param  mixed
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	public function offsetSet($key, $data)
+	{
+		if (!is_string($key)) { // prevents NULL
+			throw new /*::*/InvalidArgumentException('Key must be a string.');
+		}
 
-        if ($this->key === $key) {
-            return $this->data;
-        }
-        $this->key = $key;
-        $this->data = $this->storage->read($this->namespace . $key);
-        return $this->data;
-    }
-
-
-
-    /**
-     * Exists item in cache? (::ArrayAccess implementation).
-     * @param  string key
-     * @return bool
-     * @throws ::InvalidArgumentException
-     */
-    public function offsetExists($key)
-    {
-        if (!is_string($key)) {
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
-
-        $this->key = $key;
-        $this->data = $this->storage->read($this->namespace . $key);
-        return $this->data !== NULL;
-    }
+		$this->key = $this->data = NULL;
+		if ($data === NULL) {
+			$this->storage->remove($this->namespace . $key);
+		} else {
+			$this->storage->write($this->namespace . $key, $data, array());
+		}
+	}
 
 
 
-    /**
-     * Removes the specified item from the cache.
-     * @param  string key
-     * @return void
-     * @throws ::InvalidArgumentException
-     */
-    public function offsetUnset($key)
-    {
-        if (!is_string($key)) {
-            throw new /*::*/InvalidArgumentException('Key must be a string.');
-        }
+	/**
+	 * Retrieves the specified item from the cache or NULL if the key is not found (::ArrayAccess implementation).
+	 * @param  string key
+	 * @return mixed|NULL
+	 * @throws ::InvalidArgumentException
+	 */
+	public function offsetGet($key)
+	{
+		if (!is_string($key)) {
+			throw new /*::*/InvalidArgumentException('Key must be a string.');
+		}
 
-        $this->key = $this->data = NULL;
-        $this->storage->remove($this->namespace . $key);
-    }
+		if ($this->key === $key) {
+			return $this->data;
+		}
+		$this->key = $key;
+		$this->data = $this->storage->read($this->namespace . $key);
+		return $this->data;
+	}
+
+
+
+	/**
+	 * Exists item in cache? (::ArrayAccess implementation).
+	 * @param  string key
+	 * @return bool
+	 * @throws ::InvalidArgumentException
+	 */
+	public function offsetExists($key)
+	{
+		if (!is_string($key)) {
+			throw new /*::*/InvalidArgumentException('Key must be a string.');
+		}
+
+		$this->key = $key;
+		$this->data = $this->storage->read($this->namespace . $key);
+		return $this->data !== NULL;
+	}
+
+
+
+	/**
+	 * Removes the specified item from the cache.
+	 * @param  string key
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	public function offsetUnset($key)
+	{
+		if (!is_string($key)) {
+			throw new /*::*/InvalidArgumentException('Key must be a string.');
+		}
+
+		$this->key = $this->data = NULL;
+		$this->storage->remove($this->namespace . $key);
+	}
 
 }

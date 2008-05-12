@@ -32,14 +32,14 @@
 interface IAuthenticator
 {
 
-    /**
-     * Performs an authentication against e.g. database.
-     * and returns IIdentity on success or throws AuthenticationException
-     *
-     * @param  array
-     * @return IIdentity
-     * @throws AuthenticationException
-     */
-    function authenticate(array $credentials);
+	/**
+	 * Performs an authentication against e.g. database.
+	 * and returns IIdentity on success or throws AuthenticationException
+	 *
+	 * @param  array
+	 * @return IIdentity
+	 * @throws AuthenticationException
+	 */
+	function authenticate(array $credentials);
 
 }

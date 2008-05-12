@@ -35,181 +35,181 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class SessionNamespace extends /*Nette::*/Object implements /*::*/IteratorAggregate
 {
-    /** @var array  session data storage */
-    private $data;
+	/** @var array  session data storage */
+	private $data;
 
-    /** @var array  session metadata storage */
-    private $meta;
+	/** @var array  session metadata storage */
+	private $meta;
 
-    /** @var bool */
-    public $warnOnUndefined = FALSE;
-
-
-
-    /**
-     * Do not call directly. Use Session::getNamespace().
-     */
-    public function __construct(& $data, & $meta)
-    {
-        $this->data = & $data;
-        $this->meta = & $meta;
-    }
+	/** @var bool */
+	public $warnOnUndefined = FALSE;
 
 
 
-    /**
-     * Returns an iterator over all namespace variables.
-     * @return ::ArrayIterator
-     */
-    public function getIterator()
-    {
-        if (isset($this->data)) {
-            return new /*::*/ArrayIterator($this->data);
-        } else {
-            return new /*::*/ArrayIterator;
-        }
-    }
+	/**
+	 * Do not call directly. Use Session::getNamespace().
+	 */
+	public function __construct(& $data, & $meta)
+	{
+		$this->data = & $data;
+		$this->meta = & $meta;
+	}
 
 
 
-    /**
-     * Sets a variable in this session namespace.
-     *
-     * @param  string  name
-     * @param  mixed   value
-     * @return void
-     * @throws ::InvalidArgumentException
-     */
-    protected function __set($name, $value)
-    {
-        if ($name === '') {
-            throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
-        }
-
-        $this->data[$name] = $value;
-    }
+	/**
+	 * Returns an iterator over all namespace variables.
+	 * @return ::ArrayIterator
+	 */
+	public function getIterator()
+	{
+		if (isset($this->data)) {
+			return new /*::*/ArrayIterator($this->data);
+		} else {
+			return new /*::*/ArrayIterator;
+		}
+	}
 
 
 
-    /**
-     * Gets a variable from this session namespace.
-     *
-     * @param  string    name
-     * @return mixed
-     * @throws ::InvalidArgumentException
-     */
-    protected function &__get($name)
-    {
-        if ($name === '') {
-            throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
-        }
+	/**
+	 * Sets a variable in this session namespace.
+	 *
+	 * @param  string  name
+	 * @param  mixed   value
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	protected function __set($name, $value)
+	{
+		if ($name === '') {
+			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		}
 
-        if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
-            trigger_error("The variable '$name' does not exist", E_USER_WARNING);
-        }
-
-        return $this->data[$name];
-    }
+		$this->data[$name] = $value;
+	}
 
 
 
-    /**
-     * Determines if a variable in this session namespace is set.
-     *
-     * @param  string    name
-     * @return bool
-     */
-    protected function __isset($name)
-    {
-        return isset($this->data[$name]);
-    }
+	/**
+	 * Gets a variable from this session namespace.
+	 *
+	 * @param  string    name
+	 * @return mixed
+	 * @throws ::InvalidArgumentException
+	 */
+	protected function &__get($name)
+	{
+		if ($name === '') {
+			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		}
+
+		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
+			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
+		}
+
+		return $this->data[$name];
+	}
 
 
 
-    /**
-     * Unsets a variable in this session namespace.
-     *
-     * @param  string    name
-     * @return void
-     * @throws ::InvalidArgumentException
-     */
-    protected function __unset($name)
-    {
-        if ($name === '') {
-            throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
-        }
-
-        unset($this->data[$name], $this->meta['EXP'][$name]);
-        Session::clean();
-    }
+	/**
+	 * Determines if a variable in this session namespace is set.
+	 *
+	 * @param  string    name
+	 * @return bool
+	 */
+	protected function __isset($name)
+	{
+		return isset($this->data[$name]);
+	}
 
 
 
-    /**
-     * Sets the expiration of the namespace or specific variables.
-     * @param  int     time in seconds
-     * @param  mixed   optional list of variables / single variable to expire
-     * @return void
-     */
-    public function setExpiration($seconds, $variables = NULL)
-    {
-        if ($seconds <= 0) {
-            $this->removeExpiration($variables);
-            return;
-        }
+	/**
+	 * Unsets a variable in this session namespace.
+	 *
+	 * @param  string    name
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	protected function __unset($name)
+	{
+		if ($name === '') {
+			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		}
 
-        $seconds += time();
-        if ($variables === NULL) {
-            // to entire namespace
-            $this->meta['EXP'][''] = $seconds;
-
-        } elseif (is_array($variables)) {
-            // to variables
-            foreach ($variables as $variable) {
-                $this->meta['EXP'][$variable] = $seconds;
-            }
-
-        } else {
-            $this->meta['EXP'][$variables] = $seconds;
-        }
-    }
+		unset($this->data[$name], $this->meta['EXP'][$name]);
+		Session::clean();
+	}
 
 
 
-    /**
-     * Removes the expiration from the namespace or specific variables.
-     * @param  mixed   optional list of variables / single variable to expire
-     * @return void
-     */
-    public function removeExpiration($variables = NULL)
-    {
-        if ($variables === NULL) {
-            // from entire namespace
-            unset($this->meta['EXP']['']);
+	/**
+	 * Sets the expiration of the namespace or specific variables.
+	 * @param  int     time in seconds
+	 * @param  mixed   optional list of variables / single variable to expire
+	 * @return void
+	 */
+	public function setExpiration($seconds, $variables = NULL)
+	{
+		if ($seconds <= 0) {
+			$this->removeExpiration($variables);
+			return;
+		}
 
-        } elseif (is_array($variables)) {
-            // from variables
-            foreach ($variables as $variable) {
-                unset($this->meta['EXP'][$variable]);
-            }
-        } else {
-            unset($this->meta['EXP'][$variables]);
-        }
+		$seconds += time();
+		if ($variables === NULL) {
+			// to entire namespace
+			$this->meta['EXP'][''] = $seconds;
 
-        Session::clean();
-    }
+		} elseif (is_array($variables)) {
+			// to variables
+			foreach ($variables as $variable) {
+				$this->meta['EXP'][$variable] = $seconds;
+			}
+
+		} else {
+			$this->meta['EXP'][$variables] = $seconds;
+		}
+	}
 
 
 
-    /**
-     * Cancels the current session namespace.
-     * @return void
-     */
-    public function remove()
-    {
-        $this->data = NULL;
-        $this->meta = NULL;
-        Session::clean();
-    }
+	/**
+	 * Removes the expiration from the namespace or specific variables.
+	 * @param  mixed   optional list of variables / single variable to expire
+	 * @return void
+	 */
+	public function removeExpiration($variables = NULL)
+	{
+		if ($variables === NULL) {
+			// from entire namespace
+			unset($this->meta['EXP']['']);
+
+		} elseif (is_array($variables)) {
+			// from variables
+			foreach ($variables as $variable) {
+				unset($this->meta['EXP'][$variable]);
+			}
+		} else {
+			unset($this->meta['EXP'][$variables]);
+		}
+
+		Session::clean();
+	}
+
+
+
+	/**
+	 * Cancels the current session namespace.
+	 * @return void
+	 */
+	public function remove()
+	{
+		$this->data = NULL;
+		$this->meta = NULL;
+		Session::clean();
+	}
 
 }

@@ -1,4 +1,4 @@
-<h1>Nette::Config & ConfigAdapter_INI test</h1>
+<h1>Nette::Config & ConfigAdapter_INI test #1</h1>
 
 <pre>
 <?php
@@ -35,3 +35,12 @@ $config->html_errors = false;
 $config->save('tmp/cfg.ini', 'mysection');
 readfile('tmp/cfg.ini');
 echo "\n";
+
+
+try {
+	echo "check read-only:\n";
+	$config->setReadOnly();
+	$config->database->adapter = 'new value';
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}

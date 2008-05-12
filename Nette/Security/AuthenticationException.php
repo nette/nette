@@ -32,11 +32,11 @@
 class AuthenticationException extends /*::*/Exception
 {
 
-    /**
-     * Exception error codes.
-     */
-    const IDENTITY_NOT_FOUND = 1;
+	/**
+	 * Exception error codes.
+	 */
+	const IDENTITY_NOT_FOUND = 1;
 
-    const INVALID_CREDENTIAL = 2;
+	const INVALID_CREDENTIAL = 2;
 
 }

@@ -6,9 +6,9 @@ $a = 1;
 ${'a'} = "{$a} ${a}";
 
 if (FALSE) {
-    class Object
-    {
-    }
+	class Object
+	{
+	}
 }
 
 class TestClass

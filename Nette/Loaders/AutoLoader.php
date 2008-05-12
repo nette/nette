@@ -34,86 +34,86 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 abstract class AutoLoader extends /*Nette::*/Object
 {
-    /** @var array  list of registered loaders */
-    static private $loaders = array();
+	/** @var array  list of registered loaders */
+	static private $loaders = array();
 
-    /** @var int  for profiling purposes */
-    static public $count = 0;
-
-
-
-    /**
-     * Try to load the requested class.
-     * @param  string  class/interface name
-     * @return void
-     */
-    final public static function load($type)
-    {
-        class_exists($type);
-    }
+	/** @var int  for profiling purposes */
+	static public $count = 0;
 
 
 
-    /**
-     * Return all registered autoloaders.
-     * @return array
-     */
-    final public static function getLoaders()
-    {
-        //return spl_autoload_functions();
-        return self::$loaders;
-    }
+	/**
+	 * Try to load the requested class.
+	 * @param  string  class/interface name
+	 * @return void
+	 */
+	final public static function load($type)
+	{
+		class_exists($type);
+	}
 
 
 
-    /**
-     * Register autoloader.
-     * @return void
-     */
-    public function register()
-    {
-        if (!function_exists('spl_autoload_register')) {
-            throw new /*::*/RuntimeException('spl_autoload does not exist in this PHP installation.');
-        }
-
-        spl_autoload_register(array($this, 'tryLoad'));
-        self::$loaders[] = $this;
-    }
+	/**
+	 * Return all registered autoloaders.
+	 * @return array
+	 */
+	final public static function getLoaders()
+	{
+		//return spl_autoload_functions();
+		return self::$loaders;
+	}
 
 
 
-    /**
-     * Unregister autoloader.
-     * @return void
-     */
-    public function unregister()
-    {
-        spl_autoload_unregister(array($this, 'tryLoad'));
+	/**
+	 * Register autoloader.
+	 * @return void
+	 */
+	public function register()
+	{
+		if (!function_exists('spl_autoload_register')) {
+			throw new /*::*/RuntimeException('spl_autoload does not exist in this PHP installation.');
+		}
 
-        foreach (self::$loaders as $key => $loader) {
-            if ($loader === $this) unset(self::$loaders[$key]);
-        }
-    }
-
-
-
-    /**
-     * Handles autoloading of classes or interfaces.
-     * @param  string
-     * @return void
-     */
-    abstract public function tryLoad($type);
+		spl_autoload_register(array($this, 'tryLoad'));
+		self::$loaders[] = $this;
+	}
 
 
 
-    /**
-     * Include script in a limited scope.
-     * @param  string  file to include
-     * @return mixed   the return value of the included file
-     */
-    protected static function includeOnce()
-    {
-        return include_once func_get_arg(0);
-    }
+	/**
+	 * Unregister autoloader.
+	 * @return void
+	 */
+	public function unregister()
+	{
+		spl_autoload_unregister(array($this, 'tryLoad'));
+
+		foreach (self::$loaders as $key => $loader) {
+			if ($loader === $this) unset(self::$loaders[$key]);
+		}
+	}
+
+
+
+	/**
+	 * Handles autoloading of classes or interfaces.
+	 * @param  string
+	 * @return void
+	 */
+	abstract public function tryLoad($type);
+
+
+
+	/**
+	 * Include script in a limited scope.
+	 * @param  string  file to include
+	 * @return mixed   the return value of the included file
+	 */
+	protected static function includeOnce()
+	{
+		return include_once func_get_arg(0);
+	}
 
 }

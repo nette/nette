@@ -32,10 +32,10 @@
 interface IDebuggable
 {
 
-    /**
-     * Returns custom panels.
-     * @return array
-     */
-    function getPanels();
+	/**
+	 * Returns custom panels.
+	 * @return array
+	 */
+	function getPanels();
 
 }

@@ -32,9 +32,9 @@
  */
 interface IList extends ICollection, /*::*/ArrayAccess
 {
-    function indexOf($item);
-    function insertAt($index, $item);
-    //function ArrayAccess::offsetSet($offset, $value);
+	function indexOf($item);
+	function insertAt($index, $item);
+	//function ArrayAccess::offsetSet($offset, $value);
 	//function ArrayAccess::offsetGet($offset);
 	//function ArrayAccess::offsetUnset($offset);
 	//function ArrayAccess::offsetExists($offset);

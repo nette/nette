@@ -35,27 +35,27 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
 class SimpleLoader extends AutoLoader
 {
 
-    /**
-     * Handles autoloading of classes or interfaces.
-     * @param  string
-     * @return void
-     */
-    public function tryLoad($type)
-    {
-        if (strpbrk($type, './;\\|') !== FALSE) {
-            throw new /*::*/InvalidArgumentException("Invalid class/interface name '$type'.");
-        }
+	/**
+	 * Handles autoloading of classes or interfaces.
+	 * @param  string
+	 * @return void
+	 */
+	public function tryLoad($type)
+	{
+		if (strpbrk($type, './;\\|') !== FALSE) {
+			throw new /*::*/InvalidArgumentException("Invalid class/interface name '$type'.");
+		}
 
-        $file = str_replace('::', '/', $type) . '.php';
+		$file = str_replace('::', '/', $type) . '.php';
 
-        /*
-        if (strncmp($type, 'Nette::', 7) === 0) {
-            $file = dirname(dirname(dirname(__FILE__))) . '/' . $file;
-        }
-        */
+		/*
+		if (strncmp($type, 'Nette::', 7) === 0) {
+			$file = dirname(dirname(dirname(__FILE__))) . '/' . $file;
+		}
+		*/
 
-        @self::includeOnce($file);
-        self::$count++;
-    }
+		@self::includeOnce($file);
+		self::$count++;
+	}
 
 }

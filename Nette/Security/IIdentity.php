@@ -32,16 +32,16 @@
 interface IIdentity
 {
 
-    /**
-     * Returns the name of user.
-     * @return string
-     */
-    function getName();
+	/**
+	 * Returns the name of user.
+	 * @return string
+	 */
+	function getName();
 
-    /**
-     * Returns a list of roles that the user is a member of.
-     * @return array
-     */
-    function getRoles();
+	/**
+	 * Returns a list of roles that the user is a member of.
+	 * @return array
+	 */
+	function getRoles();
 
 }

@@ -11,20 +11,20 @@ require_once '../../Nette/loader.php';
 
 class Person
 {
-    private $name;
+	private $name;
 
 
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
+	public function __construct($name)
+	{
+		$this->name = $name;
+	}
 
 
 
-    public function sayHi()
-    {
-        echo "My name is $this->name\n";
-    }
+	public function sayHi()
+	{
+		echo "My name is $this->name\n";
+	}
 
 }
 
@@ -47,10 +47,10 @@ $list->add($mary);
 
 
 try {
-    echo "Adding foo\n";
-    $list->add($foo);
+	echo "Adding foo\n";
+	$list->add($foo);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -59,10 +59,10 @@ echo "Adding Jack using []\n";
 $list[] = $jack;
 
 try {
-    echo "Adding foo using []\n";
-    $list[] = $foo;
+	echo "Adding foo using []\n";
+	$list[] = $foo;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -80,10 +80,10 @@ echo "Adding Larry using insertAt()\n";
 Debug::dump($list->insertAt(4, $larry));
 
 try {
-    echo "Adding Larry using insertAt()\n";
-    Debug::dump($list->insertAt(6, $larry));
+	echo "Adding Larry using insertAt()\n";
+	Debug::dump($list->insertAt(6, $larry));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -102,10 +102,10 @@ echo "Contains Mary?\n";
 Debug::dump($list->contains($mary));
 
 try {
-    echo "Contains foo?\n";
-    Debug::dump($list->contains($foo));
+	echo "Contains foo?\n";
+	Debug::dump($list->contains($foo));
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -123,17 +123,17 @@ Debug::dump(isset($list[5]));
 
 // IList::offsetGet
 try {
-    echo "Getting #-1\n";
-    Debug::dump($list[-1]);
+	echo "Getting #-1\n";
+	Debug::dump($list[-1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Getting #0\n";
-    Debug::dump($list[0]);
+	echo "Getting #0\n";
+	Debug::dump($list[0]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -150,17 +150,17 @@ Debug::dump($list->remove($larry));
 
 // IList::offsetUnset
 try {
-    echo "Removing using unset\n";
-    unset($list[-1]);
+	echo "Removing using unset\n";
+	unset($list[-1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Removing using unset\n";
-    unset($list[1]);
+	echo "Removing using unset\n";
+	unset($list[1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -182,7 +182,7 @@ echo "Count: ", count($list), "\n";
 // IList::getIterator
 echo "Get Interator:\n";
 foreach ($list as $key => $person) {
-    echo $key, ' => ', $person->sayHi();
+	echo $key, ' => ', $person->sayHi();
 }
 
 
@@ -191,7 +191,7 @@ echo "Clearing\n";
 $list->clear();
 
 foreach ($list as $person) {
-    $person->sayHi();
+	$person->sayHi();
 }
 
 
@@ -199,10 +199,10 @@ foreach ($list as $person) {
 // ArrayList::__construct()
 $arr = array('a' => $jack, 'b' => $mary,  'c' => $foo);
 try {
-    echo "Construct from array\n";
-    $list2 = new ArrayList($arr, 'Person');
+	echo "Construct from array\n";
+	$list2 = new ArrayList($arr, 'Person');
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 echo "Construct from array II.\n";
@@ -218,29 +218,29 @@ $list2->setReadOnly();
 Debug::dump($list2->isReadOnly());
 
 try {
-    echo "Adding Jack using []\n";
-    $list2[] = $jack;
+	echo "Adding Jack using []\n";
+	$list2[] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Adding Jack using insertAt\n";
-    $list2->insertAt(0, $jack);
+	echo "Adding Jack using insertAt\n";
+	$list2->insertAt(0, $jack);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Removing using unset\n";
-    unset($list2[1]);
+	echo "Removing using unset\n";
+	unset($list2[1]);
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 try {
-    echo "Changing using []\n";
-    $list2[1] = $jack;
+	echo "Changing using []\n";
+	$list2[1] = $jack;
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

@@ -32,32 +32,32 @@
 interface IComponentContainer
 {
 
-    /**
-     * Adds the specified component to the IComponentContainer.
-     * @param  IComponent
-     * @param  string
-     * @return void
-     */
-    function addComponent(IComponent $component, $name);
+	/**
+	 * Adds the specified component to the IComponentContainer.
+	 * @param  IComponent
+	 * @param  string
+	 * @return void
+	 */
+	function addComponent(IComponent $component, $name);
 
-    /**
-     * Removes a component from the IComponentContainer.
-     * @param  IComponent
-     * @return void
-     */
-    function removeComponent(IComponent $component);
+	/**
+	 * Removes a component from the IComponentContainer.
+	 * @param  IComponent
+	 * @return void
+	 */
+	function removeComponent(IComponent $component);
 
-    /**
-     * Returns single component.
-     * @param  string
-     * @return IComponent|NULL
-     */
-    function getComponent($name);
+	/**
+	 * Returns single component.
+	 * @param  string
+	 * @return IComponent|NULL
+	 */
+	function getComponent($name);
 
-    /**
-     * Returns collection of all the components in the container.
-     * @return array of IComponent
-     */
-    function getComponents();
+	/**
+	 * Returns collection of all the components in the container.
+	 * @return array of IComponent
+	 */
+	function getComponents();
 
 }

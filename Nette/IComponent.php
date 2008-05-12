@@ -32,36 +32,36 @@
 interface IComponent
 {
 
-    /**
-     * @return string
-     */
-    function getName();
+	/**
+	 * @return string
+	 */
+	function getName();
 
-    /**
-     * Returns the container if any.
-     * @return IComponentContainer|NULL
-     */
-    function getParent();
+	/**
+	 * Returns the container if any.
+	 * @return IComponentContainer|NULL
+	 */
+	function getParent();
 
-    /**
-     * Sets the parent of this component.
-     * @param  IComponentContainer
-     * @param  string
-     * @return void
-     */
-    function setParent(IComponentContainer $parent = NULL, $name = NULL);
+	/**
+	 * Sets the parent of this component.
+	 * @param  IComponentContainer
+	 * @param  string
+	 * @return void
+	 */
+	function setParent(IComponentContainer $parent = NULL, $name = NULL);
 
-    /**
-     * Sets the service location (EXPERIMENTAL).
-     * @param  IServiceLocator
-     * @return void
-     */
-    function setServiceLocator(IServiceLocator $locator);
+	/**
+	 * Sets the service location (EXPERIMENTAL).
+	 * @param  IServiceLocator
+	 * @return void
+	 */
+	function setServiceLocator(IServiceLocator $locator);
 
-    /**
-     * Gets the service locator (EXPERIMENTAL).
-     * @return IServiceLocator
-     */
-    function getServiceLocator();
+	/**
+	 * Gets the service locator (EXPERIMENTAL).
+	 * @return IServiceLocator
+	 */
+	function getServiceLocator();
 
 }

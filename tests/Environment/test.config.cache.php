@@ -16,11 +16,11 @@ Environment::setName(Environment::PRODUCTION);
 
 
 try {
-    echo "Loading config #1:\n";
-    Environment::loadConfig('config.ini');
+	echo "Loading config #1:\n";
+	Environment::loadConfig('config.ini');
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 

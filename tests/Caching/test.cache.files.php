@@ -21,10 +21,10 @@ $dependentFile = $tmpDir . '/spec.file';
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'files' => array(
-        __FILE__,
-        $dependentFile,
-    ),
+	'files' => array(
+		__FILE__,
+		$dependentFile,
+	),
 ));
 
 echo "Is cached?";
@@ -40,7 +40,7 @@ Debug::dump(isset($cache[$key]));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'files' => $dependentFile,
+	'files' => $dependentFile,
 ));
 
 echo "Is cached?";

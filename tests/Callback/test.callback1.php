@@ -9,33 +9,33 @@ require_once '../../Nette/loader.php';
 
 function myFunc($a, $b)
 {
-    $method = __METHOD__;
-    return "Hello $a and $b from $method\n";
+	$method = __METHOD__;
+	return "Hello $a and $b from $method\n";
 }
 
 
 class myClass
 {
 
-    function myFunc($a, $b)
-    {
-        $method = __METHOD__;
-        return "Hello $a and $b from $method\n";
-    }
+	function myFunc($a, $b)
+	{
+		$method = __METHOD__;
+		return "Hello $a and $b from $method\n";
+	}
 
 
-    function mySimpleFunc()
-    {
-        $method = __METHOD__;
-        echo "Hello from $method\n";
-    }
+	function mySimpleFunc()
+	{
+		$method = __METHOD__;
+		echo "Hello from $method\n";
+	}
 
 
-    static function myStaticFunc($a, $b)
-    {
-        $method = __METHOD__;
-        return "Hello $a and $b from $method\n";
-    }
+	static function myStaticFunc($a, $b)
+	{
+		$method = __METHOD__;
+		return "Hello $a and $b from $method\n";
+	}
 
 }
 

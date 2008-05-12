@@ -11,8 +11,8 @@ require_once '../../Nette/loader.php';
 $key = '';
 $value = array();
 for($i=0;$i<32;$i++) {
-    $key .= chr($i);
-    $value[] = chr($i) . chr(255 - $i);
+	$key .= chr($i);
+	$value[] = chr($i) . chr(255 - $i);
 }
 $tmpDir = dirname(__FILE__) . '/tmp';
 

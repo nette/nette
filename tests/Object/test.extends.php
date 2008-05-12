@@ -9,22 +9,22 @@ echo "<pre>\n";
 
 function Test_prototype_join(Test $ths, $separator)
 {
-    return $ths->a . $separator . $ths->b;
+	return $ths->a . $separator . $ths->b;
 }
 
 
 
 class Test extends /*Nette::*/Object
 {
-    public $a;
-    public $b;
+	public $a;
+	public $b;
 
 
-    function __construct($a, $b)
-    {
-        $this->a = $a;
-        $this->b = $b;
-    }
+	function __construct($a, $b)
+	{
+		$this->a = $a;
+		$this->b = $b;
+	}
 
 }
 
@@ -33,11 +33,11 @@ class Test extends /*Nette::*/Object
 echo "\n\n<h2>Extended method</h2>\n";
 
 try {
-    $obj = new Test('Hello', 'World');
-    echo '$obj->join: ', $obj->join('***');
+	$obj = new Test('Hello', 'World');
+	echo '$obj->join: ', $obj->join('***');
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -45,8 +45,8 @@ try {
 echo "\n\n<h2>Undeclared method</h2>\n";
 
 try {
-    echo '$obj->test: ', $obj->test();
+	echo '$obj->test: ', $obj->test();
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

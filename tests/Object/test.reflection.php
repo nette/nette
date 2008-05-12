@@ -11,12 +11,12 @@ echo "<pre>\n";
 
 class Test extends /*Nette::*/Object
 {
-    public $a;
+	public $a;
 
-    static public $b;
+	static public $b;
 
-    static function c()
-    {}
+	static function c()
+	{}
 
 }
 

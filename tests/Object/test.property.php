@@ -12,64 +12,64 @@ echo "<pre>\n";
 
 class Test extends /*Nette::*/Object
 {
-    private $name;
-    private $items;
+	private $name;
+	private $items;
 
 
-    function __construct()
-    {
-        $this->items = new ArrayObject;
-    }
-
-
-
-    public function getName()
-    {
-        return $this->name;
-    }
+	function __construct()
+	{
+		$this->items = new ArrayObject;
+	}
 
 
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+	public function getName()
+	{
+		return $this->name;
+	}
 
 
 
-    public function getItems()
-    {
-        return $this->items;
-    }
+	public function setName($name)
+	{
+		$this->name = $name;
+	}
 
 
 
-    public function setItems(array $value)
-    {
-        $this->items = new ArrayObject($value);
-    }
+	public function getItems()
+	{
+		return $this->items;
+	}
 
 
 
-    public function getReadOnly()
-    {
-        return 'OK';
-    }
+	public function setItems(array $value)
+	{
+		$this->items = new ArrayObject($value);
+	}
 
 
 
-    public function gets() // or setupXyz, settle...
-    {
-        echo __METHOD__;
-        return 'ERROR';
-    }
+	public function getReadOnly()
+	{
+		return 'OK';
+	}
 
 
 
-    public function export()
-    {
-        Debug::dump($this);
-    }
+	public function gets() // or setupXyz, settle...
+	{
+		echo __METHOD__;
+		return 'ERROR';
+	}
+
+
+
+	public function export()
+	{
+		Debug::dump($this);
+	}
 }
 
 
@@ -105,13 +105,13 @@ echo $obj->name, "\n\n";
 echo "\n\n<h2>Read-only property</h2>\n";
 
 try {
-    echo 'read: ', $obj->readOnly, "\n";
+	echo 'read: ', $obj->readOnly, "\n";
 
-    echo 'write: ';
-    $obj->readOnly = 'value';
+	echo 'write: ';
+	$obj->readOnly = 'value';
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -119,20 +119,20 @@ try {
 echo "\n\n<h2>Undeclared property</h2>\n";
 
 try {
-    echo 'read: ';
-    $val = $obj->s;
+	echo 'read: ';
+	$val = $obj->s;
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 echo "\n";
 
 try {
-    echo 'write: ';
-    $obj->S = 'value';
+	echo 'write: ';
+	$obj->S = 'value';
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 echo "\n\n";

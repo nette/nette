@@ -14,11 +14,11 @@ Debug::dump(Environment::getVariable('foo'));
 
 
 try {
-    echo "Getting variable 'tempDir':\n";
-    Debug::dump(Environment::getVariable('tempDir'));
+	echo "Getting variable 'tempDir':\n";
+	Debug::dump(Environment::getVariable('tempDir'));
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
 
@@ -43,14 +43,14 @@ Debug::dump(Environment::getVariable('test'));
 
 
 try {
-    echo "Setting circular variables...\n";
-    Environment::setVariable('bar', '%foo%');
-    Environment::setVariable('foo', '%foobar%');
-    Environment::setVariable('foobar', '%bar%');
+	echo "Setting circular variables...\n";
+	Environment::setVariable('bar', '%foo%');
+	Environment::setVariable('foo', '%foobar%');
+	Environment::setVariable('foobar', '%bar%');
 
-    echo "Getting circular variable:\n";
-    Debug::dump(Environment::getVariable('bar'));
+	echo "Getting circular variable:\n";
+	Debug::dump(Environment::getVariable('bar'));
 
 } catch (Exception $e) {
-    echo get_class($e), ': ', $e->getMessage(), "\n\n";
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }

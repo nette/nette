@@ -18,7 +18,7 @@ $cache = new Cache(new /*Nette::Caching::*/FileStorage("$tmpDir/prefix-"));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'items' => array('dependent'),
+	'items' => array('dependent'),
 ));
 
 echo "Is cached?";
@@ -34,7 +34,7 @@ Debug::dump(isset($cache[$key]));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'items' => 'dependent',
+	'items' => 'dependent',
 ));
 
 echo "Is cached?";
@@ -51,7 +51,7 @@ Debug::dump(isset($cache[$key]));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-    'items' => 'dependent',
+	'items' => 'dependent',
 ));
 
 echo "Is cached?";
