@@ -214,7 +214,7 @@ final class Debug
 				}
 				unset($var[$marker]);
 			} else {
-			   $s .= "$space  ...\n";
+				$s .= "$space  ...\n";
 			}
 			return $s . "$space}\n";
 

@@ -44,54 +44,34 @@ interface IHttpRequest
 	function getUri();
 
 	/**
-	 * Returns variable provided to the script via URL query ($_GET).
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
+	 * Returns all variables provided to the script via URL query ($_GET).
+	 * @return array
 	 */
-	function getQuery($key = NULL, $default = NULL);
+	function getQuery();
 
 	/**
-	 * Returns variable provided to the script via POST method ($_POST).
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
+	 * Returns all variables provided to the script via POST method ($_POST).
+	 * @return array
 	 */
-	function getPost($key = NULL, $default = NULL);
+	function getPost();
 
 	/**
-	 * Returns uploaded file.
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @return array|NULL
+	 * Returns all uploaded files.
+	 * @return array
 	 */
-	function getFile($key = NULL);
+	function getFiles();
 
 	/**
-	 * Returns variable provided to the script via HTTP cookies.
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
+	 * Returns all HTTP cookies.
+	 * @return array
 	 */
-	function getCookie($key = NULL, $default = NULL);
+	function getCookies();
 
 	/**
-	 * Return the value of the HTTP header. Pass the header name as the.
-	 * plain, HTTP-specified header name. Ex.: Ask for 'Accept' to get the
-	 * Accept header, 'Accept-Encoding' to get the Accept-Encoding header.
-	 *
-	 * @param  string
-	 * @param  mixed
-	 * @return array|string|NULL  list or single HTTP request header
+	 * Returns all HTTP headers
+	 * @return array
 	 */
-	function getHeader($key = NULL, $default = NULL);
+	function getHeaders();
 
 	/**
 	 * Is the request is sent via secure channel (https).

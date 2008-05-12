@@ -42,7 +42,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/** @var Uri  @see self::getOriginalUri() */
 	private $originalUri;
 
-	/** @var array  @see self::getHeader() */
+	/** @var array  @see self::getHeaders() */
 	private $headers;
 
 	/** @var bool  @see self::isLocal() */
@@ -239,28 +239,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns uploaded file.
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @return array|NULL
-	 */
-	public function getFile($key = NULL)
-	{
-		if ($key === NULL) {
-			return $_FILES;
-
-		} elseif (isset($_FILES[$key])) {
-			return $_FILES[$key];
-
-		} else {
-			return NULL;
-		}
-	}
-
-
-
-	/**
 	 * Returns HTTP POST data in raw format (only for "application/x-www-form-urlencoded").
 	 * @return string
 	 */
@@ -272,24 +250,58 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
+	 * Returns uploaded file.
+	 *
+	 * @param  string
+	 * @return array|NULL
+	 */
+	public function getFile($key)
+	{
+		if (isset($_FILES[$key])) {
+			return $_FILES[$key];
+		} else {
+			return NULL;
+		}
+	}
+
+
+
+	/**
+	 * Returns all uploaded files.
+	 * @return array
+	 */
+	public function getFiles()
+	{
+		return $_FILES;
+	}
+
+
+
+	/**
 	 * Returns variable provided to the script via HTTP cookies.
-	 * If no $key is passed, returns the entire array.
 	 *
 	 * @param  string
 	 * @param  mixed  default value to use if key not found
 	 * @return mixed
 	 */
-	public function getCookie($key = NULL, $default = NULL)
+	public function getCookie($key, $default = NULL)
 	{
-		if ($key === NULL) {
-			return $_COOKIE;
-
-		} elseif (isset($_COOKIE[$key])) {
+		if (isset($_COOKIE[$key])) {
 			return $_COOKIE[$key];
-
 		} else {
 			return $default;
 		}
+	}
+
+
+
+	/**
+	 * Returns all HTTP cookies.
+	 * @return array
+	 */
+	public function getCookies()
+	{
+		return $_COOKIE;
 	}
 
 
@@ -301,9 +313,26 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 *
 	 * @param  string
 	 * @param  mixed
-	 * @return array|string|NULL  list or single HTTP request header
+	 * @return string|NULL  single HTTP header value
 	 */
-	public function getHeader($key = NULL, $default = NULL)
+	public function getHeader($header, $default = NULL)
+	{
+		$header = strtolower($header);
+		$headers = $this->getHeaders();
+		if (isset($headers[$header])) {
+			return $headers[$header];
+		} else {
+			return $default;
+		}
+	}
+
+
+
+	/**
+	 * Returns all HTTP headers
+	 * @return array
+	 */
+	public function getHeaders()
 	{
 		if ($this->headers === NULL) {
 			// lazy initialization
@@ -318,17 +347,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 				}
 			}
 		}
-
-		if ($key === NULL) {
-			return $this->headers;
-		}
-
-		$key = strtolower($key);
-		if (isset($this->headers[$key])) {
-			return $this->headers[$key];
-		}
-
-		return $default;
+		return $this->headers;
 	}
 
 
