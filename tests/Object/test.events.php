@@ -1,9 +1,9 @@
+<h1>Nette::Object events test</h1>
+
+<pre>
 <?php
 
 require_once '../../Nette/loader.php';
-
-echo '<h1>Nette::Object events test</h1>';
-echo "<pre>\n";
 
 
 

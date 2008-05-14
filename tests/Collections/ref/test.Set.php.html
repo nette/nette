@@ -1,6 +1,11 @@
 <h1>Nette::Collections::Set test</h1>
 
 <pre>
+Adding numeric
+Adding numeric
+Adding non-numeric
+InvalidArgumentException: Item must be numeric.
+
 Adding Jack
 bool(TRUE)
 
@@ -39,11 +44,12 @@ Count: 2
 Get Interator:
 My name is Jack
 My name is Mary
+(array):
 array(2) {
-  0 => object(Person) (1) {
+  "92ce270f1cf59d14d3b5b90b76a2ffc0" => object(Person) (1) {
     "name" private => string(4) "Jack"
   }
-  1 => object(Person) (1) {
+  "66b93df263808487917b2c6495bb5759" => object(Person) (1) {
     "name" private => string(4) "Mary"
   }
 }
@@ -89,4 +95,7 @@ NotSupportedException: Collection is read-only.
 
 Clearing
 NotSupportedException: Collection is read-only.
+
+Contains Jack?
+bool(TRUE)
 

@@ -1,0 +1,65 @@
+<h1>SPL::ArrayObject test</h1>
+
+<pre>
+$obj = new Test($arr):
+$obj->append("Mary"):
+ > Test::append
+ > Test::offsetSet
+$obj[] = "Jack":
+ > Test::offsetSet
+$obj[array(3)] = "Jack":
+ > Test::offsetSet
+
+Warning: Illegal offset type in D:\Web\nette\_trunk\tests\Collections\test.SPL.ArrayObject.php on line 54
+$obj->offsetSet(array(3), "Jack"):
+ > Test::offsetSet
+
+Warning: Illegal offset type in D:\Web\nette\_trunk\tests\Collections\test.SPL.ArrayObject.php on line 54
+$obj["a"] = "Jim":
+ > Test::offsetSet
+echo $obj["a"]:
+ > Test::offsetGet
+Jimecho $obj["unknown"]:
+ > Test::offsetGet
+
+Notice: Undefined index:  unknown in D:\Web\nette\_trunk\tests\Collections\test.SPL.ArrayObject.php on line 44
+isset($obj["a"]):
+ > Test::offsetExists
+isset($obj["null"]):
+ > Test::offsetExists
+bool(true)
+unset($obj["a"]):
+ > Test::offsetUnset
+count($obj):
+var_dump($obj):
+object(Test)#1 (6) {
+  [0]=>
+  int(1)
+  [1]=>
+  int(2)
+  [2]=>
+  string(4) "test"
+  ["null"]=>
+  NULL
+  [3]=>
+  string(4) "Mary"
+  [4]=>
+  string(4) "Jack"
+}
+$tmp = (array) $obj:
+$tmp = $obj->getArrayCopy():
+ > Test::getArrayCopy
+foreach ($obj as $key => $value):
+ > Test::getIterator
+$obj->exchangeArray($arr):
+ > Test::exchangeArray
+$obj->ksort():
+$obj->setFlags(Test::ARRAY_AS_PROPS):
+$obj->a = "Jack":
+ > Test::offsetSet
+echo $obj->a:
+ > Test::offsetGet
+Jackisset($obj->a):
+ > Test::offsetExists
+unset($obj->a):
+ > Test::offsetUnset

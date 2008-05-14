@@ -25,7 +25,7 @@ require_once dirname(__FILE__) . '/../Object.php';
 
 
 /**
- * URI Syntax (RFC 3986)
+ * URI Syntax (RFC 3986).
  *
  *  http://user:pass@nettephp.com:8042/basePath/script.php?name=ferret#nose
  *  \__/^^^\_________________________/\__________________/^\_________/^\__/
@@ -80,7 +80,7 @@ class Uri extends /*Nette::*/Object
 
 
 	/**
-	 * @param string  URL
+	 * @param  string  URL
 	 */
 	public function __construct($uri = NULL)
 	{
@@ -115,7 +115,7 @@ class Uri extends /*Nette::*/Object
 
 
 	/**
-	 * Returns the [user[:pass]@]host[:port] part of URI
+	 * Returns the [user[:pass]@]host[:port] part of URI.
 	 * @return string
 	 */
 	public function getAuthority()
@@ -134,7 +134,7 @@ class Uri extends /*Nette::*/Object
 
 
 	/**
-	 * Returns the scheme and authority part of URI
+	 * Returns the scheme and authority part of URI.
 	 * @return string
 	 */
 	public function getHostUri()
@@ -145,7 +145,7 @@ class Uri extends /*Nette::*/Object
 
 
 	/**
-	 * Returns the base-URI
+	 * Returns the base-URI.
 	 * @return string
 	 */
 	public function getBaseUri()
@@ -156,7 +156,7 @@ class Uri extends /*Nette::*/Object
 
 
 	/**
-	 * Returns the relative-URI
+	 * Returns the relative-URI.
 	 * @return string
 	 */
 	public function getRelativeUri()

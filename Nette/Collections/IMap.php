@@ -31,8 +31,7 @@
  */
 interface IMap extends ICollection, /*::*/ArrayAccess
 {
-	// TODO: vyresit
-	//function add($key, $value);  // produces Fatal error: Can't inherit abstract function
+	function add($key, $value);
 	function search($item);
 	function getKeys();
 	//function ArrayAccess::offsetSet($offset, $value);

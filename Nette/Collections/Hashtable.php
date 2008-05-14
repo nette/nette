@@ -49,7 +49,7 @@ class KeyNotFoundException extends /*::*/RuntimeException
 class Hashtable extends Collection implements IMap
 {
 	/** @var bool */
-	protected $strict = TRUE;
+	public $throwKeyNotFound = FALSE;
 
 
 
@@ -60,20 +60,30 @@ class Hashtable extends Collection implements IMap
 	 * @return bool
 	 * @throws ::InvalidArgumentException, ::InvalidStateException
 	 */
-	public function add($key, $item = NULL)
+	public function add($key, $item)
 	{
 		// note: $item is nullable to be compatible with that of ICollection::add()
 		if (!is_scalar($key)) {
 			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
-		if (array_key_exists($key, $this->data)) {
+		if (parent::offsetExists($key)) {
 			throw new /*::*/InvalidStateException('An element with the same key already exists.');
 		}
 
 		$this->beforeAdd($item);
-		$this->data[$key] = $item;
+		parent::offsetSet($key, $item);
 		return TRUE;
+	}
+
+
+
+	/**
+	 * Append is not supported.
+	 */
+	public function append($item)
+	{
+		throw new /*::*/NotSupportedException;
 	}
 
 
@@ -84,7 +94,7 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function getKeys()
 	{
-		return array_keys($this->data);
+		return array_keys($this->getArrayCopy());
 	}
 
 
@@ -97,7 +107,7 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function search($item)
 	{
-		return array_search($item, $this->data, TRUE);
+		return array_search($item, $this->getArrayCopy(), TRUE);
 	}
 
 
@@ -111,9 +121,10 @@ class Hashtable extends Collection implements IMap
 	public function import($arr)
 	{
 		if (is_array($arr) || $arr instanceof Traversable) {
+			$this->clear();
 			foreach ($arr as $key => $item) {
 				$this->beforeAdd($item);
-				$this->data[$key] = $item;
+				parent::offsetSet($key, $item);
 			}
 		} else {
 			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
@@ -134,8 +145,9 @@ class Hashtable extends Collection implements IMap
 			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
-		if (array_key_exists($key, $this->data)) {
-			return $this->data[$key];
+		if (parent::offsetExists($key)) {
+			return parent::offsetGet($key);
+
 		} else {
 			return $default;
 		}
@@ -161,7 +173,7 @@ class Hashtable extends Collection implements IMap
 		}
 
 		$this->beforeAdd($item);
-		$this->data[$key] = $item;
+		parent::offsetSet($key, $item);
 	}
 
 
@@ -178,12 +190,12 @@ class Hashtable extends Collection implements IMap
 			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
-		if (array_key_exists($key, $this->data)) {
-			return $this->data[$key];
-		}
+		if (parent::offsetExists($key)) {
+			return parent::offsetGet($key);
 
-		if ($this->strict) {
+		} elseif ($this->throwKeyNotFound) {
 			throw new KeyNotFoundException;
+
 		} else {
 			return NULL;
 		}
@@ -203,7 +215,7 @@ class Hashtable extends Collection implements IMap
 			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
-		return array_key_exists($key, $this->data);
+		return parent::offsetExists($key);
 	}
 
 
@@ -221,7 +233,9 @@ class Hashtable extends Collection implements IMap
 		}
 
 		$this->beforeRemove();
-		unset($this->data[$key]);
+		if (parent::offsetExists($key)) {
+			parent::offsetUnset($key);
+		}
 	}
 
 }

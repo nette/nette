@@ -1,9 +1,9 @@
+<h1>Nette::Object extension method example</h1>
+
+<pre>
 <?php
 
 require_once '../../Nette/loader.php';
-
-echo "<h1>Nette::Object extension method example</h1>";
-echo "<pre>\n";
 
 
 

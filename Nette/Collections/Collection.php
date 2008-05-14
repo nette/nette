@@ -21,25 +21,20 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
 require_once dirname(__FILE__) . '/../Collections/ICollection.php';
 
 
 
 /**
- * Provides the base class for a generic collection.
+ * SPL ArrayObject customization.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Collections
  * @version    $Revision$ $Date$
  */
-class Collection extends /*Nette::*/Object implements ICollection
+abstract class Collection extends /*::*/ArrayObject implements ICollection
 {
-	/** @var array  of objects */
-	protected $data = array();
-
 	/** @var string  type (class, interface, PHP type) */
 	protected $itemType;
 
@@ -84,21 +79,6 @@ class Collection extends /*Nette::*/Object implements ICollection
 
 
 	/**
-	 * Appends the specified element to the end of this collection.
-	 * @param  mixed
-	 * @return bool  true if this collection changed as a result of the call
-	 * @throws ::InvalidArgumentException, ::NotSupportedException
-	 */
-	public function add($item)
-	{
-		$this->beforeAdd($item);
-		$this->data[] = $item;
-		return TRUE;
-	}
-
-
-
-	/**
 	 * Removes the first occurrence of the specified element.
 	 * @param  mixed
 	 * @return bool  true if this collection changed as a result of the call
@@ -111,7 +91,7 @@ class Collection extends /*Nette::*/Object implements ICollection
 		if ($index === FALSE) {
 			return FALSE;
 		} else {
-			unset($this->data[$index]);
+			parent::offsetUnset($index);
 			return TRUE;
 		}
 	}
@@ -126,7 +106,7 @@ class Collection extends /*Nette::*/Object implements ICollection
 	 */
 	protected function search($item)
 	{
-		return array_search($item, $this->data, TRUE);
+		return array_search($item, $this->getArrayCopy(), TRUE);
 	}
 
 
@@ -139,7 +119,7 @@ class Collection extends /*Nette::*/Object implements ICollection
 	public function clear()
 	{
 		$this->beforeRemove();
-		$this->data = array();
+		parent::exchangeArray(array());
 	}
 
 
@@ -165,23 +145,13 @@ class Collection extends /*Nette::*/Object implements ICollection
 	public function import($arr)
 	{
 		if (is_array($arr) || $arr instanceof Traversable) {
+			$this->clear();
 			foreach ($arr as $item) {
-				$this->add($item);
+				$this->offsetSet(NULL, $item);
 			}
 		} else {
 			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
 		}
-	}
-
-
-
-	/**
-	 * Returns an array containing all of the elements in this collection.
-	 * @return array
-	 */
-	public function toArray()
-	{
-		return $this->data;
 	}
 
 
@@ -193,28 +163,6 @@ class Collection extends /*Nette::*/Object implements ICollection
 	public function isReadOnly()
 	{
 		return $this->readOnly;
-	}
-
-
-
-	/**
-	 * Returns the number of elements in collection (::Countable implementation).
-	 * @return int
-	 */
-	public function count()
-	{
-		return count($this->data);
-	}
-
-
-
-	/**
-	 * Returns an iterator over the elements in collection (::IteratorAggregate implementation).
-	 * @return ::ArrayIterator
-	 */
-	public function getIterator()
-	{
-		return new /*::*/ArrayIterator($this->data);
 	}
 
 
@@ -261,6 +209,124 @@ class Collection extends /*Nette::*/Object implements ICollection
 		if ($this->readOnly) {
 			throw new /*::*/NotSupportedException('Collection is read-only.');
 		}
+	}
+
+
+
+	/********************* ArrayObject cooperation ****************d*g**/
+
+
+
+	/**
+	 * Returns the iterator.
+	 * @return ArrayIterator
+	 */
+	public function getIterator()
+	{
+		return new /*::*/ArrayIterator($this->getArrayCopy());
+	}
+
+
+
+	/**
+	 * Not supported. Use import().
+	 */
+	public function exchangeArray($array)
+	{
+		throw new /*::*/NotSupportedException('Use ' . __CLASS__ . '::import()');
+	}
+
+
+
+	/**
+	 * Protected exchangeArray().
+	 * @param  array  new array
+	 * @return void
+	 */
+	protected function setArray($array)
+	{
+		parent::exchangeArray($array);
+	}
+
+
+
+	/********************* Nette::Object behaviour ****************d*g**/
+
+
+
+	/**
+	 * Returns the name of the class of this object.
+	 *
+	 * @return string
+	 */
+	final public function getClass()
+	{
+		return get_class($this);
+	}
+
+
+
+	/**
+	 * Call to undefined method.
+	 *
+	 * @throws ::MemberAccessException
+	 */
+	protected function __call($name, $args)
+	{
+		$class = get_class($this);
+		throw new /*::*/MemberAccessException("Call to undefined method $class::$name().");
+	}
+
+
+
+	/**
+	 * Call to undefined static method.
+	 *
+	 * @throws ::MemberAccessException
+	 */
+	protected static function __callStatic($name, $args)
+	{
+		$class = get_called_class();
+		throw new /*::*/MemberAccessException("Call to undefined static method $class::$name().");
+	}
+
+
+
+	/**
+	 * Returns property value. Do not call directly.
+	 *
+	 * @throws ::MemberAccessException if the property is not defined.
+	 */
+	protected function &__get($name)
+	{
+		$class = get_class($this);
+		throw new /*::*/MemberAccessException("Cannot read an undeclared property $class::\$$name.");
+	}
+
+
+
+	/**
+	 * Sets value of a property. Do not call directly.
+	 *
+	 * @throws ::MemberAccessException if the property is not defined or is read-only
+	 */
+	protected function __set($name, $value)
+	{
+		$class = get_class($this);
+		throw new /*::*/MemberAccessException("Cannot assign to an undeclared property $class::\$$name.");
+	}
+
+
+
+	/**
+	 * Access to undeclared property.
+	 *
+	 * @throws ::MemberAccessException
+	 */
+	protected function __unset($name)
+	{
+		$class = get_class($this);
+		throw new /*::*/MemberAccessException("Cannot unset an property $class::\$$name.");
 	}
 
 }

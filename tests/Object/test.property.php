@@ -1,11 +1,11 @@
+<h1>Nette::Object property test</h1>
+
+<pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
 /*use Nette::Debug;*/
-
-echo '<h1>Nette::Object property test</h1>';
-echo "<pre>\n";
 
 
 

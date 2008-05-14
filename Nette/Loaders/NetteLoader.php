@@ -76,6 +76,7 @@ class NetteLoader extends AutoLoader
 		'html' => '/Web/Html.php',
 		'httprequest' => '/Web/HttpRequest.php',
 		'httpresponse' => '/Web/HttpResponse.php',
+		'httpuploadedfile' => '/Web/HttpUploadedFile.php',
 		'iauthenticator' => '/Security/IAuthenticator.php',
 		'iauthorizator' => '/Security/IAuthorizator.php',
 		'icachestorage' => '/Caching/ICacheStorage.php',

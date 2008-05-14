@@ -2,6 +2,37 @@
 
 <pre>
 Load INI
+object(Config) (2) {
+  "production" => object(Config) (2) {
+    "webname" => string(11) "the example"
+    "database" => object(Config) (2) {
+      "adapter" => string(9) "pdo_mysql"
+      "params" => object(Config) (4) {
+        "host" => string(14) "db.example.com"
+        "username" => string(6) "dbuser"
+        "password" => string(6) "secret"
+        "dbname" => string(6) "dbname"
+      }
+    }
+  }
+  "development" => object(Config) (5) {
+    "database" => object(Config) (2) {
+      "params" => object(Config) (4) {
+        "host" => string(15) "dev.example.com"
+        "username" => string(7) "devuser"
+        "password" => string(9) "devsecret"
+        "dbname" => string(6) "dbname"
+      }
+      "adapter" => string(9) "pdo_mysql"
+    }
+    "timeout" => string(2) "10"
+    "display_errors" => string(1) "1"
+    "html_errors" => string(0) ""
+    "webname" => string(11) "the example"
+  }
+}
+
+toArray()
 array(2) {
   "production" => array(2) {
     "webname" => string(11) "the example"
@@ -75,9 +106,9 @@ development> html_errors = ""
 development> webname = "the example"
 
 Load section from INI
-array(5) {
-  "database" => array(2) {
-    "params" => array(4) {
+object(Config) (5) {
+  "database" => object(Config) (2) {
+    "params" => object(Config) (4) {
       "host" => string(15) "dev.example.com"
       "username" => string(7) "devuser"
       "password" => string(9) "devsecret"

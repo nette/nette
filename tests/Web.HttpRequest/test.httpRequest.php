@@ -20,6 +20,7 @@ echo 'HttpRequest::getOriginalUri() = '; Debug::dump($request->getOriginalUri())
 echo 'HttpRequest::getQuery() = '; Debug::dump($request->getQuery());
 echo 'HttpRequest::getPost() = '; Debug::dump($request->getPost());
 echo 'HttpRequest::getPostRaw() = '; Debug::dump($request->getPostRaw());
+echo 'HttpRequest::getFiles() = '; Debug::dump($request->getFiles());
 echo 'HttpRequest::getCookies() = '; Debug::dump($request->getCookies());
 echo 'HttpRequest::getHeaders() = '; Debug::dump($request->getHeaders());
 echo 'HttpRequest::isSecured() = '; Debug::dump($request->isSecured());

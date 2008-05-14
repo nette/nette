@@ -140,7 +140,7 @@ class User extends /*Nette::*/Object
 			$session->authenticated = FALSE;
 		}
 
-		if ($session->authkey !== Environment::getHttpRequest()->getCookie($this->namespace . 'authkey')) {
+		if ($session->authkey !== Environment::getHttpRequest()->cookies[$this->namespace . 'authkey']) {
 			$this->setAuthenticated(FALSE);
 		}
 	}

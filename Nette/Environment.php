@@ -105,7 +105,8 @@ final class Environment
 	{
 		if (self::$name === NULL) {
 			self::$name = (string) $name;
-			self::setVariable('envName', self::$name, FALSE);
+			//self::setVariable('envName', self::$name, FALSE);
+			//if (!defined('ENVIRONMENT')) define('ENVIRONMENT', self::$name);
 
 		} else {
 			throw new /*::*/InvalidStateException('Environment name has been already set.');
@@ -226,6 +227,24 @@ final class Environment
 			} else {
 				return $default;
 			}
+		}
+	}
+
+
+
+	/**
+	 * Define one or more variables as constants.
+	 * @param  string|array
+	 * @return void
+	 */
+	public static function exportConstant($names)
+	{
+		if (!is_array($names)) {
+			$names = func_get_args();
+		}
+		foreach ($names as $name) {
+			$const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $name));
+			define($const, self::getVariable($name));
 		}
 	}
 
@@ -473,12 +492,6 @@ final class Environment
 		if ($cfg->set instanceof Config) {
 			if (!function_exists('ini_set')) {
 				throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
-				/* or try to use workaround?
-				"date.timezone" => "date_default_timezone_set($value);",
-				"iconv.internal_encoding" => "iconv_set_encoding('internal_encoding', $value);",
-				"mbstring.internal_encoding" => "mb_internal_encoding($value);",
-				"include_path" => "set_include_path(strtr($value, ';', PATH_SEPARATOR));",
-				*/
 			}
 
 			foreach ($cfg->set as $key => $value) {
@@ -486,10 +499,17 @@ final class Environment
 			}
 		}
 
+		// define constants
+		if ($cfg->const instanceof Config) {
+			foreach ($cfg->const as $key => $value) {
+				define($key, $value);
+			}
+		}
+
 		// execute services - TODO: discuss
 		/*
 		if ($cfg->run) {
-			$run = $cfg->run->toArray();
+			$run = (array) $cfg->run;
 			ksort($run);
 			foreach ($run as $value) {
 				$a = strrpos($value, ':');

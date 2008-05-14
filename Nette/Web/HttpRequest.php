@@ -36,6 +36,18 @@ require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
  */
 class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 {
+	/** @var Nette::Collections::Hashtable */
+	private $query;
+
+	/** @var Nette::Collections::Hashtable */
+	private $post;
+
+	/** @var Nette::Collections::Hashtable */
+	private $files;
+
+	/** @var Nette::Collections::Hashtable */
+	private $cookies;
+
 	/** @var Uri  @see self::getUri() */
 	private $uri;
 
@@ -51,7 +63,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Sets URL object
+	 * Sets URL object.
 	 * @param  Uri
 	 * @return void
 	 */
@@ -63,7 +75,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns URL object
+	 * Returns URL object.
 	 * @return Uri
 	 */
 	public function getUri()
@@ -77,7 +89,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns URL object
+	 * Returns URL object.
 	 * @return Uri
 	 */
 	public function getOriginalUri()
@@ -193,47 +205,29 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns variable provided to the script via URL query ($_GET).
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
+	 * Returns variables provided to the script via URL query ($_GET).
+	 * @return Nette::Collections::Hashtable
 	 */
-	public function getQuery($key = NULL, $default = NULL)
+	public function getQuery()
 	{
-		if ($key === NULL) {
-			return $_GET;
-
-		} elseif (isset($_GET[$key])) {
-			return $_GET[$key];
-
-		} else {
-			return $default;
+		if ($this->query === NULL) {
+			$this->query = new /*Nette::Collections::*/Hashtable($_GET);
 		}
+		return $this->query;
 	}
 
 
 
 	/**
-	 * Returns variable provided to the script via POST method ($_POST).
-	 * If no $key is passed, returns the entire array.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
+	 * Returns variables provided to the script via POST method ($_POST).
+	 * @return Nette::Collections::Hashtable
 	 */
-	public function getPost($key = NULL, $default = NULL)
+	public function getPost()
 	{
-		if ($key === NULL) {
-			return $_POST;
-
-		} elseif (isset($_POST[$key])) {
-			return $_POST[$key];
-
-		} else {
-			return $default;
+		if ($this->post === NULL) {
+			$this->post = new /*Nette::Collections::*/Hashtable($_POST);
 		}
+		return $this->post;
 	}
 
 
@@ -250,58 +244,33 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns uploaded file.
-	 *
-	 * @param  string
-	 * @return array|NULL
-	 */
-	public function getFile($key)
-	{
-		if (isset($_FILES[$key])) {
-			return $_FILES[$key];
-		} else {
-			return NULL;
-		}
-	}
-
-
-
-	/**
-	 * Returns all uploaded files.
-	 * @return array
+	 * Returns uploaded files.
+	 * @return Nette::Collections::Hashtable
 	 */
 	public function getFiles()
 	{
-		return $_FILES;
-	}
-
-
-
-	/**
-	 * Returns variable provided to the script via HTTP cookies.
-	 *
-	 * @param  string
-	 * @param  mixed  default value to use if key not found
-	 * @return mixed
-	 */
-	public function getCookie($key, $default = NULL)
-	{
-		if (isset($_COOKIE[$key])) {
-			return $_COOKIE[$key];
-		} else {
-			return $default;
+		if ($this->files === NULL) {
+            // TODO: add support for arrays
+			$this->files = new /*Nette::Collections::*/Hashtable;
+			foreach ($_FILES as $name => $value) {
+            	$this->files[$name] = new HttpUploadedFile($value);
+			}
 		}
+		return $this->files;
 	}
 
 
 
 	/**
-	 * Returns all HTTP cookies.
-	 * @return array
+	 * Returns variables provided to the script via HTTP cookies.
+	 * @return Nette::Collections::Hashtable
 	 */
 	public function getCookies()
 	{
-		return $_COOKIE;
+		if ($this->cookies === NULL) {
+			$this->cookies = new /*Nette::Collections::*/Hashtable($_COOKIE);
+		}
+		return $this->cookies;
 	}
 
 
@@ -329,7 +298,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns all HTTP headers
+	 * Returns all HTTP headers.
 	 * @return array
 	 */
 	public function getHeaders()
@@ -353,7 +322,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns referrer
+	 * Returns referrer.
 	 * @return Uri|NULL
 	 */
 	public function getReferer()
@@ -480,7 +449,3 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	}
 
 }
-
-
-
-// init: HttpRequest::fuckingQuotes(array(&$_GET, &$_POST, &$_COOKIE, &$_FILES));

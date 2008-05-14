@@ -11,6 +11,8 @@ Debug::$maxDepth = NULL;
 
 echo "Load INI\n";
 $config = Config::fromFile('config1.ini');
+Debug::dump($config);
+echo "toArray()\n";
 Debug::dump($config->toArray());
 
 echo "Save INI\n";
@@ -27,7 +29,7 @@ echo "\n";
 
 echo "Load section from INI\n";
 $config = Config::fromFile('config1.ini', 'development', NULL);
-Debug::dump($config->toArray());
+Debug::dump($config);
 
 echo "Save INI\n";
 $config->display_errors = true;

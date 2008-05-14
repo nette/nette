@@ -38,9 +38,6 @@ class Config extends /*Nette::Collections::*/Hashtable
 	const READONLY = 1;
 	const EXPAND = 2;
 
-	/** @var bool */
-	protected $strict = FALSE;
-
 
 
 	/********************* I/O operations ****************d*g**/
@@ -121,13 +118,15 @@ class Config extends /*Nette::Collections::*/Hashtable
 			throw new /*::*/NotSupportedException('Configuration is read-only.');
 		}
 
-		foreach ($this->data as $key => $val) {
+		$data = $this->getArrayCopy();
+		foreach ($data as $key => $val) {
 			if (is_string($val)) {
-				$this->data[$key] = Environment::expand($val);
+				$data[$key] = Environment::expand($val);
 			} elseif ($val instanceof self) {
 				$val->expand();
 			}
 		}
+		$this->setArray($data);
 	}
 
 
@@ -140,16 +139,18 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	public function import($arr)
 	{
-		parent::import($arr);
+		if ($this->readOnly) {
+			throw new /*::*/NotSupportedException('Configuration is read-only.');
+		}
 
-		foreach ($this->data as $key => $val) {
+		foreach ($arr as $key => $val) {
 			if (is_array($val)) {
-				$this->data[$key] = $obj = clone $this;
+				$arr[$key] = $obj = clone $this;
 				$obj->readOnly = & $this->readOnly;
-				$obj->data = array();
 				$obj->import($val);
 			}
 		}
+		$this->setArray($arr);
 	}
 
 
@@ -160,9 +161,9 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	public function toArray()
 	{
-		$res = $this->data;
+		$res = $this->getArrayCopy();
 		foreach ($res as $key => $val) {
-			if ($val instanceof /*Nette::Collections::*/ICollection) {
+			if ($val instanceof self) {
 				$res[$key] = $val->toArray();
 			}
 		}
@@ -182,12 +183,8 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	protected function &__get($key)
 	{
-		if (array_key_exists($key, $this->data)) {
-			return $this->data[$key];
-		}
-
-		$null = NULL;
-		return $null;
+		$val = $this->offsetGet($key);
+		return $val;
 	}
 
 
@@ -200,8 +197,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	protected function __set($key, $item)
 	{
-		$this->beforeAdd($item);
-		$this->data[$key] = $item;
+		$this->offsetSet($key, $item);
 	}
 
 
@@ -213,7 +209,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	protected function __isset($key)
 	{
-		return array_key_exists($key, $this->data);
+		return $this->offsetExists($key);
 	}
 
 
@@ -225,8 +221,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	protected function __unset($key)
 	{
-		$this->beforeRemove();
-		unset($this->data[$key]);
+		$this->offsetUnset($key);
 	}
 
 }

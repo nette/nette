@@ -45,22 +45,22 @@ class Set extends Collection implements ISet
 	 * @return bool  true if this collection changed as a result of the call
 	 * @throws ::InvalidArgumentException, ::NotSupportedException
 	 */
-	public function add($item)
+	public function append($item)
 	{
 		$this->beforeAdd($item);
 
 		if (is_object($item)) {
 			$key = spl_object_hash($item);
-			if (isset($this->data[$key])) {
+			if (parent::offsetExists($key)) {
 				return FALSE;
 			}
-			$this->data[$key] = $item;
+			parent::offsetSet($key, $item);
 			return TRUE;
 
 		} else {
 			$key = $this->search($item);
 			if ($key === FALSE) {
-				$this->data[] = $item;
+				parent::offsetSet(NULL, $item);
 				return TRUE;
 			}
 			return FALSE;
@@ -70,7 +70,7 @@ class Set extends Collection implements ISet
 
 
 	/**
-	 * Returns the index of the first occurrence of the specified element,.
+	 * Returns the index of the first occurrence of the specified element,
 	 * or FALSE if this collection does not contain this element.
 	 * @param  mixed
 	 * @return int|FALSE
@@ -80,22 +80,59 @@ class Set extends Collection implements ISet
 	{
 		if (is_object($item)) {
 			$key = spl_object_hash($item);
-			return isset($this->data[$key]) ? $key : FALSE;
+			return parent::offsetExists($key) ? $key : FALSE;
 
 		} else {
-			return array_search($item, $this->data, TRUE);
+			return array_search($item, $this->getArrayCopy(), TRUE);
+		}
+	}
+
+
+
+	/********************* ArrayObject cooperation ****************d*g**/
+
+
+
+	/**
+	 * Not supported (only appending).
+	 */
+	public function offsetSet($key, $item)
+	{
+		if ($key === NULL) {
+			$this->append($item);
+		} else {
+			throw new /*::*/NotSupportedException;
 		}
 	}
 
 
 
 	/**
-	 * Returns an array containing all of the elements in this collection.
-	 * @return array
+	 * Not supported.
 	 */
-	public function toArray()
+	public function offsetGet($key)
 	{
-		return array_values($this->data);
+		throw new /*::*/NotSupportedException;
+	}
+
+
+
+	/**
+	 * Not supported.
+	 */
+	public function offsetExists($key)
+	{
+		throw new /*::*/NotSupportedException;
+	}
+
+
+
+	/**
+	 * Not supported.
+	 */
+	public function offsetUnset($key)
+	{
+		throw new /*::*/NotSupportedException;
 	}
 
 }

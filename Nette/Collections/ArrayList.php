@@ -51,12 +51,14 @@ class ArrayList extends Collection implements IList
 	public function insertAt($index, $item)
 	{
 		$index -= $this->base;
-		if ($index < 0 || $index > count($this->data)) {
+		if ($index < 0 || $index > count($this)) {
 			throw new /*::*/ArgumentOutOfRangeException;
 		}
 
 		$this->beforeAdd($item);
-		array_splice($this->data, (int) $index, 0, array($item));
+		$data = $this->getArrayCopy();
+		array_splice($data, (int) $index, 0, array($item));
+		$this->setArray($data);
 		return TRUE;
 	}
 
@@ -76,7 +78,9 @@ class ArrayList extends Collection implements IList
 		if ($index === FALSE) {
 			return FALSE;
 		} else {
-			array_splice($this->data, $index, 1);
+			$data = $this->getArrayCopy();
+			array_splice($data, $index, 1);
+			$this->setArray($data);
 			return TRUE;
 		}
 	}
@@ -113,14 +117,14 @@ class ArrayList extends Collection implements IList
 		$this->beforeAdd($item);
 
 		if ($index === NULL)  { // append
-			$this->data[] = $item;
+			parent::offsetSet(NULL, $item);
 
 		} else { // replace
 			$index -= $this->base;
-			if ($index < 0 || $index >= count($this->data)) {
+			if ($index < 0 || $index >= count($this)) {
 				throw new /*::*/ArgumentOutOfRangeException;
 			}
-			$this->data[$index] = $item;
+			parent::offsetSet($index, $item);
 		}
 	}
 
@@ -135,11 +139,11 @@ class ArrayList extends Collection implements IList
 	public function offsetGet($index)
 	{
 		$index -= $this->base;
-		if ($index < 0 || $index >= count($this->data)) {
+		if ($index < 0 || $index >= count($this)) {
 			throw new /*::*/ArgumentOutOfRangeException;
 		}
 
-		return $this->data[$index];
+		return parent::offsetGet($index);
 	}
 
 
@@ -152,7 +156,7 @@ class ArrayList extends Collection implements IList
 	public function offsetExists($index)
 	{
 		$index -= $this->base;
-		return $index >= 0 && $index < count($this->data);
+		return $index >= 0 && $index < count($this);
 	}
 
 
@@ -166,12 +170,14 @@ class ArrayList extends Collection implements IList
 	public function offsetUnset($index)
 	{
 		$index -= $this->base;
-		if ($index < 0 || $index >= count($this->data)) {
+		if ($index < 0 || $index >= count($this)) {
 			throw new /*::*/ArgumentOutOfRangeException;
 		}
 
 		$this->beforeRemove();
-		array_splice($this->data, (int) $index, 1);
+		$data = $this->getArrayCopy();
+		array_splice($data, (int) $index, 1);
+		$this->setArray($data);
 	}
 
 }

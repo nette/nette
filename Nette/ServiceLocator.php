@@ -183,7 +183,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 
 /**
- * Ambiguous service resolution exception
+ * Ambiguous service resolution exception.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl

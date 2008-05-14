@@ -15,8 +15,11 @@ Environment::loadConfig('config.ini', FALSE);
 echo "Variable foo:\n";
 Debug::dump(Environment::getVariable('foo'));
 
+echo "Constant HELLO_WORLD:\n";
+Debug::dump(constant('HELLO_WORLD'));
+
 echo "php.ini config:\n";
-Debug::dump(Environment::getConfig('set')->toArray());
+Debug::dump(Environment::getConfig('set'));
 
 echo "Database config:\n";
-Debug::dump(Environment::getConfig('database')->toArray());
+Debug::dump(Environment::getConfig('database'));

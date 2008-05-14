@@ -45,30 +45,30 @@ interface IHttpRequest
 
 	/**
 	 * Returns all variables provided to the script via URL query ($_GET).
-	 * @return array
+	 * @return Nette::Collections::Hashtable
 	 */
 	function getQuery();
 
 	/**
 	 * Returns all variables provided to the script via POST method ($_POST).
-	 * @return array
+	 * @return Nette::Collections::Hashtable
 	 */
 	function getPost();
 
 	/**
 	 * Returns all uploaded files.
-	 * @return array
+	 * @return Nette::Collections::Hashtable
 	 */
 	function getFiles();
 
 	/**
 	 * Returns all HTTP cookies.
-	 * @return array
+	 * @return Nette::Collections::Hashtable
 	 */
 	function getCookies();
 
 	/**
-	 * Returns all HTTP headers
+	 * Returns all HTTP headers.
 	 * @return array
 	 */
 	function getHeaders();

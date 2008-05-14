@@ -31,6 +31,26 @@ class Person
 
 
 // Set::__construct()
+$set = new Set(NULL, ':numeric');
+
+// ISet::append()
+echo "Adding numeric\n";
+$set->append('10.3');
+echo "Adding numeric\n";
+$set->append(12.2);
+
+try {
+	echo "Adding non-numeric\n";
+	$set->append('hello');
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}
+
+
+
+
+
+// Set::__construct()
 $set = new Set(NULL, 'Person');
 
 $jack = new Person('Jack');
@@ -39,19 +59,19 @@ $larry = new Person('Larry');
 $foo = new ArrayObject();
 
 
-// ISet::add()
+// ISet::append()
 echo "Adding Jack\n";
-Debug::dump($set->add($jack));
+Debug::dump($set->append($jack));
 echo "Adding Mary\n";
-Debug::dump($set->add($mary));
+Debug::dump($set->append($mary));
 echo "Adding Mary second time\n";
-Debug::dump($set->add($mary));
+Debug::dump($set->append($mary));
 echo "Adding Larry\n";
-Debug::dump($set->add($larry));
+Debug::dump($set->append($larry));
 
 try {
 	echo "Adding foo\n";
-	Debug::dump($set->add($foo));
+	Debug::dump($set->append($foo));
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
@@ -96,13 +116,15 @@ echo "Count: ", count($set), "\n";
 
 // ISet::getIterator
 echo "Get Interator:\n";
-foreach ($set as $person) {
+foreach ($set as & $person) {
 	$person->sayHi();
+	$person = 10; // try modify
 }
 
 
-// ISet::toArray()
-Debug::dump($set->toArray());
+// (array) ISet
+echo "(array):\n";
+Debug::dump((array) $set);
 
 
 
@@ -121,15 +143,15 @@ foreach ($set as $person) {
 // Set::__construct()
 $set = new Set();
 
-// ISet::add()
+// ISet::append()
 echo "Adding 'Jack'\n";
-Debug::dump($set->add('Jack'));
+Debug::dump($set->append('Jack'));
 echo "Adding 'Mary'\n";
-Debug::dump($set->add('Mary'));
+Debug::dump($set->append('Mary'));
 echo "Adding 'Mary' second time\n";
-Debug::dump($set->add('Mary'));
+Debug::dump($set->append('Mary'));
 echo "Adding 'Larry'\n";
-Debug::dump($set->add('Larry'));
+Debug::dump($set->append('Larry'));
 
 // ISet::remove
 echo "Removing 'Larry'\n";
@@ -138,8 +160,8 @@ Debug::dump($set->remove('Larry'));
 echo "Removing 'Larry' second time\n";
 Debug::dump($set->remove('Larry'));
 
-// ISet::toArray()
-Debug::dump($set->toArray());
+// (array) ISet
+Debug::dump((array) $set);
 
 
 
@@ -171,7 +193,7 @@ Debug::dump($set2->isReadOnly());
 
 try {
 	echo "Adding Jack\n";
-	Debug::dump($set2->add($jack));
+	Debug::dump($set2->append($jack));
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
@@ -189,3 +211,9 @@ try {
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
+
+foreach ($set2 as $key => & $val) {
+	$val = FALSE;
+}
+echo "Contains Jack?\n";
+Debug::dump($set2->contains($jack));

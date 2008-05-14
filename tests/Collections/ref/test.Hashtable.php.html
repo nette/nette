@@ -19,7 +19,10 @@ InvalidStateException: An element with the same key already exists.
 Adding Mary twice using __set()
 MemberAccessException: Cannot assign to an undeclared property Hashtable::$mary.
 
-toArray:
+Adding Jack using append
+NotSupportedException: 
+
+(array):
 array(2) {
   "jack" => object(Person) (1) {
     "name" private => string(4) "Jack"
@@ -63,6 +66,9 @@ Contains ->mary?
 bool(FALSE)
 
 Getting ['jim']
+NULL
+
+Getting ['jim'] with throwKeyNotFound
 KeyNotFoundException: 
 
 Getting ['mary']
@@ -75,12 +81,6 @@ MemberAccessException: Cannot read an undeclared property Hashtable::$jim.
 
 Getting ->mary
 MemberAccessException: Cannot read an undeclared property Hashtable::$mary.
-
-Calling getKeys() via Nette::Object'
-array(2) {
-  0 => string(4) "jack"
-  1 => string(4) "mary"
-}
 
 Getting get('jim')
 string(7) "default"
@@ -116,7 +116,7 @@ Construct from array
 InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
-array(3) {
+object(Hashtable) (3) {
   "a" => object(Person) (1) {
     "name" private => string(4) "Jack"
   }

@@ -54,3 +54,11 @@ try {
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
+
+
+echo "Exporting constant 'helloWorld'...\n";
+Environment::setVariable('helloWorld', 'Hello!');
+Environment::exportConstant('helloWorld');
+
+echo "Constant 'HELLO_WORLD':\n";
+Debug::dump(constant('HELLO_WORLD'));

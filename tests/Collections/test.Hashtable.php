@@ -45,7 +45,7 @@ $hashtable->add('jack', $jack);
 
 try {
 	echo "Adding invalid key\n";
-	$hashtable->add($foo);
+	$hashtable->add($foo, $foo);
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
@@ -90,12 +90,19 @@ try {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
+try {
+	echo "Adding Jack using append\n";
+	$hashtable->append($jack);
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}
 
 
 
-// IMap::toArray()
-echo "toArray:\n";
-Debug::dump($hashtable->toArray());
+
+// (array) IMap
+echo "(array):\n";
+Debug::dump((array) $hashtable);
 
 
 // IMap::getKeys()
@@ -151,6 +158,15 @@ try {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
+// IMap::offsetGet
+try {
+	echo "Getting ['jim'] with throwKeyNotFound\n";
+	$hashtable->throwKeyNotFound = TRUE;
+	Debug::dump($hashtable['jim']);
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}
+
 try {
 	echo "Getting ['mary']\n";
 	Debug::dump($hashtable['mary']);
@@ -170,13 +186,6 @@ try {
 try {
 	echo "Getting ->mary\n";
 	Debug::dump($hashtable->mary);
-} catch (Exception $e) {
-	echo get_class($e), ': ', $e->getMessage(), "\n\n";
-}
-
-try {
-	echo "Calling getKeys() via Nette::Object'\n";
-	Debug::dump($hashtable->keys);
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
@@ -268,7 +277,7 @@ try {
 
 echo "Construct from array II.\n";
 $hashtable2 = new Hashtable($arr);
-Debug::dump($hashtable2->toArray());
+Debug::dump($hashtable2);
 
 
 
@@ -305,3 +314,6 @@ try {
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
+
+
+$merge = array_merge((array) $hashtable, (array) $hashtable2);

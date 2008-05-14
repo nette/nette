@@ -39,16 +39,16 @@ $larry = new Person('Larry');
 $foo = new ArrayObject();
 
 
-// IList::add()
+// IList::append()
 echo "Adding Jack\n";
-$list->add($jack);
+$list->append($jack);
 echo "Adding Mary\n";
-$list->add($mary);
+$list->append($mary);
 
 
 try {
 	echo "Adding foo\n";
-	$list->add($foo);
+	$list->append($foo);
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
@@ -66,9 +66,9 @@ try {
 }
 
 
-// IList::toArray()
-echo "toArray:\n";
-Debug::dump($list->toArray());
+// (array) IList
+echo "(array):\n";
+Debug::dump((array) $list);
 
 
 // IList::insertAt()
@@ -88,9 +88,9 @@ try {
 
 
 
-// IList::toArray()
-echo "toArray:\n";
-Debug::dump($list->toArray());
+// (array) IList
+echo "(array):\n";
+Debug::dump((array) $list);
 
 
 
@@ -207,7 +207,7 @@ try {
 
 echo "Construct from array II.\n";
 $list2 = new ArrayList($arr);
-Debug::dump($list2->toArray());
+Debug::dump((array) $list2);
 
 
 

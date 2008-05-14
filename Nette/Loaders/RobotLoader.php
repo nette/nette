@@ -165,7 +165,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * Scan a directory for PHP files, subdirectories and 'netterobots.txt' file
+	 * Scan a directory for PHP files, subdirectories and 'netterobots.txt' file.
 	 * @param  string
 	 * @return void
 	 */
