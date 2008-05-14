@@ -130,6 +130,7 @@ class HttpUploadedFile extends /*Nette::*/Object
 
 	/**
 	 * Move uploaded file to new location.
+	 * @param  string
 	 * @return void
 	 */
 	public function move($dest)

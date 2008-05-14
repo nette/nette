@@ -250,11 +250,30 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	public function getFiles()
 	{
 		if ($this->files === NULL) {
-            // TODO: add support for arrays
-			$this->files = new /*Nette::Collections::*/Hashtable;
-			foreach ($_FILES as $name => $value) {
-            	$this->files[$name] = new HttpUploadedFile($value);
+			$dest = array();
+			$list = array();
+			foreach ($_FILES as $name => $v) {
+				$v['@'] = & $dest[$name];
+				$list[] = $v;
 			}
+
+			while (list(, $v) = each($list)) {
+				if (!is_array($v['name'])) {
+					$v['@'] = new HttpUploadedFile($v);
+					continue;
+				}
+				foreach ($v['name'] as $k => $foo) {
+					$list[] = array(
+						'name' => $v['name'][$k],
+						'type' => $v['type'][$k],
+						'size' => $v['size'][$k],
+						'tmp_name' => $v['tmp_name'][$k],
+						'error' => $v['error'][$k],
+						'@' => & $v['@'][$k],
+					);
+				}
+			}
+			$this->files = new /*Nette::Collections::*/Hashtable($dest);
 		}
 		return $this->files;
 	}
@@ -379,7 +398,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 * @param  array   Supported languages
 	 * @return string
 	 */
-	public function detectLanguage(/*array*/ $langs)
+	public function detectLanguage(array $langs)
 	{
 		$header = $this->getHeader('accept-language');
 		if (!$header) return NULL;
@@ -387,7 +406,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 		$s = strtolower($header);  // case insensitive
 		$s = strtr($s, '_', '-');  // cs_CZ means cs-CZ
 		rsort($langs);             // first more specific
-		preg_match_all('#('.implode('|', $langs).')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
+		preg_match_all('#(' . implode('|', $langs) . ')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
 
 		if (!$matches[0]) {
 			return NULL;

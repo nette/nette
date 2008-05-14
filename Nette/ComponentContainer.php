@@ -65,7 +65,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			throw new /*::*/InvalidArgumentException('Component name is required.');
 		}
 
-		if (!is_string($name) || !preg_match('#^[a-z0-9_]+$#', $name)) {
+		if (!is_string($name) || !preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
 			throw new /*::*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' is invalid.");
 		}
 
@@ -77,7 +77,7 @@ class ComponentContainer extends Component implements IComponentContainer
 		$obj = $this;
 		do {
 			if ($obj === $component) {
-				throw new /*::*/InvalidStateException("Component is (grand) parent of container.");
+				throw new /*::*/InvalidStateException("Circular reference detected.");
 			}
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);

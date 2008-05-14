@@ -161,7 +161,7 @@ try {
 // IMap::offsetGet
 try {
 	echo "Getting ['jim'] with throwKeyNotFound\n";
-	$hashtable->throwKeyNotFound = TRUE;
+	$hashtable->throwKeyNotFound();
 	Debug::dump($hashtable['jim']);
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";

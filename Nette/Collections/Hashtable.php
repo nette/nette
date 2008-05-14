@@ -49,7 +49,7 @@ class KeyNotFoundException extends /*::*/RuntimeException
 class Hashtable extends Collection implements IMap
 {
 	/** @var bool */
-	public $throwKeyNotFound = FALSE;
+	private $throwKeyNotFound = FALSE;
 
 
 
@@ -120,14 +120,18 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function import($arr)
 	{
-		if (is_array($arr) || $arr instanceof Traversable) {
+		if (!(is_array($arr) || $arr instanceof Traversable)) {
+			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
+		}
+
+		if (!$this->readOnly && $this->itemType === NULL) { // optimalization
+			$this->setArray((array) $arr);
+
+		} else {
 			$this->clear();
 			foreach ($arr as $key => $item) {
-				$this->beforeAdd($item);
-				parent::offsetSet($key, $item);
+				$this->offsetSet($key, $item);
 			}
-		} else {
-			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
 		}
 	}
 
@@ -151,6 +155,17 @@ class Hashtable extends Collection implements IMap
 		} else {
 			return $default;
 		}
+	}
+
+
+
+	/**
+	 * Do throw KeyNotFoundException?
+	 * @return void
+	 */
+	public function throwKeyNotFound($val = TRUE)
+	{
+		$this->throwKeyNotFound = (bool) $val;
 	}
 
 

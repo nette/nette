@@ -1,0 +1,40 @@
+<h1>Nette::Web::HttpRequest uploaded files test</h1>
+
+<pre>
+object(Hashtable) (3) {
+  "file1" => object(HttpUploadedFile) (5) {
+    "name" private => string(10) "readme.txt"
+    "type" private => string(10) "text/plain"
+    "size" private => int(209)
+    "tmpName" private => string(23) "C:\PHP\temp\php1D5B.tmp"
+    "error" private => int(0)
+  }
+  "file2" => array(1) {
+    2 => object(HttpUploadedFile) (5) {
+      "name" private => string(11) "license.txt"
+      "type" private => string(10) "text/plain"
+      "size" private => int(3013)
+      "tmpName" private => string(23) "C:\PHP\temp\php1D5C.tmp"
+      "error" private => int(0)
+    }
+  }
+  "file3" => array(2) {
+    "y" => array(1) {
+      "z" => object(HttpUploadedFile) (5) {
+        "name" private => string(11) "default.htm"
+        "type" private => string(9) "text/html"
+        "size" private => int(26320)
+        "tmpName" private => string(23) "C:\PHP\temp\php1D5D.tmp"
+        "error" private => int(0)
+      }
+    }
+    1 => object(HttpUploadedFile) (5) {
+      "name" private => string(8) "logo.gif"
+      "type" private => string(9) "image/gif"
+      "size" private => int(3519)
+      "tmpName" private => string(23) "C:\PHP\temp\php1D5E.tmp"
+      "error" private => int(0)
+    }
+  }
+}
+

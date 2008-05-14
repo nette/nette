@@ -144,13 +144,13 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 */
 	public function import($arr)
 	{
-		if (is_array($arr) || $arr instanceof Traversable) {
-			$this->clear();
-			foreach ($arr as $item) {
-				$this->offsetSet(NULL, $item);
-			}
-		} else {
+		if (!(is_array($arr) || $arr instanceof Traversable)) {
 			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
+		}
+
+		$this->clear();
+		foreach ($arr as $item) {
+			$this->offsetSet(NULL, $item);
 		}
 	}
 
