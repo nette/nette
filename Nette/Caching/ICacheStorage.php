@@ -46,7 +46,7 @@ interface ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	function write($key, $data, array $dependencies);
 
@@ -55,7 +55,7 @@ interface ICacheStorage
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	function remove($key);
 
@@ -64,7 +64,7 @@ interface ICacheStorage
 	/**
 	 * Removes items from the cache by conditions.
 	 * @param  array  conditions
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	function clean(array $conds);
 

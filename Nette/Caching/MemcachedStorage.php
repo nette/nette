@@ -101,7 +101,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function write($key, $data, array $dp)
 	{
@@ -128,7 +128,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 			}
 		}
 
-		$this->memcache->set($this->prefix . $key, $meta, 0, $expire);
+		return $this->memcache->set($this->prefix . $key, $meta, 0, $expire);
 	}
 
 
@@ -136,11 +136,11 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function remove($key)
 	{
-		$this->memcache->delete($this->prefix . $key);
+		return $this->memcache->delete($this->prefix . $key);
 	}
 
 
@@ -148,7 +148,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	/**
 	 * Removes items from the cache by conditions & garbage collector.
 	 * @param  array  conditions
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function clean(array $conds)
 	{
@@ -158,6 +158,8 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		} elseif (isset($conds['tags']) || isset($conds['priority'])) {
 			throw new /*::*/NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
 		}
+
+		return TRUE;
 	}
 
 }

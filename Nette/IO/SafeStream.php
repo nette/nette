@@ -307,8 +307,3 @@ final class SafeStream
 	}
 
 }
-
-
-
-/** static constructor */
-SafeStream::register();

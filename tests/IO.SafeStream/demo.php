@@ -5,6 +5,7 @@
 
 
 require_once '../../Nette/loader.php';
+SafeStream::register();
 
 
 // actually it creates temporary file

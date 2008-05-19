@@ -37,6 +37,17 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  */
 class FileStorage extends /*Nette::*/Object implements ICacheStorage
 {
+	/**
+	 * Atomic thread safe logic:
+	 *
+	 * 1) reading: open(r+b), lock(SH), read
+	 *     - delete?: lock(EX), truncate*, unlinkData, unlink*, close
+	 * 2) deleting: open(r+b), lock(EX), truncate*, unlinkData, unlink*, close
+	 * 3) writing: open(r+b || wb), lock(EX), truncate*, writeData, write, close
+	 *
+	 * *unlink fails in windows
+	 */
+
 	/** @var float  probability that the clean() routine is started */
 	public static $gcProbability = 0.001;
 
@@ -70,7 +81,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	{
 		// read meta
 		$metaFile = $this->getMetaFile($key);
-		$meta = @$this->readMeta($metaFile); // intentionally @
+		$meta = $this->readMeta($metaFile, LOCK_SH);
 		if (!$meta) return NULL;
 
 		// meta structure:
@@ -82,7 +93,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		//     delta => relative (sliding) expiration
 		//     df => array of dependent files (file => timestamp)
 		//     tags => array of tags (tag => [foo])
-		//     handle > file pointer resource; added by readMeta()
+		//     handle > meta file pointer resource; added by readMeta()
 		// )
 
 		// verify dependencies
@@ -105,9 +116,10 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 				}
 			}
 
-			return @$this->readData($meta);
+			return $this->readData($meta); // calls fclose()
 		} while (FALSE);
 
+		flock($meta['handle'], LOCK_EX);
 		ftruncate($meta['handle'], 0);
 		@unlink($meta['file']); // intentionally @
 		@unlink($metaFile); // intentionally @
@@ -122,7 +134,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function write($key, $data, array $dp)
 	{
@@ -168,27 +180,34 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 			}
 		}
 
-
 		$metaFile = $this->getMetaFile($key);
-		$handle = @fopen($metaFile, 'wb'); // intentionally @
-		if (!$handle) return;
+		$handle = @fopen($metaFile, 'r+b'); // intentionally @
+		if (!$handle) {
+			$handle = @fopen($metaFile, 'wb'); // intentionally @
 
-		flock($handle, LOCK_EX);
-
-		@unlink($meta['file']); // intentionally @
-		$s = serialize($meta);
-		$len = strlen($s);
-		if ($len !== fwrite($handle, $s, $len)) {
-			ftruncate($handle, 0);
-			@unlink($metaFile); // intentionally @
-
-		} elseif (!$this->writeData($meta, $data)) {
-			ftruncate($handle, 0);
-			@unlink($meta['file']); // intentionally @
-			@unlink($metaFile); // intentionally @
+			if (!$handle) {
+				return FALSE;
+			}
 		}
 
+		flock($handle, LOCK_EX);
+		ftruncate($handle, 0);
+
+		if ($this->writeData($meta, $data)) {
+			$s = serialize($meta);
+			$len = strlen($s);
+			if ($len === fwrite($handle, $s, $len)) {
+				fclose($handle);
+				return TRUE;
+			}
+			ftruncate($handle, 0);
+		}
+
+		@unlink($meta['file']); // intentionally @
+		@unlink($metaFile); // intentionally @
+
 		fclose($handle);
+		return TRUE;
 	}
 
 
@@ -196,18 +215,19 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function remove($key)
 	{
 		$metaFile = $this->getMetaFile($key);
-		$meta = $this->readMeta($metaFile);
-		if (!$meta) return;
+		$meta = $this->readMeta($metaFile, LOCK_EX);
+		if (!$meta) return TRUE;
 
 		ftruncate($meta['handle'], 0);
-		@unlink($file); // intentionally @
 		@unlink($meta['file']); // intentionally @
+		@unlink($file); // intentionally @
 		fclose($meta['handle']);
+		return TRUE;
 	}
 
 
@@ -215,7 +235,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	/**
 	 * Removes items from the cache by conditions & garbage collector.
 	 * @param  array  conditions
-	 * @return void
+	 * @return bool  TRUE if no problem
 	 */
 	public function clean(array $conds)
 	{
@@ -232,7 +252,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 			if (!is_file($metaFile)) continue;
 
 			do {
-				$meta = $this->readMeta($metaFile);
+				$meta = $this->readMeta($metaFile, LOCK_SH);
 				if (!$meta || $all) break;
 
 				if (!empty($meta['expire']) && $meta['expire'] < $now) {
@@ -251,11 +271,14 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 				continue 2;
 			} while (FALSE);
 
+			flock($meta['handle'], LOCK_EX);
 			ftruncate($meta['handle'], 0);
 			@unlink($meta['file']); // intentionally @
 			@unlink($metaFile); // intentionally @
 			fclose($meta['handle']);
 		}
+
+		return TRUE;
 	}
 
 
@@ -263,22 +286,18 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	/**
 	 * Reads cache data from disk.
 	 * @param  string  file path
+	 * @param  int     lock mode
 	 * @return array|NULL
 	 */
-	protected function readMeta($file)
+	protected function readMeta($file, $lock)
 	{
-		$handle = fopen($file, 'r+b');
+		$handle = @fopen($file, 'r+b'); // intentionally @
 		if (!$handle) return NULL;
 
-		/* non-blocking mode
-		if (!flock($handle, LOCK_EX | LOCK_NB)) {
-			fclose($handle);
-			return NULL;
-		}*/
-		flock($handle, LOCK_EX);
+		flock($handle, $lock);
 
 		$meta = stream_get_contents($handle);
-		$meta = unserialize($meta);
+		$meta = @unserialize($meta); // intentionally @
 		if (!is_array($meta)) {
 			fclose($handle);
 			return NULL;
@@ -297,13 +316,13 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	protected function readData($meta)
 	{
-		$data = file_get_contents($meta['file']);
+		$data = @file_get_contents($meta['file']); // intentionally @
 		fclose($meta['handle']);
 
 		if (empty($meta['serialized'])) {
 			return $data;
 		} else {
-			return unserialize($data);
+			return @unserialize($data); // intentionally @
 		}
 	}
 

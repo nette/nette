@@ -161,7 +161,6 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 		} else {
 			// no cache
 			header('Cache-Control: s-maxage=0, max-age=0, must-revalidate', TRUE);
-			header('Pragma: no-cache', TRUE);
 			header('Expires: Mon, 23 Jan 1978 10:00:00 GMT', TRUE);
 		}
 	}

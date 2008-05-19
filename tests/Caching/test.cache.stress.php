@@ -1,12 +1,14 @@
-<h1>Nette::IO::SafeStream stress test - run it twice (or more) simultaneously</h1>
+<h1>Nette::Caching::FileStorage stress test - run it twice (or more) simultaneously</h1>
 
 <pre>
 <?php
-
-
 require_once '../../Nette/loader.php';
 
 /*use Nette::Debug;*/
+
+
+set_time_limit(0);
+
 
 
 function randomStr()
@@ -24,36 +26,38 @@ function checkStr($s)
 
 
 
+
 define('COUNT_FILES', 3);
-set_time_limit(0);
-SafeStream::register();
+
+
+$storage = new FileStorage(dirname(__FILE__) . '/tmp/testfile');
 
 
 // clear playground
 for ($i=0; $i<=COUNT_FILES; $i++) {
-	file_put_contents('safe://tmp/testfile'.$i, randomStr());
+	$storage->write($i, randomStr(), array());
 }
 
 
 // test loop
-echo "Testing (with SafeStream)...\n";
+echo "Testing...\n";
 Debug::timer();
 
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
 	// write
-	$ok = @file_put_contents('safe://tmp/testfile'.rand(0, COUNT_FILES), randomStr());
+	$ok = $storage->write(rand(0, COUNT_FILES), randomStr(), array());
 	if ($ok === FALSE) $hits['cantwrite']++;
 
-	// delete
-//    $ok = @unlink('safe://testfile'.rand(0, COUNT_FILES));
-//    if (!$ok) $hits['cantdelete']++;
+	// remove
+	//$ok = $storage->remove(rand(0, COUNT_FILES));
+	//if (!$ok) $hits['cantdelete']++;
 
 	// read
-	$res = @file_get_contents('safe://tmp/testfile'.rand(0, COUNT_FILES));
+	$res = $storage->read(rand(0, COUNT_FILES));
 
 	// compare
-	if ($res === FALSE)  $hits['notfound']++;
+	if ($res === NULL) $hits['notfound']++;
 	elseif (checkStr($res)) $hits['ok']++;
 	else $hits['error']++;
 }
@@ -65,10 +69,10 @@ Debug::dump($hits);
 
 // expected results are:
 //    [ok] => 1000       // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000
-//    [notfound] => 0    // means "file not found", should be 0 if unlink() is not used
+//    [notfound] => 0    // means "file not found", should be 0 if delete() is not used
 //    [error] => 0,      // means "file contents is damaged", MUST be 0
 //    [cantwrite] => ?,  // means "somebody else is writing this file"
-//    [cantdelete] => 0  // means "unlink() has timeout",  should be 0
+//    [cantdelete] => 0  // means "delete() has timeout",  should be 0
 
 echo $hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!';
 echo "\ntakes $time ms";

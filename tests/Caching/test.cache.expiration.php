@@ -23,8 +23,8 @@ $cache->save($key, $value, array(
 
 
 for($i = 0; $i < 4; $i++) {
-	echo "Sleeping 1 second\n";
-	sleep(1);
+	echo "Sleeping 1.1 second\n";
+	usleep(1100000);
 	echo "Is cached?";
 	Debug::dump(isset($cache[$key]));
 }

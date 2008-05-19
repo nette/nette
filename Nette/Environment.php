@@ -128,9 +128,9 @@ final class Environment
 			} elseif (self::isConsole()) {
 				self::setName(self::CONSOLE);
 
-			} elseif (isset($_SERVER['REMOTE_ADDR'])) {
+			} elseif (isset($_SERVER['SERVER_ADDR'])) {
 				// detect by IP address
-				$oct = explode('.', $_SERVER['REMOTE_ADDR']);
+				$oct = explode('.', $_SERVER['SERVER_ADDR']);
 				self::setName((count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
 					|| ($oct[0] === '169' && $oct[1] === '254') || ($oct[0] === '192' && $oct[1] === '168'))
 					? self::DEVELOPMENT
