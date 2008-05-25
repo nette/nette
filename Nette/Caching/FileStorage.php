@@ -41,12 +41,30 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 * Atomic thread safe logic:
 	 *
 	 * 1) reading: open(r+b), lock(SH), read
-	 *     - delete?: lock(EX), truncate*, unlinkData, unlink*, close
-	 * 2) deleting: open(r+b), lock(EX), truncate*, unlinkData, unlink*, close
-	 * 3) writing: open(r+b || wb), lock(EX), truncate*, writeData, write, close
+	 *     - delete?: lock(EX), truncate*, unlink*, close
+	 * 2) deleting: open(r+b), lock(EX), truncate*, unlink*, close
+	 * 3) writing: open(r+b || wb), lock(EX), truncate*, write data, write meta, close
 	 *
 	 * *unlink fails in windows
 	 */
+
+	/**
+	 * Cache file:
+	 *
+	 * - 22b signature + 6b meta-struct size + serialized meta-struct + data
+	 * - meta structure: array of
+	 *     time => timestamp
+	 *     serialized => is content serialized?
+	 *     priority => priority
+	 *     expire => expiration timestamp
+	 *     delta => relative (sliding) expiration
+	 *     df => array of dependent files (file => timestamp)
+	 *     di => array of dependent items (file => timestamp)
+	 *     tags => array of tags (tag => [foo])
+	 */
+
+	/** @var int */
+	const HEADER_LEN = 28;
 
 	/** @var float  probability that the clean() routine is started */
 	public static $gcProbability = 0.001;
@@ -79,22 +97,11 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		// read meta
-		$metaFile = $this->getMetaFile($key);
-		$meta = $this->readMeta($metaFile, LOCK_SH);
+		$cacheFile = $this->getCacheFile($key);
+		$meta = $this->readMeta($cacheFile, LOCK_SH);
 		if (!$meta) return NULL;
 
-		// meta structure:
-		// array(
-		//     file => cache content file path (the one and only mandatory item)
-		//     serialized => is content serialized?
-		//     priority => priority
-		//     expire => expiration timestamp
-		//     delta => relative (sliding) expiration
-		//     df => array of dependent files (file => timestamp)
-		//     tags => array of tags (tag => [foo])
-		//     handle > meta file pointer resource; added by readMeta()
-		// )
+		// meta[handle] & meta[file] is added by readMeta()
 
 		// verify dependencies
 		do {
@@ -103,8 +110,8 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 			}
 
 			if (!empty($meta['delta'])) {
-				if (filemtime($metaFile) + $meta['delta'] < time()) break;
-				touch($metaFile);
+				if (filemtime($cacheFile) + $meta['delta'] < time()) break;
+				touch($cacheFile);
 
 			} elseif (!empty($meta['expire']) && $meta['expire'] < time()) {
 				break;
@@ -116,13 +123,21 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 				}
 			}
 
+			if (!empty($meta['di'])) {
+				foreach ($meta['di'] as $depFile => $time) {
+					$m = $this->readMeta($depFile, LOCK_SH);
+					// TODO: check item completely
+					if ($m['time'] !== $time) break 2;
+					unset($m);
+				}
+			}
+
 			return $this->readData($meta); // calls fclose()
 		} while (FALSE);
 
 		flock($meta['handle'], LOCK_EX);
 		ftruncate($meta['handle'], 0);
-		@unlink($meta['file']); // intentionally @
-		@unlink($metaFile); // intentionally @
+		@unlink($cacheFile); // intentionally @
 		fclose($meta['handle']);
 		return NULL;
 	}
@@ -139,7 +154,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	public function write($key, $data, array $dp)
 	{
 		$meta = array(
-			'file' => $this->getDataFile($key),
+			'time' => microtime(),
 		);
 
 		if (!is_string($data)) {
@@ -163,27 +178,26 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 			$meta['tags'] = array_flip(array_values($dp['tags']));
 		}
 
-		if (!empty($dp['files']) || !empty($dp['items'])) {
-			clearstatcache();
-		}
-
 		if (!empty($dp['items'])) {
 			foreach ((array) $dp['items'] as $item) {
-				$depFile = $this->getDataFile($item);
-				$meta['df'][$depFile] = @filemtime($depFile); // intentionally @
+				$depFile = $this->getCacheFile($item);
+				$m = $this->readMeta($depFile, LOCK_SH);
+				$meta['di'][$depFile] = $m['time'];
+				unset($m);
 			}
 		}
 
 		if (!empty($dp['files'])) {
+			clearstatcache();
 			foreach ((array) $dp['files'] as $depFile) {
 				$meta['df'][$depFile] = @filemtime($depFile); // intentionally @
 			}
 		}
 
-		$metaFile = $this->getMetaFile($key);
-		$handle = @fopen($metaFile, 'r+b'); // intentionally @
+		$cacheFile = $this->getCacheFile($key);
+		$handle = @fopen($cacheFile, 'r+b'); // intentionally @
 		if (!$handle) {
-			$handle = @fopen($metaFile, 'wb'); // intentionally @
+			$handle = @fopen($cacheFile, 'wb'); // intentionally @
 
 			if (!$handle) {
 				return FALSE;
@@ -193,19 +207,23 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		flock($handle, LOCK_EX);
 		ftruncate($handle, 0);
 
-		if ($this->writeData($meta, $data)) {
-			$s = serialize($meta);
-			$len = strlen($s);
-			if ($len === fwrite($handle, $s, $len)) {
-				fclose($handle);
-				return TRUE;
+		$head = serialize($meta) . '?>';
+		$head = '<?php //netteCache[01]' . str_pad((string) strlen($head), 6, '0', STR_PAD_LEFT) . $head;
+		$headLen = strlen($head);
+		$dataLen = strlen($data);
+
+		if (fwrite($handle, str_repeat("\x00", $headLen), $headLen) === $headLen) {
+			if (fwrite($handle, $data, $dataLen) === $dataLen) {
+				fseek($handle, 0);
+				if (fwrite($handle, $head, $headLen) === $headLen) {
+					fclose($handle);
+					return TRUE;
+				}
 			}
-			ftruncate($handle, 0);
 		}
 
-		@unlink($meta['file']); // intentionally @
-		@unlink($metaFile); // intentionally @
-
+		ftruncate($handle, 0);
+		@unlink($cacheFile); // intentionally @
 		fclose($handle);
 		return TRUE;
 	}
@@ -219,12 +237,11 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	public function remove($key)
 	{
-		$metaFile = $this->getMetaFile($key);
-		$meta = $this->readMeta($metaFile, LOCK_EX);
+		$cacheFile = $this->getCacheFile($key);
+		$meta = $this->readMeta($cacheFile, LOCK_EX);
 		if (!$meta) return TRUE;
 
 		ftruncate($meta['handle'], 0);
-		@unlink($meta['file']); // intentionally @
 		@unlink($file); // intentionally @
 		fclose($meta['handle']);
 		return TRUE;
@@ -247,12 +264,12 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 		$now = time();
 
-		foreach (glob($this->base . '*.meta') as $metaFile)
+		foreach (glob($this->base . '*') as $cacheFile)
 		{
-			if (!is_file($metaFile)) continue;
+			if (!is_file($cacheFile)) continue;
 
 			do {
-				$meta = $this->readMeta($metaFile, LOCK_SH);
+				$meta = $this->readMeta($cacheFile, LOCK_SH);
 				if (!$meta || $all) break;
 
 				if (!empty($meta['expire']) && $meta['expire'] < $now) {
@@ -273,8 +290,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 			flock($meta['handle'], LOCK_EX);
 			ftruncate($meta['handle'], 0);
-			@unlink($meta['file']); // intentionally @
-			@unlink($metaFile); // intentionally @
+			@unlink($cacheFile); // intentionally @
 			fclose($meta['handle']);
 		}
 
@@ -296,27 +312,33 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 		flock($handle, $lock);
 
-		$meta = stream_get_contents($handle);
-		$meta = @unserialize($meta); // intentionally @
-		if (!is_array($meta)) {
-			fclose($handle);
-			return NULL;
+		$head = stream_get_contents($handle, self::HEADER_LEN);
+		if ($head && strlen($head) === self::HEADER_LEN) {
+			$size = (int) substr($head, -6);
+			$meta = stream_get_contents($handle, $size, self::HEADER_LEN);
+			$meta = @unserialize($meta); // intentionally @
+			if (is_array($meta)) {
+				fseek($handle, $size + self::HEADER_LEN); // needed by PHP < 5.2.6
+				$meta['file'] = $file;
+				$meta['handle'] = $handle;
+				return $meta;
+			}
 		}
 
-		$meta['handle'] = $handle;
-		return $meta;
+		fclose($handle);
+		return NULL;
 	}
 
 
 
 	/**
-	 * Reads cache data from disk and closes meta file handle.
+	 * Reads cache data from disk and closes cache file handle.
 	 * @param  array
 	 * @return mixed
 	 */
 	protected function readData($meta)
 	{
-		$data = @file_get_contents($meta['file']); // intentionally @
+		$data = stream_get_contents($meta['handle']);
 		fclose($meta['handle']);
 
 		if (empty($meta['serialized'])) {
@@ -329,38 +351,13 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 
 	/**
-	 * Writes cache data to disk.
-	 * @param  array
-	 * @param  string
-	 * @return bool
-	 */
-	protected function writeData($meta, $data)
-	{
-		return file_put_contents($meta['file'], $data) === strlen($data);
-	}
-
-
-
-	/**
 	 * Returns file name.
 	 * @param  string
 	 * @return string
 	 */
-	protected function getMetaFile($key)
+	protected function getCacheFile($key)
 	{
-		return $this->base . urlencode($key) . '.meta';
-	}
-
-
-
-	/**
-	 * Returns file name.
-	 * @param  string
-	 * @return string
-	 */
-	protected function getDataFile($key)
-	{
-		return $this->base . urlencode($key) . '.data';
+		return $this->base . urlencode($key);
 	}
 
 }

@@ -1,4 +1,4 @@
-<h1>Nette::Caching::Cache test</h1>
+<h1>Nette::Caching::Cache & DummyStorage test</h1>
 
 <pre>
 <?php
@@ -8,17 +8,10 @@ require_once '../../Nette/loader.php';
 /*use Nette::Debug;*/
 
 // key and data with special chars
-$key = '../';
-$value = array();
-for($i=0;$i<32;$i++) {
-	$key .= chr($i);
-	$value[] = chr($i) . chr(255 - $i);
-}
-$tmpDir = dirname(__FILE__) . '/tmp';
+$key = 'nette';
+$value = '"Hello World"';
 
-foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
-
-$cache = new Cache(new /*Nette::Caching::*/FileStorage("$tmpDir/"));
+$cache = new Cache(new /*Nette::Caching::*/DummyStorage, 'myspace');
 
 
 echo "Is cached?\n";
@@ -55,3 +48,6 @@ $cache->release();
 
 echo "Is cached?\n";
 Debug::dump(isset($cache[$key]));
+
+echo "Log:\n";
+Debug::dump($cache->getStorage()->log);

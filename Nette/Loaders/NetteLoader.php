@@ -63,6 +63,7 @@ class NetteLoader extends AutoLoader
 		'debug' => '/Debug.php',
 		'dibistorage' => '/Caching/DibiStorage.php',
 		'directorynotfoundexception' => '/exceptions.php',
+		'dummystorage' => '/Caching/DummyStorage.php',
 		'environment' => '/Environment.php',
 		'file' => '/Forms/items.php',
 		'filenotfoundexception' => '/exceptions.php',
