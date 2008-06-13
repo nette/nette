@@ -49,4 +49,18 @@ class TemplateStorage extends FileStorage
 		);
 	}
 
+
+
+	/**
+	 * Returns file name.
+	 * @param  string
+	 * @return string
+	 */
+	protected function getCacheFile($key)
+	{
+		$path = $this->base . urlencode($key);
+		if (substr($path, -5) !== '.phtml') $path .= '.phtml';
+		return $path;
+	}
+
 }

@@ -139,11 +139,15 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 		$filename = basename($_SERVER['SCRIPT_FILENAME']);
 
 		if (basename($_SERVER['SCRIPT_NAME']) === $filename) {
-			$baseScript = $_SERVER['SCRIPT_NAME'];
+			$scriptPath = $_SERVER['SCRIPT_NAME'];
+			$scriptPath = rtrim($scriptPath, '/');
+
 		} elseif (basename($_SERVER['PHP_SELF']) === $filename) {
-			$baseScript = $_SERVER['PHP_SELF'];
+			$scriptPath = $_SERVER['PHP_SELF'];
+
 		} elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
-			$baseScript = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
+			$scriptPath = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
+
 		} else {
 			// Backtrack up the script_filename to find the portion matching php_self
 			$path = $_SERVER['PHP_SELF'];
@@ -151,42 +155,42 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 			$segs = array_reverse($segs);
 			$index = 0;
 			$last = count($segs);
-			$baseScript = '';
+			$scriptPath = '';
 			do {
 				$seg = $segs[$index];
-				$baseScript = '/' . $seg . $baseScript;
+				$scriptPath = '/' . $seg . $scriptPath;
 				$index++;
-			} while (($last > $index) && (FALSE !== ($pos = strpos($path, $baseScript))) && (0 != $pos));
+			} while (($last > $index) && (FALSE !== ($pos = strpos($path, $scriptPath))) && (0 != $pos));
 		}
 
-		// Does the baseScript have anything in common with the request_uri?
-		$basePath = substr($baseScript, 0, strrpos($baseScript, '/')); // do not use dirinfo!
 
-		if (strpos($uri->path, $baseScript) === 0) {
-			// full $baseScript matches
-			$uri->baseScript = $baseScript;
+		// Does the scriptPath have anything in common with the request_uri?
+		$basePath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1); // do not use dirinfo!
+
+		if (strncmp($uri->path, $scriptPath, strlen($scriptPath)) === 0) {
+			// whole $scriptPath in URL
+			$uri->scriptPath = $scriptPath;
 			$uri->basePath = $basePath;
 
-		} elseif (strpos($uri->path, $basePath . '/') === 0) {
-			// directory portion of $baseScript matches
-			$uri->baseScript = $uri->basePath = $basePath;
+		} elseif (strncmp($uri->path, $basePath, strlen($basePath)) === 0) {
+			// directory portion of $scriptPath in URL
+			$uri->scriptPath = $uri->basePath = $basePath;
 
-		} elseif (strpos($uri->path, basename($baseScript)) === FALSE) {
+		} elseif (strpos($uri->path, basename($scriptPath)) === FALSE) {
 			// no match whatsoever; set it blank
-			$uri->baseScript = '/';
+			$uri->scriptPath = '/';
 			$uri->basePath = '/';
 
-		} elseif ((strlen($uri->path) >= strlen($baseScript))
-			&& ((false !== ($pos = strpos($uri->path, $baseScript))) && ($pos !== 0))) {
+		} elseif ((strlen($uri->path) >= strlen($scriptPath))
+			&& ((FALSE !== ($pos = strpos($uri->path, $scriptPath))) && ($pos !== 0))) {
 			// If using mod_rewrite or ISAPI_Rewrite strip the script filename
-			// out of baseScript. $pos !== 0 makes sure it is not matching a value
+			// out of scriptPath. $pos !== 0 makes sure it is not matching a value
 			// from PATH_INFO or QUERY_STRING
-			$uri->baseScript = substr($uri->path, 0, $pos + strlen($baseScript));
-			// do not use dirinfo!
-			$uri->basePath = substr($baseScript, 0, strrpos($baseScript, '/') + 1);
+			$uri->scriptPath = substr($uri->path, 0, $pos + strlen($scriptPath));
+			$uri->basePath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1);
 
 		} else {
-			$uri->baseScript = rtrim($baseScript, '/');
+			$uri->scriptPath = $scriptPath;
 			$uri->basePath = $basePath;
 		}
 	}

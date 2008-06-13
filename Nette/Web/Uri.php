@@ -27,17 +27,18 @@ require_once dirname(__FILE__) . '/../Object.php';
 /**
  * URI Syntax (RFC 3986).
  *
- *  http://user:pass@nettephp.com:8042/basePath/script.php?name=ferret#nose
- *  \__/^^^\_________________________/\__________________/^\_________/^\__/
- *   |                 |                       |                |       |
- * scheme          authority                 path             query  fragment
+ *  http://user:pass@nettephp.com:8042/basePath/script.php/pathinfo/?name=ferret#nose
+ *  \__/^^^\_________________________/\__________________/\________/^\_________/^\__/
+ *   |                 |                        |              |           |       |
+ * scheme          authority                  path          pathinfo     query  fragment
  *
  * authority:   [user[:pass]@]host[:port]
  * hostUri:     http://user:pass@nettephp.com:8042
- * basePath:    /basePath  (everything before relative uri not including the script name)
- * baseUri:     http://user:pass@nettephp.com:8042/basePath
- * baseScript:  /basePath/script.php  (URI-path of the request with the script name)
- * relativeUri: /script.php
+ * basePath:    /basePath/ (everything before relative URI not including the script name)
+ * baseUri:     http://user:pass@nettephp.com:8042/basePath/
+ * scriptPath:  /basePath/script.php  (URI-path of the request with the script name)
+ * relativeUri: script.php
+ * pathInfo:    /pathinfo/ (additional path information)
  *
  *
  * @author     David Grudl
@@ -72,10 +73,10 @@ class Uri extends /*Nette::*/Object
 	public $fragment = '';
 
 	/** @var string */
-	public $baseScript = '';
+	public $scriptPath;
 
 	/** @var string */
-	public $basePath = '';
+	public $basePath;
 
 
 
@@ -161,7 +162,18 @@ class Uri extends /*Nette::*/Object
 	 */
 	public function getRelativeUri()
 	{
-		return substr($this->path, strlen($this->basePath));
+		return (string) substr($this->path, strlen($this->basePath));
+	}
+
+
+
+	/**
+	 * Returns the additional path information.
+	 * @return string
+	 */
+	public function getPathInfo()
+	{
+		return (string) substr($this->path, strlen($this->scriptPath));
 	}
 
 

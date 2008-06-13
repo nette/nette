@@ -105,7 +105,7 @@ final class SafeStream
 		case 'r':
 		case 'r+':
 			// enter critical section: open and lock EXISTING file for reading/writing
-			$handle = @fopen($path, $mode.$flag, $use_path); // @ is needed
+			$handle = @fopen($path, $mode.$flag, $use_path); // intentionally @
 			if (!$handle) return FALSE;
 			if (flock($handle, $mode == 'r' ? LOCK_SH : LOCK_EX)) {
 				$this->handle = $handle;
@@ -119,7 +119,7 @@ final class SafeStream
 		case 'w':
 		case 'w+':
 			// try enter critical section: open and lock EXISTING file for rewriting
-			$handle = @fopen($path, 'r+'.$flag, $use_path); // @ is needed
+			$handle = @fopen($path, 'r+'.$flag, $use_path); // intentionally @
 
 			if ($handle) {
 				if (flock($handle, LOCK_EX)) {
@@ -145,19 +145,19 @@ final class SafeStream
 			$tmp = '~~' . time() . '.tmp';
 
 			// enter critical section: create temporary file
-			$handle = @fopen($path.$tmp, $mode.$flag, $use_path); // @ is needed
+			$handle = @fopen($path . $tmp, $mode . $flag, $use_path); // intentionally @
 			if ($handle) {
 				if (flock($handle, LOCK_EX)) {
 					$this->handle = $handle;
-					if (!@rename($path.$tmp, $path)) { // @ is needed
+					if (!@rename($path . $tmp, $path)) { // intentionally @
 						// rename later - for windows
-						$this->tempFile = realpath($path.$tmp);
+						$this->tempFile = realpath($path . $tmp);
 						$this->filePath = substr($this->tempFile, 0, -strlen($tmp));
 					}
 					return TRUE;
 				}
 				fclose($handle);
-				unlink($path.$tmp);
+				unlink($path . $tmp);
 			}
 			return FALSE;
 
@@ -186,7 +186,7 @@ final class SafeStream
 		// are we working with temporary file?
 		if ($this->tempFile) {
 			// try to rename temp file, otherwise delete temp file
-			if (!@rename($this->tempFile, $this->filePath)) { // @ is needed
+			if (!@rename($this->tempFile, $this->filePath)) { // intentionally @
 				unlink($this->tempFile);
 			}
 		}
@@ -288,7 +288,7 @@ final class SafeStream
 	{
 		// This is not thread safe
 		$path = substr($path, strlen(self::PROTOCOL)+3);
-		return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // @ is needed
+		return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
 	}
 
 

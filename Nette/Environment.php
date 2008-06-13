@@ -40,10 +40,8 @@ final class Environment
 	const LAB = 'lab';
 
 	/** modes: */
-	const NORMAL_MODE = 0;
-	const OFF_MODE = 1;
-	const DEBUG_MODE = 2;
-	const PERFORMANCE_MODE = 4;
+	const DEBUG_MODE = 'debug';
+	const PERFORMANCE_MODE = 'performance';
 
 	/** variables */
 	const LANG = 'lang';
@@ -52,7 +50,7 @@ final class Environment
 	private static $name;
 
 	/** @var string  the mode of current application */
-	private $mode = self::NORMAL_MODE;
+	private static $mode = array();
 
 	/** @var Config */
 	private static $config;
@@ -105,7 +103,6 @@ final class Environment
 	{
 		if (self::$name === NULL) {
 			self::$name = (string) $name;
-			//self::setVariable('envName', self::$name, FALSE);
 			//if (!defined('ENVIRONMENT')) define('ENVIRONMENT', self::$name);
 
 		} else {
@@ -122,6 +119,7 @@ final class Environment
 	public static function getName()
 	{
 		if (self::$name === NULL) {
+			// environment name autodetection
 			if (defined('ENVIRONMENT')) {
 				self::setName(ENVIRONMENT);
 
@@ -147,27 +145,32 @@ final class Environment
 
 
 	/**
-	 * Sets the mode.
+	 * Sets the mode. (EXPERIMENTAL)
 	 *
-	 * @param  int mode
+	 * @param  string mode identifier
+	 * @param  bool   set or unser
 	 * @return void
 	 */
-	public function setMode($mode)
+	public static function setMode($mode, $flag = TRUE)
 	{
-		$this->mode = $mode;
+		if ($flag) {
+			self::$mode[$mode] = TRUE;
+		} else {
+			unset(self::$mode[$mode]);
+		}
 	}
 
 
 
 	/**
-	 * Returns the mode.
+	 * Returns the mode. (EXPERIMENTAL)
 	 *
-	 * @param  int mode mask
-	 * @return int|bool
+	 * @param  string mode identifier
+	 * @return bool|array
 	 */
-	final public function getMode($mask = NULL)
+	public static function getMode($mode)
 	{
-		return $mask === NULL ? $this->mode : (bool) $this->mode & $mask;
+		return $mode === NULL ? self::$mode : isset(self::$mode[$mode]);
 	}
 
 
@@ -503,6 +506,13 @@ final class Environment
 		if ($cfg->const instanceof Config) {
 			foreach ($cfg->const as $key => $value) {
 				define($key, $value);
+			}
+		}
+
+        // set mode
+		if (isset($cfg->mode)) {
+			foreach(explode(',', $cfg->mode) as $mode) {
+				self::setMode($mode);
 			}
 		}
 

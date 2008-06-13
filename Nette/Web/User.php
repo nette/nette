@@ -70,7 +70,7 @@ class User extends /*Nette::*/Object
 	public function __construct($name = NULL)
 	{
 		$this->namespace = $name === NULL ? $this->getClass() : $name;
-		$this->cookiePath = Environment::getHttpRequest()->getUri()->basePath . '/';
+		$this->cookiePath = Environment::getHttpRequest()->getUri()->basePath;
 		$this->initSession();
 	}
 
@@ -323,7 +323,7 @@ class User extends /*Nette::*/Object
 	 */
 	final public function isInRole($role)
 	{
-		return array_search($role, $this->getRoles(), TRUE);
+		return in_array($role, $this->getRoles(), TRUE);
 	}
 
 
