@@ -1,0 +1,49 @@
+body {
+	font-size: 100%;
+	font-family: "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+	color: #333;
+	background-color: #fff;
+}
+
+h1 {
+	font-size: 150%;
+	color: #165ca3;
+}
+
+h2 {
+	font-size: 120%;
+	color: #165ca3;
+}
+
+#content {
+	width: 770px;
+	margin: 0 5px;
+}
+
+label {
+	width: 100px;
+	display: block;
+	float: left;
+}
+
+form input {
+    margin-bottom: 2px;
+}
+
+#formbutton {
+	margin-left: 100px;
+}
+
+a {
+	color: #000080;
+}
+
+#message {
+    margin: 10px 0;
+    color: #f00;
+}
+
+#logged-in {
+    margin-top: 3em;
+    font-size: 90%;
+}

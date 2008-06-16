@@ -78,7 +78,7 @@ class RobotLoader extends AutoLoader
 		if ($this->list === NULL) {
 			$this->list = array(); // prevents cycling
 
-			$cache = $this->cache ? $this->cache : /*Nette::*/Environment::getCache('Nette:RobotLoader');
+			$cache = $this->cache ? $this->cache : /*Nette::*/Environment::getCache('Nette.RobotLoader');
 			$data = $cache['data'];
 			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
 

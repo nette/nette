@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Nette Framework
+ *
+ * Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+ *
+ * This source file is subject to the "Nette license" that is bundled
+ * with this package in the file license.txt.
+ *
+ * For more information please see http://nettephp.com/
+ *
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @license    http://nettephp.com/license  Nette license
+ * @link       http://nettephp.com/
+ * @category   Nette
+ * @package    Nette::Application
+ */
+
+
+/**
+ * Redirect page template.
+ *
+ * @author     David Grudl
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @package    Nette::Application
+ * @version    $Revision: 12 $ $Date: 2008-02-15 05:52:58 +0100 (pá, 15 II 2008) $
+ */
+
+// passed parameters: $title, $message, $uri
+
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Language" content="en">
+	<meta name="robots" content="noindex,noarchive">
+	<meta name="generator" content="Nette Framework">
+	<meta http-equiv="refresh" content="5;url=<?php echo htmlSpecialChars($uri) ?>">
+
+	<title><?php echo htmlSpecialChars($title) ?></title>
+</head>
+
+<body>
+	<h1><?php echo htmlSpecialChars($title) ?></h1>
+
+	<p><a href="<?php echo htmlSpecialChars($uri) ?>">Please click here to continue</a>.</p>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<h1>{$title}</h1>
+
+{if !empty($message)}
+<div id="message">
+{$message}
+</div>
+{/if}
+
+<form action="{$component->link('login!')}" method="post">
+<div>
+	<label for="username">Username</label>
+	<input type="text" name="username" value=""/>
+</div>
+<div>
+	<label for="password">Password</label>
+	<input type="password" name="password" value=""/>
+</div>
+<div id="formbutton">
+	<input type="submit" name="login" value="Login" />
+</div>
+</form>

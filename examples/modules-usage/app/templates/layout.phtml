@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>Modules demo</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="{$baseUri}css/site.css" />
+</head>
+
+<body>
+	<div id="path">
+		<span id="module">{$module}<span id="presenter">{$presenter}:<span id="view">{$view}</span></span></span>
+	</div>
+
+	<fieldset>
+		<legend>This is layout template <em>{$template->fileName}</em></legend>
+
+		<h1>Modules demo</h1>
+
+		<fieldset>
+			<legend>This is content template <em>{$content->fileName}</em></legend>
+			{!content}
+		</fieldset>
+
+
+		<h2>Absolute links</h2>
+		<ul>
+			<li><a href="{$component->link(':Front:Default:')}"><code>:Front:Default:</code></a> - link to presenter <em>Front:Default</em></li>
+			<li><a href="{$component->link(':Admin:Default:')}"><code>:Admin:Default:</code></a> - link to presenter <em>Admin:Default</em></li>
+		</ul>
+	</fieldset>
+</body>
+</html>

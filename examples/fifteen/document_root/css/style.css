@@ -1,0 +1,25 @@
+img {
+    border: none;
+}
+
+table img {
+    display: block;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0;
+}
+
+#spinner {
+    display: none;
+    position: absolute !important;
+    margin-left: 10px !important;
+    border: none !important;
+    z-index: 1000;
+}

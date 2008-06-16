@@ -14,53 +14,46 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com/
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette::Application
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette::Application;*/
 
 
 
-require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
+require_once dirname(__FILE__) . '/../Application/AbortException.php';
 
 
 
 /**
- * Cache file storage.
+ * Abort presenter and forwarding to new request.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class TemplateStorage extends FileStorage
+class ForwardingException extends AbortException
 {
+	/** @var PresenterRequest */
+	private $request;
 
-	/**
-	 * Reads cache data from disk.
-	 * @param  array
-	 * @return mixed
-	 */
-	protected function readData($meta)
+
+
+	public function __construct(PresenterRequest $request)
 	{
-		return array(
-			'file' => $meta['file'],
-			'handle' => $meta['handle'],
-		);
+		$this->request = $request;
+		parent::__construct();
 	}
 
 
 
 	/**
-	 * Returns file name.
-	 * @param  string
-	 * @return string
+	 * @return PresenterRequest
 	 */
-	protected function getCacheFile($key)
+	final public function getRequest()
 	{
-		$path = $this->base . urlencode($key);
-		if (substr($path, -6) !== '.phtml') $path .= '.phtml';
-		return $path;
+		return $this->request;
 	}
 
 }

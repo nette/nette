@@ -1,0 +1,13 @@
+<h1>{$title}</h1>
+
+{if $album}
+<form action="<?= $action; ?>" method="post">
+	<p>Are you sure that you want to delete '{$album->title}' by '{$album->artist}'?</p>
+	<div>
+		<input type="submit" name="del" value="Yes" />
+		<input type="submit" name="del" value="No" />
+	</div>
+</form>
+{else}
+<p>Cannot find album.</p>
+{/if}

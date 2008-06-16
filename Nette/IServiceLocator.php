@@ -34,18 +34,26 @@ interface IServiceLocator
 
 	/**
 	 * Adds the specified service to the service container.
+	 * @param  mixed  object, class name or service factory callback
+	 * @param  string optional service name (for factories is not optional)
+	 * @param  bool   promote to higher level?
+	 * @return void
 	 */
-	function addService($service, $promote = FALSE);
+	function addService($service, $name = NULL, $promote = FALSE);
 
 	/**
 	 * Removes the specified service type from the service container.
+	 * @param  bool   promote to higher level?
+	 * @return void
 	 */
-	function removeService($type, $promote = FALSE);
+	function removeService($name, $promote = FALSE);
 
 	/**
 	 * Gets the service object of the specified type.
+	 * @param  string service name
+	 * @return mixed
 	 */
-	function getService($type);
+	function getService($name);
 
 	/**
 	 * Returns the container if any.

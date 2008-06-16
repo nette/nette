@@ -118,9 +118,10 @@ class ServiceLocator extends Object implements IServiceLocator
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @return void
+	 * @param  bool
+	 * @return mixed
 	 */
-	public function getService($name)
+	public function getService($name, $need = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
 			throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
@@ -132,9 +133,8 @@ class ServiceLocator extends Object implements IServiceLocator
 			$service = $this->registry[$lower];
 			if (is_object($service)) {
 				return $service;
-			}
 
-			if (is_string($service)) {
+			} elseif (is_string($service)) {
 				if (substr($service, -2) === '()') {
 					// trick to pass callback as string
 					$service = substr($service, 0, -2);
@@ -159,12 +159,17 @@ class ServiceLocator extends Object implements IServiceLocator
 			if (class_exists($name)) {
 				return $this->registry[$lower] = new $name;
 			}
-
-		} elseif ($this->parent !== NULL) {
-			return $this->parent->getService($name);
 		}
 
-		return NULL;
+		if ($this->parent !== NULL) {
+			return $this->parent->getService($name);
+
+		} elseif ($need) {
+			throw new /*::*/InvalidStateException("Service '$name' was not added.");
+
+		} else {
+			return NULL;
+		}
 	}
 
 

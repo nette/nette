@@ -1,0 +1,210 @@
+<h1>Nette::Application::Route test</h1>
+
+<pre>
+
+<hr><h2>Optional presenter</h2>
+/presenter/view/12/any: no match
+parsed: OK
+
+
+/presenter/view/12/: matched
+parsed: OK
+generated: OK <code>/presenter/view/12?test=testvalue</code>
+
+
+/presenter/view/12: matched
+parsed: OK
+generated: OK <code>/presenter/view/12?test=testvalue</code>
+
+
+/presenter/view/1234: no match
+parsed: OK
+
+
+/presenter/view/: matched
+parsed: OK
+generated: OK <code>/presenter/view/?test=testvalue</code>
+
+
+/presenter/view: matched
+parsed: OK
+generated: OK <code>/presenter/view/?test=testvalue</code>
+
+
+/presenter/: matched
+parsed: OK
+generated: OK <code>/presenter/?test=testvalue</code>
+
+
+/presenter: matched
+parsed: OK
+generated: OK <code>/presenter/?test=testvalue</code>
+
+
+/: no match
+parsed: OK
+
+
+
+<hr><h2>Extra default param</h2>
+/presenter/view/12/any: no match
+parsed: OK
+
+
+/presenter/view/12: matched
+parsed: OK
+generated: OK <code>/presenter/view/12/?test=testvalue</code>
+
+
+/presenter/view/1234: no match
+parsed: OK
+
+
+/presenter/view/: no match
+parsed: OK
+
+
+/presenter: no match
+parsed: OK
+
+
+/: no match
+parsed: OK
+
+
+
+<hr><h2>No default params</h2>
+/presenter/view/12: matched
+parsed: OK
+generated: OK <code></code>
+
+
+
+<hr><h2>Combined URL param</h2>
+/presenter/view/: no match
+parsed: OK
+
+
+/extrapresenter/view/: matched
+parsed: OK
+generated: OK <code>/extrapresenter/view?test=testvalue</code>
+
+
+/extradefault/default/: matched
+parsed: OK
+generated: OK <code>/extra?test=testvalue</code>
+
+
+/extra: matched
+parsed: OK
+generated: OK <code>/extra?test=testvalue</code>
+
+
+/: no match
+parsed: OK
+
+
+
+<hr><h2>With default presenter and view</h2>
+/presenter/view/: matched
+parsed: OK
+generated: OK <code>/presenter/view?test=testvalue</code>
+
+
+/default/default/: matched
+parsed: OK
+generated: OK <code>/?test=testvalue</code>
+
+
+/presenter: matched
+parsed: OK
+generated: OK <code>/presenter/?test=testvalue</code>
+
+
+/: matched
+parsed: OK
+generated: OK <code>/?test=testvalue</code>
+
+
+
+<hr><h2>One way</h2>
+/presenter/view/: matched
+parsed: OK
+generated: OK <code></code>
+
+
+
+<hr><h2>With host</h2>
+/abc: matched
+parsed: OK
+generated: OK <code>//admin.texy.info/abc?test=testvalue</code>
+
+
+
+<hr><h2>With absolute path</h2>
+/abc: matched
+parsed: OK
+generated: OK <code>/abc/?test=testvalue</code>
+
+
+
+<hr><h2>With params in query</h2>
+/view/: matched
+parsed: OK
+generated: OK <code>/view?test=testvalue&presenter=querypresenter</code>
+
+
+/: matched
+parsed: OK
+generated: OK <code>/?test=testvalue&presenter=querypresenter</code>
+
+
+
+<hr><h2>With named params in query</h2>
+/view/: matched
+parsed: OK
+generated: OK <code>/view?test=querypresenter</code>
+
+
+/: matched
+parsed: OK
+generated: OK <code>/?test=querypresenter</code>
+
+
+
+<hr><h2>camelCaps vs dash</h2>
+/abc-x-y-z: matched
+parsed: OK
+generated: OK <code>/abc-x-y-z?test=testvalue</code>
+
+
+/: matched
+parsed: OK
+generated: OK <code>/?test=testvalue</code>
+
+
+/--: no match
+parsed: OK
+
+
+
+<hr><h2>Modules</h2>
+/abc: matched
+parsed: OK
+generated: OK <code>/abc?test=testvalue</code>
+
+
+/: no match
+parsed: OK
+
+
+/: matched
+parsed: OK
+generated: OK <code>/?test=testvalue</code>
+
+
+/module.submodule: matched
+parsed: OK
+generated: OK <code>/module.submodule/?test=testvalue</code>
+
+

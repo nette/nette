@@ -323,13 +323,14 @@ final class Environment
 
 
 	/**
-	 * Gets the service.
-	 * @param  string
-	 * @return object
+	 * Gets the service object of the specified type.
+	 * @param  string service name
+	 * @param  bool
+	 * @return mixed
 	 */
-	static public function getService($name)
+	static public function getService($name, $need = TRUE)
 	{
-		return self::getServiceLocator()->getService($name);
+		return self::getServiceLocator()->getService($name, $need);
 	}
 
 
@@ -437,7 +438,7 @@ final class Environment
 			$useCache = $name === self::PRODUCTION;
 		}
 
-		$cache = $useCache ? self::getCache('Nette:Environment') : NULL;
+		$cache = $useCache ? self::getCache('Nette.Environment') : NULL;
 
 		if (isset($cache[$name])) {
 			list(self::$vars, self::$config, self::$locator) = $cache[$name];
@@ -509,7 +510,7 @@ final class Environment
 			}
 		}
 
-        // set mode
+		// set mode
 		if (isset($cfg->mode)) {
 			foreach(explode(',', $cfg->mode) as $mode) {
 				self::setMode($mode);

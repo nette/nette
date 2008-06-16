@@ -14,53 +14,36 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com/
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette::Application
  */
 
-/*namespace Nette::Caching;*/
-
-
-
-require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
+/*namespace Nette::Application;*/
 
 
 
 /**
- * Cache file storage.
+ *
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class TemplateStorage extends FileStorage
+interface IStatePersistent
 {
 
 	/**
-	 * Reads cache data from disk.
+	 * Loads state informations.
 	 * @param  array
-	 * @return mixed
+	 * @return void
 	 */
-	protected function readData($meta)
-	{
-		return array(
-			'file' => $meta['file'],
-			'handle' => $meta['handle'],
-		);
-	}
-
-
+	function loadState(array $params);
 
 	/**
-	 * Returns file name.
-	 * @param  string
-	 * @return string
+	 * Saves state informations for next request.
+	 * @param  array
+	 * @return void
 	 */
-	protected function getCacheFile($key)
-	{
-		$path = $this->base . urlencode($key);
-		if (substr($path, -6) !== '.phtml') $path .= '.phtml';
-		return $path;
-	}
+	function saveState(array & $params);
 
 }
