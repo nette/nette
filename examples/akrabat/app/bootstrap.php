@@ -26,6 +26,7 @@ $application = Environment::getApplication();
 $router = $application->getRouter();
 $router[] = new Route('index.php', array(
 	'presenter' => 'Default',
+	'view' => 'default',
 ), Route::ONE_WAY);
 
 $router[] = new Route('<presenter>/<view>/<id>', array(
