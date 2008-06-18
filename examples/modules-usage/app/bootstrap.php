@@ -22,12 +22,12 @@ Debug::enable(E_ALL | E_STRICT);
 $application = Environment::getApplication();
 $router = $application->getRouter();
 $router[] = new Route('index.php', array(
-	'module' => 'front',
-	'presenter' => 'default',
+	'module' => 'Front',
+	'presenter' => 'Default',
 ), Route::ONE_WAY);
 
 $router[] = new Route('<presenter #d>/<view>/<id>', array(
-	'presenter' => 'default',
+	'presenter' => 'Default',
 	'view' => 'default',
 	'id' => NULL,
 ));

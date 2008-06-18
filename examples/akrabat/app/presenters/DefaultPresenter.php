@@ -13,7 +13,7 @@ class DefaultPresenter extends BasePresenter
 		// user authentication
 		$user = Environment::getUser();
 		if (!$user->isAuthenticated()) {
-			$this->redirect('auth:login', $this->backlink());
+			$this->redirect('Auth:login', $this->backlink());
 		}
 
 		$this->template->user = $user->getIdentity();
