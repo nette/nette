@@ -1,4 +1,4 @@
-<h1>Nette::Caching::Cache expiration test</h1>
+<h1>Nette::Caching::Cache constant dependency test</h1>
 
 <pre>
 <?php
@@ -16,16 +16,13 @@ foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 $cache = new Cache(new /*Nette::Caching::*/FileStorage("$tmpDir/prefix-"));
 
 
+define('ANY_CONST', 10);
+
+
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-	'expire' => time() + 2,
+	'consts' => 'ANY_CONST',
 ));
 
-
-for($i = 0; $i < 4; $i++) {
-	echo "Sleeping 1.1 second\n";
-	usleep(1100000);
-	clearstatcache();
-	echo "Is cached?";
-	Debug::dump(isset($cache[$key]));
-}
+echo "Is cached?\n";
+Debug::dump(isset($cache[$key]));

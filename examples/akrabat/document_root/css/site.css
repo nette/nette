@@ -27,7 +27,7 @@ label {
 }
 
 form input {
-    margin-bottom: 2px;
+	margin-bottom: 2px;
 }
 
 #formbutton {
@@ -39,11 +39,11 @@ a {
 }
 
 #message {
-    margin: 10px 0;
-    color: #f00;
+	margin: 10px 0;
+	color: #f00;
 }
 
 #logged-in {
-    margin-top: 3em;
-    font-size: 90%;
+	margin-top: 3em;
+	font-size: 90%;
 }

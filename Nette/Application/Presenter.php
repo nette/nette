@@ -334,7 +334,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
-		$this->view = $view == NULL ? self::DEFAULT_VIEW : strtolower($view);  // intentionally ==
+		$this->view = $view == NULL ? self::DEFAULT_VIEW : $view;  // intentionally ==
 	}
 
 
@@ -356,12 +356,12 @@ abstract class Presenter extends Control implements IPresenter
 				}
 			}
 
-			if ($template->getFile()) {
-				$template->addTemplate('content', $file);
-
-			} elseif (!$found) {
+			if (!$found) {
 				throw new /*::*/FileNotFoundException("Page not found. Missing template '$template->root/$files[0]'.");
+			}
 
+			if ($template->getFile()) { // has layout?
+				$template->addTemplate('content', $file);
 			} else {
 				$template->setFile($file);
 			}
@@ -449,16 +449,14 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatTemplateLayoutFiles($presenter)
 	{
-		$a = strrpos($presenter, ':');
-		if ($a === FALSE) {
-			$presenter = '';
-		} else {
-			$presenter = substr($presenter, 0, $a + 1);
-			$presenter = str_replace(':', 'Module/', $presenter);
-		}
+		$presenter = str_replace(':', 'Module/', $presenter);
+		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
 		return array(
-			"{$presenter}layout.phtml",
-			"layout.phtml",
+			"$presenter/@layout.phtml",
+			"$presenter.@layout.phtml",
+			"$module/@layout.phtml",
+			"@layout.phtml",
+			"layout.phtml", // back compatibility
 		);
 	}
 
@@ -472,12 +470,13 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatTemplateFiles($presenter, $view)
 	{
-		$view = preg_replace('#[^a-z0-9]#i', '-', $view);
+		if (!preg_match("#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
+			return array();
+		}
 		$presenter = str_replace(':', 'Module/', $presenter);
 		return array(
-			"{$presenter}Presenter/$view.phtml",
-			"{$presenter}Presenter.$view.phtml",
 			"$presenter/$view.phtml",
+			"$presenter.$view.phtml",
 		);
 	}
 
@@ -744,9 +743,8 @@ abstract class Presenter extends Control implements IPresenter
 		// parse $destination
 		$destination = explode(':', $destination);
 
-		$view = strtolower(array_pop($destination));
+		$view = array_pop($destination);
 		if ($view === '') $view = self::DEFAULT_VIEW;
-		$view = strtolower($view);
 
 		if (!count($destination)) {
 			$presenter = $this->request->getPresenterName();
@@ -755,13 +753,13 @@ abstract class Presenter extends Control implements IPresenter
 		} elseif ($destination[0] === '') {
 			unset($destination[0]);
 			$presenter = implode(':', $destination);
-			$presenterClass = Environment::getApplication()->getPresenterFactory()->getPresenterClass($presenter);
+			$presenterClass = Environment::getApplication()->getPresenterLoader()->getPresenterClass($presenter);
 
 		} else {
 			$presenter = explode(':', $this->request->getPresenterName());
 			array_splice($presenter, -1, 1, $destination);
 			$presenter = implode(':', $presenter);
-			$presenterClass = Environment::getApplication()->getPresenterFactory()->getPresenterClass($presenter);
+			$presenterClass = Environment::getApplication()->getPresenterLoader()->getPresenterClass($presenter);
 		}
 
 		if (is_subclass_of($presenterClass, __CLASS__)) {
@@ -945,7 +943,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		// init $this->view
 		if (isset($selfParams[self::VIEW_KEY])) {
-			$view = strtolower($selfParams[self::VIEW_KEY]);
+			$view = $selfParams[self::VIEW_KEY];
 			$realView = $this->getViewForSignal($view);
 			if ($realView !== FALSE) {
 				$selfParams[self::SIGNAL_KEY] = $view;

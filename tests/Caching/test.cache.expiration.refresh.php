@@ -26,12 +26,14 @@ $cache->save($key, $value, array(
 for($i = 0; $i < 3; $i++) {
 	echo "Sleeping 1 second\n";
 	sleep(1);
+	clearstatcache();
 	echo "Is cached?";
 	Debug::dump(isset($cache[$key]));
 }
 
 echo "Sleeping few seconds...\n";
 sleep(3);
+clearstatcache();
 
 echo "Is cached?";
 Debug::dump(isset($cache[$key]));

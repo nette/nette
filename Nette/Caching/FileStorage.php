@@ -61,6 +61,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 *     df => array of dependent files (file => timestamp)
 	 *     di => array of dependent items (file => timestamp)
 	 *     tags => array of tags (tag => [foo])
+	 *     consts => array of constants (const => [value])
 	 */
 
 	/** @var int */
@@ -105,9 +106,11 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 		// verify dependencies
 		do {
+			/*
 			if (!empty($meta['delta']) || !empty($meta['df'])) {
 				clearstatcache();
 			}
+            */
 
 			if (!empty($meta['delta'])) {
 				if (filemtime($cacheFile) + $meta['delta'] < time()) break;
@@ -115,6 +118,12 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 			} elseif (!empty($meta['expire']) && $meta['expire'] < time()) {
 				break;
+			}
+
+			if (!empty($meta['consts'])) {
+				foreach ($meta['consts'] as $const => $value) {
+					if (!defined($const) || constant($const) !== $value) break 2;
+				}
 			}
 
 			if (!empty($meta['df'])) {
@@ -188,9 +197,15 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp['files'])) {
-			clearstatcache();
+			//clearstatcache();
 			foreach ((array) $dp['files'] as $depFile) {
 				$meta['df'][$depFile] = @filemtime($depFile); // intentionally @
+			}
+		}
+
+		if (!empty($dp['consts'])) {
+			foreach ((array) $dp['consts'] as $const) {
+				$meta['consts'][$const] = constant($const);
 			}
 		}
 

@@ -46,6 +46,7 @@ Debug::dump(isset($cache[$key]));
 echo "Modifing dependent file\n";
 sleep(2);
 file_put_contents($dependentFile, 'b');
+clearstatcache();
 
 echo "Is cached?";
 Debug::dump(isset($cache[$key]));

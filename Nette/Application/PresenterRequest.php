@@ -68,16 +68,28 @@ final class PresenterRequest extends /*Nette::*/Object
 	 */
 	public function __construct($name, $source, array $params, Hashtable $post = NULL, Hashtable $files = NULL)
 	{
-		if (empty($name)) {
-			throw new InvalidArgumentException('Invalid presenter name');
-		}
-
-		$this->presenter = $name;
+		$this->setPresenterName($name);
 		$this->source = $source;
 		//$this->params = $params;
 		$this->params = new Hashtable($params);
 		$this->post = $post;
 		$this->files = $files;
+	}
+
+
+
+	/**
+	 * Retrieve the presenter name.
+	 * @param  string
+	 * @return void
+	 */
+	public function setPresenterName($name)
+	{
+		if (!is_string($name) || $name === '') {
+			throw new /*::*/InvalidArgumentException("Presenter name must be non-empty string.");
+		}
+
+		$this->presenter = $name;
 	}
 
 

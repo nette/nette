@@ -50,18 +50,30 @@ class Route extends /*Nette::*/Object implements IRouter
 	const RELATIVE = 3;
 
 	/** @var bool */
-	public static $defaultCaseSensitivity = TRUE;
+	public static $defaultCaseSensitivity = FALSE;
 
 	/** @var array */
 	public static $defaults = array(
 		'' => array(
 			're' => '[^/]+',
 		),
-		'#ident' => array(
-			're' => '[a-z][a-z0-9_]*',
-		),
 		'#d' => array(
+			're' => '[a-z][a-z0-9-]*',
+			'filterIn' => /*Nette::Application::*/'Route::dash2camel',
+			'filterOut' => /*Nette::Application::*/'Route::camel2dash',
+		),
+		'module' => array(
 			're' => '[a-z][a-z0-9.-]*',
+			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
+			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
+		),
+		'presenter' => array(
+			're' => '[a-z][a-z0-9.-]*',
+			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
+			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
+		),
+		'view' => array(
+			're' => '[a-z][a-z0-9-]*',
 			'filterIn' => /*Nette::Application::*/'Route::dash2camel',
 			'filterOut' => /*Nette::Application::*/'Route::camel2dash',
 		),
@@ -247,7 +259,11 @@ class Route extends /*Nette::*/Object implements IRouter
 				if ($optional) {
 					$uri = '';
 				} else {
-					$uri = $meta['default'] . $uri;
+					if (isset($meta['filterOut'])) {
+						$uri = call_user_func($meta['filterOut'], $meta['default']) . $uri;
+					} else {
+						$uri = $meta['default'] . $uri;
+					}
 				}
 
 			} else {
@@ -390,6 +406,10 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 
+	/********************* Utilities ****************d*g**/
+
+
+
 	/**
 	 * Proprietary cache aim.
 	 * @return string|FALSE
@@ -442,6 +462,10 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 
+	/********************* Inflectors ****************d*g**/
+
+
+
 	/**
 	 * camelCase -> dash-separated.
 	 * @param  string
@@ -449,7 +473,9 @@ class Route extends /*Nette::*/Object implements IRouter
 	 */
 	private static function camel2dash($s)
 	{
-		return strtr(strtolower(preg_replace('#(.)(?=[A-Z])#', '$1-', $s)), ':', '.');
+		$s = preg_replace('#(.)(?=[A-Z])#', '$1-', $s);
+		$s = strtolower($s);
+		return $s;
 	}
 
 
@@ -461,7 +487,44 @@ class Route extends /*Nette::*/Object implements IRouter
 	 */
 	private static function dash2camel($s)
 	{
-		return strtr(preg_replace('#-([a-z])#e', 'strtoupper("$1")', $s), '.', ':');
+		$s = strtolower($s);
+		$s = preg_replace('#-(?=[a-z])#', ' ', $s);
+		$s = ucwords('x' . $s);
+		$s = substr($s, 1);
+		$s = str_replace(' ', '', $s);
+		return $s;
+	}
+
+
+
+	/**
+	 * PascalCase:WithColons -> dash-and-dot-separated.
+	 * @param  string
+	 * @return string
+	 */
+	private static function pascal2dash($s)
+	{
+		$s = strtr($s, ':', '.');
+		$s = preg_replace('#([^.])(?=[A-Z])#', '$1-', $s);
+		$s = strtolower($s);
+		return $s;
+	}
+
+
+
+	/**
+	 * dash-and-dot-separated -> PascalCase:WithColons.
+	 * @param  string
+	 * @return string
+	 */
+	private static function dash2pascal($s)
+	{
+		$s = strtolower($s);
+		$s = preg_replace('#([.-])(?=[a-z])#', '$1 ', $s);
+		$s = ucwords($s);
+		$s = str_replace('. ', ':', $s);
+		$s = str_replace('- ', '', $s);
+		return $s;
 	}
 
 }

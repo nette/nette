@@ -99,6 +99,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	 *       tags => (array) tags
 	 *       files => (array|string) file names
 	 *       items => (array|string) cache items
+	 *       consts => (array|string) cache items
 	 *
 	 * @param  string key
 	 * @param  mixed

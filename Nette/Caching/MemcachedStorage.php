@@ -74,11 +74,21 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		//     data => stored data
 		//     delta => relative (sliding) expiration
 		//     df => array of dependent files (file => timestamp)
+	 	//     consts => array of constants (const => [value])
 		// )
 
 		// verify dependencies
+		if (!empty($meta['consts'])) {
+			foreach ($meta['consts'] as $const => $value) {
+				if (!defined($const) || constant($const) !== $value) {
+					$this->memcache->delete($key);
+					return NULL;
+				}
+			}
+		}
+
 		if (!empty($meta['df'])) {
-			clearstatcache();
+			//clearstatcache();
 			foreach ($meta['df'] as $depFile => $time) {
 				if (@filemtime($depFile) <> $time) {
 					$this->memcache->delete($key);
@@ -122,9 +132,15 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp['files'])) {
-			clearstatcache();
+			//clearstatcache();
 			foreach ((array) $dp['files'] as $depFile) {
 				$meta['df'][$depFile] = @filemtime($depFile); // intentionally @
+			}
+		}
+
+		if (!empty($dp['consts'])) {
+			foreach ((array) $dp['consts'] as $const) {
+				$meta['consts'][$const] = constant($const);
 			}
 		}
 

@@ -40,8 +40,8 @@ final class Environment
 	const LAB = 'lab';
 
 	/** modes: */
-	const DEBUG_MODE = 'debug';
-	const PERFORMANCE_MODE = 'performance';
+	const DEBUG = 'debug';
+	const PERFORMANCE = 'performance';
 
 	/** variables */
 	const LANG = 'lang';
@@ -79,6 +79,7 @@ final class Environment
 		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
 		'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
 		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'factoryCacheStorage'),
+		'Nette::Configurator' => 'Nette::Configurator',
 	);
 
 
@@ -90,6 +91,10 @@ final class Environment
 	{
 		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
 	}
+
+
+
+	/********************* environment name and modes ****************d*g**/
 
 
 
@@ -119,33 +124,16 @@ final class Environment
 	public static function getName()
 	{
 		if (self::$name === NULL) {
-			// environment name autodetection
-			if (defined('ENVIRONMENT')) {
-				self::setName(ENVIRONMENT);
-
-			} elseif (self::isConsole()) {
-				self::setName(self::CONSOLE);
-
-			} elseif (isset($_SERVER['SERVER_ADDR'])) {
-				// detect by IP address
-				$oct = explode('.', $_SERVER['SERVER_ADDR']);
-				self::setName((count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
-					|| ($oct[0] === '169' && $oct[1] === '254') || ($oct[0] === '192' && $oct[1] === '168'))
-					? self::DEVELOPMENT
-					: self::PRODUCTION);
-
-			} else {
-				self::setName(self::PRODUCTION);
-			}
+			$configurator = self::getService('Nette::Configurator');
+			self::setName($configurator->detectMode('environment'));
 		}
-
 		return self::$name;
 	}
 
 
 
 	/**
-	 * Sets the mode. (EXPERIMENTAL)
+	 * Sets the mode.
 	 *
 	 * @param  string mode identifier
 	 * @param  bool   set or unser
@@ -153,24 +141,26 @@ final class Environment
 	 */
 	public static function setMode($mode, $flag = TRUE)
 	{
-		if ($flag) {
-			self::$mode[$mode] = TRUE;
-		} else {
-			unset(self::$mode[$mode]);
-		}
+		self::$mode[$mode] = (bool) $flag;
 	}
 
 
 
 	/**
-	 * Returns the mode. (EXPERIMENTAL)
+	 * Returns the mode.
 	 *
 	 * @param  string mode identifier
-	 * @return bool|array
+	 * @return bool
 	 */
 	public static function getMode($mode)
 	{
-		return $mode === NULL ? self::$mode : isset(self::$mode[$mode]);
+		if (isset(self::$mode[$mode])) {
+			return self::$mode[$mode];
+
+		} else {
+			$configurator = self::getService('Nette::Configurator');
+			return self::$mode[$mode] = $configurator->detectMode($mode);
+		}
 	}
 
 
@@ -181,7 +171,18 @@ final class Environment
 	 */
 	public static function isConsole()
 	{
-		return PHP_SAPI === 'cli';
+		return self::getMode('console');
+	}
+
+
+
+	/**
+	 * Determines if the debugger is active.
+	 * @return bool
+	 */
+	public static function isDebugging()
+	{
+		return self::getMode('debug');
 	}
 
 
@@ -227,6 +228,7 @@ final class Environment
 			if (isset($list['user'][$const])) {
 				self::$vars[$name] = array($list['user'][$const], FALSE);
 				return $list['user'][$const];
+
 			} else {
 				return $default;
 			}
@@ -245,6 +247,7 @@ final class Environment
 		if (!is_array($names)) {
 			$names = func_get_args();
 		}
+
 		foreach ($names as $name) {
 			$const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $name));
 			define($const, self::getVariable($name));
@@ -428,111 +431,9 @@ final class Environment
 	 */
 	public static function loadConfig($file = NULL, $useCache = NULL)
 	{
-		if ($file === NULL) {
-			$file = '%appDir%/config.ini';
-		}
-
-		$name = self::getName();
-
-		if ($useCache === NULL) {
-			$useCache = $name === self::PRODUCTION;
-		}
-
-		$cache = $useCache ? self::getCache('Nette.Environment') : NULL;
-
-		if (isset($cache[$name])) {
-			list(self::$vars, self::$config, self::$locator) = $cache[$name];
-			$cfg = self::$config;
-
-		} else {
-			if ($file instanceof Config) {
-				self::$config = $file;
-				$file = NULL;
-			} else {
-				$file = self::expand($file);
-				self::$config = Config::fromFile($file, $name, 0);
-			}
-
-			$cfg = self::$config;
-
-			// process environment variables
-			if ($cfg->variable instanceof Config) {
-				foreach ($cfg->variable as $key => $value) {
-					self::setVariable($key, $value);
-				}
-			}
-
-			if (isset($cfg->set->include_path)) {
-				$cfg->set->include_path = strtr($cfg->set->include_path, ';', PATH_SEPARATOR);
-			}
-
-			$cfg->expand();
-			$cfg->setReadOnly();
-
-			// process services
-			$locator = self::getServiceLocator();
-			if ($cfg->service instanceof Config) {
-				foreach ($cfg->service as $key => $value) {
-					$locator->addService($value, $key);
-				}
-			}
-
-			// save cache
-			if ($cache) {
-				$cache->save($name, array(self::$vars, self::$config, self::$locator), array('files' => $file));
-			}
-		}
-
-
-		// check temporary directory - TODO: discuss
-		/*
-		$dir = self::getVariable('tempDir');
-		if ($dir && !(is_dir($dir) && is_writable($dir))) {
-			trigger_error("Temporary directory '$dir' is not writable", E_USER_NOTICE);
-		}
-		*/
-
-		// process ini settings
-		if ($cfg->set instanceof Config) {
-			if (!function_exists('ini_set')) {
-				throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
-			}
-
-			foreach ($cfg->set as $key => $value) {
-				ini_set($key, $value);
-			}
-		}
-
-		// define constants
-		if ($cfg->const instanceof Config) {
-			foreach ($cfg->const as $key => $value) {
-				define($key, $value);
-			}
-		}
-
-		// set mode
-		if (isset($cfg->mode)) {
-			foreach(explode(',', $cfg->mode) as $mode) {
-				self::setMode($mode);
-			}
-		}
-
-		// execute services - TODO: discuss
-		/*
-		if ($cfg->run) {
-			$run = (array) $cfg->run;
-			ksort($run);
-			foreach ($run as $value) {
-				$a = strrpos($value, ':');
-				$service = substr($value, 0, $a - 1);
-				$service = $locator->getService($service);
-				$method = substr($value, $a + 1);
-				$service->$method();
-			}
-		}
-		*/
-
-		return $cfg;
+		$configurator = self::getService('Nette::Configurator');
+		$configurator->useCache = $useCache;
+		return self::$config = $configurator->loadConfig($file);
 	}
 
 
@@ -547,6 +448,22 @@ final class Environment
 			return self::$config->get($key, $default);
 		} else {
 			return self::$config;
+		}
+	}
+
+
+
+	/**
+	 * Caching helper.
+	 * @param  array
+	 * @return array
+	 */
+	public static function swapState($state)
+	{
+		if ($state === NULL) {
+			return array(self::$config, self::$vars, self::$locator);
+		} else {
+			list(self::$config, self::$vars, self::$locator) = $state;
 		}
 	}
 

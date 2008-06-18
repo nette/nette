@@ -21,54 +21,68 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/IPresenterFactory.php';
+require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
 
 
 
 /**
- * Default presenter factory.
+ * Default presenter loader.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class PresenterFactory implements IPresenterFactory
+class PresenterLoader implements IPresenterLoader
 {
+	/** @var bool */
+	public $caseSensitivity = FALSE;
+
+
 
 	/**
 	 * @param  string  presenter name
 	 * @return string  class name
      * @throws ApplicationException
 	 */
-	public function getPresenterClass($name)
+	public function getPresenterClass(& $name)
 	{
+		if (!preg_match("#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff:]*$#", $name)) {
+			throw new ApplicationException("Invalid presenter name '$name'.");
+		}
+
 		$class = $this->formatPresenterClass($name);
 
 		if (!class_exists($class)) {
 			// internal autoloading
-			if (!preg_match('#^(:[a-z][a-z0-9]*)*$#i', ':' . $name)) {
-				throw new /*::*/InvalidArgumentException("Invalid presenter name '$name'.");
-			}
-
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
 				include_once $file;
+			}
 
-				if (!class_exists($class)) {
-					throw new ApplicationException("Cannot load presenter '$name', missing class '$class' in '$file'.");
-				}
+			if (!class_exists($class)) {
+				throw new ApplicationException("Cannot load presenter '$name', missing class '$class' in '$file'.");
 			}
 		}
 
 		$reflection = new ReflectionClass($class);
+
+		// canonicalize presenter name
+		$realName = $this->unformatPresenterClass($reflection->getName());
+		if ($name !== $realName) {
+			if ($this->caseSensitivity) {
+				throw new ApplicationException("Cannot load presenter '$name'.");
+			} else {
+				$name = $realName;
+			}
+		}
 
 		if (!$reflection->implementsInterface(/*Nette::Application::*/'IPresenter')) {
 			throw new ApplicationException("Invalid presenter '$name'.");
 		}
 
 		if ($reflection->isAbstract()) {
-			throw new ApplicationException("Invalid (abstract) presenter '$name'.");
+			throw new ApplicationException("Invalid presenter '$name' - abstract class.");
 		}
 
 		return $class;
@@ -77,7 +91,7 @@ class PresenterFactory implements IPresenterFactory
 
 
 	/**
-	 * Formats presenter class name -> case sensitivity doesn't matter.
+	 * Formats presenter class name from its name.
 	 * @param  string
 	 * @return string
 	 */
@@ -91,15 +105,27 @@ class PresenterFactory implements IPresenterFactory
 
 
 	/**
-	 * Formats presenter class name -> case sensitivity DOES matter.
+	 * Formats presenter name from class name.
+	 * @param  string
+	 * @return string
+	 */
+	public static function unformatPresenterClass($name)
+	{
+		// PHP 5.3
+		// return str_replace('::', ':', substr($name, 0, -9));
+		return strtr(substr($name, 0, -9), '_', ':');
+	}
+
+
+
+	/**
+	 * Formats presenter class file name.
 	 * @param  string
 	 * @return string
 	 */
 	public static function formatPresenterFile($name)
 	{
-		$name = strtr($name, ':', ' ');
-		$name = ucwords(strtolower($name));
-		$name = strtr($name, ' ', '/');
+		$name = str_replace(':', 'Module/', $name);
 		$name = /*Nette::*/Environment::getVariable('presentersDir') . '/' . $name . 'Presenter.php';
 		return $name;
 	}

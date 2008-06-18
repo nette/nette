@@ -68,8 +68,8 @@ class Application extends /*Nette::*/Object
 	/** @var IRouter */
 	private $router;
 
-	/** @var IPresenterFactory */
-	private $presenterFactory;
+	/** @var IPresenterLoader */
+	private $presenterLoader;
 
 	/** @var ServiceLocator */
 	private $locator;
@@ -129,7 +129,9 @@ class Application extends /*Nette::*/Object
 				$this->requests[] = $request;
 
 				// Instantiate presenter
-				$class = $this->getPresenterFactory()->getPresenterClass($request->getPresenterName());
+				$presenter = $request->getPresenterName();
+				$class = $this->getPresenterLoader()->getPresenterClass($presenter);
+				$request->setPresenterName($presenter); // TODO: better!
 				$this->presenter = new $class;
 
 				// Instantiate topmost service locator
@@ -247,25 +249,25 @@ class Application extends /*Nette::*/Object
 
 
 	/**
-	 * @return IPresenterFactory
+	 * @return IPresenterLoader
 	 */
-	public function getPresenterFactory()
+	public function getPresenterLoader()
 	{
-		if ($this->presenterFactory === NULL) {
-			$this->presenterFactory = new PresenterFactory;
+		if ($this->presenterLoader === NULL) {
+			$this->presenterLoader = new PresenterLoader;
 		}
-		return $this->presenterFactory;
+		return $this->presenterLoader;
 	}
 
 
 
 	/**
-	 * @param  IPresenterFactory
+	 * @param  IPresenterLoader
 	 * @return void
 	 */
-	public function setPresenterFactory(IPresenterFactory $factory)
+	public function setPresenterLoader(IPresenterLoader $loader)
 	{
-		$this->presenterFactory = $factory;
+		$this->presenterLoader = $loader;
 	}
 
 }

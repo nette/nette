@@ -58,7 +58,7 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 		// the default behaviour
 		if (!count($this)) {
 			$this[] = new SimpleRouter(array(
-				'presenter' => 'default',
+				'presenter' => 'Default',
 				'view' => 'default',
 			));
 		}

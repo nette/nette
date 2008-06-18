@@ -29,13 +29,13 @@
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-interface IPresenterFactory
+interface IPresenterLoader
 {
 
 	/**
 	 * @param  string  presenter name
 	 * @return string  class name
 	 */
-	function getPresenterClass($name);
+	function getPresenterClass(& $name);
 
 }
