@@ -99,8 +99,8 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array  cache for createRequest(), not static! */
 	private $requestCache = array();
 
-	/** @var bool  call canonicalize() */
-	//public $autoCanonicalize = FALSE;
+	/** @var bool  automatically call canonicalize() */
+	public $autoCanonicalize = FALSE;
 
 
 
@@ -144,7 +144,9 @@ abstract class Presenter extends Control implements IPresenter
 				$this->initGlobalParams();
 				$this->registerComponent($this->getUniqueId(), $this);
 				$this->startup();
-
+				//if ($this->autoCanonicalize) {
+				//	$this->canonicalize();
+				//}
 
 				// PHASE 2: PREPARING
 				$this->phase = self::PREPARING;
@@ -350,14 +352,14 @@ abstract class Presenter extends Control implements IPresenter
 			$found = FALSE;
 			$files = $this->formatTemplateFiles($this->request->getPresenterName(), $this->getView());
 			foreach ($files as $file) {
-				if (is_file($template->root . '/' . $file)) {
+				if (is_file($file)) {
 					$found = TRUE;
 					break;
 				}
 			}
 
 			if (!$found) {
-				throw new /*::*/FileNotFoundException("Page not found. Missing template '$template->root/$files[0]'.");
+				throw new /*::*/FileNotFoundException("Page not found. Missing template '$files[0]'.");
 			}
 
 			if ($template->getFile()) { // has layout?
@@ -426,12 +428,11 @@ abstract class Presenter extends Control implements IPresenter
 
 		$template->component = $this;
 		$template->presenter = $this;
-		$template->root = Environment::getVariable('templatesDir');
 		$template->baseUri = /*Nette::*/Environment::getVariable('basePath');
 
 		$files = $this->formatTemplateLayoutFiles($this->request->getPresenterName());
 		foreach ($files as $file) {
-			if (is_file($template->root . '/' . $file)) {
+			if (is_file($file)) {
 				$template->setFile($file);
 				break;
 			}
@@ -449,14 +450,15 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatTemplateLayoutFiles($presenter)
 	{
+		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
 		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
 		return array(
-			"$presenter/@layout.phtml",
-			"$presenter.@layout.phtml",
-			"$module/@layout.phtml",
-			"@layout.phtml",
-			"layout.phtml", // back compatibility
+			"$root/$presenter/@layout.phtml",
+			"$root/$presenter.@layout.phtml",
+			"$root/$module/@layout.phtml",
+			"$root/@layout.phtml",
+			"$root/layout.phtml", // back compatibility
 		);
 	}
 
@@ -473,10 +475,11 @@ abstract class Presenter extends Control implements IPresenter
 		if (!preg_match("#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
 			return array();
 		}
+		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
 		return array(
-			"$presenter/$view.phtml",
-			"$presenter.$view.phtml",
+			"$root/$presenter/$view.phtml",
+			"$root/$presenter.$view.phtml",
 		);
 	}
 
@@ -686,7 +689,9 @@ abstract class Presenter extends Control implements IPresenter
 	final public function canonicalize()
 	{
 		$httpRequest = Environment::getHttpRequest();
-		if ($httpRequest->getMethod() === 'POST') return;
+		if ($httpRequest->getMethod() === 'POST' || $httpRequest->isAjax()) {
+			return;
+		}
 
 		// TODO: what about signal args
 		$uri = $this->createSubRequest($this->getSignalReceiver(TRUE), $this->getSignal(), array());

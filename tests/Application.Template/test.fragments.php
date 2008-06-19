@@ -1,4 +1,4 @@
-<h1>Nette::Application::TemplateFilters::parts test</h1>
+<h1>Nette::Application::TemplateFilters::fragments test</h1>
 
 <?php
 require_once '../../Nette/loader.php';
@@ -13,11 +13,12 @@ foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
-$template->root = dirname(__FILE__) . '/templates';
-$template->registerFilter(/*Nette::Application::*/'TemplateFilters::parts');
+$template->setCache(NULL);
+$template->setFile(dirname(__FILE__) . '/templates/fragments.phtml#main');
+$template->registerFilter(/*Nette::Application::*/'TemplateFilters::fragments');
 $template->data = array(
 	array('John', 10, 20),
 	array('Mary', 30, 40),
 	array('Paul', 50, 60),
 );
-$template->render('parts.phtml#main');
+$template->render();

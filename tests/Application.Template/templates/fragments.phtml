@@ -1,21 +1,21 @@
 
-<nette:part id="main">
+<nette:fragment id="main">
 <table>
 <tbody>
 <?php foreach ($data as $row): ?>
 <tr>
 <? foreach ($row as $col): ?>
-<? $template->render('parts.phtml#td', array('col' => $col)); ?>
+<? $template->render('fragments.phtml#td', array('col' => $col)); ?>
 <?php endforeach ?>
 </tr>
 <?php endforeach ?>
 </tbody>
 </table>
-</nette:part>
+</nette:fragment>
 
 
-<nette:part id="td">
+<nette:fragment id="td">
 <td>
 <?php echo $col; ?>
 </td>
-</nette:part>
+</nette:fragment>

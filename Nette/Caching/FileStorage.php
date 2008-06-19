@@ -188,7 +188,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp['items'])) {
-			foreach ((array) $dp['items'] as $item) {
+			foreach ($dp['items'] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMeta($depFile, LOCK_SH);
 				$meta['di'][$depFile] = $m['time'];
@@ -271,7 +271,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		$tags = isset($conds['tags']) ? array_flip((array) $conds['tags']) : array();
+		$tags = isset($conds['tags']) ? array_flip($conds['tags']) : array();
 
 		$priority = isset($conds['priority']) ? $conds['priority'] : -1;
 

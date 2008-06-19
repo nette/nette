@@ -13,8 +13,8 @@ foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
-$template->root = dirname(__FILE__) . '/templates';
+$template->setCache(NULL);
 $template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
-$template->render('curly-brackets.phtml');
+$template->render(dirname(__FILE__) . '/templates/curly-brackets.phtml');

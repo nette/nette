@@ -57,11 +57,6 @@ class Route extends /*Nette::*/Object implements IRouter
 		'' => array(
 			're' => '[^/]+',
 		),
-		'#d' => array(
-			're' => '[a-z][a-z0-9-]*',
-			'filterIn' => /*Nette::Application::*/'Route::dash2camel',
-			'filterOut' => /*Nette::Application::*/'Route::camel2dash',
-		),
 		'module' => array(
 			're' => '[a-z][a-z0-9.-]*',
 			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',

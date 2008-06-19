@@ -267,7 +267,7 @@ class Html extends /*Nette::*/Object implements /*::*/ArrayAccess, /*::*/Countab
 			if ($child->parent !== NULL) {
 				throw new /*::*/InvalidStateException('Child node already has parent.');
 			}
-            //TODO: makes garbage collector life harder
+			//TODO: makes garbage collector life harder
 			//$child->parent = $this;
 
 		} elseif (!is_string($child)) {

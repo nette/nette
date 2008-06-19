@@ -74,7 +74,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		//     data => stored data
 		//     delta => relative (sliding) expiration
 		//     df => array of dependent files (file => timestamp)
-	 	//     consts => array of constants (const => [value])
+		//     consts => array of constants (const => [value])
 		// )
 
 		// verify dependencies

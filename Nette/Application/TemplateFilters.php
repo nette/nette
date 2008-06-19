@@ -49,6 +49,10 @@ final class TemplateFilters
 
 
 
+	/********************* Filter curlyBrackets ****************d*g**/
+
+
+
 	/**
 	 * Filter curlyBrackets: Support for {...} in template.
 	 *   {$variable} with escaping
@@ -125,6 +129,63 @@ final class TemplateFilters
 
 
 
+	/********************* Filter fragments ****************d*g**/
+
+
+
+	/**
+	 * Template with defined fragments (experimental).
+	 *    <nette:fragment id="main"> ... </nette:fragment>
+	 *
+	 * @param  Template
+	 * @param  string
+	 * @return string
+	 */
+	public static function fragments(Template $template, $s)
+	{
+		$file = $template->getFile();
+		$a = strpos($file, '#');
+		if ($a === FALSE) {
+			return $s;
+		}
+		$fragment = substr($file, $a + 1);
+		if (preg_match('#<nette:fragment\s+id="' . $fragment . '">(.*)</nette:fragment>#sU', $s, $matches)) {
+			return $matches[1];
+
+		} else {
+			trigger_error("Fragment '$file' is not defined.", E_USER_WARNING);
+			return '';
+		}
+	}
+
+
+
+	/********************* Filter autoConfig ****************d*g**/
+
+
+
+	/**
+	 * Template with configuration (experimental).
+	 *    <?nette filter="TemplateFilters::curlyBrackets"?>
+	 *
+	 * @param  Template
+	 * @param  string
+	 * @return string
+	 */
+	public static function autoConfig(Template $template, $s)
+	{
+		preg_match_all('#<\\?nette(.*)\\?>#sU', $s, $matches, PREG_SET_ORDER);
+		foreach ($matches as $m) {
+		}
+		return preg_replace('#<\\?nette(.*)\\?>#sU', '', $s);
+	}
+
+
+
+	/********************* Filter relativeLinks ****************d*g**/
+
+
+
 	/**
 	 * Filter relativeLinks: prepends root to relative links.
 	 * @param  Template
@@ -139,6 +200,10 @@ final class TemplateFilters
 			$s
 		);
 	}
+
+
+
+	/********************* Filter netteLinks ****************d*g**/
 
 
 
@@ -185,6 +250,10 @@ final class TemplateFilters
 			. var_export($destination, TRUE) . ', ' . var_export($params, TRUE)
 			. '))?>' . $fragment;
 	}
+
+
+
+	/********************* Filter texyElements ****************d*g**/
 
 
 

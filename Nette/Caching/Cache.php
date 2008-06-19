@@ -118,8 +118,13 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 
 		if (!$rewrite && $this->offsetGet($key) !== NULL) return;
 
-		if ($dependencies === NULL) $dependencies = array();
-		$this->storage->write($this->namespace . $key, $data, $dependencies);
+		$this->adjust($dependencies);
+
+		$this->storage->write(
+			$this->namespace . $key,
+			$data,
+			$dependencies
+		);
 	}
 
 
@@ -131,8 +136,36 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	 */
 	public function clean(array $conds = NULL)
 	{
-		if ($conds === NULL) $conds = array();
+		$this->adjust($conds);
 		$this->storage->clean($conds);
+	}
+
+
+
+	/**
+	 * Update dependencies array.
+	 * @param  array
+	 * @return void
+	 */
+	private function adjust(& $arr)
+	{
+		if ($arr === NULL) {
+			$arr = array();
+		}
+
+		if (isset($arr['tags'])) {
+			$arr['tags'] = (array) $arr['tags'];
+			foreach ($arr['tags'] as $key => $value) {
+				$arr['tags'][$key] = $this->namespace . $value;
+			}
+		}
+
+		if (isset($arr['items'])) {
+			$arr['items'] = (array) $arr['items'];
+			foreach ($arr['items'] as $key => $value) {
+				$arr['items'][$key] = $this->namespace . $value;
+			}
+		}
 	}
 
 

@@ -299,7 +299,7 @@ final class Debug
 		set_exception_handler(array(__CLASS__, 'exceptionHandler')); // buggy in PHP 5.2.1
 		self::$enabled = TRUE;
 
-        // Environment::setMode(Environment::DEBUG_MODE, TRUE);
+		// Environment::setMode(Environment::DEBUG_MODE, TRUE);
 	}
 
 
