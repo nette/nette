@@ -6,14 +6,23 @@
 /**
  * Load Nette
  */
-require_once dirname(__FILE__) . '/../../../Nette/loader.php';
+define('LIBS_DIR', APP_DIR . '/../libs');
+
+// this should be removed
+if (!is_dir(LIBS_DIR . '/Nette')) {
+	die("Extract Nette Framework to library directory '" . realpath(LIBS_DIR) . "'.");
+}
+
+require_once LIBS_DIR . '/Nette/loader.php';
 
 
 
 /**
  * Setup Nette::Debug
  */
-/*Nette::*/Debug::enable(E_ALL | E_STRICT);
+if (Environment::getName() === Environment::DEVELOPMENT) {
+	/*Nette::*/Debug::enable(E_ALL | E_STRICT);
+}
 
 
 
@@ -22,17 +31,15 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
  */
 Environment::loadConfig();
 
-if (!is_writable(Environment::getVariable('tempDir'))) {
-	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
-}
-
 
 
 /**
- * Setup database connection
+ * Enable RobotLoader (universal autoloader).
  */
-require_once 'dibi.compact.php';
-dibi::connect(Environment::getConfig('database'));
+$robot = new /*Nette::Loaders::*/RobotLoader();
+$robot->addDirectory(Environment::getVariable('appDir'));
+$robot->addDirectory(Environment::getVariable('libsDir'));
+$robot->register();
 
 
 

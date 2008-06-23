@@ -2,7 +2,7 @@
 
 
 
-class FifteenControl extends Control
+class FifteenControl extends /*Nette::Application::*/Control
 {
 	const WIDTH = 4;
 	const MAX   = 15;  // self::WIDTH * self::WIDTH - 1

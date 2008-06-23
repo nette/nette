@@ -168,6 +168,10 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function render($file = NULL, array $params = NULL)
 	{
 		if ($file !== NULL) {
+			if ($file instanceof self) {
+				return $file->render();
+			}
+
 			$tpl = clone $this;
 			$this->absolutize($file);
 			$tpl->setFile($file);

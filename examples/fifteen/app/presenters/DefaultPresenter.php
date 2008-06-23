@@ -3,7 +3,7 @@
 
 
 
-class DefaultPresenter extends Presenter
+class DefaultPresenter extends /*Nette::Application::*/Presenter
 {
 	/** @var string */
 	public $flash;

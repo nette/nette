@@ -1,10 +1,20 @@
 <?php
 
+/*use Nette::Environment;*/
+/*use Nette::Application::Route;*/
 
 /**
  * Load Nette
  */
 require_once dirname(__FILE__) . '/../../../Nette/loader.php';
+
+
+
+/**
+ * Setup Nette::Debug
+ */
+/*Nette::*/Debug::enable(E_ALL | E_STRICT);
+
 
 
 /**
@@ -13,14 +23,14 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 Environment::loadConfig();
 
 
+
 /**
- * Prepare & setup
+ * Setup router
  */
-Debug::enable(E_ALL | E_STRICT);
-
-
 $application = Environment::getApplication();
+
 $router = $application->getRouter();
+
 $router[] = new Route('index.php', array(
 	'module' => 'Front',
 	'presenter' => 'Default',
