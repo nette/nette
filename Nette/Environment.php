@@ -373,7 +373,7 @@ final class Environment
 	 */
 	public static function getUser()
 	{
-		return self::getServiceLocator()->getService('Nette::Security::User');
+		return self::getServiceLocator()->getService('Nette::Web::User');
 	}
 
 
@@ -414,7 +414,7 @@ final class Environment
 	 */
 	public static function getSession($name = 'default')
 	{
-		return /*Nette::*/Session::getNamespace($name);
+		return /*Nette::Web::*/Session::getNamespace($name);
 	}
 
 

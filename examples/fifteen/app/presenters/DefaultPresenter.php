@@ -21,7 +21,7 @@ class DefaultPresenter extends /*Nette::Application::*/Presenter
 		$this->fifteen->onGameOver[] = array($this, 'GameOver');
 		$this->fifteen->useAjax = TRUE;
 
-		$this->template->registerFilter('TemplateFilters::curlyBrackets');
+		$this->template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
 	}
 
 

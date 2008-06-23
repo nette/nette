@@ -217,6 +217,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 					if ($filter instanceof /*Nette::*/Callback) {
 						$content = $filter->invoke($this, $content);
 					} else {
+						if (!is_callable($filter)) {
+							throw new /*::*/InvalidArgumentException("Filter must be valid PHP callback or Nette::Callback object.");
+						}
 						$content = call_user_func($filter, $this, $content);
 					}
 				}

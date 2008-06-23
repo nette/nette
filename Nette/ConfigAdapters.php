@@ -62,7 +62,11 @@ final class ConfigAdapter_INI
 			throw new /*::*/FileNotFoundException("File '$file' is missing or is not readable.");
 		}
 
+		/*Nette::*/Tools::tryError();
 		$data = parse_ini_file($file, TRUE);
+		if (/*Nette::*/Tools::catchError($msg)) {
+			throw new /*::*/Exception($msg);
+		}
 
 		// init separators
 		$sectionSep = isset($data[':section']) ? $data[':section'] : trim(self::$sectionSeparator);

@@ -207,7 +207,7 @@ class User extends /*Nette::*/Object
 
 
 	/**
-	 * @return IIdentity
+	 * @return Nette::Security::IIdentity
 	 */
 	final public function getIdentity()
 	{
@@ -248,7 +248,7 @@ class User extends /*Nette::*/Object
 
 
 
-	protected function setIdentity(IIdentity $identity)
+	protected function setIdentity(/*Nette::Security::*/IIdentity $identity)
 	{
 		$this->session->identity = $identity;
 	}
@@ -301,7 +301,7 @@ class User extends /*Nette::*/Object
 	 * Returns a role this user has been granted.
 	 * @return array
 	 */
-	public public function getRoles()
+	public function getRoles()
 	{
 		if (!$this->session->authenticated) {
 			return array(self::$guestRole);

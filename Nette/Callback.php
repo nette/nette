@@ -68,6 +68,9 @@ class Callback extends /*Nette::*/Object
 	 */
 	public function invoke()
 	{
+        if (!is_callable($this->callback)) {
+        	throw new /*::*/InvalidStateException('This callback is not valid.');
+        }
 		$args = func_get_args();
 		return call_user_func_array($this->callback, $args);
 	}
@@ -81,6 +84,9 @@ class Callback extends /*Nette::*/Object
 	 */
 	public function invokeArgs(array $args)
 	{
+        if (!is_callable($this->callback)) {
+        	throw new /*::*/InvalidStateException('This callback is not valid.');
+        }
 		return call_user_func_array($this->callback, $args);
 	}
 

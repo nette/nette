@@ -13,12 +13,12 @@
 	</div>
 
 	<fieldset>
-		<legend>This is layout template <em>{$template->fileName}</em></legend>
+		<legend>This is layout template <em>{$template->getFile()}</em></legend>
 
 		<h1>&lt;xml&gt;</h1>
 
 		<fieldset>
-			<legend>This is content template <em>{$content->fileName}</em></legend>
+			<legend>This is content template <em>{$content->getFile()}</em></legend>
 			{!content}
 		</fieldset>
 

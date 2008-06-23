@@ -1,5 +1,6 @@
 <?php
 
+/*use Nette::Security::AuthenticationException;*/
 
 
 class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
@@ -31,7 +32,7 @@ class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new Identity($row->username, array(), $row);
+		return new /*Nette::Security::*/Identity($row->username, array(), $row);
 	}
 
 }
