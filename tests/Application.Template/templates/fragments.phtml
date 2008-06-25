@@ -5,7 +5,7 @@
 <?php foreach ($data as $row): ?>
 <tr>
 <? foreach ($row as $col): ?>
-<? $template->render('fragments.phtml#td', array('col' => $col)); ?>
+<? $template->subTemplate('fragments.phtml#td', array('col' => $col))->render(); ?>
 <?php endforeach ?>
 </tr>
 <?php endforeach ?>

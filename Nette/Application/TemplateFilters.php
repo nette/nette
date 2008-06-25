@@ -67,6 +67,7 @@ final class TemplateFilters
 	 *   {for ?} ... {/for}
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
+	 *   {debugbreak}
 	 *
 	 * @param  Template
 	 * @param  string
@@ -79,40 +80,51 @@ final class TemplateFilters
 
 		// simple replace
 		$s = str_replace(
-			array('{else}', '{/if}', '{/foreach}', '{/for}'), // or <%else%>, <%/if%>, <%/foreach%> ?
-			array('<?php else:?>', '<?php endif?>', '<?php endforeach?>', '<?php endfor?>'),
+			array_keys(self::$curlyXlatSimple),
+			array_values(self::$curlyXlatSimple),
 			$s
 		);
 
 		// smarter replace
+		$k = implode("\x0", array_keys(self::$curlyXlatMask));
+		$k = preg_quote($k, '#');
+		$k = str_replace('\000', '|', $k);
 		$s = preg_replace_callback(
-			'#\\{(if |elseif |foreach |for |include |\\$|!=|~=|=|!|~)([^}]+?)\\}#s',
+			'#\\{(' . $k . ')([^}]+?)\\}#s',
 			array(__CLASS__, 'curlyCb'),
 			$s
 		);
 
-		//$s = preg_replace('#<?(php|=|)(.*)? >#s', '', $s);  // PHP
 		return $s;
 	}
 
 
 
 	/** @var array */
-	public static $curlyXlat = array(
-		'$' => '<?php echo $template->escape($#)?>',
-		'!' => '<?php echo $#?>',
-		'~' => '<?php echo $template->translate($#)?>',
-		'=' => '<?php echo $template->escape(#)?>',
-		'!=' => '<?php echo #?>',
-		'~=' => '<?php echo $template->translate(#)?>',
-		'%' => '<?php echo $template->escape(Environment::getVariable(\'#\'))?>',
+	public static $curlyXlatSimple = array(
+		'{else}' => '<?php else:?>', // or <%else%>, <%/if%>, <%/foreach%> ?
+		'{/if}' => '<?php endif?>',
+		'{/foreach}' => '<?php endforeach?>',
+		'{/for}' => '<?php endfor?>',
+		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak()?>',
+	);
+
+	/** @var array */
+	public static $curlyXlatMask = array(
 		'if ' => '<?php if (#):?>',
 		/*'ifset ' => '<?php if (!empty(#)):?>',*/
 		'elseif ' => '<?php elseif (#):?>',
 		/*'elseifset ' => '<?php elseif (!empty(#)):?>',*/
 		'foreach ' => '<?php foreach (#):?>',
 		'for ' => '<?php for (#):?>',
-		'include ' => '<?php $template->render(#)?>',
+		'include ' => '<?php $template->subTemplate(#)->render()?>',
+		'!=' => '<?php echo #?>',
+		'~=' => '<?php echo $template->translate(#)?>',
+		'=' => '<?php echo $template->escape(#)?>',
+		'!' => '<?php echo $#?>',
+		'~' => '<?php echo $template->translate($#)?>',
+		'$' => '<?php echo $template->escape($#)?>',
+		/*'%' => '<?php echo $template->escape(Nette::Environment::getVariable(\'#\'))?>',*/
 	);
 
 
@@ -124,7 +136,7 @@ final class TemplateFilters
 	{
 		list(, $mod, $var) = $m;
 		// if ($mod === '%') $var = rtrim($var, '%');
-		return str_replace('#', $var, self::$curlyXlat[$mod]);
+		return str_replace('#', $var, self::$curlyXlatMask[$mod]);
 	}
 
 

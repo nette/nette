@@ -30,6 +30,26 @@
  */
 interface IHttpResponse
 {
+	// HTTP 1.1 response codes
+	const
+		S200_OK = 200,
+		S204_NO_CONTENT = 200,
+		S300_MULTIPLE_CHOICES = 300,
+		S301_MOVED_PERMANENTLY = 301,
+		S302_FOUND = 302,
+		S303_SEE_OTHER = 303,
+		S303_POST_GET = 303,
+		S304_NOT_MODIFIED = 303,
+		S307_TEMPORARY_REDIRECT= 307,
+		S400_BAD_REQUEST = 400,
+		S401_UNAUTHORIZED = 401,
+		S403_FORBIDDEN = 403,
+		S404_NOT_FOUND = 404,
+		S410_GONE = 410,
+		S500_INTERNAL_SERVER_ERROR = 500,
+		S501_NOT_IMPLEMENTED = 500,
+		S503_SERVICE_UNAVAILABLE = 503;
+
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
@@ -43,9 +63,19 @@ interface IHttpResponse
 	 */
 	function getCode();
 
+	/**
+	 * Send a raw HTTP header.
+	 * @param  string  header
+	 * @param  bool    replace?
+	 * @return void
+	 */
 	function setHeader($header, $replace = FALSE);
 
-	function getHeader($header);
+	/**
+	 * Returns a list of headers to sent.
+	 * @return array
+	 */
+	function getHeaders();
 
 	/**
 	 * Defines a new cookie.

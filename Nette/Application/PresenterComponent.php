@@ -142,12 +142,19 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	/**
 	 * Saves state informations for next request.
 	 * @param  array
+	 * @param  portion specified by class name (used by Presenter)
 	 * @return void
 	 */
-	public function saveState(array & $params)
+	public function saveState(array & $params, $forClass = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
+		if ($forClass === NULL) {
+			$forClass = $this->getClass();
+		}
+
+		foreach (PresenterHelpers::getPersistentParams($forClass) as $nm => $l)
 		{
+			if (!($this instanceof $l['since'])) continue;
+
 			if (isset($params[$nm])) {
 				// injected value
 				$val = $params[$nm];
@@ -276,7 +283,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 * @param  int HTTP error code
 	 * @return void
 	 */
-	public function redirect($destination, $args = NULL, $code = 303)
+	public function redirect($destination, $args = NULL, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
 		if ($args === NULL) $args = array();
 		$this->getPresenter()->redirectUri($this->link($destination, $args), $code);

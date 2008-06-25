@@ -36,7 +36,7 @@ require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
 class PresenterLoader implements IPresenterLoader
 {
 	/** @var bool */
-	public $caseSensitivity = FALSE;
+	public $caseSensitive = FALSE;
 
 
 
@@ -47,10 +47,6 @@ class PresenterLoader implements IPresenterLoader
 	 */
 	public function getPresenterClass(& $name)
 	{
-		if (!preg_match("#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff:]*$#", $name)) {
-			throw new ApplicationException("Invalid presenter name '$name'.");
-		}
-
 		$class = $this->formatPresenterClass($name);
 
 		if (!class_exists($class)) {
@@ -70,8 +66,8 @@ class PresenterLoader implements IPresenterLoader
 		// canonicalize presenter name
 		$realName = $this->unformatPresenterClass($reflection->getName());
 		if ($name !== $realName) {
-			if ($this->caseSensitivity) {
-				throw new ApplicationException("Cannot load presenter '$name'.");
+			if ($this->caseSensitive) {
+				throw new ApplicationException("Cannot load presenter '$name' - case mismatch.");
 			} else {
 				$name = $realName;
 			}

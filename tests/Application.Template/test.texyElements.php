@@ -18,7 +18,6 @@ class MockTexy
 Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
-$template->setCache(NULL);
 $template->setFile(dirname(__FILE__) . '/templates/texy-elements.phtml');
 $template->registerFilter(array(/*Nette::Application::*/'TemplateFilters', 'texyElements'));
 $template->render();

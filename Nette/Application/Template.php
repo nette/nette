@@ -19,6 +19,8 @@
 
 /*namespace Nette::Application;*/
 
+/*use Nette::Environment;*/
+
 
 
 require_once dirname(__FILE__) . '/../Object.php';
@@ -49,8 +51,14 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var array */
 	private $filters = array();
 
-	/** @var Nette::Caching::Cache */
-	private $cache = FALSE;
+	/** @var int */
+	private static $cacheExpire;
+
+	/** @var Nette::Caching::ICacheStorage */
+	private static $cacheStorage;
+
+	/** @var array */
+	private static $livelock = array();
 
 
 
@@ -76,46 +84,40 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 	/**
-	 * Adds new template parameter.
-	 * @param  string  name
-	 * @param  mixed   value
-	 * @return void
-	 */
-	public function add($name, $value)
-	{
-		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
-		}
-
-		if (array_key_exists($name, $this->params)) {
-			throw new /*::*/InvalidStateException("The variable '$name' exists yet.");
-		}
-
-		$this->params[$name] = $value;
-	}
-
-
-
-	/**
-	 * Adds new template as parameter.
-	 * @param  string  name
-	 * @param  string|Template  file name or Template object
+	 * Creates subtemplate.
+	 * @param  string  file name
+	 * @param  array   parameters (optional)
 	 * @return Template
 	 */
-	public function addTemplate($name, $file)
+	public function subTemplate($file, array $params = NULL)
 	{
 		if ($file instanceof self) {
-			$this->add($name, $file);
-			return $file;
+			$tpl = $file;
 
 		} else {
 			$tpl = clone $this;
-			$this->absolutize($file);
+			if ($file == NULL) { // intentionally ==
+				throw new /*::*/InvalidArgumentException("Template file name was not specified.");
+			}
+			if ($file[0] !== '/' && $file[1] !== ':') {
+				$file = dirname($this->file) . '/' . $file;
+			}
 			$tpl->setFile($file);
-			$tpl->params = & $this->params;
-			$this->add($name, $tpl);
-			return $tpl;
 		}
+
+		if ($params === NULL) {
+			$tpl->params = & $this->params;
+
+		} else {
+			foreach ($params as $key => $value) {
+				if (is_int($key)) {
+					$params[$value] = $this->params[$value];
+				}
+			}
+			$tpl->params = & $params;
+		}
+
+		return $tpl;
 	}
 
 
@@ -132,63 +134,22 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 
-	/**
-	 * Escapes string for use inside template.
-	 * @param  string
-	 * @return string
-	 */
-	public function escape($s)
-	{
-		if (is_string($s)) {
-			return htmlSpecialChars($s, ENT_QUOTES);
-		}
-		return $s;
-	}
-
-
-
-	/**
-	 * Translates and escapes string.
-	 * @param  string
-	 * @return string
-	 */
-	public function translate($s)
-	{
-		throw /*::*/NotImplementedException;
-	}
+	/********************* rendering ****************d*g**/
 
 
 
 	/**
 	 * Renders template to output.
-	 * @param  string  file name (optional)
-	 * @param  array   parameters (optional)
 	 * @return void
 	 */
-	public function render($file = NULL, array $params = NULL)
+	public function render()
 	{
-		if ($file !== NULL) {
-			if ($file instanceof self) {
-				return $file->render();
-			}
-
-			$tpl = clone $this;
-			$this->absolutize($file);
-			$tpl->setFile($file);
-			if ($params !== NULL) {
-				foreach ($params as $key => $value) {
-					if (is_int($key)) {
-						$params[$value] = $this->params[$value];
-					}
-				}
-				$tpl->params = & $params;
-			}
-			return $tpl->render();
+		if ($this->file == NULL) { // intentionally ==
+			throw new /*::*/InvalidStateException("Template file name was not specified.");
 		}
 
-
-		if ($this->file === NULL) {
-			throw new /*::*/InvalidStateException("Template file name was not specified.");
+		if (isset(self::$livelock[$this->file])) {
+			throw new /*::*/InvalidStateException("Circular rendering detected.");
 		}
 
 		// strip fragment
@@ -202,13 +163,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 		$eval = FALSE;
 
 		if (count($this->filters)) {
-			$cache = $this->getCache();
+			$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
 			$content = NULL;
 
-			if ($cache) {
-				$key = md5($this->file) . '.' . basename($this->file);
-				$content = $cache[$key];
-			}
+			$key = md5($this->file) . '.' . basename($this->file);
+			$content = $cache[$key];
 
 			if ($content === NULL) {
 				$content = file_get_contents($filePath);
@@ -218,18 +177,23 @@ class Template extends /*Nette::*/Object implements ITemplate
 						$content = $filter->invoke($this, $content);
 					} else {
 						if (!is_callable($filter)) {
-							throw new /*::*/InvalidArgumentException("Filter must be valid PHP callback or Nette::Callback object.");
+							throw new /*::*/InvalidStateException("Filter must be valid PHP callback or Nette::Callback object.");
 						}
 						$content = call_user_func($filter, $this, $content);
 					}
 				}
-				if ($cache) {
-					$content = "<?php\n// template $this->file\n?>$content";
-					$cache->save($key, $content, array('files' => $filePath));
-				}
+				$content = "<?php\n// template $this->file\n?>$content";
+				$cache->save(
+					$key,
+					$content,
+					array(
+						'files' => $filePath,
+						'expire' => self::$cacheExpire,
+					)
+				);
 			}
 
-			if ($cache && $cache->getStorage() instanceof /*Nette::Caching::*/TemplateStorage) {
+			if (self::$cacheStorage instanceof /*Nette::Caching::*/TemplateStorage) {
 				$cached = $cache[$key];
 				if ($cached !== NULL) {
 					$content = $cached['file'];
@@ -242,9 +206,18 @@ class Template extends /*Nette::*/Object implements ITemplate
 		$params = $this->params;
 		$params['template'] = $this;
 
-		self::_render($content, $params, $eval);
+		try {
+			self::$livelock[$this->file] = TRUE;
+			self::_render($content, $params, $eval);
 
-		if (isset($handle)) fclose($handle);
+		} catch (Exception $e) {
+			// continue with shutting down
+		} /* finally */ {
+			unset(self::$livelock[$this->file]);
+			if (isset($handle)) fclose($handle);
+
+			if (isset($e)) throw $e;
+		}
 	}
 
 
@@ -287,34 +260,68 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 	/**
-	 * Set cache storage.
-	 * @param  Nette::Caching::Cache|NULL
-	 * @return void
+	 * Escapes string for use inside template.
+	 * @param  string
+	 * @return string
 	 */
-	public function setCache(/*Nette::Caching::*/Cache $cache = NULL)
+	public function escape($s)
 	{
-		$this->cache = $cache;
+		if (is_string($s)) {
+			return htmlSpecialChars($s, ENT_QUOTES);
+		}
+		return $s;
 	}
 
 
 
 	/**
-	 * @return Nette::Caching::Cache|NULL
+	 * Translates and escapes string.
+	 * @param  string
+	 * @return string
 	 */
-	public function getCache()
+	public function translate($s)
 	{
-		if ($this->cache === NULL) {
-			return NULL;
+		throw /*::*/NotImplementedException;
+	}
 
-		} elseif ($this->cache === FALSE) {
-			// lazy init
-			$base = /*Nette::*/Environment::getVariable('cacheBase');
-			$storage = new /*Nette::Caching::*/TemplateStorage($base);
-			return $this->cache = new /*Nette::Caching::*/Cache($storage, 'Nette.Template');
 
-		} else {
-			return $this->cache;
+
+	/********************* template parameters ****************d*g**/
+
+
+
+	/**
+	 * Adds new template parameter.
+	 * @param  string  name
+	 * @param  mixed   value
+	 * @return void
+	 */
+	public function add($name, $value)
+	{
+		if ($name === '') {
+			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
 		}
+
+		if (array_key_exists($name, $this->params)) {
+			throw new /*::*/InvalidStateException("The variable '$name' exists yet.");
+		}
+
+		$this->params[$name] = $value;
+	}
+
+
+
+	/**
+	 * Adds new template as parameter.
+	 * @param  string  name
+	 * @param  string|Template  file name or Template object
+	 * @return Template
+	 */
+	public function addTemplate($name, $file)
+	{
+		$tpl = $this->subTemplate($file);
+		$this->add($name, $tpl);
+		return $tpl;
 	}
 
 
@@ -384,15 +391,36 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 
+	/********************* caching ****************d*g**/
+
+
+
 	/**
-	 * @param  string
+	 * Set cache storage.
+	 * @param  Nette::Caching::Cache
 	 * @return void
 	 */
-	private function absolutize(& $file)
+	public static function setCacheStorage(/*Nette::Caching::*/ICacheStorage $storage)
 	{
-		if ($file[0] !== '/' && $file[1] !== ':') {
-			$file = dirname($this->file) . '/' . $file;
+		self::$cacheStorage = $storage;
+	}
+
+
+
+	/**
+	 * @return Nette::Caching::ICacheStorage
+	 */
+	public static function getCacheStorage()
+	{
+		if (self::$cacheStorage === NULL) {
+			$base = Environment::getVariable('cacheBase');
+			self::$cacheStorage = new /*Nette::Caching::*/TemplateStorage($base);
+
+			if (self::$cacheExpire === NULL) {
+				self::$cacheExpire = Environment::getName() === Environment::DEVELOPMENT ? 1 : FALSE;
+			}
 		}
+		return self::$cacheStorage;
 	}
 
 }

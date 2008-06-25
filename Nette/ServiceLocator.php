@@ -43,7 +43,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	private $registry = array();
 
 	/** @var bool */
-	private $autoDiscovery = TRUE;
+	private $autoDiscovery;
 
 
 
@@ -53,6 +53,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function __construct(IServiceLocator $parent = NULL)
 	{
 		$this->parent = $parent;
+		$this->autoDiscovery = $parent === NULL;
 	}
 
 
@@ -84,7 +85,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		$lower = strtolower($name);
 		if (isset($this->registry[$lower]) && is_object($this->registry[$lower])) {
-			throw new AmbiguousServiceException("Ambiguous service '$name'.");
+			throw new AmbiguousServiceException("Service named '$name' has been already set.");
 		}
 		$this->registry[$lower] = $service;
 
@@ -100,13 +101,14 @@ class ServiceLocator extends Object implements IServiceLocator
 	 * @param  bool   promote to higher level?
 	 * @return void
 	 */
-	public function removeService($name, $promote = FALSE)
+	public function removeService($name, $promote = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
 			throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
 		}
 
-		// not implemented yet
+		$lower = strtolower($name);
+		unset($this->registry[$lower]);
 
 		if ($promote && $this->parent !== NULL) {
 			$this->parent->removeService($name, TRUE);
@@ -175,7 +177,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 * @return IServiceLocator|NULL
 	 */
 	public function getParent()

@@ -56,7 +56,7 @@ final class Environment
 	private static $config;
 
 	/** @var IServiceLocator */
-	private static $locator;
+	private static $serviceLocator;
 
 	/** @var array */
 	private static $vars = array(
@@ -73,11 +73,11 @@ final class Environment
 		'modelsDir' => array('%appDir%/models', TRUE),
 	);
 
+	/** @var array */
 	public static $defaultServices = array(
 		'Nette::IServiceLocator' => /*Nette::*/'ServiceLocator',
 		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
 		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
-		'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
 		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'factoryCacheStorage'),
 		'Nette::Configurator' => 'Nette::Configurator',
 	);
@@ -314,13 +314,13 @@ final class Environment
 	 */
 	public static function getServiceLocator()
 	{
-		if (self::$locator === NULL) {
-			self::$locator = new self::$defaultServices['Nette::IServiceLocator'];
+		if (self::$serviceLocator === NULL) {
+			self::$serviceLocator = new self::$defaultServices['Nette::IServiceLocator'];
 			foreach (self::$defaultServices as $name => $service) {
-				self::$locator->addService($service, $name);
+				self::$serviceLocator->addService($service, $name);
 			}
 		}
-		return self::$locator;
+		return self::$serviceLocator;
 	}
 
 
@@ -461,9 +461,9 @@ final class Environment
 	public static function swapState($state)
 	{
 		if ($state === NULL) {
-			return array(self::$config, self::$vars, self::$locator);
+			return array(self::$config, self::$vars, self::$serviceLocator);
 		} else {
-			list(self::$config, self::$vars, self::$locator) = $state;
+			list(self::$config, self::$vars, self::$serviceLocator) = $state;
 		}
 	}
 

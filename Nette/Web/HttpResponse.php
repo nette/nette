@@ -40,23 +40,6 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	const PERMANENT = 2116333333; // 23.1.2037
 	const WINDOW    = 0;   // end of session, when the browser closes
 
-	// HTTP 1.1 response codes
-	const
-		S200_OK = 200,
-		S301_MOVED_PERMANENTLY = 301,
-		S302_FOUND = 302,
-		S303_SEE_OTHER = 303,
-		S303_POST_GET = 303,
-		S307_TEMPORARY_REDIRECT= 307,
-		S400_BAD_REQUEST = 400,
-		S401_UNAUTHORIZED = 401,
-		S403_FORBIDDEN = 403,
-		S404_NOT_FOUND = 404,
-		S410_GONE = 410,
-		S500_INTERNAL_SERVER_ERROR = 500,
-		S503_SERVICE_UNAVAILABLE = 503;
-
-
 	/** @var bool */
 	private static $xhtml = TRUE;
 
@@ -69,14 +52,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	/** @var string The path in which the cookie will be available */
 	public $cookieSecure = FALSE;
 
-	private $code = NULL;
-
-	private static $allowed = array(
-		200=>1, 201=>1, 202=>1, 203=>1, 204=>1, 205=>1, 206=>1,
-		300=>1, 301=>1, 302=>1, 303=>1, 304=>1, 307=>1,
-		400=>1, 401=>1, 403=>1, 404=>1, 406=>1, 408=>1, 410=>1, 412=>1, 415=>1, 416=>1,
-		500=>1, 501=>1, 503=>1, 505=>1
-	);
+	private $code = self::S200_OK;
 
 
 
@@ -84,13 +60,25 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return void
+     * @thorws ::InvalidArgumentException, ::InvalidStateException
 	 */
 	public function setCode($code)
 	{
 		$code = (int) $code;
 
-		if (!isset(self::$allowed[$code])) {
+		static $allowed = array(
+			200=>1, 201=>1, 202=>1, 203=>1, 204=>1, 205=>1, 206=>1,
+			300=>1, 301=>1, 302=>1, 303=>1, 304=>1, 307=>1,
+			400=>1, 401=>1, 403=>1, 404=>1, 406=>1, 408=>1, 410=>1, 412=>1, 415=>1, 416=>1,
+			500=>1, 501=>1, 503=>1, 505=>1
+		);
+
+		if (!isset($allowed[$code])) {
 			throw new /*::*/InvalidArgumentException("Bad HTTP response '$code'.");
+		}
+
+		if (headers_sent()) {
+			throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent.");
 		}
 
 		$this->code = $code;
@@ -111,29 +99,43 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 	/**
-	 * Send a raw HTTP header.
+	 * Sends a raw HTTP header.
 	 * @param  string  header
 	 * @param  bool    replace?
-	 * @return void
+	 * @return bool
 	 */
 	public function setHeader($header, $replace = FALSE)
 	{
+		if (headers_sent()) {
+			//TODO: return FALSE or throw exception?
+			//throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent.");
+			return FALSE;
+		}
 		// prevent header injection
 		$header = str_replace(array("\n", "\r"), '', $header);
 		header($header, $replace);
+		return TRUE;
 	}
 
 
 
-	public function getHeader($header)
+	/**
+	 * Returns a list of headers to sent.
+	 * @return array
+	 */
+	public function getHeaders()
 	{
-		$headers = headers_list();
-		// TODO: implement or remove
-		return NULL;
+		return headers_list();
 	}
 
 
 
+	/**
+	 * Sends a Content-type HTTP header.
+	 * @param  string  mime-type
+	 * @param  string  charset
+	 * @return void
+	 */
 	public function setContentType($type = 'text/html', $charset = 'ISO-8859-1')
 	{
 		$this->setHeader('Content-type: ' . $type . ($charset ? '; charset=' . $charset : ''), TRUE);
@@ -186,7 +188,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 	/**
-	 * Sends garbage for IE.
+	 * Sends garbage for IE 6.
 	 */
 	public function fixIE()
 	{

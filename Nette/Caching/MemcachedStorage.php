@@ -45,9 +45,20 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 
 
 
+	/**
+	 * Checks if Memcached extension is available.
+	 * @return bool
+	 */
+	public static function isAvailable()
+	{
+		return extension_loaded('memcache');
+	}
+
+
+
 	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
 	{
-		if (!extension_loaded('memcache')) {
+		if (!self::isAvailable())
 			throw new /*::*/Exception("PHP extension 'memcache' is not loaded.");
 		}
 
@@ -122,8 +133,8 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		$meta = array(
 			'data' => $data,
 		);
-		$expire = 0;
 
+		$expire = 0;
 		if (!empty($dp['expire'])) {
 			$expire = (int) $dp['expire']; // absolute time
 			if (!empty($dp['refresh'])) {

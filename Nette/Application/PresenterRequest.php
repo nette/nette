@@ -39,14 +39,16 @@ final class PresenterRequest extends /*Nette::*/Object
 	// sources:
 	const HTTP_GET = 'get';
 	const HTTP_POST = 'post';
-	const HTTP_AJAX = 'ajax';
 	const FORWARD = 'forward';
+
+	// presenter name mask
+	const MASK = "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#";
 
 	/** @var string */
 	private $source;
 
 	/** @var string */
-	private $presenter;
+	private $name;
 
 	/** @var array */
 	private $params;
@@ -85,11 +87,11 @@ final class PresenterRequest extends /*Nette::*/Object
 	 */
 	public function setPresenterName($name)
 	{
-		if (!is_string($name) || $name === '') {
-			throw new /*::*/InvalidArgumentException("Presenter name must be non-empty string.");
+		if (!is_string($name) || !preg_match(self::MASK, $name)) {
+			throw new /*::*/InvalidArgumentException("Presenter name must be alphanumeric string.");
 		}
 
-		$this->presenter = $name;
+		$this->name = $name;
 	}
 
 
@@ -100,7 +102,7 @@ final class PresenterRequest extends /*Nette::*/Object
 	 */
 	public function getPresenterName()
 	{
-		return $this->presenter;
+		return $this->name;
 	}
 
 
@@ -156,6 +158,17 @@ final class PresenterRequest extends /*Nette::*/Object
 	public function isPost()
 	{
 		return $this->source === self::HTTP_POST;
+	}
+
+
+
+	/**
+	 * Is source forward?
+	 * @return boolean
+	 */
+	public function isForward()
+	{
+		return $this->source === self::FORWARD;
 	}
 
 

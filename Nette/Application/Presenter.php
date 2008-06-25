@@ -102,6 +102,15 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = FALSE;
 
+	/** @var IRouter  cached value for createRequest() & createSubRequest() */
+	private $router;
+
+	/** @var Nette::Web::IHttpRequest  cached value for better performance */
+	private $httpRequest;
+
+	/** @var Nette::Web::IHttpResponse  cached value for better performance */
+	private $httpResponse;
+
 
 
 
@@ -138,9 +147,13 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		try {
 			try {
+				$this->request = $request;
+				$this->router = Environment::getApplication()->getRouter();
+				$this->httpRequest = Environment::getHttpRequest();
+				$this->httpResponse = Environment::getHttpResponse();
+
 				// PHASE 1: STARTUP
 				$this->phase = self::STARTUP;
-				$this->request = $request;
 				$this->initGlobalParams();
 				$this->registerComponent($this->getUniqueId(), $this);
 				$this->startup();
@@ -155,7 +168,7 @@ abstract class Presenter extends Control implements IPresenter
 				$this->tryCall($this->formatPrepareMethod($this->getView()), $this->params);
 
 
-				// PHASE 3: EXECUTION
+				// PHASE 3: SIGNAL EXECUTION
 				$this->phase = self::EXECUTION;
 				$this->processSignal();
 				// save component tree persistent state
@@ -163,7 +176,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 				// PHASE 4: RENDERING
-				if (Environment::getHttpRequest()->getMethod() !== 'HEAD') {
+				if ($this->httpRequest->getMethod() !== 'HEAD') {
 					$this->phase = self::RENDERING;
 
 					if ($this->isPartialMode()) {
@@ -323,6 +336,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Returns current view name (as lower-case non-empty string).
+	 * @return string
 	 */
 	final public function getView()
 	{
@@ -333,6 +347,8 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Switch current view.
+	 * @param  string
+	 * @return void
 	 */
 	public function changeView($view)
 	{
@@ -371,8 +387,9 @@ abstract class Presenter extends Control implements IPresenter
 
 		$template->render();
 
-		//TODO: getHttpResponse is Nette::Web::IHttpResponse
-		Environment::getHttpResponse()->fixIE();
+		if ($this->httpResponse instanceof /*Nette::Web::*/HttpResponse) {
+			$this->httpResponse->fixIE();
+		}
 
 		$this->renderFinished();
 	}
@@ -520,7 +537,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function isPartialMode()
 	{
 		if ($this->partialMode === NULL) {
-			$this->partialMode = Environment::getHttpRequest()->isAjax();
+			$this->partialMode = $this->httpRequest->isAjax();
 		}
 		return $this->partialMode;
 	}
@@ -553,9 +570,8 @@ abstract class Presenter extends Control implements IPresenter
 		// discard any output
 		ob_end_clean();
 
-		$httpResponse = Environment::getHttpResponse();
-		$httpResponse->setContentType('application/x-javascript', 'utf-8');
-		$httpResponse->expire(FALSE);
+		$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
+		$this->httpResponse->expire(FALSE);
 
 		/*
 		if ($this->isInvalid()) {
@@ -642,14 +658,31 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Redirect to another URL.
+	 * Redirect to another URL and ends presenter execution.
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
+	 * @throws AbortException
 	 */
-	public function redirectUri($uri, $code = 303)
+	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
-		$this->renderRedirect($uri, $code);
+		if ($this->isPartialMode()) {
+			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
+			$this->httpResponse->expire(FALSE);
+			echo "nette.redirect(", json_encode($uri), ");\n";
+
+		} else {
+			if (substr($uri, 0, 2) === '//') {
+				$uri = $this->httpRequest->getUri()->scheme . ':' . $uri;
+			} elseif (substr($uri, 0, 1) === '/') {
+				$uri = $this->httpRequest->getUri()->hostUri . $uri;
+			}
+
+			$this->httpResponse->setCode($code);
+			$this->httpResponse->setHeader('Location: ' . $uri);
+			echo '<h1>Redirect</h1><p><a href="', htmlSpecialChars($uri), '">Please click here to continue</a>.</p>';
+		}
+
 		$this->abort();
 	}
 
@@ -669,15 +702,13 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Request is completted.
-	 * @param  Exception
+	 * Ends presenter execution.
+	 * @return void
 	 * @throws AbortException
 	 */
-	public function abort(Exception $cause = NULL)
+	public function abort()
 	{
-		$e = new AbortException();
-		// if ($cause) $e->initCause($cause); // TODO
-		throw $e;
+		throw new AbortException();
 	}
 
 
@@ -685,19 +716,19 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
+	 * @throws AbortException
 	 */
 	final public function canonicalize()
 	{
-		$httpRequest = Environment::getHttpRequest();
-		if ($httpRequest->getMethod() === 'POST' || $httpRequest->isAjax()) {
+		if ($this->httpRequest->getMethod() === 'POST' || $this->httpRequest->isAjax()) {
 			return;
 		}
 
 		// TODO: what about signal args
 		$uri = $this->createSubRequest($this->getSignalReceiver(TRUE), $this->getSignal(), array());
 
-		if (!$httpRequest->getUri()->isEqual($uri)) {
-			$this->redirectUri($uri, 301);
+		if (!$this->httpRequest->getUri()->isEqual($uri)) {
+			$this->redirectUri($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
 		}
 	}
 
@@ -705,6 +736,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * @return void
+	 * @throws AbortException
 	 */
 	public function lastModified($lastModified, $expire = NULL)
 	{
@@ -712,23 +744,20 @@ abstract class Presenter extends Control implements IPresenter
 			return;
 		}
 
-		$httpRequest = Environment::getHttpRequest();
-		$httpResponse = Environment::getHttpResponse();
-
 		if ($expire !== NULL) {
-			$httpResponse->expire($expire);
+			$this->httpResponse->expire($expire);
 		}
 
-		$ifModifiedSince = $httpRequest->getHeader('if-modified-since');
+		$ifModifiedSince = $this->httpRequest->getHeader('if-modified-since');
 		if ($ifModifiedSince !== NULL) {
 			$ifModifiedSince = strtotime($ifModifiedSince);
 			if ($lastModified <= $ifModifiedSince) {
-				$httpResponse->setCode(304);
+				$this->httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S304_NOT_MODIFIED);
 				$this->abort();
 			}
 		}
 
-		$httpResponse->setHeader('Last-Modified: ' . /*Nette::Web::*/HttpResponse::date($lastModified));
+		$this->httpResponse->setHeader('Last-Modified: ' . /*Nette::Web::*/HttpResponse::date($lastModified));
 		// TODO: support for ETag
 	}
 
@@ -793,7 +822,17 @@ abstract class Presenter extends Control implements IPresenter
 			PresenterRequest::FORWARD,
 			$args
 		);
-		return $returnUri ? Environment::getApplication()->constructUrl($request) : $request;
+
+		if ($returnUri) {
+			$uri = $this->router->constructUrl($request, $this->httpRequest);
+			if ($uri === NULL) {
+				throw new ApplicationException('No route.');
+			}
+			return $uri;
+
+		} else {
+			return $request;
+		}
 	}
 
 
@@ -853,45 +892,22 @@ abstract class Presenter extends Control implements IPresenter
 			PresenterRequest::FORWARD,
 			$params
 		);
-		return $returnUri ? Environment::getApplication()->constructUrl($request) : $request;
+
+		if ($returnUri) {
+			$uri = $this->router->constructUrl($request, $this->httpRequest);
+			if ($uri === NULL) {
+				throw new ApplicationException('No route.');
+			}
+			return $uri;
+
+		} else {
+			return $request;
+		}
 	}
 
 
 
 	/********************* interface IStatePersistent ****************d*g**/
-
-
-
-	/**
-	 * Saves state informations for next request.
-	 * @param  array
-	 * @param  portion specified by class name
-	 * @return void
-	 */
-	public function saveState(array & $params, $forClass = NULL)
-	{
-		// save persistent state
-		if ($forClass === NULL) {
-			$forClass = $this->getClass();
-		}
-
-		foreach (PresenterHelpers::getPersistentParams($forClass) as $nm => $l)
-		{
-			if (!($this instanceof $l['since'])) continue;
-
-			if (array_key_exists($nm, $params)) {
-				if ($params[$nm] === NULL) continue;
-				$val = $params[$nm];
-
-			} else {
-				$val = $this->$nm;
-			}
-
-			if ($l['type']) settype($val, $l['type']);
-
-			$params[$nm] = $val === $l['def'] ? NULL : $val;
-		}
-	}
 
 
 
@@ -1046,57 +1062,20 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function renderError(Exception $exception)
 	{
-		$httpResponse = Environment::getHttpResponse();
-
 		if ($this->isPartialMode()) {
-			$httpResponse->setContentType('application/x-javascript', 'utf-8');
-			$httpResponse->expire(FALSE);
+			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
+			$this->httpResponse->expire(FALSE);
 			echo "nette.error(", json_encode((string) $exception), ");\n";
 
 		} else {
 			if (/*Nette::*/Debug::isEnabled()) throw $exception;
 
-			$code = /*Nette::Web::*/HttpResponse::S500_INTERNAL_SERVER_ERROR;
-			$httpResponse->setCode($code);
-
-			$title = 'Redirect';
-			$message = '';
-			require dirname(__FILE__) . '/templates/error.phtml';
-		}
-
-		$this->renderFinished = TRUE;
-	}
-
-
-
-	/**
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	protected function renderRedirect($uri, $code)
-	{
-		$httpResponse = Environment::getHttpResponse();
-
-		if ($this->isPartialMode()) {
-			$httpResponse->setContentType('application/x-javascript', 'utf-8');
-			$httpResponse->expire(FALSE);
-			echo "nette.redirect(", json_encode($uri), ");\n";
-
-		} else {
-			$httpRequest = Environment::getHttpRequest();
-			if (substr($uri, 0, 2) === '//') {
-				$uri = $httpRequest->getUri()->scheme . ':' . $uri;
-			} elseif (substr($uri, 0, 1) === '/') {
-				$uri = $httpRequest->getUri()->hostUri . $uri;
-			}
-
-			$httpResponse->setCode($code);
-			$httpResponse->setHeader('Location: ' . $uri);
+			$code = /*Nette::Web::*/IHttpResponse::S500_INTERNAL_SERVER_ERROR;
+			$this->httpResponse->setCode($code);
 
 			$title = 'Error';
-			$message = 'Please click here to continue';
-			require dirname(__FILE__) . '/templates/redirect.phtml';
+			$message = '';
+			require dirname(__FILE__) . '/templates/error.phtml';
 		}
 
 		$this->renderFinished = TRUE;

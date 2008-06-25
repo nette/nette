@@ -46,7 +46,7 @@ interface IServiceLocator
 	 * @param  bool   promote to higher level?
 	 * @return void
 	 */
-	function removeService($name, $promote = FALSE);
+	function removeService($name, $promote = TRUE);
 
 	/**
 	 * Gets the service object of the specified type.
@@ -56,7 +56,7 @@ interface IServiceLocator
 	function getService($name);
 
 	/**
-	 * Returns the container if any.
+	 * Returns the parent container if any.
 	 * @return IServiceLocator|NULL
 	 */
 	function getParent();

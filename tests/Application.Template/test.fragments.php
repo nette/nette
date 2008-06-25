@@ -13,7 +13,6 @@ foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
-$template->setCache(NULL);
 $template->setFile(dirname(__FILE__) . '/templates/fragments.phtml#main');
 $template->registerFilter(/*Nette::Application::*/'TemplateFilters::fragments');
 $template->data = array(

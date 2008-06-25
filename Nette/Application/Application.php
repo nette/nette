@@ -47,6 +47,15 @@ class Application extends /*Nette::*/Object
 {
 	const MAX_LOOP = 20;
 
+	/** @var array */
+	public $defaultServices = array(
+		'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
+		'Nette::Application::IPresenterLoader' => 'Nette::Application::PresenterLoader',
+	);
+
+	/** @var bool */
+	public $catchExceptions;
+
 	/** @var array of function(Application $sender) */
 	public $onStartup;
 
@@ -57,7 +66,7 @@ class Application extends /*Nette::*/Object
 	public $onRouted;
 
 	/** @var string */
-	public $errorPresenter;// = 'Error';
+	public $errorPresenter = 'Error';
 
 	/** @var array of PresenterRequest */
 	private $requests = array();
@@ -65,17 +74,11 @@ class Application extends /*Nette::*/Object
 	/** @var Presenter */
 	private $presenter;
 
-	/** @var IRouter */
-	private $router;
-
-	/** @var IPresenterLoader */
-	private $presenterLoader;
-
-	/** @var ServiceLocator */
-	private $locator;
+	/** @var Nette::ServiceLocator */
+	private $serviceLocator;
 
 	/** @var bool */
-	private $hasError = FALSE;
+	private $hasError;
 
 
 
@@ -97,19 +100,22 @@ class Application extends /*Nette::*/Object
 			Environment::setVariable('basePath', $httpRequest->getUri()->basePath);
 		}
 
+		if ($this->catchExceptions === NULL) {
+			$this->catchExceptions = Environment::getName() !== Environment::DEVELOPMENT;
+		}
+
 		// check HTTP method
 		$method = $httpRequest->getMethod();
 		$allowed = array('GET' => 1, 'POST' => 1, 'HEAD' => 1);
 		if (!isset($allowed[$method])) {
-			$httpResponse->setCode(501); // 501 Not Implemented
+			$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S501_NOT_IMPLEMENTED);
 			$httpResponse->setHeader('Allow: ' . implode(', ', array_keys($allowed)), TRUE);
 			die("Method $method not allowed.");
 		}
 
-		$this->onStartup($this);
-
 		// dispatching
 		$request = NULL;
+		$this->hasError = FALSE;
 		do {
 			if (count($this->requests) > self::MAX_LOOP) {
 				throw new ApplicationException('Infinite loop.');
@@ -118,6 +124,8 @@ class Application extends /*Nette::*/Object
 			try {
 				// Routing
 				if (!$request) {
+					$this->onStartup($this);
+
 					$request = $this->getRouter()->match($httpRequest);
 					if (!($request instanceof PresenterRequest)) {
 						$request = NULL;
@@ -135,7 +143,7 @@ class Application extends /*Nette::*/Object
 				$this->presenter = new $class;
 
 				// Instantiate topmost service locator
-				$this->presenter->setServiceLocator(new /*Nette::*/ServiceLocator($this->locator));
+				$this->presenter->setServiceLocator(new /*Nette::*/ServiceLocator($this->serviceLocator));
 
 				// Execute presenter
 				$this->presenter->run($request);
@@ -151,7 +159,7 @@ class Application extends /*Nette::*/Object
 
 			} catch (Exception $e) {
 				// fault barrier
-				if ($this->hasError || !$this->errorPresenter) {
+				if ($this->hasError || !$this->catchExceptions || !$this->errorPresenter) {
 					throw $e;
 				}
 
@@ -173,21 +181,8 @@ class Application extends /*Nette::*/Object
 
 
 	/**
-	 * Gets the service locator (experimental).
-	 * @return Nette::IServiceLocator
-	 */
-	final public function getServiceLocator()
-	{
-		if ($this->serviceLocator === NULL) {
-			$this->serviceLocator = Environment::getServiceLocator();
-		}
-		return $this->serviceLocator;
-	}
-
-
-
-	/**
-	 * @return array
+	 * Returns all processed requests.
+	 * @return array of PresenterRequest
 	 */
 	final public function getRequests()
 	{
@@ -197,6 +192,7 @@ class Application extends /*Nette::*/Object
 
 
 	/**
+	 * Returns current presenter.
 	 * @return Presenter
 	 */
 	final public function getPresenter()
@@ -206,68 +202,71 @@ class Application extends /*Nette::*/Object
 
 
 
+	/********************* services ****************d*g**/
+
+
+
 	/**
-	 * @return IRouter
+	 * Gets the service locator (experimental).
+	 * @return Nette::IServiceLocator
 	 */
-	public function getRouter($init = NULL)
+	final public function getServiceLocator()
 	{
-		if ($this->router === NULL) {
-			$this->router = new MultiRouter($init);
-			// Environment::getService('Nette::Application::IRouter');
+		if ($this->serviceLocator === NULL) {
+			$this->serviceLocator = new /*Nette::*/ServiceLocator(Environment::getServiceLocator());
+
+			foreach ($this->defaultServices as $name => $service) {
+				$this->serviceLocator->addService($service, $name);
+			}
 		}
-		return $this->router;
+		return $this->serviceLocator;
 	}
 
 
 
 	/**
+	 * Gets the service object of the specified type.
+	 * @param  string service name
+	 * @param  bool
+	 * @return mixed
+	 */
+	final public function getService($name, $need = TRUE)
+	{
+		return $this->getServiceLocator()->getService($name, $need);
+	}
+
+
+
+	/**
+	 * Returns router.
+	 * @return IRouter
+	 */
+	public function getRouter()
+	{
+		return $this->getServiceLocator()->getService('Nette::Application::IRouter');
+	}
+
+
+
+	/**
+	 * Change router. (experimental)
 	 * @param  IRouter
 	 * @return void
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->router = $router;
+		$this->getServiceLocator()->addService($router, 'Nette::Application::IRouter');
 	}
 
 
 
 	/**
-	 * Maps PresenterRequest object to absolute URI or path.
-	 * @param  PresenterRequest
-	 * @return string
-	 * @throws ApplicationException
-	 */
-	public function constructUrl(PresenterRequest $request)
-	{
-		$uri = $this->getRouter()->constructUrl($request, Environment::getHttpRequest());
-		if ($uri === NULL) {
-			throw new ApplicationException('No route.');
-		}
-		return $uri;
-	}
-
-
-
-	/**
+	 * Returns presenter loader.
 	 * @return IPresenterLoader
 	 */
 	public function getPresenterLoader()
 	{
-		if ($this->presenterLoader === NULL) {
-			$this->presenterLoader = new PresenterLoader;
-		}
-		return $this->presenterLoader;
-	}
-
-
-
-	/**
-	 * @param  IPresenterLoader
-	 * @return void
-	 */
-	public function setPresenterLoader(IPresenterLoader $loader)
-	{
-		$this->presenterLoader = $loader;
+		return $this->getServiceLocator()->getService('Nette::Application::IPresenterLoader');
 	}
 
 }

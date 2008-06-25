@@ -29,17 +29,16 @@ if (Environment::getName() === Environment::DEVELOPMENT) {
 /**
  * Configure application
  */
-Environment::loadConfig();
+$config = Environment::loadConfig();
 
 
 
 /**
- * Enable RobotLoader (universal autoloader).
+ * Enable RobotLoader
  */
-$robot = new /*Nette::Loaders::*/RobotLoader();
-$robot->addDirectory(Environment::getVariable('appDir'));
-$robot->addDirectory(Environment::getVariable('libsDir'));
-$robot->register();
+$loader = new /*Nette::Loaders::*/RobotLoader();
+$loader->addDirectory(explode(';', $config->scanDirs));
+$loader->register();
 
 
 
