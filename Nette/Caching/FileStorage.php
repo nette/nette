@@ -110,7 +110,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 			if (!empty($meta['delta']) || !empty($meta['df'])) {
 				clearstatcache();
 			}
-            */
+			*/
 
 			if (!empty($meta['delta'])) {
 				if (filemtime($cacheFile) + $meta['delta'] < time()) break;

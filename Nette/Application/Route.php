@@ -484,8 +484,8 @@ class Route extends /*Nette::*/Object implements IRouter
 	{
 		$s = strtolower($s);
 		$s = preg_replace('#-(?=[a-z])#', ' ', $s);
-		$s = ucwords('x' . $s);
-		$s = substr($s, 1);
+		$s = substr(ucwords('x' . $s), 1);
+		//$s = lcfirst(ucwords($s));
 		$s = str_replace(' ', '', $s);
 		return $s;
 	}

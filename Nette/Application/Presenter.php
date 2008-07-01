@@ -42,7 +42,7 @@ abstract class Presenter extends Control implements IPresenter
 	/** @see $this->getPhase() */
 	const STARTUP = '1 STARTUP';
 	const PREPARING = '2 PREPARING';
-	const EXECUTION = '3 EXECUTION';
+	const SIGNAL_HANDLING = '3 SIGNAL HANDLING';
 	const RENDERING = '4 RENDERING';
 	const SHUTDOWN = '5 SHUTDOWN';
 
@@ -52,10 +52,11 @@ abstract class Presenter extends Control implements IPresenter
 
 	const SIGNAL_KEY = 'do';
 	const VIEW_KEY = 'view';
-	const DEFAULT_VIEW = 'default';
 
 	const THIS_VIEW = '!';
 
+	/** @var string */
+	public static $defaultView = 'default';
 
 	/** @var bool TODO: asi dat do Application */
 	public static $invalidLinkMode = self::LINK_WARNING;
@@ -81,6 +82,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var ITemplate */
 	private $template;
 
+	/** @var AjaxResponse */
+	private $ajaxResponse;
+
 	/** @var string */
 	private $signalReceiver;
 
@@ -92,9 +96,6 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var bool */
 	private $partialMode;
-
-	/** @var array */
-	private $partials = array();
 
 	/** @var array  cache for createRequest(), not static! */
 	private $requestCache = array();
@@ -168,32 +169,34 @@ abstract class Presenter extends Control implements IPresenter
 				$this->tryCall($this->formatPrepareMethod($this->getView()), $this->params);
 
 
-				// PHASE 3: SIGNAL EXECUTION
-				$this->phase = self::EXECUTION;
+				// PHASE 3: SIGNAL HANDLING
+				$this->phase = self::SIGNAL_HANDLING;
 				$this->processSignal();
 				// save component tree persistent state
 				$this->globalParams = $this->getGlobalParams();
 
 
 				// PHASE 4: RENDERING
-				if ($this->httpRequest->getMethod() !== 'HEAD') {
-					$this->phase = self::RENDERING;
+				if ($this->httpRequest->getMethod() === 'HEAD') {
+					$this->abort();
+				}
 
-					if ($this->isPartialMode()) {
-						$this->startPartialMode();
-					}
+				$this->phase = self::RENDERING;
 
-					$this->beforeRender();
-					// $this->render{viewname}();
-					$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
+				if ($this->isPartialMode()) {
+					$this->startPartialMode();
+				}
 
-					if (!$this->isRenderFinished()) {
-						$this->renderTemplate();
-					}
+				$this->beforeRender();
+				// $this->render{viewname}();
+				$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
 
-					if ($this->isPartialMode()) {
-						$this->finishPartialMode();
-					}
+				if (!$this->isRenderFinished()) {
+					$this->renderTemplate();
+				}
+
+				if ($this->isPartialMode()) {
+					$this->finishPartialMode();
 				}
 
 				$e = NULL;
@@ -352,7 +355,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
-		$this->view = $view == NULL ? self::DEFAULT_VIEW : $view;  // intentionally ==
+		$this->view = $view == NULL ? self::$defaultView : $view;  // intentionally ==
 	}
 
 
@@ -425,7 +428,7 @@ abstract class Presenter extends Control implements IPresenter
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
-			$value = $this->templateFactory();
+			$value = $this->createTemplate();
 			if (!($value instanceof ITemplate)) {
 				throw new /*::*/UnexpectedValueException('Object ITemplate was expected.');
 			}
@@ -439,9 +442,9 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * @return ITemplate
 	 */
-	protected function templateFactory()
+	protected function createTemplate()
 	{
-		$template = new /*Nette::Application::*/Template;
+		$template = new Template;
 
 		$template->component = $this;
 		$template->presenter = $this;
@@ -503,7 +506,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Formats view preparation method name.
+	 * Formats prepare & execute method name.
 	 * @param  string
 	 * @return string
 	 */
@@ -552,44 +555,43 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function addPartial($id, $content)
 	{
-		$this->partials[$id] = $content;
+		$this->ajaxResponse->addPartial($id, $content);
 	}
 
 
 
 	protected function startPartialMode()
 	{
-		// discard any output
-		ob_start();
+		$this->ajaxResponse = $this->createAjaxResponse();
+		$this->ajaxResponse->open();
+		ob_start(); // discard any output
 	}
 
 
 
 	protected function finishPartialMode()
 	{
-		// discard any output
-		ob_end_clean();
-
-		$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
-		$this->httpResponse->expire(FALSE);
-
+		ob_end_clean(); // discard any output
 		/*
 		if ($this->isInvalid()) {
-			$uri = $this->thisPresenter()->constructUrl();
-			echo "nette.redirect(", json_encode($uri), ");\n";
-			return;
-		}
-		*/
+			$this->ajaxResponse->redirect($this->link(self::THIS_VIEW));
 
-		// TODO: use partial template?
-		foreach ($this->partials as $id => $content) {
-			echo "nette.updateHtml(", json_encode($id), ', ', json_encode($content), ");\n";
+		} else*/ {
+			$state = array();
+			$this->saveState($state);
+			$this->ajaxResponse->setState($state);
 		}
+		$this->ajaxResponse->close();
+	}
 
-		$state = array();
-		$this->saveState($state);
-		$state = http_build_query($state, NULL, '&');
-		echo "nette.updateState(", json_encode($state), ");\n";
+
+
+	/**
+	 * @return AjaxResponse
+	 */
+	protected function createAjaxResponse()
+	{
+		return new AjaxResponse;
 	}
 
 
@@ -667,9 +669,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isPartialMode()) {
-			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
-			$this->httpResponse->expire(FALSE);
-			echo "nette.redirect(", json_encode($uri), ");\n";
+			$this->ajaxResponse->redirect($uri);
 
 		} else {
 			if (substr($uri, 0, 2) === '//') {
@@ -767,7 +767,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * PresenterRequest/URL factory.
 	 * @param  string   destination in format "[[module:]presenter:][view]"
 	 * @param  array    array of arguments
-	 * @param  bool     factory PresenterRequest or URL?
+	 * @param  bool     return PresenterRequest or URL?
 	 * @return string|PresenterRequest
 	 */
 	protected function createRequest($destination, array $args, $returnUri = TRUE)
@@ -778,7 +778,6 @@ abstract class Presenter extends Control implements IPresenter
 		$destination = explode(':', $destination);
 
 		$view = array_pop($destination);
-		if ($view === '') $view = self::DEFAULT_VIEW;
 
 		if (!count($destination)) {
 			$presenter = $this->request->getPresenterName();
@@ -797,6 +796,11 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		if (is_subclass_of($presenterClass, __CLASS__)) {
+			if ($view === '') {
+				/*$view = $presenterClass::$defaultView;*/ // in PHP 5.3
+				/**/$view = eval("return $presenterClass::\$defaultView;");/**/
+			}
+
 			if ($args) {
 				/*$method = $presenterClass::formatRenderMethod($view);*/ // in PHP 5.3
 				/**/$method = call_user_func(array($presenterClass, 'formatRenderMethod'), $view);/**/
@@ -842,7 +846,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string   optional signal executor
 	 * @param  string   optional signal to execute
 	 * @param  array    optional signal arguments
-	 * @param  bool     factory PresenterRequest or URL?
+	 * @param  bool     return PresenterRequest or URL?
 	 * @return string|PresenterRequest
 	 */
 	protected function createSubRequest($componentId, $signal, $cparams, $returnUri = TRUE)
@@ -1063,9 +1067,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function renderError(Exception $exception)
 	{
 		if ($this->isPartialMode()) {
-			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
-			$this->httpResponse->expire(FALSE);
-			echo "nette.error(", json_encode((string) $exception), ");\n";
+			$this->ajaxResponse->error((string) $exception);
 
 		} else {
 			if (/*Nette::*/Debug::isEnabled()) throw $exception;

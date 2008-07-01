@@ -198,7 +198,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...).
+	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
 	 * @return string
 	 */
 	public function getMethod()

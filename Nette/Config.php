@@ -65,7 +65,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 
 	/**
-	 * Factory new configuration object from file.
+	 * Creates new configuration object from file.
 	 * @param  string  file name
 	 * @param  string  section to load
 	 * @param  int     flags (readOnly, autoexpand variables)

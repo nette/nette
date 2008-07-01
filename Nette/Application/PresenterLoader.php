@@ -43,7 +43,7 @@ class PresenterLoader implements IPresenterLoader
 	/**
 	 * @param  string  presenter name
 	 * @return string  class name
-     * @throws ApplicationException
+	 * @throws ApplicationException
 	 */
 	public function getPresenterClass(& $name)
 	{

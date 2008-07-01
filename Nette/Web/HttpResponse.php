@@ -60,7 +60,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return void
-     * @thorws ::InvalidArgumentException, ::InvalidStateException
+	 * @thorws ::InvalidArgumentException, ::InvalidStateException
 	 */
 	public function setCode($code)
 	{

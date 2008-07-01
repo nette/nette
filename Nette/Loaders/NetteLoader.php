@@ -39,6 +39,7 @@ class NetteLoader extends AutoLoader
 	public $list = array(
 		'abortexception' => '/Application/AbortException.php',
 		'abstractform' => '/Forms/AbstractForm.php',
+		'ajaxresponse' => '/Application/AjaxResponse.php',
 		'ambiguousserviceexception' => '/ServiceLocator.php',
 		'appform' => '/Forms/AppForm.php',
 		'application' => '/Application/Application.php',
@@ -146,7 +147,7 @@ class NetteLoader extends AutoLoader
 		'submitbutton' => '/Forms/items.php',
 		'template' => '/Application/Template.php',
 		'templatefilters' => '/Application/TemplateFilters.php',
-		'templatestorage' => '/Caching/TemplateStorage.php',
+		'templatestorage' => '/Application/TemplateStorage.php',
 		'text' => '/Forms/items.php',
 		'textarea' => '/Forms/items.php',
 		'tools' => '/Tools.php',
@@ -176,10 +177,10 @@ class NetteLoader extends AutoLoader
 
 
 	/**
-	 * Factory autoloader.
+	 * Autoloader factory.
 	 * @return NetteLoader
 	 */
-	public static function factory()
+	public static function create()
 	{
 		$loader = new self;
 		$loader->base = dirname(dirname(__FILE__));

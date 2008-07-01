@@ -67,6 +67,7 @@ final class TemplateFilters
 	 *   {for ?} ... {/for}
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
+	 *   {partial ?} ... {/partial ?} control partial
 	 *   {debugbreak}
 	 *
 	 * @param  Template
@@ -111,6 +112,8 @@ final class TemplateFilters
 
 	/** @var array */
 	public static $curlyXlatMask = array(
+		'partial ' => '<?php $component->beginPartial(#);?>',
+		'/partial ' => '<?php $component->endPartial(#);?>',
 		'if ' => '<?php if (#):?>',
 		/*'ifset ' => '<?php if (!empty(#)):?>',*/
 		'elseif ' => '<?php elseif (#):?>',

@@ -21,4 +21,4 @@ require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 
 
-/*Nette::Loaders::*/NetteLoader::factory();
+/*Nette::Loaders::*/NetteLoader::create();

@@ -52,7 +52,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	private $filters = array();
 
 	/** @var int */
-	private static $cacheExpire;
+	public static $cacheExpire;
 
 	/** @var Nette::Caching::ICacheStorage */
 	private static $cacheStorage;
@@ -94,11 +94,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 		if ($file instanceof self) {
 			$tpl = $file;
 
+		} elseif ($file == NULL) { // intentionally ==
+			throw new /*::*/InvalidArgumentException("Template file name was not specified.");
+
 		} else {
 			$tpl = clone $this;
-			if ($file == NULL) { // intentionally ==
-				throw new /*::*/InvalidArgumentException("Template file name was not specified.");
-			}
 			if ($file[0] !== '/' && $file[1] !== ':') {
 				$file = dirname($this->file) . '/' . $file;
 			}
@@ -140,9 +140,10 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Renders template to output.
-	 * @return void
+	 * @return bool  return output instead of printing it?
+	 * @return void|string
 	 */
-	public function render()
+	public function render($return = FALSE)
 	{
 		if ($this->file == NULL) { // intentionally ==
 			throw new /*::*/InvalidStateException("Template file name was not specified.");
@@ -160,19 +161,19 @@ class Template extends /*Nette::*/Object implements ITemplate
 		}
 
 		$content = $filePath;
-		$eval = FALSE;
+		$isFile = TRUE;
 
 		if (count($this->filters)) {
 			$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
-			$content = NULL;
-
 			$key = md5($this->file) . '.' . basename($this->file);
 			$content = $cache[$key];
 
 			if ($content === NULL) {
 				$content = file_get_contents($filePath);
-				$eval = TRUE;
-				foreach ($this->filters as $filter) {
+				$isFile = FALSE;
+
+				reset($this->filters);
+				while (list(, $filter) = each($this->filters)) {
 					if ($filter instanceof /*Nette::*/Callback) {
 						$content = $filter->invoke($this, $content);
 					} else {
@@ -182,6 +183,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 						$content = call_user_func($filter, $this, $content);
 					}
 				}
+
 				$content = "<?php\n// template $this->file\n?>$content";
 				$cache->save(
 					$key,
@@ -193,49 +195,47 @@ class Template extends /*Nette::*/Object implements ITemplate
 				);
 			}
 
-			if (self::$cacheStorage instanceof /*Nette::Caching::*/TemplateStorage) {
+			if (self::$cacheStorage instanceof TemplateStorage) {
 				$cached = $cache[$key];
 				if ($cached !== NULL) {
 					$content = $cached['file'];
 					$handle = $cached['handle'];
-					$eval = FALSE;
+					$isFile = TRUE;
 				}
 			}
 		}
 
 		$params = $this->params;
 		$params['template'] = $this;
+		$params['parent'] = NULL; // reserved
 
 		try {
 			self::$livelock[$this->file] = TRUE;
-			self::_render($content, $params, $eval);
+			$res = NULL;
+			if ($return) {
+				ob_start();
+			}
+			self::_render($content, $params, $isFile);
+			if ($return) {
+				$res = ob_get_clean();
+			}
 
 		} catch (Exception $e) {
+			if ($return) {
+				ob_end_clean();
+			}
 			// continue with shutting down
 		} /* finally */ {
 			unset(self::$livelock[$this->file]);
-			if (isset($handle)) fclose($handle);
+			if (isset($handle)) {
+				fclose($handle);
+			}
 
-			if (isset($e)) throw $e;
-		}
-	}
+			if (isset($e)) {
+				throw $e;
+			}
 
-
-
-	/**
-	 * Renders template in limited scope.
-	 * @param  string  file path
-	 * @param  array   parameters
-	 * @param  bool    eval or include?
-	 * @return void
-	 */
-	private static function _render(/*$file, $params, $eval*/)
-	{
-		extract(func_get_arg(1), EXTR_SKIP); // skip $this
-		if (func_get_arg(2)) {
-			eval('?>' . func_get_arg(0));
-		} else {
-			include func_get_arg(0);
+			return $res;
 		}
 	}
 
@@ -248,14 +248,46 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function __toString()
 	{
 		try {
-			ob_start();
-			$this->render();
-			return ob_get_clean();
+			return $this->render(TRUE);
 
 		} catch (Exception $e) {
 			return $e->__toString();
 		}
 	}
+
+
+
+	/**
+	 * Converts to SimpleXML.
+	 * @return SimpleXMLElement
+	 */
+	public function toXml()
+	{
+		return simplexml_load_string('<xml>' . $this->render(TRUE) . '</xml>');
+	}
+
+
+
+	/**
+	 * Renders template in limited scope.
+	 * @param  string  content or file path
+	 * @param  array   parameters
+	 * @param  bool    eval or include?
+	 * @return void
+	 */
+	private static function _render(/*$file, $params, $isFile*/)
+	{
+		extract(func_get_arg(1), EXTR_SKIP); // skip $this
+		if (func_get_arg(2)) {
+			include func_get_arg(0);
+		} else {
+			eval('?>' . func_get_arg(0));
+		}
+	}
+
+
+
+	/********************* template helpers ****************d*g**/
 
 
 
@@ -414,7 +446,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	{
 		if (self::$cacheStorage === NULL) {
 			$base = Environment::getVariable('cacheBase');
-			self::$cacheStorage = new /*Nette::Caching::*/TemplateStorage($base);
+			self::$cacheStorage = new TemplateStorage($base);
 
 			if (self::$cacheExpire === NULL) {
 				self::$cacheExpire = Environment::getName() === Environment::DEVELOPMENT ? 1 : FALSE;

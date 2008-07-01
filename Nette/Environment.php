@@ -78,7 +78,7 @@ final class Environment
 		'Nette::IServiceLocator' => /*Nette::*/'ServiceLocator',
 		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
 		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
-		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'factoryCacheStorage'),
+		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette::Configurator' => 'Nette::Configurator',
 	);
 
@@ -400,7 +400,7 @@ final class Environment
 	 * @param  string
 	 * @return Nette::Caching::ICacheStorage
 	 */
-	public static function factoryCacheStorage()
+	public static function createCacheStorage()
 	{
 		return new /*Nette::Caching::*/FileStorage(self::getVariable('cacheBase'));
 	}
