@@ -58,7 +58,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 
 	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
 	{
-		if (!self::isAvailable())
+		if (!self::isAvailable()) {
 			throw new /*::*/Exception("PHP extension 'memcache' is not loaded.");
 		}
 
@@ -136,7 +136,10 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 
 		$expire = 0;
 		if (!empty($dp['expire'])) {
-			$expire = (int) $dp['expire']; // absolute time
+			$expire = (int) $dp['expire'];
+			if ($expire <= self::EXPIRATION_DELTA_LIMIT) {
+				$expire += time();
+			}
 			if (!empty($dp['refresh'])) {
 				$meta['delta'] = $expire - time(); // sliding time
 			}

@@ -45,7 +45,8 @@ if (version_compare(PHP_VERSION , '5.2.2', '<')) {
  */
 class Application extends /*Nette::*/Object
 {
-	const MAX_LOOP = 20;
+	/** @var int */
+	public static $maxLoop = 20;
 
 	/** @var array */
 	public $defaultServices = array(
@@ -122,7 +123,7 @@ class Application extends /*Nette::*/Object
 		$request = NULL;
 		$this->hasError = FALSE;
 		do {
-			if (count($this->requests) > self::MAX_LOOP) {
+			if (count($this->requests) > self::$maxLoop) {
 				throw new ApplicationException('Infinite loop.');
 			}
 

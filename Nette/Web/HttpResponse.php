@@ -155,11 +155,14 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 
-	public function expire($time)
+	public function expire($expire)
 	{
-		if ($time > 0) {
-			header('Cache-Control: max-age=' . (int) $time . ',must-revalidate', TRUE);
-			header('Expires: ' . self::date(time() + $time), TRUE);
+		if ($expire > 0) {
+			if ($expire > self::EXPIRATION_DELTA_LIMIT) {
+				$expire -= time();
+			}
+			header('Cache-Control: max-age=' . (int) $expire . ',must-revalidate', TRUE);
+			header('Expires: ' . self::date(time() + $expire), TRUE);
 		} else {
 			// no cache
 			header('Cache-Control: s-maxage=0, max-age=0, must-revalidate', TRUE);
@@ -214,6 +217,9 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 */
 	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
 	{
+		if ($expire > 0 && $expire <= self::EXPIRATION_DELTA_LIMIT) {
+			$expire += time();
+		}
 		setcookie(
 			$name,
 			$value,

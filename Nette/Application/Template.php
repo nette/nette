@@ -205,17 +205,14 @@ class Template extends /*Nette::*/Object implements ITemplate
 			}
 		}
 
-		$params = $this->params;
-		$params['template'] = $this;
-		$params['parent'] = NULL; // reserved
-
+		// rendering
 		try {
 			self::$livelock[$this->file] = TRUE;
 			$res = NULL;
 			if ($return) {
 				ob_start();
 			}
-			self::_render($content, $params, $isFile);
+			TemplateFilters::phpEvaluation($this, $content, $isFile);
 			if ($return) {
 				$res = ob_get_clean();
 			}
@@ -264,25 +261,6 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function toXml()
 	{
 		return simplexml_load_string('<xml>' . $this->render(TRUE) . '</xml>');
-	}
-
-
-
-	/**
-	 * Renders template in limited scope.
-	 * @param  string  content or file path
-	 * @param  array   parameters
-	 * @param  bool    eval or include?
-	 * @return void
-	 */
-	private static function _render(/*$file, $params, $isFile*/)
-	{
-		extract(func_get_arg(1), EXTR_SKIP); // skip $this
-		if (func_get_arg(2)) {
-			include func_get_arg(0);
-		} else {
-			eval('?>' . func_get_arg(0));
-		}
 	}
 
 
@@ -354,6 +332,17 @@ class Template extends /*Nette::*/Object implements ITemplate
 		$tpl = $this->subTemplate($file);
 		$this->add($name, $tpl);
 		return $tpl;
+	}
+
+
+
+	/**
+	 * Returns array of all parameters.
+	 * @return array
+	 */
+	public function getParams()
+	{
+		return $this->params;
 	}
 
 

@@ -35,6 +35,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class SessionNamespace extends /*Nette::*/Object implements /*::*/IteratorAggregate
 {
+	/** @var int  limit whether expiration is number of seconds starting from current time or timestamp */
+	const EXPIRATION_DELTA_LIMIT = 31622400; // 366 days
+
 	/** @var array  session data storage */
 	private $data;
 
@@ -158,7 +161,10 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 			return;
 		}
 
-		$seconds += time();
+		if ($seconds <= self::EXPIRATION_DELTA_LIMIT) {
+			$seconds += time();
+		}
+
 		if ($variables === NULL) {
 			// to entire namespace
 			$this->meta['EXP'][''] = $seconds;

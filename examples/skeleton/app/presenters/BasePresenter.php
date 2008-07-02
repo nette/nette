@@ -15,7 +15,7 @@ abstract class BasePresenter extends /*Nette::Application::*/Presenter
 	/**
 	 * @return void
 	 */
-	protected function startup()
+	protected function beforeRender()
 	{
 		$this->template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
 	}

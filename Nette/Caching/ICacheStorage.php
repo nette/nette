@@ -31,6 +31,10 @@
  */
 interface ICacheStorage
 {
+	/** @var int  limit whether expiration is number of seconds starting from current time or timestamp */
+	const EXPIRATION_DELTA_LIMIT = 31622400; // 366 days
+
+
 
 	/**
 	 * Read from cache.

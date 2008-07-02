@@ -49,6 +49,28 @@ final class TemplateFilters
 
 
 
+	/********************* Filter phpEvaluation ****************d*g**/
+
+
+
+	/**
+	 * Template filter PHP (Evaluates template in limited scope).
+	 * @param  Template
+	 * @param  string (hidden)
+	 * @return string
+	 */
+	public static function phpEvaluation(Template $template/*, $content, $isFile*/)
+	{
+		extract($template->getParams(), EXTR_SKIP); // skip $this & $template
+		if (func_num_args() > 2 && func_get_arg(2)) {
+			include func_get_arg(1);
+		} else {
+			eval('?>' . func_get_arg(1));
+		}
+	}
+
+
+
 	/********************* Filter curlyBrackets ****************d*g**/
 
 
@@ -68,6 +90,7 @@ final class TemplateFilters
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
 	 *   {partial ?} ... {/partial ?} control partial
+	 *   {block texy} ... {/block} texy block
 	 *   {debugbreak}
 	 *
 	 * @param  Template
@@ -103,33 +126,41 @@ final class TemplateFilters
 
 	/** @var array */
 	public static $curlyXlatSimple = array(
-		'{else}' => '<?php else:?>', // or <%else%>, <%/if%>, <%/foreach%> ?
-		'{/if}' => '<?php endif?>',
-		'{/foreach}' => '<?php endforeach?>',
-		'{/for}' => '<?php endfor?>',
-		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak()?>',
+		'{else}' => '<?php else: ?>', // or <%else%>, <%/if%>, <%/foreach%> ?
+		'{/if}' => '<?php endif ?>',
+		'{/foreach}' => '<?php endforeach ?>',
+		'{/for}' => '<?php endfor ?>',
+		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 	);
 
 	/** @var array */
 	public static $curlyXlatMask = array(
-		'partial ' => '<?php $component->beginPartial(#);?>',
-		'/partial ' => '<?php $component->endPartial(#);?>',
-		'if ' => '<?php if (#):?>',
-		/*'ifset ' => '<?php if (!empty(#)):?>',*/
-		'elseif ' => '<?php elseif (#):?>',
-		/*'elseifset ' => '<?php elseif (!empty(#)):?>',*/
-		'foreach ' => '<?php foreach (#):?>',
-		'for ' => '<?php for (#):?>',
-		'include ' => '<?php $template->subTemplate(#)->render()?>',
-		'!=' => '<?php echo #?>',
-		'~=' => '<?php echo $template->translate(#)?>',
-		'=' => '<?php echo $template->escape(#)?>',
-		'!' => '<?php echo $#?>',
-		'~' => '<?php echo $template->translate($#)?>',
-		'$' => '<?php echo $template->escape($#)?>',
-		/*'%' => '<?php echo $template->escape(Nette::Environment::getVariable(\'#\'))?>',*/
+		'block ' => '<?php ob_start(); try { ?>',
+		'/bloc' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } echo # ?>',
+		'partial ' => '<?php $component->beginPartial(#) ?>',
+		'/partial ' => '<?php $component->endPartial(#) ?>',
+		'if ' => '<?php if (#): ?>',
+		/*'ifset ' => '<?php if (!empty(#)): ?>',*/
+		'elseif ' => '<?php elseif (#): ?>',
+		/*'elseifset ' => '<?php elseif (!empty(#)): ?>',*/
+		'foreach ' => '<?php foreach (#): ?>',
+		'for ' => '<?php for (#): ?>',
+		'include ' => '<?php $template->subTemplate(#)->render() ?>',
+		'!=' => '<?php echo # ?>',
+		'~=' => '<?php echo $template->translate(#) ?>',
+		'=' => '<?php echo $template->escape(#) ?>',
+		'!' => '<?php echo $# ?>',
+		'~' => '<?php echo $template->translate($#) ?>',
+		'$' => '<?php echo $template->escape($#) ?>',
+		/*'%' => '<?php echo $template->escape(Nette::Environment::getVariable(\'#\')) ?>',*/
 	);
 
+	/** @var array */
+	public static $curlyBlocks = array(
+		'texy' => '$texy->process(#)',
+	);
+
+	private static $curlyBlock;
 
 
 	/**
@@ -138,6 +169,17 @@ final class TemplateFilters
 	private static function curlyCb($m)
 	{
 		list(, $mod, $var) = $m;
+
+		if ($mod === 'block ') {
+			if (!isset(self::$curlyBlocks[$var])) {
+				throw new /*::*/Exception("Unknown block '$var'");
+			}
+			self::$curlyBlock = str_replace('#', 'ob_get_clean()', self::$curlyBlocks[$var]);
+
+		} elseif ($mod === '/bloc') { // missing 'k' is tricky...
+			$var = self::$curlyBlock;
+		}
+
 		// if ($mod === '%') $var = rtrim($var, '%');
 		return str_replace('#', $var, self::$curlyXlatMask[$mod]);
 	}

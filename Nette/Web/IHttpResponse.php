@@ -50,6 +50,9 @@ interface IHttpResponse
 		S501_NOT_IMPLEMENTED = 501,
 		S503_SERVICE_UNAVAILABLE = 503;
 
+	/** @var int  limit whether expiration is number of seconds starting from current time or timestamp */
+	const EXPIRATION_DELTA_LIMIT = 31622400; // 366 days
+
 	/**
 	 * Sets HTTP response code.
 	 * @param  int

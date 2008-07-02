@@ -29,3 +29,18 @@ for($i = 0; $i < 4; $i++) {
 	echo "Is cached?";
 	Debug::dump(isset($cache[$key]));
 }
+
+
+echo "Writing cache with relative expiration...\n";
+$cache->save($key, $value, array(
+	'expire' => 2,
+));
+
+
+for($i = 0; $i < 4; $i++) {
+	echo "Sleeping 1.1 second\n";
+	usleep(1100000);
+	clearstatcache();
+	echo "Is cached?";
+	Debug::dump(isset($cache[$key]));
+}

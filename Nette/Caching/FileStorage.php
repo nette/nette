@@ -176,10 +176,14 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp['expire'])) {
+			$expire = (int) $dp['expire'];
+			if ($expire <= self::EXPIRATION_DELTA_LIMIT) {
+				$expire += time();
+			}
 			if (empty($dp['refresh'])) {
-				$meta['expire'] = (int) $dp['expire']; // absolute time
+				$meta['expire'] = $expire; // absolute time
 			} else {
-				$meta['delta'] = $dp['expire'] - time(); // sliding time
+				$meta['delta'] = $expire - time(); // sliding time
 			}
 		}
 
