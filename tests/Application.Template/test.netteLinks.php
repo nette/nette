@@ -5,10 +5,16 @@ require_once '../../Nette/loader.php';
 
 class MockPresenterComponent extends /*Nette::Application::*/PresenterComponent
 {
-	public function link($signal, $args = array())
+	function link($destination, $args = array())
 	{
 		$args = http_build_query($args);
-		return "#$signal $args";
+		return "LINK($destination $args)";
+	}
+
+	function ajaxLink($destination = NULL, $args = array())
+	{
+		$args = http_build_query($args);
+		return "AJAXLINK($destination $args)";
 	}
 
 }

@@ -4,9 +4,10 @@ The Nette License, Version 1
 Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
 All rights reserved.
 
-This license is a legal agreement between you and David Grudl for the use
-of Nette (the "Software"). By obtaining the Software you agree to comply
-with the terms and conditions of this license.
+This license is a legal agreement between you and David Grudl (the "Author")
+for the use of Nette Framework (the "Software"). By obtaining, using and/or
+copying the Software, you agree that you have read, understood, and will
+comply with the terms and conditions of this license.
 
 
 PERMITTED USE
@@ -25,25 +26,25 @@ the following conditions are met:
    in the documentation and/or other materials provided with the distribution.
 
 4. Products derived from the Software must include an acknowledgment that
-   they are derived from Nette in their documentation and/or other
+   they are derived from Nette Framework in their documentation and/or other
    materials provided with the distribution.
 
-5. The name "Nette" must not be used to endorse or promote products derived
-   from the Software without prior written permission from David Grudl.
+5. The name "Nette Framework" must not be used to endorse or promote products
+   derived from the Software without prior written permission from Author.
 
-6. Products derived from the Software may not be called "Nette",
+6. Products derived from the Software may not be called "Nette Framework",
    nor may "Nette" appear in their name, without prior written
-   permission from David Grudl.
+   permission from Author.
 
 
 INDEMNITY
 ---------
 
-You agree to indemnify and hold harmless the authors of the Software and
-any contributors for any direct, indirect, incidental, or consequential
-third-party claims, actions or suits, as well as any related expenses,
-liabilities, damages, settlements or fees arising from your use or misuse
-of the Software, or a violation of any terms of this license.
+You agree to indemnify and hold harmless the Author and any contributors
+for any direct, indirect, incidental, or consequential third-party claims,
+actions or suits, as well as any related expenses, liabilities, damages,
+settlements or fees arising from your use or misuse of the Software,
+or a violation of any terms of this license.
 
 
 DISCLAIMER OF WARRANTY

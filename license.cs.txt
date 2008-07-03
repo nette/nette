@@ -11,47 +11,47 @@ Nette Licence, verze 1
 Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
 Všechna práva vyhrazena.
 
-Tato licence je právní ujednání mezi vámi a Davidem Grudlem pro potøeby
-použití Nette (dále "Software"). By obtaining the Software you agree to comply
-with the terms and conditions of this license.
+Tato licence je právní ujednání mezi vámi a Davidem Grudlem (dále Author)
+pro potøeby použití Nette Frameworku (dále "Software"). Získáním, použitím
+a/nebo zkopírováním Software projevujete souhlas s tím, že jste pøeèetli,
+porozumìli a budete jednat v souladu s podmínkami této licence.
 
 
 POVOLENÉ POUŽITÍ
 ----------------
 
-Mùžete používat, kopírovat, modifikovat a distribuovat Software a jeho
-dokumentaci, v pùvodním i upravovaném tvaru, k jakémukoliv úèelu, a to
-za následujících podmínek:
+Je povoleno používat, kopírovat, modifikovat a distribuovat Software
+a jeho dokumentaci, v pùvodním i upravovaném tvaru, pro jakýkoliv úèel,
+za pøedpokladu, že jsou splnìny tyto podmínky:
 
-1. Kopie tohoto licenèního ujednání musí být pøiložena v distribuci.
+1. Kopie této licenèní smlouvy musí být souèástí distribuce.
 
-2. Šíøený zdrojový kód musí obsahovat výše uvedenou informaci o copyrightu
-   ve všech souborech zdrojového kódu.
+2. Šíøený zdrojový kód musí zachovat výše uvedenou informaci o autorských
+   právech ve všech souborech zdrojového kódu.
 
-3. Šíøený binární tvar musí nést výše uvedenou informaci o copyrightu ve své
-   dokumentaci a/nebo dalších materiálech poskytovaných s distribucí.
+3. Šíøený binární tvar musí reprodukovat výše uvedenou informaci o autorských
+   právech v dokumentaci a/nebo jiných materiálech poskytovaných s distribucí.
 
-4. Produkty odvozené od tohoto Software musí ve své dokumentaci a/nebo
-   dalších materiálech poskytovaných s distribucí obsahovat zmínku, že jsou
-   odvozené od Nette.
+4. Produkty odvozené od Software musí obsahovat potvrzení, že jsou odvozené
+   od Nette Frameworku, ve své dokumentaci a/nebo jiných materiálech
+   poskytovaných s distribucí.
 
-5. Název "Nette" nesmí být použit pøi podpoøe nebo právních aktech
-   souvisejících s produkty odvozenými z tohoto Software bez pøedchozího
-   písemného souhlasu Davida Grudla.
+5. Název "Nette Framework" nesmí být použit pøi podpoøe nebo propagaci produktù
+   odvozenými ze Software bez pøedchozího písemného souhlasu Autora.
 
-6. Produkty odvozené od tohoto Software nesmí být nazvány "Nette",
-   ani se nesmí "Nette" objevovat v jejich názvu bez pøedchozího
-   písemného souhlasu Davida Grudla.
+6. Produkty odvozené od Software nesmí být nazvány "Nette Framework",
+   ani se nesmí "Nette" objevit v jejich názvu bez pøedchozího
+   písemného souhlasu Autora.
 
 
-INDEMNITY
----------
+ZBAVENÍ ZODPOVÌDNOSTI
+---------------------
 
-You agree to indemnify and hold harmless the authors of the Software and
-any contributors for any direct, indirect, incidental, or consequential
-third-party claims, actions or suits, as well as any related expenses,
-liabilities, damages, settlements or fees arising from your use or misuse
-of the Software, or a violation of any terms of this license.
+Souhlasíte se zbavením zodpovìdnosti a krytím Autora a pøispìvatelù vùèi
+jakýmkoliv pøímým, nepøímým, náhodným nebo následným odjinud pocházejícím škodám,
+žalobám nebo sporùm, jakož i pøed všemi souvisejícími náklady, závazky,
+odškodnìními, úhradami nebo poplatky vyplývajících z používání nebo
+nesprávného užití Software, nebo z porušení podmínek této licence.
 
 
 ZÁRUKA SE NEPOSKYTUJE
