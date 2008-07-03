@@ -79,11 +79,11 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var string */
 	private $view;
 
-	/** @var ITemplate */
+	/** @var Nette::Templates::ITemplate */
 	private $template;
 
-	/** @var AjaxResponse */
-	private $ajaxResponse;
+	/** @var IAjaxDriver */
+	private $ajaxDriver;
 
 	/** @var string */
 	private $signalReceiver;
@@ -367,7 +367,7 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		$template = $this->getTemplate();
 
-		if ($template instanceof Template && (!$template->getFile() || !isset($template->content))) {
+		if ($template instanceof /*Nette::Templates::*/Template && (!$template->getFile() || !isset($template->content))) {
 			$found = FALSE;
 			$files = $this->formatTemplateFiles($this->request->getPresenterName(), $this->getView());
 			foreach ($files as $file) {
@@ -423,14 +423,14 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return ITemplate
+	 * @return Nette::Templates::ITemplate
 	 */
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!($value instanceof ITemplate)) {
-				throw new /*::*/UnexpectedValueException('Object ITemplate was expected.');
+			if (!($value instanceof /*Nette::Templates::*/ITemplate)) {
+				throw new /*::*/UnexpectedValueException('Object Nette::Templates::ITemplate was expected.');
 			}
 			$this->template = $value;
 		}
@@ -440,11 +440,11 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return ITemplate
+	 * @return Nette::Templates::ITemplate
 	 */
 	protected function createTemplate()
 	{
-		$template = new Template;
+		$template = new /*Nette::Templates::*/Template;
 
 		$template->component = $this;
 		$template->presenter = $this;
@@ -529,7 +529,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 
-	/********************* partial rendering ****************d*g**/
+	/********************* partial AJAX rendering ****************d*g**/
 
 
 
@@ -555,15 +555,14 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function addPartial($id, $content)
 	{
-		$this->ajaxResponse->addPartial($id, $content);
+		$this->ajaxDriver->addPartial($id, $content);
 	}
 
 
 
 	protected function startPartialMode()
 	{
-		$this->ajaxResponse = $this->createAjaxResponse();
-		$this->ajaxResponse->open();
+		$this->getAjaxDriver()->open();
 		ob_start(); // discard any output
 	}
 
@@ -574,24 +573,41 @@ abstract class Presenter extends Control implements IPresenter
 		ob_end_clean(); // discard any output
 		/*
 		if ($this->isInvalid()) {
-			$this->ajaxResponse->redirect($this->link(self::THIS_VIEW));
+			$this->ajaxDriver->redirect($this->link(self::THIS_VIEW));
 
 		} else*/ {
 			$state = array();
 			$this->saveState($state);
-			$this->ajaxResponse->setState($state);
+			$this->ajaxDriver->setState($state);
 		}
-		$this->ajaxResponse->close();
+		$this->ajaxDriver->close();
 	}
 
 
 
 	/**
-	 * @return AjaxResponse
+	 * @return IAjaxDriver|NULL
 	 */
-	protected function createAjaxResponse()
+	public function getAjaxDriver()
 	{
-		return new AjaxResponse;
+		if ($this->ajaxDriver === NULL) {
+			$value = $this->createAjaxDriver();
+			if (!($value instanceof IAjaxDriver)) {
+				throw new /*::*/UnexpectedValueException('Object IAjaxDriver was expected.');
+			}
+			$this->ajaxDriver = $value;
+		}
+		return $this->ajaxDriver;
+	}
+
+
+
+	/**
+	 * @return IAjaxDriver
+	 */
+	protected function createAjaxDriver()
+	{
+		return new AjaxDriver;
 	}
 
 
@@ -669,7 +685,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isPartialMode()) {
-			$this->ajaxResponse->redirect($uri);
+			$this->ajaxDriver->redirect($uri);
 
 		} else {
 			if (substr($uri, 0, 2) === '//') {
@@ -1067,7 +1083,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function renderError(Exception $exception)
 	{
 		if ($this->isPartialMode()) {
-			$this->ajaxResponse->error((string) $exception);
+			$this->ajaxDriver->error((string) $exception);
 
 		} else {
 			if (/*Nette::*/Debug::isEnabled()) throw $exception;

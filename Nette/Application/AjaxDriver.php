@@ -29,10 +29,26 @@
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class AjaxResponse extends /*Nette::*/Object
+class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 {
 	/** @var array */
 	private $partials = array();
+
+
+
+	/**
+	 * Generates link.
+	 * @param  string
+	 * @return string
+	 */
+	public function link($url)
+	{
+		return "return !nette.action(" . ($url === NULL ? "this.href" : json_encode($url)) . ", this)";
+	}
+
+
+
+	/********************* partial rendering ****************d*g**/
 
 
 

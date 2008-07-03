@@ -130,9 +130,8 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
 		{
 			if (isset($params[$nm])) { // NULL values must be ignored
-				$val = $params[$nm];
-				if ($l['type']) settype($val, $l['type']);
-				$this->$nm = $val;
+				if ($l['type']) settype($params[$nm], $l['type']);
+				$this->$nm = & $params[$nm];
 			}
 		}
 	}
@@ -269,9 +268,16 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 
-	public function lazylink($signal, $args = array())
+	public function lazyLink($signal, $args = array())
 	{
 		return new Link($this, $signal, $args);
+	}
+
+
+
+	public function ajaxLink($destination, $args = array())
+	{
+		return $this->getPresenter()->getAjaxDriver()->link($destination === NULL ? NULL : $this->link($destination, $args));
 	}
 
 

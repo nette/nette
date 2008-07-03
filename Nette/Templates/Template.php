@@ -14,10 +14,10 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com/
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette::Templates
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette::Templates;*/
 
 /*use Nette::Environment;*/
 
@@ -25,7 +25,7 @@
 
 require_once dirname(__FILE__) . '/../Object.php';
 
-require_once dirname(__FILE__) . '/../Application/ITemplate.php';
+require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
 
 
 
@@ -34,7 +34,7 @@ require_once dirname(__FILE__) . '/../Application/ITemplate.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette::Templates
  * @version    $Revision$ $Date$
  */
 class Template extends /*Nette::*/Object implements ITemplate

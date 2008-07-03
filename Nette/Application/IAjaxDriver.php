@@ -22,16 +22,58 @@
 
 
 /**
- *
+ * AJAX strategy interface.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-interface ITemplate
+interface IAjaxDriver
 {
 
-	public function render();
+	/**
+	 * Generates link.
+	 * @param  string
+	 * @return string
+	 */
+	function link($url);
+
+	/**
+	 * @return void
+	 */
+	function open();
+
+	/**
+	 * @return void
+	 */
+	function close();
+
+	/**
+	 * Updates the partial content.
+	 * @param  string
+	 * @param  string
+	 * @return void
+	 */
+	function addPartial($id, $content);
+
+	/**
+	 * Updates the presenter state.
+	 * @param  array
+	 * @return void
+	 */
+	function setState($state);
+
+	/**
+	 * @param  string
+	 * @return void
+	 */
+	function redirect($uri);
+
+	/**
+	 * @param  string
+	 * @return void
+	 */
+	function error($message);
 
 }

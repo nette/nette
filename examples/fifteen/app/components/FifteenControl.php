@@ -123,7 +123,7 @@ class FifteenControl extends /*Nette::Application::*/Control
 
 				if ($clickable) {
 					echo '<a href="', htmlSpecialChars($this->link('Click', $x, $y)), '"';
-					if ($this->useAjax) echo ' onclick="return !nette.action(this.href, this)"';
+					if ($this->useAjax) echo ' onclick="', htmlSpecialChars($this->ajaxLink(NULL)), '"';
 					echo '>';
 				}
 
