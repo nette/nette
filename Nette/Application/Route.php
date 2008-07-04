@@ -241,7 +241,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$name = $sequence[$i]; $i--; // parameter name
 			$meta = isset($metadata[$name]) ? $metadata[$name] : NULL;
 
-			if (isset($params[$name])) {
+			if (isset($params[$name]) && $params[$name] != '') { // intentionally ==
 				$optional = FALSE;
 				if (isset($meta['filterOut'])) {
 					$uri = call_user_func($meta['filterOut'], $params[$name]) . $uri;
@@ -355,7 +355,7 @@ class Route extends /*Nette::*/Object implements IRouter
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_]#i', $name)) {
-				throw new /*::*/InvalidArgumentException("Invalid parameter name '$name'.");
+				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string, '$name' is invalid.");
 			}
 
 			// check cond
@@ -365,7 +365,7 @@ class Route extends /*Nette::*/Object implements IRouter
 
 			} elseif ($cond[0] === '#') {
 				if (!isset(self::$defaults[$cond])) {
-					throw new /*::*/InvalidStateException("Missing default metadata key '$cond'.");
+					throw new /*::*/InvalidStateException("Parameter '$name' has '$cond' flag, but Route::\$defaults['$cond'] is not set.");
 				}
 				$defMeta = self::$defaults[$cond];
 			}
@@ -384,7 +384,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			// include in expression
 			if (isset($metadata[$name]['fixed'])) { // has default value?
 				if (!$optional) {
-					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters to the right are optional.");
+					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right are not optional.");
 				}
 				$re = '(?:(?P<' . $name . '>' . $cond . ')' . $re . ')?';
 				$metadata[$name]['fixed'] = 1;

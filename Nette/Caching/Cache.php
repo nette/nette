@@ -111,7 +111,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	public function save($key, $data, array $dependencies = NULL, $rewrite = TRUE)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be a string.');
+			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = NULL;
@@ -184,7 +184,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	public function offsetSet($key, $data)
 	{
 		if (!is_string($key)) { // prevents NULL
-			throw new /*::*/InvalidArgumentException('Key must be a string.');
+			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $this->data = NULL;
@@ -206,7 +206,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	public function offsetGet($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be a string.');
+			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		if ($this->key === $key) {
@@ -228,7 +228,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	public function offsetExists($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be a string.');
+			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $key;
@@ -247,7 +247,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	public function offsetUnset($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be a string.');
+			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $this->data = NULL;

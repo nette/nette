@@ -21,39 +21,24 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/AbortException.php';
-
-
-
 /**
- * Abort presenter and forwards to new request.
+ * Bad HTTP / presenter request exception.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class ForwardingException extends AbortException
+class BadRequestException extends /*::*/Exception
 {
-	/** @var PresenterRequest */
-	private $request;
-
-
-
-	public function __construct(PresenterRequest $request)
-	{
-		$this->request = $request;
-		parent::__construct();
-	}
-
-
 
 	/**
-	 * @return PresenterRequest
-	 */
-	final public function getRequest()
+	 * Returns HTTP status code.
+     * @return int
+     */
+	public function getHttpCode()
 	{
-		return $this->request;
+		return /*Nette::Web::*/IHttpResponse::S404_NOT_FOUND;
 	}
 
 }

@@ -72,11 +72,11 @@ class SimpleAuthenticator extends /*Nette::*/Object implements IAuthenticator
 					return new Identity($name);
 				}
 
-				throw new AuthenticationException('Invalid password', AuthenticationException::INVALID_CREDENTIAL);
+				throw new AuthenticationException("Invalid password.", AuthenticationException::INVALID_CREDENTIAL);
 			}
 		}
 
-		throw new AuthenticationException('User not found', AuthenticationException::IDENTITY_NOT_FOUND);
+		throw new AuthenticationException("User '$username' not found.", AuthenticationException::IDENTITY_NOT_FOUND);
 	}
 
 }

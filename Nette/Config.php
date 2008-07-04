@@ -79,7 +79,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 			return new /**/self/**//*static*/($arr, $flags);
 
 		} else {
-			throw new /*::*/InvalidArgumentException("Unknown file '$file' extension.");
+			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
 		}
 	}
 
@@ -98,7 +98,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 			return call_user_func(array($class, 'save'), $this, $file, $section);
 
 		} else {
-			throw new /*::*/InvalidArgumentException("Unknown file '$file' extension.");
+			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
 		}
 	}
 

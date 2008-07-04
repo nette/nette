@@ -171,7 +171,7 @@ final class TemplateFilters
 
 		if ($mod === 'block ') {
 			if (!isset(self::$curlyBlocks[$var])) {
-				throw new /*::*/Exception("Unknown block '$var'");
+				throw new /*::*/Exception("The block '$var' is not declared in TemplateFilters::\$curlyBlocks.");
 			}
 			self::$curlyBlock = str_replace('#', 'ob_get_clean()', self::$curlyBlocks[$var]);
 

@@ -35,18 +35,33 @@ require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
  */
 class PresenterLoader implements IPresenterLoader
 {
+	// presenter name pattern
+	const PRESENTER_VALIDATION_PATTERN = "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#";
+
 	/** @var bool */
 	public $caseSensitive = FALSE;
+
+	/** @var array */
+	private $cache = array();
 
 
 
 	/**
 	 * @param  string  presenter name
 	 * @return string  class name
-	 * @throws ApplicationException
+	 * @throws InvalidPresenterException
 	 */
 	public function getPresenterClass(& $name)
 	{
+		if (isset($this->cache[$name])) {
+			list($class, $name) = $this->cache[$name];
+			return $class;
+		}
+
+		if (!is_string($name) || !preg_match(self::PRESENTER_VALIDATION_PATTERN, $name)) {
+			throw new InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
+		}
+
 		$class = $this->formatPresenterClass($name);
 
 		if (!class_exists($class)) {
@@ -57,28 +72,31 @@ class PresenterLoader implements IPresenterLoader
 			}
 
 			if (!class_exists($class)) {
-				throw new ApplicationException("Cannot load presenter '$name', missing class '$class' in '$file'.");
+				throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' was not found in '$file'.");
 			}
 		}
 
 		$reflection = new ReflectionClass($class);
 
+		if (!$reflection->implementsInterface(/*Nette::Application::*/'IPresenter')) {
+			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette::Application::IPresenter implementor.");
+		}
+
+		if ($reflection->isAbstract()) {
+			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is abstract.");
+		}
+
 		// canonicalize presenter name
 		$realName = $this->unformatPresenterClass($reflection->getName());
 		if ($name !== $realName) {
 			if ($this->caseSensitive) {
-				throw new ApplicationException("Cannot load presenter '$name' - case mismatch.");
+				throw new InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");
 			} else {
+				$this->cache[$name] = array($class, $realName);
 				$name = $realName;
 			}
-		}
-
-		if (!$reflection->implementsInterface(/*Nette::Application::*/'IPresenter')) {
-			throw new ApplicationException("Invalid presenter '$name'.");
-		}
-
-		if ($reflection->isAbstract()) {
-			throw new ApplicationException("Invalid presenter '$name' - abstract class.");
+		} else {
+			$this->cache[$name] = array($class, $realName);
 		}
 
 		return $class;

@@ -191,7 +191,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 			} else {
 				$fnc = $this->checkFunc;
 				if (!$fnc($item)) {
-					throw new /*::*/InvalidArgumentException("Item must be $this->itemType.");
+					throw new /*::*/InvalidArgumentException("Item must be $this->itemType type.");
 				}
 			}
 		}

@@ -106,7 +106,7 @@ abstract class Control extends PresenterComponent
 	public function beginPartial($name = self::CONTROL, $mask = '<div %id>')
 	{
 		if (isset($this->beginedPartials[$name])) {
-			throw new /*::*/InvalidStateException("Partial '$name' has been started.");
+			throw new /*::*/InvalidStateException("Partial '$name' has been already started.");
 		}
 
 		// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
@@ -147,14 +147,14 @@ abstract class Control extends PresenterComponent
 	public function endPartial($name = self::CONTROL, $mask = '</div>')
 	{
 		if (!isset($this->beginedPartials[$name])) {
-			throw new /*::*/InvalidStateException("Partial '$name' is not started.");
+			throw new /*::*/InvalidStateException("Partial '$name' has not been started.");
 		}
 
 		if ($this->getPresenter()->isPartialMode()) {
 			list($id, $level) = $this->beginedPartials[$name];
 			if ($level !== NULL) {
 				if ($level !== ob_get_level()) {
-					throw new /*::*/InvalidStateException("Partial '$name' cannot be stopped here.");
+					throw new /*::*/InvalidStateException("Partial '$name' cannot be ended here.");
 				}
 				$this->getPresenter()->addPartial($id, ob_get_flush());
 				self::$invalidBranch = FALSE;

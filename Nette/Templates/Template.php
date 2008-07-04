@@ -157,7 +157,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 		list($filePath) = explode('#', $this->file);
 
 		if (!is_file($filePath) || !is_readable($filePath)) {
-			throw new /*::*/FileNotFoundException("Missing template '$this->file'.");
+			throw new /*::*/FileNotFoundException("Missing template file '$this->file'.");
 		}
 
 		$content = $filePath;

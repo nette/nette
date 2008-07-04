@@ -77,8 +77,8 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			throw new /*::*/InvalidArgumentException("Bad HTTP response '$code'.");
 		}
 
-		if (headers_sent()) {
-			throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent.");
+		if (headers_sent($file, $line)) {
+			throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent (output started at $file:$line).");
 		}
 
 		$this->code = $code;

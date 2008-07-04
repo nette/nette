@@ -453,10 +453,10 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string|array|self::ALL  roles
 	 * @param  string|array|self::ALL  resources
 	 * @param  string|array|self::ALL  privileges
-	 * @param  IPermissionAssert  $assert
+	 * @param  IPermissionAssertion  $assert
 	 * @return Permission  provides a fluent interface
 	 */
-	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssert $assert = NULL)
+	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assert = NULL)
 	{
 		return $this->setRule(self::ADD, self::ALLOW, $roles, $resources, $privileges, $assert);
 	}
@@ -469,10 +469,10 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string|array|self::ALL  roles
 	 * @param  string|array|self::ALL  resources
 	 * @param  string|array|self::ALL  privileges
-	 * @param  IPermissionAssert  $assert
+	 * @param  IPermissionAssertion  $assert
 	 * @return Permission  provides a fluent interface
 	 */
-	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssert $assert = NULL)
+	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assert = NULL)
 	{
 		return $this->setRule(self::ADD, self::DENY, $roles, $resources, $privileges, $assert);
 	}
@@ -552,11 +552,11 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	 * @param  string|array|self::ALL  roles
 	 * @param  string|array|self::ALL  resources
 	 * @param  string|array|self::ALL  privileges
-	 * @param  IPermissionAssert assert
+	 * @param  IPermissionAssertion assert
 	 * @throws Exception
 	 * @return Permission  provides a fluent interface
 	 */
-	public function setRule($operation, $type, $roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssert $assert = NULL)
+	public function setRule($operation, $type, $roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assert = NULL)
 	{
 		if ($type !== self::ALLOW && $type !== self::DENY) {
 			throw new /*::*/InvalidArgumentException("Unsupported rule type; must be either 'Permission::ALLOW' or 'Permission::DENY'.");
@@ -995,7 +995,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
  * @package    Nette::Security
  * @version    $Revision$ $Date$
  */
-interface IPermissionAssert
+interface IPermissionAssertion
 {
 	/**
 	 * Returns true if and only if the assertion conditions are met.

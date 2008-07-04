@@ -66,6 +66,9 @@ class Application extends /*Nette::*/Object
 	/** @var array of function(Application $sender) */
 	public $onRouted;
 
+	/** @var array of function(Application $sender, Exception $e) */
+	public $onError;
+
 	/** @var array of string */
 	public $allowedMethods = array('GET', 'POST', 'HEAD');
 
@@ -80,9 +83,6 @@ class Application extends /*Nette::*/Object
 
 	/** @var Nette::ServiceLocator */
 	private $serviceLocator;
-
-	/** @var bool */
-	private $hasError;
 
 
 
@@ -119,12 +119,20 @@ class Application extends /*Nette::*/Object
 			}
 		}
 
+		$router = $this->getRouter();
+		if ($router instanceof MultiRouter && !count($router)) {
+			$router[] = new SimpleRouter(array(
+				'presenter' => 'Default', // or Homepage ?
+				'view' => 'default',
+			));
+		}
+
 		// dispatching
 		$request = NULL;
-		$this->hasError = FALSE;
+		$hasError = FALSE;
 		do {
 			if (count($this->requests) > self::$maxLoop) {
-				throw new ApplicationException('Infinite loop.');
+				throw new ApplicationException('Too many loops detected in application life cycle.');
 			}
 
 			try {
@@ -132,10 +140,10 @@ class Application extends /*Nette::*/Object
 				if (!$request) {
 					$this->onStartup($this);
 
-					$request = $this->getRouter()->match($httpRequest);
+					$request = $router->match($httpRequest);
 					if (!($request instanceof PresenterRequest)) {
 						$request = NULL;
-						throw new ApplicationException('No route.');
+						throw new BadRequestException('No route for HTTP request.');
 					}
 
 					$this->onRouted($this);
@@ -144,8 +152,12 @@ class Application extends /*Nette::*/Object
 
 				// Instantiate presenter
 				$presenter = $request->getPresenterName();
-				$class = $this->getPresenterLoader()->getPresenterClass($presenter);
-				$request->setPresenterName($presenter); // TODO: better!
+				try {
+					$class = $this->getPresenterLoader()->getPresenterClass($presenter);
+					$request->adjustName($presenter);
+				} catch (InvalidPresenterException $e) {
+					throw new BadRequestException($e->getMessage());
+				}
 				$this->presenter = new $class;
 
 				// Instantiate topmost service locator
@@ -165,19 +177,23 @@ class Application extends /*Nette::*/Object
 
 			} catch (Exception $e) {
 				// fault barrier
-				if ($this->hasError || !$this->catchExceptions || !$this->errorPresenter) {
-					throw $e;
+				if ($hasError) {
+					throw new ApplicationException('Cannot load error presenter', 0, $e);
 				}
 
-				$this->hasError = TRUE;
+				$hasError = TRUE;
+				$this->onError($this, $e);
 
-				$request = new PresenterRequest(
-					$this->errorPresenter,
-					PresenterRequest::FORWARD,
-					array(
-						'exception' => $e,
-					)
-				);
+				if ($this->catchExceptions && $this->errorPresenter) {
+					$request = new PresenterRequest(
+						$this->errorPresenter,
+						PresenterRequest::FORWARD,
+						array('exception' => $e)
+					);
+					continue;
+				}
+
+				throw $e;
 			}
 		} while (1);
 

@@ -22,31 +22,57 @@
 
 
 /**
- * Application life cycle exception.
+ * Application fatal error.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class ApplicationException extends /*::*/Exception
+class ApplicationException extends /*::*/Exception implements /*Nette::*/ICausedException
 {
-	/** @var int */
-	private $httpCode;
+	/** @var ::Exception */
+	private $cause;
 
 
 
-	public function __construct($message = NULL, $code = 0, $httpCode = NULL)
+	/**
+	 * @param string  text describing the exception
+	 * @param int     code describing the exception
+	 * @param ::Exception  instance that caused the current exception
+	 */
+	public function __construct($message = NULL, $code = 0, /*::*/Exception $cause = NULL)
 	{
-		$this->httpCode = $httpCode;
+		$this->cause = $cause;
 		parent::__construct($message, $code);
 	}
 
 
 
-	public function getHttpCode()
+	/**
+	 * Gets the Exception instance that caused the current exception.
+	 * @return ::Exception
+	 */
+	public function getCause()
 	{
-		return $this->httpCode;
+		return $this->cause;
+	}
+
+
+
+	/**
+	 * Returns string represenation of exception.
+	 * @return string
+	 */
+	public function __toString()
+	{
+		$s = parent::__toString();
+
+		if ($this->cause !== NULL) {
+			$s .= "\nCaused by " . $this->cause->__toString();
+		}
+
+		return $s;
 	}
 
 }

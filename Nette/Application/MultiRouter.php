@@ -55,14 +55,6 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 	 */
 	public function match(/*Nette::Web::*/IHttpRequest $context)
 	{
-		// the default behaviour
-		if (!count($this)) {
-			$this[] = new SimpleRouter(array(
-				'presenter' => 'Default',
-				'view' => 'default',
-			));
-		}
-
 		foreach ($this as $route) {
 			$request = $route->match($context);
 			if ($request !== NULL) {
@@ -70,7 +62,6 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 				return $request;
 			}
 		}
-
 		return NULL;
 	}
 

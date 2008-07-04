@@ -106,7 +106,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	{
 		$name = $component->getName();
 		if (!isset($this->components[$name]) || $this->components[$name] !== $component) {
-			throw new /*::*/InvalidArgumentException("Component is not located in this container.");
+			throw new /*::*/InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
 		unset($this->components[$name]);

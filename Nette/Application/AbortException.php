@@ -22,13 +22,20 @@
 
 
 /**
- * User attempt to terminate the current script.
+ * The exception that is thrown when user attempts to terminate the current application.
+ * This is special "silent exception" with no error message or code.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class AbortException extends /*::*/RuntimeException
+class AbortException extends /*::*/Exception
 {
+
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 }

@@ -76,11 +76,11 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		} elseif (is_callable($service, TRUE)) {
 			if (empty($name)) {
-				throw new /*::*/InvalidArgumentException('Missing service name.');
+				throw new /*::*/InvalidArgumentException('Service seems to be callback, but service name is missing.');
 			}
 
 		} else {
-			throw new /*::*/InvalidArgumentException('Service must be class/interface name, object or factory callback.');
+			throw new /*::*/InvalidArgumentException('Service must be name, object or factory callback.');
 		}
 
 		$lower = strtolower($name);
@@ -146,7 +146,7 @@ class ServiceLocator extends Object implements IServiceLocator
 					if ($a = strrpos($service, ':')) $service = substr($service, $a + 1);/**/
 
 					if (!class_exists($service)) {
-						throw new AmbiguousServiceException("Class '$service' not found.");
+						throw new AmbiguousServiceException("Cannot instantiate service, class '$service' not found.");
 					}
 					return $this->registry[$lower] = new $service;
 				}
@@ -167,7 +167,7 @@ class ServiceLocator extends Object implements IServiceLocator
 			return $this->parent->getService($name);
 
 		} elseif ($need) {
-			throw new /*::*/InvalidStateException("Service '$name' was not added.");
+			throw new /*::*/InvalidStateException("Service '$name' not found.");
 
 		} else {
 			return NULL;

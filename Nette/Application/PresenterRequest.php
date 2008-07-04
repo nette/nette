@@ -41,9 +41,6 @@ final class PresenterRequest extends /*Nette::*/Object
 	const HTTP_POST = 'post';
 	const FORWARD = 'forward';
 
-	// presenter name mask
-	const MASK = "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#";
-
 	/** @var string */
 	private $source;
 
@@ -70,7 +67,7 @@ final class PresenterRequest extends /*Nette::*/Object
 	 */
 	public function __construct($name, $source, array $params, Hashtable $post = NULL, Hashtable $files = NULL)
 	{
-		$this->setPresenterName($name);
+		$this->name = $name;
 		$this->source = $source;
 		//$this->params = $params;
 		$this->params = new Hashtable($params);
@@ -81,16 +78,12 @@ final class PresenterRequest extends /*Nette::*/Object
 
 
 	/**
-	 * Retrieve the presenter name.
+	 * Adjust the presenter name.
 	 * @param  string
 	 * @return void
 	 */
-	public function setPresenterName($name)
+	public function adjustName($name)
 	{
-		if (!is_string($name) || !preg_match(self::MASK, $name)) {
-			throw new /*::*/InvalidArgumentException("Presenter name must be alphanumeric string.");
-		}
-
 		$this->name = $name;
 	}
 

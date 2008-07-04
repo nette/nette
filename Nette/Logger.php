@@ -14,46 +14,30 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com/
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette;*/
 
 
-
-require_once dirname(__FILE__) . '/../Application/AbortException.php';
+require_once dirname(__FILE__) . '/Object.php';
 
 
 
 /**
- * Abort presenter and forwards to new request.
+ * Message logger.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette
  * @version    $Revision$ $Date$
  */
-class ForwardingException extends AbortException
+class Logger extends Object
 {
-	/** @var PresenterRequest */
-	private $request;
 
-
-
-	public function __construct(PresenterRequest $request)
+	public function __construct()
 	{
-		$this->request = $request;
-		parent::__construct();
-	}
-
-
-
-	/**
-	 * @return PresenterRequest
-	 */
-	final public function getRequest()
-	{
-		return $this->request;
+		throw new /*::*/NotImplementedException;
 	}
 
 }

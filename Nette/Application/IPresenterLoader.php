@@ -22,7 +22,7 @@
 
 
 /**
- *
+ * Responsible for loading presenters.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -35,7 +35,23 @@ interface IPresenterLoader
 	/**
 	 * @param  string  presenter name
 	 * @return string  class name
+	 * @throws InvalidPresenterException
 	 */
 	function getPresenterClass(& $name);
 
+}
+
+
+
+
+/**
+ * The exception that is thrown when a presenter cannot be loaded.
+ *
+ * @author     David Grudl
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @package    Nette::Application
+ * @version    $Revision$ $Date$
+ */
+class InvalidPresenterException extends /*::*/InvalidArgumentException
+{
 }

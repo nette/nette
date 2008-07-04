@@ -101,7 +101,7 @@ final class ConfigAdapter_INI
 			if (isset($data[$section])) {
 				$data = array($section => $data[$section]);
 			} else {
-				throw new /*::*/InvalidStateException("There is not section '$section' in '$file'.");
+				throw new /*::*/InvalidStateException("There is not section [$section] in '$file'.");
 			}
 		}
 

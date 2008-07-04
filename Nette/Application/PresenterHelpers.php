@@ -41,8 +41,11 @@ class PresenterHelpers
 	private static $mpCache = array();
 
 
+
 	/**
-	 * @param  string
+	 * Returns array of classes persistent parameters. Class must implements IStatePersistent.
+     * Persistent parameter has annotation @persistent, public visibility and is non-static.
+	 * @param  string  class name
 	 * @return array
 	 */
 	final static public function getPersistentParams($class)
@@ -83,8 +86,10 @@ class PresenterHelpers
 
 
 	/**
-	 * @param  string
-	 * @param  string
+	 * Is a method callable? It means class is instantiable and method has
+	 * public visibility, is non-static and non-abstract.
+	 * @param  string  class name
+	 * @param  string  method name
 	 * @return bool
 	 */
 	final static public function isMethodCallable($class, $method)
@@ -95,8 +100,9 @@ class PresenterHelpers
 
 
 	/**
-	 * @param  string
-	 * @param  string
+	 * Returns array of annotations for "callable" methods. @see isMethodCallable()
+	 * @param  string  class name
+	 * @param  string  method name
 	 * @return array
 	 */
 	final static public function getMethodAnnotations($class, $method)
@@ -134,10 +140,12 @@ class PresenterHelpers
 
 
 	/**
-	 * @param  string
-	 * @param  string
-	 * @param  array
-	 * @return array
+	 * Converts named parameters to list of arguments.
+     * Used by PresenterComponent::tryCall()
+	 * @param  string  class name
+	 * @param  string  method name
+	 * @param  array   parameters - associative array
+	 * @return array   arguments  - list
 	 */
 	final static public function paramsToArgs($class, $method, $params)
 	{
@@ -161,9 +169,11 @@ class PresenterHelpers
 
 
 	/**
-	 * @param  string
-	 * @param  string
-	 * @param  array
+	 * Converts list of arguments to named parameters.
+     * Used by Presenter::createRequest() & PresenterComponent::link()
+	 * @param  string  class name
+	 * @param  string  method name
+	 * @param  array   arguments
 	 * @return void
 	 */
 	final static public function argsToParams($class, $method, & $args)
@@ -187,6 +197,12 @@ class PresenterHelpers
 
 
 
+	/**
+	 * Returns array of methods parameters and theirs default values.
+	 * @param  string  class name
+	 * @param  string  method name
+	 * @return array
+	 */
 	final static public function getMethodParams($class, $method)
 	{
 		$cache = & self::$mpCache[strtolower($class . ':' . $method)];
