@@ -100,7 +100,7 @@ class NetteLoader extends AutoLoader
 		'image' => '/Forms/items.php',
 		'imap' => '/Collections/IMap.php',
 		'invalidlinkexception' => '/Application/InvalidLinkException.php',
-		'invalidpresenterexception' => '/Application/IPresenterLoader.php',
+		'invalidpresenterexception' => '/Application/InvalidPresenterException.php',
 		'invalidstateexception' => '/exceptions.php',
 		'ioexception' => '/exceptions.php',
 		'ipermissionassertion' => '/Security/Permission.php',

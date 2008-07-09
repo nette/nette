@@ -31,14 +31,4 @@
  */
 class BadRequestException extends /*::*/Exception
 {
-
-	/**
-	 * Returns HTTP status code.
-     * @return int
-     */
-	public function getHttpCode()
-	{
-		return /*Nette::Web::*/IHttpResponse::S404_NOT_FOUND;
-	}
-
 }

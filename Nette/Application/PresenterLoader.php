@@ -35,9 +35,6 @@ require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
  */
 class PresenterLoader implements IPresenterLoader
 {
-	// presenter name pattern
-	const PRESENTER_VALIDATION_PATTERN = "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#";
-
 	/** @var bool */
 	public $caseSensitive = FALSE;
 
@@ -58,7 +55,7 @@ class PresenterLoader implements IPresenterLoader
 			return $class;
 		}
 
-		if (!is_string($name) || !preg_match(self::PRESENTER_VALIDATION_PATTERN, $name)) {
+		if (!is_string($name) || !preg_match("#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#", $name)) {
 			throw new InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
 		}
 
@@ -109,11 +106,11 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatPresenterClass($name)
+	public static function formatPresenterClass($presenter)
 	{
 		// PHP 5.3
-		/*return str_replace(':', '::', $name) . 'Presenter';*/
-		return strtr($name, ':', '_') . 'Presenter';
+		/*return str_replace(':', '::', $presenter) . 'Presenter';*/
+		return strtr($presenter, ':', '_') . 'Presenter';
 	}
 
 
@@ -123,11 +120,11 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function unformatPresenterClass($name)
+	public static function unformatPresenterClass($class)
 	{
 		// PHP 5.3
-		/*return str_replace('::', ':', substr($name, 0, -9));*/
-		return strtr(substr($name, 0, -9), '_', ':');
+		/*return str_replace('::', ':', substr($class, 0, -9));*/
+		return strtr(substr($class, 0, -9), '_', ':');
 	}
 
 
@@ -137,11 +134,11 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatPresenterFile($name)
+	public static function formatPresenterFile($presenter)
 	{
-		$name = str_replace(':', 'Module/', $name);
-		$name = /*Nette::*/Environment::getVariable('presentersDir') . '/' . $name . 'Presenter.php';
-		return $name;
+		$presenter = str_replace(':', 'Module/', $presenter);
+		$presenter = /*Nette::*/Environment::getVariable('presentersDir') . '/' . $presenter . 'Presenter.php';
+		return $presenter;
 	}
 
 }

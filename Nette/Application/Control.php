@@ -156,7 +156,7 @@ abstract class Control extends PresenterComponent
 				if ($level !== ob_get_level()) {
 					throw new /*::*/InvalidStateException("Partial '$name' cannot be ended here.");
 				}
-				$this->getPresenter()->addPartial($id, ob_get_flush());
+				$this->getPresenter()->getAjaxDriver()->addPartial($id, ob_get_flush());
 				self::$invalidBranch = FALSE;
 			}
 

@@ -4,8 +4,8 @@
 
 <hr><h2>Basic usage</h2>
 object(PresenterRequest) (5) {
-  "source" private => string(4) "post"
-  "presenter" private => string(11) "myPresenter"
+  "source" private => string(3) "GET"
+  "name" private => string(11) "myPresenter"
   "params" private => object(Hashtable) (4) {
     "view" => string(4) "view"
     "id" => string(2) "12"
@@ -23,8 +23,8 @@ string(48) "/?view=view&test=testvalue&presenter=myPresenter"
 
 <hr><h2>With module</h2>
 object(PresenterRequest) (5) {
-  "source" private => string(4) "post"
-  "presenter" private => string(20) "main:sub:myPresenter"
+  "source" private => string(3) "GET"
+  "name" private => string(20) "main:sub:myPresenter"
   "params" private => object(Hashtable) (0) {
   }
   "post" private => object(Hashtable) (0) {

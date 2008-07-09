@@ -27,15 +27,6 @@ require_once dirname(__FILE__) . '/../Object.php';
 
 
 /**
- * Check configuration.
- */
-if (version_compare(PHP_VERSION , '5.2.2', '<')) {
-	throw new /*::*/RuntimeException('Nette::Application needs PHP 5.2.2 or newer.');
-}
-
-
-
-/**
  * Front Controller.
  *
  * @author     David Grudl
@@ -91,6 +82,10 @@ class Application extends /*Nette::*/Object
 	 */
 	public function run()
 	{
+		if (version_compare(PHP_VERSION , '5.2.2', '<')) {
+			throw new /*::*/ApplicationException('Nette::Application needs PHP 5.2.2 or newer.');
+		}
+
 		$httpRequest = Environment::getHttpRequest();
 		$httpResponse = Environment::getHttpResponse();
 
@@ -102,10 +97,6 @@ class Application extends /*Nette::*/Object
 
 		if (Environment::getVariable('basePath') === NULL) {
 			Environment::setVariable('basePath', $httpRequest->getUri()->basePath);
-		}
-
-		if ($this->catchExceptions === NULL) {
-			$this->catchExceptions = Environment::getName() !== Environment::DEVELOPMENT;
 		}
 
 		// check HTTP method
@@ -122,7 +113,7 @@ class Application extends /*Nette::*/Object
 		$router = $this->getRouter();
 		if ($router instanceof MultiRouter && !count($router)) {
 			$router[] = new SimpleRouter(array(
-				'presenter' => 'Default', // or Homepage ?
+				'presenter' => 'Default',
 				'view' => 'default',
 			));
 		}
@@ -183,6 +174,10 @@ class Application extends /*Nette::*/Object
 
 				$hasError = TRUE;
 				$this->onError($this, $e);
+
+				if ($this->catchExceptions === NULL) {
+					$this->catchExceptions = Environment::getName() !== Environment::DEVELOPMENT;
+				}
 
 				if ($this->catchExceptions && $this->errorPresenter) {
 					$request = new PresenterRequest(

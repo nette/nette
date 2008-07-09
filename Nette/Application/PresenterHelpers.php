@@ -175,6 +175,7 @@ class PresenterHelpers
 	 * @param  string  method name
 	 * @param  array   arguments
 	 * @return void
+	 * @throws InvalidLinkException
 	 */
 	final static public function argsToParams($class, $method, & $args)
 	{
@@ -191,7 +192,7 @@ class PresenterHelpers
 		}
 
 		if (array_key_exists($i, $args)) {
-			trigger_error("Extra parameters for '$class:$method'", E_USER_WARNING);
+			throw new InvalidLinkException("Extra parameter for '$class:$method'.");
 		}
 	}
 

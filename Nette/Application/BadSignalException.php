@@ -21,22 +21,18 @@
 
 
 
+require_once dirname(__FILE__) . '/../Application/BadRequestException.php';
+
+
+
 /**
- * Responsible for loading presenters.
+ * Signal exception.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-interface IPresenterLoader
+class BadSignalException extends BadRequestException
 {
-
-	/**
-	 * @param  string  presenter name
-	 * @return string  class name
-	 * @throws InvalidPresenterException
-	 */
-	function getPresenterClass(& $name);
-
 }

@@ -3,7 +3,7 @@
 <?php
 require_once '../../Nette/loader.php';
 
-class MockPresenterComponent extends /*Nette::Templates::*/PresenterComponent
+class MockPresenterComponent extends /*Nette::Application::*/PresenterComponent
 {
 	function link($destination, $args = array())
 	{

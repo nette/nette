@@ -57,9 +57,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/** @var array  @see self::getHeaders() */
 	private $headers;
 
-	/** @var bool  @see self::isLocal() */
-	private $isLocal;
-
 
 
 	/**
@@ -374,25 +371,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	public function isAjax()
 	{
 		return ($this->getMethod() === 'POST') && ($this->getHeader('X-Requested-With') === 'XMLHttpRequest');
-	}
-
-
-
-	/**
-	 * Is server is running on local host?
-	 * @return boolean
-	 */
-	public function isLocal()
-	{
-		if ($this->isLocal === NULL) {
-			$this->isLocal = FALSE;
-			if (isset($_SERVER['SERVER_ADDR'])) {
-				$oct = explode('.', $_SERVER['SERVER_ADDR']);
-				$this->isLocal = (count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
-					|| ($oct[0] === '169' && $oct[1] === '254') || ($oct[0] === '192' && $oct[1] === '168'));
-			}
-		}
-		return $this->isLocal;
 	}
 
 

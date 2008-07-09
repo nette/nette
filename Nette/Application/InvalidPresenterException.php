@@ -21,18 +21,18 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/ApplicationException.php';
+require_once dirname(__FILE__) . '/../Application/InvalidLinkException.php';
 
 
 
 /**
- * Link generation exception.
+ * The exception that is thrown when a presenter cannot be loaded.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  * @version    $Revision$ $Date$
  */
-class LinkException extends ApplicationException
+class InvalidPresenterException extends InvalidLinkException
 {
 }

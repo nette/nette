@@ -126,13 +126,11 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	public function loadState(array $params)
 	{
 		$this->params = $params;
-
 		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
 		{
-			if (isset($params[$nm])) { // NULL values must be ignored
-				if ($l['type']) settype($params[$nm], $l['type']);
-				$this->$nm = & $params[$nm];
-			}
+			if (!isset($params[$nm])) continue; // ignore NULL values
+			if ($l['type']) settype($params[$nm], $l['type']);
+			$this->$nm = & $params[$nm];
 		}
 	}
 
@@ -155,28 +153,28 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 			if (!($this instanceof $l['since'])) continue;
 
 			if (isset($params[$nm])) {
-				// injected value
-				$val = $params[$nm];
+				$val = $params[$nm]; // injected value
 
 			} elseif (array_key_exists($nm, $params)) {
-				// i.e. $params[$nm] === NULL -> skip
-				continue;
+				continue; // i.e. $params[$nm] === NULL -> means skip
 
 			} else {
-				// taken from object property
-				$val = $this->$nm;
-				if (is_object($val)) {
-					throw new InvalidStateException("Persistent parameter '$this->class::\$$nm' is object");
+				$val = $this->$nm; // object property value
+			}
+
+			// only NULLs, scalar, arrays and IStatePersistent are allowed
+			if ($val === NULL || is_scalar($val) || is_array($val)) {
+				if ($l['type']) settype($val, $l['type']);
+
+				if ($val === $l['def']) {
+					$params[$nm] = NULL;
+				} else {
+					$params[$nm] = $val;
 				}
+
+			} else {
+				throw new InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
 			}
-
-			if ($l['type']) settype($val, $l['type']);
-
-			if ($val === $l['def']) {
-				$val === NULL;
-			}
-
-			$params[$nm] = $val;
 		}
 	}
 
@@ -186,13 +184,15 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 	/**
+	 * Calls signal handler method.
 	 * @param  string
 	 * @return void
+	 * @throws BadSignalException if there is not handler method
 	 */
 	public function signalReceived($signal)
 	{
 		if (!$this->tryCall($this->formatSignalMethod($signal), $this->params)) {
-			throw new SignalException("There is no handler for signal '$signal' in '{$this->getClass()}'.");
+			throw new BadSignalException("There is no handler for signal '$signal' in '{$this->getClass()}' class.");
 		}
 	}
 
@@ -203,29 +203,9 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 * @param  string
 	 * @return string
 	 */
-	protected function formatSignalMethod($name)
+	protected function formatSignalMethod($signal)
 	{
-		return $name == NULL ? NULL : 'handle' . $name; // intentionally ==
-	}
-
-
-
-	/**
-	 * @param  string
-	 * @param  array
-	 * @return void
-	 */
-	final protected function argsForSignal($signal, & $args)
-	{
-		$class = $this->getClass();
-		$method = $this->formatSignalMethod($signal);
-		if (!PresenterHelpers::isMethodCallable($class, $method)) {
-			throw new SignalException("Unknown signal '$class:$signal'.");
-		}
-
-		if ($args) {
-			PresenterHelpers::argsToParams($class, $method, $args);
-		}
+		return $signal == NULL ? NULL : 'handle' . $signal; // intentionally ==
 	}
 
 
@@ -234,6 +214,13 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 
+	/**
+	 * Generates URL to signal.
+	 * @param  string
+	 * @param  array|mixed
+	 * @return string
+	 * @throws InvalidLinkException
+	 */
 	public function link($signal, $args = array())
 	{
 		if (!is_array($args)) {
@@ -242,10 +229,21 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 		}
 
 		try {
-			// exclamation is not required, every destination is signal
+			// exclamation is not required, every destinations are signals
 			$signal = rtrim($signal, '!');
-			if ($signal != NULL) { // intentionally ==
-				$this->argsForSignal($signal, $args);
+			if ($signal == NULL || $signal === 'this') {
+				$signal = '';
+
+			} else {
+				$class = $this->getClass();
+				$method = $this->formatSignalMethod($signal);
+				if (!PresenterHelpers::isMethodCallable($class, $method)) {
+					throw new InvalidLinkException("Unknown signal '$class:$signal!'.");
+				}
+
+				if ($args) {
+					PresenterHelpers::argsToParams($class, $method, $args);
+				}
 			}
 
 			if ($args) {
@@ -254,23 +252,16 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 			return $this->getPresenter()->createSubRequest($this->getUniqueId(), $signal, $args);
 
-		} catch (Exception $e) {
-			if (Presenter::$invalidLinkMode === Presenter::LINK_WARNING) {
-				trigger_error($e->getMessage(), E_USER_WARNING);
-
-			} elseif (Presenter::$invalidLinkMode === Presenter::LINK_EXCEPTION) {
-				throw new LinkException($e);
-			}
-
-			return '#';
+		} catch (InvalidLinkException $e) {
+			return $this->getPresenter()->handleInvalidLink($e);
 		}
 	}
 
 
 
-	public function lazyLink($signal, $args = array())
+	public function lazyLink($destination, $args = array())
 	{
-		return new Link($this, $signal, $args);
+		return new Link($this, $destination, $args);
 	}
 
 
@@ -283,7 +274,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 	/**
-	 * Redirect to another presenter/view/signal.
+	 * Redirect to another presenter, view or signal.
 	 * @param  string
 	 * @param  array
 	 * @param  int HTTP error code

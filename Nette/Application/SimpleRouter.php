@@ -82,7 +82,7 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 
 		return new PresenterRequest(
 			$presenter,
-			$context->getMethod() === 'GET' ? PresenterRequest::HTTP_GET : PresenterRequest::HTTP_POST,
+			$context->getMethod() === 'POST' ? PresenterRequest::HTTP_POST : PresenterRequest::HTTP_GET,
 			$params,
 			$context->getPost(),
 			$context->getFiles()
