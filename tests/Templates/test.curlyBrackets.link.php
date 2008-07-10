@@ -14,11 +14,14 @@ class MockComponent
 		array_unshift($args, $destination);
 		return 'LINK(' . implode(', ', $args) . ')';
 	}
+}
 
-	function ajaxLink($destination, $args = array())
+class MockPresenter extends MockComponent
+{
+	function link($destination, $args = array())
 	{
 		array_unshift($args, $destination);
-		return 'AJAXLINK(' . implode(', ', $args) . ')';
+		return 'PLINK(' . implode(', ', $args) . ')';
 	}
 }
 
@@ -31,5 +34,6 @@ $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-link.phtml');
 $template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
 $template->component = new MockComponent;
+$template->presenter = new MockPresenter;
 $template->view = 'login';
 $template->render();

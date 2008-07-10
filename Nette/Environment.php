@@ -177,6 +177,17 @@ final class Environment
 
 
 	/**
+	 * Detects if server is running on local host.
+	 * @return boolean
+	 */
+	public static function isLocal()
+	{
+		return self::getMode('localhost');
+	}
+
+
+
+	/**
 	 * Determines if the debugger is active.
 	 * @return bool
 	 */

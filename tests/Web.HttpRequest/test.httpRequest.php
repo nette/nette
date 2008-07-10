@@ -25,7 +25,6 @@ echo 'HttpRequest::getFiles() = '; Debug::dump($request->getFiles());
 echo 'HttpRequest::getCookies() = '; Debug::dump($request->getCookies());
 echo 'HttpRequest::getHeaders() = '; Debug::dump($request->getHeaders());
 echo 'HttpRequest::isSecured() = '; Debug::dump($request->isSecured());
-echo 'HttpRequest::isLocal() = '; Debug::dump($request->isLocal());
 echo 'HttpRequest::ipHash() = '; Debug::dump($request->ipHash());
 
 echo 'HttpRequest::isEqual() = '; Debug::dump($request->uri->isEqual('//test/second?third'));
@@ -37,7 +36,6 @@ $uri = $request->uri;
 $uri->path = '/test';
 $uri->basePath = '/second';
 $request->setUri($uri);
-$request->isLocal(FALSE);
 
 echo 'HttpRequest::getUri() = '; Debug::dump($request->getUri());
 echo 'HttpRequest::getUri()->authority = '; Debug::dump($request->getUri()->authority);
@@ -46,4 +44,3 @@ echo 'HttpRequest::getUri()->baseUri = '; Debug::dump($request->getUri()->baseUr
 echo 'HttpRequest::getUri()->relativeUri = '; Debug::dump($request->getUri()->relativeUri);
 echo 'HttpRequest::getUri()->absoluteUri = '; Debug::dump($request->getUri()->absoluteUri);
 echo 'HttpRequest::getUri()->pathInfo = '; Debug::dump($request->getUri()->pathInfo);
-echo 'HttpRequest::isLocal() = '; Debug::dump($request->isLocal());
