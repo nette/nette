@@ -16,12 +16,14 @@
 <body>
 	<h1>Fifteen example</h1>
 
-	{if $component->flash}<h2>{$component->flash}</h2>{/if}
+	{partial round}<p>Round #{$fifteen->round + 1}</p>{/partial round}
 
-	<p><a href="{$component->fifteen->link('shuffle')}">Shuffle!</a></p>
+	{partial flash}{if isset($flash)}<h2>{$flash}</h2>{/if}{/partial flash}
+
+	<p><a href="{$fifteen->link('shuffle')}" onclick="{$fifteen->ajaxLink(NULL)}">Shuffle!</a></p>
 
 	<div>
-	<?$component->fifteen->render()?>
+	{? $fifteen->render() }
 	</div>
 
 	<img id="spinner" src="images/spinner.gif" alt="Wait please..." width="14" height="14">

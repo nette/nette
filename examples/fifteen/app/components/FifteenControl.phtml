@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * The Fifteen game control template
+ *
+ * @version    $Revision: 26 $ $Date: 2008-07-04 10:23:06 +0200 (pá, 04 VII 2008) $
+ *
+ * @param  int       $width
+ * @param  bool      $useAjax
+ * @param  array     $order
+ * @param  Presenter $presenter
+ * @param  Control   $component
+ * @param  Template  $template
+ */
+?>
+{partial control}
+
+<table>
+{for $y = $width - 1; $y >= 0; $y--}
+<tr>
+	{for $x = $width - 1; $x >= 0; $x--}
+	<td>
+
+	{if $clickable = $component->isClickable($x, $y)}
+	<a href="{$component->link('Click', $x, $y)}" {if $useAjax}onclick="{$component->ajaxLink(NULL)}"{/if}>
+	{/if}
+
+	<img src="images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
+
+	{if $clickable}</a>{/if}
+
+	</td>
+	{/for}
+</tr>
+{/for}
+</table>
+
+{/partial control}

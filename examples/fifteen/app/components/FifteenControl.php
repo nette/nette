@@ -1,11 +1,26 @@
 <?php
 
+/**
+ * Nette Framework "Fifteen" Example
+ *
+ * Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+ *
+ * This source file is subject to the "Nette license" that is bundled
+ * with this package in the file license.txt.
+ */
 
 
+
+/**
+ * The Fifteen game control
+ *
+ * @author     David Grudl
+ * @version    $Revision$ $Date$
+ */
 class FifteenControl extends /*Nette::Application::*/Control
 {
-	const WIDTH = 4;
-	const MAX   = 15;  // self::WIDTH * self::WIDTH - 1
+	/** @var int */
+	protected $width = 4;
 
 	/** @var array of function ($sender) */
 	public $onAfterClick;
@@ -28,7 +43,7 @@ class FifteenControl extends /*Nette::Application::*/Control
 	protected function constructed()
 	{
 		if (empty($this->order)) {
-			$this->order = range(0, self::MAX);
+			$this->order = range(0, $this->width * $this->width - 1);
 		}
 	}
 
@@ -37,14 +52,14 @@ class FifteenControl extends /*Nette::Application::*/Control
 	public function handleClick($x, $y)
 	{
 		if (!$this->isClickable($x, $y)) {
-			throw new Exception('Action not allowed.');
+			throw new /*Nette::Application::*/BadRequestException('Action not allowed.');
 		}
 
 		$this->move($x, $y);
 		$this->round++;
 		$this->onAfterClick($this);
 
-		if ($this->order == range(0, self::MAX)) {
+		if ($this->order == range(0, $this->width * $this->width - 1)) {
 			$this->onGameOver($this, $this->round);
 		}
 	}
@@ -54,8 +69,8 @@ class FifteenControl extends /*Nette::Application::*/Control
 	public function handleShuffle()
 	{
 		for ($i=0; $i<100; $i++) {
-			$x = rand(0, self::WIDTH - 1);
-			$y = rand(0, self::WIDTH - 1);
+			$x = rand(0, $this->width - 1);
+			$y = rand(0, $this->width - 1);
 			if ($this->isClickable($x, $y)) {
 				$this->move($x, $y);
 			}
@@ -72,16 +87,16 @@ class FifteenControl extends /*Nette::Application::*/Control
 
 
 
-	private function isClickable($x, $y)
+	public function isClickable($x, $y)
 	{
-		$pos = $x + $y * self::WIDTH;
+		$pos = $x + $y * $this->width;
 		$empty = $this->searchEmpty();
-		$y = (int) ($empty / self::WIDTH);
-		$x = $empty % self::WIDTH;
+		$y = (int) ($empty / $this->width);
+		$x = $empty % $this->width;
 		if ($x > 0 && $pos === $empty - 1) return TRUE;
-		if ($x < self::WIDTH-1 && $pos === $empty + 1) return TRUE;
-		if ($y > 0 && $pos === $empty - self::WIDTH) return TRUE;
-		if ($y < self::WIDTH-1 && $pos === $empty + self::WIDTH) return TRUE;
+		if ($x < $this->width-1 && $pos === $empty + 1) return TRUE;
+		if ($y > 0 && $pos === $empty - $this->width) return TRUE;
+		if ($y < $this->width-1 && $pos === $empty + $this->width) return TRUE;
 		return FALSE;
 	}
 
@@ -89,57 +104,30 @@ class FifteenControl extends /*Nette::Application::*/Control
 
 	private function move($x, $y)
 	{
-		$pos = $x + $y * self::WIDTH;
+		$pos = $x + $y * $this->width;
 		$emptyPos = $this->searchEmpty();
 		$this->order[$emptyPos] = $this->order[$pos];
-		$this->order[$pos] = self::MAX;
+		$this->order[$pos] = 0;
 	}
 
 
 
 	private function searchEmpty()
 	{
-		return array_search(self::MAX, $this->order);
+		return array_search(0, $this->order);
 	}
 
 
 
 	public function render()
 	{
-		if (!$this->beginPartial()) return;
-
-		echo "<table>\n";
-
-		for ($y = 0; $y < self::WIDTH; $y++)
-		{
-			echo "<tr>\n";
-
-			for ($x = 0; $x < self::WIDTH; $x++)
-			{
-				$pos = $x + $y * self::WIDTH;
-				echo '<td>';
-
-				$clickable = $this->isClickable($x, $y);
-
-				if ($clickable) {
-					echo '<a href="', htmlSpecialChars($this->link('Click', $x, $y)), '"';
-					if ($this->useAjax) echo ' onclick="', htmlSpecialChars($this->ajaxLink(NULL)), '"';
-					echo '>';
-				}
-
-				echo '<img src="images/', $this->order[$pos], '.jpg" width="100" height="100" alt="', ($this->order[$pos]+1), '" />';
-
-				if ($clickable) echo '</a>';
-
-				echo "</td>\n";
-			}
-
-			echo "</tr>\n";
-		}
-
-		echo "</table>\n";
-
-		$this->endPartial();
+		$template = $this->template;
+		$template->setFile(dirname(__FILE__) . '/FifteenControl.phtml');
+		$template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
+		$template->width = $this->width;
+		$template->order = $this->order;
+		$template->useAjax = $this->useAjax;
+		$template->render();
 	}
 
 
@@ -157,7 +145,7 @@ class FifteenControl extends /*Nette::Application::*/Control
 			// validate
 			$copy = $params['order'];
 			sort($copy);
-			if ($copy != range(0, self::MAX)) {
+			if ($copy != range(0, $this->width * $this->width - 1)) {
 				unset($params['order']);
 			}
 		}

@@ -5,9 +5,6 @@
 
 class DefaultPresenter extends /*Nette::Application::*/Presenter
 {
-	/** @var string */
-	public $flash;
-
 	/** @var FifteenControl */
 	public $fifteen;
 
@@ -15,21 +12,24 @@ class DefaultPresenter extends /*Nette::Application::*/Presenter
 
 	public function prepareDefault()
 	{
-		require_once dirname(__FILE__) . '/../components/FifteenControl.php';
+		require_once Environment::expand('%componentsDir%/FifteenControl.php');
 
 		$this->fifteen = new FifteenControl($this, 'game');
 		$this->fifteen->onGameOver[] = array($this, 'GameOver');
 		$this->fifteen->useAjax = TRUE;
 
 		$this->template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
+		$this->template->fifteen = $this->fifteen;
+
+		$this->invalidate('round'); // $this->invalidatePartial('round'); in Nette 0.7.5
 	}
 
 
 
 	public function GameOver($sender, $round)
 	{
-		$this->flash = 'Congratulate!';
+		$this->template->flash = 'Congratulate!';
+		$this->invalidate('flash'); // $this->invalidatePartial('flash'); in Nette 0.7.5
 	}
-
 
 }
