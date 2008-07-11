@@ -38,6 +38,7 @@ class MockHttpRequest extends /*Nette::Web::*/HttpRequest
 }
 
 
+
 function test(Route $route, $uri, $expectedReq, $expectedUri)
 {
 	echo "$uri: ";
@@ -48,7 +49,7 @@ function test(Route $route, $uri, $expectedReq, $expectedUri)
 		'presenter' => 'querypresenter',
 	);
 
-
+	//Debug::dump($route);
 	$data = $route->match($httpRequest);
 
 	echo $data ? "matched" : "no match";
@@ -193,6 +194,75 @@ test($route,
 
 
 
+echo "\n<hr><h2>With user class</h2>\n";
+
+Route::$styles['#numeric']['pattern'] = '\d{1,3}';
+
+$route = new Route('<presenter>/<id #numeric>', array());
+
+test($route,
+	'/presenter/12/',
+	array (
+		'presenter' => 'Presenter',
+		'params' =>
+		array (
+			'id' => '12',
+			'test' => 'testvalue',
+		),
+	),
+	'/presenter/12?test=testvalue'
+);
+
+test($route,
+	'/presenter/1234',
+	NULL,
+	NULL
+);
+
+test($route,
+	'/presenter/',
+	NULL,
+	NULL
+);
+
+
+
+echo "\n<hr><h2>With user class and user pattern</h2>\n";
+
+$route = new Route('<presenter>/<id [\d.]+#numeric>', array());
+
+test($route,
+	'/presenter/12.34/',
+	array (
+		'presenter' => 'Presenter',
+		'params' =>
+		array (
+			'id' => '12.34',
+			'test' => 'testvalue',
+		),
+	),
+	'/presenter/12.34?test=testvalue'
+);
+
+test($route,
+	'/presenter/123x',
+	NULL,
+	NULL
+);
+
+test($route,
+	'/presenter/',
+	NULL,
+	NULL
+);
+
+
+
+
+
+
+
+
 
 
 
@@ -274,6 +344,7 @@ test($route,
 	),
 	NULL
 );
+
 
 
 
@@ -690,4 +761,27 @@ test($route,
 		),
 	),
 	'/module.submodule/?test=testvalue'
+);
+
+
+
+
+echo "\n<hr><h2>URL encoding</h2>\n";
+
+$route = new Route('<param>', array(
+	'presenter' => 'Presenter',
+));
+
+
+test($route,
+	'/a%3Ab',
+	array (
+		'presenter' => 'Presenter',
+		'params' =>
+		array (
+			'param' => 'a:b',
+			'test' => 'testvalue',
+		),
+	),
+	'/a%3Ab?test=testvalue'
 );

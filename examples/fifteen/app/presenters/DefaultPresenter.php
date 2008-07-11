@@ -21,7 +21,7 @@ class DefaultPresenter extends /*Nette::Application::*/Presenter
 		$this->template->registerFilter(/*Nette::Application::*/'TemplateFilters::curlyBrackets');
 		$this->template->fifteen = $this->fifteen;
 
-		$this->invalidate('round'); // $this->invalidatePartial('round'); in Nette 0.7.5
+		$this->invalidatePartial('round');
 	}
 
 
@@ -29,7 +29,7 @@ class DefaultPresenter extends /*Nette::Application::*/Presenter
 	public function GameOver($sender, $round)
 	{
 		$this->template->flash = 'Congratulate!';
-		$this->invalidate('flash'); // $this->invalidatePartial('flash'); in Nette 0.7.5
+		$this->invalidatePartial('flash');
 	}
 
 }

@@ -38,10 +38,13 @@ abstract class Control extends PresenterComponent
 	/** @var string  default partial name */
 	const CONTROL = '_control';
 
+	/** @var Nette::Templates::ITemplate */
+	private $template;
+
 	/** @var bool  helper for beginPartial() & endPartial() */
 	private static $invalidBranch = FALSE;
 
-	/** @var array see invalidate() & validate() */
+	/** @var array see invalidatePartial() & validatePartial() */
 	private $invalidPartials = array();
 
 	/** @var array used by beginPartial() & endPartial() */
@@ -50,6 +53,41 @@ abstract class Control extends PresenterComponent
 	/** @var bool cache for self::hasInvalidChild() */
 	private $hasInvalidChild = NULL;
 
+
+
+	/********************* rendering ****************d*g**/
+
+
+
+	/**
+	 * @return Nette::Templates::ITemplate
+	 */
+	final public function getTemplate()
+	{
+		if ($this->template === NULL) {
+			$value = $this->createTemplate();
+			if (!($value instanceof /*Nette::Templates::*/ITemplate)) {
+				$class = get_class($value);
+				throw new /*::*/UnexpectedValueException("The Nette::Templates::ITemplate object was expected, '$class' was given.");
+			}
+			$this->template = $value;
+		}
+		return $this->template;
+	}
+
+
+
+	/**
+	 * @return Nette::Templates::ITemplate
+	 */
+	protected function createTemplate()
+	{
+		$template = new /*Nette::Templates::*/Template;
+		$template->component = $this;
+		$template->presenter = $this->getPresenter(FALSE);
+		$template->baseUri = /*Nette::*/Environment::getVariable('basePath');
+		return $template;
+	}
 
 
 
@@ -62,7 +100,7 @@ abstract class Control extends PresenterComponent
 	 * @param  string
 	 * @return void
 	 */
-	public function invalidate($partialName = self::CONTROL)
+	public function invalidatePartial($partialName = self::CONTROL)
 	{
 		$this->invalidPartials[$partialName] = TRUE;
 	}
@@ -74,7 +112,7 @@ abstract class Control extends PresenterComponent
 	 * @param  string
 	 * @return void
 	 */
-	public function validate($partialName = self::CONTROL)
+	public function validatePartial($partialName = self::CONTROL)
 	{
 		unset($this->invalidPartials[$partialName]);
 	}
@@ -86,7 +124,7 @@ abstract class Control extends PresenterComponent
 	 * @param  string
 	 * @return bool
 	 */
-	public function isInvalid($partialName = self::CONTROL)
+	public function isPartialInvalid($partialName = self::CONTROL)
 	{
 		if ($partialName === self::CONTROL) {
 			return count($this->invalidPartials) > 0;

@@ -186,7 +186,7 @@ class Uri extends /*Nette::*/Object
 	public function isEqual($uri)
 	{
 		// compare host + path
-		$part = self::unescape(strtok($uri, '?#'));
+		$part = self::unescape(strtok($uri, '?#'), '%/');
 		if (strncmp($part, '//', 2) === 0) { // absolute URI without scheme
 			if ($part !== '//' . $this->getAuthority() . $this->path) return FALSE;
 
@@ -200,7 +200,7 @@ class Uri extends /*Nette::*/Object
 		// compare query strings
 		$part = strtok('?#');
 		if ($part !== FALSE) {
-			$tmp = explode('&', self::unescape($part));
+			$tmp = explode('&', self::unescape($part, '%&=+'));
 			sort($tmp);
 			if (implode('&', $tmp) !== $this->query) {
 				return FALSE;
@@ -218,12 +218,12 @@ class Uri extends /*Nette::*/Object
 	 */
 	public function canonicalize()
 	{
-		$this->path = $this->path == '' ? '/' : self::unescape($this->path);
+		$this->path = $this->path == '' ? '/' : self::unescape($this->path, '%/');
 
-		$this->host = strtolower($this->host);
+		$this->host = strtolower(rawurldecode($this->host));
 
 		if ($this->query !== '') {
-			$tmp = explode('&', self::unescape($this->query));
+			$tmp = explode('&', self::unescape($this->query, '%&=+'));
 			sort($tmp);
 			$this->query = implode('&', $tmp);
 		}
@@ -234,14 +234,30 @@ class Uri extends /*Nette::*/Object
 	/**
 	 * Similar to rawurldecode, but preserve reserved chars encoded.
 	 * @param  string to decode
+	 * @param  string reserved characters
 	 * @return string
 	 */
-	public static function unescape($s)
+	public static function unescape($s, $reserved = '%;/?:@&=+$,')
 	{
 		// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
 		// within a path segment, the characters "/", ";", "=", "?" are reserved
 		// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-		return rawurldecode(preg_replace('#%(40|3[ABDF]|2[46BCF])#i', '%25$1', $s));
+		$offset = 0;
+		$max = strlen($s) - 3;
+		$res = '';
+		do {
+			$pos = strpos($s, '%', $offset);
+			if ($pos === FALSE || $pos > $max) {
+				return $res . substr($s, $offset);
+			}
+			$ch = chr(hexdec($s[$pos + 1] . $s[$pos + 2]));
+			if (strpos($reserved, $ch) === FALSE) {
+				$res .= substr($s, $offset, $pos - $offset) . $ch;
+			} else {
+				$res .= substr($s, $offset, $pos - $offset + 3);
+			}
+			$offset = $pos + 3;
+		} while (TRUE);
 	}
 
 }

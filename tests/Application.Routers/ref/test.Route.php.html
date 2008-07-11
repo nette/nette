@@ -46,6 +46,36 @@ parsed: OK
 
 
 
+<hr><h2>With user class</h2>
+/presenter/12/: matched
+parsed: OK
+generated: OK <code>/presenter/12?test=testvalue</code>
+
+
+/presenter/1234: no match
+parsed: OK
+
+
+/presenter/: no match
+parsed: OK
+
+
+
+<hr><h2>With user class and user pattern</h2>
+/presenter/12.34/: matched
+parsed: OK
+generated: OK <code>/presenter/12.34?test=testvalue</code>
+
+
+/presenter/123x: no match
+parsed: OK
+
+
+/presenter/: no match
+parsed: OK
+
+
+
 <hr><h2>Extra default param</h2>
 /presenter/view/12/any: no match
 parsed: OK
@@ -206,5 +236,12 @@ generated: OK <code>/?test=testvalue</code>
 /module.submodule: matched
 parsed: OK
 generated: OK <code>/module.submodule/?test=testvalue</code>
+
+
+
+<hr><h2>URL encoding</h2>
+/a%3Ab: matched
+parsed: OK
+generated: OK <code>/a%3Ab?test=testvalue</code>
 
 

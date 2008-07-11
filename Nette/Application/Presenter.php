@@ -90,9 +90,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var string */
 	private $scene;
 
-	/** @var Nette::Templates::ITemplate */
-	private $template;
-
 	/** @var IAjaxDriver */
 	private $ajaxDriver;
 
@@ -169,7 +166,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->registerComponent($this->getUniqueId(), $this);
 			$this->startup();
 			// calls $this->present{view}();
-			// $this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
+			$this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
 
 			if ($this->httpRequest->getMethod() === 'HEAD') {
 				$this->abort();
@@ -291,7 +288,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		// auto invalidate
 		if ($this->isPartialMode() && $component instanceof Control) {
-			$component->invalidate();
+			$component->invalidatePartial();
 		}
 
 		$component->signalReceived($this->signal);
@@ -390,7 +387,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * @return void
-     * @throws BadRequestException if no template found
+	 * @throws BadRequestException if no template found
 	 */
 	protected function renderTemplate()
 	{
@@ -458,38 +455,6 @@ abstract class Presenter extends Control implements IPresenter
 	final public function isRenderFinished()
 	{
 		return $this->renderFinished;
-	}
-
-
-
-	/**
-	 * @return Nette::Templates::ITemplate
-	 */
-	final public function getTemplate()
-	{
-		if ($this->template === NULL) {
-			$value = $this->createTemplate();
-			if (!($value instanceof /*Nette::Templates::*/ITemplate)) {
-				$class = get_class($value);
-				throw new /*::*/UnexpectedValueException("The Nette::Templates::ITemplate object was expected, '$class' was given.");
-			}
-			$this->template = $value;
-		}
-		return $this->template;
-	}
-
-
-
-	/**
-	 * @return Nette::Templates::ITemplate
-	 */
-	protected function createTemplate()
-	{
-		$template = new /*Nette::Templates::*/Template;
-		$template->component = $this;
-		$template->presenter = $this;
-		$template->baseUri = /*Nette::*/Environment::getVariable('basePath');
-		return $template;
 	}
 
 
@@ -599,7 +564,7 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		ob_end_clean(); // discard any output
 		/*
-		if ($this->isInvalid()) {
+		if ($this->isPartialInvalid()) {
 			$this->ajaxDriver->redirect($this->link($this->view));
 
 		} else*/ {

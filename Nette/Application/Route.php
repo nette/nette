@@ -53,22 +53,24 @@ class Route extends /*Nette::*/Object implements IRouter
 	public static $defaultCaseSensitivity = FALSE;
 
 	/** @var array */
-	public static $defaults = array(
-		'' => array(
-			're' => '[^/]+',
+	public static $styles = array(
+		'#' => array(
+			'pattern' => '[^/]+',
+			'filterIn' => 'rawurldecode',
+			'filterOut' => 'rawurlencode',
 		),
 		'module' => array(
-			're' => '[a-z][a-z0-9.-]*',
+			'pattern' => '[a-z][a-z0-9.-]*',
 			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
 			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
 		),
 		'presenter' => array(
-			're' => '[a-z][a-z0-9.-]*',
+			'pattern' => '[a-z][a-z0-9.-]*',
 			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
 			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
 		),
 		'view' => array(
-			're' => '[a-z][a-z0-9-]*',
+			'pattern' => '[a-z][a-z0-9-]*',
 			'filterIn' => /*Nette::Application::*/'Route::dash2camel',
 			'filterOut' => /*Nette::Application::*/'Route::camel2dash',
 		),
@@ -135,7 +137,9 @@ class Route extends /*Nette::*/Object implements IRouter
 			$path = $uri->path;
 		}
 
-		if (!preg_match($this->re, rtrim($path, '/') . '/', $params)) {
+		$path = rtrim($path, '/') . '/';
+
+		if (!preg_match($this->re, $path, $params)) {
 			return NULL;
 		}
 		$params = array_diff_key($params, range(0, count($params))); // deletes numeric keys
@@ -237,7 +241,6 @@ class Route extends /*Nette::*/Object implements IRouter
 			if ($i === 0) break;
 			$i--;
 
-			$cond = $sequence[$i]; $i--; // validation condition (as regexp); unused
 			$name = $sequence[$i]; $i--; // parameter name
 			$meta = isset($metadata[$name]) ? $metadata[$name] : NULL;
 
@@ -253,6 +256,10 @@ class Route extends /*Nette::*/Object implements IRouter
 			} elseif (isset($meta['fixed'])) { // has default value?
 				if ($optional) {
 					$uri = '';
+
+				} elseif ($meta['default'] == '') { // intentionally ==
+					return NULL; // default value is empty but is required
+
 				} else {
 					if (isset($meta['filterOut'])) {
 						$uri = call_user_func($meta['filterOut'], $meta['default']) . $uri;
@@ -325,7 +332,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$mask = rtrim(substr($mask, 0, $pos));
 
 			foreach ($matches as $match) {
-				list(, $param, $name, $cond) = $match;  // $cond is unsed
+				list(, $param, $name, $pattern) = $match;  // $pattern is unsed
 				$metadata[$name]['fixed'] = 0;
 				if ($param !== '') {
 					$this->xlat[$name] = $param;
@@ -335,68 +342,75 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 		// parse request uri part of mask
-		$this->sequence = $sequence = preg_split(
-			'#<([^> ]+) *([^>]*)>#',  // <parameter-name [validation-expr]>
+		$parts = preg_split(
+			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [validation-expr]>
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
 		);
 
 		$optional = TRUE;
-		$i = count($sequence) - 1;
+		$sequence = array();
+		$i = count($parts) - 1;
 		$re = '';
 		do {
-			$re = preg_quote($sequence[$i], '#') . $re;
+			array_unshift($sequence, $parts[$i]);
+			$re = preg_quote($parts[$i], '#') . $re;
 			if ($i === 0) break;
 			$i--;
 
-			$cond = $sequence[$i]; $i--; // validation condition (as regexp)
-			$name = $sequence[$i]; $i--; // parameter name
+			$class = $parts[$i]; $i--; // validation class
+			$pattern = $parts[$i]; $i--; // validation condition (as regexp)
+			$name = $parts[$i]; $i--; // parameter name
+			array_unshift($sequence, $name);
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_]#i', $name)) {
-				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string, '$name' is invalid.");
+				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string due limitations of PCRE, '$name' is invalid.");
 			}
 
-			// check cond
-			$defMeta = NULL;
-			if ($cond === '') {
-				$defMeta = self::$defaults[isset(self::$defaults[$name]) ? $name : ''];
-
-			} elseif ($cond[0] === '#') {
-				if (!isset(self::$defaults[$cond])) {
-					throw new /*::*/InvalidStateException("Parameter '$name' has '$cond' flag, but Route::\$defaults['$cond'] is not set.");
+			// pattern, condition & metadata
+			if ($class !== '') {
+				if (!isset(self::$styles[$class])) {
+					throw new /*::*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 				}
-				$defMeta = self::$defaults[$cond];
+				$meta = self::$styles[$class];
+
+			} elseif (isset(self::$styles[$name])) {
+				$meta = self::$styles[$name];
+
+			} else {
+				$meta = self::$styles['#'];
 			}
 
-			if ($defMeta !== NULL) {
-				if (isset($metadata[$name])) {
-					$metadata[$name] = $defMeta + $metadata[$name];
-				} else {
-					$metadata[$name] = $defMeta;
-				}
-				if (isset($metadata[$name]['re'])) {
-					$cond = $metadata[$name]['re'];
-				}
+			if (isset($metadata[$name])) {
+				$meta = $meta + $metadata[$name];
 			}
+
+			if ($pattern == '' && isset($meta['pattern'])) {
+				$pattern = $meta['pattern'];
+			}
+
+			$meta['pattern'] = $pattern;
+			$metadata[$name] = $meta;
 
 			// include in expression
-			if (isset($metadata[$name]['fixed'])) { // has default value?
+			if (isset($meta['fixed'])) { // has default value?
 				if (!$optional) {
 					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right are not optional.");
 				}
-				$re = '(?:(?P<' . $name . '>' . $cond . ')' . $re . ')?';
+				$re = '(?:(?P<' . $name . '>' . $pattern . ')' . $re . ')?';
 				$metadata[$name]['fixed'] = 1;
 
 			} else {
 				$optional = FALSE;
-				$re = '(?P<' . $name . '>' . $cond . ')' . $re;
+				$re = '(?P<' . $name . '>' . $pattern . ')' . $re;
 			}
 		} while (TRUE);
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 		$this->metadata = $metadata;
+		$this->sequence = $sequence;
 	}
 
 

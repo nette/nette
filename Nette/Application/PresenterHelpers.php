@@ -44,7 +44,7 @@ class PresenterHelpers
 
 	/**
 	 * Returns array of classes persistent parameters. Class must implements IStatePersistent.
-     * Persistent parameter has annotation @persistent, public visibility and is non-static.
+	 * Persistent parameter has annotation @persistent, public visibility and is non-static.
 	 * @param  string  class name
 	 * @return array
 	 */
@@ -141,7 +141,7 @@ class PresenterHelpers
 
 	/**
 	 * Converts named parameters to list of arguments.
-     * Used by PresenterComponent::tryCall()
+	 * Used by PresenterComponent::tryCall()
 	 * @param  string  class name
 	 * @param  string  method name
 	 * @param  array   parameters - associative array
@@ -170,7 +170,7 @@ class PresenterHelpers
 
 	/**
 	 * Converts list of arguments to named parameters.
-     * Used by Presenter::createRequest() & PresenterComponent::link()
+	 * Used by Presenter::createRequest() & PresenterComponent::link()
 	 * @param  string  class name
 	 * @param  string  method name
 	 * @param  array   arguments
