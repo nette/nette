@@ -12,7 +12,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 /**
  * Setup Nette::Debug
  */
-/*Nette::*/Debug::enable(E_ALL | E_STRICT);
+/*Nette::*/Debug::enable();
 
 
 
