@@ -211,6 +211,9 @@ final class Environment
 	 */
 	public static function setVariable($name, $value, $expand = TRUE)
 	{
+		if (!is_string($value)) {
+			$expand = FALSE;
+		}
 		self::$vars[$name] = array($value, (bool) $expand);
 	}
 
@@ -301,6 +304,9 @@ final class Environment
 		try {
 			$livelock[$var] = TRUE;
 			$val = self::getVariable($var);
+			if (!is_scalar($val)) {
+				throw new /*::*/InvalidStateException("Environment variable '$var' is not scalar.");
+			}
 			unset($livelock[$var]);
 		} catch (Exception $e) {
 			$livelock = array();
