@@ -14,6 +14,7 @@ echo 'HttpRequest::getUri() = '; Debug::dump($request->getUri());
 echo 'HttpRequest::getUri()->authority = '; Debug::dump($request->getUri()->authority);
 echo 'HttpRequest::getUri()->hostUri = '; Debug::dump($request->getUri()->hostUri);
 echo 'HttpRequest::getUri()->baseUri = '; Debug::dump($request->getUri()->baseUri);
+echo 'HttpRequest::getUri()->basePath = '; Debug::dump($request->getUri()->basePath);
 echo 'HttpRequest::getUri()->relativeUri = '; Debug::dump($request->getUri()->relativeUri);
 echo 'HttpRequest::getUri()->absoluteUri = '; Debug::dump($request->getUri()->absoluteUri);
 echo 'HttpRequest::getUri()->pathInfo = '; Debug::dump($request->getUri()->pathInfo);
@@ -32,15 +33,15 @@ echo 'HttpRequest::isEqual() = '; Debug::dump($request->uri->isEqual('http://tes
 echo 'HttpRequest::isEqual() = '; Debug::dump($request->uri->isEqual('/second?third'));
 
 // set
-$uri = $request->uri;
-$uri->path = '/test';
-$uri->basePath = '/second';
-$request->setUri($uri);
+$uri = $request->getUri(FALSE);
+$uri->path = '/test/';
+$uri->scriptPath = '/test/index.php';
 
 echo 'HttpRequest::getUri() = '; Debug::dump($request->getUri());
 echo 'HttpRequest::getUri()->authority = '; Debug::dump($request->getUri()->authority);
 echo 'HttpRequest::getUri()->hostUri = '; Debug::dump($request->getUri()->hostUri);
 echo 'HttpRequest::getUri()->baseUri = '; Debug::dump($request->getUri()->baseUri);
+echo 'HttpRequest::getUri()->basePath = '; Debug::dump($request->getUri()->basePath);
 echo 'HttpRequest::getUri()->relativeUri = '; Debug::dump($request->getUri()->relativeUri);
 echo 'HttpRequest::getUri()->absoluteUri = '; Debug::dump($request->getUri()->absoluteUri);
 echo 'HttpRequest::getUri()->pathInfo = '; Debug::dump($request->getUri()->pathInfo);

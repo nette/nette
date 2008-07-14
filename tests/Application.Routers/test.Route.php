@@ -19,9 +19,9 @@ class MockHttpRequest extends /*Nette::Web::*/HttpRequest
 
 	public function getUri()
 	{
-		$uri = new /*Nette::Web::*/Uri;
+		$uri = new /*Nette::Web::*/UriScript;
 		$uri->host = 'admin.texy.info';
-		$uri->basePath = '/';
+		$uri->scriptPath = '/';
 		$uri->path = $this->path;
 		return $uri;
 	}

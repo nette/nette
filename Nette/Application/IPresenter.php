@@ -32,6 +32,6 @@
 interface IPresenter
 {
 
-	function run(PresenterRequest $request);
+	function run();
 
 }

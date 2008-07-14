@@ -157,6 +157,7 @@ class NetteLoader extends AutoLoader
 		'textarea' => '/Forms/items.php',
 		'tools' => '/Tools.php',
 		'uri' => '/Web/Uri.php',
+		'uriscript' => '/Web/UriScript.php',
 		'user' => '/Web/User.php',
 	);
 

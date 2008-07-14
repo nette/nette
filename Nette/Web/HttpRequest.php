@@ -48,7 +48,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/** @var Nette::Collections::Hashtable */
 	private $cookies;
 
-	/** @var Uri  @see self::getUri() */
+	/** @var UriScript  @see self::getUri() */
 	private $uri;
 
 	/** @var Uri  @see self::getOriginalUri() */
@@ -60,41 +60,31 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Sets URL object.
-	 * @param  Uri
-	 * @return void
-	 */
-	public function setUri(Uri $uri)
-	{
-		$this->uri = $this->originalUri = $uri;
-	}
-
-
-
-	/**
 	 * Returns URL object.
-	 * @return Uri
+	 * @param  bool
+	 * @return UriScript
 	 */
-	public function getUri()
+	public function getUri($clone = TRUE)
 	{
 		if ($this->uri === NULL) {
 			$this->detectUri();
 		}
-		return clone $this->uri;
+		return $clone ? clone $this->uri : $this->uri;
 	}
 
 
 
 	/**
 	 * Returns URL object.
+	 * @param  bool
 	 * @return Uri
 	 */
-	public function getOriginalUri()
+	public function getOriginalUri($clone = TRUE)
 	{
 		if ($this->originalUri === NULL) {
 			$this->detectUri();
 		}
-		return clone $this->originalUri;
+		return $clone ? clone $this->originalUri : $this->originalUri;
 	}
 
 
@@ -105,39 +95,37 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	protected function detectUri()
 	{
+		$uri = $this->uri = new UriScript;
 		$origUri = $this->originalUri = new Uri;
-		$origUri->scheme = $this->isSecured() ? 'https' : 'http';
-		$origUri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-		$origUri->pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-		$origUri->port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : 0;
-		$origUri->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+
+		$uri->scheme = $origUri->scheme = $this->isSecured() ? 'https' : 'http';
+		$uri->user = $origUri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+		$uri->pass = $origUri->pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+		$uri->port = $origUri->port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : NULL;
+		$uri->query = $origUri->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 
 		// path
 		if (isset($_SERVER['REQUEST_URI'])) { // Apache, IIS 6.0
-			$origUri->path = (string) strtok($_SERVER['REQUEST_URI'], '?');
+			$uri->path = $origUri->path = (string) strtok($_SERVER['REQUEST_URI'], '?');
 		} elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 (PHP as CGI ?)
-			$origUri->path = $_SERVER['ORIG_PATH_INFO'];
+			$uri->path = $origUri->path = $_SERVER['ORIG_PATH_INFO'];
 		}
 
 		// host
 		if (isset($_SERVER['HTTP_HOST'])) {
-			$origUri->host = (string) strtok($_SERVER['HTTP_HOST'], ':');
+			$uri->host = $origUri->host = (string) strtok($_SERVER['HTTP_HOST'], ':');
 		} elseif (isset($_SERVER['SERVER_NAME'])) {
-			$origUri->host = (string) strtok($_SERVER['SERVER_NAME'], ':');
+			$uri->host = $origUri->host = (string) strtok($_SERVER['SERVER_NAME'], ':');
 		}
 
 		// normalized uri
-		$uri = $this->uri = clone $origUri;
-		// TODO: add ability to use URI filters
 		$uri->canonicalize();
-
 
 		// detect base URI-path - inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
 		$filename = basename($_SERVER['SCRIPT_FILENAME']);
 
 		if (basename($_SERVER['SCRIPT_NAME']) === $filename) {
-			$scriptPath = $_SERVER['SCRIPT_NAME'];
-			$scriptPath = rtrim($scriptPath, '/');
+			$scriptPath = rtrim($_SERVER['SCRIPT_NAME'], '/');
 
 		} elseif (basename($_SERVER['PHP_SELF']) === $filename) {
 			$scriptPath = $_SERVER['PHP_SELF'];
@@ -160,23 +148,18 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 			} while (($last > $index) && (FALSE !== ($pos = strpos($path, $scriptPath))) && (0 != $pos));
 		}
 
-
 		// Does the scriptPath have anything in common with the request_uri?
-		$basePath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1); // do not use dirinfo!
-
 		if (strncmp($uri->path, $scriptPath, strlen($scriptPath)) === 0) {
 			// whole $scriptPath in URL
 			$uri->scriptPath = $scriptPath;
-			$uri->basePath = $basePath;
 
-		} elseif (strncmp($uri->path, $basePath, strlen($basePath)) === 0) {
+		} elseif (strncmp($uri->path, $scriptPath, strrpos($scriptPath, '/') + 1) === 0) {
 			// directory portion of $scriptPath in URL
-			$uri->scriptPath = $uri->basePath = $basePath;
+			$uri->scriptPath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1);
 
 		} elseif (strpos($uri->path, basename($scriptPath)) === FALSE) {
 			// no match whatsoever; set it blank
 			$uri->scriptPath = '/';
-			$uri->basePath = '/';
 
 		} elseif ((strlen($uri->path) >= strlen($scriptPath))
 			&& ((FALSE !== ($pos = strpos($uri->path, $scriptPath))) && ($pos !== 0))) {
@@ -184,11 +167,9 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 			// out of scriptPath. $pos !== 0 makes sure it is not matching a value
 			// from PATH_INFO or QUERY_STRING
 			$uri->scriptPath = substr($uri->path, 0, $pos + strlen($scriptPath));
-			$uri->basePath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1);
 
 		} else {
 			$uri->scriptPath = $scriptPath;
-			$uri->basePath = $basePath;
 		}
 	}
 

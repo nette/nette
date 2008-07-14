@@ -124,6 +124,6 @@ class DirectoryNotFoundException extends IOException
  * the script should be halted.
  * @package    Nette
  */
-class FatalErrorException extends RuntimeException
+class FatalErrorException extends ErrorException
 {
 }

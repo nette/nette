@@ -304,9 +304,6 @@ final class Environment
 		try {
 			$livelock[$var] = TRUE;
 			$val = self::getVariable($var);
-			if (!is_scalar($val)) {
-				throw new /*::*/InvalidStateException("Environment variable '$var' is not scalar.");
-			}
 			unset($livelock[$var]);
 		} catch (Exception $e) {
 			$livelock = array();
@@ -315,7 +312,11 @@ final class Environment
 
 		if ($val === NULL) {
 			throw new /*::*/InvalidStateException("Unknown environment variable '$var'.");
+
+		} elseif (!is_scalar($val)) {
+			throw new /*::*/InvalidStateException("Environment variable '$var' is not scalar.");
 		}
+
 		return $val;
 	}
 

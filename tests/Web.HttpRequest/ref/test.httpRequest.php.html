@@ -3,7 +3,8 @@
 <pre>
 HttpRequest::getMethod() = NULL
 
-HttpRequest::getUri() = object(Uri) (10) {
+HttpRequest::getUri() = object(UriScript) (9) {
+  "scriptPath" => string(1) "/"
   "scheme" => string(4) "http"
   "user" => string(0) ""
   "pass" => string(0) ""
@@ -12,8 +13,6 @@ HttpRequest::getUri() = object(Uri) (10) {
   "path" => string(1) "/"
   "query" => string(0) ""
   "fragment" => string(0) ""
-  "scriptPath" => string(1) "/"
-  "basePath" => string(1) "/"
 }
 
 HttpRequest::getUri()->authority = string(0) ""
@@ -22,13 +21,15 @@ HttpRequest::getUri()->hostUri = string(7) "http://"
 
 HttpRequest::getUri()->baseUri = string(8) "http:///"
 
+HttpRequest::getUri()->basePath = string(1) "/"
+
 HttpRequest::getUri()->relativeUri = string(0) ""
 
 HttpRequest::getUri()->absoluteUri = string(8) "http:///"
 
 HttpRequest::getUri()->pathInfo = string(0) ""
 
-HttpRequest::getOriginalUri() = object(Uri) (10) {
+HttpRequest::getOriginalUri() = object(Uri) (8) {
   "scheme" => string(4) "http"
   "user" => string(0) ""
   "pass" => string(0) ""
@@ -37,8 +38,6 @@ HttpRequest::getOriginalUri() = object(Uri) (10) {
   "path" => string(0) ""
   "query" => string(0) ""
   "fragment" => string(0) ""
-  "scriptPath" => NULL
-  "basePath" => NULL
 }
 
 HttpRequest::getQuery() = object(Hashtable) (0) {
@@ -68,28 +67,29 @@ HttpRequest::isEqual() = bool(FALSE)
 
 HttpRequest::isEqual() = bool(FALSE)
 
-HttpRequest::getUri() = object(Uri) (10) {
+HttpRequest::getUri() = object(UriScript) (9) {
+  "scriptPath" => string(15) "/test/index.php"
   "scheme" => string(4) "http"
   "user" => string(0) ""
   "pass" => string(0) ""
   "host" => string(0) ""
   "port" => int(0)
-  "path" => string(5) "/test"
+  "path" => string(6) "/test/"
   "query" => string(0) ""
   "fragment" => string(0) ""
-  "scriptPath" => string(1) "/"
-  "basePath" => string(7) "/second"
 }
 
 HttpRequest::getUri()->authority = string(0) ""
 
 HttpRequest::getUri()->hostUri = string(7) "http://"
 
-HttpRequest::getUri()->baseUri = string(14) "http:///second"
+HttpRequest::getUri()->baseUri = string(13) "http:///test/"
+
+HttpRequest::getUri()->basePath = string(6) "/test/"
 
 HttpRequest::getUri()->relativeUri = string(0) ""
 
-HttpRequest::getUri()->absoluteUri = string(12) "http:///test"
+HttpRequest::getUri()->absoluteUri = string(13) "http:///test/"
 
-HttpRequest::getUri()->pathInfo = string(4) "test"
+HttpRequest::getUri()->pathInfo = string(0) ""
 

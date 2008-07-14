@@ -118,11 +118,28 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * @param  PresenterRequest
+	 */
+	public function __construct(PresenterRequest $request)
+	{
+		$this->request = $request;
+		$this->httpRequest = Environment::getHttpRequest();
+		$application = Environment::getApplication();
+		$this->router = $application->getRouter();
+		$this->presenterLoader = $application->getPresenterLoader();
+
+		parent::__construct(NULL, $request->getPresenterName());
+	}
+
+
+
+	/**
+	 * @param  bool
 	 * @return PresenterRequest
 	 */
-	final public function getRequest()
+	final public function getRequest($clone = TRUE)
 	{
-		return clone $this->request;
+		return $clone ? clone $this->request : $this->request;
 	}
 
 
@@ -143,18 +160,12 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  PresenterRequest
 	 * @return void
 	 * @throws AbortException
 	 */
-	public function run(PresenterRequest $request)
+	public function run()
 	{
 		try {
-			$this->request = $request;
-			$this->router = Environment::getApplication()->getRouter();
-			$this->httpRequest = Environment::getHttpRequest();
-			$this->presenterLoader = Environment::getApplication()->getPresenterLoader();
-
 			if ($this->autoCanonicalize) {
 				//TODO: here?
 				//$this->canonicalize();
@@ -394,7 +405,7 @@ abstract class Presenter extends Control implements IPresenter
 		$template = $this->getTemplate();
 
 		if ($template instanceof /*Nette::Templates::*/Template && !$template->getFile()) {
-			$presenter = $this->request->getPresenterName();
+			$presenter = $this->getName();
 			$hasContent = $hasLayout = FALSE;
 
 			if ($this->useLayoutTemplate) {
@@ -698,7 +709,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function backlink($full = TRUE)
 	{
 		// TODO: implement $full
-		return $this->request->getPresenterName() . ':' . $this->view;
+		return $this->getName() . ':' . $this->view;
 	}
 
 
@@ -807,7 +818,7 @@ abstract class Presenter extends Control implements IPresenter
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
 			$view = $destination;
-			$presenter = $this->request->getPresenterName();
+			$presenter = $this->getName();
 			$presenterClass = $this->getClass();
 
 		} else {
@@ -819,7 +830,7 @@ abstract class Presenter extends Control implements IPresenter
 				$presenter = substr($destination, 1, $a - 1);
 
 			} else {
-				$presenter = $this->request->getPresenterName();
+				$presenter = $this->getName();
 				$b = strrpos($presenter, ':');
 				if ($b === FALSE) {
 					$presenter = substr($destination, 0, $a);
@@ -855,7 +866,7 @@ abstract class Presenter extends Control implements IPresenter
 				}
 			}
 
-			/*if (strcasecmp($presenter, $this->request->getPresenterName()) === 0) {
+			/*if (strcasecmp($presenter, $this->getName()) === 0) {
 				$args += $this->getGlobalParams();
 			} else {*/
 				$this->saveState($args, $presenterClass);
@@ -870,17 +881,7 @@ abstract class Presenter extends Control implements IPresenter
 			$args
 		);
 
-		if ($returnUri) {
-			$uri = $this->router->constructUrl($request, $this->httpRequest);
-			if ($uri === NULL) {
-				$args = urldecode(http_build_query($args, NULL, ', '));
-				throw new InvalidLinkException("No route for $presenter:$view($args)");
-			}
-			return $uri;
-
-		} else {
-			return $request;
-		}
+		return $returnUri ? $this->constructUrl($request) : $request;
 	}
 
 
@@ -937,22 +938,35 @@ abstract class Presenter extends Control implements IPresenter
 		$params[self::VIEW_KEY] = $view;
 
 		$request = new PresenterRequest(
-			$this->request->getPresenterName(),
+			$this->getName(),
 			PresenterRequest::FORWARD,
 			$params
 		);
 
-		if ($returnUri) {
-			$uri = $this->router->constructUrl($request, $this->httpRequest);
-			if ($uri === NULL) {
-				$params = urldecode(http_build_query($params, NULL, ', '));
-				throw new InvalidLinkException("No route for signal $componentId-$signal!($params)");
-			}
-			return $uri;
+		return $returnUri ? $this->constructUrl($request) : $request;
+	}
 
-		} else {
-			return $request;
+
+
+	/**
+	 * Constructs URL or throws exception.
+	 * @param  PresenterRequest
+	 * @return string
+	 * @throws InvalidLinkException
+	 */
+	protected function constructUrl($request)
+	{
+		$uri = $this->router->constructUrl($request, $this->httpRequest);
+		if ($uri === NULL) {
+			$presenter = $request->getPresenterName();
+			$params = $request->params;
+			$view = $params['view'];
+			unset($params['view']);
+			$params = urldecode(http_build_query($params, NULL, ', '));
+			throw new InvalidLinkException("No route for $presenter:$view($params)");
 		}
+		//return $this->getAjaxDriver()->link($uri);
+		return $uri;
 	}
 
 

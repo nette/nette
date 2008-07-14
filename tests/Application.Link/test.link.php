@@ -104,9 +104,8 @@ class Submodule_OtherPresenter extends TestPresenter
 Environment::setVariable('appDir', dirname(__FILE__));
 
 $httpRequest = Environment::getHttpRequest();
-$uri = $httpRequest->uri;
+$uri = $httpRequest->getUri(FALSE);
 $uri->scriptPath = 'index.php';
-$httpRequest->setUri($uri);
 
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());
@@ -114,8 +113,8 @@ $application->setRouter(new SimpleRouter());
 $request = new PresenterRequest('Test', PresenterRequest::HTTP_GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
-$presenter = new TestPresenter;
-$presenter->run($request);
+$presenter = new TestPresenter($request);
+$presenter->run();
 
 
 echo "\n<hr><h2>Presenter & view link</h2>\n";
@@ -188,4 +187,3 @@ echo "3.5 $uri\n\n";
 
 $uri = $presenter->mycontrol->link('this', array('x' => 1, 'round' => 1));
 echo "3.6 $uri\n\n";
-

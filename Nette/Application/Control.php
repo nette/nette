@@ -85,7 +85,7 @@ abstract class Control extends PresenterComponent
 		$template = new /*Nette::Templates::*/Template;
 		$template->component = $this;
 		$template->presenter = $this->getPresenter(FALSE);
-		$template->baseUri = /*Nette::*/Environment::getVariable('basePath');
+		$template->baseUri = /*Nette::*/Environment::getVariable('baseUri');
 		return $template;
 	}
 

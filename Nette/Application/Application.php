@@ -92,11 +92,7 @@ class Application extends /*Nette::*/Object
 		$httpResponse->setHeader('X-Powered-By: Nette Framework', TRUE);
 
 		if (Environment::getVariable('baseUri') === NULL) {
-			Environment::setVariable('baseUri', $httpRequest->getUri()->baseUri);
-		}
-
-		if (Environment::getVariable('basePath') === NULL) {
-			Environment::setVariable('basePath', $httpRequest->getUri()->basePath);
+			Environment::setVariable('baseUri', $httpRequest->getUri()->basePath);
 		}
 
 		// check HTTP method
@@ -149,13 +145,13 @@ class Application extends /*Nette::*/Object
 				} catch (InvalidPresenterException $e) {
 					throw new BadRequestException($e->getMessage());
 				}
-				$this->presenter = new $class;
+				$this->presenter = new $class($request);
 
 				// Instantiate topmost service locator
 				$this->presenter->setServiceLocator(new /*Nette::*/ServiceLocator($this->serviceLocator));
 
 				// Execute presenter
-				$this->presenter->run($request);
+				$this->presenter->run();
 				break;
 
 			} catch (ForwardingException $e) {

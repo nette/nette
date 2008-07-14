@@ -27,18 +27,13 @@ require_once dirname(__FILE__) . '/../Object.php';
 /**
  * URI Syntax (RFC 3986).
  *
- *  http://user:pass@nettephp.com:8042/basePath/script.php/pathinfo/?name=ferret#nose
- *  \__/^^^\_________________________/\__________________/\________/^\_________/^\__/
- *   |                 |                        |              |           |       |
- * scheme          authority                  path          pathinfo     query  fragment
+ * http://user:pass@nettephp.com:8042/en/manual.html?name=param#fragment
+ * \__/^^^\_________________________/\_____________/^\________/^\______/
+ *   |                |                     |            |         |
+ * scheme         authority               path         query    fragment
  *
  * authority:   [user[:pass]@]host[:port]
  * hostUri:     http://user:pass@nettephp.com:8042
- * basePath:    /basePath/ (everything before relative URI not including the script name)
- * baseUri:     http://user:pass@nettephp.com:8042/basePath/
- * scriptPath:  /basePath/script.php  (URI-path of the request with the script name)
- * relativeUri: script.php
- * pathInfo:    /pathinfo/ (additional path information)
  *
  *
  * @author     David Grudl
@@ -48,6 +43,15 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Uri extends /*Nette::*/Object
 {
+	/** @var array */
+	static public $defaultPorts = array(
+		'http' => 80,
+		'https' => 443,
+		'ftp' => 21,
+		'news' => 119,
+		'nntp' => 119,
+	);
+
 	/** @var string */
 	public $scheme = '';
 
@@ -61,7 +65,7 @@ class Uri extends /*Nette::*/Object
 	public $host = '';
 
 	/** @var int */
-	public $port = 0;
+	public $port = NULL;
 
 	/** @var string */
 	public $path = '';
@@ -72,30 +76,26 @@ class Uri extends /*Nette::*/Object
 	/** @var string */
 	public $fragment = '';
 
-	/** @var string */
-	public $scriptPath;
-
-	/** @var string */
-	public $basePath;
-
 
 
 	/**
 	 * @param  string  URL
+	 * @throws InvalidArgumentException
 	 */
 	public function __construct($uri = NULL)
 	{
 		if ($uri !== NULL) {
-			foreach (parse_url($uri) as $key => $val) {
+			$parts = @parse_url($uri); // intentionally @
+			if ($parts === FALSE) {
+				throw new /*::*/InvalidArgumentException('Malformed or unsupported URI.');
+			}
+
+			foreach ($parts as $key => $val) {
 				$this->$key = $val;
 			}
 
-			if (!$this->port) {
-				if ($this->scheme === 'http') {
-					$this->port = 80;
-				} if ($this->scheme === 'https') {
-					$this->port = 443;
-				}
+			if (!$this->port && isset(self::$defaultPorts[$this->scheme])) {
+				$this->port = self::$defaultPorts[$this->scheme];
 			}
 		}
 	}
@@ -122,13 +122,14 @@ class Uri extends /*Nette::*/Object
 	public function getAuthority()
 	{
 		$authority = $this->host;
-		if ($this->port && ($this->scheme !== 'https' || $this->port != 443) && ($this->scheme !== 'http' || $this->port != 80)) {
+		if ($this->port && isset(self::$defaultPorts[$this->scheme]) && $this->port !== self::$defaultPorts[$this->scheme]) {
 			$authority .= ':' . $this->port;
 		}
 
-		if ($this->user != '') {
+		if ($this->user != '' && $this->scheme !== 'http' && $this->scheme !== 'https') {
 			$authority = $this->user . ($this->pass == '' ? '' : ':' . $this->pass) . '@' . $authority;
 		}
+
 		return $authority;
 	}
 
@@ -141,39 +142,6 @@ class Uri extends /*Nette::*/Object
 	public function getHostUri()
 	{
 		return $this->scheme . '://' . $this->getAuthority();
-	}
-
-
-
-	/**
-	 * Returns the base-URI.
-	 * @return string
-	 */
-	public function getBaseUri()
-	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->basePath;
-	}
-
-
-
-	/**
-	 * Returns the relative-URI.
-	 * @return string
-	 */
-	public function getRelativeUri()
-	{
-		return (string) substr($this->path, strlen($this->basePath));
-	}
-
-
-
-	/**
-	 * Returns the additional path information.
-	 * @return string
-	 */
-	public function getPathInfo()
-	{
-		return (string) substr($this->path, strlen($this->scriptPath));
 	}
 
 
@@ -227,6 +195,16 @@ class Uri extends /*Nette::*/Object
 			sort($tmp);
 			$this->query = implode('&', $tmp);
 		}
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->getAbsoluteUri();
 	}
 
 

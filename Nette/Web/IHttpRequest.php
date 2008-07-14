@@ -39,7 +39,7 @@ interface IHttpRequest
 
 	/**
 	 * Returns the full URL.
-	 * @return Uri
+	 * @return UriScript
 	 */
 	function getUri();
 
