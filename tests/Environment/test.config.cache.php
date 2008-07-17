@@ -13,6 +13,7 @@ $tmpDir = dirname(__FILE__) . '/tmp';
 foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 
 Environment::setName(Environment::PRODUCTION);
+Environment::setMode('live', TRUE);
 
 
 try {

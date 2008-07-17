@@ -12,8 +12,8 @@ require_once '../../Nette/loader.php';
 echo "Is console?\n";
 Debug::dump(Environment::isConsole());
 
-echo "Is local?\n";
-Debug::dump(Environment::isLocal());
+echo "Is live?\n";
+Debug::dump(Environment::isLive());
 
 define('DEBUG_MODE', FALSE);
 

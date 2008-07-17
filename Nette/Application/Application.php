@@ -172,7 +172,7 @@ class Application extends /*Nette::*/Object
 				$this->onError($this, $e);
 
 				if ($this->catchExceptions === NULL) {
-					$this->catchExceptions = Environment::getName() !== Environment::DEVELOPMENT;
+					$this->catchExceptions = Environment::isLive();
 				}
 
 				if ($this->catchExceptions && $this->errorPresenter) {

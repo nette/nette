@@ -13,7 +13,7 @@ $tmpDir = dirname(__FILE__) . '/tmp';
 
 foreach (glob("$tmpDir/*.*") as $file) unlink($file); // delete all files
 
-$cache = new Cache(new /*Nette::Caching::*/TemplateStorage("$tmpDir/prefix-"));
+$cache = new Cache(new /*Nette::Templates::*/TemplateStorage("$tmpDir/prefix-"));
 
 
 echo "Is cached?\n";

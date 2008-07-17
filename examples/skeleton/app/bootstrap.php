@@ -20,9 +20,7 @@ require_once LIBS_DIR . '/Nette/loader.php';
 /**
  * Setup Nette::Debug
  */
-if (Environment::getName() === Environment::DEVELOPMENT) {
-	/*Nette::*/Debug::enable(E_ALL | E_STRICT);
-}
+/*Nette::*/Debug::enable();
 
 
 
@@ -50,12 +48,12 @@ $application = Environment::getApplication();
 $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(
-	'presenter' => 'Default',
+	'presenter' => 'Homepage',
 	'view' => 'default',
 ), Route::ONE_WAY);
 
 $router[] = new Route('<presenter>/<view>/<id>', array(
-	'presenter' => 'Default',
+	'presenter' => 'Homepage',
 	'view' => 'default',
 	'id' => NULL,
 ));

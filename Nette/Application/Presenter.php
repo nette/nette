@@ -753,7 +753,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function lastModified($lastModified, $expire = NULL)
 	{
-		if (Environment::getName() === Environment::DEVELOPMENT) {
+		if (!Environment::isLive()) {
 			return;
 		}
 
@@ -786,7 +786,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function handleInvalidLink($e)
 	{
 		if (self::$invalidLinkMode === NULL) {
-			self::$invalidLinkMode = Environment::getName() !== Environment::DEVELOPMENT
+			self::$invalidLinkMode = Environment::isLive()
 				? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
 		}
 

@@ -23,15 +23,14 @@
 
 
 /**
- * Software version storage.
+ * The Nette Framework.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-final class Version
+final class Framework
 {
-
     /**
      * Nette Framework version identification.
      */
@@ -41,14 +40,37 @@ final class Version
 
 
 
+	/**
+	 * Static class - cannot be instantiated.
+	 */
+	final public function __construct()
+	{
+		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+	}
+
+
+
     /**
      * Compares current Nette Framework version with given version.
      * @param  string
      * @return int
      */
-    public static function compare($version)
+    public static function compareVersion($version)
     {
         return version_compare($version, self::VERSION);
     }
+
+
+
+	/**
+	 * Nette Framework promotion.
+	 * @return void
+	 */
+	public static function promo($xhtml = TRUE)
+	{
+		echo '<a href="http://nettephp.com/" title="Nette Framework - The Most Innovative PHP Framework"><img ',
+			'src="http://nettephp.com/images/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
+			($xhtml ? ' />' : '>'), '</a>';
+	}
 
 }

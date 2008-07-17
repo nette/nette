@@ -173,10 +173,10 @@ class Template extends /*Nette::*/Object implements ITemplate
 				$isFile = FALSE;
 
 				reset($this->filters);
-				while (list(, $filter) = each($this->filters)) {
+				while (list(, $filter) = each($this->filters)) {/**/
 					if ($filter instanceof /*Nette::*/Callback) {
-						$content = $filter->invoke($this, $content);
-					} else {
+						$content = $filter->__invoke($this, $content);
+					} else/**/ {
 						if (!is_callable($filter)) {
 							throw new /*::*/InvalidStateException("Filter must be valid PHP callback or Nette::Callback object.");
 						}
@@ -438,7 +438,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 			self::$cacheStorage = new TemplateStorage($base);
 
 			if (self::$cacheExpire === NULL) {
-				self::$cacheExpire = Environment::getName() === Environment::DEVELOPMENT ? 1 : FALSE;
+				self::$cacheExpire = Environment::isLive() ? FALSE : 1;
 			}
 		}
 		return self::$cacheStorage;

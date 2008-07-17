@@ -108,7 +108,6 @@ final class Environment
 	{
 		if (self::$name === NULL) {
 			self::$name = (string) $name;
-			//if (!defined('ENVIRONMENT')) define('ENVIRONMENT', self::$name);
 
 		} else {
 			throw new /*::*/InvalidStateException('Environment name has been already set.');
@@ -177,12 +176,12 @@ final class Environment
 
 
 	/**
-	 * Detects if server is running on local host.
-	 * @return boolean
+	 * Determines if a server is running in production mode.
+	 * @return bool
 	 */
-	public static function isLocal()
+	public static function isLive()
 	{
-		return self::getMode('localhost');
+		return self::getMode('live');
 	}
 
 

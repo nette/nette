@@ -55,18 +55,21 @@ class Configurator
 				return Environment::CONSOLE;
 
 			} else {
-				return Environment::getMode('localhost') ? Environment::DEVELOPMENT : Environment::PRODUCTION;
+				return Environment::getMode('live') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
 			}
 
-		case 'localhost':
-			// detect by IP address
-			if (isset($_SERVER['SERVER_ADDR'])) {
+		case 'live':
+			// detects production mode by server IP address
+			if (PHP_SAPI === 'cli') {
+				return FALSE;
+
+			} elseif (isset($_SERVER['SERVER_ADDR'])) {
 				$oct = explode('.', $_SERVER['SERVER_ADDR']);
-				return (count($oct) === 4) && ($oct[0] === '10' || $oct[0] === '127' || ($oct[0] === '171' && $oct[1] > 15 && $oct[1] < 32)
-					|| ($oct[0] === '169' && $oct[1] === '254') || ($oct[0] === '192' && $oct[1] === '168'));
+				return (count($oct) !== 4) || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '171' || $oct[1] < 16 || $oct[1] > 31)
+					&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168'));
 
 			} else {
-				return FALSE;
+				return TRUE;
 			}
 
 		case 'debug':
@@ -75,7 +78,7 @@ class Configurator
 				return (bool) DEBUG_MODE;
 
 			} else {
-				return Environment::getMode('localhost') && isset($_REQUEST['DBGSESSID']);
+				return !Environment::getMode('live') && isset($_REQUEST['DBGSESSID']);
 				// function_exists('DebugBreak');
 			}
 
@@ -97,14 +100,13 @@ class Configurator
 	 */
 	public function loadConfig($file = NULL)
 	{
-		$name = Environment::getName();
-
 		if ($this->useCache === NULL) {
-			$this->useCache = $name === Environment::PRODUCTION;
+			$this->useCache = Environment::isLive();
 		}
 
 		$cache = $this->useCache ? Environment::getCache('Nette.Environment') : NULL;
 
+		$name = Environment::getName();
 		if (isset($cache[$name])) {
 			Environment::swapState($cache[$name]);
 			$config = Environment::getConfig();
@@ -179,10 +181,10 @@ class Configurator
 			}
 		}
 
-		// set mode
+		// set modes
 		if (isset($config->mode)) {
-			foreach(explode(',', $config->mode) as $mode) {
-				Environment::setMode($mode);
+			foreach($config->mode as $mode => $state) {
+				Environment::setMode($mode, $state);
 			}
 		}
 
