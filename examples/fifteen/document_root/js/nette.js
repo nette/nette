@@ -6,9 +6,9 @@
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.
  *
- * For more information please see http://nettephp.com/
+ * For more information please see http://nettephp.com
  *
- * @version    $Revision: 7 $ $Date: 2008-05-12 03:21:36 +0200 (po, 12 V 2008) $
+ * @version    $Revision$ $Date$
  */
 
 var nette = {

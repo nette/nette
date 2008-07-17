@@ -1,4 +1,1 @@
-Nette Framework version 0.7
-
-Revision: $WCREV$
-Date: $WCDATE$
+Nette Framework 0.7 (revision $WCREV$ released on $WCDATE$)

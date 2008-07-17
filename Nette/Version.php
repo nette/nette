@@ -8,23 +8,47 @@
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.
  *
- * For more information please see http://nettephp.com/
+ * For more information please see http://nettephp.com
  *
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com/
+ * @link       http://nettephp.com
  * @category   Nette
  * @package    Nette
+ * @version    $Id$
  */
 
 /*namespace Nette;*/
 
 
 
-/**/ class Nette { // fake-namespace for PHP < 5.3 /**/
+/**
+ * Software version storage.
+ *
+ * @author     David Grudl
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @package    Nette
+ */
+final class Version
+{
+
+    /**
+     * Nette Framework version identification.
+     */
+	const VERSION = '0.7';
+
+	const REVISION = '$WCREV$ released on $WCDATE$';
 
 
-const VERSION = '0.7 (Revision: $WCREV$, Date: $WCDATE$)';
 
+    /**
+     * Compares current Nette Framework version with given version.
+     * @param  string
+     * @return int
+     */
+    public static function compare($version)
+    {
+        return version_compare($version, self::VERSION);
+    }
 
-/**/}/**/
+}

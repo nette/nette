@@ -15,7 +15,6 @@
  * The Fifteen game control
  *
  * @author     David Grudl
- * @version    $Revision$ $Date$
  */
 class FifteenControl extends /*Nette::Application::*/Control
 {

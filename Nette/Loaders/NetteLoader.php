@@ -8,13 +8,14 @@
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.
  *
- * For more information please see http://nettephp.com/
+ * For more information please see http://nettephp.com
  *
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com/
+ * @link       http://nettephp.com
  * @category   Nette
  * @package    Nette::Loaders
+ * @version    $Id$
  */
 
 /*namespace Nette::Loaders;*/
@@ -30,7 +31,6 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Loaders
- * @version    $Revision$ $Date$
  */
 class NetteLoader extends AutoLoader
 {
@@ -120,7 +120,7 @@ class NetteLoader extends AutoLoader
 		'memcachedstorage' => '/Caching/MemcachedStorage.php',
 		'multirouter' => '/Application/MultiRouter.php',
 		'multiselect' => '/Forms/items.php',
-		'nette' => '/Version.php',
+		'version' => '/Version.php',
 		'netteloader' => '/Loaders/NetteLoader.php',
 		'notimplementedexception' => '/exceptions.php',
 		'notsupportedexception' => '/exceptions.php',
