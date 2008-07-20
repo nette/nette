@@ -31,9 +31,9 @@
  */
 final class Framework
 {
-    /**
-     * Nette Framework version identification.
-     */
+	/**
+	 * Nette Framework version identification.
+	 */
 	const VERSION = '0.7';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
@@ -50,15 +50,15 @@ final class Framework
 
 
 
-    /**
-     * Compares current Nette Framework version with given version.
-     * @param  string
-     * @return int
-     */
-    public static function compareVersion($version)
-    {
-        return version_compare($version, self::VERSION);
-    }
+	/**
+	 * Compares current Nette Framework version with given version.
+	 * @param  string
+	 * @return int
+	 */
+	public static function compareVersion($version)
+	{
+		return version_compare($version, self::VERSION);
+	}
 
 
 

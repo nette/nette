@@ -76,7 +76,7 @@ final class Tools
 	 * @param  string  variable.
 	 * @param  mixed   value.
 	 * @return void
-     * @throws NotSupportedException
+	 * @throws ::NotSupportedException
 	 */
 	public static function iniSet($var, $value)
 	{
