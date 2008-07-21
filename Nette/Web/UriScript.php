@@ -26,7 +26,7 @@ require_once dirname(__FILE__) . '/../Object.php';
 
 
 /**
- * Extended HTTP URL
+ * Extended HTTP URL.
  *
  * http://nettephp.com/basePath/script.php/pathinfo/?name=param#fragment
  *                    \__________________/\________/

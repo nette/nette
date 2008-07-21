@@ -37,9 +37,9 @@ class ApplicationException extends /*::*/Exception implements /*Nette::*/ICaused
 
 
 	/**
-	 * @param string  text describing the exception
-	 * @param int     code describing the exception
-	 * @param ::Exception  instance that caused the current exception
+	 * @param  string  text describing the exception
+	 * @param  int     code describing the exception
+	 * @param  ::Exception  instance that caused the current exception
 	 */
 	public function __construct($message = NULL, $code = 0, /*::*/Exception $cause = NULL)
 	{

@@ -114,6 +114,8 @@ class NetteLoader extends AutoLoader
 		'isignalreceiver' => '/Application/ISignalReceiver.php',
 		'istatepersistent' => '/Application/IStatePersistent.php',
 		'itemplate' => '/Templates/ITemplate.php',
+		'javascript' => '/Web/JavaScript.php',
+		'javascriptconsole' => '/Web/JavaScriptConsole.php',
 		'keynotfoundexception' => '/Collections/Hashtable.php',
 		'link' => '/Application/Link.php',
 		'logger' => '/Logger.php',
