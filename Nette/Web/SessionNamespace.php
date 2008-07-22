@@ -83,7 +83,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 * @return void
 	 * @throws ::InvalidArgumentException
 	 */
-	protected function __set($name, $value)
+	public function __set($name, $value)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
@@ -101,7 +101,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 * @return mixed
 	 * @throws ::InvalidArgumentException
 	 */
-	protected function &__get($name)
+	public function &__get($name)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
@@ -122,7 +122,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 * @param  string    name
 	 * @return bool
 	 */
-	protected function __isset($name)
+	public function __isset($name)
 	{
 		return isset($this->data[$name]);
 	}
@@ -136,7 +136,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 * @return void
 	 * @throws ::InvalidArgumentException
 	 */
-	protected function __unset($name)
+	public function __unset($name)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");

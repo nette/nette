@@ -181,7 +181,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 * @param  int index
 	 * @return mixed
 	 */
-	protected function &__get($key)
+	public function &__get($key)
 	{
 		$val = $this->offsetGet($key);
 		return $val;
@@ -195,7 +195,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 * @param  object
 	 * @return void
 	 */
-	protected function __set($key, $item)
+	public function __set($key, $item)
 	{
 		$this->offsetSet($key, $item);
 	}
@@ -207,7 +207,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 * @param  string  name
 	 * @return bool
 	 */
-	protected function __isset($key)
+	public function __isset($key)
 	{
 		return $this->offsetExists($key);
 	}
@@ -219,7 +219,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 * @param  string  name
 	 * @return void
 	 */
-	protected function __unset($key)
+	public function __unset($key)
 	{
 		$this->offsetUnset($key);
 	}

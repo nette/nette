@@ -353,7 +353,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 * @param  mixed   value
 	 * @return void
 	 */
-	protected function __set($name, $value)
+	public function __set($name, $value)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
@@ -369,7 +369,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 * @param  string  name
 	 * @return mixed  value
 	 */
-	protected function &__get($name)
+	public function &__get($name)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
@@ -389,7 +389,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 * @param  string    name
 	 * @return boolean
 	 */
-	protected function __isset($name)
+	public function __isset($name)
 	{
 		return isset($this->params[$name]);
 	}
@@ -401,7 +401,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 * @param  string    name
 	 * @return void
 	 */
-	protected function __unset($name)
+	public function __unset($name)
 	{
 		if ($name === '') {
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");

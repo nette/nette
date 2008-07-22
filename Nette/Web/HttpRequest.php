@@ -346,7 +346,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Is Ajax request?
+	 * Is AJAX request?
 	 * @return boolean
 	 */
 	public function isAjax()

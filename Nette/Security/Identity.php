@@ -85,7 +85,7 @@ class Identity extends /*Nette::*/Object implements IIdentity
 	/**
 	 * @return array
 	 */
-	protected function &__get($key)
+	public function &__get($key)
 	{
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
