@@ -231,7 +231,10 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 		try {
 			// exclamation is not required, every destinations are signals
 			$signal = rtrim($signal, '!');
-			if ($signal == NULL || $signal === 'this') {
+			if ($signal == NULL) {  // intentionally ==
+				throw new InvalidLinkException("Signal must be non-empty string.");
+
+			} elseif ($signal === 'this') {
 				$signal = '';
 
 			} else {

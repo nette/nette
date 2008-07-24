@@ -1,0 +1,27 @@
+<h1>Nette::Templates::TemplateFilters::curlyBrackets & snippets test</h1>
+
+<pre>
+<?php if ($control->isOutputAllowed()) { ?>	<?php } if ($control->beginSnippet()) { ?>
+
+	<?php $control->endSnippet(""); } if ($control->isOutputAllowed()) { ?>
+
+
+
+	<?php } if ($control->beginSnippet("outer")) { ?>
+	Outer
+		<?php } if ($control->beginSnippet("inner")) { ?>Inner<?php $control->endSnippet("inner"); } if ($control->isOutputAllowed()) { ?>
+	/Outer
+	<?php $control->endSnippet("outer"); } if ($control->isOutputAllowed()) { ?>
+
+
+
+	<?php } ?><?php if (true): ?><?php if ($control->isOutputAllowed()) { ?> Hello World <?php } ?><?php endif ?><?php if ($control->isOutputAllowed()) { ?>
+
+	<?php } if ($control->beginSnippet("title", 'h2')) { ?>Title 1<?php $control->endSnippet("title"); } if ($control->isOutputAllowed()) { ?>
+
+	<?php } if ($control->beginSnippet("title", '<h2>')) { ?>Title 2<?php $control->endSnippet(""); } if ($control->isOutputAllowed()) { ?>
+
+	<?php } if ($control->beginSnippet("title", '<h2 class="top">')) { ?>Title 3<?php $control->endSnippet(""); } if ($control->isOutputAllowed()) { ?>
+
+	<?php } if ($control->beginSnippet("title", '<h2>')) { ?>Title 4<?php $control->endSnippet("invalid"); } if ($control->isOutputAllowed()) { ?>
+<?php } ?>

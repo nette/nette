@@ -23,58 +23,59 @@
 
 
 /**
- * AJAX strategy interface.
+ *
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  */
-interface IAjaxDriver
+interface IRenderable
 {
 
 	/**
-	 * Generates link.
-	 * @param  string
-	 * @return string
-	 */
-	function link($url);
-
-	/**
-	 * @return void
-	 */
-	function open();
-
-	/**
-	 * @return void
-	 */
-	function close();
-
-	/**
-	 * Updates the snippet content.
-	 * @param  string
+	 * Forces control to repaint.
 	 * @param  string
 	 * @return void
 	 */
-	function updateSnippet($id, $content);
+	function invalidateControl();
 
 	/**
-	 * Updates the presenter state.
-	 * @param  array
-	 * @return void
+	 * Is required to repaint the control?
+	 * @return bool
 	 */
-	function updateState($state);
+	function isControlInvalid();
+
+}
+
+
+/**
+ *
+ *
+ * @author     David Grudl
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @package    Nette::Application
+ */
+interface IPartiallyRenderable extends IRenderable
+{
 
 	/**
+	 * Forces control or its snippet to repaint.
 	 * @param  string
 	 * @return void
 	 */
-	function redirect($uri);
+	//function invalidateControl($snippet = NULL);
 
 	/**
-	 * @param  string
-	 * @param  mixed
-	 * @return void
+	 * Is required to repaint the control or its snippet?
+	 * @param  string  snippet name
+	 * @return bool
 	 */
-	function fireEvent($event, $arg);
+	//function isControlInvalid($snippet = NULL);
+
+	/**
+	 *
+	 * @return bool
+	 */
+	function isOutputAllowed();
 
 }

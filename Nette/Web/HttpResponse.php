@@ -216,12 +216,12 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 */
 	public function fixIE()
 	{
-		$ie = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0');
-		$codes = array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505);
-		if ($ie && in_array($this->code, $codes)) {
-			$s = " \t\r\n";
-			for ($i = 2e3; $i; $i--) echo $s{rand(0, 3)};
-		}
+		if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0') === FALSE) return;
+		if (!in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)) return;
+		$headers = $this->getHeaders(TRUE);
+		if (isset($headers['Content-Type']) && $headers['Content-Type'] !== 'text/html') return;
+		$s = " \t\r\n";
+		for ($i = 2e3; $i; $i--) echo $s{rand(0, 3)};
 	}
 
 

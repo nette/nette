@@ -90,7 +90,7 @@ final class TemplateFilters
 	 *   {for ?} ... {/for}
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
-	 *   {partial ?} ... {/partial ?} control partial
+	 *   {snippet ?} ... {/snippet ?} control snippet
 	 *   {block texy} ... {/block} texy block
 	 *   {debugbreak}
 	 *
@@ -100,6 +100,17 @@ final class TemplateFilters
 	 */
 	public static function curlyBrackets($template, $s)
 	{
+		// snippets support
+		if (isset($template->control) &&
+			$template->control instanceof /*Nette::Application::*/IPartiallyRenderable) {
+			$s = '<?php if ($control->isOutputAllowed()) { ?>' . $s . '<?php } ?>';
+		}
+		$s = preg_replace(
+			'#@(\\{[^}]+?\\})#s',
+			'<?php } ?>$1<?php if ($control->isOutputAllowed()) { ?>',
+			$s
+		);
+
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}#s', '', $s);
 
@@ -115,7 +126,7 @@ final class TemplateFilters
 		$k = preg_quote($k, '#');
 		$k = str_replace('\000', '|', $k);
 		$s = preg_replace_callback(
-			'#\\{(' . $k . ')([^}]+?)\\}#s',
+			'#\\{(' . $k . ')([^}]*)\\}#s',
 			array(__CLASS__, 'curlyCb'),
 			$s
 		);
@@ -137,9 +148,9 @@ final class TemplateFilters
 	/** @var array */
 	public static $curlyXlatMask = array(
 		'block ' => '<?php ob_start(); try { ?>',
-		'/bloc' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } echo # ?>',
-		'partial ' => '<?php if ($component->beginPartial("#")): ?>',
-		'/partial ' => '<?php $component->endPartial("#"); endif; ?>',
+		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } echo # ?>',
+		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
+		'/snippet' => '<?php $control->endSnippet("#"); } if ($control->isOutputAllowed()) { ?>',
 		'if ' => '<?php if (#): ?>',
 		'elseif ' => '<?php elseif (#): ?>',
 		'foreach ' => '<?php foreach (#): ?>',
@@ -170,6 +181,7 @@ final class TemplateFilters
 	private static function curlyCb($m)
 	{
 		list(, $mod, $var) = $m;
+		$var = trim($var);
 
 		if ($mod === 'block ') {
 			if (!isset(self::$curlyBlocks[$var])) {
@@ -177,11 +189,17 @@ final class TemplateFilters
 			}
 			self::$curlyBlock = str_replace('#', 'ob_get_clean()', self::$curlyBlocks[$var]);
 
-		} elseif ($mod === '/bloc') { // missing 'k' is tricky...
+		} elseif ($mod === '/block') {
 			$var = self::$curlyBlock;
 
+		} elseif ($mod === 'snippet') {
+			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
+				$var = '"' . $m[1] . '"';
+				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
+			}
+
 		} elseif ($mod === 'link ' || $mod === 'plink ') {
-			$var = preg_replace('#^\s*(\S+?),?\s+(.*)$#', '"$1", array($2)', $var . ' ');
+			$var = preg_replace('#^([^\s,]+),?\s*(.*)$#', '"$1", array($2)', $var);
 		}
 
 		return str_replace('#', $var, self::$curlyXlatMask[$mod]);

@@ -189,7 +189,7 @@ class Application extends /*Nette::*/Object
 				$request = $e->getRequest();
 
 			} catch (AbortException $e) {
-				// not error, application is correctly aborted
+				// not error, application is correctly terminated
 				break;
 
 			} catch (Exception $e) {

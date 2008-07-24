@@ -55,8 +55,6 @@ abstract class Presenter extends Control implements IPresenter
 	const SIGNAL_KEY = 'do';
 	const VIEW_KEY = 'view';
 
-	const THIS_VIEW = '!';
-
 	/** @var string */
 	public static $defaultView = 'default';
 
@@ -97,7 +95,7 @@ abstract class Presenter extends Control implements IPresenter
 	private $signal;
 
 	/** @var bool */
-	private $partialMode;
+	private $ajaxMode;
 
 	/** @var IRouter  cached value for createRequest() & createSubRequest() */
 	private $router;
@@ -107,7 +105,6 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var Nette::Web::IHttpRequest  cached value for better performance */
 	private $httpRequest;
-
 
 
 
@@ -162,6 +159,10 @@ abstract class Presenter extends Control implements IPresenter
 		try {
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
+			if ($this->isAjax()) {
+				$this->getAjaxDriver()->open();
+				self::$outputAllowed = FALSE;
+			}
 			$this->initGlobalParams();
 			$this->registerComponent($this->getUniqueId(), $this);
 			$this->startup();
@@ -169,7 +170,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
 
 			if ($this->httpRequest->getMethod() === 'HEAD') {
-				$this->abort();
+				$this->terminate();
 			}
 
 			// PHASE 2: PREPARING SCENE
@@ -182,14 +183,13 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_SIGNAL;
 			$this->processSignal();
 			// save component tree persistent state
-			$this->globalParams = $this->getGlobalParams();
+			$this->globalParams = $this->getGlobalState();
+			if ($this->isAjax()) {
+				$this->ajaxDriver->updateState($this->globalParams);
+			}
 
 			// PHASE 4: RENDERING SCENE
 			$this->phase = self::PHASE_RENDER;
-
-			if ($this->isPartialMode()) {
-				$this->startPartialMode();
-			}
 
 			$this->beforeRender();
 			// calls $this->render{scene}();
@@ -197,14 +197,13 @@ abstract class Presenter extends Control implements IPresenter
 
 			$this->renderTemplate();
 
-			if ($this->isPartialMode()) {
-				$this->finishPartialMode();
-			}
-
 		} catch (AbortException $e) {
 			// continue with shutting down
 		} /* finally */ {
 			// PHASE 5: SHUTDOWN
+			if ($this->isAjax()) {
+				$this->ajaxDriver->close();
+			}
 			$this->phase = self::PHASE_SHUTDOWN;
 			$this->unregisterComponent($this);
 			$this->shutdown();
@@ -285,8 +284,8 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// auto invalidate
-		if ($this->isPartialMode() && $component instanceof Control) {
-			$component->invalidatePartial();
+		if ($component instanceof Control) {
+			$component->invalidateControl();
 		}
 
 		$component->signalReceived($this->signal);
@@ -356,11 +355,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
-		if ($view == NULL) {
-			// TODO: really?
-			$this->view = self::$defaultView;
-
-		} elseif (preg_match("#^[a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
+		if (preg_match("#^[a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
 			$this->view = $view;
 
 		} else {
@@ -390,6 +385,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function renderTemplate()
 	{
 		$template = $this->getTemplate();
+		if (!$template) return;
 
 		if ($template instanceof /*Nette::Templates::*/Template && !$template->getFile()) {
 			$presenter = $this->getName();
@@ -424,7 +420,6 @@ abstract class Presenter extends Control implements IPresenter
 
 		$template->render();
 
-		// TODO: better, no in partial mode ajax
 		$httpResponse = Environment::getHttpResponse();
 		if ($httpResponse instanceof /*Nette::Web::*/HttpResponse) {
 			$httpResponse->fixIE();
@@ -439,8 +434,8 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function renderFinished()
 	{
-		trigger_error('Use $presenter->abort()', E_USER_NOTICE);
-		$this->abort();
+		trigger_error('Use $presenter->terminate()', E_USER_NOTICE);
+		$this->terminate();
 	}
 
 
@@ -525,40 +520,15 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Is in partial mode? (AJAX request).
+	 * Is AJAX request? Shortcut for Environment::getHttpRequest()->isAjax().
 	 * @return bool
 	 */
-	public function isPartialMode()
+	public function isAjax()
 	{
-		if ($this->partialMode === NULL) {
-			$this->partialMode = $this->httpRequest->isAjax();
+		if ($this->ajaxMode === NULL) {
+			$this->ajaxMode = $this->httpRequest->isAjax();
 		}
-		return $this->partialMode;
-	}
-
-
-
-	protected function startPartialMode()
-	{
-		$this->getAjaxDriver()->open();
-		ob_start(); // discard any output
-	}
-
-
-
-	protected function finishPartialMode()
-	{
-		ob_end_clean(); // discard any output
-		/*
-		if ($this->isPartialInvalid()) {
-			$this->ajaxDriver->redirect($this->link($this->view));
-
-		} else*/ {
-			$state = array();
-			$this->saveState($state);
-			$this->ajaxDriver->setState($state);
-		}
-		$this->ajaxDriver->close();
+		return $this->ajaxMode;
 	}
 
 
@@ -655,9 +625,9 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
-		if ($this->isPartialMode()) {
+		if ($this->isAjax()) {
 			$this->ajaxDriver->redirect($uri);
-			$this->abort();
+			$this->terminate();
 
 		} else {
 			throw new RedirectingException($uri, $code);
@@ -684,7 +654,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws AbortException
 	 */
-	public function abort()
+	public function terminate()
 	{
 		throw new AbortException();
 	}
@@ -711,7 +681,7 @@ abstract class Presenter extends Control implements IPresenter
 			$ifModifiedSince = strtotime($ifModifiedSince);
 			if ($lastModified <= $ifModifiedSince) {
 				$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S304_NOT_MODIFIED);
-				$this->abort();
+				$this->terminate();
 			}
 		}
 
@@ -758,10 +728,13 @@ abstract class Presenter extends Control implements IPresenter
 	protected function createRequest($destination, array $args, $returnUri = TRUE)
 	{
 		// TODO: add cache here!
+		if ($destination == NULL) {  // intentionally ==
+			throw new InvalidLinkException("Destination must be non-empty string.");
+		}
 
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
-			$view = $destination;
+			$view = $destination === 'this' ? $this->view : $destination;
 			$presenter = $this->getName();
 			$presenterClass = $this->getClass();
 
@@ -811,7 +784,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			/*if (strcasecmp($presenter, $this->getName()) === 0) {
-				$args += $this->getGlobalParams();
+				$args += $this->getGlobalState();
 			} else {*/
 				$this->saveState($args, $presenterClass);
 			/*}*/
@@ -878,7 +851,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$this->saveState($params);
-		$params += $this->getGlobalParams();
+		$params += $this->getGlobalState();
 		$params[self::VIEW_KEY] = $view;
 
 		$request = new PresenterRequest(
@@ -923,7 +896,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * Saves state information for all subcomponents.
 	 * @return array
 	 */
-	public function getGlobalParams()
+	public function getGlobalState()
 	{
 		if ($this->phase > self::PHASE_SIGNAL) {
 			return $this->globalParams;

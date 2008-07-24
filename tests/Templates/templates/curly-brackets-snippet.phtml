@@ -1,0 +1,23 @@
+	{snippet}
+
+	{/snippet}
+
+
+
+	{snippet outer}
+	Outer
+		{snippet inner}Inner{/snippet inner}
+	/Outer
+	{/snippet outer}
+
+
+
+	@{if true} Hello World @{/if}
+
+	{snippet title h2}Title 1{/snippet title}
+
+	{snippet title <h2>}Title 2{/snippet}
+
+	{snippet title <h2 class="top">}Title 3{/snippet}
+
+	{snippet title <h2>}Title 4{/snippet invalid}

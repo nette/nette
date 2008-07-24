@@ -21,6 +21,9 @@
 /*namespace Nette::Application;*/
 
 
+require_once dirname(__FILE__) . '/../Object.php';
+
+
 
 /**
  * AJAX output strategy.
@@ -32,7 +35,7 @@
 class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 {
 	/** @var array */
-	private $partials = array();
+	private $json;
 
 
 
@@ -48,10 +51,6 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 
 
 
-	/********************* partial rendering ****************d*g**/
-
-
-
 	/**
 	 * @return void
 	 */
@@ -60,6 +59,11 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 		$httpResponse = /*Nette::*/Environment::getHttpResponse();
 		$httpResponse->setHeader('Content-type: application/x-javascript; charset=utf-8', TRUE);
 		$httpResponse->expire(FALSE);
+		$this->json = array(
+			'nette' => array(
+				'version' => /*Nette::*/Framework::VERSION,
+			),
+		);
 	}
 
 
@@ -69,23 +73,25 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function close()
 	{
-		foreach ($this->partials as $id => $content) {
-			echo "nette.updateHtml(", json_encode($id), ", ", json_encode($content), ");\n";
+		if ($this->json) {
+			echo json_encode($this->json);
+			$this->json = NULL;
 		}
-		$this->partials = array();
 	}
 
 
 
 	/**
-	 * Updates the partial content.
+	 * Updates the snippet content.
 	 * @param  string
 	 * @param  string
 	 * @return void
 	 */
-	public function addPartial($id, $content)
+	public function updateSnippet($id, $content)
 	{
-		$this->partials[$id] = $content;
+		if ($this->json) {
+			$this->json['snippets'][$id] = $content;
+		}
 	}
 
 
@@ -95,10 +101,11 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 * @param  array
 	 * @return void
 	 */
-	public function setState($state)
+	public function updateState($state)
 	{
-		$state = http_build_query($state, NULL, '&');
-		echo "nette.updateState(", json_encode($state), ");\n";
+		if ($this->json) {
+			$this->json['state'] = $state;
+		}
 	}
 
 
@@ -109,18 +116,25 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function redirect($uri)
 	{
-		echo "nette.redirect(", json_encode($uri), ");\n";
+		if ($this->json) {
+			$this->json['redirect'] = $uri;
+		}
 	}
 
 
 
 	/**
 	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 */
-	public function error($message)
+	public function fireEvent($event, $arg)
 	{
-		echo "nette.error(", json_encode($message), ");\n";
+		if ($this->json) {
+			$args = func_get_args();
+			array_shift($args);
+			$this->json['events'][] = array('event' => $event, 'args' => $args);
+		}
 	}
 
 }

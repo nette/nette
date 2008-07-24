@@ -30,5 +30,5 @@ Template::setCacheStorage(new /*Nette::Caching::*/DummyStorage);
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/nette-links.phtml');
 $template->registerFilter(array(/*Nette::Templates::*/'TemplateFilters', 'netteLinks'));
-$template->component = new MockPresenterComponent;
+$template->control = new MockPresenterComponent;
 $template->render();

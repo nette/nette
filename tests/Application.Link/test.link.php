@@ -75,10 +75,13 @@ class TestPresenter extends /*Nette::Application::*/Presenter
 	public $var1 = 10;
 
 
+	protected function createTemplate()
+	{
+	}
+
 	public function beforePrepare()
 	{
 		$this->mycontrol = new TestControl($this, 'mycontrol');
-		$this->renderFinished();
 	}
 
 

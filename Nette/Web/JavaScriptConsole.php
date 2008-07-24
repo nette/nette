@@ -39,9 +39,10 @@ class JavaScriptConsole extends /*Nette::*/Object
 	/**
 	 * @return void
 	 */
-	public function __toString()
+	public function flush()
 	{
-		return implode(";\n", $this->out) . ";\n";
+		echo implode(";\n", $this->out) . ";\n";
+		$this->out = array();
 	}
 
 

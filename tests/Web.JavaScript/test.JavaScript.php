@@ -10,8 +10,7 @@ echo "<xmp>\n";
 $js = new JavaScript;
 $js->jQuery('table tr:eq(2) img')
 		->css('z-index', 1000)
-		->animate(array('top' => '100px'))
-		->evaluate('.queue(function () { alert("animation gone"); })');
+		->animate(array('top' => '100px'));
 echo $js, "\n\n";
 
 $js = new JavaScript;
@@ -74,8 +73,16 @@ $js1->document->getElementById('#sidebar')->style->left = $js2->mouse->width;
 echo $js1, "\n\n";
 
 
-// evaluate test
+// raw test
 $js = new JavaScript;
-$js->evaluate('if (i = 10) { m=', array(10, 20, 30), '; } else { ')->alert('Error')->evaluate('; }');
+$js->raw('if (i = 10) { m=', array(10, 20, 30), '; } else { ')->alert('Error')->raw('; }');
 echo $js, "\n\n";
 
+
+// raw test II
+$js = new JavaScript;
+$js->jQuery('p img')
+		->animate(array('top' => '100px'))
+		->queue( new JavaScript('function () { alert("animation gone"); }') );
+
+echo $js, "\n\n";

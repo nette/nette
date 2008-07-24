@@ -351,7 +351,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	public function isAjax()
 	{
-		return ($this->getMethod() === 'POST') && ($this->getHeader('X-Requested-With') === 'XMLHttpRequest');
+		return $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
 	}
 
 

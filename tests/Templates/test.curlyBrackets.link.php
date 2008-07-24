@@ -7,7 +7,7 @@ require_once '../../Nette/loader.php';
 /*use Nette::Environment;*/
 /*use Nette::Templates::Template;*/
 
-class MockComponent
+class MockControl
 {
 	function link($destination, $args = array())
 	{
@@ -16,7 +16,7 @@ class MockComponent
 	}
 }
 
-class MockPresenter extends MockComponent
+class MockPresenter extends MockControl
 {
 	function link($destination, $args = array())
 	{
@@ -33,7 +33,7 @@ Environment::setVariable('tempDir', $tmpDir);
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-link.phtml');
 $template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
-$template->component = new MockComponent;
+$template->control = new MockControl;
 $template->presenter = new MockPresenter;
 $template->view = 'login';
 $template->render();
