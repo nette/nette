@@ -51,6 +51,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var array */
 	private $filters = array();
 
+	/** @var bool */
+	private $isRendering;
+
 	/** @var int */
 	public static $cacheExpire;
 
@@ -145,69 +148,15 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function render($return = FALSE)
 	{
-		if ($this->file == NULL) { // intentionally ==
-			throw new /*::*/InvalidStateException("Template file name was not specified.");
-		}
-
 		if (isset(self::$livelock[$this->file])) {
 			throw new /*::*/InvalidStateException("Circular rendering detected.");
 		}
 
-		// strip fragment
-		list($filePath) = explode('#', $this->file);
+		list($content, $isFile) = $this->compile();
 
-		if (!is_file($filePath) || !is_readable($filePath)) {
-			throw new /*::*/FileNotFoundException("Missing template file '$this->file'.");
-		}
-
-		$content = $filePath;
-		$isFile = TRUE;
-
-		if (count($this->filters)) {
-			$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
-			$key = md5($this->file) . '.' . basename($this->file);
-			$content = $cache[$key];
-
-			if ($content === NULL) {
-				$content = file_get_contents($filePath);
-				$isFile = FALSE;
-
-				reset($this->filters);
-				while (list(, $filter) = each($this->filters)) {/**/
-					if ($filter instanceof /*Nette::*/Callback) {
-						$content = $filter->__invoke($this, $content);
-					} else/**/ {
-						if (!is_callable($filter)) {
-							throw new /*::*/InvalidStateException("Filter must be valid PHP callback or Nette::Callback object.");
-						}
-						$content = call_user_func($filter, $this, $content);
-					}
-				}
-
-				$content = "<?php\n// template $this->file\n?>$content";
-				$cache->save(
-					$key,
-					$content,
-					array(
-						'files' => $filePath,
-						'expire' => self::$cacheExpire,
-					)
-				);
-			}
-
-			if (self::$cacheStorage instanceof TemplateStorage) {
-				$cached = $cache[$key];
-				if ($cached !== NULL) {
-					$content = $cached['file'];
-					$handle = $cached['handle'];
-					$isFile = TRUE;
-				}
-			}
-		}
-
-		// rendering
 		try {
 			self::$livelock[$this->file] = TRUE;
+			$this->isRendering = TRUE;
 			$res = NULL;
 			if ($return) {
 				ob_start();
@@ -224,8 +173,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 			// continue with shutting down
 		} /* finally */ {
 			unset(self::$livelock[$this->file]);
-			if (isset($handle)) {
-				fclose($handle);
+			$this->isRendering = FALSE;
+			if (is_resource($isFile)) {
+				fclose($isFile);
 			}
 
 			if (isset($e)) {
@@ -261,6 +211,71 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function toXml()
 	{
 		return simplexml_load_string('<xml>' . $this->render(TRUE) . '</xml>');
+	}
+
+
+
+	/**
+	 * @return array (string, isFile/handle)
+	 */
+	private function compile()
+	{
+		if ($this->file == NULL) { // intentionally ==
+			throw new /*::*/InvalidStateException("Template file name was not specified.");
+		}
+
+		// strip fragment
+		list($filePath) = explode('#', $this->file);
+
+		if (!is_file($filePath) || !is_readable($filePath)) {
+			throw new /*::*/FileNotFoundException("Missing template file '$this->file'.");
+		}
+
+		if (!count($this->filters)) {
+			return array($filePath, TRUE);
+		}
+
+		$content = $filePath;
+		$isFile = TRUE;
+		$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
+		$key = md5($this->file) . '.' . basename($this->file);
+		$content = $cache[$key];
+
+		if ($content === NULL) {
+			$content = file_get_contents($filePath);
+			$isFile = FALSE;
+
+			reset($this->filters);
+			while (list(, $filter) = each($this->filters)) {/**/
+				if ($filter instanceof /*Nette::*/Callback) {
+					$content = $filter->__invoke($this, $content);
+				} else/**/ {
+					if (!is_callable($filter)) {
+						throw new /*::*/InvalidStateException("Filter must be valid PHP callback or Nette::Callback object.");
+					}
+					$content = call_user_func($filter, $this, $content);
+				}
+			}
+
+			$content = "<?php\n// template $this->file\n?>$content";
+			$cache->save(
+				$key,
+				$content,
+				array(
+					'files' => $filePath,
+					'expire' => self::$cacheExpire,
+				)
+			);
+		}
+
+		if (self::$cacheStorage instanceof TemplateStorage) {
+			$cached = $cache[$key];
+			if ($cached !== NULL) {
+				return array($cached['file'], $cached['handle']);
+			}
+		}
+
+		return array($content, $isFile);
 	}
 
 
@@ -308,8 +323,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function add($name, $value)
 	{
-		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		if ($this->isRendering) {
+			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		if (array_key_exists($name, $this->params)) {
@@ -355,8 +370,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function __set($name, $value)
 	{
-		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		if ($this->isRendering) {
+			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		$this->params[$name] = $value;
@@ -403,8 +418,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function __unset($name)
 	{
-		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+		if ($this->isRendering) {
+			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		unset($this->params[$name]);

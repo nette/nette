@@ -39,10 +39,9 @@ class JavaScriptConsole extends /*Nette::*/Object
 	/**
 	 * @return void
 	 */
-	public function flush()
+	public function __toString()
 	{
-		echo implode(";\n", $this->out), ";\n";
-		$this->out = array();
+		return implode(";\n", $this->out) . ";\n";
 	}
 
 
@@ -55,7 +54,7 @@ class JavaScriptConsole extends /*Nette::*/Object
 	 */
 	public function __set($name, $value)
 	{
-		$js = new JavaScript($this->out[]);
+		$js = new JavaScript('', $this->out[]);
 		$js->__set($name, $value);
 	}
 
@@ -68,7 +67,7 @@ class JavaScriptConsole extends /*Nette::*/Object
 	 */
 	public function &__get($name)
 	{
-		$js = new JavaScript($this->out[]);
+		$js = new JavaScript('', $this->out[]);
 		return $js->__get($name);
 	}
 
@@ -82,7 +81,7 @@ class JavaScriptConsole extends /*Nette::*/Object
 	 */
 	public function __call($method, $args)
 	{
-		$js = new JavaScript($this->out[]);
+		$js = new JavaScript('', $this->out[]);
 		return $js->__call($method, $args);
 	}
 
@@ -93,10 +92,10 @@ class JavaScriptConsole extends /*Nette::*/Object
 	 * @param  mixed  one or more parameters
 	 * @return JavaScript
 	 */
-	public function evaluate($arg)
+	public function raw($arg)
 	{
 		$args = func_get_args();
-		return call_user_func_array(array(new JavaScript($this->out[]), 'evaluate'), $args);
+		return call_user_func_array(array(new JavaScript('', $this->out[]), 'raw'), $args);
 	}
 
 }

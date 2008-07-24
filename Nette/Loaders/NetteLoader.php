@@ -135,6 +135,7 @@ class NetteLoader extends AutoLoader
 		'presenterloader' => '/Application/PresenterLoader.php',
 		'presenterrequest' => '/Application/PresenterRequest.php',
 		'radiolist' => '/Forms/items.php',
+		'redirectingexception' => '/Application/RedirectingException.php',
 		'repeater' => '/Forms/Repeater.php',
 		'robotloader' => '/Loaders/RobotLoader.php',
 		'route' => '/Application/Route.php',

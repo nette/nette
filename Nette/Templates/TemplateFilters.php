@@ -84,7 +84,7 @@ final class TemplateFilters
 	 *   {!=expression} echo without escaping
 	 *   {?expression} evaluate PHP statement
 	 *   {_expression} echo with escaping and translation
-	 *   {link destination ...} component link
+	 *   {link destination ...} control link
 	 *   {plink destination ...} presenter link
 	 *   {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
 	 *   {for ?} ... {/for}
@@ -146,7 +146,7 @@ final class TemplateFilters
 		'for ' => '<?php for (#): ?>',
 		'include ' => '<?php $template->subTemplate(#)->render() ?>',
 		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',
-		'link ' => '<?php echo $template->escape($component->link(#)) ?>',
+		'link ' => '<?php echo $template->escape($control->link(#)) ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
 		'=' => '<?php echo $template->escape(#) ?>',
@@ -305,7 +305,7 @@ final class TemplateFilters
 			$params = array();
 		}
 
-		return $attr . '="<?php echo $template->escape($component->'
+		return $attr . '="<?php echo $template->escape($control->'
 			. (strncmp($attr, 'on', 2) ? 'link' : 'ajaxLink')
 			. '(\''
 			. (isset($parts['path']) ? $parts['path'] : 'this!')

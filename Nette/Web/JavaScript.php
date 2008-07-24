@@ -39,15 +39,16 @@
 class JavaScript
 {
 	/** @var string */
-	protected $js = '';
+	protected $js;
 
 	/** @var string|FALSE */
 	private $state = '';
 
 
-	public function __construct(& $output = '')
+	public function __construct($init = '', & $ref = NULL)
 	{
-		$this->js = & $output;
+		$this->js = & $ref;
+		$this->js = $init;
 	}
 
 
@@ -110,7 +111,7 @@ class JavaScript
 			throw new /*::*/InvalidStateException('Invalid syntax.');
 		}
 		foreach ($args as $key => $arg) {
-			$args[$key] = json_encode($arg);
+			$args[$key] = $arg instanceof self ? $arg->js : json_encode($arg);
 		}
 		$this->js .= $this->state . $method . '(' . implode(', ', $args) . ')';
 		$this->state = '.';
@@ -124,7 +125,7 @@ class JavaScript
 	 * @param  mixed  one or more parameters
 	 * @return JavaScript provides a fluent interface
 	 */
-	public function evaluate($arg)
+	public function raw($arg)
 	{
 		$this->state = '';
 		foreach (func_get_args() as $arg) {

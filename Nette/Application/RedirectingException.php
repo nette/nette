@@ -27,23 +27,24 @@ require_once dirname(__FILE__) . '/../Application/AbortException.php';
 
 
 /**
- * Abort presenter and forwards to new request.
+ * Abort presenter and redirects to new request.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  */
-class ForwardingException extends AbortException
+class RedirectingException extends AbortException
 {
-	/** @var PresenterRequest */
-	private $request;
+	/** @var string */
+	private $uri;
 
 
 
-	public function __construct(PresenterRequest $request)
+	public function __construct($uri, $code)
 	{
 		parent::__construct();
-		$this->request = $request;
+		$this->code = $code;
+		$this->uri = $uri;
 	}
 
 
@@ -51,9 +52,9 @@ class ForwardingException extends AbortException
 	/**
 	 * @return PresenterRequest
 	 */
-	final public function getRequest()
+	final public function getUri()
 	{
-		return $this->request;
+		return $this->uri;
 	}
 
 }

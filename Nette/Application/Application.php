@@ -55,13 +55,16 @@ class Application extends /*Nette::*/Object
 	public $onShutdown;
 
 	/** @var array of function(Application $sender) */
-	public $onRouted;
+	public $onNewRequest;
 
 	/** @var array of function(Application $sender, Exception $e) */
 	public $onError;
 
 	/** @var array of string */
 	public $allowedMethods = array('GET', 'POST', 'HEAD');
+
+	/** @var bool  automatically redirect to canonical URL */
+	public $canonicalize = TRUE;
 
 	/** @var string */
 	public $errorPresenter = 'Error';
@@ -96,8 +99,8 @@ class Application extends /*Nette::*/Object
 		}
 
 		// check HTTP method
+		$method = $httpRequest->getMethod();
 		if ($this->allowedMethods) {
-			$method = $httpRequest->getMethod();
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
 				$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow: ' . implode(',', $this->allowedMethods), TRUE);
@@ -106,6 +109,7 @@ class Application extends /*Nette::*/Object
 			}
 		}
 
+		// default router
 		$router = $this->getRouter();
 		if ($router instanceof MultiRouter && !count($router)) {
 			$router[] = new SimpleRouter(array(
@@ -123,8 +127,8 @@ class Application extends /*Nette::*/Object
 			}
 
 			try {
-				// Routing
 				if (!$request) {
+					// Routing
 					$this->onStartup($this);
 
 					$request = $router->match($httpRequest);
@@ -133,9 +137,21 @@ class Application extends /*Nette::*/Object
 						throw new BadRequestException('No route for HTTP request.');
 					}
 
-					$this->onRouted($this);
+					if ($request->getPresenterName() === $this->errorPresenter) {
+						throw new BadRequestException('Invalid request.');
+					}
+
+					// redirect to canonicalized URI.
+					if ($this->canonicalize && $method !== 'POST' && !$httpRequest->isAjax()) {
+						$uri = $router->constructUrl($request, $httpRequest);
+						if ($uri !== NULL && !$httpRequest->getUri()->isEqual($uri)) {
+							throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
+						}
+					}
 				}
+
 				$this->requests[] = $request;
+				$this->onNewRequest($this);
 
 				// Instantiate presenter
 				$presenter = $request->getPresenterName();
@@ -152,6 +168,20 @@ class Application extends /*Nette::*/Object
 
 				// Execute presenter
 				$this->presenter->run();
+				break;
+
+			} catch (RedirectingException $e) {
+				// not error, presenter redirects to new URL
+				$uri = $e->getUri();
+				if (substr($uri, 0, 2) === '//') {
+					$uri = $httpRequest->getUri()->scheme . ':' . $uri;
+				} elseif (substr($uri, 0, 1) === '/') {
+					$uri = $httpRequest->getUri()->hostUri . $uri;
+				}
+				$httpResponse->setCode($e->getCode());
+				$httpResponse->setHeader('Location: ' . $uri);
+				$httpResponse->setHeader('Connection: close');
+				echo '<h1>Redirect</h1><p><a href="', htmlSpecialChars($uri), '">Please click here to continue</a>.</p>';
 				break;
 
 			} catch (ForwardingException $e) {
@@ -175,16 +205,26 @@ class Application extends /*Nette::*/Object
 					$this->catchExceptions = Environment::isLive();
 				}
 
-				if ($this->catchExceptions && $this->errorPresenter) {
+				if (!$this->catchExceptions) {
+					throw $e;
+				}
+
+				if ($this->errorPresenter) {
 					$request = new PresenterRequest(
 						$this->errorPresenter,
 						PresenterRequest::FORWARD,
 						array('exception' => $e)
 					);
-					continue;
-				}
 
-				throw $e;
+				} elseif ($e instanceof BadRequestException) {
+					$httpResponse->setCode(404);
+					echo '<title>404 Not Found</title><h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+
+				} else {
+					$httpResponse->setCode(500);
+					echo '<title>500 Internal Server Error</title><h1>Server Error</h1>',
+						'<p>The server encountered an internal error and was unable to complete your request.</p>';
+				}
 			}
 		} while (1);
 

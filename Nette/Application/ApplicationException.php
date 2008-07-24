@@ -43,8 +43,8 @@ class ApplicationException extends /*::*/Exception implements /*Nette::*/ICaused
 	 */
 	public function __construct($message = NULL, $code = 0, /*::*/Exception $cause = NULL)
 	{
-		$this->cause = $cause;
 		parent::__construct($message, $code);
+		$this->cause = $cause;
 	}
 
 

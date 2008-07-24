@@ -23,6 +23,8 @@
 
 require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
 
+require_once dirname(__FILE__) . '/../Framework.php';
+
 
 
 /**
@@ -80,7 +82,7 @@ class RobotLoader extends AutoLoader
 
 			$cache = $this->cache ? $this->cache : /*Nette::*/Environment::getCache('Nette.RobotLoader');
 			$data = $cache['data'];
-			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
+			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles, /*Nette::*/Framework::REVISION);
 
 			if ($data['opt'] === $opt) {
 				$this->list = $data['list'];
@@ -156,8 +158,8 @@ class RobotLoader extends AutoLoader
 	{
 		$class = strtolower($class);
 		if (isset($this->list[$class]) && $this->list[$class] !== $file) {
-			// throwing exception is not possible
-			trigger_error("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".", E_USER_ERROR);
+			// throwing exception is not possible, Nette::Debug converts errors to exceptions
+			die("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".");
 		}
 		$this->list[$class] = $file;
 	}

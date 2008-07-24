@@ -60,7 +60,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return void
-	 * @thorws ::InvalidArgumentException, ::InvalidStateException
+	 * @throws ::InvalidArgumentException
 	 */
 	public function setCode($code)
 	{
@@ -78,11 +78,12 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 		}
 
 		if (headers_sent($file, $line)) {
-			throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent (output started at $file:$line).");
+			return FALSE;
 		}
 
 		$this->code = $code;
 		header('HTTP/1.1 ' . $code, TRUE, $code);
+		return TRUE;
 	}
 
 
@@ -107,8 +108,6 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	public function setHeader($header, $replace = FALSE)
 	{
 		if (headers_sent()) {
-			//TODO: return FALSE or throw exception?
-			//throw new /*::*/InvalidStateException("Cannot modify header information - headers already sent.");
 			return FALSE;
 		}
 		// prevent header injection
@@ -121,11 +120,22 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 	/**
 	 * Returns a list of headers to sent.
+	 * @param  bool
 	 * @return array
 	 */
-	public function getHeaders()
+	public function getHeaders($asPairs = FALSE)
 	{
-		return headers_list();
+		if ($asPairs) {
+			$headers = array();
+			foreach (headers_list() as $header) {
+				$a = strpos($header, ':');
+				$headers[substr($header, 0, $a)] = substr($header, $a + 2);
+			}
+			return $headers;
+
+		} else {
+			return headers_list();
+		}
 	}
 
 
@@ -171,9 +181,20 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	}
 
 
-	/*
+
+	/**
+	 * Enables compression. (warning: may not work)
+	 * @return bool
+	 */
 	public function enableCompression()
 	{
+		if (headers_sent()) return FALSE;
+
+		$headers = $this->getHeaders(TRUE);
+		if (isset($headers['Content-Encoding'])) {
+			return FALSE; // called twice
+		}
+
 		$ok = ob_gzhandler('', PHP_OUTPUT_HANDLER_START);
 		if ($ok === FALSE) {
 			return FALSE; // not allowed
@@ -186,12 +207,12 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 		ob_start('ob_gzhandler');
 		return TRUE;
 	}
-	*/
 
 
 
 	/**
-	 * Sends garbage for IE 6.
+	 * Sends invisible garbage for IE 6.
+	 * @return void
 	 */
 	public function fixIE()
 	{

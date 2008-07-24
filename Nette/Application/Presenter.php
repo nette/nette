@@ -63,9 +63,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	public static $invalidLinkMode;
 
-	/** @var bool  automatically call canonicalize() */
-	public $autoCanonicalize = FALSE;
-
 	/** @var bool */
 	public $useLayoutTemplate = TRUE;
 
@@ -98,9 +95,6 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var string */
 	private $signal;
-
-	/** @var bool */
-	private $renderFinished = FALSE;
 
 	/** @var bool */
 	private $partialMode;
@@ -166,11 +160,6 @@ abstract class Presenter extends Control implements IPresenter
 	public function run()
 	{
 		try {
-			if ($this->autoCanonicalize) {
-				//TODO: here?
-				//$this->canonicalize();
-			}
-
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
 			$this->initGlobalParams();
@@ -206,9 +195,7 @@ abstract class Presenter extends Control implements IPresenter
 			// calls $this->render{scene}();
 			$this->tryCall($this->formatRenderMethod($this->getScene()), $this->params);
 
-			if (!$this->isRenderFinished()) {
-				$this->renderTemplate();
-			}
+			$this->renderTemplate();
 
 			if ($this->isPartialMode()) {
 				$this->finishPartialMode();
@@ -435,7 +422,6 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		$this->renderFinished();
 		$template->render();
 
 		// TODO: better, no in partial mode ajax
@@ -449,23 +435,12 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * @return void
+	 * @deprecated
 	 */
 	final public function renderFinished()
 	{
-		if ($this->renderFinished) {
-			throw new /*::*/InvalidStateException("Scene '$this->scene' has been rendered yet.");
-		}
-		$this->renderFinished = TRUE;
-	}
-
-
-
-	/**
-	 * @return bool
-	 */
-	final public function isRenderFinished()
-	{
-		return $this->renderFinished;
+		trigger_error('Use $presenter->abort()', E_USER_NOTICE);
+		$this->abort();
 	}
 
 
@@ -676,27 +651,17 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
-	 * @throws AbortException
+	 * @throws RedirectingException
 	 */
 	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isPartialMode()) {
 			$this->ajaxDriver->redirect($uri);
+			$this->abort();
 
 		} else {
-			if (substr($uri, 0, 2) === '//') {
-				$uri = $this->httpRequest->getUri()->scheme . ':' . $uri;
-			} elseif (substr($uri, 0, 1) === '/') {
-				$uri = $this->httpRequest->getUri()->hostUri . $uri;
-			}
-
-			$httpResponse = Environment::getHttpResponse();
-			$httpResponse->setCode($code);
-			$httpResponse->setHeader('Location: ' . $uri);
-			echo '<h1>Redirect</h1><p><a href="', htmlSpecialChars($uri), '">Please click here to continue</a>.</p>';
+			throw new RedirectingException($uri, $code);
 		}
-
-		$this->abort();
 	}
 
 
@@ -722,27 +687,6 @@ abstract class Presenter extends Control implements IPresenter
 	public function abort()
 	{
 		throw new AbortException();
-	}
-
-
-
-	/**
-	 * Conditional redirect to canonicalized URI.
-	 * @return void
-	 * @throws AbortException
-	 */
-	final public function canonicalize()
-	{
-		if ($this->httpRequest->getMethod() === 'POST' || $this->httpRequest->isAjax()) {
-			return;
-		}
-
-		// TODO: what about signal args
-		$uri = $this->createSubRequest($this->getSignalReceiver(TRUE), $this->getSignal(), array());
-
-		if (!$this->httpRequest->getUri()->isEqual($uri)) {
-			$this->redirectUri($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
-		}
 	}
 
 

@@ -55,7 +55,7 @@ abstract class Control extends PresenterComponent
 
 
 
-	/********************* rendering ****************d*g**/
+	/********************* template factory ****************d*g**/
 
 
 
@@ -83,7 +83,8 @@ abstract class Control extends PresenterComponent
 	protected function createTemplate()
 	{
 		$template = new /*Nette::Templates::*/Template;
-		$template->component = $this;
+		$template->component = $this; // DEPRECATED!
+		$template->control = $this;
 		$template->presenter = $this->getPresenter(FALSE);
 		$template->baseUri = /*Nette::*/Environment::getVariable('baseUri');
 		return $template;
@@ -91,7 +92,7 @@ abstract class Control extends PresenterComponent
 
 
 
-	/********************* partial rendering ****************d*g**/
+	/********************* rendering ****************d*g**/
 
 
 
