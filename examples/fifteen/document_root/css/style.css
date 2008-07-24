@@ -2,18 +2,22 @@ img {
 	border: none;
 }
 
-table img {
+#fifteen img {
 	display: block;
 	border-right: 1px solid white;
 	border-bottom: 1px solid white;
+	position: relative;
 }
 
-table {
+#fifteen table {
 	border-collapse: collapse;
 }
 
-td {
+#fifteen td {
 	padding: 0;
+	background: url('../images/game0.jpg') 0 0 no-repeat;
+	position: relative;
+	=position: inherit;
 }
 
 #spinner {

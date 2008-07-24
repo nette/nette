@@ -8,24 +8,36 @@
  *
  * For more information please see http://nettephp.com
  *
- * @version    $Revision$ $Date$
+ * @version    $Id$
  */
 
 var nette = {
 
 	// public
-	errorText: "Chyba pri nacitani stanky",
+	lastError: null,
 
 	spinnerId: "spinner",
 
+	processing: 0,
+
+	debug: true,
+
+	result: {},
+
 	action: function(action, sender)
 	{
+		if (this.processing > 0) return true;
+
+		this.result = {};
+
 		// create new AJAX request
 		this.initAjax();
 		if (!this.ajax) return false;
 
 		action += (action.indexOf('?') == -1) ? '?' : '&';
-		action += this.state + '&';
+		if (typeof(this.state) === 'object') {
+			action += this.buildQuery(this.state, '', '');
+		}
 
 		// create process indicator
 		try {
@@ -47,6 +59,7 @@ var nette = {
 			//this.ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			this.ajax.onreadystatechange = function() { nette.ajaxHandler(); }
 			this.ajax.send(query);
+			this.processing = 1;
 			return true;
 
 		} catch (e) {
@@ -56,44 +69,83 @@ var nette = {
 
 
 
-	// private
-	state: "",
-
-	spinner: null,
-
-	ajax: null,
-
-	redirect: function(url)
+	onSuccess: function()
 	{
-		//alert(url);
-		document.location = url;
+		if (this.result.error) {
+			this.onError(this.result.error.message);
+			return;
+		}
+
+		if (this.result.redirect) {
+			var url = this.result.redirect;
+			if (this.debug) {
+				alert(url);
+			}
+			document.location = url;
+			return;
+		}
+
+		if (this.result.state) {
+			this.state = this.result.state;
+		}
+
+		if (this.result.events) {
+			for (var id in this.result.events) {
+				this.handleEvent(this.result.events[id].event, this.result.events[id].args);
+			}
+		}
+
+		if (this.result.snippets) {
+			for (var id in this.result.snippets) {
+				this.updateSnippet(id, this.result.snippets[id]);
+			}
+		}
+
+		this.result = {};
 	},
 
 
-	error: function(message)
+	onError: function(message)
 	{
-		alert(message);
+		this.lastError = message;
+
+		if (this.debug) {
+			alert(message);
+		}
 	},
 
 
-	updateHtml: function(id, html)
+	updateSnippet: function(id, html)
 	{
 		var el = document.getElementById(id);
 		if (el) el.innerHTML = html;
 	},
 
-
-	updateState: function(state)
+	handleEvent: function(event, args)
 	{
-		this.state = state;
+		if (this.debug) {
+			//alert(event + '(' + args + ')');
+		}
+		var obj = event.split('.');
+		obj.pop();
+		obj = obj.join('.');
+		eval(event + '.apply(' + obj + ', args);');
 	},
+
+
+	// private
+	state: null,
+
+	spinner: null,
+
+	ajax: null,
 
 
 	initAjax: function()
 	{
 		this.ajax = false;
 
-		if (typeof XMLHttpRequest != 'undefined') {
+		if (typeof XMLHttpRequest !== 'undefined') {
 			this.ajax = new XMLHttpRequest();
 		}
 
@@ -120,12 +172,33 @@ var nette = {
 				this.spinner = null;
 			}
 
-			if (this.ajax.status == 200) {
-				eval(this.ajax.responseText);
+			if (this.ajax.status === 200) {
+				eval('this.result = ' + this.ajax.responseText);
+				this.onSuccess();
+
 			} else  {
-				this.error(this.errorText + " (" + this.ajax.status + ": " + this.ajax.statusText + ")");
+				this.onError(this.ajax.status + " " + this.ajax.statusText + "\n\n" + this.ajax.responseText);
+			}
+
+			this.processing -= 1;
+			this.ajax = false;
+		}
+	},
+
+
+	buildQuery: function(data, prefix, postfix)
+	{
+		var s = '';
+		for (var key in data) {
+			if (typeof(data[key]) === 'object') {
+				s += this.buildQuery(data[key], prefix + encodeURIComponent(key) + postfix + '%5B', '%5D');
+			} else {
+				if (data[key] === true || data[key] === false) {
+					data[key] = data[key] ? '1' : '0';
+				}
+				s += prefix + encodeURIComponent(key) + postfix + '=' + encodeURIComponent((data[key].toString())) + '&';
 			}
 		}
+		return s.replace(/%20/g, '+');
 	}
-
 }

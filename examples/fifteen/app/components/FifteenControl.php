@@ -54,6 +54,17 @@ class FifteenControl extends /*Nette::Application::*/Control
 			throw new /*Nette::Application::*/BadRequestException('Action not allowed.');
 		}
 
+		if ($this->presenter->isAjax()) {
+			$ajax = $this->presenter->ajaxDriver;
+			$pos = $x + $y * $this->width;
+			$empty = $this->searchEmpty();
+			$id = $this->getSnippetId();
+			if ($pos === $empty - 1) $ajax->fireEvent('fifteen.move', $id, $x, $y, -1, 0);
+			elseif ($pos === $empty + 1) $ajax->fireEvent('fifteen.move', $id, $x, $y, +1, 0);
+			elseif ($pos > $empty) $ajax->fireEvent('fifteen.move', $id, $x, $y, 0, +1);
+			else $ajax->fireEvent('fifteen.move', $id, $x, $y, 0, -1);
+		}
+
 		$this->move($x, $y);
 		$this->round++;
 		$this->onAfterClick($this);
@@ -67,11 +78,13 @@ class FifteenControl extends /*Nette::Application::*/Control
 
 	public function handleShuffle()
 	{
-		for ($i=0; $i<100; $i++) {
+		$i = 100;
+		while ($i) {
 			$x = rand(0, $this->width - 1);
 			$y = rand(0, $this->width - 1);
 			if ($this->isClickable($x, $y)) {
 				$this->move($x, $y);
+				$i--;
 			}
 		}
 		$this->round = 0;
