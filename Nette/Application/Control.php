@@ -150,7 +150,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 *
 	 * @return bool
 	 */
-	public function isOutputAllowed()
+	public static function isOutputAllowed()
 	{
 		return self::$outputAllowed;
 	}

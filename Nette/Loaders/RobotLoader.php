@@ -48,8 +48,8 @@ class RobotLoader extends AutoLoader
 	/** @var bool  experimental */
 	public $displaceNetteLoader = TRUE;
 
-	/** @var Nette::Caching::Cache  */
-	private $cache;
+	/** @var bool  */
+	public $autoRebuild;
 
 	/** @var array */
 	private $list = NULL;
@@ -62,9 +62,8 @@ class RobotLoader extends AutoLoader
 
 
 
-	public function __construct(/*Nette::Caching::*/Cache $cache = NULL)
+	public function __construct()
 	{
-		$this->cache = $cache;
 		$this->addDirectory(dirname(__FILE__) . '/..');
 	}
 
@@ -80,9 +79,9 @@ class RobotLoader extends AutoLoader
 		if ($this->list === NULL) {
 			$this->list = array(); // prevents cycling
 
-			$cache = $this->cache ? $this->cache : /*Nette::*/Environment::getCache('Nette.RobotLoader');
+			$cache = /*Nette::*/Environment::getCache('Nette.RobotLoader');
 			$data = $cache['data'];
-			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles, /*Nette::*/Framework::REVISION);
+			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
 
 			if ($data['opt'] === $opt) {
 				$this->list = $data['list'];
@@ -110,6 +109,17 @@ class RobotLoader extends AutoLoader
 		if (isset($this->list[$type])) {
 			self::includeOnce($this->list[$type]);
 			self::$count++;
+
+		} else {
+			if ($this->autoRebuild === NULL) {
+				$this->autoRebuild = !/*Nette::*/Environment::isLive();
+			}
+			if ($this->autoRebuild) {
+				$this->autoRebuild = FALSE;
+				$this->list = NULL;
+				$cache = /*Nette::*/Environment::getCache('Nette.RobotLoader')->offsetUnset('data');
+				$this->tryLoad($type);
+			}
 		}
 	}
 
@@ -128,8 +138,6 @@ class RobotLoader extends AutoLoader
 		foreach (array_unique($this->scanDirs) as $dir) {
 			$this->scanDirectory($dir);
 		}
-
-		//$this->saveCache();
 	}
 
 

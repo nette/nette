@@ -76,6 +76,6 @@ interface IPartiallyRenderable extends IRenderable
 	 *
 	 * @return bool
 	 */
-	function isOutputAllowed();
+	static function isOutputAllowed();
 
 }
