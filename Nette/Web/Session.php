@@ -194,7 +194,7 @@ final class Session
 			self::checkHeaders();
 			$params = session_get_cookie_params();
 			setcookie(
-				$name,
+				session_name(),
 				FALSE,
 				254400000,
 				$params['path'],
@@ -280,7 +280,7 @@ final class Session
 
 		$key = array();
 		foreach ($list as $item) {
-			if (isset($_SERVER[$item])) $s[] = $_SERVER[$item];
+			if (isset($_SERVER[$item])) $key[] = $_SERVER[$item];
 		}
 		return md5(implode("\0", $key));
 	}

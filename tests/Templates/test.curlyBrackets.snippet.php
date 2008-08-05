@@ -20,7 +20,7 @@ class MockControl implements /*Nette::Application::*/IPartiallyRenderable
 	{
 	}
 
-	function isOutputAllowed()
+	static function isOutputAllowed()
 	{
 		return FALSE;
 	}

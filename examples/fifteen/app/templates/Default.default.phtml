@@ -16,9 +16,7 @@
 </head>
 
 <body>
-	<h1>Fifteen example</h1>
-
-	{snippet round <p>}Round #{$fifteen->round + 1}{/snippet}
+	<h1>Fifteen example &ndash; {snippet round <span>}round #{$fifteen->round + 1}{/snippet}</h1>
 
 	{snippet flash}{if isset($flash)}<h2>{$flash}</h2>{/if}{/snippet}
 

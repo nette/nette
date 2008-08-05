@@ -61,9 +61,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	public static $invalidLinkMode;
 
-	/** @var bool */
-	public $useLayoutTemplate = TRUE;
-
 	/** @var PresenterRequest */
 	private $request;
 
@@ -84,6 +81,9 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var string */
 	private $scene;
+
+	/** @var string */
+	private $layout = 'layout';
 
 	/** @var IAjaxDriver */
 	private $ajaxDriver;
@@ -338,17 +338,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Returns current scene name.
-	 * @return string
-	 */
-	final public function getScene()
-	{
-		return $this->scene;
-	}
-
-
-
-	/**
 	 * Changes current view.
 	 * @param  string
 	 * @return void
@@ -367,6 +356,17 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * Returns current scene name.
+	 * @return string
+	 */
+	final public function getScene()
+	{
+		return $this->scene;
+	}
+
+
+
+	/**
 	 * Changes current view scene.
 	 * @param  string
 	 * @return void
@@ -374,6 +374,29 @@ abstract class Presenter extends Control implements IPresenter
 	public function changeScene($scene)
 	{
 		$this->scene = $scene;
+	}
+
+
+
+	/**
+	 * Returns current layout name.
+	 * @return string|FALSE
+	 */
+	final public function getLayout()
+	{
+		return $this->layout;
+	}
+
+
+
+	/**
+	 * Changes or disables layout.
+	 * @param  string|FALSE
+	 * @return void
+	 */
+	public function changeLayout($layout)
+	{
+		$this->layout = $layout;
 	}
 
 
@@ -391,8 +414,8 @@ abstract class Presenter extends Control implements IPresenter
 			$presenter = $this->getName();
 			$hasContent = $hasLayout = FALSE;
 
-			if ($this->useLayoutTemplate) {
-				foreach ($this->formatLayoutTemplateFiles($presenter) as $file) {
+			if ($this->layout) {
+				foreach ($this->formatLayoutTemplateFiles($presenter, $this->layout) as $file) {
 					if (is_file($file)) {
 						$template->setFile($file);
 						$hasLayout = TRUE;
@@ -443,9 +466,10 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Formats layout template file names.
 	 * @param  string
+	 * @param  string
 	 * @return array
 	 */
-	protected static function formatLayoutTemplateFiles($presenter)
+	protected static function formatLayoutTemplateFiles($presenter, $layout)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
@@ -455,10 +479,10 @@ abstract class Presenter extends Control implements IPresenter
 			$module = substr_replace($module, '/templates/', strrpos($module, '/'), 0);
 		}
 		return array(
-			"$root/$presenter/@layout.phtml",
-			"$root/$presenter.@layout.phtml",
-			"$root/$module/@layout.phtml",
-			"$root/@layout.phtml",
+			"$root/$presenter/@$layout.phtml",
+			"$root/$presenter.@$layout.phtml",
+			"$root/$module/@$layout.phtml",
+			"$root/@$layout.phtml",
 		);
 	}
 
