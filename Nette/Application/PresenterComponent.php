@@ -55,11 +55,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		$presenter = $this->lookup('Nette::Application::Presenter');
-		if ($need && $presenter === NULL) {
-			throw new /*::*/InvalidStateException('Component is not attached to presenter.');
-		}
-		return $presenter;
+		return $this->lookup('Nette::Application::Presenter', $need);
 	}
 
 

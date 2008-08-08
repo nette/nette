@@ -63,26 +63,6 @@ echo 'Child2: ', (int) isset($el[2]), "\n";
 $child = $el[1];
 echo $child, "\n";
 
-//parent
-echo $el[1]->getParent()->count(), "\n";
-
-// add child
-try {
-	$el->add($child);
-} catch (Exception $e) {
-	echo $e->getMessage(), "\n";
-}
-
-$child = clone $el[1];
-$el->add($child);
-
-// remove child
-$child = $el[0];
-unset($el[0]);
-$el[] = $child;
-echo $el, "\n";
-
-
 
 // email obfuscate
 echo $el = Html::el('a')->href('mailto:dave@example.com');

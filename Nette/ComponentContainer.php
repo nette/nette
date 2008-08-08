@@ -52,10 +52,11 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * Adds the specified component to the IComponentContainer.
 	 * @param  IComponent
 	 * @param  string
+	 * @param  string
 	 * @return void
 	 * @throws ::InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name)
+	public function addComponent(IComponent $component, $name, $placeBefore = NULL)
 	{
 		if ($name === NULL) {
 			$name = $component->getName();
@@ -86,7 +87,16 @@ class ComponentContainer extends Component implements IComponentContainer
 		$this->validateChildComponent($component);
 
 		try {
-			$this->components[$name] = $component;
+			if (isset($this->components[$placeBefore])) {
+				$tmp = array();
+				foreach ($this->components as $k => $v) {
+					if ($k === $placeBefore) $tmp[$name] = $component;
+					$tmp[$k] = $v;
+				}
+				$this->components = $tmp;
+			} else {
+				$this->components[$name] = $component;
+			}
 			$component->setParent($this, $name);
 
 		} catch (/*::*/Exception $e) {
@@ -125,8 +135,10 @@ class ComponentContainer extends Component implements IComponentContainer
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
+
 		} elseif ($need) {
 			throw new /*::*/InvalidArgumentException("Component with name '$name' does not exist.");
+
 		} else {
 			return NULL;
 		}
@@ -136,10 +148,28 @@ class ComponentContainer extends Component implements IComponentContainer
 
 	/**
 	 * Returns collection of all the components in the container.
+	 * @param  bool
+	 * @param  string
 	 * @return array of IComponent
 	 */
-	final public function getComponents()
+	final public function getComponents($deep = FALSE, $type = NULL)
 	{
+		if ($deep || $type) {
+			/**/// fix for namespaced classes/interfaces in PHP < 5.3
+			if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+
+			$list = array();
+			foreach ($this->components as $component) {
+				if ($type === NULL || $component instanceof $type) {
+					$list[] = $component;
+				}
+
+				if ($deep && $component instanceof IComponentContainer) {
+					$list = array_merge($list, $component->getComponents(TRUE, $type));
+				}
+			}
+			return $list;
+		}
 		return $this->components;
 	}
 
@@ -153,36 +183,6 @@ class ComponentContainer extends Component implements IComponentContainer
 	 */
 	protected function validateChildComponent(IComponent $child)
 	{
-	}
-
-
-
-	/********************* hierarchy notifications ****************d*g**/
-
-
-
-	/**
-	 * This helper invokes specified method of all components in IComponent & IComponentContainer hierarchy recursively.
-	 * @param  IComponentContainer
-	 * @param  string  method name
-	 * @param  array   arguments
-	 * @param  string  class/interface name
-	 * @return void
-	 */
-	static public function notifyComponents(IComponentContainer $container, $method, array $args = array(), $type = 'Nette::Component')
-	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
-
-		foreach ($container->getComponents() as $component) {
-			if ($component instanceof $type) {
-				call_user_func_array(array($component, $method), $args);
-			}
-
-			if ($component instanceof IComponentContainer) {
-				self::notifyComponents($component, $method, $args, $type);
-			}
-		}
 	}
 
 

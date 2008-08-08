@@ -70,18 +70,6 @@ abstract class Component extends Object implements IComponent
 		} elseif (is_string($name)) {
 			$this->name = $name;
 		}
-
-		$this->constructed();
-	}
-
-
-
-	/**
-	 * This method will be called from component constructor.
-	 * @return void
-	 */
-	protected function constructed()
-	{
 	}
 
 
@@ -89,31 +77,33 @@ abstract class Component extends Object implements IComponent
 	/**
 	 * Lookup hierarchy for object specified by class or interface name.
 	 * @param  string
+	 * @param  bool
 	 * @return IComponent
 	 */
-	public function lookup($type)
+	public function lookup($type, $need = FALSE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
 
-		if (isset($this->lookupCache[$type])) {
-			return $this->lookupCache[$type][0];
+		if (!isset($this->lookupCache[$type])) {
+			$obj = $this;
+			$path = array();
+			do {
+				if ($obj instanceof $type) break;
+				array_unshift($path, $obj->getName());
+				$obj = $obj->getParent(); // IConponent::getParent()
+				if ($obj === $this) $obj = NULL; // prevent cycling
+			} while ($obj !== NULL);
+
+			$this->lookupCache[$type] = array(
+				$obj,
+				$obj === NULL ? NULL : implode(self::NAME_SEPARATOR, $path),
+			);
 		}
 
-		$obj = $this;
-		$path = array();
-		do {
-			if ($obj instanceof $type) break;
-			array_unshift($path, $obj->getName());
-			$obj = $obj->getParent(); // IConponent::getParent()
-			if ($obj === $this) $obj = NULL; // prevent cycling
-		} while ($obj !== NULL);
-
-		$this->lookupCache[$type] = array(
-			$obj,
-			$obj === NULL ? NULL : implode(self::NAME_SEPARATOR, $path),
-		);
-
+		if ($need && $this->lookupCache[$type][0] === NULL) {
+			throw new /*::*/InvalidStateException("Component is not attached to '$type'.");
+		}
 		return $this->lookupCache[$type][0];
 	}
 
@@ -123,19 +113,23 @@ abstract class Component extends Object implements IComponent
 	 * Lookup for object specified by class or interface name. Returns backtrace path.
 	 * A path is the concatenation of component names separated by self::NAME_SEPARATOR.
 	 * @param  string
+	 * @param  bool
 	 * @return string
 	 */
-	public function lookupPath($type)
+	public function lookupPath($type, $need = FALSE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
 
-		if (isset($this->lookupCache[$type])) {
-			return $this->lookupCache[$type][1];
-		} else {
+		if (!isset($this->lookupCache[$type])) {
 			$this->lookup($type);
-			return $this->lookupCache[$type][1];
 		}
+
+		if ($need && $this->lookupCache[$type][1] === NULL) {
+			throw new /*::*/InvalidStateException("Component is not attached to '$type'.");
+		}
+
+		return $this->lookupCache[$type][1];
 	}
 
 

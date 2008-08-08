@@ -56,8 +56,10 @@ interface IComponentContainer
 
 	/**
 	 * Returns collection of all the components in the container.
+	 * @param  bool
+	 * @param  string
 	 * @return array of IComponent
 	 */
-	function getComponents();
+	function getComponents($deep = FALSE, $type = NULL);
 
 }
