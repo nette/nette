@@ -21,6 +21,7 @@
 /*namespace Nette;*/
 
 
+
 require_once dirname(__FILE__) . '/Component.php';
 
 require_once dirname(__FILE__) . '/IComponentContainer.php';
@@ -147,30 +148,22 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Returns collection of all the components in the container.
-	 * @param  bool
-	 * @param  string
-	 * @return array of IComponent
+	 * Iterates over a components.
+	 * @param  bool    recursive?
+	 * @param  string  class types filter
+	 * @return ::ArrayIterator
 	 */
 	final public function getComponents($deep = FALSE, $type = NULL)
 	{
-		if ($deep || $type) {
-			/**/// fix for namespaced classes/interfaces in PHP < 5.3
-			if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
-
-			$list = array();
-			foreach ($this->components as $component) {
-				if ($type === NULL || $component instanceof $type) {
-					$list[] = $component;
-				}
-
-				if ($deep && $component instanceof IComponentContainer) {
-					$list = array_merge($list, $component->getComponents(TRUE, $type));
-				}
-			}
-			return $list;
+		$iterator = new RecursiveComponentIterator($this->components);
+		if ($deep) {
+			$deep = $deep > 0 ? /*::*/RecursiveIteratorIterator::SELF_FIRST : /*::*/RecursiveIteratorIterator::CHILD_FIRST;
+			$iterator = new /*::*/RecursiveIteratorIterator($iterator, $deep);
 		}
-		return $this->components;
+		if ($type) {
+			$iterator = new InstanceFilterIterator($iterator, $type);
+		}
+		return $iterator;
 	}
 
 
@@ -216,6 +209,42 @@ class ComponentContainer extends Component implements IComponentContainer
 	public function isCloning()
 	{
 		return $this->cloning;
+	}
+
+}
+
+
+
+
+
+
+/**
+ * Recursive component iterator. See ComponentContainer::getComponents().
+ *
+ * @author     David Grudl
+ * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @package    Nette
+ */
+class RecursiveComponentIterator extends /*::*/RecursiveArrayIterator
+{
+
+	/**
+	 * Has the current element has children?
+	 * @return bool
+	 */
+	public function hasChildren()
+	{
+		return $this->current() instanceof IComponentContainer;
+	}
+
+
+	/**
+	 * The sub-iterator for the current element.
+	 * @return ::RecursiveIterator
+	 */
+	public function getChildren()
+	{
+		return $this->current()->getComponents();
 	}
 
 }

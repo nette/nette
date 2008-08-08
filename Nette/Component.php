@@ -21,6 +21,7 @@
 /*namespace Nette;*/
 
 
+
 require_once dirname(__FILE__) . '/IComponent.php';
 
 require_once dirname(__FILE__) . '/Object.php';
@@ -56,7 +57,6 @@ abstract class Component extends Object implements IComponent
 
 	/** @var array */
 	private $lookupCache = array();
-
 
 
 

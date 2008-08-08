@@ -21,6 +21,7 @@
 /*namespace Nette;*/
 
 
+
 require_once dirname(__FILE__) . '/Collections/Hashtable.php';
 
 

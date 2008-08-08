@@ -21,6 +21,7 @@
 /*namespace Nette::Security;*/
 
 
+
 require_once dirname(__FILE__) . '/../Security/IAuthorizator.php';
 
 require_once dirname(__FILE__) . '/../Object.php';

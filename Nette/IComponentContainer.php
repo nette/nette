@@ -55,10 +55,10 @@ interface IComponentContainer
 	function getComponent($name);
 
 	/**
-	 * Returns collection of all the components in the container.
-	 * @param  bool
-	 * @param  string
-	 * @return array of IComponent
+	 * Iterates over a components.
+	 * @param  bool    recursive?
+	 * @param  string  class types filter
+	 * @return ::ArrayIterator
 	 */
 	function getComponents($deep = FALSE, $type = NULL);
 

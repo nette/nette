@@ -21,6 +21,7 @@
 /*namespace Nette::Loaders;*/
 
 
+
 require_once dirname(__FILE__) . '/../Object.php';
 
 
