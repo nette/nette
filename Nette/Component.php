@@ -176,8 +176,13 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function setParent(IComponentContainer $parent = NULL, $name = NULL)
 	{
-		// if parent is the same parent it already has, no action occurs (even name or service change)
-		if ($this->parent === $parent) return;
+		// if parent is the same parent it already has, no action occurs (only renaming)
+		if ($this->parent === $parent) {
+			if ($parent === NULL && $name !== NULL) {
+				$this->name = $name;
+			}
+			return;
+		}
 
 		// A component cannot be given a parent if it already has a parent.
 		if ($this->parent !== NULL && $parent !== NULL) {

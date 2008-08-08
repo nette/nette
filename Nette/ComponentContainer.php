@@ -82,14 +82,14 @@ class ComponentContainer extends Component implements IComponentContainer
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);
 
-		// userland checking
+		// user checking
 		$this->validateChildComponent($component);
 
 		try {
 			$this->components[$name] = $component;
 			$component->setParent($this, $name);
 
-		} catch (Exception $e) {
+		} catch (/*::*/Exception $e) {
 			unset($this->components[$name]); // undo
 			throw $e;
 		}

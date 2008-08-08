@@ -67,7 +67,7 @@ class Application extends /*Nette::*/Object
 	public $canonicalize = TRUE;
 
 	/** @var string */
-	public $errorPresenter = 'Error';
+	public $errorPresenter;
 
 	/** @var array of PresenterRequest */
 	private $requests = array();
@@ -195,7 +195,11 @@ class Application extends /*Nette::*/Object
 			} catch (Exception $e) {
 				// fault barrier
 				if ($hasError) {
-					throw new ApplicationException('Cannot load error presenter', 0, $e);
+					if (version_compare(PHP_VERSION , '5.3', '<')) {
+						throw new ApplicationException('Cannot load error presenter');
+					} else {
+						throw new ApplicationException('Cannot load error presenter', 0, $e);
+					}
 				}
 
 				$hasError = TRUE;
@@ -219,11 +223,13 @@ class Application extends /*Nette::*/Object
 				} elseif ($e instanceof BadRequestException) {
 					$httpResponse->setCode(404);
 					echo '<title>404 Not Found</title><h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+					break;
 
 				} else {
 					$httpResponse->setCode(500);
 					echo '<title>500 Internal Server Error</title><h1>Server Error</h1>',
 						'<p>The server encountered an internal error and was unable to complete your request.</p>';
+					break;
 				}
 			}
 		} while (1);

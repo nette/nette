@@ -442,11 +442,6 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$template->render();
-
-		$httpResponse = Environment::getHttpResponse();
-		if ($httpResponse instanceof /*Nette::Web::*/HttpResponse) {
-			$httpResponse->fixIE();
-		}
 	}
 
 

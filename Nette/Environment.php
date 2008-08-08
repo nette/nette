@@ -21,8 +21,6 @@
 /*namespace Nette;*/
 
 
-/**/define('__DIR__', dirname(__FILE__));/**/
-
 
 /**
  * Nette environment and configuration.
@@ -62,7 +60,6 @@ final class Environment
 	private static $vars = array(
 		'encoding' => array('UTF-8', FALSE),
 		'lang' => array('en', FALSE),
-		'netteDir' => array(__DIR__, FALSE),
 		'cacheBase' => array('%tempDir%/cache-', TRUE),
 		'tempDir' => array('%appDir%/temp', TRUE),
 		'logDir' => array('%appDir%/log', TRUE),

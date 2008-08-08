@@ -29,50 +29,6 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  */
-class ApplicationException extends /*::*/Exception implements /*Nette::*/ICausedException
+class ApplicationException extends /*::*/Exception
 {
-	/** @var ::Exception */
-	private $cause;
-
-
-
-	/**
-	 * @param  string  text describing the exception
-	 * @param  int     code describing the exception
-	 * @param  ::Exception  instance that caused the current exception
-	 */
-	public function __construct($message = NULL, $code = 0, /*::*/Exception $cause = NULL)
-	{
-		parent::__construct($message, $code);
-		$this->cause = $cause;
-	}
-
-
-
-	/**
-	 * Gets the Exception instance that caused the current exception.
-	 * @return ::Exception
-	 */
-	public function getCause()
-	{
-		return $this->cause;
-	}
-
-
-
-	/**
-	 * Returns string represenation of exception.
-	 * @return string
-	 */
-	public function __toString()
-	{
-		$s = parent::__toString();
-
-		if ($this->cause !== NULL) {
-			$s .= "\nCaused by " . $this->cause->__toString();
-		}
-
-		return $s;
-	}
-
 }

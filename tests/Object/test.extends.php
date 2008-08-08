@@ -7,9 +7,9 @@ require_once '../../Nette/loader.php';
 
 
 
-function Test_prototype_join(Test $ths, $separator)
+function Test_prototype_join(Test $thisObj, $separator)
 {
-	return $ths->a . $separator . $ths->b;
+	return $thisObj->a . $separator . $thisObj->b;
 }
 
 
@@ -29,12 +29,32 @@ class Test extends /*Nette::*/Object
 }
 
 
+function Test__join(Test $thisObj, $separator)
+{
+	return $thisObj->a . $separator . $thisObj->b;
+}
 
-echo "\n\n<h2>Extended method</h2>\n";
+
+Test::extensionMethod('join2', 'Test__join', 'Test');
+
+
+echo "\n\n<h2>Extended method (old way)</h2>\n";
 
 try {
 	$obj = new Test('Hello', 'World');
 	echo '$obj->join: ', $obj->join('***');
+
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}
+
+
+
+echo "\n\n<h2>Extended method (new way)</h2>\n";
+
+try {
+	$obj = new Test('Hello', 'World');
+	echo '$obj->join2: ', $obj->join2('***');
 
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";

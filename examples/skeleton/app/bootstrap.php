@@ -44,6 +44,7 @@ $loader->register();
  * Setup router
  */
 $application = Environment::getApplication();
+$application->errorPresenter = 'Error';
 
 $router = $application->getRouter();
 

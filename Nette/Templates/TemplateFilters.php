@@ -274,7 +274,7 @@ final class TemplateFilters
 	{
 		return preg_replace(
 			'#(src|href|action)\s*=\s*"(?![a-z]+:|/|<|\\#)#',
-			'$1="' . /*Nette::*/Environment::getVariable('baseUri'),
+			'$1="' . $template->baseUri,
 			$s
 		);
 	}
