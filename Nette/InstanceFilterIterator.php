@@ -49,6 +49,7 @@ class InstanceFilterIterator extends /*::*/FilterIterator
 	}
 
 
+
 	/**
 	 * Expose the current element of the inner iterator?
 	 * @return bool

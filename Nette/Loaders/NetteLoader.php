@@ -101,8 +101,9 @@ class NetteLoader extends AutoLoader
 		'ilist' => '/Collections/IList.php',
 		'imagebutton' => '/Forms/Controls/ImageButton.php',
 		'imap' => '/Collections/IMap.php',
+		'inamingcontainer' => '/Forms/INamingContainer.php',
 		'instancefilteriterator' => '/InstanceFilterIterator.php',
-		'instantclientscript' => '/Forms/InstantClientScript.php',
+		'instantclientscript' => '/Forms/JavaScript/InstantClientScript.php',
 		'invalidlinkexception' => '/Application/InvalidLinkException.php',
 		'invalidpresenterexception' => '/Application/InvalidPresenterException.php',
 		'invalidstateexception' => '/exceptions.php',
@@ -168,6 +169,8 @@ class NetteLoader extends AutoLoader
 		'uri' => '/Web/Uri.php',
 		'uriscript' => '/Web/UriScript.php',
 		'user' => '/Web/User.php',
+		'userclientscript' => '/Forms/JavaScript/UserClientScript.php',
+		'validateexception' => '/Forms/ValidateException.php',
 	);
 
 

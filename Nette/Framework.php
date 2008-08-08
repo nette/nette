@@ -34,7 +34,7 @@ final class Framework
 	/**
 	 * Nette Framework version identification.
 	 */
-	const VERSION = '0.7';
+	const VERSION = '0.8';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
 

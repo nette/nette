@@ -127,9 +127,9 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Returns single component or NULL.
+	 * Returns component specified by name.
 	 * @param  string
-	 * @param  bool   throws exception if component didn't exist?
+	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
 	final public function getComponent($name, $need = FALSE)
@@ -236,6 +236,7 @@ class RecursiveComponentIterator extends /*::*/RecursiveArrayIterator
 	{
 		return $this->current() instanceof IComponentContainer;
 	}
+
 
 
 	/**

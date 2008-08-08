@@ -121,7 +121,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  bool
+	 * @param  bool   throw exception if service doesn't exist?
 	 * @return mixed
 	 */
 	public function getService($name, $need = TRUE)
