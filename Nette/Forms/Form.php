@@ -52,7 +52,7 @@ class Form extends FormContainer
 	const RANGE = /*Nette::Forms::*/'TextBase::validateRange';
 
 	const MAX_FILE_SIZE = /*Nette::Forms::*/'FileUpload::validateFileSize';
-	const MIME_TYPE = '/*Nette::Forms::*/FileUpload::validateMimeType';
+	const MIME_TYPE = /*Nette::Forms::*/'FileUpload::validateMimeType';
 
 
 	/** Tracker ID */
@@ -558,20 +558,26 @@ class Form extends FormContainer
 	public function renderBody()
 	{
 		// TODO: implement some decorators
-		echo "\n<table>\n";
+		$begin = "\n<table>\n";
 		$hidden = /*Nette::Web::*/Html::el('div');
-		foreach ($this->getComponents(TRUE) as $control) {
-			if ($control instanceof HiddenField) {
+		foreach ($this->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
+			if ($control->isRendered()) {
+                // skip
+			} elseif ($control instanceof HiddenField) {
 				$hidden->add($control->getControl());
 
 			} elseif ($control instanceof Checkbox) {
-				echo "<tr>\n\t<th>&nbsp;</th>\n\t<td>", $control->control, $control->label, "</td>\n</tr>\n\n";
+				echo $begin, "<tr>\n\t<th>&nbsp;</th>\n\t<td>", $control->control, $control->label, "</td>\n</tr>\n\n";
+				$begin = '';
 
-			} elseif ($control instanceof FormControl && !$control->isRendered()) {
-				echo "<tr>\n\t<th>", ($control->label ? $control->label : '&nbsp;'), "</th>\n\t<td>", $control->control, "</td>\n</tr>\n\n";
+			} else {
+				echo $begin, "<tr>\n\t<th>", ($control->label ? $control->label : '&nbsp;'), "</th>\n\t<td>", $control->control, "</td>\n</tr>\n\n";
+				$begin = '';
 			}
 		}
-		echo "</table>\n";
+		if (!$begin) {
+			echo "</table>\n";
+		}
 		if (count($hidden)) echo $hidden;
 	}
 

@@ -23,6 +23,8 @@
 
 require_once dirname(__FILE__) . '/../ComponentContainer.php';
 
+require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
+
 
 
 /**
