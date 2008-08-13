@@ -49,8 +49,18 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 	/**
+	 */
+	public function __construct(IComponentContainer $parent = NULL, $name = NULL)
+	{
+		$this->monitor('Nette::Application::Presenter');
+		parent::__construct($parent, $name);
+	}
+
+
+
+	/**
 	 * Returns the presenter where this component belongs to.
-	 * @param  bool
+	 * @param  bool   throw exception if presenter doesn't exist?
 	 * @return Presenter|NULL
 	 */
 	public function getPresenter($need = TRUE)
@@ -73,25 +83,30 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 	/**
-	 * Forwards notification messages to all components in hierarchy. Do not call directly.
-	 * @param  Nette::IComponent
-	 * @param  mixed
+	 * This method will be called when the component (or component's parent)
+	 * becomes attached to a monitored object. Do not call this method yourself.
+	 * @param  IComponent
 	 * @return void
 	 */
-	protected function notification(/*Nette::*/IComponent $sender, $message)
+	protected function attached($presenter)
 	{
-		parent::notification($sender, $message);
+		if ($presenter instanceof Presenter) {
+			$presenter->registerComponent($this->getUniqueId(), $this);
+		}
+	}
 
-		$presenter = $this->getPresenter(FALSE);
-		if ($presenter !== NULL) {
-			if ($message === self::HIERARCHY_DETACH) {
-				// is called before sender's parent is about to be detached
-				$presenter->unregisterComponent($this);
 
-			} elseif ($message === self::HIERARCHY_ATTACH) {
-				// is called after sender's parent was attached
-				$presenter->registerComponent($this->getUniqueId(), $this);
-			}
+
+	/**
+	 * This method will be called before the component (or component's parent)
+	 * becomes detached from a monitored object. Do not call this method yourself.
+	 * @param  IComponent
+	 * @return void
+	 */
+	protected function detached($presenter)
+	{
+		if ($presenter instanceof Presenter) {
+			$presenter->unregisterComponent($this);
 		}
 	}
 
@@ -278,6 +293,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 * @param  array
 	 * @param  int HTTP error code
 	 * @return void
+	 * @throws RedirectingException
 	 */
 	public function redirect($destination, $args = NULL, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
 	{

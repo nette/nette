@@ -19,14 +19,14 @@
  */
 
 /*namespace Nette::Web;*/
+
 /*use Nette::Environment;*/
+
 
 
 require_once dirname(__FILE__) . '/../Object.php';
 
-require_once dirname(__FILE__) . '/../Security/Identity.php';
-
-require_once dirname(__FILE__) . '/../Security/AuthenticationException.php';
+require_once dirname(__FILE__) . '/../Web/IUser.php';
 
 
 
@@ -37,16 +37,28 @@ require_once dirname(__FILE__) . '/../Security/AuthenticationException.php';
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Web
  */
-class User extends /*Nette::*/Object
+class User extends /*Nette::*/Object implements IUser
 {
-	/** @var array  default role for unauthenticated user */
-	public static $guestRole = 'guest';
+	/** @var string  default role for unauthenticated user */
+	public $guestRole = 'guest';
 
-	/** @var array  default role for authenticated user without own identity */
-	public static $authenticatedRole = 'authenticated';
+	/** @var string  default role for authenticated user without own identity */
+	public $authenticatedRole = 'authenticated';
 
-	/** @var string  storage namespace */
-	private $namespace;
+	/** @var string */
+	public $cookieName = 'nette-authkey';
+
+	/** @var string */
+	public $cookieDomain;
+
+	/** @var string */
+	public $cookiePath;
+
+	/** @var int */
+	public $authExpiration = FALSE;
+
+	/** @var int */
+	public $identityExpiration = FALSE;
 
 	/** @var Nette::Security::IAuthenticator */
 	private $authenticationHandler;
@@ -57,19 +69,12 @@ class User extends /*Nette::*/Object
 	/** @var SessionNamespace */
 	private $session;
 
-	/** @var string */
-	public $cookieDomain;
-
-	/** @var string */
-	public $cookiePath;
-
 
 
 	/**
 	 */
 	public function __construct($name = NULL)
 	{
-		$this->namespace = $name === NULL ? $this->getClass() : $name;
 		$this->cookiePath = Environment::getHttpRequest()->getUri()->basePath;
 		$this->initSession();
 	}
@@ -130,7 +135,7 @@ class User extends /*Nette::*/Object
 	 */
 	protected function initSession()
 	{
-		$this->session = $session = Environment::getSession($this->namespace);
+		$this->session = $session = Environment::getSession('Nette.Web.User');
 
 		if (!($session->identity instanceof /*Nette::Security::*/IIdentity)) {
 			$session->identity = NULL;
@@ -140,7 +145,7 @@ class User extends /*Nette::*/Object
 			$session->authenticated = FALSE;
 		}
 
-		if ($session->authkey !== Environment::getHttpRequest()->cookies[$this->namespace . 'authkey']) {
+		if ($session->authkey !== Environment::getHttpRequest()->cookies[$this->cookieName]) {
 			$this->setAuthenticated(FALSE);
 		}
 	}
@@ -155,14 +160,15 @@ class User extends /*Nette::*/Object
 	 * Check the authenticated status.
 	 * @param  string
 	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 * @throws Nette::Security::AuthenticationException
 	 */
-	public function authenticate($username = NULL, $password = NULL)
+	public function authenticate($username = NULL, $password = NULL, $extra = NULL)
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {
-			throw new /*::*/InvalidStateException('Missing authentization handler.');
+			throw new /*::*/InvalidStateException('Authentization handler has not been set.');
 		}
 
 		$this->setAuthenticated(FALSE);
@@ -170,6 +176,7 @@ class User extends /*Nette::*/Object
 		$credentials = array(
 			'username' => $username,
 			'password' => $password,
+			'extra' => $extra,
 		);
 
 		$this->setIdentity($handler->authenticate($credentials));
@@ -180,7 +187,6 @@ class User extends /*Nette::*/Object
 
 	/**
 	 * Removes the authentication flag from persistent storage.
-	 * *
 	 * @param  bool  Clear the identity from persistent storage?
 	 * @return void
 	 */
@@ -233,12 +239,15 @@ class User extends /*Nette::*/Object
 			if (!$session->authkey) {
 				$session->authkey = /*Nette::*/Tools::uniqueId();
 			}
+			if ($this->authExpiration) {
+				$session->setExpiration($this->authExpiration, 'authkey');
+			}
 		} else {
 			$session->authkey = NULL;
 		}
 
 		Environment::getHttpResponse()->setCookie(
-			$this->namespace . 'authkey',
+			$this->cookieName,
 			$session->authkey,
 			HttpResponse::WINDOW,
 			$this->cookiePath,
@@ -251,6 +260,9 @@ class User extends /*Nette::*/Object
 	protected function setIdentity(/*Nette::Security::*/IIdentity $identity)
 	{
 		$this->session->identity = $identity;
+		if ($this->identityExpiration) {
+			$session->setExpiration($this->identityExpiration, 'identity');
+		}
 	}
 
 
@@ -304,11 +316,11 @@ class User extends /*Nette::*/Object
 	public function getRoles()
 	{
 		if (!$this->session->authenticated) {
-			return array(self::$guestRole);
+			return array($this->guestRole);
 		}
 
 		if (!$this->session->identity) {
-			return array(self::$authenticatedRole);
+			return array($this->authenticatedRole);
 		}
 
 		return $this->session->identity->getRoles();
@@ -342,7 +354,7 @@ class User extends /*Nette::*/Object
 	{
 		$handler = $this->getAuthorizationHandler();
 		if (!$handler) {
-			throw new /*::*/InvalidStateException('Missing authorization handler.');
+			throw new /*::*/InvalidStateException("Authorization handler has not been set.");
 		}
 
 		foreach ($this->getRoles() as $role) {

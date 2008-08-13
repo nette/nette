@@ -136,6 +136,17 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * Returns self.
+	 * @return Presenter
+	 */
+	public function getPresenter()
+	{
+		return $this;
+	}
+
+
+
+	/**
 	 * Returns a name that uniquely identifies component.
 	 * @return string
 	 */
@@ -330,9 +341,9 @@ abstract class Presenter extends Control implements IPresenter
 	 * Returns current view name.
 	 * @return string
 	 */
-	final public function getView()
+	final public function getView($fullyQualified = FALSE)
 	{
-		return $this->view;
+		return $fullyQualified ? $this->getName() . ':' . $this->view : $this->view;
 	}
 
 

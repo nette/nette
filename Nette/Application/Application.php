@@ -23,6 +23,7 @@
 /*use Nette::Environment;*/
 
 
+
 require_once dirname(__FILE__) . '/../Object.php';
 
 
@@ -194,6 +195,14 @@ class Application extends /*Nette::*/Object
 
 			} catch (Exception $e) {
 				// fault barrier
+				if ($this->catchExceptions === NULL) {
+					$this->catchExceptions = Environment::isLive();
+				}
+
+				if (!$this->catchExceptions) {
+					throw $e;
+				}
+
 				if ($hasError) {
 					if (version_compare(PHP_VERSION , '5.3', '<')) {
 						throw new ApplicationException('Cannot load error presenter');
@@ -203,15 +212,8 @@ class Application extends /*Nette::*/Object
 				}
 
 				$hasError = TRUE;
+
 				$this->onError($this, $e);
-
-				if ($this->catchExceptions === NULL) {
-					$this->catchExceptions = Environment::isLive();
-				}
-
-				if (!$this->catchExceptions) {
-					throw $e;
-				}
 
 				if ($this->errorPresenter) {
 					$request = new PresenterRequest(

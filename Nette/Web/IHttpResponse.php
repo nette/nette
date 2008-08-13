@@ -21,6 +21,7 @@
 /*namespace Nette::Web;*/
 
 
+
 /**
  * IHttpResponse interface.
  *

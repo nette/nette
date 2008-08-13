@@ -75,6 +75,7 @@ final class Environment
 		'Nette::IServiceLocator' => /*Nette::*/'ServiceLocator',
 		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
 		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
+		'Nette::Web::IUser' => 'Nette::Web::User',
 		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette::Configurator' => 'Nette::Configurator',
 	);
@@ -383,11 +384,11 @@ final class Environment
 
 
 	/**
-	 * @return Nette::Security::IUser
+	 * @return Nette::Web::IUser
 	 */
 	public static function getUser()
 	{
-		return self::getServiceLocator()->getService('Nette::Web::User');
+		return self::getServiceLocator()->getService('Nette::Web::IUser');
 	}
 
 

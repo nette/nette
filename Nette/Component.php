@@ -42,10 +42,6 @@ abstract class Component extends Object implements IComponent
 {
 	const NAME_SEPARATOR = '-';
 
-	const HIERARCHY_ATTACH = 1;
-
-	const HIERARCHY_DETACH = 2;
-
 	/** @var IServiceLocator */
 	private $serviceLocator;
 
@@ -55,8 +51,11 @@ abstract class Component extends Object implements IComponent
 	/** @var string */
 	private $name;
 
+	/** @var array of type => [obj, depth, path, monitored] */
+	private $monitors = array();
+
 	/** @var array */
-	private $lookupCache = array();
+	private static $skip;
 
 
 
@@ -85,26 +84,39 @@ abstract class Component extends Object implements IComponent
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
 
-		if (!isset($this->lookupCache[$type])) {
-			$obj = $this;
-			$path = array();
-			do {
+		if (!isset($this->monitors[$type])) {
+			$obj = $this->parent;
+			$path = self::NAME_SEPARATOR . $this->name;
+			$depth = 1;
+			while ($obj !== NULL) {
 				if ($obj instanceof $type) break;
-				array_unshift($path, $obj->getName());
+				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
+				$depth++;
 				$obj = $obj->getParent(); // IConponent::getParent()
 				if ($obj === $this) $obj = NULL; // prevent cycling
-			} while ($obj !== NULL);
+			}
 
-			$this->lookupCache[$type] = array(
-				$obj,
-				$obj === NULL ? NULL : implode(self::NAME_SEPARATOR, $path),
-			);
+			$monitored = array_key_exists($type, $this->monitors);
+			if ($obj) {
+				$this->monitors[$type] = array(
+					$obj,
+					$depth,
+					substr($path, 1),
+					$monitored,
+				);
+				if ($monitored) {
+					$this->attached($obj);
+				}
+			} else {
+				$this->monitors[$type] = array(NULL, NULL, NULL, $monitored);
+			}
 		}
 
-		if ($need && $this->lookupCache[$type][0] === NULL) {
+		if ($need && $this->monitors[$type][0] === NULL) {
 			throw new /*::*/InvalidStateException("Component is not attached to '$type'.");
 		}
-		return $this->lookupCache[$type][0];
+
+		return $this->monitors[$type][0];
 	}
 
 
@@ -121,15 +133,48 @@ abstract class Component extends Object implements IComponent
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
 
-		if (!isset($this->lookupCache[$type])) {
-			$this->lookup($type);
-		}
+		$this->lookup($type, $need);
+		return $this->monitors[$type][2];
+	}
 
-		if ($need && $this->lookupCache[$type][1] === NULL) {
-			throw new /*::*/InvalidStateException("Component is not attached to '$type'.");
-		}
 
-		return $this->lookupCache[$type][1];
+
+	/**
+	 * Starts monitoring.
+	 * @param  string class/interface type
+	 * @return void
+	 */
+	public function monitor($type)
+	{
+		/**/// fix for namespaced classes/interfaces in PHP < 5.3
+		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+
+		$this->monitors[$type] = NULL;
+		$this->lookup($type, FALSE); // call attached()
+	}
+
+
+
+	/**
+	 * This method will be called when the component (or component's parent)
+	 * becomes attached to a monitored object. Do not call this method yourself.
+	 * @param  IComponent
+	 * @return void
+	 */
+	protected function attached($obj)
+	{
+	}
+
+
+
+	/**
+	 * This method will be called before the component (or component's parent)
+	 * becomes detached from a monitored object. Do not call this method yourself.
+	 * @param  IComponent
+	 * @return void
+	 */
+	protected function detached($obj)
+	{
 	}
 
 
@@ -190,9 +235,9 @@ abstract class Component extends Object implements IComponent
 				throw new /*::*/InvalidStateException('The current parent still recognizes this component as its child.');
 			}
 
-			$this->notification($this, self::HIERARCHY_DETACH);
+			self::$skip = NULL;
+			$this->refreshMonitors(0);
 			$this->parent = NULL;
-			$this->refreshCache();
 
 		} else { // add to parent
 			// Given parent container does not already recognize this component as its child.
@@ -201,11 +246,12 @@ abstract class Component extends Object implements IComponent
 			}
 
 			$this->validateParent($parent);
-
 			$this->parent = $parent;
 			if ($name !== NULL) $this->name = $name;
-			$this->refreshCache();
-			$this->notification($this, self::HIERARCHY_ATTACH);
+
+			self::$skip = array();
+			$this->refreshMonitors(0);
+			self::$skip = NULL;
 		}
 	}
 
@@ -225,37 +271,48 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Forwards notification messages to all components in hierarchy. Do not call directly.
-	 * @param  IComponent
-	 * @param  mixed
+	 * Refreshes monitors.
+	 * @param  int
 	 * @return void
 	 */
-	protected function notification(IComponent $sender, $message)
+	private function refreshMonitors($depth)
 	{
 		if ($this instanceof IComponentContainer) {
 			foreach ($this->getComponents() as $component) {
-				if ($component instanceof Component) { // or move to interface?
-					$component->notification($sender, $message);
+				if ($component instanceof Component) {
+					$component->refreshMonitors($depth + 1);
 				}
 			}
 		}
-	}
 
+		if (self::$skip === NULL) { // detaching
+			foreach ($this->monitors as $type => $rec) {
+				if (isset($rec[1]) && $rec[1] > $depth) {
+					if ($rec[3]) {
+						$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
+						$this->detached($rec[0]);
+					} else {
+						unset($this->monitors[$type]);
+					}
+				}
+			}
 
+		} else { // attaching
+			foreach ($this->monitors as $type => $rec) {
+				if (isset($rec[0])) {
+					continue;
 
-	/**
-	 * Refresh lookup cache (don't call directly).
-	 * @param  IComponent
-	 * @return void
-	 */
-	private function refreshCache()
-	{
-		$this->lookupCache = array();
+				} elseif (!$rec[3]) { // not monitored, just randomly cached
+					unset($this->monitors[$type]);
 
-		if ($this instanceof IComponentContainer) {
-			foreach ($this->getComponents() as $component) {
-				if ($component instanceof self) {
-					$component->refreshCache();
+				} elseif (isset(self::$skip[$type])) {
+					$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
+
+				} else {
+					$this->monitors[$type] = NULL; // forces re-lookup
+					if ($this->lookup($type, FALSE) === NULL) {
+						self::$skip[$type] = TRUE;
+					}
 				}
 			}
 		}

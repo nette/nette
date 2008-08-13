@@ -251,7 +251,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			$expire,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
-			$secure === NULL ? $this->cookieSecure : (string) $secure,
+			$secure === NULL ? $this->cookieSecure : (bool) $secure,
 			TRUE // added in PHP 5.2.0.
 		);
 	}
@@ -274,7 +274,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			254400000,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
-			$secure === NULL ? $this->cookieSecure : (string) $secure,
+			$secure === NULL ? $this->cookieSecure : (bool) $secure,
 			TRUE // added in PHP 5.2.0.
 		);
 	}

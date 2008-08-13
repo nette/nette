@@ -366,7 +366,7 @@ class Route extends /*Nette::*/Object implements IRouter
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_]#i', $name)) {
-				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string due limitations of PCRE, '$name' is invalid.");
+				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' is invalid.");
 			}
 
 			// pattern, condition & metadata

@@ -8,13 +8,14 @@
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.
  *
- * For more information please see http://nettephp.com/
+ * For more information please see http://nettephp.com
  *
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com/
+ * @link       http://nettephp.com
  * @category   Nette
  * @package    Nette::Forms
+ * @version    $Id$
  */
 
 /*namespace Nette::Forms;*/
@@ -26,12 +27,11 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
 
 
 /**
- * Form - allows create, validate and render (X)HTML forms.
+ * Form - create, validate and render (X)HTML forms.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Forms
- * @version    $Revision$ $Date$
  */
 class Form extends FormContainer
 {
@@ -94,17 +94,23 @@ class Form extends FormContainer
 	{
 		$this->element = /*Nette::Web::*/Html::el('form');
 		$this->setAction(''); // RFC 1808 -> empty uri means 'this'
+		$this->monitor(__CLASS__);
 		parent::__construct($parent, $name);
 	}
 
 
-
-	protected function notification(/*Nette::*/IComponent $sender, $message)
+	
+	/**
+	 * This method will be called when the component (or component's parent)
+	 * becomes attached to a monitored object. Do not call this method yourself.
+	 * @param  IComponent
+	 * @return void
+	 */
+	protected function attached($obj)
 	{
-		if ($message === self::HIERARCHY_ATTACH && $this->getParent()->lookup(__CLASS__)) {
+		if ($obj instanceof self) {
 			throw new /*::*/InvalidStateException('Nested forms are forbidden.');
 		}
-		parent::notification($sender, $message);
 	}
 
 
@@ -562,7 +568,7 @@ class Form extends FormContainer
 		$hidden = /*Nette::Web::*/Html::el('div');
 		foreach ($this->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
 			if ($control->isRendered()) {
-                // skip
+				// skip
 			} elseif ($control instanceof HiddenField) {
 				$hidden->add($control->getControl());
 

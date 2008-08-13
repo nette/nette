@@ -86,6 +86,7 @@ final class TemplateFilters
 	 *   {_expression} echo with escaping and translation
 	 *   {link destination ...} control link
 	 *   {plink destination ...} presenter link
+	 *   {ajaxlink destination ...} ajax link
 	 *   {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
 	 *   {for ?} ... {/for}
 	 *   {foreach ?} ... {/foreach}
@@ -156,6 +157,7 @@ final class TemplateFilters
 		'foreach ' => '<?php foreach (#): ?>',
 		'for ' => '<?php for (#): ?>',
 		'include ' => '<?php $template->subTemplate(#)->render() ?>',
+		'ajaxlink ' => '<?php echo $template->escape($control->ajaxlink(#)) ?>',
 		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',
 		'link ' => '<?php echo $template->escape($control->link(#)) ?>',
 		'!=' => '<?php echo # ?>',
@@ -198,7 +200,7 @@ final class TemplateFilters
 				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
 			}
 
-		} elseif ($mod === 'link ' || $mod === 'plink ') {
+		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ') {
 			$var = preg_replace('#^([^\s,]+),?\s*(.*)$#', '"$1", array($2)', $var);
 		}
 
