@@ -120,6 +120,7 @@ class NetteLoader extends AutoLoader
 		'istatepersistent' => '/Application/IStatePersistent.php',
 		'isubmittercontrol' => '/Forms/ISubmitterControl.php',
 		'itemplate' => '/Templates/ITemplate.php',
+		'iuser' => '/Web/IUser.php',
 		'javascript' => '/Web/JavaScript.php',
 		'javascriptconsole' => '/Web/JavaScriptConsole.php',
 		'keynotfoundexception' => '/Collections/Hashtable.php',

@@ -139,7 +139,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * Returns self.
 	 * @return Presenter
 	 */
-	public function getPresenter()
+	public function getPresenter($need = TRUE)
 	{
 		return $this;
 	}

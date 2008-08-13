@@ -50,7 +50,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 	/**
 	 */
-	public function __construct(IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(/*Nette::*/IComponentContainer $parent = NULL, $name = NULL)
 	{
 		$this->monitor('Nette::Application::Presenter');
 		parent::__construct($parent, $name);
@@ -77,7 +77,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 */
 	public function getUniqueId()
 	{
-		return $this->lookupPath('Nette::Application::Presenter');
+		return $this->lookupPath('Nette::Application::Presenter', TRUE);
 	}
 
 
