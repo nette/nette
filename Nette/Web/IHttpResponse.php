@@ -57,7 +57,7 @@ interface IHttpResponse
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
-	 * @return void
+	 * @return bool
 	 */
 	function setCode($code);
 
@@ -71,7 +71,7 @@ interface IHttpResponse
 	 * Send a raw HTTP header.
 	 * @param  string  header
 	 * @param  bool    replace?
-	 * @return void
+	 * @return bool
 	 */
 	function setHeader($header, $replace = FALSE);
 

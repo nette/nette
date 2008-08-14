@@ -1,0 +1,20 @@
+<<?php ?>?xml version="1.0"?>
+<rss version="2.0">
+	<channel>
+		<title>{$title}</title>
+		<link>{$link}</link>
+		<description>{$description}</description>
+
+		{foreach $heads as $key => $value}
+		<{!$key}>{$value}</{!$key}>
+		{/foreach}
+
+		{foreach $items as $item}
+		<item>
+			{foreach $item as $key => $value}
+			<{!$key}>{$value}</{!$key}>
+			{/foreach}
+		</item>
+		{/foreach}
+	</channel>
+</rss>

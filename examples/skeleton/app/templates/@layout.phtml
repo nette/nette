@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Language" content="en" />
 
 	<meta name="description" content="Nette Framework web application skeleton" />
+	{if isset($robots)}<meta name="robots" content="{$robots}">{/if}
 
 	<title>{$title}</title>
 
@@ -14,8 +15,6 @@
 </head>
 
 <body>
-	<h1>{$title}</h1>
-
 	{include $content}
 </body>
 </html>

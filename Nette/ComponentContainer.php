@@ -57,7 +57,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @return void
 	 * @throws ::InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $placeBefore = NULL)
+	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
 	{
 		if ($name === NULL) {
 			$name = $component->getName();
@@ -88,10 +88,10 @@ class ComponentContainer extends Component implements IComponentContainer
 		$this->validateChildComponent($component);
 
 		try {
-			if (isset($this->components[$placeBefore])) {
+			if (isset($this->components[$insertBefore])) {
 				$tmp = array();
 				foreach ($this->components as $k => $v) {
-					if ($k === $placeBefore) $tmp[$name] = $component;
+					if ($k === $insertBefore) $tmp[$name] = $component;
 					$tmp[$k] = $v;
 				}
 				$this->components = $tmp;

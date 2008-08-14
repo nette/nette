@@ -36,6 +36,7 @@ $config = Environment::loadConfig();
  */
 $loader = new /*Nette::Loaders::*/RobotLoader();
 $loader->addDirectory(explode(';', $config->scanDirs));
+$loader->autoRebuild = FALSE;
 $loader->register();
 
 
@@ -45,6 +46,7 @@ $loader->register();
  */
 $application = Environment::getApplication();
 $application->errorPresenter = 'Error';
+$application->catchExceptions = TRUE;
 
 $router = $application->getRouter();
 

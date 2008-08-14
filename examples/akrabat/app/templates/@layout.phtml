@@ -13,7 +13,7 @@
 	</div>
 
 	{if isset($user)}
-	<p id="logged-in">Logged in as {$user->real_name}. <a href="{$component->link('logout!')}">Logout</a></p>
+	<p id="logged-in">Logged in as {$user->real_name}. <a href="{$presenter->link('logout')}">Logout</a></p>
 	{/if}
 </body>
 </html>

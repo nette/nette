@@ -1,6 +1,6 @@
 <h1>{$title}</h1>
 
-<p><a href="{$component->link('add')}">Add new album</a></p>
+<p><a href="{$presenter->link('add')}">Add new album</a></p>
 <table>
 <tr>
 	<th>Title</th>
@@ -13,8 +13,8 @@
 	<td>{$album->title}</td>
 	<td>{$album->artist}</td>
 	<td>
-		<a href="{$component->link('edit', $album->id)}">Edit</a>
-		<a href="{$component->link('delete', $album->id)}">Delete</a>
+		<a href="{$presenter->link('edit', $album->id)}">Edit</a>
+		<a href="{$presenter->link('delete', $album->id)}">Delete</a>
 	</td>
 </tr>
 {/foreach}
