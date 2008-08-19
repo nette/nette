@@ -1,10 +1,12 @@
 # configure PHP
-php_flag magic_quotes_gpc off
-php_flag register_globals off
+# <IfModule mod_php5.c>
+#    php_flag magic_quotes_gpc off
+#    php_flag register_globals off
+# </IfModule>
 
 # mod_rewrite
 RewriteEngine On
-#RewriteBase /
+# RewriteBase /
 
 # front controller
 RewriteCond %{REQUEST_FILENAME} !-f

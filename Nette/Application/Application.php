@@ -204,11 +204,7 @@ class Application extends /*Nette::*/Object
 				}
 
 				if ($hasError) {
-					if (version_compare(PHP_VERSION , '5.3', '<')) {
-						throw new ApplicationException('Cannot load error presenter');
-					} else {
-						throw new ApplicationException('Cannot load error presenter', 0, $e);
-					}
+					throw new ApplicationException('An error occured while executing error-presenter', 0, $e);
 				}
 
 				$hasError = TRUE;
@@ -310,7 +306,7 @@ class Application extends /*Nette::*/Object
 
 
 	/**
-	 * Change router. (experimental)
+	 * Changes router.
 	 * @param  IRouter
 	 * @return void
 	 */

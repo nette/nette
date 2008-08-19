@@ -202,7 +202,7 @@ final class TemplateFilters
 
 		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'include ') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
-				$var = '"' . trim($m[1], '"\'') . '"';
+				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
 			}
 		}
