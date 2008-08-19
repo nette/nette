@@ -8,6 +8,11 @@ require_once '../../Nette/loader.php';
 /*use Nette::Debug;*/
 
 
+function ICollection_prototype_join(ICollection $thisObj, $separator)
+{
+	return implode($separator, (array) $thisObj);
+}
+
 
 class Person
 {
@@ -26,6 +31,12 @@ class Person
 		echo "My name is $this->name\n";
 	}
 
+
+
+	public function __toString()
+	{
+		return $this->name;
+	}
 }
 
 
@@ -69,6 +80,21 @@ try {
 // (array) IList
 echo "(array):\n";
 Debug::dump((array) $list);
+
+
+// extension method
+echo "join() via extension method:\n";
+Debug::dump($list->join(', '));
+
+
+// undeclared method
+try {
+	echo "undeclared method:\n";
+	$list->test();
+
+} catch (Exception $e) {
+	echo get_class($e), ': ', $e->getMessage(), "\n\n";
+}
 
 
 // IList::insertAt()

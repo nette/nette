@@ -12,8 +12,6 @@ foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 
 Environment::setVariable('tempDir', $tmpDir);
 
-Template::setCacheStorage(new /*Nette::Caching::*/DummyStorage);
-
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets.phtml');
 $template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');

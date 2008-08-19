@@ -50,6 +50,9 @@ $el->create('li')->setText('one');
 $el->add( Html::el('li')->setText('two') )->class('hello');
 echo $el, "\n\n";
 
+// with indentation
+echo $el->render(2), "\n\n";
+
 
 // container
 $el = Html::el(NULL);

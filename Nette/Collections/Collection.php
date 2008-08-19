@@ -274,6 +274,16 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	public function __call($name, $args)
 	{
 		$class = get_class($this);
+
+		if ($name === '') {
+			throw new /*::*/MemberAccessException("Call to class '$class' method without name.");
+		}
+
+		if (class_exists(/*Nette::*/'Object', FALSE) && ($cb = /*Nette::*/Object::extensionMethod("$class::$name"))) {
+			array_unshift($args, $this);
+			return call_user_func_array($cb, $args);
+		}
+
 		throw new /*::*/MemberAccessException("Call to undefined method $class::$name().");
 	}
 

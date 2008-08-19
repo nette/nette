@@ -38,6 +38,7 @@ class Form extends FormContainer
 	/** Deprecated constants. */
 	const EQUAL = ':Equal';
 	const FILLED = ':Filled';
+	const SCRIPT = /*Nette::Forms::*/'InstantClientScript::javascript';
 
 	const SUBMITTED = /*Nette::Forms::*/'SubmitButton::validateSubmitted';
 
@@ -99,7 +100,7 @@ class Form extends FormContainer
 	}
 
 
-	
+
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.

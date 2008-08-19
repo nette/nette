@@ -200,8 +200,11 @@ final class TemplateFilters
 				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
 			}
 
-		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ') {
-			$var = preg_replace('#^([^\s,]+),?\s*(.*)$#', '"$1", array($2)', $var);
+		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'include ') {
+			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
+				$var = '"' . trim($m[1], '"\'') . '"';
+				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
+			}
 		}
 
 		return str_replace('#', $var, self::$curlyXlatMask[$mod]);

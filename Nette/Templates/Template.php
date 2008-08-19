@@ -51,6 +51,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var array */
 	private $filters = array();
 
+	/** @var ITranslator */
+	private $translator;
+
 	/** @var bool */
 	private $isRendering;
 
@@ -96,6 +99,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	{
 		if ($file instanceof self) {
 			$tpl = $file;
+			$tpl->params = $this->params;
 
 		} elseif ($file == NULL) { // intentionally ==
 			throw new /*::*/InvalidArgumentException("Template file name was not specified.");
@@ -108,16 +112,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 			$tpl->setFile($file);
 		}
 
-		if ($params === NULL) {
-			$tpl->params = & $this->params;
-
-		} else {
-			foreach ($params as $key => $value) {
-				if (is_int($key)) {
-					$params[$value] = $this->params[$value];
-				}
-			}
-			$tpl->params = & $params;
+		if ($params !== NULL) {
+			$tpl->params = $params + $tpl->params;
 		}
 
 		return $tpl;
@@ -306,7 +302,30 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function translate($s)
 	{
-		throw /*::*/NotImplementedException;
+		return $this->translator === NULL ? $s : $this->translator->translate($s);
+	}
+
+
+
+	/**
+	 * Sets translate adapter.
+	 * @param  ITranslator
+	 * @return void
+	 */
+	public function setTranslator($translator = NULL)
+	{
+		$this->translator = $translator;
+	}
+
+
+
+	/**
+	 * Returns translate adapter.
+	 * @return ITranslator
+	 */
+	final public function getTranslator()
+	{
+		return $this->translator;
 	}
 
 
@@ -390,11 +409,12 @@ class Template extends /*Nette::*/Object implements ITemplate
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
-		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
+		if (array_key_exists($name, $this->params)) {
+			return $this->params[$name];
+
+		} elseif ($this->warnOnUndefined) {
 			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
 		}
-
-		return $this->params[$name];
 	}
 
 
