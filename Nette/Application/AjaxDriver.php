@@ -21,6 +21,7 @@
 /*namespace Nette::Application;*/
 
 
+
 require_once dirname(__FILE__) . '/../Object.php';
 
 
@@ -57,7 +58,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	public function open()
 	{
 		$httpResponse = /*Nette::*/Environment::getHttpResponse();
-		$httpResponse->setHeader('Content-type: application/x-javascript; charset=utf-8', TRUE);
+		$httpResponse->setContentType('application/x-javascript', 'utf-8');
 		$httpResponse->expire(FALSE);
 		$this->json = array(
 			'nette' => array(

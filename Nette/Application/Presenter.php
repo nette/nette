@@ -295,7 +295,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// auto invalidate
-		if ($component instanceof Control) {
+		if ($component instanceof IRenderable) {
 			$component->invalidateControl();
 		}
 
@@ -698,31 +698,73 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return void
+	 * Attempts to cache the sent entity by its last modification date
+	 * @param  int    last modified time as unix timestamp
+	 * @param  string strong entity tag validator
+	 * @param  int    optional expiration time
+	 * @return int    date of the client's cache version, if available
 	 * @throws AbortException
 	 */
-	public function lastModified($lastModified, $expire = NULL)
+	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
 		if (!Environment::isLive()) {
 			return;
 		}
 
 		$httpResponse = Environment::getHttpResponse();
+		$match = FALSE;
+
+		if ($lastModified > 0) {
+			$httpResponse->setHeader('Last-Modified', /*Nette::Web::*/HttpResponse::date($lastModified));
+		}
+
+		if ($etag != NULL) { // intentionally ==
+			$etag = '"' . addslashes($etag) . '"';
+			$httpResponse->setHeader('ETag', $etag);
+		}
+
 		if ($expire !== NULL) {
 			$httpResponse->expire($expire);
 		}
 
+		$ifNoneMatch = $this->httpRequest->getHeader('if-none-match');
 		$ifModifiedSince = $this->httpRequest->getHeader('if-modified-since');
 		if ($ifModifiedSince !== NULL) {
 			$ifModifiedSince = strtotime($ifModifiedSince);
-			if ($lastModified <= $ifModifiedSince) {
-				$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S304_NOT_MODIFIED);
-				$this->terminate();
+		}
+
+		if ($ifNoneMatch !== NULL) {
+			if ($ifNoneMatch === '*') {
+				$match = TRUE; // match, check if-modified-since
+
+			} elseif ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
+				if ($etag === NULL) {
+					//$httpResponse->setHeader('ETag', '""');
+				}
+				return $ifModifiedSince; // no match, ignore if-modified-since
+
+			} else {
+				$match = TRUE; // match, check if-modified-since
 			}
 		}
 
-		$httpResponse->setHeader('Last-Modified: ' . /*Nette::Web::*/HttpResponse::date($lastModified));
-		// TODO: support for ETag
+		if ($ifModifiedSince !== NULL) {
+			if ($lastModified > 0 && $lastModified <= $ifModifiedSince) {
+				$match = TRUE;
+
+			} else {
+				return $ifModifiedSince;
+			}
+		}
+
+		if ($match) {
+			$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S304_NOT_MODIFIED);
+			$httpResponse->setHeader('Connection', 'close');
+			$this->terminate();
+
+		} else {
+			return $ifModifiedSince;
+		}
 	}
 
 

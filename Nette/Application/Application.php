@@ -93,7 +93,7 @@ class Application extends /*Nette::*/Object
 		$httpRequest = Environment::getHttpRequest();
 		$httpResponse = Environment::getHttpResponse();
 
-		$httpResponse->setHeader('X-Powered-By: Nette Framework', TRUE);
+		$httpResponse->setHeader('X-Powered-By', 'Nette Framework');
 
 		if (Environment::getVariable('baseUri') === NULL) {
 			Environment::setVariable('baseUri', $httpRequest->getUri()->basePath);
@@ -104,7 +104,7 @@ class Application extends /*Nette::*/Object
 		if ($this->allowedMethods) {
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
 				$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S501_NOT_IMPLEMENTED);
-				$httpResponse->setHeader('Allow: ' . implode(',', $this->allowedMethods), TRUE);
+				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
 				$method = htmlSpecialChars($method);
 				die("<h1>Method $method is not implemented</h1>");
 			}
@@ -180,8 +180,8 @@ class Application extends /*Nette::*/Object
 					$uri = $httpRequest->getUri()->hostUri . $uri;
 				}
 				$httpResponse->setCode($e->getCode());
-				$httpResponse->setHeader('Location: ' . $uri);
-				$httpResponse->setHeader('Connection: close');
+				$httpResponse->setHeader('Location', $uri);
+				$httpResponse->setHeader('Connection', 'close');
 				echo '<h1>Redirect</h1><p><a href="', htmlSpecialChars($uri), '">Please click here to continue</a>.</p>';
 				break;
 

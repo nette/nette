@@ -76,15 +76,15 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 		if (!isset($allowed[$code])) {
 			throw new /*::*/InvalidArgumentException("Bad HTTP response '$code'.");
-		}
 
-		if (headers_sent($file, $line)) {
+		} elseif (headers_sent()) {
 			return FALSE;
-		}
 
-		$this->code = $code;
-		header('HTTP/1.1 ' . $code, TRUE, $code);
-		return TRUE;
+		} else {
+			$this->code = $code;
+			header('HTTP/1.1 ' . $code, TRUE, $code);
+			return TRUE;
+		}
 	}
 
 
@@ -102,40 +102,19 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 	/**
 	 * Sends a raw HTTP header.
-	 * @param  string  header
-	 * @param  bool    replace?
+	 * @param  string  header name
+	 * @param  string  header value
+	 * @param  bool    replace? (by default it will replace)
 	 * @return bool
 	 */
-	public function setHeader($header, $replace = FALSE)
+	public function setHeader($name, $value, $replace = TRUE)
 	{
 		if (headers_sent()) {
 			return FALSE;
-		}
-		// prevent header injection
-		$header = str_replace(array("\n", "\r"), '', $header);
-		header($header, $replace);
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Returns a list of headers to sent.
-	 * @param  bool
-	 * @return array
-	 */
-	public function getHeaders($asPairs = FALSE)
-	{
-		if ($asPairs) {
-			$headers = array();
-			foreach (headers_list() as $header) {
-				$a = strpos($header, ':');
-				$headers[substr($header, 0, $a)] = substr($header, $a + 2);
-			}
-			return $headers;
 
 		} else {
-			return headers_list();
+			header($name . ': ' . $value, $replace);
+			return TRUE;
 		}
 	}
 
@@ -147,9 +126,63 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * @param  string  charset
 	 * @return void
 	 */
-	public function setContentType($type = 'text/html', $charset = 'ISO-8859-1')
+	public function setContentType($type, $charset)
 	{
-		$this->setHeader('Content-type: ' . $type . ($charset ? '; charset=' . $charset : ''), TRUE);
+		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
+	}
+
+
+
+	/**
+	 * Sets the number of seconds before a page cached on a browser expires.
+	 * @param  int  timestamp or number of seconds
+	 * @return bool
+	 */
+	public function expire($time)
+	{
+		if (headers_sent()) {
+			return FALSE;
+
+		} elseif ($time > 0) {
+			if ($time > self::EXPIRATION_DELTA_LIMIT) {
+				$time -= time();
+			}
+			$this->setHeader('Cache-Control', 'max-age=' . (int) $time . ',must-revalidate');
+			$this->setHeader('Expires', self::date(time() + $time));
+			return TRUE;
+
+		} else { // no cache
+			$this->setHeader('Expires', 'Mon, 23 Jan 1978 10:00:00 GMT');
+			$this->setHeader('Cache-Control', 's-maxage=0, max-age=0, must-revalidate');
+			return TRUE;
+		}
+	}
+
+
+
+	/**
+	 * Checks if headers have been sent.
+	 * @return bool
+	 */
+	public function headersSent()
+	{
+		return headers_sent();
+	}
+
+
+
+	/**
+	 * Returns a list of headers to sent.
+	 * @return array
+	 */
+	public function getHeaders()
+	{
+		$headers = array();
+		foreach (headers_list() as $header) {
+			$a = strpos($header, ':');
+			$headers[substr($header, 0, $a)] = substr($header, $a + 2);
+		}
+		return $headers;
 	}
 
 
@@ -166,23 +199,6 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 
-	public function expire($expire)
-	{
-		if ($expire > 0) {
-			if ($expire > self::EXPIRATION_DELTA_LIMIT) {
-				$expire -= time();
-			}
-			header('Cache-Control: max-age=' . (int) $expire . ',must-revalidate', TRUE);
-			header('Expires: ' . self::date(time() + $expire), TRUE);
-		} else {
-			// no cache
-			header('Cache-Control: s-maxage=0, max-age=0, must-revalidate', TRUE);
-			header('Expires: Mon, 23 Jan 1978 10:00:00 GMT', TRUE);
-		}
-	}
-
-
-
 	/**
 	 * Enables compression. (warning: may not work)
 	 * @return bool
@@ -191,7 +207,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	{
 		if (headers_sent()) return FALSE;
 
-		$headers = $this->getHeaders(TRUE);
+		$headers = $this->getHeaders();
 		if (isset($headers['Content-Encoding'])) {
 			return FALSE; // called twice
 		}
@@ -220,7 +236,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			// Sends invisible garbage for IE 6.
 			if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0') === FALSE) return;
 			if (!in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)) return;
-			$headers = $this->getHeaders(TRUE);
+			$headers = $this->getHeaders();
 			if (isset($headers['Content-Type']) && $headers['Content-Type'] !== 'text/html') return;
 			$s = " \t\r\n";
 			for ($i = 2e3; $i; $i--) echo $s{rand(0, 3)};

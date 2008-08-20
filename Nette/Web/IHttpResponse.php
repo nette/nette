@@ -68,12 +68,34 @@ interface IHttpResponse
 	function getCode();
 
 	/**
-	 * Send a raw HTTP header.
-	 * @param  string  header
-	 * @param  bool    replace?
+	 * Sends a raw HTTP header.
+	 * @param  string  header name
+	 * @param  string  header value
+	 * @param  bool    replace? (by default it will replace)
 	 * @return bool
 	 */
-	function setHeader($header, $replace = FALSE);
+	function setHeader($name, $value, $replace = TRUE);
+
+	/**
+	 * Sends a Content-type HTTP header.
+	 * @param  string  mime-type
+	 * @param  string  charset
+	 * @return void
+	 */
+	function setContentType($type, $charset);
+
+	/**
+	 * Sets the number of seconds before a page cached on a browser expires.
+	 * @param  int  timestamp or number of seconds
+	 * @return bool
+	 */
+	function expire($time);
+
+	/**
+	 * Checks if headers have been sent.
+	 * @return bool
+	 */
+	function headersSent();
 
 	/**
 	 * Returns a list of headers to sent.
