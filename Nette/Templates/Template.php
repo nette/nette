@@ -99,7 +99,6 @@ class Template extends /*Nette::*/Object implements ITemplate
 	{
 		if ($file instanceof self) {
 			$tpl = $file;
-			$tpl->params = $this->params;
 
 		} elseif ($file == NULL) { // intentionally ==
 			throw new /*::*/InvalidArgumentException("Template file name was not specified.");
@@ -112,8 +111,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 			$tpl->setFile($file);
 		}
 
-		if ($params !== NULL) {
-			$tpl->params = $params + $tpl->params;
+		if ($params === NULL) {
+			$tpl->params = & $this->params;
+
+		} else {
+			$tpl->params = $params + $this->params;
 		}
 
 		return $tpl;
@@ -409,12 +411,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
-		if (array_key_exists($name, $this->params)) {
-			return $this->params[$name];
-
-		} elseif ($this->warnOnUndefined) {
+		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
 			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
 		}
+
+		return $this->params[$name];
 	}
 
 

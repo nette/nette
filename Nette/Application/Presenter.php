@@ -738,9 +738,6 @@ abstract class Presenter extends Control implements IPresenter
 				$match = TRUE; // match, check if-modified-since
 
 			} elseif ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
-				if ($etag === NULL) {
-					//$httpResponse->setHeader('ETag', '""');
-				}
 				return $ifModifiedSince; // no match, ignore if-modified-since
 
 			} else {

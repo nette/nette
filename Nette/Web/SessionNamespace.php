@@ -108,12 +108,11 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
-		if (array_key_exists($name, $this->data)) {
-			return $this->data[$name];
-
-		} elseif ($this->warnOnUndefined) {
+		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
 			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
 		}
+
+		return $this->data[$name];
 	}
 
 

@@ -380,9 +380,9 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Prevents serialization.
+	 * Prevents unserialization.
 	 */
-	final public function __sleep()
+	final public function __wakeup()
 	{
 		throw new /*::*/NotImplementedException;
 	}
