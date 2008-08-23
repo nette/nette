@@ -26,7 +26,8 @@ echo 'HttpRequest::getFiles() = '; Debug::dump($request->getFiles());
 echo 'HttpRequest::getCookies() = '; Debug::dump($request->getCookies());
 echo 'HttpRequest::getHeaders() = '; Debug::dump($request->getHeaders());
 echo 'HttpRequest::isSecured() = '; Debug::dump($request->isSecured());
-echo 'HttpRequest::ipHash() = '; Debug::dump($request->ipHash());
+echo 'HttpRequest::getRemoteAddress() = '; Debug::dump($request->getRemoteAddress());
+echo 'HttpRequest::getRemoteAddress(TRUE) = '; Debug::dump($request->getRemoteAddress(TRUE));
 
 echo 'HttpRequest::isEqual() = '; Debug::dump($request->uri->isEqual('//test/second?third'));
 echo 'HttpRequest::isEqual() = '; Debug::dump($request->uri->isEqual('http://test/second?third'));

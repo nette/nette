@@ -118,7 +118,7 @@ class Form extends FormContainer
 
 	/**
 	 * Sets form's action and method.
-	 * @param  string URI
+	 * @param  mixed URI
 	 * @param  bool  use POST method to submit the form?
 	 * @return void
 	 */
@@ -129,6 +129,17 @@ class Form extends FormContainer
 		}
 		$this->element->action = $url;
 		$this->element->method = $this->isPost ? 'post' : 'get';
+	}
+
+
+
+	/**
+	 * Returns form's action.
+	 * @return mixed URI
+	 */
+	public function getAction()
+	{
+		return $this->element->action;
 	}
 
 

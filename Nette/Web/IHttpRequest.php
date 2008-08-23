@@ -84,4 +84,11 @@ interface IHttpRequest
 	 * @return boolean
 	 */
 	function isAjax();
+
+	/**
+	 * Returns the IP or host address of the remote client.
+	 * @param  bool  return host name?
+	 * @return string
+	 */
+	function getRemoteAddress($dns = FALSE);
 }

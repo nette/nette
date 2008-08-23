@@ -75,3 +75,14 @@ $req = new /*Nette::Application::*/PresenterRequest(
 );
 $url = $route->constructUrl($req, $httpRequest);
 Debug::dump($url);
+
+
+echo "\n<hr><h2>Secured</h2>\n";
+
+$route = new SimpleRouter(array(
+	'id' => 12,
+	'any' => 'anyvalue',
+), SimpleRouter::SECURED);
+
+$url = $route->constructUrl($req, $httpRequest);
+Debug::dump($url);

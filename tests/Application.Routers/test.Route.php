@@ -785,3 +785,24 @@ test($route,
 	),
 	'/a%3Ab?test=testvalue'
 );
+
+
+echo "\n<hr><h2>Secured</h2>\n";
+
+$route = new Route('<param>', array(
+	'presenter' => 'Presenter',
+), Route::SECURED);
+
+
+test($route,
+	'/any',
+	array (
+		'presenter' => 'Presenter',
+		'params' =>
+		array (
+			'param' => 'any',
+			'test' => 'testvalue',
+		),
+	),
+	'https://admin.texy.info/any?test=testvalue'
+);

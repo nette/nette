@@ -46,12 +46,16 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 	/** @var array */
 	protected $defaults;
 
+	/** @var int */
+	protected $flags;
+
 
 
 	/**
 	 * @param  array   default values
+	 * @param  int     flags
 	 */
-	public function __construct(array $defaults = array())
+	public function __construct(array $defaults = array(), $flags = 0)
 	{
 		if (isset($defaults[self::MODULE_KEY])) {
 			$this->module = $defaults[self::MODULE_KEY] . ':';
@@ -59,6 +63,7 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 		}
 
 		$this->defaults = $defaults;
+		$this->flags = $flags;
 	}
 
 
@@ -121,6 +126,11 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 		if ($query !== '') {
 			$uri .= '?' . $query;
 		}
+
+		if ($this->flags & self::SECURED) {
+			$uri = 'https://' . $context->getUri()->authority . $uri;
+		}
+
 		return $uri;
 	}
 

@@ -92,7 +92,7 @@ abstract class Component extends Object implements IComponent
 				if ($obj instanceof $type) break;
 				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
 				$depth++;
-				$obj = $obj->getParent(); // IConponent::getParent()
+				$obj = $obj->getParent(); // IComponent::getParent()
 				if ($obj === $this) $obj = NULL; // prevent cycling
 			}
 

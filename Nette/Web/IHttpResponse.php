@@ -82,7 +82,7 @@ interface IHttpResponse
 	 * @param  string  charset
 	 * @return void
 	 */
-	function setContentType($type, $charset);
+	function setContentType($type, $charset = NULL);
 
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.

@@ -42,7 +42,7 @@ class Route extends /*Nette::*/Object implements IRouter
 	const MODULE_KEY = 'module';
 
 	// flags
-	const CASE_SENSITIVE = 2;
+	const CASE_SENSITIVE = 256;
 
 	// uri type
 	const HOST = 1;
@@ -50,7 +50,7 @@ class Route extends /*Nette::*/Object implements IRouter
 	const RELATIVE = 3;
 
 	/** @var bool */
-	public static $defaultCaseSensitivity = FALSE;
+	public static $defaultFlags = 0;
 
 	/** @var array */
 	public static $styles = array(
@@ -76,6 +76,9 @@ class Route extends /*Nette::*/Object implements IRouter
 		),
 	);
 
+	/** @var string */
+	public $mask;
+
 	/** @var array */
 	private $sequence;
 
@@ -99,13 +102,11 @@ class Route extends /*Nette::*/Object implements IRouter
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<view>/<id \d{1,3}>'
 	 * @param  array   default values
+	 * @param  int     flags
 	 */
 	public function __construct($mask, array $defaults = array(), $flags = 0)
 	{
-		if (self::$defaultCaseSensitivity) {
-			$flags = $flags | self::CASE_SENSITIVE;
-		}
-		$this->flags = $flags;
+		$this->flags = $flags | self::$defaultFlags;
 		$this->setMask($mask, $defaults);
 	}
 
@@ -258,7 +259,9 @@ class Route extends /*Nette::*/Object implements IRouter
 					$uri = '';
 
 				} elseif ($meta['default'] == '') { // intentionally ==
-					return NULL; // default value is empty but is required
+					if ($uri[0] === '/' && substr($sequence[$i], -1) === '/') {
+						return NULL; // default value is empty but is required
+					}
 
 				} else {
 					if (isset($meta['filterOut'])) {
@@ -287,6 +290,10 @@ class Route extends /*Nette::*/Object implements IRouter
 			$uri = $context->getUri()->basePath . $uri;
 		}
 
+		if ($this->flags & self::SECURED) {
+			$uri = $this->type === self::HOST ? 'https:' . $uri : 'https://' . $context->getUri()->authority . $uri;
+		}
+
 		return $uri;
 	}
 
@@ -300,6 +307,8 @@ class Route extends /*Nette::*/Object implements IRouter
 	 */
 	private function setMask($mask, array $defaults)
 	{
+		$this->mask = $mask;
+
 		// detect '//host/path' vs. '/abs. path' vs. 'relative path'
 		if (substr($mask, 0, 2) === '//') {
 			$this->type = self::HOST;

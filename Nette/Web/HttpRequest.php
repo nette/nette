@@ -358,6 +358,26 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
+	 * Returns the IP or host address of the remote client.
+	 * @param  bool  return host name?
+	 * @return string
+	 */
+	public function getRemoteAddress($dns = FALSE)
+	{
+		if (!isset($_SERVER['REMOTE_ADDR'])) {
+			return NULL;
+		}
+
+		if ($dns && !isset($_SERVER['REMOTE_HOST'])) {
+			$_SERVER['REMOTE_HOST'] = getHostByAddr($_SERVER['REMOTE_ADDR']);
+		}
+
+		return $dns ? $_SERVER['REMOTE_HOST'] : $_SERVER['REMOTE_ADDR'];
+	}
+
+
+
+	/**
 	 * Parse Accept-Language header and returns prefered language.
 	 * @param  array   Supported languages
 	 * @return string
@@ -386,29 +406,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 		}
 
 		return $lang;
-	}
-
-
-
-	/**
-	 * Generates hash from all used IP & host names from request headers.
-	 * @return string
-	 */
-	public function ipHash()
-	{
-		static $vars = array(
-			'REMOTE_ADDR', 'HTTP_FROM', 'HTTP_CLIENT_IP', 'HTTP_VIA', 'HTTP_COMING_FROM', 'HTTP_X_COMING_FROM', 'HTTP_PROXY_CONNECTION',
-			'HTTP_PROXY', 'HTTP_X_PROXY', 'HTTP_X_FORWARDED_FOR', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'HTTP_X_FORWARDED',
-		);
-
-		$ip = array();
-		foreach ($vars as $var) {
-			if (isset($_SERVER[$var])) {
-				$ip[] = substr($_SERVER[$var], 0, 20);
-			}
-		}
-
-		return sha1(implode('|', $ip));
 	}
 
 

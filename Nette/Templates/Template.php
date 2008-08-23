@@ -115,7 +115,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 			$tpl->params = & $this->params;
 
 		} else {
-			$tpl->params = $params + $this->params;
+			$tpl->params = & $params;
+			$tpl->params += $this->params;
 		}
 
 		return $tpl;

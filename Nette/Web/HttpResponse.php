@@ -126,7 +126,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * @param  string  charset
 	 * @return void
 	 */
-	public function setContentType($type, $charset)
+	public function setContentType($type, $charset = NULL)
 	{
 		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
 	}

@@ -355,7 +355,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
-		if (preg_match("#^[a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
+		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
 			$this->view = $view;
 
 		} else {
