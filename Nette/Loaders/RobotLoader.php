@@ -46,10 +46,10 @@ class RobotLoader extends AutoLoader
 	/** @var string  comma separated wildcards */
 	public $acceptFiles = '*.php, *.php5';
 
-	/** @var bool  experimental */
+	/** @var bool */
 	public $displaceNetteLoader = TRUE;
 
-	/** @var bool  */
+	/** @var bool */
 	public $autoRebuild;
 
 	/** @var array */

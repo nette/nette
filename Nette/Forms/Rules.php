@@ -91,10 +91,6 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 		if ($message === NULL && isset(self::$defaultMessages[$rule->operation])) {
 			$message = self::$defaultMessages[$rule->operation];
 		}
-		$translator = $control->getTranslator();
-		if ($message !== NULL && $translator !== NULL) {
-			$message = $translator->translate($message);
-		}
 		$rule->message = vsprintf($message, (array) $arg);
 
 		$control->notifyRule($rule);

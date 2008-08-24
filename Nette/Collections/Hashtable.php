@@ -140,6 +140,7 @@ class Hashtable extends Collection implements IMap
 	/**
 	 * Returns variable or $default if there is no element.
 	 * @param  string key
+	 * @param  mixed  default value
 	 * @return mixed
 	 * @throws ::InvalidArgumentException
 	 */

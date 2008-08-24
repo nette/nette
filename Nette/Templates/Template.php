@@ -51,7 +51,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var array */
 	private $filters = array();
 
-	/** @var ITranslator */
+	/** @var Nette::ITranslator */
 	private $translator;
 
 	/** @var bool */
@@ -312,10 +312,10 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  ITranslator
+	 * @param  Nette::ITranslator
 	 * @return void
 	 */
-	public function setTranslator($translator = NULL)
+	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 	}
@@ -324,7 +324,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Returns translate adapter.
-	 * @return ITranslator
+	 * @return Nette::ITranslator
 	 */
 	final public function getTranslator()
 	{

@@ -71,7 +71,7 @@ interface IFormControl
 
 	/**
 	 * Returns translator adapter.
-	 * @return ITranslator
+	 * @return Nette::ITranslator|NULL
 	 */
 	function getTranslator();
 

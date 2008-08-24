@@ -74,7 +74,7 @@ class Form extends FormContainer
 	/** @var Html  <form> element */
 	private $element;
 
-	/** @var ITranslator */
+	/** @var Nette::ITranslator */
 	private $translator;
 
 	/** @var bool */
@@ -162,10 +162,10 @@ class Form extends FormContainer
 
 	/**
 	 * Sets translate adapter.
-	 * @param  ITranslator
+	 * @param  Nette::ITranslator
 	 * @return void
 	 */
-	public function setTranslator($translator = NULL)
+	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 	}
@@ -174,7 +174,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns translate adapter.
-	 * @return ITranslator
+	 * @return Nette::ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{

@@ -40,6 +40,9 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var string */
 	public static $idMask = 'frm%f-%n';
 
+	/** @var string */
+	public static $labelMask = '%l';
+
 	/** @var mixed */
 	protected $value;
 
@@ -67,8 +70,8 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var Rules */
 	private $rules;
 
-	/** @var ITranslator */
-	private $translator;
+	/** @var Nette::ITranslator */
+	private $translator = TRUE; // means autodetect
 
 
 
@@ -175,10 +178,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Sets translate adapter.
-	 * @param  ITranslator or FALSE disables translator
+	 * @param  Nette::ITranslator
 	 * @return void
 	 */
-	public function setTranslator($translator)
+	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 	}
@@ -187,19 +190,14 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Returns translate adapter.
-	 * @return ITranslator|NULL
+	 * @return Nette::ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
-		if ($this->translator === FALSE) {
-			return NULL;
-
-		} elseif ($this->translator === NULL) {
+		if ($this->translator === TRUE) {
 			return $this->getForm()->getTranslator();
-
-		} else {
-			return $this->translator;
 		}
+		return $this->translator;
 	}
 
 
@@ -296,9 +294,12 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		if ($this->translator !== NULL) {
-			$label->setText($this->translator->translate($label->getText()));
+		$text = $label->getText();
+		$translator = $this->getTranslator();
+		if ($translator !== NULL) {
+			$text = $translator->translate($text);
 		}
+		$label->setText(str_replace('%l', $text, self::$labelMask));
 		return $label;
 	}
 
@@ -333,7 +334,9 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function isRendered($value = NULL)
 	{
-		if ($value !== NULL) $this->rendered = (bool) $value;
+		if ($value !== NULL) {
+			$this->rendered = (bool) $value;
+		}
 		return $this->rendered;
 	}
 
@@ -468,6 +471,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function addError($message)
 	{
+		$translator = $this->getTranslator();
+		if ($translator !== NULL) {
+			$message = $translator->translate($message);
+		}
 		if (!in_array($message, $this->errors, TRUE)) {
 			$this->errors[] = $message;
 		}

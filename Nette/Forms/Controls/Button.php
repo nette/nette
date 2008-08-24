@@ -71,4 +71,20 @@ class Button extends FormControl
 		$this->value = (bool) $value;
 	}
 
+
+
+	/**
+	 * Generates control's HTML element.
+	 * @return Nette::Web::Html
+	 */
+	public function getControl()
+	{
+		$control = parent::getControl();
+		$translator = $this->getTranslator();
+		if ($translator !== NULL) {
+			$control->value = $translator->translate($control->value);
+		}
+		return $control;
+	}
+
 }
