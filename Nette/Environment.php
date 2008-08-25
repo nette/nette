@@ -44,13 +44,16 @@ final class Environment
 	/** variables */
 	const LANG = 'lang';
 
+	/** @var IConfigurator */
+	private static $configurator;
+
 	/** @var string */
 	private static $name;
 
 	/** @var string  the mode of current application */
 	private static $mode = array();
 
-	/** @var Config */
+	/** @var Nette::Config::Config */
 	private static $config;
 
 	/** @var IServiceLocator */
@@ -70,16 +73,6 @@ final class Environment
 		'modelsDir' => array('%appDir%/models', TRUE),
 	);
 
-	/** @var array */
-	public static $defaultServices = array(
-		'Nette::IServiceLocator' => /*Nette::*/'ServiceLocator',
-		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
-		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
-		'Nette::Web::IUser' => 'Nette::Web::User',
-		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
-		'Nette::Configurator' => 'Nette::Configurator',
-	);
-
 
 
 	/**
@@ -88,6 +81,32 @@ final class Environment
 	final public function __construct()
 	{
 		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+	}
+
+
+
+	/**
+	 * Sets "class behind Environment" configurator.
+	 * @param  IConfigurator
+	 * @return void
+	 */
+	public static function setConfigurator(IConfigurator $configurator)
+	{
+		self::$configurator = $configurator;
+	}
+
+
+
+	/**
+	 * Gets "class behind Environment" configurator.
+	 * @return IConfigurator
+	 */
+	public static function getConfigurator()
+	{
+		if (self::$configurator === NULL) {
+			self::$configurator = new Configurator;
+		}
+		return self::$configurator;
 	}
 
 
@@ -121,8 +140,7 @@ final class Environment
 	public static function getName()
 	{
 		if (self::$name === NULL) {
-			$configurator = self::getService('Nette::Configurator');
-			self::setName($configurator->detectMode('environment'));
+			self::setName(self::getConfigurator()->detect('environment'));
 		}
 		return self::$name;
 	}
@@ -155,8 +173,7 @@ final class Environment
 			return self::$mode[$mode];
 
 		} else {
-			$configurator = self::getService('Nette::Configurator');
-			return self::$mode[$mode] = $configurator->detectMode($mode);
+			return self::$mode[$mode] = self::getConfigurator()->detect($mode);
 		}
 	}
 
@@ -324,16 +341,13 @@ final class Environment
 
 
 	/**
-	 * Get initial instance of service locator (experimental).
+	 * Get initial instance of service locator.
 	 * @return IServiceLocator
 	 */
 	public static function getServiceLocator()
 	{
 		if (self::$serviceLocator === NULL) {
-			self::$serviceLocator = new self::$defaultServices['Nette::IServiceLocator'];
-			foreach (self::$defaultServices as $name => $service) {
-				self::$serviceLocator->addService($service, $name);
-			}
+			self::$serviceLocator = self::getConfigurator()->createServiceLocator();
 		}
 		return self::$serviceLocator;
 	}
@@ -412,24 +426,13 @@ final class Environment
 
 
 	/**
-	 * @param  string
-	 * @return Nette::Caching::ICacheStorage
-	 */
-	public static function createCacheStorage()
-	{
-		return new /*Nette::Caching::*/FileStorage(self::getVariable('cacheBase'));
-	}
-
-
-
-	/**
 	 * Returns instance of session namespace.
 	 * @param  string
 	 * @return Nette::Web::SessionNamespace
 	 */
-	public static function getSession($name = 'default')
+	public static function getSession($namespace = 'default')
 	{
-		return /*Nette::Web::*/Session::getNamespace($name);
+		return /*Nette::Web::*/Session::getNamespace($namespace);
 	}
 
 
@@ -440,22 +443,22 @@ final class Environment
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Config  file name or Config object
+	 * @param  string|Nette::Config::Config  file name or Config object
 	 * @param  bool
-	 * @return Config
+	 * @return Nette::Config::Config
 	 */
 	public static function loadConfig($file = NULL, $useCache = NULL)
 	{
-		$configurator = self::getService('Nette::Configurator');
-		$configurator->useCache = $useCache;
-		return self::$config = $configurator->loadConfig($file);
+		return self::$config = self::getConfigurator()->loadConfig($file, $useCache);
 	}
 
 
 
 	/**
 	 * Returns the global configuration.
-	 * @return Config
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return Nette::Config::Config|mixed
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{

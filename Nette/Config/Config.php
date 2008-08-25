@@ -14,15 +14,15 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette
+ * @package    Nette::Config
  * @version    $Id$
  */
 
-/*namespace Nette;*/
+/*namespace Nette::Config;*/
 
 
 
-require_once dirname(__FILE__) . '/Collections/Hashtable.php';
+require_once dirname(__FILE__) . '/../Collections/Hashtable.php';
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/Collections/Hashtable.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette
+ * @package    Nette::Config
  */
 class Config extends /*Nette::Collections::*/Hashtable
 {
@@ -39,9 +39,46 @@ class Config extends /*Nette::Collections::*/Hashtable
 	const READONLY = 1;
 	const EXPAND = 2;
 
+	/** @var array */
+	private static $extensions = array(
+		'ini' => /*Nette::Config::*/'ConfigAdapterIni',
+		'xml' => /*Nette::Config::*/'ConfigAdapterXml',
+	);
 
 
-	/********************* I/O operations ****************d*g**/
+
+	/**
+	 * Registers adapter for given file extension.
+	 * @param  string  file extension
+	 * @param  string  class name (IConfigAdapter)
+	 * @return void
+	 */
+	public static function registerExtension($extension, $class)
+	{
+		self::$extensions[strtolower($extension)] = $class;
+	}
+
+
+
+	/**
+	 * Creates new configuration object from file.
+	 * @param  string  file name
+	 * @param  string  section to load
+	 * @param  int     flags (readOnly, autoexpand variables)
+	 * @return Config
+	 */
+	public static function fromFile($file, $section = NULL, $flags = self::READONLY)
+	{
+		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+		if (isset(self::$extensions[$extension])) {
+			$arr = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
+			return new /**/self/**//*static*/($arr, $flags);
+
+		} else {
+			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
+		}
+	}
+
 
 
 	/**
@@ -66,27 +103,6 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 
 	/**
-	 * Creates new configuration object from file.
-	 * @param  string  file name
-	 * @param  string  section to load
-	 * @param  int     flags (readOnly, autoexpand variables)
-	 * @return Config
-	 */
-	public static function fromFile($file, $section = NULL, $flags = self::READONLY)
-	{
-		$class = /*Nette::*/'ConfigAdapter_' . strtoupper(pathinfo($file, PATHINFO_EXTENSION));
-		if (class_exists($class)) {
-			$arr = call_user_func(array($class, 'load'), $file, $section);
-			return new /**/self/**//*static*/($arr, $flags);
-
-		} else {
-			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
-		}
-	}
-
-
-
-	/**
 	 * Save configuration to file.
 	 * @param  string  file
 	 * @param  string  section to write
@@ -94,9 +110,9 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 */
 	public function save($file, $section = NULL)
 	{
-		$class = /*Nette::*/'ConfigAdapter_' . strtoupper(pathinfo($file, PATHINFO_EXTENSION));
-		if (class_exists($class)) {
-			return call_user_func(array($class, 'save'), $this, $file, $section);
+		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+		if (isset(self::$extensions[$extension])) {
+			return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file, $section);
 
 		} else {
 			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
@@ -173,7 +189,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 
 
-	/********************* overloading ****************d*g**/
+	/********************* data access via overloading ****************d*g**/
 
 
 

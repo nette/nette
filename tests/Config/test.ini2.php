@@ -1,10 +1,10 @@
-<h1>Nette::Config & ConfigAdapter_INI test #2</h1>
+<h1>Nette::Config::Config & ConfigAdapterIni test #2</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Config;*/
+/*use Nette::Config::Config;*/
 /*use Nette::Debug;*/
 
 Debug::$maxDepth = NULL;

@@ -14,11 +14,16 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette
+ * @package    Nette::Config
  * @version    $Id$
  */
 
-/*namespace Nette;*/
+/*namespace Nette::Config;*/
+
+
+
+require_once dirname(__FILE__) . '/../Config/IConfigAdapter.php';
+
 
 
 /**
@@ -26,13 +31,13 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette
+ * @package    Nette::Config
  */
-final class ConfigAdapter_INI
+final class ConfigAdapterIni implements IConfigAdapter
 {
 
 	/** @var string  key nesting separator (key1> key2> key3) */
-	static public $keySeparator = '> ';
+	static public $keySeparator = '.';
 
 	/** @var string  section inheriting separator (section < parent) */
 	static public $sectionSeparator = ' < ';
@@ -68,18 +73,14 @@ final class ConfigAdapter_INI
 			throw new /*::*/Exception($msg);
 		}
 
-		// init separators
-		$sectionSep = isset($data[':section']) ? $data[':section'] : trim(self::$sectionSeparator);
-		$keySep = isset($data[':key']) ? $data[':key'] : trim(self::$keySeparator);
-		unset($data[':key'], $data[':section']);
-
 		// process extends sections like [staging < production]
-		if ($sectionSep) {
+		if (self::$sectionSeparator) {
 			foreach ($data as $secName => $secData) {
 				// ignore non-section data
 				if (!is_array($secData)) continue;
 
-				$parts = explode($sectionSep, $secName);
+				$separator = trim(self::$sectionSeparator);
+				$parts = explode($separator, strtr($secName, ':', $separator)); // special support for separator ':'
 				if (count($parts) > 1) {
 					$child = trim($parts[0]);
 					if ($child === '') {
@@ -106,23 +107,19 @@ final class ConfigAdapter_INI
 		}
 
 		// process key separators (key1> key2> key3)
-		if ($keySep) {
+		if (self::$keySeparator) {
 			$output = array();
 			foreach ($data as $secName => $secData) {
 				$cursorS = & $output;
-				foreach (explode($keySep, $secName) as $part) {
-					$cursorS = & $cursorS[trim($part)];
+				foreach (explode(self::$keySeparator, $secName) as $part) {
+					$cursorS = & $cursorS[$part];
 				}
 
 				if (is_array($secData)) {
 					foreach ($secData as $key => $val) {
 						$cursor = & $cursorS;
-						foreach (explode($keySep, $key) as $part) {
-							$part = trim($part);
-							if ($part === '') {
-								throw new /*::*/InvalidStateException("Invalid key '$key' in '$file'.");
-							}
-							$cursor = & $cursor[trim($part)];
+						foreach (explode(self::$keySeparator, $key) as $part) {
+							$cursor = & $cursor[$part];
 						}
 						$cursor = $val;
 					}
@@ -206,71 +203,6 @@ final class ConfigAdapter_INI
 				throw new /*::*/InvalidArgumentException("The '$prefix$key' item must be scalar or array.");
 			}
 		}
-	}
-
-}
-
-
-
-
-
-
-/**
- * Reading and writing XML files.
- *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette
- */
-final class ConfigAdapter_XML
-{
-
-	/**
-	 * Static class - cannot be instantiated.
-	 */
-	final public function __construct()
-	{
-		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
-	}
-
-
-
-	/**
-	 * Reads configuration from XML file.
-	 * @param  string  file name
-	 * @param  string  section to load
-	 * @return array
-	 */
-	public static function load($file, $section = NULL)
-	{
-		throw new /*::*/NotImplementedException;
-
-		if (!is_file($file) || !is_readable($file)) {
-			throw new /*::*/FileNotFoundException("File '$file' is missing or is not readable.");
-		}
-
-		$data = new SimpleXMLElement($file, NULL, TRUE);
-
-		foreach ($data as $secName => $secData) {
-			if ($secData['extends']) {
-				// $data[$child] = $secData;
-			}
-		}
-
-		return $data;
-	}
-
-
-
-	/**
-	 * Write XML file.
-	 * @param  Config to save
-	 * @param  string  file
-	 * @return void
-	 */
-	public static function save($config, $file, $section = NULL)
-	{
-		throw new /*::*/NotImplementedException;
 	}
 
 }

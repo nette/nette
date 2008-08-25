@@ -21,6 +21,11 @@
 /*namespace Nette;*/
 
 
+
+require_once dirname(__FILE__) . '/Object.php';
+
+
+
 /**
  * Nette::Environment helper.
  *
@@ -28,13 +33,21 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-class Configurator
+class Configurator extends Object
 {
 	/** @var bool */
 	public $useCache;
 
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.ini';
+
+	/** @var array */
+	public $defaultServices = array(
+		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
+		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
+		'Nette::Web::IUser' => 'Nette::Web::User',
+		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
+	);
 
 
 
@@ -43,7 +56,7 @@ class Configurator
 	 * @param  string mode name
 	 * @return bool
 	 */
-	public function detectMode($name)
+	public function detect($name)
 	{
 		switch ($name) {
 		case 'environment':
@@ -51,7 +64,7 @@ class Configurator
 			if (defined('ENVIRONMENT')) {
 				return ENVIRONMENT;
 
-			} elseif ($this->detectMode('console')) {
+			} elseif ($this->detect('console')) {
 				return Environment::CONSOLE;
 
 			} else {
@@ -86,7 +99,7 @@ class Configurator
 			return PHP_SAPI === 'cli';
 
 		default:
-			// unknowm mode
+			// unknown mode
 			return NULL;
 		}
 	}
@@ -95,16 +108,20 @@ class Configurator
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Config  file name or Config object
-	 * @return Config
+	 * @param  string|Nette::Config::Config  file name or Config object
+	 * @param  bool
+	 * @return Nette::Config::Config
 	 */
-	public function loadConfig($file = NULL)
+	public function loadConfig($file, $useCache)
 	{
-		if ($this->useCache === NULL) {
-			$this->useCache = Environment::isLive();
+		if ($useCache === NULL) {
+			if ($this->useCache === NULL) {
+				$this->useCache = Environment::isLive();
+			}
+			$useCache = $this->useCache;
 		}
 
-		$cache = $this->useCache ? Environment::getCache('Nette.Environment') : NULL;
+		$cache = $useCache ? Environment::getCache('Nette.Environment') : NULL;
 
 		$name = Environment::getName();
 		if (isset($cache[$name])) {
@@ -112,7 +129,7 @@ class Configurator
 			$config = Environment::getConfig();
 
 		} else {
-			if ($file instanceof Config) {
+			if ($file instanceof /*Nette::Config::*/Config) {
 				$config = $file;
 				$file = NULL;
 
@@ -121,11 +138,11 @@ class Configurator
 					$file = $this->defaultConfigFile;
 				}
 				$file = Environment::expand($file);
-				$config = Config::fromFile($file, $name, 0);
+				$config = /*Nette::Config::*/Config::fromFile($file, $name, 0);
 			}
 
 			// process environment variables
-			if ($config->variable instanceof Config) {
+			if ($config->variable instanceof /*Nette::Config::*/Config) {
 				foreach ($config->variable as $key => $value) {
 					Environment::setVariable($key, $value);
 				}
@@ -140,9 +157,9 @@ class Configurator
 
 			// process services
 			$locator = Environment::getServiceLocator();
-			if ($config->service instanceof Config) {
+			if ($config->service instanceof /*Nette::Config::*/Config) {
 				foreach ($config->service as $key => $value) {
-					$locator->addService($value, $key);
+					$locator->addService($value, str_replace('-', '::', $key));
 				}
 			}
 
@@ -164,18 +181,18 @@ class Configurator
 		*/
 
 		// process ini settings
-		if ($config->set instanceof Config) {
+		if ($config->set instanceof /*Nette::Config::*/Config) {
 			if (!function_exists('ini_set')) {
 				throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
 			}
 
 			foreach ($config->set as $key => $value) {
-				ini_set($key, $value);
+				ini_set(strtr($key, '-', '.'), $value);
 			}
 		}
 
 		// define constants
-		if ($config->const instanceof Config) {
+		if ($config->const instanceof /*Nette::Config::*/Config) {
 			foreach ($config->const as $key => $value) {
 				define($key, $value);
 			}
@@ -188,22 +205,36 @@ class Configurator
 			}
 		}
 
-		// execute services - TODO: discuss
-		/*
-		if ($config->run) {
-			$run = (array) $config->run;
-			ksort($run);
-			foreach ($run as $value) {
-				$a = strrpos($value, ':');
-				$service = substr($value, 0, $a - 1);
-				$service = $locator->getService($service);
-				$method = substr($value, $a + 1);
-				$service->$method();
-			}
-		}
-		*/
-
 		return $config;
+	}
+
+
+
+	/********************* service factories ****************d*g**/
+
+
+
+	/**
+	 * Get initial instance of service locator.
+	 * @return IServiceLocator
+	 */
+	public function createServiceLocator()
+	{
+		$locator = new ServiceLocator;
+		foreach ($this->defaultServices as $name => $service) {
+			$locator->addService($service, $name);
+		}
+		return $locator;
+	}
+
+
+
+	/**
+	 * @return Nette::Caching::ICacheStorage
+	 */
+	public static function createCacheStorage()
+	{
+		return new /*Nette::Caching::*/FileStorage(Environment::getVariable('cacheBase'));
 	}
 
 }

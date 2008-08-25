@@ -14,7 +14,7 @@
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    0.9 (revision 137 released on 2008/07/24 18:34:00)
+ * @version    0.9 (revision 138 released on 2008/08/25 20:55:50)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -39,7 +39,8 @@ FileNotFoundException
 extends
 IOException{}}if(!class_exists('Object',FALSE)){abstract
 class
-Object{final
+Object{private
+static$extMethods;final
 public
 function
 getClass(){return
@@ -52,11 +53,11 @@ ReflectionObject($this);}public
 function
 __call($name,$args){$class=get_class($this);if($name===''){throw
 new
-MemberAccessException("Call to class '$class' method without name.");}if(self::hasEvent($class,$name)){$list=$this->$name;if(is_array($list)||$list
+MemberAccessException("Call to class '$class' method without name.");}if(property_exists($class,$name)&&preg_match('#^on[A-Z]#',$name)){$list=$this->$name;if(is_array($list)||$list
 instanceof
 Traversable){foreach($list
-as$handler){call_user_func_array($handler,$args);}}return;}$cl=$class;do{if(function_exists($nm=$cl.'_prototype_'.$name)){array_unshift($args,$this);return
-call_user_func_array($nm,$args);}}while($cl=get_parent_class($cl));throw
+as$handler){call_user_func_array($handler,$args);}}return;}if($cb=self::extensionMethod("$class::$name")){array_unshift($args,$this);return
+call_user_func_array($cb,$args);}throw
 new
 MemberAccessException("Call to undefined method $class::$name().");}public
 static
@@ -64,6 +65,10 @@ function
 __callStatic($name,$args){$class=get_called_class();throw
 new
 MemberAccessException("Call to undefined static method $class::$name().");}public
+static
+function
+extensionMethod($name,$callback=NULL){if(self::$extMethods===NULL||$name===NULL){$list=get_defined_functions();foreach($list['user']as$fce){$pair=explode('_prototype_',$fce);if(count($pair)===2){self::$extMethods[$pair[1]][$pair[0]]=$fce;self::$extMethods[$pair[1]]['']=NULL;}}if($name===NULL)return;}$name=strtolower($name);$a=strrpos($name,':');if($a===FALSE){$class=strtolower(get_called_class());$l=&self::$extMethods[$name];}else{$class=substr($name,0,$a-1);$l=&self::$extMethods[substr($name,$a+1)];}if($callback!==NULL){$l[$class]=$callback;$l['']=NULL;return;}if(empty($l)){return
+FALSE;}elseif(isset($l[''][$class])){return$l[''][$class];}$cl=$class;do{$cl=strtolower($cl);if(isset($l[$cl])){return$l[''][$class]=$l[$cl];}}while(($cl=get_parent_class($cl))!==FALSE);foreach(class_implements($class)as$cl){$cl=strtolower($cl);if(isset($l[$cl])){return$l[''][$class]=$l[$cl];}}return$l[''][$class]=FALSE;}public
 function&__get($name){$class=get_class($this);if($name===''){throw
 new
 MemberAccessException("Cannot read an class '$class' property without name.");}$m='get'.$name;if(self::hasAccessor($class,$m)){$val=$this->$m();return$val;}else{throw
@@ -86,11 +91,7 @@ MemberAccessException("Cannot unset an property $class::\$$name.");}private
 static
 function
 hasAccessor($c,$m){static$cache;if(!isset($cache[$c])){$cache[$c]=array_flip(get_class_methods($c));}$m[3]=$m[3]&"\xDF";return
-isset($cache[$c][$m]);}private
-static
-function
-hasEvent($c,$m){return
-preg_match('#^on[A-Z]#',$m)&&property_exists($c,$m);}}}if(!interface_exists('IDebuggable',FALSE)){interface
+isset($cache[$c][$m]);}}}if(!interface_exists('IDebuggable',FALSE)){interface
 IDebuggable{function
 getPanels();}}interface
 IDibiVariable{function
@@ -152,11 +153,11 @@ Object{private$config;private$driver;private$connected=FALSE;private$inTxn=FALSE
 function
 __construct($config,$name=NULL){if(class_exists('Debug',FALSE)){Debug::addColophon(array('dibi','getColophon'));}if(is_string($config)){parse_str($config,$config);}elseif($config
 instanceof
-Hashtable){$config=(array)$config;}elseif(!is_array($config)){throw
+ArrayObject){$config=(array)$config;}elseif(!is_array($config)){throw
 new
-InvalidArgumentException('Configuration must be array, string or Nette::Collections::Hashtable.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){include_once __FILE__."/../../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
+InvalidArgumentException('Configuration must be array, string or ArrayObject.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){include_once __FILE__."/../../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
 new
-DibiException("Unable to create instance of dibi driver class '$class'.");}}if(isset($config['result:objects'])){$val=$config['result:objects'];$config['result:objects']=is_string($val)&&!is_numeric($val)?$val:(bool)$val;}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(empty($config['lazy'])){$this->connect();}}public
+DibiException("Unable to create instance of dibi driver class '$class'.");}}if(isset($config['result:withtables'])){$config['resultWithTables']=$config['result:withtables'];unset($config['result:withtables']);}if(isset($config['result:objects'])){$config['resultObjects']=$config['result:objects'];unset($config['result:objects']);}if(isset($config['resultObjects'])){$val=$config['resultObjects'];$config['resultObjects']=is_string($val)&&!is_numeric($val)?$val:(bool)$val;}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(empty($config['lazy'])){$this->connect();}}public
 function
 __destruct(){$this->disconnect();}final
 protected
@@ -241,7 +242,7 @@ Object
 implements
 IDataSource{private$driver;private$xlat;private$metaCache;private$fetched=FALSE;private$withTables=FALSE;private$objects=FALSE;public
 function
-__construct($driver,$config){$this->driver=$driver;if(!empty($config['result:withtables'])){$this->setWithTables(TRUE);}if(isset($config['result:objects'])){$this->setObjects($config['result:objects']);}}public
+__construct($driver,$config){$this->driver=$driver;if(!empty($config['resultWithTables'])){$this->setWithTables(TRUE);}if(isset($config['resultObjects'])){$this->setObjects($config['resultObjects']);}}public
 function
 __destruct(){@$this->free();}final
 public
@@ -406,7 +407,7 @@ findAll($order=NULL){if($order===NULL){return$this->complete($this->connection->
 function
 fetch($conditions){if(is_array($conditions)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',$conditions))->fetch();}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %n='.$this->primaryModifier,$this->primary,$conditions))->fetch();}public
 function
-createBlank(){$row=$this->blankRow;$row[$this->primary]=NULL;if($class=$this->connection->getConfig('result:objects')){if($class===TRUE){$row=(object)$row;}else{$row=new$class($row);}}return$row;}protected
+createBlank(){$row=$this->blankRow;$row[$this->primary]=NULL;if($class=$this->connection->getConfig('resultObjects')){if($class===TRUE){$row=(object)$row;}else{$row=new$class($row);}}return$row;}protected
 function
 prepare($data){if(is_object($data)){return(array)$data;}elseif(is_array($data)){return$data;}throw
 new
@@ -470,7 +471,7 @@ array_fill_keys($keys,$value){return
 array_combine($keys,array_fill(0,count($keys),$value));}}class
 dibi{const
 FIELD_TEXT='s',FIELD_BINARY='bin',FIELD_BOOL='b',FIELD_INTEGER='i',FIELD_FLOAT='f',FIELD_DATE='d',FIELD_DATETIME='t',IDENTIFIER='n';const
-VERSION='0.9',REVISION='137 released on 2008/07/24 18:34:00';private
+VERSION='0.9',REVISION='138 released on 2008/08/25 20:55:50';private
 static$registry=array();private
 static$connection;private
 static$substs=array();private
@@ -1180,7 +1181,7 @@ __construct(){if(!extension_loaded('sqlite')){throw
 new
 DibiDriverException("PHP extension 'sqlite' is not loaded.");}}public
 function
-connect(array&$config){DibiConnection::alias($config,'database','file');$this->fmtDate=isset($config['format:date'])?$config['format:date']:'U';$this->fmtDateTime=isset($config['format:datetime'])?$config['format:datetime']:'U';$errorMsg='';if(empty($config['persistent'])){$this->connection=@sqlite_open($config['database'],0666,$errorMsg);}else{$this->connection=@sqlite_popen($config['database'],0666,$errorMsg);}if(!$this->connection){throw
+connect(array&$config){DibiConnection::alias($config,'database','file');$this->fmtDate=isset($config['formatDate'])?$config['formatDate']:'U';$this->fmtDateTime=isset($config['formatDateTime'])?$config['formatDateTime']:'U';$errorMsg='';if(empty($config['persistent'])){$this->connection=@sqlite_open($config['database'],0666,$errorMsg);}else{$this->connection=@sqlite_popen($config['database'],0666,$errorMsg);}if(!$this->connection){throw
 new
 DibiDriverException($errorMsg);}$this->buffered=empty($config['unbuffered']);}public
 function

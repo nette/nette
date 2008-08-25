@@ -392,19 +392,6 @@ final class Session
 
 
 	/**
-	 * Configure session.
-	 * @param  Config  configuration
-	 * @return void
-	 */
-	public static function configure(Config $config)
-	{
-		// $config = /*Nette::*/Environment::getConfig(__CLASS__);
-		// TODO: implement!
-	}
-
-
-
-	/**
 	 * Resets session configuration.
 	 * @return void
 	 */
