@@ -28,7 +28,7 @@
 <fieldset>
 <legend>Dodací adresa</legend>
 
-<p><input type="checkbox" onclick="toggle(this);" name="send" id="frm-send" /><label for="frm-send">Odeslat na adresu:</label></p>
+<p><input type="checkbox" onclick="toggle(this);" name="send" id="frm-send" /><label for="frm-send">Odeslat na adresu</label></p>
 
 <table id="sendBox">
 <tr>
@@ -41,7 +41,7 @@
 </tr>
 <tr class="required">
 	<th><label onclick="return false" class="required" for="frm-country">Země:</label></th>
-	<td><select onmousewheel="return false" name="country" id="frm-country"><optgroup label="Europe"><option value="1" selected="selected">Česká republika</option><option value="2">Slovensko</option></optgroup><option value="3">USA</option><option value="4">jiná</option></select></td>
+	<td><select onmousewheel="return false" name="country" id="frm-country"><option value="0">Vyberte zemi</option><optgroup label="Europe"><option value="1" selected="selected">Česká republika</option><option value="2">Slovensko</option></optgroup><option value="3">USA</option><option value="4">jiná</option></select></td>
 </tr>
 </table>
 </fieldset>
@@ -110,7 +110,7 @@ function validate(sender) {
 	res = val!='' && val!="";
 	if (!res) { if (el) el.focus(); alert("Zadejte dodac\u00ed adresu"); return false; }
 	el = document.getElementById('frm-country');
-	res = el.selectedIndex >= 0;
+	res = el.selectedIndex >= 1;
 	if (!res) { if (el) el.focus(); alert("Vyberte zemi"); return false; }
 	}
 	el = document.getElementById('frm-password');

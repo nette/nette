@@ -41,7 +41,7 @@
 </tr>
 <tr class="required">
 	<th><label onclick="return false" class="required" for="frm-country">Country:</label></th>
-	<td><select onmousewheel="return false" name="country" id="frm-country"><optgroup label="Europe"><option value="1" selected="selected">Czech Republic</option><option value="2">Slovakia</option></optgroup><option value="3">USA</option><option value="4">other</option></select></td>
+	<td><select onmousewheel="return false" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="1" selected="selected">Czech Republic</option><option value="2">Slovakia</option></optgroup><option value="3">USA</option><option value="4">other</option></select></td>
 </tr>
 </table>
 </fieldset>
@@ -116,8 +116,8 @@ function validate(sender) {
 	res = el.checked;
 	if (res) {
 	el = document.getElementById('frm-country');
-	res = el.selectedIndex >= 0;
-	if (!res) { if (el) el.focus(); alert("Select your county"); return false; }
+	res = el.selectedIndex >= 1;
+	if (!res) { if (el) el.focus(); alert("Select your country"); return false; }
 	}
 	el = document.getElementById('frm-password');
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');

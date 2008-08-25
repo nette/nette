@@ -11,6 +11,7 @@ Debug::enable();
 
 
 $countries = array(
+	'Select your country',
 	'Europe' => array(
 		1 => 'Czech Republic',
 		2 => 'Slovakia',
@@ -54,8 +55,9 @@ $form->addText('city', 'City:', 35)
 		->addRule(Form::FILLED, 'Enter your shipping address');
 
 $form->addSelect('country', 'Country:', $countries)
+	->skipFirst()
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
-		->addRule(Form::FILLED, 'Select your county');
+		->addRule(Form::FILLED, 'Select your country');
 
 
 $form->addPassword('password', 'Choose password:', 20)

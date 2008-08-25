@@ -11,6 +11,7 @@ Debug::enable();
 
 
 $countries = array(
+	'Select your country',
 	'Europe' => array(
 		1 => 'Czech Republic',
 		2 => 'Slovakia',
@@ -33,10 +34,10 @@ $form->addText('age', 'Your age:', 5);
 $form->addRadioList('gender', 'Your gender:', $sex);
 $form->addText('email', 'E-Mail:', 35)->emptyValue = '@';
 
-$form->addCheckbox('send', 'Ship to:');
+$form->addCheckbox('send', 'Ship to address');
 $form->addText('street', 'Street:', 35);
 $form->addText('city', 'City:', 35);
-$form->addSelect('country', 'Country:', $countries);
+$form->addSelect('country', 'Country:', $countries)->skipFirst();
 
 $form->addPassword('password', 'Choose password:', 20);
 $form->addPassword('password2', 'Reenter password:', 20);
@@ -62,7 +63,7 @@ $cond->addRuleFor($form['email'], Form::EMAIL, 'Incorrect E-mail Address');
 $cond = $form['send']->addCondition(Form::EQUAL, TRUE)->toggle('sendBox');
 // ... add rules:
 $cond->addRuleFor($form['city'], Form::FILLED, 'Enter your shipping address');
-$cond->addRuleFor($form['country'], Form::FILLED, 'Select your county');
+$cond->addRuleFor($form['country'], Form::FILLED, 'Select your country');
 
 $form['password']->addRule(Form::FILLED, 'Choose your password');
 $form['password']->addRule(Form::MIN_LENGTH, 'The password is too short: it must be at least %d characters', 3);

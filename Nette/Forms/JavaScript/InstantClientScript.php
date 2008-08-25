@@ -218,13 +218,13 @@ final class InstantClientScript extends /*Nette::*/Object
 			return "el=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
 
 		case /*nette::forms::*/'selectbox::validateequal':
-			$first = $control->skipFirst() ? 1 : 0;
+			$first = $control->isFirstSkipped() ? 1 : 0;
 			return $tmp . "res = false;\n\t" .
 				"for (var i=$first;i<el.options.length;i++)\n\t\t" .
 				"if (el.options[i].selected && el.options[i].value==" . json_encode((string) $arg) . ") { res = true; break; }";
 
 		case /*nette::forms::*/'selectbox::validatefilled':
-			$first = $control->skipFirst() ? 1 : 0;
+			$first = $control->isFirstSkipped() ? 1 : 0;
 			return $tmp . "res = el.selectedIndex >= $first;";
 
 		case /*nette::forms::*/'textbase::validateequal':

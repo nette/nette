@@ -57,8 +57,8 @@ msgid "E-Mail:"
 msgstr "E-mail:"
 
 #: test.example1.php:36
-msgid "Ship to:"
-msgstr "Odeslat na adresu:"
+msgid "Ship to address"
+msgstr "Odeslat na adresu"
 
 #: test.example1.php:37
 msgid "Street:"
@@ -118,7 +118,7 @@ msgid "Enter your shipping address"
 msgstr "Zadejte dodací adresu"
 
 #: test.example1.php:65
-msgid "Select your county"
+msgid "Select your country"
 msgstr "Vyberte zemi"
 
 #: test.example1.php:67

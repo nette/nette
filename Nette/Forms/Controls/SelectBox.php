@@ -110,15 +110,23 @@ class SelectBox extends FormControl
 	/**
 	 * Ignores the first item in select box.
 	 * @param  bool
-	 * @return SelectBox|bool  provides a fluent interface or returns current value
+	 * @return SelectBox  provides a fluent interface or returns current value
 	 */
-	public function skipFirst($value = NULL)
+	public function skipFirst($value = TRUE)
 	{
-		if ($value === NULL) {
-			return $this->skipFirst;
-		}
 		$this->skipFirst = (bool) $value;
 		return $this;
+	}
+
+
+
+	/**
+	 * Is first item in select box ignored?
+	 * @return bool
+	 */
+	final public function isFirstSkipped()
+	{
+		return $this->skipFirst;
 	}
 
 
