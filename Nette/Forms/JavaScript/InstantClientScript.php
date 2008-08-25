@@ -133,8 +133,9 @@ final class InstantClientScript extends /*Nette::*/Object
 
 			if (!empty($rule->message)) { // this is rule
 				$translator = $rule->control->getTranslator();
+				$message = $translator === NULL ? $rule->message : $translator->translate($rule->message);
 				$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { " .
-					"if (el) el.focus(); alert(" . json_encode((string) ($translator === NULL ? $rule->message : $translator->translate($rule->message))) . "); return false; }\n\t";
+					"if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
 			}
 
 			if ($rule->isCondition) { // this is condition

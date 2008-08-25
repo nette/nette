@@ -471,10 +471,6 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function addError($message)
 	{
-		$translator = $this->getTranslator();
-		if ($translator !== NULL) {
-			$message = $translator->translate($message);
-		}
 		if (!in_array($message, $this->errors, TRUE)) {
 			$this->errors[] = $message;
 		}

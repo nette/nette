@@ -1,0 +1,156 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nette::Forms example\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-25 02:56+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: David Grudl <david@grudl.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: test.example1.php:14
+msgid "Europe"
+msgstr "Evropa"
+
+#: test.example1.php:15
+msgid "Czech Republic"
+msgstr "Česká republika"
+
+#: test.example1.php:16
+msgid "Slovakia"
+msgstr "Slovensko"
+
+#: test.example1.php:18
+msgid "USA"
+msgstr "USA"
+
+#: test.example1.php:19
+msgid "other"
+msgstr "jiná"
+
+#: test.example1.php:23
+msgid "male"
+msgstr "muž"
+
+#: test.example1.php:24
+msgid "female"
+msgstr "žena"
+
+#: test.example1.php:31
+msgid "Your name:"
+msgstr "Jméno:"
+
+#: test.example1.php:32
+msgid "Your age:"
+msgstr "Věk:"
+
+#: test.example1.php:33
+msgid "Your gender:"
+msgstr "Pohlaví:"
+
+#: test.example1.php:34
+msgid "E-Mail:"
+msgstr "E-mail:"
+
+#: test.example1.php:36
+msgid "Ship to:"
+msgstr "Odeslat na adresu:"
+
+#: test.example1.php:37
+msgid "Street:"
+msgstr "Ulice:"
+
+#: test.example1.php:38
+msgid "City:"
+msgstr "Město:"
+
+#: test.example1.php:39
+msgid "Country:"
+msgstr "Země:"
+
+#: test.example1.php:41
+msgid "Choose password:"
+msgstr "Zvolte si heslo:"
+
+#: test.example1.php:42
+msgid "Reenter password:"
+msgstr "Pro kontrolu:"
+
+#: test.example1.php:43
+msgid "Picture:"
+msgstr "Obrázek:"
+
+#: test.example1.php:45
+msgid "Comment:"
+msgstr "Poznámka:"
+
+#: test.example1.php:47
+msgid "Send"
+msgstr "Odeslat"
+
+#: test.example1.php:51
+msgid "Enter your name"
+msgstr "Zadejte jméno"
+
+#: test.example1.php:52
+msgid "Enter your age"
+msgstr "Zadejte váš věk"
+
+#: test.example1.php:53
+msgid "Age must be numeric value"
+msgstr "Věk musí být číslo"
+
+#: test.example1.php:54
+#, php-format
+msgid "Age must be in range from %d to %d"
+msgstr "Věk musí být v rozmezí %d až %d"
+
+#: test.example1.php:59
+msgid "Incorrect E-mail Address"
+msgstr "Zadaný e-mail není platný"
+
+#: test.example1.php:64
+msgid "Enter your shipping address"
+msgstr "Zadejte dodací adresu"
+
+#: test.example1.php:65
+msgid "Select your county"
+msgstr "Vyberte zemi"
+
+#: test.example1.php:67
+msgid "Choose your password"
+msgstr "Zvolte si heslo"
+
+#: test.example1.php:68
+#, php-format
+msgid "The password is too short: it must be at least %d characters"
+msgstr "Heslo musí mít alespoň %d znaky"
+
+#: test.example1.php:69
+msgid "Reenter your password"
+msgstr "Zadejte heslo ještě jednou pro kontrolu"
+
+#: test.example1.php:71
+msgid "Passwords do not match"
+msgstr "Zadaná hesla se neshodují"
+
+#: test.example1.php:71
+msgid "Please correct the errors:"
+msgstr "Prosím opravite chyby:"
+
+#: test.example1.php:121
+msgid "Personal data"
+msgstr "Osobní údaje"
+
+#: test.example1.php:145
+msgid "Shipping address"
+msgstr "Dodací adresa"
+
+#: test.example1.php:168
+msgid "Your account"
+msgstr "Váš účet"
+

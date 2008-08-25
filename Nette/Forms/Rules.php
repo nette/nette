@@ -89,9 +89,10 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
 		if ($message === NULL && isset(self::$defaultMessages[$rule->operation])) {
-			$message = self::$defaultMessages[$rule->operation];
+			$rule->message = self::$defaultMessages[$rule->operation];
+		} else {
+			$rule->message = $message;
 		}
-		$rule->message = vsprintf($message, (array) $arg);
 
 		$control->notifyRule($rule);
 		$this->rules[] = $rule;
@@ -174,7 +175,17 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 				$valid = $valid && $ok;
 
 			} elseif (!$rule->isCondition && !$ok) {
-				$rule->control->addError(isset($e) ? $e->getMessage() : $rule->message);
+				if (isset($e)) {
+					$rule->control->addError($e->getMessage());
+
+				} else {
+					$message = $rule->message;
+					$translator = $rule->control->getTranslator();
+					if ($translator !== NULL) {
+						$message = $translator->translate($message);
+					}
+					$rule->control->addError(vsprintf($message, (array) $rule->arg));
+				}
 				$valid = FALSE;
 			}
 		}
