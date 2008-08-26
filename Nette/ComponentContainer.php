@@ -40,8 +40,8 @@ class ComponentContainer extends Component implements IComponentContainer
 	/** @var array of IComponent */
 	private $components = array();
 
-	/** @var bool */
-	private $cloning = FALSE;
+	/** @var IComponent|NULL */
+	private $cloning;
 
 
 
@@ -189,22 +189,22 @@ class ComponentContainer extends Component implements IComponentContainer
 	 */
 	public function __clone()
 	{
-		parent::__clone();
-
 		if ($this->components) {
 			$oldMyself = reset($this->components)->getParent();
-			$oldMyself->cloning = TRUE;
+			$oldMyself->cloning = $this;
 			foreach ($this->components as $name => $component) {
 				$this->components[$name] = clone $component;
 			}
-			$oldMyself->cloning = FALSE;
+			$oldMyself->cloning = NULL;
 		}
+		parent::__clone();
 	}
 
 
 
 	/**
 	 * Is container cloning now? (for internal usage).
+	 * @return NULL|IComponent
 	 */
 	public function isCloning()
 	{

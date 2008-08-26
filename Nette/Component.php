@@ -51,11 +51,8 @@ abstract class Component extends Object implements IComponent
 	/** @var string */
 	private $name;
 
-	/** @var array of type => [obj, depth, path, monitored] */
+	/** @var array of [type => [obj, depth, path, isMonitored?]] or NULL (monitored but not processed yet) */
 	private $monitors = array();
-
-	/** @var array */
-	private static $skip;
 
 
 
@@ -84,7 +81,7 @@ abstract class Component extends Object implements IComponent
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
 
-		if (!isset($this->monitors[$type])) {
+		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
 			$path = self::NAME_SEPARATOR . $this->name;
 			$depth = 1;
@@ -108,7 +105,7 @@ abstract class Component extends Object implements IComponent
 					$this->attached($obj);
 				}
 			} else {
-				$this->monitors[$type] = array(NULL, NULL, NULL, $monitored);
+				$this->monitors[$type] = array(NULL, NULL, NULL, $monitored); // not found
 			}
 		}
 
@@ -215,12 +212,12 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function setParent(IComponentContainer $parent = NULL, $name = NULL)
 	{
-		// if parent is the same parent it already has, no action occurs (only renaming)
-		if ($this->parent === $parent) {
-			if ($parent === NULL && $name !== NULL) {
-				$this->name = $name;
-			}
+		if ($parent === NULL && $this->parent === NULL && $name !== NULL) {
+			$this->name = $name; // just rename
 			return;
+
+		} elseif ($parent === $this->parent && $name === NULL) {
+			return; // nothing to do
 		}
 
 		// A component cannot be given a parent if it already has a parent.
@@ -235,7 +232,6 @@ abstract class Component extends Object implements IComponent
 				throw new /*::*/InvalidStateException('The current parent still recognizes this component as its child.');
 			}
 
-			self::$skip = NULL;
 			$this->refreshMonitors(0);
 			$this->parent = NULL;
 
@@ -249,9 +245,8 @@ abstract class Component extends Object implements IComponent
 			$this->parent = $parent;
 			if ($name !== NULL) $this->name = $name;
 
-			self::$skip = array();
-			$this->refreshMonitors(0);
-			self::$skip = NULL;
+			$tmp = array();
+			$this->refreshMonitors(0, $tmp);
 		}
 	}
 
@@ -273,25 +268,26 @@ abstract class Component extends Object implements IComponent
 	/**
 	 * Refreshes monitors.
 	 * @param  int
+	 * @param  array|NULL (array = attaching, NULL = detaching)
 	 * @return void
 	 */
-	private function refreshMonitors($depth)
+	private function refreshMonitors($depth, & $missing = NULL)
 	{
 		if ($this instanceof IComponentContainer) {
 			foreach ($this->getComponents() as $component) {
 				if ($component instanceof Component) {
-					$component->refreshMonitors($depth + 1);
+					$component->refreshMonitors($depth + 1, $missing);
 				}
 			}
 		}
 
-		if (self::$skip === NULL) { // detaching
+		if ($missing === NULL) { // detaching
 			foreach ($this->monitors as $type => $rec) {
 				if (isset($rec[1]) && $rec[1] > $depth) {
-					if ($rec[3]) {
+					if ($rec[3]) { // monitored
 						$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
 						$this->detached($rec[0]);
-					} else {
+					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
 					}
 				}
@@ -299,19 +295,19 @@ abstract class Component extends Object implements IComponent
 
 		} else { // attaching
 			foreach ($this->monitors as $type => $rec) {
-				if (isset($rec[0])) {
+				if (isset($rec[0])) { // is in cache yet
 					continue;
 
 				} elseif (!$rec[3]) { // not monitored, just randomly cached
 					unset($this->monitors[$type]);
 
-				} elseif (isset(self::$skip[$type])) {
+				} elseif (isset($missing[$type])) { // known from previous lookup
 					$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
 
 				} else {
-					$this->monitors[$type] = NULL; // forces re-lookup
+					$this->monitors[$type] = NULL; // means 'monitored' and forces re-lookup
 					if ($this->lookup($type, FALSE) === NULL) {
-						self::$skip[$type] = TRUE;
+						$missing[$type] = TRUE;
 					}
 				}
 			}
@@ -370,10 +366,18 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function __clone()
 	{
-		if ($this->parent !== NULL &&
-			!($this->parent instanceof ComponentContainer && $this->parent->isCloning()))
-		{
-			$this->setParent(NULL);
+		if ($this->parent === NULL) {
+			return;
+
+		} elseif ($this->parent instanceof ComponentContainer) {
+			$this->parent = $this->parent->isCloning();
+			if ($this->parent === NULL) { // not cloning
+				$this->refreshMonitors(0);
+			}
+
+		} else {
+			$this->parent = NULL;
+			$this->refreshMonitors(0);
 		}
 	}
 
