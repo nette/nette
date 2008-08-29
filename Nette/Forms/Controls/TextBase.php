@@ -102,7 +102,7 @@ abstract class TextBase extends FormControl
 
 
 	/**
-	 * Appends string filter callback.
+	 * Appends input string filter callback.
 	 * @param  callback
 	 * @return TextBase  provides a fluent interface
 	 */
@@ -159,6 +159,9 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateLength(IFormControl $control, $range)
 	{
+		if (!is_array($range)) {
+			$range = array($range, $range);
+		}
 		return iconv_strlen($control->getValue()) >= $range[0] && iconv_strlen($control->getValue()) <= $range[1];
 	}
 

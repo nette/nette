@@ -9,9 +9,18 @@ require_once '../../Nette/loader.php';
 
 function handler($val)
 {
-	echo "Hello $val\n";
+	echo __METHOD__ . " says $val\n";
 }
 
+
+class Handler
+{
+
+	function __invoke($val)
+	{
+		echo __METHOD__ . " says $val\n";
+	}
+}
 
 
 
@@ -93,4 +102,11 @@ echo "\n\n<h2>Attaching handler</h2>\n";
 
 $obj->onClick3[] = 'handler';
 
-echo "Invoking: ", $obj->onClick3('vole'), "\n";
+echo "Invoking: ", $obj->onClick3('hello'), "\n";
+
+
+echo "\n\n<h2>Attaching object handler</h2>\n";
+
+$obj->onClick3[] = new Handler;
+
+echo "Invoking: ", $obj->onClick3('hello'), "\n";

@@ -92,7 +92,7 @@ class UserClientScript extends /*Nette::*/Object
 	 */
 	private function exportControl(IFormControl $control)
 	{
-		return $control->getDisabled() ? NULL : array(
+		return $control->isDisabled() ? NULL : array(
 			'class' => $control->getClass(),
 			'rules' => $this->exportRules($control->getRules()),
 		);

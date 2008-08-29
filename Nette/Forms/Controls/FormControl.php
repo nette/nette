@@ -59,6 +59,9 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	private $disabled = FALSE;
 
 	/** @var bool */
+	private $required = FALSE;
+
+	/** @var bool */
 	private $rendered = FALSE;
 
 	/** @var string */
@@ -249,7 +252,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function setDisabled($value = TRUE)
 	{
-		$this->disabled = $value;
+		$this->disabled = (bool) $value;
 		return $this;
 	}
 
@@ -259,7 +262,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * Is control disabled?
 	 * @return bool
 	 */
-	public function getDisabled()
+	public function isDisabled()
 	{
 		return $this->disabled;
 	}
@@ -293,6 +296,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	public function getLabel()
 	{
 		$label = clone $this->label;
+		$label->class[] = $this->required ? 'required' : NULL;
 		$label->for = $this->getHtmlId();
 		$text = $label->getText();
 		$translator = $this->getTranslator();
@@ -328,15 +332,24 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 
 	/**
+	 * Sets 'rendered' indicator.
+	 * @param  bool
+	 * @return FormControl  provides a fluent interface
+	 */
+	public function setRendered($value = TRUE)
+	{
+		$this->rendered = (bool) $value;
+		return $this;
+	}
+
+
+
+	/**
 	 * Does method getControl() have been called?
-	 * @param  bool  optional new value
 	 * @return bool
 	 */
-	public function isRendered($value = NULL)
+	public function isRendered()
 	{
-		if ($value !== NULL) {
-			$this->rendered = (bool) $value;
-		}
 		return $this->rendered;
 	}
 
@@ -412,6 +425,17 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 
 	/**
+	 * Is control mandatory?
+	 * @return bool
+	 */
+	final public function isRequired()
+	{
+		return $this->required;
+	}
+
+
+
+	/**
 	 * New rule or condition notification callback.
 	 * @param  Rule
 	 * @return void
@@ -423,7 +447,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 			$op = strrchr($rule->operation, ':');
 			$class = substr($rule->operation, 0, -strlen($op) - 1);
 			if (!$rule->isCondition && strcasecmp($op, ':validateFilled') === 0 && is_subclass_of($class, __CLASS__)) {
-				$this->label->class[] = 'required'; // TODO: resit jinak
+				$this->required = TRUE;
 			}
 		}
 	}
@@ -460,6 +484,18 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	public static function validateFilled(IFormControl $control)
 	{
 		return (string) $control->getValue() !== ''; // NULL, FALSE, '' ==> FALSE
+	}
+
+
+
+	/**
+	 * Valid validator: is control valid?
+	 * @param  IFormControl
+	 * @return bool
+	 */
+	public static function validateValid(IFormControl $control)
+	{
+		return $control->rules->validate(TRUE);
 	}
 
 

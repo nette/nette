@@ -51,7 +51,7 @@ class Test extends /*Nette::*/Object
 
 
 
-	public function getReadOnly()
+	public function isReadOnly()
 	{
 		return 'OK';
 	}

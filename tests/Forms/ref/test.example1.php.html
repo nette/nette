@@ -121,6 +121,19 @@ function validate(sender) {
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val.length>=3;
 	if (!res) { if (el) el.focus(); alert("The password is too short: it must be at least 3 characters"); return false; }
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = function(){
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { return false; }
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val.length>=3;
+	if (!res) { return false; }
+	return true; }();
+	if (res) {
 	el = document.getElementById('frm-password2');
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="";
@@ -129,6 +142,7 @@ function validate(sender) {
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val==document.getElementById('frm-password').value;
 	if (!res) { if (el) el.focus(); alert("Passwords do not match"); return false; }
+	}
 	return true;
 }
 

@@ -154,38 +154,32 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 
 	/**
 	 * Validates against ruleset.
+	 * @param  bool    stop before first error?
 	 * @return bool    is valid?
 	 */
-	public function validate()
+	public function validate($onlyCheck = FALSE)
 	{
 		$valid = TRUE;
 		foreach ($this->rules as $rule)
 		{
-			if ($rule->control->getDisabled()) continue;
+			if ($rule->control->isDisabled()) continue;
 
-			try {
-				unset($e);
-				$ok = ($rule->isNegative xor call_user_func($rule->operation, $rule->control, $rule->arg));
-			} catch (ValidateException $e) {
-				$ok = FALSE;
-			}
+			$ok = ($rule->isNegative xor call_user_func($rule->operation, $rule->control, $rule->arg, $rule->isNegative));
 
 			if ($rule->isCondition && $ok) {
-				$ok = $rule->subRules->validate();
+				$ok = $rule->subRules->validate($onlyCheck);
 				$valid = $valid && $ok;
 
 			} elseif (!$rule->isCondition && !$ok) {
-				if (isset($e)) {
-					$rule->control->addError($e->getMessage());
-
-				} else {
-					$message = $rule->message;
-					$translator = $rule->control->getTranslator();
-					if ($translator !== NULL) {
-						$message = $translator->translate($message);
-					}
-					$rule->control->addError(vsprintf($message, (array) $rule->arg));
+				if ($onlyCheck) {
+					return FALSE;
 				}
+				$message = $rule->message;
+				$translator = $rule->control->getTranslator();
+				if ($translator !== NULL) {
+					$message = $translator->translate($message);
+				}
+				$rule->control->addError(vsprintf($message, (array) $rule->arg));
 				$valid = FALSE;
 			}
 		}
@@ -224,9 +218,9 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 	{
 		if (!is_string($rule->operation)) return;
 
-		if (strncmp($rule->operation, '!', 1) === 0) {
+		if (ord($rule->operation[0]) > 127) {
 			$rule->isNegative = TRUE;
-			$rule->operation = substr($rule->operation, 1);
+			$rule->operation = ~$rule->operation;
 		}
 
 		if (strncmp($rule->operation, ':', 1) === 0) {

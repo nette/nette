@@ -105,7 +105,7 @@ class TextInput extends TextBase
 		if (!is_string($rule->operation)) {
 			// nothing to do
 		} elseif (!$rule->isCondition && strcasecmp($rule->operation, /*Nette::Forms::*/'TextBase::validateLength') === 0) {
-			$this->control->maxlength = $rule->arg[1];
+			$this->control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
 
 		} elseif (!$rule->isCondition && strcasecmp($rule->operation, /*Nette::Forms::*/'TextBase::validateMaxLength') === 0) {
 			$this->control->maxlength = $rule->arg;

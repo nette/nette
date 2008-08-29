@@ -122,27 +122,31 @@ final class InstantClientScript extends /*Nette::*/Object
 
 
 
-	private function getValidateScript(Rules $rules)
+	private function getValidateScript(Rules $rules, $onlyCheck = FALSE)
 	{
 		$res = '';
 		foreach ($rules as $rule) {
 			if (!is_string($rule->operation)) continue;
-			$script = self::getClientScript($rule->control, $rule->operation, $rule->arg);
+			$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 			if (!$script) continue;
 			$res .= "$script\n\t";
 
 			if (!empty($rule->message)) { // this is rule
-				$translator = $rule->control->getTranslator();
-				$message = $translator === NULL ? $rule->message : $translator->translate($rule->message);
-				$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { " .
-					"if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
+				if ($onlyCheck) {
+					$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n\t";
+				} else {
+					$translator = $rule->control->getTranslator();
+					$message = $translator === NULL ? $rule->message : $translator->translate($rule->message);
+					$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { " .
+						"if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
+				}
 			}
 
 			if ($rule->isCondition) { // this is condition
-				$script = $this->getValidateScript($rule->subRules);
+				$script = $this->getValidateScript($rule->subRules, $onlyCheck);
 				if ($script) {
 					$res .= "if (" . ($rule->isNegative ? '!' : '') . "res) {\n\t" . $script . "}\n\t";
-					if ($rule->control instanceof ISubmitterControl) {
+					if (!$onlyCheck && $rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}
 				}
@@ -162,7 +166,7 @@ final class InstantClientScript extends /*Nette::*/Object
 		}
 		foreach ($rules as $rule) {
 			if ($rule->isCondition && is_string($rule->operation)) {
-				$script = self::getClientScript($rule->control, $rule->operation, $rule->arg);
+				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 				if ($script) {
 					$res = $this->getToggleScript($rule->subRules, $cond . "$script resT = resT && res;\n\t");
 					if ($res) {
@@ -183,12 +187,13 @@ final class InstantClientScript extends /*Nette::*/Object
 
 
 
-	private static function getClientScript(IFormControl $control, $operation, $arg)
+	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
 		$operation = strtolower($operation);
 		//TODO: jinak!
 		$operation = str_replace('textarea::', 'textbase::', $operation);
 		$operation = str_replace('textinput::', 'textbase::', $operation);
+		if (substr($operation, -15) === '::validatevalid') $operation = '::validatevalid';
 
 		// trim for TextBase
 		$id = $control->getHtmlId();
@@ -198,6 +203,9 @@ final class InstantClientScript extends /*Nette::*/Object
 		switch ($operation) {
 		case /*nette::forms::*/'instantclientscript::javascript':
 			return $arg;
+
+		case '::validatevalid':
+			return $tmp . $tmp2 . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
 
 		case /*nette::forms::*/'checkbox::validateequal':
 			return "el = document.getElementById('" . $id . "');\n\tres = " . ($arg ? '' : '!') . "el.checked;";
@@ -246,6 +254,9 @@ final class InstantClientScript extends /*Nette::*/Object
 			return $tmp . $tmp2 . "res = val.length<=" . (int) $arg . ";";
 
 		case /*nette::forms::*/'textbase::validatelength':
+			if (!is_array($arg)) {
+				$arg = array($arg, $arg);
+			}
 			return $tmp . $tmp2 . "res = val.length>=" . (int) $arg[0] . " && val.length<=" . (int) $arg[1] . ";";
 
 		case /*nette::forms::*/'textbase::validateemail':

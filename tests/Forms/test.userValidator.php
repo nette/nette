@@ -15,19 +15,11 @@ function myValidator1($item, $arg)
 	return $item->getValue() != $arg;
 }
 
-function myValidator2($item, $arg)
-{
-	if ($item->getValue() == $arg) {
-		throw new /*Nette::Forms::*/ValidateException('This is big error!');
-	}
-	return TRUE;
-}
-
 
 $form = new Form();
 $form->addText('name', 'Text:', 10)
 	->addRule('myValidator1', 'Value %d is not allowed!', 11)
-	->addRule('myValidator2', 'Value %d is not allowed!', 22);
+	->addRule(~'myValidator1', 'Value %d is required!', 22);
 
 $form->addSubmit('submit1', 'Send');
 
@@ -56,4 +48,4 @@ if ($form->isSubmitted()) {
 	$form->setDefaults($defaults);
 }
 
-$form->renderForm();
+$form->render();

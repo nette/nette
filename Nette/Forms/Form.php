@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
 
 
 /**
- * Form - create, validate and render (X)HTML forms.
+ * Creates, validates and renders HTML forms.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -38,6 +38,8 @@ class Form extends FormContainer
 	/** Deprecated constants. */
 	const EQUAL = ':Equal';
 	const FILLED = ':Filled';
+	const VALID = ':Valid';
+
 	const SCRIPT = /*Nette::Forms::*/'InstantClientScript::javascript';
 
 	const SUBMITTED = /*Nette::Forms::*/'SubmitButton::validateSubmitted';
@@ -76,6 +78,9 @@ class Form extends FormContainer
 
 	/** @var Nette::ITranslator */
 	private $translator;
+
+	/** @var array of FormGroup */
+	private $groups = array();
 
 	/** @var bool */
 	private $isPopulated = FALSE;
@@ -152,6 +157,29 @@ class Form extends FormContainer
 		// TODO: implement Cross-Site Request Forgery token
 		$this[self::TRACKER_ID] = new HiddenField;
 		$this[self::TRACKER_ID]->setValue($name);
+	}
+
+
+
+	/**
+	 * Adds fieldset group to the form.
+	 * @param  string  label
+	 * @return FormGroup
+	 */
+	public function addGroup($label)
+	{
+		return $this->groups[] = $this->currentGroup = new FormGroup($label);
+	}
+
+
+
+	/**
+	 * Returns all defined groups.
+	 * @return array of FormGroup
+	 */
+	public function getGroups()
+	{
+		return $this->groups;
 	}
 
 
@@ -297,7 +325,7 @@ class Form extends FormContainer
 			if (!isset($sub->cursor)) {
 				$sub->cursor = & $cursor;
 			}
-			if ($control instanceof IFormControl && !$control->getDisabled()) {
+			if ($control instanceof IFormControl && !$control->isDisabled()) {
 				$control->loadHttpData($sub->cursor);
 				if ($control instanceof ISubmitterControl && ($this->submittedBy === TRUE || $control->isSubmittedBy())) {
 					$this->submittedBy = $control;
@@ -342,7 +370,7 @@ class Form extends FormContainer
 			if (!isset($sub->cursor)) {
 				$sub->cursor = & $cursor;
 			}
-			if ($control instanceof IFormControl && !$control->getDisabled() && !($control instanceof ISubmitterControl)) {
+			if ($control instanceof IFormControl && !$control->isDisabled() && !($control instanceof ISubmitterControl)) {
 				$sub->cursor[$name] = $control->getValue();
 			}
 			if ($control instanceof INamingContainer) {
@@ -416,24 +444,27 @@ class Form extends FormContainer
 
 	/**
 	 * Performs the server side validation.
-	 * @param  bool
+	 * @param  bool  stop on first error?
 	 * @return void
 	 */
-	public function validate($stopOnFirst = FALSE)
+	public function validate($breakOnFailure = FALSE)
 	{
 		if (!$this->isPopulated) {
 			throw new /*::*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
 		}
+
+		$controls = $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
+
 		$this->valid = TRUE;
-		foreach ($this->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
+		foreach ($controls as $control) {
 			if (!$control->getRules()->validate()) {
 				$this->valid = FALSE;
-				if ($stopOnFirst) break;
+				if ($breakOnFailure) break;
 			}
 		}
 
 		if (!$this->valid) {
-			foreach ($this->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
+			foreach ($controls as $control) {
 				$this->errors = array_merge($this->errors, $control->getErrors());
 			}
 		}
@@ -502,10 +533,10 @@ class Form extends FormContainer
 
 
 	/**
-	 * Provides complete form rendering.
+	 * Renders form.
 	 * @return void
 	 */
-	public function renderForm()
+	public function render()
 	{
 		// TODO:
 		//$js = new InstantClientScript($this);
@@ -522,11 +553,48 @@ class Form extends FormContainer
 
 
 
+	/**
+	 * Renders form to string.
+	 * @return string
+	 */
+	public function __toString()
+	{
+		ob_start();
+		try {
+			$this->render();
+			return ob_get_clean();
+
+		} catch (Exception $e) {
+			ob_end_clean();
+			trigger_error($e->getMessage(), E_USER_WARNING);
+			return '';
+		}
+	}
+
+
+
+	/********************* old rendering ****************d*g**/
+
+
+
+	/**
+	 * Provides complete form rendering.
+	 * @return void
+	 * @deprecated
+	 */
+	public function renderForm()
+	{
+		$this->render();
+	}
+
+
+
 	private $js;
 
 	/**
 	 * Renders form's start tag.
 	 * @return void
+	 * @deprecated
 	 */
 	public function renderBegin()
 	{
@@ -540,6 +608,7 @@ class Form extends FormContainer
 	/**
 	 * Renders the rest of the form.
 	 * @return void
+	 * @deprecated
 	 */
 	public function renderEnd()
 	{
@@ -553,6 +622,7 @@ class Form extends FormContainer
 	 * Renders validation errors (per form or per control).
 	 * @param  IFormControl
 	 * @return void
+	 * @deprecated
 	 */
 	public function renderErrors($control = NULL)
 	{
@@ -572,6 +642,7 @@ class Form extends FormContainer
 	 * Renders form body.
 	 * @param  FormContainer
 	 * @return void
+	 * @deprecated
 	 */
 	public function renderBody()
 	{

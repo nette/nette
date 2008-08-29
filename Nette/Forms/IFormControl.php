@@ -67,7 +67,13 @@ interface IFormControl
 	 * Is control disabled?
 	 * @return bool
 	 */
-	function getDisabled();
+	function isDisabled();
+
+	/**
+	 * Is control mandatory?
+	 * @return bool
+	 */
+	function isRequired();
 
 	/**
 	 * Returns translator adapter.

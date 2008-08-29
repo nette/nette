@@ -45,6 +45,19 @@ class Test extends ComponentContainer implements /*::*/ArrayAccess
 }
 
 
+/*Nette::Object::extensionMethod('Nette::IComponentContainer::export', function($thisObj)*/
+/**/function IComponentContainer_prototype_export($thisObj)/**/
+{
+	$res = array("($thisObj->class)" => $thisObj->name);
+	if ($thisObj instanceof /*Nette::*/IComponentContainer) {
+		foreach ($thisObj->getComponents() as $name => $obj) {
+			$res['children'][$name] = $obj->export();
+		}
+	}
+	return $res;
+}/*);*/
+
+
 class A extends Test {}
 class B extends Test {}
 class C extends Test {}
@@ -55,7 +68,7 @@ $a = new A;
 $a['b'] = new B;
 $a['b']['c'] = new C;
 $a['b']['c']['d'] = new D;
-$a['b']['c']['d']['e'] = new D;
+$a['b']['c']['d']['e'] = new E;
 
 $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
@@ -80,14 +93,3 @@ $a['dolly'] = $dolly;
 
 echo "\nexport 'a'\n";
 Debug::dump($a->export());
-
-function IComponentContainer_prototype_export($thisObj)
-{
-	$res = array("($thisObj->class)" => $thisObj->name);
-	if ($thisObj instanceof IComponentContainer) {
-		foreach ($thisObj->getComponents() as $name => $obj) {
-			$res['children'][$name] = $obj->export();
-		}
-	}
-	return $res;
-}

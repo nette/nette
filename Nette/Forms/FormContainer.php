@@ -37,6 +37,37 @@ require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
  */
 class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/ArrayAccess, INamingContainer
 {
+	/** @var FormGroup */
+	protected $currentGroup;
+
+
+	/**
+	 * @param  FormGroup
+	 * @return void
+	 */
+	public function setCurrentGroup(FromGroup $group = NULL)
+	{
+		$this->currentGroup = $group;
+	}
+
+
+
+	/**
+	 * Adds the specified component to the IComponentContainer.
+	 * @param  IComponent
+	 * @param  string
+	 * @param  string
+	 * @return void
+	 * @throws ::InvalidStateException
+	 */
+	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
+	{
+		parent::addComponent($component, $name, $insertBefore);
+		if ($this->currentGroup !== NULL && $component instanceof IFormControl) {
+			$this->currentGroup->add($component);
+		}
+	}
+
 
 
 	/********************* control factories ****************d*g**/
@@ -235,7 +266,9 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addContainer($name)
 	{
-		return $this[$name] = new FormContainer;
+		$control = new FormContainer;
+		$control->currentGroup = $this->currentGroup;
+		return $this[$name] = $control;
 	}
 
 

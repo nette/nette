@@ -67,9 +67,9 @@ $cond->addRuleFor($form['country'], Form::FILLED, 'Select your country');
 
 $form['password']->addRule(Form::FILLED, 'Choose your password');
 $form['password']->addRule(Form::MIN_LENGTH, 'The password is too short: it must be at least %d characters', 3);
-$form['password2']->addRule(Form::FILLED, 'Reenter your password');
-// special case: argument is another form item
-$form['password2']->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
+$form['password2']->addConditionOn($form['password'], Form::VALID)
+	->addRule(Form::FILLED, 'Reenter your password')
+	->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
 
 // now form is defined
 

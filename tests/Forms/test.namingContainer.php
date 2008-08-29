@@ -39,25 +39,25 @@ $form->addSubmit('submit1', 'Send');
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array (
-  'name' => 'jim',
-  'text1' => 'hello',
-  'text2' => 'world',
-  'formCont' =>
-  array (
-    'name' => 'jack',
-    'age' => '23',
-  ),
-  'firstperson' =>
-  array (
-    'name' => 'david',
-    'age' => '30',
-  ),
-  'secondperson' =>
-  array (
-    'name' => 'jim',
-    'age' => '40',
-  ),
-  'age' => '50',
+	'name' => 'jim',
+	'text1' => 'hello',
+	'text2' => 'world',
+	'formCont' =>
+	array (
+		'name' => 'jack',
+		'age' => '23',
+	),
+	'firstperson' =>
+	array (
+		'name' => 'david',
+		'age' => '30',
+	),
+	'secondperson' =>
+	array (
+		'name' => 'jim',
+		'age' => '40',
+	),
+	'age' => '50',
 );
 
 
@@ -73,25 +73,25 @@ Debug::dump($form->getValues());
 
 
 $defaults = array (
-  'name' => 'jim',
-  'text1' => 'hello',
-  'text2' => 'world',
-  'formCont' =>
-  array (
-    'name' => 'jack',
-    'age' => '23',
-  ),
-  'firstperson' =>
-  array (
-    'name' => 'david',
-    'age' => '30',
-  ),
-  'secondperson' =>
-  array (
-    'name' => 'jim',
-    'age' => '40',
-  ),
-  'age' => '50',
+	'name' => 'jim',
+	'text1' => 'hello',
+	'text2' => 'world',
+	'formCont' =>
+	array (
+		'name' => 'jack',
+		'age' => '23',
+	),
+	'firstperson' =>
+	array (
+		'name' => 'david',
+		'age' => '30',
+	),
+	'secondperson' =>
+	array (
+		'name' => 'jim',
+		'age' => '40',
+	),
+	'age' => '50',
 );
 
 $form->setDefaults($defaults);
@@ -100,4 +100,4 @@ Debug::dump($form->getValues());
 
 
 echo "Render:\n";
-$form->renderForm();
+echo $form;
