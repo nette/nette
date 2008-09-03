@@ -145,7 +145,7 @@ class User extends /*Nette::*/Object implements IUser
 			$session->authenticated = FALSE;
 		}
 
-		if ($session->authkey !== Environment::getHttpRequest()->cookies[$this->cookieName]) {
+		if ($session->authkey !== Environment::getHttpRequest()->getCookie($this->cookieName)) {
 			$this->setAuthenticated(FALSE);
 		}
 	}

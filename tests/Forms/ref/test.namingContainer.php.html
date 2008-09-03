@@ -12,16 +12,23 @@ array(7) {
   "text1" => string(5) "hello"
   "text2" => string(5) "world"
   "formCont" => array(2) {
-    "name" => string(4) "jack"
+    "name" => string(17) "jack x\y o'connor"
     "age" => string(2) "23"
   }
   "firstperson" => array(2) {
     "name" => string(5) "david"
     "age" => string(2) "30"
   }
-  "secondperson" => array(2) {
+  "secondperson" => array(3) {
     "name" => string(3) "jim"
     "age" => string(2) "40"
+    "avatar" => object(HttpUploadedFile) (5) {
+      "name" private => string(11) "license.txt"
+      "type" private => string(10) "text/plain"
+      "size" private => int(3013)
+      "tmpName" private => string(23) "C:\PHP\temp\php1D5C.tmp"
+      "error" private => int(0)
+    }
   }
   "age" => string(2) "50"
 }
@@ -39,15 +46,16 @@ array(7) {
     "name" => string(5) "david"
     "age" => string(2) "30"
   }
-  "secondperson" => array(2) {
+  "secondperson" => array(3) {
     "name" => string(3) "jim"
     "age" => string(2) "40"
+    "avatar" => NULL
   }
   "age" => string(2) "50"
 }
 
 Render:
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
 <table>
 <tr>
 	<th><label for="frm-name">Your name:</label></th>
@@ -92,6 +100,11 @@ Render:
 <tr>
 	<th><label for="frm-secondperson-age">Your age:</label></th>
 	<td><input type="text" size="5" class="text" name="secondperson[age]" id="frm-secondperson-age" value="40" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-secondperson-avatar">Picture:</label></th>
+	<td><input type="file" class="text" name="secondperson[avatar]" id="frm-secondperson-avatar" /></td>
 </tr>
 
 <tr>

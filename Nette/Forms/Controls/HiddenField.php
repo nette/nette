@@ -64,7 +64,7 @@ class HiddenField extends FormControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = (string) $value;
+		$this->value = is_scalar($value) ? (string) $value : '';
 	}
 
 

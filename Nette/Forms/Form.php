@@ -79,6 +79,9 @@ class Form extends FormContainer
 	/** @var Nette::ITranslator */
 	private $translator;
 
+	/** @var Nette::Web::IHttpRequest */
+	private $httpRequest;
+
 	/** @var array of FormGroup */
 	private $groups = array();
 
@@ -250,22 +253,51 @@ class Form extends FormContainer
 	{
 		$this->submittedBy = FALSE;
 
+		$request = $this->httpRequest ? $this->httpRequest : new /*Nette::Web::*/HttpRequest;
+
 		// standalone mode
-		if ($this->isPost xor @$_SERVER['REQUEST_METHOD'] === 'POST') return;
+		if ($this->isPost xor $request->getMethod() === 'POST') return;
 
 		$tracker = $this->getComponent(self::TRACKER_ID);
 		if ($tracker) {
-			if ($this->isPost) {
-				if (!isset($_POST[self::TRACKER_ID])) return;
-				if ($_POST[self::TRACKER_ID] !== $tracker->getValue()) return;
-			} else {
-				if (!isset($_GET[self::TRACKER_ID])) return;
-				if ($_GET[self::TRACKER_ID] !== $tracker->getValue()) return;
-			}
+			$val = $this->isPost ? $request->getPost(self::TRACKER_ID) : $request->getQuery(self::TRACKER_ID);
+			if ($val !== $tracker->getValue()) return;
 		}
 
 		$this->submittedBy = TRUE;
-		$this->loadHttpData();
+
+		if ($this->isPost) {
+			$this->loadHttpData(self::arrayAppend($request->getPost(), $request->getFiles()));
+
+		} else {
+			$this->loadHttpData($request->getQuery());
+		}
+	}
+
+
+
+	/**
+	 * Sets HTTP request object.
+	 * @param  Nette::Web::IHttpRequest
+	 * @return void
+	 */
+	public function setHttpRequest(/*Nette::Web::*/IHttpRequest $httpRequest)
+	{
+		$this->httpRequest = $httpRequest;
+		if ($this->submittedBy !== NULL) {
+			$this->detectSubmission();
+		}
+	}
+
+
+
+	/**
+	 * Returns HTTP request object.
+	 * @return void
+	 */
+	public function getHttpRequest()
+	{
+		return $this->httpRequest;
 	}
 
 
@@ -295,11 +327,19 @@ class Form extends FormContainer
 				$sub->cursor = & $cursor;
 			}
 			if ($control instanceof IFormControl) {
-				$control->setValue(isset($sub->cursor[$name]) ? $sub->cursor[$name] : NULL);
+				if (isset($sub->cursor[$name])) {
+					$control->setValue($sub->cursor[$name]);
+				} else {
+					$control->setValue(NULL);
+				}
 			}
 			if ($control instanceof INamingContainer) {
-				$cursor = & $sub->cursor[$name];
-				if (!is_array($cursor)) $cursor = array(); // note: modifies data
+				if (is_array($sub->cursor) && isset($sub->cursor[$name])) {
+					$cursor = & $sub->cursor[$name];
+				} else {
+					unset($cursor);
+					$cursor = NULL;
+				}
 			}
 		}
 		$this->isPopulated = TRUE;
@@ -312,12 +352,8 @@ class Form extends FormContainer
 	 * @param  array    user data
 	 * @return void
 	 */
-	public function loadHttpData(array $data = NULL)
+	public function loadHttpData(array $data)
 	{
-		if ($data === NULL) {
-			$data = $this->isPost ? $_POST + $_FILES : $_GET;
-		}
-
 		$cursor = & $data;
 		$iterator = $this->getComponents(TRUE);
 		foreach ($iterator as $name => $control) {
@@ -331,9 +367,13 @@ class Form extends FormContainer
 					$this->submittedBy = $control;
 				}
 			}
-			if ($control instanceof INamingContainer) {
-				$cursor = & $sub->cursor[$name];
-				if (!is_array($cursor)) $cursor = array(); // note: modifies data
+			if ($control instanceof INamingContainer) { // going deeper
+				if (isset($sub->cursor[$name]) && is_array($sub->cursor[$name])) {
+					$cursor = & $sub->cursor[$name];
+				} else {
+					unset($cursor);
+					$cursor = NULL;
+				}
 			}
 		}
 		$this->isPopulated = TRUE;
@@ -380,6 +420,25 @@ class Form extends FormContainer
 		}
 		unset($values[self::TRACKER_ID]);
 		return $values;
+	}
+
+
+
+	/**
+	 * Recursively appends elements of remaining keys from the second array to the first.
+	 * @param  array
+	 * @param  array
+	 * @return array
+	 */
+	public static function arrayAppend($arr1, $arr2)
+	{
+		$res = $arr1 + $arr2;
+		foreach (array_intersect_key($arr1, $arr2) as $k => $v) {
+			if (is_array($v) && is_array($arr2[$k])) {
+				$res[$k] = self::arrayAppend($v, $arr2[$k]);
+			}
+		}
+		return $res;
 	}
 
 

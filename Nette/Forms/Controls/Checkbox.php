@@ -55,7 +55,7 @@ class Checkbox extends FormControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = (bool) $value;
+		$this->value = is_scalar($value) ? (bool) $value : FALSE;
 	}
 
 

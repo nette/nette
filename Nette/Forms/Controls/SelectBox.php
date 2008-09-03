@@ -94,14 +94,19 @@ class SelectBox extends FormControl
 		}
 
 		if ($this->multiple) {
+			if (is_scalar($value)) {
+				$value = (array) $value;
+			} elseif (!is_array($value)) {
+				$value = array();
+			}
 			$this->value = array();
-			foreach ((array) $value as $val) {
-				if (isset($allowed[$val])) {
+			foreach ($value as $val) {
+				if (is_scalar($val) && isset($allowed[$val])) {
 					$this->value[] = $val;
 				}
 			}
 		} else {
-			$this->value = isset($allowed[$value]) ? $value : NULL;
+			$this->value = is_scalar($value) && isset($allowed[$value]) ? $value : NULL;
 		}
 	}
 

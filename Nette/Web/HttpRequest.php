@@ -37,26 +37,81 @@ require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
  */
 class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 {
-	/** @var Nette::Collections::Hashtable */
-	private $query;
+	/** @var array */
+	protected $query = array();
 
-	/** @var Nette::Collections::Hashtable */
-	private $post;
+	/** @var array */
+	protected $post = array();
 
-	/** @var Nette::Collections::Hashtable */
-	private $files;
+	/** @var array */
+	protected $files = array();
 
-	/** @var Nette::Collections::Hashtable */
-	private $cookies;
+	/** @var array */
+	protected $cookies = array();
 
 	/** @var UriScript  @see self::getUri() */
-	private $uri;
+	protected $uri;
 
 	/** @var Uri  @see self::getOriginalUri() */
-	private $originalUri;
+	protected $originalUri;
 
 	/** @var array  @see self::getHeaders() */
-	private $headers;
+	protected $headers;
+
+
+
+	public function __construct()
+	{
+		if (!empty($_GET)) {
+			$this->query = $_GET;
+		}
+		if (!empty($_POST)) {
+			$this->post = $_POST;
+		}
+		if (!empty($_COOKIE)) {
+			$this->cookies = $_COOKIE;
+		}
+		if (get_magic_quotes_gpc()) { // remove fucking quotes
+			$list = array(& $this->query, & $this->post, & $this->cookies);
+			while (list($k, $v) = each($list)) {
+				if (is_array($v)) {
+					foreach ($v as $k2 => $foo) $list[] = & $list[$k][$k2];
+				} else {
+					$list[$k] = stripSlashes($v);
+				}
+			}
+			unset($list, $k, $v, $k2, $foo);
+		}
+
+		$list = array();
+		if (!empty($_FILES)) {
+			foreach ($_FILES as $name => $v) {
+				$v['@'] = & $this->files[$name];
+				$list[] = $v;
+			}
+		}
+
+		while (list(, $v) = each($list)) {
+			if (!isset($v['name'])) continue;
+			if (!is_array($v['name'])) {
+				if (get_magic_quotes_gpc()) {
+					$v['name'] = stripSlashes($v['name']);
+				}
+				$v['@'] = new HttpUploadedFile($v);
+				continue;
+			}
+			foreach ($v['name'] as $k => $foo) {
+				$list[] = array(
+					'name' => $v['name'][$k],
+					'type' => $v['type'][$k],
+					'size' => $v['size'][$k],
+					'tmp_name' => $v['tmp_name'][$k],
+					'error' => $v['error'][$k],
+					'@' => & $v['@'][$k],
+				);
+			}
+		}
+	}
 
 
 
@@ -65,7 +120,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 * @param  bool
 	 * @return UriScript
 	 */
-	public function getUri($clone = TRUE)
+	final public function getUri($clone = TRUE)
 	{
 		if ($this->uri === NULL) {
 			$this->detectUri();
@@ -80,7 +135,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 * @param  bool
 	 * @return Uri
 	 */
-	public function getOriginalUri($clone = TRUE)
+	final public function getOriginalUri($clone = TRUE)
 	{
 		if ($this->originalUri === NULL) {
 			$this->detectUri();
@@ -188,29 +243,45 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns variables provided to the script via URL query ($_GET).
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via URL query ($_GET).
+	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
 	 */
-	public function getQuery()
+	final public function getQuery($key = NULL, $default = NULL)
 	{
-		if ($this->query === NULL) {
-			$this->query = new /*Nette::Collections::*/Hashtable($_GET);
+		if (func_num_args() === 0) {
+			return $this->query;
+
+		} elseif (isset($this->query[$key])) {
+			return $this->query[$key];
+
+		} else {
+			return $default;
 		}
-		return $this->query;
 	}
 
 
 
 	/**
-	 * Returns variables provided to the script via POST method ($_POST).
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via POST method ($_POST).
+	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
 	 */
-	public function getPost()
+	final public function getPost($key = NULL, $default = NULL)
 	{
-		if ($this->post === NULL) {
-			$this->post = new /*Nette::Collections::*/Hashtable($_POST);
+		if (func_num_args() === 0) {
+			return $this->post;
+
+		} elseif (isset($this->post[$key])) {
+			return $this->post[$key];
+
+		} else {
+			return $default;
 		}
-		return $this->post;
 	}
 
 
@@ -227,66 +298,76 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns uploaded files.
-	 * @return Nette::Collections::Hashtable
+	 * Returns uploaded file.
+	 * @param  string key (or more keys)
+	 * @return HttpUploadedFile
 	 */
-	public function getFiles()
+	final public function getFile($key)
 	{
-		if ($this->files === NULL) {
-			$dest = array();
-			$list = array();
-			foreach ($_FILES as $name => $v) {
-				$v['@'] = & $dest[$name];
-				$list[] = $v;
+		$var = $this->files;
+		foreach (func_get_args() as $k) {
+			if (is_array($var) && isset($var[$k])) {
+				$var = $var[$k];
+			} else {
+				return NULL;
 			}
-
-			while (list(, $v) = each($list)) {
-				if (!is_array($v['name'])) {
-					$v['@'] = new HttpUploadedFile($v);
-					continue;
-				}
-				foreach ($v['name'] as $k => $foo) {
-					$list[] = array(
-						'name' => $v['name'][$k],
-						'type' => $v['type'][$k],
-						'size' => $v['size'][$k],
-						'tmp_name' => $v['tmp_name'][$k],
-						'error' => $v['error'][$k],
-						'@' => & $v['@'][$k],
-					);
-				}
-			}
-			$this->files = new /*Nette::Collections::*/Hashtable($dest);
 		}
+		return $var;
+	}
+
+
+
+	/**
+	 * Returns uploaded files.
+	 * @return array
+	 */
+	final public function getFiles()
+	{
 		return $this->files;
 	}
 
 
 
 	/**
-	 * Returns variables provided to the script via HTTP cookies.
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via HTTP cookies.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
 	 */
-	public function getCookies()
+	final public function getCookie($key, $default = NULL)
 	{
-		if ($this->cookies === NULL) {
-			$this->cookies = new /*Nette::Collections::*/Hashtable($_COOKIE);
+		if (func_num_args() === 0) {
+			return $this->cookies;
+
+		} elseif (isset($this->cookies[$key])) {
+			return $this->cookies[$key];
+
+		} else {
+			return $default;
 		}
+	}
+
+
+
+	/**
+	 * Returns variables provided to the script via HTTP cookies.
+	 * @return array
+	 */
+	final public function getCookies()
+	{
 		return $this->cookies;
 	}
 
 
 
 	/**
-	 * Return the value of the HTTP header. Pass the header name as the.
-	 * plain, HTTP-specified header name. Ex.: Ask for 'Accept' to get the
-	 * Accept header, 'Accept-Encoding' to get the Accept-Encoding header.
-	 *
+	 * Return the value of the HTTP header. Pass the header name as the
+	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
 	 * @param  string
 	 * @param  mixed
-	 * @return string|NULL  single HTTP header value
+	 * @return mixed
 	 */
-	public function getHeader($header, $default = NULL)
+	final public function getHeader($header, $default = NULL)
 	{
 		$header = strtolower($header);
 		$headers = $this->getHeaders();
@@ -327,7 +408,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 * Returns referrer.
 	 * @return Uri|NULL
 	 */
-	public function getReferer()
+	final public function getReferer()
 	{
 		$uri = self::getHeader('referer');
 		return $uri ? new Uri($uri) : NULL;
@@ -406,26 +487,6 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 		}
 
 		return $lang;
-	}
-
-
-
-	/**
-	 * Magic quotes remover.
-	 * @param  array
-	 * @return void
-	 */
-	public static function fuckingQuotes($list)
-	{
-		if (get_magic_quotes_gpc()) {
-			while (list($k, $v) = each($list)) {
-				if (is_array($v)) {
-					foreach ($v as $k2 => $foo) $list[] = & $list[$k][$k2];
-				} else {
-					$list[$k] = stripSlashes($v);
-				}
-			}
-		}
 	}
 
 }

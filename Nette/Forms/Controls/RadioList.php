@@ -69,7 +69,7 @@ class RadioList extends FormControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = isset($this->items[$value]) ? $value : NULL;
+		$this->value = is_scalar($value) && isset($this->items[$value]) ? $value : NULL;
 	}
 
 

@@ -1,7 +1,7 @@
 <h1>Nette::Web::HttpRequest uploaded files test</h1>
 
 <pre>
-object(Hashtable) (3) {
+array(3) {
   "file1" => object(HttpUploadedFile) (5) {
     "name" private => string(10) "readme.txt"
     "type" private => string(10) "text/plain"
@@ -38,3 +38,15 @@ object(Hashtable) (3) {
   }
 }
 
+bool(FALSE)
+
+bool(TRUE)
+
+NULL
+
+Before move:
+C:\PHP\temp\php1D5D.tmp
+
+Warning: rename(C:\PHP\temp\php1D5D.tmp,new.loc): No such file or directory in D:\Web\nette\_trunk2\Nette\Web\HttpUploadedFile.php on line 159
+After move:
+C:\PHP\temp\php1D5D.tmp

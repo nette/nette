@@ -70,7 +70,7 @@ abstract class TextBase extends FormControl
 	public function loadHttpData($data)
 	{
 		$name = $this->getName();
-		$rawValue = isset($data[$name]) ? $data[$name] : NULL;
+		$rawValue = isset($data[$name]) && is_scalar($data[$name]) ? $data[$name] : NULL;
 		$this->setValue($rawValue);
 		$this->rawValue = $rawValue;
 	}

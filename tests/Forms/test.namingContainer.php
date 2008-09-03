@@ -31,6 +31,7 @@ $sub->addText('age', 'Your age:', 5);
 $sub = $form->addContainer('secondperson');
 $sub->addText('name', 'Your name:', 35);
 $sub->addText('age', 'Your age:', 5);
+$sub->addFile('avatar', 'Picture:');
 
 $form->addText('age', 'Your age:', 5);
 
@@ -38,27 +39,52 @@ $form->addSubmit('submit1', 'Send');
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
-$_POST = array (
+$_POST = array(
 	'name' => 'jim',
 	'text1' => 'hello',
 	'text2' => 'world',
 	'formCont' =>
-	array (
-		'name' => 'jack',
+	array(
+		'name' => 'jack x\\\\y o\\\'connor',
 		'age' => '23',
 	),
 	'firstperson' =>
-	array (
+	array(
 		'name' => 'david',
 		'age' => '30',
 	),
 	'secondperson' =>
-	array (
+	array(
 		'name' => 'jim',
 		'age' => '40',
 	),
 	'age' => '50',
 );
+
+$_FILES = array(
+	'secondperson' => array(
+		'name' => array(
+			'avatar' => 'license.txt',
+		),
+
+		'type' => array(
+			'avatar' => 'text/plain',
+		),
+
+		'tmp_name' => array(
+			'avatar' => 'C:\\PHP\\temp\\php1D5C.tmp',
+		),
+
+		'error' => array(
+			'avatar' => 0,
+		),
+
+		'size' => array(
+			'avatar' => 3013,
+		),
+	),
+);
+
 
 
 echo "Submitted?\n";
@@ -72,22 +98,22 @@ echo "Values:\n";
 Debug::dump($form->getValues());
 
 
-$defaults = array (
+$defaults = array(
 	'name' => 'jim',
 	'text1' => 'hello',
 	'text2' => 'world',
 	'formCont' =>
-	array (
+	array(
 		'name' => 'jack',
 		'age' => '23',
 	),
 	'firstperson' =>
-	array (
+	array(
 		'name' => 'david',
 		'age' => '30',
 	),
 	'secondperson' =>
-	array (
+	array(
 		'name' => 'jim',
 		'age' => '40',
 	),

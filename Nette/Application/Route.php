@@ -165,11 +165,11 @@ class Route extends /*Nette::*/Object implements IRouter
 
 		// 3) query
 		if ($this->xlat) {
-			$params += self::renameKeys((array) $context->getQuery(), array_flip($this->xlat));
+			$params += self::renameKeys($context->getQuery(), array_flip($this->xlat));
 		} else {
-			$params += (array) $context->getQuery();
+			$params += $context->getQuery();
 		}
-		//$params += (array) $context->getPost();
+		//$params += $context->getPost();
 
 
 		// 4) defaults
@@ -208,7 +208,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			return NULL;
 		}
 
-		$params = (array) $request->getParams();
+		$params = $request->getParams();
 		$metadata = $this->metadata;
 
 		$presenter = $request->getPresenterName();

@@ -54,11 +54,20 @@ class HttpUploadedFile extends /*Nette::*/Object
 
 	public function __construct($value)
 	{
-		$this->name = isset($value['name']) ? $value['name'] : NULL;
-		$this->type = isset($value['type']) ? $value['type'] : NULL;
-		$this->size = isset($value['size']) ? $value['size'] : NULL;
-		$this->tmpName = isset($value['tmp_name']) ? $value['tmp_name'] : NULL;
-		$this->error = isset($value['error']) ? $value['error'] : UPLOAD_ERR_NO_FILE;
+		foreach (array('name', 'type', 'size', 'tmp_name', 'error') as $key) {
+			if (!isset($value[$key]) || !is_scalar($value[$key])) {
+				$this->error = UPLOAD_ERR_NO_FILE;
+				return; // or throw exception?
+			}
+		}
+		//if (!is_uploaded_file($value['tmp_name'])) {
+			//throw new /*::*/InvalidStateException("Filename '$value[tmp_name]' is not a valid uploaded file.");
+		//}
+		$this->name = $value['name'];
+		$this->type = $value['type'];
+		$this->size = $value['size'];
+		$this->tmpName = $value['tmp_name'];
+		$this->error = $value['error'];
 	}
 
 
@@ -108,6 +117,17 @@ class HttpUploadedFile extends /*Nette::*/Object
 
 
 	/**
+	 * Returns the path to an uploaded file.
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->tmpName;
+	}
+
+
+
+	/**
 	 * Returns the error code.
 	 * @return int
 	 */
@@ -132,11 +152,17 @@ class HttpUploadedFile extends /*Nette::*/Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return void
+	 * @return bool
 	 */
 	public function move($dest)
 	{
-		return move_uploaded_file($this->tmpName, $dest);
+		if (rename($this->tmpName, $dest)) {
+			$this->tmpName = $dest;
+			return TRUE;
+
+		} else {
+			return FALSE;
+		}
 	}
 
 

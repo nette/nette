@@ -6,35 +6,29 @@
 require_once '../../Nette/loader.php';
 
 /*use Nette::Application::Route;*/
-/*use Nette::Collections::Hashtable ;*/
 
 
 class MockHttpRequest extends /*Nette::Web::*/HttpRequest
 {
-	public $path;
 
-	public $query = array();
-
-	public $post = array();
-
-	public function getUri()
+	public function setPath($path)
 	{
-		$uri = new /*Nette::Web::*/UriScript;
-		$uri->host = 'admin.texy.info';
-		$uri->scriptPath = '/';
-		$uri->path = $this->path;
-		return $uri;
+		$this->uri = new /*Nette::Web::*/UriScript;
+		$this->uri->host = 'admin.texy.info';
+		$this->uri->scriptPath = '/';
+		$this->uri->path = $path;
 	}
 
-	public function getQuery()
+	public function setQuery(array $query)
 	{
-		return new Hashtable($this->query);
+		$this->query = $query;
 	}
 
-	public function getPost()
+	public function setPost(array $post)
 	{
-		return new Hashtable($this->post);
+		$this->post = $post;
 	}
+
 }
 
 
@@ -43,32 +37,32 @@ function test(Route $route, $uri, $expectedReq, $expectedUri)
 {
 	echo "$uri: ";
 	$httpRequest = new MockHttpRequest;
-	$httpRequest->path = $uri;
-	$httpRequest->query = array(
+	$httpRequest->setPath($uri);
+	$httpRequest->setQuery(array(
 		'test' => 'testvalue',
 		'presenter' => 'querypresenter',
-	);
+	));
 
 	//Debug::dump($route);
-	$data = $route->match($httpRequest);
+	$request = $route->match($httpRequest);
 
-	echo $data ? "matched" : "no match";
+	echo $request ? "matched" : "no match";
 	echo "\n";
 
-	if ($data) {
-		$tmp = (array) $data->getParams();
-		//asort($tmp); asort($expectedReq['params']);
-		$ok = ($data->getPresenterName() === $expectedReq['presenter'])	&& ($tmp === $expectedReq['params']);
+	if ($request) {
+		$params = $request->getParams();
+		//asort($params); asort($expectedReq['params']);
+		$ok = ($request->getPresenterName() === $expectedReq['presenter'])	&& ($params === $expectedReq['params']);
 	} else {
-		$ok = $expectedReq === $data;
+		$ok = $expectedReq === $request;
 	}
 	echo 'parsed: ', ($ok ? 'OK' : '***ERROR***');
 	echo "\n";
 
-	if ($data) {
-		$data->params['extra'] = NULL;
-		//$data->setParam('extra', NULL);
-		$result = $route->constructUrl($data, $httpRequest);
+	if ($request) {
+		//$request->setParam('extra', NULL);
+		$request->modify('params', 'extra', NULL);
+		$result = $route->constructUrl($request, $httpRequest);
 		$ok = $expectedUri === $result;
 		echo 'generated: ', ($ok ? 'OK' : '***ERROR***');
 		echo " <code>$result</code>\n";

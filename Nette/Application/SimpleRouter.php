@@ -76,8 +76,8 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 	public function match(/*Nette::Web::*/IHttpRequest $context)
 	{
 		// combine with precedence: get, (post,) defaults
-		$params = (array) $context->getQuery();
-		//$params += (array) $context->getPost();
+		$params = $context->getQuery();
+		//$params += $context->getPost();
 		$params += $this->defaults;
 
 		if (isset($params[self::PRESENTER_KEY])) {
@@ -104,7 +104,7 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 	 */
 	public function constructUrl(PresenterRequest $request, /*Nette::Web::*/IHttpRequest $context)
 	{
-		$params = (array) $request->getParams();
+		$params = $request->getParams();
 
 		// presenter name
 		$presenter = $request->getPresenterName();

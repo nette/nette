@@ -158,7 +158,7 @@ class Application extends /*Nette::*/Object
 				$presenter = $request->getPresenterName();
 				try {
 					$class = $this->getPresenterLoader()->getPresenterClass($presenter);
-					$request->adjustName($presenter);
+					$request->modify('name', $presenter);
 				} catch (InvalidPresenterException $e) {
 					throw new BadRequestException($e->getMessage());
 				}

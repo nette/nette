@@ -12,19 +12,12 @@ require_once '../../Nette/loader.php';
 
 class MockHttpRequest extends /*Nette::Web::*/HttpRequest
 {
-	public $query = array();
 
-	public $post = array();
-
-	public function getQuery()
+	public function setQuery(array $query)
 	{
-		return new Hashtable($this->query);
+		$this->query = $query;
 	}
 
-	public function getPost()
-	{
-		return new Hashtable($this->post);
-	}
 }
 
 
@@ -36,12 +29,12 @@ $route = new SimpleRouter(array(
 ));
 
 $httpRequest = new MockHttpRequest;
-$httpRequest->query = array (
+$httpRequest->setQuery(array(
 	'presenter' => 'myPresenter',
 	'view' => 'view',
 	'id' => '12',
 	'test' => 'testvalue',
-);
+));
 
 $req = $route->match($httpRequest);
 Debug::dump($req);
@@ -58,9 +51,9 @@ $route = new SimpleRouter(array(
 ));
 
 $httpRequest = new MockHttpRequest;
-$httpRequest->query = array (
+$httpRequest->setQuery(array(
 	'presenter' => 'myPresenter',
-);
+));
 
 $req = $route->match($httpRequest);
 Debug::dump($req);

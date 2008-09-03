@@ -60,7 +60,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @return void
 	 * @throws ::InvalidStateException
 	 */
-	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
+	public function addComponent(/*Nette::*/IComponent $component, $name, $insertBefore = NULL)
 	{
 		parent::addComponent($component, $name, $insertBefore);
 		if ($this->currentGroup !== NULL && $component instanceof IFormControl) {

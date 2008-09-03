@@ -20,8 +20,6 @@
 
 /*namespace Nette::Application;*/
 
-/*use Nette::Collections::Hashtable;*/
-
 require_once dirname(__FILE__) . '/../Object.php';
 
 
@@ -37,9 +35,9 @@ require_once dirname(__FILE__) . '/../Object.php';
 final class PresenterRequest extends /*Nette::*/Object
 {
 	// sources:
-	const HTTP_GET = 'get';
-	const HTTP_POST = 'post';
-	const FORWARD = 'forward';
+	const HTTP_GET = 'GET';
+	const HTTP_POST = 'POST';
+	const FORWARD = 'FORWARD';
 
 	/** @var string */
 	private $source;
@@ -50,10 +48,10 @@ final class PresenterRequest extends /*Nette::*/Object
 	/** @var array */
 	private $params;
 
-	/** @var Nette::Collections::Hashtable|NULL */
+	/** @var array */
 	private $post;
 
-	/** @var Nette::Collections::Hashtable|NULL */
+	/** @var array */
 	private $files;
 
 
@@ -65,26 +63,13 @@ final class PresenterRequest extends /*Nette::*/Object
 	 * @param  array   variables provided to the presenter via POST
 	 * @param  array   all uploaded files
 	 */
-	public function __construct($name, $source, array $params, Hashtable $post = NULL, Hashtable $files = NULL)
+	public function __construct($name, $source, array $params, array $post = array(), array $files = array())
 	{
 		$this->name = $name;
 		$this->source = $source;
-		//$this->params = $params;
-		$this->params = new Hashtable($params);
+		$this->params = $params;
 		$this->post = $post;
 		$this->files = $files;
-	}
-
-
-
-	/**
-	 * Adjust the presenter name.
-	 * @param  string
-	 * @return void
-	 */
-	public function adjustName($name)
-	{
-		$this->name = $name;
 	}
 
 
@@ -113,7 +98,7 @@ final class PresenterRequest extends /*Nette::*/Object
 
 	/**
 	 * Returns all variables provided to the presenter (usually via URL).
-	 * @return Nette::Collections::Hashtable
+	 * @return array
 	 */
 	public function getParams()
 	{
@@ -124,7 +109,7 @@ final class PresenterRequest extends /*Nette::*/Object
 
 	/**
 	 * Returns all variables provided to the presenter via POST.
-	 * @return Nette::Collections::Hashtable|NULL
+	 * @return array
 	 */
 	public function getPost()
 	{
@@ -135,7 +120,7 @@ final class PresenterRequest extends /*Nette::*/Object
 
 	/**
 	 * Returns all uploaded files.
-	 * @return Nette::Collections::Hashtable|NULL
+	 * @return array
 	 */
 	public function getFiles()
 	{
@@ -167,17 +152,16 @@ final class PresenterRequest extends /*Nette::*/Object
 
 
 	/**
+	 * @internal
+	 * @return array
 	 */
-	public function setReadOnly()
+	public function modify($var, $key, $value = NULL)
 	{
-		$this->params->setReadOnly();
+		if (func_num_args() === 3) {
+			$this->{$var}[$key] = $value;
 
-		if ($this->post) {
-			$this->post->setReadOnly();
-		}
-
-		if ($this->files) {
-			$this->files->setReadOnly();
+		} else {
+			$this->$var = $key;
 		}
 	}
 

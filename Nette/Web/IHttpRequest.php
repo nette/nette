@@ -32,40 +32,76 @@
 interface IHttpRequest
 {
 	/**
-	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...).
-	 * @return string
-	 */
-	function getMethod();
-
-	/**
-	 * Returns the full URL.
+	 * Returns URL object.
 	 * @return UriScript
 	 */
 	function getUri();
 
 	/**
-	 * Returns all variables provided to the script via URL query ($_GET).
-	 * @return Nette::Collections::Hashtable
+	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
+	 * @return string
 	 */
-	function getQuery();
+	function getMethod();
 
 	/**
-	 * Returns all variables provided to the script via POST method ($_POST).
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via URL query ($_GET).
+	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
 	 */
-	function getPost();
+	function getQuery($key = NULL, $default = NULL);
 
 	/**
-	 * Returns all uploaded files.
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via POST method ($_POST).
+	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
+	 */
+	function getPost($key = NULL, $default = NULL);
+
+	/**
+	 * Returns HTTP POST data in raw format (only for "application/x-www-form-urlencoded").
+	 * @return string
+	 */
+	function getPostRaw();
+
+	/**
+	 * Returns uploaded file.
+	 * @param  string key (or more keys)
+	 * @return HttpUploadedFile
+	 */
+	function getFile($key);
+
+	/**
+	 * Returns uploaded files.
+	 * @return array
 	 */
 	function getFiles();
 
 	/**
-	 * Returns all HTTP cookies.
-	 * @return Nette::Collections::Hashtable
+	 * Returns variable provided to the script via HTTP cookies.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
+	 */
+	function getCookie($key, $default = NULL);
+
+	/**
+	 * Returns variables provided to the script via HTTP cookies.
+	 * @return array
 	 */
 	function getCookies();
+
+	/**
+	 * Return the value of the HTTP header. Pass the header name as the
+	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
+	 * @param  string
+	 * @param  mixed
+	 * @return mixed
+	 */
+	function getHeader($header, $default = NULL);
 
 	/**
 	 * Returns all HTTP headers.
@@ -80,7 +116,7 @@ interface IHttpRequest
 	function isSecured();
 
 	/**
-	 * Is Ajax request?
+	 * Is AJAX request?
 	 * @return boolean
 	 */
 	function isAjax();
@@ -91,4 +127,5 @@ interface IHttpRequest
 	 * @return string
 	 */
 	function getRemoteAddress($dns = FALSE);
+
 }
