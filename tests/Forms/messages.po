@@ -11,6 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Czech\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n>=2 && n<=4 ? 1 : 2;\n"
 
 #: test.example1.php:14
 msgid "Europe"
@@ -153,4 +154,11 @@ msgstr "Dodací adresa"
 #: test.example1.php:168
 msgid "Your account"
 msgstr "Váš účet"
+
+#: test.php:1
+msgid "You have %d new e-mail."
+msgid_plural "You have %d new e-mails."
+msgstr[0] "Máte %d novou e-mailovou zprávu."
+msgstr[1] "Máte %d nové e-mailové zprávy."
+msgstr[2] "Máte %d nových e-mailových zpráv."
 

@@ -148,9 +148,11 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			$js->enable();
 		}
 
-		foreach ($this->form->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
+		foreach ($this->form->getControls() as $control) {
 			$control->setRendered(FALSE);
+
 			if ($control->isRequired()) {
+				// TODO: only for back compatiblity - remove?
 				$control->getLabelPrototype()->class($this->classes['required']);
 			}
 		}
@@ -184,28 +186,36 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderBody()
 	{
-		$container = Html::el($this->wrappers['group']['container']);
+		$defaultContainer = Html::el($this->wrappers['group']['container']);
 		$translator = $this->form->getTranslator();
 
-		$s = '';
+		$s = $remains = '';
 		foreach ($this->form->getGroups() as $group) {
 			if (!$group->getControls()) continue;
 
-			$s .= $container->startTag();
+			$container = $group->getOption('container', $defaultContainer);
+			$s .= "\n" . $container->startTag();
 
-			$text = $group->getLegend();
+			$text = $group->getOption('label');
 			if ($text != NULL) {
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
-				$s .= Html::el($this->wrappers['group']['label'])->setText($text) . "\n";
+				$s .= "\n" . Html::el($this->wrappers['group']['label'])->setText($text) . "\n";
 			}
 
-			$s .= $this->renderControls($group->getControls());
-			$s .= $container->endTag();
+			$s .= $this->renderControls($group);
+
+			if ($group->getOption('embedNext')) {
+				$remains .= $container->endTag() . "\n";
+
+			} else {
+				$s .= $remains . $container->endTag() . "\n";
+				$remains = '';
+			}
 		}
 
-		$s .= $this->renderControls($this->form->getComponents(TRUE, 'Nette::Forms::IFormControl'));
+		$s .= $remains . $this->renderControls($this->form);
 		return $s;
 	}
 
@@ -213,10 +223,10 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 	/**
 	 * Renders group of controls.
-	 * @param  array
+	 * @param  Form|FormGroup
 	 * @return string
 	 */
-	protected function renderControls($controls)
+	protected function renderControls($parent)
 	{
 		$container = Html::el($this->wrappers['control']['container']);
 		$pair = Html::el($this->wrappers['control']['pair']);
@@ -224,17 +234,21 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$ctrl = Html::el($this->wrappers['control']['control']);
 		$hidden = Html::el($this->wrappers['hidden']['container']);
 
-		foreach ($controls as $control) {
+		foreach ($parent->getControls() as $control) {
 			if ($control->isRendered()) {
 				// skip
+
 			} elseif ($control instanceof HiddenField) {
 				$hidden->add($control->getControl());
 
 			} else {
-				$labelEl = (string) $control->label;
-				$controlEl = (string) $control->control;
+				$labelEl = $control->label;
+				$controlEl = $control->control;
+
+				$pair->class($control->isRequired() ? $this->classes['required'] : NULL);
+
 				if ($control instanceof Checkbox) {
-					$controlEl = $controlEl . $labelEl;
+					$controlEl = (string) $controlEl . (string) $labelEl;
 					$labelEl = '&nbsp;';
 
 				} elseif (!$labelEl) {

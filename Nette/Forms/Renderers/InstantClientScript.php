@@ -71,7 +71,7 @@ final class InstantClientScript extends /*Nette::*/Object
 		$this->toggleScript = '';
 		$this->central = TRUE;
 
-		foreach ($this->form->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
+		foreach ($this->form->getControls() as $control) {
 			$this->validateScript .= $this->getValidateScript($control->getRules());
 			$this->toggleScript .= $this->getToggleScript($control->getRules());
 		}

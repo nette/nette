@@ -38,7 +38,7 @@ require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
 abstract class FormControl extends /*Nette::*/Component implements IFormControl
 {
 	/** @var string */
-	public static $idMask = 'frm%f-%n';
+	public static $idMask = 'frm%s-%s';
 
 	/** @var mixed */
 	protected $value;
@@ -163,11 +163,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 			return NULL;
 
 		} elseif ($this->htmlId === NULL) {
-			$this->htmlId = str_replace(
-				array('%f', '%n'),
-				array($this->getForm()->getName(), $this->getHtmlName()),
-				self::$idMask
-			);
+			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->getHtmlName());
 			$this->htmlId = str_replace(array('[', ']'), array('-', ''), $this->htmlId);
 		}
 		return $this->htmlId;

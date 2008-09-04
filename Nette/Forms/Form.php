@@ -168,11 +168,22 @@ class Form extends FormContainer
 
 
 	/**
+	 * Iterates over all form controls.
+	 * @return ::ArrayIterator
+	 */
+	public function getControls()
+	{
+		return $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
+	}
+
+
+
+	/**
 	 * Adds fieldset group to the form.
 	 * @param  string  label
 	 * @return FormGroup
 	 */
-	public function addGroup($label)
+	public function addGroup($label = NULL)
 	{
 		return $this->groups[] = $this->currentGroup = new FormGroup($label);
 	}
@@ -515,7 +526,7 @@ class Form extends FormContainer
 			throw new /*::*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
 		}
 
-		$controls = $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
+		$controls = $this->getControls();
 
 		$this->valid = TRUE;
 		foreach ($controls as $control) {

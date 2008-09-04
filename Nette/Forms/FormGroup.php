@@ -38,20 +38,20 @@ class FormGroup extends /*Nette::*/Object
 	/** @var array */
 	protected $controls = array();
 
-	/** @var string */
-	protected $legend;
+	/** @var array user options */
+	private $options = array();
 
 
 
-	public function __construct($legend)
+	public function __construct($label)
 	{
-		$this->legend = $legend;
+		$this->setOption('label', $label);
 	}
 
 
 
 	/**
-	 * @return void
+	 * @return FormGroup  provides a fluent interface
 	 */
 	public function add()
 	{
@@ -65,6 +65,7 @@ class FormGroup extends /*Nette::*/Object
 				throw new /*::*/InvalidArgumentException("Only IFormControl items are allowed, the #$id parameter is invalid.");
 			}
 		}
+		return $this;
 	}
 
 
@@ -80,23 +81,44 @@ class FormGroup extends /*Nette::*/Object
 
 
 	/**
-	 * @param  string
-	 * @return FormGroup  provides a fluent interface
+	 * Sets user-specific option.
+	 * @param  string key
+	 * @param  mixed  value
+	 * @return FormControl  provides a fluent interface
 	 */
-	public function setLegend($legend)
+	public function setOption($key, $value)
 	{
-		$this->legend = $legend;
+		if ($value === NULL) {
+			unset($this->options[$key]);
+
+		} else {
+			$this->options[$key] = $value;
+		}
 		return $this;
 	}
 
 
 
 	/**
-	 * @return string
+	 * Returns user-specific option.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
 	 */
-	public function getLegend()
+	final public function getOption($key, $default = NULL)
 	{
-		return $this->legend;
+		return isset($this->options[$key]) ? $this->options[$key] : $default;
+	}
+
+
+
+	/**
+	 * Returns user-specific options.
+	 * @return array
+	 */
+	final public function getOptions()
+	{
+		return $this->options;
 	}
 
 }
