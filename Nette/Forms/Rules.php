@@ -210,7 +210,7 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 
 
 	/**
-	 * Process 'operation' string
+	 * Process 'operation' string.
 	 * @param  Rule
 	 * @return void
 	 */

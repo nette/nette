@@ -138,7 +138,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 		$data = $this->getArrayCopy();
 		foreach ($data as $key => $val) {
 			if (is_string($val)) {
-				$data[$key] = Environment::expand($val);
+				$data[$key] = /*Nette::*/Environment::expand($val);
 			} elseif ($val instanceof self) {
 				$val->expand();
 			}

@@ -58,7 +58,7 @@ final class InstantClientScript extends /*Nette::*/Object
 	public function __construct(Form $form)
 	{
 		$this->form = $form;
-		$name = ucfirst($form->getName());//ucfirst(strtr($form->getUniqueId(), Form::NAME_SEPARATOR, '_'));
+		$name = ucfirst($form->getName()); //ucfirst(strtr($form->getUniqueId(), Form::NAME_SEPARATOR, '_'));
 		$this->validateFunction = 'validate' . $name;
 		$this->toggleFunction = 'toggle' . $name;
 	}
@@ -92,32 +92,35 @@ final class InstantClientScript extends /*Nette::*/Object
 
 	/**
 	 * Genetares the client side validation script.
-	 * @return void
+	 * @return string
 	 */
 	public function renderClientScript()
 	{
-		if (!$this->validateScript && !$this->toggleScript) return;
+		$s = '';
 
-		echo "<script type=\"text/javascript\">\n",
-			"/* <![CDATA[ */\n";
+		if ($this->validateScript) {
+			$s .= "function $this->validateFunction(sender) {\n\t"
+			. "var el, res;\n\t"
+			. $this->validateScript
+			. "return true;\n"
+			. "}\n\n";
+		}
 
-		if ($this->validateScript)
-			echo
-			"function $this->validateFunction(sender) {\n\t",
-			"var el, res;\n\t",
-			$this->validateScript,
-			"return true;\n",
-			"}\n\n";
+		if ($this->toggleScript) {
+			$s .= "function $this->toggleFunction(sender) {\n\t"
+			. "var el, res, resT;\n\t"
+			. $this->toggleScript
+			. "\n}\n\n"
+			. "$this->toggleFunction(null);\n";
+		}
 
-		if ($this->toggleScript)
-			echo
-			"function $this->toggleFunction(sender) {\n\t",
-			"var el, res, resT;\n\t",
-			$this->toggleScript,
-			"\n}\n\n",
-			"$this->toggleFunction(null);\n";
-
-		echo "/* ]]> */\n", "</script>\n";
+		if ($s) {
+			return "<script type=\"text/javascript\">\n"
+			. "/* <![CDATA[ */\n"
+			. $s
+			. "/* ]]> */\n"
+			. "</script>";
+		}
 	}
 
 

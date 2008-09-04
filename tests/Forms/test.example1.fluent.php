@@ -116,10 +116,10 @@ if ($form->isSubmitted()) {
 
 echo '<style> .required { color: darkred; } </style>';
 
-$form->renderBegin();
+$form->render('begin');
 if ($form->getErrors()) {
 	echo '<p>Opravte chyby:</p>';
-	echo $form->renderErrors();
+	$form->render('errors');
 }
 ?>
 
@@ -197,7 +197,7 @@ if ($form->getErrors()) {
 <?=$form['submit1']->control?>
 </div>
 
-<? $form->renderEnd(); ?>
+<? $form->render('end'); ?>
 
 
 <?

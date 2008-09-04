@@ -24,6 +24,8 @@
 
 require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
 
+/*use Nette::Web::HttpUploadedFile;*/
+
 
 
 /**
@@ -71,7 +73,7 @@ class FileUpload extends FormControl
 	public function setValue($value)
 	{
 		if (is_array($value)) {
-			$this->value = new /*Nette::Web::*/HttpUploadedFile($value);
+			$this->value = new HttpUploadedFile($value);
 
 		} elseif ($value instanceof HttpUploadedFile) {
 			$this->value = $value;

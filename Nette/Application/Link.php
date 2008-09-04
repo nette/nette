@@ -103,7 +103,13 @@ class Link extends /*Nette::*/Object
 	 */
 	public function __toString()
 	{
-		return $this->component->link($this->destination, $this->args);
+		try {
+			return $this->component->link($this->destination, $this->args);
+
+		} catch (Exception $e) {
+			trigger_error($e->getMessage(), E_USER_WARNING);
+			return '';
+		}
 	}
 
 }

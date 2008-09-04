@@ -40,9 +40,6 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var string */
 	public static $idMask = 'frm%f-%n';
 
-	/** @var string */
-	public static $labelMask = '%l';
-
 	/** @var mixed */
 	protected $value;
 
@@ -75,6 +72,9 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/** @var Nette::ITranslator */
 	private $translator = TRUE; // means autodetect
+
+	/** @var array user options */
+	private $options = array();
 
 
 
@@ -171,6 +171,49 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 			$this->htmlId = str_replace(array('[', ']'), array('-', ''), $this->htmlId);
 		}
 		return $this->htmlId;
+	}
+
+
+
+	/**
+	 * Sets user-specific option.
+	 * @param  string key
+	 * @param  mixed  value
+	 * @return FormControl  provides a fluent interface
+	 */
+	public function setOption($key, $value)
+	{
+		if ($value === NULL) {
+			unset($this->options[$key]);
+
+		} else {
+			$this->options[$key] = $value;
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns user-specific option.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
+	 */
+	final public function getOption($key, $default = NULL)
+	{
+		return isset($this->options[$key]) ? $this->options[$key] : $default;
+	}
+
+
+
+	/**
+	 * Returns user-specific options.
+	 * @return array
+	 */
+	final public function getOptions()
+	{
+		return $this->options;
 	}
 
 
@@ -296,14 +339,11 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	public function getLabel()
 	{
 		$label = clone $this->label;
-		$label->class[] = $this->required ? 'required' : NULL;
 		$label->for = $this->getHtmlId();
-		$text = $label->getText();
 		$translator = $this->getTranslator();
 		if ($translator !== NULL) {
-			$text = $translator->translate($text);
+			$label->setText($translator->translate($label->getText()));
 		}
-		$label->setText(str_replace('%l', $text, self::$labelMask));
 		return $label;
 	}
 

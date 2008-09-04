@@ -133,10 +133,10 @@ if ($form->isSubmitted()) {
 
 echo '<style> .required { color: darkred; } </style>';
 
-$form->renderBegin();
+$form->render('begin');
 if ($form->getErrors()) {
 	echo '<p>', $translator->translate('Please correct the errors:'), '</p>';
-	echo $form->renderErrors();
+	$form->render('errors');
 }
 ?>
 
@@ -214,7 +214,7 @@ if ($form->getErrors()) {
 <?=$form['submit1']->control?>
 </div>
 
-<? $form->renderEnd(); ?>
+<? $form->render('end'); ?>
 
 
 <?

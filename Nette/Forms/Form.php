@@ -76,6 +76,9 @@ class Form extends FormContainer
 	/** @var Html  <form> element */
 	private $element;
 
+	/** @var IFormRenderer */
+	private $renderer;
+
 	/** @var Nette::ITranslator */
 	private $translator;
 
@@ -458,7 +461,7 @@ class Form extends FormContainer
 	 */
 	public function addRule($name, $operation, $message, $arg = NULL)
 	{
-		trigger_error("Deprecated: use \$form['$name']->addRule(...) instead.", E_USER_NOTICE);
+		trigger_error("Deprecated: use \$form['$name']->addRule(...) instead.", E_USER_WARNING);
 		$this->getComponent($name, TRUE)->addRule($operation, $message, $arg);
 	}
 
@@ -475,7 +478,7 @@ class Form extends FormContainer
 	 */
 	public function addCondition($name, $operation, $value = NULL, $toggle = NULL)
 	{
-		trigger_error("Deprecated: use \$form['$name']->addCondition(...) instead.", E_USER_NOTICE);
+		trigger_error("Deprecated: use \$form['$name']->addCondition(...) instead.", E_USER_WARNING);
 		$cond = $this->getComponent($name, TRUE)->addCondition($operation, $value, $toggle);
 		if ($toggle) $cond->toggle($toggle);
 		return $cond;
@@ -592,22 +595,40 @@ class Form extends FormContainer
 
 
 	/**
+	 * Sets form renderer.
+	 * @param  IFormRenderer
+	 * @return void
+	 */
+	public function setRenderer(IFormRenderer $renderer)
+	{
+		$this->renderer = $renderer;
+	}
+
+
+
+	/**
+	 * Returns form renderer.
+	 * @return IFormRenderer|NULL
+	 */
+	final public function getRenderer()
+	{
+		if ($this->renderer === NULL) {
+			$this->renderer = new ConventionalRenderer;
+		}
+		return $this->renderer;
+	}
+
+
+
+	/**
 	 * Renders form.
 	 * @return void
 	 */
 	public function render()
 	{
-		// TODO:
-		//$js = new InstantClientScript($this);
-		//$js->enable();
-
-		$this->renderBegin();
-		if ($this->submittedBy) {
-			$this->renderErrors();
-		}
-		$this->renderBody();
-		$this->renderEnd();
-		//$js->renderClientScript();
+		$args = func_get_args();
+		array_unshift($args, $this);
+		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
 
 
@@ -618,13 +639,9 @@ class Form extends FormContainer
 	 */
 	public function __toString()
 	{
-		ob_start();
 		try {
-			$this->render();
-			return ob_get_clean();
-
+			return $this->getRenderer()->render($this);
 		} catch (Exception $e) {
-			ob_end_clean();
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';
 		}
@@ -632,101 +649,61 @@ class Form extends FormContainer
 
 
 
-	/********************* old rendering ****************d*g**/
+	/********************* deprecated ****************d*g**/
 
 
 
 	/**
-	 * Provides complete form rendering.
-	 * @return void
 	 * @deprecated
 	 */
 	public function renderForm()
 	{
-		$this->render();
+		trigger_error("Deprecated: use \$form->render() instead.", E_USER_WARNING);
+		echo $this->render();
 	}
 
 
 
-	private $js;
-
 	/**
-	 * Renders form's start tag.
-	 * @return void
 	 * @deprecated
 	 */
 	public function renderBegin()
 	{
-		$this->js = new InstantClientScript($this);
-		$this->js->enable();
-		echo $this->element->startTag();
+		trigger_error("Deprecated: use \$form->render('begin') instead.", E_USER_WARNING);
+		echo $this->render('begin');
 	}
 
 
 
 	/**
-	 * Renders the rest of the form.
-	 * @return void
 	 * @deprecated
 	 */
 	public function renderEnd()
 	{
-		echo $this->element->endTag();
-		$this->js->renderClientScript();
+		trigger_error("Deprecated: use \$form->render('end') instead.", E_USER_WARNING);
+		echo $this->render('end');
 	}
 
 
 
 	/**
-	 * Renders validation errors (per form or per control).
-	 * @param  IFormControl
-	 * @return void
 	 * @deprecated
 	 */
 	public function renderErrors($control = NULL)
 	{
-		$errors = $control ? $control->getErrors() : $this->getErrors();
-		if (count($errors)) {
-			$ul = /*Nette::Web::*/Html::el('ul')->class('error');
-			foreach ($errors as $error) {
-				$ul->create('li', $error);
-			}
-			echo "\n", $ul;
-		}
+		trigger_error("Deprecated: use \$form->render('errors') instead.", E_USER_WARNING);
+		echo $this->render('errors', $control);
 	}
 
 
 
 	/**
-	 * Renders form body.
-	 * @param  FormContainer
-	 * @return void
 	 * @deprecated
 	 */
 	public function renderBody()
 	{
-		// TODO: implement some decorators
-		$begin = "\n<table>\n";
-		$hidden = /*Nette::Web::*/Html::el('div');
-		foreach ($this->getComponents(TRUE, 'Nette::Forms::IFormControl') as $control) {
-			if ($control->isRendered()) {
-				// skip
-			} elseif ($control instanceof HiddenField) {
-				$hidden->add($control->getControl());
-
-			} elseif ($control instanceof Checkbox) {
-				echo $begin, "<tr>\n\t<th>&nbsp;</th>\n\t<td>", $control->control, $control->label, "</td>\n</tr>\n\n";
-				$begin = '';
-
-			} else {
-				echo $begin, "<tr>\n\t<th>", ($control->label ? $control->label : '&nbsp;'), "</th>\n\t<td>", $control->control, "</td>\n</tr>\n\n";
-				$begin = '';
-			}
-		}
-		if (!$begin) {
-			echo "</table>\n";
-		}
-		if (count($hidden)) echo $hidden;
+		trigger_error("Deprecated: use \$form->render('body') instead.", E_USER_WARNING);
+		echo $this->render('body');
 	}
 
 }

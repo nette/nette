@@ -22,6 +22,10 @@
 
 
 
+require_once dirname(__FILE__) . '/IComponent.php';
+
+
+
 /**
  * Containers are objects that logically contain zero or more IComponent components.
  *
@@ -29,7 +33,7 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-interface IComponentContainer
+interface IComponentContainer extends IComponent
 {
 
 	/**

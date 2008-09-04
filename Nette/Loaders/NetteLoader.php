@@ -62,6 +62,7 @@ class NetteLoader extends AutoLoader
 		'configadapterxml' => '/Config/ConfigAdapterXml.php',
 		'configurator' => '/Configurator.php',
 		'control' => '/Application/Control.php',
+		'conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
 		'datagrid' => '/Application/UI/DataGrid.php',
 		'datagridcolumn' => '/Application/UI/DataGridColumn.php',
 		'debug' => '/Debug.php',
@@ -76,6 +77,7 @@ class NetteLoader extends AutoLoader
 		'form' => '/Forms/Form.php',
 		'formcontainer' => '/Forms/FormContainer.php',
 		'formcontrol' => '/Forms/Controls/FormControl.php',
+		'formgroup' => '/Forms/FormGroup.php',
 		'forwardingexception' => '/Application/ForwardingException.php',
 		'framework' => '/Framework.php',
 		'hashtable' => '/Collections/Hashtable.php',
@@ -95,6 +97,7 @@ class NetteLoader extends AutoLoader
 		'idebuggable' => '/IDebuggable.php',
 		'identity' => '/Security/Identity.php',
 		'iformcontrol' => '/Forms/IFormControl.php',
+		'iformrenderer' => '/Forms/IFormRenderer.php',
 		'ihttprequest' => '/Web/IHttpRequest.php',
 		'ihttpresponse' => '/Web/IHttpResponse.php',
 		'iidentity' => '/Security/IIdentity.php',
@@ -103,7 +106,7 @@ class NetteLoader extends AutoLoader
 		'imap' => '/Collections/IMap.php',
 		'inamingcontainer' => '/Forms/INamingContainer.php',
 		'instancefilteriterator' => '/InstanceFilterIterator.php',
-		'instantclientscript' => '/Forms/JavaScript/InstantClientScript.php',
+		'instantclientscript' => '/Forms/Renderers/InstantClientScript.php',
 		'invalidlinkexception' => '/Application/InvalidLinkException.php',
 		'invalidpresenterexception' => '/Application/InvalidPresenterException.php',
 		'invalidstateexception' => '/exceptions.php',
@@ -171,8 +174,7 @@ class NetteLoader extends AutoLoader
 		'uri' => '/Web/Uri.php',
 		'uriscript' => '/Web/UriScript.php',
 		'user' => '/Web/User.php',
-		'userclientscript' => '/Forms/JavaScript/UserClientScript.php',
-		'validateexception' => '/Forms/ValidateException.php',
+		'userclientscript' => '/Forms/Renderers/UserClientScript.php',
 	);
 
 
