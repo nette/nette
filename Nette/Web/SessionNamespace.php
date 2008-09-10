@@ -144,7 +144,6 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 		}
 
 		unset($this->data[$name], $this->meta['EXP'][$name]);
-		Session::clean();
 	}
 
 
@@ -202,8 +201,6 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 		} else {
 			unset($this->meta['EXP'][$variables]);
 		}
-
-		Session::clean();
 	}
 
 
@@ -216,7 +213,6 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	{
 		$this->data = NULL;
 		$this->meta = NULL;
-		Session::clean();
 	}
 
 }

@@ -197,7 +197,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 			return $this->render(TRUE);
 
 		} catch (Exception $e) {
-			return $e->__toString();
+			trigger_error($e->getMessage(), E_USER_WARNING);
+			return '';
 		}
 	}
 

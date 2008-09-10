@@ -53,11 +53,11 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 
 
 	/**
+	 * @param  Nette::Web::IHttpResponse
 	 * @return void
 	 */
-	public function open()
+	public function open(/*Nette::Web::*/IHttpResponse $httpResponse)
 	{
-		$httpResponse = /*Nette::*/Environment::getHttpResponse();
 		$httpResponse->setContentType('application/x-javascript', 'utf-8');
 		$httpResponse->expire(FALSE);
 		$this->json = array(

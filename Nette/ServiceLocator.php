@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/Object.php';
 
 
 /**
- * Service locator pattern implementation (experimental).
+ * Service locator pattern implementation.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -43,9 +43,6 @@ class ServiceLocator extends Object implements IServiceLocator
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
-	/** @var bool */
-	private $autoDiscovery;
-
 
 
 	/**
@@ -54,7 +51,6 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function __construct(IServiceLocator $parent = NULL)
 	{
 		$this->parent = $parent;
-		$this->autoDiscovery = $parent === NULL;
 	}
 
 
@@ -154,14 +150,6 @@ class ServiceLocator extends Object implements IServiceLocator
 			}
 
 			return $this->registry[$lower] = call_user_func($service);
-
-		} elseif ($this->autoDiscovery) {
-			/**/// fix for namespaced classes/interfaces in PHP < 5.3
-			if ($a = strrpos($name, ':')) $name = substr($name, $a + 1);/**/
-
-			if (class_exists($name)) {
-				return $this->registry[$lower] = new $name;
-			}
 		}
 
 		if ($this->parent !== NULL) {

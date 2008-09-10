@@ -22,6 +22,10 @@
 
 
 
+require_once dirname(__FILE__) . '/../Object.php';
+
+
+
 /**
  * Provides access to session namespaces as well as session settings and management methods.
  *
@@ -29,97 +33,104 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Web
  */
-final class Session
+class Session extends /*Nette::*/Object
 {
+	/** @var callback  Validation key generator */
+	public $verificationKeyGenerator;
+
+	/** @var bool  is required session id regeneration? */
+	private $regenerationNeeded;
+
+	/** @var bool  has been session started? */
+	private static $started = FALSE;
+
 	/** @var array of SessionNamespace  registry of singleton instances */
 	private static $instances = array();
 
-	/** @var callback  Validation key generator */
-	public static $verifyKeyGenerator = array(__CLASS__, 'getVerifyKey');
+	/** @var array */
+	private static $configuration = array(
+		// security
+		'session.referer_check' => '',    // default "" (must be disabled because PHP implementation is invalid)
+		'session.use_cookies' => 1,       // default "1" (must be enabled to prevent Session Hijacking and Fixation)
+		'session.use_only_cookies' => 1,  // default "1" (must be enabled to prevent Session Fixation)
+		'session.use_trans_sid' => 0,     // default "0" (must be disabled to prevent Session Hijacking and Fixation)
 
-	/** @var bool Has been session started? */
-	private static $started = FALSE;
+		// cookies
+		'session.cookie_path ' => '/',    // default "/"
+		'session.cookie_domain' => '',    // default ""
+		'session.cookie_secure' => FALSE, // default ""
+		'session.cookie_httponly' => TRUE,// default "" (must be enabled to prevent Session Fixation)
 
-	/** @var bool  Is required session id regeneration? */
-	private static $regenerationNeeded;
+		// misc
+		'session_cache_limiter' => 'none',// default "nocache" (do not affect caching)
+		'session_cache_expire' => NULL,   // default "180"
+		'session.hash_function' => NULL,  // default "0" (MD5)
+		'session.hash_bits_per_character' => NULL, // default "4"
+	);
 
-	/** @var bool  Is reset needed? */
-	private static $resetNeeded = TRUE;
 
 
-
-	/**
-	 * Static class - cannot be instantiated.
-	 */
-	final public function __construct()
+	public function __construct()
 	{
-		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+		$this->verificationKeyGenerator = array($this, 'generateVerificationKey');
 	}
-
-
-
-	/********************* session management ****************d*g**/
 
 
 
 	/**
 	 * Starts and initializes session data.
-	 * @throws SessionException
+	 * @throws ::InvalidStateException
 	 * @return void
 	 */
-	public static function start()
+	public function start()
 	{
-		// already started?
-		if (defined('SID')) {
-			throw new SessionException('A session had already been started by session.auto-start or session_start().');
-		}
-		if (self::$started) self::checkHeaders();
+		if (self::$started) {
+			throw new /*::*/InvalidStateException('Session has already been started.');
 
-		// session configuration
-		if (self::$resetNeeded) self::reset();
+		} elseif (defined('SID')) {
+			throw new /*::*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
+		}
+
+		$this->configure(self::$configuration);
 
 		/*Nette::*/Tools::tryError();
 		session_start();
 		if (/*Nette::*/Tools::catchError($msg)) {
-			session_write_close(); // this is needed
-			throw new SessionException($msg);
+			@session_write_close(); // this is needed
+			throw new /*::*/InvalidStateException($msg);
 		}
 
 		self::$started = TRUE;
-		if (self::$regenerationNeeded) {
-			self::regenerateId();
+		if ($this->regenerationNeeded) {
+			session_regenerate_id(TRUE);
+			$this->regenerationNeeded = FALSE;
 		}
 
 
 		/*
 		nette: __NT
-		data:  __NS->namespace->variables->...
-		meta:  __NM->namespace->EXP->variables
+		data:  __NS->namespace->variable = data
+		meta:  __NM->namespace->EXP->variable = timestamp
 		*/
 
 		// additional protection against Session Hijacking & Fixation
-		if (self::$verifyKeyGenerator) {
-			$key = call_user_func(self::$verifyKeyGenerator);
-			$key = NULL; // debug
-		} else {
-			$key = NULL;
-		}
+		$key = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 
-		if (empty($_SESSION)) { // new session
-			$_SESSION = array();
-			$_SESSION['__NT']['COUNTER'] = 0;
-			$_SESSION['__NT']['VERIFY'] = $key;
+		if (!isset($_SESSION['__NT']['V'])) { // new session
+			$_SESSION['__NT'] = array();
+			$_SESSION['__NT']['C'] = 0;
+			$_SESSION['__NT']['V'] = $key;
 
 		} else {
-			$saved = & $_SESSION['__NT']['VERIFY'];
+			$saved = & $_SESSION['__NT']['V'];
 			if ($saved === $key) { // verified
-				$_SESSION['__NT']['COUNTER']++;
+				$_SESSION['__NT']['C']++;
 
 			} else { // session attack?
 				session_regenerate_id(TRUE);
 				$_SESSION = array();
-				$_SESSION['__NT']['COUNTER'] = 0;
-				$_SESSION['__NT']['VERIFY'] = $key;
+				$_SESSION['__NT']['C'] = 0;
+				$_SESSION['__NT']['V'] = $key;
 			}
 		}
 
@@ -145,7 +156,7 @@ final class Session
 			}
 		}
 
-		self::clean();
+		register_shutdown_function(array($this, 'clean'));
 	}
 
 
@@ -154,7 +165,7 @@ final class Session
 	 * Has been session started?
 	 * @return bool
 	 */
-	public static function isStarted()
+	public function isStarted()
 	{
 		return self::$started;
 	}
@@ -165,7 +176,7 @@ final class Session
 	 * Ends the current session and store session data.
 	 * @return void
 	 */
-	public static function close()
+	public function close()
 	{
 		if (self::$started) {
 			session_write_close();
@@ -180,10 +191,10 @@ final class Session
 	 * @param  bool  remove the session cookie? Defaults to TRUE
 	 * @return void
 	 */
-	public static function destroy($removeCookie = TRUE)
+	public function destroy($removeCookie = TRUE)
 	{
 		if (!self::$started) {
-			throw new SessionException('Session is not started.');
+			throw new /*::*/InvalidStateException('Session is not started.');
 		}
 
 		session_destroy();
@@ -191,7 +202,10 @@ final class Session
 		self::$started = FALSE;
 
 		if ($removeCookie) {
-			self::checkHeaders();
+			// TODO: Environment::getHttpResponse()->headersSent, deleteCookie
+			if (headers_sent($file, $line)) {
+				throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+			}
 			$params = session_get_cookie_params();
 			setcookie(
 				session_name(),
@@ -210,8 +224,9 @@ final class Session
 	 * Does session exists for the current request?
 	 * @return bool
 	 */
-	public static function exists()
+	public function exists()
 	{
+		// TODO: return Environment::getHttpRequest()->getCookie(session_name()) !== NULL;
 		return isset($_COOKIE[session_name()]);
 	}
 
@@ -219,17 +234,21 @@ final class Session
 
 	/**
 	 * Regenerates the session id.
-	 * @throws SessionException
+	 * @throws ::InvalidStateException
 	 * @return void
 	 */
-	public static function regenerateId()
+	public function regenerateId()
 	{
 		if (self::$started) {
-			self::checkHeaders();
+			// TODO: Environment::getHttpResponse()->headersSent
+			if (headers_sent($file, $line)) {
+				throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+			}
+			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
 
 		} else {
-			self::$regenerationNeeded = TRUE;
+			$this->regenerationNeeded = TRUE;
 		}
 	}
 
@@ -237,14 +256,14 @@ final class Session
 
 	/**
 	 * Sets the session id to a user specified one.
-	 * @throws SessionException
+	 * @throws ::InvalidStateException
 	 * @param  string $id
 	 * @return void
 	 */
-	public static function setId($id)
+	public function setId($id)
 	{
 		if (defined('SID')) {
-			throw new SessionException('A session had already been started - the session id must be set first.');
+			throw new /*::*/InvalidStateException('A session had already been started - the session id must be set first.');
 		}
 
 		if (!is_string($id) || $id === '') {
@@ -260,7 +279,7 @@ final class Session
 	 * Returns the current session id.
 	 * @return string
 	 */
-	public static function getId()
+	public function getId()
 	{
 		return session_id();
 	}
@@ -271,8 +290,9 @@ final class Session
 	 * Generates key as protection against Session Hijacking & Fixation.
 	 * @return string
 	 */
-	private static function getVerifyKey()
+	public function generateVerificationKey()
 	{
+		//return; // debug
 		$list = array(
 			'HTTP_ACCEPT_CHARSET', 'HTTP_ACCEPT_ENCODING',
 			'HTTP_ACCEPT_LANGUAGE', 'HTTP_USER_AGENT',
@@ -280,6 +300,7 @@ final class Session
 
 		$key = array();
 		foreach ($list as $item) {
+			// TODO: $key[] = $httpRequest->getHeader($header)
 			if (isset($_SERVER[$item])) $key[] = $_SERVER[$item];
 		}
 		return md5(implode("\0", $key));
@@ -294,39 +315,38 @@ final class Session
 	/**
 	 * Returns instance of session namespace.
 	 * @param  string
+	 * @param  string
 	 * @return SessionNamespace
 	 * @throws ::InvalidArgumentException
 	 */
-	public static function getNamespace($name = 'default')
+	public function getNamespace($namespace, $class = /*Nette::Web::*/'SessionNamespace')
 	{
-		if (!is_string($name) || $name === '') {
+		if (!is_string($namespace) || $namespace === '') {
 			throw new /*::*/InvalidArgumentException('Session namespace must be a non-empty string.');
 		}
 
 		if (!self::$started) {
-			self::start();
+			$this->start();
 		}
 
-		if (!isset(self::$instances[$name])) {
-			self::$instances[$name] = new SessionNamespace($_SESSION['__NS'][$name], $_SESSION['__NM'][$name]);
+		if (!isset(self::$instances[$namespace])) {
+			self::$instances[$namespace] = new $class($_SESSION['__NS'][$namespace], $_SESSION['__NM'][$namespace]);
 		}
 
-		return self::$instances[$name];
+		return self::$instances[$namespace];
 	}
 
 
 
 	/**
 	 * Checks if a namespace exists.
-	 *
 	 * @param  string
-	 * @throws SessionException
 	 * @return bool
 	 */
-	public static function hasNamespace($namespace)
+	public function hasNamespace($namespace)
 	{
 		if (!self::$started) {
-			throw new SessionException('Session is not started.');
+			$this->start();
 		}
 
 		return isset($_SESSION['__NS'][$namespace]);
@@ -336,17 +356,17 @@ final class Session
 
 	/**
 	 * Iteration over all namespaces.
-	 * @throws SessionException
 	 * @return ::ArrayIterator
 	 */
-	public static function getIterator()
+	public function getIterator()
 	{
 		if (!self::$started) {
-			throw new SessionException('Session is not started.');
+			$this->start();
 		}
 
 		if (isset($_SESSION['__NS'])) {
 			return new /*::*/ArrayIterator(array_keys($_SESSION['__NS']));
+
 		} else {
 			return new /*::*/ArrayIterator;
 		}
@@ -358,10 +378,10 @@ final class Session
 	 * Cleans and minimizes meta structures.
 	 * @return void
 	 */
-	public static function clean()
+	public function clean()
 	{
-		if (!self::$started) {
-			throw new SessionException('Session is not started.');
+		if (!self::$started || empty($_SESSION)) {
+			return;
 		}
 
 		if (isset($_SESSION['__NM']) && is_array($_SESSION['__NM'])) {
@@ -392,99 +412,96 @@ final class Session
 
 
 	/**
-	 * Resets session configuration.
+	 * Configurates session environment.
+	 * @param  array
 	 * @return void
 	 */
-	public static function reset()
+	public function configure(array $config)
 	{
-		self::$resetNeeded = FALSE;
-		// security
-		ini_set('session.referer_check', '');   // default "" (PHP referer checking is invalid; disable it)
-		ini_set('session.use_cookies', 1);      // default "1" (yes, use only cookies!)
-		ini_set('session.use_only_cookies', 1); // default "1" (yes, use only cookies!)
-		ini_set('session.use_trans_sid', 0);    // default "0" (no! use only cookies!)
+		// TODO: Environment::getHttpResponse()->headersSent
+		if (headers_sent($file, $line)) {
+			throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+		}
 
-		// cookie
-		self::setCookieParams('/', '', '');
-		self::setTimeout(0);
-		// ini_set('session.hash_function', ?); // default "0"
-		// ini_set('session.hash_bits_per_character', ?);  // default "4"
-		// session_cache_limiter(?);    // default "nocache"
-		// session_cache_expire(?);     // default "180"
+		$special = array('session.cache_expire' => 1, 'session.cache_limiter' => 1, 'session.save_path' => 1, 'session.name' => 1);
+		$hasIniSet = function_exists('ini_set');
+
+		foreach ($config as $key => $value) {
+			if ($value === NULL) {
+				continue;
+
+			} elseif (isset($special[$key])) {
+				$key = strtr($key, '.', '_');
+				$key($value);
+
+			} elseif (strncmp($key, 'session.cookie_', 15) === 0) {
+				if (!isset($cookie)) {
+					$cookie = session_get_cookie_params();
+					//foreach ($cookie as $k => $v) self::$configuration['session.cookie_' . $k] = $v;
+				}
+				$cookie[substr($key, 15)] = $value;
+
+			} elseif (!$hasIniSet) {
+				// TODO: what to do?
+
+			} else {
+				ini_set($key, $value);
+			}
+
+			self::$configuration[$key] = $value;
+		}
+
+		if (isset($cookie)) {
+			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		}
 	}
 
 
 
 	/**
-	 * Sets the amount of time in seconds allowed between.
+	 * Sets the amount of time in seconds allowed between
 	 * requests before the session will be terminated.
-	 * @param  int
+	 * @param  int  number of seconds
 	 * @return void
 	 */
-	public static function setTimeout($seconds)
+	public function setTimeout($seconds)
 	{
-		if (self::$resetNeeded) self::reset();
-		if (self::$started) self::checkHeaders();
-
-		ini_set('session.gc_maxlifetime', $seconds + 60 * 60);
-		session_set_cookie_params($seconds);
-		self::regenerateId();
+		$this->configure(array(
+			'session.gc_maxlifetime' => $seconds + 60 * 60,
+			'session.cookie_lifetime' => $seconds,
+		));
+		$this->regenerateId();
 	}
 
 
 
 	/**
 	 * Sets the session cookie parameters.
+	 * @param  string  path
+	 * @param  string  domain
+	 * @param  bool    secure
 	 * @return void
 	 */
-	public static function setCookieParams($path, $domain = NULL, $secure = NULL)
+	public function setCookieParams($path, $domain = NULL, $secure = NULL)
 	{
-		if (self::$resetNeeded) self::reset();
-		if (self::$started) self::checkHeaders();
-
-		$params = session_get_cookie_params();
-		session_set_cookie_params(
-			$params['lifetime'],
-			$path === NULL ? $params['path'] : $path,
-			$domain === NULL ? $params['domain'] : $domain,
-			$secure === NULL ? $params['secure'] : $secure,
-			TRUE
-		);
+		$this->configure(array(
+			'session.cookie_path' => $path,
+			'session.cookie_domain' => $domain,
+			'session.cookie_secure' => $secure
+		));
 	}
 
 
 
 	/**
 	 * Sets path of the directory used to save session data.
-	 * @return string
+	 * @return void
 	 */
-	public static function setSavePath($path)
+	public function setSavePath($path)
 	{
-		if (self::$resetNeeded) self::reset();
-		return session_save_path($path);
+		$this->configure(array(
+			'session.save_path' => $path,
+		));
 	}
 
-
-
-	private static function checkHeaders()
-	{
-		if (headers_sent($file, $line)) {
-			throw new SessionException("Headers already sent (output started at $file:$line).");
-		}
-	}
-
-}
-
-
-
-
-/**
- * Session Exception.
- *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
- */
-class SessionException extends /*::*/Exception
-{
 }

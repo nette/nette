@@ -84,10 +84,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addText($name, $label, $cols = NULL, $maxLength = NULL)
 	{
-		$control = new TextInput($label, $cols, $maxLength);
-		$control->getControlPrototype()->class[] = 'text';
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = new TextInput($label, $cols, $maxLength);
 	}
 
 
@@ -103,7 +100,6 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	public function addPassword($name, $label, $cols = NULL, $maxLength = NULL)
 	{
 		$control = new TextInput($label, $cols, $maxLength);
-		$control->getControlPrototype()->class[] = 'text';
 		$control->setPasswordMode(TRUE);
 		$this->addComponent($control, $name);
 		return $control;
@@ -121,9 +117,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addTextArea($name, $label, $cols = 40, $rows = 10)
 	{
-		$control = new TextArea($label, $cols, $rows);
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = new TextArea($label, $cols, $rows);
 	}
 
 
@@ -136,10 +130,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addFile($name, $label)
 	{
-		$control = new FileUpload($label);
-		$control->getControlPrototype()->class[] = 'text';
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = new FileUpload($label);
 	}
 
 
@@ -221,10 +212,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addSubmit($name, $label)
 	{
-		$control = new SubmitButton($label);
-		$control->getControlPrototype()->class[] = 'button';
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = new SubmitButton($label);
 	}
 
 
@@ -237,10 +225,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addButton($name, $label)
 	{
-		$control = new Button($label);
-		$control->getControlPrototype()->class[] = 'button';
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = new Button($label);
 	}
 
 

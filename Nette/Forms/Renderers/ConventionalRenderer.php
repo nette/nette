@@ -63,7 +63,13 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	/** @var array of HTML tags */
 	public $classes = array(
 		'required' => 'required',
+		'optional' => NULL,
 		'error' => 'error',
+		'text' => 'text',
+		'password' => 'text',
+		'file' => 'text',
+		'submit' => 'button',
+		'button' => 'button',
 	);
 
 
@@ -153,7 +159,12 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 			if ($control->isRequired()) {
 				// TODO: only for back compatiblity - remove?
-				$control->getLabelPrototype()->class($this->classes['required']);
+				$control->getLabelPrototype()->class[] = $this->classes['required'];
+			}
+
+			$el = $control->getControlPrototype();
+			if ($el->getName() === 'input' && isset($this->classes[$el->type])) {
+				$el->class[] = $this->classes[$el->type];
 			}
 		}
 	}
@@ -170,7 +181,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
 		if (count($errors)) {
 			$ul = Html::el($this->wrappers['error']['container']);
-			$ul->class($this->classes['error']);
+			$ul->class[] = $this->classes['error'];
 			foreach ($errors as $error) {
 				$ul->create($this->wrappers['error']['item'], $error);
 			}
@@ -245,7 +256,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				$labelEl = $control->label;
 				$controlEl = $control->control;
 
-				$pair->class($control->isRequired() ? $this->classes['required'] : NULL);
+				$pair->class = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
 
 				if ($control instanceof Checkbox) {
 					$controlEl = (string) $controlEl . (string) $labelEl;

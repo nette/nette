@@ -171,7 +171,7 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
 			if ($this->isAjax()) {
-				$this->getAjaxDriver()->open();
+				$this->getAjaxDriver()->open(Environment::getHttpResponse());
 				self::$outputAllowed = FALSE;
 			}
 			$this->initGlobalParams();
@@ -556,7 +556,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Is AJAX request? Shortcut for Environment::getHttpRequest()->isAjax().
+	 * Is AJAX request?
 	 * @return bool
 	 */
 	public function isAjax()

@@ -48,16 +48,12 @@ class UserClientScript extends /*Nette::*/Object
 
 
 	/**
-	 * Genetares the client side validation script.
-	 * @return string
+	 * Generates the client side validation script.
+	 * @return void
 	 */
 	public function renderClientScript()
 	{
-		$export = $this->exportContainer($this->form);
-		return "<script type=\"text/javascript\">\n"
-			. "/* <![CDATA[ */\n"
-			. "var form" . $this->form->getName() . " = " . json_encode($export) . ";\n\n"
-			. "/* ]]> */\n", "</script>\n";
+		$this->form->getElementPrototype()->attrs['data-nette-rules'] = json_encode($this->exportContainer($this->form));
 	}
 
 

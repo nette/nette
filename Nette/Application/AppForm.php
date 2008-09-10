@@ -130,25 +130,6 @@ class AppForm extends /*Nette::Forms::*/Form implements ISignalReceiver
 
 	/**
 	 * This method is called by presenter.
-	 * @return void
-	 */
-	public function handleSubmit()
-	{
-		if (!$this->isSubmitted() || ($this->onlyValid && !$this->isValid())) {
-			return;
-		}
-
-		if ($this->submittedBy instanceof FormControl) {
-			$this->submittedBy->Click();
-		}
-
-		$this->onSubmit($this);
-	}
-
-
-
-	/**
-	 * This method is called by presenter.
 	 * @param  string
 	 * @return void
 	 */

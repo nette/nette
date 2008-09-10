@@ -44,7 +44,7 @@ final class Environment
 	/** variables */
 	const LANG = 'lang';
 
-	/** @var IConfigurator */
+	/** @var Configurator */
 	private static $configurator;
 
 	/** @var string */
@@ -87,10 +87,10 @@ final class Environment
 
 	/**
 	 * Sets "class behind Environment" configurator.
-	 * @param  IConfigurator
+	 * @param  Configurator
 	 * @return void
 	 */
-	public static function setConfigurator(IConfigurator $configurator)
+	public static function setConfigurator(Configurator $configurator)
 	{
 		self::$configurator = $configurator;
 	}
@@ -99,7 +99,7 @@ final class Environment
 
 	/**
 	 * Gets "class behind Environment" configurator.
-	 * @return IConfigurator
+	 * @return Configurator
 	 */
 	public static function getConfigurator()
 	{
@@ -426,13 +426,14 @@ final class Environment
 
 
 	/**
-	 * Returns instance of session namespace.
+	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return Nette::Web::SessionNamespace
+	 * @return Nette::Web::Session|Nette::Web::Session
 	 */
-	public static function getSession($namespace = 'default')
+	public static function getSession($namespace = NULL)
 	{
-		return /*Nette::Web::*/Session::getNamespace($namespace);
+		$handler = self::getService('Nette::Web::Session');
+		return func_num_args() === 0 ? $handler : $handler->getNamespace($namespace);
 	}
 
 

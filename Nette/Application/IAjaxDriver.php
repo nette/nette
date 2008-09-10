@@ -40,9 +40,10 @@ interface IAjaxDriver
 	function link($url);
 
 	/**
+	 * @param  Nette::Web::IHttpResponse
 	 * @return void
 	 */
-	function open();
+	function open(/*Nette::Web::*/IHttpResponse $httpResponse);
 
 	/**
 	 * @return void

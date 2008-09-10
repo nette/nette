@@ -156,7 +156,6 @@ class NetteLoader extends AutoLoader
 		'selectbox' => '/Forms/Controls/SelectBox.php',
 		'servicelocator' => '/ServiceLocator.php',
 		'session' => '/Web/Session.php',
-		'sessionexception' => '/Web/Session.php',
 		'sessionnamespace' => '/Web/SessionNamespace.php',
 		'set' => '/Collections/Set.php',
 		'simpleauthenticator' => '/Security/SimpleAuthenticator.php',

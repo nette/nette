@@ -91,7 +91,7 @@ final class InstantClientScript extends /*Nette::*/Object
 
 
 	/**
-	 * Genetares the client side validation script.
+	 * Generates the client side validation script.
 	 * @return string
 	 */
 	public function renderClientScript()

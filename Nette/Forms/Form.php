@@ -286,6 +286,14 @@ class Form extends FormContainer
 		} else {
 			$this->loadHttpData($request->getQuery());
 		}
+
+		if (!$this->onlyValid || $this->isValid()) {
+			if ($this->submittedBy instanceof FormControl) {
+				$this->submittedBy->Click();
+			}
+
+			$this->onSubmit($this);
+		}
 	}
 
 
@@ -554,6 +562,7 @@ class Form extends FormContainer
 	{
 		if (!in_array($message, $this->errors, TRUE)) {
 			$this->errors[] = $message;
+			$this->valid = FALSE;
 		}
 	}
 
@@ -586,6 +595,7 @@ class Form extends FormContainer
 	public function cleanErrors()
 	{
 		$this->errors = array();
+		$this->valid = NULL;
 	}
 
 

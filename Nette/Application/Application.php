@@ -138,7 +138,7 @@ class Application extends /*Nette::*/Object
 						throw new BadRequestException('No route for HTTP request.');
 					}
 
-					if ($request->getPresenterName() === $this->errorPresenter) {
+					if (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
 						throw new BadRequestException('Invalid request.');
 					}
 
