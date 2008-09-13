@@ -3,37 +3,23 @@
 /*use Nette::Environment;*/
 /*use Nette::Application::Route;*/
 
-/**
- * Load Nette
- */
-define('LIBS_DIR', APP_DIR . '/../libs');
 
-// this should be removed
-if (!is_dir(LIBS_DIR . '/Nette')) {
-	die("Extract Nette Framework to library directory '" . realpath(LIBS_DIR) . "'.");
-}
-
+// Step 1: Load Nette Framework
+// this allows Nette to load classes automatically so that
+// you don't have to litter your code with 'require' statements
 require_once LIBS_DIR . '/Nette/loader.php';
+//require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 
-/**
- * Setup Nette::Debug
- */
-/*Nette::*/Debug::enable();
+// Step 2: Configure and setup application environment
+// 2a) enable Nette::Debug for better exception and error visualisation
+Debug::enable();
 
-
-
-/**
- * Configure application
- */
+// 2b) load configuration from config.ini file
 $config = Environment::loadConfig();
 
-
-
-/**
- * Enable RobotLoader
- */
+// 2c) enable RobotLoader
 $loader = new /*Nette::Loaders::*/RobotLoader();
 $loader->addDirectory(explode(';', $config->scanDirs));
 $loader->autoRebuild = FALSE;
@@ -41,13 +27,15 @@ $loader->register();
 
 
 
-/**
- * Setup router
- */
+// Step 3: Get the front controller
 $application = Environment::getApplication();
+// 2b) setup front controller
 $application->errorPresenter = 'Error';
 $application->catchExceptions = TRUE;
 
+
+
+// Step 4: Setup application routes
 $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(
@@ -63,7 +51,5 @@ $router[] = new Route('<presenter>/<view>/<id>', array(
 
 
 
-/**
- * Run!
- */
+// Step 5: Run the application!
 $application->run();

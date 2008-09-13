@@ -9,3 +9,10 @@ h1 {
 	font-size: 150%;
 	color: #165ca3;
 }
+
+#spinner {
+	display: none;
+	position: absolute;
+	border: none;
+	z-index: 1000;
+}

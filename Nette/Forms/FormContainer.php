@@ -45,7 +45,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  FormGroup
 	 * @return void
 	 */
-	public function setCurrentGroup(FromGroup $group = NULL)
+	public function setCurrentGroup(FormGroup $group = NULL)
 	{
 		$this->currentGroup = $group;
 	}

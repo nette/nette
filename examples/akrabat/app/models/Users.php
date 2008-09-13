@@ -3,16 +3,19 @@
 /*use Nette::Security::AuthenticationException;*/
 
 
+/**
+ * Users
+ *
+ * @sql
+ *  CREATE TABLE [users] (
+ *  [id] INTEGER  NULL PRIMARY KEY,
+ *  [username] VARCHAR(50)  UNIQUE NOT NULL,
+ *  [password] VARCHAR(50)  NOT NULL,
+ *  [real_name] VARCHAR(100)  NOT NULL
+ *  );
+ */
 class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
 {
-
-/*  CREATE TABLE [users] (
-	[id] INTEGER  NULL PRIMARY KEY,
-	[username] VARCHAR(50)  UNIQUE NOT NULL,
-	[password] VARCHAR(50)  NOT NULL,
-	[real_name] VARCHAR(100)  NOT NULL
-	) */
-
 
 	/**
 	 * Performs an authentication

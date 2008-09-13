@@ -3,3 +3,7 @@ body {
 	color: black;
 	background-color: white;
 }
+
+#spinner {
+	display: none;
+}

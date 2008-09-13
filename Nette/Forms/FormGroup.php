@@ -35,8 +35,8 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class FormGroup extends /*Nette::*/Object
 {
-	/** @var array */
-	protected $controls = array();
+	/** @var SplObjectStorage */
+	protected $controls;
 
 	/** @var array user options */
 	private $options = array();
@@ -45,6 +45,7 @@ class FormGroup extends /*Nette::*/Object
 
 	public function __construct($label)
 	{
+		$this->controls = new SplObjectStorage;
 		$this->setOption('label', $label);
 	}
 
@@ -55,14 +56,17 @@ class FormGroup extends /*Nette::*/Object
 	 */
 	public function add()
 	{
-		foreach (func_get_args() as $id => $control) {
-			if ($control instanceof IFormControl) {
-				if (!in_array($control, $this->controls, TRUE)) {
-					$this->controls[] = $control;
+		foreach (func_get_args() as $num => $item) {
+			if ($item instanceof IFormControl) {
+				$this->controls->attach($item);
+
+			} elseif ($item instanceof Traversable || is_array($item)) {
+				foreach ($item as $control) {
+					$this->controls->attach($control);
 				}
 
 			} else {
-				throw new /*::*/InvalidArgumentException("Only IFormControl items are allowed, the #$id parameter is invalid.");
+				throw new /*::*/InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
 			}
 		}
 		return $this;
@@ -75,7 +79,7 @@ class FormGroup extends /*Nette::*/Object
 	 */
 	public function getControls()
 	{
-		return $this->controls;
+		return iterator_to_array($this->controls);
 	}
 
 
