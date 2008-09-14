@@ -177,7 +177,13 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 		// build PresenterRequest
+		if (!isset($params[self::PRESENTER_KEY])) {
+			throw new /*::*/InvalidStateException('Missing presenter in route definition.');
+		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
+			if (!isset($params[self::MODULE_KEY])) {
+				throw new /*::*/InvalidStateException('Missing module in route definition.');
+			}
 			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
 			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
 		} else {

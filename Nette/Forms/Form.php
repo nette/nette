@@ -64,9 +64,6 @@ class Form extends FormContainer
 	/** @var array - function($sender, $submittor) */
 	public $onSubmit;
 
-	/** @var bool  fire event onSubmit only for valid form? */
-	public $onlyValid = TRUE;
-
 	/** @var bool */
 	protected $isPost = TRUE;
 
@@ -287,11 +284,27 @@ class Form extends FormContainer
 			$this->loadHttpData($request->getQuery());
 		}
 
-		if (!$this->onlyValid || $this->isValid()) {
-			if ($this->submittedBy instanceof FormControl) {
+		$this->submit();
+	}
+
+
+
+	/**
+	 * Fires submit/click events.
+	 * @return void
+	 */
+	protected function submit()
+	{
+		if ($this->submittedBy instanceof FormControl) {
+			$allowed = $this->submittedBy->getValidationScope() ? $this->isValid() : TRUE;
+			if ($allowed) {
 				$this->submittedBy->Click();
 			}
+		} else {
+			$allowed = $this->isValid();
+		}
 
+		if ($allowed) {
 			$this->onSubmit($this);
 		}
 	}

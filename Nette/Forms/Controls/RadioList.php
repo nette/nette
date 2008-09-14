@@ -55,7 +55,6 @@ class RadioList extends FormControl
 		parent::__construct($label);
 		$this->items = $items;
 		$this->control->type = 'radio';
-		$this->label->for = NULL;
 		$this->container = /*Nette::Web::*/Html::el();
 		$this->separator = /*Nette::Web::*/Html::el('br');
 	}

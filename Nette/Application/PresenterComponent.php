@@ -191,6 +191,28 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 
 
+	/**
+	 * Returns component param.
+	 * If no key is passed, returns the entire array.
+	 * @param  string key
+	 * @param  mixed  default value
+	 * @return mixed
+	 */
+	final public function getParam($key = NULL, $default = NULL)
+	{
+		if (func_num_args() === 0) {
+			return $this->params;
+
+		} elseif (isset($this->params[$key])) {
+			return $this->params[$key];
+
+		} else {
+			return $default;
+		}
+	}
+
+
+
 	/********************* interface ISignalReceiver ****************d*g**/
 
 

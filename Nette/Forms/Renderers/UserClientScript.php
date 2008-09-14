@@ -90,7 +90,8 @@ class UserClientScript extends /*Nette::*/Object
 		return $control->isDisabled() ? NULL : array(
 			'class' => $control->getClass(),
 			'rules' => $this->exportRules($control->getRules()),
-			'opt' => $control instanceof FormControl ? $control->getOptions() : NULL
+			'opt' => $control instanceof FormControl ? $control->getOptions() : NULL,
+			'scope' => $control instanceof ISubmitterControl ? (bool) $control->getValidationScope() : NULL,
 		);
 	}
 

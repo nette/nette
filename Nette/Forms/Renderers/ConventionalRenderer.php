@@ -77,7 +77,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	private $form;
 
 	/** @var  */
-	private $js;
+	private $clientScript;
 
 
 
@@ -107,9 +107,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		if (!$mode || $mode === 'end') {
 			$s .= $form->getElementPrototype()->endTag() . "\n";
 
-			$js = $this->getJs();
-			if ($js) {
-				$s .= $js->renderClientScript() . "\n";
+			$clientScript = $this->getClientScript();
+			if ($clientScript) {
+				$s .= $clientScript->renderClientScript() . "\n";
 			}
 		}
 		return $s;
@@ -122,9 +122,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param
 	 * @return void
 	 */
-	public function setJs($js = NULL)
+	public function setClientScript($clientScript = NULL)
 	{
-		$this->js = $js;
+		$this->clientScript = $clientScript;
 	}
 
 
@@ -133,12 +133,12 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * Returns JavaScript handler.
 	 * @return |NULL
 	 */
-	public function getJs()
+	public function getClientScript()
 	{
-		if ($this->js === NULL) {
-			$this->js = new InstantClientScript($this->form);
+		if ($this->clientScript === NULL) {
+			$this->clientScript = new InstantClientScript($this->form);
 		}
-		return $this->js;
+		return $this->clientScript;
 	}
 
 
@@ -149,9 +149,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	protected function init()
 	{
-		$js = $this->getJs();
-		if ($js) {
-			$js->enable();
+		$clientScript = $this->getClientScript();
+		if ($clientScript) {
+			$clientScript->enable();
 		}
 
 		foreach ($this->form->getControls() as $control) {
@@ -241,10 +241,11 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$container = Html::el($this->wrappers['control']['container']);
 		$pair = Html::el($this->wrappers['control']['pair']);
-		$label = Html::el($this->wrappers['control']['label']);
-		$ctrl = Html::el($this->wrappers['control']['control']);
+		$label = $pair->create($this->wrappers['control']['label']);
+		$ctrl = $pair->create($this->wrappers['control']['control']);
 		$hidden = Html::el($this->wrappers['hidden']['container']);
 
+		$s = $buttons = NULL;
 		foreach ($parent->getControls() as $control) {
 			if ($control->isRendered()) {
 				// skip
@@ -252,30 +253,45 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			} elseif ($control instanceof HiddenField) {
 				$hidden->add($control->getControl());
 
+			} elseif ($control instanceof Button) {
+				$buttons[] = $control->getControl();
+
 			} else {
-				$labelEl = $control->label;
-				$controlEl = $control->control;
+				if ($buttons) {
+					$label->setHtml('&nbsp;');
+					$ctrl->setHtml(implode(" ", $buttons));
+					$container->add($pair->render(0));
+					$buttons = NULL;
+				}
+
+				$labelEl = $control->getLabel();
+				$controlEl = $control->getControl();
 
 				$pair->class = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
 
 				if ($control instanceof Checkbox) {
-					$controlEl = (string) $controlEl . (string) $labelEl;
-					$labelEl = '&nbsp;';
+					$label->setHtml('&nbsp;');
+					$ctrl->setHtml((string) $controlEl . (string) $labelEl);
 
-				} elseif (!$labelEl) {
-					$labelEl = '&nbsp;';
+				} else {
+					$label->setHtml((string) $labelEl);
+					$ctrl->setHtml((string) $controlEl);
 				}
 
-				$container->add("\n" . $pair->startTag() . "\n\t"
-					. $label->startTag() . $labelEl . $label->endTag() . "\n\t"
-					. $ctrl->startTag() . $controlEl . $ctrl->endTag() . "\n"
-					. $pair->endTag() . "\n");
+				$container->add($pair->render(0));
 			}
 		}
-		$s = '';
+
+		if ($buttons) {
+			$label->setHtml('&nbsp;');
+			$ctrl->setHtml(implode(" ", $buttons));
+			$container->add($pair->render(0));
+		}
+
 		if (count($container)) {
 			$s .= "\n" . $container . "\n";
 		}
+
 		if (count($hidden)) {
 			$s .= "\n" . $hidden . "\n";
 		}

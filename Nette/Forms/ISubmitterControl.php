@@ -42,4 +42,10 @@ interface ISubmitterControl extends IFormControl
 	 */
 	function isSubmittedBy();
 
+	/**
+	 * Gets the validation scope. Clicking the button validates only the controls within the specified scope.
+	 * @return mixed
+	 */
+	function getValidationScope();
+
 }

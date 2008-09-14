@@ -40,6 +40,9 @@ class SubmitButton extends Button implements ISubmitterControl
 	/** @var array  click event handlers: function($sender) */
 	public $onClick;
 
+	/** @var mixed */
+	private $validationScope = TRUE;
+
 
 
 	/**
@@ -60,6 +63,31 @@ class SubmitButton extends Button implements ISubmitterControl
 	public function isSubmittedBy()
 	{
 		return (bool) $this->value;
+	}
+
+
+
+	/**
+	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
+	 * @param  mixed
+	 * @return SubmitButton  provides a fluent interface or returns current value
+	 */
+	public function setValidationScope($scope)
+	{
+		// TODO: implement groups
+		$this->validationScope = (bool) $scope;
+		return $this;
+	}
+
+
+
+	/**
+	 * Gets the validation scope.
+	 * @return mixed
+	 */
+	final public function getValidationScope()
+	{
+		return $this->validationScope;
 	}
 
 

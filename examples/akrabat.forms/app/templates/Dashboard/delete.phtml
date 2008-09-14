@@ -1,0 +1,10 @@
+<h1>{$title}</h1>
+
+
+{if $album}
+<p>Are you sure that you want to delete ‘{$album->title}’ by ‘{$album->artist}’?</p>
+{!$form}
+
+{else}
+<p>Cannot find album.</p>
+{/if}

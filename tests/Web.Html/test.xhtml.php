@@ -43,6 +43,7 @@ echo $el, "\n\n";
 
 echo Html::el('p')->setText('Hello &ndash; World'), "\n";
 echo Html::el('p')->setText('Hello &ndash; World', TRUE), "\n\n";
+echo Html::el('p')->setHtml('Hello &ndash; World'), "\n\n";
 
 // add
 $el = Html::el('ul');

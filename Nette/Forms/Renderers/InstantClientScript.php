@@ -82,7 +82,9 @@ final class InstantClientScript extends /*Nette::*/Object
 
 			} else {
 				foreach ($this->form->getComponents(TRUE, 'Nette::Forms::ISubmitterControl') as $control) {
-					$control->getControlPrototype()->onclick .= 'return ' . $this->validateFunction . "(this);";
+					if ($control->getValidationScope()) {
+						$control->getControlPrototype()->onclick .= 'return ' . $this->validateFunction . "(this);";
+					}
 				}
 			}
 		}

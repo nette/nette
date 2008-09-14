@@ -66,7 +66,6 @@ final class Environment
 		'cacheBase' => array('%tempDir%/cache-', TRUE),
 		'tempDir' => array('%appDir%/temp', TRUE),
 		'logDir' => array('%appDir%/log', TRUE),
-		'libsDir' => array('%appDir%/libs', TRUE),
 		'templatesDir' => array('%appDir%/templates', TRUE),
 		'presentersDir' => array('%appDir%/presenters', TRUE),
 		'componentsDir' => array('%appDir%/components', TRUE),

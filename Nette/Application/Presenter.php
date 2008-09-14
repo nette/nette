@@ -193,6 +193,7 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 3: SIGNAL HANDLING
 			$this->phase = self::PHASE_SIGNAL;
 			$this->processSignal();
+
 			// save component tree persistent state
 			$this->globalParams = $this->getGlobalState();
 			if ($this->isAjax()) {
@@ -300,6 +301,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$component->signalReceived($this->signal);
+		$this->signal = NULL;
 	}
 
 
