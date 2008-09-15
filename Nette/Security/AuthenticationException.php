@@ -39,4 +39,6 @@ class AuthenticationException extends /*::*/Exception
 
 	const INVALID_CREDENTIAL = 2;
 
+	const FAILURE = 3;
+
 }

@@ -477,7 +477,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @return array
 	 */
-	protected static function formatLayoutTemplateFiles($presenter, $layout)
+	protected function formatLayoutTemplateFiles($presenter, $layout)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
@@ -502,7 +502,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @return array
 	 */
-	protected static function formatTemplateFiles($presenter, $scene)
+	protected function formatTemplateFiles($presenter, $scene)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);

@@ -295,16 +295,16 @@ class Form extends FormContainer
 	 */
 	protected function submit()
 	{
-		if ($this->submittedBy instanceof FormControl) {
-			$allowed = $this->submittedBy->getValidationScope() ? $this->isValid() : TRUE;
-			if ($allowed) {
-				$this->submittedBy->Click();
-			}
-		} else {
-			$allowed = $this->isValid();
-		}
+		if (!$this->isSubmitted()) {
+			return;
 
-		if ($allowed) {
+		} elseif ($this->submittedBy instanceof ISubmitterControl) {
+			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
+				$this->submittedBy->Click();
+				$this->onSubmit($this);
+			}
+
+		} elseif ($this->isValid()) {
 			$this->onSubmit($this);
 		}
 	}

@@ -106,7 +106,7 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatPresenterClass($presenter)
+	public function formatPresenterClass($presenter)
 	{
 		// PHP 5.3
 		/*return str_replace(':', '::', $presenter) . 'Presenter';*/
@@ -120,7 +120,7 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function unformatPresenterClass($class)
+	public function unformatPresenterClass($class)
 	{
 		// PHP 5.3
 		/*return str_replace('::', ':', substr($class, 0, -9));*/
@@ -134,7 +134,7 @@ class PresenterLoader implements IPresenterLoader
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatPresenterFile($presenter)
+	public function formatPresenterFile($presenter)
 	{
 		$presenter = str_replace(':', 'Module/', $presenter);
 		$presenter = /*Nette::*/Environment::getVariable('presentersDir') . '/' . $presenter . 'Presenter.php';
