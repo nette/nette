@@ -54,25 +54,36 @@ class Route extends /*Nette::*/Object implements IRouter
 
 	/** @var array */
 	public static $styles = array(
-		'#' => array(
+		'#' => array( // default style for path parameters
 			'pattern' => '[^/]+',
 			'filterIn' => 'rawurldecode',
 			'filterOut' => 'rawurlencode',
 		),
+		'?#' => array( // default style for query parameters
+		),
 		'module' => array(
 			'pattern' => '[a-z][a-z0-9.-]*',
-			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
-			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
+			'filterIn' => /*Nette::Application::*/'Route::path2presenter',
+			'filterOut' => /*Nette::Application::*/'Route::presenter2path',
 		),
 		'presenter' => array(
 			'pattern' => '[a-z][a-z0-9.-]*',
-			'filterIn' => /*Nette::Application::*/'Route::dash2pascal',
-			'filterOut' => /*Nette::Application::*/'Route::pascal2dash',
+			'filterIn' => /*Nette::Application::*/'Route::path2presenter',
+			'filterOut' => /*Nette::Application::*/'Route::presenter2path',
 		),
 		'view' => array(
 			'pattern' => '[a-z][a-z0-9-]*',
-			'filterIn' => /*Nette::Application::*/'Route::dash2camel',
-			'filterOut' => /*Nette::Application::*/'Route::camel2dash',
+			'filterIn' => /*Nette::Application::*/'Route::path2view',
+			'filterOut' => /*Nette::Application::*/'Route::view2path',
+		),
+		'?module' => array(
+			'filterOut' => 'strtolower',
+		),
+		'?presenter' => array(
+			'filterOut' => 'strtolower',
+		),
+		'?view' => array(
+			'filterOut' => 'strtolower',
 		),
 	);
 
@@ -150,13 +161,13 @@ class Route extends /*Nette::*/Object implements IRouter
 		$defaults = array();
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
-				if (isset($meta['filterIn'])) {
+				if (isset($meta['filterIn'])) { // applyies filterIn only to path parameters
 					$params[$name] = call_user_func($meta['filterIn'], $params[$name]);
 				}
 			} elseif (isset($meta['fixed'])) {
 				if ($meta['fixed'] !== 0) { // force now
 					$params[$name] = $meta['default'];
-				} else { // append later
+				} else { // append later - after query params
 					$defaults[$name] = $meta['default'];
 				}
 			}
@@ -227,14 +238,21 @@ class Route extends /*Nette::*/Object implements IRouter
 		}
 
 		foreach ($metadata as $name => $meta) {
-			if (isset($params[$name]) && isset($meta['fixed'])) {
-				if ($params[$name] == $meta['default']) {  // intentionally ==
+			if (!isset($params[$name])) continue; // retains NULL values
+
+			if (isset($meta['fixed'])) {
+				if (strcasecmp($params[$name], $meta['default']) === 0) {  // intentionally ==
 					// remove default values; NULL values are retain
 					unset($params[$name]);
+					continue;
 
 				} elseif ($meta['fixed'] === 2) {
 					return NULL; // missing or wrong parameter '$name'
 				}
+			}
+
+			if (isset($meta['filterOut'])) {
+				$params[$name] = call_user_func($meta['filterOut'], $params[$name]);
 			}
 		}
 
@@ -249,32 +267,23 @@ class Route extends /*Nette::*/Object implements IRouter
 			$i--;
 
 			$name = $sequence[$i]; $i--; // parameter name
-			$meta = isset($metadata[$name]) ? $metadata[$name] : NULL;
 
 			if (isset($params[$name]) && $params[$name] != '') { // intentionally ==
 				$optional = FALSE;
-				if (isset($meta['filterOut'])) {
-					$uri = call_user_func($meta['filterOut'], $params[$name]) . $uri;
-				} else {
-					$uri = $params[$name] . $uri;
-				}
+				$uri = $params[$name] . $uri;
 				unset($params[$name]);
 
-			} elseif (isset($meta['fixed'])) { // has default value?
+			} elseif (isset($metadata[$name]['fixed'])) { // has default value?
 				if ($optional) {
 					$uri = '';
 
-				} elseif ($meta['default'] == '') { // intentionally ==
+				} elseif ($metadata[$name]['default'] == '') { // intentionally ==
 					if ($uri[0] === '/' && substr($sequence[$i], -1) === '/') {
 						return NULL; // default value is empty but is required
 					}
 
 				} else {
-					if (isset($meta['filterOut'])) {
-						$uri = call_user_func($meta['filterOut'], $meta['default']) . $uri;
-					} else {
-						$uri = $meta['default'] . $uri;
-					}
+					$uri = $metadata[$name]['defOut'] . $uri;
 				}
 
 			} else {
@@ -348,7 +357,16 @@ class Route extends /*Nette::*/Object implements IRouter
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern) = $match;  // $pattern is unsed
-				$metadata[$name]['fixed'] = 0;
+				if (isset(self::$styles['?' . $name])) {
+					$meta = self::$styles['?' . $name];
+				} else {
+					$meta = self::$styles['?#'];
+				}
+				if (isset($metadata[$name])) {
+					$meta = $meta + $metadata[$name];
+				}
+				$meta['fixed'] = 0;
+				$metadata[$name] = $meta;
 				if ($param !== '') {
 					$this->xlat[$name] = $param;
 				}
@@ -406,6 +424,9 @@ class Route extends /*Nette::*/Object implements IRouter
 				$pattern = $meta['pattern'];
 			}
 
+			if (isset($meta['default'])) {
+				$meta['defOut'] = isset($meta['filterOut']) ? call_user_func($meta['filterOut'], $meta['default']) : $meta['default'];
+			}
 			$meta['pattern'] = $pattern;
 			$metadata[$name] = $meta;
 
@@ -491,25 +512,26 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 	/**
-	 * camelCase -> dash-separated.
+	 * camelCaseView name -> dash-separated.
 	 * @param  string
 	 * @return string
 	 */
-	private static function camel2dash($s)
+	private static function view2path($s)
 	{
 		$s = preg_replace('#(.)(?=[A-Z])#', '$1-', $s);
 		$s = strtolower($s);
+		$s = rawurlencode($s);
 		return $s;
 	}
 
 
 
 	/**
-	 * dash-separated -> camelCase.
+	 * dash-separated -> camelCaseView name.
 	 * @param  string
 	 * @return string
 	 */
-	private static function dash2camel($s)
+	private static function path2view($s)
 	{
 		$s = strtolower($s);
 		$s = preg_replace('#-(?=[a-z])#', ' ', $s);
@@ -522,26 +544,27 @@ class Route extends /*Nette::*/Object implements IRouter
 
 
 	/**
-	 * PascalCase:WithColons -> dash-and-dot-separated.
+	 * PascalCase:Presenter name -> dash-and-dot-separated.
 	 * @param  string
 	 * @return string
 	 */
-	private static function pascal2dash($s)
+	private static function presenter2path($s)
 	{
 		$s = strtr($s, ':', '.');
 		$s = preg_replace('#([^.])(?=[A-Z])#', '$1-', $s);
 		$s = strtolower($s);
+		$s = rawurlencode($s);
 		return $s;
 	}
 
 
 
 	/**
-	 * dash-and-dot-separated -> PascalCase:WithColons.
+	 * dash-and-dot-separated -> PascalCase:Presenter name.
 	 * @param  string
 	 * @return string
 	 */
-	private static function dash2pascal($s)
+	private static function path2presenter($s)
 	{
 		$s = strtolower($s);
 		$s = preg_replace('#([.-])(?=[a-z])#', '$1 ', $s);

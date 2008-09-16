@@ -150,19 +150,12 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	/**
 	 * Saves state informations for next request.
 	 * @param  array
-	 * @param  portion specified by class name (used by Presenter)
 	 * @return void
 	 */
-	public function saveState(array & $params, $forClass = NULL)
+	public function saveState(array & $params)
 	{
-		if ($forClass === NULL) {
-			$forClass = $this->getClass();
-		}
-
-		foreach (PresenterHelpers::getPersistentParams($forClass) as $nm => $l)
+		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
 		{
-			if (!($this instanceof $l['since'])) continue;
-
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
 
@@ -173,18 +166,14 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 				$val = $this->$nm; // object property value
 			}
 
-			// only NULLs, scalar, arrays and IStatePersistent are allowed
-			if ($val === NULL || is_scalar($val) || is_array($val)) {
-				if ($l['type']) settype($val, $l['type']);
-
-				if ($val === $l['def']) {
-					$params[$nm] = NULL;
+			if (!is_object($val)) {
+				if ($l['type'] === NULL) {
+					if ((string) $val === '') $val = NULL; // unnecessary
 				} else {
-					$params[$nm] = $val;
+					settype($val, $l['type']);
+					if ($val === $l['def']) $val = NULL;
 				}
-
-			} else {
-				throw new InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
+				$params[$nm] = $val;
 			}
 		}
 	}

@@ -67,6 +67,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	private $phase;
 
+	/** @var bool  automatically call canonicalize() */
+	public $autoCanonicalize = TRUE;
+
 	/**
 	 * Lists of all components identified by a uniqueId starting from this page.
 	 * @var array of Nette::IComponent
@@ -75,6 +78,9 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var array */
 	private $globalParams;
+
+	/** @var array */
+	private $globalState;
 
 	/** @var string */
 	private $view;
@@ -180,6 +186,9 @@ abstract class Presenter extends Control implements IPresenter
 			// calls $this->present{view}();
 			$this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
 
+			if ($this->autoCanonicalize) {
+				$this->canonicalize();
+			}
 			if ($this->httpRequest->getMethod() === 'HEAD') {
 				$this->terminate();
 			}
@@ -195,9 +204,9 @@ abstract class Presenter extends Control implements IPresenter
 			$this->processSignal();
 
 			// save component tree persistent state
-			$this->globalParams = $this->getGlobalState();
+			$this->saveGlobalState();
 			if ($this->isAjax()) {
-				$this->ajaxDriver->updateState($this->globalParams);
+				$this->ajaxDriver->updateState($this->globalState[NULL]);
 			}
 
 			// PHASE 4: RENDERING SCENE
@@ -345,7 +354,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function getView($fullyQualified = FALSE)
 	{
-		return $fullyQualified ? $this->getName() . ':' . $this->view : $this->view;
+		return $fullyQualified ? ':' . $this->getName() . ':' . $this->view : $this->view;
 	}
 
 
@@ -676,13 +685,11 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Link to myself.
-	 * @param  bool
 	 * @return string
 	 */
-	public function backlink($full = TRUE)
+	public function backlink()
 	{
-		// TODO: implement $full
-		return $this->getName() . ':' . $this->view;
+		return $this->getView(TRUE);
 	}
 
 
@@ -695,6 +702,24 @@ abstract class Presenter extends Control implements IPresenter
 	public function terminate()
 	{
 		throw new AbortException();
+	}
+
+
+
+	/**
+	 * Conditional redirect to canonicalized URI.
+	 * @return void
+	 * @throws AbortException
+	 */
+	public function canonicalize()
+	{
+		if ($this->request->getSource() === PresenterRequest::HTTP_GET && !$this->isAjax()) {
+			$uri = $this->createRequest('self', array());
+			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
+				error_log("Canonicalize: {$this->httpRequest->uri} -> $uri");
+				throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
+			}
+		}
 	}
 
 
@@ -811,7 +836,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
-			$view = $destination === 'this' ? $this->view : $destination;
+			$view = $destination === 'this' || $destination === 'self' ? $this->view : $destination;
 			$presenter = $this->getName();
 			$presenterClass = $this->getClass();
 
@@ -838,7 +863,7 @@ abstract class Presenter extends Control implements IPresenter
 		if (is_subclass_of($presenterClass, __CLASS__)) {
 			if ($view === '') {
 				/*$view = $presenterClass::$defaultView;*/ // in PHP 5.3
-				/**/$view = eval("return $presenterClass::\$defaultView;");/**/
+				/**/$view = self::$defaultView;/**/
 			}
 
 			if ($args) {
@@ -860,11 +885,12 @@ abstract class Presenter extends Control implements IPresenter
 				}
 			}
 
-			/*if (strcasecmp($presenter, $this->getName()) === 0) {
-				$args += $this->getGlobalState();
-			} else {*/
-				$this->saveState($args, $presenterClass);
-			/*}*/
+			$this->saveGlobalState();
+			$this->saveState($args, $presenterClass);
+
+			if ($destination === 'self') { // experimental
+				$args += $this->request->getParams();
+			}
 		}
 
 		$args[self::VIEW_KEY] = $view;
@@ -927,8 +953,9 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		$this->saveState($params);
-		$params += $this->getGlobalState();
+		$this->saveGlobalState();
+		$this->saveState($params, $presenterClass);
+		$params += $this->globalState[NULL];
 		$params[self::VIEW_KEY] = $view;
 
 		$request = new PresenterRequest(
@@ -970,32 +997,79 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Saves state information for all subcomponents.
-	 * @return array
+	 * Saves state informations for next request.
+	 * @param  array
+	 * @param  portion specified by class name (used by Presenter)
+	 * @return void
 	 */
-	public function getGlobalState()
+	public function saveState(array & $params, $forClass = NULL)
 	{
-		if ($this->phase > self::PHASE_SIGNAL) {
-			return $this->globalParams;
-		}
-
-		$state = array();
-		foreach ($this->globalComponents as $id => $component)
+		foreach (PresenterHelpers::getPersistentParams($forClass) as $nm => $l)
 		{
-			if ($component instanceof IStatePersistent) {
-				$params = array();
-				$component->saveState($params);
-				if ($id === '') {
-					$state = $params + $state;
+			if (isset($params[$nm])) {
+				$val = $params[$nm]; // injected value
+
+			} elseif (array_key_exists($nm, $params)) {
+				continue; // i.e. $params[$nm] === NULL -> means skip
+
+			} elseif ($this instanceof $l['since']) {
+				$val = $this->$nm; // object property value
+
+			} else {
+				continue; // foreign parameter which is not set
+			}
+
+			if (is_object($val)) {
+				if ($val instanceof IStatePersistent) { // and $state
+					$nm = $val->getUniqueId();
+					if (isset($this->globalState[$nm])) {
+						$params += $this->globalState[$nm];
+					}
 				} else {
-					$prefix = $id . self::NAME_SEPARATOR;
-					foreach ($params as $key => $val) {
-						$state[$prefix . $key] = $val;
+					throw new InvalidStateException("Persistent parameter must be scalar, array or IStatePersistent, '$this->class::\$$nm' is " . gettype($val));
+				}
+
+			} else {
+				if ($l['type'] === NULL) {
+					if ((string) $val === '') $val = NULL; // unnecessary
+				} else {
+					settype($val, $l['type']);
+					if ($val === $l['def']) $val = NULL;
+				}
+				$params[$nm] = $val;
+			}
+		}
+	}
+
+
+
+	/**
+	 * Saves state information for all subcomponents to $this->globalState.
+	 * @return void
+	 */
+	protected function saveGlobalState()
+	{
+		if ($this->globalState === NULL || $this->phase <= self::PHASE_SIGNAL) {
+			$state = array();
+			foreach ($this->globalComponents as $id => $component)
+			{
+				if ($component instanceof IStatePersistent) {
+					$params = array();
+					$component->saveState($params);
+					if ($id === '') { // presenter itself
+						$state[NULL] = $params;
+					} else {
+						$prefix = $id . self::NAME_SEPARATOR;
+						$prefix2 = substr($prefix, 0, strpos($prefix, self::NAME_SEPARATOR));
+						foreach ($params as $key => $val) {
+							$state[NULL][$prefix . $key] = $val;
+							$state[$prefix2][$prefix . $key] = $val;
+						}
 					}
 				}
 			}
+			$this->globalState = $state;
 		}
-		return $state;
 	}
 
 

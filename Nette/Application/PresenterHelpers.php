@@ -187,7 +187,13 @@ class PresenterHelpers
 			} elseif (!array_key_exists($name, $args)) {
 				continue;
 			}
-			if ($args[$name] == $def) $args[$name] = NULL;
+
+			if ($def === NULL) {
+				if ((string) $args[$name] === '') $args[$name] = NULL; // unnecessary
+			} else {
+				settype($args[$name], gettype($def));
+				if ($args[$name] === $def) $args[$name] = NULL;
+			}
 			$i++;
 		}
 

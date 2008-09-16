@@ -66,9 +66,6 @@ class Application extends /*Nette::*/Object
 	/** @var array of string */
 	public $allowedMethods = array('GET', 'POST', 'HEAD');
 
-	/** @var bool  automatically redirect to canonical URL */
-	public $canonicalize = TRUE;
-
 	/** @var string */
 	public $errorPresenter;
 
@@ -142,14 +139,6 @@ class Application extends /*Nette::*/Object
 
 					if (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
 						throw new BadRequestException('Invalid request.');
-					}
-
-					// redirect to canonicalized URI.
-					if ($this->canonicalize && $method !== 'POST' && !$httpRequest->isAjax()) {
-						$uri = $router->constructUrl($request, $httpRequest);
-						if ($uri !== NULL && !$httpRequest->getUri()->isEqual($uri)) {
-							throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
-						}
 					}
 				}
 

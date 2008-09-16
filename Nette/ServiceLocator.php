@@ -43,6 +43,9 @@ class ServiceLocator extends Object implements IServiceLocator
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
+	/** @var array  storage for shared objects */
+	private $factories = array();
+
 
 
 	/**
@@ -81,10 +84,16 @@ class ServiceLocator extends Object implements IServiceLocator
 		}
 
 		$lower = strtolower($name);
-		if (isset($this->registry[$lower]) && is_object($this->registry[$lower])) {
+		if (isset($this->registry[$lower])) {
 			throw new AmbiguousServiceException("Service named '$name' has been already set.");
 		}
-		$this->registry[$lower] = $service;
+
+		if (is_object($service)) {
+			$this->registry[$lower] = $service;
+
+		} else {
+			$this->factories[$lower] = $service;
+		}
 
 		if ($promote && $this->parent !== NULL) {
 			$this->parent->addService($service, $name, TRUE);
@@ -105,7 +114,7 @@ class ServiceLocator extends Object implements IServiceLocator
 		}
 
 		$lower = strtolower($name);
-		unset($this->registry[$lower]);
+		unset($this->registry[$lower], $this->factories[$lower]);
 
 		if ($promote && $this->parent !== NULL) {
 			$this->parent->removeService($name, TRUE);
@@ -129,11 +138,12 @@ class ServiceLocator extends Object implements IServiceLocator
 		$lower = strtolower($name);
 
 		if (isset($this->registry[$lower])) {
-			$service = $this->registry[$lower];
-			if (is_object($service)) {
-				return $service;
+			return $this->registry[$lower];
 
-			} elseif (is_string($service)) {
+		} elseif (isset($this->factories[$lower])) {
+			$service = $this->factories[$lower];
+
+			if (is_string($service)) {
 				if (substr($service, -2) === '()') {
 					// trick to pass callback as string
 					$service = substr($service, 0, -2);
