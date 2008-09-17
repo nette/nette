@@ -272,35 +272,23 @@ class User extends /*Nette::*/Object implements IUser
 
 
 	/**
-	 * @param  Nette::Application::PresenterRequest
-	 * @return string
+	 * @deprecated
 	 */
 	public function storeRequest(/*Nette::Application::*/PresenterRequest $request)
 	{
-		$session = $this->session;
-		do {
-			$key = /*Nette::*/Tools::uniqueId();
-		} while (isset($session->rq[$key]));
-
-		$session->rq[$key] = $request;
-		$session->setExpiration(10 * 60, 'rq');
-		return $key;
+		trigger_error("Deprecated: use \$application->storeRequest() instead.", E_USER_WARNING);
+		return Environment::getApplication()->storeRequest();
 	}
 
 
 
 	/**
-	 * @param  string
-	 * @return void
+	 * @deprecated
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->session;
-		if (isset($session->rq[$key])) {
-			$request = $session->rq[$key];
-			unset($session->rq[$key]);
-			throw new /*Nette::Application::*/ForwardingException($request);
-		}
+		trigger_error("Deprecated: use \$application->restoreRequest(\$key) instead.", E_USER_WARNING);
+		Environment::getApplication()->restoreRequest($key);
 	}
 
 

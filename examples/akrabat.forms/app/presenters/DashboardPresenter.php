@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter
 		// user authentication
 		$user = Environment::getUser();
 		if (!$user->isAuthenticated()) {
-			$backlink = $user->storeRequest($this->getRequest());
+			$backlink = $this->getApplication()->storeRequest();
 			$this->redirect('Auth:login', $backlink);
 		}
 

@@ -317,4 +317,41 @@ class Application extends /*Nette::*/Object
 		return $this->getServiceLocator()->getService('Nette::Application::IPresenterLoader');
 	}
 
+
+
+	/********************* request serialization ****************d*g**/
+
+
+
+	/**
+	 * @return string
+	 */
+	public function storeRequest()
+	{
+		$session = Environment::getSession('Nette.Application.Request');
+		do {
+			$key = /*Nette::*/Tools::uniqueId();
+		} while (isset($session->rq[$key]));
+
+		$session->rq[$key] = end($this->requests);
+		$session->setExpiration(10 * 60, 'rq');
+		return $key;
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return void
+	 */
+	public function restoreRequest($key)
+	{
+		$session = Environment::getSession('Nette.Application.Request');
+		if (isset($session->rq[$key])) {
+			$request = $session->rq[$key];
+			unset($session->rq[$key]);
+			throw new ForwardingException($request);
+		}
+	}
+
 }

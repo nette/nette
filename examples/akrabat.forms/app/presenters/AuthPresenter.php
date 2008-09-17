@@ -37,7 +37,7 @@ class AuthPresenter extends BasePresenter
 			require_once 'models/Users.php';
 			$user = Environment::getUser();
 			$user->authenticate($form['username']->getValue(), $form['password']->getValue());
-			$user->restoreRequest($this->backlink);
+			$this->getApplication()->restoreRequest($this->backlink);
 			$this->redirect('Dashboard:');
 
 		} catch (AuthenticationException $e) {

@@ -103,6 +103,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool */
 	private $ajaxMode;
 
+	/** @var Application */
+	private $application;
+
 	/** @var IRouter  cached value for createRequest() & createSubRequest() */
 	private $router;
 
@@ -121,9 +124,9 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		$this->request = $request;
 		$this->httpRequest = Environment::getHttpRequest();
-		$application = Environment::getApplication();
-		$this->router = $application->getRouter();
-		$this->presenterLoader = $application->getPresenterLoader();
+		$this->application = Environment::getApplication();
+		$this->router = $this->application->getRouter();
+		$this->presenterLoader = $this->application->getPresenterLoader();
 
 		parent::__construct(NULL, $request->getPresenterName());
 	}
@@ -145,7 +148,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * Returns self.
 	 * @return Presenter
 	 */
-	public function getPresenter($need = TRUE)
+	final public function getPresenter($need = TRUE)
 	{
 		return $this;
 	}
@@ -159,6 +162,17 @@ abstract class Presenter extends Control implements IPresenter
 	final public function getUniqueId()
 	{
 		return '';
+	}
+
+
+
+	/**
+	 * Returns application object.
+	 * @return Application
+	 */
+	final public function getApplication()
+	{
+		return $this->application;
 	}
 
 
@@ -716,7 +730,6 @@ abstract class Presenter extends Control implements IPresenter
 		if ($this->request->getSource() === PresenterRequest::HTTP_GET && !$this->isAjax()) {
 			$uri = $this->createRequest('self', array());
 			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
-				error_log("Canonicalize: {$this->httpRequest->uri} -> $uri");
 				throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
 		}
