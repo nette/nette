@@ -180,11 +180,10 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
 		if (count($errors)) {
-			$wrappers = $this->wrappers['error'];
-			$ul = $this->getHtml($wrappers['container']);
+			$ul = $this->getHtml($this->wrappers['error']['container']);
 			$ul->class[] = $this->classes['error'];
 			foreach ($errors as $error) {
-				$ul->add($this->getHtml($wrappers['item'])->setText($error));
+				$ul->add($this->getHtml($this->wrappers['error']['item'])->setText($error));
 			}
 			return "\n" . $ul->render(0);
 		}
@@ -198,8 +197,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderBody()
 	{
-		$wrappers = $this->wrappers['group'];
-		$defaultContainer = $this->getHtml($wrappers['container']);
+		$defaultContainer = $this->getHtml($this->wrappers['group']['container']);
 		$translator = $this->form->getTranslator();
 
 		$s = $remains = '';
@@ -214,7 +212,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
-				$s .= "\n" . $this->getHtml($wrappers['label'])->setText($text) . "\n";
+				$s .= "\n" . $this->getHtml($this->wrappers['group']['label'])->setText($text) . "\n";
 			}
 
 			$s .= $this->renderControls($group);
@@ -241,15 +239,10 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	protected function renderControls($parent)
 	{
-		$wrappers = $this->wrappers['control'];
-		$container = $this->getHtml($wrappers['container']);
-		$pair = $this->getHtml($wrappers['pair']);
-		$pair->add($label = $this->getHtml($wrappers['label']));
-		$pair->add($ctrl = $this->getHtml($wrappers['control']));
+		$container = $this->getHtml($this->wrappers['control']['container']);
 		$hidden = $this->getHtml($this->wrappers['hidden']['container']);
-		$emptyLabel = $pair->getName() === 'tr' ? '&nbsp;' : '';
 
-		$s = $buttons = NULL;
+		$buttons = NULL;
 		foreach ($parent->getControls() as $control) {
 			if ($control->isRendered()) {
 				// skip
@@ -258,40 +251,22 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				$hidden->add($control->getControl());
 
 			} elseif ($control instanceof Button) {
-				$buttons[] = $control->getControl();
+				$buttons[] = $control;
 
 			} else {
 				if ($buttons) {
-					$label->setHtml($emptyLabel);
-					$ctrl->setHtml(implode(" ", $buttons));
-					$container->add($pair->render(0));
+					$container->add($this->renderPairMulti($buttons));
 					$buttons = NULL;
 				}
-
-				$labelEl = $control->getLabel();
-				$controlEl = $control->getControl();
-
-				$pair->class = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
-
-				if ($control instanceof Checkbox) {
-					$label->setHtml($emptyLabel);
-					$ctrl->setHtml((string) $controlEl . (string) $labelEl);
-
-				} else {
-					$label->setHtml((string) $labelEl);
-					$ctrl->setHtml((string) $controlEl);
-				}
-
-				$container->add($pair->render(0));
+				$container->add($this->renderPair($control));
 			}
 		}
 
 		if ($buttons) {
-			$label->setHtml($emptyLabel);
-			$ctrl->setHtml(implode(" ", $buttons));
-			$container->add($pair->render(0));
+			$container->add($this->renderPairMulti($buttons));
 		}
 
+		$s = '';
 		if (count($container)) {
 			$s .= "\n" . $container . "\n";
 		}
@@ -300,6 +275,79 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			$s .= "\n" . $hidden . "\n";
 		}
 		return $s;
+	}
+
+
+
+	/**
+	 * Renders single visual row.
+	 * @param  IFormControl
+	 * @return string
+	 */
+	protected function renderPair(IFormControl $control)
+	{
+		$pair = $this->getHtml($this->wrappers['control']['pair']);
+		$pair->add($this->renderLabel($control));
+		$pair->add($this->renderControl($control));
+		$pair->class = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
+		return $pair->render(0);
+	}
+
+
+
+	/**
+	 * Renders single visual row of multiple controls.
+	 * @param  array of IFormControl
+	 * @return string
+	 */
+	protected function renderPairMulti(array $controls)
+	{
+		$s = array();
+		foreach ($controls as $control) {
+			$s[] = (string) $control->getControl();
+		}
+		$pair = $this->getHtml($this->wrappers['control']['pair']);
+		$pair->add($this->getHtml($this->wrappers['control']['label'])->setHtml('&nbsp;'));
+		$pair->add($this->getHtml($this->wrappers['control']['control'])->setHtml(implode(" ", $s)));
+		return $pair->render(0);
+	}
+
+
+
+	/**
+	 * Renders 'label' part of visual row of controls.
+	 * @param  IFormControl
+	 * @return string
+	 */
+	protected function renderLabel(IFormControl $control)
+	{
+		$head = $this->getHtml($this->wrappers['control']['label']);
+
+		if ($control instanceof Checkbox || $control instanceof Button) {
+			return $head->setHtml('&nbsp;');
+
+		} else {
+			return $head->setHtml((string) $control->getLabel());
+		}
+	}
+
+
+
+	/**
+	 * Renders 'control' part of visual row of controls.
+	 * @param  IFormControl
+	 * @return string
+	 */
+	protected function renderControl(IFormControl $control)
+	{
+		$body = $this->getHtml($this->wrappers['control']['control']);
+
+		if ($control instanceof Checkbox || $control instanceof Button) {
+			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel());
+
+		} else {
+			return $body->setHtml((string) $control->getControl());
+		}
 	}
 
 
