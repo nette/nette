@@ -240,8 +240,16 @@ class RobotLoader extends AutoLoader
 		$expected = FALSE;
 		$namespace = '';
 		$level = 0;
+		$s = file_get_contents($file);
 
-		foreach (token_get_all(file_get_contents($file)) as $token)
+		if (preg_match('#//netteloader=(\S*)#', $s, $matches)) {
+			foreach (explode(',', $matches[1]) as $name) {
+				$this->addClass($name, $file);
+			}
+			return;
+		}
+
+		foreach (token_get_all($s) as $token)
 		{
 			if (is_array($token)) {
 				switch ($token[0]) {
@@ -261,10 +269,6 @@ class RobotLoader extends AutoLoader
 				case T_STRING:
 					if ($expected) {
 						$name .= $token[1];
-
-					} elseif ($token[1] === 'namespace') { // PHP < 5.3
-						$expected = T_NAMESPACE;
-						$name = '';
 					}
 					continue 2;
 				}

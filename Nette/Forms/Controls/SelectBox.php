@@ -69,12 +69,14 @@ class SelectBox extends FormControl
 		$this->allowed = array();
 
 		foreach ($items as $key => $value) {
-			if (is_array($value)) {
-				foreach ($value as $key2 => $value2) {
-					$this->allowed[$key2] = TRUE;
+			if (!is_array($value)) {
+				$value = array($key => $value);
+			}
+			foreach ($value as $key2 => $value2) {
+				if (isset($this->allowed[$key2])) {
+					throw new /*::*/InvalidArgumentException("Items contain duplication for key '$key2'.");
 				}
-			} else {
-				$this->allowed[$key] = TRUE;
+				$this->allowed[$key2] = $value2;
 			}
 		}
 	}
@@ -143,6 +145,27 @@ class SelectBox extends FormControl
 	final public function getItems()
 	{
 		return $this->items;
+	}
+
+
+
+	/**
+	 * Returns item or items from which to choose.
+	 * @return array|string
+	 */
+	final public function getSelectedItem()
+	{
+		if ($this->multiple) {
+			$res = array();
+			foreach ($this->getValue() as $value) {
+				$res[$value] = $this->allowed[$value];
+			}
+			return $res;
+
+		} else {
+			$value = $this->getValue();
+			return $value === NULL ? NULL : $this->allowed[$value];
+		}
 	}
 
 

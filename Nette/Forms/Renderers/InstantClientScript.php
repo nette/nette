@@ -217,7 +217,10 @@ final class InstantClientScript extends /*Nette::*/Object
 			return $tmp . $tmp2 . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
 
 		case /*nette::forms::*/'checkbox::validateequal':
-			return "el = document.getElementById('" . $id . "');\n\tres = " . ($arg ? '' : '!') . "el.checked;";
+			return $tmp . "res = " . ($arg ? '' : '!') . "el.checked;";
+
+		case /*nette::forms::*/'fileupload::validatefilled':
+			return $tmp . "res = el.value!='';";
 
 		case /*nette::forms::*/'radiolist::validateequal':
 			return "res = false;\n\t" .

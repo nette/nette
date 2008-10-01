@@ -237,6 +237,7 @@ final class Environment
 	 * @param  string
 	 * @param  mixed  default value to use if key not found
 	 * @return mixed
+     * @throws ::InvalidStateException
 	 */
 	public static function getVariable($name, $default = NULL)
 	{
@@ -287,6 +288,7 @@ final class Environment
 	 * Returns expanded variable.
 	 * @param  string
 	 * @return string
+     * @throws ::InvalidStateException
 	 */
 	public static function expand($var)
 	{

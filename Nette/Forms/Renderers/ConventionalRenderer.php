@@ -237,7 +237,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  Form|FormGroup
 	 * @return string
 	 */
-	protected function renderControls($parent)
+	public function renderControls($parent)
 	{
 		$container = $this->getHtml($this->wrappers['control']['container']);
 		$hidden = $this->getHtml($this->wrappers['hidden']['container']);
@@ -284,7 +284,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  IFormControl
 	 * @return string
 	 */
-	protected function renderPair(IFormControl $control)
+	public function renderPair(IFormControl $control)
 	{
 		$pair = $this->getHtml($this->wrappers['control']['pair']);
 		$pair->add($this->renderLabel($control));
@@ -300,7 +300,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  array of IFormControl
 	 * @return string
 	 */
-	protected function renderPairMulti(array $controls)
+	public function renderPairMulti(array $controls)
 	{
 		$s = array();
 		foreach ($controls as $control) {
@@ -319,7 +319,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  IFormControl
 	 * @return string
 	 */
-	protected function renderLabel(IFormControl $control)
+	public function renderLabel(IFormControl $control)
 	{
 		$head = $this->getHtml($this->wrappers['control']['label']);
 
@@ -338,7 +338,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  IFormControl
 	 * @return string
 	 */
-	protected function renderControl(IFormControl $control)
+	public function renderControl(IFormControl $control)
 	{
 		$body = $this->getHtml($this->wrappers['control']['control']);
 
@@ -356,7 +356,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 * @param  string|Nette::Web::Html
 	 * @return Nette::Web::Html
 	 */
-	private function getHtml(& $data)
+	protected function getHtml(& $data)
 	{
 		if ($data instanceof Html) {
 			return clone $data;
