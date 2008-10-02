@@ -1,4 +1,5 @@
-<?php
+<?php //netteloader=IDibiVariable,IDataSource,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,dibi,DibiLogger,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
+
 /**
  * dibi - tiny'n'smart database abstraction layer
  * ----------------------------------------------
@@ -14,7 +15,7 @@
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    0.9 (revision 146 released on 2008/09/13 18:38:59)
+ * @version    0.9 (revision 150 released on 2008/10/02 11:01:38)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -156,7 +157,7 @@ __construct($config,$name=NULL){if(class_exists('Debug',FALSE)){Debug::addColoph
 instanceof
 ArrayObject){$config=(array)$config;}elseif(!is_array($config)){throw
 new
-InvalidArgumentException('Configuration must be array, string or ArrayObject.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){include_once __FILE__."/../../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
+InvalidArgumentException('Configuration must be array, string or ArrayObject.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){ include_once dirname(__FILE__)."/../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
 new
 DibiException("Unable to create instance of dibi driver class '$class'.");}}if(isset($config['result:withtables'])){$config['resultWithTables']=$config['result:withtables'];unset($config['result:withtables']);}if(isset($config['result:objects'])){$config['resultObjects']=$config['result:objects'];unset($config['result:objects']);}if(isset($config['resultObjects'])){$val=$config['resultObjects'];$config['resultObjects']=is_string($val)&&!is_numeric($val)?$val:(bool)$val;}if(isset($config['resultClass'])){if(strcasecmp($config['resultClass'],'DibiResult')&&!is_subclass_of($config['resultClass'],'DibiResult')){throw
 new
@@ -294,8 +295,8 @@ fetchSingle(){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
 FALSE;$this->fetched=TRUE;$value=reset($row);$key=key($row);if(isset($this->xlat[$key])){$type=$this->xlat[$key];return$this->convert($value,$type['type'],$type['format']);}return$value;}final
 public
 function
-fetchAll($offset=NULL,$limit=NULL,$simplify=TRUE){$limit=$limit===NULL?-1:(int)$limit;$this->seek((int)$offset);$row=$this->fetch();if(!$row)return
-array();$data=array();if($simplify&&!$this->objects&&count($row)===1){$key=key($row);do{if($limit===0)break;$limit--;$data[]=$row[$key];}while($row=$this->fetch());}else{do{if($limit===0)break;$limit--;$data[]=$row;}while($row=$this->fetch());}return$data;}final
+fetchAll($offset=NULL,$limit=NULL){$limit=$limit===NULL?-1:(int)$limit;$this->seek((int)$offset);$row=$this->fetch();if(!$row)return
+array();$data=array();do{if($limit===0)break;$limit--;$data[]=$row;}while($row=$this->fetch());return$data;}final
 public
 function
 fetchAssoc($assoc){$this->seek(0);$row=$this->fetch(FALSE);if(!$row)return
@@ -309,9 +310,7 @@ function
 fetchPairs($key=NULL,$value=NULL){$this->seek(0);$row=$this->fetch(FALSE);if(!$row)return
 array();$data=array();if($value===NULL){if($key!==NULL){throw
 new
-InvalidArgumentException("Either none or both columns must be specified.");}if(count($row)<2){throw
-new
-UnexpectedValueException("Result must have at least two columns.");}$tmp=array_keys($row);$key=$tmp[0];$value=$tmp[1];}else{if(!array_key_exists($value,$row)){throw
+InvalidArgumentException("Either none or both columns must be specified.");}$tmp=array_keys($row);$key=$tmp[0];if(count($row)<2){do{$data[]=$row[$key];}while($row=$this->fetch(FALSE));return$data;}$value=$tmp[1];}else{if(!array_key_exists($value,$row)){throw
 new
 InvalidArgumentException("Unknown value column '$value'.");}if($key===NULL){do{$data[]=$row[$value];}while($row=$this->fetch(FALSE));return$data;}if(!array_key_exists($key,$row)){throw
 new
@@ -349,7 +348,7 @@ public
 function
 getIterator($offset=NULL,$limit=NULL){return
 new
-ArrayIterator($this->fetchAll($offset,$limit,FALSE));}final
+ArrayIterator($this->fetchAll($offset,$limit));}final
 public
 function
 count(){return$this->rowCount();}private
@@ -368,19 +367,23 @@ getDriver(){return$this->driver;}public
 function
 translate(array$args){$this->limit=-1;$this->offset=0;$this->hasError=FALSE;$commandIns=NULL;$lastArr=NULL;$cursor=&$this->cursor;$cursor=0;$this->args=array_values($args);$args=&$this->args;$this->ifLevel=$this->ifLevelStart=0;$comment=&$this->comment;$comment=FALSE;$sql=array();while($cursor<count($args)){$arg=$args[$cursor];$cursor++;if(is_string($arg)){$toSkip=strcspn($arg,'`[\'"%');if(strlen($arg)===$toSkip){$sql[]=$arg;}else{$sql[]=substr($arg,0,$toSkip).preg_replace_callback('/(?=`|\[|\'|"|%)(?:`(.+?)`|\[(.+?)\]|(\')((?:\'\'|[^\'])*)\'|(")((?:""|[^"])*)"|(\'|")|%([a-zA-Z]{1,4})(?![a-zA-Z]))/s',array($this,'cb'),substr($arg,$toSkip));}continue;}if($comment){$sql[]='...';continue;}if(is_array($arg)){if(is_string(key($arg))){if($commandIns===NULL){$commandIns=strtoupper(substr(ltrim($args[0]),0,6));$commandIns=$commandIns==='INSERT'||$commandIns==='REPLAC';$sql[]=$this->formatValue($arg,$commandIns?'v':'a');}else{if($lastArr===$cursor-1)$sql[]=',';$sql[]=$this->formatValue($arg,$commandIns?'l':'a');}$lastArr=$cursor;continue;}elseif($cursor===1){$cursor=0;array_splice($args,0,1,$arg);continue;}}$sql[]=$this->formatValue($arg,FALSE);}if($comment)$sql[]="*/";$sql=implode(' ',$sql);if($this->limit>-1||$this->offset>0){$this->driver->applyLimit($sql,$this->limit,$this->offset);}$this->sql=$sql;return!$this->hasError;}public
 function
-formatValue($value,$modifier){if(is_array($value)){$vx=$kx=array();$separator=', ';switch($modifier){case'and':case'or':$separator=' '.strtoupper($modifier).' ';if(empty($value)){return'1';}elseif(!is_string(key($value))){foreach($value
+formatValue($value,$modifier){if(is_array($value)){$vx=$kx=array();$operator=', ';switch($modifier){case'and':case'or':$operator=' '.strtoupper($modifier).' ';if(empty($value)){return'1';}elseif(!is_string(key($value))){foreach($value
 as$v){$vx[]=$this->formatValue($v,'sql');}}else{foreach($value
-as$k=>$v){$pair=explode('%',$k,2);$k=$this->delimite($pair[0]);if(isset($pair[1])){$pair=explode(' ',$pair[1],2);$op=isset($pair[1])?$pair[1]:'=';$v=$this->formatValue($v,$pair[0]);}else{$op='=';$v=$this->formatValue($v,FALSE);}if($v==='NULL'){$op='IS';}$vx[]=$k.' '.$op.' '.$v;}}return
-implode($separator,$vx);case'a':foreach($value
+as$k=>$v){$pair=explode('%',$k,2);$k=$this->delimite($pair[0]);$v=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);$op=isset($pair[1])&&$pair[1]==='l'?'IN':($v==='NULL'?'IS':'=');$vx[]=$k.' '.$op.' '.$v;}}return
+implode($operator,$vx);case'a':foreach($value
 as$k=>$v){$pair=explode('%',$k,2);$vx[]=$this->delimite($pair[0]).'='.$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return
-implode($separator,$vx);case'l':foreach($value
+implode($operator,$vx);case'l':foreach($value
 as$k=>$v){$pair=explode('%',$k,2);$vx[]=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return'('.implode(', ',$vx).')';case'v':foreach($value
-as$k=>$v){$pair=explode('%',$k,2);$kx[]=$this->delimite($pair[0]);$vx[]=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return'('.implode(', ',$kx).') VALUES ('.implode(', ',$vx).')';default:foreach($value
+as$k=>$v){$pair=explode('%',$k,2);$kx[]=$this->delimite($pair[0]);$vx[]=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return'('.implode(', ',$kx).') VALUES ('.implode(', ',$vx).')';case'by':foreach($value
+as$k=>$v){if(is_string($k)){$v=(is_string($v)&&strcasecmp($v,'desc'))||$v>0?'ASC':'DESC';$vx[]=$this->delimite($k).' '.$v;}else{$vx[]=$this->delimite($v);}}return
+implode(', ',$vx);default:foreach($value
 as$v){$vx[]=$this->formatValue($v,$modifier);}return
 implode(', ',$vx);}}if($modifier){if($value===NULL){return'NULL';}if($value
 instanceof
-IDibiVariable){return$value->toSql($this,$modifier);}if(!is_scalar($value)){$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';}switch($modifier){case's':case'bin':case'b':return$this->driver->escape($value,$modifier);case'sn':return$value==''?'NULL':$this->driver->escape($value,dibi::FIELD_TEXT);case'i':case'u':if(is_string($value)&&preg_match('#[+-]?\d+(e\d+)?$#A',$value)){return$value;}return(string)(int)($value+0);case'f':if(is_numeric($value)&&(!is_string($value)||strpos($value,'x')===FALSE)){return$value;}return(string)($value+0);case'd':case't':return$this->driver->escape(is_string($value)?strtotime($value):$value,$modifier);case'n':return$this->delimite($value);case'sql':$value=(string)$value;$toSkip=strcspn($value,'`[\'"');if(strlen($value)===$toSkip){return$value;}else{return
-substr($value,0,$toSkip).preg_replace_callback('/(?=`|\[|\'|")(?:`(.+?)`|\[(.+?)\]|(\')((?:\'\'|[^\'])*)\'|(")((?:""|[^"])*)"(\'|"))/s',array($this,'cb'),substr($value,$toSkip));}case'and':case'or':case'a':case'l':case'v':$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';default:$this->hasError=TRUE;return"**Unknown or invalid modifier %$modifier**";}}if(is_string($value))return$this->driver->escape($value,dibi::FIELD_TEXT);if(is_int($value)||is_float($value))return(string)$value;if(is_bool($value))return$this->driver->escape($value,dibi::FIELD_BOOL);if($value===NULL)return'NULL';if($value
+IDibiVariable){return$value->toSql($this,$modifier);}if(!is_scalar($value)){$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';}switch($modifier){case's':case'bin':case'b':return$this->driver->escape($value,$modifier);case'sn':return$value==''?'NULL':$this->driver->escape($value,dibi::FIELD_TEXT);case'i':case'u':if(is_string($value)&&preg_match('#[+-]?\d+(e\d+)?$#A',$value)){return$value;}return(string)(int)($value+0);case'f':if(is_string($value)&&is_numeric($value)&&strpos($value,'x')===FALSE){return$value;}return
+rtrim(rtrim(number_format($value,5,'.',''),'0'),'.');case'd':case't':return$this->driver->escape(is_string($value)?strtotime($value):$value,$modifier);case'by':case'n':return$this->delimite($value);case'sql':$value=(string)$value;$toSkip=strcspn($value,'`[\'"');if(strlen($value)===$toSkip){return$value;}else{return
+substr($value,0,$toSkip).preg_replace_callback('/(?=`|\[|\'|")(?:`(.+?)`|\[(.+?)\]|(\')((?:\'\'|[^\'])*)\'|(")((?:""|[^"])*)"(\'|"))/s',array($this,'cb'),substr($value,$toSkip));}case'and':case'or':case'a':case'l':case'v':$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';default:$this->hasError=TRUE;return"**Unknown or invalid modifier %$modifier**";}}if(is_string($value))return$this->driver->escape($value,dibi::FIELD_TEXT);if(is_int($value)||is_float($value))return
+rtrim(rtrim(number_format($value,5,'.',''),'0'),'.');if(is_bool($value))return$this->driver->escape($value,dibi::FIELD_BOOL);if($value===NULL)return'NULL';if($value
 instanceof
 IDibiVariable)return$value->toSql($this,NULL);$this->hasError=TRUE;return'**Unexpected '.gettype($value).'**';}private
 function
@@ -415,13 +418,17 @@ setup(){if($this->name===NULL){$name=$this->getClass();if(FALSE!==($pos=strrpos(
 function
 insert($data){$this->connection->query('INSERT INTO %n',$this->name,'%v',$this->prepare($data));if($this->primaryAutoIncrement){return$this->connection->insertId();}}public
 function
-update($where,$data){$this->connection->query('UPDATE %n',$this->name,'SET %a',$this->prepare($data),'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$where,')');return$this->connection->affectedRows();}public
+update($where,$data){$data=$this->prepare($data);if($where===NULL&&isset($data[$this->primary])){;$where=$data[$this->primary];unset($data[$this->primary]);}$this->connection->query('UPDATE %n',$this->name,'SET %a',$data,'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$where,')');return$this->connection->affectedRows();}public
+function
+insertOrUpdate($data){$data=$this->prepare($data);if(!isset($data[$this->primary])){throw
+new
+InvalidArgumentException("Missing primary key '$this->primary' in dataset.");}try{$this->connection->query('INSERT INTO %n',$this->name,'%v',$data);}catch(DibiDriverException$e){$where=$data[$this->primary];unset($data[$this->primary]);$this->connection->query('UPDATE %n',$this->name,'SET %a',$data,'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$where,')');}}public
 function
 delete($where){$this->connection->query('DELETE FROM %n',$this->name,'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$where,')');return$this->connection->affectedRows();}public
 function
 find($what){if(!is_array($what)){$what=func_get_args();}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$what,')'));}public
 function
-findAll($conditions=NULL,$order=NULL){$order=func_get_args();if(is_array($conditions)){array_shift($order);}else{$conditions=NULL;}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'%ex',$conditions?array('WHERE %and',$conditions):NULL,'%ex',$order?array('ORDER BY %n',$order):NULL));}public
+findAll($conditions=NULL,$order=NULL){if(!is_array($order)){$order=func_get_args();if(is_array($conditions)){array_shift($order);}else{$conditions=NULL;}}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'%ex',$conditions?array('WHERE %and',$conditions):NULL,'%ex',$order?array('ORDER BY %by',$order):NULL));}public
 function
 fetch($conditions){if(is_array($conditions)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',$conditions))->fetch();}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %n='.$this->primaryModifier,$this->primary,$conditions))->fetch();}public
 function
@@ -480,7 +487,7 @@ fetch(){if($this->command==='SELECT'){$this->clauses['LIMIT']=array(1);}return$t
 function
 fetchSingle(){if($this->command==='SELECT'){$this->clauses['LIMIT']=array(1);}return$this->execute()->fetchSingle();}public
 function
-fetchAll($offset=NULL,$limit=NULL,$simplify=TRUE){return$this->execute()->fetchAll($offset,$limit,$simplify);}public
+fetchAll($offset=NULL,$limit=NULL){return$this->execute()->fetchAll($offset,$limit);}public
 function
 fetchAssoc($assoc){return$this->execute()->fetchAssoc($assoc);}public
 function
@@ -503,7 +510,7 @@ array_fill_keys($keys,$value){return
 array_combine($keys,array_fill(0,count($keys),$value));}}class
 dibi{const
 FIELD_TEXT='s',FIELD_BINARY='bin',FIELD_BOOL='b',FIELD_INTEGER='i',FIELD_FLOAT='f',FIELD_DATE='d',FIELD_DATETIME='t',IDENTIFIER='n';const
-VERSION='0.9',REVISION='146 released on 2008/09/13 18:38:59';private
+VERSION='0.9',REVISION='150 released on 2008/10/02 11:01:38';private
 static$registry=array();private
 static$connection;private
 static$substs=array();private
@@ -566,6 +573,10 @@ static
 function
 fetchSingle($args){$args=func_get_args();return
 self::getConnection()->query($args)->fetchSingle();}public
+static
+function
+fetchPairs($args){$args=func_get_args();return
+self::getConnection()->query($args)->fetchPairs();}public
 static
 function
 affectedRows(){return
@@ -715,7 +726,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
-dibi::IDENTIFIER:return'['.str_replace('.','].[',$value).']';case
+dibi::IDENTIFIER:$value=str_replace(array('[',']'),array('[[',']]'),$value);return'['.str_replace('.','].[',$value).']';case
 dibi::FIELD_BOOL:return$value?-1:0;case
 dibi::FIELD_DATE:return
 date("'Y-m-d'",$value);case
@@ -791,7 +802,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".mysql_real_escape_string($value,$this->connection)."'";case
-dibi::IDENTIFIER:return'`'.str_replace('.','`.`',$value).'`';case
+dibi::IDENTIFIER:$value=str_replace('`','``',$value);return'`'.str_replace('.','`.`',$value).'`';case
 dibi::FIELD_BOOL:return$value?1:0;case
 dibi::FIELD_DATE:return
 date("'Y-m-d'",$value);case
@@ -867,7 +878,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".mysqli_real_escape_string($this->connection,$value)."'";case
-dibi::IDENTIFIER:return'`'.str_replace('.','`.`',$value).'`';case
+dibi::IDENTIFIER:$value=str_replace('`','``',$value);return'`'.str_replace('.','`.`',$value).'`';case
 dibi::FIELD_BOOL:return$value?1:0;case
 dibi::FIELD_DATE:return
 date("'Y-m-d'",$value);case
@@ -946,7 +957,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
-dibi::IDENTIFIER:return'['.str_replace('.','].[',$value).']';case
+dibi::IDENTIFIER:$value=str_replace(array('[',']'),array('[[',']]'),$value);return'['.str_replace('.','].[',$value).']';case
 dibi::FIELD_BOOL:return$value?-1:0;case
 dibi::FIELD_DATE:return
 date("#m/d/Y#",$value);case
@@ -1025,7 +1036,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
-dibi::IDENTIFIER:return'['.str_replace('.','].[',$value).']';case
+dibi::IDENTIFIER:$value=str_replace('"','""',$value);return'"'.str_replace('.','"."',$value).'"';case
 dibi::FIELD_BOOL:return$value?1:0;case
 dibi::FIELD_DATE:return
 date("U",$value);case
@@ -1106,8 +1117,8 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:return$this->connection->quote($value,PDO::PARAM_STR);case
 dibi::FIELD_BINARY:return$this->connection->quote($value,PDO::PARAM_LOB);case
-dibi::IDENTIFIER:switch($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME)){case'mysql':return'`'.str_replace('.','`.`',$value).'`';case'pgsql':$a=strrpos($value,'.');if($a===FALSE){return'"'.str_replace('"','""',$value).'"';}else{return
-substr($value,0,$a).'."'.str_replace('"','""',substr($value,$a+1)).'"';}case'sqlite':case'sqlite2':case'odbc':case'oci':case'mssql':return'['.str_replace('.','].[',$value).']';default:return$value;}case
+dibi::IDENTIFIER:switch($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME)){case'mysql':$value=str_replace('`','``',$value);return'`'.str_replace('.','`.`',$value).'`';case'pgsql':$a=strrpos($value,'.');if($a===FALSE){return'"'.str_replace('"','""',$value).'"';}else{return
+substr($value,0,$a).'."'.str_replace('"','""',substr($value,$a+1)).'"';}case'sqlite':case'sqlite2':$value=strtr($value,'[]','  ');case'odbc':case'oci':case'mssql':$value=str_replace(array('[',']'),array('[[',']]'),$value);return'['.str_replace('.','].[',$value).']';default:return$value;}case
 dibi::FIELD_BOOL:return$this->connection->quote($value,PDO::PARAM_BOOL);case
 dibi::FIELD_DATE:return
 date("'Y-m-d'",$value);case
@@ -1256,7 +1267,7 @@ function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".sqlite_escape_string($value)."'";case
-dibi::IDENTIFIER:return'['.str_replace('.','].[',$value).']';case
+dibi::IDENTIFIER:return'['.str_replace('.','].[',strtr($value,'[]','  ')).']';case
 dibi::FIELD_BOOL:return$value?1:0;case
 dibi::FIELD_DATE:return
 date($this->fmtDate,$value);case

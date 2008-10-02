@@ -31,7 +31,7 @@ if (!function_exists('json_encode')) { // since PHP 5.2.0
 		}
 
 		if (is_int($val) || is_float($val)) {
-			return (string) $val;
+			return rtrim(rtrim(number_format($val, 5, '.', ''), '0'), '.');
 		}
 
 		if (is_bool($val)) {

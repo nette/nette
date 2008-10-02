@@ -287,7 +287,7 @@ final class InstantClientScript extends /*Nette::*/Object
 			return $tmp . $tmp2 . "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val);";
 
 		case /*nette::forms::*/'textbase::validaterange':
-			return $tmp . $tmp2 . "res = parseFloat(val)>=" . (float) $arg[0] . " && parseFloat(val)<=" . (float) $arg[1] . ";";
+			return $tmp . $tmp2 . "res = parseFloat(val)>=" . json_encode((float) $arg[0]) . " && parseFloat(val)<=" . json_encode((float) $arg[1]) . ";";
 		}
 	}
 

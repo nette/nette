@@ -1,0 +1,39 @@
+<h1>Nette::String base method test</h1>
+
+<pre>
+String::startsWith('123', NULL)
+bool(TRUE)
+
+String::startsWith('123', '')
+bool(TRUE)
+
+String::startsWith('123', '1')
+bool(TRUE)
+
+String::startsWith('123', '2')
+bool(FALSE)
+
+String::startsWith('123', '123')
+bool(TRUE)
+
+String::startsWith('123', '1234')
+bool(FALSE)
+
+String::endsWith('123', NULL)
+bool(TRUE)
+
+String::endsWith('123', '')
+bool(TRUE)
+
+String::endsWith('123', '3')
+bool(TRUE)
+
+String::endsWith('123', '2')
+bool(FALSE)
+
+String::endsWith('123', '123')
+bool(TRUE)
+
+String::endsWith('123', '1234')
+bool(FALSE)
+

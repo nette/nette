@@ -505,15 +505,22 @@ abstract class Presenter extends Control implements IPresenter
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
 		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
+		$base = '';
 		if ($root === Environment::getVariable('presentersDir')) {
-			$presenter = substr_replace($presenter, '/templates/', strrpos($presenter, '/'), 0);
-			$module = substr_replace($module, '/templates/', strrpos($module, '/'), 0);
+			$base = 'templates/';				
+			if ($module === '') {
+				$presenter = 'templates/' . $presenter;
+			} else {	
+				$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
+				$module .= '/';
+			}	
 		}
+
 		return array(
 			"$root/$presenter/@$layout.phtml",
 			"$root/$presenter.@$layout.phtml",
-			"$root/$module/@$layout.phtml",
-			"$root/@$layout.phtml",
+			"$root/$module$base@$layout.phtml",
+			"$root/$base@$layout.phtml",
 		);
 	}
 
@@ -530,7 +537,8 @@ abstract class Presenter extends Control implements IPresenter
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
 		if ($root === Environment::getVariable('presentersDir')) {
-			$presenter = substr_replace($presenter, '/templates/', strrpos($presenter, '/'), 0);
+			$pos = strrpos($presenter, '/');
+			$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
 		}
 		return array(
 			"$root/$presenter/$scene.phtml",
