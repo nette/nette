@@ -507,19 +507,18 @@ abstract class Presenter extends Control implements IPresenter
 		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
 		$base = '';
 		if ($root === Environment::getVariable('presentersDir')) {
-			$base = 'templates/';				
+			$base = 'templates/';
 			if ($module === '') {
 				$presenter = 'templates/' . $presenter;
-			} else {	
+			} else {
 				$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
-				$module .= '/';
-			}	
+			}
 		}
 
 		return array(
 			"$root/$presenter/@$layout.phtml",
 			"$root/$presenter.@$layout.phtml",
-			"$root/$module$base@$layout.phtml",
+			"$root/$module/$base@$layout.phtml",
 			"$root/$base@$layout.phtml",
 		);
 	}

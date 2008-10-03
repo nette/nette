@@ -61,9 +61,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 		$httpResponse->setContentType('application/x-javascript', 'utf-8');
 		$httpResponse->expire(FALSE);
 		$this->json = array(
-			'nette' => array(
-				'version' => /*Nette::*/Framework::VERSION,
-			),
+			'nette' => array(),
 		);
 	}
 

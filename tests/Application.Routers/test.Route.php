@@ -14,6 +14,7 @@ class MockHttpRequest extends /*Nette::Web::*/HttpRequest
 	public function setPath($path)
 	{
 		$this->uri = new /*Nette::Web::*/UriScript;
+		$this->uri->scheme = 'http';
 		$this->uri->host = 'admin.texy.info';
 		$this->uri->scriptPath = '/';
 		$this->uri->path = $path;
@@ -524,7 +525,7 @@ test($route,
 			'test' => 'testvalue',
 		),
 	),
-	'//admin.texy.info/abc?test=testvalue'
+	'http://admin.texy.info/abc?test=testvalue'
 );
 
 
@@ -799,4 +800,25 @@ test($route,
 		),
 	),
 	'https://admin.texy.info/any?test=testvalue'
+);
+
+
+echo "\n<hr><h2>Dash in parameter</h2>\n";
+
+$route = new Route('<para-meter>', array(
+	'presenter' => 'Presenter',
+));
+
+
+test($route,
+	'/any',
+	array (
+		'presenter' => 'Presenter',
+		'params' =>
+		array (
+			'para-meter' => 'any',
+			'test' => 'testvalue',
+		),
+	),
+	'/any?test=testvalue'
 );

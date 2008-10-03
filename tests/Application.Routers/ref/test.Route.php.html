@@ -167,7 +167,7 @@ generated: OK <code></code>
 <hr><h2>With host</h2>
 /abc: matched
 parsed: OK
-generated: OK <code>//admin.texy.info/abc?test=testvalue</code>
+generated: OK <code>http://admin.texy.info/abc?test=testvalue</code>
 
 
 
@@ -250,5 +250,12 @@ generated: OK <code>/a%3Ab?test=testvalue</code>
 /any: matched
 parsed: OK
 generated: OK <code>https://admin.texy.info/any?test=testvalue</code>
+
+
+
+<hr><h2>Dash in parameter</h2>
+/any: matched
+parsed: OK
+generated: OK <code>/any?test=testvalue</code>
 
 

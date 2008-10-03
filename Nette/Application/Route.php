@@ -132,7 +132,7 @@ class Route extends /*Nette::*/Object implements IRouter
 	{
 		// combine with precedence: mask (params in URL-path), fixed, query, (post,) defaults
 
-		// 1) mask
+		// 1) MASK
 		$uri = $context->getUri();
 
 		if ($this->type === self::HOST) {
@@ -151,13 +151,21 @@ class Route extends /*Nette::*/Object implements IRouter
 
 		$path = rtrim($path, '/') . '/';
 
-		if (!preg_match($this->re, $path, $params)) {
+		if (!preg_match($this->re, $path, $matches)) {
+			// stop, not matched
 			return NULL;
 		}
-		$params = array_diff_key($params, range(0, count($params))); // deletes numeric keys
+
+		// deletes numeric keys, restore '-' chars
+		$params = array();
+		foreach ($matches as $k => $v) {
+			if (is_string($k)) {
+				$params[strtr($k, "\x8A", '-')] = $v;
+			}
+		}
 
 
-		// 2) fixed
+		// 2) FIXED
 		$defaults = array();
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
@@ -174,16 +182,15 @@ class Route extends /*Nette::*/Object implements IRouter
 		}
 
 
-		// 3) query
+		// 3) QUERY
 		if ($this->xlat) {
 			$params += self::renameKeys($context->getQuery(), array_flip($this->xlat));
 		} else {
 			$params += $context->getQuery();
 		}
-		//$params += $context->getPost();
 
 
-		// 4) defaults
+		// 4) DEFAULTS
 		$params += $defaults;
 
 
@@ -307,6 +314,9 @@ class Route extends /*Nette::*/Object implements IRouter
 
 		if ($this->flags & self::SECURED) {
 			$uri = $this->type === self::HOST ? 'https:' . $uri : 'https://' . $context->getUri()->authority . $uri;
+
+		} elseif ($this->type === self::HOST) {
+			$uri = $context->getUri()->scheme . ':' . $uri; // required due bug in IE7
 		}
 
 		return $uri;
@@ -398,7 +408,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			array_unshift($sequence, $name);
 
 			// check name (limitation by regexp)
-			if (preg_match('#[^a-z0-9_]#i', $name)) {
+			if (preg_match('#[^a-z0-9_-]#i', $name)) {
 				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' is invalid.");
 			}
 
@@ -431,6 +441,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$metadata[$name] = $meta;
 
 			// include in expression
+			$name = strtr($name, '-', "\x8A"); // trick to use '-' in parameter name
 			if (isset($meta['fixed'])) { // has default value?
 				if (!$optional) {
 					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right are not optional.");

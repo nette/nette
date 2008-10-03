@@ -156,7 +156,7 @@ class HttpUploadedFile extends /*Nette::*/Object
 	 */
 	public function move($dest)
 	{
-		if (rename($this->tmpName, $dest)) {
+		if ($this->isOk() && rename($this->tmpName, $dest)) {
 			$this->tmpName = $dest;
 			return TRUE;
 
@@ -173,7 +173,7 @@ class HttpUploadedFile extends /*Nette::*/Object
 	 */
 	public function getImageSize()
 	{
-		return $this->error === UPLOAD_ERR_OK ? getimagesize($this->tmpName) : NULL;
+		return $this->isOk() ? getimagesize($this->tmpName) : NULL;
 	}
 
 }
