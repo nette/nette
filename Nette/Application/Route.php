@@ -160,7 +160,7 @@ class Route extends /*Nette::*/Object implements IRouter
 		$params = array();
 		foreach ($matches as $k => $v) {
 			if (is_string($k)) {
-				$params[strtr($k, "\x8A", '-')] = $v;
+				$params[str_replace('___', '-', $k)] = $v; // trick
 			}
 		}
 
@@ -441,7 +441,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$metadata[$name] = $meta;
 
 			// include in expression
-			$name = strtr($name, '-', "\x8A"); // trick to use '-' in parameter name
+			$name = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
 			if (isset($meta['fixed'])) { // has default value?
 				if (!$optional) {
 					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right are not optional.");

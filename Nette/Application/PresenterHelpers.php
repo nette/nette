@@ -58,25 +58,28 @@ class PresenterHelpers
 			$rc = new ReflectionClass($class);
 			if (!$rc->implementsInterface(/*Nette::Application::*/'IStatePersistent')) return array();
 
+			$sinces = $rc->isSubclassOf(/*Nette::Application::*/'Presenter');
+
 			// generate
 			foreach ($rc->getDefaultProperties() as $nm => $val)
 			{
 				$rp = $rc->getProperty($nm);
-				if (!$rp->isPublic() || $rp->isStatic()) continue;
-
-				if (!strpos($rp->getDocComment(), '@persistent')) continue;
-
-				$decl = $rp->getDeclaringClass();
-				// find REAL declaring class
-				while (($tmp = $decl->getParentClass()) && $tmp->hasProperty($nm) && $tmp->getProperty($nm)->isPublic()) {
-					$decl = $tmp;
-				}
+				if (!$rp->isPublic() || $rp->isStatic() || strpos($rp->getDocComment(), '@persistent') === FALSE) continue;
 
 				$meta[$nm] = array(
 					'def' => $val, // default value from $class
 					'type' => $val === NULL ? NULL : gettype($val), // forced type
-					'since' => $decl->getName(),
 				);
+
+				if ($sinces) {
+					$decl = $rp->getDeclaringClass();
+					// find REAL declaring class
+					while (($tmp = $decl->getParentClass()) && $tmp->hasProperty($nm) && $tmp->getProperty($nm)->isPublic()) {
+						$decl = $tmp;
+					}
+					$meta[$nm]['since'] = $decl->getName();
+				}
+
 			}
 		} catch (ReflectionException $e) {
 		}
