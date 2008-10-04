@@ -71,6 +71,8 @@ $form['password2']->addConditionOn($form['password'], Form::VALID)
 	->addRule(Form::FILLED, 'Reenter your password')
 	->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
 
+$form['avatar']->addRule(Form::MIME_TYPE, 'Avatar must be image', 'image/*');
+
 // now form is defined
 
 

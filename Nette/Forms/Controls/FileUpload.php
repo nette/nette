@@ -86,6 +86,27 @@ class FileUpload extends FormControl
 
 
 	/**
+	 * New rule or condition notification callback.
+	 * @param  Rule
+	 * @return void
+	 */
+	public function notifyRule(Rule $rule)
+	{
+		if (!$rule->isCondition && is_string($rule->operation)) {
+			$op = strrchr($rule->operation, ':');
+			if (strcasecmp($op, ':validateMimeType') === 0) {
+				$this->control->accept = $rule->arg;
+
+			} elseif (strcasecmp($op, ':validateFileSize') === 0) {
+				// TODO: $this->getForm()->addHidden('MAX_FILE_SIZE')->setValue($arg);
+			}
+		}
+		parent::notifyRule($rule);
+	}
+
+
+
+	/**
 	 * Filled validator: has been any file uploaded?
 	 * @param  IFormControl
 	 * @return bool
@@ -121,7 +142,20 @@ class FileUpload extends FormControl
 	public static function validateMimeType(IFormControl $control, $mimeType)
 	{
 		$file = $control->getValue();
-		return $file instanceof HttpUploadedFile && strcasecmp($file->getContentType(), $mimeType) === 0;
+		if ($file instanceof HttpUploadedFile) {
+			$type = $file->getContentType();
+			if (!$type) {
+				return FALSE; // cannot verify :-(
+			}
+			$mimeTypes = explode(',', $mimeType);
+			if (in_array($type, $mimeTypes, TRUE)) {
+				return TRUE;
+			}
+			if (in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 
 }

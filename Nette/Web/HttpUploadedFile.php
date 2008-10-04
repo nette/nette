@@ -35,16 +35,19 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class HttpUploadedFile extends /*Nette::*/Object
 {
-	/* @var array */
+	/* @var string */
 	private $name;
 
-	/* @var array */
+	/* @var string */
 	private $type;
 
-	/* @var array */
+	/* @var string */
+	private $realType;
+
+	/* @var string */
 	private $size;
 
-	/* @var array */
+	/* @var string */
 	private $tmpName;
 
 	/* @var int */
@@ -89,7 +92,18 @@ class HttpUploadedFile extends /*Nette::*/Object
 	 */
 	public function getContentType()
 	{
-		return $this->type;
+		if ($this->isOk() && $this->realType === NULL) {
+			if (extension_loaded('fileinfo')) {
+				$this->realType = finfo_file(finfo_open(FILEINFO_MIME), $this->tmpName);
+
+			} elseif (function_exists('mime_content_type')) {
+				$this->realType = mime_content_type($this->tmpName);
+
+			} else {
+				$this->realType = $this->type;
+			}
+		}
+		return $this->realType;
 	}
 
 

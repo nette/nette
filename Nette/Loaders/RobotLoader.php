@@ -187,10 +187,6 @@ class RobotLoader extends AutoLoader
 		$iterator = dir($dir);
 		if (!$iterator) return;
 
-		if (!defined('T_NAMESPACE')) {
-			define('T_NAMESPACE', -1);
-		}
-
 		$disallow = array();
 		if (is_file($dir . '/netterobots.txt')) {
 			foreach (file($dir . '/netterobots.txt') as $s) {

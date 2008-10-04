@@ -61,7 +61,7 @@
 </tr>
 <tr>
 	<th><label for="frm-avatar">Picture:</label></th>
-	<td><input type="file" class="text" name="avatar" id="frm-avatar" /></td>
+	<td><input type="file" accept="image/*" class="text" name="avatar" id="frm-avatar" /></td>
 </tr>
 <tr>
 	<th><label for="frm-note">Comment:</label></th>
@@ -93,7 +93,7 @@ function validate(sender) {
 	el = document.getElementById('frm-age');
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = parseFloat(val)>=9.9 && parseFloat(val)<=100;
-	if (!res) { if (el) el.focus(); alert("Age must be in range from 9,90 to 100,00"); return false; }
+	if (!res) { if (el) el.focus(); alert("Age must be in range from 9.90 to 100.00"); return false; }
 	el = document.getElementById('frm-email');
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="@";
