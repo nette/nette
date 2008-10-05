@@ -9,6 +9,7 @@ require_once '../../Nette/loader.php';
 /*use Nette::String;*/
 
 
+// String::startsWith
 echo "String::startsWith('123', NULL)\n";
 Debug::dump(String::startsWith('123', NULL));
 
@@ -28,6 +29,7 @@ echo "String::startsWith('123', '1234')\n";
 Debug::dump(String::startsWith('123', '1234'));
 
 
+// String::endsWith
 echo "String::endsWith('123', NULL)\n";
 Debug::dump(String::endsWith('123', NULL));
 
@@ -45,3 +47,24 @@ Debug::dump(String::endsWith('123', '123'));
 
 echo "String::endsWith('123', '1234')\n";
 Debug::dump(String::endsWith('123', '1234'));
+
+
+// String::webalize
+echo "String::webalize('&ŽLUŤOUČKÝ KŮŇ öőôò!')\n";
+Debug::dump(String::webalize('&ŽLUŤOUČKÝ KŮŇ öőôò!'));
+
+echo "String::webalize('¼!', '!')\n";
+Debug::dump(String::webalize('¼!', '!'));
+
+
+// String::normalize
+echo "String::normalize(...)\n";
+Debug::dump(bin2hex(String::normalize("\r\nHello  \r  World \n\n")));
+
+
+// String::checkUtf
+echo "String::checkUtf(...valid...)\n";
+Debug::dump(String::checkUtf('žluťoučký'));
+
+echo "String::checkUtf(...invalid...)\n";
+Debug::dump(String::checkUtf('žluťoučký' . chr(128)));
