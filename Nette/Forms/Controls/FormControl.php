@@ -545,6 +545,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	{
 		if (!in_array($message, $this->errors, TRUE)) {
 			$this->errors[] = $message;
+			$this->getForm()->addError($message);
 		}
 	}
 

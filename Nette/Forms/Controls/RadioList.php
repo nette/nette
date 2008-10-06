@@ -126,7 +126,7 @@ class RadioList extends FormControl
 			$control->checked = (string) $key === $value;
 			$control->value = $key;
 			$label->setText($translator === NULL ? $val : $translator->translate($val));
-			$container->add((string) $control)->add((string) $label)->add($separator);
+			$container->add((string) $control . (string) $label . $separator);
 			$counter++;
 			// TODO: separator after last item?
 		}

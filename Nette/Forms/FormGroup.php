@@ -43,10 +43,9 @@ class FormGroup extends /*Nette::*/Object
 
 
 
-	public function __construct($label)
+	public function __construct()
 	{
 		$this->controls = new SplObjectStorage;
-		$this->setOption('label', $label);
 	}
 
 

@@ -73,8 +73,12 @@ $form['password2']->addConditionOn($form['password'], Form::VALID)
 
 $form['avatar']->addRule(Form::MIME_TYPE, 'Avatar must be image', 'image/*');
 
-// now form is defined
 
+$form['avatar']->addError('User error');
+$form['avatar']->addError(/*Nette::Web::*/Html::el('strong', 'User error #2'));
+
+
+// now form is defined
 
 
 
@@ -108,7 +112,6 @@ if ($form->isSubmitted()) {
 
 	$form->setDefaults($defaults);
 }
-
 
 
 echo '<style> .required { color: darkred; } </style>';

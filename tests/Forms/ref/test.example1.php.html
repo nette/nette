@@ -1,6 +1,15 @@
 <h1>Nette::Forms example 1</h1>
 
-<style> .required { color: darkred; } </style><form action="" method="post" enctype="multipart/form-data" onsubmit="return validate(this)">
+<style> .required { color: darkred; } </style><form action="" method="post" enctype="multipart/form-data" onsubmit="return validate(this)"><p>Opravte chyby:</p>
+
+<ul class="error">
+	<li>User error</li>
+
+	<li>
+		<strong>User error #2</strong>
+	</li>
+</ul>
+
 <fieldset>
 <legend>Personal data</legend>
 <table>

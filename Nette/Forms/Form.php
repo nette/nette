@@ -178,11 +178,17 @@ class Form extends FormContainer
 	/**
 	 * Adds fieldset group to the form.
 	 * @param  string  label
+	 * @param  bool    set this group as current
 	 * @return FormGroup
 	 */
-	public function addGroup($label = NULL)
+	public function addGroup($label = NULL, $setAsCurrent = TRUE)
 	{
-		return $this->groups[] = $this->currentGroup = new FormGroup($label);
+		$group = new FormGroup;
+		$group->setOption('label', $label);
+		if ($setAsCurrent) {
+			$this->setCurrentGroup($group);
+		}
+		return $this->groups[] = $group;
 	}
 
 
@@ -554,12 +560,6 @@ class Form extends FormContainer
 			if (!$control->getRules()->validate()) {
 				$this->valid = FALSE;
 				if ($breakOnFailure) break;
-			}
-		}
-
-		if (!$this->valid) {
-			foreach ($controls as $control) {
-				$this->errors = array_merge($this->errors, $control->getErrors());
 			}
 		}
 	}

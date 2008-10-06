@@ -48,12 +48,14 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		'group' => array(
 			'container' => 'fieldset',
 			'label' => 'legend',
+			'description' => 'p',
 		),
 		'control' => array(
 			'container' => 'table',
 			'pair' => 'tr',
 			'control' => 'td',
 			'label' => 'th',
+			'description' => 'small',
 		),
 		'hidden' => array(
 			'container' => 'div',
@@ -77,7 +79,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	private $form;
 
 	/** @var  */
-	private $clientScript;
+	private $clientScript = TRUE; // means autodetect
 
 
 
@@ -108,7 +110,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			$s .= $form->getElementPrototype()->endTag() . "\n";
 
 			$clientScript = $this->getClientScript();
-			if ($clientScript) {
+			if ($clientScript !== NULL) {
 				$s .= $clientScript->renderClientScript() . "\n";
 			}
 		}
@@ -135,7 +137,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function getClientScript()
 	{
-		if ($this->clientScript === NULL) {
+		if ($this->clientScript === TRUE) {
 			$this->clientScript = new InstantClientScript($this->form);
 		}
 		return $this->clientScript;
@@ -150,7 +152,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	protected function init()
 	{
 		$clientScript = $this->getClientScript();
-		if ($clientScript) {
+		if ($clientScript !== NULL) {
 			$clientScript->enable();
 		}
 
@@ -181,9 +183,16 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
 		if (count($errors)) {
 			$ul = $this->getHtml($this->wrappers['error']['container']);
+			$li = $this->getHtml($this->wrappers['error']['item']);
 			$ul->class[] = $this->classes['error'];
 			foreach ($errors as $error) {
-				$ul->add($this->getHtml($this->wrappers['error']['item'])->setText($error));
+				$item = clone $li;
+				if ($error instanceof Html) {
+					$item->add($error);
+				} else {
+					$item->setText($error);
+				}
+				$ul->add($item);
 			}
 			return "\n" . $ul->render(0);
 		}
@@ -213,6 +222,13 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 					$text = $translator->translate($text);
 				}
 				$s .= "\n" . $this->getHtml($this->wrappers['group']['label'])->setText($text) . "\n";
+			}
+
+			if ($group->getOption('description') instanceof Html) {
+				$s .= $group->getOption('description');
+
+			} elseif (is_string($group->getOption('description'))) {
+				$s .= $this->getHtml($this->wrappers['group']['description'])->setText($group->getOption('description'));
 			}
 
 			$s .= $this->renderControls($group);
@@ -289,7 +305,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$pair = $this->getHtml($this->wrappers['control']['pair']);
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
+		$pair->class[] = $control->isRequired() ? $this->classes['required'] : $this->classes['optional'];
+		$pair->class[] = $control->getOption('class');
+		$pair->id = $control->getOption('id');
 		return $pair->render(0);
 	}
 
@@ -342,11 +360,21 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$body = $this->getHtml($this->wrappers['control']['control']);
 
-		if ($control instanceof Checkbox || $control instanceof Button) {
-			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel());
+		if ($control->getOption('description') instanceof Html) {
+			$description = ' ' . $control->getOption('description');
+
+		} elseif (is_string($control->getOption('description'))) {
+			$description = ' ' . $this->getHtml($this->wrappers['control']['description'])->setText($control->getOption('description'));
 
 		} else {
-			return $body->setHtml((string) $control->getControl());
+			$description = '';
+		}
+
+		if ($control instanceof Checkbox || $control instanceof Button) {
+			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel() . $description);
+
+		} else {
+			return $body->setHtml((string) $control->getControl() . $description);
 		}
 	}
 
