@@ -1,0 +1,15 @@
+<ul>
+	<li>lower: {$hello |lower}</li>
+	<li>upper: {$hello |upper}</li>
+	<li>lower & capitalize: {$hello |lower|capitalize}</li>
+	<li>default: {$hello |default:10} vs. {$hellox |default:10}</li>
+	<li>nl2br: {$hello |nl2br}</li>
+	<li>truncate: {$hello |truncate:10}</li>
+</ul>
+
+<ul>
+	<li>{$hello |h1|h2}</li>
+	<li>{!$hello |h1|h2}</li>
+	<li>{$hello |h2|h1}</li>
+	<li>{!$hello |h2|h1}</li>
+</ul>

@@ -243,7 +243,7 @@ if (headers_sent()) {
 			var collapsed = div.currentStyle ? div.currentStyle.display == 'none' : getComputedStyle(div, null).display == 'none';
 
 			span.innerHTML = String.fromCharCode(collapsed ? 0x25bc : 0x25b6);
-			div.style.display = collapsed ? 'block' : 'none';
+			div.style.display = collapsed ? '' : 'none';
 
 			return true;
 		}

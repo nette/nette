@@ -51,6 +51,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var array */
 	private $filters = array();
 
+	/** @var array */
+	private $helpers = array();
+
 	/** @var Nette::ITranslator */
 	private $translator;
 
@@ -285,6 +288,36 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 	/**
+	 * Registers callback as template helper.
+	 * @param  string
+	 * @param  callback
+	 * @return void
+	 */
+	public function registerHelper($name, $callback)
+	{
+		$this->helpers[$name] = $callback;
+	}
+
+
+
+	/**
+	 * Call a template helper. Do not call directly.
+	 * @param  string  helper name
+	 * @param  array   arguments
+	 * @return mixed
+	 */
+	public function __call($name, $args)
+	{
+		if (!isset($this->helpers[$name])) {
+			throw new /*::*/InvalidStateException("The helper '$name' was not registered.");
+		}
+
+		return call_user_func_array($this->helpers[$name], $args);
+	}
+
+
+
+	/**
 	 * Escapes string for use inside template.
 	 * @param  string
 	 * @return string
@@ -318,6 +351,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
 	{
+		// registerHelper('translate', array($translator, 'translate')
 		$this->translator = $translator;
 	}
 

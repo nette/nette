@@ -107,6 +107,7 @@ class UserClientScript extends /*Nette::*/Object
 		foreach ($rules as $rule) {
 			if (!is_string($rule->operation)) continue;
 			$data[] = array(
+				'class' => $rule->control->getClass(),
 				'op' => $rule->operation,
 				'neg' => $rule->isNegative,
 				'cond' => $rule->isCondition,

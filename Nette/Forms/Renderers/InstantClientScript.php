@@ -136,25 +136,31 @@ final class InstantClientScript extends /*Nette::*/Object
 		$res = '';
 		foreach ($rules as $rule) {
 			if (!is_string($rule->operation)) continue;
+
+			if (strcasecmp($rule->operation, /*Nette::Forms::*/'InstantClientScript::javascript') === 0) {
+				$res .= "$rule->arg\n\t";
+				continue;
+			}
+
 			$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 			if (!$script) continue;
-			$res .= "$script\n\t";
 
 			if (!empty($rule->message)) { // this is rule
 				if ($onlyCheck) {
-					$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n\t";
+					$res .= "$script\n\tif (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n\t";
 				} else {
 					$translator = $rule->control->getTranslator();
 					$message = $translator === NULL ? $rule->message : $translator->translate($rule->message);
-					$res .= "if (" . ($rule->isNegative ? '' : '!') . "res) { " .
-						"if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
+					$res .= "$script\n\t"
+						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
+						. "if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
 				}
 			}
 
 			if ($rule->isCondition) { // this is condition
-				$script = $this->getValidateScript($rule->subRules, $onlyCheck);
-				if ($script) {
-					$res .= "if (" . ($rule->isNegative ? '!' : '') . "res) {\n\t" . $script . "}\n\t";
+				$innerScript = $this->getValidateScript($rule->subRules, $onlyCheck);
+				if ($innerScript) {
+					$res .= "$script\n\tif (" . ($rule->isNegative ? '!' : '') . "res) {\n\t" . $innerScript . "}\n\t";
 					if (!$onlyCheck && $rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}
@@ -171,13 +177,13 @@ final class InstantClientScript extends /*Nette::*/Object
 		$s = '';
 		foreach ($rules->getToggles() as $id => $visible) {
 			$s .= "resT = true; {$cond}el = document.getElementById('" . $id . "');\n\t"
-				. "if (el) el.style.display = " . ($visible ? '' : '!') . "resT ? 'block' : 'none';\n\t";
+				. "if (el) el.style.display = " . ($visible ? '' : '!') . "resT ? '' : 'none';\n\t";
 		}
 		foreach ($rules as $rule) {
 			if ($rule->isCondition && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 				if ($script) {
-					$res = $this->getToggleScript($rule->subRules, $cond . "$script resT = resT && res;\n\t");
+					$res = $this->getToggleScript($rule->subRules, $cond . "$script resT = resT && " . ($rule->isNegative ? '!' : '') . "res;\n\t");
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
@@ -198,96 +204,100 @@ final class InstantClientScript extends /*Nette::*/Object
 
 	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
-		$operation = strtolower($operation);
-		//TODO: jinak!
-		$operation = str_replace('textarea::', 'textbase::', $operation);
-		$operation = str_replace('textinput::', 'textbase::', $operation);
-		if (substr($operation, -15) === '::validatevalid') $operation = '::validatevalid';
-
-		// trim for TextBase
 		$id = $control->getHtmlId();
 		$tmp = "el = document.getElementById('" . $id . "');\n\t";
 		$tmp2 = "var val = el.value.replace(/^\\s+/, '').replace(/\\s+\$/, '');\n\t";
+		$tmp3 = array();
+		$operation = strtolower($operation);
 
-		switch ($operation) {
-		case /*nette::forms::*/'instantclientscript::javascript':
-			return $arg;
-
-		case '::validatevalid':
-			return $tmp . $tmp2 . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
-
-		case /*nette::forms::*/'checkbox::validateequal':
+		switch (TRUE) {
+		case $control instanceof /*Nette::Forms::*/Checkbox && $operation === ':equal':
 			return $tmp . "res = " . ($arg ? '' : '!') . "el.checked;";
 
-		case /*nette::forms::*/'fileupload::validatefilled':
+		case $control instanceof /*Nette::Forms::*/FileUpload && $operation === ':filled':
 			return $tmp . "res = el.value!='';";
 
-		case /*nette::forms::*/'radiolist::validateequal':
-			return "res = false;\n\t" .
-				"for (var i=0;i<" . count($control->getItems()) . ";i++) {\n\t\t" .
-				"el = document.getElementById('" . $id . "-'+i);\n\t\t" .
-				"if (el.checked && el.value==" . json_encode((string) $arg) . ") { res = true; break; }\n\t" .
-				"}\n\tel = null;";
+		case $control instanceof /*Nette::Forms::*/RadioList && $operation === ':equal':
+			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
+				$tmp3[] = "el.value==" . json_encode((string) $item);
+			}
+			return "res = false;\n\t"
+				. "for (var i=0;i<" . count($control->getItems()) . ";i++) {\n\t\t"
+				. "el = document.getElementById('" . $id . "-'+i);\n\t\t"
+				. "if (el.checked && (" . implode(' || ', $tmp3) . ")) { res = true; break; }\n\t"
+				. "}\n\tel = null;";
 
-		case /*nette::forms::*/'radiolist::validatefilled':
-			return "res = false; el=null;\n\t" .
-				"for (var i=0;i<" . count($control->getItems()) . ";i++) " .
-				"if (document.getElementById('" . $id . "-'+i).checked) { res = true; break; }";
+		case $control instanceof /*Nette::Forms::*/RadioList && $operation === ':filled':
+			return "res = false; el=null;\n\t"
+				. "for (var i=0;i<" . count($control->getItems()) . ";i++) "
+				. "if (document.getElementById('" . $id . "-'+i).checked) { res = true; break; }";
 
-		case /*nette::forms::*/'submitbutton::validatesubmitted':
+		case $control instanceof /*Nette::Forms::*/SubmitButton && $operation === ':submitted':
 			return "el=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
 
-		case /*nette::forms::*/'selectbox::validateequal':
+		case $control instanceof /*Nette::Forms::*/SelectBox && $operation === ':equal':
+			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
+				$tmp3[] = "el.options[i].value==" . json_encode((string) $item);
+			}
 			$first = $control->isFirstSkipped() ? 1 : 0;
-			return $tmp . "res = false;\n\t" .
-				"for (var i=$first;i<el.options.length;i++)\n\t\t" .
-				"if (el.options[i].selected && el.options[i].value==" . json_encode((string) $arg) . ") { res = true; break; }";
+			return $tmp . "res = false;\n\t"
+				. "for (var i=$first;i<el.options.length;i++)\n\t\t"
+				. "if (el.options[i].selected && (" . implode(' || ', $tmp3) . ")) { res = true; break; }";
 
-		case /*nette::forms::*/'selectbox::validatefilled':
+		case $control instanceof /*Nette::Forms::*/SelectBox && $operation === ':filled':
 			$first = $control->isFirstSkipped() ? 1 : 0;
 			return $tmp . "res = el.selectedIndex >= $first;";
 
-		case /*nette::forms::*/'textbase::validateequal':
-			if (is_object($arg)) { // compare with another form control?
-				return get_class($arg) === $control->getClass()
-					? $tmp . $tmp2 . "res = val==document.getElementById('" . $arg->getHtmlId() . "').value;" // missing trim
-					: 'res = false;';
-			} else {
-				return $tmp . $tmp2 . "res = val==" . json_encode((string) $arg) . ";";
-			}
-
-		case /*nette::forms::*/'textbase::validatefilled':
+		case $control instanceof /*Nette::Forms::*/TextInput && $operation === ':filled':
 			return $tmp . $tmp2 . "res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
 
-		case /*nette::forms::*/'textbase::validateminlength':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':minlength':
 			return $tmp . $tmp2 . "res = val.length>=" . (int) $arg . ";";
 
-		case /*nette::forms::*/'textbase::validatemaxlength':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':maxlength':
 			return $tmp . $tmp2 . "res = val.length<=" . (int) $arg . ";";
 
-		case /*nette::forms::*/'textbase::validatelength':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':length':
 			if (!is_array($arg)) {
 				$arg = array($arg, $arg);
 			}
 			return $tmp . $tmp2 . "res = val.length>=" . (int) $arg[0] . " && val.length<=" . (int) $arg[1] . ";";
 
-		case /*nette::forms::*/'textbase::validateemail':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':email':
 			return $tmp . $tmp2 . 'res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);';
 
-		case /*nette::forms::*/'textbase::validateurl':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':url':
 			return $tmp . $tmp2 . 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val);';
 
-		case /*nette::forms::*/'textbase::validateregexp':
-			return $tmp . $tmp2 . "res = $arg.test(val);";
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':regexp':
+			foreach ((array) $arg as $item) {
+				$tmp3[] = "$arg.test(val)";
+			}
+			return $tmp . $tmp2 . "res = (" . implode(' || ', $tmp3) . ");";
 
-		case /*nette::forms::*/'textbase::validatenumeric':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':numeric':
 			return $tmp . $tmp2 . "res = /^-?[0-9]+$/.test(val);";
 
-		case /*nette::forms::*/'textbase::validatefloat':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':float':
 			return $tmp . $tmp2 . "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val);";
 
-		case /*nette::forms::*/'textbase::validaterange':
+		case $control instanceof /*Nette::Forms::*/TextBase && $operation === ':range':
 			return $tmp . $tmp2 . "res = parseFloat(val)>=" . json_encode((float) $arg[0]) . " && parseFloat(val)<=" . json_encode((float) $arg[1]) . ";";
+
+		case $control instanceof /*Nette::Forms::*/FormControl && $operation === ':valid':
+			return $tmp . $tmp2 . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
+
+		case $control instanceof /*Nette::Forms::*/FormControl && $operation === ':equal':
+			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
+				if (is_object($item)) { // compare with another form control?
+					$tmp3[] = get_class($item) === $control->getClass()
+						? "val==document.getElementById('" . $item->getHtmlId() . "').value" // missing trim
+						: 'false';
+				} else {
+					$tmp3[] = "val==" . json_encode((string) $item);
+				}
+			}
+			return $tmp . $tmp2 . "res = (" . implode(' || ', $tmp3) . ");";
 		}
 	}
 
@@ -295,7 +305,6 @@ final class InstantClientScript extends /*Nette::*/Object
 
 	public static function javascript()
 	{
-		// TODO: needed?
 		return TRUE;
 	}
 

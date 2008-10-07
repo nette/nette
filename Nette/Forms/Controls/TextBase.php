@@ -116,8 +116,12 @@ abstract class TextBase extends FormControl
 
 	public function notifyRule(Rule $rule)
 	{
-		if (is_string($rule->operation) && strcasecmp($rule->operation, /*Nette::Forms::*/'TextBase::validateRegexp') === 0 && $rule->arg[0] !== '/') {
-			throw new /*::*/InvalidArgumentException('Regular expression must be JavaScript compatible.');
+		if (is_string($rule->operation) && strcasecmp($rule->operation, ':regexp') === 0) {
+			foreach ((array) $rule->arg as $regexp) {
+				if (strncmp($regexp, '/', 1)) {
+					throw new /*::*/InvalidArgumentException('Regular expression must be JavaScript compatible.');
+				}
+			}
 		}
 		parent::notifyRule($rule);
 	}
@@ -197,9 +201,12 @@ abstract class TextBase extends FormControl
 	 * @param  string
 	 * @return bool
 	 */
-	public static function validateRegexp(IFormControl $control, $regexp)
+	public static function validateRegexp(IFormControl $control, $regexps)
 	{
-		return preg_match($regexp, $control->getValue());
+		foreach ((array) $regexps as $regexp) {
+			if (preg_match($regexp, $control->getValue())) return TRUE;
+		}
+		return FALSE;
 	}
 
 

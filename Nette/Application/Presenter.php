@@ -483,18 +483,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return void
-	 * @deprecated
-	 */
-	final public function renderFinished()
-	{
-		trigger_error('Use $presenter->terminate()', E_USER_NOTICE);
-		$this->terminate();
-	}
-
-
-
-	/**
 	 * Formats layout template file names.
 	 * @param  string
 	 * @param  string

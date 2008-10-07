@@ -35,27 +35,31 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  */
 class Form extends FormContainer
 {
-	/** Deprecated constants. */
-	const EQUAL = ':Equal';
-	const FILLED = ':Filled';
-	const VALID = ':Valid';
+	// common
+	const EQUAL = ':equal';
+	const FILLED = ':filled';
+	const VALID = ':valid';
 
+	// button
+	const SUBMITTED = ':submitted';
+
+	// text
+	const MIN_LENGTH = ':minLength';
+	const MAX_LENGTH = ':maxLength';
+	const LENGTH = ':length';
+	const EMAIL = ':email';
+	const URL = ':url';
+	const REGEXP = ':regexp';
+	const NUMERIC = ':numeric';
+	const FLOAT = ':float';
+	const RANGE = ':range';
+
+	// file upload
+	const MAX_FILE_SIZE = ':fileSize';
+	const MIME_TYPE = ':mimeType';
+
+	// special case
 	const SCRIPT = /*Nette::Forms::*/'InstantClientScript::javascript';
-
-	const SUBMITTED = /*Nette::Forms::*/'SubmitButton::validateSubmitted';
-
-	const MIN_LENGTH = /*Nette::Forms::*/'TextBase::validateMinLength';
-	const MAX_LENGTH = /*Nette::Forms::*/'TextBase::validateMaxLength';
-	const LENGTH = /*Nette::Forms::*/'TextBase::validateLength';
-	const EMAIL = /*Nette::Forms::*/'TextBase::validateEmail';
-	const URL = /*Nette::Forms::*/'TextBase::validateUrl';
-	const REGEXP = /*Nette::Forms::*/'TextBase::validateRegexp';
-	const NUMERIC = /*Nette::Forms::*/'TextBase::validateNumeric';
-	const FLOAT = /*Nette::Forms::*/'TextBase::validateFloat';
-	const RANGE = /*Nette::Forms::*/'TextBase::validateRange';
-
-	const MAX_FILE_SIZE = /*Nette::Forms::*/'FileUpload::validateFileSize';
-	const MIME_TYPE = /*Nette::Forms::*/'FileUpload::validateMimeType';
 
 
 	/** Tracker ID */
@@ -484,46 +488,6 @@ class Form extends FormContainer
 
 
 
-	/********************* rules ****************d*g**/
-
-
-
-	/**
-	 * Adds a validation rule for the control. Deprecated.
-	 * @param  string     form control name
-	 * @param  mixed      rule type
-	 * @param  string     message to display for invalid data
-	 * @param  mixed      optional extra rule data
-	 * @return void
-	 * @deprecated
-	 */
-	public function addRule($name, $operation, $message, $arg = NULL)
-	{
-		trigger_error("Deprecated: use \$form['$name']->addRule(...) instead.", E_USER_WARNING);
-		$this->getComponent($name, TRUE)->addRule($operation, $message, $arg);
-	}
-
-
-
-	/**
-	 * Adds a validation condition. Deprecated
-	 * @param  string     form control name
-	 * @param  mixed      condition type
-	 * @param  mixed      optional condition data
-	 * @param  string     optional HTML #ID to be toggled
-	 * @return Rules
-	 * @deprecated
-	 */
-	public function addCondition($name, $operation, $value = NULL, $toggle = NULL)
-	{
-		trigger_error("Deprecated: use \$form['$name']->addCondition(...) instead.", E_USER_WARNING);
-		$cond = $this->getComponent($name, TRUE)->addCondition($operation, $value, $toggle);
-		if ($toggle) $cond->toggle($toggle);
-		return $cond;
-	}
-
-
-
 	/********************* validation ****************d*g**/
 
 
@@ -679,65 +643,6 @@ class Form extends FormContainer
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';
 		}
-	}
-
-
-
-	/********************* deprecated ****************d*g**/
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function renderForm()
-	{
-		trigger_error("Deprecated: use \$form->render() instead.", E_USER_WARNING);
-		echo $this->render();
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function renderBegin()
-	{
-		trigger_error("Deprecated: use \$form->render('begin') instead.", E_USER_WARNING);
-		echo $this->render('begin');
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function renderEnd()
-	{
-		trigger_error("Deprecated: use \$form->render('end') instead.", E_USER_WARNING);
-		echo $this->render('end');
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function renderErrors($control = NULL)
-	{
-		trigger_error("Deprecated: use \$form->render('errors') instead.", E_USER_WARNING);
-		echo $this->render('errors', $control);
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function renderBody()
-	{
-		trigger_error("Deprecated: use \$form->render('body') instead.", E_USER_WARNING);
-		echo $this->render('body');
 	}
 
 }

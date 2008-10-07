@@ -93,11 +93,10 @@ class FileUpload extends FormControl
 	public function notifyRule(Rule $rule)
 	{
 		if (!$rule->isCondition && is_string($rule->operation)) {
-			$op = strrchr($rule->operation, ':');
-			if (strcasecmp($op, ':validateMimeType') === 0) {
+			if (strcasecmp($rule->operation, ':mimeType') === 0) {
 				$this->control->accept = $rule->arg;
 
-			} elseif (strcasecmp($op, ':validateFileSize') === 0) {
+			} elseif (strcasecmp($rule->operation, ':fileSize') === 0) {
 				// TODO: $this->getForm()->addHidden('MAX_FILE_SIZE')->setValue($arg);
 			}
 		}

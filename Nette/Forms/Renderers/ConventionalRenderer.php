@@ -224,11 +224,15 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				$s .= "\n" . $this->getHtml($this->wrappers['group']['label'])->setText($text) . "\n";
 			}
 
-			if ($group->getOption('description') instanceof Html) {
-				$s .= $group->getOption('description');
+			$text = $group->getOption('description');
+			if ($text instanceof Html) {
+				$s .= $text;
 
-			} elseif (is_string($group->getOption('description'))) {
-				$s .= $this->getHtml($this->wrappers['group']['description'])->setText($group->getOption('description'));
+			} elseif (is_string($text)) {
+				if ($translator !== NULL) {
+					$text = $translator->translate($text);
+				}
+				$s .= $this->getHtml($this->wrappers['group']['description'])->setText($text);
 			}
 
 			$s .= $this->renderControls($group);
@@ -360,11 +364,15 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$body = $this->getHtml($this->wrappers['control']['control']);
 
-		if ($control->getOption('description') instanceof Html) {
+		$description = $control->getOption('description');
+		if ($description instanceof Html) {
 			$description = ' ' . $control->getOption('description');
 
-		} elseif (is_string($control->getOption('description'))) {
-			$description = ' ' . $this->getHtml($this->wrappers['control']['description'])->setText($control->getOption('description'));
+		} elseif (is_string($description)) {
+			if ($control->getTranslator() !== NULL) {
+				$description = $control->getTranslator()->translate($description);
+			}
+			$description = ' ' . $this->getHtml($this->wrappers['control']['description'])->setText($description);
 
 		} else {
 			$description = '';

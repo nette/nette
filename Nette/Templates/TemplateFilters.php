@@ -31,13 +31,6 @@
  */
 final class TemplateFilters
 {
-	/** @var Texy */
-	public static $texy;
-
-	/** @var Template */
-	private static $template;
-
-
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -92,7 +85,7 @@ final class TemplateFilters
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
 	 *   {snippet ?} ... {/snippet ?} control snippet
-	 *   {block texy} ... {/block} texy block
+	 *   {block|texy} ... {/block} texy block
 	 *   {debugbreak}
 	 *
 	 * @param  Template
@@ -127,7 +120,7 @@ final class TemplateFilters
 		$k = preg_quote($k, '#');
 		$k = str_replace('\000', '|', $k);
 		$s = preg_replace_callback(
-			'#\\{(' . $k . ')([^}]*)\\}#s',
+			'#\\{(' . $k . ')([^}]*?)(?:\\|([a-z][a-zA-Z0-9|:]*))?\\}()#s',
 			array(__CLASS__, 'curlyCb'),
 			$s
 		);
@@ -148,10 +141,10 @@ final class TemplateFilters
 
 	/** @var array */
 	public static $curlyXlatMask = array(
-		'block ' => '<?php ob_start(); try { ?>',
+		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } echo # ?>',
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
-		'/snippet' => '<?php $control->endSnippet("#"); } if ($control->isOutputAllowed()) { ?>',
+		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
 		'if ' => '<?php if (#): ?>',
 		'elseif ' => '<?php elseif (#): ?>',
 		'foreach ' => '<?php foreach (#): ?>',
@@ -163,18 +156,26 @@ final class TemplateFilters
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
 		'=' => '<?php echo $template->escape(#) ?>',
-		'!$' => '<?php echo $# ?>',
-		'!' => '<?php echo $# ?>',
-		'$' => '<?php echo $template->escape($#) ?>',
+		'!$' => '<?php echo # ?>',
+		'!' => '<?php echo # ?>',
+		'$' => '<?php echo $template->escape(#) ?>',
 		'?' => '<?php # ?>',
 	);
 
 	/** @var array */
-	public static $curlyBlocks = array(
-		'texy' => '$texy->process(#)',
+	public static $curlyHelpers = array(
+		'texy' => '$texy->process(%s)',
+		'lower' => 'strtolower(%s)',
+		'upper' => 'strtoupper(%s)',
+		'capitalize' => 'ucfirst(%s)',
+		'default' => 'isset(%1$s) ? %1$s : %2$s',
+		'nl2br' => 'nl2br(%s)',
+		'truncate' => 'substr(%1$s, 0, %2$d)',
 	);
 
-	private static $curlyBlock;
+	/** @var string */
+	private static $curlyBlockHelpers;
+
 
 
 	/**
@@ -182,17 +183,15 @@ final class TemplateFilters
 	 */
 	private static function curlyCb($m)
 	{
-		list(, $mod, $var) = $m;
+		list(, $mod, $var, $modifiers) = $m;
 		$var = trim($var);
 
-		if ($mod === 'block ') {
-			if (!isset(self::$curlyBlocks[$var])) {
-				throw new /*::*/Exception("The block '$var' is not declared in TemplateFilters::\$curlyBlocks.");
-			}
-			self::$curlyBlock = str_replace('#', 'ob_get_clean()', self::$curlyBlocks[$var]);
+		if ($mod === 'block') {
+			self::$curlyBlockHelpers = $modifiers ? $modifiers : $var;
 
 		} elseif ($mod === '/block') {
-			$var = self::$curlyBlock;
+			$modifiers = self::$curlyBlockHelpers;
+			$var = 'ob_get_clean()';
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
@@ -200,10 +199,30 @@ final class TemplateFilters
 				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
 			}
 
+		} elseif ($mod === '/snippet') {
+			$var = '"' . $var . '"';
+
+		} elseif ($mod === '$' || $mod === '!' || $mod === '!$') {
+			$var = '$' . $var;
+
 		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'include ') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
+			}
+		}
+
+		if ($modifiers) {
+			foreach (explode('|', $modifiers) as $modifier) {
+				$args = explode(':', $modifier);
+				$modifier = $args[0];
+				$args[0] = $var;
+				if (isset(self::$curlyHelpers[$modifier])) {
+					$var = vsprintf(self::$curlyHelpers[$modifier], $args);
+				} else {
+					$var = implode(', ', $args);
+					$var = "\$template->$modifier($var)";
+				}
 			}
 		}
 
@@ -341,6 +360,11 @@ final class TemplateFilters
 
 
 	/********************* Filter texyElements ****************d*g**/
+
+
+
+	/** @var Texy */
+	public static $texy;
 
 
 

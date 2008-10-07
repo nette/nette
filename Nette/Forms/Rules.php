@@ -164,13 +164,17 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 		{
 			if ($rule->control->isDisabled()) continue;
 
-			$ok = ($rule->isNegative xor call_user_func($rule->operation, $rule->control, $rule->arg, $rule->isNegative));
+			$callback = is_string($rule->operation) && strncmp($rule->operation, ':', 1) === 0
+				? $rule->control->getClass() . self::VALIDATE_PREFIX . ltrim($rule->operation, ':')
+				: $rule->operation;
 
-			if ($rule->isCondition && $ok) {
-				$ok = $rule->subRules->validate($onlyCheck);
-				$valid = $valid && $ok;
+			$success = ($rule->isNegative xor call_user_func($callback, $rule->control, $rule->arg, $rule->isNegative));
 
-			} elseif (!$rule->isCondition && !$ok) {
+			if ($rule->isCondition && $success) {
+				$success = $rule->subRules->validate($onlyCheck);
+				$valid = $valid && $success;
+
+			} elseif (!$rule->isCondition && !$success) {
 				if ($onlyCheck) {
 					return FALSE;
 				}
@@ -216,15 +220,19 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 	 */
 	private function adjustOperation($rule)
 	{
-		if (!is_string($rule->operation)) return;
-
-		if (ord($rule->operation[0]) > 127) {
+		if (is_string($rule->operation) && ord($rule->operation[0]) > 127) {
 			$rule->isNegative = TRUE;
 			$rule->operation = ~$rule->operation;
 		}
 
-		if (strncmp($rule->operation, ':', 1) === 0) {
-			$rule->operation = get_class($rule->control) . self::VALIDATE_PREFIX . ltrim($rule->operation, ':');
+		// check callback
+		$callback = is_string($rule->operation) && strncmp($rule->operation, ':', 1) === 0
+			? $rule->control->getClass() . self::VALIDATE_PREFIX . ltrim($rule->operation, ':')
+			: $rule->operation;
+
+		if (!is_callable($callback)) {
+			$operation = is_scalar($rule->operation) ? "'$rule->operation' " : '';
+			throw new /*::*/InvalidArgumentException("Unknown operation $operation for control '{$rule->control->name}'.");
 		}
 	}
 

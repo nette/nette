@@ -478,13 +478,8 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function notifyRule(Rule $rule)
 	{
-		if (!$rule->isCondition && is_string($rule->operation)) {
-			// TODO: too complicated
-			$op = strrchr($rule->operation, ':');
-			$class = substr($rule->operation, 0, -strlen($op) - 1);
-			if (strcasecmp($op, ':validateFilled') === 0 && is_subclass_of($class, __CLASS__)) {
-				$this->required = TRUE;
-			}
+		if (!$rule->isCondition && is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
+			$this->required = TRUE;
 		}
 	}
 
@@ -502,12 +497,15 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public static function validateEqual(IFormControl $control, $arg)
 	{
-		if (is_object($arg)) {
-			return get_class($arg) === get_class($control) ? $control->getValue() == $arg->value : FALSE;
+		foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
+			if (is_object($item)) {
+				if (get_class($item) === get_class($control) && $control->getValue() == $item->value) return TRUE;
 
-		} else {
-			return $control->getValue() == $arg;
+			} else {
+				if ($control->getValue() == $item) return TRUE;
+			}
 		}
+		return FALSE;
 	}
 
 

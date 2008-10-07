@@ -150,7 +150,7 @@ function validate(sender) {
 	if (!res) { if (el) el.focus(); alert("Reenter your password"); return false; }
 	el = document.getElementById('frm-password2');
 	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
-	res = val==document.getElementById('frm-password').value;
+	res = (val==document.getElementById('frm-password').value);
 	if (!res) { if (el) el.focus(); alert("Passwords do not match"); return false; }
 	}
 	return true;
@@ -161,7 +161,7 @@ function toggle(sender) {
 	resT = true; el = document.getElementById('frm-send');
 	res = el.checked; resT = resT && res;
 	el = document.getElementById('sendBox');
-	if (el) el.style.display = resT ? 'block' : 'none';
+	if (el) el.style.display = resT ? '' : 'none';
 	
 }
 
