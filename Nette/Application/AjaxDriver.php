@@ -35,6 +35,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 {
+	/** @var bool */
+	private $opened = FALSE;
+
 	/** @var array */
 	private $json;
 
@@ -61,8 +64,10 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function open(/*Nette::Web::*/IHttpResponse $httpResponse)
 	{
+		$httpResponse->expire(FALSE);
 		$this->httpResponse = $httpResponse;
 		$this->json = array();
+		$this->opened = TRUE;
 	}
 
 
@@ -72,12 +77,12 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function close()
 	{
-		if ($this->json) {
-			$httpResponse->setContentType('application/x-javascript', 'utf-8');
-			$httpResponse->expire(FALSE);
+		if ($this->opened && $this->json) {
+			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
 			echo json_encode($this->json);
 			$this->json = NULL;
 		}
+		$this->opened = FALSE;
 	}
 
 
@@ -90,7 +95,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function updateSnippet($id, $content)
 	{
-		if ($this->json) {
+		if ($this->opened) {
 			$this->json['snippets'][$id] = $content;
 		}
 	}
@@ -104,7 +109,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function updateState($state)
 	{
-		if ($this->json) {
+		if ($this->opened) {
 			$this->json['state'] = $state;
 		}
 	}
@@ -117,7 +122,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function redirect($uri)
 	{
-		if ($this->json) {
+		if ($this->opened) {
 			$this->json['redirect'] = $uri;
 		}
 	}
@@ -131,7 +136,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function fireEvent($event, $arg)
 	{
-		if ($this->json) {
+		if ($this->opened) {
 			$args = func_get_args();
 			array_shift($args);
 			$this->json['events'][] = array('event' => $event, 'args' => $args);
