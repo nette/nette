@@ -22,4 +22,7 @@ require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 
 
-/*Nette::Loaders::*/NetteLoader::create();
+${'!'} = new /*Nette::Loaders::*/NetteLoader;
+${'!'}->base = dirname(__FILE__);
+${'!'}->register();
+unset(${'!'});

@@ -319,7 +319,10 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	final public function offsetUnset($name)
 	{
-		$this->removeComponent($this->getComponent($name, TRUE));
+		$component = $this->getComponent($name);
+		if ($component !== NULL) {
+			$this->removeComponent($component);
+		}
 	}
 
 }

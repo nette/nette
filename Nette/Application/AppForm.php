@@ -101,7 +101,7 @@ class AppForm extends /*Nette::Forms::*/Form implements ISignalReceiver
 	 * Detects form submission and loads PresenterRequest values.
 	 * @return void
 	 */
-	protected function detectSubmission()
+	public function detectSubmission()
 	{
 		$this->submittedBy = FALSE;
 

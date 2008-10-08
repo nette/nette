@@ -195,18 +195,4 @@ class NetteLoader extends AutoLoader
 		}
 	}
 
-
-
-	/**
-	 * Autoloader factory.
-	 * @return NetteLoader
-	 */
-	public static function create()
-	{
-		$loader = new self;
-		$loader->base = dirname(dirname(__FILE__));
-		$loader->register();
-		return $loader;
-	}
-
 }

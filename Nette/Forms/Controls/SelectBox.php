@@ -58,27 +58,12 @@ class SelectBox extends FormControl
 	{
 		parent::__construct($label);
 		$this->control->setName('select');
-		$this->control->multiple = (bool) $multiple;
 		$this->control->size = $size > 1 ? (int) $size : NULL;
 		$this->control->onmousewheel = 'return false';  // prevent accidental change
 		$this->label->onclick = 'return false';  // prevent "deselect" for IE 5 - 6
 
-		$this->items = $items;
 		$this->multiple = $multiple;
-		$this->value = NULL;
-		$this->allowed = array();
-
-		foreach ($items as $key => $value) {
-			if (!is_array($value)) {
-				$value = array($key => $value);
-			}
-			foreach ($value as $key2 => $value2) {
-				if (isset($this->allowed[$key2])) {
-					throw new /*::*/InvalidArgumentException("Items contain duplication for key '$key2'.");
-				}
-				$this->allowed[$key2] = $value2;
-			}
-		}
+		$this->setItems($items);
 	}
 
 
@@ -117,7 +102,7 @@ class SelectBox extends FormControl
 	/**
 	 * Ignores the first item in select box.
 	 * @param  bool
-	 * @return SelectBox  provides a fluent interface or returns current value
+	 * @return SelectBox  provides a fluent interface
 	 */
 	public function skipFirst($value = TRUE)
 	{
@@ -134,6 +119,33 @@ class SelectBox extends FormControl
 	final public function isFirstSkipped()
 	{
 		return $this->skipFirst;
+	}
+
+
+
+	/**
+	 * Sets items from which to choose.
+	 * @param  array
+	 * @return SelectBox  provides a fluent interface
+	 */
+	public function setItems(array $items)
+	{
+		$this->items = $items;
+		$this->value = NULL;
+		$this->allowed = array();
+
+		foreach ($items as $key => $value) {
+			if (!is_array($value)) {
+				$value = array($key => $value);
+			}
+			foreach ($value as $key2 => $value2) {
+				if (isset($this->allowed[$key2])) {
+					throw new /*::*/InvalidArgumentException("Items contain duplication for key '$key2'.");
+				}
+				$this->allowed[$key2] = $value2;
+			}
+		}
+		return $this;
 	}
 
 
@@ -178,6 +190,7 @@ class SelectBox extends FormControl
 	{
 		$control = parent::getControl();
 		if ($this->multiple) $control->name .= '[]';
+		$control->multiple = (bool) $this->multiple;
 		$selected = array_flip((array) $this->value);
 		$option = /*Nette::Web::*/Html::el('option');
 		$translator = $this->getTranslator();

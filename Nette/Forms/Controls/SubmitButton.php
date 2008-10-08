@@ -70,7 +70,7 @@ class SubmitButton extends Button implements ISubmitterControl
 	/**
 	 * Sets the validation scope. Clicking the button validates only the controls within the specified scope.
 	 * @param  mixed
-	 * @return SubmitButton  provides a fluent interface or returns current value
+	 * @return SubmitButton  provides a fluent interface
 	 */
 	public function setValidationScope($scope)
 	{

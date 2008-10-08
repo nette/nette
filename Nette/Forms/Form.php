@@ -270,13 +270,12 @@ class Form extends FormContainer
 	 * Detects form submission and loads HTTP values.
 	 * @return void
 	 */
-	protected function detectSubmission()
+	public function detectSubmission()
 	{
 		$this->submittedBy = FALSE;
 
-		$request = $this->httpRequest ? $this->httpRequest : new /*Nette::Web::*/HttpRequest;
+		$request = $this->getHttpRequest();
 
-		// standalone mode
 		if ($this->isPost xor $request->getMethod() === 'POST') return;
 
 		$tracker = $this->getComponent(self::TRACKER_ID);
@@ -342,6 +341,9 @@ class Form extends FormContainer
 	 */
 	public function getHttpRequest()
 	{
+		if ($this->httpRequest === NULL) {
+			$this->httpRequest = class_exists(/*Nette::*/'Environment') ? /*Nette::*/Environment::getHttpRequest() : new /*Nette::Web::*/HttpRequest;
+		}
 		return $this->httpRequest;
 	}
 

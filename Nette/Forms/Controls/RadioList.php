@@ -53,10 +53,10 @@ class RadioList extends FormControl
 	public function __construct($label, array $items)
 	{
 		parent::__construct($label);
-		$this->items = $items;
 		$this->control->type = 'radio';
 		$this->container = /*Nette::Web::*/Html::el();
 		$this->separator = /*Nette::Web::*/Html::el('br');
+		$this->setItems($items);
 	}
 
 
@@ -69,6 +69,20 @@ class RadioList extends FormControl
 	public function setValue($value)
 	{
 		$this->value = is_scalar($value) && isset($this->items[$value]) ? $value : NULL;
+	}
+
+
+
+	/**
+	 * Sets options from which to choose.
+	 * @param  array
+	 * @return RadioList  provides a fluent interface
+	 */
+	public function setItems(array $items)
+	{
+		$this->items = $items;
+		$this->value = NULL;
+		return $this;
 	}
 
 

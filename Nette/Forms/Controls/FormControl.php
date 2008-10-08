@@ -85,7 +85,8 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	{
 		parent::__construct();
 		$this->control = /*Nette::Web::*/Html::el('input');
-		$this->label = /*Nette::Web::*/Html::el('label')->setText($label);
+		$this->label = /*Nette::Web::*/Html::el('label');
+		$this->options['label'] = $label;
 		$this->rules = new Rules($this);
 	}
 
@@ -337,9 +338,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
 		$translator = $this->getTranslator();
-		if ($translator !== NULL) {
-			$label->setText($translator->translate($label->getText()));
-		}
+		$label->setText($translator === NULL ? $this->getOption('label') : $translator->translate($this->getOption('label')));
 		return $label;
 	}
 

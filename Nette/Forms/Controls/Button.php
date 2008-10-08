@@ -41,9 +41,8 @@ class Button extends FormControl
 	 */
 	public function __construct($label)
 	{
-		parent::__construct(NULL);
+		parent::__construct($label);
 		$this->control->type = 'button';
-		$this->control->value = $label;
 		$this->value = FALSE;
 		$this->setHtmlId(FALSE);
 	}
@@ -81,9 +80,7 @@ class Button extends FormControl
 	{
 		$control = parent::getControl();
 		$translator = $this->getTranslator();
-		if ($translator !== NULL) {
-			$control->value = $translator->translate($control->value);
-		}
+		$control->value = $translator === NULL ? $this->getOption('label') : $translator->translate($this->getOption('label'));
 		return $control;
 	}
 

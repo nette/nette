@@ -38,6 +38,9 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	/** @var array */
 	private $json;
 
+	/** @var Nette::Web::IHttpResponse */
+	private $httpResponse;
+
 
 
 	/**
@@ -58,11 +61,8 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	 */
 	public function open(/*Nette::Web::*/IHttpResponse $httpResponse)
 	{
-		$httpResponse->setContentType('application/x-javascript', 'utf-8');
-		$httpResponse->expire(FALSE);
-		$this->json = array(
-			'nette' => array(),
-		);
+		$this->httpResponse = $httpResponse;
+		$this->json = array();
 	}
 
 
@@ -73,6 +73,8 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	public function close()
 	{
 		if ($this->json) {
+			$httpResponse->setContentType('application/x-javascript', 'utf-8');
+			$httpResponse->expire(FALSE);
 			echo json_encode($this->json);
 			$this->json = NULL;
 		}
