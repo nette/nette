@@ -44,7 +44,6 @@ class Button extends FormControl
 		parent::__construct($label);
 		$this->control->type = 'button';
 		$this->value = FALSE;
-		$this->setHtmlId(FALSE);
 	}
 
 

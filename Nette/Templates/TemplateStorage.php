@@ -44,8 +44,8 @@ class TemplateStorage extends /*Nette::Caching::*/FileStorage
 	protected function readData($meta)
 	{
 		return array(
-			'file' => $meta['file'],
-			'handle' => $meta['handle'],
+			'file' => $meta[self::FILE],
+			'handle' => $meta[self::HANDLE],
 		);
 	}
 

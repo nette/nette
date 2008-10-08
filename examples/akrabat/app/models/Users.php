@@ -27,11 +27,11 @@ class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
 	{
 		$row = $this->fetch(array('username' => $credentials['username']));
 		if (!$row) {
-			throw new AuthenticationException('', AuthenticationException::IDENTITY_NOT_FOUND);
+			throw new AuthenticationException('', self::IDENTITY_NOT_FOUND);
 		}
 
 		if ($row->password !== $credentials['password']) {
-			throw new AuthenticationException('', AuthenticationException::INVALID_CREDENTIAL);
+			throw new AuthenticationException('', self::INVALID_CREDENTIAL);
 		}
 
 		unset($row->password);

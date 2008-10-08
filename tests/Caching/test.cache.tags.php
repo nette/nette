@@ -17,15 +17,15 @@ $cache = new Cache($storage);
 
 echo "Writing cache...\n";
 $cache->save('key1', 'value1', array(
-	'tags' => array('one', 'two'),
+	Cache::TAGS => array('one', 'two'),
 ));
 
 $cache->save('key2', 'value2', array(
-	'tags' => array('one', 'three'),
+	Cache::TAGS => array('one', 'three'),
 ));
 
 $cache->save('key3', 'value3', array(
-	'tags' => array('two', 'three'),
+	Cache::TAGS => array('two', 'three'),
 ));
 
 $cache['key4'] = 'value4';
@@ -33,7 +33,7 @@ $cache['key4'] = 'value4';
 
 echo "Cleaning by tags...\n";
 $cache->clean(array(
-	'tags' => 'one',
+	Cache::TAGS => 'one',
 ));
 
 echo "Is cached key1?\n";

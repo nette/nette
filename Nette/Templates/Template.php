@@ -265,8 +265,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 				$key,
 				$content,
 				array(
-					'files' => $filePath,
-					'expire' => self::$cacheExpire,
+					/*Nette::Caching::*/Cache::FILES => $filePath,
+					/*Nette::Caching::*/Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
 		}

@@ -49,41 +49,46 @@ class Route extends /*Nette::*/Object implements IRouter
 	const PATH = 2;
 	const RELATIVE = 3;
 
+	// keys
+	const PATTERN = 'pattern';
+	const FILTER_IN = 'filterIn';
+	const FILTER_OUT = 'filterOut';
+
 	/** @var bool */
 	public static $defaultFlags = 0;
 
 	/** @var array */
 	public static $styles = array(
 		'#' => array( // default style for path parameters
-			'pattern' => '[^/]+',
-			'filterIn' => 'rawurldecode',
-			'filterOut' => 'rawurlencode',
+			self::PATTERN => '[^/]+',
+			self::FILTER_IN => 'rawurldecode',
+			self::FILTER_OUT => 'rawurlencode',
 		),
 		'?#' => array( // default style for query parameters
 		),
 		'module' => array(
-			'pattern' => '[a-z][a-z0-9.-]*',
-			'filterIn' => /*Nette::Application::*/'Route::path2presenter',
-			'filterOut' => /*Nette::Application::*/'Route::presenter2path',
+			self::PATTERN => '[a-z][a-z0-9.-]*',
+			self::FILTER_IN => /*Nette::Application::*/'Route::path2presenter',
+			self::FILTER_OUT => /*Nette::Application::*/'Route::presenter2path',
 		),
 		'presenter' => array(
-			'pattern' => '[a-z][a-z0-9.-]*',
-			'filterIn' => /*Nette::Application::*/'Route::path2presenter',
-			'filterOut' => /*Nette::Application::*/'Route::presenter2path',
+			self::PATTERN => '[a-z][a-z0-9.-]*',
+			self::FILTER_IN => /*Nette::Application::*/'Route::path2presenter',
+			self::FILTER_OUT => /*Nette::Application::*/'Route::presenter2path',
 		),
 		'view' => array(
-			'pattern' => '[a-z][a-z0-9-]*',
-			'filterIn' => /*Nette::Application::*/'Route::path2view',
-			'filterOut' => /*Nette::Application::*/'Route::view2path',
+			self::PATTERN => '[a-z][a-z0-9-]*',
+			self::FILTER_IN => /*Nette::Application::*/'Route::path2view',
+			self::FILTER_OUT => /*Nette::Application::*/'Route::view2path',
 		),
 		'?module' => array(
-			'filterOut' => 'strtolower',
+			self::FILTER_OUT => 'strtolower',
 		),
 		'?presenter' => array(
-			'filterOut' => 'strtolower',
+			self::FILTER_OUT => 'strtolower',
 		),
 		'?view' => array(
-			'filterOut' => 'strtolower',
+			self::FILTER_OUT => 'strtolower',
 		),
 	);
 
@@ -169,8 +174,8 @@ class Route extends /*Nette::*/Object implements IRouter
 		$defaults = array();
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
-				if (isset($meta['filterIn'])) { // applyies filterIn only to path parameters
-					$params[$name] = call_user_func($meta['filterIn'], $params[$name]);
+				if (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
+					$params[$name] = call_user_func($meta[self::FILTER_IN], $params[$name]);
 				}
 			} elseif (isset($meta['fixed'])) {
 				if ($meta['fixed'] !== 0) { // force now
@@ -258,8 +263,8 @@ class Route extends /*Nette::*/Object implements IRouter
 				}
 			}
 
-			if (isset($meta['filterOut'])) {
-				$params[$name] = call_user_func($meta['filterOut'], $params[$name]);
+			if (isset($meta[self::FILTER_OUT])) {
+				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
 			}
 		}
 
@@ -430,14 +435,14 @@ class Route extends /*Nette::*/Object implements IRouter
 				$meta = $meta + $metadata[$name];
 			}
 
-			if ($pattern == '' && isset($meta['pattern'])) {
-				$pattern = $meta['pattern'];
+			if ($pattern == '' && isset($meta[self::PATTERN])) {
+				$pattern = $meta[self::PATTERN];
 			}
 
 			if (isset($meta['default'])) {
-				$meta['defOut'] = isset($meta['filterOut']) ? call_user_func($meta['filterOut'], $meta['default']) : $meta['default'];
+				$meta['defOut'] = isset($meta[self::FILTER_OUT]) ? call_user_func($meta[self::FILTER_OUT], $meta['default']) : $meta['default'];
 			}
-			$meta['pattern'] = $pattern;
+			$meta[self::PATTERN] = $pattern;
 			$metadata[$name] = $meta;
 
 			// include in expression

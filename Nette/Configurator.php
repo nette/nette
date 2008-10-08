@@ -35,8 +35,8 @@ require_once dirname(__FILE__) . '/Object.php';
  */
 class Configurator extends Object
 {
-	/** @var bool */
-	public $useCache;
+	/** @var string */
+	public $cacheKey = '%environment%';
 
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.ini';
@@ -63,10 +63,7 @@ class Configurator extends Object
 		switch ($name) {
 		case 'environment':
 			// environment name autodetection
-			if (defined('ENVIRONMENT')) {
-				return ENVIRONMENT;
-
-			} elseif ($this->detect('console')) {
+			if ($this->detect('console')) {
 				return Environment::CONSOLE;
 
 			} else {
@@ -117,17 +114,14 @@ class Configurator extends Object
 	public function loadConfig($file, $useCache)
 	{
 		if ($useCache === NULL) {
-			if ($this->useCache === NULL) {
-				$this->useCache = Environment::isLive();
-			}
-			$useCache = $this->useCache;
+			$useCache = Environment::isLive();
 		}
-
-		$cache = $useCache ? Environment::getCache('Nette.Environment') : NULL;
+		$cache = $useCache && $this->cacheKey ? Environment::getCache('Nette.Environment') : NULL;
 
 		$name = Environment::getName();
-		if (isset($cache[$name])) {
-			Environment::swapState($cache[$name]);
+		$cacheKey = Environment::expand($this->cacheKey);
+		if (isset($cache[$cacheKey])) {
+			Environment::swapState($cache[$cacheKey]);
 			$config = Environment::getConfig();
 
 		} else {
@@ -169,7 +163,7 @@ class Configurator extends Object
 			if ($cache) {
 				$state = Environment::swapState(NULL);
 				$state[0] = $config; // TODO: better!
-				$cache->save($name, $state, array('files' => $file));
+				$cache->save($cacheKey, $state, array(/*Nette::Caching::*/Cache::FILES => $file));
 			}
 		}
 

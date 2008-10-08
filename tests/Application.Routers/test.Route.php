@@ -191,7 +191,7 @@ test($route,
 
 echo "\n<hr><h2>With user class</h2>\n";
 
-Route::$styles['#numeric']['pattern'] = '\d{1,3}';
+Route::$styles['#numeric'][Route::PATTERN] = '\d{1,3}';
 
 $route = new Route('<presenter>/<id #numeric>', array());
 

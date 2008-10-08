@@ -37,6 +37,11 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  */
 class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 {
+	const META_CONSTS = 'consts';
+	const META_DATA = 'data';
+	const META_DELTA = 'delta';
+	const META_FILES = 'df';
+
 	/** @var Memcache */
 	protected $memcache;
 
@@ -89,8 +94,8 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		// )
 
 		// verify dependencies
-		if (!empty($meta['consts'])) {
-			foreach ($meta['consts'] as $const => $value) {
+		if (!empty($meta[self::META_CONSTS])) {
+			foreach ($meta[self::META_CONSTS] as $const => $value) {
 				if (!defined($const) || constant($const) !== $value) {
 					$this->memcache->delete($key);
 					return NULL;
@@ -98,9 +103,9 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($meta['df'])) {
+		if (!empty($meta[self::META_FILES])) {
 			//clearstatcache();
-			foreach ($meta['df'] as $depFile => $time) {
+			foreach ($meta[self::META_FILES] as $depFile => $time) {
 				if (@filemtime($depFile) <> $time) {
 					$this->memcache->delete($key);
 					return NULL;
@@ -108,11 +113,11 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($meta['delta'])) {
-			$this->memcache->replace($key, $meta, 0, $meta['delta'] + time());
+		if (!empty($meta[self::META_DELTA])) {
+			$this->memcache->replace($key, $meta, 0, $meta[self::META_DELTA] + time());
 		}
 
-		return $meta['data'];
+		return $meta[self::META_DATA];
 	}
 
 
@@ -126,35 +131,35 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		if (!empty($dp['tags']) || isset($dp['priority']) || !empty($dp['items'])) {
+		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY]) || !empty($dp[Cache::ITEMS])) {
 			throw new /*::*/NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
 		}
 
 		$meta = array(
-			'data' => $data,
+			self::META_DATA => $data,
 		);
 
 		$expire = 0;
-		if (!empty($dp['expire'])) {
-			$expire = (int) $dp['expire'];
+		if (!empty($dp[Cache::EXPIRE])) {
+			$expire = (int) $dp[Cache::EXPIRE];
 			if ($expire <= self::EXPIRATION_DELTA_LIMIT) {
 				$expire += time();
 			}
-			if (!empty($dp['refresh'])) {
-				$meta['delta'] = $expire - time(); // sliding time
+			if (!empty($dp[Cache::REFRESH])) {
+				$meta[self::META_DELTA] = $expire - time(); // sliding time
 			}
 		}
 
-		if (!empty($dp['files'])) {
+		if (!empty($dp[Cache::FILES])) {
 			//clearstatcache();
-			foreach ((array) $dp['files'] as $depFile) {
-				$meta['df'][$depFile] = @filemtime($depFile); // intentionally @
+			foreach ((array) $dp[Cache::FILES] as $depFile) {
+				$meta[self::META_FILES][$depFile] = @filemtime($depFile); // intentionally @
 			}
 		}
 
-		if (!empty($dp['consts'])) {
-			foreach ((array) $dp['consts'] as $const) {
-				$meta['consts'][$const] = constant($const);
+		if (!empty($dp[Cache::CONSTS])) {
+			foreach ((array) $dp[Cache::CONSTS] as $const) {
+				$meta[self::META_CONSTS][$const] = constant($const);
 			}
 		}
 
@@ -182,10 +187,10 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		if (!empty($conds['all'])) {
+		if (!empty($conds[Cache::ALL])) {
 			$this->memcache->flush();
 
-		} elseif (isset($conds['tags']) || isset($conds['priority'])) {
+		} elseif (isset($conds[Cache::TAGS]) || isset($conds[Cache::PRIORITY])) {
 			throw new /*::*/NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
 		}
 

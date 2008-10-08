@@ -182,7 +182,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  int     number of rows that should be visible
 	 * @return SelectBox
 	 */
-	public function addSelect($name, $label, array $items, $size = 1)
+	public function addSelect($name, $label, array $items = NULL, $size = NULL)
 	{
 		return $this[$name] = new SelectBox($label, $items, FALSE, $size);
 	}
@@ -197,7 +197,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  int     number of rows that should be visible
 	 * @return SelectBox
 	 */
-	public function addMultiSelect($name, $label, array $items, $size = 1)
+	public function addMultiSelect($name, $label, array $items = NULL, $size = NULL)
 	{
 		return $this[$name] = new SelectBox($label, $items, TRUE, $size);
 	}

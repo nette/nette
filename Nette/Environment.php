@@ -47,9 +47,6 @@ final class Environment
 	/** @var Configurator */
 	private static $configurator;
 
-	/** @var string */
-	private static $name;
-
 	/** @var string  the mode of current application */
 	private static $mode = array();
 
@@ -122,8 +119,8 @@ final class Environment
 	 */
 	public static function setName($name)
 	{
-		if (self::$name === NULL) {
-			self::$name = (string) $name;
+		if (!isset(self::$vars['environment'])) {
+			self::setVariable('environment', $name, FALSE);
 
 		} else {
 			throw new /*::*/InvalidStateException('Environment name has been already set.');
@@ -138,10 +135,12 @@ final class Environment
 	 */
 	public static function getName()
 	{
-		if (self::$name === NULL) {
-			self::setName(self::getConfigurator()->detect('environment'));
+		$name = self::getVariable('environment');
+		if ($name === NULL) {
+			$name = self::getConfigurator()->detect('environment');
+			self::setVariable('environment', $name, FALSE);
 		}
-		return self::$name;
+		return $name;
 	}
 
 

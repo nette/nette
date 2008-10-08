@@ -35,6 +35,15 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Cache extends /*Nette::*/Object implements ArrayAccess
 {
+	const PRIORITY = 'priority';
+	const EXPIRE = 'expire';
+	const REFRESH = 'refresh';
+	const TAGS = 'tags';
+	const FILES = 'files';
+	const ITEMS = 'items';
+	const CONSTS = 'consts';
+	const ALL = 'all';
+
 	/** @var ICacheStorage */
 	private $storage;
 
@@ -153,17 +162,17 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 			$arr = array();
 		}
 
-		if (isset($arr['tags'])) {
-			$arr['tags'] = (array) $arr['tags'];
-			foreach ($arr['tags'] as $key => $value) {
-				$arr['tags'][$key] = $this->namespace . $value;
+		if (isset($arr[self::TAGS])) {
+			$arr[self::TAGS] = (array) $arr[self::TAGS];
+			foreach ($arr[self::TAGS] as $key => $value) {
+				$arr[self::TAGS][$key] = $this->namespace . $value;
 			}
 		}
 
-		if (isset($arr['items'])) {
-			$arr['items'] = (array) $arr['items'];
-			foreach ($arr['items'] as $key => $value) {
-				$arr['items'][$key] = $this->namespace . $value;
+		if (isset($arr[self::ITEMS])) {
+			$arr[self::ITEMS] = (array) $arr[self::ITEMS];
+			foreach ($arr[self::ITEMS] as $key => $value) {
+				$arr[self::ITEMS][$key] = $this->namespace . $value;
 			}
 		}
 	}

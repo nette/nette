@@ -21,7 +21,7 @@ define('ANY_CONST', 10);
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-	'consts' => 'ANY_CONST',
+	Cache::CONSTS => 'ANY_CONST',
 ));
 
 echo "Is cached?\n";

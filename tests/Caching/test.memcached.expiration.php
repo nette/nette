@@ -15,7 +15,7 @@ $cache = new Cache(new /*Nette::Caching::*/MemcachedStorage('localhost'));
 
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
-	'expire' => time() + 2,
+	Cache::EXPIRE => time() + 2,
 ));
 
 

@@ -31,6 +31,18 @@
  */
 interface IAuthenticator
 {
+	/**
+	 * Credential keys.
+	 */
+	const USERNAME = 'username';
+	const PASSWORD = 'password';
+
+	/**
+	 * Exception error codes.
+	 */
+	const IDENTITY_NOT_FOUND = 1;
+	const INVALID_CREDENTIAL = 2;
+	const FAILURE = 3;
 
 	/**
 	 * Performs an authentication against e.g. database.

@@ -233,8 +233,8 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	public function __destruct()
 	{
 		if (self::$fixIE) {
-			// Sends invisible garbage for IE 6.
-			if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 6.0') === FALSE) return;
+			// Sends invisible garbage for IE.
+			if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') === FALSE) return;
 			if (!in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)) return;
 			$headers = $this->getHeaders();
 			if (isset($headers['Content-Type']) && $headers['Content-Type'] !== 'text/html') return;

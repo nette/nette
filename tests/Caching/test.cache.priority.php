@@ -17,15 +17,15 @@ $cache = new Cache($storage);
 
 echo "Writing cache...\n";
 $cache->save('key1', 'value1', array(
-	'priority' => 100,
+	Cache::PRIORITY => 100,
 ));
 
 $cache->save('key2', 'value2', array(
-	'priority' => 200,
+	Cache::PRIORITY => 200,
 ));
 
 $cache->save('key3', 'value3', array(
-	'priority' => 300,
+	Cache::PRIORITY => 300,
 ));
 
 $cache['key4'] = 'value4';
@@ -33,7 +33,7 @@ $cache['key4'] = 'value4';
 
 echo "Cleaning by priority...\n";
 $cache->clean(array(
-	'priority' => '200',
+	Cache::PRIORITY => '200',
 ));
 
 echo "Is cached key1?\n";

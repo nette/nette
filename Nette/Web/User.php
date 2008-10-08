@@ -174,8 +174,8 @@ class User extends /*Nette::*/Object implements IUser
 		$this->setAuthenticated(FALSE);
 
 		$credentials = array(
-			'username' => $username,
-			'password' => $password,
+			/*Nette::Security::*/IAuthenticator::USERNAME => $username,
+			/*Nette::Security::*/IAuthenticator::PASSWORD => $password,
 			'extra' => $extra,
 		);
 

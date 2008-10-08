@@ -65,19 +65,19 @@ class SimpleAuthenticator extends /*Nette::*/Object implements IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		$username = $credentials['username'];
+		$username = $credentials[self::USERNAME];
 		foreach ($this->userlist as $name => $pass) {
-			if (strcasecmp($name, $credentials['username']) === 0) {
-				if (strcasecmp($pass, $credentials['password']) === 0) {
+			if (strcasecmp($name, $credentials[self::USERNAME]) === 0) {
+				if (strcasecmp($pass, $credentials[self::PASSWORD]) === 0) {
 					// matched!
 					return new Identity($name);
 				}
 
-				throw new AuthenticationException("Invalid password.", AuthenticationException::INVALID_CREDENTIAL);
+				throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
 			}
 		}
 
-		throw new AuthenticationException("User '$username' not found.", AuthenticationException::IDENTITY_NOT_FOUND);
+		throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 	}
 
 }
