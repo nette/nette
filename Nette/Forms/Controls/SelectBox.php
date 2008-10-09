@@ -36,12 +36,12 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
 class SelectBox extends FormControl
 {
 	/** @var array */
-	private $items;
+	private $items = array();
 
 	/** @var array */
-	protected $allowed;
+	protected $allowed = array();
 
-	/** @var array */
+	/** @var bool */
 	protected $multiple;
 
 	/** @var bool */
@@ -72,11 +72,11 @@ class SelectBox extends FormControl
 
 
 	/**
-	 * Sets selected item/items.
-	 * @param  string|int|array
-	 * @return void
+	 * Returns selected item/items.
+	 * @param  bool
+	 * @return mixed
 	 */
-	public function setValue($value)
+	public function getValue($raw = FALSE)
 	{
 		$allowed = $this->allowed;
 		if ($this->skipFirst) {
@@ -84,22 +84,26 @@ class SelectBox extends FormControl
 		}
 
 		if ($this->multiple) {
-			if (is_scalar($value)) {
-				$value = array($value);
+			if (is_scalar($this->value)) {
+				$value = array($this->value);
 
-			} elseif (!is_array($value)) {
+			} elseif (!is_array($this->value)) {
 				$value = array();
+
+			} else {
+				$value = $this->value;
 			}
 
-			$this->value = array();
+			$res = array();
 			foreach ($value as $val) {
-				if (is_scalar($val) && isset($allowed[$val])) {
-					$this->value[] = $val;
+				if (is_scalar($val) && ($raw || isset($allowed[$val]))) {
+					$res[] = $val;
 				}
 			}
+			return $res;
 
 		} else {
-			$this->value = is_scalar($value) && isset($allowed[$value]) ? $value : NULL;
+			return is_scalar($this->value) && ($raw || isset($allowed[$this->value])) ? $this->value : NULL;
 		}
 	}
 
@@ -148,7 +152,6 @@ class SelectBox extends FormControl
 	public function setItems(array $items, $useKeys = TRUE)
 	{
 		$this->items = $items;
-		$this->value = NULL;
 		$this->allowed = array();
 		$this->useKeys = (bool) $useKeys;
 
@@ -213,7 +216,7 @@ class SelectBox extends FormControl
 		$control = parent::getControl();
 		if ($this->multiple) $control->name .= '[]';
 		$control->multiple = (bool) $this->multiple;
-		$selected = array_flip((array) $this->value);
+		$selected = array_flip((array) $this->getValue());
 		$option = /*Nette::Web::*/Html::el('option');
 		$translator = $this->getTranslator();
 

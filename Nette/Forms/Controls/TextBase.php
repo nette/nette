@@ -38,8 +38,8 @@ abstract class TextBase extends FormControl
 	/** @var string */
 	protected $emptyValue = '';
 
-	/** @var string original submitted value */
-	protected $rawValue;
+	/** @var string */
+	protected $tmpValue;
 
 	/** @var array */
 	protected $filters = array();
@@ -57,7 +57,7 @@ abstract class TextBase extends FormControl
 		foreach ($this->filters as $filter) {
 			$value = (string) call_user_func($filter, $value);
 		}
-		$this->rawValue = $this->value = $value === $this->emptyValue ? '' : $value;
+		$this->tmpValue = $this->value = $value === $this->emptyValue ? '' : $value;
 	}
 
 
@@ -70,9 +70,9 @@ abstract class TextBase extends FormControl
 	public function loadHttpData($data)
 	{
 		$name = $this->getName();
-		$rawValue = isset($data[$name]) && is_scalar($data[$name]) ? $data[$name] : NULL;
-		$this->setValue($rawValue);
-		$this->rawValue = $rawValue;
+		$tmpValue = isset($data[$name]) && is_scalar($data[$name]) ? $data[$name] : NULL;
+		$this->setValue($tmpValue);
+		$this->tmpValue = $tmpValue;
 	}
 
 

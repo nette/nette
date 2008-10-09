@@ -167,7 +167,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  array   options from which to choose
 	 * @return RadioList
 	 */
-	public function addRadioList($name, $label, array $items)
+	public function addRadioList($name, $label, array $items = NULL)
 	{
 		return $this[$name] = new RadioList($label, $items);
 	}

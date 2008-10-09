@@ -64,7 +64,7 @@ class TextInput extends TextBase
 		parent::loadHttpData($data);
 
 		if ($this->control->type === 'password') {
-			$this->rawValue = '';
+			$this->tmpValue = '';
 		}
 
 		if ($this->control->maxlength && iconv_strlen($this->value) > $this->control->maxlength) {
@@ -94,7 +94,7 @@ class TextInput extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->value = $this->value === '' ? $this->emptyValue : $this->rawValue;
+		$control->value = $this->value === '' ? $this->emptyValue : $this->tmpValue;
 		return $control;
 	}
 

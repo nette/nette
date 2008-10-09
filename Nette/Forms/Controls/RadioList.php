@@ -42,7 +42,7 @@ class RadioList extends FormControl
 	protected $container;
 
 	/** @var array */
-	protected $items;
+	protected $items = array();
 
 
 
@@ -50,25 +50,25 @@ class RadioList extends FormControl
 	 * @param  string  label
 	 * @param  array   options from which to choose
 	 */
-	public function __construct($label, array $items)
+	public function __construct($label, array $items = NULL)
 	{
 		parent::__construct($label);
 		$this->control->type = 'radio';
 		$this->container = /*Nette::Web::*/Html::el();
 		$this->separator = /*Nette::Web::*/Html::el('br');
-		$this->setItems($items);
+		if ($items !== NULL) $this->setItems($items);
 	}
 
 
 
 	/**
-	 * Sets selected radio value.
-	 * @param  string|int
-	 * @return void
+	 * Returns selected radio value.
+	 * @param  bool
+	 * @return mixed
 	 */
-	public function setValue($value)
+	public function getValue($raw = FALSE)
 	{
-		$this->value = is_scalar($value) && isset($this->items[$value]) ? $value : NULL;
+		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
 	}
 
 
@@ -81,7 +81,6 @@ class RadioList extends FormControl
 	public function setItems(array $items)
 	{
 		$this->items = $items;
-		$this->value = NULL;
 		return $this;
 	}
 
@@ -131,7 +130,7 @@ class RadioList extends FormControl
 		$control = parent::getControl();
 		$id = $control->id;
 		$counter = 0;
-		$value = $this->value === NULL ? NULL : (string) $this->value;
+		$value = $this->value === NULL ? NULL : (string) $this->getValue();
 		$label = /*Nette::Web::*/Html::el('label');
 		$translator = $this->getTranslator();
 
