@@ -68,3 +68,12 @@ Debug::dump(String::checkUtf('žluťoučký'));
 
 echo "String::checkUtf(...invalid...)\n";
 Debug::dump(String::checkUtf('žluťoučký' . chr(128)));
+
+
+
+// String::bytes
+echo "String::bytes(0.1)\n";
+Debug::dump(String::bytes(0.1));
+
+echo "String::bytes(-1024 * 1024 * 1050)\n";
+Debug::dump(String::bytes(-1024 * 1024 * 1050));

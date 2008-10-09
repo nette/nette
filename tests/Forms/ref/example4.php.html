@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette::Forms example 4 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	body {
+		font-family: "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+	}
+
+	.required {
+		font-weight: bold;
+	}
+
+	.error {
+		color: red;
+	}
+
+	input.text {
+		border: 1px solid #78bd3f;
+		padding: 3px;
+		color: black;
+		background: white;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	dt, dd {
+		padding: .5em 1em;
+	}
+
+	#form {
+		width: 550px;
+	}
+
+	#form h3 {
+		background: #78bd3f;
+		color: white;
+		margin: 0;
+		padding: .1em 1em;
+		font-size: 100%;
+		font-weight: normal;
+		clear: both;
+	}
+
+	#form dl {
+		background: #F8F8F8;
+		margin: 0;
+	}
+
+	#form dt {
+		text-align: right;
+		font-weight: normal;
+		float: left;
+		width: 10em;
+		clear: both;
+	}
+
+	#form dd {
+		margin: 0;
+		padding-left: 10em;
+		display: block;
+	}
+
+	#form dd ul {
+		list-style: none;
+		font-size: 90%;
+	}
+
+	#form dd.odd {
+		background: #EEE;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Nette::Forms example 4</h1>
+
+	<form action="" method="post" enctype="multipart/form-data" onsubmit="return validate(this)">
+<div id="form">
+<div><input type="hidden" name="userid" value="231" /></div>
+
+
+<h3>Personal data</h3>
+
+<dl>
+
+	<dt><label class="required" for="frm-name">Your name</label>:</dt>
+
+	<dd><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe" /></dd>
+
+
+
+	<dt><label class="required" for="frm-age">Your age</label>:</dt>
+
+	<dd class="odd"><input type="text" size="5" class="text" name="age" id="frm-age" value="" /></dd>
+
+
+
+	<dt><label>Your gender</label>:</dt>
+
+	<dd><input type="radio" name="gender" id="frm-gender-0" value="m" /><label for="frm-gender-0">male</label><br /><input type="radio" name="gender" id="frm-gender-1" value="f" /><label for="frm-gender-1">female</label><br /></dd>
+
+
+
+	<dt><label for="frm-email">E-mail</label>:</dt>
+
+	<dd class="odd"><input type="text" size="35" class="text" name="email" id="frm-email" value="&#64;" /></dd>
+
+</dl>
+
+
+
+<h3>Shipping address</h3>
+
+<dl>
+
+	<dt>&nbsp;</dt>
+
+	<dd><input type="checkbox" onclick="toggle(this);" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></dd>
+
+</dl>
+
+<div id="sendBox">
+<dl>
+
+	<dt><label for="frm-street">Street</label>:</dt>
+
+	<dd class="odd"><input type="text" size="35" class="text" name="street" id="frm-street" value="" /></dd>
+
+
+
+	<dt><label class="required" for="frm-city">City</label>:</dt>
+
+	<dd><input type="text" size="35" class="text" name="city" id="frm-city" value="" /></dd>
+
+
+
+	<dt><label onclick="return false" class="required" for="frm-country">Country</label>:</dt>
+
+	<dd class="odd"><select onmousewheel="return false" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></dd>
+
+</dl>
+</div>
+
+
+
+<h3>Your account</h3>
+
+<dl>
+
+	<dt><label class="required" for="frm-password">Choose password</label>:</dt>
+
+	<dd><input type="password" size="20" class="text" name="password" id="frm-password" value="" /> <small>(at least 3 characters)</small></dd>
+
+
+
+	<dt><label class="required" for="frm-password2">Reenter password</label>:</dt>
+
+	<dd class="odd"><input type="password" size="20" class="text" name="password2" id="frm-password2" value="" /></dd>
+
+
+
+	<dt><label for="frm-avatar">Picture</label>:</dt>
+
+	<dd><input type="file" class="text" name="avatar" id="frm-avatar" /></dd>
+
+
+
+	<dt><label for="frm-note">Comment</label>:</dt>
+
+	<dd class="odd"><textarea cols="30" rows="5" name="note" id="frm-note"></textarea></dd>
+
+</dl>
+
+
+
+<dl>
+
+	<dt>&nbsp;</dt>
+
+	<dd><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></dd>
+
+</dl>
+
+</div>
+</form>
+<script type="text/javascript">
+/* <![CDATA[ */
+function validate(sender) {
+	var el, res;
+	el = document.getElementById('frm-name');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { if (el) el.focus(); alert("Enter your name"); return false; }
+	el = document.getElementById('frm-age');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { if (el) el.focus(); alert("Enter your age"); return false; }
+	el = document.getElementById('frm-age');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = /^-?[0-9]+$/.test(val);
+	if (!res) { if (el) el.focus(); alert("Age must be numeric value"); return false; }
+	el = document.getElementById('frm-age');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = parseFloat(val)>=9.9 && parseFloat(val)<=100;
+	if (!res) { if (el) el.focus(); alert("Age must be in range from 9.90 to 100.00"); return false; }
+	el = document.getElementById('frm-email');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="@";
+	if (res) {
+	el = document.getElementById('frm-email');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);
+	if (!res) { if (el) el.focus(); alert("Incorrect E-mail Address"); return false; }
+	}
+	el = document.getElementById('frm-send');
+	res = el.checked;
+	if (res) {
+	el = document.getElementById('frm-city');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { if (el) el.focus(); alert("Enter your shipping address"); return false; }
+	}
+	el = document.getElementById('frm-send');
+	res = el.checked;
+	if (res) {
+	el = document.getElementById('frm-country');
+	res = el.selectedIndex >= 1;
+	if (!res) { if (el) el.focus(); alert("Select your country"); return false; }
+	}
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { if (el) el.focus(); alert("Choose your password"); return false; }
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val.length>=3;
+	if (!res) { if (el) el.focus(); alert("The password is too short: it must be at least 3 characters"); return false; }
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = function(){
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { return false; }
+	el = document.getElementById('frm-password');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val.length>=3;
+	if (!res) { return false; }
+	return true; }();
+	if (res) {
+	el = document.getElementById('frm-password2');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = val!='' && val!="";
+	if (!res) { if (el) el.focus(); alert("Reenter your password"); return false; }
+	el = document.getElementById('frm-password2');
+	var val = el.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	res = (val==document.getElementById('frm-password').value);
+	if (!res) { if (el) el.focus(); alert("Passwords do not match"); return false; }
+	}
+	return true;
+}
+
+function toggle(sender) {
+	var el, res, resT;
+	resT = true; el = document.getElementById('frm-send');
+	res = el.checked; resT = resT && res;
+	el = document.getElementById('sendBox');
+	if (el) el.style.display = resT ? '' : 'none';
+	
+}
+
+toggle(null);
+/* ]]> */
+</script>
+</body>
+</html>

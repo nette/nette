@@ -94,3 +94,8 @@ echo "\n\n";
 // href with query
 echo $el = Html::el('a')->href('file.php', array('a' => 10));
 echo "\n\n";
+
+
+// special creating
+echo $el = Html::el('a lang=cs href="#" title="" selected')->setText('click');
+echo "\n\n";

@@ -9,13 +9,13 @@ require_once '../../Nette/loader.php';
 
 class MyHelper
 {
-    protected $count = 0;
+	protected $count = 0;
 
-    public function invoke($s)
-    {
-        $this->count++;
-        return strtolower($s) . " ($this->count times)";
-    }
+	public function invoke($s)
+	{
+		$this->count++;
+		return strtolower($s) . " ($this->count times)";
+	}
 
 }
 
