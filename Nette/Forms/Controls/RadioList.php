@@ -138,7 +138,13 @@ class RadioList extends FormControl
 			$control->id = $label->for = $id . '-' . $counter;
 			$control->checked = (string) $key === $value;
 			$control->value = $key;
-			$label->setText($translator === NULL ? $val : $translator->translate($val));
+
+			if ($val instanceof /*Nette::Web::*/Html) {
+				$label->setHtml($val);
+			} else {
+				$label->setText($translator === NULL ? $val : $translator->translate($val));
+			}	
+
 			$container->add((string) $control . (string) $label . $separator);
 			$counter++;
 			// TODO: separator after last item?

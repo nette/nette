@@ -164,13 +164,13 @@ final class TemplateFilters
 
 	/** @var array */
 	public static $curlyHelpers = array(
-		'texy' => '$texy->process(%s)',
 		'lower' => 'strtolower(%s)',
 		'upper' => 'strtoupper(%s)',
 		'capitalize' => 'ucfirst(%s)',
 		'default' => 'isset(%1$s) ? %1$s : %2$s',
 		'nl2br' => 'nl2br(%s)',
-		'truncate' => 'substr(%1$s, 0, %2$d)',
+		'truncate' => 'String::truncate(%1$s, %2$d)',
+		'bytes' => 'String::bytes(%s)',
 	);
 
 	/** @var string */

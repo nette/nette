@@ -23,7 +23,7 @@ Environment::setVariable('tempDir', $tmpDir);
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-texy.phtml');
 $template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
+$template->registerHelper('texy', array(new MockTexy, 'process'));
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
-$template->texy = new MockTexy;
 $template->render();

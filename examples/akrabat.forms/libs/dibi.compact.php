@@ -1,4 +1,4 @@
-<?php //netteloader=IDibiVariable,IDataSource,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,dibi,DibiLogger,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
+<?php //netteloader=IDibiVariable,IDataSource,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiRow,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,DibiDatabaseInfo,DibiTableInfo,DibiColumnInfo,DibiForeignKeyInfo,DibiIndexInfo,dibi,DibiLogger,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
 
 /**
  * dibi - tiny'n'smart database abstraction layer
@@ -15,7 +15,7 @@
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    0.9 (revision 150 released on 2008/10/02 11:01:38)
+ * @version    0.9 (revision 153 released on 2008/10/10 19:39:33)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -55,6 +55,7 @@ insertId($sequence);function
 begin();function
 commit();function
 rollback();function
+getResource();function
 escape($value,$type);function
 unescape($value,$type);function
 applyLimit(&$sql,$limit,$offset);function
@@ -63,9 +64,11 @@ seek($row);function
 fetch($type);function
 free();function
 getColumnsMeta();function
-getResource();function
 getResultResource();function
-getDibiReflection();}abstract
+getTables();function
+getColumns($table);function
+getIndexes($table);function
+getForeignKeys($table);}abstract
 class
 DibiObject{private
 static$extMethods;final
@@ -151,7 +154,7 @@ function
 _errorHandler($code,$message){restore_error_handler();if(ini_get('html_errors')){$message=strip_tags($message);$message=html_entity_decode($message);}self::$errorMsg=$message;}}class
 DibiConnection
 extends
-DibiObject{private$config;private$driver;private$connected=FALSE;private$inTxn=FALSE;private$resultClass='DibiResult';public
+DibiObject{private$config;private$driver;private$connected=FALSE;private$inTxn=FALSE;public
 function
 __construct($config,$name=NULL){if(class_exists('Debug',FALSE)){Debug::addColophon(array('dibi','getColophon'));}if(is_string($config)){parse_str($config,$config);}elseif($config
 instanceof
@@ -159,9 +162,7 @@ ArrayObject){$config=(array)$config;}elseif(!is_array($config)){throw
 new
 InvalidArgumentException('Configuration must be array, string or ArrayObject.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){ include_once dirname(__FILE__)."/../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
 new
-DibiException("Unable to create instance of dibi driver class '$class'.");}}if(isset($config['result:withtables'])){$config['resultWithTables']=$config['result:withtables'];unset($config['result:withtables']);}if(isset($config['result:objects'])){$config['resultObjects']=$config['result:objects'];unset($config['result:objects']);}if(isset($config['resultObjects'])){$val=$config['resultObjects'];$config['resultObjects']=is_string($val)&&!is_numeric($val)?$val:(bool)$val;}if(isset($config['resultClass'])){if(strcasecmp($config['resultClass'],'DibiResult')&&!is_subclass_of($config['resultClass'],'DibiResult')){throw
-new
-InvalidArgumentException("Class '$config[resultClass]' is not DibiResult descendant.");}$this->resultClass=$config['resultClass'];}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(empty($config['lazy'])){$this->connect();}}public
+DibiException("Unable to create instance of dibi driver class '$class'.");}}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(empty($config['lazy'])){$this->connect();}}public
 function
 __destruct(){$this->disconnect();}final
 protected
@@ -194,7 +195,8 @@ test($args){$args=func_get_args();$this->connect();$trans=new
 DibiTranslator($this->driver);$ok=$trans->translate($args);dibi::dump($trans->sql);return$ok;}final
 public
 function
-nativeQuery($sql){$this->connect();dibi::$numOfQueries++;dibi::$sql=$sql;dibi::$elapsedTime=FALSE;$time=-microtime(TRUE);dibi::notify($this,'beforeQuery',$sql);if($res=$this->driver->query($sql)){$res=new$this->resultClass($res,$this->config);}$time+=microtime(TRUE);dibi::$elapsedTime=$time;dibi::$totalTime+=$time;dibi::notify($this,'afterQuery',$res);return$res;}public
+nativeQuery($sql){$this->connect();dibi::$numOfQueries++;dibi::$sql=$sql;dibi::$elapsedTime=FALSE;$time=-microtime(TRUE);dibi::notify($this,'beforeQuery',$sql);if($res=$this->driver->query($sql)){$res=new
+DibiResult($res,$this->config);}$time+=microtime(TRUE);dibi::$elapsedTime=$time;dibi::$totalTime+=$time;dibi::notify($this,'afterQuery',$res);return$res;}public
 function
 affectedRows(){$rows=$this->driver->affectedRows();if(!is_int($rows)||$rows<0)throw
 new
@@ -240,9 +242,9 @@ loadFile($file){$this->connect();@set_time_limit(0);$handle=@fopen($file,'r');if
 new
 FileNotFoundException("Cannot open file '$file'.");}$count=0;$sql='';while(!feof($handle)){$s=fgets($handle);$sql.=$s;if(substr(rtrim($s),-1)===';'){$this->driver->query($sql);$sql='';$count++;}}fclose($handle);return$count;}public
 function
-getDibiReflection(){throw
+getDatabaseInfo(){return
 new
-NotImplementedException;}public
+DibiDatabaseInfo($this->driver,isset($this->config['database'])?$this->config['database']:NULL);}public
 function
 __wakeup(){throw
 new
@@ -255,9 +257,9 @@ DibiResult
 extends
 DibiObject
 implements
-IDataSource{private$driver;private$xlat;private$metaCache;private$fetched=FALSE;private$withTables=FALSE;private$objects=FALSE;public
+IDataSource{private$driver;private$xlat;private$metaCache;private$fetched=FALSE;private$withTables=FALSE;public
 function
-__construct($driver,$config){$this->driver=$driver;if(!empty($config['resultWithTables'])){$this->setWithTables(TRUE);}if(isset($config['resultObjects'])){$this->setObjects($config['resultObjects']);}}public
+__construct($driver,$config){$this->driver=$driver;if(!empty($config[dibi::RESULT_WITH_TABLES])){$this->setWithTables(TRUE);}}public
 function
 __destruct(){@$this->free();}final
 public
@@ -278,17 +280,15 @@ setWithTables($val){if($val){if($this->metaCache===NULL){$this->metaCache=$this-
 as$col){$name=$col['table']==''?$col['name']:($col['table'].'.'.$col['name']);if(isset($cols[$name])){$fix=1;while(isset($cols[$name.'#'.$fix]))$fix++;$name.='#'.$fix;}$cols[$name]=TRUE;}$this->withTables=array_keys($cols);}else{$this->withTables=FALSE;}}final
 public
 function
-getWithTables(){return(bool)$this->withTables;}public
-function
-setObjects($type){$this->objects=$type;}public
-function
-getObjects(){return$this->objects;}final
+getWithTables(){return(bool)$this->withTables;}final
 public
 function
-fetch($objects=NULL){if($this->withTables===FALSE){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
+fetch(){if($this->withTables===FALSE){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
 FALSE;}else{$row=$this->getDriver()->fetch(FALSE);if(!is_array($row))return
 FALSE;$row=array_combine($this->withTables,$row);}$this->fetched=TRUE;if($this->xlat!==NULL){foreach($this->xlat
-as$col=>$type){if(isset($row[$col])){$row[$col]=$this->convert($row[$col],$type['type'],$type['format']);}}}if($objects===NULL){$objects=$this->objects;}if($objects){if($objects===TRUE){$row=(object)$row;}else{$row=new$objects($row);}}return$row;}final
+as$col=>$type){if(isset($row[$col])){$row[$col]=$this->convert($row[$col],$type['type'],$type['format']);}}}return
+new
+DibiRow($row,2);}final
 public
 function
 fetchSingle(){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
@@ -299,22 +299,22 @@ fetchAll($offset=NULL,$limit=NULL){$limit=$limit===NULL?-1:(int)$limit;$this->se
 array();$data=array();do{if($limit===0)break;$limit--;$data[]=$row;}while($row=$this->fetch());return$data;}final
 public
 function
-fetchAssoc($assoc){$this->seek(0);$row=$this->fetch(FALSE);if(!$row)return
+fetchAssoc($assoc){$this->seek(0);$row=$this->fetch();if(!$row)return
 array();$data=NULL;$assoc=explode(',',$assoc);foreach($assoc
 as$as){if($as!=='#'&&$as!=='='&&$as!=='@'&&!array_key_exists($as,$row)){throw
 new
-InvalidArgumentException("Unknown column '$as' in associative descriptor.");}}$leaf=$this->objects?$this->objects:'=';$last=count($assoc)-1;while($assoc[$last]==='='||$assoc[$last]==='@'){$leaf=$assoc[$last];unset($assoc[$last]);$last--;if($last<0){$assoc[]='#';break;}}do{$x=&$data;foreach($assoc
-as$i=>$as){if($as==='#'){$x=&$x[];}elseif($as==='='){if($x===NULL){$x=$row;$x=&$x[$assoc[$i+1]];$x=NULL;}else{$x=&$x[$assoc[$i+1]];}}elseif($as==='@'){if($x===NULL){$x=(object)$row;$x=&$x->{$assoc[$i+1]};$x=NULL;}else{$x=&$x->{$assoc[$i+1]};}}else{$x=&$x[$row[$as]];}}if($x===NULL){if($leaf==='='){$x=$row;}elseif($leaf===TRUE||$leaf==='@'){$x=(object)$row;}else{$x=new$leaf($row);}}}while($row=$this->fetch(FALSE));unset($x);return$data;}final
+InvalidArgumentException("Unknown column '$as' in associative descriptor.");}}$leaf='@';$last=count($assoc)-1;while($assoc[$last]==='='||$assoc[$last]==='@'){$leaf=$assoc[$last];unset($assoc[$last]);$last--;if($last<0){$assoc[]='#';break;}}do{$arr=(array)$row;$x=&$data;foreach($assoc
+as$i=>$as){if($as==='#'){$x=&$x[];}elseif($as==='='){if($x===NULL){$x=$arr;$x=&$x[$assoc[$i+1]];$x=NULL;}else{$x=&$x[$assoc[$i+1]];}}elseif($as==='@'){if($x===NULL){$x=clone$row;$x=&$x->{$assoc[$i+1]};$x=NULL;}else{$x=&$x->{$assoc[$i+1]};}}else{$x=&$x[$arr[$as]];}}if($x===NULL){if($leaf==='='){$x=$arr;}else{$x=$row;}}}while($row=$this->fetch());unset($x);return$data;}final
 public
 function
-fetchPairs($key=NULL,$value=NULL){$this->seek(0);$row=$this->fetch(FALSE);if(!$row)return
+fetchPairs($key=NULL,$value=NULL){$this->seek(0);$row=$this->fetch();if(!$row)return
 array();$data=array();if($value===NULL){if($key!==NULL){throw
 new
-InvalidArgumentException("Either none or both columns must be specified.");}$tmp=array_keys($row);$key=$tmp[0];if(count($row)<2){do{$data[]=$row[$key];}while($row=$this->fetch(FALSE));return$data;}$value=$tmp[1];}else{if(!array_key_exists($value,$row)){throw
+InvalidArgumentException("Either none or both columns must be specified.");}$tmp=array_keys((array)$row);$key=$tmp[0];if(count($row)<2){do{$data[]=$row[$key];}while($row=$this->fetch());return$data;}$value=$tmp[1];}else{if(!array_key_exists($value,$row)){throw
 new
-InvalidArgumentException("Unknown value column '$value'.");}if($key===NULL){do{$data[]=$row[$value];}while($row=$this->fetch(FALSE));return$data;}if(!array_key_exists($key,$row)){throw
+InvalidArgumentException("Unknown value column '$value'.");}if($key===NULL){do{$data[]=$row[$value];}while($row=$this->fetch());return$data;}if(!array_key_exists($key,$row)){throw
 new
-InvalidArgumentException("Unknown key column '$key'.");}}do{$data[$row[$key]]=$row[$value];}while($row=$this->fetch(FALSE));return$data;}final
+InvalidArgumentException("Unknown key column '$key'.");}}do{$data[$row[$key]]=$row[$value];}while($row=$this->fetch());return$data;}final
 public
 function
 setType($col,$type,$format=NULL){$this->xlat[$col]=array('type'=>$type,'format'=>$format);}final
@@ -337,11 +337,15 @@ dibi::FIELD_DATETIME:$value=strtotime($value);return$format===NULL?$value:date($
 dibi::FIELD_BOOL:return((bool)$value)&&$value!=='f'&&$value!=='F';default:return$value;}}final
 public
 function
-getColumnsMeta(){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
-as$col){$name=(!$this->withTables||$col['table']===NULL)?$col['name']:($col['table'].'.'.$col['name']);$cols[$name]=$col;}return$cols;}final
+getColumns(){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
+as$info){$cols[]=new
+DibiColumnInfo($this->driver,$info);}return$cols;}public
+function
+getColumnNames($withTables=FALSE){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
+as$info){$cols[]=(!$withTables||$info['table']===NULL)?$info['name']:($info['table'].'.'.$info['name']);}return$cols;}final
 public
 function
-dump(){$i=0;$this->seek(0);while($row=$this->fetch(FALSE)){if($i===0){echo"\n<table class=\"dump\">\n<thead>\n\t<tr>\n\t\t<th>#row</th>\n";foreach($row
+dump(){$i=0;$this->seek(0);while($row=$this->fetch()){if($i===0){echo"\n<table class=\"dump\">\n<thead>\n\t<tr>\n\t\t<th>#row</th>\n";foreach($row
 as$col=>$foo){echo"\t\t<th>".htmlSpecialChars($col)."</th>\n";}echo"\t</tr>\n</thead>\n<tbody>\n";}echo"\t<tr>\n\t\t<th>",$i,"</th>\n";foreach($row
 as$col){echo"\t\t<td>",htmlSpecialChars($col),"</td>\n";}echo"\t</tr>\n";$i++;}if($i===0){echo'<p><em>empty result set</em></p>';}else{echo"</tbody>\n</table>\n";}}final
 public
@@ -355,7 +359,10 @@ count(){return$this->rowCount();}private
 function
 getDriver(){if($this->driver===NULL){throw
 new
-InvalidStateException('Resultset was released from memory.');}return$this->driver;}}final
+InvalidStateException('Resultset was released from memory.');}return$this->driver;}}class
+DibiRow
+extends
+ArrayObject{}final
 class
 DibiTranslator
 extends
@@ -367,7 +374,9 @@ getDriver(){return$this->driver;}public
 function
 translate(array$args){$this->limit=-1;$this->offset=0;$this->hasError=FALSE;$commandIns=NULL;$lastArr=NULL;$cursor=&$this->cursor;$cursor=0;$this->args=array_values($args);$args=&$this->args;$this->ifLevel=$this->ifLevelStart=0;$comment=&$this->comment;$comment=FALSE;$sql=array();while($cursor<count($args)){$arg=$args[$cursor];$cursor++;if(is_string($arg)){$toSkip=strcspn($arg,'`[\'"%');if(strlen($arg)===$toSkip){$sql[]=$arg;}else{$sql[]=substr($arg,0,$toSkip).preg_replace_callback('/(?=`|\[|\'|"|%)(?:`(.+?)`|\[(.+?)\]|(\')((?:\'\'|[^\'])*)\'|(")((?:""|[^"])*)"|(\'|")|%([a-zA-Z]{1,4})(?![a-zA-Z]))/s',array($this,'cb'),substr($arg,$toSkip));}continue;}if($comment){$sql[]='...';continue;}if(is_array($arg)){if(is_string(key($arg))){if($commandIns===NULL){$commandIns=strtoupper(substr(ltrim($args[0]),0,6));$commandIns=$commandIns==='INSERT'||$commandIns==='REPLAC';$sql[]=$this->formatValue($arg,$commandIns?'v':'a');}else{if($lastArr===$cursor-1)$sql[]=',';$sql[]=$this->formatValue($arg,$commandIns?'l':'a');}$lastArr=$cursor;continue;}elseif($cursor===1){$cursor=0;array_splice($args,0,1,$arg);continue;}}$sql[]=$this->formatValue($arg,FALSE);}if($comment)$sql[]="*/";$sql=implode(' ',$sql);if($this->limit>-1||$this->offset>0){$this->driver->applyLimit($sql,$this->limit,$this->offset);}$this->sql=$sql;return!$this->hasError;}public
 function
-formatValue($value,$modifier){if(is_array($value)){$vx=$kx=array();$operator=', ';switch($modifier){case'and':case'or':$operator=' '.strtoupper($modifier).' ';if(empty($value)){return'1';}elseif(!is_string(key($value))){foreach($value
+formatValue($value,$modifier){if(is_array($value)||$value
+instanceof
+ArrayObject){$vx=$kx=array();$operator=', ';switch($modifier){case'and':case'or':$operator=' '.strtoupper($modifier).' ';if(empty($value)){return'1';}elseif(!is_string(key($value))){foreach($value
 as$v){$vx[]=$this->formatValue($v,'sql');}}else{foreach($value
 as$k=>$v){$pair=explode('%',$k,2);$k=$this->delimite($pair[0]);$v=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);$op=isset($pair[1])&&$pair[1]==='l'?'IN':($v==='NULL'?'IS':'=');$vx[]=$k.' '.$op.' '.$v;}}return
 implode($operator,$vx);case'a':foreach($value
@@ -432,7 +441,8 @@ findAll($conditions=NULL,$order=NULL){if(!is_array($order)){$order=func_get_args
 function
 fetch($conditions){if(is_array($conditions)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',$conditions))->fetch();}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %n='.$this->primaryModifier,$this->primary,$conditions))->fetch();}public
 function
-createBlank(){$row=$this->blankRow;$row[$this->primary]=NULL;if($class=$this->connection->getConfig('resultObjects')){if($class===TRUE){$row=(object)$row;}else{$row=new$class($row);}}return$row;}protected
+createBlank(){$row=new
+DibiRow($this->blankRow,2);$row[$this->primary]=NULL;return$row;}protected
 function
 prepare($data){if(is_object($data)){return(array)$data;}elseif(is_array($data)){return$data;}throw
 new
@@ -508,9 +518,130 @@ __toString(){ob_start();$this->test();return
 ob_get_clean();}}if(!function_exists('array_fill_keys')){function
 array_fill_keys($keys,$value){return
 array_combine($keys,array_fill(0,count($keys),$value));}}class
+DibiDatabaseInfo
+extends
+DibiObject{private$driver;private$name;private$tables;public
+function
+__construct(IDibiDriver$driver,$name){$this->driver=$driver;$this->name=$name;}public
+function
+getName(){return$this->name;}public
+function
+getTables(){$this->init();return
+array_values($this->tables);}public
+function
+getTableNames(){$this->init();$res=array();foreach($this->tables
+as$table){$res[]=$table->getName();}return$res;}public
+function
+getTable($name){$this->init();$l=strtolower($name);if(isset($this->tables[$l])){return$this->tables[$l];}else{throw
+new
+DibiException("Database '$this->name' has no table '$name'.");}}public
+function
+hasTable($name){$this->init();return
+isset($this->tables[strtolower($name)]);}public
+function
+getSequences(){throw
+new
+NotImplementedException;}protected
+function
+init(){if($this->tables===NULL){$this->tables=array();foreach($this->driver->getTables()as$info){$this->tables[strtolower($info['name'])]=new
+DibiTableInfo($this->driver,$info);}}}}class
+DibiTableInfo
+extends
+DibiObject{private$driver;private$info;private$columns;private$foreignKeys;private$indexes;private$primaryKey;public
+function
+__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->info=$info;}public
+function
+getName(){return$this->info['name'];}public
+function
+isView(){return!empty($this->info['view']);}public
+function
+getColumns(){$this->initColumns();return
+array_values($this->columns);}public
+function
+getColumnNames(){$this->initColumns();$res=array();foreach($this->columns
+as$column){$res[]=$column->getName();}return$res;}public
+function
+getColumn($name){$this->initColumns();$l=strtolower($name);if(isset($this->columns[$l])){return$this->columns[$l];}else{throw
+new
+DibiException("Table '$this->name' has no column '$name'.");}}public
+function
+hasColumn($name){$this->initColumns();return
+isset($this->columns[strtolower($name)]);}public
+function
+getForeignKeys(){$this->initForeignKeys();return$this->foreignKeys;}public
+function
+getIndexes(){$this->initIndexes();return$this->indexes;}public
+function
+getPrimaryKey(){$this->initIndexes();return$this->primaryKey;}protected
+function
+initColumns(){if($this->columns===NULL){$this->columns=array();foreach($this->driver->getColumns($this->name)as$info){$this->columns[strtolower($info['name'])]=new
+DibiColumnInfo($this->driver,$info);}}}protected
+function
+initIndexes(){if($this->indexes===NULL){$this->initColumns();$this->indexes=array();foreach($this->driver->getIndexes($this->name)as$info){$cols=array();foreach($info['columns']as$name){$cols[]=$this->columns[strtolower($name)];}$name=$info['name'];$this->indexes[strtolower($name)]=new
+DibiIndexInfo($this,$name,$cols,$info['unique']);if(!empty($info['primary'])){$this->primaryKey=$this->indexes[strtolower($name)];}}}}protected
+function
+initForeignKeys(){throw
+new
+NotImplementedException;}}class
+DibiColumnInfo
+extends
+DibiObject{private$driver;private$info;public
+function
+__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->info=$info;}public
+function
+getName(){return$this->info['name'];}public
+function
+getTable(){if(empty($this->info['table'])){throw
+new
+DibiException("Table name is unknown.");}return
+new
+DibiTableInfo($this->driver,array('name'=>$this->info['table']));}public
+function
+getType(){return
+isset($this->info['type'])?$this->info['type']:NULL;}public
+function
+getNativeType(){return
+isset($this->info['nativetype'])?$this->info['nativetype']:NULL;}public
+function
+getSize(){return
+isset($this->info['size'])?(int)$this->info['size']:NULL;}public
+function
+getPrecision(){return
+isset($this->info['precision'])?(int)$this->info['precision']:NULL;}public
+function
+getScale(){return
+isset($this->info['scale'])?(int)$this->info['scale']:NULL;}public
+function
+isNullable(){return!empty($this->info['nullable']);}public
+function
+isAutoIncrement(){return!empty($this->info['autoincrement']);}public
+function
+getDefaultValue(){return
+isset($this->info['default'])?$this->info['default']:NULL;}}class
+DibiForeignKeyInfo
+extends
+DibiObject{private$name;private$references;public
+function
+__construct($name,array$references){$this->name=$name;$this->references=$references;}public
+function
+getName(){return$this->name;}public
+function
+getReferences(){return$this->references;}}class
+DibiIndexInfo
+extends
+DibiObject{private$name;private$columns;private$unique;public
+function
+__construct($name,array$columns,$unique){$this->name=$name;$this->columns=$columns;$this->unique=(bool)$unique;}public
+function
+getName(){return$this->name;}public
+function
+getColumns(){return$this->columns;}public
+function
+isUnique(){return$this->unique;}}class
 dibi{const
 FIELD_TEXT='s',FIELD_BINARY='bin',FIELD_BOOL='b',FIELD_INTEGER='i',FIELD_FLOAT='f',FIELD_DATE='d',FIELD_DATETIME='t',IDENTIFIER='n';const
-VERSION='0.9',REVISION='150 released on 2008/10/02 11:01:38';private
+VERSION='0.9',REVISION='153 released on 2008/10/10 19:39:33';const
+RESULT_WITH_TABLES='resultWithTables';private
 static$registry=array();private
 static$connection;private
 static$substs=array();private
@@ -594,6 +725,10 @@ commit(){self::getConnection()->commit();}public
 static
 function
 rollback(){self::getConnection()->rollback();}public
+static
+function
+getDatabaseInfo(){return
+self::getConnection()->getDatabaseInfo();}public
 static
 function
 loadFile($file){return
@@ -723,6 +858,8 @@ commit(){$this->query('COMMIT');}public
 function
 rollback(){$this->query('ROLLBACK');}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
@@ -746,20 +883,33 @@ function
 rowCount(){return
 mssql_num_rows($this->resultSet);}public
 function
-fetch($type){return
-mssql_fetch_array($this->resultSet,$type?MSSQL_ASSOC:MSSQL_NUM);}public
+fetch($assoc){return
+mssql_fetch_array($this->resultSet,$assoc?MSSQL_ASSOC:MSSQL_NUM);}public
 function
 seek($row){return
 mssql_data_seek($this->resultSet,$row);}public
 function
 free(){mssql_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mssql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mssql_fetch_field($this->resultSet,$i);$info['table']=$info['column_source'];$meta[]=$info;}return$meta;}public
+getColumnsMeta(){$count=mssql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mssql_fetch_field($this->resultSet,$i);$info['table']=$info['column_source'];$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){throw
+new
+NotImplementedException;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiMySqlDriver
 extends
 DibiObject
@@ -799,6 +949,8 @@ commit(){$this->query('COMMIT');}public
 function
 rollback(){$this->query('ROLLBACK');}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".mysql_real_escape_string($value,$this->connection)."'";case
@@ -822,8 +974,8 @@ new
 DibiDriverException('Row count is not available for unbuffered queries.');}return
 mysql_num_rows($this->resultSet);}public
 function
-fetch($type){return
-mysql_fetch_array($this->resultSet,$type?MYSQL_ASSOC:MYSQL_NUM);}public
+fetch($assoc){return
+mysql_fetch_array($this->resultSet,$assoc?MYSQL_ASSOC:MYSQL_NUM);}public
 function
 seek($row){if(!$this->buffered){throw
 new
@@ -832,12 +984,23 @@ mysql_data_seek($this->resultSet,$row);}public
 function
 free(){mysql_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mysql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=(array)mysql_fetch_field($this->resultSet,$i);}return$meta;}public
+getColumnsMeta(){$count=mysql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mysql_fetch_field($this->resultSet,$i);$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){$this->query("SHOW TABLES");$res=array();while($row=mysql_fetch_array($this->resultSet,MYSQL_NUM)){$res[]=array('name'=>$row[0]);}$this->free();return$res;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiMySqliDriver
 extends
 DibiObject
@@ -875,6 +1038,8 @@ commit(){$this->query('COMMIT');}public
 function
 rollback(){$this->query('ROLLBACK');}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".mysqli_real_escape_string($this->connection,$value)."'";case
@@ -898,8 +1063,8 @@ new
 DibiDriverException('Row count is not available for unbuffered queries.');}return
 mysqli_num_rows($this->resultSet);}public
 function
-fetch($type){return
-mysqli_fetch_array($this->resultSet,$type?MYSQLI_ASSOC:MYSQLI_NUM);}public
+fetch($assoc){return
+mysqli_fetch_array($this->resultSet,$assoc?MYSQLI_ASSOC:MYSQLI_NUM);}public
 function
 seek($row){if(!$this->buffered){throw
 new
@@ -908,12 +1073,23 @@ mysqli_data_seek($this->resultSet,$row);}public
 function
 free(){mysqli_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mysqli_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=(array)mysqli_fetch_field_direct($this->resultSet,$i);}return$meta;}public
+getColumnsMeta(){$count=mysqli_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mysqli_fetch_field_direct($this->resultSet,$i);$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){$this->query("SHOW TABLES");$res=array();while($row=mysqli_fetch_array($this->resultSet,MYSQLI_NUM)){$res[]=array('name'=>$row[0]);}$this->free();return$res;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiOdbcDriver
 extends
 DibiObject
@@ -954,6 +1130,8 @@ rollback(){if(!odbc_rollback($this->connection)){throw
 new
 DibiDriverException(odbc_errormsg($this->connection).' '.odbc_error($this->connection));}odbc_autocommit($this->connection,TRUE);}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
@@ -977,7 +1155,7 @@ function
 rowCount(){return
 odbc_num_rows($this->resultSet);}public
 function
-fetch($type){if($type){return
+fetch($assoc){if($assoc){return
 odbc_fetch_array($this->resultSet,++$this->row);}else{$set=$this->resultSet;if(!odbc_fetch_row($set,++$this->row))return
 FALSE;$count=odbc_num_fields($set);$cols=array();for($i=1;$i<=$count;$i++)$cols[]=odbc_result($set,$i);return$cols;}}public
 function
@@ -986,12 +1164,23 @@ TRUE;}public
 function
 free(){odbc_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=odbc_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>odbc_field_name($this->resultSet,$i),'table'=>NULL,'type'=>odbc_field_type($this->resultSet,$i),'length'=>odbc_field_len($this->resultSet,$i),'scale'=>odbc_field_scale($this->resultSet,$i),'precision'=>odbc_field_precision($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$count=odbc_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>odbc_field_name($this->resultSet,$i),'table'=>NULL,'nativetype'=>odbc_field_type($this->resultSet,$i),'length'=>odbc_field_len($this->resultSet,$i),'scale'=>odbc_field_scale($this->resultSet,$i),'precision'=>odbc_field_precision($this->resultSet,$i));}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){$result=odbc_tables($this->connection);$res=array();while(odbc_fetch_row($result)){$res[]=array('name'=>odbc_result($result,'TABLE_NAME'));}return$res;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiOracleDriver
 extends
 DibiObject
@@ -1033,6 +1222,8 @@ rollback(){if(!oci_rollback($this->connection)){$err=oci_error($this->connection
 new
 DibiDriverException($err['message'],$err['code']);}$this->autocommit=TRUE;}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".str_replace("'","''",$value)."'";case
@@ -1054,8 +1245,8 @@ function
 rowCount(){return
 oci_num_rows($this->resultSet);}public
 function
-fetch($type){return
-oci_fetch_array($this->resultSet,($type?OCI_ASSOC:OCI_NUM)|OCI_RETURN_NULLS);}public
+fetch($assoc){return
+oci_fetch_array($this->resultSet,($assoc?OCI_ASSOC:OCI_NUM)|OCI_RETURN_NULLS);}public
 function
 seek($row){throw
 new
@@ -1063,12 +1254,25 @@ NotImplementedException;}public
 function
 free(){oci_free_statement($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=oci_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>oci_field_name($this->resultSet,$i),'table'=>NULL,'type'=>oci_field_type($this->resultSet,$i),'size'=>oci_field_size($this->resultSet,$i),'scale'=>oci_field_scale($this->resultSet,$i),'precision'=>oci_field_precision($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$count=oci_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>oci_field_name($this->resultSet,$i),'table'=>NULL,'nativetype'=>oci_field_type($this->resultSet,$i),'size'=>oci_field_size($this->resultSet,$i),'scale'=>oci_field_scale($this->resultSet,$i),'precision'=>oci_field_precision($this->resultSet,$i));}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){throw
+new
+NotImplementedException;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiPdoDriver
 extends
 DibiObject
@@ -1114,6 +1318,8 @@ rollback(){if(!$this->connection->rollBack()){$err=$this->connection->errorInfo(
 new
 DibiDriverException("SQLSTATE[$err[0]]: $err[2]",$err[1]);}}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:return$this->connection->quote($value,PDO::PARAM_STR);case
 dibi::FIELD_BINARY:return$this->connection->quote($value,PDO::PARAM_LOB);case
@@ -1139,7 +1345,7 @@ rowCount(){throw
 new
 DibiDriverException('Row count is not available for unbuffered queries.');}public
 function
-fetch($type){return$this->resultSet->fetch($type?PDO::FETCH_ASSOC:PDO::FETCH_NUM);}public
+fetch($assoc){return$this->resultSet->fetch($assoc?PDO::FETCH_ASSOC:PDO::FETCH_NUM);}public
 function
 seek($row){throw
 new
@@ -1149,12 +1355,25 @@ free(){$this->resultSet=NULL;}public
 function
 getColumnsMeta(){$count=$this->resultSet->columnCount();$meta=array();for($i=0;$i<$count;$i++){$info=@$this->resultSet->getColumnsMeta($i);if($info===FALSE){throw
 new
-DibiDriverException('Driver does not support meta data.');}$meta[]=$info;}return$meta;}public
+DibiDriverException('Driver does not support meta data.');}$info['nativetype']=$info['native_type'];$meta[]=$info;}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){throw
+new
+NotImplementedException;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiPostgreDriver
 extends
 DibiObject
@@ -1193,6 +1412,8 @@ commit(){$this->query('COMMIT');}public
 function
 rollback(){$this->query('ROLLBACK');}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:if($this->escMethod){return"'".pg_escape_string($this->connection,$value)."'";}else{return"'".pg_escape_string($value)."'";}case
 dibi::FIELD_BINARY:if($this->escMethod){return"'".pg_escape_bytea($this->connection,$value)."'";}else{return"'".pg_escape_bytea($value)."'";}case
@@ -1217,20 +1438,33 @@ function
 rowCount(){return
 pg_num_rows($this->resultSet);}public
 function
-fetch($type){return
-pg_fetch_array($this->resultSet,NULL,$type?PGSQL_ASSOC:PGSQL_NUM);}public
+fetch($assoc){return
+pg_fetch_array($this->resultSet,NULL,$assoc?PGSQL_ASSOC:PGSQL_NUM);}public
 function
 seek($row){return
 pg_result_seek($this->resultSet,$row);}public
 function
 free(){pg_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$hasTable=version_compare(PHP_VERSION,'5.2.0','>=');$count=pg_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=array('name'=>pg_field_name($this->resultSet,$i),'table'=>$hasTable?pg_field_table($this->resultSet,$i):NULL,'type'=>pg_field_type($this->resultSet,$i),'size'=>pg_field_size($this->resultSet,$i),'prtlen'=>pg_field_prtlen($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$hasTable=version_compare(PHP_VERSION,'5.2.0','>=');$count=pg_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=array('name'=>pg_field_name($this->resultSet,$i),'table'=>$hasTable?pg_field_table($this->resultSet,$i):NULL,'nativetype'=>pg_field_type($this->resultSet,$i),'size'=>pg_field_size($this->resultSet,$i),'prtlen'=>pg_field_prtlen($this->resultSet,$i));}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}class
+getTables(){throw
+new
+NotImplementedException;}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}class
 DibiSqliteDriver
 extends
 DibiObject
@@ -1264,6 +1498,8 @@ commit(){$this->query('COMMIT');}public
 function
 rollback(){$this->query('ROLLBACK');}public
 function
+getResource(){return$this->connection;}public
+function
 escape($value,$type){switch($type){case
 dibi::FIELD_TEXT:case
 dibi::FIELD_BINARY:return"'".sqlite_escape_string($value)."'";case
@@ -1287,8 +1523,8 @@ new
 DibiDriverException('Row count is not available for unbuffered queries.');}return
 sqlite_num_rows($this->resultSet);}public
 function
-fetch($type){return
-sqlite_fetch_array($this->resultSet,$type?SQLITE_ASSOC:SQLITE_NUM);}public
+fetch($assoc){$row=sqlite_fetch_array($this->resultSet,$assoc?SQLITE_ASSOC:SQLITE_NUM);if($assoc&&$row){$tmp=array();foreach($row
+as$k=>$v){$tmp[str_replace(array('[',']'),'',$k)]=$v;}return$tmp;}return$row;}public
 function
 seek($row){if(!$this->buffered){throw
 new
@@ -1297,9 +1533,24 @@ sqlite_seek($this->resultSet,$row);}public
 function
 free(){$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=sqlite_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=array('name'=>sqlite_field_name($this->resultSet,$i),'table'=>NULL);}return$meta;}public
+getColumnsMeta(){$count=sqlite_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$pair=explode('.',str_replace(array('[',']'),'',sqlite_field_name($this->resultSet,$i)));if(!isset($pair[1])){array_unshift($pair,NULL);}$meta[]=array('name'=>$pair[1],'table'=>$pair[0]);}return$meta;}public
 function
-getResource(){return$this->connection;}public
+getResultResource(){return$this->resultSet;}public
 function
-getResultResource(){return$this->resultSet;}function
-getDibiReflection(){}}
+getTables(){$this->query("
+			SELECT name FROM sqlite_master WHERE type='table'
+			UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name
+		");return
+sqlite_fetch_all($this->resultSet,SQLITE_ASSOC);}public
+function
+getColumns($table){throw
+new
+NotImplementedException;}public
+function
+getIndexes($table){throw
+new
+NotImplementedException;}public
+function
+getForeignKeys($table){throw
+new
+NotImplementedException;}}
