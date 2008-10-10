@@ -153,21 +153,16 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 		$s = '';
 		if (!$mode || $mode === 'begin') {
-			$s .= $form->getElementPrototype()->startTag();
+			$s .= $this->renderBegin();
 		}
-		if ((!$mode && $this->wrappers['form']['errors']) || $mode === 'errors') {
+		if ((!$mode && $this->getValue('form errors')) || $mode === 'errors') {
 			$s .= $this->renderErrors();
 		}
 		if (!$mode || $mode === 'body') {
 			$s .= $this->renderBody();
 		}
 		if (!$mode || $mode === 'end') {
-			$s .= $form->getElementPrototype()->endTag() . "\n";
-
-			$clientScript = $this->getClientScript();
-			if ($clientScript !== NULL) {
-				$s .= $clientScript->renderClientScript() . "\n";
-			}
+			$s .= $this->renderEnd();
 		}
 		return $s;
 	}
@@ -212,16 +207,62 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		}
 
 		// TODO: only for back compatiblity - remove?
+		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
-			if ($control->isRequired()) {
-				$control->getLabelPrototype()->class[] = $this->wrappers['control']['.required'];
+			if ($control->isRequired() && isset($wrapper['.required'])) {
+				$control->getLabelPrototype()->class[] = $wrapper['.required'];
 			}
 
 			$el = $control->getControlPrototype();
-			if ($el->getName() === 'input' && isset($this->wrappers['control']['.' . $el->type])) {
-				$el->class[] = $this->wrappers['control']['.' . $el->type];
+			if ($el->getName() === 'input' && isset($wrapper['.' . $el->type])) {
+				$el->class[] = $wrapper['.' . $el->type];
 			}
 		}
+	}
+
+
+
+	/**
+	 * Renders form begin.
+	 * @return string
+	 */
+	public function renderBegin()
+	{
+		$this->counter = 0;
+
+		foreach ($this->form->getControls() as $control) {
+			$control->setRendered(FALSE);
+		}
+
+		return $this->form->getElementPrototype()->startTag();
+	}
+
+
+
+	/**
+	 * Renders form end.
+	 * @return string
+	 */
+	public function renderEnd()
+	{
+		$s = '';
+		foreach ($this->form->getControls() as $control) {
+			if ($control instanceof HiddenField && !$control->isRendered()) {
+				$s .= (string) $control->getControl();
+			}
+		}
+		if ($s) {
+			$s = $this->getWrapper('hidden container')->setHtml($s) . "\n";
+		}
+
+		$s .= $this->form->getElementPrototype()->endTag() . "\n";
+
+		$clientScript = $this->getClientScript();
+		if ($clientScript !== NULL) {
+			$s .= $clientScript->renderClientScript() . "\n";
+		}
+
+		return $s;
 	}
 
 
@@ -235,8 +276,8 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
 		if (count($errors)) {
-			$ul = $this->getHtml($this->wrappers['error']['container']);
-			$li = $this->getHtml($this->wrappers['error']['item']);
+			$ul = $this->getWrapper('error container');
+			$li = $this->getWrapper('error item');
 
 			foreach ($errors as $error) {
 				$item = clone $li;
@@ -259,22 +300,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderBody()
 	{
-		$this->counter = 0;
 		$s = $remains = '';
 
-		foreach ($this->form->getControls() as $control) {
-			$control->setRendered(FALSE);
-
-			if ($control instanceof HiddenField) {
-				$s .= (string) $control->getControl();
-			}
-		}
-
-		if ($s) {
-			$s = "\n" . $this->getHtml($this->wrappers['hidden']['container'])->setHtml($s) . "\n";
-		}
-
-		$defaultContainer = $this->getHtml($this->wrappers['group']['container']);
+		$defaultContainer = $this->getWrapper('group container');
 		$translator = $this->form->getTranslator();
 
 		foreach ($this->form->getGroups() as $group) {
@@ -288,7 +316,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
-				$s .= "\n" . $this->getHtml($this->wrappers['group']['label'])->setText($text) . "\n";
+				$s .= "\n" . $this->getWrapper('group label')->setText($text) . "\n";
 			}
 
 			$text = $group->getOption('description');
@@ -299,7 +327,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
-				$s .= $this->getHtml($this->wrappers['group']['description'])->setText($text);
+				$s .= $this->getWrapper('group description')->setText($text);
 			}
 
 			$s .= $this->renderControls($group);
@@ -315,7 +343,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 		$s .= $remains . $this->renderControls($this->form);
 
-		$container = $this->getHtml($this->wrappers['form']['container']);
+		$container = $this->getWrapper('form container');
 		$container->setHtml($s);
 		return $container->render(0);
 	}
@@ -329,11 +357,11 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderControls($parent)
 	{
-		$container = $this->getHtml($this->wrappers['controls']['container']);
+		$container = $this->getWrapper('controls container');
 
 		$buttons = NULL;
 		foreach ($parent->getControls() as $control) {
-			if ($control->isRendered()) {
+			if ($control->isRendered() || $control instanceof HiddenField) {
 				// skip
 
 			} elseif ($control instanceof Button) {
@@ -369,12 +397,12 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderPair(IFormControl $control)
 	{
-		$pair = $this->getHtml($this->wrappers['pair']['container']);
+		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class[] = $control->isRequired() ? $this->wrappers['pair']['.required'] : $this->wrappers['pair']['.optional'];
+		$pair->class[] = $control->isRequired() ? $this->getValue('pair .required') : $this->getValue('pair .optional');
 		$pair->class[] = $control->getOption('class');
-		if (++$this->counter % 2) $pair->class[] = $this->wrappers['pair']['.odd'];
+		if (++$this->counter % 2) $pair->class[] = $this->getValue('pair .odd');
 		$pair->id = $control->getOption('id');
 		return $pair->render(0);
 	}
@@ -392,9 +420,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		foreach ($controls as $control) {
 			$s[] = (string) $control->getControl();
 		}
-		$pair = $this->getHtml($this->wrappers['pair']['container']);
-		$pair->add($this->getHtml($this->wrappers['label']['container'])->setHtml('&nbsp;'));
-		$pair->add($this->getHtml($this->wrappers['control']['container'])->setHtml(implode(" ", $s)));
+		$pair = $this->getWrapper('pair container');
+		$pair->add($this->getWrapper('label container')->setHtml('&nbsp;'));
+		$pair->add($this->getWrapper('control container')->setHtml(implode(" ", $s)));
 		return $pair->render(0);
 	}
 
@@ -407,13 +435,13 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderLabel(IFormControl $control)
 	{
-		$head = $this->getHtml($this->wrappers['label']['container']);
+		$head = $this->getWrapper('label container');
 
 		if ($control instanceof Checkbox || $control instanceof Button) {
 			return $head->setHtml('&nbsp;');
 
 		} else {
-			return $head->setHtml((string) $control->getLabel() . $this->wrappers['label']['suffix']);
+			return $head->setHtml((string) $control->getLabel() . $this->getValue('label suffix'));
 		}
 	}
 
@@ -426,8 +454,8 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	 */
 	public function renderControl(IFormControl $control)
 	{
-		$body = $this->getHtml($this->wrappers['control']['container']);
-		if ($this->counter % 2) $body->class[] = $this->wrappers['control']['.odd'];
+		$body = $this->getWrapper('control container');
+		if ($this->counter % 2) $body->class[] = $this->getValue('control .odd');
 
 		$description = $control->getOption('description');
 		if ($description instanceof Html) {
@@ -437,13 +465,13 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			if ($control->getTranslator() !== NULL) {
 				$description = $control->getTranslator()->translate($description);
 			}
-			$description = ' ' . $this->getHtml($this->wrappers['control']['description'])->setText($description);
+			$description = ' ' . $this->getWrapper('control description')->setText($description);
 
 		} else {
 			$description = '';
 		}
 
-		if ($this->wrappers['control']['errors']) {
+		if ($this->getValue('control errors')) {
 			$description .= $this->renderErrors($control);
 		}
 
@@ -458,17 +486,26 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 
 	/**
-	 * @param  string|Nette::Web::Html
+	 * @param  string
 	 * @return Nette::Web::Html
 	 */
-	protected function getHtml(& $data)
+	protected function getWrapper($name)
 	{
-		if ($data instanceof Html) {
-			return clone $data;
+		$data = $this->getValue($name);
+		return $data instanceof Html ? clone $data : Html::el($data);
+	}
 
-		} else {
-			return Html::el($data);
-		}
+
+
+	/**
+	 * @param  string
+	 * @return string
+	 */
+	protected function getValue($name)
+	{
+		$name = explode(' ', $name);
+		$data = & $this->wrappers[$name[0]][$name[1]];
+		return $data;
 	}
 
 }
