@@ -38,16 +38,16 @@ require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
 class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 {
 	/** @var array */
-	protected $query = array();
+	protected $query;
 
 	/** @var array */
-	protected $post = array();
+	protected $post;
 
 	/** @var array */
-	protected $files = array();
+	protected $files;
 
 	/** @var array */
-	protected $cookies = array();
+	protected $cookies;
 
 	/** @var UriScript  @see self::getUri() */
 	protected $uri;
@@ -58,67 +58,12 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/** @var array  @see self::getHeaders() */
 	protected $headers;
 
-
-
-	public function __construct()
-	{
-		$this->initialize();
-	}
+	/** @var string */
+	protected $encoding;
 
 
 
-	public function initialize()
-	{
-		if (!empty($_GET)) {
-			$this->query = $_GET;
-		}
-		if (!empty($_POST)) {
-			$this->post = $_POST;
-		}
-		if (!empty($_COOKIE)) {
-			$this->cookies = $_COOKIE;
-		}
-		if (get_magic_quotes_gpc()) { // remove fucking quotes
-			$list = array(& $this->query, & $this->post, & $this->cookies);
-			while (list($k, $v) = each($list)) {
-				if (is_array($v)) {
-					foreach ($v as $k2 => $foo) $list[] = & $list[$k][$k2];
-				} else {
-					$list[$k] = stripSlashes($v);
-				}
-			}
-			unset($list, $k, $v, $k2, $foo);
-		}
-
-		$list = array();
-		if (!empty($_FILES)) {
-			foreach ($_FILES as $name => $v) {
-				$v['@'] = & $this->files[$name];
-				$list[] = $v;
-			}
-		}
-
-		while (list(, $v) = each($list)) {
-			if (!isset($v['name'])) continue;
-			if (!is_array($v['name'])) {
-				if (get_magic_quotes_gpc()) {
-					$v['name'] = stripSlashes($v['name']);
-				}
-				$v['@'] = new HttpUploadedFile($v);
-				continue;
-			}
-			foreach ($v['name'] as $k => $foo) {
-				$list[] = array(
-					'name' => $v['name'][$k],
-					'type' => $v['type'][$k],
-					'size' => $v['size'][$k],
-					'tmp_name' => $v['tmp_name'][$k],
-					'error' => $v['error'][$k],
-					'@' => & $v['@'][$k],
-				);
-			}
-		}
-	}
+	/********************* URI ****************d*g**/
 
 
 
@@ -238,14 +183,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 
-	/**
-	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
-	 * @return string
-	 */
-	public function getMethod()
-	{
-		return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
-	}
+	/********************* query, post, files & cookies ****************d*g**/
 
 
 
@@ -258,6 +196,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getQuery($key = NULL, $default = NULL)
 	{
+		if ($this->query === NULL) {
+			$this->initialize();
+		}
+
 		if (func_num_args() === 0) {
 			return $this->query;
 
@@ -280,6 +222,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getPost($key = NULL, $default = NULL)
 	{
+		if ($this->post === NULL) {
+			$this->initialize();
+		}
+
 		if (func_num_args() === 0) {
 			return $this->post;
 
@@ -311,6 +257,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getFile($key)
 	{
+		if ($this->files === NULL) {
+			$this->initialize();
+		}
+
 		$var = $this->files;
 		foreach (func_get_args() as $k) {
 			if (is_array($var) && isset($var[$k])) {
@@ -330,6 +280,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getFiles()
 	{
+		if ($this->files === NULL) {
+			$this->initialize();
+		}
+
 		return $this->files;
 	}
 
@@ -343,6 +297,10 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getCookie($key, $default = NULL)
 	{
+		if ($this->cookies === NULL) {
+			$this->initialize();
+		}
+
 		if (func_num_args() === 0) {
 			return $this->cookies;
 
@@ -362,7 +320,150 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	 */
 	final public function getCookies()
 	{
+		if ($this->cookies === NULL) {
+			$this->initialize();
+		}
+
 		return $this->cookies;
+	}
+
+
+
+	/**
+	 * Recursively converts and checks encoding.
+	 * @param  array
+	 * @param  string
+	 * @return void
+	 */
+	public function setEncoding($encoding)
+	{
+		if (strcasecmp($encoding, $this->encoding)) {
+			$this->encoding = $encoding;
+			$this->query = $this->post = $this->cookies = NULL; // reinitialization required
+		}
+	}
+
+
+
+	/**
+	 * Initializes $this->query, $this->files, $this->cookies and $this->files arrays
+	 * @return void
+	 */
+	public function initialize()
+	{
+		$this->query = $this->post = $this->files = $this->cookies = array();
+
+		if (!empty($_GET)) {
+			$this->query = $_GET;
+		}
+		if (!empty($_POST)) {
+			$this->post = $_POST;
+		}
+		if (!empty($_COOKIE)) {
+			$this->cookies = $_COOKIE;
+		}
+
+		$gpc = (bool) get_magic_quotes_gpc();
+		$enc = (bool) $this->encoding;
+		$old = error_reporting(0);
+
+
+		// remove fucking quotes and check (and optionally convert) encoding
+		if ($gpc || $enc) {
+			$utf = strcasecmp($this->encoding, 'UTF-8') === 0;
+			$list = array(& $this->query, & $this->post, & $this->cookies);
+			while (list($key, $val) = each($list)) {
+				foreach ($val as $k => $v) {
+					unset($list[$key][$k]);
+
+					if ($gpc) {
+						$k = stripslashes($k);
+					}
+
+					if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) {
+						// invalid key -> ignore
+
+					} elseif (is_array($v)) {
+						$list[$key][$k] = $v;
+						$list[] = & $list[$key][$k];
+
+					} else {
+						if ($gpc) {
+							$v = stripSlashes($v);
+						}
+						if ($enc) {
+							if ($utf) {
+								$v = iconv('UTF-8', 'UTF-8//IGNORE', $v);
+
+							} else {
+								if ($v !== iconv('UTF-8', 'UTF-8//IGNORE', $v)) {
+									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
+								}
+								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
+							}
+						}
+						$list[$key][$k] = $v;
+					}
+				}
+			}
+			unset($list, $key, $val, $k, $v);
+		}
+
+
+		// structure $files and create HttpUploadedFile objects
+		$list = array();
+		if (!empty($_FILES)) {
+			foreach ($_FILES as $k => $v) {
+				if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				$v['@'] = & $this->files[$k];
+				$list[] = $v;
+			}
+		}
+
+		while (list(, $v) = each($list)) {
+			if (!isset($v['name'])) {
+				continue;
+
+			} elseif (!is_array($v['name'])) {
+				if ($gpc) {
+					$v['name'] = stripSlashes($v['name']);
+				}
+				if ($enc) {
+					$v['name'] = iconv('UTF-8', 'UTF-8//IGNORE', $v['name']);
+				}
+				$v['@'] = new HttpUploadedFile($v);
+				continue;
+			}
+
+			foreach ($v['name'] as $k => $foo) {
+				if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				$list[] = array(
+					'name' => $v['name'][$k],
+					'type' => $v['type'][$k],
+					'size' => $v['size'][$k],
+					'tmp_name' => $v['tmp_name'][$k],
+					'error' => $v['error'][$k],
+					'@' => & $v['@'][$k],
+				);
+			}
+		}
+
+		error_reporting($old);
+	}
+
+
+
+	/********************* method & headers ****************d*g**/
+
+
+
+	/**
+	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
+	 * @return string
+	 */
+	public function getMethod()
+	{
+		return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
 	}
 
 

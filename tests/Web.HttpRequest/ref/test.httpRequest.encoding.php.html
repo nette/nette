@@ -1,0 +1,84 @@
+<h1>Nette::Web::HttpRequest encoding test</h1>
+
+<pre>
+array(3) {
+  "test" => string(4) "vÄÅ¾"
+  "vÄÅ¾" => string(4) "vÄÅ¾"
+  "array" => array(1) {
+    "vÄÅ¾" => int(1)
+  }
+}
+
+HttpRequest::getQuery() = array(3) {
+  "test" => string(4) "vÄÅ¾"
+  "vÄÅ¾" => string(4) "vÄÅ¾"
+  "array" => array(1) {
+    "vÄÅ¾" => string(1) "1"
+  }
+}
+
+HttpRequest::getPost() = array(3) {
+  "test" => string(4) "vÄÅ¾"
+  "vÄÅ¾" => string(4) "vÄÅ¾"
+  "array" => array(1) {
+    "vÄÅ¾" => string(1) "1"
+  }
+}
+
+HttpRequest::getFiles() = array(2) {
+  "vÄÅ¾" => object(HttpUploadedFile) (6) {
+    "name" private => string(4) "vÄÅ¾"
+    "type" private => string(10) "text/plain"
+    "realType" private => NULL
+    "size" private => int(209)
+    "tmpName" private => string(23) "C:\PHP\temp\php1D5B.tmp"
+    "error" private => int(0)
+  }
+  "file1" => object(HttpUploadedFile) (6) {
+    "name" private => string(10) "readme.txt"
+    "type" private => string(10) "text/plain"
+    "realType" private => NULL
+    "size" private => int(209)
+    "tmpName" private => string(23) "C:\PHP\temp\php1D5B.tmp"
+    "error" private => int(0)
+  }
+}
+
+HttpRequest::getCookies() = array(3) {
+  "test" => string(4) "vÄÅ¾"
+  "vÄÅ¾" => string(4) "vÄÅ¾"
+  "array" => array(1) {
+    "vÄÅ¾" => string(1) "1"
+  }
+}
+
+<h2>Encoding UTF-8</h2>
+HttpRequest::getQuery() = array(2) {
+  "test" => string(3) "vÅ¾"
+  "array" => array(0) {
+  }
+}
+
+HttpRequest::getPost() = array(2) {
+  "test" => string(3) "vÅ¾"
+  "array" => array(0) {
+  }
+}
+
+HttpRequest::getFiles() = array(1) {
+  "file1" => object(HttpUploadedFile) (6) {
+    "name" private => string(10) "readme.txt"
+    "type" private => string(10) "text/plain"
+    "realType" private => NULL
+    "size" private => int(209)
+    "tmpName" private => string(23) "C:\PHP\temp\php1D5B.tmp"
+    "error" private => int(0)
+  }
+}
+
+HttpRequest::getCookies() = array(2) {
+  "test" => string(3) "vÅ¾"
+  "array" => array(0) {
+  }
+}
+

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Nette::Forms example 5
+ * Nette::Forms example 7
  *
- * - custom validator usage
+ * - custom charset encoding (Forms internally works in UTF-8 encoding!)
  */
 
 
@@ -11,30 +11,50 @@ require_once '../../Nette/loader.php';
 
 /*use Nette::Forms::Form;*/
 /*use Nette::Debug;*/
+/*use Nette::Web::Html;*/
 
 Debug::enable();
 
 
-
-// Step 0: Define custom validator
-function myValidator($item, $arg)
-{
-	return $item->getValue() % $arg === 0;
-}
+$countries = array(
+	'Select your country',
+	'Europe' => array(
+		'CZ' => 'Česká republika',
+		'SK' => 'Slovakia',
+	),
+	'AU' => 'Australia',
+	'CA' => 'Canada',
+	'EG' => 'Egypt',
+	'JP' => 'Japan',
+	'US' => 'United States',
+	'?'  => 'other',
+);
 
 
 
 // Step 1: Define form with validation rules
 $form = new Form;
+$form->encoding = 'ISO-8859-1';
 
-$form->addText('num1', 'Multiple of 8:')
-	->addRule('myValidator', 'First number must be %d multiple', 8);
+// group Personal data
+$form->addGroup('Personal data');
+$form->addText('name', 'Your name:', 35);
 
-$form->addText('num2', 'Not multiple of 5:')
-	->addRule(~'myValidator', 'Second number must not be %d multiple', 5); // negative
+$form->addSelect('country', 'Country:')
+	->skipFirst()
+    ->setItems($countries, FALSE);
 
+$form->addHidden('userid');
+
+$form->addTextArea('note', 'Comment:', 30, 5);
+
+
+// group for buttons
+$form->addGroup();
 
 $form->addSubmit('submit1', 'Send');
+
+
 
 
 
@@ -44,6 +64,8 @@ if ($form->isSubmitted()) {
 
 	// Step 2c: Check if form is valid
 	if ($form->isValid()) {
+		header('Content-type: text/html; charset=utf-8');
+
 		echo '<h2>Form was submitted and successfully validated</h2>';
 
 		$values = $form->getValues();
@@ -56,13 +78,14 @@ if ($form->isSubmitted()) {
 } else {
 	// not submitted, define default values
 	$defaults = array(
-		'num1'    => '5',
-		'num2'    => '5',
+		'name'    => 'Žluťoučký kůň',
+		'userid'  => 'kůň',
+		'note' => 'жед',
+		'country' => 'Česká republika', // Czech Republic
 	);
 
 	$form->setDefaults($defaults);
 }
-
 
 
 
@@ -71,10 +94,10 @@ if ($form->isSubmitted()) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=<?= $form->encoding ?>" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette::Forms example 5 | Nette Framework</title>
+	<title>Nette::Forms example 7 | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -102,7 +125,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette::Forms example 5</h1>
+	<h1>Nette::Forms example 7</h1>
 
 	<?php echo $form ?>
 </body>

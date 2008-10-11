@@ -77,7 +77,6 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 	{
 		// combine with precedence: get, (post,) defaults
 		$params = $context->getQuery();
-		//$params += $context->getPost();
 		$params += $this->defaults;
 
 		if (isset($params[self::PRESENTER_KEY])) {

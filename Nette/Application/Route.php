@@ -155,6 +155,7 @@ class Route extends /*Nette::*/Object implements IRouter
 		}
 
 		$path = rtrim($path, '/') . '/';
+		$path = String::fixEncoding($path);
 
 		if (!preg_match($this->re, $path, $matches)) {
 			// stop, not matched

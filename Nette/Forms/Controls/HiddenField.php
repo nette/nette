@@ -70,20 +70,6 @@ class HiddenField extends FormControl
 
 
 	/**
-	 * Loads HTTP data.
-	 * @param  array
-	 * @return void
-	 */
-	public function loadHttpData($data)
-	{
-		parent::loadHttpData($data);
-		$encoding = $this->getForm()->getEncoding();
-		$this->value = iconv($encoding, $encoding . '//IGNORE', $this->value);
-	}
-
-
-
-	/**
 	 * Generates control's HTML element.
 	 * @return Nette::Web::Html
 	 */

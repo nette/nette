@@ -145,7 +145,7 @@ if ($form->isSubmitted()) {
 
 	// Step 2c: Check if form is valid
 	if ($form->isValid()) {
-		echo '<h2>And successfully validated!</h2>';
+		echo '<h2>Form was submitted and successfully validated</h2>';
 
 		$values = $form->getValues();
 		Debug::dump($values);

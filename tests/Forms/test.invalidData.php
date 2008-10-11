@@ -165,29 +165,27 @@ $_POST = array(
 );
 
 
-$_FILES = array(
-	'avatar' => array(
-		'name' => 'readme.txt',
-		'type' => 'text/plain',
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
-		'error' => 0,
-		'size' => 209,
-	),
+$tmp = array(
+	'name' => 'readme.txt',
+	'type' => 'text/plain',
+	'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+	'error' => 0,
+	'size' => 209,
 );
 $_FILES = array(
-	'name' => $_FILES['avatar'],
-	'note' => $_FILES['avatar'],
-	'gender' => $_FILES['avatar'],
-	'send' => $_FILES['avatar'],
-	'country' => $_FILES['avatar'],
-	'countrym' => $_FILES['avatar'],
-	'password' => $_FILES['avatar'],
-	'firstperson' => $_FILES['avatar'],
+	'name' => $tmp,
+	'note' => $tmp,
+	'gender' => $tmp,
+	'send' => $tmp,
+	'country' => $tmp,
+	'countrym' => $tmp,
+	'password' => $tmp,
+	'firstperson' => $tmp,
 	'secondperson' => array(
-		'age' => $_FILES['avatar'],
+		'age' => $tmp,
 	),
-	'submit1' => $_FILES['avatar'],
-	'userid' => $_FILES['avatar'],
+	'submit1' => $tmp,
+	'userid' => $tmp,
 );
 
 

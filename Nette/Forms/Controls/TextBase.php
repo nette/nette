@@ -70,13 +70,7 @@ abstract class TextBase extends FormControl
 	public function loadHttpData($data)
 	{
 		$name = $this->getName();
-		if (isset($data[$name]) && is_scalar($data[$name])) {
-			$this->tmpValue = $data[$name];
-			$encoding = $this->getForm()->getEncoding();
-			$this->tmpValue = iconv($encoding, $encoding . '//IGNORE', $this->tmpValue);
-		} else {
-			$this->tmpValue = NULL;
-		}
+		$this->tmpValue = isset($data[$name]) && is_scalar($data[$name]) ? $data[$name] : NULL;
 		$this->setValue($this->tmpValue);
 	}
 
@@ -142,7 +136,7 @@ abstract class TextBase extends FormControl
 	public static function validateMinLength(TextBase $control, $length)
 	{
 		// bug #33268 iconv_strlen works since PHP 5.0.5
-		return iconv_strlen($control->getValue(), $control->getForm()->getEncoding()) >= $length;
+		return iconv_strlen($control->getValue(), 'UTF-8') >= $length;
 	}
 
 
@@ -155,7 +149,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMaxLength(TextBase $control, $length)
 	{
-		return iconv_strlen($control->getValue(), $control->getForm()->getEncoding()) <= $length;
+		return iconv_strlen($control->getValue(), 'UTF-8') <= $length;
 	}
 
 
@@ -171,7 +165,7 @@ abstract class TextBase extends FormControl
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		$len = iconv_strlen($control->getValue(), $control->getForm()->getEncoding());
+		$len = iconv_strlen($control->getValue(), 'UTF-8');
 		return $len >= $range[0] && $len <= $range[1];
 	}
 

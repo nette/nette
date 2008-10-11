@@ -92,6 +92,7 @@ class Application extends /*Nette::*/Object
 		$httpRequest = Environment::getHttpRequest();
 		$httpResponse = Environment::getHttpResponse();
 
+		$httpRequest->setEncoding('UTF-8');
 		$httpResponse->setHeader('X-Powered-By', 'Nette Framework');
 
 		if (Environment::getVariable('baseUri') === NULL) {

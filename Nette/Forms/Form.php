@@ -218,7 +218,7 @@ class Form extends FormContainer
 	 */
 	public function setEncoding($value)
 	{
-		$this->encoding = $value;
+		$this->encoding = empty($value) ? 'UTF-8' : $value;
 	}
 
 
@@ -301,24 +301,27 @@ class Form extends FormContainer
 		$this->submittedBy = FALSE;
 
 		$request = $this->getHttpRequest();
+		$request->setEncoding($this->encoding);
 
-		if ($this->isPost xor $request->getMethod() === 'POST') return;
+		if ($this->isPost) {
+			if ($request->getMethod() !== 'POST') return;
+			$data = self::arrayAppend($request->getPost(), $request->getFiles());
+
+		} else {
+			if ($request->getMethod() === 'POST') return;
+			$data = $request->getQuery();
+		}
 
 		$tracker = $this->getComponent(self::TRACKER_ID);
 		if ($tracker) {
-			$val = $this->isPost ? $request->getPost(self::TRACKER_ID) : $request->getQuery(self::TRACKER_ID);
-			if ($val !== $tracker->getValue()) return;
+			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) return;
+
+		} else {
+			if (!count($data)) return;
 		}
 
 		$this->submittedBy = TRUE;
-
-		if ($this->isPost) {
-			$this->loadHttpData(self::arrayAppend($request->getPost(), $request->getFiles()));
-
-		} else {
-			$this->loadHttpData($request->getQuery());
-		}
-
+		$this->loadHttpData($data);
 		$this->submit();
 	}
 
@@ -661,7 +664,13 @@ class Form extends FormContainer
 	{
 		$args = func_get_args();
 		array_unshift($args, $this);
-		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
+		$s = call_user_func_array(array($this->getRenderer(), 'render'), $args);
+
+		if (strcmp($this->encoding, 'UTF-8')) {
+			echo mb_convert_encoding($s, 'HTML-ENTITIES', 'UTF-8');
+		} else {
+			echo $s;
+		}
 	}
 
 
@@ -673,7 +682,12 @@ class Form extends FormContainer
 	public function __toString()
 	{
 		try {
-			return $this->getRenderer()->render($this);
+			if (strcmp($this->encoding, 'UTF-8')) {
+				return mb_convert_encoding($this->getRenderer()->render($this), 'HTML-ENTITIES', 'UTF-8');
+			} else {
+				return $this->getRenderer()->render($this);
+			}
+
 		} catch (Exception $e) {
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';

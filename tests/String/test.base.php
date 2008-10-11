@@ -63,11 +63,11 @@ Debug::dump(bin2hex(String::normalize("\r\nHello  \r  World \n\n")));
 
 
 // String::checkUtf
-echo "String::checkUtf8(...valid...)\n";
-Debug::dump(String::checkUtf8('žluťoučký'));
+echo "String::checkEncoding(...valid...)\n";
+Debug::dump(String::checkEncoding('žluťoučký'));
 
-echo "String::checkUtf8(...invalid...)\n";
-Debug::dump(String::checkUtf8('žluťoučký' . chr(128)));
+echo "String::checkEncoding(...invalid...)\n";
+Debug::dump(String::checkEncoding('žluťoučký' . chr(128)));
 
 
 

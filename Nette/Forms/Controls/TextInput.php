@@ -67,9 +67,8 @@ class TextInput extends TextBase
 			$this->tmpValue = '';
 		}
 
-		$encoding = $this->getForm()->getEncoding();
-		if ($this->control->maxlength && iconv_strlen($this->value, $encoding) > $this->control->maxlength) {
-			$this->value = iconv_substr($this->value, 0, $this->control->maxlength, $encoding);
+		if ($this->control->maxlength && iconv_strlen($this->value, 'UTF-8') > $this->control->maxlength) {
+			$this->value = iconv_substr($this->value, 0, $this->control->maxlength, 'UTF-8');
 		}
 	}
 
