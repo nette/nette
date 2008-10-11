@@ -52,10 +52,16 @@ class Template extends /*Nette::*/Object implements ITemplate
 	private $filters = array();
 
 	/** @var array */
-	private $helpers = array();
-
-	/** @var Nette::ITranslator */
-	private $translator;
+	private $helpers = array(
+		'escape' => /*Nette::Templates::*/'TemplateHelpers::escape',
+		'translate' => /*Nette::Templates::*/'TemplateHelpers::nop',
+		'lower' => /*Nette::Templates::*/'TemplateHelpers::lower',
+		'upper' => /*Nette::Templates::*/'TemplateHelpers::upper',
+		'capitalize' => /*Nette::Templates::*/'TemplateHelpers::capitalize',
+		'nl2br' => 'nl2br',
+		'truncate' => /*Nette::*/'String::truncate',
+		'bytes' => /*Nette::*/'String::bytes',
+	);
 
 	/** @var bool */
 	private $isRendering;
@@ -318,52 +324,13 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 	/**
-	 * Escapes string for use inside template.
-	 * @param  string
-	 * @return string
-	 */
-	public function escape($s)
-	{
-		if (is_string($s)) {
-			return htmlSpecialChars($s, ENT_QUOTES);
-		}
-		return $s;
-	}
-
-
-
-	/**
-	 * Translates and escapes string.
-	 * @param  string
-	 * @return string
-	 */
-	public function translate($s)
-	{
-		return $this->translator === NULL ? $s : $this->translator->translate($s);
-	}
-
-
-
-	/**
 	 * Sets translate adapter.
 	 * @param  Nette::ITranslator
 	 * @return void
 	 */
 	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
 	{
-		// registerHelper('translate', array($translator, 'translate')
-		$this->translator = $translator;
-	}
-
-
-
-	/**
-	 * Returns translate adapter.
-	 * @return Nette::ITranslator
-	 */
-	final public function getTranslator()
-	{
-		return $this->translator;
+		$this->registerHelper('translate', $translator === NULL ? /*Nette::Templates::*/'TemplateHelpers::nop' : array($translator, 'translate'));
 	}
 
 

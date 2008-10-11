@@ -143,7 +143,7 @@ class RadioList extends FormControl
 				$label->setHtml($val);
 			} else {
 				$label->setText($translator === NULL ? $val : $translator->translate($val));
-			}	
+			}
 
 			$container->add((string) $control . (string) $label . $separator);
 			$counter++;
@@ -170,10 +170,10 @@ class RadioList extends FormControl
 
 	/**
 	 * Filled validator: has been any radio button selected?
-	 * @param  IFormControl
+	 * @param  RadioList
 	 * @return bool
 	 */
-	public static function validateFilled(IFormControl $control)
+	public static function validateFilled(RadioList $control)
 	{
 		return $control->getValue() !== NULL;
 	}

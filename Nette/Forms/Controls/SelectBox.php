@@ -249,10 +249,10 @@ class SelectBox extends FormControl
 
 	/**
 	 * Filled validator: has been any item selected?
-	 * @param  IFormControl
+	 * @param  SelectBox
 	 * @return bool
 	 */
-	public static function validateFilled(IFormControl $control)
+	public static function validateFilled(SelectBox $control)
 	{
 		$value = $control->getValue();
 		return is_array($value) ? count($value) > 0 : $value !== NULL;

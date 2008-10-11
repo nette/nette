@@ -8,6 +8,7 @@ require_once '../../Nette/loader.php';
 /*use Nette::Forms::Form;*/
 /*use Nette::Forms::TextInput;*/
 /*use Nette::Forms::FormContainer;*/
+/*use Nette::Environment;*/
 /*use Nette::Debug;*/
 
 Debug::enable();
@@ -144,7 +145,8 @@ $_FILES = array(
 echo "<h2>Invalid data #1</h2>\n";
 
 echo "Submitted?\n";
-$dolly = clone($form);
+$dolly = clone $form;
+Environment::getHttpRequest()->initialize();
 Debug::dump(gettype($dolly->isSubmitted()));
 
 echo "Values:\n";
@@ -156,6 +158,9 @@ Debug::dump($dolly->getValues());
 
 // invalid #2
 $_POST = array(
+	'name' => "invalid\xAA\xAA\xAAutf",
+	'note' => "invalid\xAA\xAA\xAAutf",
+	'userid' => "invalid\xAA\xAA\xAAutf",
 	'secondperson' => array(NULL),
 );
 
@@ -189,7 +194,8 @@ $_FILES = array(
 echo "<h2>Invalid data #2</h2>\n";
 
 echo "Submitted?\n";
-$dolly = clone($form);
+$dolly = clone $form;
+Environment::getHttpRequest()->initialize();
 Debug::dump(gettype($dolly->isSubmitted()));
 
 echo "Values:\n";

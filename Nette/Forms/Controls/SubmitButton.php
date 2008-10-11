@@ -105,10 +105,10 @@ class SubmitButton extends Button implements ISubmitterControl
 
 	/**
 	 * Submitted validator: has been button pressed?
-	 * @param  IFormControl
+	 * @param  ISubmitterControl
 	 * @return bool
 	 */
-	public static function validateSubmitted(IFormControl $control)
+	public static function validateSubmitted(ISubmitterControl $control)
 	{
 		return $control->isSubmittedBy();
 	}

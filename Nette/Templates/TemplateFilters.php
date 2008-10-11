@@ -23,7 +23,7 @@
 
 
 /**
- * Filters for Template.
+ * Standard template filters shipped with Nette Framework.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -162,17 +162,6 @@ final class TemplateFilters
 		'?' => '<?php # ?>',
 	);
 
-	/** @var array */
-	public static $curlyHelpers = array(
-		'lower' => 'strtolower(%s)',
-		'upper' => 'strtoupper(%s)',
-		'capitalize' => 'ucfirst(%s)',
-		'default' => 'isset(%1$s) ? %1$s : %2$s',
-		'nl2br' => 'nl2br(%s)',
-		'truncate' => 'String::truncate(%1$s, %2$d)',
-		'bytes' => 'String::bytes(%s)',
-	);
-
 	/** @var string */
 	private static $curlyBlockHelpers;
 
@@ -217,12 +206,8 @@ final class TemplateFilters
 				$args = explode(':', $modifier);
 				$modifier = $args[0];
 				$args[0] = $var;
-				if (isset(self::$curlyHelpers[$modifier])) {
-					$var = vsprintf(self::$curlyHelpers[$modifier], $args);
-				} else {
-					$var = implode(', ', $args);
-					$var = "\$template->$modifier($var)";
-				}
+				$var = implode(', ', $args);
+				$var = "\$template->$modifier($var)";
 			}
 		}
 

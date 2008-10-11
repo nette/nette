@@ -70,9 +70,14 @@ abstract class TextBase extends FormControl
 	public function loadHttpData($data)
 	{
 		$name = $this->getName();
-		$tmpValue = isset($data[$name]) && is_scalar($data[$name]) ? $data[$name] : NULL;
-		$this->setValue($tmpValue);
-		$this->tmpValue = $tmpValue;
+		if (isset($data[$name]) && is_scalar($data[$name])) {
+			$this->tmpValue = $data[$name];
+			$encoding = $this->getForm()->getEncoding();
+			$this->tmpValue = iconv($encoding, $encoding . '//IGNORE', $this->tmpValue);
+		} else {
+			$this->tmpValue = NULL;
+		}
+		$this->setValue($this->tmpValue);
 	}
 
 
@@ -130,53 +135,54 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * Min-length validator: has control's value minimal length?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @param  int  length
 	 * @return bool
 	 */
-	public static function validateMinLength(IFormControl $control, $length)
+	public static function validateMinLength(TextBase $control, $length)
 	{
 		// bug #33268 iconv_strlen works since PHP 5.0.5
-		return iconv_strlen($control->getValue()) >= $length;
+		return iconv_strlen($control->getValue(), $control->getForm()->getEncoding()) >= $length;
 	}
 
 
 
 	/**
 	 * Max-length validator: is control's value length in limit?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @param  int  length
 	 * @return bool
 	 */
-	public static function validateMaxLength(IFormControl $control, $length)
+	public static function validateMaxLength(TextBase $control, $length)
 	{
-		return iconv_strlen($control->getValue()) <= $length;
+		return iconv_strlen($control->getValue(), $control->getForm()->getEncoding()) <= $length;
 	}
 
 
 
 	/**
 	 * Length validator: is control's value length in range?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @param  array  min and max length pair
 	 * @return bool
 	 */
-	public static function validateLength(IFormControl $control, $range)
+	public static function validateLength(TextBase $control, $range)
 	{
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		return iconv_strlen($control->getValue()) >= $range[0] && iconv_strlen($control->getValue()) <= $range[1];
+		$len = iconv_strlen($control->getValue(), $control->getForm()->getEncoding());
+		return $len >= $range[0] && $len <= $range[1];
 	}
 
 
 
 	/**
 	 * Email validator: is control's value valid email address?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @return bool
 	 */
-	public static function validateEmail(IFormControl $control)
+	public static function validateEmail(TextBase $control)
 	{
 		return preg_match('/^[^@]+@[^@]+\.[a-z]{2,6}$/i', $control->getValue());
 	}
@@ -185,10 +191,10 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * URL validator: is control's value valid URL?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @return bool
 	 */
-	public static function validateUrl(IFormControl $control)
+	public static function validateUrl(TextBase $control)
 	{
 		return preg_match('/^.+\.[a-z]{2,6}(\\/.*)?$/i', $control->getValue());
 	}
@@ -197,11 +203,11 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * Regular expression validator: matches control's value regular expression?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @param  string
 	 * @return bool
 	 */
-	public static function validateRegexp(IFormControl $control, $regexps)
+	public static function validateRegexp(TextBase $control, $regexps)
 	{
 		foreach ((array) $regexps as $regexp) {
 			if (preg_match($regexp, $control->getValue())) return TRUE;
@@ -213,10 +219,10 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * Numeric validator: is a control's value decimal number?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @return bool
 	 */
-	public static function validateNumeric(IFormControl $control)
+	public static function validateNumeric(TextBase $control)
 	{
 		return preg_match('/^-?[0-9]+$/', $control->getValue());
 	}
@@ -225,10 +231,10 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * Float validator: is a control's value float number?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @return bool
 	 */
-	public static function validateFloat(IFormControl $control)
+	public static function validateFloat(TextBase $control)
 	{
 		return preg_match('/^-?[0-9]*[.,]?[0-9]+$/', $control->getValue());
 	}
@@ -237,11 +243,11 @@ abstract class TextBase extends FormControl
 
 	/**
 	 * Rangle validator: is a control's value number in specified range?
-	 * @param  IFormControl
+	 * @param  TextBase
 	 * @param  array  min and max value pair
 	 * @return bool
 	 */
-	public static function validateRange(IFormControl $control, $range)
+	public static function validateRange(TextBase $control, $range)
 	{
 		return $control->getValue() >= $range[0] && $control->getValue() <= $range[1];
 	}

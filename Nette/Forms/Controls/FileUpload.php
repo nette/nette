@@ -102,10 +102,10 @@ class FileUpload extends FormControl
 
 	/**
 	 * Filled validator: has been any file uploaded?
-	 * @param  IFormControl
+	 * @param  FileUpload
 	 * @return bool
 	 */
-	public static function validateFilled(IFormControl $control)
+	public static function validateFilled(FileUpload $control)
 	{
 		$file = $control->getValue();
 		return $file instanceof HttpUploadedFile && $file->isOK();
@@ -115,11 +115,11 @@ class FileUpload extends FormControl
 
 	/**
 	 * FileSize validator: is file size in limit?
-	 * @param  IFormControl
+	 * @param  FileUpload
 	 * @param  int  file size limit
 	 * @return bool
 	 */
-	public static function validateFileSize(IFormControl $control, $limit)
+	public static function validateFileSize(FileUpload $control, $limit)
 	{
 		$file = $control->getValue();
 		return $file instanceof HttpUploadedFile && $file->getSize() <= $limit;
@@ -129,11 +129,11 @@ class FileUpload extends FormControl
 
 	/**
 	 * MimeType validator: has file specified mime type?
-	 * @param  IFormControl
+	 * @param  FileUpload
 	 * @param  string  mime type
 	 * @return bool
 	 */
-	public static function validateMimeType(IFormControl $control, $mimeType)
+	public static function validateMimeType(FileUpload $control, $mimeType)
 	{
 		$file = $control->getValue();
 		if ($file instanceof HttpUploadedFile) {

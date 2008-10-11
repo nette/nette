@@ -62,6 +62,13 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 	public function __construct()
 	{
+		$this->initialize();
+	}
+
+
+
+	public function initialize()
+	{
 		if (!empty($_GET)) {
 			$this->query = $_GET;
 		}

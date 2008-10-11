@@ -98,6 +98,9 @@ class Form extends FormContainer
 	/** @var array */
 	private $errors = array();
 
+	/** @var array */
+	private $encoding = 'UTF-8';
+
 
 
 	/**
@@ -204,6 +207,29 @@ class Form extends FormContainer
 	public function getGroups()
 	{
 		return $this->groups;
+	}
+
+
+
+	/**
+	 * Set the encoding for the values.
+	 * @param  string
+	 * @return void
+	 */
+	public function setEncoding($value)
+	{
+		$this->encoding = $value;
+	}
+
+
+
+	/**
+	 * Returns the encoding.
+	 * @return string
+	 */
+	final public function getEncoding()
+	{
+		return $this->encoding;
 	}
 
 
@@ -358,8 +384,15 @@ class Form extends FormContainer
 	 * @param  array    values used to fill the form
 	 * @return void
 	 */
-	public function setDefaults(array $values)
+	public function setDefaults($values)
 	{
+		if ($values instanceof ArrayObject) {
+			$values = (array) $values;
+
+		} elseif (!is_array($values)) {
+			throw new /*::*/InvalidArgumentException('Default values must be an array.');
+		}
+
 		// tracker value cannot be changed
 		$tracker = $this->getComponent(self::TRACKER_ID);
 		if ($tracker) {

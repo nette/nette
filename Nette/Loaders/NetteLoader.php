@@ -165,6 +165,7 @@ class NetteLoader extends AutoLoader
 		'submitbutton' => '/Forms/Controls/SubmitButton.php',
 		'template' => '/Templates/Template.php',
 		'templatefilters' => '/Templates/TemplateFilters.php',
+		'templatehelpers' => '/Templates/TemplateHelpers.php',
 		'templatestorage' => '/Templates/TemplateStorage.php',
 		'textarea' => '/Forms/Controls/TextArea.php',
 		'textbase' => '/Forms/Controls/TextBase.php',

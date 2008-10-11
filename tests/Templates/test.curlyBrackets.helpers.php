@@ -27,10 +27,9 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-helpers.phtml');
-$template->registerHelper('h1', array(new MyHelper, 'invoke'));
-$template->hello = 'Hello World';
-
 $template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
-TemplateFilters::$curlyHelpers['h2'] = 'strtoupper(%s)';
+$template->registerHelper('h1', array(new MyHelper, 'invoke'));
+$template->registerHelper('h2', 'strtoupper');
+$template->hello = 'Hello World';
 
 $template->render();
