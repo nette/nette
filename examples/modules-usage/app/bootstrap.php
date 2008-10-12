@@ -14,7 +14,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 // Step 2: Configure and setup application environment
 // 2a) enable Nette::Debug for better exception and error visualisation
-Debug::enable();
+Debug::enable(E_ALL | E_STRICT);
 
 // 2b) load configuration from config.ini file
 Environment::loadConfig();

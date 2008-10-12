@@ -170,10 +170,10 @@ class RadioList extends FormControl
 
 	/**
 	 * Filled validator: has been any radio button selected?
-	 * @param  RadioList
+	 * @param  IFormControl
 	 * @return bool
 	 */
-	public static function validateFilled(RadioList $control)
+	public static function validateFilled(IFormControl $control)
 	{
 		return $control->getValue() !== NULL;
 	}

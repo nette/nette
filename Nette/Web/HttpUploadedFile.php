@@ -170,7 +170,7 @@ class HttpUploadedFile extends /*Nette::*/Object
 	 */
 	public function move($dest)
 	{
-		if ($this->isOk() && rename($this->tmpName, $dest)) {
+		if (move_uploaded_file($this->tmpName, $dest)) {
 			$this->tmpName = $dest;
 			return TRUE;
 

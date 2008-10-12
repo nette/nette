@@ -18,7 +18,7 @@ if (!class_exists('Zend_Translate')) {
 /*use Nette::Debug;*/
 /*use Nette::Web::Html;*/
 
-Debug::enable();
+Debug::enable(E_ALL | E_STRICT);
 
 
 class MyTranslator extends Zend_Translate implements /*Nette::*/ITranslator

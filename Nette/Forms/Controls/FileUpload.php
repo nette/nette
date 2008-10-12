@@ -79,6 +79,7 @@ class FileUpload extends FormControl
 			$this->value = $value;
 
 		} else {
+			// TODO: or create object?
 			$this->value = NULL;
 		}
 	}
@@ -102,10 +103,10 @@ class FileUpload extends FormControl
 
 	/**
 	 * Filled validator: has been any file uploaded?
-	 * @param  FileUpload
+	 * @param  IFormControl
 	 * @return bool
 	 */
-	public static function validateFilled(FileUpload $control)
+	public static function validateFilled(IFormControl $control)
 	{
 		$file = $control->getValue();
 		return $file instanceof HttpUploadedFile && $file->isOK();

@@ -10,6 +10,12 @@ The files in this archive are released under the Nette license.
 See license.txt in this directory for a copy of the license.
 
 
+Requirements
+------------
+
+Requires PHP 5.2.2 or higher.
+
+
 Documentation and Examples
 --------------------------
 
