@@ -210,12 +210,12 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
 			if ($control->isRequired() && isset($wrapper['.required'])) {
-				$control->getLabelPrototype()->class[] = $wrapper['.required'];
+				$control->getLabelPrototype()->class($wrapper['.required'], TRUE);
 			}
 
 			$el = $control->getControlPrototype();
 			if ($el->getName() === 'input' && isset($wrapper['.' . $el->type])) {
-				$el->class[] = $wrapper['.' . $el->type];
+				$el->class($wrapper['.' . $el->type], TRUE);
 			}
 		}
 	}
@@ -400,9 +400,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class[] = $control->isRequired() ? $this->getValue('pair .required') : $this->getValue('pair .optional');
-		$pair->class[] = $control->getOption('class');
-		if (++$this->counter % 2) $pair->class[] = $this->getValue('pair .odd');
+		$pair->class($control->isRequired() ? $this->getValue('pair .required') : $this->getValue('pair .optional'), TRUE);
+		$pair->class($control->getOption('class'), TRUE);
+		if (++$this->counter % 2) $pair->class($this->getValue('pair .odd'), TRUE);
 		$pair->id = $control->getOption('id');
 		return $pair->render(0);
 	}
@@ -455,7 +455,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	public function renderControl(IFormControl $control)
 	{
 		$body = $this->getWrapper('control container');
-		if ($this->counter % 2) $body->class[] = $this->getValue('control .odd');
+		if ($this->counter % 2) $body->class($this->getValue('control .odd'), TRUE);
 
 		$description = $control->getOption('description');
 		if ($description instanceof Html) {

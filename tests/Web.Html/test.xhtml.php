@@ -99,3 +99,17 @@ echo "\n\n";
 // special creating
 echo $el = Html::el('a lang=cs href="#" title="" selected')->setText('click');
 echo "\n\n";
+
+
+// append
+$el = Html::el('div');
+$el->style[] = 'text-align:right';
+$el->style('', TRUE);
+$el->style('background-color: blue', TRUE);
+
+$el->class = 'one';
+$el->class('', TRUE);
+$el->class('two', TRUE);
+
+$el->id('my', TRUE);
+echo $el, "\n\n";
