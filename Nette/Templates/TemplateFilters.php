@@ -85,7 +85,7 @@ final class TemplateFilters
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
 	 *   {snippet ?} ... {/snippet ?} control snippet
-	 *   {block|texy} ... {/block} texy block
+	 *   {block|texy} ... {/block} capture of filter block
 	 *   {debugbreak}
 	 *
 	 * @param  Template
@@ -116,6 +116,7 @@ final class TemplateFilters
 		);
 
 		// smarter replace
+		self::$curlyBlocks = array();
 		$k = implode("\x0", array_keys(self::$curlyXlatMask));
 		$k = preg_quote($k, '#');
 		$k = str_replace('\000', '|', $k);
@@ -142,7 +143,7 @@ final class TemplateFilters
 	/** @var array */
 	public static $curlyXlatMask = array(
 		'block' => '<?php ob_start(); try { ?>',
-		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } echo # ?>',
+		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
 		'if ' => '<?php if (#): ?>',
@@ -162,8 +163,8 @@ final class TemplateFilters
 		'?' => '<?php # ?>',
 	);
 
-	/** @var string */
-	private static $curlyBlockHelpers;
+	/** @var array */
+	private static $curlyBlocks;
 
 
 
@@ -176,11 +177,11 @@ final class TemplateFilters
 		$var = trim($var);
 
 		if ($mod === 'block') {
-			self::$curlyBlockHelpers = $modifiers ? $modifiers : $var;
+			$tmp = $var === '' ? 'echo ' : $var . '=';
+			$var = 'ob_get_clean()';
 
 		} elseif ($mod === '/block') {
-			$modifiers = self::$curlyBlockHelpers;
-			$var = 'ob_get_clean()';
+			$var = array_pop(self::$curlyBlocks);
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
@@ -209,6 +210,10 @@ final class TemplateFilters
 				$var = implode(', ', $args);
 				$var = "\$template->$modifier($var)";
 			}
+		}
+
+		if ($mod === 'block') {
+			self::$curlyBlocks[] = $tmp . $var;
 		}
 
 		return str_replace('#', $var, self::$curlyXlatMask[$mod]);

@@ -144,8 +144,8 @@ class Configurator extends Object
 				}
 			}
 
-			if (isset($config->set->include_path)) {
-				$config->set->include_path = strtr($config->set->include_path, ';', PATH_SEPARATOR);
+			if (PATH_SEPARATOR !== ';' && isset($config->set->include_path)) {
+				$config->set->include_path = str_replace(';', PATH_SEPARATOR, $config->set->include_path);
 			}
 
 			$config->expand();
@@ -178,12 +178,37 @@ class Configurator extends Object
 
 		// process ini settings
 		if ($config->set instanceof /*Nette::Config::*/Config) {
-			if (!function_exists('ini_set')) {
-				throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
-			}
-
 			foreach ($config->set as $key => $value) {
-				ini_set(strtr($key, '-', '.'), $value);
+				$key = strtr($key, '-', '.');
+				if (function_exists('ini_set')) {
+					ini_set($key, $value);
+				} else {
+					switch ($key) {
+					case 'include_path':
+						set_include_path($value);
+						break;
+					case 'iconv.internal_encoding':
+						iconv_set_encoding('internal_encoding', $value);
+						break;
+					case 'mbstring.internal_encoding':
+						mb_internal_encoding($value);
+						break;
+					case 'date.timezone':
+						date_default_timezone_set($value);
+						break;
+					case 'error_reporting':
+						error_reporting($value);
+						break;
+					case 'ignore_user_abort':
+						ignore_user_abort($value);
+						break;
+					case 'max_execution_time':
+						set_time_limit($value);
+						break;
+					default:
+						throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
+					}
+				}
 			}
 		}
 

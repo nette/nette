@@ -128,13 +128,13 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	);
 
 	/** @var Form */
-	private $form;
+	protected $form;
 
 	/** @var object */
-	private $clientScript = TRUE; // means autodetect
+	protected $clientScript = TRUE; // means autodetect
 
 	/** @var int */
-	private $counter;
+	protected $counter;
 
 
 
@@ -183,7 +183,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 	/**
 	 * Returns JavaScript handler.
-	 * @return |NULL
+	 * @return mixed
 	 */
 	public function getClientScript()
 	{
@@ -306,7 +306,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$translator = $this->form->getTranslator();
 
 		foreach ($this->form->getGroups() as $group) {
-			if (!$group->getControls()) continue;
+			if (!$group->getControls() || !$group->getOption('render')) continue;
 
 			$container = $group->getOption('container', $defaultContainer);
 			$s .= "\n" . $container->startTag();

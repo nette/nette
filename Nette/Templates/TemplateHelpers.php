@@ -103,4 +103,16 @@ final class TemplateHelpers
 		return mb_convert_case($s, MB_CASE_TITLE, 'UTF-8');
 	}
 
+
+
+	/**
+	 * Replaces all repeated white spaces with a single space.
+	 * @param  string
+	 * @return string
+	 */
+	public static function strip($s)
+	{
+		return preg_replace('#\\s+#', ' ', $s);
+	}
+
 }

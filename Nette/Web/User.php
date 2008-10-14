@@ -261,7 +261,7 @@ class User extends /*Nette::*/Object implements IUser
 	{
 		$this->session->identity = $identity;
 		if ($this->identityExpiration) {
-			$session->setExpiration($this->identityExpiration, 'identity');
+			$this->session->setExpiration($this->identityExpiration, 'identity');
 		}
 	}
 

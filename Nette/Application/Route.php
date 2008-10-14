@@ -82,13 +82,10 @@ class Route extends /*Nette::*/Object implements IRouter
 			self::FILTER_OUT => /*Nette::Application::*/'Route::view2path',
 		),
 		'?module' => array(
-			self::FILTER_OUT => 'strtolower',
 		),
 		'?presenter' => array(
-			self::FILTER_OUT => 'strtolower',
 		),
 		'?view' => array(
-			self::FILTER_OUT => 'strtolower',
 		),
 	);
 
