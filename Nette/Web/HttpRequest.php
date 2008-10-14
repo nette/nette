@@ -380,7 +380,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 						$k = stripslashes($k);
 					}
 
-					if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) {
+					if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -396,7 +396,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 								$v = iconv('UTF-8', 'UTF-8//IGNORE', $v);
 
 							} else {
-								if ($v !== iconv('UTF-8', 'UTF-8//IGNORE', $v)) {
+								if ($v != iconv('UTF-8', 'UTF-8//IGNORE', $v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
@@ -414,7 +414,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
 				$v['@'] = & $this->files[$k];
 				$list[] = $v;
 			}
@@ -436,7 +436,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if ($enc && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
 				$list[] = array(
 					'name' => $v['name'][$k],
 					'type' => $v['type'][$k],

@@ -65,8 +65,10 @@ class SelectBox extends FormControl
 		$this->control->size = $size > 1 ? (int) $size : NULL;
 		$this->control->onmousewheel = 'return false';  // prevent accidental change
 		$this->label->onclick = 'return false';  // prevent "deselect" for IE 5 - 6
-		$this->multiple = $multiple;
-		if ($items !== NULL) $this->setItems($items);
+		$this->multiple = (bool) $multiple;
+		if ($items !== NULL) {
+			$this->setItems($items);
+		}	
 	}
 
 
