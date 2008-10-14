@@ -15,7 +15,7 @@ class AuthPresenter extends BasePresenter
 
 	public function presentLogin($backlink)
 	{
-		if ($this->request->isPost()) {
+		if ($this->request->isMethod('post')) {
 			// collect the data from the user
 			$username = trim($this->request->post['username']);
 			$password = trim($this->request->post['password']);

@@ -44,7 +44,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function presentAdd()
 	{
-		if ($this->request->isPost()) {
+		if ($this->request->isMethod('post')) {
 			$artist = trim($this->request->post['artist']);
 			$title = trim($this->request->post['title']);
 
@@ -79,7 +79,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function presentEdit($id = 0)
 	{
-		if ($this->request->isPost()) {
+		if ($this->request->isMethod('post')) {
 			$artist = trim($this->request->post['artist']);
 			$title = trim($this->request->post['title']);
 
@@ -119,7 +119,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function presentDelete($id = 0)
 	{
-		if ($this->request->isPost()) {
+		if ($this->request->isMethod('post')) {
 			$del = $this->request->post['del'];
 			if ($del == 'Yes' && $id > 0) {
 				$album = new Albums();

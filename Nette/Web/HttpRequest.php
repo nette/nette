@@ -469,6 +469,18 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
+	 * Checks HTTP request method.
+	 * @param  string
+	 * @return boolean
+	 */
+	public function isMethod($method)
+	{
+		return isset($_SERVER['REQUEST_METHOD']) ? strcasecmp($_SERVER['REQUEST_METHOD'], $method) === 0 : FALSE;
+	}
+
+
+
+	/**
 	 * Return the value of the HTTP header. Pass the header name as the
 	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
 	 * @param  string

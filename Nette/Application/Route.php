@@ -214,7 +214,7 @@ class Route extends /*Nette::*/Object implements IRouter
 
 		return new PresenterRequest(
 			$presenter,
-			$context->getMethod() === 'POST' ? PresenterRequest::HTTP_POST : PresenterRequest::HTTP_GET,
+			$context->getMethod(),
 			$params,
 			$context->getPost(),
 			$context->getFiles()

@@ -34,13 +34,10 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class PresenterRequest extends /*Nette::*/Object
 {
-	// sources:
-	const HTTP_GET = 'GET';
-	const HTTP_POST = 'POST';
 	const FORWARD = 'FORWARD';
 
 	/** @var string */
-	private $source;
+	private $method;
 
 	/** @var string */
 	private $name;
@@ -58,15 +55,15 @@ final class PresenterRequest extends /*Nette::*/Object
 
 	/**
 	 * @param  string  fully qualified presenter name (module:module:presenter)
-	 * @param  string  source
+	 * @param  string  method
 	 * @param  array   variables provided to the presenter usually via URL
 	 * @param  array   variables provided to the presenter via POST
 	 * @param  array   all uploaded files
 	 */
-	public function __construct($name, $source, array $params, array $post = array(), array $files = array())
+	public function __construct($name, $method, array $params, array $post = array(), array $files = array())
 	{
 		$this->name = $name;
-		$this->source = $source;
+		$this->method = $method;
 		$this->params = $params;
 		$this->post = $post;
 		$this->files = $files;
@@ -81,17 +78,6 @@ final class PresenterRequest extends /*Nette::*/Object
 	public function getPresenterName()
 	{
 		return $this->name;
-	}
-
-
-
-	/**
-	 * Retrieve the source.
-	 * @return string
-	 */
-	public function getSource()
-	{
-		return $this->source;
 	}
 
 
@@ -130,23 +116,13 @@ final class PresenterRequest extends /*Nette::*/Object
 
 
 	/**
-	 * Is source HTTP POST?
+	 * Checks source method.
+	 * @param  string
 	 * @return boolean
 	 */
-	public function isPost()
+	public function isMethod($method)
 	{
-		return $this->source === self::HTTP_POST;
-	}
-
-
-
-	/**
-	 * Is source forward?
-	 * @return boolean
-	 */
-	public function isForward()
-	{
-		return $this->source === self::FORWARD;
+		return strcasecmp($this->method, $method) === 0;
 	}
 
 

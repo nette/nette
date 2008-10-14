@@ -37,11 +37,7 @@ interface IHttpRequest
 	 */
 	function getUri();
 
-	/**
-	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
-	 * @return string
-	 */
-	function getMethod();
+	/********************* query, post, files & cookies ****************d*g**/
 
 	/**
 	 * Returns variable provided to the script via URL query ($_GET).
@@ -93,6 +89,21 @@ interface IHttpRequest
 	 * @return array
 	 */
 	function getCookies();
+
+	/********************* method & headers ****************d*g**/
+
+	/**
+	 * Returns HTTP request method (GET, POST, HEAD, PUT, ...). The method is case-sensitive.
+	 * @return string
+	 */
+	function getMethod();
+
+	/**
+	 * Checks HTTP request method.
+	 * @param  string
+	 * @return boolean
+	 */
+	function isMethod($method);
 
 	/**
 	 * Return the value of the HTTP header. Pass the header name as the

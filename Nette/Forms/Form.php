@@ -323,11 +323,11 @@ class Form extends FormContainer
 		$request->setEncoding($this->encoding);
 
 		if ($this->isPost) {
-			if ($request->getMethod() !== 'POST') return;
+			if (!$request->isMethod('post')) return;
 			$data = self::arrayAppend($request->getPost(), $request->getFiles());
 
 		} else {
-			if ($request->getMethod() === 'POST') return;
+			if (!$request->isMethod('get')) return;
 			$data = $request->getQuery();
 		}
 

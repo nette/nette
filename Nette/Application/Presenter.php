@@ -203,7 +203,7 @@ abstract class Presenter extends Control implements IPresenter
 			if ($this->autoCanonicalize) {
 				$this->canonicalize();
 			}
-			if ($this->httpRequest->getMethod() === 'HEAD') {
+			if ($this->httpRequest->isMethod('head')) {
 				$this->terminate();
 			}
 
@@ -722,7 +722,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function canonicalize()
 	{
-		if ($this->request->getSource() === PresenterRequest::HTTP_GET && !$this->isAjax()) {
+		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest('self', array());
 			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);

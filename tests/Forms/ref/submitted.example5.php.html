@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette::Forms example 5 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	.required {
+		color: darkred
+	}
+
+	fieldset {
+		padding: .5em;
+		margin: .3em 0;
+		background: #EAF3FA;
+		border: 1px solid #b2d1eb;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	th {
+		width: 8em;
+		text-align: right;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Nette::Forms example 5</h1>
+
+	<form action="" method="post">
+
+<ul class="error">
+	<li>First number must be 8 multiple</li>
+
+	<li>Second number must not be 5 multiple</li>
+</ul>
+
+
+<table>
+<tr>
+	<th><label for="frm-num1">Multiple of 8:</label></th>
+
+	<td><input type="text" class="text" name="num1" id="frm-num1" value="5" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-num2">Not multiple of 5:</label></th>
+
+	<td><input type="text" class="text" name="num2" id="frm-num2" value="5" /></td>
+</tr>
+
+<tr>
+	<th>&nbsp;</th>
+
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+</tr>
+</table>
+
+</form>
+
+</body>
+</html>

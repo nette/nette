@@ -68,7 +68,7 @@ class SelectBox extends FormControl
 		$this->multiple = (bool) $multiple;
 		if ($items !== NULL) {
 			$this->setItems($items);
-		}	
+		}
 	}
 
 
