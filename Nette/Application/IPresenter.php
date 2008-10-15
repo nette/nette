@@ -23,7 +23,7 @@
 
 
 /**
- *
+ * Defines method that must be implemented to allow a component to act like a presenter.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -32,6 +32,9 @@
 interface IPresenter
 {
 
+	/**
+	 * @return void
+	 */
 	function run();
 
 }

@@ -31,7 +31,13 @@
  */
 interface IHttpResponse
 {
-	// HTTP 1.1 response codes
+	/** @var int cookie expiration: forever (23.1.2037) */
+	const PERMANENT = 2116333333;
+
+	/** @var int cookie expiration: until the browser is closed */
+	const BROWSER = 0;
+
+	/**#@+ HTTP 1.1 response codes */
 	const
 		S200_OK = 200,
 		S204_NO_CONTENT = 204,
@@ -50,9 +56,7 @@ interface IHttpResponse
 		S500_INTERNAL_SERVER_ERROR = 500,
 		S501_NOT_IMPLEMENTED = 501,
 		S503_SERVICE_UNAVAILABLE = 503;
-
-	/** @var int  limit whether expiration is number of seconds starting from current time or timestamp */
-	const EXPIRATION_DELTA_LIMIT = 31622400; // 366 days
+	/**#@-*/
 
 	/**
 	 * Sets HTTP response code.
@@ -104,10 +108,10 @@ interface IHttpResponse
 	function getHeaders();
 
 	/**
-	 * Defines a new cookie.
-	 * @param  string name of the cookie.
+	 * Sends a cookie.
+	 * @param  string name of the cookie
 	 * @param  string value
-	 * @param  int expiration as unix timestamp
+	 * @param  int expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
 	 * @param  string
 	 * @param  string
 	 * @param  bool

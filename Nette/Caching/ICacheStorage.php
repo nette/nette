@@ -31,10 +31,6 @@
  */
 interface ICacheStorage
 {
-	/** @var int  limit whether expiration is number of seconds starting from current time or timestamp */
-	const EXPIRATION_DELTA_LIMIT = 31622400; // 366 days
-
-
 
 	/**
 	 * Read from cache.
@@ -42,8 +38,6 @@ interface ICacheStorage
 	 * @return mixed|NULL
 	 */
 	function read($key);
-
-
 
 	/**
 	 * Writes item into the cache.
@@ -54,16 +48,12 @@ interface ICacheStorage
 	 */
 	function write($key, $data, array $dependencies);
 
-
-
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
 	 * @return bool  TRUE if no problem
 	 */
 	function remove($key);
-
-
 
 	/**
 	 * Removes items from the cache by conditions.

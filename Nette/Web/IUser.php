@@ -31,57 +31,88 @@
  */
 interface IUser
 {
-	/**
-	 * @return Nette::Security::IAuthenticator
-	 */
-	function getAuthenticationHandler();
 
 	/**
-	 * @return Nette::Security::IAuthorizator
-	 */
-	function getAuthorizationHandler();
-
-	/**
-	 * Check the authenticated status.
+	 * Conducts the authentication process.
 	 * @return void
+	 * @throws Nette::Security::AuthenticationException if authentication was not successful
 	 */
 	function authenticate();
 
 	/**
-	 * Removes the authentication flag from persistent storage.
+	 * Logs off the user from the current session.
 	 * @return void
 	 */
 	function signOut();
 
 	/**
-	 * Indicates whether this user is authenticated.
-	 * @return bool true, if this user is authenticated, otherwise false.
+	 * Is this user authenticated?
+	 * @return bool
 	 */
 	function isAuthenticated();
 
 	/**
+	 * Returns current user identity, if any.
 	 * @return Nette::Security::IIdentity
 	 */
 	function getIdentity();
 
 	/**
-	 * Returns a role this user has been granted.
+	 * Sets authentication handler.
+	 * @param  Nette::Security::IAuthenticator
+	 * @return void
+	 */
+	function setAuthenticationHandler(/*Nette::Security::*/IAuthenticator $handler);
+
+	/**
+	 * Returns authentication handler.
+	 * @return Nette::Security::IAuthenticator
+	 */
+	function getAuthenticationHandler();
+
+	/**
+	 * Changes namespace; allows more users to share a session.
+	 * @param  string
+	 * @return void
+	 */
+	function setNamespace($namespace);
+
+	/**
+	 * Returns current namespace.
+	 * @return string
+	 */
+	function getNamespace();
+
+	/**
+	 * Returns a list of roles that a user has been granted.
 	 * @return array
 	 */
 	function getRoles();
 
 	/**
-	 * Returns a role this user has been granted.
+	 * Is a user in the specified role?
 	 * @param  string
 	 * @return bool
 	 */
 	function isInRole($role);
 
 	/**
-	 * Returns TRUE if and only if the user has access to the resource.
-	 * @param  string  resource
-	 * @return bool
+	 * Has a user access to the Resource?
+	 * @return boolean
 	 */
-	function isAllowed($resource = NULL);
+	function isAllowed();
+
+	/**
+	 * Sets authorization handler.
+	 * @param  Nette::Security::IAuthorizator
+	 * @return void
+	 */
+	function setAuthorizationHandler(/*Nette::Security::*/IAuthorizator $handler);
+
+	/**
+	 * Returns current authorization handler.
+	 * @return Nette::Security::IAuthorizator
+	 */
+	function getAuthorizationHandler();
 
 }

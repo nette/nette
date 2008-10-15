@@ -206,7 +206,7 @@ class Configurator extends Object
 						set_time_limit($value);
 						break;
 					default:
-						throw new /*::*/NotSupportedException('Function ini_set() is not enabled.');
+						throw new /*::*/NotSupportedException('Required function ini_set() is disabled.');
 					}
 				}
 			}

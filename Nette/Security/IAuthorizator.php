@@ -23,7 +23,7 @@
 
 
 /**
- * Authorizator checks if a given role has authorization.
+ * Authorizator checks if a given role has authorization
  * to access a given resource.
  *
  * @author     David Grudl
@@ -32,6 +32,15 @@
  */
 interface IAuthorizator
 {
+	/** Set type: all */
+	const ALL = NULL;
+
+	/** Permission type: allow */
+	const ALLOW = TRUE;
+
+	/** Permission type: deny */
+	const DENY = FALSE;
+
 
 	/**
 	 * Performs an role-based authorization.
@@ -40,6 +49,6 @@ interface IAuthorizator
 	 * @param  string  privilege
 	 * @return bool
 	 */
-	function isAllowed();
+	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL);
 
 }

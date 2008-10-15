@@ -23,7 +23,7 @@
 
 
 /**
- * Represents a collection of objects that can be individually.
+ * Represents a collection of objects that can be individually
  * accessed by index (ordered collection)
  *
  * @author     David Grudl

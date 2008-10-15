@@ -152,10 +152,9 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Renders template to output.
-	 * @return bool  return output instead of printing it?
-	 * @return void|string
+	 * @return void
 	 */
-	public function render($return = FALSE)
+	public function render()
 	{
 		if (isset(self::$livelock[$this->file])) {
 			throw new /*::*/InvalidStateException("Circular rendering detected.");
@@ -163,50 +162,41 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 		list($content, $isFile) = $this->compile();
 
+		self::$livelock[$this->file] = TRUE;
+		$this->isRendering = TRUE;
+
 		try {
-			self::$livelock[$this->file] = TRUE;
-			$this->isRendering = TRUE;
-			$res = NULL;
-			if ($return) {
-				ob_start();
-			}
 			TemplateFilters::phpEvaluation($this, $content, $isFile);
-			if ($return) {
-				$res = ob_get_clean();
-			}
-
 		} catch (Exception $e) {
-			if ($return) {
-				ob_end_clean();
-			}
 			// continue with shutting down
-		} /* finally */ {
-			unset(self::$livelock[$this->file]);
-			$this->isRendering = FALSE;
-			if (is_resource($isFile)) {
-				fclose($isFile);
-			}
+		}
 
-			if (isset($e)) {
-				throw $e;
-			}
+		unset(self::$livelock[$this->file]);
+		$this->isRendering = FALSE;
+		if (is_resource($isFile)) {
+			fclose($isFile);
+		}
 
-			return $res;
+		if (isset($e)) {
+			throw $e;
 		}
 	}
 
 
 
 	/**
-	 * Support for template rendering using 'echo $template'.
+	 * Renders template to string.
 	 * @return string
 	 */
 	public function __toString()
 	{
+		ob_start();
 		try {
-			return $this->render(TRUE);
+			$this->render();
+			return ob_get_clean();
 
 		} catch (Exception $e) {
+			ob_end_clean();
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';
 		}
@@ -220,7 +210,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	 */
 	public function toXml()
 	{
-		return simplexml_load_string('<xml>' . $this->render(TRUE) . '</xml>');
+		return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
 	}
 
 

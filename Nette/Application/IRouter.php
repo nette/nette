@@ -23,7 +23,7 @@
 
 
 /**
- *
+ * The bi-directional router.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl

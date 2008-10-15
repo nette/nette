@@ -23,7 +23,7 @@
 
 
 /**
- *
+ * Defines template methods.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -32,6 +32,10 @@
 interface ITemplate
 {
 
-	public function render();
+	/**
+	 * Renders template to output.
+	 * @return void
+	 */
+	function render();
 
 }

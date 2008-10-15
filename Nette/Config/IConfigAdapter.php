@@ -31,6 +31,7 @@
  */
 interface IConfigAdapter
 {
+
 	/**
 	 * Reads configuration from file.
 	 * @param  string  file name

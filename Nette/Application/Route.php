@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/../Application/IRouter.php';
 
 
 /**
- * The bidirectional route is responsible for mapping.
+ * The bidirectional route is responsible for mapping
  * HTTP request to a PresenterRoute object for dispatch and vice-versa.
  *
  * @author     David Grudl

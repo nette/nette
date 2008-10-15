@@ -37,10 +37,6 @@ require_once dirname(__FILE__) . '/../Web/IHttpResponse.php';
  */
 final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 {
-	/** cookie expirations */
-	const PERMANENT = 2116333333; // 23.1.2037
-	const WINDOW    = 0;   // end of session, when the browser closes
-
 	/** @var bool  Send invisible garbage for IE 6? */
 	private static $fixIE = TRUE;
 
@@ -53,6 +49,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	/** @var string The path in which the cookie will be available */
 	public $cookieSecure = FALSE;
 
+	/** @var int HTTP response code */
 	private $code = self::S200_OK;
 
 
@@ -144,11 +141,11 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			return FALSE;
 
 		} elseif ($time > 0) {
-			if ($time > self::EXPIRATION_DELTA_LIMIT) {
-				$time -= time();
+			if ($time <= Tools::EXPIRATION_DELTA_LIMIT) {
+				$time += time();
 			}
-			$this->setHeader('Cache-Control', 'max-age=' . (int) $time . ',must-revalidate');
-			$this->setHeader('Expires', self::date(time() + $time));
+			$this->setHeader('Cache-Control', 'max-age=' . ($time - time()). ',must-revalidate');
+			$this->setHeader('Expires', self::date($time));
 			return TRUE;
 
 		} else { // no cache
@@ -247,10 +244,10 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 
 	/**
-	 * Defines a new cookie.
-	 * @param  string name of the cookie.
+	 * Sends a cookie.
+	 * @param  string name of the cookie
 	 * @param  string value
-	 * @param  int expiration as unix timestamp
+	 * @param  int expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
 	 * @param  string
 	 * @param  string
 	 * @param  bool
@@ -258,7 +255,8 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 */
 	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
 	{
-		if ($expire > 0 && $expire <= self::EXPIRATION_DELTA_LIMIT) {
+		// TODO: check headers_sent
+		if ($expire > 0 && $expire <= Tools::EXPIRATION_DELTA_LIMIT) {
 			$expire += time();
 		}
 		setcookie(
@@ -284,6 +282,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 */
 	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
 	{
+		// TODO: check headers_sent
 		setcookie(
 			$name,
 			FALSE,

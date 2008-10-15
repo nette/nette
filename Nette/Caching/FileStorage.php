@@ -177,7 +177,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 		if (!empty($dp[Cache::EXPIRE])) {
 			$expire = (int) $dp[Cache::EXPIRE];
-			if ($expire <= self::EXPIRATION_DELTA_LIMIT) {
+			if ($expire <= Tools::EXPIRATION_DELTA_LIMIT) {
 				$expire += time();
 			}
 			if (empty($dp[Cache::REFRESH])) {

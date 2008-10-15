@@ -40,15 +40,6 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Permission extends /*Nette::*/Object implements IAuthorizator
 {
-	/** Set type: all */
-	const ALL = NULL;
-
-	/** Permission type: allow */
-	const ALLOW = TRUE;
-
-	/** Permission type: deny */
-	const DENY = FALSE;
-
 	/** Rule operation: add */
 	const ADD = TRUE;
 
