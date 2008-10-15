@@ -203,8 +203,9 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Is container cloning now? (for internal usage).
+	 * Is container cloning now?
 	 * @return NULL|IComponent
+	 * @internal
 	 */
 	public function isCloning()
 	{

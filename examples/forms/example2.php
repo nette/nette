@@ -4,7 +4,7 @@
  * Nette::Forms example 2
  *
  * - form definition using fluent interfaces
- * - using form control groups
+ * - form groups usage
  * - default rendering
  */
 

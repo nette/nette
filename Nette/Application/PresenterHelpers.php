@@ -103,7 +103,7 @@ class PresenterHelpers
 
 
 	/**
-	 * Returns array of annotations for "callable" methods. @see isMethodCallable()
+	 * Returns array of annotations for "callable" methods. {@link PresenterHelpers::isMethodCallable()}
 	 * @param  string  class name
 	 * @param  string  method name
 	 * @return array

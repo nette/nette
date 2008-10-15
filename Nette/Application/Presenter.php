@@ -39,7 +39,7 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/**#@+ life cycle phases @see getPhase() */
+	/**#@+ life cycle phases {@link Presenter::getPhase()} */
 	const PHASE_STARTUP = 1;
 	const PHASE_PREPARE = 2;
 	const PHASE_SIGNAL = 3;
@@ -47,7 +47,7 @@ abstract class Presenter extends Control implements IPresenter
 	const PHASE_SHUTDOWN = 5;
 	/**#@-*/
 
-	/**#@+ bad link handling @see $invalidLinkMode */
+	/**#@+ bad link handling {@link Presenter::$invalidLinkMode} */
 	const INVALID_LINK_SILENT = 1;
 	const INVALID_LINK_WARNING = 2;
 	const INVALID_LINK_EXCEPTION = 3;

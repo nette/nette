@@ -32,7 +32,6 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Web
- * @property   mixed
  */
 final class SessionNamespace extends /*Nette::*/Object implements /*::*/IteratorAggregate
 {
@@ -158,7 +157,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 			return;
 		}
 
-		if ($seconds <= Tools::EXPIRATION_DELTA_LIMIT) {
+		if ($seconds <= /*Nette::*/Tools::YEAR) {
 			$seconds += time();
 		}
 

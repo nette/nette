@@ -22,6 +22,8 @@
 
 
 
+/**/if (version_compare(PHP_VERSION , '5.3', '<')) {
+
 /**
  * Application fatal error.
  *
@@ -29,8 +31,6 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  */
-/**/if (version_compare(PHP_VERSION , '5.3', '<')) {
-
 	class ApplicationException extends /*::*/Exception
 	{
 

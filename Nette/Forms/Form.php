@@ -32,6 +32,13 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Forms
+ * @example    forms/example1.php Manual form rendering and separated form and rules definition
+ * @example    forms/example2.php Form definition using fluent interfaces
+ * @example    forms/example3.php Localization (with Zend_Translate)
+ * @example    forms/example4.php Custom form rendering
+ * @example    forms/example5.php How to use custom validator
+ * @example    forms/example6.php How to use naming containers
+ * @example    forms/example7.php How to change charset
  */
 class Form extends FormContainer
 {
@@ -301,7 +308,7 @@ class Form extends FormContainer
 
 	/**
 	 * Sets the submittor control.
-	 * @params ISubmitterControl
+	 * @param  ISubmitterControl
 	 * @return void
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)

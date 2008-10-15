@@ -49,13 +49,13 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/** @var array */
 	protected $cookies;
 
-	/** @var UriScript  @see self::getUri() */
+	/** @var UriScript {@link HttpRequest::getUri()} */
 	protected $uri;
 
-	/** @var Uri  @see self::getOriginalUri() */
+	/** @var Uri  {@link HttpRequest::getOriginalUri()} */
 	protected $originalUri;
 
-	/** @var array  @see self::getHeaders() */
+	/** @var array  {@link HttpRequest::getHeaders()} */
 	protected $headers;
 
 	/** @var string */

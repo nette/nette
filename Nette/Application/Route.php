@@ -50,7 +50,7 @@ class Route extends /*Nette::*/Object implements IRouter
 	const RELATIVE = 3;
 	/**#@-*/
 
-	/**#@+ key used in @see $styles */
+	/**#@+ key used in {@link Route::$styles} */
 	const PATTERN = 'pattern';
 	const FILTER_IN = 'filterIn';
 	const FILTER_OUT = 'filterOut';

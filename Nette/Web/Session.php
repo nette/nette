@@ -476,7 +476,7 @@ class Session extends /*Nette::*/Object
 			));
 
 		} else {
-			if ($seconds > Tools::EXPIRATION_DELTA_LIMIT) {
+			if ($seconds > /*Nette::*/Tools::YEAR) {
 				$seconds -= time();
 			}
 			$this->configure(array(

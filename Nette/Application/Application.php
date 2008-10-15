@@ -331,7 +331,7 @@ class Application extends /*Nette::*/Object
 	{
 		$session = Environment::getSession('Nette.Application.Request');
 		do {
-			$key = /*Nette::*/Tools::uniqueId();
+			$key = substr(lcg_value(), 2);
 		} while (isset($session->rq[$key]));
 
 		$session->rq[$key] = end($this->requests);

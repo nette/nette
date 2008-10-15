@@ -141,7 +141,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			return FALSE;
 
 		} elseif ($time > 0) {
-			if ($time <= Tools::EXPIRATION_DELTA_LIMIT) {
+			if ($time <= /*Nette::*/Tools::YEAR) {
 				$time += time();
 			}
 			$this->setHeader('Cache-Control', 'max-age=' . ($time - time()). ',must-revalidate');
@@ -256,7 +256,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
 	{
 		// TODO: check headers_sent
-		if ($expire > 0 && $expire <= Tools::EXPIRATION_DELTA_LIMIT) {
+		if ($expire > 0 && $expire <= /*Nette::*/Tools::YEAR) {
 			$expire += time();
 		}
 		setcookie(

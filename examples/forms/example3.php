@@ -3,7 +3,7 @@
 /**
  * Nette::Forms example 3
  *
- * - with translator Zend_Translate
+ * - localization (with Zend_Translate)
  */
 
 

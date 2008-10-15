@@ -299,7 +299,7 @@ final class Environment
 
 
 	/**
-	 * @see self::expand()
+	 * @see Environment::expand()
 	 * @param  array
 	 * @return string
 	 */

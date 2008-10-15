@@ -3,8 +3,7 @@
 /**
  * Nette::Forms example 4
  *
- * - using custom rendering
- * - using control descriptions
+ * - custom form rendering
  */
 
 

@@ -184,15 +184,15 @@ class User extends /*Nette::*/Object implements IUser
 	/**
 	 * Enables sign out after inactivity.
 	 * @param  int   number of seconds or timestamp
-	 * @param  bool  clear the identity from persistent storage?
 	 * @param  bool  sign out when the browser is closed?
+	 * @param  bool  clear the identity from persistent storage?
 	 * @return void
 	 */
-	public function setExpiration($seconds, $clearIdentity = FALSE, $browser = TRUE)
+	public function setExpiration($seconds, $browser = TRUE, $clearIdentity = FALSE)
 	{
 		$session = $this->getSession();
 		if ($seconds > 0) {
-			if ($seconds <= Tools::EXPIRATION_DELTA_LIMIT) {
+			if ($seconds <= /*Nette::*/Tools::YEAR) {
 				$seconds += time();
 			}
 			$session->expireTime = $seconds;
@@ -265,7 +265,7 @@ class User extends /*Nette::*/Object implements IUser
 			$session->authkey = Environment::getHttpRequest()->getCookie('nette-authkey');
 
 			if (!$session->authkey) {
-				$session->authkey = /*Nette::*/Tools::uniqueId();
+				$session->authkey = (string) lcg_value();
 
 				$params = Environment::getSession()->getCookieParams();
 				Environment::getHttpResponse()->setCookie(

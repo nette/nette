@@ -43,7 +43,7 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 	/** @var string  type (class, interface, PHP type) */
 	protected $itemType = /*Nette::Application::*/'IRouter';
 
-	/** @var array @see self::constructUrl() */
+	/** @var array {@link MultiRouter::constructUrl()} */
 	private $cachedRoutes;
 
 

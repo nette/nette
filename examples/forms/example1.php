@@ -3,8 +3,8 @@
 /**
  * Nette::Forms example 1
  *
- * - with separated rules definition
- * - using custom rendering
+ * - separated form and rules definition
+ * - manual form rendering
  */
 
 
