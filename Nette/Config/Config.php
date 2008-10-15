@@ -35,9 +35,10 @@ require_once dirname(__FILE__) . '/../Collections/Hashtable.php';
  */
 class Config extends /*Nette::Collections::*/Hashtable
 {
-	/** flags: */
+	/**#@+ flag */
 	const READONLY = 1;
 	const EXPAND = 2;
+	/**#@-*/
 
 	/** @var array */
 	private static $extensions = array(

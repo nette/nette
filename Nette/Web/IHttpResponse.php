@@ -37,7 +37,7 @@ interface IHttpResponse
 	/** @var int cookie expiration: until the browser is closed */
 	const BROWSER = 0;
 
-	/**#@+ HTTP 1.1 response codes */
+	/**#@+ HTTP 1.1 response code */
 	const
 		S200_OK = 200,
 		S204_NO_CONTENT = 204,

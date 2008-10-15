@@ -35,6 +35,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Cache extends /*Nette::*/Object implements ArrayAccess
 {
+	/**#@+ dependency */
 	const PRIORITY = 'priority';
 	const EXPIRE = 'expire';
 	const REFRESH = 'refresh';
@@ -43,6 +44,7 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	const ITEMS = 'items';
 	const CONSTS = 'consts';
 	const ALL = 'all';
+	/**#@-*/
 
 	/** @var ICacheStorage */
 	private $storage;

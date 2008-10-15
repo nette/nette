@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  */
 class Form extends FormContainer
 {
-	// common
+	/**#@+ operation name */
 	const EQUAL = ':equal';
 	const FILLED = ':filled';
 	const VALID = ':valid';
@@ -60,9 +60,9 @@ class Form extends FormContainer
 
 	// special case
 	const SCRIPT = /*Nette::Forms::*/'InstantClientScript::javascript';
+	/**#@-*/
 
-
-	/** Tracker ID */
+	/** tracker ID */
 	const TRACKER_ID = '_form_';
 
 	/** @var array - function($sender, $submittor) */

@@ -25,14 +25,13 @@
 /**
  * Thread safe / atomic file manipulation. Stream safe://
  *
- * usage:
- *     <code>
- *     file_put_contents('safe://myfile.txt', $content)
+ * <code>
+ * file_put_contents('safe://myfile.txt', $content)
  *
- *     $content = file_get_contents('safe://myfile.txt')
+ * $content = file_get_contents('safe://myfile.txt')
  *
- *     unlink('safe://myfile.txt');
- *     </code>
+ * unlink('safe://myfile.txt');
+ * </code>
  *
  *
  * @author     David Grudl

@@ -28,7 +28,7 @@ require_once dirname(__FILE__) . '/../Object.php';
 
 /**
  * Extended HTTP URL.
- *
+ * <pre>
  * http://nettephp.com/basePath/script.php/pathinfo/?name=param#fragment
  *                    \__________________/\________/
  *                              |              |
@@ -39,7 +39,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * scriptPath:  /basePath/script.php  (URI-path of the request with the script name)
  * relativeUri: script.php
  * pathInfo:    /pathinfo/ (additional path information)
- *
+ * </pre>
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl

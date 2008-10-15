@@ -39,21 +39,24 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/** life cycle phases @see getPhase() */
+	/**#@+ life cycle phases @see getPhase() */
 	const PHASE_STARTUP = 1;
 	const PHASE_PREPARE = 2;
 	const PHASE_SIGNAL = 3;
 	const PHASE_RENDER = 4;
 	const PHASE_SHUTDOWN = 5;
+	/**#@-*/
 
-	/** bad link handling @see $invalidLinkMode */
+	/**#@+ bad link handling @see $invalidLinkMode */
 	const INVALID_LINK_SILENT = 1;
 	const INVALID_LINK_WARNING = 2;
 	const INVALID_LINK_EXCEPTION = 3;
+	/**#@-*/
 
-	/** special parameters */
+	/**#@+ special parameter key */
 	const SIGNAL_KEY = 'do';
 	const VIEW_KEY = 'view';
+	/**#@-*/
 
 	/** @var string */
 	public static $defaultView = 'default';

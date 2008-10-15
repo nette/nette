@@ -25,12 +25,13 @@
 /**
  * PHP to JavaScript helper.
  *
- * usage:
- *     $js = new JavaScript;
- *     $js->jQuery('.prod img')
- *        ->css('position', 'relative')
- *        ->animate(array('top' => '100px'))
- *     echo $js;
+ * <code>
+ * $js = new JavaScript;
+ * $js->jQuery('.prod img')
+ *     ->css('position', 'relative')
+ *     ->animate(array('top' => '100px'))
+ * echo $js;
+ * </code>
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl

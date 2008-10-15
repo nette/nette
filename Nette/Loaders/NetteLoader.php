@@ -35,8 +35,10 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  */
 class NetteLoader extends AutoLoader
 {
+	/** @var string  base file path */
 	public $base;
 
+	/** @var array */
 	public $list = array(
 		'abortexception' => '/Application/AbortException.php',
 		'ajaxdriver' => '/Application/AjaxDriver.php',

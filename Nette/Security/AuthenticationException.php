@@ -31,11 +31,11 @@
  */
 class AuthenticationException extends /*::*/Exception
 {
-	/**
-	 * @deprecated
-	 */
+
+	/**#@+ @deprecated */
 	const IDENTITY_NOT_FOUND = 1;
 	const INVALID_CREDENTIAL = 2;
 	const FAILURE = 3;
+	/**#@-*/
 
 }

@@ -31,9 +31,10 @@
  */
 interface IRouter
 {
-	// flags
+	/**#@+ flag */
 	const ONE_WAY = 1;
 	const SECURED = 2;
+	/**#@-*/
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.

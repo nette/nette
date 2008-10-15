@@ -31,18 +31,17 @@
  */
 final class Environment
 {
-	/** environments */
+	/**#@+ environment name */
 	const DEVELOPMENT = 'development';
 	const PRODUCTION = 'production';
 	const CONSOLE = 'console';
 	const LAB = 'lab';
+	/**#@-*/
 
-	/** modes: */
+	/**#@+ mode name */
 	const DEBUG = 'debug';
 	const PERFORMANCE = 'performance';
-
-	/** variables */
-	const LANG = 'lang';
+	/**#@-*/
 
 	/** @var Configurator */
 	private static $configurator;

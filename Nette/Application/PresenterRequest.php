@@ -34,6 +34,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class PresenterRequest extends /*Nette::*/Object
 {
+	/** method */
 	const FORWARD = 'FORWARD';
 
 	/** @var string */

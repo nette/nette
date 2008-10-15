@@ -48,9 +48,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	 * *unlink fails in windows
 	 */
 
-	/**
-	 * Cache file:
-	 */
+	/**#@+ internal cache file structure */
 	const META_HEADER_LEN = 28; // 22b signature + 6b meta-struct size + serialized meta-struct + data
 	// meta structure: array of
 	const META_TIME = 'time'; // timestamp
@@ -62,9 +60,12 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 	const META_ITEMS = 'di'; // array of dependent items (file => timestamp)
 	const META_TAGS = 'tags'; // array of tags (tag => [foo])
 	const META_CONSTS = 'consts'; // array of constants (const => [value])
-	// additional
+	/**#@- */
+
+	/**#@+ additional cache structure */
 	const FILE = 'file';
 	const HANDLE = 'handle';
+	/**#@- */
 
 
 	/** @var float  probability that the clean() routine is started */

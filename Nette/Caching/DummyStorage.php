@@ -37,6 +37,7 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  */
 class DummyStorage extends /*Nette::*/Object implements ICacheStorage
 {
+	/** @var array */
 	public $log = array();
 
 
