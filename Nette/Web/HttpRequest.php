@@ -469,7 +469,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Checks HTTP request method.
+	 * Checks if the request method is the given one.
 	 * @param  string
 	 * @return boolean
 	 */

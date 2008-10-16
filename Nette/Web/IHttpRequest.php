@@ -31,6 +31,15 @@
  */
 interface IHttpRequest
 {
+	/**#@+ HTTP request method */
+	const
+		GET = 'GET',
+		POST = 'POST',
+		HEAD = 'HEAD',
+		PUT = 'PUT',
+		DELETE = 'DELETE';
+	/**#@-*/
+
 	/**
 	 * Returns URL object.
 	 * @return UriScript

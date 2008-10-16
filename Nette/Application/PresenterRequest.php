@@ -116,7 +116,7 @@ final class PresenterRequest extends /*Nette::*/Object
 
 
 	/**
-	 * Checks source method.
+	 * Checks if the method is the given one.
 	 * @param  string
 	 * @return boolean
 	 */

@@ -8,6 +8,7 @@ require_once '../../Nette/loader.php';
 /*use Nette::Debug;*/
 /*use Nette::Application::SimpleRouter;*/
 /*use Nette::Collections::Hashtable;*/
+/*use Nette::Web::HttpRequest;*/
 
 
 class MockHttpRequest extends /*Nette::Web::*/HttpRequest
@@ -63,7 +64,7 @@ Debug::dump($url);
 
 $req = new /*Nette::Application::*/PresenterRequest(
 	'othermodule:presenter',
-	/*Nette::Application::*/PresenterRequest::HTTP_GET,
+	/*Nette::Web::*/HttpRequest::GET,
 	array()
 );
 $url = $route->constructUrl($req, $httpRequest);

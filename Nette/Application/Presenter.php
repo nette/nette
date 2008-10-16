@@ -308,7 +308,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws BadSignalException
 	 */
-	final protected function processSignal()
+	protected function processSignal()
 	{
 		if ($this->signal === NULL) return;
 
@@ -333,30 +333,41 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  bool  component or its id?
-	 * @return string|ISignalReceiver|NULL
+	 * Returns pair signal receiver and name.
+	 * @return array|NULL
 	 */
-	final public function getSignalReceiver($returnId = FALSE)
+	final public function getSignal()
 	{
-		if ($returnId) {
-			return $this->signalReceiver;
-
-		} elseif (isset($this->globalComponents[$this->signalReceiver])) {
-			return $this->globalComponents[$this->signalReceiver];
-
-		} else {
-			return NULL;
-		}
+		return $this->signal === NULL ? NULL : array($this->signalReceiver, $this->signal);
 	}
 
 
 
 	/**
-	 * @return string|NULL
+	 * Checks if the signal receiver is the given one.
+	 * @param  mixed  component or its id
+	 * @param  string signal name (optional)
+	 * @return bool
 	 */
-	final public function getSignal()
+	final public function isSignalReceiver($component, $signal = NULL)
 	{
-		return $this->signal;
+		if ($component instanceof /*Nette::*/Component) {
+			$component = $component === $this ? '' : $component->lookupPath(__CLASS__, TRUE);
+		}
+
+		if ($this->signal === NULL) {
+			return FALSE;
+
+		} elseif ($signal === TRUE) {
+			return $component === ''
+				|| strncmp($this->signalReceiver . '-', $component . '-', strlen($component) + 1) === 0;
+
+		} elseif ($signal === NULL) {
+			return $this->signalReceiver === $component;
+
+		} else {
+			return $this->signalReceiver === $component && strcasecmp($signal, $this->signal) === 0;
+		}
 	}
 
 

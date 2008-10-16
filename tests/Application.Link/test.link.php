@@ -116,7 +116,7 @@ $uri->scriptPath = 'index.php';
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());
 
-$request = new PresenterRequest('Test', PresenterRequest::HTTP_GET, array());
+$request = new PresenterRequest('Test', /*Nette::Web::*/HttpRequest::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter($request);

@@ -25,6 +25,18 @@
 /**
  * JavaScript output console.
  *
+ * <code>
+ * $js = new JavaScriptConsole;
+ * $js->jQuery('table tr:eq(2) img')
+ * 		->css('z-index', 1000)
+ * 		->animate(array('top' => '100px'));
+ *
+ * $js->fifteen->move(5, 6);
+ *
+ * $js->fifteen->partialId = '';
+ * $js->flush();
+ * </code>
+ *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Web
