@@ -121,7 +121,10 @@ abstract class TextBase extends FormControl
 					throw new /*::*/InvalidArgumentException('Regular expression must be JavaScript compatible.');
 				}
 			}
+		} elseif (!$rule->isCondition && strcasecmp($rule->operation, ':float') === 0) {
+			$this->addFilter(array(__CLASS__, 'filterFloat'));
 		}
+
 		parent::notifyRule($rule);
 	}
 
@@ -244,6 +247,18 @@ abstract class TextBase extends FormControl
 	public static function validateRange(TextBase $control, $range)
 	{
 		return $control->getValue() >= $range[0] && $control->getValue() <= $range[1];
+	}
+
+
+
+	/**
+	 * Numeric string cleanup.
+	 * @param  string
+	 * @return string
+	 */
+	public static function filterFloat($s)
+	{
+		return str_replace(array(' ', ','), array('', '.'), $s);
 	}
 
 }

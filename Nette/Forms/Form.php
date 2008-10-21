@@ -320,7 +320,7 @@ class Form extends FormContainer
 	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
-			$this->detectSubmission();
+			$this->processHttpData();
 		}
 
 		return $this->submittedBy;
@@ -344,7 +344,7 @@ class Form extends FormContainer
 	 * Detects form submission and loads HTTP values.
 	 * @return void
 	 */
-	public function detectSubmission()
+	public function processHttpData()
 	{
 		$this->submittedBy = FALSE;
 
@@ -406,7 +406,7 @@ class Form extends FormContainer
 	{
 		$this->httpRequest = $httpRequest;
 		if ($this->submittedBy !== NULL) {
-			$this->detectSubmission();
+			$this->processHttpData();
 		}
 	}
 
@@ -483,7 +483,7 @@ class Form extends FormContainer
 	 * @param  array    user data
 	 * @return void
 	 */
-	public function loadHttpData(array $data)
+	protected function loadHttpData(array $data)
 	{
 		$cursor = & $data;
 		$iterator = $this->getComponents(TRUE);
@@ -494,7 +494,7 @@ class Form extends FormContainer
 			}
 			if ($control instanceof IFormControl && !$control->isDisabled()) {
 				$control->loadHttpData($sub->cursor);
-				if ($control instanceof ISubmitterControl && ($this->submittedBy === TRUE || $control->isSubmittedBy())) {
+				if ($control instanceof ISubmitterControl && (!is_object($this->submittedBy) || $control->isSubmittedBy())) {
 					$this->submittedBy = $control;
 				}
 			}

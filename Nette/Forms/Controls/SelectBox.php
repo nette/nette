@@ -193,7 +193,8 @@ class SelectBox extends FormControl
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$selected = array_flip((array) $this->getValue());
+		$selected = $this->getValue();
+		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
 		$option = /*Nette::Web::*/Html::el('option');
 		$translator = $this->getTranslator();
 
