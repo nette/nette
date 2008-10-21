@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
 
 
 /**
- * Select box control that allows single or multiple item selection.
+ * Select box control that allows single item selection.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -42,9 +42,6 @@ class SelectBox extends FormControl
 	protected $allowed = array();
 
 	/** @var bool */
-	protected $multiple;
-
-	/** @var bool */
 	private $skipFirst = FALSE;
 
 	/** @var bool */
@@ -55,17 +52,15 @@ class SelectBox extends FormControl
 	/**
 	 * @param  string  label
 	 * @param  array   items from which to choose
-	 * @param  bool    allows multiple item selection?
 	 * @param  int     number of rows that should be visible
 	 */
-	public function __construct($label, array $items = NULL, $multiple = FALSE, $size = NULL)
+	public function __construct($label, array $items = NULL, $size = NULL)
 	{
 		parent::__construct($label);
 		$this->control->setName('select');
 		$this->control->size = $size > 1 ? (int) $size : NULL;
 		$this->control->onmousewheel = 'return false';  // prevent accidental change
 		$this->label->onclick = 'return false';  // prevent "deselect" for IE 5 - 6
-		$this->multiple = (bool) $multiple;
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
@@ -74,39 +69,28 @@ class SelectBox extends FormControl
 
 
 	/**
-	 * Returns selected item/items.
-	 * @param  bool
+	 * Returns selected item key.
 	 * @return mixed
 	 */
-	public function getValue($raw = FALSE)
+	public function getValue()
 	{
 		$allowed = $this->allowed;
 		if ($this->skipFirst) {
 			$allowed = array_slice($allowed, 1, count($allowed), TRUE);
 		}
 
-		if ($this->multiple) {
-			if (is_scalar($this->value)) {
-				$value = array($this->value);
+		return is_scalar($this->value) && isset($allowed[$this->value]) ? $this->value : NULL;
+	}
 
-			} elseif (!is_array($this->value)) {
-				$value = array();
 
-			} else {
-				$value = $this->value;
-			}
 
-			$res = array();
-			foreach ($value as $val) {
-				if (is_scalar($val) && ($raw || isset($allowed[$val]))) {
-					$res[] = $val;
-				}
-			}
-			return $res;
-
-		} else {
-			return is_scalar($this->value) && ($raw || isset($allowed[$this->value])) ? $this->value : NULL;
-		}
+	/**
+	 * Returns selected item key (not checked).
+	 * @return mixed
+	 */
+	public function getRawValue()
+	{
+		return is_scalar($this->value) ? $this->value : NULL;
 	}
 
 
@@ -186,20 +170,13 @@ class SelectBox extends FormControl
 
 
 	/**
-	 * Returns item or items from which to choose.
-	 * @return array|string
+	 * Returns selected value.
+	 * @return string
 	 */
-	final public function getSelectedItem()
+	public function getSelectedItem()
 	{
 		if (!$this->useKeys) {
 			return $this->getValue();
-
-		} elseif ($this->multiple) {
-			$res = array();
-			foreach ($this->getValue() as $value) {
-				$res[$value] = $this->allowed[$value];
-			}
-			return $res;
 
 		} else {
 			$value = $this->getValue();
@@ -216,8 +193,6 @@ class SelectBox extends FormControl
 	public function getControl()
 	{
 		$control = parent::getControl();
-		if ($this->multiple) $control->name .= '[]';
-		$control->multiple = (bool) $this->multiple;
 		$selected = array_flip((array) $this->getValue());
 		$option = /*Nette::Web::*/Html::el('option');
 		$translator = $this->getTranslator();

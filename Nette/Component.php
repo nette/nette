@@ -76,7 +76,7 @@ abstract class Component extends Object implements IComponent
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent
 	 */
-	public function lookup($type, $need = FALSE)
+	public function lookup($type, $need = TRUE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
@@ -125,7 +125,7 @@ abstract class Component extends Object implements IComponent
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return string
 	 */
-	public function lookupPath($type, $need = FALSE)
+	public function lookupPath($type, $need = TRUE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
 		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
@@ -228,7 +228,7 @@ abstract class Component extends Object implements IComponent
 		// remove from parent?
 		if ($parent === NULL) {
 			// parent cannot be removed if is still this component contains
-			if ($this->parent->getComponent($this->name) === $this) {
+			if ($this->parent->getComponent($this->name, FALSE) === $this) {
 				throw new /*::*/InvalidStateException('The current parent still recognizes this component as its child.');
 			}
 
@@ -237,7 +237,7 @@ abstract class Component extends Object implements IComponent
 
 		} else { // add to parent
 			// Given parent container does not already recognize this component as its child.
-			if ($parent->getComponent($name) !== $this) {
+			if ($parent->getComponent($name, FALSE) !== $this) {
 				throw new /*::*/InvalidStateException('The given parent does not recognize this component as its child.');
 			}
 

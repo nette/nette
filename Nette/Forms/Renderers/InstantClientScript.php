@@ -284,6 +284,9 @@ final class InstantClientScript extends /*Nette::*/Object
 		case $operation === ':range' && $control instanceof TextBase:
 			return $tmp . $tmp2 . "res = parseFloat(val)>=" . json_encode((float) $arg[0]) . " && parseFloat(val)<=" . json_encode((float) $arg[1]) . ";";
 
+		case $operation === ':filled' && $control instanceof FormControl:
+			return $tmp . $tmp2 . "res = val!='';";
+
 		case $operation === ':valid' && $control instanceof FormControl:
 			return $tmp . $tmp2 . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
 

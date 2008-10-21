@@ -64,6 +64,6 @@ interface IComponentContainer extends IComponent
 	 * @param  string  class types filter
 	 * @return ::ArrayIterator
 	 */
-	function getComponents($deep = FALSE, $type = NULL);
+	function getComponents($deep = FALSE, $filterType = NULL);
 
 }

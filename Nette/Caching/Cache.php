@@ -115,19 +115,16 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	 * @param  string key
 	 * @param  mixed
 	 * @param  array
-	 * @param  bool
 	 * @return void
 	 * @throws ::InvalidArgumentException
 	 */
-	public function save($key, $data, array $dependencies = NULL, $rewrite = TRUE)
+	public function save($key, $data, array $dependencies = NULL)
 	{
 		if (!is_string($key)) {
 			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = NULL;
-
-		if (!$rewrite && $this->offsetGet($key) !== NULL) return;
 
 		$this->adjust($dependencies);
 

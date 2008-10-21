@@ -72,7 +72,7 @@ final class SafeStream
 	/**
 	 * Registers protocol 'safe://'.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function register()
 	{
@@ -88,7 +88,7 @@ final class SafeStream
 	 * @param  string    mode - see fopen()
 	 * @param  int       STREAM_USE_PATH, STREAM_REPORT_ERRORS
 	 * @param  string    full path
-	 * @return boolean  TRUE on success or FALSE on failure
+	 * @return bool      TRUE on success or FALSE on failure
 	 */
 	public function stream_open($path, $mode, $options, &$opened_path)
 	{
@@ -297,7 +297,7 @@ final class SafeStream
 	 * On Windows unlink is not allowed till file is opened
 	 *
 	 * @param  string    file name with stream protocol
-	 * @return boolean  TRUE on success or FALSE on failure
+	 * @return bool      TRUE on success or FALSE on failure
 	 */
 	public function unlink($path)
 	{

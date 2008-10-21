@@ -55,18 +55,14 @@ class RobotLoader extends AutoLoader
 	/** @var array */
 	private $list = NULL;
 
+	/** @var bool */
+	private $rebuilded = FALSE;
+
 	/** @var string */
 	private $acceptMask;
 
 	/** @var string */
 	private $ignoreMask;
-
-
-
-	public function __construct()
-	{
-		$this->addDirectory(dirname(__FILE__) . '/..');
-	}
 
 
 
@@ -108,18 +104,27 @@ class RobotLoader extends AutoLoader
 
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
-			self::includeOnce($this->list[$type]);
-			self::$count++;
+			if ($this->list[$type] !== FALSE) {
+				self::includeOnce($this->list[$type]);
+				self::$count++;
+			}
 
 		} else {
 			if ($this->autoRebuild === NULL) {
 				$this->autoRebuild = !/*Nette::*/Environment::isLive();
 			}
 			if ($this->autoRebuild) {
-				$this->autoRebuild = FALSE;
-				$this->list = NULL;
-				$cache = /*Nette::*/Environment::getCache('Nette.RobotLoader')->offsetUnset('data');
-				$this->tryLoad($type);
+				if (!$this->rebuilded) {
+					$this->rebuild();
+				}
+				if (!isset($this->list[$type])) {
+					$this->list[$type] = FALSE;
+				}
+				$cache = /*Nette::*/Environment::getCache('Nette.RobotLoader');
+				$cache['data'] = array(
+					'list' => $this->list,
+					'opt' => array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles),
+				);
 			}
 		}
 	}
@@ -135,6 +140,7 @@ class RobotLoader extends AutoLoader
 		$this->acceptMask = self::wildcards2re($this->acceptFiles);
 		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
 		$this->list = array();
+		$this->rebuilded = TRUE;
 
 		foreach (array_unique($this->scanDirs) as $dir) {
 			$this->scanDirectory($dir);
@@ -238,7 +244,7 @@ class RobotLoader extends AutoLoader
 		$level = 0;
 		$s = file_get_contents($file);
 
-		if (preg_match('#//netteloader=(\S*)#', $s, $matches)) {
+		if (preg_match('#//nette'.'loader=(\S*)#', $s, $matches)) {
 			foreach (explode(',', $matches[1]) as $name) {
 				$this->addClass($name, $file);
 			}

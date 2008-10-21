@@ -98,7 +98,7 @@ interface IUser
 
 	/**
 	 * Has a user access to the Resource?
-	 * @return boolean
+	 * @return bool
 	 */
 	function isAllowed();
 

@@ -184,7 +184,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	public function addSelect($name, $label, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new SelectBox($label, $items, FALSE, $size);
+		return $this[$name] = new SelectBox($label, $items, $size);
 	}
 
 
@@ -195,11 +195,11 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  string  label
 	 * @param  array   options from which to choose
 	 * @param  int     number of rows that should be visible
-	 * @return SelectBox
+	 * @return MultiSelectBox
 	 */
 	public function addMultiSelect($name, $label, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new SelectBox($label, $items, TRUE, $size);
+		return $this[$name] = new MultiSelectBox($label, $items, $size);
 	}
 
 
@@ -303,11 +303,11 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	/**
 	 * Does component specified by name exists?
 	 * @param  string  component name
-	 * @return boolean
+	 * @return bool
 	 */
 	final public function offsetExists($name)
 	{
-		return $this->getComponent($name) !== NULL;
+		return $this->getComponent($name, FALSE) !== NULL;
 	}
 
 
@@ -319,7 +319,7 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 */
 	final public function offsetUnset($name)
 	{
-		$component = $this->getComponent($name);
+		$component = $this->getComponent($name, FALSE);
 		if ($component !== NULL) {
 			$this->removeComponent($component);
 		}

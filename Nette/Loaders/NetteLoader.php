@@ -135,6 +135,7 @@ class NetteLoader extends AutoLoader
 		'memberaccessexception' => '/exceptions.php',
 		'memcachedstorage' => '/Caching/MemcachedStorage.php',
 		'multirouter' => '/Application/MultiRouter.php',
+		'multiselectbox' => '/Forms/Controls/MultiSelectBox.php',
 		'netteloader' => '/Loaders/NetteLoader.php',
 		'notimplementedexception' => '/exceptions.php',
 		'notsupportedexception' => '/exceptions.php',

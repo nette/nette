@@ -420,7 +420,7 @@ class Session extends /*Nette::*/Object
 	 * @return void
 	 * @throws ::NotSupportedException
 	 */
-	public function configure(array $config, $throw = TRUE)
+	public function configure(array $config, $throwException = TRUE)
 	{
 		// TODO: Environment::getHttpResponse()->headersSent
 		if (headers_sent($file, $line)) {
@@ -446,7 +446,7 @@ class Session extends /*Nette::*/Object
 				$cookie[substr($key, 15)] = $value;
 
 			} elseif (!$hasIniSet) {
-				if ($throw) {
+				if ($throwException) {
 					throw new /*::*/NotSupportedException('Required function ini_set() is disabled.');
 				}
 

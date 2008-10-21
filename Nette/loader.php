@@ -21,8 +21,9 @@
 require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 
+define('NETTE_DIR', dirname(__FILE__));
 
 $__loader = new /*Nette::Loaders::*/NetteLoader;
-$__loader->base = dirname(__FILE__);
+$__loader->base = NETTE_DIR;
 $__loader->register();
 unset($__loader);

@@ -132,7 +132,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
-	final public function getComponent($name, $need = FALSE)
+	final public function getComponent($name, $need = TRUE)
 	{
 		if (isset($this->components[$name])) {
 			return $this->components[$name];
@@ -153,15 +153,15 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @param  string  class types filter
 	 * @return ::ArrayIterator
 	 */
-	final public function getComponents($deep = FALSE, $type = NULL)
+	final public function getComponents($deep = FALSE, $filterType = NULL)
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
 			$deep = $deep > 0 ? /*::*/RecursiveIteratorIterator::SELF_FIRST : /*::*/RecursiveIteratorIterator::CHILD_FIRST;
 			$iterator = new /*::*/RecursiveIteratorIterator($iterator, $deep);
 		}
-		if ($type) {
-			$iterator = new InstanceFilterIterator($iterator, $type);
+		if ($filterType) {
+			$iterator = new InstanceFilterIterator($iterator, $filterType);
 		}
 		return $iterator;
 	}

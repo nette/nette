@@ -118,11 +118,22 @@ final class PresenterRequest extends /*Nette::*/Object
 	/**
 	 * Checks if the method is the given one.
 	 * @param  string
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isMethod($method)
 	{
 		return strcasecmp($this->method, $method) === 0;
+	}
+
+
+
+	/**
+	 * Checks if the method is POST.
+	 * @return bool
+	 */
+	public function isPost()
+	{
+		return strcasecmp($this->method, 'post') === 0;
 	}
 
 

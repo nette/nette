@@ -471,7 +471,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 	/**
 	 * Checks if the request method is the given one.
 	 * @param  string
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isMethod($method)
 	{
@@ -538,7 +538,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 	/**
 	 * Is the request is sent via secure channel (https).
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isSecured()
 	{
@@ -549,7 +549,7 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 	/**
 	 * Is AJAX request?
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isAjax()
 	{
@@ -559,21 +559,30 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
-	 * Returns the IP or host address of the remote client.
-	 * @param  bool  return host name?
+	 * Returns the IP address of the remote client.
 	 * @return string
 	 */
-	public function getRemoteAddress($dns = FALSE)
+	public function getRemoteAddress()
 	{
-		if (!isset($_SERVER['REMOTE_ADDR'])) {
-			return NULL;
-		}
+		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+	}
 
-		if ($dns && !isset($_SERVER['REMOTE_HOST'])) {
+
+
+	/**
+	 * Returns the host of the remote client.
+	 * @return string
+	 */
+	public function getRemoteHost()
+	{
+		if (!isset($_SERVER['REMOTE_HOST'])) {
+			if (!isset($_SERVER['REMOTE_ADDR'])) {
+				return NULL;
+			}
 			$_SERVER['REMOTE_HOST'] = getHostByAddr($_SERVER['REMOTE_ADDR']);
 		}
 
-		return $dns ? $_SERVER['REMOTE_HOST'] : $_SERVER['REMOTE_ADDR'];
+		return $_SERVER['REMOTE_HOST'];
 	}
 
 

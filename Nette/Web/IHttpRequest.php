@@ -110,7 +110,7 @@ interface IHttpRequest
 	/**
 	 * Checks HTTP request method.
 	 * @param  string
-	 * @return boolean
+	 * @return bool
 	 */
 	function isMethod($method);
 
@@ -131,21 +131,26 @@ interface IHttpRequest
 
 	/**
 	 * Is the request is sent via secure channel (https).
-	 * @return boolean
+	 * @return bool
 	 */
 	function isSecured();
 
 	/**
 	 * Is AJAX request?
-	 * @return boolean
+	 * @return bool
 	 */
 	function isAjax();
 
 	/**
-	 * Returns the IP or host address of the remote client.
-	 * @param  bool  return host name?
+	 * Returns the IP address of the remote client.
 	 * @return string
 	 */
-	function getRemoteAddress($dns = FALSE);
+	function getRemoteAddress();
+
+	/**
+	 * Returns the host of the remote client.
+	 * @return string
+	 */
+	function getRemoteHost();
 
 }

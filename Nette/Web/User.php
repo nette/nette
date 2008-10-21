@@ -188,7 +188,7 @@ class User extends /*Nette::*/Object implements IUser
 	 * @param  bool  clear the identity from persistent storage?
 	 * @return void
 	 */
-	public function setExpiration($seconds, $browser = TRUE, $clearIdentity = FALSE)
+	public function setExpiration($seconds, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
 		$session = $this->getSession();
 		if ($seconds > 0) {
@@ -203,7 +203,7 @@ class User extends /*Nette::*/Object implements IUser
 		}
 
 		$session->expireIdentity = (bool) $clearIdentity;
-		$session->expireBrowser = (bool) $browser;
+		$session->expireBrowser = (bool) $whenBrowserIsClosed;
 	}
 
 
@@ -332,7 +332,7 @@ class User extends /*Nette::*/Object implements IUser
 	 * If $resource is NULL, then the query applies to all resources.
 	 * @param  string  resource
 	 * @param  string  privilege
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isAllowed($resource = NULL, $privilege = NULL)
 	{

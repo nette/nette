@@ -74,16 +74,16 @@ $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
 echo "\n'e' looking 'a'\n";
-echo $a['b']['c']['d']['e']->lookupPath('A'), "\n";
+echo $a['b']['c']['d']['e']->lookupPath('A', FALSE), "\n";
 
 echo "\nclone 'c'\n";
 $dolly = clone $a['b']['c'];
 
 echo "\n'e' looking 'a'\n";
-echo $dolly['d']['e']->lookupPath('A'), "\n";
+echo $dolly['d']['e']->lookupPath('A', FALSE), "\n";
 
 echo "\n'e' looking 'c'\n";
-echo $dolly['d']['e']->lookupPath('C'), "\n";
+echo $dolly['d']['e']->lookupPath('C', FALSE), "\n";
 
 echo "\nclone 'b'\n";
 $dolly = clone $a['b'];

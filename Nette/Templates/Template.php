@@ -68,7 +68,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	private $isRendering;
 
 	/** @var int */
-	public static $cacheExpire;
+	public static $cacheExpire = FALSE;
 
 	/** @var Nette::Caching::ICacheStorage */
 	private static $cacheStorage;
@@ -417,7 +417,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/**
 	 * Determines whether parameter is defined. Do not call directly.
 	 * @param  string    name
-	 * @return boolean
+	 * @return bool
 	 */
 	public function __isset($name)
 	{
@@ -466,10 +466,6 @@ class Template extends /*Nette::*/Object implements ITemplate
 		if (self::$cacheStorage === NULL) {
 			$base = Environment::getVariable('cacheBase');
 			self::$cacheStorage = new TemplateStorage($base);
-
-			if (self::$cacheExpire === NULL) {
-				self::$cacheExpire = Environment::isLive() ? FALSE : 1;
-			}
 		}
 		return self::$cacheStorage;
 	}

@@ -116,7 +116,8 @@ class Form extends FormContainer
 	public function __construct($name = NULL, $parent = NULL)
 	{
 		$this->element = /*Nette::Web::*/Html::el('form');
-		$this->setAction(''); // RFC 1808 -> empty uri means 'this'
+		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
+		$this->element->method = 'post';
 		$this->monitor(__CLASS__);
 		parent::__construct($parent, $name);
 	}
@@ -139,18 +140,13 @@ class Form extends FormContainer
 
 
 	/**
-	 * Sets form's action and method.
+	 * Sets form's action.
 	 * @param  mixed URI
-	 * @param  bool  use POST method to submit the form?
 	 * @return void
 	 */
-	public function setAction($url, $isPost = NULL)
+	public function setAction($url)
 	{
-		if ($isPost !== NULL) {
-			$this->isPost = (bool) $isPost;
-		}
 		$this->element->action = $url;
-		$this->element->method = $this->isPost ? 'post' : 'get';
 	}
 
 
@@ -162,6 +158,29 @@ class Form extends FormContainer
 	public function getAction()
 	{
 		return $this->element->action;
+	}
+
+
+
+	/**
+	 * Sets form's method.
+	 * @param  string get | post
+	 * @return void
+	 */
+	public function setMethod($method)
+	{
+		$this->element->method = strtolower($method);
+	}
+
+
+
+	/**
+	 * Returns form's method.
+	 * @return string get | post
+	 */
+	public function getMethod()
+	{
+		return $this->element->method;
 	}
 
 
@@ -244,7 +263,10 @@ class Form extends FormContainer
 	 */
 	public function setEncoding($value)
 	{
-		$this->encoding = empty($value) ? 'UTF-8' : $value;
+		$this->encoding = empty($value) ? 'UTF-8' : strtoupper($value);
+		if ($this->encoding !== 'UTF-8' && !extension_loaded('mbstring')) {
+			throw new /*::*/Exception("The PHP extension 'mbstring' is required for this encoding but is not loaded.");
+		}
 	}
 
 
@@ -338,7 +360,7 @@ class Form extends FormContainer
 			$data = $request->getQuery();
 		}
 
-		$tracker = $this->getComponent(self::TRACKER_ID);
+		$tracker = $this->getComponent(self::TRACKER_ID, FALSE);
 		if ($tracker) {
 			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) return;
 
@@ -423,7 +445,7 @@ class Form extends FormContainer
 		}
 
 		// tracker value cannot be changed
-		$tracker = $this->getComponent(self::TRACKER_ID);
+		$tracker = $this->getComponent(self::TRACKER_ID, FALSE);
 		if ($tracker) {
 			$values[self::TRACKER_ID] = $tracker->getValue();
 		}
