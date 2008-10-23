@@ -89,6 +89,14 @@ interface IHttpResponse
 	function setContentType($type, $charset = NULL);
 
 	/**
+	 * Redirects to a new URL.
+	 * @param  string  URL
+	 * @param  int     HTTP code
+	 * @return void
+	 */
+	function redirect($url, $code = self::S302_FOUND);
+
+	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  int  timestamp or number of seconds
 	 * @return bool

@@ -171,10 +171,7 @@ class Application extends /*Nette::*/Object
 				} elseif (substr($uri, 0, 1) === '/') {
 					$uri = $httpRequest->getUri()->hostUri . $uri;
 				}
-				$httpResponse->setCode($e->getCode());
-				$httpResponse->setHeader('Location', $uri);
-				$httpResponse->setHeader('Connection', 'close');
-				echo '<h1>Redirect</h1><p><a href="', htmlSpecialChars($uri), '">Please click here to continue</a>.</p>';
+				$httpResponse->redirect($uri);
 				break;
 
 			} catch (ForwardingException $e) {
@@ -212,13 +209,13 @@ class Application extends /*Nette::*/Object
 
 				} elseif ($e instanceof BadRequestException) {
 					$httpResponse->setCode(404);
-					echo '<title>404 Not Found</title><h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 					break;
 
 				} else {
 					$httpResponse->setCode(500);
-					echo '<title>500 Internal Server Error</title><h1>Server Error</h1>',
-						'<p>The server encountered an internal error and was unable to complete your request.</p>';
+					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
+						"<p>The server encountered an internal error and was unable to complete your request.</p>";
 					break;
 				}
 			}

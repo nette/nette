@@ -79,7 +79,8 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 
 		} else {
 			$this->code = $code;
-			header('HTTP/1.1 ' . $code, TRUE, $code);
+			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
+			header($protocol . ' ' . $code, TRUE, $code);
 			return TRUE;
 		}
 	}
@@ -110,7 +111,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			return FALSE;
 
 		} else {
-			header($name . ': ' . $value, $replace);
+			header($name . ': ' . $value, $replace, $this->code);
 			return TRUE;
 		}
 	}
@@ -126,6 +127,22 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	public function setContentType($type, $charset = NULL)
 	{
 		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
+	}
+
+
+
+	/**
+	 * Redirects to a new URL. Call exit() after it.
+	 * @param  string  URL
+	 * @param  int     HTTP code
+	 * @return void
+	 */
+	public function redirect($url, $code = self::S302_FOUND)
+	{
+		$this->setCode($code);
+		$this->setHeader('Location', $url);
+		$this->setHeader('Connection', 'close');
+		echo "<h1>Redirect</h1>\n\n<p><a href=\"', htmlSpecialChars($url), '\">Please click here to continue</a>.</p>";
 	}
 
 
