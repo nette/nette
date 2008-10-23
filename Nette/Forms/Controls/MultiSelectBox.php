@@ -22,7 +22,7 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
+require_once dirname(__FILE__) . '/../../Forms/Controls/SelectBox.php';
 
 
 

@@ -275,7 +275,7 @@ final class InstantClientScript extends /*Nette::*/Object
 			}
 			return $tmp . $tmp2 . "res = (" . implode(' || ', $tmp3) . ");";
 
-		case $operation === ':numeric' && $control instanceof TextBase:
+		case $operation === ':integer' && $control instanceof TextBase:
 			return $tmp . $tmp2 . "res = /^-?[0-9]+$/.test(val);";
 
 		case $operation === ':float' && $control instanceof TextBase:

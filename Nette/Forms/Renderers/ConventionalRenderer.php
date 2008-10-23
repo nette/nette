@@ -312,7 +312,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 			$s .= "\n" . $container->startTag();
 
 			$text = $group->getOption('label');
-			if ($text != NULL) {
+			if ($text != NULL) { // intentionally ==
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}

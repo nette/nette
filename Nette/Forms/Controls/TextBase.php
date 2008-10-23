@@ -215,11 +215,11 @@ abstract class TextBase extends FormControl
 
 
 	/**
-	 * Numeric validator: is a control's value decimal number?
+	 * Integer validator: is a control's value decimal number?
 	 * @param  TextBase
 	 * @return bool
 	 */
-	public static function validateNumeric(TextBase $control)
+	public static function validateInteger(TextBase $control)
 	{
 		return preg_match('/^-?[0-9]+$/', $control->getValue());
 	}
@@ -252,7 +252,7 @@ abstract class TextBase extends FormControl
 
 
 	/**
-	 * Numeric string cleanup.
+	 * Float string cleanup.
 	 * @param  string
 	 * @return string
 	 */

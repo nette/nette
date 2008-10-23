@@ -1,3 +1,6 @@
+# disable directory listing
+Options -Indexes
+
 # configure PHP
 # <IfModule mod_php5.c>
 #    php_flag magic_quotes_gpc off

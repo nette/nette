@@ -338,10 +338,14 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
 		$text = $this->getOption('label');
-		if ($this->getTranslator() !== NULL) {
-			$text = $this->getTranslator()->translate($text);
+		if (is_string($text)) {
+			if ($this->getTranslator() !== NULL) {
+				$text = $this->getTranslator()->translate($text);
+			}
+			$label->setText($text);
+		} else {
+			$label->add($text);
 		}
-		$label->setText($text);
 		return $label;
 	}
 
@@ -499,12 +503,13 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public static function validateEqual(IFormControl $control, $arg)
 	{
+		$value = $control->getValue();
 		foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 			if (is_object($item)) {
-				if (get_class($item) === get_class($control) && $control->getValue() == $item->value) return TRUE;
+				if (get_class($item) === get_class($control) && $value == $item->value) return TRUE; // intentionally ==
 
 			} else {
-				if ($control->getValue() == $item) return TRUE;
+				if ($value == $item) return TRUE; // intentionally ==
 			}
 		}
 		return FALSE;

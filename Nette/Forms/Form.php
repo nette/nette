@@ -44,6 +44,7 @@ class Form extends FormContainer
 {
 	/**#@+ operation name */
 	const EQUAL = ':equal';
+	const IS_IN = ':equal';
 	const FILLED = ':filled';
 	const VALID = ':valid';
 
@@ -57,7 +58,8 @@ class Form extends FormContainer
 	const EMAIL = ':email';
 	const URL = ':url';
 	const REGEXP = ':regexp';
-	const NUMERIC = ':numeric';
+	const INTEGER = ':integer';
+	const NUMERIC = ':integer';
 	const FLOAT = ':float';
 	const RANGE = ':range';
 
@@ -89,9 +91,6 @@ class Form extends FormContainer
 
 	/** @var Nette::ITranslator */
 	private $translator;
-
-	/** @var Nette::Web::IHttpRequest */
-	private $httpRequest;
 
 	/** @var array of FormGroup */
 	private $groups = array();
@@ -320,7 +319,7 @@ class Form extends FormContainer
 	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
-			$this->processHttpData();
+			$this->processHttpRequest();
 		}
 
 		return $this->submittedBy;
@@ -342,22 +341,25 @@ class Form extends FormContainer
 
 	/**
 	 * Detects form submission and loads HTTP values.
+	 * @param  Nette::Web::IHttpRequest  optional request object
 	 * @return void
 	 */
-	public function processHttpData()
+	public function processHttpRequest(/*Nette::Web::*/IHttpRequest $httpRequest = NULL)
 	{
 		$this->submittedBy = FALSE;
 
-		$request = $this->getHttpRequest();
-		$request->setEncoding($this->encoding);
+		if ($httpRequest === NULL) {
+			$httpRequest = class_exists(/*Nette::*/'Environment') ? /*Nette::*/Environment::getHttpRequest() : new /*Nette::Web::*/HttpRequest;
+		}
+		$httpRequest->setEncoding($this->encoding);
 
 		if ($this->isPost) {
-			if (!$request->isMethod('post')) return;
-			$data = self::arrayAppend($request->getPost(), $request->getFiles());
+			if (!$httpRequest->isMethod('post')) return;
+			$data = self::arrayAppend($httpRequest->getPost(), $httpRequest->getFiles());
 
 		} else {
-			if (!$request->isMethod('get')) return;
-			$data = $request->getQuery();
+			if (!$httpRequest->isMethod('get')) return;
+			$data = $httpRequest->getQuery();
 		}
 
 		$tracker = $this->getComponent(self::TRACKER_ID, FALSE);
@@ -393,35 +395,6 @@ class Form extends FormContainer
 		} elseif ($this->isValid()) {
 			$this->onSubmit($this);
 		}
-	}
-
-
-
-	/**
-	 * Sets HTTP request object.
-	 * @param  Nette::Web::IHttpRequest
-	 * @return void
-	 */
-	public function setHttpRequest(/*Nette::Web::*/IHttpRequest $httpRequest)
-	{
-		$this->httpRequest = $httpRequest;
-		if ($this->submittedBy !== NULL) {
-			$this->processHttpData();
-		}
-	}
-
-
-
-	/**
-	 * Returns HTTP request object.
-	 * @return void
-	 */
-	public function getHttpRequest()
-	{
-		if ($this->httpRequest === NULL) {
-			$this->httpRequest = class_exists(/*Nette::*/'Environment') ? /*Nette::*/Environment::getHttpRequest() : new /*Nette::Web::*/HttpRequest;
-		}
-		return $this->httpRequest;
 	}
 
 
@@ -513,7 +486,7 @@ class Form extends FormContainer
 
 
 	/**
-	 * Was form populated by setDefaults() or populate() yet?
+	 * Was form populated by setDefaults() or processHttpRequest() yet?
 	 * @return bool
 	 */
 	public function isPopulated()
