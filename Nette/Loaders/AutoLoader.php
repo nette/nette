@@ -57,17 +57,11 @@ abstract class AutoLoader extends /*Nette::*/Object
 
 	/**
 	 * Return all registered autoloaders.
-	 * @param  string
-	 * @return array
+	 * @return array of AutoLoader
 	 */
-	final public static function getLoaders($class = NULL)
+	final public static function getLoaders()
 	{
-		if (func_num_args() === 0) {
-			return self::$loaders;
-
-		} elseif (isset(self::$loaders[$class])) {
-			return self::$loaders[$class];
-		}
+		return array_values(self::$loaders);
 	}
 
 
@@ -83,19 +77,19 @@ abstract class AutoLoader extends /*Nette::*/Object
 		}
 
 		spl_autoload_register(array($this, 'tryLoad'));
-		self::$loaders[get_class($this)] = $this;
+		self::$loaders[spl_object_hash($this)] = $this;
 	}
 
 
 
 	/**
 	 * Unregister autoloader.
-	 * @return void
+	 * @return bool
 	 */
 	public function unregister()
 	{
-		spl_autoload_unregister(array($this, 'tryLoad'));
-		unset(self::$loaders[get_class($this)]);
+		unset(self::$loaders[spl_object_hash($this)]);
+		return spl_autoload_unregister(array($this, 'tryLoad'));
 	}
 
 

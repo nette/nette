@@ -27,12 +27,17 @@ class ErrorPresenter extends BasePresenter
 			if ($exception instanceof /*Nette::Application::*/BadRequestException) {
 				Environment::getHttpResponse()->setCode(404);
 				$this->template->title = '404 Not Found';
-				$this->template->message = 'The requested URL was not found on this server.';
+				$this->changeScene('404');
 
 			} else {
 				Environment::getHttpResponse()->setCode(500);
 				$this->template->title = '500 Internal Server Error';
-				$this->template->message = 'The server encountered an internal error and was unable to complete your request.';
+				$this->changeScene('500');
+
+				// log to file
+				if (/*Nette::*/Debug::isEnabled()) {
+					/*Nette::*/Debug::exceptionHandler($exception);
+				}
 			}
 		}
 	}

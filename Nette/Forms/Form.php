@@ -197,17 +197,6 @@ class Form extends FormContainer
 
 
 	/**
-	 * Iterates over all form controls.
-	 * @return ::ArrayIterator
-	 */
-	public function getControls()
-	{
-		return $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
-	}
-
-
-
-	/**
 	 * Adds fieldset group to the form.
 	 * @param  string  label
 	 * @param  bool    set this group as current
@@ -217,7 +206,7 @@ class Form extends FormContainer
 	{
 		$group = new FormGroup;
 		$group->setOption('label', $label);
-		$group->setOption('render', TRUE);
+		$group->setOption('visual', TRUE);
 
 		if ($setAsCurrent) {
 			$this->setCurrentGroup($group);
@@ -344,7 +333,7 @@ class Form extends FormContainer
 	 * @param  Nette::Web::IHttpRequest  optional request object
 	 * @return void
 	 */
-	public function processHttpRequest(/*Nette::Web::*/IHttpRequest $httpRequest = NULL)
+	public function processHttpRequest($httpRequest = NULL)
 	{
 		$this->submittedBy = FALSE;
 

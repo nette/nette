@@ -22,6 +22,10 @@
 
 
 
+require_once dirname(__FILE__) . '/../Object.php';
+
+
+
 /**
  * PHP to JavaScript helper.
  *
@@ -37,7 +41,7 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Web
  */
-class JavaScript
+class JavaScript extends Object
 {
 	/** @var string */
 	protected $js;

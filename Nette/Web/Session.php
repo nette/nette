@@ -35,6 +35,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Session extends /*Nette::*/Object
 {
+	/** Default lifetime is 3 hours */
+	const DEFAULT_LIFETIME = 10800;
+
 	/** @var callback  Validation key generator */
 	public $verificationKeyGenerator;
 
@@ -63,7 +66,7 @@ class Session extends /*Nette::*/Object
 		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
 
 		// other
-		'session.gc_maxlifetime' => 10800,// 3 hours
+		'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,// 3 hours
 		'session_cache_limiter' => 'none',// do not affect caching
 		'session_cache_expire' => NULL,   // (default "180")
 		'session.hash_function' => NULL,  // (default "0", means MD5)
@@ -471,7 +474,7 @@ class Session extends /*Nette::*/Object
 	{
 		if ($seconds <= 0) {
 			$this->configure(array(
-				'session.gc_maxlifetime' => 10800,
+				'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,
 				'session.cookie_lifetime' => 0,
 			));
 

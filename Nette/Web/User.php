@@ -236,9 +236,9 @@ class User extends /*Nette::*/Object implements IUser
 			}
 
 			if ($session->authenticated && $session->expireBrowser) {
-				if ($session->authkey !== Environment::getHttpRequest()->getCookie('nette-authkey')) {
+				if ($session->authKey !== Environment::getHttpRequest()->getCookie('nette-authkey')) {
 					$session->authenticated = FALSE;
-					unset($session->authkey);
+					unset($session->authKey);
 					if ($session->expireIdentity) unset($session->identity);
 				}
 			}
@@ -262,15 +262,16 @@ class User extends /*Nette::*/Object implements IUser
 		$session->authenticated = $state;
 		if ($state) {
 			$session->expireBrowser = TRUE;
-			$session->authkey = Environment::getHttpRequest()->getCookie('nette-authkey');
+			$session->authTime = time(); // informative value
+			$session->authKey = Environment::getHttpRequest()->getCookie('nette-authkey');
 
-			if (!$session->authkey) {
-				$session->authkey = (string) lcg_value();
+			if (!$session->authKey) {
+				$session->authKey = (string) lcg_value();
 
 				$params = Environment::getSession()->getCookieParams();
 				Environment::getHttpResponse()->setCookie(
 					'nette-authkey',
-					$session->authkey,
+					$session->authKey,
 					HttpResponse::BROWSER,
 					$params['path'],
 					$params['domain'],
@@ -278,8 +279,8 @@ class User extends /*Nette::*/Object implements IUser
 				);
 			}
 		} else {
-			unset($session->authkey, $session->expireTime, $session->expireDelta,
-			$session->expireIdentity, $session->expireBrowser);
+			unset($session->authKey, $session->expireTime, $session->expireDelta,
+			$session->expireIdentity, $session->expireBrowser, $session->authTime);
 		}
 	}
 

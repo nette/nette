@@ -26,8 +26,8 @@ if (!function_exists('json_encode')) { // since PHP 5.2.0
 		}
 
 		if (is_string($val)) {
-			$val = addslashes($val); // ' " \ NUL - due to bug #40915
-			return '"' . addcslashes($val, "\x8..\xA\xC\xD/") . '"';
+			$val = str_replace(array("\\", "\x00"), array("\\\\", "\\u0000"), $val); // due to bug #40915
+			return '"' . addcslashes($val, "\x8\x9\xA\xC\xD/\"") . '"';
 		}
 
 		if (is_int($val) || is_float($val)) {

@@ -47,9 +47,6 @@ class RobotLoader extends AutoLoader
 	public $acceptFiles = '*.php, *.php5';
 
 	/** @var bool */
-	public $displaceNetteLoader = TRUE;
-
-	/** @var bool */
 	public $autoRebuild;
 
 	/** @var array */
@@ -90,12 +87,8 @@ class RobotLoader extends AutoLoader
 				);
 			}
 
-			if ($this->displaceNetteLoader) {
-				foreach (self::getLoaders() as $loader) {
-					if ($loader instanceof NetteLoader) {
-						$loader->unregister();
-					}
-				}
+			if (in_array(NETTE_DIR, $this->scanDirs, TRUE)) {
+				NetteLoader::getInstance()->unregister();
 			}
 		}
 

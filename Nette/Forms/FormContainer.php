@@ -70,6 +70,17 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 
 
 
+	/**
+	 * Iterates over all form controls.
+	 * @return ::ArrayIterator
+	 */
+	public function getControls()
+	{
+		return $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
+	}
+
+
+
 	/********************* control factories ****************d*g**/
 
 

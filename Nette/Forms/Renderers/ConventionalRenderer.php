@@ -306,13 +306,16 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$translator = $this->form->getTranslator();
 
 		foreach ($this->form->getGroups() as $group) {
-			if (!$group->getControls() || !$group->getOption('render')) continue;
+			if (!$group->getControls() || !$group->getOption('visual')) continue;
 
 			$container = $group->getOption('container', $defaultContainer);
 			$s .= "\n" . $container->startTag();
 
 			$text = $group->getOption('label');
-			if ($text != NULL) { // intentionally ==
+			if ($text instanceof Html) {
+				$s .= $text;
+
+			} elseif (is_string($text)) {
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
@@ -327,7 +330,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 				if ($translator !== NULL) {
 					$text = $translator->translate($text);
 				}
-				$s .= $this->getWrapper('group description')->setText($text);
+				$s .= $this->getWrapper('group description')->setText($text) . "\n";
 			}
 
 			$s .= $this->renderControls($group);
@@ -352,11 +355,15 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 	/**
 	 * Renders group of controls.
-	 * @param  Form|FormGroup
+	 * @param  FormContainer|FormGroup
 	 * @return string
 	 */
 	public function renderControls($parent)
 	{
+		if (!($parent instanceof FormContainer || $parent instanceof FormGroup)) {
+			throw new /*::*/InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
+		}
+
 		$container = $this->getWrapper('controls container');
 
 		$buttons = NULL;
@@ -400,7 +407,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class($control->isRequired() ? $this->getValue('pair .required') : $this->getValue('pair .optional'), TRUE);
+		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
 		$pair->class($control->getOption('class'), TRUE);
 		if (++$this->counter % 2) $pair->class($this->getValue('pair .odd'), TRUE);
 		$pair->id = $control->getOption('id');
@@ -418,6 +425,9 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$s = array();
 		foreach ($controls as $control) {
+			if (!($control instanceof IFormControl)) {
+				throw new /*::*/InvalidArgumentException("Argument must be array of IFormControl instances.");
+			}
 			$s[] = (string) $control->getControl();
 		}
 		$pair = $this->getWrapper('pair container');

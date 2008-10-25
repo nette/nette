@@ -79,6 +79,20 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 
 
 	/**
+	 * Appends the specified element to the end of this collection.
+	 * @param  mixed
+	 * @return void
+	 * @throws ::InvalidArgumentException
+	 */
+	public function append($item)
+	{
+		$this->beforeAdd($item);
+		parent::append($item);
+	}
+
+
+
+	/**
 	 * Removes the first occurrence of the specified element.
 	 * @param  mixed
 	 * @return bool  true if this collection changed as a result of the call

@@ -22,8 +22,6 @@
 
 
 
-/**/if (version_compare(PHP_VERSION , '5.3', '<')) {
-
 /**
  * Application fatal error.
  *
@@ -31,26 +29,18 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette::Application
  */
-	class ApplicationException extends /*::*/Exception
-	{
-
-		function __construct($message = '', $code = 0, /*::*/Exception $previous = NULL)
-		{
-			$this->previous = $previous;
-			parent::__construct($message, $code);
-		}
-
-		function getPrevious()
-		{
-			return $this->previous;
-		}
-
-	}
-
-} else {/**/
-
 class ApplicationException extends /*::*/Exception
 {
-}
 
-/**/}/**/
+	function __construct($message = '', $code = 0, /*::*/Exception $previous = NULL)
+	{
+		if (version_compare(PHP_VERSION , '5.3', '<')) {
+			$this->previous = $previous;
+			parent::__construct($message, $code);
+
+		} else {
+			parent::__construct($message, $code, $previous);
+		}
+	}
+
+}

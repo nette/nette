@@ -22,6 +22,10 @@
 
 
 
+require_once dirname(__FILE__) . '/../Collections/ICollection.php';
+
+
+
 /**
  * Represents a collection of objects that can be individually
  * accessed by index (ordered collection)

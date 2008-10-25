@@ -35,6 +35,9 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  */
 class NetteLoader extends AutoLoader
 {
+	/** @var NetteLoader */
+	public static $instance;
+
 	/** @var string  base file path */
 	public $base;
 
@@ -179,6 +182,20 @@ class NetteLoader extends AutoLoader
 		'user' => '/Web/User.php',
 		'userclientscript' => '/Forms/Renderers/UserClientScript.php',
 	);
+
+
+
+	/**
+	 * Returns singleton instance with lazy instantiation.
+	 * @return NetteLoader
+	 */
+	public static function getInstance()
+	{
+		if (self::$instance === NULL) {
+			self::$instance = new self;
+		}
+		return self::$instance;
+	}
 
 
 

@@ -4,6 +4,7 @@
 <?php
 
 require_once '../../Nette/loader.php';
+
 /*use Nette::Debug;*/
 /*use Nette::Environment;*/
 
@@ -15,7 +16,7 @@ foreach (glob(Environment::expand('%tempDir%/*')) as $file) unlink($file); // de
 $loader = new /*Nette::Loaders::*/RobotLoader;
 $loader->addDirectory(NETTE_DIR);
 $loader->addDirectory(dirname(__FILE__));
-$loader->addDirectory(dirname(__FILE__)); // doubled
+$loader->addDirectory(dirname(__FILE__)); // purposely doubled
 $loader->register();
 
 if (class_exists(/*Nette::*/'TestClass')) echo 'class TestClass successfully loaded';

@@ -6,7 +6,7 @@
 require_once '../../Nette/Loaders/NetteLoader.php';
 /*use Nette::Debug;*/
 
-$loader = new /*Nette::Loaders::*/NetteLoader;
+$loader = /*Nette::Loaders::*/NetteLoader::getInstance();
 $loader->base = '../../Nette';
 $loader->register();
 
