@@ -757,7 +757,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
 		if (!Environment::isLive()) {
-			return;
+			return NULL;
 		}
 
 		$httpResponse = Environment::getHttpResponse();
@@ -811,6 +811,8 @@ abstract class Presenter extends Control implements IPresenter
 		} else {
 			return $ifModifiedSince;
 		}
+
+		return NULL;
 	}
 
 

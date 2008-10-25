@@ -139,6 +139,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 						return TRUE;
 					}
 				}
+				return FALSE;
 			}
 
 		} else {

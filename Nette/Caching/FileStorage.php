@@ -262,7 +262,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		if (!$meta) return TRUE;
 
 		ftruncate($meta[self::HANDLE], 0);
-		@unlink($file); // intentionally @
+		@unlink($cacheFile); // intentionally @
 		fclose($meta[self::HANDLE]);
 		return TRUE;
 	}

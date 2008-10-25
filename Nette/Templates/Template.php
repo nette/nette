@@ -235,7 +235,6 @@ class Template extends /*Nette::*/Object implements ITemplate
 			return array($filePath, TRUE);
 		}
 
-		$content = $filePath;
 		$isFile = TRUE;
 		$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
 		$key = md5($this->file) . '.' . basename($this->file);

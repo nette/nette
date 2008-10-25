@@ -1,4 +1,4 @@
-<?php //netteloader=IDibiVariable,IDataSource,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiRow,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,DibiDatabaseInfo,DibiTableInfo,DibiColumnInfo,DibiForeignKeyInfo,DibiIndexInfo,dibi,DibiLogger,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
+<?php //netteloader=IDibiVariable,IDataSource,IDibiProfiler,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiRow,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,DibiDatabaseInfo,DibiTableInfo,DibiColumnInfo,DibiForeignKeyInfo,DibiIndexInfo,DibiProfiler,dibi,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
 
 /**
  * dibi - tiny'n'smart database abstraction layer
@@ -15,7 +15,7 @@
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    0.9 (revision 153 released on 2008/10/10 19:39:33)
+ * @version    0.9 (revision 157 released on 2008/10/25 17:36:37)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -46,6 +46,22 @@ toSql(DibiTranslator$translator,$modifier);}interface
 IDataSource
 extends
 Countable,IteratorAggregate{}interface
+IDibiProfiler{const
+CONNECT=1;const
+SELECT=4;const
+INSERT=8;const
+DELETE=16;const
+UPDATE=32;const
+QUERY=60;const
+BEGIN=64;const
+COMMIT=128;const
+ROLLBACK=256;const
+TRANSACTION=448;const
+EXCEPTION=512;const
+ALL=1023;function
+before(DibiConnection$connection,$event,$sql=NULL);function
+after($ticket,$result=NULL);function
+exception(DibiDriverException$exception);}interface
 IDibiDriver{function
 connect(array&$config);function
 disconnect();function
@@ -134,7 +150,7 @@ implements
 IDebuggable{private
 static$errorMsg;private$sql;public
 function
-__construct($message=NULL,$code=0,$sql=NULL){parent::__construct($message,(int)$code);$this->sql=$sql;dibi::notify(NULL,'exception',$this);}final
+__construct($message=NULL,$code=0,$sql=NULL){parent::__construct($message,(int)$code);$this->sql=$sql;}final
 public
 function
 getSql(){return$this->sql;}public
@@ -154,7 +170,7 @@ function
 _errorHandler($code,$message){restore_error_handler();if(ini_get('html_errors')){$message=strip_tags($message);$message=html_entity_decode($message);}self::$errorMsg=$message;}}class
 DibiConnection
 extends
-DibiObject{private$config;private$driver;private$connected=FALSE;private$inTxn=FALSE;public
+DibiObject{private$config;private$driver;private$profiler;private$connected=FALSE;private$inTxn=FALSE;public
 function
 __construct($config,$name=NULL){if(class_exists('Debug',FALSE)){Debug::addColophon(array('dibi','getColophon'));}if(is_string($config)){parse_str($config,$config);}elseif($config
 instanceof
@@ -162,15 +178,17 @@ ArrayObject){$config=(array)$config;}elseif(!is_array($config)){throw
 new
 InvalidArgumentException('Configuration must be array, string or ArrayObject.');}if(!isset($config['driver'])){$config['driver']=dibi::$defaultDriver;}$driver=preg_replace('#[^a-z0-9_]#','_',$config['driver']);$class="Dibi".$driver."Driver";if(!class_exists($class,FALSE)){ include_once dirname(__FILE__)."/../drivers/$driver.php";if(!class_exists($class,FALSE)){throw
 new
-DibiException("Unable to create instance of dibi driver class '$class'.");}}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(empty($config['lazy'])){$this->connect();}}public
+DibiException("Unable to create instance of dibi driver '$class'.");}}$config['name']=$name;$this->config=$config;$this->driver=new$class;if(!empty($config['profiler'])){$class=$config['profiler'];if(is_numeric($class)||is_bool($class)){$class='DibiProfiler';}if(!class_exists($class)){throw
+new
+DibiException("Unable to create instance of dibi profiler '$class'.");}$this->setProfiler(new$class);}if(empty($config['lazy'])){$this->connect();}}public
 function
 __destruct(){$this->disconnect();}final
 protected
 function
-connect(){if(!$this->connected){$this->driver->connect($this->config);$this->connected=TRUE;dibi::notify($this,'connected');}}final
+connect(){if(!$this->connected){if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::CONNECT);}$this->driver->connect($this->config);$this->connected=TRUE;if(isset($ticket)){$this->profiler->after($ticket);}}}final
 public
 function
-disconnect(){if($this->connected){if($this->inTxn){$this->rollback();}$this->driver->disconnect();$this->connected=FALSE;dibi::notify($this,'disconnected');}}final
+disconnect(){if($this->connected){if($this->inTxn){$this->rollback();}$this->driver->disconnect();$this->connected=FALSE;}}final
 public
 function
 isConnected(){return$this->connected;}final
@@ -195,8 +213,8 @@ test($args){$args=func_get_args();$this->connect();$trans=new
 DibiTranslator($this->driver);$ok=$trans->translate($args);dibi::dump($trans->sql);return$ok;}final
 public
 function
-nativeQuery($sql){$this->connect();dibi::$numOfQueries++;dibi::$sql=$sql;dibi::$elapsedTime=FALSE;$time=-microtime(TRUE);dibi::notify($this,'beforeQuery',$sql);if($res=$this->driver->query($sql)){$res=new
-DibiResult($res,$this->config);}$time+=microtime(TRUE);dibi::$elapsedTime=$time;dibi::$totalTime+=$time;dibi::notify($this,'afterQuery',$res);return$res;}public
+nativeQuery($sql){$this->connect();if($this->profiler!==NULL){$event=IDibiProfiler::QUERY;if(preg_match('#\s*(SELECT|UPDATE|INSERT|DELETE)#i',$sql,$matches)){static$events=array('SELECT'=>IDibiProfiler::SELECT,'UPDATE'=>IDibiProfiler::UPDATE,'INSERT'=>IDibiProfiler::INSERT,'DELETE'=>IDibiProfiler::DELETE);$event=$events[strtoupper($matches[1])];}$ticket=$this->profiler->before($this,$event,$sql);}dibi::$numOfQueries++;dibi::$sql=$sql;dibi::$elapsedTime=FALSE;$time=-microtime(TRUE);if($res=$this->driver->query($sql)){$res=new
+DibiResult($res,$this->config);}$time+=microtime(TRUE);dibi::$elapsedTime=$time;dibi::$totalTime+=$time;if(isset($ticket)){$this->profiler->after($ticket,$res);}return$res;}public
 function
 affectedRows(){$rows=$this->driver->affectedRows();if(!is_int($rows)||$rows<0)throw
 new
@@ -208,15 +226,15 @@ DibiException('Cannot retrieve last generated ID.');return(int)$id;}public
 function
 begin(){$this->connect();if($this->inTxn){throw
 new
-DibiException('There is already an active transaction.');}$this->driver->begin();$this->inTxn=TRUE;dibi::notify($this,'begin');}public
+DibiException('There is already an active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::BEGIN);}$this->driver->begin();$this->inTxn=TRUE;if(isset($ticket)){$this->profiler->after($ticket);}}public
 function
 commit(){if(!$this->inTxn){throw
 new
-DibiException('There is no active transaction.');}$this->driver->commit();$this->inTxn=FALSE;dibi::notify($this,'commit');}public
+DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::COMMIT);}$this->driver->commit();$this->inTxn=FALSE;if(isset($ticket)){$this->profiler->after($ticket);}}public
 function
 rollback(){if(!$this->inTxn){throw
 new
-DibiException('There is no active transaction.');}$this->driver->rollback();$this->inTxn=FALSE;dibi::notify($this,'rollback');}public
+DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::ROLLBACK);}$this->driver->rollback();$this->inTxn=FALSE;if(isset($ticket)){$this->profiler->after($ticket);}}public
 function
 escape($value,$type=dibi::FIELD_TEXT){$this->connect();return$this->driver->escape($value,$type);}public
 function
@@ -237,6 +255,10 @@ function
 insert($table,array$args){return$this->command()->insert()->into('%n',$table,'(%n)',array_keys($args))->values('%l',array_values($args));}public
 function
 delete($table){return$this->command()->delete()->from('%n',$table);}public
+function
+setProfiler(IDibiProfiler$profiler=NULL){$this->profiler=$profiler;}public
+function
+getProfiler(){return$this->profiler;}public
 function
 loadFile($file){$this->connect();@set_time_limit(0);$handle=@fopen($file,'r');if(!$handle){throw
 new
@@ -301,7 +323,7 @@ public
 function
 fetchAssoc($assoc){$this->seek(0);$row=$this->fetch();if(!$row)return
 array();$data=NULL;$assoc=explode(',',$assoc);foreach($assoc
-as$as){if($as!=='#'&&$as!=='='&&$as!=='@'&&!array_key_exists($as,$row)){throw
+as$as){if($as!=='#'&&$as!=='='&&$as!=='@'&&!isset($row[$as])){throw
 new
 InvalidArgumentException("Unknown column '$as' in associative descriptor.");}}$leaf='@';$last=count($assoc)-1;while($assoc[$last]==='='||$assoc[$last]==='@'){$leaf=$assoc[$last];unset($assoc[$last]);$last--;if($last<0){$assoc[]='#';break;}}do{$arr=(array)$row;$x=&$data;foreach($assoc
 as$i=>$as){if($as==='#'){$x=&$x[];}elseif($as==='='){if($x===NULL){$x=$arr;$x=&$x[$assoc[$i+1]];$x=NULL;}else{$x=&$x[$assoc[$i+1]];}}elseif($as==='@'){if($x===NULL){$x=clone$row;$x=&$x->{$assoc[$i+1]};$x=NULL;}else{$x=&$x->{$assoc[$i+1]};}}else{$x=&$x[$arr[$as]];}}if($x===NULL){if($leaf==='='){$x=$arr;}else{$x=$row;}}}while($row=$this->fetch());unset($x);return$data;}final
@@ -310,9 +332,9 @@ function
 fetchPairs($key=NULL,$value=NULL){$this->seek(0);$row=$this->fetch();if(!$row)return
 array();$data=array();if($value===NULL){if($key!==NULL){throw
 new
-InvalidArgumentException("Either none or both columns must be specified.");}$tmp=array_keys((array)$row);$key=$tmp[0];if(count($row)<2){do{$data[]=$row[$key];}while($row=$this->fetch());return$data;}$value=$tmp[1];}else{if(!array_key_exists($value,$row)){throw
+InvalidArgumentException("Either none or both columns must be specified.");}$tmp=array_keys((array)$row);$key=$tmp[0];if(count($row)<2){do{$data[]=$row[$key];}while($row=$this->fetch());return$data;}$value=$tmp[1];}else{if(!isset($row[$value])){throw
 new
-InvalidArgumentException("Unknown value column '$value'.");}if($key===NULL){do{$data[]=$row[$value];}while($row=$this->fetch());return$data;}if(!array_key_exists($key,$row)){throw
+InvalidArgumentException("Unknown value column '$value'.");}if($key===NULL){do{$data[]=$row[$value];}while($row=$this->fetch());return$data;}if(!isset($row[$key])){throw
 new
 InvalidArgumentException("Unknown key column '$key'.");}}do{$data[$row[$key]]=$row[$value];}while($row=$this->fetch());return$data;}final
 public
@@ -454,7 +476,11 @@ command(){return
 new
 DibiFluent($this->connection);}public
 function
-select($args){$args=func_get_args();return$this->command()->__call('select',$args)->from($this->name);}}class
+select($args){$args=func_get_args();return$this->command()->__call('select',$args)->from($this->name);}public
+function
+__call($name,$args){if(strncmp($name,'fetchBy',7)===0){$single=TRUE;$name=substr($name,7);}elseif(strncmp($name,'fetchAllBy',10)===0){$name=substr($name,10);}else{parent::__call($name,$args);}$parts=explode('_and_',strtolower(preg_replace('#(.)(?=[A-Z])#','$1_',$name)));if(count($parts)!==count($args)){throw
+new
+InvalidArgumentException("Magic fetch expects ".count($parts)." parameters, but ".count($args)." was given.");}if(isset($single)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args),'LIMIT 1'))->fetch();}else{return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args)))->fetchAll();}}}class
 DibiDataSource
 extends
 DibiObject
@@ -474,13 +500,14 @@ DibiFluent
 extends
 DibiObject{public
 static$masks=array('SELECT'=>array('SELECT','DISTINCT','FROM','WHERE','GROUP BY','HAVING','ORDER BY','LIMIT','OFFSET','%end'),'UPDATE'=>array('UPDATE','SET','WHERE','ORDER BY','LIMIT','%end'),'INSERT'=>array('INSERT','INTO','VALUES','SELECT','%end'),'DELETE'=>array('DELETE','FROM','USING','WHERE','ORDER BY','LIMIT','%end'));public
+static$modifiers=array('SELECT'=>'%n','IN'=>'%l','VALUES'=>'%l','SET'=>'%a','WHERE'=>'%and','HAVING'=>'%and','ORDER BY'=>'%by','GROUP BY'=>'%by');public
 static$separators=array('SELECT'=>',','FROM'=>FALSE,'WHERE'=>'AND','GROUP BY'=>',','HAVING'=>'AND','ORDER BY'=>',','LIMIT'=>FALSE,'OFFSET'=>FALSE,'SET'=>',','VALUES'=>',','INTO'=>FALSE);private$connection;private$command;private$clauses=array();private$flags=array();private$cursor;public
 function
 __construct(DibiConnection$connection){$this->connection=$connection;}public
 function
-__call($clause,$args){$clause=self::_clause($clause);if($this->command===NULL){if(isset(self::$masks[$clause])){$this->clauses=array_fill_keys(self::$masks[$clause],NULL);}$this->cursor=&$this->clauses[$clause];$this->cursor=array();$this->command=$clause;}if(count($args)===1){$arg=$args[0];if($arg===TRUE){$args=array();}elseif(is_string($arg)&&preg_match('#^[a-z][a-z0-9_.]*$#i',$arg)){$args=array('%n',$arg);}}if(array_key_exists($clause,$this->clauses)){$this->cursor=&$this->clauses[$clause];if($args===array(FALSE)){$this->cursor=NULL;return$this;}if(isset(self::$separators[$clause])){$sep=self::$separators[$clause];if($sep===FALSE){$this->cursor=array();}elseif(!empty($this->cursor)){$this->cursor[]=$sep;}}}else{if($args===array(FALSE)){return$this;}$this->cursor[]=$clause;}if($this->cursor===NULL){$this->cursor=array();}array_splice($this->cursor,count($this->cursor),0,$args);return$this;}public
+__call($clause,$args){$clause=self::_formatClause($clause);if($this->command===NULL){if(isset(self::$masks[$clause])){$this->clauses=array_fill_keys(self::$masks[$clause],NULL);}$this->cursor=&$this->clauses[$clause];$this->cursor=array();$this->command=$clause;}if(count($args)===1){$arg=$args[0];if($arg===TRUE){$args=array();}elseif(is_string($arg)&&preg_match('#^[a-z][a-z0-9_.]*$#i',$arg)){$args=array('%n',$arg);}elseif(is_array($arg)){if(isset(self::$modifiers[$clause])){$args=array(self::$modifiers[$clause],$arg);}elseif(is_string(key($arg))){$args=array('%a',$arg);}}}if(array_key_exists($clause,$this->clauses)){$this->cursor=&$this->clauses[$clause];if($args===array(FALSE)){$this->cursor=NULL;return$this;}if(isset(self::$separators[$clause])){$sep=self::$separators[$clause];if($sep===FALSE){$this->cursor=array();}elseif(!empty($this->cursor)){$this->cursor[]=$sep;}}}else{if($args===array(FALSE)){return$this;}$this->cursor[]=$clause;}if($this->cursor===NULL){$this->cursor=array();}array_splice($this->cursor,count($this->cursor),0,$args);return$this;}public
 function
-clause($clause,$remove=FALSE){$this->cursor=&$this->clauses[self::_clause($clause)];if($remove){$this->cursor=NULL;}elseif($this->cursor===NULL){$this->cursor=array();}return$this;}public
+clause($clause,$remove=FALSE){$this->cursor=&$this->clauses[self::_formatClause($clause)];if($remove){$this->cursor=NULL;}elseif($this->cursor===NULL){$this->cursor=array();}return$this;}public
 function
 setFlag($flag,$value=TRUE){$flag=strtoupper($flag);if($value){$this->flags[$flag]=TRUE;}else{unset($this->flags[$flag]);}return$this;}final
 public
@@ -505,12 +532,12 @@ fetchPairs($key=NULL,$value=NULL){return$this->execute()->fetchPairs($key,$value
 function
 test($clause=NULL){return$this->connection->test($this->_export($clause));}protected
 function
-_export($clause=NULL){if($clause===NULL){$data=$this->clauses;}else{$clause=self::_clause($clause);if(array_key_exists($clause,$this->clauses)){$data=array($clause=>$this->clauses[$clause]);}else{return
+_export($clause=NULL){if($clause===NULL){$data=$this->clauses;}else{$clause=self::_formatClause($clause);if(array_key_exists($clause,$this->clauses)){$data=array($clause=>$this->clauses[$clause]);}else{return
 array();}}$args=array();foreach($data
 as$clause=>$statement){if($statement!==NULL){if($clause[0]!=='%'){$args[]=$clause;if($clause===$this->command){$args[]=implode(' ',array_keys($this->flags));}}array_splice($args,count($args),0,$statement);}}return$args;}private
 static
 function
-_clause($s){if($s==='order'||$s==='group'){$s.='By';trigger_error("Did you mean '$s'?",E_USER_NOTICE);}return
+_formatClause($s){if($s==='order'||$s==='group'){$s.='By';trigger_error("Did you mean '$s'?",E_USER_NOTICE);}return
 strtoupper(preg_replace('#[A-Z]#',' $0',$s));}final
 public
 function
@@ -638,9 +665,41 @@ function
 getColumns(){return$this->columns;}public
 function
 isUnique(){return$this->unique;}}class
+DibiProfiler
+extends
+DibiObject
+implements
+IDibiProfiler{private$file;private$useFirebug;private$filter=self::ALL;public$tickets=array();public
+static$table=array(array('Time','SQL Statement','Rows','Connection'));public
+function
+__construct(){$this->useFirebug=isset($_SERVER['HTTP_USER_AGENT'])&&strpos($_SERVER['HTTP_USER_AGENT'],'FirePHP/');}public
+function
+setFile($file){$this->file=$file;}public
+function
+setFilter($filter){$this->filter=(int)$filter;}public
+function
+before(DibiConnection$connection,$event,$sql=NULL){$this->tickets[]=array($connection,$event,$sql);end($this->tickets);return
+key($this->tickets);}public
+function
+after($ticket,$res=NULL){if(!isset($this->tickets[$ticket])){throw
+new
+InvalidArgumentException('Bad ticket number.');}list($connection,$event,$sql)=$this->tickets[$ticket];if(($event&$this->filter)===0)return;if($event&self::QUERY){if($this->useFirebug){self::$table[]=array(sprintf('%0.3f',dibi::$elapsedTime*1000),trim($sql),$res
+instanceof
+DibiResult?count($res):'-',$connection->getConfig('driver').'/'.$connection->getConfig('name'));header('X-Wf-Protocol-dibi: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');header('X-Wf-dibi-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.2.0');header('X-Wf-dibi-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');$payload=array(array('Type'=>'TABLE','Label'=>'dibi profiler ('.dibi::$numOfQueries.' SQL queries took '.sprintf('%0.3f',dibi::$totalTime*1000).' ms)'),self::$table);$payload=function_exists('json_encode')?json_encode($payload):self::json_encode($payload);foreach(str_split($payload,4990)as$num=>$s){$num++;header("X-Wf-dibi-1-1-$num: |$s|\\");}header("X-Wf-dibi-1-1-$num: |$s|");header("X-Wf-dibi-Index: $num");}if($this->file){$this->writeFile("OK: ".$sql.($res
+instanceof
+DibiResult?";\n-- rows: ".count($res):'')."\n-- takes: ".sprintf('%0.3f',dibi::$elapsedTime*1000).' ms'."\n-- driver: ".$connection->getConfig('driver').'/'.$connection->getConfig('name')."\n-- ".date('Y-m-d H:i:s')."\n\n");}}}public
+function
+exception(DibiDriverException$exception){if((self::EXCEPTION&$this->filter)===0)return;if($this->useFirebug){}if($this->file){$message=$exception->getMessage();$code=$exception->getCode();if($code){$message="[$code] $message";}$this->writeFile("ERROR: $message"."\n-- SQL: ".dibi::$sql."\n-- driver: ".";\n-- ".date('Y-m-d H:i:s')."\n\n");}}private
+function
+writeFile($message){$handle=fopen($this->file,'a');if(!$handle)return;flock($handle,LOCK_EX);fwrite($handle,$message);fclose($handle);}public
+static
+function
+json_encode($val){if(is_array($val)&&(!$val||array_keys($val)===range(0,count($val)-1))){return'['.implode(',',array_map(array(__CLASS__,'json_encode'),$val)).']';}if(is_array($val)||is_object($val)){$tmp=array();foreach($val
+as$k=>$v){$tmp[]=self::json_encode((string)$k).':'.self::json_encode($v);}return'{'.implode(',',$tmp).'}';}if(is_string($val)){$val=str_replace(array("\\","\x00"),array("\\\\","\\u0000"),$val);return'"'.addcslashes($val,"\x8\x9\xA\xC\xD/\"").'"';}if(is_int($val)||is_float($val)){return
+rtrim(rtrim(number_format($val,5,'.',''),'0'),'.');}if(is_bool($val)){return$val?'true':'false';}return'null';}}class
 dibi{const
 FIELD_TEXT='s',FIELD_BINARY='bin',FIELD_BOOL='b',FIELD_INTEGER='i',FIELD_FLOAT='f',FIELD_DATE='d',FIELD_DATETIME='t',IDENTIFIER='n';const
-VERSION='0.9',REVISION='153 released on 2008/10/10 19:39:33';const
+VERSION='0.9',REVISION='157 released on 2008/10/25 17:36:37';const
 RESULT_WITH_TABLES='resultWithTables';private
 static$registry=array();private
 static$connection;private
@@ -680,6 +739,10 @@ self::$registry[$name];}public
 static
 function
 activate($name){self::$connection=self::getConnection($name);}public
+static
+function
+getProfiler(){return
+self::getConnection()->getProfiler();}public
 static
 function
 query($args){$args=func_get_args();return
@@ -787,19 +850,6 @@ self::$substs[$m];}elseif(self::$substFallBack){return
 self::$substs[$m]=call_user_func(self::$substFallBack,$m);}else{return$m;}}public
 static
 function
-addHandler($callback){if(!is_callable($callback)){throw
-new
-InvalidArgumentException("Invalid callback.");}self::$handlers[]=$callback;}public
-static
-function
-notify(DibiConnection$connection=NULL,$event,$arg=NULL){foreach(self::$handlers
-as$handler){call_user_func($handler,$connection,$event,$arg);}}public
-static
-function
-startLogger($file,$logQueries=FALSE){$logger=new
-DibiLogger($file);$logger->logQueries=$logQueries;self::addHandler(array($logger,'handler'));return$logger;}public
-static
-function
 dump($sql=NULL,$return=FALSE){ob_start();if($sql
 instanceof
 DibiResult){$sql->dump();}else{if($sql===NULL)$sql=self::$sql;static$keywords1='SELECT|UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';static$keywords2='ALL|DISTINCT|DISTINCTROW|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|TRUE|FALSE';$sql=' '.$sql;$sql=preg_replace("#(?<=[\\s,(])($keywords1)(?=[\\s,)])#i","\n\$1",$sql);$sql=preg_replace('#[ \t]{2,}#'," ",$sql);$sql=wordwrap($sql,100);$sql=htmlSpecialChars($sql);$sql=preg_replace("#\n{2,}#","\n",$sql);$sql=preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is",array('dibi','highlightCallback'),$sql);$sql=trim($sql);echo'<pre class="dump">',$sql,"</pre>\n";}if($return){return
@@ -809,19 +859,7 @@ function
 highlightCallback($matches){if(!empty($matches[1]))return'<em style="color:gray">'.$matches[1].'</em>';if(!empty($matches[2]))return'<strong style="color:red">'.$matches[2].'</strong>';if(!empty($matches[3]))return'<strong style="color:blue">'.$matches[3].'</strong>';if(!empty($matches[4]))return'<strong style="color:green">'.$matches[4].'</strong>';}public
 static
 function
-getColophon($sender=NULL){$arr=array('Number of SQL queries: '.dibi::$numOfQueries.(dibi::$totalTime===NULL?'':', elapsed time: '.sprintf('%0.3f',dibi::$totalTime*1000).' ms'));if($sender==='bluescreen'){$arr[]='dibi '.dibi::VERSION.' (revision '.dibi::REVISION.')';}return$arr;}}final
-class
-DibiLogger
-extends
-DibiObject{private$file;public$logErrors=TRUE;public$logQueries=TRUE;public
-function
-__construct($file){$this->file=$file;}public
-function
-handler($connection,$event,$arg){if($event==='afterQuery'&&$this->logQueries){$this->write("OK: ".dibi::$sql.($arg
-instanceof
-DibiResult?";\n-- rows: ".count($arg):'')."\n-- takes: ".sprintf('%0.3f',dibi::$elapsedTime*1000).' ms'."\n-- driver: ".$connection->getConfig('driver')."\n-- ".date('Y-m-d H:i:s')."\n\n");return;}if($event==='exception'&&$this->logErrors){$message=$arg->getMessage();$code=$arg->getCode();if($code){$message="[$code] $message";}$this->write("ERROR: $message"."\n-- SQL: ".dibi::$sql."\n-- driver: ".";\n-- ".date('Y-m-d H:i:s')."\n\n");return;}}private
-function
-write($message){$handle=fopen($this->file,'a');if(!$handle)return;flock($handle,LOCK_EX);fwrite($handle,$message);fclose($handle);}}class
+getColophon($sender=NULL){$arr=array('Number of SQL queries: '.dibi::$numOfQueries.(dibi::$totalTime===NULL?'':', elapsed time: '.sprintf('%0.3f',dibi::$totalTime*1000).' ms'));if($sender==='bluescreen'){$arr[]='dibi '.dibi::VERSION.' (revision '.dibi::REVISION.')';}return$arr;}}class
 DibiMsSqlDriver
 extends
 DibiObject
@@ -1384,7 +1422,7 @@ __construct(){if(!extension_loaded('pgsql')){throw
 new
 DibiDriverException("PHP extension 'pgsql' is not loaded.");}}public
 function
-connect(array&$config){if(isset($config['string'])){$string=$config['string'];}else{$string='';foreach(array('host','hostaddr','port','dbname','user','password','connect_timeout','options','sslmode','service')as$key){if(isset($config[$key]))$string.=$key.'='.$config[$key].' ';}}DibiDriverException::tryError();if(isset($config['persistent'])){$this->connection=pg_connect($string,PGSQL_CONNECT_FORCE_NEW);}else{$this->connection=pg_pconnect($string,PGSQL_CONNECT_FORCE_NEW);}if(DibiDriverException::catchError($msg)){throw
+connect(array&$config){if(isset($config['string'])){$string=$config['string'];}else{$string='';foreach(array('host','hostaddr','port','dbname','user','password','connect_timeout','options','sslmode','service')as$key){if(isset($config[$key]))$string.=$key.'='.$config[$key].' ';}}DibiDriverException::tryError();if(empty($config['persistent'])){$this->connection=pg_connect($string,PGSQL_CONNECT_FORCE_NEW);}else{$this->connection=pg_pconnect($string,PGSQL_CONNECT_FORCE_NEW);}if(DibiDriverException::catchError($msg)){throw
 new
 DibiDriverException($msg,0);}if(!is_resource($this->connection)){throw
 new

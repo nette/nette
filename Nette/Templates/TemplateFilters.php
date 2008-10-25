@@ -266,6 +266,7 @@ final class TemplateFilters
 	 */
 	public static function autoConfig(Template $template, $s)
 	{
+		throw new /*::*/NotImplementedException;
 		preg_match_all('#<\\?nette(.*)\\?>#sU', $s, $matches, PREG_SET_ORDER);
 		foreach ($matches as $m) {
 		}

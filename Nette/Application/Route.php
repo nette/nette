@@ -496,6 +496,7 @@ class Route extends /*Nette::*/Object implements IRouter
 				return $presenter . $m[self::PRESENTER_KEY]['default'];
 			}
 		}
+		return NULL;
 	}
 
 

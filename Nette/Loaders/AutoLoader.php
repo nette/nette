@@ -108,7 +108,7 @@ abstract class AutoLoader extends /*Nette::*/Object
 	 * @param  string  file to include
 	 * @return mixed   the return value of the included file
 	 */
-	protected static function includeOnce()
+	public static function includeOnce()
 	{
 		return include_once func_get_arg(0);
 	}
