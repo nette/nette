@@ -209,7 +209,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		// TODO: only for back compatiblity - remove?
 		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
-			if ($control->isRequired() && isset($wrapper['.required'])) {
+			if ($control->getOption('required') && isset($wrapper['.required'])) {
 				$control->getLabelPrototype()->class($wrapper['.required'], TRUE);
 			}
 
@@ -231,7 +231,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$this->counter = 0;
 
 		foreach ($this->form->getControls() as $control) {
-			$control->setRendered(FALSE);
+			$control->setOption('rendered', FALSE);
 		}
 
 		return $this->form->getElementPrototype()->startTag();
@@ -247,7 +247,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	{
 		$s = '';
 		foreach ($this->form->getControls() as $control) {
-			if ($control instanceof HiddenField && !$control->isRendered()) {
+			if ($control instanceof HiddenField && !$control->getOption('rendered')) {
 				$s .= (string) $control->getControl();
 			}
 		}
@@ -368,7 +368,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 		$buttons = NULL;
 		foreach ($parent->getControls() as $control) {
-			if ($control->isRendered() || $control instanceof HiddenField) {
+			if ($control->getOption('rendered') || $control instanceof HiddenField) {
 				// skip
 
 			} elseif ($control instanceof Button) {
@@ -407,7 +407,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
+		$pair->class($this->getValue($control->getOption('required') ? 'pair .required' : 'pair .optional'), TRUE);
 		$pair->class($control->getOption('class'), TRUE);
 		if (++$this->counter % 2) $pair->class($this->getValue('pair .odd'), TRUE);
 		$pair->id = $control->getOption('id');

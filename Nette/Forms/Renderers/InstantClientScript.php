@@ -211,6 +211,9 @@ final class InstantClientScript extends /*Nette::*/Object
 		$operation = strtolower($operation);
 
 		switch (TRUE) {
+		case $control instanceof HiddenField || $control->isDisabled():
+			return NULL;
+
 		case $operation === ':equal' && $control instanceof Checkbox:
 			return $tmp . "res = " . ($arg ? '' : '!') . "el.checked;";
 

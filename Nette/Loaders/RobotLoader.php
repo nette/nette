@@ -92,9 +92,6 @@ class RobotLoader extends AutoLoader
 			}
 		}
 
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
-
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {

@@ -70,12 +70,6 @@ interface IFormControl
 	function isDisabled();
 
 	/**
-	 * Is control mandatory?
-	 * @return bool
-	 */
-	function isRequired();
-
-	/**
 	 * Returns translator adapter.
 	 * @return Nette::ITranslator|NULL
 	 */

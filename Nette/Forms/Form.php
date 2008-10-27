@@ -74,6 +74,9 @@ class Form extends FormContainer
 	/** tracker ID */
 	const TRACKER_ID = '_form_';
 
+	/** protection token ID */
+	const PROTECTOR_ID = '_token_';
+
 	/** @var array - function($sender, $submittor) */
 	public $onSubmit;
 
@@ -185,13 +188,35 @@ class Form extends FormContainer
 
 
 	/**
-	 * @return HiddenField
+	 * Adds distinguishing mark.
+	 * @param  string
+	 * @return void
 	 */
 	public function addTracker($name)
 	{
-		// TODO: implement Cross-Site Request Forgery token
-		$this[self::TRACKER_ID] = new HiddenField;
-		$this[self::TRACKER_ID]->setValue($name);
+		$this[self::TRACKER_ID] = new HiddenField($name);
+	}
+
+
+
+	/**
+	 * Cross-Site Request Forgery (CSRF) form protection.
+	 * @param  string
+	 * @param  int
+	 * @return void
+	 */
+	public function addProtection($message = NULL, $timeout = NULL)
+	{
+		$session = /*Nette::*/Environment::getSession(__METHOD__);
+		$key = "key$timeout";
+		if (isset($session->$key)) {
+			$token = $session->$key;
+		} else {
+			$session->$key = $token = md5(uniqid('', TRUE));
+		}
+		$session->setExpiration($timeout, $key);
+		$this[self::PROTECTOR_ID] = new HiddenField($token);
+		$this[self::PROTECTOR_ID]->addRule(':equal', empty($message) ? 'Security token did not match. Possible CSRF attack.' : $message, $token);
 	}
 
 
@@ -406,12 +431,6 @@ class Form extends FormContainer
 			throw new /*::*/InvalidArgumentException('Default values must be an array.');
 		}
 
-		// tracker value cannot be changed
-		$tracker = $this->getComponent(self::TRACKER_ID, FALSE);
-		if ($tracker) {
-			$values[self::TRACKER_ID] = $tracker->getValue();
-		}
-
 		$cursor = & $values;
 		$iterator = $this->getComponents(TRUE);
 		foreach ($iterator as $name => $control) {
@@ -511,7 +530,7 @@ class Form extends FormContainer
 				$cursor = array();
 			}
 		}
-		unset($values[self::TRACKER_ID]);
+		unset($values[self::TRACKER_ID], $values[self::PROTECTOR_ID]);
 		return $values;
 	}
 

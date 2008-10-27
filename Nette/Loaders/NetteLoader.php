@@ -206,9 +206,6 @@ class NetteLoader extends AutoLoader
 	 */
 	public function tryLoad($type)
 	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
-
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
 			self::includeOnce($this->base . $this->list[$type]);

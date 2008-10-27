@@ -35,12 +35,17 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  */
 class HiddenField extends FormControl
 {
+	/** @var string */
+	private $forcedValue;
 
-	public function __construct()
+
+
+	public function __construct($forcedValue = NULL)
 	{
 		parent::__construct(NULL);
 		$this->control->type = 'hidden';
-		$this->value = '';
+		$this->value = (string) $forcedValue;
+		$this->forcedValue = $forcedValue;
 		$this->setHtmlId(FALSE);
 	}
 
@@ -75,7 +80,7 @@ class HiddenField extends FormControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->value($this->value);
+		return parent::getControl()->value($this->forcedValue === NULL ? $this->value : $this->forcedValue);
 	}
 
 }

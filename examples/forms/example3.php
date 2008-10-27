@@ -67,7 +67,7 @@ $form->addText('name', 'Your name:', 35)
 
 $form->addText('age', 'Your age:', 5)
 	->addRule(Form::FILLED, 'Enter your age')
-	->addRule(Form::NUMERIC, 'Age must be numeric value')
+	->addRule(Form::INTEGER, 'Age must be numeric value')
 	->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', array(9.9, 100));
 
 $form->addRadioList('gender', 'Your gender:', $sex);

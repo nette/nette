@@ -55,12 +55,6 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var bool */
 	private $disabled = FALSE;
 
-	/** @var bool */
-	private $required = FALSE;
-
-	/** @var bool */
-	private $rendered = FALSE;
-
 	/** @var string */
 	private $htmlId;
 
@@ -319,7 +313,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function getControl()
 	{
-		$this->rendered = TRUE;
+		$this->options['rendered'] = TRUE;
 		$control = clone $this->control;
 		$control->name = $this->getHtmlName();
 		$control->disabled = $this->disabled;
@@ -377,10 +371,11 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * Sets 'rendered' indicator.
 	 * @param  bool
 	 * @return FormControl  provides a fluent interface
+     * @deprecated
 	 */
 	public function setRendered($value = TRUE)
 	{
-		$this->rendered = (bool) $value;
+		$this->setOption('rendered', $value);
 		return $this;
 	}
 
@@ -389,10 +384,11 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/**
 	 * Does method getControl() have been called?
 	 * @return bool
+     * @deprecated
 	 */
 	public function isRendered()
 	{
-		return $this->rendered;
+		return !empty($this->options['rendered']);
 	}
 
 
@@ -457,6 +453,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * Makes control mandatory.
 	 * @param  string  error message
 	 * @return FormControl  provides a fluent interface
+     * @deprecated
 	 */
 	final public function setRequired($message = NULL)
 	{
@@ -469,10 +466,11 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/**
 	 * Is control mandatory?
 	 * @return bool
+     * @deprecated
 	 */
 	final public function isRequired()
 	{
-		return $this->required;
+		return !empty($this->options['required']);
 	}
 
 
@@ -485,7 +483,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	public function notifyRule(Rule $rule)
 	{
 		if (!$rule->isCondition && is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
-			$this->required = TRUE;
+			$this->setOption('required', TRUE);
 		}
 	}
 

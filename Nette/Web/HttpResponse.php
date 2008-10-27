@@ -142,7 +142,8 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
 		$this->setHeader('Connection', 'close');
-		echo "<h1>Redirect</h1>\n\n<p><a href=\"', htmlSpecialChars($url), '\">Please click here to continue</a>.</p>";
+		$url = htmlSpecialChars($url);
+		echo "<h1>Redirect</h1>\n\n<p><a href=\"$url\">Please click here to continue</a>.</p>";
 	}
 
 
