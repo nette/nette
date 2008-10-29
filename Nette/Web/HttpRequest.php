@@ -481,6 +481,17 @@ class HttpRequest extends /*Nette::*/Object implements IHttpRequest
 
 
 	/**
+	 * Checks if the request method is POST.
+	 * @return bool
+	 */
+	public function isPost()
+	{
+		return $this->isMethod('POST');
+	}
+
+
+
+	/**
 	 * Return the value of the HTTP header. Pass the header name as the
 	 * plain, HTTP-specified header name (e.g. 'Accept-Encoding').
 	 * @param  string

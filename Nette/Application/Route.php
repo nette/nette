@@ -449,7 +449,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$tmp = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
 			if (isset($meta['fixed'])) { // has default value?
 				if (!$optional) {
-					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right are not optional.");
+					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
 				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
 				$metadata[$name]['fixed'] = 1;
