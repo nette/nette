@@ -569,9 +569,11 @@ final class Debug
 	{
 		$colophons = self::$colophons;
 		if (self::$useFirebug) {
+			self::fireLog( 'Nette profiler', 'GROUP_START');
 			foreach (self::$colophons as $callback) {
 				foreach ((array) call_user_func($callback, 'profiler') as $line) self::fireLog(strip_tags($line));
 			}
+			self::fireLog( null, 'GROUP_END');
 		}
 		if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
 			// non AJAX mode

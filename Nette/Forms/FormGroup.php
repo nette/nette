@@ -85,6 +85,14 @@ class FormGroup extends /*Nette::*/Object
 
 	/**
 	 * Sets user-specific option.
+	 *
+	 * Options recognized by ConventionalRenderer
+	 * - 'label' - textual or Html object label
+	 * - 'visual' - indicates visual group
+	 * - 'container' - container as Html object
+	 * - 'description' - textual or Html object description
+	 * - 'embedNext' - describes how render next group
+	 *
 	 * @param  string key
 	 * @param  mixed  value
 	 * @return FormControl  provides a fluent interface

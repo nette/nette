@@ -161,12 +161,12 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	/**
 	 * Adds check box control to the form.
 	 * @param  string  control name
-	 * @param  string  label
+	 * @param  string  caption
 	 * @return Checkbox
 	 */
-	public function addCheckbox($name, $label)
+	public function addCheckbox($name, $caption)
 	{
-		return $this[$name] = new Checkbox($label);
+		return $this[$name] = new Checkbox($caption);
 	}
 
 
@@ -218,12 +218,12 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	/**
 	 * Adds button used to submit form.
 	 * @param  string  control name
-	 * @param  string  label
+	 * @param  string  caption
 	 * @return SubmitButton
 	 */
-	public function addSubmit($name, $label)
+	public function addSubmit($name, $caption)
 	{
-		return $this[$name] = new SubmitButton($label);
+		return $this[$name] = new SubmitButton($caption);
 	}
 
 
@@ -231,12 +231,12 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	/**
 	 * Adds push buttons with no default behavior.
 	 * @param  string  control name
-	 * @param  string  label
+	 * @param  string  caption
 	 * @return Button
 	 */
-	public function addButton($name, $label)
+	public function addButton($name, $caption)
 	{
-		return $this[$name] = new Button($label);
+		return $this[$name] = new Button($caption);
 	}
 
 

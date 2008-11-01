@@ -37,11 +37,11 @@ class Button extends FormControl
 {
 
 	/**
-	 * @param  string  label
+	 * @param  string  caption
 	 */
-	public function __construct($label)
+	public function __construct($caption)
 	{
-		parent::__construct($label);
+		parent::__construct($caption);
 		$this->control->type = 'button';
 		$this->value = FALSE;
 	}
@@ -79,7 +79,7 @@ class Button extends FormControl
 	{
 		$control = parent::getControl();
 		$translator = $this->getTranslator();
-		$control->value = $translator === NULL ? $this->getOption('label') : $translator->translate($this->getOption('label'));
+		$control->value = $translator === NULL ? $this->caption : $translator->translate($this->caption);
 		return $control;
 	}
 

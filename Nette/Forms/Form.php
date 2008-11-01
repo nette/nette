@@ -575,10 +575,9 @@ class Form extends FormContainer
 
 	/**
 	 * Performs the server side validation.
-	 * @param  bool  stop on first error?
 	 * @return void
 	 */
-	public function validate($breakOnFailure = FALSE)
+	public function validate()
 	{
 		if (!$this->isPopulated) {
 			throw new /*::*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
@@ -590,7 +589,6 @@ class Form extends FormContainer
 		foreach ($controls as $control) {
 			if (!$control->getRules()->validate()) {
 				$this->valid = FALSE;
-				if ($breakOnFailure) break;
 			}
 		}
 	}

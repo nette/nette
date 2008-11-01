@@ -273,8 +273,11 @@ final class InstantClientScript extends /*Nette::*/Object
 			return $tmp . $tmp2 . 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val);';
 
 		case $operation === ':regexp' && $control instanceof TextBase:
-			foreach ((array) $arg as $item) {
-				$tmp3[] = "$arg.test(val)";
+			foreach ((array) $arg as $regexp) {
+				if (strncmp($regexp, '/', 1)) {
+					throw new /*::*/InvalidStateException("Regular expression '$regexp' must be JavaScript compatible.");
+				}
+				$tmp3[] = "$regexp.test(val)";
 			}
 			return $tmp . $tmp2 . "res = (" . implode(' || ', $tmp3) . ");";
 

@@ -46,11 +46,11 @@ class SubmitButton extends Button implements ISubmitterControl
 
 
 	/**
-	 * @param  string  label
+	 * @param  string  caption
 	 */
-	public function __construct($label)
+	public function __construct($caption)
 	{
-		parent::__construct($label);
+		parent::__construct($caption);
 		$this->control->type = 'submit';
 	}
 

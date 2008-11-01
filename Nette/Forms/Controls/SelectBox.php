@@ -145,11 +145,19 @@ class SelectBox extends FormControl
 			if (!is_array($value)) {
 				$value = array($key => $value);
 			}
+
 			foreach ($value as $key2 => $value2) {
-				if (!$this->useKeys) $key2 = $value2;
+				if (!$this->useKeys) {
+					if (!is_scalar($value2)) {
+						throw new /*::*/InvalidArgumentException("All items must be scalars.");
+					}
+					$key2 = $value2;
+				}
+
 				if (isset($this->allowed[$key2])) {
 					throw new /*::*/InvalidArgumentException("Items contain duplication for key '$key2'.");
 				}
+
 				$this->allowed[$key2] = $value2;
 			}
 		}
@@ -199,25 +207,32 @@ class SelectBox extends FormControl
 		$translator = $this->getTranslator();
 
 		foreach ($this->items as $key => $value) {
-			if (is_array($value)) {
-				$group = $control->create('optgroup')->label($key);
-				foreach ($value as $key2 => $value2) {
-					if ($translator !== NULL) $value2 = $translator->translate($value2);
-					if ($this->useKeys) {
-						$option->value($key2)->selected(isset($selected[$key2]));
-					} else {
-						$option->selected(isset($selected[$value2]));
-					}
-					$group->add((string) $option->setText($value2));
-				}
+			if (!is_array($value)) {
+				$value = array($key => $value);
+				$dest = $control;
+
 			} else {
-				if ($translator !== NULL) $value = $translator->translate($value);
-				if ($this->useKeys) {
-					$option->value($key)->selected(isset($selected[$key]));
-				} else {
-					$option->selected(isset($selected[$value]));
+				$dest = $control->create('optgroup')->label($key);
+			}
+
+			foreach ($value as $key2 => $value2) {
+				if ($value2 instanceof /*Nette::Web::*/Html) {
+					$dest->add((string) $value2->selected(isset($selected[$key2])));
+					continue;
 				}
-				$control->add((string) $option->setText($value));
+
+				if ($translator !== NULL) {
+					$value2 = $translator->translate($value2);
+				}
+
+				if ($this->useKeys) {
+					$option->value($key2)->selected(isset($selected[$key2]));
+
+				} else {
+					$option->selected(isset($selected[$value2]));
+				}
+
+				$dest->add((string) $option->setText($value2));
 			}
 		}
 		return $control;

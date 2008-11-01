@@ -79,7 +79,7 @@ class TextInput extends TextBase
 	 * @param  bool
 	 * @return TextInput  provides a fluent interface
 	 */
-	public function setPasswordMode($mode)
+	public function setPasswordMode($mode = TRUE)
 	{
 		$this->control->type = $mode ? 'password' : 'text';
 		return $this;

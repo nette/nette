@@ -396,11 +396,11 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
 			$this->view = $view;
+			$this->scene = $view;
 
 		} else {
 			throw new BadRequestException("View name '$view' is not alphanumeric string.");
 		}
-		$this->changeScene($view);
 	}
 
 
@@ -423,7 +423,12 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeScene($scene)
 	{
-		$this->scene = $scene;
+		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $scene)) {
+			$this->scene = $scene;
+
+		} else {
+			throw new BadRequestException("Scene name '$scene' is not alphanumeric string.");
+		}
 	}
 
 
@@ -446,7 +451,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeLayout($layout)
 	{
-		$this->layout = $layout;
+		$this->layout = (string) $layout;
 	}
 
 
@@ -556,7 +561,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatPresentMethod($view)
 	{
-		return $view == NULL ? NULL : 'present' . $view; // intentionally ==
+		return 'present' . $view;
 	}
 
 
@@ -568,7 +573,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatPrepareMethod($scene)
 	{
-		return $scene == NULL ? NULL : 'prepare' . $scene; // intentionally ==
+		return 'prepare' . $scene;
 	}
 
 
@@ -580,7 +585,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected static function formatRenderMethod($scene)
 	{
-		return $scene == NULL ? NULL : 'render' . $scene; // intentionally ==
+		return 'render' . $scene;
 	}
 
 
@@ -1073,6 +1078,10 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function saveGlobalState()
 	{
+		if ($this->phase >= self::PHASE_SHUTDOWN) {
+			throw new /*::*/InvalidStateException("Presenter is shutting down, cannot save state.");
+		}
+
 		if ($this->globalState === NULL || $this->phase <= self::PHASE_SIGNAL) {
 			$state = array();
 			foreach ($this->globalComponents as $id => $component)

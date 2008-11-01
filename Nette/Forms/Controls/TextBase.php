@@ -115,13 +115,7 @@ abstract class TextBase extends FormControl
 
 	public function notifyRule(Rule $rule)
 	{
-		if (is_string($rule->operation) && strcasecmp($rule->operation, ':regexp') === 0) {
-			foreach ((array) $rule->arg as $regexp) {
-				if (strncmp($regexp, '/', 1)) {
-					throw new /*::*/InvalidArgumentException('Regular expression must be JavaScript compatible.');
-				}
-			}
-		} elseif (!$rule->isCondition && strcasecmp($rule->operation, ':float') === 0) {
+		if (!$rule->isCondition && strcasecmp($rule->operation, ':float') === 0) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
 		}
 

@@ -98,7 +98,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	public function updateSnippet($id, $content)
 	{
 		if ($this->opened) {
-			$this->json['snippets'][$id] = $content;
+			$this->json['snippets'][$id] = (string) $content;
 		}
 	}
 
@@ -125,7 +125,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	public function redirect($uri)
 	{
 		if ($this->opened) {
-			$this->json['redirect'] = $uri;
+			$this->json['redirect'] = (string) $uri;
 		}
 	}
 

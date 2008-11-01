@@ -40,7 +40,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var string */
 	public static $idMask = 'frm%s-%s';
 
-	/** @var mixed */
+	/** @var string textual caption or label */
+	public $caption;
+
+	/** @var mixed unfiltered control value */
 	protected $value;
 
 	/** @var Nette::Web::Html  control element template */
@@ -80,7 +83,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 		parent::__construct();
 		$this->control = /*Nette::Web::*/Html::el('input');
 		$this->label = /*Nette::Web::*/Html::el('label');
-		$this->options['label'] = $label;
+		$this->caption = $label;
 		$this->rules = new Rules($this);
 	}
 
@@ -168,6 +171,12 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Sets user-specific option.
+	 *
+	 * Common options:
+	 * - 'rendered' - indicate if method getControl() have been called
+	 * - 'required' - indicate if ':required' rule has been applied
+	 * - 'description' - textual or Html object description (recognized by ConventionalRenderer)
+	 *
 	 * @param  string key
 	 * @param  mixed  value
 	 * @return FormControl  provides a fluent interface
@@ -313,7 +322,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function getControl()
 	{
-		$this->options['rendered'] = TRUE;
+		$this->setOption('rendered', TRUE);
 		$control = clone $this->control;
 		$control->name = $this->getHtmlName();
 		$control->disabled = $this->disabled;
@@ -331,7 +340,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		$text = $this->getOption('label');
+		$text = $this->caption;
 		if (is_string($text)) {
 			if ($this->getTranslator() !== NULL) {
 				$text = $this->getTranslator()->translate($text);
@@ -371,7 +380,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * Sets 'rendered' indicator.
 	 * @param  bool
 	 * @return FormControl  provides a fluent interface
-     * @deprecated
+	 * @deprecated
 	 */
 	public function setRendered($value = TRUE)
 	{
@@ -384,7 +393,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/**
 	 * Does method getControl() have been called?
 	 * @return bool
-     * @deprecated
+	 * @deprecated
 	 */
 	public function isRendered()
 	{
@@ -453,7 +462,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * Makes control mandatory.
 	 * @param  string  error message
 	 * @return FormControl  provides a fluent interface
-     * @deprecated
+	 * @deprecated
 	 */
 	final public function setRequired($message = NULL)
 	{
@@ -466,7 +475,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/**
 	 * Is control mandatory?
 	 * @return bool
-     * @deprecated
+	 * @deprecated
 	 */
 	final public function isRequired()
 	{

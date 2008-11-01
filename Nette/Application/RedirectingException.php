@@ -43,14 +43,14 @@ class RedirectingException extends AbortException
 	public function __construct($uri, $code)
 	{
 		parent::__construct();
-		$this->code = $code;
-		$this->uri = $uri;
+		$this->code = (int) $code;
+		$this->uri = (string) $uri;
 	}
 
 
 
 	/**
-	 * @return PresenterRequest
+	 * @return string
 	 */
 	final public function getUri()
 	{
