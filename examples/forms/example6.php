@@ -90,7 +90,7 @@ if ($form->isSubmitted()) {
 		Debug::dump($values);
 
 		// this is the end, my friend :-)
-		exit;
+		if (empty($disableExit)) exit;
 	}
 
 } else {

@@ -115,7 +115,7 @@ abstract class TextBase extends FormControl
 
 	public function notifyRule(Rule $rule)
 	{
-		if (!$rule->isCondition && strcasecmp($rule->operation, ':float') === 0) {
+		if ($rule->type === Rule::VALIDATOR && strcasecmp($rule->operation, ':float') === 0) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
 		}
 
@@ -198,12 +198,9 @@ abstract class TextBase extends FormControl
 	 * @param  string
 	 * @return bool
 	 */
-	public static function validateRegexp(TextBase $control, $regexps)
+	public static function validateRegexp(TextBase $control, $regexp)
 	{
-		foreach ((array) $regexps as $regexp) {
-			if (preg_match($regexp, $control->getValue())) return TRUE;
-		}
-		return FALSE;
+		return preg_match($regexp, $control->getValue());
 	}
 
 

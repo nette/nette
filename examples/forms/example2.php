@@ -111,7 +111,9 @@ $form->addPassword('password2', 'Reenter password:', 20)
 		->addRule(Form::FILLED, 'Reenter your password')
 		->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
 
-$form->addFile('avatar', 'Picture:');
+$form->addFile('avatar', 'Picture:')
+	->addCondition(Form::FILLED)
+		->addRule(Form::MIME_TYPE, 'Uploaded file is not image', 'image/*');
 
 $form->addHidden('userid');
 
@@ -139,7 +141,7 @@ if ($form->isSubmitted()) {
 		Debug::dump($values);
 
 		// this is the end, my friend :-)
-		exit;
+		if (empty($disableExit)) exit;
 	}
 
 } else {

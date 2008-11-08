@@ -148,16 +148,17 @@ final class InstantClientScript extends /*Nette::*/Object
 			if (!empty($rule->message)) { // this is rule
 				if ($onlyCheck) {
 					$res .= "$script\n\tif (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n\t";
+
 				} else {
-					$translator = $rule->control->getTranslator();
-					$message = $translator === NULL ? $rule->message : $translator->translate($rule->message);
 					$res .= "$script\n\t"
 						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "if (el) el.focus(); alert(" . json_encode((string) vsprintf($message, (array) $rule->arg)) . "); return false; }\n\t";
+						. "if (el) el.focus(); alert("
+						. json_encode((string) vsprintf($rule->control->translate($rule->message), (array) $rule->arg))
+						. "); return false; }\n\t";
 				}
 			}
 
-			if ($rule->isCondition) { // this is condition
+			if ($rule->type === Rule::CONDITION) { // this is condition
 				$innerScript = $this->getValidateScript($rule->subRules, $onlyCheck);
 				if ($innerScript) {
 					$res .= "$script\n\tif (" . ($rule->isNegative ? '!' : '') . "res) {\n\t" . $innerScript . "}\n\t";
@@ -180,7 +181,7 @@ final class InstantClientScript extends /*Nette::*/Object
 				. "if (el) el.style.display = " . ($visible ? '' : '!') . "resT ? '' : 'none';\n\t";
 		}
 		foreach ($rules as $rule) {
-			if ($rule->isCondition && is_string($rule->operation)) {
+			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 				if ($script) {
 					$res = $this->getToggleScript($rule->subRules, $cond . "$script resT = resT && " . ($rule->isNegative ? '!' : '') . "res;\n\t");
@@ -273,13 +274,10 @@ final class InstantClientScript extends /*Nette::*/Object
 			return $tmp . $tmp2 . 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val);';
 
 		case $operation === ':regexp' && $control instanceof TextBase:
-			foreach ((array) $arg as $regexp) {
-				if (strncmp($regexp, '/', 1)) {
-					throw new /*::*/InvalidStateException("Regular expression '$regexp' must be JavaScript compatible.");
-				}
-				$tmp3[] = "$regexp.test(val)";
+			if (strncmp($arg, '/', 1)) {
+				throw new /*::*/InvalidStateException("Regular expression '$arg' must be JavaScript compatible.");
 			}
-			return $tmp . $tmp2 . "res = (" . implode(' || ', $tmp3) . ");";
+			return $tmp . $tmp2 . "res = $arg.test(val);";
 
 		case $operation === ':integer' && $control instanceof TextBase:
 			return $tmp . $tmp2 . "res = /^-?[0-9]+$/.test(val);";

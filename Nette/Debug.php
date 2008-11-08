@@ -719,7 +719,6 @@ final class Debug
 			header("X-Wf-nette-$index-1-n$num: |$s|\\");
 		}
 		header("X-Wf-nette-$index-1-n$num: |$s|");
-		header("X-Wf-nette-Index: n$num");
 
 		return TRUE;
 	}

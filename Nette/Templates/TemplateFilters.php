@@ -327,25 +327,17 @@ final class TemplateFilters
 		list(, $attr, $uri, $fragment) = $m;
 
 		$parts = parse_url($uri);
-		if (!isset($parts['scheme']) || $parts['scheme'] !== 'nette') return $m[0];
-
-		if (isset($parts['query'])) {
-			parse_str($parts['query'], $params); // vyzaduje vypnute fuckingQuotes
-			foreach ($params as $k => $v) {
-				if ($v === '') $params[$k] = NULL;
-			}
+		if (isset($parts['scheme']) && $parts['scheme'] === 'nette') {
+			return $attr . '="<?php echo $template->escape($control->'
+				. (strncmp($attr, 'on', 2) ? 'link' : 'ajaxLink')
+				. '(\''
+				. (isset($parts['path']) ? $parts['path'] : 'this!')
+				. (isset($parts['query']) ? '?' . $parts['query'] : '')
+				. '\'))?>'
+				. $fragment;
 		} else {
-			$params = array();
+			return $m[0];
 		}
-
-		return $attr . '="<?php echo $template->escape($control->'
-			. (strncmp($attr, 'on', 2) ? 'link' : 'ajaxLink')
-			. '(\''
-			. (isset($parts['path']) ? $parts['path'] : 'this!')
-			. '\', '
-			. var_export($params, TRUE)
-			. '))?>'
-			. $fragment;
 	}
 
 

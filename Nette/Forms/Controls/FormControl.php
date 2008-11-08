@@ -248,6 +248,19 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 
 
+	/**
+	 * Returns translated string.
+	 * @param  string
+	 * @return string
+	 */
+	public function translate($s)
+	{
+		$translator = $this->getTranslator();
+		return $translator === NULL ? $s : $translator->translate($s);
+	}
+
+
+
 	/********************* interface IFormControl ****************d*g**/
 
 
@@ -491,7 +504,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function notifyRule(Rule $rule)
 	{
-		if (!$rule->isCondition && is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
+		if ($rule->type === Rule::VALIDATOR && is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
 			$this->setOption('required', TRUE);
 		}
 	}

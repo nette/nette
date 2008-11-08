@@ -388,7 +388,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Changes current view.
+	 * Changes current view. Only alphanumeric characters are allowed.
 	 * @param  string
 	 * @return void
 	 */
@@ -417,18 +417,13 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Changes current view scene.
+	 * Changes current view scene. Any name is allowed.
 	 * @param  string
 	 * @return void
 	 */
 	public function changeScene($scene)
 	{
-		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $scene)) {
-			$this->scene = $scene;
-
-		} else {
-			throw new BadRequestException("Scene name '$scene' is not alphanumeric string.");
-		}
+		$this->scene = (string) $scene;
 	}
 
 
@@ -659,6 +654,12 @@ abstract class Presenter extends Control implements IPresenter
 				return parent::link($destination, $args);
 
 			} else {
+				$a = strpos($destination, '?');
+				if ($a !== FALSE) {
+					parse_str(substr($destination, $a + 1), $args); // requires disabled magic quotes
+					$destination = substr($destination, 0, $a);
+				}
+
 				return $this->createRequest($destination, $args);
 			}
 
@@ -850,7 +851,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * PresenterRequest/URL factory.
-	 * @param  string   destination in format "[[module:]presenter:][view]"
+	 * @param  string   destination in format "[[module:]presenter:]view"
 	 * @param  array    array of arguments
 	 * @param  bool     return PresenterRequest or URL?
 	 * @return string|PresenterRequest

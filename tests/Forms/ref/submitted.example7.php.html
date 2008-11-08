@@ -8,3 +8,80 @@
   "note" => string(6) "жед"
 }
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette::Forms example 7 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	.required {
+		color: darkred
+	}
+
+	fieldset {
+		padding: .5em;
+		margin: .3em 0;
+		background: #EAF3FA;
+		border: 1px solid #b2d1eb;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	th {
+		width: 8em;
+		text-align: right;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Nette::Forms example 7</h1>
+
+	<form action="" method="post">
+
+<fieldset>
+<legend>Personal data</legend>
+
+<table>
+<tr>
+	<th><label for="frm-name">Your name:</label></th>
+
+	<td><input type="text" size="35" class="text" name="name" id="frm-name" value="&#142;lu&#357;ou&#269;k&yacute; k&#367;&#328;" /></td>
+</tr>
+
+<tr>
+	<th><label onclick="return false" for="frm-country">Country:</label></th>
+
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="country[]" id="frm-country" multiple="multiple"><option>Select your country</option><optgroup label="Europe"><option selected="selected">&#268;esk&aacute; republika</option><option>Slovakia</option></optgroup><option>Australia</option><option>Canada</option><option>Egypt</option><option selected="selected">Japan</option><option>United States</option><option>other</option></select></td>
+</tr>
+
+<tr>
+	<th><label for="frm-note">Comment:</label></th>
+
+	<td><textarea cols="30" rows="5" name="note" id="frm-note">&#1078;&#1077;&#1076;</textarea></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset>
+<table>
+<tr>
+	<th>&nbsp;</th>
+
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+</tr>
+</table>
+</fieldset>
+
+<div><input type="hidden" name="userid" value="k&#367;&#328;" /></div>
+</form>
+
+</body>
+</html>

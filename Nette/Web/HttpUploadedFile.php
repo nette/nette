@@ -100,7 +100,8 @@ class HttpUploadedFile extends /*Nette::*/Object
 				$this->realType = mime_content_type($this->tmpName);
 
 			} else {
-				$this->realType = $this->type;
+				$info = getImageSize($this->tmpName);
+				$this->realType = isset($info['mime']) ? $info['mime'] : $this->type;
 			}
 		}
 		return $this->realType;

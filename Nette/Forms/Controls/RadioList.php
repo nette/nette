@@ -132,7 +132,6 @@ class RadioList extends FormControl
 		$counter = 0;
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
 		$label = /*Nette::Web::*/Html::el('label');
-		$translator = $this->getTranslator();
 
 		foreach ($this->items as $key => $val) {
 			$control->id = $label->for = $id . '-' . $counter;
@@ -142,7 +141,7 @@ class RadioList extends FormControl
 			if ($val instanceof /*Nette::Web::*/Html) {
 				$label->setHtml($val);
 			} else {
-				$label->setText($translator === NULL ? $val : $translator->translate($val));
+				$label->setText($this->translate($val));
 			}
 
 			$container->add((string) $control . (string) $label . $separator);

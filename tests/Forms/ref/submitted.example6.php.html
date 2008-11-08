@@ -15,3 +15,127 @@
   }
 }
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette::Forms example 6 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	.required {
+		color: darkred
+	}
+
+	fieldset {
+		padding: .5em;
+		margin: .3em 0;
+		background: #EAF3FA;
+		border: 1px solid #b2d1eb;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	th {
+		width: 8em;
+		text-align: right;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Nette::Forms example 6</h1>
+
+	<form action="" method="post">
+
+<fieldset>
+<legend>First person</legend>
+
+<table>
+<tr>
+	<th><label for="frm-first-name">Your name:</label></th>
+
+	<td><input type="text" size="35" class="text" name="first[name]" id="frm-first-name" value="James Bond" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-first-email">E-mail:</label></th>
+
+	<td><input type="text" size="35" class="text" name="first[email]" id="frm-first-email" value="bond&#64;007.com" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-first-street">Street:</label></th>
+
+	<td><input type="text" size="35" class="text" name="first[street]" id="frm-first-street" value="Unknown" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-first-city">City:</label></th>
+
+	<td><input type="text" size="35" class="text" name="first[city]" id="frm-first-city" value="London" /></td>
+</tr>
+
+<tr>
+	<th><label onclick="return false" for="frm-first-country">Country:</label></th>
+
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="first[country]" id="frm-first-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB" selected="selected">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset>
+<legend>Second person</legend>
+
+<table>
+<tr>
+	<th><label for="frm-second-name">Your name:</label></th>
+
+	<td><input type="text" size="35" class="text" name="second[name]" id="frm-second-name" value="Jim Beam" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-second-email">E-mail:</label></th>
+
+	<td><input type="text" size="35" class="text" name="second[email]" id="frm-second-email" value="jim&#64;beam.com" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-second-street">Street:</label></th>
+
+	<td><input type="text" size="35" class="text" name="second[street]" id="frm-second-street" value="" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-second-city">City:</label></th>
+
+	<td><input type="text" size="35" class="text" name="second[city]" id="frm-second-city" value="" /></td>
+</tr>
+
+<tr>
+	<th><label onclick="return false" for="frm-second-country">Country:</label></th>
+
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="second[country]" id="frm-second-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US" selected="selected">United States</option><option value="?">other</option></select></td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset>
+<table>
+<tr>
+	<th>&nbsp;</th>
+
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+</tr>
+</table>
+</fieldset>
+
+</form>
+
+</body>
+</html>

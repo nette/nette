@@ -114,7 +114,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 
 
 	/**
-	 * Determines if a variable in this session namespace is set.
+	 * Determines whether a variable in this session namespace is set.
 	 *
 	 * @param  string    name
 	 * @return bool

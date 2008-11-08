@@ -35,6 +35,18 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class Rule extends /*Nette::*/Object
 {
+	/** type */
+	const CONDITION = 1;
+
+	/** type */
+	const VALIDATOR = 2;
+
+	/** type */
+	const FILTER = 3;
+
+	/** type */
+	const TERMINATOR = 4;
+
 	/** @var IFormControl */
 	public $control;
 
@@ -44,16 +56,16 @@ final class Rule extends /*Nette::*/Object
 	/** @var mixed */
 	public $arg;
 
-	/** @var bool */
-	public $isCondition = FALSE;
+	/** @var int (CONDITION, VALIDATOR, FILTER) */
+	public $type;
 
 	/** @var bool */
 	public $isNegative = FALSE;
 
-	/** @var string */
+	/** @var string (only for VALIDATOR type) */
 	public $message;
 
-	/** @var Rules */
+	/** @var Rules (only for CONDITION type)  */
 	public $subRules;
 
 }

@@ -110,7 +110,7 @@ class UserClientScript extends /*Nette::*/Object
 				'class' => $rule->control->getClass(),
 				'op' => $rule->operation,
 				'neg' => $rule->isNegative,
-				'cond' => $rule->isCondition,
+				'type' => $rule->type,
 				'msg' => $rule->message,
 				'id' => $rule->control->getHtmlId(),
 				'arg' => $rule->arg instanceof FormControl ? $rule->arg->getHtmlId() : $rule->arg,

@@ -110,7 +110,7 @@
 <tr class="required">
 	<th><label onclick="return false" class="required" for="frm-country">Country:</label></th>
 
-	<td><select onmousewheel="return false" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU" selected="selected">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU" selected="selected">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
 </table>
 </div></fieldset>
@@ -135,7 +135,7 @@
 <tr>
 	<th><label for="frm-avatar">Picture:</label></th>
 
-	<td><input type="file" class="text" name="avatar" id="frm-avatar" /></td>
+	<td><input type="file" accept="image/*" class="text" name="avatar" id="frm-avatar" /></td>
 </tr>
 
 <tr>

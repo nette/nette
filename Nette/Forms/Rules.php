@@ -88,6 +88,7 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 		$rule->operation = $operation;
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
+		$rule->type = Rule::VALIDATOR;
 		if ($message === NULL && isset(self::$defaultMessages[$rule->operation])) {
 			$rule->message = self::$defaultMessages[$rule->operation];
 		} else {
@@ -128,7 +129,7 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 		$rule->operation = $operation;
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
-		$rule->isCondition = TRUE;
+		$rule->type = Rule::CONDITION;
 		$rule->subRules = new self($this->control);
 
 		$control->notifyRule($rule);
@@ -166,20 +167,15 @@ final class Rules extends /*Nette::*/Object implements /*::*/IteratorAggregate
 
 			$success = ($rule->isNegative xor call_user_func($this->getCallback($rule), $rule->control, $rule->arg));
 
-			if ($rule->isCondition && $success) {
+			if ($rule->type === Rule::CONDITION && $success) {
 				$success = $rule->subRules->validate($onlyCheck);
 				$valid = $valid && $success;
 
-			} elseif (!$rule->isCondition && !$success) {
+			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
 				if ($onlyCheck) {
 					return FALSE;
 				}
-				$message = $rule->message;
-				$translator = $rule->control->getTranslator();
-				if ($translator !== NULL) {
-					$message = $translator->translate($message);
-				}
-				$rule->control->addError(vsprintf($message, (array) $rule->arg));
+				$rule->control->addError(vsprintf($rule->control->translate($rule->message), (array) $rule->arg));
 				$valid = FALSE;
 			}
 		}

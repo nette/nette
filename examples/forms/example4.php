@@ -43,8 +43,8 @@ $countries = array(
 );
 
 $sex = array(
-	'm' => 'male',
-	'f' => 'female',
+	'm' => Html::el('option', 'male')->style('color: #248bd3'),
+	'f' => Html::el('option', 'female')->style('color: #e948d4'),
 );
 
 
@@ -76,7 +76,7 @@ $form->addText('age', 'Your age', 5)
 	->addRule(Form::INTEGER, 'Age must be numeric value')
 	->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', array(9.9, 100));
 
-$form->addRadioList('gender', 'Your gender', $sex);
+$form->addSelect('gender', 'Your gender', $sex, 2);
 
 $form->addText('email', 'E-mail', 35)
 	->setEmptyValue('@')
@@ -150,7 +150,7 @@ if ($form->isSubmitted()) {
 		Debug::dump($values);
 
 		// this is the end, my friend :-)
-		exit;
+		if (empty($disableExit)) exit;
 	}
 
 } else {

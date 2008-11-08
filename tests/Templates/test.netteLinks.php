@@ -25,7 +25,7 @@ class MockPresenterComponent extends /*Nette::Application::*/PresenterComponent
 
 Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
-Template::setCacheStorage(new /*Nette::Caching::*/DummyStorage);
+//Template::setCacheStorage(new /*Nette::Caching::*/DummyStorage);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/nette-links.phtml');

@@ -251,6 +251,12 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 		}
 
 		try {
+			$a = strpos($signal, '?');
+			if ($a !== FALSE) {
+				parse_str(substr($signal, $a + 1), $args); // requires disabled magic quotes
+				$signal = substr($signal, 0, $a);
+			}
+
 			// exclamation is not required, every destinations are signals
 			$signal = rtrim($signal, '!');
 			if ($signal == NULL) {  // intentionally ==

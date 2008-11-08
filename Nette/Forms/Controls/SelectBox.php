@@ -59,8 +59,8 @@ class SelectBox extends FormControl
 		parent::__construct($label);
 		$this->control->setName('select');
 		$this->control->size = $size > 1 ? (int) $size : NULL;
-		$this->control->onmousewheel = 'return false';  // prevent accidental change
-		$this->label->onclick = 'return false';  // prevent "deselect" for IE 5 - 6
+		$this->control->onfocus = 'this.onmousewheel=function(){return false}';  // prevents accidental change in IE
+		$this->label->onclick = 'return false';  // prevents deselect in IE 5 - 6
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
@@ -204,7 +204,6 @@ class SelectBox extends FormControl
 		$selected = $this->getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
 		$option = /*Nette::Web::*/Html::el('option');
-		$translator = $this->getTranslator();
 
 		foreach ($this->items as $key => $value) {
 			if (!is_array($value)) {
@@ -218,21 +217,13 @@ class SelectBox extends FormControl
 			foreach ($value as $key2 => $value2) {
 				if ($value2 instanceof /*Nette::Web::*/Html) {
 					$dest->add((string) $value2->selected(isset($selected[$key2])));
-					continue;
-				}
 
-				if ($translator !== NULL) {
-					$value2 = $translator->translate($value2);
-				}
-
-				if ($this->useKeys) {
-					$option->value($key2)->selected(isset($selected[$key2]));
+				} elseif ($this->useKeys) {
+					$dest->add((string) $option->value($key2)->selected(isset($selected[$key2]))->setText($this->translate($value2)));
 
 				} else {
-					$option->selected(isset($selected[$value2]));
+					$dest->add((string) $option->selected(isset($selected[$value2]))->setText($this->translate($value2)));
 				}
-
-				$dest->add((string) $option->setText($value2));
 			}
 		}
 		return $control;

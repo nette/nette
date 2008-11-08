@@ -188,7 +188,7 @@ final class Environment
 
 
 	/**
-	 * Determines if a server is running in production mode.
+	 * Determines whether a server is running in production mode.
 	 * @return bool
 	 */
 	public static function isLive()
@@ -199,7 +199,7 @@ final class Environment
 
 
 	/**
-	 * Determines if the debugger is active.
+	 * Determines whether the debugger is active.
 	 * @return bool
 	 */
 	public static function isDebugging()

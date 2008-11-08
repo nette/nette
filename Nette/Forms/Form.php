@@ -541,8 +541,9 @@ class Form extends FormContainer
 	 * @param  array
 	 * @param  array
 	 * @return array
+	 * @internal
 	 */
-	public static function arrayAppend($arr1, $arr2)
+	protected static function arrayAppend($arr1, $arr2)
 	{
 		$res = $arr1 + $arr2;
 		foreach (array_intersect_key($arr1, $arr2) as $k => $v) {

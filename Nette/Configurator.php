@@ -85,7 +85,7 @@ class Configurator extends Object
 			}
 
 		case 'debug':
-			// determines if the debugger is active
+			// Determines whether the debugger is active
 			if (defined('DEBUG_MODE')) {
 				return (bool) DEBUG_MODE;
 

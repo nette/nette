@@ -70,9 +70,10 @@ interface IFormControl
 	function isDisabled();
 
 	/**
-	 * Returns translator adapter.
-	 * @return Nette::ITranslator|NULL
+	 * Returns translated string.
+	 * @param  string
+	 * @return string
 	 */
-	function getTranslator();
+	function translate($s);
 
 }

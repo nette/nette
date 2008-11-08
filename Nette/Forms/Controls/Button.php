@@ -78,8 +78,7 @@ class Button extends FormControl
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$translator = $this->getTranslator();
-		$control->value = $translator === NULL ? $this->caption : $translator->translate($this->caption);
+		$control->value = $this->translate($this->caption);
 		return $control;
 	}
 

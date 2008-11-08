@@ -93,7 +93,7 @@ class FileUpload extends FormControl
 	 */
 	public function notifyRule(Rule $rule)
 	{
-		if (!$rule->isCondition && is_string($rule->operation) && strcasecmp($rule->operation, ':mimeType') === 0) {
+		if ($rule->type === Rule::VALIDATOR && is_string($rule->operation) && strcasecmp($rule->operation, ':mimeType') === 0) {
 			$this->control->accept = $rule->arg;
 		}
 		parent::notifyRule($rule);

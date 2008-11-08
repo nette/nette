@@ -48,8 +48,11 @@ class Application extends /*Nette::*/Object
 		'Nette::Application::IPresenterLoader' => 'Nette::Application::PresenterLoader',
 	);
 
-	/** @var bool */
+	/** @var bool enable fault barrier? */
 	public $catchExceptions;
+
+	/** @var string */
+	public $errorPresenter;
 
 	/** @var array of function(Application $sender) */
 	public $onStartup;
@@ -65,9 +68,6 @@ class Application extends /*Nette::*/Object
 
 	/** @var array of string */
 	public $allowedMethods = array('GET', 'POST', 'HEAD');
-
-	/** @var string */
-	public $errorPresenter;
 
 	/** @var array of PresenterRequest */
 	private $requests = array();
@@ -192,22 +192,22 @@ class Application extends /*Nette::*/Object
 					throw $e;
 				}
 
-				if ($hasError) {
-					throw new ApplicationException('An error occured while executing error-presenter', 0, $e);
-				}
-
-				$hasError = TRUE;
-
 				$this->onError($this, $e);
 
-				if ($this->errorPresenter) {
+				if ($hasError) {
+					$e = new ApplicationException('An error occured while executing error-presenter', 0, $e);
+
+				} elseif ($this->errorPresenter) {
+					$hasError = TRUE;
 					$request = new PresenterRequest(
 						$this->errorPresenter,
 						PresenterRequest::FORWARD,
 						array('exception' => $e)
 					);
+					continue;
+				}
 
-				} elseif ($e instanceof BadRequestException) {
+				if ($e instanceof BadRequestException) {
 					$httpResponse->setCode(404);
 					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 					break;
@@ -215,7 +215,7 @@ class Application extends /*Nette::*/Object
 				} else {
 					$httpResponse->setCode(500);
 					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
-						"<p>The server encountered an internal error and was unable to complete your request.</p>";
+						"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
 					break;
 				}
 			}
