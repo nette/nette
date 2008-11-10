@@ -1,19 +1,19 @@
-<h1>Nette::Application::Route test</h1>
+<h1>Nette\Application\Route test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Application::Route;*/
+/*use Nette\Application\Route;*/
 
 
-class MockHttpRequest extends /*Nette::Web::*/HttpRequest
+class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 {
 
 	public function setPath($path)
 	{
-		$this->uri = new /*Nette::Web::*/UriScript;
+		$this->uri = new /*Nette\Web\*/UriScript;
 		$this->uri->scheme = 'http';
 		$this->uri->host = 'admin.texy.info';
 		$this->uri->scriptPath = '/';

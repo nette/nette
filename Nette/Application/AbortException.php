@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -28,9 +28,9 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class AbortException extends /*::*/Exception
+class AbortException extends /*\*/Exception
 {
 
 	public function __construct()

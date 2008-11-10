@@ -1,16 +1,16 @@
-<h1>Nette::Loaders::SimpleLoader test</h1>
+<h1>Nette\Loaders\SimpleLoader test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/Loaders/SimpleLoader.php';
-/*use Nette::Debug;*/
+/*use Nette\Debug;*/
 
 set_include_path('../../');
 
-$loader = new /*Nette::Loaders::*/SimpleLoader;
+$loader = new /*Nette\Loaders\*/SimpleLoader;
 $loader->register();
 
-/**/AutoLoader::load('Nette::Debug');/**/
+/**/AutoLoader::load('Nette\Debug');/**/
 
-Debug::dump('class Nette::Debug successfully loaded');
+Debug::dump('class Nette\Debug successfully loaded');

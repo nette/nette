@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Collections
+ * @package    Nette\Collections
  * @version    $Id$
  */
 
-/*namespace Nette::Collections;*/
+/*namespace Nette\Collections;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Collections/IMap.php';
 /**
  * The exception that is thrown when the key specified for accessing
  * an element in a collection does not match any key.
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
-class KeyNotFoundException extends /*::*/RuntimeException
+class KeyNotFoundException extends /*\*/RuntimeException
 {
 }
 
@@ -44,7 +44,7 @@ class KeyNotFoundException extends /*::*/RuntimeException
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
 class Hashtable extends Collection implements IMap
 {
@@ -58,17 +58,17 @@ class Hashtable extends Collection implements IMap
 	 * @param  mixed
 	 * @param  mixed
 	 * @return bool
-	 * @throws ::InvalidArgumentException, ::InvalidStateException
+	 * @throws \InvalidArgumentException, \InvalidStateException
 	 */
 	public function add($key, $item)
 	{
 		// note: $item is nullable to be compatible with that of ICollection::add()
 		if (!is_scalar($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		if (parent::offsetExists($key)) {
-			throw new /*::*/InvalidStateException('An element with the same key already exists.');
+			throw new /*\*/InvalidStateException('An element with the same key already exists.');
 		}
 
 		$this->beforeAdd($item);
@@ -83,7 +83,7 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function append($item)
 	{
-		throw new /*::*/NotSupportedException;
+		throw new /*\*/NotSupportedException;
 	}
 
 
@@ -116,12 +116,12 @@ class Hashtable extends Collection implements IMap
 	 * Import from array or any traversable object.
 	 * @param  array|Traversable
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function import($arr)
 	{
 		if (!(is_array($arr) || $arr instanceof Traversable)) {
-			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
+			throw new /*\*/InvalidArgumentException("Argument must be traversable.");
 		}
 
 		if (!$this->readOnly && $this->itemType === NULL) { // optimalization
@@ -142,12 +142,12 @@ class Hashtable extends Collection implements IMap
 	 * @param  string key
 	 * @param  mixed  default value
 	 * @return mixed
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function get($key, $default = NULL)
 	{
 		if (!is_scalar($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		if (parent::offsetExists($key)) {
@@ -171,21 +171,21 @@ class Hashtable extends Collection implements IMap
 
 
 
-	/********************* interface ::ArrayAccess ****************d*g**/
+	/********************* interface \ArrayAccess ****************d*g**/
 
 
 
 	/**
-	 * Inserts (replaces) item (::ArrayAccess implementation).
+	 * Inserts (replaces) item (\ArrayAccess implementation).
 	 * @param  string key
 	 * @param  object
 	 * @return void
-	 * @throws ::NotSupportedException, ::InvalidArgumentException
+	 * @throws \NotSupportedException, \InvalidArgumentException
 	 */
 	public function offsetSet($key, $item)
 	{
 		if (!is_scalar($key)) { // prevents NULL
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		$this->beforeAdd($item);
@@ -195,15 +195,15 @@ class Hashtable extends Collection implements IMap
 
 
 	/**
-	 * Returns item (::ArrayAccess implementation).
+	 * Returns item (\ArrayAccess implementation).
 	 * @param  string key
 	 * @return mixed
-	 * @throws KeyNotFoundException, ::InvalidArgumentException
+	 * @throws KeyNotFoundException, \InvalidArgumentException
 	 */
 	public function offsetGet($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		if (parent::offsetExists($key)) {
@@ -220,15 +220,15 @@ class Hashtable extends Collection implements IMap
 
 
 	/**
-	 * Exists item? (::ArrayAccess implementation).
+	 * Exists item? (\ArrayAccess implementation).
 	 * @param  string key
 	 * @return bool
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetExists($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		return parent::offsetExists($key);
@@ -240,12 +240,12 @@ class Hashtable extends Collection implements IMap
 	 * Removes the element at the specified position in this list.
 	 * @param  string key
 	 * @return void
-	 * @throws ::NotSupportedException, ::InvalidArgumentException
+	 * @throws \NotSupportedException, \InvalidArgumentException
 	 */
 	public function offsetUnset($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*::*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
 		}
 
 		$this->beforeRemove();

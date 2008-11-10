@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Collections
+ * @package    Nette\Collections
  * @version    $Id$
  */
 
-/*namespace Nette::Collections;*/
+/*namespace Nette\Collections;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Collections/ICollection.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
-abstract class Collection extends /*::*/ArrayObject implements ICollection
+abstract class Collection extends /*\*/ArrayObject implements ICollection
 {
 	/** @var string  type (class, interface, PHP type) */
 	protected $itemType;
@@ -49,7 +49,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * @param  array to wrap
 	 * @param  string class/interface name or ':type'
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($arr = NULL, $type = NULL)
 	{
@@ -82,7 +82,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 * Appends the specified element to the end of this collection.
 	 * @param  mixed
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function append($item)
 	{
@@ -96,7 +96,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 * Removes the first occurrence of the specified element.
 	 * @param  mixed
 	 * @return bool  true if this collection changed as a result of the call
-	 * @throws ::NotSupportedException
+	 * @throws \NotSupportedException
 	 */
 	public function remove($item)
 	{
@@ -128,7 +128,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Removes all of the elements from this collection.
 	 * @return void
-	 * @throws ::NotSupportedException
+	 * @throws \NotSupportedException
 	 */
 	public function clear()
 	{
@@ -154,12 +154,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 * Import from array or any traversable object.
 	 * @param  array|Traversable
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function import($arr)
 	{
 		if (!(is_array($arr) || $arr instanceof Traversable)) {
-			throw new /*::*/InvalidArgumentException("Argument must be traversable.");
+			throw new /*\*/InvalidArgumentException("Argument must be traversable.");
 		}
 
 		$this->clear();
@@ -189,23 +189,23 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 * Responds when the item is about to be added to the collection.
 	 * @param  mixed
 	 * @return void
-	 * @throws ::InvalidArgumentException, ::NotSupportedException
+	 * @throws \InvalidArgumentException, \NotSupportedException
 	 */
 	protected function beforeAdd($item)
 	{
 		if ($this->readOnly) {
-			throw new /*::*/NotSupportedException('Collection is read-only.');
+			throw new /*\*/NotSupportedException('Collection is read-only.');
 		}
 
 		if ($this->itemType !== NULL) {
 			if ($this->checkFunc === NULL) {
 				if (!($item instanceof $this->itemType)) {
-					throw new /*::*/InvalidArgumentException("Item must be '$this->itemType' object.");
+					throw new /*\*/InvalidArgumentException("Item must be '$this->itemType' object.");
 				}
 			} else {
 				$fnc = $this->checkFunc;
 				if (!$fnc($item)) {
-					throw new /*::*/InvalidArgumentException("Item must be $this->itemType type.");
+					throw new /*\*/InvalidArgumentException("Item must be $this->itemType type.");
 				}
 			}
 		}
@@ -216,12 +216,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Responds when an item is about to be removed from the collection.
 	 * @return void
-	 * @throws ::NotSupportedException
+	 * @throws \NotSupportedException
 	 */
 	protected function beforeRemove()
 	{
 		if ($this->readOnly) {
-			throw new /*::*/NotSupportedException('Collection is read-only.');
+			throw new /*\*/NotSupportedException('Collection is read-only.');
 		}
 	}
 
@@ -237,7 +237,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 */
 	public function getIterator()
 	{
-		return new /*::*/ArrayIterator($this->getArrayCopy());
+		return new /*\*/ArrayIterator($this->getArrayCopy());
 	}
 
 
@@ -247,7 +247,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	 */
 	public function exchangeArray($array)
 	{
-		throw new /*::*/NotSupportedException('Use ' . __CLASS__ . '::import()');
+		throw new /*\*/NotSupportedException('Use ' . __CLASS__ . '::import()');
 	}
 
 
@@ -264,7 +264,7 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 
 
 
-	/********************* Nette::Object behaviour ****************d*g**/
+	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
@@ -283,22 +283,22 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Call to undefined method.
 	 *
-	 * @throws ::MemberAccessException
+	 * @throws \MemberAccessException
 	 */
 	public function __call($name, $args)
 	{
 		$class = get_class($this);
 
 		if ($name === '') {
-			throw new /*::*/MemberAccessException("Call to class '$class' method without name.");
+			throw new /*\*/MemberAccessException("Call to class '$class' method without name.");
 		}
 
-		if (class_exists(/*Nette::*/'Object', FALSE) && ($cb = /*Nette::*/Object::extensionMethod("$class::$name"))) {
+		if (class_exists(/*Nette\*/'Object', FALSE) && ($cb = /*Nette\*/Object::extensionMethod("$class::$name"))) {
 			array_unshift($args, $this);
 			return call_user_func_array($cb, $args);
 		}
 
-		throw new /*::*/MemberAccessException("Call to undefined method $class::$name().");
+		throw new /*\*/MemberAccessException("Call to undefined method $class::$name().");
 	}
 
 
@@ -306,12 +306,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Call to undefined static method.
 	 *
-	 * @throws ::MemberAccessException
+	 * @throws \MemberAccessException
 	 */
 	public static function __callStatic($name, $args)
 	{
 		$class = get_called_class();
-		throw new /*::*/MemberAccessException("Call to undefined static method $class::$name().");
+		throw new /*\*/MemberAccessException("Call to undefined static method $class::$name().");
 	}
 
 
@@ -319,12 +319,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Returns property value. Do not call directly.
 	 *
-	 * @throws ::MemberAccessException if the property is not defined.
+	 * @throws \MemberAccessException if the property is not defined.
 	 */
 	public function &__get($name)
 	{
 		$class = get_class($this);
-		throw new /*::*/MemberAccessException("Cannot read an undeclared property $class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot read an undeclared property $class::\$$name.");
 	}
 
 
@@ -332,12 +332,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Sets value of a property. Do not call directly.
 	 *
-	 * @throws ::MemberAccessException if the property is not defined or is read-only
+	 * @throws \MemberAccessException if the property is not defined or is read-only
 	 */
 	public function __set($name, $value)
 	{
 		$class = get_class($this);
-		throw new /*::*/MemberAccessException("Cannot assign to an undeclared property $class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot assign to an undeclared property $class::\$$name.");
 	}
 
 
@@ -345,12 +345,12 @@ abstract class Collection extends /*::*/ArrayObject implements ICollection
 	/**
 	 * Access to undeclared property.
 	 *
-	 * @throws ::MemberAccessException
+	 * @throws \MemberAccessException
 	 */
 	public function __unset($name)
 	{
 		$class = get_class($this);
-		throw new /*::*/MemberAccessException("Cannot unset an property $class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot unset an property $class::\$$name.");
 	}
 
 }

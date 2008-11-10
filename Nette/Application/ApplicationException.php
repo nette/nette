@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -27,12 +27,12 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class ApplicationException extends /*::*/Exception
+class ApplicationException extends /*\*/Exception
 {
 
-	function __construct($message = '', $code = 0, /*::*/Exception $previous = NULL)
+	function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)
 	{
 		if (version_compare(PHP_VERSION , '5.3', '<')) {
 			$this->previous = $previous;

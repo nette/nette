@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -41,9 +41,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
-class Uri extends /*Nette::*/Object
+class Uri extends /*Nette\*/Object
 {
 	/** @var array */
 	static public $defaultPorts = array(
@@ -89,7 +89,7 @@ class Uri extends /*Nette::*/Object
 		if ($uri !== NULL) {
 			$parts = @parse_url($uri); // intentionally @
 			if ($parts === FALSE) {
-				throw new /*::*/InvalidArgumentException('Malformed or unsupported URI.');
+				throw new /*\*/InvalidArgumentException('Malformed or unsupported URI.');
 			}
 
 			foreach ($parts as $key => $val) {

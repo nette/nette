@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Collections
+ * @package    Nette\Collections
  * @version    $Id$
  */
 
-/*namespace Nette::Collections;*/
+/*namespace Nette\Collections;*/
 
 
 
@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Collections/ISet.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
 class Set extends Collection implements ISet
 {
@@ -43,7 +43,7 @@ class Set extends Collection implements ISet
 	 * Appends the specified element to the end of this collection.
 	 * @param  mixed
 	 * @return bool  true if this collection changed as a result of the call
-	 * @throws ::InvalidArgumentException, ::NotSupportedException
+	 * @throws \InvalidArgumentException, \NotSupportedException
 	 */
 	public function append($item)
 	{
@@ -74,7 +74,7 @@ class Set extends Collection implements ISet
 	 * or FALSE if this collection does not contain this element.
 	 * @param  mixed
 	 * @return int|FALSE
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	protected function search($item)
 	{
@@ -101,7 +101,7 @@ class Set extends Collection implements ISet
 		if ($key === NULL) {
 			$this->append($item);
 		} else {
-			throw new /*::*/NotSupportedException;
+			throw new /*\*/NotSupportedException;
 		}
 	}
 
@@ -112,7 +112,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetGet($key)
 	{
-		throw new /*::*/NotSupportedException;
+		throw new /*\*/NotSupportedException;
 	}
 
 
@@ -122,7 +122,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetExists($key)
 	{
-		throw new /*::*/NotSupportedException;
+		throw new /*\*/NotSupportedException;
 	}
 
 
@@ -132,7 +132,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetUnset($key)
 	{
-		throw new /*::*/NotSupportedException;
+		throw new /*\*/NotSupportedException;
 	}
 
 }

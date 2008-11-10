@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
 interface IHttpResponse
 {

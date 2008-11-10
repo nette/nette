@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Application/IRouter.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class SimpleRouter extends /*Nette::*/Object implements IRouter
+class SimpleRouter extends /*Nette\*/Object implements IRouter
 {
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
@@ -70,10 +70,10 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette::Web::*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $context)
 	{
 		// combine with precedence: get, (post,) defaults
 		$params = $context->getQuery();
@@ -97,11 +97,11 @@ class SimpleRouter extends /*Nette::*/Object implements IRouter
 
 	/**
 	 * Constructs URL path from PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette::Web::*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
 	{
 		$params = $request->getParams();
 

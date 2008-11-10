@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-final class InstantClientScript extends /*Nette::*/Object
+final class InstantClientScript extends /*Nette\*/Object
 {
 	/** @var string  JavaScript event handler name */
 	public $validateFunction;
@@ -85,7 +85,7 @@ final class InstantClientScript extends /*Nette::*/Object
 				$this->form->getElementPrototype()->onsubmit = "return " . $this->validateFunction . "(this)";
 
 			} else {
-				foreach ($this->form->getComponents(TRUE, 'Nette::Forms::ISubmitterControl') as $control) {
+				foreach ($this->form->getComponents(TRUE, 'Nette\Forms\ISubmitterControl') as $control) {
 					if ($control->getValidationScope()) {
 						$control->getControlPrototype()->onclick .= 'return ' . $this->validateFunction . "(this);";
 					}
@@ -137,7 +137,7 @@ final class InstantClientScript extends /*Nette::*/Object
 		foreach ($rules as $rule) {
 			if (!is_string($rule->operation)) continue;
 
-			if (strcasecmp($rule->operation, /*Nette::Forms::*/'InstantClientScript::javascript') === 0) {
+			if (strcasecmp($rule->operation, /*Nette\Forms\*/'InstantClientScript::javascript') === 0) {
 				$res .= "$rule->arg\n\t";
 				continue;
 			}
@@ -275,7 +275,7 @@ final class InstantClientScript extends /*Nette::*/Object
 
 		case $operation === ':regexp' && $control instanceof TextBase:
 			if (strncmp($arg, '/', 1)) {
-				throw new /*::*/InvalidStateException("Regular expression '$arg' must be JavaScript compatible.");
+				throw new /*\*/InvalidStateException("Regular expression '$arg' must be JavaScript compatible.");
 			}
 			return $tmp . $tmp2 . "res = $arg.test(val);";
 

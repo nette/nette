@@ -1,4 +1,4 @@
-<h1>Nette::IO::SafeStream demo</h1>
+<h1>Nette\IO\SafeStream demo</h1>
 
 <pre>
 <?php

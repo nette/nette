@@ -1,15 +1,15 @@
-<h1>Nette::Forms invalid HTTP data test</h1>
+<h1>Nette\Forms invalid HTTP data test</h1>
 
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::ComponentContainer;*/
-/*use Nette::Forms::Form;*/
-/*use Nette::Forms::TextInput;*/
-/*use Nette::Forms::FormContainer;*/
-/*use Nette::Environment;*/
-/*use Nette::Debug;*/
+/*use Nette\ComponentContainer;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Forms\TextInput;*/
+/*use Nette\Forms\FormContainer;*/
+/*use Nette\Environment;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 

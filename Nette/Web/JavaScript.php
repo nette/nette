@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -39,7 +39,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
 class JavaScript extends Object
 {
@@ -67,7 +67,7 @@ class JavaScript extends Object
 	public function __set($name, $value)
 	{
 		if ($this->state === FALSE) {
-			throw new /*::*/InvalidStateException('Invalid syntax.');
+			throw new /*\*/InvalidStateException('Invalid syntax.');
 
 		} elseif ($value instanceof self) {
 			$this->js .= $this->state . $name . ' = ' . $value->js;
@@ -89,7 +89,7 @@ class JavaScript extends Object
 	public function &__get($name)
 	{
 		if ($this->state === FALSE) {
-			throw new /*::*/InvalidStateException('Invalid syntax.');
+			throw new /*\*/InvalidStateException('Invalid syntax.');
 
 		} elseif ($name === 'var') {
 			$this->js .= $this->state . $name . ' ';
@@ -113,7 +113,7 @@ class JavaScript extends Object
 	public function __call($method, $args)
 	{
 		if ($this->state === FALSE) {
-			throw new /*::*/InvalidStateException('Invalid syntax.');
+			throw new /*\*/InvalidStateException('Invalid syntax.');
 		}
 		foreach ($args as $key => $arg) {
 			$args[$key] = $arg instanceof self ? $arg->js : json_encode($arg);

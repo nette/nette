@@ -1,12 +1,12 @@
-<h1>Nette::String truncate method test</h1>
+<h1>Nette\String truncate method test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::String;*/
+/*use Nette\Debug;*/
+/*use Nette\String;*/
 
 
 iconv_set_encoding('internal_encoding', 'UTF-8');

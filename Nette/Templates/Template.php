@@ -14,13 +14,13 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Templates
+ * @package    Nette\Templates
  * @version    $Id$
  */
 
-/*namespace Nette::Templates;*/
+/*namespace Nette\Templates;*/
 
-/*use Nette::Environment;*/
+/*use Nette\Environment;*/
 
 
 
@@ -35,9 +35,9 @@ require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Templates
+ * @package    Nette\Templates
  */
-class Template extends /*Nette::*/Object implements ITemplate
+class Template extends /*Nette\*/Object implements ITemplate
 {
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
@@ -53,15 +53,15 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/** @var array */
 	private $helpers = array(
-		'escape' => /*Nette::Templates::*/'TemplateHelpers::escape',
-		'translate' => /*Nette::Templates::*/'TemplateHelpers::nop',
-		'lower' => /*Nette::Templates::*/'TemplateHelpers::lower',
-		'upper' => /*Nette::Templates::*/'TemplateHelpers::upper',
-		'capitalize' => /*Nette::Templates::*/'TemplateHelpers::capitalize',
-		'strip' => /*Nette::Templates::*/'TemplateHelpers::strip',
+		'escape' => /*Nette\Templates\*/'TemplateHelpers::escape',
+		'translate' => /*Nette\Templates\*/'TemplateHelpers::nop',
+		'lower' => /*Nette\Templates\*/'TemplateHelpers::lower',
+		'upper' => /*Nette\Templates\*/'TemplateHelpers::upper',
+		'capitalize' => /*Nette\Templates\*/'TemplateHelpers::capitalize',
+		'strip' => /*Nette\Templates\*/'TemplateHelpers::strip',
 		'nl2br' => 'nl2br',
-		'truncate' => /*Nette::*/'String::truncate',
-		'bytes' => /*Nette::*/'String::bytes',
+		'truncate' => /*Nette\*/'String::truncate',
+		'bytes' => /*Nette\*/'String::bytes',
 	);
 
 	/** @var bool */
@@ -70,7 +70,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	/** @var int */
 	public static $cacheExpire = FALSE;
 
-	/** @var Nette::Caching::ICacheStorage */
+	/** @var Nette\Caching\ICacheStorage */
 	private static $cacheStorage;
 
 	/** @var array */
@@ -111,7 +111,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 			$tpl = $file;
 
 		} elseif ($file == NULL) { // intentionally ==
-			throw new /*::*/InvalidArgumentException("Template file name was not specified.");
+			throw new /*\*/InvalidArgumentException("Template file name was not specified.");
 
 		} else {
 			$tpl = clone $this;
@@ -157,7 +157,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function render()
 	{
 		if (isset(self::$livelock[$this->file])) {
-			throw new /*::*/InvalidStateException("Circular rendering detected.");
+			throw new /*\*/InvalidStateException("Circular rendering detected.");
 		}
 
 		list($content, $isFile) = $this->compile();
@@ -221,14 +221,14 @@ class Template extends /*Nette::*/Object implements ITemplate
 	private function compile()
 	{
 		if ($this->file == NULL) { // intentionally ==
-			throw new /*::*/InvalidStateException("Template file name was not specified.");
+			throw new /*\*/InvalidStateException("Template file name was not specified.");
 		}
 
 		// strip fragment
 		list($filePath) = explode('#', $this->file);
 
 		if (!is_file($filePath) || !is_readable($filePath)) {
-			throw new /*::*/FileNotFoundException("Missing template file '$this->file'.");
+			throw new /*\*/FileNotFoundException("Missing template file '$this->file'.");
 		}
 
 		if (!count($this->filters)) {
@@ -236,7 +236,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 		}
 
 		$isFile = TRUE;
-		$cache = new /*Nette::Caching::*/Cache($this->getCacheStorage(), 'Nette.Template');
+		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
 		$key = md5($this->file) . '.' . basename($this->file);
 		$content = $cache[$key];
 
@@ -246,11 +246,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 			reset($this->filters);
 			while (list(, $filter) = each($this->filters)) {/**/
-				if ($filter instanceof /*Nette::*/Callback) {
+				if ($filter instanceof /*Nette\*/Callback) {
 					$content = $filter->__invoke($this, $content);
 				} else/**/ {
 					if (!is_callable($filter)) {
-						throw new /*::*/InvalidStateException("Filter must be valid PHP callback or Nette::Callback object.");
+						throw new /*\*/InvalidStateException("Filter must be valid PHP callback or Nette\Callback object.");
 					}
 					$content = call_user_func($filter, $this, $content);
 				}
@@ -261,8 +261,8 @@ class Template extends /*Nette::*/Object implements ITemplate
 				$key,
 				$content,
 				array(
-					/*Nette::Caching::*/Cache::FILES => $filePath,
-					/*Nette::Caching::*/Cache::EXPIRE => self::$cacheExpire,
+					/*Nette\Caching\*/Cache::FILES => $filePath,
+					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
 		}
@@ -305,7 +305,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function __call($name, $args)
 	{
 		if (!isset($this->helpers[$name])) {
-			throw new /*::*/InvalidStateException("The helper '$name' was not registered.");
+			throw new /*\*/InvalidStateException("The helper '$name' was not registered.");
 		}
 
 		return call_user_func_array($this->helpers[$name], $args);
@@ -315,12 +315,12 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette::ITranslator
+	 * @param  Nette\ITranslator
 	 * @return void
 	 */
-	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
+	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
 	{
-		$this->registerHelper('translate', $translator === NULL ? /*Nette::Templates::*/'TemplateHelpers::nop' : array($translator, 'translate'));
+		$this->registerHelper('translate', $translator === NULL ? /*Nette\Templates\*/'TemplateHelpers::nop' : array($translator, 'translate'));
 	}
 
 
@@ -338,11 +338,11 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function add($name, $value)
 	{
 		if ($this->isRendering) {
-			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
+			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		if (array_key_exists($name, $this->params)) {
-			throw new /*::*/InvalidStateException("The variable '$name' exists yet.");
+			throw new /*\*/InvalidStateException("The variable '$name' exists yet.");
 		}
 
 		$this->params[$name] = $value;
@@ -385,7 +385,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function __set($name, $value)
 	{
 		if ($this->isRendering) {
-			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
+			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		$this->params[$name] = $value;
@@ -401,7 +401,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function &__get($name)
 	{
 		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
@@ -433,7 +433,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 	public function __unset($name)
 	{
 		if ($this->isRendering) {
-			throw new /*::*/InvalidStateException("Parameters are read-only while rendering template.");
+			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
 		}
 
 		unset($this->params[$name]);
@@ -447,10 +447,10 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @param  Nette::Caching::Cache
+	 * @param  Nette\Caching\Cache
 	 * @return void
 	 */
-	public static function setCacheStorage(/*Nette::Caching::*/ICacheStorage $storage)
+	public static function setCacheStorage(/*Nette\Caching\*/ICacheStorage $storage)
 	{
 		self::$cacheStorage = $storage;
 	}
@@ -458,7 +458,7 @@ class Template extends /*Nette::*/Object implements ITemplate
 
 
 	/**
-	 * @return Nette::Caching::ICacheStorage
+	 * @return Nette\Caching\ICacheStorage
 	 */
 	public static function getCacheStorage()
 	{

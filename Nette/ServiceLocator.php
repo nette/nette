@@ -64,7 +64,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	 * @param  string optional service name (for factories is not optional)
 	 * @param  bool   promote to higher level?
 	 * @return void
-	 * @throws ::InvalidArgumentException, AmbiguousServiceException
+	 * @throws \InvalidArgumentException, AmbiguousServiceException
 	 */
 	public function addService($service, $name = NULL, $promote = FALSE)
 	{
@@ -76,11 +76,11 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		} elseif (is_callable($service, TRUE)) {
 			if (empty($name)) {
-				throw new /*::*/InvalidArgumentException('Service seems to be callback, but service name is missing.');
+				throw new /*\*/InvalidArgumentException('Service seems to be callback, but service name is missing.');
 			}
 
 		} else {
-			throw new /*::*/InvalidArgumentException('Service must be name, object or factory callback.');
+			throw new /*\*/InvalidArgumentException('Service must be name, object or factory callback.');
 		}
 
 		$lower = strtolower($name);
@@ -110,7 +110,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function removeService($name, $promote = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
+			throw new /*\*/InvalidArgumentException('Service name must be a non-empty string.');
 		}
 
 		$lower = strtolower($name);
@@ -132,7 +132,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function getService($name, $need = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*::*/InvalidArgumentException('Service name must be a non-empty string.');
+			throw new /*\*/InvalidArgumentException('Service name must be a non-empty string.');
 		}
 
 		$lower = strtolower($name);
@@ -150,7 +150,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 				} else {
 					/**/// fix for namespaced classes/interfaces in PHP < 5.3
-					if ($a = strrpos($service, ':')) $service = substr($service, $a + 1);/**/
+					if ($a = strrpos($service, '\\')) $service = substr($service, $a + 1);/**/
 
 					if (!class_exists($service)) {
 						throw new AmbiguousServiceException("Cannot instantiate service, class '$service' not found.");
@@ -166,7 +166,7 @@ class ServiceLocator extends Object implements IServiceLocator
 			return $this->parent->getService($name);
 
 		} elseif ($need) {
-			throw new /*::*/InvalidStateException("Service '$name' not found.");
+			throw new /*\*/InvalidStateException("Service '$name' not found.");
 
 		} else {
 			return NULL;
@@ -195,6 +195,6 @@ class ServiceLocator extends Object implements IServiceLocator
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-class AmbiguousServiceException extends /*::*/Exception
+class AmbiguousServiceException extends /*\*/Exception
 {
 }

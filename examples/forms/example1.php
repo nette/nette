@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette::Forms example 1
+ * Nette\Forms example 1
  *
  * - separated form and rules definition
  * - manual form rendering
@@ -10,8 +10,8 @@
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Forms::Form;*/
-/*use Nette::Debug;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Debug;*/
 
 Debug::enable(E_ALL | E_STRICT);
 
@@ -136,7 +136,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette::Forms example 1 | Nette Framework</title>
+	<title>Nette\Forms example 1 | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -164,7 +164,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette::Forms example 1</h1>
+	<h1>Nette\Forms example 1</h1>
 
 	<?php $form->render('begin') ?>
 

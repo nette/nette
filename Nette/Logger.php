@@ -38,7 +38,7 @@ class Logger extends Object
 
 	public function __construct()
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 	}
 
 }

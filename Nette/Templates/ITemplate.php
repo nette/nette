@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Templates
+ * @package    Nette\Templates
  * @version    $Id$
  */
 
-/*namespace Nette::Templates;*/
+/*namespace Nette\Templates;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Templates
+ * @package    Nette\Templates
  */
 interface ITemplate
 {

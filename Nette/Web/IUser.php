@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
 interface IUser
 {
@@ -35,7 +35,7 @@ interface IUser
 	/**
 	 * Conducts the authentication process.
 	 * @return void
-	 * @throws Nette::Security::AuthenticationException if authentication was not successful
+	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
 	function authenticate();
 
@@ -53,20 +53,20 @@ interface IUser
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return Nette::Security::IIdentity
+	 * @return Nette\Security\IIdentity
 	 */
 	function getIdentity();
 
 	/**
 	 * Sets authentication handler.
-	 * @param  Nette::Security::IAuthenticator
+	 * @param  Nette\Security\IAuthenticator
 	 * @return void
 	 */
-	function setAuthenticationHandler(/*Nette::Security::*/IAuthenticator $handler);
+	function setAuthenticationHandler(/*Nette\Security\*/IAuthenticator $handler);
 
 	/**
 	 * Returns authentication handler.
-	 * @return Nette::Security::IAuthenticator
+	 * @return Nette\Security\IAuthenticator
 	 */
 	function getAuthenticationHandler();
 
@@ -104,14 +104,14 @@ interface IUser
 
 	/**
 	 * Sets authorization handler.
-	 * @param  Nette::Security::IAuthorizator
+	 * @param  Nette\Security\IAuthorizator
 	 * @return void
 	 */
-	function setAuthorizationHandler(/*Nette::Security::*/IAuthorizator $handler);
+	function setAuthorizationHandler(/*Nette\Security\*/IAuthorizator $handler);
 
 	/**
 	 * Returns current authorization handler.
-	 * @return Nette::Security::IAuthorizator
+	 * @return Nette\Security\IAuthorizator
 	 */
 	function getAuthorizationHandler();
 

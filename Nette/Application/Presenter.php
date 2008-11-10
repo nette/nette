@@ -14,13 +14,13 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
-/*use Nette::Environment;*/
+/*use Nette\Environment;*/
 
 
 
@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 abstract class Presenter extends Control implements IPresenter
 {
@@ -75,7 +75,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Lists of all components identified by a uniqueId starting from this page.
-	 * @var array of Nette::IComponent
+	 * @var array of Nette\IComponent
 	 */
 	private $globalComponents = array();
 
@@ -115,7 +115,7 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var IPresenterLoader  cached value for createRequest() & createSubRequest() */
 	private $presenterLoader;
 
-	/** @var Nette::Web::IHttpRequest  cached value for better performance */
+	/** @var Nette\Web\IHttpRequest  cached value for better performance */
 	private $httpRequest;
 
 
@@ -351,7 +351,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function isSignalReceiver($component, $signal = NULL)
 	{
-		if ($component instanceof /*Nette::*/Component) {
+		if ($component instanceof /*Nette\*/Component) {
 			$component = $component === $this ? '' : $component->lookupPath(__CLASS__, TRUE);
 		}
 
@@ -460,7 +460,7 @@ abstract class Presenter extends Control implements IPresenter
 		$template = $this->getTemplate();
 		if (!$template) return;
 
-		if ($template instanceof /*Nette::Templates::*/Template && !$template->getFile()) {
+		if ($template instanceof /*Nette\Templates\*/Template && !$template->getFile()) {
 			$presenter = $this->getName();
 			$hasContent = $hasLayout = FALSE;
 
@@ -612,7 +612,7 @@ abstract class Presenter extends Control implements IPresenter
 			$value = $this->createAjaxDriver();
 			if (!($value instanceof IAjaxDriver)) {
 				$class = get_class($value);
-				throw new /*::*/UnexpectedValueException("The Nette::Application::IAjaxDriver object was expected, '$class' was given.");
+				throw new /*\*/UnexpectedValueException("The Nette\Application\IAjaxDriver object was expected, '$class' was given.");
 			}
 			$this->ajaxDriver = $value;
 		}
@@ -699,7 +699,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws RedirectingException
 	 */
-	public function redirectUri($uri, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
+	public function redirectUri($uri, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isAjax()) {
 			$this->ajaxDriver->redirect($uri);
@@ -745,7 +745,7 @@ abstract class Presenter extends Control implements IPresenter
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest('self', array());
 			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
-				throw new RedirectingException($uri, /*Nette::Web::*/IHttpResponse::S301_MOVED_PERMANENTLY);
+				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
 		}
 	}
@@ -770,7 +770,7 @@ abstract class Presenter extends Control implements IPresenter
 		$match = FALSE;
 
 		if ($lastModified > 0) {
-			$httpResponse->setHeader('Last-Modified', /*Nette::Web::*/HttpResponse::date($lastModified));
+			$httpResponse->setHeader('Last-Modified', /*Nette\Web\*/HttpResponse::date($lastModified));
 		}
 
 		if ($etag != NULL) { // intentionally ==
@@ -810,7 +810,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		if ($match) {
-			$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S304_NOT_MODIFIED);
+			$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S304_NOT_MODIFIED);
 			$httpResponse->setHeader('Connection', 'close');
 			$this->terminate();
 
@@ -1080,7 +1080,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function saveGlobalState()
 	{
 		if ($this->phase >= self::PHASE_SHUTDOWN) {
-			throw new /*::*/InvalidStateException("Presenter is shutting down, cannot save state.");
+			throw new /*\*/InvalidStateException("Presenter is shutting down, cannot save state.");
 		}
 
 		if ($this->globalState === NULL || $this->phase <= self::PHASE_SIGNAL) {
@@ -1159,10 +1159,10 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * @param  string
-	 * @param  Nette::IComponent
+	 * @param  Nette\IComponent
 	 * @return bool
 	 */
-	final public function registerComponent($id, /*Nette::*/IComponent $component)
+	final public function registerComponent($id, /*Nette\*/IComponent $component)
 	{
 		if (isset($this->globalComponents[$id])) {
 			return FALSE;
@@ -1179,10 +1179,10 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  Nette::IComponent
+	 * @param  Nette\IComponent
 	 * @return bool
 	 */
-	final public function unregisterComponent(/*Nette::*/IComponent $component)
+	final public function unregisterComponent(/*Nette\*/IComponent $component)
 	{
 		foreach ($this->globalComponents as $id => $c) {
 			if ($c === $component) {

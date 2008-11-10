@@ -1,17 +1,17 @@
-<h1>Nette::Application::SimpleRouter test</h1>
+<h1>Nette\Application\SimpleRouter test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Application::SimpleRouter;*/
-/*use Nette::Collections::Hashtable;*/
-/*use Nette::Web::HttpRequest;*/
+/*use Nette\Debug;*/
+/*use Nette\Application\SimpleRouter;*/
+/*use Nette\Collections\Hashtable;*/
+/*use Nette\Web\HttpRequest;*/
 
 
-class MockHttpRequest extends /*Nette::Web::*/HttpRequest
+class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 {
 
 	public function setQuery(array $query)
@@ -62,9 +62,9 @@ Debug::dump($req);
 $url = $route->constructUrl($req, $httpRequest);
 Debug::dump($url);
 
-$req = new /*Nette::Application::*/PresenterRequest(
+$req = new /*Nette\Application\*/PresenterRequest(
 	'othermodule:presenter',
-	/*Nette::Web::*/HttpRequest::GET,
+	/*Nette\Web\*/HttpRequest::GET,
 	array()
 );
 $url = $route->constructUrl($req, $httpRequest);

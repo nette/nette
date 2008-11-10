@@ -1,17 +1,17 @@
-<h1>Nette::Application link test</h1>
+<h1>Nette\Application link test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Environment;*/
-/*use Nette::Debug;*/
-/*use Nette::Application::PresenterRequest;*/
-/*use Nette::Application::SimpleRouter;*/
+/*use Nette\Environment;*/
+/*use Nette\Debug;*/
+/*use Nette\Application\PresenterRequest;*/
+/*use Nette\Application\SimpleRouter;*/
 
 
-class TestControl extends /*Nette::Application::*/Control
+class TestControl extends /*Nette\Application\*/Control
 {
 	/** @persistent array */
 	public $order;
@@ -66,7 +66,7 @@ class TestControl extends /*Nette::Application::*/Control
 
 
 
-class TestPresenter extends /*Nette::Application::*/Presenter
+class TestPresenter extends /*Nette\Application\*/Presenter
 {
 	/** @var TestControl */
 	public $mycontrol;
@@ -230,7 +230,7 @@ $uri->scriptPath = 'index.php';
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());
 
-$request = new PresenterRequest('Test', /*Nette::Web::*/HttpRequest::GET, array());
+$request = new PresenterRequest('Test', /*Nette\Web\*/HttpRequest::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter($request);

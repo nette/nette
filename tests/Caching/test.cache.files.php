@@ -1,11 +1,11 @@
-<h1>Nette::Caching::Cache files dependency test</h1>
+<h1>Nette\Caching\Cache files dependency test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Debug;*/
 
 $key = 'nette';
 $value = 'rulez';
@@ -13,7 +13,7 @@ $tmpDir = dirname(__FILE__) . '/tmp';
 
 foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 
-$cache = new Cache(new /*Nette::Caching::*/FileStorage("$tmpDir/prefix-"));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage("$tmpDir/prefix-"));
 
 
 $dependentFile = $tmpDir . '/spec.file';

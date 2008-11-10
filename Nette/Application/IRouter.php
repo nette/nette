@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 interface IRouter
 {
@@ -38,17 +38,17 @@ interface IRouter
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	function match(/*Nette::Web::*/IHttpRequest $context);
+	function match(/*Nette\Web\*/IHttpRequest $context);
 
 	/**
 	 * Constructs URL path from PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	function constructUrl(PresenterRequest $request, /*Nette::Web::*/IHttpRequest $context);
+	function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context);
 
 }

@@ -1,11 +1,11 @@
-<h1>Nette::Collections::Set test</h1>
+<h1>Nette\Collections\Set test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Collections::Set;*/
-/*use Nette::Debug;*/
+/*use Nette\Collections\Set;*/
+/*use Nette\Debug;*/
 
 
 

@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Collections
+ * @package    Nette\Collections
  * @version    $Id$
  */
 
-/*namespace Nette::Collections;*/
+/*namespace Nette\Collections;*/
 
 
 
@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Collections/IList.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
 class ArrayList extends Collection implements IList
 {
@@ -46,13 +46,13 @@ class ArrayList extends Collection implements IList
 	 * @param  int
 	 * @param  mixed
 	 * @return bool
-	 * @throws ::ArgumentOutOfRangeException
+	 * @throws \ArgumentOutOfRangeException
 	 */
 	public function insertAt($index, $item)
 	{
 		$index -= $this->base;
 		if ($index < 0 || $index > count($this)) {
-			throw new /*::*/ArgumentOutOfRangeException;
+			throw new /*\*/ArgumentOutOfRangeException;
 		}
 
 		$this->beforeAdd($item);
@@ -68,7 +68,7 @@ class ArrayList extends Collection implements IList
 	 * Removes the first occurrence of the specified element.
 	 * @param  mixed
 	 * @return bool  true if this list changed as a result of the call
-	 * @throws ::NotSupportedException
+	 * @throws \NotSupportedException
 	 */
 	public function remove($item)
 	{
@@ -101,16 +101,16 @@ class ArrayList extends Collection implements IList
 
 
 
-	/********************* interface ::ArrayAccess ****************d*g**/
+	/********************* interface \ArrayAccess ****************d*g**/
 
 
 
 	/**
-	 * Replaces (or appends) the item (::ArrayAccess implementation).
+	 * Replaces (or appends) the item (\ArrayAccess implementation).
 	 * @param  int index
 	 * @param  object
 	 * @return void
-	 * @throws ::InvalidArgumentException, ::NotSupportedException, ::ArgumentOutOfRangeException
+	 * @throws \InvalidArgumentException, \NotSupportedException, \ArgumentOutOfRangeException
 	 */
 	public function offsetSet($index, $item)
 	{
@@ -122,7 +122,7 @@ class ArrayList extends Collection implements IList
 		} else { // replace
 			$index -= $this->base;
 			if ($index < 0 || $index >= count($this)) {
-				throw new /*::*/ArgumentOutOfRangeException;
+				throw new /*\*/ArgumentOutOfRangeException;
 			}
 			parent::offsetSet($index, $item);
 		}
@@ -131,16 +131,16 @@ class ArrayList extends Collection implements IList
 
 
 	/**
-	 * Returns item (::ArrayAccess implementation).
+	 * Returns item (\ArrayAccess implementation).
 	 * @param  int index
 	 * @return mixed
-	 * @throws ::ArgumentOutOfRangeException
+	 * @throws \ArgumentOutOfRangeException
 	 */
 	public function offsetGet($index)
 	{
 		$index -= $this->base;
 		if ($index < 0 || $index >= count($this)) {
-			throw new /*::*/ArgumentOutOfRangeException;
+			throw new /*\*/ArgumentOutOfRangeException;
 		}
 
 		return parent::offsetGet($index);
@@ -149,7 +149,7 @@ class ArrayList extends Collection implements IList
 
 
 	/**
-	 * Exists item? (::ArrayAccess implementation).
+	 * Exists item? (\ArrayAccess implementation).
 	 * @param  int index
 	 * @return bool
 	 */
@@ -165,13 +165,13 @@ class ArrayList extends Collection implements IList
 	 * Removes the element at the specified position in this list.
 	 * @param  int index
 	 * @return void
-	 * @throws ::NotSupportedException, ::ArgumentOutOfRangeException
+	 * @throws \NotSupportedException, \ArgumentOutOfRangeException
 	 */
 	public function offsetUnset($index)
 	{
 		$index -= $this->base;
 		if ($index < 0 || $index >= count($this)) {
-			throw new /*::*/ArgumentOutOfRangeException;
+			throw new /*\*/ArgumentOutOfRangeException;
 		}
 
 		$this->beforeRemove();

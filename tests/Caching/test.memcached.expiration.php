@@ -1,16 +1,16 @@
-<h1>Nette::Caching::Cache & Memcached expiration test</h1>
+<h1>Nette\Caching\Cache & Memcached expiration test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Debug;*/
 
 $key = 'nette';
 $value = 'rulez';
 
-$cache = new Cache(new /*Nette::Caching::*/MemcachedStorage('localhost'));
+$cache = new Cache(new /*Nette\Caching\*/MemcachedStorage('localhost'));
 
 
 echo "Writing cache...\n";

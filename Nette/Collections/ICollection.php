@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Collections
+ * @package    Nette\Collections
  * @version    $Id$
  */
 
-/*namespace Nette::Collections;*/
+/*namespace Nette\Collections;*/
 
 
 
@@ -27,9 +27,9 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Collections
+ * @package    Nette\Collections
  */
-interface ICollection extends /*::*/Countable, /*::*/IteratorAggregate
+interface ICollection extends /*\*/Countable, /*\*/IteratorAggregate
 {
 	function append($item);
 	function remove($item);

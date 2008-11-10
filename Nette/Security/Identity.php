@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Security
+ * @package    Nette\Security
  * @version    $Id$
  */
 
-/*namespace Nette::Security;*/
+/*namespace Nette\Security;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Security
+ * @package    Nette\Security
  */
-class Identity extends /*Nette::*/Object implements IIdentity
+class Identity extends /*Nette\*/Object implements IIdentity
 {
 	/** @var string */
 	private $name;

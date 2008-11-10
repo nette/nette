@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-final class Rule extends /*Nette::*/Object
+final class Rule extends /*Nette\*/Object
 {
 	/** type */
 	const CONDITION = 1;

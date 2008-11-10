@@ -1,9 +1,9 @@
-<h1>Nette::Templates::TemplateFilters::netteLinks test</h1>
+<h1>Nette\Templates\TemplateFilters::netteLinks test</h1>
 
 <?php
 require_once '../../Nette/loader.php';
 
-class MockPresenterComponent extends /*Nette::Application::*/PresenterComponent
+class MockPresenterComponent extends /*Nette\Application\*/PresenterComponent
 {
 	function link($destination, $args = array())
 	{
@@ -19,16 +19,16 @@ class MockPresenterComponent extends /*Nette::Application::*/PresenterComponent
 
 }
 
-/*use Nette::Debug;*/
-/*use Nette::Environment;*/
-/*use Nette::Templates::Template;*/
+/*use Nette\Debug;*/
+/*use Nette\Environment;*/
+/*use Nette\Templates\Template;*/
 
 Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
-//Template::setCacheStorage(new /*Nette::Caching::*/DummyStorage);
+//Template::setCacheStorage(new /*Nette\Caching\*/DummyStorage);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/nette-links.phtml');
-$template->registerFilter(array(/*Nette::Templates::*/'TemplateFilters', 'netteLinks'));
+$template->registerFilter(array(/*Nette\Templates\*/'TemplateFilters', 'netteLinks'));
 $template->control = new MockPresenterComponent;
 $template->render();

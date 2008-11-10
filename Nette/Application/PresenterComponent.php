@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -39,9 +39,9 @@ require_once dirname(__FILE__) . '/../Application/IStatePersistent.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-abstract class PresenterComponent extends /*Nette::*/ComponentContainer implements ISignalReceiver, IStatePersistent
+abstract class PresenterComponent extends /*Nette\*/ComponentContainer implements ISignalReceiver, IStatePersistent
 {
 	/** @var array */
 	protected $params = array();
@@ -50,9 +50,9 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 
 	/**
 	 */
-	public function __construct(/*Nette::*/IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
 	{
-		$this->monitor('Nette::Application::Presenter');
+		$this->monitor('Nette\Application\Presenter');
 		parent::__construct($parent, $name);
 	}
 
@@ -65,7 +65,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		return $this->lookup('Nette::Application::Presenter', $need);
+		return $this->lookup('Nette\Application\Presenter', $need);
 	}
 
 
@@ -77,7 +77,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 */
 	public function getUniqueId()
 	{
-		return $this->lookupPath('Nette::Application::Presenter', TRUE);
+		return $this->lookupPath('Nette\Application\Presenter', TRUE);
 	}
 
 
@@ -312,7 +312,7 @@ abstract class PresenterComponent extends /*Nette::*/ComponentContainer implemen
 	 * @return void
 	 * @throws RedirectingException
 	 */
-	public function redirect($destination, $args = NULL, $code = /*Nette::Web::*/IHttpResponse::S303_POST_GET)
+	public function redirect($destination, $args = NULL, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
 		if ($args === NULL) $args = array();
 		$this->getPresenter()->redirectUri($this->link($destination, $args), $code);

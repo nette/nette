@@ -24,7 +24,7 @@ class ErrorPresenter extends BasePresenter
 		} else {
 			$this->template->robots = 'noindex,noarchive';
 
-			if ($exception instanceof /*Nette::Application::*/BadRequestException) {
+			if ($exception instanceof /*Nette\Application\*/BadRequestException) {
 				Environment::getHttpResponse()->setCode(404);
 				$this->template->title = '404 Not Found';
 				$this->changeScene('404');
@@ -35,8 +35,8 @@ class ErrorPresenter extends BasePresenter
 				$this->changeScene('500');
 
 				// log to file
-				if (/*Nette::*/Debug::isEnabled()) {
-					/*Nette::*/Debug::exceptionHandler($exception);
+				if (/*Nette\*/Debug::isEnabled()) {
+					/*Nette\*/Debug::exceptionHandler($exception);
 				}
 			}
 		}

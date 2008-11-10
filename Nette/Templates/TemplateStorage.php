@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Templates
+ * @package    Nette\Templates
  * @version    $Id$
  */
 
-/*namespace Nette::Templates;*/
+/*namespace Nette\Templates;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Templates
+ * @package    Nette\Templates
  */
-class TemplateStorage extends /*Nette::Caching::*/FileStorage
+class TemplateStorage extends /*Nette\Caching\*/FileStorage
 {
 
 	/**

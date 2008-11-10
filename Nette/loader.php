@@ -23,5 +23,5 @@ require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 define('NETTE_DIR', dirname(__FILE__));
 
-/*Nette::Loaders::*/NetteLoader::getInstance()->base = NETTE_DIR;
-/*Nette::Loaders::*/NetteLoader::getInstance()->register();
+/*Nette\Loaders\*/NetteLoader::getInstance()->base = NETTE_DIR;
+/*Nette\Loaders\*/NetteLoader::getInstance()->register();

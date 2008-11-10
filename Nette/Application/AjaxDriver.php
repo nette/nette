@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Application/IAjaxDriver.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
+class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 {
 	/** @var bool */
 	private $opened = FALSE;
@@ -43,7 +43,7 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 	/** @var array */
 	private $json;
 
-	/** @var Nette::Web::IHttpResponse */
+	/** @var Nette\Web\IHttpResponse */
 	private $httpResponse;
 
 
@@ -61,10 +61,10 @@ class AjaxDriver extends /*Nette::*/Object implements IAjaxDriver
 
 
 	/**
-	 * @param  Nette::Web::IHttpResponse
+	 * @param  Nette\Web\IHttpResponse
 	 * @return void
 	 */
-	public function open(/*Nette::Web::*/IHttpResponse $httpResponse)
+	public function open(/*Nette\Web\*/IHttpResponse $httpResponse)
 	{
 		$httpResponse->expire(FALSE);
 		$this->httpResponse = $httpResponse;

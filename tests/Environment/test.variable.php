@@ -1,12 +1,12 @@
-<h1>Nette::Environment variables test</h1>
+<h1>Nette\Environment variables test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Environment;*/
+/*use Nette\Debug;*/
+/*use Nette\Environment;*/
 
 echo "Getting variable 'foo':\n";
 Debug::dump(Environment::getVariable('foo'));

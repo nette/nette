@@ -1,12 +1,12 @@
-<h1>Nette::String base method test</h1>
+<h1>Nette\String base method test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::String;*/
+/*use Nette\Debug;*/
+/*use Nette\String;*/
 
 
 // String::startsWith

@@ -1,4 +1,4 @@
-<h1>Nette::Object events test</h1>
+<h1>Nette\Object events test</h1>
 
 <pre>
 <?php
@@ -24,7 +24,7 @@ class Handler
 
 
 
-class Test extends /*Nette::*/Object
+class Test extends /*Nette\*/Object
 {
 	private $onClick1;
 

@@ -1,7 +1,7 @@
 <?php
 
-/*use Nette::Environment;*/
-/*use Nette::Application::Route;*/
+/*use Nette\Environment;*/
+/*use Nette\Application\Route;*/
 
 
 // Step 1: Load Nette Framework
@@ -13,14 +13,14 @@ require_once LIBS_DIR . '/Nette/loader.php';
 
 
 // Step 2: Configure and setup application environment
-// 2a) enable Nette::Debug for better exception and error visualisation
+// 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable();
 
 // 2b) load configuration from config.ini file
 $config = Environment::loadConfig();
 
 // 2c) enable RobotLoader
-$loader = new /*Nette::Loaders::*/RobotLoader();
+$loader = new /*Nette\Loaders\*/RobotLoader();
 $loader->addDirectory(explode(';', $config->scanDirs));
 $loader->autoRebuild = FALSE;
 $loader->register();

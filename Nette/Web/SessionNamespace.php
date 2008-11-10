@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
-final class SessionNamespace extends /*Nette::*/Object implements /*::*/IteratorAggregate
+final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAggregate
 {
 	/** @var array  session data storage */
 	private $data;
@@ -59,14 +59,14 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 
 	/**
 	 * Returns an iterator over all namespace variables.
-	 * @return ::ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getIterator()
 	{
 		if (isset($this->data)) {
-			return new /*::*/ArrayIterator($this->data);
+			return new /*\*/ArrayIterator($this->data);
 		} else {
-			return new /*::*/ArrayIterator;
+			return new /*\*/ArrayIterator;
 		}
 	}
 
@@ -78,12 +78,12 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 * @param  string  name
 	 * @param  mixed   value
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function __set($name, $value)
 	{
 		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
 		$this->data[$name] = $value;
@@ -96,12 +96,12 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 *
 	 * @param  string    name
 	 * @return mixed
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function &__get($name)
 	{
 		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
@@ -131,12 +131,12 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 	 *
 	 * @param  string    name
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function __unset($name)
 	{
 		if ($name === '') {
-			throw new /*::*/InvalidArgumentException("The key must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
 		}
 
 		unset($this->data[$name], $this->meta['EXP'][$name]);
@@ -157,7 +157,7 @@ final class SessionNamespace extends /*Nette::*/Object implements /*::*/Iterator
 			return;
 		}
 
-		if ($seconds <= /*Nette::*/Tools::YEAR) {
+		if ($seconds <= /*Nette\*/Tools::YEAR) {
 			$seconds += time();
 		}
 

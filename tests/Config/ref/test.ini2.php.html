@@ -1,4 +1,4 @@
-<h1>Nette::Config::Config & ConfigAdapterIni test #2</h1>
+<h1>Nette\Config\Config & ConfigAdapterIni test #2</h1>
 
 <pre>
 Load INI
@@ -18,9 +18,9 @@ object(Config) (3) {
   }
   "production" => object(Config) (5) {
     "service" => object(Config) (3) {
-      "Nette-Application-IRouter" => string(31) "Nette::Application::MultiRouter"
-      "User" => string(21) "Nette::Security::User"
-      "Nette-Autoloader" => string(17) "Nette::AutoLoader"
+      "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+      "User" => string(19) "Nette\Security\User"
+      "Nette-Autoloader" => string(16) "Nette\AutoLoader"
     }
     "webhost" => string(15) "www.example.com"
     "database" => object(Config) (2) {
@@ -55,9 +55,9 @@ object(Config) (3) {
       "adapter" => string(9) "pdo_mysql"
     }
     "service" => object(Config) (3) {
-      "Nette-Application-IRouter" => string(31) "Nette::Application::MultiRouter"
-      "User" => string(21) "Nette::Security::User"
-      "Nette-Autoloader" => string(17) "Nette::AutoLoader"
+      "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+      "User" => string(19) "Nette\Security\User"
+      "Nette-Autoloader" => string(16) "Nette\AutoLoader"
     }
     "webhost" => string(15) "www.example.com"
     "variable" => object(Config) (3) {
@@ -87,9 +87,9 @@ set.mbstring-internal_encoding = "%encoding%"
 set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 [production]
-service.Nette-Application-IRouter = "Nette::Application::MultiRouter"
-service.User = "Nette::Security::User"
-service.Nette-Autoloader = "Nette::AutoLoader"
+service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
+service.User = "Nette\Security\User"
+service.Nette-Autoloader = "Nette\AutoLoader"
 webhost = "www.example.com"
 database.adapter = "pdo_mysql"
 database.params.host = "db.example.com"
@@ -110,9 +110,9 @@ database.params.username = "devuser"
 database.params.password = "devsecret"
 database.params.dbname = "dbname"
 database.adapter = "pdo_mysql"
-service.Nette-Application-IRouter = "Nette::Application::MultiRouter"
-service.User = "Nette::Security::User"
-service.Nette-Autoloader = "Nette::AutoLoader"
+service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
+service.User = "Nette\Security\User"
+service.Nette-Autoloader = "Nette\AutoLoader"
 webhost = "www.example.com"
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"
@@ -133,9 +133,9 @@ common.set.date-timezone = "Europe/Prague"
 common.set.iconv-internal_encoding = "%encoding%"
 common.set.mbstring-internal_encoding = "%encoding%"
 common.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
-production.service.Nette-Application-IRouter = "Nette::Application::MultiRouter"
-production.service.User = "Nette::Security::User"
-production.service.Nette-Autoloader = "Nette::AutoLoader"
+production.service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
+production.service.User = "Nette\Security\User"
+production.service.Nette-Autoloader = "Nette\AutoLoader"
 production.webhost = "www.example.com"
 production.database.adapter = "pdo_mysql"
 production.database.params.host = "db.example.com"
@@ -154,9 +154,9 @@ development.database.params.username = "devuser"
 development.database.params.password = "devsecret"
 development.database.params.dbname = "dbname"
 development.database.adapter = "pdo_mysql"
-development.service.Nette-Application-IRouter = "Nette::Application::MultiRouter"
-development.service.User = "Nette::Security::User"
-development.service.Nette-Autoloader = "Nette::AutoLoader"
+development.service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
+development.service.User = "Nette\Security\User"
+development.service.Nette-Autoloader = "Nette\AutoLoader"
 development.webhost = "www.example.com"
 development.variable.tempDir = "%appDir%/cache"
 development.variable.foo = "%bar% world"
@@ -178,9 +178,9 @@ object(Config) (5) {
     "adapter" => string(9) "pdo_mysql"
   }
   "service" => object(Config) (3) {
-    "Nette-Application-IRouter" => string(31) "Nette::Application::MultiRouter"
-    "User" => string(21) "Nette::Security::User"
-    "Nette-Autoloader" => string(17) "Nette::AutoLoader"
+    "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+    "User" => string(19) "Nette\Security\User"
+    "Nette-Autoloader" => string(16) "Nette\AutoLoader"
   }
   "webhost" => string(15) "www.example.com"
   "variable" => object(Config) (3) {
@@ -205,9 +205,9 @@ database.params.username = "devuser"
 database.params.password = "devsecret"
 database.params.dbname = "dbname"
 database.adapter = "pdo_mysql"
-service.Nette-Application-IRouter = "Nette::Application::MultiRouter"
-service.User = "Nette::Security::User"
-service.Nette-Autoloader = "Nette::AutoLoader"
+service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
+service.User = "Nette\Security\User"
+service.Nette-Autoloader = "Nette\AutoLoader"
 webhost = "www.example.com"
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"

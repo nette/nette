@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-abstract class FormControl extends /*Nette::*/Component implements IFormControl
+abstract class FormControl extends /*Nette\*/Component implements IFormControl
 {
 	/** @var string */
 	public static $idMask = 'frm%s-%s';
@@ -46,10 +46,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var mixed unfiltered control value */
 	protected $value;
 
-	/** @var Nette::Web::Html  control element template */
+	/** @var Nette\Web\Html  control element template */
 	protected $control;
 
-	/** @var Nette::Web::Html  label element template */
+	/** @var Nette\Web\Html  label element template */
 	protected $label;
 
 	/** @var array */
@@ -67,7 +67,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	/** @var Rules */
 	private $rules;
 
-	/** @var Nette::ITranslator */
+	/** @var Nette\ITranslator */
 	private $translator = TRUE; // means autodetect
 
 	/** @var array user options */
@@ -81,8 +81,8 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	public function __construct($label)
 	{
 		parent::__construct();
-		$this->control = /*Nette::Web::*/Html::el('input');
-		$this->label = /*Nette::Web::*/Html::el('label');
+		$this->control = /*Nette\Web\*/Html::el('input');
+		$this->label = /*Nette\Web\*/Html::el('label');
 		$this->caption = $label;
 		$this->rules = new Rules($this);
 	}
@@ -95,10 +95,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 * @param  string
 	 * @return void
 	 */
-	public function setParent(/*Nette::*/IComponentContainer $parent = NULL, $name = NULL)
+	public function setParent(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
 	{
 		if ($name === 'submit') {
-			throw new /*::*/InvalidArgumentException("Name 'submit' is not allowed due to JavaScript limitations.");
+			throw new /*\*/InvalidArgumentException("Name 'submit' is not allowed due to JavaScript limitations.");
 		}
 		parent::setParent($parent, $name);
 	}
@@ -112,7 +112,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 	 */
 	public function getForm($need = TRUE)
 	{
-		return $this->lookup('Nette::Forms::Form', $need);
+		return $this->lookup('Nette\Forms\Form', $need);
 	}
 
 
@@ -126,11 +126,11 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 		if ($this->htmlName === NULL) {
 			$s = '';
 			$name = $this->getName();
-			$obj = $this->lookup('Nette::Forms::INamingContainer', TRUE);
+			$obj = $this->lookup('Nette\Forms\INamingContainer', TRUE);
 			while (!($obj instanceof Form)) {
 				$s = "[$name]$s";
 				$name = $obj->getName();
-				$obj = $obj->lookup('Nette::Forms::INamingContainer', TRUE);
+				$obj = $obj->lookup('Nette\Forms\INamingContainer', TRUE);
 			}
 			$this->htmlName = "$name$s";
 		}
@@ -224,10 +224,10 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette::ITranslator
+	 * @param  Nette\ITranslator
 	 * @return void
 	 */
-	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
+	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 	}
@@ -236,7 +236,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Returns translate adapter.
-	 * @return Nette::ITranslator|NULL
+	 * @return Nette\ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
@@ -331,7 +331,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	public function getControl()
 	{
@@ -347,7 +347,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Generates label's HTML element.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	public function getLabel()
 	{
@@ -369,7 +369,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Returns control's HTML element template.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	final public function getControlPrototype()
 	{
@@ -380,7 +380,7 @@ abstract class FormControl extends /*Nette::*/Component implements IFormControl
 
 	/**
 	 * Returns label's HTML element template.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	final public function getLabelPrototype()
 	{

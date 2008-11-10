@@ -1,7 +1,7 @@
 <?php
 
-/*use Nette::Environment;*/
-/*use Nette::Application::Route;*/
+/*use Nette\Environment;*/
+/*use Nette\Application\Route;*/
 
 
 // Step 1: Load Nette Framework
@@ -13,7 +13,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 // Step 2: Configure and setup application environment
-// 2a) enable Nette::Debug for better exception and error visualisation
+// 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable(E_ALL | E_STRICT);
 
 // 2b) load configuration from config.ini file

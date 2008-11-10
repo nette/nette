@@ -1,12 +1,12 @@
 <?php header('Content-Type: text/html; charset=utf-8'); ?>
-<h1>Nette::Web::HttpRequest encoding test</h1>
+<h1>Nette\Web\HttpRequest encoding test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Web::HttpRequest;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\HttpRequest;*/
 
 define("VALID", "\x76\xC4\x9B\xC5\xBE");
 define("INVALID", "\x76\xC4\xC5\xBE");

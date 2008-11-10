@@ -1,6 +1,6 @@
 <?php
 
-/*use Nette::Security::AuthenticationException;*/
+/*use Nette\Security\AuthenticationException;*/
 
 
 /**
@@ -14,7 +14,7 @@
  *  [real_name] VARCHAR(100)  NOT NULL
  *  );
  */
-class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
+class Users extends DibiTable implements /*Nette\Security\*/IAuthenticator
 {
 
 	/**
@@ -35,7 +35,7 @@ class Users extends DibiTable implements /*Nette::Security::*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette::Security::*/Identity($row->username, array(), $row);
+		return new /*Nette\Security\*/Identity($row->username, array(), $row);
 	}
 
 }

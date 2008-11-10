@@ -1,13 +1,13 @@
-<h1>Nette::Component iterator test</h1>
+<h1>Nette\Component iterator test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Component;*/
-/*use Nette::ComponentContainer;*/
-/*use Nette::Forms::Button;*/
-/*use Nette::Debug;*/
+/*use Nette\Component;*/
+/*use Nette\ComponentContainer;*/
+/*use Nette\Forms\Button;*/
+/*use Nette\Debug;*/
 
 class ComponentX extends Component
 {
@@ -34,7 +34,7 @@ echo "\n\n";
 
 
 echo "Filter:\n";
-foreach ($c->getComponents(FALSE, 'Nette::Forms::Button') as $name => $component) {
+foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) {
 	echo "$name [$component->class]\n";
 }
 echo "\n\n";
@@ -64,14 +64,14 @@ echo "\n\n";
 
 
 echo "Recursive & filter I:\n";
-foreach ($c->getComponents(TRUE, 'Nette::Forms::Button') as $name => $component) {
+foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
 	echo "$name [$component->class]\n";
 }
 echo "\n\n";
 
 
 echo "Recursive & filter II:\n";
-foreach ($c->getComponents(TRUE, 'Nette::ComponentContainer') as $name => $component) {
+foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $component) {
 	echo "$name [$component->class]\n";
 }
 echo "\n\n";

@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Config
+ * @package    Nette\Config
  * @version    $Id$
  */
 
-/*namespace Nette::Config;*/
+/*namespace Nette\Config;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Config
+ * @package    Nette\Config
  */
 interface IConfigAdapter
 {

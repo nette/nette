@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette\Caching
  * @version    $Id$
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette\Caching;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette\Caching
  */
-class DummyStorage extends /*Nette::*/Object implements ICacheStorage
+class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 {
 	/** @var array */
 	public $log = array();

@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  * @version    $Id$
  */
 
-/*namespace Nette::Loaders;*/
+/*namespace Nette\Loaders;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  */
-abstract class AutoLoader extends /*Nette::*/Object
+abstract class AutoLoader extends /*Nette\*/Object
 {
 	/** @var array  list of registered loaders */
 	static private $loaders = array();
@@ -73,7 +73,7 @@ abstract class AutoLoader extends /*Nette::*/Object
 	public function register()
 	{
 		if (!function_exists('spl_autoload_register')) {
-			throw new /*::*/RuntimeException('spl_autoload does not exist in this PHP installation.');
+			throw new /*\*/RuntimeException('spl_autoload does not exist in this PHP installation.');
 		}
 
 		spl_autoload_register(array($this, 'tryLoad'));

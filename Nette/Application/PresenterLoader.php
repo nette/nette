@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 class PresenterLoader implements IPresenterLoader
 {
@@ -65,7 +65,7 @@ class PresenterLoader implements IPresenterLoader
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				/*Nette::Loaders::*/AutoLoader::includeOnce($file);
+				/*Nette\Loaders\*/AutoLoader::includeOnce($file);
 			}
 
 			if (!class_exists($class)) {
@@ -75,8 +75,8 @@ class PresenterLoader implements IPresenterLoader
 
 		$reflection = new ReflectionClass($class);
 
-		if (!$reflection->implementsInterface(/*Nette::Application::*/'IPresenter')) {
-			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette::Application::IPresenter implementor.");
+		if (!$reflection->implementsInterface(/*Nette\Application\*/'IPresenter')) {
+			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\Application\IPresenter implementor.");
 		}
 
 		if ($reflection->isAbstract()) {
@@ -109,7 +109,7 @@ class PresenterLoader implements IPresenterLoader
 	public function formatPresenterClass($presenter)
 	{
 		// PHP 5.3
-		/*return str_replace(':', '::', $presenter) . 'Presenter';*/
+		/*return strtr($presenter, ':', '\\') . 'Presenter';*/
 		return strtr($presenter, ':', '_') . 'Presenter';
 	}
 
@@ -123,7 +123,7 @@ class PresenterLoader implements IPresenterLoader
 	public function unformatPresenterClass($class)
 	{
 		// PHP 5.3
-		/*return str_replace('::', ':', substr($class, 0, -9));*/
+		/*return strtr(substr($class, 0, -9), '\\', ':');*/
 		return strtr(substr($class, 0, -9), '_', ':');
 	}
 
@@ -137,7 +137,7 @@ class PresenterLoader implements IPresenterLoader
 	public function formatPresenterFile($presenter)
 	{
 		$presenter = str_replace(':', 'Module/', $presenter);
-		$presenter = /*Nette::*/Environment::getVariable('presentersDir') . '/' . $presenter . 'Presenter.php';
+		$presenter = /*Nette\*/Environment::getVariable('presentersDir') . '/' . $presenter . 'Presenter.php';
 		return $presenter;
 	}
 

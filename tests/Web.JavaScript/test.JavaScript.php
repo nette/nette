@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../Nette/loader.php';
-/*use Nette::Web::JavaScript;*/
+/*use Nette\Web\JavaScript;*/
 
 
 echo "<xmp>\n";

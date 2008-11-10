@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,14 +31,14 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
 class RadioList extends FormControl
 {
-	/** @var Nette::Web::Html  separator element template */
+	/** @var Nette\Web\Html  separator element template */
 	protected $separator;
 
-	/** @var Nette::Web::Html  container element template */
+	/** @var Nette\Web\Html  container element template */
 	protected $container;
 
 	/** @var array */
@@ -54,8 +54,8 @@ class RadioList extends FormControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'radio';
-		$this->container = /*Nette::Web::*/Html::el();
-		$this->separator = /*Nette::Web::*/Html::el('br');
+		$this->container = /*Nette\Web\*/Html::el();
+		$this->separator = /*Nette\Web\*/Html::el('br');
 		if ($items !== NULL) $this->setItems($items);
 	}
 
@@ -99,7 +99,7 @@ class RadioList extends FormControl
 
 	/**
 	 * Returns separator HTML element template.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	final public function getSeparatorPrototype()
 	{
@@ -110,7 +110,7 @@ class RadioList extends FormControl
 
 	/**
 	 * Returns container HTML element template.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	final public function getContainerPrototype()
 	{
@@ -121,7 +121,7 @@ class RadioList extends FormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	public function getControl()
 	{
@@ -131,14 +131,14 @@ class RadioList extends FormControl
 		$id = $control->id;
 		$counter = 0;
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = /*Nette::Web::*/Html::el('label');
+		$label = /*Nette\Web\*/Html::el('label');
 
 		foreach ($this->items as $key => $val) {
 			$control->id = $label->for = $id . '-' . $counter;
 			$control->checked = (string) $key === $value;
 			$control->value = $key;
 
-			if ($val instanceof /*Nette::Web::*/Html) {
+			if ($val instanceof /*Nette\Web\*/Html) {
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate($val));

@@ -29,7 +29,7 @@
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-class InstanceFilterIterator extends /*::*/FilterIterator
+class InstanceFilterIterator extends /*\*/FilterIterator
 {
 	/** @var string */
 	private $type;
@@ -40,10 +40,10 @@ class InstanceFilterIterator extends /*::*/FilterIterator
 	 * @param  Iterator
 	 * @param  string  class/interface name
 	 */
-	public function __construct(/*::*/Iterator $iterator, $type)
+	public function __construct(/*\*/Iterator $iterator, $type)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
 		$this->type = $type;
 		parent::__construct($iterator);
 	}

@@ -1,12 +1,12 @@
-<h1>Nette::Environment services test</h1>
+<h1>Nette\Environment services test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Environment;*/
+/*use Nette\Debug;*/
+/*use Nette\Environment;*/
 
 echo "Environment::getHttpResponse\n";
 $obj = Environment::getHttpResponse();

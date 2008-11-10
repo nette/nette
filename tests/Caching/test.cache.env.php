@@ -1,12 +1,12 @@
-<h1>Nette::Caching::Cache & Environment test</h1>
+<h1>Nette\Caching\Cache & Environment test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Environment;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Environment;*/
+/*use Nette\Debug;*/
 
 $tmpDir = dirname(__FILE__) . '/tmp';
 

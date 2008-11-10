@@ -1,11 +1,11 @@
-<h1>Nette::Forms example 1</h1>
+<h1>Nette\Forms example 1</h1>
 
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Forms::Form;*/
-/*use Nette::Debug;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 
@@ -22,7 +22,7 @@ $form['age']->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', arr
 
 $form['avatar']->addRule(Form::MIME_TYPE, 'Avatar must be image', 'image/*');
 $form['avatar']->addError('User error');
-$form['avatar']->addError(/*Nette::Web::*/Html::el('strong', 'User error #2'));
+$form['avatar']->addError(/*Nette\Web\*/Html::el('strong', 'User error #2'));
 
 
 echo $form;

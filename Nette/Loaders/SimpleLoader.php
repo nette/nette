@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  * @version    $Id$
  */
 
-/*namespace Nette::Loaders;*/
+/*namespace Nette\Loaders;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  */
 class SimpleLoader extends AutoLoader
 {
@@ -43,14 +43,14 @@ class SimpleLoader extends AutoLoader
 	 */
 	public function tryLoad($type)
 	{
-		if (strpbrk($type, './;\\|') !== FALSE) {
-			throw new /*::*/InvalidArgumentException("Invalid class/interface name '$type'.");
+		if (strpbrk($type, './;|') !== FALSE) {
+			throw new /*\*/InvalidArgumentException("Invalid class/interface name '$type'.");
 		}
 
-		$file = str_replace('::', '/', $type) . '.php';
+		$file = strtr($type, '\\', '/') . '.php';
 
 		/*
-		if (strncmp($type, 'Nette::', 7) === 0) {
+		if (strncmp($type, 'Nette\\', 6) === 0) {
 			$file = dirname(dirname(dirname(__FILE__))) . '/' . $file;
 		}
 		*/

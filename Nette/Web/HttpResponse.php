@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Web/IHttpResponse.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
-final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
+final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 {
 	/** @var bool  Send invisible garbage for IE 6? */
 	private static $fixIE = TRUE;
@@ -58,7 +58,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return bool
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function setCode($code)
 	{
@@ -72,7 +72,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 		);
 
 		if (!isset($allowed[$code])) {
-			throw new /*::*/InvalidArgumentException("Bad HTTP response '$code'.");
+			throw new /*\*/InvalidArgumentException("Bad HTTP response '$code'.");
 
 		} elseif (headers_sent()) {
 			return FALSE;
@@ -159,7 +159,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 			return FALSE;
 
 		} elseif ($time > 0) {
-			if ($time <= /*Nette::*/Tools::YEAR) {
+			if ($time <= /*Nette\*/Tools::YEAR) {
 				$time += time();
 			}
 			$this->setHeader('Cache-Control', 'max-age=' . ($time - time()). ',must-revalidate');
@@ -274,7 +274,7 @@ final class HttpResponse extends /*Nette::*/Object implements IHttpResponse
 	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
 	{
 		// TODO: check headers_sent
-		if ($expire > 0 && $expire <= /*Nette::*/Tools::YEAR) {
+		if ($expire > 0 && $expire <= /*Nette\*/Tools::YEAR) {
 			$expire += time();
 		}
 		setcookie(

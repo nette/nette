@@ -1,11 +1,11 @@
-<h1>Nette::Callback test</h1>
+<h1>Nette\Callback test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Callback;*/
-/*use Nette::Debug;*/
+/*use Nette\Callback;*/
+/*use Nette\Debug;*/
 
 function myFunc($a, $b)
 {

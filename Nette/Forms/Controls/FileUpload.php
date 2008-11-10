@@ -14,17 +14,17 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
 require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
 
-/*use Nette::Web::HttpUploadedFile;*/
+/*use Nette\Web\HttpUploadedFile;*/
 
 
 
@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
 class FileUpload extends FormControl
 {
@@ -43,7 +43,7 @@ class FileUpload extends FormControl
 	 */
 	public function __construct($label)
 	{
-		$this->monitor('Nette::Forms::Form');
+		$this->monitor('Nette\Forms\Form');
 		parent::__construct($label);
 		$this->control->type = 'file';
 	}
@@ -67,7 +67,7 @@ class FileUpload extends FormControl
 
 	/**
 	 * Sets control's value.
-	 * @param  array|Nette::Web::HttpUploadedFile
+	 * @param  array|Nette\Web\HttpUploadedFile
 	 * @return void
 	 */
 	public function setValue($value)

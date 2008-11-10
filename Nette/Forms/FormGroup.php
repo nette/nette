@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-class FormGroup extends /*Nette::*/Object
+class FormGroup extends /*Nette\*/Object
 {
 	/** @var SplObjectStorage */
 	protected $controls;
@@ -65,7 +65,7 @@ class FormGroup extends /*Nette::*/Object
 				}
 
 			} else {
-				throw new /*::*/InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
+				throw new /*\*/InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
 			}
 		}
 		return $this;

@@ -1,11 +1,11 @@
-<h1>Nette::Web::Uri test</h1>
+<h1>Nette\Web\Uri test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Web::Uri;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\Uri;*/
 
 echo "<h1>Http scheme</h1>\n";
 

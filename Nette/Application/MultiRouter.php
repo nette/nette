@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -33,15 +33,15 @@ require_once dirname(__FILE__) . '/../Collections/ArrayList.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
+class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 {
 	/** @var IRouter */
 	public $matched;
 
 	/** @var string  type (class, interface, PHP type) */
-	protected $itemType = /*Nette::Application::*/'IRouter';
+	protected $itemType = /*Nette\Application\*/'IRouter';
 
 	/** @var array {@link MultiRouter::constructUrl()} */
 	private $cachedRoutes;
@@ -50,10 +50,10 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette::Web::*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $context)
 	{
 		foreach ($this as $route) {
 			$request = $route->match($context);
@@ -69,11 +69,11 @@ class MultiRouter extends /*Nette::Collections::*/ArrayList implements IRouter
 
 	/**
 	 * Constructs URL path from PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette::Web::*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();

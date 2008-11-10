@@ -1,14 +1,14 @@
-<h1>Nette::Collections::ArrayList test</h1>
+<h1>Nette\Collections\ArrayList test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Collections::ArrayList;*/
-/*use Nette::Debug;*/
+/*use Nette\Collections\ArrayList;*/
+/*use Nette\Debug;*/
 
 
-/*Nette::Object::extensionMethod('Nette::Collections::ICollection::join', function(Nette::Collections::ICollection $thisObj, $separator)*/
+/*Nette\Object\extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $thisObj, $separator)*/
 /**/function ICollection_prototype_join(ICollection $thisObj, $separator)/**/
 {
 	return implode($separator, (array) $thisObj);

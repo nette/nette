@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -34,9 +34,9 @@ require_once dirname(__FILE__) . '/../Application/IRouter.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class Route extends /*Nette::*/Object implements IRouter
+class Route extends /*Nette\*/Object implements IRouter
 {
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
@@ -70,18 +70,18 @@ class Route extends /*Nette::*/Object implements IRouter
 		),
 		'module' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => /*Nette::Application::*/'Route::path2presenter',
-			self::FILTER_OUT => /*Nette::Application::*/'Route::presenter2path',
+			self::FILTER_IN => /*Nette\Application\*/'Route::path2presenter',
+			self::FILTER_OUT => /*Nette\Application\*/'Route::presenter2path',
 		),
 		'presenter' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => /*Nette::Application::*/'Route::path2presenter',
-			self::FILTER_OUT => /*Nette::Application::*/'Route::presenter2path',
+			self::FILTER_IN => /*Nette\Application\*/'Route::path2presenter',
+			self::FILTER_OUT => /*Nette\Application\*/'Route::presenter2path',
 		),
 		'view' => array(
 			self::PATTERN => '[a-z][a-z0-9-]*',
-			self::FILTER_IN => /*Nette::Application::*/'Route::path2view',
-			self::FILTER_OUT => /*Nette::Application::*/'Route::view2path',
+			self::FILTER_IN => /*Nette\Application\*/'Route::path2view',
+			self::FILTER_OUT => /*Nette\Application\*/'Route::view2path',
 		),
 		'?module' => array(
 		),
@@ -129,10 +129,10 @@ class Route extends /*Nette::*/Object implements IRouter
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette::Web::*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $context)
 	{
 		// combine with precedence: mask (params in URL-path), fixed, query, (post,) defaults
 
@@ -154,7 +154,7 @@ class Route extends /*Nette::*/Object implements IRouter
 		}
 
 		$path = rtrim($path, '/') . '/';
-		$path = /*Nette::*/String::fixEncoding($path);
+		$path = /*Nette\*/String::fixEncoding($path);
 
 		if (!preg_match($this->re, $path, $matches)) {
 			// stop, not matched
@@ -201,11 +201,11 @@ class Route extends /*Nette::*/Object implements IRouter
 
 		// build PresenterRequest
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new /*::*/InvalidStateException('Missing presenter in route definition.');
+			throw new /*\*/InvalidStateException('Missing presenter in route definition.');
 		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
 			if (!isset($params[self::MODULE_KEY])) {
-				throw new /*::*/InvalidStateException('Missing module in route definition.');
+				throw new /*\*/InvalidStateException('Missing module in route definition.');
 			}
 			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
 			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
@@ -227,11 +227,11 @@ class Route extends /*Nette::*/Object implements IRouter
 
 	/**
 	 * Constructs URL path from PresenterRequest object.
-	 * @param  Nette::Web::IHttpRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette::Web::*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
@@ -414,13 +414,13 @@ class Route extends /*Nette::*/Object implements IRouter
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_-]#i', $name)) {
-				throw new /*::*/InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' is invalid.");
+				throw new /*\*/InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' is invalid.");
 			}
 
 			// pattern, condition & metadata
 			if ($class !== '') {
 				if (!isset(self::$styles[$class])) {
-					throw new /*::*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+					throw new /*\*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 				}
 				$meta = self::$styles[$class];
 
@@ -449,7 +449,7 @@ class Route extends /*Nette::*/Object implements IRouter
 			$tmp = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
 			if (isset($meta['fixed'])) { // has default value?
 				if (!$optional) {
-					throw new /*::*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
+					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
 				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
 				$metadata[$name]['fixed'] = 1;

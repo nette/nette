@@ -1,6 +1,6 @@
 <?php
 
-/*use Nette::Environment;*/
+/*use Nette\Environment;*/
 
 require_once dirname(__FILE__) . '/BasePresenter.php';
 

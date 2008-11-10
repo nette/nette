@@ -1,13 +1,13 @@
 <?php ob_start() ?>
-<h1>Nette::Web::Session Namespace test</h1>
+<h1>Nette\Web\Session Namespace test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Web::Session;*/
-/*use Nette::Debug;*/
+/*use Nette\Web\Session;*/
+/*use Nette\Debug;*/
 
 echo "\nGetting namespace:\n";
 

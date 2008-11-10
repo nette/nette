@@ -1,7 +1,7 @@
 <?php
 
-/*use Nette::Environment;*/
-/*use Nette::Security::AuthenticationException;*/
+/*use Nette\Environment;*/
+/*use Nette\Security\AuthenticationException;*/
 
 require_once dirname(__FILE__) . '/BasePresenter.php';
 

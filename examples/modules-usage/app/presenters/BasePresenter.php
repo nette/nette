@@ -1,12 +1,12 @@
 <?php
 
 
-abstract class BasePresenter extends /*Nette::Application::*/Presenter
+abstract class BasePresenter extends /*Nette\Application\*/Presenter
 {
 
 	protected function beforeRender()
 	{
-		$this->template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
+		$this->template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
 		$this->template->view = $this->view;
 		$a = strrpos($this->name, ':');
 		if ($a === FALSE) {

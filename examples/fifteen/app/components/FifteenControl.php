@@ -16,7 +16,7 @@
  *
  * @author     David Grudl
  */
-class FifteenControl extends /*Nette::Application::*/Control
+class FifteenControl extends /*Nette\Application\*/Control
 {
 	/** @var int */
 	protected $width = 4;
@@ -52,7 +52,7 @@ class FifteenControl extends /*Nette::Application::*/Control
 	public function handleClick($x, $y)
 	{
 		if (!$this->isClickable($x, $y)) {
-			throw new /*Nette::Application::*/BadRequestException('Action not allowed.');
+			throw new /*Nette\Application\*/BadRequestException('Action not allowed.');
 		}
 
 		if ($this->presenter->isAjax()) {
@@ -136,7 +136,7 @@ class FifteenControl extends /*Nette::Application::*/Control
 	{
 		$template = $this->template;
 		$template->setFile(dirname(__FILE__) . '/FifteenControl.phtml');
-		$template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
+		$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
 		$template->width = $this->width;
 		$template->order = $this->order;
 		$template->useAjax = $this->useAjax;

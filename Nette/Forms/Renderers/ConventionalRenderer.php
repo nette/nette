@@ -14,13 +14,13 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
-/*use Nette::Web::Html;*/
+/*use Nette\Web\Html;*/
 
 
 
@@ -35,9 +35,9 @@ require_once dirname(__FILE__) . '/../../Forms/IFormRenderer.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
+class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 {
 	/**
 	 *  /--- form.container
@@ -361,7 +361,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 	public function renderControls($parent)
 	{
 		if (!($parent instanceof FormContainer || $parent instanceof FormGroup)) {
-			throw new /*::*/InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
+			throw new /*\*/InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
 		}
 
 		$container = $this->getWrapper('controls container');
@@ -426,7 +426,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 		$s = array();
 		foreach ($controls as $control) {
 			if (!($control instanceof IFormControl)) {
-				throw new /*::*/InvalidArgumentException("Argument must be array of IFormControl instances.");
+				throw new /*\*/InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$s[] = (string) $control->getControl();
 		}
@@ -494,7 +494,7 @@ class ConventionalRenderer extends /*Nette::*/Object implements IFormRenderer
 
 	/**
 	 * @param  string
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	protected function getWrapper($name)
 	{

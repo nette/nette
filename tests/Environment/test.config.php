@@ -1,12 +1,12 @@
-<h1>Nette::Environment config without cache test</h1>
+<h1>Nette\Environment config without cache test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Environment;*/
+/*use Nette\Debug;*/
+/*use Nette\Environment;*/
 
 echo "Loading config:\n";
 Environment::setName(Environment::PRODUCTION);

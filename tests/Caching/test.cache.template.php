@@ -1,11 +1,11 @@
-<h1>Nette::Caching::Cache & TemplateStorage test</h1>
+<h1>Nette\Caching\Cache & TemplateStorage test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Debug;*/
 
 $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
@@ -13,7 +13,7 @@ $tmpDir = dirname(__FILE__) . '/tmp';
 
 foreach (glob("$tmpDir/*.*") as $file) unlink($file); // delete all files
 
-$cache = new Cache(new /*Nette::Templates::*/TemplateStorage("$tmpDir/prefix-"));
+$cache = new Cache(new /*Nette\Templates\*/TemplateStorage("$tmpDir/prefix-"));
 
 
 echo "Is cached?\n";

@@ -1,17 +1,17 @@
-<h1>Nette::Component cloning test</h1>
+<h1>Nette\Component cloning test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::ComponentContainer;*/
-/*use Nette::Debug;*/
+/*use Nette\ComponentContainer;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 Debug::$maxDepth = 0;
 
-class Test extends ComponentContainer implements /*::*/ArrayAccess
+class Test extends ComponentContainer implements /*\*/ArrayAccess
 {
 	protected function attached($obj)
 	{
@@ -45,11 +45,11 @@ class Test extends ComponentContainer implements /*::*/ArrayAccess
 }
 
 
-/*Nette::Object::extensionMethod('Nette::IComponentContainer::export', function($thisObj)*/
+/*Nette\Object\extensionMethod('Nette\IComponentContainer\export', function($thisObj)*/
 /**/function IComponentContainer_prototype_export($thisObj)/**/
 {
 	$res = array("($thisObj->class)" => $thisObj->name);
-	if ($thisObj instanceof /*Nette::*/IComponentContainer) {
+	if ($thisObj instanceof /*Nette\*/IComponentContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
 			$res['children'][$name] = $obj->export();
 		}

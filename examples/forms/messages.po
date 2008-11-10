@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Nette::Forms example\n"
+"Project-Id-Version: Nette\\Forms example\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-25 02:56+0100\n"
 "PO-Revision-Date: \n"

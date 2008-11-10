@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette\Caching
  * @version    $Id$
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette\Caching;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette\Caching
  */
-class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
+class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 {
 	/**#@+ internal cache structure */
 	const META_CONSTS = 'consts';
@@ -66,7 +66,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
 	{
 		if (!self::isAvailable()) {
-			throw new /*::*/Exception("PHP extension 'memcache' is not loaded.");
+			throw new /*\*/Exception("PHP extension 'memcache' is not loaded.");
 		}
 
 		$this->prefix = $prefix;
@@ -134,7 +134,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 	public function write($key, $data, array $dp)
 	{
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY]) || !empty($dp[Cache::ITEMS])) {
-			throw new /*::*/NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
+			throw new /*\*/NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
 		}
 
 		$meta = array(
@@ -144,7 +144,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 		$expire = 0;
 		if (!empty($dp[Cache::EXPIRE])) {
 			$expire = (int) $dp[Cache::EXPIRE];
-			if ($expire <= /*Nette::*/Tools::YEAR) {
+			if ($expire <= /*Nette\*/Tools::YEAR) {
 				$expire += time();
 			}
 			if (!empty($dp[Cache::REFRESH])) {
@@ -193,7 +193,7 @@ class MemcachedStorage extends /*Nette::*/Object implements ICacheStorage
 			$this->memcache->flush();
 
 		} elseif (isset($conds[Cache::TAGS]) || isset($conds[Cache::PRIORITY])) {
-			throw new /*::*/NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
+			throw new /*\*/NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
 		}
 
 		return TRUE;

@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../Nette/loader.php';
-/*use Nette::Web::Html;*/
+/*use Nette\Web\Html;*/
 
 Html::$xhtml = FALSE;
 

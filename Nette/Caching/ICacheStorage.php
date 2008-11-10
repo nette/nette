@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette\Caching
  * @version    $Id$
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette\Caching;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette\Caching
  */
 interface ICacheStorage
 {

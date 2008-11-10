@@ -1,15 +1,15 @@
 <?php ob_start(); ?>
-<h1>Nette::Web::User Authentication test</h1>
+<h1>Nette\Web\User Authentication test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Web::User;*/
-/*use Nette::Security::IAuthenticator;*/
-/*use Nette::Security::AuthenticationException;*/
-/*use Nette::Security::Identity;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\User;*/
+/*use Nette\Security\IAuthenticator;*/
+/*use Nette\Security\AuthenticationException;*/
+/*use Nette\Security\Identity;*/
 
 
 class AuthenticationHandler implements IAuthenticator

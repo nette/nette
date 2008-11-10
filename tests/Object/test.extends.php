@@ -1,4 +1,4 @@
-<h1>Nette::Object extension method example</h1>
+<h1>Nette\Object extension method example</h1>
 
 <pre>
 <?php
@@ -16,7 +16,7 @@ function Test_prototype_join(Test $thisObj, $separator)
 
 
 
-class Test extends /*Nette::*/Object implements ISecond
+class Test extends /*Nette\*/Object implements ISecond
 {
 	public $a;
 	public $b;

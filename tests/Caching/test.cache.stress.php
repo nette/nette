@@ -1,10 +1,10 @@
-<h1>Nette::Caching::FileStorage stress test - run it twice (or more) simultaneously</h1>
+<h1>Nette\Caching\FileStorage stress test - run it twice (or more) simultaneously</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
+/*use Nette\Debug;*/
 
 
 set_time_limit(0);
@@ -30,7 +30,7 @@ function checkStr($s)
 define('COUNT_FILES', 3);
 
 
-$storage = new /*Nette::Caching::*/FileStorage(dirname(__FILE__) . '/tmp/testfile');
+$storage = new /*Nette\Caching\*/FileStorage(dirname(__FILE__) . '/tmp/testfile');
 
 
 // clear playground

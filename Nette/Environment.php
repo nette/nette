@@ -49,7 +49,7 @@ final class Environment
 	/** @var string  the mode of current application */
 	private static $mode = array();
 
-	/** @var Nette::Config::Config */
+	/** @var Nette\Config\Config */
 	private static $config;
 
 	/** @var IServiceLocator */
@@ -75,7 +75,7 @@ final class Environment
 	 */
 	final public function __construct()
 	{
-		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -114,7 +114,7 @@ final class Environment
 	 * Sets the current environment name.
 	 * @param  string
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	public static function setName($name)
 	{
@@ -122,7 +122,7 @@ final class Environment
 			self::setVariable('environment', $name, FALSE);
 
 		} else {
-			throw new /*::*/InvalidStateException('Environment name has been already set.');
+			throw new /*\*/InvalidStateException('Environment name has been already set.');
 		}
 	}
 
@@ -235,7 +235,7 @@ final class Environment
 	 * @param  string
 	 * @param  mixed  default value to use if key not found
 	 * @return mixed
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	public static function getVariable($name, $default = NULL)
 	{
@@ -286,7 +286,7 @@ final class Environment
 	 * Returns expanded variable.
 	 * @param  string
 	 * @return string
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	public static function expand($var)
 	{
@@ -310,7 +310,7 @@ final class Environment
 
 		static $livelock;
 		if (isset($livelock[$var])) {
-			throw new /*::*/InvalidStateException("Circular reference detected for variables: "
+			throw new /*\*/InvalidStateException("Circular reference detected for variables: "
 				. implode(', ', array_keys($livelock)) . ".");
 		}
 
@@ -324,10 +324,10 @@ final class Environment
 		}
 
 		if ($val === NULL) {
-			throw new /*::*/InvalidStateException("Unknown environment variable '$var'.");
+			throw new /*\*/InvalidStateException("Unknown environment variable '$var'.");
 
 		} elseif (!is_scalar($val)) {
-			throw new /*::*/InvalidStateException("Environment variable '$var' is not scalar.");
+			throw new /*\*/InvalidStateException("Environment variable '$var' is not scalar.");
 		}
 
 		return $val;
@@ -367,41 +367,41 @@ final class Environment
 
 
 	/**
-	 * @return Nette::Web::IHttpRequest
+	 * @return Nette\Web\IHttpRequest
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getServiceLocator()->getService('Nette::Web::IHttpRequest');
+		return self::getServiceLocator()->getService('Nette\Web\IHttpRequest');
 	}
 
 
 
 	/**
-	 * @return Nette::Web::IHttpResponse
+	 * @return Nette\Web\IHttpResponse
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getServiceLocator()->getService('Nette::Web::IHttpResponse');
+		return self::getServiceLocator()->getService('Nette\Web\IHttpResponse');
 	}
 
 
 
 	/**
-	 * @return Nette::Application::Application
+	 * @return Nette\Application\Application
 	 */
 	public static function getApplication()
 	{
-		return self::getServiceLocator()->getService('Nette::Application::Application');
+		return self::getServiceLocator()->getService('Nette\Application\Application');
 	}
 
 
 
 	/**
-	 * @return Nette::Web::IUser
+	 * @return Nette\Web\IUser
 	 */
 	public static function getUser()
 	{
-		return self::getServiceLocator()->getService('Nette::Web::IUser');
+		return self::getServiceLocator()->getService('Nette\Web\IUser');
 	}
 
 
@@ -412,12 +412,12 @@ final class Environment
 
 	/**
 	 * @param  string
-	 * @return Nette::Caching::Cache
+	 * @return Nette\Caching\Cache
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new /*Nette::Caching::*/Cache(
-			self::getService('Nette::Caching::ICacheStorage'),
+		return new /*Nette\Caching\*/Cache(
+			self::getService('Nette\Caching\ICacheStorage'),
 			$namespace
 		);
 	}
@@ -427,11 +427,11 @@ final class Environment
 	/**
 	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return Nette::Web::Session|Nette::Web::Session
+	 * @return Nette\Web\Session|Nette\Web\Session
 	 */
 	public static function getSession($namespace = NULL)
 	{
-		$handler = self::getService('Nette::Web::Session');
+		$handler = self::getService('Nette\Web\Session');
 		return func_num_args() === 0 ? $handler : $handler->getNamespace($namespace);
 	}
 
@@ -443,9 +443,9 @@ final class Environment
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Nette::Config::Config  file name or Config object
+	 * @param  string|Nette\Config\Config  file name or Config object
 	 * @param  bool
-	 * @return Nette::Config::Config
+	 * @return Nette\Config\Config
 	 */
 	public static function loadConfig($file = NULL, $useCache = NULL)
 	{
@@ -458,7 +458,7 @@ final class Environment
 	 * Returns the global configuration.
 	 * @param  string key
 	 * @param  mixed  default value
-	 * @return Nette::Config::Config|mixed
+	 * @return Nette\Config\Config|mixed
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{

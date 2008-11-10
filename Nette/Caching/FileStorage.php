@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette\Caching
  * @version    $Id$
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette\Caching;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette\Caching
  */
-class FileStorage extends /*Nette::*/Object implements ICacheStorage
+class FileStorage extends /*Nette\*/Object implements ICacheStorage
 {
 	/**
 	 * Atomic thread safe logic:
@@ -82,7 +82,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 		$dir = dirname($base . '-');
 
 		if (!is_dir($dir) || !is_writable($dir)) {
-			throw new /*::*/InvalidStateException("Temporary directory '$dir' is not writable.");
+			throw new /*\*/InvalidStateException("Temporary directory '$dir' is not writable.");
 		}
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
@@ -178,7 +178,7 @@ class FileStorage extends /*Nette::*/Object implements ICacheStorage
 
 		if (!empty($dp[Cache::EXPIRE])) {
 			$expire = (int) $dp[Cache::EXPIRE];
-			if ($expire <= /*Nette::*/Tools::YEAR) {
+			if ($expire <= /*Nette\*/Tools::YEAR) {
 				$expire += time();
 			}
 			if (empty($dp[Cache::REFRESH])) {

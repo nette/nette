@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
 class RepeaterControl extends FormContainer /*implements IFormControl*/
 {
@@ -54,7 +54,7 @@ class RepeaterControl extends FormContainer /*implements IFormControl*/
 	 */
 	public function __construct()
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 	}
 
 

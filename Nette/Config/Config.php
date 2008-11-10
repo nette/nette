@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Config
+ * @package    Nette\Config
  * @version    $Id$
  */
 
-/*namespace Nette::Config;*/
+/*namespace Nette\Config;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Collections/Hashtable.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Config
+ * @package    Nette\Config
  */
-class Config extends /*Nette::Collections::*/Hashtable
+class Config extends /*Nette\Collections\*/Hashtable
 {
 	/**#@+ flag */
 	const READONLY = 1;
@@ -42,8 +42,8 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 	/** @var array */
 	private static $extensions = array(
-		'ini' => /*Nette::Config::*/'ConfigAdapterIni',
-		'xml' => /*Nette::Config::*/'ConfigAdapterXml',
+		'ini' => /*Nette\Config\*/'ConfigAdapterIni',
+		'xml' => /*Nette\Config\*/'ConfigAdapterXml',
 	);
 
 
@@ -76,7 +76,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 			return new /**/self/**//*static*/($arr, $flags);
 
 		} else {
-			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
+			throw new /*\*/InvalidArgumentException("Unknown file extension '$file'.");
 		}
 	}
 
@@ -84,7 +84,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 
 	/**
 	 * @param  array to wrap
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($arr = NULL, $flags = self::READONLY)
 	{
@@ -116,7 +116,7 @@ class Config extends /*Nette::Collections::*/Hashtable
 			return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file, $section);
 
 		} else {
-			throw new /*::*/InvalidArgumentException("Unknown file extension '$file'.");
+			throw new /*\*/InvalidArgumentException("Unknown file extension '$file'.");
 		}
 	}
 
@@ -133,13 +133,13 @@ class Config extends /*Nette::Collections::*/Hashtable
 	public function expand()
 	{
 		if ($this->readOnly) {
-			throw new /*::*/NotSupportedException('Configuration is read-only.');
+			throw new /*\*/NotSupportedException('Configuration is read-only.');
 		}
 
 		$data = $this->getArrayCopy();
 		foreach ($data as $key => $val) {
 			if (is_string($val)) {
-				$data[$key] = /*Nette::*/Environment::expand($val);
+				$data[$key] = /*Nette\*/Environment::expand($val);
 			} elseif ($val instanceof self) {
 				$val->expand();
 			}
@@ -153,12 +153,12 @@ class Config extends /*Nette::Collections::*/Hashtable
 	 * Import from array or any traversable object.
 	 * @param  array|Traversable
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function import($arr)
 	{
 		if ($this->readOnly) {
-			throw new /*::*/NotSupportedException('Configuration is read-only.');
+			throw new /*\*/NotSupportedException('Configuration is read-only.');
 		}
 
 		foreach ($arr as $key => $val) {

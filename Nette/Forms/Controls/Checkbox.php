@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
 class Checkbox extends FormControl
 {
@@ -62,7 +62,7 @@ class Checkbox extends FormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	public function getControl()
 	{

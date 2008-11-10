@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/Object.php';
 
 
 /**
- * Nette::Environment helper.
+ * Nette\Environment helper.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
@@ -43,12 +43,12 @@ class Configurator extends Object
 
 	/** @var array */
 	public $defaultServices = array(
-		'Nette::Application::Application' => 'Nette::Application::Application',
-		'Nette::Web::IHttpRequest' => 'Nette::Web::HttpRequest',
-		'Nette::Web::IHttpResponse' => 'Nette::Web::HttpResponse',
-		'Nette::Web::IUser' => 'Nette::Web::User',
-		'Nette::Caching::ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
-		'Nette::Web::Session' => 'Nette::Web::Session',
+		'Nette\Application\Application' => 'Nette\Application\Application',
+		'Nette\Web\IHttpRequest' => 'Nette\Web\HttpRequest',
+		'Nette\Web\IHttpResponse' => 'Nette\Web\HttpResponse',
+		'Nette\Web\IUser' => 'Nette\Web\User',
+		'Nette\Caching\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
+		'Nette\Web\Session' => 'Nette\Web\Session',
 	);
 
 
@@ -107,9 +107,9 @@ class Configurator extends Object
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Nette::Config::Config  file name or Config object
+	 * @param  string|Nette\Config\Config  file name or Config object
 	 * @param  bool
-	 * @return Nette::Config::Config
+	 * @return Nette\Config\Config
 	 */
 	public function loadConfig($file, $useCache)
 	{
@@ -125,7 +125,7 @@ class Configurator extends Object
 			$config = Environment::getConfig();
 
 		} else {
-			if ($file instanceof /*Nette::Config::*/Config) {
+			if ($file instanceof /*Nette\Config\*/Config) {
 				$config = $file;
 				$file = NULL;
 
@@ -134,11 +134,11 @@ class Configurator extends Object
 					$file = $this->defaultConfigFile;
 				}
 				$file = Environment::expand($file);
-				$config = /*Nette::Config::*/Config::fromFile($file, $name, 0);
+				$config = /*Nette\Config\*/Config::fromFile($file, $name, 0);
 			}
 
 			// process environment variables
-			if ($config->variable instanceof /*Nette::Config::*/Config) {
+			if ($config->variable instanceof /*Nette\Config\*/Config) {
 				foreach ($config->variable as $key => $value) {
 					Environment::setVariable($key, $value);
 				}
@@ -153,9 +153,9 @@ class Configurator extends Object
 
 			// process services
 			$locator = Environment::getServiceLocator();
-			if ($config->service instanceof /*Nette::Config::*/Config) {
+			if ($config->service instanceof /*Nette\Config\*/Config) {
 				foreach ($config->service as $key => $value) {
-					$locator->addService($value, str_replace('-', '::', $key));
+					$locator->addService($value, strtr($key, '-', '\\'));
 				}
 			}
 
@@ -163,7 +163,7 @@ class Configurator extends Object
 			if ($cache) {
 				$state = Environment::swapState(NULL);
 				$state[0] = $config; // TODO: better!
-				$cache->save($cacheKey, $state, array(/*Nette::Caching::*/Cache::FILES => $file));
+				$cache->save($cacheKey, $state, array(/*Nette\Caching\*/Cache::FILES => $file));
 			}
 		}
 
@@ -177,7 +177,7 @@ class Configurator extends Object
 		*/
 
 		// process ini settings
-		if ($config->set instanceof /*Nette::Config::*/Config) {
+		if ($config->set instanceof /*Nette\Config\*/Config) {
 			foreach ($config->set as $key => $value) {
 				$key = strtr($key, '-', '.');
 				if (function_exists('ini_set')) {
@@ -206,14 +206,14 @@ class Configurator extends Object
 						set_time_limit($value);
 						break;
 					default:
-						throw new /*::*/NotSupportedException('Required function ini_set() is disabled.');
+						throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
 					}
 				}
 			}
 		}
 
 		// define constants
-		if ($config->const instanceof /*Nette::Config::*/Config) {
+		if ($config->const instanceof /*Nette\Config\*/Config) {
 			foreach ($config->const as $key => $value) {
 				define($key, $value);
 			}
@@ -251,11 +251,11 @@ class Configurator extends Object
 
 
 	/**
-	 * @return Nette::Caching::ICacheStorage
+	 * @return Nette\Caching\ICacheStorage
 	 */
 	public static function createCacheStorage()
 	{
-		return new /*Nette::Caching::*/FileStorage(Environment::getVariable('cacheBase'));
+		return new /*Nette\Caching\*/FileStorage(Environment::getVariable('cacheBase'));
 	}
 
 }

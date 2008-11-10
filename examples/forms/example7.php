@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette::Forms example 7
+ * Nette\Forms example 7
  *
  * - custom charset encoding (Forms internally works in UTF-8 encoding!)
  */
@@ -9,9 +9,9 @@
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Forms::Form;*/
-/*use Nette::Debug;*/
-/*use Nette::Web::Html;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\Html;*/
 
 Debug::enable(E_ALL | E_STRICT);
 
@@ -97,7 +97,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=<?= $form->encoding ?>" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette::Forms example 7 | Nette Framework</title>
+	<title>Nette\Forms example 7 | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -125,7 +125,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette::Forms example 7</h1>
+	<h1>Nette\Forms example 7</h1>
 
 	<?php echo $form ?>
 </body>

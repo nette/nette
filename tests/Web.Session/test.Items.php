@@ -1,15 +1,15 @@
 <?php ob_start() ?>
-<h1>Nette::Web::Session Items test</h1>
+<h1>Nette\Web\Session Items test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Web::Session;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\Session;*/
 
-$session = /*Nette::*/Environment::getSession();
+$session = /*Nette\*/Environment::getSession();
 
 echo "\nGetting non-existent key:\n";
 

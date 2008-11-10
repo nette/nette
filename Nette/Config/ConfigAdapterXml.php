@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Config
+ * @package    Nette\Config
  * @version    $Id$
  */
 
-/*namespace Nette::Config;*/
+/*namespace Nette\Config;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Config/IConfigAdapter.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Config
+ * @package    Nette\Config
  */
 final class ConfigAdapterXml implements IConfigAdapter
 {
@@ -41,7 +41,7 @@ final class ConfigAdapterXml implements IConfigAdapter
 	 */
 	final public function __construct()
 	{
-		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -54,10 +54,10 @@ final class ConfigAdapterXml implements IConfigAdapter
 	 */
 	public static function load($file, $section = NULL)
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 
 		if (!is_file($file) || !is_readable($file)) {
-			throw new /*::*/FileNotFoundException("File '$file' is missing or is not readable.");
+			throw new /*\*/FileNotFoundException("File '$file' is missing or is not readable.");
 		}
 
 		$data = new SimpleXMLElement($file, NULL, TRUE);
@@ -81,7 +81,7 @@ final class ConfigAdapterXml implements IConfigAdapter
 	 */
 	public static function save($config, $file, $section = NULL)
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 	}
 
 }

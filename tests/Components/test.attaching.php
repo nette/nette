@@ -1,16 +1,16 @@
-<h1>Nette::Component attaching/detaching test</h1>
+<h1>Nette\Component attaching/detaching test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::ComponentContainer;*/
-/*use Nette::Debug;*/
+/*use Nette\ComponentContainer;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 
-class Test extends ComponentContainer implements /*::*/ArrayAccess
+class Test extends ComponentContainer implements /*\*/ArrayAccess
 {
 	protected function attached($obj)
 	{

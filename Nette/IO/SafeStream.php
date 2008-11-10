@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::IO
+ * @package    Nette\IO
  * @version    $Id$
  */
 
-/*namespace Nette::IO;*/
+/*namespace Nette\IO;*/
 
 
 
@@ -36,7 +36,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::IO
+ * @package    Nette\IO
  */
 final class SafeStream
 {

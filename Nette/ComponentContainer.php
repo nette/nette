@@ -55,7 +55,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @param  string
 	 * @param  string
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
 	{
@@ -64,22 +64,22 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if ($name == NULL) { // intentionally ==
-			throw new /*::*/InvalidArgumentException('Component name is required.');
+			throw new /*\*/InvalidArgumentException('Component name is required.');
 		}
 
 		if (!is_string($name) || !preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-			throw new /*::*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' is invalid.");
+			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' is invalid.");
 		}
 
 		if (isset($this->components[$name])) {
-			throw new /*::*/InvalidStateException("Component with name '$name' already exists.");
+			throw new /*\*/InvalidStateException("Component with name '$name' already exists.");
 		}
 
 		// check circular reference
 		$obj = $this;
 		do {
 			if ($obj === $component) {
-				throw new /*::*/InvalidStateException("Circular reference detected.");
+				throw new /*\*/InvalidStateException("Circular reference detected.");
 			}
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);
@@ -100,7 +100,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			}
 			$component->setParent($this, $name);
 
-		} catch (/*::*/Exception $e) {
+		} catch (/*\*/Exception $e) {
 			unset($this->components[$name]); // undo
 			throw $e;
 		}
@@ -117,7 +117,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	{
 		$name = $component->getName();
 		if (!isset($this->components[$name]) || $this->components[$name] !== $component) {
-			throw new /*::*/InvalidArgumentException("Component named '$name' is not located in this container.");
+			throw new /*\*/InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
 		unset($this->components[$name]);
@@ -138,7 +138,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			return $this->components[$name];
 
 		} elseif ($need) {
-			throw new /*::*/InvalidArgumentException("Component with name '$name' does not exist.");
+			throw new /*\*/InvalidArgumentException("Component with name '$name' does not exist.");
 
 		} else {
 			return NULL;
@@ -151,14 +151,14 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * Iterates over a components.
 	 * @param  bool    recursive?
 	 * @param  string  class types filter
-	 * @return ::ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	final public function getComponents($deep = FALSE, $filterType = NULL)
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
-			$deep = $deep > 0 ? /*::*/RecursiveIteratorIterator::SELF_FIRST : /*::*/RecursiveIteratorIterator::CHILD_FIRST;
-			$iterator = new /*::*/RecursiveIteratorIterator($iterator, $deep);
+			$deep = $deep > 0 ? /*\*/RecursiveIteratorIterator::SELF_FIRST : /*\*/RecursiveIteratorIterator::CHILD_FIRST;
+			$iterator = new /*\*/RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
 			$iterator = new InstanceFilterIterator($iterator, $filterType);
@@ -169,10 +169,10 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Descendant can override this method to disallow insert a child by throwing an ::InvalidStateException.
+	 * Descendant can override this method to disallow insert a child by throwing an \InvalidStateException.
 	 * @param  IComponent
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	protected function validateChildComponent(IComponent $child)
 	{
@@ -226,7 +226,7 @@ class ComponentContainer extends Component implements IComponentContainer
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette
  */
-class RecursiveComponentIterator extends /*::*/RecursiveArrayIterator
+class RecursiveComponentIterator extends /*\*/RecursiveArrayIterator
 {
 
 	/**
@@ -242,7 +242,7 @@ class RecursiveComponentIterator extends /*::*/RecursiveArrayIterator
 
 	/**
 	 * The sub-iterator for the current element.
-	 * @return ::RecursiveIterator
+	 * @return \RecursiveIterator
 	 */
 	public function getChildren()
 	{

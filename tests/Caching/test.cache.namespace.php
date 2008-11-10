@@ -1,17 +1,17 @@
-<h1>Nette::Caching::Cache & namespace test</h1>
+<h1>Nette\Caching\Cache & namespace test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Debug;*/
 
 $tmpDir = dirname(__FILE__) . '/tmp';
 
 foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
 
-$storage = new /*Nette::Caching::*/FileStorage("$tmpDir/prefix-");
+$storage = new /*Nette\Caching\*/FileStorage("$tmpDir/prefix-");
 $cacheA = new Cache($storage, 'a');
 $cacheB = new Cache($storage, 'b');
 

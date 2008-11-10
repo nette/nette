@@ -1,17 +1,17 @@
-<h1>Nette::Caching::Cache & DummyStorage test</h1>
+<h1>Nette\Caching\Cache & DummyStorage test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Caching::Cache;*/
-/*use Nette::Debug;*/
+/*use Nette\Caching\Cache;*/
+/*use Nette\Debug;*/
 
 // key and data with special chars
 $key = 'nette';
 $value = '"Hello World"';
 
-$cache = new Cache(new /*Nette::Caching::*/DummyStorage, 'myspace');
+$cache = new Cache(new /*Nette\Caching\*/DummyStorage, 'myspace');
 
 
 echo "Is cached?\n";

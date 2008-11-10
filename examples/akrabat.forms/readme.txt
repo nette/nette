@@ -1,7 +1,7 @@
 Nette Framework example
 -----------------------
 
-Klasicky Zend Framework Tutorial prepsany pro Nette s vyuzitím Nette::Forms.
+Klasicky Zend Framework Tutorial prepsany pro Nette s vyuzitím Nette\Forms.
 
 Priklad demonstruje velmi dulezity rys Nette Frameworku: v ramci aplikace a to vcetne sablon
 se nepouzivaji URL. Ty jsou zalezitosti routeru a mohou se kdykoliv menit. Cilem odkazu je vzdy

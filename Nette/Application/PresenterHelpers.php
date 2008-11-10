@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 class PresenterHelpers
 {
@@ -56,9 +56,9 @@ class PresenterHelpers
 		try {
 			$meta = array();
 			$rc = new ReflectionClass($class);
-			if (!$rc->implementsInterface(/*Nette::Application::*/'IStatePersistent')) return array();
+			if (!$rc->implementsInterface(/*Nette\Application\*/'IStatePersistent')) return array();
 
-			$sinces = $rc->isSubclassOf(/*Nette::Application::*/'Presenter');
+			$sinces = $rc->isSubclassOf(/*Nette\Application\*/'Presenter');
 
 			// generate
 			foreach ($rc->getDefaultProperties() as $nm => $val)

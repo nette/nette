@@ -14,13 +14,13 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
-/*use Nette::Environment;*/
+/*use Nette\Environment;*/
 
 
 
@@ -35,17 +35,17 @@ require_once dirname(__FILE__) . '/../Application/ApplicationException.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class Application extends /*Nette::*/Object
+class Application extends /*Nette\*/Object
 {
 	/** @var int */
 	public static $maxLoop = 20;
 
 	/** @var array */
 	public $defaultServices = array(
-		'Nette::Application::IRouter' => 'Nette::Application::MultiRouter',
-		'Nette::Application::IPresenterLoader' => 'Nette::Application::PresenterLoader',
+		'Nette\Application\IRouter' => 'Nette\Application\MultiRouter',
+		'Nette\Application\IPresenterLoader' => 'Nette\Application\PresenterLoader',
 	);
 
 	/** @var bool enable fault barrier? */
@@ -75,7 +75,7 @@ class Application extends /*Nette::*/Object
 	/** @var Presenter */
 	private $presenter;
 
-	/** @var Nette::ServiceLocator */
+	/** @var Nette\ServiceLocator */
 	private $serviceLocator;
 
 
@@ -86,7 +86,7 @@ class Application extends /*Nette::*/Object
 	public function run()
 	{
 		if (version_compare(PHP_VERSION , '5.2.2', '<')) {
-			throw new /*::*/ApplicationException('Nette::Application needs PHP 5.2.2 or newer.');
+			throw new /*\*/ApplicationException('Nette\Application needs PHP 5.2.2 or newer.');
 		}
 
 		$httpRequest = Environment::getHttpRequest();
@@ -103,7 +103,7 @@ class Application extends /*Nette::*/Object
 		$method = $httpRequest->getMethod();
 		if ($this->allowedMethods) {
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
-				$httpResponse->setCode(/*Nette::Web::*/IHttpResponse::S501_NOT_IMPLEMENTED);
+				$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
 				$method = htmlSpecialChars($method);
 				die("<h1>Method $method is not implemented</h1>");
@@ -157,7 +157,7 @@ class Application extends /*Nette::*/Object
 				$this->presenter = new $class($request);
 
 				// Instantiate topmost service locator
-				$this->presenter->setServiceLocator(new /*Nette::*/ServiceLocator($this->serviceLocator));
+				$this->presenter->setServiceLocator(new /*Nette\*/ServiceLocator($this->serviceLocator));
 
 				// Execute presenter
 				$this->presenter->run();
@@ -254,12 +254,12 @@ class Application extends /*Nette::*/Object
 
 	/**
 	 * Gets the service locator (experimental).
-	 * @return Nette::IServiceLocator
+	 * @return Nette\IServiceLocator
 	 */
 	final public function getServiceLocator()
 	{
 		if ($this->serviceLocator === NULL) {
-			$this->serviceLocator = new /*Nette::*/ServiceLocator(Environment::getServiceLocator());
+			$this->serviceLocator = new /*Nette\*/ServiceLocator(Environment::getServiceLocator());
 
 			foreach ($this->defaultServices as $name => $service) {
 				$this->serviceLocator->addService($service, $name);
@@ -289,7 +289,7 @@ class Application extends /*Nette::*/Object
 	 */
 	public function getRouter()
 	{
-		return $this->getServiceLocator()->getService('Nette::Application::IRouter');
+		return $this->getServiceLocator()->getService('Nette\Application\IRouter');
 	}
 
 
@@ -301,7 +301,7 @@ class Application extends /*Nette::*/Object
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->getServiceLocator()->addService($router, 'Nette::Application::IRouter');
+		$this->getServiceLocator()->addService($router, 'Nette\Application\IRouter');
 	}
 
 
@@ -312,7 +312,7 @@ class Application extends /*Nette::*/Object
 	 */
 	public function getPresenterLoader()
 	{
-		return $this->getServiceLocator()->getService('Nette::Application::IPresenterLoader');
+		return $this->getServiceLocator()->getService('Nette\Application\IPresenterLoader');
 	}
 
 

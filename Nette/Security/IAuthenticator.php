@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Security
+ * @package    Nette\Security
  * @version    $Id$
  */
 
-/*namespace Nette::Security;*/
+/*namespace Nette\Security;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Security
+ * @package    Nette\Security
  */
 interface IAuthenticator
 {

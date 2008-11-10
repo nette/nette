@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
-class Session extends /*Nette::*/Object
+class Session extends /*Nette\*/Object
 {
 	/** Default lifetime is 3 hours */
 	const DEFAULT_LIFETIME = 10800;
@@ -84,25 +84,25 @@ class Session extends /*Nette::*/Object
 
 	/**
 	 * Starts and initializes session data.
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 * @return void
 	 */
 	public function start()
 	{
 		if (self::$started) {
-			throw new /*::*/InvalidStateException('Session has already been started.');
+			throw new /*\*/InvalidStateException('Session has already been started.');
 
 		} elseif (defined('SID')) {
-			throw new /*::*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
+			throw new /*\*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
 		}
 
 		$this->configure(self::$configuration, FALSE);
 
-		/*Nette::*/Tools::tryError();
+		/*Nette\*/Tools::tryError();
 		session_start();
-		if (/*Nette::*/Tools::catchError($msg)) {
+		if (/*Nette\*/Tools::catchError($msg)) {
 			@session_write_close(); // this is needed
-			throw new /*::*/InvalidStateException($msg);
+			throw new /*\*/InvalidStateException($msg);
 		}
 
 		self::$started = TRUE;
@@ -199,7 +199,7 @@ class Session extends /*Nette::*/Object
 	public function destroy($removeCookie = TRUE)
 	{
 		if (!self::$started) {
-			throw new /*::*/InvalidStateException('Session is not started.');
+			throw new /*\*/InvalidStateException('Session is not started.');
 		}
 
 		session_destroy();
@@ -209,7 +209,7 @@ class Session extends /*Nette::*/Object
 		if ($removeCookie) {
 			// TODO: Environment::getHttpResponse()->headersSent, deleteCookie
 			if (headers_sent($file, $line)) {
-				throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+				throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
 			}
 			$params = session_get_cookie_params();
 			setcookie(
@@ -239,7 +239,7 @@ class Session extends /*Nette::*/Object
 
 	/**
 	 * Regenerates the session id.
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 * @return void
 	 */
 	public function regenerateId()
@@ -247,7 +247,7 @@ class Session extends /*Nette::*/Object
 		if (self::$started) {
 			// TODO: Environment::getHttpResponse()->headersSent
 			if (headers_sent($file, $line)) {
-				throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+				throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
 			}
 			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
@@ -261,18 +261,18 @@ class Session extends /*Nette::*/Object
 
 	/**
 	 * Sets the session id to a user specified one.
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 * @param  string $id
 	 * @return void
 	 */
 	public function setId($id)
 	{
 		if (defined('SID')) {
-			throw new /*::*/InvalidStateException('A session had already been started - the session id must be set first.');
+			throw new /*\*/InvalidStateException('A session had already been started - the session id must be set first.');
 		}
 
 		if (!is_string($id) || $id === '') {
-			throw new /*::*/InvalidArgumentException('You must provide a non-empty string as a session id.');
+			throw new /*\*/InvalidArgumentException('You must provide a non-empty string as a session id.');
 		}
 
 		session_id($id);
@@ -322,12 +322,12 @@ class Session extends /*Nette::*/Object
 	 * @param  string
 	 * @param  string
 	 * @return SessionNamespace
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
-	public function getNamespace($namespace, $class = /*Nette::Web::*/'SessionNamespace')
+	public function getNamespace($namespace, $class = /*Nette\Web\*/'SessionNamespace')
 	{
 		if (!is_string($namespace) || $namespace === '') {
-			throw new /*::*/InvalidArgumentException('Session namespace must be a non-empty string.');
+			throw new /*\*/InvalidArgumentException('Session namespace must be a non-empty string.');
 		}
 
 		if (!self::$started) {
@@ -361,7 +361,7 @@ class Session extends /*Nette::*/Object
 
 	/**
 	 * Iteration over all namespaces.
-	 * @return ::ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getIterator()
 	{
@@ -370,10 +370,10 @@ class Session extends /*Nette::*/Object
 		}
 
 		if (isset($_SESSION['__NS'])) {
-			return new /*::*/ArrayIterator(array_keys($_SESSION['__NS']));
+			return new /*\*/ArrayIterator(array_keys($_SESSION['__NS']));
 
 		} else {
-			return new /*::*/ArrayIterator;
+			return new /*\*/ArrayIterator;
 		}
 	}
 
@@ -421,13 +421,13 @@ class Session extends /*Nette::*/Object
 	 * @param  array
 	 * @param  bool   throw exception?
 	 * @return void
-	 * @throws ::NotSupportedException
+	 * @throws \NotSupportedException
 	 */
 	public function configure(array $config, $throwException = TRUE)
 	{
 		// TODO: Environment::getHttpResponse()->headersSent
 		if (headers_sent($file, $line)) {
-			throw new /*::*/InvalidStateException("Headers already sent (output started at $file:$line).");
+			throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
 		}
 
 		$special = array('session.cache_expire' => 1, 'session.cache_limiter' => 1,
@@ -450,7 +450,7 @@ class Session extends /*Nette::*/Object
 
 			} elseif (!$hasIniSet) {
 				if ($throwException) {
-					throw new /*::*/NotSupportedException('Required function ini_set() is disabled.');
+					throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
 				}
 
 			} else {
@@ -479,7 +479,7 @@ class Session extends /*Nette::*/Object
 			));
 
 		} else {
-			if ($seconds > /*Nette::*/Tools::YEAR) {
+			if ($seconds > /*Nette\*/Tools::YEAR) {
 				$seconds -= time();
 			}
 			$this->configure(array(

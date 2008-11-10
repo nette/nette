@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Security
+ * @package    Nette\Security
  * @version    $Id$
  */
 
-/*namespace Nette::Security;*/
+/*namespace Nette\Security;*/
 
 
 
@@ -36,9 +36,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Security
+ * @package    Nette\Security
  */
-class Permission extends /*Nette::*/Object implements IAuthorizator
+class Permission extends /*Nette\*/Object implements IAuthorizator
 {
 	/** Rule operation: add */
 	const ADD = TRUE;
@@ -92,11 +92,11 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	public function addRole($role, $parents = NULL)
 	{
 		if (!is_string($role) || $role === '') {
-			throw new /*::*/InvalidArgumentException("Role must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("Role must be a non-empty string.");
 		}
 
 		if ($this->hasRole($role)) {
-			throw new /*::*/InvalidStateException("Role '$role' already exists in the list.");
+			throw new /*\*/InvalidStateException("Role '$role' already exists in the list.");
 		}
 
 		$roleParents = array();
@@ -144,7 +144,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	protected function needRole($role)
 	{
 		if (!isset($this->roles[$role])) {
-			throw new /*::*/InvalidStateException("Role '$role' does not exist.");
+			throw new /*\*/InvalidStateException("Role '$role' does not exist.");
 		}
 
 		return TRUE;
@@ -284,11 +284,11 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	public function addResource($resource, $parent = NULL)
 	{
 		if (!is_string($resource) || $resource === '') {
-			throw new /*::*/InvalidArgumentException("Resource must be a non-empty string.");
+			throw new /*\*/InvalidArgumentException("Resource must be a non-empty string.");
 		}
 
 		if ($this->hasResource($resource)) {
-			throw new /*::*/InvalidStateException("Resource '$resource' already exists in the list.");
+			throw new /*\*/InvalidStateException("Resource '$resource' already exists in the list.");
 		}
 
 		$resourceParent = NULL;
@@ -329,7 +329,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	protected function needResource($resource)
 	{
 		if (!isset($this->resources[$resource])) {
-			throw new /*::*/InvalidStateException("Resource '$resource' does not exist.");
+			throw new /*\*/InvalidStateException("Resource '$resource' does not exist.");
 		}
 	}
 
@@ -551,7 +551,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 	public function setRule($operation, $type, $roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assert = NULL)
 	{
 		if ($type !== self::ALLOW && $type !== self::DENY) {
-			throw new /*::*/InvalidArgumentException("Unsupported rule type; must be either 'Permission::ALLOW' or 'Permission::DENY'.");
+			throw new /*\*/InvalidArgumentException("Unsupported rule type; must be either 'Permission::ALLOW' or 'Permission::DENY'.");
 		}
 
 		// ensure that all specified Roles exist; normalize input to array of Roles or NULL
@@ -633,7 +633,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
 				}
 			}
 		} else {
-			throw new /*::*/InvalidArgumentException("Unsupported operation; must be either 'Permission::ADD' or 'Permission::REMOVE'.");
+			throw new /*\*/InvalidArgumentException("Unsupported operation; must be either 'Permission::ADD' or 'Permission::REMOVE'.");
 		}
 
 		return $this;
@@ -984,7 +984,7 @@ class Permission extends /*Nette::*/Object implements IAuthorizator
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Security
+ * @package    Nette\Security
  */
 interface IPermissionAssertion
 {

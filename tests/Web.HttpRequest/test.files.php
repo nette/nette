@@ -1,11 +1,11 @@
-<h1>Nette::Web::HttpRequest uploaded files test</h1>
+<h1>Nette\Web\HttpRequest uploaded files test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Web::HttpRequest;*/
+/*use Nette\Debug;*/
+/*use Nette\Web\HttpRequest;*/
 
 $_FILES = require '_FILES.php';
 

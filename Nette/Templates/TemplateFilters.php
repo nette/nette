@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Templates
+ * @package    Nette\Templates
  * @version    $Id$
  */
 
-/*namespace Nette::Templates;*/
+/*namespace Nette\Templates;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Templates
+ * @package    Nette\Templates
  */
 final class TemplateFilters
 {
@@ -37,7 +37,7 @@ final class TemplateFilters
 	 */
 	final public function __construct()
 	{
-		throw new /*::*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -96,7 +96,7 @@ final class TemplateFilters
 	{
 		// snippets support
 		if (isset($template->control) &&
-			$template->control instanceof /*Nette::Application::*/IPartiallyRenderable) {
+			$template->control instanceof /*Nette\Application\*/IPartiallyRenderable) {
 			$s = '<?php if ($control->isOutputAllowed()) { ?>' . $s . '<?php } ?>';
 		}
 		$s = preg_replace(
@@ -266,7 +266,7 @@ final class TemplateFilters
 	 */
 	public static function autoConfig(Template $template, $s)
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 		preg_match_all('#<\\?nette(.*)\\?>#sU', $s, $matches, PREG_SET_ORDER);
 		foreach ($matches as $m) {
 		}

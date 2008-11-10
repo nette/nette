@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -33,9 +33,9 @@ require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  */
-class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/ArrayAccess, INamingContainer
+class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAccess, INamingContainer
 {
 	/** @var FormGroup */
 	protected $currentGroup;
@@ -58,9 +58,9 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	 * @param  string
 	 * @param  string
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
-	public function addComponent(/*Nette::*/IComponent $component, $name, $insertBefore = NULL)
+	public function addComponent(/*Nette\*/IComponent $component, $name, $insertBefore = NULL)
 	{
 		parent::addComponent($component, $name, $insertBefore);
 		if ($this->currentGroup !== NULL && $component instanceof IFormControl) {
@@ -72,11 +72,11 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 
 	/**
 	 * Iterates over all form controls.
-	 * @return ::ArrayIterator
+	 * @return \ArrayIterator
 	 */
 	public function getControls()
 	{
-		return $this->getComponents(TRUE, 'Nette::Forms::IFormControl');
+		return $this->getComponents(TRUE, 'Nette\Forms\IFormControl');
 	}
 
 
@@ -281,14 +281,14 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 
 
 
-	/********************* interface ::ArrayAccess ****************d*g**/
+	/********************* interface \ArrayAccess ****************d*g**/
 
 
 
 	/**
 	 * Adds the component to the container.
 	 * @param  string  component name
-	 * @param  Nette::IComponent
+	 * @param  Nette\IComponent
 	 * @return void.
 	 */
 	final public function offsetSet($name, $component)
@@ -301,8 +301,8 @@ class FormContainer extends /*Nette::*/ComponentContainer implements /*::*/Array
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
-	 * @return Nette::IComponent
-	 * @throws ::InvalidArgumentException
+	 * @return Nette\IComponent
+	 * @throws \InvalidArgumentException
 	 */
 	final public function offsetGet($name)
 	{

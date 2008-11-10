@@ -1,6 +1,6 @@
 <?php
 
-/*use Nette::Environment;*/
+/*use Nette\Environment;*/
 
 
 // Step 1: Load Nette Framework
@@ -12,7 +12,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 // Step 2: Configure and setup application environment
-// 2a) enable Nette::Debug for better exception and error visualisation
+// 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable(E_ALL | E_STRICT);
 
 // 2b) check if directory /app/temp is writable

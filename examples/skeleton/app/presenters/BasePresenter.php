@@ -9,7 +9,7 @@
 /**
  * Base class for all application presenters.
  */
-abstract class BasePresenter extends /*Nette::Application::*/Presenter
+abstract class BasePresenter extends /*Nette\Application\*/Presenter
 {
 
 	/**
@@ -17,7 +17,7 @@ abstract class BasePresenter extends /*Nette::Application::*/Presenter
 	 */
 	protected function beforeRender()
 	{
-		$this->template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
+		$this->template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
 	}
 
 }

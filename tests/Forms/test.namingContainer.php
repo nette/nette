@@ -1,14 +1,14 @@
-<h1>Nette::Forms naming container test</h1>
+<h1>Nette\Forms naming container test</h1>
 
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::ComponentContainer;*/
-/*use Nette::Forms::Form;*/
-/*use Nette::Forms::TextInput;*/
-/*use Nette::Forms::FormContainer;*/
-/*use Nette::Debug;*/
+/*use Nette\ComponentContainer;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Forms\TextInput;*/
+/*use Nette\Forms\FormContainer;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 

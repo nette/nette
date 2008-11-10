@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  * @version    $Id$
  */
 
-/*namespace Nette::Loaders;*/
+/*namespace Nette\Loaders;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Loaders
+ * @package    Nette\Loaders
  */
 class NetteLoader extends AutoLoader
 {
@@ -68,10 +68,7 @@ class NetteLoader extends AutoLoader
 		'configurator' => '/Configurator.php',
 		'control' => '/Application/Control.php',
 		'conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
-		'datagrid' => '/Application/UI/DataGrid.php',
-		'datagridcolumn' => '/Application/UI/DataGridColumn.php',
 		'debug' => '/Debug.php',
-		'dibistorage' => '/Caching/DibiStorage.php',
 		'directorynotfoundexception' => '/exceptions.php',
 		'dummystorage' => '/Caching/DummyStorage.php',
 		'environment' => '/Environment.php',

@@ -1,15 +1,15 @@
-<h1>Nette::Templates::TemplateFilters::curlyBrackets & snippets test</h1>
+<h1>Nette\Templates\TemplateFilters::curlyBrackets & snippets test</h1>
 
 <pre>
 <?php
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
-/*use Nette::Environment;*/
-/*use Nette::Templates::Template;*/
+/*use Nette\Debug;*/
+/*use Nette\Environment;*/
+/*use Nette\Templates\Template;*/
 
 
-class MockControl implements /*Nette::Application::*/IPartiallyRenderable
+class MockControl implements /*Nette\Application\*/IPartiallyRenderable
 {
 
 	function invalidateControl($snippet = NULL)
@@ -49,7 +49,7 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');
-$template->registerFilter(/*Nette::Templates::*/'TemplateFilters::curlyBrackets');
+$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
 $template->registerFilter('printSource');
 $template->control = new MockControl;
 $template->render();

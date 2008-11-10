@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -33,17 +33,17 @@ require_once dirname(__FILE__) . '/../Application/ISignalReceiver.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
-class AppForm extends /*Nette::Forms::*/Form implements ISignalReceiver
+class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 {
 
 	/**
 	 * Application form constructor.
 	 */
-	public function __construct(/*Nette::*/IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
 	{
-		$this->monitor('Nette::Application::Presenter');
+		$this->monitor('Nette\Application\Presenter');
 		parent::__construct($name, $parent);
 	}
 
@@ -56,7 +56,7 @@ class AppForm extends /*Nette::Forms::*/Form implements ISignalReceiver
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		return $this->lookup('Nette::Application::Presenter', $need);
+		return $this->lookup('Nette\Application\Presenter', $need);
 	}
 
 
@@ -70,7 +70,7 @@ class AppForm extends /*Nette::Forms::*/Form implements ISignalReceiver
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$id = $this->lookupPath('Nette::Application::Presenter');
+			$id = $this->lookupPath('Nette\Application\Presenter');
 			$presenter->registerComponent($id, $this);
 			$this->setAction(new Link(
 				$presenter,

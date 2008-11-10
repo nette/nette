@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Caching
+ * @package    Nette\Caching
  * @version    $Id$
  */
 
-/*namespace Nette::Caching;*/
+/*namespace Nette\Caching;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Caching
+ * @package    Nette\Caching
  */
-class Cache extends /*Nette::*/Object implements ArrayAccess
+class Cache extends /*Nette\*/Object implements ArrayAccess
 {
 	/**#@+ dependency */
 	const PRIORITY = 'priority';
@@ -116,12 +116,12 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	 * @param  mixed
 	 * @param  array
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function save($key, $data, array $dependencies = NULL)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = NULL;
@@ -178,21 +178,21 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 
 
 
-	/********************* interface ::ArrayAccess ****************d*g**/
+	/********************* interface \ArrayAccess ****************d*g**/
 
 
 
 	/**
-	 * Inserts (replaces) item into the cache (::ArrayAccess implementation).
+	 * Inserts (replaces) item into the cache (\ArrayAccess implementation).
 	 * @param  string key
 	 * @param  mixed
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetSet($key, $data)
 	{
 		if (!is_string($key)) { // prevents NULL
-			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $this->data = NULL;
@@ -206,15 +206,15 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 
 
 	/**
-	 * Retrieves the specified item from the cache or NULL if the key is not found (::ArrayAccess implementation).
+	 * Retrieves the specified item from the cache or NULL if the key is not found (\ArrayAccess implementation).
 	 * @param  string key
 	 * @return mixed|NULL
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetGet($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		if ($this->key === $key) {
@@ -228,15 +228,15 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 
 
 	/**
-	 * Exists item in cache? (::ArrayAccess implementation).
+	 * Exists item in cache? (\ArrayAccess implementation).
 	 * @param  string key
 	 * @return bool
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetExists($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $key;
@@ -250,12 +250,12 @@ class Cache extends /*Nette::*/Object implements ArrayAccess
 	 * Removes the specified item from the cache.
 	 * @param  string key
 	 * @return void
-	 * @throws ::InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetUnset($key)
 	{
 		if (!is_string($key)) {
-			throw new /*::*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
 		}
 
 		$this->key = $this->data = NULL;

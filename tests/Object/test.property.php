@@ -1,16 +1,16 @@
-<h1>Nette::Object property test</h1>
+<h1>Nette\Object property test</h1>
 
 <pre>
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
+/*use Nette\Debug;*/
 
 
 
 
-class Test extends /*Nette::*/Object
+class Test extends /*Nette\*/Object
 {
 	private $name;
 	private $items;

@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -33,11 +33,11 @@ require_once dirname(__FILE__) . '/../Application/IRenderable.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 abstract class Control extends PresenterComponent implements IPartiallyRenderable
 {
-	/** @var Nette::Templates::ITemplate */
+	/** @var Nette\Templates\ITemplate */
 	private $template;
 
 	/** @var bool  helper for beginSnippet() & endSnippet() */
@@ -56,15 +56,15 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 * @return Nette::Templates::ITemplate
+	 * @return Nette\Templates\ITemplate
 	 */
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!($value instanceof /*Nette::Templates::*/ITemplate || $value === NULL)) {
+			if (!($value instanceof /*Nette\Templates\*/ITemplate || $value === NULL)) {
 				$class = get_class($value);
-				throw new /*::*/UnexpectedValueException("The Nette::Templates::ITemplate object was expected, '$class' was given.");
+				throw new /*\*/UnexpectedValueException("The Nette\Templates\ITemplate object was expected, '$class' was given.");
 			}
 			$this->template = $value;
 		}
@@ -74,15 +74,15 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 * @return Nette::Templates::ITemplate
+	 * @return Nette\Templates\ITemplate
 	 */
 	protected function createTemplate()
 	{
-		$template = new /*Nette::Templates::*/Template;
+		$template = new /*Nette\Templates\*/Template;
 		$template->component = $this; // DEPRECATED!
 		$template->control = $this;
 		$template->presenter = $this->getPresenter(FALSE);
-		$template->baseUri = /*Nette::*/Environment::getVariable('baseUri');
+		$template->baseUri = /*Nette\*/Environment::getVariable('baseUri');
 		return $template;
 	}
 
@@ -215,12 +215,12 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		list($id, $level, $endTag) = array_pop(self::$beginedSnippets);
 
 		if ($name != NULL && $id !== ($this->getUniqueId() . ':' . $name)) {
-			throw new /*::*/InvalidStateException("Snippet '$name' cannot be ended here.");
+			throw new /*\*/InvalidStateException("Snippet '$name' cannot be ended here.");
 		}
 
 		if ($level !== NULL) {
 			if ($level !== ob_get_level()) {
-				throw new /*::*/InvalidStateException("Snippet '$name' cannot be ended here.");
+				throw new /*\*/InvalidStateException("Snippet '$name' cannot be ended here.");
 			}
 			$this->getPresenter()->getAjaxDriver()->updateSnippet($id, ob_get_clean(), $endTag);
 			self::$outputAllowed = FALSE;

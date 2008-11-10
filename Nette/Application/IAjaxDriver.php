@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Application
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette::Application;*/
+/*namespace Nette\Application;*/
 
 
 
@@ -27,7 +27,7 @@
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Application
+ * @package    Nette\Application
  */
 interface IAjaxDriver
 {
@@ -40,10 +40,10 @@ interface IAjaxDriver
 	function link($url);
 
 	/**
-	 * @param  Nette::Web::IHttpResponse
+	 * @param  Nette\Web\IHttpResponse
 	 * @return void
 	 */
-	function open(/*Nette::Web::*/IHttpResponse $httpResponse);
+	function open(/*Nette\Web\*/IHttpResponse $httpResponse);
 
 	/**
 	 * @return void

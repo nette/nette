@@ -1,11 +1,11 @@
-<h1>Nette::Forms user validator test</h1>
+<h1>Nette\Forms user validator test</h1>
 
 <?php
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Forms::Form;*/
-/*use Nette::Debug;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Debug;*/
 
 Debug::enable();
 

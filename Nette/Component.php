@@ -79,7 +79,7 @@ abstract class Component extends Object implements IComponent
 	public function lookup($type, $need = TRUE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
 
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
@@ -110,7 +110,7 @@ abstract class Component extends Object implements IComponent
 		}
 
 		if ($need && $this->monitors[$type][0] === NULL) {
-			throw new /*::*/InvalidStateException("Component is not attached to '$type'.");
+			throw new /*\*/InvalidStateException("Component is not attached to '$type'.");
 		}
 
 		return $this->monitors[$type][0];
@@ -128,7 +128,7 @@ abstract class Component extends Object implements IComponent
 	public function lookupPath($type, $need = TRUE)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
 
 		$this->lookup($type, $need);
 		return $this->monitors[$type][2];
@@ -144,7 +144,7 @@ abstract class Component extends Object implements IComponent
 	public function monitor($type)
 	{
 		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, ':')) $type = substr($type, $a + 1);/**/
+		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
 
 		$this->monitors[$type] = NULL;
 		$this->lookup($type, FALSE); // call attached()
@@ -208,7 +208,7 @@ abstract class Component extends Object implements IComponent
 	 * @param  IComponentContainer  New parent or null if this component is being removed from a parent
 	 * @param  string
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	public function setParent(IComponentContainer $parent = NULL, $name = NULL)
 	{
@@ -222,14 +222,14 @@ abstract class Component extends Object implements IComponent
 
 		// A component cannot be given a parent if it already has a parent.
 		if ($this->parent !== NULL && $parent !== NULL) {
-			throw new /*::*/InvalidStateException('Component already has a parent.');
+			throw new /*\*/InvalidStateException('Component already has a parent.');
 		}
 
 		// remove from parent?
 		if ($parent === NULL) {
 			// parent cannot be removed if is still this component contains
 			if ($this->parent->getComponent($this->name, FALSE) === $this) {
-				throw new /*::*/InvalidStateException('The current parent still recognizes this component as its child.');
+				throw new /*\*/InvalidStateException('The current parent still recognizes this component as its child.');
 			}
 
 			$this->refreshMonitors(0);
@@ -238,7 +238,7 @@ abstract class Component extends Object implements IComponent
 		} else { // add to parent
 			// Given parent container does not already recognize this component as its child.
 			if ($parent->getComponent($name, FALSE) !== $this) {
-				throw new /*::*/InvalidStateException('The given parent does not recognize this component as its child.');
+				throw new /*\*/InvalidStateException('The given parent does not recognize this component as its child.');
 			}
 
 			$this->validateParent($parent);
@@ -254,10 +254,10 @@ abstract class Component extends Object implements IComponent
 
 	/**
 	 * Is called by a component when it is about to be set new parent. Descendant can.
-	 * override this method to disallow a parent change by throwing an ::InvalidStateException
+	 * override this method to disallow a parent change by throwing an \InvalidStateException
 	 * @param  IComponentContainer
 	 * @return void
-	 * @throws ::InvalidStateException
+	 * @throws \InvalidStateException
 	 */
 	protected function validateParent(IComponentContainer $parent)
 	{
@@ -388,7 +388,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	final public function __wakeup()
 	{
-		throw new /*::*/NotImplementedException;
+		throw new /*\*/NotImplementedException;
 	}
 
 }

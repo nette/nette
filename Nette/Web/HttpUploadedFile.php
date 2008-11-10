@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Web
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette::Web;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -31,9 +31,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Web
+ * @package    Nette\Web
  */
-class HttpUploadedFile extends /*Nette::*/Object
+class HttpUploadedFile extends /*Nette\*/Object
 {
 	/* @var string */
 	private $name;
@@ -64,7 +64,7 @@ class HttpUploadedFile extends /*Nette::*/Object
 			}
 		}
 		//if (!is_uploaded_file($value['tmp_name'])) {
-			//throw new /*::*/InvalidStateException("Filename '$value[tmp_name]' is not a valid uploaded file.");
+			//throw new /*\*/InvalidStateException("Filename '$value[tmp_name]' is not a valid uploaded file.");
 		//}
 		$this->name = $value['name'];
 		$this->type = $value['type'];

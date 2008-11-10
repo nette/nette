@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @version    $Id$
  */
 
-/*namespace Nette::Forms;*/
+/*namespace Nette\Forms;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
- * @package    Nette::Forms
+ * @package    Nette\Forms
  * @example    forms/example1.php Manual form rendering and separated form and rules definition
  * @example    forms/example2.php Form definition using fluent interfaces
  * @example    forms/example3.php Localization (with Zend_Translate)
@@ -68,7 +68,7 @@ class Form extends FormContainer
 	const MIME_TYPE = ':mimeType';
 
 	// special case
-	const SCRIPT = /*Nette::Forms::*/'InstantClientScript::javascript';
+	const SCRIPT = /*Nette\Forms\*/'InstantClientScript::javascript';
 	/**#@-*/
 
 	/** tracker ID */
@@ -92,7 +92,7 @@ class Form extends FormContainer
 	/** @var IFormRenderer */
 	private $renderer;
 
-	/** @var Nette::ITranslator */
+	/** @var Nette\ITranslator */
 	private $translator;
 
 	/** @var array of FormGroup */
@@ -117,7 +117,7 @@ class Form extends FormContainer
 	 */
 	public function __construct($name = NULL, $parent = NULL)
 	{
-		$this->element = /*Nette::Web::*/Html::el('form');
+		$this->element = /*Nette\Web\*/Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = 'post';
 		$this->monitor(__CLASS__);
@@ -135,7 +135,7 @@ class Form extends FormContainer
 	protected function attached($obj)
 	{
 		if ($obj instanceof self) {
-			throw new /*::*/InvalidStateException('Nested forms are forbidden.');
+			throw new /*\*/InvalidStateException('Nested forms are forbidden.');
 		}
 	}
 
@@ -207,7 +207,7 @@ class Form extends FormContainer
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = /*Nette::*/Environment::getSession(__METHOD__);
+		$session = /*Nette\*/Environment::getSession(__METHOD__);
 		$key = "key$timeout";
 		if (isset($session->$key)) {
 			$token = $session->$key;
@@ -278,7 +278,7 @@ class Form extends FormContainer
 	{
 		$this->encoding = empty($value) ? 'UTF-8' : strtoupper($value);
 		if ($this->encoding !== 'UTF-8' && !extension_loaded('mbstring')) {
-			throw new /*::*/Exception("The PHP extension 'mbstring' is required for this encoding but is not loaded.");
+			throw new /*\*/Exception("The PHP extension 'mbstring' is required for this encoding but is not loaded.");
 		}
 	}
 
@@ -301,10 +301,10 @@ class Form extends FormContainer
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette::ITranslator
+	 * @param  Nette\ITranslator
 	 * @return void
 	 */
-	public function setTranslator(/*Nette::*/ITranslator $translator = NULL)
+	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 	}
@@ -313,7 +313,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns translate adapter.
-	 * @return Nette::ITranslator|NULL
+	 * @return Nette\ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
@@ -355,7 +355,7 @@ class Form extends FormContainer
 
 	/**
 	 * Detects form submission and loads HTTP values.
-	 * @param  Nette::Web::IHttpRequest  optional request object
+	 * @param  Nette\Web\IHttpRequest  optional request object
 	 * @return void
 	 */
 	public function processHttpRequest($httpRequest = NULL)
@@ -363,7 +363,7 @@ class Form extends FormContainer
 		$this->submittedBy = FALSE;
 
 		if ($httpRequest === NULL) {
-			$httpRequest = class_exists(/*Nette::*/'Environment') ? /*Nette::*/Environment::getHttpRequest() : new /*Nette::Web::*/HttpRequest;
+			$httpRequest = class_exists(/*Nette\*/'Environment') ? /*Nette\*/Environment::getHttpRequest() : new /*Nette\Web\*/HttpRequest;
 		}
 		$httpRequest->setEncoding($this->encoding);
 
@@ -428,7 +428,7 @@ class Form extends FormContainer
 			$values = (array) $values;
 
 		} elseif (!is_array($values)) {
-			throw new /*::*/InvalidArgumentException('Default values must be an array.');
+			throw new /*\*/InvalidArgumentException('Default values must be an array.');
 		}
 
 		$cursor = & $values;
@@ -511,7 +511,7 @@ class Form extends FormContainer
 	public function getValues()
 	{
 		if (!$this->isPopulated) {
-			throw new /*::*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
+			throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
 		}
 
 		$values = array();
@@ -581,7 +581,7 @@ class Form extends FormContainer
 	public function validate()
 	{
 		if (!$this->isPopulated) {
-			throw new /*::*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
+			throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
 		}
 
 		$controls = $this->getControls();
@@ -649,7 +649,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns form's HTML element template.
-	 * @return Nette::Web::Html
+	 * @return Nette\Web\Html
 	 */
 	public function getElementPrototype()
 	{

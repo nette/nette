@@ -1,4 +1,4 @@
-<h1>Nette::IO::SafeStream stress test - run it twice (or more) simultaneously</h1>
+<h1>Nette\IO\SafeStream stress test - run it twice (or more) simultaneously</h1>
 
 <pre>
 <?php
@@ -6,7 +6,7 @@
 
 require_once '../../Nette/loader.php';
 
-/*use Nette::Debug;*/
+/*use Nette\Debug;*/
 
 
 function randomStr()
