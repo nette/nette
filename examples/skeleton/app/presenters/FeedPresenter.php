@@ -2,12 +2,19 @@
 
 /**
  * My Application
+ *
+ * @copyright  Copyright (c) 2008 John Doe
+ * @package    MyApplication
+ * @version    $Id$
  */
 
 
 
 /**
  * Feed channel presenter.
+ *
+ * @author     John Doe
+ * @package    MyApplication
  */
 class FeedPresenter extends BasePresenter
 {

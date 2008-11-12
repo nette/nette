@@ -1,6 +1,6 @@
 <?php
 
-/*namespace Front::Export;*/
+/*namespace Front\Export;*/
 
 require_once dirname(__FILE__) . '/../../BasePresenter.php';
 

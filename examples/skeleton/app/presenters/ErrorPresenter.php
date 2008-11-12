@@ -2,12 +2,19 @@
 
 /**
  * My Application
+ *
+ * @copyright  Copyright (c) 2008 John Doe
+ * @package    MyApplication
+ * @version    $Id$
  */
 
 
 
 /**
  * Error presenter.
+ *
+ * @author     John Doe
+ * @package    MyApplication
  */
 class ErrorPresenter extends BasePresenter
 {
@@ -34,10 +41,7 @@ class ErrorPresenter extends BasePresenter
 				$this->template->title = '500 Internal Server Error';
 				$this->changeScene('500');
 
-				// log to file
-				if (/*Nette\*/Debug::isEnabled()) {
-					/*Nette\*/Debug::exceptionHandler($exception);
-				}
+				/*Nette\*/Debug::logException($exception);
 			}
 		}
 	}

@@ -17,12 +17,13 @@ class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 		$this->uri->scheme = 'http';
 		$this->uri->host = 'admin.texy.info';
 		$this->uri->scriptPath = '/';
-		$this->uri->path = $path;
+		@list($this->uri->path, $this->uri->query) = explode('?', $path);
+		parse_str($this->uri->query, $this->query);
 	}
 
 	public function setQuery(array $query)
 	{
-		$this->query = $query;
+		$this->query += $query;
 	}
 
 	public function setPost(array $post)
@@ -618,14 +619,14 @@ test($route,
 echo "\n<hr><h2>With named params in query</h2>\n";
 
 
-$route = new Route('<view> ? test=<presenter>', array(
+$route = new Route(' ? test=<presenter> & test2=<view [a-z]+>', array(
 	'presenter' => 'default',
 	'view' => 'default',
 ));
 
 
 test($route,
-	'/view/',
+	'/?test2=view',
 	array (
 		'presenter' => 'querypresenter',
 		'params' =>
@@ -633,7 +634,7 @@ test($route,
 			'view' => 'view',
 		),
 	),
-	'/view?test=querypresenter'
+	'/?test2=view&test=querypresenter'
 );
 
 test($route,

@@ -86,6 +86,7 @@ final class TemplateFilters
 	 *   {include ?}
 	 *   {snippet ?} ... {/snippet ?} control snippet
 	 *   {block|texy} ... {/block} capture of filter block
+	 *   {contentType ...} HTTP Content-Type header
 	 *   {debugbreak}
 	 *
 	 * @param  Template
@@ -106,7 +107,7 @@ final class TemplateFilters
 		);
 
 		// remove comments
-		$s = preg_replace('#\\{\\*.*?\\*\\}#s', '', $s);
+		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
 		// simple replace
 		$s = str_replace(
@@ -154,6 +155,7 @@ final class TemplateFilters
 		'ajaxlink ' => '<?php echo $template->escape($control->ajaxlink(#)) ?>',
 		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',
 		'link ' => '<?php echo $template->escape($control->link(#)) ?>',
+		'contentType ' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
 		'=' => '<?php echo $template->escape(#) ?>',
@@ -248,6 +250,30 @@ final class TemplateFilters
 			trigger_error("Fragment '$file' is not defined.", E_USER_WARNING);
 			return '';
 		}
+	}
+
+
+
+	/********************* Filter removePhp ****************d*g**/
+
+
+
+	/**
+	 * Filters out PHP code.
+	 *
+	 * @param  Template
+	 * @param  string
+	 * @return string
+	 */
+	public static function removePhp(Template $template, $s)
+	{
+		$res = '';
+		foreach (token_get_all($s) as $token) {
+			if (is_array($token) && $token[0] === T_INLINE_HTML) {
+				$res .= $token[1] . '<?php ?>';
+			}
+		}
+		return $res;
 	}
 
 

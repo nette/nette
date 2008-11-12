@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * My Application bootstrap file.
+ *
+ * @copyright  Copyright (c) 2008 John Doe
+ * @package    MyApplication
+ * @version    $Id$
+ */
+
+
 /*use Nette\Environment;*/
 /*use Nette\Application\Route;*/
 
@@ -22,7 +31,6 @@ $config = Environment::loadConfig();
 // 2c) enable RobotLoader
 $loader = new /*Nette\Loaders\*/RobotLoader();
 $loader->addDirectory(explode(';', $config->scanDirs));
-$loader->autoRebuild = FALSE;
 $loader->register();
 
 

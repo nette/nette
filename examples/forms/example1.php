@@ -84,10 +84,13 @@ $form['email']->addCondition(Form::FILLED)
 // another conditional rule: if is checkbox checked...
 $form['send']->addCondition(Form::EQUAL, TRUE)
 	// toggle div #sendBox
-	->toggle('sendBox')
-	// ... add apply rules:
-	->addRuleFor($form['city'], Form::FILLED, 'Enter your shipping address')
-	->addRuleFor($form['country'], Form::FILLED, 'Select your country');
+	->toggle('sendBox');
+
+$form['city']->addConditionOn($form['send'], Form::EQUAL, TRUE)
+	->addRule(Form::FILLED, 'Enter your shipping address');
+
+$form['country']->addConditionOn($form['send'], Form::EQUAL, TRUE)
+	->addRule(Form::FILLED, 'Select your country');
 
 $form['password']->addRule(Form::FILLED, 'Choose your password');
 $form['password']->addRule(Form::MIN_LENGTH, 'The password is too short: it must be at least %d characters', 3);
