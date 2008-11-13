@@ -138,6 +138,7 @@ final class TemplateFilters
 		'{/if}' => '<?php endif ?>',
 		'{/foreach}' => '<?php endforeach ?>',
 		'{/for}' => '<?php endfor ?>',
+		'{/while}' => '<?php endwhile ?>',
 		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 	);
 
@@ -151,6 +152,7 @@ final class TemplateFilters
 		'elseif ' => '<?php elseif (#): ?>',
 		'foreach ' => '<?php foreach (#): ?>',
 		'for ' => '<?php for (#): ?>',
+		'while ' => '<?php while (#): ?>',
 		'include ' => '<?php $template->subTemplate(#)->render() ?>',
 		'ajaxlink ' => '<?php echo $template->escape($control->ajaxlink(#)) ?>',
 		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',

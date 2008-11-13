@@ -56,6 +56,12 @@ class Route extends /*Nette\*/Object implements IRouter
 	const FILTER_OUT = 'filterOut';
 	/**#@-*/
 
+	/**#@+ @internal fixed types {@link Route::$metadata} */
+	const NOT_FIXED = 0;
+	const PATH_FIXED = 1;
+	const URL_FIXED = 2;
+	/**#@-*/
+
 	/** @var bool */
 	public static $defaultFlags = 0;
 
@@ -178,7 +184,7 @@ class Route extends /*Nette\*/Object implements IRouter
 					$params[$name] = call_user_func($meta[self::FILTER_IN], $params[$name]);
 				}
 			} elseif (isset($meta['fixed'])) {
-				if ($meta['fixed'] !== 0) { // force now
+				if ($meta['fixed'] !== self::NOT_FIXED) { // force now
 					$params[$name] = $meta['default'];
 				} else { // append later - after query params
 					$defaults[$name] = $meta['default'];
@@ -258,13 +264,17 @@ class Route extends /*Nette\*/Object implements IRouter
 					unset($params[$name]);
 					continue;
 
-				} elseif ($meta['fixed'] === 2) {
+				} elseif ($meta['fixed'] === self::URL_FIXED) {
 					return NULL; // missing or wrong parameter '$name'
 				}
 			}
 
 			if (isset($meta[self::FILTER_OUT])) {
 				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
+			}
+
+			if (isset($meta[self::PATTERN]) && !preg_match($meta[self::PATTERN], $params[$name])) {
+				return NULL; // pattern not match
 			}
 		}
 
@@ -357,7 +367,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		foreach ($defaults as $name => $def) {
 			$metadata[$name] = array(
 				'default' => $def,
-				'fixed' => 2, // 2=fully fixed, 1=must be in path, 0=not fixed
+				'fixed' => self::URL_FIXED
 			);
 		}
 
@@ -383,7 +393,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				if (isset($metadata[$name])) {
 					$meta = $meta + $metadata[$name];
 				}
-				$meta['fixed'] = 0;
+				$meta['fixed'] = self::NOT_FIXED;
 				$metadata[$name] = $meta;
 				if ($param !== '') {
 					$this->xlat[$name] = $param;
@@ -451,7 +461,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			if (isset($meta['default'])) {
 				$meta['defOut'] = isset($meta[self::FILTER_OUT]) ? call_user_func($meta[self::FILTER_OUT], $meta['default']) : $meta['default'];
 			}
-			$meta[self::PATTERN] = $pattern;
+			$meta[self::PATTERN] = "#$pattern$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 			$metadata[$name] = $meta;
 
 			// include in expression
@@ -461,7 +471,7 @@ class Route extends /*Nette\*/Object implements IRouter
 					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
 				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
-				$metadata[$name]['fixed'] = 1;
+				$metadata[$name]['fixed'] = self::PATH_FIXED;
 
 			} else {
 				$optional = FALSE;
@@ -494,14 +504,14 @@ class Route extends /*Nette\*/Object implements IRouter
 		$presenter = '';
 
 		if (isset($m[self::MODULE_KEY]['fixed'])) {
-			if ($m[self::MODULE_KEY]['fixed'] !== 2) {
+			if ($m[self::MODULE_KEY]['fixed'] !== self::URL_FIXED) {
 				return NULL;
 			}
 			$presenter = $m[self::MODULE_KEY]['default'] . ':';
 		}
 
 		if (isset($m[self::PRESENTER_KEY]['fixed'])) {
-			if ($m[self::PRESENTER_KEY]['fixed'] === 2) {
+			if ($m[self::PRESENTER_KEY]['fixed'] === self::URL_FIXED) {
 				return $presenter . $m[self::PRESENTER_KEY]['default'];
 			}
 		}
@@ -598,6 +608,52 @@ class Route extends /*Nette\*/Object implements IRouter
 		$s = str_replace('. ', ':', $s);
 		$s = str_replace('- ', '', $s);
 		return $s;
+	}
+
+
+
+	/********************* Route::$styles manipulator ****************d*g**/
+
+
+
+	/**
+	 * Creates new style.
+	 * @param  string  style name (#style, urlParameter, ?queryParameter)
+	 * @param  string  optional parent style name
+	 * @param  void
+	 */
+	public static function addStyle($style, $parent = NULL)
+	{
+		if (isset(self::$styles[$style])) {
+			throw new InvalidArgumentException("Style '$style' already exists.");
+		}
+
+		if ($parent !== NULL) {
+			if (!isset(self::$styles[$parent])) {
+				throw new InvalidArgumentException("Parent style '$parent' doesn't exist.");
+			}
+			self::$styles[$style] = self::$styles[$parent];
+
+		} else {
+			self::$styles[$style] = array();
+		}
+	}
+
+
+
+	/**
+	 * Changes style property value.
+	 * @param  string  style name (#style, urlParameter, ?queryParameter)
+	 * @param  string  property name (Route::PATTERN, Route::FILTER_IN, Router::FILTER_OUT)
+	 * @param  mixed   property value
+	 * @param  void
+	 */
+	public static function setStyleProperty($style, $key, $value)
+	{
+		if (!isset(self::$styles[$style])) {
+			throw new InvalidArgumentException("Style '$style' doesn't exist.");
+		}
+		self::$styles[$style][$key] = $value;
 	}
 
 }

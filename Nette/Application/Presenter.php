@@ -232,6 +232,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->beforeRender();
 			// calls $this->render{scene}();
 			$this->tryCall($this->formatRenderMethod($this->getScene()), $this->params);
+			$this->afterRender();
 
 			$this->renderTemplate();
 
@@ -286,6 +287,16 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 */
 	protected function beforeRender()
+	{
+	}
+
+
+
+	/**
+	 * Common render method.
+	 * @return void
+	 */
+	protected function afterRender()
 	{
 	}
 
