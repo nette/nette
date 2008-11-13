@@ -42,7 +42,7 @@ $form->addText('name', 'Your name:', 35);
 
 $form->addMultiSelect('country', 'Country:')
 	->skipFirst()
-    ->setItems($countries, FALSE);
+	->setItems($countries, FALSE);
 
 $form->addHidden('userid');
 

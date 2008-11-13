@@ -56,7 +56,7 @@ $form = new Form;
 
 // group Personal data
 $form->addGroup('Personal data')
-    ->setOption('description', 'We value your privacy and we ensure that the information you give to us will not be shared to other entities.');
+	->setOption('description', 'We value your privacy and we ensure that the information you give to us will not be shared to other entities.');
 
 $form->addText('name', 'Your name:', 35)
 	->addRule(Form::FILLED, 'Enter your name');

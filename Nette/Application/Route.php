@@ -280,7 +280,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			$name = $sequence[$i]; $i--; // parameter name
 
-			if (isset($params[$name]) && $params[$name] != '') { // intentionally ==
+			if ($name[0] === '?') { // "foo" parameter
+				continue;
+
+			} elseif (isset($params[$name]) && $params[$name] != '') { // intentionally ==
 				$optional = FALSE;
 				$uri = $params[$name] . $uri;
 				unset($params[$name]);
@@ -411,6 +414,12 @@ class Route extends /*Nette\*/Object implements IRouter
 			$pattern = $parts[$i]; $i--; // validation condition (as regexp)
 			$name = $parts[$i]; $i--; // parameter name
 			array_unshift($sequence, $name);
+
+			if ($name[0] === '?') { // "foo" parameter
+				$re = '(?:' . $pattern . ')' . $re;
+				$sequence[1] = substr($name, 1) . $sequence[1];
+				continue;
+			}
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_-]#i', $name)) {

@@ -823,3 +823,58 @@ test($route,
 	),
 	'/any?test=testvalue'
 );
+
+
+
+
+
+echo "\n<hr><h2>Foo parameter</h2>\n";
+
+$route = new Route('index<?.xml \.html?|\.php|>/', array(
+	'presenter' => 'DefaultPresenter',
+));
+
+test($route,
+	'/index.',
+	NULL,
+	NULL
+);
+
+
+test($route,
+	'/index.php',
+	array (
+		'presenter' => 'DefaultPresenter',
+		'params' =>
+		array (
+			'test' => 'testvalue',
+		),
+	),
+	'/index.xml/?test=testvalue'
+);
+
+
+test($route,
+	'/index.htm',
+	array (
+		'presenter' => 'DefaultPresenter',
+		'params' =>
+		array (
+			'test' => 'testvalue',
+		),
+	),
+	'/index.xml/?test=testvalue'
+);
+
+
+test($route,
+	'/index',
+	array (
+		'presenter' => 'DefaultPresenter',
+		'params' =>
+		array (
+			'test' => 'testvalue',
+		),
+	),
+	'/index.xml/?test=testvalue'
+);

@@ -30,16 +30,19 @@ require_once dirname(__FILE__) . '/../Web/Uri.php';
  * Extended HTTP URL.
  *
  * <pre>
- * http://nettephp.com/basePath/script.php/pathinfo/?name=param#fragment
- *                    \__________________/\________/
- *                              |              |
- *                            path          pathinfo
+ *                    basePath   relativeUri
+ *                       |           |
+ *                    /-----\/------------------\
+ * http://nettephp.com/admin/script.php/pathinfo/?name=param#fragment
+ *                    \_______________/\________/
+ *                           |              |
+ *                      scriptPath       pathInfo
  * </pre>
  *
- * - basePath:    /basePath/ (everything before relative URI not including the script name)
- * - baseUri:     http://nettephp.com/basePath/
- * - scriptPath:  /basePath/script.php  (URI-path of the request with the script name)
- * - relativeUri: script.php
+ * - basePath:    /admin/ (everything before relative URI not including the script name)
+ * - baseUri:     http://nettephp.com/admin/
+ * - scriptPath:  /admin/script.php
+ * - relativeUri: script.php/pathinfo/
  * - pathInfo:    /pathinfo/ (additional path information)
  *
  * @author     David Grudl
