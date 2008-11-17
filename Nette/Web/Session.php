@@ -67,8 +67,8 @@ class Session extends /*Nette\*/Object
 
 		// other
 		'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,// 3 hours
-		'session_cache_limiter' => 'none',// do not affect caching
-		'session_cache_expire' => NULL,   // (default "180")
+		'session.cache_limiter' => NULL,  // (default "nocache")
+		'session.cache_expire' => NULL,   // (default "180")
 		'session.hash_function' => NULL,  // (default "0", means MD5)
 		'session.hash_bits_per_character' => NULL, // (default "4")
 	);

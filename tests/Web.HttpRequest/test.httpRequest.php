@@ -8,6 +8,8 @@ require_once '../../Nette/loader.php';
 /*use Nette\Web\HttpRequest;*/
 
 $request = new HttpRequest;
+$request->addUriFilter('%20', '', PHP_URL_PATH);
+$request->addUriFilter('[.,)]$');
 
 echo 'HttpRequest::getMethod() = '; Debug::dump($request->getMethod());
 echo 'HttpRequest::getUri() = '; Debug::dump($request->getUri());

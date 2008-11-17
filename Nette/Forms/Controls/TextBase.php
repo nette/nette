@@ -115,7 +115,7 @@ abstract class TextBase extends FormControl
 
 	public function notifyRule(Rule $rule)
 	{
-		if ($rule->type === Rule::VALIDATOR && strcasecmp($rule->operation, ':float') === 0) {
+		if ($rule->type === Rule::VALIDATOR && is_string($rule->operation) && strcasecmp($rule->operation, ':float') === 0) {
 			$this->addFilter(array(__CLASS__, 'filterFloat'));
 		}
 

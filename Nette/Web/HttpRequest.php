@@ -58,6 +58,12 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	/** @var array  {@link HttpRequest::getHeaders()} */
 	protected $headers;
 
+	/** @var array */
+	protected $uriFilter = array(
+		PHP_URL_PATH => array('#/{2,}#' => '/'), // '%20' => ''
+		0 => array(), // '#[.,)]$#' => ''
+	);
+
 	/** @var string */
 	protected $encoding;
 
@@ -98,6 +104,39 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 
 
 	/**
+	 * Sets request URI filter.
+	 * @param  string  pattern to search for
+	 * @param  string  string to replace
+	 * @param  int     PHP_URL_PATH or NULL
+	 * @return void
+	 */
+	public function addUriFilter($pattern, $replacement = '', $component = NULL)
+	{
+		$pattern = '#' . $pattern . '#';
+		$component = $component === PHP_URL_PATH ? PHP_URL_PATH : 0;
+
+		if ($replacement === NULL) {
+			unset($this->uriFilter[$component][$pattern]);
+		} else {
+			$this->uriFilter[$component][$pattern] = $replacement;
+		}
+		$this->uri = NULL;
+	}
+
+
+
+	/**
+	 * Returns request URI filter.
+	 * @return array
+	 */
+	final public function getUriFilters()
+	{
+		return $this->uriFilter;
+	}
+
+
+
+	/**
 	 * Detects uri, base path and script path of the request.
 	 * @return void
 	 */
@@ -109,21 +148,51 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$uri->scheme = $origUri->scheme = $this->isSecured() ? 'https' : 'http';
 		$uri->user = $origUri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 		$uri->pass = $origUri->pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
-		$uri->port = $origUri->port = isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : NULL;
-		$uri->query = $origUri->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 
-		// path
-		if (isset($_SERVER['REQUEST_URI'])) { // Apache, IIS 6.0
-			$uri->path = $origUri->path = (string) strtok($_SERVER['REQUEST_URI'], '?');
-		} elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 (PHP as CGI ?)
-			$uri->path = $origUri->path = $_SERVER['ORIG_PATH_INFO'];
+		// host & port
+		if (isset($_SERVER['HTTP_HOST'])) {
+			$pair = explode(':', $_SERVER['HTTP_HOST']);
+
+		} elseif (isset($_SERVER['SERVER_NAME'])) {
+			$pair = explode(':', $_SERVER['SERVER_NAME']);
+
+		} else {
+			$pair = array('');
 		}
 
-		// host
-		if (isset($_SERVER['HTTP_HOST'])) {
-			$uri->host = $origUri->host = (string) strtok($_SERVER['HTTP_HOST'], ':');
-		} elseif (isset($_SERVER['SERVER_NAME'])) {
-			$uri->host = $origUri->host = (string) strtok($_SERVER['SERVER_NAME'], ':');
+		$uri->host = $origUri->host = $pair[0];
+
+		if (isset($pair[1])) {
+			$uri->port = $origUri->port = (int) $pair[1];
+
+		} elseif (isset($_SERVER['SERVER_PORT'])) {
+			$uri->port = $origUri->port = (int) $_SERVER['SERVER_PORT'];
+		}
+
+		// path & query
+		if (isset($_SERVER['REQUEST_URI'])) { // Apache, IIS 6.0
+			$requestUri = $_SERVER['REQUEST_URI'];
+
+		} elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0 (PHP as CGI ?)
+			$requestUri = $_SERVER['ORIG_PATH_INFO'];
+			if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') {
+				$requestUri .= '?' . $_SERVER['QUERY_STRING'];
+			}
+		} else {
+			$requestUri = '';
+		}
+
+		$tmp = explode('?', $requestUri, 2);
+		$origUri->path = $tmp[0];
+		$origUri->query = isset($tmp[1]) ? $tmp[1] : '';
+
+		$requestUri = preg_replace(array_keys($this->uriFilter[0]), array_values($this->uriFilter[0]), $requestUri);
+		$tmp = explode('?', $requestUri, 2);
+		$uri->path = preg_replace(array_keys($this->uriFilter[PHP_URL_PATH]), array_values($this->uriFilter[PHP_URL_PATH]), $tmp[0]);
+		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
+
+		if ($uri->query !== $origUri->query) {
+			parse_str($uri->query, $_GET);
 		}
 
 		// normalized uri

@@ -822,7 +822,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		if ($match) {
 			$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S304_NOT_MODIFIED);
-			$httpResponse->setHeader('Connection', 'close');
+			$httpResponse->setHeader('Content-Length', '0');
 			$this->terminate();
 
 		} else {
