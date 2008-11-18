@@ -127,15 +127,25 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Returns component specified by name.
+	 * Returns component specified by name or path.
 	 * @param  string
 	 * @param  bool   throw exception if component doesn't exist?
 	 * @return IComponent|NULL
 	 */
 	final public function getComponent($name, $need = TRUE)
 	{
+		$a = strpos($name, self::NAME_SEPARATOR);
+		if ($a !== FALSE) {
+			$ext = substr($name, $a + 1);
+			$name = substr($name, 0, $a);
+		}
+
+		if (!isset($this->components[$name])) {
+			$this->createComponent($name);
+		}
+
 		if (isset($this->components[$name])) {
-			return $this->components[$name];
+			return $a === FALSE ? $this->components[$name] : $this->components[$name]->getComponent($ext);
 
 		} elseif ($need) {
 			throw new /*\*/InvalidArgumentException("Component with name '$name' does not exist.");
@@ -143,6 +153,17 @@ class ComponentContainer extends Component implements IComponentContainer
 		} else {
 			return NULL;
 		}
+	}
+
+
+
+	/**
+	 * Component factory. Descendant can override this method to enable lazy component loading.
+	 * @param  string  component name
+	 * @return void
+	 */
+	protected function createComponent($name)
+	{
 	}
 
 

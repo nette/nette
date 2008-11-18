@@ -71,27 +71,11 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 	{
 		if ($presenter instanceof Presenter) {
 			$id = $this->lookupPath('Nette\Application\Presenter');
-			$presenter->registerComponent($id, $this);
 			$this->setAction(new Link(
 				$presenter,
 				'this!',
 				array(Presenter::SIGNAL_KEY => "$id-submit")
 			));
-		}
-	}
-
-
-
-	/**
-	 * This method will be called before the component (or component's parent)
-	 * becomes detached from a monitored object. Do not call this method yourself.
-	 * @param  IComponent
-	 * @return void
-	 */
-	protected function detached($presenter)
-	{
-		if ($presenter instanceof Presenter) {
-			$presenter->unregisterComponent($this);
 		}
 	}
 
@@ -111,12 +95,12 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 		$request = $presenter->getRequest();
 		if ($request->isMethod('forward') || $request->isMethod('post') !== $this->isPost) return;
 
-		$this->submittedBy = TRUE;
-		if ($this->isPost) {
-			$this->loadHttpData(self::arrayAppend($request->getPost(), $request->getFiles()));
+			$this->submittedBy = TRUE;
+			if ($this->isPost) {
+				$this->loadHttpData(self::arrayAppend($request->getPost(), $request->getFiles()));
 
-		} else {
-			$this->loadHttpData($request->getParams());
+			} else {
+				$this->loadHttpData($request->getParams());
 		}
 	}
 

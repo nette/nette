@@ -91,22 +91,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$presenter->registerComponent($this->getUniqueId(), $this);
-		}
-	}
-
-
-
-	/**
-	 * This method will be called before the component (or component's parent)
-	 * becomes detached from a monitored object. Do not call this method yourself.
-	 * @param  IComponent
-	 * @return void
-	 */
-	protected function detached($presenter)
-	{
-		if ($presenter instanceof Presenter) {
-			$presenter->unregisterComponent($this);
+			$this->loadState($presenter->getGlobalParams($this->getUniqueId()));
 		}
 	}
 

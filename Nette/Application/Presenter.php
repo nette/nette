@@ -73,12 +73,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = TRUE;
 
-	/**
-	 * Lists of all components identified by a uniqueId starting from this page.
-	 * @var array of Nette\IComponent
-	 */
-	private $globalComponents = array();
-
 	/** @var array */
 	private $globalParams;
 
@@ -198,7 +192,6 @@ abstract class Presenter extends Control implements IPresenter
 				self::$outputAllowed = FALSE;
 			}
 			$this->initGlobalParams();
-			$this->registerComponent($this->getUniqueId(), $this);
 			$this->startup();
 			// calls $this->present{view}();
 			$this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
@@ -244,7 +237,6 @@ abstract class Presenter extends Control implements IPresenter
 				$this->ajaxDriver->close();
 			}
 			$this->phase = self::PHASE_SHUTDOWN;
-			$this->unregisterComponent($this);
 			$this->shutdown();
 			if (isset($e)) throw $e;
 		}
@@ -323,12 +315,11 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if ($this->signal === NULL) return;
 
-		if (!isset($this->globalComponents[$this->signalReceiver])) {
+		$component = $this->getComponent($this->signalReceiver, FALSE);
+		if ($component === NULL) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not found.");
-		}
 
-		$component = $this->globalComponents[$this->signalReceiver];
-		if (!$component instanceof ISignalReceiver) {
+		} elseif (!$component instanceof ISignalReceiver) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not ISignalReceiver implementor.");
 		}
 
@@ -1096,20 +1087,18 @@ abstract class Presenter extends Control implements IPresenter
 
 		if ($this->globalState === NULL || $this->phase <= self::PHASE_SIGNAL) {
 			$state = array();
-			foreach ($this->globalComponents as $id => $component)
+			foreach ($this->getComponents(TRUE, 'Nette\Application\IStatePersistent') as $id => $component)
 			{
-				if ($component instanceof IStatePersistent) {
-					$params = array();
-					$component->saveState($params);
-					if ($id === '') { // presenter itself
-						$state[NULL] = $params;
-					} else {
-						$prefix = $id . self::NAME_SEPARATOR;
-						$prefix2 = substr($prefix, 0, strpos($prefix, self::NAME_SEPARATOR));
-						foreach ($params as $key => $val) {
-							$state[NULL][$prefix . $key] = $val;
-							$state[$prefix2][$prefix . $key] = $val;
-						}
+				$params = array();
+				$component->saveState($params);
+				if ($id === '') { // presenter itself
+					$state[NULL] = $params;
+				} else {
+					$prefix = $id . self::NAME_SEPARATOR;
+					$prefix2 = substr($prefix, 0, strpos($prefix, self::NAME_SEPARATOR));
+					foreach ($params as $key => $val) {
+						$state[NULL][$prefix . $key] = $val;
+						$state[$prefix2][$prefix . $key] = $val;
 					}
 				}
 			}
@@ -1160,48 +1149,24 @@ abstract class Presenter extends Control implements IPresenter
 				$this->signal = NULL;
 			}
 		}
+
+		$this->loadState($selfParams);
 	}
-
-
-
-	/********************* hierarchy tree ****************d*g**/
 
 
 
 	/**
 	 * @param  string
-	 * @param  Nette\IComponent
-	 * @return bool
+	 * @return array
 	 */
-	final public function registerComponent($id, /*Nette\*/IComponent $component)
+	final public function getGlobalParams($id)
 	{
-		if (isset($this->globalComponents[$id])) {
-			return FALSE;
+		if (isset($this->globalParams[$id])) {
+			return $this->globalParams[$id];
+
+		} else {
+			return array();
 		}
-
-		$this->globalComponents[$id] = $component;
-		if (isset($this->globalParams[$id]) && $component instanceof IStatePersistent) {
-			$component->loadState($this->globalParams[$id]);
-		}
-
-		return TRUE;
-	}
-
-
-
-	/**
-	 * @param  Nette\IComponent
-	 * @return bool
-	 */
-	final public function unregisterComponent(/*Nette\*/IComponent $component)
-	{
-		foreach ($this->globalComponents as $id => $c) {
-			if ($c === $component) {
-				unset($this->globalComponents[$id]);
-				return TRUE;
-			}
-		}
-		return FALSE;
 	}
 
 }
