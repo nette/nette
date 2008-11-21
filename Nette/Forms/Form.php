@@ -77,8 +77,11 @@ class Form extends FormContainer
 	/** protection token ID */
 	const PROTECTOR_ID = '_token_';
 
-	/** @var array - function($sender, $submittor) */
+	/** @var array  valid form submission; function(Form $sender) */
 	public $onSubmit;
+
+	/** @var array  invalid form submission; function(Form $sender) */
+	public $onInvalidSubmit;
 
 	/** @var bool */
 	protected $isPost = TRUE;
@@ -402,12 +405,18 @@ class Form extends FormContainer
 
 		} elseif ($this->submittedBy instanceof ISubmitterControl) {
 			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
-				$this->submittedBy->Click();
+				$this->submittedBy->click();
 				$this->onSubmit($this);
+			} else {
+				$this->submittedBy->onInvalidClick($this->submittedBy);
+				$this->onInvalidSubmit($this);
 			}
 
 		} elseif ($this->isValid()) {
 			$this->onSubmit($this);
+
+		} else {
+			$this->onInvalidSubmit($this);
 		}
 	}
 

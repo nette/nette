@@ -161,7 +161,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			if ($rule->type === Rule::CONDITION) { // this is condition
 				$innerScript = $this->getValidateScript($rule->subRules, $onlyCheck);
 				if ($innerScript) {
-					$res .= "$script\n\tif (" . ($rule->isNegative ? '!' : '') . "res) {\n\t" . $innerScript . "}\n\t";
+					$res .= "$script\n\tif (" . ($rule->isNegative ? '!' : '') . "res) {\n\t\t" . str_replace("\n\t", "\n\t\t", rtrim($innerScript)) . "\n\t}\n\t";
 					if (!$onlyCheck && $rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}

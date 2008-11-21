@@ -114,6 +114,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			'.password' => 'text',
 			'.file' => 'text',
 			'.submit' => 'button',
+			'.image' => 'button',
 			'.button' => 'button',
 		),
 
