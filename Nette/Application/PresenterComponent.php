@@ -91,12 +91,18 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$this->loadState($presenter->getGlobalParams($this->getUniqueId()));
+			$this->loadState($presenter->popGlobalParams($this->getUniqueId()));
 		}
 	}
 
 
 
+	/**
+	 * Calls public method if exists.
+	 * @param  string
+	 * @param  array
+	 * @return bool  does method exist?
+	 */
 	protected function tryCall($method, array $params)
 	{
 		$class = $this->getClass();
@@ -135,25 +141,32 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	/**
 	 * Saves state informations for next request.
 	 * @param  array
+	 * @param  portion specified by class name (used by Presenter)
 	 * @return void
 	 */
-	public function saveState(array & $params)
+	public function saveState(array & $params, $forClass = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
+		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? $this->getClass() : $forClass) as $nm => $l)
 		{
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
 
-			} elseif (array_key_exists($nm, $params)) {
-				continue; // i.e. $params[$nm] === NULL -> means skip
+			} elseif (array_key_exists($nm, $params)) { // $params[$nm] === NULL
+				continue; // means skip
+
+			} elseif (!isset($l['since']) || $this instanceof $l['since']) {
+				$val = $this->$nm; // object property value
 
 			} else {
-				$val = $this->$nm; // object property value
+				continue; // ignored parameter
 			}
 
-			if (!is_object($val)) {
+			if (is_object($val)) {
+				throw new InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
+
+			} else {
 				if ($l['type'] === NULL) {
-					if ((string) $val === '') $val = NULL; // unnecessary
+					if ((string) $val === '') $val = NULL;
 				} else {
 					settype($val, $l['type']);
 					if ($val === $l['def']) $val = NULL;
@@ -235,41 +248,47 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 			array_shift($args);
 		}
 
-		try {
-			$a = strpos($signal, '?');
-			if ($a !== FALSE) {
-				parse_str(substr($signal, $a + 1), $args); // requires disabled magic quotes
-				$signal = substr($signal, 0, $a);
-			}
+		$presenter = $this->getPresenter();
 
-			// exclamation is not required, every destinations are signals
-			$signal = rtrim($signal, '!');
+		$a = strpos($signal, '?');
+		if ($a !== FALSE) {
+			parse_str(substr($signal, $a + 1), $args); // requires disabled magic quotes
+			$signal = substr($signal, 0, $a);
+		}
+
+		$signal = rtrim($signal, '!'); // exclamation is not required, every destinations are signals
+		$class = $this->getClass();
+
+		try {
 			if ($signal == NULL) {  // intentionally ==
 				throw new InvalidLinkException("Signal must be non-empty string.");
 
-			} elseif ($signal === 'this') {
+			} elseif ($signal === 'this') { // means "no signal"
 				$signal = '';
+				if (array_key_exists(0, $args)) {
+					throw new InvalidLinkException("Extra parameter for signal '$class:$signal!'.");
+				}
 
 			} else {
-				$class = $this->getClass();
+				// counterpart of signalReceived() & tryCall()
 				$method = $this->formatSignalMethod($signal);
 				if (!PresenterHelpers::isMethodCallable($class, $method)) {
 					throw new InvalidLinkException("Unknown signal '$class:$signal!'.");
 				}
-
-				if ($args) {
+				if ($args) { // convert indexed parameters to named
 					PresenterHelpers::argsToParams($class, $method, $args);
 				}
 			}
 
-			if ($args) {
+			// counterpart of IStatePersistent
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
 				$this->saveState($args);
 			}
 
-			return $this->getPresenter()->createSubRequest($this->getUniqueId(), $signal, $args);
+			return $presenter->constructUrl($presenter->createRequest('this', $args, $this->getUniqueId(), $signal));
 
 		} catch (InvalidLinkException $e) {
-			return $this->getPresenter()->handleInvalidLink($e);
+			return $presenter->handleInvalidLink($e);
 		}
 	}
 

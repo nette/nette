@@ -40,8 +40,6 @@ require_once dirname(__FILE__) . '/Object.php';
  */
 abstract class Component extends Object implements IComponent
 {
-	const NAME_SEPARATOR = '-';
-
 	/** @var IServiceLocator */
 	private $serviceLocator;
 

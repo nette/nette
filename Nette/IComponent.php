@@ -31,6 +31,8 @@
  */
 interface IComponent
 {
+	/** Separator for component names in path concatenation. */
+	const NAME_SEPARATOR = '-';
 
 	/**
 	 * @return string

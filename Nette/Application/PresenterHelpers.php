@@ -34,6 +34,9 @@ class PresenterHelpers
 	/** @var array getPersistentParams cache */
 	private static $ppCache = array();
 
+	/** @var array getPersistentComponents cache */
+	private static $pcCache = array();
+
 	/** @var array isMethodCallable cache */
 	private static $mcCache = array();
 
@@ -89,6 +92,39 @@ class PresenterHelpers
 
 
 	/**
+	 * Returns array of classes persistent components.
+	 * Persistent components has class-level annotation @persistent(cmp1, cmp2).
+	 * @param  string  class name
+	 * @return array
+	 */
+	final static public function getPersistentComponents($class)
+	{
+		$meta = & self::$pcCache[strtolower($class)];
+		if ($meta !== NULL) return $meta;
+
+		try {
+			$meta = array();
+			$rc = new ReflectionClass($class);
+			if (!$rc->isSubclassOf(/*Nette\Application\*/'Presenter')) return array();
+
+			// generate
+			preg_match_all('#@persistent\((.*?)\)#', $rc->getDocComment(), $matches, PREG_SET_ORDER);
+			foreach ($matches as $m) {
+				foreach (explode(',', $m[1]) as $id) {
+					$meta[trim($id)] = $class;
+				}
+			}
+			unset($meta['']);
+			$meta = $meta + self::getPersistentComponents(get_parent_class($class));
+
+		} catch (ReflectionException $e) {
+		}
+		return $meta;
+	}
+
+
+
+	/**
 	 * Is a method callable? It means class is instantiable and method has
 	 * public visibility, is non-static and non-abstract.
 	 * @param  string  class name
@@ -96,19 +132,6 @@ class PresenterHelpers
 	 * @return bool
 	 */
 	final static public function isMethodCallable($class, $method)
-	{
-		return self::getMethodAnnotations($class, $method) !== FALSE;
-	}
-
-
-
-	/**
-	 * Returns array of annotations for "callable" methods. {@link PresenterHelpers::isMethodCallable()}
-	 * @param  string  class name
-	 * @param  string  method name
-	 * @return array
-	 */
-	final static public function getMethodAnnotations($class, $method)
 	{
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache !== NULL) return $cache;
@@ -127,13 +150,7 @@ class PresenterHelpers
 				return FALSE;
 			}
 
-			// parse annotation
-			if (preg_match_all('#@([a-z]+):\s*(\S+)#', $rm->getDocComment(), $match)) {
-				$cache = array_combine($match[1], $match[2]);
-			} else {
-				$cache = array();
-			}
-			return $cache;
+			return $cache = TRUE;
 
 		} catch (ReflectionException $e) {
 			return FALSE;
@@ -177,31 +194,39 @@ class PresenterHelpers
 	 * @param  string  class name
 	 * @param  string  method name
 	 * @param  array   arguments
+	 * @param  array   supplemental arguments
 	 * @return void
 	 * @throws InvalidLinkException
 	 */
-	final static public function argsToParams($class, $method, & $args)
+	final static public function argsToParams($class, $method, & $args, $supplemental = array())
 	{
 		$i = 0;
 		foreach (self::getMethodParams($class, $method) as $name => $def) {
 			if (array_key_exists($i, $args)) {
 				$args[$name] = $args[$i];
 				unset($args[$i]);
-			} elseif (!array_key_exists($name, $args)) {
+				$i++;
+
+			} elseif (array_key_exists($name, $args)) {
+				// continue with process
+
+			} elseif (array_key_exists($name, $supplemental)) {
+				$args[$name] = $supplemental[$name];
+
+			} else {
 				continue;
 			}
 
 			if ($def === NULL) {
-				if ((string) $args[$name] === '') $args[$name] = NULL; // unnecessary
+				if ((string) $args[$name] === '') $args[$name] = NULL; // value transmit is unnecessary
 			} else {
 				settype($args[$name], gettype($def));
 				if ($args[$name] === $def) $args[$name] = NULL;
 			}
-			$i++;
 		}
 
 		if (array_key_exists($i, $args)) {
-			throw new InvalidLinkException("Extra parameter for '$class:$method'.");
+			throw new InvalidLinkException("Extra parameter for signal '$class:$method'.");
 		}
 	}
 
