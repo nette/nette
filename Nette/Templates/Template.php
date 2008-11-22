@@ -246,14 +246,10 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 			reset($this->filters);
 			while (list(, $filter) = each($this->filters)) {/**/
-				if ($filter instanceof /*Nette\*/Callback) {
-					$content = $filter->__invoke($this, $content);
-				} else/**/ {
-					if (!is_callable($filter)) {
-						throw new /*\*/InvalidStateException("Filter must be valid PHP callback or Nette\Callback object.");
-					}
-					$content = call_user_func($filter, $this, $content);
+				if (!is_callable($filter)) {
+					throw new /*\*/InvalidStateException("Filter must be valid PHP callback object.");
 				}
+				$content = call_user_func($filter, $this, $content);
 			}
 
 			$content = "<?php\n// template $this->file\n?>$content";

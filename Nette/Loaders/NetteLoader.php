@@ -58,7 +58,6 @@ class NetteLoader extends AutoLoader
 		'badsignalexception' => '/Application/BadSignalException.php',
 		'button' => '/Forms/Controls/Button.php',
 		'cache' => '/Caching/Cache.php',
-		'callback' => '/Callback.php',
 		'checkbox' => '/Forms/Controls/Checkbox.php',
 		'collection' => '/Collections/Collection.php',
 		'component' => '/Component.php',
