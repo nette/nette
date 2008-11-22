@@ -1,4 +1,4 @@
-<?php //netteloader=IDibiVariable,IDataSource,IDibiProfiler,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiRow,DibiTranslator,DibiVariable,DibiTable,DibiDataSource,DibiFluent,DibiDatabaseInfo,DibiTableInfo,DibiColumnInfo,DibiForeignKeyInfo,DibiIndexInfo,DibiProfiler,dibi,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
+<?php //netteloader=IDibiVariable,IDataSource,IDibiProfiler,IDibiDriver,DibiObject,DibiException,DibiDriverException,DibiConnection,DibiResult,DibiRow,DibiTranslator,DibiVariable,DibiTableX,DibiTable,DibiDataSource,DibiFluent,DibiDatabaseInfo,DibiTableInfo,DibiColumnInfo,DibiForeignKeyInfo,DibiIndexInfo,DibiProfiler,dibi,DibiMsSqlDriver,DibiMySqlDriver,DibiMySqliDriver,DibiOdbcDriver,DibiOracleDriver,DibiPdoDriver,DibiPostgreDriver,DibiSqliteDriver
 
 /**
  * dibi - tiny'n'smart database abstraction layer
@@ -15,7 +15,7 @@
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    0.9 (revision 157 released on 2008/10/25 17:36:37)
+ * @version    1.0 (revision 170 released on 2008/11/22 15:31:38)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -68,9 +68,9 @@ disconnect();function
 query($sql);function
 affectedRows();function
 insertId($sequence);function
-begin();function
-commit();function
-rollback();function
+begin($savepoint=NULL);function
+commit($savepoint=NULL);function
+rollback($savepoint=NULL);function
 getResource();function
 escape($value,$type);function
 unescape($value,$type);function
@@ -104,7 +104,8 @@ MemberAccessException("Call to class '$class' method without name.");}if(preg_ma
 ReflectionProperty($class,$name);if($rp->isPublic()&&!$rp->isStatic()){$list=$this->$name;if(is_array($list)||$list
 instanceof
 Traversable){foreach($list
-as$handler){if(is_object($handler)){call_user_func_array(array($handler,'__invoke'),$args);}else{call_user_func_array($handler,$args);}}}return;}}if($cb=self::extensionMethod("$class::$name")){array_unshift($args,$this);return
+as$handler){if(is_object($handler)){call_user_func_array(array($handler,'__invoke'),$args);}else{call_user_func_array($handler,$args);}}}return
+NULL;}}if($cb=self::extensionMethod("$class::$name")){array_unshift($args,$this);return
 call_user_func_array($cb,$args);}throw
 new
 MemberAccessException("Call to undefined method $class::$name().");}public
@@ -115,7 +116,9 @@ new
 MemberAccessException("Call to undefined static method $class::$name().");}public
 static
 function
-extensionMethod($name,$callback=NULL){if(self::$extMethods===NULL||$name===NULL){$list=get_defined_functions();foreach($list['user']as$fce){$pair=explode('_prototype_',$fce);if(count($pair)===2){self::$extMethods[$pair[1]][$pair[0]]=$fce;self::$extMethods[$pair[1]]['']=NULL;}}if($name===NULL)return;}$name=strtolower($name);$a=strrpos($name,':');if($a===FALSE){$class=strtolower(get_called_class());$l=&self::$extMethods[$name];}else{$class=substr($name,0,$a-1);$l=&self::$extMethods[substr($name,$a+1)];}if($callback!==NULL){$l[$class]=$callback;$l['']=NULL;return;}if(empty($l)){return
+extensionMethod($name,$callback=NULL){if(self::$extMethods===NULL||$name===NULL){$list=get_defined_functions();foreach($list['user']as$fce){$pair=explode('_prototype_',$fce);if(count($pair)===2){self::$extMethods[$pair[1]][$pair[0]]=$fce;self::$extMethods[$pair[1]]['']=NULL;}}if($name===NULL)return
+NULL;}$name=strtolower($name);$a=strrpos($name,':');if($a===FALSE){$class=strtolower(get_called_class());$l=&self::$extMethods[$name];}else{$class=substr($name,0,$a-1);$l=&self::$extMethods[substr($name,$a+1)];}if($callback!==NULL){$l[$class]=$callback;$l['']=NULL;return
+NULL;}if(empty($l)){return
 FALSE;}elseif(isset($l[''][$class])){return$l[''][$class];}$cl=$class;do{$cl=strtolower($cl);if(isset($l[$cl])){return$l[''][$class]=$l[$cl];}}while(($cl=get_parent_class($cl))!==FALSE);foreach(class_implements($class)as$cl){$cl=strtolower($cl);if(isset($l[$cl])){return$l[''][$class]=$l[$cl];}}return$l[''][$class]=FALSE;}public
 function&__get($name){$class=get_class($this);if($name===''){throw
 new
@@ -209,6 +212,12 @@ new
 DibiException('SQL translate error: '.$trans->sql);}}final
 public
 function
+sql($args){$args=func_get_args();$this->connect();$trans=new
+DibiTranslator($this->driver);if($trans->translate($args)){return$trans->sql;}else{throw
+new
+DibiException('SQL translate error: '.$trans->sql);}}final
+public
+function
 test($args){$args=func_get_args();$this->connect();$trans=new
 DibiTranslator($this->driver);$ok=$trans->translate($args);dibi::dump($trans->sql);return$ok;}final
 public
@@ -224,17 +233,19 @@ insertId($sequence=NULL){$id=$this->driver->insertId($sequence);if($id<1)throw
 new
 DibiException('Cannot retrieve last generated ID.');return(int)$id;}public
 function
-begin(){$this->connect();if($this->inTxn){throw
+begin($savepoint=NULL){$this->connect();if(!$savepoint&&$this->inTxn){throw
 new
-DibiException('There is already an active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::BEGIN);}$this->driver->begin();$this->inTxn=TRUE;if(isset($ticket)){$this->profiler->after($ticket);}}public
+DibiException('There is already an active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::BEGIN,$savepoint);}if($savepoint&&!$this->inTxn){$this->driver->begin();}$this->driver->begin($savepoint);$this->inTxn=TRUE;if(isset($ticket)){$this->profiler->after($ticket);}}public
 function
-commit(){if(!$this->inTxn){throw
+commit($savepoint=NULL){if(!$this->inTxn){throw
 new
-DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::COMMIT);}$this->driver->commit();$this->inTxn=FALSE;if(isset($ticket)){$this->profiler->after($ticket);}}public
+DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::COMMIT,$savepoint);}$this->driver->commit($savepoint);$this->inTxn=(bool)$savepoint;if(isset($ticket)){$this->profiler->after($ticket);}}public
 function
-rollback(){if(!$this->inTxn){throw
+rollback($savepoint=NULL){if(!$this->inTxn){throw
 new
-DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::ROLLBACK);}$this->driver->rollback();$this->inTxn=FALSE;if(isset($ticket)){$this->profiler->after($ticket);}}public
+DibiException('There is no active transaction.');}if($this->profiler!==NULL){$ticket=$this->profiler->before($this,IDibiProfiler::ROLLBACK,$savepoint);}$this->driver->rollback($savepoint);$this->inTxn=(bool)$savepoint;if(isset($ticket)){$this->profiler->after($ticket);}}public
+function
+inTransaction(){return$this->inTxn;}public
 function
 escape($value,$type=dibi::FIELD_TEXT){$this->connect();return$this->driver->escape($value,$type);}public
 function
@@ -279,7 +290,7 @@ DibiResult
 extends
 DibiObject
 implements
-IDataSource{private$driver;private$xlat;private$metaCache;private$fetched=FALSE;private$withTables=FALSE;public
+IDataSource{private$driver;private$xlat;private$meta;private$fetched=FALSE;private$withTables=FALSE;private$class='DibiRow';public
 function
 __construct($driver,$config){$this->driver=$driver;if(!empty($config[dibi::RESULT_WITH_TABLES])){$this->setWithTables(TRUE);}}public
 function
@@ -298,19 +309,21 @@ function
 free(){if($this->driver!==NULL){$this->driver->free();$this->driver=NULL;}}final
 public
 function
-setWithTables($val){if($val){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
-as$col){$name=$col['table']==''?$col['name']:($col['table'].'.'.$col['name']);if(isset($cols[$name])){$fix=1;while(isset($cols[$name.'#'.$fix]))$fix++;$name.='#'.$fix;}$cols[$name]=TRUE;}$this->withTables=array_keys($cols);}else{$this->withTables=FALSE;}}final
+setWithTables($val){if($val){$cols=array();foreach($this->getMeta()as$info){$name=$info['fullname'];if(isset($cols[$name])){$fix=1;while(isset($cols[$name.'#'.$fix]))$fix++;$name.='#'.$fix;}$cols[$name]=TRUE;}$this->withTables=array_keys($cols);}else{$this->withTables=FALSE;}}final
 public
 function
-getWithTables(){return(bool)$this->withTables;}final
+getWithTables(){return(bool)$this->withTables;}public
+function
+setRowClass($class){$this->class=$class;}public
+function
+getRowClass(){return$this->class;}final
 public
 function
 fetch(){if($this->withTables===FALSE){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
 FALSE;}else{$row=$this->getDriver()->fetch(FALSE);if(!is_array($row))return
 FALSE;$row=array_combine($this->withTables,$row);}$this->fetched=TRUE;if($this->xlat!==NULL){foreach($this->xlat
 as$col=>$type){if(isset($row[$col])){$row[$col]=$this->convert($row[$col],$type['type'],$type['format']);}}}return
-new
-DibiRow($row,2);}final
+new$this->class($row);}final
 public
 function
 fetchSingle(){$row=$this->getDriver()->fetch(TRUE);if(!is_array($row))return
@@ -342,6 +355,9 @@ function
 setType($col,$type,$format=NULL){$this->xlat[$col]=array('type'=>$type,'format'=>$format);}final
 public
 function
+detectTypes(){foreach($this->getMeta()as$info){$this->xlat[$info['name']]=array('type'=>$info['type'],'format'=>NULL);}}final
+public
+function
 setTypes(array$types){$this->xlat=$types;}final
 public
 function
@@ -359,12 +375,10 @@ dibi::FIELD_DATETIME:$value=strtotime($value);return$format===NULL?$value:date($
 dibi::FIELD_BOOL:return((bool)$value)&&$value!=='f'&&$value!=='F';default:return$value;}}final
 public
 function
-getColumns(){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
-as$info){$cols[]=new
+getColumns(){$cols=array();foreach($this->getMeta()as$info){$cols[]=new
 DibiColumnInfo($this->driver,$info);}return$cols;}public
 function
-getColumnNames($withTables=FALSE){if($this->metaCache===NULL){$this->metaCache=$this->getDriver()->getColumnsMeta();}$cols=array();foreach($this->metaCache
-as$info){$cols[]=(!$withTables||$info['table']===NULL)?$info['name']:($info['table'].'.'.$info['name']);}return$cols;}final
+getColumnNames($withTables=FALSE){$cols=array();foreach($this->getMeta()as$info){$cols[]=$info[$withTables?'fullname':'name'];}return$cols;}final
 public
 function
 dump(){$i=0;$this->seek(0);while($row=$this->fetch()){if($i===0){echo"\n<table class=\"dump\">\n<thead>\n\t<tr>\n\t\t<th>#row</th>\n";foreach($row
@@ -381,10 +395,15 @@ count(){return$this->rowCount();}private
 function
 getDriver(){if($this->driver===NULL){throw
 new
-InvalidStateException('Resultset was released from memory.');}return$this->driver;}}class
+InvalidStateException('Resultset was released from memory.');}return$this->driver;}private
+function
+getMeta(){if($this->meta===NULL){$this->meta=$this->getDriver()->getColumnsMeta();foreach($this->meta
+as&$row){$row['type']=DibiColumnInfo::detectType($row['nativetype']);}}return$this->meta;}}class
 DibiRow
 extends
-ArrayObject{}final
+ArrayObject{public
+function
+__construct($arr){parent::__construct($arr,2);}}final
 class
 DibiTranslator
 extends
@@ -406,7 +425,7 @@ as$k=>$v){$pair=explode('%',$k,2);$vx[]=$this->delimite($pair[0]).'='.$this->for
 implode($operator,$vx);case'l':foreach($value
 as$k=>$v){$pair=explode('%',$k,2);$vx[]=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return'('.implode(', ',$vx).')';case'v':foreach($value
 as$k=>$v){$pair=explode('%',$k,2);$kx[]=$this->delimite($pair[0]);$vx[]=$this->formatValue($v,isset($pair[1])?$pair[1]:FALSE);}return'('.implode(', ',$kx).') VALUES ('.implode(', ',$vx).')';case'by':foreach($value
-as$k=>$v){if(is_string($k)){$v=(is_string($v)&&strcasecmp($v,'desc'))||$v>0?'ASC':'DESC';$vx[]=$this->delimite($k).' '.$v;}else{$vx[]=$this->delimite($v);}}return
+as$k=>$v){if(is_string($k)){$v=(is_string($v)&&strncasecmp($v,'d',1))||$v>0?'ASC':'DESC';$vx[]=$this->delimite($k).' '.$v;}else{$vx[]=$this->delimite($v);}}return
 implode(', ',$vx);default:foreach($value
 as$v){$vx[]=$this->formatValue($v,$modifier);}return
 implode(', ',$vx);}}if($modifier){if($value===NULL){return'NULL';}if($value
@@ -431,7 +450,7 @@ __construct($value,$modifier){$this->value=$value;$this->modifier=$modifier;}pub
 function
 toSql(DibiTranslator$translator,$modifier){return$translator->formatValue($this->value,$this->modifier);}}abstract
 class
-DibiTable
+DibiTableX
 extends
 DibiObject{public
 static$primaryMask='id';public
@@ -447,7 +466,7 @@ getConnection(){return$this->connection;}protected
 function
 setup(){if($this->name===NULL){$name=$this->getClass();if(FALSE!==($pos=strrpos($name,':'))){$name=substr($name,$pos+1);}if(self::$lowerCase){$name=strtolower($name);}$this->name=$name;}if($this->primary===NULL){$this->primary=str_replace(array('%p','%s'),array($this->name,trim($this->name,'s')),self::$primaryMask);}}public
 function
-insert($data){$this->connection->query('INSERT INTO %n',$this->name,'%v',$this->prepare($data));if($this->primaryAutoIncrement){return$this->connection->insertId();}}public
+insert($data){$this->connection->query('INSERT INTO %n',$this->name,'%v',$this->prepare($data));return$this->primaryAutoIncrement?$this->connection->insertId():NULL;}public
 function
 update($where,$data){$data=$this->prepare($data);if($where===NULL&&isset($data[$this->primary])){;$where=$data[$this->primary];unset($data[$this->primary]);}$this->connection->query('UPDATE %n',$this->name,'SET %a',$data,'WHERE %n',$this->primary,'IN ('.$this->primaryModifier,$where,')');return$this->connection->affectedRows();}public
 function
@@ -464,13 +483,13 @@ function
 fetch($conditions){if(is_array($conditions)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',$conditions))->fetch();}return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %n='.$this->primaryModifier,$this->primary,$conditions))->fetch();}public
 function
 createBlank(){$row=new
-DibiRow($this->blankRow,2);$row[$this->primary]=NULL;return$row;}protected
+DibiRow($this->blankRow);$row[$this->primary]=NULL;return$row;}protected
 function
 prepare($data){if(is_object($data)){return(array)$data;}elseif(is_array($data)){return$data;}throw
 new
 InvalidArgumentException('Dataset must be array or anonymous object.');}protected
 function
-complete($res){$res->setTypes($this->types);return$res;}public
+complete($res){if(is_array($this->types)){$res->setTypes($this->types);}elseif($this->types===TRUE){$res->detectTypes();}return$res;}public
 function
 command(){return
 new
@@ -480,7 +499,11 @@ select($args){$args=func_get_args();return$this->command()->__call('select',$arg
 function
 __call($name,$args){if(strncmp($name,'fetchBy',7)===0){$single=TRUE;$name=substr($name,7);}elseif(strncmp($name,'fetchAllBy',10)===0){$name=substr($name,10);}else{parent::__call($name,$args);}$parts=explode('_and_',strtolower(preg_replace('#(.)(?=[A-Z])#','$1_',$name)));if(count($parts)!==count($args)){throw
 new
-InvalidArgumentException("Magic fetch expects ".count($parts)." parameters, but ".count($args)." was given.");}if(isset($single)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args),'LIMIT 1'))->fetch();}else{return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args)))->fetchAll();}}}class
+InvalidArgumentException("Magic fetch expects ".count($parts)." parameters, but ".count($args)." was given.");}if(isset($single)){return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args),'LIMIT 1'))->fetch();}else{return$this->complete($this->connection->query('SELECT * FROM %n',$this->name,'WHERE %and',array_combine($parts,$args)))->fetchAll();}}}abstract
+class
+DibiTable
+extends
+DibiTableX{}class
 DibiDataSource
 extends
 DibiObject
@@ -489,7 +512,7 @@ IDataSource{private$connection;private$sql;private$count;public
 function
 __construct($sql,DibiConnection$connection=NULL){if(strpos($sql,' ')===FALSE){$this->sql=$sql;}else{$this->sql='('.$sql.') AS [source]';}$this->connection=$connection===NULL?dibi::getConnection():$connection;}public
 function
-getIterator($offset=NULL,$limit=NULL,$cols=NULL){return$this->connection->query('
+getIterator($offset=NULL,$limit=NULL){return$this->connection->query('
 			SELECT *
 			FROM',$this->sql,'
 			%ofs %lmt',$offset,$limit);}public
@@ -505,14 +528,16 @@ static$separators=array('SELECT'=>',','FROM'=>FALSE,'WHERE'=>'AND','GROUP BY'=>'
 function
 __construct(DibiConnection$connection){$this->connection=$connection;}public
 function
-__call($clause,$args){$clause=self::_formatClause($clause);if($this->command===NULL){if(isset(self::$masks[$clause])){$this->clauses=array_fill_keys(self::$masks[$clause],NULL);}$this->cursor=&$this->clauses[$clause];$this->cursor=array();$this->command=$clause;}if(count($args)===1){$arg=$args[0];if($arg===TRUE){$args=array();}elseif(is_string($arg)&&preg_match('#^[a-z][a-z0-9_.]*$#i',$arg)){$args=array('%n',$arg);}elseif(is_array($arg)){if(isset(self::$modifiers[$clause])){$args=array(self::$modifiers[$clause],$arg);}elseif(is_string(key($arg))){$args=array('%a',$arg);}}}if(array_key_exists($clause,$this->clauses)){$this->cursor=&$this->clauses[$clause];if($args===array(FALSE)){$this->cursor=NULL;return$this;}if(isset(self::$separators[$clause])){$sep=self::$separators[$clause];if($sep===FALSE){$this->cursor=array();}elseif(!empty($this->cursor)){$this->cursor[]=$sep;}}}else{if($args===array(FALSE)){return$this;}$this->cursor[]=$clause;}if($this->cursor===NULL){$this->cursor=array();}array_splice($this->cursor,count($this->cursor),0,$args);return$this;}public
+__call($clause,$args){$clause=self::_formatClause($clause);if($this->command===NULL){if(isset(self::$masks[$clause])){$this->clauses=array_fill_keys(self::$masks[$clause],NULL);}$this->cursor=&$this->clauses[$clause];$this->cursor=array();$this->command=$clause;}if(count($args)===1){$arg=$args[0];if($arg===TRUE){$args=array();}elseif(is_string($arg)&&preg_match('#^[a-z][a-z0-9_.]*$#i',$arg)){$args=array('%n',$arg);}elseif($arg
+instanceof
+self){$args=array_merge(array('('),$arg->_export(),array(')'));}elseif(is_array($arg)){if(isset(self::$modifiers[$clause])){$args=array(self::$modifiers[$clause],$arg);}elseif(is_string(key($arg))){$args=array('%a',$arg);}}}if(array_key_exists($clause,$this->clauses)){$this->cursor=&$this->clauses[$clause];if($args===array(FALSE)){$this->cursor=NULL;return$this;}if(isset(self::$separators[$clause])){$sep=self::$separators[$clause];if($sep===FALSE){$this->cursor=array();}elseif(!empty($this->cursor)){$this->cursor[]=$sep;}}}else{if($args===array(FALSE)){return$this;}$this->cursor[]=$clause;}if($this->cursor===NULL){$this->cursor=array();}array_splice($this->cursor,count($this->cursor),0,$args);return$this;}public
 function
 clause($clause,$remove=FALSE){$this->cursor=&$this->clauses[self::_formatClause($clause)];if($remove){$this->cursor=NULL;}elseif($this->cursor===NULL){$this->cursor=array();}return$this;}public
 function
 setFlag($flag,$value=TRUE){$flag=strtoupper($flag);if($value){$this->flags[$flag]=TRUE;}else{unset($this->flags[$flag]);}return$this;}final
 public
 function
-getFlag($flag,$value=TRUE){return
+getFlag($flag){return
 isset($this->flags[strtoupper($flag)]);}final
 public
 function
@@ -541,8 +566,7 @@ _formatClause($s){if($s==='order'||$s==='group'){$s.='By';trigger_error("Did you
 strtoupper(preg_replace('#[A-Z]#',' $0',$s));}final
 public
 function
-__toString(){ob_start();$this->test();return
-ob_get_clean();}}if(!function_exists('array_fill_keys')){function
+__toString(){return$this->connection->sql($this->_export());}}if(!function_exists('array_fill_keys')){function
 array_fill_keys($keys,$value){return
 array_combine($keys,array_fill(0,count($keys),$value));}}class
 DibiDatabaseInfo
@@ -564,23 +588,19 @@ new
 DibiException("Database '$this->name' has no table '$name'.");}}public
 function
 hasTable($name){$this->init();return
-isset($this->tables[strtolower($name)]);}public
-function
-getSequences(){throw
-new
-NotImplementedException;}protected
+isset($this->tables[strtolower($name)]);}protected
 function
 init(){if($this->tables===NULL){$this->tables=array();foreach($this->driver->getTables()as$info){$this->tables[strtolower($info['name'])]=new
 DibiTableInfo($this->driver,$info);}}}}class
 DibiTableInfo
 extends
-DibiObject{private$driver;private$info;private$columns;private$foreignKeys;private$indexes;private$primaryKey;public
+DibiObject{private$driver;private$name;private$view;private$columns;private$foreignKeys;private$indexes;private$primaryKey;public
 function
-__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->info=$info;}public
+__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->name=$info['name'];$this->view=!empty($info['view']);}public
 function
-getName(){return$this->info['name'];}public
+getName(){return$this->name;}public
 function
-isView(){return!empty($this->info['view']);}public
+isView(){return$this->view;}public
 function
 getColumns(){$this->initColumns();return
 array_values($this->columns);}public
@@ -604,19 +624,22 @@ function
 initColumns(){if($this->columns===NULL){$this->columns=array();foreach($this->driver->getColumns($this->name)as$info){$this->columns[strtolower($info['name'])]=new
 DibiColumnInfo($this->driver,$info);}}}protected
 function
-initIndexes(){if($this->indexes===NULL){$this->initColumns();$this->indexes=array();foreach($this->driver->getIndexes($this->name)as$info){$cols=array();foreach($info['columns']as$name){$cols[]=$this->columns[strtolower($name)];}$name=$info['name'];$this->indexes[strtolower($name)]=new
-DibiIndexInfo($this,$name,$cols,$info['unique']);if(!empty($info['primary'])){$this->primaryKey=$this->indexes[strtolower($name)];}}}}protected
+initIndexes(){if($this->indexes===NULL){$this->initColumns();$this->indexes=array();foreach($this->driver->getIndexes($this->name)as$info){foreach($info['columns']as$key=>$name){$info['columns'][$key]=$this->columns[strtolower($name)];}$this->indexes[strtolower($info['name'])]=new
+DibiIndexInfo($info);if(!empty($info['primary'])){$this->primaryKey=$this->indexes[strtolower($info['name'])];}}}}protected
 function
 initForeignKeys(){throw
 new
 NotImplementedException;}}class
 DibiColumnInfo
 extends
-DibiObject{private$driver;private$info;public
+DibiObject{private
+static$types;private$driver;private$info;private$type;public
 function
-__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->info=$info;}public
+__construct(IDibiDriver$driver,array$info){$this->driver=$driver;$this->info=$info;$this->type=self::detectType($this->info['nativetype']);}public
 function
 getName(){return$this->info['name'];}public
+function
+hasTable(){return!empty($this->info['table']);}public
 function
 getTable(){if(empty($this->info['table'])){throw
 new
@@ -624,27 +647,30 @@ DibiException("Table name is unknown.");}return
 new
 DibiTableInfo($this->driver,array('name'=>$this->info['table']));}public
 function
-getType(){return
-isset($this->info['type'])?$this->info['type']:NULL;}public
+getType(){return$this->type;}public
 function
-getNativeType(){return
-isset($this->info['nativetype'])?$this->info['nativetype']:NULL;}public
+getNativeType(){return$this->info['nativetype'];}public
 function
 getSize(){return
 isset($this->info['size'])?(int)$this->info['size']:NULL;}public
 function
-getPrecision(){return
-isset($this->info['precision'])?(int)$this->info['precision']:NULL;}public
+isNullable(){return
+isset($this->info['nullable'])?(bool)$this->info['nullable']:NULL;}public
 function
-getScale(){return
-isset($this->info['scale'])?(int)$this->info['scale']:NULL;}public
+isAutoIncrement(){return
+isset($this->info['autoincrement'])?(bool)$this->info['autoincrement']:NULL;}public
 function
-isNullable(){return!empty($this->info['nullable']);}public
+getDefault(){return
+isset($this->info['default'])?$this->info['default']:NULL;}public
 function
-isAutoIncrement(){return!empty($this->info['autoincrement']);}public
+getVendorInfo($key){return
+isset($this->info['vendor'][$key])?$this->info['vendor'][$key]:NULL;}public
+static
 function
-getDefaultValue(){return
-isset($this->info['default'])?$this->info['default']:NULL;}}class
+detectType($type){static$patterns=array('BYTE|COUNTER|SERIAL|INT|LONG'=>dibi::FIELD_INTEGER,'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC'=>dibi::FIELD_FLOAT,'^TIME$'=>dibi::FIELD_TIME,'TIME'=>dibi::FIELD_DATETIME,'YEAR|DATE'=>dibi::FIELD_DATE,'BYTEA|BLOB|BIN'=>dibi::FIELD_BINARY,'BOOL|BIT'=>dibi::FIELD_BOOL);if(!isset(self::$types[$type])){self::$types[$type]=dibi::FIELD_TEXT;foreach($patterns
+as$s=>$val){if(preg_match("#$s#i",$type)){return
+self::$types[$type]=$val;}}}return
+self::$types[$type];}}class
 DibiForeignKeyInfo
 extends
 DibiObject{private$name;private$references;public
@@ -656,15 +682,17 @@ function
 getReferences(){return$this->references;}}class
 DibiIndexInfo
 extends
-DibiObject{private$name;private$columns;private$unique;public
+DibiObject{private$info;public
 function
-__construct($name,array$columns,$unique){$this->name=$name;$this->columns=$columns;$this->unique=(bool)$unique;}public
+__construct(array$info){$this->info=$info;}public
 function
-getName(){return$this->name;}public
+getName(){return$this->info['name'];}public
 function
-getColumns(){return$this->columns;}public
+getColumns(){return$this->info['columns'];}public
 function
-isUnique(){return$this->unique;}}class
+isUnique(){return!empty($this->info['unique']);}public
+function
+isPrimary(){return!empty($this->info['primary']);}}class
 DibiProfiler
 extends
 DibiObject
@@ -685,7 +713,7 @@ after($ticket,$res=NULL){if(!isset($this->tickets[$ticket])){throw
 new
 InvalidArgumentException('Bad ticket number.');}list($connection,$event,$sql)=$this->tickets[$ticket];if(($event&$this->filter)===0)return;if($event&self::QUERY){if($this->useFirebug){self::$table[]=array(sprintf('%0.3f',dibi::$elapsedTime*1000),trim($sql),$res
 instanceof
-DibiResult?count($res):'-',$connection->getConfig('driver').'/'.$connection->getConfig('name'));header('X-Wf-Protocol-dibi: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');header('X-Wf-dibi-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.2.0');header('X-Wf-dibi-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');$payload=array(array('Type'=>'TABLE','Label'=>'dibi profiler ('.dibi::$numOfQueries.' SQL queries took '.sprintf('%0.3f',dibi::$totalTime*1000).' ms)'),self::$table);$payload=function_exists('json_encode')?json_encode($payload):self::json_encode($payload);foreach(str_split($payload,4990)as$num=>$s){$num++;header("X-Wf-dibi-1-1-$num: |$s|\\");}header("X-Wf-dibi-1-1-$num: |$s|");header("X-Wf-dibi-Index: $num");}if($this->file){$this->writeFile("OK: ".$sql.($res
+DibiResult?count($res):'-',$connection->getConfig('driver').'/'.$connection->getConfig('name'));header('X-Wf-Protocol-dibi: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');header('X-Wf-dibi-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.2.0');header('X-Wf-dibi-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');$payload=array(array('Type'=>'TABLE','Label'=>'dibi profiler ('.dibi::$numOfQueries.' SQL queries took '.sprintf('%0.3f',dibi::$totalTime*1000).' ms)'),self::$table);$payload=function_exists('json_encode')?json_encode($payload):self::json_encode($payload);foreach(str_split($payload,4990)as$num=>$s){$num++;header("X-Wf-dibi-1-1-d$num: |$s|\\");}header("X-Wf-dibi-1-1-d$num: |$s|");}if($this->file){$this->writeFile("OK: ".$sql.($res
 instanceof
 DibiResult?";\n-- rows: ".count($res):'')."\n-- takes: ".sprintf('%0.3f',dibi::$elapsedTime*1000).' ms'."\n-- driver: ".$connection->getConfig('driver').'/'.$connection->getConfig('name')."\n-- ".date('Y-m-d H:i:s')."\n\n");}}}public
 function
@@ -698,8 +726,17 @@ json_encode($val){if(is_array($val)&&(!$val||array_keys($val)===range(0,count($v
 as$k=>$v){$tmp[]=self::json_encode((string)$k).':'.self::json_encode($v);}return'{'.implode(',',$tmp).'}';}if(is_string($val)){$val=str_replace(array("\\","\x00"),array("\\\\","\\u0000"),$val);return'"'.addcslashes($val,"\x8\x9\xA\xC\xD/\"").'"';}if(is_int($val)||is_float($val)){return
 rtrim(rtrim(number_format($val,5,'.',''),'0'),'.');}if(is_bool($val)){return$val?'true':'false';}return'null';}}class
 dibi{const
-FIELD_TEXT='s',FIELD_BINARY='bin',FIELD_BOOL='b',FIELD_INTEGER='i',FIELD_FLOAT='f',FIELD_DATE='d',FIELD_DATETIME='t',IDENTIFIER='n';const
-VERSION='0.9',REVISION='157 released on 2008/10/25 17:36:37';const
+FIELD_TEXT='s';const
+FIELD_BINARY='bin';const
+FIELD_BOOL='b';const
+FIELD_INTEGER='i';const
+FIELD_FLOAT='f';const
+FIELD_DATE='d';const
+FIELD_DATETIME='t';const
+FIELD_TIME='t';const
+IDENTIFIER='n';const
+VERSION='1.0';const
+REVISION='170 released on 2008/11/22 15:31:38';const
 RESULT_WITH_TABLES='resultWithTables';private
 static$registry=array();private
 static$connection;private
@@ -781,13 +818,13 @@ insertId($sequence=NULL){return
 self::getConnection()->insertId($sequence);}public
 static
 function
-begin(){self::getConnection()->begin();}public
+begin($savepoint=NULL){self::getConnection()->begin($savepoint);}public
 static
 function
-commit(){self::getConnection()->commit();}public
+commit($savepoint=NULL){self::getConnection()->commit($savepoint);}public
 static
 function
-rollback(){self::getConnection()->rollback();}public
+rollback($savepoint=NULL){self::getConnection()->rollback($savepoint);}public
 static
 function
 getDatabaseInfo(){return
@@ -886,15 +923,14 @@ function
 affectedRows(){return
 mssql_rows_affected($this->connection);}public
 function
-insertId($sequence){throw
-new
-NotSupportedException('MS SQL does not support autoincrementing.');}public
+insertId($sequence){$res=mssql_query('SELECT @@IDENTITY',$this->connection);if(is_resource($res)){$row=mssql_fetch_row($res);return$row[0];}return
+FALSE;}public
 function
-begin(){$this->query('BEGIN TRANSACTION');}public
+begin($savepoint=NULL){$this->query('BEGIN TRANSACTION');}public
 function
-commit(){$this->query('COMMIT');}public
+commit($savepoint=NULL){$this->query('COMMIT');}public
 function
-rollback(){$this->query('ROLLBACK');}public
+rollback($savepoint=NULL){$this->query('ROLLBACK');}public
 function
 getResource(){return$this->connection;}public
 function
@@ -929,7 +965,7 @@ mssql_data_seek($this->resultSet,$row);}public
 function
 free(){mssql_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mssql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mssql_fetch_field($this->resultSet,$i);$info['table']=$info['column_source'];$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
+getColumnsMeta(){$count=mssql_num_fields($this->resultSet);$res=array();for($i=0;$i<$count;$i++){$row=(array)mssql_fetch_field($this->resultSet,$i);$res[]=array('name'=>$row['name'],'fullname'=>$row['column_source']?$row['column_source'].'.'.$row['name']:$row['name'],'table'=>$row['column_source'],'nativetype'=>$row['type']);}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
@@ -981,11 +1017,11 @@ function
 insertId($sequence){return
 mysql_insert_id($this->connection);}public
 function
-begin(){$this->query('START TRANSACTION');}public
+begin($savepoint=NULL){$this->query($savepoint?"SAVEPOINT $savepoint":'START TRANSACTION');}public
 function
-commit(){$this->query('COMMIT');}public
+commit($savepoint=NULL){$this->query($savepoint?"RELEASE SAVEPOINT $savepoint":'COMMIT');}public
 function
-rollback(){$this->query('ROLLBACK');}public
+rollback($savepoint=NULL){$this->query($savepoint?"ROLLBACK TO SAVEPOINT $savepoint":'ROLLBACK');}public
 function
 getResource(){return$this->connection;}public
 function
@@ -1022,19 +1058,16 @@ mysql_data_seek($this->resultSet,$row);}public
 function
 free(){mysql_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mysql_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mysql_fetch_field($this->resultSet,$i);$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
+getColumnsMeta(){$count=mysql_num_fields($this->resultSet);$res=array();for($i=0;$i<$count;$i++){$row=(array)mysql_fetch_field($this->resultSet,$i);$res[]=array('name'=>$row['name'],'table'=>$row['table'],'fullname'=>$row['table']?$row['table'].'.'.$row['name']:$row['name'],'nativetype'=>strtoupper($row['type']),'vendor'=>$row);}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
-getTables(){$this->query("SHOW TABLES");$res=array();while($row=mysql_fetch_array($this->resultSet,MYSQL_NUM)){$res[]=array('name'=>$row[0]);}$this->free();return$res;}public
+getTables(){$this->query("SHOW FULL TABLES");$res=array();while($row=$this->fetch(FALSE)){$res[]=array('name'=>$row[0],'view'=>isset($row[1])&&$row[1]==='VIEW');}$this->free();return$res;}public
 function
-getColumns($table){throw
-new
-NotImplementedException;}public
+getColumns($table){$this->query("SHOW COLUMNS FROM `$table`");$res=array();while($row=$this->fetch(TRUE)){$type=explode('(',$row['Type']);$res[]=array('name'=>$row['Field'],'table'=>$table,'nativetype'=>strtoupper($type[0]),'size'=>isset($type[1])?(int)$type[1]:NULL,'nullable'=>$row['Null']==='YES','default'=>$row['Default'],'autoincrement'=>$row['Extra']==='auto_increment');}$this->free();return$res;}public
 function
-getIndexes($table){throw
-new
-NotImplementedException;}public
+getIndexes($table){$this->query("SHOW INDEX FROM `$table`");$res=array();while($row=$this->fetch(TRUE)){$res[$row['Key_name']]['name']=$row['Key_name'];$res[$row['Key_name']]['unique']=!$row['Non_unique'];$res[$row['Key_name']]['primary']=$row['Key_name']==='PRIMARY';$res[$row['Key_name']]['columns'][$row['Seq_in_index']-1]=$row['Column_name'];}$this->free();return
+array_values($res);}public
 function
 getForeignKeys($table){throw
 new
@@ -1070,11 +1103,11 @@ function
 insertId($sequence){return
 mysqli_insert_id($this->connection);}public
 function
-begin(){$this->query('START TRANSACTION');}public
+begin($savepoint=NULL){$this->query($savepoint?"SAVEPOINT $savepoint":'START TRANSACTION');}public
 function
-commit(){$this->query('COMMIT');}public
+commit($savepoint=NULL){$this->query($savepoint?"RELEASE SAVEPOINT $savepoint":'COMMIT');}public
 function
-rollback(){$this->query('ROLLBACK');}public
+rollback($savepoint=NULL){$this->query($savepoint?"ROLLBACK TO SAVEPOINT $savepoint":'ROLLBACK');}public
 function
 getResource(){return$this->connection;}public
 function
@@ -1111,19 +1144,16 @@ mysqli_data_seek($this->resultSet,$row);}public
 function
 free(){mysqli_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=mysqli_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$info=(array)mysqli_fetch_field_direct($this->resultSet,$i);$info['nativetype']=$info['type'];$meta[]=$info;}return$meta;}public
+getColumnsMeta(){static$types;if(empty($types)){$consts=get_defined_constants(TRUE);foreach($consts['mysqli']as$key=>$value){if(strncmp($key,'MYSQLI_TYPE_',12)===0){$types[$value]=substr($key,12);}}}$count=mysqli_num_fields($this->resultSet);$res=array();for($i=0;$i<$count;$i++){$row=(array)mysqli_fetch_field_direct($this->resultSet,$i);$res[]=array('name'=>$row['name'],'table'=>$row['orgtable'],'fullname'=>$row['table']?$row['table'].'.'.$row['name']:$row['name'],'nativetype'=>$types[$row['type']],'vendor'=>$row);}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
-getTables(){$this->query("SHOW TABLES");$res=array();while($row=mysqli_fetch_array($this->resultSet,MYSQLI_NUM)){$res[]=array('name'=>$row[0]);}$this->free();return$res;}public
+getTables(){$this->query("SHOW FULL TABLES");$res=array();while($row=$this->fetch(FALSE)){$res[]=array('name'=>$row[0],'view'=>isset($row[1])&&$row[1]==='VIEW');}$this->free();return$res;}public
 function
-getColumns($table){throw
-new
-NotImplementedException;}public
+getColumns($table){$this->query("SHOW COLUMNS FROM `$table`");$res=array();while($row=$this->fetch(TRUE)){$type=explode('(',$row['Type']);$res[]=array('name'=>$row['Field'],'table'=>$table,'nativetype'=>strtoupper($type[0]),'size'=>isset($type[1])?(int)$type[1]:NULL,'nullable'=>$row['Null']==='YES','default'=>$row['Default'],'autoincrement'=>$row['Extra']==='auto_increment');}$this->free();return$res;}public
 function
-getIndexes($table){throw
-new
-NotImplementedException;}public
+getIndexes($table){$this->query("SHOW INDEX FROM `$table`");$res=array();while($row=$this->fetch(TRUE)){$res[$row['Key_name']]['name']=$row['Key_name'];$res[$row['Key_name']]['unique']=!$row['Non_unique'];$res[$row['Key_name']]['primary']=$row['Key_name']==='PRIMARY';$res[$row['Key_name']]['columns'][$row['Seq_in_index']-1]=$row['Column_name'];}$this->free();return
+array_values($res);}public
 function
 getForeignKeys($table){throw
 new
@@ -1156,15 +1186,15 @@ insertId($sequence){throw
 new
 NotSupportedException('ODBC does not support autoincrementing.');}public
 function
-begin(){if(!odbc_autocommit($this->connection,FALSE)){throw
+begin($savepoint=NULL){if(!odbc_autocommit($this->connection,FALSE)){throw
 new
 DibiDriverException(odbc_errormsg($this->connection).' '.odbc_error($this->connection));}}public
 function
-commit(){if(!odbc_commit($this->connection)){throw
+commit($savepoint=NULL){if(!odbc_commit($this->connection)){throw
 new
 DibiDriverException(odbc_errormsg($this->connection).' '.odbc_error($this->connection));}odbc_autocommit($this->connection,TRUE);}public
 function
-rollback(){if(!odbc_rollback($this->connection)){throw
+rollback($savepoint=NULL){if(!odbc_rollback($this->connection)){throw
 new
 DibiDriverException(odbc_errormsg($this->connection).' '.odbc_error($this->connection));}odbc_autocommit($this->connection,TRUE);}public
 function
@@ -1202,15 +1232,13 @@ TRUE;}public
 function
 free(){odbc_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=odbc_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>odbc_field_name($this->resultSet,$i),'table'=>NULL,'nativetype'=>odbc_field_type($this->resultSet,$i),'length'=>odbc_field_len($this->resultSet,$i),'scale'=>odbc_field_scale($this->resultSet,$i),'precision'=>odbc_field_precision($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$count=odbc_num_fields($this->resultSet);$res=array();for($i=1;$i<=$count;$i++){$res[]=array('name'=>odbc_field_name($this->resultSet,$i),'table'=>NULL,'fullname'=>odbc_field_name($this->resultSet,$i),'nativetype'=>odbc_field_type($this->resultSet,$i));}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
-getTables(){$result=odbc_tables($this->connection);$res=array();while(odbc_fetch_row($result)){$res[]=array('name'=>odbc_result($result,'TABLE_NAME'));}return$res;}public
+getTables(){$result=odbc_tables($this->connection);$res=array();while($row=odbc_fetch_array($result)){if($row['TABLE_TYPE']==='TABLE'||$row['TABLE_TYPE']==='VIEW'){$res[]=array('name'=>$row['TABLE_NAME'],'view'=>$row['TABLE_TYPE']==='VIEW');}}odbc_free_result($result);return$res;}public
 function
-getColumns($table){throw
-new
-NotImplementedException;}public
+getColumns($table){$result=odbc_columns($this->connection);$res=array();while($row=odbc_fetch_array($result)){if($row['TABLE_NAME']===$table){$res[]=array('name'=>$row['COLUMN_NAME'],'table'=>$table,'nativetype'=>$row['TYPE_NAME'],'size'=>$row['COLUMN_SIZE'],'nullable'=>(bool)$row['NULLABLE'],'default'=>$row['COLUMN_DEF']);}}odbc_free_result($result);return$res;}public
 function
 getIndexes($table){throw
 new
@@ -1250,13 +1278,13 @@ insertId($sequence){throw
 new
 NotSupportedException('Oracle does not support autoincrementing.');}public
 function
-begin(){$this->autocommit=FALSE;}public
+begin($savepoint=NULL){$this->autocommit=FALSE;}public
 function
-commit(){if(!oci_commit($this->connection)){$err=oci_error($this->connection);throw
+commit($savepoint=NULL){if(!oci_commit($this->connection)){$err=oci_error($this->connection);throw
 new
 DibiDriverException($err['message'],$err['code']);}$this->autocommit=TRUE;}public
 function
-rollback(){if(!oci_rollback($this->connection)){$err=oci_error($this->connection);throw
+rollback($savepoint=NULL){if(!oci_rollback($this->connection)){$err=oci_error($this->connection);throw
 new
 DibiDriverException($err['message'],$err['code']);}$this->autocommit=TRUE;}public
 function
@@ -1292,7 +1320,7 @@ NotImplementedException;}public
 function
 free(){oci_free_statement($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=oci_num_fields($this->resultSet);$meta=array();for($i=1;$i<=$count;$i++){$meta[]=array('name'=>oci_field_name($this->resultSet,$i),'table'=>NULL,'nativetype'=>oci_field_type($this->resultSet,$i),'size'=>oci_field_size($this->resultSet,$i),'scale'=>oci_field_scale($this->resultSet,$i),'precision'=>oci_field_precision($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$count=oci_num_fields($this->resultSet);$res=array();for($i=1;$i<=$count;$i++){$res[]=array('name'=>oci_field_name($this->resultSet,$i),'table'=>NULL,'fullname'=>oci_field_name($this->resultSet,$i),'nativetype'=>oci_field_type($this->resultSet,$i));}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
@@ -1344,15 +1372,15 @@ affectedRows(){return$this->affectedRows;}public
 function
 insertId($sequence){return$this->connection->lastInsertId();}public
 function
-begin(){if(!$this->connection->beginTransaction()){$err=$this->connection->errorInfo();throw
+begin($savepoint=NULL){if(!$this->connection->beginTransaction()){$err=$this->connection->errorInfo();throw
 new
 DibiDriverException("SQLSTATE[$err[0]]: $err[2]",$err[1]);}}public
 function
-commit(){if(!$this->connection->commit()){$err=$this->connection->errorInfo();throw
+commit($savepoint=NULL){if(!$this->connection->commit()){$err=$this->connection->errorInfo();throw
 new
 DibiDriverException("SQLSTATE[$err[0]]: $err[2]",$err[1]);}}public
 function
-rollback(){if(!$this->connection->rollBack()){$err=$this->connection->errorInfo();throw
+rollback($savepoint=NULL){if(!$this->connection->rollBack()){$err=$this->connection->errorInfo();throw
 new
 DibiDriverException("SQLSTATE[$err[0]]: $err[2]",$err[1]);}}public
 function
@@ -1375,9 +1403,9 @@ unescape($value,$type){throw
 new
 InvalidArgumentException('Unsupported type.');}public
 function
-applyLimit(&$sql,$limit,$offset){throw
+applyLimit(&$sql,$limit,$offset){if($limit<0&&$offset<1)return;switch($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME)){case'mysql':$sql.=' LIMIT '.($limit<0?'18446744073709551615':(int)$limit).($offset>0?' OFFSET '.(int)$offset:'');break;case'pgsql':if($limit>=0)$sql.=' LIMIT '.(int)$limit;if($offset>0)$sql.=' OFFSET '.(int)$offset;break;case'sqlite':case'sqlite2':case'oci':$sql.=' LIMIT '.$limit.($offset>0?' OFFSET '.(int)$offset:'');break;case'odbc':case'mssql':if($offset<1){$sql='SELECT TOP '.(int)$limit.' * FROM ('.$sql.')';break;}default:throw
 new
-NotSupportedException('PDO does not support applying limit or offset.');}public
+NotSupportedException('PDO or driver does not support applying limit or offset.');}}public
 function
 rowCount(){throw
 new
@@ -1391,9 +1419,9 @@ DibiDriverException('Cannot seek an unbuffered result set.');}public
 function
 free(){$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=$this->resultSet->columnCount();$meta=array();for($i=0;$i<$count;$i++){$info=@$this->resultSet->getColumnsMeta($i);if($info===FALSE){throw
+getColumnsMeta(){$count=$this->resultSet->columnCount();$res=array();for($i=0;$i<$count;$i++){$row=@$this->resultSet->getColumnMeta($i);if($row===FALSE){throw
 new
-DibiDriverException('Driver does not support meta data.');}$info['nativetype']=$info['native_type'];$meta[]=$info;}return$meta;}public
+DibiDriverException('Driver does not support meta data.');}$res[]=array('name'=>$row['name'],'table'=>$row['table'],'nativetype'=>$row['native_type'],'fullname'=>$row['table']?$row['table'].'.'.$row['name']:$row['name'],'vendor'=>$row);}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
@@ -1444,11 +1472,11 @@ insertId($sequence){if($sequence===NULL){$has=$this->query("SELECT LASTVAL()");}
 FALSE;$row=$this->fetch(FALSE);$this->free();return
 is_array($row)?$row[0]:FALSE;}public
 function
-begin(){$this->query('START TRANSACTION');}public
+begin($savepoint=NULL){$this->query($savepoint?"SAVEPOINT $savepoint":'START TRANSACTION');}public
 function
-commit(){$this->query('COMMIT');}public
+commit($savepoint=NULL){$this->query($savepoint?"RELEASE SAVEPOINT $savepoint":'COMMIT');}public
 function
-rollback(){$this->query('ROLLBACK');}public
+rollback($savepoint=NULL){$this->query($savepoint?"ROLLBACK TO SAVEPOINT $savepoint":'ROLLBACK');}public
 function
 getResource(){return$this->connection;}public
 function
@@ -1484,21 +1512,43 @@ pg_result_seek($this->resultSet,$row);}public
 function
 free(){pg_free_result($this->resultSet);$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$hasTable=version_compare(PHP_VERSION,'5.2.0','>=');$count=pg_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$meta[]=array('name'=>pg_field_name($this->resultSet,$i),'table'=>$hasTable?pg_field_table($this->resultSet,$i):NULL,'nativetype'=>pg_field_type($this->resultSet,$i),'size'=>pg_field_size($this->resultSet,$i),'prtlen'=>pg_field_prtlen($this->resultSet,$i));}return$meta;}public
+getColumnsMeta(){$hasTable=version_compare(PHP_VERSION,'5.2.0','>=');$count=pg_num_fields($this->resultSet);$res=array();for($i=0;$i<$count;$i++){$row=array('name'=>pg_field_name($this->resultSet,$i),'table'=>$hasTable?pg_field_table($this->resultSet,$i):NULL,'nativetype'=>pg_field_type($this->resultSet,$i));$row['fullname']=$row['table']?$row['table'].'.'.$row['name']:$row['name'];$res[]=$row;}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
-getTables(){throw
+getTables(){$version=pg_version($this->connection);if($version['server']<8){throw
 new
-NotImplementedException;}public
+NotSupportedException('Reflection requires PostgreSQL 8.');}$this->query("
+			SELECT table_name as name, CAST(table_type = 'VIEW' AS INTEGER) as view
+			FROM information_schema.tables
+			WHERE table_schema = current_schema()
+		");$res=pg_fetch_all($this->resultSet);$this->free();return$res;}public
 function
-getColumns($table){throw
-new
-NotImplementedException;}public
+getColumns($table){$_table=$this->escape($table,dibi::FIELD_TEXT);$this->query("
+			SELECT indkey
+			FROM pg_class
+			LEFT JOIN pg_index on pg_class.oid = pg_index.indrelid AND pg_index.indisprimary
+			WHERE pg_class.relname = $_table
+		");$primary=(int)pg_fetch_object($this->resultSet)->indkey;$this->query("
+			SELECT *
+			FROM information_schema.columns
+			WHERE table_name = $_table AND table_schema = current_schema()
+			ORDER BY ordinal_position
+		");$res=array();while($row=$this->fetch(TRUE)){$size=(int)max($row['character_maximum_length'],$row['numeric_precision']);$res[]=array('name'=>$row['column_name'],'table'=>$table,'nativetype'=>strtoupper($row['udt_name']),'size'=>$size?$size:NULL,'nullable'=>$row['is_nullable']==='YES','default'=>$row['column_default'],'autoincrement'=>(int)$row['ordinal_position']===$primary&&substr($row['column_default'],0,7)==='nextval','vendor'=>$row);}$this->free();return$res;}public
 function
-getIndexes($table){throw
-new
-NotImplementedException;}public
+getIndexes($table){$_table=$this->escape($table,dibi::FIELD_TEXT);$this->query("
+			SELECT ordinal_position, column_name
+			FROM information_schema.columns
+			WHERE table_name = $_table AND table_schema = current_schema()
+			ORDER BY ordinal_position
+		");$columns=array();while($row=$this->fetch(TRUE)){$columns[$row['ordinal_position']]=$row['column_name'];}$this->query("
+			SELECT pg_class2.relname, indisunique, indisprimary, indkey
+			FROM pg_class
+			LEFT JOIN pg_index on pg_class.oid = pg_index.indrelid
+			INNER JOIN pg_class as pg_class2 on pg_class2.oid = pg_index.indexrelid
+			WHERE pg_class.relname = $_table
+		");$res=array();while($row=$this->fetch(TRUE)){$res[$row['relname']]['name']=$row['relname'];$res[$row['relname']]['unique']=$row['indisunique']==='t';$res[$row['relname']]['primary']=$row['indisprimary']==='t';foreach(explode(' ',$row['indkey'])as$index){$res[$row['relname']]['columns'][]=$columns[$index];}}$this->free();return
+array_values($res);}public
 function
 getForeignKeys($table){throw
 new
@@ -1530,11 +1580,11 @@ function
 insertId($sequence){return
 sqlite_last_insert_rowid($this->connection);}public
 function
-begin(){$this->query('BEGIN');}public
+begin($savepoint=NULL){$this->query('BEGIN');}public
 function
-commit(){$this->query('COMMIT');}public
+commit($savepoint=NULL){$this->query('COMMIT');}public
 function
-rollback(){$this->query('ROLLBACK');}public
+rollback($savepoint=NULL){$this->query('ROLLBACK');}public
 function
 getResource(){return$this->connection;}public
 function
@@ -1571,15 +1621,16 @@ sqlite_seek($this->resultSet,$row);}public
 function
 free(){$this->resultSet=NULL;}public
 function
-getColumnsMeta(){$count=sqlite_num_fields($this->resultSet);$meta=array();for($i=0;$i<$count;$i++){$pair=explode('.',str_replace(array('[',']'),'',sqlite_field_name($this->resultSet,$i)));if(!isset($pair[1])){array_unshift($pair,NULL);}$meta[]=array('name'=>$pair[1],'table'=>$pair[0]);}return$meta;}public
+getColumnsMeta(){$count=sqlite_num_fields($this->resultSet);$res=array();for($i=0;$i<$count;$i++){$name=str_replace(array('[',']'),'',sqlite_field_name($this->resultSet,$i));$pair=explode('.',$name);$res[]=array('name'=>isset($pair[1])?$pair[1]:$pair[0],'table'=>isset($pair[1])?$pair[0]:NULL,'fullname'=>$name,'nativetype'=>NULL);}return$res;}public
 function
 getResultResource(){return$this->resultSet;}public
 function
 getTables(){$this->query("
-			SELECT name FROM sqlite_master WHERE type='table'
-			UNION ALL SELECT name FROM sqlite_temp_master WHERE type='table' ORDER BY name
-		");return
-sqlite_fetch_all($this->resultSet,SQLITE_ASSOC);}public
+			SELECT name, type = 'view' as view FROM sqlite_master WHERE type IN ('table', 'view')
+			UNION ALL
+			SELECT name, type = 'view' as view FROM sqlite_temp_master WHERE type IN ('table', 'view')
+			ORDER BY name
+		");$res=sqlite_fetch_all($this->resultSet,SQLITE_ASSOC);$this->free();return$res;}public
 function
 getColumns($table){throw
 new

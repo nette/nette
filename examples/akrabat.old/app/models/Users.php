@@ -14,7 +14,7 @@
  *  [real_name] VARCHAR(100)  NOT NULL
  *  );
  */
-class Users extends DibiTable implements /*Nette\Security\*/IAuthenticator
+class Users extends DibiTableX implements /*Nette\Security\*/IAuthenticator
 {
 
 	/**

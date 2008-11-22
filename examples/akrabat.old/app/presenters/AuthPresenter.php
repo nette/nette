@@ -24,7 +24,6 @@ class AuthPresenter extends BasePresenter
 				$this->template->message = 'Please provide a username.';
 			} else {
 				try {
-					require_once 'models/Users.php';
 					$user = Environment::getUser();
 					$user->authenticate($username, $password);
 					$this->getApplication()->restoreRequest($backlink);

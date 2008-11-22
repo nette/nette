@@ -10,8 +10,6 @@ class DashboardPresenter extends BasePresenter
 
 	protected function startup()
 	{
-		require_once 'models/Albums.php';
-
 		// user authentication
 		$user = Environment::getUser();
 		if (!$user->isAuthenticated()) {

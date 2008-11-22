@@ -11,8 +11,6 @@ class DashboardPresenter extends BasePresenter
 
 	protected function startup()
 	{
-		require_once 'models/Albums.php';
-
 		// user authentication
 		$user = Environment::getUser();
 		if (!$user->isAuthenticated()) {
@@ -31,40 +29,53 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$album = new Albums();
-		$this->template->albums = $album->findAll('artist', 'title');
 		$this->template->title = "My Albums";
+
+		$album = new Albums;
+		$this->template->albums = $album->findAll('artist', 'title');
 	}
 
 
 
-	/********************* view add *********************/
+	/********************* views add & edit *********************/
 
 
 
 	public function renderAdd()
 	{
-		$this->renderEdit();
+		$this->template->title = "Add New Album";
+
+		$form = $this->getComponent('albumForm');
+		$form['submit1']->caption = 'Add';
+		$this->template->form = $form;
+
+		if (!$form->isSubmitted()) {
+			$album = new Albums;
+			$form->setDefaults($album->createBlank());
+		}
 	}
-
-
-
-	/********************* view edit *********************/
 
 
 
 	public function renderEdit($id = 0)
 	{
-		$this->template->form = $this->getComponent('editForm');
-		$this->template->title = $id > 0 ? "Edit Album" : "Add New Album";
+		$this->template->title = "Edit Album";
+
+		$form = $this->getComponent('albumForm');
+		$this->template->form = $form;
+
+		if (!$form->isSubmitted()) {
+			$album = new Albums;
+			$form->setDefaults($album->fetch($id));
+		}
 	}
 
 
 
-	public function editFormSubmitted(AppForm $form)
+	public function albumFormSubmitted(AppForm $form)
 	{
 		$id = (int) $this->getParam('id');
-		$album = new Albums();
+		$album = new Albums;
 		if ($id > 0) {
 			$album->update($id, $form->getValues());
 		} else {
@@ -81,10 +92,10 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderDelete($id = 0)
 	{
-		$this->template->form = $this->getComponent('deleteForm');
-		$album = new Albums();
-		$this->template->album = $album->fetch($id);
 		$this->template->title = "Delete Album";
+		$this->template->form = $this->getComponent('deleteForm');
+		$album = new Albums;
+		$this->template->album = $album->fetch($id);
 
 	}
 
@@ -93,7 +104,7 @@ class DashboardPresenter extends BasePresenter
 	public function deleteFormSubmitted(AppForm $form)
 	{
 		if ($form['yes']->isSubmittedBy()) {
-			$album = new Albums();
+			$album = new Albums;
 			$album->delete((int) $this->getParam('id'));
 		}
 
@@ -126,7 +137,7 @@ class DashboardPresenter extends BasePresenter
 	protected function createComponent($name)
 	{
 		switch ($name) {
-		case 'editForm':
+		case 'albumForm':
 			$id = $this->getParam('id');
 			$form = new AppForm($this, $name);
 			$form->addText('artist', 'Artist:')
@@ -135,17 +146,8 @@ class DashboardPresenter extends BasePresenter
 			$form->addText('title', 'Title:')
 				->addRule(Form::FILLED, 'Please enter a title.');
 
-			$form->addSubmit('submit1', $id > 0 ? 'Edit' : 'Add');
-			$form->onSubmit[] = array($this, 'editFormSubmitted');
-
-			if (!$form->isSubmitted()) {
-				$album = new Albums();
-				if ($id > 0) {
-					$form->setDefaults($album->fetch($id));
-				} else {
-					$form->setDefaults($album->createBlank());
-				}
-			}
+			$form->addSubmit('submit1', 'Edit');
+			$form->onSubmit[] = array($this, 'albumFormSubmitted');
 			return;
 
 		case 'deleteForm':

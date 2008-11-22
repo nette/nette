@@ -34,7 +34,6 @@ class AuthPresenter extends BasePresenter
 	public function loginFormSubmitted($form)
 	{
 		try {
-			require_once 'models/Users.php';
 			$user = Environment::getUser();
 			$user->authenticate($form['username']->getValue(), $form['password']->getValue());
 			$this->getApplication()->restoreRequest($this->backlink);
