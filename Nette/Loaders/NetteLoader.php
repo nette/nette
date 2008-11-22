@@ -46,6 +46,7 @@ class NetteLoader extends AutoLoader
 		'abortexception' => '/Application/AbortException.php',
 		'ajaxdriver' => '/Application/AjaxDriver.php',
 		'ambiguousserviceexception' => '/ServiceLocator.php',
+		'annotations' => '/Annotations.php',
 		'appform' => '/Application/AppForm.php',
 		'application' => '/Application/Application.php',
 		'applicationexception' => '/Application/ApplicationException.php',

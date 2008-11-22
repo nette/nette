@@ -70,3 +70,6 @@ $a['b'] = $b;
 
 echo "\n'e' looking 'a'\n";
 echo $d['e']->lookupPath('A');
+
+echo "\n\nchecking 'a-b-c'\n";
+Debug::dump($a['b-c'] === $b['c']);

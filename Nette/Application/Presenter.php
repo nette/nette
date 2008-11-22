@@ -316,7 +316,7 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if ($this->signal === NULL) return;
 
-		$component = $this->getComponent($this->signalReceiver, FALSE);
+		$component = $this->signalReceiver === '' ? $this : $this->getComponent($this->signalReceiver, FALSE);
 		if ($component === NULL) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not found.");
 
@@ -838,6 +838,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string   optional signal to execute
 	 * @return PresenterRequest
 	 * @throws InvalidLinkException
+	 * @internal
 	 */
 	final protected function createRequest($destination, array $args, $componentId = NULL, $signal = NULL)
 	{
@@ -921,7 +922,7 @@ abstract class Presenter extends Control implements IPresenter
 				$this->saveState($args, $presenterClass);
 			}
 
-			$args += $this->getGlobalState($presenterClass);
+			$args += $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
 		}
 
 		// add view & signal
@@ -1088,7 +1089,9 @@ abstract class Presenter extends Control implements IPresenter
 		$this->globalParams = array();
 		$selfParams = array();
 
-		foreach ($this->request->getParams() as $key => $value) {
+		$params = $this->request->getParams();
+		// TODO: $params += $this->request->getPost();
+		foreach ($params as $key => $value) {
 			$a = strlen($key) > 2 ? strrpos($key, self::NAME_SEPARATOR, -2) : FALSE;
 			if ($a === FALSE) {
 				$selfParams[$key] = $value;

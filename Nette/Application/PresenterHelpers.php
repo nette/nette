@@ -28,6 +28,7 @@
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette\Application
+ * @internal
  */
 class PresenterHelpers
 {
@@ -67,7 +68,7 @@ class PresenterHelpers
 			foreach ($rc->getDefaultProperties() as $nm => $val)
 			{
 				$rp = $rc->getProperty($nm);
-				if (!$rp->isPublic() || $rp->isStatic() || strpos($rp->getDocComment(), '@persistent') === FALSE) continue;
+				if (!$rp->isPublic() || $rp->isStatic() || !Annotations::get($rp, 'persistent')) continue;
 
 				$meta[$nm] = array(
 					'def' => $val, // default value from $class
@@ -105,18 +106,10 @@ class PresenterHelpers
 		try {
 			$meta = array();
 			$rc = new ReflectionClass($class);
-			if (!$rc->isSubclassOf(/*Nette\Application\*/'Presenter')) return array();
-
-			// generate
-			preg_match_all('#@persistent\((.*?)\)#', $rc->getDocComment(), $matches, PREG_SET_ORDER);
-			foreach ($matches as $m) {
-				foreach (explode(',', $m[1]) as $id) {
-					$meta[trim($id)] = $class;
-				}
+			if ($rc->isSubclassOf(/*Nette\Application\*/'Presenter')) {
+				$meta = array_fill_keys((array) Annotations::get($rc, 'persistent'), $class)
+					+ self::getPersistentComponents(get_parent_class($class));
 			}
-			unset($meta['']);
-			$meta = $meta + self::getPersistentComponents(get_parent_class($class));
-
 		} catch (ReflectionException $e) {
 		}
 		return $meta;
