@@ -20,6 +20,8 @@
 
 /*namespace Nette\Templates;*/
 
+/*use Nette\Caching\Cache;*/
+
 
 
 /**
@@ -84,6 +86,7 @@ final class TemplateFilters
 	 *   {for ?} ... {/for}
 	 *   {foreach ?} ... {/foreach}
 	 *   {include ?}
+	 *   {cache ?} ... {/cache} cached block
 	 *   {snippet ?} ... {/snippet ?} control snippet
 	 *   {block|texy} ... {/block} capture of filter block
 	 *   {contentType ...} HTTP Content-Type header
@@ -105,6 +108,9 @@ final class TemplateFilters
 			'<?php } ?>$1<?php if ($control->isOutputAllowed()) { ?>',
 			$s
 		);
+
+		// cache support
+		$s = '<?php TemplateFilters::$curlyCacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s . '<?php array_pop(TemplateFilters::$curlyCacheFrames[0][Cache::FILES]); ?>';
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -148,6 +154,8 @@ final class TemplateFilters
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
+		'cache' => '<?php TemplateFilters::$curlyCacheFrames[0][Cache::ITEMS][] = #; if (isset($cache[#])) { echo $cache[#]; } else { ob_start(); TemplateFilters::curlyAddFrame(##); try { ?>',
+		'/cache' => '<?php $cache->save(#); } catch (Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
 		'if ' => '<?php if (#): ?>',
 		'elseif ' => '<?php elseif (#): ?>',
 		'foreach ' => '<?php foreach (#): ?>',
@@ -168,7 +176,28 @@ final class TemplateFilters
 	);
 
 	/** @var array */
-	private static $curlyBlocks;
+	public static $curlyCacheFrames = array(
+		array('files' => NULL, 'items' => NULL)
+	);
+
+	/** @var array */
+	private static $curlyBlocks = array();
+
+
+
+	/**
+	 * Curly cache helper.
+	 * @return void
+	 */
+	public static function curlyAddFrame($tags)
+	{
+		array_unshift(self::$curlyCacheFrames, array(
+			Cache::TAGS => $tags,
+			Cache::FILES => array(end(self::$curlyCacheFrames[0][Cache::FILES])),
+			Cache::ITEMS => NULL,
+			Cache::EXPIRE => rand(86400 * 4, 86400 * 7),
+		));
+	}
 
 
 
@@ -179,12 +208,22 @@ final class TemplateFilters
 	{
 		list(, $mod, $var, $modifiers) = $m;
 		$var = trim($var);
+		$var2 = NULL;
 
 		if ($mod === 'block') {
 			$tmp = $var === '' ? 'echo ' : $var . '=';
 			$var = 'ob_get_clean()';
 
 		} elseif ($mod === '/block') {
+			$var = array_pop(self::$curlyBlocks);
+
+		} elseif ($mod === 'cache') {
+			$var2 = 'array(' . $var . ')';
+			$var = var_export(uniqid(), TRUE);
+			$tmp = $var . ', ob_get_flush(), array_shift(TemplateFilters::$curlyCacheFrames)';
+			$modifiers = NULL;
+
+		} elseif ($mod === '/cache') {
 			$var = array_pop(self::$curlyBlocks);
 
 		} elseif ($mod === 'snippet') {
@@ -218,9 +257,12 @@ final class TemplateFilters
 
 		if ($mod === 'block') {
 			self::$curlyBlocks[] = $tmp . $var;
+
+		} elseif ($mod === 'cache') {
+			self::$curlyBlocks[] = $tmp;
 		}
 
-		return str_replace('#', $var, self::$curlyXlatMask[$mod]);
+		return strtr(self::$curlyXlatMask[$mod], array('##' => $var2, '#' => $var));
 	}
 
 

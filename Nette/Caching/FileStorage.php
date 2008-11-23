@@ -99,23 +99,33 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		$cacheFile = $this->getCacheFile($key);
-		$meta = $this->readMeta($cacheFile, LOCK_SH);
-		if (!$meta) return NULL;
+		$meta = $this->readMeta($this->getCacheFile($key), LOCK_SH);
+		if ($meta && $this->verify($meta)) {
+			return $this->readData($meta); // calls fclose()
 
-		// meta[handle] & meta[file] is added by readMeta()
+		} else {
+			return NULL;
+		}
+	}
 
-		// verify dependencies
+
+
+	/**
+	 * Verifies dependencies.
+	 * @param  array
+	 * @return bool
+	 */
+	private function verify($meta)
+	{
 		do {
-			/*
-			if (!empty($meta[self::META_DELTA]) || !empty($meta[self::META_FILES])) {
+			/*if (!empty($meta[self::META_DELTA]) || !empty($meta[self::META_FILES])) {
 				clearstatcache();
-			}
-			*/
+			}*/
 
 			if (!empty($meta[self::META_DELTA])) {
-				if (filemtime($cacheFile) + $meta[self::META_DELTA] < time()) break;
-				touch($cacheFile);
+				// meta[file] was added by readMeta()
+				if (filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < time()) break;
+				touch($meta[self::FILE]);
 
 			} elseif (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < time()) {
 				break;
@@ -136,20 +146,20 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			if (!empty($meta[self::META_ITEMS])) {
 				foreach ($meta[self::META_ITEMS] as $depFile => $time) {
 					$m = $this->readMeta($depFile, LOCK_SH);
-					// TODO: check item completely
 					if ($m[self::META_TIME] !== $time) break 2;
-					unset($m);
+					if ($m && !$this->verify($m)) break 2;
 				}
 			}
 
-			return $this->readData($meta); // calls fclose()
+			return TRUE;
 		} while (FALSE);
 
+		// meta[handle] was added by readMeta()
 		flock($meta[self::HANDLE], LOCK_EX);
 		ftruncate($meta[self::HANDLE], 0);
 		@unlink($cacheFile); // intentionally @
 		fclose($meta[self::HANDLE]);
-		return NULL;
+		return FALSE;
 	}
 
 
