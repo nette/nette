@@ -51,7 +51,7 @@ class Session extends /*Nette\*/Object
 	private static $instances = array();
 
 	/** @var array default configuration */
-	private static $configuration = array(
+	private static $defaultConfig = array(
 		// security
 		'session.referer_check' => '',    // must be disabled because PHP implementation is invalid
 		'session.use_cookies' => 1,       // must be enabled to prevent Session Hijacking and Fixation
@@ -61,7 +61,7 @@ class Session extends /*Nette\*/Object
 		// cookies
 		'session.cookie_lifetime' => 0,   // until the browser is closed
 		'session.cookie_path ' => '/',    // cookie is available within the entire domain
-		'session.cookie_domain' => '',    // cookie is available on all subdomains
+		'session.cookie_domain' => '',    // cookie is available on current subdomain only
 		'session.cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
 		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
 
@@ -94,9 +94,12 @@ class Session extends /*Nette\*/Object
 
 		} elseif (defined('SID')) {
 			throw new /*\*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
+
+		} elseif (headers_sent($file, $line)) {
+			throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
 		}
 
-		$this->configure(self::$configuration, FALSE);
+		$this->configure(self::$defaultConfig, FALSE);
 
 		/*Nette\*/Tools::tryError();
 		session_start();
@@ -422,23 +425,23 @@ class Session extends /*Nette\*/Object
 	 * @param  bool   throw exception?
 	 * @return void
 	 * @throws \NotSupportedException
+	 * @throws \InvalidStateException
 	 */
 	public function configure(array $config, $throwException = TRUE)
 	{
-		// TODO: Environment::getHttpResponse()->headersSent
-		if (headers_sent($file, $line)) {
-			throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
-		}
-
 		$special = array('session.cache_expire' => 1, 'session.cache_limiter' => 1,
 			'session.save_path' => 1, 'session.name' => 1);
-		$hasIniSet = function_exists('ini_set');
 
 		foreach ($config as $key => $value) {
+			unset(self::$defaultConfig[$key]); // prevents overwriting
+
 			if ($value === NULL) {
 				continue;
 
 			} elseif (isset($special[$key])) {
+				if (self::$started) {
+					throw new /*\*/InvalidStateException('Session has already been started.');
+				}
 				$key = strtr($key, '.', '_');
 				$key($value);
 
@@ -448,18 +451,27 @@ class Session extends /*Nette\*/Object
 				}
 				$cookie[substr($key, 15)] = $value;
 
-			} elseif (!$hasIniSet) {
+			} elseif (!function_exists('ini_set')) {
 				if ($throwException) {
 					throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
 				}
 
 			} else {
+				if (self::$started) {
+					throw new /*\*/InvalidStateException('Session has already been started.');
+				}
 				ini_set($key, $value);
 			}
 		}
 
 		if (isset($cookie)) {
 			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+			if (self::$started) {
+				if (headers_sent($file, $line)) {
+					throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
+				}
+				setcookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+			}
 		}
 	}
 

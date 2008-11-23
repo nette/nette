@@ -110,7 +110,7 @@ final class TemplateFilters
 		);
 
 		// cache support
-		$s = '<?php TemplateFilters::$curlyCacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s . '<?php array_pop(TemplateFilters::$curlyCacheFrames[0][Cache::FILES]); ?>';
+		$s = '<?php TemplateFilters::$curlyCacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s;
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
