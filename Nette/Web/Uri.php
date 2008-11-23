@@ -168,16 +168,13 @@ class Uri extends /*Nette\*/Object
 		}
 
 		// compare query strings
-		$part = strtok('?#');
-		if ($part !== FALSE) {
+		$part = (string) strtok('?#');
+		if ($part !== '') {
 			$tmp = explode('&', self::unescape($part, '%&'));
 			sort($tmp);
-			if (implode('&', $tmp) !== $this->query) {
-				return FALSE;
-			}
+			$part = implode('&', $tmp);
 		}
-
-		return TRUE;
+		return $part === $this->query;
 	}
 
 

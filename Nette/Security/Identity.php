@@ -55,7 +55,7 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	public function __construct($name, array $roles = NULL, $data = NULL)
 	{
 		$this->name = (string) $name;
-		$this->roles = $roles;
+		$this->roles = (array) $roles;
 		$this->data = (array) $data;
 	}
 
