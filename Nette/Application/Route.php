@@ -225,7 +225,8 @@ class Route extends /*Nette\*/Object implements IRouter
 			$context->getMethod(),
 			$params,
 			$context->getPost(),
-			$context->getFiles()
+			$context->getFiles(),
+			array('secured' => $context->isSecured())
 		);
 	}
 

@@ -39,6 +39,9 @@ final class PresenterRequest extends /*Nette\*/Object
 	/** @var string */
 	private $method;
 
+	/** @var array */
+	private $flags = array();
+
 	/** @var string */
 	private $name;
 
@@ -60,13 +63,14 @@ final class PresenterRequest extends /*Nette\*/Object
 	 * @param  array   variables provided to the presenter via POST
 	 * @param  array   all uploaded files
 	 */
-	public function __construct($name, $method, array $params, array $post = array(), array $files = array())
+	public function __construct($name, $method, array $params, array $post = array(), array $files = array(), array $flags = array())
 	{
 		$this->name = $name;
 		$this->method = $method;
 		$this->params = $params;
 		$this->post = $post;
 		$this->files = $files;
+		$this->flags = $flags;
 	}
 
 
@@ -134,6 +138,18 @@ final class PresenterRequest extends /*Nette\*/Object
 	public function isPost()
 	{
 		return strcasecmp($this->method, 'post') === 0;
+	}
+
+
+
+	/**
+	 * Checks the flag.
+	 * @param  string
+	 * @return bool
+	 */
+	public function hasFlag($flag)
+	{
+		return !empty($this->flags[$flag]);
 	}
 
 

@@ -146,6 +146,7 @@ final class TemplateFilters
 		'{/for}' => '<?php endfor ?>',
 		'{/while}' => '<?php endwhile ?>',
 		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
+		'{ifCurrent}' => '<?php if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
 	);
 
 	/** @var array */
@@ -214,7 +215,7 @@ final class TemplateFilters
 			$tmp = $var === '' ? 'echo ' : $var . '=';
 			$var = 'ob_get_clean()';
 
-		} elseif ($mod === '/block') {
+		} elseif ($mod === '/block' || $mod === '/cache') {
 			$var = array_pop(self::$curlyBlocks);
 
 		} elseif ($mod === 'cache') {
@@ -222,9 +223,6 @@ final class TemplateFilters
 			$var = var_export(uniqid(), TRUE);
 			$tmp = $var . ', ob_get_flush(), array_shift(TemplateFilters::$curlyCacheFrames)';
 			$modifiers = NULL;
-
-		} elseif ($mod === '/cache') {
-			$var = array_pop(self::$curlyBlocks);
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {

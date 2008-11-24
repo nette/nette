@@ -3,8 +3,11 @@
 <pre>
 
 <hr><h2>Basic usage</h2>
-object(PresenterRequest) (5) {
+object(PresenterRequest) (6) {
   "method" private => NULL
+  "flags" private => array(1) {
+    "secured" => bool(FALSE)
+  }
   "name" private => string(11) "myPresenter"
   "params" private => array(4) {
     "view" => string(4) "view"
@@ -22,8 +25,11 @@ string(48) "/?view=view&test=testvalue&presenter=myPresenter"
 
 
 <hr><h2>With module</h2>
-object(PresenterRequest) (5) {
+object(PresenterRequest) (6) {
   "method" private => NULL
+  "flags" private => array(1) {
+    "secured" => bool(FALSE)
+  }
   "name" private => string(20) "main:sub:myPresenter"
   "params" private => array(0) {
   }

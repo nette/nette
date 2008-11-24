@@ -103,6 +103,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool */
 	private $ajaxMode;
 
+	/** @var PresenterRequest */
+	private $createdRequest;
+
 	/** @var Application */
 	private $application;
 
@@ -731,6 +734,17 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * Returns the last created PresenterRequest.
+	 * @return PresenterRequest
+	 */
+	public function getCreatedRequest()
+	{
+		return $this->createdRequest;
+	}
+
+
+
+	/**
 	 * Correctly terminates presenter.
 	 * @return void
 	 * @throws AbortException
@@ -844,11 +858,14 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
+		$this->createdRequest = NULL;
+
 		// parse destination
 		if ($destination == NULL) {  // intentionally ==
 			throw new InvalidLinkException("Destination must be non-empty string.");
 		}
 
+		$current = FALSE;
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
 			$view = $destination === 'this' ? $this->view : $destination;
@@ -857,18 +874,18 @@ abstract class Presenter extends Control implements IPresenter
 
 		} else {
 			$view = (string) substr($destination, $a + 1);
-			if ($destination[0] === ':') {
+			if ($destination[0] === ':') { // absolute
 				if ($a < 2) {
 					throw new InvalidLinkException("Missing presenter name in '$destination'.");
 				}
 				$presenter = substr($destination, 1, $a - 1);
 
-			} else {
+			} else { // relative
 				$presenter = $this->getName();
 				$b = strrpos($presenter, ':');
-				if ($b === FALSE) {
+				if ($b === FALSE) { // no module
 					$presenter = substr($destination, 0, $a);
-				} else {
+				} else { // with module
 					$presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
 				}
 			}
@@ -881,6 +898,8 @@ abstract class Presenter extends Control implements IPresenter
 				/*$view = $presenterClass::$defaultView;*/ // in PHP 5.3
 				/**/$view = self::$defaultView;/**/
 			}
+
+			$current = $this->view === $view && $presenterClass === $this->getClass();
 
 			if ($args || $destination === 'this') {
 				// prefix component parameters
@@ -922,19 +941,25 @@ abstract class Presenter extends Control implements IPresenter
 				$this->saveState($args, $presenterClass);
 			}
 
-			$args += $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
+			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
+			$current = $current && count($args) === count(array_intersect_assoc($args, $globalState));
+			$args += $globalState;
 		}
 
 		// add view & signal
 		$args[self::VIEW_KEY] = $view;
 		if ($signal != NULL) { // intentionally ==
 			$args[self::SIGNAL_KEY] = ($componentId === '' ? '' : $componentId . self::NAME_SEPARATOR) . strtolower($signal);
+			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
 		}
 
-		return new PresenterRequest(
+		return $this->createdRequest = new PresenterRequest(
 			$presenter,
 			PresenterRequest::FORWARD,
-			$args
+			$args,
+			array(),
+			array(),
+			array('current' => $current)
 		);
 	}
 
