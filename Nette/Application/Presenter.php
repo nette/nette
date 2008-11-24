@@ -942,7 +942,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
-			$current = $current && count($args) === count(array_intersect_assoc($args, $globalState));
+			$current = $current && count($args) === count(array_intersect_assoc($args, $globalState + $this->params));
 			$args += $globalState;
 		}
 

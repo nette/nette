@@ -296,6 +296,11 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 	public function lazyLink($destination, $args = array())
 	{
+		if (!is_array($args)) {
+			$args = func_get_args();
+			array_shift($args);
+		}
+
 		return new Link($this, $destination, $args);
 	}
 

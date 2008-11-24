@@ -24,4 +24,4 @@
 	<?php } if ($control->beginSnippet("title", '<h2 class="top">')) { ?>Title 3<?php $control->endSnippet(""); } if ($control->isOutputAllowed()) { ?>
 
 	<?php } if ($control->beginSnippet("title", '<h2>')) { ?>Title 4<?php $control->endSnippet("invalid"); } if ($control->isOutputAllowed()) { ?>
-<?php } ?><?php array_pop(TemplateFilters::$curlyCacheFrames[0][Cache::FILES]); ?>
+<?php } ?>

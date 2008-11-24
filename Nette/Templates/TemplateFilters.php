@@ -146,7 +146,6 @@ final class TemplateFilters
 		'{/for}' => '<?php endfor ?>',
 		'{/while}' => '<?php endwhile ?>',
 		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
-		'{ifCurrent}' => '<?php if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
 	);
 
 	/** @var array */
@@ -155,8 +154,8 @@ final class TemplateFilters
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
-		'cache' => '<?php TemplateFilters::$curlyCacheFrames[0][Cache::ITEMS][] = #; if (isset($cache[#])) { echo $cache[#]; } else { ob_start(); TemplateFilters::curlyAddFrame(##); try { ?>',
-		'/cache' => '<?php $cache->save(#); } catch (Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
+		'cache' => '<?php TemplateFilters::$curlyCacheFrames[0][Cache::ITEMS][] = #; $_cache = Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); TemplateFilters::curlyAddFrame(##); try { ?>',
+		'/cache' => '<?php $_cache->save(#); } catch (Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
 		'if ' => '<?php if (#): ?>',
 		'elseif ' => '<?php elseif (#): ?>',
 		'foreach ' => '<?php foreach (#): ?>',
@@ -166,6 +165,7 @@ final class TemplateFilters
 		'ajaxlink ' => '<?php echo $template->escape($control->ajaxlink(#)) ?>',
 		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',
 		'link ' => '<?php echo $template->escape($control->link(#)) ?>',
+		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
 		'contentType ' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
@@ -236,10 +236,11 @@ final class TemplateFilters
 		} elseif ($mod === '$' || $mod === '!' || $mod === '!$') {
 			$var = '$' . $var;
 
-		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'include ') {
+		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'ifCurrent' || $mod ===  'include ') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
+				if ($mod === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
 			}
 		}
 

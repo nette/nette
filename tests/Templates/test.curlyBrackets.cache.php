@@ -19,5 +19,4 @@ $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-cache.phtml');
 $template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
 $template->title = 'Hello';
 $template->id = 456;
-$template->cache = Environment::getCache('myTemplate');
 $template->render();

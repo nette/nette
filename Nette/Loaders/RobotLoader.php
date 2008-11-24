@@ -87,7 +87,7 @@ class RobotLoader extends AutoLoader
 				);
 			}
 
-			if (isset($this->list[strtolower(__CLASS__)])) {
+			if (isset($this->list[strtolower(__CLASS__)]) && class_exists(/*Nette\Loaders\*/'NetteLoader', FALSE)) {
 				NetteLoader::getInstance()->unregister();
 			}
 		}
