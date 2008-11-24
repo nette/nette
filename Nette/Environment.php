@@ -153,6 +153,7 @@ final class Environment
 	 */
 	public static function setMode($mode, $flag = TRUE)
 	{
+		if ($mode === 'live') $mode = 'production'; // back compatibility
 		self::$mode[$mode] = (bool) $flag;
 	}
 
@@ -166,6 +167,7 @@ final class Environment
 	 */
 	public static function getMode($mode)
 	{
+		if ($mode === 'live') $mode = 'production'; // back compatibility
 		if (isset(self::$mode[$mode])) {
 			return self::$mode[$mode];
 
@@ -191,9 +193,19 @@ final class Environment
 	 * Determines whether a server is running in production mode.
 	 * @return bool
 	 */
+	public static function isProduction()
+	{
+		return self::getMode('production');
+	}
+
+
+
+	/**
+	 * @deprecated {@link Environment::isProduction()}
+	 */
 	public static function isLive()
 	{
-		return self::getMode('live');
+		return self::getMode('production');
 	}
 
 

@@ -67,10 +67,10 @@ class Configurator extends Object
 				return Environment::CONSOLE;
 
 			} else {
-				return Environment::getMode('live') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+				return Environment::getMode('production') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
 			}
 
-		case 'live':
+		case 'production':
 			// detects production mode by server IP address
 			if (PHP_SAPI === 'cli') {
 				return FALSE;
@@ -90,7 +90,7 @@ class Configurator extends Object
 				return (bool) DEBUG_MODE;
 
 			} else {
-				return !Environment::getMode('live') && isset($_REQUEST['DBGSESSID']);
+				return !Environment::getMode('production') && isset($_REQUEST['DBGSESSID']);
 				// function_exists('DebugBreak');
 			}
 
@@ -114,7 +114,7 @@ class Configurator extends Object
 	public function loadConfig($file, $useCache)
 	{
 		if ($useCache === NULL) {
-			$useCache = Environment::isLive();
+			$useCache = Environment::isProduction();
 		}
 		$cache = $useCache && $this->cacheKey ? Environment::getCache('Nette.Environment') : NULL;
 

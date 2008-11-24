@@ -101,7 +101,7 @@ class RobotLoader extends AutoLoader
 
 		} else {
 			if ($this->autoRebuild === NULL) {
-				$this->autoRebuild = !/*Nette\*/Environment::isLive();
+				$this->autoRebuild = !/*Nette\*/Environment::isProduction();
 			}
 			if ($this->autoRebuild) {
 				if (!$this->rebuilded) {

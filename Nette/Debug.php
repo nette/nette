@@ -44,7 +44,7 @@ final class Debug
 	public static $html;
 
 	/** @var bool determines whether a server is running in production mode */
-	public static $liveMode;
+	public static $productionMode;
 
 	/** @var bool determines whether a server is running in console mode */
 	public static $consoleMode;
@@ -55,7 +55,7 @@ final class Debug
 	/** @var int  how long strings display {@link Debug::dump()} */
 	public static $maxLen = 150;
 
-	/** @var int  sensitive keys not displayed by {@link Debug::dump()} when {@link Debug::$liveMode} in on */
+	/** @var int  sensitive keys not displayed by {@link Debug::dump()} when {@link Debug::$productionMode} in on */
 	public static $keysToHide = array('password', 'passwd', 'pass', 'pwd', 'creditcard', 'credit card', 'cc', 'pin');
 
 	/** @var bool {@link Debug::enable()} */
@@ -129,7 +129,7 @@ final class Debug
 	 */
 	public static function dump($var, $return = FALSE)
 	{
-		self::$keyFilter = self::$liveMode ? array_change_key_case(array_flip(self::$keysToHide), CASE_LOWER) : NULL;
+		self::$keyFilter = self::$productionMode ? array_change_key_case(array_flip(self::$keysToHide), CASE_LOWER) : NULL;
 
 		$output = "<pre class=\"dump\">" . self::_dump($var, 0) . "</pre>\n";
 
@@ -279,19 +279,19 @@ final class Debug
 		error_reporting($level === NULL ? E_ALL | E_STRICT : $level);
 
 		// production/development mode detection
-		if (self::$liveMode === NULL) {
-			self::$liveMode = class_exists(/*Nette\*/'Environment')
-				? /*Nette\*/Environment::isLive()
+		if (self::$productionMode === NULL) {
+			self::$productionMode = class_exists(/*Nette\*/'Environment')
+				? /*Nette\*/Environment::isProduction()
 				: !isset($_SERVER['SERVER_ADDR']) || $_SERVER['SERVER_ADDR'] !== '127.0.0.1';
 		}
 
 		// Firebug detection
-		self::$useFirebug = !self::$liveMode && function_exists('json_encode')
+		self::$useFirebug = !self::$productionMode && function_exists('json_encode')
 			&& isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'FirePHP/');
 
 		// logging configuration
 		if ($logFile === NULL) {
-			$logFile = self::$liveMode;
+			$logFile = self::$productionMode;
 		}
 
 		if ($logFile) {
@@ -319,7 +319,7 @@ final class Debug
 			ini_set('html_errors', !self::$consoleMode);
 			ini_set('log_errors', (bool) $logFile);
 
-		} elseif (self::$liveMode) { // throws error only on production server
+		} elseif (self::$productionMode) { // throws error only on production server
 			throw new /*\*/NotSupportedException('Function ini_set() is not enabled.');
 		}
 
@@ -483,7 +483,7 @@ final class Debug
 	public static function paintBlueScreen(Exception $exception)
 	{
 		$colophons = self::$colophons;
-		$keyFilter = self::$liveMode ? array_change_key_case(array_flip(self::$keysToHide), CASE_LOWER) : NULL;
+		$keyFilter = self::$productionMode ? array_change_key_case(array_flip(self::$keysToHide), CASE_LOWER) : NULL;
 		require dirname(__FILE__) . '/Debug.templates/bluescreen.phtml';
 	}
 

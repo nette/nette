@@ -24,5 +24,5 @@ Debug::dump(Environment::getConfig('set'));
 echo "Database config:\n";
 Debug::dump(Environment::getConfig('database'));
 
-echo "is live?\n";
-Debug::dump(Environment::isLive());
+echo "is production mode?\n";
+Debug::dump(Environment::isProduction());

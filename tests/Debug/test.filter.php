@@ -9,7 +9,7 @@ $_SERVER = array_intersect_key($_SERVER, array('PHP_SELF' => 1, 'SCRIPT_NAME' =>
 
 Debug::$consoleMode = FALSE;
 Debug::enable(E_ALL, FALSE);
-Debug::$liveMode = TRUE;
+Debug::$productionMode = TRUE;
 
 define('PASS', 'tajne heslo');
 

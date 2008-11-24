@@ -185,7 +185,7 @@ class Application extends /*Nette\*/Object
 			} catch (Exception $e) {
 				// fault barrier
 				if ($this->catchExceptions === NULL) {
-					$this->catchExceptions = Environment::isLive();
+					$this->catchExceptions = Environment::isProduction();
 				}
 
 				if (!$this->catchExceptions) {
