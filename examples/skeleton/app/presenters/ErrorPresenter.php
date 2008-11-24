@@ -41,7 +41,7 @@ class ErrorPresenter extends BasePresenter
 				$this->template->title = '500 Internal Server Error';
 				$this->changeScene('500');
 
-				/*Nette\*/Debug::logException($exception);
+				/*Nette\*/Debug::processException($exception, FALSE);
 			}
 		}
 	}

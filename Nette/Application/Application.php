@@ -214,6 +214,7 @@ class Application extends /*Nette\*/Object
 
 				} else {
 					$httpResponse->setCode(500);
+					/*Nette\*/Debug::processException($e, FALSE);
 					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
 						"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
 					break;
