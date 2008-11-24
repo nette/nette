@@ -52,7 +52,7 @@ class FifteenControl extends /*Nette\Application\*/Control
 	public function handleClick($x, $y)
 	{
 		if (!$this->isClickable($x, $y)) {
-			throw new /*Nette\Application\*/BadRequestException('Action not allowed.');
+			throw new /*Nette\Application\*/BadSignalException('Action not allowed.');
 		}
 
 		if ($this->presenter->isAjax()) {

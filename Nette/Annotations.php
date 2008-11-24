@@ -140,12 +140,7 @@ final class Annotations
 					}
 				}
 
-				if (count($items) < 2) {
-					$items = $val;
-
-				} elseif (!isset($items[0])) {
-					$items = (object) $items;
-				}
+				$items = count($items) < 2 ? $val : new ArrayObject($items, ArrayObject::ARRAY_AS_PROPS);
 
 			} else {
 				$items = TRUE;

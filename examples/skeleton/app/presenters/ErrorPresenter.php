@@ -32,7 +32,7 @@ class ErrorPresenter extends BasePresenter
 			$this->template->robots = 'noindex,noarchive';
 
 			if ($exception instanceof /*Nette\Application\*/BadRequestException) {
-				Environment::getHttpResponse()->setCode(404);
+				Environment::getHttpResponse()->setCode($exception->getCode());
 				$this->template->title = '404 Not Found';
 				$this->changeScene('404');
 

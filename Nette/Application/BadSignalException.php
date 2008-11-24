@@ -35,4 +35,7 @@ require_once dirname(__FILE__) . '/../Application/BadRequestException.php';
  */
 class BadSignalException extends BadRequestException
 {
+	/** @var int */
+	protected $defaultCode = 403;
+
 }

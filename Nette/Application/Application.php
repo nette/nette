@@ -152,7 +152,7 @@ class Application extends /*Nette\*/Object
 					$class = $this->getPresenterLoader()->getPresenterClass($presenter);
 					$request->modify('name', $presenter);
 				} catch (InvalidPresenterException $e) {
-					throw new BadRequestException($e->getMessage());
+					throw new BadRequestException($e->getMessage(), 404, $e);
 				}
 				$this->presenter = new $class($request);
 
@@ -208,7 +208,7 @@ class Application extends /*Nette\*/Object
 				}
 
 				if ($e instanceof BadRequestException) {
-					$httpResponse->setCode(404);
+					$httpResponse->setCode($e->getCode());
 					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 					break;
 
