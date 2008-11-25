@@ -250,6 +250,14 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 		$presenter = $this->getPresenter();
 
+		$a = strpos($signal, '#');
+		if ($a == FALSE) {
+			$fragment = '';
+		} else {
+			$fragment = substr($signal, $a);
+			$signal = substr($signal, 0, $a);
+		}
+
 		$a = strpos($signal, '?');
 		if ($a !== FALSE) {
 			parse_str(substr($signal, $a + 1), $args); // requires disabled magic quotes
@@ -285,7 +293,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 				$this->saveState($args);
 			}
 
-			return $presenter->constructUrl($presenter->createRequest('this', $args, $this->getUniqueId(), $signal));
+			return $presenter->constructUrl($presenter->createRequest('this', $args, $this->getUniqueId(), $signal)) . $fragment;
 
 		} catch (InvalidLinkException $e) {
 			return $presenter->handleInvalidLink($e);

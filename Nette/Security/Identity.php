@@ -88,10 +88,11 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if (array_key_exists($key, $this->data)) {
-			return $this->data[$key];
-		} else {
+		if ($key === 'name' || $key === 'roles') {
 			return parent::__get($key);
+
+		} elseif (isset($key, $this->data)) {
+			return $this->data[$key];
 		}
 	}
 

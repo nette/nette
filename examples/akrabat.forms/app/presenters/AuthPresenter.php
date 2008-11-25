@@ -40,7 +40,7 @@ class AuthPresenter extends BasePresenter
 			$this->redirect('Dashboard:');
 
 		} catch (AuthenticationException $e) {
-			$form->addError('Login failed.');
+			$form->addError($e->getMessage());
 		}
 	}
 

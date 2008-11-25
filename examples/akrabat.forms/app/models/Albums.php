@@ -11,7 +11,7 @@
  *  [title] VARCHAR(100)  NOT NULL
  *  );
  */
-class Albums extends DibiTable
+class Albums extends DibiTableX
 {
 
 	protected $blankRow = array(

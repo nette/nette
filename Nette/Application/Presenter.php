@@ -659,19 +659,26 @@ abstract class Presenter extends Control implements IPresenter
 			array_shift($args);
 		}
 
+		$a = strpos($destination, '#');
+		if ($a == FALSE) {
+			$fragment = '';
+		} else {
+			$fragment = substr($destination, $a);
+			$destination = substr($destination, 0, $a);
+		}
+
+		$a = strpos($destination, '?');
+		if ($a !== FALSE) {
+			parse_str(substr($destination, $a + 1), $args); // requires disabled magic quotes
+			$destination = substr($destination, 0, $a);
+		}
+
+		if (substr($destination, -1) === '!') {
+			return parent::link($destination, $args) . $fragment;		
+		}	
+
 		try {
-			if (substr($destination, -1) === '!') {
-				return parent::link($destination, $args);
-
-			} else {
-				$a = strpos($destination, '?');
-				if ($a !== FALSE) {
-					parse_str(substr($destination, $a + 1), $args); // requires disabled magic quotes
-					$destination = substr($destination, 0, $a);
-				}
-
-				return $this->constructUrl($this->createRequest($destination, $args));
-			}
+			return $this->constructUrl($this->createRequest($destination, $args)) . $fragment;
 
 		} catch (InvalidLinkException $e) {
 			return $this->handleInvalidLink($e);

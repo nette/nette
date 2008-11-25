@@ -121,6 +121,9 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 		$uri = $this->link('product?x=1&y=2');
 		echo "1.10 $uri\n\n";
 
+		$uri = $this->link('product?x=1&y=2#fragment');
+		echo "1.11 $uri\n\n";
+
 
 
 
@@ -199,6 +202,9 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 		$uri = $this->mycontrol->link('this?x=1&round=1');
 		echo "3.11 $uri\n\n";
+
+		$uri = $this->mycontrol->link('this?x=1&round=1#frag');
+		echo "3.12 $uri\n\n";
 	}
 
 

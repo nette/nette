@@ -30,7 +30,7 @@ class AuthPresenter extends BasePresenter
 					$this->redirect('Dashboard:');
 
 				} catch (AuthenticationException $e) {
-					$this->template->message = 'Login failed.';
+					$this->template->message = $e->getMessage();
 				}
 			}
 		}
