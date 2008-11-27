@@ -674,8 +674,8 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		if (substr($destination, -1) === '!') {
-			return parent::link($destination, $args) . $fragment;		
-		}	
+			return parent::link($destination, $args) . $fragment;
+		}
 
 		try {
 			return $this->constructUrl($this->createRequest($destination, $args)) . $fragment;

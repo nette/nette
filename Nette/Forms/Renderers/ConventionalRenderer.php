@@ -114,7 +114,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			'.password' => 'text',
 			'.file' => 'text',
 			'.submit' => 'button',
-			'.image' => 'button',
+			'.image' => 'imagebutton',
 			'.button' => 'button',
 		),
 
@@ -310,6 +310,8 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			if (!$group->getControls() || !$group->getOption('visual')) continue;
 
 			$container = $group->getOption('container', $defaultContainer);
+			$container = $container instanceof Html ? clone $container : Html::el($container);
+
 			$s .= "\n" . $container->startTag();
 
 			$text = $group->getOption('label');

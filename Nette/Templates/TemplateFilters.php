@@ -115,20 +115,18 @@ final class TemplateFilters
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
-		// simple replace
-		$s = str_replace(
-			array_keys(self::$curlyXlatSimple),
-			array_values(self::$curlyXlatSimple),
-			$s
-		);
-
-		// smarter replace
 		self::$curlyBlocks = array();
-		$k = implode("\x0", array_keys(self::$curlyXlatMask));
-		$k = preg_quote($k, '#');
-		$k = str_replace('\000', '|', $k);
+		$k = array();
+		foreach (self::$curlyXlatMask as $key => $foo)
+		{
+			$key = preg_quote($key, '#');
+			if (preg_match('#[a-zA-Z0-9]$#', $key)) {
+				$key .= '(?=[|}\s])';
+			}
+			$k[] = $key;
+		}
 		$s = preg_replace_callback(
-			'#\\{(' . $k . ')([^}]*?)(?:\\|([a-z][a-zA-Z0-9|:]*))?\\}()#s',
+			'#\\{(' . implode('|', $k) . ')([^}]*?)(?:\\|([a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*))?\\}()#s',
 			array(__CLASS__, 'curlyCb'),
 			$s
 		);
@@ -139,16 +137,6 @@ final class TemplateFilters
 
 
 	/** @var array */
-	public static $curlyXlatSimple = array(
-		'{else}' => '<?php else: ?>',
-		'{/if}' => '<?php endif ?>',
-		'{/foreach}' => '<?php endforeach ?>',
-		'{/for}' => '<?php endfor ?>',
-		'{/while}' => '<?php endwhile ?>',
-		'{debugbreak}' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
-	);
-
-	/** @var array */
 	public static $curlyXlatMask = array(
 		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
@@ -156,17 +144,23 @@ final class TemplateFilters
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
 		'cache' => '<?php TemplateFilters::$curlyCacheFrames[0][Cache::ITEMS][] = #; $_cache = Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); TemplateFilters::curlyAddFrame(##); try { ?>',
 		'/cache' => '<?php $_cache->save(#); } catch (Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
-		'if ' => '<?php if (#): ?>',
-		'elseif ' => '<?php elseif (#): ?>',
-		'foreach ' => '<?php foreach (#): ?>',
-		'for ' => '<?php for (#): ?>',
-		'while ' => '<?php while (#): ?>',
-		'include ' => '<?php $template->subTemplate(#)->render() ?>',
-		'ajaxlink ' => '<?php echo $template->escape($control->ajaxlink(#)) ?>',
-		'plink ' => '<?php echo $template->escape($presenter->link(#)) ?>',
-		'link ' => '<?php echo $template->escape($control->link(#)) ?>',
+		'if' => '<?php if (#): ?>',
+		'elseif' => '<?php elseif (#): ?>',
+		'else' => '<?php else: ?>',
+		'/if' => '<?php endif ?>',
+		'foreach' => '<?php foreach (#): ?>',
+		'/foreach' => '<?php endforeach ?>',
+		'for' => '<?php for (#): ?>',
+		'/for' => '<?php endfor ?>',
+		'while' => '<?php while (#): ?>',
+		'/while' => '<?php endwhile ?>',
+		'include' => '<?php $template->subTemplate(#)->render() ?>',
+		'ajaxlink' => '<?php echo $template->escape(#) ?>',
+		'plink' => '<?php echo $template->escape(#) ?>',
+		'link' => '<?php echo $template->escape(#) ?>',
 		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
-		'contentType ' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
+		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
+		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
 		'=' => '<?php echo $template->escape(#) ?>',
@@ -220,7 +214,7 @@ final class TemplateFilters
 
 		} elseif ($mod === 'cache') {
 			$var2 = 'array(' . $var . ')';
-			$var = var_export(uniqid(), TRUE);
+			$var = var_export(uniqid(), TRUE); // TODO: odstranit uniqid
 			$tmp = $var . ', ob_get_flush(), array_shift(TemplateFilters::$curlyCacheFrames)';
 			$modifiers = NULL;
 
@@ -236,12 +230,15 @@ final class TemplateFilters
 		} elseif ($mod === '$' || $mod === '!' || $mod === '!$') {
 			$var = '$' . $var;
 
-		} elseif ($mod === 'link ' || $mod === 'plink ' || $mod === 'ajaxlink ' || $mod ===  'ifCurrent' || $mod ===  'include ') {
+		} elseif ($mod === 'link' || $mod === 'plink' || $mod === 'ajaxlink' || $mod ===  'ifCurrent' || $mod ===  'include') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
 				if ($mod === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
 			}
+			if ($mod === 'link') $var = '$control->link(' . $var .')';
+			elseif ($mod === 'plink') $var = '$presenter->link(' . $var .')';
+			elseif ($mod === 'ajaxlink') $var = '$control->ajaxlink(' . $var .')';
 		}
 
 		if ($modifiers) {

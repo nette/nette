@@ -20,11 +20,13 @@ abstract class BasePresenter extends /*Nette\Application\*/Presenter
 {
 
 	/**
-	 * @return void
+	 * @return /*Nette\Templates\*/ITemplate
 	 */
-	protected function beforeRender()
+	protected function createTemplate()
 	{
-		$this->template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
+		$template = parent::createTemplate();
+		$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
+		return $template;
 	}
 
 }

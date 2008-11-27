@@ -41,6 +41,12 @@ final class InstantClientScript extends /*Nette\*/Object
 	/** @var string  JavaScript event handler name */
 	public $toggleFunction;
 
+	/** @var string  JavaScript code */
+	public $doAlert = 'if (element) element.focus(); alert(message);';
+
+	/** @var string  JavaScript code */
+	public $doToggle = 'if (element) element.style.display = visible ? "" : "none";';
+
 	/** @var string */
 	public $validateScript;
 
@@ -106,7 +112,7 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		if ($this->validateScript) {
 			$s .= "function $this->validateFunction(sender) {\n\t"
-			. "var el, res;\n\t"
+			. "var element, message, res;\n\t"
 			. $this->validateScript
 			. "return true;\n"
 			. "}\n\n";
@@ -114,7 +120,7 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		if ($this->toggleScript) {
 			$s .= "function $this->toggleFunction(sender) {\n\t"
-			. "var el, res, resT;\n\t"
+			. "var element, visible, res;\n\t"
 			. $this->toggleScript
 			. "\n}\n\n"
 			. "$this->toggleFunction(null);\n";
@@ -152,9 +158,9 @@ final class InstantClientScript extends /*Nette\*/Object
 				} else {
 					$res .= "$script\n\t"
 						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "if (el) el.focus(); alert("
-						. json_encode((string) vsprintf($rule->control->translate($rule->message), (array) $rule->arg))
-						. "); return false; }\n\t";
+						. "message = " . json_encode((string) vsprintf($rule->control->translate($rule->message), (array) $rule->arg)) . "; "
+						. $this->doAlert
+						. " return false; }\n\t";
 				}
 			}
 
@@ -177,14 +183,16 @@ final class InstantClientScript extends /*Nette\*/Object
 	{
 		$s = '';
 		foreach ($rules->getToggles() as $id => $visible) {
-			$s .= "resT = true; {$cond}el = document.getElementById('" . $id . "');\n\t"
-				. "if (el) el.style.display = " . ($visible ? '' : '!') . "resT ? '' : 'none';\n\t";
+			$s .= "visible = true; {$cond}element = document.getElementById('" . $id . "');\n\t"
+				. ($visible ? '' : 'visible = !visible; ')
+				. $this->doToggle
+				. "\n\t";
 		}
 		foreach ($rules as $rule) {
 			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 				if ($script) {
-					$res = $this->getToggleScript($rule->subRules, $cond . "$script resT = resT && " . ($rule->isNegative ? '!' : '') . "res;\n\t");
+					$res = $this->getToggleScript($rule->subRules, $cond . "$script visible = visible && " . ($rule->isNegative ? '!' : '') . "res;\n\t");
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
@@ -206,8 +214,8 @@ final class InstantClientScript extends /*Nette\*/Object
 	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
 		$id = $control->getHtmlId();
-		$tmp = "el = document.getElementById('" . $id . "');\n\t";
-		$tmp2 = "var val = el.value.replace(/^\\s+/, '').replace(/\\s+\$/, '');\n\t";
+		$tmp = "element = document.getElementById('" . $id . "');\n\t";
+		$tmp2 = "var val = element.value.replace(/^\\s+/, '').replace(/\\s+\$/, '');\n\t";
 		$tmp3 = array();
 		$operation = strtolower($operation);
 
@@ -216,41 +224,41 @@ final class InstantClientScript extends /*Nette\*/Object
 			return NULL;
 
 		case $operation === ':equal' && $control instanceof Checkbox:
-			return $tmp . "res = " . ($arg ? '' : '!') . "el.checked;";
+			return $tmp . "res = " . ($arg ? '' : '!') . "element.checked;";
 
 		case $operation === ':filled' && $control instanceof FileUpload:
-			return $tmp . "res = el.value!='';";
+			return $tmp . "res = element.value!='';";
 
 		case $operation === ':equal' && $control instanceof RadioList:
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				$tmp3[] = "el.value==" . json_encode((string) $item);
+				$tmp3[] = "element.value==" . json_encode((string) $item);
 			}
 			return "res = false;\n\t"
 				. "for (var i=0;i<" . count($control->getItems()) . ";i++) {\n\t\t"
-				. "el = document.getElementById('" . $id . "-'+i);\n\t\t"
-				. "if (el.checked && (" . implode(' || ', $tmp3) . ")) { res = true; break; }\n\t"
-				. "}\n\tel = null;";
+				. "element = document.getElementById('" . $id . "-'+i);\n\t\t"
+				. "if (element.checked && (" . implode(' || ', $tmp3) . ")) { res = true; break; }\n\t"
+				. "}\n\telement = null;";
 
 		case $operation === ':filled' && $control instanceof RadioList:
-			return "res = false; el=null;\n\t"
+			return "res = false; element=null;\n\t"
 				. "for (var i=0;i<" . count($control->getItems()) . ";i++) "
 				. "if (document.getElementById('" . $id . "-'+i).checked) { res = true; break; }";
 
 		case $operation === ':submitted' && $control instanceof SubmitButton:
-			return "el=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
+			return "element=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
 
 		case $operation === ':equal' && $control instanceof SelectBox:
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				$tmp3[] = "el.options[i].value==" . json_encode((string) $item);
+				$tmp3[] = "element.options[i].value==" . json_encode((string) $item);
 			}
 			$first = $control->isFirstSkipped() ? 1 : 0;
 			return $tmp . "res = false;\n\t"
-				. "for (var i=$first;i<el.options.length;i++)\n\t\t"
-				. "if (el.options[i].selected && (" . implode(' || ', $tmp3) . ")) { res = true; break; }";
+				. "for (var i=$first;i<element.options.length;i++)\n\t\t"
+				. "if (element.options[i].selected && (" . implode(' || ', $tmp3) . ")) { res = true; break; }";
 
 		case $operation === ':filled' && $control instanceof SelectBox:
 			$first = $control->isFirstSkipped() ? 1 : 0;
-			return $tmp . "res = el.selectedIndex >= $first;";
+			return $tmp . "res = element.selectedIndex >= $first;";
 
 		case $operation === ':filled' && $control instanceof TextInput:
 			return $tmp . $tmp2 . "res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
