@@ -72,13 +72,20 @@ interface IHttpResponse
 	function getCode();
 
 	/**
-	 * Sends a raw HTTP header.
+	 * Sends a HTTP header and replaces a previous one.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @param  bool    replace? (by default it will replace)
 	 * @return bool
 	 */
-	function setHeader($name, $value, $replace = TRUE);
+	function setHeader($name, $value);
+
+	/**
+	 * Adds HTTP header.
+	 * @param  string  header name
+	 * @param  string  header value
+	 * @return bool
+	 */
+	function addHeader($name, $value);
 
 	/**
 	 * Sends a Content-type HTTP header.

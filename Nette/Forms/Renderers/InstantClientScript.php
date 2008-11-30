@@ -78,7 +78,10 @@ final class InstantClientScript extends /*Nette\*/Object
 		$this->central = TRUE;
 
 		foreach ($this->form->getControls() as $control) {
-			$this->validateScript .= $this->getValidateScript($control->getRules());
+			$script = $this->getValidateScript($control->getRules());
+			if ($script) {
+				$this->validateScript .= "do {\n\t$script} while(0);\n\n\t";
+			}
 			$this->toggleScript .= $this->getToggleScript($control->getRules());
 
 			if ($control instanceof ISubmitterControl && $control->getValidationScope() !== TRUE) {
@@ -88,12 +91,12 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		if ($this->validateScript || $this->toggleScript) {
 			if ($this->central) {
-				$this->form->getElementPrototype()->onsubmit = "return " . $this->validateFunction . "(this)";
+				$this->form->getElementPrototype()->onsubmit("return $this->validateFunction(this)", TRUE);
 
 			} else {
 				foreach ($this->form->getComponents(TRUE, 'Nette\Forms\ISubmitterControl') as $control) {
 					if ($control->getValidationScope()) {
-						$control->getControlPrototype()->onclick .= 'return ' . $this->validateFunction . "(this);";
+						$control->getControlPrototype()->onclick("return $this->validateFunction(this)", TRUE);
 					}
 				}
 			}
@@ -196,10 +199,10 @@ final class InstantClientScript extends /*Nette\*/Object
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
-							$el->onchange .= $this->toggleFunction . "(this);";
+							$el->onchange("$this->toggleFunction(this)", TRUE);
 						} else {
-							$el->onclick .= $this->toggleFunction . "(this);";
-							//$el->onkeyup .= $this->toggleFunction . "(this);";
+							$el->onclick("$this->toggleFunction(this)", TRUE);
+							//$el->onkeyup("$this->toggleFunction(this)", TRUE);
 						}
 						$s .= $res;
 					}

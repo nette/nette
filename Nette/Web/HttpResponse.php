@@ -99,21 +99,33 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 
 	/**
-	 * Sends a raw HTTP header.
+	 * Sends a HTTP header and replaces a previous one.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @param  bool    replace? (by default it will replace)
 	 * @return bool
 	 */
 	public function setHeader($name, $value, $replace = TRUE)
 	{
-		if (headers_sent()) {
-			return FALSE;
-
-		} else {
+		if ($res = !headers_sent()) {
 			header($name . ': ' . $value, $replace, $this->code);
-			return TRUE;
 		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Adds HTTP header.
+	 * @param  string  header name
+	 * @param  string  header value
+	 * @return bool
+	 */
+	public function addHeader($name, $value)
+	{
+		if ($res = !headers_sent()) {
+			header($name . ': ' . $value, FALSE, $this->code);
+		}
+		return $res;
 	}
 
 
