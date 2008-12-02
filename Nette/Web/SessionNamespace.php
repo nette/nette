@@ -105,7 +105,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 		}
 
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
-			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
+			trigger_error("The variable '$name' does not exist in session namespace", E_USER_WARNING);
 		}
 
 		return $this->data[$name];

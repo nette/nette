@@ -401,7 +401,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 		}
 
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
-			trigger_error("The variable '$name' does not exist", E_USER_WARNING);
+			trigger_error("The variable '$name' does not exist in template '$this->file'", E_USER_WARNING);
 		}
 
 		return $this->params[$name];
