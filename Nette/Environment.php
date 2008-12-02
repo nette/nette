@@ -330,7 +330,7 @@ final class Environment
 			$livelock[$var] = TRUE;
 			$val = self::getVariable($var);
 			unset($livelock[$var]);
-		} catch (Exception $e) {
+		} catch (/*\*/Exception $e) {
 			$livelock = array();
 			throw $e;
 		}

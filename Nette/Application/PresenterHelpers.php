@@ -59,7 +59,7 @@ class PresenterHelpers
 
 		try {
 			$meta = array();
-			$rc = new ReflectionClass($class);
+			$rc = new /*\*/ReflectionClass($class);
 			if (!$rc->implementsInterface(/*Nette\Application\*/'IStatePersistent')) return array();
 
 			$sinces = $rc->isSubclassOf(/*Nette\Application\*/'Presenter');
@@ -68,7 +68,7 @@ class PresenterHelpers
 			foreach ($rc->getDefaultProperties() as $nm => $val)
 			{
 				$rp = $rc->getProperty($nm);
-				if (!$rp->isPublic() || $rp->isStatic() || !Annotations::get($rp, 'persistent')) continue;
+				if (!$rp->isPublic() || $rp->isStatic() || !/*Nette\*/Annotations::get($rp, 'persistent')) continue;
 
 				$meta[$nm] = array(
 					'def' => $val, // default value from $class
@@ -85,7 +85,7 @@ class PresenterHelpers
 				}
 
 			}
-		} catch (ReflectionException $e) {
+		} catch (/*\*/ReflectionException $e) {
 		}
 		return $meta;
 	}
@@ -105,12 +105,12 @@ class PresenterHelpers
 
 		try {
 			$meta = array();
-			$rc = new ReflectionClass($class);
+			$rc = new /*\*/ReflectionClass($class);
 			if ($rc->isSubclassOf(/*Nette\Application\*/'Presenter')) {
-				$meta = array_fill_keys((array) Annotations::get($rc, 'persistent'), $class)
+				$meta = array_fill_keys((array) /*Nette\*/Annotations::get($rc, 'persistent'), $class)
 					+ self::getPersistentComponents(get_parent_class($class));
 			}
-		} catch (ReflectionException $e) {
+		} catch (/*\*/ReflectionException $e) {
 		}
 		return $meta;
 	}
@@ -132,7 +132,7 @@ class PresenterHelpers
 		try {
 			$cache = FALSE;
 			// check class
-			$rc = new ReflectionClass($class);
+			$rc = new /*\*/ReflectionClass($class);
 			if (!$rc->isInstantiable()) {
 				return FALSE;
 			}
@@ -145,7 +145,7 @@ class PresenterHelpers
 
 			return $cache = TRUE;
 
-		} catch (ReflectionException $e) {
+		} catch (/*\*/ReflectionException $e) {
 			return FALSE;
 		}
 	}
@@ -235,7 +235,7 @@ class PresenterHelpers
 	{
 		$cache = & self::$mpCache[strtolower($class . ':' . $method)];
 		if ($cache !== NULL) return $cache;
-		$rm = new ReflectionMethod($class, $method);
+		$rm = new /*\*/ReflectionMethod($class, $method);
 		$cache = array();
 		foreach ($rm->getParameters() as $param) {
 			$cache[$param->getName()] = $param->isDefaultValueAvailable()

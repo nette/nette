@@ -155,7 +155,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 
 		if ($section === NULL) {
 			foreach ($config as $secName => $secData) {
-				if (!(is_array($secData) || $secData instanceof Traversable)) {
+				if (!(is_array($secData) || $secData instanceof /*\*/Traversable)) {
 					throw new /*\*/InvalidStateException("Invalid section '$section'.");
 				}
 
@@ -179,7 +179,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 
 	/**
 	 * Recursive builds INI list.
-	 * @param  array|Traversable
+	 * @param  array|\Traversable
 	 * @param  array
 	 * @param  string
 	 * @return void
@@ -187,7 +187,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 	private static function build($input, & $output, $prefix)
 	{
 		foreach ($input as $key => $val) {
-			if (is_array($val) || $val instanceof Traversable) {
+			if (is_array($val) || $val instanceof /*\*/Traversable) {
 				self::build($val, $output, $prefix . $key . self::$keySeparator);
 
 			} elseif (is_bool($val)) {

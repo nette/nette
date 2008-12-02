@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette\Caching
  */
-class Cache extends /*Nette\*/Object implements ArrayAccess
+class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 {
 	/**#@+ dependency */
 	const PRIORITY = 'priority';

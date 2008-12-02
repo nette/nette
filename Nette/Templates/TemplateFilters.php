@@ -110,7 +110,8 @@ final class TemplateFilters
 		);
 
 		// cache support
-		$s = '<?php TemplateFilters::$curlyCacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s;
+		/**/$s = '<?php TemplateFilters::$curlyCacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s;/**/
+		/*$s = '<?php \Nette\Templates\TemplateFilters::$curlyCacheFrames[0][\Nette\Caching\Cache::FILES][] = $template->getFile(); ?>' . $s;*/
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -140,10 +141,13 @@ final class TemplateFilters
 	public static $curlyXlatMask = array(
 		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
+		/*'/block' => '<?php } catch (\Exception $_e) { ob_end_clean(); throw $_e; } # ?>',*/
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
 		'cache' => '<?php TemplateFilters::$curlyCacheFrames[0][Cache::ITEMS][] = #; $_cache = Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); TemplateFilters::curlyAddFrame(##); try { ?>',
-		'/cache' => '<?php $_cache->save(#); } catch (Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
+		/*'cache' => '<?php \Nette\Templates\TemplateFilters::$curlyCacheFrames[0][\Nette\Caching\Cache::ITEMS][] = #; $_cache = \Nette\Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); \Nette\Templates\TemplateFilters::curlyAddFrame(##); try { ?>',*/
+		'/cache' => '<?php $_cache->save(#); } catch (/*\*/Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
+		/*'/cache' => '<?php $_cache->save(#); } catch (\Exception $_e) { ob_end_clean(); throw $_e; } } ?>',*/
 		'if' => '<?php if (#): ?>',
 		'elseif' => '<?php elseif (#): ?>',
 		'else' => '<?php else: ?>',
@@ -160,6 +164,7 @@ final class TemplateFilters
 		'link' => '<?php echo $template->escape(#) ?>',
 		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
+		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
@@ -215,7 +220,8 @@ final class TemplateFilters
 		} elseif ($mod === 'cache') {
 			$var2 = 'array(' . $var . ')';
 			$var = var_export(uniqid(), TRUE); // TODO: odstranit uniqid
-			$tmp = $var . ', ob_get_flush(), array_shift(TemplateFilters::$curlyCacheFrames)';
+			/**/$tmp = $var . ', ob_get_flush(), array_shift(TemplateFilters::$curlyCacheFrames)';/**/
+			/*$tmp = $var . ', ob_get_flush(), array_shift(\Nette\Templates\TemplateFilters::$curlyCacheFrames)';*/
 			$modifiers = NULL;
 
 		} elseif ($mod === 'snippet') {

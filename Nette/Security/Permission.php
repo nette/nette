@@ -86,7 +86,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string|array
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addRole($role, $parents = NULL)
@@ -138,7 +138,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	/**
 	 * Throws exception the Role doesn't exist in the list.
 	 * @param  string
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	protected function needRole($role)
@@ -183,7 +183,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  boolean
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	public function roleInheritsFrom($role, $inherit, $onlyParents = FALSE)
@@ -212,7 +212,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * Removes the Role from the list.
 	 *
 	 * @param  string
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeRole($role)
@@ -278,7 +278,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addResource($resource, $parent = NULL)
@@ -323,7 +323,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	/**
 	 * Throws exception the Resource doesn't exist in the list.
 	 * @param  string
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	protected function needResource($resource)
@@ -346,7 +346,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  boolean
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	public function resourceInheritsFrom($resource, $inherit, $onlyParent = FALSE)
@@ -381,7 +381,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * Removes a Resource and all of its children.
 	 *
 	 * @param  string
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeResource($resource)
@@ -545,7 +545,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * @param  string|array|self::ALL  resources
 	 * @param  string|array|self::ALL  privileges
 	 * @param  IPermissionAssertion assert
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return Permission  provides a fluent interface
 	 */
 	public function setRule($operation, $type, $roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assert = NULL)

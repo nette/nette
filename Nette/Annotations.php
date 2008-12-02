@@ -48,11 +48,11 @@ final class Annotations
 
 	/**
 	 * Has class/method/property specified annotation?
-	 * @param  ReflectionClass|ReflectionMethod|ReflectionProperty
+	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @param  string    annotation name
 	 * @return bool
 	 */
-	public static function has(Reflector $r, $name)
+	public static function has(/*\*/Reflector $r, $name)
 	{
 		$cache = & self::init($r);
 		return !empty($cache[$name]);
@@ -62,11 +62,11 @@ final class Annotations
 
 	/**
 	 * Returns an annotation value.
-	 * @param  ReflectionClass|ReflectionMethod|ReflectionProperty
+	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @param  string    annotation name
 	 * @return array
 	 */
-	public static function get(Reflector $r, $name)
+	public static function get(/*\*/Reflector $r, $name)
 	{
 		$cache = & self::init($r);
 		return isset($cache[$name]) ? end($cache[$name]) : NULL;
@@ -76,11 +76,11 @@ final class Annotations
 
 	/**
 	 * Returns all annotations.
-	 * @param  ReflectionClass|ReflectionMethod|ReflectionProperty
+	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @param  string    annotation name
 	 * @return array
 	 */
-	public static function getAll(Reflector $r, $name = NULL)
+	public static function getAll(/*\*/Reflector $r, $name = NULL)
 	{
 		$cache = & self::init($r);
 
@@ -104,7 +104,7 @@ final class Annotations
 	 */
 	public static function & init($r)
 	{
-		$cache = & self::$cache[$r->getName()][$r instanceof ReflectionClass ? '' : $r->getDeclaringClass()->getName()];
+		$cache = & self::$cache[$r->getName()][$r instanceof /*\*/ReflectionClass ? '' : $r->getDeclaringClass()->getName()];
 		if ($cache !== NULL) {
 			return $cache;
 		}
@@ -140,7 +140,7 @@ final class Annotations
 					}
 				}
 
-				$items = count($items) < 2 ? $val : new ArrayObject($items, ArrayObject::ARRAY_AS_PROPS);
+				$items = count($items) < 2 ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
 
 			} else {
 				$items = TRUE;

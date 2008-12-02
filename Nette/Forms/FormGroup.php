@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class FormGroup extends /*Nette\*/Object
 {
-	/** @var SplObjectStorage */
+	/** @var \SplObjectStorage */
 	protected $controls;
 
 	/** @var array user options */
@@ -45,7 +45,7 @@ class FormGroup extends /*Nette\*/Object
 
 	public function __construct()
 	{
-		$this->controls = new SplObjectStorage;
+		$this->controls = new /*\*/SplObjectStorage;
 	}
 
 
@@ -59,7 +59,7 @@ class FormGroup extends /*Nette\*/Object
 			if ($item instanceof IFormControl) {
 				$this->controls->attach($item);
 
-			} elseif ($item instanceof Traversable || is_array($item)) {
+			} elseif ($item instanceof /*\*/Traversable || is_array($item)) {
 				foreach ($item as $control) {
 					$this->controls->attach($control);
 				}

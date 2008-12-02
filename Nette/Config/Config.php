@@ -151,7 +151,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 
 	/**
 	 * Import from array or any traversable object.
-	 * @param  array|Traversable
+	 * @param  array|\Traversable
 	 * @return void
 	 * @throws \InvalidArgumentException
 	 */

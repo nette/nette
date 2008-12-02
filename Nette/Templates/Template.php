@@ -167,7 +167,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 		try {
 			TemplateFilters::phpEvaluation($this, $content, $isFile);
-		} catch (Exception $e) {
+		} catch (/*\*/Exception $e) {
 			// continue with shutting down
 		}
 
@@ -195,7 +195,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 			$this->render();
 			return ob_get_clean();
 
-		} catch (Exception $e) {
+		} catch (/*\*/Exception $e) {
 			ob_end_clean();
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';

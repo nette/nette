@@ -152,13 +152,13 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 	/**
 	 * Import from array or any traversable object.
-	 * @param  array|Traversable
+	 * @param  array|\Traversable
 	 * @return void
 	 * @throws \InvalidArgumentException
 	 */
 	public function import($arr)
 	{
-		if (!(is_array($arr) || $arr instanceof Traversable)) {
+		if (!(is_array($arr) || $arr instanceof /*\*/Traversable)) {
 			throw new /*\*/InvalidArgumentException("Argument must be traversable.");
 		}
 

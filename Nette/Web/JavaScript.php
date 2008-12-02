@@ -41,7 +41,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @copyright  Copyright (c) 2004, 2008 David Grudl
  * @package    Nette\Web
  */
-class JavaScript extends Object
+class JavaScript extends /*Nette\*/Object
 {
 	/** @var string */
 	protected $js;

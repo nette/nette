@@ -69,6 +69,7 @@ class NetteLoader extends AutoLoader
 		'control' => '/Application/Control.php',
 		'conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
 		'debug' => '/Debug.php',
+		'deprecatedexception' => '/exceptions.php',
 		'directorynotfoundexception' => '/exceptions.php',
 		'dummystorage' => '/Caching/DummyStorage.php',
 		'environment' => '/Environment.php',

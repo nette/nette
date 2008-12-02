@@ -63,7 +63,7 @@ class Application extends /*Nette\*/Object
 	/** @var array of function(Application $sender) */
 	public $onNewRequest;
 
-	/** @var array of function(Application $sender, Exception $e) */
+	/** @var array of function(Application $sender, \Exception $e) */
 	public $onError;
 
 	/** @var array of string */
@@ -182,7 +182,7 @@ class Application extends /*Nette\*/Object
 				// not error, application is correctly terminated
 				break;
 
-			} catch (Exception $e) {
+			} catch (/*\*/Exception $e) {
 				// fault barrier
 				if ($this->catchExceptions === NULL) {
 					$this->catchExceptions = Environment::isProduction();

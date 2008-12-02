@@ -8,7 +8,7 @@ require_once '../../Nette/loader.php';
 /*use Nette\Debug;*/
 
 
-/*Nette\Object\extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $thisObj, $separator)*/
+/*Nette\Object::extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $thisObj, $separator)*/
 /**/function ICollection_prototype_join(ICollection $thisObj, $separator)/**/
 {
 	return implode($separator, (array) $thisObj);

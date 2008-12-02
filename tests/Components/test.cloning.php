@@ -45,7 +45,7 @@ class Test extends ComponentContainer implements /*\*/ArrayAccess
 }
 
 
-/*Nette\Object\extensionMethod('Nette\IComponentContainer\export', function($thisObj)*/
+/*Nette\Object::extensionMethod('Nette\IComponentContainer::export', function($thisObj)*/
 /**/function IComponentContainer_prototype_export($thisObj)/**/
 {
 	$res = array("($thisObj->class)" => $thisObj->name);
