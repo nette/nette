@@ -78,7 +78,7 @@
 	<fieldset>
 		<legend>Shipping address</legend>
 
-		<p><input type="checkbox" onclick="toggle(this);" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></p>
+		<p><input type="checkbox" onclick="toggle(this)" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></p>
 
 		<table id="sendBox">
 		<tr>
@@ -128,10 +128,14 @@
 /* <![CDATA[ */
 function validate(sender) {
 	var element, message, res;
+	do {
 	element = document.getElementById('frm-name');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="";
 	if (!res) { message = "Enter your name"; if (element) element.focus(); alert(message); return false; }
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-age');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="";
@@ -144,6 +148,9 @@ function validate(sender) {
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = parseFloat(val)>=9.9 && parseFloat(val)<=100;
 	if (!res) { message = "Age must be in range from 9.90 to 100.00"; if (element) element.focus(); alert(message); return false; }
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-email');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="@";
@@ -153,6 +160,9 @@ function validate(sender) {
 		res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);
 		if (!res) { message = "Incorrect E-mail Address"; if (element) element.focus(); alert(message); return false; }
 	}
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-send');
 	res = element.checked;
 	if (res) {
@@ -161,6 +171,9 @@ function validate(sender) {
 		res = val!='' && val!="";
 		if (!res) { message = "Enter your shipping address"; if (element) element.focus(); alert(message); return false; }
 	}
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-send');
 	res = element.checked;
 	if (res) {
@@ -168,6 +181,9 @@ function validate(sender) {
 		res = element.selectedIndex >= 1;
 		if (!res) { message = "Select your country"; if (element) element.focus(); alert(message); return false; }
 	}
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-password');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val!='' && val!="";
@@ -176,6 +192,9 @@ function validate(sender) {
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = val.length>=3;
 	if (!res) { message = "The password is too short: it must be at least 3 characters"; if (element) element.focus(); alert(message); return false; }
+	} while(0);
+
+	do {
 	element = document.getElementById('frm-password');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = function(){
@@ -198,6 +217,8 @@ function validate(sender) {
 		res = (val==document.getElementById('frm-password').value);
 		if (!res) { message = "Passwords do not match"; if (element) element.focus(); alert(message); return false; }
 	}
+	} while(0);
+
 	return true;
 }
 

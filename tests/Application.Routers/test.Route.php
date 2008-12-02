@@ -879,3 +879,45 @@ test($route,
 	),
 	'/index.xml/?test=testvalue'
 );
+
+
+
+
+
+
+echo "\n<hr><h2>Filter table</h2>\n";
+
+Route::addStyle('#xlat', 'presenter');
+Route::setStyleProperty('#xlat', Route::FILTER_TABLE, array(
+	'produkt' => 'Product',
+	'kategorie' => 'Category',
+	'zakaznik' => 'Customer',
+	'kosik' => 'Basket',
+));
+
+$route = new Route('<presenter #xlat>', array());
+
+test($route,
+	'/kategorie/',
+	array (
+		'presenter' => 'Category',
+		'params' =>
+		array (
+			'test' => 'testvalue',
+		),
+	),
+	'/kategorie?test=testvalue'
+);
+
+
+test($route,
+	'/other/',
+	array (
+		'presenter' => 'Other',
+		'params' =>
+		array (
+			'test' => 'testvalue',
+		),
+	),
+	'/other?test=testvalue'
+);

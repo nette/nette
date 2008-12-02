@@ -276,7 +276,8 @@ final class InstantClientScript extends /*Nette\*/Object
 			if (!is_array($arg)) {
 				$arg = array($arg, $arg);
 			}
-			return $tmp . $tmp2 . "res = val.length>=" . (int) $arg[0] . " && val.length<=" . (int) $arg[1] . ";";
+			return $tmp . $tmp2 . "res = " . ($arg[0] === NULL ? "true" : "val.length>=" . (int) $arg[0]) . " && "
+				. ($arg[1] === NULL ? "true" : "val.length<=" . (int) $arg[1]) . ";";
 
 		case $operation === ':email' && $control instanceof TextBase:
 			return $tmp . $tmp2 . 'res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);';
@@ -297,7 +298,8 @@ final class InstantClientScript extends /*Nette\*/Object
 			return $tmp . $tmp2 . "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val);";
 
 		case $operation === ':range' && $control instanceof TextBase:
-			return $tmp . $tmp2 . "res = parseFloat(val)>=" . json_encode((float) $arg[0]) . " && parseFloat(val)<=" . json_encode((float) $arg[1]) . ";";
+			return $tmp . $tmp2 . "res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
+				. ($arg[1] === NULL ? "true" : "parseFloat(val)<=" . json_encode((float) $arg[1])) . ";";
 
 		case $operation === ':filled' && $control instanceof FormControl:
 			return $tmp . $tmp2 . "res = val!='';";

@@ -54,6 +54,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	const PATTERN = 'pattern';
 	const FILTER_IN = 'filterIn';
 	const FILTER_OUT = 'filterOut';
+	const FILTER_TABLE = 'filterTable';
 	/**#@-*/
 
 	/**#@+ @internal fixed types {@link Route::$metadata} */
@@ -178,14 +179,21 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 2) FIXED
 		$defaults = array();
+		$lower = !($this->flags & self::CASE_SENSITIVE);
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
-				if (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
-					$params[$name] = call_user_func($meta[self::FILTER_IN], $params[$name]);
+				$val = $lower ? strtolower($params[$name]) : $params[$name];
+				if (isset($meta[self::FILTER_TABLE][$val])) { // applyies filterTable only to path parameters
+					$params[$name] = $meta[self::FILTER_TABLE][$val];
+
+				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
+					$params[$name] = call_user_func($meta[self::FILTER_IN], $val);
 				}
+
 			} elseif (isset($meta['fixed'])) {
 				if ($meta['fixed'] !== self::NOT_FIXED) { // force now
 					$params[$name] = $meta['default'];
+
 				} else { // append later - after query params
 					$defaults[$name] = $meta['default'];
 				}
@@ -215,6 +223,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			}
 			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
 			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
+
 		} else {
 			$presenter = $params[self::PRESENTER_KEY];
 			unset($params[self::PRESENTER_KEY]);
@@ -270,7 +279,10 @@ class Route extends /*Nette\*/Object implements IRouter
 				}
 			}
 
-			if (isset($meta[self::FILTER_OUT])) {
+			if (isset($meta['filterTable2'][$params[$name]])) {
+				$params[$name] = $meta['filterTable2'][$params[$name]];
+
+			} elseif (isset($meta[self::FILTER_OUT])) {
 				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
 			}
 
@@ -459,8 +471,17 @@ class Route extends /*Nette\*/Object implements IRouter
 				$pattern = $meta[self::PATTERN];
 			}
 
+			$meta['filterTable2'] = empty($meta[self::FILTER_TABLE]) ? NULL : array_flip($meta[self::FILTER_TABLE]);
 			if (isset($meta['default'])) {
-				$meta['defOut'] = isset($meta[self::FILTER_OUT]) ? call_user_func($meta[self::FILTER_OUT], $meta['default']) : $meta['default'];
+				if (isset($meta['filterTable2'][$meta['default']])) {
+					$meta['defOut'] = $meta['filterTable2'][$meta['default']];
+
+				} elseif (isset($meta[self::FILTER_OUT])) {
+					$meta['defOut'] = call_user_func($meta[self::FILTER_OUT], $meta['default']);
+
+				} else {
+					$meta['defOut'] = $meta['default'];
+				}
 			}
 			$meta[self::PATTERN] = "#$pattern$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 			$metadata[$name] = $meta;
@@ -623,7 +644,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  string  optional parent style name
 	 * @param  void
 	 */
-	public static function addStyle($style, $parent = NULL)
+	public static function addStyle($style, $parent = '#')
 	{
 		if (isset(self::$styles[$style])) {
 			throw new InvalidArgumentException("Style '$style' already exists.");
@@ -645,7 +666,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	/**
 	 * Changes style property value.
 	 * @param  string  style name (#style, urlParameter, ?queryParameter)
-	 * @param  string  property name (Route::PATTERN, Route::FILTER_IN, Router::FILTER_OUT)
+	 * @param  string  property name (Route::PATTERN, Route::FILTER_IN, Route::FILTER_OUT, Route::FILTER_TABLE)
 	 * @param  mixed   property value
 	 * @param  void
 	 */

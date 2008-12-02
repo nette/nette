@@ -42,10 +42,13 @@
 /* <![CDATA[ */
 function validate(sender) {
 	var element, message, res;
+	do {
 	element = document.getElementById('frm-age');
 	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
 	res = parseFloat(val)>=9.9 && parseFloat(val)<=100;
 	if (!res) { message = "Age must be in range from 9.90 to 100.00"; if (element) element.focus(); alert(message); return false; }
+	} while(0);
+
 	return true;
 }
 

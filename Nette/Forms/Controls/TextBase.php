@@ -163,7 +163,7 @@ abstract class TextBase extends FormControl
 			$range = array($range, $range);
 		}
 		$len = iconv_strlen($control->getValue(), 'UTF-8');
-		return $len >= $range[0] && $len <= $range[1];
+		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
 	}
 
 
@@ -237,7 +237,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateRange(TextBase $control, $range)
 	{
-		return $control->getValue() >= $range[0] && $control->getValue() <= $range[1];
+		return ($range[0] === NULL || $control->getValue() >= $range[0]) && ($range[1] === NULL || $control->getValue() <= $range[1]);
 	}
 
 
