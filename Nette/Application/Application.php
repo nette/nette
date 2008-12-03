@@ -171,7 +171,7 @@ class Application extends /*Nette\*/Object
 				} elseif (substr($uri, 0, 1) === '/') {
 					$uri = $httpRequest->getUri()->hostUri . $uri;
 				}
-				$httpResponse->redirect($uri);
+				$httpResponse->redirect($uri, $e->getCode());
 				break;
 
 			} catch (ForwardingException $e) {

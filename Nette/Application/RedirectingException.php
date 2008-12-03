@@ -35,16 +35,11 @@ require_once dirname(__FILE__) . '/../Application/AbortException.php';
  */
 class RedirectingException extends AbortException
 {
-	/** @var string */
-	private $uri;
-
 
 
 	public function __construct($uri, $code)
 	{
-		parent::__construct();
-		$this->code = (int) $code;
-		$this->uri = (string) $uri;
+		parent::__construct((string) $uri, (int) $code);
 	}
 
 
@@ -54,7 +49,7 @@ class RedirectingException extends AbortException
 	 */
 	final public function getUri()
 	{
-		return $this->uri;
+		return $this->getMessage();
 	}
 
 }

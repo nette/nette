@@ -32,10 +32,4 @@
  */
 class AbortException extends /*\*/Exception
 {
-
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 }
