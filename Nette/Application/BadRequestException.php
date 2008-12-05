@@ -32,7 +32,7 @@
 class BadRequestException extends /*\*/Exception
 {
 	/** @var int */
-	protected $defaultCode = 403;
+	protected $defaultCode = 404;
 
 
 	function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)

@@ -771,7 +771,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$uri = $this->constructUrl($this->createRequest('this', $this->params));
+			$uri = $this->constructUrl($this->createRequest($this->view, $this->getGlobalState() + $this->request->params));
 			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
