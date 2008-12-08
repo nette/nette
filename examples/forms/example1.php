@@ -75,7 +75,7 @@ $form['name']->addRule(Form::FILLED, 'Enter your name');
 
 $form['age']->addRule(Form::FILLED, 'Enter your age');
 $form['age']->addRule(Form::INTEGER, 'Age must be numeric value');
-$form['age']->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', array(9.9, 100));
+$form['age']->addRule(Form::RANGE, 'Age must be in range from %d to %d', array(10, 100));
 
 // conditional rule: if is email filled, ...
 $form['email']->addCondition(Form::FILLED)

@@ -56,7 +56,7 @@ $sex = array(
 // Step 1: Define form with validation rules
 $form = new Form;
 // enable translator
-$translator = new MyTranslator('gettext', dirname(__FILE__) . '/messages.mo');
+$translator = new MyTranslator('gettext', dirname(__FILE__) . '/messages.mo', 'cs');
 $translator->setLocale('cs');
 $form->setTranslator($translator);
 
@@ -68,7 +68,7 @@ $form->addText('name', 'Your name:', 35)
 $form->addText('age', 'Your age:', 5)
 	->addRule(Form::FILLED, 'Enter your age')
 	->addRule(Form::INTEGER, 'Age must be numeric value')
-	->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', array(9.9, 100));
+	->addRule(Form::RANGE, 'Age must be in range from %d to %d', array(10, 100));
 
 $form->addRadioList('gender', 'Your gender:', $sex);
 

@@ -74,7 +74,7 @@ $form->addText('name', 'Your name', 35)
 $form->addText('age', 'Your age', 5)
 	->addRule(Form::FILLED, 'Enter your age')
 	->addRule(Form::INTEGER, 'Age must be numeric value')
-	->addRule(Form::RANGE, 'Age must be in range from %.2f to %.2f', array(9.9, 100));
+	->addRule(Form::RANGE, 'Age must be in range from %d to %d', array(10, 100));
 
 $form->addSelect('gender', 'Your gender', $sex, 2);
 

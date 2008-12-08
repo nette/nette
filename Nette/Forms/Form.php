@@ -210,7 +210,7 @@ class Form extends FormContainer
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = /*Nette\*/Environment::getSession(__METHOD__);
+		$session = /*Nette\*/Environment::getSession('Nette.Forms.Form/CSRF');
 		$key = "key$timeout";
 		if (isset($session->$key)) {
 			$token = $session->$key;

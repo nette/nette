@@ -497,6 +497,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			if (!$hasContent) {
+				$file = reset($this->formatTemplateFiles($presenter, $this->scene));
 				throw new BadRequestException("Page not found. Missing template '$file'.");
 			}
 		}
@@ -1122,7 +1123,10 @@ abstract class Presenter extends Control implements IPresenter
 		$selfParams = array();
 
 		$params = $this->request->getParams();
-		// TODO: $params += $this->request->getPost();
+		if ($this->isAjax()) {
+			$params = $this->request->getPost() + $params;
+		}
+
 		foreach ($params as $key => $value) {
 			$a = strlen($key) > 2 ? strrpos($key, self::NAME_SEPARATOR, -2) : FALSE;
 			if ($a === FALSE) {

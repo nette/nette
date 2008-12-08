@@ -360,7 +360,7 @@ final class TemplateFilters
 	public static function relativeLinks($template, $s)
 	{
 		return preg_replace(
-			'#(src|href|action)\s*=\s*"(?![a-z]+:|/|<|\\#)#',
+			'#(src|href|action)\s*=\s*["\'](?![a-z]+:|/|<|\\#)#',
 			'$1="' . $template->baseUri,
 			$s
 		);

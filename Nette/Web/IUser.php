@@ -37,13 +37,13 @@ interface IUser
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	function authenticate();
+	function authenticate($username = NULL, $password = NULL, $extra = NULL);
 
 	/**
 	 * Logs off the user from the current session.
 	 * @return void
 	 */
-	function signOut();
+	function signOut($clearIdentity = FALSE);
 
 	/**
 	 * Is this user authenticated?

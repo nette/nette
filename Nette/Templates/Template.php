@@ -59,6 +59,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 		'upper' => /*Nette\Templates\*/'TemplateHelpers::upper',
 		'capitalize' => /*Nette\Templates\*/'TemplateHelpers::capitalize',
 		'strip' => /*Nette\Templates\*/'TemplateHelpers::strip',
+		'date' => /*Nette\Templates\*/'TemplateHelpers::date',
 		'nl2br' => 'nl2br',
 		'truncate' => /*Nette\*/'String::truncate',
 		'bytes' => /*Nette\*/'String::bytes',

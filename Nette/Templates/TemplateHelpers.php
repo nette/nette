@@ -115,4 +115,17 @@ final class TemplateHelpers
 		return preg_replace('#\\s+#', ' ', $s);
 	}
 
+
+
+	/**
+	 * Date/time formatting.
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	public static function date($s, $format = "%x")
+	{
+		return strftime($format, $s);
+	}
+
 }
