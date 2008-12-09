@@ -66,7 +66,11 @@ class DashboardPresenter extends BasePresenter
 
 		if (!$form->isSubmitted()) {
 			$album = new Albums;
-			$form->setDefaults($album->fetch($id));
+			$row = $album->fetch($id);
+			if (!$row) {
+				throw new /*Nette\Application\*/BadRequestException('Record not found');
+			}
+			$form->setDefaults($row);
 		}
 	}
 
@@ -96,7 +100,9 @@ class DashboardPresenter extends BasePresenter
 		$this->template->form = $this->getComponent('deleteForm');
 		$album = new Albums;
 		$this->template->album = $album->fetch($id);
-
+		if (!$this->template->album) {
+			throw new /*Nette\Application\*/BadRequestException('Record not found');
+		}
 	}
 
 

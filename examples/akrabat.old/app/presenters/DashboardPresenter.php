@@ -98,6 +98,10 @@ class DashboardPresenter extends BasePresenter
 		$album = new Albums();
 		if ($id > 0) {
 			$this->template->album = $album->fetch($id);
+			if (!$this->template->album) {
+				throw new /*Nette\Application\*/BadRequestException('Record not found');
+			}
+
 		} else {
 			$this->template->album = $album->createBlank();
 		}
@@ -131,7 +135,7 @@ class DashboardPresenter extends BasePresenter
 			$album = new Albums();
 			$this->template->album = $album->fetch($id);
 			if (!$this->template->album) {
-				$this->redirect('default');
+				throw new /*Nette\Application\*/BadRequestException('Record not found');
 			}
 		}
 

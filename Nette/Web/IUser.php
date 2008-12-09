@@ -34,10 +34,13 @@ interface IUser
 
 	/**
 	 * Conducts the authentication process.
+	 * @param  string
+	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	function authenticate($username = NULL, $password = NULL, $extra = NULL);
+	function authenticate($username, $password, $extra = NULL);
 
 	/**
 	 * Logs off the user from the current session.

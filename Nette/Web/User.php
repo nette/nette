@@ -71,7 +71,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	public function authenticate($username = NULL, $password = NULL, $extra = NULL)
+	public function authenticate($username, $password, $extra = NULL)
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {

@@ -49,7 +49,7 @@ final class Environment
 	/** @var string  the mode of current application */
 	private static $mode = array();
 
-	/** @var Nette\Config\Config */
+	/** @var \ArrayObject */
 	private static $config;
 
 	/** @var IServiceLocator */
@@ -457,7 +457,7 @@ final class Environment
 	 * Loads global configuration from file and process it.
 	 * @param  string|Nette\Config\Config  file name or Config object
 	 * @param  bool
-	 * @return Nette\Config\Config
+	 * @return \ArrayObject
 	 */
 	public static function loadConfig($file = NULL, $useCache = NULL)
 	{
@@ -470,12 +470,13 @@ final class Environment
 	 * Returns the global configuration.
 	 * @param  string key
 	 * @param  mixed  default value
-	 * @return Nette\Config\Config|mixed
+	 * @return mixed
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
 		if (func_num_args()) {
-			return self::$config->get($key, $default);
+			return isset(self::$config[$key]) ? self::$config[$key] : $default;
+
 		} else {
 			return self::$config;
 		}
@@ -492,6 +493,7 @@ final class Environment
 	{
 		if ($state === NULL) {
 			return array(self::$config, self::$vars, self::$serviceLocator);
+
 		} else {
 			list(self::$config, self::$vars, self::$serviceLocator) = $state;
 		}
