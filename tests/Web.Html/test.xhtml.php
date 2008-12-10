@@ -102,8 +102,8 @@ echo "\n\n";
 
 // append
 $el = Html::el('div');
-$el->style('color: white', TRUE);
-$el->style('background-color: blue', TRUE);
+$el->style('color', 'white');
+$el->style('background-color', 'blue');
 
 $el->class = 'one';
 $el->class('', TRUE);
@@ -118,4 +118,14 @@ $el = Html::el('div');
 $el->style[] = 'text-align:right';
 $el->style('', TRUE);
 $el->style('background-color: blue', TRUE);
+echo $el, "\n\n";
+
+
+// append III
+$el = Html::el('div');
+$el->class('top', TRUE);
+$el->class('active', TRUE);
+echo $el, "\n\n";
+$el->class('top', NULL);
+$el->class('active', FALSE);
 echo $el, "\n\n";

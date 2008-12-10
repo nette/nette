@@ -1,4 +1,4 @@
-<h1>Nette\Templates\TemplateFilters::curlyBrackets & helpers test</h1>
+<h1>Nette\Templates\CurlyBracketsFilter & helpers test</h1>
 
 <?php
 require_once '../../Nette/loader.php';
@@ -27,7 +27,7 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-helpers.phtml');
-$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
+$template->registerFilter(/*Nette\Templates\*/'CurlyBracketsFilter::invoke');
 $template->registerHelper('h1', array(new MyHelper, 'invoke'));
 $template->registerHelper('h2', 'strtoupper');
 $template->hello = 'Hello World';

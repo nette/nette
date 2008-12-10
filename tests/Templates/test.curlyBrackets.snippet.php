@@ -1,4 +1,4 @@
-<h1>Nette\Templates\TemplateFilters::curlyBrackets & snippets test</h1>
+<h1>Nette\Templates\CurlyBracketsFilter & snippets test</h1>
 
 <pre>
 <?php
@@ -49,7 +49,7 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');
-$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::curlyBrackets');
+$template->registerFilter(/*Nette\Templates\*/'CurlyBracketsFilter::invoke');
 $template->registerFilter('printSource');
 $template->control = new MockControl;
 $template->render();

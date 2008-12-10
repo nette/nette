@@ -53,8 +53,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 	/** @var array */
 	private $helpers = array(
-		'escape' => /*Nette\Templates\*/'TemplateHelpers::escape',
-		'translate' => /*Nette\Templates\*/'TemplateHelpers::nop',
+		'escape' => /*Nette\Templates\*/'TemplateHelpers::escapeHtml',
 		'lower' => /*Nette\Templates\*/'TemplateHelpers::lower',
 		'upper' => /*Nette\Templates\*/'TemplateHelpers::upper',
 		'capitalize' => /*Nette\Templates\*/'TemplateHelpers::capitalize',
@@ -317,7 +316,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
 	{
-		$this->registerHelper('translate', $translator === NULL ? /*Nette\Templates\*/'TemplateHelpers::nop' : array($translator, 'translate'));
+		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
 	}
 
 

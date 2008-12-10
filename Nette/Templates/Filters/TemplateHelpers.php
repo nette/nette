@@ -43,11 +43,11 @@ final class TemplateHelpers
 
 
 	/**
-	 * Escapes string for use inside template.
+	 * Escapes string for use inside HTML template.
 	 * @param  string
 	 * @return string
 	 */
-	public static function escape($s)
+	public static function escapeHtml($s)
 	{
 		if (is_string($s)) {
 			return htmlSpecialChars($s, ENT_QUOTES);
@@ -58,12 +58,16 @@ final class TemplateHelpers
 
 
 	/**
-	 * No operation.
+	 * Escapes string for use inside CSS template.
 	 * @param  string
 	 * @return string
 	 */
-	public static function nop($s)
+	public static function escapeCss($s)
 	{
+		if (is_string($s)) {
+			// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
+			return addcslashes($s, "\x00..\x2C./:;<=>?@[\\]^`{|}~");
+		}
 		return $s;
 	}
 
@@ -119,13 +123,14 @@ final class TemplateHelpers
 
 	/**
 	 * Date/time formatting.
-	 * @param  string
+	 * @param  string|int|DateTime
 	 * @param  string
 	 * @return string
 	 */
-	public static function date($s, $format = "%x")
+	public static function date($value, $format = "%x")
 	{
-		return strftime($format, $s);
+		$value = is_numeric($value) ? (int) $value : ($value instanceof DateTime ? $value->format('U') : strtotime($value));
+		return strftime($format, $value);
 	}
 
 }
