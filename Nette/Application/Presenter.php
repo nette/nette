@@ -56,6 +56,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**#@+ special parameter key */
 	const SIGNAL_KEY = 'do';
 	const VIEW_KEY = 'view';
+	const FLASH_KEY = 'flash';
 	/**#@-*/
 
 	/** @var string */
@@ -497,7 +498,8 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			if (!$hasContent) {
-				$file = reset($this->formatTemplateFiles($presenter, $this->scene));
+				$files = $this->formatTemplateFiles($presenter, $this->scene);
+				$file = reset($files);
 				throw new BadRequestException("Page not found. Missing template '$file'.");
 			}
 		}
