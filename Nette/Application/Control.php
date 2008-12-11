@@ -83,6 +83,16 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->control = $this;
 		$template->presenter = $this->getPresenter(FALSE);
 		$template->baseUri = /*Nette\*/Environment::getVariable('baseUri');
+		$template->registerHelper('escape', /*Nette\Templates\*/'TemplateHelpers::escapeHtml');
+		$template->registerHelper('cache', /*Nette\Templates\*/'CachingHelper::create');
+		$template->registerHelper('lower', /*Nette\*/'String::lower');
+		$template->registerHelper('upper', /*Nette\*/'String::upper');
+		$template->registerHelper('capitalize', /*Nette\*/'String::capitalize');
+		$template->registerHelper('strip', /*Nette\Templates\*/'TemplateHelpers::strip');
+		$template->registerHelper('date', /*Nette\Templates\*/'TemplateHelpers::date');
+		$template->registerHelper('nl2br', 'nl2br');
+		$template->registerHelper('truncate', /*Nette\*/'String::truncate');
+		$template->registerHelper('bytes', /*Nette\*/'String::bytes');
 		return $template;
 	}
 

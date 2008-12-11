@@ -52,17 +52,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 	private $filters = array();
 
 	/** @var array */
-	private $helpers = array(
-		'escape' => /*Nette\Templates\*/'TemplateHelpers::escapeHtml',
-		'lower' => /*Nette\Templates\*/'TemplateHelpers::lower',
-		'upper' => /*Nette\Templates\*/'TemplateHelpers::upper',
-		'capitalize' => /*Nette\Templates\*/'TemplateHelpers::capitalize',
-		'strip' => /*Nette\Templates\*/'TemplateHelpers::strip',
-		'date' => /*Nette\Templates\*/'TemplateHelpers::date',
-		'nl2br' => 'nl2br',
-		'truncate' => /*Nette\*/'String::truncate',
-		'bytes' => /*Nette\*/'String::bytes',
-	);
+	private $helpers = array();
 
 	/** @var bool */
 	private $isRendering;
@@ -115,6 +105,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 		} else {
 			$tpl = clone $this;
+			$tpl->isRendering = FALSE;
 			if ($file[0] !== '/' && $file[1] !== ':') {
 				$file = dirname($this->file) . '/' . $file;
 			}

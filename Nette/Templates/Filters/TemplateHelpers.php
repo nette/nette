@@ -74,37 +74,13 @@ final class TemplateHelpers
 
 
 	/**
-	 * Convert to lower case.
+	 * Escapes string for use inside JavaScript template.
 	 * @param  string
 	 * @return string
 	 */
-	public static function lower($s)
+	public static function escapeJs($s)
 	{
-		return mb_strtolower($s, 'UTF-8');
-	}
-
-
-
-	/**
-	 * Convert to upper case.
-	 * @param  string
-	 * @return string
-	 */
-	public static function upper($s)
-	{
-		return mb_strtoupper($s, 'UTF-8');
-	}
-
-
-
-	/**
-	 * Capitalize string.
-	 * @param  string
-	 * @return string
-	 */
-	public static function capitalize($s)
-	{
-		return mb_convert_case($s, MB_CASE_TITLE, 'UTF-8');
+		return json_encode($s);
 	}
 
 

@@ -33,6 +33,7 @@ Environment::setVariable('tempDir', $tmpDir);
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-link.phtml');
 $template->registerFilter(/*Nette\Templates\*/'CurlyBracketsFilter::invoke');
+$template->registerHelper('escape', /*Nette\Templates\*/'TemplateHelpers::escapeHtml');
 $template->control = new MockControl;
 $template->presenter = new MockPresenter;
 $template->view = 'login';

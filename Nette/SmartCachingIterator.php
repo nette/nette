@@ -93,6 +93,17 @@ class SmartCachingIterator extends /*\*/CachingIterator
 
 
 	/**
+	 * Is the counter even?
+	 * @return bool
+	 */
+	public function isEven()
+	{
+		return $this->counter % 2 === 0;
+	}
+
+
+
+	/**
 	 * Returns the counter.
 	 * @return int
 	 */
