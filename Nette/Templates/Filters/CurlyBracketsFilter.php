@@ -41,6 +41,7 @@
  *   {include ?}
  *   {cache ?} ... {/cache} cached block
  *   {snippet ?} ... {/snippet ?} control snippet
+ *   {attr ?} HTML element attributes
  *   {block|texy} ... {/block} capture of filter block
  *   {contentType ...} HTTP Content-Type header
  *   {debugbreak}
@@ -51,6 +52,49 @@
  */
 final class CurlyBracketsFilter
 {
+
+	/** @var array */
+	public static $statements = array(
+		'block' => '<?php ob_start(); try { ?>',
+		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
+		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
+		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
+		'cache' => '<?php if ($_cb->foo = $template->cache($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(#))) { $_cb->caches[] = $_cb->foo; ?>',
+		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key); ?>',
+		'if' => '<?php if (#): ?>',
+		'elseif' => '<?php elseif (#): ?>',
+		'else' => '<?php else: ?>',
+		'/if' => '<?php endif ?>',
+		'foreach' => '<?php foreach (#): ?>',
+		'/foreach' => '<?php endforeach; $iterator = array_pop($_cb->iterators); ?>',
+		'for' => '<?php for (#): ?>',
+		'/for' => '<?php endfor ?>',
+		'while' => '<?php while (#): ?>',
+		'/while' => '<?php endwhile ?>',
+		'include' => '<?php $template->subTemplate(#)->render() ?>',
+		'ajaxlink' => '<?php echo $template->{$_cb->escape}(#) ?>',
+		'plink' => '<?php echo $template->{$_cb->escape}(#) ?>',
+		'link' => '<?php echo $template->{$_cb->escape}(#) ?>',
+		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
+		'attr' => '<?php echo Html::el(NULL)->#attributes() ?>',
+		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
+		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
+		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
+		'!=' => '<?php echo # ?>',
+		'_' => '<?php echo $template->{$_cb->escape}($template->translate(#)) ?>',
+		'=' => '<?php echo $template->{$_cb->escape}(#) ?>',
+		'!$' => '<?php echo # ?>',
+		'!' => '<?php echo # ?>',
+		'$' => '<?php echo $template->{$_cb->escape}(#) ?>',
+		'?' => '<?php # ?>',
+	);
+
+
+
+	/** @var array */
+	private static $blocks = array();
+
+
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -70,6 +114,9 @@ final class CurlyBracketsFilter
 	 */
 	public static function invoke($template, $s)
 	{
+		// remove comments
+		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
+
 		// snippets support
 		if (isset($template->control) &&
 			$template->control instanceof /*Nette\Application\*/IPartiallyRenderable) {
@@ -83,13 +130,24 @@ final class CurlyBracketsFilter
 
 		// internal variable
 		$s = "<?php\n"
-			//. "use Exception;\n"
+			//. "use Exception, Nette\SmartCachingIterator;\n"
 			. "if (!isset(\$_cb)) \$_cb = \$template->_cb = (object) NULL;\n"  // internal variable
+			. "if (empty(\$_cb->escape)) \$_cb->escape = 'escape';\n"  // content sensitive escaping
 			. "if (!empty(\$_cb->caches)) end(\$_cb->caches)->addFile(\$template->getFile());\n" // cache support
 			. "?>" . $s;
 
-		// remove comments
-		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
+		// add local content escaping switcher
+		$s = str_replace(array(
+			'<script',
+			'<style',
+			'</script',
+			'</style',
+		), array(
+			"<?php \$_cb->escape = 'escapeJs' ?><script",
+			"<?php \$_cb->escape = 'escapeCss' ?><style",
+			"<?php \$_cb->escape = 'escape' ?></script",
+			"<?php \$_cb->escape = 'escape' ?></style",
+		), $s);
 
 		self::$blocks = array();
 		$k = array();
@@ -112,49 +170,6 @@ final class CurlyBracketsFilter
 
 
 
-	/** @var array */
-	public static $statements = array(
-		'block' => '<?php ob_start(); try { ?>',
-		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
-		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
-		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
-		'cache' => '<?php if ($_cb->foo = $template->cache($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(#))) { $_cb->caches[] = $_cb->foo; ?>',
-		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key); ?>',
-		'if' => '<?php if (#): ?>',
-		'elseif' => '<?php elseif (#): ?>',
-		'else' => '<?php else: ?>',
-		'/if' => '<?php endif ?>',
-		'foreach' => '<?php foreach (#): ?>',
-		'/foreach' => '<?php endforeach ?>',
-		'for' => '<?php for (#): ?>',
-		'/for' => '<?php endfor ?>',
-		'while' => '<?php while (#): ?>',
-		'/while' => '<?php endwhile ?>',
-		'include' => '<?php $template->subTemplate(#)->render() ?>',
-		'ajaxlink' => '<?php echo $template->escape(#) ?>',
-		'plink' => '<?php echo $template->escape(#) ?>',
-		'link' => '<?php echo $template->escape(#) ?>',
-		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
-		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
-		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
-		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
-		'!=' => '<?php echo # ?>',
-		'_' => '<?php echo $template->escape($template->translate(#)) ?>',
-		'=' => '<?php echo $template->escape(#) ?>',
-		'!$' => '<?php echo # ?>',
-		'!' => '<?php echo # ?>',
-		'$' => '<?php echo $template->escape(#) ?>',
-		'?' => '<?php # ?>',
-	);
-
-
-
-	/** @var array */
-	private static $blocks = array();
-
-
-
-
 	/**
 	 * Callback.
 	 */
@@ -170,6 +185,12 @@ final class CurlyBracketsFilter
 
 		} elseif ($mod === '/block') {
 			$var = array_pop(self::$blocks);
+
+		} elseif ($mod === 'foreach') {
+			$var = '$iterator = $_cb->iterators[] = new SmartCachingIterator(' . str_replace(' as', ') as', $var);
+
+		} elseif ($mod === 'attr') {
+			$var = str_replace(') ', ')->', $var . ' ');
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {

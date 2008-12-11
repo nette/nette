@@ -1,5 +1,5 @@
 
-<ul>
+<ul{attr class('item') style('background', 'white') title($hello) compact(TRUE)}>
 	<li>Escaped: {$hello}</li>
 	<li>Non-escaped: {!hello}</li>
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
@@ -23,11 +23,34 @@ comment *}
 {/if}
 
 
-<ul>
-{foreach $people as $person}
-	<li>{$person}</li>
+{foreach array(TRUE) as $foo}
+	{foreach $people as $person}
+	{if $iterator->isFirst()}<ul id="{$id}">{/if}
+	<li id="item-{$iterator->getCounter()}" class="{$iterator->isOdd() ? 'odd' : 'even'}">{$person}</li>
+	{if $iterator->isLast()}</ul>{/if}
+	{/foreach}
 {/foreach}
-</ul>
+
 
 
 {include 'subdir/include1.phtml', 'localvar' => 10}
+
+
+
+<style type="text/css">
+<!--
+#{$id} {
+	background: blue;
+}
+-->
+</style>
+
+
+
+<script>
+<!--
+var prop = {$people};
+
+document.getElementById({$id}).style.backgroundColor = 'red';
+-->
+</script>

@@ -3,6 +3,7 @@
 <pre>
 <?php
 if (!isset($_cb)) $_cb = $template->_cb = (object) NULL;
+if (empty($_cb->escape)) $_cb->escape = 'escape';
 if (!empty($_cb->caches)) end($_cb->caches)->addFile($template->getFile());
 ?><?php if ($control->isOutputAllowed()) { ?>	<?php } if ($control->beginSnippet()) { ?>
 

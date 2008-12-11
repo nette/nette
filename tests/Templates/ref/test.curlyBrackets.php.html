@@ -1,6 +1,6 @@
 <h1>Nette\Templates\CurlyBracketsFilter test</h1>
 
-<ul>
+<ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact="compact">
 	<li>Escaped: &lt;i&gt;Hello&lt;/i&gt;</li>
 	<li>Non-escaped: <i>Hello</i></li>
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
@@ -10,11 +10,10 @@
 
 	&lt;i&gt;Hello&lt;/i&gt;
 
-<ul>
-	<li>John</li>
-	<li>Mary</li>
-	<li>Paul</li>
-</ul>
+		<ul id=":item">	<li id="item-0" class="even">John</li>
+				<li id="item-1" class="odd">Mary</li>
+				<li id="item-2" class="even">Paul</li>
+	</ul>	
 
 
 <p>Included file #1</p>
@@ -22,3 +21,23 @@
 <p>Included file #2 (20, &lt;i&gt;Hello&lt;/i&gt;)</p>
 
 <p>Included file #3 (10, &lt;i&gt;Hello&lt;/i&gt;)</p>
+
+
+
+<style type="text/css">
+<!--
+#\:item {
+	background: blue;
+}
+-->
+</style>
+
+
+
+<script>
+<!--
+var prop = ["John","Mary","Paul"];
+
+document.getElementById(":item").style.backgroundColor = 'red';
+-->
+</script>
