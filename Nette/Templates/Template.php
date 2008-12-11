@@ -54,9 +54,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	/** @var array */
 	private $helpers = array();
 
-	/** @var bool */
-	private $isRendering;
-
 	/** @var int */
 	public static $cacheExpire = FALSE;
 
@@ -105,7 +102,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 		} else {
 			$tpl = clone $this;
-			$tpl->isRendering = FALSE;
 			if ($file[0] !== '/' && $file[1] !== ':') {
 				$file = dirname($this->file) . '/' . $file;
 			}
@@ -154,7 +150,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 		list($content, $isFile) = $this->compile();
 
 		self::$livelock[$this->file] = TRUE;
-		$this->isRendering = TRUE;
 
 		try {
 			TemplateFilters::phpEvaluation($this, $content, $isFile);
@@ -163,7 +158,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 		}
 
 		unset(self::$livelock[$this->file]);
-		$this->isRendering = FALSE;
 		if (is_resource($isFile)) {
 			fclose($isFile);
 		}
@@ -324,10 +318,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function add($name, $value)
 	{
-		if ($this->isRendering) {
-			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
-		}
-
 		if (array_key_exists($name, $this->params)) {
 			throw new /*\*/InvalidStateException("The variable '$name' exists yet.");
 		}
@@ -371,10 +361,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function __set($name, $value)
 	{
-		if ($this->isRendering) {
-			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
-		}
-
 		$this->params[$name] = $value;
 	}
 
@@ -419,10 +405,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function __unset($name)
 	{
-		if ($this->isRendering) {
-			throw new /*\*/InvalidStateException("Parameters are read-only while rendering template.");
-		}
-
 		unset($this->params[$name]);
 	}
 

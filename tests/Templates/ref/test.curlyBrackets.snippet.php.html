@@ -1,7 +1,10 @@
 <h1>Nette\Templates\CurlyBracketsFilter & snippets test</h1>
 
 <pre>
-<?php CurlyBracketsFilter::$cacheFrames[0][Cache::FILES][] = $template->getFile(); ?><?php if ($control->isOutputAllowed()) { ?>	<?php } if ($control->beginSnippet()) { ?>
+<?php
+if (!isset($_cb)) $_cb = $template->_cb = (object) NULL;
+if (!empty($_cb->caches)) end($_cb->caches)->addFile($template->getFile());
+?><?php if ($control->isOutputAllowed()) { ?>	<?php } if ($control->beginSnippet()) { ?>
 
 	<?php $control->endSnippet(""); } if ($control->isOutputAllowed()) { ?>
 

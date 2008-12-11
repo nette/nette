@@ -1,7 +1,9 @@
-	{cache 'mytag', "tag/$id"}
+Noncached content
 
-	<h1>{$title|upper}</h1>
+{cache 'mytag', "tag/$id"}
 
-	{include 'include.cache.phtml', 'localvar' => 11}
+<h1>{$title|upper}</h1>
 
-	{/cache}
+{include 'include.cache.phtml', 'localvar' => 11}
+
+{/cache}

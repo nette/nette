@@ -20,8 +20,6 @@
 
 /*namespace Nette\Templates;*/
 
-/*use Nette\Caching\Cache;*/
-
 
 
 /**
@@ -83,9 +81,12 @@ final class CurlyBracketsFilter
 			$s
 		);
 
-		// cache support
-		/**/$s = '<?php CurlyBracketsFilter::$cacheFrames[0][Cache::FILES][] = $template->getFile(); ?>' . $s;/**/
-		/*$s = '<?php \Nette\Templates\CurlyBracketsFilter::$cacheFrames[0][\Nette\Caching\Cache::FILES][] = $template->getFile(); ?>' . $s;*/
+		// internal variable
+		$s = "<?php\n"
+			//. "use Exception;\n"
+			. "if (!isset(\$_cb)) \$_cb = \$template->_cb = (object) NULL;\n"  // internal variable
+			. "if (!empty(\$_cb->caches)) end(\$_cb->caches)->addFile(\$template->getFile());\n" // cache support
+			. "?>" . $s;
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -115,13 +116,10 @@ final class CurlyBracketsFilter
 	public static $statements = array(
 		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
-		/*'/block' => '<?php } catch (\Exception $_e) { ob_end_clean(); throw $_e; } # ?>',*/
 		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
 		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
-		'cache' => '<?php CurlyBracketsFilter::$cacheFrames[0][Cache::ITEMS][] = #; $_cache = Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); CurlyBracketsFilter::addFrame(##); try { ?>',
-		/*'cache' => '<?php \Nette\Templates\CurlyBracketsFilter::$cacheFrames[0][\Nette\Caching\Cache::ITEMS][] = #; $_cache = \Nette\Environment::getCache("Nette.Template.Curly"); if (isset($_cache[#])) { echo $_cache[#]; } else { ob_start(); \Nette\Templates\CurlyBracketsFilter::addFrame(##); try { ?>',*/
-		'/cache' => '<?php $_cache->save(#); } catch (/*\*/Exception $_e) { ob_end_clean(); throw $_e; } } ?>',
-		/*'/cache' => '<?php $_cache->save(#); } catch (\Exception $_e) { ob_end_clean(); throw $_e; } } ?>',*/
+		'cache' => '<?php if ($_cb->foo = $template->cache($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(#))) { $_cb->caches[] = $_cb->foo; ?>',
+		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key); ?>',
 		'if' => '<?php if (#): ?>',
 		'elseif' => '<?php elseif (#): ?>',
 		'else' => '<?php else: ?>',
@@ -149,29 +147,11 @@ final class CurlyBracketsFilter
 		'?' => '<?php # ?>',
 	);
 
-	/** @var array */
-	public static $cacheFrames = array(
-		array('files' => NULL, 'items' => NULL)
-	);
+
 
 	/** @var array */
 	private static $blocks = array();
 
-
-
-	/**
-	 * Curly cache helper.
-	 * @return void
-	 */
-	public static function addFrame($tags)
-	{
-		array_unshift(self::$cacheFrames, array(
-			Cache::TAGS => $tags,
-			Cache::FILES => array(end(self::$cacheFrames[0][Cache::FILES])),
-			Cache::ITEMS => NULL,
-			Cache::EXPIRE => rand(86400 * 4, 86400 * 7),
-		));
-	}
 
 
 
@@ -188,15 +168,8 @@ final class CurlyBracketsFilter
 			$tmp = $var === '' ? 'echo ' : $var . '=';
 			$var = 'ob_get_clean()';
 
-		} elseif ($mod === '/block' || $mod === '/cache') {
+		} elseif ($mod === '/block') {
 			$var = array_pop(self::$blocks);
-
-		} elseif ($mod === 'cache') {
-			$var2 = 'array(' . $var . ')';
-			$var = var_export(uniqid(), TRUE); // TODO: odstranit uniqid
-			/**/$tmp = $var . ', ob_get_flush(), array_shift(CurlyBracketsFilter::$cacheFrames)';/**/
-			/*$tmp = $var . ', ob_get_flush(), array_shift(\Nette\Templates\CurlyBracketsFilter::$cacheFrames)';*/
-			$modifiers = NULL;
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
@@ -233,12 +206,9 @@ final class CurlyBracketsFilter
 
 		if ($mod === 'block') {
 			self::$blocks[] = $tmp . $var;
-
-		} elseif ($mod === 'cache') {
-			self::$blocks[] = $tmp;
 		}
 
-		return strtr(self::$statements[$mod], array('##' => $var2, '#' => $var));
+		return strtr(self::$statements[$mod], array('#' => $var));
 	}
 
 }
