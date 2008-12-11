@@ -291,7 +291,7 @@ final class Debug
 	 * @param  array|string  administrator email or email headers; enables email sending
 	 * @return void
 	 */
-	public static function enable($level = E_ALL, $logFile = NULL, $email = NULL)
+	public static function enable($level = NULL, $logFile = NULL, $email = NULL)
 	{
 		if (version_compare(PHP_VERSION, '5.2.1') === 0) {
 			throw new /*\*/NotSupportedException(__METHOD__ . ' is not supported in PHP 5.2.1'); // PHP bug #40815

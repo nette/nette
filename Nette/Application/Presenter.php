@@ -196,7 +196,6 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_STARTUP;
 			if ($this->isAjax()) {
 				$this->getAjaxDriver()->open(Environment::getHttpResponse());
-				self::$outputAllowed = FALSE;
 			}
 			$this->initGlobalParams();
 			$this->startup();
@@ -466,6 +465,7 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if ($this->isAjax()) {
 			$this->ajaxDriver->updateState($this->getGlobalState());
+			SnippetHelper::$outputAllowed = FALSE; // TODO!
 		}
 
 		$template = $this->getTemplate();

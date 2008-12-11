@@ -169,6 +169,7 @@ class NetteLoader extends AutoLoader
 		'simpleloader' => '/Loaders/SimpleLoader.php',
 		'simplerouter' => '/Application/SimpleRouter.php',
 		'smartcachingiterator' => '/SmartCachingIterator.php',
+		'snippethelper' => '/Templates/Filters/SnippetHelper.php',
 		'string' => '/String.php',
 		'submitbutton' => '/Forms/Controls/SubmitButton.php',
 		'template' => '/Templates/Template.php',

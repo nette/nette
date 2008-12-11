@@ -20,7 +20,7 @@
 
 /*namespace Nette\Templates;*/
 
-/*use Nette\Caching\Cache;*/
+/*use Nette\Caching\Cache, Nette\Environment;*/
 
 
 
@@ -46,11 +46,11 @@ class CachingHelper extends /*Nette\*/Object
 
 
 	/**
-	 * Starts the output cache.
+	 * Starts the output cache. Returns CachingHelper object if buffering was started.
 	 * @param  string
 	 * @param  string
 	 * @param  array
-	 * @return Nette\Caching\Cache
+	 * @return CachingHelper
 	 */
 	public static function create($key, $file, $tags)
 	{

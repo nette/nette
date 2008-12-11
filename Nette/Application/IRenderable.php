@@ -73,10 +73,4 @@ interface IPartiallyRenderable extends IRenderable
 	 */
 	//function isControlInvalid($snippet = NULL);
 
-	/**
-	 *
-	 * @return bool
-	 */
-	static function isOutputAllowed();
-
 }

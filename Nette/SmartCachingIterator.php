@@ -39,10 +39,13 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	public function __construct($iterator)
 	{
 		if (is_array($iterator)) {
-			parent::__construct(new /*\*/ArrayIterator($iterator));
+			parent::__construct(new /*\*/ArrayIterator($iterator), 0);
+
+		} elseif ($iterator instanceof /*\*/IteratorAggregate) {
+			parent::__construct($iterator->getIterator(), 0);
 
 		} else {
-			parent::__construct($iterator);
+			parent::__construct($iterator, 0);
 		}
 	}
 

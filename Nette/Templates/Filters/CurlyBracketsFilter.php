@@ -57,10 +57,13 @@ final class CurlyBracketsFilter
 	public static $statements = array(
 		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
-		'snippet' => '<?php } if ($control->beginSnippet(#)) { ?>',
-		'/snippet' => '<?php $control->endSnippet(#); } if ($control->isOutputAllowed()) { ?>',
+
+		'snippet' => '<?php } if ($_cb->foo = $template->snippet($control#)) { $_cb->snippets[] = $_cb->foo; ?>',
+		'/snippet' => '<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>',
+
 		'cache' => '<?php if ($_cb->foo = $template->cache($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(#))) { $_cb->caches[] = $_cb->foo; ?>',
 		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key); ?>',
+
 		'if' => '<?php if (#): ?>',
 		'elseif' => '<?php elseif (#): ?>',
 		'else' => '<?php else: ?>',
@@ -71,15 +74,18 @@ final class CurlyBracketsFilter
 		'/for' => '<?php endfor ?>',
 		'while' => '<?php while (#): ?>',
 		'/while' => '<?php endwhile ?>',
+
 		'include' => '<?php $template->subTemplate(#)->render() ?>',
 		'ajaxlink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'plink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'link' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
+
 		'attr' => '<?php echo Html::el(NULL)->#attributes() ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
 		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
+
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->{$_cb->escape}($template->translate(#)) ?>',
 		'=' => '<?php echo $template->{$_cb->escape}(#) ?>',
@@ -118,35 +124,32 @@ final class CurlyBracketsFilter
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
 		// snippets support
-		if (isset($template->control) &&
-			$template->control instanceof /*Nette\Application\*/IPartiallyRenderable) {
-			$s = '<?php if ($control->isOutputAllowed()) { ?>' . $s . '<?php } ?>';
-		}
+		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
 		$s = preg_replace(
 			'#@(\\{[^}]+?\\})#s',
-			'<?php } ?>$1<?php if ($control->isOutputAllowed()) { ?>',
+			'<?php } ?>$1<?php if (SnippetHelper::\\$outputAllowed) { ?>',
 			$s
 		);
 
 		// internal variable
 		$s = "<?php\n"
-			//. "use Exception, Nette\SmartCachingIterator;\n"
+			/*. "use Exception, Nette\\SmartCachingIterator, Nette\\Environment, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
 			. "if (!isset(\$_cb)) \$_cb = \$template->_cb = (object) NULL;\n"  // internal variable
 			. "if (empty(\$_cb->escape)) \$_cb->escape = 'escape';\n"  // content sensitive escaping
 			. "if (!empty(\$_cb->caches)) end(\$_cb->caches)->addFile(\$template->getFile());\n" // cache support
 			. "?>" . $s;
 
 		// add local content escaping switcher
-		$s = str_replace(array(
-			'<script',
-			'<style',
-			'</script',
-			'</style',
+		$s = preg_replace(array(
+			'#<script[^>]*>(?!</script>)#i',
+			'#<style[^>]*>#i',
+			'#(?<![\'"]>)</script#i',
+			'#</style#i',
 		), array(
-			"<?php \$_cb->escape = 'escapeJs' ?><script",
-			"<?php \$_cb->escape = 'escapeCss' ?><style",
-			"<?php \$_cb->escape = 'escape' ?></script",
-			"<?php \$_cb->escape = 'escape' ?></style",
+			'$0<?php \\$_cb->escape = "escapeJs" ?>',
+			'$0<?php \\$_cb->escape = "escapeCss" ?>',
+			'<?php \\$_cb->escape = "escape" ?>$0',
+			'<?php \\$_cb->escape = "escape" ?>$0',
 		), $s);
 
 		self::$blocks = array();
@@ -194,12 +197,12 @@ final class CurlyBracketsFilter
 
 		} elseif ($mod === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
-				$var = '"' . $m[1] . '"';
+				$var = ', "' . $m[1] . '"';
 				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
 			}
 
 		} elseif ($mod === '/snippet') {
-			$var = '"' . $var . '"';
+			$var = ', "' . $var . '"';
 
 		} elseif ($mod === '$' || $mod === '!' || $mod === '!$') {
 			$var = '$' . $var;

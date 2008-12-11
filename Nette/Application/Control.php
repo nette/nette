@@ -40,14 +40,8 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	/** @var Nette\Templates\ITemplate */
 	private $template;
 
-	/** @var bool  helper for beginSnippet() & endSnippet() */
-	protected static $outputAllowed = TRUE;
-
-	/** @var array see invalidateControl() & validateControl() */
+	/** @var array */
 	private $invalidSnippets = array();
-
-	/** @var array used by beginSnippet() & endSnippet() */
-	private static $beginedSnippets = array();
 
 
 
@@ -87,6 +81,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelper('escapeJs', /*Nette\Templates\*/'TemplateHelpers::escapeJs');
 		$template->registerHelper('escapeCss', /*Nette\Templates\*/'TemplateHelpers::escapeCss');
 		$template->registerHelper('cache', /*Nette\Templates\*/'CachingHelper::create');
+		$template->registerHelper('snippet', /*Nette\Templates\*/'SnippetHelper::create');
 		$template->registerHelper('lower', /*Nette\*/'String::lower');
 		$template->registerHelper('upper', /*Nette\*/'String::upper');
 		$template->registerHelper('capitalize', /*Nette\*/'String::capitalize');
@@ -109,9 +104,9 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 * @param  string
 	 * @return void
 	 */
-	public function invalidateControl($snippet = NULL, $meta = NULL)
+	public function invalidateControl($snippet = NULL)
 	{
-		$this->invalidSnippets[$snippet] = (array) $meta;
+		$this->invalidSnippets[$snippet] = TRUE;
 	}
 
 
@@ -162,86 +157,14 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 *
-	 * @return bool
+	 * Returns snippet HTML ID.
+	 * @param  string  snippet name
+	 * @return string
 	 */
-	public static function isOutputAllowed()
-	{
-		return self::$outputAllowed;
-	}
-
-
-
-	/**
-	 *
-	 * @return bool
-	 */
-	public function getSnippetId($name = 'main')
+	public function getSnippetId($name = NULL)
 	{
 		// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
 		return $this->getUniqueId() . ':' . $name;
-	}
-
-
-
-	/**
-	 * Starts conditional snippet rendering. Returns TRUE if snippet was started.
-	 * @param  string  snippet name
-	 * @param  string  start element
-	 * @return bool
-	 */
-	public function beginSnippet($name = 'main', $startTag = 'div')
-	{
-		$id = $this->getSnippetId($name);
-
-		if (self::$outputAllowed) {
-			$startTag = trim($startTag, '<>');
-			self::$beginedSnippets[] = array($id, NULL, $startTag);
-			echo '<', $startTag, ' id="', $id, '">';
-
-		} elseif (isset($this->invalidSnippets[$name])) {
-			self::$outputAllowed = TRUE;
-			ob_start();
-			self::$beginedSnippets[] = array($id, ob_get_level(), $this->invalidSnippets[$name]);
-
-		} elseif (isset($this->invalidSnippets[NULL])) {
-			self::$outputAllowed = TRUE;
-			ob_start();
-			self::$beginedSnippets[] = array($id, ob_get_level(), NULL);
-
-		} else {
-			return FALSE;
-		}
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Finist conditional snippet rendering.
-	 * @param  string  snippet name
-	 * @return void
-	 */
-	public function endSnippet($name = NULL)
-	{
-		list($id, $level, $endTag) = array_pop(self::$beginedSnippets);
-
-		if ($name != NULL && $id !== ($this->getUniqueId() . ':' . $name)) {
-			throw new /*\*/InvalidStateException("Snippet '$name' cannot be ended here.");
-		}
-
-		if ($level !== NULL) {
-			if ($level !== ob_get_level()) {
-				throw new /*\*/InvalidStateException("Snippet '$name' cannot be ended here.");
-			}
-			$this->getPresenter()->getAjaxDriver()->updateSnippet($id, ob_get_clean(), $endTag);
-			self::$outputAllowed = FALSE;
-
-		} elseif (self::$outputAllowed) {
-			echo '</', $endTag, '>';
-		}
-
-		unset(self::$beginedSnippets[$id]);
 	}
 
 }
