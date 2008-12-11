@@ -20,8 +20,6 @@
 
 /*namespace Nette\Templates;*/
 
-/*use Nette\Caching\Cache;*/
-
 
 
 /**

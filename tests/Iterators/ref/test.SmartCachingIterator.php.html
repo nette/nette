@@ -1,0 +1,84 @@
+<h1>Nette\SmartCachingIterator test</h1>
+
+<pre>
+
+<h2>Two items in array</h2>
+
+first: bool(TRUE)
+
+last: bool(FALSE)
+
+counter: int(0)
+
+
+  inner first: bool(TRUE)
+
+  inner last: bool(FALSE)
+
+  inner counter: int(0)
+
+
+  inner first: bool(FALSE)
+
+  inner last: bool(TRUE)
+
+  inner counter: int(1)
+
+
+first: bool(FALSE)
+
+last: bool(TRUE)
+
+counter: int(1)
+
+
+  inner first: bool(TRUE)
+
+  inner last: bool(FALSE)
+
+  inner counter: int(0)
+
+
+  inner first: bool(FALSE)
+
+  inner last: bool(TRUE)
+
+  inner counter: int(1)
+
+rewinding...
+first: bool(TRUE)
+
+last: bool(FALSE)
+
+counter: int(0)
+
+empty: bool(FALSE)
+
+
+<h2>One item in array</h2>
+
+first: bool(TRUE)
+
+last: bool(TRUE)
+
+counter: int(0)
+
+rewinding...
+first: bool(TRUE)
+
+last: bool(TRUE)
+
+counter: int(0)
+
+empty: bool(FALSE)
+
+
+<h2>Zero item in array</h2>
+first: bool(FALSE)
+
+last: bool(TRUE)
+
+counter: NULL
+
+empty: bool(TRUE)
+
