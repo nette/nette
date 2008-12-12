@@ -209,6 +209,17 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
+	 * Was user signed out due time expiration?
+	 * @return bool
+	 */
+	final public function isExpired()
+	{
+		return (bool) $this->getSession()->expired;
+	}
+
+
+
+	/**
 	 * Returns and initializes $this->session.
 	 * @return SessionNamespace
 	 */
@@ -229,7 +240,11 @@ class User extends /*Nette\*/Object implements IUser
 			if ($session->authenticated && isset($session->expireTime)) {
 				if ($session->expireTime < time()) {
 					$session->authenticated = FALSE;
-					if ($session->expireIdentity) unset($session->identity);
+					if ($session->expireIdentity) {
+						unset($session->identity);
+					} else {
+						$session->expired = TRUE;
+					}
 				} else {
 					$session->expireTime = time() + $session->expireDelta; // sliding expiration
 				}
@@ -239,7 +254,9 @@ class User extends /*Nette\*/Object implements IUser
 				if ($session->authKey !== Environment::getHttpRequest()->getCookie('nette-authkey')) {
 					$session->authenticated = FALSE;
 					unset($session->authKey);
-					if ($session->expireIdentity) unset($session->identity);
+					if ($session->expireIdentity) {
+						unset($session->identity);
+					}
 				}
 			}
 		}
@@ -260,6 +277,8 @@ class User extends /*Nette\*/Object implements IUser
 		if ($session->authenticated === $state) return;
 
 		$session->authenticated = $state;
+		$session->expired = FALSE;
+
 		if ($state) {
 			$session->expireBrowser = TRUE;
 			$session->authTime = time(); // informative value

@@ -91,7 +91,7 @@ var nette = {
 
 		if (this.result.events) {
 			for (var id in this.result.events) {
-				this.handleEvent(this.result.events[id].event, this.result.events[id].args);
+				this.handleEvent(this.result.events[id]);
 			}
 		}
 
@@ -121,11 +121,12 @@ var nette = {
 		if (el) el.innerHTML = html;
 	},
 
-	handleEvent: function(event, args)
+	handleEvent: function(args)
 	{
 		if (this.debug) {
 			//alert(event + '(' + args + ')');
 		}
+		var event = args.shift();
 		var obj = event.split('.');
 		obj.pop();
 		obj = obj.join('.');

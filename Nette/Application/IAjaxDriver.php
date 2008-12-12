@@ -50,11 +50,4 @@ interface IAjaxDriver
 	 */
 	function close();
 
-	/**
-	 * @param  string
-	 * @param  mixed
-	 * @return void
-	 */
-	function fireEvent($event, $arg);
-
 }

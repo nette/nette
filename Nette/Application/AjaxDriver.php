@@ -86,20 +86,6 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 
 
 	/**
-	 * @param  string
-	 * @param  mixed
-	 * @return void
-	 */
-	public function fireEvent($event, $arg)
-	{
-		$args = func_get_args();
-		array_shift($args);
-		$this->data['events'][] = array('event' => $event, 'args' => $args);
-	}
-
-
-
-	/**
 	 * Sets a response parameter. Do not call directly.
 	 * @param  string  name
 	 * @param  mixed   value
@@ -148,6 +134,26 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	public function __unset($name)
 	{
 		unset($this->data[$name]);
+	}
+
+
+
+	/** @deprecated */
+	public function fireEvent($event, $arg)
+	{
+		trigger_error('Deprecated: use $presenter->ajaxDriver->events[] = array($event, $arg, ...); instead.', E_USER_WARNING);
+		$args = func_get_args();
+		array_shift($args);
+		$this->data['events'][] = array('event' => $event, 'args' => $args);
+	}
+
+
+
+	/** @deprecated */
+	public function updateSnippet($id, $content)
+	{
+		trigger_error('Deprecated: use $presenter->ajaxDriver->snippet[$id] = $content; instead.', E_USER_WARNING);
+		$this->data['snippets'][$id] = (string) $content;
 	}
 
 }

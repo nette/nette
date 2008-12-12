@@ -25,7 +25,7 @@ class ErrorPresenter extends BasePresenter
 	public function renderDefault($exception)
 	{
 		if ($this->isAjax()) {
-			$this->getAjaxDriver()->fireEvent('error', $exception->getMessage());
+			$this->getAjaxDriver()->events[] = array('error', $exception->getMessage());
 			$this->terminate();
 
 		} else {
