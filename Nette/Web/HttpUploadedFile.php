@@ -132,6 +132,17 @@ class HttpUploadedFile extends /*Nette\*/Object
 
 
 	/**
+	 * Returns the image.
+	 * @return Nette\Image
+	 */
+	public function getImage()
+	{
+		return /*Nette\*/Image::fromFile($this->tmpName);
+	}
+
+
+
+	/**
 	 * Returns the path to an uploaded file.
 	 * @return string
 	 */

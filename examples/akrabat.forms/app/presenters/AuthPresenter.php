@@ -25,6 +25,8 @@ class AuthPresenter extends BasePresenter
 		$form->addSubmit('login', 'Login');
 		$form->onSubmit[] = array($this, 'loginFormSubmitted');
 
+		$form->addProtection('Please submit this form again (security token has expired).');
+
 		$this->template->form = $form;
 		$this->template->title = "Log in";
 	}

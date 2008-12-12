@@ -107,6 +107,7 @@ class NetteLoader extends AutoLoader
 		'ihttpresponse' => '/Web/IHttpResponse.php',
 		'iidentity' => '/Security/IIdentity.php',
 		'ilist' => '/Collections/IList.php',
+		'image' => '/Image.php',
 		'imagebutton' => '/Forms/Controls/ImageButton.php',
 		'imap' => '/Collections/IMap.php',
 		'inamingcontainer' => '/Forms/INamingContainer.php',

@@ -154,6 +154,8 @@ class DashboardPresenter extends BasePresenter
 
 			$form->addSubmit('submit1', 'Edit');
 			$form->onSubmit[] = array($this, 'albumFormSubmitted');
+
+			$form->addProtection('Please submit this form again (security token has expired).');
 			return;
 
 		case 'deleteForm':
@@ -161,6 +163,8 @@ class DashboardPresenter extends BasePresenter
 			$form->addSubmit('yes', 'Yes');
 			$form->addSubmit('no', 'No');
 			$form->onSubmit[] = array($this, 'deleteFormSubmitted');
+
+			$form->addProtection('Please submit this form again (security token has expired).');
 			return;
 
 		default:
