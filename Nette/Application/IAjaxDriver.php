@@ -51,27 +51,6 @@ interface IAjaxDriver
 	function close();
 
 	/**
-	 * Updates the snippet content.
-	 * @param  string
-	 * @param  string
-	 * @return void
-	 */
-	function updateSnippet($id, $content);
-
-	/**
-	 * Updates the presenter state.
-	 * @param  array
-	 * @return void
-	 */
-	function updateState($state);
-
-	/**
-	 * @param  string
-	 * @return void
-	 */
-	function redirect($uri);
-
-	/**
 	 * @param  string
 	 * @param  mixed
 	 * @return void

@@ -464,7 +464,7 @@ abstract class Presenter extends Control implements IPresenter
 	protected function renderTemplate()
 	{
 		if ($this->isAjax()) {
-			$this->ajaxDriver->updateState($this->getGlobalState());
+			$this->ajaxDriver->state = $this->getGlobalState();
 			SnippetHelper::$outputAllowed = FALSE; // TODO!
 		}
 
@@ -722,7 +722,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isAjax()) {
-			$this->ajaxDriver->redirect($uri);
+			$this->ajaxDriver->redirect = $uri;
 			$this->terminate();
 
 		} else {

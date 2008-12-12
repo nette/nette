@@ -37,11 +37,8 @@ require_once dirname(__FILE__) . '/../Application/IAjaxDriver.php';
  */
 class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 {
-	/** @var bool */
-	private $opened = FALSE;
-
 	/** @var array */
-	private $json;
+	private $data = array();
 
 	/** @var Nette\Web\IHttpResponse */
 	private $httpResponse;
@@ -68,8 +65,6 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	{
 		$httpResponse->expire(FALSE);
 		$this->httpResponse = $httpResponse;
-		$this->json = array();
-		$this->opened = TRUE;
 	}
 
 
@@ -79,55 +74,14 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	 */
 	public function close()
 	{
-		if ($this->opened && $this->json) {
-			$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
-			echo json_encode($this->json);
-			$this->json = NULL;
-		}
-		$this->opened = FALSE;
+		$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
+		echo json_encode($this->data);
+		$this->data = array();
 	}
 
 
 
-	/**
-	 * Updates the snippet content.
-	 * @param  string
-	 * @param  string
-	 * @return void
-	 */
-	public function updateSnippet($id, $content)
-	{
-		if ($this->opened) {
-			$this->json['snippets'][$id] = (string) $content;
-		}
-	}
-
-
-
-	/**
-	 * Updates the presenter state.
-	 * @param  array
-	 * @return void
-	 */
-	public function updateState($state)
-	{
-		if ($this->opened) {
-			$this->json['state'] = $state;
-		}
-	}
-
-
-
-	/**
-	 * @param  string
-	 * @return void
-	 */
-	public function redirect($uri)
-	{
-		if ($this->opened) {
-			$this->json['redirect'] = (string) $uri;
-		}
-	}
+	/********************* AJAX response ****************d*g**/
 
 
 
@@ -138,11 +92,62 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	 */
 	public function fireEvent($event, $arg)
 	{
-		if ($this->opened) {
-			$args = func_get_args();
-			array_shift($args);
-			$this->json['events'][] = array('event' => $event, 'args' => $args);
+		$args = func_get_args();
+		array_shift($args);
+		$this->data['events'][] = array('event' => $event, 'args' => $args);
+	}
+
+
+
+	/**
+	 * Sets a response parameter. Do not call directly.
+	 * @param  string  name
+	 * @param  mixed   value
+	 * @return void
+	 */
+	public function __set($name, $value)
+	{
+		$this->data[$name] = $value;
+	}
+
+
+
+	/**
+	 * Returns a response parameter. Do not call directly.
+	 * @param  string  name
+	 * @return mixed  value
+	 */
+	public function &__get($name)
+	{
+		if ($name === '') {
+			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
 		}
+
+		return $this->data[$name];
+	}
+
+
+
+	/**
+	 * Determines whether parameter is defined. Do not call directly.
+	 * @param  string    name
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		return isset($this->data[$name]);
+	}
+
+
+
+	/**
+	 * Removes a response parameter. Do not call directly.
+	 * @param  string    name
+	 * @return void
+	 */
+	public function __unset($name)
+	{
+		unset($this->data[$name]);
 	}
 
 }

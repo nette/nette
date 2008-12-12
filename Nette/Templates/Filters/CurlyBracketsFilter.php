@@ -25,26 +25,26 @@
 /**
  * Template filter curlyBrackets: support for {...} in template.
  *
- *   {$variable} with escaping
- *   {!$variable} without escaping
- *   {*comment*} will be removed
- *   {=expression} echo with escaping
- *   {!=expression} echo without escaping
- *   {?expression} evaluate PHP statement
- *   {_expression} echo with escaping and translation
- *   {link destination ...} control link
- *   {plink destination ...} presenter link
- *   {ajaxlink destination ...} ajax link
- *   {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
- *   {for ?} ... {/for}
- *   {foreach ?} ... {/foreach}
- *   {include ?}
- *   {cache ?} ... {/cache} cached block
- *   {snippet ?} ... {/snippet ?} control snippet
- *   {attr ?} HTML element attributes
- *   {block|texy} ... {/block} capture of filter block
- *   {contentType ...} HTTP Content-Type header
- *   {debugbreak}
+ * - {$variable} with escaping
+ * - {!$variable} without escaping
+ * - {*comment*} will be removed
+ * - {=expression} echo with escaping
+ * - {!=expression} echo without escaping
+ * - {?expression} evaluate PHP statement
+ * - {_expression} echo with escaping and translation
+ * - {link destination ...} control link
+ * - {plink destination ...} presenter link
+ * - {ajaxlink destination ...} ajax link
+ * - {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
+ * - {for ?} ... {/for}
+ * - {foreach ?} ... {/foreach}
+ * - {include ?}
+ * - {cache ?} ... {/cache} cached block
+ * - {snippet ?} ... {/snippet ?} control snippet
+ * - {attr ?} HTML element attributes
+ * - {block|texy} ... {/block} capture of filter block
+ * - {contentType ...} HTTP Content-Type header
+ * - {debugbreak}
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2008 David Grudl
