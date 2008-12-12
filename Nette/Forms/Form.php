@@ -429,9 +429,10 @@ class Form extends FormContainer
 	/**
 	 * Fill-in with default values.
 	 * @param  array    values used to fill the form
+	 * @param  bool     erase other controls
 	 * @return void
 	 */
-	public function setDefaults($values)
+	public function setDefaults($values, $erase = FALSE)
 	{
 		if ($values instanceof ArrayObject) {
 			$values = (array) $values;
@@ -448,9 +449,10 @@ class Form extends FormContainer
 				$sub->cursor = & $cursor;
 			}
 			if ($control instanceof IFormControl) {
-				if (isset($sub->cursor[$name])) {
+				if (array_key_exists($name, $sub->cursor)) {
 					$control->setValue($sub->cursor[$name]);
-				} else {
+
+				} elseif ($erase) {
 					$control->setValue(NULL);
 				}
 			}

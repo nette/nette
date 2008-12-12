@@ -190,7 +190,7 @@ final class CurlyBracketsFilter
 			$var = array_pop(self::$blocks);
 
 		} elseif ($mod === 'foreach') {
-			$var = '$iterator = $_cb->iterators[] = new SmartCachingIterator(' . str_replace(' as', ') as', $var);
+			$var = '$iterator = $_cb->iterators[] = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
 
 		} elseif ($mod === 'attr') {
 			$var = str_replace(') ', ')->', $var . ' ');

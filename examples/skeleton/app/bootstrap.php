@@ -35,6 +35,10 @@ $loader->addDirectory(APP_DIR);
 $loader->addDirectory(LIBS_DIR);
 $loader->register();
 
+// 2d) setup sessions
+$session = Environment::getSession();
+$session->setSavePath(APP_DIR . '/sessions/');
+
 
 
 // Step 3: Get the front controller
