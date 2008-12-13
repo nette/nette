@@ -74,16 +74,16 @@ class Image extends Object {
 	 * @param  int  red 0..255
 	 * @param  int  green 0..255
 	 * @param  int  blue 0..255
-	 * @param  int  opacity 0..100
+	 * @param  int  transparency 0..127
 	 * @return array
 	 */
-	public static function rgb($red, $green, $blue, $opacity = 100)
+	public static function rgb($red, $green, $blue, $transparency = 0)
 	{
 		return array(
 			'r' => max(0, min(255, (int) $red)),
 			'g' => max(0, min(255, (int) $green)),
 			'b' => max(0, min(255, (int) $blue)),
-			'a' => max(0, min(100, (int) $opacity)),
+			'a' => max(0, min(127, (int) $transparency)),
 		);
 	}
 
@@ -130,7 +130,7 @@ class Image extends Object {
 		if (!extension_loaded('gd')) {
 			throw new /*\*/Exception("PHP extension GD is not loaded.");
 		}
-		
+
 		$width = (int) $width;
 		$height = (int) $height;
 		if ($width < 1 || $height < 1) {
@@ -308,7 +308,6 @@ class Image extends Object {
 	 */
 	public function place(Image $image, $left = 0, $top = 0, $opacity = 100)
 	{
-		// TODO: use only merge?
 		$opacity = max(0, min(100, (int) $opacity));
 
 		if (substr($left, -1) === '%') {
@@ -398,11 +397,41 @@ class Image extends Object {
 	 */
 	public function send($type = self::JPEG, $quality = 85)
 	{
-		if ($type !== self::JPEG && $type !== self::JPEG && $type !== self::JPEG) {
+		if ($type !== self::GIF && $type !== self::PNG && $type !== self::JPEG) {
 			throw new /*\*/Exception("Unsupported image type.");
 		}
 		header('Content-Type: ' . image_type_to_mime_type($type));
 		echo $this->__toString($type, $quality);
+	}
+
+
+
+	/**
+	 * Call to undefined method.
+	 *
+	 * @param  string  method name
+	 * @param  array   arguments
+	 * @return mixed
+	 * @throws \MemberAccessException
+	 */
+	public function __call($name, $args)
+	{
+		$function = 'image' . $name;
+		if (function_exists($function)) {
+			foreach ($args as $key => $value) {
+				if ($value instanceof self) {
+					$args[$key] = $value->image;
+
+				} elseif (is_array($value) && isset($value['r'])) { // rgb
+					$args[$key] = imagecolorallocatealpha($this->image, $value['r'], $value['g'], $value['b'], $value['a']);
+				}
+			}
+			array_unshift($args, $this->image);
+
+			return call_user_func_array($function, $args);
+		}
+
+		parent::__call($name, $args);
 	}
 
 }
