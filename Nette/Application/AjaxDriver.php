@@ -38,7 +38,7 @@ require_once dirname(__FILE__) . '/../Application/IAjaxDriver.php';
 class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 {
 	/** @var array */
-	private $data = array();
+	private $data;
 
 	/** @var Nette\Web\IHttpResponse */
 	private $httpResponse;
@@ -74,9 +74,13 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	 */
 	public function close()
 	{
+		if ($this->data === NULL) {
+			return; // response handled by user?
+		}
+
 		$this->httpResponse->setContentType('application/x-javascript', 'utf-8');
 		echo json_encode($this->data);
-		$this->data = array();
+		$this->data = NULL;
 	}
 
 
