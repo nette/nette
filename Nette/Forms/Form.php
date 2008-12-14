@@ -449,7 +449,7 @@ class Form extends FormContainer
 				$sub->cursor = & $cursor;
 			}
 			if ($control instanceof IFormControl) {
-				if (array_key_exists($name, $sub->cursor)) {
+				if (is_array($sub->cursor) && array_key_exists($name, $sub->cursor)) {
 					$control->setValue($sub->cursor[$name]);
 
 				} elseif ($erase) {

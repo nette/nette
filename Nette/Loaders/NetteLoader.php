@@ -85,6 +85,8 @@ class NetteLoader extends AutoLoader
 		'formgroup' => '/Forms/FormGroup.php',
 		'forwardingexception' => '/Application/ForwardingException.php',
 		'framework' => '/Framework.php',
+		'ftp' => '/Web/Ftp.php',
+		'ftpexception' => '/Web/Ftp.php',
 		'hashtable' => '/Collections/Hashtable.php',
 		'hiddenfield' => '/Forms/Controls/HiddenField.php',
 		'html' => '/Web/Html.php',

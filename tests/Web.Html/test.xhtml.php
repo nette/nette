@@ -1,10 +1,12 @@
-<?php
+<h1>Nette\Web\Html test</h1>
 
+<xmp>
+<?php
 require_once '../../Nette/loader.php';
+
+/*use Nette\Debug;*/
 /*use Nette\Web\Html;*/
 
-
-echo "<xmp>\n";
 
 $el = Html::el('img')->src('image.gif')->alt('');
 echo $el, "\n";
