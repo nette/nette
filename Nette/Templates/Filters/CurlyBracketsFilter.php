@@ -68,7 +68,7 @@ final class CurlyBracketsFilter
 		'elseif' => '<?php elseif (#): ?>',
 		'else' => '<?php else: ?>',
 		'/if' => '<?php endif ?>',
-		'foreach' => '<?php foreach (#): ?>',
+		'foreach' => '<?php $_cb->iterators[] = $iterator; foreach (#): ?>',
 		'/foreach' => '<?php endforeach; $iterator = array_pop($_cb->iterators); ?>',
 		'for' => '<?php for (#): ?>',
 		'/for' => '<?php endfor ?>',
@@ -137,6 +137,7 @@ final class CurlyBracketsFilter
 			. "if (!isset(\$_cb)) \$_cb = \$template->_cb = (object) NULL;\n"  // internal variable
 			. "if (empty(\$_cb->escape)) \$_cb->escape = 'escape';\n"  // content sensitive escaping
 			. "if (!empty(\$_cb->caches)) end(\$_cb->caches)->addFile(\$template->getFile());\n" // cache support
+			. "\$iterator = NULL;\n" // iterator support
 			. "?>" . $s;
 
 		// add local content escaping switcher
@@ -190,7 +191,7 @@ final class CurlyBracketsFilter
 			$var = array_pop(self::$blocks);
 
 		} elseif ($mod === 'foreach') {
-			$var = '$iterator = $_cb->iterators[] = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
+			$var = '$iterator = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
 
 		} elseif ($mod === 'attr') {
 			$var = str_replace(') ', ')->', $var . ' ');
