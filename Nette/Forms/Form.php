@@ -449,7 +449,7 @@ class Form extends FormContainer
 				$sub->cursor = & $cursor;
 			}
 			if ($control instanceof IFormControl) {
-				if (is_array($sub->cursor) && array_key_exists($name, $sub->cursor)) {
+				if ((is_array($sub->cursor) || $sub->cursor instanceof /*\*/ArrayAccess) && array_key_exists($name, $sub->cursor)) {
 					$control->setValue($sub->cursor[$name]);
 
 				} elseif ($erase) {
@@ -457,7 +457,7 @@ class Form extends FormContainer
 				}
 			}
 			if ($control instanceof INamingContainer) {
-				if (is_array($sub->cursor) && isset($sub->cursor[$name])) {
+				if ((is_array($sub->cursor) || $sub->cursor instanceof /*\*/ArrayAccess) && isset($sub->cursor[$name])) {
 					$cursor = & $sub->cursor[$name];
 				} else {
 					unset($cursor);

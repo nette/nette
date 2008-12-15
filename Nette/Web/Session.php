@@ -444,10 +444,7 @@ class Session extends /*Nette\*/Object
 		if (isset($cookie)) {
 			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			if (self::$started) {
-				if (headers_sent($file, $line)) {
-					throw new /*\*/InvalidStateException("Cannot configure session cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-				}
-				setcookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+				$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			}
 		}
 	}
