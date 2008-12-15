@@ -41,7 +41,7 @@ class Session extends /*Nette\*/Object
 	/** @var callback  Validation key generator */
 	public $verificationKeyGenerator;
 
-	/** @var bool  is required session id regeneration? */
+	/** @var bool  is required session ID regeneration? */
 	private $regenerationNeeded;
 
 	/** @var bool  has been session started? */
@@ -67,7 +67,7 @@ class Session extends /*Nette\*/Object
 
 		// other
 		'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,// 3 hours
-		'session.cache_limiter' => NULL,  // (default "nocache")
+		'session.cache_limiter' => NULL,  // (default "nocache", special value "\0")
 		'session.cache_expire' => NULL,   // (default "180")
 		'session.hash_function' => NULL,  // (default "0", means MD5)
 		'session.hash_bits_per_character' => NULL, // (default "4")
@@ -94,9 +94,6 @@ class Session extends /*Nette\*/Object
 
 		} elseif (defined('SID')) {
 			throw new /*\*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
-
-		} elseif (headers_sent($file, $line)) {
-			throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
 		}
 
 		$this->configure(self::$defaultConfig, FALSE);
@@ -196,10 +193,9 @@ class Session extends /*Nette\*/Object
 
 	/**
 	 * Destroys all data registered to a session.
-	 * @param  bool  remove the session cookie? Defaults to TRUE
 	 * @return void
 	 */
-	public function destroy($removeCookie = TRUE)
+	public function destroy()
 	{
 		if (!self::$started) {
 			throw new /*\*/InvalidStateException('Session is not started.');
@@ -208,21 +204,9 @@ class Session extends /*Nette\*/Object
 		session_destroy();
 		$_SESSION = NULL;
 		self::$started = FALSE;
-
-		if ($removeCookie) {
-			// TODO: Environment::getHttpResponse()->headersSent, deleteCookie
-			if (headers_sent($file, $line)) {
-				throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
-			}
+		if (!headers_sent()) {
 			$params = session_get_cookie_params();
-			setcookie(
-				session_name(),
-				FALSE,
-				254400000,
-				$params['path'],
-				$params['domain'],
-				$params['secure']
-			);
+			$this->getHttpResponse()->deleteCookie(session_name(), $params['path'], $params['domain'], $params['secure']);
 		}
 	}
 
@@ -234,23 +218,21 @@ class Session extends /*Nette\*/Object
 	 */
 	public function exists()
 	{
-		// TODO: return Environment::getHttpRequest()->getCookie(session_name()) !== NULL;
-		return isset($_COOKIE[session_name()]);
+		return $this->getHttpRequest()->getCookie(session_name()) !== NULL;
 	}
 
 
 
 	/**
-	 * Regenerates the session id.
+	 * Regenerates the session ID.
 	 * @throws \InvalidStateException
 	 * @return void
 	 */
 	public function regenerateId()
 	{
 		if (self::$started) {
-			// TODO: Environment::getHttpResponse()->headersSent
 			if (headers_sent($file, $line)) {
-				throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
+				throw new /*\*/InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
 			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
@@ -263,7 +245,7 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Sets the session id to a user specified one.
+	 * Sets the session ID to a user specified one.
 	 * @throws \InvalidStateException
 	 * @param  string $id
 	 * @return void
@@ -271,11 +253,11 @@ class Session extends /*Nette\*/Object
 	public function setId($id)
 	{
 		if (defined('SID')) {
-			throw new /*\*/InvalidStateException('A session had already been started - the session id must be set first.');
+			throw new /*\*/InvalidStateException('A session had already been started - the session ID must be set first.');
 		}
 
 		if (!is_string($id) || $id === '') {
-			throw new /*\*/InvalidArgumentException('You must provide a non-empty string as a session id.');
+			throw new /*\*/InvalidArgumentException('You must provide a non-empty string as a session ID.');
 		}
 
 		session_id($id);
@@ -284,7 +266,7 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Returns the current session id.
+	 * Returns the current session ID.
 	 * @return string
 	 */
 	public function getId()
@@ -300,16 +282,11 @@ class Session extends /*Nette\*/Object
 	 */
 	public function generateVerificationKey()
 	{
-		//return; // debug
-		$list = array(
-			'HTTP_ACCEPT_CHARSET', 'HTTP_ACCEPT_ENCODING',
-			'HTTP_ACCEPT_LANGUAGE', 'HTTP_USER_AGENT',
-		);
-
+		$list = array('Accept-Charset', 'Accept-Encoding', 'Accept-Language', 'User-Agent');
 		$key = array();
-		foreach ($list as $item) {
-			// TODO: $key[] = $httpRequest->getHeader($header)
-			if (isset($_SERVER[$item])) $key[] = $_SERVER[$item];
+		$httpRequest = $this->getHttpRequest();
+		foreach ($list as $header) {
+			$key[] = $httpRequest->getHeader($header);
 		}
 		return md5(implode("\0", $key));
 	}
@@ -468,7 +445,7 @@ class Session extends /*Nette\*/Object
 			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			if (self::$started) {
 				if (headers_sent($file, $line)) {
-					throw new /*\*/InvalidStateException("Headers already sent (output started at $file:$line).");
+					throw new /*\*/InvalidStateException("Cannot configure session cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 				}
 				setcookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			}
@@ -541,6 +518,30 @@ class Session extends /*Nette\*/Object
 		$this->configure(array(
 			'session.save_path' => $path,
 		));
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return Environment::getHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\IHttpResponse
+	 */
+	protected function getHttpResponse()
+	{
+		return Environment::getHttpResponse();
 	}
 
 }

@@ -284,7 +284,10 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 */
 	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
 	{
-		// TODO: check headers_sent
+		if (headers_sent($file, $line)) {
+			//throw new /*\*/InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+		}
+
 		if ($expire > 0 && $expire <= /*Nette\*/Tools::YEAR) {
 			$expire += time();
 		}
@@ -311,7 +314,10 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 */
 	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
 	{
-		// TODO: check headers_sent
+		if (headers_sent($file, $line)) {
+			//throw new /*\*/InvalidStateException("Cannot delete cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+		}
+
 		setcookie(
 			$name,
 			FALSE,

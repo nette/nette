@@ -73,7 +73,7 @@ class RobotLoader extends AutoLoader
 		if ($this->list === NULL) {
 			$this->list = array(); // prevents cycling
 
-			$cache = /*Nette\*/Environment::getCache('Nette.RobotLoader');
+			$cache = $this->getCache();
 			$data = $cache['data'];
 			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
 
@@ -101,7 +101,7 @@ class RobotLoader extends AutoLoader
 
 		} else {
 			if ($this->autoRebuild === NULL) {
-				$this->autoRebuild = !/*Nette\*/Environment::isProduction();
+				$this->autoRebuild = !$this->isProduction();
 			}
 			if ($this->autoRebuild) {
 				if (!$this->rebuilded) {
@@ -110,7 +110,7 @@ class RobotLoader extends AutoLoader
 				if (!isset($this->list[$type])) {
 					$this->list[$type] = FALSE;
 				}
-				$cache = /*Nette\*/Environment::getCache('Nette.RobotLoader');
+				$cache = $this->getCache();
 				$cache['data'] = array(
 					'list' => $this->list,
 					'opt' => array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles),
@@ -309,6 +309,31 @@ class RobotLoader extends AutoLoader
 			$mask[] = $wildcard;
 		}
 		return '#^(' . implode('|', $mask) . ')$#i';
+	}
+
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	protected function getCache()
+	{
+		return /*Nette\*/Environment::getCache('Nette.RobotLoader');
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	protected function isProduction()
+	{
+		return /*Nette\*/Environment::isProduction();
 	}
 
 }

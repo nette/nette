@@ -117,13 +117,8 @@ class Ftp extends /*Nette\*/Object
 			}
 		}
 
-		if (/*Nette\*/Tools::catchError($msg)) {
-			if (!$silent) {
-				if (($a = strpos($msg, ': ')) !== FALSE) {
-					$msg = substr($msg, $a + 2);
-				}
-				throw new FtpException($msg);
-			}
+		if (/*Nette\*/Tools::catchError($msg) && !$silent) {
+			throw new FtpException($msg);
 		}
 
 		return $res;

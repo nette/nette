@@ -210,7 +210,7 @@ class Form extends FormContainer
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = /*Nette\*/Environment::getSession('Nette.Forms.Form/CSRF');
+		$session = $this->getSession()->getNamespace('Nette.Forms.Form/CSRF');
 		$key = "key$timeout";
 		if (isset($session->$key)) {
 			$token = $session->$key;
@@ -366,7 +366,7 @@ class Form extends FormContainer
 		$this->submittedBy = FALSE;
 
 		if ($httpRequest === NULL) {
-			$httpRequest = class_exists(/*Nette\*/'Environment') ? /*Nette\*/Environment::getHttpRequest() : new /*Nette\Web\*/HttpRequest;
+			$httpRequest = $this->getHttpRequest();
 		}
 		$httpRequest->setEncoding($this->encoding);
 
@@ -731,6 +731,30 @@ class Form extends FormContainer
 			trigger_error($e->getMessage(), E_USER_WARNING);
 			return '';
 		}
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return class_exists(/*Nette\*/'Environment') ? /*Nette\*/Environment::getHttpRequest() : new /*Nette\Web\*/HttpRequest;
+	}
+
+
+
+	/**
+	 * @return Nette\Web\Session
+	 */
+	protected function getSession()
+	{
+		return /*Nette\*/Environment::getSession();
 	}
 
 }

@@ -54,7 +54,7 @@ class CachingHelper extends /*Nette\*/Object
 	 */
 	public static function create($key, $file, $tags)
 	{
-		$cache = Environment::getCache("Nette.Template.Curly");
+		$cache = self::getCache();
 		if (isset($cache[$key])) {
 			echo $cache[$key];
 			return FALSE;
@@ -80,7 +80,7 @@ class CachingHelper extends /*Nette\*/Object
 	 */
 	public function save()
 	{
-		Environment::getCache("Nette.Template.Curly")->save($this->key, ob_get_flush(), $this->frame);
+		$this->getCache()->save($this->key, ob_get_flush(), $this->frame);
 		$this->key = $this->frame = NULL;
 	}
 
@@ -106,6 +106,20 @@ class CachingHelper extends /*Nette\*/Object
 	public function addItem($item)
 	{
 		$this->frame[Cache::ITEMS][] = $item;
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	protected static function getCache()
+	{
+		return /*Nette\*/Environment::getCache('Nette.Template.Curly');
 	}
 
 }

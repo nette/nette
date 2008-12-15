@@ -75,7 +75,7 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	public function close()
 	{
 		if ($this->data === NULL) {
-			return; // response handled by user?
+			return; // response already handled by user?
 		}
 
 		$this->httpResponse->setContentType('application/x-javascript', 'utf-8');

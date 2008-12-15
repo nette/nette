@@ -107,18 +107,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var PresenterRequest */
 	private $createdRequest;
 
-	/** @var Application */
-	private $application;
-
-	/** @var IRouter  cached value for createRequest() */
-	private $router;
-
-	/** @var IPresenterLoader  cached value for createRequest() */
-	private $presenterLoader;
-
-	/** @var Nette\Web\IHttpRequest  cached value for better performance */
-	private $httpRequest;
-
 
 
 	/**
@@ -127,11 +115,6 @@ abstract class Presenter extends Control implements IPresenter
 	public function __construct(PresenterRequest $request)
 	{
 		$this->request = $request;
-		$this->httpRequest = Environment::getHttpRequest();
-		$this->application = Environment::getApplication();
-		$this->router = $this->application->getRouter();
-		$this->presenterLoader = $this->application->getPresenterLoader();
-
 		parent::__construct(NULL, $request->getPresenterName());
 	}
 
@@ -170,17 +153,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 
-	/**
-	 * Returns application object.
-	 * @return Application
-	 */
-	final public function getApplication()
-	{
-		return $this->application;
-	}
-
-
-
 	/********************* interface IPresenter ****************d*g**/
 
 
@@ -195,7 +167,7 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
 			if ($this->isAjax()) {
-				$this->getAjaxDriver()->open(Environment::getHttpResponse());
+				$this->getAjaxDriver()->open($this->getHttpResponse());
 			}
 			$this->initGlobalParams();
 			$this->startup();
@@ -205,7 +177,7 @@ abstract class Presenter extends Control implements IPresenter
 			if ($this->autoCanonicalize) {
 				$this->canonicalize();
 			}
-			if ($this->httpRequest->isMethod('head')) {
+			if ($this->getHttpRequest()->isMethod('head')) {
 				$this->terminate();
 			}
 
@@ -609,7 +581,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function isAjax()
 	{
 		if ($this->ajaxMode === NULL) {
-			$this->ajaxMode = $this->httpRequest->isAjax();
+			$this->ajaxMode = $this->getHttpRequest()->isAjax();
 		}
 		return $this->ajaxMode;
 	}
@@ -775,7 +747,7 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->constructUrl($this->createRequest($this->view, $this->getGlobalState() + $this->request->params));
-			if ($uri !== NULL && !$this->httpRequest->getUri()->isEqual($uri)) {
+			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
 		}
@@ -797,7 +769,7 @@ abstract class Presenter extends Control implements IPresenter
 			return NULL;
 		}
 
-		$httpResponse = Environment::getHttpResponse();
+		$httpResponse = $this->getHttpResponse();
 		$match = FALSE;
 
 		if ($lastModified > 0) {
@@ -813,8 +785,8 @@ abstract class Presenter extends Control implements IPresenter
 			$httpResponse->expire($expire);
 		}
 
-		$ifNoneMatch = $this->httpRequest->getHeader('if-none-match');
-		$ifModifiedSince = $this->httpRequest->getHeader('if-modified-since');
+		$ifNoneMatch = $this->getHttpRequest()->getHeader('if-none-match');
+		$ifModifiedSince = $this->getHttpRequest()->getHeader('if-modified-since');
 		if ($ifModifiedSince !== NULL) {
 			$ifModifiedSince = strtotime($ifModifiedSince);
 		}
@@ -868,6 +840,12 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
+		// cached service for better performance
+		static $presenterLoader;
+		if ($presenterLoader === NULL) {
+			$presenterLoader = $this->getApplication()->getPresenterLoader();
+		}
+
 		$this->createdRequest = NULL;
 
 		// parse destination
@@ -899,7 +877,7 @@ abstract class Presenter extends Control implements IPresenter
 					$presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
 				}
 			}
-			$presenterClass = $this->presenterLoader->getPresenterClass($presenter);
+			$presenterClass = $presenterLoader->getPresenterClass($presenter);
 		}
 
 		// process arguments
@@ -983,7 +961,13 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function constructUrl($request)
 	{
-		$uri = $this->router->constructUrl($request, $this->httpRequest);
+		// cached service for better performance
+		static $router;
+		if ($router === NULL) {
+			$router = $this->getApplication()->getRouter();
+		}
+
+		$uri = $router->constructUrl($request, $this->getHttpRequest());
 		if ($uri === NULL) {
 			$presenter = $request->getPresenterName();
 			$params = $request->params;
@@ -1178,6 +1162,40 @@ abstract class Presenter extends Control implements IPresenter
 		} else {
 			return array();
 		}
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return Environment::getHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\IHttpResponse
+	 */
+	protected function getHttpResponse()
+	{
+		return Environment::getHttpResponse();
+	}
+
+
+
+	/**
+	 * @return Application
+	 */
+	public function getApplication()
+	{
+		return Environment::getApplication();
 	}
 
 }

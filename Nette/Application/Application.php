@@ -89,8 +89,8 @@ class Application extends /*Nette\*/Object
 			throw new /*\*/ApplicationException('Nette\Application needs PHP 5.2.2 or newer.');
 		}
 
-		$httpRequest = Environment::getHttpRequest();
-		$httpResponse = Environment::getHttpResponse();
+		$httpRequest = $this->getHttpRequest();
+		$httpResponse = $this->getHttpResponse();
 
 		$httpRequest->setEncoding('UTF-8');
 		$httpResponse->setHeader('X-Powered-By', 'Nette Framework');
@@ -327,7 +327,7 @@ class Application extends /*Nette\*/Object
 	 */
 	public function storeRequest()
 	{
-		$session = Environment::getSession('Nette.Application.Request');
+		$session = $this->getSession()->getNamespace('Nette.Application.Request');
 		do {
 			$key = substr(lcg_value(), 2);
 		} while (isset($session->rq[$key]));
@@ -345,12 +345,46 @@ class Application extends /*Nette\*/Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = Environment::getSession('Nette.Application.Request');
+		$session = $this->getSession()->getNamespace('Nette.Application.Request');
 		if (isset($session->rq[$key])) {
 			$request = $session->rq[$key];
 			unset($session->rq[$key]);
 			throw new ForwardingException($request);
 		}
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return Environment::getHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\IHttpResponse
+	 */
+	protected function getHttpResponse()
+	{
+		return Environment::getHttpResponse();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\Session
+	 */
+	protected function getSession()
+	{
+		return Environment::getSession();
 	}
 
 }
