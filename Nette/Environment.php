@@ -456,12 +456,11 @@ final class Environment
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string|Nette\Config\Config  file name or Config object
-	 * @param  bool
 	 * @return \ArrayObject
 	 */
-	public static function loadConfig($file = NULL, $useCache = NULL)
+	public static function loadConfig($file = NULL)
 	{
-		return self::$config = self::getConfigurator()->loadConfig($file, $useCache);
+		return self::$config = self::getConfigurator()->loadConfig($file);
 	}
 
 
@@ -479,23 +478,6 @@ final class Environment
 
 		} else {
 			return self::$config;
-		}
-	}
-
-
-
-	/**
-	 * Caching helper.
-	 * @param  array
-	 * @return array
-	 */
-	public static function swapState($state)
-	{
-		if ($state === NULL) {
-			return array(self::$config, self::$vars, self::$serviceLocator);
-
-		} else {
-			list(self::$config, self::$vars, self::$serviceLocator) = $state;
 		}
 	}
 

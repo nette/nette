@@ -75,7 +75,7 @@ interface IHttpResponse
 	 * Sends a HTTP header and replaces a previous one.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return bool
+	 * @return void
 	 */
 	function setHeader($name, $value);
 
@@ -83,7 +83,7 @@ interface IHttpResponse
 	 * Adds HTTP header.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return bool
+	 * @return void
 	 */
 	function addHeader($name, $value);
 
@@ -106,7 +106,7 @@ interface IHttpResponse
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  int  timestamp or number of seconds
-	 * @return bool
+	 * @return void
 	 */
 	function expire($time);
 
@@ -114,7 +114,7 @@ interface IHttpResponse
 	 * Checks if headers have been sent.
 	 * @return bool
 	 */
-	function headersSent();
+	function isSent();
 
 	/**
 	 * Returns a list of headers to sent.

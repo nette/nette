@@ -36,9 +36,6 @@ require_once dirname(__FILE__) . '/Object.php';
 class Configurator extends Object
 {
 	/** @var string */
-	public $cacheKey = '%environment%';
-
-	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.ini';
 
 	/** @var array */
@@ -113,65 +110,40 @@ class Configurator extends Object
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string|Nette\Config\Config  file name or Config object
-	 * @param  bool
 	 * @return Nette\Config\Config
 	 */
-	public function loadConfig($file, $useCache)
+	public function loadConfig($file)
 	{
-		if ($useCache === NULL) {
-			$useCache = Environment::isProduction();
-		}
-		$cache = $useCache && $this->cacheKey ? Environment::getCache('Nette.Environment') : NULL;
-
 		$name = Environment::getName();
-		$cacheKey = Environment::expand($this->cacheKey);
-		if (isset($cache[$cacheKey])) {
-			Environment::swapState($cache[$cacheKey]);
-			$config = Environment::getConfig();
+
+		if ($file instanceof /*Nette\Config\*/Config) {
+			$config = $file;
+			$file = NULL;
 
 		} else {
-			if ($file instanceof /*Nette\Config\*/Config) {
-				$config = $file;
-				$file = NULL;
-
-			} else {
-				if ($file === NULL) {
-					$file = $this->defaultConfigFile;
-				}
-				$file = Environment::expand($file);
-				$config = /*Nette\Config\*/Config::fromFile($file, $name, 0);
+			if ($file === NULL) {
+				$file = $this->defaultConfigFile;
 			}
+			$file = Environment::expand($file);
+			$config = /*Nette\Config\*/Config::fromFile($file, $name, 0);
+		}
 
-			// process environment variables
-			if ($config->variable instanceof /*Nette\Config\*/Config) {
-				foreach ($config->variable as $key => $value) {
-					Environment::setVariable($key, $value);
-				}
-			}
-
-			if (PATH_SEPARATOR !== ';' && isset($config->set->include_path)) {
-				$config->set->include_path = str_replace(';', PATH_SEPARATOR, $config->set->include_path);
-			}
-
-			$config->expand();
-			$config->setReadOnly();
-
-			// process services
-			$locator = Environment::getServiceLocator();
-			if ($config->service instanceof /*Nette\Config\*/Config) {
-				foreach ($config->service as $key => $value) {
-					$locator->addService($value, strtr($key, '-', '\\'));
-				}
-			}
-
-			// save cache
-			if ($cache) {
-				$state = Environment::swapState(NULL);
-				$state[0] = $config; // TODO: better!
-				$cache->save($cacheKey, $state, array(/*Nette\Caching\*/Cache::FILES => $file));
+		// process environment variables
+		if ($config->variable instanceof /*Nette\Config\*/Config) {
+			foreach ($config->variable as $key => $value) {
+				Environment::setVariable($key, $value);
 			}
 		}
 
+		$config->expand();
+
+		// process services
+		$locator = Environment::getServiceLocator();
+		if ($config->service instanceof /*Nette\Config\*/Config) {
+			foreach ($config->service as $key => $value) {
+				$locator->addService($value, strtr($key, '-', '\\'));
+			}
+		}
 
 		// check temporary directory - TODO: discuss
 		/*
@@ -183,6 +155,10 @@ class Configurator extends Object
 
 		// process ini settings
 		if ($config->set instanceof /*Nette\Config\*/Config) {
+			if (PATH_SEPARATOR !== ';' && isset($config->set->include_path)) {
+				$config->set->include_path = str_replace(';', PATH_SEPARATOR, $config->set->include_path);
+			}
+
 			foreach ($config->set as $key => $value) {
 				$key = strtr($key, '-', '.');
 				if (function_exists('ini_set')) {
@@ -231,6 +207,7 @@ class Configurator extends Object
 			}
 		}
 
+		$config->setReadOnly();
 		return $config;
 	}
 

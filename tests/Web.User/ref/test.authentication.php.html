@@ -17,6 +17,8 @@ authenticate as john
 AuthenticationException: Password not match #2
 
 authenticate as john#2
+
+[onAuthenticated]
 isAuthenticated?
 bool(TRUE)
 
@@ -31,6 +33,8 @@ object(Identity) (3) {
 }
 
 signing out...
+
+[onSignedOut 1]
 isAuthenticated?
 bool(FALSE)
 
@@ -52,6 +56,8 @@ getIdentity
 NULL
 
 authenticate as john#2?
+
+[onAuthenticated]
 isAuthenticated?
 bool(TRUE)
 

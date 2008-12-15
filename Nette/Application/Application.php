@@ -208,12 +208,16 @@ class Application extends /*Nette\*/Object
 				}
 
 				if ($e instanceof BadRequestException) {
-					$httpResponse->setCode($e->getCode());
+					if (!$httpResponse->isSent()) {
+						$httpResponse->setCode($e->getCode());
+					}
 					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 					break;
 
 				} else {
-					$httpResponse->setCode(500);
+					if (!$httpResponse->isSent()) {
+						$httpResponse->setCode(500);
+					}
 					/*Nette\*/Debug::processException($e, FALSE);
 					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
 						"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";

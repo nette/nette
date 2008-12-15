@@ -39,11 +39,23 @@ require_once dirname(__FILE__) . '/../Web/IUser.php';
  */
 class User extends /*Nette\*/Object implements IUser
 {
+	/**#@+ sign-out reason {@link User::getSignOutReason()} */
+	const MANUAL = 1;
+	const INACTIVITY = 2;
+	const BROWSER_CLOSED = 3;
+	/**#@-*/
+
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
 
 	/** @var string  default role for authenticated user without own identity */
 	public $authenticatedRole = 'authenticated';
+
+	/** @var array  user was successfully authenticated; function(User $sender) */
+	public $onAuthenticated;
+
+	/** @var array  user was signout out (identity still exists); function(User $sender) */
+	public $onSignedOut;
 
 	/** @var Nette\Security\IAuthenticator */
 	private $authenticationHandler;
@@ -78,7 +90,7 @@ class User extends /*Nette\*/Object implements IUser
 			throw new /*\*/InvalidStateException('Authentication handler has not been set.');
 		}
 
-		$this->setAuthenticated(FALSE);
+		$this->signOut(TRUE);
 
 		$credentials = array(
 			/*Nette\Security\*/IAuthenticator::USERNAME => $username,
@@ -88,6 +100,7 @@ class User extends /*Nette\*/Object implements IUser
 
 		$this->setIdentity($handler->authenticate($credentials));
 		$this->setAuthenticated(TRUE);
+		$this->onAuthenticated($this);
 	}
 
 
@@ -99,7 +112,11 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	final public function signOut($clearIdentity = FALSE)
 	{
-		$this->setAuthenticated(FALSE);
+		if ($this->isAuthenticated()) {
+			$this->setAuthenticated(FALSE);
+			$this->onSignedOut($this);
+		}
+
 		if ($clearIdentity) {
 			$this->setIdentity(NULL);
 		}
@@ -211,13 +228,13 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Was user signed out due time expiration?
-	 * @return bool
+	 * Why was user signed out?
+	 * @return int
 	 */
-	final public function isExpired()
+	final public function getSignOutReason()
 	{
 		$session = $this->getSessionNamespace(FALSE);
-		return $session && $session->expired;
+		return $session ? $session->reason : NULL;
 	}
 
 
@@ -242,32 +259,35 @@ class User extends /*Nette\*/Object implements IUser
 
 		if (!($session->identity instanceof /*Nette\Security\*/IIdentity)) {
 			unset($session->identity);
+			$session->authenticated = FALSE;
 		}
 
 		if (!is_bool($session->authenticated)) {
 			$session->authenticated = FALSE;
 		}
 
-		if ($session->authenticated && isset($session->expireTime)) {
-			if ($session->expireTime < time()) {
+		if ($session->authenticated && $session->expireBrowser) { // check if browser was closed?
+			if ($session->authKey !== $this->getHttpRequest()->getCookie('nette-authkey')) {
+				$session->reason = self::BROWSER_CLOSED;
 				$session->authenticated = FALSE;
+				unset($session->authKey);
+				$this->onSignedOut($this);
 				if ($session->expireIdentity) {
 					unset($session->identity);
-				} else {
-					$session->expired = TRUE;
 				}
-			} else {
-				$session->expireTime = time() + $session->expireDelta; // sliding expiration
 			}
 		}
 
-		if ($session->authenticated && $session->expireBrowser) {
-			if ($session->authKey !== $this->getHttpRequest()->getCookie('nette-authkey')) {
+		if ($session->authenticated && isset($session->expireTime)) { // check time expiration
+			if ($session->expireTime < time()) {
+				$session->reason = self::INACTIVITY;
 				$session->authenticated = FALSE;
-				unset($session->authKey);
+				$this->onSignedOut($this);
 				if ($session->expireIdentity) {
 					unset($session->identity);
 				}
+			} else {
+				$session->expireTime = time() + $session->expireDelta; // sliding expiration
 			}
 		}
 
@@ -283,14 +303,11 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	protected function setAuthenticated($state)
 	{
-		$state = ($state === TRUE);
-		if ($this->isAuthenticated() === $state) return;
-
 		$session = $this->getSessionNamespace(TRUE);
-		$session->authenticated = $state;
-		$session->expired = FALSE;
+		$session->authenticated = (bool) $state;
 
 		if ($state) {
+			$session->reason = NULL;
 			$session->expireBrowser = TRUE;
 			$session->authTime = time(); // informative value
 			$session->authKey = $this->getHttpRequest()->getCookie('nette-authkey');
@@ -309,6 +326,7 @@ class User extends /*Nette\*/Object implements IUser
 				);
 			}
 		} else {
+			$session->reason = self::MANUAL;
 			unset($session->authKey, $session->expireTime, $session->expireDelta,
 			$session->expireIdentity, $session->expireBrowser, $session->authTime);
 		}

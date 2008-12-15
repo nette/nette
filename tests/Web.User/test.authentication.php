@@ -34,10 +34,23 @@ class AuthenticationHandler implements IAuthenticator
 
 }
 
+
+function onAuthenticated($user) {
+	echo "\n[onAuthenticated]\n";
+}
+
+function onSignedOut($user) {
+	echo "\n[onSignedOut $user->signOutReason]\n";
+}
+
+
 // delete cookies
 $_COOKIE = array();
 
 $user = new User;
+$user->onAuthenticated[] = 'onAuthenticated';
+$user->onSignedOut[] = 'onSignedOut';
+
 
 echo "isAuthenticated?\n";
 Debug::dump($user->isAuthenticated());

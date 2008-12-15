@@ -105,8 +105,8 @@ class Ftp extends /*Nette\*/Object
 			throw new FtpException("Not connected to FTP server. Call connect() or ssl_connect() first.");
 
 		} else {
-			if ($func === 'ftp_login') {
-				$this->state['login'] = $args;
+			if ($func === 'ftp_login' || $func === 'ftp_pasv') {
+				$this->state[$name] = $args;
 			}
 
 			array_unshift($args, $this->resource);

@@ -1,4 +1,4 @@
-<h1>Nette\Environment config without cache test</h1>
+<h1>Nette\Environment config test</h1>
 
 <pre>
 <?php
@@ -10,7 +10,7 @@ require_once '../../Nette/loader.php';
 
 echo "Loading config:\n";
 Environment::setName(Environment::PRODUCTION);
-Environment::loadConfig('config.ini', FALSE);
+Environment::loadConfig('config.ini');
 
 echo "Variable foo:\n";
 Debug::dump(Environment::getVariable('foo'));
