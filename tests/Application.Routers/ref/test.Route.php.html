@@ -191,14 +191,14 @@ generated: OK <code>/?test=testvalue&presenter=querypresenter</code>
 
 
 <hr><h2>With named params in query</h2>
-/?test2=view: matched
+/?test=view: matched
 parsed: OK
-generated: OK <code>/?test2=view&test=querypresenter</code>
+generated: OK <code>/?test=view</code>
 
 
-/: matched
+/?test=default: matched
 parsed: OK
-generated: OK <code>/?test=querypresenter</code>
+generated: OK <code>/</code>
 
 
 
@@ -290,5 +290,10 @@ generated: OK <code>/kategorie?test=testvalue</code>
 /other/: matched
 parsed: OK
 generated: OK <code>/other?test=testvalue</code>
+
+
+/?action=kategorie: matched
+parsed: OK
+generated: OK <code>/?test=testvalue&action=kategorie</code>
 
 

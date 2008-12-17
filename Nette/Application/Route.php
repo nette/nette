@@ -57,10 +57,10 @@ class Route extends /*Nette\*/Object implements IRouter
 	const FILTER_TABLE = 'filterTable';
 	/**#@-*/
 
-	/**#@+ @internal fixed types {@link Route::$metadata} */
-	const NOT_FIXED = 0;
-	const PATH_FIXED = 1;
-	const URL_FIXED = 2;
+	/**#@+ @internal fixity types - how to handle 'default' value? {@link Route::$metadata} */
+	const OPTIONAL = 0;
+	const PATH_OPTIONAL = 1;
+	const CONSTANT = 2;
 	/**#@-*/
 
 	/** @var bool */
@@ -107,7 +107,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	/** @var string  regular expression pattern */
 	private $re;
 
-	/** @var array of [default & fixed, filterIn, filterOut] */
+	/** @var array of [default & fixity, filterIn, filterOut] */
 	protected $metadata = array();
 
 	/** @var array  */
@@ -141,9 +141,9 @@ class Route extends /*Nette\*/Object implements IRouter
 	 */
 	public function match(/*Nette\Web\*/IHttpRequest $context)
 	{
-		// combine with precedence: mask (params in URL-path), fixed, query, (post,) defaults
+		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
 
-		// 1) MASK
+		// 1) URL MASK
 		$uri = $context->getUri();
 
 		if ($this->type === self::HOST) {
@@ -177,26 +177,13 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 
-		// 2) FIXED
-		$defaults = array();
-		$lower = !($this->flags & self::CASE_SENSITIVE);
+		// 2) CONSTANT FIXITY
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
-				$val = /*$lower ? strtolower($params[$name]) : */$params[$name]; // strtolower damages UTF-8
-				if (isset($meta[self::FILTER_TABLE][$val])) { // applyies filterTable only to path parameters
-					$params[$name] = $meta[self::FILTER_TABLE][$val];
+				//$params[$name] = $this->flags & self::CASE_SENSITIVE === 0 ? strtolower($params[$name]) : */$params[$name]; // strtolower damages UTF-8
 
-				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
-					$params[$name] = call_user_func($meta[self::FILTER_IN], $val);
-				}
-
-			} elseif (isset($meta['fixed'])) {
-				if ($meta['fixed'] !== self::NOT_FIXED) { // force now
-					$params[$name] = $meta['default'];
-
-				} else { // append later - after query params
-					$defaults[$name] = $meta['default'];
-				}
+			} elseif (isset($meta['fixity']) && $meta['fixity'] !== self::OPTIONAL) {
+				$params[$name] = NULL; // cannot be overwriten in 3) and detected by isset() in 4)
 			}
 		}
 
@@ -209,11 +196,23 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 
-		// 4) DEFAULTS
-		$params += $defaults;
+		// 4) APPLY FILTERS & FIXITY
+		foreach ($this->metadata as $name => $meta) {
+			if (isset($params[$name])) {
+				if (isset($meta[self::FILTER_TABLE][$params[$name]])) { // applyies filterTable only to path parameters
+					$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
+
+				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
+					$params[$name] = call_user_func($meta[self::FILTER_IN], $params[$name]);
+				}
+
+			} elseif (isset($meta['fixity'])) {
+				$params[$name] = $meta['default'];
+			}
+		}
 
 
-		// build PresenterRequest
+		// 5) BUILD PresenterRequest
 		if (!isset($params[self::PRESENTER_KEY])) {
 			throw new /*\*/InvalidStateException('Missing presenter in route definition.');
 		}
@@ -258,7 +257,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		$presenter = $request->getPresenterName();
 		if (isset($metadata[self::MODULE_KEY])) {
-			if (isset($metadata[self::MODULE_KEY]['fixed'])) {
+			if (isset($metadata[self::MODULE_KEY]['fixity'])) {
 				$a = strlen($metadata[self::MODULE_KEY]['default']);
 				if (substr($presenter, $a, 1) !== ':') {
 					return NULL; // module not match
@@ -275,13 +274,13 @@ class Route extends /*Nette\*/Object implements IRouter
 		foreach ($metadata as $name => $meta) {
 			if (!isset($params[$name])) continue; // retains NULL values
 
-			if (isset($meta['fixed'])) {
+			if (isset($meta['fixity'])) {
 				if (strcasecmp($params[$name], $meta['default']) === 0) {  // intentionally ==
 					// remove default values; NULL values are retain
 					unset($params[$name]);
 					continue;
 
-				} elseif ($meta['fixed'] === self::URL_FIXED) {
+				} elseif ($meta['fixity'] === self::CONSTANT) {
 					return NULL; // missing or wrong parameter '$name'
 				}
 			}
@@ -318,7 +317,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				$uri = $params[$name] . $uri;
 				unset($params[$name]);
 
-			} elseif (isset($metadata[$name]['fixed'])) { // has default value?
+			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
 				if ($optional) {
 					$uri = '';
 
@@ -387,16 +386,17 @@ class Route extends /*Nette\*/Object implements IRouter
 		foreach ($defaults as $name => $def) {
 			$metadata[$name] = array(
 				'default' => $def,
-				'fixed' => self::URL_FIXED
+				'fixity' => self::CONSTANT
 			);
 		}
 
-		// parse query part of mask
+
+		// 1) PARSE QUERY PART OF MASK
 		$this->xlat = array();
 		$pos = strpos($mask, ' ? ');
 		if ($pos !== FALSE) {
 			preg_match_all(
-				'#(?:([a-zA-Z0-9_.-]+)=)?<([^> ]+) *([^>]*)>#',
+				'/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/', // name=<parameter-name [pattern][#class]>
 				substr($mask, $pos + 1),
 				$matches,
 				PREG_SET_ORDER
@@ -404,16 +404,32 @@ class Route extends /*Nette\*/Object implements IRouter
 			$mask = rtrim(substr($mask, 0, $pos));
 
 			foreach ($matches as $match) {
-				list(, $param, $name, $pattern) = $match;  // $pattern is unsed
-				if (isset(self::$styles['?' . $name])) {
+				list(, $param, $name, $pattern, $class) = $match;  // $pattern is unsed
+
+				if ($class !== '') {
+					if (!isset(self::$styles[$class])) {
+						throw new /*\*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+					}
+					$meta = self::$styles[$class];
+
+				} elseif (isset(self::$styles['?' . $name])) {
 					$meta = self::$styles['?' . $name];
+
 				} else {
 					$meta = self::$styles['?#'];
 				}
+
 				if (isset($metadata[$name])) {
 					$meta = $meta + $metadata[$name];
 				}
-				$meta['fixed'] = self::NOT_FIXED;
+
+				if (array_key_exists('default', $meta)) {
+					$meta['fixity'] = self::OPTIONAL;
+				}
+
+				unset($meta['pattern']);
+				$meta['filterTable2'] = empty($meta[self::FILTER_TABLE]) ? NULL : array_flip($meta[self::FILTER_TABLE]);
+
 				$metadata[$name] = $meta;
 				if ($param !== '') {
 					$this->xlat[$name] = $param;
@@ -422,9 +438,9 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 
-		// parse request uri part of mask
+		// 2) PARSE URI-PATH PART OF MASK
 		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [validation-expr]>
+			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [pattern][#class]>
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
@@ -495,12 +511,12 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			// include in expression
 			$tmp = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
-			if (isset($meta['fixed'])) { // has default value?
+			if (isset($meta['fixity'])) { // has default value?
 				if (!$optional) {
 					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
 				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
-				$metadata[$name]['fixed'] = self::PATH_FIXED;
+				$metadata[$name]['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
 				$optional = FALSE;
@@ -532,15 +548,15 @@ class Route extends /*Nette\*/Object implements IRouter
 		$m = $this->metadata;
 		$presenter = '';
 
-		if (isset($m[self::MODULE_KEY]['fixed'])) {
-			if ($m[self::MODULE_KEY]['fixed'] !== self::URL_FIXED) {
+		if (isset($m[self::MODULE_KEY]['fixity'])) {
+			if ($m[self::MODULE_KEY]['fixity'] !== self::CONSTANT) {
 				return NULL;
 			}
 			$presenter = $m[self::MODULE_KEY]['default'] . ':';
 		}
 
-		if (isset($m[self::PRESENTER_KEY]['fixed'])) {
-			if ($m[self::PRESENTER_KEY]['fixed'] === self::URL_FIXED) {
+		if (isset($m[self::PRESENTER_KEY]['fixity'])) {
+			if ($m[self::PRESENTER_KEY]['fixity'] === self::CONSTANT) {
 				return $presenter . $m[self::PRESENTER_KEY]['default'];
 			}
 		}
@@ -560,10 +576,12 @@ class Route extends /*Nette\*/Object implements IRouter
 		if (empty($xlat)) return $arr;
 
 		$res = array();
+		$occupied = array_flip($xlat);
 		foreach ($arr as $k => $v) {
 			if (isset($xlat[$k])) {
 				$res[$xlat[$k]] = $v;
-			} else {
+
+			} elseif (!isset($occupied[$k])) {
 				$res[$k] = $v;
 			}
 		}
