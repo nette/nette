@@ -71,7 +71,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Returns a fully-qualified name that uniquely identifies the component.
+	 * Returns a fully-qualified name that uniquely identifies the component
 	 * within the presenter hierarchy.
 	 * @return string
 	 */
@@ -196,6 +196,18 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 		} else {
 			return $default;
 		}
+	}
+
+
+
+	/**
+	 * Returns a fully-qualified name that uniquely identifies the parameter.
+	 * @return string
+	 */
+	final public function getParamId($key)
+	{
+		$uid = $this->getUniqueId();
+		return $uid === '' ? $key : $uid . self::NAME_SEPARATOR . $key;
 	}
 
 

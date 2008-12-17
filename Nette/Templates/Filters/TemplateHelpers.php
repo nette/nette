@@ -109,4 +109,22 @@ final class TemplateHelpers
 		return strftime($format, $value);
 	}
 
+
+
+	/**
+	 * Converts to human readable file size.
+	 * @param  int
+	 * @return string
+	 */
+	public static function bytes($bytes)
+	{
+		$bytes = (int) $bytes;
+		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+		foreach ($units as $unit) {
+			if (abs($bytes) < 1024) break;
+			$bytes = $bytes / 1024;
+		}
+		return round($bytes, 2) . ' ' . $unit;
+	}
+
 }

@@ -68,12 +68,3 @@ Debug::dump(String::checkEncoding('žluťoučký'));
 
 echo "String::checkEncoding(...invalid...)\n";
 Debug::dump(String::checkEncoding('žluťoučký' . chr(128)));
-
-
-
-// String::bytes
-echo "String::bytes(0.1)\n";
-Debug::dump(String::bytes(0.1));
-
-echo "String::bytes(-1024 * 1024 * 1050)\n";
-Debug::dump(String::bytes(-1024 * 1024 * 1050));
