@@ -103,13 +103,19 @@ class RobotLoader extends AutoLoader
 			if ($this->autoRebuild === NULL) {
 				$this->autoRebuild = !$this->isProduction();
 			}
+			
 			if ($this->autoRebuild) {
 				if (!$this->rebuilded) {
 					$this->rebuild();
 				}
-				if (!isset($this->list[$type])) {
+
+				if (isset($this->list[$type])) {
+					self::includeOnce($this->list[$type]);
+					self::$count++;
+				} else {
 					$this->list[$type] = FALSE;
 				}
+
 				$cache = $this->getCache();
 				$cache['data'] = array(
 					'list' => $this->list,
