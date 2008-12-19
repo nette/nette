@@ -109,10 +109,6 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	 */
 	public function &__get($name)
 	{
-		if ($name === '') {
-			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
-		}
-
 		return $this->data[$name];
 	}
 

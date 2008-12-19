@@ -1089,7 +1089,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * Permanently saves state information for all subcomponents to $this->globalState.
 	 * @return void
 	 */
-	private function saveGlobalState()
+	protected function saveGlobalState()
 	{
 		$this->globalParams = array();
 		$this->globalState = $this->getGlobalState();

@@ -218,7 +218,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function exists()
 	{
-		return $this->getHttpRequest()->getCookie(session_name()) !== NULL;
+		return self::$started || $this->getHttpRequest()->getCookie(session_name()) !== NULL;
 	}
 
 
@@ -330,6 +330,10 @@ class Session extends /*Nette\*/Object
 	 */
 	public function hasNamespace($namespace)
 	{
+		if (!$this->exists()) {
+			return FALSE;
+		}
+
 		if (!self::$started) {
 			$this->start();
 		}
@@ -345,6 +349,10 @@ class Session extends /*Nette\*/Object
 	 */
 	public function getIterator()
 	{
+		if (!$this->exists()) {
+			return new /*\*/ArrayIterator;
+		}
+
 		if (!self::$started) {
 			$this->start();
 		}
@@ -387,6 +395,10 @@ class Session extends /*Nette\*/Object
 
 		if (empty($_SESSION['__NS'])) {
 			unset($_SESSION['__NS']);
+		}
+
+		if (empty($_SESSION)) {
+			//$this->destroy(); only when shutting down
 		}
 	}
 

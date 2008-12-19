@@ -103,7 +103,7 @@ class RobotLoader extends AutoLoader
 			if ($this->autoRebuild === NULL) {
 				$this->autoRebuild = !$this->isProduction();
 			}
-			
+
 			if ($this->autoRebuild) {
 				if (!$this->rebuilded) {
 					$this->rebuild();

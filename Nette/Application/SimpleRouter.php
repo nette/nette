@@ -79,10 +79,12 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 		$params = $context->getQuery();
 		$params += $this->defaults;
 
-		if (isset($params[self::PRESENTER_KEY])) {
-			$presenter = $this->module . $params[self::PRESENTER_KEY];
-			unset($params[self::PRESENTER_KEY]);
+		if (!isset($params[self::PRESENTER_KEY])) {
+			throw new /*\*/InvalidStateException('Missing presenter.');
 		}
+
+		$presenter = $this->module . $params[self::PRESENTER_KEY];
+		unset($params[self::PRESENTER_KEY]);
 
 		return new PresenterRequest(
 			$presenter,

@@ -163,7 +163,7 @@ class ServiceLocator extends Object implements IServiceLocator
 		}
 
 		if ($this->parent !== NULL) {
-			return $this->parent->getService($name);
+			return $this->parent->getService($name, $need);
 
 		} elseif ($need) {
 			throw new /*\*/InvalidStateException("Service '$name' not found.");

@@ -78,14 +78,9 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	 * @param  string  name
 	 * @param  mixed   value
 	 * @return void
-	 * @throws \InvalidArgumentException
 	 */
 	public function __set($name, $value)
 	{
-		if ($name === '') {
-			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
-		}
-
 		$this->data[$name] = $value;
 	}
 
@@ -96,14 +91,9 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	 *
 	 * @param  string    name
 	 * @return mixed
-	 * @throws \InvalidArgumentException
 	 */
 	public function &__get($name)
 	{
-		if ($name === '') {
-			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
-		}
-
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
 			trigger_error("The variable '$name' does not exist in session namespace", E_USER_WARNING);
 		}
@@ -131,14 +121,9 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	 *
 	 * @param  string    name
 	 * @return void
-	 * @throws \InvalidArgumentException
 	 */
 	public function __unset($name)
 	{
-		if ($name === '') {
-			throw new /*\*/InvalidArgumentException("The key must be a non-empty string.");
-		}
-
 		unset($this->data[$name], $this->meta['EXP'][$name]);
 	}
 

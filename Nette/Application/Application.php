@@ -267,7 +267,9 @@ class Application extends /*Nette\*/Object
 			$this->serviceLocator = new /*Nette\*/ServiceLocator(Environment::getServiceLocator());
 
 			foreach ($this->defaultServices as $name => $service) {
-				$this->serviceLocator->addService($service, $name);
+				if ($this->serviceLocator->getService($name, FALSE) === NULL) {
+					$this->serviceLocator->addService($service, $name);
+				}
 			}
 		}
 		return $this->serviceLocator;
