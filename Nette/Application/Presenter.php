@@ -65,6 +65,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	public static $invalidLinkMode;
 
+	/** @var array of event handlers; Occurs when the presenter is shutting down; function(Presenter $sender, Exception $exception = NULL) */
+	public $onShutdown;
+
 	/** @var PresenterRequest */
 	private $request;
 
@@ -205,6 +208,8 @@ abstract class Presenter extends Control implements IPresenter
 			// finish template rendering
 			$this->renderTemplate();
 
+			$e = NULL;
+
 		} catch (AbortException $e) {
 			// continue with shutting down
 		} /* finally */ {
@@ -213,6 +218,7 @@ abstract class Presenter extends Control implements IPresenter
 				$this->ajaxDriver->close();
 			}
 			$this->phase = self::PHASE_SHUTDOWN;
+			$this->onShutdown($this, $e);
 			$this->shutdown();
 			if (isset($e)) throw $e;
 		}

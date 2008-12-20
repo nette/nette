@@ -77,10 +77,10 @@ class Form extends FormContainer
 	/** protection token ID */
 	const PROTECTOR_ID = '_token_';
 
-	/** @var array  valid form submission; function(Form $sender) */
+	/** @var array of event handlers; Occurs when the form is submitted and successfully validated; function(Form $sender) */
 	public $onSubmit;
 
-	/** @var array  invalid form submission; function(Form $sender) */
+	/** @var array of event handlers; Occurs when the form is submitted and not validated; function(Form $sender) */
 	public $onInvalidSubmit;
 
 	/** @var bool */

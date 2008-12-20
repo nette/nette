@@ -37,10 +37,10 @@ require_once dirname(__FILE__) . '/../../Forms/ISubmitterControl.php';
  */
 class SubmitButton extends Button implements ISubmitterControl
 {
-	/** @var array  valid click event handlers; function(SubmitButton $sender) */
+	/** @var array of event handlers; Occurs when the button is clicked and form is successfully validated; function(SubmitButton $sender) */
 	public $onClick;
 
-	/** @var array  invalid click event handlers; function(SubmitButton $sender) */
+	/** @var array of event handlers; Occurs when the button is clicked and form is not validated; function(SubmitButton $sender) */
 	public $onInvalidClick;
 
 	/** @var mixed */

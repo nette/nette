@@ -51,10 +51,10 @@ class User extends /*Nette\*/Object implements IUser
 	/** @var string  default role for authenticated user without own identity */
 	public $authenticatedRole = 'authenticated';
 
-	/** @var array  user was successfully authenticated; function(User $sender) */
+	/** @var array of event handlers; Occurs when the user is successfully authenticated; function(User $sender) */
 	public $onAuthenticated;
 
-	/** @var array  user was signout out (identity still exists); function(User $sender) */
+	/** @var array of event handlers; Occurs when the user is logged off; function(User $sender) */
 	public $onSignedOut;
 
 	/** @var Nette\Security\IAuthenticator */
