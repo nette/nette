@@ -70,11 +70,10 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$id = $this->lookupPath('Nette\Application\Presenter');
 			$this->setAction(new Link(
 				$presenter,
-				'this!',
-				array(Presenter::SIGNAL_KEY => "$id-submit")
+				$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
+				array()
 			));
 		}
 	}

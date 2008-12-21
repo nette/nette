@@ -52,7 +52,7 @@ class Link extends /*Nette\*/Object
 	 * @param  string
 	 * @param  array
 	 */
-	public function __construct(PresenterComponent $component, $destination, array $args = NULL)
+	public function __construct(PresenterComponent $component, $destination, array $args)
 	{
 		$this->component = $component;
 		$this->destination = $destination;

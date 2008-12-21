@@ -108,7 +108,10 @@ abstract class Presenter extends Control implements IPresenter
 	private $ajaxMode;
 
 	/** @var PresenterRequest */
-	private $createdRequest;
+	private $lastCreatedRequest;
+
+	/** @var array */
+	private $lastCreatedRequestFlag;
 
 
 
@@ -627,48 +630,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Generates URL to presenter, view or signal.
-	 * @param  string
-	 * @param  array|mixed
-	 * @return string
-	 * @throws InvalidLinkException
-	 */
-	public function link($destination, $args = array())
-	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
-		$a = strpos($destination, '#');
-		if ($a == FALSE) {
-			$fragment = '';
-		} else {
-			$fragment = substr($destination, $a);
-			$destination = substr($destination, 0, $a);
-		}
-
-		$a = strpos($destination, '?');
-		if ($a !== FALSE) {
-			parse_str(substr($destination, $a + 1), $args); // requires disabled magic quotes
-			$destination = substr($destination, 0, $a);
-		}
-
-		if (substr($destination, -1) === '!') {
-			return parent::link($destination, $args) . $fragment;
-		}
-
-		try {
-			return $this->constructUrl($this->createRequest($destination, $args)) . $fragment;
-
-		} catch (InvalidLinkException $e) {
-			return $this->handleInvalidLink($e);
-		}
-	}
-
-
-
-	/**
 	 * Forward to another presenter or view.
 	 * @param  string|PresenterRequest
 	 * @param  array|mixed
@@ -685,7 +646,8 @@ abstract class Presenter extends Control implements IPresenter
 			array_shift($args);
 		}
 
-		throw new ForwardingException($this->createRequest($destination, $args));
+		$this->createRequest($this, $destination, $args, 'forward');
+		throw new ForwardingException($this->lastCreatedRequest);
 	}
 
 
@@ -725,9 +687,21 @@ abstract class Presenter extends Control implements IPresenter
 	 * Returns the last created PresenterRequest.
 	 * @return PresenterRequest
 	 */
-	public function getCreatedRequest()
+	public function getLastCreatedRequest()
 	{
-		return $this->createdRequest;
+		return $this->lastCreatedRequest;
+	}
+
+
+
+	/**
+	 * Returns the last created PresenterRequest flag.
+	 * @param  string
+	 * @return bool
+	 */
+	public function getLastCreatedRequestFlag($flag)
+	{
+		return !empty($this->lastCreatedRequestFlag[$flag]);
 	}
 
 
@@ -752,7 +726,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$uri = $this->constructUrl($this->createRequest($this->view, $this->getGlobalState() + $this->request->params));
+			$uri = $this->createRequest($this, $this->view, $this->getGlobalState() + $this->request->params, 'redirect');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
@@ -834,31 +808,58 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * PresenterRequest/URL factory.
-	 * @param  string   destination in format "[[module:]presenter:]view"
+	 * @param  PresenterComponent  base
+	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
 	 * @param  array    array of arguments
-	 * @param  string   optional signal executor
-	 * @param  string   optional signal to execute
-	 * @return PresenterRequest
+	 * @param  string   forward|redirect|link
+	 * @return string   URL
 	 * @throws InvalidLinkException
 	 * @internal
 	 */
-	final protected function createRequest($destination, array $args, $componentId = NULL, $signal = NULL)
+	final protected function createRequest($component, $destination, array $args, $mode)
 	{
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
-		// cached service for better performance
-		static $presenterLoader;
+		// cached services for better performance
+		static $presenterLoader, $router, $httpRequest;
 		if ($presenterLoader === NULL) {
 			$presenterLoader = $this->getApplication()->getPresenterLoader();
+			$router = $this->getApplication()->getRouter();
+			$httpRequest = $this->getHttpRequest();
 		}
 
-		$this->createdRequest = NULL;
+		$this->lastCreatedRequest = $this->lastCreatedRequestFlag = NULL;
 
-		// parse destination
+		// PARSE DESTINATION
+		// 1) fragment
+		$a = strpos($destination, '#');
+		if ($a == FALSE) {
+			$fragment = '';
+		} else {
+			$fragment = substr($destination, $a);
+			$destination = substr($destination, 0, $a);
+		}
+
+		// 2) ?query syntax
+		$a = strpos($destination, '?');
+		if ($a !== FALSE) {
+			parse_str(substr($destination, $a + 1), $args); // requires disabled magic quotes
+			$destination = substr($destination, 0, $a);
+		}
+
+		if (!($component instanceof Presenter) || substr($destination, -1) === '!') {
+			$signal = rtrim($destination, '!');
+			if ($signal == NULL) {  // intentionally ==
+				throw new InvalidLinkException("Signal must be non-empty string.");
+			}
+			$destination = 'this';
+		}
+
 		if ($destination == NULL) {  // intentionally ==
 			throw new InvalidLinkException("Destination must be non-empty string.");
 		}
 
+		// 3) presenter: view
 		$current = FALSE;
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
@@ -886,7 +887,41 @@ abstract class Presenter extends Control implements IPresenter
 			$presenterClass = $presenterLoader->getPresenterClass($presenter);
 		}
 
-		// process arguments
+		// PROCESS SIGNAL ARGUMENTS
+		if (isset($signal)) { // $component must be IStatePersistent
+			$class = get_class($component);
+			if ($signal === 'this') { // means "no signal"
+				$signal = '';
+				if (array_key_exists(0, $args)) {
+					throw new InvalidLinkException("Extra parameter for signal '$class:$signal!'.");
+				}
+
+			} elseif (strpos($signal, self::NAME_SEPARATOR) === FALSE) { // TODO: AppForm exception
+				// counterpart of signalReceived() & tryCall()
+				$method = $component->formatSignalMethod($signal);
+				if (!PresenterHelpers::isMethodCallable($class, $method)) {
+					throw new InvalidLinkException("Unknown signal '$class:$signal!'.");
+				}
+				if ($args) { // convert indexed parameters to named
+					PresenterHelpers::argsToParams($class, $method, $args);
+				}
+			}
+
+			// counterpart of IStatePersistent
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
+				$component->saveState($args);
+			}
+
+			if ($args && $component !== $this) {
+				$prefix = $component->getUniqueId() . self::NAME_SEPARATOR;
+				foreach ($args as $key => $val) {
+					unset($args[$key]);
+					$args[$prefix . $key] = $val;
+				}
+			}
+		}
+
+		// PROCESS ARGUMENTS
 		if (is_subclass_of($presenterClass, __CLASS__)) {
 			if ($view === '') {
 				/*$view = $presenterClass::$defaultView;*/ // in PHP 5.3
@@ -896,15 +931,6 @@ abstract class Presenter extends Control implements IPresenter
 			$current = ($view === '*' || $view === $this->view) && $presenterClass === $this->getClass(); // TODO
 
 			if ($args || $destination === 'this') {
-				// prefix component parameters
-				if ($componentId != '') { // intentionally ==
-					$prefix = $componentId . self::NAME_SEPARATOR;
-					foreach ($args as $key => $val) {
-						unset($args[$key]);
-						$args[$prefix . $key] = $val;
-					}
-				}
-
 				// counterpart of run() & tryCall()
 				/*$method = $presenterClass::formatPresentMethod($view);*/ // in PHP 5.3
 				/**/$method = call_user_func(array($presenterClass, 'formatPresentMethod'), $view);/**/
@@ -940,50 +966,41 @@ abstract class Presenter extends Control implements IPresenter
 			$args += $globalState;
 		}
 
-		// add view & signal
+		// ADD VIEW & SIGNAL & FLASH
 		$args[self::VIEW_KEY] = $view;
-		if ($signal != NULL) { // intentionally ==
-			$args[self::SIGNAL_KEY] = ($componentId === '' ? '' : $componentId . self::NAME_SEPARATOR) . strtolower($signal);
+		if (!empty($signal)) {
+			$args[self::SIGNAL_KEY] = $component->getParamId($signal);
 			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
 		}
 
-		return $this->createdRequest = new PresenterRequest(
+		$this->lastCreatedRequest = new PresenterRequest(
 			$presenter,
 			PresenterRequest::FORWARD,
 			$args,
 			array(),
-			array(),
-			array('current' => $current)
+			array()
 		);
-	}
+		$this->lastCreatedRequestFlag = array('current' => $current);
 
+		if ($mode === 'forward') return;
 
-
-	/**
-	 * Constructs URL or throws exception.
-	 * @param  PresenterRequest
-	 * @return string
-	 * @throws InvalidLinkException
-	 */
-	protected function constructUrl($request)
-	{
-		// cached service for better performance
-		static $router;
-		if ($router === NULL) {
-			$router = $this->getApplication()->getRouter();
-		}
-
-		$uri = $router->constructUrl($request, $this->getHttpRequest());
+		// CONSTRUCT URL
+		$uri = $router->constructUrl($this->lastCreatedRequest, $httpRequest);
 		if ($uri === NULL) {
-			$presenter = $request->getPresenterName();
-			$params = $request->params;
-			$view = $params['view'];
-			unset($params['view']);
-			$params = urldecode(http_build_query($params, NULL, ', '));
+			unset($args['view']);
+			$params = urldecode(http_build_query($args, NULL, ', '));
 			throw new InvalidLinkException("No route for $presenter:$view($params)");
 		}
-		//return $this->getAjaxDriver()->link($uri);
-		return $uri;
+
+		// make URL relative if possible
+		if ($mode === 'link') {
+			$hostUri = $httpRequest->getUri()->hostUri;
+			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
+				$uri = substr($uri, strlen($hostUri));
+			}
+		}
+
+		return $uri . $fragment;
 	}
 
 
@@ -1202,6 +1219,16 @@ abstract class Presenter extends Control implements IPresenter
 	public function getApplication()
 	{
 		return Environment::getApplication();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\Sesssion
+	 */
+	private function getSession()
+	{
+		return Environment::getSession();
 	}
 
 }

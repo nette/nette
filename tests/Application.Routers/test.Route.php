@@ -65,6 +65,7 @@ function test(Route $route, $uri, $expectedReq, $expectedUri)
 		//$request->setParam('extra', NULL);
 		$request->modify('params', 'extra', NULL);
 		$result = $route->constructUrl($request, $httpRequest);
+		$result = strncmp($result, 'http://admin.texy.info', 22) ? $result : substr($result, 22);
 		$ok = $expectedUri === $result;
 		echo 'generated: ', ($ok ? 'OK' : '***ERROR***');
 		echo " <code>$result</code>\n";
@@ -527,7 +528,7 @@ test($route,
 			'test' => 'testvalue',
 		),
 	),
-	'http://admin.texy.info/abc?test=testvalue'
+	'/abc?test=testvalue'
 );
 
 

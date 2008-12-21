@@ -215,6 +215,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	/********************* interface ISignalReceiver ****************d*g**/
 
 
+
 	/**
 	 * Calls signal handler method.
 	 * @param  string
@@ -247,68 +248,24 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Generates URL to signal.
-	 * @param  string
+	 * Generates URL to presenter, view or signal.
+	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
 	 * @param  array|mixed
 	 * @return string
 	 * @throws InvalidLinkException
 	 */
-	public function link($signal, $args = array())
+	public function link($destination, $args = array())
 	{
 		if (!is_array($args)) {
 			$args = func_get_args();
 			array_shift($args);
 		}
 
-		$presenter = $this->getPresenter();
-
-		$a = strpos($signal, '#');
-		if ($a == FALSE) {
-			$fragment = '';
-		} else {
-			$fragment = substr($signal, $a);
-			$signal = substr($signal, 0, $a);
-		}
-
-		$a = strpos($signal, '?');
-		if ($a !== FALSE) {
-			parse_str(substr($signal, $a + 1), $args); // requires disabled magic quotes
-			$signal = substr($signal, 0, $a);
-		}
-
-		$signal = rtrim($signal, '!'); // exclamation is not required, every destinations are signals
-		$class = $this->getClass();
-
 		try {
-			if ($signal == NULL) {  // intentionally ==
-				throw new InvalidLinkException("Signal must be non-empty string.");
-
-			} elseif ($signal === 'this') { // means "no signal"
-				$signal = '';
-				if (array_key_exists(0, $args)) {
-					throw new InvalidLinkException("Extra parameter for signal '$class:$signal!'.");
-				}
-
-			} else {
-				// counterpart of signalReceived() & tryCall()
-				$method = $this->formatSignalMethod($signal);
-				if (!PresenterHelpers::isMethodCallable($class, $method)) {
-					throw new InvalidLinkException("Unknown signal '$class:$signal!'.");
-				}
-				if ($args) { // convert indexed parameters to named
-					PresenterHelpers::argsToParams($class, $method, $args);
-				}
-			}
-
-			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
-				$this->saveState($args);
-			}
-
-			return $presenter->constructUrl($presenter->createRequest('this', $args, $this->getUniqueId(), $signal)) . $fragment;
+			return $this->getPresenter()->createRequest($this, $destination, $args, 'link');
 
 		} catch (InvalidLinkException $e) {
-			return $presenter->handleInvalidLink($e);
+			return $this->getPresenter()->handleInvalidLink($e);
 		}
 	}
 
@@ -343,8 +300,11 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function redirect($destination, $args = NULL, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
-		if ($args === NULL) $args = array();
-		$this->getPresenter()->redirectUri($this->link($destination, $args), $code);
+		if (!is_array($args)) {
+			$args = (array) $args;
+		}
+		$presenter = $this->getPresenter();
+		$presenter->redirectUri($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
 	}
 
 }

@@ -298,7 +298,7 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Returns instance of session namespace.
+	 * Returns specified session namespace.
 	 * @param  string
 	 * @param  string
 	 * @return SessionNamespace
@@ -324,7 +324,7 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Checks if a namespace exists.
+	 * Checks if a session namespace exists.
 	 * @param  string
 	 * @return bool
 	 */

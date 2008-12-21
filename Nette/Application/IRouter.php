@@ -44,7 +44,7 @@ interface IRouter
 	function match(/*Nette\Web\*/IHttpRequest $context);
 
 	/**
-	 * Constructs URL path from PresenterRequest object.
+	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL

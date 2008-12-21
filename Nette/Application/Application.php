@@ -165,13 +165,7 @@ class Application extends /*Nette\*/Object
 
 			} catch (RedirectingException $e) {
 				// not error, presenter redirects to new URL
-				$uri = $e->getUri();
-				if (substr($uri, 0, 2) === '//') {
-					$uri = $httpRequest->getUri()->scheme . ':' . $uri;
-				} elseif (substr($uri, 0, 1) === '/') {
-					$uri = $httpRequest->getUri()->hostUri . $uri;
-				}
-				$httpResponse->redirect($uri, $e->getCode());
+				$httpResponse->redirect($e->getUri(), $e->getCode());
 				break;
 
 			} catch (ForwardingException $e) {

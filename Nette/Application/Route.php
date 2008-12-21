@@ -241,7 +241,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 
 	/**
-	 * Constructs URL path from PresenterRequest object.
+	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
 	 * @return string|NULL
@@ -346,15 +346,13 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
-			$uri = $context->getUri()->basePath . $uri;
+			$uri = '//' . $context->getUri()->authority . $context->getUri()->basePath . $uri;
+
+		} elseif ($this->type === self::PATH) {
+			$uri = '//' . $context->getUri()->authority . $uri;
 		}
 
-		if ($this->flags & self::SECURED) {
-			$uri = $this->type === self::HOST ? 'https:' . $uri : 'https://' . $context->getUri()->authority . $uri;
-
-		} elseif ($this->type === self::HOST) {
-			$uri = $context->getUri()->scheme . ':' . $uri; // required due bug in IE7
-		}
+		$uri = ($this->flags & self::SECURED ? 'https:' : 'http:') . $uri;
 
 		return $uri;
 	}

@@ -231,7 +231,7 @@ Environment::setVariable('appDir', dirname(__FILE__));
 
 $httpRequest = Environment::getHttpRequest();
 $uri = $httpRequest->getUri(FALSE);
-$uri->scriptPath = 'index.php';
+$uri->scriptPath = '/index.php';
 
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());

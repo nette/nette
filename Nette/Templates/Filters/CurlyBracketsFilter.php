@@ -79,7 +79,7 @@ final class CurlyBracketsFilter
 		'ajaxlink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'plink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'link' => '<?php echo $template->{$_cb->escape}(#) ?>',
-		'ifCurrent' => '<?php #if ($presenter->getCreatedRequest() && $presenter->getCreatedRequest()->hasFlag("current")): ?>',
+		'ifCurrent' => '<?php #if ($presenter->getLastCreatedRequestFlag("current")): ?>',
 
 		'attr' => '<?php echo Html::el(NULL)->#attributes() ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
