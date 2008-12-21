@@ -8,6 +8,8 @@
 </head>
 
 <body>
+	{if isset($flash)}<div class="flash {$flash->type}">{$flash->message}</div>{/if}
+
 	<div id="content">
 	{include $content}
 	</div>

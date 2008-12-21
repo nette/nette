@@ -28,6 +28,12 @@ label {
 
 form input {
 	margin-bottom: 2px;
+	font-size: 100%;
+}
+
+form input.default {
+	font-weight: bold;
+	font-size: 105%;
 }
 
 #formbutton {
@@ -46,4 +52,12 @@ a {
 #logged-in {
 	margin-top: 3em;
 	font-size: 90%;
+}
+
+div.flash {
+	color: black;
+	background: #FFFFDD;
+	border: 1px solid #FFD700;
+	padding: 1em;
+	margin: 1em 0;
 }

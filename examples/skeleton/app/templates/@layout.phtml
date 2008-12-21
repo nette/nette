@@ -8,6 +8,7 @@
  * @param string   $title    page title
  * @param string   $robots   tell robots how to index the content of a page (optinal)
  * @param string   $baseUri  web base URI
+ * @param stdClass $flash	 flash message
  * @param Template $content  view template
  *}
 
@@ -28,6 +29,8 @@
 </head>
 
 <body>
+	{if isset($flash)}<div class="flash {$flash->type}">{$flash->message}</div>{/if}
+
 	{include $content}
 </body>
 </html>

@@ -324,21 +324,17 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Checks if a session namespace exists.
+	 * Checks if a session namespace exist and is not empty.
 	 * @param  string
 	 * @return bool
 	 */
 	public function hasNamespace($namespace)
 	{
-		if (!$this->exists()) {
-			return FALSE;
-		}
-
-		if (!self::$started) {
+		if ($this->exists() && !self::$started) {
 			$this->start();
 		}
 
-		return isset($_SESSION['__NS'][$namespace]);
+		return !empty($_SESSION['__NS'][$namespace]);
 	}
 
 
@@ -349,11 +345,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function getIterator()
 	{
-		if (!$this->exists()) {
-			return new /*\*/ArrayIterator;
-		}
-
-		if (!self::$started) {
+		if ($this->exists() && !self::$started) {
 			$this->start();
 		}
 

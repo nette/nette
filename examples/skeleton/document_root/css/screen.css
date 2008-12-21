@@ -16,3 +16,11 @@ h1 {
 	border: none;
 	z-index: 1000;
 }
+
+div.flash {
+	color: black;
+	background: #FFF9D7;
+	border: 1px solid #E2C822;
+	padding: 1em;
+	margin: 1em 0;
+}

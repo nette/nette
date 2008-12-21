@@ -4,8 +4,8 @@
 <form action="{$action}" method="post">
 	<p>Are you sure that you want to delete ‘{$album->title}’ by ‘{$album->artist}’?</p>
 	<div>
-		<input type="submit" name="del" value="Yes" />
-		<input type="submit" name="del" value="No" />
+		<input type="submit" name="cancel" value="Cancel" />
+		<input type="submit" name="delete" class="default" value="Delete" />
 	</div>
 </form>
 {else}

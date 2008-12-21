@@ -255,15 +255,13 @@ class User extends /*Nette\*/Object implements IUser
 		}
 
 		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
-		$session->warnOnUndefined = FALSE;
 
 		if (!($session->identity instanceof /*Nette\Security\*/IIdentity)) {
-			unset($session->identity);
-			$session->authenticated = FALSE;
+			$session->remove();
 		}
 
 		if (!is_bool($session->authenticated)) {
-			$session->authenticated = FALSE;
+			$session->remove();
 		}
 
 		if ($session->authenticated && $session->expireBrowser) { // check if browser was closed?
@@ -278,7 +276,7 @@ class User extends /*Nette\*/Object implements IUser
 			}
 		}
 
-		if ($session->authenticated && isset($session->expireTime)) { // check time expiration
+		if ($session->authenticated && $session->expireDelta > 0) { // check time expiration
 			if ($session->expireTime < time()) {
 				$session->reason = self::INACTIVITY;
 				$session->authenticated = FALSE;
@@ -286,9 +284,8 @@ class User extends /*Nette\*/Object implements IUser
 				if ($session->expireIdentity) {
 					unset($session->identity);
 				}
-			} else {
-				$session->expireTime = time() + $session->expireDelta; // sliding expiration
 			}
+			$session->expireTime = time() + $session->expireDelta; // sliding expiration
 		}
 
 		return $this->session;

@@ -73,10 +73,21 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	protected function createTemplate()
 	{
 		$template = new /*Nette\Templates\*/Template;
+		$presenter = $this->getPresenter(FALSE);
+
+		// default parameters
 		$template->component = $this; // DEPRECATED!
 		$template->control = $this;
-		$template->presenter = $this->getPresenter(FALSE);
+		$template->presenter = $presenter;
 		$template->baseUri = /*Nette\*/Environment::getVariable('baseUri');
+
+		// flash message
+		if ($presenter !== NULL && $presenter->hasFlashSession()) {
+			$id = $this->getParamId('flash');
+			$template->flash = $presenter->getFlashSession()->$id;
+		}
+
+		// default helpers
 		$template->registerHelper('escape', /*Nette\Templates\*/'TemplateHelpers::escapeHtml');
 		$template->registerHelper('escapeJs', /*Nette\Templates\*/'TemplateHelpers::escapeJs');
 		$template->registerHelper('escapeCss', /*Nette\Templates\*/'TemplateHelpers::escapeCss');
@@ -90,7 +101,35 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelper('nl2br', 'nl2br');
 		$template->registerHelper('truncate', /*Nette\*/'String::truncate');
 		$template->registerHelper('bytes', /*Nette\*/'TemplateHelpers::bytes');
+
 		return $template;
+	}
+
+
+
+	/**
+	 * Saves the message to template, that can be displayed after redirect.
+	 * @param  string
+	 * @param  string
+	 * @return stdClass
+	 */
+	public function flashMessage($message, $type = 'info')
+	{
+		$id = $this->getParamId('flash');
+		if ($message == NULL) { // intentionally ==
+			unset($this->getTemplate()->flash);
+			unset($this->getPresenter()->getFlashSession()->$id);
+			return NULL;
+
+		} else {
+			$flash = (object) array(
+				'message' => $message,
+				'type' => $type,
+			);
+			$this->getTemplate()->flash = $flash;
+			$this->getPresenter()->getFlashSession()->$id = $flash;
+			return $flash;
+		}
 	}
 
 

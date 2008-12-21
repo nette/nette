@@ -207,6 +207,9 @@ abstract class Presenter extends Control implements IPresenter
 
 			// save component tree persistent state
 			$this->saveGlobalState();
+			if ($this->isAjax()) {
+				$this->ajaxDriver->state = $this->getGlobalState();
+			}
 
 			// finish template rendering
 			$this->renderTemplate();
@@ -216,13 +219,21 @@ abstract class Presenter extends Control implements IPresenter
 		} catch (AbortException $e) {
 			// continue with shutting down
 		} /* finally */ {
+
 			// PHASE 5: SHUTDOWN
+			$this->phase = self::PHASE_SHUTDOWN;
+
 			if ($this->isAjax()) {
 				$this->ajaxDriver->close();
 			}
-			$this->phase = self::PHASE_SHUTDOWN;
+
+			if ($this->hasFlashSession()) {
+				$this->getFlashSession()->setExpiration($e instanceof RedirectingException ? 30 : 3);
+			}
+
 			$this->onShutdown($this, $e);
 			$this->shutdown();
+
 			if (isset($e)) throw $e;
 		}
 	}
@@ -444,11 +455,6 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function renderTemplate()
 	{
-		if ($this->isAjax()) {
-			$this->ajaxDriver->state = $this->getGlobalState();
-			SnippetHelper::$outputAllowed = FALSE; // TODO!
-		}
-
 		$template = $this->getTemplate();
 		if (!$template) return;
 
@@ -485,6 +491,9 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
+		if ($this->isAjax()) { // TODO!
+			SnippetHelper::$outputAllowed = FALSE;
+		}
 		$template->render();
 	}
 
@@ -972,6 +981,9 @@ abstract class Presenter extends Control implements IPresenter
 			$args[self::SIGNAL_KEY] = $component->getParamId($signal);
 			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
 		}
+		if ($mode === 'redirect' && $this->hasFlashSession()) {
+			$args[self::FLASH_KEY] = $this->getParam(self::FLASH_KEY);
+		}
 
 		$this->lastCreatedRequest = new PresenterRequest(
 			$presenter,
@@ -1185,6 +1197,36 @@ abstract class Presenter extends Control implements IPresenter
 		} else {
 			return array();
 		}
+	}
+
+
+
+	/********************* flash session ****************d*g**/
+
+
+
+	/**
+	 * Checks if a flash session namespace exists.
+	 * @return bool
+	 */
+	public function hasFlashSession()
+	{
+		return !empty($this->params[self::FLASH_KEY])
+			&& $this->getSession()->hasNamespace('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
+	}
+
+
+
+	/**
+	 * Returns session namespace provided to pass temporary data between redirects.
+	 * @return Nette\Web\SesssionNamespace
+	 */
+	public function getFlashSession()
+	{
+		if (empty($this->params[self::FLASH_KEY])) {
+			$this->params[self::FLASH_KEY] = substr(lcg_value(), 2, 7);
+		}
+		return $this->getSession()->getNamespace('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}
 
 
