@@ -56,7 +56,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**#@+ special parameter key */
 	const SIGNAL_KEY = 'do';
 	const VIEW_KEY = 'view';
-	const FLASH_KEY = 'flash';
+	const FLASH_KEY = '_fid';
 	/**#@-*/
 
 	/** @var string */
@@ -1224,7 +1224,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function getFlashSession()
 	{
 		if (empty($this->params[self::FLASH_KEY])) {
-			$this->params[self::FLASH_KEY] = substr(lcg_value(), 2, 7);
+			$this->params[self::FLASH_KEY] = substr(md5(lcg_value()), 0, 4);
 		}
 		return $this->getSession()->getNamespace('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}

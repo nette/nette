@@ -327,13 +327,13 @@ class Application extends /*Nette\*/Object
 	 */
 	public function storeRequest()
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application.Request');
+		$session = $this->getSession()->getNamespace('Nette.Application');
 		do {
-			$key = substr(lcg_value(), 2);
-		} while (isset($session->rq[$key]));
+			$key = substr(md5(lcg_value()), 0, 4);
+		} while (isset($session->requests[$key]));
 
-		$session->rq[$key] = end($this->requests);
-		$session->setExpiration(10 * 60, 'rq');
+		$session->requests[$key] = end($this->requests);
+		$session->setExpiration(10 * 60, 'requests');
 		return $key;
 	}
 
@@ -345,10 +345,10 @@ class Application extends /*Nette\*/Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application.Request');
-		if (isset($session->rq[$key])) {
-			$request = $session->rq[$key];
-			unset($session->rq[$key]);
+		$session = $this->getSession()->getNamespace('Nette.Application');
+		if (isset($session->requests[$key])) {
+			$request = $session->requests[$key];
+			unset($session->requests[$key]);
 			throw new ForwardingException($request);
 		}
 	}
