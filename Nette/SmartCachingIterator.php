@@ -32,7 +32,7 @@
 class SmartCachingIterator extends /*\*/CachingIterator
 {
 	/** @var int */
-	private $counter;
+	private $counter = 0;
 
 
 
@@ -57,7 +57,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	 */
 	public function isFirst()
 	{
-		return $this->counter === 0;
+		return $this->counter === 1;
 	}
 
 
@@ -79,7 +79,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	 */
 	public function isEmpty()
 	{
-		return $this->counter === NULL;
+		return $this->counter === 0;
 	}
 
 
@@ -118,6 +118,17 @@ class SmartCachingIterator extends /*\*/CachingIterator
 
 
 	/**
+	 * Returns the current index (counter - 1).
+	 * @return int
+	 */
+	public function getIndex()
+	{
+		return $this->counter > 0 ? $this->counter - 1 : FALSE;
+	}
+
+
+
+	/**
 	 * Forwards to the next element.
 	 * @return void
 	 */
@@ -138,7 +149,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	public function rewind()
 	{
 		parent::rewind();
-		$this->counter = 0;
+		$this->counter = parent::valid() ? 1 : 0;
 	}
 
 }
