@@ -114,11 +114,10 @@ final class CurlyBracketsFilter
 
 	/**
 	 * Invokes filter.
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function invoke($template, $s)
+	public static function invoke($s)
 	{
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);

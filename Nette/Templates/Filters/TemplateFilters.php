@@ -42,28 +42,6 @@ final class TemplateFilters
 
 
 
-	/********************* Filter phpEvaluation ****************d*g**/
-
-
-
-	/**
-	 * Template filter PHP (Evaluates template in limited scope).
-	 * @param  Template
-	 * @param  string (hidden)
-	 * @return string
-	 */
-	public static function phpEvaluation(Template $template/*, $content, $isFile*/)
-	{
-		extract($template->getParams(), EXTR_SKIP); // skip $this & $template
-		if (func_num_args() > 2 && func_get_arg(2)) {
-			include func_get_arg(1);
-		} else {
-			eval('?>' . func_get_arg(1));
-		}
-	}
-
-
-
 	/********************* Filter curlyBrackets ****************d*g**/
 
 
@@ -73,10 +51,10 @@ final class TemplateFilters
 
 
 	/** @deprecated */
-	public static function curlyBrackets($template, $s)
+	public static function curlyBrackets($s)
 	{
 		trigger_error('Deprecated: use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead.', E_USER_WARNING);
-		return CurlyBracketsFilter::invoke($template, $s);
+		return CurlyBracketsFilter::invoke($s);
 	}
 
 
@@ -89,13 +67,12 @@ final class TemplateFilters
 	 * Template with defined fragments (experimental).
 	 *    <nette:fragment id="main"> ... </nette:fragment>
 	 *
-	 * @param  Template
+	 * @param  string
 	 * @param  string
 	 * @return string
 	 */
-	public static function fragments(Template $template, $s)
+	public static function fragments($s, $file)
 	{
-		$file = $template->getFile();
 		$a = strpos($file, '#');
 		if ($a === FALSE) {
 			return $s;
@@ -119,11 +96,10 @@ final class TemplateFilters
 	/**
 	 * Filters out PHP code.
 	 *
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function removePhp(Template $template, $s)
+	public static function removePhp($s)
 	{
 		$res = '';
 		foreach (token_get_all($s) as $token) {
@@ -144,11 +120,10 @@ final class TemplateFilters
 	 * Template with configuration (experimental).
 	 *    <?nette filter="CurlyBracketsFilter::invoke"?>
 	 *
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function autoConfig(Template $template, $s)
+	public static function autoConfig($s)
 	{
 		throw new /*\*/NotImplementedException;
 		preg_match_all('#<\\?nette(.*)\\?>#sU', $s, $matches, PREG_SET_ORDER);
@@ -165,15 +140,14 @@ final class TemplateFilters
 
 	/**
 	 * Filter relativeLinks: prepends root to relative links.
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function relativeLinks($template, $s)
+	public static function relativeLinks($s)
 	{
 		return preg_replace(
 			'#(src|href|action)\s*=\s*["\'](?![a-z]+:|/|<|\\#)#',
-			'$1="' . $template->baseUri,
+			'$1="<?php echo \\$baseUri ?>',
 			$s
 		);
 	}
@@ -187,11 +161,10 @@ final class TemplateFilters
 	/**
 	 * Filter netteLinks: translates links "nette:...".
 	 *   nette:destination?arg
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function netteLinks($template, $s)
+	public static function netteLinks($s)
 	{
 		return preg_replace_callback(
 			'#(src|href|action|on[a-z]+)\s*=\s*"(nette:.*?)([\#"])#',
@@ -237,11 +210,10 @@ final class TemplateFilters
 
 	/**
 	 * Process <texy>...</texy> elements.
-	 * @param  Template
 	 * @param  string
 	 * @return string
 	 */
-	public static function texyElements($template, $s)
+	public static function texyElements($s)
 	{
 		return preg_replace_callback(
 			'#<texy([^>]*)>(.*?)</texy>#s',

@@ -243,7 +243,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 				if (!is_callable($filter)) {
 					throw new /*\*/InvalidStateException("Filter must be valid PHP callback object.");
 				}
-				$content = call_user_func($filter, $this, $content);
+				$content = call_user_func($filter, $content, $this->file);
 			}
 
 			$content = "<?php\n// template $this->file\n?>$content";

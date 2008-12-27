@@ -36,7 +36,7 @@ class MockControl implements /*Nette\Application\*/IPartiallyRenderable
 }
 
 
-function printSource(Template $template, $s)
+function printSource($s)
 {
 	echo $s;
 }
