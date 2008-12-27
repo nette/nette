@@ -43,6 +43,7 @@
  * - {snippet ?} ... {/snippet ?} control snippet
  * - {attr ?} HTML element attributes
  * - {block|texy} ... {/block} capture of filter block
+ * - {param $var value} set template parameter
  * - {contentType ...} HTTP Content-Type header
  * - {debugbreak}
  *
@@ -84,6 +85,7 @@ final class CurlyBracketsFilter
 		'attr' => '<?php echo Html::el(NULL)->#attributes() ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
 		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
+		'param' => '<?php $template->#2 = $#2 = # ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!=' => '<?php echo # ?>',
@@ -178,44 +180,49 @@ final class CurlyBracketsFilter
 	 */
 	private static function cb($m)
 	{
-		list(, $mod, $var, $modifiers) = $m;
+		list(, $stat, $var, $modifiers) = $m;
 		$var = trim($var);
 		$var2 = NULL;
 
-		if ($mod === 'block') {
+		if ($stat === 'block') {
 			$tmp = $var === '' ? 'echo ' : $var . '=';
 			$var = 'ob_get_clean()';
 
-		} elseif ($mod === '/block') {
+		} elseif ($stat === '/block') {
 			$var = array_pop(self::$blocks);
 
-		} elseif ($mod === 'foreach') {
+		} elseif ($stat === 'foreach') {
 			$var = '$iterator = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
 
-		} elseif ($mod === 'attr') {
+		} elseif ($stat === 'attr') {
 			$var = str_replace(') ', ')->', $var . ' ');
 
-		} elseif ($mod === 'snippet') {
+		} elseif ($stat === 'param') {
+			preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
+			list(, $var2, $var) = $m;
+			if ($var === '') $var = 'NULL';
+
+		} elseif ($stat === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 				$var = ', "' . $m[1] . '"';
 				if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
 			}
 
-		} elseif ($mod === '/snippet') {
+		} elseif ($stat === '/snippet') {
 			$var = ', "' . $var . '"';
 
-		} elseif ($mod === '$' || $mod === '!' || $mod === '!$') {
+		} elseif ($stat === '$' || $stat === '!' || $stat === '!$') {
 			$var = '$' . $var;
 
-		} elseif ($mod === 'link' || $mod === 'plink' || $mod === 'ajaxlink' || $mod ===  'ifCurrent' || $mod ===  'include') {
+		} elseif ($stat === 'link' || $stat === 'plink' || $stat === 'ajaxlink' || $stat ===  'ifCurrent' || $stat ===  'include') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
-				if ($mod === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
+				if ($stat === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
 			}
-			if ($mod === 'link') $var = '$control->link(' . $var .')';
-			elseif ($mod === 'plink') $var = '$presenter->link(' . $var .')';
-			elseif ($mod === 'ajaxlink') $var = '$control->ajaxlink(' . $var .')';
+			if ($stat === 'link') $var = '$control->link(' . $var .')';
+			elseif ($stat === 'plink') $var = '$presenter->link(' . $var .')';
+			elseif ($stat === 'ajaxlink') $var = '$control->ajaxlink(' . $var .')';
 		}
 
 		if ($modifiers) {
@@ -228,11 +235,11 @@ final class CurlyBracketsFilter
 			}
 		}
 
-		if ($mod === 'block') {
+		if ($stat === 'block') {
 			self::$blocks[] = $tmp . $var;
 		}
 
-		return strtr(self::$statements[$mod], array('#' => $var));
+		return strtr(self::$statements[$stat], array('#2' => $var2, '#' => $var));
 	}
 
 }

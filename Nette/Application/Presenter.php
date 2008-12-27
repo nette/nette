@@ -476,6 +476,7 @@ abstract class Presenter extends Control implements IPresenter
 				if (is_file($file)) {
 					if ($hasLayout) { // has layout?
 						$template->addTemplate('content', $file);
+						$template->content->preRender();
 					} else {
 						$template->setFile($file);
 					}

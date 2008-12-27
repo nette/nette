@@ -54,6 +54,9 @@ class Template extends /*Nette\*/Object implements ITemplate
 	/** @var array */
 	private $helpers = array();
 
+	/** @var string  pre-rendered content */
+	private $content;
+
 	/** @var int */
 	public static $cacheExpire = FALSE;
 
@@ -143,6 +146,11 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function render()
 	{
+		if ($this->content !== NULL) {
+			echo $this->content;
+			return;
+		}
+
 		if (isset(self::$livelock[$this->file])) {
 			throw new /*\*/InvalidStateException("Circular rendering detected.");
 		}
@@ -176,6 +184,17 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 	/**
 	 * Renders template to string.
+	 * @return void
+	 */
+	public function preRender()
+	{
+		$this->content = $this->__toString(TRUE);
+	}
+
+
+
+	/**
+	 * Renders template to string.
 	 * @return string
 	 */
 	public function __toString()
@@ -199,12 +218,15 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 
 	/**
-	 * Converts to SimpleXML.
+	 * Converts to SimpleXML. (experimental)
 	 * @return SimpleXMLElement
 	 */
 	public function toXml()
 	{
-		return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
+		$dom = new DOMDocument;
+		$dom->loadHTML('<html><meta http-equiv="Content-Type" content="text/html;charset=utf-8">' . str_replace("\r", '', $this->__toString()) . '</html>');
+		return simplexml_import_dom($dom)->body;
+		//return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
 	}
 
 
