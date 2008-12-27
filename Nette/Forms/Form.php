@@ -728,8 +728,12 @@ class Form extends FormContainer
 			}
 
 		} catch (/*\*/Exception $e) {
-			trigger_error($e->getMessage(), E_USER_WARNING);
-			return '';
+			if (func_get_args()) {
+				throw $e;
+			} else {
+				trigger_error($e->getMessage(), E_USER_WARNING);
+				return '';
+			}
 		}
 	}
 

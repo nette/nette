@@ -95,7 +95,7 @@ class RobotLoader extends AutoLoader
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {
-				self::includeOnce($this->list[$type]);
+				LimitedScope::load($this->list[$type]);
 				self::$count++;
 			}
 
@@ -110,7 +110,7 @@ class RobotLoader extends AutoLoader
 				}
 
 				if (isset($this->list[$type])) {
-					self::includeOnce($this->list[$type]);
+					LimitedScope::load($this->list[$type]);
 					self::$count++;
 				} else {
 					$this->list[$type] = FALSE;

@@ -24,6 +24,8 @@
 
 require_once dirname(__FILE__) . '/../Object.php';
 
+require_once dirname(__FILE__) . '/../Loaders/LimitedScope.php';
+
 
 
 /**
@@ -100,17 +102,5 @@ abstract class AutoLoader extends /*Nette\*/Object
 	 * @return void
 	 */
 	abstract public function tryLoad($type);
-
-
-
-	/**
-	 * Include script in a limited scope.
-	 * @param  string  file to include
-	 * @return mixed   the return value of the included file
-	 */
-	public static function includeOnce()
-	{
-		return include_once func_get_arg(0);
-	}
 
 }

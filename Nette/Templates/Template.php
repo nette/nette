@@ -152,7 +152,12 @@ class Template extends /*Nette\*/Object implements ITemplate
 		self::$livelock[$this->file] = TRUE;
 
 		try {
-			TemplateFilters::phpEvaluation($this, $content, $isFile);
+			$this->params['template'] = $this;
+			if ($isFile) {
+				/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
+			} else {
+				/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
+			}
 		} catch (/*\*/Exception $e) {
 			// continue with shutting down
 		}
@@ -182,8 +187,12 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 		} catch (/*\*/Exception $e) {
 			ob_end_clean();
-			trigger_error($e->getMessage(), E_USER_WARNING);
-			return '';
+			if (func_get_args()) {
+				throw $e;
+			} else {
+				trigger_error($e->getMessage(), E_USER_WARNING);
+				return '';
+			}
 		}
 	}
 

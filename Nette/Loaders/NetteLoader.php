@@ -136,6 +136,7 @@ class NetteLoader extends AutoLoader
 		'javascript' => '/Web/JavaScript.php',
 		'javascriptconsole' => '/Web/JavaScriptConsole.php',
 		'keynotfoundexception' => '/Collections/Hashtable.php',
+		'limitedscope' => '/Loaders/LimitedScope.php',
 		'link' => '/Application/Link.php',
 		'logger' => '/Logger.php',
 		'memberaccessexception' => '/exceptions.php',
@@ -214,7 +215,7 @@ class NetteLoader extends AutoLoader
 	{
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
-			self::includeOnce($this->base . $this->list[$type]);
+			LimitedScope::load($this->base . $this->list[$type]);
 			self::$count++;
 		}
 	}
