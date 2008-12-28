@@ -165,7 +165,7 @@ final class CurlyBracketsFilter
 			$k[] = $key;
 		}
 		$s = preg_replace_callback(
-			'#\\{(' . implode('|', $k) . ')([^}]*?)(?:\\|([a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*))?\\}()#s',
+			'#\\{(' . implode('|', $k) . ')([^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}()#s',
 			array(__CLASS__, 'cb'),
 			$s
 		);
@@ -226,12 +226,33 @@ final class CurlyBracketsFilter
 		}
 
 		if ($modifiers) {
-			foreach (explode('|', $modifiers) as $modifier) {
-				$args = explode(':', $modifier);
-				$modifier = $args[0];
-				$args[0] = $var;
-				$var = implode(', ', $args);
-				$var = "\$template->$modifier($var)";
+			preg_match_all(
+				'#[^\'"}\s|:]+|[|:]|\'[^\']*\'|"[^"]*"#s',
+				$modifiers . '|',
+				$tokens
+			);
+			$state = FALSE;
+			foreach ($tokens[0] as $token) {
+				if ($token === ':' || $token === '|') {
+					if (!isset($prev)) {
+						continue;
+
+					} elseif ($state === FALSE) {
+						$var = "\$template->$prev($var";
+
+					} else {
+						$var .= ', ' . $prev;
+					}
+
+					if ($token === '|') {
+						$var .= ')';
+
+					} else {
+						$state = TRUE;
+					}
+				} else {
+					$prev = $token;
+				}
 			}
 		}
 
