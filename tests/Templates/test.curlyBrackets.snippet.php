@@ -49,7 +49,7 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');
-$template->registerFilter(/*Nette\Templates\*/'CurlyBracketsFilter::invoke');
+$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 $template->registerFilter('printSource');
 $template->control = new MockControl;
 $template->render();

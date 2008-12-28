@@ -19,5 +19,5 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/texy-elements.phtml');
-$template->registerFilter(array(/*Nette\Templates\*/'TemplateFilters', 'texyElements'));
+$template->registerFilter(array('Nette\Templates\TemplateFilters', 'texyElements'));
 $template->render();

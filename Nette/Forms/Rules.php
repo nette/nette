@@ -228,9 +228,14 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 	private function getCallback($rule)
 	{
-		return is_string($rule->operation) && strncmp($rule->operation, ':', 1) === 0
-			? array($rule->control->getClass(), self::VALIDATE_PREFIX . ltrim($rule->operation, ':'))
-			: $rule->operation;
+		$op = $rule->operation;
+		if (is_string($op) && strncmp($op, ':', 1) === 0) {
+			return array($rule->control->getClass(), self::VALIDATE_PREFIX . ltrim($op, ':'));
+
+		} else {
+			/**/fixCallback($op);/**/
+			return $op;
+		}
 	}
 
 }

@@ -42,8 +42,8 @@ class Config extends /*Nette\Collections\*/Hashtable
 
 	/** @var array */
 	private static $extensions = array(
-		'ini' => /*Nette\Config\*/'ConfigAdapterIni',
-		'xml' => /*Nette\Config\*/'ConfigAdapterXml',
+		'ini' => 'Nette\Config\ConfigAdapterIni',
+		'xml' => 'Nette\Config\ConfigAdapterXml',
 	);
 
 
@@ -72,6 +72,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (isset(self::$extensions[$extension])) {
+			/**/fixNamespace(self::$extensions[$extension]);/**/
 			$arr = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
 			return new /**/self/**//*static*/($arr, $flags);
 

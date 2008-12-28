@@ -146,7 +146,7 @@ final class InstantClientScript extends /*Nette\*/Object
 		foreach ($rules as $rule) {
 			if (!is_string($rule->operation)) continue;
 
-			if (strcasecmp($rule->operation, /*Nette\Forms\*/'InstantClientScript::javascript') === 0) {
+			if (strcasecmp($rule->operation, 'Nette\Forms\InstantClientScript::javascript') === 0) {
 				$res .= "$rule->arg\n\t";
 				continue;
 			}

@@ -29,7 +29,7 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/nette-links.phtml');
-$template->registerFilter(array(/*Nette\Templates\*/'TemplateFilters', 'netteLinks'));
-$template->registerHelper('escape', /*Nette\Templates\*/'TemplateHelpers::escapeHtml');
+$template->registerFilter(array('Nette\Templates\TemplateFilters', 'netteLinks'));
+$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->control = new MockPresenterComponent;
 $template->render();

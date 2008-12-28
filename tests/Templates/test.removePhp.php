@@ -13,5 +13,5 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/remove-php.phtml');
-$template->registerFilter(array(/*Nette\Templates\*/'TemplateFilters', 'removePhp'));
+$template->registerFilter(array('Nette\Templates\TemplateFilters', 'removePhp'));
 $template->render();

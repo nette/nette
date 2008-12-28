@@ -13,7 +13,7 @@ See license.txt in this directory for a copy of the license.
 Requirements
 ------------
 
-Requires PHP 5.2.2 or higher.
+Requires PHP 5.2.0 or higher.
 
 
 Documentation and Examples

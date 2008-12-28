@@ -68,7 +68,7 @@ class Form extends FormContainer
 	const MIME_TYPE = ':mimeType';
 
 	// special case
-	const SCRIPT = /*Nette\Forms\*/'InstantClientScript::javascript';
+	const SCRIPT = 'Nette\Forms\InstantClientScript::javascript';
 	/**#@-*/
 
 	/** tracker ID */

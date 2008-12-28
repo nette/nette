@@ -14,7 +14,7 @@ Environment::setVariable('tempDir', $tmpDir);
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/fragments.phtml#main');
-$template->registerFilter(/*Nette\Templates\*/'TemplateFilters::fragments');
+$template->registerFilter('Nette\Templates\TemplateFilters::fragments');
 $template->data = array(
 	array('John', 10, 20),
 	array('Mary', 30, 40),
