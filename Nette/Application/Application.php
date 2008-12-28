@@ -85,8 +85,8 @@ class Application extends /*Nette\*/Object
 	 */
 	public function run()
 	{
-		if (version_compare(PHP_VERSION , '5.2.2', '<')) {
-			throw new /*\*/ApplicationException('Nette\Application needs PHP 5.2.2 or newer.');
+		if (version_compare(PHP_VERSION , '5.2.0', '<')) {
+			throw new /*\*/ApplicationException('Nette\Application needs PHP 5.2.0 or newer.');
 		}
 
 		$httpRequest = $this->getHttpRequest();
@@ -327,12 +327,12 @@ class Application extends /*Nette\*/Object
 	 */
 	public function storeRequest()
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application');
+		$session = $this->getSession()->getNamespace('Nette.Application/requests');
 		do {
 			$key = substr(md5(lcg_value()), 0, 4);
-		} while (isset($session->requests[$key]));
+		} while (isset($session->$key));
 
-		$session->requests[$key] = end($this->requests);
+		$session->$key = end($this->requests);
 		$session->setExpiration(10 * 60, 'requests');
 		return $key;
 	}
@@ -345,10 +345,10 @@ class Application extends /*Nette\*/Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application');
-		if (isset($session->requests[$key])) {
-			$request = $session->requests[$key];
-			unset($session->requests[$key]);
+		$session = $this->getSession()->getNamespace('Nette.Application/requests');
+		if (isset($session->$key)) {
+			$request = $session->$key;
+			unset($session->$key);
 			throw new ForwardingException($request);
 		}
 	}

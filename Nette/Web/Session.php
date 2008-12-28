@@ -119,6 +119,7 @@ class Session extends /*Nette\*/Object
 		*/
 
 		// additional protection against Session Hijacking & Fixation
+		/**/fixCallback($this->verificationKeyGenerator);/**/
 		$key = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 
 		if (!isset($_SESSION['__NT']['V'])) { // new session
@@ -234,6 +235,7 @@ class Session extends /*Nette\*/Object
 			if (headers_sent($file, $line)) {
 				throw new /*\*/InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
+			/**/fixCallback($this->verificationKeyGenerator);/**/
 			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
 

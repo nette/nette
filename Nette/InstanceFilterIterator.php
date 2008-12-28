@@ -42,8 +42,7 @@ class InstanceFilterIterator extends /*\*/FilterIterator
 	 */
 	public function __construct(/*\*/Iterator $iterator, $type)
 	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
+		/**/fixNamespace($type);/**/
 		$this->type = $type;
 		parent::__construct($iterator);
 	}

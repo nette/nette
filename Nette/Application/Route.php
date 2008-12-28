@@ -77,18 +77,18 @@ class Route extends /*Nette\*/Object implements IRouter
 		),
 		'module' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => /*Nette\Application\*/'Route::path2presenter',
-			self::FILTER_OUT => /*Nette\Application\*/'Route::presenter2path',
+			self::FILTER_IN => array(__CLASS__, 'path2presenter'),
+			self::FILTER_OUT => array(__CLASS__, 'presenter2path'),
 		),
 		'presenter' => array(
 			self::PATTERN => '[a-z][a-z0-9.-]*',
-			self::FILTER_IN => /*Nette\Application\*/'Route::path2presenter',
-			self::FILTER_OUT => /*Nette\Application\*/'Route::presenter2path',
+			self::FILTER_IN => array(__CLASS__, 'path2presenter'),
+			self::FILTER_OUT => array(__CLASS__, 'presenter2path'),
 		),
 		'view' => array(
 			self::PATTERN => '[a-z][a-z0-9-]*',
-			self::FILTER_IN => /*Nette\Application\*/'Route::path2view',
-			self::FILTER_OUT => /*Nette\Application\*/'Route::view2path',
+			self::FILTER_IN => array(__CLASS__, 'path2view'),
+			self::FILTER_OUT => array(__CLASS__, 'view2path'),
 		),
 		'?module' => array(
 		),
@@ -342,7 +342,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 		$query = http_build_query($params, '', '&');
-		if ($query !== '') $uri .= '?' . $query;
+		if ($query != '') $uri .= '?' . $query; // intentionally ==
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {

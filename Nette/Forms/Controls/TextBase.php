@@ -107,6 +107,7 @@ abstract class TextBase extends FormControl
 	 */
 	public function addFilter($filter)
 	{
+		/**/fixCallback($filter);/**/
 		$this->filters[] = $filter;
 		return $this;
 	}

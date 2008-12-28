@@ -76,8 +76,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function lookup($type, $need = TRUE)
 	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
+		/**/fixNamespace($type);/**/
 
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
@@ -125,9 +124,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function lookupPath($type, $need = TRUE)
 	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
-
+		/**/fixNamespace($type);/**/
 		$this->lookup($type, $need);
 		return $this->monitors[$type][2];
 	}
@@ -141,9 +138,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function monitor($type)
 	{
-		/**/// fix for namespaced classes/interfaces in PHP < 5.3
-		if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1);/**/
-
+		/**/fixNamespace($type);/**/
 		$this->monitors[$type] = NULL;
 		$this->lookup($type, FALSE); // call attached()
 	}

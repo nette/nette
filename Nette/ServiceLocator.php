@@ -149,8 +149,7 @@ class ServiceLocator extends Object implements IServiceLocator
 					$service = substr($service, 0, -2);
 
 				} else {
-					/**/// fix for namespaced classes/interfaces in PHP < 5.3
-					if ($a = strrpos($service, '\\')) $service = substr($service, $a + 1);/**/
+					/**/fixNamespace($service);/**/
 
 					if (!class_exists($service)) {
 						throw new AmbiguousServiceException("Cannot instantiate service, class '$service' not found.");
@@ -159,6 +158,7 @@ class ServiceLocator extends Object implements IServiceLocator
 				}
 			}
 
+			/**/fixCallback($service);/**/
 			return $this->registry[$lower] = call_user_func($service);
 		}
 

@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 {
-	const VALIDATE_PREFIX = '::validate';
+	const VALIDATE_PREFIX = 'validate';
 
 	/** @var array */
 	public static $defaultMessages = array(
@@ -229,7 +229,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	private function getCallback($rule)
 	{
 		return is_string($rule->operation) && strncmp($rule->operation, ':', 1) === 0
-			? $rule->control->getClass() . self::VALIDATE_PREFIX . ltrim($rule->operation, ':')
+			? array($rule->control->getClass(), self::VALIDATE_PREFIX . ltrim($rule->operation, ':'))
 			: $rule->operation;
 	}
 

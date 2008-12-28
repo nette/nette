@@ -120,7 +120,7 @@ $defaults = array(
 	'age' => '50',
 );
 
-$form->setDefaults($defaults);
+$form->setDefaults($defaults, TRUE);
 echo "Setted values:\n";
 Debug::dump($form->getValues());
 

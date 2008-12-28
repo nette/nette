@@ -131,6 +131,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
+		/**/fixCallback($callback);/**/
 		$this->filters[] = $callback;
 	}
 
@@ -303,6 +304,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
+		/**/fixCallback($callback);/**/
 		$this->helpers[$name] = $callback;
 	}
 

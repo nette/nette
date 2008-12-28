@@ -295,6 +295,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 		if (class_exists(/*Nette\*/'Object', FALSE) && ($cb = /*Nette\*/Object::extensionMethod("$class::$name"))) {
 			array_unshift($args, $this);
+			/**/fixCallback($cb);/**/
 			return call_user_func_array($cb, $args);
 		}
 
