@@ -84,7 +84,10 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		// flash message
 		if ($presenter !== NULL && $presenter->hasFlashSession()) {
 			$id = $this->getParamId('flash');
-			$template->flash = $presenter->getFlashSession()->$id;
+			$template->flashes = $presenter->getFlashSession()->$id;
+		}
+		if (!isset($template->flashes) || !is_array($template->flashes)) {
+			$template->flashes = array();
 		}
 
 		// default helpers
@@ -117,20 +120,14 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	public function flashMessage($message, $type = 'info')
 	{
 		$id = $this->getParamId('flash');
-		if ($message == NULL) { // intentionally ==
-			unset($this->getTemplate()->flash);
-			unset($this->getPresenter()->getFlashSession()->$id);
-			return NULL;
-
-		} else {
-			$flash = (object) array(
-				'message' => $message,
-				'type' => $type,
-			);
-			$this->getTemplate()->flash = $flash;
-			$this->getPresenter()->getFlashSession()->$id = $flash;
-			return $flash;
-		}
+		$messages = $this->getPresenter()->getFlashSession()->$id;
+		$messages[] = $flash = (object) array(
+			'message' => $message,
+			'type' => $type,
+		);
+		$this->getTemplate()->flashes = $messages;
+		$this->getPresenter()->getFlashSession()->$id = $messages;
+		return $flash;
 	}
 
 

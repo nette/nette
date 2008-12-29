@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	{if isset($flash)}<div class="flash {$flash->type}">{$flash->message}</div>{/if}
+	{foreach $flashes as $flash}<div class="flash {$flash->type}">{$flash->message}</div>{/foreach}
 
 	<div id="content">
 	{include $content}

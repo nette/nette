@@ -458,6 +458,9 @@ abstract class Presenter extends Control implements IPresenter
 		$template = $this->getTemplate();
 		if (!$template) return;
 
+		if ($this->isAjax()) { // TODO!
+			SnippetHelper::$outputAllowed = FALSE;
+		}
 		if ($template instanceof /*Nette\Templates\*/Template && !$template->getFile()) {
 			$presenter = $this->getName();
 			$hasContent = $hasLayout = FALSE;
@@ -492,9 +495,6 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		if ($this->isAjax()) { // TODO!
-			SnippetHelper::$outputAllowed = FALSE;
-		}
 		$template->render();
 	}
 

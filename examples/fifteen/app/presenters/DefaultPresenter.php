@@ -13,7 +13,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 		$fifteen->onGameOver[] = array($this, 'GameOver');
 		$fifteen->useAjax = TRUE;
 
-		$this->template->registerFilter(/*Nette\Templates\*/'CurlyBracketsFilter::invoke');
+		$this->template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 		$this->template->fifteen = $fifteen;
 
 		$this->invalidateControl('round');
