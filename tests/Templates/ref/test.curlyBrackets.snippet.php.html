@@ -1,36 +1,17 @@
 <h1>Nette\Templates\CurlyBracketsFilter & snippets test</h1>
 
 <pre>
-<?php
-if (!isset($_cb)) $_cb = $template->_cb = (object) NULL;
-if (empty($_cb->escape)) $_cb->escape = 'escape';
-if (!empty($_cb->caches)) end($_cb->caches)->addFile($template->getFile());
-$iterator = NULL;
-?><?php
-if (SnippetHelper::$outputAllowed) {
-?>	<?php } if ($_cb->foo = $template->snippet($control)) { $_cb->snippets[] = $_cb->foo; ?>
-
-	<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+<php:p0/>	<php:p1/>
+	<php:p2/>
 
 
-
-	<?php } if ($_cb->foo = $template->snippet($control, "outer")) { $_cb->snippets[] = $_cb->foo; ?>
-	Outer
-		<?php } if ($_cb->foo = $template->snippet($control, "inner")) { $_cb->snippets[] = $_cb->foo; ?>Inner<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
-	/Outer
-	<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+	<php:p3/>	Outer
+		<php:p4/>Inner<php:p5/>	/Outer
+	<php:p6/>
 
 
-
-	<?php } ?><?php if (true): ?><?php if (SnippetHelper::$outputAllowed) { ?> Hello World <?php } ?><?php endif ?><?php if (SnippetHelper::$outputAllowed) { ?>
-
-	<?php } if ($_cb->foo = $template->snippet($control, "title", 'h2')) { $_cb->snippets[] = $_cb->foo; ?>Title 1<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
-
-	<?php } if ($_cb->foo = $template->snippet($control, "title", '<h2>')) { $_cb->snippets[] = $_cb->foo; ?>Title 2<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
-
-	<?php } if ($_cb->foo = $template->snippet($control, "title", '<h2 class="top">')) { $_cb->snippets[] = $_cb->foo; ?>Title 3<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
-
-	<?php } if ($_cb->foo = $template->snippet($control, "title", '<h2>')) { $_cb->snippets[] = $_cb->foo; ?>Title 4<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
-<?php
-}
-?>
+	<php:p7/> Hello World <php:p8/>
+	<php:p9/>Title 1<php:p10/>
+	<php:p11/>Title 2<php:p12/>
+	<php:p13/>Title 3<php:p14/>
+	<php:p15/>Title 4<php:p16/>

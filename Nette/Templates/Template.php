@@ -261,12 +261,33 @@ class Template extends /*Nette\*/Object implements ITemplate
 			$content = file_get_contents($filePath);
 			$isFile = FALSE;
 
-			reset($this->filters);
-			while (list(, $filter) = each($this->filters)) {/**/
+			foreach ($this->filters as $filter) {
 				if (!is_callable($filter)) {
 					throw new /*\*/InvalidStateException("Filter must be valid PHP callback object.");
 				}
-				$content = call_user_func($filter, $content, $this->file);
+
+				// remove PHP code
+				$res = '';
+				$blocks = array();
+				foreach (token_get_all($content) as $token) {
+					if (is_array($token)) {
+						if ($token[0] === T_INLINE_HTML) {
+							$res .= $token[1];
+							unset($php);
+						} else {
+							if (!isset($php)) {
+								$res .= $php = '<php:p' . count($blocks) . '/>';
+								$php = & $blocks[$php];
+							}
+							$php .= $token[1];
+						}
+					} else {
+						$php .= $token;
+					}
+				}
+
+				$content = call_user_func($filter, $res, $this->file);
+				$content = strtr($content, $blocks); // put PHP code back
 			}
 
 			$content = "<?php\n// template $this->file\n?>$content";

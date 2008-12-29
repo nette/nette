@@ -101,13 +101,7 @@ final class TemplateFilters
 	 */
 	public static function removePhp($s)
 	{
-		$res = '';
-		foreach (token_get_all($s) as $token) {
-			if (is_array($token) && $token[0] === T_INLINE_HTML) {
-				$res .= $token[1] . '<?php ?>';
-			}
-		}
-		return $res;
+		return preg_replace('#<php:p\d+/>#', '<?php ?>', $s);
 	}
 
 
