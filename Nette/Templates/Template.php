@@ -269,6 +269,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 				// remove PHP code
 				$res = '';
 				$blocks = array();
+				unset($php);
 				foreach (token_get_all($content) as $token) {
 					if (is_array($token)) {
 						if ($token[0] === T_INLINE_HTML) {
