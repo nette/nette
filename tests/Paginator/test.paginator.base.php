@@ -1,4 +1,4 @@
-<h1>Nette\Paginator test</h1>
+<h1>Nette\Paginator & base test</h1>
 
 <pre>
 <?php
@@ -12,7 +12,7 @@ require_once '../../Nette/loader.php';
 $paginator = new Paginator;
 $paginator->itemCount = 7;
 $paginator->itemsPerPage = 6;
-$paginator->base = 0;
+$paginator->base = 1;
 
 
 $paginator->page = 3;
