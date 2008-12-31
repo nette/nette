@@ -1,7 +1,7 @@
 /**
  * Nette Framework
  *
- * Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2009 David Grudl (http://davidgrudl.com)
  *
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.

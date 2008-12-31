@@ -4,18 +4,18 @@
  * dibi - tiny'n'smart database abstraction layer
  * ----------------------------------------------
  *
- * Copyright (c) 2005, 2008 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2005, 2009 David Grudl (http://davidgrudl.com)
  *
  * This source file is subject to the "dibi license" that is bundled
  * with this package in the file license.txt.
  *
  * For more information please see http://dibiphp.com
  *
- * @copyright  Copyright (c) 2005, 2008 David Grudl
+ * @copyright  Copyright (c) 2005, 2009 David Grudl
  * @license    http://dibiphp.com/license  dibi license
  * @link       http://dibiphp.com
  * @package    dibi
- * @version    1.0 (revision 170 released on 2008/11/22 15:31:38)
+ * @version    1.0 (revision 174 released on 2008/12/31 01:13:40)
  */
 
 if(version_compare(PHP_VERSION,'5.1.0','<')){throw
@@ -271,11 +271,19 @@ setProfiler(IDibiProfiler$profiler=NULL){$this->profiler=$profiler;}public
 function
 getProfiler(){return$this->profiler;}public
 function
+fetch($args){$args=func_get_args();return$this->query($args)->fetch();}public
+function
+fetchAll($args){$args=func_get_args();return$this->query($args)->fetchAll();}public
+function
+fetchSingle($args){$args=func_get_args();return$this->query($args)->fetchSingle();}public
+function
+fetchPairs($args){$args=func_get_args();return$this->query($args)->fetchPairs();}public
+function
 loadFile($file){$this->connect();@set_time_limit(0);$handle=@fopen($file,'r');if(!$handle){throw
 new
 FileNotFoundException("Cannot open file '$file'.");}$count=0;$sql='';while(!feof($handle)){$s=fgets($handle);$sql.=$s;if(substr(rtrim($s),-1)===';'){$this->driver->query($sql);$sql='';$count++;}}fclose($handle);return$count;}public
 function
-getDatabaseInfo(){return
+getDatabaseInfo(){$this->connect();return
 new
 DibiDatabaseInfo($this->driver,isset($this->config['database'])?$this->config['database']:NULL);}public
 function
@@ -371,7 +379,7 @@ dibi::FIELD_BINARY:return$this->getDriver()->unescape($value,$type);case
 dibi::FIELD_INTEGER:return(int)$value;case
 dibi::FIELD_FLOAT:return(float)$value;case
 dibi::FIELD_DATE:case
-dibi::FIELD_DATETIME:$value=strtotime($value);return$format===NULL?$value:date($format,$value);case
+dibi::FIELD_DATETIME:$value=is_numeric($value)?(int)$value:strtotime($value);return$format===NULL?$value:date($format,$value);case
 dibi::FIELD_BOOL:return((bool)$value)&&$value!=='f'&&$value!=='F';default:return$value;}}final
 public
 function
@@ -431,7 +439,9 @@ as$v){$vx[]=$this->formatValue($v,$modifier);}return
 implode(', ',$vx);}}if($modifier){if($value===NULL){return'NULL';}if($value
 instanceof
 IDibiVariable){return$value->toSql($this,$modifier);}if(!is_scalar($value)){$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';}switch($modifier){case's':case'bin':case'b':return$this->driver->escape($value,$modifier);case'sn':return$value==''?'NULL':$this->driver->escape($value,dibi::FIELD_TEXT);case'i':case'u':if(is_string($value)&&preg_match('#[+-]?\d+(e\d+)?$#A',$value)){return$value;}return(string)(int)($value+0);case'f':if(is_string($value)&&is_numeric($value)&&strpos($value,'x')===FALSE){return$value;}return
-rtrim(rtrim(number_format($value,5,'.',''),'0'),'.');case'd':case't':return$this->driver->escape(is_string($value)?strtotime($value):$value,$modifier);case'by':case'n':return$this->delimite($value);case'sql':$value=(string)$value;$toSkip=strcspn($value,'`[\'"');if(strlen($value)===$toSkip){return$value;}else{return
+rtrim(rtrim(number_format($value,5,'.',''),'0'),'.');case'd':case't':$value=is_numeric($value)?(int)$value:($value
+instanceof
+DateTime?$value->format('U'):strtotime($value));return$this->driver->escape($value,$modifier);case'by':case'n':return$this->delimite($value);case'sql':$value=(string)$value;$toSkip=strcspn($value,'`[\'"');if(strlen($value)===$toSkip){return$value;}else{return
 substr($value,0,$toSkip).preg_replace_callback('/(?=`|\[|\'|")(?:`(.+?)`|\[(.+?)\]|(\')((?:\'\'|[^\'])*)\'|(")((?:""|[^"])*)"(\'|"))/s',array($this,'cb'),substr($value,$toSkip));}case'and':case'or':case'a':case'l':case'v':$this->hasError=TRUE;return'**Unexpected type '.gettype($value).'**';default:$this->hasError=TRUE;return"**Unknown or invalid modifier %$modifier**";}}if(is_string($value))return$this->driver->escape($value,dibi::FIELD_TEXT);if(is_int($value)||is_float($value))return
 rtrim(rtrim(number_format($value,5,'.',''),'0'),'.');if(is_bool($value))return$this->driver->escape($value,dibi::FIELD_BOOL);if($value===NULL)return'NULL';if($value
 instanceof
@@ -697,7 +707,7 @@ DibiProfiler
 extends
 DibiObject
 implements
-IDibiProfiler{private$file;private$useFirebug;private$filter=self::ALL;public$tickets=array();public
+IDibiProfiler{private$file;public$useFirebug;private$filter=self::ALL;public$tickets=array();public
 static$table=array(array('Time','SQL Statement','Rows','Connection'));public
 function
 __construct(){$this->useFirebug=isset($_SERVER['HTTP_USER_AGENT'])&&strpos($_SERVER['HTTP_USER_AGENT'],'FirePHP/');}public
@@ -711,7 +721,7 @@ key($this->tickets);}public
 function
 after($ticket,$res=NULL){if(!isset($this->tickets[$ticket])){throw
 new
-InvalidArgumentException('Bad ticket number.');}list($connection,$event,$sql)=$this->tickets[$ticket];if(($event&$this->filter)===0)return;if($event&self::QUERY){if($this->useFirebug){self::$table[]=array(sprintf('%0.3f',dibi::$elapsedTime*1000),trim($sql),$res
+InvalidArgumentException('Bad ticket number.');}list($connection,$event,$sql)=$this->tickets[$ticket];if(($event&$this->filter)===0)return;if($event&self::QUERY){if($this->useFirebug&&!headers_sent()){self::$table[]=array(sprintf('%0.3f',dibi::$elapsedTime*1000),trim($sql),$res
 instanceof
 DibiResult?count($res):'-',$connection->getConfig('driver').'/'.$connection->getConfig('name'));header('X-Wf-Protocol-dibi: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');header('X-Wf-dibi-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.2.0');header('X-Wf-dibi-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');$payload=array(array('Type'=>'TABLE','Label'=>'dibi profiler ('.dibi::$numOfQueries.' SQL queries took '.sprintf('%0.3f',dibi::$totalTime*1000).' ms)'),self::$table);$payload=function_exists('json_encode')?json_encode($payload):self::json_encode($payload);foreach(str_split($payload,4990)as$num=>$s){$num++;header("X-Wf-dibi-1-1-d$num: |$s|\\");}header("X-Wf-dibi-1-1-d$num: |$s|");}if($this->file){$this->writeFile("OK: ".$sql.($res
 instanceof
@@ -736,7 +746,7 @@ FIELD_DATETIME='t';const
 FIELD_TIME='t';const
 IDENTIFIER='n';const
 VERSION='1.0';const
-REVISION='170 released on 2008/11/22 15:31:38';const
+REVISION='174 released on 2008/12/31 01:13:40';const
 RESULT_WITH_TABLES='resultWithTables';private
 static$registry=array();private
 static$connection;private
@@ -859,7 +869,9 @@ delete($table){return
 self::getConnection()->delete($table);}public
 static
 function
-datetime($time=NULL){if($time===NULL){$time=time();}elseif(is_string($time)){$time=strtotime($time);}else{$time=(int)$time;}return
+datetime($time=NULL){if($time===NULL){$time=time();}elseif(is_numeric($time)){$time=(int)$time;}elseif($time
+instanceof
+DateTime){$time=$time->format('U');}else{$time=strtotime($time);}return
 new
 DibiVariable($time,dibi::FIELD_DATETIME);}public
 static

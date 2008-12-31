@@ -3,7 +3,7 @@
 /**
  * My Application
  *
- * @copyright  Copyright (c) 2008 John Doe
+ * @copyright  Copyright (c) 2009 John Doe
  * @package    MyApplication
  * @version    $Id$
  */

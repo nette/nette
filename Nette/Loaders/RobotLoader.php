@@ -3,14 +3,14 @@
 /**
  * Nette Framework
  *
- * Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2009 David Grudl (http://davidgrudl.com)
  *
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt.
  *
  * For more information please see http://nettephp.com
  *
- * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
@@ -32,7 +32,7 @@ require_once dirname(__FILE__) . '/../Framework.php';
  * Nette auto loader is responsible for loading classes and interfaces.
  *
  * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2008 David Grudl
+ * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Loaders
  */
 class RobotLoader extends AutoLoader
@@ -238,6 +238,7 @@ class RobotLoader extends AutoLoader
 	{
 		if (!defined('T_NAMESPACE')) {
 			define('T_NAMESPACE', -1);
+			define('T_NS_SEPARATOR', -1);
 		}
 
 		$expected = FALSE;
@@ -268,7 +269,7 @@ class RobotLoader extends AutoLoader
 				case T_WHITESPACE:
 					continue 2;
 
-				case T_DOUBLE_COLON:
+				case T_NS_SEPARATOR:
 				case T_STRING:
 					if ($expected) {
 						$name .= $token[1];
@@ -279,7 +280,7 @@ class RobotLoader extends AutoLoader
 
 			if ($expected) {
 				if ($expected === T_NAMESPACE) {
-					$namespace = $name . '::';
+					$namespace = $name . '\\';
 				} elseif ($level === 0) {
 					$this->addClass($namespace . $name, $file);
 				}
