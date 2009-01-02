@@ -548,6 +548,7 @@ abstract class Presenter extends Control implements IPresenter
 		return array(
 			"$root/$presenter/$scene.phtml",
 			"$root/$presenter.$scene.phtml",
+			"$root/@global.$scene.phtml",
 		);
 	}
 

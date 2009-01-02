@@ -247,10 +247,11 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Sets the session ID to a user specified one.
+	 * Sets the session ID to a specified one.
 	 * @throws \InvalidStateException
 	 * @param  string $id
 	 * @return void
+     * @deprecated
 	 */
 	public function setId($id)
 	{
@@ -268,7 +269,7 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Returns the current session ID.
+	 * Returns the current session ID. Don't make dependencies, can be changed for each request.
 	 * @return string
 	 */
 	public function getId()
