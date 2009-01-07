@@ -205,6 +205,7 @@ final class Environment
 	 */
 	public static function isLive()
 	{
+		trigger_error('Deprecated: use Environment::isProduction() instead.', E_USER_WARNING);
 		return self::getMode('production');
 	}
 

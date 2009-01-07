@@ -438,7 +438,7 @@ class Form extends FormContainer
 			$values = (array) $values;
 
 		} elseif (!is_array($values)) {
-			throw new /*\*/InvalidArgumentException('Default values must be an array.');
+			throw new /*\*/InvalidArgumentException("Default values must be an array, " . gettype($values) ." given.");
 		}
 
 		$cursor = & $values;

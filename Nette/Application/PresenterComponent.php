@@ -236,7 +236,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * @param  string
 	 * @return string
 	 */
-	protected function formatSignalMethod($signal)
+	public function formatSignalMethod($signal)
 	{
 		return $signal == NULL ? NULL : 'handle' . $signal; // intentionally ==
 	}

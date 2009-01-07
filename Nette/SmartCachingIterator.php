@@ -44,8 +44,11 @@ class SmartCachingIterator extends /*\*/CachingIterator
 		} elseif ($iterator instanceof /*\*/IteratorAggregate) {
 			parent::__construct($iterator->getIterator(), 0);
 
-		} else {
+		} elseif ($iterator instanceof /*\*/Iterator) {
 			parent::__construct($iterator, 0);
+
+		} else {
+			throw new /*\*/InvalidArgumentException("Argument passed to " . __METHOD__ . " must be an array or interface Iterator provider, " . (is_object($iterator) ? get_class($iterator) : gettype($iterator)) ." given.");
 		}
 	}
 

@@ -67,10 +67,10 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be string, " . gettype($name) . " is given.");
+			throw new /*\*/InvalidArgumentException("Component name must be string, " . gettype($name) . " given.");
 
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' is invalid.");
+			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		if (isset($this->components[$name])) {

@@ -64,7 +64,7 @@ class Hashtable extends Collection implements IMap
 	{
 		// note: $item is nullable to be compatible with that of ICollection::add()
 		if (!is_scalar($key)) {
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		if (parent::offsetExists($key)) {
@@ -147,7 +147,7 @@ class Hashtable extends Collection implements IMap
 	public function get($key, $default = NULL)
 	{
 		if (!is_scalar($key)) {
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		if (parent::offsetExists($key)) {
@@ -185,7 +185,7 @@ class Hashtable extends Collection implements IMap
 	public function offsetSet($key, $item)
 	{
 		if (!is_scalar($key)) { // prevents NULL
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		$this->beforeAdd($item);
@@ -203,7 +203,7 @@ class Hashtable extends Collection implements IMap
 	public function offsetGet($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		if (parent::offsetExists($key)) {
@@ -228,7 +228,7 @@ class Hashtable extends Collection implements IMap
 	public function offsetExists($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		return parent::offsetExists($key);
@@ -245,7 +245,7 @@ class Hashtable extends Collection implements IMap
 	public function offsetUnset($key)
 	{
 		if (!is_scalar($key)) {
-			throw new /*\*/InvalidArgumentException('Key must be either a string or an integer.');
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
 		$this->beforeRemove();

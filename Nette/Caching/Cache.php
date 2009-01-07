@@ -121,7 +121,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	public function save($key, $data, array $dependencies = NULL)
 	{
 		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
 		}
 
 		$this->key = NULL;
@@ -192,7 +192,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	public function offsetSet($key, $data)
 	{
 		if (!is_string($key)) { // prevents NULL
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
 		}
 
 		$this->key = $this->data = NULL;
@@ -214,7 +214,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	public function offsetGet($key)
 	{
 		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
 		}
 
 		if ($this->key === $key) {
@@ -236,7 +236,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	public function offsetExists($key)
 	{
 		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
 		}
 
 		$this->key = $key;
@@ -255,7 +255,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	public function offsetUnset($key)
 	{
 		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." was given.");
+			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
 		}
 
 		$this->key = $this->data = NULL;

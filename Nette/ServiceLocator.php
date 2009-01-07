@@ -76,7 +76,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		} elseif (is_callable($service, TRUE)) {
 			if (empty($name)) {
-				throw new /*\*/InvalidArgumentException('Service seems to be callback, but service name is missing.');
+				throw new /*\*/InvalidArgumentException('When factory callback is given, service name must be specified.');
 			}
 
 		} else {
@@ -85,7 +85,7 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		$lower = strtolower($name);
 		if (isset($this->registry[$lower])) {
-			throw new AmbiguousServiceException("Service named '$name' has been already set.");
+			throw new AmbiguousServiceException("Service named '$name' has been already registered.");
 		}
 
 		if (is_object($service)) {
@@ -110,7 +110,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function removeService($name, $promote = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException('Service name must be a non-empty string.');
+			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -132,7 +132,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function getService($name, $need = TRUE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException('Service name must be a non-empty string.');
+			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);

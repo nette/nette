@@ -89,7 +89,7 @@ class Uri extends /*Nette\*/Object
 		if ($uri !== NULL) {
 			$parts = @parse_url($uri); // intentionally @
 			if ($parts === FALSE) {
-				throw new /*\*/InvalidArgumentException('Malformed or unsupported URI.');
+				throw new /*\*/InvalidArgumentException("Malformed or unsupported URI '$uri'.");
 			}
 
 			foreach ($parts as $key => $val) {

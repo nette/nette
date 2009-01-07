@@ -200,7 +200,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 				$output[] = "$prefix$key = \"$val\"";
 
 			} else {
-				throw new /*\*/InvalidArgumentException("The '$prefix$key' item must be scalar or array.");
+				throw new /*\*/InvalidArgumentException("The '$prefix$key' item must be scalar or array, " . gettype($val) ." given.");
 			}
 		}
 	}

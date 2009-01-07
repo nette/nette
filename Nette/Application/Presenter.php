@@ -307,7 +307,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws BadSignalException
 	 */
-	protected function processSignal()
+	public function processSignal()
 	{
 		if ($this->signal === NULL) return;
 
@@ -453,7 +453,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws BadRequestException if no template found
 	 */
-	protected function renderTemplate()
+	public function renderTemplate()
 	{
 		$template = $this->getTemplate();
 		if (!$template) return;
@@ -506,7 +506,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @return array
 	 */
-	protected function formatLayoutTemplateFiles($presenter, $layout)
+	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
@@ -537,7 +537,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @return array
 	 */
-	protected function formatTemplateFiles($presenter, $scene)
+	public function formatTemplateFiles($presenter, $scene)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
@@ -617,7 +617,7 @@ abstract class Presenter extends Control implements IPresenter
 			$value = $this->createAjaxDriver();
 			if (!($value instanceof IAjaxDriver)) {
 				$class = get_class($value);
-				throw new /*\*/UnexpectedValueException("The Nette\Application\IAjaxDriver object was expected, '$class' was given.");
+				throw new /*\*/UnexpectedValueException("Object returned by $this->class::getAjaxDriver() must be instance of Nette\\Application\\IAjaxDriver, '$class' given.");
 			}
 			$this->ajaxDriver = $value;
 		}
