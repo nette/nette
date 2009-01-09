@@ -251,7 +251,7 @@ class Session extends /*Nette\*/Object
 	 * @throws \InvalidStateException
 	 * @param  string $id
 	 * @return void
-     * @deprecated
+	 * @deprecated
 	 */
 	public function setId($id)
 	{

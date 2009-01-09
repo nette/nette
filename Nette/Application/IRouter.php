@@ -41,7 +41,7 @@ interface IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	function match(/*Nette\Web\*/IHttpRequest $context);
+	function match(/*Nette\Web\*/IHttpRequest $httpRequest);
 
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
@@ -49,6 +49,6 @@ interface IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context);
+	function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest);
 
 }

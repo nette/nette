@@ -73,10 +73,10 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
 	{
 		// combine with precedence: get, (post,) defaults
-		$params = $context->getQuery();
+		$params = $httpRequest->getQuery();
 		$params += $this->defaults;
 
 		if (!isset($params[self::PRESENTER_KEY])) {
@@ -88,11 +88,11 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 
 		return new PresenterRequest(
 			$presenter,
-			$context->getMethod(),
+			$httpRequest->getMethod(),
 			$params,
-			$context->getPost(),
-			$context->getFiles(),
-			array('secured' => $context->isSecured())
+			$httpRequest->getPost(),
+			$httpRequest->getFiles(),
+			array('secured' => $httpRequest->isSecured())
 		);
 	}
 
@@ -104,12 +104,12 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
 	{
-		$params = $request->getParams();
+		$params = $appRequest->getParams();
 
 		// presenter name
-		$presenter = $request->getPresenterName();
+		$presenter = $appRequest->getPresenterName();
 		if (strncasecmp($presenter, $this->module, strlen($this->module)) === 0) {
 			$params[self::PRESENTER_KEY] = substr($presenter, strlen($this->module));
 		} else {
@@ -123,13 +123,24 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 			}
 		}
 
-		$uri = $context->getUri();
+		$uri = $httpRequest->getUri();
 		$uri = ($this->flags & self::SECURED ? 'https://' : 'http://') . $uri->authority . $uri->scriptPath;
 		$query = http_build_query($params, '', '&');
 		if ($query != '') { // intentionally ==
 			$uri .= '?' . $query;
 		}
 		return $uri;
+	}
+
+
+
+	/**
+	 * Returns default values.
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		return $this->defaults;
 	}
 
 }

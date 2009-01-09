@@ -99,7 +99,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	);
 
 	/** @var string */
-	public $mask;
+	private $mask;
 
 	/** @var array */
 	private $sequence;
@@ -139,12 +139,12 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
 	{
 		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
 
 		// 1) URL MASK
-		$uri = $context->getUri();
+		$uri = $httpRequest->getUri();
 
 		if ($this->type === self::HOST) {
 			$path = '//' . $uri->host . $uri->path;
@@ -190,9 +190,9 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 3) QUERY
 		if ($this->xlat) {
-			$params += self::renameKeys($context->getQuery(), array_flip($this->xlat));
+			$params += self::renameKeys($httpRequest->getQuery(), array_flip($this->xlat));
 		} else {
-			$params += $context->getQuery();
+			$params += $httpRequest->getQuery();
 		}
 
 
@@ -230,11 +230,11 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		return new PresenterRequest(
 			$presenter,
-			$context->getMethod(),
+			$httpRequest->getMethod(),
 			$params,
-			$context->getPost(),
-			$context->getFiles(),
-			array('secured' => $context->isSecured())
+			$httpRequest->getPost(),
+			$httpRequest->getFiles(),
+			array('secured' => $httpRequest->isSecured())
 		);
 	}
 
@@ -246,16 +246,16 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
 		}
 
-		$params = $request->getParams();
+		$params = $appRequest->getParams();
 		$metadata = $this->metadata;
 
-		$presenter = $request->getPresenterName();
+		$presenter = $appRequest->getPresenterName();
 		if (isset($metadata[self::MODULE_KEY])) {
 			if (isset($metadata[self::MODULE_KEY]['fixity'])) {
 				$a = strlen($metadata[self::MODULE_KEY]['default']);
@@ -346,10 +346,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
-			$uri = '//' . $context->getUri()->authority . $context->getUri()->basePath . $uri;
+			$uri = '//' . $httpRequest->getUri()->authority . $httpRequest->getUri()->basePath . $uri;
 
 		} elseif ($this->type === self::PATH) {
-			$uri = '//' . $context->getUri()->authority . $uri;
+			$uri = '//' . $httpRequest->getUri()->authority . $uri;
 		}
 
 		$uri = ($this->flags & self::SECURED ? 'https:' : 'http:') . $uri;
@@ -525,6 +525,34 @@ class Route extends /*Nette\*/Object implements IRouter
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 		$this->metadata = $metadata;
 		$this->sequence = $sequence;
+	}
+
+
+
+	/**
+	 * Returns mask.
+	 * @return string
+	 */
+	public function getMask()
+	{
+		return $this->mask;
+	}
+
+
+
+	/**
+	 * Returns default values.
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		$defaults = array();
+		foreach ($this->metadata as $name => $meta) {
+			if (isset($meta['fixity'])) {
+				$defaults[$name] = $meta['default'];
+			}
+		}
+		return $defaults;
 	}
 
 

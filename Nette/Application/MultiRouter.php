@@ -37,9 +37,6 @@ require_once dirname(__FILE__) . '/../Collections/ArrayList.php';
  */
 class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 {
-	/** @var IRouter */
-	public $matched;
-
 	/** @var string  type (class, interface, PHP type) */
 	protected $itemType = /*Nette\Application\*/'IRouter';
 
@@ -53,13 +50,12 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $context)
+	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
 	{
 		foreach ($this as $route) {
-			$request = $route->match($context);
-			if ($request !== NULL) {
-				$this->matched = $route;
-				return $request;
+			$appRequest = $route->match($httpRequest);
+			if ($appRequest !== NULL) {
+				return $appRequest;
 			}
 		}
 		return NULL;
@@ -73,7 +69,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $request, /*Nette\Web\*/IHttpRequest $context)
+	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();
@@ -100,11 +96,11 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 			$this->cachedRoutes = $routes;
 		}
 
-		$presenter = $request->getPresenterName();
+		$presenter = $appRequest->getPresenterName();
 		if (!isset($this->cachedRoutes[$presenter])) $presenter = '*';
 
 		foreach ($this->cachedRoutes[$presenter] as $route) {
-			$uri = $route->constructUrl($request, $context);
+			$uri = $route->constructUrl($appRequest, $httpRequest);
 			if ($uri !== NULL) {
 				return $uri;
 			}
