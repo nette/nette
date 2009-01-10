@@ -180,6 +180,7 @@ class NetteLoader extends AutoLoader
 		'templatefilters' => '/Templates/Filters/TemplateFilters.php',
 		'templatehelpers' => '/Templates/Filters/TemplateHelpers.php',
 		'templatestorage' => '/Templates/TemplateStorage.php',
+		'terminateexception' => '/Application/TerminateException.php',
 		'textarea' => '/Forms/Controls/TextArea.php',
 		'textbase' => '/Forms/Controls/TextBase.php',
 		'textinput' => '/Forms/Controls/TextInput.php',

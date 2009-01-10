@@ -39,12 +39,10 @@ class FifteenControl extends /*Nette\Application\*/Control
 
 
 
-	public function __construct($parent = NULL, $name = NULL)
+	public function __construct()
 	{
-		if (empty($this->order)) {
-			$this->order = range(0, $this->width * $this->width - 1);
-		}
-		parent::__construct($parent, $name);
+		parent::__construct();
+		$this->order = range(0, $this->width * $this->width - 1);
 	}
 
 

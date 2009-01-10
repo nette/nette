@@ -31,7 +31,8 @@
  * - {=expression} echo with escaping
  * - {!=expression} echo without escaping
  * - {?expression} evaluate PHP statement
- * - {_expression} echo with escaping and translation
+ * - {_expression} echo translation with escaping
+ * - {!_expression} echo translation without escaping
  * - {link destination ...} control link
  * - {plink destination ...} presenter link
  * - {ajaxlink destination ...} ajax link
@@ -55,7 +56,7 @@ final class CurlyBracketsFilter
 {
 
 	/** @var array */
-	public static $statements = array(
+	public static $macros = array(
 		'block' => '<?php ob_start(); try { ?>',
 		'/block' => '<?php } catch (Exception $_e) { ob_end_clean(); throw $_e; } # ?>',
 
@@ -77,6 +78,7 @@ final class CurlyBracketsFilter
 		'/while' => '<?php endwhile ?>',
 
 		'include' => '<?php $template->subTemplate(#)->render() ?>',
+
 		'ajaxlink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'plink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'link' => '<?php echo $template->{$_cb->escape}(#) ?>',
@@ -88,6 +90,7 @@ final class CurlyBracketsFilter
 		'param' => '<?php $template->#2 = $#2 = # ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
+		'!_' => '<?php echo $template->translate(#) ?>',
 		'!=' => '<?php echo # ?>',
 		'_' => '<?php echo $template->{$_cb->escape}($template->translate(#)) ?>',
 		'=' => '<?php echo $template->{$_cb->escape}(#) ?>',
@@ -156,7 +159,7 @@ final class CurlyBracketsFilter
 
 		self::$blocks = array();
 		$k = array();
-		foreach (self::$statements as $key => $foo)
+		foreach (self::$macros as $key => $foo)
 		{
 			$key = preg_quote($key, '#');
 			if (preg_match('#[a-zA-Z0-9]$#', $key)) {
@@ -216,7 +219,7 @@ final class CurlyBracketsFilter
 
 		} elseif ($stat === 'link' || $stat === 'plink' || $stat === 'ajaxlink' || $stat ===  'ifCurrent' || $stat ===  'include') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
-				$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
+				$var = strspn($m[1], '\'"') ? $m[1] : '"' . $m[1] . '"';
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
 				if ($stat === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
 			}
@@ -260,7 +263,7 @@ final class CurlyBracketsFilter
 			self::$blocks[] = $tmp . $var;
 		}
 
-		return strtr(self::$statements[$stat], array('#2' => $var2, '#' => $var));
+		return strtr(self::$macros[$stat], array('#2' => $var2, '#' => $var));
 	}
 
 }

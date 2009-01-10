@@ -716,6 +716,7 @@ class Form extends FormContainer
 
 	/**
 	 * Renders form to string.
+	 * @return bool  can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()

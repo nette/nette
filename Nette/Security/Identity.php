@@ -54,9 +54,21 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	 */
 	public function __construct($name, array $roles = NULL, $data = NULL)
 	{
-		$this->name = (string) $name;
-		$this->roles = (array) $roles;
+		$this->setName($name);
+		$this->setRoles($roles === NULL ? array() : $roles);
 		$this->data = (array) $data;
+	}
+
+
+
+	/**
+	 * Sets the name of user.
+	 * @param  string
+	 * @return void
+	 */
+	public function setName($name)
+	{
+		$this->name = (string) $name;
 	}
 
 
@@ -73,6 +85,18 @@ class Identity extends /*Nette\*/Object implements IIdentity
 
 
 	/**
+	 * Sets a list of roles that the user is a member of.
+	 * @param  array
+	 * @return void
+	 */
+	public function setRoles(array $roles)
+	{
+		$this->roles = $roles;
+	}
+
+
+
+	/**
 	 * Returns a list of roles that the user is a member of.
 	 * @return array
 	 */
@@ -84,14 +108,34 @@ class Identity extends /*Nette\*/Object implements IIdentity
 
 
 	/**
-	 * @return array
+	 * Sets user data value.
+	 * @param  string  property name
+	 * @param  mixed   property value
+	 * @return void
+	 */
+	public function __set($key, $value)
+	{
+		if ($key === 'name' || $key === 'roles') {
+			parent::__set($key, $value);
+
+		} else {
+			$this->data[$key] = $value;
+		}
+	}
+
+
+
+	/**
+	 * Returns user data value.
+	 * @param  string  property name
+	 * @return mixed
 	 */
 	public function &__get($key)
 	{
 		if ($key === 'name' || $key === 'roles') {
 			return parent::__get($key);
 
-		} elseif (isset($key, $this->data)) {
+		} else {
 			return $this->data[$key];
 		}
 	}

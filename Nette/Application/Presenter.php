@@ -232,7 +232,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			$this->onShutdown($this, $e);
-			$this->shutdown();
+			$this->shutdown($e);
 
 			if (isset($e)) throw $e;
 		}
@@ -291,9 +291,10 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * @param  Exception  optional catched exception
 	 * @return void
 	 */
-	protected function shutdown()
+	protected function shutdown($exception)
 	{
 	}
 
@@ -720,11 +721,11 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Correctly terminates presenter.
 	 * @return void
-	 * @throws AbortException
+	 * @throws TerminateException
 	 */
 	public function terminate()
 	{
-		throw new AbortException();
+		throw new TerminateException();
 	}
 
 
@@ -732,7 +733,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
-	 * @throws AbortException
+	 * @throws RedirectingException
 	 */
 	public function canonicalize()
 	{
@@ -752,7 +753,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string strong entity tag validator
 	 * @param  int    optional expiration time
 	 * @return int    date of the client's cache version, if available
-	 * @throws AbortException
+	 * @throws TerminateException
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{

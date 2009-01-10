@@ -26,10 +26,10 @@ class MyTranslator extends Zend_Translate implements /*Nette\*/ITranslator
 	/**
 	 * Translates the given string.
 	 * @param  string   message
-	 * @param  int      plural
+	 * @param  int      plural count
 	 * @return string
 	 */
-	public function translate($message, $plural = NULL)
+	public function translate($message, $count = NULL)
 	{
 		return parent::translate($message);
 	}

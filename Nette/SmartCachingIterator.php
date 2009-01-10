@@ -123,6 +123,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	/**
 	 * Returns the current index (counter - 1).
 	 * @return int
+	 * @deprecated
 	 */
 	public function getIndex()
 	{

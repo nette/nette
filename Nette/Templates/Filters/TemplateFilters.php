@@ -251,4 +251,4 @@ final class TemplateFilters
 
 
 // back compatiblity:
-TemplateFilters::$curlyXlatMask = & CurlyBracketsFilter::$statements;
+TemplateFilters::$curlyXlatMask = & CurlyBracketsFilter::$macros;

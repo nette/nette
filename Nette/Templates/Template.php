@@ -63,9 +63,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	/** @var Nette\Caching\ICacheStorage */
 	private static $cacheStorage;
 
-	/** @var array */
-	private static $livelock = array();
-
 
 
 	/**
@@ -152,32 +149,17 @@ class Template extends /*Nette\*/Object implements ITemplate
 			return;
 		}
 
-		if (isset(self::$livelock[$this->file])) {
-			throw new /*\*/InvalidStateException("Circular rendering detected.");
-		}
-
 		list($content, $isFile) = $this->compile();
 
-		self::$livelock[$this->file] = TRUE;
-
-		try {
-			$this->params['template'] = $this;
-			if ($isFile) {
-				/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
-			} else {
-				/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
+		$this->params['template'] = $this;
+		if ($isFile) {
+			/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
+			if (is_resource($isFile)) {
+				fclose($isFile);
 			}
-		} catch (/*\*/Exception $e) {
-			// continue with shutting down
-		}
 
-		unset(self::$livelock[$this->file]);
-		if (is_resource($isFile)) {
-			fclose($isFile);
-		}
-
-		if (isset($e)) {
-			throw $e;
+		} else {
+			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
 		}
 	}
 
@@ -196,6 +178,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 	/**
 	 * Renders template to string.
+	 * @return bool  can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()

@@ -23,6 +23,12 @@ Debug::dump($paginator->page);
 echo "pageCount:\n";
 Debug::dump($paginator->pageCount);
 
+echo "firstPage:\n";
+Debug::dump($paginator->firstPage);
+
+echo "lastPage:\n";
+Debug::dump($paginator->lastPage);
+
 echo "offset:\n";
 Debug::dump($paginator->offset);
 
@@ -58,6 +64,12 @@ Debug::dump($paginator->page);
 echo "pageCount:\n";
 Debug::dump($paginator->pageCount);
 
+echo "firstPage:\n";
+Debug::dump($paginator->firstPage);
+
+echo "lastPage:\n";
+Debug::dump($paginator->lastPage);
+
 echo "offset:\n";
 Debug::dump($paginator->offset);
 
@@ -79,6 +91,12 @@ Debug::dump($paginator->page);
 echo "pageCount:\n";
 Debug::dump($paginator->pageCount);
 
+echo "firstPage:\n";
+Debug::dump($paginator->firstPage);
+
+echo "lastPage:\n";
+Debug::dump($paginator->lastPage);
+
 echo "offset:\n";
 Debug::dump($paginator->offset);
 
@@ -87,9 +105,3 @@ Debug::dump($paginator->countdownOffset);
 
 echo "length:\n";
 Debug::dump($paginator->length);
-
-
-echo "\n";
-$paginator->itemCount = 170;
-$paginator->itemsPerPage = 5;
-var_dump($paginator->getSteps(3));

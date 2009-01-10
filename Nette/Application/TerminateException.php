@@ -14,30 +14,25 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette
+ * @package    Nette\Application
  * @version    $Id$
  */
 
-/*namespace Nette;*/
+/*namespace Nette\Application;*/
+
+
+
+require_once dirname(__FILE__) . '/../Application/AbortException.php';
 
 
 
 /**
- * Translator adapter.
+ * Correctly terminate presenter.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
- * @package    Nette
+ * @package    Nette\Application
  */
-interface ITranslator
+class TerminateException extends AbortException
 {
-
-	/**
-	 * Translates the given string.
-	 * @param  string   message
-	 * @param  int      plural count
-	 * @return string
-	 */
-	function translate($message, $count = NULL);
-
 }
