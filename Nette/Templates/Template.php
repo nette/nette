@@ -54,9 +54,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	/** @var array */
 	private $helpers = array();
 
-	/** @var string  pre-rendered content */
-	private $content;
-
 	/** @var int */
 	public static $cacheExpire = FALSE;
 
@@ -144,82 +141,6 @@ class Template extends /*Nette\*/Object implements ITemplate
 	 */
 	public function render()
 	{
-		if ($this->content !== NULL) {
-			echo $this->content;
-			return;
-		}
-
-		list($content, $isFile) = $this->compile();
-
-		$this->params['template'] = $this;
-		if ($isFile) {
-			/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
-			if (is_resource($isFile)) {
-				fclose($isFile);
-			}
-
-		} else {
-			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
-		}
-	}
-
-
-
-	/**
-	 * Renders template to string.
-	 * @return void
-	 */
-	public function preRender()
-	{
-		$this->content = $this->__toString(TRUE);
-	}
-
-
-
-	/**
-	 * Renders template to string.
-	 * @return bool  can throw exceptions? (hidden parameter)
-	 * @return string
-	 */
-	public function __toString()
-	{
-		ob_start();
-		try {
-			$this->render();
-			return ob_get_clean();
-
-		} catch (/*\*/Exception $e) {
-			ob_end_clean();
-			if (func_get_args()) {
-				throw $e;
-			} else {
-				trigger_error($e->getMessage(), E_USER_WARNING);
-				return '';
-			}
-		}
-	}
-
-
-
-	/**
-	 * Converts to SimpleXML. (experimental)
-	 * @return SimpleXMLElement
-	 */
-	public function toXml()
-	{
-		$dom = new DOMDocument;
-		$dom->loadHTML('<html><meta http-equiv="Content-Type" content="text/html;charset=utf-8">' . str_replace("\r", '', $this->__toString()) . '</html>');
-		return simplexml_import_dom($dom)->body;
-		//return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
-	}
-
-
-
-	/**
-	 * @return array (string, isFile/handle)
-	 */
-	private function compile()
-	{
 		if ($this->file == NULL) { // intentionally ==
 			throw new /*\*/InvalidStateException("Template file name was not specified.");
 		}
@@ -231,8 +152,11 @@ class Template extends /*Nette\*/Object implements ITemplate
 			throw new /*\*/FileNotFoundException("Missing template file '$this->file'.");
 		}
 
+		$this->params['template'] = $this;
+
 		if (!count($this->filters)) {
-			return array($filePath, TRUE);
+			/*Nette\Loaders\*/LimitedScope::load($filePath, $this->params);
+			return;
 		}
 
 		$isFile = TRUE;
@@ -288,11 +212,57 @@ class Template extends /*Nette\*/Object implements ITemplate
 		if (self::$cacheStorage instanceof TemplateStorage) {
 			$cached = $cache[$key];
 			if ($cached !== NULL) {
-				return array($cached['file'], $cached['handle']);
+				/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->params);
+				fclose($cached['handle']);
+				return;
 			}
 		}
 
-		return array($content, $isFile);
+		if ($isFile) {
+			/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
+
+		} else {
+			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
+		}
+	}
+
+
+
+	/**
+	 * Renders template to string.
+	 * @return bool  can throw exceptions? (hidden parameter)
+	 * @return string
+	 */
+	public function __toString()
+	{
+		ob_start();
+		try {
+			$this->render();
+			return ob_get_clean();
+
+		} catch (/*\*/Exception $e) {
+			ob_end_clean();
+			if (func_get_args()) {
+				throw $e;
+			} else {
+				trigger_error($e->getMessage(), E_USER_WARNING);
+				return '';
+			}
+		}
+	}
+
+
+
+	/**
+	 * Converts to SimpleXML. (experimental)
+	 * @return SimpleXMLElement
+	 */
+	public function toXml()
+	{
+		$dom = new DOMDocument;
+		$dom->loadHTML('<html><meta http-equiv="Content-Type" content="text/html;charset=utf-8">' . str_replace("\r", '', $this->__toString()) . '</html>');
+		return simplexml_import_dom($dom)->body;
+		//return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
 	}
 
 

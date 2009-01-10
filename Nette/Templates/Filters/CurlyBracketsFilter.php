@@ -44,7 +44,6 @@
  * - {snippet ?} ... {/snippet ?} control snippet
  * - {attr ?} HTML element attributes
  * - {block|texy} ... {/block} capture of filter block
- * - {param $var value} set template parameter
  * - {contentType ...} HTTP Content-Type header
  * - {debugbreak}
  *
@@ -87,7 +86,6 @@ final class CurlyBracketsFilter
 		'attr' => '<?php echo Html::el(NULL)->#attributes() ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',
 		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "#") ?>',*/
-		'param' => '<?php $template->#2 = $#2 = # ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!_' => '<?php echo $template->translate(#) ?>',
@@ -199,11 +197,6 @@ final class CurlyBracketsFilter
 
 		} elseif ($stat === 'attr') {
 			$var = str_replace(') ', ')->', $var . ' ');
-
-		} elseif ($stat === 'param') {
-			preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
-			list(, $var2, $var) = $m;
-			if ($var === '') $var = 'NULL';
 
 		} elseif ($stat === 'snippet') {
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
