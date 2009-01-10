@@ -77,6 +77,7 @@ final class CurlyBracketsFilter
 		'/while' => '<?php endwhile ?>',
 
 		'include' => '<?php $template->subTemplate(#)->render() ?>',
+		'extends' => '<?php $template->subTemplate(#)->render() ?>',
 
 		'ajaxlink' => '<?php echo $template->{$_cb->escape}(#) ?>',
 		'plink' => '<?php echo $template->{$_cb->escape}(#) ?>',
@@ -98,10 +99,14 @@ final class CurlyBracketsFilter
 		'?' => '<?php # ?>',
 	);
 
-
-
 	/** @var array */
 	private static $blocks = array();
+
+	/** @var string */
+	private static $file;
+
+	/** @var string */
+	private static $extends;
 
 
 
@@ -120,8 +125,11 @@ final class CurlyBracketsFilter
 	 * @param  string
 	 * @return string
 	 */
-	public static function invoke($s)
+	public static function invoke($s, $file)
 	{
+		self::$file = $file;
+		self::$extends = NULL;
+
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
@@ -171,6 +179,8 @@ final class CurlyBracketsFilter
 			$s
 		);
 
+		$s .= self::$extends;
+
 		return $s;
 	}
 
@@ -186,11 +196,18 @@ final class CurlyBracketsFilter
 		$var2 = NULL;
 
 		if ($stat === 'block') {
+			if (substr($var, 0, 1) === ':') {
+				$func = '__cbblock' . md5(self::$file . "\00" . $var);
+				$call = self::$extends ? '' : "\ncall_user_func(array_shift(\$_cb->blocks['$var']), get_defined_vars())";
+				self::$blocks[] = array("<?php\n}\n\$_cb->blocks['$var'][] = '$func'; $call?>");
+				return "<?php\nfunction $func(\$params) { extract(\$params);\n?>";
+			}
 			$tmp = $var === '' ? 'echo ' : $var . '=';
 			$var = 'ob_get_clean()';
 
 		} elseif ($stat === '/block') {
 			$var = array_pop(self::$blocks);
+			if (is_array($var)) return $var[0];
 
 		} elseif ($stat === 'foreach') {
 			$var = '$iterator = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
@@ -210,15 +227,21 @@ final class CurlyBracketsFilter
 		} elseif ($stat === '$' || $stat === '!' || $stat === '!$') {
 			$var = '$' . $var;
 
-		} elseif ($stat === 'link' || $stat === 'plink' || $stat === 'ajaxlink' || $stat ===  'ifCurrent' || $stat ===  'include') {
+		} elseif ($stat === 'link' || $stat === 'plink' || $stat === 'ajaxlink' || $stat ===  'ifCurrent' || $stat ===  'include' || $stat ===  'extends') {
+			if ($stat === 'include' && substr($var, 0, 1) === ':') {
+				$func = '__cbblock' . md5(self::$file . "\00" . $var);
+				return "<?php call_user_func(array_shift(\$_cb->blocks['$var']), get_defined_vars()) ?>";
+			}
+
 			if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
-				$var = strspn($m[1], '\'"') ? $m[1] : '"' . $m[1] . '"';
+				$var = $stat === 'include' ? (strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'") : (strspn($m[1], '\'"') ? $m[1] : '"' . $m[1] . '"');
 				if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
 				if ($stat === 'ifCurrent') $var = '$presenter->link(' . $var . '); ';
 			}
 			if ($stat === 'link') $var = '$control->link(' . $var .')';
 			elseif ($stat === 'plink') $var = '$presenter->link(' . $var .')';
 			elseif ($stat === 'ajaxlink') $var = '$control->ajaxlink(' . $var .')';
+			elseif ($stat === 'extends') { self::$extends = strtr(self::$macros[$stat], array('#' => $var)); return ''; }
 		}
 
 		if ($modifiers) {
@@ -256,7 +279,7 @@ final class CurlyBracketsFilter
 			self::$blocks[] = $tmp . $var;
 		}
 
-		return strtr(self::$macros[$stat], array('#2' => $var2, '#' => $var));
+		return strtr(self::$macros[$stat], array('#' => $var));
 	}
 
 }
