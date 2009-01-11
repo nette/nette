@@ -26,4 +26,5 @@ $template->registerHelper('upper', 'Nette\String::upper');
 $template->hello = '<i>Hello</i>';
 $template->id = ':item';
 $template->people = array('John', 'Mary', 'Paul');
+$template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->render();

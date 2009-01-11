@@ -54,3 +54,17 @@ var prop = {$people};
 document.getElementById({$id}).style.backgroundColor = 'red';
 -->
 </script>
+
+
+
+{include '@menu.phtml'}
+
+
+
+{block #menu}
+<ul>
+	{foreach $menu as $item}
+	<li>{if is_array($item)} {include :this, 'menu' => $item} {else}{$item}{/if}</li>
+	{/foreach}
+</ul>
+{/block}
