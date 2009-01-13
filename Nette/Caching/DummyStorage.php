@@ -37,9 +37,6 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  */
 class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 {
-	/** @var array */
-	public $log = array();
-
 
 	/**
 	 * Read from cache.
@@ -48,7 +45,6 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		$this->log[] = array('read', $key);
 		return NULL;
 	}
 
@@ -63,7 +59,6 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		$this->log[] = array('write', $key);
 		return TRUE;
 	}
 
@@ -76,7 +71,6 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function remove($key)
 	{
-		$this->log[] = array('remove', $key);
 		return TRUE;
 	}
 
@@ -89,7 +83,6 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		$this->log[] = array('clean', $conds);
 		return TRUE;
 	}
 
