@@ -48,10 +48,10 @@ final class LimitedScope
 	 * @param  array   local variables
 	 * @return mixed   the return value of the evaluated code
 	 */
-	public static function evaluate(/*$code, array $variables*/)
+	public static function evaluate($_code, array $_vars = NULL)
 	{
-		if (func_num_args() > 1) {
-			extract(func_get_arg(1));
+		if ($_vars !== NULL) {
+			extract($_vars);
 		}
 		return eval('?>' . func_get_arg(0));
 	}
@@ -64,10 +64,10 @@ final class LimitedScope
 	 * @param  array   local variables
 	 * @return mixed   the return value of the included file
 	 */
-	public static function load(/*$file, array $variables*/)
+	public static function load($_file, array $_vars = NULL)
 	{
-		if (func_num_args() > 1) {
-			extract(func_get_arg(1));
+		if ($_vars !== NULL) {
+			extract($_vars);
 		}
 		return include func_get_arg(0);
 	}

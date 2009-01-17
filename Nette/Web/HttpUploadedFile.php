@@ -96,7 +96,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 			if (extension_loaded('fileinfo')) {
 				$this->realType = finfo_file(finfo_open(FILEINFO_MIME), $this->tmpName);
 
-			} elseif (function_exists('mime_content_type')) {
+			} elseif (function_exists('mime_content_type') && mime_content_type($this->tmpName)) {
 				$this->realType = mime_content_type($this->tmpName);
 
 			} else {

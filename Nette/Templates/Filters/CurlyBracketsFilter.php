@@ -143,7 +143,7 @@ final class CurlyBracketsFilter
 
 		// internal state holder
 		$s = "<?php "
-			/*. "use Nette\\Templates\\CurlyBracketsFilter, Exception, Nette\\SmartCachingIterator, Nette\\Environment, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
+			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\SmartCachingIterator, Nette\\Environment, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
 			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
 		// add local content escaping switcher

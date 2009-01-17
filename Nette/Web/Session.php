@@ -535,7 +535,7 @@ class Session extends /*Nette\*/Object
 	 */
 	protected function getHttpRequest()
 	{
-		return Environment::getHttpRequest();
+		return /*Nette\*/Environment::getHttpRequest();
 	}
 
 
@@ -545,7 +545,7 @@ class Session extends /*Nette\*/Object
 	 */
 	protected function getHttpResponse()
 	{
-		return Environment::getHttpResponse();
+		return /*Nette\*/Environment::getHttpResponse();
 	}
 
 }

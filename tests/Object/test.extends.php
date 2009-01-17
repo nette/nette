@@ -9,9 +9,9 @@ require_once '../../Nette/loader.php';
 interface IFirst {}
 interface ISecond extends IFirst {}
 
-function Test_prototype_join(Test $thisObj, $separator)
+function Test_prototype_join(Test $_this, $separator)
 {
-	return __METHOD__ . ' says ' . $thisObj->a . $separator . $thisObj->b;
+	return __METHOD__ . ' says ' . $_this->a . $separator . $_this->b;
 }
 
 
@@ -31,21 +31,21 @@ class Test extends /*Nette\*/Object implements ISecond
 }
 
 
-function Test_join(Test $thisObj, $separator)
+function Test_join(Test $_this, $separator)
 {
-	return __METHOD__ . ' says ' . $thisObj->a . $separator . $thisObj->b;
+	return __METHOD__ . ' says ' . $_this->a . $separator . $_this->b;
 }
 
 
-function IFirst_join(ISecond $thisObj, $separator)
+function IFirst_join(ISecond $_this, $separator)
 {
-	return __METHOD__ . ' says ' . $thisObj->a . $separator . $thisObj->b;
+	return __METHOD__ . ' says ' . $_this->a . $separator . $_this->b;
 }
 
 
-function ISecond_join(ISecond $thisObj, $separator)
+function ISecond_join(ISecond $_this, $separator)
 {
-	return __METHOD__ . ' says ' . $thisObj->a . $separator . $thisObj->b;
+	return __METHOD__ . ' says ' . $_this->a . $separator . $_this->b;
 }
 
 
