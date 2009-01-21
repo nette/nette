@@ -48,6 +48,3 @@ $cache->release();
 
 echo "Is cached?\n";
 Debug::dump(isset($cache[$key]));
-
-echo "Log:\n";
-Debug::dump($cache->getStorage()->log);

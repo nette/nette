@@ -119,6 +119,9 @@ class Image extends Object {
 			return new self(imagecreatefromgif($file));
 
 		default:
+			if (self::$useImageMagick) {
+				return new ImageMagick($file);
+			}
 			throw new /*\*/Exception("Unknown image type in file '$file'.");
 		}
 	}
@@ -223,9 +226,9 @@ class Image extends Object {
 	public function resize($newWidth, $newHeight, $flags = 0)
 	{
 		list($newWidth, $newHeight) = $this->calculateSize($newWidth, $newHeight, $flags);
-		$oldImg = $this->getImageResource();
-		$this->image = imagecreatetruecolor($newWidth, $newHeight);
-		imagecopyresampled($this->image, $oldImg, 0, 0, 0, 0, $newWidth, $newHeight, $this->getWidth(), $this->getHeight());
+		$newImage = imagecreatetruecolor($newWidth, $newHeight);
+		imagecopyresampled($newImage, $this->getImageResource(), 0, 0, 0, 0, $newWidth, $newHeight, $this->getWidth(), $this->getHeight());
+		$this->image = $newImage;
 	}
 
 
@@ -310,9 +313,9 @@ class Image extends Object {
 		$width = min((int) $width, $this->getWidth() - $left);
 		$height = min((int) $height, $this->getHeight() - $top);
 
-		$oldImg = $this->image;
-		$this->image = imagecreatetruecolor($width, $height);
-		imagecopy($this->image, $oldImg, 0, 0, $left, $top, $width, $height);
+		$newImage = imagecreatetruecolor($width, $height);
+		imagecopy($newImage, $this->getImageResource(), 0, 0, $left, $top, $width, $height);
+		$this->image = $newImage;
 	}
 
 

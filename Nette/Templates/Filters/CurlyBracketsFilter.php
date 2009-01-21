@@ -346,7 +346,7 @@ final class CurlyBracketsFilter
 	 */
 	private static function macroIfCurrent($var, $modifiers)
 	{
-		return self::macroModifiers('$presenter->link(' . self::formatVars($var) .')', $modifiers);
+		return $var ? self::macroModifiers('$presenter->link(' . self::formatVars($var) .')', $modifiers) : '';
 	}
 
 
@@ -387,6 +387,7 @@ final class CurlyBracketsFilter
 
 				if ($token === '|') {
 					$var .= ')';
+					$state = FALSE;
 
 				} else {
 					$state = TRUE;
