@@ -91,11 +91,12 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 		$this->submittedBy = FALSE;
 		if (!$presenter->isSignalReceiver($this, 'submit')) return;
 
+		$isPost = strcasecmp($this->getMethod(), 'post') === 0;
 		$request = $presenter->getRequest();
-		if ($request->isMethod('forward') || $request->isMethod('post') !== $this->isPost) return;
+		if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) return;
 
 		$this->submittedBy = TRUE;
-		if ($this->isPost) {
+		if ($isPost) {
 			$this->loadHttpData(self::arrayAppend($request->getPost(), $request->getFiles()));
 
 		} else {

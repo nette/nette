@@ -83,9 +83,6 @@ class Form extends FormContainer
 	/** @var array of event handlers; Occurs when the form is submitted and not validated; function(Form $sender) */
 	public $onInvalidSubmit;
 
-	/** @var bool */
-	protected $isPost = TRUE;
-
 	/** @var mixed */
 	protected $submittedBy;
 
@@ -370,7 +367,7 @@ class Form extends FormContainer
 		}
 		$httpRequest->setEncoding($this->encoding);
 
-		if ($this->isPost) {
+		if (strcasecmp($this->getMethod(), 'post') === 0) {
 			if (!$httpRequest->isMethod('post')) return;
 			$data = self::arrayAppend($httpRequest->getPost(), $httpRequest->getFiles());
 
