@@ -111,6 +111,7 @@ class NetteLoader extends AutoLoader
 		'ilist' => '/Collections/IList.php',
 		'image' => '/Image.php',
 		'imagebutton' => '/Forms/Controls/ImageButton.php',
+		'imagemagick' => '/ImageMagick.php',
 		'imap' => '/Collections/IMap.php',
 		'inamingcontainer' => '/Forms/INamingContainer.php',
 		'instancefilteriterator' => '/InstanceFilterIterator.php',
