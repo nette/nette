@@ -150,8 +150,8 @@ final class CurlyBracketsFilter
 
 		// add local content escaping switcher
 		$s = preg_replace(array(
-			'#(<script.*>)(.+)(</script)#Uis',
-			'#(<style.*>)(.+)(</style)#Uis',
+			'#(<script[^>]*>)(?!</)(.+)(</script)#Uis',
+			'#(<style[^>]*>)(?!</)(.*)(</style)#Uis',
 		), array(
 			'$1<?php \\$_cb->escape = "escapeJs" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
 			'$1<?php \\$_cb->escape = "escapeCss" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
