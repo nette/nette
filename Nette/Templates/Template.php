@@ -20,8 +20,6 @@
 
 /*namespace Nette\Templates;*/
 
-/*use Nette\Environment;*/
-
 
 
 require_once dirname(__FILE__) . '/../Object.php';
@@ -184,7 +182,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 							unset($php);
 						} else {
 							if (!isset($php)) {
-								$res .= $php = '<php:p' . count($blocks) . '/>';
+								$res .= $php = "\x01@php:p" . count($blocks) . "@\x02";
 								$php = & $blocks[$php];
 							}
 							$php .= $token[1];
@@ -436,8 +434,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 	public static function getCacheStorage()
 	{
 		if (self::$cacheStorage === NULL) {
-			$base = Environment::getVariable('cacheBase');
-			self::$cacheStorage = new TemplateStorage($base);
+			self::$cacheStorage = new TemplateStorage(/*Nette\*/Environment::getVariable('cacheBase'));
 		}
 		return self::$cacheStorage;
 	}

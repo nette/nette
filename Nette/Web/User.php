@@ -288,10 +288,6 @@ class User extends /*Nette\*/Object implements IUser
 			$session->expireTime = time() + $session->expireDelta; // sliding expiration
 		}
 
-		if ($session->authenticated) { // Session Fixation defence
-			$sessionHandler->regenerateId();
-		}
-
 		return $this->session;
 	}
 
@@ -306,6 +302,9 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		$session = $this->getSessionNamespace(TRUE);
 		$session->authenticated = (bool) $state;
+
+		// Session Fixation defence
+		$this->getSession()->regenerateId();
 
 		if ($state) {
 			$session->reason = NULL;

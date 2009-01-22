@@ -101,7 +101,7 @@ final class TemplateFilters
 	 */
 	public static function removePhp($s)
 	{
-		return preg_replace('#<php:p\d+/>#', '<?php ?>', $s);
+		return preg_replace('#\x01@php:p\d+@\x02#', '<?php ?>', $s);
 	}
 
 

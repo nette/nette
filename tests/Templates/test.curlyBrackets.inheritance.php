@@ -21,4 +21,4 @@ $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml
 
 $template->people = array('John', 'Mary', 'Paul');
 
-echo $template;
+$template->render();

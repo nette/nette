@@ -56,6 +56,11 @@ document.getElementById({$id}).style.backgroundColor = 'red';
 </script>
 
 
+<script name="<?php echo 123 ?>" id="{$hello}">  </script>
+
+
+<script name="<?php echo 123 ?>" id="{$hello}"></script>
+
 
 {include '@menu.phtml'}
 
@@ -64,7 +69,7 @@ document.getElementById({$id}).style.backgroundColor = 'red';
 {block #menu}
 <ul>
 	{foreach $menu as $item}
-	<li>{if is_array($item)} {include :this, 'menu' => $item} {else}{$item}{/if}</li>
+	<li>{if is_array($item)} {include #this, 'menu' => $item} {else}{$item}{/if}</li>
 	{/foreach}
 </ul>
 {/block}

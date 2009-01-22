@@ -9,9 +9,8 @@ require_once '../../Nette/loader.php';
 
 Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
-//Template::setCacheStorage(new /*Nette\Caching\*/DummyStorage);
-
 $template = new Template;
+//$template->setCacheStorage(new /*Nette\Caching\*/DummyStorage);
 $template->setFile(dirname(__FILE__) . '/templates/remove-php.phtml');
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'removePhp'));
 $template->render();

@@ -45,6 +45,7 @@
  * - {attr ?} HTML element attributes
  * - {block|texy} ... {/block} capture of filter block
  * - {contentType ...} HTTP Content-Type header
+ * - {assign $var value} set template parameter
  * - {debugbreak}
  *
  * @author     David Grudl
@@ -87,6 +88,7 @@ final class CurlyBracketsFilter
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "%%") ?>',
 		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "%%") ?>',*/
+		'assign' => '<?php %:macroAssign% ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',
@@ -148,15 +150,11 @@ final class CurlyBracketsFilter
 
 		// add local content escaping switcher
 		$s = preg_replace(array(
-			'#<script[^>]*>(?!</script>)#i',
-			'#<style[^>]*>#i',
-			'#(?<![\'"]>)</script#i',
-			'#</style#i',
+			'#(<script.*>)(.+)(</script)#Uis',
+			'#(<style.*>)(.+)(</style)#Uis',
 		), array(
-			'$0<?php \\$_cb->escape = "escapeJs" ?>',
-			'$0<?php \\$_cb->escape = "escapeCss" ?>',
-			'<?php \\$_cb->escape = "escape" ?>$0',
-			'<?php \\$_cb->escape = "escape" ?>$0',
+			'$1<?php \\$_cb->escape = "escapeJs" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
+			'$1<?php \\$_cb->escape = "escapeCss" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
 		), $s);
 
 		self::$blocks = array();
@@ -224,19 +222,19 @@ final class CurlyBracketsFilter
 	 */
 	private static function macroInclude($var, $modifiers)
 	{
-		if (substr($var, 0, 1) === '#' || substr($var, 0, 1) === ':') {
-			preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m);
+		if (substr($var, 0, 1) === '#') {
+			preg_match('#^.([^\s,]+),?\s*(.*)$#', $var, $m);
 			$var = '$template->getParams()'; // get_defined_vars()
 			if ($m[2]) $var = strncmp($m[2], 'array', 5) === 0 ? "$m[2] + $var" : "array($m[2]) + $var";
 			$var = 'call_user_func($_cb->cs[0], ' . $var. ')';
-			if ($m[1] === ':parent') {
+			if ($m[1] === 'parent') {
 				return '$_cb->csX = array_shift($_cb->cs); ' . $var . '; array_unshift($_cb->cs, $_cb->csX)';
 
-			} elseif ($m[1] === ':this') {
+			} elseif ($m[1] === 'this') {
 				return $var;
 
 			} else {
-				return '$_cb->cs = $_cb->f[' . var_export(substr($m[1], 1), TRUE) . ']; ' . $var;
+				return '$_cb->cs = $_cb->f[' . var_export($m[1], TRUE) . ']; ' . $var;
 			}
 		}
 
@@ -357,6 +355,17 @@ final class CurlyBracketsFilter
 	private static function macroAjaxlink($var, $modifiers)
 	{
 		return self::macroModifiers('$control->ajaxlink(' . self::formatVars($var) .')', $modifiers);
+	}
+
+
+
+	/**
+	 * {assign ...}
+	 */
+	private static function macroAssign($var, $modifiers)
+	{
+		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
+		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . self::macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
 	}
 
 
