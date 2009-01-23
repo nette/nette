@@ -140,7 +140,7 @@ final class TemplateFilters
 	public static function relativeLinks($s)
 	{
 		return preg_replace(
-			'#(src|href|action)\s*=\s*["\'](?![a-z]+:|/|<|\\#)#',
+			'#(src|href|action)\s*=\s*["\'](?![a-z]+:|[\x00/<\\#])#',
 			'$1="<?php echo \\$baseUri ?>',
 			$s
 		);
@@ -161,7 +161,7 @@ final class TemplateFilters
 	public static function netteLinks($s)
 	{
 		return preg_replace_callback(
-			'#(src|href|action|on[a-z]+)\s*=\s*"(nette:.*?)([\#"])#',
+			'#(src|href|action|on[a-z]+)\s*=\s*["\'](nette:.*?)([\#"\'])#',
 			array(__CLASS__, 'tnlCb'),
 			$s)
 		;
