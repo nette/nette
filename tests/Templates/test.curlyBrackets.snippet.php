@@ -42,10 +42,7 @@ function printSource($s)
 }
 
 
-$tmpDir = dirname(__FILE__) . '/tmp';
-foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
-
-Environment::setVariable('tempDir', $tmpDir);
+Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');

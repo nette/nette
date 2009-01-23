@@ -68,6 +68,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array of event handlers; Occurs when the presenter is shutting down; function(Presenter $sender, Exception $exception = NULL) */
 	public $onShutdown;
 
+	/** @var bool */
+	public $oldLayoutMode = TRUE;
+
 	/** @var PresenterRequest */
 	private $request;
 
@@ -462,36 +465,42 @@ abstract class Presenter extends Control implements IPresenter
 		if ($this->isAjax()) { // TODO!
 			SnippetHelper::$outputAllowed = FALSE;
 		}
-		if ($template instanceof /*Nette\Templates\*/Template && !$template->getFile()) {
-			$presenter = $this->getName();
-			$hasContent = $hasLayout = FALSE;
 
-			if ($this->layout) {
-				foreach ($this->formatLayoutTemplateFiles($presenter, $this->layout) as $file) {
-					if (is_file($file)) {
-						$template->setFile($file);
-						$hasLayout = TRUE;
-						break;
-					}
-				}
+		if ($template instanceof /*Nette\Templates\*/Template && !$template->getFile()) {
+
+			if (isset($template->layout)) {
+				trigger_error('Parameter $template->layout is about to be reserved.', E_USER_WARNING);
 			}
 
-			foreach ($this->formatTemplateFiles($presenter, $this->scene) as $file) {
+			unset($template->layout, $template->content);
+
+			// content template
+			$files = $this->formatTemplateFiles($this->getName(), $this->scene);
+			foreach ($files as $file) {
 				if (is_file($file)) {
-					if ($hasLayout) { // has layout?
-						$template->addTemplate('content', $file);
-					} else {
-						$template->setFile($file);
-					}
-					$hasContent = TRUE;
+					$template->setFile($file);
 					break;
 				}
 			}
 
-			if (!$hasContent) {
-				$files = $this->formatTemplateFiles($presenter, $this->scene);
+			if (!$template->getFile()) {
 				$file = reset($files);
 				throw new BadRequestException("Page not found. Missing template '$file'.");
+			}
+
+			// layout template
+			if ($this->layout) {
+				foreach ($this->formatLayoutTemplateFiles($this->getName(), $this->layout) as $file) {
+					if (is_file($file)) {
+						if ($this->oldLayoutMode) {
+							$template->addTemplate('content', $template->getFile());
+							$template->setFile($file);
+						} else {
+							$template->layout = $file;
+						}
+						break;
+					}
+				}
 			}
 		}
 
@@ -541,14 +550,16 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
-		if ($root === Environment::getVariable('presentersDir')) {
+		$dir = '';
+		if ($root === Environment::getVariable('presentersDir')) { // special supported case
 			$pos = strrpos($presenter, '/');
 			$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
+			$dir = 'templates/';
 		}
 		return array(
 			"$root/$presenter/$scene.phtml",
 			"$root/$presenter.$scene.phtml",
-			"$root/@global.$scene.phtml",
+			"$root/$dir@global.$scene.phtml",
 		);
 	}
 
