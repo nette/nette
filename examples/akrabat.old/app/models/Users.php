@@ -36,7 +36,7 @@ class Users extends DibiTableX implements /*Nette\Security\*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette\Security\*/Identity($row->username, array(), $row);
+		return new /*Nette\Security\*/Identity($row->username, NULL, $row);
 	}
 
 }

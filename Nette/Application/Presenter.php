@@ -68,7 +68,7 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array of event handlers; Occurs when the presenter is shutting down; function(Presenter $sender, Exception $exception = NULL) */
 	public $onShutdown;
 
-	/** @var bool */
+	/** @var bool (experimental) */
 	public $oldLayoutMode = TRUE;
 
 	/** @var PresenterRequest */
@@ -79,6 +79,9 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = TRUE;
+
+	/** @var bool  relativise links? */
+	public $relativeLinks = TRUE;
 
 	/** @var array */
 	private $globalParams;
@@ -466,7 +469,7 @@ abstract class Presenter extends Control implements IPresenter
 			SnippetHelper::$outputAllowed = FALSE;
 		}
 
-		if ($template instanceof /*Nette\Templates\*/Template && !$template->getFile()) {
+		if ($template instanceof /*Nette\Templates\*/IFileTemplate && !$template->getFile()) {
 
 			if (isset($template->layout)) {
 				trigger_error('Parameter $template->layout is about to be reserved.', E_USER_WARNING);
@@ -493,10 +496,10 @@ abstract class Presenter extends Control implements IPresenter
 				foreach ($this->formatLayoutTemplateFiles($this->getName(), $this->layout) as $file) {
 					if (is_file($file)) {
 						if ($this->oldLayoutMode) {
-							$template->addTemplate('content', $template->getFile());
+							$template->content = $template instanceof /*Nette\Templates\*/Template ? $template->subTemplate($template->getFile()) : $template->getFile();
 							$template->setFile($file);
 						} else {
-							$template->layout = $file;
+							$template->layout = $file; // experimental
 						}
 						break;
 					}
@@ -748,7 +751,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$uri = $this->createRequest($this, $this->view, $this->getGlobalState() + $this->request->params, 'redirect');
+			$uri = $this->createRequest($this, $this->view, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
@@ -1018,7 +1021,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// make URL relative if possible
-		if ($mode === 'link') {
+		if ($mode === 'link' && $this->relativeLinks) {
 			$hostUri = $httpRequest->getUri()->hostUri;
 			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
 				$uri = substr($uri, strlen($hostUri));
@@ -1031,7 +1034,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Invalid link handler.
+	 * Invalid link handler. Descendant can override this method to change default behaviour.
 	 * @param  InvalidLinkException
 	 * @return string
 	 * @throws InvalidLinkException

@@ -49,13 +49,13 @@ class Identity extends /*Nette\*/Object implements IIdentity
 
 	/**
 	 * @param  string  identity name
-	 * @param  array   roles
+	 * @param  mixed   roles
 	 * @param  array   user data
 	 */
-	public function __construct($name, array $roles = NULL, $data = NULL)
+	public function __construct($name, $roles = NULL, $data = NULL)
 	{
 		$this->setName($name);
-		$this->setRoles($roles === NULL ? array() : $roles);
+		$this->setRoles((array) $roles);
 		$this->data = (array) $data;
 	}
 

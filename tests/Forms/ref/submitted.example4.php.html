@@ -206,92 +206,96 @@
 function validate(sender) {
 	var element, message, res;
 	do {
-	element = document.getElementById('frm-name');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-name");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val!='' && val!="";
 	if (!res) { message = "Enter your name"; if (element) element.focus(); alert(message); return false; }
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-age');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-age");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val!='' && val!="";
 	if (!res) { message = "Enter your age"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById('frm-age');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-age");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = /^-?[0-9]+$/.test(val);
 	if (!res) { message = "Age must be numeric value"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById('frm-age');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
-	res = parseFloat(val)>=9.9 && parseFloat(val)<=100;
-	if (!res) { message = "Age must be in range from 9.90 to 100.00"; if (element) element.focus(); alert(message); return false; }
+	element = document.getElementById("frm-age");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
+	res = parseFloat(val)>=10 && parseFloat(val)<=100;
+	if (!res) { message = "Age must be in range from 10 to 100"; if (element) element.focus(); alert(message); return false; }
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-email');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-email");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val!='' && val!="@";
 	if (res) {
-		element = document.getElementById('frm-email');
-		var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+		element = document.getElementById("frm-email");
+		var val = element.value.replace(/^\s+|\s+$/g, '');
 		res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);
 		if (!res) { message = "Incorrect E-mail Address"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-send');
-	res = element.checked;
+	element = document.getElementById("frm-send");
+	var val = element.checked;
+	res = (val==true);
 	if (res) {
-		element = document.getElementById('frm-city');
-		var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+		element = document.getElementById("frm-city");
+		var val = element.value.replace(/^\s+|\s+$/g, '');
 		res = val!='' && val!="";
 		if (!res) { message = "Enter your shipping address"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-send');
-	res = element.checked;
+	element = document.getElementById("frm-send");
+	var val = element.checked;
+	res = (val==true);
 	if (res) {
-		element = document.getElementById('frm-country');
+		element = document.getElementById("frm-country");
 		res = element.selectedIndex >= 1;
 		if (!res) { message = "Select your country"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-password');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-password");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val!='' && val!="";
 	if (!res) { message = "Choose your password"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById('frm-password');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-password");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val.length>=3;
 	if (!res) { message = "The password is too short: it must be at least 3 characters"; if (element) element.focus(); alert(message); return false; }
 	} while(0);
 
 	do {
-	element = document.getElementById('frm-password');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-password");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = function(){
-	element = document.getElementById('frm-password');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-password");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val!='' && val!="";
 	if (!res) { return false; }
-	element = document.getElementById('frm-password');
-	var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+	element = document.getElementById("frm-password");
+	var val = element.value.replace(/^\s+|\s+$/g, '');
 	res = val.length>=3;
 	if (!res) { return false; }
 	return true; }();
 	if (res) {
-		element = document.getElementById('frm-password2');
-		var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
+		element = document.getElementById("frm-password2");
+		var val = element.value.replace(/^\s+|\s+$/g, '');
 		res = val!='' && val!="";
 		if (!res) { message = "Reenter your password"; if (element) element.focus(); alert(message); return false; }
-		element = document.getElementById('frm-password2');
-		var val = element.value.replace(/^\s+/, '').replace(/\s+$/, '');
-		res = (val==document.getElementById('frm-password').value);
+		element = document.getElementById("frm-password2");
+		var val = element.value.replace(/^\s+|\s+$/g, '');
+		res = (val==function(){var element;element = document.getElementById("frm-password");
+		var val = element.value.replace(/^\s+|\s+$/g, '');
+		return val;}());
 		if (!res) { message = "Passwords do not match"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);
@@ -301,8 +305,9 @@ function validate(sender) {
 
 function toggle(sender) {
 	var element, visible, res;
-	visible = true; element = document.getElementById('frm-send');
-	res = element.checked; visible = visible && res;
+	visible = true; element = document.getElementById("frm-send");
+	var val = element.checked;
+	res = (val==true); visible = visible && res;
 	element = document.getElementById('sendBox');
 	if (element) element.style.display = visible ? "" : "none";
 	

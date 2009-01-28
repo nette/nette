@@ -371,7 +371,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 
 		$buttons = NULL;
 		foreach ($parent->getControls() as $control) {
-			if ($control->getOption('rendered') || $control instanceof HiddenField) {
+			if ($control->getOption('rendered') || $control instanceof HiddenField || $control->getForm(FALSE) !== $this->form) {
 				// skip
 
 			} elseif ($control instanceof Button) {

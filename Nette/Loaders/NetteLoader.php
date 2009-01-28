@@ -103,6 +103,7 @@ class NetteLoader extends AutoLoader
 		'iconfigadapter' => '/Config/IConfigAdapter.php',
 		'idebuggable' => '/IDebuggable.php',
 		'identity' => '/Security/Identity.php',
+		'ifiletemplate' => '/Templates/IFileTemplate.php',
 		'iformcontrol' => '/Forms/IFormControl.php',
 		'iformrenderer' => '/Forms/IFormRenderer.php',
 		'ihttprequest' => '/Web/IHttpRequest.php',

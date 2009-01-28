@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__) . '/../Object.php';
 
-require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
+require_once dirname(__FILE__) . '/../Templates/IFileTemplate.php';
 
 
 
@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-class Template extends /*Nette\*/Object implements ITemplate
+class Template extends /*Nette\*/Object implements IFileTemplate
 {
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
@@ -61,6 +61,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 
 	/**
+	 * Sets the path to the template file.
 	 * @param  string  template file path
 	 * @return void
 	 */
@@ -72,6 +73,7 @@ class Template extends /*Nette\*/Object implements ITemplate
 
 
 	/**
+	 * Returns the path to the template file.
 	 * @return string  template file path
 	 */
 	public function getFile()

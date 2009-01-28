@@ -29,7 +29,7 @@ class AuthenticationHandler implements IAuthenticator
 			throw new AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 		}
 
-		return new Identity('John Doe', array('admin'));
+		return new Identity('John Doe', 'admin');
 	}
 
 }
