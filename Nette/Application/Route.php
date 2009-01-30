@@ -85,16 +85,16 @@ class Route extends /*Nette\*/Object implements IRouter
 			self::FILTER_IN => array(__CLASS__, 'path2presenter'),
 			self::FILTER_OUT => array(__CLASS__, 'presenter2path'),
 		),
-		'view' => array(
+		'action' => array(
 			self::PATTERN => '[a-z][a-z0-9-]*',
-			self::FILTER_IN => array(__CLASS__, 'path2view'),
-			self::FILTER_OUT => array(__CLASS__, 'view2path'),
+			self::FILTER_IN => array(__CLASS__, 'path2action'),
+			self::FILTER_OUT => array(__CLASS__, 'action2path'),
 		),
 		'?module' => array(
 		),
 		'?presenter' => array(
 		),
-		'?view' => array(
+		'?action' => array(
 		),
 	);
 
@@ -122,7 +122,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 
 	/**
-	 * @param  string  URL mask, e.g. '<presenter>/<view>/<id \d{1,3}>'
+	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
 	 * @param  array   default values
 	 * @param  int     flags
 	 */
@@ -382,6 +382,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		$metadata = array();
 		foreach ($defaults as $name => $def) {
+			if ($name === 'view') $name = 'action'; // back compatibility
 			$metadata[$name] = array(
 				'default' => $def,
 				'fixity' => self::CONSTANT
@@ -403,6 +404,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is unsed
+				if ($name === 'view') $name = 'action'; // back compatibility
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
@@ -457,6 +459,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			$class = $parts[$i]; $i--; // validation class
 			$pattern = $parts[$i]; $i--; // validation condition (as regexp)
 			$name = $parts[$i]; $i--; // parameter name
+			if ($name === 'view') $name = 'action'; // back compatibility
 			array_unshift($sequence, $name);
 
 			if ($name[0] === '?') { // "foo" parameter
@@ -621,11 +624,11 @@ class Route extends /*Nette\*/Object implements IRouter
 
 
 	/**
-	 * camelCaseView name -> dash-separated.
+	 * camelCaseAction name -> dash-separated.
 	 * @param  string
 	 * @return string
 	 */
-	private static function view2path($s)
+	private static function action2path($s)
 	{
 		$s = preg_replace('#(.)(?=[A-Z])#', '$1-', $s);
 		$s = strtolower($s);
@@ -636,11 +639,11 @@ class Route extends /*Nette\*/Object implements IRouter
 
 
 	/**
-	 * dash-separated -> camelCaseView name.
+	 * dash-separated -> camelCaseAction name.
 	 * @param  string
 	 * @return string
 	 */
-	private static function path2view($s)
+	private static function path2action($s)
 	{
 		$s = strtolower($s);
 		$s = preg_replace('#-(?=[a-z])#', ' ', $s);
@@ -730,3 +733,9 @@ class Route extends /*Nette\*/Object implements IRouter
 	}
 
 }
+
+
+
+// back-compatibility
+Route::$styles['view'] = & Route::$styles['action'];
+Route::$styles['?view'] = & Route::$styles['?action'];

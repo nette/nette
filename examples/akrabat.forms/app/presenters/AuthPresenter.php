@@ -13,7 +13,7 @@ class AuthPresenter extends BasePresenter
 
 
 
-	public function presentLogin($backlink)
+	public function actionLogin($backlink)
 	{
 		$form = new AppForm($this, 'form');
 		$form->addText('username', 'Username:')

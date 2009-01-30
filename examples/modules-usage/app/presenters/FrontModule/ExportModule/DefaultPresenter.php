@@ -16,7 +16,7 @@ class Front_Export_DefaultPresenter extends /*\*/BasePresenter
 	protected function startup()
 	{
 		// disables layout
-		$this->changeLayout(FALSE);
+		$this->setLayout(FALSE);
 	}
 
 }

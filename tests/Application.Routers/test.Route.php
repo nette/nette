@@ -81,77 +81,77 @@ function test(Route $route, $uri, $expectedReq, $expectedUri)
 
 echo "\n<hr><h2>Optional presenter</h2>\n";
 
-$route = new Route('<presenter>/<view>/<id \d{1,3}>', array(
-	'view' => 'default',
+$route = new Route('<presenter>/<action>/<id \d{1,3}>', array(
+	'action' => 'default',
 	'id' => NULL,
 ));
 
 test($route,
-	'/presenter/view/12/any', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12/any', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
 
 test($route,
-	'/presenter/view/12/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'id' => '12',
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view/12?test=testvalue'
+	'/presenter/action/12?test=testvalue'
 );
 
 test($route,
-	'/presenter/view/12', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'id' => '12',
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view/12?test=testvalue'
+	'/presenter/action/12?test=testvalue'
 );
 
 test($route,
-	'/presenter/view/1234', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/1234', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
 
 test($route,
-	'/presenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'id' => NULL,
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view/?test=testvalue'
+	'/presenter/action/?test=testvalue'
 );
 
 test($route,
-	'/presenter/view', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'id' => NULL,
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view/?test=testvalue'
+	'/presenter/action/?test=testvalue'
 );
 
 test($route,
@@ -160,7 +160,7 @@ test($route,
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'id' => NULL,
 			'test' => 'testvalue',
 		),
@@ -174,7 +174,7 @@ test($route,
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'id' => NULL,
 			'test' => 'testvalue',
 		),
@@ -267,40 +267,40 @@ test($route,
 
 echo "\n<hr><h2>Extra default param</h2>\n";
 
-$route = new Route('<presenter>/<view>/<id \d{1,3}>/', array(
+$route = new Route('<presenter>/<action>/<id \d{1,3}>/', array(
 	'extra' => NULL,
 ));
 
 
 test($route,
-	'/presenter/view/12/any', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12/any', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
 
 test($route,
-	'/presenter/view/12', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'id' => '12',
 			'extra' => NULL,
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view/12/?test=testvalue'
+	'/presenter/action/12/?test=testvalue'
 );
 
 test($route,
-	'/presenter/view/1234', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/1234', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
 
 test($route,
-	'/presenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
@@ -325,17 +325,17 @@ test($route,
 
 echo "\n<hr><h2>No default params</h2>\n";
 
-$route = new Route('<presenter>/<view>/<extra>', array(
+$route = new Route('<presenter>/<action>/<extra>', array(
 ));
 
 
 test($route,
-	'/presenter/view/12', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/12', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'extra' => '12',
 			'test' => 'testvalue',
 		),
@@ -350,29 +350,29 @@ test($route,
 
 echo "\n<hr><h2>Combined URL param</h2>\n";
 
-$route = new Route('extra<presenter>/<view>', array(
+$route = new Route('extra<presenter>/<action>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 
 test($route,
-	'/presenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/', // ?test=testvalue&presenter=querypresenter
 	NULL,
 	NULL
 );
 
 test($route,
-	'/extrapresenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/extrapresenter/action/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'test' => 'testvalue',
 		),
 	),
-	'/extrapresenter/view?test=testvalue'
+	'/extrapresenter/action?test=testvalue'
 );
 
 test($route,
@@ -381,7 +381,7 @@ test($route,
 		'presenter' => 'Default',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -394,7 +394,7 @@ test($route,
 		'presenter' => 'Default', //  or querypresenter ?
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -414,25 +414,25 @@ test($route,
 
 
 
-echo "\n<hr><h2>With default presenter and view</h2>\n";
+echo "\n<hr><h2>With default presenter and action</h2>\n";
 
-$route = new Route('<presenter>/<view>', array(
+$route = new Route('<presenter>/<action>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 
 test($route,
-	'/presenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'test' => 'testvalue',
 		),
 	),
-	'/presenter/view?test=testvalue'
+	'/presenter/action?test=testvalue'
 );
 
 test($route,
@@ -441,7 +441,7 @@ test($route,
 		'presenter' => 'Default',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -454,7 +454,7 @@ test($route,
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -467,7 +467,7 @@ test($route,
 		'presenter' => 'Default', // or querypresenter?
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -482,19 +482,19 @@ test($route,
 
 echo "\n<hr><h2>One way</h2>\n";
 
-$route = new Route('<presenter>/<view>', array(
+$route = new Route('<presenter>/<action>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ), Route::ONE_WAY);
 
 
 test($route,
-	'/presenter/view/', // ?test=testvalue&presenter=querypresenter
+	'/presenter/action/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Presenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'test' => 'testvalue',
 		),
 	),
@@ -511,7 +511,7 @@ echo "\n<hr><h2>With host</h2>\n";
 
 $route = new Route('//<host>.texy.<domain>/<path>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 
@@ -524,7 +524,7 @@ test($route,
 			'host' => 'admin',
 			'domain' => 'info',
 			'path' => 'abc',
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -540,7 +540,7 @@ echo "\n<hr><h2>With absolute path</h2>\n";
 
 $route = new Route('/<abspath>/', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 test($route,
@@ -550,7 +550,7 @@ test($route,
 		'params' =>
 		array (
 			'abspath' => 'abc',
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -566,23 +566,23 @@ test($route,
 echo "\n<hr><h2>With params in query</h2>\n";
 
 
-$route = new Route('<view> ? <presenter>', array(
+$route = new Route('<action> ? <presenter>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 
 test($route,
-	'/view/', // ?test=testvalue&presenter=querypresenter
+	'/action/', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'querypresenter',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 			'test' => 'testvalue',
 		),
 	),
-	'/view?test=testvalue&presenter=querypresenter'
+	'/action?test=testvalue&presenter=querypresenter'
 );
 
 test($route,
@@ -591,7 +591,7 @@ test($route,
 		'presenter' => 'querypresenter', // or querypresenter?
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 			'test' => 'testvalue',
 		),
 	),
@@ -607,22 +607,22 @@ test($route,
 echo "\n<hr><h2>With named params in query</h2>\n";
 
 
-$route = new Route(' ? action=<presenter> & test=<view [a-z]+>', array(
+$route = new Route(' ? action=<presenter> & test=<action [a-z]+>', array(
 	'presenter' => 'Default',
-	'view' => 'default',
+	'action' => 'default',
 ));
 
 
 test($route,
-	'/?test=view', // ?test=testvalue&presenter=querypresenter
+	'/?test=action', // ?test=testvalue&presenter=querypresenter
 	array (
 		'presenter' => 'Default',
 		'params' =>
 		array (
-			'view' => 'view',
+			'action' => 'action',
 		),
 	),
-	'/?test=view'
+	'/?test=action'
 );
 
 test($route,
@@ -631,7 +631,7 @@ test($route,
 		'presenter' => 'Default',
 		'params' =>
 		array (
-			'view' => 'default',
+			'action' => 'default',
 		),
 	),
 	'/'

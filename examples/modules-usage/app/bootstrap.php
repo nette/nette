@@ -45,9 +45,9 @@ $router[] = new Route('index.php', array(
 	'presenter' => 'Default',
 ), Route::ONE_WAY);
 
-$router[] = new Route('<presenter>/<view>/<id>', array(
+$router[] = new Route('<presenter>/<action>/<id>', array(
 	'presenter' => 'Front:Default',
-	'view' => 'default',
+	'action' => 'default',
 	'id' => NULL,
 ));
 

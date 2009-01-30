@@ -115,7 +115,7 @@ class Application extends /*Nette\*/Object
 		if ($router instanceof MultiRouter && !count($router)) {
 			$router[] = new SimpleRouter(array(
 				'presenter' => 'Default',
-				'view' => 'default',
+				'action' => 'default',
 			));
 		}
 

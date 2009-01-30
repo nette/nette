@@ -6,7 +6,7 @@ Pro jednoduchost (resp. slozitost :-) zde neni pouzito Nette\Forms.
 
 Priklad demonstruje velmi dulezity rys Nette Frameworku: v ramci aplikace a to vcetne sablon
 se nepouzivaji URL. Ty jsou zalezitosti routeru a mohou se kdykoliv menit. Cilem odkazu je vzdy
-kombinace "Presenter:view" nebo "Presenter:command!".
+kombinace "Presenter:action" nebo "Presenter:signal!".
 
 Pro prihlaseni pouzijte
 username: demo

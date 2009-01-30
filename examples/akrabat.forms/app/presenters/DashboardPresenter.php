@@ -120,11 +120,11 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view logout *********************/
+	/********************* action logout *********************/
 
 
 
-	public function presentLogout()
+	public function actionLogout()
 	{
 		Environment::getUser()->signOut();
 		$this->flashMessage('You have been logged off.');

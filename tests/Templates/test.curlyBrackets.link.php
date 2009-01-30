@@ -33,5 +33,5 @@ $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->control = new MockControl;
 $template->presenter = new MockPresenter;
-$template->view = 'login';
+$template->action = 'login';
 $template->render();

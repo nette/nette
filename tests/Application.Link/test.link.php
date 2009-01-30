@@ -89,7 +89,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 
 
-		echo "\n<hr><h2>Presenter & view link</h2>\n";
+		echo "\n<hr><h2>Presenter & action link</h2>\n";
 
 		$uri = $this->link('product', array('var1' => $this->var1));
 		echo "1.1 $uri\n\n";

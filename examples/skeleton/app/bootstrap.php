@@ -54,12 +54,12 @@ $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(
 	'presenter' => 'Homepage',
-	'view' => 'default',
+	'action' => 'default',
 ), Route::ONE_WAY);
 
-$router[] = new Route('<presenter>/<view>/<id>', array(
+$router[] = new Route('<presenter>/<action>/<id>', array(
 	'presenter' => 'Homepage',
-	'view' => 'default',
+	'action' => 'default',
 	'id' => NULL,
 ));
 

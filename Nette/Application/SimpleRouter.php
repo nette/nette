@@ -62,6 +62,12 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 			unset($defaults[self::MODULE_KEY]);
 		}
 
+		// back compatiblity
+		if (isset($defaults['view'])) {
+			$defaults['action'] = $defaults['view'];
+			unset($defaults['view']);
+		}
+
 		$this->defaults = $defaults;
 		$this->flags = $flags;
 	}

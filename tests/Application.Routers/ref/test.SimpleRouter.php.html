@@ -10,7 +10,7 @@ object(PresenterRequest) (6) {
   }
   "name" private => string(11) "myPresenter"
   "params" private => array(4) {
-    "view" => string(4) "view"
+    "action" => string(6) "action"
     "id" => string(2) "12"
     "test" => string(9) "testvalue"
     "any" => string(8) "anyvalue"
@@ -21,7 +21,7 @@ object(PresenterRequest) (6) {
   }
 }
 
-string(55) "http:///?view=view&test=testvalue&presenter=myPresenter"
+string(59) "http:///?action=action&test=testvalue&presenter=myPresenter"
 
 
 <hr><h2>With module</h2>

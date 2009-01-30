@@ -13,7 +13,7 @@ class AuthPresenter extends BasePresenter
 
 
 
-	public function presentLogin($backlink)
+	public function actionLogin($backlink)
 	{
 		if ($this->request->isMethod('post')) {
 			// collect the data from the user

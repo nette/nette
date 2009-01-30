@@ -55,12 +55,12 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**#@+ special parameter key */
 	const SIGNAL_KEY = 'do';
-	const VIEW_KEY = 'view';
+	const ACTION_KEY = 'action';
 	const FLASH_KEY = '_fid';
 	/**#@-*/
 
 	/** @var string */
-	public static $defaultView = 'default';
+	public static $defaultAction = 'default';
 
 	/** @var int */
 	public static $invalidLinkMode;
@@ -93,10 +93,10 @@ abstract class Presenter extends Control implements IPresenter
 	private $globalStateSince;
 
 	/** @var string */
-	private $view;
+	private $action;
 
 	/** @var string */
-	private $scene;
+	private $view;
 
 	/** @var string */
 	private $layout = 'layout';
@@ -183,8 +183,9 @@ abstract class Presenter extends Control implements IPresenter
 			}
 			$this->initGlobalParams();
 			$this->startup();
-			// calls $this->present{view}();
-			$this->tryCall($this->formatPresentMethod($this->getView()), $this->params);
+			// calls $this->action{action}();
+			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
+			$this->tryCall('present'. $this->getAction(), $this->params); // back compatibility
 
 			if ($this->autoCanonicalize) {
 				$this->canonicalize();
@@ -193,22 +194,22 @@ abstract class Presenter extends Control implements IPresenter
 				$this->terminate();
 			}
 
-			// PHASE 2: PREPARING SCENE
+			// PHASE 2: PREPARING VIEW
 			$this->phase = self::PHASE_PREPARE;
 			$this->beforePrepare();
-			// calls $this->prepare{scene}();
-			$this->tryCall($this->formatPrepareMethod($this->getScene()), $this->params);
+			// calls $this->prepare{view}();
+			$this->tryCall($this->formatPrepareMethod($this->getView()), $this->params);
 
 			// PHASE 3: SIGNAL HANDLING
 			$this->phase = self::PHASE_SIGNAL;
 			$this->processSignal();
 
-			// PHASE 4: RENDERING SCENE
+			// PHASE 4: RENDERING VIEW
 			$this->phase = self::PHASE_RENDER;
 
 			$this->beforeRender();
-			// calls $this->render{scene}();
-			$this->tryCall($this->formatRenderMethod($this->getScene()), $this->params);
+			// calls $this->render{view}();
+			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
 			$this->afterRender();
 
 			// save component tree persistent state
@@ -382,53 +383,53 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Returns current view name.
+	 * Returns current action name.
 	 * @return string
 	 */
-	final public function getView($fullyQualified = FALSE)
+	final public function getAction($fullyQualified = FALSE)
 	{
-		return $fullyQualified ? ':' . $this->getName() . ':' . $this->view : $this->view;
+		return $fullyQualified ? ':' . $this->getName() . ':' . $this->action : $this->action;
 	}
 
 
 
 	/**
-	 * Changes current view. Only alphanumeric characters are allowed.
+	 * Changes current action. Only alphanumeric characters are allowed.
 	 * @param  string
 	 * @return void
 	 */
-	public function changeView($view)
+	public function changeAction($action)
 	{
-		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $view)) {
-			$this->view = $view;
-			$this->scene = $view;
+		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $action)) {
+			$this->action = $action;
+			$this->view = $action;
 
 		} else {
-			throw new BadRequestException("View name '$view' is not alphanumeric string.");
+			throw new BadRequestException("Action name '$action' is not alphanumeric string.");
 		}
 	}
 
 
 
 	/**
-	 * Returns current scene name.
+	 * Returns current view.
 	 * @return string
 	 */
-	final public function getScene()
+	final public function getView()
 	{
-		return $this->scene;
+		return $this->view;
 	}
 
 
 
 	/**
-	 * Changes current view scene. Any name is allowed.
+	 * Changes current view. Any name is allowed.
 	 * @param  string
 	 * @return void
 	 */
-	public function changeScene($scene)
+	public function setView($view)
 	{
-		$this->scene = (string) $scene;
+		$this->view = (string) $view;
 	}
 
 
@@ -448,6 +449,46 @@ abstract class Presenter extends Control implements IPresenter
 	 * Changes or disables layout.
 	 * @param  string|FALSE
 	 * @return void
+	 */
+	public function setLayout($layout)
+	{
+		$this->layout = (string) $layout;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function changeView($view)
+	{
+		$this->view = (string) $view;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	final public function getScene()
+	{
+		return $this->view;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function changeScene($view)
+	{
+		$this->view = (string) $view;
+	}
+
+
+
+	/**
+	 * @deprecated
 	 */
 	public function changeLayout($layout)
 	{
@@ -478,7 +519,7 @@ abstract class Presenter extends Control implements IPresenter
 			unset($template->layout, $template->content);
 
 			// content template
-			$files = $this->formatTemplateFiles($this->getName(), $this->scene);
+			$files = $this->formatTemplateFiles($this->getName(), $this->view);
 			foreach ($files as $file) {
 				if (is_file($file)) {
 					$template->setFile($file);
@@ -544,12 +585,12 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Formats scene template file names.
+	 * Formats view template file names.
 	 * @param  string
 	 * @param  string
 	 * @return array
 	 */
-	public function formatTemplateFiles($presenter, $scene)
+	public function formatTemplateFiles($presenter, $view)
 	{
 		$root = Environment::getVariable('templatesDir');
 		$presenter = str_replace(':', 'Module/', $presenter);
@@ -560,46 +601,46 @@ abstract class Presenter extends Control implements IPresenter
 			$dir = 'templates/';
 		}
 		return array(
-			"$root/$presenter/$scene.phtml",
-			"$root/$presenter.$scene.phtml",
-			"$root/$dir@global.$scene.phtml",
+			"$root/$presenter/$view.phtml",
+			"$root/$presenter.$view.phtml",
+			"$root/$dir@global.$view.phtml",
 		);
 	}
 
 
 
 	/**
-	 * Formats execute method name.
+	 * Formats action method name.
 	 * @param  string
 	 * @return string
 	 */
-	protected static function formatPresentMethod($view)
+	protected static function formatActionMethod($action)
 	{
-		return 'present' . $view;
+		return 'action' . $action;
 	}
 
 
 
 	/**
-	 * Formats prepare scene method name.
+	 * Formats prepare view method name.
 	 * @param  string
 	 * @return string
 	 */
-	protected static function formatPrepareMethod($scene)
+	protected static function formatPrepareMethod($view)
 	{
-		return 'prepare' . $scene;
+		return 'prepare' . $view;
 	}
 
 
 
 	/**
-	 * Formats render scene method name.
+	 * Formats render view method name.
 	 * @param  string
 	 * @return string
 	 */
-	protected static function formatRenderMethod($scene)
+	protected static function formatRenderMethod($view)
 	{
-		return 'render' . $scene;
+		return 'render' . $view;
 	}
 
 
@@ -655,7 +696,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Forward to another presenter or view.
+	 * Forward to another presenter or action.
 	 * @param  string|PresenterRequest
 	 * @param  array|mixed
 	 * @return void
@@ -703,7 +744,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function backlink()
 	{
-		return $this->getView(TRUE);
+		return $this->getAction(TRUE);
 	}
 
 
@@ -751,7 +792,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$uri = $this->createRequest($this, $this->view, $this->getGlobalState() + $this->request->params, 'redirectX');
+			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
 				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
 			}
@@ -834,7 +875,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * PresenterRequest/URL factory.
 	 * @param  PresenterComponent  base
-	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!"
 	 * @param  array    array of arguments
 	 * @param  string   forward|redirect|link
 	 * @return string   URL
@@ -884,16 +925,16 @@ abstract class Presenter extends Control implements IPresenter
 			throw new InvalidLinkException("Destination must be non-empty string.");
 		}
 
-		// 3) presenter: view
+		// 3) presenter: action
 		$current = FALSE;
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
-			$view = $destination === 'this' ? $this->view : $destination;
+			$action = $destination === 'this' ? $this->action : $destination;
 			$presenter = $this->getName();
 			$presenterClass = $this->getClass();
 
 		} else {
-			$view = (string) substr($destination, $a + 1);
+			$action = (string) substr($destination, $a + 1);
 			if ($destination[0] === ':') { // absolute
 				if ($a < 2) {
 					throw new InvalidLinkException("Missing presenter name in '$destination'.");
@@ -948,29 +989,32 @@ abstract class Presenter extends Control implements IPresenter
 
 		// PROCESS ARGUMENTS
 		if (is_subclass_of($presenterClass, __CLASS__)) {
-			if ($view === '') {
-				/*$view = $presenterClass::$defaultView;*/ // in PHP 5.3
-				/**/$view = self::$defaultView;/**/
+			if ($action === '') {
+				/*$action = $presenterClass::$defaultAction;*/ // in PHP 5.3
+				/**/$action = self::$defaultAction;/**/
 			}
 
-			$current = ($view === '*' || $view === $this->view) && $presenterClass === $this->getClass(); // TODO
+			$current = ($action === '*' || $action === $this->action) && $presenterClass === $this->getClass(); // TODO
 
 			if ($args || $destination === 'this') {
 				// counterpart of run() & tryCall()
-				/*$method = $presenterClass::formatPresentMethod($view);*/ // in PHP 5.3
-				/**/$method = call_user_func(array($presenterClass, 'formatPresentMethod'), $view);/**/
+				/*$method = $presenterClass::formatActionMethod($action);*/ // in PHP 5.3
+				/**/$method = call_user_func(array($presenterClass, 'formatActionMethod'), $action);/**/
 				if (!PresenterHelpers::isMethodCallable($presenterClass, $method)) {
-					/*$method = $presenterClass::formatRenderMethod($view);*/ // in PHP 5.3
-					/**/$method = call_user_func(array($presenterClass, 'formatRenderMethod'), $view);/**/
+					$method = 'present' . $action;
+					if (!PresenterHelpers::isMethodCallable($presenterClass, $method)) {// back compatibility
+					/*$method = $presenterClass::formatRenderMethod($action);*/ // in PHP 5.3
+					/**/$method = call_user_func(array($presenterClass, 'formatRenderMethod'), $action);/**/
 					if (!PresenterHelpers::isMethodCallable($presenterClass, $method)) {
 						$method = NULL;
+					}
 					}
 				}
 
 				// convert indexed parameters to named
 				if ($method === NULL) {
 					if (array_key_exists(0, $args)) {
-						throw new InvalidLinkException("Extra parameter for '$presenter:$view'.");
+						throw new InvalidLinkException("Extra parameter for '$presenter:$action'.");
 					}
 
 				} elseif ($destination === 'this') {
@@ -991,8 +1035,8 @@ abstract class Presenter extends Control implements IPresenter
 			$args += $globalState;
 		}
 
-		// ADD VIEW & SIGNAL & FLASH
-		$args[self::VIEW_KEY] = $view;
+		// ADD ACTION & SIGNAL & FLASH
+		$args[self::ACTION_KEY] = $action;
 		if (!empty($signal)) {
 			$args[self::SIGNAL_KEY] = $component->getParamId($signal);
 			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
@@ -1015,9 +1059,9 @@ abstract class Presenter extends Control implements IPresenter
 		// CONSTRUCT URL
 		$uri = $router->constructUrl($this->lastCreatedRequest, $httpRequest);
 		if ($uri === NULL) {
-			unset($args['view']);
+			unset($args[self::ACTION_KEY]);
 			$params = urldecode(http_build_query($args, NULL, ', '));
-			throw new InvalidLinkException("No route for $presenter:$view($params)");
+			throw new InvalidLinkException("No route for $presenter:$action($params)");
 		}
 
 		// make URL relative if possible
@@ -1149,9 +1193,9 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Initializes $this->globalParams, $this->signal & $this->signalReceiver, $this->view, $this->scene. Called by run().
+	 * Initializes $this->globalParams, $this->signal & $this->signalReceiver, $this->action, $this->view. Called by run().
 	 * @return void
-	 * @throws BadRequestException if view name is not valid
+	 * @throws BadRequestException if action name is not valid
 	 */
 	private function initGlobalParams()
 	{
@@ -1173,8 +1217,8 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		// init & validate $this->view & $this->scene
-		$this->changeView(isset($selfParams[self::VIEW_KEY]) ? $selfParams[self::VIEW_KEY] : self::$defaultView);
+		// init & validate $this->action & $this->view
+		$this->changeAction(isset($selfParams[self::ACTION_KEY]) ? $selfParams[self::ACTION_KEY] : self::$defaultAction);
 
 		// init $this->signalReceiver and key 'signal' in appropriate params array
 		$this->signalReceiver = $this->getUniqueId();

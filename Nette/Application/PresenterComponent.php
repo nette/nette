@@ -248,8 +248,8 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Generates URL to presenter, view or signal.
-	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
+	 * Generates URL to presenter, action or signal.
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!"
 	 * @param  array|mixed
 	 * @return string
 	 * @throws InvalidLinkException
@@ -291,7 +291,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Redirect to another presenter, view or signal.
+	 * Redirect to another presenter, action or signal.
 	 * @param  string
 	 * @param  array
 	 * @param  int HTTP error code

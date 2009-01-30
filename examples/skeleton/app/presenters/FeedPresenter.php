@@ -25,7 +25,7 @@ class FeedPresenter extends BasePresenter
 	protected function startup()
 	{
 		// disables layout
-		$this->changeLayout(FALSE);
+		$this->setLayout(FALSE);
 		$this->relativeLinks = FALSE;
 	}
 

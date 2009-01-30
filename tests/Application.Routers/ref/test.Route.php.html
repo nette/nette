@@ -3,32 +3,32 @@
 <pre>
 
 <hr><h2>Optional presenter</h2>
-/presenter/view/12/any: no match
+/presenter/action/12/any: no match
 parsed: OK
 
 
-/presenter/view/12/: matched
+/presenter/action/12/: matched
 parsed: OK
-generated: OK <code>/presenter/view/12?test=testvalue</code>
+generated: OK <code>/presenter/action/12?test=testvalue</code>
 
 
-/presenter/view/12: matched
+/presenter/action/12: matched
 parsed: OK
-generated: OK <code>/presenter/view/12?test=testvalue</code>
+generated: OK <code>/presenter/action/12?test=testvalue</code>
 
 
-/presenter/view/1234: no match
+/presenter/action/1234: no match
 parsed: OK
 
 
-/presenter/view/: matched
+/presenter/action/: matched
 parsed: OK
-generated: OK <code>/presenter/view/?test=testvalue</code>
+generated: OK <code>/presenter/action/?test=testvalue</code>
 
 
-/presenter/view: matched
+/presenter/action: matched
 parsed: OK
-generated: OK <code>/presenter/view/?test=testvalue</code>
+generated: OK <code>/presenter/action/?test=testvalue</code>
 
 
 /presenter/: matched
@@ -77,20 +77,20 @@ parsed: OK
 
 
 <hr><h2>Extra default param</h2>
-/presenter/view/12/any: no match
+/presenter/action/12/any: no match
 parsed: OK
 
 
-/presenter/view/12: matched
+/presenter/action/12: matched
 parsed: OK
-generated: OK <code>/presenter/view/12/?test=testvalue</code>
+generated: OK <code>/presenter/action/12/?test=testvalue</code>
 
 
-/presenter/view/1234: no match
+/presenter/action/1234: no match
 parsed: OK
 
 
-/presenter/view/: no match
+/presenter/action/: no match
 parsed: OK
 
 
@@ -104,20 +104,20 @@ parsed: OK
 
 
 <hr><h2>No default params</h2>
-/presenter/view/12: matched
+/presenter/action/12: matched
 parsed: OK
 generated: OK <code></code>
 
 
 
 <hr><h2>Combined URL param</h2>
-/presenter/view/: no match
+/presenter/action/: no match
 parsed: OK
 
 
-/extrapresenter/view/: matched
+/extrapresenter/action/: matched
 parsed: OK
-generated: OK <code>/extrapresenter/view?test=testvalue</code>
+generated: OK <code>/extrapresenter/action?test=testvalue</code>
 
 
 /extradefault/default/: matched
@@ -135,10 +135,10 @@ parsed: OK
 
 
 
-<hr><h2>With default presenter and view</h2>
-/presenter/view/: matched
+<hr><h2>With default presenter and action</h2>
+/presenter/action/: matched
 parsed: OK
-generated: OK <code>/presenter/view?test=testvalue</code>
+generated: OK <code>/presenter/action?test=testvalue</code>
 
 
 /default/default/: matched
@@ -158,7 +158,7 @@ generated: OK <code>/?test=testvalue</code>
 
 
 <hr><h2>One way</h2>
-/presenter/view/: matched
+/presenter/action/: matched
 parsed: OK
 generated: OK <code></code>
 
@@ -179,9 +179,9 @@ generated: OK <code>/abc/?test=testvalue</code>
 
 
 <hr><h2>With params in query</h2>
-/view/: matched
+/action/: matched
 parsed: OK
-generated: OK <code>/view?test=testvalue&presenter=querypresenter</code>
+generated: OK <code>/action?test=testvalue&presenter=querypresenter</code>
 
 
 /: matched
@@ -191,9 +191,9 @@ generated: OK <code>/?test=testvalue&presenter=querypresenter</code>
 
 
 <hr><h2>With named params in query</h2>
-/?test=view: matched
+/?test=action: matched
 parsed: OK
-generated: OK <code>/?test=view</code>
+generated: OK <code>/?test=action</code>
 
 
 /?test=default: matched

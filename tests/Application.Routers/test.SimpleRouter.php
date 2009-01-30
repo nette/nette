@@ -32,7 +32,7 @@ $route = new SimpleRouter(array(
 $httpRequest = new MockHttpRequest;
 $httpRequest->setQuery(array(
 	'presenter' => 'myPresenter',
-	'view' => 'view',
+	'action' => 'action',
 	'id' => '12',
 	'test' => 'testvalue',
 ));

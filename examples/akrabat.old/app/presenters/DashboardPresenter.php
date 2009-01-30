@@ -39,11 +39,11 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view add *********************/
+	/********************* action add *********************/
 
 
 
-	public function presentAdd()
+	public function actionAdd()
 	{
 		if ($this->request->isMethod('post')) {
 			$artist = trim($this->request->post['artist']);
@@ -75,11 +75,11 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view edit *********************/
+	/********************* action edit *********************/
 
 
 
-	public function presentEdit($id = 0)
+	public function actionEdit($id = 0)
 	{
 		if ($this->request->isMethod('post')) {
 			$artist = trim($this->request->post['artist']);
@@ -120,11 +120,11 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view delete *********************/
+	/********************* action delete *********************/
 
 
 
-	public function presentDelete($id = 0)
+	public function actionDelete($id = 0)
 	{
 		if ($this->request->isMethod('post')) {
 			if (isset($this->request->post['delete']) && $id > 0) {
@@ -150,11 +150,11 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view logout *********************/
+	/********************* action logout *********************/
 
 
 
-	public function presentLogout()
+	public function actionLogout()
 	{
 		Environment::getUser()->signOut();
 		$this->flashMessage('You have been logged off.');
