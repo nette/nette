@@ -28,6 +28,11 @@ var nette = {
 	{
 		if (this.processing > 0) return true;
 
+		if (typeof action === 'object') {
+			sender = action;
+			action = sender.href;
+		}	
+
 		this.result = {};
 
 		// create new AJAX request

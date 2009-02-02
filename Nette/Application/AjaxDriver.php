@@ -152,7 +152,7 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	/** @deprecated */
 	public function updateSnippet($id, $content)
 	{
-		trigger_error('Deprecated: use $presenter->ajaxDriver->snippet[$id] = $content; instead.', E_USER_WARNING);
+		trigger_error('Deprecated: use $presenter->ajaxDriver->snippets[$id] = $content; instead.', E_USER_WARNING);
 		$this->data['snippets'][$id] = (string) $content;
 	}
 

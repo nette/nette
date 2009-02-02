@@ -20,7 +20,7 @@
 
 	{snippet flash}{if isset($flash)}<h2>{$flash}</h2>{/if}{/snippet}
 
-	<p><a href="{$fifteen->link('shuffle')}" onclick="{$fifteen->ajaxLink(NULL)}">Shuffle!</a></p>
+	<p><a href="{$fifteen->link('shuffle')}" onclick="return !nette.action(this)">Shuffle!</a></p>
 
 	<div class="fifteen">
 	@{? $fifteen->render() }

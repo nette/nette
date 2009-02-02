@@ -246,7 +246,7 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Is called by a component when it is about to be set new parent. Descendant can.
+	 * Is called by a component when it is about to be set new parent. Descendant can
 	 * override this method to disallow a parent change by throwing an \InvalidStateException
 	 * @param  IComponentContainer
 	 * @return void

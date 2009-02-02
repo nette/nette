@@ -60,7 +60,7 @@ class Session extends /*Nette\*/Object
 
 		// cookies
 		'session.cookie_lifetime' => 0,   // until the browser is closed
-		'session.cookie_path ' => '/',    // cookie is available within the entire domain
+		'session.cookie_path' => '/',    // cookie is available within the entire domain
 		'session.cookie_domain' => '',    // cookie is available on current subdomain only
 		'session.cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
 		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation

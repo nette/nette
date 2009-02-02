@@ -338,11 +338,9 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 
 			$s .= $this->renderControls($group);
 
-			if ($group->getOption('embedNext')) {
-				$remains .= $container->endTag() . "\n";
-
-			} else {
-				$s .= $container->endTag() . $remains . "\n";
+			$remains = $container->endTag() . "\n" . $remains;
+			if (!$group->getOption('embedNext')) {
+				$s .= $remains;
 				$remains = '';
 			}
 		}

@@ -33,13 +33,6 @@ interface IAjaxDriver
 {
 
 	/**
-	 * Generates link.
-	 * @param  string
-	 * @return string
-	 */
-	function link($url);
-
-	/**
 	 * @param  Nette\Web\IHttpResponse
 	 * @return void
 	 */

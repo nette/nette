@@ -18,7 +18,7 @@
  * @version    $Id$
  */
 
-
+/**/
 /**
  * json_encode in PHP < 5.2.0
  */
@@ -98,14 +98,10 @@ if (version_compare(PHP_VERSION , '5.2.2', '<')) {
 /**
  * Fix for namespaced classes/interfaces in PHP < 5.3
  */
-if (version_compare(PHP_VERSION , '5.3.0', '<')) {
-	function fixNamespace(& $class)
-	{
-		if ($a = strrpos($class, '\\')) {
-			$class = substr($class, $a + 1);
-		}
+function fixNamespace(& $class)
+{
+	if ($a = strrpos($class, '\\')) {
+		$class = substr($class, $a + 1);
 	}
-
-} else {
-	function fixNamespace($foo) {}
 }
+/**/

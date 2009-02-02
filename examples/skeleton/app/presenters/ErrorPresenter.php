@@ -41,7 +41,7 @@ class ErrorPresenter extends BasePresenter
 				$this->template->title = '500 Internal Server Error';
 				$this->setView('500');
 
-				/*Nette\*/Debug::processException($exception, FALSE);
+				/*Nette\*/Debug::processException($exception);
 			}
 		}
 	}

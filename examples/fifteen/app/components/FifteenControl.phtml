@@ -22,7 +22,7 @@
 	<td>
 
 	{if $clickable = $control->isClickable($x, $y)}
-	<a href="{$control->link('Click', $x, $y)}" {if $useAjax}onclick="{$control->ajaxLink(NULL)}"{/if}>
+	<a href="{link Click, $x, $y}" {if $useAjax}onclick="return !nette.action(this)"{/if}>
 	{/if}
 
 	<img src="{$baseUri}images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
