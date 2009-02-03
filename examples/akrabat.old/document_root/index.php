@@ -7,7 +7,7 @@ define('WWW_DIR', dirname(__FILE__));
 define('APP_DIR', WWW_DIR . '/../app');
 
 // absolute filesystem path to the libraries
-define('LIBS_DIR', WWW_DIR . '/../libs');
+define('LIBS_DIR', WWW_DIR . '/../../../3rdParty');
 
 // load bootstrap file
 require APP_DIR . '/bootstrap.php';

@@ -61,3 +61,27 @@ div.flash {
 	padding: 1em;
 	margin: 1em 0;
 }
+
+
+table.grid {
+	padding: 0;
+	margin: 0;
+	border-collapse:collapse;
+}
+
+table.grid td, table.grid th {
+	color: #525b37;
+	background: #fff;
+	border: 1px solid #d1cdab;
+	padding: 6px 6px 6px 12px;
+}
+
+table.grid th {
+	color: #505767;
+	background: #e3e9ba;
+	text-align: left;
+}
+
+table.grid .alt td {
+	background: #f8f8f0;
+}
