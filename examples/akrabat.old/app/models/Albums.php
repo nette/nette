@@ -2,22 +2,55 @@
 
 
 /**
- * Albums
- *
- * @sql
- *  CREATE TABLE [albums] (
- *  [id] INTEGER  NOT NULL PRIMARY KEY,
- *  [artist] VARCHAR(100)  NOT NULL,
- *  [title] VARCHAR(100)  NOT NULL
- *  );
+ * Albums model.
  */
-class Albums extends DibiTableX
+class Albums extends Object
 {
+	/** @var string */
+	private $table = 'albums';
 
-	protected $blankRow = array(
-		'artist' => '',
-		'title' => '',
-	);
+	/** @var DibiConnection */
+	private $connection;
 
+
+	public function __construct()
+	{
+		$this->connection = dibi::getConnection();
+	}
+
+
+
+	public function findAll()
+	{
+		return $this->connection->select('*')->from($this->table);
+	}
+
+
+
+	public function find($id)
+	{
+		return $this->connection->select('*')->from($this->table)->where('id=%i', $id);
+	}
+
+
+
+	public function update($id, array $data)
+	{
+		return $this->connection->update($this->table, $data)->where('id=%i', $id)->execute();
+	}
+
+
+
+	public function insert(array $data)
+	{
+		return $this->connection->insert($this->table, $data)->execute(dibi::IDENTIFIER);
+	}
+
+
+
+	public function delete($id)
+	{
+		return $this->connection->delete($this->table)->where('id=%i', $id)->execute();
+	}
 
 }

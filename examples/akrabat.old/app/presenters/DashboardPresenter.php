@@ -34,7 +34,7 @@ class DashboardPresenter extends BasePresenter
 		$this->template->title = "My Albums";
 
 		$album = new Albums;
-		$this->template->albums = $album->findAll('artist', 'title');
+		$this->template->albums = $album->findAll()->orderBy('artist')->orderBy('title');
 	}
 
 
@@ -65,8 +65,10 @@ class DashboardPresenter extends BasePresenter
 		$this->template->title = "Add New Album";
 
 		// set up an "empty" album
-		$album = new Albums();
-		$this->template->album = $album->createBlank();
+		$this->template->album = (object) array(
+			'artist' => '',
+			'title' => '',
+		);
 
 		// additional view fields required by form
 		$this->template->action = $this->link('add');
@@ -81,34 +83,31 @@ class DashboardPresenter extends BasePresenter
 
 	public function actionEdit($id = 0)
 	{
+		if (!$id) {
+			$this->redirect('add');
+		}
+
 		if ($this->request->isMethod('post')) {
 			$artist = trim($this->request->post['artist']);
 			$title = trim($this->request->post['title']);
 
-			if ($id !== 0) {
-				if ($artist != '' && $title != '') {
-					$data = array(
-						'artist' => $artist,
-						'title'  => $title,
-					);
-					$album = new Albums();
-					$album->update($id, $data);
+			if ($artist != '' && $title != '') {
+				$data = array(
+					'artist' => $artist,
+					'title'  => $title,
+				);
+				$album = new Albums();
+				$album->update($id, $data);
 
-					$this->flashMessage('The album has been updated.');
-					$this->redirect('default');
-				}
+				$this->flashMessage('The album has been updated.');
+				$this->redirect('default');
 			}
 		}
 
 		$album = new Albums();
-		if ($id > 0) {
-			$this->template->album = $album->fetch($id);
-			if (!$this->template->album) {
-				throw new /*Nette\Application\*/BadRequestException('Record not found');
-			}
-
-		} else {
-			$this->template->album = $album->createBlank();
+		$this->template->album = $album->find($id)->fetch();
+		if (!$this->template->album) {
+			throw new /*Nette\Application\*/BadRequestException('Record not found');
 		}
 
 		$this->template->title = "Edit Album";
@@ -138,7 +137,7 @@ class DashboardPresenter extends BasePresenter
 		if ($id > 0) {
 			// only render if we have an id and can find the album.
 			$album = new Albums();
-			$this->template->album = $album->fetch($id);
+			$this->template->album = $album->find($id)->fetch();
 			if (!$this->template->album) {
 				throw new /*Nette\Application\*/BadRequestException('Record not found');
 			}

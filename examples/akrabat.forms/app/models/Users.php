@@ -4,17 +4,9 @@
 
 
 /**
- * Users
- *
- * @sql
- *  CREATE TABLE [users] (
- *  [id] INTEGER  NULL PRIMARY KEY,
- *  [username] VARCHAR(50)  UNIQUE NOT NULL,
- *  [password] VARCHAR(50)  NOT NULL,
- *  [real_name] VARCHAR(100)  NOT NULL
- *  );
+ * Users authenticator.
  */
-class Users extends DibiTableX implements /*Nette\Security\*/IAuthenticator
+class Users extends Object implements /*Nette\Security\*/IAuthenticator
 {
 
 	/**
@@ -25,8 +17,11 @@ class Users extends DibiTableX implements /*Nette\Security\*/IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		$username = $credentials[self::USERNAME];
-		$row = $this->fetch(array('username' => $username));
+		$username = strtolower($credentials[self::USERNAME]);
+		$password = strtolower($credentials[self::PASSWORD]);
+
+		$row = dibi::select('*')->from('users')->where('username=%s', $username)->fetch();
+
 		if (!$row) {
 			throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 		}

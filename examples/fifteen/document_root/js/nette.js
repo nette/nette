@@ -31,7 +31,7 @@ var nette = {
 		if (typeof action === 'object') {
 			sender = action;
 			action = sender.href;
-		}	
+		}
 
 		this.result = {};
 
