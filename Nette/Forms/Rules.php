@@ -42,13 +42,16 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	);
 
 	/** @var array of Rule */
-	protected $rules = array();
+	private $rules = array();
+
+	/** @var Rules */
+	private $parent;
 
 	/** @var array */
-	protected $toggles = array();
+	private $toggles = array();
 
 	/** @var IFormControl */
-	protected $control;
+	private $control;
 
 
 
@@ -68,23 +71,8 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
-		return $this->addRuleFor($this->control, $operation, $message, $arg);
-	}
-
-
-
-	/**
-	 * Adds a validation rule for the specified control.
-	 * @param  IFormControl form control
-	 * @param  mixed      rule type
-	 * @param  string     message to display for invalid data
-	 * @param  mixed      optional rule arguments
-	 * @return Rules      provides a fluent interface
-	 */
-	public function addRuleFor(IFormControl $control, $operation, $message = NULL, $arg = NULL)
-	{
 		$rule = new Rule;
-		$rule->control = $control;
+		$rule->control = $this->control;
 		$rule->operation = $operation;
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
@@ -95,9 +83,19 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 			$rule->message = $message;
 		}
 
-		$control->notifyRule($rule);
+		$this->control->notifyRule($rule);
 		$this->rules[] = $rule;
 		return $this;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function addRuleFor()
+	{
+		throw new DeprecatedException('Method addRuleFor() is deprecated. Use addConditionOn() & addRule() construction.');
 	}
 
 
@@ -131,10 +129,38 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 		$rule->arg = $arg;
 		$rule->type = Rule::CONDITION;
 		$rule->subRules = new self($this->control);
+		$rule->subRules->parent = $this;
 
 		$control->notifyRule($rule);
 		$this->rules[] = $rule;
 		return $rule->subRules;
+	}
+
+
+
+	/**
+	 * Adds a else statement.
+	 * @return Rules      else branch
+	 */
+	public function elseCondition()
+	{
+		$rule = clone end($this->parent->rules);
+		$rule->isNegative = !$rule->isNegative;
+		$rule->subRules = new self($this->parent->control);
+		$rule->subRules->parent = $this->parent;
+		$this->parent->rules[] = $rule;
+		return $rule->subRules;
+	}
+
+
+
+	/**
+	 * Ends current validation condition.
+	 * @return Rules      parent branch
+	 */
+	public function endCondition()
+	{
+		return $this->parent;
 	}
 
 
