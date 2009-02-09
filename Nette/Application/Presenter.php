@@ -185,7 +185,9 @@ abstract class Presenter extends Control implements IPresenter
 			$this->startup();
 			// calls $this->action{action}();
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
-			$this->tryCall('present'. $this->getAction(), $this->params); // back compatibility
+			if ($this->tryCall('present'. $this->getAction(), $this->params)) { // deprecated
+				trigger_error('Method name present' . $this->getAction() . '() is deprecated; use ' . $this->formatActionMethod($this->getAction()) . '() instead.', E_USER_WARNING);
+			}
 
 			if ($this->autoCanonicalize) {
 				$this->canonicalize();
@@ -462,6 +464,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
+		trigger_error('Presenter::changeView() is deprecated; use Presenter::setView(...) instead.', E_USER_WARNING);
 		$this->view = (string) $view;
 	}
 
@@ -472,6 +475,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function getScene()
 	{
+		trigger_error('Presenter::getScene() is deprecated; use Presenter::getView() instead.', E_USER_WARNING);
 		return $this->view;
 	}
 
@@ -482,6 +486,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeScene($view)
 	{
+		trigger_error('Presenter::changeScene() is deprecated; use Presenter::setView(...) instead.', E_USER_WARNING);
 		$this->view = (string) $view;
 	}
 
@@ -492,6 +497,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeLayout($layout)
 	{
+		trigger_error('Presenter::changeLayout() is deprecated; use Presenter::setLayout(...) instead.', E_USER_WARNING);
 		$this->layout = (string) $layout;
 	}
 
