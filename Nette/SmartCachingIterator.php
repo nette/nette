@@ -38,7 +38,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 
 	public function __construct($iterator)
 	{
-		if (is_array($iterator)) {
+		if (is_array($iterator) || $iterator instanceof /*\*/stdClass) {
 			parent::__construct(new /*\*/ArrayIterator($iterator), 0);
 
 		} elseif ($iterator instanceof /*\*/IteratorAggregate) {
@@ -155,5 +155,82 @@ class SmartCachingIterator extends /*\*/CachingIterator
 		parent::rewind();
 		$this->counter = parent::valid() ? 1 : 0;
 	}
+
+
+
+	/********************* Nette\Object behaviour ****************d*g**/
+
+
+
+	/**
+	 * Call to undefined method.
+	 *
+	 * @param  string  method name
+	 * @param  array   arguments
+	 * @return mixed
+	 * @throws \MemberAccessException
+	 */
+	public function __call($name, $args)
+	{
+		return ObjectMixin::call($this, $name, $args);
+	}
+
+
+
+	/**
+	 * Returns property value. Do not call directly.
+	 *
+	 * @param  string  property name
+	 * @return mixed   property value
+	 * @throws \MemberAccessException if the property is not defined.
+	 */
+	public function &__get($name)
+	{
+		return ObjectMixin::get($this, $name);
+	}
+
+
+
+	/**
+	 * Sets value of a property. Do not call directly.
+	 *
+	 * @param  string  property name
+	 * @param  mixed   property value
+	 * @return void
+	 * @throws \MemberAccessException if the property is not defined or is read-only
+	 */
+	public function __set($name, $value)
+	{
+		return ObjectMixin::set($this, $name, $value);
+	}
+
+
+
+	/**
+	 * Is property defined?
+	 *
+	 * @param  string  property name
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		return ObjectMixin::has($this, $name);
+	}
+
+
+
+	/**
+	 * Access to undeclared property.
+	 *
+	 * @param  string  property name
+	 * @return void
+	 * @throws \MemberAccessException
+	 */
+	public function __unset($name)
+	{
+		$class = get_class($this);
+		throw new /*\*/MemberAccessException("Cannot unset an property $class::\$$name.");
+	}
+
 
 }

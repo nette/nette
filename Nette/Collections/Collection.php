@@ -287,19 +287,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __call($name, $args)
 	{
-		$class = get_class($this);
-
-		if ($name === '') {
-			throw new /*\*/MemberAccessException("Call to class '$class' method without name.");
-		}
-
-		if (class_exists(/*Nette\*/'Object', FALSE) && ($cb = /*Nette\*/Object::extensionMethod("$class::$name"))) {
-			array_unshift($args, $this);
-			/**/fixCallback($cb);/**/
-			return call_user_func_array($cb, $args);
-		}
-
-		throw new /*\*/MemberAccessException("Call to undefined method $class::$name().");
+		return ObjectMixin::call($this, $name, $args);
 	}
 
 
@@ -324,8 +312,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function &__get($name)
 	{
-		$class = get_class($this);
-		throw new /*\*/MemberAccessException("Cannot read an undeclared property $class::\$$name.");
+		return ObjectMixin::get($this, $name);
 	}
 
 
@@ -337,8 +324,20 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __set($name, $value)
 	{
-		$class = get_class($this);
-		throw new /*\*/MemberAccessException("Cannot assign to an undeclared property $class::\$$name.");
+		return ObjectMixin::set($this, $name, $value);
+	}
+
+
+
+	/**
+	 * Is property defined?
+	 *
+	 * @param  string  property name
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		return ObjectMixin::has($this, $name);
 	}
 
 
@@ -350,8 +349,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __unset($name)
 	{
-		$class = get_class($this);
-		throw new /*\*/MemberAccessException("Cannot unset an property $class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot unset an property $this->class::\$$name.");
 	}
 
 }

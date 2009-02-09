@@ -25,7 +25,7 @@ foreach ($iterator = new SmartCachingIterator($arr) as $k => $v)
 		echo "\n";
 		echo "  inner first: "; Debug::dump($innerIterator->isFirst());
 		echo "  inner last: "; Debug::dump($innerIterator->isLast());
-		echo "  inner counter: "; Debug::dump($innerIterator->getCounter());
+		echo "  inner counter: "; Debug::dump($innerIterator->counter);
 	}
 }
 
