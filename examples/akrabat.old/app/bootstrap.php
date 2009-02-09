@@ -13,7 +13,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 
-// Step 2: Configure and setup application environment
+// Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable(E_ALL | E_STRICT);
 
@@ -31,17 +31,17 @@ $loader->addDirectory(APP_DIR);
 $loader->addDirectory(LIBS_DIR);
 $loader->register();
 
-// 2e) establish database connection
-dibi::connect(Environment::getConfig('database'));
 
 
-
-// Step 3: Get the front controller
+// Step 3: Configure application
+// 3a) get and setup a front controller
 $application = Environment::getApplication();
 
+// 3b) establish database connection
+$application->onStartup[] = 'Albums::initialize';
 
 
-// Step 4: Setup application routes
+// Step 4: Setup application router
 $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(

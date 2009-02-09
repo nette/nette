@@ -13,6 +13,13 @@ class Albums extends Object
 	private $connection;
 
 
+	public static function initialize()
+	{
+		dibi::connect(Environment::getConfig('database'));
+	}
+
+
+
 	public function __construct()
 	{
 		$this->connection = dibi::getConnection();

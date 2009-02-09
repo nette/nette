@@ -22,7 +22,7 @@ require_once LIBS_DIR . '/Nette/loader.php';
 
 
 
-// Step 2: Configure and setup application environment
+// Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable();
 
@@ -41,15 +41,15 @@ $session->setSavePath(APP_DIR . '/sessions/');
 
 
 
-// Step 3: Get the front controller
+// Step 3: Configure application
+// 3a) get and setup a front controller
 $application = Environment::getApplication();
-// 2b) setup front controller
 $application->errorPresenter = 'Error';
 //$application->catchExceptions = TRUE;
 
 
 
-// Step 4: Setup application routes
+// Step 4: Setup application router
 $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(

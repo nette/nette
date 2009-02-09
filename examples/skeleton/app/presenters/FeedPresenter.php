@@ -26,7 +26,7 @@ class FeedPresenter extends BasePresenter
 	{
 		// disables layout
 		$this->setLayout(FALSE);
-		$this->relativeLinks = FALSE;
+		$this->absoluteUrls = TRUE;
 	}
 
 }

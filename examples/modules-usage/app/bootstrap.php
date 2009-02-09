@@ -13,7 +13,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 
-// Step 2: Configure and setup application environment
+// Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable(E_ALL | E_STRICT);
 
@@ -32,12 +32,12 @@ $loader->register();
 
 
 
-// Step 3: Get the front controller
+// Step 3: Configure application
 $application = Environment::getApplication();
 
 
 
-// Step 4: Setup application routes
+// Step 4: Setup application router
 $router = $application->getRouter();
 
 $router[] = new Route('index.php', array(

@@ -80,8 +80,8 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = TRUE;
 
-	/** @var bool  relativise links? */
-	public $relativeLinks = TRUE;
+	/** @var bool  use absolute Urls or paths? */
+	public $absoluteUrls = FALSE;
 
 	/** @var array */
 	private $globalParams;
@@ -1065,7 +1065,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// make URL relative if possible
-		if ($mode === 'link' && $this->relativeLinks) {
+		if ($mode === 'link' && !$this->absoluteUrls) {
 			$hostUri = $httpRequest->getUri()->hostUri;
 			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
 				$uri = substr($uri, strlen($hostUri));

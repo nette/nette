@@ -57,11 +57,11 @@ class Application extends /*Nette\*/Object
 	/** @var array of function(Application $sender) */
 	public $onStartup;
 
-	/** @var array of function(Application $sender) */
+	/** @var array of function(Application $sender, \Exception $e = NULL) */
 	public $onShutdown;
 
-	/** @var array of function(Application $sender) */
-	public $onNewRequest;
+	/** @var array of function(Application $sender, PresenterRequest $request) */
+	public $onRequest;
 
 	/** @var array of function(Application $sender, \Exception $e) */
 	public $onError;
@@ -123,11 +123,11 @@ class Application extends /*Nette\*/Object
 		$request = NULL;
 		$hasError = FALSE;
 		do {
-			if (count($this->requests) > self::$maxLoop) {
-				throw new ApplicationException('Too many loops detected in application life cycle.');
-			}
-
 			try {
+				if (count($this->requests) > self::$maxLoop) {
+					throw new ApplicationException('Too many loops detected in application life cycle.');
+				}
+
 				if (!$request) {
 					// Routing
 					$this->onStartup($this);
@@ -144,7 +144,7 @@ class Application extends /*Nette\*/Object
 				}
 
 				$this->requests[] = $request;
-				$this->onNewRequest($this);
+				$this->onRequest($this, $request);
 
 				// Instantiate presenter
 				$presenter = $request->getPresenterName();
@@ -174,6 +174,7 @@ class Application extends /*Nette\*/Object
 
 			} catch (AbortException $e) {
 				// not error, application is correctly terminated
+				unset($e);
 				break;
 
 			} catch (/*\*/Exception $e) {
@@ -220,7 +221,7 @@ class Application extends /*Nette\*/Object
 			}
 		} while (1);
 
-		$this->onShutdown($this);
+		$this->onShutdown($this, isset($e) ? $e : NULL);
 	}
 
 

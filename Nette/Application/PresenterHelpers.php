@@ -30,7 +30,7 @@
  * @package    Nette\Application
  * @internal
  */
-class PresenterHelpers
+final class PresenterHelpers
 {
 	/** @var array getPersistentParams cache */
 	private static $ppCache = array();
@@ -43,6 +43,16 @@ class PresenterHelpers
 
 	/** @var array getMethodParams cache */
 	private static $mpCache = array();
+
+
+
+	/**
+	 * Static class - cannot be instantiated.
+	 */
+	final public function __construct()
+	{
+		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+	}
 
 
 
