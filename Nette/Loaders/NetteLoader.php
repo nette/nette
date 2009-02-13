@@ -151,6 +151,7 @@ class NetteLoader extends AutoLoader
 		'notimplementedexception' => '/exceptions.php',
 		'notsupportedexception' => '/exceptions.php',
 		'object' => '/Object.php',
+		'objectmixin' => '/ObjectMixin.php',
 		'paginator' => '/Paginator.php',
 		'permission' => '/Security/Permission.php',
 		'presenter' => '/Application/Presenter.php',
