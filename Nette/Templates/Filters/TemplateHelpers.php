@@ -92,7 +92,7 @@ final class TemplateHelpers
 	 */
 	public static function strip($s)
 	{
-		return preg_replace('#\\s+#', ' ', $s);
+		return trim(preg_replace('#\\s+#', ' ', $s));
 	}
 
 
