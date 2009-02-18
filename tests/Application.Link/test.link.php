@@ -124,6 +124,9 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 		$uri = $this->link('product?x=1&y=2#fragment');
 		echo "1.11 $uri\n\n";
 
+		$uri = $this->link('//product?x=1&y=2#fragment');
+		echo "1.12 $uri\n\n";
+
 
 
 
@@ -205,6 +208,9 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 		$uri = $this->mycontrol->link('this?x=1&round=1#frag');
 		echo "3.12 $uri\n\n";
+
+		$uri = $this->mycontrol->link('//this?x=1&round=1#frag');
+		echo "3.13 $uri\n\n";
 	}
 
 
@@ -232,6 +238,7 @@ Environment::setVariable('appDir', dirname(__FILE__));
 $httpRequest = Environment::getHttpRequest();
 $uri = $httpRequest->getUri(FALSE);
 $uri->scriptPath = '/index.php';
+$uri->host = 'localhost';
 
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());

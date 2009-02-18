@@ -905,7 +905,7 @@ abstract class Presenter extends Control implements IPresenter
 		// PARSE DESTINATION
 		// 1) fragment
 		$a = strpos($destination, '#');
-		if ($a == FALSE) {
+		if ($a === FALSE) {
 			$fragment = '';
 		} else {
 			$fragment = substr($destination, $a);
@@ -919,6 +919,16 @@ abstract class Presenter extends Control implements IPresenter
 			$destination = substr($destination, 0, $a);
 		}
 
+		// 3) URL scheme
+		$a = strpos($destination, '//');
+		if ($a === FALSE) {
+			$scheme = FALSE;
+		} else {
+			$scheme = substr($destination, 0, $a);
+			$destination = substr($destination, $a + 2);
+		}
+
+		// 4) signal or empty
 		if (!($component instanceof Presenter) || substr($destination, -1) === '!') {
 			$signal = rtrim($destination, '!');
 			if ($signal == NULL) {  // intentionally ==
@@ -931,7 +941,7 @@ abstract class Presenter extends Control implements IPresenter
 			throw new InvalidLinkException("Destination must be non-empty string.");
 		}
 
-		// 3) presenter: action
+		// 5) presenter: action
 		$current = FALSE;
 		$a = strrpos($destination, ':');
 		if ($a === FALSE) {
@@ -1071,7 +1081,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// make URL relative if possible
-		if ($mode === 'link' && !$this->absoluteUrls) {
+		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
 			$hostUri = $httpRequest->getUri()->hostUri;
 			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
 				$uri = substr($uri, strlen($hostUri));
