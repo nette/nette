@@ -83,7 +83,10 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 			$rule->message = $message;
 		}
 
-		$this->control->notifyRule($rule);
+		if ($this->parent === NULL) {
+			// notify only direct rules
+			$this->control->notifyRule($rule);
+		}
 		$this->rules[] = $rule;
 		return $this;
 	}
@@ -131,7 +134,6 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 		$rule->subRules = new self($this->control);
 		$rule->subRules->parent = $this;
 
-		$control->notifyRule($rule);
 		$this->rules[] = $rule;
 		return $rule->subRules;
 	}

@@ -87,21 +87,6 @@ class FileUpload extends FormControl
 
 
 	/**
-	 * New rule or condition notification callback.
-	 * @param  Rule
-	 * @return void
-	 */
-	public function notifyRule(Rule $rule)
-	{
-		if ($rule->type === Rule::VALIDATOR && is_string($rule->operation) && strcasecmp($rule->operation, ':mimeType') === 0) {
-			$this->control->accept = $rule->arg;
-		}
-		parent::notifyRule($rule);
-	}
-
-
-
-	/**
 	 * Filled validator: has been any file uploaded?
 	 * @param  IFormControl
 	 * @return bool

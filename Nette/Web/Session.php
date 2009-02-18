@@ -255,15 +255,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function setId($id)
 	{
-		if (defined('SID')) {
-			throw new /*\*/InvalidStateException('A session had already been started - the session ID must be set first.');
-		}
-
-		if (!is_string($id) || $id === '') {
-			throw new /*\*/InvalidArgumentException('You must provide a non-empty string as a session ID.');
-		}
-
-		session_id($id);
+		throw new DeprecatedException('Method '.__METHOD__.'() is deprecated.');
 	}
 
 

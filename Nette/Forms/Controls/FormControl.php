@@ -504,7 +504,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public function notifyRule(Rule $rule)
 	{
-		if ($rule->type === Rule::VALIDATOR && is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
+		if (is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
 			$this->setOption('required', TRUE);
 		}
 	}
