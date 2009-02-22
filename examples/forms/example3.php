@@ -8,6 +8,8 @@
 
 
 require_once '../../Nette/loader.php';
+
+// set_include_path();
 include_once 'Zend/Translate.php';
 
 if (!class_exists('Zend_Translate')) {
@@ -18,7 +20,7 @@ if (!class_exists('Zend_Translate')) {
 /*use Nette\Debug;*/
 /*use Nette\Web\Html;*/
 
-Debug::enable(E_ALL | E_STRICT);
+Debug::enable();
 
 
 class MyTranslator extends Zend_Translate implements /*Nette\*/ITranslator

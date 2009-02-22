@@ -13,7 +13,7 @@ require_once '../../Nette/loader.php';
 /*use Nette\Forms\Form;*/
 /*use Nette\Debug;*/
 
-Debug::enable(E_ALL | E_STRICT);
+Debug::enable();
 
 
 $countries = array(
