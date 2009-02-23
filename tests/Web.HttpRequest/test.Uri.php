@@ -52,6 +52,12 @@ try {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
 
+echo "<h1>isEqual?</h1>\n";
+
+$uri = new Uri('http://exampl%65.COM?text=foo%20bar+foo');
+$uri->canonicalize();
+Debug::dump($uri->isEqual('http://example.com/?text=foo+bar%20foo'));
+
 
 /*
 // not supported by parse_url()

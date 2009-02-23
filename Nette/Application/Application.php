@@ -110,15 +110,6 @@ class Application extends /*Nette\*/Object
 			}
 		}
 
-		// default router
-		$router = $this->getRouter();
-		if ($router instanceof MultiRouter && !count($router)) {
-			$router[] = new SimpleRouter(array(
-				'presenter' => 'Default',
-				'action' => 'default',
-			));
-		}
-
 		// dispatching
 		$request = NULL;
 		$hasError = FALSE;
@@ -129,9 +120,18 @@ class Application extends /*Nette\*/Object
 				}
 
 				if (!$request) {
-					// Routing
 					$this->onStartup($this);
 
+					// default router
+					$router = $this->getRouter();
+					if ($router instanceof MultiRouter && !count($router)) {
+						$router[] = new SimpleRouter(array(
+							'presenter' => 'Default',
+							'action' => 'default',
+						));
+					}
+
+					// routing
 					$request = $router->match($httpRequest);
 					if (!($request instanceof PresenterRequest)) {
 						$request = NULL;

@@ -170,7 +170,7 @@ class Uri extends /*Nette\*/Object
 		// compare query strings
 		$part = (string) strtok('?#');
 		if ($part !== '') {
-			$tmp = explode('&', self::unescape($part, '%&'));
+			$tmp = explode('&', self::unescape(strtr($part, '+', ' '), '%&'));
 			sort($tmp);
 			$part = implode('&', $tmp);
 		}
@@ -190,7 +190,7 @@ class Uri extends /*Nette\*/Object
 		$this->host = strtolower(rawurldecode($this->host));
 
 		if ($this->query !== '') {
-			$tmp = explode('&', self::unescape($this->query, '%&'));
+			$tmp = explode('&', self::unescape(strtr($this->query, '+', ' '), '%&'));
 			sort($tmp);
 			$this->query = implode('&', $tmp);
 		}
