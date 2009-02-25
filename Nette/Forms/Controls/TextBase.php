@@ -57,7 +57,7 @@ abstract class TextBase extends FormControl
 		foreach ($this->filters as $filter) {
 			$value = (string) call_user_func($filter, $value);
 		}
-		$this->tmpValue = $this->value = $value === $this->emptyValue ? '' : $value;
+		$this->tmpValue = $this->value = $value === $this->translate($this->emptyValue) ? '' : $value;
 	}
 
 

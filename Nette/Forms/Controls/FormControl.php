@@ -355,10 +355,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 		$label->for = $this->getHtmlId();
 		$text = $this->caption;
 		if (is_string($text)) {
-			if ($this->getTranslator() !== NULL) {
-				$text = $this->getTranslator()->translate($text);
-			}
-			$label->setText($text);
+			$label->setText($this->translate($text));
 		} else {
 			$label->add($text);
 		}

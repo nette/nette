@@ -94,7 +94,7 @@ class TextInput extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->value = $this->value === '' ? $this->emptyValue : $this->tmpValue;
+		$control->value = $this->value === '' ? $this->translate($this->emptyValue) : $this->tmpValue;
 		return $control;
 	}
 

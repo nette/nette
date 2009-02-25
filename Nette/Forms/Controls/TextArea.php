@@ -60,7 +60,7 @@ class TextArea extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->setText($this->value === '' ? $this->emptyValue : $this->tmpValue);
+		$control->setText($this->value === '' ? $this->translate($this->emptyValue) : $this->tmpValue);
 		return $control;
 	}
 
