@@ -33,6 +33,8 @@ final class Framework
 {
 
 	/**#@+ Nette Framework version identification */
+	const NAME = 'Nette Framework';
+
 	const VERSION = '0.8';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';

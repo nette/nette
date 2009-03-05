@@ -346,7 +346,7 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Returns a list of roles that a user has been granted.
+	 * Returns a list of effective roles that a user has been granted.
 	 * @return array
 	 */
 	public function getRoles()
@@ -362,7 +362,7 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Is a user in the specified role?
+	 * Is a user in the specified effective role?
 	 * @param  string
 	 * @return bool
 	 */
@@ -374,7 +374,7 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Has a user access to the Resource?
+	 * Has a user effective access to the Resource?
 	 * If $resource is NULL, then the query applies to all resources.
 	 * @param  string  resource
 	 * @param  string  privilege
