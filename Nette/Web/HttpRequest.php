@@ -435,6 +435,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$gpc = (bool) get_magic_quotes_gpc();
 		$enc = (bool) $this->encoding;
 		$old = error_reporting(0);
+		$nonChars = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
 
 
 		// remove fucking quotes and check (and optionally convert) encoding
@@ -449,7 +450,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 						$k = stripslashes($k);
 					}
 
-					if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) {
+					if ($enc && is_string($k) && (preg_match($nonChars, $k) || preg_last_error())) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -471,7 +472,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
 							}
 						}
-						$list[$key][$k] = $v;
+						$list[$key][$k] = preg_replace($nonChars, '', $v);
 					}
 				}
 			}
@@ -483,7 +484,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				if ($enc && is_string($k) && (preg_match($nonChars, $k) || preg_last_error())) continue;
 				$v['@'] = & $this->files[$k];
 				$list[] = $v;
 			}
@@ -498,14 +499,14 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($enc) {
-					$v['name'] = iconv('UTF-8', 'UTF-8//IGNORE', $v['name']);
+					$v['name'] = preg_replace($nonChars, '', iconv('UTF-8', 'UTF-8//IGNORE', $v['name']));
 				}
 				$v['@'] = new HttpUploadedFile($v);
 				continue;
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if ($enc && is_string($k) && $k !== iconv('UTF-8', 'UTF-8//IGNORE', $k)) continue;
+				if ($enc && is_string($k) && (preg_match($nonChars, $k) || preg_last_error())) continue;
 				$list[] = array(
 					'name' => $v['name'][$k],
 					'type' => $v['type'][$k],

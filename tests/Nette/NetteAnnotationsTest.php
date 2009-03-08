@@ -26,7 +26,7 @@ require_once '../../Nette/loader.php';
  * @title(value ="Johno's addendum", mode=True)
  * @title( value= 'One, Two', mode= true or false)
  * @title( value = 'Three (Four)', mode = 'false')
- * @components(game, form, item 1, item 2)
+ * @components(item 1)
  * @persistent(true)
  * @persistent(FALSE)
  * @renderable
@@ -66,6 +66,7 @@ class NetteAnnotationsTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("true or false", $tmp["title"][1]->mode);
 		$this->assertEquals("Three (Four)", $tmp["title"][2]->value);
 		$this->assertEquals("false", $tmp["title"][2]->mode);
+		$this->assertEquals("item 1", $tmp["components"][0]);
 		$this->assertTrue($tmp["persistent"][0]);
 		$this->assertFalse($tmp["persistent"][1]);
 		$this->assertTrue($tmp["renderable"][0]);

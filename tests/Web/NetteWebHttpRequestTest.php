@@ -93,66 +93,106 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testInvalidEncoding()
 	{
-		define("INVALID", "\x76\xC4\xC5\xBE");
+		define('INVALID', "\x76\xC4\xC5\xBE");
+		define('CONTROL_CHARACTERS', "A\x00B\x80C");
 
 		$_GET = array(
-			'test' => INVALID,
-			INVALID => INVALID,
+			'invalid' => INVALID,
+			'control' => CONTROL_CHARACTERS,
+			INVALID => 1,
+			CONTROL_CHARACTERS => 1,
 			'array' => array(INVALID => 1),
 		);
 
 		$_POST = array(
-			'test' => INVALID,
-			INVALID => INVALID,
+			'invalid' => INVALID,
+			'control' => CONTROL_CHARACTERS,
+			INVALID => 1,
+			CONTROL_CHARACTERS => 1,
+			'array' => array(INVALID => 1),
+		);
+
+		$_COOKIE = array(
+			'invalid' => INVALID,
+			'control' => CONTROL_CHARACTERS,
+			INVALID => 1,
+			CONTROL_CHARACTERS => 1,
 			'array' => array(INVALID => 1),
 		);
 
 		$_FILES = array(
 			INVALID => array(
-				'name' => INVALID,
-				'type' => 'text/plain',
-				'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
-				'error' => 0,
-				'size' => 209,
-			),
-			'file1' => array(
 				'name' => 'readme.txt',
 				'type' => 'text/plain',
 				'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
 				'error' => 0,
 				'size' => 209,
 			),
-		);
-
-		$_COOKIE = array(
-			'test' => INVALID,
-			INVALID => INVALID,
-			'array' => array(INVALID => 1),
+			CONTROL_CHARACTERS => array(
+				'name' => 'readme.txt',
+				'type' => 'text/plain',
+				'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+				'error' => 0,
+				'size' => 209,
+			),
+			'file1' => array(
+				'name' => INVALID,
+				'type' => 'text/plain',
+				'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+				'error' => 0,
+				'size' => 209,
+			),
 		);
 
 		$request = new HttpRequest;
 
-		$this->assertEquals(INVALID, $request->getQuery('test'));
-		$this->assertEquals(INVALID, $request->getQuery(INVALID));
-		$this->assertEquals("1", $request->query['array'][INVALID]);
-		$this->assertEquals(INVALID, $request->getPost('test'));
-		$this->assertEquals(INVALID, $request->getPost(INVALID));
-		$this->assertEquals("1", $request->post['array'][INVALID]);
-		$this->assertEquals(INVALID, $request->getCookie('test'));
-		$this->assertEquals(INVALID, $request->getCookie(INVALID));
-		$this->assertEquals("1", $request->cookies['array'][INVALID]);
+		$this->assertEquals(INVALID, $request->getQuery('invalid'));
+		$this->assertEquals(CONTROL_CHARACTERS, $request->getQuery('control'));
+		$this->assertEquals('1', $request->getQuery(INVALID));
+		$this->assertEquals('1', $request->getQuery(CONTROL_CHARACTERS));
+		$this->assertEquals('1', $request->query['array'][INVALID]);
 
+		$this->assertEquals(INVALID, $request->getPost('invalid'));
+		$this->assertEquals(CONTROL_CHARACTERS, $request->getPost('control'));
+		$this->assertEquals('1', $request->getPost(INVALID));
+		$this->assertEquals('1', $request->getPost(CONTROL_CHARACTERS));
+		$this->assertEquals('1', $request->post['array'][INVALID]);
+
+		$this->assertEquals(INVALID, $request->getCookie('invalid'));
+		$this->assertEquals(CONTROL_CHARACTERS, $request->getCookie('control'));
+		$this->assertEquals('1', $request->getCookie(INVALID));
+		$this->assertEquals('1', $request->getCookie(CONTROL_CHARACTERS));
+		$this->assertEquals('1', $request->cookies['array'][INVALID]);
+
+		$this->assertType('HttpUploadedFile', $request->getFile(INVALID));
+		$this->assertType('HttpUploadedFile', $request->getFile(CONTROL_CHARACTERS));
+		$this->assertType('HttpUploadedFile', $request->files['file1']);
+
+        // filter data
 		$request->setEncoding('UTF-8');
 
-		$this->assertEquals("v\xc5\xbe", $request->getQuery('test'));
+		$this->assertEquals("v\xc5\xbe", $request->getQuery('invalid'));
+		$this->assertEquals('ABC', $request->getQuery('control'));
 		$this->assertNull($request->getQuery(INVALID));
+		$this->assertNull($request->getQuery(CONTROL_CHARACTERS));
 		$this->assertFalse(isset($request->query['array'][INVALID]));
-		$this->assertEquals("v\xc5\xbe", $request->getPost('test'));
+
+		$this->assertEquals("v\xc5\xbe", $request->getPost('invalid'));
+		$this->assertEquals('ABC', $request->getPost('control'));
 		$this->assertNull($request->getPost(INVALID));
+		$this->assertNull($request->getPost(CONTROL_CHARACTERS));
 		$this->assertFalse(isset($request->post['array'][INVALID]));
-		$this->assertEquals("v\xc5\xbe", $request->getCookie('test'));
+
+		$this->assertEquals("v\xc5\xbe", $request->getCookie('invalid'));
+		$this->assertEquals('ABC', $request->getCookie('control'));
 		$this->assertNull($request->getCookie(INVALID));
+		$this->assertNull($request->getCookie(CONTROL_CHARACTERS));
 		$this->assertFalse(isset($request->cookies['array'][INVALID]));
+
+		$this->assertNull($request->getFile(INVALID));
+		$this->assertNull($request->getFile(CONTROL_CHARACTERS));
+		$this->assertType('HttpUploadedFile', $request->files['file1']);
+		$this->assertEquals("v\xc5\xbe", $request->files['file1']->name);
 	}
 
 
@@ -234,10 +274,10 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 
 		$request = new HttpRequest;
 
-		$this->assertType("HttpUploadedFile", $request->files["file1"]);
-		$this->assertType("HttpUploadedFile", $request->files["file2"][2]);
-		$this->assertType("HttpUploadedFile", $request->files["file3"]["y"]["z"]);
-		$this->assertType("HttpUploadedFile", $request->files["file3"][1]);
+		$this->assertType('HttpUploadedFile', $request->files['file1']);
+		$this->assertType('HttpUploadedFile', $request->files['file2'][2]);
+		$this->assertType('HttpUploadedFile', $request->files['file3']['y']['z']);
+		$this->assertType('HttpUploadedFile', $request->files['file3'][1]);
 
 		$this->assertFalse(isset($request->files['file0']));
 		$this->assertTrue(isset($request->files['file1']));

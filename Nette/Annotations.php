@@ -116,6 +116,7 @@ final class Annotations
 			if (isset($match[2])) {
 				preg_match_all('#[,\s](?>([a-zA-Z0-9_]+)\s*=\s*)?([^\'",\s][^,]*|\'[^\']*\'|"[^"]*")#', ',' . $match[2], $matches, PREG_SET_ORDER);
 				$items = array();
+				$key = '';
 				$val = TRUE;
 				foreach ($matches as $m) {
 					list(, $key, $val) = $m;
@@ -140,7 +141,7 @@ final class Annotations
 					}
 				}
 
-				$items = count($items) < 2 ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
+				$items = count($items) < 2 && $key === '' ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
 
 			} else {
 				$items = TRUE;
