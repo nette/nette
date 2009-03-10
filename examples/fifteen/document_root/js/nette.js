@@ -57,13 +57,11 @@ var nette = {
 
 		try {
 			var url = action + '-r=' + Math.random();
-			var query = null;
-
 			this.ajax.open("POST", url, true);
 			this.ajax.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			//this.ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			this.ajax.onreadystatechange = function() { nette.ajaxHandler(); }
-			this.ajax.send(query);
+			this.ajax.send();
 			this.processing = 1;
 			return true;
 

@@ -463,10 +463,10 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 						}
 						if ($enc) {
 							if ($utf) {
-								$v = iconv('UTF-8', 'UTF-8//IGNORE', $v);
+								$v = String::fixEncoding($v);
 
 							} else {
-								if ($v != iconv('UTF-8', 'UTF-8//IGNORE', $v)) {
+								if (!String::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
@@ -499,7 +499,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($enc) {
-					$v['name'] = preg_replace($nonChars, '', iconv('UTF-8', 'UTF-8//IGNORE', $v['name']));
+					$v['name'] = preg_replace($nonChars, '', String::fixEncoding($v['name']));
 				}
 				$v['@'] = new HttpUploadedFile($v);
 				continue;

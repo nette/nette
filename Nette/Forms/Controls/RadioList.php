@@ -121,22 +121,32 @@ class RadioList extends FormControl
 
 	/**
 	 * Generates control's HTML element.
+	 * @param  mixed
 	 * @return Nette\Web\Html
 	 */
-	public function getControl()
+	public function getControl($key = NULL)
 	{
-		$container = clone $this->container;
-		$separator = (string) $this->separator;
+		if ($key === NULL) {
+			$container = clone $this->container;
+			$separator = (string) $this->separator;
+
+		} elseif (!isset($this->items[$key])) {
+			return NULL;
+		}
+
 		$control = parent::getControl();
 		$id = $control->id;
-		$counter = 0;
+		$counter = -1;
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
 		$label = /*Nette\Web\*/Html::el('label');
 
-		foreach ($this->items as $key => $val) {
+		foreach ($this->items as $k => $val) {
+			$counter++;
+			if ($key !== NULL && $key != $k) continue; // intentionally ==
+
 			$control->id = $label->for = $id . '-' . $counter;
-			$control->checked = (string) $key === $value;
-			$control->value = $key;
+			$control->checked = (string) $k === $value;
+			$control->value = $k;
 
 			if ($val instanceof /*Nette\Web\*/Html) {
 				$label->setHtml($val);
@@ -144,8 +154,11 @@ class RadioList extends FormControl
 				$label->setText($this->translate($val));
 			}
 
+			if ($key !== NULL) {
+				return (string) $control . (string) $label;
+			}
+
 			$container->add((string) $control . (string) $label . $separator);
-			$counter++;
 			// TODO: separator after last item?
 		}
 
