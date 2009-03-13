@@ -292,17 +292,25 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 	/**
 	 * Redirect to another presenter, action or signal.
-	 * @param  string
-	 * @param  array
-	 * @param  int HTTP error code
+	 * @param  int      [optional] HTTP error code
+	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
+	 * @param  array|mixed
 	 * @return void
 	 * @throws RedirectingException
 	 */
-	public function redirect($destination, $args = NULL, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
+	public function redirect($code, $destination = NULL, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = (array) $args;
+		if (!is_numeric($code)) { // first parameter is optional
+			$args = $destination;
+			$destination = $code;
+			$code = /*Nette\Web\*/IHttpResponse::S303_POST_GET;
 		}
+
+		if (!is_array($args)) {
+			$args = func_get_args();
+			if (is_numeric(array_shift($args))) array_shift($args);
+		}
+
 		$presenter = $this->getPresenter();
 		$presenter->redirectUri($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
 	}

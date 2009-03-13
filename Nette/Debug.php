@@ -821,7 +821,7 @@ final class Debug
 			return 'object ' . get_class($val) . '';
 
 		} elseif (is_string($val)) {
-			return $val = String::fixEncoding($val);
+			return $val = @iconv('UTF-16', $encoding . '//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $val)); // intentionally @
 
 		} elseif (is_array($val)) {
 			foreach ($val as $k => $v) {

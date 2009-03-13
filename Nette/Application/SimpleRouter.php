@@ -55,17 +55,23 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	 * @param  array   default values
 	 * @param  int     flags
 	 */
-	public function __construct(array $defaults = array(), $flags = 0)
+	public function __construct($defaults = array(), $flags = 0)
 	{
+		if (is_string($defaults)) {
+			$a = strrpos($defaults, ':');
+			$defaults = array(
+				self::PRESENTER_KEY => substr($defaults, 0, $a),
+				'action' => substr($defaults, $a + 1),
+			);
+
+		} elseif (isset($defaults['view'])) { // back compatiblity
+			$defaults['action'] = $defaults['view'];
+			unset($defaults['view']);
+		}
+
 		if (isset($defaults[self::MODULE_KEY])) {
 			$this->module = $defaults[self::MODULE_KEY] . ':';
 			unset($defaults[self::MODULE_KEY]);
-		}
-
-		// back compatiblity
-		if (isset($defaults['view'])) {
-			$defaults['action'] = $defaults['view'];
-			unset($defaults['view']);
 		}
 
 		$this->defaults = $defaults;
