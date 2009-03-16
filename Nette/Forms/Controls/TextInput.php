@@ -42,12 +42,12 @@ class TextInput extends TextBase
 	 * @param  int  width of the control
 	 * @param  int  maximum number of characters the user may enter
 	 */
-	public function __construct($label, $cols = NULL, $maxLenght = NULL)
+	public function __construct($label, $cols = NULL, $maxLength = NULL)
 	{
 		parent::__construct($label);
 		$this->control->type = 'text';
 		$this->control->size = $cols;
-		$this->control->maxlength = $maxLenght;
+		$this->control->maxlength = $maxLength;
 		$this->filters[] = 'trim';
 		$this->value = '';
 	}

@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/../../../Nette/loader.php';
 Debug::enable();
 
 // 2b) check if directory /app/temp is writable
-if (!is_writable(Environment::getVariable('tempDir'))) {
+if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
 	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
 }
 

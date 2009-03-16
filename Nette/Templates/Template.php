@@ -161,7 +161,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 		$isFile = TRUE;
 		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
-		$key = md5($this->file) . '.' . basename($this->file);
+		$key = md5($this->file) . count($this->filters) . '.' . basename($this->file);
 		$content = $cache[$key];
 
 		if ($content === NULL) {

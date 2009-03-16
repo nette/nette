@@ -29,13 +29,18 @@ Debug::enable();
 // 2b) load configuration from config.ini file
 Environment::loadConfig();
 
-// 2c) enable RobotLoader - this allows load all classes automatically
+// 2c) check if directory /app/temp is writable
+if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
+	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
+}
+
+// 2d) enable RobotLoader - this allows load all classes automatically
 $loader = new /*Nette\Loaders\*/RobotLoader();
 $loader->addDirectory(APP_DIR);
 $loader->addDirectory(LIBS_DIR);
 $loader->register();
 
-// 2d) setup sessions
+// 2e) setup sessions
 $session = Environment::getSession();
 $session->setSavePath(APP_DIR . '/sessions/');
 
