@@ -70,25 +70,6 @@ final class String
 
 
 	/**
-	 * Converts to hexadecimal representation of the given string.
-	 * @param  string
-	 * @return string
-	 */
-	public static function toHex($s)
-	{
-		static $hex = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
-		$s = (string) $s;
-		$len = strlen($s);
-		$res = '';
-		for ($i = 0; $i < $len; $i++) {
-			$res .= $hex[ord($s[$i]) >> 4] . $hex[ord($s[$i]) & 15];
-		}
-		return $res;
-	}
-
-
-
-	/**
 	 * Starts the $haystack string with the prefix $needle?
 	 * @param  string
 	 * @param  string

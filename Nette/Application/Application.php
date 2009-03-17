@@ -85,10 +85,6 @@ class Application extends /*Nette\*/Object
 	 */
 	public function run()
 	{
-		if (version_compare(PHP_VERSION , '5.2.0', '<')) {
-			throw new /*\*/ApplicationException('Nette\Application needs PHP 5.2.0 or newer.');
-		}
-
 		$httpRequest = $this->getHttpRequest();
 		$httpResponse = $this->getHttpResponse();
 

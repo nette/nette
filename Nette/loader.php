@@ -19,6 +19,7 @@
  */
 
 /**/require_once dirname(__FILE__) . '/compatibility.php';/**/
+
 require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 

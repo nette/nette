@@ -67,8 +67,8 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testWebalize()
 	{
-		$this->assertEquals("zlutoucky-kun-oooo", String::webalize('&ŽLUŤOUČKÝ KŮŇ öőôò!'));
-		$this->assertEquals("1-4-!", String::webalize('¼!', '!'));
+		$this->assertEquals("zlutoucky-kun-oooo", String::webalize("&\xc5\xbdLU\xc5\xa4OU\xc4\x8cK\xc3\x9d K\xc5\xae\xc5\x87 \xc3\xb6\xc5\x91\xc3\xb4o!")); // &ŽLUŤOUČKÝ KŮŇ öőôo!
+		$this->assertEquals("1-4-!", String::webalize("\xc2\xBC!", '!'));
 	}
 
 
@@ -79,7 +79,7 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testNormalize()
 	{
-		$this->assertEquals("48656c6c6f0a2020576f726c64", bin2hex(String::normalize("\r\nHello  \r  World \n\n")));
+		$this->assertEquals("Hello\n  World", String::normalize("\r\nHello  \r  World \n\n"));
 	}
 
 
@@ -88,9 +88,24 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 	 * checkEncoding test.
 	 * @return void
 	 */
-	public function testCheckencoding()
+	public function testCheckEncoding()
 	{
-		$this->assertTrue(String::checkEncoding('žluťoučký'));
+		$this->assertTrue(String::checkEncoding("\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd"), 'UTF-8'); // žluťoučký
+		$this->assertTrue(String::checkEncoding("\x01"), 'C0');
+		$this->assertFalse(String::checkEncoding("\xed\xa0\x80"), 'surrogate pairs'); // xD800
+		$this->assertFalse(String::checkEncoding("\xef\xbb\xbf"), 'noncharacter'); // xFEFF
+		$this->assertFalse(String::checkEncoding("\xf4\x90\x80\x80"), 'out of range'); // x110000
+	}
+
+
+
+	/**
+	 * fixEncoding test.
+	 * @return void
+	 */
+	public function testFixEncoding()
+	{
+		$this->assertEquals("\xc5\xbea\x01bcde", String::fixEncoding("\xc5\xbea\x01b\xed\xa0\x80c\xef\xbb\xbfd\xf4\x90\x80\x80e"), 'C0'); // C0, surrogate pairs, noncharacter, out of range
 	}
 
 
@@ -102,7 +117,7 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 	public function testTruncate()
 	{
 		iconv_set_encoding('internal_encoding', 'UTF-8');
-		$s = 'Řekněte, jak se (dnes) máte?';
+		$s = "\xc5\x98ekn\xc4\x9bte, jak se (dnes) m\xc3\xa1te?"; // Řekněte, jak se (dnes) máte?
 
 		$this->assertEquals("\xe2\x80\xa6", String::truncate($s, -1), "length=-1");
 		$this->assertEquals("\xe2\x80\xa6", String::truncate($s, 0), "length=0");
