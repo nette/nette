@@ -1,17 +1,2 @@
 # disable directory listing
 Options -Indexes
-
-# configure PHP
-# <IfModule mod_php5.c>
-#    php_flag magic_quotes_gpc off
-#    php_flag register_globals off
-# </IfModule>
-
-# mod_rewrite
-RewriteEngine On
-# RewriteBase /
-
-# front controller
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz)$ index.php [L]

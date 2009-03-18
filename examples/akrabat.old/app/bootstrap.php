@@ -21,7 +21,7 @@ Debug::enable();
 Environment::loadConfig();
 
 // 2c) check if directory /app/temp is writable
-if (!is_writable(Environment::getVariable('tempDir'))) {
+if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
 	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
 }
 
@@ -41,19 +41,26 @@ $application = Environment::getApplication();
 $application->onStartup[] = 'Albums::initialize';
 
 
+
 // Step 4: Setup application router
 $router = $application->getRouter();
 
-$router[] = new Route('index.php', array(
-	'presenter' => 'Dashboard',
-	'action' => 'default',
-), Route::ONE_WAY);
+// mod_rewrite detection
+if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
+	$router[] = new Route('index.php', array(
+		'presenter' => 'Dashboard',
+		'action' => 'default',
+	), Route::ONE_WAY);
 
-$router[] = new Route('<presenter>/<action>/<id>', array(
-	'presenter' => 'Dashboard',
-	'action' => 'default',
-	'id' => NULL,
-));
+	$router[] = new Route('<presenter>/<action>/<id>', array(
+		'presenter' => 'Dashboard',
+		'action' => 'default',
+		'id' => NULL,
+	));
+
+} else {
+	$router[] = new SimpleRouter('Dashboard:default');
+}
 
 
 
