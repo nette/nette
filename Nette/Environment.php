@@ -304,7 +304,7 @@ final class Environment
 	public static function expand($var)
 	{
 		if (is_string($var) && strpos($var, '%') !== FALSE) {
-			return preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var);
+			return @preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var); // intentionally @ due PHP bug #39257
 		}
 		return $var;
 	}

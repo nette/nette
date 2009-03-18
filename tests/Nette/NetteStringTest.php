@@ -111,6 +111,19 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 
 
 	/**
+	 * chr test.
+	 * @return void
+	 */
+	public function testChr()
+	{
+		$this->assertEquals("\x00", String::chr(0), '#0');
+		$this->assertEquals("\xc3\xbf", String::chr(255), '#255 in UTF-8');
+		$this->assertEquals("\xFF", String::chr(255, 'ISO-8859-1'), '#255 in ISO-8859-1');
+	}
+
+
+
+	/**
 	 * truncate test.
 	 * @return void
 	 */

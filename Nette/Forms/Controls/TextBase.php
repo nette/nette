@@ -133,7 +133,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMinLength(TextBase $control, $length)
 	{
-		// bug #33268 iconv_strlen works since PHP 5.0.5
+		// PHP bug #33268 iconv_strlen works since PHP 5.0.5
 		return iconv_strlen($control->getValue(), 'UTF-8') >= $length;
 	}
 
