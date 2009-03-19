@@ -806,7 +806,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 
 
 	/**
-	 * Visits an $role in order to look for a rule allowing/denying $role access to all privileges upon $resource.
+	 * Visits a $role in order to look for a rule allowing/denying $role access to all privileges upon $resource.
 	 *
 	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
 	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.
@@ -874,7 +874,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 
 
 	/**
-	 * Visits an $role in order to look for a rule allowing/denying $role access to a $privilege upon $resource.
+	 * Visits a $role in order to look for a rule allowing/denying $role access to a $privilege upon $resource.
 	 *
 	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
 	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.

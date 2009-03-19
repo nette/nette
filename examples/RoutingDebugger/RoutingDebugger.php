@@ -34,7 +34,7 @@ class RoutingDebugger extends Object
 
 
 	/**
-	 * Dispatch an HTTP request to a routing debugger.
+	 * Dispatch a HTTP request to a routing debugger.
 	 */
 	public static function run()
 	{

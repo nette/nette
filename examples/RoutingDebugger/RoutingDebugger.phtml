@@ -62,6 +62,10 @@
 		font-weight: bold;
 	}
 
+	pre {
+		display: inline;
+	}
+
 	</style>
 </head>
 
@@ -71,7 +75,7 @@
 	<p><small>Enter an URL into the address bar and see which routes match it.</small></p>
 
 	<?php if (!empty($presenter)): ?>
-		<h2>&#x25BA; <?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
+		<h2>&#x25b6; <?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
 
 		<?php if (empty($params)): ?>
 			<p>No parameters.</p>
@@ -88,7 +92,7 @@
 			<?php foreach ($params as $key => $value): ?>
 			<tr>
 				<td><code><?php echo htmlSpecialChars($key) ?></code></td>
-				<td><code><?php echo htmlSpecialChars($value) ?></code></td>
+				<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><? else: Debug::dump($value); endif ?></td>
 			</tr>
 			<?php endforeach ?>
 			</tbody>
@@ -99,10 +103,10 @@
 	<!-- ~~~~~~~~~~~ -->
 
 	<?php if (empty($router)): ?>
-		<h2>&#x25BA; Not matched</h2>
+		<h2>&#x25b6; Not matched</h2>
 
 	<?php else: ?>
-		<h2>&#x25BA; Matched by <?php echo htmlSpecialChars($router) ?></h2>
+		<h2>&#x25b6; Matched by <?php echo htmlSpecialChars($router) ?></h2>
 	<?php endif ?>
 
 	<!-- ~~~~~~~~~~~ -->
@@ -129,7 +133,7 @@
 			<td><code><strong><?php echo htmlSpecialChars($router['mask']) ?></strong></code></td>
 			<td><code>
 			<?php foreach ($router['defaults'] as $key => $value): ?>
-				<?php echo htmlSpecialChars($key), " = ", $value === NULL ? '<i>NULL</i>' : htmlSpecialChars($value) ?><br>
+				<?php echo htmlSpecialChars($key), " = ", is_string($value) ? htmlSpecialChars($value) : Debug::dump($value, TRUE) ?><br>
 			<?php endforeach ?>
 			</code></td>
 		</tr>

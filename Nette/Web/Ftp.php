@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../Object.php';
 
 
 /**
- * Access to an FTP server.
+ * Access to a FTP server.
  *
  * <code>
  * $ftp = new Ftp;

@@ -349,7 +349,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset an property $this->class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot unset the property $this->class::\$$name.");
 	}
 
 }

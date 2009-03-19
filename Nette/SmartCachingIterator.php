@@ -229,7 +229,7 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	public function __unset($name)
 	{
 		$class = get_class($this);
-		throw new /*\*/MemberAccessException("Cannot unset an property $class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot unset the property $class::\$$name.");
 	}
 
 

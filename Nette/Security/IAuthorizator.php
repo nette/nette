@@ -43,7 +43,7 @@ interface IAuthorizator
 
 
 	/**
-	 * Performs an role-based authorization.
+	 * Performs a role-based authorization.
 	 * @param  string  role
 	 * @param  string  resource
 	 * @param  string  privilege

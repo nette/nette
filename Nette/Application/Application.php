@@ -81,7 +81,7 @@ class Application extends /*Nette\*/Object
 
 
 	/**
-	 * Dispatch an HTTP request to a front controller.
+	 * Dispatch a HTTP request to a front controller.
 	 */
 	public function run()
 	{
