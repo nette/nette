@@ -108,6 +108,9 @@ abstract class TextBase extends FormControl
 	public function addFilter($filter)
 	{
 		/**/fixCallback($filter);/**/
+		if (!is_callable($filter)) {
+			throw new /*\*/InvalidStateException("Filter must be valid PHP callback.");
+		}
 		$this->filters[] = $filter;
 		return $this;
 	}
@@ -176,7 +179,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateEmail(TextBase $control)
 	{
-		return preg_match('/^[^@]+@[^@]+\.[a-z]{2,6}$/i', $control->getValue());
+		return preg_match('/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i', $control->getValue());
 	}
 
 
