@@ -599,7 +599,7 @@ final class Debug
 			$header .= "$key: $value\r\n";
 		}
 
-		// pro mailer v unixu je treba zamenit \r\n na \n, protoze on si to pak opet zameni za \r\n
+        // we need to change \r\n to \n because Unix mailer changes it back to \r\n
 		$body = str_replace("\r\n", "\n", $body);
 		if (PHP_OS != 'Linux') $body = str_replace("\n", "\r\n", $body);
 
@@ -823,12 +823,12 @@ final class Debug
 			return 'object ' . get_class($val) . '';
 
 		} elseif (is_string($val)) {
-			return $val = @iconv('UTF-16', $encoding . '//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $val)); // intentionally @
+			return $val = @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', $val)); // intentionally @
 
 		} elseif (is_array($val)) {
 			foreach ($val as $k => $v) {
 				unset($val[$k]);
-				$k = @iconv('UTF-16', $encoding . '//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $k)); // intentionally @
+				$k = @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', $k)); // intentionally @
 				$val[$k] = self::replaceObjects($v);
 			}
 		}

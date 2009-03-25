@@ -157,7 +157,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		// meta[handle] was added by readMeta()
 		flock($meta[self::HANDLE], LOCK_EX);
 		ftruncate($meta[self::HANDLE], 0);
-		@unlink($cacheFile); // intentionally @
+		@unlink($meta[self::FILE]); // intentionally @; meta[file] was added by readMeta()
 		fclose($meta[self::HANDLE]);
 		return FALSE;
 	}
