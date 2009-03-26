@@ -162,7 +162,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 			}
 
 			if (is_object($val)) {
-				throw new InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
+				throw new /*\*/InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
 
 			} else {
 				if ($l['type'] === NULL) {

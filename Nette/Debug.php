@@ -533,7 +533,7 @@ final class Debug
 		$internals = array();
 		foreach (array(/*Nette\*/'Object', /*Nette\*/'ObjectMixin') as $class) {
 			if (class_exists($class, FALSE)) {
-				$rc = new ReflectionClass($class);
+				$rc = new /*\*/ReflectionClass($class);
 				$internals[$rc->getFileName()] = TRUE;
 			}
 		}

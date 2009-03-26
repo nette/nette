@@ -271,7 +271,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 	/**
 	 * Renders validation errors (per form or per control).
 	 * @param  IFormControl
-	 * @return void
+	 * @return string
 	 */
 	public function renderErrors(IFormControl $control = NULL)
 	{

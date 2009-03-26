@@ -190,11 +190,11 @@ class Form extends FormContainer
 	/**
 	 * Adds distinguishing mark.
 	 * @param  string
-	 * @return void
+	 * @return HiddenField
 	 */
 	public function addTracker($name)
 	{
-		$this[self::TRACKER_ID] = new HiddenField($name);
+		return $this[self::TRACKER_ID] = new HiddenField($name);
 	}
 
 
@@ -431,7 +431,7 @@ class Form extends FormContainer
 	 */
 	public function setDefaults($values, $erase = FALSE)
 	{
-		if ($values instanceof ArrayObject) {
+		if ($values instanceof /*\*/ArrayObject) {
 			$values = (array) $values;
 
 		} elseif (!is_array($values)) {

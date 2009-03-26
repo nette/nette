@@ -701,12 +701,12 @@ class Route extends /*Nette\*/Object implements IRouter
 	public static function addStyle($style, $parent = '#')
 	{
 		if (isset(self::$styles[$style])) {
-			throw new InvalidArgumentException("Style '$style' already exists.");
+			throw new /*\*/InvalidArgumentException("Style '$style' already exists.");
 		}
 
 		if ($parent !== NULL) {
 			if (!isset(self::$styles[$parent])) {
-				throw new InvalidArgumentException("Parent style '$parent' doesn't exist.");
+				throw new /*\*/InvalidArgumentException("Parent style '$parent' doesn't exist.");
 			}
 			self::$styles[$style] = self::$styles[$parent];
 
@@ -727,7 +727,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	public static function setStyleProperty($style, $key, $value)
 	{
 		if (!isset(self::$styles[$style])) {
-			throw new InvalidArgumentException("Style '$style' doesn't exist.");
+			throw new /*\*/InvalidArgumentException("Style '$style' doesn't exist.");
 		}
 		self::$styles[$style][$key] = $value;
 	}

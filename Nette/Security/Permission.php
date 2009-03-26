@@ -289,8 +289,6 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 			throw new /*\*/InvalidStateException("Resource '$resource' already exists in the list.");
 		}
 
-		$resourceParent = NULL;
-
 		if ($parent !== NULL) {
 			$this->checkResource($parent);
 			$this->resources[$parent]['children'][$resource] = TRUE;

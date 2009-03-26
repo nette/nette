@@ -104,10 +104,6 @@ class Session extends /*Nette\*/Object
 				$able = is_callable($this->verificationKeyGenerator, TRUE, $textual);
 				throw new /*\*/InvalidStateException("Verification key generator '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 			}
-			$verKey = (string) call_user_func($this->verificationKeyGenerator);
-
-		} else {
-			$verKey = '';
 		}
 
 
@@ -133,6 +129,8 @@ class Session extends /*Nette\*/Object
 			data:  __NS->namespace->variable = data
 			meta:  __NM->namespace->EXP->variable = timestamp
 		*/
+
+		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 		if (!isset($_SESSION['__NT']['V'])) { // new session
 			$_SESSION['__NT'] = array();
 			$_SESSION['__NT']['C'] = 0;
@@ -265,7 +263,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function setId($id)
 	{
-		throw new DeprecatedException('Method '.__METHOD__.'() is deprecated.');
+		throw new /*\*/DeprecatedException('Method '.__METHOD__.'() is deprecated.');
 	}
 
 

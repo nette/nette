@@ -98,7 +98,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	 */
 	public function addRuleFor()
 	{
-		throw new DeprecatedException('Method addRuleFor() is deprecated. Use addConditionOn() & addRule() construction.');
+		throw new /*\*/DeprecatedException('Method addRuleFor() is deprecated. Use addConditionOn() & addRule() construction.');
 	}
 
 
@@ -247,8 +247,8 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 		// check callback
 		if (!is_callable($this->getCallback($rule))) {
-			$operation = is_scalar($rule->operation) ? "'$rule->operation' " : '';
-			throw new /*\*/InvalidArgumentException("Unknown operation $operation for control '{$rule->control->name}'.");
+			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
+			throw new /*\*/InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
 		}
 	}
 
