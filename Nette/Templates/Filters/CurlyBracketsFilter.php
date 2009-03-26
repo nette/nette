@@ -197,9 +197,14 @@ final class CurlyBracketsFilter
 	private static function cb2($m)
 	{
 		if ($m[1]) {
-			$method = $m[1][0] === ':' ? __CLASS__ . ':' . $m[1] : $m[1];
-			/**/fixCallback($method);/**/
-			return call_user_func($method, trim(self::$var), self::$modifiers);
+			$callback = $m[1][0] === ':' ? __CLASS__ . ':' . $m[1] : $m[1];
+			/**/fixCallback($callback);/**/
+			if (!is_callable($callback)) {
+				$able = is_callable($callback, TRUE, $textual);
+				throw new /*\*/InvalidStateException("CurlyBrackets macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+			}
+			return call_user_func($callback, trim(self::$var), self::$modifiers);
+
 		} else {
 			return trim(self::$var);
 		}

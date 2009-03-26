@@ -109,7 +109,8 @@ abstract class TextBase extends FormControl
 	{
 		/**/fixCallback($filter);/**/
 		if (!is_callable($filter)) {
-			throw new /*\*/InvalidStateException("Filter must be valid PHP callback.");
+			$able = is_callable($filter, TRUE, $textual);
+			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
 		$this->filters[] = $filter;
 		return $this;

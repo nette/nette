@@ -32,10 +32,18 @@ if (version_compare(PHP_VERSION , '5.2.0', '<')) {
 if (version_compare(PHP_VERSION , '5.2.2', '<')) {
 	function fixCallback(& $callback)
 	{
+		// __invoke support
+		if (is_object($callback)) {
+			$callback = array($callback, '__invoke');
+			return;
+		}
+
+		// explode 'Class::method' into array
 		if (is_string($callback) && strpos($callback, ':')) {
 			$callback = explode('::', $callback);
 		}
 
+		// remove class namespace
 		if (is_array($callback) && is_string($callback[0]) && $a = strrpos($callback[0], '\\')) {
 			$callback[0] = substr($callback[0], $a + 1);
 		}
@@ -44,7 +52,11 @@ if (version_compare(PHP_VERSION , '5.2.2', '<')) {
 } else {
 	function fixCallback(& $callback)
 	{
-		if (is_string($callback) && $a = strrpos($callback, '\\')) {
+		// remove class namespace and support __invoke
+		if (is_object($callback)) {
+			$callback = array($callback, '__invoke');
+
+		} elseif (is_string($callback) && $a = strrpos($callback, '\\')) {
 			$callback = substr($callback, $a + 1);
 
 		} elseif (is_array($callback) && is_string($callback[0]) && $a = strrpos($callback[0], '\\')) {

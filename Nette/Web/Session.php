@@ -96,6 +96,22 @@ class Session extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
 		}
 
+
+		// additional protection against Session Hijacking & Fixation
+		if ($this->verificationKeyGenerator) {
+			/**/fixCallback($this->verificationKeyGenerator);/**/
+			if (!is_callable($this->verificationKeyGenerator)) {
+				$able = is_callable($this->verificationKeyGenerator, TRUE, $textual);
+				throw new /*\*/InvalidStateException("Verification key generator '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+			}
+			$verKey = (string) call_user_func($this->verificationKeyGenerator);
+
+		} else {
+			$verKey = '';
+		}
+
+
+		// start session
 		$this->configure(self::$defaultConfig, FALSE);
 
 		/*Nette\*/Tools::tryError();
@@ -112,31 +128,26 @@ class Session extends /*Nette\*/Object
 		}
 
 
-		/*
-		nette: __NT
-		data:  __NS->namespace->variable = data
-		meta:  __NM->namespace->EXP->variable = timestamp
+		/* initialize structures
+			nette: __NT
+			data:  __NS->namespace->variable = data
+			meta:  __NM->namespace->EXP->variable = timestamp
 		*/
-
-		// additional protection against Session Hijacking & Fixation
-		/**/fixCallback($this->verificationKeyGenerator);/**/
-		$key = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
-
 		if (!isset($_SESSION['__NT']['V'])) { // new session
 			$_SESSION['__NT'] = array();
 			$_SESSION['__NT']['C'] = 0;
-			$_SESSION['__NT']['V'] = $key;
+			$_SESSION['__NT']['V'] = $verKey;
 
 		} else {
 			$saved = & $_SESSION['__NT']['V'];
-			if ($saved === $key) { // verified
+			if ($saved === $verKey) { // verified
 				$_SESSION['__NT']['C']++;
 
 			} else { // session attack?
 				session_regenerate_id(TRUE);
 				$_SESSION = array();
 				$_SESSION['__NT']['C'] = 0;
-				$_SESSION['__NT']['V'] = $key;
+				$_SESSION['__NT']['V'] = $verKey;
 			}
 		}
 
@@ -235,7 +246,6 @@ class Session extends /*Nette\*/Object
 			if (headers_sent($file, $line)) {
 				throw new /*\*/InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
-			/**/fixCallback($this->verificationKeyGenerator);/**/
 			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
 

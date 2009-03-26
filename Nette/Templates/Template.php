@@ -170,7 +170,8 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 			foreach ($this->filters as $filter) {
 				if (!is_callable($filter)) {
-					throw new /*\*/InvalidStateException("Filter must be valid PHP callback object.");
+					$able = is_callable($filter, TRUE, $textual);
+					throw new /*\*/InvalidStateException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 				}
 
 				// remove PHP code
@@ -280,6 +281,10 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function registerHelper($name, $callback)
 	{
 		/**/fixCallback($callback);/**/
+		if (!is_callable($callback)) {
+			$able = is_callable($callback, TRUE, $textual);
+			throw new /*\*/InvalidArgumentException("Helper handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+		}
 		$this->helpers[$name] = $callback;
 	}
 

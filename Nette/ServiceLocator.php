@@ -152,13 +152,18 @@ class ServiceLocator extends Object implements IServiceLocator
 					/**/fixNamespace($service);/**/
 
 					if (!class_exists($service)) {
-						throw new AmbiguousServiceException("Cannot instantiate service, class '$service' not found.");
+						throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$service' not found.");
 					}
 					return $this->registry[$lower] = new $service;
 				}
 			}
 
 			/**/fixCallback($service);/**/
+			if (!is_callable($service)) {
+				$able = is_callable($service, TRUE, $textual);
+				throw new AmbiguousServiceException("Cannot instantiate service '$name', handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+			}
+
 			return $this->registry[$lower] = call_user_func($service);
 		}
 

@@ -42,8 +42,8 @@ class Config extends /*Nette\Collections\*/Hashtable
 
 	/** @var array */
 	private static $extensions = array(
-		'ini' => 'Nette\Config\ConfigAdapterIni',
-		'xml' => 'Nette\Config\ConfigAdapterXml',
+		'ini' => /*Nette\Config\*/'ConfigAdapterIni',
+		'xml' => /*Nette\Config\*/'ConfigAdapterXml',
 	);
 
 
@@ -56,6 +56,15 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public static function registerExtension($extension, $class)
 	{
+		if (!class_exists($class)) {
+			throw new /*\*/InvalidArgumentException("Class '$class' was not found.");
+		}
+
+		$reflection = new /*\*/ReflectionClass($class);
+		if (!$reflection->implementsInterface(/*Nette\Config\*/'IConfigAdapter')) {
+			throw new /*\*/InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IConfigAdapter implementor.");
+		}
+
 		self::$extensions[strtolower($extension)] = $class;
 	}
 
@@ -72,7 +81,6 @@ class Config extends /*Nette\Collections\*/Hashtable
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (isset(self::$extensions[$extension])) {
-			/**/fixNamespace(self::$extensions[$extension]);/**/
 			$arr = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
 			return new /**/self/**//*static*/($arr, $flags);
 

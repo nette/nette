@@ -184,6 +184,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			$iterator = new /*\*/RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
+			/**/fixNamespace($filterType);/**/
 			$iterator = new InstanceFilterIterator($iterator, $filterType);
 		}
 		return $iterator;
