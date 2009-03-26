@@ -99,10 +99,10 @@ final class Annotations
 
 	/**
 	 * Parses and caches annotations.
-	 * @param  string    phpDoc comment
+	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @return array
 	 */
-	public static function & init($r)
+	public static function & init(/*\*/Reflector $r)
 	{
 		$cache = & self::$cache[$r->getName()][$r instanceof /*\*/ReflectionClass ? '' : $r->getDeclaringClass()->getName()];
 		if ($cache !== NULL) {
