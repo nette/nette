@@ -507,7 +507,7 @@ class Route extends /*Nette\*/Object implements IRouter
 					$meta['defOut'] = $meta['default'];
 				}
 			}
-			$meta[self::PATTERN] = "#$pattern$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
+			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 			$metadata[$name] = $meta;
 
 			// include in expression
