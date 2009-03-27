@@ -20,6 +20,8 @@
 
 /*namespace Nette\Collections;*/
 
+/*use Nette\ObjectMixin;*/
+
 
 
 require_once dirname(__FILE__) . '/../Collections/ICollection.php';

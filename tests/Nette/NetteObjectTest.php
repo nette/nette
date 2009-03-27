@@ -160,10 +160,12 @@ class NetteObjectTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testUndeclaredPropertyReading()
 	{
-		$this->setExpectedException("MemberAccessException", "Cannot read an undeclared property TestClass::\$undeclared.", 0);
+		$this->setExpectedException("MemberAccessException", "Cannot read an undeclared property TestClass::\$s.", 0);
 		$obj = new TestClass;
+		$this->assertFalse(isset($obj->S));
+		$this->assertFalse(isset($obj->s));
 		$this->assertFalse(isset($obj->undeclared));
-		$val = $obj->undeclared;
+		$val = $obj->s;
 	}
 
 
