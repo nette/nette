@@ -230,7 +230,14 @@ final class CurlyBracketsFilter
 		if (substr($var, 0, 1) === '#') {
 			preg_match('#^.([^\s,]+),?\s*(.*)$#', $var, $m);
 			$var = '$template->getParams()'; // get_defined_vars()
-			if ($m[2]) $var = strncmp($m[2], 'array', 5) === 0 ? "$m[2] + $var" : "array($m[2]) + $var";
+			if ($m[2]) {
+				if (strncmp($m[2], 'array', 5) === 0) {
+					trigger_error('CurlyBracketsFilter: do not use keyword \'array\' in {include ...} macro', E_USER_WARNING);
+					$var = "$m[2] + $var";
+				} else {
+					$var = "array($m[2]) + $var";
+				}
+			}
 			$var = 'call_user_func($_cb->cs[0], ' . $var. ')';
 			if ($m[1] === 'parent') {
 				return '$_cb->csX = array_shift($_cb->cs); ' . $var . '; array_unshift($_cb->cs, $_cb->csX)';
@@ -422,7 +429,14 @@ final class CurlyBracketsFilter
 	{
 		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 			$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
-			if ($m[2]) $var .= strncmp($m[2], 'array', 5) === 0 ? ", $m[2]" : ", array($m[2])";
+			if ($m[2]) {
+				if (strncmp($m[2], 'array', 5) === 0) {
+					trigger_error('CurlyBracketsFilter: do not use keyword \'array\' in {link ...} macro', E_USER_WARNING);
+					$var .= ", $m[2]";
+				} else {
+					$var .= ', ' . (strpos($m[2], '=>') === FALSE ? $m[2] : "array($m[2])");
+				}
+			}
 		}
 		return $var;
 	}

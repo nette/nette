@@ -7,23 +7,40 @@ require_once '../../Nette/loader.php';
 /*use Nette\Environment;*/
 /*use Nette\Templates\Template;*/
 
+
 class MockControl
 {
-	function link($destination, $args = array())
+
+	public function link($destination, $args = array())
 	{
+		if (!is_array($args)) {
+			$args = func_get_args();
+			array_shift($args);
+		}
 		array_unshift($args, $destination);
 		return 'LINK(' . implode(', ', $args) . ')';
 	}
+
 }
+
+
 
 class MockPresenter extends MockControl
 {
-	function link($destination, $args = array())
+
+	public function link($destination, $args = array())
 	{
+		if (!is_array($args)) {
+			$args = func_get_args();
+			array_shift($args);
+		}
 		array_unshift($args, $destination);
 		return 'PLINK(' . implode(', ', $args) . ')';
 	}
+
 }
+
+
 
 Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
