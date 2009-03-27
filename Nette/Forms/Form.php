@@ -369,7 +369,7 @@ class Form extends FormContainer
 
 		if (strcasecmp($this->getMethod(), 'post') === 0) {
 			if (!$httpRequest->isMethod('post')) return;
-			$data = self::arrayAppend($httpRequest->getPost(), $httpRequest->getFiles());
+			$data = /*Nette\*/Tools::arrayMergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 
 		} else {
 			if (!$httpRequest->isMethod('get')) return;
@@ -540,26 +540,6 @@ class Form extends FormContainer
 		}
 		unset($values[self::TRACKER_ID], $values[self::PROTECTOR_ID]);
 		return $values;
-	}
-
-
-
-	/**
-	 * Recursively appends elements of remaining keys from the second array to the first.
-	 * @param  array
-	 * @param  array
-	 * @return array
-	 * @internal
-	 */
-	protected static function arrayAppend($arr1, $arr2)
-	{
-		$res = $arr1 + $arr2;
-		foreach (array_intersect_key($arr1, $arr2) as $k => $v) {
-			if (is_array($v) && is_array($arr2[$k])) {
-				$res[$k] = self::arrayAppend($v, $arr2[$k]);
-			}
-		}
-		return $res;
 	}
 
 

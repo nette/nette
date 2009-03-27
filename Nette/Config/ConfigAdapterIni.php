@@ -42,6 +42,9 @@ final class ConfigAdapterIni implements IConfigAdapter
 	/** @var string  section inheriting separator (section < parent) */
 	static public $sectionSeparator = ' < ';
 
+	/** @var string  raw section marker */
+	static public $rawSection = '!';
+
 
 
 	/**
@@ -68,74 +71,86 @@ final class ConfigAdapterIni implements IConfigAdapter
 		}
 
 		/*Nette\*/Tools::tryError();
-		$data = parse_ini_file($file, TRUE);
+		$ini = parse_ini_file($file, TRUE);
 		if (/*Nette\*/Tools::catchError($msg)) {
 			throw new /*\*/Exception($msg);
 		}
 
-		// process extends sections like [staging < production]
-		if (self::$sectionSeparator) {
-			foreach ($data as $secName => $secData) {
-				// ignore non-section data
-				if (!is_array($secData)) continue;
+		$separator = trim(self::$sectionSeparator);
+		$data = array();
+		foreach ($ini as $secName => $secData) {
+			// is section?
+			if (is_array($secData)) {
+				if (substr($secName, -1) === self::$rawSection) {
+					$secName = substr($secName, 0, -1);
 
-				$separator = trim(self::$sectionSeparator);
-				$parts = explode($separator, strtr($secName, ':', $separator)); // special support for separator ':'
-				if (count($parts) > 1) {
-					$child = trim($parts[0]);
-					if ($child === '') {
-						throw new /*\*/InvalidStateException("Invalid section [$secName] in '$file'.");
-					}
-					$parent = trim($parts[1]);
-					if (isset($data[$parent])) {
-						$secData += $data[$parent];
-					} else {
-						throw new /*\*/InvalidStateException("Missing parent section [$parent] in '$file'.");
-					}
-					$data[$child] = $secData;
-					unset($data[$secName]);
-				}
-			}
-		}
-
-		if ($section !== NULL) {
-			if (isset($data[$section])) {
-				$data = array($section => $data[$section]);
-			} else {
-				throw new /*\*/InvalidStateException("There is not section [$section] in '$file'.");
-			}
-		}
-
-		// process key separators (key1> key2> key3)
-		if (self::$keySeparator) {
-			$output = array();
-			foreach ($data as $secName => $secData) {
-				$cursorS = & $output;
-				foreach (explode(self::$keySeparator, $secName) as $part) {
-					$cursorS = & $cursorS[$part];
-				}
-
-				if (is_array($secData)) {
+				} elseif (self::$keySeparator) {
+					// process key separators (key1> key2> key3)
+					$tmp = array();
 					foreach ($secData as $key => $val) {
-						$cursor = & $cursorS;
+						$cursor = & $tmp;
 						foreach (explode(self::$keySeparator, $key) as $part) {
-							$cursor = & $cursor[$part];
+							if (!isset($cursor[$part]) || is_array($cursor[$part])) {
+								$cursor = & $cursor[$part];
+							} else {
+								throw new /*\*/InvalidStateException("Invalid key '$key' in section [$secName] in '$file'.");
+							}
 						}
 						$cursor = $val;
 					}
-				} else {
-					// non-section data
-					$cursorS = $secData;
+					$secData = $tmp;
+				}
+
+				// process extends sections like [staging < production] (with special support for separator ':')
+				$parts = $separator ? explode($separator, strtr($secName, ':', $separator)) : array($secName);
+				if (count($parts) > 1) {
+					$parent = trim($parts[1]);
+					$cursor = & $data;
+					foreach (self::$keySeparator ? explode(self::$keySeparator, $parent) : array($parent) as $part) {
+						if (isset($cursor[$part]) && is_array($cursor[$part])) {
+							$cursor = & $cursor[$part];
+						} else {
+							throw new /*\*/InvalidStateException("Missing parent section [$parent] in '$file'.");
+						}
+					}
+					$secData = /*Nette\*/Tools::arrayMergeTree($secData, $cursor);
+				}
+
+				$secName = trim($parts[0]);
+				if ($secName === '') {
+					throw new /*\*/InvalidStateException("Invalid empty section name in '$file'.");
 				}
 			}
-			$data = $output;
+
+			if (self::$keySeparator) {
+				$cursor = & $data;
+				foreach (explode(self::$keySeparator, $secName) as $part) {
+					if (!isset($cursor[$part]) || is_array($cursor[$part])) {
+						$cursor = & $cursor[$part];
+					} else {
+						throw new /*\*/InvalidStateException("Invalid section [$secName] in '$file'.");
+					}
+				}
+			} else {
+				$cursor = & $data[$secName];
+			}
+
+			if (is_array($secData) && is_array($cursor)) {
+				$secData = /*Nette\*/Tools::arrayMergeTree($secData, $cursor);
+			}
+
+			$cursor = $secData;
 		}
 
-		if ($section !== NULL) {
-			$data = $data[$section];
-		}
+		if ($section === NULL) {
+			return $data;
 
-		return $data;
+		} elseif (!isset($data[$section]) || !is_array($data[$section])) {
+			throw new /*\*/InvalidStateException("There is not section [$section] in '$file'.");
+
+		} else {
+			return $data[$section];
+		}
 	}
 
 

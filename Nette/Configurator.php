@@ -160,7 +160,12 @@ class Configurator extends Object
 			}
 
 			foreach ($config->set as $key => $value) {
-				$key = strtr($key, '-', '.');
+				$key = strtr($key, '-', '.'); // old INI compatibility
+
+				if (!is_scalar($value)) {
+					throw new /*\*/InvalidStateException("Configuration value for directive '$key' is not scalar.");
+				}
+
 				if (function_exists('ini_set')) {
 					ini_set($key, $value);
 				} else {

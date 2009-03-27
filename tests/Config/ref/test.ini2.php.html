@@ -2,7 +2,7 @@
 
 <pre>
 Load INI
-object(Config) (3) {
+object(Config) (4) {
   "common" => object(Config) (2) {
     "variable" => object(Config) (3) {
       "tempDir" => string(14) "%appDir%/cache"
@@ -10,9 +10,9 @@ object(Config) (3) {
       "bar" => string(5) "hello"
     }
     "set" => object(Config) (4) {
-      "date-timezone" => string(13) "Europe/Prague"
-      "iconv-internal_encoding" => string(10) "%encoding%"
-      "mbstring-internal_encoding" => string(10) "%encoding%"
+      "date.timezone" => string(13) "Europe/Prague"
+      "iconv.internal_encoding" => string(10) "%encoding%"
+      "mbstring.internal_encoding" => string(10) "%encoding%"
       "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
     }
   }
@@ -24,13 +24,13 @@ object(Config) (3) {
     }
     "webhost" => string(15) "www.example.com"
     "database" => object(Config) (2) {
-      "adapter" => string(9) "pdo_mysql"
       "params" => object(Config) (4) {
         "host" => string(14) "db.example.com"
         "username" => string(6) "dbuser"
         "password" => string(6) "secret"
         "dbname" => string(6) "dbname"
       }
+      "adapter" => string(9) "pdo_mysql"
     }
     "variable" => object(Config) (3) {
       "tempDir" => string(14) "%appDir%/cache"
@@ -38,13 +38,13 @@ object(Config) (3) {
       "bar" => string(5) "hello"
     }
     "set" => object(Config) (4) {
-      "date-timezone" => string(13) "Europe/Prague"
-      "iconv-internal_encoding" => string(10) "%encoding%"
-      "mbstring-internal_encoding" => string(10) "%encoding%"
+      "date.timezone" => string(13) "Europe/Prague"
+      "iconv.internal_encoding" => string(10) "%encoding%"
+      "mbstring.internal_encoding" => string(10) "%encoding%"
       "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
     }
   }
-  "development" => object(Config) (5) {
+  "development" => object(Config) (6) {
     "database" => object(Config) (2) {
       "params" => object(Config) (4) {
         "host" => string(15) "dev.example.com"
@@ -66,9 +66,27 @@ object(Config) (3) {
       "bar" => string(5) "hello"
     }
     "set" => object(Config) (4) {
-      "date-timezone" => string(13) "Europe/Prague"
-      "iconv-internal_encoding" => string(10) "%encoding%"
-      "mbstring-internal_encoding" => string(10) "%encoding%"
+      "date.timezone" => string(13) "Europe/Prague"
+      "iconv.internal_encoding" => string(10) "%encoding%"
+      "mbstring.internal_encoding" => string(10) "%encoding%"
+      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+    }
+    "test" => object(Config) (3) {
+      "host" => string(9) "localhost"
+      "params" => object(Config) (4) {
+        "host" => string(15) "dev.example.com"
+        "username" => string(7) "devuser"
+        "password" => string(9) "devsecret"
+        "dbname" => string(6) "dbname"
+      }
+      "adapter" => string(9) "pdo_mysql"
+    }
+  }
+  "extra" => object(Config) (1) {
+    "set" => object(Config) (4) {
+      "date.timezone" => string(12) "Europe/Paris"
+      "iconv.internal_encoding" => string(10) "%encoding%"
+      "mbstring.internal_encoding" => string(10) "%encoding%"
       "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
     }
   }
@@ -81,9 +99,9 @@ Save INI
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"
 variable.bar = "hello"
-set.date-timezone = "Europe/Prague"
-set.iconv-internal_encoding = "%encoding%"
-set.mbstring-internal_encoding = "%encoding%"
+set.date.timezone = "Europe/Prague"
+set.iconv.internal_encoding = "%encoding%"
+set.mbstring.internal_encoding = "%encoding%"
 set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 [production]
@@ -91,17 +109,17 @@ service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
 service.User = "Nette\Security\User"
 service.Nette-Autoloader = "Nette\AutoLoader"
 webhost = "www.example.com"
-database.adapter = "pdo_mysql"
 database.params.host = "db.example.com"
 database.params.username = "dbuser"
 database.params.password = "secret"
 database.params.dbname = "dbname"
+database.adapter = "pdo_mysql"
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"
 variable.bar = "hello"
-set.date-timezone = "Europe/Prague"
-set.iconv-internal_encoding = "%encoding%"
-set.mbstring-internal_encoding = "%encoding%"
+set.date.timezone = "Europe/Prague"
+set.iconv.internal_encoding = "%encoding%"
+set.mbstring.internal_encoding = "%encoding%"
 set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 [development]
@@ -117,9 +135,21 @@ webhost = "www.example.com"
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"
 variable.bar = "hello"
-set.date-timezone = "Europe/Prague"
-set.iconv-internal_encoding = "%encoding%"
-set.mbstring-internal_encoding = "%encoding%"
+set.date.timezone = "Europe/Prague"
+set.iconv.internal_encoding = "%encoding%"
+set.mbstring.internal_encoding = "%encoding%"
+set.include_path = "%appDir%/../_trunk;%appDir%/libs"
+test.host = "localhost"
+test.params.host = "dev.example.com"
+test.params.username = "devuser"
+test.params.password = "devsecret"
+test.params.dbname = "dbname"
+test.adapter = "pdo_mysql"
+
+[extra]
+set.date.timezone = "Europe/Paris"
+set.iconv.internal_encoding = "%encoding%"
+set.mbstring.internal_encoding = "%encoding%"
 set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 Save section to INI
@@ -129,25 +159,25 @@ Save section to INI
 common.variable.tempDir = "%appDir%/cache"
 common.variable.foo = "%bar% world"
 common.variable.bar = "hello"
-common.set.date-timezone = "Europe/Prague"
-common.set.iconv-internal_encoding = "%encoding%"
-common.set.mbstring-internal_encoding = "%encoding%"
+common.set.date.timezone = "Europe/Prague"
+common.set.iconv.internal_encoding = "%encoding%"
+common.set.mbstring.internal_encoding = "%encoding%"
 common.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 production.service.Nette-Application-IRouter = "Nette\Application\MultiRouter"
 production.service.User = "Nette\Security\User"
 production.service.Nette-Autoloader = "Nette\AutoLoader"
 production.webhost = "www.example.com"
-production.database.adapter = "pdo_mysql"
 production.database.params.host = "db.example.com"
 production.database.params.username = "dbuser"
 production.database.params.password = "secret"
 production.database.params.dbname = "dbname"
+production.database.adapter = "pdo_mysql"
 production.variable.tempDir = "%appDir%/cache"
 production.variable.foo = "%bar% world"
 production.variable.bar = "hello"
-production.set.date-timezone = "Europe/Prague"
-production.set.iconv-internal_encoding = "%encoding%"
-production.set.mbstring-internal_encoding = "%encoding%"
+production.set.date.timezone = "Europe/Prague"
+production.set.iconv.internal_encoding = "%encoding%"
+production.set.mbstring.internal_encoding = "%encoding%"
 production.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 development.database.params.host = "dev.example.com"
 development.database.params.username = "devuser"
@@ -161,13 +191,23 @@ development.webhost = "www.example.com"
 development.variable.tempDir = "%appDir%/cache"
 development.variable.foo = "%bar% world"
 development.variable.bar = "hello"
-development.set.date-timezone = "Europe/Prague"
-development.set.iconv-internal_encoding = "%encoding%"
-development.set.mbstring-internal_encoding = "%encoding%"
+development.set.date.timezone = "Europe/Prague"
+development.set.iconv.internal_encoding = "%encoding%"
+development.set.mbstring.internal_encoding = "%encoding%"
 development.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
+development.test.host = "localhost"
+development.test.params.host = "dev.example.com"
+development.test.params.username = "devuser"
+development.test.params.password = "devsecret"
+development.test.params.dbname = "dbname"
+development.test.adapter = "pdo_mysql"
+extra.set.date.timezone = "Europe/Paris"
+extra.set.iconv.internal_encoding = "%encoding%"
+extra.set.mbstring.internal_encoding = "%encoding%"
+extra.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 Load section from INI
-object(Config) (5) {
+object(Config) (6) {
   "database" => object(Config) (2) {
     "params" => object(Config) (4) {
       "host" => string(15) "dev.example.com"
@@ -189,10 +229,20 @@ object(Config) (5) {
     "bar" => string(5) "hello"
   }
   "set" => object(Config) (4) {
-    "date-timezone" => string(13) "Europe/Prague"
-    "iconv-internal_encoding" => string(10) "%encoding%"
-    "mbstring-internal_encoding" => string(10) "%encoding%"
+    "date.timezone" => string(13) "Europe/Prague"
+    "iconv.internal_encoding" => string(10) "%encoding%"
+    "mbstring.internal_encoding" => string(10) "%encoding%"
     "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+  }
+  "test" => object(Config) (3) {
+    "host" => string(9) "localhost"
+    "params" => object(Config) (4) {
+      "host" => string(15) "dev.example.com"
+      "username" => string(7) "devuser"
+      "password" => string(9) "devsecret"
+      "dbname" => string(6) "dbname"
+    }
+    "adapter" => string(9) "pdo_mysql"
   }
 }
 
@@ -212,10 +262,16 @@ webhost = "www.example.com"
 variable.tempDir = "%appDir%/cache"
 variable.foo = "%bar% world"
 variable.bar = "hello"
-set.date-timezone = "Europe/Prague"
-set.iconv-internal_encoding = "%encoding%"
-set.mbstring-internal_encoding = "%encoding%"
+set.date.timezone = "Europe/Prague"
+set.iconv.internal_encoding = "%encoding%"
+set.mbstring.internal_encoding = "%encoding%"
 set.include_path = "%appDir%/../_trunk;%appDir%/libs"
+test.host = "localhost"
+test.params.host = "dev.example.com"
+test.params.username = "devuser"
+test.params.password = "devsecret"
+test.params.dbname = "dbname"
+test.adapter = "pdo_mysql"
 display_errors = true
 html_errors = false
 

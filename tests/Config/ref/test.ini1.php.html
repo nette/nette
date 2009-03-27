@@ -6,16 +6,16 @@ object(Config) (2) {
   "production" => object(Config) (2) {
     "webname" => string(11) "the example"
     "database" => object(Config) (2) {
-      "adapter" => string(9) "pdo_mysql"
       "params" => object(Config) (4) {
         "host" => string(14) "db.example.com"
         "username" => string(6) "dbuser"
         "password" => string(6) "secret"
         "dbname" => string(6) "dbname"
       }
+      "adapter" => string(9) "pdo_mysql"
     }
   }
-  "development" => object(Config) (5) {
+  "development" => object(Config) (6) {
     "database" => object(Config) (2) {
       "params" => object(Config) (4) {
         "host" => string(15) "dev.example.com"
@@ -28,6 +28,10 @@ object(Config) (2) {
     "timeout" => string(2) "10"
     "display_errors" => string(1) "1"
     "html_errors" => string(0) ""
+    "items" => object(Config) (2) {
+      "0" => string(2) "10"
+      "1" => string(2) "20"
+    }
     "webname" => string(11) "the example"
   }
 }
@@ -37,16 +41,16 @@ array(2) {
   "production" => array(2) {
     "webname" => string(11) "the example"
     "database" => array(2) {
-      "adapter" => string(9) "pdo_mysql"
       "params" => array(4) {
         "host" => string(14) "db.example.com"
         "username" => string(6) "dbuser"
         "password" => string(6) "secret"
         "dbname" => string(6) "dbname"
       }
+      "adapter" => string(9) "pdo_mysql"
     }
   }
-  "development" => array(5) {
+  "development" => array(6) {
     "database" => array(2) {
       "params" => array(4) {
         "host" => string(15) "dev.example.com"
@@ -59,6 +63,10 @@ array(2) {
     "timeout" => string(2) "10"
     "display_errors" => string(1) "1"
     "html_errors" => string(0) ""
+    "items" => array(2) {
+      0 => string(2) "10"
+      1 => string(2) "20"
+    }
     "webname" => string(11) "the example"
   }
 }
@@ -68,11 +76,11 @@ Save INI
 
 [production]
 webname = "the example"
-database.adapter = "pdo_mysql"
 database.params.host = "db.example.com"
 database.params.username = "dbuser"
 database.params.password = "secret"
 database.params.dbname = "dbname"
+database.adapter = "pdo_mysql"
 
 [development]
 database.params.host = "dev.example.com"
@@ -83,6 +91,8 @@ database.adapter = "pdo_mysql"
 timeout = 10
 display_errors = 1
 html_errors = ""
+items.0 = 10
+items.1 = 20
 webname = "the example"
 
 Save section to INI
@@ -90,11 +100,11 @@ Save section to INI
 
 [mysection]
 production.webname = "the example"
-production.database.adapter = "pdo_mysql"
 production.database.params.host = "db.example.com"
 production.database.params.username = "dbuser"
 production.database.params.password = "secret"
 production.database.params.dbname = "dbname"
+production.database.adapter = "pdo_mysql"
 development.database.params.host = "dev.example.com"
 development.database.params.username = "devuser"
 development.database.params.password = "devsecret"
@@ -103,10 +113,12 @@ development.database.adapter = "pdo_mysql"
 development.timeout = 10
 development.display_errors = 1
 development.html_errors = ""
+development.items.0 = 10
+development.items.1 = 20
 development.webname = "the example"
 
 Load section from INI
-object(Config) (5) {
+object(Config) (6) {
   "database" => object(Config) (2) {
     "params" => object(Config) (4) {
       "host" => string(15) "dev.example.com"
@@ -119,6 +131,10 @@ object(Config) (5) {
   "timeout" => string(2) "10"
   "display_errors" => string(1) "1"
   "html_errors" => string(0) ""
+  "items" => object(Config) (2) {
+    "0" => string(2) "10"
+    "1" => string(2) "20"
+  }
   "webname" => string(11) "the example"
 }
 
@@ -134,6 +150,8 @@ database.adapter = "pdo_mysql"
 timeout = 10
 display_errors = true
 html_errors = false
+items.0 = 10
+items.1 = 20
 webname = "the example"
 
 check read-only:
