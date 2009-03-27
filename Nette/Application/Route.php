@@ -575,19 +575,18 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 		$m = $this->metadata;
-		$presenter = '';
+		$module = '';
 
-		if (isset($m[self::MODULE_KEY]['fixity'])) {
-			if ($m[self::MODULE_KEY]['fixity'] !== self::CONSTANT) {
+		if (isset($m[self::MODULE_KEY])) {
+			if (isset($m[self::MODULE_KEY]['fixity']) && $m[self::MODULE_KEY]['fixity'] === self::CONSTANT) {
+				$module = $m[self::MODULE_KEY]['default'] . ':';
+			} else {
 				return NULL;
 			}
-			$presenter = $m[self::MODULE_KEY]['default'] . ':';
 		}
 
-		if (isset($m[self::PRESENTER_KEY]['fixity'])) {
-			if ($m[self::PRESENTER_KEY]['fixity'] === self::CONSTANT) {
-				return $presenter . $m[self::PRESENTER_KEY]['default'];
-			}
+		if (isset($m[self::PRESENTER_KEY]['fixity']) && $m[self::PRESENTER_KEY]['fixity'] === self::CONSTANT) {
+			return $module . $m[self::PRESENTER_KEY]['default'];
 		}
 		return NULL;
 	}
