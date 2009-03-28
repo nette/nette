@@ -1,14 +1,15 @@
 Nette Framework example "Akrabat"
 ---------------------------------
 
-Klasicky Zend Framework Tutorial prepsany pro Nette.
+Classic Zend Framework Tutorial rewritten for Nette.
 
-Priklad demonstruje velmi dulezity rys Nette Frameworku: v ramci aplikace a to vcetne sablon
-se nepouzivaji URL. Ty jsou zalezitosti routeru a mohou se kdykoliv menit. Cilem odkazu je vzdy
-kombinace "Presenter:action" nebo "Presenter:signal!".
+The example shows an important feature of the Nette Framework: the URLs are
+not used inside the application including the templates. The URLs are in
+responsibility of the router and can be changed anytime. The target of a link
+is always a combination "Presenter:action" or "Presenter:signal!".
 
-Pro prihlaseni pouzijte
+To sign in:
 username: demo
 password: xxx
 
-Zdroj: http://akrabat.com/zend-framework-tutorial/ (Getting Started with the Zend Framework 1.5)
+Source: http://akrabat.com/zend-framework-tutorial/ (Getting Started with the Zend Framework 1.5)

@@ -1,4 +1,4 @@
 Nette Framework example
 -----------------------
 
-Nìkolik pøíkladù demonstrujících pouívání formuláøù v Nette.
+A couple of examples demonstrate forms usage in Nette.

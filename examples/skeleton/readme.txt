@@ -10,7 +10,7 @@ Installing
 ----------
 
 Download Nette Framework (http://nettephp.com/download) and extract the folder 'Nette' to your project's library directory 'libs'.
-Your library directory should now contain the Nette directory which contains all of the Nette Framework units. Now is Nette Framework
+Your library directory should now contain the Nette directory which contains all of the Nette Framework units. Now the Nette Framework is
 successfully installed and ready to use.
 
 

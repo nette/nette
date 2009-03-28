@@ -1,7 +1,7 @@
 Nette Framework example
 -----------------------
 
-Jednoduchy priklad demostrujici komponenty, jakozto logicke samostatne jednotky
-existujici v ramci presenteru. Komponenty muzeme umistit i dve vedle sebe,
-kazda bude plnit svou funkci samostatne. Komunikace mezi komponentami/presenterem
-zajistuji udalosti (event-driven model).
+A simple example showing components as the logical stand-alone units existing
+inside the presenter. We can put two components alongside and each of them
+will be working stand-alone. The communication between components and
+presenter is arranged by events (event-driven model).

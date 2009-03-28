@@ -1,6 +1,6 @@
 Nette Framework example
 -----------------------
 
-Priklad demonstruje pouziti modulu a submodulu. Presentery (a potazmo sablony) jsou
-rozdeleny do dvou hlavnich modulu Front a Admin, dale modul Front jeste obsahuje
-submodul Export.
+The example demonstrates the usage of modules and submodules. Presenters (and
+then templates) are separated on two main modules Front and Admin.
+Furthermore, the Front module contains the Export submodule.
