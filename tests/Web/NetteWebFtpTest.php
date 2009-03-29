@@ -39,7 +39,7 @@ class NetteWebFtpTest extends PHPUnit_Framework_TestCase
 		$ftp = new Ftp;
 		// Opens an FTP connection to the specified host
 		$ftp->connect('ftp.nettephp.com');
-		$ftp->pasv(true);
+		$ftp->pasv(TRUE);
 		// Login with username and password
 		$ftp->login('nette@php7.org', 'anonymous');
 
