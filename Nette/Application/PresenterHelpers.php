@@ -69,7 +69,8 @@ final class PresenterHelpers
 		if (is_subclass_of($class, /*Nette\Application\*/'PresenterComponent')) {
 			// $class::getPersistentMembers() in PHP 5.3
 			$defaults = get_class_vars($class);
-			foreach (call_user_func(array($class, 'getPersistentMembers'), $class) as $name => $foo) {
+			foreach (call_user_func(array($class, 'getPersistentMembers'), $class) as $name => $meta) {
+				if (is_string($meta)) $name = $meta;
 				$members[$name] = array(
 					'def' => $defaults[$name],
 					'since' => $class,
@@ -94,7 +95,8 @@ final class PresenterHelpers
 		$components = array();
 		if (is_subclass_of($class, /*Nette\Application\*/'Presenter')) {
 			// $class::getPersistentComponents() in PHP 5.3
-			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $foo) {
+			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $meta) {
+				if (is_string($meta)) $name = $meta;
 				$components[$name] = array('since' => $class);
 			}
 			$components = self::getPersistentComponents(get_parent_class($class)) + $components;

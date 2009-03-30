@@ -1130,10 +1130,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public static function getPersistentComponents()
 	{
-		return array_fill_keys(
-			(array) /*Nette\*/Annotations::get(new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/), 'persistent'),
-			array()
-		);
+		return (array) /*Nette\*/Annotations::get(new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/), 'persistent');
 	}
 
 

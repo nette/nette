@@ -226,7 +226,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 		$members = array();
 		foreach ($rc->getProperties() as $rp) {
 			if ($rp->isPublic() && !$rp->isStatic() && /*Nette\*/Annotations::get($rp, 'persistent')) {
-				$members[$rp->getName()] = array();
+				$members[] = $rp->getName();
 			}
 		}
 		return $members;
