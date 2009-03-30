@@ -471,8 +471,9 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 								}
 								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
 							}
+							$v = preg_replace($nonChars, '', $v);
 						}
-						$list[$key][$k] = preg_replace($nonChars, '', $v);
+						$list[$key][$k] = $v;
 					}
 				}
 			}
