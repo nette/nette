@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * $js = new JavaScript;
  * $js->jQuery('.prod img')
  *     ->css('position', 'relative')
- *     ->animate(array('top' => '100px'))
+ *     ->animate(array('top' => '100px'));
  * echo $js;
  * </code>
  *

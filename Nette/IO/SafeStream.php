@@ -26,9 +26,9 @@
  * Thread safe / atomic file manipulation. Stream safe://
  *
  * <code>
- * file_put_contents('safe://myfile.txt', $content)
+ * file_put_contents('safe://myfile.txt', $content);
  *
- * $content = file_get_contents('safe://myfile.txt')
+ * $content = file_get_contents('safe://myfile.txt');
  *
  * unlink('safe://myfile.txt');
  * </code>
