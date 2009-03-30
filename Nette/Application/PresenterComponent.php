@@ -127,13 +127,16 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function loadState(array $params)
 	{
-		$this->params = $params;
-		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $l)
+		foreach (PresenterHelpers::getPersistentMembers($this->getClass()) as $nm => $meta)
 		{
-			if (!isset($params[$nm])) continue; // ignore NULL values
-			if ($l['type']) settype($params[$nm], $l['type']);
-			$this->$nm = & $params[$nm];
+			if (isset($params[$nm])) { // ignore NULL values
+				if (isset($meta['def'])) {
+					settype($params[$nm], gettype($meta['def']));
+				}
+				$this->$nm = & $params[$nm];
+			}
 		}
+		$this->params = $params;
 	}
 
 
@@ -146,7 +149,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function saveState(array & $params, $forClass = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? $this->getClass() : $forClass) as $nm => $l)
+		foreach (PresenterHelpers::getPersistentMembers($forClass === NULL ? $this->getClass() : $forClass) as $nm => $meta)
 		{
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
@@ -154,7 +157,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 			} elseif (array_key_exists($nm, $params)) { // $params[$nm] === NULL
 				continue; // means skip
 
-			} elseif (!isset($l['since']) || $this instanceof $l['since']) {
+			} elseif (!isset($meta['since']) || $this instanceof $meta['since']) {
 				$val = $this->$nm; // object property value
 
 			} else {
@@ -165,11 +168,11 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 				throw new /*\*/InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
 
 			} else {
-				if ($l['type'] === NULL) {
-					if ((string) $val === '') $val = NULL;
+				if (isset($meta['def'])) {
+					settype($val, gettype($meta['def']));
+					if ($val === $meta['def']) $val = NULL;
 				} else {
-					settype($val, $l['type']);
-					if ($val === $l['def']) $val = NULL;
+					if ((string) $val === '') $val = NULL;
 				}
 				$params[$nm] = $val;
 			}
@@ -185,13 +188,13 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getParam($key = NULL, $default = NULL)
+	final public function getParam($name = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->params;
 
-		} elseif (isset($this->params[$key])) {
-			return $this->params[$key];
+		} elseif (isset($this->params[$name])) {
+			return $this->params[$name];
 
 		} else {
 			return $default;
@@ -204,10 +207,29 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * Returns a fully-qualified name that uniquely identifies the parameter.
 	 * @return string
 	 */
-	final public function getParamId($key)
+	final public function getParamId($name)
 	{
 		$uid = $this->getUniqueId();
-		return $uid === '' ? $key : $uid . self::NAME_SEPARATOR . $key;
+		return $uid === '' ? $name : $uid . self::NAME_SEPARATOR . $name;
+	}
+
+
+
+	/**
+	 * Returns array of classes persistent members. They have public visibility and are non-static.
+	 * This default implementation detects persistent members by annotation @persistent.
+	 * @return array
+	 */
+	public static function getPersistentMembers()
+	{
+		$rc = new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/);
+		$members = array();
+		foreach ($rc->getProperties() as $rp) {
+			if ($rp->isPublic() && !$rp->isStatic() && /*Nette\*/Annotations::get($rp, 'persistent')) {
+				$members[$rp->getName()] = array();
+			}
+		}
+		return $members;
 	}
 
 

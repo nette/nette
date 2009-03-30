@@ -90,7 +90,7 @@ abstract class Presenter extends Control implements IPresenter
 	private $globalState;
 
 	/** @var array */
-	private $globalStateSince;
+	private $globalStateSinces;
 
 	/** @var string */
 	private $action;
@@ -990,7 +990,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentMembers($class))) {
 				$component->saveState($args);
 			}
 
@@ -1042,7 +1042,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($presenterClass))) {
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentMembers($presenterClass))) {
 				$this->saveState($args, $presenterClass);
 			}
 
@@ -1124,24 +1124,31 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * Returns array of persistent components.
+	 * This default implementation detects components by class-level annotation @persistent(cmp1, cmp2).
+	 * @return array
+	 */
+	public static function getPersistentComponents()
+	{
+		return array_fill_keys(
+			(array) /*Nette\*/Annotations::get(new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/), 'persistent'),
+			array()
+		);
+	}
+
+
+
+	/**
 	 * Saves state information for all subcomponents to $this->globalState.
 	 * @return array
 	 */
 	private function getGlobalState($forClass = NULL)
 	{
-		$sinces = & $this->globalStateSince;
+		$sinces = & $this->globalStateSinces;
 
 		if ($this->globalState === NULL) {
 			if ($this->phase >= self::PHASE_SHUTDOWN) {
 				throw new /*\*/InvalidStateException("Presenter is shutting down, cannot save state.");
-			}
-
-			if ($sinces === NULL) {
-				// sinces base
-				$sinces = PresenterHelpers::getPersistentComponents(get_class($this));
-				foreach (PresenterHelpers::getPersistentParams(get_class($this)) as $nm => $l) {
-					$sinces[$nm] = $l['since'];
-				}
 			}
 
 			$state = array();
@@ -1151,21 +1158,29 @@ abstract class Presenter extends Control implements IPresenter
 					$state[$prefix . $key] = $val;
 				}
 			}
-
 			$this->saveState($state, $forClass);
 
+			if ($sinces === NULL) {
+				$sinces = array();
+				foreach (PresenterHelpers::getPersistentMembers(get_class($this)) as $nm => $meta) {
+					$sinces[$nm] = $meta['since'];
+				}
+			}
+
+			$components = PresenterHelpers::getPersistentComponents(get_class($this));
 			$iterator = $this->getComponents(TRUE, 'Nette\Application\IStatePersistent');
-			foreach ($iterator as $id => $component)
+			foreach ($iterator as $name => $component)
 			{
 				if ($iterator->getDepth() === 0) {
-					$since = isset($sinces[$id]) ? $sinces[$id] : FALSE; // FALSE = nonpersistent
+					// counts with RecursiveIteratorIterator::SELF_FIRST
+					$since = isset($components[$name]['since']) ? $components[$name]['since'] : FALSE; // FALSE = nonpersistent
 				}
 				$prefix = $component->getUniqueId() . self::NAME_SEPARATOR;
 				$params = array();
 				$component->saveState($params);
 				foreach ($params as $key => $val) {
 					$state[$prefix . $key] = $val;
-					$sinces[$prefix . $key] = $since; // additional sinces for speed-up
+					$sinces[$prefix . $key] = $since;
 				}
 			}
 

@@ -74,6 +74,7 @@ class PresenterLoader implements IPresenterLoader
 		}
 
 		$reflection = new /*\*/ReflectionClass($class);
+		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface(/*Nette\Application\*/'IPresenter')) {
 			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor.");
@@ -84,7 +85,7 @@ class PresenterLoader implements IPresenterLoader
 		}
 
 		// canonicalize presenter name
-		$realName = $this->unformatPresenterClass($reflection->getName());
+		$realName = $this->unformatPresenterClass($class);
 		if ($name !== $realName) {
 			if ($this->caseSensitive) {
 				throw new InvalidPresenterException("Cannot load presenter '$name', case mismatch. Real name is '$realName'.");

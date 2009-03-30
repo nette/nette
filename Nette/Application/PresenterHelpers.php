@@ -32,8 +32,8 @@
  */
 final class PresenterHelpers
 {
-	/** @var array getPersistentParams cache */
-	private static $ppCache = array();
+	/** @var array getPersistentMembers cache */
+	private static $pmCache = array();
 
 	/** @var array getPersistentComponents cache */
 	private static $pcCache = array();
@@ -57,72 +57,49 @@ final class PresenterHelpers
 
 
 	/**
-	 * Returns array of classes persistent parameters. Class must implements IStatePersistent.
-	 * Persistent parameter has annotation @persistent, public visibility and is non-static.
+	 * Returns array of classes persistent members.
 	 * @param  string  class name
 	 * @return array
 	 */
-	final static public function getPersistentParams($class)
+	public static function getPersistentMembers($class)
 	{
-		$meta = & self::$ppCache[strtolower($class)];
-		if ($meta !== NULL) return $meta;
-
-		try {
-			$meta = array();
-			$rc = new /*\*/ReflectionClass($class);
-			if (!$rc->implementsInterface(/*Nette\Application\*/'IStatePersistent')) return array();
-
-			$sinces = $rc->isSubclassOf(/*Nette\Application\*/'Presenter');
-
-			// generate
-			foreach ($rc->getDefaultProperties() as $nm => $val)
-			{
-				$rp = $rc->getProperty($nm);
-				if (!$rp->isPublic() || $rp->isStatic() || !/*Nette\*/Annotations::get($rp, 'persistent')) continue;
-
-				$meta[$nm] = array(
-					'def' => $val, // default value from $class
-					'type' => $val === NULL ? NULL : gettype($val), // forced type
+		$members = & self::$pmCache[$class];
+		if ($members !== NULL) return $members;
+		$members = array();
+		if (is_subclass_of($class, /*Nette\Application\*/'PresenterComponent')) {
+			// $class::getPersistentMembers() in PHP 5.3
+			$defaults = get_class_vars($class);
+			foreach (call_user_func(array($class, 'getPersistentMembers'), $class) as $name => $foo) {
+				$members[$name] = array(
+					'def' => $defaults[$name],
+					'since' => $class,
 				);
-
-				if ($sinces) {
-					$decl = $rp->getDeclaringClass();
-					// find REAL declaring class
-					while (($tmp = $decl->getParentClass()) && $tmp->hasProperty($nm) && $tmp->getProperty($nm)->isPublic()) {
-						$decl = $tmp;
-					}
-					$meta[$nm]['since'] = $decl->getName();
-				}
-
 			}
-		} catch (/*\*/ReflectionException $e) {
+			$members = self::getPersistentMembers(get_parent_class($class)) + $members;
 		}
-		return $meta;
+		return $members;
 	}
 
 
 
 	/**
 	 * Returns array of classes persistent components.
-	 * Persistent components has class-level annotation @persistent(cmp1, cmp2).
 	 * @param  string  class name
 	 * @return array
 	 */
-	final static public function getPersistentComponents($class)
+	public static function getPersistentComponents($class)
 	{
-		$meta = & self::$pcCache[strtolower($class)];
-		if ($meta !== NULL) return $meta;
-
-		try {
-			$meta = array();
-			$rc = new /*\*/ReflectionClass($class);
-			if ($rc->isSubclassOf(/*Nette\Application\*/'Presenter')) {
-				$meta = array_fill_keys((array) /*Nette\*/Annotations::get($rc, 'persistent'), $class)
-					+ self::getPersistentComponents(get_parent_class($class));
+		$components = & self::$pcCache[$class];
+		if ($components !== NULL) return $components;
+		$components = array();
+		if (is_subclass_of($class, /*Nette\Application\*/'Presenter')) {
+			// $class::getPersistentComponents() in PHP 5.3
+			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $foo) {
+				$components[$name] = array('since' => $class);
 			}
-		} catch (/*\*/ReflectionException $e) {
+			$components = self::getPersistentComponents(get_parent_class($class)) + $components;
 		}
-		return $meta;
+		return $components;
 	}
 
 
@@ -134,7 +111,7 @@ final class PresenterHelpers
 	 * @param  string  method name
 	 * @return bool
 	 */
-	final static public function isMethodCallable($class, $method)
+	public static function isMethodCallable($class, $method)
 	{
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache !== NULL) return $cache;
@@ -170,7 +147,7 @@ final class PresenterHelpers
 	 * @param  array   parameters - associative array
 	 * @return array   arguments  - list
 	 */
-	final static public function paramsToArgs($class, $method, $params)
+	public static function paramsToArgs($class, $method, $params)
 	{
 		$args = array();
 		$i = 0;
@@ -201,7 +178,7 @@ final class PresenterHelpers
 	 * @return void
 	 * @throws InvalidLinkException
 	 */
-	final static public function argsToParams($class, $method, & $args, $supplemental = array())
+	public static function argsToParams($class, $method, & $args, $supplemental = array())
 	{
 		$i = 0;
 		foreach (self::getMethodParams($class, $method) as $name => $def) {
@@ -241,7 +218,7 @@ final class PresenterHelpers
 	 * @param  string  method name
 	 * @return array
 	 */
-	final static public function getMethodParams($class, $method)
+	private static function getMethodParams($class, $method)
 	{
 		$cache = & self::$mpCache[strtolower($class . ':' . $method)];
 		if ($cache !== NULL) return $cache;
