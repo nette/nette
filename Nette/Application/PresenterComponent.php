@@ -127,7 +127,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function loadState(array $params)
 	{
-		foreach (PresenterHelpers::getPersistentMembers($this->getClass()) as $nm => $meta)
+		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $meta)
 		{
 			if (isset($params[$nm])) { // ignore NULL values
 				if (isset($meta['def'])) {
@@ -149,7 +149,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function saveState(array & $params, $forClass = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentMembers($forClass === NULL ? $this->getClass() : $forClass) as $nm => $meta)
+		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? $this->getClass() : $forClass) as $nm => $meta)
 		{
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
@@ -216,20 +216,20 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Returns array of classes persistent members. They have public visibility and are non-static.
-	 * This default implementation detects persistent members by annotation @persistent.
+	 * Returns array of classes persistent parameters. They have public visibility and are non-static.
+	 * This default implementation detects persistent parameters by annotation @persistent.
 	 * @return array
 	 */
-	public static function getPersistentMembers()
+	public static function getPersistentParams()
 	{
 		$rc = new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/);
-		$members = array();
+		$params = array();
 		foreach ($rc->getProperties() as $rp) {
 			if ($rp->isPublic() && !$rp->isStatic() && /*Nette\*/Annotations::get($rp, 'persistent')) {
-				$members[] = $rp->getName();
+				$params[] = $rp->getName();
 			}
 		}
-		return $members;
+		return $params;
 	}
 
 

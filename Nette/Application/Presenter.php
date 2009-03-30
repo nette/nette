@@ -990,7 +990,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentMembers($class))) {
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
 				$component->saveState($args);
 			}
 
@@ -1042,7 +1042,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentMembers($presenterClass))) {
+			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($presenterClass))) {
 				$this->saveState($args, $presenterClass);
 			}
 
@@ -1159,7 +1159,7 @@ abstract class Presenter extends Control implements IPresenter
 
 			if ($sinces === NULL) {
 				$sinces = array();
-				foreach (PresenterHelpers::getPersistentMembers(get_class($this)) as $nm => $meta) {
+				foreach (PresenterHelpers::getPersistentParams(get_class($this)) as $nm => $meta) {
 					$sinces[$nm] = $meta['since'];
 				}
 			}

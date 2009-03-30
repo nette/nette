@@ -32,8 +32,8 @@
  */
 final class PresenterHelpers
 {
-	/** @var array getPersistentMembers cache */
-	private static $pmCache = array();
+	/** @var array getPersistentParams cache */
+	private static $ppCache = array();
 
 	/** @var array getPersistentComponents cache */
 	private static $pcCache = array();
@@ -57,28 +57,28 @@ final class PresenterHelpers
 
 
 	/**
-	 * Returns array of classes persistent members.
+	 * Returns array of classes persistent parameters.
 	 * @param  string  class name
 	 * @return array
 	 */
-	public static function getPersistentMembers($class)
+	public static function getPersistentParams($class)
 	{
-		$members = & self::$pmCache[$class];
-		if ($members !== NULL) return $members;
-		$members = array();
+		$params = & self::$ppCache[$class];
+		if ($params !== NULL) return $params;
+		$params = array();
 		if (is_subclass_of($class, /*Nette\Application\*/'PresenterComponent')) {
-			// $class::getPersistentMembers() in PHP 5.3
+			// $class::getPersistentParams() in PHP 5.3
 			$defaults = get_class_vars($class);
-			foreach (call_user_func(array($class, 'getPersistentMembers'), $class) as $name => $meta) {
+			foreach (call_user_func(array($class, 'getPersistentParams'), $class) as $name => $meta) {
 				if (is_string($meta)) $name = $meta;
-				$members[$name] = array(
+				$params[$name] = array(
 					'def' => $defaults[$name],
 					'since' => $class,
 				);
 			}
-			$members = self::getPersistentMembers(get_parent_class($class)) + $members;
+			$params = self::getPersistentParams(get_parent_class($class)) + $params;
 		}
-		return $members;
+		return $params;
 	}
 
 
