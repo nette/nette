@@ -20,9 +20,15 @@
 
 
 
-if (version_compare(PHP_VERSION , '5.2.0', '<')) {
+/**
+ * Check PHP configuration.
+ */
+if (version_compare(PHP_VERSION, '5.2.0', '<')) {
 	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
 }
+
+set_magic_quotes_runtime(FALSE);
+
 
 
 /**/

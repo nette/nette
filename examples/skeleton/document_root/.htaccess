@@ -6,6 +6,8 @@ Options -Indexes
 #    php_flag magic_quotes_gpc off
 #    php_flag register_globals off
 #    php_flag short_open_tag on
+#    php_flag zend.ze1_compatibility_mode off
+#    php_value variables_order "GPCS"
 # </IfModule>
 
 # mod_rewrite

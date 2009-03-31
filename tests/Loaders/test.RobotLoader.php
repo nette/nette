@@ -14,7 +14,7 @@ foreach (glob(Environment::expand('%tempDir%/*')) as $file) unlink($file); // de
 
 
 $loader = new /*Nette\Loaders\*/RobotLoader;
-$loader->addDirectory(NETTE_DIR);
+$loader->addDirectory('../../Nette/');
 $loader->addDirectory(dirname(__FILE__));
 $loader->addDirectory(dirname(__FILE__)); // purposely doubled
 $loader->register();
