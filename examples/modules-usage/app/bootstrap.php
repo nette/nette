@@ -1,7 +1,10 @@
 <?php
 
+/*use Nette\Debug;*/
 /*use Nette\Environment;*/
 /*use Nette\Application\Route;*/
+/*use Nette\Application\SimpleRouter;*/
+/*use Nette\Loaders\RobotLoader;*/
 
 
 
@@ -26,7 +29,7 @@ if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
 }
 
 // 2d) enable RobotLoader - this allows load all classes automatically
-$loader = new /*Nette\Loaders\*/RobotLoader();
+$loader = new RobotLoader();
 $loader->addDirectory(APP_DIR);
 $loader->register();
 

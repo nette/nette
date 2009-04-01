@@ -1,7 +1,10 @@
 <?php
 
+/*use Nette\Environment;*/
+/*use Nette\Application\Presenter;*/
 
-abstract class BasePresenter extends /*Nette\Application\*/Presenter
+
+abstract class BasePresenter extends Presenter
 {
 
 	protected function beforeRender()

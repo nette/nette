@@ -1,6 +1,9 @@
 <?php
 
 /*use Nette\Environment;*/
+/*use Nette\Application\AppForm;*/
+/*use Nette\Forms\Form;*/
+/*use Nette\Web\User;*/
 
 require_once dirname(__FILE__) . '/BasePresenter.php';
 

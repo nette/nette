@@ -12,8 +12,7 @@
  */
 
 /*use Nette\Debug;*/
-/*use Nette\Debug;*/
-/*use Nette\Web\Uri;*/
+/*use Nette\Web\UriScript;*/
 
 
 

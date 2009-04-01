@@ -104,7 +104,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelper('date', 'Nette\Templates\TemplateHelpers::date');
 		$template->registerHelper('nl2br', 'nl2br');
 		$template->registerHelper('truncate', 'Nette\String::truncate');
-		$template->registerHelper('bytes', 'Nette\TemplateHelpers::bytes');
+		$template->registerHelper('bytes', 'Nette\Template\TemplateHelpers::bytes');
 
 		return $template;
 	}

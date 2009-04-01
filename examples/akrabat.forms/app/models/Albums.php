@@ -1,5 +1,8 @@
 <?php
 
+/*use Nette\Object;*/
+/*use Nette\Environment;*/
+
 
 /**
  * Albums model.

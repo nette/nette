@@ -59,7 +59,7 @@ class SnippetHelper extends /*Nette\*/Object
 	 * @param  string  start element
 	 * @return SnippetHelper
 	 */
-	public static function create(PresenterComponent $control, $name = NULL, $tag = 'div')
+	public static function create(/*Nette\Application\*/PresenterComponent $control, $name = NULL, $tag = 'div')
 	{
 		if (self::$outputAllowed) { // rendering flow or non-AJAX request
 			$obj = new self;

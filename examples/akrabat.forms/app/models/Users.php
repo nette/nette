@@ -1,5 +1,6 @@
 <?php
 
+/*use Nette\Object;*/
 /*use Nette\Security\AuthenticationException;*/
 
 

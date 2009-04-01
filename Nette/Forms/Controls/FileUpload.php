@@ -116,7 +116,7 @@ class FileUpload extends FormControl
 	/**
 	 * MimeType validator: has file specified mime type?
 	 * @param  FileUpload
-	 * @param  string  mime type
+	 * @param  array|string  mime type
 	 * @return bool
 	 */
 	public static function validateMimeType(FileUpload $control, $mimeType)
@@ -128,7 +128,7 @@ class FileUpload extends FormControl
 			if (!$type) {
 				return FALSE; // cannot verify :-(
 			}
-			$mimeTypes = explode(',', $mimeType);
+			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
 				return TRUE;
 			}
