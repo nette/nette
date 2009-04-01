@@ -15,7 +15,7 @@
 
 	<style>
 	body {
-		font: 13px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+		font: 13px/1.5 sans-serif;
 		color: #333;
 		background: #fff;
 	}
@@ -75,7 +75,7 @@
 	<p><small>Enter an URL into the address bar and see which routes match it.</small></p>
 
 	<?php if (!empty($presenter)): ?>
-		<h2>&#x25b6; <?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
+		<h2>&#x25ba; <?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
 
 		<?php if (empty($params)): ?>
 			<p>No parameters.</p>
@@ -103,10 +103,10 @@
 	<!-- ~~~~~~~~~~~ -->
 
 	<?php if (empty($router)): ?>
-		<h2>&#x25b6; Not matched</h2>
+		<h2>&#x25ba; Not matched</h2>
 
 	<?php else: ?>
-		<h2>&#x25b6; Matched by <?php echo htmlSpecialChars($router) ?></h2>
+		<h2>&#x25ba; Matched by <?php echo htmlSpecialChars($router) ?></h2>
 	<?php endif ?>
 
 	<!-- ~~~~~~~~~~~ -->
