@@ -13,7 +13,7 @@
 /**
  * Check PHP configuration.
  */
-foreach (array('version_compare', 'function_exists', 'extension_loaded', 'ini_get') as $function) {
+foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_get') as $function) {
 	if (!function_exists($function)) {
 		die("Error: function '$function' is required by Nette Framework and this Requirements Checker.");
 	}
@@ -35,6 +35,12 @@ paint(array(
 		REQUIRED,
 		version_compare(PHP_VERSION, '5.2.0', '>='),
 		'PHP version 5.2.0 or higher is required by Nette Framework.',
+	),
+	array(
+		'PHP version & set_exception_handler',
+		OPTIONAL,
+		version_compare(PHP_VERSION, '5.2.1', '<>'),
+		'With PHP version 5.2.1 you will not be able to use Nette\Debug.',
 	),
 	array(
 		'Function ini_set',
@@ -147,7 +153,7 @@ paint(array(
 	array(
 		'ImageMagick library',
 		OPTIONAL,
-		exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/checker.gif', ' ')) === '176,104,GIF',
+		@exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/checker.gif', ' ')) === '176,104,GIF', // intentionally @
 		'ImageMagick server library is optional. If it is absent, you will not be able to use Nette\ImageMagick.',
 	),
 	array(
@@ -168,6 +174,11 @@ paint(array(
  */
 function paint($requirements)
 {
+	$redirect = time();
+	if (!isset($_GET) || (isset($_GET['r']) && $_GET['r'] == $redirect)) {
+		$redirect = NULL;
+	}
+
 	$errors = array(
 		REQUIRED => 0,
 		OPTIONAL => 0,

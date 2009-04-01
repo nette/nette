@@ -159,14 +159,12 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			return;
 		}
 
-		$isFile = TRUE;
 		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
 		$key = md5($this->file) . count($this->filters) . '.' . basename($this->file);
-		$content = $cache[$key];
+		$cached = $content = $cache[$key];
 
 		if ($content === NULL) {
 			$content = file_get_contents($filePath);
-			$isFile = FALSE;
 
 			foreach ($this->filters as $filter) {
 				if (!is_callable($filter)) {
@@ -208,19 +206,12 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
-		}
-
-		if (self::$cacheStorage instanceof TemplateStorage) {
 			$cached = $cache[$key];
-			if ($cached !== NULL) {
-				/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->params);
-				fclose($cached['handle']);
-				return;
-			}
 		}
 
-		if ($isFile) {
-			/*Nette\Loaders\*/LimitedScope::load($content, $this->params);
+		if ($cached !== NULL && self::$cacheStorage instanceof TemplateStorage) {
+			/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->params);
+			fclose($cached['handle']);
 
 		} else {
 			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);

@@ -168,7 +168,7 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertType('HttpUploadedFile', $request->getFile(CONTROL_CHARACTERS));
 		$this->assertType('HttpUploadedFile', $request->files['file1']);
 
-        // filter data
+		// filter data
 		$request->setEncoding('UTF-8');
 
 		$this->assertEquals("v\xc5\xbe", $request->getQuery('invalid'));
