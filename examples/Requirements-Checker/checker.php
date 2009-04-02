@@ -44,7 +44,7 @@ paint(array(
 	),
 	array(
 		'Function ini_set',
-		REQUIRED,
+		OPTIONAL,
 		function_exists('ini_set'),
 		'Function ini_set() is optional. If it is absent, some parts of framework may not work properly.',
 	),
