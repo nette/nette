@@ -45,10 +45,7 @@ class Session extends /*Nette\*/Object
 	private $regenerationNeeded;
 
 	/** @var bool  has been session started? */
-	private static $started = FALSE;
-
-	/** @var array of SessionNamespace  registry of singleton instances */
-	private static $instances = array();
+	private static $started;
 
 	/** @var array default configuration */
 	private static $defaultConfig = array(
@@ -92,7 +89,7 @@ class Session extends /*Nette\*/Object
 		if (self::$started) {
 			throw new /*\*/InvalidStateException('Session has already been started.');
 
-		} elseif (defined('SID')) {
+		} elseif (self::$started === NULL && defined('SID')) {
 			throw new /*\*/InvalidStateException('A session had already been started by session.auto-start or session_start().');
 		}
 
@@ -182,7 +179,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function isStarted()
 	{
-		return self::$started;
+		return (bool) self::$started;
 	}
 
 
@@ -256,9 +253,6 @@ class Session extends /*Nette\*/Object
 
 	/**
 	 * Sets the session ID to a specified one.
-	 * @throws \InvalidStateException
-	 * @param  string $id
-	 * @return void
 	 * @deprecated
 	 */
 	public function setId($id)
@@ -275,6 +269,35 @@ class Session extends /*Nette\*/Object
 	public function getId()
 	{
 		return session_id();
+	}
+
+
+
+	/**
+	 * Sets the session name to a specified one.
+	 * @param  string
+	 * @return void
+	 */
+	public function setName($name)
+	{
+		if (!is_string($name) || !preg_match('#[^0-9.][^.]*$#A', $name)) {
+			throw new /*\*/InvalidArgumentException('Session name must be a string and cannot contain dot.');
+		}
+
+		$this->configure(array(
+			'session.name' => $name,
+		));
+	}
+
+
+
+	/**
+	 * Gets the session name.
+	 * @return string
+	 */
+	public function getName()
+	{
+		return session_name();
 	}
 
 
@@ -317,11 +340,7 @@ class Session extends /*Nette\*/Object
 			$this->start();
 		}
 
-		if (!isset(self::$instances[$namespace])) {
-			self::$instances[$namespace] = new $class($_SESSION['__NS'][$namespace], $_SESSION['__NM'][$namespace]);
-		}
-
-		return self::$instances[$namespace];
+		return new $class($_SESSION['__NS'][$namespace], $_SESSION['__NM'][$namespace]);
 	}
 
 

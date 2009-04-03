@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
  */
-final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAggregate
+final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAggregate, /*\*/ArrayAccess
 {
 	/** @var array  session data storage */
 	private $data;
@@ -125,6 +125,59 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	public function __unset($name)
 	{
 		unset($this->data[$name], $this->meta['EXP'][$name]);
+	}
+
+
+
+	/**
+	 * Sets a variable in this session namespace.
+	 *
+	 * @param  string  name
+	 * @param  mixed   value
+	 * @return void
+	 */
+	public function offsetSet($name, $value)
+	{
+		$this->__set($name, $value);
+	}
+
+
+
+	/**
+	 * Gets a variable from this session namespace.
+	 *
+	 * @param  string    name
+	 * @return mixed
+	 */
+	public function offsetGet($name)
+	{
+		return $this->__get($name);
+	}
+
+
+
+	/**
+	 * Determines whether a variable in this session namespace is set.
+	 *
+	 * @param  string    name
+	 * @return bool
+	 */
+	public function offsetExists($name)
+	{
+		return $this->__isset($name);
+	}
+
+
+
+	/**
+	 * Unsets a variable in this session namespace.
+	 *
+	 * @param  string    name
+	 * @return void
+	 */
+	public function offsetUnset($name)
+	{
+		$this->__unset($name);
 	}
 
 
