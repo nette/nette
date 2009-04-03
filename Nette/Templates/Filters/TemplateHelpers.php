@@ -44,31 +44,28 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside HTML template.
-	 * @param  string
+	 * @param  mixed
 	 * @return string
 	 */
 	public static function escapeHtml($s)
 	{
-		if (is_string($s)) {
-			return htmlSpecialChars($s, ENT_QUOTES);
+		if (is_object($s) && ($s instanceof Template || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+			return (string) $s;
 		}
-		return $s;
+		return htmlSpecialChars($s, ENT_QUOTES);
 	}
 
 
 
 	/**
 	 * Escapes string for use inside CSS template.
-	 * @param  string
+	 * @param  mixed
 	 * @return string
 	 */
 	public static function escapeCss($s)
 	{
-		if (is_string($s)) {
-			// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
-			return addcslashes($s, "\x00..\x2C./:;<=>?@[\\]^`{|}~");
-		}
-		return $s;
+		// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
+		return addcslashes($s, "\x00..\x2C./:;<=>?@[\\]^`{|}~");
 	}
 
 

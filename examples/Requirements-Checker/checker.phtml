@@ -98,11 +98,11 @@ header('Content-Type: text/html; charset=utf-8');
 
 
 	<?php if ($errors[REQUIRED]): ?>
-	<h3 class="failed">Sorry, your server configuration does not satisfy the requirements by Nette Framework.</h3>
+	<h3 class="failed">Sorry, your server configuration does not satisfy the requirements of Nette Framework.</h3>
 	<?php elseif ($errors[OPTIONAL]): ?>
-	<h3 class="warning">Your server configuration satisfies minimum requirements by Nette Framework. Please see the warnings listed below.</h3>
+	<h3 class="warning">Your server configuration satisfies minimum requirements of Nette Framework. Please see the warnings listed below.</h3>
 	<?php else: ?>
-	<h3 class="passed">Congratulations! Your server configuration satisfies all requirements by Nette Framework.</h3>
+	<h3 class="passed">Congratulations! Your server configuration satisfies all requirements of Nette Framework.</h3>
 	<?php endif ?>
 
 
