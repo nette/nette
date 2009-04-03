@@ -24,6 +24,7 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 /**
  * Check Nette Framework requirements.
  */
+define('CHECKER_VERSION', '1.0');
 define('REQUIRED', TRUE);
 define('OPTIONAL', FALSE);
 
@@ -37,7 +38,7 @@ paint(array(
 		'PHP version 5.2.0 or higher is required by Nette Framework.',
 	),
 	array(
-		'PHP version & set_exception_handler',
+		'set_exception_handler',
 		OPTIONAL,
 		version_compare(PHP_VERSION, '5.2.1', '<>'),
 		'With PHP version 5.2.1 you will not be able to use Nette\Debug.',

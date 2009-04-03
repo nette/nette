@@ -54,6 +54,15 @@ header('Content-Type: text/html; charset=utf-8');
 		border: 1px solid #d1cdab;
 		text-align: left;
 		padding: 3px;
+		font-weight: normal;
+	}
+
+	th {
+		font-size: 105%;
+	}
+
+	p span {
+		padding: 0 .6em;
 	}
 
 	.passed {
@@ -68,6 +77,15 @@ header('Content-Type: text/html; charset=utf-8');
 	.failed {
 		background: firebrick;
 		color: white;
+	}
+
+	.required {
+		background: #F0F0F0;
+		color: black;
+	}
+
+	.optional {
+		color: #666;
 	}
 </style>
 </head>
@@ -93,13 +111,18 @@ header('Content-Type: text/html; charset=utf-8');
 	<table class="result">
 	<?php foreach ($requirements as $requirement):?>
 	<?php list($name, $required, $result, $hint) = $requirement ?>
-	<?php $class = $result ? 'passed' : ($required ? 'failed' : 'warning') ?>
+	<?php $class1 = $result ? 'passed' : ($required === REQUIRED ? 'failed' : 'warning') ?>
+	<?php $class2 = $required === REQUIRED ? 'required' : 'optional' ?>
 	<tr>
-		<td class="<?php echo $class ?>"><?php echo $class ?></td>
-		<th><?php echo htmlSpecialChars($name) ?></th>
-		<td><?php echo htmlSpecialChars($hint) ?></td>
+		<td class="<?php echo $class1 ?>"><?php echo $class1 ?></td>
+		<th class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($name) ?></th>
+		<td class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($hint) ?></td>
 	</tr>
 	<?php endforeach ?>
 	</table>
+
+	<p>Legend: <span class="passed">passed</span> <span class="failed">failed</span> <span class="warning">warning</span> <span class="required">required</span> <span class="optional">optional</span></p>
+
+	<p>Requirements Checker version <?php echo CHECKER_VERSION ?></p>
 </body>
 </html>
