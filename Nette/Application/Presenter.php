@@ -1047,7 +1047,15 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
-			$current = $current && count($args) === count(array_intersect_assoc($args, $globalState + $this->params));
+			if ($current && $args) {
+				$tmp = $globalState + $this->params;
+				foreach ($args as $key => $val) {
+					if ((string) $val !== (isset($tmp[$key]) ? (string) $tmp[$key] : '')) {
+						$current = FALSE;
+						break;
+					}
+				}
+			}
 			$args += $globalState;
 		}
 

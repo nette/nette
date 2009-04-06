@@ -46,7 +46,6 @@ class HiddenField extends FormControl
 		$this->control->type = 'hidden';
 		$this->value = (string) $forcedValue;
 		$this->forcedValue = $forcedValue;
-		$this->setHtmlId(FALSE);
 	}
 
 

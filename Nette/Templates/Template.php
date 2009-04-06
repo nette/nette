@@ -209,7 +209,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			$cached = $cache[$key];
 		}
 
-		if ($cached !== NULL && self::$cacheStorage instanceof TemplateStorage) {
+		if ($cached !== NULL && self::$cacheStorage instanceof TemplateCacheStorage) {
 			/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->params);
 			fclose($cached['handle']);
 
@@ -432,7 +432,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public static function getCacheStorage()
 	{
 		if (self::$cacheStorage === NULL) {
-			self::$cacheStorage = new TemplateStorage(/*Nette\*/Environment::getVariable('cacheBase'));
+			self::$cacheStorage = new TemplateCacheStorage(/*Nette\*/Environment::getVariable('cacheBase'));
 		}
 		return self::$cacheStorage;
 	}

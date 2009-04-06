@@ -33,7 +33,7 @@ require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-class TemplateStorage extends /*Nette\Caching\*/FileStorage
+class TemplateCacheStorage extends /*Nette\Caching\*/FileStorage
 {
 
 	/**

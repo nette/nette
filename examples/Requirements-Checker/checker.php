@@ -152,6 +152,12 @@ paint(array(
 		'GD extension is optional. If it is absent, you will not be able to use Nette\Image.',
 	),
 	array(
+		'Bundled GD extension',
+		OPTIONAL,
+		extension_loaded('gd') && GD_BUNDLED,
+		'Bundled GD extension is optional. If it is absent, you will not be able to some function as Image::filter() or Image::rotate().',
+	),
+	array(
 		'ImageMagick library',
 		OPTIONAL,
 		@exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/checker.gif', ' ')) === '176,104,GIF', // intentionally @
