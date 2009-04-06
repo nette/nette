@@ -121,7 +121,7 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 			$this->submit();
 
 		} else {
-			throw new SignalException("There is no handler for signal '$signal' in '{$this->getClass()}'.");
+			throw new BadSignalException("There is no handler for signal '$signal' in '{$this->getClass()}'.");
 		}
 	}
 

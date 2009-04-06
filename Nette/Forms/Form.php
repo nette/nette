@@ -32,13 +32,14 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
- * @example    forms/example1.php Manual form rendering and separated form and rules definition
- * @example    forms/example2.php Form definition using fluent interfaces
- * @example    forms/example3.php Localization (with Zend_Translate)
- * @example    forms/example4.php Custom form rendering
- * @example    forms/example5.php How to use custom validator
- * @example    forms/example6.php How to use naming containers
- * @example    forms/example7.php How to change charset
+ * @example    forms/basic-example.php  Form definition using fluent interfaces
+ * @example    forms/manual-rendering.php  Manual form rendering and separated form and rules definition
+ * @example    forms/localization.php  Localization (with Zend_Translate)
+ * @example    forms/custom-rendering.php  Custom form rendering
+ * @example    forms/custom-validator.php  How to use custom validator
+ * @example    forms/naming-containers.php  How to use naming containers
+ * @example    forms/CSRF-protection.php  How to use Cross-Site Request Forgery (CSRF) form protection
+ * @example    forms/custom-encoding.php  How to change charset
  */
 class Form extends FormContainer
 {
