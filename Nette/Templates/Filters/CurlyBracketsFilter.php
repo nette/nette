@@ -22,6 +22,10 @@
 
 
 
+require_once dirname(__FILE__) . '/../../Object.php';
+
+
+
 /**
  * Template filter curlyBrackets: support for {...} in template.
  *
@@ -52,7 +56,7 @@
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-final class CurlyBracketsFilter
+class CurlyBracketsFilter extends /*Nette\*/Object
 {
 
 	/** @var array */
@@ -102,23 +106,13 @@ final class CurlyBracketsFilter
 	);
 
 	/** @var array */
-	private static $blocks = array();
+	private $blocks = array();
 
 	/** @var string */
-	private static $file;
+	private $file;
 
 	/** @var string */
-	private static $extends, $var, $modifiers;
-
-
-
-	/**
-	 * Static class - cannot be instantiated.
-	 */
-	final public function __construct()
-	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
-	}
+	private $extends, $var, $modifiers;
 
 
 
@@ -129,8 +123,21 @@ final class CurlyBracketsFilter
 	 */
 	public static function invoke($s, $file)
 	{
-		self::$file = $file;
-		self::$extends = NULL;
+		$filter = new self;
+		return $filter->__invoke($s, $file);
+	}
+
+
+
+	/**
+	 * Invokes filter.
+	 * @param  string
+	 * @return string
+	 */
+	public function __invoke($s, $file)
+	{
+		$this->file = $file;
+		$this->extends = NULL;
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -157,7 +164,7 @@ final class CurlyBracketsFilter
 			'$1<?php \\$_cb->escape = "escapeCss" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
 		), $s);
 
-		self::$blocks = array();
+		$this->blocks = array();
 		$k = array();
 		foreach (self::$macros as $key => $foo)
 		{
@@ -169,11 +176,11 @@ final class CurlyBracketsFilter
 		}
 		$s = preg_replace_callback(
 			'#\\{(' . implode('|', $k) . ')([^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}()#s',
-			array(__CLASS__, 'cb'),
+			array($this, 'cb'),
 			$s
 		);
 
-		$s .= self::$extends;
+		$s .= $this->extends;
 
 		return $s;
 	}
@@ -183,10 +190,10 @@ final class CurlyBracketsFilter
 	/**
 	 * Callback for replacing text.
 	 */
-	private static function cb($m)
+	private function cb($m)
 	{
-		list(, $macro, self::$var, self::$modifiers) = $m;
-		return preg_replace_callback('#%(.*?)%#', array(__CLASS__, 'cb2'), self::$macros[$macro]);
+		list(, $macro, $this->var, $this->modifiers) = $m;
+		return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), self::$macros[$macro]);
 	}
 
 
@@ -194,19 +201,19 @@ final class CurlyBracketsFilter
 	/**
 	 * Callback for replacing text.
 	 */
-	private static function cb2($m)
+	private function cb2($m)
 	{
 		if ($m[1]) {
-			$callback = $m[1][0] === ':' ? __CLASS__ . ':' . $m[1] : $m[1];
+			$callback = $m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1];
 			/**/fixCallback($callback);/**/
 			if (!is_callable($callback)) {
 				$able = is_callable($callback, TRUE, $textual);
 				throw new /*\*/InvalidStateException("CurlyBrackets macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 			}
-			return call_user_func($callback, trim(self::$var), self::$modifiers);
+			return call_user_func($callback, trim($this->var), $this->modifiers);
 
 		} else {
-			return trim(self::$var);
+			return trim($this->var);
 		}
 	}
 
@@ -215,9 +222,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {$var |modifiers}
 	 */
-	private static function macroVar($var, $modifiers)
+	private function macroVar($var, $modifiers)
 	{
-		return self::macroModifiers('$' . $var, $modifiers);
+		return $this->macroModifiers('$' . $var, $modifiers);
 	}
 
 
@@ -225,7 +232,7 @@ final class CurlyBracketsFilter
 	/**
 	 * {include ...}
 	 */
-	private static function macroInclude($var, $modifiers)
+	private function macroInclude($var, $modifiers)
 	{
 		if (substr($var, 0, 1) === '#') {
 			preg_match('#^.([^\s,]+),?\s*(.*)$#', $var, $m);
@@ -250,7 +257,7 @@ final class CurlyBracketsFilter
 			}
 		}
 
-		return 'echo ' . self::macroModifiers('$template->subTemplate(' . self::formatVars($var) . ')->__toString(TRUE)', $modifiers);
+		return 'echo ' . $this->macroModifiers('$template->subTemplate(' . $this->formatVars($var) . ')->__toString(TRUE)', $modifiers);
 	}
 
 
@@ -258,9 +265,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {extends ...}
 	 */
-	private static function macroExtends($var)
+	private function macroExtends($var)
 	{
-		self::$extends = '<?php ob_end_clean(); ' . self::macroInclude($var, NULL) . '?>';
+		$this->extends = '<?php ob_end_clean(); ' . $this->macroInclude($var, NULL) . '?>';
 		return 'ob_start()';
 	}
 
@@ -269,19 +276,19 @@ final class CurlyBracketsFilter
 	/**
 	 * {block ...}
 	 */
-	private static function macroBlock($var, $modifiers)
+	private function macroBlock($var, $modifiers)
 	{
 		if (substr($var, 0, 1) === '#') {
 			$var = var_export(substr($var, 1), TRUE);
-			$func = '_cbb' . substr(md5(self::$file . "\00" . $var), 0, 15);
-			$call = self::$extends ? '' : "\n\$_cb->cs = \$_cb->f[$var]; call_user_func(\$_cb->cs[0], \$template->getParams())"; // get_defined_vars()
-			self::$blocks[] = "\n}\n\$_cb->f[$var][] = '$func';$call";
+			$func = '_cbb' . substr(md5($this->file . "\00" . $var), 0, 15);
+			$call = $this->extends ? '' : "\n\$_cb->cs = \$_cb->f[$var]; call_user_func(\$_cb->cs[0], \$template->getParams())"; // get_defined_vars()
+			$this->blocks[] = "\n}\n\$_cb->f[$var][] = '$func';$call";
 			return "\nfunction $func() { extract(func_get_arg(0))\n";
 		}
 
-		self::$blocks[] = '} catch (Exception $_e) { ob_end_clean(); throw $_e; } '
+		$this->blocks[] = '} catch (Exception $_e) { ob_end_clean(); throw $_e; } '
 			. ($var === '' ? 'echo ' : $var . '=')
-			. self::macroModifiers('ob_get_clean()', $modifiers);
+			. $this->macroModifiers('ob_get_clean()', $modifiers);
 		return 'ob_start(); try {';
 	}
 
@@ -290,9 +297,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {/block ...}
 	 */
-	private static function macroBlockEnd($var)
+	private function macroBlockEnd($var)
 	{
-		return array_pop(self::$blocks);
+		return array_pop($this->blocks);
 	}
 
 
@@ -300,7 +307,7 @@ final class CurlyBracketsFilter
 	/**
 	 * {foreach ...}
 	 */
-	private static function macroForeach($var)
+	private function macroForeach($var)
 	{
 		return '$iterator = $_cb->its[] = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $var, 1);
 	}
@@ -310,7 +317,7 @@ final class CurlyBracketsFilter
 	/**
 	 * {attr ...}
 	 */
-	private static function macroAttr($var)
+	private function macroAttr($var)
 	{
 		return str_replace(') ', ')->', $var . ' ');
 	}
@@ -320,7 +327,7 @@ final class CurlyBracketsFilter
 	/**
 	 * {snippet ...}
 	 */
-	private static function macroSnippet($var)
+	private function macroSnippet($var)
 	{
 		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 			$var = ', "' . $m[1] . '"';
@@ -334,9 +341,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {link ...}
 	 */
-	private static function macroLink($var, $modifiers)
+	private function macroLink($var, $modifiers)
 	{
-		return self::macroModifiers('$control->link(' . self::formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$control->link(' . $this->formatVars($var) .')', $modifiers);
 	}
 
 
@@ -344,9 +351,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {plink ...}
 	 */
-	private static function macroPlink($var, $modifiers)
+	private function macroPlink($var, $modifiers)
 	{
-		return self::macroModifiers('$presenter->link(' . self::formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$presenter->link(' . $this->formatVars($var) .')', $modifiers);
 	}
 
 
@@ -354,9 +361,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {ifCurrent ...}
 	 */
-	private static function macroIfCurrent($var, $modifiers)
+	private function macroIfCurrent($var, $modifiers)
 	{
-		return $var ? self::macroModifiers('$presenter->link(' . self::formatVars($var) .')', $modifiers) : '';
+		return $var ? $this->macroModifiers('$presenter->link(' . $this->formatVars($var) .')', $modifiers) : '';
 	}
 
 
@@ -364,9 +371,9 @@ final class CurlyBracketsFilter
 	/**
 	 * {ajaxlink ...}
 	 */
-	private static function macroAjaxlink($var, $modifiers)
+	private function macroAjaxlink($var, $modifiers)
 	{
-		return self::macroModifiers('$control->ajaxlink(' . self::formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$control->ajaxlink(' . $this->formatVars($var) .')', $modifiers);
 	}
 
 
@@ -374,10 +381,10 @@ final class CurlyBracketsFilter
 	/**
 	 * {assign ...}
 	 */
-	private static function macroAssign($var, $modifiers)
+	private function macroAssign($var, $modifiers)
 	{
 		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
-		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . self::macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
+		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . $this->macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
 	}
 
 
@@ -385,7 +392,7 @@ final class CurlyBracketsFilter
 	/**
 	 * Applies modifiers.
 	 */
-	public static function macroModifiers($var, $modifiers)
+	public function macroModifiers($var, $modifiers)
 	{
 		if (!$modifiers) return $var;
 		preg_match_all(
@@ -425,7 +432,7 @@ final class CurlyBracketsFilter
 	/**
 	 * Formats {*link ...} parameters.
 	 */
-	private static function formatVars($var)
+	private function formatVars($var)
 	{
 		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
 			$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";

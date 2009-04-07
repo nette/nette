@@ -707,7 +707,7 @@ class Form extends FormContainer
 			}
 
 		} catch (/*\*/Exception $e) {
-			if (func_get_args()) {
+			if (func_get_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
 				trigger_error($e->getMessage(), E_USER_WARNING);
