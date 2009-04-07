@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette\Forms example 8 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	.required {
+		color: darkred
+	}
+
+	fieldset {
+		padding: .5em;
+		margin: .3em 0;
+		background: #EAF3FA;
+		border: 1px solid #b2d1eb;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	th {
+		width: 8em;
+		text-align: right;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Nette\Forms example 8</h1>
+
+	<form action="" method="post">
+
+<ul class="error">
+	<li>Security token did not match. Possible CSRF attack.</li>
+</ul>
+
+
+<table>
+<tr>
+	<th><label for="frm-text">Any text:</label></th>
+
+	<td><input type="text" class="text" name="text" id="frm-text" value="a" /></td>
+</tr>
+
+<tr>
+	<th>&nbsp;</th>
+
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+</tr>
+</table>
+
+<div><input type="hidden" name="_token_" id="frm-_token_" value="5404d97e4aaf63f4c88ada1c6c99d861" /></div>
+</form>
+
+</body>
+</html>
