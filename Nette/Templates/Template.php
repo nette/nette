@@ -222,7 +222,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 	/**
 	 * Renders template to string.
-	 * @return bool  can throw exceptions? (hidden parameter)
+	 * @param bool  can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()
@@ -234,7 +234,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 		} catch (/*\*/Exception $e) {
 			ob_end_clean();
-			if (func_get_args()) {
+			if (func_num_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
 				trigger_error($e->getMessage(), E_USER_WARNING);
