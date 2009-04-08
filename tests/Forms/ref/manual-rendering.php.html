@@ -70,11 +70,11 @@
 			<td><input type="text" size="35" class="text" name="street" id="frm-street" value="" /></td>
 		</tr>
 		<tr class="required">
-			<th><label class="required" for="frm-city">City:</label></th>
+			<th><label for="frm-city">City:</label></th>
 			<td><input type="text" size="35" class="text" name="city" id="frm-city" value="" /></td>
 		</tr>
 		<tr class="required">
-			<th><label onclick="return false" class="required" for="frm-country">Country:</label></th>
+			<th><label onclick="return false" for="frm-country">Country:</label></th>
 			<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
 		</tr>
 		</table>
@@ -87,11 +87,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-password">Choose password:</label></th>
-			<td><input type="password" size="20" class="text" name="password" id="frm-password" /></td>
+			<td><input type="password" size="20" class="text" name="password" id="frm-password" value="" /></td>
 		</tr>
 		<tr class="required">
-			<th><label class="required" for="frm-password2">Reenter password:</label></th>
-			<td><input type="password" size="20" class="text" name="password2" id="frm-password2" /></td>
+			<th><label for="frm-password2">Reenter password:</label></th>
+			<td><input type="password" size="20" class="text" name="password2" id="frm-password2" value="" /></td>
 		</tr>
 		<tr>
 			<th><label for="frm-avatar">Picture:</label></th>
@@ -105,7 +105,7 @@
 	</fieldset>
 
 	<div>
-		<input type="hidden" name="userid" value="231" />		<input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" />	</div>
+		<input type="hidden" name="userid" id="frm-userid" value="231" />		<input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" />	</div>
 
 	</form>
 <script type="text/javascript">
