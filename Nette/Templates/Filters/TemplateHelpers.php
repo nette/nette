@@ -73,7 +73,7 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside CSS template.
-	 * @param  mixed
+	 * @param  string
 	 * @return string
 	 */
 	public static function escapeCss($s)
@@ -85,13 +85,37 @@ final class TemplateHelpers
 
 
 	/**
-	 * Escapes string for use inside JavaScript template.
+	 * Escapes string for use inside HTML style attribute.
 	 * @param  string
+	 * @return string
+	 */
+	public static function escapeHtmlCss($s)
+	{
+		return htmlSpecialChars(self::escapeCss($s), ENT_QUOTES);
+	}
+
+
+
+	/**
+	 * Escapes string for use inside JavaScript template.
+	 * @param  mixed
 	 * @return string
 	 */
 	public static function escapeJs($s)
 	{
 		return json_encode($s);
+	}
+
+
+
+	/**
+	 * Escapes string for use inside HTML JavaScript attribute.
+	 * @param  mixed
+	 * @return string
+	 */
+	public static function escapeHtmlJs($s)
+	{
+		return htmlSpecialChars(json_encode($s), ENT_QUOTES);
 	}
 
 

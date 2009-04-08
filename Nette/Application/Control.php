@@ -92,8 +92,6 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 		// default helpers
 		$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
-		$template->registerHelper('escapeJs', 'Nette\Templates\TemplateHelpers::escapeJs');
-		$template->registerHelper('escapeCss', 'Nette\Templates\TemplateHelpers::escapeCss');
 		$template->registerHelper('cache', 'Nette\Templates\CachingHelper::create');
 		$template->registerHelper('snippet', 'Nette\Templates\SnippetHelper::create');
 		$template->registerHelper('lower', 'Nette\String::lower');

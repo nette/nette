@@ -1,3 +1,4 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ul{attr class('item') style('background', 'white') title($hello) compact(TRUE)}>
 	<li>Escaped: {$hello}</li>
@@ -56,10 +57,13 @@ document.getElementById({$id}).style.backgroundColor = 'red';
 </script>
 
 
-<script name="<?php echo 123 ?>" id="{$hello}">  </script>
+<p onclick =
+'alert({$id});alert("hello");'
+ title='{$id}"'
+ style =
+ "color:{$id};'"
+>click on me</p>
 
-
-<script name="<?php echo 123 ?>" id="{$hello}"></script>
 
 
 {include '@menu.phtml'}

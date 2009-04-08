@@ -84,24 +84,23 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
 
-		'ajaxlink' => '<?php echo $template->{$_cb->escape}(%:macroAjaxlink%) ?>',
-		'plink' => '<?php echo $template->{$_cb->escape}(%:macroPlink%) ?>',
-		'link' => '<?php echo $template->{$_cb->escape}(%:macroLink%) ?>',
+		'ajaxlink' => '<?php echo %:macroEscape%(%:macroAjaxlink%) ?>',
+		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
+		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent%; if ($presenter->getLastCreatedRequestFlag("current")): ?>',
 
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
-		'contentType' => '<?php Environment::getHttpResponse()->setHeader("Content-Type", "%%") ?>',
-		/*'contentType' => '<?php \Nette\Environment::getHttpResponse()->setHeader("Content-Type", "%%") ?>',*/
+		'contentType' => '<?php %:macroContentType% ?>',
 		'assign' => '<?php %:macroAssign% ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',
 		'!=' => '<?php echo %:macroModifiers% ?>',
-		'_' => '<?php echo $template->{$_cb->escape}($template->translate(%:macroModifiers%)) ?>',
-		'=' => '<?php echo $template->{$_cb->escape}(%:macroModifiers%) ?>',
+		'_' => '<?php echo %:macroEscape%($template->translate(%:macroModifiers%)) ?>',
+		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
 		'!$' => '<?php echo %:macroVar% ?>',
 		'!' => '<?php echo %:macroVar% ?>',
-		'$' => '<?php echo $template->{$_cb->escape}(%:macroVar%) ?>',
+		'$' => '<?php echo %:macroEscape%(%:macroVar%) ?>',
 		'?' => '<?php %:macroModifiers% ?>',
 	);
 
@@ -113,6 +112,18 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/** @var string */
 	private $extends, $var, $modifiers;
+
+	/** @var string */
+	private $context, $escape, $tag;
+
+	/**#@+ Context-aware escaping states */
+	const CONTEXT_TEXT = 1;
+	const CONTEXT_CDATA = 2;
+	const CONTEXT_TAG = 3;
+	const CONTEXT_ATTRIBUTE_SINGLE = "'";
+	const CONTEXT_ATTRIBUTE_DOUBLE = '"';
+	const CONTEXT_NONE = 4;
+	/**#@-*/
 
 
 
@@ -138,6 +149,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$this->file = $file;
 		$this->extends = NULL;
+		$this->blocks = array();
+
+		// context-aware escaping
+		$this->context = self::CONTEXT_TEXT;
+		$this->escape = 'TemplateHelpers::escapeHtml';
+		$this->tag = NULL;
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -152,19 +169,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php "
-			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\SmartCachingIterator, Nette\\Environment, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
+			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
 			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
-		// add local content escaping switcher
-		$s = preg_replace(array(
-			'#(<script[^>]*>)(?!</)(.+)(</script)#Uis',
-			'#(<style[^>]*>)(?!</)(.*)(</style)#Uis',
-		), array(
-			'$1<?php \\$_cb->escape = "escapeJs" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
-			'$1<?php \\$_cb->escape = "escapeCss" ?>$2<?php \\$_cb->escape = "escape" ?>$3',
-		), $s);
-
-		$this->blocks = array();
 		$k = array();
 		foreach (self::$macros as $key => $foo)
 		{
@@ -174,8 +181,15 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			}
 			$k[] = $key;
 		}
-		$s = preg_replace_callback(
-			'#\\{(' . implode('|', $k) . ')([^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}()#s',
+
+		$s = preg_replace_callback('~
+				<(/?)([a-z]+)|             ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
+				(>)|                       ## 3) end tag
+				\\sstyle\s*=\s*(["\'])|    ## 4) style attribute
+				\\son[a-z]+\s*=\s*(["\'])| ## 5) javascript attribute
+				(["\'])|                   ## 6) attribute end
+				\\{(' . implode('|', $k) . ')([^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8,9) macro & modifiers
+			~xs',
 			array($this, 'cb'),
 			$s
 		);
@@ -190,10 +204,69 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/**
 	 * Callback for replacing text.
 	 */
-	private function cb($m)
+	private function cb($matches)
 	{
-		list(, $macro, $this->var, $this->modifiers) = $m;
-		return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), self::$macros[$macro]);
+		//    [1] => /
+		//    [2] => tag
+		//    [3] => >
+		//    [4] => style='"
+		//    [5] => javascript='"
+		//    [6] => '"
+		//    [7] => {macro
+		//    [8] => {...var...}
+		//    [9] => {...|modifiers}
+
+		if (!empty($matches[7])) { // {macro|var|modifiers}
+			list(, , , , , , , $macro, $this->var, $this->modifiers) = $matches;
+			return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), self::$macros[$macro]);
+
+		} elseif ($this->context === self::CONTEXT_NONE) {
+			// skip analyse
+
+		} elseif (!empty($matches[6])) { // (end) '"
+			if ($this->context === $matches[6]) {
+				$this->context = self::CONTEXT_TAG;
+				$this->escape = 'TemplateHelpers::escapeHtml';
+			}
+
+		} elseif (!empty($matches[5])) { // (javascript) '"
+			if ($this->context === self::CONTEXT_TAG) {
+				$this->context = $matches[5]; // self::CONTEXT_ATTRIBUTE_SINGLE || self::CONTEXT_ATTRIBUTE_DOUBLE
+				$this->escape = 'TemplateHelpers::escapeHtmlJs';
+			}
+
+		} elseif (!empty($matches[4])) { // (style) '"
+			if ($this->context === self::CONTEXT_TAG) {
+				$this->context = $matches[4]; // self::CONTEXT_ATTRIBUTE_SINGLE || self::CONTEXT_ATTRIBUTE_DOUBLE
+				$this->escape = 'TemplateHelpers::escapeHtmlCss';
+			}
+
+		} elseif (!empty($matches[3])) { // >
+			if ($this->context === self::CONTEXT_TAG) {
+				if ($this->tag === 'script' || $this->tag === 'style') {
+					$this->context = self::CONTEXT_CDATA;
+					$this->escape = $this->tag === 'script' ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
+				} else {
+					$this->context = self::CONTEXT_TEXT;
+					$this->escape = 'TemplateHelpers::escapeHtml';
+				}
+			}
+
+		} elseif (empty($matches[1])) { // <tag
+			if ($this->context === self::CONTEXT_TEXT) {
+				$this->context = self::CONTEXT_TAG;
+				$this->escape = 'TemplateHelpers::escapeHtml';
+				$this->tag = strtolower($matches[2]);
+			}
+
+		} else { // </tag
+			if ($this->context === self::CONTEXT_TEXT || $this->context === self::CONTEXT_CDATA) {
+				$this->context = self::CONTEXT_TAG;
+				$this->escape = 'TemplateHelpers::escapeHtml';
+				$this->tag = NULL;
+			}
+		}
+		return $matches[0];
 	}
 
 
@@ -325,6 +398,38 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
+	 * {contentType ...}
+	 */
+	private function macroContentType($var)
+	{
+		if (strpos($var, 'html') !== FALSE) {
+			$this->escape = 'TemplateHelpers::escapeHtml';
+			$this->context = self::CONTEXT_TEXT;
+
+		} elseif (strpos($var, 'xml') !== FALSE) {
+			$this->escape = 'TemplateHelpers::escapeXml';
+			$this->context = self::CONTEXT_NONE;
+
+		} elseif (strpos($var, 'javascript') !== FALSE) {
+			$this->escape = 'TemplateHelpers::escapeJs';
+			$this->context = self::CONTEXT_NONE;
+
+		} elseif (strpos($var, 'css') !== FALSE) {
+			$this->escape = 'TemplateHelpers::escapeCss';
+			$this->context = self::CONTEXT_NONE;
+
+		} else {
+			$this->escape = '$template->escape';
+			$this->context = self::CONTEXT_NONE;
+		}
+
+		// temporary solution
+		return strpos($var, '/') ? /*\Nette\*/'Environment::getHttpResponse()->setHeader("Content-Type", "' . $var . '")' : '';
+	}
+
+
+
+	/**
 	 * {snippet ...}
 	 */
 	private function macroSnippet($var)
@@ -385,6 +490,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
 		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . $this->macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
+	}
+
+
+
+	/**
+	 * Escaping helper.
+	 */
+	private function macroEscape($var)
+	{
+		return $this->escape;
 	}
 
 
@@ -452,11 +567,13 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Initializes state holder $_cb in template.
+	 * @param  ITemplate
+	 * @return stdClass
 	 */
 	public static function initState($template)
 	{
 		if (!isset($template->_cb)) {
-			$template->_cb = (object) array('escape' => 'escape'); // escaping support
+			$template->_cb = (object) NULL;
 		}
 		if (!empty($template->_cb->caches)) { // cache support
 			end($template->_cb->caches)->addFile($template->getFile());

@@ -1,5 +1,7 @@
 <h1>Nette\Templates\CurlyBracketsFilter test</h1>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact="compact">
 	<li>Escaped: &lt;i&gt;Hello&lt;/i&gt;</li>
 	<li>Non-escaped: <i>Hello</i></li>
@@ -10,7 +12,7 @@
 
 	&lt;i&gt;Hello&lt;/i&gt;
 
-		<ul id=":item">	<li id="item-1" class="odd">John</li>
+		<ul id=":/item">	<li id="item-1" class="odd">John</li>
 				<li id="item-2" class="even">Mary</li>
 				<li id="item-3" class="odd">Paul</li>
 	</ul>	
@@ -24,8 +26,9 @@
 
 
 
-<style type="text/css"><!--
-#\:item {
+<style type="text/css">
+<!--
+#\:\/item {
 	background: blue;
 }
 -->
@@ -33,18 +36,22 @@
 
 
 
-<script><!--
+<script>
+<!--
 var prop = ["John","Mary","Paul"];
 
-document.getElementById(":item").style.backgroundColor = 'red';
+document.getElementById(":\/item").style.backgroundColor = 'red';
 -->
 </script>
 
 
-<script name="123" id="&lt;i&gt;Hello&lt;/i&gt;">  </script>
+<p onclick =
+'alert(&quot;:\/item&quot;);alert("hello");'
+ title=':/item"'
+ style =
+ "color:\:\/item;'"
+>click on me</p>
 
-
-<script name="123" id="&lt;i&gt;Hello&lt;/i&gt;"></script>
 
 
 <ul>
