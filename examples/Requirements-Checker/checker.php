@@ -98,10 +98,10 @@ paint(array(
 		'$_SERVER["SCRIPT_FILENAME"] and $_SERVER["SCRIPT_NAME"] and $_SERVER["PHP_SELF"] must be available for resolving script file path.',
 	),
 	array(
-		'$_SERVER["SERVER_ADDR"]',
+		'$_SERVER["SERVER_ADDR"] or "LOCAL_ADDR"',
 		REQUIRED,
-		isset($_SERVER["SERVER_ADDR"]),
-		'$_SERVER["SERVER_ADDR"] must be available for detecting development/production mode.',
+		isset($_SERVER["SERVER_ADDR"]) || isset($_SERVER["LOCAL_ADDR"]),
+		'$_SERVER["SERVER_ADDR"] or $_SERVER["LOCAL_ADDR"] must be available for detecting development/production mode.',
 	),
 	array(
 		'Multibyte String extension',
