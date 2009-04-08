@@ -172,23 +172,13 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
 			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
-		$k = array();
-		foreach (self::$macros as $key => $foo)
-		{
-			$key = preg_quote($key, '#');
-			if (preg_match('#[a-zA-Z0-9]$#', $key)) {
-				$key .= '(?=[^a-zA-Z0-9._-])';
-			}
-			$k[] = $key;
-		}
-
 		$s = preg_replace_callback('~
 				<(/?)([a-z]+)|             ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
 				(>)|                       ## 3) end tag
 				\\sstyle\s*=\s*(["\'])|    ## 4) style attribute
 				\\son[a-z]+\s*=\s*(["\'])| ## 5) javascript attribute
 				(["\'])|                   ## 6) attribute end
-				\\{(' . implode('|', $k) . ')([^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8,9) macro & modifiers
+				\\{(\S[^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8) macro & modifiers
 			~xs',
 			array($this, 'cb'),
 			$s
@@ -213,12 +203,20 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		//    [5] => javascript='"
 		//    [6] => '"
 		//    [7] => {macro
-		//    [8] => {...var...}
-		//    [9] => {...|modifiers}
+		//    [8] => {...|modifiers}
 
 		if (!empty($matches[7])) { // {macro|var|modifiers}
-			list(, , , , , , , $macro, $this->var, $this->modifiers) = $matches;
-			return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), self::$macros[$macro]);
+			list(, , , , , , , $macro, $this->modifiers) = $matches;
+			foreach (self::$macros as $key => $val) {
+				if (strncmp($macro, $key, strlen($key)) === 0) {
+					$this->var = substr($macro, strlen($key));
+					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $this->var)) {
+						continue;
+					}
+					return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), $val);
+				}
+			}
+			throw new /*\*/InvalidStateException("CurlyBrackets macro '$matches[0]' is unknown.");
 
 		} elseif ($this->context === self::CONTEXT_NONE) {
 			// skip analyse
