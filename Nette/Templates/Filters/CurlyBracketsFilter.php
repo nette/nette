@@ -178,7 +178,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				\\sstyle\s*=\s*(["\'])|    ## 4) style attribute
 				\\son[a-z]+\s*=\s*(["\'])| ## 5) javascript attribute
 				(["\'])|                   ## 6) attribute end
-				\\{(\S[^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8) macro & modifiers
+				\\{([^\\s\'"][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8) macro & modifiers
 			~xs',
 			array($this, 'cb'),
 			$s
@@ -216,7 +216,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), $val);
 				}
 			}
-			throw new /*\*/InvalidStateException("CurlyBrackets macro '$matches[0]' is unknown.");
+			throw new /*\*/InvalidStateException("Unknown CurlyBrackets macro '$matches[0]' in file '$this->file'.");
 
 		} elseif ($this->context === self::CONTEXT_NONE) {
 			// skip analyse

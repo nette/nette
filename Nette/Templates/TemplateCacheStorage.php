@@ -59,7 +59,7 @@ class TemplateCacheStorage extends /*Nette\Caching\*/FileStorage
 	protected function getCacheFile($key)
 	{
 		$path = $this->base . urlencode($key);
-		if (substr($path, -6) !== '.phtml') $path .= '.phtml';
+		if (substr($path, -6) !== '.php') $path .= '.php';
 		return $path;
 	}
 
