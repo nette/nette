@@ -205,6 +205,9 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 				}
 				$rule->control->addError(vsprintf($rule->control->translate($rule->message), (array) $rule->arg));
 				$valid = FALSE;
+				if ($rule->breakOnFailure) {
+					break;
+				}
 			}
 		}
 		return $valid;

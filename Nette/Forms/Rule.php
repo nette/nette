@@ -65,6 +65,9 @@ final class Rule extends /*Nette\*/Object
 	/** @var string (only for VALIDATOR type) */
 	public $message;
 
+	/** @var bool (only for VALIDATOR type) */
+	public $breakOnFailure = TRUE;
+
 	/** @var Rules (only for CONDITION type)  */
 	public $subRules;
 
