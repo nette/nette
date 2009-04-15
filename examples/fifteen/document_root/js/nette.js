@@ -61,7 +61,7 @@ var nette = {
 			this.ajax.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			//this.ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 			this.ajax.onreadystatechange = function() { nette.ajaxHandler(); }
-			this.ajax.send();
+			this.ajax.send(null);
 			this.processing = 1;
 			return true;
 

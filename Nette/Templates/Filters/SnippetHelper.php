@@ -54,17 +54,17 @@ class SnippetHelper extends /*Nette\*/Object
 
 	/**
 	 * Starts conditional snippet rendering. Returns SnippetHelper object if snippet was started.
-	 * @param  PresenterComponent control
+	 * @param  Control control
 	 * @param  string  snippet name
 	 * @param  string  start element
 	 * @return SnippetHelper
 	 */
-	public static function create(/*Nette\Application\*/PresenterComponent $control, $name = NULL, $tag = 'div')
+	public static function create(/*Nette\Application\*/Control $control, $name = NULL, $tag = 'div')
 	{
 		if (self::$outputAllowed) { // rendering flow or non-AJAX request
 			$obj = new self;
 			$obj->tag = trim($tag, '<>');
-			echo '<', $obj->tag, ' id="', $control->getSnippetId($name), '">';
+			if ($obj->tag) echo '<', $obj->tag, ' id="', $control->getSnippetId($name), '">';
 			return $obj; // or string?
 
 		} elseif ($control->isControlInvalid($name)) { // start snippet buffering
@@ -90,7 +90,7 @@ class SnippetHelper extends /*Nette\*/Object
 	public function finish()
 	{
 		if ($this->tag !== NULL) { // rendering flow or non-AJAX request
-			echo "</$this->tag>";
+			if ($obj->tag) echo "</$this->tag>";
 
 		} else {  // finish snippet buffering
 			if ($this->level !== ob_get_level()) {

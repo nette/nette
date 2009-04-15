@@ -51,10 +51,10 @@ final class TemplateFilters
 
 
 	/** @deprecated */
-	public static function curlyBrackets($s)
+	public static function curlyBrackets($s, $file)
 	{
-		trigger_error('Deprecated: use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead.', E_USER_WARNING);
-		return CurlyBracketsFilter::invoke($s);
+		trigger_error(__METHOD__ . '() is deprecated; use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead', E_USER_WARNING);
+		return CurlyBracketsFilter::invoke($s, $file);
 	}
 
 
@@ -82,7 +82,7 @@ final class TemplateFilters
 			return $matches[1];
 
 		} else {
-			trigger_error("Fragment '$file' is not defined.", E_USER_WARNING);
+			trigger_error("Fragment '$file' is not defined", E_USER_WARNING);
 			return '';
 		}
 	}

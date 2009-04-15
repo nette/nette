@@ -9,28 +9,12 @@ require_once '../../Nette/loader.php';
 /*use Nette\Templates\Template;*/
 
 
-class MockControl implements /*Nette\Application\*/IPartiallyRenderable
+class MockControl extends Control
 {
 
-	function invalidateControl($snippet = NULL)
+	public function getSnippetId($name = NULL)
 	{
-	}
-
-	function isControlInvalid($snippet = NULL)
-	{
-	}
-
-	static function isOutputAllowed()
-	{
-		return FALSE;
-	}
-
-	public function beginSnippet($name = 'main', $startTag = 'div')
-	{
-	}
-
-	public function endSnippet($name = NULL)
-	{
+		return 'sni__' . $name;
 	}
 
 }
@@ -48,5 +32,6 @@ $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');
 $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 $template->registerFilter('printSource');
+$template->registerHelper('snippet', 'Nette\Templates\SnippetHelper::create');
 $template->control = new MockControl;
 $template->render();
