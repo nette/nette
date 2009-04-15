@@ -90,7 +90,7 @@ class SnippetHelper extends /*Nette\*/Object
 	public function finish()
 	{
 		if ($this->tag !== NULL) { // rendering flow or non-AJAX request
-			if ($obj->tag) echo "</$this->tag>";
+			if ($this->tag) echo "</$this->tag>";
 
 		} else {  // finish snippet buffering
 			if ($this->level !== ob_get_level()) {
