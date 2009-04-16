@@ -159,6 +159,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
+		// rearranging spaces
+		$s = substr(preg_replace_callback('~(\n[ \t]*)?(\\{[^\\s\'"][^}]*\\})[ \t]*(?=[\r\n])~', array($this, 'cbSpaces'), "\n" . $s), 1);
+
 		// snippets support
 		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
 		$s = preg_replace(
@@ -288,6 +291,17 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		} else {
 			return trim($this->var);
 		}
+	}
+
+
+
+	/**
+	 * Callback for rearranging spaces.
+	 */
+	private function cbSpaces($matches)
+	{
+		list(, $indent, $macro) = $matches;
+		return $indent ? "\n" . $macro : $macro . "\n";
 	}
 
 
