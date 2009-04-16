@@ -99,6 +99,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelper('capitalize', 'Nette\String::capitalize');
 		$template->registerHelper('stripTags', 'strip_tags');
 		$template->registerHelper('strip', 'Nette\Templates\TemplateHelpers::strip');
+		$template->registerHelper('indent', 'Nette\Templates\TemplateHelpers::indent');
 		$template->registerHelper('date', 'Nette\Templates\TemplateHelpers::date');
 		$template->registerHelper('nl2br', 'nl2br');
 		$template->registerHelper('truncate', 'Nette\String::truncate');

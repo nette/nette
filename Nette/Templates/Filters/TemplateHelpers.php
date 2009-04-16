@@ -133,6 +133,31 @@ final class TemplateHelpers
 
 
 	/**
+	 * Indents the HTML content from the left.
+	 * @param  string
+	 * @param  int
+	 * @param  string
+	 * @return string
+	 */
+	public static function indent($s, $level = 1, $chars = "\t")
+	{
+		if ($level < 1) {
+			return $s;
+		}	
+		$space = str_repeat($chars, $level);
+		$allowed = 1;
+		$lines = explode("\n", $s);
+		foreach ($lines as $n => $line) {
+			if ($allowed > 0) $lines[$n] = $space . $line;
+			$line = strtolower($line);
+			$allowed = $allowed + substr_count($line, '</pre') + substr_count($line, '</textarea') - substr_count($line, '<pre') - substr_count($line, '<textarea');
+		}
+		return implode("\n", $lines);
+	}
+
+
+
+	/**
 	 * Date/time formatting.
 	 * @param  string|int|DateTime
 	 * @param  string
