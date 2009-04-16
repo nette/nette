@@ -186,7 +186,7 @@ abstract class Presenter extends Control implements IPresenter
 			// calls $this->action{action}();
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
 			if ($this->tryCall('present'. $this->getAction(), $this->params)) { // deprecated
-				trigger_error('Method name present' . $this->getAction() . '() is deprecated; use ' . $this->formatActionMethod($this->getAction()) . '() instead.', E_USER_WARNING);
+				trigger_error('Method name present' . $this->getAction() . '() is deprecated; use ' . $this->formatActionMethod($this->getAction()) . '() instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 			}
 
 			if ($this->autoCanonicalize) {
@@ -464,7 +464,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeView($view)
 	{
-		trigger_error('Presenter::changeView() is deprecated; use Presenter::setView(...) instead.', E_USER_WARNING);
+		trigger_error('Presenter::changeView() is deprecated; use Presenter::setView(...) instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		$this->view = (string) $view;
 	}
 
@@ -475,7 +475,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function getScene()
 	{
-		trigger_error('Presenter::getScene() is deprecated; use Presenter::getView() instead.', E_USER_WARNING);
+		trigger_error('Presenter::getScene() is deprecated; use Presenter::getView() instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		return $this->view;
 	}
 
@@ -486,7 +486,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeScene($view)
 	{
-		trigger_error('Presenter::changeScene() is deprecated; use Presenter::setView(...) instead.', E_USER_WARNING);
+		trigger_error('Presenter::changeScene() is deprecated; use Presenter::setView(...) instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		$this->view = (string) $view;
 	}
 
@@ -497,7 +497,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeLayout($layout)
 	{
-		trigger_error('Presenter::changeLayout() is deprecated; use Presenter::setLayout(...) instead.', E_USER_WARNING);
+		trigger_error('Presenter::changeLayout() is deprecated; use Presenter::setLayout(...) instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		$this->layout = (string) $layout;
 	}
 

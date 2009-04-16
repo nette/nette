@@ -141,7 +141,7 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	/** @deprecated */
 	public function fireEvent($event, $arg)
 	{
-		trigger_error('Deprecated: use $presenter->ajaxDriver->events[] = array($event, $arg, ...); instead.', E_USER_WARNING);
+		trigger_error('Deprecated: use $presenter->ajaxDriver->events[] = array($event, $arg, ...); instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		$args = func_get_args();
 		array_shift($args);
 		$this->data['events'][] = array('event' => $event, 'args' => $args);
@@ -152,7 +152,7 @@ class AjaxDriver extends /*Nette\*/Object implements IAjaxDriver
 	/** @deprecated */
 	public function updateSnippet($id, $content)
 	{
-		trigger_error('Deprecated: use $presenter->ajaxDriver->snippets[$id] = $content; instead.', E_USER_WARNING);
+		trigger_error('Deprecated: use $presenter->ajaxDriver->snippets[$id] = $content; instead.', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		$this->data['snippets'][$id] = (string) $content;
 	}
 

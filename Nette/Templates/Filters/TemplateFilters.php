@@ -53,7 +53,7 @@ final class TemplateFilters
 	/** @deprecated */
 	public static function curlyBrackets($s, $file)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 		return CurlyBracketsFilter::invoke($s, $file);
 	}
 
