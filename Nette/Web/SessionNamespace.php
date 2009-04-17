@@ -184,18 +184,16 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 
 	/**
 	 * Sets the expiration of the namespace or specific variables.
-	 * @param  int     time in seconds
+	 * @param  int     time in seconds, value 0 means "until the browser is closed"
 	 * @param  mixed   optional list of variables / single variable to expire
 	 * @return void
 	 */
 	public function setExpiration($seconds, $variables = NULL)
 	{
 		if ($seconds <= 0) {
-			$this->removeExpiration($variables);
-			return;
-		}
+			$seconds = 0;
 
-		if ($seconds <= /*Nette\*/Tools::YEAR) {
+		} elseif ($seconds <= /*Nette\*/Tools::YEAR) {
 			$seconds += time();
 		}
 

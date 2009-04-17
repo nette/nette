@@ -264,15 +264,12 @@ class User extends /*Nette\*/Object implements IUser
 			$session->remove();
 		}
 
-		if ($session->authenticated && $session->expireBrowser) { // check if browser was closed?
-			if ($session->authKey !== $this->getHttpRequest()->getCookie('nette-authkey')) {
-				$session->reason = self::BROWSER_CLOSED;
-				$session->authenticated = FALSE;
-				unset($session->authKey);
-				$this->onSignedOut($this);
-				if ($session->expireIdentity) {
-					unset($session->identity);
-				}
+		if ($session->authenticated && $session->expireBrowser && !$session->browserCheck) { // check if browser was closed?
+			$session->reason = self::BROWSER_CLOSED;
+			$session->authenticated = FALSE;
+			$this->onSignedOut($this);
+			if ($session->expireIdentity) {
+				unset($session->identity);
 			}
 		}
 
@@ -310,24 +307,12 @@ class User extends /*Nette\*/Object implements IUser
 			$session->reason = NULL;
 			$session->expireBrowser = TRUE;
 			$session->authTime = time(); // informative value
-			$session->authKey = $this->getHttpRequest()->getCookie('nette-authkey');
+			$session->browserCheck = TRUE;
+			$session->setExpiration(0, 'browserCheck');
 
-			if (!$session->authKey) {
-				$session->authKey = (string) lcg_value();
-
-				$params = $this->getSession()->getCookieParams();
-				$this->getHttpResponse()->setCookie(
-					'nette-authkey',
-					$session->authKey,
-					HttpResponse::BROWSER,
-					$params['path'],
-					$params['domain'],
-					$params['secure']
-				);
-			}
 		} else {
 			$session->reason = self::MANUAL;
-			unset($session->authKey, $session->expireTime, $session->expireDelta,
+			unset($session->browserCheck, $session->expireTime, $session->expireDelta,
 			$session->expireIdentity, $session->expireBrowser, $session->authTime);
 		}
 	}
@@ -433,26 +418,6 @@ class User extends /*Nette\*/Object implements IUser
 	protected function getSession()
 	{
 		return Environment::getSession();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\IHttpRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\IHttpResponse
-	 */
-	protected function getHttpResponse()
-	{
-		return Environment::getHttpResponse();
 	}
 
 }

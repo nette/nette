@@ -35,8 +35,8 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 class Session extends /*Nette\*/Object
 {
-	/** Default lifetime is 3 hours */
-	const DEFAULT_LIFETIME = 10800;
+	/** Default file lifetime is 3 hours */
+	const DEFAULT_FILE_LIFETIME = 10800;
 
 	/** @var callback  Validation key generator */
 	public $verificationKeyGenerator;
@@ -63,7 +63,7 @@ class Session extends /*Nette\*/Object
 		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
 
 		// other
-		'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,// 3 hours
+		'session.gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,// 3 hours
 		'session.cache_limiter' => NULL,  // (default "nocache", special value "\0")
 		'session.cache_expire' => NULL,   // (default "180")
 		'session.hash_function' => NULL,  // (default "0", means MD5)
@@ -120,13 +120,13 @@ class Session extends /*Nette\*/Object
 			$this->regenerationNeeded = FALSE;
 		}
 
-
-		/* initialize structures
+		/* structure:
 			nette: __NT
 			data:  __NS->namespace->variable = data
 			meta:  __NM->namespace->EXP->variable = timestamp
 		*/
 
+		// initialize structures
 		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 		if (!isset($_SESSION['__NT']['V'])) { // new session
 			$_SESSION['__NT'] = array();
@@ -146,6 +146,16 @@ class Session extends /*Nette\*/Object
 			}
 		}
 
+		// browser closing detection
+		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
+		if (!$browserKey) {
+			$browserKey = (string) lcg_value();
+		}
+		$browserClosed = !isset($_SESSION['__NT']['B']) || $_SESSION['__NT']['B'] !== $browserKey;
+		$_SESSION['__NT']['B'] = $browserKey;
+
+		// resend cookie
+		$this->sendCookie();
 
 		// process meta metadata
 		if (isset($_SESSION['__NM'])) {
@@ -155,7 +165,7 @@ class Session extends /*Nette\*/Object
 			foreach ($_SESSION['__NM'] as $namespace => $metadata) {
 				if (isset($metadata['EXP'])) {
 					foreach ($metadata['EXP'] as $variable => $time) {
-						if ($now > $time) {
+						if ((!$time && $browserClosed) || ($time && $now > $time)) {
 							if ($variable === '') { // expire whole namespace
 								unset($_SESSION['__NM'][$namespace], $_SESSION['__NS'][$namespace]);
 								continue 2;
@@ -470,7 +480,7 @@ class Session extends /*Nette\*/Object
 		if (isset($cookie)) {
 			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			if (self::$started) {
-				$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+				$this->sendCookie();
 			}
 		}
 	}
@@ -486,7 +496,7 @@ class Session extends /*Nette\*/Object
 	{
 		if ($seconds <= 0) {
 			$this->configure(array(
-				'session.gc_maxlifetime' => self::DEFAULT_LIFETIME,
+				'session.gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
 				'session.cookie_lifetime' => 0,
 			));
 
@@ -496,7 +506,7 @@ class Session extends /*Nette\*/Object
 			}
 			$this->configure(array(
 				'session.gc_maxlifetime' => $seconds,
-				'session.cookie_lifetime' => $seconds + 60 * 60, // server time != time in browser
+				'session.cookie_lifetime' => $seconds,
 			));
 		}
 	}
@@ -541,6 +551,19 @@ class Session extends /*Nette\*/Object
 		$this->configure(array(
 			'session.save_path' => $path,
 		));
+	}
+
+
+
+	/**
+	 * Sends the session cookies.
+	 * @return void
+	 */
+	private function sendCookie()
+	{
+		$cookie = $this->getCookieParams();
+		$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		$this->getHttpResponse()->setCookie('nette-browser', $_SESSION['__NT']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 	}
 
 
