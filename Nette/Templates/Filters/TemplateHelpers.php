@@ -141,18 +141,22 @@ final class TemplateHelpers
 	 */
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
-		if ($level < 1) {
-			return $s;
-		}	
-		$space = str_repeat($chars, $level);
-		$allowed = 1;
-		$lines = explode("\n", $s);
-		foreach ($lines as $n => $line) {
-			if ($allowed > 0) $lines[$n] = $space . $line;
-			$line = strtolower($line);
-			$allowed = $allowed + substr_count($line, '</pre') + substr_count($line, '</textarea') - substr_count($line, '<pre') - substr_count($line, '<textarea');
+		if ($level >= 1) {
+			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
+			$s = /*Nette\*/String::indent($s, $level, $chars);
+			$s = strtr($s, "\x1D\x1A", "\r\n");
 		}
-		return implode("\n", $lines);
+		return $s;
+	}
+
+
+
+	/**
+	 * Callback for self::indent
+	 */
+	private static function indentCb($m)
+	{
+		return strtr($m[0], "\r\n", "\x1D\x1A");
 	}
 
 

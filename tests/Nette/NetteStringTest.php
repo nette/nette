@@ -168,4 +168,23 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("\xc5\x98ekn\xc4\x9bte, jak se (dnes) m\xc3\xa1te?", String::truncate($s, 32), "length=32");
 	}
 
+
+
+	/**
+	 * indent test.
+	 * @return void
+	 */
+	public function testIndent()
+	{
+		$this->assertEquals("", String::indent(""));
+		$this->assertEquals("\n", String::indent("\n"));
+		$this->assertEquals("\tword", String::indent("word"));
+		$this->assertEquals("\n\tword", String::indent("\nword"));
+		$this->assertEquals("\n\tword", String::indent("\nword"));
+		$this->assertEquals("\n\tword\n", String::indent("\nword\n"));
+		$this->assertEquals("\r\n\tword\r\n", String::indent("\r\nword\r\n"));
+		$this->assertEquals("\r\n\t\tword\r\n", String::indent("\r\nword\r\n", 2));
+		$this->assertEquals("\r\n      word\r\n", String::indent("\r\nword\r\n", 2, '   '));
+	}
+
 }
