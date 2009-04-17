@@ -18,6 +18,7 @@ $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml
 $template->registerHelper('cache', 'Nette\Templates\CachingHelper::create');
 $template->registerHelper('lower', 'Nette\String::lower');
 $template->registerHelper('upper', 'Nette\String::upper');
+$template->registerHelper('indent', 'Nette\Templates\TemplateHelpers::indent');
 $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
 $template->people = array('John', 'Mary', 'Paul');

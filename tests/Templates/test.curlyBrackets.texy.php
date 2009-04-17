@@ -11,7 +11,7 @@ class MockTexy
 {
 	function process($text, $singleLine = FALSE)
 	{
-		return '<pre>' . nl2br($text) . '</pre>';
+		return '<pre>' . $text . '</pre>';
 	}
 }
 

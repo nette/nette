@@ -159,9 +159,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
-		// rearranging spaces
-		$s = substr(preg_replace_callback('~(\n[ \t]*)?(\\{[^\\s\'"][^}]*\\})[ \t]*(?=[\r\n])~', array($this, 'cbSpaces'), "\n" . $s), 1);
-
 		// snippets support
 		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
 		$s = preg_replace(
@@ -176,12 +173,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
 		$s = preg_replace_callback('~
-				<(/?)([a-z]+)|             ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
-				(>)|                       ## 3) end tag
-				\\sstyle\s*=\s*(["\'])|    ## 4) style attribute
-				\\son[a-z]+\s*=\s*(["\'])| ## 5) javascript attribute
-				(["\'])|                   ## 6) attribute delimiter
-				\\{([^\\s\'"][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}() ## 7,8) macro & modifiers
+				<(/?)([a-z]+)|                          ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
+				(>)|                                    ## 3) end tag
+				(?<=\\s)(style|on[a-z]+)\s*=\s*(["\'])| ## 4,5) attribute
+				(["\'])|                                ## 6) attribute delimiter
+				(\n[ \t]*)?\\{([^\\s\'"][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}([ \t]*(?=\r|\n))? ## 7,8,9,10) indent & macro & modifiers & newline
 			~xsi',
 			array($this, 'cb'),
 			$s
@@ -202,21 +198,28 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		//    [1] => /
 		//    [2] => tag
 		//    [3] => >
-		//    [4] => style='"
-		//    [5] => javascript='"
+		//    [4] => style|on...
+		//    [5] => '"
 		//    [6] => '"
-		//    [7] => {macro
-		//    [8] => {...|modifiers}
+		//    [7] => indent
+		//    [8] => {macro
+		//    [9] => {...|modifiers}
+		//    [10] => newline?
 
-		if (!empty($matches[7])) { // {macro|var|modifiers}
-			list(, , , , , , , $macro, $this->modifiers) = $matches;
+		if (!empty($matches[8])) { // {macro|var|modifiers}
+			$matches[] = NULL;
+			list(, , , , , , , $indent, $macro, $this->modifiers) = $matches;
 			foreach (self::$macros as $key => $val) {
 				if (strncmp($macro, $key, strlen($key)) === 0) {
 					$this->var = substr($macro, strlen($key));
 					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $this->var)) {
 						continue;
 					}
-					return preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), $val);
+					$nl = isset($matches[10]) ? "\n" : ''; // double newline
+					if ($nl && $indent && strncmp($val, '<?php echo ', 11)) {
+						$indent = "\n"; $nl = ''; // remove indent, single newline
+					}
+					return $indent . preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), $val) . $nl;
 				}
 			}
 			throw new /*\*/InvalidStateException("Unknown CurlyBrackets macro '$matches[0]' in file '$this->file'.");
@@ -232,16 +235,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$this->context = $matches[6];
 			}
 
-		} elseif (!empty($matches[5])) { // (javascript) '"
+		} elseif (!empty($matches[4])) { // (style|on...) '"
 			if ($this->context === self::CONTEXT_TAG) {
 				$this->context = $matches[5]; // self::CONTEXT_ATTRIBUTE_SINGLE || self::CONTEXT_ATTRIBUTE_DOUBLE
-				$this->escape = 'TemplateHelpers::escapeHtmlJs';
-			}
-
-		} elseif (!empty($matches[4])) { // (style) '"
-			if ($this->context === self::CONTEXT_TAG) {
-				$this->context = $matches[4]; // self::CONTEXT_ATTRIBUTE_SINGLE || self::CONTEXT_ATTRIBUTE_DOUBLE
-				$this->escape = 'TemplateHelpers::escapeHtmlCss';
+				$this->escape = strncasecmp($matches[4], 'on', 2) ? 'TemplateHelpers::escapeHtmlCss' : 'TemplateHelpers::escapeHtmlJs';
 			}
 
 		} elseif (!empty($matches[3])) { // >
@@ -291,17 +288,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		} else {
 			return trim($this->var);
 		}
-	}
-
-
-
-	/**
-	 * Callback for rearranging spaces.
-	 */
-	private function cbSpaces($matches)
-	{
-		list(, $indent, $macro) = $matches;
-		return $indent ? "\n" . $macro : $macro . "\n";
 	}
 
 
