@@ -160,7 +160,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
 		// snippets support
-		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
+		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>\n$s<?php\n}\n?>"; // \n$s is required by following RE
 		$s = preg_replace(
 			'#@(\\{[^}]+?\\})#s',
 			'<?php } ?>$1<?php if (SnippetHelper::\\$outputAllowed) { ?>',

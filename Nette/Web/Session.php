@@ -465,7 +465,7 @@ class Session extends /*Nette\*/Object
 				$cookie[substr($key, 15)] = $value;
 
 			} elseif (!function_exists('ini_set')) {
-				if ($throwException) {
+				if ($throwException && ini_get($key) != $value) { // intentionally ==
 					throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
 				}
 

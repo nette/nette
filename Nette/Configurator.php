@@ -193,7 +193,9 @@ class Configurator extends Object
 						set_time_limit($value);
 						break;
 					default:
-						throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
+						if (ini_get($key) != $value) { // intentionally ==
+							throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
+						}
 					}
 				}
 			}
