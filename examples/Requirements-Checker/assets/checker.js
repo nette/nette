@@ -1,0 +1,1 @@
+checkerScript = true;

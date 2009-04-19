@@ -87,7 +87,9 @@ header('Content-Type: text/html; charset=utf-8');
 	.optional {
 		color: #666;
 	}
-</style>
+	</style>
+
+	<script src="assets/checker.js"></script>
 </head>
 
 <body>
@@ -109,12 +111,12 @@ header('Content-Type: text/html; charset=utf-8');
 	<h2>Details</h2>
 
 	<table class="result">
-	<?php foreach ($requirements as $requirement):?>
-	<?php list($name, $required, $result, $hint) = $requirement ?>
-	<?php $class1 = $result ? 'passed' : ($required === REQUIRED ? 'failed' : 'warning') ?>
+	<?php foreach ($requirements as $id => $requirement):?>
+	<?php @list($name, $required, $result, $hint, $script) = $requirement ?>
+	<?php $class1 = $result === NULL ? 'skipped' : ($result ? 'passed' : ($required === REQUIRED ? 'failed' : 'warning')) ?>
 	<?php $class2 = $required === REQUIRED ? 'required' : 'optional' ?>
-	<tr>
-		<td class="<?php echo $class1 ?>"><?php echo $class1 ?></td>
+	<tr id="res<?php echo $id ?>">
+		<td class="<?php echo $class1 ?>"><?php echo $class1, $script ?></td>
 		<th class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($name) ?></th>
 		<td class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($hint) ?></td>
 	</tr>
