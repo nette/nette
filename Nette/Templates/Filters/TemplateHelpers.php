@@ -44,7 +44,7 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside HTML template.
-	 * @param  mixed
+	 * @param  mixed  UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function escapeHtml($s)
@@ -58,22 +58,22 @@ final class TemplateHelpers
 
 
 	/**
-	 * Escapes string for use inside XML template.
-	 * @param  mixed
+	 * Escapes string for use inside XML 1.0 template.
+	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function escapeXML($s)
 	{
 		// XML 1.0: \x09 \x0A \x0D and C1 allowed directly, C0 forbidden
 		// XML 1.1: \x00 forbidden directly and as a character reference, \x09 \x0A \x0D \x85 allowed directly, C0, C1 and \x7F allowed as character references
-		return htmlSpecialChars(preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F]+#', '', $s), ENT_QUOTES);
+		return htmlSpecialChars(preg_replace('#[\x00-\x08\x0B\x0C\x0E-\x1F]+#', '', $s), ENT_QUOTES);
 	}
 
 
 
 	/**
 	 * Escapes string for use inside CSS template.
-	 * @param  string
+	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function escapeCss($s)
@@ -86,7 +86,7 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside HTML style attribute.
-	 * @param  string
+	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function escapeHtmlCss($s)
@@ -98,7 +98,7 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside JavaScript template.
-	 * @param  mixed
+	 * @param  mixed  UTF-8 encoding
 	 * @return string
 	 */
 	public static function escapeJs($s)
@@ -110,7 +110,7 @@ final class TemplateHelpers
 
 	/**
 	 * Escapes string for use inside HTML JavaScript attribute.
-	 * @param  mixed
+	 * @param  mixed  UTF-8 encoding
 	 * @return string
 	 */
 	public static function escapeHtmlJs($s)
@@ -122,7 +122,7 @@ final class TemplateHelpers
 
 	/**
 	 * Replaces all repeated white spaces with a single space.
-	 * @param  string
+	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function strip($s)
@@ -134,7 +134,7 @@ final class TemplateHelpers
 
 	/**
 	 * Indents the HTML content from the left.
-	 * @param  string
+	 * @param  string UTF-8 encoding or 8-bit
 	 * @param  int
 	 * @param  string
 	 * @return string
