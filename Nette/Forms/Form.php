@@ -143,6 +143,17 @@ class Form extends FormContainer
 
 
 	/**
+	 * Returns self.
+	 * @return Form
+	 */
+	final public function getForm($need = TRUE)
+	{
+		return $this;
+	}
+
+
+
+	/**
 	 * Sets form's action.
 	 * @param  mixed URI
 	 * @return void

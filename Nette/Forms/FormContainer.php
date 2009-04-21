@@ -81,6 +81,18 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 
 
 
+	/**
+	 * Returns form.
+	 * @param  bool   throw exception if form doesn't exist?
+	 * @return Form
+	 */
+	public function getForm($need = TRUE)
+	{
+		return $this->lookup('Nette\Forms\Form', $need);
+	}
+
+
+
 	/********************* control factories ****************d*g**/
 
 

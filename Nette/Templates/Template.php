@@ -126,6 +126,10 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function registerFilter($callback)
 	{
 		/**/fixCallback($callback);/**/
+		if (in_array($callback, $this->filters, TRUE)) {
+			is_callable($callback, TRUE, $textual);
+			throw new /*\*/InvalidStateException("Filter '$textual' was registered twice.");
+		}
 		$this->filters[] = $callback;
 	}
 
