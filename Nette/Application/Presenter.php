@@ -217,7 +217,7 @@ abstract class Presenter extends Control implements IPresenter
 			// save component tree persistent state
 			$this->saveGlobalState();
 			if ($this->isAjax()) {
-				$this->ajaxDriver->state = $this->getGlobalState();
+				$this->getPayload()->state = $this->getGlobalState();
 			}
 
 			// finish template rendering
@@ -656,6 +656,16 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * @return mixed
+	 */
+	public function getPayload()
+	{
+		return $this->getAjaxDriver();
+	}
+
+
+
+	/**
 	 * Is AJAX request?
 	 * @return bool
 	 */
@@ -734,7 +744,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isAjax()) {
-			$this->ajaxDriver->redirect = $uri;
+			$this->getPayload()->redirect = $uri;
 			$this->terminate();
 
 		} else {

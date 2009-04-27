@@ -159,7 +159,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
 
-		// snippets support
+		// snippets support (temporary solution)
 		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>\n$s<?php\n}\n?>"; // \n$s is required by following RE
 		$s = preg_replace(
 			'#@(\\{[^}]+?\\})#s',
@@ -177,7 +177,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				(>)|                                    ## 3) end tag
 				(?<=\\s)(style|on[a-z]+)\s*=\s*(["\'])| ## 4,5) attribute
 				(["\'])|                                ## 6) attribute delimiter
-				(\n[ \t]*)?\\{([^\\s\'"][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}([ \t]*(?=\r|\n))? ## 7,8,9,10) indent & macro & modifiers & newline
+				(\n[ \t]*)?\\{([^\\s\'"{}][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}([ \t]*(?=\r|\n))? ## 7,8,9,10) indent & macro & modifiers & newline
 			~xsi',
 			array($this, 'cb'),
 			$s

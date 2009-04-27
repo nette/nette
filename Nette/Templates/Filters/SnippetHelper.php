@@ -44,8 +44,8 @@ class SnippetHelper extends /*Nette\*/Object
 	/** @var string */
 	private $tag;
 
-	/** @var IAjaxDriver */
-	private $ajaxDriver;
+	/** @var ArrayObject */
+	private $payload;
 
 	/** @var int */
 	private $level;
@@ -70,7 +70,7 @@ class SnippetHelper extends /*Nette\*/Object
 		} elseif ($control->isControlInvalid($name)) { // start snippet buffering
 			$obj = new self;
 			$obj->id = $control->getSnippetId($name);
-			$obj->ajaxDriver = $control->getPresenter()->getAjaxDriver();
+			$obj->payload = $control->getPresenter()->getPayload();
 			ob_start();
 			$obj->level = ob_get_level();
 			self::$outputAllowed = TRUE;
@@ -96,10 +96,10 @@ class SnippetHelper extends /*Nette\*/Object
 			if ($this->level !== ob_get_level()) {
 				throw new /*\*/InvalidStateException("Snippet '$this->id' cannot be ended here.");
 			}
-			/**/if (empty($this->ajaxDriver->snippets)) { // PHP 5.2.0 bug workaround
-				$this->ajaxDriver->snippets = new ArrayObject;
+			/**/if (empty($this->payload->snippets)) { // PHP 5.2.0 bug workaround
+				$this->payload->snippets = new ArrayObject;
 			}/**/
-			$this->ajaxDriver->snippets[$this->id] = ob_get_clean();
+			$this->payload->snippets[$this->id] = ob_get_clean();
 			self::$outputAllowed = FALSE;
 		}
 	}

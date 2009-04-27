@@ -54,17 +54,17 @@ class FifteenControl extends /*Nette\Application\*/Control
 		}
 
 		if ($this->presenter->isAjax()) {
-			$ajax = $this->presenter->ajaxDriver;
+			$payload = $this->presenter->payload;
 			$pos = $x + $y * $this->width;
 			$empty = $this->searchEmpty();
 			$id = $this->getSnippetId();
-			if (empty($ajax->events)) { // PHP 5.2.0 bug workaround
-				$ajax->events = new ArrayObject;
+			if (empty($payload->events)) { // PHP 5.2.0 bug workaround
+				$payload->events = new ArrayObject;
 			}
-			if ($pos === $empty - 1) $ajax->events[] = array('fifteen.move', $id, $x, $y, -1, 0);
-			elseif ($pos === $empty + 1) $ajax->events[] = array('fifteen.move', $id, $x, $y, +1, 0);
-			elseif ($pos > $empty) $ajax->events[] = array('fifteen.move', $id, $x, $y, 0, +1);
-			else $ajax->events[] = array('fifteen.move', $id, $x, $y, 0, -1);
+			if ($pos === $empty - 1) $payload->events[] = array('fifteen.move', $id, $x, $y, -1, 0);
+			elseif ($pos === $empty + 1) $payload->events[] = array('fifteen.move', $id, $x, $y, +1, 0);
+			elseif ($pos > $empty) $payload->events[] = array('fifteen.move', $id, $x, $y, 0, +1);
+			else $payload->events[] = array('fifteen.move', $id, $x, $y, 0, -1);
 		}
 
 		$this->move($x, $y);
