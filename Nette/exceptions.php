@@ -145,10 +145,11 @@ class FatalErrorException extends /*Error*/Exception
 
 	public function __construct($message, $code, $severity, $file, $line, $context)
 	{
-		parent::__construct($message, $code);
+		/*parent::__construct($message, $code, $severity, $file, $line);*/
+		/**/parent::__construct($message, $code);
 		$this->severity = $severity;
 		$this->file = $file;
-		$this->line = $line;
+		$this->line = $line;/**/
 		$this->context = $context;
 	}
 
