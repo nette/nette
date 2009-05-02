@@ -111,7 +111,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private $file;
 
 	/** @var string */
-	private $extends, $var, $modifiers;
+	private $extends;
 
 	/** @var string */
 	private $context, $escape, $tag;
@@ -179,7 +179,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				(["\'])|                                ## 6) attribute delimiter
 				(\n[ \t]*)?\\{([^\\s\'"{}][^}]*?)(\\|[a-z](?:[^\'"}\s|]+|\\|[a-z]|\'[^\']*\'|"[^"]*")*)?\\}([ \t]*(?=\r|\n))? ## 7,8,9,10) indent & macro & modifiers & newline
 			~xsi',
-			array($this, 'cb'),
+			array($this, 'cbContent'),
 			$s
 		);
 
@@ -191,9 +191,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
-	 * Callback for replacing text.
+	 * Searches for curly brackets, HTML tags and attributes.
 	 */
-	private function cb($matches)
+	private function cbContent($matches)
 	{
 		//    [1] => /
 		//    [2] => tag
@@ -208,18 +208,20 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		if (!empty($matches[8])) { // {macro|var|modifiers}
 			$matches[] = NULL;
-			list(, , , , , , , $indent, $macro, $this->modifiers) = $matches;
+			list(, , , , , , , $indent, $macro, $modifiers) = $matches;
 			foreach (self::$macros as $key => $val) {
 				if (strncmp($macro, $key, strlen($key)) === 0) {
-					$this->var = substr($macro, strlen($key));
-					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $this->var)) {
+					$var = substr($macro, strlen($key));
+					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $var)) {
 						continue;
 					}
+					$result = $this->macro($key, trim($var), $modifiers);
 					$nl = isset($matches[10]) ? "\n" : ''; // double newline
-					if ($nl && $indent && strncmp($val, '<?php echo ', 11)) {
-						$indent = "\n"; $nl = ''; // remove indent, single newline
+					if ($nl && $indent && strncmp($result, '<?php echo ', 11)) {
+						return "\n" . $result; // remove indent, single newline
+					} else {
+						return $indent . $result . $nl;
 					}
-					return $indent . preg_replace_callback('#%(.*?)%#', array($this, 'cb2'), $val) . $nl;
 				}
 			}
 			throw new /*\*/InvalidStateException("Unknown CurlyBrackets macro '$matches[0]' in file '$this->file'.");
@@ -272,10 +274,25 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
-	 * Callback for replacing text.
+	 * Process specified macro.
 	 */
-	private function cb2($m)
+	public function macro($macro, $var, $modifiers)
 	{
+		$this->_cbMacro = array($var, $modifiers);
+		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), self::$macros[$macro]);
+	}
+
+
+
+	/** @var array */
+	private $_cbMacro;
+
+	/**
+	 * Callback for self::macro().
+	 */
+	private function cbMacro($m)
+	{
+		list($var, $modifiers) = $this->_cbMacro;
 		if ($m[1]) {
 			$callback = $m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1];
 			/**/fixCallback($callback);/**/
@@ -283,10 +300,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$able = is_callable($callback, TRUE, $textual);
 				throw new /*\*/InvalidStateException("CurlyBrackets macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 			}
-			return call_user_func($callback, trim($this->var), $this->modifiers);
+			return call_user_func($callback, $var, $modifiers);
 
 		} else {
-			return trim($this->var);
+			return $var;
 		}
 	}
 
