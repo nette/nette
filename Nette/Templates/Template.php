@@ -147,19 +147,15 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	{
 		if ($this->file == NULL) { // intentionally ==
 			throw new /*\*/InvalidStateException("Template file name was not specified.");
-		}
 
-		// strip fragment
-		list($filePath) = explode('#', $this->file);
-
-		if (!is_file($filePath) || !is_readable($filePath)) {
+		} elseif (!is_file($this->file) || !is_readable($this->file)) {
 			throw new /*\*/FileNotFoundException("Missing template file '$this->file'.");
 		}
 
 		$this->params['template'] = $this;
 
 		if (!count($this->filters)) {
-			/*Nette\Loaders\*/LimitedScope::load($filePath, $this->params);
+			/*Nette\Loaders\*/LimitedScope::load($this->file, $this->params);
 			return;
 		}
 
@@ -168,7 +164,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 		$cached = $content = $cache[$key];
 
 		if ($content === NULL) {
-			$content = file_get_contents($filePath);
+			$content = file_get_contents($this->file);
 
 			foreach ($this->filters as $filter) {
 				if (!is_callable($filter)) {
@@ -206,7 +202,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 				$key,
 				$content,
 				array(
-					/*Nette\Caching\*/Cache::FILES => $filePath,
+					/*Nette\Caching\*/Cache::FILES => $this->file,
 					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
 				)
 			);

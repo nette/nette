@@ -63,28 +63,10 @@ final class TemplateFilters
 
 
 
-	/**
-	 * Template with defined fragments (experimental).
-	 *    <nette:fragment id="main"> ... </nette:fragment>
-	 *
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
+	/** @deprecated */
 	public static function fragments($s, $file)
 	{
-		$a = strpos($file, '#');
-		if ($a === FALSE) {
-			return $s;
-		}
-		$fragment = substr($file, $a + 1);
-		if (preg_match('#<nette:fragment\s+id="' . $fragment . '">(.*)</nette:fragment>#sU', $s, $matches)) {
-			return $matches[1];
-
-		} else {
-			trigger_error("Fragment '$file' is not defined", E_USER_WARNING);
-			return '';
-		}
+		trigger_error(__METHOD__ . '() is deprecated; use {block}...{/block} instead', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 	}
 
 
