@@ -110,8 +110,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** @var string */
 	private $file;
 
-	/** @var string */
-	private $extends;
+	/** @var array */
+	private $namedBlocks = array();
 
 	/** @var string */
 	private $context, $escape, $tag;
@@ -148,8 +148,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	public function __invoke($s, $file)
 	{
 		$this->file = $file;
-		$this->extends = NULL;
 		$this->blocks = array();
+		$this->namedBlocks = array();
 
 		// context-aware escaping
 		$this->context = self::CONTEXT_TEXT;
@@ -167,11 +167,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$s
 		);
 
-		// internal state holder
-		$s = "<?php "
-			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
-			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
-
 		$s = preg_replace_callback('~
 				<(/?)([a-z]+)|                          ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
 				(>)|                                    ## 3) end tag
@@ -183,7 +178,19 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$s
 		);
 
-		$s .= $this->extends;
+		// named blocks
+		if ($this->namedBlocks) {
+			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
+				$s = preg_replace_callback("#{block\#($name)} \?>(.*)<\?php {/block\#$name}#sU", array($this, 'cbNamedBlocks'), $s);
+			}
+			$func = '_cbb' . substr(md5("$this->file\x00$name"), 0, 15) . '_' . $name;
+			$s = "<?php\nif (!function_exists('$func')) {\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n} ?>" . $s;
+		}
+
+		// internal state holder
+		$s = "<?php "
+			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
+			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
 		return $s;
 	}
@@ -325,26 +332,26 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function macroInclude($var, $modifiers)
 	{
 		if (substr($var, 0, 1) === '#') {
-			preg_match('#^.([^\s,]+),?\s*(.*)$#', $var, $m);
-			$var = '$template->getParams()'; // get_defined_vars()
-			if ($m[2]) {
-				if (strncmp($m[2], 'array', 5) === 0) {
-					trigger_error('CurlyBracketsFilter: do not use keyword \'array\' in {include ...} macro', E_USER_WARNING);
-					$var = "$m[2] + $var";
-				} else {
-					$var = "array($m[2]) + $var";
+			preg_match('#^.([^\s,]+),?\s*(.*)$()#', $var, $m); // #name[,] [params]
+			list(, $name, $params) = $m;
+
+			if (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
+				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$name' given in file '$this->file'.");
+			}
+
+			$params = ($params ? "array($params) + " : '') . '$template->getParams()'; // or get_defined_vars() ?
+			$cmd = $name === 'parent' ? 'next' : 'reset';
+			if ($name === 'parent' || $name === 'this') {
+				$item = end($this->blocks);
+				while ($item && $item[0][0] !== '#') $item = prev($this->blocks);
+				if (!$item) {
+					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block in file '$this->file'.");
 				}
+				$name = substr($item[0], 1);
 			}
-			$var = 'call_user_func($_cb->cs[0], ' . $var. ')';
-			if ($m[1] === 'parent') {
-				return '$_cb->csX = array_shift($_cb->cs); ' . $var . '; array_unshift($_cb->cs, $_cb->csX)';
-
-			} elseif ($m[1] === 'this') {
-				return $var;
-
-			} else {
-				return '$_cb->cs = $_cb->f[' . var_export($m[1], TRUE) . ']; ' . $var;
-			}
+			$name = var_export($name, TRUE);
+			$cmd = "call_user_func($cmd(\$_cb->blks[$name]), $params)";
+			return $modifiers ? $this->macroBlock('', $modifiers) . $cmd . ";" . $this->macroBlockEnd(NULL) : $cmd;
 		}
 
 		return 'echo ' . $this->macroModifiers('$template->subTemplate(' . $this->formatVars($var) . ')->__toString(TRUE)', $modifiers);
@@ -357,8 +364,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroExtends($var)
 	{
-		$this->extends = '<?php ob_end_clean(); ' . $this->macroInclude($var, NULL) . '?>';
-		return 'ob_start()';
+		return $this->macroInclude($var, '') . '; return';
 	}
 
 
@@ -368,18 +374,26 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroBlock($var, $modifiers)
 	{
-		if (substr($var, 0, 1) === '#') {
-			$var = var_export(substr($var, 1), TRUE);
-			$func = '_cbb' . substr(md5($this->file . "\00" . $var), 0, 15);
-			$call = $this->extends ? '' : "\n\$_cb->cs = \$_cb->f[$var]; call_user_func(\$_cb->cs[0], \$template->getParams())"; // get_defined_vars()
-			$this->blocks[] = "\n}\n\$_cb->f[$var][] = '$func';$call";
-			return "\nfunction $func() { extract(func_get_arg(0))\n";
+		if (substr($var, 0, 1) === '#') { // named block
+			$name = substr($var, 1);
+			if (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
+				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given in file '$this->file'.");
+
+			} elseif (isset($this->namedBlocks[$name])) {
+				throw new /*\*/InvalidStateException("Cannot redeclare block '$name' in file '$this->file'.");
+			}
+
+			$this->namedBlocks[$name] = $name;
+			$this->blocks[] = array($var, '');
+			return $this->macroInclude($var, $modifiers) . "{block#$name}";
 		}
 
-		$this->blocks[] = '} catch (Exception $_e) { ob_end_clean(); throw $_e; } '
-			. ($var === '' ? 'echo ' : $var . '=')
-			. $this->macroModifiers('ob_get_clean()', $modifiers);
-		return 'ob_start(); try {';
+		if ($var === '' || $var[0] === '$') { // capture or modifier
+			$this->blocks[] = array($var, $modifiers);
+			return ($var === '' && $modifiers === '') ? '' : 'ob_start(); try {';
+		}
+
+		throw new /*\*/InvalidStateException("Invalid block parameter '$var' in file '$this->file'.");
 	}
 
 
@@ -387,9 +401,36 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/**
 	 * {/block ...}
 	 */
-	private function macroBlockEnd($var)
+	private function macroBlockEnd($optVar)
 	{
-		return array_pop($this->blocks);
+		list($var, $modifiers) = array_pop($this->blocks);
+
+		if ($optVar && $optVar !== $var) {
+			throw new /*\*/InvalidStateException("Tag {/block $var} was not expected here in file '$this->file'.");
+
+		} elseif (substr($var, 0, 1) === '#') { // named block
+			return "{/block$var}";
+
+		} else { // capture or modifier
+			return ($var === '' && $modifiers === '') ? ''
+				: '} catch (Exception $_e) { ob_end_clean(); throw $_e; } '
+				. ($var === '' ? 'echo ' : $var . '=')
+				. $this->macroModifiers('ob_get_clean()', $modifiers);
+		}
+	}
+
+
+
+	/**
+	 * Converts {block#named}...{/block} to functions.
+	 */
+	private function cbNamedBlocks($matches)
+	{
+		list(, $name, $content) = $matches;
+		$func = '_cbb' . substr(md5("$this->file\x00$name"), 0, 15) . '_' . $name;
+		$this->namedBlocks[$name] = "\$_cb->blks[" . var_export($name, TRUE) . "][] = '$func';\n"
+			. "function $func() { extract(func_get_arg(0)) // block #$name\n?>$content<?php\n}";
+		return '';
 	}
 
 
@@ -451,9 +492,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroSnippet($var)
 	{
-		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
-			$var = ', "' . $m[1] . '"';
-			if ($m[2]) $var .= ', ' . var_export($m[2], TRUE);
+		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) { // [name[,]] [tag]
+			$var = ', "' . $m[1] . '"' . ($m[2] ? ', ' . var_export($m[2], TRUE) : '');
 		}
 		return $var;
 	}
@@ -505,7 +545,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroAssign($var, $modifiers)
 	{
-		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m);
+		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m); // [$]params value
 		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . $this->macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
 	}
 
@@ -566,15 +606,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function formatVars($var)
 	{
-		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) {
+		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) { // destination[,] args
 			$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
 			if ($m[2]) {
-				if (strncmp($m[2], 'array', 5) === 0) {
-					trigger_error('CurlyBracketsFilter: do not use keyword \'array\' in {link ...} macro', E_USER_WARNING);
-					$var .= ", $m[2]";
-				} else {
-					$var .= ', ' . (strpos($m[2], '=>') === FALSE ? $m[2] : "array($m[2])");
-				}
+				$var .= ', ' . (strpos($m[2], '=>') === FALSE ? $m[2] : "array($m[2])");
 			}
 		}
 		return $var;

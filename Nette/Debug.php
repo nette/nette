@@ -411,7 +411,7 @@ final class Debug
 	 *
 	 * @param  \Exception
 	 * @return void
-     * @internal
+	 * @internal
 	 */
 	public static function exceptionHandler(/*\*/Exception $exception)
 	{
@@ -435,7 +435,7 @@ final class Debug
 	 * @param  array  an array of variables that existed in the scope the error was triggered in
 	 * @return bool   FALSE to call normal error handler, NULL otherwise
 	 * @throws \FatalErrorException
-     * @internal
+	 * @internal
 	 */
 	public static function errorHandler($severity, $message, $file, $line, $context)
 	{
@@ -483,7 +483,7 @@ final class Debug
 	/**
 	 * Shutdown handler to process fatal errors.
 	 * @return void
-     * @internal
+	 * @internal
 	 */
 	public static function shutdownHandler()
 	{
