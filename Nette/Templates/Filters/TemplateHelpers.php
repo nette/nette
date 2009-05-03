@@ -43,6 +43,27 @@ final class TemplateHelpers
 
 
 	/**
+	 * Try to load the requested helper.
+	 * @param  string  helper name
+	 * @return callback
+	 */
+	public static function loader($helper)
+	{
+		$callback = 'Nette\Templates\TemplateHelpers::' . $helper;
+		/**/fixCallback($callback);/**/
+		if (is_callable($callback)) {
+			return $callback;
+		}
+		$callback = 'Nette\String::' . $helper;
+		/**/fixCallback($callback);/**/
+		if (is_callable($callback)) {
+			return $callback;
+		}
+	}
+
+
+
+	/**
 	 * Escapes string for use inside HTML template.
 	 * @param  mixed  UTF-8 encoding or 8-bit
 	 * @return string

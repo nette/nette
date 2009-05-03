@@ -20,9 +20,10 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-texy.phtml');
 $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
-$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
-$template->registerHelper('lower', 'Nette\String::lower');
 $template->registerHelper('texy', array(new MockTexy, 'process'));
+$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
+
 $template->render();

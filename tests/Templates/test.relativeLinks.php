@@ -12,6 +12,8 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/relative-links.phtml');
-$template->baseUri = 'http://example.com/~my/';
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'relativeLinks'));
+
+$template->baseUri = 'http://example.com/~my/';
+
 $template->render();

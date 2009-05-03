@@ -14,10 +14,10 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-cache.phtml');
 $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
-$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->registerHelper('cache', 'Nette\Templates\CachingHelper::create');
-$template->registerHelper('lower', 'Nette\String::lower');
-$template->registerHelper('upper', 'Nette\String::upper');
+$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+
 $template->title = 'Hello';
 $template->id = 456;
+
 $template->render();

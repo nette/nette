@@ -14,7 +14,6 @@ Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-inheritance.child.phtml');
 $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
-$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 
 $template->people = array('John', 'Mary', 'Paul');
 

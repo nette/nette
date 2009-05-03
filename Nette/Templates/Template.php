@@ -52,6 +52,9 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	/** @var array */
 	private $helpers = array();
 
+	/** @var array */
+	private $helperLoaders = array();
+
 	/** @var int */
 	public static $cacheExpire = FALSE;
 
@@ -282,7 +285,24 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			$able = is_callable($callback, TRUE, $textual);
 			throw new /*\*/InvalidArgumentException("Helper handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
-		$this->helpers[$name] = $callback;
+		$this->helpers[strtolower($name)] = $callback;
+	}
+
+
+
+	/**
+	 * Registers callback as template helpers loader.
+	 * @param  callback
+	 * @return void
+	 */
+	public function registerHelperLoader($callback)
+	{
+		/**/fixCallback($callback);/**/
+		if (!is_callable($callback)) {
+			$able = is_callable($callback, TRUE, $textual);
+			throw new /*\*/InvalidArgumentException("Helper loader '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+		}
+		$this->helperLoaders[] = $callback;
 	}
 
 
@@ -295,7 +315,15 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	 */
 	public function __call($name, $args)
 	{
+		$name = strtolower($name);
 		if (!isset($this->helpers[$name])) {
+			foreach ($this->helperLoaders as $loader) {
+				$helper = call_user_func($loader, $name);
+				if ($helper) {
+					$this->registerHelper($name, $helper);
+					return call_user_func_array($helper, $args);
+				}
+			}
 			throw new /*\*/InvalidStateException("The helper '$name' was not registered.");
 		}
 
