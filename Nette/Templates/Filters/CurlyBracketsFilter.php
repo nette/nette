@@ -107,9 +107,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** @var array */
 	private $blocks = array();
 
-	/** @var string */
-	private $file;
-
 	/** @var array */
 	private $namedBlocks = array();
 
@@ -132,10 +129,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 * @param  string
 	 * @return string
 	 */
-	public static function invoke($s, $file)
+	public static function invoke($s)
 	{
 		$filter = new self;
-		return $filter->__invoke($s, $file);
+		return $filter->__invoke($s);
 	}
 
 
@@ -145,9 +142,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 * @param  string
 	 * @return string
 	 */
-	public function __invoke($s, $file)
+	public function __invoke($s)
 	{
-		$this->file = $file;
 		$this->blocks = array();
 		$this->namedBlocks = array();
 
@@ -167,6 +163,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$s
 		);
 
+		// process all {tags} and <tags/>
 		$s = preg_replace_callback('~
 				<(/?)([a-z]+)|                          ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
 				(>)|                                    ## 3) end tag
@@ -183,8 +180,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$s = preg_replace_callback("#{block\#($name)} \?>(.*)<\?php {/block\#$name}#sU", array($this, 'cbNamedBlocks'), $s);
 			}
-			$func = '_cbb' . substr(md5("$this->file\x00$name"), 0, 15) . '_' . $name;
-			$s = "<?php\nif (!function_exists('$func')) {\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n} ?>" . $s;
+			preg_match('#function (\S+)\(#', reset($this->namedBlocks), $m);
+			$s = "<?php\nif (!function_exists('$m[1]')) {\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n} ?>" . $s;
 		}
 
 		// internal state holder
@@ -231,7 +228,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					}
 				}
 			}
-			throw new /*\*/InvalidStateException("Unknown CurlyBrackets macro '$matches[0]' in file '$this->file'.");
+			throw new /*\*/InvalidStateException("Unknown macro '$matches[0]'.");
 
 		} elseif ($this->context === self::CONTEXT_NONE) {
 			// skip analyse
@@ -336,7 +333,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			list(, $name, $params) = $m;
 
 			if (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$name' given in file '$this->file'.");
+				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$name' given.");
 			}
 
 			$params = ($params ? "array($params) + " : '') . '$template->getParams()'; // or get_defined_vars() ?
@@ -345,7 +342,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$item = end($this->blocks);
 				while ($item && $item[0][0] !== '#') $item = prev($this->blocks);
 				if (!$item) {
-					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block in file '$this->file'.");
+					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block.");
 				}
 				$name = substr($item[0], 1);
 			}
@@ -377,10 +374,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		if (substr($var, 0, 1) === '#') { // named block
 			$name = substr($var, 1);
 			if (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given in file '$this->file'.");
+				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new /*\*/InvalidStateException("Cannot redeclare block '$name' in file '$this->file'.");
+				throw new /*\*/InvalidStateException("Cannot redeclare block '$name'.");
 			}
 
 			$this->namedBlocks[$name] = $name;
@@ -393,7 +390,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			return ($var === '' && $modifiers === '') ? '' : 'ob_start(); try {';
 		}
 
-		throw new /*\*/InvalidStateException("Invalid block parameter '$var' in file '$this->file'.");
+		throw new /*\*/InvalidStateException("Invalid block parameter '$var'.");
 	}
 
 
@@ -406,7 +403,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		list($var, $modifiers) = array_pop($this->blocks);
 
 		if ($optVar && $optVar !== $var) {
-			throw new /*\*/InvalidStateException("Tag {/block $var} was not expected here in file '$this->file'.");
+			throw new /*\*/InvalidStateException("Tag {/block $var} was not expected here.");
 
 		} elseif (substr($var, 0, 1) === '#') { // named block
 			return "{/block$var}";
@@ -427,7 +424,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function cbNamedBlocks($matches)
 	{
 		list(, $name, $content) = $matches;
-		$func = '_cbb' . substr(md5("$this->file\x00$name"), 0, 15) . '_' . $name;
+		$func = '_cbb' . substr(md5(uniqid($name)), 0, 15) . '_' . $name;
 		$this->namedBlocks[$name] = "\$_cb->blks[" . var_export($name, TRUE) . "][] = '$func';\n"
 			. "function $func() { extract(func_get_arg(0)) // block #$name\n?>$content<?php\n}";
 		return '';

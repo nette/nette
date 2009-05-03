@@ -51,10 +51,10 @@ final class TemplateFilters
 
 
 	/** @deprecated */
-	public static function curlyBrackets($s, $file)
+	public static function curlyBrackets($s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use $template->registerFilter(\'CurlyBracketsFilter::invoke\') instead', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
-		return CurlyBracketsFilter::invoke($s, $file);
+		return CurlyBracketsFilter::invoke($s);
 	}
 
 
@@ -64,7 +64,7 @@ final class TemplateFilters
 
 
 	/** @deprecated */
-	public static function fragments($s, $file)
+	public static function fragments($s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use {block}...{/block} instead', /**/E_USER_WARNING/**//*E_USER_DEPRECATED*/);
 	}

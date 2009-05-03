@@ -193,7 +193,13 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 					}
 				}
 
-				$content = call_user_func($filter, $res, $this->file);
+				try {
+					$content = call_user_func($filter, $res);
+				} catch (Exception $e) {
+					is_callable($filter, TRUE, $textual);
+					throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . " (in file $this->file)", 0, $e);
+				}
+
 				$content = strtr($content, $blocks); // put PHP code back
 			}
 
