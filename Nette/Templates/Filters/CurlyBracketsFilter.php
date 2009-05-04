@@ -266,7 +266,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			}
 
 		} else { // </tag
-			if ($this->context === self::CONTEXT_TEXT || $this->context === self::CONTEXT_CDATA) {
+			if ($this->context === self::CONTEXT_TEXT || ($this->context === self::CONTEXT_CDATA && $this->tag === strtolower($matches[2]))) {
 				$this->context = self::CONTEXT_TAG;
 				$this->escape = 'TemplateHelpers::escapeHtml';
 				$this->tag = NULL;
