@@ -63,10 +63,6 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 				self::PRESENTER_KEY => substr($defaults, 0, $a),
 				'action' => substr($defaults, $a + 1),
 			);
-
-		} elseif (isset($defaults['view'])) { // back compatiblity
-			$defaults['action'] = $defaults['view'];
-			unset($defaults['view']);
 		}
 
 		if (isset($defaults[self::MODULE_KEY])) {

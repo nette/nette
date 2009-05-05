@@ -121,18 +121,6 @@ class SmartCachingIterator extends /*\*/CachingIterator
 
 
 	/**
-	 * Returns the current index (counter - 1).
-	 * @return int
-	 * @deprecated
-	 */
-	public function getIndex()
-	{
-		return $this->counter > 0 ? $this->counter - 1 : FALSE;
-	}
-
-
-
-	/**
 	 * Forwards to the next element.
 	 * @return void
 	 */

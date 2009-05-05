@@ -384,7 +384,6 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		$metadata = array();
 		foreach ($defaults as $name => $def) {
-			if ($name === 'view') $name = 'action'; // back compatibility
 			$metadata[$name] = array(
 				'default' => $def,
 				'fixity' => self::CONSTANT
@@ -406,7 +405,6 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is unsed
-				if ($name === 'view') $name = 'action'; // back compatibility
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
@@ -461,7 +459,6 @@ class Route extends /*Nette\*/Object implements IRouter
 			$class = $parts[$i]; $i--; // validation class
 			$pattern = $parts[$i]; $i--; // validation condition (as regexp)
 			$name = $parts[$i]; $i--; // parameter name
-			if ($name === 'view') $name = 'action'; // back compatibility
 			array_unshift($sequence, $name);
 
 			if ($name[0] === '?') { // "foo" parameter
@@ -734,9 +731,3 @@ class Route extends /*Nette\*/Object implements IRouter
 	}
 
 }
-
-
-
-// back-compatibility
-Route::$styles['view'] = & Route::$styles['action'];
-Route::$styles['?view'] = & Route::$styles['?action'];

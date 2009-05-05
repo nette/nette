@@ -262,17 +262,6 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Sets the session ID to a specified one.
-	 * @deprecated
-	 */
-	public function setId($id)
-	{
-		throw new /*\*/DeprecatedException('Method '.__METHOD__.'() is deprecated.');
-	}
-
-
-
-	/**
 	 * Returns the current session ID. Don't make dependencies, can be changed for each request.
 	 * @return string
 	 */

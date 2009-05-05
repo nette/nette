@@ -94,16 +94,6 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 
 	/**
-	 * @deprecated
-	 */
-	public function addRuleFor()
-	{
-		throw new /*\*/DeprecatedException('Method addRuleFor() is deprecated. Use addConditionOn() & addRule() construction.');
-	}
-
-
-
-	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed      condition type
 	 * @param  mixed      optional condition arguments
