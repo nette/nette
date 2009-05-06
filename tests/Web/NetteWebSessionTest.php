@@ -241,7 +241,7 @@ class NetteWebSessionTest extends PHPUnit_Framework_TestCase
 		$s->a = 'apple';
 		$s->p = 'pear';
 		$s['o'] = 'orange';
-		$s->setExpiration(5);
+		$s->setExpiration('+ 5 seconds');
 
 		$this->session->close();
 		sleep(6);

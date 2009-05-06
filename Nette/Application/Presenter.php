@@ -234,7 +234,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			if ($this->hasFlashSession()) {
-				$this->getFlashSession()->setExpiration($e instanceof RedirectingException ? 30 : 3);
+				$this->getFlashSession()->setExpiration($e instanceof RedirectingException ? '+ 30 seconds': '+ 3 seconds');
 			}
 
 			$this->onShutdown($this, $e);

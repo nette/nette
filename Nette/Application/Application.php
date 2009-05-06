@@ -330,7 +330,7 @@ class Application extends /*Nette\*/Object
 		} while (isset($session->$key));
 
 		$session->$key = end($this->requests);
-		$session->setExpiration(10 * 60, 'requests');
+		$session->setExpiration('+ 10 minutes', 'requests');
 		return $key;
 	}
 
