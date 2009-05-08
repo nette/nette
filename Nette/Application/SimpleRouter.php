@@ -65,6 +65,7 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 			);
 
 		} elseif (isset($defaults['view'])) { // back compatiblity
+			trigger_error("Routing parameter 'view' is deprecated; use 'action' instead.", E_USER_WARNING);
 			$defaults['action'] = $defaults['view'];
 			unset($defaults['view']);
 		}

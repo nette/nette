@@ -153,7 +153,10 @@ final class Environment
 	 */
 	public static function setMode($mode, $flag = TRUE)
 	{
-		if ($mode === 'live') $mode = 'production'; // back compatibility
+		if ($mode === 'live') {
+			trigger_error("Environment mode 'live' is deprecated; use 'production' instead.", E_USER_WARNING);
+			$mode = 'production';
+		}
 		self::$mode[$mode] = (bool) $flag;
 	}
 
@@ -167,7 +170,10 @@ final class Environment
 	 */
 	public static function getMode($mode)
 	{
-		if ($mode === 'live') $mode = 'production'; // back compatibility
+		if ($mode === 'live') {
+			trigger_error("Environment mode 'live' is deprecated; use 'production' instead.", E_USER_WARNING);
+			$mode = 'production';
+		}
 		if (isset(self::$mode[$mode])) {
 			return self::$mode[$mode];
 

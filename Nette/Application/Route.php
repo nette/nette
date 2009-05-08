@@ -384,7 +384,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		$metadata = array();
 		foreach ($defaults as $name => $def) {
-			if ($name === 'view') $name = 'action'; // back compatibility
+			if ($name === 'view') {
+				trigger_error("Routing parameter 'view' is deprecated; use 'action' instead.", E_USER_WARNING);
+				$name = 'action';
+			}
 			$metadata[$name] = array(
 				'default' => $def,
 				'fixity' => self::CONSTANT
@@ -406,7 +409,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is unsed
-				if ($name === 'view') $name = 'action'; // back compatibility
+				if ($name === 'view') {
+					trigger_error("Routing parameter 'view' is deprecated; use 'action' instead.", E_USER_WARNING);
+					$name = 'action';
+				}
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
