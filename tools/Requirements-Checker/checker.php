@@ -176,6 +176,12 @@ paint(array(
 		extension_loaded('fileinfo') || function_exists('mime_content_type'),
 		'Fileinfo extension or function mime_content_type are optional. If they are absent, you will not be able to determine mime type of uploaded files.',
 	),
+	/**/array(
+		'Disabled HTTP extension',
+		OPTIONAL,
+		!extension_loaded('http'),
+		'HTTP extension has naming conflict with Nette Framework. If it is present, you will have to use Prefixed version.',
+	),/**/
 ));
 
 

@@ -174,8 +174,7 @@ class RobotLoader extends AutoLoader
 	{
 		$class = strtolower($class);
 		if (isset($this->list[$class]) && $this->list[$class] !== $file) {
-			// throwing exception is not possible, Nette\Debug converts errors to exceptions
-			die("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".");
+			trigger_error("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".", E_USER_ERROR);
 		}
 		$this->list[$class] = $file;
 	}

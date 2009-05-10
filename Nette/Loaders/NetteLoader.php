@@ -137,8 +137,6 @@ class NetteLoader extends AutoLoader
 		'itemplate' => '/Templates/ITemplate.php',
 		'itranslator' => '/ITranslator.php',
 		'iuser' => '/Web/IUser.php',
-		'javascript' => '/Web/JavaScript.php',
-		'javascriptconsole' => '/Web/JavaScriptConsole.php',
 		'keynotfoundexception' => '/Collections/Hashtable.php',
 		'limitedscope' => '/Loaders/LimitedScope.php',
 		'link' => '/Application/Link.php',
