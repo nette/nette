@@ -57,7 +57,7 @@ class Session extends /*Nette\*/Object
 
 		// cookies
 		'session.cookie_lifetime' => 0,   // until the browser is closed
-		'session.cookie_path' => '/',    // cookie is available within the entire domain
+		'session.cookie_path' => '/',     // cookie is available within the entire domain
 		'session.cookie_domain' => '',    // cookie is available on current subdomain only
 		'session.cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
 		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
@@ -164,8 +164,11 @@ class Session extends /*Nette\*/Object
 			// expire namespace variables
 			foreach ($_SESSION['__NM'] as $namespace => $metadata) {
 				if (isset($metadata['EXP'])) {
-					foreach ($metadata['EXP'] as $variable => $time) {
-						if ((!$time && $browserClosed) || ($time && $now > $time)) {
+					foreach ($metadata['EXP'] as $variable => $value) {
+						if (!is_array($value)) $value = array($value, !$value); // back compatibility
+
+						list($time, $whenBrowserIsClosed) = $value;
+						if (($whenBrowserIsClosed && $browserClosed) || ($time && $now > $time)) {
 							if ($variable === '') { // expire whole namespace
 								unset($_SESSION['__NM'][$namespace], $_SESSION['__NS'][$namespace]);
 								continue 2;

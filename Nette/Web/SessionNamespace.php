@@ -194,6 +194,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 			$seconds = strtotime($seconds);
 		}
 
+		$whenBrowserIsClosed = $seconds == 0;
 		if ($seconds <= 0) {
 			$seconds = 0;
 
@@ -203,16 +204,16 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 
 		if ($variables === NULL) {
 			// to entire namespace
-			$this->meta['EXP'][''] = $seconds;
+			$this->meta['EXP'][''] = array($seconds, $whenBrowserIsClosed);
 
 		} elseif (is_array($variables)) {
 			// to variables
 			foreach ($variables as $variable) {
-				$this->meta['EXP'][$variable] = $seconds;
+				$this->meta['EXP'][$variable] = array($seconds, $whenBrowserIsClosed);
 			}
 
 		} else {
-			$this->meta['EXP'][$variables] = $seconds;
+			$this->meta['EXP'][$variables] = array($seconds, $whenBrowserIsClosed);
 		}
 	}
 
