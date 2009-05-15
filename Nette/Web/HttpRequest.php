@@ -189,6 +189,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$requestUri = preg_replace(array_keys($this->uriFilter[0]), array_values($this->uriFilter[0]), $requestUri);
 		$tmp = explode('?', $requestUri, 2);
 		$uri->path = preg_replace(array_keys($this->uriFilter[PHP_URL_PATH]), array_values($this->uriFilter[PHP_URL_PATH]), $tmp[0]);
+		$uri->path = /*Nette\*/String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		if ($uri->query !== $origUri->query) {
@@ -434,7 +435,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 
 		$gpc = (bool) get_magic_quotes_gpc();
 		$enc = (bool) $this->encoding;
-		$old = error_reporting(0);
+		$old = error_reporting(error_reporting() ^ E_NOTICE);
 		$nonChars = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
 
 

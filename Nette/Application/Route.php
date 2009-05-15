@@ -162,7 +162,6 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		if ($path !== '') {
 			$path = rtrim($path, '/') . '/';
-			$path = /*Nette\*/String::fixEncoding($path);
 		}
 
 		if (!preg_match($this->re, $path, $matches)) {

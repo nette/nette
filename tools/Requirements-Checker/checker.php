@@ -76,7 +76,7 @@ paint(array(
 	array(
 		'ICONV extension',
 		REQUIRED,
-		extension_loaded('iconv'),
+		extension_loaded('iconv') && (ICONV_IMPL !== 'unknown'),
 		'ICONV extension is required.',
 	),
 	array(

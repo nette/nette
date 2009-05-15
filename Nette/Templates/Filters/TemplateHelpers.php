@@ -203,7 +203,7 @@ final class TemplateHelpers
 	 */
 	public static function bytes($bytes)
 	{
-		$bytes = (int) $bytes;
+		$bytes = round($bytes);
 		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 		foreach ($units as $unit) {
 			if (abs($bytes) < 1024) break;
