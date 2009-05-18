@@ -200,11 +200,13 @@ class Route extends /*Nette\*/Object implements IRouter
 		// 4) APPLY FILTERS & FIXITY
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($params[$name])) {
-				if (isset($meta[self::FILTER_TABLE][$params[$name]])) { // applyies filterTable only to path parameters
+				if (!is_scalar($params[$name])) {
+
+				} elseif (isset($meta[self::FILTER_TABLE][$params[$name]])) { // applyies filterTable only to scalar parameters
 					$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
 
-				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to path parameters
-					$params[$name] = call_user_func($meta[self::FILTER_IN], $params[$name]);
+				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to scalar parameters
+					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name]);
 				}
 
 			} elseif (isset($meta['fixity'])) {
@@ -276,7 +278,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			if (!isset($params[$name])) continue; // retains NULL values
 
 			if (isset($meta['fixity'])) {
-				if (strcasecmp($params[$name], $meta['default']) === 0) {  // intentionally ==
+				if (is_scalar($params[$name]) && strcasecmp($params[$name], $meta['default']) === 0) {
 					// remove default values; NULL values are retain
 					unset($params[$name]);
 					continue;
@@ -286,7 +288,9 @@ class Route extends /*Nette\*/Object implements IRouter
 				}
 			}
 
-			if (isset($meta['filterTable2'][$params[$name]])) {
+			if (!is_scalar($params[$name])) {
+
+			} elseif (isset($meta['filterTable2'][$params[$name]])) {
 				$params[$name] = $meta['filterTable2'][$params[$name]];
 
 			} elseif (isset($meta[self::FILTER_OUT])) {

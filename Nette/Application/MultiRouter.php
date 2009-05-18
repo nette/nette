@@ -37,11 +37,15 @@ require_once dirname(__FILE__) . '/../Collections/ArrayList.php';
  */
 class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 {
-	/** @var string  type (class, interface, PHP type) */
-	protected $itemType = /*Nette\Application\*/'IRouter';
-
 	/** @var array {@link MultiRouter::constructUrl()} */
 	private $cachedRoutes;
+
+
+
+	public function __construct()
+	{
+		parent::__construct(NULL, /*Nette\Application\*/'IRouter');
+	}
 
 
 

@@ -43,7 +43,7 @@ class Link extends /*Nette\*/Object
 	private $destination;
 
 	/** @var array */
-	private $args;
+	private $params;
 
 
 	/**
@@ -52,11 +52,11 @@ class Link extends /*Nette\*/Object
 	 * @param  string
 	 * @param  array
 	 */
-	public function __construct(PresenterComponent $component, $destination, array $args)
+	public function __construct(PresenterComponent $component, $destination, array $params)
 	{
 		$this->component = $component;
 		$this->destination = $destination;
-		$this->args = $args;
+		$this->params = $params;
 	}
 
 
@@ -80,7 +80,7 @@ class Link extends /*Nette\*/Object
 	 */
 	public function setParam($key, $value)
 	{
-		$this->args[$key] = $value;
+		$this->params[$key] = $value;
 	}
 
 
@@ -92,7 +92,18 @@ class Link extends /*Nette\*/Object
 	 */
 	public function getParam($key)
 	{
-		return isset($this->args[$key]) ? $this->args[$key] : NULL;
+		return isset($this->params[$key]) ? $this->params[$key] : NULL;
+	}
+
+
+
+	/**
+	 * Returns link parameters.
+	 * @return array
+	 */
+	public function getParams()
+	{
+		return $this->params;
 	}
 
 
@@ -104,7 +115,7 @@ class Link extends /*Nette\*/Object
 	public function __toString()
 	{
 		try {
-			return $this->component->link($this->destination, $this->args);
+			return $this->component->link($this->destination, $this->params);
 
 		} catch (/*\*/Exception $e) {
 			trigger_error($e->getMessage(), E_USER_WARNING);

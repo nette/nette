@@ -95,7 +95,7 @@ class FormGroup extends /*Nette\*/Object
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return FormControl  provides a fluent interface
+	 * @return FormGroup  provides a fluent interface
 	 */
 	public function setOption($key, $value)
 	{
