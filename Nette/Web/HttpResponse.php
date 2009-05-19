@@ -176,18 +176,22 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
-	 * @param  int  timestamp or number of seconds
+	 * @param  mixed  timestamp or number of seconds
 	 * @return void
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
-	public function expire($time)
+	public function expire($seconds)
 	{
-		if ($time > 0) {
-			if ($time <= /*Nette\*/Tools::YEAR) {
-				$time += time();
+		if (is_string($seconds) && !is_numeric($seconds)) {
+			$seconds = strtotime($seconds);
+		}
+
+		if ($seconds > 0) {
+			if ($seconds <= /*Nette\*/Tools::YEAR) {
+				$seconds += time();
 			}
-			$this->setHeader('Cache-Control', 'max-age=' . ($time - time()). ',must-revalidate');
-			$this->setHeader('Expires', self::date($time));
+			$this->setHeader('Cache-Control', 'max-age=' . ($seconds - time()). ',must-revalidate');
+			$this->setHeader('Expires', self::date($seconds));
 
 		} else { // no cache
 			$this->setHeader('Expires', 'Mon, 23 Jan 1978 10:00:00 GMT');
@@ -287,7 +291,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 * Sends a cookie.
 	 * @param  string name of the cookie
 	 * @param  string value
-	 * @param  int expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
+	 * @param  mixed  expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
 	 * @param  string
 	 * @param  string
 	 * @param  bool
@@ -300,10 +304,17 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			throw new /*\*/InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
+		if (is_string($expire) && !is_numeric($expire)) {
+			$expire = strtotime($expire);
+
+		} elseif ($expire > 0 && $expire <= /*Nette\*/Tools::YEAR) {
+			$expire += time();
+		}
+
 		setcookie(
 			$name,
 			$value,
-			$expire > 0 && $expire <= /*Nette\*/Tools::YEAR ? $expire + time() : $expire,
+			$expire,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,

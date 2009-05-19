@@ -18,7 +18,7 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
-$template->people = array('John', 'Mary', 'Paul');
+$template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->menu = array('about', array('product1', 'product2'), 'contact');
 
 $template->render();

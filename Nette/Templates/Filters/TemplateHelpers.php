@@ -124,7 +124,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeJs($s)
 	{
-		return json_encode($s);
+		return str_replace(']]>', ']]\x3E', json_encode($s));
 	}
 
 

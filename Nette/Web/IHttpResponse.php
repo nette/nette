@@ -105,10 +105,10 @@ interface IHttpResponse
 
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
-	 * @param  int  timestamp or number of seconds
+	 * @param  mixed  timestamp or number of seconds
 	 * @return void
 	 */
-	function expire($time);
+	function expire($seconds);
 
 	/**
 	 * Checks if headers have been sent.
@@ -126,7 +126,7 @@ interface IHttpResponse
 	 * Sends a cookie.
 	 * @param  string name of the cookie
 	 * @param  string value
-	 * @param  int expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
+	 * @param  mixed expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
 	 * @param  string
 	 * @param  string
 	 * @param  bool

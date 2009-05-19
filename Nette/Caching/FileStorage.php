@@ -187,14 +187,16 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp[Cache::EXPIRE])) {
-			$expire = (int) $dp[Cache::EXPIRE];
-			if ($expire <= /*Nette\*/Tools::YEAR) {
-				$expire += time();
+			$expire = $dp[Cache::EXPIRE];
+			if (is_string($expire) && !is_numeric($expire)) {
+				$expire = strtotime($expire) - time();
+			} elseif ($expire > /*Nette\*/Tools::YEAR) {
+				$expire -= time();
 			}
 			if (empty($dp[Cache::REFRESH])) {
-				$meta[self::META_EXPIRE] = $expire; // absolute time
+				$meta[self::META_EXPIRE] = (int) $expire + time(); // absolute time
 			} else {
-				$meta[self::META_DELTA] = $expire - time(); // sliding time
+				$meta[self::META_DELTA] = (int) $expire; // sliding time
 			}
 		}
 
@@ -294,8 +296,14 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 		$now = time();
 
-		foreach (glob($this->base . '*') as $cacheFile)
-		{
+		$iterator = dir(dirname($this->base . '-'));
+		if (!$iterator) return FALSE;
+		$rest = substr($this->base, strlen($iterator->path) + 1);
+
+		while (FALSE !== ($entry = $iterator->read())) {
+			if (strncmp($entry, $rest, strlen($rest))) continue;
+
+			$cacheFile = $iterator->path . '/' . $entry;
 			if (!is_file($cacheFile)) continue;
 
 			do {

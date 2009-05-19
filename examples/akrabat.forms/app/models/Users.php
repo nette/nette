@@ -27,7 +27,7 @@ class Users extends Object implements /*Nette\Security\*/IAuthenticator
 			throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 		}
 
-		if ($row->password !== $credentials[self::PASSWORD]) {
+		if ($row->password !== $password) {
 			throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
 		}
 

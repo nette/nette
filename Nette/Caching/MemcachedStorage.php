@@ -143,12 +143,14 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 
 		$expire = 0;
 		if (!empty($dp[Cache::EXPIRE])) {
-			$expire = (int) $dp[Cache::EXPIRE];
-			if ($expire <= /*Nette\*/Tools::YEAR) {
-				$expire += time();
+			$expire = $dp[Cache::EXPIRE];
+			if (is_string($expire) && !is_numeric($expire)) {
+				$expire = strtotime($expire) - time();
+			} elseif ($expire > /*Nette\*/Tools::YEAR) {
+				$expire -= time();
 			}
 			if (!empty($dp[Cache::REFRESH])) {
-				$meta[self::META_DELTA] = $expire - time(); // sliding time
+				$meta[self::META_DELTA] = (int) $expire; // sliding time
 			}
 		}
 
