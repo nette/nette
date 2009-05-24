@@ -465,7 +465,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			array_unshift($sequence, $name);
 
 			if ($name[0] === '?') { // "foo" parameter
-				$re = '(?:' . $pattern . ')' . $re;
+				$re = '(?:' . preg_quote(substr($name, 1), '#') . '|' . $pattern . ')' . $re;
 				$sequence[1] = substr($name, 1) . $sequence[1];
 				continue;
 			}

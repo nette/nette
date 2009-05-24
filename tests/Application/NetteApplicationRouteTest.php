@@ -883,6 +883,19 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 
 
 		$this->assertRoute($route,
+			'/index.xml', // ?test=testvalue&presenter=querypresenter
+			array (
+				'presenter' => 'DefaultPresenter',
+				'params' =>
+				array (
+					'test' => 'testvalue',
+				),
+			),
+			'/index.xml/?test=testvalue'
+		);
+
+
+		$this->assertRoute($route,
 			'/index.php', // ?test=testvalue&presenter=querypresenter
 			array (
 				'presenter' => 'DefaultPresenter',
@@ -905,6 +918,53 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 				),
 			),
 			'/index.xml/?test=testvalue'
+		);
+
+
+		$this->assertRoute($route,
+			'/index', // ?test=testvalue&presenter=querypresenter
+			array (
+				'presenter' => 'DefaultPresenter',
+				'params' =>
+				array (
+					'test' => 'testvalue',
+				),
+			),
+			'/index.xml/?test=testvalue'
+		);
+
+
+
+
+		$route = new Route('index<?.xml>/', array(
+			'presenter' => 'DefaultPresenter',
+		));
+
+
+		$this->assertRoute($route,
+			'/index.', // ?test=testvalue&presenter=querypresenter
+			NULL,
+			NULL
+		);
+
+
+		$this->assertRoute($route,
+			'/index.xml', // ?test=testvalue&presenter=querypresenter
+			array (
+				'presenter' => 'DefaultPresenter',
+				'params' =>
+				array (
+					'test' => 'testvalue',
+				),
+			),
+			'/index.xml/?test=testvalue'
+		);
+
+
+		$this->assertRoute($route,
+			'/index.php', // ?test=testvalue&presenter=querypresenter
+			NULL,
+			NULL
 		);
 
 
