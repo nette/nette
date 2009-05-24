@@ -1,4 +1,4 @@
-<h1>Nette\Caching\Cache & Memcached expiration with refresh test</h1>
+<h1>Nette\Caching\Cache & Memcached sliding expiration test</h1>
 
 <pre>
 <?php
@@ -16,7 +16,7 @@ $cache = new Cache(new /*Nette\Caching\*/MemcachedStorage('localhost'));
 echo "Writing cache...\n";
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
-	Cache::REFRESH => TRUE,
+	Cache::SLIDING => TRUE,
 ));
 
 

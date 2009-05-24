@@ -38,13 +38,16 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	/**#@+ dependency */
 	const PRIORITY = 'priority';
 	const EXPIRE = 'expire';
-	const REFRESH = 'refresh';
+	const SLIDING = 'sliding';
 	const TAGS = 'tags';
 	const FILES = 'files';
 	const ITEMS = 'items';
 	const CONSTS = 'consts';
 	const ALL = 'all';
 	/**#@-*/
+
+	/** @deprecated */
+	const REFRESH = 'sliding';
 
 	/** @var ICacheStorage */
 	private $storage;
@@ -106,7 +109,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 * Dependencies are:
 	 *       priority => (int) priority
 	 *       expire => (timestamp) expiration
-	 *       refresh => (bool) use sliding expiration?
+	 *       sliding => (bool) use sliding expiration?
 	 *       tags => (array) tags
 	 *       files => (array|string) file names
 	 *       items => (array|string) cache items

@@ -193,7 +193,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			} elseif ($expire > /*Nette\*/Tools::YEAR) {
 				$expire -= time();
 			}
-			if (empty($dp[Cache::REFRESH])) {
+			if (empty($dp[Cache::SLIDING])) {
 				$meta[self::META_EXPIRE] = (int) $expire + time(); // absolute time
 			} else {
 				$meta[self::META_DELTA] = (int) $expire; // sliding time
