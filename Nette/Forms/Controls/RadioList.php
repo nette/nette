@@ -50,7 +50,7 @@ class RadioList extends FormControl
 	 * @param  string  label
 	 * @param  array   options from which to choose
 	 */
-	public function __construct($label, array $items = NULL)
+	public function __construct($label = NULL, array $items = NULL)
 	{
 		parent::__construct($label);
 		$this->control->type = 'radio';

@@ -76,14 +76,14 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 
 	/**
-	 * @param  string  label
+	 * @param  string  caption
 	 */
-	public function __construct($label)
+	public function __construct($caption = NULL)
 	{
 		parent::__construct();
 		$this->control = /*Nette\Web\*/Html::el('input');
 		$this->label = /*Nette\Web\*/Html::el('label');
-		$this->caption = $label;
+		$this->caption = $caption;
 		$this->rules = new Rules($this);
 	}
 

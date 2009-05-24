@@ -39,7 +39,7 @@ class Checkbox extends FormControl
 	/**
 	 * @param  string  label
 	 */
-	public function __construct($label)
+	public function __construct($label = NULL)
 	{
 		parent::__construct($label);
 		$this->control->type = 'checkbox';

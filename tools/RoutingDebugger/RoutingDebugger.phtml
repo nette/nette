@@ -137,7 +137,7 @@
 			<td><code><strong><?php echo htmlSpecialChars($router['mask']) ?></strong></code></td>
 			<td><code>
 			<?php foreach ($router['defaults'] as $key => $value): ?>
-				<?php echo htmlSpecialChars($key), " = ", is_string($value) ? htmlSpecialChars($value) : Debug::dump($value, TRUE) ?><br>
+				<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : Debug::dump($value, TRUE) ?><br>
 			<?php endforeach ?>
 			</code></td>
 		</tr>

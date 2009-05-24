@@ -39,7 +39,7 @@ class Button extends FormControl
 	/**
 	 * @param  string  caption
 	 */
-	public function __construct($caption)
+	public function __construct($caption = NULL)
 	{
 		parent::__construct($caption);
 		$this->control->type = 'button';

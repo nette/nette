@@ -54,7 +54,7 @@ class SelectBox extends FormControl
 	 * @param  array   items from which to choose
 	 * @param  int     number of rows that should be visible
 	 */
-	public function __construct($label, array $items = NULL, $size = NULL)
+	public function __construct($label = NULL, array $items = NULL, $size = NULL)
 	{
 		parent::__construct($label);
 		$this->control->setName('select');

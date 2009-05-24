@@ -105,7 +105,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  int  maximum number of characters the user may enter
 	 * @return TextInput
 	 */
-	public function addText($name, $label, $cols = NULL, $maxLength = NULL)
+	public function addText($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		return $this[$name] = new TextInput($label, $cols, $maxLength);
 	}
@@ -120,7 +120,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  int  maximum number of characters the user may enter
 	 * @return TextInput
 	 */
-	public function addPassword($name, $label, $cols = NULL, $maxLength = NULL)
+	public function addPassword($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$control = new TextInput($label, $cols, $maxLength);
 		$control->setPasswordMode(TRUE);
@@ -138,7 +138,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  int  height of the control in text lines
 	 * @return TextArea
 	 */
-	public function addTextArea($name, $label, $cols = 40, $rows = 10)
+	public function addTextArea($name, $label = NULL, $cols = 40, $rows = 10)
 	{
 		return $this[$name] = new TextArea($label, $cols, $rows);
 	}
@@ -151,7 +151,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  string  label
 	 * @return FileUpload
 	 */
-	public function addFile($name, $label)
+	public function addFile($name, $label = NULL)
 	{
 		return $this[$name] = new FileUpload($label);
 	}
@@ -190,7 +190,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  array   options from which to choose
 	 * @return RadioList
 	 */
-	public function addRadioList($name, $label, array $items = NULL)
+	public function addRadioList($name, $label = NULL, array $items = NULL)
 	{
 		return $this[$name] = new RadioList($label, $items);
 	}
@@ -205,7 +205,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  int     number of rows that should be visible
 	 * @return SelectBox
 	 */
-	public function addSelect($name, $label, array $items = NULL, $size = NULL)
+	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
 		return $this[$name] = new SelectBox($label, $items, $size);
 	}
@@ -220,7 +220,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  int     number of rows that should be visible
 	 * @return MultiSelectBox
 	 */
-	public function addMultiSelect($name, $label, array $items = NULL, $size = NULL)
+	public function addMultiSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
 		return $this[$name] = new MultiSelectBox($label, $items, $size);
 	}

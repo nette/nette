@@ -41,7 +41,7 @@ class FileUpload extends FormControl
 	/**
 	 * @param  string  label
 	 */
-	public function __construct($label)
+	public function __construct($label = NULL)
 	{
 		$this->monitor('Nette\Forms\Form');
 		parent::__construct($label);

@@ -235,24 +235,24 @@ class Form extends FormContainer
 
 	/**
 	 * Adds fieldset group to the form.
-	 * @param  string  label
+	 * @param  string  caption
 	 * @param  bool    set this group as current
 	 * @return FormGroup
 	 */
-	public function addGroup($label = NULL, $setAsCurrent = TRUE)
+	public function addGroup($caption = NULL, $setAsCurrent = TRUE)
 	{
 		$group = new FormGroup;
-		$group->setOption('label', $label);
+		$group->setOption('label', $caption);
 		$group->setOption('visual', TRUE);
 
 		if ($setAsCurrent) {
 			$this->setCurrentGroup($group);
 		}
 
-		if (isset($this->groups[$label])) {
+		if (isset($this->groups[$caption])) {
 			return $this->groups[] = $group;
 		} else {
-			return $this->groups[$label] = $group;
+			return $this->groups[$caption] = $group;
 		}
 	}
 
