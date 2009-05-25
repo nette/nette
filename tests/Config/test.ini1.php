@@ -46,3 +46,17 @@ try {
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
+
+echo "check read-only clone:\n";
+$dolly = clone $config;
+$dolly->database->adapter = 'works good';
+Debug::dump($dolly->database->adapter);
+Debug::dump($config->database->adapter);
+unset($dolly);
+
+echo "check read-only clone II:\n";
+$dolly = unserialize(serialize($config));
+$dolly->database->adapter = 'works good';
+Debug::dump($dolly->database->adapter);
+Debug::dump($config->database->adapter);
+unset($dolly);

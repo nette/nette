@@ -394,6 +394,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __wakeup()
 	{
+		// ArrayObject serialization is wrong in PHP 5.2.x
 		$this->frozen = FALSE;
 	}
 

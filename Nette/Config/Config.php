@@ -210,6 +210,24 @@ class Config extends /*Nette\Collections\*/Hashtable
 
 
 
+	/**
+	 * Creates a modifiable clone of the object.
+	 * @return void
+	 */
+	public function __clone()
+	{
+		parent::__clone();
+		$data = $this->getArrayCopy();
+		foreach ($data as $key => $val) {
+			if ($val instanceof self) {
+				$data[$key] = clone $val;
+			}
+		}
+		$this->setArray($data);
+	}
+
+
+
 	/********************* data access via overloading ****************d*g**/
 
 
