@@ -188,8 +188,8 @@ try {
 // readonly collection
 echo "Construct as readonly\n";
 $set2 = new Set($arr);
-$set2->setReadOnly();
-Debug::dump($set2->isReadOnly());
+$set2->freeze();
+Debug::dump($set2->isFrozen());
 
 try {
 	echo "Adding Jack\n";

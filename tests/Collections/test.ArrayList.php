@@ -241,8 +241,8 @@ Debug::dump((array) $list2);
 // readonly collection
 echo "Construct as readonly\n";
 $list2 = new ArrayList($arr);
-$list2->setReadOnly();
-Debug::dump($list2->isReadOnly());
+$list2->freeze();
+Debug::dump($list2->isFrozen());
 
 try {
 	echo "Adding Jack using []\n";

@@ -284,8 +284,8 @@ Debug::dump($hashtable2);
 // readonly collection
 echo "Construct as readonly\n";
 $hashtable2 = new Hashtable($hashtable);
-$hashtable2->setReadOnly();
-Debug::dump($hashtable2->isReadOnly());
+$hashtable2->freeze();
+Debug::dump($hashtable2->isFrozen());
 
 try {
 	echo "Adding Jack using []\n";

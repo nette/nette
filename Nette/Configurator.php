@@ -215,7 +215,7 @@ class Configurator extends Object
 			}
 		}
 
-		$config->setReadOnly();
+		$config->freeze();
 		return $config;
 	}
 

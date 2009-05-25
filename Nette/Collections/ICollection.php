@@ -35,7 +35,6 @@ interface ICollection extends /*\*/Countable, /*\*/IteratorAggregate
 	function remove($item);
 	function clear();
 	function contains($item);
-	function isReadOnly();
 	//function IteratorAggregate::getIterator();
 	//function Countable::count();
 }

@@ -105,7 +105,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 			}
 
 			if ($flags & self::READONLY) {
-				$this->setReadOnly();
+				$this->freeze();
 			}
 		}
 	}
@@ -141,9 +141,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function expand()
 	{
-		if ($this->readOnly) {
-			throw new /*\*/NotSupportedException('Configuration is read-only.');
-		}
+		$this->updating();
 
 		$data = $this->getArrayCopy();
 		foreach ($data as $key => $val) {
@@ -166,14 +164,11 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function import($arr)
 	{
-		if ($this->readOnly) {
-			throw new /*\*/NotSupportedException('Configuration is read-only.');
-		}
+		$this->updating();
 
 		foreach ($arr as $key => $val) {
 			if (is_array($val)) {
 				$arr[$key] = $obj = clone $this;
-				$obj->readOnly = & $this->readOnly;
 				$obj->import($val);
 			}
 		}
@@ -195,6 +190,22 @@ class Config extends /*Nette\Collections\*/Hashtable
 			}
 		}
 		return $res;
+	}
+
+
+
+	/**
+	 * Makes the object unmodifiable.
+	 * @return void
+	 */
+	public function freeze()
+	{
+		parent::freeze();
+		foreach ($this->getArrayCopy() as $val) {
+			if ($val instanceof self) {
+				$val->freeze();
+			}
+		}
 	}
 
 

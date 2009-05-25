@@ -41,7 +41,7 @@ echo "\n";
 
 try {
 	echo "check read-only:\n";
-	$config->setReadOnly();
+	$config->freeze();
 	$config->database->adapter = 'new value';
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";

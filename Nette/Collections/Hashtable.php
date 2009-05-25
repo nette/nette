@@ -120,11 +120,13 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function import($arr)
 	{
+		$this->updating();
+
 		if (!(is_array($arr) || $arr instanceof /*\*/Traversable)) {
 			throw new /*\*/InvalidArgumentException("Argument must be traversable.");
 		}
 
-		if (!$this->readOnly && $this->itemType === NULL) { // optimalization
+		if ($this->getItemType() === NULL) { // optimalization
 			$this->setArray((array) $arr);
 
 		} else {
@@ -244,11 +246,12 @@ class Hashtable extends Collection implements IMap
 	 */
 	public function offsetUnset($key)
 	{
+		$this->updating();
+
 		if (!is_scalar($key)) {
 			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
 		}
 
-		$this->beforeRemove();
 		if (parent::offsetExists($key)) {
 			parent::offsetUnset($key);
 		}

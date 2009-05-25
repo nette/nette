@@ -72,7 +72,7 @@ class ArrayList extends Collection implements IList
 	 */
 	public function remove($item)
 	{
-		$this->beforeRemove();
+		$this->updating();
 
 		$index = $this->search($item);
 		if ($index === FALSE) {
@@ -169,12 +169,13 @@ class ArrayList extends Collection implements IList
 	 */
 	public function offsetUnset($index)
 	{
+		$this->updating();
+
 		$index -= $this->base;
 		if ($index < 0 || $index >= count($this)) {
 			throw new /*\*/ArgumentOutOfRangeException;
 		}
 
-		$this->beforeRemove();
 		$data = $this->getArrayCopy();
 		array_splice($data, (int) $index, 1);
 		$this->setArray($data);

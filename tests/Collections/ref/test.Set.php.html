@@ -46,10 +46,10 @@ My name is Jack
 My name is Mary
 (array):
 array(2) {
-  "92ce270f1cf59d14d3b5b90b76a2ffc0" => object(Person) (1) {
+  "d3b510054ef9011ffda8f5424b5f4c60" => object(Person) (1) {
     "name" private => string(4) "Jack"
   }
-  "66b93df263808487917b2c6495bb5759" => object(Person) (1) {
+  "0cd35b6e967a98fc602a338c925cb5e2" => object(Person) (1) {
     "name" private => string(4) "Mary"
   }
 }
@@ -88,13 +88,13 @@ Construct as readonly
 bool(TRUE)
 
 Adding Jack
-NotSupportedException: Collection is read-only.
+InvalidStateException: Cannot modify a frozen object 'Set'.
 
 Removing Jack
-NotSupportedException: Collection is read-only.
+InvalidStateException: Cannot modify a frozen object 'Set'.
 
 Clearing
-NotSupportedException: Collection is read-only.
+InvalidStateException: Cannot modify a frozen object 'Set'.
 
 Contains Jack?
 bool(TRUE)
