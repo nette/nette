@@ -412,7 +412,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function &__get($name)
 	{
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
-			trigger_error("The variable '$name' does not exist in template '$this->file'", E_USER_WARNING);
+			trigger_error("The variable '$name' does not exist in template '$this->file'", E_USER_NOTICE);
 		}
 
 		return $this->params[$name];
