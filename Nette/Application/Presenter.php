@@ -133,12 +133,11 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  bool
 	 * @return PresenterRequest
 	 */
-	final public function getRequest($clone = TRUE)
+	final public function getRequest()
 	{
-		return $clone ? clone $this->request : $this->request;
+		return $this->request;
 	}
 
 
@@ -774,7 +773,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * Attempts to cache the sent entity by its last modification date
 	 * @param  int    last modified time as unix timestamp
 	 * @param  string strong entity tag validator
-	 * @param  int    optional expiration time
+	 * @param  mixed  optional expiration time
 	 * @return int    date of the client's cache version, if available
 	 * @throws TerminateException
 	 */

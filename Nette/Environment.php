@@ -151,9 +151,9 @@ final class Environment
 	 * @param  bool   set or unser
 	 * @return void
 	 */
-	public static function setMode($mode, $flag = TRUE)
+	public static function setMode($mode, $value = TRUE)
 	{
-		self::$mode[$mode] = (bool) $flag;
+		self::$mode[$mode] = (bool) $value;
 	}
 
 

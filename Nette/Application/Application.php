@@ -146,10 +146,11 @@ class Application extends /*Nette\*/Object
 				$presenter = $request->getPresenterName();
 				try {
 					$class = $this->getPresenterLoader()->getPresenterClass($presenter);
-					$request->modify('name', $presenter);
+					$request->setPresenterName($presenter);
 				} catch (InvalidPresenterException $e) {
 					throw new BadRequestException($e->getMessage(), 404, $e);
 				}
+				$request->freeze();
 				$this->presenter = new $class($request);
 
 				// Instantiate topmost service locator
@@ -320,32 +321,36 @@ class Application extends /*Nette\*/Object
 
 
 	/**
-	 * @return string
+	 * Stores current request to session.
+	 * @param  mixed  optional expiration time
+	 * @return string key
 	 */
-	public function storeRequest()
+	public function storeRequest($expiration = '+ 10 minutes')
 	{
 		$session = $this->getSession()->getNamespace('Nette.Application/requests');
 		do {
 			$key = substr(md5(lcg_value()), 0, 4);
-		} while (isset($session->$key));
+		} while (isset($session[$key]));
 
-		$session->$key = end($this->requests);
-		$session->setExpiration('+ 10 minutes', 'requests');
+		$session[$key] = end($this->requests);
+		$session->setExpiration($expiration, $key);
 		return $key;
 	}
 
 
 
 	/**
-	 * @param  string
+	 * Restores current request to session.
+	 * @param  string key
 	 * @return void
 	 */
 	public function restoreRequest($key)
 	{
 		$session = $this->getSession()->getNamespace('Nette.Application/requests');
-		if (isset($session->$key)) {
-			$request = $session->$key;
-			unset($session->$key);
+		if (isset($session[$key])) {
+			$request = $session[$key];
+			unset($session[$key]);
+			$request->setFlag(PresenterRequest::RESTORED, TRUE);
 			throw new ForwardingException($request);
 		}
 	}

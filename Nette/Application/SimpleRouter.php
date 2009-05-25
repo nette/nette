@@ -100,7 +100,7 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 			$params,
 			$httpRequest->getPost(),
 			$httpRequest->getFiles(),
-			array('secured' => $httpRequest->isSecured())
+			array(PresenterRequest::SECURED => $httpRequest->isSecured())
 		);
 	}
 

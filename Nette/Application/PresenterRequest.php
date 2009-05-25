@@ -20,7 +20,7 @@
 
 /*namespace Nette\Application;*/
 
-require_once dirname(__FILE__) . '/../Object.php';
+require_once dirname(__FILE__) . '/../FreezableObject.php';
 
 
 
@@ -31,10 +31,16 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
  */
-final class PresenterRequest extends /*Nette\*/Object
+final class PresenterRequest extends /*Nette\*/FreezableObject
 {
 	/** method */
 	const FORWARD = 'FORWARD';
+
+	/** flag */
+	const SECURED = 'secured';
+
+	/** flag */
+	const RESTORED = 'restored';
 
 	/** @var string */
 	private $method;
@@ -71,6 +77,19 @@ final class PresenterRequest extends /*Nette\*/Object
 		$this->post = $post;
 		$this->files = $files;
 		$this->flags = $flags;
+	}
+
+
+
+	/**
+	 * Sets the presenter name.
+	 * @param  string
+	 * @return void
+	 */
+	public function setPresenterName($name)
+	{
+		$this->updating();
+		$this->name = $name;
 	}
 
 
@@ -143,6 +162,20 @@ final class PresenterRequest extends /*Nette\*/Object
 
 
 	/**
+	 * Sets the flag.
+	 * @param  string
+	 * @param  bool
+	 * @return void
+	 */
+	public function setFlag($flag, $value = TRUE)
+	{
+		$this->updating();
+		$this->flags[$flag] = (bool) $value;
+	}
+
+
+
+	/**
 	 * Checks the flag.
 	 * @param  string
 	 * @return bool
@@ -150,22 +183,6 @@ final class PresenterRequest extends /*Nette\*/Object
 	public function hasFlag($flag)
 	{
 		return !empty($this->flags[$flag]);
-	}
-
-
-
-	/**
-	 * @return array
-	 * @internal
-	 */
-	public function modify($var, $key, $value = NULL)
-	{
-		if (func_num_args() === 3) {
-			$this->{$var}[$key] = $value;
-
-		} else {
-			$this->$var = $key;
-		}
 	}
 
 }
