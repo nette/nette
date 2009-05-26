@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette\Mail
+ * @package    Nette\Web
  * @version    $Id$
  */
 
-/*namespace Nette\Mail;*/
+/*namespace Nette\Web;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
- * @package    Nette\Mail
+ * @package    Nette\Web
  */
 class MailMimePart extends /*Nette\*/Object
 {
@@ -204,7 +204,7 @@ class MailMimePart extends /*Nette\*/Object
 	 * Returns encoded body.
 	 * @return string
 	 */
-	protected function getEncodedBody()
+	public function getEncodedBody()
 	{
 		if ($this->parts) {
 			$boundary = '=_' . md5(uniqid('', TRUE));

@@ -106,6 +106,18 @@ final class PresenterRequest extends /*Nette\*/FreezableObject
 
 
 	/**
+	 * Sets variables provided to the presenter.
+	 * @return array
+	 */
+	public function setParams(array $params)
+	{
+		$this->updating();
+		$this->params = $params;
+	}
+
+
+
+	/**
 	 * Returns all variables provided to the presenter (usually via URL).
 	 * @return array
 	 */

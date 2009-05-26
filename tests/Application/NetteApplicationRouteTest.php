@@ -76,7 +76,8 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 			//asort($params); asort($expectedReq['params']);
 			$this->assertTrue($request->getPresenterName() === $expectedReq['presenter'] && $params === $expectedReq['params']);
 
-			$request->modify('params', 'extra', NULL);
+			unset($params['extra']);
+			$request->setParams($params);
 			$result = $route->constructUrl($request, $httpRequest);
 			$result = strncmp($result, 'http://admin.texy.info', 22) ? $result : substr($result, 22);
 			$this->assertEquals($expectedUri, $result);

@@ -1,5 +1,5 @@
-Nette Framework example "Akrabat"
----------------------------------
+Nette Framework example CD collection (Akrabat)
+-----------------------------------------------
 
 Klasický Zend Framework Tutorial přepsaný pro Nette.
 
