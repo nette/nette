@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../Web/MailMimePart.php';
 
 
 /**
- * Mail MIME part.
+ * Mail provides functionality to compose and send both text and MIME-compliant multipart e-mail messages.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
@@ -42,7 +42,7 @@ class Mail extends MailMimePart
 	/**#@-*/
 
 	/** @var callback */
-	public static $mailer = array(__CLASS__, 'defaultMailer');
+	public static $defaultMailer = array(__CLASS__, 'defaultMailer');
 
 	/** @var string */
 	private $charset = 'UTF-8';
@@ -61,8 +61,8 @@ class Mail extends MailMimePart
 
 	public function __construct()
 	{
-		$this->addHeader('MIME-Version', '1.0');
-		$this->addHeader('X-Mailer', 'Nette Framework');
+		$this->setHeader('MIME-Version', '1.0');
+		$this->setHeader('X-Mailer', 'Nette Framework');
 	}
 
 
@@ -75,8 +75,7 @@ class Mail extends MailMimePart
 	 */
 	public function setFrom($email, $name = NULL)
 	{
-		$this->addHeader('From', NULL);
-		$this->addRecipient('From', $email, $name);
+		$this->setHeader('From', $this->formatEmail($email, $name));
 	}
 
 
@@ -99,7 +98,7 @@ class Mail extends MailMimePart
 	 */
 	public function setSubject($subject)
 	{
-		$this->addHeader('Subject', $subject);
+		$this->setHeader('Subject', $subject);
 	}
 
 
@@ -123,7 +122,7 @@ class Mail extends MailMimePart
 	 */
 	public function addTo($email, $name = NULL) // addRecipient()
 	{
-		$this->addRecipient('To', $email, $name);
+		$this->setHeader('To', $this->formatEmail($email, $name), TRUE);
 	}
 
 
@@ -136,7 +135,7 @@ class Mail extends MailMimePart
 	 */
 	public function addCc($email, $name = NULL)
 	{
-		$this->addRecipient('Cc', $email, $name);
+		$this->setHeader('Cc', $this->formatEmail($email, $name), TRUE);
 	}
 
 
@@ -149,33 +148,57 @@ class Mail extends MailMimePart
 	 */
 	public function addBcc($email, $name = NULL)
 	{
-		$this->addRecipient('Bcc', $email, $name);
+		$this->setHeader('Bcc', $this->formatEmail($email, $name), TRUE);
 	}
 
 
 
 	/**
-	 * Adds email recipient.
+	 * Formats recipient e-mail.
 	 * @param  string
 	 * @param  string
-	 * @param  string
-	 * @return void
+	 * @return string
 	 */
-	private function addRecipient($header, $email, $name)
+	private function formatEmail($email, $name)
 	{
 		if (!$name && preg_match('#^(.+) +<(.*)>$#', $email, $matches)) {
 			list(, $name, $email) = $matches;
 		}
 
+		$name = preg_replace('#[\r\n\t"<>]#', '', $name);
+		$email = preg_replace('#[\r\n\t"<>,]#', '', $email);
 		if (!$name) {
-			$name = $email;
-		} elseif ($this->encodeHeader($name) === $name && strpos($name, ',') !== FALSE) {
-			$name = "\"$name\" <$email>";
-		} else {
-			$name = "$name <$email>";
-		}
+			return $email;
 
-		$this->addHeader($header, array($email => $name));
+		} elseif (self::encodeQuotedPrintableHeader($name) === $name && strpos($name, ',') !== FALSE) {
+			return "\"$name\" <$email>";
+
+		} else {
+			return "$name <$email>";
+		}
+	}
+
+
+
+	/**
+	 * Sets the Return-Path header of the message.
+	 * @param  string  e-mail
+	 * @return void
+	 */
+	public function setReturnPath($email)
+	{
+		$this->setHeader('Return-Path', $email);
+	}
+
+
+
+	/**
+	 * Returns the Return-Path header.
+	 * @return string
+	 */
+	public function getReturnPath()
+	{
+		return $this->getHeader('From');
 	}
 
 
@@ -187,7 +210,7 @@ class Mail extends MailMimePart
 	 */
 	public function setPriority($priority)
 	{
-		$this->addHeader('X-Priority', (int) $priority);
+		$this->setHeader('X-Priority', (int) $priority);
 	}
 
 
@@ -198,7 +221,7 @@ class Mail extends MailMimePart
 	 */
 	public function getPriority()
 	{
-		return $this->getHeader('X-Priority', self::NORMAL);
+		return $this->getHeader('X-Priority');
 	}
 
 
@@ -211,7 +234,7 @@ class Mail extends MailMimePart
 	public function setHtmlBody($html)
 	{
 		$this->html = (string) $html;
-		if ($this->getBody() === '') {
+		if ($this->getBody() === '') { // TODO: better
 			$text = strip_tags($html);
 			$text = html_entity_decode($text, ENT_QUOTES, $this->charset);
 			$text = preg_replace('#<style.*</style>#Uis', '', $text);
@@ -236,16 +259,15 @@ class Mail extends MailMimePart
 	/**
 	 * Adds embedded file.
 	 * @param  string
+	 * @param  string
+	 * @param  string
 	 * @return MailMimePart
 	 */
-	public function addEmbeddedFile($file, $contentType = 'application/octet-stream', $encoding = self::ENCODING_BASE64)
+	public function addEmbeddedFile($file, $contentType = NULL, $encoding = self::ENCODING_BASE64)
 	{
-		$part = new MailMimePart;
-		$part->setContentType($contentType);
-		$part->setEncoding($encoding);
-		$part->setBody(file_get_contents($file));
-		$part->addHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"');
-		$part->addHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
+		$part = $this->createFilePart($file, $contentType, $encoding);
+		$part->setHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"');
+		$part->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
 		return $this->inlines[basename($file)] = $part;
 	}
 
@@ -254,16 +276,40 @@ class Mail extends MailMimePart
 	/**
 	 * Adds attachment.
 	 * @param  string
+	 * @param  string
+	 * @param  string
 	 * @return MailMimePart
 	 */
-	public function addAttachment($file, $contentType = 'application/octet-stream', $encoding = self::ENCODING_BASE64)
+	public function addAttachment($file, $contentType = NULL, $encoding = self::ENCODING_BASE64)
 	{
+		$part = $this->createFilePart($file, $contentType, $encoding);
+		$part->setHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
+		return $this->attachments[$file] = $part;
+	}
+
+
+
+	/**
+	 * Creates file MIME part.
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return MailMimePart
+	 */
+	public function createFilePart($file, $contentType, $encoding)
+	{
+		if (!is_file($file)) {
+			throw new /*\*/FileNotFoundException("File '$file' not found.");
+		}
+		if (!$contentType) {
+			$info = getimagesize($file);
+			$contentType = $info ? image_type_to_mime_type($info[2]) : 'application/octet-stream';
+		}
 		$part = new MailMimePart;
 		$part->setContentType($contentType);
 		$part->setEncoding($encoding);
 		$part->setBody(file_get_contents($file));
-		$part->addHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
-		return $this->attachments[$file] = $part;
+		return $part;
 	}
 
 
@@ -286,31 +332,14 @@ class Mail extends MailMimePart
 
 
 
-	private function injectInlines($part)
-	{
-		foreach ($this->inlines as $value) {
-			$part->addPart($value);
-		}
-	}
-
-
-
-	private function injectAttachments($part)
-	{
-		foreach ($this->attachments as $value) {
-			$part->addPart($value);
-		}
-	}
-
-
-
 	/**
 	 * Builds e-mail.
 	 * @return void
 	 */
 	protected function build()
 	{
-		$message = clone $this;
+		$mail = clone $this;
+		$mail->setBody(NULL);
 
 		$html = $this->html;
 		foreach ($this->inlines as $name => $value) {
@@ -320,60 +349,71 @@ class Mail extends MailMimePart
 		}
 
 		if (!$this->html && !$this->attachments) {
-			$this->injectText($message);
+			$this->injectText($mail);
 
 		} elseif (!$this->html && $this->attachments) {
-			$message->setContentType('multipart/mixed');
-			$this->injectText($message->createPart());
-			$this->injectAttachments($message);
+			$mail->setContentType('multipart/mixed');
+			$this->injectText($mail->createPart());
+			foreach ($this->attachments as $value) {
+				$mail->addPart($value);
+			}
 
 		} elseif (!$this->attachments && !$this->inlines) {
-			$message->setContentType('multipart/alternative');
-			$this->injectText($message->createPart());
-			$this->injectHtml($message->createPart(), $html);
+			$mail->setContentType('multipart/alternative');
+			$this->injectText($mail->createPart());
+			$this->injectHtml($mail->createPart(), $html);
 
 		} elseif (!$this->attachments && $this->inlines) {
-			$message->setContentType('multipart/related');
-			$alternative = $message->createPart('multipart/alternative');
+			$mail->setContentType('multipart/related');
+			$alternative = $mail->createPart('multipart/alternative');
 			$this->injectText($alternative->createPart());
 			$this->injectHtml($alternative->createPart(), $html);
-			$this->injectInlines($message);
+			foreach ($this->inlines as $value) {
+				$mail->addPart($value);
+			}
 
 		} elseif ($this->attachments && !$this->inlines) {
-			$message->setContentType('multipart/mixed');
-			$alternative = $message->createPart('multipart/alternative');
+			$mail->setContentType('multipart/mixed');
+			$alternative = $mail->createPart('multipart/alternative');
 			$this->injectText($alternative->createPart());
 			$this->injectHtml($alternative->createPart(), $html);
-			$this->injectAttachments($message);
+			foreach ($this->attachments as $value) {
+				$mail->addPart($value);
+			}
 
 		} elseif ($this->attachments && $this->inlines) {
-			$message->setContentType('multipart/mixed');
-			$related = $message->createPart('multipart/related');
+			$mail->setContentType('multipart/mixed');
+			$related = $mail->createPart('multipart/related');
 			$alternative = $related->createPart('multipart/alternative');
 			$this->injectText($alternative->createPart());
 			$this->injectHtml($alternative->createPart(), $html);
-			$this->injectInlines($related);
-			$this->injectAttachments($message);
+			foreach ($this->inlines as $value) {
+				$related->addPart($value);
+			}
+			foreach ($this->attachments as $value) {
+				$mail->addPart($value);
+			}
 
 		} else {
 			throw new /*\*/InvalidStateException;
 		}
 
 		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
-		$message->addHeader('Message-ID', sprintf('<%s@%s>', md5(uniqid('', TRUE)), $hostname));
+		$mail->setHeader('Message-ID', sprintf('<%s@%s>', md5(uniqid('', TRUE)), $hostname));
 
-		return $message;
+		return $mail;
 	}
 
 
 
 	/**
 	 * Sends e-mail.
-	 * @return void
+	 * @param  callback
+	 * @return bool
 	 */
-	public function send()
+	public function send($mailer = NULL)
 	{
-		return call_user_func(self::$mailer, $this->build());
+		return (bool) call_user_func($mailer ? $mailer : self::$defaultMailer, $this->build());
 	}
 
 
@@ -383,29 +423,19 @@ class Mail extends MailMimePart
 	 * @param  Mail
 	 * @return bool
 	 */
-	private static function defaultMailer($message)
+	private static function defaultMailer(Mail $mail)
 	{
-		$body = $message->getEncodedBody();
+		$tmp = clone $mail;
+		$tmp->setHeader('Subject', NULL);
+		$tmp->setHeader('To', NULL);
 
-		$headers = $headersS = array();
-		foreach ($message->getHeaders() as $name => $value) {
-			$headers[$name] = self::encodeHeader(is_array($value) ? implode(',', $value) : $value, $message->charset);
-			$headersS[$name] = $name . ': ' . $headers[$name];
-		}
-
-		unset($headersS['Subject'], $headersS['To']);
-		$headersS = implode(self::EOL, $headersS);
-
-		if (PHP_OS !== 'Linux') {
-			$body = str_replace(self::EOL, "\r\n", $body);
-			$headersS = str_replace(self::EOL, "\r\n", $headersS);
-		}
-
+		$parts = explode(self::EOL . self::EOL, $tmp->generateMessage(), 2);
+		$linux = strncasecmp(PHP_OS, 'win', 3);
 		return mail(
-			isset($headers['To']) ? $headers['To'] : '',
-			isset($headers['Subject']) ? $headers['Subject'] : '',
-			$body,
-			$headersS
+			$mail->getEncodedHeader('To'),
+			$mail->getEncodedHeader('Subject'),
+			$linux ? $parts[1] : str_replace(self::EOL, "\r\n", $parts[1]),
+			$linux ? $parts[0] : str_replace(self::EOL, "\r\n", $parts[0])
 		);
 	}
 
