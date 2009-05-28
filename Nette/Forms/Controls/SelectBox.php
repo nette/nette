@@ -32,6 +32,11 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property-read mixed $rawValue
+ * @property   array $items
+ * @property-read mixed $selectedItem
+ * @property-read bool $firstSkipped
  */
 class SelectBox extends FormControl
 {

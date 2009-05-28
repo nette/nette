@@ -32,6 +32,7 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
  * @example    forms/basic-example.php  Form definition using fluent interfaces
  * @example    forms/manual-rendering.php  Manual form rendering and separated form and rules definition
  * @example    forms/localization.php  Localization (with Zend_Translate)
@@ -40,6 +41,19 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @example    forms/naming-containers.php  How to use naming containers
  * @example    forms/CSRF-protection.php  How to use Cross-Site Request Forgery (CSRF) form protection
  * @example    forms/custom-encoding.php  How to change charset
+ *
+ * @property   string $action
+ * @property   string $method
+ * @property-read array $groups
+ * @property   string $encoding
+ * @property   Nette\ITranslator $translator
+ * @property   array $values
+ * @property-read array $errors
+ * @property-read Nette\Web\Html $elementPrototype
+ * @property   IFormRenderer $renderer
+ * @property-read boold $submitted
+ * @property-read boold $populated
+ * @property-read boold $valid
  */
 class Form extends FormContainer
 {

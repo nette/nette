@@ -32,6 +32,8 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property   string $emptyValue
  */
 abstract class TextBase extends FormControl
 {

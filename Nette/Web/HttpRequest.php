@@ -34,6 +34,20 @@ require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property   UriScript $uri
+ * @property-read Uri $originalUri
+ * @property-read array $query
+ * @property-read array $post
+ * @property-read string $postRaw
+ * @property-read array $files
+ * @property-read array $cookies
+ * @property-read string $method
+ * @property-read array $headers
+ * @property-read Uri $referer
+ * @property-read string $remoteAddress
+ * @property-read string $remoteHost
+ * @property-read bool $secured
  */
 class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 {

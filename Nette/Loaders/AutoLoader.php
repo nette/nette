@@ -41,7 +41,7 @@ abstract class AutoLoader extends /*Nette\*/Object
 	static private $loaders = array();
 
 	/** @var int  for profiling purposes */
-	static public $count = 0;
+	public static $count = 0;
 
 
 

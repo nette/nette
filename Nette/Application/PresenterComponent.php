@@ -40,6 +40,8 @@ require_once dirname(__FILE__) . '/../Application/IStatePersistent.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
+ *
+ * @property-read Presenter $presenter
  */
 abstract class PresenterComponent extends /*Nette\*/ComponentContainer implements ISignalReceiver, IStatePersistent
 {

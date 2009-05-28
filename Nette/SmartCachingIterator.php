@@ -28,6 +28,12 @@
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette
+ *
+ * @property-read bool $first
+ * @property-read bool $last
+ * @property-read bool $empty
+ * @property-read bool $odd
+ * @property-read bool $even
  */
 class SmartCachingIterator extends /*\*/CachingIterator
 {

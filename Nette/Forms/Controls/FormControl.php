@@ -34,7 +34,23 @@ require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
- */
+ *
+ * @property-read Form $form
+ * @property-read mixed $control
+ * @property-read mixed $label
+ * @property-read string $htmlName
+ * @property   string $htmlId
+ * @property-read array $options
+ * @property   Nette\ITranslator $translator
+ * @property   mixed $value
+ * @property-read Nette\Web\Html $controlPrototype
+ * @property-read Nette\Web\Html $labelPrototype
+ * @property-read Rules $rules
+ * @property-read array $errors
+ * @property   bool $disabled
+ * @property   bool $rendered
+ * @property   bool $required
+*/
 abstract class FormControl extends /*Nette\*/Component implements IFormControl
 {
 	/** @var string */

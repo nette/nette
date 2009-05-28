@@ -34,6 +34,8 @@ require_once dirname(__FILE__) . '/IComponentContainer.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette
+ *
+ * @property-read \ArrayIterator $components
  */
 class ComponentContainer extends Component implements IComponentContainer
 {

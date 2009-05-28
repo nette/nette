@@ -36,6 +36,16 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
+ *
+ * @property-read PresenterRequest $request
+ * @property-read int $phase
+ * @property-read array $signal
+ * @property-read string $action
+ * @property   string $view
+ * @property   string $layout
+ * @property-read mixed $payload
+ * @property-read IAjaxDriver $ajaxDriver
+ * @property-read Application $application
  */
 abstract class Presenter extends Control implements IPresenter
 {

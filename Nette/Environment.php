@@ -359,7 +359,7 @@ final class Environment
 	 * @param  bool   throw exception if service doesn't exist?
 	 * @return mixed
 	 */
-	static public function getService($name, $need = TRUE)
+	public static function getService($name, $need = TRUE)
 	{
 		return self::getServiceLocator()->getService($name, $need);
 	}

@@ -32,6 +32,15 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property-read string $name
+ * @property-read string $contentType
+ * @property-read int $size
+ * @property-read string $temporaryFile
+ * @property-read Nette\Image $image
+ * @property-read int $error
+ * @property-read array $imageSize
+ * @property-read bool $ok
  */
 class HttpUploadedFile extends /*Nette\*/Object
 {
@@ -168,7 +177,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 	 * Is there any error?
 	 * @return bool
 	 */
-	public function isOK()
+	public function isOk()
 	{
 		return $this->error === UPLOAD_ERR_OK;
 	}

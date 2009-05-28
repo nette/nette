@@ -30,18 +30,30 @@ require_once dirname(__FILE__) . '/../Object.php';
  * URI Syntax (RFC 3986).
  *
  * <pre>
- * http://user:pass@nettephp.com:8042/en/manual.html?name=param#fragment
- * \__/^^^\_________________________/\_____________/^\________/^\______/
- *   |                |                     |            |         |
- * scheme         authority               path         query    fragment
+ * http://user:password@nettephp.com:8042/en/manual.html?name=param#fragment
+ * \__/^^^\_____________________________/\_____________/^\________/^\______/
+ *   |                    |                     |            |         |
+ * scheme             authority               path         query    fragment
  * </pre>
  *
- * - authority:   [user[:pass]@]host[:port]
- * - hostUri:     http://user:pass@nettephp.com:8042
+ * - authority:   [user[:password]@]host[:port]
+ * - hostUri:     http://user:password@nettephp.com:8042
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property   string $scheme
+ * @property   string $user
+ * @property   string $password
+ * @property   string $host
+ * @property   string $port
+ * @property   string $path
+ * @property   string $query
+ * @property   string $fragment
+ * @property-read string $absoluteUri
+ * @property-read string $authority
+ * @property-read string $hostUri
  */
 class Uri extends /*Nette\*/Object
 {

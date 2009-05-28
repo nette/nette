@@ -37,13 +37,13 @@ final class ConfigAdapterIni implements IConfigAdapter
 {
 
 	/** @var string  key nesting separator (key1> key2> key3) */
-	static public $keySeparator = '.';
+	public static $keySeparator = '.';
 
 	/** @var string  section inheriting separator (section < parent) */
-	static public $sectionSeparator = ' < ';
+	public static $sectionSeparator = ' < ';
 
 	/** @var string  raw section marker */
-	static public $rawSection = '!';
+	public static $rawSection = '!';
 
 
 

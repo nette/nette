@@ -32,6 +32,10 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Mail
+ *
+ * @property   string $encoding
+ * @property   string $body
+ * @property-read array $headers
  */
 class MailMimePart extends /*Nette\*/Object
 {

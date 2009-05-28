@@ -34,6 +34,10 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Security
+ *
+ * @property   string $name
+ * @property   mixed $id
+ * @property   array $roles
  */
 class Identity extends /*Nette\*/Object implements IIdentity
 {

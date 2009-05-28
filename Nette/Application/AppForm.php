@@ -34,6 +34,8 @@ require_once dirname(__FILE__) . '/../Application/ISignalReceiver.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
+ *
+ * @property-read Presenter $presenter
  */
 class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 {

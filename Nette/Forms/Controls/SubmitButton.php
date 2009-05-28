@@ -34,6 +34,9 @@ require_once dirname(__FILE__) . '/../../Forms/ISubmitterControl.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property   mixed $validationScope
+ * @property-read bool $submittedBy
  */
 class SubmitButton extends Button implements ISubmitterControl
 {

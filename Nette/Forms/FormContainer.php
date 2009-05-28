@@ -34,11 +34,15 @@ require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property-read \ArrayIterator $controls
+ * @property-read Form $form
  */
 class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAccess, INamingContainer
 {
 	/** @var FormGroup */
 	protected $currentGroup;
+
 
 
 	/**

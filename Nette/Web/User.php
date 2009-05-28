@@ -36,6 +36,13 @@ require_once dirname(__FILE__) . '/../Web/IUser.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property-read Nette\Security\IIdentity $identity
+ * @property   Nette\Security\IAuthenticator $authenticationHandler
+ * @property   Nette\Security\IAuthorizator $authorizationHandler
+ * @property-read int $signOutReason
+ * @property-read array $roles
+ * @property-read bool $authenticated
  */
 class User extends /*Nette\*/Object implements IUser
 {

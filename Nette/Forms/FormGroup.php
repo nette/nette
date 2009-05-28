@@ -32,6 +32,9 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property-read array $controls
+ * @property-read array $options
  */
 class FormGroup extends /*Nette\*/Object
 {

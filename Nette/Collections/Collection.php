@@ -34,6 +34,8 @@ require_once dirname(__FILE__) . '/../Collections/ICollection.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Collections
+ *
+ * @property-read bool $frozen
  */
 abstract class Collection extends /*\*/ArrayObject implements ICollection
 {

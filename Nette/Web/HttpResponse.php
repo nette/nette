@@ -34,6 +34,10 @@ require_once dirname(__FILE__) . '/../Web/IHttpResponse.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property   int $code
+ * @property-read array $headers
+ * @property-read mixed $sent
  */
 final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 {

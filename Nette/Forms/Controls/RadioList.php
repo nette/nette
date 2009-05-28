@@ -32,6 +32,10 @@ require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
+ *
+ * @property   array $items
+ * @property-read Nette\Web\Html $separatorPrototype
+ * @property-read Nette\Web\Html $containerPrototype
  */
 class RadioList extends FormControl
 {

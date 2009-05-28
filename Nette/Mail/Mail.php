@@ -32,6 +32,12 @@ require_once dirname(__FILE__) . '/../Mail/MailMimePart.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Mail
+ *
+ * @property   string $from
+ * @property   string $subject
+ * @property   string $returnPath
+ * @property   int $priority
+ * @property   string $htmlBody
  */
 class Mail extends MailMimePart
 {

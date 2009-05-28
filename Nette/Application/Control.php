@@ -34,6 +34,8 @@ require_once dirname(__FILE__) . '/../Application/IRenderable.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
+ *
+ * @property-read Nette\Templates\ITemplate $template
  */
 abstract class Control extends PresenterComponent implements IPartiallyRenderable
 {

@@ -30,6 +30,11 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
+ *
+ * @property   string $presenterName
+ * @property   array $params
+ * @property   array $post
+ * @property   array $files
  */
 final class PresenterRequest extends /*Nette\*/FreezableObject
 {
@@ -107,7 +112,8 @@ final class PresenterRequest extends /*Nette\*/FreezableObject
 
 	/**
 	 * Sets variables provided to the presenter.
-	 * @return array
+	 * @param  array
+	 * @return void
 	 */
 	public function setParams(array $params)
 	{
@@ -129,6 +135,19 @@ final class PresenterRequest extends /*Nette\*/FreezableObject
 
 
 	/**
+	 * Sets variables provided to the presenter via POST.
+	 * @param  array
+	 * @return void
+	 */
+	public function setPost(array $params)
+	{
+		$this->updating();
+		$this->post = $params;
+	}
+
+
+
+	/**
 	 * Returns all variables provided to the presenter via POST.
 	 * @return array
 	 */
@@ -140,12 +159,37 @@ final class PresenterRequest extends /*Nette\*/FreezableObject
 
 
 	/**
+	 * Sets all uploaded files.
+	 * @param  array
+	 * @return void
+	 */
+	public function setFiles(array $files)
+	{
+		$this->updating();
+		$this->files = $files;
+	}
+
+
+
+	/**
 	 * Returns all uploaded files.
 	 * @return array
 	 */
 	public function getFiles()
 	{
 		return $this->files;
+	}
+
+
+
+	/**
+	 * Sets the method.
+	 * @param  string
+	 * @return void
+	 */
+	public function setMethod($method)
+	{
+		$this->method = $method;
 	}
 
 
