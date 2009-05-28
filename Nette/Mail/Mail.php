@@ -70,7 +70,6 @@ class Mail extends MailMimePart
 
 
 
-
 	public function __construct()
 	{
 		foreach (self::$defaultHeaders as $name => $value) {
@@ -84,11 +83,12 @@ class Mail extends MailMimePart
 	 * Sets the sender of the message.
 	 * @param  string  e-mail or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return void
+	 * @return Mail  provides a fluent interface
 	 */
 	public function setFrom($email, $name = NULL)
 	{
 		$this->setHeader('From', $this->formatEmail($email, $name));
+		return $this;
 	}
 
 
@@ -107,11 +107,12 @@ class Mail extends MailMimePart
 	/**
 	 * Sets the subject of the message.
 	 * @param  string
-	 * @return void
+	 * @return Mail  provides a fluent interface
 	 */
 	public function setSubject($subject)
 	{
 		$this->setHeader('Subject', $subject);
+		return $this;
 	}
 
 
@@ -196,11 +197,12 @@ class Mail extends MailMimePart
 	/**
 	 * Sets the Return-Path header of the message.
 	 * @param  string  e-mail
-	 * @return void
+	 * @return Mail  provides a fluent interface
 	 */
 	public function setReturnPath($email)
 	{
 		$this->setHeader('Return-Path', $email);
+		return $this;
 	}
 
 
@@ -219,11 +221,12 @@ class Mail extends MailMimePart
 	/**
 	 * Sets email priority.
 	 * @param  int
-	 * @return void
+	 * @return Mail  provides a fluent interface
 	 */
 	public function setPriority($priority)
 	{
 		$this->setHeader('X-Priority', (int) $priority);
+		return $this;
 	}
 
 
@@ -242,7 +245,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sets HTML body.
 	 * @param  string
-	 * @return void
+	 * @return Mail  provides a fluent interface
 	 */
 	public function setHtmlBody($html)
 	{
@@ -254,6 +257,7 @@ class Mail extends MailMimePart
 			$text = preg_replace('#<script.*</script>#Uis', '', $text);
 			$this->setBody($text);
 		}
+		return $this;
 	}
 
 
@@ -281,7 +285,7 @@ class Mail extends MailMimePart
 		$part = $this->createFilePart($file, $contentType, $encoding);
 		$part->setHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"');
 		$part->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
-		return $this->inlines[basename($file)] = $part;
+		return $this->inlines[$file] = $part;
 	}
 
 
@@ -297,7 +301,7 @@ class Mail extends MailMimePart
 	{
 		$part = $this->createFilePart($file, $contentType, $encoding);
 		$part->setHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
-		return $this->attachments[$file] = $part;
+		return $this->attachments[] = $part;
 	}
 
 
@@ -327,24 +331,6 @@ class Mail extends MailMimePart
 
 
 
-	private function injectText($part)
-	{
-		$part->setContentType('text/plain', $this->charset);
-		$part->setEncoding(self::ENCODING_7BIT);
-		$part->setBody($this->getBody());
-	}
-
-
-
-	private function injectHtml($part, $html)
-	{
-		$part->setContentType('text/html', $this->charset);
-		$part->setEncoding(self::ENCODING_QUOTED_PRINTABLE);
-		$part->setBody($html);
-	}
-
-
-
 	/**
 	 * Builds e-mail.
 	 * @return void
@@ -352,67 +338,38 @@ class Mail extends MailMimePart
 	protected function build()
 	{
 		$mail = clone $this;
-		$mail->setBody(NULL);
+		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+		$mail->setHeader('Message-ID', '<' . md5(uniqid('', TRUE)) . "@$hostname>");
+
+		$cursor = $mail;
+		if ($this->attachments) {
+			$tmp = $cursor->setContentType('multipart/mixed');
+			$cursor = $cursor->createPart();
+			foreach ($this->attachments as $value) {
+				$tmp->addPart($value);
+			}
+		}
 
 		$html = $this->html;
-		foreach ($this->inlines as $name => $value) {
-			$name = preg_quote($name);
-			$cid = substr($value->getHeader('Content-ID'), 1, -1);
-			$html = preg_replace("#src=([\"'])$name\\1#", "src=\"cid:$cid\"", $html);
+		if ($this->inlines) {
+			$tmp = $cursor->setContentType('multipart/related');
+			$cursor = $cursor->createPart();
+			foreach ($this->inlines as $name => $value) {
+				$tmp->addPart($value);
+				$name = preg_quote($name, '#');
+				$cid = substr($value->getHeader('Content-ID'), 1, -1);
+				$html = preg_replace("#src=([\"'])$name\\1#", "src=\"cid:$cid\"", $html);
+			}
 		}
 
-		if (!$this->html && !$this->attachments) {
-			$this->injectText($mail);
-
-		} elseif (!$this->html && $this->attachments) {
-			$mail->setContentType('multipart/mixed');
-			$this->injectText($mail->createPart());
-			foreach ($this->attachments as $value) {
-				$mail->addPart($value);
-			}
-
-		} elseif (!$this->attachments && !$this->inlines) {
-			$mail->setContentType('multipart/alternative');
-			$this->injectText($mail->createPart());
-			$this->injectHtml($mail->createPart(), $html);
-
-		} elseif (!$this->attachments && $this->inlines) {
-			$mail->setContentType('multipart/related');
-			$alternative = $mail->createPart('multipart/alternative');
-			$this->injectText($alternative->createPart());
-			$this->injectHtml($alternative->createPart(), $html);
-			foreach ($this->inlines as $value) {
-				$mail->addPart($value);
-			}
-
-		} elseif ($this->attachments && !$this->inlines) {
-			$mail->setContentType('multipart/mixed');
-			$alternative = $mail->createPart('multipart/alternative');
-			$this->injectText($alternative->createPart());
-			$this->injectHtml($alternative->createPart(), $html);
-			foreach ($this->attachments as $value) {
-				$mail->addPart($value);
-			}
-
-		} elseif ($this->attachments && $this->inlines) {
-			$mail->setContentType('multipart/mixed');
-			$related = $mail->createPart('multipart/related');
-			$alternative = $related->createPart('multipart/alternative');
-			$this->injectText($alternative->createPart());
-			$this->injectHtml($alternative->createPart(), $html);
-			foreach ($this->inlines as $value) {
-				$related->addPart($value);
-			}
-			foreach ($this->attachments as $value) {
-				$mail->addPart($value);
-			}
-
-		} else {
-			throw new /*\*/InvalidStateException;
+		if ($this->html) {
+			$tmp = $cursor->setContentType('multipart/alternative');
+			$cursor = $cursor->createPart();
+			$tmp->createPart()->setContentType('text/html', $this->charset)->setEncoding(self::ENCODING_QUOTED_PRINTABLE)->setBody($html);
 		}
 
-		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
-		$mail->setHeader('Message-ID', sprintf('<%s@%s>', md5(uniqid('', TRUE)), $hostname));
+		$mail->setBody(NULL);
+		$cursor->setContentType('text/plain', $this->charset)->setEncoding(self::ENCODING_7BIT)->setBody($this->getBody());
 
 		return $mail;
 	}

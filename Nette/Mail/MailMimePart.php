@@ -64,7 +64,7 @@ class MailMimePart extends /*Nette\*/Object
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @return void
+	 * @return MailMimePart  provides a fluent interface
 	 */
 	public function setHeader($name, $value, $append = FALSE)
 	{
@@ -82,6 +82,7 @@ class MailMimePart extends /*Nette\*/Object
 		} else {
 			$this->headers[$name] = $value;
 		}
+		return $this;
 	}
 
 
@@ -125,11 +126,12 @@ class MailMimePart extends /*Nette\*/Object
 	 * Sets Content-Type header.
 	 * @param  string
 	 * @param  string
-	 * @return void
+	 * @return MailMimePart  provides a fluent interface
 	 */
 	public function setContentType($contentType, $charset = NULL)
 	{
 		$this->setHeader('Content-Type', $contentType . ($charset ? "; charset=$charset" : ''));
+		return $this;
 	}
 
 
@@ -137,11 +139,12 @@ class MailMimePart extends /*Nette\*/Object
 	/**
 	 * Sets Content-Transfer-Encoding header.
 	 * @param  string
-	 * @return void
+	 * @return MailMimePart  provides a fluent interface
 	 */
 	public function setEncoding($encoding)
 	{
 		$this->setHeader('Content-Transfer-Encoding', $encoding);
+		return $this;
 	}
 
 
@@ -186,11 +189,12 @@ class MailMimePart extends /*Nette\*/Object
 	/**
 	 * Sets textual body.
 	 * @param  string
-	 * @return void
+	 * @return MailMimePart  provides a fluent interface
 	 */
 	public function setBody($text)
 	{
 		$this->body = (string) $text;
+		return $this;
 	}
 
 
@@ -296,7 +300,7 @@ class MailMimePart extends /*Nette\*/Object
 					$o .= "?=\n $prefix";
 					$len = 3;
 				}
-				$o .= '=' . bin2hex($s[$pos]);
+				$o .= '=' . strtoupper(bin2hex($s[$pos]));
 				$pos++;
 			}
 		}
@@ -340,7 +344,7 @@ class MailMimePart extends /*Nette\*/Object
 					$o .= "=\n";
 					$len = 3;
 				}
-				$o .= '=' . bin2hex($s[$pos]);
+				$o .= '=' . strtoupper(bin2hex($s[$pos]));
 				$pos++;
 			}
 		}
