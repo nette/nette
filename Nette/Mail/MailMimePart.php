@@ -14,11 +14,11 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette\Web
+ * @package    Nette\Mail
  * @version    $Id$
  */
 
-/*namespace Nette\Web;*/
+/*namespace Nette\Mail;*/
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
- * @package    Nette\Web
+ * @package    Nette\Mail
  */
 class MailMimePart extends /*Nette\*/Object
 {
@@ -199,6 +199,10 @@ class MailMimePart extends /*Nette\*/Object
 	{
 		return $this->body;
 	}
+
+
+
+	/********************* building ****************d*g**/
 
 
 

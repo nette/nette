@@ -14,15 +14,15 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
- * @package    Nette\Web
+ * @package    Nette\Mail
  * @version    $Id$
  */
 
-/*namespace Nette\Web;*/
+/*namespace Nette\Mail;*/
 
 
 
-require_once dirname(__FILE__) . '/../Web/MailMimePart.php';
+require_once dirname(__FILE__) . '/../Mail/MailMimePart.php';
 
 
 
@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../Web/MailMimePart.php';
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
- * @package    Nette\Web
+ * @package    Nette\Mail
  */
 class Mail extends MailMimePart
 {
@@ -41,8 +41,14 @@ class Mail extends MailMimePart
 	const LOW = 5;
 	/**#@-*/
 
-	/** @var callback */
-	public static $defaultMailer = array(__CLASS__, 'defaultMailer');
+	/** @var IMailer */
+	public static $defaultMailer = 'Nette\Mail\SendmailMailer';
+
+	/** @var array */
+	public static $defaultHeaders = array(
+		'MIME-Version' => '1.0',
+		'X-Mailer' => 'Nette Framework',
+	);
 
 	/** @var string */
 	private $charset = 'UTF-8';
@@ -61,8 +67,9 @@ class Mail extends MailMimePart
 
 	public function __construct()
 	{
-		$this->setHeader('MIME-Version', '1.0');
-		$this->setHeader('X-Mailer', 'Nette Framework');
+		foreach (self::$defaultHeaders as $name => $value) {
+			$this->setHeader($name, $value);
+		}
 	}
 
 
@@ -408,35 +415,16 @@ class Mail extends MailMimePart
 
 	/**
 	 * Sends e-mail.
-	 * @param  callback
+	 * @param  IMailer
 	 * @return bool
 	 */
-	public function send($mailer = NULL)
+	public function send(IMailer $mailer = NULL)
 	{
-		return (bool) call_user_func($mailer ? $mailer : self::$defaultMailer, $this->build());
-	}
-
-
-
-	/**
-	 * Default mailer.
-	 * @param  Mail
-	 * @return bool
-	 */
-	private static function defaultMailer(Mail $mail)
-	{
-		$tmp = clone $mail;
-		$tmp->setHeader('Subject', NULL);
-		$tmp->setHeader('To', NULL);
-
-		$parts = explode(self::EOL . self::EOL, $tmp->generateMessage(), 2);
-		$linux = strncasecmp(PHP_OS, 'win', 3);
-		return mail(
-			$mail->getEncodedHeader('To'),
-			$mail->getEncodedHeader('Subject'),
-			$linux ? $parts[1] : str_replace(self::EOL, "\r\n", $parts[1]),
-			$linux ? $parts[0] : str_replace(self::EOL, "\r\n", $parts[0])
-		);
+		if ($mailer === NULL) {
+			/**/fixCallback(self::$defaultMailer);/**/
+			$mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
+		}
+		return $mailer->send($this->build());
 	}
 
 }
