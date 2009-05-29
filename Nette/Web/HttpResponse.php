@@ -164,7 +164,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	{
 		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE'])) {
 			foreach (headers_list() as $header) {
-				if (strncmp($header, 'Set-Cookie:', 11) === 0) {
+				if (strncasecmp($header, 'Set-Cookie:', 11) === 0) {
 					$this->setHeader('Refresh', "0;url=$url");
 					return;
 				}
