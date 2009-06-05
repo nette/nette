@@ -55,7 +55,7 @@ class MailMimePart extends /*Nette\*/Object
 	private $parts = array();
 
 	/** @var string */
-	private $body = '';
+	private $body;
 
 
 
@@ -161,39 +161,25 @@ class MailMimePart extends /*Nette\*/Object
 
 
 	/**
-	 * Adds new multipart.
+	 * Adds or creates new multipart.
 	 * @param  MailMimePart
-	 * @return void
-	 */
-	public function addPart(MailMimePart $part)
-	{
-		$this->parts[] = $part;
-	}
-
-
-
-	/**
-	 * Creates new multipart.
-	 * @param  string
 	 * @return MailMimePart
 	 */
-	public function createPart($contentType = NULL)
+	public function addPart(MailMimePart $part = NULL)
 	{
-		$part = new self;
-		$part->setContentType($contentType);
-		return $this->parts[] = $part;
+		return $this->parts[] = $part === NULL ? new self : $part;
 	}
 
 
 
 	/**
 	 * Sets textual body.
-	 * @param  string
+	 * @param  mixed
 	 * @return MailMimePart  provides a fluent interface
 	 */
-	public function setBody($text)
+	public function setBody($body)
 	{
-		$this->body = (string) $text;
+		$this->body = $body;
 		return $this;
 	}
 
@@ -201,7 +187,7 @@ class MailMimePart extends /*Nette\*/Object
 
 	/**
 	 * Gets textual body.
-	 * @return string
+	 * @return mixed
 	 */
 	public function getBody()
 	{
@@ -221,28 +207,30 @@ class MailMimePart extends /*Nette\*/Object
 	public function generateMessage()
 	{
 		$output = '';
+		$boundary = '--------' . md5(uniqid('', TRUE));
+
 		foreach ($this->headers as $name => $value) {
 			if ($this->parts && $name === 'Content-Type') {
-				$boundary = '=_' . md5(uniqid('', TRUE));
 				$value .= ';' . self::EOL . "\tboundary=\"$boundary\"";
 			}
 			$output .= $name . ': ' . self::encodeQuotedPrintableHeader($value) . self::EOL;
 		}
 		$output .= self::EOL;
 
-		if ($this->body !== '') {
+		$body = (string) $this->body;
+		if ($body !== '') {
 			switch ($this->getEncoding()) {
 			case self::ENCODING_QUOTED_PRINTABLE:
-				$output .= self::encodeQuotedPrintable($this->body);
+				$output .= self::encodeQuotedPrintable($body);
 				break;
 
 			case self::ENCODING_BASE64:
-				$output .= rtrim(chunk_split(base64_encode($this->body), 76, self::EOL));
+				$output .= rtrim(chunk_split(base64_encode($body), 76, self::EOL));
 				break;
 
 			case self::ENCODING_7BIT:
 			case self::ENCODING_8BIT:
-				$output .= $this->body;
+				$output .= $body;
 				break;
 
 			default:
@@ -283,10 +271,11 @@ class MailMimePart extends /*Nette\*/Object
 		}
 
 		$prefix = "=?$charset?Q?";
-		$maxLen = 74 - strlen($prefix);
+		$maxLen = 74;
 		$pos = 0;
 		$len = 0;
 		$o = '';
+		$inside = FALSE;
 		$size = strlen($s);
 		while ($pos < $size) {
 			if ($l = strspn($s, $range, $pos)) {
@@ -294,17 +283,29 @@ class MailMimePart extends /*Nette\*/Object
 				$len += $l;
 				$pos += $l;
 
-			} else {
-				$len += 3;
-				if ($len > $maxLen && $s[$pos] === ' ') {
-					$o .= "?=\n $prefix";
-					$len = 3;
+			} elseif ($s[$pos] === ' ') {
+				$o .= $tmp = $inside ? '=20?=' : ' ';
+				$len += strlen($tmp);
+				if ($inside && $len > $maxLen) {
+					$o .= "\n\t";
+					$len = 0;
 				}
+				$inside = FALSE;
+				$pos++;
+
+			} else {
+				if (!$inside) {
+					$inside = TRUE;
+					$o .= $prefix;
+					$len += strlen($prefix);
+				}
+
 				$o .= '=' . strtoupper(bin2hex($s[$pos]));
+				$len += 3;
 				$pos++;
 			}
 		}
-		return $prefix . $o . '?=';
+		return $o . ($inside ? '?=' : '');
 	}
 
 

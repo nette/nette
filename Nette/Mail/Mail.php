@@ -273,6 +273,10 @@ class Mail extends MailMimePart
 
 
 
+	/********************* building and sending ****************d*g**/
+
+
+
 	/**
 	 * Adds embedded file.
 	 * @param  string
@@ -342,34 +346,34 @@ class Mail extends MailMimePart
 		$mail->setHeader('Message-ID', '<' . md5(uniqid('', TRUE)) . "@$hostname>");
 
 		$cursor = $mail;
-		if ($this->attachments) {
+		if ($mail->attachments) {
 			$tmp = $cursor->setContentType('multipart/mixed');
-			$cursor = $cursor->createPart();
-			foreach ($this->attachments as $value) {
+			$cursor = $cursor->addPart();
+			foreach ($mail->attachments as $value) {
 				$tmp->addPart($value);
 			}
 		}
 
 		$html = $this->html;
-		if ($this->inlines) {
-			$tmp = $cursor->setContentType('multipart/related');
-			$cursor = $cursor->createPart();
-			foreach ($this->inlines as $name => $value) {
-				$tmp->addPart($value);
-				$name = preg_quote($name, '#');
-				$cid = substr($value->getHeader('Content-ID'), 1, -1);
-				$html = preg_replace("#src=([\"'])$name\\1#", "src=\"cid:$cid\"", $html);
-			}
-		}
-
-		if ($this->html) {
+		if ($html) {
 			$tmp = $cursor->setContentType('multipart/alternative');
-			$cursor = $cursor->createPart();
-			$tmp->createPart()->setContentType('text/html', $this->charset)->setEncoding(self::ENCODING_QUOTED_PRINTABLE)->setBody($html);
+			$cursor = $cursor->addPart();
+			$alt = $tmp->addPart();
+			if ($mail->inlines) {
+				$tmp = $alt->setContentType('multipart/related');
+				$alt = $alt->addPart();
+				foreach ($mail->inlines as $name => $value) {
+					$tmp->addPart($value);
+					$name = preg_quote($name, '#');
+					$cid = substr($value->getHeader('Content-ID'), 1, -1);
+					$html = preg_replace("#src=([\"'])$name\\1#", "src=\"cid:$cid\"", $html);
+				}
+			}
+			$alt->setContentType('text/html', $mail->charset)->setEncoding(self::ENCODING_8BIT)->setBody($html);
 		}
 
 		$mail->setBody(NULL);
-		$cursor->setContentType('text/plain', $this->charset)->setEncoding(self::ENCODING_7BIT)->setBody($this->getBody());
+		$cursor->setContentType('text/plain', $mail->charset)->setEncoding(self::ENCODING_7BIT)->setBody($this->getBody());
 
 		return $mail;
 	}
