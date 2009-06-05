@@ -234,6 +234,8 @@ class User extends /*Nette\*/Object implements IUser
 
 		$session->expireIdentity = (bool) $clearIdentity;
 		$session->expireBrowser = (bool) $whenBrowserIsClosed;
+		$session->browserCheck = TRUE;
+		$session->setExpiration(0, 'browserCheck');
 	}
 
 
@@ -267,11 +269,7 @@ class User extends /*Nette\*/Object implements IUser
 
 		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
 
-		if (!($session->identity instanceof /*Nette\Security\*/IIdentity)) {
-			$session->remove();
-		}
-
-		if (!is_bool($session->authenticated)) {
+		if (!($session->identity instanceof /*Nette\Security\*/IIdentity) || !is_bool($session->authenticated)) {
 			$session->remove();
 		}
 
@@ -296,6 +294,11 @@ class User extends /*Nette\*/Object implements IUser
 			$session->expireTime = time() + $session->expireDelta; // sliding expiration
 		}
 
+		if (!$session->authenticated) {
+			unset($session->expireTime, $session->expireDelta, $session->expireIdentity,
+				$session->expireBrowser, $session->browserCheck, $session->authTime);
+		}
+
 		return $this->session;
 	}
 
@@ -316,15 +319,11 @@ class User extends /*Nette\*/Object implements IUser
 
 		if ($state) {
 			$session->reason = NULL;
-			$session->expireBrowser = TRUE;
 			$session->authTime = time(); // informative value
-			$session->browserCheck = TRUE;
-			$session->setExpiration(0, 'browserCheck');
 
 		} else {
 			$session->reason = self::MANUAL;
-			unset($session->browserCheck, $session->expireTime, $session->expireDelta,
-			$session->expireIdentity, $session->expireBrowser, $session->authTime);
+			$session->authTime = NULL;
 		}
 	}
 
