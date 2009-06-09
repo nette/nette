@@ -99,6 +99,10 @@ echo "\n\n";
 
 // special creating
 echo $el = Html::el('a lang=cs href="#" title="" selected')->setText('click');
+echo "\n";
+echo $el = Html::el('a lang=hello world href="hello world" title="hello \'world"')->setText('click');
+echo "\n";
+echo $el = Html::el('a lang=\'hello" world\' href="hello "world" title=0')->setText('click');
 echo "\n\n";
 
 
