@@ -75,6 +75,7 @@ class Mail extends MailMimePart
 		foreach (self::$defaultHeaders as $name => $value) {
 			$this->setHeader($name, $value);
 		}
+		$this->setHeader('Date', date('r'));
 	}
 
 
@@ -100,6 +101,20 @@ class Mail extends MailMimePart
 	public function getFrom()
 	{
 		return $this->getHeader('From');
+	}
+
+
+
+	/**
+	 * Adds the reply-to address.
+	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string
+	 * @return Mail  provides a fluent interface
+	 */
+	public function addReplyTo($email, $name = NULL)
+	{
+		$this->setHeader('Reply-To', $this->formatEmail($email, $name), TRUE);
+		return $this;
 	}
 
 
@@ -369,11 +384,15 @@ class Mail extends MailMimePart
 					$html = preg_replace("#src=([\"'])$name\\1#", "src=\"cid:$cid\"", $html);
 				}
 			}
-			$alt->setContentType('text/html', $mail->charset)->setEncoding(self::ENCODING_8BIT)->setBody($html);
+			$alt->setContentType('text/html', $mail->charset)
+				->setEncoding(preg_match('#[\x80-\xFF]#', $html) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
+				->setBody($html);
 		}
 
 		$mail->setBody(NULL);
-		$cursor->setContentType('text/plain', $mail->charset)->setEncoding(self::ENCODING_7BIT)->setBody($this->getBody());
+		$cursor->setContentType('text/plain', $mail->charset)
+			->setEncoding(preg_match('#[\x80-\xFF]#', $this->getBody()) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
+			->setBody($this->getBody());
 
 		return $mail;
 	}

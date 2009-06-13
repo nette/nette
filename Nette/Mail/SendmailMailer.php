@@ -52,8 +52,8 @@ class SendmailMailer extends /*Nette\*/Object implements IMailer
 		return mail(
 			$mail->getEncodedHeader('To'),
 			$mail->getEncodedHeader('Subject'),
-			$linux ? $parts[1] : str_replace(Mail::EOL, "\r\n", $parts[1]),
-			$linux ? $parts[0] : str_replace(Mail::EOL, "\r\n", $parts[0])
+			$linux ? str_replace(Mail::EOL, "\n", $parts[1]) : $parts[1];
+			$linux ? str_replace(Mail::EOL, "\n", $parts[0]) : $parts[0];
 		);
 	}
 

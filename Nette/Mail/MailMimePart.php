@@ -46,7 +46,8 @@ class MailMimePart extends /*Nette\*/Object
 	const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
 	/**#@-*/
 
-	const EOL = "\n";
+	const EOL = "\r\n";
+	const LINE_LENGTH = 78;
 
 	/** @var array */
 	private $headers = array();
@@ -69,12 +70,14 @@ class MailMimePart extends /*Nette\*/Object
 	public function setHeader($name, $value, $append = FALSE)
 	{
 		if (!$name || preg_match('#[^a-z0-9-]#i', $name)) {
-			throw new /*\*/InvalidArgumentException("Header must be non-empty alphanumeric string, '$name' given.");
+			throw new /*\*/InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		$value = preg_replace('#[\r\n\t]#', '', $value);
 		if ($value == '') { // intentionally ==
-			unset($this->headers[$name]);
+			if (!$append) {
+				unset($this->headers[$name]);
+			}
 
 		} elseif ($append) {
 			$this->headers[$name][] = $value;
@@ -225,10 +228,13 @@ class MailMimePart extends /*Nette\*/Object
 				break;
 
 			case self::ENCODING_BASE64:
-				$output .= rtrim(chunk_split(base64_encode($body), 76, self::EOL));
+				$output .= rtrim(chunk_split(base64_encode($body), self::LINE_LENGTH, self::EOL));
 				break;
 
 			case self::ENCODING_7BIT:
+				$output .= preg_replace('#[\x80-\xFF]+#', '', $body);
+				break;
+
 			case self::ENCODING_8BIT:
 				$output .= $body;
 				break;
@@ -239,7 +245,7 @@ class MailMimePart extends /*Nette\*/Object
 		}
 
 		if ($this->parts) {
-			if (substr($output, -1) !== self::EOL) $output .= self::EOL;
+			if (substr($output, -strlen(self::EOL)) !== self::EOL) $output .= self::EOL;
 			foreach ($this->parts as $part) {
 				$output .= '--' . $boundary . self::EOL . $part->generateMessage() . self::EOL;
 			}
@@ -266,12 +272,11 @@ class MailMimePart extends /*Nette\*/Object
 			. "\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e"
 			. "\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e";
 
-		if (strspn($s, $range . "=? _\n\t") === strlen($s)) {
+		if (strspn($s, $range . "=? _\r\n\t") === strlen($s)) {
 			return $s;
 		}
 
 		$prefix = "=?$charset?Q?";
-		$maxLen = 74;
 		$pos = 0;
 		$len = 0;
 		$o = '';
@@ -286,8 +291,8 @@ class MailMimePart extends /*Nette\*/Object
 			} elseif ($s[$pos] === ' ') {
 				$o .= $tmp = $inside ? '=20?=' : ' ';
 				$len += strlen($tmp);
-				if ($inside && $len > $maxLen) {
-					$o .= "\n\t";
+				if ($inside && $len > self::LINE_LENGTH) {
+					$o .= self::EOL . "\t";
 					$len = 0;
 				}
 				$inside = FALSE;
@@ -322,17 +327,16 @@ class MailMimePart extends /*Nette\*/Object
 			. "\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f"
 			. "\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e";
 
-		$maxLen = 74;
 		$pos = 0;
 		$len = 0;
 		$o = '';
 		$size = strlen($s);
 		while ($pos < $size) {
 			if ($l = strspn($s, $range, $pos)) {
-				while ($len + $l > $maxLen) {
-					$o .= substr($s, $pos, $maxLen - $len) . "=\n";
-					$pos += $maxLen - $len;
-					$l -= $maxLen - $len;
+				while ($len + $l > self::LINE_LENGTH) {
+					$o .= substr($s, $pos, self::LINE_LENGTH - $len) . '=' . self::EOL;
+					$pos += self::LINE_LENGTH - $len;
+					$l -= self::LINE_LENGTH - $len;
 					$len = 0;
 				}
 				$o .= substr($s, $pos, $l);
@@ -341,15 +345,15 @@ class MailMimePart extends /*Nette\*/Object
 
 			} else {
 				$len += 3;
-				if ($len > $maxLen) {
-					$o .= "=\n";
+				if ($len > self::LINE_LENGTH) {
+					$o .= '=' . self::EOL;
 					$len = 3;
 				}
 				$o .= '=' . strtoupper(bin2hex($s[$pos]));
 				$pos++;
 			}
 		}
-		return rtrim($o, "=\n");
+		return rtrim($o, '=' . self::EOL);
 	}
 
 }
