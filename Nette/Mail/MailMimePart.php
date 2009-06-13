@@ -47,7 +47,7 @@ class MailMimePart extends /*Nette\*/Object
 	/**#@-*/
 
 	const EOL = "\r\n";
-	const LINE_LENGTH = 78;
+	const LINE_LENGTH = 76;
 
 	/** @var array */
 	private $headers = array();
@@ -63,7 +63,7 @@ class MailMimePart extends /*Nette\*/Object
 	/**
 	 * Sets an user header.
 	 * @param  string
-	 * @param  string
+	 * @param  string|array  value or pair email => name
 	 * @param  bool
 	 * @return MailMimePart  provides a fluent interface
 	 */
@@ -73,14 +73,27 @@ class MailMimePart extends /*Nette\*/Object
 			throw new /*\*/InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
 		}
 
-		$value = preg_replace('#[\r\n\t]#', '', $value);
-		if ($value == '') { // intentionally ==
+		if ($value == NULL) { // intentionally ==
 			if (!$append) {
 				unset($this->headers[$name]);
 			}
 
-		} elseif ($append) {
-			$this->headers[$name][] = $value;
+		} elseif (is_array($value)) { // email
+			$tmp = & $this->headers[$name];
+			if (!$append || !is_array($tmp)) {
+				$tmp = array();
+			}
+
+			foreach ($value as $email => $name) {
+				if (!preg_match('#^[^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
+					throw new /*\*/InvalidArgumentException("Email address '$email' is not valid.");
+				}
+
+				if (preg_match('#[\r\n]#', $name)) {
+					throw new /*\*/InvalidArgumentException("Name cannot contain the line separator.");
+				}
+				$tmp[$email] = $name;
+			}
 
 		} else {
 			$this->headers[$name] = $value;
@@ -232,10 +245,12 @@ class MailMimePart extends /*Nette\*/Object
 				break;
 
 			case self::ENCODING_7BIT:
-				$output .= preg_replace('#[\x80-\xFF]+#', '', $body);
-				break;
+				$body = preg_replace('#[\x80-\xFF]+#', '', $body);
+				// break intentionally omitted
 
 			case self::ENCODING_8BIT:
+				$body = str_replace(array("\x00", "\r"), '', $body);
+				$body = str_replace("\n", self::EOL, $body);
 				$output .= $body;
 				break;
 
@@ -259,18 +274,34 @@ class MailMimePart extends /*Nette\*/Object
 
 	/**
 	 * Converts a 8 bit header to a quoted-printable string.
-	 * @parram string
-	 * @parram string
+	 * @param  mixed
+	 * @param  string
 	 * @return string
 	 */
-	public static function encodeQuotedPrintableHeader($s, $charset = 'UTF-8')
+	public static function encodeQuotedPrintableHeader($value, $charset = 'UTF-8')
 	{
-		if (is_array($s)) $s = implode(',', $s);
+		if (is_array($value)) {
+			$tmp = array();
+			foreach ($value as $email => $name) {
+				if ($name == NULL) { // intentionally ==
+					$tmp[] = $email;
+				} else {
+					$enc = self::encodeQuotedPrintableHeader($name);
+					if ($enc === $name && strpos($name, ',') !== FALSE) {
+						$name = str_replace('"', '\"', $name);
+						$tmp[] = "\"$name\" <$email>";
+					} else {
+						$tmp[] = "$enc <$email>";
+					}
+				}
+			}
+			return implode(',', $tmp);
+		}
 
-		// \x20-\x7F without \x3D \x3F \x20 \x5F
-		$range = "\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3e"
-			. "\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e"
-			. "\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e";
+		$s = $value;
+
+		// \x21-\x7E without \x3D \x3F \x5F
+		$range = '!"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}';
 
 		if (strspn($s, $range . "=? _\r\n\t") === strlen($s)) {
 			return $s;
@@ -317,26 +348,23 @@ class MailMimePart extends /*Nette\*/Object
 
 	/**
 	 * Converts a 8 bit string to a quoted-printable string.
-	 * @parram string
+	 * @param  string
 	 * @return string
 	 */
 	public static function encodeQuotedPrintable($s)
 	{
-		// \x20-\x7F without \x3D
-		$range = "\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3e\x3f"
-			. "\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f"
-			. "\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e";
-
+		$range = '!"#$%&\'()*+,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}'; // \x21-\x7E without \x3D
 		$pos = 0;
 		$len = 0;
 		$o = '';
 		$size = strlen($s);
 		while ($pos < $size) {
 			if ($l = strspn($s, $range, $pos)) {
-				while ($len + $l > self::LINE_LENGTH) {
-					$o .= substr($s, $pos, self::LINE_LENGTH - $len) . '=' . self::EOL;
-					$pos += self::LINE_LENGTH - $len;
-					$l -= self::LINE_LENGTH - $len;
+				while ($len + $l > self::LINE_LENGTH - 1) {
+					$lx = self::LINE_LENGTH - $len - 1;
+					$o .= substr($s, $pos, $lx) . '=' . self::EOL;
+					$pos += $lx;
+					$l -= $lx;
 					$len = 0;
 				}
 				$o .= substr($s, $pos, $l);
@@ -345,7 +373,7 @@ class MailMimePart extends /*Nette\*/Object
 
 			} else {
 				$len += 3;
-				if ($len > self::LINE_LENGTH) {
+				if ($len > self::LINE_LENGTH - 1) {
 					$o .= '=' . self::EOL;
 					$len = 3;
 				}

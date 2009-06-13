@@ -96,7 +96,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Returns the sender of the message.
-	 * @return string
+	 * @return array
 	 */
 	public function getFrom()
 	{
@@ -186,24 +186,14 @@ class Mail extends MailMimePart
 	 * Formats recipient e-mail.
 	 * @param  string
 	 * @param  string
-	 * @return string
+	 * @return array
 	 */
 	private function formatEmail($email, $name)
 	{
 		if (!$name && preg_match('#^(.+) +<(.*)>$#', $email, $matches)) {
-			list(, $name, $email) = $matches;
-		}
-
-		$name = preg_replace('#[\r\n\t"<>]#', '', $name);
-		$email = preg_replace('#[\r\n\t"<>,]#', '', $email);
-		if (!$name) {
-			return $email;
-
-		} elseif (self::encodeQuotedPrintableHeader($name) === $name && strpos($name, ',') !== FALSE) {
-			return "\"$name\" <$email>";
-
+			return array($matches[2] => $matches[1]);
 		} else {
-			return "$name <$email>";
+			return array($email => $name);
 		}
 	}
 
@@ -407,7 +397,7 @@ class Mail extends MailMimePart
 	public function send(IMailer $mailer = NULL)
 	{
 		if ($mailer === NULL) {
-			/**/fixCallback(self::$defaultMailer);/**/
+			/**/fixNamespace(self::$defaultMailer);/**/
 			$mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
 		}
 		return $mailer->send($this->build());
