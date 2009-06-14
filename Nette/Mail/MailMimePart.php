@@ -61,7 +61,7 @@ class MailMimePart extends /*Nette\*/Object
 
 
 	/**
-	 * Sets an user header.
+	 * Sets a header.
 	 * @param  string
 	 * @param  string|array  value or pair email => name
 	 * @param  bool
@@ -116,6 +116,19 @@ class MailMimePart extends /*Nette\*/Object
 
 
 	/**
+	 * Removes a header.
+	 * @param  string
+	 * @return MailMimePart  provides a fluent interface
+	 */
+	public function clearHeader($name)
+	{
+		unset($this->headers[$name]);
+		return $this;
+	}
+
+
+
+	/**
 	 * Returns an encoded header.
 	 * @param  string
 	 * @param  string
@@ -133,7 +146,7 @@ class MailMimePart extends /*Nette\*/Object
 			foreach ($this->headers[$name] as $email => $name) {
 				if ($name != NULL) { // intentionally ==
 					$s .= self::encodeQuotedPrintableHeader(
-						strspn($name, '.,;<@>()[]"') ? '"' . addcslashes($name, '"\\') . '"' : $name,
+						strspn($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
 						$charset, $len
 					);
 					$email = " <$email>";
@@ -340,7 +353,7 @@ class MailMimePart extends /*Nette\*/Object
 			} else {
 				$len += 3;
 				// \xC0 tests UTF-8 character boudnary; 9 is reserved space for 4bytes UTF-8 character
-				if (($s[$pos] & "\xC0") === "\xC0" && $len > self::LINE_LENGTH - 2 - 9) {
+				if (($s[$pos] & "\xC0") !== "\x80" && $len > self::LINE_LENGTH - 2 - 9) {
 					$o .= '?=' . self::EOL . ' ' . $prefix;
 					$len = strlen($prefix) + 1 + 3;
 				}
