@@ -48,11 +48,41 @@ require_once dirname(__FILE__) . '/../Web/Uri.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Web
+ *
+ * @property   string $scriptPath
+ * @property-read string $basePath
+ * @property-read string $baseUri
+ * @property-read string $relativeUri
+ * @property-read string $pathInfo
  */
 class UriScript extends Uri
 {
 	/** @var string */
-	public $scriptPath;
+	private $scriptPath;
+
+
+
+	/**
+	 * Sets the script-path part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setScriptPath($value)
+	{
+		$this->updating();
+		$this->scriptPath = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the script-path part of URI.
+	 * @return string
+	 */
+	public function getScriptPath()
+	{
+		return $this->scriptPath;
+	}
 
 
 

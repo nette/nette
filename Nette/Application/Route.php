@@ -147,17 +147,17 @@ class Route extends /*Nette\*/Object implements IRouter
 		$uri = $httpRequest->getUri();
 
 		if ($this->type === self::HOST) {
-			$path = '//' . $uri->host . $uri->path;
+			$path = '//' . $uri->getHost() . $uri->getPath();
 
 		} elseif ($this->type === self::RELATIVE) {
-			$basePath = $uri->basePath;
-			if (strncmp($uri->path, $basePath, strlen($basePath)) !== 0) {
+			$basePath = $uri->getBasePath();
+			if (strncmp($uri->getPath(), $basePath, strlen($basePath)) !== 0) {
 				return NULL;
 			}
-			$path = (string) substr($uri->path, strlen($basePath));
+			$path = (string) substr($uri->getPath(), strlen($basePath));
 
 		} else {
-			$path = $uri->path;
+			$path = $uri->getPath();
 		}
 
 		if ($path !== '') {
@@ -351,10 +351,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
-			$uri = '//' . $httpRequest->getUri()->authority . $httpRequest->getUri()->basePath . $uri;
+			$uri = '//' . $httpRequest->getUri()->getAuthority() . $httpRequest->getUri()->getBasePath() . $uri;
 
 		} elseif ($this->type === self::PATH) {
-			$uri = '//' . $httpRequest->getUri()->authority . $uri;
+			$uri = '//' . $httpRequest->getUri()->getAuthority() . $uri;
 		}
 
 		$uri = ($this->flags & self::SECURED ? 'https:' : 'http:') . $uri;

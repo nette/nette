@@ -92,7 +92,7 @@ class Application extends /*Nette\*/Object
 		$httpResponse->setHeader('X-Powered-By', 'Nette Framework');
 
 		if (Environment::getVariable('baseUri') === NULL) {
-			Environment::setVariable('baseUri', $httpRequest->getUri()->basePath);
+			Environment::setVariable('baseUri', $httpRequest->getUri()->getBasePath());
 		}
 
 		// check HTTP method

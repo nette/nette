@@ -22,7 +22,7 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
+require_once dirname(__FILE__) . '/../FreezableObject.php';
 
 
 
@@ -55,10 +55,10 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @property-read string $authority
  * @property-read string $hostUri
  */
-class Uri extends /*Nette\*/Object
+class Uri extends /*Nette\*/FreezableObject
 {
 	/** @var array */
-	static public $defaultPorts = array(
+	public static $defaultPorts = array(
 		'http' => 80,
 		'https' => 443,
 		'ftp' => 21,
@@ -67,28 +67,28 @@ class Uri extends /*Nette\*/Object
 	);
 
 	/** @var string */
-	public $scheme = '';
+	private $scheme = '';
 
 	/** @var string */
-	public $user = '';
+	private $user = '';
 
 	/** @var string */
-	public $pass = '';
+	private $pass = '';
 
 	/** @var string */
-	public $host = '';
+	private $host = '';
 
 	/** @var int */
-	public $port = NULL;
+	private $port = NULL;
 
 	/** @var string */
-	public $path = '';
+	private $path = '';
 
 	/** @var string */
-	public $query = '';
+	private $query = '';
 
 	/** @var string */
-	public $fragment = '';
+	private $fragment = '';
 
 
 
@@ -98,7 +98,7 @@ class Uri extends /*Nette\*/Object
 	 */
 	public function __construct($uri = NULL)
 	{
-		if ($uri !== NULL) {
+		if (is_string($uri)) {
 			$parts = @parse_url($uri); // intentionally @
 			if ($parts === FALSE) {
 				throw new /*\*/InvalidArgumentException("Malformed or unsupported URI '$uri'.");
@@ -111,7 +111,224 @@ class Uri extends /*Nette\*/Object
 			if (!$this->port && isset(self::$defaultPorts[$this->scheme])) {
 				$this->port = self::$defaultPorts[$this->scheme];
 			}
+
+		} elseif ($uri instanceof self) {
+			foreach ($uri as $key => $val) {
+				$this->$key = $val;
+			}
 		}
+	}
+
+
+
+	/**
+	 * Sets the scheme part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setScheme($value)
+	{
+		$this->updating();
+		$this->scheme = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the scheme part of URI.
+	 * @return string
+	 */
+	public function getScheme()
+	{
+		return $this->scheme;
+	}
+
+
+
+	/**
+	 * Sets the user name part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setUser($value)
+	{
+		$this->updating();
+		$this->user = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the user name part of URI.
+	 * @return string
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+
+
+	/**
+	 * Sets the password part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setPassword($value)
+	{
+		$this->updating();
+		$this->pass = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the password part of URI.
+	 * @return string
+	 */
+	public function getPassword()
+	{
+		return $this->pass;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function setPass($value)
+	{
+		$this->setPassword($value);
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function getPass()
+	{
+		return $this->pass;
+	}
+
+
+
+	/**
+	 * Sets the host part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setHost($value)
+	{
+		$this->updating();
+		$this->host = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the host part of URI.
+	 * @return string
+	 */
+	public function getHost()
+	{
+		return $this->host;
+	}
+
+
+
+	/**
+	 * Sets the port part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setPort($value)
+	{
+		$this->updating();
+		$this->port = (int) $value;
+	}
+
+
+
+	/**
+	 * Returns the port part of URI.
+	 * @return string
+	 */
+	public function getPort()
+	{
+		return $this->port;
+	}
+
+
+
+	/**
+	 * Sets the path part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setPath($value)
+	{
+		$this->updating();
+		$this->path = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the path part of URI.
+	 * @return string
+	 */
+	public function getPath()
+	{
+		return $this->path;
+	}
+
+
+
+	/**
+	 * Sets the query part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setQuery($value)
+	{
+		$this->updating();
+		$this->query = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the query part of URI.
+	 * @return string
+	 */
+	public function getQuery()
+	{
+		return $this->query;
+	}
+
+
+
+	/**
+	 * Sets the fragment part of URI.
+	 * @param  string
+	 * @return void
+	 */
+	public function setFragment($value)
+	{
+		$this->updating();
+		$this->fragment = (string) $value;
+	}
+
+
+
+	/**
+	 * Returns the fragment part of URI.
+	 * @return string
+	 */
+	public function getFragment()
+	{
+		return $this->fragment;
 	}
 
 

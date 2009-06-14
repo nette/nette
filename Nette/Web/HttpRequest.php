@@ -89,30 +89,43 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 
 	/**
 	 * Returns URL object.
-	 * @param  bool
 	 * @return UriScript
 	 */
-	final public function getUri($clone = TRUE)
+	final public function getUri()
 	{
 		if ($this->uri === NULL) {
-			$this->detectUri();
+			$this->initialize();
 		}
-		return $clone ? clone $this->uri : $this->uri;
+		return $this->uri;
+	}
+
+
+
+	/**
+	 * Sets URL object.
+	 * @param  UriScript
+	 * @return void
+	 */
+	public function setUri(UriScript $uri)
+	{
+		$this->uri = clone $uri;
+		parse_str($this->uri->query, $this->query);
+		$this->uri->canonicalize();
+		$this->uri->freeze();
 	}
 
 
 
 	/**
 	 * Returns URL object.
-	 * @param  bool
 	 * @return Uri
 	 */
-	final public function getOriginalUri($clone = TRUE)
+	final public function getOriginalUri()
 	{
 		if ($this->originalUri === NULL) {
-			$this->detectUri();
+			$this->initialize();
 		}
-		return $clone ? clone $this->originalUri : $this->originalUri;
+		return $this->originalUri;
 	}
 
 
@@ -157,11 +170,9 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	protected function detectUri()
 	{
 		$uri = $this->uri = new UriScript;
-		$origUri = $this->originalUri = new Uri;
-
-		$uri->scheme = $origUri->scheme = $this->isSecured() ? 'https' : 'http';
-		$uri->user = $origUri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
-		$uri->pass = $origUri->pass = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+		$uri->scheme = $this->isSecured() ? 'https' : 'http';
+		$uri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
+		$uri->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
 		// host & port
 		if (isset($_SERVER['HTTP_HOST'])) {
@@ -174,13 +185,13 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 			$pair = array('');
 		}
 
-		$uri->host = $origUri->host = $pair[0];
+		$uri->host = $pair[0];
 
 		if (isset($pair[1])) {
-			$uri->port = $origUri->port = (int) $pair[1];
+			$uri->port = (int) $pair[1];
 
 		} elseif (isset($_SERVER['SERVER_PORT'])) {
-			$uri->port = $origUri->port = (int) $_SERVER['SERVER_PORT'];
+			$uri->port = (int) $_SERVER['SERVER_PORT'];
 		}
 
 		// path & query
@@ -197,8 +208,10 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		}
 
 		$tmp = explode('?', $requestUri, 2);
-		$origUri->path = $tmp[0];
-		$origUri->query = isset($tmp[1]) ? $tmp[1] : '';
+		$this->originalUri = new Uri($uri);
+		$this->originalUri->path = $tmp[0];
+		$this->originalUri->query = isset($tmp[1]) ? $tmp[1] : '';
+		$this->originalUri->freeze();
 
 		$requestUri = preg_replace(array_keys($this->uriFilter[0]), array_values($this->uriFilter[0]), $requestUri);
 		$tmp = explode('?', $requestUri, 2);
@@ -206,8 +219,8 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$uri->path = /*Nette\*/String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
-		if ($uri->query !== $origUri->query) {
-			parse_str($uri->query, $_GET);
+		if ($uri->query !== $this->originalUri->query) {
+			parse_str($uri->query, $this->query);
 		}
 
 		// normalized uri
@@ -263,6 +276,8 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		} else {
 			$uri->scriptPath = $scriptPath;
 		}
+
+		$uri->freeze();
 	}
 
 
@@ -446,6 +461,8 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		if (!empty($_COOKIE)) {
 			$this->cookies = $_COOKIE;
 		}
+
+		$this->detectUri();
 
 		$gpc = (bool) get_magic_quotes_gpc();
 		$enc = (bool) $this->encoding;

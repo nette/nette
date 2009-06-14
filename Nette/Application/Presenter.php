@@ -1059,7 +1059,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		// make URL relative if possible
 		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
-			$hostUri = $httpRequest->getUri()->hostUri;
+			$hostUri = $httpRequest->getUri()->getHostUri();
 			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
 				$uri = substr($uri, strlen($hostUri));
 			}

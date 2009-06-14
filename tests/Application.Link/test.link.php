@@ -236,9 +236,10 @@ class Submodule_OtherPresenter extends TestPresenter
 Environment::setVariable('appDir', dirname(__FILE__));
 
 $httpRequest = Environment::getHttpRequest();
-$uri = $httpRequest->getUri(FALSE);
+$uri = clone $httpRequest->getUri();
 $uri->scriptPath = '/index.php';
 $uri->host = 'localhost';
+$httpRequest->setUri($uri);
 
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());
