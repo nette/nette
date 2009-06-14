@@ -278,7 +278,7 @@ final class InstantClientScript extends /*Nette\*/Object
 				. ($arg[1] === NULL ? "true" : "val.length<=" . (int) $arg[1]) . ";";
 
 		case $operation === ':email' && $control instanceof TextBase:
-			return $this->getValueScript($control) . 'res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);';
+			return $this->getValueScript($control) . 'res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);';
 
 		case $operation === ':url' && $control instanceof TextBase:
 			return $this->getValueScript($control) . 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val);';

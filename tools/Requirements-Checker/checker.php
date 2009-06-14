@@ -28,7 +28,7 @@ define('CHECKER_VERSION', '1.0');
 define('REQUIRED', TRUE);
 define('OPTIONAL', FALSE);
 
-$reflection = class_exists('ReflectionFunction') ? new ReflectionFunction('paint') : NULL;
+$reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 
 paint(array(
 	array(

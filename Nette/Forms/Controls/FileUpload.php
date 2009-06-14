@@ -79,8 +79,7 @@ class FileUpload extends FormControl
 			$this->value = $value;
 
 		} else {
-			// TODO: or create object?
-			$this->value = NULL;
+			$this->value = new HttpUploadedFile(NULL);
 		}
 	}
 

@@ -116,8 +116,8 @@ final class TemplateFilters
 		return preg_replace_callback(
 			'#(src|href|action|on[a-z]+)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',
 			array(__CLASS__, 'tnlCb'),
-			$s)
-		;
+			$s
+		);
 	}
 
 
