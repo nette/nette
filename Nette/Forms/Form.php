@@ -86,6 +86,11 @@ class Form extends FormContainer
 	const SCRIPT = 'Nette\Forms\InstantClientScript::javascript';
 	/**#@-*/
 
+	/**#@+ method */
+	const GET = 'get';
+	const POST = 'post';
+	/**#@-*/
+
 	/** tracker ID */
 	const TRACKER_ID = '_form_';
 

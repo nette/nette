@@ -40,7 +40,7 @@ array(7) {
   "text1" => string(5) "hello"
   "text2" => string(5) "world"
   "formCont" => array(2) {
-    "name" => string(4) "jack"
+    "name" => string(17) "jack x\y o'connor"
     "age" => string(2) "23"
   }
   "firstperson" => array(2) {
@@ -50,7 +50,14 @@ array(7) {
   "secondperson" => array(3) {
     "name" => string(3) "jim"
     "age" => string(2) "40"
-    "avatar" => NULL
+    "avatar" => object(HttpUploadedFile) (6) {
+      "name" private => string(11) "license.txt"
+      "type" private => string(10) "text/plain"
+      "realType" private => NULL
+      "size" private => int(3013)
+      "tmpName" private => string(23) "C:\PHP\temp\php1D5C.tmp"
+      "error" private => int(0)
+    }
   }
   "age" => string(2) "50"
 }
@@ -80,7 +87,7 @@ Render:
 <tr>
 	<th><label for="frm-formCont-name">Your name:</label></th>
 
-	<td><input type="text" size="35" class="text" name="formCont[name]" id="frm-formCont-name" value="jack" /></td>
+	<td><input type="text" size="35" class="text" name="formCont[name]" id="frm-formCont-name" value="jack x\y o'connor" /></td>
 </tr>
 
 <tr>

@@ -71,7 +71,7 @@ final class TemplateHelpers
 	public static function escapeHtml($s)
 	{
 		if (is_object($s) && ($s instanceof Template || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
-			return (string) $s;
+			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, ENT_QUOTES);
 	}

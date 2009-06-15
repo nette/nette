@@ -175,7 +175,7 @@ function validate(sender) {
 	if (res) {
 		element = document.getElementById("frm-email");
 		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);
+		res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);
 		if (!res) { message = "Zadan\u00fd e-mail nen\u00ed platn\u00fd"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);

@@ -224,7 +224,7 @@ function validate(sender) {
 	if (res) {
 		element = document.getElementById("frm-email");
 		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = /^[^@]+@[^@]+\.[a-z]{2,6}$/i.test(val);
+		res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);
 		if (!res) { message = "Incorrect E-mail Address"; if (element) element.focus(); alert(message); return false; }
 	}
 	} while(0);
