@@ -451,7 +451,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			$s[] = (string) $control->getControl();
 		}
 		$pair = $this->getWrapper('pair container');
-		$pair->add($this->getWrapper('label container')->setHtml('&nbsp;'));
+		$pair->add($this->renderLabel($control));
 		$pair->add($this->getWrapper('control container')->setHtml(implode(" ", $s)));
 		return $pair->render(0);
 	}
@@ -468,7 +468,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 		$head = $this->getWrapper('label container');
 
 		if ($control instanceof Checkbox || $control instanceof Button) {
-			return $head->setHtml('&nbsp;');
+			return $head->setHtml(($head->getName() === 'td' || $head->getName() === 'th') ? '&nbsp;' : '');
 
 		} else {
 			$label = $control->getLabel();
