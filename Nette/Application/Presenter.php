@@ -44,7 +44,6 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  * @property   string $view
  * @property   string $layout
  * @property-read mixed $payload
- * @property-read IAjaxDriver $ajaxDriver
  * @property-read Application $application
  */
 abstract class Presenter extends Control implements IPresenter
@@ -111,8 +110,8 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var string */
 	private $layout = 'layout';
 
-	/** @var IAjaxDriver */
-	private $ajaxDriver;
+	/** @var stdClass */
+	private $payload;
 
 	/** @var string */
 	private $signalReceiver;
@@ -137,6 +136,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function __construct(PresenterRequest $request)
 	{
 		$this->request = $request;
+		$this->payload = (object) NULL;
 		parent::__construct(NULL, $request->getPresenterName());
 	}
 
@@ -187,9 +187,6 @@ abstract class Presenter extends Control implements IPresenter
 		try {
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
-			if ($this->isAjax()) {
-				$this->getAjaxDriver()->open($this->getHttpResponse());
-			}
 			$this->initGlobalParams();
 			$this->startup();
 			// calls $this->action{action}();
@@ -223,7 +220,7 @@ abstract class Presenter extends Control implements IPresenter
 			// save component tree persistent state
 			$this->saveGlobalState();
 			if ($this->isAjax()) {
-				$this->getPayload()->state = $this->getGlobalState();
+				$this->payload->state = $this->getGlobalState();
 			}
 
 			// finish template rendering
@@ -239,7 +236,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_SHUTDOWN;
 
 			if ($this->isAjax()) {
-				$this->ajaxDriver->close();
+				$this->sendPayload();
 			}
 
 			if ($this->hasFlashSession()) {
@@ -618,11 +615,11 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return mixed
+	 * @return stdClass
 	 */
-	public function getPayload()
+	final public function getPayload()
 	{
-		return $this->getAjaxDriver();
+		return $this->payload;
 	}
 
 
@@ -642,29 +639,27 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return IAjaxDriver|NULL
+	 * Sends AJAX payload to the output.
+	 * @return void
 	 */
-	public function getAjaxDriver()
+	protected function sendPayload()
 	{
-		if ($this->ajaxDriver === NULL) {
-			$value = $this->createAjaxDriver();
-			if (!($value instanceof IAjaxDriver)) {
-				$class = get_class($value);
-				throw new /*\*/UnexpectedValueException("Object returned by $this->class::getAjaxDriver() must be instance of Nette\\Application\\IAjaxDriver, '$class' given.");
-			}
-			$this->ajaxDriver = $value;
+		if (!empty($this->payload)) {
+			$this->getHttpResponse()->expire(FALSE);
+			$this->getHttpResponse()->setContentType('application/x-javascript', 'utf-8');
+			echo json_encode($this->payload);
 		}
-		return $this->ajaxDriver;
 	}
 
 
 
 	/**
-	 * @return IAjaxDriver
+	 * @deprecated
 	 */
-	protected function createAjaxDriver()
+	public function getAjaxDriver()
 	{
-		return new AjaxDriver;
+		trigger_error(__METHOD__ . '() is deprecated; use $presenter->payload instead.', E_USER_WARNING);
+		return $this->payload;
 	}
 
 
@@ -706,7 +701,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
 	{
 		if ($this->isAjax()) {
-			$this->getPayload()->redirect = $uri;
+			$this->payload->redirect = $uri;
 			$this->terminate();
 
 		} else {

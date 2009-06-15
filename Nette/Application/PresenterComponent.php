@@ -295,6 +295,12 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 
+	/**
+	 * Returns destination as Link object.
+	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
+	 * @param  array|mixed
+	 * @return Link
+	 */
 	public function lazyLink($destination, $args = array())
 	{
 		if (!is_array($args)) {
@@ -307,9 +313,13 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 
+	/**
+	 * @deprecated
+	 */
 	public function ajaxLink($destination, $args = array())
 	{
-		return $this->getPresenter()->getAjaxDriver()->link($destination === NULL ? NULL : $this->link($destination, $args));
+		trigger_error(__METHOD__ . '() is deprecated.', E_USER_WARNING);
+		return "return !nette.action(" . ($destination === NULL ? "this.href" : json_encode($this->link($destination, $args))) . ", this)";
 	}
 
 
