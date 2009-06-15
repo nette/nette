@@ -235,7 +235,24 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			$control->setOption('rendered', FALSE);
 		}
 
-		return $this->form->getElementPrototype()->startTag();
+		if (strcasecmp($this->form->getMethod(), 'get') === 0) {
+			$el = clone $this->form->getElementPrototype();
+			$uri = explode('?', (string) $el->action, 2);
+			$el->action = $uri[0];
+			$s = '';
+			if (isset($uri[1])) {
+				foreach (explode('&', $uri[1]) as $param) {
+					$parts = explode('=', $param, 2);
+					$s .= Html::el('input', array('type' => 'hidden', 'name' => urldecode($parts[0]), 'value' => urldecode($parts[1])));
+				}
+				$s = "\n\t" . $this->getWrapper('hidden container')->setHtml($s);
+			}
+			return $el->startTag() . $s;
+
+
+		} else {
+			return $this->form->getElementPrototype()->startTag();
+		}
 	}
 
 
