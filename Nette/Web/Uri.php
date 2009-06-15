@@ -399,7 +399,7 @@ class Uri extends /*Nette\*/FreezableObject
 		// compare query strings
 		$part = (string) strtok('?#');
 		if ($part !== '') {
-			$tmp = explode('&', self::unescape(strtr($part, '+', ' '), '%&'));
+			$tmp = preg_split('#[&;]#', self::unescape(strtr($part, '+', ' '), '%&;'));
 			sort($tmp);
 			$part = implode('&', $tmp);
 		}
@@ -414,12 +414,13 @@ class Uri extends /*Nette\*/FreezableObject
 	 */
 	public function canonicalize()
 	{
+		$this->updating();
 		$this->path = $this->path == '' ? '/' : self::unescape($this->path, '%/');
 
 		$this->host = strtolower(rawurldecode($this->host));
 
 		if ($this->query !== '') {
-			$tmp = explode('&', self::unescape(strtr($this->query, '+', ' '), '%&'));
+			$tmp = preg_split('#[&;]#', self::unescape(strtr($this->query, '+', ' '), '%&;'));
 			sort($tmp);
 			$this->query = implode('&', $tmp);
 		}

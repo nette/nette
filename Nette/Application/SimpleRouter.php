@@ -133,7 +133,8 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 
 		$uri = $httpRequest->getUri();
 		$uri = ($this->flags & self::SECURED ? 'https://' : 'http://') . $uri->getAuthority() . $uri->getScriptPath();
-		$query = http_build_query($params, '', '&');
+		$sep = ini_get('arg_separator.input');
+		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') { // intentionally ==
 			$uri .= '?' . $query;
 		}

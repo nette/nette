@@ -346,7 +346,8 @@ class Route extends /*Nette\*/Object implements IRouter
 			$params = self::renameKeys($params, $this->xlat);
 		}
 
-		$query = http_build_query($params, '', '&');
+		$sep = ini_get('arg_separator.input');
+		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') $uri .= '?' . $query; // intentionally ==
 
 		// absolutize path
