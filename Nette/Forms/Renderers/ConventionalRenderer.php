@@ -108,6 +108,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 
 			'errors' => FALSE,
 			'description' => 'small',
+			'requiredsuffix' => '',
 
 			'.required' => 'required',
 			'.text' => 'text',
@@ -121,6 +122,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 		'label' => array(
 			'container' => 'th',
 			'suffix' => NULL,
+			'requiredsuffix' => '',
 		),
 
 		'hidden' => array(
@@ -470,12 +472,12 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 
 		} else {
 			$label = $control->getLabel();
+			$suffix = $this->getValue('label suffix') . ($control->getOption('required') ? $this->getValue('label requiredsuffix') : '');
 			if ($label instanceof Html) {
-				$label->setText($label->getText() . $this->getValue('label suffix'));
-			} else {
-				$label = (string) $label . $this->getValue('label suffix');
+				$label->setText($label->getText() . $suffix);
+				$suffix = '';
 			}
-			return $head->setHtml((string) $label);
+			return $head->setHtml((string) $label . $suffix);
 		}
 	}
 
@@ -500,6 +502,10 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 
 		} else {
 			$description = '';
+		}
+
+		if ($control->getOption('required')) {
+			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
 		if ($this->getValue('control errors')) {
