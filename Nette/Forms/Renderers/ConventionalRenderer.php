@@ -469,7 +469,13 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			return $head->setHtml('&nbsp;');
 
 		} else {
-			return $head->setHtml((string) $control->getLabel() . $this->getValue('label suffix'));
+			$label = $control->getLabel();
+			if ($label instanceof Html) {
+				$label->setText($label->getText() . $this->getValue('label suffix'));
+			} else {
+				$label = (string) $label . $this->getValue('label suffix');
+			}
+			return $head->setHtml((string) $label);
 		}
 	}
 
