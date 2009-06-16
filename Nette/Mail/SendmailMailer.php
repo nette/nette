@@ -39,9 +39,9 @@ class SendmailMailer extends /*Nette\*/Object implements IMailer
 	/**
 	 * Sends e-mail.
 	 * @param  Mail
-	 * @return bool
+	 * @return void
 	 */
-	function send(Mail $mail)
+	public function send(Mail $mail)
 	{
 		$tmp = clone $mail;
 		$tmp->setHeader('Subject', NULL);
@@ -49,12 +49,21 @@ class SendmailMailer extends /*Nette\*/Object implements IMailer
 
 		$parts = explode(Mail::EOL . Mail::EOL, $tmp->generateMessage(), 2);
 		$linux = strncasecmp(PHP_OS, 'win', 3);
-		return mail(
+
+		/*Nette\*/Tools::tryError();
+		$res = mail(
 			$mail->getEncodedHeader('To'),
 			$mail->getEncodedHeader('Subject'),
 			$linux ? str_replace(Mail::EOL, "\n", $parts[1]) : $parts[1],
 			$linux ? str_replace(Mail::EOL, "\n", $parts[0]) : $parts[0]
 		);
+
+		if (/*Nette\*/Tools::catchError($msg)) {
+			throw new /*\*/InvalidStateException($msg);
+
+		} elseif (!$res) {
+			throw new /*\*/InvalidStateException('Unable to send email.');
+		}
 	}
 
 }

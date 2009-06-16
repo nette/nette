@@ -35,7 +35,7 @@ interface IMailer
 	/**
 	 * Sends e-mail.
 	 * @param  Mail
-	 * @return bool
+	 * @return void
 	 */
 	function send(Mail $mail);
 

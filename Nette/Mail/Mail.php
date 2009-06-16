@@ -344,7 +344,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sends e-mail.
 	 * @param  IMailer
-	 * @return bool
+	 * @return void
 	 */
 	public function send(IMailer $mailer = NULL)
 	{
@@ -352,7 +352,7 @@ class Mail extends MailMimePart
 			/**/fixNamespace(self::$defaultMailer);/**/
 			$mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
 		}
-		return $mailer->send($this->build());
+		$mailer->send($this->build());
 	}
 
 
