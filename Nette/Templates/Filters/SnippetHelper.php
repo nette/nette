@@ -96,9 +96,6 @@ class SnippetHelper extends /*Nette\*/Object
 			if ($this->level !== ob_get_level()) {
 				throw new /*\*/InvalidStateException("Snippet '$this->id' cannot be ended here.");
 			}
-			/**/if (empty($this->payload->snippets)) { // PHP 5.2.0 bug workaround
-				$this->payload->snippets = new ArrayObject;
-			}/**/
 			$this->payload->snippets[$this->id] = ob_get_clean();
 			self::$outputAllowed = FALSE;
 		}
