@@ -9,7 +9,7 @@ img {
 	position: relative;
 }
 
-.fifteen table {
+.fifteen {
 	border-collapse: collapse;
 }
 
@@ -20,10 +20,10 @@ img {
 	=position: inherit;
 }
 
-#spinner {
-	display: none;
-	position: absolute !important;
-	margin-left: 10px !important;
-	border: none !important;
-	z-index: 1000;
+#ajax-spinner {
+	margin: 15px 0 0 15px;
+	padding: 13px;
+	background: white url('../images/spinner.gif') no-repeat 50% 50%;
+	font-size: 0;
+	z-index: 123456;
 }

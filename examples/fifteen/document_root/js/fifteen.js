@@ -11,27 +11,38 @@
  * @version    $Id$
  */
 
-var fifteen = {
+jQuery(function($) {
 
-	move: function(snippetId, x, y, dx, dy)
-	{
-		var snippet = nette.result.snippets[snippetId];
-		delete nette.result.snippets[snippetId];
+	var active = false;
 
-		nette.processing += 1;
+	$('.fifteen a.ajax').die('click').live('click', function(event) {
+		event.preventDefault();
+		if (active || $.active) return;
 
-		var el = document.getElementById(snippetId);
-		var img = $('table tr:eq(' + (3-y) + ') td:eq(' + (3-x) + ') img', el);
-		img.parent().replaceWith(img);
+		active = true;
+		var payload;
+		var delta = $(this).attr('rel').split(',');
+		var img = $('img', this);
 		img.css('z-index', 1000);
 		img.animate({
-			'left': dx * img.attr('width') + 'px',
-			'top': dy * img.attr('height') + 'px'
+			'left': delta[0] * (img.attr('width') + 1) + 'px',
+			'top': delta[1] * (img.attr('height') + 1) + 'px'
 		});
-		img.queue(function () {
-			nette.updateSnippet(snippetId, snippet);
-			nette.processing -= 1;
+		img.queue(function() {
+			active = false;
+			if (payload) $.nette.success(payload);
 		});
-	}
 
-}
+		$.post(this.href, function(data) {
+			payload = data;
+			if (!active) $.nette.success(payload);
+		});
+
+		$.nette.spinner.css({
+			position: 'absolute',
+			left: event.pageX,
+			top: event.pageY
+		});
+	});
+
+});

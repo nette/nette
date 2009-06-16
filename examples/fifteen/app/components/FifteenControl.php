@@ -33,9 +33,6 @@ class FifteenControl extends /*Nette\Application\*/Control
 	/** @persistent int */
 	public $round = 0;
 
-	/** @var bool */
-	public $useAjax = TRUE;
-
 
 
 
@@ -51,20 +48,6 @@ class FifteenControl extends /*Nette\Application\*/Control
 	{
 		if (!$this->isClickable($x, $y)) {
 			throw new /*Nette\Application\*/BadSignalException('Action not allowed.');
-		}
-
-		if ($this->presenter->isAjax()) {
-			$payload = $this->presenter->payload;
-			$pos = $x + $y * $this->width;
-			$empty = $this->searchEmpty();
-			$id = $this->getSnippetId();
-			if (empty($payload->events)) { // PHP 5.2.0 bug workaround
-				$payload->events = new ArrayObject;
-			}
-			if ($pos === $empty - 1) $payload->events[] = array('fifteen.move', $id, $x, $y, -1, 0);
-			elseif ($pos === $empty + 1) $payload->events[] = array('fifteen.move', $id, $x, $y, +1, 0);
-			elseif ($pos > $empty) $payload->events[] = array('fifteen.move', $id, $x, $y, 0, +1);
-			else $payload->events[] = array('fifteen.move', $id, $x, $y, 0, -1);
 		}
 
 		$this->move($x, $y);
@@ -101,16 +84,29 @@ class FifteenControl extends /*Nette\Application\*/Control
 
 
 
-	public function isClickable($x, $y)
+	public function isClickable($x, $y, & $rel = NULL)
 	{
+		$rel = NULL;
 		$pos = $x + $y * $this->width;
 		$empty = $this->searchEmpty();
 		$y = (int) ($empty / $this->width);
 		$x = $empty % $this->width;
-		if ($x > 0 && $pos === $empty - 1) return TRUE;
-		if ($x < $this->width-1 && $pos === $empty + 1) return TRUE;
-		if ($y > 0 && $pos === $empty - $this->width) return TRUE;
-		if ($y < $this->width-1 && $pos === $empty + $this->width) return TRUE;
+		if ($x > 0 && $pos === $empty - 1) {
+			$rel = '-1,';
+			return TRUE;
+		}
+		if ($x < $this->width-1 && $pos === $empty + 1) {
+			$rel = '+1,';
+			return TRUE;
+		}
+		if ($y > 0 && $pos === $empty - $this->width) {
+			$rel = ',-1';
+			return TRUE;
+		}
+		if ($y < $this->width-1 && $pos === $empty + $this->width) {
+			$rel = ',+1';
+			return TRUE;
+		}
 		return FALSE;
 	}
 
@@ -140,7 +136,6 @@ class FifteenControl extends /*Nette\Application\*/Control
 		$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 		$template->width = $this->width;
 		$template->order = $this->order;
-		$template->useAjax = $this->useAjax;
 		$template->render();
 	}
 

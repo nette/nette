@@ -15,20 +15,16 @@
 ?>
 {snippet}
 
-<table>
+<table class="fifteen">
 {for $y = $width - 1; $y >= 0; $y--}
 <tr>
 	{for $x = $width - 1; $x >= 0; $x--}
 	<td>
+		{if $clickable = $control->isClickable($x, $y, $rel)}<a href="{link Click, $x, $y}" class="ajax" rel="{$rel}">{/if}
 
-	{if $clickable = $control->isClickable($x, $y)}
-	<a href="{link Click, $x, $y}" {if $useAjax}onclick="return !nette.action(this)"{/if}>
-	{/if}
+		<img src="{$baseUri}images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
 
-	<img src="{$baseUri}images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
-
-	{if $clickable}</a>{/if}
-
+		{if $clickable}</a>{/if}
 	</td>
 	{/for}
 </tr>

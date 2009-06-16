@@ -11,7 +11,6 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 	{
 		$fifteen = new FifteenControl;
 		$fifteen->onGameOver[] = array($this, 'GameOver');
-		$fifteen->useAjax = TRUE;
 
 		$this->addComponent($fifteen, 'game');
 
