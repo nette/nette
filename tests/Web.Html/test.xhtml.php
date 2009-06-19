@@ -18,6 +18,14 @@ echo $el, "\n";
 echo $el->startTag(), "\n";
 echo $el->endTag(), "\n\n";
 
+$el = Html::el('img')->setSrc('image.gif')->setAlt('alt1')->setAlt('alt2');
+echo $el, "\n";
+echo $el->getSrc(), "\n";
+echo $el->getTitle(), "\n";
+echo $el->getAlt(), "\n";
+$el->addAlt('alt3');
+echo $el, "\n\n";
+
 $el = Html::el('div');
 $el->style[] = 'text-align:right';
 $el->style[] = NULL;

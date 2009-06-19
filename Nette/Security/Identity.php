@@ -112,6 +112,17 @@ class Identity extends /*Nette\*/Object implements IIdentity
 
 
 	/**
+	 * Returns an user data.
+	 * @return array
+	 */
+	public function getData()
+	{
+		return $this->data;
+	}
+
+
+
+	/**
 	 * Sets user data value.
 	 * @param  string  property name
 	 * @param  mixed   property value

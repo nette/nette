@@ -17,23 +17,23 @@ if (typeof jQuery != 'function') {
 (function($) {
 
 	$.nette = {
-		success: function(data)
+		success: function(payload)
 		{
 			// redirect
-			if (data.redirect) {
-				window.location.href = data.redirect;
+			if (payload.redirect) {
+				window.location.href = payload.redirect;
 				return;
 			}
 
 			// state
-			if (data.state) {
-				$.nette.state = data.state;
+			if (payload.state) {
+				$.nette.state = payload.state;
 			}
 
 			// snippets
-			if (data.snippets) {
-				for (var i in data.snippets) {
-					$.nette.updateSnippet(i, data.snippets[i]);
+			if (payload.snippets) {
+				for (var i in payload.snippets) {
+					$.nette.updateSnippet(i, payload.snippets[i]);
 				}
 			}
 		},

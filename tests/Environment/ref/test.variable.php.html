@@ -18,11 +18,22 @@ Setting variable 'test'...
 Getting variable 'test':
 string(11) "/myApp/test"
 
+Getting variables:
+array(11) {
+  "encoding" => string(5) "UTF-8"
+  "lang" => string(2) "en"
+  "cacheBase" => string(18) "/myApp/temp/cache-"
+  "tempDir" => string(11) "/myApp/temp"
+  "logDir" => string(10) "/myApp/log"
+  "templatesDir" => string(16) "/myApp/templates"
+  "presentersDir" => string(17) "/myApp/presenters"
+  "componentsDir" => string(17) "/myApp/components"
+  "modelsDir" => string(13) "/myApp/models"
+  "appDir" => string(6) "/myApp"
+  "test" => string(11) "/myApp/test"
+}
+
 Setting circular variables...
 Getting circular variable:
 InvalidStateException: Circular reference detected for variables: foo, foobar, bar.
-
-Exporting constant 'helloWorld'...
-Constant 'HELLO_WORLD':
-string(6) "Hello!"
 

@@ -264,20 +264,16 @@ final class Environment
 
 
 	/**
-	 * Define one or more variables as constants.
-	 * @param  string|array
-	 * @return void
+	 * Returns the all environment variables.
+	 * @return array
 	 */
-	public static function exportConstant($names)
+	public static function getVariables()
 	{
-		if (!is_array($names)) {
-			$names = func_get_args();
+		$res = array();
+		foreach (self::$vars as $name => $foo) {
+			$res[$name] = self::getVariable($name);
 		}
-
-		foreach ($names as $name) {
-			$const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $name));
-			define($const, self::getVariable($name));
-		}
+		return $res;
 	}
 
 

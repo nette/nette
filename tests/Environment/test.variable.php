@@ -41,6 +41,10 @@ echo "Getting variable 'test':\n";
 Debug::dump(Environment::getVariable('test'));
 
 
+echo "Getting variables:\n";
+Debug::dump(Environment::getVariables());
+
+
 
 try {
 	echo "Setting circular variables...\n";
@@ -54,11 +58,3 @@ try {
 } catch (Exception $e) {
 	echo get_class($e), ': ', $e->getMessage(), "\n\n";
 }
-
-
-echo "Exporting constant 'helloWorld'...\n";
-Environment::setVariable('helloWorld', 'Hello!');
-Environment::exportConstant('helloWorld');
-
-echo "Constant 'HELLO_WORLD':\n";
-Debug::dump(constant('HELLO_WORLD'));
