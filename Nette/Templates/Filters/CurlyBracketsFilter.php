@@ -95,7 +95,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'assign' => '<?php %:macroAssign% ?>',
-		'dump' => '<?php Debug::dump(%:macroDump%, Debug::CONSOLE, "Template {$template->getFile()}") ?>',
+		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("templatesDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',

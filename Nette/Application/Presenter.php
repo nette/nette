@@ -493,7 +493,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			if (!$template->getFile()) {
-				$file = reset($files);
+				$file = str_replace(Environment::getVariable('templatesDir'), "\xE2\x80\xA6", reset($files));
 				throw new BadRequestException("Page not found. Missing template '$file'.");
 			}
 
