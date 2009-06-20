@@ -81,6 +81,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'/for' => '<?php endfor ?>',
 		'while' => '<?php while (%%): ?>',
 		'/while' => '<?php endwhile ?>',
+		'continue' => '<?php continue ?>',
+		'break' => '<?php break ?>',
 
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
@@ -93,7 +95,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'assign' => '<?php %:macroAssign% ?>',
-		'dump' => '<?php Debug::dump(%%) ?>',
+		'dump' => '<?php Debug::dump(%:macroDump%, Debug::CONSOLE, "Template {$template->getFile()}") ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
 		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',
@@ -486,6 +488,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		// temporary solution
 		return strpos($var, '/') ? /*\Nette\*/'Environment::getHttpResponse()->setHeader("Content-Type", "' . $var . '")' : '';
+	}
+
+
+
+	/**
+	 * {dump ...}
+	 */
+	private function macroDump($var)
+	{
+		return $var ? "array('$var' => $var)" : 'get_defined_vars()';
 	}
 
 
