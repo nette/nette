@@ -12,15 +12,15 @@ InvalidArgumentException: Item must be 'Person' object.
 
 (array):
 array(3) {
-  0 => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  1 => object(Person) (1) {
-    "name" private => string(4) "Mary"
-  }
-  2 => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
+   0 => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   1 => object(Person) (1) {
+      "name" private => string(4) "Mary"
+   }
+   2 => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
 }
 
 join() via extension method:
@@ -40,21 +40,21 @@ ArgumentOutOfRangeException:
 
 (array):
 array(5) {
-  0 => object(Person) (1) {
-    "name" private => string(5) "Larry"
-  }
-  1 => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  2 => object(Person) (1) {
-    "name" private => string(4) "Mary"
-  }
-  3 => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  4 => object(Person) (1) {
-    "name" private => string(5) "Larry"
-  }
+   0 => object(Person) (1) {
+      "name" private => string(5) "Larry"
+   }
+   1 => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   2 => object(Person) (1) {
+      "name" private => string(4) "Mary"
+   }
+   3 => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   4 => object(Person) (1) {
+      "name" private => string(5) "Larry"
+   }
 }
 
 Contains Jack?
@@ -80,7 +80,7 @@ ArgumentOutOfRangeException:
 
 Getting #0
 object(Person) (1) {
-  "name" private => string(5) "Larry"
+   "name" private => string(5) "Larry"
 }
 
 Removing Larry
@@ -110,14 +110,13 @@ InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 array(3) {
-  0 => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  1 => object(Person) (1) {
-    "name" private => string(4) "Mary"
-  }
-  2 => object(ArrayObject) (0) {
-  }
+   0 => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   1 => object(Person) (1) {
+      "name" private => string(4) "Mary"
+   }
+   2 => object(ArrayObject) (0) {}
 }
 
 Construct as readonly

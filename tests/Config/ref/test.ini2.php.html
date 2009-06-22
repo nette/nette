@@ -3,93 +3,93 @@
 <pre>
 Load INI
 object(Config) (4) {
-  "common" => object(Config) (2) {
-    "variable" => object(Config) (3) {
-      "tempDir" => string(14) "%appDir%/cache"
-      "foo" => string(11) "%bar% world"
-      "bar" => string(5) "hello"
-    }
-    "set" => object(Config) (4) {
-      "date.timezone" => string(13) "Europe/Prague"
-      "iconv.internal_encoding" => string(10) "%encoding%"
-      "mbstring.internal_encoding" => string(10) "%encoding%"
-      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
-    }
-  }
-  "production" => object(Config) (5) {
-    "service" => object(Config) (3) {
-      "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
-      "User" => string(19) "Nette\Security\User"
-      "Nette-Autoloader" => string(16) "Nette\AutoLoader"
-    }
-    "webhost" => string(15) "www.example.com"
-    "database" => object(Config) (2) {
-      "params" => object(Config) (4) {
-        "host" => string(14) "db.example.com"
-        "username" => string(6) "dbuser"
-        "password" => string(6) "secret"
-        "dbname" => string(6) "dbname"
+   "common" => object(Config) (2) {
+      "variable" => object(Config) (3) {
+         "tempDir" => string(14) "%appDir%/cache"
+         "foo" => string(11) "%bar% world"
+         "bar" => string(5) "hello"
       }
-      "adapter" => string(9) "pdo_mysql"
-    }
-    "variable" => object(Config) (3) {
-      "tempDir" => string(14) "%appDir%/cache"
-      "foo" => string(11) "%bar% world"
-      "bar" => string(5) "hello"
-    }
-    "set" => object(Config) (4) {
-      "date.timezone" => string(13) "Europe/Prague"
-      "iconv.internal_encoding" => string(10) "%encoding%"
-      "mbstring.internal_encoding" => string(10) "%encoding%"
-      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
-    }
-  }
-  "development" => object(Config) (6) {
-    "database" => object(Config) (2) {
-      "params" => object(Config) (4) {
-        "host" => string(15) "dev.example.com"
-        "username" => string(7) "devuser"
-        "password" => string(9) "devsecret"
-        "dbname" => string(6) "dbname"
+      "set" => object(Config) (4) {
+         "date.timezone" => string(13) "Europe/Prague"
+         "iconv.internal_encoding" => string(10) "%encoding%"
+         "mbstring.internal_encoding" => string(10) "%encoding%"
+         "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
       }
-      "adapter" => string(9) "pdo_mysql"
-    }
-    "service" => object(Config) (3) {
-      "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
-      "User" => string(19) "Nette\Security\User"
-      "Nette-Autoloader" => string(16) "Nette\AutoLoader"
-    }
-    "webhost" => string(15) "www.example.com"
-    "variable" => object(Config) (3) {
-      "tempDir" => string(14) "%appDir%/cache"
-      "foo" => string(11) "%bar% world"
-      "bar" => string(5) "hello"
-    }
-    "set" => object(Config) (4) {
-      "date.timezone" => string(13) "Europe/Prague"
-      "iconv.internal_encoding" => string(10) "%encoding%"
-      "mbstring.internal_encoding" => string(10) "%encoding%"
-      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
-    }
-    "test" => object(Config) (3) {
-      "host" => string(9) "localhost"
-      "params" => object(Config) (4) {
-        "host" => string(15) "dev.example.com"
-        "username" => string(7) "devuser"
-        "password" => string(9) "devsecret"
-        "dbname" => string(6) "dbname"
+   }
+   "production" => object(Config) (5) {
+      "service" => object(Config) (3) {
+         "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+         "User" => string(19) "Nette\Security\User"
+         "Nette-Autoloader" => string(16) "Nette\AutoLoader"
       }
-      "adapter" => string(9) "pdo_mysql"
-    }
-  }
-  "extra" => object(Config) (1) {
-    "set" => object(Config) (4) {
-      "date.timezone" => string(12) "Europe/Paris"
-      "iconv.internal_encoding" => string(10) "%encoding%"
-      "mbstring.internal_encoding" => string(10) "%encoding%"
-      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
-    }
-  }
+      "webhost" => string(15) "www.example.com"
+      "database" => object(Config) (2) {
+         "params" => object(Config) (4) {
+            "host" => string(14) "db.example.com"
+            "username" => string(6) "dbuser"
+            "password" => string(6) "secret"
+            "dbname" => string(6) "dbname"
+         }
+         "adapter" => string(9) "pdo_mysql"
+      }
+      "variable" => object(Config) (3) {
+         "tempDir" => string(14) "%appDir%/cache"
+         "foo" => string(11) "%bar% world"
+         "bar" => string(5) "hello"
+      }
+      "set" => object(Config) (4) {
+         "date.timezone" => string(13) "Europe/Prague"
+         "iconv.internal_encoding" => string(10) "%encoding%"
+         "mbstring.internal_encoding" => string(10) "%encoding%"
+         "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+      }
+   }
+   "development" => object(Config) (6) {
+      "database" => object(Config) (2) {
+         "params" => object(Config) (4) {
+            "host" => string(15) "dev.example.com"
+            "username" => string(7) "devuser"
+            "password" => string(9) "devsecret"
+            "dbname" => string(6) "dbname"
+         }
+         "adapter" => string(9) "pdo_mysql"
+      }
+      "service" => object(Config) (3) {
+         "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+         "User" => string(19) "Nette\Security\User"
+         "Nette-Autoloader" => string(16) "Nette\AutoLoader"
+      }
+      "webhost" => string(15) "www.example.com"
+      "variable" => object(Config) (3) {
+         "tempDir" => string(14) "%appDir%/cache"
+         "foo" => string(11) "%bar% world"
+         "bar" => string(5) "hello"
+      }
+      "set" => object(Config) (4) {
+         "date.timezone" => string(13) "Europe/Prague"
+         "iconv.internal_encoding" => string(10) "%encoding%"
+         "mbstring.internal_encoding" => string(10) "%encoding%"
+         "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+      }
+      "test" => object(Config) (3) {
+         "host" => string(9) "localhost"
+         "params" => object(Config) (4) {
+            "host" => string(15) "dev.example.com"
+            "username" => string(7) "devuser"
+            "password" => string(9) "devsecret"
+            "dbname" => string(6) "dbname"
+         }
+         "adapter" => string(9) "pdo_mysql"
+      }
+   }
+   "extra" => object(Config) (1) {
+      "set" => object(Config) (4) {
+         "date.timezone" => string(12) "Europe/Paris"
+         "iconv.internal_encoding" => string(10) "%encoding%"
+         "mbstring.internal_encoding" => string(10) "%encoding%"
+         "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+      }
+   }
 }
 
 Save INI
@@ -208,42 +208,42 @@ extra.set.include_path = "%appDir%/../_trunk;%appDir%/libs"
 
 Load section from INI
 object(Config) (6) {
-  "database" => object(Config) (2) {
-    "params" => object(Config) (4) {
-      "host" => string(15) "dev.example.com"
-      "username" => string(7) "devuser"
-      "password" => string(9) "devsecret"
-      "dbname" => string(6) "dbname"
-    }
-    "adapter" => string(9) "pdo_mysql"
-  }
-  "service" => object(Config) (3) {
-    "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
-    "User" => string(19) "Nette\Security\User"
-    "Nette-Autoloader" => string(16) "Nette\AutoLoader"
-  }
-  "webhost" => string(15) "www.example.com"
-  "variable" => object(Config) (3) {
-    "tempDir" => string(14) "%appDir%/cache"
-    "foo" => string(11) "%bar% world"
-    "bar" => string(5) "hello"
-  }
-  "set" => object(Config) (4) {
-    "date.timezone" => string(13) "Europe/Prague"
-    "iconv.internal_encoding" => string(10) "%encoding%"
-    "mbstring.internal_encoding" => string(10) "%encoding%"
-    "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
-  }
-  "test" => object(Config) (3) {
-    "host" => string(9) "localhost"
-    "params" => object(Config) (4) {
-      "host" => string(15) "dev.example.com"
-      "username" => string(7) "devuser"
-      "password" => string(9) "devsecret"
-      "dbname" => string(6) "dbname"
-    }
-    "adapter" => string(9) "pdo_mysql"
-  }
+   "database" => object(Config) (2) {
+      "params" => object(Config) (4) {
+         "host" => string(15) "dev.example.com"
+         "username" => string(7) "devuser"
+         "password" => string(9) "devsecret"
+         "dbname" => string(6) "dbname"
+      }
+      "adapter" => string(9) "pdo_mysql"
+   }
+   "service" => object(Config) (3) {
+      "Nette-Application-IRouter" => string(29) "Nette\Application\MultiRouter"
+      "User" => string(19) "Nette\Security\User"
+      "Nette-Autoloader" => string(16) "Nette\AutoLoader"
+   }
+   "webhost" => string(15) "www.example.com"
+   "variable" => object(Config) (3) {
+      "tempDir" => string(14) "%appDir%/cache"
+      "foo" => string(11) "%bar% world"
+      "bar" => string(5) "hello"
+   }
+   "set" => object(Config) (4) {
+      "date.timezone" => string(13) "Europe/Prague"
+      "iconv.internal_encoding" => string(10) "%encoding%"
+      "mbstring.internal_encoding" => string(10) "%encoding%"
+      "include_path" => string(32) "%appDir%/../_trunk;%appDir%/libs"
+   }
+   "test" => object(Config) (3) {
+      "host" => string(9) "localhost"
+      "params" => object(Config) (4) {
+         "host" => string(15) "dev.example.com"
+         "username" => string(7) "devuser"
+         "password" => string(9) "devsecret"
+         "dbname" => string(6) "dbname"
+      }
+      "adapter" => string(9) "pdo_mysql"
+   }
 }
 
 Save INI

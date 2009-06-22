@@ -24,18 +24,18 @@ NotSupportedException:
 
 (array):
 array(2) {
-  "jack" => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  "mary" => object(Person) (1) {
-    "name" private => string(4) "Mary"
-  }
+   "jack" => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   "mary" => object(Person) (1) {
+      "name" private => string(4) "Mary"
+   }
 }
 
 getKeys:
 array(2) {
-  0 => string(4) "jack"
-  1 => string(4) "mary"
+   0 => string(4) "jack"
+   1 => string(4) "mary"
 }
 
 Contains Jack?
@@ -73,7 +73,7 @@ KeyNotFoundException:
 
 Getting ['mary']
 object(Person) (1) {
-  "name" private => string(4) "Mary"
+   "name" private => string(4) "Mary"
 }
 
 Getting ->jim
@@ -87,7 +87,7 @@ string(7) "default"
 
 Getting get('mary')
 object(Person) (1) {
-  "name" private => string(4) "Mary"
+   "name" private => string(4) "Mary"
 }
 
 Count: 2
@@ -117,14 +117,13 @@ InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 object(Hashtable) (3) {
-  "a" => object(Person) (1) {
-    "name" private => string(4) "Jack"
-  }
-  "b" => object(Person) (1) {
-    "name" private => string(4) "Mary"
-  }
-  "c" => object(ArrayObject) (0) {
-  }
+   "a" => object(Person) (1) {
+      "name" private => string(4) "Jack"
+   }
+   "b" => object(Person) (1) {
+      "name" private => string(4) "Mary"
+   }
+   "c" => object(ArrayObject) (0) {}
 }
 
 Construct as readonly
