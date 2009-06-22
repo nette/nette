@@ -58,7 +58,7 @@ require_once dirname(__FILE__) . '/../Web/Uri.php';
 class UriScript extends Uri
 {
 	/** @var string */
-	private $scriptPath;
+	private $scriptPath = '';
 
 
 
@@ -92,7 +92,7 @@ class UriScript extends Uri
 	 */
 	public function getBasePath()
 	{
-		return substr($this->scriptPath, 0, strrpos($this->scriptPath, '/') + 1);
+		return (string) substr($this->scriptPath, 0, strrpos($this->scriptPath, '/') + 1);
 	}
 
 

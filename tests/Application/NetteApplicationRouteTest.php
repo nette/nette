@@ -21,37 +21,6 @@ require_once '../../Nette/loader.php';
 
 
 
-class MockHttpRequest extends /*Nette\Web\*/HttpRequest
-{
-
-	public function setPath($path)
-	{
-		$this->uri = new /*Nette\Web\*/UriScript;
-		$this->uri->scheme = 'http';
-		$this->uri->host = 'admin.texy.info';
-		$this->uri->scriptPath = '/';
-		@list($this->uri->path, $this->uri->query) = explode('?', $path);
-		parse_str($this->uri->query, $this->query);
-	}
-
-
-
-	public function setQuery(array $query)
-	{
-		$this->query += $query;
-	}
-
-
-
-	public function setPost(array $post)
-	{
-		$this->post = $post;
-	}
-
-}
-
-
-
 /**
  * @package    Nette\Application
  * @subpackage UnitTests
@@ -62,12 +31,16 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 
 	public function assertRoute(Route $route, $uri, $expectedReq, $expectedUri)
 	{
-		$httpRequest = new MockHttpRequest;
-		$httpRequest->setPath($uri);
-		$httpRequest->setQuery(array(
+		$uri = new /*Nette\Web\*/UriScript("http://admin.texy.info$uri");
+		$uri->scriptPath = '/';
+		$uri->appendQuery(array(
 			'test' => 'testvalue',
 			'presenter' => 'querypresenter',
 		));
+
+		$httpRequest = new HttpRequest;
+		$httpRequest->initialize();
+		$httpRequest->setUri($uri);
 
 		$request = $route->match($httpRequest);
 
@@ -635,34 +608,36 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testWithNamedParamsInQuery()
 	{
-		$route = new Route(' ? action=<presenter> & test=<action [a-z]+>', array(
+		$route = new Route(' ? action=<presenter> & act=<action [a-z]+>', array(
 			'presenter' => 'Default',
 			'action' => 'default',
 		));
 
 
 		$this->assertRoute($route,
-			'/?test=action', // ?test=testvalue&presenter=querypresenter
+			'/?act=action', // ?test=testvalue&presenter=querypresenter
 			array (
 				'presenter' => 'Default',
 				'params' =>
 				array (
 					'action' => 'action',
+					'test' => 'testvalue',
 				),
 			),
-			'/?test=action'
+			'/?act=action&test=testvalue'
 		);
 
 		$this->assertRoute($route,
-			'/?test=default', // ?test=testvalue&presenter=querypresenter
+			'/?act=default', // ?test=testvalue&presenter=querypresenter
 			array (
 				'presenter' => 'Default',
 				'params' =>
 				array (
 					'action' => 'default',
+					'test' => 'testvalue',
 				),
 			),
-			'/'
+			'/?test=testvalue'
 		);
 	}
 
