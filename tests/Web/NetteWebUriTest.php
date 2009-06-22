@@ -141,4 +141,31 @@ class NetteWebUriTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($uri->isEqual('http://example.com/?text=foo+bar%20foo'));
 	}
 
+
+
+	/**
+	 * Query test.
+	 * @return void
+	 */
+	public function testQeury()
+	{
+		$uri = new Uri('http://username:password@hostname:60/path?arg=value#anchor');
+		$this->assertEquals('arg=value', $uri->query);
+
+		$uri->appendQuery(NULL);
+		$this->assertEquals('arg=value', $uri->query);
+
+		$uri->appendQuery(array(NULL));
+		$this->assertEquals('arg=value', $uri->query);
+
+		$uri->appendQuery('arg2=value2');
+		$this->assertEquals('arg=value&arg2=value2', $uri->query);
+
+		$uri->appendQuery(array('arg3' => 'value3'));
+		$this->assertEquals('arg=value&arg2=value2&arg3=value3', $uri->query);
+
+		$uri->setQuery(array('arg3' => 'value3'));
+		$this->assertEquals('arg3=value3', $uri->query);
+	}
+
 }

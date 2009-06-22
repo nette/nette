@@ -287,13 +287,28 @@ class Uri extends /*Nette\*/FreezableObject
 
 	/**
 	 * Sets the query part of URI.
-	 * @param  string
+	 * @param  string|array
 	 * @return void
 	 */
 	public function setQuery($value)
 	{
 		$this->updating();
-		$this->query = (string) $value;
+		$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
+
+	}
+
+
+
+	/**
+	 * Appends the query part of URI.
+	 * @param  string|array
+	 * @return void
+	 */
+	public function appendQuery($value)
+	{
+		$this->updating();
+		$value = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
+		$this->query .= ($this->query === '' || $value === '') ? $value : '&' . $value;
 	}
 
 
@@ -340,8 +355,8 @@ class Uri extends /*Nette\*/FreezableObject
 	public function getAbsoluteUri()
 	{
 		return $this->scheme . '://' . $this->getAuthority() . $this->path
-			. ($this->query == '' ? '' : '?' . $this->query)
-			. ($this->fragment == '' ? '' : '#' . $this->fragment);
+			. ($this->query === '' ? '' : '?' . $this->query)
+			. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
 
 
@@ -357,8 +372,8 @@ class Uri extends /*Nette\*/FreezableObject
 			$authority .= ':' . $this->port;
 		}
 
-		if ($this->user != '' && $this->scheme !== 'http' && $this->scheme !== 'https') {
-			$authority = $this->user . ($this->pass == '' ? '' : ':' . $this->pass) . '@' . $authority;
+		if ($this->user !== '' && $this->scheme !== 'http' && $this->scheme !== 'https') {
+			$authority = $this->user . ($this->pass === '' ? '' : ':' . $this->pass) . '@' . $authority;
 		}
 
 		return $authority;
@@ -415,7 +430,7 @@ class Uri extends /*Nette\*/FreezableObject
 	public function canonicalize()
 	{
 		$this->updating();
-		$this->path = $this->path == '' ? '/' : self::unescape($this->path, '%/');
+		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
 
 		$this->host = strtolower(rawurldecode($this->host));
 
