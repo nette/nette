@@ -190,7 +190,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php "
-			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper;\n"*/
+			/*. "use Nette\\Templates\\CurlyBracketsFilter, Nette\\Templates\\TemplateHelpers, Nette\\SmartCachingIterator, Nette\\Web\\Html, Nette\\Templates\\SnippetHelper, Nette\\Debug, Nette\\Environment;\n"*/
 			. "\$_cb = CurlyBracketsFilter::initState(\$template) ?>" . $s;
 
 		return $s;

@@ -15,6 +15,13 @@ class AuthPresenter extends BasePresenter
 
 
 
+	public static function getPersistentParams()
+	{
+		return array('backlink');
+	}
+
+
+
 	public function actionLogin($backlink)
 	{
 		$form = new AppForm($this, 'form');

@@ -70,7 +70,7 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		$this->prefix = $prefix;
-		$this->memcache = new Memcache;
+		$this->memcache = new /*\*/Memcache;
 		$this->memcache->connect($host, $port);
 	}
 

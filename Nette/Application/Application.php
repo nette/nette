@@ -204,7 +204,6 @@ class Application extends /*Nette\*/Object
 						$httpResponse->setCode($e->getCode());
 					}
 					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
-					break;
 
 				} else {
 					if (!$httpResponse->isSent()) {
@@ -213,8 +212,9 @@ class Application extends /*Nette\*/Object
 					/*Nette\*/Debug::processException($e, FALSE);
 					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
 						"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
-					break;
 				}
+				echo "\n\n<hr>\n<small><i>Nette Framework</i></small>";
+				break;
 			}
 		} while (1);
 
