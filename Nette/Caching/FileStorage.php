@@ -200,12 +200,12 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($dp[Cache::TAGS]) && is_array($dp[Cache::TAGS])) {
-			$meta[self::META_TAGS] = array_flip(array_values($dp[Cache::TAGS]));
+		if (!empty($dp[Cache::TAGS])) {
+			$meta[self::META_TAGS] = array_flip(array_values((array) $dp[Cache::TAGS]));
 		}
 
 		if (!empty($dp[Cache::ITEMS])) {
-			foreach ($dp[Cache::ITEMS] as $item) {
+			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMeta($depFile, LOCK_SH);
 				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME];
@@ -288,7 +288,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		$tags = isset($conds[Cache::TAGS]) ? array_flip($conds[Cache::TAGS]) : array();
+		$tags = isset($conds[Cache::TAGS]) ? array_flip((array) $conds[Cache::TAGS]) : array();
 
 		$priority = isset($conds[Cache::PRIORITY]) ? $conds[Cache::PRIORITY] : -1;
 
