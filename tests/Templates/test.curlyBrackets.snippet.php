@@ -32,6 +32,7 @@ $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/curly-brackets-snippet.phtml');
 $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 $template->registerFilter('printSource');
-$template->registerHelper('snippet', 'Nette\Templates\SnippetHelper::create');
+
 $template->control = new MockControl;
+
 $template->render();
