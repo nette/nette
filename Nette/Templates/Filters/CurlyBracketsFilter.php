@@ -61,7 +61,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 {
 
 	/** @var array */
-	public static $macros = array(
+	public static $defaultMacros = array(
 		'block' => '<?php %:macroBlock% ?>',
 		'/block' => '<?php %:macroBlockEnd% ?>',
 
@@ -109,6 +109,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	);
 
 	/** @var array */
+	public $macros;
+
+	/** @var array */
 	private $blocks = array();
 
 	/** @var array */
@@ -137,6 +140,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$filter = new self;
 		return $filter->__invoke($s);
+	}
+
+
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct()
+	{
+		$this->macros = self::$defaultMacros;
 	}
 
 
@@ -217,7 +230,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		if (!empty($matches[8])) { // {macro|var|modifiers}
 			$matches[] = NULL;
 			list(, , , , , , , $indent, $macro, $modifiers) = $matches;
-			foreach (self::$macros as $key => $val) {
+			foreach ($this->macros as $key => $val) {
 				if (strncmp($macro, $key, strlen($key)) === 0) {
 					$var = substr($macro, strlen($key));
 					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $var)) {
@@ -287,7 +300,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	public function macro($macro, $var, $modifiers)
 	{
 		$this->_cbMacro = array($var, $modifiers);
-		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), self::$macros[$macro]);
+		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), $this->macros[$macro]);
 	}
 
 
