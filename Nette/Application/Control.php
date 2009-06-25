@@ -112,7 +112,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	public function templatePrepareFilters($template)
 	{
 		// default filters
-		$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
+		$template->registerFilter(new /*Nette\Templates\*/CurlyBracketsFilter);
 	}
 
 

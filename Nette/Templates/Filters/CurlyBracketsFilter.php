@@ -133,8 +133,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Invokes filter.
-	 * @param  string
-	 * @return string
+	 * @deprecated
 	 */
 	public static function invoke($s)
 	{

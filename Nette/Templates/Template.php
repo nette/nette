@@ -132,11 +132,26 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function registerFilter($callback)
 	{
 		/**/fixCallback($callback);/**/
+		if (!is_callable($filter)) {
+			$able = is_callable($filter, TRUE, $textual);
+			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+		}
 		if (in_array($callback, $this->filters, TRUE)) {
 			is_callable($callback, TRUE, $textual);
 			throw new /*\*/InvalidStateException("Filter '$textual' was registered twice.");
 		}
 		$this->filters[] = $callback;
+	}
+
+
+
+	/**
+	 * Returns all registered compile-time filters.
+	 * @return array
+	 */
+	final public function getFilters()
+	{
+		return $this->filters;
 	}
 
 
@@ -178,11 +193,6 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			$content = file_get_contents($this->file);
 
 			foreach ($this->filters as $filter) {
-				if (!is_callable($filter)) {
-					$able = is_callable($filter, TRUE, $textual);
-					throw new /*\*/InvalidStateException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-				}
-
 				// remove PHP code
 				$res = '';
 				$blocks = array();
@@ -312,6 +322,17 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			throw new /*\*/InvalidArgumentException("Helper loader '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
 		$this->helperLoaders[] = $callback;
+	}
+
+
+
+	/**
+	 * Returns all registered run-time helpers.
+	 * @return array
+	 */
+	final public function getHelpers()
+	{
+		return $this->helpers;
 	}
 
 
