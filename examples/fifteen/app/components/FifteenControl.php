@@ -139,7 +139,6 @@ class FifteenControl extends /*Nette\Application\*/Control
 	{
 		$template = $this->template;
 		$template->setFile(dirname(__FILE__) . '/FifteenControl.phtml');
-		$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 		$template->width = $this->width;
 		$template->order = $this->order;
 		$template->render();
