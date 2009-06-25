@@ -74,7 +74,7 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	public static $invalidLinkMode;
 
-	/** @var array of event handlers; Occurs when the presenter is shutting down; function(Presenter $sender, Exception $exception = NULL) */
+	/** @var array of function(Presenter $sender, \Exception $exception = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
 
 	/** @var bool (experimental) */

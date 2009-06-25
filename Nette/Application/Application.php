@@ -54,16 +54,16 @@ class Application extends /*Nette\*/Object
 	/** @var string */
 	public $errorPresenter;
 
-	/** @var array of function(Application $sender) */
+	/** @var array of function(Application $sender); Occurs before the application loads presenter */
 	public $onStartup;
 
-	/** @var array of function(Application $sender, \Exception $e = NULL) */
+	/** @var array of function(Application $sender, \Exception $e = NULL); Occurs before the application shuts down */
 	public $onShutdown;
 
-	/** @var array of function(Application $sender, PresenterRequest $request) */
+	/** @var array of function(Application $sender, PresenterRequest $request); Occurs when a new request is ready for dispatch */
 	public $onRequest;
 
-	/** @var array of function(Application $sender, \Exception $e) */
+	/** @var array of function(Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
 	public $onError;
 
 	/** @var array of string */

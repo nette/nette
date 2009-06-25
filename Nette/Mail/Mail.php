@@ -422,7 +422,7 @@ class Mail extends MailMimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			preg_match_all('#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+)\\2#i', $this->html, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+			preg_match_all('#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', $this->html, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 			foreach (array_reverse($matches) as $m)	{
 				$file = rtrim($this->basePath, '/\\') . '/' . $m[3][0];
 				$cid = isset($cids[$file]) ? $cids[$file] : $cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
