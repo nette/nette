@@ -23,7 +23,7 @@
 
 
 /**
- * Standard template filters shipped with Nette Framework.
+ * Standard template compile-time filters shipped with Nette Framework.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl

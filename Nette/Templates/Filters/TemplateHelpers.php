@@ -23,7 +23,7 @@
 
 
 /**
- * Standard template helpers shipped with Nette Framework.
+ * Standard template run-time helpers shipped with Nette Framework.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl

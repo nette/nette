@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
 
 
 /**
- * Template filter curlyBrackets: support for {...} in template.
+ * Template compile-time filter curlyBrackets supports for {...} in template.
  *
  * - {$variable} with escaping
  * - {!$variable} without escaping

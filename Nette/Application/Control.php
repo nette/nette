@@ -76,6 +76,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	{
 		$template = new /*Nette\Templates\*/Template;
 		$presenter = $this->getPresenter(FALSE);
+		$template->onPrepareFilters[] = array($this, 'templatePrepareFilters');
 
 		// default parameters
 		$template->component = $this; // DEPRECATED!
@@ -99,6 +100,19 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 		return $template;
+	}
+
+
+
+	/**
+	 * Descendant can override this method to customize template compile-time filters.
+	 * @param  Nette\Templates\Template
+	 * @return void
+	 */
+	public function templatePrepareFilters($template)
+	{
+		// default filters
+		$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 	}
 
 

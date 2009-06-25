@@ -1,3 +1,6 @@
+cls
+for %%f in (*Test.php) do call phpunit "%%f"
+
 call ../config.bat
 
 del tmp\* /q

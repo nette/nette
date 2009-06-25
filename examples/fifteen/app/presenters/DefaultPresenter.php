@@ -10,7 +10,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 	public function prepareDefault()
 	{
 		$fifteen = new FifteenControl;
-		$fifteen->onGameOver[] = array($this, 'GameOver');
+		$fifteen->onGameOver[] = array($this, 'gameOver');
 
 		$this->addComponent($fifteen, 'game');
 
@@ -22,7 +22,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 
 
 
-	public function GameOver($sender, $round)
+	public function gameOver($sender, $round)
 	{
 		$this->template->flash = 'Congratulate!';
 		$this->invalidateControl('flash');

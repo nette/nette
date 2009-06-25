@@ -40,16 +40,19 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
 
+	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
+	public $onPrepareFilters = array();
+
 	/** @var string */
 	private $file;
 
 	/** @var array */
 	private $params = array();
 
-	/** @var array */
+	/** @var array compile-time filters */
 	private $filters = array();
 
-	/** @var array */
+	/** @var array run-time helpers */
 	private $helpers = array();
 
 	/** @var array */
@@ -122,7 +125,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 	/**
-	 * Registers callback as template filter.
+	 * Registers callback as template compile-time filter.
 	 * @param  callback
 	 * @return void
 	 */
@@ -157,16 +160,21 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 		$this->params['template'] = $this;
 
-		if (!count($this->filters)) {
-			/*Nette\Loaders\*/LimitedScope::load($this->file, $this->params);
-			return;
-		}
-
 		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
-		$key = md5($this->file) . count($this->filters) . '.' . basename($this->file);
+		$key = md5($this->file) . '.' . basename($this->file);
 		$cached = $content = $cache[$key];
 
 		if ($content === NULL) {
+			if (!$this->filters) {
+				$this->onPrepareFilters($this);
+			}
+
+			if (!$this->filters) {
+				/*Nette\Loaders\*/LimitedScope::load($this->file, $this->params);
+				return;
+			}
+
+			// compiling
 			$content = file_get_contents($this->file);
 
 			foreach ($this->filters as $filter) {
@@ -274,7 +282,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 	/**
-	 * Registers callback as template helper.
+	 * Registers callback as template run-time helper.
 	 * @param  string
 	 * @param  callback
 	 * @return void
@@ -292,7 +300,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 	/**
-	 * Registers callback as template helpers loader.
+	 * Registers callback as template run-time helpers loader.
 	 * @param  callback
 	 * @return void
 	 */
@@ -309,26 +317,26 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 	/**
-	 * Call a template helper. Do not call directly.
+	 * Call a template run-time helper. Do not call directly.
 	 * @param  string  helper name
 	 * @param  array   arguments
 	 * @return mixed
 	 */
 	public function __call($name, $args)
 	{
-		$name = strtolower($name);
-		if (!isset($this->helpers[$name])) {
+		$lname = strtolower($name);
+		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = call_user_func($loader, $name);
+				$helper = call_user_func($loader, $lname);
 				if ($helper) {
-					$this->registerHelper($name, $helper);
+					$this->registerHelper($lname, $helper);
 					return call_user_func_array($helper, $args);
 				}
 			}
-			throw new /*\*/InvalidStateException("The helper '$name' was not registered.");
+			return parent::__call($name, $args);
 		}
 
-		return call_user_func_array($this->helpers[$name], $args);
+		return call_user_func_array($this->helpers[$lname], $args);
 	}
 
 
