@@ -118,6 +118,18 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
+	 * Returns widget component specified by name.
+	 * @param  string
+	 * @return IComponent
+	 */
+	public function getWidget($name)
+	{
+		return $this->getComponent($name);
+	}
+
+
+
+	/**
 	 * Saves the message to template, that can be displayed after redirect.
 	 * @param  string
 	 * @param  string

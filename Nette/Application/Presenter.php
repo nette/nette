@@ -898,6 +898,11 @@ abstract class Presenter extends Control implements IPresenter
 		// 4) signal or empty
 		if (!($component instanceof Presenter) || substr($destination, -1) === '!') {
 			$signal = rtrim($destination, '!');
+			$a = strrpos($signal, ':');
+			if ($a !== FALSE) {
+				$component = $component->getComponent(strtr(substr($signal, 0, $a), ':', '-'));
+				$signal = (string) substr($signal, $a + 1);
+			}
 			if ($signal == NULL) {  // intentionally ==
 				throw new InvalidLinkException("Signal must be non-empty string.");
 			}
