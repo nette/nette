@@ -114,7 +114,7 @@ final class TemplateFilters
 	public static function netteLinks($s)
 	{
 		return preg_replace_callback(
-			'#(src|href|action|on[a-z]+)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',
+			'#(src|href|action)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',
 			array(__CLASS__, 'tnlCb'),
 			$s
 		);
@@ -133,8 +133,7 @@ final class TemplateFilters
 		$parts = parse_url($uri);
 		if (isset($parts['scheme']) && $parts['scheme'] === 'nette') {
 			return $attr . '=' . $quote . '<?php echo $template->escape($control->'
-				. (strncmp($attr, 'on', 2) ? 'link' : 'ajaxLink')
-				. '(\''
+				. "link('"
 				. (isset($parts['path']) ? $parts['path'] : 'this!')
 				. (isset($parts['query']) ? '?' . $parts['query'] : '')
 				. '\'))?>'

@@ -11,12 +11,6 @@ class MockPresenterComponent extends /*Nette\Application\*/PresenterComponent
 		return "LINK($destination $args)";
 	}
 
-	function ajaxLink($destination, $args = array())
-	{
-		$args = http_build_query($args);
-		return "AJAXLINK($destination $args)";
-	}
-
 }
 
 /*use Nette\Debug;*/

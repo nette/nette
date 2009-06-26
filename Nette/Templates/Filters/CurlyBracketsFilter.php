@@ -39,7 +39,6 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {!_expression} echo translation without escaping
  * - {link destination ...} control link
  * - {plink destination ...} presenter link
- * - {ajaxlink destination ...} ajax link
  * - {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
  * - {for ?} ... {/for}
  * - {foreach ?} ... {/foreach}
@@ -87,7 +86,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
 
-		'ajaxlink' => '<?php echo %:macroEscape%(%:macroAjaxlink%) ?>',
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent%; if ($presenter->getLastCreatedRequestFlag("current")): ?>',
@@ -95,7 +93,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
-		'assign' => '<?php %:macroAssign% ?>',
+		'assign' => '<?php %:macroAssign% ?>', // deprecated?
 		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("templatesDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
@@ -104,9 +102,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'_' => '<?php echo %:macroEscape%($template->translate(%:macroModifiers%)) ?>',
 		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
 		'!$' => '<?php echo %:macroVar% ?>',
-		'!' => '<?php echo %:macroVar% ?>',
+		'!' => '<?php echo %:macroVar% ?>', // deprecated
 		'$' => '<?php echo %:macroEscape%(%:macroVar%) ?>',
-		'?' => '<?php %:macroModifiers% ?>',
+		'?' => '<?php %:macroModifiers% ?>', // deprecated?
 	);
 
 	/** @var array */
@@ -571,16 +569,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function macroIfCurrent($var, $modifiers)
 	{
 		return $var ? $this->macroModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers) : '';
-	}
-
-
-
-	/**
-	 * {ajaxlink ...}
-	 */
-	private function macroAjaxlink($var, $modifiers)
-	{
-		return $this->macroModifiers('$control->ajaxlink(' . $this->formatLink($var) .')', $modifiers);
 	}
 
 
