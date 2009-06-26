@@ -368,7 +368,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			return $modifiers ? $this->macroBlock('', $modifiers) . $cmd . ";" . $this->macroBlockEnd(NULL) : $cmd;
 		}
 
-		return 'echo ' . $this->macroModifiers('$template->subTemplate(' . $this->formatVars($var) . ')->__toString(TRUE)', $modifiers);
+		$destination = $this->fetchToken($var);
+		if (!strspn($destination, '\'"$')) {
+			$destination = "'$destination'";
+		}
+		return 'echo ' . $this->macroModifiers('$template->subTemplate(' . $destination . $this->formatArray($var, ', ') . ')->__toString(TRUE)', $modifiers);
 	}
 
 
@@ -533,12 +537,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroWidget($var, $modifiers)
 	{
-		if (preg_match('#^([^\s,:]+)(?::([^\s,:]+))?,?\s*(.*)$#', $var, $m)) { // widget[,] args
-			$m[1] = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
-			$m[2] = 'render' . ucfirst($m[2]);
-			$m[3] = $m[3] ? $this->formatArray($m[3]) : '';
-			return "\$presenter->getComponent($m[1])->$m[2]($m[3])";
-		}
+		// TODO: add support for $modifiers
+		$pair = explode(':', $this->fetchToken($var), 2);
+		$pair[1] = isset($pair[1]) ? ucfirst($pair[1]) : '';
+		return "\$control->getWidget(\"$pair[0]\")->render$pair[1]({$this->formatArray($var)})";
 	}
 
 
@@ -548,7 +550,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroLink($var, $modifiers)
 	{
-		return $this->macroModifiers('$control->link(' . $this->formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$control->link(' . $this->formatLink($var) .')', $modifiers);
 	}
 
 
@@ -558,7 +560,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroPlink($var, $modifiers)
 	{
-		return $this->macroModifiers('$presenter->link(' . $this->formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers);
 	}
 
 
@@ -568,7 +570,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroIfCurrent($var, $modifiers)
 	{
-		return $var ? $this->macroModifiers('$presenter->link(' . $this->formatVars($var) .')', $modifiers) : '';
+		return $var ? $this->macroModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers) : '';
 	}
 
 
@@ -578,7 +580,21 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroAjaxlink($var, $modifiers)
 	{
-		return $this->macroModifiers('$control->ajaxlink(' . $this->formatVars($var) .')', $modifiers);
+		return $this->macroModifiers('$control->ajaxlink(' . $this->formatLink($var) .')', $modifiers);
+	}
+
+
+
+	/**
+	 * Formats {*link ...} parameters.
+	 */
+	private function formatLink($var)
+	{
+		$destination = $this->fetchToken($var); // destination [,] args
+		if (strspn($destination, '\'"')) {
+			throw new /*\*/InvalidStateException("Link destination '$destination' contains invalid characters.");
+		}
+		return '"' . $destination . '"' . $this->formatArray($var, ', ');
 	}
 
 
@@ -645,17 +661,17 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
-	 * Formats {*link ...} parameters.
+	 * Reads single token (optionally delimited by comma) from string.
+	 * @param  string
+	 * @return string
 	 */
-	private function formatVars($var)
+	public static function fetchToken(& $s)
 	{
-		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) { // destination[,] args
-			$var = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
-			if ($m[2]) {
-				$var .= ', ' . $this->formatArray($m[2]);
-			}
+		if (preg_match('#^([^\s,]+)\s*,?\s*(.*)$#', $s, $matches)) { // token [,] tail
+			$s = $matches[2];
+			return $matches[1];
 		}
-		return $var;
+		return NULL;
 	}
 
 
@@ -663,9 +679,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/**
 	 * Formats parameters to PHP array syntax.
 	 * @param  string
+	 * @param  string
 	 * @return string
 	 */
-	public static function formatArray($s)
+	public static function formatArray($s, $prefix = '')
 	{
 		$s = preg_replace_callback(
 			'/(?:
@@ -673,11 +690,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				\'(?:\\\\\'|[^\'])*\'|         ## single quoted string
 				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)|   ## 1) symbol
 				(?<![=><!])(=)(?![=><!])       ## 2) equal sign
-			)/xsi',
+			)/xi',
 			array(__CLASS__, 'cbArgs'),
 			trim($s)
 		);
-		return "array($s)";
+		return $s === '' ? '' : $prefix . "array($s)";
 	}
 
 

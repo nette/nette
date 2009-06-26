@@ -36,13 +36,15 @@ class NetteTemplatesCurlyBracketsFilter extends PHPUnit_Framework_TestCase
 	public function testFormatArray()
 	{
 		// symbols
-		$this->assertEquals('array()', CurlyBracketsFilter::formatArray(''));
+		$this->assertEquals('', CurlyBracketsFilter::formatArray(''));
+		$this->assertEquals('', CurlyBracketsFilter::formatArray('', '&'));
 		$this->assertEquals('array(1)', CurlyBracketsFilter::formatArray('1'));
+		$this->assertEquals('&array(1)', CurlyBracketsFilter::formatArray('1', '&'));
 		$this->assertEquals("array('symbol')", CurlyBracketsFilter::formatArray('symbol'));
 		$this->assertEquals("array(1, 2,'symbol1','symbol2')", CurlyBracketsFilter::formatArray('1, 2, symbol1, symbol2'));
 
 		// strings
-		$this->assertEquals('array("\"1, 2, symbol1, symbol2")', CurlyBracketsFilter::formatArray('"\"1, 2, symbol1, symbol2"'));
+		$this->assertEquals('array("\"1, 2, symbol1, symbol2")', CurlyBracketsFilter::formatArray('"\"1, 2, symbol1, symbol2"')); // unable to parse "${'"'}" yet
 		$this->assertEquals("array('\'1, 2, symbol1, symbol2')", CurlyBracketsFilter::formatArray("'\'1, 2, symbol1, symbol2'"));
 
 		// key words
