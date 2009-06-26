@@ -81,8 +81,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'/for' => '<?php endfor ?>',
 		'while' => '<?php while (%%): ?>',
 		'/while' => '<?php endwhile ?>',
-		'continue' => '<?php continue ?>',
-		'break' => '<?php break ?>',
+		'continueIf' => '<?php if (%%) continue ?>',
+		'breakIf' => '<?php if (%%) break ?>',
 
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
@@ -91,6 +91,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent%; if ($presenter->getLastCreatedRequestFlag("current")): ?>',
+		'widget' => '<?php %:macroWidget% ?>',
 
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
@@ -523,6 +524,21 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$var = ', "' . $m[1] . '"' . ($m[2] ? ', ' . var_export($m[2], TRUE) : '');
 		}
 		return $var;
+	}
+
+
+
+	/**
+	 * {widget ...}
+	 */
+	private function macroWidget($var, $modifiers)
+	{
+		if (preg_match('#^([^\s,:]+)(?::([^\s,:]+))?,?\s*(.*)$#', $var, $m)) { // widget[,] args
+			$m[1] = strspn($m[1], '\'"$') ? $m[1] : "'$m[1]'";
+			$m[2] = 'render' . ucfirst($m[2]);
+			$m[3] = $m[3] ? $this->formatArray($m[3]) : '';
+			return "\$presenter->getComponent($m[1])->$m[2]($m[3])";
+		}
 	}
 
 

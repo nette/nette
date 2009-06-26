@@ -132,8 +132,8 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function registerFilter($callback)
 	{
 		/**/fixCallback($callback);/**/
-		if (!is_callable($filter)) {
-			$able = is_callable($filter, TRUE, $textual);
+		if (!is_callable($callback)) {
+			$able = is_callable($callback, TRUE, $textual);
 			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
 		if (in_array($callback, $this->filters, TRUE)) {
