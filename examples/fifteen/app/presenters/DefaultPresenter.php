@@ -11,7 +11,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 	{
 		$fifteen = new FifteenControl;
 		$fifteen->onGameOver[] = array($this, 'gameOver');
-		$this->addComponent($fifteen, 'game');
+		$this->addComponent($fifteen, 'fifteen');
 		$this->template->fifteen = $fifteen;
 
 		$this->invalidateControl('round');

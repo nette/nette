@@ -24,7 +24,7 @@ class AuthPresenter extends BasePresenter
 
 	public function actionLogin($backlink)
 	{
-		$form = new AppForm($this, 'form');
+		$form = new AppForm($this, 'loginForm');
 		$form->addText('username', 'Username:')
 			->addRule(Form::FILLED, 'Please provide an username.');
 
@@ -36,7 +36,6 @@ class AuthPresenter extends BasePresenter
 
 		$form->addProtection('Please submit this form again (security token has expired).');
 
-		$this->template->form = $form;
 		$this->template->title = "Log in";
 	}
 

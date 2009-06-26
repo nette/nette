@@ -20,8 +20,8 @@
 
 	{snippet flash}{if isset($flash)}<h2>{$flash}</h2>{/if}{/snippet}
 
-	<p><a href="{$fifteen->link('shuffle')}" class="ajax">Shuffle!</a></p>
+	<p><a href="{link fifteen:shuffle!}" class="ajax">Shuffle!</a></p>
 
-	@{? $fifteen->render() }
+	@{widget fifteen}
 </body>
 </html>
