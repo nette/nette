@@ -318,8 +318,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function ajaxLink($destination, $args = array())
 	{
-		trigger_error(__METHOD__ . '() is deprecated.', E_USER_WARNING);
-		return "return !nette.action(" . ($destination === NULL ? "this.href" : json_encode($this->link($destination, $args))) . ", this)";
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated.');
 	}
 
 

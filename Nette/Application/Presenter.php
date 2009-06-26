@@ -658,8 +658,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function getAjaxDriver()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $presenter->payload instead.', E_USER_WARNING);
-		return $this->payload;
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->payload instead.');
 	}
 
 

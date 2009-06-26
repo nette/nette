@@ -179,8 +179,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function setReadOnly()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use freeze() instead.', E_USER_WARNING);
-		$this->freeze();
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use freeze() instead.');
 	}
 
 
@@ -190,8 +189,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function isReadOnly()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use isFrozen() instead.', E_USER_WARNING);
-		return $this->isFrozen();
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use isFrozen() instead.');
 	}
 
 
