@@ -451,15 +451,16 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	public function initialize()
 	{
 		$this->query = $this->post = $this->files = $this->cookies = array();
+		$filter = (!in_array(ini_get("filter.default"), array("", "unsafe_row")) || ini_get("filter.default_flags"));
 
 		if (!empty($_GET)) {
-			$this->query = $_GET;
+			$this->query = ($filter ? filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW) : $_GET);
 		}
 		if (!empty($_POST)) {
-			$this->post = $_POST;
+			$this->post = ($filter ? filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW) : $_POST);
 		}
 		if (!empty($_COOKIE)) {
-			$this->cookies = $_COOKIE;
+			$this->cookies = ($filter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : $_COOKIE);
 		}
 
 		$this->detectUri();
@@ -490,7 +491,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 						$list[] = & $list[$key][$k];
 
 					} else {
-						if ($gpc) {
+						if ($gpc && !$filter) {
 							$v = stripSlashes($v);
 						}
 						if ($enc) {
