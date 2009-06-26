@@ -152,6 +152,28 @@ class SmartCachingIterator extends /*\*/CachingIterator
 
 
 
+	/**
+	 * Returns the next key.
+	 * @return mixed
+	 */
+	public function getNextKey()
+	{
+		return $this->getInnerIterator()->key();
+	}
+
+
+
+	/**
+	 * Returns the next element.
+	 * @return mixed
+	 */
+	public function getNextValue()
+	{
+		return $this->getInnerIterator()->current();
+	}
+
+
+
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
