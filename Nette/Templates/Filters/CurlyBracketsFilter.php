@@ -344,14 +344,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function macroInclude($var, $modifiers)
 	{
 		if (substr($var, 0, 1) === '#') {
-			preg_match('#^.([^\s,]+),?\s*(.*)$()#', $var, $m); // #name[,] [params]
-			list(, $name, $params) = $m;
-
+			$name = substr($this->fetchToken($var), 1); // #name [,] [params]
 			if (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
 				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$name' given.");
 			}
 
-			$params = ($params ? "array($params) + " : '') . '$template->getParams()'; // or get_defined_vars() ?
 			$cmd = $name === 'parent' ? 'next' : 'reset';
 			if ($name === 'parent' || $name === 'this') {
 				$item = end($this->blocks);
@@ -362,6 +359,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$name = substr($item[0], 1);
 			}
 			$name = var_export($name, TRUE);
+			$params = $this->formatArray($var);
+			$params .= ($params ? ' + ' : '') . '$template->getParams()'; // or get_defined_vars() ?
 			$cmd = "call_user_func($cmd(\$_cb->blks[$name]), $params)";
 			return $modifiers ? $this->macroBlock('', $modifiers) . $cmd . ";" . $this->macroBlockEnd(NULL) : $cmd;
 		}
@@ -519,10 +518,14 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroSnippet($var)
 	{
-		if (preg_match('#^([^\s,]+),?\s*(.*)$#', $var, $m)) { // [name[,]] [tag]
-			$var = ', "' . $m[1] . '"' . ($m[2] ? ', ' . var_export($m[2], TRUE) : '');
+		$args = array('');
+		if ($snippet = $this->fetchToken($var)) {  // [name [,]] [tag]
+			$args[] = var_export($snippet, TRUE);
 		}
-		return $var;
+		if ($var) {
+			$args[] = var_export($var, TRUE);
+		}
+		return implode(', ', $args);
 	}
 
 
@@ -589,8 +592,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroAssign($var, $modifiers)
 	{
-		preg_match('#^\\$?(\S+)\s*(.*)$#', $var, $m); // [$]params value
-		return '$template->' . $m[1] . ' = $' . $m[1] . ' = ' . $this->macroModifiers($m[2] === '' ? 'NULL' : $m[2], $modifiers);
+		$param = ltrim($this->fetchToken($var), '$'); // [$]params value
+		return '$template->' . $param . ' = $' . $param . ' = ' . $this->macroModifiers($var === '' ? 'NULL' : $var, $modifiers);
 	}
 
 
