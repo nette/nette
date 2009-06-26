@@ -46,7 +46,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {cache ?} ... {/cache} cached block
  * - {snippet ?} ... {/snippet ?} control snippet
  * - {attr ?} HTML element attributes
- * - {block|texy} ... {/block} capture of filter block
+ * - {block|texy} ... {/block} block
  * - {contentType ...} HTTP Content-Type header
  * - {assign $var value} set template parameter
  * - {dump $var}
@@ -404,9 +404,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			return $this->macroInclude($var, $modifiers) . "{block#$name}";
 		}
 
-		if ($var === '' || $var[0] === '$') { // capture or modifier
+		if ($var === '') { // capture or modifier
 			$this->blocks[] = array($var, $modifiers);
-			return ($var === '' && $modifiers === '') ? '' : 'ob_start(); try {';
+			return $modifiers === '' ? '' : 'ob_start()';
 		}
 
 		throw new /*\*/InvalidStateException("Invalid block parameter '$var'.");
@@ -427,11 +427,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		} elseif (substr($var, 0, 1) === '#') { // named block
 			return "{/block$var}";
 
-		} else { // capture or modifier
-			return ($var === '' && $modifiers === '') ? ''
-				: '} catch (Exception $_e) { ob_end_clean(); throw $_e; } '
-				. ($var === '' ? 'echo ' : $var . '=')
-				. $this->macroModifiers('ob_get_clean()', $modifiers);
+		} else { // modifier
+			return $modifiers === '' ? '' : 'echo ' . $this->macroModifiers('ob_get_clean()', $modifiers);
 		}
 	}
 

@@ -218,8 +218,9 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 					$content = call_user_func($filter, $res);
 				} catch (Exception $e) {
 					is_callable($filter, TRUE, $textual);
+					$file = $this->file;
 					try {
-						$file = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $this->file);
+						$file = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $file);
 					} catch (Exception $foo) {
 					}
 					throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . " (in file $file)", 0, $e);

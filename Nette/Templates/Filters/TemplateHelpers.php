@@ -199,9 +199,10 @@ final class TemplateHelpers
 	/**
 	 * Converts to human readable file size.
 	 * @param  int
+	 * @param  int
 	 * @return string
 	 */
-	public static function bytes($bytes)
+	public static function bytes($bytes, $precision = 2)
 	{
 		$bytes = round($bytes);
 		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
@@ -209,7 +210,7 @@ final class TemplateHelpers
 			if (abs($bytes) < 1024) break;
 			$bytes = $bytes / 1024;
 		}
-		return round($bytes, 2) . ' ' . $unit;
+		return round($bytes, $precision) . ' ' . $unit;
 	}
 
 }
