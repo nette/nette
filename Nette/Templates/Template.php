@@ -95,7 +95,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	 * @param  array   parameters (optional)
 	 * @return Template
 	 */
-	public function subTemplate($file, array $params = NULL)
+	public function subTemplate($file, array $params = array())
 	{
 		if ($file instanceof self) {
 			$tpl = $file;
@@ -105,20 +105,13 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 		} else {
 			$tpl = clone $this;
-			if ($file[0] !== '/' && $file[1] !== ':') {
+			if (substr($file, 0, 1) !== '/' && substr($file, 1, 1) !== ':') {
 				$file = dirname($this->file) . '/' . $file;
 			}
 			$tpl->setFile($file);
 		}
 
-		if ($params === NULL) {
-			$tpl->params = & $this->params;
-
-		} else {
-			$tpl->params = & $params;
-			$tpl->params += $this->params;
-		}
-
+		$tpl->params = $params;
 		return $tpl;
 	}
 
@@ -400,16 +393,11 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 	/**
-	 * Adds new template as parameter.
-	 * @param  string  name
-	 * @param  string|Template  file name or Template object
-	 * @return Template
+	 * @deprecated
 	 */
 	public function addTemplate($name, $file)
 	{
-		$tpl = $this->subTemplate($file);
-		$this->add($name, $tpl);
-		return $tpl;
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated.');
 	}
 
 
