@@ -34,8 +34,6 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->title = "My Albums";
-
 		$album = new Albums;
 		$this->template->albums = $album->findAll()->orderBy('artist')->orderBy('title');
 	}
@@ -48,8 +46,6 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderAdd()
 	{
-		$this->template->title = "Add New Album";
-
 		$form = $this->getComponent('albumForm');
 		$form['save']->caption = 'Add';
 	}
@@ -58,8 +54,6 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderEdit($id = 0)
 	{
-		$this->template->title = "Edit Album";
-
 		$form = $this->getComponent('albumForm');
 		if (!$form->isSubmitted()) {
 			$album = new Albums;
@@ -98,7 +92,6 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderDelete($id = 0)
 	{
-		$this->template->title = "Delete Album";
 		$album = new Albums;
 		$this->template->album = $album->find($id)->fetch();
 		if (!$this->template->album) {

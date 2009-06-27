@@ -1,5 +1,7 @@
-{assign $title 'Log in'}
+{assign $robots 'noindex'}
 
-<h1>{$title}</h1>
+{block #content}
+
+<h1>{block #title}Log in{/block}</h1>
 
 {widget loginForm}

@@ -1,6 +1,6 @@
-{assign $title 'My Albums'}
+{block #content}
 
-<h1>{$title}</h1>
+<h1>{block #title}My Albums{/block}</h1>
 
 <p><a href="{link add}">Add new album</a></p>
 

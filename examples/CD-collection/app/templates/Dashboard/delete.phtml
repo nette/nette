@@ -1,6 +1,6 @@
-{assign $title 'Delete Album'}
+{block #content}
 
-<h1>{$title}</h1>
+<h1>{block #title}Delete Album{/block}</h1>
 
 {if $album}
 <p>Are you sure that you want to delete ‘{$album->title}’ by ‘{$album->artist}’?</p>

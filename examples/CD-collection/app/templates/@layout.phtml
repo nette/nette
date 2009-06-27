@@ -5,6 +5,7 @@
  * @package    MyApplication
  * @version    $Id$
  *
+ * @param string   $robots   tell robots how to index the content of a page (optinal)
  * @param string   $baseUri  web base URI
  * @param array    $flashes  flash messages
  * @param Identity $user     logged user (optinal)
@@ -17,8 +18,9 @@
 	<meta http-equiv="Content-Language" content="en" />
 
 	<meta name="description" content="Nette Framework example" />
+	{if isset($robots)}<meta name="robots" content="{$robots}" />{/if}
 
-	<title>{$title|stripTags}</title>
+	<title>{block #title|upper}{/block} Nette example</title>
 
 	<link rel="stylesheet" type="text/css" media="screen" href="{$baseUri}css/site.css" />
 </head>
@@ -27,7 +29,7 @@
 	{foreach $flashes as $flash}<div class="flash {$flash->type}">{$flash->message}</div>{/foreach}
 
 	<div id="content">
-	{include $content}
+		{include #content}
 	</div>
 
 	{if isset($user)}

@@ -11,6 +11,8 @@ abstract class BasePresenter extends Presenter
 	{
 		$user = Environment::getUser();
 		$this->template->user = $user->isAuthenticated() ? $user->getIdentity() : NULL;
+
+		$this->oldLayoutMode = FALSE;
 	}
 
 }
