@@ -52,7 +52,7 @@ final class LimitedScope
 	{
 		if (func_num_args() > 1) {
 			$__vars = func_get_arg(1);
-			extract($__vars);
+			extract($__vars, EXTR_SKIP);
 			unset($__vars);
 		}
 		return eval('?>' . func_get_arg(0));
@@ -70,7 +70,7 @@ final class LimitedScope
 	{
 		if (func_num_args() > 1) {
 			$__vars = func_get_arg(1);
-			extract($__vars);
+			extract($__vars, EXTR_SKIP);
 			unset($__vars);
 		}
 		return include func_get_arg(0);

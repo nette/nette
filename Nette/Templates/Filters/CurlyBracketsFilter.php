@@ -387,11 +387,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				}
 				$destination = $item[0];
 			}
-			$destination = var_export($destination, TRUE);
+			$name = var_export($destination, TRUE);
 			$params .= 'get_defined_vars()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
-				? "call_user_func(reset(\$_cb->blks[$destination]), $params)"
-				: "CurlyBracketsFilter::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blks, $destination, $params)";
+				? "call_user_func(reset(\$_cb->blks[$name]), $params)"
+				: "CurlyBracketsFilter::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blks, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . $this->macroModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
