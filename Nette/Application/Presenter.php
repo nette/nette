@@ -333,7 +333,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// auto invalidate
-		if ($component instanceof IRenderable) {
+		if ($this->oldLayoutMode && $component instanceof IRenderable) {
 			$component->invalidateControl();
 		}
 
