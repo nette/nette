@@ -38,6 +38,8 @@ final class Framework
 	const VERSION = '0.9';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
+
+	const PACKAGE = '';
 	/**#@-*/
 
 

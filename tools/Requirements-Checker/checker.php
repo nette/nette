@@ -38,12 +38,6 @@ paint(array(
 		'PHP version 5.2.0 or higher is required by Nette Framework.',
 	),
 	array(
-		'set_exception_handler',
-		OPTIONAL,
-		version_compare(PHP_VERSION, '5.2.1', '<>'),
-		'With PHP version 5.2.1 you will not be able to use Nette\Debug.',
-	),
-	array(
 		'Function ini_set',
 		OPTIONAL,
 		function_exists('ini_set'),
@@ -59,7 +53,7 @@ paint(array(
 		'Reflection phpDoc',
 		OPTIONAL,
 		$reflection ? strpos($reflection->getDocComment(), 'Paints') !== FALSE : FALSE,
-		'Reflection phpDoc is optional. If it is absent, persistent parameters must be declared by static function.',
+		'Reflection phpDoc is optional. If it is absent, persistent parameters must be declared using static function.',
 	),
 	array(
 		'SPL extension',
@@ -162,7 +156,7 @@ paint(array(
 		'Bundled GD extension',
 		OPTIONAL,
 		extension_loaded('gd') && GD_BUNDLED,
-		'Bundled GD extension is optional. If it is absent, you will not be able to some function as Image::filter() or Image::rotate().',
+		'Bundled GD extension is optional. If it is absent, you will not be able to use some function as Nette\Image::filter() or Nette\Image::rotate().',
 	),
 	array(
 		'ImageMagick library',
