@@ -4,12 +4,16 @@
 
 {plink Homepage:action }
 
-{plink Homepage:action 10, 20, 'one&two'}
+{plink 'Homepage:action' }
+
+{plink Homepage:action 10, 20, '{one}&two'}
 
 {plink : 10 }
 
 {plink default 10, 'a' => 20, 'b' => 30}
 
 {link  $action}
+
+{plink $arr['link'], $arr['param']}
 
 {link default 10, 'a' => 20, 'b' => 30}

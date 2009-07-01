@@ -408,9 +408,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				: $cmd;
 
 		} else { // include "file"
-			if (!strspn($destination, '\'"$')) {
-				$destination = var_export($destination, TRUE);
-			}
+			$destination = $this->formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
 				? 'echo ' . $this->formatModifiers('$template->subTemplate(' . $destination . ', ' . $params . ')->__toString(TRUE)', $modifiers)
@@ -428,12 +426,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$destination = $this->fetchToken($var); // destination
 		if ($destination === NULL) {
 			throw new /*\*/InvalidStateException("Missing destination in {extends}.");
-
-		} elseif (!strspn($destination, '\'"$')) {
-			$destination = var_export($destination, TRUE);
 		}
 		$this->extends = TRUE;
-		return 'if (!($_cb->extends = ' . $destination . ')) throw new Exception("Empty destination in {extends}")';
+		return 'if (!($_cb->extends = ' . $this->formatString($destination) . ')) throw new Exception("Empty destination in {extends}")';
 	}
 
 
@@ -584,10 +579,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$args = array('');
 		if ($snippet = $this->fetchToken($var)) {  // [name [,]] [tag]
-			$args[] = var_export($snippet, TRUE);
+			$args[] = $this->formatString($snippet, TRUE);
 		}
 		if ($var) {
-			$args[] = var_export($var, TRUE);
+			$args[] = $this->formatString($var, TRUE);
 		}
 		return implode(', ', $args);
 	}
@@ -642,11 +637,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function formatLink($var)
 	{
-		$destination = $this->fetchToken($var); // destination [,] args
-		if (strspn($destination, '\'"')) {
-			throw new /*\*/InvalidStateException("Link destination '$destination' contains invalid characters.");
-		}
-		return '"' . $destination . '"' . $this->formatArray($var, ', ');
+		return $this->formatString($this->fetchToken($var)) . $this->formatArray($var, ', '); // destination [,] args
 	}
 
 

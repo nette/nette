@@ -51,5 +51,6 @@ $template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
 $template->control = new MockControl;
 $template->presenter = new MockPresenter;
 $template->action = 'login';
+$template->arr = array('link' => 'login', 'param' => 123);
 
 $template->render();
