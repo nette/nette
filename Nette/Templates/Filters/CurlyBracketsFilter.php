@@ -58,8 +58,11 @@ require_once dirname(__FILE__) . '/../../Object.php';
  */
 class CurlyBracketsFilter extends /*Nette\*/Object
 {
-	/** single & double quoted string */
+	/** single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
+
+	/** PHP identifier */
+	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
 	/** @var array */
 	public static $defaultMacros = array(
@@ -191,7 +194,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				(?<=\\s)(style|on[a-z]+)\s*=\s*(["\'])| ## 4,5) attribute
 				(["\'])|                                ## 6) attribute delimiter
 				(\n[ \t]*)?\\{([^\\s\'"{}]              ## 7,8) indent & macro begin
-					(?:'.self::RE_STRING.'|[^\'"}]+)    ##   + single or double quoted string, chars
+					(?>'.self::RE_STRING.'|[^\'"}]+)    ##   + single or double quoted string, chars
 					*)\\}([\ \t]*(?=\r|\n))?            ##   + 9) newline
 			~xsi',
 			array($this, 'cbContent'),
@@ -382,7 +385,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException("Missing destination in {include}.");
 
 		} elseif ($destination[0] === '#') { // include #block
-			if (!preg_match('#^\#[a-zA-Z0-9_]+$#', $destination)) {
+			if (!preg_match('#^\\#'.self::RE_IDENTIFIER.'$#', $destination)) {
 				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given.");
 			}
 
@@ -447,7 +450,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			return $modifiers === '' ? '' : 'ob_start()';
 
 		} elseif ($name[0] === '#') { // #block
-			if (!preg_match('#^\#[a-zA-Z0-9_]+$#', $name)) {
+			if (!preg_match('#^\\#'.self::RE_IDENTIFIER.'$#', $name)) {
 				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -685,7 +688,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		preg_match_all(
 			'~
 				'.self::RE_STRING.'|  ## single or double quoted string
-				[^\'"}\s|:,]+|        ## symbol
+				[^\'"|:,]+|           ## symbol
 				[|:,]                 ## separator
 			~xs',
 			$modifiers . '|',
@@ -698,6 +701,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				if ($prev === '') {
 
 				} elseif (!$inside) {
+					if (!preg_match('#^'.self::RE_IDENTIFIER.'$#', $prev)) {
+						throw new /*\*/InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
+					}
 					$var = "\$template->$prev($var";
 					$prev = '';
 					$inside = TRUE;
@@ -727,7 +733,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	public static function fetchToken(& $s)
 	{
-		if (preg_match('#^([^\s,]+)\s*,?\s*(.*)$#', $s, $matches)) { // token [,] tail
+		if (preg_match('#^((?>'.self::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#', $s, $matches)) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}

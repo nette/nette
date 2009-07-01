@@ -88,4 +88,50 @@ class NetteTemplatesCurlyBracketsFilter extends PHPUnit_Framework_TestCase
 		$this->assertEquals("\$template->mod(@, '\\\\', 'a', 'b', 'c', 'arg2')", CurlyBracketsFilter::formatModifiers('@', "mod:'\\\\':a:b:c':arg2"));
 	}
 
+
+
+	/**
+	 * fetchToken() test.
+	 * @return void
+	 */
+	public function testFetchToken()
+	{
+		$s = '';
+		$this->assertEquals('', CurlyBracketsFilter::fetchToken($s));
+		$this->assertEquals('', $s);
+
+		$s = '$1d-,a';
+		$this->assertEquals('$1d-', CurlyBracketsFilter::fetchToken($s));
+		$this->assertEquals('a', $s);
+
+		$s = '$1d"-,a';
+		$this->assertEquals('$1d', CurlyBracketsFilter::fetchToken($s));
+		$this->assertEquals('"-,a', $s);
+
+		$s = '"item\'1""item2"';
+		$this->assertEquals('"item\'1""item2"', CurlyBracketsFilter::fetchToken($s));
+		$this->assertEquals('', $s);
+	}
+
+
+
+	/**
+	 * formatString() test.
+	 * @return void
+	 */
+	public function testFormatString()
+	{
+		$this->assertEquals("''", CurlyBracketsFilter::formatString(''));
+		$this->assertEquals("' '", CurlyBracketsFilter::formatString(' '));
+		$this->assertEquals("0", CurlyBracketsFilter::formatString('0'));
+		$this->assertEquals("-0.0", CurlyBracketsFilter::formatString('-0.0'));
+		$this->assertEquals("'symbol'", CurlyBracketsFilter::formatString('symbol'));
+		$this->assertEquals("\$var", CurlyBracketsFilter::formatString('$var'));
+		$this->assertEquals("'symbol\$var'", CurlyBracketsFilter::formatString('symbol$var'));
+		$this->assertEquals("'var'", CurlyBracketsFilter::formatString("'var'"));
+		$this->assertEquals('"var"', CurlyBracketsFilter::formatString('"var"'));
+		$this->assertEquals('"v\\"ar"', CurlyBracketsFilter::formatString('"v\\"ar"'));
+		$this->assertEquals("'var\"", CurlyBracketsFilter::formatString("'var\""));
+	}
+
 }
