@@ -97,14 +97,14 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("templatesDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
-		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',
-		'!=' => '<?php echo %:macroModifiers% ?>',
-		'_' => '<?php echo %:macroEscape%($template->translate(%:macroModifiers%)) ?>',
-		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
+		'!_' => '<?php echo $template->translate(%:formatModifiers%) ?>',
+		'!=' => '<?php echo %:formatModifiers% ?>',
+		'_' => '<?php echo %:macroEscape%($template->translate(%:formatModifiers%)) ?>',
+		'=' => '<?php echo %:macroEscape%(%:formatModifiers%) ?>',
 		'!$' => '<?php echo %:macroVar% ?>',
 		'!' => '<?php echo %:macroVar% ?>', // deprecated
 		'$' => '<?php echo %:macroEscape%(%:macroVar%) ?>',
-		'?' => '<?php %:macroModifiers% ?>', // deprecated?
+		'?' => '<?php %:formatModifiers% ?>', // deprecated?
 	);
 
 	/** @var array */
@@ -357,7 +357,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroVar($var, $modifiers)
 	{
-		return $this->macroModifiers('$' . $var, $modifiers);
+		return $this->formatModifiers('$' . $var, $modifiers);
 	}
 
 
@@ -393,7 +393,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				? "call_user_func(reset(\$_cb->blks[$name]), $params)"
 				: "CurlyBracketsFilter::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blks, $name, $params)";
 			return $modifiers
-				? "ob_start(); $cmd; echo " . $this->macroModifiers('ob_get_clean()', $modifiers)
+				? "ob_start(); $cmd; echo " . $this->formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
 
 		} else { // include "file"
@@ -402,7 +402,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			}
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . $this->macroModifiers('$template->subTemplate(' . $destination . ', ' . $params . ')->__toString(TRUE)', $modifiers)
+				? 'echo ' . $this->formatModifiers('$template->subTemplate(' . $destination . ', ' . $params . ')->__toString(TRUE)', $modifiers)
 				: '$template->subTemplate(' . $destination . ', ' . $params . ')->render()';
 		}
 	}
@@ -480,7 +480,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			return "{/block$name}";
 
 		} else { // anonymous block
-			return $modifiers === '' ? '' : 'echo ' . $this->macroModifiers('ob_get_clean()', $modifiers);
+			return $modifiers === '' ? '' : 'echo ' . $this->formatModifiers('ob_get_clean()', $modifiers);
 		}
 	}
 
@@ -601,7 +601,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroLink($var, $modifiers)
 	{
-		return $this->macroModifiers('$control->link(' . $this->formatLink($var) .')', $modifiers);
+		return $this->formatModifiers('$control->link(' . $this->formatLink($var) .')', $modifiers);
 	}
 
 
@@ -611,7 +611,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroPlink($var, $modifiers)
 	{
-		return $this->macroModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers);
+		return $this->formatModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers);
 	}
 
 
@@ -621,7 +621,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroIfCurrent($var, $modifiers)
 	{
-		return $var ? $this->macroModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers) : '';
+		return $var ? $this->formatModifiers('$presenter->link(' . $this->formatLink($var) .')', $modifiers) : '';
 	}
 
 
@@ -646,7 +646,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function macroAssign($var, $modifiers)
 	{
 		$param = ltrim($this->fetchToken($var), '$'); // [$]params value
-		return '$' . $param . ' = ' . $this->macroModifiers($var === '' ? 'NULL' : $var, $modifiers);
+		return '$' . $param . ' = ' . $this->formatModifiers($var === '' ? 'NULL' : $var, $modifiers);
 	}
 
 
@@ -667,34 +667,41 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Applies modifiers.
+	 * @param  string
+	 * @param  string
+	 * @return string
 	 */
-	public static function macroModifiers($var, $modifiers)
+	public static function formatModifiers($var, $modifiers)
 	{
 		if (!$modifiers) return $var;
 		preg_match_all(
-			'#[^\'"}\s|:]+|[|:]|\'[^\']*\'|"[^"]*"#s',
+			'/
+				[^\'"}\s|:]+|               ## symbol
+				[|:]|                       ## separator
+				\'(?:\\\\.|[^\'\\\\])*\'|   ## single quoted string
+				"(?:\\\\.|[^"\\\\])*"       ## double quoted string
+			/xs',
 			$modifiers . '|',
 			$tokens
 		);
-		$state = FALSE;
+		$inside = FALSE;
 		foreach ($tokens[0] as $token) {
 			if ($token === ':' || $token === '|') {
 				if (!isset($prev)) {
-					continue;
 
-				} elseif ($state === FALSE) {
+				} elseif (!$inside) {
 					$var = "\$template->$prev($var";
+					unset($prev);
+					$inside = TRUE;
 
 				} else {
-					$var .= ', ' . $prev;
+					$var .= ', ' . self::formatString($prev);
+					unset($prev);
 				}
 
-				if ($token === '|') {
+				if ($token === '|' && $inside) {
 					$var .= ')';
-					$state = FALSE;
-
-				} else {
-					$state = TRUE;
+					$inside = FALSE;
 				}
 			} else {
 				$prev = $token;
@@ -722,7 +729,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
-	 * Formats parameters to PHP array syntax.
+	 * Formats parameters to PHP array.
 	 * @param  string
 	 * @param  string
 	 * @return string
@@ -731,8 +738,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$s = preg_replace_callback(
 			'/(?:
-				"(?:\\\\"|[^"])*"|             ## double quoted string
-				\'(?:\\\\\'|[^\'])*\'|         ## single quoted string
+				\'(?:\\\\.|[^\'\\\\])*\'|      ## single quoted string
+				"(?:\\\\.|[^"\\\\])*"|         ## double quoted string
 				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)|   ## 1) symbol
 				(?<![=><!])(=)(?![=><!])       ## 2) equal sign
 			)/xi',
@@ -763,6 +770,18 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		} else {
 			return $matches[0];
 		}
+	}
+
+
+
+	/**
+	 * Formats parameter to PHP string.
+	 * @param  string
+	 * @return string
+	 */
+	public static function formatString($s)
+	{
+		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : var_export($s, TRUE);
 	}
 
 
