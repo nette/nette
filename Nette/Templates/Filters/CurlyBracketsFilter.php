@@ -685,25 +685,26 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		preg_match_all(
 			'~
 				'.self::RE_STRING.'|  ## single or double quoted string
-				[^\'"}\s|:]+|         ## symbol
-				[|:]                  ## separator
+				[^\'"}\s|:,]+|        ## symbol
+				[|:,]                 ## separator
 			~xs',
 			$modifiers . '|',
 			$tokens
 		);
 		$inside = FALSE;
+		$prev = '';
 		foreach ($tokens[0] as $token) {
-			if ($token === ':' || $token === '|') {
-				if (!isset($prev)) {
+			if ($token === '|' || $token === ':' || $token === ',') {
+				if ($prev === '') {
 
 				} elseif (!$inside) {
 					$var = "\$template->$prev($var";
-					unset($prev);
+					$prev = '';
 					$inside = TRUE;
 
 				} else {
 					$var .= ', ' . self::formatString($prev);
-					unset($prev);
+					$prev = '';
 				}
 
 				if ($token === '|' && $inside) {
@@ -711,7 +712,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					$inside = FALSE;
 				}
 			} else {
-				$prev = $token;
+				$prev .= $token;
 			}
 		}
 		return $var;
