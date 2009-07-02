@@ -51,9 +51,7 @@ final class LimitedScope
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			$__vars = func_get_arg(1);
-			extract($__vars, EXTR_SKIP);
-			unset($__vars);
+			extract(func_get_arg(1));
 		}
 		return eval('?>' . func_get_arg(0));
 	}
@@ -69,9 +67,7 @@ final class LimitedScope
 	public static function load(/*$file, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			$__vars = func_get_arg(1);
-			extract($__vars, EXTR_SKIP);
-			unset($__vars);
+			extract(func_get_arg(1));
 		}
 		return include func_get_arg(0);
 	}
