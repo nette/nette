@@ -182,7 +182,11 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateEmail(TextBase $control)
 	{
-		return preg_match('/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i', $control->getValue());
+		$atom = "[-a-z0-9!#$%&'*+/=?^_`{|}~]"; // RFC 5322 unquoted characters in local-part
+		$localPart = "(\"([ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(\\.$atom+)*)"; // quoted or unquoted
+		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
+		$domain = "[$chars]([-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
+		return preg_match("(^$localPart@($domain?\\.)+[a-z]{2,10}\\z)i", $control->getValue()); // strict top-level domain
 	}
 
 
