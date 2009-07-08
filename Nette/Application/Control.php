@@ -47,6 +47,28 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 
+	/********************* component factory ****************d*g**/
+
+
+
+	/**
+	 * Delegates the creation of components to a createComponent<Name> method.
+	 * @param  string  component name
+	 * @return void
+	 */
+	protected function createComponent($name)
+	{
+		$method = "createComponent$name";
+		if (method_exists($this, $method)) {
+			$component = $this->$method();
+			if ($component instanceof /*Nette\*/IComponent && $component->getParent() === NULL) {
+				$this->addComponent($component, $name);
+			}
+		}
+	}
+
+
+
 	/********************* template factory ****************d*g**/
 
 

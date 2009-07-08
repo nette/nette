@@ -67,6 +67,61 @@ class DashboardPresenter extends BasePresenter
 
 
 
+	/********************* view delete *********************/
+
+
+
+	public function renderDelete($id = 0)
+	{
+		$album = new Albums;
+		$this->template->album = $album->find($id)->fetch();
+		if (!$this->template->album) {
+			throw new /*Nette\Application\*/BadRequestException('Record not found');
+		}
+	}
+
+
+
+	/********************* action logout *********************/
+
+
+
+	public function actionLogout()
+	{
+		Environment::getUser()->signOut();
+		$this->flashMessage('You have been logged off.');
+		$this->redirect('Auth:login');
+	}
+
+
+
+	/********************* component factories *********************/
+
+
+
+	/**
+	 * Album edit form component factory.
+	 * @return mixed
+	 */
+	protected function createComponentAlbumForm()
+	{
+		$form = new AppForm;
+		$form->addText('artist', 'Artist:')
+			->addRule(Form::FILLED, 'Please enter an artist.');
+
+		$form->addText('title', 'Title:')
+			->addRule(Form::FILLED, 'Please enter a title.');
+
+		$form->addSubmit('save', 'Save')->getControlPrototype()->class('default');
+		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL);
+		$form->onSubmit[] = array($this, 'albumFormSubmitted');
+
+		$form->addProtection('Please submit this form again (security token has expired).');
+		return $form;
+	}
+
+
+
 	public function albumFormSubmitted(AppForm $form)
 	{
 		if ($form['save']->isSubmittedBy()) {
@@ -86,17 +141,19 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/********************* view delete *********************/
-
-
-
-	public function renderDelete($id = 0)
+	/**
+	 * Album delete form component factory.
+	 * @return mixed
+	 */
+	protected function createComponentDeleteForm()
 	{
-		$album = new Albums;
-		$this->template->album = $album->find($id)->fetch();
-		if (!$this->template->album) {
-			throw new /*Nette\Application\*/BadRequestException('Record not found');
-		}
+		$form = new AppForm;
+		$form->addSubmit('cancel', 'Cancel');
+		$form->addSubmit('delete', 'Delete')->getControlPrototype()->class('default');
+		$form->onSubmit[] = array($this, 'deleteFormSubmitted');
+
+		$form->addProtection('Please submit this form again (security token has expired).');
+		return $form;
 	}
 
 
@@ -110,63 +167,6 @@ class DashboardPresenter extends BasePresenter
 		}
 
 		$this->redirect('default');
-	}
-
-
-
-	/********************* action logout *********************/
-
-
-
-	public function actionLogout()
-	{
-		Environment::getUser()->signOut();
-		$this->flashMessage('You have been logged off.');
-		$this->redirect('Auth:login');
-	}
-
-
-
-	/********************* facilities *********************/
-
-
-
-	/**
-	 * Component factory.
-	 * @param  string  component name
-	 * @return void
-	 */
-	protected function createComponent($name)
-	{
-		switch ($name) {
-		case 'albumForm':
-			$id = $this->getParam('id');
-			$form = new AppForm($this, $name);
-			$form->addText('artist', 'Artist:')
-				->addRule(Form::FILLED, 'Please enter an artist.');
-
-			$form->addText('title', 'Title:')
-				->addRule(Form::FILLED, 'Please enter a title.');
-
-			$form->addSubmit('save', 'Save')->getControlPrototype()->class('default');
-			$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL);
-			$form->onSubmit[] = array($this, 'albumFormSubmitted');
-
-			$form->addProtection('Please submit this form again (security token has expired).');
-			return;
-
-		case 'deleteForm':
-			$form = new AppForm($this, $name);
-			$form->addSubmit('cancel', 'Cancel');
-			$form->addSubmit('delete', 'Delete')->getControlPrototype()->class('default');
-			$form->onSubmit[] = array($this, 'deleteFormSubmitted');
-
-			$form->addProtection('Please submit this form again (security token has expired).');
-			return;
-
-		default:
-			parent::createComponent($name);
-		}
 	}
 
 }
