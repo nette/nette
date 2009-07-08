@@ -56,6 +56,9 @@ class Mail extends MailMimePart
 		'X-Mailer' => 'Nette Framework',
 	);
 
+	/** @var IMailer */
+	private $mailer;
+
 	/** @var string */
 	private $charset = 'UTF-8';
 
@@ -343,16 +346,39 @@ class Mail extends MailMimePart
 
 	/**
 	 * Sends e-mail.
-	 * @param  IMailer
 	 * @return void
 	 */
-	public function send(IMailer $mailer = NULL)
+	public function send()
 	{
-		if ($mailer === NULL) {
+		$this->getMailer()->send($this->build());
+	}
+
+
+
+	/**
+	 * Sets the mailer.
+	 * @param  IMailer
+	 * @return Mail  provides a fluent interface
+	 */
+	public function setMailer(IMailer $mailer)
+	{
+		$this->mailer = $mailer;
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns mailer.
+	 * @return IMailer
+	 */
+	public function getMailer()
+	{
+		if ($this->mailer === NULL) {
 			/**/fixNamespace(self::$defaultMailer);/**/
-			$mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
+			$this->mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
 		}
-		$mailer->send($this->build());
+		return $this->mailer;
 	}
 
 
