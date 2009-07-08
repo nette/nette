@@ -257,7 +257,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	final public function getTranslator()
 	{
 		if ($this->translator === TRUE) {
-			return $this->getForm()->getTranslator();
+			return $this->getForm(FALSE) ? $this->getForm()->getTranslator() : NULL;
 		}
 		return $this->translator;
 	}

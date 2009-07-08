@@ -139,7 +139,6 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMinLength(TextBase $control, $length)
 	{
-		// PHP bug #33268 iconv_strlen works since PHP 5.0.5
 		return iconv_strlen($control->getValue(), 'UTF-8') >= $length;
 	}
 
@@ -186,7 +185,7 @@ abstract class TextBase extends FormControl
 		$localPart = "(\"([ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars]([-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return preg_match("(^$localPart@($domain?\\.)+[a-z]{2,10}\\z)i", $control->getValue()); // strict top-level domain
+		return (bool) preg_match("(^$localPart@($domain?\\.)+[a-z]{2,10}\\z)i", $control->getValue()); // strict top-level domain
 	}
 
 
@@ -198,7 +197,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateUrl(TextBase $control)
 	{
-		return preg_match('/^.+\.[a-z]{2,6}(\\/.*)?$/i', $control->getValue());
+		return (bool) preg_match('/^.+\.[a-z]{2,6}(\\/.*)?$/i', $control->getValue());
 	}
 
 
@@ -211,7 +210,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
-		return preg_match($regexp, $control->getValue());
+		return (bool) preg_match($regexp, $control->getValue());
 	}
 
 
@@ -223,7 +222,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateInteger(TextBase $control)
 	{
-		return preg_match('/^-?[0-9]+$/', $control->getValue());
+		return (bool) preg_match('/^-?[0-9]+$/', $control->getValue());
 	}
 
 
@@ -235,7 +234,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateFloat(TextBase $control)
 	{
-		return preg_match('/^-?[0-9]*[.,]?[0-9]+$/', $control->getValue());
+		return (bool) preg_match('/^-?[0-9]*[.,]?[0-9]+$/', $control->getValue());
 	}
 
 
