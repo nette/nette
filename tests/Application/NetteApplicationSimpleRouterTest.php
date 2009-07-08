@@ -13,7 +13,6 @@
 
 /*use Nette\Debug;*/
 /*use Nette\Application\SimpleRouter;*/
-/*use Nette\Collections\Hashtable;*/
 /*use Nette\Web\HttpRequest;*/
 
 

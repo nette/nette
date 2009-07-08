@@ -96,8 +96,8 @@ class Application extends /*Nette\*/Object
 		}
 
 		// check HTTP method
-		$method = $httpRequest->getMethod();
 		if ($this->allowedMethods) {
+			$method = $httpRequest->getMethod();
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
 				$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
