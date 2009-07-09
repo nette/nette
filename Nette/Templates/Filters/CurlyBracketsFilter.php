@@ -229,11 +229,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php\n"
-			/*. 'use Nette\Templates\CurlyBracketsFilter, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n"*/
-			. 'if (!isset($_cb)) $_cb = (object) NULL;' . "\n"
-			. '$_cb->extends = ' . ($this->extends ? 'TRUE' : 'empty($template->layout) ? FALSE : $template->layout') . ";\n"
-			. "unset(\$layout, \$template->layout, \$template->_cb);\n"
-			. 'if (!empty($_cb->caches)) end($_cb->caches)->addFile($template->getFile());' . "\n"
+			/*. 'use Nette\Templates\CurlyBracketsFilter, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
+			. "\$_cb = CurlyBracketsFilter::initRuntime(\$template, " . var_export($this->extends, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 
 		return $s;
@@ -427,6 +424,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		if ($destination === NULL) {
 			throw new /*\*/InvalidStateException("Missing destination in {extends}.");
 		}
+		if (!empty($this->blocks)) {
+			throw new /*\*/InvalidStateException("{extends} must be placed outside any block.");
+		}
 		$this->extends = TRUE;
 		return 'if (!($_cb->extends = ' . $this->formatString($destination) . ')) throw new Exception("Empty destination in {extends}")';
 	}
@@ -595,9 +595,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function macroWidget($var, $modifiers)
 	{
 		// TODO: add support for $modifiers
+		// TODO: check arguments
 		$pair = explode(':', $this->fetchToken($var), 2);
 		$pair[1] = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		return "\$control->getWidget(\"$pair[0]\")->render$pair[1]({$this->formatArray($var)})";
+		return "\$control->getWidget(\"$pair[0]\")->{\"render$pair[1]\"}({$this->formatArray($var)})";
 	}
 
 
@@ -825,6 +826,29 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException("Call to undefined parent block '$name'.");
 		}
 		$block($params);
+	}
+
+
+
+	/**
+	 * Initializes state holder $_cb in template.
+	 * @param  ITemplate
+	 * @param  bool
+	 * @return stdClass
+	 */
+	public static function initRuntime($template, $extends)
+	{
+		$cb = isset($template->_cb) ? $template->_cb : (object) NULL;
+		unset($template->_cb);
+
+		$cb->extends = $extends ? TRUE : (empty($template->_extends) ? FALSE : $template->_extends);
+		unset($template->_extends);
+
+		if (!empty($cb->caches)) { // cache support
+			end($cb->caches)->addFile($template->getFile());
+		}
+
+		return $cb;
 	}
 
 }

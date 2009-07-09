@@ -477,12 +477,6 @@ abstract class Presenter extends Control implements IPresenter
 
 		if ($template instanceof /*Nette\Templates\*/IFileTemplate && !$template->getFile()) {
 
-			if (isset($template->layout)) {
-				trigger_error('Parameter $template->layout is about to be reserved.', E_USER_WARNING);
-			}
-
-			unset($template->layout, $template->content);
-
 			// content template
 			$files = $this->formatTemplateFiles($this->getName(), $this->view);
 			foreach ($files as $file) {
@@ -505,7 +499,7 @@ abstract class Presenter extends Control implements IPresenter
 							$template->content = $template instanceof /*Nette\Templates\*/Template ? $template->subTemplate($template->getFile(), $template->getParams()) : $template->getFile();
 							$template->setFile($file);
 						} else {
-							$template->layout = $file;
+							$template->layout = $template->_extends = $file;
 						}
 						break;
 					}
