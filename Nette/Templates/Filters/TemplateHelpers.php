@@ -79,6 +79,19 @@ final class TemplateHelpers
 
 
 	/**
+	 * Escapes string for use inside HTML comments.
+	 * @param  mixed  UTF-8 encoding or 8-bit
+	 * @return string
+	 */
+	public static function escapeHtmlComment($s)
+	{
+		// -- has special meaning in different browsers
+		return str_replace('--', '--><!--', $s); // HTML tags have no meaning inside comments
+	}
+
+
+
+	/**
 	 * Escapes string for use inside XML 1.0 template.
 	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string

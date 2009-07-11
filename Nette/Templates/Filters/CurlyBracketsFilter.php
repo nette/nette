@@ -134,6 +134,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	const CONTEXT_ATTRIBUTE_SINGLE = "'";
 	const CONTEXT_ATTRIBUTE_DOUBLE = '"';
 	const CONTEXT_NONE = 4;
+	const CONTEXT_COMMENT = 5;
 	/**#@-*/
 
 
@@ -189,8 +190,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// process all {tags} and <tags/>
 		$s = preg_replace_callback(
 			'~
-				<(/?)([a-z]+)|                          ## 1,2) start tag: <tag </tag ; ignores <!-- <!DOCTYPE
-				(>)|                                    ## 3) end tag
+				<(/?)([a-z]+|!--)|                      ## 1,2) start tag: <tag </tag <!-- ; ignores <!DOCTYPE
+				((?:--\\s*)?>)|                         ## 3) end tag
 				(?<=\\s)(style|on[a-z]+)\s*=\s*(["\'])| ## 4,5) attribute
 				(["\'])|                                ## 6) attribute delimiter
 				(\n[ \t]*)?\\{([^\\s\'"{}]              ## 7,8) indent & macro begin
@@ -303,13 +304,21 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					$this->context = self::CONTEXT_TEXT;
 					$this->escape = 'TemplateHelpers::escapeHtml';
 				}
+			} elseif ($this->context === self::CONTEXT_COMMENT && $matches[3] !== '>') { // --\s*>
+				$this->context = self::CONTEXT_TEXT;
+				$this->escape = 'TemplateHelpers::escapeHtml';
 			}
 
 		} elseif (empty($matches[1])) { // <tag
 			if ($this->context === self::CONTEXT_TEXT) {
-				$this->context = self::CONTEXT_TAG;
-				$this->escape = 'TemplateHelpers::escapeHtml';
-				$this->tag = strtolower($matches[2]);
+				if ($matches[2] === '!--') {
+					$this->context = self::CONTEXT_COMMENT;
+					$this->escape = 'TemplateHelpers::escapeHtmlComment';
+				} else {
+					$this->context = self::CONTEXT_TAG;
+					$this->escape = 'TemplateHelpers::escapeHtml';
+					$this->tag = strtolower($matches[2]);
+				}
 			}
 
 		} else { // </tag
