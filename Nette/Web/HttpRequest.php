@@ -451,7 +451,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	public function initialize()
 	{
 		$this->query = $this->post = $this->files = $this->cookies = array();
-		$filter = (!in_array(ini_get("filter.default"), array("", "unsafe_row")) || ini_get("filter.default_flags"));
+		$filter = (!in_array(ini_get("filter.default"), array("", "unsafe_raw")) || ini_get("filter.default_flags"));
 
 		if (!empty($_GET)) {
 			$this->query = ($filter ? filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW) : $_GET);
