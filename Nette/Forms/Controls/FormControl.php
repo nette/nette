@@ -369,11 +369,10 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		$text = $this->caption;
-		if (is_string($text)) {
-			$label->setText($this->translate($text));
+		if ($this->caption instanceof /*Nette\Web\*/Html) {
+			$label->add($this->caption);
 		} else {
-			$label->add($text);
+			$label->setText($this->translate($this->caption));
 		}
 		return $label;
 	}
@@ -536,13 +535,13 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public static function validateEqual(IFormControl $control, $arg)
 	{
-		$value = $control->getValue();
+		$value = (string) $control->getValue();
 		foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 			if ($item instanceof IFormControl) {
-				if ($value == $item->value) return TRUE; // intentionally ==
+				if ($value === (string) $item->value) return TRUE;
 
 			} else {
-				if ($value == $item) return TRUE; // intentionally ==
+				if ($value === (string) $item) return TRUE;
 			}
 		}
 		return FALSE;

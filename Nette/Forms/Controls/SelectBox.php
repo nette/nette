@@ -102,12 +102,20 @@ class SelectBox extends FormControl
 
 	/**
 	 * Ignores the first item in select box.
-	 * @param  bool
+	 * @param  string
 	 * @return SelectBox  provides a fluent interface
 	 */
-	public function skipFirst($value = TRUE)
+	public function skipFirst($item = NULL)
 	{
-		$this->skipFirst = (bool) $value;
+		if (is_bool($item)) {
+			$this->skipFirst = $item;
+		} else {
+			$this->skipFirst = TRUE;
+			if ($item !== NULL) {
+				$this->items = array('' => $item) + $this->items;
+				$this->allowed = array('' => '') + $this->allowed;
+			}
+		}
 		return $this;
 	}
 
