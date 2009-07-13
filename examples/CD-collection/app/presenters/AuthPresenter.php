@@ -22,9 +22,17 @@ class AuthPresenter extends BasePresenter
 
 
 
-	public function actionLogin($backlink)
+	/********************* component factories *********************/
+
+
+
+	/**
+	 * Login form component factory.
+	 * @return mixed
+	 */
+	protected function createComponentLoginForm()
 	{
-		$form = new AppForm($this, 'loginForm');
+		$form = new AppForm;
 		$form->addText('username', 'Username:')
 			->addRule(Form::FILLED, 'Please provide an username.');
 
@@ -35,6 +43,7 @@ class AuthPresenter extends BasePresenter
 		$form->onSubmit[] = array($this, 'loginFormSubmitted');
 
 		$form->addProtection('Please submit this form again (security token has expired).');
+		return $form;
 	}
 
 
@@ -51,6 +60,5 @@ class AuthPresenter extends BasePresenter
 			$form->addError($e->getMessage());
 		}
 	}
-
 
 }

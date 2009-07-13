@@ -7,14 +7,22 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 {
 
 
-	public function prepareDefault()
+	public function renderDefault()
+	{
+		$this->invalidateControl('round');
+	}
+
+
+
+	/**
+	 * Fifteen game control factory.
+	 * @return mixed
+	 */
+	protected function createComponentFifteen()
 	{
 		$fifteen = new FifteenControl;
 		$fifteen->onGameOver[] = array($this, 'gameOver');
-		$this->addComponent($fifteen, 'fifteen');
-		$this->template->fifteen = $fifteen;
-
-		$this->invalidateControl('round');
+		return $fifteen;
 	}
 
 

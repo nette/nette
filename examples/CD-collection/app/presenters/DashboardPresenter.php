@@ -20,7 +20,7 @@ class DashboardPresenter extends BasePresenter
 				$this->flashMessage('You have been logged out due to inactivity. Please login again.');
 			}
 			$backlink = $this->getApplication()->storeRequest();
-			$this->redirect('Auth:login', $backlink);
+			$this->redirect('Auth:login', array('backlink' => $backlink));
 		}
 
 		parent::startup();
