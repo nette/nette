@@ -691,13 +691,16 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws RedirectingException
 	 */
-	public function redirectUri($uri, $code = /*Nette\Web\*/IHttpResponse::S303_POST_GET)
+	public function redirectUri($uri, $code = NULL)
 	{
 		if ($this->isAjax()) {
 			$this->payload->redirect = $uri;
 			$this->terminate();
 
 		} else {
+			if (!$code) {
+				$code = $this->getHttpRequest()->isMethod('post') ? /*Nette\Web\*/IHttpResponse::S303_POST_GET : /*Nette\Web\*/IHttpResponse::S302_FOUND;
+			}
 			throw new RedirectingException($uri, $code);
 		}
 	}

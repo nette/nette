@@ -336,7 +336,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 		if (!is_numeric($code)) { // first parameter is optional
 			$args = $destination;
 			$destination = $code;
-			$code = /*Nette\Web\*/IHttpResponse::S303_POST_GET;
+			$code = NULL;
 		}
 
 		if (!is_array($args)) {
