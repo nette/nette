@@ -46,15 +46,14 @@ class DashboardPresenter extends BasePresenter
 
 	public function renderAdd()
 	{
-		$form = $this->getComponent('albumForm');
-		$form['save']->caption = 'Add';
+		$this['albumForm']['save']->caption = 'Add';
 	}
 
 
 
 	public function renderEdit($id = 0)
 	{
-		$form = $this->getComponent('albumForm');
+		$form = $this['albumForm'];
 		if (!$form->isSubmitted()) {
 			$album = new Albums;
 			$row = $album->find($id)->fetch();

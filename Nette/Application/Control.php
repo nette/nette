@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . '/../Application/IRenderable.php';
  *
  * @property-read Nette\Templates\ITemplate $template
  */
-abstract class Control extends PresenterComponent implements IPartiallyRenderable
+abstract class Control extends PresenterComponent implements IPartiallyRenderable, /*\*/ArrayAccess
 {
 	/** @var Nette\Templates\ITemplate */
 	private $template;
@@ -242,6 +242,63 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	{
 		// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
 		return $this->getUniqueId() . '__' . $name;
+	}
+
+
+
+	/********************* interface \ArrayAccess ****************d*g**/
+
+
+
+	/**
+	 * Adds the component to the container.
+	 * @param  string  component name
+	 * @param  Nette\IComponent
+	 * @return void.
+	 */
+	final public function offsetSet($name, $component)
+	{
+		$this->addComponent($component, $name);
+	}
+
+
+
+	/**
+	 * Returns component specified by name. Throws exception if component doesn't exist.
+	 * @param  string  component name
+	 * @return Nette\IComponent
+	 * @throws \InvalidArgumentException
+	 */
+	final public function offsetGet($name)
+	{
+		return $this->getComponent($name, TRUE);
+	}
+
+
+
+	/**
+	 * Does component specified by name exists?
+	 * @param  string  component name
+	 * @return bool
+	 */
+	final public function offsetExists($name)
+	{
+		return $this->getComponent($name, FALSE) !== NULL;
+	}
+
+
+
+	/**
+	 * Removes component from the container. Throws exception if component doesn't exist.
+	 * @param  string  component name
+	 * @return void
+	 */
+	final public function offsetUnset($name)
+	{
+		$component = $this->getComponent($name, FALSE);
+		if ($component !== NULL) {
+			$this->removeComponent($component);
+		}
 	}
 
 }
