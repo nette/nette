@@ -10,13 +10,4 @@ require_once dirname(__FILE__) . '/../../BasePresenter.php';
 class Front_Export_DefaultPresenter extends /*\*/BasePresenter
 {
 
-	/**
-	 * @return void
-	 */
-	protected function startup()
-	{
-		// disables layout
-		$this->setLayout(FALSE);
-	}
-
 }

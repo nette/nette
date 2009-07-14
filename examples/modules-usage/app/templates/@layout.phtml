@@ -9,7 +9,7 @@
 
 <body>
 	<div id="path">
-		<span id="module">{$module}<span id="presenter">{$presenter}:<span id="view">{$view}</span></span></span>
+		<span id="module">{$moduleName}<span id="presenter">{$presenterName}:<span id="view">{$viewName}</span></span></span>
 	</div>
 
 	<fieldset>
@@ -18,8 +18,8 @@
 		<h1>Modules demo</h1>
 
 		<fieldset>
-			<legend>This is content template <em>{$content->getFile()}</em></legend>
-			{include $content}
+			<legend>This is content block template <em>{$presenter->template->getFile()}</em></legend>
+			{include #content}
 		</fieldset>
 
 
