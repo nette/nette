@@ -588,10 +588,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$args = array('');
 		if ($snippet = $this->fetchToken($var)) {  // [name [,]] [tag]
-			$args[] = $this->formatString($snippet, TRUE);
+			$args[] = $this->formatString($snippet);
 		}
 		if ($var) {
-			$args[] = $this->formatString($var, TRUE);
+			$args[] = $this->formatString($var);
 		}
 		return implode(', ', $args);
 	}
@@ -790,7 +790,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	public static function formatString($s)
 	{
-		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : var_export($s, TRUE);
+		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : '"' . $s . '"';
 	}
 
 

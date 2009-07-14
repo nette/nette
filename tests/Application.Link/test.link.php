@@ -83,7 +83,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 	}
 
 
-	public function beforePrepare()
+	public function startup()
 	{
 		$this->mycontrol = new TestControl($this, 'mycontrol');
 
