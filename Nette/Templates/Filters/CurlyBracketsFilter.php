@@ -214,10 +214,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
 
 		// extends support
-		$s = "<?php\n"
-			. 'if ($_cb->extends) { ob_start(); }' . "\n"
-			. '?>' . $s . "<?php\n"
-			. 'if ($_cb->extends) { ob_end_clean(); $template->subTemplate($_cb->extends, get_defined_vars())->render(); }' . "\n";
+		if ($this->namedBlocks || $this->extends) {
+			$s = "<?php\n"
+				. 'if ($_cb->extends) { ob_start(); }' . "\n"
+				. '?>' . $s . "<?php\n"
+				. 'if ($_cb->extends) { ob_end_clean(); $template->subTemplate($_cb->extends, get_defined_vars())->render(); }' . "\n";
+		}	
 
 		// named blocks
 		if ($this->namedBlocks) {
@@ -225,7 +227,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$name = preg_quote($name, '#');
 				$s = preg_replace_callback("#{block($name)} \?>(.*)<\?php {/block$name}#sU", array($this, 'cbNamedBlocks'), $s);
 			}
-			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n?>" . $s;
+			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
 		}
 
 		// internal state holder
@@ -508,8 +510,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5(uniqid($name)), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-		$this->namedBlocks[$name] = "\$_cb->blks[" . var_export($name, TRUE) . "][] = '$func';\n"
-			. "if (!function_exists('$func')) { function $func() { extract(func_get_arg(0)) // block $name\n?>$content<?php\n}}";
+		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
+			. "if (!function_exists(\$_cb->blks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -606,8 +608,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// TODO: add support for $modifiers
 		// TODO: check arguments
 		$pair = explode(':', $this->fetchToken($var), 2);
-		$pair[1] = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		return "\$control->getWidget(\"$pair[0]\")->{\"render$pair[1]\"}({$this->formatArray($var)})";
+		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
+		$method = preg_match('#^'.self::RE_IDENTIFIER.'|$#', $method) ? "render$method" : "{\"render$method\"}";
+		return "\$control->getWidget(\"$pair[0]\")->$method({$this->formatArray($var)})";
 	}
 
 

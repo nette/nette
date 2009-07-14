@@ -182,47 +182,28 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 				return;
 			}
 
+			try {
+				$shortName = $this->file;
+				$shortName = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $shortName);
+			} catch (Exception $foo) {
+			}
+
 			// compiling
 			$content = file_get_contents($this->file);
 
 			foreach ($this->filters as $filter) {
-				// remove PHP code
-				$res = '';
-				$blocks = array();
-				unset($php);
-				foreach (token_get_all($content) as $token) {
-					if (is_array($token)) {
-						if ($token[0] === T_INLINE_HTML) {
-							$res .= $token[1];
-							unset($php);
-						} else {
-							if (!isset($php)) {
-								$res .= $php = "\x01@php:p" . count($blocks) . "@\x02";
-								$php = & $blocks[$php];
-							}
-							$php .= $token[1];
-						}
-					} else {
-						$php .= $token;
-					}
-				}
-
+				$content = self::extractPhp($content, $blocks);
 				try {
-					$content = call_user_func($filter, $res);
+					$content = call_user_func($filter, $content);
 				} catch (Exception $e) {
 					is_callable($filter, TRUE, $textual);
-					$file = $this->file;
-					try {
-						$file = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $file);
-					} catch (Exception $foo) {
-					}
-					throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . " (in file $file)", 0, $e);
+					throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . " (in file $shortName)", 0, $e);
 				}
-
 				$content = strtr($content, $blocks); // put PHP code back
 			}
 
-			$content = "<?php\n// template $this->file\n?>$content";
+			$content = "<?php\n// template $shortName\n//\n?>$content";
+			$content = self::optimizePhp($content);
 			$cache->save(
 				$key,
 				$content,
@@ -491,6 +472,83 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 			self::$cacheStorage = new TemplateCacheStorage(/*Nette\*/Environment::getVariable('cacheBase'));
 		}
 		return self::$cacheStorage;
+	}
+
+
+
+	/********************* tools ****************d*g**/
+
+
+
+	/**
+	 * Extracts all blocks of PHP code.
+	 * @param  string
+	 * @param  array
+	 * @return string
+	*/
+	private static function extractPhp($source, & $blocks)
+	{
+		$res = '';
+		$blocks = array();
+		foreach (token_get_all($source) as $token) {
+			if (is_array($token)) {
+				if ($token[0] === T_INLINE_HTML) {
+					$res .= $token[1];
+					unset($php);
+				} else {
+					if (!isset($php)) {
+						$res .= $php = "\x01@php:p" . count($blocks) . "@\x02";
+						$php = & $blocks[$php];
+					}
+					$php .= $token[1];
+				}
+			} else {
+				$php .= $token;
+			}
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Removes unnecessary blocks of PHP code.
+	 * @param  string
+	 * @return string
+	*/
+	private static function optimizePhp($source)
+	{
+		$res = $php = '';
+		$tokens = token_get_all($source);
+		$iterator = new SmartCachingIterator(token_get_all($source));
+		foreach ($iterator as $token) {
+			if (is_array($token)) {
+				if ($token[0] === T_INLINE_HTML) {
+					$res .= $token[1];
+
+				} elseif ($token[0] === T_CLOSE_TAG) {
+					$next = $iterator->getNextValue();
+					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*$#', $php)) {
+						$php = ''; // removes empty [?php ?], but retains [[?php ?]]
+
+					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) {
+						$ch = substr(rtrim($php), -1);
+						if ($ch !== ';' && $ch !== '{' && $ch !== '}' && $ch !== ':' && $ch !== '/') $php .= ';';
+						if (substr($next[1], -1) === "\n") $php .= "\n";
+						$iterator->next();
+
+					} else {
+						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1];
+						$php = '';
+					}
+				} else {
+					$php .= $token[1];
+				}
+			} else {
+				$php .= $token;
+			}
+		}
+		return $res . $php;
 	}
 
 }
