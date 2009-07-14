@@ -753,9 +753,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$s = preg_replace_callback(
 			'~
-				'.self::RE_STRING.'|           ## single or double quoted string
-				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)|   ## 1) symbol
-				(?<![=><!])(=)(?![=><!])       ## 2) equal sign
+				'.self::RE_STRING.'|                          ## single or double quoted string
+				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)   ## 1) symbol
 			~xi',
 			array(__CLASS__, 'cbArgs'),
 			trim($s)
@@ -771,12 +770,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private static function cbArgs($matches)
 	{
 		//    [1] => symbol
-		//    [2] => equal sign
 
-		if (!empty($matches[2])) { // equal sign
-			return '=>';
-
-		} elseif (!empty($matches[1])) { // symbol
+		if (!empty($matches[1])) { // symbol
 			list(, $symbol) = $matches;
 			static $keywords = array('true'=>1, 'false'=>1, 'null'=>1, 'and'=>1, 'or'=>1, 'xor'=>1, 'clone'=>1, 'new'=>1);
 			return is_numeric($symbol) || isset($keywords[strtolower($symbol)]) ? $matches[0] : "'$symbol'";

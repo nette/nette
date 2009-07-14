@@ -55,10 +55,6 @@ class NetteTemplatesCurlyBracketsFilter extends PHPUnit_Framework_TestCase
 		// associative arrays
 		$this->assertEquals("array('symbol1' =>'value','symbol2'=>'value')", CurlyBracketsFilter::formatArray('symbol1 => value,symbol2=>value'));
 		$this->assertEquals("array('symbol1' => array ('symbol2' =>'value'))", CurlyBracketsFilter::formatArray('symbol1 => array (symbol2 => value)'));
-
-		// equal signs
-		$this->assertEquals("array('symbol1' =>'value','symbol2'=>'value')", CurlyBracketsFilter::formatArray('symbol1 = value,symbol2=value'));
-		$this->assertEquals('array($x == 1, $x != 1)', CurlyBracketsFilter::formatArray('$x == 1, $x != 1'));
 	}
 
 
