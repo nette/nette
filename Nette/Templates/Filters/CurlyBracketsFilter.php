@@ -170,7 +170,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$this->blocks = array();
 		$this->namedBlocks = array();
-		$this->extends = FALSE;
+		$this->extends = NULL;
 
 		// context-aware escaping
 		$this->context = self::CONTEXT_TEXT;
@@ -219,7 +219,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				. 'if ($_cb->extends) { ob_start(); }' . "\n"
 				. '?>' . $s . "<?php\n"
 				. 'if ($_cb->extends) { ob_end_clean(); $template->subTemplate($_cb->extends, get_defined_vars())->render(); }' . "\n";
-		}	
+		}
 
 		// named blocks
 		if ($this->namedBlocks) {
@@ -409,8 +409,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$name = var_export($destination, TRUE);
 			$params .= 'get_defined_vars()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
-				? "call_user_func(reset(\$_cb->blks[$name]), $params)"
-				: "CurlyBracketsFilter::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blks, $name, $params)";
+				? "call_user_func(reset(\$_cb->blocks[$name]), $params)"
+				: "CurlyBracketsFilter::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . $this->formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
@@ -438,8 +438,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		if (!empty($this->blocks)) {
 			throw new /*\*/InvalidStateException("{extends} must be placed outside any block.");
 		}
-		$this->extends = TRUE;
-		return 'if (!($_cb->extends = ' . $this->formatString($destination) . ')) throw new Exception("Empty destination in {extends}")';
+		if ($this->extends !== NULL) {
+			throw new /*\*/InvalidStateException("Multiple {extends} declarations are not allowed.");
+		}
+		$this->extends = $destination !== 'none';
+		return $this->extends ? '$_cb->extends = ' . $this->formatString($destination) : '';
 	}
 
 
@@ -511,7 +514,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5(uniqid($name)), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_cb->blks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -848,7 +851,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$cb = isset($template->_cb) ? $template->_cb : (object) NULL;
 		unset($template->_cb);
 
-		$cb->extends = $extends ? TRUE : (empty($template->_extends) ? FALSE : $template->_extends);
+		$cb->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
 		unset($template->_extends);
 
 		if (!empty($cb->caches)) { // cache support

@@ -520,7 +520,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	{
 		$res = $php = '';
 		$tokens = token_get_all($source);
-		$iterator = new SmartCachingIterator(token_get_all($source));
+		$iterator = new /*Nette\*/SmartCachingIterator(token_get_all($source));
 		foreach ($iterator as $token) {
 			if (is_array($token)) {
 				if ($token[0] === T_INLINE_HTML) {
@@ -529,16 +529,16 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 				} elseif ($token[0] === T_CLOSE_TAG) {
 					$next = $iterator->getNextValue();
 					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*$#', $php)) {
-						$php = ''; // removes empty [?php ?], but retains [[?php ?]]
+						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
-					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) {
+					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
 						$ch = substr(rtrim($php), -1);
 						if ($ch !== ';' && $ch !== '{' && $ch !== '}' && $ch !== ':' && $ch !== '/') $php .= ';';
 						if (substr($next[1], -1) === "\n") $php .= "\n";
 						$iterator->next();
 
 					} else {
-						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1];
+						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1]; // remove last semicolon before ?)
 						$php = '';
 					}
 				} else {
