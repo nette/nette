@@ -40,14 +40,28 @@ class AuthPresenter extends BasePresenter
 			->addRule(Form::FILLED, 'Please provide a password.');
 
 		$form->addSubmit('login', 'Login');
-		$form->onSubmit[] = array($this, 'loginFormSubmitted');
 
 		$form->addProtection('Please submit this form again (security token has expired).');
+
+		/**/$form->onSubmit[] = array($this, 'loginFormSubmitted');/**/
+		/* PHP 5.3
+		$that = $this;
+		$form->onSubmit[] = function($form) use ($that) {
+			try {
+				$user = Environment::getUser();
+				$user->authenticate($form['username']->getValue(), $form['password']->getValue());
+				$that->getApplication()->restoreRequest($that->backlink);
+				$that->redirect('Dashboard:');
+
+			} catch (AuthenticationException $e) {
+				$form->addError($e->getMessage());
+			}
+		};*/
 		return $form;
 	}
 
 
-
+	/**/
 	public function loginFormSubmitted($form)
 	{
 		try {
@@ -60,5 +74,6 @@ class AuthPresenter extends BasePresenter
 			$form->addError($e->getMessage());
 		}
 	}
+	/**/
 
 }
