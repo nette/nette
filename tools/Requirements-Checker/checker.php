@@ -24,7 +24,7 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.0');
+define('CHECKER_VERSION', '1.1');
 define('REQUIRED', TRUE);
 define('OPTIONAL', FALSE);
 
@@ -70,8 +70,8 @@ paint(array(
 	array(
 		'ICONV extension',
 		REQUIRED,
-		extension_loaded('iconv') && (ICONV_IMPL !== 'unknown'),
-		'ICONV extension is required.',
+		extension_loaded('iconv') && (ICONV_IMPL !== 'unknown') && @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', 'test')) === 'test',
+		'ICONV extension is required and must work properly.',
 	),
 	array(
 		'$_SERVER["HTTP_HOST"] or "SERVER_NAME"',

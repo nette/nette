@@ -256,7 +256,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 * @param  Nette\IComponent
 	 * @return void.
 	 */
-	final public function offsetSet($name, $component)
+	/*final*/ public function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
@@ -269,7 +269,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 * @return Nette\IComponent
 	 * @throws \InvalidArgumentException
 	 */
-	final public function offsetGet($name)
+	/*final*/ public function offsetGet($name)
 	{
 		return $this->getComponent($name, TRUE);
 	}
@@ -281,7 +281,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 * @param  string  component name
 	 * @return bool
 	 */
-	final public function offsetExists($name)
+	/*final*/ public function offsetExists($name)
 	{
 		return $this->getComponent($name, FALSE) !== NULL;
 	}
@@ -293,7 +293,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 * @param  string  component name
 	 * @return void
 	 */
-	final public function offsetUnset($name)
+	/*final*/ public function offsetUnset($name)
 	{
 		$component = $this->getComponent($name, FALSE);
 		if ($component !== NULL) {
