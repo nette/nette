@@ -50,7 +50,6 @@ abstract class Presenter extends Control implements IPresenter
 {
 	/**#@+ life cycle phases {@link Presenter::getPhase()} */
 	const PHASE_STARTUP = 1;
-	const PHASE_PREPARE = 2;
 	const PHASE_SIGNAL = 3;
 	const PHASE_RENDER = 4;
 	const PHASE_SHUTDOWN = 5;
@@ -189,7 +188,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_STARTUP;
 			$this->initGlobalParams();
 			$this->startup();
-			// calls $this->action{action}();
+			// calls $this->action<Action>()
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
 
 			if ($this->autoCanonicalize) {
@@ -199,21 +198,25 @@ abstract class Presenter extends Control implements IPresenter
 				$this->terminate();
 			}
 
-			// PHASE 2: PREPARING VIEW
-			$this->phase = self::PHASE_PREPARE;
-			$this->beforePrepare();
-			// calls $this->prepare{view}();
-			$this->tryCall($this->formatPrepareMethod($this->getView()), $this->params);
+			// back compatibility
+			if (method_exists($this, 'beforePrepare')) {
+				$this->beforePrepare();
+				trigger_error('beforePrepare() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
+			}
+			if ($this->tryCall('prepare' . $this->getView(), $this->params)) {
+				trigger_error('prepare' . ucfirst($this->getView()) . '() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
+			}
 
-			// PHASE 3: SIGNAL HANDLING
+			// PHASE 2: SIGNAL HANDLING
 			$this->phase = self::PHASE_SIGNAL;
+			// calls $this->handle<Signal>()
 			$this->processSignal();
 
-			// PHASE 4: RENDERING VIEW
+			// PHASE 3: RENDERING VIEW
 			$this->phase = self::PHASE_RENDER;
 
 			$this->beforeRender();
-			// calls $this->render{view}();
+			// calls $this->render<View>()
 			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
 			$this->afterRender();
 
@@ -232,7 +235,7 @@ abstract class Presenter extends Control implements IPresenter
 			// continue with shutting down
 		} /* finally */ {
 
-			// PHASE 5: SHUTDOWN
+			// PHASE 4: SHUTDOWN
 			$this->phase = self::PHASE_SHUTDOWN;
 
 			if ($this->isAjax()) {
@@ -267,16 +270,6 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 */
 	protected function startup()
-	{
-	}
-
-
-
-	/**
-	 * Common prepare method.
-	 * @return void
-	 */
-	protected function beforePrepare()
 	{
 	}
 
@@ -576,18 +569,6 @@ abstract class Presenter extends Control implements IPresenter
 	protected static function formatActionMethod($action)
 	{
 		return 'action' . $action;
-	}
-
-
-
-	/**
-	 * Formats prepare view method name.
-	 * @param  string
-	 * @return string
-	 */
-	protected static function formatPrepareMethod($view)
-	{
-		return 'prepare' . $view;
 	}
 
 
