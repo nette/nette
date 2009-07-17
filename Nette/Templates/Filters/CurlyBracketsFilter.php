@@ -46,7 +46,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {cache ?} ... {/cache} cached block
  * - {snippet ?} ... {/snippet ?} control snippet
  * - {attr ?} HTML element attributes
- * - {block|texy} ... {/block} block
+ * - {block|texy} ... {/block} capture of filter block
  * - {contentType ...} HTTP Content-Type header
  * - {assign $var value} set template parameter
  * - {dump $var}
@@ -454,9 +454,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$name = $this->fetchToken($var); // block [,] [params]
 
-		if ($name === NULL) { // anonymous block
-			$this->blocks[] = array('', $modifiers);
-			return $modifiers === '' ? '' : 'ob_start()';
+		if ($name === NULL || $name[0] === '$') { // anonymous block or capture
+			$this->blocks[] = array($name, $modifiers);
+			return ($name === NULL && $modifiers === '') ? '' : 'ob_start()';
 
 		} elseif ($name[0] === '#') { // #block
 			if (!preg_match('#^\\#'.self::RE_IDENTIFIER.'$#', $name)) {
@@ -491,16 +491,18 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	private function macroBlockEnd($var)
 	{
+		$empty = empty($this->blocks);
 		list($name, $modifiers) = array_pop($this->blocks);
 
-		if ($name === NULL || ($var && $var !== $name)) { // $name === NULL means $this->blocks is empty
+		if ($empty || ($var && $var !== $name)) {
 			throw new /*\*/InvalidStateException("Tag {/block $var} was not expected here.");
 
 		} elseif (substr($name, 0, 1) === '#') { // #block
 			return "{/block$name}";
 
-		} else { // anonymous block
-			return $modifiers === '' ? '' : 'echo ' . $this->formatModifiers('ob_get_clean()', $modifiers);
+		} else { // anonymous block or capture
+			return ($name === NULL && $modifiers === '') ? ''
+				: ($name === NULL ? 'echo ' : $name . '=') . $this->formatModifiers('ob_get_clean()', $modifiers);
 		}
 	}
 
