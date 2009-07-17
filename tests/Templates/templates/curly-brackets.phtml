@@ -6,6 +6,7 @@
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
 	<li>Non-escaped expression: {!='<' . 'b' . '>hello' . '</b>'}</li>
 	<li>Array access: {$people[1]}</li>
+	<li>Html: {$el}</li>
 </ul>
 
 { test} {"test} {'test}
@@ -57,6 +58,8 @@ alert('</div>');
 var prop = {$people};
 
 document.getElementById({$id}).style.backgroundColor = 'red';
+
+var html = {$el};
 -->
 </script>
 
@@ -75,6 +78,8 @@ var prop2 = {$people};
  title='{$id}"'
  style =
  "color:{$id};'"
+ alt='{$el}'
+ onfocus="alert({$el})"
 >click on me</p>
 
 

@@ -8,6 +8,7 @@
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
 	<li>Non-escaped expression: <b>hello</b></li>
 	<li>Array access: Mary</li>
+	<li>Html: <div title="1/2&quot;"></div></li>
 </ul>
 
 { test} {"test} {'test}
@@ -59,6 +60,8 @@ alert('</div>');
 var prop = ["John","Mary","Paul","]]\x3E"];
 
 document.getElementById(":\/item").style.backgroundColor = 'red';
+
+var html = "<div title=\"1\/2&quot;\"><\/div>";
 -->
 </script>
 
@@ -77,6 +80,8 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
  title=':/item"'
  style =
  "color:\:\/item;'"
+ alt='<div title="1/2&quot;"></div>'
+ onfocus="alert(&quot;&lt;div title=\&quot;1\/2&amp;quot;\&quot;&gt;&lt;\/div&gt;&quot;)"
 >click on me</p>
 
 

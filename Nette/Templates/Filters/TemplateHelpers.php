@@ -137,6 +137,9 @@ final class TemplateHelpers
 	 */
 	public static function escapeJs($s)
 	{
+		if (is_object($s) && ($s instanceof Template || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+			$s = $s->__toString(TRUE);
+		}
 		return str_replace(']]>', ']]\x3E', json_encode($s));
 	}
 
@@ -149,7 +152,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeHtmlJs($s)
 	{
-		return htmlSpecialChars(json_encode($s), ENT_QUOTES);
+		return htmlSpecialChars(self::escapeJs($s), ENT_QUOTES);
 	}
 
 
