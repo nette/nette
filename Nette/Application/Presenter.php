@@ -489,7 +489,7 @@ abstract class Presenter extends Control implements IPresenter
 				foreach ($this->formatLayoutTemplateFiles($this->getName(), $this->layout) as $file) {
 					if (is_file($file)) {
 						if ($this->oldLayoutMode) {
-							$template->content = $template instanceof /*Nette\Templates\*/Template ? $template->subTemplate($template->getFile(), $template->getParams()) : $template->getFile();
+							$template->content = $template instanceof /*Nette\Templates\*/Template ? clone $template : $template->getFile();
 							$template->setFile($file);
 						} else {
 							$template->layout = $template->_extends = $file;

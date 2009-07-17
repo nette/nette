@@ -218,7 +218,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$s = "<?php\n"
 				. 'if ($_cb->extends) { ob_start(); }' . "\n"
 				. '?>' . $s . "<?php\n"
-				. 'if ($_cb->extends) { ob_end_clean(); $template->subTemplate($_cb->extends, get_defined_vars())->render(); }' . "\n";
+				. 'if ($_cb->extends) { ob_end_clean(); CurlyBracketsFilter::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
 		}
 
 		// named blocks
@@ -233,7 +233,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// internal state holder
 		$s = "<?php\n"
 			/*. 'use Nette\Templates\CurlyBracketsFilter, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
-			. "\$_cb = CurlyBracketsFilter::initRuntime(\$template, " . var_export($this->extends, TRUE) . "); unset(\$_extends);\n"
+			. "\$_cb = CurlyBracketsFilter::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", __FILE__); unset(\$_extends);\n"
 			. '?>' . $s;
 
 		return $s;
@@ -419,8 +419,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$destination = $this->formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . $this->formatModifiers('$template->subTemplate(' . $destination . ', ' . $params . ')->__toString(TRUE)', $modifiers)
-				: '$template->subTemplate(' . $destination . ', ' . $params . ')->render()';
+				? 'echo ' . $this->formatModifiers('CurlyBracketsFilter::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[__FILE__])->__toString(TRUE)', $modifiers)
+				: 'CurlyBracketsFilter::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[__FILE__])->render()';
 		}
 	}
 
@@ -843,20 +843,58 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
+	 * Includes subtemplate.
+	 * @param  mixed      included file name or template
+	 * @param  array      parameters
+	 * @param  ITemplate  current template
+	 * @return Template
+	 */
+	public static function includeTemplate($destination, $params, $template)
+	{
+		if ($destination instanceof ITemplate) {
+			$tpl = $destination;
+
+		} elseif ($destination == NULL) { // intentionally ==
+			throw new /*\*/InvalidArgumentException("Template file name was not specified.");
+
+		} else {
+			$tpl = clone $template;
+			if ($template instanceof IFileTemplate) {
+				if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
+					$destination = dirname($template->getFile()) . '/' . $destination;
+				}
+				$tpl->setFile($destination);
+			}
+		}
+
+		$tpl->setParams($params); // interface?
+		return $tpl;
+	}
+
+
+
+	/**
 	 * Initializes state holder $_cb in template.
 	 * @param  ITemplate
 	 * @param  bool
+	 * @param  string
 	 * @return stdClass
 	 */
-	public static function initRuntime($template, $extends)
+	public static function initRuntime($template, $extends, $realFile)
 	{
-		$cb = isset($template->_cb) ? $template->_cb : (object) NULL;
-		unset($template->_cb);
+		$cb = (object) NULL;
 
+		// extends support
+		if (isset($template->_cb)) {
+			$cb->blocks = & $template->_cb->blocks;
+			$cb->templates = & $template->_cb->templates;
+		}	
+		$cb->templates[$realFile] = $template;
 		$cb->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
-		unset($template->_extends);
+		unset($template->_cb, $template->_extends);
 
-		if (!empty($cb->caches)) { // cache support
+		// cache support
+		if (!empty($cb->caches)) {
 			end($cb->caches)->addFile($template->getFile());
 		}
 
