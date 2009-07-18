@@ -181,6 +181,24 @@ class ServiceLocator extends Object implements IServiceLocator
 
 
 	/**
+	 * Exists the service?
+	 * @param  string service name
+	 * @param  bool   must be created yet?
+	 * @return bool
+	 */
+	public function hasService($name, $created = FALSE)
+	{
+		if (!is_string($name) || $name === '') {
+			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+		}
+
+		$lower = strtolower($name);
+		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower])) || ($this->parent !== NULL && $this->parent->hasService($name, $created));
+	}
+
+
+
+	/**
 	 * Returns the parent container if any.
 	 * @return IServiceLocator|NULL
 	 */
