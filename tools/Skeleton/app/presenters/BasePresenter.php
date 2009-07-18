@@ -8,6 +8,7 @@
  * @version    $Id$
  */
 
+/*use Nette\Application\Presenter;*/
 
 
 /**
@@ -16,17 +17,8 @@
  * @author     John Doe
  * @package    MyApplication
  */
-abstract class BasePresenter extends /*Nette\Application\*/Presenter
+abstract class BasePresenter extends Presenter
 {
-
-	/**
-	 * @return Nette\Templates\ITemplate
-	 */
-	protected function createTemplate()
-	{
-		$template = parent::createTemplate();
-		$template->registerFilter('Nette\Templates\CurlyBracketsFilter::invoke');
-		return $template;
-	}
+	public $oldLayoutMode = FALSE;
 
 }

@@ -19,13 +19,19 @@
 class FeedPresenter extends BasePresenter
 {
 
-	/**
-	 * @return void
-	 */
-	protected function startup()
+	public function renderRss()
 	{
-		// disables layout
-		$this->setLayout(FALSE);
+		$this->template->title = 'My feed';
+		$this->template->description = 'The latest news';
+
+		$this->template->items = array();
+		$this->template->items[] = (object) array(
+			'title' => 'An article',
+		);
+		$this->template->items[] = (object) array(
+			'title' => 'Another article',
+			'link' => $this->link('//Homepage:'),
+		);
 	}
 
 }
