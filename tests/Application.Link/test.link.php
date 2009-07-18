@@ -85,6 +85,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 	public function startup()
 	{
+		parent::startup();
 		$this->mycontrol = new TestControl($this, 'mycontrol');
 
 

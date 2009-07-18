@@ -121,6 +121,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool */
 	private $ajaxMode;
 
+	/** @var bool */
+	private $startupCheck;
+
 	/** @var PresenterRequest */
 	private $lastCreatedRequest;
 
@@ -188,6 +191,10 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_STARTUP;
 			$this->initGlobalParams();
 			$this->startup();
+			if (!$this->startupCheck) {
+				$class = $this->reflection->getMethod('startup')->getDeclaringClass()->getName();
+				trigger_error("Method $class::startup() or its descendant doesn't call parent::startup().", E_USER_WARNING);
+			}
 			// calls $this->action<Action>()
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);
 
@@ -271,6 +278,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function startup()
 	{
+		$this->startupCheck = TRUE;
 	}
 
 
