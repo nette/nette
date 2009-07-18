@@ -627,7 +627,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function sendPayload()
 	{
-		if (!empty($this->payload)) {
+		if (count($this->payload)) {
 			$this->getHttpResponse()->expire(FALSE);
 			$this->getHttpResponse()->setContentType('application/json');
 			echo json_encode($this->payload);
