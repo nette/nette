@@ -61,7 +61,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
-	 * @return bool
+	 * @return void
 	 * @throws \InvalidArgumentException  if code is invalid
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
@@ -86,7 +86,6 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			$this->code = $code;
 			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
 			header($protocol . ' ' . $code, TRUE, $code);
-			return TRUE;
 		}
 	}
 
@@ -110,13 +109,13 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 * @return void
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
-	public function setHeader($name, $value, $replace = TRUE)
+	public function setHeader($name, $value)
 	{
 		if (headers_sent($file, $line)) {
 			throw new /*\*/InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
-		header($name . ': ' . $value, $replace, $this->code);
+		header($name . ': ' . $value, TRUE, $this->code);
 	}
 
 

@@ -61,7 +61,7 @@ interface IHttpResponse
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
-	 * @return bool
+	 * @return void
 	 */
 	function setCode($code);
 
