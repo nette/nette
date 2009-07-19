@@ -125,16 +125,15 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private $extends;
 
 	/** @var string */
-	private $context, $escape, $tag;
+	private $context, $escape;
 
 	/**#@+ Context-aware escaping states */
 	const CONTEXT_TEXT = 1;
 	const CONTEXT_CDATA = 2;
 	const CONTEXT_TAG = 3;
-	const CONTEXT_ATTRIBUTE_SINGLE = "'";
-	const CONTEXT_ATTRIBUTE_DOUBLE = '"';
-	const CONTEXT_NONE = 4;
-	const CONTEXT_COMMENT = 5;
+	const CONTEXT_ATTRIBUTE = 4;
+	const CONTEXT_NONE = 5;
+	const CONTEXT_COMMENT = 6;
 	/**#@-*/
 
 
@@ -175,7 +174,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		// context-aware escaping
 		$this->context = self::CONTEXT_TEXT;
 		$this->escape = 'TemplateHelpers::escapeHtml';
-		$this->tag = NULL;
 
 		// remove comments
 		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
@@ -188,19 +186,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		);
 
 		// process all {tags} and <tags/>
-		$s = preg_replace_callback(
-			'~
-				<(/?)([a-z]+|!--)|                      ## 1,2) start tag: <tag </tag <!-- ; ignores <!DOCTYPE
-				((?:--\\s*)?>)|                         ## 3) end tag
-				(?<=\\s)(style|on[a-z]+)\s*=\s*(["\'])| ## 4,5) attribute
-				(["\'])|                                ## 6) attribute delimiter
-				(\n[ \t]*)?\\{([^\\s\'"{}]              ## 7,8) indent & macro begin
-					(?>'.self::RE_STRING.'|[^\'"}]+)    ##   + single or double quoted string, chars
-					*)\\}([\ \t]*(?=\r|\n))?            ##   + 9) newline
-			~xsi',
-			array($this, 'cbContent'),
-			"\n" . $s
-		);
+		$s = $this->parse("\n" . $s);
 
 		// blocks closing check
 		if (count($this->blocks) === 1) { // auto-close last block
@@ -243,94 +229,156 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Searches for curly brackets, HTML tags and attributes.
+	 * @param  string
+	 * @return string
 	 */
-	private function cbContent($matches)
+	private function parse($s)
 	{
-		//    [1] => /
-		//    [2] => tag
-		//    [3] => >
-		//    [4] => style|on...
-		//    [5] => '"
-		//    [6] => '"
-		//    [7] => indent
-		//    [8] => {macro...}
-		//    [9] => newline?
+		$offset = 0;
+		$len = strlen($s);
+		$output = $tagName = '';
+		$curlyRE = '
+			(?P<indent>\n[ \t]*)?
+			\\{(?P<macro>[^\\s\'"{}](?>'.self::RE_STRING.'|[^\'"}]+)*)\\}
+			(?P<newline>[\ \t]*(?=\r|\n))?
+		';
 
-		if (!empty($matches[8])) { // {macro|var|modifiers}
-			list(, , , , , , , $indent, $macro) = $matches;
+		while ($offset < $len) {
+			switch ($this->context) {
+			case self::CONTEXT_TEXT:
+				preg_match('~
+					<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+					<(?P<comment>!--)|         ##  begin of HTML comment <!--
+					'.$curlyRE.'               ##  curly tag
+				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
 
-			if (preg_match('#^(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)$#i', $macro, $m)) {
-				list(, $macro, $modifiers) = $m;
-			}
+				if (!$matches || !empty($matches['macro'][0])) { // EOF or {macro}
 
-			foreach ($this->macros as $key => $val) {
-				if (strncmp($macro, $key, strlen($key)) === 0) {
-					$var = substr($macro, strlen($key));
-					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $var)) {
-						continue;
-					}
-					$result = $this->macro($key, trim($var), isset($modifiers) ? $modifiers : '');
-					$nl = isset($matches[9]) ? "\n" : ''; // double newline
-					if ($nl && $indent && strncmp($result, '<?php echo ', 11)) {
-						return "\n" . $result; // remove indent, single newline
-					} else {
-						return $indent . $result . $nl;
-					}
+				} elseif (!empty($matches['comment'][0])) { // <!--
+					$this->context = self::CONTEXT_COMMENT;
+					$this->escape = 'TemplateHelpers::escapeHtmlComment';
+
+				} elseif (empty($matches['closing'][0])) { // <tag
+					$tagName = strtolower($matches['tag'][0]);
+					$this->context = self::CONTEXT_TAG;
+					$this->escape = 'TemplateHelpers::escapeHtml';
+
+				} else { // </tag
+					$tagName = '';
+					$this->context = self::CONTEXT_TAG;
+					$this->escape = 'TemplateHelpers::escapeHtml';
 				}
-			}
-			throw new /*\*/InvalidStateException("Unknown macro '$matches[0]'.");
+				break;
 
-		} elseif ($this->context === self::CONTEXT_NONE) {
-			// skip analyse
+			case self::CONTEXT_CDATA:
+				preg_match('~
+					</'.$tagName.'(?![a-z0-9:])| ##  end HTML tag </tag
+					'.$curlyRE.'                 ##  curly tag
+				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
 
-		} elseif (!empty($matches[6])) { // (attribute) '"
-			if ($this->context === $matches[6]) {
-				$this->context = self::CONTEXT_TAG;
-				$this->escape = 'TemplateHelpers::escapeHtml';
-			} elseif ($this->context === self::CONTEXT_TAG) {
-				$this->context = $matches[6];
-			}
+				if ($matches && empty($matches['macro'][0])) { // </tag
+					$tagName = '';
+					$this->context = self::CONTEXT_TAG;
+					$this->escape = 'TemplateHelpers::escapeHtml';
+				}
+				break;
 
-		} elseif (!empty($matches[4])) { // (style|on...) '"
-			if ($this->context === self::CONTEXT_TAG) {
-				$this->context = $matches[5]; // self::CONTEXT_ATTRIBUTE_SINGLE || self::CONTEXT_ATTRIBUTE_DOUBLE
-				$this->escape = strncasecmp($matches[4], 'on', 2) ? 'TemplateHelpers::escapeHtmlCss' : 'TemplateHelpers::escapeHtmlJs';
-			}
+			case self::CONTEXT_TAG:
+				preg_match('~
+					(?P<end>>)|                ##  end of HTML tag
+					(?<=\\s)(?P<attr>[a-z0-9:-]+)\s*=\s*(?P<quote>["\'])| ## begin of HTML attribute
+					'.$curlyRE.'               ##  curly tag
+				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
 
-		} elseif (!empty($matches[3])) { // >
-			if ($this->context === self::CONTEXT_TAG) {
-				if ($this->tag === 'script' || $this->tag === 'style') {
-					$this->context = self::CONTEXT_CDATA;
-					$this->escape = $this->tag === 'script' ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
-				} else {
+				if (!$matches || !empty($matches['macro'][0])) { // EOF or {macro}
+
+				} elseif (!empty($matches['end'][0])) { // >
+					if ($tagName === 'script' || $tagName === 'style') {
+						$this->context = self::CONTEXT_CDATA;
+						$this->escape = $tagName === 'script' ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
+					} else {
+						$this->context = self::CONTEXT_TEXT;
+						$this->escape = 'TemplateHelpers::escapeHtml';
+					}
+
+				} else { // attribute = '"
+					$this->context = self::CONTEXT_ATTRIBUTE;
+					$quote = $matches['quote'][0];
+					$this->escape = strncasecmp($matches['attr'][0], 'on', 2)
+						? (strcasecmp($matches['attr'][0], 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
+						: 'TemplateHelpers::escapeHtmlJs';
+				}
+				break;
+
+			case self::CONTEXT_ATTRIBUTE:
+				preg_match('~
+					(' . $quote . ')|  ##  1) end of HTML attribute
+					'.$curlyRE.'               ##  curly tag
+				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
+
+				if ($matches && empty($matches['macro'][0])) { // (attribute end) '"
+					$this->context = self::CONTEXT_TAG;
+					$this->escape = 'TemplateHelpers::escapeHtml';
+				}
+				break;
+
+			case self::CONTEXT_COMMENT:
+				preg_match('~
+					(--\s*>)|                  ##  1) end of HTML comment
+					'.$curlyRE.'               ##  curly tag
+				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
+
+				if ($matches && empty($matches['macro'][0])) { // --\s*>
 					$this->context = self::CONTEXT_TEXT;
 					$this->escape = 'TemplateHelpers::escapeHtml';
 				}
-			} elseif ($this->context === self::CONTEXT_COMMENT && $matches[3] !== '>') { // --\s*>
-				$this->context = self::CONTEXT_TEXT;
-				$this->escape = 'TemplateHelpers::escapeHtml';
+				break;
+
+			case self::CONTEXT_NONE:
+				break 2;
 			}
 
-		} elseif (empty($matches[1])) { // <tag
-			if ($this->context === self::CONTEXT_TEXT) {
-				if ($matches[2] === '!--') {
-					$this->context = self::CONTEXT_COMMENT;
-					$this->escape = 'TemplateHelpers::escapeHtmlComment';
+
+			if (!$matches) { // EOF
+				break;
+			}
+
+			$output .= substr($s, $offset, $matches[0][1] - $offset); // advance
+			$offset = $matches[0][1] + strlen($matches[0][0]);
+
+			if (!empty($matches['macro'][0])) { // {macro|modifiers}
+				if (preg_match('#^(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)$#i', $matches['macro'][0], $tmp)) {
+					list(, $macro, $modifiers) = $tmp;
 				} else {
-					$this->context = self::CONTEXT_TAG;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-					$this->tag = strtolower($matches[2]);
+					$macro = $matches['macro'][0];
+					$modifiers = NULL;
 				}
-			}
 
-		} else { // </tag
-			if ($this->context === self::CONTEXT_TEXT || ($this->context === self::CONTEXT_CDATA && $this->tag === strtolower($matches[2]))) {
-				$this->context = self::CONTEXT_TAG;
-				$this->escape = 'TemplateHelpers::escapeHtml';
-				$this->tag = NULL;
+				foreach ($this->macros as $key => $val) {
+					if (strncmp($macro, $key, strlen($key))) {
+						continue;
+					}
+					$macro = substr($macro, strlen($key));
+					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $macro)) {
+						continue;
+					}
+					$macro = $this->macro($key, trim($macro), isset($modifiers) ? $modifiers : '');
+					$nl = isset($matches['newline']) ? "\n" : ''; // double newline
+					if ($nl && $matches['indent'][0] && strncmp($macro, '<?php echo ', 11)) {
+						$output .= "\n" . $macro; // remove indent, single newline
+					} else {
+						$output .= $matches['indent'][0] . $macro . $nl;
+					}
+					continue 2;
+				}
+				throw new /*\*/InvalidStateException("Unknown macro '{$matches['macro'][0]}'.");
+
+			} else { // common behaviour
+				$output .= $matches[0][0];
 			}
 		}
-		return $matches[0];
+
+		return $output . substr($s, $offset);
 	}
 
 
@@ -888,7 +936,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		if (isset($template->_cb)) {
 			$cb->blocks = & $template->_cb->blocks;
 			$cb->templates = & $template->_cb->templates;
-		}	
+		}
 		$cb->templates[$realFile] = $template;
 		$cb->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
 		unset($template->_cb, $template->_extends);
