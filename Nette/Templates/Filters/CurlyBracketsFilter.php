@@ -236,7 +236,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$offset = 0;
 		$len = strlen($s);
-		$output = $tagName = '';
+		$output = '';
 		$curlyRE = '
 			(?P<indent>\n[ \t]*)?
 			\\{(?P<macro>[^\\s\'"{}](?>'.self::RE_STRING.'|[^\'"}]+)*)\\}
@@ -248,8 +248,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			case self::CONTEXT_TEXT:
 				preg_match('~
 					<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-					<(?P<comment>!--)|         ##  begin of HTML comment <!--
-					'.$curlyRE.'               ##  curly tag
+					<(?P<comment>!--)|           ##  begin of HTML comment <!--
+					'.$curlyRE.'                 ##  curly tag
 				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
 
 				if (!$matches || !empty($matches['macro'][0])) { // EOF or {macro}
@@ -259,7 +259,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					$this->escape = 'TemplateHelpers::escapeHtmlComment';
 
 				} elseif (empty($matches['closing'][0])) { // <tag
-					$tagName = strtolower($matches['tag'][0]);
+					$tagName = $matches['tag'][0];
 					$this->context = self::CONTEXT_TAG;
 					$this->escape = 'TemplateHelpers::escapeHtml';
 
@@ -285,7 +285,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 			case self::CONTEXT_TAG:
 				preg_match('~
-					(?P<end>>)|                ##  end of HTML tag
+					(?P<end>>)|                  ##  end of HTML tag
 					(?<=\\s)(?P<attr>[a-z0-9:-]+)\s*=\s*(?P<quote>["\'])| ## begin of HTML attribute
 					'.$curlyRE.'               ##  curly tag
 				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
@@ -293,20 +293,20 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				if (!$matches || !empty($matches['macro'][0])) { // EOF or {macro}
 
 				} elseif (!empty($matches['end'][0])) { // >
-					if ($tagName === 'script' || $tagName === 'style') {
+					if (strcasecmp($tagName, 'script') === 0 || strcasecmp($tagName, 'style') === 0) {
 						$this->context = self::CONTEXT_CDATA;
-						$this->escape = $tagName === 'script' ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
+						$this->escape = strcasecmp($tagName, 'style') ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
 					} else {
 						$this->context = self::CONTEXT_TEXT;
 						$this->escape = 'TemplateHelpers::escapeHtml';
 					}
 
 				} else { // attribute = '"
-					$this->context = self::CONTEXT_ATTRIBUTE;
+						$this->context = self::CONTEXT_ATTRIBUTE;
 					$quote = $matches['quote'][0];
 					$this->escape = strncasecmp($matches['attr'][0], 'on', 2)
 						? (strcasecmp($matches['attr'][0], 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
-						: 'TemplateHelpers::escapeHtmlJs';
+							: 'TemplateHelpers::escapeHtmlJs';
 				}
 				break;
 
@@ -324,8 +324,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 			case self::CONTEXT_COMMENT:
 				preg_match('~
-					(--\s*>)|                  ##  1) end of HTML comment
-					'.$curlyRE.'               ##  curly tag
+					(--\s*>)|                    ##  1) end of HTML comment
+					'.$curlyRE.'                 ##  curly tag
 				~xsi', $s, $matches, PREG_OFFSET_CAPTURE, $offset);
 
 				if ($matches && empty($matches['macro'][0])) { // --\s*>
@@ -358,16 +358,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					if (strncmp($macro, $key, strlen($key))) {
 						continue;
 					}
-					$macro = substr($macro, strlen($key));
-					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $macro)) {
+					$code = substr($macro, strlen($key));
+					if (preg_match('#[a-zA-Z0-9]$#', $key) && preg_match('#^[a-zA-Z0-9._-]#', $code)) {
 						continue;
 					}
-					$macro = $this->macro($key, trim($macro), isset($modifiers) ? $modifiers : '');
+					$code = $this->macro($key, trim($code), isset($modifiers) ? $modifiers : '');
 					$nl = isset($matches['newline']) ? "\n" : ''; // double newline
-					if ($nl && $matches['indent'][0] && strncmp($macro, '<?php echo ', 11)) {
-						$output .= "\n" . $macro; // remove indent, single newline
+					if ($nl && $matches['indent'][0] && strncmp($code, '<?php echo ', 11)) {
+						$output .= "\n" . $code; // remove indent, single newline
 					} else {
-						$output .= $matches['indent'][0] . $macro . $nl;
+						$output .= $matches['indent'][0] . $code . $nl;
 					}
 					continue 2;
 				}

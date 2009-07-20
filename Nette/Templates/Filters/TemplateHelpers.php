@@ -229,4 +229,16 @@ final class TemplateHelpers
 		return round($bytes, $precision) . ' ' . $unit;
 	}
 
+
+
+	/**
+	 * /dev/null.
+	 * @param  mixed
+	 * @return string
+	 */
+	public static function null($value)
+	{
+		return '';
+	}
+
 }
