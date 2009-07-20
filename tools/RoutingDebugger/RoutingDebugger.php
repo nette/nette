@@ -39,7 +39,7 @@ class RoutingDebugger extends Object
 	 */
 	public static function enable()
 	{
-		if (!Environment::isProduction()) {
+		if (!Environment::isProduction() && !Environment::getHttpRequest()->isAjax()) {
 			$debugger = new self(Environment::getApplication()->getRouter(), Environment::getHttpRequest());
 			register_shutdown_function(array($debugger, 'paint'));
 		}
@@ -61,13 +61,8 @@ class RoutingDebugger extends Object
 	 */
 	public function paint()
 	{
-		foreach (headers_list() as $header) {
-			if (strncasecmp($header, 'Content-Type:', 13) === 0) {
-				if (substr($header, 14, 9) === 'text/html') {
-					break;
-				}
-				return;
-			}
+		if (strncmp(Environment::getHttpResponse()->getHeader('Content-Type', 'text/html'), 'text/html', 9)) {
+			return;
 		}
 
 		$this->template = new Template;

@@ -161,13 +161,9 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
-		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE'])) {
-			foreach (headers_list() as $header) {
-				if (strncasecmp($header, 'Set-Cookie:', 11) === 0) {
-					$this->setHeader('Refresh', "0;url=$url");
-					return;
-				}
-			}
+		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE']) && $this->getHeader('Set-Cookie') !== NULL) {
+			$this->setHeader('Refresh', "0;url=$url");
+			return;
 		}
 
 		$this->setCode($code);
@@ -216,6 +212,26 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 
 	/**
+	 * Return the value of the HTTP header.
+	 * @param  string
+	 * @param  mixed
+	 * @return mixed
+	 */
+	public function getHeader($header, $default = NULL)
+	{
+		$header .= ':';
+		$len = strlen($header);
+		foreach (headers_list() as $item) {
+			if (strncasecmp($item, $header, $len) === 0) {
+				return ltrim(substr($item, $len));
+			}
+		}
+		return $default;
+	}
+
+
+
+	/**
 	 * Returns a list of headers to sent.
 	 * @return array
 	 */
@@ -224,7 +240,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 		$headers = array();
 		foreach (headers_list() as $header) {
 			$a = strpos($header, ':');
-			$headers[substr($header, 0, $a)] = substr($header, $a + 2);
+			$headers[substr($header, 0, $a)] = (string) substr($header, $a + 2);
 		}
 		return $headers;
 	}
@@ -251,8 +267,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	{
 		if (headers_sent()) return FALSE;
 
-		$headers = $this->getHeaders();
-		if (isset($headers['Content-Encoding'])) {
+		if ($this->getHeader('Content-Encoding') !== NULL) {
 			return FALSE; // called twice
 		}
 
@@ -280,8 +295,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			// Sends invisible garbage for IE.
 			if (!isset($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') === FALSE) return;
 			if (!in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)) return;
-			$headers = $this->getHeaders();
-			if (isset($headers['Content-Type']) && $headers['Content-Type'] !== 'text/html') return;
+			if ($this->getHeader('Content-Type', 'text/html') !== 'text/html') return;
 			$s = " \t\r\n";
 			for ($i = 2e3; $i; $i--) echo $s{rand(0, 3)};
 			self::$fixIE = FALSE;
