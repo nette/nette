@@ -55,6 +55,7 @@ class NetteLoader extends AutoLoader
 		'autoloader' => '/Loaders/AutoLoader.php',
 		'badrequestexception' => '/Application/BadRequestException.php',
 		'badsignalexception' => '/Application/BadSignalException.php',
+		'basetemplate' => '/Templates/BaseTemplate.php',
 		'button' => '/Forms/Controls/Button.php',
 		'cache' => '/Caching/Cache.php',
 		'cachinghelper' => '/Templates/Filters/CachingHelper.php',

@@ -223,20 +223,6 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 
 
-	/**
-	 * Converts to SimpleXML. (experimental)
-	 * @return SimpleXMLElement
-	 */
-	public function toXml()
-	{
-		$dom = new DOMDocument;
-		$dom->loadHTML('<html><meta http-equiv="Content-Type" content="text/html;charset=utf-8">' . str_replace("\r", '', $this->__toString()) . '</html>');
-		return simplexml_import_dom($dom)->body;
-		//return simplexml_load_string('<xml>' . $this->__toString() . '</xml>');
-	}
-
-
-
 	/********************* template helpers ****************d*g**/
 
 
