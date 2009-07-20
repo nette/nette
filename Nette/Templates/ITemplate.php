@@ -38,4 +38,10 @@ interface ITemplate
 	 */
 	function render();
 
+	/**
+	 * Renders template to string.
+	 * @return string
+	 */
+	//function __toString();
+
 }

@@ -438,9 +438,9 @@ class Mail extends MailMimePart
 	 */
 	protected function buildHtml()
 	{
-		if ($this->html instanceof /*Nette\Templates\*/Template) {
+		if ($this->html instanceof /*Nette\Templates\*/ITemplate) {
 			$this->html->mail = $this;
-			if ($this->basePath === NULL) {
+			if ($this->basePath === NULL && $this->html instanceof /*Nette\Templates\*/IFileTemplate) {
 				$this->basePath = dirname($this->html->getFile());
 			}
 			$this->html = $this->html->__toString(TRUE);
@@ -470,7 +470,7 @@ class Mail extends MailMimePart
 	protected function buildText()
 	{
 		$text = $this->getBody();
-		if ($text instanceof /*Nette\Templates\*/Template) {
+		if ($text instanceof /*Nette\Templates\*/ITemplate) {
 			$text->mail = $this;
 			$this->setBody($text->__toString(TRUE));
 

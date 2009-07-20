@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__) . '/../Object.php';
 
-require_once dirname(__FILE__) . '/../Templates/IFileTemplate.php';
+require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
 
 
 
@@ -35,16 +35,13 @@ require_once dirname(__FILE__) . '/../Templates/IFileTemplate.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-class Template extends /*Nette\*/Object implements IFileTemplate
+abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 {
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
 
-	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
+	/** @var array of function(BaseTemplate $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
-
-	/** @var string */
-	private $file;
 
 	/** @var array */
 	private $params = array();
@@ -57,35 +54,6 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 
 	/** @var array */
 	private $helperLoaders = array();
-
-	/** @var int */
-	public static $cacheExpire = FALSE;
-
-	/** @var Nette\Caching\ICacheStorage */
-	private static $cacheStorage;
-
-
-
-	/**
-	 * Sets the path to the template file.
-	 * @param  string  template file path
-	 * @return void
-	 */
-	public function setFile($file)
-	{
-		$this->file = $file;
-	}
-
-
-
-	/**
-	 * Returns the path to the template file.
-	 * @return string  template file path
-	 */
-	public function getFile()
-	{
-		return $this->file;
-	}
 
 
 
@@ -128,79 +96,17 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	/**
 	 * Renders template to output.
 	 * @return void
+	 * @abstract
 	 */
 	public function render()
 	{
-		if ($this->file == NULL) { // intentionally ==
-			throw new /*\*/InvalidStateException("Template file name was not specified.");
-
-		} elseif (!is_file($this->file) || !is_readable($this->file)) {
-			throw new /*\*/FileNotFoundException("Missing template file '$this->file'.");
-		}
-
-		$this->params['template'] = $this;
-
-		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
-		$key = md5($this->file) . '.' . basename($this->file);
-		$cached = $content = $cache[$key];
-
-		if ($content === NULL) {
-			if (!$this->filters) {
-				$this->onPrepareFilters($this);
-			}
-
-			if (!$this->filters) {
-				/*Nette\Loaders\*/LimitedScope::load($this->file, $this->params);
-				return;
-			}
-
-			try {
-				$shortName = $this->file;
-				$shortName = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $shortName);
-			} catch (Exception $foo) {
-			}
-
-			// compiling
-			$content = file_get_contents($this->file);
-
-			foreach ($this->filters as $filter) {
-				$content = self::extractPhp($content, $blocks);
-				try {
-					$content = call_user_func($filter, $content);
-				} catch (Exception $e) {
-					is_callable($filter, TRUE, $textual);
-					throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . " (in file $shortName)", 0, $e);
-				}
-				$content = strtr($content, $blocks); // put PHP code back
-			}
-
-			$content = "<?php\n// template $shortName\n//\n?>$content";
-			$content = self::optimizePhp($content);
-			$cache->save(
-				$key,
-				$content,
-				array(
-					/*Nette\Caching\*/Cache::FILES => $this->file,
-					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
-				)
-			);
-			$cached = $cache[$key];
-		}
-
-		if ($cached !== NULL && self::$cacheStorage instanceof TemplateCacheStorage) {
-			/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->params);
-			fclose($cached['handle']);
-
-		} else {
-			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->params);
-		}
 	}
 
 
 
 	/**
 	 * Renders template to string.
-	 * @param bool  can throw exceptions? (hidden parameter)
+	 * @param  bool  can throw exceptions? (hidden parameter)
 	 * @return string
 	 */
 	public function __toString()
@@ -219,6 +125,38 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 				return '';
 			}
 		}
+	}
+
+
+
+	/**
+	 * Applies filters on template content.
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	protected function compile($content, $label = NULL)
+	{
+		if (!$this->filters) {
+			$this->onPrepareFilters($this);
+		}
+
+		try {
+			foreach ($this->filters as $filter) {
+				$content = self::extractPhp($content, $blocks);
+				$content = call_user_func($filter, $content);
+				$content = strtr($content, $blocks); // put PHP code back
+			}
+		} catch (Exception $e) {
+			is_callable($filter, TRUE, $textual);
+			throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
+		}
+
+		if ($label) {
+			$content = "<?php\n// $label\n//\n?>$content";
+		}
+
+		return self::optimizePhp($content);
 	}
 
 
@@ -375,7 +313,7 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function &__get($name)
 	{
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
-			trigger_error("The variable '$name' does not exist in template '$this->file'", E_USER_NOTICE);
+			trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
 		}
 
 		return $this->params[$name];
@@ -403,35 +341,6 @@ class Template extends /*Nette\*/Object implements IFileTemplate
 	public function __unset($name)
 	{
 		unset($this->params[$name]);
-	}
-
-
-
-	/********************* caching ****************d*g**/
-
-
-
-	/**
-	 * Set cache storage.
-	 * @param  Nette\Caching\Cache
-	 * @return void
-	 */
-	public static function setCacheStorage(/*Nette\Caching\*/ICacheStorage $storage)
-	{
-		self::$cacheStorage = $storage;
-	}
-
-
-
-	/**
-	 * @return Nette\Caching\ICacheStorage
-	 */
-	public static function getCacheStorage()
-	{
-		if (self::$cacheStorage === NULL) {
-			self::$cacheStorage = new TemplateCacheStorage(/*Nette\*/Environment::getVariable('cacheBase'));
-		}
-		return self::$cacheStorage;
 	}
 
 

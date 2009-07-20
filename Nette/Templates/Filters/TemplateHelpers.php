@@ -70,7 +70,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeHtml($s)
 	{
-		if (is_object($s) && ($s instanceof Template || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
 			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, ENT_QUOTES);
@@ -137,7 +137,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeJs($s)
 	{
-		if (is_object($s) && ($s instanceof Template || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(']]>', ']]\x3E', json_encode($s));
