@@ -26,4 +26,4 @@ Usage:
 2) Run debugger. Add this lines above command $application->run()
 
 	require 'RoutingDebugger.php';
-	RoutingDebugger::run();
+	RoutingDebugger::enable();

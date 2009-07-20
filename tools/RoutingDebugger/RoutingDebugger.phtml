@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routing debugger template.
  *
@@ -12,75 +13,88 @@
 /*use Nette\Application\Presenter;*/
 
 ?>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Routing debugger</title>
 
-	<style>
-	body {
-		font: 13px/1.5 sans-serif;
-		color: #333;
-		background: #fff;
+<style type="text/css">
+/* <![CDATA[ */
+	#routingDebugger {
+		position: fixed;
+		_position: absolute;
+		right: 5px;
+		top: 5px;
+		z-index: 23178;
+		padding: 5px;
+		font: 9pt/1.5 Consolas, monospace !important;
+		color: black;
+		background: #F5F5F5;
+		border: 1px dotted gray;
 	}
 
-	h1 {
-		font-size: 170%;
-		color: #165ca3;
+	#routingDebugger div {
+		display: none;
 	}
 
-	h2 {
-		font-size: 150%;
+	#routingDebugger * {
+		color: inherit;
+		background: inherit;
+		text-align: inherit;
+	}
+
+	#routingDebuggerIcon {
+		padding: 4px;
+		top: 0;
+		right: 0;
+		line-height: 1;
+		color: black;
+		text-decoration: none;
+	}
+
+	#routingDebugger h2 {
+		font-size: 120%;
 		color: black;
 	}
 
-	table {
+	#routingDebugger table {
 		padding: 0;
 		margin: 0;
-		border-collapse:collapse;
+		border-collapse: collapse;
 	}
 
-	table td, table th {
-		color: #525b37;
-		background: #fff;
-		border: 1px solid #d1cdab;
-		padding: 6px;
+	#routingDebugger table td, #routingDebugger table th {
+		color: #444;
+		background: #FFF;
+		border: 1px solid #CCC;
+		padding: 3px 6px;
 		text-align: left;
 	}
 
-	table th {
+	#routingDebugger table th {
 		color: #165ca3;
-		background: #e3e9ba;
+		background: #DDD;
 		font-size: 90%;
 	}
 
-	table .alt td {
-		background: #f8f8f0;
-	}
-
-	.may, .yes {
+	#routingDebugger .may, #routingDebugger .yes {
 		color: green;
 	}
 
-	.yes {
+	#routingDebugger .yes {
 		font-weight: bold;
 	}
 
-	pre {
+	#routingDebugger pre, #routingDebugger code {
+		font: 9pt/1.5 Consolas, monospace !important;
 		display: inline;
 	}
 
-	</style>
-</head>
+/* ]]> */
+</style>
 
-<body>
-	<h1>Routing debugger</h1>
 
-	<p><small>Enter an URL into the address bar and see which routes match it.</small></p>
-
+<div id="routingDebugger">
+	<a id="routingDebuggerIcon" href="#"><?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?> <abbr>&#x25ba;</abbr></a
+	><div>
 	<?php if (!empty($presenter)): ?>
-		<h2>&#x25ba; <?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
-
+		<h2><?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
 		<?php if (empty($params)): ?>
 			<p>No parameters.</p>
 
@@ -107,10 +121,10 @@
 	<!-- ~~~~~~~~~~~ -->
 
 	<?php if (empty($router)): ?>
-		<h2>&#x25ba; Not matched</h2>
+		<h2>Not matched</h2>
 
 	<?php else: ?>
-		<h2>&#x25ba; Matched by <?php echo htmlSpecialChars($router) ?></h2>
+		<h2>Matched by <?php echo htmlSpecialChars($router) ?></h2>
 	<?php endif ?>
 
 	<!-- ~~~~~~~~~~~ -->
@@ -145,5 +159,29 @@
 		</tbody>
 		</table>
 	<?php endif ?>
-</body>
-</html>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+/* <![CDATA[ */
+document.getElementById('routingDebuggerIcon').onclick = function(e) {
+	var arrow = this.getElementsByTagName('abbr')[0];
+	var panel = this.nextSibling;
+	var collapsed = panel.currentStyle ? panel.currentStyle.display == 'none' : getComputedStyle(panel, null).display == 'none';
+
+	arrow.innerHTML = collapsed ? String.fromCharCode(0x25bc) : String.fromCharCode(0x25ba);
+	panel.style.display = collapsed ? 'block' : 'none';
+	arrow.parentNode.style.position = collapsed ? 'absolute' : 'static';
+
+	document.cookie = 'routingDebuggerVisible=' + collapsed*1 + '; path=/';
+	return false;
+}
+
+document.body.appendChild(document.getElementById('routingDebugger'));
+
+if (document.cookie.indexOf('routingDebuggerVisible=1') > -1) {
+	document.getElementById('routingDebuggerIcon').onclick();
+}
+/* ]]> */
+</script>

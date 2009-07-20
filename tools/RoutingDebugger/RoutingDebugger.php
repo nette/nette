@@ -34,13 +34,15 @@ class RoutingDebugger extends Object
 
 
 	/**
-	 * Dispatch a HTTP request to a routing debugger.
+	 * Enables routing debugger.
+	 * @return void
 	 */
-	public static function run()
+	public static function enable()
 	{
-		$debugger = new self(Environment::getApplication()->getRouter(), Environment::getHttpRequest());
-		$debugger->show();
-		exit;
+		if (!Environment::isProduction()) {
+			$debugger = new self(Environment::getApplication()->getRouter(), Environment::getHttpRequest());
+			register_shutdown_function(array($debugger, 'paint'));
+		}
 	}
 
 
@@ -57,8 +59,17 @@ class RoutingDebugger extends Object
 	 * Renders debuger output.
 	 * @return void
 	 */
-	public function show()
+	public function paint()
 	{
+		foreach (headers_list() as $header) {
+			if (strncasecmp($header, 'Content-Type:', 13) === 0) {
+				if (substr($header, 14, 9) === 'text/html') {
+					break;
+				}
+				return;
+			}
+		}
+
 		$this->template = new Template;
 		$this->template->setFile(dirname(__FILE__) . '/RoutingDebugger.phtml');
 		$this->template->routers = array();
