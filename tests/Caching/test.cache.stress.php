@@ -30,7 +30,7 @@ function checkStr($s)
 define('COUNT_FILES', 3);
 
 
-$storage = new /*Nette\Caching\*/FileStorage(dirname(__FILE__) . '/tmp/testfile');
+$storage = new /*Nette\Caching\*/FileStorage(dirname(__FILE__) . '/tmp');
 
 
 // clear playground

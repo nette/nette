@@ -59,7 +59,7 @@ final class Environment
 	private static $vars = array(
 		'encoding' => array('UTF-8', FALSE),
 		'lang' => array('en', FALSE),
-		'cacheBase' => array('%tempDir%/cache-', TRUE),
+		'cacheBase' => array('%tempDir%/cache', TRUE),
 		'tempDir' => array('%appDir%/temp', TRUE),
 		'logDir' => array('%appDir%/log', TRUE),
 		'templatesDir' => array('%appDir%/templates', TRUE),

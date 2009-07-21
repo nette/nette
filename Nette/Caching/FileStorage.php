@@ -72,18 +72,13 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	public static $gcProbability = 0.001;
 
 	/** @var string */
-	protected $base;
+	protected $dir;
 
 
 
-	public function __construct($base)
+	public function __construct($dir)
 	{
-		$this->base = $base;
-		$dir = dirname($base . '-');
-
-		if (!is_dir($dir) || !is_writable($dir)) {
-			throw new /*\*/InvalidStateException("Temporary directory '$dir' is not writable.");
-		}
+		$this->dir = $dir;
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
 			$this->clean(array());
@@ -227,6 +222,13 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		$cacheFile = $this->getCacheFile($key);
+		$dir = dirname($cacheFile);
+		if (!is_dir($dir)) {
+			umask(0000);
+			if (!@mkdir($dir, 0777, TRUE)) {
+				throw new /*\*/InvalidStateException("Unable to create directory '$dir'.");
+			}
+		}
 		$handle = @fopen($cacheFile, 'r+b'); // intentionally @
 		if (!$handle) {
 			$handle = @fopen($cacheFile, 'wb'); // intentionally @
@@ -296,18 +298,18 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 		$now = time();
 
-		$iterator = dir(dirname($this->base . '-'));
-		if (!$iterator) return FALSE;
-		$rest = substr($this->base, strlen($iterator->path) + 1);
-
-		while (FALSE !== ($entry = $iterator->read())) {
-			if (strncmp($entry, $rest, strlen($rest))) continue;
-
-			$cacheFile = $iterator->path . '/' . $entry;
-			if (!is_file($cacheFile)) continue;
-
+		$base = $this->dir . DIRECTORY_SEPARATOR . 'c';
+		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->dir), RecursiveIteratorIterator::CHILD_FIRST);
+		foreach ($iterator as $entry) {
+			if (strncmp($entry, $base, strlen($base))) {
+				continue;
+			}
+			if ($entry->isDir()) {
+				@rmdir((string) $entry); // intentionally @
+				continue;
+			}
 			do {
-				$meta = $this->readMeta($cacheFile, LOCK_SH);
+				$meta = $this->readMeta((string) $entry, LOCK_SH);
 				if (!$meta || $all) continue 2;
 
 				if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
@@ -328,7 +330,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 			flock($meta[self::HANDLE], LOCK_EX);
 			ftruncate($meta[self::HANDLE], 0);
-			@unlink($cacheFile); // intentionally @
+			@unlink((string) $entry); // intentionally @
 			fclose($meta[self::HANDLE]);
 		}
 
@@ -395,7 +397,8 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		return $this->base . urlencode($key);
+		$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
+		return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
 	}
 
 }

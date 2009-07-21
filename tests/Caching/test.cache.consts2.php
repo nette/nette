@@ -11,7 +11,7 @@ $key = 'nette';
 $value = 'rulez';
 $tmpDir = dirname(__FILE__) . '/tmp';
 
-$cache = new Cache(new /*Nette\Caching\*/FileStorage("$tmpDir/prefix-"));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage($tmpDir));
 
 
 echo "'Deleting' dependent const\n";

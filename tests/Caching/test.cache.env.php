@@ -10,7 +10,8 @@ require_once '../../Nette/loader.php';
 
 $tmpDir = dirname(__FILE__) . '/tmp';
 
-foreach (glob("$tmpDir/*") as $file) unlink($file); // delete all files
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($tmpDir), RecursiveIteratorIterator::CHILD_FIRST) as $entry) // delete all files
+	if ($entry->isDir()) @rmdir($entry); else @unlink($entry);
 
 Environment::setVariable('tempDir', $tmpDir);
 
