@@ -58,8 +58,9 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 */
 	protected function createComponent($name)
 	{
-		$method = "createComponent$name";
-		if (method_exists($this, $method)) {
+		$ucname = ucfirst($name);
+		$method = 'createComponent' . $ucname;
+		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			$component = $this->$method($name);
 			if ($component instanceof /*Nette\*/IComponent && $component->getParent() === NULL) {
 				$this->addComponent($component, $name);

@@ -245,7 +245,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$matches = $this->match('~
 			(?P<end>>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
 			'.self::RE_CURLY.'|          ##  curly tag
-			\s*(?P<attr>[^\s/>=]+)(?:\s*=\s*(?P<value>["\']|[^\s/>]+))? ## begin of HTML attribute
+			\s*(?P<attr>[^\s/>={}]+)(?:\s*=\s*(?P<value>["\']|[^\s/>]+))? ## begin of HTML attribute
 		~xsi');
 
 		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}

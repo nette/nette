@@ -11,6 +11,14 @@
 
 { test} {"test} {'test}
 
+<p {attr class('item')}> </p>
+
+<p val0 val1 = tmp val2=tmp val3="x"/> </p>
+
+<p val = {$id}> </p>
+
+<p val = />{$id}</p>
+
 {* comment *}
 
 {* multi
@@ -104,8 +112,34 @@ var prop2 = {$people};
 </ul>
 
 
+<ul>
+	<li n:each="$people as $person">{$person}</li>
+</ul>
+
+<p n:if="true">
+	<div><p>true</div>
+</p>
+
+<p n:if="true">
+	<div><p>true</p></div>
+</p>
+
+<p n:if="false">
+	<div><p>true</div>
+</p>
+
+<p n:if="false">
+	<div><p>true</p></div>
+</p>
+
+<p n:if="strlen('{$id}') == 5">nocurly</p>
+
+<ul>
+	<li n:if="strlen($person)===4" n:each="$people as $person">{$person}</li>
+</ul>
+
 <ul n:block="bl">
 	<li n:if="strlen($person)===4" n:each="$people as $person">{$person}</li>
 </ul>
 
-<n:include block="bl">
+<n:include block="bl" n:modifiers="upper">

@@ -686,7 +686,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function redirectUri($uri, $code = NULL)
 	{
 		if ($this->isAjax()) {
-			$this->payload->redirect = $uri;
+			$this->payload->redirect = (string) $uri;
 			$this->terminate();
 
 		} else {
@@ -1272,7 +1272,7 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Returns session namespace provided to pass temporary data between redirects.
-	 * @return Nette\Web\SesssionNamespace
+	 * @return Nette\Web\SessionNamespace
 	 */
 	public function getFlashSession()
 	{
@@ -1319,7 +1319,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return Nette\Web\Sesssion
+	 * @return Nette\Web\Session
 	 */
 	private function getSession()
 	{
