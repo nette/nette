@@ -505,6 +505,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 
 
 		// structure $files and create HttpUploadedFile objects
+		$this->files = array();
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
