@@ -214,6 +214,9 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 				}
 			}
 			$content = substr($content, strlen($macro));
+
+		} elseif (!isset(self::$defaultMacros[$macro])) {
+			return NULL;
 		}
 		$this->current = array($content, $modifiers);
 		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), self::$defaultMacros[$macro]);
@@ -238,6 +241,48 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 		} else {
 			return $content;
+		}
+	}
+
+
+
+	/**
+	 * Process <n:tag n:attr> (experimental).
+	 * @param  stdClass
+	 * @return string
+	 */
+	public function tag($tag)
+	{
+		if ($tag->isSpecial) {
+			$knownTags = array(
+				'n:include' => 'block',
+				'n:for' => 'each',
+				'n:block' => 'name',
+			);
+			$value = isset($knownTags[$tag->name], $tag->attrs['n:' . $knownTags[$tag->name]]) ? $tag->attrs['n:' . $knownTags[$tag->name]] : '';
+			if ($tag->name === 'n:block' || $tag->name === 'n:include') $value = '#' . $value;
+			return $this->macro(substr($tag->name, 2), $value, isset($tag->attrs['n:modifiers']) ? $tag->attrs['n:modifiers'] : '');
+
+		} else {
+			$knownAttrs = array(
+				'n:if' => 'if',
+				'n:each' => 'foreach',
+				'n:block' => 'block',
+			);
+			$code = $tag->html;
+			$attrs = $tag->attrs;
+			foreach ($knownAttrs as $name => $macro) {
+				if (!isset($attrs[$name])) continue;
+				$value = $attrs[$name];
+				unset($attrs[$name]);
+				if ($name === 'n:block') $value = '#' . $value;
+				if ($tag->closing) $macro = '/' . $macro;
+				$code = $tag->closing ? $code . $this->macro($macro, $value, '') : $this->macro($macro, $value, '') . $code;
+			}
+			if ($attrs) {
+				throw new /*\*/InvalidStateException("Unknown HTML attribute " . implode(', ', array_keys($attrs)));
+			}
+			return $code;
 		}
 	}
 

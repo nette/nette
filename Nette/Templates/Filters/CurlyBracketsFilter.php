@@ -41,7 +41,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** PHP identifier */
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
-	/** PHP identifier */
+	/** curly bracket tag */
 	const RE_CURLY = '
 		(?P<indent>\n[ \t]*)?
 		\\{(?P<macro>[^\\s\'"{}](?>
@@ -49,6 +49,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			[^\'"}]+)*)\\}
 		(?P<newline>[\ \t]*(?=\r|\n))?
 	';
+
+	/** spcial HTML tag or attribute prefix */
+	const HTML_PREFIX = 'n:';
 
 	/** @var array */
 	private $handlers;
@@ -152,7 +155,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
 					$this->output .= "\n" . $code; // remove indent, single newline
 				} else {
-					$this->output .= $matches['indent'] . $code . $nl;
+					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' ? $nl : '');
 				}
 
 			} else { // common behaviour
@@ -171,7 +174,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function contextText()
 	{
 		$matches = $this->match('~
-			<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+			(?:\n[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
 			<(?P<comment>!--)|           ##  begin of HTML comment <!--
 			'.self::RE_CURLY.'           ##  curly tag
 		~xsi');
@@ -186,13 +189,24 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
+			$tag->isSpecial = !strncmp($tag->name, self::HTML_PREFIX, 2);
+			$tag->attrs = array();
+			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'TemplateHelpers::escapeHtml';
 
 		} else { // </tag
-			$tag = end($this->tags);
-			$tag->name = $matches['tag'];
+			do {
+				$tag = array_pop($this->tags);
+				if (!$tag) {
+					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open.");
+					$tag = (object) NULL;
+					$tag->name = $matches['tag'];
+				}
+			} while (strcasecmp($tag->name, $matches['tag']));
+			$this->tags[] = $tag;
 			$tag->closing = TRUE;
+			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'TemplateHelpers::escapeHtml';
 		}
@@ -214,6 +228,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		if ($matches && empty($matches['macro'])) { // </tag
 			$tag->closing = TRUE;
+			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'TemplateHelpers::escapeHtml';
 		}
@@ -228,15 +243,24 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function contextTag()
 	{
 		$matches = $this->match('~
-			(?P<end>>)|                  ##  end of HTML tag
-			(?<=\\s)(?P<attr>[a-z0-9:-]+)\s*=\s*(?P<quote>["\'])| ## begin of HTML attribute
-			'.self::RE_CURLY.'           ##  curly tag
+			(?P<end>>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
+			'.self::RE_CURLY.'|          ##  curly tag
+			\s*(?P<attr>[^\s/>=]+)(?:\s*=\s*(?P<value>["\']|[^\s/>]+))? ## begin of HTML attribute
 		~xsi');
 
 		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
 
-		} elseif (!empty($matches['end'])) { // >
+		} elseif (!empty($matches['end'])) { // end of HTML tag >
 			$tag = end($this->tags);
+			if (!empty($tag->isSpecial) || !empty($tag->attrs)) {
+				$tag->html = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
+				$code = $this->processTag($tag);
+				if ($code === NULL) {
+					throw new /*\*/InvalidStateException("Unable to process '" . trim($tag->html) . "'.");
+				}
+				$this->output = substr_replace($this->output, $code, $tag->pos);
+				$matches[0] = ''; // remove from output
+			}
 
 			if (!$tag->closing && (strcasecmp($tag->name, 'script') === 0 || strcasecmp($tag->name, 'style') === 0)) {
 				$this->context = self::CONTEXT_CDATA;
@@ -247,12 +271,33 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				if ($tag->closing) array_pop($this->tags);
 			}
 
-		} else { // attribute = '"
+		} else { // HTML attribute
+			$name = $matches['attr'];
+			$value = empty($matches['value']) ? TRUE : $matches['value'];
+
+			// special attributes
+			$isSpecial = !strncmp($matches['attr'], self::HTML_PREFIX, 2);
+			$tag = end($this->tags);
+			if (!$isSpecial && $tag->isSpecial) {
+				$name = 'n:' . $name;
+				$isSpecial = TRUE;
+			}
+			if ($isSpecial) {
+				if ($value === '"' || $value === "'") {
+					if ($matches = $this->match('~(.*?)' . $value . '~xsi')) { // overwrites $matches
+						$value = $matches[1];
+					}
+				}
+				$tag->attrs[$name] = $value;
+				$matches[0] = ''; // remove from output
+
+			} elseif ($value === '"' || $value === "'") { // attribute = "'
 				$this->context = self::CONTEXT_ATTRIBUTE;
-			$this->quote = $matches['quote'];
-			$this->escape = strncasecmp($matches['attr'], 'on', 2)
-				? (strcasecmp($matches['attr'], 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
+				$this->quote = $value;
+				$this->escape = strncasecmp($name, 'on', 2)
+					? (strcasecmp($name, 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
 					: 'TemplateHelpers::escapeHtmlJs';
+			}
 		}
 		return $matches;
 	}
@@ -321,6 +366,21 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		foreach ($this->handlers as $handler) {
 			$code = $handler->macro($macro, $value, $modifiers);
+			if ($code !== NULL) return $code;
+		}
+	}
+
+
+
+	/**
+	 * HTML tag processing.
+	 * @param  stdClass
+	 * @return string
+	 */
+	protected function processTag($tag)
+	{
+		foreach ($this->handlers as $handler) {
+			$code = $handler->tag($tag);
 			if ($code !== NULL) return $code;
 		}
 	}
