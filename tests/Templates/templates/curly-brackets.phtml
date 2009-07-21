@@ -99,3 +99,13 @@ var prop2 = {$people};
 
 
 <!-- {$comment} -->
+
+
+</ul>
+
+
+<ul n:block="bl">
+	<li n:if="strlen($person)===4" n:each="$people as $person">{$person}</li>
+</ul>
+
+<n:include block="bl">
