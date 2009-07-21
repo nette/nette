@@ -280,7 +280,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 				$code = $tag->closing ? $code . $this->macro($macro, $value, '') : $this->macro($macro, $value, '') . $code;
 			}
 			if ($attrs) {
-				throw new /*\*/InvalidStateException("Unknown HTML attribute " . implode(', ', array_keys($attrs)));
+				throw new /*\*/InvalidStateException("Unknown attribute " . implode(', ', array_keys($attrs)) . " on line {$this->filter->line}.");
 			}
 			return $code;
 		}
@@ -307,11 +307,11 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		$params = CurlyBracketsFilter::formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new /*\*/InvalidStateException("Missing destination in {include}.");
+			throw new /*\*/InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
 
 		} elseif ($destination[0] === '#') { // include #block
 			if (!preg_match('#^\\#'.CurlyBracketsFilter::RE_IDENTIFIER.'$#', $destination)) {
-				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given.");
+				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
 			$parent = $destination === '#parent';
@@ -319,7 +319,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 				$item = end($this->blocks);
 				while ($item && $item[0][0] !== '#') $item = prev($this->blocks);
 				if (!$item) {
-					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block.");
+					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block on line {$this->filter->line}.");
 				}
 				$destination = $item[0];
 			}
@@ -350,13 +350,13 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	{
 		$destination = CurlyBracketsFilter::fetchToken($content); // destination
 		if ($destination === NULL) {
-			throw new /*\*/InvalidStateException("Missing destination in {extends}.");
+			throw new /*\*/InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
 		}
 		if (!empty($this->blocks)) {
-			throw new /*\*/InvalidStateException("{extends} must be placed outside any block.");
+			throw new /*\*/InvalidStateException("{extends} must be placed outside any block; on line {$this->filter->line}.");
 		}
 		if ($this->extends !== NULL) {
-			throw new /*\*/InvalidStateException("Multiple {extends} declarations are not allowed.");
+			throw new /*\*/InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
 		}
 		$this->extends = $destination !== 'none';
 		return $this->extends ? '$_cb->extends = ' . CurlyBracketsFilter::formatString($destination) : '';
@@ -377,10 +377,10 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 		} elseif ($name[0] === '#') { // #block
 			if (!preg_match('#^\\#'.CurlyBracketsFilter::RE_IDENTIFIER.'$#', $name)) {
-				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given.");
+				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new /*\*/InvalidStateException("Cannot redeclare block '$name'.");
+				throw new /*\*/InvalidStateException("Cannot redeclare block '$name'; on line {$this->filter->line}.");
 			}
 
 			$top = empty($this->blocks);
@@ -397,7 +397,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			}
 
 		} else {
-			throw new /*\*/InvalidStateException("Invalid block parameter '$name'.");
+			throw new /*\*/InvalidStateException("Invalid block parameter '$name' on line {$this->filter->line}.");
 		}
 	}
 
@@ -412,7 +412,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		list($name, $modifiers) = array_pop($this->blocks);
 
 		if ($empty || ($content && $content !== $name)) {
-			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here.");
+			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
 
 		} elseif (substr($name, 0, 1) === '#') { // #block
 			return "{/block$name}";

@@ -149,7 +149,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				list(, $macro, $value, $modifiers) = $m2;
 				$code = $this->processMacro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
-					throw new /*\*/InvalidStateException("Unknown macro '{$matches['macro']}'.");
+					throw new /*\*/InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
 				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
@@ -199,7 +199,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			do {
 				$tag = array_pop($this->tags);
 				if (!$tag) {
-					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open.");
+					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
 				}
@@ -256,7 +256,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				$tag->html = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 				$code = $this->processTag($tag);
 				if ($code === NULL) {
-					throw new /*\*/InvalidStateException("Unable to process '" . trim($tag->html) . "'.");
+					$tmp = strrpos($this->input, '<', -strlen($this->input) + $this->offset);
+					throw new /*\*/InvalidStateException("Unknown tag or attribute in " . substr($this->input, $tmp, $this->offset - $tmp) . " on line $this->line.");
 				}
 				$this->output = substr_replace($this->output, $code, $tag->pos);
 				$matches[0] = ''; // remove from output
@@ -400,6 +401,17 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			foreach ($matches as $k => $v) $matches[$k] = $v[0];
 		}
 		return $matches;
+	}
+
+
+
+	/**
+	 * Returns current line number.
+	 * @return int
+	 */
+	public function getLine()
+	{
+		return substr_count($this->input, "\n", 0, $this->offset);
 	}
 
 
