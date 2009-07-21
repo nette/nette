@@ -61,14 +61,14 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('nettephp.com', $request->getUri()->host);
 		$this->assertEquals(8080, $request->getUri()->port);
 		$this->assertEquals('/file.php', $request->getUri()->path);
-		$this->assertEquals("pa\x072am=val2&x param=val.", $request->getUri()->query);
+		$this->assertEquals("pa%\x72am=val2&x param=val.", $request->getUri()->query);
 		$this->assertEquals('', $request->getUri()->fragment);
 		$this->assertEquals('nettephp.com:8080', $request->getUri()->authority);
 		$this->assertEquals('https://nettephp.com:8080', $request->getUri()->hostUri);
 		$this->assertEquals('https://nettephp.com:8080/', $request->getUri()->baseUri);
 		$this->assertEquals('/', $request->getUri()->basePath);
 		$this->assertEquals('file.php', $request->getUri()->relativeUri);
-		$this->assertEquals("https://nettephp.com:8080/file.php?pa\x072am=val2&x param=val.", $request->getUri()->absoluteUri);
+		$this->assertEquals("https://nettephp.com:8080/file.php?pa%\x72am=val2&x param=val.", $request->getUri()->absoluteUri);
 		$this->assertEquals('', $request->getUri()->pathInfo);
 
 		$this->assertEquals('https', $request->getOriginalUri()->scheme);

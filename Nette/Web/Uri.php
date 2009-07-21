@@ -464,22 +464,14 @@ class Uri extends /*Nette\*/FreezableObject
 		// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
 		// within a path segment, the characters "/", ";", "=", "?" are reserved
 		// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-		$offset = 0;
-		$max = strlen($s) - 3;
-		$res = '';
-		do {
-			$pos = strpos($s, '%', $offset);
-			if ($pos === FALSE || $pos > $max) {
-				return $res . substr($s, $offset);
-			}
-			$ch = chr(hexdec($s[$pos + 1] . $s[$pos + 2]));
+		preg_match_all('#(?<=%)[a-f0-9][a-f0-9]#i', $s, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+		foreach (array_reverse($matches) as $match) {
+			$ch = chr(hexdec($match[0][0]));
 			if (strpos($reserved, $ch) === FALSE) {
-				$res .= substr($s, $offset, $pos - $offset) . $ch;
-			} else {
-				$res .= substr($s, $offset, $pos - $offset + 3);
+				$s = substr_replace($s, $ch, $match[0][1] - 1, 3);
 			}
-			$offset = $pos + 3;
-		} while (TRUE);
+		}
+		return $s;
 	}
 
 }

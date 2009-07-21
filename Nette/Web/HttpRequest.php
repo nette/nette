@@ -94,7 +94,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	final public function getUri()
 	{
 		if ($this->uri === NULL) {
-			$this->initialize();
+			$this->detectUri();
 		}
 		return $this->uri;
 	}
@@ -109,7 +109,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	public function setUri(UriScript $uri)
 	{
 		$this->uri = clone $uri;
-		parse_str($this->uri->query, $this->query);
+		$this->query = NULL;
 		$this->uri->canonicalize();
 		$this->uri->freeze();
 	}
@@ -123,7 +123,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	final public function getOriginalUri()
 	{
 		if ($this->originalUri === NULL) {
-			$this->initialize();
+			$this->detectUri();
 		}
 		return $this->originalUri;
 	}
@@ -218,10 +218,6 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$uri->path = preg_replace(array_keys($this->uriFilter[PHP_URL_PATH]), array_values($this->uriFilter[PHP_URL_PATH]), $tmp[0]);
 		$uri->path = /*Nette\*/String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
-
-		if ($uri->query !== $this->originalUri->query) {
-			parse_str($uri->query, $this->query);
-		}
 
 		// normalized uri
 		$uri->canonicalize();
@@ -438,7 +434,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	{
 		if (strcasecmp($encoding, $this->encoding)) {
 			$this->encoding = $encoding;
-			$this->query = $this->post = $this->cookies = NULL; // reinitialization required
+			$this->query = $this->post = $this->cookies = $this->files = NULL; // reinitialization required
 		}
 	}
 
@@ -450,20 +446,14 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 	 */
 	public function initialize()
 	{
-		$this->query = $this->post = $this->files = $this->cookies = array();
 		$filter = (!in_array(ini_get("filter.default"), array("", "unsafe_raw")) || ini_get("filter.default_flags"));
 
-		if (!empty($_GET)) {
-			$this->query = ($filter ? filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW) : $_GET);
+		parse_str($this->getUri()->query, $this->query);
+		if (!$this->query) {
+			$this->query = $filter ? filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW) : (empty($_GET) ? array() : $_GET);
 		}
-		if (!empty($_POST)) {
-			$this->post = ($filter ? filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW) : $_POST);
-		}
-		if (!empty($_COOKIE)) {
-			$this->cookies = ($filter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : $_COOKIE);
-		}
-
-		$this->detectUri();
+		$this->post = $filter ? filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW) : (empty($_POST) ? array() : $_POST);
+		$this->cookies = $filter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : (empty($_COOKIE) ? array() : $_COOKIE);
 
 		$gpc = (bool) get_magic_quotes_gpc();
 		$enc = (bool) $this->encoding;
