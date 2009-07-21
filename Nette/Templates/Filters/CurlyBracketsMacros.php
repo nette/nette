@@ -198,10 +198,10 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 	/**
 	 * Process {macro content | modifiers}
-     * @param  string
-     * @param  string
-     * @param  string
-     * @return string
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return string
 	 */
 	public function macro($macro, $content, $modifiers)
 	{

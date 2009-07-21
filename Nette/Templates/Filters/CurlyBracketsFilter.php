@@ -59,16 +59,22 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** @var int */
 	private $offset;
 
+	/** @var strng (for CONTEXT_ATTRIBUTE) */
+	private $quote;
+
+	/** @var array */
+	private $tags;
+
 	/** @var string */
 	public $context, $escape;
 
 	/**#@+ Context-aware escaping states */
-	const CONTEXT_TEXT = 1;
-	const CONTEXT_CDATA = 2;
-	const CONTEXT_TAG = 3;
-	const CONTEXT_ATTRIBUTE = 4;
-	const CONTEXT_NONE = 5;
-	const CONTEXT_COMMENT = 6;
+	const CONTEXT_TEXT = 'text';
+	const CONTEXT_CDATA = 'cdata';
+	const CONTEXT_TAG = 'tag';
+	const CONTEXT_ATTRIBUTE = 'attribute';
+	const CONTEXT_NONE = 'none';
+	const CONTEXT_COMMENT = 'comment';
 	/**#@-*/
 
 
@@ -126,103 +132,11 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$this->input = & $s;
 		$this->offset = 0;
 		$this->output = '';
+		$this->tags = array();
 		$len = strlen($s);
 
 		while ($this->offset < $len) {
-			switch ($this->context) {
-			case self::CONTEXT_TEXT:
-				$matches = $this->match('~
-					<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-					<(?P<comment>!--)|           ##  begin of HTML comment <!--
-					'.self::RE_CURLY.'           ##  curly tag
-				~xsi');
-
-				if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
-
-				} elseif (!empty($matches['comment'])) { // <!--
-					$this->context = self::CONTEXT_COMMENT;
-					$this->escape = 'TemplateHelpers::escapeHtmlComment';
-
-				} elseif (empty($matches['closing'])) { // <tag
-					$tagName = $matches['tag'];
-					$this->context = self::CONTEXT_TAG;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-
-				} else { // </tag
-					$tagName = '';
-					$this->context = self::CONTEXT_TAG;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-				}
-				break;
-
-			case self::CONTEXT_CDATA:
-				$matches = $this->match('~
-					</'.$tagName.'(?![a-z0-9:])| ##  end HTML tag </tag
-					'.self::RE_CURLY.'           ##  curly tag
-				~xsi');
-
-				if ($matches && empty($matches['macro'])) { // </tag
-					$tagName = '';
-					$this->context = self::CONTEXT_TAG;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-				}
-				break;
-
-			case self::CONTEXT_TAG:
-				$matches = $this->match('~
-					(?P<end>>)|                  ##  end of HTML tag
-					(?<=\\s)(?P<attr>[a-z0-9:-]+)\s*=\s*(?P<quote>["\'])| ## begin of HTML attribute
-					'.self::RE_CURLY.'           ##  curly tag
-				~xsi');
-
-				if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
-
-				} elseif (!empty($matches['end'])) { // >
-					if (strcasecmp($tagName, 'script') === 0 || strcasecmp($tagName, 'style') === 0) {
-						$this->context = self::CONTEXT_CDATA;
-						$this->escape = strcasecmp($tagName, 'style') ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
-					} else {
-						$this->context = self::CONTEXT_TEXT;
-						$this->escape = 'TemplateHelpers::escapeHtml';
-					}
-
-				} else { // attribute = '"
-						$this->context = self::CONTEXT_ATTRIBUTE;
-					$quote = $matches['quote'];
-					$this->escape = strncasecmp($matches['attr'], 'on', 2)
-						? (strcasecmp($matches['attr'], 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
-							: 'TemplateHelpers::escapeHtmlJs';
-				}
-				break;
-
-			case self::CONTEXT_ATTRIBUTE:
-				$matches = $this->match('~
-					(' . $quote . ')|            ##  1) end of HTML attribute
-					'.self::RE_CURLY.'           ##  curly tag
-				~xsi');
-
-				if ($matches && empty($matches['macro'])) { // (attribute end) '"
-					$this->context = self::CONTEXT_TAG;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-				}
-				break;
-
-			case self::CONTEXT_COMMENT:
-				$matches = $this->match('~
-					(--\s*>)|                    ##  1) end of HTML comment
-					'.self::RE_CURLY.'           ##  curly tag
-				~xsi');
-
-				if ($matches && empty($matches['macro'])) { // --\s*>
-					$this->context = self::CONTEXT_TEXT;
-					$this->escape = 'TemplateHelpers::escapeHtml';
-				}
-				break;
-
-			case self::CONTEXT_NONE:
-				break 2;
-			}
-
+			$matches = $this->{"context$this->context"}();
 
 			if (!$matches) { // EOF
 				break;
@@ -230,19 +144,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
 				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)?$()#i', $matches['macro'], $m2);
 				list(, $macro, $value, $modifiers) = $m2;
-				foreach ($this->handlers as $handler) {
-					$code = $handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
-					if ($code === NULL) continue;
-					$nl = isset($matches['newline']) ? "\n" : ''; // double newline
-					if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
-						$this->output .= "\n" . $code; // remove indent, single newline
-					} else {
-						$this->output .= $matches['indent'] . $code . $nl;
-					}
-					continue 2;
+				$code = $this->processMacro($macro, trim($value), isset($modifiers) ? $modifiers : '');
+				if ($code === NULL) {
+					throw new /*\*/InvalidStateException("Unknown macro '{$matches['macro']}'.");
 				}
-
-				throw new /*\*/InvalidStateException("Unknown macro '{$matches['macro']}'.");
+				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
+				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
+					$this->output .= "\n" . $code; // remove indent, single newline
+				} else {
+					$this->output .= $matches['indent'] . $code . $nl;
+				}
 
 			} else { // common behaviour
 				$this->output .= $matches[0];
@@ -250,6 +161,168 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		}
 
 		return $this->output . substr($this->input, $this->offset);
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_TEXT.
+	 */
+	private function contextText()
+	{
+		$matches = $this->match('~
+			<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+			<(?P<comment>!--)|           ##  begin of HTML comment <!--
+			'.self::RE_CURLY.'           ##  curly tag
+		~xsi');
+
+		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
+
+		} elseif (!empty($matches['comment'])) { // <!--
+			$this->context = self::CONTEXT_COMMENT;
+			$this->escape = 'TemplateHelpers::escapeHtmlComment';
+
+		} elseif (empty($matches['closing'])) { // <tag
+			$tag = $this->tags[] = (object) NULL;
+			$tag->name = $matches['tag'];
+			$tag->closing = FALSE;
+			$this->context = self::CONTEXT_TAG;
+			$this->escape = 'TemplateHelpers::escapeHtml';
+
+		} else { // </tag
+			$tag = end($this->tags);
+			$tag->name = $matches['tag'];
+			$tag->closing = TRUE;
+			$this->context = self::CONTEXT_TAG;
+			$this->escape = 'TemplateHelpers::escapeHtml';
+		}
+		return $matches;
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_CDATA.
+	 */
+	private function contextCData()
+	{
+		$tag = end($this->tags);
+		$matches = $this->match('~
+			</'.$tag->name.'(?![a-z0-9:])| ##  end HTML tag </tag
+			'.self::RE_CURLY.'           ##  curly tag
+		~xsi');
+
+		if ($matches && empty($matches['macro'])) { // </tag
+			$tag->closing = TRUE;
+			$this->context = self::CONTEXT_TAG;
+			$this->escape = 'TemplateHelpers::escapeHtml';
+		}
+		return $matches;
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_TAG.
+	 */
+	private function contextTag()
+	{
+		$matches = $this->match('~
+			(?P<end>>)|                  ##  end of HTML tag
+			(?<=\\s)(?P<attr>[a-z0-9:-]+)\s*=\s*(?P<quote>["\'])| ## begin of HTML attribute
+			'.self::RE_CURLY.'           ##  curly tag
+		~xsi');
+
+		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
+
+		} elseif (!empty($matches['end'])) { // >
+			$tag = end($this->tags);
+
+			if (!$tag->closing && (strcasecmp($tag->name, 'script') === 0 || strcasecmp($tag->name, 'style') === 0)) {
+				$this->context = self::CONTEXT_CDATA;
+				$this->escape = strcasecmp($tag->name, 'style') ? 'TemplateHelpers::escapeJs' : 'TemplateHelpers::escapeCss';
+			} else {
+				$this->context = self::CONTEXT_TEXT;
+				$this->escape = 'TemplateHelpers::escapeHtml';
+				if ($tag->closing) array_pop($this->tags);
+			}
+
+		} else { // attribute = '"
+				$this->context = self::CONTEXT_ATTRIBUTE;
+			$this->quote = $matches['quote'];
+			$this->escape = strncasecmp($matches['attr'], 'on', 2)
+				? (strcasecmp($matches['attr'], 'style') ? 'TemplateHelpers::escapeHtml' : 'TemplateHelpers::escapeHtmlCss')
+					: 'TemplateHelpers::escapeHtmlJs';
+		}
+		return $matches;
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_ATTRIBUTE.
+	 */
+	private function contextAttribute()
+	{
+		$matches = $this->match('~
+			(' . $this->quote . ')|      ##  1) end of HTML attribute
+			'.self::RE_CURLY.'           ##  curly tag
+		~xsi');
+
+		if ($matches && empty($matches['macro'])) { // (attribute end) '"
+			$this->context = self::CONTEXT_TAG;
+			$this->escape = 'TemplateHelpers::escapeHtml';
+		}
+		return $matches;
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_COMMENT.
+	 */
+	private function contextComment()
+	{
+		$matches = $this->match('~
+			(--\s*>)|                    ##  1) end of HTML comment
+			'.self::RE_CURLY.'           ##  curly tag
+		~xsi');
+
+		if ($matches && empty($matches['macro'])) { // --\s*>
+			$this->context = self::CONTEXT_TEXT;
+			$this->escape = 'TemplateHelpers::escapeHtml';
+		}
+		return $matches;
+	}
+
+
+
+	/**
+	 * Handles CONTEXT_NONE.
+	 */
+	private function contextNone()
+	{
+		$matches = $this->match('~
+			.*                           ##  all
+		~xsi');
+		return $matches;
+	}
+
+
+
+	/**
+	 * Macro processing.
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	protected function processMacro($macro, $value, $modifiers)
+	{
+		foreach ($this->handlers as $handler) {
+			$code = $handler->macro($macro, $value, $modifiers);
+			if ($code !== NULL) return $code;
+		}
 	}
 
 
