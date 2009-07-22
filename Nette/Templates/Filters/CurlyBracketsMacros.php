@@ -121,6 +121,9 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	/** @var bool */
 	private $extends;
 
+	/** @var string */
+	private $uniq;
+
 
 
 	/**
@@ -135,6 +138,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
+		$this->uniq = substr(md5(uniqid()), 0, 10);
 
 		$filter->context = CurlyBracketsFilter::CONTEXT_TEXT;
 		$filter->escape = 'TemplateHelpers::escapeHtml';
@@ -190,7 +194,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		// internal state holder
 		$s = "<?php\n"
 			/*. 'use Nette\Templates\CurlyBracketsMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
-			. "\$_cb = CurlyBracketsMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", __FILE__); unset(\$_extends);\n"
+			. "\$_cb = CurlyBracketsMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
 
@@ -336,8 +340,8 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			$destination = CurlyBracketsFilter::formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . CurlyBracketsFilter::formatModifiers('CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[__FILE__])->__toString(TRUE)', $modifiers)
-				: 'CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[__FILE__])->render()';
+				? 'echo ' . CurlyBracketsFilter::formatModifiers('CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . ')->__toString(TRUE)', $modifiers)
+				: 'CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->render()';
 		}
 	}
 
@@ -431,7 +435,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	private function cbNamedBlocks($matches)
 	{
 		list(, $name, $content) = $matches;
-		$func = '_cbb' . substr(md5(uniqid($name)), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
 			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
 		return '';
