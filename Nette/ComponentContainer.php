@@ -144,6 +144,10 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = substr($name, 0, $a);
 		}
 
+		if ($name == NULL) {
+			throw new /*\*/InvalidArgumentException("Component or subcomponent name must be non-empty alphanumeric string, '$name' given.");
+		}
+
 		if (!isset($this->components[$name])) {
 			$this->createComponent($name);
 		}

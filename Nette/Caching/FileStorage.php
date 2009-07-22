@@ -72,13 +72,20 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	public static $gcProbability = 0.001;
 
 	/** @var string */
-	protected $dir;
+	private $dir;
+
+	/** @var bool */
+	private $useSubdir;
 
 
 
 	public function __construct($dir)
 	{
+		$this->useSubdir = !ini_get('safe_mode') || !ini_get('safe_mode_gid');
 		$this->dir = $dir;
+		if (!$this->useSubdir && (!is_dir($dir) || !is_writable($dir))) {
+			throw new /*\*/InvalidStateException("Temporary directory '$dir' is not writable.");
+		}
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
 			$this->clean(array());
@@ -223,7 +230,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 		$cacheFile = $this->getCacheFile($key);
 		$dir = dirname($cacheFile);
-		if (!is_dir($dir)) {
+		if ($this->useSubdir && !is_dir($dir)) {
 			umask(0000);
 			if (!@mkdir($dir, 0777, TRUE)) {
 				throw new /*\*/InvalidStateException("Unable to create directory '$dir'.");
@@ -397,8 +404,12 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
-		return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
+		if ($this->useSubdir) {
+			$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
+			return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
+		} else {
+			return $this->dir . '/c_' . urlencode($key);
+		}
 	}
 
 }

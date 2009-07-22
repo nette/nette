@@ -145,7 +145,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 				break;
 
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
-				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)?$()#i', $matches['macro'], $m2);
+				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)?$()#is', $matches['macro'], $m2);
 				list(, $macro, $value, $modifiers) = $m2;
 				$code = $this->processMacro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
