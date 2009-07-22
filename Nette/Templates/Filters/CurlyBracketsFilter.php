@@ -349,7 +349,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function contextNone()
 	{
 		$matches = $this->match('~
-			.*                           ##  all
+			'.self::RE_CURLY.'           ##  curly tag
 		~xsi');
 		return $matches;
 	}

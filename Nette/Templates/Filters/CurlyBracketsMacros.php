@@ -340,7 +340,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			$destination = CurlyBracketsFilter::formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . CurlyBracketsFilter::formatModifiers('CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . ')->__toString(TRUE)', $modifiers)
+				? 'echo ' . CurlyBracketsFilter::formatModifiers('CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
 				: 'CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->render()';
 		}
 	}

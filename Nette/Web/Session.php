@@ -224,7 +224,7 @@ class Session extends /*Nette\*/Object
 		session_destroy();
 		$_SESSION = NULL;
 		self::$started = FALSE;
-		if (!headers_sent()) {
+		if (!$this->getHttpResponse()->isSent()) {
 			$params = session_get_cookie_params();
 			$this->getHttpResponse()->deleteCookie(session_name(), $params['path'], $params['domain'], $params['secure']);
 		}
