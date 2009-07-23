@@ -53,8 +53,8 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** spcial HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
-	/** @var array */
-	private $handlers;
+	/** @var ICurlyBracketsHandler */
+	private $handler;
 
 	/** @var string */
 	private $input, $output;
@@ -83,13 +83,24 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 
 	/**
-	 * Adds a new macro handler.
+	 * Sets a macro handler.
 	 * @param  ICurlyBracketsHandler
 	 * @return void
 	 */
-	public function addHandler($handler)
+	public function setHandler($handler)
 	{
-		$this->handlers[] = $handler;
+		$this->handler = $handler;
+	}
+
+
+
+	/**
+	 * Returns macro handler.
+	 * @return ICurlyBracketsHandler
+	 */
+	public function getHandler()
+	{
+		return $this->handler;
 	}
 
 
@@ -106,19 +117,15 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$this->escape = '$template->escape';
 
 		// initialize handlers
-		if (empty($this->handlers)) {
-			$this->handlers[] = new CurlyBracketsMacros;
+		if (empty($this->handler)) {
+			$this->handler = new CurlyBracketsMacros;
 		}
-		foreach ($this->handlers as $handler) {
-			$handler->initialize($this, $s);
-		}
+		$this->handler->initialize($this, $s);
 
 		// process all {tags} and <tags/>
 		$s = $this->parse("\n" . $s);
 
-		foreach ($this->handlers as $handler) {
-			$handler->finalize($s);
-		}
+		$this->handler->finalize($s);
 
 		return $s;
 	}
@@ -147,7 +154,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
 				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)?$()#is', $matches['macro'], $m2);
 				list(, $macro, $value, $modifiers) = $m2;
-				$code = $this->processMacro($macro, trim($value), isset($modifiers) ? $modifiers : '');
+				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
 					throw new /*\*/InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
@@ -189,7 +196,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isSpecial = !strncmp($tag->name, self::HTML_PREFIX, 2);
+			$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -202,6 +209,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
+					$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
@@ -252,12 +260,18 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag >
 			$tag = end($this->tags);
-			if (!empty($tag->isSpecial) || !empty($tag->attrs)) {
-				$tag->html = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
-				$code = $this->processTag($tag);
-				if ($code === NULL) {
-					$tmp = strrpos($this->input, '<', -strlen($this->input) + $this->offset);
-					throw new /*\*/InvalidStateException("Unknown tag or attribute in " . substr($this->input, $tmp, $this->offset - $tmp) . " on line $this->line.");
+			if ($tag->isMacro || !empty($tag->attrs)) {
+				if ($tag->isMacro) {
+					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
+					if ($code === NULL) {
+						throw new /*\*/InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
+					}
+				} else {
+					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
+					$code = $this->handler->attrsMacro($code, $tag->attrs, $tag->closing);
+					if ($code === NULL) {
+						throw new /*\*/InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
+					}
 				}
 				$this->output = substr_replace($this->output, $code, $tag->pos);
 				$matches[0] = ''; // remove from output
@@ -276,14 +290,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$name = $matches['attr'];
 			$value = empty($matches['value']) ? TRUE : $matches['value'];
 
-			// special attributes
-			$isSpecial = !strncmp($matches['attr'], self::HTML_PREFIX, 2);
-			$tag = end($this->tags);
-			if (!$isSpecial && $tag->isSpecial) {
-				$name = 'n:' . $name;
-				$isSpecial = TRUE;
+			// special attribute?
+			if ($isSpecial = String::startsWith($name, self::HTML_PREFIX)) {
+				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
-			if ($isSpecial) {
+			$tag = end($this->tags);
+			if ($isSpecial || $tag->isMacro) {
 				if ($value === '"' || $value === "'") {
 					if ($matches = $this->match('~(.*?)' . $value . '~xsi')) { // overwrites $matches
 						$value = $matches[1];
@@ -352,38 +364,6 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			'.self::RE_CURLY.'           ##  curly tag
 		~xsi');
 		return $matches;
-	}
-
-
-
-	/**
-	 * Macro processing.
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	protected function processMacro($macro, $value, $modifiers)
-	{
-		foreach ($this->handlers as $handler) {
-			$code = $handler->macro($macro, $value, $modifiers);
-			if ($code !== NULL) return $code;
-		}
-	}
-
-
-
-	/**
-	 * HTML tag processing.
-	 * @param  stdClass
-	 * @return string
-	 */
-	protected function processTag($tag)
-	{
-		foreach ($this->handlers as $handler) {
-			$code = $handler->tag($tag);
-			if ($code !== NULL) return $code;
-		}
 	}
 
 

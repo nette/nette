@@ -115,7 +115,15 @@ var prop2 = {$people};
 
 
 <ul>
-	<li n:each="$people as $person">{$person}</li>
+	<li n:foreach="$people as $person">{$person}</li>
+</ul>
+
+<ul>
+	<li n:for="$i=0;$i<3;$i++">{$i}</li>
+</ul>
+
+<ul>
+	<li n:while="--$i>0">{$i}</li>
 </ul>
 
 <p n:if="true">
@@ -137,11 +145,11 @@ var prop2 = {$people};
 <p n:if="strlen('{$id}') == 5">nocurly</p>
 
 <ul>
-	<li n:if="strlen($person)===4" n:each="$people as $person">{$person}</li>
+	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
 <ul n:block="bl">
-	<li n:if="strlen($person)===4" n:each="$people as $person">{$person}</li>
+	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
 <n:include block="bl" n:modifiers="upper">
