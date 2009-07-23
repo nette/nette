@@ -48,7 +48,8 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {attr ?} HTML element attributes
  * - {block|texy} ... {/block} capture of filter block
  * - {contentType ...} HTTP Content-Type header
- * - {assign $var value} set template parameter
+ * - {assign var => value} set template parameter
+ * - {default var => value} set default template parameter
  * - {dump $var}
  * - {debugbreak}
  *
@@ -93,6 +94,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'assign' => '<?php %:macroAssign% ?>', // deprecated?
+		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("templatesDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
@@ -592,6 +594,17 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	{
 		$param = ltrim(CurlyBracketsFilter::fetchToken($content), '$'); // [$]params value
 		return '$' . $param . ' = ' . CurlyBracketsFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
+		//return 'extract(' . CurlyBracketsFilter::fetchArray($content) . ')';
+	}
+
+
+
+	/**
+	 * {default ...}
+	 */
+	private function macroDefault($content)
+	{
+		return 'extract(get_defined_vars()' . CurlyBracketsFilter::formatArray($content, ' + ') . ')';
 	}
 
 
