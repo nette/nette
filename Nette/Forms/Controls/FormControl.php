@@ -436,7 +436,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 * @param  mixed      rule type
 	 * @param  string     message to display for invalid data
 	 * @param  mixed      optional rule arguments
-	 * @return FormContainer  provides a fluent interface
+	 * @return FormControl  provides a fluent interface
 	 */
 	public function addRule($operation, $message = NULL, $arg = NULL)
 	{

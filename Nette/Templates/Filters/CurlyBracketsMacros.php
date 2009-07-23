@@ -552,14 +552,20 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	/**
 	 * {widget ...}
 	 */
-	private function macroWidget($content, $modifiers)
+	private function macroWidget($content)
 	{
-		// TODO: add support for $modifiers
-		// TODO: check arguments
-		$pair = explode(':', CurlyBracketsFilter::fetchToken($content), 2);
+		$pair = CurlyBracketsFilter::fetchToken($content); // widget[:method]
+		if ($pair === NULL) {
+			throw new /*\*/InvalidStateException("Missing widget name in {widget} on line {$this->filter->line}.");
+		}
+		$pair = explode(':', $pair, 2);
+		$widget = CurlyBracketsFilter::formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = preg_match('#^'.CurlyBracketsFilter::RE_IDENTIFIER.'|$#', $method) ? "render$method" : "{\"render$method\"}";
-		return "\$control->getWidget(\"$pair[0]\")->$method({$this->filter->formatArray($content)})";
+		$method = preg_match('#^('.CurlyBracketsFilter::RE_IDENTIFIER.'|)$#', $method) ? "render$method" : "{\"render$method\"}";
+		$param = CurlyBracketsFilter::formatArray($content);
+		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
+		return ($widget[0] === '$' ? "if (is_object($widget)) $widget->$method($param); else " : '')
+			. "\$control->getWidget($widget)->$method($param)";
 	}
 
 
@@ -609,9 +615,10 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroAssign($content, $modifiers)
 	{
-		$param = ltrim(CurlyBracketsFilter::fetchToken($content), '$'); // [$]params value
-		return '$' . $param . ' = ' . CurlyBracketsFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
-		//return 'extract(' . CurlyBracketsFilter::fetchArray($content) . ')';
+		if (strpos($content, '=>') === FALSE) { // back compatibility
+			return '$' . ltrim(CurlyBracketsFilter::fetchToken($content), '$') . ' = ' . CurlyBracketsFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
+		}
+		return 'extract(' . CurlyBracketsFilter::formatArray($content) . ')';
 	}
 
 

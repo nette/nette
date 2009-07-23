@@ -261,7 +261,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			return "element = document.getElementById(" . json_encode($control->getHtmlId()) . ");\n\t"
 				. "res = element.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
 
-		case $operation === ':filled' && $control instanceof TextInput:
+		case $operation === ':filled' && $control instanceof TextBase:
 			return $this->getValueScript($control) . "res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
 
 		case $operation === ':minlength' && $control instanceof TextBase:

@@ -69,7 +69,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 			$able = is_callable($callback, TRUE, $textual);
 			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
-		if (in_array($callback, $this->filters, TRUE)) {
+		if (in_array($callback, $this->filters)) {
 			is_callable($callback, TRUE, $textual);
 			throw new /*\*/InvalidStateException("Filter '$textual' was registered twice.");
 		}
