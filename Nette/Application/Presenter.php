@@ -245,7 +245,7 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 4: SHUTDOWN
 			$this->phase = self::PHASE_SHUTDOWN;
 
-			if ($this->isAjax()) {
+			if ($this->isAjax() && !($e instanceof ForwardingException)) {
 				$this->sendPayload();
 			}
 
@@ -1022,7 +1022,7 @@ abstract class Presenter extends Control implements IPresenter
 			$args[self::SIGNAL_KEY] = $component->getParamId($signal);
 			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
 		}
-		if ($mode === 'redirect' && $this->hasFlashSession()) {
+		if (($mode === 'redirect' || $mode === 'forward') && $this->hasFlashSession()) {
 			$args[self::FLASH_KEY] = $this->getParam(self::FLASH_KEY);
 		}
 
