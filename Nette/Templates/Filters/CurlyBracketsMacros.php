@@ -108,6 +108,9 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		'?' => '<?php %:macroModifiers% ?>', // deprecated?
 	);
 
+	/** @var array */
+	public $macros;
+
 	/** @var CurlyBracketsFilter */
 	private $filter;
 
@@ -125,6 +128,16 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 	/** @var string */
 	private $uniq;
+
+
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct()
+	{
+		$this->macros = self::$defaultMacros;
+	}
 
 
 
@@ -213,19 +226,19 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	{
 		if ($macro === '') {
 			$macro = substr($content, 0, 2);
-			if (!isset(self::$defaultMacros[$macro])) {
+			if (!isset($this->macros[$macro])) {
 				$macro = substr($content, 0, 1);
-				if (!isset(self::$defaultMacros[$macro])) {
+				if (!isset($this->macros[$macro])) {
 					return NULL;
 				}
 			}
 			$content = substr($content, strlen($macro));
 
-		} elseif (!isset(self::$defaultMacros[$macro])) {
+		} elseif (!isset($this->macros[$macro])) {
 			return NULL;
 		}
 		$this->current = array($content, $modifiers);
-		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), self::$defaultMacros[$macro]);
+		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), $this->macros[$macro]);
 	}
 
 
@@ -295,6 +308,10 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		}
 		return $attrs ? NULL : $code;
 	}
+
+
+
+	/********************* macros ****************d*g**/
 
 
 

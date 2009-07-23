@@ -100,6 +100,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	public function getHandler()
 	{
+		if ($this->handler === NULL) {
+			$this->handler = new CurlyBracketsMacros;
+		}
 		return $this->handler;
 	}
 
@@ -117,15 +120,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$this->escape = '$template->escape';
 
 		// initialize handlers
-		if (empty($this->handler)) {
-			$this->handler = new CurlyBracketsMacros;
-		}
-		$this->handler->initialize($this, $s);
+		$this->getHandler()->initialize($this, $s);
 
 		// process all {tags} and <tags/>
 		$s = $this->parse("\n" . $s);
 
-		$this->handler->finalize($s);
+		$this->getHandler()->finalize($s);
 
 		return $s;
 	}
