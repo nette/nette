@@ -615,6 +615,9 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroAssign($content, $modifiers)
 	{
+		if (!$content) {
+			throw new /*\*/InvalidStateException("Missing arguments in {assign} on line {$this->filter->line}.");
+		}
 		if (strpos($content, '=>') === FALSE) { // back compatibility
 			return '$' . ltrim(CurlyBracketsFilter::fetchToken($content), '$') . ' = ' . CurlyBracketsFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
 		}
@@ -628,7 +631,10 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroDefault($content)
 	{
-		return 'extract(get_defined_vars()' . CurlyBracketsFilter::formatArray($content, ' + ') . ')';
+		if (!$content) {
+			throw new /*\*/InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
+		}
+		return 'extract(' . CurlyBracketsFilter::formatArray($content) . ', EXTR_SKIP)';
 	}
 
 
