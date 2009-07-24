@@ -196,7 +196,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
+			$tag->isMacro = /*Nette\*/String::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -209,7 +209,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
-					$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
+					$tag->isMacro = /*Nette\*/String::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
@@ -291,7 +291,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			$value = empty($matches['value']) ? TRUE : $matches['value'];
 
 			// special attribute?
-			if ($isSpecial = String::startsWith($name, self::HTML_PREFIX)) {
+			if ($isSpecial = /*Nette\*/String::startsWith($name, self::HTML_PREFIX)) {
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$tag = end($this->tags);

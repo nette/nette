@@ -564,7 +564,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		$method = preg_match('#^('.CurlyBracketsFilter::RE_IDENTIFIER.'|)$#', $method) ? "render$method" : "{\"render$method\"}";
 		$param = CurlyBracketsFilter::formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
-		return ($widget[0] === '$' ? "if (is_object($widget)) $widget->$method($param); else " : '')
+		return ($widget[0] === '$' ? "if (is_object($widget)) {$widget}->$method($param); else " : '')
 			. "\$control->getWidget($widget)->$method($param)";
 	}
 
