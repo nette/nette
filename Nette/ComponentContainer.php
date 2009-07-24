@@ -153,7 +153,7 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if (isset($this->components[$name])) {
-			return $a === FALSE ? $this->components[$name] : $this->components[$name]->getComponent($ext);
+			return $a === FALSE ? $this->components[$name] : $this->components[$name]->getComponent($ext, $need);
 
 		} elseif ($need) {
 			throw new /*\*/InvalidArgumentException("Component with name '$name' does not exist.");

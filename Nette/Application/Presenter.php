@@ -1179,6 +1179,11 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function saveGlobalState()
 	{
+		// load lazy components
+		foreach ($this->globalParams as $id => $foo) {
+			$this->getComponent($id, FALSE);
+		}
+
 		$this->globalParams = array();
 		$this->globalState = $this->getGlobalState();
 	}
