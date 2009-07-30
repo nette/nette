@@ -71,8 +71,8 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key); ?>',
 
 		'if' => '<?php if (%%): ?>',
-		'elseif' => '<?php elseif (%%): ?>',
-		'else' => '<?php else: ?>',
+		'elseif' => '<?php ; elseif (%%): ?>',
+		'else' => '<?php ; else: ?>',
 		'/if' => '<?php endif ?>',
 		'foreach' => '<?php foreach (%:macroForeach%): ?>',
 		'/foreach' => '<?php endforeach; array_pop($_cb->its); $iterator = end($_cb->its) ?>',
