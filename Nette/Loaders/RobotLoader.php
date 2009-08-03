@@ -94,6 +94,7 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = strtolower($type);
+        /*$type = ltrim($type, '\\'); // PHP namespace bug #49143 */
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {
 				LimitedScope::load($this->list[$type]);

@@ -31,7 +31,7 @@
  */
 final class LimitedScope
 {
-	private $vars;
+	private static $vars;
 
 	/**
 	 * Static class - cannot be instantiated.
