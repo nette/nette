@@ -61,10 +61,12 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 	 *          /--- label.container
 	 *            .... LABEL
 	 *            .... label.suffix
+	 *            .... label.requiredsuffix
 	 *          \---
 	 *
 	 *          /--- control.container [.odd]
 	 *            .... CONTROL [.required .text .password .file .submit .button]
+	 *            .... control.requiredsuffix
 	 *            .... control.description
 	 *            .... if (control.errors) error.container
 	 *          \---
@@ -474,7 +476,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			$label = $control->getLabel();
 			$suffix = $this->getValue('label suffix') . ($control->getOption('required') ? $this->getValue('label requiredsuffix') : '');
 			if ($label instanceof Html) {
-				$label->setText($label->getText() . $suffix);
+				$label->setHtml($label->getHtml() . $suffix);
 				$suffix = '';
 			}
 			return $head->setHtml((string) $label . $suffix);
