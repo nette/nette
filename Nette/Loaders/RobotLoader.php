@@ -41,7 +41,7 @@ class RobotLoader extends AutoLoader
 	public $scanDirs;
 
 	/** @var string  comma separated wildcards */
-	public $ignoreDirs = '.svn, .cvs, *.old, *.bak, *.tmp';
+	public $ignoreDirs = '.*, *.old, *.bak, *.tmp';
 
 	/** @var string  comma separated wildcards */
 	public $acceptFiles = '*.php, *.php5';
@@ -50,7 +50,7 @@ class RobotLoader extends AutoLoader
 	public $autoRebuild;
 
 	/** @var array */
-	private $list = NULL;
+	private $list = array();
 
 	/** @var bool */
 	private $rebuilded = FALSE;
@@ -64,34 +64,35 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 * Register autoloader.
+	 * @return void
+	 */
+	public function register()
+	{
+		$cache = $this->getCache();
+		$data = $cache['data'];
+		if ($data['opt'] === array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles)) {
+			$this->list = $data['list'];
+		} else {
+			$this->rebuild();
+		}
+
+		if (isset($this->list[strtolower(__CLASS__)]) && class_exists(/*Nette\Loaders\*/'NetteLoader', FALSE)) {
+			NetteLoader::getInstance()->unregister();
+		}
+
+		parent::register();
+	}
+
+
+
+	/**
 	 * Handles autoloading of classes or interfaces.
 	 * @param  string
 	 * @return void
 	 */
 	public function tryLoad($type)
 	{
-		if ($this->list === NULL) {
-			$this->list = array(); // prevents cycling
-
-			$cache = $this->getCache();
-			$data = $cache['data'];
-			$opt = array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles);
-
-			if ($data['opt'] === $opt) {
-				$this->list = $data['list'];
-			} else {
-				$this->rebuild();
-				$cache['data'] = array(
-					'list' => $this->list,
-					'opt' => $opt,
-				);
-			}
-
-			if (isset($this->list[strtolower(__CLASS__)]) && class_exists(/*Nette\Loaders\*/'NetteLoader', FALSE)) {
-				NetteLoader::getInstance()->unregister();
-			}
-		}
-
 		$type = strtolower($type);
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {
@@ -100,27 +101,19 @@ class RobotLoader extends AutoLoader
 			}
 
 		} else {
+			$this->list[$type] = FALSE;
+
 			if ($this->autoRebuild === NULL) {
 				$this->autoRebuild = !$this->isProduction();
 			}
 
 			if ($this->autoRebuild) {
-				if (!$this->rebuilded) {
-					$this->rebuild();
-				}
+				$this->rebuild(FALSE);
+			}
 
-				if (isset($this->list[$type])) {
-					LimitedScope::load($this->list[$type]);
-					self::$count++;
-				} else {
-					$this->list[$type] = FALSE;
-				}
-
-				$cache = $this->getCache();
-				$cache['data'] = array(
-					'list' => $this->list,
-					'opt' => array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles),
-				);
+			if ($this->list[$type] !== FALSE) {
+				LimitedScope::load($this->list[$type]);
+				self::$count++;
 			}
 		}
 	}
@@ -129,18 +122,26 @@ class RobotLoader extends AutoLoader
 
 	/**
 	 * Rebuilds class list cache.
+	 * @param  bool
 	 * @return void
 	 */
-	public function rebuild()
+	public function rebuild($force = TRUE)
 	{
 		$this->acceptMask = self::wildcards2re($this->acceptFiles);
 		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
-		$this->list = array();
-		$this->rebuilded = TRUE;
 
-		foreach (array_unique($this->scanDirs) as $dir) {
-			$this->scanDirectory($dir);
+		if ($force || !$this->rebuilded) {
+			foreach (array_unique($this->scanDirs) as $dir) {
+				$this->scanDirectory($dir);
+			}
 		}
+
+		$this->rebuilded = TRUE;
+		$cache = $this->getCache();
+		$cache['data'] = array(
+			'list' => $this->list,
+			'opt' => array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles),
+		);
 	}
 
 
@@ -312,7 +313,7 @@ class RobotLoader extends AutoLoader
 		foreach (explode(',', $wildcards) as $wildcard) {
 			$wildcard = trim($wildcard);
 			$wildcard = addcslashes($wildcard, '.\\+[^]$(){}=!><|:#');
-			$wildcard = strtr($wildcard, array('*' => '.*', '?' => '.?'));
+			$wildcard = strtr($wildcard, array('*' => '.*', '?' => '.'));
 			$mask[] = $wildcard;
 		}
 		return '#^(' . implode('|', $mask) . ')$#i';
