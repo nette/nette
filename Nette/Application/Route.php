@@ -207,6 +207,9 @@ class Route extends /*Nette\*/Object implements IRouter
 
 				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to scalar parameters
 					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name]);
+					if ($params[$name] === NULL && !isset($meta['fixity'])) {
+						return NULL; // rejected by filter
+					}
 				}
 
 			} elseif (isset($meta['fixity'])) {
