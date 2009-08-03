@@ -51,9 +51,6 @@ class HttpUploadedFile extends /*Nette\*/Object
 	private $type;
 
 	/* @var string */
-	private $realType;
-
-	/* @var string */
 	private $size;
 
 	/* @var string */
@@ -76,7 +73,6 @@ class HttpUploadedFile extends /*Nette\*/Object
 			//throw new /*\*/InvalidStateException("Filename '$value[tmp_name]' is not a valid uploaded file.");
 		//}
 		$this->name = $value['name'];
-		$this->type = $value['type'];
 		$this->size = $value['size'];
 		$this->tmpName = $value['tmp_name'];
 		$this->error = $value['error'];
@@ -101,19 +97,23 @@ class HttpUploadedFile extends /*Nette\*/Object
 	 */
 	public function getContentType()
 	{
-		if ($this->isOk() && $this->realType === NULL) {
-			if (extension_loaded('fileinfo')) {
-				$this->realType = finfo_file(finfo_open(FILEINFO_MIME), $this->tmpName);
+		if ($this->isOk() && $this->type === NULL) {
+			$info = getimagesize($this->tmpName);
+			if (isset($info['mime'])) {
+				$this->type = $info['mime'];
 
-			} elseif (function_exists('mime_content_type') && mime_content_type($this->tmpName)) {
-				$this->realType = mime_content_type($this->tmpName);
+			} elseif (extension_loaded('fileinfo')) {
+				$this->type = finfo_file(finfo_open(FILEINFO_MIME), $this->tmpName);
 
-			} else {
-				$info = getImageSize($this->tmpName);
-				$this->realType = isset($info['mime']) ? $info['mime'] : $this->type;
+			} elseif (function_exists('mime_content_type')) {
+				$this->type = mime_content_type($this->tmpName);
+			}
+
+			if (!$this->type) {
+				$this->type = 'application/octet-stream';
 			}
 		}
-		return $this->realType;
+		return $this->type;
 	}
 
 
@@ -136,17 +136,6 @@ class HttpUploadedFile extends /*Nette\*/Object
 	public function getTemporaryFile()
 	{
 		return $this->tmpName;
-	}
-
-
-
-	/**
-	 * Returns the image.
-	 * @return Nette\Image
-	 */
-	public function getImage()
-	{
-		return /*Nette\*/Image::fromFile($this->tmpName);
 	}
 
 
@@ -198,6 +187,28 @@ class HttpUploadedFile extends /*Nette\*/Object
 		} else {
 			return FALSE;
 		}
+	}
+
+
+
+	/**
+	 * Is uploaded file GIF, PNG or JPEG?
+	 * @return bool
+	 */
+	public function isImage()
+	{
+		return in_array($this->getContentType(), array('image/gif', 'image/png', 'image/jpeg'), TRUE);
+	}
+
+
+
+	/**
+	 * Returns the image.
+	 * @return Nette\Image
+	 */
+	public function getImage()
+	{
+		return /*Nette\*/Image::fromFile($this->tmpName);
 	}
 
 
