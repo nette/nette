@@ -289,9 +289,12 @@ class Mail extends MailMimePart
 	 * @param  string
 	 * @return MailMimePart
 	 */
-	public function addEmbeddedFile($file, $contentType = NULL, $encoding = self::ENCODING_BASE64)
+	public function addEmbeddedFile($file, $content = NULL, $contentType = NULL)
 	{
-		$part = $this->createFilePart($file, $contentType, $encoding);
+		$part = new MailMimePart;
+		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
+		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
+		$part->setEncoding(self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"');
 		$part->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
 		return $this->inlines[$file] = $part;
@@ -306,9 +309,12 @@ class Mail extends MailMimePart
 	 * @param  string
 	 * @return MailMimePart
 	 */
-	public function addAttachment($file, $contentType = NULL, $encoding = self::ENCODING_BASE64)
+	public function addAttachment($file, $content = NULL, $contentType = NULL)
 	{
-		$part = $this->createFilePart($file, $contentType, $encoding);
+		$part = new MailMimePart;
+		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
+		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
+		$part->setEncoding(self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
 		return $this->attachments[] = $part;
 	}
@@ -319,23 +325,17 @@ class Mail extends MailMimePart
 	 * Creates file MIME part.
 	 * @param  string
 	 * @param  string
-	 * @param  string
-	 * @return MailMimePart
+	 * @return string
 	 */
-	public function createFilePart($file, $contentType, $encoding)
+	private function readFile($file, & $contentType)
 	{
 		if (!is_file($file)) {
 			throw new /*\*/FileNotFoundException("File '$file' not found.");
 		}
-		if (!$contentType) {
-			$info = getimagesize($file);
-			$contentType = $info ? image_type_to_mime_type($info[2]) : 'application/octet-stream';
+		if (!$contentType && $info = getimagesize($file)) {
+			$contentType = $info['mime'];
 		}
-		$part = new MailMimePart;
-		$part->setContentType($contentType);
-		$part->setEncoding($encoding);
-		$part->setBody(file_get_contents($file));
-		return $part;
+		return file_get_contents($file);
 	}
 
 
