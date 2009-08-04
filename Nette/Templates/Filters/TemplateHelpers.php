@@ -207,7 +207,7 @@ final class TemplateHelpers
 	public static function date($value, $format = "%x")
 	{
 		$value = is_numeric($value) ? (int) $value : ($value instanceof /*\*/DateTime ? $value->format('U') : strtotime($value));
-		return strftime($format, $value);
+		return strpos($format, '%') === FALSE ? date($format, $value) : strftime($format, $value);
 	}
 
 
