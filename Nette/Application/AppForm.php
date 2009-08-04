@@ -52,6 +52,15 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 
 
 	/**
+	 * @return void
+	 */
+	public function addTracker($name)
+	{
+	}
+
+
+
+	/**
 	 * Returns the presenter where this component belongs to.
 	 * @param  bool   throw exception if presenter doesn't exist?
 	 * @return Presenter|NULL

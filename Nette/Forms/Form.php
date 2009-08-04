@@ -141,6 +141,9 @@ class Form extends FormContainer
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = 'post';
 		$this->monitor(__CLASS__);
+		if ($name !== NULL) {
+			$this->addTracker($name);
+		}	
 		parent::__construct($parent, $name);
 	}
 
