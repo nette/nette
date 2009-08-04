@@ -49,6 +49,21 @@ class NetteWebUriTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('http://hostname:60', $uri->hostUri);
 		$this->assertEquals('http://hostname:60/path?arg=value#anchor', $uri->absoluteUri);
 		$this->assertEquals('http://hostname:60/path?arg=value#anchor', (string) $uri);
+	}	
+
+
+
+	/**
+	 * Canonicalize test.
+	 * @return void
+	 */
+	public function testCanonicalize()
+	{
+		$uri = new Uri('http://hostname/path?arg=value&arg2=v%20a%26l%3Du%2Be');
+		$this->assertEquals('arg=value&arg2=v%20a%26l%3Du%2Be', $uri->query);
+
+		$uri->canonicalize();
+		$this->assertEquals('arg2=v a%26l%3Du%2Be&arg=value', $uri->query);
 	}
 
 
@@ -147,9 +162,9 @@ class NetteWebUriTest extends PHPUnit_Framework_TestCase
 	 * Query test.
 	 * @return void
 	 */
-	public function testQeury()
+	public function testQuery()
 	{
-		$uri = new Uri('http://username:password@hostname:60/path?arg=value#anchor');
+		$uri = new Uri('http://hostname/path?arg=value');
 		$this->assertEquals('arg=value', $uri->query);
 
 		$uri->appendQuery(NULL);

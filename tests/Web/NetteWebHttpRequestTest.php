@@ -38,10 +38,10 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 		$_SERVER = array(
 			'HTTPS' => 'On',
 			'HTTP_HOST' => 'nettephp.com:8080',
-			'QUERY_STRING' => 'x param=val.&pa%%72am=val2)',
+			'QUERY_STRING' => 'x param=val.&pa%%72am=val2&param3=v%20a%26l%3Du%2Be)',
 			'REMOTE_ADDR' => '192.168.188.66',
 			'REQUEST_METHOD' => 'GET',
-			'REQUEST_URI' => '/file.php?x param=val.&pa%%72am=val2)',
+			'REQUEST_URI' => '/file.php?x param=val.&pa%%72am=val2&param3=v%20a%26l%3Du%2Be)',
 			'SCRIPT_FILENAME' => '/public_html/www/file.php',
 			'SCRIPT_NAME' => '/file.php',
 		);
@@ -61,14 +61,14 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('nettephp.com', $request->getUri()->host);
 		$this->assertEquals(8080, $request->getUri()->port);
 		$this->assertEquals('/file.php', $request->getUri()->path);
-		$this->assertEquals("pa%\x72am=val2&x param=val.", $request->getUri()->query);
+		$this->assertEquals("pa%\x72am=val2&param3=v a%26l%3Du%2Be&x param=val.", $request->getUri()->query);
 		$this->assertEquals('', $request->getUri()->fragment);
 		$this->assertEquals('nettephp.com:8080', $request->getUri()->authority);
 		$this->assertEquals('https://nettephp.com:8080', $request->getUri()->hostUri);
 		$this->assertEquals('https://nettephp.com:8080/', $request->getUri()->baseUri);
 		$this->assertEquals('/', $request->getUri()->basePath);
 		$this->assertEquals('file.php', $request->getUri()->relativeUri);
-		$this->assertEquals("https://nettephp.com:8080/file.php?pa%\x72am=val2&x param=val.", $request->getUri()->absoluteUri);
+		$this->assertEquals("https://nettephp.com:8080/file.php?pa%\x72am=val2&param3=v a%26l%3Du%2Be&x param=val.", $request->getUri()->absoluteUri);
 		$this->assertEquals('', $request->getUri()->pathInfo);
 
 		$this->assertEquals('https', $request->getOriginalUri()->scheme);
@@ -77,10 +77,11 @@ class NetteWebHttpRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('nettephp.com', $request->getOriginalUri()->host);
 		$this->assertEquals(8080, $request->getOriginalUri()->port);
 		$this->assertEquals('/file.php', $request->getOriginalUri()->path);
-		$this->assertEquals('x param=val.&pa%%72am=val2)', $request->getOriginalUri()->query);
+		$this->assertEquals('x param=val.&pa%%72am=val2&param3=v%20a%26l%3Du%2Be)', $request->getOriginalUri()->query);
 		$this->assertEquals('', $request->getOriginalUri()->fragment);
 		$this->assertEquals('val.', $request->getQuery('x_param'));
 		$this->assertEquals('val2', $request->getQuery('pa%ram'));
+		$this->assertEquals('v a&l=u+e', $request->getQuery('param3'));
 		$this->assertEquals('', $request->getPostRaw());
 		$this->assertEquals('nettephp.com:8080', $request->headers['host']);
 	}

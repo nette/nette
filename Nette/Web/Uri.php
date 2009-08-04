@@ -435,7 +435,7 @@ class Uri extends /*Nette\*/FreezableObject
 		$this->host = strtolower(rawurldecode($this->host));
 
 		if ($this->query !== '') {
-			$tmp = preg_split('#[&;]#', self::unescape(strtr($this->query, '+', ' '), '%&;'));
+			$tmp = preg_split('#[&;]#', self::unescape(strtr($this->query, '+', ' '), '%&;=+'));
 			sort($tmp);
 			$this->query = implode('&', $tmp);
 		}
