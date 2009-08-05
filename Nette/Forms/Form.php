@@ -281,6 +281,32 @@ class Form extends FormContainer
 
 
 	/**
+	 * Remove fieldset group from form.
+	 * @param  string|FormGroup
+	 * @return void
+	 */
+	public function removeGroup($name)
+	{
+		if (is_string($name)) {
+			$group = $this->getGroup($name);
+
+		} elseif ($name instanceof FormGroup) {
+			$group = $name;
+
+		} else {
+			throw new InvalidArgumentException("Group '$name' not found in form '$this->name'");
+		}
+
+		foreach ($group->getControls() as $control) {
+			$this->removeComponent($control);
+		}
+
+		unset($this->groups[$name]);
+	}
+
+
+
+	/**
 	 * Returns all defined groups.
 	 * @return array of FormGroup
 	 */
