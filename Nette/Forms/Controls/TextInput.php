@@ -48,7 +48,7 @@ class TextInput extends TextBase
 		$this->control->type = 'text';
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->filters[] = 'trim';
+		$this->filters[] = /*Nette\*/'String::trim';
 		$this->value = '';
 	}
 

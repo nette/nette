@@ -188,4 +188,19 @@ class NetteStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("\r\n      word\r\n", String::indent("\r\nword\r\n", 2, '   '));
 	}
 
+
+
+	/**
+	 * trim test.
+	 * @return void
+	 */
+	public function testTrim()
+	{
+		$this->assertEquals("x", String::trim(" \t\n\r\x00\x0B\xC2\xA0x"));
+		$this->assertEquals("", String::trim("\xC2x\xA0"));
+		$this->assertEquals("a b", String::trim(" a b "));
+		$this->assertEquals(" a b ", String::trim(" a b ", ''));
+		$this->assertEquals("e", String::trim("\xc5\x98e-", "\xc5\x98-")); // Ře-
+	}
+
 }
