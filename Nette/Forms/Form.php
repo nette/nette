@@ -143,7 +143,7 @@ class Form extends FormContainer
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
 			$this->addTracker($name);
-		}	
+		}
 		parent::__construct($parent, $name);
 	}
 
@@ -281,20 +281,21 @@ class Form extends FormContainer
 
 
 	/**
-	 * Remove fieldset group from form.
+	 * Removes fieldset group from form.
 	 * @param  string|FormGroup
 	 * @return void
 	 */
 	public function removeGroup($name)
 	{
-		if (is_string($name)) {
-			$group = $this->getGroup($name);
+		if (is_string($name) && isset($this->groups[$name])) {
+			$group = $this->groups[$name];
 
-		} elseif ($name instanceof FormGroup) {
+		} elseif ($name instanceof FormGroup && in_array($name, $this->groups, TRUE)) {
 			$group = $name;
+			$name = array_search($group, $this->groups, TRUE);
 
 		} else {
-			throw new InvalidArgumentException("Group '$name' not found in form '$this->name'");
+			throw new /*\*/InvalidArgumentException("Group not found in form '$this->name'");
 		}
 
 		foreach ($group->getControls() as $control) {
