@@ -175,7 +175,7 @@ class RobotLoader extends AutoLoader
 	public function addClass($class, $file)
 	{
 		$class = strtolower($class);
-		if (isset($this->list[$class]) && $this->list[$class] !== $file) {
+		if (!empty($this->list[$class]) && $this->list[$class] !== $file) {
 			spl_autoload_call($class); // hack: enables exceptions
 			throw new /*\*/InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".");
 		}
