@@ -414,7 +414,7 @@ class Uri extends /*Nette\*/FreezableObject
 		// compare query strings
 		$part = (string) strtok('?#');
 		if ($part !== '') {
-			$tmp = preg_split('#[&;]#', self::unescape(strtr($part, '+', ' '), '%&;'));
+			$tmp = preg_split('#[&;]#', self::unescape(strtr($part, '+', ' '), '%&;=+'));
 			sort($tmp);
 			$part = implode('&', $tmp);
 		}
