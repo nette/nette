@@ -19,7 +19,7 @@ echo "Constant HELLO_WORLD:\n";
 Debug::dump(constant('HELLO_WORLD'));
 
 echo "php.ini config:\n";
-Debug::dump(Environment::getConfig('set'));
+Debug::dump(Environment::getConfig('php'));
 
 echo "Database config:\n";
 Debug::dump(Environment::getConfig('database'));

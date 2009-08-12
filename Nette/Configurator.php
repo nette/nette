@@ -155,13 +155,27 @@ class Configurator extends Object
 		*/
 
 		// process ini settings
-		if ($config->set instanceof /*Nette\Config\*/Config) {
-			if (PATH_SEPARATOR !== ';' && isset($config->set->include_path)) {
-				$config->set->include_path = str_replace(';', PATH_SEPARATOR, $config->set->include_path);
+		if (!$config->php) { // backcompatibility
+			$config->php = $config->set;
+			unset($config->set);
+		}
+
+		if ($config->php instanceof /*Nette\Config\*/Config) {
+			if (PATH_SEPARATOR !== ';' && isset($config->php->include_path)) {
+				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
 			}
 
-			foreach ($config->set as $key => $value) {
-				$key = strtr($key, '-', '.'); // old INI compatibility
+			foreach ($config->php as $key => $value) { // flatten INI dots
+				if ($value instanceof /*Nette\Config\*/Config) {
+					unset($config->php->$key);
+					foreach ($value as $k => $v) {
+						$config->php->{"$key.$k"} = $v;
+					}
+				}
+			}
+
+			foreach ($config->php as $key => $value) {
+				$key = strtr($key, '-', '.'); // backcompatibility
 
 				if (!is_scalar($value)) {
 					throw new /*\*/InvalidStateException("Configuration value for directive '$key' is not scalar.");
