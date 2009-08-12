@@ -51,13 +51,25 @@ class ImageButton extends SubmitButton
 
 
 	/**
+	 * Returns name of control within a Form & INamingContainer scope.
+	 * @return string
+	 */
+	public function getHtmlName()
+	{
+		$name = parent::getHtmlName();
+		return strpos($name, '[') === FALSE ? $name : $name . '[]';
+	}
+
+
+
+	/**
 	 * Loads HTTP data.
 	 * @param  array
 	 * @return void
 	 */
 	public function loadHttpData($data)
 	{
-		$this->value = isset($data[$this->getName() . '_x']);
+		$this->value = isset($data[$this->getName() . '_x']) || isset($data[$this->getName()][0]);
 	}
 
 }
