@@ -39,7 +39,8 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {!_expression} echo translation without escaping
  * - {link destination ...} control link
  * - {plink destination ...} presenter link
- * - {if ?} ... {elseif ?} ... {else} ... {/if} // or <%else%>, <%/if%>, <%/foreach%> ?
+ * - {if ?} ... {elseif ?} ... {else} ... {/if}
+ * - {ifset ?} ... {elseifset ?} ... {/if}
  * - {for ?} ... {/for}
  * - {foreach ?} ... {/foreach}
  * - {include ?}
@@ -74,6 +75,8 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		'elseif' => '<?php ; elseif (%%): ?>',
 		'else' => '<?php ; else: ?>',
 		'/if' => '<?php endif ?>',
+		'ifset' => '<?php if (isset(%%)): ?>',
+		'elseifset' => '<?php ; elseif (isset(%%)): ?>',
 		'foreach' => '<?php foreach (%:macroForeach%): ?>',
 		'/foreach' => '<?php endforeach; array_pop($_cb->its); $iterator = end($_cb->its) ?>',
 		'for' => '<?php for (%%): ?>',
@@ -297,7 +300,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	public function attrsMacro($code, $attrs, $closing)
 	{
-		$knownAttrs = array('if', 'foreach', 'for',	'while', 'block', 'snippet');
+		$knownAttrs = array('if', 'ifset', 'foreach', 'for', 'while', 'block', 'snippet');
 		foreach ($knownAttrs as $name) {
 			if (!isset($attrs[$name])) continue;
 			$value = $attrs[$name];
