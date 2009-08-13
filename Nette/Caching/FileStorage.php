@@ -306,7 +306,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		$now = time();
 
 		$base = $this->dir . DIRECTORY_SEPARATOR . 'c';
-		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->dir), RecursiveIteratorIterator::CHILD_FIRST);
+		$iterator = new /*\*/RecursiveIteratorIterator(new /*\*/RecursiveDirectoryIterator($this->dir), /*\*/RecursiveIteratorIterator::CHILD_FIRST);
 		foreach ($iterator as $entry) {
 			if (strncmp($entry, $base, strlen($base))) {
 				continue;
