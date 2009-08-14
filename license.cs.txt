@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
-Tento text je NEOFICIÁLNÍM pøekladem "Nette license". Nevyjadøuje právní podstatu
-podmínek pro šíøení tohoto softwaru - k tomuto úèelu slouí vıhradnì pùvodní
-anglická verze licence.
+Tento text je NEOFICIÃLNÃM pÅ™ekladem "Nette license". NevyjadÅ™uje prÃ¡vnÃ­ podstatu
+podmÃ­nek pro Å¡Ã­Å™enÃ­ tohoto softwaru - k tomuto ÃºÄelu slouÅ¾Ã­ vÃ½hradnÄ› pÅ¯vodnÃ­
+anglickÃ¡ verze licence.
 ----------------------------------------------------------------------------------
 
 
@@ -9,61 +9,61 @@ Nette Licence, verze 1
 ======================
 
 Copyright (c) 2004, 2008 David Grudl (http://davidgrudl.com)
-Všechna práva vyhrazena.
+VÅ¡echna prÃ¡va vyhrazena.
 
-Tato licence je právní ujednání mezi vámi a Davidem Grudlem (dále Author)
-pro potøeby pouití Nette Frameworku (dále "Software"). Získáním, pouitím
-a/nebo zkopírováním Software projevujete souhlas s tím, e jste pøeèetli,
-porozumìli a budete jednat v souladu s podmínkami této licence.
+Tato licence je prÃ¡vnÃ­ ujednÃ¡nÃ­ mezi vÃ¡mi a Davidem Grudlem (dÃ¡le Author)
+pro potÅ™eby pouÅ¾itÃ­ Nette Frameworku (dÃ¡le "Software"). ZÃ­skÃ¡nÃ­m, pouÅ¾itÃ­m
+a/nebo zkopÃ­rovÃ¡nÃ­m Software projevujete souhlas s tÃ­m, Å¾e jste pÅ™eÄetli,
+porozumÄ›li a budete jednat v souladu s podmÃ­nkami tÃ©to licence.
 
 
-POVOLENÉ POUITÍ
+POVOLENÃ‰ POUÅ½ITÃ
 ----------------
 
-Je povoleno pouívat, kopírovat, modifikovat a distribuovat Software
-a jeho dokumentaci, v pùvodním i upravovaném tvaru, pro jakıkoliv úèel,
-za pøedpokladu, e jsou splnìny tyto podmínky:
+Je povoleno pouÅ¾Ã­vat, kopÃ­rovat, modifikovat a distribuovat Software
+a jeho dokumentaci, v pÅ¯vodnÃ­m i upravovanÃ©m tvaru, pro jakÃ½koliv ÃºÄel,
+za pÅ™edpokladu, Å¾e jsou splnÄ›ny tyto podmÃ­nky:
 
-1. Kopie této licenèní smlouvy musí bıt souèástí distribuce.
+1. Kopie tÃ©to licenÄnÃ­ smlouvy musÃ­ bÃ½t souÄÃ¡stÃ­ distribuce.
 
-2. Šíøenı zdrojovı kód musí zachovat vıše uvedenou informaci o autorskıch
-   právech ve všech souborech zdrojového kódu.
+2. Å Ã­Å™enÃ½ zdrojovÃ½ kÃ³d musÃ­ zachovat vÃ½Å¡e uvedenou informaci o autorskÃ½ch
+   prÃ¡vech ve vÅ¡ech souborech zdrojovÃ©ho kÃ³du.
 
-3. Šíøenı binární tvar musí reprodukovat vıše uvedenou informaci o autorskıch
-   právech v dokumentaci a/nebo jinıch materiálech poskytovanıch s distribucí.
+3. Å Ã­Å™enÃ½ binÃ¡rnÃ­ tvar musÃ­ reprodukovat vÃ½Å¡e uvedenou informaci o autorskÃ½ch
+   prÃ¡vech v dokumentaci a/nebo jinÃ½ch materiÃ¡lech poskytovanÃ½ch s distribucÃ­.
 
-4. Produkty odvozené od Software musí obsahovat potvrzení, e jsou odvozené
-   od Nette Frameworku, ve své dokumentaci a/nebo jinıch materiálech
-   poskytovanıch s distribucí.
+4. Produkty odvozenÃ© od Software musÃ­ obsahovat potvrzenÃ­, Å¾e jsou odvozenÃ©
+   od Nette Frameworku, ve svÃ© dokumentaci a/nebo jinÃ½ch materiÃ¡lech
+   poskytovanÃ½ch s distribucÃ­.
 
-5. Název "Nette Framework" nesmí bıt pouit pøi podpoøe nebo propagaci produktù
-   odvozenımi ze Software bez pøedchozího písemného souhlasu Autora.
+5. NÃ¡zev "Nette Framework" nesmÃ­ bÃ½t pouÅ¾it pÅ™i podpoÅ™e nebo propagaci produktÅ¯
+   odvozenÃ½mi ze Software bez pÅ™edchozÃ­ho pÃ­semnÃ©ho souhlasu Autora.
 
-6. Produkty odvozené od Software nesmí bıt nazvány "Nette Framework",
-   ani se nesmí "Nette" objevit v jejich názvu bez pøedchozího
-   písemného souhlasu Autora.
+6. Produkty odvozenÃ© od Software nesmÃ­ bÃ½t nazvÃ¡ny "Nette Framework",
+   ani se nesmÃ­ "Nette" objevit v jejich nÃ¡zvu bez pÅ™edchozÃ­ho
+   pÃ­semnÃ©ho souhlasu Autora.
 
 
-ZBAVENÍ ZODPOVÌDNOSTI
+ZBAVENÃ ZODPOVÄšDNOSTI
 ---------------------
 
-Souhlasíte se zbavením zodpovìdnosti a krytím Autora a pøispìvatelù vùèi
-jakımkoliv pøímım, nepøímım, náhodnım nebo následnım odjinud pocházejícím škodám,
-alobám nebo sporùm, jako i pøed všemi souvisejícími náklady, závazky,
-odškodnìními, úhradami nebo poplatky vyplıvajících z pouívání nebo
-nesprávného uití Software, nebo z porušení podmínek této licence.
+SouhlasÃ­te se zbavenÃ­m zodpovÄ›dnosti a krytÃ­m Autora a pÅ™ispÄ›vatelÅ¯ vÅ¯Äi
+jakÃ½mkoliv pÅ™Ã­mÃ½m, nepÅ™Ã­mÃ½m, nÃ¡hodnÃ½m nebo nÃ¡slednÃ½m odjinud pochÃ¡zejÃ­cÃ­m Å¡kodÃ¡m,
+Å¾alobÃ¡m nebo sporÅ¯m, jakoÅ¾ i pÅ™ed vÅ¡emi souvisejÃ­cÃ­mi nÃ¡klady, zÃ¡vazky,
+odÅ¡kodnÄ›nÃ­mi, Ãºhradami nebo poplatky vyplÃ½vajÃ­cÃ­ch z pouÅ¾Ã­vÃ¡nÃ­ nebo
+nesprÃ¡vnÃ©ho uÅ¾itÃ­ Software, nebo z poruÅ¡enÃ­ podmÃ­nek tÃ©to licence.
 
 
-ZÁRUKA SE NEPOSKYTUJE
+ZÃRUKA SE NEPOSKYTUJE
 ---------------------
 
-TENTO SOFTWARE JE POSKYTOVÁN DRITELEM LICENCE A JEHO PØISPÌVATELI "JAK STOJÍ A LEÍ"
-A JAKÉKOLIV VİSLOVNÉ NEBO PØEDPOKLÁDANÉ ZÁRUKY VÈETNÌ, ALE NEJEN, PØEDPOKLÁDANİCH
-OBCHODNÍCH ZÁRUK A ZÁRUKY VHODNOSTI PRO JAKİKOLIV ÚÈEL JSOU POPØENY.
-DRITEL, ANI PØISPÌVATELÉ NEBUDOU V ÁDNÉM PØÍPADÌ ODPOVÌDNI ZA JAKÉKOLIV PØÍMÉ,
-NEPØÍMÉ, NÁHODNÉ, ZVLÁŠTNÍ, PØÍKLADNÉ NEBO VYPLİVAJÍCÍ ŠKODY (VÈETNÌ, ALE NEJEN,
-ŠKOD VZNIKLİCH NARUŠENÍM DODÁVEK ZBOÍ NEBO SLUEB; ZTRÁTOU POUITELNOSTI,
-DAT NEBO ZISKÙ; NEBO PØERUŠENÍM OBCHODNÍ ÈINNOSTI) JAKKOLIV ZPÙSOBENÉ NA ZÁKLADÌ
-JAKÉKOLIV TEORIE O ZODPOVÌDNOSTI, A U PLYNOUCÍ Z JINÉHO SMLUVNÍHO VZTAHU,
-URÈITÉ ZODPOVÌDNOSTI NEBO PØEÈINU (VÈETNÌ NEDBALOSTI) NA JAKÉMKOLIV ZPÙSOBU POUITÍ
-TOHOTO SOFTWARE, I V PØÍPADÌ, E DRITEL PRÁV BYL UPOZORNÌN NA MONOST TAKOVİCH ŠKOD.
+TENTO SOFTWARE JE POSKYTOVÃN DRÅ½ITELEM LICENCE A JEHO PÅ˜ISPÄšVATELI "JAK STOJÃ A LEÅ½Ã"
+A JAKÃ‰KOLIV VÃSLOVNÃ‰ NEBO PÅ˜EDPOKLÃDANÃ‰ ZÃRUKY VÄŒETNÄš, ALE NEJEN, PÅ˜EDPOKLÃDANÃCH
+OBCHODNÃCH ZÃRUK A ZÃRUKY VHODNOSTI PRO JAKÃKOLIV ÃšÄŒEL JSOU POPÅ˜ENY.
+DRÅ½ITEL, ANI PÅ˜ISPÄšVATELÃ‰ NEBUDOU V Å½ÃDNÃ‰M PÅ˜ÃPADÄš ODPOVÄšDNI ZA JAKÃ‰KOLIV PÅ˜ÃMÃ‰,
+NEPÅ˜ÃMÃ‰, NÃHODNÃ‰, ZVLÃÅ TNÃ, PÅ˜ÃKLADNÃ‰ NEBO VYPLÃVAJÃCÃ Å KODY (VÄŒETNÄš, ALE NEJEN,
+Å KOD VZNIKLÃCH NARUÅ ENÃM DODÃVEK ZBOÅ½Ã NEBO SLUÅ½EB; ZTRÃTOU POUÅ½ITELNOSTI,
+DAT NEBO ZISKÅ®; NEBO PÅ˜ERUÅ ENÃM OBCHODNÃ ÄŒINNOSTI) JAKKOLIV ZPÅ®SOBENÃ‰ NA ZÃKLADÄš
+JAKÃ‰KOLIV TEORIE O ZODPOVÄšDNOSTI, AÅ¤ UÅ½ PLYNOUCÃ Z JINÃ‰HO SMLUVNÃHO VZTAHU,
+URÄŒITÃ‰ ZODPOVÄšDNOSTI NEBO PÅ˜EÄŒINU (VÄŒETNÄš NEDBALOSTI) NA JAKÃ‰MKOLIV ZPÅ®SOBU POUÅ½ITÃ
+TOHOTO SOFTWARE, I V PÅ˜ÃPADÄš, Å½E DRÅ½ITEL PRÃV BYL UPOZORNÄšN NA MOÅ½NOST TAKOVÃCH Å KOD.
