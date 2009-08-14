@@ -18,7 +18,6 @@
  * @copyright  Copyright (c) 2009 David Grudl
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
- * @version    $Id$
  */
 class RoutingDebugger extends Object
 {

@@ -15,7 +15,6 @@
  * @link       http://nettephp.com
  * @category   Nette
  * @package    Nette
- * @version    $Id$
  */
 
 /**/require_once dirname(__FILE__) . '/compatibility.php';/**/

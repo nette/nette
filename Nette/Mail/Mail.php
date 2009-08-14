@@ -15,7 +15,6 @@
  * @link       http://nettephp.com
  * @category   Nette
  * @package    Nette\Mail
- * @version    $Id$
  */
 
 /*namespace Nette\Mail;*/

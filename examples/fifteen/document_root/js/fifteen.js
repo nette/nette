@@ -8,7 +8,6 @@
  *
  * For more information please see http://nettephp.com
  *
- * @version    $Id$
  */
 
 jQuery(function($) {

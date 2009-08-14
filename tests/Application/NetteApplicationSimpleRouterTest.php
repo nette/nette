@@ -8,7 +8,6 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
- * @version    $Id$
  */
 
 /*use Nette\Debug;*/

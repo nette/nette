@@ -5,7 +5,6 @@
  *
  * @copyright  Copyright (c) 2009 John Doe
  * @package    MyApplication
- * @version    $Id$
  */
 
 /*use Nette\Application\Presenter;*/

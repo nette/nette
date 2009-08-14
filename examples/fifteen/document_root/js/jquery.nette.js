@@ -5,7 +5,6 @@
  * @copyright  Copyright (c) 2009 David Grudl
  * @license    MIT
  * @link       http://nettephp.com/cs/extras/jquery-ajax
- * @version    $Id$
  */
 
 /*
