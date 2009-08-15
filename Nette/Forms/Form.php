@@ -127,17 +127,18 @@ class Form extends FormContainer
 
 	/**
 	 * Form constructor.
+	 * @param  string
 	 */
-	public function __construct($name = NULL, $parent = NULL)
+	public function __construct($name = NULL)
 	{
 		$this->element = /*Nette\Web\*/Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = self::POST;
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$this->addTracker($name);
+			$this[self::TRACKER_ID] = new HiddenField($name);
 		}
-		parent::__construct($parent, $name);
+		parent::__construct(NULL, $name);
 	}
 
 
@@ -215,13 +216,11 @@ class Form extends FormContainer
 
 
 	/**
-	 * Adds distinguishing mark.
-	 * @param  string
-	 * @return HiddenField
+	 * @deprecated
 	 */
-	public function addTracker($name)
+	public function addTracker()
 	{
-		return $this[self::TRACKER_ID] = new HiddenField($name);
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; pass form name to the constructor.');
 	}
 
 

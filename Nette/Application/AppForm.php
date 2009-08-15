@@ -44,17 +44,11 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 	 */
 	public function __construct(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
 	{
+		parent::__construct();
 		$this->monitor('Nette\Application\Presenter');
-		parent::__construct($name, $parent);
-	}
-
-
-
-	/**
-	 * @return void
-	 */
-	public function addTracker($name)
-	{
+		if ($parent !== NULL) {
+			$parent->addComponent($this, $name);
+		}	
 	}
 
 
