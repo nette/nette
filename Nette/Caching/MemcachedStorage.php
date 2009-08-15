@@ -37,10 +37,9 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
 class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 {
 	/**#@+ internal cache structure */
-	const META_CONSTS = 'consts';
+	const META_CALLBACKS = 'callbacks';
 	const META_DATA = 'data';
 	const META_DELTA = 'delta';
-	const META_FILES = 'df';
 	/**#@-*/
 
 	/** @var Memcache */
@@ -90,28 +89,13 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 		// array(
 		//     data => stored data
 		//     delta => relative (sliding) expiration
-		//     df => array of dependent files (file => timestamp)
-		//     consts => array of constants (const => [value])
+		//     callbacks => array of callbacks (function, args)
 		// )
 
 		// verify dependencies
-		if (!empty($meta[self::META_CONSTS])) {
-			foreach ($meta[self::META_CONSTS] as $const => $value) {
-				if (!defined($const) || constant($const) !== $value) {
-					$this->memcache->delete($key);
-					return NULL;
-				}
-			}
-		}
-
-		if (!empty($meta[self::META_FILES])) {
-			//clearstatcache();
-			foreach ($meta[self::META_FILES] as $depFile => $time) {
-				if (@filemtime($depFile) <> $time) {
-					$this->memcache->delete($key);
-					return NULL;
-				}
-			}
+		if (!empty($meta[self::META_CALLBACKS]) && !Cache::checkCallbacks($meta[self::META_CALLBACKS])) {
+			$this->memcache->delete($key);
+			return NULL;
 		}
 
 		if (!empty($meta[self::META_DELTA])) {
@@ -142,28 +126,14 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 
 		$expire = 0;
 		if (!empty($dp[Cache::EXPIRE])) {
-			$expire = $dp[Cache::EXPIRE];
-			if (is_string($expire) && !is_numeric($expire)) {
-				$expire = strtotime($expire) - time();
-			} elseif ($expire > /*Nette\*/Tools::YEAR) {
-				$expire -= time();
-			}
+			$expire = (int) $dp[Cache::EXPIRE];
 			if (!empty($dp[Cache::SLIDING])) {
-				$meta[self::META_DELTA] = (int) $expire; // sliding time
+				$meta[self::META_DELTA] = $expire; // sliding time
 			}
 		}
 
-		if (!empty($dp[Cache::FILES])) {
-			//clearstatcache();
-			foreach ((array) $dp[Cache::FILES] as $depFile) {
-				$meta[self::META_FILES][$depFile] = @filemtime($depFile); // intentionally @
-			}
-		}
-
-		if (!empty($dp[Cache::CONSTS])) {
-			foreach ((array) $dp[Cache::CONSTS] as $const) {
-				$meta[self::META_CONSTS][$const] = constant($const);
-			}
+		if (!empty($dp[Cache::CALLBACKS])) {
+			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
 		return $this->memcache->set($this->prefix . $key, $meta, 0, $expire);

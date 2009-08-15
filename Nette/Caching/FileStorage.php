@@ -55,10 +55,9 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	const META_PRIORITY = 'priority'; // priority
 	const META_EXPIRE = 'expire'; // expiration timestamp
 	const META_DELTA = 'delta'; // relative (sliding) expiration
-	const META_FILES = 'df'; // array of dependent files (file => timestamp)
 	const META_ITEMS = 'di'; // array of dependent items (file => timestamp)
 	const META_TAGS = 'tags'; // array of tags (tag => [foo])
-	const META_CONSTS = 'consts'; // array of constants (const => [value])
+	const META_CALLBACKS = 'callbacks'; // array of callbacks (function, args)
 	/**#@-*/
 
 	/**#@+ additional cache structure */
@@ -119,10 +118,6 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	private function verify($meta)
 	{
 		do {
-			/*if (!empty($meta[self::META_DELTA]) || !empty($meta[self::META_FILES])) {
-				clearstatcache();
-			}*/
-
 			if (!empty($meta[self::META_DELTA])) {
 				// meta[file] was added by readMeta()
 				if (filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < time()) break;
@@ -132,16 +127,8 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 				break;
 			}
 
-			if (!empty($meta[self::META_CONSTS])) {
-				foreach ($meta[self::META_CONSTS] as $const => $value) {
-					if (!defined($const) || constant($const) !== $value) break 2;
-				}
-			}
-
-			if (!empty($meta[self::META_FILES])) {
-				foreach ($meta[self::META_FILES] as $depFile => $time) {
-					if (@filemtime($depFile) <> $time) break 2;  // intentionally @
-				}
+			if (!empty($meta[self::META_CALLBACKS]) && !Cache::checkCallbacks($meta[self::META_CALLBACKS])) {
+				break;
 			}
 
 			if (!empty($meta[self::META_ITEMS])) {
@@ -188,16 +175,10 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		if (!empty($dp[Cache::EXPIRE])) {
-			$expire = $dp[Cache::EXPIRE];
-			if (is_string($expire) && !is_numeric($expire)) {
-				$expire = strtotime($expire) - time();
-			} elseif ($expire > /*Nette\*/Tools::YEAR) {
-				$expire -= time();
-			}
 			if (empty($dp[Cache::SLIDING])) {
-				$meta[self::META_EXPIRE] = (int) $expire + time(); // absolute time
+				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRE] + time(); // absolute time
 			} else {
-				$meta[self::META_DELTA] = (int) $expire; // sliding time
+				$meta[self::META_DELTA] = (int) $dp[Cache::EXPIRE]; // sliding time
 			}
 		}
 
@@ -214,17 +195,8 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($dp[Cache::FILES])) {
-			//clearstatcache();
-			foreach ((array) $dp[Cache::FILES] as $depFile) {
-				$meta[self::META_FILES][$depFile] = @filemtime($depFile); // intentionally @
-			}
-		}
-
-		if (!empty($dp[Cache::CONSTS])) {
-			foreach ((array) $dp[Cache::CONSTS] as $const) {
-				$meta[self::META_CONSTS][$const] = constant($const);
-			}
+		if (!empty($dp[Cache::CALLBACKS])) {
+			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
 		$cacheFile = $this->getCacheFile($key);
