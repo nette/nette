@@ -23,7 +23,7 @@
 
 require_once dirname(__FILE__) . '/../Security/IIdentity.php';
 
-require_once dirname(__FILE__) . '/../Object.php';
+require_once dirname(__FILE__) . '/../FreezableObject.php';
 
 
 
@@ -38,7 +38,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  * @property   mixed $id
  * @property   array $roles
  */
-class Identity extends /*Nette\*/Object implements IIdentity
+class Identity extends /*Nette\*/FreezableObject implements IIdentity
 {
 	/** @var string */
 	private $name;
@@ -71,6 +71,7 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	 */
 	public function setName($name)
 	{
+		$this->updating();
 		$this->name = (string) $name;
 	}
 
@@ -94,6 +95,7 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	 */
 	public function setRoles(array $roles)
 	{
+		$this->updating();
 		$this->roles = $roles;
 	}
 
@@ -129,6 +131,7 @@ class Identity extends /*Nette\*/Object implements IIdentity
 	 */
 	public function __set($key, $value)
 	{
+		$this->updating();
 		if ($key === 'name' || $key === 'roles') {
 			parent::__set($key, $value);
 
