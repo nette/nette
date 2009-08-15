@@ -48,7 +48,7 @@ class NetteWebUriTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('http://hostname:60', $uri->hostUri);
 		$this->assertEquals('http://hostname:60/path?arg=value#anchor', $uri->absoluteUri);
 		$this->assertEquals('http://hostname:60/path?arg=value#anchor', (string) $uri);
-	}	
+	}
 
 
 
