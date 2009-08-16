@@ -79,7 +79,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 	public function __construct($dir)
 	{
-		$this->useSubdir = !ini_get('safe_mode') || !ini_get('safe_mode_gid');
+		$this->useSubdir = !ini_get('safe_mode');
 		$this->dir = $dir;
 		if (!$this->useSubdir && (!is_dir($dir) || !is_writable($dir))) {
 			throw new /*\*/InvalidStateException("Temporary directory '$dir' is not writable.");
