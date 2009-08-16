@@ -169,6 +169,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 			}
 		}
 
+		foreach ($this->tags as $tag) {
+			if (!$tag->isMacro && !empty($tag->attrs)) {
+				throw new /*\*/InvalidStateException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX . implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".");
+			}
+		}
+
 		return $this->output . substr($this->input, $this->offset);
 	}
 
