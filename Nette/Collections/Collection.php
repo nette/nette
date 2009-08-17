@@ -388,18 +388,6 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 
 	/**
-	 * Creates a modifiable clone of the object.
-	 * @return void
-	 */
-	public function __wakeup()
-	{
-		// ArrayObject serialization is wrong in PHP 5.2.x
-		$this->frozen = FALSE;
-	}
-
-
-
-	/**
 	 * @return void
 	 */
 	protected function updating()
