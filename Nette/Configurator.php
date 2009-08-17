@@ -258,7 +258,7 @@ class Configurator extends Object
 	 */
 	public static function createCacheStorage()
 	{
-		return new /*Nette\Caching\*/FileStorage(Environment::getVariable('cacheBase'));
+		return new /*Nette\Caching\*/FileStorage(Environment::getVariable('tempDir'));
 	}
 
 }
