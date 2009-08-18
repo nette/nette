@@ -285,9 +285,11 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			'if' => 'cond',
 			'elseif' => 'cond',
 		);
-		$value = isset($knownTags[$name], $attrs[$knownTags[$name]]) ? $attrs[$knownTags[$name]] : substr(var_export($attrs, TRUE), 8, -1);
-		if ($name === 'block' || $name === 'include') $value = '#' . $value;
-		return $this->macro($closing ? "/$name" : $name, $value, isset($attrs['modifiers']) ? $attrs['modifiers'] : '');
+		return $this->macro(
+			$closing ? "/$name" : $name,
+			isset($knownTags[$name], $attrs[$knownTags[$name]]) ? $attrs[$knownTags[$name]] : substr(var_export($attrs, TRUE), 8, -1),
+			isset($attrs['modifiers']) ? $attrs['modifiers'] : ''
+		);
 	}
 
 
@@ -309,14 +311,20 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 			$macro = $closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
-				$value = $this->macro($macro, $name === 'block' ? '#' . $attrs[$name] : $attrs[$name], '');
-				if ($closing) $right .= $value; else $left = $value . $left;
+				if ($closing) {
+					$right .= $this->macro($macro, $attrs[$name], '');
+				} else {
+					$left = $this->macro($macro, $attrs[$name], '') . $left;
+				}
 			}
 
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
-				$value = $this->macro($macro, $name === 'block' ? '#' . $attrs[$innerName] : $attrs[$innerName], '');
-				if ($closing) $left .= $value; else $right = $value . $right;
+				if ($closing) {
+					$left .= $this->macro($macro, $attrs[$innerName], '');
+				} else {
+					$right = $this->macro($macro, $attrs[$innerName], '') . $right;
+				}
 			}
 
 			unset($attrs[$name], $attrs[$innerName]);
