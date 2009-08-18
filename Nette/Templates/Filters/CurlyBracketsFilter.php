@@ -256,20 +256,25 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function contextTag()
 	{
 		$matches = $this->match('~
-			(?P<end>>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
+			(?P<end>/?>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
 			'.self::RE_CURLY.'|          ##  curly tag
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
 
 		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
 
-		} elseif (!empty($matches['end'])) { // end of HTML tag >
+		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$tag = end($this->tags);
+			$isEmpty = !$tag->closing && ($matches['end'][0] === '/' || isset(/*Nette\Web\*/Html::$emptyElements[strtolower($tag->name)]));
+
 			if ($tag->isMacro || !empty($tag->attrs)) {
 				if ($tag->isMacro) {
 					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
 					if ($code === NULL) {
 						throw new /*\*/InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
+					}
+					if ($isEmpty) {
+						$code .= $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, TRUE);
 					}
 				} else {
 					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
@@ -277,9 +282,16 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 					if ($code === NULL) {
 						throw new /*\*/InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
 					}
+					if ($isEmpty) {
+						$code = $this->handler->attrsMacro($code, $tag->attrs, TRUE);
+					}
 				}
 				$this->output = substr_replace($this->output, $code, $tag->pos);
 				$matches[0] = ''; // remove from output
+			}
+
+			if ($isEmpty) {
+				$tag->closing = TRUE;
 			}
 
 			if (!$tag->closing && (strcasecmp($tag->name, 'script') === 0 || strcasecmp($tag->name, 'style') === 0)) {
