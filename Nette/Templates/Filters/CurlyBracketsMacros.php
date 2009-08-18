@@ -75,6 +75,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		'else' => '<?php ; else: ?>',
 		'/if' => '<?php endif ?>',
 		'ifset' => '<?php if (isset(%%)): ?>',
+		'/ifset' => '<?php endif ?>',
 		'elseifset' => '<?php ; elseif (isset(%%)): ?>',
 		'foreach' => '<?php foreach (%:macroForeach%): ?>',
 		'/foreach' => '<?php endforeach; array_pop($_cb->its); $iterator = end($_cb->its) ?>',
@@ -300,16 +301,28 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	public function attrsMacro($code, $attrs, $closing)
 	{
-		$knownAttrs = array('if', 'ifset', 'foreach', 'for', 'while', 'block', 'snippet');
-		foreach ($knownAttrs as $name) {
-			if (!isset($attrs[$name])) continue;
-			$value = $attrs[$name];
-			if ($name === 'block') $value = '#' . $value;
-			$value = $this->macro($closing ? "/$name" : $name, $value, '');
-			$code = $closing ? $code . $value : $value . $code;
-			unset($attrs[$name]);
+		$left = $right = '';
+		foreach ($this->macros as $name => $foo) {
+			if (!isset($this->macros["/$name"])) { // must be pair-macro
+				continue;
+			}
+
+			$macro = $closing ? "/$name" : $name;
+			if (isset($attrs[$name])) {
+				$value = $this->macro($macro, $name === 'block' ? '#' . $attrs[$name] : $attrs[$name], '');
+				if ($closing) $right .= $value; else $left = $value . $left;
+			}
+
+			$innerName = "inner-$name";
+			if (isset($attrs[$innerName])) {
+				$value = $this->macro($macro, $name === 'block' ? '#' . $attrs[$innerName] : $attrs[$innerName], '');
+				if ($closing) $left .= $value; else $right = $value . $right;
+			}
+
+			unset($attrs[$name], $attrs[$innerName]);
 		}
-		return $attrs ? NULL : $code;
+
+		return $attrs ? NULL : $left . $code . $right;
 	}
 
 

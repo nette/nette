@@ -152,6 +152,10 @@ var prop2 = {$people};
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
+<ul n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">
+	<li>{$person|lower}</li>
+</ul>
+
 <ul n:block="bl">
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
