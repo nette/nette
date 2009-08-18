@@ -19,6 +19,6 @@ Debug::dump($obj->class);
 
 
 echo "Environment::getCache(...)\n";
-Environment::setVariable('cacheBase', __FILE__);
+Environment::setVariable('tempDir', __FILE__);
 $obj = Environment::getCache('my');
 Debug::dump($obj->class);

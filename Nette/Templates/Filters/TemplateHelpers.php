@@ -220,9 +220,9 @@ final class TemplateHelpers
 	public static function bytes($bytes, $precision = 2)
 	{
 		$bytes = round($bytes);
-		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', FALSE);
 		foreach ($units as $unit) {
-			if (abs($bytes) < 1024) break;
+			if (abs($bytes) < 1024 || $unit === 'PB') break;
 			$bytes = $bytes / 1024;
 		}
 		return round($bytes, $precision) . ' ' . $unit;

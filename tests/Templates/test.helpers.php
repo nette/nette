@@ -17,3 +17,6 @@ Debug::dump(TemplateHelpers::bytes(0.1));
 
 echo "TemplateHelpers::bytes(-1024 * 1024 * 1050)\n";
 Debug::dump(TemplateHelpers::bytes(-1024 * 1024 * 1050));
+
+echo "TemplateHelpers::bytes(1e19)\n";
+Debug::dump(TemplateHelpers::bytes(1e19));
