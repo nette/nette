@@ -429,7 +429,7 @@ class Form extends FormContainer
 
 		if (strcasecmp($this->getMethod(), 'post') === 0) {
 			if (!$httpRequest->isMethod('post')) return;
-			$data = /*Nette\*/Tools::arrayMergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+			$data = /*Nette\*/ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 
 		} else {
 			if (!$httpRequest->isMethod('get')) return;

@@ -112,7 +112,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 							throw new /*\*/InvalidStateException("Missing parent section [$parent] in '$file'.");
 						}
 					}
-					$secData = /*Nette\*/Tools::arrayMergeTree($secData, $cursor);
+					$secData = /*Nette\*/ArrayTools::mergeTree($secData, $cursor);
 				}
 
 				$secName = trim($parts[0]);
@@ -135,7 +135,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 			}
 
 			if (is_array($secData) && is_array($cursor)) {
-				$secData = /*Nette\*/Tools::arrayMergeTree($secData, $cursor);
+				$secData = /*Nette\*/ArrayTools::mergeTree($secData, $cursor);
 			}
 
 			$cursor = $secData;

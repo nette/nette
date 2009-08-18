@@ -107,7 +107,7 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 
 		$this->submittedBy = TRUE;
 		if ($isPost) {
-			$this->loadHttpData(/*Nette\*/Tools::arrayMergeTree($request->getPost(), $request->getFiles()));
+			$this->loadHttpData(/*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles()));
 
 		} else {
 			$this->loadHttpData($request->getParams());

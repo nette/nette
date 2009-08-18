@@ -50,6 +50,7 @@ class NetteLoader extends AutoLoader
 		'applicationexception' => '/Application/ApplicationException.php',
 		'argumentoutofrangeexception' => '/exceptions.php',
 		'arraylist' => '/Collections/ArrayList.php',
+		'arraytools' => '/ArrayTools.php',
 		'authenticationexception' => '/Security/AuthenticationException.php',
 		'autoloader' => '/Loaders/AutoLoader.php',
 		'badrequestexception' => '/Application/BadRequestException.php',
