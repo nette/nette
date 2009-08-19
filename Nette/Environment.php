@@ -67,6 +67,14 @@ final class Environment
 		'modelsDir' => array('%appDir%/models', TRUE),
 	);
 
+	/** @var array */
+	private static $aliases = array(
+		'getHttpRequest' => 'Nette\Web\IHttpRequest',
+		'getHttpResponse' => 'Nette\Web\IHttpResponse',
+		'getApplication' => 'Nette\Application\Application',
+		'getUser' => 'Nette\Web\IUser',
+	);
+
 
 
 	/**
@@ -362,11 +370,41 @@ final class Environment
 
 
 	/**
+	 * Adds new Environment::get<Service>() method.
+	 * @param  string  service name
+	 * @param  string  alias name
+	 * @return void
+	 */
+	public static function setServiceAlias($service, $alias)
+	{
+		self::$aliases['get' . ucfirst($alias)] = $service;
+	}
+
+
+
+	/**
+	 * Calling to undefined static method.
+	 * @param  string  method name
+	 * @param  array   arguments
+	 * @return object  service
+	 */
+	public static function __callStatic($name, $args)
+	{
+		if (isset(self::$aliases[$name])) {
+			return self::getServiceLocator()->getService(self::$aliases[$name], $args);
+		} else {
+			throw new /*\*/MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
+		}
+	}
+
+
+
+	/**
 	 * @return Nette\Web\IHttpRequest
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getServiceLocator()->getService('Nette\Web\IHttpRequest');
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -376,7 +414,7 @@ final class Environment
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getServiceLocator()->getService('Nette\Web\IHttpResponse');
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -386,7 +424,7 @@ final class Environment
 	 */
 	public static function getApplication()
 	{
-		return self::getServiceLocator()->getService('Nette\Application\Application');
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -396,7 +434,7 @@ final class Environment
 	 */
 	public static function getUser()
 	{
-		return self::getServiceLocator()->getService('Nette\Web\IUser');
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 

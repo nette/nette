@@ -22,3 +22,10 @@ echo "Environment::getCache(...)\n";
 Environment::setVariable('tempDir', __FILE__);
 $obj = Environment::getCache('my');
 Debug::dump($obj->class);
+
+/* in PHP 5.3
+echo "Environment::getXyz(...)\n";
+Environment::setServiceAlias('Nette\Web\IUser', 'xyz');
+$obj = Environment::getXyz();
+Debug::dump($obj->class);
+*/
