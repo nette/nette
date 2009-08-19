@@ -255,8 +255,8 @@ class Application extends /*Nette\*/Object
 			$this->serviceLocator = new /*Nette\*/ServiceLocator(Environment::getServiceLocator());
 
 			foreach ($this->defaultServices as $name => $service) {
-				if ($this->serviceLocator->getService($name, FALSE) === NULL) {
-					$this->serviceLocator->addService($service, $name);
+				if (!$this->serviceLocator->hasService($name)) {
+					$this->serviceLocator->addService($name, $service);
 				}
 			}
 		}
@@ -268,12 +268,12 @@ class Application extends /*Nette\*/Object
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  bool   throw exception if service doesn't exist?
-	 * @return mixed
+	 * @param  array  options in case service is not singleton
+	 * @return object
 	 */
-	final public function getService($name, $need = TRUE)
+	final public function getService($name, array $options = NULL)
 	{
-		return $this->getServiceLocator()->getService($name, $need);
+		return $this->getServiceLocator()->getService($name, $options);
 	}
 
 

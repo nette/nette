@@ -138,10 +138,19 @@ class Configurator extends Object
 		$config->expand();
 
 		// process services
+		$runServices = array();
 		$locator = Environment::getServiceLocator();
 		if ($config->service instanceof /*Nette\Config\*/Config) {
 			foreach ($config->service as $key => $value) {
-				$locator->addService($value, strtr($key, '-', '\\'));
+				$key = strtr($key, '-', '\\'); // limited INI chars
+				if (is_string($value)) {
+					$locator->addService($key, $value);
+				} else {
+					$locator->addService($key, $value->factory, $value->singleton, (array) $value->option);
+					if ($value->run) {
+						$runServices[] = $key;
+					}
+				}
 			}
 		}
 
@@ -228,6 +237,11 @@ class Configurator extends Object
 			}
 		}
 
+		// auto-start services
+		foreach ($runServices as $name) {
+			$locator->getService($name);
+		}
+
 		$config->freeze();
 		return $config;
 	}
@@ -246,7 +260,7 @@ class Configurator extends Object
 	{
 		$locator = new ServiceLocator;
 		foreach ($this->defaultServices as $name => $service) {
-			$locator->addService($service, $name);
+			$locator->addService($name, $service);
 		}
 		return $locator;
 	}

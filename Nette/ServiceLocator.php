@@ -42,7 +42,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
-	/** @var array  storage for shared objects */
+	/** @var array  storage for service factories */
 	private $factories = array();
 
 
@@ -59,43 +59,34 @@ class ServiceLocator extends Object implements IServiceLocator
 
 	/**
 	 * Adds the specified service to the service container.
-	 * @param  mixed  object, class name or service factory callback
-	 * @param  string optional service name (for factories is not optional)
-	 * @param  bool   promote to higher level?
+	 * @param  string service name
+	 * @param  mixed  object, class name or factory callback
+	 * @param  bool   is singleton?
+	 * @param  array  factory options
 	 * @return void
-	 * @throws \InvalidArgumentException, AmbiguousServiceException
 	 */
-	public function addService($service, $name = NULL, $promote = FALSE)
+	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
-		if (is_object($service)) {
-			if ($name === NULL) $name = get_class($service);
-
-		} elseif (is_string($service)) {
-			if ($name === NULL) $name = $service;
-
-		} elseif (is_callable($service, TRUE)) {
-			if (empty($name)) {
-				throw new /*\*/InvalidArgumentException('When factory callback is given, service name must be specified.');
-			}
-
-		} else {
-			throw new /*\*/InvalidArgumentException('Service must be name, object or factory callback.');
+		if (!is_string($name) || $name === '') {
+			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
-		if (isset($this->registry[$lower])) {
+		if (isset($this->registry[$lower])) { // only for instantiated services?
 			throw new AmbiguousServiceException("Service named '$name' has been already registered.");
 		}
 
 		if (is_object($service)) {
+			if (!$singleton || $options) {
+				throw new /*\*/InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
+			}
 			$this->registry[$lower] = $service;
 
 		} else {
-			$this->factories[$lower] = $service;
-		}
-
-		if ($promote && $this->parent !== NULL) {
-			$this->parent->addService($service, $name, TRUE);
+			if (!$service) {
+				throw new /*\*/InvalidArgumentException("Service named '$name' is empty.");
+			}
+			$this->factories[$lower] = array($service, $singleton, $options);
 		}
 	}
 
@@ -103,10 +94,9 @@ class ServiceLocator extends Object implements IServiceLocator
 
 	/**
 	 * Removes the specified service type from the service container.
-	 * @param  bool   promote to higher level?
 	 * @return void
 	 */
-	public function removeService($name, $promote = TRUE)
+	public function removeService($name)
 	{
 		if (!is_string($name) || $name === '') {
 			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
@@ -114,10 +104,6 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		$lower = strtolower($name);
 		unset($this->registry[$lower], $this->factories[$lower]);
-
-		if ($promote && $this->parent !== NULL) {
-			$this->parent->removeService($name, TRUE);
-		}
 	}
 
 
@@ -125,10 +111,10 @@ class ServiceLocator extends Object implements IServiceLocator
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  bool   throw exception if service doesn't exist?
+	 * @param  array  options in case service is not singleton
 	 * @return mixed
 	 */
-	public function getService($name, $need = TRUE)
+	public function getService($name, array $options = NULL)
 	{
 		if (!is_string($name) || $name === '') {
 			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
@@ -136,44 +122,57 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		$lower = strtolower($name);
 
-		if (isset($this->registry[$lower])) {
+		if (isset($this->registry[$lower])) { // instantiated singleton
+			if ($options) {
+				throw new /*\*/InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+			}
 			return $this->registry[$lower];
 
 		} elseif (isset($this->factories[$lower])) {
-			$service = $this->factories[$lower];
+			list($factory, $singleton, $defOptions) = $this->factories[$lower];
 
-			if (is_string($service)) {
-				if (substr($service, -2) === '()') {
-					// trick to pass callback as string
-					$service = substr($service, 0, -2);
+			if ($singleton && $options) {
+				throw new /*\*/InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 
-				} else {
-					/**/fixNamespace($service);/**/
+			} elseif ($defOptions) {
+				$options = $options ? $options + $defOptions : $defOptions;
+			}
 
-					if (!class_exists($service)) {
-						throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$service' not found.");
-					}
-					return $this->registry[$lower] = new $service;
+			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
+				/**/fixNamespace($factory);/**/
+				if (!class_exists($factory)) {
+					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
+				}
+				$service = new $factory;
+				if ($options && method_exists($service, 'setOptions')) {
+					$service->setOptions($options); // TODO: better!
+				}
+
+			} else { // factory callback
+				/**/fixCallback($factory);/**/
+				if (!is_callable($factory)) {
+					$able = is_callable($factory, TRUE, $textual);
+					throw new AmbiguousServiceException("Cannot instantiate service '$name', handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+				}
+				$service = call_user_func($factory, $options);
+				if (!is_object($service)) {
+					$able = is_callable($factory, TRUE, $textual);
+					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$textual' is not object.");
 				}
 			}
 
-			/**/fixCallback($service);/**/
-			if (!is_callable($service)) {
-				$able = is_callable($service, TRUE, $textual);
-				throw new AmbiguousServiceException("Cannot instantiate service '$name', handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+			if ($singleton) {
+				$this->registry[$lower] = $service;
+				unset($this->factories[$lower]);
 			}
-
-			return $this->registry[$lower] = call_user_func($service);
+			return $service;
 		}
 
 		if ($this->parent !== NULL) {
-			return $this->parent->getService($name, $need);
-
-		} elseif ($need) {
-			throw new /*\*/InvalidStateException("Service '$name' not found.");
+			return $this->parent->getService($name, $options);
 
 		} else {
-			return NULL;
+			throw new /*\*/InvalidStateException("Service '$name' not found.");
 		}
 	}
 

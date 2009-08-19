@@ -351,12 +351,12 @@ final class Environment
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  bool   throw exception if service doesn't exist?
-	 * @return mixed
+	 * @param  array  options in case service is not singleton
+	 * @return object
 	 */
-	public static function getService($name, $need = TRUE)
+	public static function getService($name, array $options = NULL)
 	{
-		return self::getServiceLocator()->getService($name, $need);
+		return self::getServiceLocator()->getService($name, $options);
 	}
 
 

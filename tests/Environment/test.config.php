@@ -8,6 +8,16 @@ require_once '../../Nette/loader.php';
 /*use Nette\Debug;*/
 /*use Nette\Environment;*/
 
+class Factory
+{
+	static function createService($options)
+	{
+		Debug::dump(__METHOD__);
+		Debug::dump($options);
+		return (object) NULL;
+	}
+}
+
 echo "Loading config:\n";
 Environment::setName(Environment::PRODUCTION);
 Environment::loadConfig('config.ini');
