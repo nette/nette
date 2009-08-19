@@ -4,7 +4,6 @@
 /*use Nette\Environment;*/
 /*use Nette\Application\Route;*/
 /*use Nette\Application\SimpleRouter;*/
-/*use Nette\Loaders\RobotLoader;*/
 
 
 
@@ -27,11 +26,6 @@ Environment::loadConfig();
 if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
 	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
 }
-
-// 2d) enable RobotLoader - this allows load all classes automatically
-$loader = new RobotLoader();
-$loader->addDirectory(APP_DIR);
-$loader->register();
 
 
 

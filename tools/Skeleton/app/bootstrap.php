@@ -12,7 +12,6 @@
 /*use Nette\Environment;*/
 /*use Nette\Application\Route;*/
 /*use Nette\Application\SimpleRouter;*/
-/*use Nette\Loaders\RobotLoader;*/
 
 
 
@@ -36,13 +35,7 @@ if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
 	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
 }
 
-// 2d) enable RobotLoader - this allows load all classes automatically
-$loader = new RobotLoader();
-$loader->addDirectory(APP_DIR);
-$loader->addDirectory(LIBS_DIR);
-$loader->register();
-
-// 2e) setup sessions
+// 2d) setup sessions
 $session = Environment::getSession();
 $session->setSavePath(APP_DIR . '/sessions/');
 
