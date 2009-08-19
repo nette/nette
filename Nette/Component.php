@@ -30,8 +30,7 @@ require_once dirname(__FILE__) . '/Object.php';
 /**
  * Component is the base class for all components.
  *
- * Components are objects implementing IComponent. They has parent component,
- * own name and service locator.
+ * Components are objects implementing IComponent. They has parent component and own name.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
@@ -42,9 +41,6 @@ require_once dirname(__FILE__) . '/Object.php';
  */
 abstract class Component extends Object implements IComponent
 {
-	/** @var IServiceLocator */
-	private $serviceLocator;
-
 	/** @var IComponentContainer */
 	private $parent;
 
@@ -307,47 +303,6 @@ abstract class Component extends Object implements IComponent
 				}
 			}
 		}
-	}
-
-
-
-	/**
-	 * Sets the service location (experimental).
-	 * @param  IServiceLocator
-	 * @return void
-	 */
-	public function setServiceLocator(IServiceLocator $locator)
-	{
-		$this->serviceLocator = $locator;
-	}
-
-
-
-	/**
-	 * Gets the service locator (experimental).
-	 * @return IServiceLocator
-	 */
-	final public function getServiceLocator()
-	{
-		if ($this->serviceLocator === NULL) {
-			$this->serviceLocator = $this->parent === NULL
-				? Environment::getServiceLocator()
-				: $this->parent->getServiceLocator();
-		}
-
-		return $this->serviceLocator;
-	}
-
-
-
-	/**
-	 * Gets the service (experimental).
-	 * @param  string
-	 * @return object
-	 */
-	final public function getService($type)
-	{
-		return $this->getServiceLocator()->getService($type);
 	}
 
 

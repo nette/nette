@@ -52,17 +52,4 @@ interface IComponent
 	 */
 	function setParent(IComponentContainer $parent = NULL, $name = NULL);
 
-	/**
-	 * Sets the service location (EXPERIMENTAL).
-	 * @param  IServiceLocator
-	 * @return void
-	 */
-	function setServiceLocator(IServiceLocator $locator);
-
-	/**
-	 * Gets the service locator (EXPERIMENTAL).
-	 * @return IServiceLocator
-	 */
-	function getServiceLocator();
-
 }

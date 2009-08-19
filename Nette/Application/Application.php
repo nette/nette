@@ -152,9 +152,6 @@ class Application extends /*Nette\*/Object
 				$request->freeze();
 				$this->presenter = new $class($request);
 
-				// Instantiate topmost service locator
-				$this->presenter->setServiceLocator(new /*Nette\*/ServiceLocator($this->serviceLocator));
-
 				// Execute presenter
 				$this->presenter->run();
 				break;
