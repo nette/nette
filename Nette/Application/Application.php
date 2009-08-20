@@ -107,7 +107,7 @@ class Application extends /*Nette\*/Object
 
 		// dispatching
 		$request = NULL;
-		$hasError = FALSE;
+		$repeatedError = FALSE;
 		do {
 			try {
 				if (count($this->requests) > self::$maxLoop) {
@@ -182,35 +182,36 @@ class Application extends /*Nette\*/Object
 
 				$this->onError($this, $e);
 
-				if ($hasError) {
+				if ($repeatedError) {
 					$e = new ApplicationException('An error occured while executing error-presenter', 0, $e);
+				}
 
-				} elseif ($this->errorPresenter) {
-					$hasError = TRUE;
+				if (!$httpResponse->isSent()) {
+					$httpResponse->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
+				}
+
+				if (!$repeatedError && $this->errorPresenter) {
+					$repeatedError = TRUE;
 					$request = new PresenterRequest(
 						$this->errorPresenter,
 						PresenterRequest::FORWARD,
 						array('exception' => $e)
 					);
-					continue;
-				}
+					// continue
 
-				if ($e instanceof BadRequestException) {
-					if (!$httpResponse->isSent()) {
-						$httpResponse->setCode($e->getCode());
-					}
-					echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
+				} else { // default error handler
+					echo "<meta name='robots' content='noindex'>\n\n";
+					if ($e instanceof BadRequestException) {
+						echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 
-				} else {
-					if (!$httpResponse->isSent()) {
-						$httpResponse->setCode(500);
+					} else {
+						/*Nette\*/Debug::processException($e, FALSE);
+						echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
+							"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
 					}
-					/*Nette\*/Debug::processException($e, FALSE);
-					echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
-						"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
+					echo "\n\n<hr>\n<small><i>Nette Framework</i></small>";
+					break;
 				}
-				echo "\n\n<hr>\n<small><i>Nette Framework</i></small>";
-				break;
 			}
 		} while (1);
 
