@@ -188,7 +188,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			if ($seconds <= /*Nette\*/Tools::YEAR) {
 				$seconds += time();
 			}
-			$this->setHeader('Cache-Control', 'max-age=' . ($seconds - time()). ',must-revalidate');
+			$this->setHeader('Cache-Control', 'max-age=' . ($seconds - time()));
 			$this->setHeader('Expires', self::date($seconds));
 
 		} else { // no cache
