@@ -51,7 +51,7 @@ class Button extends FormControl
 	 * Bypasses label generation.
 	 * @return void
 	 */
-	public function getLabel()
+	public function getLabel($caption = NULL)
 	{
 		return NULL;
 	}
@@ -72,12 +72,13 @@ class Button extends FormControl
 
 	/**
 	 * Generates control's HTML element.
+	 * @param  string
 	 * @return Nette\Web\Html
 	 */
-	public function getControl()
+	public function getControl($caption = NULL)
 	{
 		$control = parent::getControl();
-		$control->value = $this->translate($this->caption);
+		$control->value = $this->translate($caption === NULL ? $this->caption : $caption);
 		return $control;
 	}
 

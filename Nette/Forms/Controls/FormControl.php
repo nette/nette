@@ -362,14 +362,19 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 	/**
 	 * Generates label's HTML element.
+	 * @param  string
 	 * @return Nette\Web\Html
 	 */
-	public function getLabel()
+	public function getLabel($caption = NULL)
 	{
 		$label = clone $this->label;
 		$label->for = $this->getHtmlId();
-		if ($this->caption instanceof /*Nette\Web\*/Html) {
+		if ($caption !== NULL) {
+			$label->setText($this->translate($caption));
+
+		} elseif ($this->caption instanceof /*Nette\Web\*/Html) {
 			$label->add($this->caption);
+
 		} else {
 			$label->setText($this->translate($this->caption));
 		}

@@ -53,7 +53,7 @@ class HiddenField extends FormControl
 	 * Bypasses label generation.
 	 * @return void
 	 */
-	public function getLabel()
+	public function getLabel($caption = NULL)
 	{
 		return NULL;
 	}

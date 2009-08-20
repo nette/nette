@@ -172,11 +172,12 @@ class RadioList extends FormControl
 
 	/**
 	 * Generates label's HTML element.
+	 * @param  string
 	 * @return void
 	 */
-	public function getLabel()
+	public function getLabel($caption = NULL)
 	{
-		$label = parent::getLabel();
+		$label = parent::getLabel($caption);
 		$label->for = NULL;
 		return $label;
 	}
