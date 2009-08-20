@@ -40,11 +40,11 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 * Atomic thread safe logic:
 	 *
 	 * 1) reading: open(r+b), lock(SH), read
-	 *     - delete?: lock(EX), truncate*, unlink*, close
-	 * 2) deleting: open(r+b), lock(EX), truncate*, unlink*, close
+	 *     - delete?: delete*, close
+	 * 2) deleting: open(r+b), delete*, close
 	 * 3) writing: open(r+b || wb), lock(EX), truncate*, write data, write meta, close
 	 *
-	 * *unlink fails in windows
+	 * delete* = lock(EX), try unlink, if fails (on NTFS) { truncate, close, unlink } else close (on ext3)
 	 */
 
 	/**#@+ internal cache file structure */
@@ -142,11 +142,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			return TRUE;
 		} while (FALSE);
 
-		// meta[handle] was added by readMeta()
-		flock($meta[self::HANDLE], LOCK_EX);
-		ftruncate($meta[self::HANDLE], 0);
-		@unlink($meta[self::FILE]); // intentionally @; meta[file] was added by readMeta()
-		fclose($meta[self::HANDLE]);
+		$this->delete($meta[self::HANDLE], $meta[self::FILE]); // meta[handle] & meta[file] was added by readMeta()
 		return FALSE;
 	}
 
@@ -234,9 +230,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 		}
 
-		ftruncate($handle, 0);
-		@unlink($cacheFile); // intentionally @
-		fclose($handle);
+		$this->delete($handle, $cacheFile);
 		return TRUE;
 	}
 
@@ -251,11 +245,9 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	{
 		$cacheFile = $this->getCacheFile($key);
 		$meta = $this->readMeta($cacheFile, LOCK_EX);
-		if (!$meta) return TRUE;
-
-		ftruncate($meta[self::HANDLE], 0);
-		@unlink($cacheFile); // intentionally @
-		fclose($meta[self::HANDLE]);
+		if ($meta) {
+			$this->delete($meta[self::HANDLE], $cacheFile);
+		}
 		return TRUE;
 	}
 
@@ -306,10 +298,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 				continue 2;
 			} while (FALSE);
 
-			flock($meta[self::HANDLE], LOCK_EX);
-			ftruncate($meta[self::HANDLE], 0);
-			@unlink((string) $entry); // intentionally @
-			fclose($meta[self::HANDLE]);
+			$this->delete($meta[self::HANDLE], (string) $entry);
 		}
 
 		return TRUE;
@@ -380,6 +369,26 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
 		} else {
 			return $this->dir . '/c_' . urlencode($key);
+		}
+	}
+
+
+
+	/**
+	 * Deletes and closes file.
+	 * @param  resource
+	 * @param  string
+	 * @return void
+	 */
+	private static function delete($handle, $file)
+	{
+		if (@unlink($file)) { // intentionally @
+			fclose($handle);
+		} else {
+			flock($handle, LOCK_EX);
+			ftruncate($handle, 0);
+			fclose($handle);
+			@unlink($file); // intentionally @; not atomic
 		}
 	}
 
