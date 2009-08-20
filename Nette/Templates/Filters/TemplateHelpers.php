@@ -203,10 +203,18 @@ final class TemplateHelpers
 	 * @param  string
 	 * @return string
 	 */
-	public static function date($value, $format = "%x")
+	public static function date($time, $format = "%x")
 	{
-		$value = is_numeric($value) ? (int) $value : ($value instanceof /*\*/DateTime ? $value->format('U') : strtotime($value));
-		return strpos($format, '%') === FALSE ? date($format, $value) : strftime($format, $value);
+		if ($time == NULL) { // intentionally ==
+			return NULL;
+
+		} elseif (!($time instanceof /*\*/DateTime)) {
+			$time = new /*\*/DateTime(is_numeric($time) ? date('Y-m-d H:i:s', $time) : $time);
+		}
+
+		return strpos($format, '%') === FALSE
+			? $time->format($format) // formats using date()
+			: strftime($format, $time->format('U')); // formats according to locales
 	}
 
 
@@ -220,9 +228,9 @@ final class TemplateHelpers
 	public static function bytes($bytes, $precision = 2)
 	{
 		$bytes = round($bytes);
-		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', FALSE);
+		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 		foreach ($units as $unit) {
-			if (abs($bytes) < 1024 || $unit === 'PB') break;
+			if (abs($bytes) < 1024 || $unit === end($units)) break;
 			$bytes = $bytes / 1024;
 		}
 		return round($bytes, $precision) . ' ' . $unit;
