@@ -156,11 +156,11 @@ var prop2 = {$people};
 	<li>{$person|lower}</li>
 </ul>
 
-<ul n:block="bl">
+<ul n:block="#bl">
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
-<n:include block="bl" n:modifiers="upper">
+<n:include block="#bl" n:modifiers="upper">
 
 <n:default vary=3>{$vary}
 
