@@ -42,7 +42,7 @@ require_once dirname(__FILE__) . '/../Application/IStatePersistent.php';
  *
  * @property-read Presenter $presenter
  */
-abstract class PresenterComponent extends /*Nette\*/ComponentContainer implements ISignalReceiver, IStatePersistent
+abstract class PresenterComponent extends /*Nette\*/ComponentContainer implements ISignalReceiver, IStatePersistent, /*\*/ArrayAccess
 {
 	/** @var array */
 	protected $params = array();
@@ -345,6 +345,63 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 		$presenter = $this->getPresenter();
 		$presenter->redirectUri($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
+	}
+
+
+
+	/********************* interface \ArrayAccess ****************d*g**/
+
+
+
+	/**
+	 * Adds the component to the container.
+	 * @param  string  component name
+	 * @param  Nette\IComponent
+	 * @return void.
+	 */
+	final public function offsetSet($name, $component)
+	{
+		$this->addComponent($component, $name);
+	}
+
+
+
+	/**
+	 * Returns component specified by name. Throws exception if component doesn't exist.
+	 * @param  string  component name
+	 * @return Nette\IComponent
+	 * @throws \InvalidArgumentException
+	 */
+	final public function offsetGet($name)
+	{
+		return $this->getComponent($name, TRUE);
+	}
+
+
+
+	/**
+	 * Does component specified by name exists?
+	 * @param  string  component name
+	 * @return bool
+	 */
+	final public function offsetExists($name)
+	{
+		return $this->getComponent($name, FALSE) !== NULL;
+	}
+
+
+
+	/**
+	 * Removes component from the container. Throws exception if component doesn't exist.
+	 * @param  string  component name
+	 * @return void
+	 */
+	final public function offsetUnset($name)
+	{
+		$component = $this->getComponent($name, FALSE);
+		if ($component !== NULL) {
+			$this->removeComponent($component);
+		}
 	}
 
 }

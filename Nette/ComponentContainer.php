@@ -165,12 +165,20 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Component factory. Descendant can override this method to enable lazy component loading.
+	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string  component name
 	 * @return void
 	 */
 	protected function createComponent($name)
 	{
+		$ucname = ucfirst($name);
+		$method = 'createComponent' . $ucname;
+		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
+			$component = $this->$method($name);
+			if ($component instanceof IComponent && $component->getParent() === NULL) {
+				$this->addComponent($component, $name);
+			}
+		}
 	}
 
 
