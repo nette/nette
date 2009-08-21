@@ -69,21 +69,39 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	/** @var float  probability that the clean() routine is started */
 	public static $gcProbability = 0.001;
 
+	/** @var bool */
+	public static $useDirectories;
+
 	/** @var string */
 	private $dir;
 
 	/** @var bool */
-	private $useSubdir;
+	private $useDirs;
 
 
 
 	public function __construct($dir)
 	{
-		$this->useSubdir = !ini_get('safe_mode');
-		$this->dir = $dir;
-		if (!$this->useSubdir && (!is_dir($dir) || !is_writable($dir))) {
-			throw new /*\*/InvalidStateException("Temporary directory '$dir' is not writable.");
+		if (self::$useDirectories === NULL) {
+			self::$useDirectories = !ini_get('safe_mode');
+
+			// checks whether directory is writable
+			$uniq = uniqid();
+			umask(0000);
+			if (!@mkdir("$dir/$uniq", 0777)) { // intentionally @
+				throw new /*\*/InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
+			}
+
+			// tests subdirectory mode
+			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // intentionally @
+				self::$useDirectories = TRUE;
+				unlink("$dir/$uniq/_");
+			}
+			rmdir("$dir/$uniq");
 		}
+
+		$this->dir = $dir;
+		$this->useDirs = (bool) self::$useDirectories;
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
 			$this->clean(array());
@@ -196,17 +214,15 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		$cacheFile = $this->getCacheFile($key);
-		$dir = dirname($cacheFile);
-		if ($this->useSubdir && !is_dir($dir)) {
+		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
 			umask(0000);
-			if (!@mkdir($dir, 0777, TRUE)) {
-				throw new /*\*/InvalidStateException("Unable to create directory '$dir'.");
+			if (!mkdir($dir, 0777, TRUE)) {
+				return FALSE;
 			}
 		}
 		$handle = @fopen($cacheFile, 'r+b'); // intentionally @
 		if (!$handle) {
-			$handle = @fopen($cacheFile, 'wb'); // intentionally @
-
+			$handle = fopen($cacheFile, 'wb'); // intentionally @
 			if (!$handle) {
 				return FALSE;
 			}
@@ -364,7 +380,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		if ($this->useSubdir) {
+		if ($this->useDirs) {
 			$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
 			return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
 		} else {

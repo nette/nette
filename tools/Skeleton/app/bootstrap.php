@@ -30,12 +30,7 @@ Debug::enable();
 // 2b) load configuration from config.ini file
 Environment::loadConfig();
 
-// 2c) check if directory /app/temp is writable
-if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
-	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
-}
-
-// 2d) setup sessions
+// 2c) setup sessions
 $session = Environment::getSession();
 $session->setSavePath(APP_DIR . '/sessions/');
 

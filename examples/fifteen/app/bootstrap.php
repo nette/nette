@@ -18,12 +18,7 @@ require dirname(__FILE__) . '/../../../Nette/loader.php';
 // 2a) enable Nette\Debug for better exception and error visualisation
 Debug::enable();
 
-// 2b) check if directory /app/temp is writable
-if (@file_put_contents(Environment::expand('%tempDir%/_check'), '') === FALSE) {
-	throw new Exception("Make directory '" . Environment::getVariable('tempDir') . "' writable!");
-}
-
-// 2c) enable RobotLoader - this allows load all classes automatically
+// 2b) enable RobotLoader - this allows load all classes automatically
 $loader = new RobotLoader();
 $loader->addDirectory(APP_DIR);
 $loader->register();
