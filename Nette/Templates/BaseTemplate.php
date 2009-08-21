@@ -353,7 +353,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 * @param  string
 	 * @param  array
 	 * @return string
-	*/
+	 */
 	private static function extractPhp($source, & $blocks)
 	{
 		$res = '';
@@ -383,37 +383,47 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 * Removes unnecessary blocks of PHP code.
 	 * @param  string
 	 * @return string
-	*/
-	private static function optimizePhp($source)
+	 */
+	public static function optimizePhp($source)
 	{
 		$res = $php = '';
-		$tokens = token_get_all($source);
-		$iterator = new /*Nette\*/SmartCachingIterator(token_get_all($source));
-		foreach ($iterator as $token) {
+		$lastChar = ';';
+		$tokens = new /*\*/ArrayIterator(token_get_all($source));
+		foreach ($tokens as $key => $token) {
 			if (is_array($token)) {
 				if ($token[0] === T_INLINE_HTML) {
+					$lastChar = '';
 					$res .= $token[1];
 
 				} elseif ($token[0] === T_CLOSE_TAG) {
-					$next = $iterator->getNextValue();
+					$next = isset($tokens[$key + 1]) ? $tokens[$key + 1] : NULL;
 					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*$#', $php)) {
 						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
 					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
-						$ch = substr(rtrim($php), -1);
-						if ($ch !== ';' && $ch !== '{' && $ch !== '}' && $ch !== ':' && $ch !== '/') $php .= ';';
+						if ($lastChar !== ';' && $lastChar !== '{' && $lastChar !== '}' && $lastChar !== ':' && $lastChar !== '/' ) $php .= $lastChar = ';';
 						if (substr($next[1], -1) === "\n") $php .= "\n";
-						$iterator->next();
+						$tokens->next();
 
-					} else {
+					} elseif ($next) {
 						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1]; // remove last semicolon before ?)
 						$php = '';
+
+					} else { // remove last ?)
+						if ($lastChar !== '}' && $lastChar !== ';') $php .= ';';
 					}
+
+				} elseif ($token[0] === T_ELSE || $token[0] === T_ELSEIF) {
+					if ($tokens[$key + 1] === ':' && $lastChar === '}') $php .= ';'; // semicolon needed in if(): ... if() ... else:
+					$lastChar = '';
+					$php .= $token[1];
+
 				} else {
+					if (!in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG))) $lastChar = '';
 					$php .= $token[1];
 				}
 			} else {
-				$php .= $token;
+				$php .= $lastChar = $token;
 			}
 		}
 		return $res . $php;

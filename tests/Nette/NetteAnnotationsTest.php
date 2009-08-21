@@ -28,6 +28,7 @@ require_once '../../Nette/loader.php';
  * @components(item 1)
  * @persistent(true)
  * @persistent(FALSE)
+ * @persistent(null)
  * @renderable
  */
 class TestClass {
@@ -36,7 +37,7 @@ class TestClass {
 	public $foo;
 
 	/** @RolesAllowed('admin', web editor) */
-	public function bar()
+	public function foo()
 	{}
 
 }
@@ -68,6 +69,7 @@ class NetteAnnotationsTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("item 1", $tmp["components"][0]);
 		$this->assertTrue($tmp["persistent"][0]);
 		$this->assertFalse($tmp["persistent"][1]);
+		$this->assertNull($tmp["persistent"][2]);
 		$this->assertTrue($tmp["renderable"][0]);
 
 		$this->assertSame($tmp, Annotations::getAll($rc), 'cache test');
@@ -90,9 +92,10 @@ class NetteAnnotationsTest extends PHPUnit_Framework_TestCase
 		$tmp = Annotations::getAll($rc, 'renderable');
 		$this->assertTrue($tmp[0]);
 		$tmp = Annotations::getAll($rc, 'persistent');
-		$this->assertFalse(Annotations::get($rc, 'persistent'), "get('persistent')");
+		$this->assertNull(Annotations::get($rc, 'persistent'), "get('persistent')");
 		$this->assertTrue($tmp[0]);
 		$this->assertFalse($tmp[1]);
+		$this->assertNull($tmp[2]);
 
 		$this->assertFalse(Annotations::has($rc, 'xxx'), "has('xxx')");
 		$this->assertNull(Annotations::get($rc, 'xxx'), "get('xxx')");
@@ -121,7 +124,7 @@ class NetteAnnotationsTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMethodAnnotations()
 	{
-		$rm = new ReflectionMethod('TestClass', 'bar');
+		$rm = new ReflectionMethod('TestClass', 'foo');
 		$tmp = Annotations::getAll($rm);
 
 		$this->assertEquals('admin', $tmp["RolesAllowed"][0][0]);

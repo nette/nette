@@ -103,7 +103,17 @@ final class Annotations
 	 */
 	public static function & init(/*\*/Reflector $r)
 	{
-		$cache = & self::$cache[$r->getName()][$r instanceof /*\*/ReflectionClass ? '' : $r->getDeclaringClass()->getName()];
+		$cache = & self::$cache[$r->getName()];
+		if ($r instanceof /*\*/ReflectionClass) {
+			$cache = & $cache[''];
+
+		} elseif ($r instanceof /*\*/ReflectionMethod) {
+			$cache = & $cache[$r->getDeclaringClass()->getName()];
+
+		} else {
+			$cache = & $cache['$' . $r->getDeclaringClass()->getName()];
+		}
+
 		if ($cache !== NULL) {
 			return $cache;
 		}
@@ -127,6 +137,9 @@ final class Annotations
 
 					} elseif (strcasecmp($val, 'false') === 0) {
 						$val = FALSE;
+
+					} elseif (strcasecmp($val, 'null') === 0) {
+						$val = NULL;
 
 					} elseif (is_numeric($val)) {
 						$val = 1 * $val;
