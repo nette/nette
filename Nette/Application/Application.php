@@ -297,7 +297,7 @@ class Application extends /*Nette\*/Object
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->getServiceLocator()->addService($router, 'Nette\Application\IRouter');
+		$this->getServiceLocator()->addService('Nette\Application\IRouter', $router);
 	}
 
 
