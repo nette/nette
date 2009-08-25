@@ -47,26 +47,26 @@ class Session extends /*Nette\*/Object
 	private static $started;
 
 	/** @var array default configuration */
-	private static $defaultConfig = array(
+	private $options = array(
 		// security
-		'session.referer_check' => '',    // must be disabled because PHP implementation is invalid
-		'session.use_cookies' => 1,       // must be enabled to prevent Session Hijacking and Fixation
-		'session.use_only_cookies' => 1,  // must be enabled to prevent Session Fixation
-		'session.use_trans_sid' => 0,     // must be disabled to prevent Session Hijacking and Fixation
+		'referer_check' => '',    // must be disabled because PHP implementation is invalid
+		'use_cookies' => 1,       // must be enabled to prevent Session Hijacking and Fixation
+		'use_only_cookies' => 1,  // must be enabled to prevent Session Fixation
+		'use_trans_sid' => 0,     // must be disabled to prevent Session Hijacking and Fixation
 
 		// cookies
-		'session.cookie_lifetime' => 0,   // until the browser is closed
-		'session.cookie_path' => '/',     // cookie is available within the entire domain
-		'session.cookie_domain' => '',    // cookie is available on current subdomain only
-		'session.cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
-		'session.cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
+		'cookie_lifetime' => 0,   // until the browser is closed
+		'cookie_path' => '/',     // cookie is available within the entire domain
+		'cookie_domain' => '',    // cookie is available on current subdomain only
+		'cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
+		'cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
 
 		// other
-		'session.gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,// 3 hours
-		'session.cache_limiter' => NULL,  // (default "nocache", special value "\0")
-		'session.cache_expire' => NULL,   // (default "180")
-		'session.hash_function' => NULL,  // (default "0", means MD5)
-		'session.hash_bits_per_character' => NULL, // (default "4")
+		'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,// 3 hours
+		'cache_limiter' => NULL,  // (default "nocache", special value "\0")
+		'cache_expire' => NULL,   // (default "180")
+		'hash_function' => NULL,  // (default "0", means MD5)
+		'hash_bits_per_character' => NULL, // (default "4")
 	);
 
 
@@ -104,7 +104,11 @@ class Session extends /*Nette\*/Object
 
 
 		// start session
-		$this->configure(self::$defaultConfig, FALSE);
+		try {
+			$this->configure($this->options);
+		} catch (/*\*/NotSupportedException $e) {
+			// ignore?
+		}
 
 		/*Nette\*/Tools::tryError();
 		session_start();
@@ -285,8 +289,8 @@ class Session extends /*Nette\*/Object
 			throw new /*\*/InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 
-		$this->configure(array(
-			'session.name' => $name,
+		$this->setOptions(array(
+			'name' => $name,
 		));
 	}
 
@@ -424,47 +428,73 @@ class Session extends /*Nette\*/Object
 
 
 	/**
-	 * Configurates session environment.
+	 * Sets session options.
 	 * @param  array
-	 * @param  bool   throw exception?
 	 * @return void
 	 * @throws \NotSupportedException
 	 * @throws \InvalidStateException
 	 */
-	public function configure(array $config, $throwException = TRUE)
+	public function setOptions(array $options)
 	{
-		$special = array('session.cache_expire' => 1, 'session.cache_limiter' => 1,
-			'session.save_path' => 1, 'session.name' => 1);
+		if (self::$started) {
+			$this->configure($options);
+		}
+		$this->options = $options + $this->options;
+	}
+
+
+
+	/**
+	 * Returns all session options.
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+
+
+	/**
+	 * Configurates session environment.
+	 * @param  array
+	 * @return void
+	 */
+	private function configure(array $config)
+	{
+		$special = array('cache_expire' => 1, 'cache_limiter' => 1, 'save_path' => 1, 'name' => 1);
 
 		foreach ($config as $key => $value) {
-			unset(self::$defaultConfig[$key]); // prevents overwriting
+			if (!strncmp($key, 'session.', 8)) { // back compatibility
+				$key = substr($key, 8);
+			}
 
 			if ($value === NULL) {
 				continue;
 
 			} elseif (isset($special[$key])) {
 				if (self::$started) {
-					throw new /*\*/InvalidStateException('Session has already been started.');
+					throw new /*\*/InvalidStateException("Unable to set '$key' when session has been started.");
 				}
-				$key = strtr($key, '.', '_');
+				$key = "session_$key";
 				$key($value);
 
-			} elseif (strncmp($key, 'session.cookie_', 15) === 0) {
+			} elseif (strncmp($key, 'cookie_', 7) === 0) {
 				if (!isset($cookie)) {
 					$cookie = session_get_cookie_params();
 				}
-				$cookie[substr($key, 15)] = $value;
+				$cookie[substr($key, 7)] = $value;
 
 			} elseif (!function_exists('ini_set')) {
-				if ($throwException && ini_get($key) != $value) { // intentionally ==
+				if (ini_get($key) != $value) { // intentionally ==
 					throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
 				}
 
 			} else {
 				if (self::$started) {
-					throw new /*\*/InvalidStateException('Session has already been started.');
+					throw new /*\*/InvalidStateException("Unable to set '$key' when session has been started.");
 				}
-				ini_set($key, $value);
+				ini_set("session.$key", $value);
 			}
 		}
 
@@ -490,18 +520,18 @@ class Session extends /*Nette\*/Object
 		}
 
 		if ($seconds <= 0) {
-			$this->configure(array(
-				'session.gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
-				'session.cookie_lifetime' => 0,
+			$this->setOptions(array(
+				'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
+				'cookie_lifetime' => 0,
 			));
 
 		} else {
 			if ($seconds > /*Nette\*/Tools::YEAR) {
 				$seconds -= time();
 			}
-			$this->configure(array(
-				'session.gc_maxlifetime' => $seconds,
-				'session.cookie_lifetime' => $seconds,
+			$this->setOptions(array(
+				'gc_maxlifetime' => $seconds,
+				'cookie_lifetime' => $seconds,
 			));
 		}
 	}
@@ -517,10 +547,10 @@ class Session extends /*Nette\*/Object
 	 */
 	public function setCookieParams($path, $domain = NULL, $secure = NULL)
 	{
-		$this->configure(array(
-			'session.cookie_path' => $path,
-			'session.cookie_domain' => $domain,
-			'session.cookie_secure' => $secure
+		$this->setOptions(array(
+			'cookie_path' => $path,
+			'cookie_domain' => $domain,
+			'cookie_secure' => $secure
 		));
 	}
 
@@ -543,8 +573,8 @@ class Session extends /*Nette\*/Object
 	 */
 	public function setSavePath($path)
 	{
-		$this->configure(array(
-			'session.save_path' => $path,
+		$this->setOptions(array(
+			'save_path' => $path,
 		));
 	}
 
