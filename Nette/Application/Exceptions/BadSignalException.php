@@ -21,17 +21,20 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/InvalidLinkException.php';
+require_once dirname(__FILE__) . '/../../Application/Exceptions/BadRequestException.php';
 
 
 
 /**
- * The exception that is thrown when a presenter cannot be loaded.
+ * Signal exception.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
  */
-class InvalidPresenterException extends InvalidLinkException
+class BadSignalException extends BadRequestException
 {
+	/** @var int */
+	protected $defaultCode = 403;
+
 }
