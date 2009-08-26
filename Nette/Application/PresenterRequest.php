@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
 
 
 /**
- * Application presenter request. Immutable object.
+ * Presenter request. Immutable object.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl

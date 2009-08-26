@@ -128,6 +128,7 @@ class NetteLoader extends AutoLoader
 		'ipermissionassertion' => '/Security/IPermissionAssertion.php',
 		'ipresenter' => '/Application/IPresenter.php',
 		'ipresenterloader' => '/Application/IPresenterLoader.php',
+		'ipresenterresponse' => '/Application/IPresenterResponse.php',
 		'irenderable' => '/Application/IRenderable.php',
 		'iresource' => '/Security/IResource.php',
 		'irole' => '/Security/IRole.php',

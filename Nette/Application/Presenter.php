@@ -72,7 +72,7 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var int */
 	public static $invalidLinkMode;
 
-	/** @var array of function(Presenter $sender, \Exception $exception = NULL); Occurs when the presenter is shutting down */
+	/** @var array of function(Presenter $sender, IPresenterResponse $response = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
 
 	/** @var bool (experimental) */
@@ -180,8 +180,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return void
-	 * @throws AbortException
+	 * @return IPresenterResponse
 	 */
 	public function run()
 	{
@@ -235,9 +234,10 @@ abstract class Presenter extends Control implements IPresenter
 			// finish template rendering
 			$this->renderTemplate();
 
-			$e = NULL;
+			$response = $e = NULL;
 
 		} catch (AbortException $e) {
+			$response = NULL;
 			// continue with shutting down
 		} /* finally */ {
 
@@ -252,10 +252,11 @@ abstract class Presenter extends Control implements IPresenter
 				$this->getFlashSession()->setExpiration($e instanceof RedirectingException ? '+ 30 seconds': '+ 3 seconds');
 			}
 
-			$this->onShutdown($this, $e);
-			$this->shutdown($e);
+			$this->onShutdown($this, $response);
+			$this->shutdown($response);
 
 			if (isset($e)) throw $e;
+			return $response;
 		}
 	}
 
@@ -303,10 +304,10 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  Exception  optional catched exception
+	 * @param  IPresenterResponse  optional catched exception
 	 * @return void
 	 */
-	protected function shutdown($exception)
+	protected function shutdown($response)
 	{
 	}
 

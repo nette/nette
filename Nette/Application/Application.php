@@ -153,7 +153,7 @@ class Application extends /*Nette\*/Object
 				$this->presenter = new $class($request);
 
 				// Execute presenter
-				$this->presenter->run();
+				$response = $this->presenter->run();
 				break;
 
 			} catch (RedirectingException $e) {

@@ -22,12 +22,19 @@
 
 
 /**
- * The exception that is thrown when user attempts to terminate the current presenter or application.
+ * Any response returned by presenter.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
  */
-class AbortException extends /*\*/Exception
+interface IPresenterResponse
 {
+
+	/**
+	 * Sends response to output.
+	 * @return void
+	 */
+	function send();
+
 }

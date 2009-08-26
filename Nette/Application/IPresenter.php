@@ -32,7 +32,7 @@ interface IPresenter
 {
 
 	/**
-	 * @return void
+	 * @return IPresenterResponse
 	 */
 	function run();
 
