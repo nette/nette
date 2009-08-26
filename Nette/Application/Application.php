@@ -154,20 +154,15 @@ class Application extends /*Nette\*/Object
 
 				// Execute presenter
 				$response = $this->presenter->run();
-				break;
 
-			} catch (RedirectingException $e) {
-				// not error, presenter redirects to new URL
-				$httpResponse->redirect($e->getUri(), $e->getCode());
-				break;
+				// Send response
+				if ($response instanceof ForwardingResponse) {
+					$request = $response->getRequest();
+					continue;
 
-			} catch (ForwardingException $e) {
-				// not error, presenter forwards to new request
-				$request = $e->getRequest();
-
-			} catch (AbortException $e) {
-				// not error, application is correctly terminated
-				unset($e);
+				} elseif ($response instanceof IPresenterResponse) {
+					$response->send();
+				}
 				break;
 
 			} catch (/*\*/Exception $e) {
@@ -348,7 +343,7 @@ class Application extends /*Nette\*/Object
 			$request = clone $session[$key];
 			unset($session[$key]);
 			$request->setFlag(PresenterRequest::RESTORED, TRUE);
-			throw new ForwardingException($request);
+			throw new AbortException(new ForwardingResponse($request));
 		}
 	}
 

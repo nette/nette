@@ -21,34 +21,49 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/AbortException.php';
+require_once dirname(__FILE__) . '/../../Object.php';
+
+require_once dirname(__FILE__) . '/../../Application/IPresenterResponse.php';
 
 
 
 /**
- * Abort presenter and redirects to new request.
+ * Forwards to new request.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
  */
-class RedirectingException extends AbortException
+class ForwardingResponse extends /*Nette\*/Object implements IPresenterResponse
 {
+	/** @var PresenterRequest */
+	private $request;
 
 
-	public function __construct($uri, $code)
+
+	public function __construct(PresenterRequest $request)
 	{
-		parent::__construct((string) $uri, (int) $code);
+		$this->request = $request;
 	}
 
 
 
 	/**
-	 * @return string
+	 * @return PresenterRequest
 	 */
-	final public function getUri()
+	final public function getRequest()
 	{
-		return $this->getMessage();
+		return $this->request;
+	}
+
+
+
+	/**
+	 * Sends response to output.
+	 * @return void
+	 */
+	public function send()
+	{
 	}
 
 }

@@ -30,4 +30,25 @@
  */
 class AbortException extends /*\*/Exception
 {
+	/** @var IPresenterResponse */
+	private $response;
+
+
+
+	public function __construct(IPresenterResponse $response = NULL)
+	{
+		parent::__construct();
+		$this->response = $response;
+	}
+
+
+
+	/**
+	 * @return IPresenterResponse
+	 */
+	final public function getResponse()
+	{
+		return $this->response;
+	}
+
 }

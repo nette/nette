@@ -234,28 +234,27 @@ abstract class Presenter extends Control implements IPresenter
 			// finish template rendering
 			$this->renderTemplate();
 
-			$response = $e = NULL;
+			$response = NULL;
 
 		} catch (AbortException $e) {
-			$response = NULL;
+			$response = $e->getResponse();
 			// continue with shutting down
 		} /* finally */ {
 
 			// PHASE 4: SHUTDOWN
 			$this->phase = self::PHASE_SHUTDOWN;
 
-			if ($this->isAjax() && !($e instanceof ForwardingException)) {
+			if ($this->isAjax() && !($response instanceof ForwardingResponse)) {
 				$this->sendPayload();
 			}
 
 			if ($this->hasFlashSession()) {
-				$this->getFlashSession()->setExpiration($e instanceof RedirectingException ? '+ 30 seconds': '+ 3 seconds');
+				$this->getFlashSession()->setExpiration($response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
 			}
 
 			$this->onShutdown($this, $response);
 			$this->shutdown($response);
 
-			if (isset($e)) throw $e;
 			return $response;
 		}
 	}
@@ -658,12 +657,12 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string|PresenterRequest
 	 * @param  array|mixed
 	 * @return void
-	 * @throws ForwardingException
+	 * @throws AbortException
 	 */
 	public function forward($destination, $args = array())
 	{
 		if ($destination instanceof PresenterRequest) {
-			throw new ForwardingException($destination);
+			throw new AbortException(new ForwardingResponse($destination));
 
 		} elseif (!is_array($args)) {
 			$args = func_get_args();
@@ -671,7 +670,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$this->createRequest($this, $destination, $args, 'forward');
-		throw new ForwardingException($this->lastCreatedRequest);
+		throw new AbortException(new ForwardingResponse($this->lastCreatedRequest));
 	}
 
 
@@ -681,7 +680,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
-	 * @throws RedirectingException
+	 * @throws AbortException
 	 */
 	public function redirectUri($uri, $code = NULL)
 	{
@@ -693,7 +692,7 @@ abstract class Presenter extends Control implements IPresenter
 			if (!$code) {
 				$code = $this->getHttpRequest()->isMethod('post') ? /*Nette\Web\*/IHttpResponse::S303_POST_GET : /*Nette\Web\*/IHttpResponse::S302_FOUND;
 			}
-			throw new RedirectingException($uri, $code);
+			throw new AbortException(new RedirectingResponse($uri, $code));
 		}
 	}
 
@@ -736,11 +735,11 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Correctly terminates presenter.
 	 * @return void
-	 * @throws TerminateException
+	 * @throws AbortException
 	 */
 	public function terminate()
 	{
-		throw new TerminateException();
+		throw new AbortException();
 	}
 
 
@@ -748,14 +747,14 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
-	 * @throws RedirectingException
+	 * @throws AbortException
 	 */
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
-				throw new RedirectingException($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY);
+				throw new AbortException(new RedirectingResponse($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
 	}
@@ -768,7 +767,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  string strong entity tag validator
 	 * @param  mixed  optional expiration time
 	 * @return int    date of the client's cache version, if available
-	 * @throws TerminateException
+	 * @throws AbortException
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{

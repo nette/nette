@@ -328,7 +328,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
 	 * @param  array|mixed
 	 * @return void
-	 * @throws RedirectingException
+	 * @throws AbortException
 	 */
 	public function redirect($code, $destination = NULL, $args = array())
 	{
