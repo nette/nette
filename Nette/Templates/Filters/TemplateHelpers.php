@@ -163,7 +163,9 @@ final class TemplateHelpers
 	 */
 	public static function strip($s)
 	{
-		return trim(preg_replace('#\\s+#', ' ', $s));
+		$s = preg_replace_callback('#<(textarea|pre|script).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
+		$s = trim(preg_replace('#\\s+#', ' ', $s));
+		return strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 	}
 
 
@@ -180,7 +182,7 @@ final class TemplateHelpers
 		if ($level >= 1) {
 			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
 			$s = /*Nette\*/String::indent($s, $level, $chars);
-			$s = strtr($s, "\x1D\x1A", "\r\n");
+			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
 	}
@@ -192,7 +194,7 @@ final class TemplateHelpers
 	 */
 	private static function indentCb($m)
 	{
-		return strtr($m[0], "\r\n", "\x1D\x1A");
+		return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");
 	}
 
 
