@@ -41,6 +41,9 @@ class ForwardingResponse extends /*Nette\*/Object implements IPresenterResponse
 
 
 
+	/**
+	 * @param  PresenterRequest  new request
+	 */
 	public function __construct(PresenterRequest $request)
 	{
 		$this->request = $request;

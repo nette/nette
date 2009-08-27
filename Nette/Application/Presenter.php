@@ -244,8 +244,10 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 4: SHUTDOWN
 			$this->phase = self::PHASE_SHUTDOWN;
 
-			if ($this->isAjax() && !($response instanceof ForwardingResponse)) {
-				$this->sendPayload();
+			// back compatibility for use terminate() instead of sendPayload()
+			if ($this->isAjax() && !($response instanceof ForwardingResponse) && (array) $this->payload) {
+				try { $this->sendPayload(); }
+				catch (AbortException $e) { $response = $e->getResponse(); }
 			}
 
 			if ($this->hasFlashSession()) {
@@ -465,15 +467,12 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * @return void
 	 * @throws BadRequestException if no template found
+	 * @throws AbortException
 	 */
 	public function renderTemplate()
 	{
 		$template = $this->getTemplate();
 		if (!$template) return;
-
-		if ($this->isAjax()) { // TODO!
-			/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
-		}
 
 		if ($template instanceof /*Nette\Templates\*/IFileTemplate && !$template->getFile()) {
 
@@ -507,7 +506,13 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		$template->render();
+		if ($this->isAjax()) { // TODO!
+			/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
+			$template->render();
+			$this->sendPayload();
+		}
+
+		$this->terminate(new RenderResponse($template));
 	}
 
 
@@ -623,17 +628,11 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Sends AJAX payload to the output.
 	 * @return void
+	 * @throws AbortException
 	 */
 	protected function sendPayload()
 	{
-		if ((array) $this->payload) {
-			$httpResponse = $this->getHttpResponse();
-			if ($httpResponse->getHeader('Content-Type') === NULL) {
-				$httpResponse->setContentType('application/json');
-			}
-			$httpResponse->expire(FALSE);
-			echo json_encode($this->payload);
-		}
+		$this->terminate(new JsonResponse($this->payload));
 	}
 
 
@@ -662,7 +661,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function forward($destination, $args = array())
 	{
 		if ($destination instanceof PresenterRequest) {
-			throw new AbortException(new ForwardingResponse($destination));
+			$this->terminate(new ForwardingResponse($destination));
 
 		} elseif (!is_array($args)) {
 			$args = func_get_args();
@@ -670,7 +669,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$this->createRequest($this, $destination, $args, 'forward');
-		throw new AbortException(new ForwardingResponse($this->lastCreatedRequest));
+		$this->terminate(new ForwardingResponse($this->lastCreatedRequest));
 	}
 
 
@@ -686,14 +685,12 @@ abstract class Presenter extends Control implements IPresenter
 	{
 		if ($this->isAjax()) {
 			$this->payload->redirect = (string) $uri;
-			$this->terminate();
+			$this->sendPayload();
 
-		} else {
-			if (!$code) {
-				$code = $this->getHttpRequest()->isMethod('post') ? /*Nette\Web\*/IHttpResponse::S303_POST_GET : /*Nette\Web\*/IHttpResponse::S302_FOUND;
-			}
-			throw new AbortException(new RedirectingResponse($uri, $code));
+		} elseif (!$code) {
+			$code = $this->getHttpRequest()->isMethod('post') ? /*Nette\Web\*/IHttpResponse::S303_POST_GET : /*Nette\Web\*/IHttpResponse::S302_FOUND;
 		}
+		$this->terminate(new RedirectingResponse($uri, $code));
 	}
 
 
@@ -734,12 +731,13 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Correctly terminates presenter.
+	 * @param  IPresenterResponse
 	 * @return void
 	 * @throws AbortException
 	 */
-	public function terminate()
+	public function terminate(IPresenterResponse $response = NULL)
 	{
-		throw new AbortException();
+		throw new AbortException($response);
 	}
 
 
@@ -754,7 +752,7 @@ abstract class Presenter extends Control implements IPresenter
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
-				throw new AbortException(new RedirectingResponse($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY));
+				$this->terminate(new RedirectingResponse($uri, /*Nette\Web\*/IHttpResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
 	}

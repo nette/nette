@@ -28,50 +28,35 @@ require_once dirname(__FILE__) . '/../../Application/IPresenterResponse.php';
 
 
 /**
- * Redirects to new request.
+ * Rendering presenter response.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Application
  */
-class RedirectingResponse extends /*Nette\*/Object implements IPresenterResponse
+class RenderResponse extends /*Nette\*/Object implements IPresenterResponse
 {
-	/** @var string */
-	private $uri;
-
-	/** @var int */
-	private $code;
+	/** @var mixed */
+	private $source;
 
 
 
 	/**
-	 * @param  string  URI
-	 * @param  int     HTTP code 3xx
+	 * @param  mixed  renderable variable
 	 */
-	public function __construct($uri, $code = /*Nette\Web\*/IHttpResponse::S302_FOUND)
+	public function __construct($source)
 	{
-		$this->uri = (string) $uri;
-		$this->code = (int) $code;
+		$this->source = $source;
 	}
 
 
 
 	/**
-	 * @return string
+	 * @return mixed
 	 */
-	final public function getUri()
+	final public function getSource()
 	{
-		return $this->uri;
-	}
-
-
-
-	/**
-	 * @return int
-	 */
-	final public function getCode()
-	{
-		return $this->code;
+		return $this->source;
 	}
 
 
@@ -82,7 +67,12 @@ class RedirectingResponse extends /*Nette\*/Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		/*Nette\*/Environment::getHttpResponse()->redirect($this->uri, $this->code);
+		if ($this->source instanceof /*Nette\Templates\*/ITemplate) {
+			$this->source->render();
+
+		} else {
+			echo $this->source;
+		}
 	}
 
 }
