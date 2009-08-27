@@ -81,6 +81,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var PresenterRequest */
 	private $request;
 
+	/** @var IPresenterResponse */
+	private $response;
+
 	/** @var int */
 	private $phase;
 
@@ -234,10 +237,7 @@ abstract class Presenter extends Control implements IPresenter
 			// finish template rendering
 			$this->sendTemplate();
 
-			$response = NULL;
-
 		} catch (AbortException $e) {
-			$response = $e->getResponse();
 			// continue with shutting down
 		} /* finally */ {
 
@@ -245,19 +245,19 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_SHUTDOWN;
 
 			// back compatibility for use terminate() instead of sendPayload()
-			if ($this->isAjax() && !($response instanceof ForwardingResponse) && (array) $this->payload) {
+			if ($this->isAjax() && !($this->response instanceof ForwardingResponse) && (array) $this->payload) {
 				try { $this->sendPayload(); }
-				catch (AbortException $e) { $response = $e->getResponse(); }
+				catch (AbortException $e) { }
 			}
 
 			if ($this->hasFlashSession()) {
-				$this->getFlashSession()->setExpiration($response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
+				$this->getFlashSession()->setExpiration($this->response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
 			}
 
-			$this->onShutdown($this, $response);
-			$this->shutdown($response);
+			$this->onShutdown($this, $this->response);
+			$this->shutdown($this->response);
 
-			return $response;
+			return $this->response;
 		}
 	}
 
@@ -747,7 +747,8 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function terminate(IPresenterResponse $response = NULL)
 	{
-		throw new AbortException($response);
+		$this->response = $response;
+		throw new AbortException();
 	}
 
 
