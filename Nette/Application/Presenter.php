@@ -232,7 +232,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// finish template rendering
-			$this->renderTemplate();
+			$this->sendTemplate();
 
 			$response = NULL;
 
@@ -469,7 +469,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @throws BadRequestException if no template found
 	 * @throws AbortException
 	 */
-	public function renderTemplate()
+	public function sendTemplate()
 	{
 		$template = $this->getTemplate();
 		if (!$template) return;
@@ -593,6 +593,16 @@ abstract class Presenter extends Control implements IPresenter
 	protected static function formatRenderMethod($view)
 	{
 		return 'render' . $view;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	protected function renderTemplate()
+	{
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->sendTemplate() instead.');
 	}
 
 
