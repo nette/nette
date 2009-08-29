@@ -3,93 +3,126 @@
  * Nette Framework Requirements Checker template.
  *
  * @param array    $requirements
- * @param array    $errors
+ * @param bool     $errors
+ * @param bool     $warnings
  * @param string   $redirect
  */
 
 header('Content-Type: text/html; charset=utf-8');
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="robots" content="noindex,noarchive">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="robots" content="noindex">
 	<meta name="generator" content="Nette Framework">
 	<?php if ($redirect): ?><meta http-equiv="Refresh" content="0; URL=?r=<?php echo $redirect ?>"><?php endif ?>
 
 	<title>Nette Framework Requirements Checker</title>
 
-	<style>
+	<style type="text/css">
 	body {
-		font: 13px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
-		color: #333;
-		background: #fff;
+		font: 9pt/1.5 Verdana, sans-serif;
+		color: #222;
+		background: #fff url('assets/logo.gif') no-repeat 97% 5px;
+		margin: 10px auto;
+		padding: 0 10px;
+		width: 700px;
 	}
 
-	h1 {
-		font-size: 170%;
+	h1, h2 {
+		font: 22pt/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
 		color: #165ca3;
+		margin: .7em 0;
 	}
 
 	h2 {
-		font-size: 150%;
-		color: black;
+		font-size: 17pt;
 	}
 
-	h3 {
-		font-size: 150%;
-		padding: 1em;
+	p {
+		margin: 1.2em 0;
+	}
+
+	.result {
+		font-size: 15pt;
+		margin: 1.5em 0;
+		padding: 0 1em;
+		border: 2px solid white;
+	}
+
+	.passed h2 {
+		color: #091;
+	}
+
+	.failed h2 {
+		color: #A30;
 	}
 
 	table {
-		font: 10pt/1.5 Verdana, sans-serif;
+		font: 9pt/1.5 Verdana, sans-serif;
 		padding: 0;
 		margin: 0;
-		border-collapse:collapse;
+		border-collapse: collapse;
 		width: 100%;
 	}
 
 	table td, table th {
-		color: #525b37;
-		background: #fff;
-		border: 1px solid #d1cdab;
 		text-align: left;
-		padding: 3px;
-		font-weight: normal;
+		padding: 10px;
+		vertical-align: top;
+		border-style: solid;
+		border-width: 1px 0 0;
+		border-color: inherit;
+		background: white none no-repeat 12px 8px;
+		background-color: inherit;
 	}
 
-	th {
+	table th {
 		font-size: 105%;
+		font-weight: bold;
+		padding-left: 50px;
 	}
 
-	p span {
-		padding: 0 .6em;
+	.passed, .info {
+		background-color: #DFD;
+		border-color: #BEB;
 	}
 
-	.passed {
-		background: green;
-		color: white;
+	.passed th {
+		background-image: url('assets/passed.gif');
+	}
+
+	.info th {
+		background-image: url('assets/info.gif');
 	}
 
 	.warning {
-		background: #ffffbb;
+		background-color: #FCF9CF;
+		border-color: #EE9;
+	}
+
+	.warning th {
+		background-image: url('assets/warning.gif');
 	}
 
 	.failed {
-		background: firebrick;
-		color: white;
+		background-color: #F4D2D2;
+		border-color: #EAA;
 	}
 
-	.required {
-		background: #F0F0F0;
-		color: black;
+	.failed th {
+		background-image: url('assets/failed.gif');
 	}
 
-	.optional {
-		color: #666;
+	.description td {
+		border-top: none !important;
+		padding: 0 10px 10px 50px;
+		color: #555;
 	}
 	</style>
 
-	<script src="assets/checker.js"></script>
+	<script src="assets/denied/checker.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -99,32 +132,52 @@ header('Content-Type: text/html; charset=utf-8');
 	for running <a href="http://nettephp.com/">Nette Framework</a>.</p>
 
 
-	<?php if ($errors[REQUIRED]): ?>
-	<h3 class="failed">Sorry, your server configuration does not satisfy the requirements of Nette Framework.</h3>
-	<?php elseif ($errors[OPTIONAL]): ?>
-	<h3 class="warning">Your server configuration satisfies minimum requirements of Nette Framework. Please see the warnings listed below.</h3>
+	<?php if ($errors): ?>
+	<div class="failed result">
+		<h2>Sorry, your server configuration does not satisfy the requirements of Nette Framework.</h2>
+	</div>
 	<?php else: ?>
-	<h3 class="passed">Congratulations! Your server configuration satisfies all requirements of Nette Framework.</h3>
+	<div class="passed result">
+		<h2>Congratulations! Server configuration meets the minimum requirements for Nette Framework.</h2>
+		<?php if ($warnings):?><p>Please see the warnings listed below.</p><?php endif ?>
+	</div>
 	<?php endif ?>
 
 
 	<h2>Details</h2>
 
-	<table class="result">
+	<table>
 	<?php foreach ($requirements as $id => $requirement):?>
-	<?php @list($name, $required, $result, $hint, $script) = $requirement ?>
-	<?php $class1 = $result === NULL ? 'skipped' : ($result ? 'passed' : ($required === REQUIRED ? 'failed' : 'warning')) ?>
-	<?php $class2 = $required === REQUIRED ? 'required' : 'optional' ?>
-	<tr id="res<?php echo $id ?>">
-		<td class="<?php echo $class1 ?>"><?php echo $class1, $script ?></td>
-		<th class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($name) ?></th>
-		<td class="<?php echo $class2 ?>"><?php echo htmlSpecialChars($hint) ?></td>
+	<?php $class = isset($requirement->passed) ? ($requirement->passed ? 'passed' : ($requirement->required ? 'failed' : 'warning')) : 'info' ?>
+	<tr id="res<?php echo $id ?>" class="<?php echo $class ?>">
+		<th><?php echo htmlSpecialChars($requirement->title) ?></th>
+
+		<?php if (empty($requirement->passed) && isset($requirement->errorMessage)): ?>
+			<td><?php echo htmlSpecialChars($requirement->errorMessage) ?></td>
+		<?php elseif (isset($requirement->message)): ?>
+			<td><?php echo htmlSpecialChars($requirement->message) ?></td>
+		<?php elseif (isset($requirement->passed)): ?>
+			<td><?php echo $requirement->passed ? 'Enabled' : 'Disabled' ?></td>
+		<?php else: ?>
+			<td></td>
+		<?php endif ?>
 	</tr>
+
+	<?php if (isset($requirement->passed) && !$requirement->passed): ?>
+	<tr class="<?php echo $class ?> description">
+		<td colspan="2"><?php echo $requirement->description ?></td>
+	</tr>
+	<?php endif ?>
+
+	<?php if (isset($requirement->script)): ?>
+		<script type="text/javascript"><?php echo $requirement->script ?></script>
+	<?php endif ?>
+
 	<?php endforeach ?>
 	</table>
 
-	<p>Legend: <span class="passed">passed</span> <span class="failed">failed</span> <span class="warning">warning</span> <span class="required">required</span> <span class="optional">optional</span></p>
+	<?php if ($errors): ?><p>Please check the error messages and <a href="?">try again</a>.</p><?php endif ?>
 
-	<p>Requirements Checker version <?php echo CHECKER_VERSION ?></p>
+	<p><i>Requirements Checker version <?php echo CHECKER_VERSION ?></i></p>
 </body>
 </html>
