@@ -248,6 +248,6 @@ $application->setRouter(new SimpleRouter());
 $request = new PresenterRequest('Test', /*Nette\Web\*/HttpRequest::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
-$presenter = new TestPresenter($request);
+$presenter = new TestPresenter;
 $presenter->autoCanonicalize = FALSE;
-$presenter->run();
+$presenter->run($request);

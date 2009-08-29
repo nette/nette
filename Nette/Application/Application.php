@@ -148,10 +148,10 @@ class Application extends /*Nette\*/Object
 					throw new BadRequestException($e->getMessage(), 404, $e);
 				}
 				$request->freeze();
-				$this->presenter = new $class($request);
 
 				// Execute presenter
-				$response = $this->presenter->run();
+				$this->presenter = new $class;
+				$response = $this->presenter->run($request);
 
 				// Send response
 				if ($response instanceof ForwardingResponse) {

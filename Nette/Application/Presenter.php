@@ -135,18 +135,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @param  PresenterRequest
-	 */
-	public function __construct(PresenterRequest $request)
-	{
-		$this->request = $request;
-		$this->payload = (object) NULL;
-		parent::__construct(NULL, $request->getPresenterName());
-	}
-
-
-
-	/**
 	 * @return PresenterRequest
 	 */
 	final public function getRequest()
@@ -183,13 +171,18 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
+	 * @param  PresenterRequest
 	 * @return IPresenterResponse
 	 */
-	public function run()
+	public function run(PresenterRequest $request)
 	{
 		try {
 			// PHASE 1: STARTUP
 			$this->phase = self::PHASE_STARTUP;
+			$this->request = $request;
+			$this->payload = (object) NULL;
+			$this->setParent($this->getParent(), $request->getPresenterName());
+
 			$this->initGlobalParams();
 			$this->startup();
 			if (!$this->startupCheck) {
