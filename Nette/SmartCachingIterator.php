@@ -34,7 +34,7 @@
  * @property-read bool $odd
  * @property-read bool $even
  */
-class SmartCachingIterator extends /*\*/CachingIterator
+class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countable
 {
 	/** @var int */
 	private $counter = 0;
@@ -121,6 +121,23 @@ class SmartCachingIterator extends /*\*/CachingIterator
 	public function getCounter()
 	{
 		return $this->counter;
+	}
+
+
+
+	/**
+	 * Returns the count of elements.
+	 * @return int
+	 */
+	public function count()
+	{
+		$inner = $this->getInnerIterator();
+		if ($inner instanceof /*\*/Countable) {
+			return $inner->count();
+
+		} else {
+			throw new /*\*/NotSupportedException('Iterator is not countable');
+		}
 	}
 
 
