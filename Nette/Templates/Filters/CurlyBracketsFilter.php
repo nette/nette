@@ -40,20 +40,14 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** PHP identifier */
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
-	/** curly bracket tag */
-	const RE_CURLY = '
-		(?P<indent>\n[ \t]*)?
-		\\{(?P<macro>[^\\s\'"{}](?>
-			\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"|  # RE_STRING
-			[^\'"}]+)*)\\}
-		(?P<newline>[\ \t]*(?=\r|\n))?
-	';
-
 	/** spcial HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
 	/** @var ICurlyBracketsHandler */
 	private $handler;
+
+	/** @var string */
+	private $macroRe;
 
 	/** @var string */
 	private $input, $output;
@@ -114,6 +108,10 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	 */
 	public function __invoke($s)
 	{
+		if (!$this->macroRe) {
+			$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
+		}
+
 		// context-aware escaping
 		$this->context = CurlyBracketsFilter::CONTEXT_NONE;
 		$this->escape = '$template->escape';
@@ -188,7 +186,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$matches = $this->match('~
 			(?:\n[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
 			<(?P<comment>!--)|           ##  begin of HTML comment <!--
-			'.self::RE_CURLY.'           ##  curly tag
+			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
 		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
@@ -236,7 +234,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		$tag = end($this->tags);
 		$matches = $this->match('~
 			</'.$tag->name.'(?![a-z0-9:])| ##  end HTML tag </tag
-			'.self::RE_CURLY.'           ##  curly tag
+			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
 		if ($matches && empty($matches['macro'])) { // </tag
@@ -257,7 +255,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$matches = $this->match('~
 			(?P<end>/?>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
-			'.self::RE_CURLY.'|          ##  curly tag
+			'.$this->macroRe.'|          ##  curly tag
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
 
@@ -341,7 +339,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$matches = $this->match('~
 			(' . $this->quote . ')|      ##  1) end of HTML attribute
-			'.self::RE_CURLY.'           ##  curly tag
+			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
 		if ($matches && empty($matches['macro'])) { // (attribute end) '"
@@ -360,7 +358,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	{
 		$matches = $this->match('~
 			(--\s*>)|                    ##  1) end of HTML comment
-			'.self::RE_CURLY.'           ##  curly tag
+			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
 		if ($matches && empty($matches['macro'])) { // --\s*>
@@ -378,7 +376,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	private function contextNone()
 	{
 		$matches = $this->match('~
-			'.self::RE_CURLY.'           ##  curly tag
+			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 		return $matches;
 	}
@@ -409,6 +407,25 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	public function getLine()
 	{
 		return substr_count($this->input, "\n", 0, $this->offset);
+	}
+
+
+
+	/**
+	 * Changes macro delimiters.
+	 * @param  string  left regular expression
+	 * @param  string  right regular expression
+	 * @return void
+	 */
+	public function setDelimiters($left, $right)
+	{
+		$this->macroRe = '
+			(?P<indent>\n[\ \t]*)?
+			' . $left . '
+				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
+			' . $right . '
+			(?P<newline>[\ \t]*(?=\r|\n))?
+		';
 	}
 
 
