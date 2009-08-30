@@ -45,12 +45,12 @@ class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 
 
 	/**
-	 * @param  stdClass  payload
+	 * @param  stdClass|array  payload
 	 * @param  string    MIME content type
 	 */
-	public function __construct(stdClass $payload, $contentType = NULL)
+	public function __construct($payload, $contentType = NULL)
 	{
-		$this->payload = $payload;
+		$this->payload = (object) $payload;
 		$this->contentType = $contentType ? $contentType : 'application/json';
 	}
 
