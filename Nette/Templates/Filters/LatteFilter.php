@@ -26,13 +26,13 @@ require_once dirname(__FILE__) . '/../../Object.php';
 
 
 /**
- * Compile-time filter CurlyBrackets.
+ * Compile-time filter Latte.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-class CurlyBracketsFilter extends /*Nette\*/Object
+class LatteFilter extends /*Nette\*/Object
 {
 	/** single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
@@ -43,7 +43,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	/** spcial HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
-	/** @var ICurlyBracketsHandler */
+	/** @var ILatteHandler */
 	private $handler;
 
 	/** @var string */
@@ -77,7 +77,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Sets a macro handler.
-	 * @param  ICurlyBracketsHandler
+	 * @param  ILatteHandler
 	 * @return void
 	 */
 	public function setHandler($handler)
@@ -89,12 +89,12 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 
 	/**
 	 * Returns macro handler.
-	 * @return ICurlyBracketsHandler
+	 * @return ILatteHandler
 	 */
 	public function getHandler()
 	{
 		if ($this->handler === NULL) {
-			$this->handler = new CurlyBracketsMacros;
+			$this->handler = new LatteMacros;
 		}
 		return $this->handler;
 	}
@@ -113,7 +113,7 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 		}
 
 		// context-aware escaping
-		$this->context = CurlyBracketsFilter::CONTEXT_NONE;
+		$this->context = LatteFilter::CONTEXT_NONE;
 		$this->escape = '$template->escape';
 
 		// initialize handlers
@@ -563,3 +563,9 @@ class CurlyBracketsFilter extends /*Nette\*/Object
 	}
 
 }
+
+
+
+/** @deprecated */
+class CurlyBracketsFilter extends LatteFilter {}
+class CurlyBracketsMacros extends LatteMacros {}

@@ -64,7 +64,7 @@ final class TemplateFilters
 
 	/**
 	 * Template with configuration (experimental).
-	 *    <?nette filter="CurlyBracketsFilter::invoke"?>
+	 *    <?nette filter="LatteFilter::invoke"?>
 	 *
 	 * @param  string
 	 * @return string

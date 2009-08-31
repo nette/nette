@@ -26,7 +26,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
 
 
 /**
- * Default macros for filter CurlyBracketsFilter.
+ * Default macros for filter LatteFilter.
  *
  * - {$variable} with escaping
  * - {!$variable} without escaping
@@ -57,7 +57,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
  */
-class CurlyBracketsMacros extends /*Nette\*/Object
+class LatteMacros extends /*Nette\*/Object
 {
 	/** @var array */
 	public static $defaultMacros = array(
@@ -115,7 +115,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	/** @var array */
 	public $macros;
 
-	/** @var CurlyBracketsFilter */
+	/** @var LatteFilter */
 	private $filter;
 
 	/** @var array */
@@ -147,7 +147,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 	/**
 	 * Initializes parsing.
-	 * @param  CurlyBracketsFilter
+	 * @param  LatteFilter
 	 * @param  string
 	 * @return void
 	 */
@@ -159,7 +159,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		$this->extends = NULL;
 		$this->uniq = substr(md5(uniqid()), 0, 10);
 
-		$filter->context = CurlyBracketsFilter::CONTEXT_TEXT;
+		$filter->context = LatteFilter::CONTEXT_TEXT;
 		$filter->escape = 'TemplateHelpers::escapeHtml';
 
 		// remove comments
@@ -198,7 +198,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			$s = "<?php\n"
 				. 'if ($_cb->extends) { ob_start(); }' . "\n"
 				. '?>' . $s . "<?php\n"
-				. 'if ($_cb->extends) { ob_end_clean(); CurlyBracketsMacros::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
+				. 'if ($_cb->extends) { ob_end_clean(); LatteMacros::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
 		}
 
 		// named blocks
@@ -212,8 +212,8 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php\n"
-			/*. 'use Nette\Templates\CurlyBracketsMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
-			. "\$_cb = CurlyBracketsMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
+			/*. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
+			. "\$_cb = LatteMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
 
@@ -258,7 +258,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			/**/fixCallback($callback);/**/
 			if (!is_callable($callback)) {
 				$able = is_callable($callback, TRUE, $textual);
-				throw new /*\*/InvalidStateException("CurlyBrackets macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+				throw new /*\*/InvalidStateException("Latte macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 			}
 			return call_user_func($callback, $content, $modifiers);
 
@@ -344,7 +344,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroVar($var, $modifiers)
 	{
-		return CurlyBracketsFilter::formatModifiers('$' . $var, $modifiers);
+		return LatteFilter::formatModifiers('$' . $var, $modifiers);
 	}
 
 
@@ -354,14 +354,14 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroInclude($content, $modifiers)
 	{
-		$destination = CurlyBracketsFilter::fetchToken($content); // destination [,] [params]
-		$params = CurlyBracketsFilter::formatArray($content) . ($content ? ' + ' : '');
+		$destination = LatteFilter::fetchToken($content); // destination [,] [params]
+		$params = LatteFilter::formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
 			throw new /*\*/InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
 
 		} elseif ($destination[0] === '#') { // include #block
-			if (!preg_match('#^\\#'.CurlyBracketsFilter::RE_IDENTIFIER.'$#', $destination)) {
+			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $destination)) {
 				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
@@ -378,17 +378,17 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			$params .= 'get_defined_vars()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
 				? "call_user_func(reset(\$_cb->blocks[$name]), $params)"
-				: "CurlyBracketsMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
+				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
 			return $modifiers
-				? "ob_start(); $cmd; echo " . CurlyBracketsFilter::formatModifiers('ob_get_clean()', $modifiers)
+				? "ob_start(); $cmd; echo " . LatteFilter::formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
 
 		} else { // include "file"
-			$destination = CurlyBracketsFilter::formatString($destination);
+			$destination = LatteFilter::formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . CurlyBracketsFilter::formatModifiers('CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
-				: 'CurlyBracketsMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->render()';
+				? 'echo ' . LatteFilter::formatModifiers('LatteMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
+				: 'LatteMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->render()';
 		}
 	}
 
@@ -399,7 +399,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroExtends($content)
 	{
-		$destination = CurlyBracketsFilter::fetchToken($content); // destination
+		$destination = LatteFilter::fetchToken($content); // destination
 		if ($destination === NULL) {
 			throw new /*\*/InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
 		}
@@ -410,7 +410,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
 		}
 		$this->extends = $destination !== 'none';
-		return $this->extends ? '$_cb->extends = ' . CurlyBracketsFilter::formatString($destination) : '';
+		return $this->extends ? '$_cb->extends = ' . LatteFilter::formatString($destination) : '';
 	}
 
 
@@ -420,14 +420,14 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroBlock($content, $modifiers)
 	{
-		$name = CurlyBracketsFilter::fetchToken($content); // block [,] [params]
+		$name = LatteFilter::fetchToken($content); // block [,] [params]
 
 		if ($name === NULL || $name[0] === '$') { // anonymous block or capture
 			$this->blocks[] = array($name, $modifiers);
 			return ($name === NULL && $modifiers === '') ? '' : 'ob_start()';
 
 		} elseif ($name[0] === '#') { // #block
-			if (!preg_match('#^\\#'.CurlyBracketsFilter::RE_IDENTIFIER.'$#', $name)) {
+			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
 				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -470,7 +470,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 
 		} else { // anonymous block or capture
 			return ($name === NULL && $modifiers === '') ? ''
-				: ($name === NULL ? 'echo ' : $name . '=') . CurlyBracketsFilter::formatModifiers('ob_get_clean()', $modifiers);
+				: ($name === NULL ? 'echo ' : $name . '=') . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
 		}
 	}
 
@@ -517,27 +517,27 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	{
 		if (strpos($content, 'html') !== FALSE) {
 			$this->filter->escape = 'TemplateHelpers::escapeHtml';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_TEXT;
+			$this->filter->context = LatteFilter::CONTEXT_TEXT;
 
 		} elseif (strpos($content, 'xml') !== FALSE) {
 			$this->filter->escape = 'TemplateHelpers::escapeXml';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_NONE;
+			$this->filter->context = LatteFilter::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'javascript') !== FALSE) {
 			$this->filter->escape = 'TemplateHelpers::escapeJs';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_NONE;
+			$this->filter->context = LatteFilter::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'css') !== FALSE) {
 			$this->filter->escape = 'TemplateHelpers::escapeCss';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_NONE;
+			$this->filter->context = LatteFilter::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'plain') !== FALSE) {
 			$this->filter->escape = '';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_NONE;
+			$this->filter->context = LatteFilter::CONTEXT_NONE;
 
 		} else {
 			$this->filter->escape = '$template->escape';
-			$this->filter->context = CurlyBracketsFilter::CONTEXT_NONE;
+			$this->filter->context = LatteFilter::CONTEXT_NONE;
 		}
 
 		// temporary solution
@@ -562,11 +562,11 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	private function macroSnippet($content)
 	{
 		$args = array('');
-		if ($snippet = CurlyBracketsFilter::fetchToken($content)) {  // [name [,]] [tag]
-			$args[] = CurlyBracketsFilter::formatString($snippet);
+		if ($snippet = LatteFilter::fetchToken($content)) {  // [name [,]] [tag]
+			$args[] = LatteFilter::formatString($snippet);
 		}
 		if ($content) {
-			$args[] = CurlyBracketsFilter::formatString($content);
+			$args[] = LatteFilter::formatString($content);
 		}
 		return implode(', ', $args);
 	}
@@ -578,15 +578,15 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroWidget($content)
 	{
-		$pair = CurlyBracketsFilter::fetchToken($content); // widget[:method]
+		$pair = LatteFilter::fetchToken($content); // widget[:method]
 		if ($pair === NULL) {
 			throw new /*\*/InvalidStateException("Missing widget name in {widget} on line {$this->filter->line}.");
 		}
 		$pair = explode(':', $pair, 2);
-		$widget = CurlyBracketsFilter::formatString($pair[0]);
+		$widget = LatteFilter::formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = preg_match('#^('.CurlyBracketsFilter::RE_IDENTIFIER.'|)$#', $method) ? "render$method" : "{\"render$method\"}";
-		$param = CurlyBracketsFilter::formatArray($content);
+		$method = preg_match('#^('.LatteFilter::RE_IDENTIFIER.'|)$#', $method) ? "render$method" : "{\"render$method\"}";
+		$param = LatteFilter::formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($widget[0] === '$' ? "if (is_object($widget)) {$widget}->$method($param); else " : '')
 			. "\$control->getWidget($widget)->$method($param)";
@@ -599,7 +599,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroLink($content, $modifiers)
 	{
-		return CurlyBracketsFilter::formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers);
+		return LatteFilter::formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers);
 	}
 
 
@@ -609,7 +609,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroPlink($content, $modifiers)
 	{
-		return CurlyBracketsFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers);
+		return LatteFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers);
 	}
 
 
@@ -619,7 +619,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroIfCurrent($content, $modifiers)
 	{
-		return $content ? CurlyBracketsFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers) : '';
+		return $content ? LatteFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers) : '';
 	}
 
 
@@ -629,7 +629,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function formatLink($content)
 	{
-		return CurlyBracketsFilter::formatString(CurlyBracketsFilter::fetchToken($content)) . CurlyBracketsFilter::formatArray($content, ', '); // destination [,] args
+		return LatteFilter::formatString(LatteFilter::fetchToken($content)) . LatteFilter::formatArray($content, ', '); // destination [,] args
 	}
 
 
@@ -643,9 +643,9 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException("Missing arguments in {assign} on line {$this->filter->line}.");
 		}
 		if (strpos($content, '=>') === FALSE) { // back compatibility
-			return '$' . ltrim(CurlyBracketsFilter::fetchToken($content), '$') . ' = ' . CurlyBracketsFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
+			return '$' . ltrim(LatteFilter::fetchToken($content), '$') . ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
 		}
-		return 'extract(' . CurlyBracketsFilter::formatArray($content) . ')';
+		return 'extract(' . LatteFilter::formatArray($content) . ')';
 	}
 
 
@@ -658,7 +658,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 		if (!$content) {
 			throw new /*\*/InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
 		}
-		return 'extract(' . CurlyBracketsFilter::formatArray($content) . ', EXTR_SKIP)';
+		return 'extract(' . LatteFilter::formatArray($content) . ', EXTR_SKIP)';
 	}
 
 
@@ -678,7 +678,7 @@ class CurlyBracketsMacros extends /*Nette\*/Object
 	 */
 	private function macroModifiers($content, $modifiers)
 	{
-		return CurlyBracketsFilter::formatModifiers($content, $modifiers);
+		return LatteFilter::formatModifiers($content, $modifiers);
 	}
 
 
