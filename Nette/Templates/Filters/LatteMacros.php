@@ -137,6 +137,12 @@ class LatteMacros extends /*Nette\*/Object
 	/** @var string */
 	private $uniq;
 
+	/**#@+ @internal block type */
+	const BLOCK_NAMED = 1;
+	const BLOCK_CAPTURE = 2;
+	const BLOCK_ANONYMOUS = 3;
+	/**#@-*/
+
 
 
 	/**
@@ -372,11 +378,11 @@ class LatteMacros extends /*Nette\*/Object
 			$parent = $destination === '#parent';
 			if ($destination === '#parent' || $destination === '#this') {
 				$item = end($this->blocks);
-				while ($item && $item[0][0] !== '#') $item = prev($this->blocks);
+				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new /*\*/InvalidStateException("Cannot include $name block outside of any block on line {$this->filter->line}.");
+					throw new /*\*/InvalidStateException("Cannot include $destination block outside of any block on line {$this->filter->line}.");
 				}
-				$destination = $item[0];
+				$destination = $item[1];
 			}
 			$name = var_export($destination, TRUE);
 			$params .= 'get_defined_vars()';
@@ -424,15 +430,16 @@ class LatteMacros extends /*Nette\*/Object
 	 */
 	private function macroBlock($content, $modifiers)
 	{
+		if (substr($content, 0, 1) === '$') { // capture - back compatibility
+			trigger_error("Capturing {block $content} is deprecated; use {capture $content} instead on line {$this->filter->line}.", E_USER_WARNING);
+			return $this->macroCapture($content, $modifiers);
+		}	
+
 		$name = LatteFilter::fetchToken($content); // block [,] [params]
 
 		if ($name === NULL) { // anonymous block
-			$this->blocks[] = array(NULL, $modifiers);
+			$this->blocks[] = array(self::BLOCK_ANONYMOUS, NULL, $modifiers);
 			return $modifiers === '' ? '' : 'ob_start()';
-
-		} elseif ($name[0] === '$') { // capture - back compatibility
-			trigger_error("Capturing {block $name} is deprecated; use {capture $name} instead on line {$this->filter->line}.", E_USER_WARNING);
-			return $this->macroCapture($name, $modifiers);
 
 		} elseif ($name[0] === '#') { // #block
 			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
@@ -444,7 +451,7 @@ class LatteMacros extends /*Nette\*/Object
 
 			$top = empty($this->blocks);
 			$this->namedBlocks[$name] = $name;
-			$this->blocks[] = array($name, '');
+			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
 			if (!$top) {
 				return $this->macroInclude($name, $modifiers) . "{block$name}";
 
@@ -467,18 +474,18 @@ class LatteMacros extends /*Nette\*/Object
 	 */
 	private function macroBlockEnd($content)
 	{
-		$empty = empty($this->blocks);
-		list($name, $modifiers) = array_pop($this->blocks);
+		list($type, $name, $modifiers) = array_pop($this->blocks);
 
-		if ($empty || ($content && $content !== $name)) {
+		if ($type === self::BLOCK_CAPTURE) { // capture - back compatibility
+			$this->blocks[] = array($type, $name, $modifiers);
+			return $this->macroCaptureEnd($content);
+		}	
+
+		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
 			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
 
-		} elseif (substr($name, 0, 1) === '#') { // #block
+		} elseif ($type === self::BLOCK_NAMED) { // #block
 			return "{/block$name}";
-
-		} elseif (substr($name, 0, 1) === '$') { // capture - back compatibility
-			$this->blocks[] = array($name, $modifiers);
-			return $this->macroCaptureEnd($content);
 
 		} else { // anonymous block
 			return $modifiers === '' ? '' : 'echo ' . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
@@ -494,11 +501,11 @@ class LatteMacros extends /*Nette\*/Object
 	{
 		$name = LatteFilter::fetchToken($content); // $variable
 
-		if ($name === NULL || $name[0] !== '$') { // anonymous block or capture
+		if (substr($name, 0, 1) !== '$') {
 			throw new /*\*/InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
 		}
 
-		$this->blocks[] = array($name, $modifiers);
+		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
 		return 'ob_start()';
 	}
 
@@ -509,10 +516,9 @@ class LatteMacros extends /*Nette\*/Object
 	 */
 	private function macroCaptureEnd($content)
 	{
-		$empty = empty($this->blocks);
-		list($name, $modifiers) = array_pop($this->blocks);
+		list($type, $name, $modifiers) = array_pop($this->blocks);
 
-		if ($empty || ($content && $content !== $name) || substr($name, 0, 1) !== '$') {
+		if ($type !== self::BLOCK_CAPTURE || ($content && $content !== $name)) {
 			throw new /*\*/InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
 		}
 
