@@ -46,8 +46,9 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {cache ?} ... {/cache} cached block
  * - {snippet ?} ... {/snippet ?} control snippet
  * - {attr ?} HTML element attributes
- * - {block|texy} ... {/block} capture of filter block
+ * - {block|texy} ... {/block} block
  * - {contentType ...} HTTP Content-Type header
+ * - {capture ?} ... {/capture} capture block to parameter
  * - {assign var => value} set template parameter
  * - {default var => value} set default template parameter
  * - {dump $var}
@@ -63,6 +64,9 @@ class LatteMacros extends /*Nette\*/Object
 	public static $defaultMacros = array(
 		'block' => '<?php %:macroBlock% ?>',
 		'/block' => '<?php %:macroBlockEnd% ?>',
+
+		'capture' => '<?php %:macroCapture% ?>',
+		'/capture' => '<?php %:macroCaptureEnd% ?>',
 
 		'snippet' => '<?php } if ($_cb->foo = SnippetHelper::create($control%:macroSnippet%)) { $_cb->snippets[] = $_cb->foo ?>',
 		'/snippet' => '<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>',
@@ -422,9 +426,13 @@ class LatteMacros extends /*Nette\*/Object
 	{
 		$name = LatteFilter::fetchToken($content); // block [,] [params]
 
-		if ($name === NULL || $name[0] === '$') { // anonymous block or capture
-			$this->blocks[] = array($name, $modifiers);
-			return ($name === NULL && $modifiers === '') ? '' : 'ob_start()';
+		if ($name === NULL) { // anonymous block
+			$this->blocks[] = array(NULL, $modifiers);
+			return $modifiers === '' ? '' : 'ob_start()';
+
+		} elseif ($name[0] === '$') { // capture - back compatibility
+			trigger_error("Capturing {block $name} is deprecated; use {capture $name} instead on line {$this->filter->line}.", E_USER_WARNING);
+			return $this->macroCapture($name, $modifiers);
 
 		} elseif ($name[0] === '#') { // #block
 			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
@@ -455,7 +463,7 @@ class LatteMacros extends /*Nette\*/Object
 
 
 	/**
-	 * {/block ...}
+	 * {/block}
 	 */
 	private function macroBlockEnd($content)
 	{
@@ -468,10 +476,47 @@ class LatteMacros extends /*Nette\*/Object
 		} elseif (substr($name, 0, 1) === '#') { // #block
 			return "{/block$name}";
 
-		} else { // anonymous block or capture
-			return ($name === NULL && $modifiers === '') ? ''
-				: ($name === NULL ? 'echo ' : $name . '=') . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
+		} elseif (substr($name, 0, 1) === '$') { // capture - back compatibility
+			$this->blocks[] = array($name, $modifiers);
+			return $this->macroCaptureEnd($content);
+
+		} else { // anonymous block
+			return $modifiers === '' ? '' : 'echo ' . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
 		}
+	}
+
+
+
+	/**
+	 * {capture ...}
+	 */
+	private function macroCapture($content, $modifiers)
+	{
+		$name = LatteFilter::fetchToken($content); // $variable
+
+		if ($name === NULL || $name[0] !== '$') { // anonymous block or capture
+			throw new /*\*/InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
+		}
+
+		$this->blocks[] = array($name, $modifiers);
+		return 'ob_start()';
+	}
+
+
+
+	/**
+	 * {/capture}
+	 */
+	private function macroCaptureEnd($content)
+	{
+		$empty = empty($this->blocks);
+		list($name, $modifiers) = array_pop($this->blocks);
+
+		if ($empty || ($content && $content !== $name) || substr($name, 0, 1) !== '$') {
+			throw new /*\*/InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
+		}
+
+		return $name . '=' . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
 	}
 
 

@@ -30,14 +30,29 @@ alert();
 
 
 
-{block$capture}
+{block$capture}deprecated{/block}
+<p>
+Captured: {$capture}
+</p>
+
+
+{capture$capture}
 <ul>
 	<li>lower: {$hello |lower}</li>
 </ul>
-{/block}
+{/capture}
 
 <p>
 Captured: {$capture}
+</p>
+
+
+{capture$capture|upper}
+Hello
+{/capture}
+
+<p>
+Captured with modifier: {$capture}
 </p>
 
 
