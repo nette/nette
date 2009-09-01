@@ -68,7 +68,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be string, " . gettype($name) . " given.");
+			throw new /*\*/InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
 
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
 			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
@@ -137,14 +137,22 @@ class ComponentContainer extends Component implements IComponentContainer
 	 */
 	final public function getComponent($name, $need = TRUE)
 	{
-		$a = strpos($name, self::NAME_SEPARATOR);
-		if ($a !== FALSE) {
-			$ext = substr($name, $a + 1);
-			$name = substr($name, 0, $a);
-		}
+		if (is_int($name)) {
+			$name = (string) $name;
 
-		if ($name == NULL) {
-			throw new /*\*/InvalidArgumentException("Component or subcomponent name must be non-empty alphanumeric string, '$name' given.");
+		} elseif (!is_string($name)) {
+			throw new /*\*/InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+
+		} else {
+			$a = strpos($name, self::NAME_SEPARATOR);
+			if ($a !== FALSE) {
+				$ext = (string) substr($name, $a + 1);
+				$name = substr($name, 0, $a);
+			}
+
+			if ($name === '') {
+				throw new /*\*/InvalidArgumentException("Component or subcomponent name must not be empty string.");
+			}
 		}
 
 		if (!isset($this->components[$name])) {
