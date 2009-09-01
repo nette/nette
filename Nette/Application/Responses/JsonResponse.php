@@ -36,7 +36,7 @@ require_once dirname(__FILE__) . '/../../Application/IPresenterResponse.php';
  */
 class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 {
-	/** @var stdClass */
+	/** @var array|stdClass */
 	private $payload;
 
 	/** @var string */
@@ -45,19 +45,22 @@ class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 
 
 	/**
-	 * @param  stdClass|array  payload
+	 * @param  array|stdClass  payload
 	 * @param  string    MIME content type
 	 */
 	public function __construct($payload, $contentType = NULL)
 	{
-		$this->payload = (object) $payload;
+		if (!is_array($payload) && !($payload instanceof /*\*/stdClass)) {
+			throw new /*\*/InvalidArgumentException("Payload must be array or anonymous class, " . gettype($payload) . " given.");
+		}
+		$this->payload = $payload;
 		$this->contentType = $contentType ? $contentType : 'application/json';
 	}
 
 
 
 	/**
-	 * @return stdClass
+	 * @return array|stdClass
 	 */
 	final public function getPayload()
 	{
