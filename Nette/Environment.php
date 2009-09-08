@@ -206,12 +206,11 @@ final class Environment
 
 
 	/**
-	 * Determines whether the debugger is active.
-	 * @return bool
+	 * @deprecated
 	 */
 	public static function isDebugging()
 	{
-		return self::getMode('debug');
+		throw new /*\*/DeprecatedException;
 	}
 
 

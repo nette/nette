@@ -87,16 +87,6 @@ class Configurator extends Object
 				return TRUE;
 			}
 
-		case 'debug':
-			// Determines whether the debugger is active
-			if (defined('DEBUG_MODE')) {
-				return (bool) DEBUG_MODE;
-
-			} else {
-				return !Environment::getMode('production') && isset($_REQUEST['DBGSESSID']);
-				// function_exists('DebugBreak');
-			}
-
 		case 'console':
 			return PHP_SAPI === 'cli';
 
