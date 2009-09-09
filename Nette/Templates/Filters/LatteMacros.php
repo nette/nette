@@ -340,7 +340,13 @@ class LatteMacros extends /*Nette\*/Object
 				}
 			}
 
-			unset($attrs[$name], $attrs[$innerName]);
+			$tagName = "tag-$name";
+			if (isset($attrs[$tagName])) {
+				$left = $this->macro($name, $attrs[$tagName], '') . $left;
+				$right .= $this->macro("/$name", '', '');
+			}
+
+			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
 
 		return $attrs ? NULL : $left . $code . $right;

@@ -160,6 +160,8 @@ var prop2 = {$people};
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
+<b n:tag-if="true">bold</b> <b n:tag-if="false">normal</b>
+
 <n:include block="#bl" n:modifiers="upper">
 
 <n:default vary=3>{$vary}
