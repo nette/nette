@@ -62,6 +62,9 @@ class LatteMacros extends /*Nette\*/Object
 {
 	/** @var array */
 	public static $defaultMacros = array(
+		'syntax' => '%:macroSyntax%',
+		'/syntax' => '%:macroSyntax%',
+
 		'block' => '<?php %:macroBlock% ?>',
 		'/block' => '<?php %:macroBlockEnd% ?>',
 
@@ -322,7 +325,7 @@ class LatteMacros extends /*Nette\*/Object
 			$macro = $closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
 				if ($closing) {
-					$right .= $this->macro($macro, $attrs[$name], '');
+					$right .= $this->macro($macro, '', '');
 				} else {
 					$left = $this->macro($macro, $attrs[$name], '') . $left;
 				}
@@ -331,7 +334,7 @@ class LatteMacros extends /*Nette\*/Object
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
 				if ($closing) {
-					$left .= $this->macro($macro, $attrs[$innerName], '');
+					$left .= $this->macro($macro, '', '');
 				} else {
 					$right = $this->macro($macro, $attrs[$innerName], '') . $right;
 				}
@@ -355,6 +358,40 @@ class LatteMacros extends /*Nette\*/Object
 	private function macroVar($var, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$' . $var, $modifiers);
+	}
+
+
+
+	/**
+	 * {syntax ...}
+	 */
+	private function macroSyntax($var)
+	{
+		switch ($var) {
+		case '':
+		case 'latte':
+			$this->filter->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
+			break;
+
+		case 'double':
+			$this->filter->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
+			break;
+
+		case 'asp':
+			$this->filter->setDelimiters('<%\s*', '\s*%>'); // <%...%>
+			break;
+
+		case 'python':
+			$this->filter->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
+			break;
+
+		case 'off':
+			$this->filter->setDelimiters('[^\x00-\xFF]', '');
+			break;
+
+		default:
+			throw new /*\*/InvalidStateException("Unknown macro syntax '$var' on line {$this->filter->line}.");
+		}
 	}
 
 
@@ -433,7 +470,7 @@ class LatteMacros extends /*Nette\*/Object
 		if (substr($content, 0, 1) === '$') { // capture - back compatibility
 			trigger_error("Capturing {block $content} is deprecated; use {capture $content} instead on line {$this->filter->line}.", E_USER_WARNING);
 			return $this->macroCapture($content, $modifiers);
-		}	
+		}
 
 		$name = LatteFilter::fetchToken($content); // block [,] [params]
 
@@ -479,7 +516,7 @@ class LatteMacros extends /*Nette\*/Object
 		if ($type === self::BLOCK_CAPTURE) { // capture - back compatibility
 			$this->blocks[] = array($type, $name, $modifiers);
 			return $this->macroCaptureEnd($content);
-		}	
+		}
 
 		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
 			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
