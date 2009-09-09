@@ -217,6 +217,45 @@ class NetteApplicationRouteTest extends PHPUnit_Framework_TestCase
 
 
 	/**
+	 * With user class alternative test.
+	 * @return void
+	 */
+	public function testWithUserClassAlt()
+	{
+		$route = new Route('<presenter>/<id>', array(
+			'id' => array(
+				Route::PATTERN => '\d{1,3}',
+			),
+		), Route::FULL_META);
+
+		$this->assertRoute($route,
+			'/presenter/12/', // ?test=testvalue&presenter=querypresenter
+			array (
+				'presenter' => 'Presenter',
+				'params' =>
+				array (
+					'id' => '12',
+					'test' => 'testvalue',
+				),
+			),
+			'/presenter/12?test=testvalue'
+		);
+		$this->assertRoute($route,
+			'/presenter/1234', // ?test=testvalue&presenter=querypresenter
+			NULL,
+			NULL
+		);
+
+		$this->assertRoute($route,
+			'/presenter/', // ?test=testvalue&presenter=querypresenter
+			NULL,
+			NULL
+		);
+	}
+
+
+
+	/**
 	 * With user class and user pattern test.
 	 * @return void
 	 */

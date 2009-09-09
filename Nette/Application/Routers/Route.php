@@ -42,6 +42,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 	/** flag */
 	const CASE_SENSITIVE = 256;
+	const FULL_META = 128;
 
 	/**#@+ uri type */
 	const HOST = 1;
@@ -49,7 +50,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	const RELATIVE = 3;
 	/**#@-*/
 
-	/**#@+ key used in {@link Route::$styles} */
+	/**#@+ key used in {@link Route::$styles} or metadata {@link Route::__construct} */
 	const VALUE = 'value';
 	const PATTERN = 'pattern';
 	const FILTER_IN = 'filterIn';
@@ -123,13 +124,18 @@ class Route extends /*Nette\*/Object implements IRouter
 
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
-	 * @param  array   default values
+	 * @param  array   default values or metadata
 	 * @param  int     flags
 	 */
-	public function __construct($mask, array $defaults = array(), $flags = 0)
+	public function __construct($mask, array $metadata = array(), $flags = 0)
 	{
 		$this->flags = $flags | self::$defaultFlags;
-		$this->setMask($mask, $defaults);
+		if (!($this->flags & self::FULL_META)) {
+			foreach ($metadata as $name => $def) {
+				$metadata[$name] = array(self::VALUE => $def);
+			}
+		}
+		$this->setMask($mask, $metadata);
 	}
 
 
@@ -374,7 +380,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  array
 	 * @return void
 	 */
-	private function setMask($mask, array $defaults)
+	private function setMask($mask, array $metadata)
 	{
 		$this->mask = $mask;
 
@@ -389,12 +395,10 @@ class Route extends /*Nette\*/Object implements IRouter
 			$this->type = self::RELATIVE;
 		}
 
-		$metadata = array();
-		foreach ($defaults as $name => $def) {
-			$metadata[$name] = array(
-				self::VALUE => $def,
-				'fixity' => self::CONSTANT
-			);
+		foreach ($metadata as $name => $meta) {
+			if (array_key_exists(self::VALUE, $meta)) {
+				$metadata[$name]['fixity'] = self::CONSTANT;
+			}
 		}
 
 
@@ -427,7 +431,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				}
 
 				if (isset($metadata[$name])) {
-					$meta = $meta + $metadata[$name];
+					$meta = $metadata[$name] + $meta;
 				}
 
 				if (array_key_exists(self::VALUE, $meta)) {
@@ -494,7 +498,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			}
 
 			if (isset($metadata[$name])) {
-				$meta = $meta + $metadata[$name];
+				$meta = $metadata[$name] + $meta;
 			}
 
 			if ($pattern == '' && isset($meta[self::PATTERN])) {
