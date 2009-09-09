@@ -50,13 +50,14 @@ class Route extends /*Nette\*/Object implements IRouter
 	/**#@-*/
 
 	/**#@+ key used in {@link Route::$styles} */
+	const VALUE = 'value';
 	const PATTERN = 'pattern';
 	const FILTER_IN = 'filterIn';
 	const FILTER_OUT = 'filterOut';
 	const FILTER_TABLE = 'filterTable';
 	/**#@-*/
 
-	/**#@+ @internal fixity types - how to handle 'default' value? {@link Route::$metadata} */
+	/**#@+ @internal fixity types - how to handle default value? {@link Route::$metadata} */
 	const OPTIONAL = 0;
 	const PATH_OPTIONAL = 1;
 	const CONSTANT = 2;
@@ -106,7 +107,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	/** @var string  regular expression pattern */
 	private $re;
 
-	/** @var array of [default & fixity, filterIn, filterOut] */
+	/** @var array of [value & fixity, filterIn, filterOut] */
 	protected $metadata = array();
 
 	/** @var array  */
@@ -212,7 +213,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				}
 
 			} elseif (isset($meta['fixity'])) {
-				$params[$name] = $meta['default'];
+				$params[$name] = $meta[self::VALUE];
 			}
 		}
 
@@ -263,7 +264,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		$presenter = $appRequest->getPresenterName();
 		if (isset($metadata[self::MODULE_KEY])) {
 			if (isset($metadata[self::MODULE_KEY]['fixity'])) {
-				$a = strlen($metadata[self::MODULE_KEY]['default']);
+				$a = strlen($metadata[self::MODULE_KEY][self::VALUE]);
 				if (substr($presenter, $a, 1) !== ':') {
 					return NULL; // module not match
 				}
@@ -280,7 +281,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			if (!isset($params[$name])) continue; // retains NULL values
 
 			if (isset($meta['fixity'])) {
-				if (is_scalar($params[$name]) && strcasecmp($params[$name], $meta['default']) === 0) {
+				if (is_scalar($params[$name]) && strcasecmp($params[$name], $meta[self::VALUE]) === 0) {
 					// remove default values; NULL values are retain
 					unset($params[$name]);
 					continue;
@@ -328,7 +329,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				if ($optional) {
 					$uri = '';
 
-				} elseif ($metadata[$name]['default'] == '') { // intentionally ==
+				} elseif ($metadata[$name][self::VALUE] == '') { // intentionally ==
 					if ($uri[0] === '/' && substr($sequence[$i], -1) === '/') {
 						return NULL; // default value is empty but is required
 					}
@@ -391,7 +392,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		$metadata = array();
 		foreach ($defaults as $name => $def) {
 			$metadata[$name] = array(
-				'default' => $def,
+				self::VALUE => $def,
 				'fixity' => self::CONSTANT
 			);
 		}
@@ -429,7 +430,7 @@ class Route extends /*Nette\*/Object implements IRouter
 					$meta = $meta + $metadata[$name];
 				}
 
-				if (array_key_exists('default', $meta)) {
+				if (array_key_exists(self::VALUE, $meta)) {
 					$meta['fixity'] = self::OPTIONAL;
 				}
 
@@ -501,15 +502,15 @@ class Route extends /*Nette\*/Object implements IRouter
 			}
 
 			$meta['filterTable2'] = empty($meta[self::FILTER_TABLE]) ? NULL : array_flip($meta[self::FILTER_TABLE]);
-			if (isset($meta['default'])) {
-				if (isset($meta['filterTable2'][$meta['default']])) {
-					$meta['defOut'] = $meta['filterTable2'][$meta['default']];
+			if (isset($meta[self::VALUE])) {
+				if (isset($meta['filterTable2'][$meta[self::VALUE]])) {
+					$meta['defOut'] = $meta['filterTable2'][$meta[self::VALUE]];
 
 				} elseif (isset($meta[self::FILTER_OUT])) {
-					$meta['defOut'] = call_user_func($meta[self::FILTER_OUT], $meta['default']);
+					$meta['defOut'] = call_user_func($meta[self::FILTER_OUT], $meta[self::VALUE]);
 
 				} else {
-					$meta['defOut'] = $meta['default'];
+					$meta['defOut'] = $meta[self::VALUE];
 				}
 			}
 			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
@@ -557,7 +558,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		$defaults = array();
 		foreach ($this->metadata as $name => $meta) {
 			if (isset($meta['fixity'])) {
-				$defaults[$name] = $meta['default'];
+				$defaults[$name] = $meta[self::VALUE];
 			}
 		}
 		return $defaults;
@@ -584,14 +585,14 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		if (isset($m[self::MODULE_KEY])) {
 			if (isset($m[self::MODULE_KEY]['fixity']) && $m[self::MODULE_KEY]['fixity'] === self::CONSTANT) {
-				$module = $m[self::MODULE_KEY]['default'] . ':';
+				$module = $m[self::MODULE_KEY][self::VALUE] . ':';
 			} else {
 				return NULL;
 			}
 		}
 
 		if (isset($m[self::PRESENTER_KEY]['fixity']) && $m[self::PRESENTER_KEY]['fixity'] === self::CONSTANT) {
-			return $module . $m[self::PRESENTER_KEY]['default'];
+			return $module . $m[self::PRESENTER_KEY][self::VALUE];
 		}
 		return NULL;
 	}
