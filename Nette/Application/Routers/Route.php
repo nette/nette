@@ -451,7 +451,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 2) PARSE URI-PATH PART OF MASK
 		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [pattern][#class]>
+			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [pattern] [#class]>
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
@@ -468,7 +468,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			$i--;
 
 			$class = $parts[$i]; $i--; // validation class
-			$pattern = $parts[$i]; $i--; // validation condition (as regexp)
+			$pattern = trim($parts[$i]); $i--; // validation condition (as regexp)
 			$name = $parts[$i]; $i--; // parameter name
 			array_unshift($sequence, $name);
 
