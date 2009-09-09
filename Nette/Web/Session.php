@@ -130,7 +130,7 @@ class Session extends /*Nette\*/Object
 		*/
 
 		// initialize structures
-		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
+		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : NULL;
 		if (!isset($_SESSION['__NT']['V'])) { // new session
 			$_SESSION['__NT'] = array();
 			$_SESSION['__NT']['C'] = 0;
@@ -138,7 +138,7 @@ class Session extends /*Nette\*/Object
 
 		} else {
 			$saved = & $_SESSION['__NT']['V'];
-			if ($saved === $verKey) { // verified
+			if ($verKey == NULL || $verKey === $saved) { // verified
 				$_SESSION['__NT']['C']++;
 
 			} else { // session attack?
@@ -257,7 +257,6 @@ class Session extends /*Nette\*/Object
 			if (headers_sent($file, $line)) {
 				throw new /*\*/InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
-			$_SESSION['__NT']['V'] = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : '';
 			session_regenerate_id(TRUE);
 
 		} else {
@@ -313,11 +312,13 @@ class Session extends /*Nette\*/Object
 	 */
 	public function generateVerificationKey()
 	{
-		$list = array('Accept-Charset', 'Accept-Encoding', 'Accept-Language', 'User-Agent');
-		$key = array();
 		$httpRequest = $this->getHttpRequest();
-		foreach ($list as $header) {
-			$key[] = $httpRequest->getHeader($header);
+		$key[] = $httpRequest->getHeader('Accept-Charset');
+		$key[] = $httpRequest->getHeader('Accept-Encoding');
+		$key[] = $httpRequest->getHeader('Accept-Language');
+		$key[] = $httpRequest->getHeader('User-Agent');
+		if (strpos($key[3], 'MSIE 8.0')) { // IE 8 AJAX bug
+			$key[2] = substr($key[2], 0, 2);
 		}
 		return md5(implode("\0", $key));
 	}
