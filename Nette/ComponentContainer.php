@@ -160,13 +160,18 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if (isset($this->components[$name])) {
-			return $a === FALSE ? $this->components[$name] : $this->components[$name]->getComponent($ext, $need);
+			if ($a === FALSE) {
+				return $this->components[$name];
+
+			} elseif ($this->components[$name] instanceof IComponentContainer) {
+				return $this->components[$name]->getComponent($ext, $need);
+
+			} elseif ($need) {
+				throw new /*\*/InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
+			}
 
 		} elseif ($need) {
 			throw new /*\*/InvalidArgumentException("Component with name '$name' does not exist.");
-
-		} else {
-			return NULL;
 		}
 	}
 
