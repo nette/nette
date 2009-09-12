@@ -276,7 +276,7 @@ class ComponentContainer extends Component implements IComponentContainer
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette
  */
-class RecursiveComponentIterator extends /*\*/RecursiveArrayIterator
+class RecursiveComponentIterator extends /*\*/RecursiveArrayIterator implements /*\*/Countable
 {
 
 	/**
@@ -297,6 +297,17 @@ class RecursiveComponentIterator extends /*\*/RecursiveArrayIterator
 	public function getChildren()
 	{
 		return $this->current()->getComponents();
+	}
+
+
+
+	/**
+	 * Returns the count of elements.
+	 * @return int
+	 */
+	public function count()
+	{
+		return iterator_count($this);
 	}
 
 }

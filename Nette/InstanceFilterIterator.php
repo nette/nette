@@ -28,7 +28,7 @@
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette
  */
-class InstanceFilterIterator extends /*\*/FilterIterator
+class InstanceFilterIterator extends /*\*/FilterIterator implements /*\*/Countable
 {
 	/** @var string */
 	private $type;
@@ -54,6 +54,17 @@ class InstanceFilterIterator extends /*\*/FilterIterator
 	public function accept()
 	{
 		return $this->current() instanceof $this->type;
+	}
+
+
+
+	/**
+	 * Returns the count of elements.
+	 * @return int
+	 */
+	public function count()
+	{
+		return iterator_count($this);
 	}
 
 }

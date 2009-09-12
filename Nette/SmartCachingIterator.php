@@ -136,7 +136,7 @@ class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countabl
 			return $inner->count();
 
 		} else {
-			throw new /*\*/NotSupportedException('Iterator is not countable');
+			throw new /*\*/NotSupportedException('Iterator is not countable.');
 		}
 	}
 
