@@ -21,6 +21,10 @@
 
 
 
+require_once dirname(__FILE__) . '/../IComponentContainer.php';
+
+
+
 /**
  * Identifies a container that creates a new namespace for form's control hierarchy.
  *
@@ -28,6 +32,6 @@
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
  */
-interface INamingContainer
+interface INamingContainer extends IComponentContainer
 {
 }
