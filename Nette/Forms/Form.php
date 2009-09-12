@@ -51,7 +51,6 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @property-read Nette\Web\Html $elementPrototype
  * @property   IFormRenderer $renderer
  * @property-read boold $submitted
- * @property-read boold $populated
  * @property-read boold $valid
  */
 class Form extends FormContainer
@@ -102,7 +101,7 @@ class Form extends FormContainer
 	/** @var array of function(Form $sender); Occurs when the form is submitted and not validated */
 	public $onInvalidSubmit;
 
-	/** @var mixed */
+	/** @var mixed or NULL meaning: not detected yet */
 	protected $submittedBy;
 
 	/** @var Html  <form> element */
@@ -116,9 +115,6 @@ class Form extends FormContainer
 
 	/** @var array of FormGroup */
 	private $groups = array();
-
-	/** @var bool */
-	private $isPopulated = FALSE;
 
 	/** @var bool */
 	private $valid;
@@ -138,7 +134,7 @@ class Form extends FormContainer
 	{
 		$this->element = /*Nette\Web\*/Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
-		$this->element->method = 'post';
+		$this->element->method = self::POST;
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
 			$this->addTracker($name);
@@ -486,7 +482,7 @@ class Form extends FormContainer
 	/**
 	 * Fill-in with default values.
 	 * @param  array|Traversable  values used to fill the form
-	 * @param  bool     erase other controls?
+	 * @param  bool     erase other default values?
 	 * @return void
 	 */
 	public function setDefaults($values, $erase = FALSE)
@@ -527,18 +523,6 @@ class Form extends FormContainer
 				}
 			}
 		}
-		$this->isPopulated = TRUE;
-	}
-
-
-
-	/**
-	 * Was form populated by setDefaults() or processHttpRequest() yet?
-	 * @return bool
-	 */
-	public function isPopulated()
-	{
-		return $this->isPopulated;
 	}
 
 
@@ -582,7 +566,6 @@ class Form extends FormContainer
 				}
 			}
 		}
-		$this->isPopulated = TRUE;
 	}
 
 
@@ -593,10 +576,6 @@ class Form extends FormContainer
 	 */
 	public function getValues()
 	{
-		if (!$this->isPopulated) {
-			throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
-		}
-
 		$values = array();
 		$cursor = & $values;
 		$iterator = $this->getComponents(TRUE);
@@ -630,6 +609,9 @@ class Form extends FormContainer
 	public function isValid()
 	{
 		if ($this->valid === NULL) {
+			if ($this->submittedBy === NULL) {
+				throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or processHttpRequest().');
+			}
 			$this->validate();
 		}
 		return $this->valid;
@@ -643,14 +625,8 @@ class Form extends FormContainer
 	 */
 	public function validate()
 	{
-		if (!$this->isPopulated) {
-			throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or setDefaults().');
-		}
-
-		$controls = $this->getControls();
-
 		$this->valid = TRUE;
-		foreach ($controls as $control) {
+		foreach ($this->getControls() as $control) {
 			if (!$control->getRules()->validate()) {
 				$this->valid = FALSE;
 			}
