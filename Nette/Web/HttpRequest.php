@@ -354,16 +354,8 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		if ($this->files === NULL) {
 			$this->initialize();
 		}
-
-		$var = $this->files;
-		foreach (func_get_args() as $k) {
-			if (is_array($var) && isset($var[$k])) {
-				$var = $var[$k];
-			} else {
-				return NULL;
-			}
-		}
-		return $var;
+		$args = func_get_args();
+		return /*Nette\*/ArrayTools::get($this->files, $args);
 	}
 
 
