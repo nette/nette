@@ -48,27 +48,22 @@ class TextInput extends TextBase
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
 		$this->filters[] = array(/*Nette\*/'String', 'trim');
+		$this->filters[] = array($this, 'checkMaxLength');
 		$this->value = '';
 	}
 
 
 
 	/**
-	 * Loads HTTP data.
-	 * @param  array
-	 * @return void
+	 * Filter: shortens value to control's max length.
+	 * @return string
 	 */
-	public function loadHttpData($data)
+	protected function checkMaxLength($value)
 	{
-		parent::loadHttpData($data);
-
-		if ($this->control->type === 'password') {
-			$this->tmpValue = '';
+		if ($this->control->maxlength && iconv_strlen($value, 'UTF-8') > $this->control->maxlength) {
+			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');
 		}
-
-		if ($this->control->maxlength && iconv_strlen($this->value, 'UTF-8') > $this->control->maxlength) {
-			$this->value = iconv_substr($this->value, 0, $this->control->maxlength, 'UTF-8');
-		}
+		return $value;
 	}
 
 
@@ -93,7 +88,9 @@ class TextInput extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->value = $this->value === '' ? $this->translate($this->emptyValue) : $this->tmpValue;
+		if ($this->control->type !== 'password') {
+			$control->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
+		}
 		return $control;
 	}
 
