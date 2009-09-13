@@ -82,7 +82,7 @@ class ComponentContainer extends Component implements IComponentContainer
 		$obj = $this;
 		do {
 			if ($obj === $component) {
-				throw new /*\*/InvalidStateException("Circular reference detected.");
+				throw new /*\*/InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);
