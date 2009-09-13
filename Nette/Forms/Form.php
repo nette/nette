@@ -103,6 +103,9 @@ class Form extends FormContainer
 	/** @var mixed or NULL meaning: not detected yet */
 	protected $submittedBy;
 
+	/** @var array */
+	protected $httpData;
+
 	/** @var Html  <form> element */
 	private $element;
 
@@ -442,6 +445,26 @@ class Form extends FormContainer
 		$this->submittedBy = TRUE;
 		$this->loadHttpData($data);
 		$this->submit();
+	}
+
+
+
+	/**
+	 * Returns submitted HTTP data.
+	 * @return array
+	 */
+	public function getHttpData()
+	{
+		if ($this->httpData === NULL && $this->isSubmitted()) {
+			$httpRequest = $this->getHttpRequest();
+			$httpRequest->setEncoding($this->encoding);
+			if ($httpRequest->isMethod('post')) {
+				$this->httpData = /*Nette\*/ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+			} else {
+				$this->httpData = $httpRequest->getQuery();
+			}
+		}
+		return $this->httpData;
 	}
 
 

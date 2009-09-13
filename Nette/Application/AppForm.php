@@ -116,6 +116,25 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 
 
 
+	/**
+	 * Returns submitted HTTP data.
+	 * @return array
+	 */
+	public function getHttpData()
+	{
+		if ($this->httpData === NULL && $this->isSubmitted()) {
+			$request = $this->getPresenter()->getRequest();
+			if (strcasecmp($this->getMethod(), 'post') === 0) {
+				$this->httpData = /*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles());
+			} else {
+				$this->httpData = $request->getParams();
+			}
+		}
+		return $this->httpData;
+	}
+
+
+
 	/********************* interface ISignalReceiver ****************d*g**/
 
 
