@@ -47,7 +47,7 @@ abstract class Component extends Object implements IComponent
 	/** @var string */
 	private $name;
 
-	/** @var array of [type => [obj, depth, path, isMonitored?]] or NULL (monitored but not processed yet) */
+	/** @var array of [type => [obj, depth, path, is_monitored?]] */
 	private $monitors = array();
 
 
@@ -88,19 +88,11 @@ abstract class Component extends Object implements IComponent
 				if ($obj === $this) $obj = NULL; // prevent cycling
 			}
 
-			$monitored = array_key_exists($type, $this->monitors);
 			if ($obj) {
-				$this->monitors[$type] = array(
-					$obj,
-					$depth,
-					substr($path, 1),
-					$monitored,
-				);
-				if ($monitored) {
-					$this->attached($obj);
-				}
+				$this->monitors[$type] = array($obj, $depth, substr($path, 1), FALSE);
+
 			} else {
-				$this->monitors[$type] = array(NULL, NULL, NULL, $monitored); // not found
+				$this->monitors[$type] = array(NULL, NULL, NULL, FALSE); // not found
 			}
 		}
 
@@ -137,8 +129,12 @@ abstract class Component extends Object implements IComponent
 	public function monitor($type)
 	{
 		/**/fixNamespace($type);/**/
-		$this->monitors[$type] = NULL;
-		$this->lookup($type, FALSE); // call attached()
+		if (empty($this->monitors[$type][3])) {
+			if ($obj = $this->lookup($type, FALSE)) {
+				$this->attached($obj);
+			}
+			$this->monitors[$type][3] = TRUE; // mark as monitored
+		}	
 	}
 
 
@@ -260,14 +256,15 @@ abstract class Component extends Object implements IComponent
 	 * Refreshes monitors.
 	 * @param  int
 	 * @param  array|NULL (array = attaching, NULL = detaching)
+	 * @param  array
 	 * @return void
 	 */
-	private function refreshMonitors($depth, & $missing = NULL)
+	private function refreshMonitors($depth, & $missing = NULL, & $listeners = array())
 	{
 		if ($this instanceof IComponentContainer) {
 			foreach ($this->getComponents() as $component) {
 				if ($component instanceof Component) {
-					$component->refreshMonitors($depth + 1, $missing);
+					$component->refreshMonitors($depth + 1, $missing, $listeners);
 				}
 			}
 		}
@@ -277,7 +274,7 @@ abstract class Component extends Object implements IComponent
 				if (isset($rec[1]) && $rec[1] > $depth) {
 					if ($rec[3]) { // monitored
 						$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
-						$this->detached($rec[0]);
+						$listeners[] = array($this, $rec[0]);
 					} else { // not monitored, just randomly cached
 						unset($this->monitors[$type]);
 					}
@@ -296,11 +293,21 @@ abstract class Component extends Object implements IComponent
 					$this->monitors[$type] = array(NULL, NULL, NULL, TRUE);
 
 				} else {
-					$this->monitors[$type] = NULL; // means 'monitored' and forces re-lookup
-					if ($this->lookup($type, FALSE) === NULL) {
+					$this->monitors[$type] = NULL; // forces re-lookup
+					if ($obj = $this->lookup($type, FALSE)) {
+						$listeners[] = array($this, $obj);
+					} else {
 						$missing[$type] = TRUE;
 					}
+					$this->monitors[$type][3] = TRUE; // mark as monitored
 				}
+			}
+		}
+
+		if ($depth === 0) { // call listeners
+			$method = $missing === NULL ? 'detached' : 'attached';
+			foreach ($listeners as $item) {
+				$item[0]->$method($item[1]);
 			}
 		}
 	}

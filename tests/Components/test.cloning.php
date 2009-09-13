@@ -71,6 +71,7 @@ $a['b']['c']['d'] = new D;
 $a['b']['c']['d']['e'] = new E;
 
 $a['b']->monitor('a');
+$a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
 echo "\n'e' looking 'a'\n";
