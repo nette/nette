@@ -134,7 +134,7 @@ abstract class Component extends Object implements IComponent
 				$this->attached($obj);
 			}
 			$this->monitors[$type][3] = TRUE; // mark as monitored
-		}	
+		}
 	}
 
 

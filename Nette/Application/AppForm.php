@@ -48,7 +48,7 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 		$this->monitor('Nette\Application\Presenter');
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
-		}	
+		}
 	}
 
 
