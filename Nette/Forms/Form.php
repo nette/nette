@@ -385,15 +385,34 @@ class Form extends FormContainer
 
 
 	/**
+	 * Tells if the form is anchored.
+	 * @return bool
+	 */
+	public function isAnchored()
+	{
+		return TRUE;
+	}
+
+
+
+	/**
 	 * Tells if the form was submitted.
 	 * @return ISubmitterControl|FALSE  submittor control
 	 */
 	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
-			$this->processHttpRequest();
-		}
+			$httpRequest = $this->getHttpRequest();
 
+			$this->submittedBy = strcasecmp($this->getMethod(), $httpRequest->getMethod()) === 0;
+
+			if ($this->submittedBy && $tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
+				$data = $httpRequest->isMethod('post') ? $httpRequest->getPost() : $httpRequest->getQuery();
+				if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
+					$this->submittedBy = FALSE;
+				}
+			}
+		}
 		return $this->submittedBy;
 	}
 
@@ -412,38 +431,10 @@ class Form extends FormContainer
 
 
 	/**
-	 * Detects form submission and loads HTTP values.
-	 * @param  Nette\Web\IHttpRequest  optional request object
 	 * @return void
 	 */
-	public function processHttpRequest($httpRequest = NULL)
+	public function processHttpRequest()
 	{
-		$this->submittedBy = FALSE;
-
-		if ($httpRequest === NULL) {
-			$httpRequest = $this->getHttpRequest();
-		}
-		$httpRequest->setEncoding($this->encoding);
-
-		if (strcasecmp($this->getMethod(), 'post') === 0) {
-			if (!$httpRequest->isMethod('post')) return;
-			$data = /*Nette\*/ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
-
-		} else {
-			if (!$httpRequest->isMethod('get')) return;
-			$data = $httpRequest->getQuery();
-		}
-
-		$tracker = $this->getComponent(self::TRACKER_ID, FALSE);
-		if ($tracker) {
-			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) return;
-
-		} else {
-			if (!count($data)) return;
-		}
-
-		$this->submittedBy = TRUE;
-		$this->loadHttpData($data);
 		$this->submit();
 	}
 
@@ -514,39 +505,6 @@ class Form extends FormContainer
 
 
 
-	/**
-	 * Fill-in the form with HTTP data. Doesn't check if form was submitted.
-	 * @param  array    user data
-	 * @return void
-	 */
-	protected function loadHttpData(array $data)
-	{
-		$cursor = & $data;
-		$iterator = $this->getComponents(TRUE);
-		foreach ($iterator as $name => $control) {
-			$sub = $iterator->getSubIterator();
-			if (!isset($sub->cursor)) {
-				$sub->cursor = & $cursor;
-			}
-			if ($control instanceof IFormControl && !$control->isDisabled()) {
-				$control->loadHttpData($sub->cursor);
-				if ($control instanceof ISubmitterControl && (!is_object($this->submittedBy) || $control->isSubmittedBy())) {
-					$this->submittedBy = $control;
-				}
-			}
-			if ($control instanceof INamingContainer) { // going deeper
-				if (isset($sub->cursor[$name]) && is_array($sub->cursor[$name])) {
-					$cursor = & $sub->cursor[$name];
-				} else {
-					unset($cursor);
-					$cursor = NULL;
-				}
-			}
-		}
-	}
-
-
-
 	/********************* validation ****************d*g**/
 
 
@@ -558,9 +516,6 @@ class Form extends FormContainer
 	public function isValid()
 	{
 		if ($this->valid === NULL) {
-			if ($this->submittedBy === NULL) {
-				throw new /*\*/InvalidStateException('Form was not populated yet. Call method isSubmitted() or processHttpRequest().');
-			}
 			$this->validate();
 		}
 		return $this->valid;

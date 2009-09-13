@@ -87,10 +87,9 @@ class RepeaterControl extends FormContainer /*implements IFormControl*/
 
 	/**
 	 * Load HTTP data.
-	 * @param  array
 	 * @return void
 	 */
-	public function loadHttpData($data)
+	public function loadHttpData()
 	{
 		$name = $this->getName();
 		$this->setValue(isset($data[$name]) ? $data[$name] : array());

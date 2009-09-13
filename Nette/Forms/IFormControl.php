@@ -33,10 +33,9 @@ interface IFormControl
 
 	/**
 	 * Loads HTTP data.
-	 * @param  array
 	 * @return void
 	 */
-	function loadHttpData($data);
+	function loadHttpData();
 
 	/**
 	 * Sets control's value.

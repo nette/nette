@@ -85,33 +85,48 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 				$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
 				array()
 			));
+
+			// fill-in the form with HTTP data
+			if ($this->isSubmitted()) {
+				foreach ($this->getControls() as $control) {
+					$control->loadHttpData();
+				}
+			}
 		}
+		parent::attached($presenter);
 	}
 
 
 
 	/**
-	 * Detects form submission and loads PresenterRequest values.
-	 * @return void
+	 * Tells if the form is anchored.
+	 * @return bool
 	 */
-	public function processHttpRequest($foo = NULL)
+	public function isAnchored()
 	{
-		$presenter = $this->getPresenter();
+		return (bool) $this->getPresenter(FALSE);
+	}
 
-		$this->submittedBy = FALSE;
-		if (!$presenter->isSignalReceiver($this, 'submit')) return;
 
-		$isPost = strcasecmp($this->getMethod(), 'post') === 0;
-		$request = $presenter->getRequest();
-		if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) return;
 
-		$this->submittedBy = TRUE;
-		if ($isPost) {
-			$this->loadHttpData(/*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles()));
-
-		} else {
-			$this->loadHttpData($request->getParams());
+	/**
+	 * Tells if the form was submitted.
+	 * @return ISubmitterControl|FALSE  submittor control
+	 */
+	public function isSubmitted()
+	{
+		if ($this->submittedBy === NULL) {
+			$this->submittedBy = FALSE;
+			$presenter = $this->getPresenter();
+			if ($presenter->isSignalReceiver($this, 'submit')) {
+				$isPost = strcasecmp($this->getMethod(), 'post') === 0;
+				$request = $presenter->getRequest();
+				if (!$request->isMethod('forward') && $request->isMethod('post') === $isPost) {
+					$this->submittedBy = TRUE;
+				}
+			}
 		}
+		return $this->submittedBy;
 	}
 
 

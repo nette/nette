@@ -63,12 +63,13 @@ class ImageButton extends SubmitButton
 
 	/**
 	 * Loads HTTP data.
-	 * @param  array
 	 * @return void
 	 */
-	public function loadHttpData($data)
+	public function loadHttpData()
 	{
-		$this->value = isset($data[$this->getName() . '_x']) || isset($data[$this->getName()][0]);
+		$path = $this->getHtmlName(); // img_x or img['x']
+		$path = strtr(str_replace(']', '', strpos($path, '[') === FALSE ? $path . '.x' : substr($path, 0, -2)), '.', '_');
+		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), explode('[', $path)) !== NULL);
 	}
 
 }

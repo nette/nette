@@ -95,11 +95,26 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public function __construct($caption = NULL)
 	{
+		$this->monitor('Nette\Forms\Form');
 		parent::__construct();
 		$this->control = /*Nette\Web\*/Html::el('input');
 		$this->label = /*Nette\Web\*/Html::el('label');
 		$this->caption = $caption;
 		$this->rules = new Rules($this);
+	}
+
+
+
+	/**
+	 * This method will be called when the component becomes attached to Form.
+	 * @param  IComponent
+	 * @return void
+	 */
+	protected function attached($form)
+	{
+		if (!$this->disabled && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
+			$this->loadHttpData();
+		}
 	}
 
 
@@ -305,13 +320,12 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 	/**
 	 * Loads HTTP data.
-	 * @param  array
 	 * @return void
 	 */
-	public function loadHttpData($data)
+	public function loadHttpData()
 	{
-		$name = $this->getName();
-		$this->setValue(isset($data[$name]) ? $data[$name] : NULL);
+		$path = strtr(str_replace(']', '', $this->getHtmlName()), '.', '_');
+		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), explode('[', $path)));
 	}
 
 

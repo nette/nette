@@ -62,6 +62,22 @@ class SubmitButton extends Button implements ISubmitterControl
 
 
 	/**
+	 * Sets control's value.
+	 * @param  bool
+	 * @return void
+	 */
+	public function setValue($value)
+	{
+		parent::setValue($value);
+		$form = $this->getForm();
+		if ($this->isSubmittedBy() || !is_object($form->isSubmitted())) {
+			$form->setSubmittedBy($this);
+		}
+	}
+
+
+
+	/**
 	 * Tells if the form was submitted by this button.
 	 * @return bool
 	 */

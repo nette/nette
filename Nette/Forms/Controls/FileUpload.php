@@ -42,7 +42,6 @@ class FileUpload extends FormControl
 	 */
 	public function __construct($label = NULL)
 	{
-		$this->monitor('Nette\Forms\Form');
 		parent::__construct($label);
 		$this->control->type = 'file';
 	}
@@ -60,6 +59,7 @@ class FileUpload extends FormControl
 		if ($form instanceof Form) {
 			$form->getElementPrototype()->enctype = 'multipart/form-data';
 		}
+		parent::attached($form);
 	}
 
 
