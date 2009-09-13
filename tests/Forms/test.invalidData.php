@@ -13,42 +13,44 @@ require_once '../../Nette/loader.php';
 
 Debug::enable();
 
-$countries = array(
-	'Select your country',
-	'Europe' => array(
-		1 => 'Czech Republic',
-		2 => 'Slovakia',
-	),
-	3 => 'USA',
-	4 => 'other',
-);
+function createForm()
+{
+	$countries = array(
+		'Select your country',
+		'Europe' => array(
+			1 => 'Czech Republic',
+			2 => 'Slovakia',
+		),
+		3 => 'USA',
+		4 => 'other',
+	);
 
-$sex = array(
-	'm' => 'male',
-	'f' => 'female',
-);
+	$sex = array(
+		'm' => 'male',
+		'f' => 'female',
+	);
 
+	$form = new Form();
+	$form->addText('name', 'Your name:', 35);  // item name, label, size, maxlength
+	$form->addTextArea('note', 'Comment:', 30, 5);
+	$form->addRadioList('gender', 'Your gender:', $sex);
+	$form->addCheckbox('send', 'Ship to address');
+	$form->addSelect('country', 'Country:', $countries)->skipFirst();
+	$form->addMultiSelect('countrym', 'Country:', $countries);
+	$form->addPassword('password', 'Choose password:', 20);
+	$form->addFile('avatar', 'Picture:');
+	$form->addHidden('userid');
 
-$form = new Form();
-$form->addText('name', 'Your name:', 35);  // item name, label, size, maxlength
-$form->addTextArea('note', 'Comment:', 30, 5);
-$form->addRadioList('gender', 'Your gender:', $sex);
-$form->addCheckbox('send', 'Ship to address');
-$form->addSelect('country', 'Country:', $countries)->skipFirst();
-$form->addMultiSelect('countrym', 'Country:', $countries);
-$form->addPassword('password', 'Choose password:', 20);
-$form->addFile('avatar', 'Picture:');
-$form->addHidden('userid');
+	$sub = $form->addContainer('firstperson');
+	$sub->addText('age', 'Your age:', 5);
 
-$sub = $form->addContainer('firstperson');
-$sub->addText('age', 'Your age:', 5);
+	$sub = $form->addContainer('secondperson');
+	$sub->addText('age', 'Your age:', 5);
+	$sub->addFile('avatar', 'Picture:');
 
-$sub = $form->addContainer('secondperson');
-$sub->addText('age', 'Your age:', 5);
-$sub->addFile('avatar', 'Picture:');
-
-$form->addSubmit('submit1', 'Send');
-
+	$form->addSubmit('submit1', 'Send');
+	return $form;
+}
 
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -142,15 +144,16 @@ $_FILES = array(
 	),
 );
 
+Environment::getHttpRequest()->initialize();
+
 echo "<h2>Invalid data #1</h2>\n";
 
 echo "Submitted?\n";
-$dolly = clone $form;
-Environment::getHttpRequest()->initialize();
-Debug::dump(gettype($dolly->isSubmitted()));
+$form = createForm();
+Debug::dump(gettype($form->isSubmitted()));
 
 echo "Values:\n";
-Debug::dump($dolly->getValues());
+Debug::dump($form->getValues());
 
 
 
@@ -188,13 +191,13 @@ $_FILES = array(
 	'userid' => $tmp,
 );
 
+Environment::getHttpRequest()->initialize();
 
 echo "<h2>Invalid data #2</h2>\n";
 
 echo "Submitted?\n";
-$dolly = clone $form;
-Environment::getHttpRequest()->initialize();
-Debug::dump(gettype($dolly->isSubmitted()));
+$form = createForm();
+Debug::dump(gettype($form->isSubmitted()));
 
 echo "Values:\n";
-Debug::dump($dolly->getValues());
+Debug::dump($form->getValues());

@@ -9,10 +9,9 @@
    "country" => string(2) "CZ"
    "password" => string(3) "123"
    "password2" => string(3) "123"
-   "avatar" => object(HttpUploadedFile) (6) {
+   "avatar" => object(HttpUploadedFile) (5) {
       "name" private => NULL
       "type" private => NULL
-      "realType" private => NULL
       "size" private => NULL
       "tmpName" private => NULL
       "error" private => int(4)
@@ -66,7 +65,7 @@
 <tr class="required">
 	<th><label class="required" for="frm-name">Jméno:</label></th>
 
-	<td><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe" /></td>
+	<td><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe " /></td>
 </tr>
 
 <tr class="required">
@@ -130,13 +129,13 @@
 <tr class="required">
 	<th><label class="required" for="frm-password">Zvolte si heslo:</label></th>
 
-	<td><input type="password" size="20" class="text" name="password" id="frm-password" value="" /></td>
+	<td><input type="password" size="20" class="text" name="password" id="frm-password" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-password2">Pro kontrolu:</label></th>
 
-	<td><input type="password" size="20" class="text" name="password2" id="frm-password2" value="" /></td>
+	<td><input type="password" size="20" class="text" name="password2" id="frm-password2" /></td>
 </tr>
 
 <tr>

@@ -9,10 +9,9 @@
    "country" => string(2) "CZ"
    "password" => string(3) "xxx"
    "password2" => string(3) "xxx"
-   "avatar" => object(HttpUploadedFile) (6) {
+   "avatar" => object(HttpUploadedFile) (5) {
       "name" private => NULL
       "type" private => NULL
-      "realType" private => NULL
       "size" private => NULL
       "tmpName" private => NULL
       "error" private => int(4)
@@ -64,11 +63,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-name">Your name:</label></th>
-			<td><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe" /></td>
+			<td><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe " /></td>
 		</tr>
 		<tr class="required">
 			<th><label class="required" for="frm-age">Your age:</label></th>
-			<td><input type="text" size="5" class="text" name="age" id="frm-age" value="12" /></td>
+			<td><input type="text" size="5" class="text" name="age" id="frm-age" value="  12 " /></td>
 		</tr>
 		<tr>
 			<th><label>Your gender:</label></th>
@@ -110,11 +109,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-password">Choose password:</label></th>
-			<td><input type="password" size="20" class="text" name="password" id="frm-password" value="" /></td>
+			<td><input type="password" size="20" class="text" name="password" id="frm-password" /></td>
 		</tr>
 		<tr class="required">
 			<th><label for="frm-password2">Reenter password:</label></th>
-			<td><input type="password" size="20" class="text" name="password2" id="frm-password2" value="" /></td>
+			<td><input type="password" size="20" class="text" name="password2" id="frm-password2" /></td>
 		</tr>
 		<tr>
 			<th><label for="frm-avatar">Picture:</label></th>
