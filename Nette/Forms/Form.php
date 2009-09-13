@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @property-read Nette\Web\Html $elementPrototype
  * @property   IFormRenderer $renderer
  * @property-read boold $submitted
- * @property-read boold $valid
  */
 class Form extends FormContainer
 {
@@ -117,9 +116,6 @@ class Form extends FormContainer
 
 	/** @var array of FormGroup */
 	private $groups = array();
-
-	/** @var bool */
-	private $valid;
 
 	/** @var array */
 	private $errors = array();
@@ -506,36 +502,6 @@ class Form extends FormContainer
 
 
 	/********************* validation ****************d*g**/
-
-
-
-	/**
-	 * Is form valid?
-	 * @return bool
-	 */
-	public function isValid()
-	{
-		if ($this->valid === NULL) {
-			$this->validate();
-		}
-		return $this->valid;
-	}
-
-
-
-	/**
-	 * Performs the server side validation.
-	 * @return void
-	 */
-	public function validate()
-	{
-		$this->valid = TRUE;
-		foreach ($this->getControls() as $control) {
-			if (!$control->getRules()->validate()) {
-				$this->valid = FALSE;
-			}
-		}
-	}
 
 
 

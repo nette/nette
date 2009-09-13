@@ -36,12 +36,16 @@ require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
  *
  * @property-read \ArrayIterator $controls
  * @property-read Form $form
+ * @property-read boold $valid
  * @property   array $values
  */
 class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAccess, INamingContainer
 {
 	/** @var FormGroup */
 	protected $currentGroup;
+
+	/** @var bool */
+	protected $valid;
 
 
 
@@ -130,6 +134,40 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 			}
 		}
 		return $values;
+	}
+
+
+
+	/********************* validation ****************d*g**/
+
+
+
+	/**
+	 * Is form valid?
+	 * @return bool
+	 */
+	public function isValid()
+	{
+		if ($this->valid === NULL) {
+			$this->validate();
+		}
+		return $this->valid;
+	}
+
+
+
+	/**
+	 * Performs the server side validation.
+	 * @return void
+	 */
+	public function validate()
+	{
+		$this->valid = TRUE;
+		foreach ($this->getControls() as $control) {
+			if (!$control->getRules()->validate()) {
+				$this->valid = FALSE;
+			}
+		}
 	}
 
 
