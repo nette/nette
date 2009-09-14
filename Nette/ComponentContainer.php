@@ -160,7 +160,7 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if (isset($this->components[$name])) {
-			if ($a === FALSE) {
+			if (!isset($ext)) {
 				return $this->components[$name];
 
 			} elseif ($this->components[$name] instanceof IComponentContainer) {
