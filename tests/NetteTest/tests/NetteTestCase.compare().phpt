@@ -46,4 +46,3 @@ Char: %c%%c%b %c%%c%d
 Whitespace: a%s?%b%s%bb%s%cc
 
 Regexp: %[^a]%abc%[^c]%c
--------END-------

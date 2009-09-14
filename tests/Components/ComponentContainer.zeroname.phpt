@@ -5,7 +5,7 @@
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette\Test
+ * @package    Nette
  * @subpackage UnitTests
  */
 
@@ -20,5 +20,3 @@ __halt_compiler();
 
 ------EXPECT------
 string(1) "0"
-
--------END-------

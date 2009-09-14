@@ -54,5 +54,3 @@ array(5) {
 	"subpackage" => string(9) "UnitTests"
 	"name" => string(21) "Nette\Test::heading()"
 }
-
--------END-------

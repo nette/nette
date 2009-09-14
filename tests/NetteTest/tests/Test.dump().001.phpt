@@ -64,7 +64,7 @@ string(5) "hello"
 
 object(stdClass) (0) {}
 
-array(0) 
+array(0)
 
 resource of type(stream)
 
@@ -76,7 +76,7 @@ array(9) {
 	4 => NULL
 	5 => string(5) "hello"
 	6 => object(stdClass) (0) {}
-	7 => array(0) 
+	7 => array(0)
 	8 => resource of type(stream)
 }
 
@@ -91,5 +91,3 @@ object(TestClass) (3) {
 
 Section
 -------
-
--------END-------
