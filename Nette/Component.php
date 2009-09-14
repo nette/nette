@@ -140,6 +140,19 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
+	 * Stops monitoring.
+	 * @param  string class/interface type
+	 * @return void
+	 */
+	public function unmonitor($type)
+	{
+		/**/fixNamespace($type);/**/
+		unset($this->monitors[$type]);
+	}
+
+
+
+	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
 	 * @param  IComponent
