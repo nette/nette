@@ -104,42 +104,27 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 
 
 	/**
-	 * Tells if the form was submitted.
-	 * @return ISubmitterControl|FALSE  submittor control
-	 */
-	public function isSubmitted()
-	{
-		if ($this->submittedBy === NULL) {
-			$this->submittedBy = FALSE;
-			$presenter = $this->getPresenter();
-			if ($presenter->isSignalReceiver($this, 'submit')) {
-				$isPost = strcasecmp($this->getMethod(), 'post') === 0;
-				$request = $presenter->getRequest();
-				if (!$request->isMethod('forward') && $request->isMethod('post') === $isPost) {
-					$this->submittedBy = TRUE;
-				}
-			}
-		}
-		return $this->submittedBy;
-	}
-
-
-
-	/**
-	 * Returns submitted HTTP data.
+	 * Internal: receives submitted HTTP data.
 	 * @return array
 	 */
-	public function getHttpData()
+	protected function receiveHttpData()
 	{
-		if ($this->httpData === NULL && $this->isSubmitted()) {
-			$request = $this->getPresenter()->getRequest();
-			if (strcasecmp($this->getMethod(), 'post') === 0) {
-				$this->httpData = /*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles());
-			} else {
-				$this->httpData = $request->getParams();
-			}
+		$presenter = $this->getPresenter();
+		if (!$presenter->isSignalReceiver($this, 'submit')) {
+			return;
 		}
-		return $this->httpData;
+
+		$isPost = strcasecmp($this->getMethod(), 'post') === 0;
+		$request = $presenter->getRequest();
+		if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) {
+			return;
+		}
+
+		if ($isPost) {
+			return /*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles());
+		} else {
+			return $request->getParams();
+		}
 	}
 
 

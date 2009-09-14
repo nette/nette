@@ -44,6 +44,7 @@ require_once dirname(__FILE__) . '/../Forms/FormContainer.php';
  * @property   string $action
  * @property   string $method
  * @property-read array $groups
+ * @property-read array $httpData
  * @property   string $encoding
  * @property   Nette\ITranslator $translator
  * @property-read array $errors
@@ -100,10 +101,10 @@ class Form extends FormContainer
 	public $onInvalidSubmit;
 
 	/** @var mixed or NULL meaning: not detected yet */
-	protected $submittedBy;
+	private $submittedBy;
 
 	/** @var array */
-	protected $httpData;
+	private $httpData;
 
 	/** @var Html  <form> element */
 	private $element;
@@ -394,19 +395,11 @@ class Form extends FormContainer
 	 * Tells if the form was submitted.
 	 * @return ISubmitterControl|FALSE  submittor control
 	 */
-	public function isSubmitted()
+	final public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
-			$httpRequest = $this->getHttpRequest();
-
-			$this->submittedBy = strcasecmp($this->getMethod(), $httpRequest->getMethod()) === 0;
-
-			if ($this->submittedBy && $tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
-				$data = $httpRequest->isMethod('post') ? $httpRequest->getPost() : $httpRequest->getQuery();
-				if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
-					$this->submittedBy = FALSE;
-				}
-			}
+			$this->getHttpData();
+			$this->submittedBy = !empty($this->httpData);
 		}
 		return $this->submittedBy;
 	}
@@ -439,16 +432,13 @@ class Form extends FormContainer
 	 * Returns submitted HTTP data.
 	 * @return array
 	 */
-	public function getHttpData()
+	final public function getHttpData()
 	{
-		if ($this->httpData === NULL && $this->isSubmitted()) {
-			$httpRequest = $this->getHttpRequest();
-			$httpRequest->setEncoding($this->encoding);
-			if ($httpRequest->isMethod('post')) {
-				$this->httpData = /*Nette\*/ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
-			} else {
-				$this->httpData = $httpRequest->getQuery();
+		if ($this->httpData === NULL) {
+			if (!$this->isAnchored()) {
+				throw new /*\*/InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 			}
+			$this->httpData = (array) $this->receiveHttpData();
 		}
 		return $this->httpData;
 	}
@@ -479,6 +469,35 @@ class Form extends FormContainer
 		} else {
 			$this->onInvalidSubmit($this);
 		}
+	}
+
+
+
+	/**
+	 * Internal: receives submitted HTTP data.
+	 * @return array
+	 */
+	protected function receiveHttpData()
+	{
+		$httpRequest = $this->getHttpRequest();
+		if (strcasecmp($this->getMethod(), $httpRequest->getMethod())) {
+			return;
+		}
+
+		$httpRequest->setEncoding($this->encoding);
+		if ($httpRequest->isMethod('post')) {
+			$data = /*Nette\*/ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+		} else {
+			$data = $httpRequest->getQuery();
+		}
+
+		if ($tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
+			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
+				return;
+			}
+		}
+
+		return $data;
 	}
 
 
