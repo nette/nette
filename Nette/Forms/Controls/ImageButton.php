@@ -41,7 +41,7 @@ class ImageButton extends SubmitButton
 	 */
 	public function __construct($src = NULL, $alt = NULL)
 	{
-		parent::__construct(NULL);
+		parent::__construct();
 		$this->control->type = 'image';
 		$this->control->src = $src;
 		$this->control->alt = $alt;

@@ -137,7 +137,9 @@ class Form extends FormContainer
 		$this->element->method = self::POST;
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$this[self::TRACKER_ID] = new HiddenField($name);
+			$tracker = new HiddenField($name);
+			$tracker->unmonitor(__CLASS__);
+			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
 	}
@@ -200,6 +202,9 @@ class Form extends FormContainer
 	 */
 	public function setMethod($method)
 	{
+		if ($this->httpData !== NULL) {
+			throw new /*\*/InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
+		}
 		$this->element->method = strtolower($method);
 	}
 

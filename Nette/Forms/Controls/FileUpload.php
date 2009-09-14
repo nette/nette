@@ -57,6 +57,9 @@ class FileUpload extends FormControl
 	protected function attached($form)
 	{
 		if ($form instanceof Form) {
+			if ($form->getMethod() !== Form::POST) {
+				throw new /*\*/InvalidStateException('File upload requires method POST.');
+			}
 			$form->getElementPrototype()->enctype = 'multipart/form-data';
 		}
 		parent::attached($form);

@@ -41,7 +41,7 @@ class HiddenField extends FormControl
 
 	public function __construct($forcedValue = NULL)
 	{
-		parent::__construct(NULL);
+		parent::__construct();
 		$this->control->type = 'hidden';
 		$this->value = (string) $forcedValue;
 		$this->forcedValue = $forcedValue;
