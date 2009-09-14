@@ -1,0 +1,56 @@
+Test case file name
+===================
+
+Nette\<class>.<method()>.<area>.<number>.phpt
+
+Nette\Debug.phpt                - tests for a class's basic behaviour
+Nette\Debug.fireLog().phpt      - tests for a method's basic behaviour
+Nette\Debug.fireLog().inc       - common code for more test cases
+Nette\Debug.fireLog().expect    - expected raw output
+Nette\Debug.fireLog().area.phpt - tests for a specified area of class/method
+
+- areas: basic, error, bug#123
+- numbers have three digits
+
+
+
+
+Test case file layout
+=====================
+
+Sections:
+
+PHP (All test cases are valid PHP files)
+	- phpDoc with test case name (optional)
+	- require 'NetteTest/initialize.php' (required)
+    - dump variables using function dump()
+    - __halt_compiler() (required if file contains more sections)
+
+
+---EXPECT---
+	The expected output from the test script. It uses a number
+	of substitution tags for strings, spaces, digits, etc:
+
+		%a%    one or more of anything except the end of line characters
+		%a?%   zero or more of anything except the end of line characters
+		%A%    one or more of anything including the end of line characters
+		%A?%   zero or more of anything including the end of line characters
+		%s%    one or more white space characters except the end of line characters
+		%s?%   zero or more white space characters except the end of line characters
+		%S%    one or more of characters except the white space
+		%S?%   zero or more of characters except the white space
+		%c%    a single character of any sort (except the end of line)
+		%d%    one or more digits
+		%d?%   zero or more digits
+		%i%    signed integer value
+		%f%    floating point number
+		%[..]% reg-exp
+
+
+---EXPECTHEADERS---
+	The expected HTTP headers. Any header specified here must exist
+	in the response and have the same value or the test fails.
+	Additional headers found in the actual tests while running are ignored.
+
+		Content-type: text/html; charset=UTF-8
+		Status: 403 Access Denied

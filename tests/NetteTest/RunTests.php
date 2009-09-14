@@ -1,5 +1,6 @@
-Nette Framework tests
----------------------
+
+Nette Test Framework (v0.1)
+---------------------------
 <?php
 
 require_once dirname(__FILE__) . '/NetteTestCase.php';
@@ -29,11 +30,12 @@ Options:
 try {
 	$manager = new NetteTestRunner;
 	$manager->parseArguments();
-	$manager->run();
+	$res = $manager->run();
+	die($res ? 1 : 0);
 
 } catch (Exception $e) {
 	echo 'Error: ', $e->getMessage(), "\n";
-	die(-1);
+	die(2);
 }
 
 
@@ -51,10 +53,10 @@ class NetteTestRunner
 	const HEADERS = 'headers';
 
 	/** @var string  PHP-CGI.exe commandline */
-	private $cmdLine;
+	public $cmdLine;
 
-	/** @var string  */
-	private $path;
+	/** @var string */
+	public $path;
 
 
 
@@ -65,7 +67,8 @@ class NetteTestRunner
 	 */
 	public function run()
 	{
-		$number = $failed = $passed = 0;
+		$count = 0;
+		$failed = $passed = array();
 
 		if (is_file($this->path)) {
 			$files = array($this->path);
@@ -74,22 +77,22 @@ class NetteTestRunner
 		}
 
 		foreach ($files as $entry) {
+			$entry = (string) $entry;
 			$info = pathinfo($entry);
 			if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
 				continue;
 			}
 
-			$number++;
+			$count++;
 			$testCase = new NetteTestCase($entry, $this->cmdLine);
 			try {
-				echo $testCase->getName(), ': ';
+				echo '.';
 				$testCase->run();
-				$passed++;
-				echo "OK";
+				$passed[] = array($testCase->getName(), $entry);
 
 			} catch (NetteTestCaseException $e) {
-				echo $e->getMessage();
-				$failed++;
+				echo 'F';
+				$failed[] = array($testCase->getName(), $entry, $e->getMessage());
 
 				if ($testCase->getExpectedOutput() !== NULL) {
 					$this->log($entry, $testCase->getOutput(), self::OUTPUT);
@@ -100,14 +103,26 @@ class NetteTestRunner
 					$this->log($entry, $testCase->getExpectedHeaders(), self::EXPECTED, self::HEADERS);
 				}
 			}
-			echo "\n";
 		}
 
-		echo "\nTest result summary\n-------------------\n";
-		echo "Number of tests: $number\n";
-		echo "Tests failed: $failed\n";
-		echo "Tests passed: $passed\n";
-		echo "-------------------\n";
+		$failures = count($failed);
+
+		if (!$count) {
+			echo "No tests found\n";
+
+		} elseif ($failures) {
+			echo "\n\nFailures:\n";
+			foreach ($failed as $i => $item) {
+				list($name, $file, $message) = $item;
+				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
+			}
+			echo "\nFAILURES! ($count tests, $failures failures)\n";
+			return FALSE;
+
+		} else {
+			echo "\n\nOK ($count tests)\n";
+		}
+		return TRUE;
 	}
 
 

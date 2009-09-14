@@ -66,18 +66,20 @@ class NetteTestCase
 	{
 		$this->execute();
 		$tests = 0;
+		$trim = isset($this->sections['expect']);
 
 		// compare output
-		$expectedOutput = $this->getExpectedOutput();
+		$output = self::normalize($this->output, $trim);
+		$expectedOutput = self::normalize($this->getExpectedOutput(), $trim);
 		if ($expectedOutput !== NULL) {
 			$tests++;
-			if (!$this->compare($this->output, $expectedOutput)) {
+			if (!$this->compare($output, $expectedOutput)) {
 				throw new NetteTestCaseException("Output doesn't match.");
 			}
 		}
 
 		// compare headers
-		$expectedHeaders = $this->getExpectedHeaders();
+		$expectedHeaders = self::normalize($this->getExpectedHeaders(), TRUE);
 		if ($expectedHeaders !== NULL) {
 			$tests++;
 			$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
@@ -124,7 +126,6 @@ class NetteTestCase
 		unlink($tempFile);
 
 		list($this->headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
-		$this->output = str_replace("\n", PHP_EOL, str_replace("\r\n", "\n", $this->output));  // normalize EOL
 	}
 
 
@@ -231,7 +232,7 @@ class NetteTestCase
 		$tmp = preg_split('#^-{3,}([^ -]+)-{1,}(?:\r?\n|$)#m', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$i = 1;
 		while (isset($tmp[$i])) {
-			$sections[strtolower($tmp[$i])] = preg_replace('~#EOF\s*$~', '', $tmp[$i+1]); // supports #EOF;
+			$sections[strtolower($tmp[$i])] = $tmp[$i+1];
 			$i += 2;
 		}
 		return $sections;
@@ -290,6 +291,24 @@ class NetteTestCase
 		));
 
 		return (bool) preg_match("#^$right$#s", $left);
+	}
+
+
+
+	/**
+	 * Normalizes whitespace
+	 * @param  string
+	 * @param  bool
+	 * @return string
+	 */
+	public static function normalize($s, $trim = FALSE)
+	{
+		$s = str_replace("\n", PHP_EOL, str_replace("\r\n", "\n", $s));  // normalize EOL
+		if ($trim) {
+    		$s = preg_replace("#[\t ]+(\r?\n)#", '$1', $s); // multiline right trim
+    		$s = rtrim($s); // ending trim
+		}
+		return $s;
 	}
 
 }
