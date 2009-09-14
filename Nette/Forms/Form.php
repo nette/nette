@@ -419,16 +419,6 @@ class Form extends FormContainer
 
 
 	/**
-	 * @return void
-	 */
-	public function processHttpRequest()
-	{
-		$this->submit();
-	}
-
-
-
-	/**
 	 * Returns submitted HTTP data.
 	 * @return array
 	 */
@@ -449,7 +439,7 @@ class Form extends FormContainer
 	 * Fires submit/click events.
 	 * @return void
 	 */
-	protected function submit()
+	public function fireEvents()
 	{
 		if (!$this->isSubmitted()) {
 			return;
@@ -498,6 +488,16 @@ class Form extends FormContainer
 		}
 
 		return $data;
+	}
+
+
+
+	/**
+	 * @deprecated
+	 */
+	public function processHttpRequest()
+	{
+		$this->fireEvents();
 	}
 
 
