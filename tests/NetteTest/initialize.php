@@ -31,6 +31,30 @@ function dump($var)
 
 
 /**
+ * Writes new section.
+ * @param  string
+ * @return void
+ */
+function section($heading = NULL)
+{
+	echo $heading ? "==> $heading\n\n" : "===\n\n";
+}
+
+
+
+/**
+ * Writes new message.
+ * @param  string
+ * @return void
+ */
+function message($message)
+{
+	echo "$message\n\n";
+}
+
+
+
+/**
  * Test helpers.
  *
  * @author     David Grudl
@@ -87,30 +111,6 @@ final class Test
 				unlink($entry);
 			}
 		}
-	}
-
-
-
-	/**
-	 * Writes new section.
-	 * @param  string
-	 * @return void
-	 */
-	public static function section($heading = NULL)
-	{
-		echo $heading ? "==> $heading\n\n" : "===\n\n";
-	}
-
-
-
-	/**
-	 * Writes new message.
-	 * @param  string
-	 * @return void
-	 */
-	public static function message($message)
-	{
-		echo "$message\n\n";
 	}
 
 

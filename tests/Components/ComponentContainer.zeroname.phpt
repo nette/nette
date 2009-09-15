@@ -11,6 +11,7 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
+/*use Nette\ComponentContainer;*/
 
 $container = new ComponentContainer;
 $container->addComponent(new ComponentContainer, 0);

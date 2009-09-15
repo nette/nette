@@ -44,9 +44,13 @@ class TestClass
 
 dump( new TestClass );
 
-Test::section('Section');
+section('Section');
 
-Test::section();
+section();
+
+message('message');
+
+echo 'EOF';
 
 
 __halt_compiler();
@@ -94,3 +98,7 @@ object(TestClass) (3) {
 ==> Section
 
 ===
+
+message
+
+EOF
