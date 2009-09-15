@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Test::dump() nesting and recursion
+ * Test: NetteTestHelpers::dump() nesting and recursion
  *
  * @author     David Grudl
  * @category   Nette

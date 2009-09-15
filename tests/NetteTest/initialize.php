@@ -12,7 +12,7 @@ require dirname(__FILE__) . '/../../Nette/loader.php';
 
 
 
-Test::startup();
+NetteTestHelpers::startup();
 
 
 
@@ -23,7 +23,7 @@ Test::startup();
  */
 function dump($var)
 {
-	Test::dump($var, 0);
+	NetteTestHelpers::dump($var, 0);
 	echo "\n";
 	return $var;
 }
@@ -60,8 +60,11 @@ function message($message)
  * @author     David Grudl
  * @package    Nette\Test
  */
-final class Test
+final class NetteTestHelpers
 {
+	/** @var int */
+	static public $maxDepth = 5;
+
 	/** @var array */
 	private static $sections;
 
@@ -186,7 +189,7 @@ final class Test
 			} elseif (isset($var[$marker])) {
 				echo "{\n$space\t*RECURSION*\n$space}";
 
-			} elseif ($level < 5) {
+			} elseif ($level < self::$maxDepth) {
 				echo "{\n";
 				$var[$marker] = 0;
 				foreach ($var as $k => &$v) {
@@ -218,7 +221,7 @@ final class Test
 			} elseif (in_array($var, $list, TRUE)) {
 				echo "{\n$space\t*RECURSION*\n$space}";
 
-			} elseif ($level < 5) {
+			} elseif ($level < self::$maxDepth) {
 				echo "{\n";
 				$list[] = $var;
 				foreach ($arr as $k => &$v) {

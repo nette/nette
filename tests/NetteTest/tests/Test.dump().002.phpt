@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Test::dump() extra characters
+ * Test: NetteTestHelpers::dump() extra characters
  *
  * @author     David Grudl
  * @category   Nette

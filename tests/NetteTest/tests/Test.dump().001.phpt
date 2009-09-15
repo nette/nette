@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Test::dump() basic types & section()
+ * Test: NetteTestHelpers::dump() basic types & section()
  *
  * @author     David Grudl
  * @category   Nette
