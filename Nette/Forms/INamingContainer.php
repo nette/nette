@@ -32,6 +32,6 @@ require_once dirname(__FILE__) . '/../IComponentContainer.php';
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Forms
  */
-interface INamingContainer extends IComponentContainer
+interface INamingContainer extends /*Nette\*/IComponentContainer
 {
 }
