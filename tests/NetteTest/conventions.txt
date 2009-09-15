@@ -44,6 +44,7 @@ PHP (All test cases are valid PHP files)
 		%d?%   zero or more digits
 		%i%    signed integer value
 		%f%    floating point number
+		%h%    one or more HEX digits
 		%[..]% reg-exp
 
 

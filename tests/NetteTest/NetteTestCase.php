@@ -284,6 +284,7 @@ class NetteTestCase
 			'%d?%'=> '[0-9]*',      // zero or more digits
 			'%i%' => '[+-]?[0-9]+', // signed integer value
 			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
+			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
 			'%[^' => '[^',          // reg-exp
 			'%['  => '[',           // reg-exp
 			']%'  => ']+',          // reg-exp

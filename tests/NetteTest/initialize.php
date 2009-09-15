@@ -203,6 +203,9 @@ final class Test
 			}
 			echo "\n";
 
+		} elseif ($var instanceof Exception) {
+			echo 'Exception ', get_class($var), ': ', ($var->getCode() ? '#' . $var->getCode() . ' ' : '') . $var->getMessage(), "\n";
+
 		} elseif (is_object($var)) {
 			$arr = (array) $var;
 			echo "object(" . get_class($var) . ") (" . count($arr) . ") ";
