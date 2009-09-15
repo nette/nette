@@ -19,10 +19,15 @@ NetteTestHelpers::startup();
 /**
  * Dumps information about a variable in readable format.
  * @param  mixed  variable to dump
+ * @param  string
  * @return mixed  variable itself or dump
  */
-function dump($var)
+function dump($var, $message = NULL)
 {
+	if ($message) {
+		message("$message:");
+	}
+
 	NetteTestHelpers::dump($var, 0);
 	echo "\n";
 	return $var;
@@ -93,6 +98,8 @@ final class NetteTestHelpers
 		if (PHP_SAPI !== 'cli') {
 			header('Content-Type: text/plain; charset=utf-8');
 		}
+
+		set_exception_handler(array(__CLASS__, 'exceptionHandler'));
 	}
 
 
@@ -248,6 +255,18 @@ final class NetteTestHelpers
 		} else {
 			echo "unknown type\n";
 		}
+	}
+
+
+
+	/**
+	 * Custom exception handler.
+	 * @param  \Exception
+	 * @return void
+	 */
+	public static function exceptionHandler(Exception $exception)
+	{
+		self::dump($exception, 0);
 	}
 
 }
