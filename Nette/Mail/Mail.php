@@ -475,7 +475,7 @@ class Mail extends MailMimePart
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
 			$text = preg_replace('#<(style|script|head).*</\\1>#Uis', '', $this->html);
-			$text = preg_replace('#\s+#', ' ', $text);
+			$text = preg_replace('#[ \t\r\n]+#', ' ', $text);
 			$text = preg_replace('#<(/?p|/?h\d|li|br|/tr)[ >]#i', "\n$0", $text);
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, $this->charset);
 			$this->setBody(trim($text));

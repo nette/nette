@@ -164,7 +164,7 @@ final class TemplateHelpers
 	public static function strip($s)
 	{
 		$s = preg_replace_callback('#<(textarea|pre|script).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
-		$s = trim(preg_replace('#\\s+#', ' ', $s));
+		$s = trim(preg_replace('#[ \t\r\n]+#', ' ', $s));
 		return strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 	}
 
