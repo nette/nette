@@ -86,18 +86,17 @@ class NetteTestRunner
 			$count++;
 			$testCase = new NetteTestCase($entry, $this->cmdLine);
 			try {
-				echo '.';
 				$testCase->run();
+				echo '.';
 				$passed[] = array($testCase->getName(), $entry);
 
 			} catch (NetteTestCaseException $e) {
 				echo 'F';
 				$failed[] = array($testCase->getName(), $entry, $e->getMessage());
 
-				if ($testCase->getExpectedOutput() !== NULL) {
-					$this->log($entry, $testCase->getOutput(), self::OUTPUT);
-					$this->log($entry, $testCase->getExpectedOutput(), self::EXPECTED);
-				}
+				$this->log($entry, $testCase->getOutput(), self::OUTPUT);
+				$this->log($entry, $testCase->getExpectedOutput(), self::EXPECTED);
+
 				if ($testCase->getExpectedHeaders() !== NULL) {
 					$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
 					$this->log($entry, $testCase->getExpectedHeaders(), self::EXPECTED, self::HEADERS);

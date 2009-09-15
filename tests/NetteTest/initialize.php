@@ -92,13 +92,25 @@ final class Test
 
 
 	/**
-	 * Writes new heading.
+	 * Writes new section.
 	 * @param  string
 	 * @return void
 	 */
-	public static function heading($heading)
+	public static function section($heading = NULL)
 	{
-		echo "$heading\n" . str_repeat('-', strlen($heading)) . "\n\n";
+		echo $heading ? "==> $heading\n\n" : "===\n\n";
+	}
+
+
+
+	/**
+	 * Writes new message.
+	 * @param  string
+	 * @return void
+	 */
+	public static function message($message)
+	{
+		echo "$message\n\n";
 	}
 
 

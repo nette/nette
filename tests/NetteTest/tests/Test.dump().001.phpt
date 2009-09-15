@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Test::dump() basic types & heading()
+ * Test: Nette\Test::dump() basic types & section()
  *
  * @author     David Grudl
  * @category   Nette
@@ -44,7 +44,9 @@ class TestClass
 
 dump( new TestClass );
 
-Test::heading('Section');
+Test::section('Section');
+
+Test::section();
 
 
 __halt_compiler();
@@ -89,5 +91,6 @@ object(TestClass) (3) {
 	"z" protected => int(30)
 }
 
-Section
--------
+==> Section
+
+===

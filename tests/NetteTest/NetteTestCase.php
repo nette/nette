@@ -66,23 +66,25 @@ class NetteTestCase
 	{
 		$this->execute();
 		$tests = 0;
-		$trim = isset($this->sections['expect']);
 
 		// compare output
-		$output = self::normalize($this->output, $trim);
-		$expectedOutput = self::normalize($this->getExpectedOutput(), $trim);
+		$expectedOutput = $this->getExpectedOutput();
 		if ($expectedOutput !== NULL) {
 			$tests++;
+			$trim = isset($this->sections['expect']);
+			$output = self::normalize($this->output, $trim);
+			$expectedOutput = self::normalize($expectedOutput, $trim);
 			if (!$this->compare($output, $expectedOutput)) {
 				throw new NetteTestCaseException("Output doesn't match.");
 			}
 		}
 
 		// compare headers
-		$expectedHeaders = self::normalize($this->getExpectedHeaders(), TRUE);
+		$expectedHeaders = $this->getExpectedHeaders();
 		if ($expectedHeaders !== NULL) {
 			$tests++;
 			$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
+			$expectedHeaders = self::normalize($expectedHeaders, TRUE);
 			$expectedHeaders = array_change_key_case(self::parseLines($expectedHeaders, ':'), CASE_LOWER);
 			foreach ($expectedHeaders as $name => $header) {
 				if (!isset($headers[$name])) {
@@ -229,7 +231,7 @@ class NetteTestCase
 		$sections['options']['name'] = preg_match('#^\s*\*\s*TEST:(.*)#mi', $phpDoc, $matches) ? trim($matches[1]) : $testFile;
 
 		// file parts
-		$tmp = preg_split('#^-{3,}([^ -]+)-{1,}(?:\r?\n|$)#m', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tmp = preg_split('#^-{3,}([^\s-]+)-{1,}(?:\r?\n|$)#m', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$i = 1;
 		while (isset($tmp[$i])) {
 			$sections[strtolower($tmp[$i])] = $tmp[$i+1];

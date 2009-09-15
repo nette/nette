@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Test::heading()
+ * Test: Nette\Test::getSection()
  *
  * @author     David Grudl
  * @category   Nette
@@ -52,5 +52,5 @@ array(5) {
 	"category" => string(5) "Nette"
 	"package" => string(10) "Nette\Test"
 	"subpackage" => string(9) "UnitTests"
-	"name" => string(21) "Nette\Test::heading()"
+	"name" => string(24) "Nette\Test::getSection()"
 }
