@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $list = new ArrayList(NULL, 'Person');
@@ -23,98 +26,65 @@ $foo = new ArrayObject();
 
 
 
-message("Contains Jack?");
-dump( $list->contains($jack) );
+dump( $list->contains($jack), "Contains Jack?" );
 
-message("indexOf Jack:");
-dump( $list->indexOf($jack) );
+dump( $list->indexOf($jack), "indexOf Jack:" );
 
-message("Contains Mary?");
-dump( $list->contains($mary) );
+dump( $list->contains($mary), "Contains Mary?" );
 
-message("indexOf Mary:");
-dump( $list->indexOf($mary) );
+dump( $list->indexOf($mary), "indexOf Mary:" );
 
-message("Contains foo?");
-dump( $list->contains($foo) );
+dump( $list->contains($foo), "Contains foo?" );
 
-message("indexOf foo?");
-dump( $list->indexOf($foo) );
+dump( $list->indexOf($foo), "indexOf foo?" );
 
 
 
-message("Contains index -1?");
-dump( isset($list[-1]) );
+dump( isset($list[-1]), "Contains index -1?" );
 
-message("Contains index 0?");
-dump( isset($list[0]) );
+dump( isset($list[0]), "Contains index 0?" );
 
-message("Contains index 5?");
-dump( isset($list[5]) );
+dump( isset($list[5]), "Contains index 5?" );
 
 
 
 try {
-	message("Getting index -1");
-	dump( $list[-1] );
+	dump( $list[-1], "Getting index -1" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Getting index 0");
-	dump( $list[0] );
+	dump( $list[0], "Getting index 0" );
 } catch (Exception $e) {
 	dump( $e );
 }
+
 
 
 __halt_compiler();
 
 ------EXPECT------
-Contains Jack?
+Contains Jack? bool(TRUE)
 
-bool(TRUE)
+indexOf Jack: int(0)
 
-indexOf Jack:
+Contains Mary? bool(TRUE)
 
-int(0)
+indexOf Mary: int(1)
 
-Contains Mary?
+Contains foo? bool(FALSE)
 
-bool(TRUE)
+indexOf foo? bool(FALSE)
 
-indexOf Mary:
+Contains index -1? bool(FALSE)
 
-int(1)
+Contains index 0? bool(TRUE)
 
-Contains foo?
+Contains index 5? bool(FALSE)
 
-bool(FALSE)
+Exception ArgumentOutOfRangeException:
 
-indexOf foo?
-
-bool(FALSE)
-
-Contains index -1?
-
-bool(FALSE)
-
-Contains index 0?
-
-bool(TRUE)
-
-Contains index 5?
-
-bool(FALSE)
-
-Getting index -1
-
-Exception ArgumentOutOfRangeException: 
-
-Getting index 0
-
-object(Person) (1) {
+Getting index 0: object(Person) (1) {
 	"name" private => string(4) "Jack"
 }
-

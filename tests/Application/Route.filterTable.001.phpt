@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Application\Route;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Route.inc';
 
-/*use Nette\Application\Route;*/
 
 
 Route::addStyle('#xlat', 'presenter');
@@ -29,6 +32,7 @@ $route = new Route('<presenter #xlat>', array());
 testRoute($route, '/kategorie/');
 
 testRoute($route, '/other/');
+
 
 
 __halt_compiler();

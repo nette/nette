@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Common code for collections test cases.
+ */
+
+
+
 class Person
 {
 	private $name;

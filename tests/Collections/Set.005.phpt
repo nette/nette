@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $set = new Set(NULL, 'Person');
@@ -22,32 +25,23 @@ $set->append(new Person('Mary'));
 $larry = new Person('Larry');
 $foo = new ArrayObject;
 
-message("Contains Jack?");
-dump( $set->contains($jack) );
+dump( $set->contains($jack), "Contains Jack?" );
 
-message("Contains Larry?");
-dump( $set->contains($larry) );
+dump( $set->contains($larry), "Contains Larry?" );
 
 try {
-	message("Contains foo?");
-	dump( $set->contains($foo) );
+	dump( $set->contains($foo), "Contains foo?" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 
+
 __halt_compiler();
 
 ------EXPECT------
-Contains Jack?
+Contains Jack? bool(TRUE)
 
-bool(TRUE)
+Contains Larry? bool(FALSE)
 
-Contains Larry?
-
-bool(FALSE)
-
-Contains foo?
-
-bool(FALSE)
-
+Contains foo? bool(FALSE)

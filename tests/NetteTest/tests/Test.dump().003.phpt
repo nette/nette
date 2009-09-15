@@ -12,6 +12,7 @@
 require dirname(__FILE__) . '/../initialize.php';
 
 
+
 $arr = array(
 	'key' => 'value',
 
@@ -47,6 +48,7 @@ dump( $obj );
 $arr[] = & $arr;
 
 dump( $arr );
+
 
 
 __halt_compiler();

@@ -12,6 +12,7 @@
 require dirname(__FILE__) . '/../initialize.php';
 
 
+
 dump( 10 );
 
 dump( 20.2 );
@@ -51,6 +52,7 @@ section();
 message('message');
 
 echo 'EOF';
+
 
 
 __halt_compiler();

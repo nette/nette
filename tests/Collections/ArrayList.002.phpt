@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $list = new ArrayList(NULL, 'Person');
@@ -64,17 +67,16 @@ bool(TRUE)
 
 Adding Jack using []
 
-Exception InvalidStateException: Cannot modify a frozen object 'ArrayList'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
 
 Adding Jack using insertAt
 
-Exception InvalidStateException: Cannot modify a frozen object 'ArrayList'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
 
 Removing using unset
 
-Exception InvalidStateException: Cannot modify a frozen object 'ArrayList'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
 
 Changing using []
 
-Exception InvalidStateException: Cannot modify a frozen object 'ArrayList'.
-
+Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.

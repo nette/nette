@@ -9,12 +9,14 @@
  * @subpackage UnitTests
  */
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
-
 /*use Nette\Environment;*/
-/*use Nette\Debug;*/
 /*use Nette\Application\PresenterRequest;*/
 /*use Nette\Application\SimpleRouter;*/
+
+
+
+require dirname(__FILE__) . '/../NetteTest/initialize.php';
+
 
 
 class TestControl extends /*Nette\Application\*/Control
@@ -257,6 +259,7 @@ TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter;
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);
+
 
 
 __halt_compiler();

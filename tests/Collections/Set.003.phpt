@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $set = new Set(NULL, ':numeric');
@@ -32,6 +35,7 @@ try {
 }
 
 
+
 __halt_compiler();
 
 ------EXPECT------
@@ -42,4 +46,3 @@ Adding numeric
 Adding non-numeric
 
 Exception InvalidArgumentException: Item must be numeric type.
-

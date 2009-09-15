@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $list = new ArrayList(NULL, 'Person');
@@ -22,11 +25,9 @@ $list[] = new Person('Mary');
 $list[] = $larry = new Person('Larry');
 
 
-message("Removing Larry");
-dump( $list->remove($larry) );
+dump( $list->remove($larry), "Removing Larry" );
 
-message("Removing Larry second time");
-dump( $list->remove($larry) );
+dump( $list->remove($larry), "Removing Larry second time" );
 
 
 try {
@@ -46,26 +47,22 @@ try {
 dump( $list );
 
 
+
 __halt_compiler();
 
 ------EXPECT------
-Removing Larry
+Removing Larry: bool(TRUE)
 
-bool(TRUE)
-
-Removing Larry second time
-
-bool(FALSE)
+Removing Larry second time: bool(FALSE)
 
 unset -1
 
-Exception ArgumentOutOfRangeException: 
+Exception ArgumentOutOfRangeException:
 
 unset 1
 
-object(ArrayList) (1) {
+object(%ns%ArrayList) (1) {
 	"0" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
 }
-

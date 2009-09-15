@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 /*Nette\Object::extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $that, $separator)*/
@@ -41,10 +44,10 @@ try {
 }
 
 
+
 __halt_compiler();
 
 ------EXPECT------
 string(17) "Jack, Mary, Larry"
 
-Exception MemberAccessException: Call to undefined method ArrayList::test().
-
+Exception MemberAccessException: Call to undefined method %ns%ArrayList::test().

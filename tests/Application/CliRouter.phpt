@@ -9,10 +9,14 @@
  * @subpackage UnitTests
  */
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
-
 /*use Nette\Application\CliRouter;*/
 /*use Nette\Web\HttpRequest;*/
+
+
+
+require dirname(__FILE__) . '/../NetteTest/initialize.php';
+
+
 
 // php.exe app.phpc homepage:default name --verbose -user "john doe" "-pass=se cret" /wait
 $_SERVER['argv'] = array(
@@ -44,6 +48,8 @@ dump( $req->isMethod('cli') ); // TRUE
 
 $url = $router->constructUrl($req, $httpRequest);
 dump( $url ); // NULL
+
+
 
 __halt_compiler();
 

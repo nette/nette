@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $list = new ArrayList(NULL, 'Person');
@@ -33,7 +36,6 @@ try {
 } catch (Exception $e) {
 	dump( $e );
 }
-
 
 
 
@@ -71,5 +73,4 @@ array(4) {
 	}
 }
 
-Exception ArgumentOutOfRangeException: 
-
+Exception ArgumentOutOfRangeException:

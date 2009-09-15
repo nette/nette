@@ -45,6 +45,7 @@ PHP (All test cases are valid PHP files)
 		%i%    signed integer value
 		%f%    floating point number
 		%h%    one or more HEX digits
+		%ns%   PHP namespace
 		%[..]% reg-exp
 
 

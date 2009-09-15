@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Application\Route;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Route.inc';
 
-/*use Nette\Application\Route;*/
 
 
 $route = new Route('//<host>.texy.<domain>/<path>', array(
@@ -23,6 +26,7 @@ $route = new Route('//<host>.texy.<domain>/<path>', array(
 
 
 testRoute($route, '/abc');
+
 
 
 __halt_compiler();

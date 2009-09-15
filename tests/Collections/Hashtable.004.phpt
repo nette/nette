@@ -9,22 +9,23 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Hashtable;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Hashtable;*/
 
 
 $hashtable = new Hashtable(NULL, 'Person');
 $hashtable['jack'] = $jack = new Person('Jack');
 $hashtable['mary'] = new Person('Mary');
 
-message("Removing Jack");
-dump( $hashtable->remove($jack) );
+dump( $hashtable->remove($jack), "Removing Jack" );
 
-message("Removing Jack second time");
-dump( $hashtable->remove($jack) );
+dump( $hashtable->remove($jack), "Removing Jack second time" );
 
 
 try {
@@ -47,17 +48,12 @@ try {
 __halt_compiler();
 
 ------EXPECT------
-Removing Jack
+Removing Jack: bool(TRUE)
 
-bool(TRUE)
-
-Removing Jack second time
-
-bool(FALSE)
+Removing Jack second time: bool(FALSE)
 
 Removing using unset(['unknown'])
 
 Removing using unset(->unknown)
 
-Exception MemberAccessException: Cannot unset the property Hashtable::$unknown.
-
+Exception MemberAccessException: Cannot unset the property %ns%Hashtable::$unknown.

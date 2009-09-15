@@ -9,16 +9,19 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Hashtable;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Hashtable;*/
 
 
 $arr = array(
-	'a' => new Person('Jack'), 
-	'b' => new Person('Mary'),  
+	'a' => new Person('Jack'),
+	'b' => new Person('Mary'),
 	'c' => new ArrayObject(),
 );
 
@@ -44,7 +47,7 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(Hashtable) (3) {
+object(%ns%Hashtable) (3) {
 	"a" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -53,4 +56,3 @@ object(Hashtable) (3) {
 	}
 	"c" => object(ArrayObject) (0) {}
 }
-

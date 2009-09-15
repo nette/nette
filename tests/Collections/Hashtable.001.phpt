@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Hashtable;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Hashtable;*/
 
 
 $hashtable = new Hashtable(NULL, 'Person');
@@ -81,15 +84,13 @@ try {
 
 
 
-message('count:');
-dump( $hashtable->count() );
+dump( $hashtable->count(), 'count:' );
 dump( count($hashtable) );
 
 
 dump( $hashtable );
 dump( (array) $hashtable );
-message("getKeys:");
-dump( $hashtable->getKeys() );
+dump( $hashtable->getKeys(), "getKeys:" );
 
 
 
@@ -134,19 +135,17 @@ Exception InvalidStateException: An element with the same key already exists.
 
 Adding Mary twice using __set()
 
-Exception MemberAccessException: Cannot assign to an undeclared property Hashtable::$mary.
+Exception MemberAccessException: Cannot assign to an undeclared property %ns%Hashtable::$mary.
 
 Adding Jack using append
 
-Exception NotSupportedException: 
+Exception NotSupportedException:
 
-count:
-
-int(2)
+count: int(2)
 
 int(2)
 
-object(Hashtable) (2) {
+object(%ns%Hashtable) (2) {
 	"jack" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -164,9 +163,7 @@ array(2) {
 	}
 }
 
-getKeys:
-
-array(2) {
+getKeys: array(2) {
 	0 => string(4) "jack"
 	1 => string(4) "mary"
 }
@@ -179,5 +176,4 @@ mary => My name is Mary
 
 Clearing
 
-object(Hashtable) (0) {}
-
+object(%ns%Hashtable) (0) {}

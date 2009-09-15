@@ -9,11 +9,15 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Application\SimpleRouter;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/SimpleRouter.inc';
 
-/*use Nette\Application\SimpleRouter;*/
+
 
 $router = new SimpleRouter(array(
 	'module' => 'main:sub',
@@ -37,6 +41,8 @@ $req = new /*Nette\Application\*/PresenterRequest(
 );
 $url = $router->constructUrl($req, $httpRequest);
 dump( $url ); // NULL
+
+
 
 __halt_compiler();
 

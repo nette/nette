@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Hashtable;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Hashtable;*/
 
 
 $hashtable = new Hashtable(NULL, 'Person');
@@ -54,7 +57,6 @@ try {
 
 
 
-
 __halt_compiler();
 
 ------EXPECT------
@@ -64,17 +66,16 @@ bool(TRUE)
 
 Adding Jack using []
 
-Exception InvalidStateException: Cannot modify a frozen object 'Hashtable'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
 
 Adding Jack using add
 
-Exception InvalidStateException: Cannot modify a frozen object 'Hashtable'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
 
 Removing using unset
 
-Exception InvalidStateException: Cannot modify a frozen object 'Hashtable'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
 
 Changing using []
 
-Exception InvalidStateException: Cannot modify a frozen object 'Hashtable'.
-
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.

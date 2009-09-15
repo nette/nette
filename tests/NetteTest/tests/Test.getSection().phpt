@@ -12,6 +12,7 @@
 require dirname(__FILE__) . '/../initialize.php';
 
 
+
 dump( NetteTestHelpers::getSection(__FILE__, 'MySection') );
 
 dump( NetteTestHelpers::getSection(__FILE__, 'mysection') );
@@ -19,6 +20,7 @@ dump( NetteTestHelpers::getSection(__FILE__, 'mysection') );
 dump( NetteTestHelpers::getSection(__FILE__, 'POST') );
 
 dump( NetteTestHelpers::getSection(__FILE__, 'options') );
+
 
 
 __halt_compiler();
@@ -50,7 +52,7 @@ array(2) {
 array(5) {
 	"author" => string(11) "David Grudl"
 	"category" => string(5) "Nette"
-	"package" => string(10) "Nette\Test"
+	"package" => string(10) "%ns%Test"
 	"subpackage" => string(9) "UnitTests"
 	"name" => string(30) "NetteTestHelpers::getSection()"
 }

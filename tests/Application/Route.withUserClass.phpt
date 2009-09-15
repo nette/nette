@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Application\Route;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Route.inc';
 
-/*use Nette\Application\Route;*/
 
 
 Route::addStyle('#numeric');
@@ -26,6 +29,7 @@ testRoute($route, '/presenter/12/');
 testRoute($route, '/presenter/1234');
 
 testRoute($route, '/presenter/');
+
 
 
 __halt_compiler();

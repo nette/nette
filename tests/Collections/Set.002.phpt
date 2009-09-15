@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $set = new Set(NULL, 'Person');
@@ -26,8 +29,7 @@ $set->freeze();
 dump( $set->isFrozen() );
 
 try {
-	message("Adding Jack");
-	dump( $set->append($jack) );
+	dump( $set->append($jack), "Adding Jack" );
 } catch (Exception $e) {
 	dump( $e );
 }
@@ -47,6 +49,7 @@ try {
 }
 
 
+
 __halt_compiler();
 
 ------EXPECT------
@@ -54,15 +57,12 @@ bool(FALSE)
 
 bool(TRUE)
 
-Adding Jack
-
-Exception InvalidStateException: Cannot modify a frozen object 'Set'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.
 
 Removing Jack
 
-Exception InvalidStateException: Cannot modify a frozen object 'Set'.
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.
 
 Clearing
 
-Exception InvalidStateException: Cannot modify a frozen object 'Set'.
-
+Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.

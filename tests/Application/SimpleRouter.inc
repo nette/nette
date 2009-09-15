@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Common code for SimpleRouter test cases.
+ */
+
+
 
 class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 {

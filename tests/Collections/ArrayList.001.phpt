@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $list = new ArrayList(NULL, 'Person');
@@ -51,8 +54,7 @@ try {
 
 
 
-message('count:');
-dump( $list->count() );
+dump( $list->count(), 'count:' );
 dump( count($list) );
 
 
@@ -76,7 +78,6 @@ dump( $list );
 
 
 
-
 __halt_compiler();
 
 ------EXPECT------
@@ -94,13 +95,11 @@ Adding invalid item using []
 
 Exception InvalidArgumentException: Item must be 'Person' object.
 
-count:
+count: int(3)
 
 int(3)
 
-int(3)
-
-object(ArrayList) (3) {
+object(%ns%ArrayList) (3) {
 	"0" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -134,5 +133,4 @@ Get Interator:
 
 Clearing
 
-object(ArrayList) (0) {}
-
+object(%ns%ArrayList) (0) {}

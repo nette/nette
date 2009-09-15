@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Hashtable;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Hashtable;*/
 
 
 $hashtable = new Hashtable(NULL, 'Person');
@@ -23,45 +26,35 @@ $foo = new ArrayObject();
 
 
 
-message("Contains Jack?");
-dump( $hashtable->contains($jack) );
+dump( $hashtable->contains($jack), "Contains Jack?" );
 
-message("Contains Mary?");
-dump( $hashtable->contains($mary) );
+dump( $hashtable->contains($mary), "Contains Mary?" );
 
 try {
-	message("Contains foo?");
-	dump( $hashtable->contains($foo) );
+	dump( $hashtable->contains($foo), "Contains foo?" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 
-message("Contains ['jim']?");
-dump( isset($hashtable['jim']) );
+dump( isset($hashtable['jim']), "Contains ['jim']?" );
 
-message("Contains ['jack']?");
-dump( isset($hashtable['jack']) );
+dump( isset($hashtable['jack']), "Contains ['jack']?" );
 
-message("Contains ['mary']?");
-dump( isset($hashtable['mary']) );
+dump( isset($hashtable['mary']), "Contains ['mary']?" );
 
 
 
-message("Contains ->jim?");
-dump( isset($hashtable->jim) );
+dump( isset($hashtable->jim), "Contains ->jim?" );
 
-message("Contains ->jack?");
-dump( isset($hashtable->jack) );
+dump( isset($hashtable->jack), "Contains ->jack?" );
 
-message("Contains ->mary?");
-dump( isset($hashtable->mary) );
+dump( isset($hashtable->mary), "Contains ->mary?" );
 
 
 
 try {
-	message("Getting ['jim']");
-	dump( $hashtable['jim'] );
+	dump( $hashtable['jim'], "Getting ['jim']" );
 } catch (Exception $e) {
 	dump( $e );
 }
@@ -75,23 +68,20 @@ try {
 }
 
 try {
-	message("Getting ['mary']");
-	dump( $hashtable['mary'] );
+	dump( $hashtable['mary'], "Getting ['mary']" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 
 try {
-	message("Getting ->jim");
-	dump( $hashtable->jim );
+	dump( $hashtable->jim, "Getting ->jim" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Getting ->mary");
-	dump( $hashtable->mary );
+	dump( $hashtable->mary, "Getting ->mary" );
 } catch (Exception $e) {
 	dump( $e );
 }
@@ -99,104 +89,66 @@ try {
 
 
 try {
-	message("Getting get('jim')");
-	dump( $hashtable->get('jim', 'default') );
+	dump( $hashtable->get('jim', 'default'), "Getting get('jim')" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Getting get('mary')");
-	dump( $hashtable->get('mary', 'default') );
+	dump( $hashtable->get('mary', 'default'), "Getting get('mary')" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 
 
-message("search Jack:");
-dump( $hashtable->search($jack) );
+dump( $hashtable->search($jack), "search Jack:" );
 
-message("search Mary:");
-dump( $hashtable->search($mary) );
+dump( $hashtable->search($mary), "search Mary:" );
+
 
 
 __halt_compiler();
 
 ------EXPECT------
-Contains Jack?
+Contains Jack? bool(TRUE)
 
-bool(TRUE)
+Contains Mary? bool(TRUE)
 
-Contains Mary?
+Contains foo? bool(FALSE)
 
-bool(TRUE)
+Contains ['jim']? bool(FALSE)
 
-Contains foo?
+Contains ['jack']? bool(TRUE)
 
-bool(FALSE)
+Contains ['mary']? bool(TRUE)
 
-Contains ['jim']?
+Contains ->jim? bool(FALSE)
 
-bool(FALSE)
+Contains ->jack? bool(FALSE)
 
-Contains ['jack']?
+Contains ->mary? bool(FALSE)
 
-bool(TRUE)
-
-Contains ['mary']?
-
-bool(TRUE)
-
-Contains ->jim?
-
-bool(FALSE)
-
-Contains ->jack?
-
-bool(FALSE)
-
-Contains ->mary?
-
-bool(FALSE)
-
-Getting ['jim']
-
-NULL
+Getting ['jim']: NULL
 
 Getting ['jim'] with throwKeyNotFound
 
-Exception KeyNotFoundException: 
+Exception %ns%KeyNotFoundException:
 
-Getting ['mary']
-
-object(Person) (1) {
+Getting ['mary']: object(Person) (1) {
 	"name" private => string(4) "Mary"
 }
 
-Getting ->jim
+Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$jim.
 
-Exception MemberAccessException: Cannot read an undeclared property Hashtable::$jim.
+Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$mary.
 
-Getting ->mary
+Getting get('jim'): string(7) "default"
 
-Exception MemberAccessException: Cannot read an undeclared property Hashtable::$mary.
-
-Getting get('jim')
-
-string(7) "default"
-
-Getting get('mary')
-
-object(Person) (1) {
+Getting get('mary'): object(Person) (1) {
 	"name" private => string(4) "Mary"
 }
 
-search Jack:
+search Jack: string(4) "jack"
 
-string(4) "jack"
-
-search Mary:
-
-string(4) "mary"
-
+search Mary: string(4) "mary"

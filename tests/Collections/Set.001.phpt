@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $set = new Set(NULL, 'Person');
@@ -24,29 +27,23 @@ $larry = new Person('Larry');
 $foo = new ArrayObject();
 
 
-message("Adding Jack");
-dump( $set->append($jack) );
+dump( $set->append($jack), "Adding Jack" );
 
-message("Adding Mary");
-dump( $set->append($mary) );
+dump( $set->append($mary), "Adding Mary" );
 
-message("Adding Mary second time");
-dump( $set->append($mary) );
+dump( $set->append($mary), "Adding Mary second time" );
 
-message("Adding Larry");
-dump( $set->append($larry) );
+dump( $set->append($larry), "Adding Larry" );
 
 try {
-	message("Adding foo");
-	dump( $set->append($foo) );
+	dump( $set->append($foo), "Adding foo" );
 } catch (Exception $e) {
 	dump( $e );
 }
 
 
 
-message('count:');
-dump( $set->count() );
+dump( $set->count(), 'count:' );
 dump( count($set) );
 
 
@@ -69,36 +66,25 @@ $set->clear();
 dump( $set );
 
 
+
 __halt_compiler();
 
 ------EXPECT------
-Adding Jack
+Adding Jack: bool(TRUE)
 
-bool(TRUE)
+Adding Mary: bool(TRUE)
 
-Adding Mary
+Adding Mary second time: bool(FALSE)
 
-bool(TRUE)
-
-Adding Mary second time
-
-bool(FALSE)
-
-Adding Larry
-
-bool(TRUE)
-
-Adding foo
+Adding Larry: bool(TRUE)
 
 Exception InvalidArgumentException: Item must be 'Person' object.
 
-count:
+count: int(3)
 
 int(3)
 
-int(3)
-
-object(Set) (3) {
+object(%ns%Set) (3) {
 	"%h%" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -132,5 +118,4 @@ My name is Larry
 
 Clearing
 
-object(Set) (0) {}
-
+object(%ns%Set) (0) {}

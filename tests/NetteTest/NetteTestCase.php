@@ -71,11 +71,18 @@ class NetteTestCase
 		$expectedOutput = $this->getExpectedOutput();
 		if ($expectedOutput !== NULL) {
 			$tests++;
-			$trim = isset($this->sections['expect']);
-			$output = self::normalize($this->output, $trim);
-			$expectedOutput = self::normalize($expectedOutput, $trim);
-			if (!$this->compare($output, $expectedOutput)) {
-				throw new NetteTestCaseException("Output doesn't match.");
+			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $this->output);
+			if ($binary) {
+				if ($expectedOutput !== $this->output) {
+					throw new NetteTestCaseException("Binary output doesn't match.");
+				}
+			} else {
+				$trim = isset($this->sections['expect']);
+				$output = self::normalize($this->output, $trim);
+				$expectedOutput = self::normalize($expectedOutput, $trim);
+				if (!$this->compare($output, $expectedOutput)) {
+					throw new NetteTestCaseException("Output doesn't match.");
+				}
 			}
 		}
 
@@ -285,6 +292,7 @@ class NetteTestCase
 			'%i%' => '[+-]?[0-9]+', // signed integer value
 			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
 			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
+			'%ns%'=> '(?:[_0-9a-zA-Z\\\\]+\\\\|N)?',// PHP namespace
 			'%[^' => '[^',          // reg-exp
 			'%['  => '[',           // reg-exp
 			']%'  => ']+',          // reg-exp

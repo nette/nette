@@ -9,16 +9,19 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\ArrayList;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\ArrayList;*/
 
 
 $arr = array(
-	'a' => new Person('Jack'), 
-	'b' => new Person('Mary'),  
+	'a' => new Person('Jack'),
+	'b' => new Person('Mary'),
 	'c' => new ArrayObject(),
 );
 
@@ -44,7 +47,7 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(ArrayList) (3) {
+object(%ns%ArrayList) (3) {
 	"0" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -53,4 +56,3 @@ object(ArrayList) (3) {
 	}
 	"2" => object(ArrayObject) (0) {}
 }
-

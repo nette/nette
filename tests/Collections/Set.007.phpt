@@ -9,16 +9,19 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $arr = array(
-	'a' => new Person('Jack'), 
-	'b' => new Person('Mary'),  
+	'a' => new Person('Jack'),
+	'b' => new Person('Mary'),
 	'c' => new ArrayObject(),
 );
 
@@ -47,6 +50,7 @@ $set2 = new Set($set);
 dump( $set2 );
 
 
+
 __halt_compiler();
 
 ------EXPECT------
@@ -56,7 +60,7 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(Set) (3) {
+object(%ns%Set) (3) {
 	"%h%" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -72,7 +76,7 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from collection II.
 
-object(Set) (3) {
+object(%ns%Set) (3) {
 	"%h%" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -81,4 +85,3 @@ object(Set) (3) {
 	}
 	"%h%" => object(ArrayObject) (0) {}
 }
-

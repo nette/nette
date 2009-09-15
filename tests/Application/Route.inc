@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Common code for Route test cases.
+ */
+
+
 
 function testRoute(/*Nette\Application\*/Route $route, $uri)
 {

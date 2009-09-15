@@ -9,11 +9,14 @@
  * @subpackage UnitTests
  */
 
+/*use Nette\Collections\Set;*/
+
+
+
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 require dirname(__FILE__) . '/Collections.inc';
 
-/*use Nette\Collections\Set;*/
 
 
 $set = new Set(NULL, 'Person');
@@ -22,15 +25,12 @@ $set->append(new Person('Mary'));
 $set->append($larry = new Person('Larry'));
 $foo = new ArrayObject;
 
-message("Removing Larry");
-dump( $set->remove($larry) );
+dump( $set->remove($larry), "Removing Larry" );
 
-message("Removing Larry second time");
-dump( $set->remove($larry) );
+dump( $set->remove($larry), "Removing Larry second time" );
 
 try {
-	message("Removing foo");
-	dump( $set->remove($foo) );
+	dump( $set->remove($foo), "Removing foo" );
 } catch (Exception $e) {
 	dump( $e );
 }
@@ -42,19 +42,13 @@ dump( $set );
 __halt_compiler();
 
 ------EXPECT------
-Removing Larry
+Removing Larry: bool(TRUE)
 
-bool(TRUE)
+Removing Larry second time: bool(FALSE)
 
-Removing Larry second time
+Removing foo: bool(FALSE)
 
-bool(FALSE)
-
-Removing foo
-
-bool(FALSE)
-
-object(Set) (2) {
+object(%ns%Set) (2) {
 	"%h%" => object(Person) (1) {
 		"name" private => string(4) "Jack"
 	}
@@ -62,4 +56,3 @@ object(Set) (2) {
 		"name" private => string(4) "Mary"
 	}
 }
-

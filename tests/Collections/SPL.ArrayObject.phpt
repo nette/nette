@@ -225,13 +225,13 @@ $obj[array(3)] = "Jack":
 > TestArrayObject::offsetSet
 
 
-Warning: Illegal offset type in D:\Web\nette\_nette\tests\Collections\SPL.ArrayObject.phpt on line 66
+Warning: Illegal offset type in %a%
 $obj->offsetSet(array(3), "Jack"):
 
 > TestArrayObject::offsetSet
 
 
-Warning: Illegal offset type in D:\Web\nette\_nette\tests\Collections\SPL.ArrayObject.phpt on line 66
+Warning: Illegal offset type in %a%
 $obj["a"] = "Jim":
 
 > TestArrayObject::offsetSet
@@ -245,7 +245,7 @@ Jimecho $obj["unknown"]:
 > TestArrayObject::offsetGet
 
 
-Notice: Undefined index:  unknown in D:\Web\nette\_nette\tests\Collections\SPL.ArrayObject.phpt on line 56
+Notice: Undefined index:  unknown in %a%
 isset($obj["a"]):
 
 > TestArrayObject::offsetExists
@@ -313,4 +313,3 @@ Jackisset($obj->a):
 unset($obj->a):
 
 > TestArrayObject::offsetUnset
-
