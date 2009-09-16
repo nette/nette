@@ -68,7 +68,7 @@ class NetteTestRunner
 	public function run()
 	{
 		$count = 0;
-		$failed = $passed = array();
+		$failed = $passed = $skipped = array();
 
 		if (is_file($this->path)) {
 			$files = array($this->path);
@@ -91,35 +91,42 @@ class NetteTestRunner
 				$passed[] = array($testCase->getName(), $entry);
 
 			} catch (NetteTestCaseException $e) {
-				echo 'F';
-				$failed[] = array($testCase->getName(), $entry, $e->getMessage());
+				if ($e->getCode() === NetteTestCaseException::SKIPPED) {
+					echo 's';
+					$skipped[] = array($testCase->getName(), $entry);
 
-				$this->log($entry, $testCase->getOutput(), self::OUTPUT);
-				$this->log($entry, $testCase->getExpectedOutput(), self::EXPECTED);
+				} else {
+					echo 'F';
+					$failed[] = array($testCase->getName(), $entry, $e->getMessage());
 
-				if ($testCase->getExpectedHeaders() !== NULL) {
-					$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
-					$this->log($entry, $testCase->getExpectedHeaders(), self::EXPECTED, self::HEADERS);
+					$this->log($entry, $testCase->getOutput(), self::OUTPUT);
+					$this->log($entry, $testCase->getExpectedOutput(), self::EXPECTED);
+
+					if ($testCase->getExpectedHeaders() !== NULL) {
+						$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
+						$this->log($entry, $testCase->getExpectedHeaders(), self::EXPECTED, self::HEADERS);
+					}
 				}
 			}
 		}
 
-		$failures = count($failed);
+		$failedCount = count($failed);
+		$skippedCount = count($skipped);
 
 		if (!$count) {
 			echo "No tests found\n";
 
-		} elseif ($failures) {
+		} elseif ($failedCount) {
 			echo "\n\nFailures:\n";
 			foreach ($failed as $i => $item) {
 				list($name, $file, $message) = $item;
 				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
 			}
-			echo "\nFAILURES! ($count tests, $failures failures)\n";
+			echo "\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n";
 			return FALSE;
 
 		} else {
-			echo "\n\nOK ($count tests)\n";
+			echo "\n\nOK ($count tests, $skippedCount skipped)\n";
 		}
 		return TRUE;
 	}

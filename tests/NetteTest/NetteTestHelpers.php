@@ -229,4 +229,16 @@ final class NetteTestHelpers
 		self::dump($exception, 0);
 	}
 
+
+
+	/**
+	 * Skips this test.
+	 * @return void
+	 */
+	public static function skip()
+	{
+		header('X-Nette-Test-Skip: 1');
+		exit;
+	}
+
 }

@@ -65,20 +65,27 @@ class NetteTestCase
 	public function run()
 	{
 		$this->execute();
+		$output = $this->output;
+		$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
 		$tests = 0;
+
+		// skip?
+		if (isset($headers['x-nette-test-skip'])) {
+			throw new NetteTestCaseException('Skipped.', NetteTestCaseException::SKIPPED);
+		}
 
 		// compare output
 		$expectedOutput = $this->getExpectedOutput();
 		if ($expectedOutput !== NULL) {
 			$tests++;
-			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $this->output);
+			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $output);
 			if ($binary) {
-				if ($expectedOutput !== $this->output) {
+				if ($expectedOutput !== $output) {
 					throw new NetteTestCaseException("Binary output doesn't match.");
 				}
 			} else {
 				$trim = isset($this->sections['expect']);
-				$output = self::normalize($this->output, $trim);
+				$output = self::normalize($output, $trim);
 				$expectedOutput = self::normalize($expectedOutput, $trim);
 				if (!$this->compare($output, $expectedOutput)) {
 					throw new NetteTestCaseException("Output doesn't match.");
@@ -90,7 +97,6 @@ class NetteTestCase
 		$expectedHeaders = $this->getExpectedHeaders();
 		if ($expectedHeaders !== NULL) {
 			$tests++;
-			$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
 			$expectedHeaders = self::normalize($expectedHeaders, TRUE);
 			$expectedHeaders = array_change_key_case(self::parseLines($expectedHeaders, ':'), CASE_LOWER);
 			foreach ($expectedHeaders as $name => $header) {
@@ -334,4 +340,6 @@ class NetteTestCase
  */
 class NetteTestCaseException extends Exception
 {
+	const SKIPPED = 1;
+
 }

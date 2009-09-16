@@ -10,6 +10,7 @@
  */
 
 /*use Nette\Caching\Cache;*/
+/*use Nette\Caching\MemcachedStorage;*/
 
 
 
@@ -17,10 +18,16 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
+if (!MemcachedStorage::isAvailable()) {
+	NetteTestHelpers::skip();
+}
+
+
+
 $key = 'nette';
 $value = 'rulez';
 
-$cache = new Cache(new /*Nette\Caching\*/MemcachedStorage('localhost'));
+$cache = new Cache(new MemcachedStorage('localhost'));
 
 
 $dependentFile = dirname(__FILE__) . '/tmp/spec.file';
