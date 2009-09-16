@@ -30,9 +30,6 @@ class NetteTestCase
 	/** @var string  test file */
 	private $file;
 
-	/** @var string  PHP-CGI command line */
-	private $cmdLine;
-
 	/** @var array   test file multiparts */
 	private $sections;
 
@@ -42,6 +39,15 @@ class NetteTestCase
 	/** @var string  output headers in raw format */
 	private $headers;
 
+	/** @var string  PHP-CGI command line */
+	private $cmdLine;
+
+	/** @var string  PHP-CGI command line */
+	private $phpVersion;
+
+	/** @var array */
+	private static $cachedPhp;
+
 
 
 	/**
@@ -49,10 +55,9 @@ class NetteTestCase
 	 * @param  string  PHP-CGI command line
 	 * @return void
 	 */
-	public function __construct($testFile, $cmdLine)
+	public function __construct($testFile)
 	{
 		$this->file = (string) $testFile;
-		$this->cmdLine = (string) $cmdLine;
 		$this->sections = self::parseSections($this->file);
 	}
 
@@ -64,12 +69,21 @@ class NetteTestCase
 	 */
 	public function run()
 	{
+		// pre-skip?
+		$options = $this->sections['options'];
+		if (isset($options['skip'])) {
+			throw new NetteTestCaseException('Skipped.', NetteTestCaseException::SKIPPED);
+
+		} elseif (isset($options['phpversion']) && version_compare($options['phpversion'], $this->phpVersion, '>')) {
+			throw new NetteTestCaseException("Requires PHP version $options[phpversion].", NetteTestCaseException::SKIPPED);
+		}
+
 		$this->execute();
 		$output = $this->output;
 		$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
 		$tests = 0;
 
-		// skip?
+		// post-skip?
 		if (isset($headers['x-nette-test-skip'])) {
 			throw new NetteTestCaseException('Skipped.', NetteTestCaseException::SKIPPED);
 		}
@@ -117,6 +131,35 @@ class NetteTestCase
 
 
 	/**
+	 * Sets PHP command line.
+	 * @param  string
+	 * @param  string
+	 * @return void
+	 */
+	public function setPHP($executable, $args)
+	{
+		if (isset(self::$cachedPhp[$executable])) {
+			$this->phpVersion = self::$cachedPhp[$executable];
+
+		} else {
+			exec(escapeshellarg($executable) . ' -v', $output, $res);
+			if ($res !== 0 && $res !== 255) {
+				throw new Exception("Unable to execute '$executable'.");
+			}
+
+			if (!preg_match('#^PHP (\S+).*cgi#i', $output[0], $matches)) {
+				throw new Exception("Unable to detect PHP version (output: $output[0]).");
+			}
+
+			$this->phpVersion = self::$cachedPhp[$executable] = $matches[1];
+		}
+
+		$this->cmdLine = escapeshellarg($executable) . " $args %input > %output";
+	}
+
+
+
+	/**
 	 * Execute test.
 	 * @return array
 	 */
@@ -133,8 +176,12 @@ class NetteTestCase
 		$command = str_replace('%input', escapeshellarg($this->file), $this->cmdLine);
 		$command = str_replace('%output', escapeshellarg($tempFile), $command);
 		exec($command, $foo, $res);
-		if ($res !== 0 && $res !== 255) {
+		if ($res === 255) { // exit_status 255 => parse error
+			throw new NetteTestCaseException("PHP parse error.");
+
+		} elseif ($res !== 0) {
 			throw new Exception("Unable to execute '$command'.");
+
 		}
 
 		$this->output = file_get_contents($tempFile);

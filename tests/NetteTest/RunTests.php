@@ -52,17 +52,19 @@ class NetteTestRunner
 	const EXPECTED = 'expect';
 	const HEADERS = 'headers';
 
-	/** @var string  PHP-CGI.exe commandline */
-	public $cmdLine;
-
 	/** @var string */
 	public $path;
+
+	/** @var string  PHP-CGI.exe */
+	public $phpExecutable;
+
+	/** @var string  PHP-CGI.exe arguments */
+	public $phpArgs;
 
 
 
 	/**
 	 * Runs all tests.
-	 * @param  string  path
 	 * @return void
 	 */
 	public function run()
@@ -84,7 +86,8 @@ class NetteTestRunner
 			}
 
 			$count++;
-			$testCase = new NetteTestCase($entry, $this->cmdLine);
+			$testCase = new NetteTestCase($entry);
+			$testCase->setPhp($this->phpExecutable, $this->phpArgs);
 			try {
 				$testCase->run();
 				echo '.';
@@ -112,6 +115,15 @@ class NetteTestRunner
 
 		$failedCount = count($failed);
 		$skippedCount = count($skipped);
+
+		/*
+		if ($skippedCount) {
+			echo "\n\nSkipped:\n";
+			foreach ($skipped as $i => $item) {
+				list($name, $file) = $item;
+				echo "\n", ($i + 1), ") $name\n   $file\n";
+			}
+		}*/
 
 		if (!$count) {
 			echo "No tests found\n";
@@ -156,9 +168,8 @@ class NetteTestRunner
 	 */
 	public function parseArguments()
 	{
-		$phpExecutable = 'php-cgi.exe'; // path to PHP CGI executable that is used to run the test scripts
-		$phpIni = dirname(__FILE__) . '/php.ini'; // path in which to look for php.ini
-		$phpArgs = '';
+		$this->phpExecutable = 'php-cgi.exe'; // path to PHP CGI executable that is used to run the test scripts
+		$this->phpArgs = '';
 		$this->path = getcwd(); // current directory
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
@@ -170,27 +181,18 @@ class NetteTestRunner
 			} else switch ($opt) {
 				case 'p':
 					$args->next();
-					$phpExecutable = $args->current();
+					$this->phpExecutable = $args->current();
 					break;
 				case 'c':
-					$args->next();
-					$phpIni = $args->current();
-					break;
 				case 'd':
 					$args->next();
-					$phpArgs .= ' -d ' . escapeshellarg($args->current());
+					$this->phpArgs .= " -$opt " . escapeshellarg($args->current());
 					break;
 				default:
 					echo "Unknown option -$opt\n";
 					exit;
 			}
 		}
-
-		$real = realpath($phpExecutable);
-		if (!$real) {
-			throw new Exception("Missing PHP executable file '$phpExecutable'.");
-		}
-		$this->cmdLine = escapeshellarg($real) . $phpArgs . ' -c ' . escapeshellarg($phpIni) . " %input > %output";
 	}
 
 }
