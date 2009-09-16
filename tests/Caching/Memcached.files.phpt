@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Memcached files dependency test.
+ * Test: Nette\Caching\Memcached files dependency test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -33,7 +33,7 @@ $cache = new Cache(new MemcachedStorage('localhost'));
 $dependentFile = dirname(__FILE__) . '/tmp/spec.file';
 @unlink($dependentFile);
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => array(
 		__FILE__,
@@ -43,19 +43,19 @@ $cache->save($key, $value, array(
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent file');
+output('Modifing dependent file');
 file_put_contents($dependentFile, 'a');
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent file');
+output('Modifing dependent file');
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();

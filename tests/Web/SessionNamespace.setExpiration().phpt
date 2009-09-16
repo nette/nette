@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SessionNamespace::setExpiration
+ * Test: Nette\Web\SessionNamespace::setExpiration()
  *
  * @author     David Grudl
  * @category   Nette

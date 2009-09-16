@@ -154,7 +154,7 @@ class NetteTestCase
 			$this->phpVersion = self::$cachedPhp[$executable] = $matches[1];
 		}
 
-		$this->cmdLine = escapeshellarg($executable) . " $args %input > %output";
+		$this->cmdLine = escapeshellarg($executable) . " $args";
 	}
 
 
@@ -172,12 +172,18 @@ class NetteTestCase
 			throw new Exception("Unable to create temporary file.");
 		}
 
+		$command = $this->cmdLine;
+		if (isset($this->sections['options']['phpini'])) {
+			foreach (explode(';', $this->sections['options']['phpini']) as $item) {
+				$command .= " -d " . escapeshellarg(trim($item));
+			}
+		}
+		$command .= ' ' . escapeshellarg($this->file) . ' > ' . escapeshellarg($tempFile);
+
 		chdir(dirname($this->file));
-		$command = str_replace('%input', escapeshellarg($this->file), $this->cmdLine);
-		$command = str_replace('%output', escapeshellarg($tempFile), $command);
 		exec($command, $foo, $res);
-		if ($res === 255) { // exit_status 255 => parse error
-			throw new NetteTestCaseException("PHP parse error.");
+		if ($res === 255) {
+			// exit_status 255 => parse or fatal error
 
 		} elseif ($res !== 0) {
 			throw new Exception("Unable to execute '$command'.");

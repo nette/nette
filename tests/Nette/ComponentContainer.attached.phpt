@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ComponentContainer::attached()
+ * Test: Nette\ComponentContainer::attached()
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,12 +21,12 @@ class TestClass extends ComponentContainer implements ArrayAccess
 {
 	protected function attached($obj)
 	{
-		message(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		output(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	protected function detached($obj)
 	{
-		message(get_class($this) . '::detached(' . get_class($obj) . ')');
+		output(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	final public function offsetSet($name, $component)
@@ -65,14 +65,14 @@ $b['c'] = new C;
 $b['c']->monitor('a');
 $b['c']['d'] = $d;
 
-section("'a' becoming 'b' parent");
+output("'a' becoming 'b' parent");
 $a = new A;
 $a['b'] = $b;
 
-section("removing 'b' from 'a'");
+output("removing 'b' from 'a'");
 unset($a['b']);
 
-section("'a' becoming 'b' parent");
+output("'a' becoming 'b' parent");
 $a['b'] = $b;
 
 dump( $d['e']->lookupPath('A'), "'e' looking 'a'" );
@@ -84,19 +84,19 @@ dump( $a['b-c'] === $b['c'], "checking 'a-b-c'" );
 __halt_compiler();
 
 ------EXPECT------
-==> 'a' becoming 'b' parent
+'a' becoming 'b' parent
 
 C::ATTACHED(A)
 
 B::ATTACHED(A)
 
-==> removing 'b' from 'a'
+removing 'b' from 'a'
 
 C::detached(A)
 
 B::detached(A)
 
-==> 'a' becoming 'b' parent
+'a' becoming 'b' parent
 
 C::ATTACHED(A)
 

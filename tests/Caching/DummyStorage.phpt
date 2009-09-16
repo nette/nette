@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: DummyStorage test.
+ * Test: Nette\Caching\DummyStorage test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -27,20 +27,20 @@ $cache = new Cache(new /*Nette\Caching\*/DummyStorage, 'myspace');
 dump( isset($cache[$key]), "Is cached?" );
 dump( $cache[$key], "Cache content:" );
 
-message("Writing cache...");
+output("Writing cache...");
 $cache[$key] = $value;
 $cache->release();
 
 dump( isset($cache[$key]), "Is cached?" );
 dump( $cache[$key] === $value, "Is cache ok?" );
 
-message("Removing from cache using unset()...");
+output("Removing from cache using unset()...");
 unset($cache[$key]);
 $cache->release();
 
 dump( isset($cache[$key]), "Is cached?" );
 
-message("Removing from cache using set NULL...");
+output("Removing from cache using set NULL...");
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();

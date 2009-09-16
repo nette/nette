@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteLoader basic usage.
+ * Test: Nette\Loaders\RobotLoader basic usage.
  *
  * @author     David Grudl
  * @category   Nette
@@ -19,9 +19,9 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-NetteTestHelpers::purge($tempDir);
-Environment::setVariable('tempDir', $tempDir);
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
+Environment::setVariable('tempDir', TEMP_DIR);
 
 
 $loader = new RobotLoader;

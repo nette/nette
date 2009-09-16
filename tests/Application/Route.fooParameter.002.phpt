@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with FooParameter
+ * Test: Nette\Application\Route with FooParameter
  *
  * @author     David Grudl
  * @category   Nette

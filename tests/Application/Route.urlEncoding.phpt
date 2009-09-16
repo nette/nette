@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with UrlEncoding
+ * Test: Nette\Application\Route with UrlEncoding
  *
  * @author     David Grudl
  * @category   Nette

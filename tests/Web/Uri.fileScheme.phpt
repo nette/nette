@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri file://
+ * Test: Nette\Web\Uri file://
  *
  * @author     David Grudl
  * @category   Nette
@@ -17,7 +17,6 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-section();
 $uri = new Uri('file://localhost/D:/dokumentace/rfc3986.txt');
 dump( (string) $uri ); // 'file://localhost/D:/dokumentace/rfc3986.txt'
 dump( $uri->scheme ); // 'file'
@@ -30,7 +29,6 @@ dump( $uri->query ); // ''
 dump( $uri->fragment ); // ''
 
 
-section();
 $uri = new Uri('file:///D:/dokumentace/rfc3986.txt');
 dump( (string) $uri ); // 'file://D:/dokumentace/rfc3986.txt'
 dump( $uri->scheme ); // 'file'
@@ -47,8 +45,6 @@ dump( $uri->fragment ); // ''
 __halt_compiler();
 
 ------EXPECT------
-===
-
 string(43) "file://localhost/D:/dokumentace/rfc3986.txt"
 
 string(4) "file"
@@ -66,8 +62,6 @@ string(27) "/D:/dokumentace/rfc3986.txt"
 string(0) ""
 
 string(0) ""
-
-===
 
 string(33) "file://D:/dokumentace/rfc3986.txt"
 

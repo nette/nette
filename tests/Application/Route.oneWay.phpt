@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with OneWay
+ * Test: Nette\Application\Route with OneWay
  *
  * @author     David Grudl
  * @category   Nette

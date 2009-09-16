@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList and removing items.
+ * Test: Nette\Collections\ArrayList and removing items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -31,14 +31,14 @@ dump( $list->remove($larry), "Removing Larry second time" );
 
 
 try {
-	message("unset -1");
+	output("unset -1");
 	unset($list[-1]);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("unset 1");
+	output("unset 1");
 	unset($list[1]);
 } catch (Exception $e) {
 	dump( $e );

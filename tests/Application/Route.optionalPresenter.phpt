@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with OptionalPresenter
+ * Test: Nette\Application\Route with OptionalPresenter
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage files dependency test.
+ * Test: Nette\Caching\FileStorage files dependency test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,17 +21,16 @@ $key = 'nette';
 $value = 'rulez';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
-NetteTestHelpers::purge($tempDir);
-
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 
-$dependentFile = $tempDir . '/spec.file';
+$dependentFile = TEMP_DIR . '/spec.file';
 @unlink($dependentFile);
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => array(
 		__FILE__,
@@ -41,19 +40,19 @@ $cache->save($key, $value, array(
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent file');
+output('Modifing dependent file');
 file_put_contents($dependentFile, 'a');
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent file');
+output('Modifing dependent file');
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri http://
+ * Test: Nette\Web\Uri http://
  *
  * @author     David Grudl
  * @category   Nette

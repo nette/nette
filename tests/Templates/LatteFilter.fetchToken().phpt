@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: LatteFilter::fetchToken()
+ * Test: Nette\Templates\LatteFilter::fetchToken()
  *
  * @author     David Grudl
  * @category   Nette

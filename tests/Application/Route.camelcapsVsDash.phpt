@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with CamelcapsVsDash
+ * Test: Nette\Application\Route with CamelcapsVsDash
  *
  * @author     David Grudl
  * @category   Nette

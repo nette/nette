@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set adding numeric items.
+ * Test: Nette\Collections\Set adding numeric items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,14 +21,14 @@ require dirname(__FILE__) . '/Collections.inc';
 
 $set = new Set(NULL, ':numeric');
 
-message("Adding numeric");
+output("Adding numeric");
 $set->append('10.3');
 
-message("Adding numeric");
+output("Adding numeric");
 $set->append(12.2);
 
 try {
-	message("Adding non-numeric");
+	output("Adding non-numeric");
 	$set->append('hello');
 } catch (Exception $e) {
 	dump( $e );

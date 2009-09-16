@@ -8,7 +8,7 @@
 
 function testRoute(/*Nette\Application\*/Route $route, $uri)
 {
-	section($uri);
+	output("==> $uri");
 
 	$uri = new /*Nette\Web\*/UriScript("http://admin.texy.info$uri");
 	$uri->scriptPath = '/';
@@ -36,7 +36,7 @@ function testRoute(/*Nette\Application\*/Route $route, $uri)
 		dump( $result );
 
 	} else { // not matched
-		message('not matched');
+		output('not matched');
 	}
 }
 

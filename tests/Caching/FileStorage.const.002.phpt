@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage constant dependency test (continue...).
+ * Test: Nette\Caching\FileStorage constant dependency test (continue...).
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,13 +21,13 @@ $key = 'nette';
 $value = 'rulez';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
 
 
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 
-message('Deleting dependent const');
+output('Deleting dependent const');
 
 dump( isset($cache[$key]), 'Is cached?' );
 

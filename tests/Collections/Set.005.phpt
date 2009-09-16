@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set::contains()
+ * Test: Nette\Collections\Set::contains()
  *
  * @author     David Grudl
  * @category   Nette

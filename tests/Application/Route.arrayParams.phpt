@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with ArrayParams
+ * Test: Nette\Application\Route with ArrayParams
  *
  * @author     David Grudl
  * @category   Nette

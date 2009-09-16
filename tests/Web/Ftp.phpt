@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Ftp basic usage.
+ * Test: Nette\Web\Ftp basic usage.
  *
  * @author     David Grudl
  * @category   Nette

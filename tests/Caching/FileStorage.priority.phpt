@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage priority test.
+ * Test: Nette\Caching\FileStorage priority test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,16 +18,15 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
-NetteTestHelpers::purge($tempDir);
 
-
-$storage = new /*Nette\Caching\*/FileStorage($tempDir);
+$storage = new /*Nette\Caching\*/FileStorage(TEMP_DIR);
 $cache = new Cache($storage);
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save('key1', 'value1', array(
 	Cache::PRIORITY => 100,
 ));
@@ -43,7 +42,7 @@ $cache->save('key3', 'value3', array(
 $cache['key4'] = 'value4';
 
 
-message('Cleaning by priority...');
+output('Cleaning by priority...');
 $cache->clean(array(
 	Cache::PRIORITY => '200',
 ));

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Session::regenerateId()
+ * Test: Nette\Web\Session::regenerateId()
  *
  * @author     David Grudl
  * @category   Nette

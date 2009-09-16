@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with ExtraDefaultParam
+ * Test: Nette\Application\Route with ExtraDefaultParam
  *
  * @author     David Grudl
  * @category   Nette

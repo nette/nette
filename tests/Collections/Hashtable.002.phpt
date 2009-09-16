@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable readonly collection.
+ * Test: Nette\Collections\Hashtable readonly collection.
  *
  * @author     David Grudl
  * @category   Nette
@@ -28,28 +28,28 @@ $hashtable->freeze();
 dump( $hashtable->isFrozen() );
 
 try {
-	message("Adding Jack using []");
+	output("Adding Jack using []");
 	$hashtable['new'] = $jack;
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Jack using add");
+	output("Adding Jack using add");
 	$hashtable->add('new', $jack);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Removing using unset");
+	output("Removing using unset");
 	unset($hashtable['jack']);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Changing using []");
+	output("Changing using []");
 	$hashtable['jack'] = $jack;
 } catch (Exception $e) {
 	dump( $e );

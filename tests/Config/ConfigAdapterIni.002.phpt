@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ConfigAdapterIni section.
+ * Test: Nette\Config\ConfigAdapterIni section.
  *
  * @author     David Grudl
  * @category   Nette

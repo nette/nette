@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable::__construct()
+ * Test: Nette\Collections\Hashtable::__construct()
  *
  * @author     David Grudl
  * @category   Nette
@@ -26,13 +26,13 @@ $arr = array(
 );
 
 try {
-	message("Construct from array");
+	output("Construct from array");
 	$hashtable = new Hashtable($arr, 'Person');
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Construct from array II.");
+output("Construct from array II.");
 $hashtable = new Hashtable($arr);
 dump( $hashtable );
 

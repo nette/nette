@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage tags dependency test.
+ * Test: Nette\Caching\FileStorage tags dependency test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,17 +18,16 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-
-NetteTestHelpers::purge($tempDir);
-
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
-$storage = new /*Nette\Caching\*/FileStorage($tempDir);
+
+$storage = new /*Nette\Caching\*/FileStorage(TEMP_DIR);
 $cache = new Cache($storage);
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save('key1', 'value1', array(
 	Cache::TAGS => array('one', 'two'),
 ));
@@ -44,7 +43,7 @@ $cache->save('key3', 'value3', array(
 $cache['key4'] = 'value4';
 
 
-message('Cleaning by tags...');
+output('Cleaning by tags...');
 $cache->clean(array(
 	Cache::TAGS => 'one',
 ));

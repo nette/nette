@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with CombinedUrlParam
+ * Test: Nette\Application\Route with CombinedUrlParam
  *
  * @author     David Grudl
  * @category   Nette

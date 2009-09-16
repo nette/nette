@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList readonly collection.
+ * Test: Nette\Collections\ArrayList readonly collection.
  *
  * @author     David Grudl
  * @category   Nette
@@ -29,28 +29,28 @@ $list->freeze();
 dump( $list->isFrozen() );
 
 try {
-	message("Adding Jack using []");
+	output("Adding Jack using []");
 	$list[] = $jack;
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Jack using insertAt");
+	output("Adding Jack using insertAt");
 	$list->insertAt(0, $jack);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Removing using unset");
+	output("Removing using unset");
 	unset($list[1]);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Changing using []");
+	output("Changing using []");
 	$list[1] = $jack;
 } catch (Exception $e) {
 	dump( $e );

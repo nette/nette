@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Presenter::link()
+ * Test: Nette\Application\Presenter::link()
  *
  * @author     David Grudl
  * @category   Nette
@@ -98,7 +98,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 
 
-		section("Presenter & action link");
+		output("==> Presenter & action link");
 
 		$uri = $this->link('product', array('var1' => $this->var1));
 		dump( "1.1 $uri" );
@@ -139,7 +139,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 
 
-		section("Presenter & signal link");
+		output("==> Presenter & signal link");
 
 		$uri = $this->link('buy!', array('var1' => $this->var1));
 		dump( "2.1 $uri" );
@@ -180,7 +180,7 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 
 
-		section("Component link");
+		output("==> Component link");
 
 		$uri = $this->mycontrol->link('', 0, 1);
 		dump( "3.1 $uri" );

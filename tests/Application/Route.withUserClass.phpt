@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithUserClass
+ * Test: Nette\Application\Route with WithUserClass
  *
  * @author     David Grudl
  * @category   Nette

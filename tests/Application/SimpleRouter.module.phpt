@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SimpleRouter and modules.
+ * Test: Nette\Application\SimpleRouter and modules.
  *
  * @author     David Grudl
  * @category   Nette

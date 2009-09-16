@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable and removing items.
+ * Test: Nette\Collections\Hashtable and removing items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -29,7 +29,7 @@ dump( $hashtable->remove($jack), "Removing Jack second time" );
 
 
 try {
-	message("Removing using unset(['unknown'])");
+	output("Removing using unset(['unknown'])");
 	unset($hashtable['unknown']);
 } catch (Exception $e) {
 	dump( $e );
@@ -37,7 +37,7 @@ try {
 
 
 try {
-	message("Removing using unset(->unknown)");
+	output("Removing using unset(->unknown)");
 	unset($hashtable->unknown);
 } catch (Exception $e) {
 	dump( $e );

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList adding items.
+ * Test: Nette\Collections\ArrayList adding items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -27,25 +27,25 @@ $foo = new ArrayObject();
 
 
 
-message("Adding Jack");
+output("Adding Jack");
 $list->append($jack);
 
-message("Adding Mary");
+output("Adding Mary");
 $list->append($mary);
 
 try {
-	message("Adding invalid item");
+	output("Adding invalid item");
 	$list->append($foo);
 
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Adding Jack using []");
+output("Adding Jack using []");
 $list[] = $jack;
 
 try {
-	message("Adding invalid item using []");
+	output("Adding invalid item using []");
 	$list[] = $foo;
 
 } catch (Exception $e) {
@@ -64,14 +64,14 @@ dump( (array) $list );
 
 
 
-message("Get Interator:");
+output("Get Interator:");
 foreach ($list as $key => $person) {
 	echo $key, ' => ', $person->sayHi();
 }
 
 
 
-message("Clearing");
+output("Clearing");
 $list->clear();
 
 dump( $list );

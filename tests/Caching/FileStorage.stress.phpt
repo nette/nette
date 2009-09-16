@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage sliding expiration test.
+ * Test: Nette\Caching\FileStorage sliding expiration test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -81,8 +81,8 @@ dump( $hits );
 //    [cantwrite] => ?,  // means "somebody else is writing this file"
 //    [cantdelete] => 0  // means "delete() has timeout",  should be 0
 
-message($hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!');
-message("takes $time ms");
+output($hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!');
+output("takes $time ms");
 
 
 

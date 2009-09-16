@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: CliRouter invald input.
+ * Test: Nette\Application\CliRouter invalid argument
  *
  * @author     David Grudl
  * @category   Nette
@@ -22,8 +22,7 @@ $_SERVER['argv'] = 1;
 $httpRequest = new HttpRequest;
 
 $router = new CliRouter;
-$req = $router->match($httpRequest);
-dump( $req );
+dump( $router->match($httpRequest) ); // NULL
 
 
 

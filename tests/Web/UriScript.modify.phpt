@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: UriScript modify
+ * Test: Nette\Web\UriScript modify.
  *
  * @author     David Grudl
  * @category   Nette

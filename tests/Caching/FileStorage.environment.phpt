@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage and Environment.
+ * Test: Nette\Caching\FileStorage and Environment.
  *
  * @author     David Grudl
  * @category   Nette
@@ -23,11 +23,10 @@ $key = '../' . implode('', range("\x00", "\x1F"));
 $value = range("\x00", "\xFF");
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
-NetteTestHelpers::purge($tempDir);
-
-Environment::setVariable('tempDir', $tempDir);
+Environment::setVariable('tempDir', TEMP_DIR);
 
 $cache = Environment::getCache();
 
@@ -35,20 +34,20 @@ $cache = Environment::getCache();
 dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key], 'Cache content' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache[$key] = $value;
 $cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key] === $value, 'Is cache ok?' );
 
-message('Removing from cache using unset()...');
+output('Removing from cache using unset()...');
 unset($cache[$key]);
 $cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Removing from cache using set NULL...');
+output('Removing from cache using set NULL...');
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();

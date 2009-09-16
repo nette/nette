@@ -39,23 +39,11 @@ function dump($var, $message = NULL)
 
 
 /**
- * Writes new section.
- * @param  string
- * @return void
- */
-function section($heading = NULL)
-{
-	echo $heading ? "==> $heading\n\n" : "===\n\n";
-}
-
-
-
-/**
  * Writes new message.
  * @param  string
  * @return void
  */
-function message($message)
+function output($message = NULL)
 {
-	echo "$message\n\n";
+	echo $message ? "$message\n\n" : "===\n\n";
 }

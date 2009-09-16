@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Memcached expiration test.
+ * Test: Nette\Caching\Memcached expiration test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -30,14 +30,14 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 ));
 
 
 for($i = 0; $i < 4; $i++) {
-	message('Sleeping 1.2 second');
+	output('Sleeping 1.2 second');
 	usleep(1100000);
 	dump( isset($cache[$key]), 'Is cached?' );
 }

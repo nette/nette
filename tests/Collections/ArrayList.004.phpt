@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList and getting items & contains(), indexOf()
+ * Test: Nette\Collections\ArrayList and getting items & contains(), indexOf()
  *
  * @author     David Grudl
  * @category   Nette

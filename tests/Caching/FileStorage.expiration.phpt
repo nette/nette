@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage expiration test.
+ * Test: Nette\Caching\FileStorage expiration test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,35 +21,34 @@ $key = 'nette';
 $value = 'rulez';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
-NetteTestHelpers::purge($tempDir);
-
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 ));
 
 
 for($i = 0; $i < 4; $i++) {
-	message('Sleeping 1.2 second');
+	output('Sleeping 1.2 second');
 	usleep(1100000);
 	clearstatcache();
 	dump( isset($cache[$key]), 'Is cached?' );
 }
 
 
-message('Writing cache with relative expiration...');
+output('Writing cache with relative expiration...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => 2,
 ));
 
 
 for($i = 0; $i < 4; $i++) {
-	message('Sleeping 1.2 second');
+	output('Sleeping 1.2 second');
 	usleep(1100000);
 	clearstatcache();
 	dump( isset($cache[$key]), 'Is cached?' );

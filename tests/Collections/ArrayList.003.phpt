@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList::insertAt()
+ * Test: Nette\Collections\ArrayList::insertAt()
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: HttpRequest invalid encoding.
+ * Test: Nette\Web\HttpRequest invalid encoding.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,6 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
+// Setup environment
 define('INVALID', "\x76\xC4\xC5\xBE");
 define('CONTROL_CHARACTERS', "A\x00B\x80C");
 
@@ -69,23 +70,23 @@ $_FILES = array(
 	),
 );
 
-section('unfiltered data');
+output('==> unfiltered data');
 $request = new HttpRequest;
 
-dump( $request->getQuery('invalid') ); // INVALID
-dump( $request->getQuery('control') ); // CONTROL_CHARACTERS
+dump( $request->getQuery('invalid') === INVALID ); // TRUE
+dump( $request->getQuery('control') === CONTROL_CHARACTERS ); // TRUE
 dump( $request->getQuery(INVALID) ); // '1'
 dump( $request->getQuery(CONTROL_CHARACTERS) ); // '1'
 dump( $request->query['array'][INVALID] ); // '1'
 
-dump( $request->getPost('invalid') ); // INVALID
-dump( $request->getPost('control') ); // CONTROL_CHARACTERS
+dump( $request->getPost('invalid') === INVALID ); // TRUE
+dump( $request->getPost('control') === CONTROL_CHARACTERS ); // TRUE
 dump( $request->getPost(INVALID) ); // '1'
 dump( $request->getPost(CONTROL_CHARACTERS) ); // '1'
 dump( $request->post['array'][INVALID] ); // '1'
 
-dump( $request->getCookie('invalid') ); // INVALID
-dump( $request->getCookie('control') ); // CONTROL_CHARACTERS
+dump( $request->getCookie('invalid') === INVALID ); // TRUE
+dump( $request->getCookie('control') === CONTROL_CHARACTERS ); // TRUE
 dump( $request->getCookie(INVALID) ); // '1'
 dump( $request->getCookie(CONTROL_CHARACTERS) ); // '1'
 dump( $request->cookies['array'][INVALID] ); // '1'
@@ -95,7 +96,7 @@ dump( $request->getFile(CONTROL_CHARACTERS) instanceof HttpUploadedFile ); // TR
 dump( $request->files['file1'] instanceof HttpUploadedFile ); // TRUE
 
 
-section('filtered data');
+output('==> filtered data');
 $request->setEncoding('UTF-8');
 
 dump( $request->getQuery('invalid') ); // "v\xc5\xbe"
@@ -128,19 +129,9 @@ __halt_compiler();
 ------EXPECT------
 ==> unfiltered data
 
-string(4) "v\xc4\xc5\xbe"
+bool(TRUE)
 
-string(5) "A\x00B\x80C"
-
-int(1)
-
-int(1)
-
-int(1)
-
-string(4) "v\xc4\xc5\xbe"
-
-string(5) "A\x00B\x80C"
+bool(TRUE)
 
 int(1)
 
@@ -148,9 +139,19 @@ int(1)
 
 int(1)
 
-string(4) "v\xc4\xc5\xbe"
+bool(TRUE)
 
-string(5) "A\x00B\x80C"
+bool(TRUE)
+
+int(1)
+
+int(1)
+
+int(1)
+
+bool(TRUE)
+
+bool(TRUE)
 
 int(1)
 

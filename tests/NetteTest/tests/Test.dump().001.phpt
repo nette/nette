@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestHelpers::dump() basic types & section()
+ * Test: NetteTestHelpers::dump() basic types & output()
  *
  * @author     David Grudl
  * @category   Nette
@@ -45,11 +45,9 @@ class TestClass
 
 dump( new TestClass );
 
-section('Section');
+output('message');
 
-section();
-
-message('message');
+output();
 
 echo 'EOF';
 
@@ -97,10 +95,8 @@ object(TestClass) (3) {
 	"z" protected => int(30)
 }
 
-==> Section
+message
 
 ===
-
-message
 
 EOF

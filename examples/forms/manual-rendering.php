@@ -202,7 +202,7 @@ if ($form->isSubmitted()) {
 	<fieldset>
 		<legend>Shipping address</legend>
 
-		<p><?php echo $form['send']->control?><?=$form['send']->label ?></p>
+		<p><?php echo $form['send']->control?><?php echo $form['send']->label ?></p>
 
 		<table id="sendBox">
 		<tr>

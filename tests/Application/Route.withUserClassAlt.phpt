@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithUserClassAlt
+ * Test: Nette\Application\Route with WithUserClassAlt
  *
  * @author     David Grudl
  * @category   Nette

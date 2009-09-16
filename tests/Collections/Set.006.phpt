@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set and removing items.
+ * Test: Nette\Collections\Set and removing items.
  *
  * @author     David Grudl
  * @category   Nette

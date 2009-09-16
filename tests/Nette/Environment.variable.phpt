@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Environment configuration.
+ * Test: Nette\Environment variables.
  *
  * @author     David Grudl
  * @category   Nette
@@ -27,7 +27,7 @@ try {
 }
 
 
-section("Defining constant 'APP_DIR':");
+output("Defining constant 'APP_DIR':");
 define('APP_DIR', '/myApp');
 
 dump( Environment::getVariable('appDir'), "Getting variable 'appDir':" );
@@ -35,7 +35,7 @@ dump( Environment::getVariable('appDir'), "Getting variable 'appDir':" );
 dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir' #2:" );
 
 
-section("Setting variable 'test'...");
+output("Setting variable 'test'...");
 Environment::setVariable('test', '%appDir%/test');
 
 dump( Environment::getVariable('test'), "Getting variable 'test':" );
@@ -44,7 +44,7 @@ dump( Environment::getVariables(), "Getting variables:" );
 
 
 try {
-	section("Setting circular variables...");
+	output("Setting circular variables...");
 	Environment::setVariable('bar', '%foo%');
 	Environment::setVariable('foo', '%foobar%');
 	Environment::setVariable('foobar', '%bar%');
@@ -64,13 +64,13 @@ Getting variable 'foo': NULL
 
 Exception InvalidStateException: Unknown environment variable 'appDir'.
 
-==> Defining constant 'APP_DIR':
+Defining constant 'APP_DIR':
 
 Getting variable 'appDir': string(6) "/myApp"
 
 Getting variable 'tempDir' #2: string(11) "/myApp/temp"
 
-==> Setting variable 'test'...
+Setting variable 'test'...
 
 Getting variable 'test': string(11) "/myApp/test"
 
@@ -88,6 +88,6 @@ Getting variables: array(11) {
 	"test" => string(11) "/myApp/test"
 }
 
-==> Setting circular variables...
+Setting circular variables...
 
 Exception InvalidStateException: Circular reference detected for variables: foo, foobar, bar.

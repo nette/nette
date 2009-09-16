@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri::isEqual()
+ * Test: Nette\Web\Uri::isEqual()
  *
  * @author     David Grudl
  * @category   Nette

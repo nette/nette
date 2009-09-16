@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Environment configuration.
+ * Test: Nette\Environment modes.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,7 +21,7 @@ dump( Environment::isConsole(), "Is console?" );
 
 dump( Environment::isProduction(), "Is production mode?" );
 
-message("Setting my mode...");
+output("Setting my mode...");
 Environment::setMode('myMode', 123);
 
 dump( Environment::getMode('myMode'), "Is enabled?" );

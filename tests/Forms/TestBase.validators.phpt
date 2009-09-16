@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: TextBase validators.
+ * Test: Nette\Forms\TextBase validators.
  *
  * @author     David Grudl
  * @category   Nette

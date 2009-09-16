@@ -1,0 +1,13 @@
+<pre>&lt;i&gt;hello&lt;/i&gt;
+---------
+- escaped: &lt;i&gt;hello&lt;/i&gt;
+- non-escaped: <i>hello</i>
+
+- escaped expression: &lt;b&gt;hello&lt;/b&gt;
+
+- non-escaped expression: <b>hello</b>
+
+- array access: mary
+
+[* image.jpg *]
+</pre>

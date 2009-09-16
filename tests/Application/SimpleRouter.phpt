@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SimpleRouter basic functions.
+ * Test: Nette\Application\SimpleRouter basic functions.
  *
  * @author     David Grudl
  * @category   Nette

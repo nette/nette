@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SessionNamespace undefined property.
+ * Test: Nette\Web\SessionNamespace undefined property.
  *
  * @author     David Grudl
  * @category   Nette

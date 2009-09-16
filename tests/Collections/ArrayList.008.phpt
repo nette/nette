@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList and extension method.
+ * Test: Nette\Collections\ArrayList and extension method.
  *
  * @author     David Grudl
  * @category   Nette

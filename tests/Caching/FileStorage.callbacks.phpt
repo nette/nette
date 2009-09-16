@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage callbacks dependency.
+ * Test: Nette\Caching\FileStorage callbacks dependency.
  *
  * @author     David Grudl
  * @category   Nette
@@ -19,15 +19,14 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 $key = 'nette';
 $value = 'rulez';
-$tempDir = dirname(__FILE__) . '/tmp';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-NetteTestHelpers::purge($tempDir);
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
 
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 
 function dependency($val)
@@ -36,7 +35,7 @@ function dependency($val)
 }
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 1)),
 ));
@@ -44,7 +43,7 @@ $cache->save($key, $value, array(
 dump( isset($cache[$key]), 'Is cached?' );
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 0)),
 ));

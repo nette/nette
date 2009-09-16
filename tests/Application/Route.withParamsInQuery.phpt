@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithParamsInQuery
+ * Test: Nette\Application\Route with WithParamsInQuery
  *
  * @author     David Grudl
  * @category   Nette

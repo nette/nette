@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithDefaultPresenterAndAction
+ * Test: Nette\Application\Route with WithDefaultPresenterAndAction
  *
  * @author     David Grudl
  * @category   Nette

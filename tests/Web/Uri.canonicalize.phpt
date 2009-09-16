@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri canonicalize.
+ * Test: Nette\Web\Uri canonicalize.
  *
  * @author     David Grudl
  * @category   Nette

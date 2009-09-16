@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithHost
+ * Test: Nette\Application\Route with WithHost
  *
  * @author     David Grudl
  * @category   Nette

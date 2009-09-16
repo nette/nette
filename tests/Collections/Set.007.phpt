@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set::__construct()
+ * Test: Nette\Collections\Set::__construct()
  *
  * @author     David Grudl
  * @category   Nette
@@ -26,26 +26,26 @@ $arr = array(
 );
 
 try {
-	message("Construct from array");
+	output("Construct from array");
 	$set = new Set($arr, 'Person');
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Construct from array II.");
+output("Construct from array II.");
 $set = new Set($arr);
 dump( $set );
 
 
 try {
-	message("Construct from collection");
+	output("Construct from collection");
 	$set2 = new Set($set, 'Person');
 
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Construct from collection II.");
+output("Construct from collection II.");
 $set2 = new Set($set);
 dump( $set2 );
 

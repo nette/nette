@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ComponentContainer cloning.
+ * Test: Nette\ComponentContainer cloning.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,12 +21,12 @@ class TestClass extends ComponentContainer implements ArrayAccess
 {
 	protected function attached($obj)
 	{
-		message(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		output(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	protected function detached($obj)
 	{
-		message(get_class($this) . '::detached(' . get_class($obj) . ')');
+		output(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	final public function offsetSet($name, $component)
@@ -82,17 +82,17 @@ $a['b']['c']->monitor('a');
 
 dump( $a['b']['c']['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
 
-section("clone 'c'");
+output("==> clone 'c'");
 $dolly = clone $a['b']['c'];
 
 dump( $dolly['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
 
 dump( $dolly['d']['e']->lookupPath('C', FALSE), "'e' looking 'c'" );
 
-section("clone 'b'");
+output("==> clone 'b'");
 $dolly = clone $a['b'];
 
-section("a['dolly'] = 'b'");
+output("==> a['dolly'] = 'b'");
 $a['dolly'] = $dolly;
 
 dump( $a->export(), "export 'a'" );

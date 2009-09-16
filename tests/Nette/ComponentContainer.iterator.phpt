@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ComponentContainer cloning.
+ * Test: Nette\ComponentContainer iterator.
  *
  * @author     David Grudl
  * @category   Nette
@@ -35,60 +35,60 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'
 
 
 
-section("Normal:");
+output("==> Normal:");
 foreach ($c->getComponents() as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
 
-section("Filter:");
+output("==> Filter:");
 foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
 
-section("RecursiveIteratorIterator:");
+output("==> RecursiveIteratorIterator:");
 foreach (new RecursiveIteratorIterator($c->getComponents(), 1) as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
 
-section("Recursive:");
+output("==> Recursive:");
 foreach ($c->getComponents(TRUE) as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
-section("Recursive CHILD_FIRST:");
+output("==> Recursive CHILD_FIRST:");
 foreach ($c->getComponents(-1) as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
-section("Recursive & filter I:");
+output("==> Recursive & filter I:");
 foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 
 
 
-section("Recursive & filter II:");
+output("==> Recursive & filter II:");
 foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $component) {
-	message("$name [$component->class]");
+	output("$name [$component->class]");
 }
 
 

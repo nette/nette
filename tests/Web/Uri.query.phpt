@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri query manipulation.
+ * Test: Nette\Web\Uri query manipulation.
  *
  * @author     David Grudl
  * @category   Nette

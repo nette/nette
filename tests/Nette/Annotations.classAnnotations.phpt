@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Annotations with ClassAnnotations
+ * Test: Nette\Annotations with class annotations.
  *
  * @author     David Grudl
  * @category   Nette
@@ -40,7 +40,7 @@ class TestClass {
 
 
 
-section('Class annotations');
+output('==> Class annotations');
 
 $rc = new ReflectionClass('TestClass');
 $tmp = Annotations::getAll($rc);
@@ -86,7 +86,7 @@ dump( Annotations::has($rc, 'xxx'), "has('xxx')" ); // False
 dump( Annotations::get($rc, 'xxx'), "get('xxx')" ); // Null
 
 
-section('Method annotations');
+output('==> Method annotations');
 
 $rm = new ReflectionMethod('TestClass', 'foo');
 $tmp = Annotations::getAll($rm);
@@ -95,7 +95,7 @@ dump( $tmp["RolesAllowed"][0][0] ); // 'admin'
 dump( $tmp["RolesAllowed"][0][1] ); // 'web editor'
 
 
-section('Property annotations');
+output('==> Property annotations');
 
 $rp = new ReflectionProperty('TestClass', 'foo');
 $tmp = Annotations::getAll($rp);

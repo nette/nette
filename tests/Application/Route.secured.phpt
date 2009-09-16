@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with Secured
+ * Test: Nette\Application\Route with Secured
  *
  * @author     David Grudl
  * @category   Nette

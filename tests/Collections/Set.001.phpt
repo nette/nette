@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set adding items.
+ * Test: Nette\Collections\Set adding items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -53,14 +53,14 @@ dump( (array) $set );
 
 
 
-message("Get Interator:");
+output("Get Interator:");
 foreach ($set as $person) {
 	echo $person->sayHi();
 }
 
 
 
-message("Clearing");
+output("Clearing");
 $set->clear();
 
 dump( $set );

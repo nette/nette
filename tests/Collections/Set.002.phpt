@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set readonly collection.
+ * Test: Nette\Collections\Set readonly collection.
  *
  * @author     David Grudl
  * @category   Nette
@@ -35,14 +35,14 @@ try {
 }
 
 try {
-	message("Removing Jack");
+	output("Removing Jack");
 	$set->remove($jack);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Clearing");
+	output("Clearing");
 	$set->clear();
 } catch (Exception $e) {
 	dump( $e );

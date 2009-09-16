@@ -1,0 +1,97 @@
+MockControl::getWidgetarray(1) {
+	0 => string(4) "name"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(6) "render"
+	1 => array(0) 
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(6) "render"
+	1 => array(0) 
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(10) "renderTest"
+	1 => array(0) 
+}
+
+
+MockWidget::__callarray(2) {
+	0 => string(10) "renderTest"
+	1 => array(0) 
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(10) "renderTest"
+	1 => array(0) 
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(10) "renderform"
+	1 => array(0) 
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(6) "render"
+	1 => array(1) {
+		0 => string(4) "var1"
+	}
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(6) "render"
+	1 => array(3) {
+		0 => string(4) "var1"
+		1 => int(1)
+		2 => int(2)
+	}
+}
+
+
+MockControl::getWidgetarray(1) {
+	0 => string(4) "form"
+}
+
+MockWidget::__callarray(2) {
+	0 => string(6) "render"
+	1 => array(1) {
+		0 => array(3) {
+			"var1" => int(5)
+			0 => int(1)
+			1 => int(2)
+		}
+	}
+}
+

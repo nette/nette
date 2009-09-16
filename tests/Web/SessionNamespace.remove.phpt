@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SessionNamespace remove
+ * Test: Nette\Web\SessionNamespace remove.
  *
  * @author     David Grudl
  * @category   Nette
@@ -26,7 +26,7 @@ $namespace['c'] = 'cherry';
 $namespace = $session->getNamespace('three');
 dump( http_build_query($namespace->getIterator()) );
 
-section('removing');
+output('removing');
 $namespace->remove();
 dump( http_build_query($namespace->getIterator()) );
 
@@ -37,6 +37,6 @@ __halt_compiler();
 ------EXPECT------
 string(25) "a=apple&p=papaya&c=cherry"
 
-==> removing
+removing
 
 string(0) ""

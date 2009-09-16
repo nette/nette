@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri malformed URI.
+ * Test: Nette\Web\Uri malformed URI.
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with Modules
+ * Test: Nette\Application\Route with Modules
  *
  * @author     David Grudl
  * @category   Nette

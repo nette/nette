@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SessionNamespace basic usage.
+ * Test: Nette\Web\SessionNamespace basic usage.
  *
  * @author     David Grudl
  * @category   Nette

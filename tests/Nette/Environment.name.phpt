@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Environment configuration.
+ * Test: Nette\Environment name.
  *
  * @author     David Grudl
  * @category   Nette
@@ -23,7 +23,7 @@ dump( Environment::getName(), "Name:" );
 
 
 try {
-	message("Setting name:");
+	output("Setting name:");
 	Environment::setName('lab2');
 	dump( Environment::getName() );
 

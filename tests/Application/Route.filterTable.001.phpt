@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with FilterTable
+ * Test: Nette\Application\Route with FilterTable
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SessionNamespace separated space.
+ * Test: Nette\Web\SessionNamespace separated space.
  *
  * @author     David Grudl
  * @category   Nette

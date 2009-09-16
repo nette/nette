@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: CliRouter basic functions.
+ * Test: Nette\Application\CliRouter basic usage
  *
  * @author     David Grudl
  * @category   Nette
@@ -39,15 +39,10 @@ $router = new CliRouter(array(
 $req = $router->match($httpRequest);
 
 dump( $req->getPresenterName() ); // "homepage"
-dump( $req->params["action"] ); // "default"
-dump( $req->params["id"] ); // "12"
-dump( $req->params["user"] ); // "john doe"
-dump( $req->params["pass"] ); // "se cret"
-dump( $req->params["wait"] ); // TRUE
+dump( $req->params );
 dump( $req->isMethod('cli') ); // TRUE
 
-$url = $router->constructUrl($req, $httpRequest);
-dump( $url ); // NULL
+dump( $router->constructUrl($req, $httpRequest) ); // NULL
 
 
 
@@ -56,15 +51,15 @@ __halt_compiler();
 ------EXPECT------
 string(8) "homepage"
 
-string(7) "default"
-
-int(12)
-
-string(8) "john doe"
-
-string(7) "se cret"
-
-bool(TRUE)
+array(7) {
+	"id" => int(12)
+	"user" => string(8) "john doe"
+	"action" => string(7) "default"
+	0 => string(4) "name"
+	"verbose" => bool(TRUE)
+	"pass" => string(7) "se cret"
+	"wait" => bool(TRUE)
+}
 
 bool(TRUE)
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable basic usage
+ * Test: SPL ArrayObject basic usage
  *
  * @author     David Grudl
  * @category   Nette
@@ -22,7 +22,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function exchangeArray($array)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::exchangeArray($array);
 	}
 
@@ -32,7 +32,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function getIterator()
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::getIterator();
 	}
 
@@ -42,7 +42,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetExists($index)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::offsetExists($index);
 	}
 
@@ -52,7 +52,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetGet($index)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::offsetGet($index);
 	}
 
@@ -62,7 +62,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetSet($index, $newval)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::offsetSet($index, $newval);
 	}
 
@@ -71,7 +71,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetUnset($index)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::offsetUnset($index);
 	}
 
@@ -82,7 +82,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function append($value)
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::append($value);
 	}
 
@@ -93,7 +93,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function getArrayCopy()
 	{
-		message('> ' . __METHOD__);
+		output('> ' . __METHOD__);
 		return parent::getArrayCopy();
 	}
 
@@ -104,103 +104,103 @@ class TestArrayObject extends ArrayObject
 $arr = array(1, 2, 'test', 'null' => NULL);
 
 
-message('$obj = new TestArrayObject($arr):');
+output('$obj = new TestArrayObject($arr):');
 $obj = new TestArrayObject($arr);
 
 
-message('$obj->append("Mary"):');
+output('$obj->append("Mary"):');
 $obj->append('Mary');
 
 
-message('$obj[] = "Jack":');
+output('$obj[] = "Jack":');
 $obj[] = 'Jack';
 
 
-message('$obj[array(3)] = "Jack":');
+output('$obj[array(3)] = "Jack":');
 $obj[array(3)] = 'Jack';
 
 
-message('$obj->offsetSet(array(3), "Jack"):');
+output('$obj->offsetSet(array(3), "Jack"):');
 $obj->offsetSet(array(3), 'Jack');
 
 
-message('$obj["a"] = "Jim":');
+output('$obj["a"] = "Jim":');
 $obj['a'] = 'Jim';
 
 
-message('echo $obj["a"]:');
+output('echo $obj["a"]:');
 echo $obj['a'];
 
 
-message('echo $obj["unknown"]:');
+output('echo $obj["unknown"]:');
 echo $obj['unknown'];
 
 
-message('isset($obj["a"]):');
+output('isset($obj["a"]):');
 isset($obj['a']);
 
 
-message('isset($obj["null"]):');
-var_dump(isset($obj['null']));
+output('isset($obj["null"]):');
+dump( isset($obj['null']) );
 
 
-message('unset($obj["a"]):');
+output('unset($obj["a"]):');
 unset($obj['a']);
 
 
 
 
-message('count($obj):');
+output('count($obj):');
 count($obj);
 
 
 
 
-message('var_dump($obj):');
-var_dump($obj);
+output('dump($obj):');
+dump( $obj );
 
 
-message('$tmp = (array) $obj:');
+output('$tmp = (array) $obj:');
 $tmp = (array) $obj;
 
 
-message('$tmp = $obj->getArrayCopy():');
+output('$tmp = $obj->getArrayCopy():');
 $tmp = $obj->getArrayCopy();
 
 
-message('foreach ($obj as $key => $value):');
+output('foreach ($obj as $key => $value):');
 foreach ($obj as $key => $value);
 
 
 
 
-message('$obj->exchangeArray($arr):');
+output('$obj->exchangeArray($arr):');
 $obj->exchangeArray($arr);
 
 
-message('$obj->ksort():');
+output('$obj->ksort():');
 $obj->ksort();
 
 
 
 
-message('$obj->setFlags(TestArrayObject::ARRAY_AS_PROPS):');
+output('$obj->setFlags(TestArrayObject::ARRAY_AS_PROPS):');
 $obj->setFlags(TestArrayObject::ARRAY_AS_PROPS);
 
 
-message('$obj->a = "Jack":');
+output('$obj->a = "Jack":');
 $obj->a = 'Jack';
 
 
-message('echo $obj->a:');
+output('echo $obj->a:');
 echo $obj->a;
 
 
-message('isset($obj->a):');
+output('isset($obj->a):');
 isset($obj->a);
 
 
-message('unset($obj->a):');
+output('unset($obj->a):');
 unset($obj->a);
 
 
@@ -225,13 +225,13 @@ $obj[array(3)] = "Jack":
 > TestArrayObject::offsetSet
 
 
-Warning: Illegal offset type in %a%
+Warning: Illegal offset type %a%
 $obj->offsetSet(array(3), "Jack"):
 
 > TestArrayObject::offsetSet
 
 
-Warning: Illegal offset type in %a%
+Warning: Illegal offset type %a%
 $obj["a"] = "Jim":
 
 > TestArrayObject::offsetSet
@@ -254,32 +254,25 @@ isset($obj["null"]):
 
 > TestArrayObject::offsetExists
 
-bool(true)
+bool(TRUE)
+
 unset($obj["a"]):
 
 > TestArrayObject::offsetUnset
 
 count($obj):
 
-var_dump($obj):
+dump($obj):
 
-object(TestArrayObject)#2 (1) {
-  ["storage":"ArrayObject":private]=>
-  array(6) {
-    [0]=>
-    int(1)
-    [1]=>
-    int(2)
-    [2]=>
-    string(4) "test"
-    ["null"]=>
-    NULL
-    [3]=>
-    string(4) "Mary"
-    [4]=>
-    string(4) "Jack"
-  }
+object(TestArrayObject) (6) {
+	"0" => int(1)
+	"1" => int(2)
+	"2" => string(4) "test"
+	"null" => NULL
+	"3" => string(4) "Mary"
+	"4" => string(4) "Jack"
 }
+
 $tmp = (array) $obj:
 
 $tmp = $obj->getArrayCopy():

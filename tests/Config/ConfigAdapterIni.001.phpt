@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ConfigAdapterIni
+ * Test: Nette\Config\ConfigAdapterIni
  *
  * @author     David Grudl
  * @category   Nette
@@ -17,16 +17,16 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-section("Load INI");
+output("Load INI");
 $config = Config::fromFile('config1.ini');
 dump( $config );
 dump( $config->toArray(), "toArray()" );
 
-section("Save INI");
+output("Save INI");
 $config->save('tmp/cfg.ini');
 readfile('tmp/cfg.ini');
 
-section("Save section to INI");
+output("Save section to INI");
 $config->save('tmp/cfg.ini', 'mysection');
 readfile('tmp/cfg.ini');
 

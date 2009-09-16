@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage & namespace test.
+ * Test: Nette\Caching\FileStorage & namespace test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,17 +18,16 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
-NetteTestHelpers::purge($tempDir);
 
-
-$storage = new /*Nette\Caching\*/FileStorage($tempDir);
+$storage = new /*Nette\Caching\*/FileStorage(TEMP_DIR);
 $cacheA = new Cache($storage, 'a');
 $cacheB = new Cache($storage, 'b');
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cacheA['key'] = 'hello';
 $cacheB['key'] = 'world';
 
@@ -37,7 +36,7 @@ dump( isset($cacheB['key']), 'Is cached #2?' );
 dump( $cacheA['key'] === 'hello', 'Is cache ok #1?' );
 dump( $cacheB['key'] === 'world', 'Is cache ok #2?' );
 
-message('Removing from cache #2 using unset()...');
+output('Removing from cache #2 using unset()...');
 unset($cacheB['key']);
 $cacheA->release();
 $cacheB->release();

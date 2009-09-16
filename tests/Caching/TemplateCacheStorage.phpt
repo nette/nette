@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: TemplateCacheStorage test.
+ * Test: Nette\Caching\TemplateCacheStorage test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,18 +21,17 @@ $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-
-NetteTestHelpers::purge($tempDir);
-
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
-$cache = new Cache(new /*Nette\Templates\*/TemplateCacheStorage($tempDir));
+
+$cache = new Cache(new /*Nette\Templates\*/TemplateCacheStorage(TEMP_DIR));
 
 
 dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key], 'Cache content' );
-message('Writing cache...');
+output('Writing cache...');
 $cache[$key] = $value;
 
 $cache->release();
@@ -41,7 +40,7 @@ dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key], 'Cache content' );
 $var = $cache[$key];
 
-message('Test include');
+output('Test include');
 
 // this is impossible
 // $cache[$key] = NULL;

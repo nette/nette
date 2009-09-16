@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: LatteFilter::formatModifiers()
+ * Test: Nette\Templates\LatteFilter::formatModifiers()
  *
  * @author     David Grudl
  * @category   Nette
@@ -17,19 +17,19 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-section('special');
+output('special');
 
 dump( LatteFilter::formatModifiers('@', '') ); // '@'
 dump( LatteFilter::formatModifiers('@', ':') ); // '@'
 dump( LatteFilter::formatModifiers('@', '|') ); // '@'
 dump( LatteFilter::formatModifiers('@', 'mod::||:|') ); // '$template->mod(@)'
 
-section('common');
+output('common');
 
 dump( LatteFilter::formatModifiers('@', 'mod') ); // '$template->mod(@)'
 dump( LatteFilter::formatModifiers('@', 'mod1|mod2|mod3') ); // '$template->mod3($template->mod2($template->mod1(@)))'
 
-section('arguments');
+output('arguments');
 
 dump( LatteFilter::formatModifiers('@', 'mod:arg1:2:$var["pocet"]') ); // '$template->mod(@, "arg1", 2, $var["pocet"])'
 dump( LatteFilter::formatModifiers('@', 'mod,arg1,2,$var["pocet"]') ); // '$template->mod(@, "arg1", 2, $var["pocet"])'
@@ -43,7 +43,7 @@ dump( LatteFilter::formatModifiers('@', "mod:'\\\\':a:b:c':arg2") ); // '$templa
 __halt_compiler();
 
 ------EXPECT------
-==> special
+special
 
 string(1) "@"
 
@@ -53,13 +53,13 @@ string(1) "@"
 
 string(17) "$template->mod(@)"
 
-==> common
+common
 
 string(17) "$template->mod(@)"
 
 string(52) "$template->mod3($template->mod2($template->mod1(@)))"
 
-==> arguments
+arguments
 
 string(43) "$template->mod(@, "arg1", 2, $var["pocet"])"
 

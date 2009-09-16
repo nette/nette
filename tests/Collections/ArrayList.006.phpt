@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ArrayList::__construct()
+ * Test: Nette\Collections\ArrayList::__construct()
  *
  * @author     David Grudl
  * @category   Nette
@@ -26,13 +26,13 @@ $arr = array(
 );
 
 try {
-	message("Construct from array");
+	output("Construct from array");
 	$list = new ArrayList($arr, 'Person');
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Construct from array II.");
+output("Construct from array II.");
 $list = new ArrayList($arr);
 dump( $list );
 

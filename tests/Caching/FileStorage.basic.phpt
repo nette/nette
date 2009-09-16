@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage basic usage.
+ * Test: Nette\Caching\FileStorage basic usage.
  *
  * @author     David Grudl
  * @category   Nette
@@ -22,31 +22,30 @@ $key = '../' . implode('', range("\x00", "\x1F"));
 $value = range("\x00", "\xFF");
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-
-NetteTestHelpers::purge($tempDir);
-
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key], 'Cache content' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache[$key] = $value;
 $cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 dump( $cache[$key] === $value, 'Is cache ok?' );
 
-message('Removing from cache using unset()...');
+output('Removing from cache using unset()...');
 unset($cache[$key]);
 $cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Removing from cache using set NULL...');
+output('Removing from cache using set NULL...');
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();

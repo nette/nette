@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ComponentContainer and '0' name
+ * Test: Nette\ComponentContainer and '0' name.
  *
  * @author     David Grudl
  * @category   Nette

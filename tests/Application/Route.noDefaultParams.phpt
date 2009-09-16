@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with NoDefaultParams
+ * Test: Nette\Application\Route with NoDefaultParams
  *
  * @author     David Grudl
  * @category   Nette

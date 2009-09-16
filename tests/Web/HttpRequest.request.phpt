@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: HttpRequest URI.
+ * Test: Nette\Web\HttpRequest URI.
  *
  * @author     David Grudl
  * @category   Nette
@@ -17,6 +17,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
+// Setup environment
 $_SERVER = array(
 	'HTTPS' => 'On',
 	'HTTP_HOST' => 'nettephp.com:8080',
@@ -36,7 +37,7 @@ dump( $request->getMethod() ); // 'GET'
 dump( $request->isSecured() ); // TRUE
 dump( $request->getRemoteAddress() ); // '192.168.188.66'
 
-section('getUri');
+output('==> getUri');
 dump( $request->getUri()->scriptPath ); // '/file.php'
 dump( $request->getUri()->scheme ); // 'https'
 dump( $request->getUri()->user ); // ''
@@ -54,7 +55,7 @@ dump( $request->getUri()->relativeUri ); // 'file.php'
 dump( $request->getUri()->absoluteUri ); // "https://nettephp.com:8080/file.php?pa%\x72am=val2&param3=v a%26l%3Du%2Be&x param=val."
 dump( $request->getUri()->pathInfo ); // ''
 
-section('getOriginalUri');
+output('==> getOriginalUri');
 dump( $request->getOriginalUri()->scheme ); // 'https'
 dump( $request->getOriginalUri()->user ); // ''
 dump( $request->getOriginalUri()->pass ); // ''

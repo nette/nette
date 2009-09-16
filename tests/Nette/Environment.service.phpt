@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Environment configuration.
+ * Test: Nette\Environment services.
  *
  * @author     David Grudl
  * @category   Nette

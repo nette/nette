@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Memcached sliding expiration test.
+ * Test: Nette\Caching\Memcached sliding expiration test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -30,7 +30,7 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 	Cache::SLIDING => TRUE,
@@ -38,12 +38,12 @@ $cache->save($key, $value, array(
 
 
 for($i = 0; $i < 3; $i++) {
-	message('Sleeping 1 second');
+	output('Sleeping 1 second');
 	sleep(1);
 	dump( isset($cache[$key]), 'Is cached?' );
 }
 
-message('Sleeping few seconds...');
+output('Sleeping few seconds...');
 sleep(3);
 
 dump( isset($cache[$key]), 'Is cached?' );

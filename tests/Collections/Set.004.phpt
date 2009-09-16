@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Set modifing iterator.
+ * Test: Nette\Collections\Set modifing iterator.
  *
  * @author     David Grudl
  * @category   Nette

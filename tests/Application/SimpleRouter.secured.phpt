@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: SimpleRouter with secured connection.
+ * Test: Nette\Application\SimpleRouter with secured connection.
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: LatteFilter::formatString()
+ * Test: Nette\Templates\LatteFilter::formatString()
  *
  * @author     David Grudl
  * @category   Nette

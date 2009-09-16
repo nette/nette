@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable and get & contains, indexOf.
+ * Test: Nette\Collections\Hashtable and get & contains, indexOf.
  *
  * @author     David Grudl
  * @category   Nette
@@ -60,7 +60,7 @@ try {
 }
 
 try {
-	message("Getting ['jim'] with throwKeyNotFound");
+	output("Getting ['jim'] with throwKeyNotFound");
 	$hashtable->throwKeyNotFound();
 	dump( $hashtable['jim'] );
 } catch (Exception $e) {

@@ -20,7 +20,7 @@ class Person
 
 	public function sayHi()
 	{
-		message("My name is $this->name");
+		output("My name is $this->name");
 	}
 
 

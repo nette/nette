@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Uri ftp://
+ * Test: Nette\Web\Uri ftp://
  *
  * @author     David Grudl
  * @category   Nette

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Hashtable adding items.
+ * Test: Nette\Collections\Hashtable adding items.
  *
  * @author     David Grudl
  * @category   Nette
@@ -26,56 +26,56 @@ $mary = new Person('Mary');
 $foo = new ArrayObject();
 
 
-message("Adding Jack");
+output("Adding Jack");
 $hashtable->add('jack', $jack);
 
 try {
-	message("Adding invalid key");
+	output("Adding invalid key");
 	$hashtable->add($foo, $foo);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding foo");
+	output("Adding foo");
 	$hashtable->add('foo', $foo);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Mary using []");
+	output("Adding Mary using []");
 	$hashtable[] = $mary;
 } catch (Exception $e) {
 	dump( $e );
 }
 
-message("Adding Mary using ['mary']");
+output("Adding Mary using ['mary']");
 $hashtable['mary'] = $mary;
 
 try {
-	message("Adding Mary twice using ['mary']");
+	output("Adding Mary twice using ['mary']");
 	$hashtable['mary'] = $mary;
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Mary twice using add()");
+	output("Adding Mary twice using add()");
 	$hashtable->add('mary', $mary);
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Mary twice using __set()");
+	output("Adding Mary twice using __set()");
 	$hashtable->mary = $mary;
 } catch (Exception $e) {
 	dump( $e );
 }
 
 try {
-	message("Adding Jack using append");
+	output("Adding Jack using append");
 	$hashtable->append($jack);
 } catch (Exception $e) {
 	dump( $e );
@@ -94,14 +94,14 @@ dump( $hashtable->getKeys(), "getKeys:" );
 
 
 
-message("Get Interator:");
+output("Get Interator:");
 foreach ($hashtable as $key => $person) {
 	echo $key, ' => ', $person->sayHi();
 }
 
 
 
-message("Clearing");
+output("Clearing");
 $hashtable->clear();
 
 dump( $hashtable );

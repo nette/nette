@@ -51,10 +51,6 @@ final class NetteTestHelpers
 		$_SERVER['REQUEST_TIME'] = 1234567890;
 		$_ENV = array();
 
-		if (defined('TEMP_DIR')) {
-			self::purge(TEMP_DIR);
-		}
-
 		if (PHP_SAPI !== 'cli') {
 			header('Content-Type: text/plain; charset=utf-8');
 		}

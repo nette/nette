@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage sliding expiration test.
+ * Test: Nette\Caching\FileStorage sliding expiration test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,15 +21,14 @@ $key = 'nette';
 $value = 'rulez';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-
-NetteTestHelpers::purge($tempDir);
-
-
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
-message('Writing cache...');
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
+
+
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 	Cache::SLIDING => TRUE,
@@ -37,13 +36,13 @@ $cache->save($key, $value, array(
 
 
 for($i = 0; $i < 3; $i++) {
-	message('Sleeping 1 second');
+	output('Sleeping 1 second');
 	sleep(1);
 	clearstatcache();
 	dump( isset($cache[$key]), 'Is cached?' );
 }
 
-message('Sleeping few seconds...');
+output('Sleeping few seconds...');
 sleep(3);
 clearstatcache();
 

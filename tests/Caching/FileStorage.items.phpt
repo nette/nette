@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FileStorage items dependency test.
+ * Test: Nette\Caching\FileStorage items dependency test.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,47 +21,46 @@ $key = 'nette';
 $value = 'rulez';
 
 // temporary directory
-$tempDir = dirname(__FILE__) . '/tmp';
-
-NetteTestHelpers::purge($tempDir);
-
-
-$cache = new Cache(new /*Nette\Caching\*/FileStorage($tempDir));
+define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+NetteTestHelpers::purge(TEMP_DIR);
 
 
-message('Writing cache...');
+$cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
+
+
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => array('dependent'),
 ));
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent cached item');
+output('Modifing dependent cached item');
 $cache['dependent'] = 'hello world';
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Modifing dependent cached item');
+output('Modifing dependent cached item');
 sleep(2);
 $cache['dependent'] = 'hello europe';
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Writing cache...');
+output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 
 dump( isset($cache[$key]), 'Is cached?' );
 
-message('Deleting dependent cached item');
+output('Deleting dependent cached item');
 $cache['dependent'] = NULL;
 
 dump( isset($cache[$key]), 'Is cached?' );

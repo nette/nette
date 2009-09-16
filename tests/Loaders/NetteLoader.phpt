@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteLoader basic usage.
+ * Test: Nette\Loaders\NetteLoader basic usage.
  *
  * @author     David Grudl
  * @category   Nette

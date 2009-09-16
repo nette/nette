@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: HttpRequest files.
+ * Test: Nette\Web\HttpRequest files.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,6 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
+// Setup environment
 $_FILES = array(
 	'file1' => array(
 		'name' => 'readme.txt',

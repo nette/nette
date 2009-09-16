@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with DashInParameter
+ * Test: Nette\Application\Route with DashInParameter
  *
  * @author     David Grudl
  * @category   Nette

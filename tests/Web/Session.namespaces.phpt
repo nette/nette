@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Session namespaces.
+ * Test: Nette\Web\Session namespaces.
  *
  * @author     David Grudl
  * @category   Nette

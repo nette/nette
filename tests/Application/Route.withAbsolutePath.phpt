@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Route with WithAbsolutePath
+ * Test: Nette\Application\Route with WithAbsolutePath
  *
  * @author     David Grudl
  * @category   Nette

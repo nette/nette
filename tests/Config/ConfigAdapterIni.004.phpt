@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ConfigAdapterIni section.
+ * Test: Nette\Config\ConfigAdapterIni section.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,7 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 try {
-	section("Example 3");
+	output("Example 3");
 	$config = Config::fromFile('config3.ini');
 	dump( $config );
 } catch (Exception $e) {
@@ -27,7 +27,7 @@ try {
 
 
 try {
-	section("Example 4");
+	output("Example 4");
 	$config = Config::fromFile('config4.ini');
 	dump( $config );
 } catch (Exception $e) {
@@ -36,7 +36,7 @@ try {
 
 
 try {
-	section("Example 5");
+	output("Example 5");
 	$config = Config::fromFile('config5.ini');
 	dump( $config );
 } catch (Exception $e) {
@@ -48,14 +48,14 @@ try {
 __halt_compiler();
 
 ------EXPECT------
-==> Example 3
+Example 3
 
 Exception InvalidStateException: Missing parent section [scalar] in 'config3.ini'.
 
-==> Example 4
+Example 4
 
 Exception InvalidStateException: Invalid section [scalar.set] in 'config4.ini'.
 
-==> Example 5
+Example 5
 
 Exception InvalidStateException: Invalid key 'date.timezone' in section [set] in 'config5.ini'.
