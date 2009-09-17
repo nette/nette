@@ -9,7 +9,7 @@
    "country" => string(2) "CZ"
    "password" => string(3) "xxx"
    "password2" => string(3) "xxx"
-   "avatar" => object(HttpUploadedFile) (5) {
+   "avatar" => object(%ns%HttpUploadedFile) (5) {
       "name" private => NULL
       "type" private => NULL
       "size" private => NULL

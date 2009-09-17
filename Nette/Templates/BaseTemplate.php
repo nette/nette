@@ -146,7 +146,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 				$content = call_user_func($filter, $content);
 				$content = strtr($content, $blocks); // put PHP code back
 			}
-		} catch (Exception $e) {
+		} catch (/*\*/Exception $e) {
 			is_callable($filter, TRUE, $textual);
 			throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
 		}

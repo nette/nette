@@ -106,7 +106,7 @@ class Template extends BaseTemplate implements IFileTemplate
 			try {
 				$shortName = $this->file;
 				$shortName = str_replace(/*Nette\*/Environment::getVariable('templatesDir'), "\xE2\x80\xA6", $shortName);
-			} catch (Exception $foo) {
+			} catch (/*\*/Exception $foo) {
 			}
 
 			$content = $this->compile(file_get_contents($this->file), "file $shortName");
