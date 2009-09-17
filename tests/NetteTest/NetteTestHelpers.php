@@ -55,6 +55,12 @@ final class NetteTestHelpers
 			header('Content-Type: text/plain; charset=utf-8');
 		}
 
+		if (extension_loaded('xdebug')) {
+			xdebug_disable();
+			xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+			register_shutdown_function(array(__CLASS__, 'prepareSaveCoverage'));
+		}
+
 		set_exception_handler(array(__CLASS__, 'exceptionHandler'));
 	}
 
@@ -223,6 +229,42 @@ final class NetteTestHelpers
 	public static function exceptionHandler(Exception $exception)
 	{
 		self::dump($exception, 0);
+	}
+
+
+
+	/**
+	 * Coverage saving helper.
+	 * @return void
+	 */
+	public static function prepareSaveCoverage()
+	{
+		register_shutdown_function(array(__CLASS__, 'saveCoverage'));
+	}
+
+
+
+	/**
+	 * Saves information about code coverage.
+	 * @return void
+	 */
+	public static function saveCoverage()
+	{
+		$file = dirname(__FILE__) . '/coverage.tmp';
+		$coverage = @unserialize(file_get_contents($file));
+		$root = realpath(dirname(__FILE__) . '/../../Nette') . DIRECTORY_SEPARATOR;
+
+		foreach (xdebug_get_code_coverage() as $filename => $lines) {
+			if (strncmp($root, $filename, strlen($root))) continue;
+
+			foreach ($lines as $num => $val) {
+				if (empty($coverage[$filename][$num]) || $val > 0) {
+					$coverage[$filename][$num] = $val; // -1 => untested; -2 => dead code
+				}
+			}
+		}
+
+		file_put_contents($file, serialize($coverage));
 	}
 
 

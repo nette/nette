@@ -11,11 +11,13 @@ require dirname(__FILE__) . '/NetteTestCase.php';
 
 require dirname(__FILE__) . '/NetteTestHelpers.php';
 
-require dirname(__FILE__) . '/../../Nette/loader.php';
-
 
 
 NetteTestHelpers::startup();
+
+
+
+require dirname(__FILE__) . '/../../Nette/loader.php';
 
 
 

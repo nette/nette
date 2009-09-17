@@ -28,6 +28,8 @@ Options:
  * Execute tests
  */
 try {
+	@unlink(dirname(__FILE__) . '/coverage.tmp'); // intentionally @
+
 	$manager = new NetteTestRunner;
 	$manager->parseArguments();
 	$res = $manager->run();
