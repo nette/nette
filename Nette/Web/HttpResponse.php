@@ -268,7 +268,9 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 */
 	public function enableCompression()
 	{
-		if (headers_sent()) return FALSE;
+		if (headers_sent()) {
+			return FALSE;
+		}
 
 		if ($this->getHeader('Content-Encoding') !== NULL) {
 			return FALSE; // called twice
@@ -283,7 +285,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			ini_set('zlib.output_compression', 'Off');
 			ini_set('zlib.output_compression_level', '6');
 		}
-		ob_start('ob_gzhandler');
+		ob_start('ob_gzhandler', 1);
 		return TRUE;
 	}
 
