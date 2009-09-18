@@ -245,7 +245,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			$el->action = $uri[0];
 			$s = '';
 			if (isset($uri[1])) {
-				foreach (explode('&', $uri[1]) as $param) {
+				foreach (preg_split('#[;&]#', $uri[1]) as $param) {
 					$parts = explode('=', $param, 2);
 					$name = urldecode($parts[0]);
 					if (!isset($this->form[$name])) {
