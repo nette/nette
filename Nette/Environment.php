@@ -399,7 +399,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\IHttpRequest
+	 * @return Nette\Web\HttpRequest
 	 */
 	public static function getHttpRequest()
 	{
@@ -409,7 +409,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\IHttpResponse
+	 * @return Nette\Web\HttpResponse
 	 */
 	public static function getHttpResponse()
 	{
@@ -429,7 +429,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\IUser
+	 * @return Nette\Web\User
 	 */
 	public static function getUser()
 	{
@@ -459,7 +459,7 @@ final class Environment
 	/**
 	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return Nette\Web\Session|Nette\Web\Session
+	 * @return Nette\Web\Session
 	 */
 	public static function getSession($namespace = NULL)
 	{
