@@ -199,6 +199,17 @@ final class PresenterRequest extends /*Nette\*/FreezableObject
 
 
 	/**
+	 * Returns the method.
+	 * @return string
+	 */
+	public function getMethod()
+	{
+		return $this->method;
+	}
+
+
+
+	/**
 	 * Checks if the method is the given one.
 	 * @param  string
 	 * @return bool

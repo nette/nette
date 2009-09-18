@@ -64,7 +64,7 @@ class Application extends /*Nette\*/Object
 	public $onError;
 
 	/** @var array of string */
-	public $allowedMethods = array('GET', 'POST', 'HEAD');
+	public $allowedMethods = array('GET', 'POST', 'HEAD', 'PUT', 'DELETE');
 
 	/** @var array of PresenterRequest */
 	private $requests = array();
@@ -79,6 +79,7 @@ class Application extends /*Nette\*/Object
 
 	/**
 	 * Dispatch a HTTP request to a front controller.
+	 * @return void
 	 */
 	public function run()
 	{
@@ -99,7 +100,8 @@ class Application extends /*Nette\*/Object
 				$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
 				$method = htmlSpecialChars($method);
-				die("<h1>Method $method is not implemented</h1>");
+				echo "<h1>Method $method is not implemented</h1>";
+				return;
 			}
 		}
 
