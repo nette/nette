@@ -61,7 +61,7 @@ class RepeaterControl extends FormContainer /*implements IFormControl*/
 	/**
 	 * Set value.
 	 * @param  mixed
-	 * @return void
+	 * @return RepeaterControl  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
@@ -70,6 +70,7 @@ class RepeaterControl extends FormContainer /*implements IFormControl*/
 		} else {
 			$this->value = array();
 		}
+		return $this;
 	}
 
 

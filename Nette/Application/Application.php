@@ -286,11 +286,12 @@ class Application extends /*Nette\*/Object
 	/**
 	 * Changes router.
 	 * @param  IRouter
-	 * @return void
+	 * @return Application  provides a fluent interface
 	 */
 	public function setRouter(IRouter $router)
 	{
 		$this->getServiceLocator()->addService('Nette\Application\IRouter', $router);
+		return $this;
 	}
 
 

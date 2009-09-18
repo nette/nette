@@ -157,11 +157,12 @@ class User extends /*Nette\*/Object implements IUser
 	/**
 	 * Sets authentication handler.
 	 * @param  Nette\Security\IAuthenticator
-	 * @return void
+	 * @return User  provides a fluent interface
 	 */
 	public function setAuthenticationHandler(/*Nette\Security\*/IAuthenticator $handler)
 	{
 		$this->authenticationHandler = $handler;
+		return $this;
 	}
 
 
@@ -183,7 +184,7 @@ class User extends /*Nette\*/Object implements IUser
 	/**
 	 * Changes namespace; allows more users to share a session.
 	 * @param  string
-	 * @return void
+	 * @return User  provides a fluent interface
 	 */
 	public function setNamespace($namespace)
 	{
@@ -191,6 +192,7 @@ class User extends /*Nette\*/Object implements IUser
 			$this->namespace = (string) $namespace;
 			$this->session = NULL;
 		}
+		return $this;
 	}
 
 
@@ -211,7 +213,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * @param  mixed number of seconds or timestamp
 	 * @param  bool  sign out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
-	 * @return void
+	 * @return User  provides a fluent interface
 	 */
 	public function setExpiration($seconds, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
@@ -235,6 +237,7 @@ class User extends /*Nette\*/Object implements IUser
 		$session->expireBrowser = (bool) $whenBrowserIsClosed;
 		$session->browserCheck = TRUE;
 		$session->setExpiration(0, 'browserCheck');
+		return $this;
 	}
 
 
@@ -304,9 +307,9 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Set the authenticated status of this user.
+	 * Sets the authenticated status of this user.
 	 * @param  bool  flag indicating the authenticated status of user
-	 * @return void
+	 * @return User  provides a fluent interface
 	 */
 	protected function setAuthenticated($state)
 	{
@@ -324,13 +327,20 @@ class User extends /*Nette\*/Object implements IUser
 			$session->reason = self::MANUAL;
 			$session->authTime = NULL;
 		}
+		return $this;
 	}
 
 
 
+	/**
+	 * Sets the user identity.
+	 * @param  IIdentity
+	 * @return User  provides a fluent interface
+	 */
 	protected function setIdentity(/*Nette\Security\*/IIdentity $identity = NULL)
 	{
 		$this->getSessionNamespace(TRUE)->identity = $identity;
+		return $this;
 	}
 
 
@@ -393,11 +403,12 @@ class User extends /*Nette\*/Object implements IUser
 	/**
 	 * Sets authorization handler.
 	 * @param  Nette\Security\IAuthorizator
-	 * @return void
+	 * @return User  provides a fluent interface
 	 */
 	public function setAuthorizationHandler(/*Nette\Security\*/IAuthorizator $handler)
 	{
 		$this->authorizationHandler = $handler;
+		return $this;
 	}
 
 

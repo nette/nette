@@ -57,13 +57,14 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * Fill-in with default values.
 	 * @param  array|Traversable  values used to fill the form
 	 * @param  bool     erase other default values?
-	 * @return void
+	 * @return FormContainer  provides a fluent interface
 	 */
 	public function setDefaults($values, $erase = FALSE)
 	{
 		if (!$this->getForm()->isSubmitted()) {
 			$this->setValues($values, $erase);
 		}
+		return $this;
 	}
 
 
@@ -72,7 +73,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * Fill-in with values.
 	 * @param  array|Traversable  values used to fill the form
 	 * @param  bool     erase other controls?
-	 * @return void
+	 * @return FormContainer  provides a fluent interface
 	 */
 	public function setValues($values, $erase = FALSE)
 	{
@@ -107,6 +108,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 				}
 			}
 		}
+		return $this;
 	}
 
 
@@ -178,11 +180,12 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 
 	/**
 	 * @param  FormGroup
-	 * @return void
+	 * @return FormContainer  provides a fluent interface
 	 */
 	public function setCurrentGroup(FormGroup $group = NULL)
 	{
 		$this->currentGroup = $group;
+		return $this;
 	}
 
 

@@ -175,11 +175,12 @@ class Form extends FormContainer
 	/**
 	 * Sets form's action.
 	 * @param  mixed URI
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setAction($url)
 	{
 		$this->element->action = $url;
+		return $this;
 	}
 
 
@@ -198,7 +199,7 @@ class Form extends FormContainer
 	/**
 	 * Sets form's method.
 	 * @param  string get | post
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setMethod($method)
 	{
@@ -206,6 +207,7 @@ class Form extends FormContainer
 			throw new /*\*/InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
 		$this->element->method = strtolower($method);
+		return $this;
 	}
 
 
@@ -331,7 +333,7 @@ class Form extends FormContainer
 	/**
 	 * Set the encoding for the values.
 	 * @param  string
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setEncoding($value)
 	{
@@ -339,6 +341,7 @@ class Form extends FormContainer
 		if ($this->encoding !== 'UTF-8' && !extension_loaded('mbstring')) {
 			throw new /*\*/Exception("The PHP extension 'mbstring' is required for this encoding but is not loaded.");
 		}
+		return $this;
 	}
 
 
@@ -361,11 +364,12 @@ class Form extends FormContainer
 	/**
 	 * Sets translate adapter.
 	 * @param  Nette\ITranslator
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
+		return $this;
 	}
 
 
@@ -414,11 +418,12 @@ class Form extends FormContainer
 	/**
 	 * Sets the submittor control.
 	 * @param  ISubmitterControl
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)
 	{
 		$this->submittedBy = $by === NULL ? FALSE : $by;
+		return $this;
 	}
 
 
@@ -593,11 +598,12 @@ class Form extends FormContainer
 	/**
 	 * Sets form renderer.
 	 * @param  IFormRenderer
-	 * @return void
+	 * @return Form  provides a fluent interface
 	 */
 	public function setRenderer(IFormRenderer $renderer)
 	{
 		$this->renderer = $renderer;
+		return $this;
 	}
 
 

@@ -176,11 +176,12 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 	/**
 	 * Sets JavaScript handler.
 	 * @param  object
-	 * @return void
+	 * @return ConventionalRenderer  provides a fluent interface
 	 */
 	public function setClientScript($clientScript = NULL)
 	{
 		$this->clientScript = $clientScript;
+		return $this;
 	}
 
 

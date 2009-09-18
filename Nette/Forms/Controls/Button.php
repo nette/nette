@@ -61,11 +61,12 @@ class Button extends FormControl
 	/**
 	 * Sets 'pressed' indicator.
 	 * @param  bool
-	 * @return void
+	 * @return Button  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
 		$this->value = is_scalar($value) ? (bool) $value : FALSE;
+		return $this;
 	}
 
 

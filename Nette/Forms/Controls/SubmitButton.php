@@ -64,7 +64,7 @@ class SubmitButton extends Button implements ISubmitterControl
 	/**
 	 * Sets control's value.
 	 * @param  bool
-	 * @return void
+	 * @return SubmitButton  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
@@ -73,6 +73,7 @@ class SubmitButton extends Button implements ISubmitterControl
 		if ($this->isSubmittedBy() || !is_object($form->isSubmitted())) {
 			$form->setSubmittedBy($this);
 		}
+		return $this;
 	}
 
 

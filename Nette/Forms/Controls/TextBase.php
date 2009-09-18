@@ -47,11 +47,12 @@ abstract class TextBase extends FormControl
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return void
+	 * @return TextBase  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
 		$this->value = is_scalar($value) ? (string) $value : '';
+		return $this;
 	}
 
 

@@ -67,12 +67,13 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	/**
 	 * Sets the name of user.
 	 * @param  string
-	 * @return void
+	 * @return Identity  provides a fluent interface
 	 */
 	public function setName($name)
 	{
 		$this->updating();
 		$this->name = (string) $name;
+		return $this;
 	}
 
 
@@ -91,12 +92,13 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	/**
 	 * Sets a list of roles that the user is a member of.
 	 * @param  array
-	 * @return void
+	 * @return Identity  provides a fluent interface
 	 */
 	public function setRoles(array $roles)
 	{
 		$this->updating();
 		$this->roles = $roles;
+		return $this;
 	}
 
 

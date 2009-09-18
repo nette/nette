@@ -25,6 +25,7 @@ class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 	public function setQuery(array $query)
 	{
 		$this->query = $query;
+		return $this;
 	}
 
 }

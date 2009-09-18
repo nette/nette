@@ -63,11 +63,12 @@ class HiddenField extends FormControl
 	/**
 	 * Sets control's value.
 	 * @param  string
-	 * @return void
+	 * @return HiddenField  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
 		$this->value = is_scalar($value) ? (string) $value : '';
+		return $this;
 	}
 
 

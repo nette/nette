@@ -134,7 +134,7 @@ class NetteTestCase
 	 * Sets PHP command line.
 	 * @param  string
 	 * @param  string
-	 * @return void
+	 * @return NetteTestCase  provides a fluent interface
 	 */
 	public function setPHP($executable, $args)
 	{
@@ -155,6 +155,7 @@ class NetteTestCase
 		}
 
 		$this->cmdLine = escapeshellarg($executable) . " $args";
+		return $this;
 	}
 
 
@@ -375,8 +376,8 @@ class NetteTestCase
 	{
 		$s = str_replace("\n", PHP_EOL, str_replace("\r\n", "\n", $s));  // normalize EOL
 		if ($trim) {
-    		$s = preg_replace("#[\t ]+(\r?\n)#", '$1', $s); // multiline right trim
-    		$s = rtrim($s); // ending trim
+			$s = preg_replace("#[\t ]+(\r?\n)#", '$1', $s); // multiline right trim
+			$s = rtrim($s); // ending trim
 		}
 		return $s;
 	}

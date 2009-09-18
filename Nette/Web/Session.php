@@ -280,7 +280,7 @@ class Session extends /*Nette\*/Object
 	/**
 	 * Sets the session name to a specified one.
 	 * @param  string
-	 * @return void
+	 * @return Session  provides a fluent interface
 	 */
 	public function setName($name)
 	{
@@ -288,7 +288,7 @@ class Session extends /*Nette\*/Object
 			throw new /*\*/InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 
-		$this->setOptions(array(
+		return $this->setOptions(array(
 			'name' => $name,
 		));
 	}
@@ -431,7 +431,7 @@ class Session extends /*Nette\*/Object
 	/**
 	 * Sets session options.
 	 * @param  array
-	 * @return void
+	 * @return Session  provides a fluent interface
 	 * @throws \NotSupportedException
 	 * @throws \InvalidStateException
 	 */
@@ -441,6 +441,7 @@ class Session extends /*Nette\*/Object
 			$this->configure($options);
 		}
 		$this->options = $options + $this->options;
+		return $this;
 	}
 
 
@@ -512,7 +513,7 @@ class Session extends /*Nette\*/Object
 	/**
 	 * Sets the amount of time allowed between requests before the session will be terminated.
 	 * @param  mixed  number of seconds, value 0 means "until the browser is closed"
-	 * @return void
+	 * @return Session  provides a fluent interface
 	 */
 	public function setExpiration($seconds)
 	{
@@ -521,7 +522,7 @@ class Session extends /*Nette\*/Object
 		}
 
 		if ($seconds <= 0) {
-			$this->setOptions(array(
+			return $this->setOptions(array(
 				'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
 				'cookie_lifetime' => 0,
 			));
@@ -530,7 +531,7 @@ class Session extends /*Nette\*/Object
 			if ($seconds > /*Nette\*/Tools::YEAR) {
 				$seconds -= time();
 			}
-			$this->setOptions(array(
+			return $this->setOptions(array(
 				'gc_maxlifetime' => $seconds,
 				'cookie_lifetime' => $seconds,
 			));
@@ -544,11 +545,11 @@ class Session extends /*Nette\*/Object
 	 * @param  string  path
 	 * @param  string  domain
 	 * @param  bool    secure
-	 * @return void
+	 * @return Session  provides a fluent interface
 	 */
 	public function setCookieParams($path, $domain = NULL, $secure = NULL)
 	{
-		$this->setOptions(array(
+		return $this->setOptions(array(
 			'cookie_path' => $path,
 			'cookie_domain' => $domain,
 			'cookie_secure' => $secure
@@ -570,11 +571,11 @@ class Session extends /*Nette\*/Object
 
 	/**
 	 * Sets path of the directory used to save session data.
-	 * @return void
+	 * @return Session  provides a fluent interface
 	 */
 	public function setSavePath($path)
 	{
-		$this->setOptions(array(
+		return $this->setOptions(array(
 			'save_path' => $path,
 		));
 	}

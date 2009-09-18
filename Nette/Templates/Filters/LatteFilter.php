@@ -78,11 +78,12 @@ class LatteFilter extends /*Nette\*/Object
 	/**
 	 * Sets a macro handler.
 	 * @param  ILatteHandler
-	 * @return void
+	 * @return LatteFilter  provides a fluent interface
 	 */
 	public function setHandler($handler)
 	{
 		$this->handler = $handler;
+		return $this;
 	}
 
 
@@ -415,7 +416,7 @@ class LatteFilter extends /*Nette\*/Object
 	 * Changes macro delimiters.
 	 * @param  string  left regular expression
 	 * @param  string  right regular expression
-	 * @return void
+	 * @return LatteFilter  provides a fluent interface
 	 */
 	public function setDelimiters($left, $right)
 	{
@@ -426,6 +427,7 @@ class LatteFilter extends /*Nette\*/Object
 			' . $right . '
 			(?P<newline>[\ \t]*(?=\r|\n))?
 		';
+		return $this;
 	}
 
 

@@ -425,11 +425,12 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Changes current view. Any name is allowed.
 	 * @param  string
-	 * @return void
+	 * @return Presenter  provides a fluent interface
 	 */
 	public function setView($view)
 	{
 		$this->view = (string) $view;
+		return $this;
 	}
 
 
@@ -448,11 +449,12 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * Changes or disables layout.
 	 * @param  string|FALSE
-	 * @return void
+	 * @return Presenter  provides a fluent interface
 	 */
 	public function setLayout($layout)
 	{
 		$this->layout = (string) $layout;
+		return $this;
 	}
 
 

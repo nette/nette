@@ -207,17 +207,17 @@ abstract class Component extends Object implements IComponent
 	 *
 	 * @param  IComponentContainer  New parent or null if this component is being removed from a parent
 	 * @param  string
-	 * @return void
+	 * @return Component  provides a fluent interface
 	 * @throws \InvalidStateException
 	 */
 	public function setParent(IComponentContainer $parent = NULL, $name = NULL)
 	{
 		if ($parent === NULL && $this->parent === NULL && $name !== NULL) {
 			$this->name = $name; // just rename
-			return;
+			return $this;
 
 		} elseif ($parent === $this->parent && $name === NULL) {
-			return; // nothing to do
+			return $this; // nothing to do
 		}
 
 		// A component cannot be given a parent if it already has a parent.
@@ -248,6 +248,7 @@ abstract class Component extends Object implements IComponent
 			$tmp = array();
 			$this->refreshMonitors(0, $tmp);
 		}
+		return $this;
 	}
 
 

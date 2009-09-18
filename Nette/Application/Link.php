@@ -75,11 +75,12 @@ class Link extends /*Nette\*/Object
 	 * Changes link parameter.
 	 * @param  string
 	 * @param  mixed
-	 * @return void
+	 * @return Link  provides a fluent interface
 	 */
 	public function setParam($key, $value)
 	{
 		$this->params[$key] = $value;
+		return $this;
 	}
 
 

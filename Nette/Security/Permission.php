@@ -544,7 +544,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  IPermissionAssertion assertion
 	 * @throws \InvalidStateException
-	 * @return void
+	 * @return Permission  provides a fluent interface
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, IPermissionAssertion $assertion = NULL)
 	{
@@ -638,6 +638,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 				}
 			}
 		}
+		return $this;
 	}
 
 
