@@ -175,18 +175,15 @@ class HttpUploadedFile extends /*Nette\*/Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return bool
+	 * @return void
 	 */
 	public function move($dest)
 	{
-		@unlink($dest); // needed in PHP < 5.3 & Windows; intentionally @
-		if (rename($this->tmpName, $dest)) {
-			$this->tmpName = $dest;
-			return TRUE;
-
-		} else {
-			return FALSE;
+		if (!move_uploaded_file($this->tmpName, $dest)) {
+			throw new /*\*/InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
+		$this->tmpName = $dest;
+		return TRUE; // back compatibility
 	}
 
 
