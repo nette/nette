@@ -42,7 +42,6 @@ class Button extends FormControl
 	{
 		parent::__construct($caption);
 		$this->control->type = 'button';
-		$this->value = FALSE;
 	}
 
 
@@ -54,19 +53,6 @@ class Button extends FormControl
 	public function getLabel($caption = NULL)
 	{
 		return NULL;
-	}
-
-
-
-	/**
-	 * Sets 'pressed' indicator.
-	 * @param  bool
-	 * @return Button  provides a fluent interface
-	 */
-	public function setValue($value)
-	{
-		$this->value = is_scalar($value) ? (bool) $value : FALSE;
-		return $this;
 	}
 
 
