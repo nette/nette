@@ -225,7 +225,7 @@ class LatteMacros extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php\n"
-			/*. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"*/
+			/*. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"*/
 			. "\$_cb = LatteMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
@@ -711,9 +711,9 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {ifCurrent ...}
 	 */
-	private function macroIfCurrent($content, $modifiers)
+	private function macroIfCurrent($content)
 	{
-		return $content ? LatteFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers) : '';
+		return $content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (InvalidLinkException $e) {}' : '';
 	}
 
 
