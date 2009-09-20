@@ -17,11 +17,14 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
+require dirname(__FILE__) . '/Template.inc';
+
 
 
 // temporary directory
 define('TEMP_DIR', dirname(__FILE__) . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
+Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 Environment::setVariable('tempDir', TEMP_DIR);
 
 

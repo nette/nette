@@ -18,12 +18,7 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
@@ -53,8 +48,7 @@ class MockWidget extends Object
 
 
 
-$template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/latte.widget.phtml');
+$template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
@@ -62,8 +56,27 @@ $template->control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 
-$template->render();
+$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
 __halt_compiler();
+
+-----template-----
+{widget 'name'}
+
+{widget form}
+
+{widget form:test}
+
+{widget $form:test}
+
+{widget $name:test}
+
+{widget $name:$name}
+
+{widget form var1}
+
+{widget form var1, 1, 2}
+
+{widget form var1 => 5, 1, 2}

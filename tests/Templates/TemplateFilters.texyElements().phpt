@@ -17,12 +17,7 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
@@ -37,14 +32,32 @@ class MockTexy
 
 TemplateFilters::$texy = new MockTexy;
 
-$template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/texy-elements.phtml');
+$template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'texyElements'));
-$template->render();
+$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
 __halt_compiler();
+
+-----template-----
+<texy>**Hello World**</texy>
+
+
+<texy>
+Multi line
+----------
+
+example
+</texy>
+
+
+<texy param="value">
+Second multi line
+-----------------
+
+example
+</texy>
 
 ------EXPECT------
 <...>

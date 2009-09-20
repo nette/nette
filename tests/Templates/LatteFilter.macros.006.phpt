@@ -18,12 +18,7 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
@@ -38,21 +33,13 @@ class MockControl extends Control
 }
 
 
-function printSource($s)
-{
-	echo $s;
-}
 
-
-
-$template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/latte.snippet.phtml');
+$template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
-$template->registerFilter('printSource');
-
 $template->control = new MockControl;
+$template->render(file_get_contents(dirname(__FILE__) . '/templates/latte.snippet.phtml'));
 
-$template->render();
+echo $template->compiled;
 
 
 

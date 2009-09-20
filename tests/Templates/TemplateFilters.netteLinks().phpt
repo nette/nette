@@ -16,12 +16,7 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
@@ -37,17 +32,26 @@ class MockPresenterComponent extends /*Nette\Application\*/PresenterComponent
 
 
 
-$template = new Template;
-//$template->setCacheStorage(new /*Nette\Caching\*/DummyStorage);
-$template->setFile(dirname(__FILE__) . '/templates/nette-links.phtml');
+$template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'netteLinks'));
 $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->control = new MockPresenterComponent;
-$template->render();
+$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
 __halt_compiler();
+
+-----template-----
+<a href="nette:action?id=10">link</a>
+
+<a href="nette:">link</a>
+
+<a href="nette:#fragment">link</a>
+
+<a href='nette:'>link</a>
+
+<a href='nette:#fragment'>link</a>
 
 ------EXPECT------
 <a href="LINK(action?id=10 )">link</a>

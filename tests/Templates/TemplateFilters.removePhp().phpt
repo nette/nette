@@ -16,24 +16,22 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
-$template = new Template;
-//$template->setCacheStorage(new /*Nette\Caching\*/DummyStorage);
-$template->setFile(dirname(__FILE__) . '/templates/remove-php.phtml');
+$template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'removePhp'));
-$template->render();
+$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
 __halt_compiler();
+
+-----template-----
+Hello<?php echo '?>hacked!'; ?> World!
+
+<<?php ?>?php doEvil(); ?>
 
 ------EXPECT------
 Hello World!

@@ -16,26 +16,35 @@
 
 require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
-
-
-// temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
+require dirname(__FILE__) . '/Template.inc';
 
 
 
-$template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/relative-links.phtml');
+$template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'relativeLinks'));
 
 $template->baseUri = 'http://example.com/~my/';
 
-$template->render();
+$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
 __halt_compiler();
+
+-----template-----
+<a href="relative">link</a>
+
+<a href="relative#fragment">link</a>
+
+<a href="#fragment">link</a>
+
+<a href="http://url">link</a>
+
+<a href="mailto:john@example.com">link</a>
+
+<a href="/absolute-path">link</a>
+
+<a href="//absolute">link</a>
 
 ------EXPECT------
 <a href="http://example.com/~my/relative">link</a>

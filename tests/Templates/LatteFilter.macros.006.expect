@@ -1,19 +1,33 @@
-@php:p0@
-@php:p1@
+%A%
+
+if (SnippetHelper::$outputAllowed) {
+} if ($_cb->foo = SnippetHelper::create($control)) { $_cb->snippets[] = $_cb->foo ?>
+
+<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
 
 
-@php:p2@	Outer
-		@php:p3@Inner@php:p4@
+
+<?php } if ($_cb->foo = SnippetHelper::create($control, "outer")) { $_cb->snippets[] = $_cb->foo ?>
+	Outer
+		<?php } if ($_cb->foo = SnippetHelper::create($control, "inner")) { $_cb->snippets[] = $_cb->foo ?>Inner<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+
 	/Outer
-@php:p5@
+<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
 
 
-	@php:p6@ Hello World @php:p7@
-	@php:p8@Title 1@php:p9@
 
-	@php:p10@Title 2@php:p11@
+	<?php } if (true): if (SnippetHelper::$outputAllowed) { ?> Hello World <?php } endif ;if (SnippetHelper::$outputAllowed) { ?>
 
-	@php:p12@Title 3@php:p13@
+	<?php } if ($_cb->foo = SnippetHelper::create($control, "title", "h2")) { $_cb->snippets[] = $_cb->foo ?>Title 1<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
 
-	@php:p14@Title 4@php:p15@
-@php:p16@
+
+	<?php } if ($_cb->foo = SnippetHelper::create($control, "title", "<h2>")) { $_cb->snippets[] = $_cb->foo ?>Title 2<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+
+
+	<?php } if ($_cb->foo = SnippetHelper::create($control, "title", "<h2 class="top">")) { $_cb->snippets[] = $_cb->foo ?>Title 3<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+
+
+	<?php } if ($_cb->foo = SnippetHelper::create($control, "title", "<h2>")) { $_cb->snippets[] = $_cb->foo ?>Title 4<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>
+
+<?php
+}
