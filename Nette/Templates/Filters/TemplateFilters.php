@@ -58,28 +58,6 @@ final class TemplateFilters
 
 
 
-	/********************* Filter autoConfig ****************d*g**/
-
-
-
-	/**
-	 * Template with configuration (experimental).
-	 *    <?nette filter="LatteFilter::invoke"?>
-	 *
-	 * @param  string
-	 * @return string
-	 */
-	public static function autoConfig($s)
-	{
-		throw new /*\*/NotImplementedException;
-		preg_match_all('#<\\?nette(.*)\\?>#sU', $s, $matches, PREG_SET_ORDER);
-		foreach ($matches as $m) {
-		}
-		return preg_replace('#<\\?nette(.*)\\?>#sU', '', $s);
-	}
-
-
-
 	/********************* Filter relativeLinks ****************d*g**/
 
 
@@ -114,7 +92,7 @@ final class TemplateFilters
 	{
 		return preg_replace_callback(
 			'#(src|href|action)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',
-			array(__CLASS__, 'tnlCb'),
+			array(__CLASS__, 'netteLinksCb'),
 			$s
 		);
 	}
@@ -125,7 +103,7 @@ final class TemplateFilters
 	 * Callback for self::netteLinks.
 	 * Parses a "nette" URI (scheme is 'nette') and converts to real URI
 	 */
-	private static function tnlCb($m)
+	private static function netteLinksCb($m)
 	{
 		list(, $attr, $quote, $uri, $fragment) = $m;
 
