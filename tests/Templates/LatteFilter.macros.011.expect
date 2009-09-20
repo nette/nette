@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact="compact">
+	<li>Escaped: &lt;i&gt;Hello&lt;/i&gt;</li>
+	<li>Non-escaped: <i>Hello</i></li>
+	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
+	<li>Non-escaped expression: <b>hello</b></li>
+	<li>Array access: Mary</li>
+	<li>Html: &lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;</li>
+</ul>
+
+<style type="text/css">
+<!--
+#:/item {
+	background: blue;
+}
+-->
+</style>
+
+
+
+<script>
+<!--
+var html = &lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;;
+-->
+</script>
+
+
+<p onclick =
+'alert(:/item);alert("hello");'
+ title=':/item"'
+ style =
+ "color::/item;'"
+ alt='&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;'
+ onfocus="alert(&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;)"
+>click on me</p>
+
+
+<!-- test -- comment -->
+
+
+</ul>
+
+
+<ul>
+	<li n:foreach="$people as $person">
+Notice: Undefined variable: person in D:\Web\nette\_nette\tests\Templates\tmp\c-Nette.Template\_aab29610c5e409938e8af56ebb95bb5a.latte.xml.phtml.php on line 56
+</li>
+</ul>
+
+<p n:if="true">
+	<div><p>true</div>
+</p>
+
+<n:default vary=3>
