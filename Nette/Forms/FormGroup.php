@@ -76,7 +76,7 @@ class FormGroup extends /*Nette\*/Object
 
 
 	/**
-	 * @return array
+	 * @return array IFormControl
 	 */
 	public function getControls()
 	{
