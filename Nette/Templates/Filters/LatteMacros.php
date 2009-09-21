@@ -109,9 +109,9 @@ class LatteMacros extends /*Nette\*/Object
 		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("templatesDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak() ?>',
 
-		'!_' => '<?php echo $template->translate(%:macroModifiers%) ?>',
+		'!_' => '<?php echo %:macroTranslate% ?>',
 		'!=' => '<?php echo %:macroModifiers% ?>',
-		'_' => '<?php echo %:macroEscape%($template->translate(%:macroModifiers%)) ?>',
+		'_' => '<?php echo %:macroEscape%(%:macroTranslate%) ?>',
 		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
 		'!$' => '<?php echo %:macroVar% ?>',
 		'!' => '<?php echo %:macroVar% ?>', // deprecated
@@ -364,6 +364,16 @@ class LatteMacros extends /*Nette\*/Object
 	private function macroVar($var, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$' . $var, $modifiers);
+	}
+
+
+
+	/**
+	 * {_$var |modifiers}
+	 */
+	private function macroTranslate($var, $modifiers)
+	{
+		return LatteFilter::formatModifiers($var, 'translate|' . $modifiers);
 	}
 
 

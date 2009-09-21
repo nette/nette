@@ -7,6 +7,8 @@
 	<li>Non-escaped expression: {!='<' . 'b' . '>hello' . '</b>'}</li>
 	<li>Array access: {$people[1]}</li>
 	<li>Html: {$el}</li>
+	<li>Translated: {_$people[1]}</li>
+	<li>Non-escaped and translated: {!_$people[1]}</li>
 </ul>
 
 { test} {"test} {'test}

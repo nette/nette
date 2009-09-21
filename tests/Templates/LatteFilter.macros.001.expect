@@ -7,6 +7,8 @@
 	<li>Non-escaped expression: <b>hello</b></li>
 	<li>Array access: Mary</li>
 	<li>Html: <div title="1/2&quot;"></div></li>
+	<li>Translated: yraM</li>
+	<li>Non-escaped and translated: yraM</li>
 </ul>
 
 { test} {"test} {'test}

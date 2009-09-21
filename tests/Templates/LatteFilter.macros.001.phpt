@@ -31,6 +31,7 @@ Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template = new Template;
 $template->setFile(dirname(__FILE__) . '/templates/latte.phtml');
 $template->registerFilter(new LatteFilter);
+$template->registerHelper('translate', 'strrev');
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 $template->hello = '<i>Hello</i>';

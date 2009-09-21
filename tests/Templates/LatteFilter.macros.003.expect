@@ -1,5 +1,5 @@
 
-Warning: Capturing {block $capture} is deprecated; use {capture $capture} instead on line 34. %a%
+Warning: Capturing {block $capture} is deprecated; use {capture $capture} instead on line %a%
 <ul>
 	<li>lower: hello world</li>
 	<li>upper: HELLO WORLD</li>
@@ -7,6 +7,7 @@ Warning: Capturing {block $capture} is deprecated; use {capture $capture} instea
 	<li>nl2br: Hello World</li>
 	<li>truncate: hello…</li>
 	<li>date: 02.01.2008 00:00:00</li>
+	<li>translated: dl…</li>
 </ul>
 
 <ul>

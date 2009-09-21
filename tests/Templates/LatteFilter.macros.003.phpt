@@ -48,6 +48,7 @@ $template->registerFilter(new LatteFilter);
 $template->registerHelper('nl2br', 'nl2br');
 $template->registerHelper('h1', array(new MyHelper, 'invoke'));
 $template->registerHelper('h2', 'strtoupper');
+$template->registerHelper('translate', 'strrev');
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 $template->hello = 'Hello World';
