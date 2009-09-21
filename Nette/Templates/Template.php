@@ -54,6 +54,9 @@ class Template extends BaseTemplate implements IFileTemplate
 	 */
 	public function setFile($file)
 	{
+		if (!is_file($file)) {
+			throw new /*\*/FileNotFoundException("Missing template file '$file'.");
+		}
 		$this->file = $file;
 		return $this;
 	}
@@ -83,9 +86,6 @@ class Template extends BaseTemplate implements IFileTemplate
 	{
 		if ($this->file == NULL) { // intentionally ==
 			throw new /*\*/InvalidStateException("Template file name was not specified.");
-
-		} elseif (!is_file($this->file) || !is_readable($this->file)) {
-			throw new /*\*/FileNotFoundException("Missing template file '$this->file'.");
 		}
 
 		$this->__set('template', $this);
