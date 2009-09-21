@@ -322,6 +322,22 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 
 	/**
+	 * Sets control's default value.
+	 * @param  mixed
+	 * @return FormControl  provides a fluent interface
+	 */
+	public function setDefaultValue($value)
+	{
+		$form = $this->getForm(FALSE);
+		if (!$form || !$form->isAnchored() || !$form->isSubmitted()) {
+			$this->setValue($value);
+		}
+		return $this;
+	}
+
+
+
+	/**
 	 * Loads HTTP data.
 	 * @return void
 	 */

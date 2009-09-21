@@ -61,7 +61,8 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 */
 	public function setDefaults($values, $erase = FALSE)
 	{
-		if (!$this->getForm()->isAnchored() || !$this->getForm()->isSubmitted()) {
+		$form = $this->getForm(FALSE);
+		if (!$form || !$form->isAnchored() || !$form->isSubmitted()) {
 			$this->setValues($values, $erase);
 		}
 		return $this;
