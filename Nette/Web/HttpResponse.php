@@ -117,8 +117,9 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 		if ($value === NULL && function_exists('header_remove')) {
 			header_remove($name);
+		} else {
+			header($name . ': ' . $value, TRUE, $this->code);
 		}
-		header($name . ': ' . $value, TRUE, $this->code);
 		return $this;
 	}
 
