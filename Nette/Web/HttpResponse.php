@@ -115,7 +115,9 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 			throw new /*\*/InvalidStateException("Cannot send header after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
-		/*if ($value === NULL) header_remove($name); else*/
+		if ($value === NULL && function_exists('header_remove')) {
+			header_remove($name);
+		}
 		header($name . ': ' . $value, TRUE, $this->code);
 		return $this;
 	}
