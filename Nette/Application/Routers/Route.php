@@ -327,11 +327,13 @@ class Route extends /*Nette\*/Object implements IRouter
 			if ($name === '}') { // opening optional part
 				$brackets[] = $uri;
 
-			} elseif ($name === '{') { // closing optional part
-				if ($required < count($brackets)) { // is this level optional?
-					$uri = array_pop($brackets);
+			} elseif ($name[0] === '{') { // closing optional part
+				$tmp = array_pop($brackets);
+				if ($required < count($brackets) + 1) { // is this level optional?
+					if ($name !== '{!') { // and not "required"-optional
+						$uri = $tmp;
+					}
 				} else {
-					array_pop($brackets);
 					$required = count($brackets);
 				}
 
@@ -461,7 +463,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 2) PARSE URI-PATH PART OF MASK
 		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|([{}])/',  // <parameter-name [pattern] [#class]> or {}
+			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|(\{!?|\})/',  // <parameter-name [pattern] [#class]> or { or }
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
@@ -479,13 +481,13 @@ class Route extends /*Nette\*/Object implements IRouter
 			$i--;
 
 			$bracket = $parts[$i]; // { or }
-			if ($bracket === '{' || $bracket === '}') {
-				$brackets += $bracket === '{' ? -1 : 1;
+			if ($bracket === '{' || $bracket === '}' || $bracket === '{!') {
+				$brackets += $bracket[0] === '{' ? -1 : 1;
 				if ($brackets < 0) {
 					throw new /*\*/InvalidArgumentException("Unexpected '$bracket' in mask '$mask'.");
 				}
 				array_unshift($sequence, $bracket);
-				$re = ($bracket === '{' ? '(?:' : ')?') . $re;
+				$re = ($bracket[0] === '{' ? '(?:' : ')?') . $re;
 				$i -= 4;
 				continue;
 			}
