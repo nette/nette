@@ -91,7 +91,7 @@
 
 
 <div id="routingDebugger">
-	<a id="routingDebuggerIcon" href="#"><?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?> <abbr>&#x25ba;</abbr></a
+	<a id="routingDebuggerIcon" href="#"><?php echo empty($presenter) ? 'no route' : htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?> <abbr>&#x25ba;</abbr></a
 	><div>
 	<?php if (!empty($presenter)): ?>
 		<h2><?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
