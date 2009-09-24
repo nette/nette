@@ -178,7 +178,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		// deletes numeric keys, restore '-' chars
 		$params = array();
 		foreach ($matches as $k => $v) {
-			if (is_string($k)) {
+			if (is_string($k) && $v !== '') {
 				$params[str_replace('___', '-', $k)] = $v; // trick
 			}
 		}
@@ -518,7 +518,6 @@ class Route extends /*Nette\*/Object implements IRouter
 				}
 			}
 			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
-			$metadata[$name] = $meta;
 
 			// include in expression
 			$tmp = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
@@ -527,12 +526,14 @@ class Route extends /*Nette\*/Object implements IRouter
 					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
 				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
-				$metadata[$name]['fixity'] = self::PATH_OPTIONAL;
+				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
 				$optional = FALSE;
 				$re = '(?P<' . $tmp . '>' . $pattern . ')' . $re;
 			}
+
+			$metadata[$name] = $meta;
 		} while (TRUE);
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
