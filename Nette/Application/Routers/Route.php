@@ -313,9 +313,8 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// compositing path
 		$sequence = $this->sequence;
-		$optional = array();
-		$autoOptional = TRUE;
-		$skipTo = -1;
+		$brackets = array();
+		$required = NULL; // NULL for auto-optional
 		$uri = '';
 		$i = count($sequence) - 1;
 		do {
@@ -326,31 +325,30 @@ class Route extends /*Nette\*/Object implements IRouter
 			$name = $sequence[$i]; $i--; // parameter name
 
 			if ($name === '}') { // opening optional part
-				$optional[] = $uri;
+				$brackets[] = $uri;
 
 			} elseif ($name === '{') { // closing optional part
-				if (count($optional) === $skipTo) {
-					$uri = array_pop($optional);
-					$skipTo = -1;
+				if ($required < count($brackets)) { // is this level optional?
+					$uri = array_pop($brackets);
 				} else {
-					array_pop($optional);
+					array_pop($brackets);
+					$required = count($brackets);
 				}
 
 			} elseif ($name[0] === '?') { // "foo" parameter
 				continue;
 
 			} elseif (isset($params[$name]) && $params[$name] != '') { // intentionally ==
-				$autoOptional = FALSE;
+				$required = count($brackets); // make this level required
 				$uri = $params[$name] . $uri;
 				unset($params[$name]);
 
-			} elseif ($optional) { // is in brackets?
-				if ($skipTo === -1) {
-					$skipTo = count($optional);
-				}
-
 			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
-				$uri = $autoOptional ? '' : $metadata[$name]['defOut'] . $uri;
+				if ($required === NULL && !$brackets) { // auto-optional
+					$uri = '';
+				} else {
+					$uri = $metadata[$name]['defOut'] . $uri;
+				}
 
 			} else {
 				return NULL; // missing parameter '$name'
@@ -469,7 +467,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			PREG_SPLIT_DELIM_CAPTURE
 		);
 
-		$optional = 0; // optional level
+		$brackets = 0; // optional level
 		$autoOptional = TRUE;
 		$sequence = array();
 		$i = count($parts) - 1;
@@ -482,8 +480,8 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			$bracket = $parts[$i]; // { or }
 			if ($bracket === '{' || $bracket === '}') {
-				$optional += $bracket === '{' ? -1 : 1;
-				if ($optional < 0) {
+				$brackets += $bracket === '{' ? -1 : 1;
+				if ($brackets < 0) {
 					throw new /*\*/InvalidArgumentException("Unexpected '$bracket' in mask '$mask'.");
 				}
 				array_unshift($sequence, $bracket);
@@ -546,11 +544,13 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			// include in expression
 			$re = '(?P<' . str_replace('-', '___', $name) . '>' . $pattern . ')' . $re; // str_replace is dirty trick to enable '-' in parameter name
-			if ($optional) { // is in brackets?
-				$meta[self::VALUE] = isset($meta[self::VALUE]) ? $meta[self::VALUE] : NULL;
+			if ($brackets) { // is in brackets?
+				if (!isset($meta[self::VALUE])) {
+					$meta[self::VALUE] = $meta['defOut'] = NULL;
+				}
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
-			} elseif (isset($meta['fixity'])) { // has default value?
+			} elseif (isset($meta['fixity'])) { // auto-optional
 				if (!$autoOptional) {
 					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
@@ -564,7 +564,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			$metadata[$name] = $meta;
 		} while (TRUE);
 
-		if ($optional) {
+		if ($brackets) {
 			throw new /*\*/InvalidArgumentException("Missing closing '}' in mask '$mask'.");
 		}
 

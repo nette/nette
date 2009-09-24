@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with OptionalPresenter
+ * Test: Nette\Application\Route and auto-optional as optional sequences.
  *
  * @author     David Grudl
  * @category   Nette
@@ -19,9 +19,8 @@ require dirname(__FILE__) . '/Route.inc';
 
 
 
-$route = new Route('<presenter>/<action>/<id \d{1,3}>', array(
+$route = new Route('<presenter>/{<action>/{<id \d{1,3}>}}', array(
 	'action' => 'default',
-	'id' => NULL,
 ));
 
 testRoute($route, '/presenter/action/12/any');

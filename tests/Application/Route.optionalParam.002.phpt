@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with optional parameters 2.
+ * Test: Nette\Application\Route with optional sequence.
  *
  * @author     David Grudl
  * @category   Nette
@@ -18,46 +18,35 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 require dirname(__FILE__) . '/Route.inc';
 
 
-$route = new Route('{<lang [a-z]{2}>}/<name>', array(
-	'lang' => 'cz',
+$route = new Route('index{.html}', array(
 ));
 
-testRoute($route, '/cs/name');
+testRoute($route, '/index.html');
 
-testRoute($route, '//name');
-
-testRoute($route, '/');
-
+testRoute($route, '/index');
 
 
 
 __halt_compiler();
 
 ------EXPECT------
-==> /cs/name
+==> /index.html
 
 string(14) "querypresenter"
 
-array(3) {
-	"lang" => string(2) "cs"
-	"name" => string(4) "name"
+array(1) {
 	"test" => string(9) "testvalue"
 }
 
-string(48) "/cs/name?test=testvalue&presenter=querypresenter"
+string(46) "/index?test=testvalue&presenter=querypresenter"
 
-==> //name
+==> /index
 
 string(14) "querypresenter"
 
-array(3) {
-	"name" => string(4) "name"
-	"lang" => string(2) "cz"
+array(1) {
 	"test" => string(9) "testvalue"
 }
 
-NULL
+string(46) "/index?test=testvalue&presenter=querypresenter"
 
-==> /
-
-not matched

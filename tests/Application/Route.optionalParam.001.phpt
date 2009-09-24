@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with optional parameters 1.
+ * Test: Nette\Application\Route with nested optional sequences.
  *
  * @author     David Grudl
  * @category   Nette
@@ -31,6 +31,8 @@ testRoute($route, '/cs/name');
 testRoute($route, '/name');
 
 testRoute($route, '/name/page-0');
+
+testRoute($route, '/name/page-');
 
 testRoute($route, '/');
 
@@ -110,6 +112,11 @@ array(5) {
 
 string(52) "/name/page-0?test=testvalue&presenter=querypresenter"
 
+==> /name/page-
+
+not matched
+
 ==> /
 
 not matched
+
