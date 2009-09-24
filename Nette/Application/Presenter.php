@@ -109,7 +109,7 @@ abstract class Presenter extends Control implements IPresenter
 	private $view;
 
 	/** @var string */
-	private $layout = 'layout';
+	private $layout;
 
 	/** @var stdClass */
 	private $payload;
@@ -486,17 +486,24 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			// layout template
-			if ($this->layout) {
-				foreach ($this->formatLayoutTemplateFiles($this->getName(), $this->layout) as $file) {
+			if ($this->layout !== FALSE) {
+				$files = $this->formatLayoutTemplateFiles($this->getName(), $this->layout ? $this->layout : 'layout');
+				foreach ($files as $file) {
 					if (is_file($file)) {
+						$template->layout = $file;
 						if ($this->oldLayoutMode) {
 							$template->content = clone $template;
 							$template->setFile($file);
 						} else {
-							$template->layout = $template->_extends = $file;
+							$template->_extends = $file;
 						}
 						break;
 					}
+				}
+
+				if (empty($template->layout) && $this->layout !== NULL) {
+					$file = str_replace(Environment::getVariable('templatesDir'), "\xE2\x80\xA6", reset($files));
+					throw new BadRequestException("Layout not found. Missing template '$file'.");
 				}
 			}
 		}
