@@ -313,7 +313,9 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// compositing path
 		$sequence = $this->sequence;
-		$optional = TRUE;
+		$optional = array();
+		$autoOptional = TRUE;
+		$skipTo = -1;
 		$uri = '';
 		$i = count($sequence) - 1;
 		do {
@@ -323,26 +325,32 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			$name = $sequence[$i]; $i--; // parameter name
 
-			if ($name[0] === '?') { // "foo" parameter
+			if ($name === '}') { // opening optional part
+				$optional[] = $uri;
+
+			} elseif ($name === '{') { // closing optional part
+				if (count($optional) === $skipTo) {
+					$uri = array_pop($optional);
+					$skipTo = -1;
+				} else {
+					array_pop($optional);
+				}
+
+			} elseif ($name[0] === '?') { // "foo" parameter
 				continue;
 
 			} elseif (isset($params[$name]) && $params[$name] != '') { // intentionally ==
-				$optional = FALSE;
+				$autoOptional = FALSE;
 				$uri = $params[$name] . $uri;
 				unset($params[$name]);
 
-			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
-				if ($optional) {
-					$uri = '';
-
-				} elseif ($metadata[$name][self::VALUE] == '') { // intentionally ==
-					if ($uri[0] === '/' && substr($sequence[$i], -1) === '/') {
-						return NULL; // default value is empty but is required
-					}
-
-				} else {
-					$uri = $metadata[$name]['defOut'] . $uri;
+			} elseif ($optional) { // is in brackets?
+				if ($skipTo === -1) {
+					$skipTo = count($optional);
 				}
+
+			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
+				$uri = $autoOptional ? '' : $metadata[$name]['defOut'] . $uri;
 
 			} else {
 				return NULL; // missing parameter '$name'
@@ -365,6 +373,10 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		} elseif ($this->type === self::PATH) {
 			$uri = '//' . $httpRequest->getUri()->getAuthority() . $uri;
+		}
+
+		if (strpos($uri, '//', 2) !== FALSE) {
+			return NULL; // TODO: implement counterpart in match() ?
 		}
 
 		$uri = ($this->flags & self::SECURED ? 'https:' : 'http:') . $uri;
@@ -451,13 +463,14 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 2) PARSE URI-PATH PART OF MASK
 		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>]*)>/',  // <parameter-name [pattern] [#class]>
+			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|([{}])/',  // <parameter-name [pattern] [#class]> or {}
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
 		);
 
-		$optional = TRUE;
+		$optional = 0; // optional level
+		$autoOptional = TRUE;
 		$sequence = array();
 		$i = count($parts) - 1;
 		$re = '';
@@ -466,6 +479,18 @@ class Route extends /*Nette\*/Object implements IRouter
 			$re = preg_quote($parts[$i], '#') . $re;
 			if ($i === 0) break;
 			$i--;
+
+			$bracket = $parts[$i]; // { or }
+			if ($bracket === '{' || $bracket === '}') {
+				$optional += $bracket === '{' ? -1 : 1;
+				if ($optional < 0) {
+					throw new /*\*/InvalidArgumentException("Unexpected '$bracket' in mask '$mask'.");
+				}
+				array_unshift($sequence, $bracket);
+				$re = ($bracket === '{' ? '(?:' : ')?') . $re;
+				$i -= 4;
+				continue;
+			}
 
 			$class = $parts[$i]; $i--; // validation class
 			$pattern = trim($parts[$i]); $i--; // validation condition (as regexp)
@@ -520,21 +545,28 @@ class Route extends /*Nette\*/Object implements IRouter
 			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 
 			// include in expression
-			$tmp = str_replace('-', '___', $name); // dirty trick to enable '-' in parameter name
-			if (isset($meta['fixity'])) { // has default value?
-				if (!$optional) {
+			$re = '(?P<' . str_replace('-', '___', $name) . '>' . $pattern . ')' . $re; // str_replace is dirty trick to enable '-' in parameter name
+			if ($optional) { // is in brackets?
+				$meta[self::VALUE] = isset($meta[self::VALUE]) ? $meta[self::VALUE] : NULL;
+				$meta['fixity'] = self::PATH_OPTIONAL;
+
+			} elseif (isset($meta['fixity'])) { // has default value?
+				if (!$autoOptional) {
 					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
 				}
-				$re = '(?:(?P<' . $tmp . '>' . $pattern . ')' . $re . ')?';
+				$re = '(?:' . $re . ')?';
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
-				$optional = FALSE;
-				$re = '(?P<' . $tmp . '>' . $pattern . ')' . $re;
+				$autoOptional = FALSE;
 			}
 
 			$metadata[$name] = $meta;
 		} while (TRUE);
+
+		if ($optional) {
+			throw new /*\*/InvalidArgumentException("Missing closing '}' in mask '$mask'.");
+		}
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');
 		$this->metadata = $metadata;
