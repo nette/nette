@@ -43,7 +43,7 @@ __halt_compiler();
 {* kód  *}
 
 ------EXPECT------
-        
+
 <?php
 %a%
 

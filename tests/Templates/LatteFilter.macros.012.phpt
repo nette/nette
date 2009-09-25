@@ -36,4 +36,3 @@ qwerty
 
 ------EXPECT------
 qwerty
-

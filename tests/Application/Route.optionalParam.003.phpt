@@ -83,4 +83,3 @@ array(3) {
 }
 
 string(43) "/x2?test=testvalue&presenter=querypresenter"
-

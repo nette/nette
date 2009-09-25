@@ -49,4 +49,3 @@ array(1) {
 }
 
 string(46) "/index?test=testvalue&presenter=querypresenter"
-
