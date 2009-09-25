@@ -1,8 +1,6 @@
 <?php
 
-/*namespace Front\Export;*/
-
-require_once dirname(__FILE__) . '/../../BasePresenter.php';
+/*namespace FrontModule\ExportModule;*/
 
 
 /* use only DefaultPresenter in PHP 5.3 */

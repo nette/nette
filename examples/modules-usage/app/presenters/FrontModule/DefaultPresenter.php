@@ -1,8 +1,6 @@
 <?php
 
-/*namespace Front;*/
-
-require_once dirname(__FILE__) . '/../BasePresenter.php';
+/*namespace FrontModule;*/
 
 
 /* use only DefaultPresenter in PHP 5.3 */

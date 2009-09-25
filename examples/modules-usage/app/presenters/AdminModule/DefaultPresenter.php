@@ -1,8 +1,6 @@
 <?php
 
-/*namespace Admin;*/
-
-require_once dirname(__FILE__) . '/../BasePresenter.php';
+/*namespace AdminModule;*/
 
 
 /* use only DefaultPresenter in PHP 5.3 */
