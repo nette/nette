@@ -552,18 +552,16 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$appDir = Environment::getVariable('appDir');
-		$templates = 'templates';
-		$module = '';
-		if (($a = strrpos($presenter, ':')) !== FALSE) {
-			$module = str_replace(':', 'Module/', substr($presenter, 0, $a + 1));
-			$presenter = substr($presenter, $a + 1);
-		}
-		return array(
-			"$appDir/$module$templates/$presenter/@$layout.phtml",
-			"$appDir/$module$templates/$presenter.@$layout.phtml",
-			"$appDir/$module$templates/@$layout.phtml",
-			"$appDir/$templates/@$layout.phtml",
+		$path = '/' . str_replace(':', 'Module/', $presenter);
+		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
+		$list = array(
+			"$appDir$pathP/@$layout.phtml",
+			"$appDir$pathP.@$layout.phtml",
 		);
+		while (($path = substr($path, 0, strrpos($path, '/'))) !== FALSE) {
+			$list[] = "$appDir$path/templates/@$layout.phtml";
+		}
+		return $list;
 	}
 
 
@@ -593,16 +591,13 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$appDir = Environment::getVariable('appDir');
-		$templates = 'templates';
-		$module = '';
-		if (($a = strrpos($presenter, ':')) !== FALSE) {
-			$module = str_replace(':', 'Module/', substr($presenter, 0, $a + 1));
-			$presenter = substr($presenter, $a + 1);
-		}
+		$path = '/' . str_replace(':', 'Module/', $presenter);
+		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
+		$path = substr_replace($path, '/templates', strrpos($path, '/'));
 		return array(
-			"$appDir/$module$templates/$presenter/$view.phtml",
-			"$appDir/$module$templates/$presenter.$view.phtml",
-			"$appDir/$templates/@global.$view.phtml",
+			"$appDir$pathP/$view.phtml",
+			"$appDir$pathP.$view.phtml",
+			"$appDir$path/@global.$view.phtml",
 		);
 	}
 
