@@ -78,6 +78,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var bool (experimental) */
 	public $oldLayoutMode = TRUE;
 
+	/** @var bool (experimental) */
+	public $oldModuleMode = TRUE;
+
 	/** @var PresenterRequest */
 	private $request;
 
@@ -527,24 +530,39 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
-		$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-		$presenter = str_replace(':', 'Module/', $presenter);
-		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
-		$base = '';
-		if ($root === Environment::getVariable('appDir') . '/presenters') {
-			$base = 'templates/';
-			if ($module === '') {
-				$presenter = 'templates/' . $presenter;
-			} else {
-				$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
+		if ($this->oldModuleMode) {
+			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
+			$presenter = str_replace(':', 'Module/', $presenter);
+			$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
+			$base = '';
+			if ($root === Environment::getVariable('appDir') . '/presenters') {
+				$base = 'templates/';
+				if ($module === '') {
+					$presenter = 'templates/' . $presenter;
+				} else {
+					$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
+				}
 			}
+			return array(
+				"$root/$presenter/@$layout.phtml",
+				"$root/$presenter.@$layout.phtml",
+				"$root/$module/$base@$layout.phtml",
+				"$root/$base@$layout.phtml",
+			);
 		}
 
+		$appDir = Environment::getVariable('appDir');
+		$templates = 'templates';
+		$module = '';
+		if (($a = strrpos($presenter, ':')) !== FALSE) {
+			$module = str_replace(':', 'Module/', substr($presenter, 0, $a + 1));
+			$presenter = substr($presenter, $a + 1);
+		}
 		return array(
-			"$root/$presenter/@$layout.phtml",
-			"$root/$presenter.@$layout.phtml",
-			"$root/$module/$base@$layout.phtml",
-			"$root/$base@$layout.phtml",
+			"$appDir/$module$templates/$presenter/@$layout.phtml",
+			"$appDir/$module$templates/$presenter.@$layout.phtml",
+			"$appDir/$module$templates/@$layout.phtml",
+			"$appDir/$templates/@$layout.phtml",
 		);
 	}
 
@@ -558,18 +576,33 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatTemplateFiles($presenter, $view)
 	{
-		$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-		$presenter = str_replace(':', 'Module/', $presenter);
-		$dir = '';
-		if ($root === Environment::getVariable('appDir') . '/presenters') { // special supported case
-			$pos = strrpos($presenter, '/');
-			$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
-			$dir = 'templates/';
+		if ($this->oldModuleMode) {
+			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
+			$presenter = str_replace(':', 'Module/', $presenter);
+			$dir = '';
+			if ($root === Environment::getVariable('appDir') . '/presenters') { // special supported case
+				$pos = strrpos($presenter, '/');
+				$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
+				$dir = 'templates/';
+			}
+			return array(
+				"$root/$presenter/$view.phtml",
+				"$root/$presenter.$view.phtml",
+				"$root/$dir@global.$view.phtml",
+			);
+		}
+
+		$appDir = Environment::getVariable('appDir');
+		$templates = 'templates';
+		$module = '';
+		if (($a = strrpos($presenter, ':')) !== FALSE) {
+			$module = str_replace(':', 'Module/', substr($presenter, 0, $a + 1));
+			$presenter = substr($presenter, $a + 1);
 		}
 		return array(
-			"$root/$presenter/$view.phtml",
-			"$root/$presenter.$view.phtml",
-			"$root/$dir@global.$view.phtml",
+			"$appDir/$module$templates/$presenter/$view.phtml",
+			"$appDir/$module$templates/$presenter.$view.phtml",
+			"$appDir/$templates/@global.$view.phtml",
 		);
 	}
 

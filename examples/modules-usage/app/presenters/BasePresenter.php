@@ -5,6 +5,8 @@ abstract class BasePresenter extends /*Nette\Application\*/Presenter
 {
 	public $oldLayoutMode = FALSE;
 
+	public $oldModuleMode = FALSE;
+
 
 	protected function beforeRender()
 	{
