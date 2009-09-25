@@ -42,7 +42,7 @@ class Application extends /*Nette\*/Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\Application\IRouter' => 'Nette\Application\MultiRouter',
-		'Nette\Application\IPresenterLoader' => 'Nette\Application\PresenterLoader',
+		'Nette\Application\IPresenterLoader' => array(__CLASS__, 'createPresenterLoader'),
 	);
 
 	/** @var bool enable fault barrier? */
@@ -305,6 +305,20 @@ class Application extends /*Nette\*/Object
 	public function getPresenterLoader()
 	{
 		return $this->getServiceLocator()->getService('Nette\Application\IPresenterLoader');
+	}
+
+
+
+	/********************* service factories ****************d*g**/
+
+
+
+	/**
+	 * @return IPresenterLoader
+	 */
+	public static function createPresenterLoader()
+	{
+		return new PresenterLoader(Environment::getVariable('appDir'));
 	}
 
 
