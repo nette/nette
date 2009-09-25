@@ -69,9 +69,9 @@ class RobotLoader extends AutoLoader
 	public function register()
 	{
 		$cache = $this->getCache();
-		$data = $cache['data'];
-		if ($data['opt'] === array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles)) {
-			$this->list = $data['list'];
+		$key = $this->getKey();
+		if (isset($cache[$key])) {
+			$this->list = $cache[$key];
 		} else {
 			$this->rebuild();
 		}
@@ -137,11 +137,7 @@ class RobotLoader extends AutoLoader
 		}
 
 		$this->rebuilded = TRUE;
-		$cache = $this->getCache();
-		$cache['data'] = array(
-			'list' => $this->list,
-			'opt' => array($this->scanDirs, $this->ignoreDirs, $this->acceptFiles),
-		);
+		$this->getCache()->save($this->getKey(), $this->list);
 	}
 
 
@@ -331,6 +327,16 @@ class RobotLoader extends AutoLoader
 	protected function getCache()
 	{
 		return /*Nette\*/Environment::getCache('Nette.RobotLoader');
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	protected function getKey()
+	{
+		return md5("$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs));
 	}
 
 
