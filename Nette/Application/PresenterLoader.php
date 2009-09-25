@@ -137,7 +137,7 @@ class PresenterLoader implements IPresenterLoader
 	public function formatPresenterFile($presenter)
 	{
 		$presenter = str_replace(':', 'Module/', $presenter);
-		$presenter = /*Nette\*/Environment::getVariable('presentersDir') . '/' . $presenter . 'Presenter.php';
+		$presenter = /*Nette\*/Environment::getVariable('appDir') . '/presenters/' . $presenter . 'Presenter.php';
 		return $presenter;
 	}
 

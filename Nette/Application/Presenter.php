@@ -481,7 +481,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 
 			if (!$template->getFile()) {
-				$file = str_replace(Environment::getVariable('templatesDir'), "\xE2\x80\xA6", reset($files));
+				$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
 				throw new BadRequestException("Page not found. Missing template '$file'.");
 			}
 
@@ -502,7 +502,7 @@ abstract class Presenter extends Control implements IPresenter
 				}
 
 				if (empty($template->layout) && $this->layout !== NULL) {
-					$file = str_replace(Environment::getVariable('templatesDir'), "\xE2\x80\xA6", reset($files));
+					$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
 					throw new BadRequestException("Layout not found. Missing template '$file'.");
 				}
 			}
@@ -527,11 +527,11 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
-		$root = Environment::getVariable('templatesDir');
+		$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
 		$presenter = str_replace(':', 'Module/', $presenter);
 		$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
 		$base = '';
-		if ($root === Environment::getVariable('presentersDir')) {
+		if ($root === Environment::getVariable('appDir') . '/presenters') {
 			$base = 'templates/';
 			if ($module === '') {
 				$presenter = 'templates/' . $presenter;
@@ -558,10 +558,10 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatTemplateFiles($presenter, $view)
 	{
-		$root = Environment::getVariable('templatesDir');
+		$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
 		$presenter = str_replace(':', 'Module/', $presenter);
 		$dir = '';
-		if ($root === Environment::getVariable('presentersDir')) { // special supported case
+		if ($root === Environment::getVariable('appDir') . '/presenters') { // special supported case
 			$pos = strrpos($presenter, '/');
 			$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
 			$dir = 'templates/';

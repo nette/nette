@@ -74,16 +74,12 @@ Setting variable 'test'...
 
 Getting variable 'test': string(11) "/myApp/test"
 
-Getting variables: array(11) {
+Getting variables: array(7) {
 	"encoding" => string(5) "UTF-8"
 	"lang" => string(2) "en"
 	"cacheBase" => string(11) "/myApp/temp"
 	"tempDir" => string(11) "/myApp/temp"
 	"logDir" => string(10) "/myApp/log"
-	"templatesDir" => string(16) "/myApp/templates"
-	"presentersDir" => string(17) "/myApp/presenters"
-	"componentsDir" => string(17) "/myApp/components"
-	"modelsDir" => string(13) "/myApp/models"
 	"appDir" => string(6) "/myApp"
 	"test" => string(11) "/myApp/test"
 }

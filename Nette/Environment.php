@@ -61,10 +61,6 @@ final class Environment
 		'cacheBase' => array('%tempDir%', TRUE), // deprecated
 		'tempDir' => array('%appDir%/temp', TRUE),
 		'logDir' => array('%appDir%/log', TRUE),
-		'templatesDir' => array('%appDir%/templates', TRUE),
-		'presentersDir' => array('%appDir%/presenters', TRUE),
-		'componentsDir' => array('%appDir%/components', TRUE),
-		'modelsDir' => array('%appDir%/models', TRUE),
 	);
 
 	/** @var array */
