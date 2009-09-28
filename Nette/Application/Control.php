@@ -219,7 +219,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	public function getSnippetId($name = NULL)
 	{
 		// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
-		return $this->getUniqueId() . '__' . $name;
+		return 'snippet-' . $this->getUniqueId() . '-' . $name;
 	}
 
 }
