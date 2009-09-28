@@ -82,6 +82,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->control = $this;
 		$template->presenter = $presenter;
 		$template->baseUri = /*Nette\*/Environment::getVariable('baseUri');
+		$template->basePath = rtrim($template->baseUri, '/');
 
 		// flash message
 		if ($presenter !== NULL && $presenter->hasFlashSession()) {

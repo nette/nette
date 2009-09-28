@@ -19,7 +19,7 @@
 	<td>
 		{if $clickable = $control->isClickable($x, $y, $rel)}<a href="{link Click, $x, $y}" class="ajax" rel="{$rel}">{/if}
 
-		<img src="{$baseUri}images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
+		<img src="{$basePath}/images/game{!$order[$x + $y * $width]}.jpg" width="100" height="100" alt="{!$order[$x + $y * $width]+1}" />
 
 		{if $clickable}</a>{/if}
 	</td>

@@ -5,7 +5,7 @@
  * @package    MyApplication
  *
  * @param string   $robots   tell robots how to index the content of a page (optinal)
- * @param string   $baseUri  web base URI
+ * @param string   $basePath web base path
  * @param array    $flashes  flash messages
  * @param Identity $user     logged user (optinal)
  *}
@@ -21,7 +21,7 @@
 
 	<title>{block #title|upper}{/block} Nette example</title>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="{$baseUri}css/site.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{$basePath}/css/site.css" />
 </head>
 
 <body>
