@@ -113,6 +113,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	protected function attached($form)
 	{
 		if (!$this->disabled && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
+			$this->htmlName = NULL;
 			$this->loadHttpData();
 		}
 	}
