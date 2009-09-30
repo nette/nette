@@ -48,6 +48,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * - {attr ?} HTML element attributes
  * - {block|texy} ... {/block} block
  * - {contentType ...} HTTP Content-Type header
+ * - {status ...} HTTP status
  * - {capture ?} ... {/capture} capture block to parameter
  * - {assign var => value} set template parameter
  * - {default var => value} set default template parameter
@@ -104,6 +105,7 @@ class LatteMacros extends /*Nette\*/Object
 
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
+		'status' => '<?php Environment::getHttpResponse()->setCode(%%) ?>',
 		'assign' => '<?php %:macroAssign% ?>', // deprecated?
 		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
