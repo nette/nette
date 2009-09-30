@@ -455,7 +455,7 @@ class Mail extends MailMimePart
 			}
 		}
 
-		if (!$this->getSubject() && preg_match('#<title>(.+)</title>#i', $this->html, $matches)) {
+		if (!$this->getSubject() && preg_match('#<title>(.+?)</title>#is', $this->html, $matches)) {
 			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, $this->charset));
 		}
 	}
