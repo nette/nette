@@ -47,7 +47,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	public $cookieDomain = '';
 
 	/** @var string The path in which the cookie will be available */
-	public $cookiePath = '';
+	public $cookiePath = '/';
 
 	/** @var string The path in which the cookie will be available */
 	public $cookieSecure = FALSE;
