@@ -48,6 +48,19 @@ class Template extends BaseTemplate implements IFileTemplate
 
 
 	/**
+	 * Constructor.
+	 * @param  string  template file path
+	 */
+	public function __construct($file = null)
+	{
+		if (isset($file)) {
+			$this->setFile($file);
+		}
+	}
+
+
+
+	/**
 	 * Sets the path to the template file.
 	 * @param  string  template file path
 	 * @return Template  provides a fluent interface
