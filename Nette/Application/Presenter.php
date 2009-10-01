@@ -506,7 +506,7 @@ abstract class Presenter extends Control implements IPresenter
 
 				if (empty($template->layout) && $this->layout !== NULL) {
 					$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
-					throw new BadRequestException("Layout not found. Missing template '$file'.");
+					throw new /*\*/FileNotFoundException("Layout not found. Missing template '$file'.");
 				}
 			}
 		}
