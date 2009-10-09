@@ -19,6 +19,7 @@ Options:
 	-c <path>   Look for php.ini in directory <path> or use <path> as php.ini.
 	-d key=val  Define INI entry 'key' with value 'val'.
 	-l <path>   Specify path to shared library files (LD_LIBRARY_PATH)
+	-s          Show information about skipped tests
 
 <?php
 }
@@ -66,6 +67,9 @@ class NetteTestRunner
 
 	/** @var string  php-cgi environment variables */
 	public $phpEnvironment;
+
+	/** @var bool  display skipped tests information? */
+	public $displaySkipped = FALSE;
 
 
 
@@ -123,14 +127,13 @@ class NetteTestRunner
 		$failedCount = count($failed);
 		$skippedCount = count($skipped);
 
-		/*
-		if ($skippedCount) {
+		if ($this->displaySkipped && $skippedCount) {
 			echo "\n\nSkipped:\n";
 			foreach ($skipped as $i => $item) {
 				list($name, $file) = $item;
 				echo "\n", ($i + 1), ") $name\n   $file\n";
 			}
-		}*/
+		}
 
 		if (!$count) {
 			echo "No tests found\n";
@@ -203,6 +206,9 @@ class NetteTestRunner
 				case 'l':
 					$args->next();
 					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
+					break;
+				case 's':
+					$this->displaySkipped = TRUE;
 					break;
 				default:
 					echo "Error: Unknown option -$arg[1]\n";
