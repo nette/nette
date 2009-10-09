@@ -34,7 +34,7 @@ try {
 	$manager = new NetteTestRunner;
 	$manager->parseArguments();
 	$res = $manager->run();
-	die($res ? 1 : 0);
+	die($res ? 0 : 1);
 
 } catch (Exception $e) {
 	echo 'Error: ', $e->getMessage(), "\n";
