@@ -75,8 +75,15 @@ class NetteTestCase
 			$message = $options['skip'] ? $options['skip'] : 'No message.';
 			throw new NetteTestCaseException($message, NetteTestCaseException::SKIPPED);
 
-		} elseif (isset($options['phpversion']) && version_compare($options['phpversion'], $this->phpVersion, '>')) {
-			throw new NetteTestCaseException("Requires PHP version $options[phpversion].", NetteTestCaseException::SKIPPED);
+		} elseif (isset($options['phpversion'])) {
+			$operator = '>=';
+			if (preg_match('#^(<=|le|<|lt|==|=|eq|!=|<>|ne|>=|ge|>|gt)#', $options['phpversion'], $matches)) {
+				$options['phpversion'] = trim(substr($options['phpversion'], strlen($matches[1])));
+				$operator = $matches[1];
+			}
+			if (version_compare($options['phpversion'], $this->phpVersion, $operator)) {
+				throw new NetteTestCaseException("Requires PHP $operator $options[phpversion].", NetteTestCaseException::SKIPPED);
+			}
 		}
 
 		$this->execute();
