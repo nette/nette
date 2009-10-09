@@ -18,8 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 if (PHP_VERSION < '5.3') {
-	// ArrayObject serialization is flawed in PHP 5.2
-	NetteTestHelpers::skip();
+	NetteTestHelpers::skip('ArrayObject serialization is flawed in PHP 5.2.');
 }
 
 

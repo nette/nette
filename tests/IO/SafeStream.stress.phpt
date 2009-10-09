@@ -7,7 +7,7 @@
  * @category   Nette
  * @package    Nette\IO
  * @subpackage UnitTests
- * @skip
+ * @skip       Requires more robust NetteTestCase implementation.
  */
 
 /*use Nette\IO\SafeStream;*/

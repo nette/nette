@@ -273,9 +273,9 @@ final class NetteTestHelpers
 	 * Skips this test.
 	 * @return void
 	 */
-	public static function skip()
+	public static function skip($message = 'No message.')
 	{
-		header('X-Nette-Test-Skip: 1');
+		header('X-Nette-Test-Skip: '. $message);
 		exit;
 	}
 

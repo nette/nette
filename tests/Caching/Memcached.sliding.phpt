@@ -19,7 +19,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 if (!MemcachedStorage::isAvailable()) {
-	NetteTestHelpers::skip();
+	NetteTestHelpers::skip('Requires PHP extension Memcache.');
 }
 
 

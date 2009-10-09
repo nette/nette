@@ -72,7 +72,8 @@ class NetteTestCase
 		// pre-skip?
 		$options = $this->sections['options'];
 		if (isset($options['skip'])) {
-			throw new NetteTestCaseException('Skipped.', NetteTestCaseException::SKIPPED);
+			$message = $options['skip'] ? $options['skip'] : 'No message.';
+			throw new NetteTestCaseException($message, NetteTestCaseException::SKIPPED);
 
 		} elseif (isset($options['phpversion']) && version_compare($options['phpversion'], $this->phpVersion, '>')) {
 			throw new NetteTestCaseException("Requires PHP version $options[phpversion].", NetteTestCaseException::SKIPPED);
@@ -85,7 +86,7 @@ class NetteTestCase
 
 		// post-skip?
 		if (isset($headers['x-nette-test-skip'])) {
-			throw new NetteTestCaseException('Skipped.', NetteTestCaseException::SKIPPED);
+			throw new NetteTestCaseException($headers['x-nette-test-skip'], NetteTestCaseException::SKIPPED);
 		}
 
 		// compare output

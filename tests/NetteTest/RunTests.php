@@ -107,7 +107,7 @@ class NetteTestRunner
 			} catch (NetteTestCaseException $e) {
 				if ($e->getCode() === NetteTestCaseException::SKIPPED) {
 					echo 's';
-					$skipped[] = array($testCase->getName(), $entry);
+					$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
 
 				} else {
 					echo 'F';
@@ -130,8 +130,8 @@ class NetteTestRunner
 		if ($this->displaySkipped && $skippedCount) {
 			echo "\n\nSkipped:\n";
 			foreach ($skipped as $i => $item) {
-				list($name, $file) = $item;
-				echo "\n", ($i + 1), ") $name\n   $file\n";
+				list($name, $file, $message) = $item;
+				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
 			}
 		}
 
