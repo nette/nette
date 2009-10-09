@@ -182,11 +182,10 @@ class NetteTestRunner
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
 		foreach ($args as $arg) {
-			$opt = preg_replace('#/|-+#A', '', $arg);
-			if ($opt === $arg) {
+			if (!preg_match('#^[-/][a-z]$#', $arg)) {
 				$this->path = $arg;
 
-			} else switch ($opt) {
+			} else switch ($arg[1]) {
 				case 'p':
 					$args->next();
 					$this->phpBinary = $args->current();
@@ -194,14 +193,14 @@ class NetteTestRunner
 				case 'c':
 				case 'd':
 					$args->next();
-					$this->phpArgs .= " -$opt " . escapeshellarg($args->current());
+					$this->phpArgs .= " -$arg[1] " . escapeshellarg($args->current());
 					break;
 				case 'l':
 					$args->next();
 					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
 					break;
 				default:
-					echo "Error: Unknown option -$opt\n";
+					echo "Error: Unknown option -$arg[1]\n";
 					exit;
 			}
 		}
