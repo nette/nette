@@ -18,6 +18,7 @@ Options:
 	-p <php>    Specify PHP-CGI executable to run.
 	-c <path>   Look for php.ini in directory <path> or use <path> as php.ini.
 	-d key=val  Define INI entry 'key' with value 'val'.
+	-l <path>   Specify path to shared library files (LD_LIBRARY_PATH)
 
 <?php
 }
@@ -54,14 +55,17 @@ class NetteTestRunner
 	const EXPECTED = 'expect';
 	const HEADERS = 'headers';
 
-	/** @var string */
+	/** @var string  path to test file/directory */
 	public $path;
 
-	/** @var string  PHP-CGI.exe */
-	public $phpExecutable;
+	/** @var string  php-cgi binary */
+	public $phpBinary;
 
-	/** @var string  PHP-CGI.exe arguments */
+	/** @var string  php-cgi command-line arguments */
 	public $phpArgs;
+
+	/** @var string  php-cgi environment variables */
+	public $phpEnvironment;
 
 
 
@@ -89,7 +93,8 @@ class NetteTestRunner
 
 			$count++;
 			$testCase = new NetteTestCase($entry);
-			$testCase->setPhp($this->phpExecutable, $this->phpArgs);
+			$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
+
 			try {
 				$testCase->run();
 				echo '.';
@@ -170,8 +175,9 @@ class NetteTestRunner
 	 */
 	public function parseArguments()
 	{
-		$this->phpExecutable = 'php-cgi.exe'; // path to PHP CGI executable that is used to run the test scripts
+		$this->phpBinary = 'php-cgi';
 		$this->phpArgs = '';
+		$this->phpEnvironment = '';
 		$this->path = getcwd(); // current directory
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
@@ -183,15 +189,19 @@ class NetteTestRunner
 			} else switch ($opt) {
 				case 'p':
 					$args->next();
-					$this->phpExecutable = $args->current();
+					$this->phpBinary = $args->current();
 					break;
 				case 'c':
 				case 'd':
 					$args->next();
 					$this->phpArgs .= " -$opt " . escapeshellarg($args->current());
 					break;
+				case 'l':
+					$args->next();
+					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
+					break;
 				default:
-					echo "Unknown option -$opt\n";
+					echo "Error: Unknown option -$opt\n";
 					exit;
 			}
 		}

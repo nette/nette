@@ -134,27 +134,28 @@ class NetteTestCase
 	 * Sets PHP command line.
 	 * @param  string
 	 * @param  string
+	 * @param  string
 	 * @return NetteTestCase  provides a fluent interface
 	 */
-	public function setPHP($executable, $args)
+	public function setPhp($binary, $args, $environment)
 	{
-		if (isset(self::$cachedPhp[$executable])) {
-			$this->phpVersion = self::$cachedPhp[$executable];
+		if (isset(self::$cachedPhp[$binary])) {
+			$this->phpVersion = self::$cachedPhp[$binary];
 
 		} else {
-			exec(escapeshellarg($executable) . ' -v', $output, $res);
+			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
 			if ($res !== 0 && $res !== 255) {
-				throw new Exception("Unable to execute '$executable'.");
+				throw new Exception("Unable to execute '$binary -v'.");
 			}
 
 			if (!preg_match('#^PHP (\S+).*cgi#i', $output[0], $matches)) {
 				throw new Exception("Unable to detect PHP version (output: $output[0]).");
 			}
 
-			$this->phpVersion = self::$cachedPhp[$executable] = $matches[1];
+			$this->phpVersion = self::$cachedPhp[$binary] = $matches[1];
 		}
 
-		$this->cmdLine = escapeshellarg($executable) . " $args";
+		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
 		return $this;
 	}
 
