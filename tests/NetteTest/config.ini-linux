@@ -1,0 +1,9 @@
+[php-5.2.0]
+binary = "/opt/php-5.2.0/bin/php5-cgi"
+php.ini = "/opt/php-5.2.0/etc/php.ini"
+libraries = "/opt/php-5.2.0/lib"
+
+[php-5.3.0]
+binary = "/opt/php-5.3.0/bin/php5-cgi"
+php.ini = "/opt/php-5.3.0/etc/php.ini"
+libraries = "/opt/php-5.3.0/lib"

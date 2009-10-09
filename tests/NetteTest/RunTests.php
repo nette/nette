@@ -19,6 +19,7 @@ Options:
 	-c <path>   Look for php.ini in directory <path> or use <path> as php.ini.
 	-d key=val  Define INI entry 'key' with value 'val'.
 	-l <path>   Specify path to shared library files (LD_LIBRARY_PATH)
+	-e <name>   Load php environment <name>
 	-s          Show information about skipped tests
 
 <?php
@@ -33,6 +34,7 @@ try {
 	@unlink(dirname(__FILE__) . '/coverage.tmp'); // intentionally @
 
 	$manager = new NetteTestRunner;
+	$manager->parseConfigFile();
 	$manager->parseArguments();
 	$res = $manager->run();
 	die($res ? 0 : 1);
@@ -173,6 +175,37 @@ class NetteTestRunner
 
 
 	/**
+	 * Parses configuration file.
+	 * @return void
+	 */
+	public function parseConfigFile()
+	{
+		$configFile = dirname(__FILE__) .'/config.ini';
+		if (file_exists($configFile)) {
+			$this->config = parse_ini_file($configFile, TRUE);
+			if ($this->config === FALSE) {
+				throw new Exception('Config file parsing failed.');
+			}
+			foreach ($this->config as & $environment) {
+				$environment += array(
+					'binary' => 'php-cgi',
+					'args' => '',
+					'environment' => '',
+				);
+				// shorthand options
+				if (isset($environment['php.ini'])) {
+					$environment['args'] .= ' -c '. escapeshellarg($environment['php.ini']);
+				}
+				if (isset($environment['libraries'])) {
+					$environment['environment'] .= 'LD_LIBRARY_PATH='. escapeshellarg($environment['libraries']) .' ';
+				}
+			}
+		}
+	}
+
+
+
+	/**
 	 * Parses command line arguments.
 	 * @return void
 	 */
@@ -206,6 +239,13 @@ class NetteTestRunner
 				case 'l':
 					$args->next();
 					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
+					break;
+				case 'e':
+					$args->next();
+					$config = $this->config[$args->current()];
+					$this->phpBinary = $config['binary'];
+					$this->phpArgs = $config['args'];
+					$this->phpEnvironment = $config['environment'];
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;
