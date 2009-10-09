@@ -183,7 +183,12 @@ class NetteTestRunner
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
 		foreach ($args as $arg) {
 			if (!preg_match('#^[-/][a-z]$#', $arg)) {
-				$this->path = $arg;
+				if ($path = realpath($arg)) {
+					$this->path = $path;
+				} else {
+					echo "Error: '$arg' is not valid path\n";
+					exit;
+				}
 
 			} else switch ($arg[1]) {
 				case 'p':
