@@ -322,7 +322,7 @@ class NetteTestCase
 		foreach (explode("\r\n", $raw) as $header) {
 			$a = strpos($header, $separator);
 			if ($a !== FALSE) {
-				$headers[trim(substr($header, 0, $a))] = (string) trim(substr($header, $a + 2));
+				$headers[trim(substr($header, 0, $a))] = (string) trim(substr($header, $a + 1));
 			}
 		}
 		return $headers;

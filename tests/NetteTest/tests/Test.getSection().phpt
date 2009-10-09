@@ -46,7 +46,7 @@ content
 
 array(2) {
 	"key1" => string(6) "value1"
-	"key2" => string(5) "alue2"
+	"key2" => string(6) "value2"
 }
 
 array(5) {
