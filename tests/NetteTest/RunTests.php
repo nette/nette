@@ -222,8 +222,7 @@ class NetteTestRunner
 				if ($path = realpath($arg)) {
 					$this->path = $path;
 				} else {
-					echo "Error: '$arg' is not valid path\n";
-					exit;
+					throw new Exception("Invalid path '$arg'.");
 				}
 
 			} else switch ($arg[1]) {
@@ -242,16 +241,19 @@ class NetteTestRunner
 					break;
 				case 'e':
 					$args->next();
-					$config = $this->config[$args->current()];
-					$this->phpBinary = $config['binary'];
-					$this->phpArgs = $config['args'];
-					$this->phpEnvironment = $config['environment'];
+					$name = $args->current();
+					if (!isset($this->config[$name])) {
+						throw new Exception("Unknown environment name '$name'.");
+					}
+					$this->phpBinary = $this->config[$name]['binary'];
+					$this->phpArgs = $this->config[$name]['args'];
+					$this->phpEnvironment = $this->config[$name]['environment'];
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;
 					break;
 				default:
-					echo "Error: Unknown option -$arg[1]\n";
+					throw new Exception("Unknown option -$arg[1].");
 					exit;
 			}
 		}
