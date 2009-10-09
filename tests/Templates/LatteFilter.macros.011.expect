@@ -45,7 +45,7 @@ var html = &lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;;
 
 <ul>
 	<li n:foreach="$people as $person">
-Notice: Undefined variable: person in D:\Web\nette\_nette\tests\Templates\tmp\c-Nette.Template\_aab29610c5e409938e8af56ebb95bb5a.latte.xml.phtml.php on line 56
+Notice: Undefined variable: person in %a% on line %d%
 </li>
 </ul>
 
