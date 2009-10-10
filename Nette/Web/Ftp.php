@@ -63,6 +63,17 @@ class Ftp extends /*Nette\*/Object
 
 
 	/**
+	 */
+	public function __construct()
+	{
+		if (!extension_loaded('ftp')) {
+			throw new /*\*/Exception("PHP extension FTP is not loaded.");
+		}
+	}
+
+
+
+	/**
 	 * Magic method (do not call directly).
 	 * @param  string  method name
 	 * @param  array   arguments

@@ -63,6 +63,17 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 */
+	public function __construct()
+	{
+		if (!extension_loaded('tokenizer')) {
+			throw new /*\*/Exception("PHP extension Tokenizer is not loaded.");
+		}
+	}
+
+
+
+	/**
 	 * Register autoloader.
 	 * @return void
 	 */
