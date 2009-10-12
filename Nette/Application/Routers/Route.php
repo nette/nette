@@ -423,11 +423,12 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		$this->xlat = array();
 		$i = count($parts) - 1;
-		$part = $parts[$i - 1];
-		if (substr(ltrim($part), 0, 1) === '?') { // PARSE QUERY PART OF MASK
+
+		// PARSE QUERY PART OF MASK
+		if (isset($parts[$i - 1]) && substr(ltrim($parts[$i - 1]), 0, 1) === '?') {
 			preg_match_all(
 				'/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/', // name=<parameter-name [pattern][#class]>
-				$part,
+				$parts[$i - 1],
 				$matches,
 				PREG_SET_ORDER
 			);
