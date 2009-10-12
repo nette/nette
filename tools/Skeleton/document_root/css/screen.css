@@ -23,3 +23,8 @@ div.flash {
 	padding: 1em;
 	margin: 1em 0;
 }
+
+a[href^="error:"] {
+	background: red;
+	color: white;
+}

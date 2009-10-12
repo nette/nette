@@ -19,7 +19,6 @@
 // this allows load Nette Framework classes automatically so that
 // you don't have to litter your code with 'require' statements
 require LIBS_DIR . '/Nette/loader.php';
-//require dirname(__FILE__) . '/../../../Nette/loader.php';
 
 
 
