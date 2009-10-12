@@ -39,7 +39,7 @@ class CliRouter extends /*Nette\*/Object implements IRouter
 	const PRESENTER_KEY = 'action';
 
 	/** @var array */
-	protected $defaults;
+	private $defaults;
 
 
 

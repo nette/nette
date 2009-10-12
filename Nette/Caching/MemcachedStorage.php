@@ -43,10 +43,10 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 	/**#@-*/
 
 	/** @var Memcache */
-	protected $memcache;
+	private $memcache;
 
 	/** @var string */
-	protected $prefix;
+	private $prefix;
 
 
 

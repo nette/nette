@@ -109,16 +109,16 @@ class Route extends /*Nette\*/Object implements IRouter
 	private $re;
 
 	/** @var array of [value & fixity, filterIn, filterOut] */
-	protected $metadata = array();
+	private $metadata = array();
 
 	/** @var array  */
-	protected $xlat;
+	private $xlat;
 
 	/** @var int HOST, PATH, RELATIVE */
-	protected $type;
+	private $type;
 
 	/** @var int */
-	protected $flags;
+	private $flags;
 
 
 

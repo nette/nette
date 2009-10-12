@@ -40,13 +40,13 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	const MODULE_KEY = 'module';
 
 	/** @var string */
-	protected $module = '';
+	private $module = '';
 
 	/** @var array */
-	protected $defaults;
+	private $defaults;
 
 	/** @var int */
-	protected $flags;
+	private $flags;
 
 
 
