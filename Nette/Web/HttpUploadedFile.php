@@ -151,7 +151,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 
 
 	/**
-	 * Returns the error code.
+	 * Returns the error code. {@link http://php.net/manual/en/features.file-upload.errors.php}
 	 * @return int
 	 */
 	public function getError()
