@@ -19,7 +19,7 @@ require dirname(__FILE__) . '/Route.inc';
 
 
 
-$route = new Route(' ? action=<presenter> & act=<action [a-z]+>', array(
+$route = new Route('?action=<presenter> & act=<action [a-z]+>', array(
 	'presenter' => 'Default',
 	'action' => 'default',
 ));

@@ -413,21 +413,26 @@ class Route extends /*Nette\*/Object implements IRouter
 			}
 		}
 
+		// PARSE MASK
+		$parts = preg_split(
+			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|(\{!?|\}|\s*\?.*)/',  // <parameter-name [pattern] [#class]> or { or } or ?...
+			$mask,
+			-1,
+			PREG_SPLIT_DELIM_CAPTURE
+		);
 
-		// 1) PARSE QUERY PART OF MASK
 		$this->xlat = array();
-		$pos = strpos($mask, ' ? ');
-		if ($pos !== FALSE) {
+		$i = count($parts) - 1;
+		$part = $parts[$i - 1];
+		if (substr(ltrim($part), 0, 1) === '?') { // PARSE QUERY PART OF MASK
 			preg_match_all(
 				'/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/', // name=<parameter-name [pattern][#class]>
-				substr($mask, $pos + 1),
+				$part,
 				$matches,
 				PREG_SET_ORDER
 			);
-			$mask = rtrim(substr($mask, 0, $pos));
-
 			foreach ($matches as $match) {
-				list(, $param, $name, $pattern, $class) = $match;  // $pattern is unsed
+				list(, $param, $name, $pattern, $class) = $match;  // $pattern is not used
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
@@ -458,21 +463,12 @@ class Route extends /*Nette\*/Object implements IRouter
 					$this->xlat[$name] = $param;
 				}
 			}
+			$i -= 5;
 		}
-
-
-		// 2) PARSE URI-PATH PART OF MASK
-		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|(\{!?|\})/',  // <parameter-name [pattern] [#class]> or { or }
-			$mask,
-			-1,
-			PREG_SPLIT_DELIM_CAPTURE
-		);
 
 		$brackets = 0; // optional level
 		$autoOptional = TRUE;
 		$sequence = array();
-		$i = count($parts) - 1;
 		$re = '';
 		do {
 			array_unshift($sequence, $parts[$i]);
@@ -480,14 +476,14 @@ class Route extends /*Nette\*/Object implements IRouter
 			if ($i === 0) break;
 			$i--;
 
-			$bracket = $parts[$i]; // { or }
-			if ($bracket === '{' || $bracket === '}' || $bracket === '{!') {
-				$brackets += $bracket[0] === '{' ? -1 : 1;
+			$part = $parts[$i]; // { or }
+			if ($part === '{' || $part === '}' || $part === '{!') {
+				$brackets += $part[0] === '{' ? -1 : 1;
 				if ($brackets < 0) {
-					throw new /*\*/InvalidArgumentException("Unexpected '$bracket' in mask '$mask'.");
+					throw new /*\*/InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
 				}
-				array_unshift($sequence, $bracket);
-				$re = ($bracket[0] === '{' ? '(?:' : ')?') . $re;
+				array_unshift($sequence, $part);
+				$re = ($part[0] === '{' ? '(?:' : ')?') . $re;
 				$i -= 4;
 				continue;
 			}
