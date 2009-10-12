@@ -23,7 +23,7 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.2');
+define('CHECKER_VERSION', '1.3');
 
 $reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 
@@ -136,6 +136,13 @@ paint(array(
 		'required' => FALSE,
 		'passed' => extension_loaded('mbstring'),
 		'description' => 'Multibyte String extension is absent. Some internationalization components may not work properly.',
+	),
+
+	array(
+		'title' => 'PHP tokenizer',
+		'required' => TRUE,
+		'passed' => extension_loaded('tokenizer'),
+		'description' => 'PHP tokenizer is required.',
 	),
 
 	array(
