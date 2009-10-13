@@ -314,7 +314,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		// compositing path
 		$sequence = $this->sequence;
 		$brackets = array();
-		$required = NULL; // NULL for auto-optional
+		$required = 0;
 		$uri = '';
 		$i = count($sequence) - 1;
 		do {
@@ -346,11 +346,7 @@ class Route extends /*Nette\*/Object implements IRouter
 				unset($params[$name]);
 
 			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
-				if ($required === NULL && !$brackets) { // auto-optional
-					$uri = '';
-				} else {
-					$uri = $metadata[$name]['defOut'] . $uri;
-				}
+				$uri = $metadata[$name]['defOut'] . $uri;
 
 			} else {
 				return NULL; // missing parameter '$name'
@@ -468,9 +464,9 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 		$brackets = 0; // optional level
-		$autoOptional = TRUE;
-		$sequence = array();
 		$re = '';
+		$sequence = array();
+		$autoOptional = array(0, 0); // strlen($re), count($sequence)
 		do {
 			array_unshift($sequence, $parts[$i]);
 			$re = preg_quote($parts[$i], '#') . $re;
@@ -528,7 +524,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			}
 
 			$meta['filterTable2'] = empty($meta[self::FILTER_TABLE]) ? NULL : array_flip($meta[self::FILTER_TABLE]);
-			if (isset($meta[self::VALUE])) {
+			if (array_key_exists(self::VALUE, $meta)) {
 				if (isset($meta['filterTable2'][$meta[self::VALUE]])) {
 					$meta['defOut'] = $meta['filterTable2'][$meta[self::VALUE]];
 
@@ -550,14 +546,13 @@ class Route extends /*Nette\*/Object implements IRouter
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} elseif (isset($meta['fixity'])) { // auto-optional
-				if (!$autoOptional) {
-					throw new /*\*/InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
-				}
-				$re = '(?:' . $re . ')?';
+				$re = '(?:' . substr_replace($re, ')?', strlen($re) - $autoOptional[0], 0);
+				array_splice($sequence, count($sequence) - $autoOptional[1], 0, array('}', ''));
+				array_unshift($sequence, '{', '');
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
-				$autoOptional = FALSE;
+				$autoOptional = array(strlen($re), count($sequence));
 			}
 
 			$metadata[$name] = $meta;
