@@ -456,7 +456,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function setLayout($layout)
 	{
-		$this->layout = (string) $layout;
+		$this->layout = $layout === FALSE ? FALSE : (string) $layout;
 		return $this;
 	}
 
