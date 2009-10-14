@@ -334,7 +334,7 @@ class Application extends /*Nette\*/Object
 	 */
 	public function storeRequest($expiration = '+ 10 minutes')
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application/requests');
+		$session = $this->getSession('Nette.Application/requests');
 		do {
 			$key = substr(md5(lcg_value()), 0, 4);
 		} while (isset($session[$key]));
@@ -353,7 +353,7 @@ class Application extends /*Nette\*/Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->getSession()->getNamespace('Nette.Application/requests');
+		$session = $this->getSession('Nette.Application/requests');
 		if (isset($session[$key])) {
 			$request = clone $session[$key];
 			unset($session[$key]);
@@ -391,9 +391,9 @@ class Application extends /*Nette\*/Object
 	/**
 	 * @return Nette\Web\Session
 	 */
-	protected function getSession()
+	protected function getSession($namespace = NULL)
 	{
-		return Environment::getSession();
+		return Environment::getSession($namespace);
 	}
 
 }
