@@ -240,11 +240,16 @@ abstract class Presenter extends Control implements IPresenter
 			// PHASE 4: SHUTDOWN
 			$this->phase = self::PHASE_SHUTDOWN;
 
-			// back compatibility for use terminate() instead of sendPayload()
-			if ($this->isAjax() && !$this->response && (array) $this->payload) {
-				try { $this->sendPayload(); }
-				catch (AbortException $e) { }
-			}
+			if ($this->isAjax()) try {
+				if ($this->response instanceof RenderResponse) { // snippets - TODO
+					/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
+					$this->response->send();
+					$this->sendPayload();
+
+				} elseif (!$this->response && (array) $this->payload) { // back compatibility for use terminate() instead of sendPayload()
+					$this->sendPayload();
+				}
+			} catch (AbortException $e) { }
 
 			if ($this->hasFlashSession()) {
 				$this->getFlashSession()->setExpiration($this->response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
@@ -509,12 +514,6 @@ abstract class Presenter extends Control implements IPresenter
 					throw new /*\*/FileNotFoundException("Layout not found. Missing template '$file'.");
 				}
 			}
-		}
-
-		if ($this->isAjax()) { // TODO!
-			/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
-			$template->render();
-			$this->sendPayload();
 		}
 
 		$this->terminate(new RenderResponse($template));
