@@ -29,7 +29,7 @@ Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/latte.inheritance.child.phtml');
+$template->setFile(dirname(__FILE__) . '/templates/latte.inheritance.child1.phtml');
 $template->registerFilter(new LatteFilter);
 
 $template->people = array('John', 'Mary', 'Paul');
