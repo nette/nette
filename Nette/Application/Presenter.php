@@ -1322,7 +1322,7 @@ abstract class Presenter extends Control implements IPresenter
 		if (empty($this->params[self::FLASH_KEY])) {
 			$this->params[self::FLASH_KEY] = substr(md5(lcg_value()), 0, 4);
 		}
-		return $this->getSession()->getNamespace('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
+		return $this->getSession('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}
 
 
@@ -1364,9 +1364,9 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * @return Nette\Web\Session
 	 */
-	private function getSession()
+	protected function getSession($namespace = NULL)
 	{
-		return Environment::getSession();
+		return Environment::getSession($namespace);
 	}
 
 }
