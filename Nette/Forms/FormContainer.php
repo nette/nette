@@ -494,7 +494,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 */
 	final public function __clone()
 	{
-		throw new /*\*/NotImplementedException;
+		throw new /*\*/NotImplementedException('Form cloning is not supported yet.');
 	}
 
 }

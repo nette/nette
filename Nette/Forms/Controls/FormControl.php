@@ -344,8 +344,8 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public function loadHttpData()
 	{
-		$path = strtr(str_replace(']', '', $this->getHtmlName()), '.', '_');
-		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), explode('[', $path)));
+		$path = explode('[', strtr(str_replace(']', '', $this->getHtmlName()), '.', '_'));
+		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), $path));
 	}
 
 
