@@ -18,6 +18,5 @@
  */
 abstract class BasePresenter extends Presenter
 {
-	public $oldLayoutMode = FALSE;
 
 }

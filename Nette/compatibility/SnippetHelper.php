@@ -21,7 +21,7 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Object.php';
+require_once dirname(__FILE__) . '/../Object.php';
 
 
 
@@ -31,6 +31,7 @@ require_once dirname(__FILE__) . '/../../Object.php';
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
  * @package    Nette\Templates
+ * @deprecated
  */
 class SnippetHelper extends /*Nette\*/Object
 {

@@ -22,6 +22,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 	{
 		$fifteen = new FifteenControl;
 		$fifteen->onGameOver[] = array($this, 'gameOver');
+		$fifteen->invalidateControl();
 		return $fifteen;
 	}
 

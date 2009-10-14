@@ -75,12 +75,6 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array of function(Presenter $sender, IPresenterResponse $response = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
 
-	/** @var bool (experimental) */
-	public $oldLayoutMode = TRUE;
-
-	/** @var bool (experimental) */
-	public $oldModuleMode = TRUE;
-
 	/** @var PresenterRequest */
 	private $request;
 
@@ -200,15 +194,6 @@ abstract class Presenter extends Control implements IPresenter
 			}
 			if ($this->getHttpRequest()->isMethod('head')) {
 				$this->terminate();
-			}
-
-			// back compatibility
-			if (method_exists($this, 'beforePrepare')) {
-				$this->beforePrepare();
-				trigger_error('beforePrepare() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
-			}
-			if ($this->tryCall('prepare' . $this->getView(), $this->params)) {
-				trigger_error('prepare' . ucfirst($this->getView()) . '() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
 			}
 
 			// PHASE 2: SIGNAL HANDLING
@@ -334,11 +319,6 @@ abstract class Presenter extends Control implements IPresenter
 
 		} elseif (!$component instanceof ISignalReceiver) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not ISignalReceiver implementor.");
-		}
-
-		// auto invalidate
-		if ($this->oldLayoutMode && $component instanceof IRenderable) {
-			$component->invalidateControl();
 		}
 
 		$component->signalReceived($this->signal);
@@ -500,12 +480,7 @@ abstract class Presenter extends Control implements IPresenter
 				foreach ($files as $file) {
 					if (is_file($file)) {
 						$template->layout = $file;
-						if ($this->oldLayoutMode) {
-							$template->content = clone $template;
-							$template->setFile($file);
-						} else {
-							$template->_extends = $file;
-						}
+						$template->_extends = $file;
 						break;
 					}
 				}
@@ -530,27 +505,6 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
-		if ($this->oldModuleMode) {
-			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-			$presenter = str_replace(':', 'Module/', $presenter);
-			$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
-			$base = '';
-			if ($root === Environment::getVariable('appDir') . '/presenters') {
-				$base = 'templates/';
-				if ($module === '') {
-					$presenter = 'templates/' . $presenter;
-				} else {
-					$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
-				}
-			}
-			return array(
-				"$root/$presenter/@$layout.phtml",
-				"$root/$presenter.@$layout.phtml",
-				"$root/$module/$base@$layout.phtml",
-				"$root/$base@$layout.phtml",
-			);
-		}
-
 		$appDir = Environment::getVariable('appDir');
 		$path = '/' . str_replace(':', 'Module/', $presenter);
 		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
@@ -574,22 +528,6 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatTemplateFiles($presenter, $view)
 	{
-		if ($this->oldModuleMode) {
-			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-			$presenter = str_replace(':', 'Module/', $presenter);
-			$dir = '';
-			if ($root === Environment::getVariable('appDir') . '/presenters') { // special supported case
-				$pos = strrpos($presenter, '/');
-				$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
-				$dir = 'templates/';
-			}
-			return array(
-				"$root/$presenter/$view.phtml",
-				"$root/$presenter.$view.phtml",
-				"$root/$dir@global.$view.phtml",
-			);
-		}
-
 		$appDir = Environment::getVariable('appDir');
 		$path = '/' . str_replace(':', 'Module/', $presenter);
 		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
@@ -623,16 +561,6 @@ abstract class Presenter extends Control implements IPresenter
 	protected static function formatRenderMethod($view)
 	{
 		return 'render' . $view;
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	protected function renderTemplate()
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->sendTemplate() instead.');
 	}
 
 
@@ -673,16 +601,6 @@ abstract class Presenter extends Control implements IPresenter
 	protected function sendPayload()
 	{
 		$this->terminate(new JsonResponse($this->payload));
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getAjaxDriver()
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->payload instead.');
 	}
 
 

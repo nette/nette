@@ -17,7 +17,14 @@
  * @package    Nette
  */
 
-/**/require_once dirname(__FILE__) . '/compatibility.php';/**/
+/**
+ * Check PHP configuration.
+ */
+if (version_compare(PHP_VERSION, '5.2.0', '<')) {
+	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
+}
+
+/**/require_once dirname(__FILE__) . '/compatibility/PHP.php';/**/
 
 require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 

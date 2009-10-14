@@ -565,9 +565,3 @@ class LatteFilter extends /*Nette\*/Object
 	}
 
 }
-
-
-
-/** @deprecated */
-class CurlyBracketsFilter extends LatteFilter {}
-class CurlyBracketsMacros extends LatteMacros {}

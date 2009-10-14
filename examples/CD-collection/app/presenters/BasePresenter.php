@@ -6,8 +6,6 @@
 
 abstract class BasePresenter extends Presenter
 {
-	public $oldLayoutMode = FALSE;
-
 
 	protected function beforeRender()
 	{
