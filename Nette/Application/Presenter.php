@@ -241,7 +241,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_SHUTDOWN;
 
 			// back compatibility for use terminate() instead of sendPayload()
-			if ($this->isAjax() && !($this->response instanceof ForwardingResponse || $this->response instanceof JsonResponse) && (array) $this->payload) {
+			if ($this->isAjax() && !$this->response && (array) $this->payload) {
 				try { $this->sendPayload(); }
 				catch (AbortException $e) { }
 			}
