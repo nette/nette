@@ -29,10 +29,6 @@ Debug::enable();
 // 2b) load configuration from config.ini file
 Environment::loadConfig();
 
-// 2c) setup sessions
-$session = Environment::getSession();
-$session->setSavePath(APP_DIR . '/sessions/');
-
 
 
 // Step 3: Configure application

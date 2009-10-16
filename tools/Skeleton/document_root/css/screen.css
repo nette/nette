@@ -9,11 +9,12 @@ h1 {
 	color: #165ca3;
 }
 
-#spinner {
-	display: none;
-	position: absolute;
-	border: none;
-	z-index: 1000;
+#ajax-spinner {
+	margin: 15px 0 0 15px;
+	padding: 13px;
+	background: white url('../images/spinner.gif') no-repeat 50% 50%;
+	font-size: 0;
+	z-index: 123456;
 }
 
 div.flash {

@@ -31,11 +31,9 @@ class ErrorPresenter extends BasePresenter
 			$this->terminate();
 
 		} elseif ($exception instanceof BadRequestException) {
-			$this->template->title = '404 Not Found';
 			$this->setView('404'); // load template 404.phtml
 
 		} else {
-			$this->template->title = '500 Internal Server Error';
 			$this->setView('500'); // load template 500.phtml
 			Debug::processException($exception); // and handle error by Nette\Debug
 		}

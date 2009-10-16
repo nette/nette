@@ -1,5 +1,35 @@
 {block #content}
 
-<h1>{$title}</h1>
+<div id="header">
+	<h1>It works!</h1>
 
-<p>Hello World</p>
+	<h2>Congratulations on your first Nette Framework powered page.</h2>
+</div>
+
+<p>{$message}</p>
+
+<style>
+	body {
+		margin: 0;
+		padding 0;
+	}
+
+	#header {
+		background: #EEE;
+		padding: .2em 1em;
+	}
+
+	h1 {
+		color: navy;
+		font-size: 30px;
+	}
+
+	h2 {
+		color: gray;
+		font-size: 20px;
+	}
+
+	p {
+		padding: .2em 1em;
+	}
+</style>
