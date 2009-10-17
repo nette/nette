@@ -979,11 +979,9 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	private function & getRules($resource, $role, $create = FALSE)
 	{
 		// follow $resource
-		do {
-			if ($resource === self::ALL) {
-				$visitor = & $this->rules['allResources'];
-				break;
-			}
+		if ($resource === self::ALL) {
+			$visitor = & $this->rules['allResources'];
+		} else {
 			if (!isset($this->rules['byResource'][$resource])) {
 				if (!$create) {
 					$null = NULL;
@@ -992,7 +990,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 				$this->rules['byResource'][$resource] = array();
 			}
 			$visitor = & $this->rules['byResource'][$resource];
-		} while (FALSE);
+		}
 
 
 		// follow $role
