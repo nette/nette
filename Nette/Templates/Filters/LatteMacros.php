@@ -220,7 +220,7 @@ class LatteMacros extends /*Nette\*/Object
 		if ($this->namedBlocks) {
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$name = preg_quote($name, '#');
-				$s = preg_replace_callback("#{block($name)} \?>(.*)<\?php {/block$name}#sU", array($this, 'cbNamedBlocks'), $s);
+				$s = preg_replace_callback("#{block ($name)} \?>(.*)<\?php {/block $name}#sU", array($this, 'cbNamedBlocks'), $s);
 			}
 			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
 		}
@@ -426,12 +426,13 @@ class LatteMacros extends /*Nette\*/Object
 			throw new /*\*/InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
 
 		} elseif ($destination[0] === '#') { // include #block
-			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $destination)) {
+			$destination = ltrim($destination, '#');
+			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $destination)) {
 				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
-			$parent = $destination === '#parent';
-			if ($destination === '#parent' || $destination === '#this') {
+			$parent = $destination === 'parent';
+			if ($destination === 'parent' || $destination === 'this') {
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
@@ -496,8 +497,9 @@ class LatteMacros extends /*Nette\*/Object
 			$this->blocks[] = array(self::BLOCK_ANONYMOUS, NULL, $modifiers);
 			return $modifiers === '' ? '' : 'ob_start()';
 
-		} elseif ($name[0] === '#') { // #block
-			if (!preg_match('#^\\#'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
+		} else { // #block
+			$name = ltrim($name, '#');
+			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
 				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -508,17 +510,14 @@ class LatteMacros extends /*Nette\*/Object
 			$this->namedBlocks[$name] = $name;
 			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
 			if (!$top) {
-				return $this->macroInclude($name, $modifiers) . "{block$name}";
+				return $this->macroInclude('#' . $name, $modifiers) . "{block $name}";
 
 			} elseif ($this->extends) {
-				return "{block$name}";
+				return "{block $name}";
 
 			} else {
-				return 'if (!$_cb->extends) { ' . $this->macroInclude($name, $modifiers) . "; } {block$name}";
+				return 'if (!$_cb->extends) { ' . $this->macroInclude('#' . $name, $modifiers) . "; } {block $name}";
 			}
-
-		} else {
-			throw new /*\*/InvalidStateException("Invalid block parameter '$name' on line {$this->filter->line}.");
 		}
 	}
 
@@ -539,8 +538,8 @@ class LatteMacros extends /*Nette\*/Object
 		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
 			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
 
-		} elseif ($type === self::BLOCK_NAMED) { // #block
-			return "{/block$name}";
+		} elseif ($type === self::BLOCK_NAMED) { // block
+			return "{/block $name}";
 
 		} else { // anonymous block
 			return $modifiers === '' ? '' : 'echo ' . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
@@ -583,7 +582,7 @@ class LatteMacros extends /*Nette\*/Object
 
 
 	/**
-	 * Converts {block#named}...{/block} to functions.
+	 * Converts {block named}...{/block} to functions.
 	 */
 	private function cbNamedBlocks($matches)
 	{
