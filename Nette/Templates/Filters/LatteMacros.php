@@ -72,8 +72,8 @@ class LatteMacros extends /*Nette\*/Object
 		'capture' => '<?php %:macroCapture% ?>',
 		'/capture' => '<?php %:macroCaptureEnd% ?>',
 
-		'snippet' => '<?php } if ($_cb->foo = SnippetHelper::create($control%:macroSnippet%)) { $_cb->snippets[] = $_cb->foo ?>',
-		'/snippet' => '<?php array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) { ?>',
+		'snippet' => '<?php %:macroSnippet% ?>',
+		'/snippet' => '<?php %:macroSnippetEnd% ?>',
 
 		'cache' => '<?php if ($_cb->foo = CachingHelper::create($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(%%))) { $_cb->caches[] = $_cb->foo ?>',
 		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key) ?>',
@@ -549,6 +549,33 @@ class LatteMacros extends /*Nette\*/Object
 
 
 	/**
+	 * {snippet ...}
+	 */
+	private function macroSnippet($content)
+	{
+		$args = array('');
+		if ($snippet = LatteFilter::fetchToken($content)) {  // [name [,]] [tag]
+			$args[] = LatteFilter::formatString($snippet);
+		}
+		if ($content) {
+			$args[] = LatteFilter::formatString($content);
+		}
+		return '} if ($_cb->foo = SnippetHelper::create($control' . implode(', ', $args) . ')) { $_cb->snippets[] = $_cb->foo';
+	}
+
+
+
+	/**
+	 * {snippet ...}
+	 */
+	private function macroSnippetEnd($content)
+	{
+		return 'array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) {';
+	}
+
+
+
+	/**
 	 * {capture ...}
 	 */
 	private function macroCapture($content, $modifiers)
@@ -657,23 +684,6 @@ class LatteMacros extends /*Nette\*/Object
 	private function macroDump($content)
 	{
 		return $content ? "array('$content' => $content)" : 'get_defined_vars()';
-	}
-
-
-
-	/**
-	 * {snippet ...}
-	 */
-	private function macroSnippet($content)
-	{
-		$args = array('');
-		if ($snippet = LatteFilter::fetchToken($content)) {  // [name [,]] [tag]
-			$args[] = LatteFilter::formatString($snippet);
-		}
-		if ($content) {
-			$args[] = LatteFilter::formatString($content);
-		}
-		return implode(', ', $args);
 	}
 
 
