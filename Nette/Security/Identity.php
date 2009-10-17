@@ -115,7 +115,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 
 
 	/**
-	 * Returns an user data.
+	 * Returns a user data.
 	 * @return array
 	 */
 	public function getData()

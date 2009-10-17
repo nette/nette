@@ -34,7 +34,7 @@ class AuthPresenter extends BasePresenter
 	{
 		$form = new AppForm;
 		$form->addText('username', 'Username:')
-			->addRule(Form::FILLED, 'Please provide an username.');
+			->addRule(Form::FILLED, 'Please provide a username.');
 
 		$form->addPassword('password', 'Password:')
 			->addRule(Form::FILLED, 'Please provide a password.');
