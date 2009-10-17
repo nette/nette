@@ -241,12 +241,13 @@ abstract class Presenter extends Control implements IPresenter
 			$this->phase = self::PHASE_SHUTDOWN;
 
 			if ($this->isAjax()) try {
-				if ($this->response instanceof RenderResponse) { // snippets - TODO
+				$hasPayload = count((array) $this->payload) > 1; // ignore 'state'
+				if ($this->response instanceof RenderResponse && ($this->isControlInvalid() || $hasPayload)) { // snippets - TODO
 					/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
 					$this->response->send();
 					$this->sendPayload();
 
-				} elseif (!$this->response && (array) $this->payload) { // back compatibility for use terminate() instead of sendPayload()
+				} elseif (!$this->response && $hasPayload) { // back compatibility for use terminate() instead of sendPayload()
 					$this->sendPayload();
 				}
 			} catch (AbortException $e) { }
