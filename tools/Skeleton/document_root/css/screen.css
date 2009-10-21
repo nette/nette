@@ -15,6 +15,7 @@ h1 {
 	background: white url('../images/spinner.gif') no-repeat 50% 50%;
 	font-size: 0;
 	z-index: 123456;
+	display: none;
 }
 
 div.flash {

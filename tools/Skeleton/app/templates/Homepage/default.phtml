@@ -1,4 +1,4 @@
-{block #content}
+{block content}
 
 <div id="header">
 	<h1>It works!</h1>
@@ -6,7 +6,9 @@
 	<h2>Congratulations on your first Nette Framework powered page.</h2>
 </div>
 
-<p>{$message}</p>
+<div>
+	<p>{$message}</p>
+</div>	
 
 <style>
 	body {
@@ -14,22 +16,22 @@
 		padding 0;
 	}
 
-	#header {
-		background: #EEE;
+	div {
 		padding: .2em 1em;
 	}
 
+	#header {
+		background: #EEE;
+		border-bottom: 1px #DDD solid;
+	}
+
 	h1 {
-		color: navy;
+		color: #0056ad;
 		font-size: 30px;
 	}
 
 	h2 {
 		color: gray;
 		font-size: 20px;
-	}
-
-	p {
-		padding: .2em 1em;
 	}
 </style>
