@@ -296,8 +296,9 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 			do {
 				$meta = $this->readMeta((string) $entry, LOCK_SH);
-				if (!$meta || $all) continue 2;
+				if (!$meta) continue 2;
 
+				if ($all) break;
 				if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
 					break;
 				}
