@@ -51,7 +51,11 @@ abstract class AutoLoader extends /*Nette\*/Object
 	 */
 	final public static function load($type)
 	{
-		class_exists($type);
+		foreach (func_get_args() as $type) {
+			if (!class_exists($type)) {
+				throw new /*\*/InvalidStateException("Unable to load class or interface '$type'.");
+			}
+		}
 	}
 
 
