@@ -1369,4 +1369,14 @@ abstract class Presenter extends Control implements IPresenter
 		return Environment::getSession($namespace);
 	}
 
+
+
+	/**
+	 * @return Nette\Web\User
+	 */
+	protected function getUser()
+	{
+		return Environment::getUser();
+	}
+
 }
