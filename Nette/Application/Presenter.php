@@ -60,7 +60,7 @@ abstract class Presenter extends Control implements IPresenter
 	const INVALID_LINK_EXCEPTION = 3;
 	/**#@-*/
 
-	/**#@+ special parameter key */
+	/**#@+ @internal special parameter key */
 	const SIGNAL_KEY = 'do';
 	const ACTION_KEY = 'action';
 	const FLASH_KEY = '_fid';

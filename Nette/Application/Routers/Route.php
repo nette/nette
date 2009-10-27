@@ -44,7 +44,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	const CASE_SENSITIVE = 256;
 	const FULL_META = 128;
 
-	/**#@+ uri type */
+	/**#@+ @internal uri type */
 	const HOST = 1;
 	const PATH = 2;
 	const RELATIVE = 3;

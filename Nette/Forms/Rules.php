@@ -34,6 +34,7 @@ require_once dirname(__FILE__) . '/../Object.php';
  */
 final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 {
+	/** @internal */
 	const VALIDATE_PREFIX = 'validate';
 
 	/** @var array */

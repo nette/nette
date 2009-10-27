@@ -49,7 +49,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	/** @deprecated */
 	const REFRESH = 'sliding';
 
-	/** @private */
+	/** @internal */
 	const NAMESPACE_SEPARATOR = "\x00";
 
 	/** @var ICacheStorage */

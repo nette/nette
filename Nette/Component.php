@@ -341,7 +341,7 @@ abstract class Component extends Object implements IComponent
 			return;
 
 		} elseif ($this->parent instanceof ComponentContainer) {
-			$this->parent = $this->parent->isCloning();
+			$this->parent = $this->parent->_isCloning();
 			if ($this->parent === NULL) { // not cloning
 				$this->refreshMonitors(0);
 			}

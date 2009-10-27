@@ -257,7 +257,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @return NULL|IComponent
 	 * @internal
 	 */
-	public function isCloning()
+	public function _isCloning()
 	{
 		return $this->cloning;
 	}

@@ -36,7 +36,7 @@ require_once dirname(__FILE__) . '/../Caching/ICacheStorage.php';
  */
 class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 {
-	/**#@+ internal cache structure */
+	/**#@+ @internal cache structure */
 	const META_CALLBACKS = 'callbacks';
 	const META_DATA = 'data';
 	const META_DELTA = 'delta';

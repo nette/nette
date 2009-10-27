@@ -88,10 +88,10 @@ class Form extends FormContainer
 	const POST = 'post';
 	/**#@-*/
 
-	/** tracker ID */
+	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
 
-	/** protection token ID */
+	/** @internal protection token ID */
 	const PROTECTOR_ID = '_token_';
 
 	/** @var array of function(Form $sender); Occurs when the form is submitted and successfully validated */

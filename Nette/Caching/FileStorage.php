@@ -47,7 +47,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 * delete* = lock(EX), try unlink, if fails (on NTFS) { truncate, close, unlink } else close (on ext3)
 	 */
 
-	/**#@+ internal cache file structure */
+	/**#@+ @internal cache file structure */
 	const META_HEADER_LEN = 28; // 22b signature + 6b meta-struct size + serialized meta-struct + data
 	// meta structure: array of
 	const META_TIME = 'time'; // timestamp

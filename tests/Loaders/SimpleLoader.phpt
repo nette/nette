@@ -22,7 +22,7 @@ set_include_path('../../');
 $loader = new SimpleLoader;
 $loader->register();
 
-/**/AutoLoader::load('Nette\Debug');/**/
+/**/AutoLoader::load(/*Nette\*/'Debug');/**/
 
 dump( class_exists(/*Nette\*/'Debug'), 'Class Nette\Debug loaded?' );
 

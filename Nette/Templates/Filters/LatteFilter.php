@@ -34,13 +34,13 @@ require_once dirname(__FILE__) . '/../../Object.php';
  */
 class LatteFilter extends /*Nette\*/Object
 {
-	/** single & double quoted PHP string */
+	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
-	/** PHP identifier */
+	/** @internal PHP identifier */
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
-	/** spcial HTML tag or attribute prefix */
+	/** @internal special HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
 	/** @var ILatteHandler */
@@ -64,7 +64,7 @@ class LatteFilter extends /*Nette\*/Object
 	/** @var string */
 	public $context, $escape;
 
-	/**#@+ Context-aware escaping states */
+	/**#@+ @internal Context-aware escaping states */
 	const CONTEXT_TEXT = 'text';
 	const CONTEXT_CDATA = 'cdata';
 	const CONTEXT_TAG = 'tag';
