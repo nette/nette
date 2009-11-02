@@ -96,6 +96,7 @@ class LatteMacros extends /*Nette\*/Object
 
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
+		'layout' => '<?php %:macroExtends% ?>',
 
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
