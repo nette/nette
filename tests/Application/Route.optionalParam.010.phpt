@@ -19,9 +19,9 @@ require dirname(__FILE__) . '/Route.inc';
 
 
 $route = new Route('{<module admin|image>/}<presenter>/<action>', array(
-        'module' => 'Front',
-        'presenter' => 'Homepage',
-        'action' => 'default',
+	'module' => 'Front',
+	'presenter' => 'Homepage',
+	'action' => 'default',
 ));
 
 testRoute($route, '/one');

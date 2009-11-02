@@ -35,9 +35,9 @@ __halt_compiler();
 {* kód  *}
 
 @{if TRUE}
-        {* kód  *}
+		{* kód  *}
 @{else}
-        {* kód  *}
+		{* kód  *}
 @{/if}
 
 {* kód  *}
