@@ -40,7 +40,7 @@ class RobotLoader extends AutoLoader
 	public $scanDirs;
 
 	/** @var string  comma separated wildcards */
-	public $ignoreDirs = '.*, *.old, *.bak, *.tmp';
+	public $ignoreDirs = '.*, *.old, *.bak, *.tmp, temp';
 
 	/** @var string  comma separated wildcards */
 	public $acceptFiles = '*.php, *.php5';
