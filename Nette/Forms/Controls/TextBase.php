@@ -179,7 +179,7 @@ abstract class TextBase extends FormControl
 		$localPart = "(\"([ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars]([-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) preg_match("(^$localPart@($domain?\\.)+[a-z]{2,10}\\z)i", $control->getValue()); // strict top-level domain
+		return (bool) preg_match("(^$localPart@($domain?\\.)+[a-z]{2,14}\\z)i", $control->getValue()); // strict top-level domain
 	}
 
 
