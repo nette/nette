@@ -205,8 +205,6 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanDirectory($dir)
 	{
-		$dir = realpath($dir);
-		if (!$dir) return;
 		$iterator = dir($dir);
 		if (!$iterator) return;
 
@@ -223,8 +221,7 @@ class RobotLoader extends AutoLoader
 		while (FALSE !== ($entry = $iterator->read())) {
 			if ($entry == '.' || $entry == '..' || isset($disallow[$entry])) continue;
 
-			$path = $dir . '/' . $entry;
-			if (!is_readable($path)) continue;
+			$path = $dir . DIRECTORY_SEPARATOR . $entry;
 
 			// process subdirectories
 			if (is_dir($path)) {
