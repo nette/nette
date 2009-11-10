@@ -49,8 +49,8 @@ __halt_compiler();
 
 if (SnippetHelper::$outputAllowed) {
 } if (TRUE): if (SnippetHelper::$outputAllowed) { ?>
-        <?php } ;else: if (SnippetHelper::$outputAllowed) { ?>
-        <?php } endif ;if (SnippetHelper::$outputAllowed) { ?>
+		<?php } ;else: if (SnippetHelper::$outputAllowed) { ?>
+		<?php } endif ;if (SnippetHelper::$outputAllowed) { ?>
 
 <?php
 }
