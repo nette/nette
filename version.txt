@@ -1,1 +1,1 @@
-Nette Framework 0.9.2 (revision $WCREV$ released on $WCDATE$)
+Nette Framework 0.9.3-dev (revision $WCREV$ released on $WCDATE$)
