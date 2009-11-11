@@ -18,7 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 require dirname(__FILE__) . '/Route.inc';
 
 
-$route = new Route('{<one [a-z]+><two [0-9]+>}', array(
+$route = new Route('[<one [a-z]+><two [0-9]+>]', array(
 	'one' => 'a',
 	'two' => '1',
 ));

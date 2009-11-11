@@ -324,13 +324,13 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			$name = $sequence[$i]; $i--; // parameter name
 
-			if ($name === '}') { // opening optional part
+			if ($name === ']') { // opening optional part
 				$brackets[] = $uri;
 
-			} elseif ($name[0] === '{') { // closing optional part
+			} elseif ($name[0] === '[') { // closing optional part
 				$tmp = array_pop($brackets);
 				if ($required < count($brackets) + 1) { // is this level optional?
-					if ($name !== '{!') { // and not "required"-optional
+					if ($name !== '[!') { // and not "required"-optional
 						$uri = $tmp;
 					}
 				} else {
@@ -411,7 +411,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// PARSE MASK
 		$parts = preg_split(
-			'/<([^># ]+) *([^>#]*)(#?[^>{}]*)>|(\{!?|\}|\s*\?.*)/',  // <parameter-name [pattern] [#class]> or { or } or ?...
+			'/<([^># ]+) *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/',  // <parameter-name [pattern] [#class]> or [ or ] or ?...
 			$mask,
 			-1,
 			PREG_SPLIT_DELIM_CAPTURE
@@ -469,18 +469,21 @@ class Route extends /*Nette\*/Object implements IRouter
 		$autoOptional = array(0, 0); // strlen($re), count($sequence)
 		do {
 			array_unshift($sequence, $parts[$i]);
+			if (strpos($parts[$i], '{') !== FALSE) {
+				throw new /*\*/DeprecatedException('Optional parts delimited using {...} are deprecated; use [...] instead.');
+			}
 			$re = preg_quote($parts[$i], '#') . $re;
 			if ($i === 0) break;
 			$i--;
 
-			$part = $parts[$i]; // { or }
-			if ($part === '{' || $part === '}' || $part === '{!') {
-				$brackets += $part[0] === '{' ? -1 : 1;
+			$part = $parts[$i]; // [ or ]
+			if ($part === '[' || $part === ']' || $part === '[!') {
+				$brackets += $part[0] === '[' ? -1 : 1;
 				if ($brackets < 0) {
 					throw new /*\*/InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
 				}
 				array_unshift($sequence, $part);
-				$re = ($part[0] === '{' ? '(?:' : ')?') . $re;
+				$re = ($part[0] === '[' ? '(?:' : ')?') . $re;
 				$i -= 4;
 				continue;
 			}
@@ -547,8 +550,8 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			} elseif (isset($meta['fixity'])) { // auto-optional
 				$re = '(?:' . substr_replace($re, ')?', strlen($re) - $autoOptional[0], 0);
-				array_splice($sequence, count($sequence) - $autoOptional[1], 0, array('}', ''));
-				array_unshift($sequence, '{', '');
+				array_splice($sequence, count($sequence) - $autoOptional[1], 0, array(']', ''));
+				array_unshift($sequence, '[', '');
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
@@ -559,7 +562,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		} while (TRUE);
 
 		if ($brackets) {
-			throw new /*\*/InvalidArgumentException("Missing closing '}' in mask '$mask'.");
+			throw new /*\*/InvalidArgumentException("Missing closing ']' in mask '$mask'.");
 		}
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'i');

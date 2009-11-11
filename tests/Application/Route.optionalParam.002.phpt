@@ -18,7 +18,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 require dirname(__FILE__) . '/Route.inc';
 
 
-$route = new Route('index{.html}', array(
+$route = new Route('index[.html]', array(
 ));
 
 testRoute($route, '/index.html');
