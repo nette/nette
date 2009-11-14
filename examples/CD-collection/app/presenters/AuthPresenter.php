@@ -15,13 +15,6 @@ class AuthPresenter extends BasePresenter
 
 
 
-	public static function getPersistentParams()
-	{
-		return array('backlink');
-	}
-
-
-
 	/********************* component factories *********************/
 
 
