@@ -274,13 +274,6 @@ class RobotLoader extends AutoLoader
 		{
 			if (is_array($token)) {
 				switch ($token[0]) {
-				case T_NAMESPACE:
-				case T_CLASS:
-				case T_INTERFACE:
-					$expected = $token[0];
-					$name = '';
-					continue 2;
-
 				case T_COMMENT:
 				case T_DOC_COMMENT:
 				case T_WHITESPACE:
@@ -292,23 +285,36 @@ class RobotLoader extends AutoLoader
 						$name .= $token[1];
 					}
 					continue 2;
+
+				case T_NAMESPACE:
+				case T_CLASS:
+				case T_INTERFACE:
+					$expected = $token[0];
+					$name = '';
+					continue 2;
+				case T_CURLY_OPEN:
+				case T_DOLLAR_OPEN_CURLY_BRACES:
+					$level++;
 				}
 			}
 
 			if ($expected) {
-				if ($expected === T_NAMESPACE) {
+				switch ($expected) {
+				case T_CLASS:
+				case T_INTERFACE:
+					if ($level === 0) {
+						$this->addClass($namespace . $name, $file);
+					}
+					break;
+
+				case T_NAMESPACE:
 					$namespace = $name . '\\';
-				} elseif ($level === 0) {
-					$this->addClass($namespace . $name, $file);
 				}
-				$expected = FALSE;
+
+				$expected = NULL;
 			}
 
-			if (is_array($token)) {
-				if ($token[0] === T_CURLY_OPEN || $token[0] === T_DOLLAR_OPEN_CURLY_BRACES) {
-					$level++;
-				}
-			} elseif ($token === '{') {
+			if ($token === '{') {
 				$level++;
 			} elseif ($token === '}') {
 				$level--;
