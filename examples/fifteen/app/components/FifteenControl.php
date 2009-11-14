@@ -35,13 +35,6 @@ class FifteenControl extends /*Nette\Application\*/Control
 
 
 
-	public static function getPersistentParams()
-	{
-		return array('order', 'round');
-	}
-
-
-
 	public function __construct()
 	{
 		parent::__construct();
