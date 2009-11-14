@@ -30,8 +30,14 @@
  */
 final class Annotations
 {
+    /** @var bool */
+	public static $useReflection;
+
 	/** @var array */
-	private static $cache = array();
+	private static $cache;
+
+	/** @var array */
+	private static $timestamps;
 
 
 
@@ -97,11 +103,11 @@ final class Annotations
 
 
 	/**
-	 * Parses and caches annotations.
+	 * Returns annotations.
 	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @return array
 	 */
-	private static function init(/*\*/Reflector $r)
+	public static function init(/*\*/Reflector $r)
 	{
 		if ($r instanceof /*\*/ReflectionClass) {
 			$type = $r->getName();
@@ -116,13 +122,57 @@ final class Annotations
 			$member = '$' . $r->getName();
 		}
 
-		$cache = & self::$cache[$type][$member];
-		if ($cache !== NULL) {
-			return $cache;
+		if (!self::$useReflection) { // auto-expire cache
+			$file = $r instanceof /*\*/ReflectionClass ? $r->getFileName() : $r->getDeclaringClass()->getFileName(); // will be used later
+			if ($file && isset(self::$timestamps[$file]) && self::$timestamps[$file] !== filemtime($file)) {
+				unset(self::$cache[$type]);
+			}
+			unset(self::$timestamps[$file]);
 		}
 
-		preg_match_all('#@([a-zA-Z0-9_]+)(?:\(((?>[^\'")]+|\'[^\']*\'|"[^"]*")*)\))?#', trim($r->getDocComment(), "*/\r\n\t "), $matches, PREG_SET_ORDER);
-		$cache = array();
+		if (isset(self::$cache[$type][$member])) { // is value cached?
+			return self::$cache[$type][$member];
+		}
+
+		if (self::$useReflection === NULL) { // detects whether is reflection available
+			$rc = new ReflectionClass(__CLASS__);
+			self::$useReflection = (bool) $rc->getDocComment();
+		}
+
+		if (self::$useReflection) {
+			return self::$cache[$type][$member] = self::parseComment($r->getDocComment());
+
+		} else {
+			if (self::$cache === NULL) {
+				self::$cache = (array) self::getCache()->offsetGet('list');
+				self::$timestamps = isset(self::$cache['*']) ? self::$cache['*'] : array();
+			}
+
+			if (!isset(self::$cache[$type]) && $file) {
+				self::$cache['*'][$file] = filemtime($file);
+				self::parseScript($file);
+				self::getCache()->save('list', self::$cache);
+			}
+
+			if (isset(self::$cache[$type][$member])) {
+				return self::$cache[$type][$member];
+			} else {
+				return self::$cache[$type][$member] = array();
+			}
+		}
+	}
+
+
+
+	/**
+	 * Parses phpDoc comment.
+	 * @param  string
+	 * @return array
+	 */
+	private static function parseComment($comment)
+	{
+		preg_match_all('#@([a-zA-Z0-9_]+)(?:\(((?>[^\'")]+|\'[^\']*\'|"[^"]*")*)\))?#', trim($comment, "*/\r\n\t "), $matches, PREG_SET_ORDER);
+		$res = array();
 		foreach ($matches as $match)
 		{
 			if (isset($match[2])) {
@@ -162,9 +212,126 @@ final class Annotations
 				$items = TRUE;
 			}
 
-			$cache[$match[1]][] = $items;
+			$res[$match[1]][] = $items;
 		}
-		return $cache;
+
+		return $res;
+	}
+
+
+
+	/**
+	 * Parses PHP file.
+	 * @param  string
+	 * @return void
+	 */
+	private static function parseScript($file)
+	{
+		if (!defined('T_NAMESPACE')) {
+			define('T_NAMESPACE', -1);
+			define('T_NS_SEPARATOR', -1);
+		}
+
+		$s = file_get_contents($file);
+
+		if (preg_match('#//nette'.'loader=(\S*)#', $s)) {
+			return; // TODO: allways ignore?
+		}
+
+		$expected = $namespace = $class = $docComment = NULL;
+		$level = $classLevel = 0;
+
+		foreach (token_get_all($s) as $token)
+		{
+			if (is_array($token)) {
+				switch ($token[0]) {
+				case T_DOC_COMMENT:
+					$docComment = $token[1];
+				case T_WHITESPACE:
+				case T_COMMENT:
+					continue 2;
+
+				case T_STRING:
+				case T_NS_SEPARATOR:
+				case T_VARIABLE:
+					if ($expected) {
+						$name .= $token[1];
+					}
+					continue 2;
+
+				case T_FUNCTION:
+				case T_VAR:
+				case T_PUBLIC:
+				case T_PROTECTED:
+				case T_NAMESPACE:
+				case T_CLASS:
+				case T_INTERFACE:
+					$expected = $token[0];
+					$name = NULL;
+					continue 2;
+
+				case T_STATIC:
+				case T_ABSTRACT:
+				case T_FINAL:
+					continue 2; // ignore in expectation
+
+				case T_CURLY_OPEN:
+				case T_DOLLAR_OPEN_CURLY_BRACES:
+					$level++;
+				}
+			}
+
+			if ($expected) {
+				switch ($expected) {
+				case T_CLASS:
+				case T_INTERFACE:
+					$class = $namespace . $name;
+					$classLevel = $level;
+					$name = '';
+					// break intentionally omitted
+				case T_FUNCTION:
+					if ($token === '&') continue 2; // ignore
+				case T_VAR:
+				case T_PUBLIC:
+				case T_PROTECTED:
+					if ($class && $name !== NULL && $docComment) {
+						self::$cache[$class][$name] = self::parseComment($docComment);
+					}
+					break;
+
+				case T_NAMESPACE:
+					$namespace = $name . '\\';
+				}
+
+				$expected = $docComment = NULL;
+			}
+
+			if ($token === ';') {
+				$docComment = NULL;
+			} elseif ($token === '{') {
+				$docComment = NULL;
+				$level++;
+			} elseif ($token === '}') {
+				$level--;
+				if ($level === $classLevel) {
+					$class = NULL;
+				}
+			}
+		}
+	}
+
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	protected static function getCache()
+	{
+		return /*Nette\*/Environment::getCache('Nette.Annotations');
 	}
 
 }
