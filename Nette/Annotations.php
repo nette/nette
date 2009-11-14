@@ -31,7 +31,7 @@
 final class Annotations
 {
 	/** @var array */
-	static private $cache = array();
+	private static $cache = array();
 
 
 
@@ -53,7 +53,7 @@ final class Annotations
 	 */
 	public static function has(/*\*/Reflector $r, $name)
 	{
-		$cache = & self::init($r);
+		$cache = self::init($r);
 		return !empty($cache[$name]);
 	}
 
@@ -67,7 +67,7 @@ final class Annotations
 	 */
 	public static function get(/*\*/Reflector $r, $name)
 	{
-		$cache = & self::init($r);
+		$cache = self::init($r);
 		return isset($cache[$name]) ? end($cache[$name]) : NULL;
 	}
 
@@ -81,7 +81,7 @@ final class Annotations
 	 */
 	public static function getAll(/*\*/Reflector $r, $name = NULL)
 	{
-		$cache = & self::init($r);
+		$cache = self::init($r);
 
 		if ($name === NULL) {
 			return $cache;
@@ -101,24 +101,27 @@ final class Annotations
 	 * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty
 	 * @return array
 	 */
-	public static function & init(/*\*/Reflector $r)
+	private static function init(/*\*/Reflector $r)
 	{
-		$cache = & self::$cache[$r->getName()];
 		if ($r instanceof /*\*/ReflectionClass) {
-			$cache = & $cache[''];
+			$type = $r->getName();
+			$member = '';
 
 		} elseif ($r instanceof /*\*/ReflectionMethod) {
-			$cache = & $cache[$r->getDeclaringClass()->getName()];
+			$type = $r->getDeclaringClass()->getName();
+			$member = $r->getName();
 
 		} else {
-			$cache = & $cache['$' . $r->getDeclaringClass()->getName()];
+			$type = $r->getDeclaringClass()->getName();
+			$member = '$' . $r->getName();
 		}
 
+		$cache = & self::$cache[$type][$member];
 		if ($cache !== NULL) {
 			return $cache;
 		}
 
-		preg_match_all('#@([a-zA-Z0-9_]+)(?:\(((?>[^\'")]+|\'[^\']*\'|"[^"]*")*)\))?#', $r->getDocComment(), $matches, PREG_SET_ORDER);
+		preg_match_all('#@([a-zA-Z0-9_]+)(?:\(((?>[^\'")]+|\'[^\']*\'|"[^"]*")*)\))?#', trim($r->getDocComment(), "*/\r\n\t "), $matches, PREG_SET_ORDER);
 		$cache = array();
 		foreach ($matches as $match)
 		{
