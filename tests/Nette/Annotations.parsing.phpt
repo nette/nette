@@ -66,37 +66,37 @@ AnnotatedClass1
 
 array(1) {
 	"author" => array(1) {
-		0 => bool(TRUE)
+		0 => string(4) "john"
 	}
 }
 
 $a: array(1) {
 	"var" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "a"
 	}
 }
 
 $b: array(1) {
 	"var" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "b"
 	}
 }
 
 $c: array(1) {
 	"var" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "c"
 	}
 }
 
 $d: array(1) {
 	"var" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "d"
 	}
 }
 
 $e: array(1) {
 	"var" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "e"
 	}
 }
 
@@ -104,31 +104,31 @@ $f: array(0)
 
 a(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "a"
 	}
 }
 
 b(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "b"
 	}
 }
 
 c(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "c"
 	}
 }
 
 d(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "d"
 	}
 }
 
 e(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "e"
 	}
 }
 
@@ -136,7 +136,7 @@ f(): array(0)
 
 g(): array(1) {
 	"return" => array(1) {
-		0 => bool(TRUE)
+		0 => string(1) "g"
 	}
 }
 
@@ -144,7 +144,7 @@ AnnotatedClass2
 
 array(1) {
 	"author" => array(1) {
-		0 => bool(TRUE)
+		0 => string(4) "jack"
 	}
 }
 

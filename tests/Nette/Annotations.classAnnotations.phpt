@@ -18,13 +18,18 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 /**
- * @title(value ="Johno's addendum", mode=True)
+ * @title(value ="Johno's addendum", mode=True,) , out
  * @title( value= 'One, Two', mode= true or false)
  * @title( value = 'Three (Four)', mode = 'false')
  * @components(item 1)
  * @persistent(true)
  * @persistent(FALSE)
  * @persistent(null)
+ * @author true
+ * @author FALSE
+ * @author null
+ * @author
+ * @author John Doe
  * @renderable
  */
 class TestClass {
@@ -52,9 +57,14 @@ dump( $tmp["title"][1]->mode ); // "true or false"
 dump( $tmp["title"][2]->value ); // "Three (Four)"
 dump( $tmp["title"][2]->mode ); // "false"
 dump( $tmp["components"][0] ); // "item 1"
-dump( $tmp["persistent"][0] ); // True
+dump( $tmp["persistent"][0], 'persistent' ); // True
 dump( $tmp["persistent"][1] ); // False
 dump( $tmp["persistent"][2] ); // Null
+dump( $tmp["author"][0], 'author' ); // True
+dump( $tmp["author"][1] ); // False
+dump( $tmp["author"][2] ); // Null
+dump( $tmp["author"][3] ); // True
+dump( $tmp["author"][4] ); // "John Doe"
 dump( $tmp["renderable"][0] ); // True
 
 dump( $tmp === Annotations::getAll($rc), 'cache test' );
@@ -124,11 +134,21 @@ string(5) "false"
 
 string(6) "item 1"
 
-bool(TRUE)
+persistent: bool(TRUE)
 
 bool(FALSE)
 
 NULL
+
+author: bool(TRUE)
+
+bool(FALSE)
+
+NULL
+
+bool(TRUE)
+
+string(8) "John Doe"
 
 bool(TRUE)
 
