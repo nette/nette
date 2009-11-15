@@ -171,31 +171,31 @@ final class Annotations
 	 */
 	private static function parseComment($comment)
 	{
-		preg_match_all('#@([a-zA-Z0-9_]+)(?:\(((?>[^\'")]+|\'[^\']*\'|"[^"]*")*)\))?#', trim($comment, "*/\r\n\t "), $matches, PREG_SET_ORDER);
+		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
+
+		preg_match_all('#@([a-zA-Z0-9_]+)([\s(].*)#', substr($comment, 0, -2) . ' ', $matches, PREG_SET_ORDER);
 		$res = array();
 		foreach ($matches as $match)
 		{
-			if (isset($match[2])) {
-				preg_match_all('#[,\s](?>([a-zA-Z0-9_]+)\s*=\s*)?([^\'",\s][^,]*|\'[^\']*\'|"[^"]*")#', ',' . $match[2], $matches, PREG_SET_ORDER);
+			list(, $name, $value) = $match;
+
+			if ($value[0] === '(') {
 				$items = array();
 				$key = '';
 				$val = TRUE;
-				foreach ($matches as $m) {
+				$value[0] = ',';
+				while (preg_match('#\s*,\s*(?>([a-zA-Z0-9_]+)\s*=\s*)?([^\'"),\s][^),]*|\'[^\']*\'|"[^"]*")#A', $value, $m)) {
+					$value = substr($value, strlen($m[0]));
 					list(, $key, $val) = $m;
 					if ($val[0] === "'" || $val[0] === '"') {
 						$val = substr($val, 1, -1);
 
-					} elseif (strcasecmp($val, 'true') === 0) {
-						$val = TRUE;
-
-					} elseif (strcasecmp($val, 'false') === 0) {
-						$val = FALSE;
-
-					} elseif (strcasecmp($val, 'null') === 0) {
-						$val = NULL;
-
 					} elseif (is_numeric($val)) {
 						$val = 1 * $val;
+
+					} else {
+						$lval = strtolower($val);
+						$val = array_key_exists($lval, $tokens) ? $tokens[$lval] : $val;
 					}
 
 					if ($key === '') {
@@ -206,13 +206,18 @@ final class Annotations
 					}
 				}
 
-				$items = count($items) < 2 && $key === '' ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
+				$res[$name][] = count($items) < 2 && $key === '' ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
 
 			} else {
-				$items = TRUE;
-			}
+				$value = trim($value);
+				if (is_numeric($value)) {
+					$res[$name][] = 1 * $value;
 
-			$res[$match[1]][] = $items;
+				} else {
+					$lval = strtolower($value);
+					$res[$name][] = array_key_exists($lval, $tokens) ? $tokens[$lval] : $value;
+				}
+			}
 		}
 
 		return $res;
