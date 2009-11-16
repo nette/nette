@@ -82,6 +82,7 @@ class NetteLoader extends AutoLoader
 		'filenotfoundexception' => '/exceptions.php',
 		'filestorage' => '/Caching/FileStorage.php',
 		'fileupload' => '/Forms/Controls/FileUpload.php',
+		'forbiddenrequestexception' => '/Application/Exceptions/ForbiddenRequestException.php',
 		'form' => '/Forms/Form.php',
 		'formcontainer' => '/Forms/FormContainer.php',
 		'formcontrol' => '/Forms/Controls/FormControl.php',
