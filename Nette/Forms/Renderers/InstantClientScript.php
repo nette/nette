@@ -160,7 +160,7 @@ final class InstantClientScript extends /*Nette\*/Object
 				} else {
 					$res .= "$script\n\t"
 						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "message = " . json_encode((string) vsprintf($rule->control->translate($rule->message), (array) $rule->arg)) . "; "
+						. "message = " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; "
 						. $this->doAlert
 						. " return false; }\n\t";
 				}

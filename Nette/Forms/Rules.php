@@ -193,7 +193,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 				if ($onlyCheck) {
 					return FALSE;
 				}
-				$rule->control->addError(vsprintf($rule->control->translate($rule->message), (array) $rule->arg));
+				$rule->control->addError(vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg));
 				$valid = FALSE;
 				if ($rule->breakOnFailure) {
 					break;

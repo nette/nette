@@ -284,12 +284,13 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	/**
 	 * Returns translated string.
 	 * @param  string
+	 * @param  int      plural count
 	 * @return string
 	 */
-	public function translate($s)
+	public function translate($s, $count = NULL)
 	{
 		$translator = $this->getTranslator();
-		return $translator === NULL ? $s : $translator->translate($s);
+		return $translator === NULL ? $s : $translator->translate($s, $count);
 	}
 
 
