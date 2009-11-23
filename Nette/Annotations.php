@@ -135,7 +135,7 @@ final class Annotations
 		}
 
 		if (self::$useReflection === NULL) { // detects whether is reflection available
-			$rc = new ReflectionClass(__CLASS__);
+			$rc = new /*\*/ReflectionClass(__CLASS__);
 			self::$useReflection = (bool) $rc->getDocComment();
 		}
 
