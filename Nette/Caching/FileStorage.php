@@ -86,7 +86,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			self::$useDirectories = !ini_get('safe_mode');
 
 			// checks whether directory is writable
-			$uniq = uniqid();
+			$uniq = uniqid('_', TRUE);
 			umask(0000);
 			if (!@mkdir("$dir/$uniq", 0777)) { // intentionally @
 				throw new /*\*/InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
