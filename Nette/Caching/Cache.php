@@ -130,8 +130,8 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function save($key, $data, array $dp = NULL)
 	{
-		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
+		if (!is_string($key) && !is_int($key)) {
+			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
 
 		// convert expire into relative amount of seconds
@@ -209,8 +209,8 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetSet($key, $data)
 	{
-		if (!is_string($key)) { // prevents NULL
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
+		if (!is_string($key) && !is_int($key)) { // prevents NULL
+			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
 
 		$this->key = $this->data = NULL;
@@ -231,10 +231,11 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetGet($key)
 	{
-		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
+		if (!is_string($key) && !is_int($key)) {
+			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
 
+		$key = (string) $key;
 		if ($this->key === $key) {
 			return $this->data;
 		}
@@ -253,11 +254,11 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetExists($key)
 	{
-		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
+		if (!is_string($key) && !is_int($key)) {
+			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
 
-		$this->key = $key;
+		$this->key = (string) $key;
 		$this->data = $this->storage->read($this->namespace . self::NAMESPACE_SEPARATOR . $key);
 		return $this->data !== NULL;
 	}
@@ -272,8 +273,8 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetUnset($key)
 	{
-		if (!is_string($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string, " . gettype($key) ." given.");
+		if (!is_string($key) && !is_int($key)) {
+			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
 
 		$this->key = $this->data = NULL;
