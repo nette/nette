@@ -110,30 +110,30 @@ final class InstantClientScript extends /*Nette\*/Object
 	 */
 	public function renderClientScript()
 	{
-		$s = '';
+		$script = '';
 
 		if ($this->validateScript) {
-			$s .= "function $this->validateFunction(sender) {\n\t"
+			$script .= "function $this->validateFunction(sender) {\n\t"
 			. "var element, message, res;\n\t"
+			. "var form = sender.form || sender;\n\t"
 			. $this->validateScript
 			. "return true;\n"
 			. "}\n\n";
 		}
 
 		if ($this->toggleScript) {
-			$s .= "function $this->toggleFunction(sender) {\n\t"
+			$script .= "function $this->toggleFunction(sender) {\n\t"
 			. "var element, visible, res;\n\t"
+			. "var form = sender.form || sender;\n\t"
 			. $this->toggleScript
 			. "\n}\n\n"
-			. "$this->toggleFunction(null);\n";
+			. "$this->toggleFunction(document.forms[document.forms.length - 1]);\n";
 		}
 
-		if ($s) {
-			return "<script type=\"text/javascript\">\n"
-			. "/* <![CDATA[ */\n"
-			. $s
-			. "/* ]]> */\n"
-			. "</script>";
+		if ($script) {
+			ob_start();
+			include dirname(__FILE__) . '/InstantClientScript.js';
+			return ob_get_clean();
 		}
 	}
 
@@ -213,35 +213,17 @@ final class InstantClientScript extends /*Nette\*/Object
 
 
 
-	private function getValueScript(IFormControl $control)
-	{
-		$tmp = "element = document.getElementById(" . json_encode($control->getHtmlId()) . ");\n\t";
-		switch (TRUE) {
-		case $control instanceof Checkbox:
-			return $tmp . "var val = element.checked;\n\t";
-
-		case $control instanceof RadioList:
-			return "for (var val=null, i=0; i<" . count($control->getItems()) . "; i++) {\n\t\t"
-			. "element = document.getElementById(" . json_encode($control->getHtmlId() . '-') . "+i);\n\t\t"
-			. "if (element.checked) { val = element.value; break; }\n\t"
-			. "}\n\t";
-
-		default:
-			return $tmp . "var val = element.value.replace(/^\\s+|\\s+\$/g, '');\n\t";
-		}
-	}
-
-
-
 	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
 		$operation = strtolower($operation);
+		$elem = 'element = form[' . json_encode($control->getHtmlName()) . ']';
+
 		switch (TRUE) {
 		case $control instanceof HiddenField || $control->isDisabled():
 			return NULL;
 
 		case $operation === ':filled' && $control instanceof RadioList:
-			return $this->getValueScript($control) . "res = val !== null;";
+			return "res = nette.getValue($elem) !== null;";
 
 		case $operation === ':submitted' && $control instanceof SubmitButton:
 			return "element=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
@@ -252,69 +234,68 @@ final class InstantClientScript extends /*Nette\*/Object
 				$tmp[] = "element.options[i].value==" . json_encode((string) $item);
 			}
 			$first = $control->isFirstSkipped() ? 1 : 0;
-			return "element = document.getElementById(" . json_encode($control->getHtmlId()) . ");\n\tres = false;\n\t"
+			return "$elem; res = false;\n\t"
 				. "for (var i=$first;i<element.options.length;i++)\n\t\t"
 				. "if (element.options[i].selected && (" . implode(' || ', $tmp) . ")) { res = true; break; }";
 
 		case $operation === ':filled' && $control instanceof SelectBox:
-			return "element = document.getElementById(" . json_encode($control->getHtmlId()) . ");\n\t"
-				. "res = element.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
+			return "$elem; res = element.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
 
 		case $operation === ':filled' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
+			return "var val = nette.getValue($elem); res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
 
 		case $operation === ':minlength' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = val.length>=" . (int) $arg . ";";
+			return "res = nette.getValue($elem).length>=" . (int) $arg . ";";
 
 		case $operation === ':maxlength' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = val.length<=" . (int) $arg . ";";
+			return "res = nette.getValue($elem).length<=" . (int) $arg . ";";
 
 		case $operation === ':length' && $control instanceof TextBase:
 			if (!is_array($arg)) {
 				$arg = array($arg, $arg);
 			}
-			return $this->getValueScript($control) . "res = " . ($arg[0] === NULL ? "true" : "val.length>=" . (int) $arg[0]) . " && "
+			return "var val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "val.length>=" . (int) $arg[0]) . " && "
 				. ($arg[1] === NULL ? "true" : "val.length<=" . (int) $arg[1]) . ";";
 
 		case $operation === ':email' && $control instanceof TextBase:
-			return $this->getValueScript($control) . 'res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);';
+			return 'res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(nette.getValue('.$elem.'));';
 
 		case $operation === ':url' && $control instanceof TextBase:
-			return $this->getValueScript($control) . 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val);';
+			return 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(nette.getValue('.$elem.'));';
 
 		case $operation === ':regexp' && $control instanceof TextBase:
 			if (strncmp($arg, '/', 1)) {
 				throw new /*\*/InvalidStateException("Regular expression '$arg' must be JavaScript compatible.");
 			}
-			return $this->getValueScript($control) . "res = $arg.test(val);";
+			return "res = nette.getValue($elem).test(val);";
 
 		case $operation === ':integer' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = /^-?[0-9]+$/.test(val);";
+			return "res = /^-?[0-9]+$/.test(nette.getValue($elem));";
 
 		case $operation === ':float' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val);";
+			return "res = /^-?[0-9]*[.,]?[0-9]+$/.test(nette.getValue($elem));";
 
 		case $operation === ':range' && $control instanceof TextBase:
-			return $this->getValueScript($control) . "res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
+			return "var val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
 				. ($arg[1] === NULL ? "true" : "parseFloat(val)<=" . json_encode((float) $arg[1])) . ";";
 
 		case $operation === ':filled' && $control instanceof FormControl:
-			return $this->getValueScript($control) . "res = val!='';";
+			return "res = nette.getValue($elem) != '';";
 
 		case $operation === ':valid' && $control instanceof FormControl:
-			return $this->getValueScript($control) . "res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
+			return "var val = nette.getValue($elem); res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
 
 		case $operation === ':equal' && $control instanceof FormControl:
 			if ($control instanceof Checkbox) $arg = (bool) $arg;
 			$tmp = array();
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 				if ($item instanceof IFormControl) { // compare with another form control?
-					$tmp[] = "val==function(){var element;" . $this->getValueScript($item). "return val;}()";
+					$tmp[] = "val==nette.getValue(form[" . json_encode($item->getHtmlName()) . "])";
 				} else {
 					$tmp[] = "val==" . json_encode($item);
 				}
 			}
-			return $this->getValueScript($control) . "res = (" . implode(' || ', $tmp) . ");";
+			return "var val = nette.getValue($elem); res = (" . implode(' || ', $tmp) . ");";
 		}
 	}
 
