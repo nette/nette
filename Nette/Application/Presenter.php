@@ -47,7 +47,7 @@ require_once dirname(__FILE__) . '/../Application/IPresenter.php';
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/**#@+ life cycle phases {@link Presenter::getPhase()} */
+	/**#@+ @deprecated */
 	const PHASE_STARTUP = 1;
 	const PHASE_SIGNAL = 3;
 	const PHASE_RENDER = 4;
@@ -266,8 +266,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Returns current presenter life cycle phase.
-	 * @return int
+	 * @deprecated
 	 */
 	final public function getPhase()
 	{
@@ -1147,10 +1146,6 @@ abstract class Presenter extends Control implements IPresenter
 		$sinces = & $this->globalStateSinces;
 
 		if ($this->globalState === NULL) {
-			if ($this->phase >= self::PHASE_SHUTDOWN) {
-				throw new /*\*/InvalidStateException("Presenter is shutting down, cannot save state.");
-			}
-
 			$state = array();
 			foreach ($this->globalParams as $id => $params) {
 				$prefix = $id . self::NAME_SEPARATOR;
