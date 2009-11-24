@@ -135,9 +135,11 @@ class Configurator extends Object
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
+					$locator->removeService($key);
 					$locator->addService($key, $value);
 				} else {
 					if ($value->factory) {
+						$locator->removeService($key);
 						$locator->addService($key, $value->factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
 					}
 					if ($value->run) {
