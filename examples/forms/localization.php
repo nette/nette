@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Nette\Forms example 3
- *
- * - localization (with Zend_Translate)
+ * Nette\Forms localization example (with Zend_Translate).
  */
 
 
@@ -169,7 +167,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 3 | Nette Framework</title>
+	<title>Nette\Forms localization example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -197,7 +195,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 3</h1>
+	<h1>Nette\Forms localization example</h1>
 
 	<?php echo $form ?>
 </body>

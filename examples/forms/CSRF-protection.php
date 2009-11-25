@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Nette\Forms example 8
- *
- * - Cross-Site Request Forgery (CSRF) form protection
+ * Nette\Forms Cross-Site Request Forgery (CSRF) protection example.
  */
 
 
@@ -18,9 +16,10 @@ Debug::enable();
 
 $form = new Form;
 
-$form->addText('text', 'Any text:');
 $form->addProtection('Security token did not match. Possible CSRF attack.', 3);
-$form->addSubmit('submit1', 'Send');
+
+$form->addHidden('id')->setDefaultValue(123);
+$form->addSubmit('submit1', 'Delete item');
 
 
 
@@ -50,7 +49,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 8 | Nette Framework</title>
+	<title>Nette\Forms CSRF protection example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -78,7 +77,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 8</h1>
+	<h1>Nette\Forms CSRF protection example</h1>
 
 	<?php echo $form ?>
 </body>

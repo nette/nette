@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 1 | Nette Framework</title>
+	<title>Nette\Forms manual form rendering | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -32,9 +32,9 @@
 </head>
 
 <body>
-	<h1>Nette\Forms example 1</h1>
+	<h1>Nette\Forms manual form rendering</h1>
 
-	<form action="" method="post" enctype="multipart/form-data" onsubmit="return validate(this)">
+	<form action="" method="post" enctype="multipart/form-data" name="frm-" onsubmit="return nette.validateForm(this)">
 	
 	<fieldset>
 		<legend>Personal data</legend>
@@ -62,7 +62,7 @@
 	<fieldset>
 		<legend>Shipping address</legend>
 
-		<p><input type="checkbox" onclick="toggle(this)" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></p>
+		<p><input type="checkbox" onclick="nette.forms[&quot;frm-&quot;].toggle(this)" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></p>
 
 		<table id="sendBox">
 		<tr>
@@ -75,7 +75,7 @@
 		</tr>
 		<tr class="required">
 			<th><label onclick="return false" for="frm-country">Country:</label></th>
-			<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
+			<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 		</tr>
 		</table>
 	</fieldset>
@@ -110,118 +110,161 @@
 	</form>
 <script type="text/javascript">
 /* <![CDATA[ */
-function validate(sender) {
-	var element, message, res;
-	do {
-	element = document.getElementById("frm-name");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val!='' && val!="";
-	if (!res) { message = "Enter your name"; if (element) element.focus(); alert(message); return false; }
-	} while(0);
 
-	do {
-	element = document.getElementById("frm-age");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val!='' && val!="";
-	if (!res) { message = "Enter your age"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById("frm-age");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = /^-?[0-9]+$/.test(val);
-	if (!res) { message = "Age must be numeric value"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById("frm-age");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = parseFloat(val)>=10 && parseFloat(val)<=100;
-	if (!res) { message = "Age must be in range from 10 to 100"; if (element) element.focus(); alert(message); return false; }
-	} while(0);
+var nette = nette || { };
 
-	do {
-	element = document.getElementById("frm-email");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val!='' && val!="@";
-	if (res) {
-		element = document.getElementById("frm-email");
-		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);
-		if (!res) { message = "Incorrect E-mail Address"; if (element) element.focus(); alert(message); return false; }
+nette.getValue = function(elem) {
+	if (!elem) {
+		var undefined;
+		return undefined;
 	}
-	} while(0);
 
-	do {
-	element = document.getElementById("frm-send");
-	var val = element.checked;
-	res = (val==true);
-	if (res) {
-		element = document.getElementById("frm-city");
-		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = val!='' && val!="";
-		if (!res) { message = "Enter your shipping address"; if (element) element.focus(); alert(message); return false; }
+	if (!elem.nodeName) { // radio
+		for (var i = 0, len = elem.length; i < len; i++) {
+			if (elem[i].checked) {
+				return elem[i].value;
+			}
+		}
+		return null;
 	}
-	} while(0);
 
-	do {
-	element = document.getElementById("frm-send");
-	var val = element.checked;
-	res = (val==true);
-	if (res) {
-		element = document.getElementById("frm-country");
-		res = element.selectedIndex >= 1;
-		if (!res) { message = "Select your country"; if (element) element.focus(); alert(message); return false; }
+	if (elem.nodeName.toLowerCase() === 'select') {
+		var index = elem.selectedIndex, options = elem.options;
+
+		if (index < 0) {
+			return null;
+
+		} else if (elem.type === 'select-one') {
+			return options[index].value;
+		}
+
+		for (var i = 0, values = [], len = options.length; i < len; i++) {
+			if (options[i].selected) {
+				values.push(options[i].value);
+			}
+		}
+		return values;
 	}
-	} while(0);
 
-	do {
-	element = document.getElementById("frm-password");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val!='' && val!="";
-	if (!res) { message = "Choose your password"; if (element) element.focus(); alert(message); return false; }
-	element = document.getElementById("frm-password");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val.length>=3;
-	if (!res) { message = "The password is too short: it must be at least 3 characters"; if (element) element.focus(); alert(message); return false; }
-	} while(0);
-
-	do {
-	element = document.getElementById("frm-password");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = function(){
-	element = document.getElementById("frm-password");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val!='' && val!="";
-	if (!res) { return false; }
-	element = document.getElementById("frm-password");
-	var val = element.value.replace(/^\s+|\s+$/g, '');
-	res = val.length>=3;
-	if (!res) { return false; }
-	return true; }();
-	if (res) {
-		element = document.getElementById("frm-password2");
-		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = val!='' && val!="";
-		if (!res) { message = "Reenter your password"; if (element) element.focus(); alert(message); return false; }
-		element = document.getElementById("frm-password2");
-		var val = element.value.replace(/^\s+|\s+$/g, '');
-		res = (val==function(){var element;element = document.getElementById("frm-password");
-		var val = element.value.replace(/^\s+|\s+$/g, '');
-		return val;}());
-		if (!res) { message = "Passwords do not match"; if (element) element.focus(); alert(message); return false; }
+	if (elem.type === 'checkbox') {
+		return elem.checked;
 	}
-	} while(0);
 
+	return elem.value.replace(/^\s+|\s+$/g, '');
+}
+
+
+nette.getFormValidators = function(form) {
+	var name = form.getAttributeNode('name').nodeValue;
+	return this.forms[name] ? this.forms[name].validators : [];
+}
+
+
+nette.validateControl = function(control) {
+	var validator = this.getFormValidators(control.form)[control.name];
+	return validator ? validator(control) : null;
+}
+
+
+nette.validateForm = function(sender) {
+	var form = sender.form || sender;
+	var validators = this.getFormValidators(form);
+	for (var name in validators) {
+		var error = validators[name](sender);
+		if (error) {
+			form[name].focus();
+			alert(error);
+			return false;
+		}
+	}
 	return true;
 }
 
-function toggle(sender) {
-	var element, visible, res;
-	visible = true; element = document.getElementById("frm-send");
-	var val = element.checked;
-	res = (val==true); visible = visible && res;
-	element = document.getElementById('sendBox');
-	if (element) element.style.display = visible ? "" : "none";
-	
+
+nette.toggle = function(id, visible) {
+	var elem = document.getElementById(id);
+	if (elem) {
+		elem.style.display = visible ? "" : "none";
+	}
 }
 
-toggle(null);
+
+nette.forms = nette.forms || { };
+
+nette.forms["frm-"] = {
+	validators: {
+		"name": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["name"]); res = val!='' && val!="";
+			if (!res) return "Enter your name";
+		},
+		"age": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["age"]); res = val!='' && val!="";
+			if (!res) return "Enter your age";
+			res = /^-?[0-9]+$/.test(nette.getValue(form["age"]));
+			if (!res) return "Age must be numeric value";
+			var val = nette.getValue(form["age"]); res = parseFloat(val)>=10 && parseFloat(val)<=100;
+			if (!res) return "Age must be in range from 10 to 100";
+		},
+		"email": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["email"]); res = val!='' && val!="@";
+			if (res) {
+				res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(nette.getValue(form["email"]));
+				if (!res) return "Incorrect E-mail Address";
+			}
+		},
+		"city": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["send"]); res = (val==true);
+			if (res) {
+				var val = nette.getValue(form["city"]); res = val!='' && val!="";
+				if (!res) return "Enter your shipping address";
+			}
+		},
+		"country": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["send"]); res = (val==true);
+			if (res) {
+				res = form["country"].selectedIndex >= 1;
+				if (!res) return "Select your country";
+			}
+		},
+		"password": function(sender) {
+			var res, form = sender.form || sender;
+			var val = nette.getValue(form["password"]); res = val!='' && val!="";
+			if (!res) return "Choose your password";
+			res = nette.getValue(form["password"]).length>=3;
+			if (!res) return "The password is too short: it must be at least 3 characters";
+		},
+		"password2": function(sender) {
+			var res, form = sender.form || sender;
+			res = !this["password"](sender);
+			if (res) {
+				var val = nette.getValue(form["password2"]); res = val!='' && val!="";
+				if (!res) return "Reenter your password";
+				var val = nette.getValue(form["password2"]); res = (val==nette.getValue(form["password"]));
+				if (!res) return "Passwords do not match";
+			}
+		},
+
+		'': null
+	},
+
+	toggle: function(sender) {
+		var visible, res, form = document.forms["frm-"];
+		visible = true; var val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
+
+		nette.toggle("sendBox", visible);
+	}
+}
+
+
+nette.forms["frm-"].toggle();
+
 /* ]]> */
 </script>
+
 </body>
 </html>

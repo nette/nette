@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 8 | Nette Framework</title>
+	<title>Nette\Forms CSRF protection example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -32,25 +32,19 @@
 </head>
 
 <body>
-	<h1>Nette\Forms example 8</h1>
+	<h1>Nette\Forms CSRF protection example</h1>
 
-	<form action="" method="post">
+	<form action="" method="post" name="frm-">
 
 <table>
 <tr>
-	<th><label for="frm-text">Any text:</label></th>
-
-	<td><input type="text" class="text" name="text" id="frm-text" value="" /></td>
-</tr>
-
-<tr>
 	<th>&nbsp;</th>
 
-	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Delete item" /></td>
 </tr>
 </table>
 
-<div><input type="hidden" name="_token_" id="frm-_token_" value="%h%" /></div>
+<div><input type="hidden" name="_token_" id="frm-_token_" value="%h%" /><input type="hidden" name="id" id="frm-id" value="123" /></div>
 </form>
 
 </body>

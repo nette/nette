@@ -2,7 +2,7 @@
    "name" => string(17) "luťoučký kůň"
    "country" => array(2) {
       0 => string(17) "Česká republika"
-      2 => string(5) "Japan"
+      2 => string(6) "Canada"
    }
    "userid" => string(5) "kůň"
    "note" => string(6) "жед"
@@ -14,7 +14,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 7 | Nette Framework</title>
+	<title>Nette\Forms custom encoding example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -42,9 +42,9 @@
 </head>
 
 <body>
-	<h1>Nette\Forms example 7</h1>
+	<h1>Nette\Forms custom encoding example</h1>
 
-	<form action="" method="post">
+	<form action="" method="post" name="frm-">
 
 <fieldset>
 <legend>Personal data</legend>
@@ -59,7 +59,7 @@
 <tr>
 	<th><label onclick="return false" for="frm-country">Country:</label></th>
 
-	<td><select onfocus="this.onmousewheel=function(){return false}" name="country[]" id="frm-country" multiple="multiple"><option>Select your country</option><optgroup label="Europe"><option selected="selected">&#268;esk&aacute; republika</option><option>Slovakia</option></optgroup><option>Australia</option><option>Canada</option><option>Egypt</option><option selected="selected">Japan</option><option>United States</option><option>other</option></select></td>
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="country[]" id="frm-country" multiple="multiple"><option>Select your country</option><optgroup label="Europe"><option selected="selected">&#268;esk&aacute; republika</option><option>Slovakia</option><option>United Kingdom</option></optgroup><option selected="selected">Canada</option><option>United States</option><option>other</option></select></td>
 </tr>
 
 <tr>
