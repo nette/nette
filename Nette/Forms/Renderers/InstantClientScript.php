@@ -121,7 +121,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			if (!is_string($rule->operation)) continue;
 
 			if (strcasecmp($rule->operation, 'Nette\Forms\InstantClientScript::javascript') === 0) {
-				$res .= "$rule->arg\n\t";
+				$res .= "$rule->arg\n";
 				continue;
 			}
 
@@ -130,19 +130,19 @@ final class InstantClientScript extends /*Nette\*/Object
 
 			if (!empty($rule->message)) { // this is rule
 				if ($onlyCheck) {
-					$res .= "$script\n\tif (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n\t";
+					$res .= "$script\nif (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n";
 
 				} else {
-					$res .= "$script\n\t"
+					$res .= "$script\n"
 						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; }\n\t";
+						. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; }\n";
 				}
 			}
 
 			if ($rule->type === Rule::CONDITION) { // this is condition
 				$innerScript = $this->getValidateScript($rule->subRules, $onlyCheck);
 				if ($innerScript) {
-					$res .= "$script\n\tif (" . ($rule->isNegative ? '!' : '') . "res) {\n\t\t" . str_replace("\n\t", "\n\t\t", rtrim($innerScript)) . "\n\t}\n\t";
+					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . /*Nette\*/String::indent($innerScript) . "\n}\n";
 					if (!$onlyCheck && $rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}
@@ -158,15 +158,15 @@ final class InstantClientScript extends /*Nette\*/Object
 	{
 		$s = '';
 		foreach ($rules->getToggles() as $id => $visible) {
-			$s .= "visible = true; {$cond}\n\t"
-				. "nette.toggle(" . json_encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n\t";
+			$s .= "visible = true; {$cond}\n"
+				. "nette.toggle(" . json_encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n";
 		}
 		$formName = json_encode((string) $this->form->getElementPrototype()->name);
 		foreach ($rules as $rule) {
 			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 				if ($script) {
-					$res = $this->getToggleScript($rule->subRules, $cond . "$script visible = visible && " . ($rule->isNegative ? '!' : '') . "res;\n\t");
+					$res = $this->getToggleScript($rule->subRules, $cond . "$script visible = visible && " . ($rule->isNegative ? '!' : '') . "res;\n");
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
@@ -188,7 +188,7 @@ final class InstantClientScript extends /*Nette\*/Object
 	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
 		$operation = strtolower($operation);
-		$elem = 'element = form[' . json_encode($control->getHtmlName()) . ']';
+		$elem = 'form[' . json_encode($control->getHtmlName()) . ']';
 
 		switch (TRUE) {
 		case $control instanceof HiddenField || $control->isDisabled():
@@ -198,20 +198,20 @@ final class InstantClientScript extends /*Nette\*/Object
 			return "res = nette.getValue($elem) !== null;";
 
 		case $operation === ':submitted' && $control instanceof SubmitButton:
-			return "element=null; res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
+			return "res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
 
 		case $operation === ':equal' && $control instanceof MultiSelectBox:
 			$tmp = array();
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				$tmp[] = "element.options[i].value==" . json_encode((string) $item);
+				$tmp[] = "options[i].value==" . json_encode((string) $item);
 			}
 			$first = $control->isFirstSkipped() ? 1 : 0;
-			return "$elem; res = false;\n\t"
-				. "for (var i=$first;i<element.options.length;i++)\n\t\t"
-				. "if (element.options[i].selected && (" . implode(' || ', $tmp) . ")) { res = true; break; }";
+			return "var options = $elem.options; res = false;\n"
+				. "for (var i=$first, len=options.length; i<len; i++)\n\t"
+				. "if (options[i].selected && (" . implode(' || ', $tmp) . ")) { res = true; break; }";
 
 		case $operation === ':filled' && $control instanceof SelectBox:
-			return "$elem; res = element.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
+			return "res = $elem.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
 
 		case $operation === ':filled' && $control instanceof TextBase:
 			return "var val = nette.getValue($elem); res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
@@ -255,7 +255,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			return "res = nette.getValue($elem) != '';";
 
 		case $operation === ':valid' && $control instanceof FormControl:
-			return "var val = nette.getValue($elem); res = function(){\n\t" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
+			return "var val = nette.getValue($elem); res = function(){\n" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
 
 		case $operation === ':equal' && $control instanceof FormControl:
 			if ($control instanceof Checkbox) $arg = (bool) $arg;
