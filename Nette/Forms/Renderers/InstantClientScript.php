@@ -59,10 +59,7 @@ final class InstantClientScript extends /*Nette\*/Object
 	{
 		$el = $this->form->getElementPrototype();
 		if (!$el->name) {
-			$el->name = $this->form instanceof /*Nette\Application\*/AppForm ? $this->form->getUniqueId() : $this->form->getName();
-			if (!$el->name) {
-				$el->name = 'frm';
-			}
+			$el->name = 'frm-' . ($this->form instanceof /*Nette\Application\*/AppForm ? $this->form->lookupPath('Nette\Application\Presenter', TRUE) : $this->form->getName());
 		}
 		$this->validateScripts = array();
 		$this->toggleScript = '';
@@ -108,7 +105,7 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		$formName = json_encode((string) $this->form->getElementPrototype()->name);
 		ob_start();
-		include dirname(__FILE__) . '/InstantClientScript.js';
+		include dirname(__FILE__) . '/InstantClientScript.phtml';
 		return ob_get_clean();
 	}
 

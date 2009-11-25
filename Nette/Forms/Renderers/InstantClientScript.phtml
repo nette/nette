@@ -44,23 +44,29 @@ nette.getValue = function(elem) {
 }
 
 
+nette.getFormValidators = function(form) {
+	var name = form.getAttributeNode('name').nodeValue;
+	return this.forms[name] ? this.forms[name].validators : [];
+}
+
+
+nette.validateControl = function(control) {
+	var validator = this.getFormValidators(control.form)[control.name];
+	return validator ? validator(control) : null;
+}
+
+
 nette.validateForm = function(sender) {
 	var form = sender.form || sender;
-	var formName = form.getAttributeNode('name').nodeValue;
-	if (!this.forms[formName]) {
-		return true;
-	}
-
-	var error, validators = this.forms[formName].validators;
+	var validators = this.getFormValidators(form);
 	for (var name in validators) {
-		error = validators[name](sender);
+		var error = validators[name](sender);
 		if (error) {
 			form[name].focus();
 			alert(error);
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -84,7 +90,7 @@ nette.forms[<?php echo $formName ?>] = {
 		},
 <?php endforeach ?>
 
-		null: null
+		'': null
 	},
 
 	toggle: function(sender) {
