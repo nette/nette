@@ -34,23 +34,20 @@ require_once dirname(__FILE__) . '/../../Object.php';
  */
 final class InstantClientScript extends /*Nette\*/Object
 {
-	/** @var string  JavaScript event handler name */
-	public $validateFunction;
-
-	/** @var string  JavaScript event handler name */
-	public $toggleFunction;
-
 	/** @var string  JavaScript code */
 	public $doAlert = 'if (element) element.focus(); alert(message);';
 
 	/** @var string  JavaScript code */
 	public $doToggle = 'if (element) element.style.display = visible ? "" : "none";';
 
-	/** @var string */
-	public $validateScript;
+	/** @var string  JavaScript form name */
+	private $jsName;
 
 	/** @var string */
-	public $toggleScript;
+	private $validateScript;
+
+	/** @var string */
+	private $toggleScript;
 
 	/** @var bool */
 	private $central;
@@ -63,15 +60,20 @@ final class InstantClientScript extends /*Nette\*/Object
 	public function __construct(Form $form)
 	{
 		$this->form = $form;
-		$name = ucfirst($form->getName()); //ucfirst(strtr($form->getUniqueId(), Form::NAME_SEPARATOR, '_'));
-		$this->validateFunction = 'validate' . $name;
-		$this->toggleFunction = 'toggle' . $name;
 	}
 
 
 
 	public function enable()
 	{
+		$el = $this->form->getElementPrototype();
+		if (!$el->name) {
+			$el->name = $this->form instanceof /*Nette\Application\*/AppForm ? $this->form->getUniqueId() : $this->form->getName();
+			if (!$el->name) {
+				$el->name = 'frm';
+			}
+		}
+		$this->jsName = json_encode((string) $el->name);
 		$this->validateScript = '';
 		$this->toggleScript = '';
 		$this->central = TRUE;
@@ -90,12 +92,12 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		if ($this->validateScript || $this->toggleScript) {
 			if ($this->central) {
-				$this->form->getElementPrototype()->onsubmit("return $this->validateFunction(this)", TRUE);
+				$this->form->getElementPrototype()->onsubmit("return nette.forms[$this->jsName].validate(this)", TRUE);
 
 			} else {
 				foreach ($this->form->getComponents(TRUE, 'Nette\Forms\ISubmitterControl') as $control) {
 					if ($control->getValidationScope()) {
-						$control->getControlPrototype()->onclick("return $this->validateFunction(this)", TRUE);
+						$control->getControlPrototype()->onclick("return nette.forms[$this->jsName].validate(this)", TRUE);
 					}
 				}
 			}
@@ -110,31 +112,31 @@ final class InstantClientScript extends /*Nette\*/Object
 	 */
 	public function renderClientScript()
 	{
-		$script = '';
+		if (!$this->validateScript && !$this->toggleScript) {
+			return;
+		}
+
+		$script = "nette.forms[$this->jsName] = { };\n";
 
 		if ($this->validateScript) {
-			$script .= "function $this->validateFunction(sender) {\n\t"
-			. "var element, message, res;\n\t"
-			. "var form = sender.form || sender;\n\t"
+			$script .= "nette.forms[$this->jsName].validate = function(sender) {\n\t"
+			. "var element, message, res, form = sender.form || sender;\n\t"
 			. $this->validateScript
 			. "return true;\n"
 			. "}\n\n";
 		}
 
 		if ($this->toggleScript) {
-			$script .= "function $this->toggleFunction(sender) {\n\t"
-			. "var element, visible, res;\n\t"
-			. "var form = sender.form || sender;\n\t"
+			$script .= "nette.forms[$this->jsName].toggle = function(sender) {\n\t"
+			. "var element, visible, res, form = document.forms[$this->jsName]\n\t"
 			. $this->toggleScript
-			. "\n}\n\n"
-			. "$this->toggleFunction(document.forms[document.forms.length - 1]);\n";
+			. "}\n\n"
+			. "nette.forms[$this->jsName].toggle();\n";
 		}
 
-		if ($script) {
-			ob_start();
-			include dirname(__FILE__) . '/InstantClientScript.js';
-			return ob_get_clean();
-		}
+		ob_start();
+		include dirname(__FILE__) . '/InstantClientScript.js';
+		return ob_get_clean();
 	}
 
 
@@ -198,10 +200,10 @@ final class InstantClientScript extends /*Nette\*/Object
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
-							$el->onchange("$this->toggleFunction(this)", TRUE);
+							$el->onchange("nette.forms[$this->jsName].toggle(this)", TRUE);
 						} else {
-							$el->onclick("$this->toggleFunction(this)", TRUE);
-							//$el->onkeyup("$this->toggleFunction(this)", TRUE);
+							$el->onclick("nette.forms[$this->jsName].toggle(this)", TRUE);
+							//$el->onkeyup("nette.forms[$this->jsName].toggle(this)", TRUE);
 						}
 						$s .= $res;
 					}

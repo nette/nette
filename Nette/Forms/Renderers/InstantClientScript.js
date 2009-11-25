@@ -44,6 +44,8 @@ nette.getValue = function(elem) {
 }
 
 
+nette.forms = nette.forms || { };
+
 <?php echo $script ?>
 
 /* ]]> */
