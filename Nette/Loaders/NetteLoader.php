@@ -202,7 +202,6 @@ class NetteLoader extends AutoLoader
 		'uri' => '/Web/Uri.php',
 		'uriscript' => '/Web/UriScript.php',
 		'user' => '/Web/User.php',
-		'userclientscript' => '/Forms/Renderers/UserClientScript.php',
 	);
 
 
