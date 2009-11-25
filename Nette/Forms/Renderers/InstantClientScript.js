@@ -77,11 +77,10 @@ nette.forms = nette.forms || { };
 
 nette.forms[<?php echo $formName ?>] = {
 	validators: {
-
 <?php foreach ($this->validateScripts as $name => $validateScript): ?>
 		<?php echo json_encode((string) $name) ?>: function(sender) {
-			var element, res, form = sender.form || sender;
-			<?php echo $validateScript ?>
+			var res, form = sender.form || sender;
+<?php echo /*Nette\*/String::indent($validateScript, 3) ?>
 
 		},
 <?php endforeach ?>
@@ -90,8 +89,8 @@ nette.forms[<?php echo $formName ?>] = {
 	},
 
 	toggle: function(sender) {
-		var element, visible, res, form = document.forms[<?php echo $formName ?>];
-		<?php echo $this->toggleScript ?>
+		var visible, res, form = document.forms[<?php echo $formName ?>];
+<?php echo /*Nette\*/String::indent($this->toggleScript, 2) ?>
 
 	}
 }
