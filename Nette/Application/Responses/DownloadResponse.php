@@ -66,7 +66,7 @@ class DownloadResponse extends /*Nette\*/Object implements IPresenterResponse
 
 
 	/**
-	 * Returns the path to an downloaded file.
+	 * Returns the path to a downloaded file.
 	 * @return string
 	 */
 	final public function getFile()
@@ -88,7 +88,7 @@ class DownloadResponse extends /*Nette\*/Object implements IPresenterResponse
 
 
 	/**
-	 * Returns the MIME content type of an downloaded file.
+	 * Returns the MIME content type of a downloaded file.
 	 * @return string
 	 */
 	final public function getContentType()
