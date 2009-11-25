@@ -44,9 +44,62 @@ nette.getValue = function(elem) {
 }
 
 
+nette.validateForm = function(sender) {
+	var form = sender.form || sender;
+	var formName = form.getAttributeNode('name').nodeValue;
+	if (!this.forms[formName]) {
+		return true;
+	}
+
+	var error, validators = this.forms[formName].validators;
+	for (var name in validators) {
+		error = validators[name](sender);
+		if (typeof error === 'string') {
+			form[name].focus();
+			alert(error);
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+nette.toggle = function(id, visible) {
+	var elem = document.getElementById(id);
+	if (elem) {
+		elem.style.display = visible ? "" : "none";
+	}
+}
+
+
 nette.forms = nette.forms || { };
 
-<?php echo $script ?>
+nette.forms[<?php echo $formName ?>] = {
+	validators: {
+
+<?php foreach ($this->validateScripts as $name => $validateScript): ?>
+		<?php echo json_encode((string) $name) ?>: function(sender) {
+			var element, res, form = sender.form || sender;
+			<?php echo $validateScript ?>
+
+		},
+<?php endforeach ?>
+
+		null: null
+	},
+
+	toggle: function(sender) {
+		var element, visible, res, form = document.forms[<?php echo $formName ?>];
+		<?php echo $this->toggleScript ?>
+
+	}
+}
+
+
+<?php if ($this->toggleScript): ?>
+nette.forms[<?php echo $formName ?>].toggle();
+<?php endif ?>
 
 /* ]]> */
 </script>

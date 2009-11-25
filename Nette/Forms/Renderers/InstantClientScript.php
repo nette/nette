@@ -34,17 +34,8 @@ require_once dirname(__FILE__) . '/../../Object.php';
  */
 final class InstantClientScript extends /*Nette\*/Object
 {
-	/** @var string  JavaScript code */
-	public $doAlert = 'if (element) element.focus(); alert(message);';
-
-	/** @var string  JavaScript code */
-	public $doToggle = 'if (element) element.style.display = visible ? "" : "none";';
-
-	/** @var string  JavaScript form name */
-	private $jsName;
-
-	/** @var string */
-	private $validateScript;
+	/** @var array */
+	private $validateScripts;
 
 	/** @var string */
 	private $toggleScript;
@@ -73,15 +64,14 @@ final class InstantClientScript extends /*Nette\*/Object
 				$el->name = 'frm';
 			}
 		}
-		$this->jsName = json_encode((string) $el->name);
-		$this->validateScript = '';
+		$this->validateScripts = array();
 		$this->toggleScript = '';
 		$this->central = TRUE;
 
 		foreach ($this->form->getControls() as $control) {
 			$script = $this->getValidateScript($control->getRules());
 			if ($script) {
-				$this->validateScript .= "do {\n\t$script} while(0);\n\n\t";
+				$this->validateScripts[$control->getHtmlName()] = $script;
 			}
 			$this->toggleScript .= $this->getToggleScript($control->getRules());
 
@@ -90,14 +80,14 @@ final class InstantClientScript extends /*Nette\*/Object
 			}
 		}
 
-		if ($this->validateScript || $this->toggleScript) {
+		if ($this->validateScripts || $this->toggleScript) {
 			if ($this->central) {
-				$this->form->getElementPrototype()->onsubmit("return nette.forms[$this->jsName].validate(this)", TRUE);
+				$this->form->getElementPrototype()->onsubmit("return nette.validateForm(this)", TRUE);
 
 			} else {
 				foreach ($this->form->getComponents(TRUE, 'Nette\Forms\ISubmitterControl') as $control) {
 					if ($control->getValidationScope()) {
-						$control->getControlPrototype()->onclick("return nette.forms[$this->jsName].validate(this)", TRUE);
+						$control->getControlPrototype()->onclick("return nette.validateForm(this)", TRUE);
 					}
 				}
 			}
@@ -112,28 +102,11 @@ final class InstantClientScript extends /*Nette\*/Object
 	 */
 	public function renderClientScript()
 	{
-		if (!$this->validateScript && !$this->toggleScript) {
+		if (!$this->validateScripts && !$this->toggleScript) {
 			return;
 		}
 
-		$script = "nette.forms[$this->jsName] = { };\n";
-
-		if ($this->validateScript) {
-			$script .= "nette.forms[$this->jsName].validate = function(sender) {\n\t"
-			. "var element, message, res, form = sender.form || sender;\n\t"
-			. $this->validateScript
-			. "return true;\n"
-			. "}\n\n";
-		}
-
-		if ($this->toggleScript) {
-			$script .= "nette.forms[$this->jsName].toggle = function(sender) {\n\t"
-			. "var element, visible, res, form = document.forms[$this->jsName]\n\t"
-			. $this->toggleScript
-			. "}\n\n"
-			. "nette.forms[$this->jsName].toggle();\n";
-		}
-
+		$formName = json_encode((string) $this->form->getElementPrototype()->name);
 		ob_start();
 		include dirname(__FILE__) . '/InstantClientScript.js';
 		return ob_get_clean();
@@ -162,9 +135,7 @@ final class InstantClientScript extends /*Nette\*/Object
 				} else {
 					$res .= "$script\n\t"
 						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "message = " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; "
-						. $this->doAlert
-						. " return false; }\n\t";
+						. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; }\n\t";
 				}
 			}
 
@@ -187,11 +158,10 @@ final class InstantClientScript extends /*Nette\*/Object
 	{
 		$s = '';
 		foreach ($rules->getToggles() as $id => $visible) {
-			$s .= "visible = true; {$cond}element = document.getElementById('" . $id . "');\n\t"
-				. ($visible ? '' : 'visible = !visible; ')
-				. $this->doToggle
-				. "\n\t";
+			$s .= "visible = true; {$cond}\n\t"
+				. "nette.toggle(" . json_encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n\t";
 		}
+		$formName = json_encode((string) $this->form->getElementPrototype()->name);
 		foreach ($rules as $rule) {
 			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
@@ -200,10 +170,10 @@ final class InstantClientScript extends /*Nette\*/Object
 					if ($res) {
 						$el = $rule->control->getControlPrototype();
 						if ($el->getName() === 'select') {
-							$el->onchange("nette.forms[$this->jsName].toggle(this)", TRUE);
+							$el->onchange("nette.forms[$formName].toggle(this)", TRUE);
 						} else {
-							$el->onclick("nette.forms[$this->jsName].toggle(this)", TRUE);
-							//$el->onkeyup("nette.forms[$this->jsName].toggle(this)", TRUE);
+							$el->onclick("nette.forms[$formName].toggle(this)", TRUE);
+							//$el->onkeyup("nette.forms[$formName].toggle(this)", TRUE);
 						}
 						$s .= $res;
 					}
