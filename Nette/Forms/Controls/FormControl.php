@@ -194,7 +194,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 		} elseif ($this->htmlId === NULL) {
 			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->getHtmlName());
-			$this->htmlId = str_replace(array('[', ']'), array('-', ''), $this->htmlId);
+			$this->htmlId = str_replace(array('[]', '[', ']'), array('', '-', ''), $this->htmlId);
 		}
 		return $this->htmlId;
 	}
@@ -345,7 +345,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public function loadHttpData()
 	{
-		$path = explode('[', strtr(str_replace(']', '', $this->getHtmlName()), '.', '_'));
+		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
 		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), $path));
 	}
 
@@ -575,7 +575,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	public static function validateEqual(IFormControl $control, $arg)
 	{
 		$value = (string) $control->getValue();
-		foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
+			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 			if ($item instanceof IFormControl) {
 				if ($value === (string) $item->value) return TRUE;
 
