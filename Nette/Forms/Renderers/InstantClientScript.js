@@ -54,7 +54,7 @@ nette.validateForm = function(sender) {
 	var error, validators = this.forms[formName].validators;
 	for (var name in validators) {
 		error = validators[name](sender);
-		if (typeof error === 'string') {
+		if (error) {
 			form[name].focus();
 			alert(error);
 			return false;
@@ -81,7 +81,6 @@ nette.forms[<?php echo $formName ?>] = {
 		<?php echo json_encode((string) $name) ?>: function(sender) {
 			var res, form = sender.form || sender;
 <?php echo /*Nette\*/String::indent($validateScript, 3) ?>
-
 		},
 <?php endforeach ?>
 
@@ -91,7 +90,6 @@ nette.forms[<?php echo $formName ?>] = {
 	toggle: function(sender) {
 		var visible, res, form = document.forms[<?php echo $formName ?>];
 <?php echo /*Nette\*/String::indent($this->toggleScript, 2) ?>
-
 	}
 }
 
