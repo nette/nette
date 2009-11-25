@@ -114,7 +114,7 @@ final class InstantClientScript extends /*Nette\*/Object
 
 
 
-	private function getValidateScript(Rules $rules, $onlyCheck = FALSE)
+	private function getValidateScript(Rules $rules)
 	{
 		$res = '';
 		foreach ($rules as $rule) {
@@ -129,21 +129,16 @@ final class InstantClientScript extends /*Nette\*/Object
 			if (!$script) continue;
 
 			if (!empty($rule->message)) { // this is rule
-				if ($onlyCheck) {
-					$res .= "$script\nif (" . ($rule->isNegative ? '' : '!') . "res) { return false; }\n";
-
-				} else {
-					$res .= "$script\n"
-						. "if (" . ($rule->isNegative ? '' : '!') . "res) { "
-						. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . "; }\n";
-				}
+				$res .= "$script\n"
+					. "if (" . ($rule->isNegative ? '' : '!') . "res) "
+					. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . ";\n";
 			}
 
 			if ($rule->type === Rule::CONDITION) { // this is condition
-				$innerScript = $this->getValidateScript($rule->subRules, $onlyCheck);
+				$innerScript = $this->getValidateScript($rule->subRules);
 				if ($innerScript) {
-					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . /*Nette\*/String::indent($innerScript) . "\n}\n";
-					if (!$onlyCheck && $rule->control instanceof ISubmitterControl) {
+					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . /*Nette\*/String::indent($innerScript) . "}\n";
+					if ($rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}
 				}
@@ -255,7 +250,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			return "res = nette.getValue($elem) != '';";
 
 		case $operation === ':valid' && $control instanceof FormControl:
-			return "var val = nette.getValue($elem); res = function(){\n" . $this->getValidateScript($control->getRules(), TRUE) . "return true; }();";
+			return "res = !this[" . json_encode($control->getHtmlName()) . "](sender);";
 
 		case $operation === ':equal' && $control instanceof FormControl:
 			if ($control instanceof Checkbox) $arg = (bool) $arg;
