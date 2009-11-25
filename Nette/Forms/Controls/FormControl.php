@@ -574,13 +574,12 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public static function validateEqual(IFormControl $control, $arg)
 	{
-		$value = (string) $control->getValue();
+		$value = $control->getValue();
+		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-			if ($item instanceof IFormControl) {
-				if ($value === (string) $item->value) return TRUE;
-
-			} else {
-				if ($value === (string) $item) return TRUE;
+				if ($val === (string) ($item instanceof IFormControl ? $item->value : $item)) {
+					return TRUE;
+				}	
 			}
 		}
 		return FALSE;
