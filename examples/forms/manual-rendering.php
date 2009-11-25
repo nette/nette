@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette\Forms example 1
+ * Nette\Forms manual form rendering.
  *
  * - separated form and rules definition
  * - manual form rendering
@@ -20,24 +20,10 @@ $countries = array(
 	'Select your country',
 	'Europe' => array(
 		'CZ' => 'Czech Republic',
-		'FR' => 'France',
-		'DE' => 'Germany',
-		'GR' => 'Greece',
-		'HU' => 'Hungary',
-		'IE' => 'Ireland',
-		'IT' => 'Italy',
-		'NL' => 'Netherlands',
-		'PL' => 'Poland',
 		'SK' => 'Slovakia',
-		'ES' => 'Spain',
-		'CH' => 'Switzerland',
-		'UA' => 'Ukraine',
 		'GB' => 'United Kingdom',
 	),
-	'AU' => 'Australia',
 	'CA' => 'Canada',
-	'EG' => 'Egypt',
-	'JP' => 'Japan',
 	'US' => 'United States',
 	'?'  => 'other',
 );
@@ -139,7 +125,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 1 | Nette Framework</title>
+	<title>Nette\Forms manual form rendering | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -167,7 +153,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 1</h1>
+	<h1>Nette\Forms manual form rendering</h1>
 
 	<?php $form->render('begin') ?>
 

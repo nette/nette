@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Nette\Forms example 7
+ * Nette\Forms custom encoding example.
  *
- * - custom charset encoding (Forms internally works in UTF-8 encoding!)
+ * - Forms internally works in UTF-8 encoding!
  */
 
 
@@ -21,11 +21,9 @@ $countries = array(
 	'Europe' => array(
 		'CZ' => 'Česká republika',
 		'SK' => 'Slovakia',
+		'GB' => 'United Kingdom',
 	),
-	'AU' => 'Australia',
 	'CA' => 'Canada',
-	'EG' => 'Egypt',
-	'JP' => 'Japan',
 	'US' => 'United States',
 	'?'  => 'other',
 );
@@ -97,7 +95,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=<?php echo $form->encoding ?>" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 7 | Nette Framework</title>
+	<title>Nette\Forms custom encoding example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -125,7 +123,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 7</h1>
+	<h1>Nette\Forms custom encoding example</h1>
 
 	<?php echo $form ?>
 </body>

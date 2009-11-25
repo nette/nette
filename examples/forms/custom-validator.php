@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Nette\Forms example 5
- *
- * - custom validator usage
+ * Nette\Forms custom validator example.
  */
 
 
@@ -74,7 +72,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 5 | Nette Framework</title>
+	<title>Nette\Forms custom validator example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -102,7 +100,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 5</h1>
+	<h1>Nette\Forms custom validator example</h1>
 
 	<?php echo $form ?>
 </body>

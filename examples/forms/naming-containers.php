@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette\Forms example 6
+ * Nette\Forms naming containers example.
  *
  * - using naming containers
  */
@@ -19,24 +19,10 @@ $countries = array(
 	'Select your country',
 	'Europe' => array(
 		'CZ' => 'Czech Republic',
-		'FR' => 'France',
-		'DE' => 'Germany',
-		'GR' => 'Greece',
-		'HU' => 'Hungary',
-		'IE' => 'Ireland',
-		'IT' => 'Italy',
-		'NL' => 'Netherlands',
-		'PL' => 'Poland',
 		'SK' => 'Slovakia',
-		'ES' => 'Spain',
-		'CH' => 'Switzerland',
-		'UA' => 'Ukraine',
 		'GB' => 'United Kingdom',
 	),
-	'AU' => 'Australia',
 	'CA' => 'Canada',
-	'EG' => 'Egypt',
-	'JP' => 'Japan',
 	'US' => 'United States',
 	'?'  => 'other',
 );
@@ -107,7 +93,7 @@ if ($form->isSubmitted()) {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 6 | Nette Framework</title>
+	<title>Nette\Forms naming containers example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -135,7 +121,7 @@ if ($form->isSubmitted()) {
 </head>
 
 <body>
-	<h1>Nette\Forms example 6</h1>
+	<h1>Nette\Forms naming containers example</h1>
 
 	<?php echo $form ?>
 </body>

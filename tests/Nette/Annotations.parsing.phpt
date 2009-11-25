@@ -100,7 +100,7 @@ $e: array(1) {
 	}
 }
 
-$f: array(0) 
+$f: array(0)
 
 a(): array(1) {
 	"return" => array(1) {
@@ -132,7 +132,7 @@ e(): array(1) {
 	}
 }
 
-f(): array(0) 
+f(): array(0)
 
 g(): array(1) {
 	"return" => array(1) {
@@ -150,5 +150,4 @@ array(1) {
 
 AnnotatedClass3
 
-array(0) 
-
+array(0)

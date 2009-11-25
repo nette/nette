@@ -21,7 +21,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta http-equiv="content-language" content="en" />
 
-	<title>Nette\Forms example 6 | Nette Framework</title>
+	<title>Nette\Forms naming containers example | Nette Framework</title>
 
 	<style type="text/css">
 	<!--
@@ -49,9 +49,9 @@
 </head>
 
 <body>
-	<h1>Nette\Forms example 6</h1>
+	<h1>Nette\Forms naming containers example</h1>
 
-	<form action="" method="post">
+	<form action="" method="post" name="frm-">
 
 <fieldset>
 <legend>First person</legend>
@@ -84,7 +84,7 @@
 <tr>
 	<th><label onclick="return false" for="frm-first-country">Country:</label></th>
 
-	<td><select onfocus="this.onmousewheel=function(){return false}" name="first[country]" id="frm-first-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB" selected="selected">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US">United States</option><option value="?">other</option></select></td>
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="first[country]" id="frm-first-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB" selected="selected">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
 </table>
 </fieldset>
@@ -120,7 +120,7 @@
 <tr>
 	<th><label onclick="return false" for="frm-second-country">Country:</label></th>
 
-	<td><select onfocus="this.onmousewheel=function(){return false}" name="second[country]" id="frm-second-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="FR">France</option><option value="DE">Germany</option><option value="GR">Greece</option><option value="HU">Hungary</option><option value="IE">Ireland</option><option value="IT">Italy</option><option value="NL">Netherlands</option><option value="PL">Poland</option><option value="SK">Slovakia</option><option value="ES">Spain</option><option value="CH">Switzerland</option><option value="UA">Ukraine</option><option value="GB">United Kingdom</option></optgroup><option value="AU">Australia</option><option value="CA">Canada</option><option value="EG">Egypt</option><option value="JP">Japan</option><option value="US" selected="selected">United States</option><option value="?">other</option></select></td>
+	<td><select onfocus="this.onmousewheel=function(){return false}" name="second[country]" id="frm-second-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US" selected="selected">United States</option><option value="?">other</option></select></td>
 </tr>
 </table>
 </fieldset>
