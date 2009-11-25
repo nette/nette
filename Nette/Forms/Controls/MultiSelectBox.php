@@ -99,13 +99,23 @@ class MultiSelectBox extends SelectBox
 
 
 	/**
+	 * Returns name of control within a Form & INamingContainer scope.
+	 * @return string
+	 */
+	public function getHtmlName()
+	{
+		return parent::getHtmlName() . '[]';
+	}
+
+
+
+	/**
 	 * Generates control's HTML element.
 	 * @return Nette\Web\Html
 	 */
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->name .= '[]';
 		$control->multiple = TRUE;
 		return $control;
 	}
