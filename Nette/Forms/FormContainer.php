@@ -41,6 +41,9 @@ require_once dirname(__FILE__) . '/../Forms/INamingContainer.php';
  */
 class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAccess, INamingContainer
 {
+	/** @var array of function(Form $sender); Occurs when the form is validated */
+	public $onValidate;
+
 	/** @var FormGroup */
 	protected $currentGroup;
 
@@ -166,6 +169,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	public function validate()
 	{
 		$this->valid = TRUE;
+		$this->onValidate($this);
 		foreach ($this->getControls() as $control) {
 			if (!$control->getRules()->validate()) {
 				$this->valid = FALSE;
