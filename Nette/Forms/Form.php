@@ -540,9 +540,9 @@ class Form extends FormContainer
 	 */
 	public function addError($message)
 	{
-		if (!in_array($message, $this->errors, TRUE)) {
+		$this->valid = FALSE;
+		if ($message !== NULL && !in_array($message, $this->errors, TRUE)) {
 			$this->errors[] = $message;
-			$this->valid = FALSE;
 		}
 	}
 
