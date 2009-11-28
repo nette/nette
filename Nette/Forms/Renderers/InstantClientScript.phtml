@@ -83,14 +83,14 @@ nette.forms = nette.forms || { };
 
 nette.forms[<?php echo $formName ?>] = {
 	validators: {
+<?php end($this->validateScripts); $last = key($this->validateScripts); ?>
 <?php foreach ($this->validateScripts as $name => $validateScript): ?>
 		<?php echo json_encode((string) $name) ?>: function(sender) {
 			var res, form = sender.form || sender;
 <?php echo /*Nette\*/String::indent($validateScript, 3) ?>
-		},
-<?php endforeach ?>
+		}<?php echo $name === $last ? '' : ',' ?>
 
-		'': null
+<?php endforeach ?>
 	},
 
 	toggle: function(sender) {
