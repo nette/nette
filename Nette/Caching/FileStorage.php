@@ -41,10 +41,10 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 *
 	 * 1) reading: open(r+b), lock(SH), read
 	 *     - delete?: delete*, close
-	 * 2) deleting: open(r+b), delete*, close
+	 * 2) deleting: delete*
 	 * 3) writing: open(r+b || wb), lock(EX), truncate*, write data, write meta, close
 	 *
-	 * delete* = lock(EX), try unlink, if fails (on NTFS) { truncate, close, unlink } else close (on ext3)
+	 * delete* = try unlink, if fails (on NTFS) { lock(EX), truncate, close, unlink } else close (on ext3)
 	 */
 
 	/**#@+ @internal cache file structure */
@@ -160,7 +160,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			return TRUE;
 		} while (FALSE);
 
-		$this->delete($meta[self::HANDLE], $meta[self::FILE]); // meta[handle] & meta[file] was added by readMeta()
+		$this->delete($meta[self::FILE], $meta[self::HANDLE]); // meta[handle] & meta[file] was added by readMeta()
 		return FALSE;
 	}
 
@@ -246,7 +246,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 		}
 
-		$this->delete($handle, $cacheFile);
+		$this->delete($cacheFile, $handle);
 	}
 
 
@@ -258,11 +258,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 */
 	public function remove($key)
 	{
-		$cacheFile = $this->getCacheFile($key);
-		$meta = $this->readMeta($cacheFile, LOCK_EX);
-		if ($meta) {
-			$this->delete($meta[self::HANDLE], $cacheFile);
-		}
+		$this->delete($this->getCacheFile($key));
 	}
 
 
@@ -313,7 +309,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 				continue 2;
 			} while (FALSE);
 
-			$this->delete($meta[self::HANDLE], (string) $entry);
+			$this->delete((string) $entry, $meta[self::HANDLE]);
 		}
 	}
 
@@ -389,15 +385,21 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 	/**
 	 * Deletes and closes file.
-	 * @param  resource
 	 * @param  string
+	 * @param  resource
 	 * @return void
 	 */
-	private static function delete($handle, $file)
+	private static function delete($file, $handle = NULL)
 	{
 		if (@unlink($file)) { // intentionally @
-			fclose($handle);
-		} else {
+			if ($handle) fclose($handle);
+			return;
+		}
+
+		if (!$handle) {
+			$handle = @fopen($file, 'r+'); // intentionally @
+		}	
+		if ($handle) {
 			flock($handle, LOCK_EX);
 			ftruncate($handle, 0);
 			fclose($handle);
