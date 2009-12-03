@@ -54,11 +54,10 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function write($key, $data, array $dp)
 	{
-		return TRUE;
 	}
 
 
@@ -66,11 +65,10 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function remove($key)
 	{
-		return TRUE;
 	}
 
 
@@ -78,11 +76,10 @@ class DummyStorage extends /*Nette\*/Object implements ICacheStorage
 	/**
 	 * Removes items from the cache by conditions & garbage collector.
 	 * @param  array  conditions
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function clean(array $conds)
 	{
-		return TRUE;
 	}
 
 }

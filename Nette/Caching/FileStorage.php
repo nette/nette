@@ -171,7 +171,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function write($key, $data, array $dp)
 	{
@@ -217,14 +217,14 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
 			umask(0000);
 			if (!mkdir($dir, 0777, TRUE)) {
-				return FALSE;
+				return;
 			}
 		}
 		$handle = @fopen($cacheFile, 'r+b'); // intentionally @
 		if (!$handle) {
 			$handle = fopen($cacheFile, 'wb'); // intentionally @
 			if (!$handle) {
-				return FALSE;
+				return;
 			}
 		}
 
@@ -241,13 +241,12 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 				fseek($handle, 0);
 				if (fwrite($handle, $head, $headLen) === $headLen) {
 					fclose($handle);
-					return TRUE;
+					return;
 				}
 			}
 		}
 
 		$this->delete($handle, $cacheFile);
-		return TRUE;
 	}
 
 
@@ -255,7 +254,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	/**
 	 * Removes item from the cache.
 	 * @param  string key
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function remove($key)
 	{
@@ -264,7 +263,6 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		if ($meta) {
 			$this->delete($meta[self::HANDLE], $cacheFile);
 		}
-		return TRUE;
 	}
 
 
@@ -272,7 +270,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	/**
 	 * Removes items from the cache by conditions & garbage collector.
 	 * @param  array  conditions
-	 * @return bool  TRUE if no problem
+	 * @return void
 	 */
 	public function clean(array $conds)
 	{
@@ -317,8 +315,6 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 			$this->delete($meta[self::HANDLE], (string) $entry);
 		}
-
-		return TRUE;
 	}
 
 
