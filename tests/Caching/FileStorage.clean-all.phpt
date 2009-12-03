@@ -36,7 +36,7 @@ dump(implode(' ',array(
 	$cacheB['test2'],
 )));
 
-dump($storage->clean(array(Cache::ALL => TRUE)), 'Clean all');
+$storage->clean(array(Cache::ALL => TRUE));
 
 dump($cacheA['test1']);
 dump($cacheA['test2']);
@@ -47,8 +47,6 @@ __halt_compiler();
 
 ------EXPECT------
 string(%i%) "David Grudl divaD ldurG"
-
-Clean all: bool(TRUE)
 
 NULL
 
