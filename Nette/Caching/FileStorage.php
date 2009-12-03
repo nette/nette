@@ -236,15 +236,23 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		$headLen = strlen($head);
 		$dataLen = strlen($data);
 
-		if (fwrite($handle, str_repeat("\x00", $headLen), $headLen) === $headLen) {
-			if (fwrite($handle, $data, $dataLen) === $dataLen) {
-				fseek($handle, 0);
-				if (fwrite($handle, $head, $headLen) === $headLen) {
-					fclose($handle);
-					return;
-				}
+		do {
+			if (fwrite($handle, str_repeat("\x00", $headLen), $headLen) !== $headLen) {
+				break;
 			}
-		}
+
+	        if (fwrite($handle, $data, $dataLen) !== $dataLen) {
+				break;
+	        }
+
+			fseek($handle, 0);
+			if (fwrite($handle, $head, $headLen) !== $headLen) {
+				break;
+			}
+
+			fclose($handle);
+			return TRUE;
+		} while (FALSE);
 
 		$this->delete($cacheFile, $handle);
 	}
@@ -281,35 +289,38 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		$base = $this->dir . DIRECTORY_SEPARATOR . 'c';
 		$iterator = new /*\*/RecursiveIteratorIterator(new /*\*/RecursiveDirectoryIterator($this->dir), /*\*/RecursiveIteratorIterator::CHILD_FIRST);
 		foreach ($iterator as $entry) {
-			if (strncmp($entry, $base, strlen($base))) {
+			$path = (string) $entry;
+			if (strncmp($path, $base, strlen($base))) { // skip files out of cache
 				continue;
 			}
-			if ($entry->isDir()) {
-				@rmdir((string) $entry); // intentionally @
+			if ($entry->isDir()) { // collector: remove empty dirs
+				@rmdir($path); // intentionally @
 				continue;
 			}
-			do {
-				$meta = $this->readMeta((string) $entry, LOCK_SH);
-				if (!$meta) continue 2;
+			if ($all) {
+				$this->delete($path);
 
-				if ($all) break;
+			} else { // collector
+				$meta = $this->readMeta($path, LOCK_SH);
+				if (!$meta) continue;
+
 				if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
-					break;
+					$this->delete($path, $meta[self::HANDLE]);
+					continue;
 				}
 
 				if (!empty($meta[self::META_PRIORITY]) && $meta[self::META_PRIORITY] <= $priority) {
-					break;
+					$this->delete($path, $meta[self::HANDLE]);
+					continue;
 				}
 
 				if (!empty($meta[self::META_TAGS]) && array_intersect_key($tags, $meta[self::META_TAGS])) {
-					break;
+					$this->delete($path, $meta[self::HANDLE]);
+					continue;
 				}
 
 				fclose($meta[self::HANDLE]);
-				continue 2;
-			} while (FALSE);
-
-			$this->delete((string) $entry, $meta[self::HANDLE]);
+			}
 		}
 	}
 
@@ -398,7 +409,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 		if (!$handle) {
 			$handle = @fopen($file, 'r+'); // intentionally @
-		}	
+		}
 		if ($handle) {
 			flock($handle, LOCK_EX);
 			ftruncate($handle, 0);
