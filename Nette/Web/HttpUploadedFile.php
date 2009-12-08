@@ -179,9 +179,14 @@ class HttpUploadedFile extends /*Nette\*/Object
 	 */
 	public function move($dest)
 	{
+		$dir = dirname($dest);
+		if (@mkdir($dir, 0755, TRUE)) { // intentionally @
+			chmod($dir, 0755);
+		}
 		if (!move_uploaded_file($this->tmpName, $dest)) {
 			throw new /*\*/InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
+		chmod($dest, 0644);
 		$this->tmpName = $dest;
 		return TRUE; // back compatibility
 	}
