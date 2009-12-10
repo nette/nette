@@ -3,9 +3,7 @@
 /**
  * Routing debugger template.
  *
- * @param string   $presenter
- * @param array    $params
- * @param string   $router
+ * @param PresenterRequest $request
  * @param array    $routers
  */
 
@@ -73,17 +71,21 @@
 		font-size: 90%;
 	}
 
-	#routingDebugger .may, #routingDebugger .yes {
+	#routingDebugger .yes td {
 		color: green;
+		font-weight: bold;
 	}
 
-	#routingDebugger .yes {
-		font-weight: bold;
+	#routingDebugger .may td {
+		color: #67F;
 	}
 
 	#routingDebugger pre, #routingDebugger code {
 		font: 9pt/1.5 Consolas, monospace !important;
 		display: inline;
+		margin: 0;
+		padding: 0;
+		border: 0;
 	}
 
 /* ]]> */
@@ -91,10 +93,11 @@
 
 
 <div id="routingDebugger">
-	<a id="routingDebuggerIcon" href="#"><?php echo empty($presenter) ? 'no route' : htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?> <abbr>&#x25ba;</abbr></a
+	<a id="routingDebuggerIcon" href="#"><?php echo empty($request) ? 'no route' : htmlSpecialChars($request->getPresenterName() . ':' . (isset($request->params[Presenter::ACTION_KEY]) ? $request->params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?> <abbr>&#x25ba;</abbr></a
 	><div>
-	<?php if (!empty($presenter)): ?>
-		<h2><?php echo htmlSpecialChars($presenter . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
+	<?php if (!empty($request)): ?>
+		<?php $params = $request->getParams() ?>
+		<h2><?php echo htmlSpecialChars($request->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></h2>
 		<?php if (empty($params)): ?>
 			<p>No parameters.</p>
 
@@ -107,6 +110,7 @@
 			</tr>
 			</thead>
 			<tbody>
+			<?php unset($params[Presenter::ACTION_KEY]) ?>
 			<?php foreach ($params as $key => $value): ?>
 			<tr>
 				<td><code><?php echo htmlSpecialChars($key) ?></code></td>
@@ -118,19 +122,11 @@
 		<?php endif ?>
 	<?php endif ?>
 
-	<!-- ~~~~~~~~~~~ -->
 
-	<?php if (empty($router)): ?>
-		<h2>Not matched</h2>
-
-	<?php else: ?>
-		<h2>Matched by <?php echo htmlSpecialChars($router) ?></h2>
-	<?php endif ?>
-
-	<!-- ~~~~~~~~~~~ -->
+	<h2>Routers</h2>
 
 	<?php if (empty($routers)): ?>
-		<p>No routes defined.</p>
+		<p>No routers defined.</p>
 
 	<?php else: ?>
 		<table>
@@ -140,20 +136,33 @@
 			<th>Class</th>
 			<th>Mask</th>
 			<th>Defaults</th>
+			<th>Request</th>
 		</tr>
 		</thead>
 
 		<tbody>
 		<?php foreach ($routers as $router): ?>
-		<tr>
-			<td class="<?php echo $router['matched'] ?>"><?php echo $router['matched'] ?></td>
+		<tr class="<?php echo $router['matched'] ?>">
+			<td><?php echo $router['matched'] ?></td>
+
 			<td><code><?php echo htmlSpecialChars($router['class']) ?></code></td>
+
 			<td><code><strong><?php echo htmlSpecialChars($router['mask']) ?></strong></code></td>
+
 			<td><code>
 			<?php foreach ($router['defaults'] as $key => $value): ?>
-				<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : Debug::dump($value, TRUE) ?><br>
+				<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Debug::dump($value, TRUE)) ?><br>
 			<?php endforeach ?>
 			</code></td>
+
+			<td><?php if ($router['request']): ?><code>
+			<?php $params = $router['request']->getParams(); ?>
+			<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></strong><br>
+			<?php unset($params[Presenter::ACTION_KEY]) ?>
+			<?php foreach ($params as $key => $value): ?>
+				<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Debug::dump($value, TRUE)) ?><br>
+			<?php endforeach ?>
+			</code><?php endif ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>
