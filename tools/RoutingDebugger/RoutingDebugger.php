@@ -89,10 +89,8 @@ class RoutingDebugger extends Object
 
 		$appRequest = $router->match($this->httpRequest);
 		$matched = $appRequest === NULL ? 'no' : 'may';
-		if ($appRequest !== NULL && !isset($this->template->router)) {
-			$this->template->router = get_class($router) . ($router instanceof Route ? ' "' . $router->mask . '"' : '');
-			$this->template->presenter = $appRequest->getPresenterName();
-			$this->template->params = $appRequest->getParams();
+		if ($appRequest !== NULL && !isset($this->template->request)) {
+			$this->template->request = $appRequest;
 			$matched = 'yes';
 		}
 
@@ -101,6 +99,7 @@ class RoutingDebugger extends Object
 			'class' => get_class($router),
 			'defaults' => $router instanceof Route || $router instanceof SimpleRouter ? $router->getDefaults() : array(),
 			'mask' => $router instanceof Route ? $router->getMask() : NULL,
+			'request' => $appRequest,
 		);
 	}
 
