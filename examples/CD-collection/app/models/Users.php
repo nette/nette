@@ -32,7 +32,7 @@ class Users extends Object implements /*Nette\Security\*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette\Security\*/Identity($row->username, NULL, $row);
+		return new /*Nette\Security\*/Identity($row->id, NULL, $row);
 	}
 
 }

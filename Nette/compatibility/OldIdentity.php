@@ -28,7 +28,7 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
 
 
 /**
- * Default implementation of IIdentity.
+ * Old implementation of IIdentity.
  *
  * @author     David Grudl
  * @copyright  Copyright (c) 2004, 2009 David Grudl
@@ -38,10 +38,10 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
  * @property   mixed $id
  * @property   array $roles
  */
-class Identity extends /*Nette\*/FreezableObject implements IIdentity
+class OldIdentity extends /*Nette\*/FreezableObject implements IIdentity
 {
-	/** @var mixed */
-	private $id;
+	/** @var string */
+	private $name;
 
 	/** @var array */
 	private $roles;
@@ -51,15 +51,43 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 
 
 	/**
-	 * @param  mixed   identity ID
+	 * @param  string  identity name
 	 * @param  mixed   roles
 	 * @param  array   user data
 	 */
-	public function __construct($id, $roles = NULL, $data = NULL)
+	public function __construct($name, $roles = NULL, $data = NULL)
 	{
-		$this->setId($id);
+		$this->setName($name);
 		$this->setRoles((array) $roles);
 		$this->data = (array) $data;
+		if (!isset($this->data['id'])) {
+			$this->data['id'] = $name;
+		}
+	}
+
+
+
+	/**
+	 * Sets the name of user.
+	 * @param  string
+	 * @return Identity  provides a fluent interface
+	 */
+	public function setName($name)
+	{
+		$this->updating();
+		$this->name = (string) $name;
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns the name of user.
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
 	}
 
 
@@ -72,7 +100,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	public function setId($id)
 	{
 		$this->updating();
-		$this->id = $id;
+		$this->data['id'] = $id;
 		return $this;
 	}
 
@@ -84,7 +112,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	 */
 	public function getId()
 	{
-		return $this->id;
+		return isset($this->data['id']) ? $this->data['id'] : NULL;
 	}
 
 
@@ -134,7 +162,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	public function __set($key, $value)
 	{
 		$this->updating();
-		if ($key === 'id' || $key === 'roles') {
+		if ($key === 'name' || $key === 'roles') {
 			parent::__set($key, $value);
 
 		} else {
@@ -151,7 +179,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if ($key === 'id' || $key === 'roles') {
+		if ($key === 'name' || $key === 'roles') {
 			return parent::__get($key);
 
 		} else {
