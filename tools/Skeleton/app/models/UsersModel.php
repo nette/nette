@@ -1,13 +1,23 @@
 <?php
 
+/**
+ * My Application
+ *
+ * @copyright  Copyright (c) 2009 John Doe
+ * @package    MyApplication
+ */
+
 /*use Nette\Object;*/
 /*use Nette\Security\AuthenticationException;*/
 
 
 /**
  * Users authenticator.
+ *
+ * @author     John Doe
+ * @package    MyApplication
  */
-class Users extends Object implements /*Nette\Security\*/IAuthenticator
+class UsersModel extends Object implements /*Nette\Security\*/IAuthenticator
 {
 
 	/**
@@ -18,10 +28,10 @@ class Users extends Object implements /*Nette\Security\*/IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		$username = strtolower($credentials[self::USERNAME]);
-		$password = strtolower($credentials[self::PASSWORD]);
+		$username = $credentials[self::USERNAME];
+		$password = md5($credentials[self::PASSWORD]);
 
-		$row = dibi::select('*')->from('users')->where('username=%s', $username)->fetch();
+		$row = dibi::fetch('SELECT * FROM users WHERE login=%s', $username);
 
 		if (!$row) {
 			throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
@@ -32,7 +42,7 @@ class Users extends Object implements /*Nette\Security\*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette\Security\*/Identity($row->username, NULL, $row);
+		return new /*Nette\Security\*/Identity($row->id, $row->role, $row);
 	}
 
 }
