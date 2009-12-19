@@ -426,7 +426,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {include ...}
 	 */
-	private function macroInclude($content, $modifiers)
+	private function macroInclude($content, $modifiers, $isDefinition = FALSE)
 	{
 		$destination = LatteFilter::fetchToken($content); // destination [,] [params]
 		$params = LatteFilter::formatArray($content) . ($content ? ' + ' : '');
@@ -450,10 +450,10 @@ class LatteMacros extends /*Nette\*/Object
 				$destination = $item[1];
 			}
 			$name = var_export($destination, TRUE);
-			$params .= $destination[0] === '_' ? '$template->getParams()' : 'get_defined_vars()'; // snippets
+			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
-				? "call_user_func(reset(\$_cb->blocks[$name]), $params)"
-				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
+				? "call_user_func(reset(\$_cb->blocks[$name]), \$_cb, $params)"
+				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . LatteFilter::formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
@@ -526,7 +526,7 @@ class LatteMacros extends /*Nette\*/Object
 				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php " . $this->macroInclude('#' . $name, $modifiers) . " ?></$tag><?php {block $name}";
 
 			} elseif (!$top) {
-				return $this->macroInclude('#' . $name, $modifiers) . "{block $name}";
+				return $this->macroInclude('#' . $name, $modifiers, TRUE) . "{block $name}";
 
 			} elseif ($this->extends) {
 				return "{block $name}";
@@ -639,7 +639,7 @@ class LatteMacros extends /*Nette\*/Object
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_cb) { extract(func_get_arg(1))\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -827,35 +827,35 @@ class LatteMacros extends /*Nette\*/Object
 
 	/**
 	 * Calls block.
-	 * @param  array
+	 * @param  stdClass
 	 * @param  string
 	 * @param  array
 	 * @return void
 	 */
-	public static function callBlock(& $blocks, $name, $params)
+	public static function callBlock($context, $name, $params)
 	{
-		if (empty($blocks[$name])) {
+		if (empty($context->blocks[$name])) {
 			throw new /*\*/InvalidStateException("Call to undefined block '$name'.");
 		}
-		$block = reset($blocks[$name]);
-		$block($params);
+		$block = reset($context->blocks[$name]);
+		$block($context, $params);
 	}
 
 
 
 	/**
 	 * Calls parent block.
-	 * @param  array
+	 * @param  stdClass
 	 * @param  string
 	 * @param  array
 	 * @return void
 	 */
-	public static function callBlockParent(& $blocks, $name, $params)
+	public static function callBlockParent($context, $name, $params)
 	{
-		if (empty($blocks[$name]) || ($block = next($blocks[$name])) === FALSE) {
+		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
 			throw new /*\*/InvalidStateException("Call to undefined parent block '$name'.");
 		}
-		$block($params);
+		$block($context, $params);
 	}
 
 
