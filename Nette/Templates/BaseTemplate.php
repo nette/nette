@@ -360,18 +360,23 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	{
 		$res = '';
 		$blocks = array();
-		foreach (token_get_all($source) as $token) {
+		$tokens = token_get_all($source);
+		foreach ($tokens as $n => $token) {
 			if (is_array($token)) {
 				if ($token[0] === T_INLINE_HTML) {
 					$res .= $token[1];
-					unset($php);
-				} else {
-					if (!isset($php)) {
-						$res .= $php = "\x01@php:p" . count($blocks) . "@\x02";
-						$php = & $blocks[$php];
-					}
-					$php .= $token[1];
+					continue;
+
+				} elseif ($token[0] === T_OPEN_TAG && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
+					$php = & $res;
+					$token[1] = '<<?php ?>?';
+
+				} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
+					$res .= $id = "\x01@php:p" . count($blocks) . "@\x02";
+					$php = & $blocks[$id];
 				}
+				$php .= $token[1];
+
 			} else {
 				$php .= $token;
 			}
