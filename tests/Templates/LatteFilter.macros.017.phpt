@@ -22,6 +22,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 require dirname(__FILE__) . '/Template.inc';
 
 
+function xml($v) { echo $v; }
 
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
@@ -33,8 +34,10 @@ __halt_compiler();
 
 -----template-----
 <?xml version="1.0" ?>
+<?php xml(1) ?>
+<? xml(2) ?>
 <?php echo 'ok' ?>
 
 ------EXPECT------
 <?xml version="1.0" ?>
-ok
+12ok

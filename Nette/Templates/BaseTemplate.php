@@ -367,7 +367,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 					$res .= $token[1];
 					continue;
 
-				} elseif ($token[0] === T_OPEN_TAG && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
+				} elseif ($token[0] === T_OPEN_TAG && $token[1] === '<?' && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
 					$php = & $res;
 					$token[1] = '<<?php ?>?';
 
