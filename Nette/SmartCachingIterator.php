@@ -61,22 +61,24 @@ class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countabl
 
 	/**
 	 * Is the current element the first one?
+     * @param  int  grid width
 	 * @return bool
 	 */
-	public function isFirst()
+	public function isFirst($width = NULL)
 	{
-		return $this->counter === 1;
+		return $width === NULL ? $this->counter === 1 : ($this->counter % $width) === 1;
 	}
 
 
 
 	/**
 	 * Is the current element the last one?
+     * @param  int  grid width
 	 * @return bool
 	 */
-	public function isLast()
+	public function isLast($width = NULL)
 	{
-		return !$this->hasNext();
+		return !$this->hasNext() || ($width !== NULL && ($this->counter % $width) === 0);
 	}
 
 
