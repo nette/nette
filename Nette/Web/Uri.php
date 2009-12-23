@@ -418,12 +418,7 @@ class Uri extends /*Nette\*/FreezableObject
 		}
 
 		// compare query strings
-		$part = (string) strtok('?#');
-		if ($part !== '') {
-			$tmp = preg_split('#[&;]#', self::unescape(strtr($part, '+', ' '), '%&;=+'));
-			sort($tmp);
-			$part = implode('&', $tmp);
-		}
+		$part = self::unescape(strtr((string) strtok('?#'), '+', ' '), '%&;=+');
 		return $part === $this->query;
 	}
 
@@ -437,14 +432,8 @@ class Uri extends /*Nette\*/FreezableObject
 	{
 		$this->updating();
 		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
-
 		$this->host = strtolower(rawurldecode($this->host));
-
-		if ($this->query !== '') {
-			$tmp = preg_split('#[&;]#', self::unescape(strtr($this->query, '+', ' '), '%&;=+'));
-			sort($tmp);
-			$this->query = implode('&', $tmp);
-		}
+		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
 	}
 
 

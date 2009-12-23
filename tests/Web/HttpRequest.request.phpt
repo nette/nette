@@ -97,7 +97,7 @@ int(8080)
 
 string(9) "/file.php"
 
-string(47) "pa%ram=val2&param3=v a%26l%3Du%2Be&x param=val."
+string(47) "x param=val.&pa%ram=val2&param3=v a%26l%3Du%2Be"
 
 string(0) ""
 
@@ -111,7 +111,7 @@ string(1) "/"
 
 string(8) "file.php"
 
-string(82) "https://nettephp.com:8080/file.php?pa%ram=val2&param3=v a%26l%3Du%2Be&x param=val."
+string(82) "https://nettephp.com:8080/file.php?x param=val.&pa%ram=val2&param3=v a%26l%3Du%2Be"
 
 string(0) ""
 

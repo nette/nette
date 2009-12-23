@@ -30,4 +30,4 @@ __halt_compiler();
 ------EXPECT------
 string(32) "arg=value&arg2=v%20a%26l%3Du%2Be"
 
-string(30) "arg2=v a%26l%3Du%2Be&arg=value"
+string(30) "arg=value&arg2=v a%26l%3Du%2Be"
