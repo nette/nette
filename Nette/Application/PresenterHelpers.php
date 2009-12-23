@@ -229,6 +229,10 @@ final class PresenterHelpers
 			$cache[$param->getName()] = $param->isDefaultValueAvailable()
 				? $param->getDefaultValue()
 				: NULL;
+
+			if ($param->isArray()) {
+				settype($cache[$param->getName()], 'array');
+			}
 		}
 		return $cache;
 	}
