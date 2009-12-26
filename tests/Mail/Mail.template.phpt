@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Mail\Mail;*/
+/*use Nette\Mail\Mail, Nette\Environment;*/
 
 
 
