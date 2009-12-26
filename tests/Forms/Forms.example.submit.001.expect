@@ -289,9 +289,7 @@ nette.forms["frm-"] = {
 				var val = nette.getValue(form["password2"]); res = (val==nette.getValue(form["password"]));
 				if (!res) return "Passwords do not match";
 			}
-		},
-
-		'': null
+		}
 	},
 
 	toggle: function(sender) {
