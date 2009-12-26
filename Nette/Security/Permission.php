@@ -232,9 +232,11 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 		}
 
 		foreach ($this->rules['byResource'] as $resourceCurrent => $visitor) {
-			foreach ($visitor['byRole'] as $roleCurrent => $rules) {
-				if ($role === $roleCurrent) {
-					unset($this->rules['byResource'][$resourceCurrent]['byRole'][$roleCurrent]);
+			if (isset($visitor['byRole'])) {
+				foreach ($visitor['byRole'] as $roleCurrent => $rules) {
+					if ($role === $roleCurrent) {
+						unset($this->rules['byResource'][$resourceCurrent]['byRole'][$roleCurrent]);
+					}
 				}
 			}
 		}
