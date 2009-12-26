@@ -136,12 +136,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 
 		// convert expire into relative amount of seconds
 		if (!empty($dp[Cache::EXPIRE])) {
-			$expire = & $dp[Cache::EXPIRE];
-			if (is_string($expire) && !is_numeric($expire)) {
-				$expire = strtotime($expire) - time();
-			} elseif ($expire > /*Nette\*/Tools::YEAR) {
-				$expire -= time();
-			}
+			$dp[Cache::EXPIRE] = /*Nette\*/Tools::createDateTime($dp[Cache::EXPIRE])->format('U') - time();
 		}
 
 		// convert FILES into CALLBACKS

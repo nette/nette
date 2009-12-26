@@ -513,28 +513,22 @@ class Session extends /*Nette\*/Object
 
 	/**
 	 * Sets the amount of time allowed between requests before the session will be terminated.
-	 * @param  mixed  number of seconds, value 0 means "until the browser is closed"
+	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
 	 * @return Session  provides a fluent interface
 	 */
-	public function setExpiration($seconds)
+	public function setExpiration($time)
 	{
-		if (is_string($seconds) && !is_numeric($seconds)) {
-			$seconds = strtotime($seconds);
-		}
-
-		if ($seconds <= 0) {
+		if ($time == 0) {
 			return $this->setOptions(array(
 				'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
 				'cookie_lifetime' => 0,
 			));
 
 		} else {
-			if ($seconds > /*Nette\*/Tools::YEAR) {
-				$seconds -= time();
-			}
+			$time = /*Nette\*/Tools::createDateTime($time)->format('U');
 			return $this->setOptions(array(
-				'gc_maxlifetime' => $seconds,
-				'cookie_lifetime' => $seconds,
+				'gc_maxlifetime' => $time,
+				'cookie_lifetime' => $time,
 			));
 		}
 	}

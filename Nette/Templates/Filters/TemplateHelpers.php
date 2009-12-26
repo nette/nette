@@ -209,11 +209,9 @@ final class TemplateHelpers
 	{
 		if ($time == NULL) { // intentionally ==
 			return NULL;
-
-		} elseif (!($time instanceof /*\*/DateTime)) {
-			$time = new /*\*/DateTime(is_numeric($time) ? date('Y-m-d H:i:s', $time) : $time);
 		}
 
+		$time = /*Nette\*/Tools::createDateTime($time);
 		return strpos($format, '%') === FALSE
 			? $time->format($format) // formats using date()
 			: strftime($format, $time->format('U')); // formats according to locales

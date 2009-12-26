@@ -108,7 +108,7 @@ interface IHttpResponse
 	 * @param  mixed  timestamp or number of seconds
 	 * @return void
 	 */
-	function expire($seconds);
+	function setExpiration($seconds);
 
 	/**
 	 * Checks if headers have been sent.

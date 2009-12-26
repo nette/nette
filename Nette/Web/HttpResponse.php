@@ -181,27 +181,30 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
-	 * @param  mixed  timestamp or number of seconds
-	 * @return void
+	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
+	 * @return HttpResponse  provides a fluent interface
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
+	public function setExpiration($time)
+	{
+		if (!$time) { // no cache
+			$this->setHeader('Cache-Control', 's-maxage=0, max-age=0, must-revalidate');
+			$this->setHeader('Expires', 'Mon, 23 Jan 1978 10:00:00 GMT');
+			return $this;
+		}
+
+		$time = /*Nette\*/Tools::createDateTime($time);
+		$this->setHeader('Cache-Control', 'max-age=' . ($time->format('U') - time()));
+		$this->setHeader('Expires', self::date($time));
+		return $this;
+	}
+
+
+
+	/** @deprecated */
 	public function expire($seconds)
 	{
-		if (is_string($seconds) && !is_numeric($seconds)) {
-			$seconds = strtotime($seconds);
-		}
-
-		if ($seconds > 0) {
-			if ($seconds <= /*Nette\*/Tools::YEAR) {
-				$seconds += time();
-			}
-			$this->setHeader('Cache-Control', 'max-age=' . ($seconds - time()));
-			$this->setHeader('Expires', self::date($seconds));
-
-		} else { // no cache
-			$this->setHeader('Expires', 'Mon, 23 Jan 1978 10:00:00 GMT');
-			$this->setHeader('Cache-Control', 's-maxage=0, max-age=0, must-revalidate');
-		}
+		$this->setExpiration();
 	}
 
 
@@ -255,12 +258,14 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 
 	/**
 	 * Returns HTTP valid date format.
-	 * @param  int  timestamp
+	 * @param  string|int|DateTime
 	 * @return string
 	 */
 	public static function date($time = NULL)
 	{
-		return gmdate('D, d M Y H:i:s \G\M\T', $time === NULL ? time() : $time);
+		$time = /*Nette\*/Tools::createDateTime($time);
+		$time->setTimezone(new DateTimeZone('GMT'));
+		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
 
 
@@ -316,30 +321,23 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	 * Sends a cookie.
 	 * @param  string name of the cookie
 	 * @param  string value
-	 * @param  mixed  expiration as unix timestamp or number of seconds; Value 0 means "until the browser is closed"
+	 * @param  string|int|DateTime  expiration time, value 0 means "until the browser is closed"
 	 * @param  string
 	 * @param  string
 	 * @param  bool
 	 * @return HttpResponse  provides a fluent interface
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
-	public function setCookie($name, $value, $expire, $path = NULL, $domain = NULL, $secure = NULL)
+	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL)
 	{
 		if (headers_sent($file, $line)) {
 			throw new /*\*/InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
 
-		if (is_string($expire) && !is_numeric($expire)) {
-			$expire = strtotime($expire);
-
-		} elseif ($expire > 0 && $expire <= /*Nette\*/Tools::YEAR) {
-			$expire += time();
-		}
-
 		setcookie(
 			$name,
 			$value,
-			$expire,
+			$time ? /*Nette\*/Tools::createDateTime($time)->format('U') : 0,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
