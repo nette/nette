@@ -210,24 +210,18 @@ class User extends /*Nette\*/Object implements IUser
 
 	/**
 	 * Enables sign out after inactivity.
-	 * @param  mixed number of seconds or timestamp
+	 * @param  string|int|DateTime number of seconds or timestamp
 	 * @param  bool  sign out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
 	 * @return User  provides a fluent interface
 	 */
-	public function setExpiration($seconds, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
+	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		if (is_string($seconds) && !is_numeric($seconds)) {
-			$seconds = strtotime($seconds);
-		}
-
 		$session = $this->getSessionNamespace(TRUE);
-		if ($seconds > 0) {
-			if ($seconds <= /*Nette\*/Tools::YEAR) {
-				$seconds += time();
-			}
-			$session->expireTime = $seconds;
-			$session->expireDelta = $seconds - time();
+		if ($time) {
+			$time = /*Nette\*/Tools::createDateTime($time)->format('U');
+			$session->expireTime = $time;
+			$session->expireDelta = $time - time();
 
 		} else {
 			unset($session->expireTime, $session->expireDelta);

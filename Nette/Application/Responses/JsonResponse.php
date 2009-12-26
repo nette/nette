@@ -76,7 +76,7 @@ class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 	public function send()
 	{
 		/*Nette\*/Environment::getHttpResponse()->setContentType($this->contentType);
-		/*Nette\*/Environment::getHttpResponse()->expire(FALSE);
+		/*Nette\*/Environment::getHttpResponse()->setExpiration(FALSE);
 		echo json_encode($this->payload);
 	}
 

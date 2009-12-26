@@ -183,36 +183,28 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 
 	/**
 	 * Sets the expiration of the namespace or specific variables.
-	 * @param  mixed   time in seconds, value 0 means "until the browser is closed"
+	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
 	 * @param  mixed   optional list of variables / single variable to expire
 	 * @return SessionNamespace  provides a fluent interface
 	 */
-	public function setExpiration($seconds, $variables = NULL)
+	public function setExpiration($time, $variables = NULL)
 	{
-		if (is_string($seconds) && !is_numeric($seconds)) {
-			$seconds = strtotime($seconds);
+		if ($time == 0) {
+			$value = array(0, TRUE);
+		} else {
+			$value = array(/*Nette\*/Tools::createDateTime($time)->format('U'), FALSE);
 		}
 
-		$whenBrowserIsClosed = $seconds == 0;
-		if ($seconds <= 0) {
-			$seconds = 0;
+		if ($variables === NULL) { // to entire namespace
+			$this->meta['EXP'][''] = $value;
 
-		} elseif ($seconds <= /*Nette\*/Tools::YEAR) {
-			$seconds += time();
-		}
-
-		if ($variables === NULL) {
-			// to entire namespace
-			$this->meta['EXP'][''] = array($seconds, $whenBrowserIsClosed);
-
-		} elseif (is_array($variables)) {
-			// to variables
+		} elseif (is_array($variables)) { // to variables
 			foreach ($variables as $variable) {
-				$this->meta['EXP'][$variable] = array($seconds, $whenBrowserIsClosed);
+				$this->meta['EXP'][$variable] = $value;
 			}
 
-		} else {
-			$this->meta['EXP'][$variables] = array($seconds, $whenBrowserIsClosed);
+		} else { // to variable
+			$this->meta['EXP'][$variables] = $value;
 		}
 		return $this;
 	}
