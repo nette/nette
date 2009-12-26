@@ -801,71 +801,26 @@ abstract class Presenter extends Control implements IPresenter
 
 	/**
 	 * Attempts to cache the sent entity by its last modification date
-	 * @param  int    last modified time as unix timestamp
+	 * @param  string|int|DateTime  last modified time
 	 * @param  string strong entity tag validator
 	 * @param  mixed  optional expiration time
-	 * @return int    date of the client's cache version, if available
+	 * @return void
 	 * @throws AbortException
+     * @deprecated
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
 		if (!Environment::isProduction()) {
-			return NULL;
-		}
-
-		$httpResponse = $this->getHttpResponse();
-		$match = FALSE;
-
-		if ($lastModified > 0) {
-			$httpResponse->setHeader('Last-Modified', /*Nette\Web\*/HttpResponse::date($lastModified));
-		}
-
-		if ($etag != NULL) { // intentionally ==
-			$etag = '"' . addslashes($etag) . '"';
-			$httpResponse->setHeader('ETag', $etag);
+			return;
 		}
 
 		if ($expire !== NULL) {
-			$httpResponse->expire($expire);
+			$this->getHttpResponse()->setExpiration($expire);
 		}
 
-		$ifNoneMatch = $this->getHttpRequest()->getHeader('if-none-match');
-		$ifModifiedSince = $this->getHttpRequest()->getHeader('if-modified-since');
-		if ($ifModifiedSince !== NULL) {
-			$ifModifiedSince = strtotime($ifModifiedSince);
-		}
-
-		if ($ifNoneMatch !== NULL) {
-			if ($ifNoneMatch === '*') {
-				$match = TRUE; // match, check if-modified-since
-
-			} elseif ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
-				return $ifModifiedSince; // no match, ignore if-modified-since
-
-			} else {
-				$match = TRUE; // match, check if-modified-since
-			}
-		}
-
-		if ($ifModifiedSince !== NULL) {
-			if ($lastModified > 0 && $lastModified <= $ifModifiedSince) {
-				$match = TRUE;
-
-			} else {
-				return $ifModifiedSince;
-			}
-		}
-
-		if ($match) {
-			$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S304_NOT_MODIFIED);
-			$httpResponse->setHeader('Content-Length', '0');
+		if (!$this->getHttpContext()->isModified($lastModified, $etag)) {
 			$this->terminate();
-
-		} else {
-			return $ifModifiedSince;
 		}
-
-		return NULL;
 	}
 
 
@@ -1327,7 +1282,7 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return Nette\Web\IHttpRequest
+	 * @return Nette\Web\HttpRequest
 	 */
 	protected function getHttpRequest()
 	{
@@ -1337,11 +1292,21 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * @return Nette\Web\IHttpResponse
+	 * @return Nette\Web\HttpResponse
 	 */
 	protected function getHttpResponse()
 	{
 		return Environment::getHttpResponse();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\HttpContext
+	 */
+	protected function getHttpContext()
+	{
+		return Environment::getHttpContext();
 	}
 
 

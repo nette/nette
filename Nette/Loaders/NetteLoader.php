@@ -95,6 +95,7 @@ class NetteLoader extends AutoLoader
 		'hashtable' => '/Collections/Hashtable.php',
 		'hiddenfield' => '/Forms/Controls/HiddenField.php',
 		'html' => '/Web/Html.php',
+		'httpcontext' => '/Web/HttpContext.php',
 		'httprequest' => '/Web/HttpRequest.php',
 		'httpresponse' => '/Web/HttpResponse.php',
 		'httpuploadedfile' => '/Web/HttpUploadedFile.php',
