@@ -65,6 +65,7 @@ final class Environment
 
 	/** @var array */
 	private static $aliases = array(
+		'getHttpContext' => 'Nette\Web\HttpContext',
 		'getHttpRequest' => 'Nette\Web\IHttpRequest',
 		'getHttpResponse' => 'Nette\Web\IHttpResponse',
 		'getApplication' => 'Nette\Application\Application',
@@ -398,6 +399,16 @@ final class Environment
 	 * @return Nette\Web\HttpRequest
 	 */
 	public static function getHttpRequest()
+	{
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+	}
+
+
+
+	/**
+	 * @return Nette\Web\HttpContext
+	 */
+	public static function getHttpContext()
 	{
 		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}

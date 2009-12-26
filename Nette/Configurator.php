@@ -40,6 +40,7 @@ class Configurator extends Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\Application\Application' => 'Nette\Application\Application',
+		'Nette\Web\HttpContext' => 'Nette\Web\HttpContext',
 		'Nette\Web\IHttpRequest' => 'Nette\Web\HttpRequest',
 		'Nette\Web\IHttpResponse' => 'Nette\Web\HttpResponse',
 		'Nette\Web\IUser' => 'Nette\Web\User',
