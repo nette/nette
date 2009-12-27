@@ -131,8 +131,10 @@ class NetteTestCase
 			}
 		}
 
-		if (!$tests) {
-			throw new NetteTestCaseException("Missing EXPECT and/or EXPECTHEADERS section.");
+		if (!$tests) { // expecting no output
+			if (trim($output) !== '') {
+				throw new NetteTestCaseException("Empty output doesn't match.");
+			}
 		}
 	}
 

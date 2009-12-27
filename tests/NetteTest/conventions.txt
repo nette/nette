@@ -23,8 +23,8 @@ Sections:
 PHP (All test cases are valid PHP files)
 	- phpDoc with test case name (optional)
 	- require 'NetteTest/initialize.php' (required)
-    - dump variables using function dump()
-    - __halt_compiler() (required if file contains more sections)
+	- dump variables using function dump()
+	- __halt_compiler() (required if file contains more sections)
 
 
 ---EXPECT---
