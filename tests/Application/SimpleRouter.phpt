@@ -33,28 +33,11 @@ $httpRequest->setQuery(array(
 ));
 
 $req = $router->match($httpRequest);
-dump( $req->getPresenterName() ); // "myPresenter"
-dump( $req->params["action"] ); // "action"
-dump( $req->params["id"] ); // "12"
-dump( $req->params["test"] ); // "testvalue"
-dump( $req->params["any"] ); // "anyvalue"
+Assert::same( "myPresenter",  $req->getPresenterName() );
+Assert::same( "action",  $req->params["action"] );
+Assert::same( "12",  $req->params["id"] );
+Assert::same( "testvalue",  $req->params["test"] );
+Assert::same( "anyvalue",  $req->params["any"] );
 
 $url = $router->constructUrl($req, $httpRequest);
-dump( $url ); // "http://nettephp.com/file.php?action=action&test=testvalue&presenter=myPresenter"
-
-
-
-__halt_compiler();
-
-------EXPECT------
-string(11) "myPresenter"
-
-string(6) "action"
-
-string(2) "12"
-
-string(9) "testvalue"
-
-string(8) "anyvalue"
-
-string(79) "http://nettephp.com/file.php?action=action&test=testvalue&presenter=myPresenter"
+Assert::same( "http://nettephp.com/file.php?action=action&test=testvalue&presenter=myPresenter",  $url );

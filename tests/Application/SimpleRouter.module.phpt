@@ -29,10 +29,10 @@ $httpRequest->setQuery(array(
 ));
 
 $req = $router->match($httpRequest);
-dump( $req->getPresenterName() ); // "main:sub:myPresenter"
+Assert::same( "main:sub:myPresenter",  $req->getPresenterName() );
 
 $url = $router->constructUrl($req, $httpRequest);
-dump( $url ); // "http://nettephp.com/file.php?presenter=myPresenter"
+Assert::same( "http://nettephp.com/file.php?presenter=myPresenter",  $url );
 
 $req = new /*Nette\Application\*/PresenterRequest(
 	'othermodule:presenter',
@@ -40,15 +40,4 @@ $req = new /*Nette\Application\*/PresenterRequest(
 	array()
 );
 $url = $router->constructUrl($req, $httpRequest);
-dump( $url ); // NULL
-
-
-
-__halt_compiler();
-
-------EXPECT------
-string(20) "main:sub:myPresenter"
-
-string(50) "http://nettephp.com/file.php?presenter=myPresenter"
-
-NULL
+Assert::null( $url );

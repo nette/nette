@@ -17,41 +17,14 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-dump( LatteFilter::formatString('') ); // '""'
-dump( LatteFilter::formatString(' ') ); // '" "'
-dump( LatteFilter::formatString('0') ); // "0"
-dump( LatteFilter::formatString('-0.0') ); // "-0.0"
-dump( LatteFilter::formatString('symbol') ); // '"symbol"'
-dump( LatteFilter::formatString('$var') ); // "\$var"
-dump( LatteFilter::formatString('symbol$var') ); // '"symbol$var"'
-dump( LatteFilter::formatString("'var'") ); // "'var'"
-dump( LatteFilter::formatString('"var"') ); // '"var"'
-dump( LatteFilter::formatString('"v\\"ar"') ); // '"v\\"ar"'
-dump( LatteFilter::formatString("'var\"") ); // "'var\""
-
-
-
-__halt_compiler();
-
-------EXPECT------
-string(2) """"
-
-string(3) "" ""
-
-string(1) "0"
-
-string(4) "-0.0"
-
-string(8) ""symbol""
-
-string(4) "$var"
-
-string(12) ""symbol$var""
-
-string(5) "'var'"
-
-string(5) ""var""
-
-string(7) ""v\"ar""
-
-string(5) "'var""
+Assert::same( '""',  LatteFilter::formatString('') );
+Assert::same( '" "',  LatteFilter::formatString(' ') );
+Assert::same( "0",  LatteFilter::formatString('0') );
+Assert::same( "-0.0",  LatteFilter::formatString('-0.0') );
+Assert::same( '"symbol"',  LatteFilter::formatString('symbol') );
+Assert::same( "\$var",  LatteFilter::formatString('$var') );
+Assert::same( '"symbol$var"',  LatteFilter::formatString('symbol$var') );
+Assert::same( "'var'",  LatteFilter::formatString("'var'") );
+Assert::same( '"var"',  LatteFilter::formatString('"var"') );
+Assert::same( '"v\\"ar"',  LatteFilter::formatString('"v\\"ar"') );
+Assert::same( "'var\"",  LatteFilter::formatString("'var\"") );

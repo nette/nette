@@ -20,18 +20,8 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 $session = new Session;
 $namespace = $session->getNamespace('one');
 
-dump( isset($namespace->undefined) ); // False
+Assert::false( isset($namespace->undefined) );
 
-dump( $namespace->undefined, 'Getting value of non-existent key' ); // Null
+Assert::null( $namespace->undefined, 'Getting value of non-existent key' );
 
-dump( http_build_query($namespace->getIterator()) );
-
-
-__halt_compiler();
-
-------EXPECT------
-bool(FALSE)
-
-Getting value of non-existent key: NULL
-
-string(0) ""
+Assert::same( '', http_build_query($namespace->getIterator()) );

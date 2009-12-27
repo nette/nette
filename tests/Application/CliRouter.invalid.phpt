@@ -22,11 +22,4 @@ $_SERVER['argv'] = 1;
 $httpRequest = new HttpRequest;
 
 $router = new CliRouter;
-dump( $router->match($httpRequest) ); // NULL
-
-
-
-__halt_compiler();
-
-------EXPECT------
-NULL
+Assert::null( $router->match($httpRequest) );
