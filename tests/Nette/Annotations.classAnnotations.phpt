@@ -45,161 +45,70 @@ class TestClass {
 
 
 
-output('==> Class annotations');
+// Class annotations
 
 $rc = new ReflectionClass('TestClass');
 $tmp = Annotations::getAll($rc);
 
-dump( $tmp["title"][0]->value ); // "Johno's addendum"
-dump( $tmp["title"][0]->mode ); // True
-dump( $tmp["title"][1]->value ); // "One, Two"
-dump( $tmp["title"][1]->mode ); // "true or false"
-dump( $tmp["title"][2]->value ); // "Three (Four)"
-dump( $tmp["title"][2]->mode ); // "false"
-dump( $tmp["components"][0] ); // "item 1"
-dump( $tmp["persistent"][0], 'persistent' ); // True
-dump( $tmp["persistent"][1] ); // False
-dump( $tmp["persistent"][2] ); // Null
-dump( $tmp["author"][0], 'author' ); // True
-dump( $tmp["author"][1] ); // False
-dump( $tmp["author"][2] ); // Null
-dump( $tmp["author"][3] ); // True
-dump( $tmp["author"][4] ); // "John Doe"
-dump( $tmp["renderable"][0] ); // True
+Assert::same( "Johno's addendum",  $tmp["title"][0]->value );
+Assert::true( $tmp["title"][0]->mode );
+Assert::same( "One, Two",  $tmp["title"][1]->value );
+Assert::same( "true or false",  $tmp["title"][1]->mode );
+Assert::same( "Three (Four)",  $tmp["title"][2]->value );
+Assert::same( "false",  $tmp["title"][2]->mode );
+Assert::same( "item 1",  $tmp["components"][0] );
+Assert::true( $tmp["persistent"][0], 'persistent' );
+Assert::false( $tmp["persistent"][1] );
+Assert::null( $tmp["persistent"][2] );
+Assert::true( $tmp["author"][0], 'author' );
+Assert::false( $tmp["author"][1] );
+Assert::null( $tmp["author"][2] );
+Assert::true( $tmp["author"][3] );
+Assert::same( "John Doe",  $tmp["author"][4] );
+Assert::true( $tmp["renderable"][0] );
 
-dump( $tmp === Annotations::getAll($rc), 'cache test' );
-dump( $tmp !== Annotations::getAll(new ReflectionClass('ReflectionClass')), 'cache test' );
+Assert::true( $tmp === Annotations::getAll($rc), 'cache test' );
+Assert::true( $tmp !== Annotations::getAll(new ReflectionClass('ReflectionClass')), 'cache test' );
 
-dump( Annotations::has($rc, 'title'), "has('title')" ); // True
-dump( Annotations::get($rc, 'title')->value ); // "Three (Four)"
-dump( Annotations::get($rc, 'title')->mode ); // "false"
+Assert::true( Annotations::has($rc, 'title'), "has('title')" );
+Assert::same( "Three (Four)",  Annotations::get($rc, 'title')->value );
+Assert::same( "false",  Annotations::get($rc, 'title')->mode );
 
 $tmp = Annotations::getAll($rc, 'title');
-dump( $tmp[0]->value ); // "Johno's addendum"
-dump( $tmp[0]->mode ); // True
-dump( $tmp[1]->value ); // "One, Two",
-dump( $tmp[1]->mode ); // "true or false"
-dump( $tmp[2]->value ); // "Three (Four)"
-dump( $tmp[2]->mode ); // "false"
+Assert::same( "Johno's addendum",  $tmp[0]->value );
+Assert::true( $tmp[0]->mode );
+Assert::same( "One, Two",  $tmp[1]->value );
+Assert::same( "true or false",  $tmp[1]->mode );
+Assert::same( "Three (Four)",  $tmp[2]->value );
+Assert::same( "false",  $tmp[2]->mode );
 
-dump( Annotations::has($rc, 'renderable'), "has('renderable')" ); // True
-dump( Annotations::get($rc, 'renderable'), "get('renderable')" ); // True
+Assert::true( Annotations::has($rc, 'renderable'), "has('renderable')" );
+Assert::true( Annotations::get($rc, 'renderable'), "get('renderable')" );
 $tmp = Annotations::getAll($rc, 'renderable');
-dump( $tmp[0] ); // True
+Assert::true( $tmp[0] );
 $tmp = Annotations::getAll($rc, 'persistent');
-dump( Annotations::get($rc, 'persistent'), "get('persistent')" ); // Null
-dump( $tmp[0] ); // True
-dump( $tmp[1] ); // False
-dump( $tmp[2] ); // Null
+Assert::null( Annotations::get($rc, 'persistent'), "get('persistent')" );
+Assert::true( $tmp[0] );
+Assert::false( $tmp[1] );
+Assert::null( $tmp[2] );
 
-dump( Annotations::has($rc, 'xxx'), "has('xxx')" ); // False
-dump( Annotations::get($rc, 'xxx'), "get('xxx')" ); // Null
+Assert::false( Annotations::has($rc, 'xxx'), "has('xxx')" );
+Assert::null( Annotations::get($rc, 'xxx'), "get('xxx')" );
 
 
-output('==> Method annotations');
+// Method annotations
 
 $rm = new ReflectionMethod('TestClass', 'foo');
 $tmp = Annotations::getAll($rm);
 
-dump( $tmp["RolesAllowed"][0][0] ); // 'admin'
-dump( $tmp["RolesAllowed"][0][1] ); // 'web editor'
+Assert::same( 'admin',  $tmp["RolesAllowed"][0][0] );
+Assert::same( 'web editor',  $tmp["RolesAllowed"][0][1] );
 
 
-output('==> Property annotations');
+// Property annotations
 
 $rp = new ReflectionProperty('TestClass', 'foo');
 $tmp = Annotations::getAll($rp);
 
-dump( $tmp["secured"][0]->role ); // "admin"
-dump( $tmp["secured"][0]->level ); // 2
-
-
-
-__halt_compiler();
-
-------EXPECT------
-==> Class annotations
-
-string(16) "Johno's addendum"
-
-bool(TRUE)
-
-string(8) "One, Two"
-
-string(13) "true or false"
-
-string(12) "Three (Four)"
-
-string(5) "false"
-
-string(6) "item 1"
-
-persistent: bool(TRUE)
-
-bool(FALSE)
-
-NULL
-
-author: bool(TRUE)
-
-bool(FALSE)
-
-NULL
-
-bool(TRUE)
-
-string(8) "John Doe"
-
-bool(TRUE)
-
-cache test: bool(TRUE)
-
-cache test: bool(TRUE)
-
-has('title'): bool(TRUE)
-
-string(12) "Three (Four)"
-
-string(5) "false"
-
-string(16) "Johno's addendum"
-
-bool(TRUE)
-
-string(8) "One, Two"
-
-string(13) "true or false"
-
-string(12) "Three (Four)"
-
-string(5) "false"
-
-has('renderable'): bool(TRUE)
-
-get('renderable'): bool(TRUE)
-
-bool(TRUE)
-
-get('persistent'): NULL
-
-bool(TRUE)
-
-bool(FALSE)
-
-NULL
-
-has('xxx'): bool(FALSE)
-
-get('xxx'): NULL
-
-==> Method annotations
-
-string(5) "admin"
-
-string(10) "web editor"
-
-==> Property annotations
-
-string(5) "admin"
-
-int(2)
+Assert::same( "admin",  $tmp["secured"][0]->role );
+Assert::same( 2,  $tmp["secured"][0]->level );

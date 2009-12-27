@@ -36,11 +36,4 @@ $req = new /*Nette\Application\*/PresenterRequest(
 );
 
 $url = $router->constructUrl($req, $httpRequest);
-dump( $url ); // "https://nettephp.com/file.php?presenter=othermodule%3Apresenter"
-
-
-
-__halt_compiler();
-
-------EXPECT------
-string(63) "https://nettephp.com/file.php?presenter=othermodule%3Apresenter"
+Assert::same( "https://nettephp.com/file.php?presenter=othermodule%3Apresenter",  $url );

@@ -90,31 +90,12 @@ $_FILES = array(
 
 $request = new HttpRequest;
 
-dump( $request->files['file1'] instanceof HttpUploadedFile ); // TRUE
-dump( $request->files['file2'][2] instanceof HttpUploadedFile ); // TRUE
-dump( $request->files['file3']['y']['z'] instanceof HttpUploadedFile ); // TRUE
-dump( $request->files['file3'][1] instanceof HttpUploadedFile ); // TRUE
+Assert::true( $request->files['file1'] instanceof HttpUploadedFile );
+Assert::true( $request->files['file2'][2] instanceof HttpUploadedFile );
+Assert::true( $request->files['file3']['y']['z'] instanceof HttpUploadedFile );
+Assert::true( $request->files['file3'][1] instanceof HttpUploadedFile );
 
-dump( isset($request->files['file0']) ); // False
-dump( isset($request->files['file1']) ); // True
+Assert::false( isset($request->files['file0']) );
+Assert::true( isset($request->files['file1']) );
 
-dump( $request->getFile('file1', 'a') ); // Null
-
-
-
-__halt_compiler();
-
-------EXPECT------
-bool(TRUE)
-
-bool(TRUE)
-
-bool(TRUE)
-
-bool(TRUE)
-
-bool(FALSE)
-
-bool(TRUE)
-
-NULL
+Assert::null( $request->getFile('file1', 'a') );

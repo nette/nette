@@ -26,16 +26,16 @@ foreach ($namespace as $key => $val) {
 	dump( "$key=$val" );
 }
 
-dump( isset($namespace['p']) ); // True
-dump( isset($namespace->o) ); // True
-dump( isset($namespace->undefined) ); // False
+Assert::true( isset($namespace['p']) );
+Assert::true( isset($namespace->o) );
+Assert::false( isset($namespace->undefined) );
 
 unset($namespace['a']);
 unset($namespace->p);
 unset($namespace->o);
 unset($namespace->undef);
 
-dump( http_build_query($namespace->getIterator()) );
+Assert::same( '', http_build_query($namespace->getIterator()) );
 
 
 
@@ -47,11 +47,3 @@ string(7) "a=apple"
 string(6) "p=pear"
 
 string(8) "o=orange"
-
-bool(TRUE)
-
-bool(TRUE)
-
-bool(FALSE)
-
-string(0) ""

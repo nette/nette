@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Mail\Mail, Nette\Environment;*/
+/*use Nette\Mail\Mail, Nette\Environment, Nette\Templates\Template, Nette\Templates\LatteFilter;*/
 
 
 

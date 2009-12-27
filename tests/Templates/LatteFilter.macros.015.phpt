@@ -21,10 +21,13 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 require dirname(__FILE__) . '/Template.inc';
 
 
-
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
-$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
+try {
+	$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
+} catch (Exception $e) {
+	dump($e);
+}
 
 
 
@@ -35,4 +38,4 @@ Block
 {/block}
 
 ------EXPECT------
-Exception InvalidStateException: Filter LatteFilter::__invoke: Tag {/block } was not expected here on line 2.
+Exception InvalidStateException: Filter %ns%LatteFilter::__invoke: Tag {/block } was not expected here on line 2.

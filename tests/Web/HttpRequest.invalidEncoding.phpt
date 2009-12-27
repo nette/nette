@@ -70,137 +70,54 @@ $_FILES = array(
 	),
 );
 
-output('==> unfiltered data');
+// unfiltered data
 $request = new HttpRequest;
 
-dump( $request->getQuery('invalid') === INVALID ); // TRUE
-dump( $request->getQuery('control') === CONTROL_CHARACTERS ); // TRUE
-dump( $request->getQuery(INVALID) ); // '1'
-dump( $request->getQuery(CONTROL_CHARACTERS) ); // '1'
-dump( $request->query['array'][INVALID] ); // '1'
+Assert::true( $request->getQuery('invalid') === INVALID );
+Assert::true( $request->getQuery('control') === CONTROL_CHARACTERS );
+Assert::same( 1,  $request->getQuery(INVALID) );
+Assert::same( 1,  $request->getQuery(CONTROL_CHARACTERS) );
+Assert::same( 1,  $request->query['array'][INVALID] );
 
-dump( $request->getPost('invalid') === INVALID ); // TRUE
-dump( $request->getPost('control') === CONTROL_CHARACTERS ); // TRUE
-dump( $request->getPost(INVALID) ); // '1'
-dump( $request->getPost(CONTROL_CHARACTERS) ); // '1'
-dump( $request->post['array'][INVALID] ); // '1'
+Assert::true( $request->getPost('invalid') === INVALID );
+Assert::true( $request->getPost('control') === CONTROL_CHARACTERS );
+Assert::same( 1,  $request->getPost(INVALID) );
+Assert::same( 1,  $request->getPost(CONTROL_CHARACTERS) );
+Assert::same( 1,  $request->post['array'][INVALID] );
 
-dump( $request->getCookie('invalid') === INVALID ); // TRUE
-dump( $request->getCookie('control') === CONTROL_CHARACTERS ); // TRUE
-dump( $request->getCookie(INVALID) ); // '1'
-dump( $request->getCookie(CONTROL_CHARACTERS) ); // '1'
-dump( $request->cookies['array'][INVALID] ); // '1'
+Assert::true( $request->getCookie('invalid') === INVALID );
+Assert::true( $request->getCookie('control') === CONTROL_CHARACTERS );
+Assert::same( 1,  $request->getCookie(INVALID) );
+Assert::same( 1,  $request->getCookie(CONTROL_CHARACTERS) );
+Assert::same( 1,  $request->cookies['array'][INVALID] );
 
-dump( $request->getFile(INVALID) instanceof HttpUploadedFile ); // TRUE
-dump( $request->getFile(CONTROL_CHARACTERS) instanceof HttpUploadedFile ); // TRUE
-dump( $request->files['file1'] instanceof HttpUploadedFile ); // TRUE
+Assert::true( $request->getFile(INVALID) instanceof HttpUploadedFile );
+Assert::true( $request->getFile(CONTROL_CHARACTERS) instanceof HttpUploadedFile );
+Assert::true( $request->files['file1'] instanceof HttpUploadedFile );
 
 
-output('==> filtered data');
+// filtered data
 $request->setEncoding('UTF-8');
 
-dump( $request->getQuery('invalid') ); // "v\xc5\xbe"
-dump( $request->getQuery('control') ); // 'ABC'
-dump( $request->getQuery(INVALID) ); // Null
-dump( $request->getQuery(CONTROL_CHARACTERS) ); // Null
-dump( isset($request->query['array'][INVALID]) ); // False
+Assert::same( "v\xc5\xbe",  $request->getQuery('invalid') );
+Assert::same( 'ABC',  $request->getQuery('control') );
+Assert::null( $request->getQuery(INVALID) );
+Assert::null( $request->getQuery(CONTROL_CHARACTERS) );
+Assert::false( isset($request->query['array'][INVALID]) );
 
-dump( $request->getPost('invalid') ); // "v\xc5\xbe"
-dump( $request->getPost('control') ); // 'ABC'
-dump( $request->getPost(INVALID) ); // Null
-dump( $request->getPost(CONTROL_CHARACTERS) ); // Null
-dump( isset($request->post['array'][INVALID]) ); // False
+Assert::same( "v\xc5\xbe",  $request->getPost('invalid') );
+Assert::same( 'ABC',  $request->getPost('control') );
+Assert::null( $request->getPost(INVALID) );
+Assert::null( $request->getPost(CONTROL_CHARACTERS) );
+Assert::false( isset($request->post['array'][INVALID]) );
 
-dump( $request->getCookie('invalid') ); // "v\xc5\xbe"
-dump( $request->getCookie('control') ); // 'ABC'
-dump( $request->getCookie(INVALID) ); // Null
-dump( $request->getCookie(CONTROL_CHARACTERS) ); // Null
-dump( isset($request->cookies['array'][INVALID]) ); // False
+Assert::same( "v\xc5\xbe",  $request->getCookie('invalid') );
+Assert::same( 'ABC',  $request->getCookie('control') );
+Assert::null( $request->getCookie(INVALID) );
+Assert::null( $request->getCookie(CONTROL_CHARACTERS) );
+Assert::false( isset($request->cookies['array'][INVALID]) );
 
-dump( $request->getFile(INVALID) ); // Null
-dump( $request->getFile(CONTROL_CHARACTERS) ); // Null
-dump( $request->files['file1'] instanceof HttpUploadedFile ); // TRUE
-dump( $request->files['file1']->name ); // "v\xc5\xbe"
-
-
-
-__halt_compiler();
-
-------EXPECT------
-==> unfiltered data
-
-bool(TRUE)
-
-bool(TRUE)
-
-int(1)
-
-int(1)
-
-int(1)
-
-bool(TRUE)
-
-bool(TRUE)
-
-int(1)
-
-int(1)
-
-int(1)
-
-bool(TRUE)
-
-bool(TRUE)
-
-int(1)
-
-int(1)
-
-int(1)
-
-bool(TRUE)
-
-bool(TRUE)
-
-bool(TRUE)
-
-==> filtered data
-
-string(3) "vž"
-
-string(3) "ABC"
-
-NULL
-
-NULL
-
-bool(FALSE)
-
-string(3) "vž"
-
-string(3) "ABC"
-
-NULL
-
-NULL
-
-bool(FALSE)
-
-string(3) "vž"
-
-string(3) "ABC"
-
-NULL
-
-NULL
-
-bool(FALSE)
-
-NULL
-
-NULL
-
-bool(TRUE)
-
-string(3) "vž"
+Assert::null( $request->getFile(INVALID) );
+Assert::null( $request->getFile(CONTROL_CHARACTERS) );
+Assert::true( $request->files['file1'] instanceof HttpUploadedFile );
+Assert::same( "v\xc5\xbe",  $request->files['file1']->name );

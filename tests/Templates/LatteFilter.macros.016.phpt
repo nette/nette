@@ -45,7 +45,7 @@ __halt_compiler();
 ------EXPECT------
 
 <?php
-%a%
+%A%
 
 if (SnippetHelper::$outputAllowed) {
 } if (TRUE): if (SnippetHelper::$outputAllowed) { ?>
