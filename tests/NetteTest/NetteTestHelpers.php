@@ -228,6 +228,7 @@ final class NetteTestHelpers
 	 */
 	public static function exceptionHandler(Exception $exception)
 	{
+		echo 'Error: Uncaught ';
 		self::dump($exception, 0);
 	}
 
