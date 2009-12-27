@@ -11,6 +11,8 @@ require dirname(__FILE__) . '/NetteTestCase.php';
 
 require dirname(__FILE__) . '/NetteTestHelpers.php';
 
+require dirname(__FILE__) . '/Assert.php';
+
 
 
 NetteTestHelpers::startup();
