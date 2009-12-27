@@ -17,7 +17,12 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-$uri = new Uri(':');
+try {
+	$uri = new Uri(':');
+
+} catch (Exception $e) {
+	dump( $e );
+}
 
 
 
