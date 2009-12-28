@@ -126,7 +126,7 @@ class Session extends /*Nette\*/Object
 		/* structure:
 			__NF: VerificationKey, Counter, BrowserKey, Data, Meta
 				DATA: namespace->variable = data
-				META: namespace->variable = Timestamp, Browser
+				META: namespace->variable = Timestamp, Browser, Version
 		*/
 
 		// initialize structures
@@ -168,7 +168,10 @@ class Session extends /*Nette\*/Object
 			foreach ($nf['META'] as $namespace => $metadata) {
 				if (is_array($metadata)) {
 					foreach ($metadata as $variable => $value) {
-						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T'])) {
+						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T']) // whenBrowserIsClosed || Time
+							|| ($variable !== '' && is_object($nf['DATA'][$namespace][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
+								!== (defined($const = get_class($nf['DATA'][$namespace][$variable]) . '::SERIALIZATION_VERSION') ? constant($const) : NULL))) {
+
 							if ($variable === '') { // expire whole namespace
 								unset($nf['META'][$namespace], $nf['DATA'][$namespace]);
 								continue 2;

@@ -81,6 +81,10 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	public function __set($name, $value)
 	{
 		$this->data[$name] = $value;
+		if (is_object($value)) {
+			$const = get_class($value) . '::SERIALIZATION_VERSION';
+			$this->meta[$name]['V'] = defined($const) ? constant($const) : NULL;
+		}
 	}
 
 
