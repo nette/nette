@@ -123,7 +123,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	 */
 	public function __unset($name)
 	{
-		unset($this->data[$name], $this->meta['EXP'][$name]);
+		unset($this->data[$name], $this->meta[$name]);
 	}
 
 
@@ -198,18 +198,18 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 		}
 
 		if ($variables === NULL) { // to entire namespace
-			$this->meta['EXP'][''][0] = $time;
-			$this->meta['EXP'][''][1] = $whenBrowserIsClosed;
+			$this->meta['']['T'] = $time;
+			$this->meta['']['B'] = $whenBrowserIsClosed;
 
 		} elseif (is_array($variables)) { // to variables
 			foreach ($variables as $variable) {
-				$this->meta['EXP'][$variable][0] = $time;
-				$this->meta['EXP'][$variable][1] = $whenBrowserIsClosed;
+				$this->meta[$variable]['T'] = $time;
+				$this->meta[$variable]['B'] = $whenBrowserIsClosed;
 			}
 
 		} else { // to variable
-			$this->meta['EXP'][$variables][0] = $time;
-			$this->meta['EXP'][$variables][1] = $whenBrowserIsClosed;
+			$this->meta[$variables]['T'] = $time;
+			$this->meta[$variables]['B'] = $whenBrowserIsClosed;
 		}
 		return $this;
 	}
@@ -225,15 +225,15 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	{
 		if ($variables === NULL) {
 			// from entire namespace
-			unset($this->meta['EXP'][''][0], $this->meta['EXP'][''][1]);
+			unset($this->meta['']['T'], $this->meta['']['B']);
 
 		} elseif (is_array($variables)) {
 			// from variables
 			foreach ($variables as $variable) {
-				unset($this->meta['EXP'][$variable][0], $this->meta['EXP'][$variable][1]);
+				unset($this->meta[$variable]['T'], $this->meta[$variable]['B']);
 			}
 		} else {
-			unset($this->meta['EXP'][$variables][0], $this->meta['EXP'][$variable][1]);
+			unset($this->meta[$variables]['T'], $this->meta[$variable]['B']);
 		}
 	}
 
