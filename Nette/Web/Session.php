@@ -149,6 +149,7 @@ class Session extends /*Nette\*/Object
 			}
 		}
 		$nf = & $_SESSION['__NF'];
+		unset($_SESSION['__NT'], $_SESSION['__NS'], $_SESSION['__NM']); // old structures
 
 		// browser closing detection
 		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
