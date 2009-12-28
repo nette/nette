@@ -132,13 +132,14 @@ class Session extends /*Nette\*/Object
 		// initialize structures
 		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : NULL;
 		if (!isset($_SESSION['__NT']['V'])) { // new session
+			unset($_SESSION['__NS'], $_SESSION['__NM']);
 			$_SESSION['__NT'] = array();
 			$_SESSION['__NT']['C'] = 0;
 			$_SESSION['__NT']['V'] = $verKey;
 
 		} else {
 			$saved = & $_SESSION['__NT']['V'];
-			if ($verKey == NULL || $verKey === $saved) { // verified
+			if (!$this->verificationKeyGenerator || $verKey === $saved) { // ignored or verified
 				$_SESSION['__NT']['C']++;
 
 			} else { // session attack?
@@ -207,6 +208,7 @@ class Session extends /*Nette\*/Object
 	public function close()
 	{
 		if (self::$started) {
+			$this->clean();
 			session_write_close();
 			self::$started = FALSE;
 		}
@@ -518,7 +520,7 @@ class Session extends /*Nette\*/Object
 	 */
 	public function setExpiration($time)
 	{
-		if ($time == 0) {
+		if (empty($time)) {
 			return $this->setOptions(array(
 				'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,
 				'cookie_lifetime' => 0,
