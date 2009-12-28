@@ -61,7 +61,7 @@ class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countabl
 
 	/**
 	 * Is the current element the first one?
-     * @param  int  grid width
+	 * @param  int  grid width
 	 * @return bool
 	 */
 	public function isFirst($width = NULL)
@@ -73,7 +73,7 @@ class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countabl
 
 	/**
 	 * Is the current element the last one?
-     * @param  int  grid width
+	 * @param  int  grid width
 	 * @return bool
 	 */
 	public function isLast($width = NULL)

@@ -806,7 +806,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @param  mixed  optional expiration time
 	 * @return void
 	 * @throws AbortException
-     * @deprecated
+	 * @deprecated
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
