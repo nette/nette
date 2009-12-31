@@ -111,6 +111,17 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 
+	/**
+	 * Access to reflection.
+	 * @return PresenterComponentReflection
+	 */
+	public function getReflection()
+	{
+		return new PresenterComponentReflection($this);
+	}
+
+
+
 	/********************* interface IStatePersistent ****************d*g**/
 
 
@@ -122,7 +133,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function loadState(array $params)
 	{
-		foreach (PresenterHelpers::getPersistentParams(get_class($this)) as $nm => $meta)
+		foreach ($this->getReflection()->getPersistentParams() as $nm => $meta)
 		{
 			if (isset($params[$nm])) { // ignore NULL values
 				if (isset($meta['def'])) {
@@ -139,12 +150,13 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	/**
 	 * Saves state informations for next request.
 	 * @param  array
-	 * @param  portion specified by class name (used by Presenter)
+	 * @param  PresenterComponentReflection (internal, used by Presenter)
 	 * @return void
 	 */
-	public function saveState(array & $params, $forClass = NULL)
+	public function saveState(array & $params, $reflection = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? get_class($this) : $forClass) as $nm => $meta)
+		$reflection = $reflection === NULL ? $this->getReflection() : $reflection;
+		foreach ($reflection->getPersistentParams() as $nm => $meta)
 		{
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
