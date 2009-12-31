@@ -106,11 +106,13 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	protected function tryCall($method, array $params)
 	{
-		$class = get_class($this);
-		if (PresenterHelpers::isMethodCallable($class, $method)) {
-			$args = PresenterHelpers::paramsToArgs($class, $method, $params);
-			call_user_func_array(array($this, $method), $args);
-			return TRUE;
+		$rc = $this->getReflection();
+		if ($rc->hasMethod($method)) {
+			$rm = $rc->getMethod($method);
+			if ($rm->isCallable() && !$rm->isStatic()) {
+				$rm->invokeNamedArgs($this, $params);
+				return TRUE;
+			}
 		}
 		return FALSE;
 	}

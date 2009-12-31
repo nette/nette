@@ -40,7 +40,7 @@ final class PresenterHelpers
 	/** @var array isMethodCallable cache */
 	private static $mcCache = array();
 
-	/** @var array getMethodParams cache */
+	/** @var array getDefaultParameters cache */
 	private static $mpCache = array();
 
 
@@ -115,63 +115,20 @@ final class PresenterHelpers
 	public static function isMethodCallable($class, $method)
 	{
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
-		if ($cache !== NULL) return $cache;
-
-		try {
+		if ($cache === NULL) try {
 			$cache = FALSE;
-			// check class
-			$rc = new /*\*/ReflectionClass($class);
-			if (!$rc->isInstantiable()) {
-				return FALSE;
-			}
-
-			// check method
-			$rm = $rc->getMethod($method);
-			if (!$rm || !$rm->isPublic() || $rm->isAbstract() || $rm->isStatic()) {
-				return FALSE;
-			}
-
-			return $cache = TRUE;
-
+			$rm = /*Nette\Reflection\*/MethodReflection::create($class, $method);
+			$cache = $rm->isCallable() && !$rm->isStatic();
 		} catch (/*\*/ReflectionException $e) {
-			return FALSE;
 		}
-	}
-
-
-
-	/**
-	 * Converts named parameters to list of arguments.
-	 * Used by PresenterComponent::tryCall()
-	 * @param  string  class name
-	 * @param  string  method name
-	 * @param  array   parameters - associative array
-	 * @return array   arguments  - list
-	 */
-	public static function paramsToArgs($class, $method, $params)
-	{
-		$args = array();
-		$i = 0;
-		foreach (self::getMethodParams($class, $method) as $name => $def) {
-			if (isset($params[$name])) { // NULL treats as none value
-				$val = $params[$name];
-				if ($def !== NULL) {
-					settype($val, gettype($def));
-				}
-				$args[$i++] = $val;
-			} else {
-				$args[$i++] = $def;
-			}
-		}
-
-		return $args;
+		return $cache;
 	}
 
 
 
 	/**
 	 * Converts list of arguments to named parameters.
-	 * Used by Presenter::createRequest() & PresenterComponent::link()
+	 * Used by Presenter::createRequest()
 	 * @param  string  class name
 	 * @param  string  method name
 	 * @param  array   arguments
@@ -181,8 +138,12 @@ final class PresenterHelpers
 	 */
 	public static function argsToParams($class, $method, & $args, $supplemental = array())
 	{
+		$params = & self::$mpCache[strtolower($class . ':' . $method)];
+		if ($params === NULL) {
+			$params = /*Nette\Reflection\*/MethodReflection::create($class, $method)->getDefaultParameters();
+		}
 		$i = 0;
-		foreach (self::getMethodParams($class, $method) as $name => $def) {
+		foreach ($params as $name => $def) {
 			if (array_key_exists($i, $args)) {
 				$args[$name] = $args[$i];
 				unset($args[$i]);
@@ -209,32 +170,6 @@ final class PresenterHelpers
 		if (array_key_exists($i, $args)) {
 			throw new InvalidLinkException("Extra parameter for signal '$class:$method'.");
 		}
-	}
-
-
-
-	/**
-	 * Returns array of methods parameters and theirs default values.
-	 * @param  string  class name
-	 * @param  string  method name
-	 * @return array
-	 */
-	private static function getMethodParams($class, $method)
-	{
-		$cache = & self::$mpCache[strtolower($class . ':' . $method)];
-		if ($cache !== NULL) return $cache;
-		$rm = new /*\*/ReflectionMethod($class, $method);
-		$cache = array();
-		foreach ($rm->getParameters() as $param) {
-			$cache[$param->getName()] = $param->isDefaultValueAvailable()
-				? $param->getDefaultValue()
-				: NULL;
-
-			if ($param->isArray()) {
-				settype($cache[$param->getName()], 'array');
-			}
-		}
-		return $cache;
 	}
 
 }
