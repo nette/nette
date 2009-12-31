@@ -494,9 +494,8 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	 */
 	static function import(/*\*/ReflectionParameter $ref)
 	{
-		$class = $ref->getClass();
-		$method = $ref->getDeclaringFunction()->getName();
-		return new self($class ? array($class, $method) : $method, $ref->getName());
+		$method = $ref->getDeclaringFunction();
+		return new self($method instanceof /*\*/ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
 	}
 
 
@@ -506,7 +505,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	 */
 	function getClass()
 	{
-		return ClassReflection::import(parent::getClass());
+		return ($ref = parent::getClass()) ? ClassReflection::import($ref) : NULL;
 	}
 
 
@@ -516,7 +515,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	 */
 	function getDeclaringClass()
 	{
-		return ClassReflection::import(parent::getDeclaringClass());
+		return ($ref = parent::getDeclaringClass()) ? ClassReflection::import($ref) : NULL;
 	}
 
 
