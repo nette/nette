@@ -77,7 +77,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	function getInterfaces()
 	{
-		return array_map('ClassReflection::import', parent::getInterfaces());
+		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getInterfaces());
 	}
 
 
@@ -94,7 +94,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	function getMethods($filter = -1)
 	{
-		return array_map('MethodReflection::import', parent::getMethods($filter));
+		return array_map(/*Nette\Reflection\*/'MethodReflection::import', parent::getMethods($filter));
 	}
 
 
@@ -111,7 +111,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	function getProperties($filter = -1)
 	{
-		return array_map('PropertyReflection::import', parent::getProperties($filter));
+		return array_map(/*Nette\Reflection\*/'PropertyReflection::import', parent::getProperties($filter));
 	}
 
 
@@ -413,7 +413,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	function getParameters()
 	{
-		return array_map('MethodParameterReflection::import', parent::getParameters());
+		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
 	}
 
 
@@ -548,7 +548,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 
 	function getParameters()
 	{
-		return array_map('MethodParameterReflection::import', parent::getParameters());
+		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
 	}
 
 
@@ -737,14 +737,14 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 
 	function getClasses()
 	{
-		return array_map('ClassReflection::import', parent::getClasses());
+		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getClasses());
 	}
 
 
 
 	function getFunctions()
 	{
-		return array_map('FunctionReflection::import', parent::getFunctions());
+		return array_map(/*Nette\Reflection\*/'FunctionReflection::import', parent::getFunctions());
 	}
 
 
