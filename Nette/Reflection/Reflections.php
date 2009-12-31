@@ -371,6 +371,18 @@ class MethodReflection extends /*\*/ReflectionMethod
 {
 
 	/**
+	 * @param  string|object
+	 * @param  string
+	 * @return Nette\Reflection\MethodReflection
+	 */
+	static function create($class, $method)
+	{
+		return new self(is_object($class) ? get_class($class) : $class, $method);
+	}
+
+
+
+	/**
 	 * @return Nette\Reflection\MethodReflection
 	 */
 	static function import(/*\*/ReflectionMethod $ref)
@@ -410,6 +422,63 @@ class MethodReflection extends /*\*/ReflectionMethod
 	function __toString()
 	{
 		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	function getDefaultParameters()
+	{
+		$res = array();
+		foreach (parent::getParameters() as $param) {
+			$res[$param->getName()] = $param->isDefaultValueAvailable()
+				? $param->getDefaultValue()
+				: NULL;
+
+			if ($param->isArray()) {
+				settype($res[$param->getName()], 'array');
+			}
+		}
+		return $res;
+	}
+
+
+
+	/**
+	 * Is a method callable? (class is instantiable, method is public and non-abstract).
+	 * @return bool
+	 */
+	function isCallable()
+	{
+		return parent::getDeclaringClass()->isInstantiable() && $this->isPublic() && !$this->isAbstract();
+	}
+
+
+
+	/**
+	 * Invokes method using named parameters.
+	 * @param  object
+	 * @param  array
+	 * @return mixed
+	 */
+	function invokeNamedArgs($object, $args)
+	{
+		$res = array();
+		$i = 0;
+		foreach ($this->getDefaultParameters() as $name => $def) {
+			if (isset($args[$name])) { // NULL treats as none value
+				$val = $args[$name];
+				if ($def !== NULL) {
+					settype($val, gettype($def));
+				}
+				$res[$i++] = $val;
+			} else {
+				$res[$i++] = $def;
+			}
+		}
+		return $this->invokeArgs($object, $res);
 	}
 
 
