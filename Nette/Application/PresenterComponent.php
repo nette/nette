@@ -106,7 +106,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	protected function tryCall($method, array $params)
 	{
-		$class = $this->getClass();
+		$class = get_class($this);
 		if (PresenterHelpers::isMethodCallable($class, $method)) {
 			$args = PresenterHelpers::paramsToArgs($class, $method, $params);
 			call_user_func_array(array($this, $method), $args);
@@ -128,7 +128,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function loadState(array $params)
 	{
-		foreach (PresenterHelpers::getPersistentParams($this->getClass()) as $nm => $meta)
+		foreach (PresenterHelpers::getPersistentParams(get_class($this)) as $nm => $meta)
 		{
 			if (isset($params[$nm])) { // ignore NULL values
 				if (isset($meta['def'])) {
@@ -150,7 +150,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function saveState(array & $params, $forClass = NULL)
 	{
-		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? $this->getClass() : $forClass) as $nm => $meta)
+		foreach (PresenterHelpers::getPersistentParams($forClass === NULL ? get_class($this) : $forClass) as $nm => $meta)
 		{
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
@@ -166,7 +166,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 			}
 
 			if (is_object($val)) {
-				throw new /*\*/InvalidStateException("Persistent parameter must be scalar or array, '$this->class::\$$nm' is " . gettype($val));
+				throw new /*\*/InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
 
 			} else {
 				if (isset($meta['def'])) {
@@ -248,7 +248,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	public function signalReceived($signal)
 	{
 		if (!$this->tryCall($this->formatSignalMethod($signal), $this->params)) {
-			throw new BadSignalException("There is no handler for signal '$signal' in '{$this->getClass()}' class.");
+			throw new BadSignalException("There is no handler for signal '$signal' in {$this->reflection->name} class.");
 		}
 	}
 

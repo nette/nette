@@ -266,18 +266,6 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 
 	/**
-	 * Returns the name of the class of this object.
-	 *
-	 * @return string
-	 */
-	final public function getClass()
-	{
-		return get_class($this);
-	}
-
-
-
-	/**
 	 * Call to undefined method.
 	 *
 	 * @throws \MemberAccessException
@@ -346,7 +334,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property $this->class::\$$name.");
+		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 
