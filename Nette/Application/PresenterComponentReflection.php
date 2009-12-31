@@ -21,7 +21,7 @@
  * @package    Nette\Application
  * @internal
  */
-final class PresenterHelpers
+class PresenterComponentReflection extends /*Nette\Reflection\*/ClassReflection
 {
 	/** @var array getPersistentParams cache */
 	private static $ppCache = array();
@@ -32,28 +32,14 @@ final class PresenterHelpers
 	/** @var array isMethodCallable cache */
 	private static $mcCache = array();
 
-	/** @var array getDefaultParameters cache */
-	private static $mpCache = array();
-
 
 
 	/**
-	 * Static class - cannot be instantiated.
+	 * @return array of persistent parameters.
 	 */
-	final public function __construct()
+	public function getPersistentParams($class = NULL)
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
-	}
-
-
-
-	/**
-	 * Returns array of classes persistent parameters.
-	 * @param  string  class name
-	 * @return array
-	 */
-	public static function getPersistentParams($class)
-	{
+		$class = $class === NULL ? $this->getName() : $class; // TODO
 		$params = & self::$ppCache[$class];
 		if ($params !== NULL) return $params;
 		$params = array();
@@ -67,7 +53,7 @@ final class PresenterHelpers
 					'since' => $class,
 				);
 			}
-			$params = self::getPersistentParams(get_parent_class($class)) + $params;
+			$params = $this->getPersistentParams(get_parent_class($class)) + $params; // TODO
 		}
 		return $params;
 	}
@@ -75,12 +61,11 @@ final class PresenterHelpers
 
 
 	/**
-	 * Returns array of classes persistent components.
-	 * @param  string  class name
-	 * @return array
+	 * @return array of persistent components.
 	 */
-	public static function getPersistentComponents($class)
+	public function getPersistentComponents()
 	{
+		$class = $this->getName();
 		$components = & self::$pcCache[$class];
 		if ($components !== NULL) return $components;
 		$components = array();
@@ -100,12 +85,12 @@ final class PresenterHelpers
 	/**
 	 * Is a method callable? It means class is instantiable and method has
 	 * public visibility, is non-static and non-abstract.
-	 * @param  string  class name
 	 * @param  string  method name
 	 * @return bool
 	 */
-	public static function isMethodCallable($class, $method)
+	public function hasCallableMethod($method)
 	{
+		$class =$this->getName();
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache === NULL) try {
 			$cache = FALSE;
@@ -114,54 +99,6 @@ final class PresenterHelpers
 		} catch (/*\*/ReflectionException $e) {
 		}
 		return $cache;
-	}
-
-
-
-	/**
-	 * Converts list of arguments to named parameters.
-	 * Used by Presenter::createRequest()
-	 * @param  string  class name
-	 * @param  string  method name
-	 * @param  array   arguments
-	 * @param  array   supplemental arguments
-	 * @return void
-	 * @throws InvalidLinkException
-	 */
-	public static function argsToParams($class, $method, & $args, $supplemental = array())
-	{
-		$params = & self::$mpCache[strtolower($class . ':' . $method)];
-		if ($params === NULL) {
-			$params = /*Nette\Reflection\*/MethodReflection::create($class, $method)->getDefaultParameters();
-		}
-		$i = 0;
-		foreach ($params as $name => $def) {
-			if (array_key_exists($i, $args)) {
-				$args[$name] = $args[$i];
-				unset($args[$i]);
-				$i++;
-
-			} elseif (array_key_exists($name, $args)) {
-				// continue with process
-
-			} elseif (array_key_exists($name, $supplemental)) {
-				$args[$name] = $supplemental[$name];
-
-			} else {
-				continue;
-			}
-
-			if ($def === NULL) {
-				if ((string) $args[$name] === '') $args[$name] = NULL; // value transmit is unnecessary
-			} else {
-				settype($args[$name], gettype($def));
-				if ($args[$name] === $def) $args[$name] = NULL;
-			}
-		}
-
-		if (array_key_exists($i, $args)) {
-			throw new InvalidLinkException("Extra parameter for signal '$class:$method'.");
-		}
 	}
 
 }

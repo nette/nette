@@ -162,7 +162,7 @@ class NetteLoader extends AutoLoader
 		'permission' => '/Security/Permission.php',
 		'presenter' => '/Application/Presenter.php',
 		'presentercomponent' => '/Application/PresenterComponent.php',
-		'presenterhelpers' => '/Application/PresenterHelpers.php',
+		'presentercomponentreflection' => '/Application/PresenterComponentReflection.php',
 		'presenterloader' => '/Application/PresenterLoader.php',
 		'presenterrequest' => '/Application/PresenterRequest.php',
 		'propertyreflection' => '/Reflection/Reflections.php',

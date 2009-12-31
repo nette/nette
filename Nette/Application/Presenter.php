@@ -915,26 +915,26 @@ abstract class Presenter extends Control implements IPresenter
 
 		// PROCESS SIGNAL ARGUMENTS
 		if (isset($signal)) { // $component must be IStatePersistent
-			$class = get_class($component);
+			$reflection = new PresenterComponentReflection(get_class($component));
 			if ($signal === 'this') { // means "no signal"
 				$signal = '';
 				if (array_key_exists(0, $args)) {
-					throw new InvalidLinkException("Extra parameter for signal '$class:$signal!'.");
+					throw new InvalidLinkException("Extra parameter for signal '{$reflection->name}:$signal!'.");
 				}
 
 			} elseif (strpos($signal, self::NAME_SEPARATOR) === FALSE) { // TODO: AppForm exception
 				// counterpart of signalReceived() & tryCall()
 				$method = $component->formatSignalMethod($signal);
-				if (!PresenterHelpers::isMethodCallable($class, $method)) {
-					throw new InvalidLinkException("Unknown signal '$class:$signal!'.");
+				if (!$reflection->hasCallableMethod($method)) {
+					throw new InvalidLinkException("Unknown signal '{$reflection->name}:$signal!'.");
 				}
 				if ($args) { // convert indexed parameters to named
-					PresenterHelpers::argsToParams($class, $method, $args);
+					self::argsToParams(get_class($component), $method, $args);
 				}
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($class))) {
+			if ($args && array_intersect_key($args, $reflection->getPersistentParams())) {
 				$component->saveState($args);
 			}
 
@@ -956,14 +956,15 @@ abstract class Presenter extends Control implements IPresenter
 
 			$current = ($action === '*' || $action === $this->action) && $presenterClass === get_class($this); // TODO
 
+			$reflection = new PresenterComponentReflection($presenterClass);
 			if ($args || $destination === 'this') {
 				// counterpart of run() & tryCall()
 				/*$method = $presenterClass::formatActionMethod($action);*/ // in PHP 5.3
 				/**/$method = call_user_func(array($presenterClass, 'formatActionMethod'), $action);/**/
-				if (!PresenterHelpers::isMethodCallable($presenterClass, $method)) {
+				if (!$reflection->hasCallableMethod($method)) {
 					/*$method = $presenterClass::formatRenderMethod($action);*/ // in PHP 5.3
 					/**/$method = call_user_func(array($presenterClass, 'formatRenderMethod'), $action);/**/
-					if (!PresenterHelpers::isMethodCallable($presenterClass, $method)) {
+					if (!$reflection->hasCallableMethod($method)) {
 						$method = NULL;
 					}
 				}
@@ -975,16 +976,16 @@ abstract class Presenter extends Control implements IPresenter
 					}
 
 				} elseif ($destination === 'this') {
-					PresenterHelpers::argsToParams($presenterClass, $method, $args, $this->params);
+					self::argsToParams($presenterClass, $method, $args, $this->params);
 
 				} else {
-					PresenterHelpers::argsToParams($presenterClass, $method, $args);
+					self::argsToParams($presenterClass, $method, $args);
 				}
 			}
 
 			// counterpart of IStatePersistent
-			if ($args && array_intersect_key($args, PresenterHelpers::getPersistentParams($presenterClass))) {
-				$this->saveState($args, $presenterClass);
+			if ($args && array_intersect_key($args, $reflection->getPersistentParams())) {
+				$this->saveState($args, $reflection);
 			}
 
 			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
@@ -1038,6 +1039,54 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		return $uri . $fragment;
+	}
+
+
+
+	/**
+	 * Converts list of arguments to named parameters.
+	 * @param  string  class name
+	 * @param  string  method name
+	 * @param  array   arguments
+	 * @param  array   supplemental arguments
+	 * @return void
+	 * @throws InvalidLinkException
+	 */
+	private static function argsToParams($class, $method, & $args, $supplemental = array())
+	{
+		static $cache;
+		$params = & $cache[strtolower($class . ':' . $method)];
+		if ($params === NULL) {
+			$params = /*Nette\Reflection\*/MethodReflection::create($class, $method)->getDefaultParameters();
+		}
+		$i = 0;
+		foreach ($params as $name => $def) {
+			if (array_key_exists($i, $args)) {
+				$args[$name] = $args[$i];
+				unset($args[$i]);
+				$i++;
+
+			} elseif (array_key_exists($name, $args)) {
+				// continue with process
+
+			} elseif (array_key_exists($name, $supplemental)) {
+				$args[$name] = $supplemental[$name];
+
+			} else {
+				continue;
+			}
+
+			if ($def === NULL) {
+				if ((string) $args[$name] === '') $args[$name] = NULL; // value transmit is unnecessary
+			} else {
+				settype($args[$name], gettype($def));
+				if ($args[$name] === $def) $args[$name] = NULL;
+			}
+		}
+
+		if (array_key_exists($i, $args)) {
+			throw new InvalidLinkException("Extra parameter for signal '$class:$method'.");
+		}
 	}
 
 
@@ -1100,16 +1149,16 @@ abstract class Presenter extends Control implements IPresenter
 					$state[$prefix . $key] = $val;
 				}
 			}
-			$this->saveState($state, $forClass);
+			$this->saveState($state, $forClass ? new PresenterComponentReflection($forClass) : NULL);
 
 			if ($sinces === NULL) {
 				$sinces = array();
-				foreach (PresenterHelpers::getPersistentParams(get_class($this)) as $nm => $meta) {
+				foreach ($this->getReflection()->getPersistentParams() as $nm => $meta) {
 					$sinces[$nm] = $meta['since'];
 				}
 			}
 
-			$components = PresenterHelpers::getPersistentComponents(get_class($this));
+			$components = $this->getReflection()->getPersistentComponents();
 			$iterator = $this->getComponents(TRUE, 'Nette\Application\IStatePersistent');
 			foreach ($iterator as $name => $component)
 			{
