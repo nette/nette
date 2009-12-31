@@ -20,6 +20,7 @@
 /*namespace Nette\Reflection;*/
 
 /*use Nette\ObjectMixin;*/
+/*use Nette\Annotations;*/
 
 
 
@@ -117,6 +118,46 @@ class ClassReflection extends /*\*/ReflectionClass
 	function __toString()
 	{
 		return 'Class ' . $this->getName();
+	}
+
+
+
+	/********************* Nette\Annotations support ****************d*g**/
+
+	
+	
+	/**
+	 * Has class specified annotation?
+	 * @param  string
+	 * @return bool
+	 */
+	function hasAnnotation($name)
+	{
+		return Annotations::has($this, $name);
+	}
+
+
+
+	/**
+	 * Returns an annotation value.
+	 * @param  string
+	 * @return array
+	 */
+	function getAnnotation($name)
+	{
+		return Annotations::get($this, $name);
+	}
+
+
+
+	/**
+	 * Returns all annotations.
+	 * @param  string
+	 * @return array
+	 */
+	function getAllAnnotations($name = NULL)
+	{
+		return Annotations::getAll($this, $name);
 	}
 
 
@@ -228,6 +269,46 @@ class PropertyReflection extends /*\*/ReflectionProperty
 
 
 
+	/********************* Nette\Annotations support ****************d*g**/
+
+	
+	
+	/**
+	 * Has property specified annotation?
+	 * @param  string
+	 * @return bool
+	 */
+	function hasAnnotation($name)
+	{
+		return Annotations::has($this, $name);
+	}
+
+
+
+	/**
+	 * Returns an annotation value.
+	 * @param  string
+	 * @return array
+	 */
+	function getAnnotation($name)
+	{
+		return Annotations::get($this, $name);
+	}
+
+
+
+	/**
+	 * Returns all annotations.
+	 * @param  string
+	 * @return array
+	 */
+	function getAllAnnotations($name = NULL)
+	{
+		return Annotations::getAll($this, $name);
+	}
+
+
+
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
@@ -329,6 +410,46 @@ class MethodReflection extends /*\*/ReflectionMethod
 	function __toString()
 	{
 		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
+	}
+
+
+
+	/********************* Nette\Annotations support ****************d*g**/
+
+	
+	
+	/**
+	 * Has method specified annotation?
+	 * @param  string
+	 * @return bool
+	 */
+	function hasAnnotation($name)
+	{
+		return Annotations::has($this, $name);
+	}
+
+
+
+	/**
+	 * Returns an annotation value.
+	 * @param  string
+	 * @return array
+	 */
+	function getAnnotation($name)
+	{
+		return Annotations::get($this, $name);
+	}
+
+
+
+	/**
+	 * Returns all annotations.
+	 * @param  string
+	 * @return array
+	 */
+	function getAllAnnotations($name = NULL)
+	{
+		return Annotations::getAll($this, $name);
 	}
 
 
