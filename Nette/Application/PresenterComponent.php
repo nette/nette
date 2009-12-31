@@ -223,10 +223,10 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public static function getPersistentParams()
 	{
-		$rc = new /*\*/ReflectionClass(/**/func_get_arg(0)/**//*get_called_class()*/);
+		$rc = new /*Nette\Reflection\*/ClassReflection(/**/func_get_arg(0)/**//*get_called_class()*/);
 		$params = array();
-		foreach ($rc->getProperties() as $rp) {
-			if ($rp->isPublic() && !$rp->isStatic() && /*Nette\*/Annotations::get($rp, 'persistent')) {
+		foreach ($rc->getProperties(/*\*/ReflectionProperty::IS_PUBLIC) as $rp) {
+			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
 				$params[] = $rp->getName();
 			}
 		}

@@ -266,6 +266,16 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 
 	/**
+	 * @return Nette\Reflection\ObjectReflection
+	 */
+	public function getReflection()
+	{
+		return new /*Nette\Reflection\*/ObjectReflection($this);
+	}
+
+
+
+	/**
 	 * Call to undefined method.
 	 *
 	 * @throws \MemberAccessException

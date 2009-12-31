@@ -30,7 +30,7 @@
  */
 final class Annotations
 {
-    /** @var bool */
+	/** @var bool */
 	public static $useReflection;
 
 	/** @var array */
@@ -135,8 +135,7 @@ final class Annotations
 		}
 
 		if (self::$useReflection === NULL) { // detects whether is reflection available
-			$rc = new /*\*/ReflectionClass(__CLASS__);
-			self::$useReflection = (bool) $rc->getDocComment();
+			self::$useReflection = (bool) /*Nette\Reflection\*/ClassReflection::create(__CLASS__)->getDocComment();
 		}
 
 		if (self::$useReflection) {
