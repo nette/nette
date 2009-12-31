@@ -171,7 +171,7 @@ class Session extends /*Nette\*/Object
 					foreach ($metadata as $variable => $value) {
 						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T']) // whenBrowserIsClosed || Time
 							|| ($variable !== '' && is_object($nf['DATA'][$namespace][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
-								!== (defined($const = get_class($nf['DATA'][$namespace][$variable]) . '::SERIALIZATION_VERSION') ? constant($const) : NULL))) {
+								!== /*Nette\*/Annotations::get(new /*\*/ReflectionObject($nf['DATA'][$namespace][$variable]), 'serializationVersion'))) {
 
 							if ($variable === '') { // expire whole namespace
 								unset($nf['META'][$namespace], $nf['DATA'][$namespace]);
