@@ -74,11 +74,11 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$this->setAction(new Link(
-				$presenter,
-				$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
-				array()
-			));
+				$this->setAction(new Link(
+					$presenter,
+					$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
+					array()
+				));
 
 			// fill-in the form with HTTP data
 			if ($this->isSubmitted()) {
@@ -144,7 +144,7 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 			$this->fireEvents();
 
 		} else {
-			throw new BadSignalException("There is no handler for signal '$signal' in '{$this->getClass()}'.");
+			throw new BadSignalException("There is no handler for signal '$signal' in {$this->reflection->name}.");
 		}
 	}
 

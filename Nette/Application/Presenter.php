@@ -899,7 +899,7 @@ abstract class Presenter extends Control implements IPresenter
 		if ($a === FALSE) {
 			$action = $destination === 'this' ? $this->action : $destination;
 			$presenter = $this->getName();
-			$presenterClass = $this->getClass();
+			$presenterClass = get_class($this);
 
 		} else {
 			$action = (string) substr($destination, $a + 1);
@@ -962,7 +962,7 @@ abstract class Presenter extends Control implements IPresenter
 				/**/$action = self::$defaultAction;/**/
 			}
 
-			$current = ($action === '*' || $action === $this->action) && $presenterClass === $this->getClass(); // TODO
+			$current = ($action === '*' || $action === $this->action) && $presenterClass === get_class($this); // TODO
 
 			if ($args || $destination === 'this') {
 				// counterpart of run() & tryCall()
