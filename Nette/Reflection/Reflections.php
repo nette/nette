@@ -35,6 +35,17 @@ class ClassReflection extends /*\*/ReflectionClass
 {
 
 	/**
+	 * @param  string|object
+	 * @return Nette\Reflection\ClassReflection
+	 */
+	static function create($class)
+	{
+		return new self(is_object($class) ? get_class($class) : $class);
+	}
+
+
+
+	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
 	static function import(/*\*/ReflectionClass $ref)
@@ -124,8 +135,8 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	/********************* Nette\Annotations support ****************d*g**/
 
-	
-	
+
+
 	/**
 	 * Has class specified annotation?
 	 * @param  string
@@ -155,7 +166,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @param  string
 	 * @return array
 	 */
-	function getAllAnnotations($name = NULL)
+	function getAnnotations($name = NULL)
 	{
 		return Annotations::getAll($this, $name);
 	}
@@ -271,8 +282,8 @@ class PropertyReflection extends /*\*/ReflectionProperty
 
 	/********************* Nette\Annotations support ****************d*g**/
 
-	
-	
+
+
 	/**
 	 * Has property specified annotation?
 	 * @param  string
@@ -302,7 +313,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	 * @param  string
 	 * @return array
 	 */
-	function getAllAnnotations($name = NULL)
+	function getAnnotations($name = NULL)
 	{
 		return Annotations::getAll($this, $name);
 	}
@@ -416,8 +427,8 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	/********************* Nette\Annotations support ****************d*g**/
 
-	
-	
+
+
 	/**
 	 * Has method specified annotation?
 	 * @param  string
@@ -447,7 +458,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  string
 	 * @return array
 	 */
-	function getAllAnnotations($name = NULL)
+	function getAnnotations($name = NULL)
 	{
 		return Annotations::getAll($this, $name);
 	}

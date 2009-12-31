@@ -37,7 +37,7 @@ class TestClass {
 // Class annotations
 
 $rc = new ClassReflection('TestClass');
-$tmp = $rc->getAllAnnotations();
+$tmp = $rc->getAnnotations();
 
 Assert::same( "John Doe",  $tmp["author"][0] );
 Assert::true( $tmp["renderable"][0] );
@@ -50,7 +50,7 @@ Assert::same( "John Doe",  $rc->getAnnotation('author') );
 // Method annotations
 
 $rm = $rc->getMethod('foo');
-$tmp = $rm->getAllAnnotations();
+$tmp = $rm->getAnnotations();
 
 Assert::true( $tmp["AJAX"][0] );
 Assert::true( $rm->hasAnnotation('AJAX'), "has('AJAX')" );
@@ -60,7 +60,7 @@ Assert::true( $rm->getAnnotation('AJAX') );
 // Property annotations
 
 $rp = $rc->getProperty('foo');
-$tmp = $rp->getAllAnnotations();
+$tmp = $rp->getAnnotations();
 
 Assert::true( $tmp["secured"][0] );
 Assert::true( $rp->hasAnnotation('secured'), "has('secured')" );

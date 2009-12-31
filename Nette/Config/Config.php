@@ -59,8 +59,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 			throw new /*\*/InvalidArgumentException("Class '$class' was not found.");
 		}
 
-		$reflection = new /*\*/ReflectionClass($class);
-		if (!$reflection->implementsInterface(/*Nette\Config\*/'IConfigAdapter')) {
+		if (!/*Nette\Reflection\*/ClassReflection::create($class)->implementsInterface(/*Nette\Config\*/'IConfigAdapter')) {
 			throw new /*\*/InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IConfigAdapter implementor.");
 		}
 

@@ -30,7 +30,12 @@ class Bar extends Foo implements /*\*/Countable
 }
 
 
-$rc = new ClassReflection("Bar");
+dump( new ClassReflection("Bar") );
+dump( ClassReflection::create("Bar") );
+dump( ClassReflection::create(new Bar) );
+
+
+$rc = ClassReflection::create("Bar");
 
 dump( $rc->getExtension() );
 
@@ -66,6 +71,18 @@ dump( $rc->getProperties() );
 __halt_compiler();
 
 ------EXPECT------
+object(%ns%ClassReflection) (1) {
+	"name" => string(3) "Bar"
+}
+
+object(%ns%ClassReflection) (1) {
+	"name" => string(3) "Bar"
+}
+
+object(%ns%ClassReflection) (1) {
+	"name" => string(3) "Bar"
+}
+
 NULL
 
 array(1) {
