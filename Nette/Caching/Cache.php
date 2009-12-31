@@ -164,6 +164,11 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 			unset($dp[self::CONSTS]);
 		}
 
+		if (is_object($data)) {
+			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
+				/*Nette\Reflection\*/ClassReflection::create($data)->getAnnotation('serializationVersion'));
+		}
+
 		$this->key = NULL;
 		$this->storage->write(
 			$this->namespace . self::NAMESPACE_SEPARATOR . $key,
@@ -322,6 +327,19 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	private static function checkFile($file, $time)
 	{
 		return @filemtime($file) == $time; // intentionally @
+	}
+
+
+
+	/**
+	 * Checks object @serializationVersion label.
+	 * @param  string
+	 * @param  mixed
+	 * @return bool
+	 */
+	private static function checkSerializationVersion($class, $value)
+	{
+		return /*Nette\Reflection\*/ClassReflection::create($class)->getAnnotation('serializationVersion') === $value;
 	}
 
 }
