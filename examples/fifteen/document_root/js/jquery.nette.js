@@ -1,8 +1,8 @@
 /**
  * AJAX Nette Framwork plugin for jQuery
  *
- * @copyright  Copyright (c) 2009 Jan Marek
- * @copyright  Copyright (c) 2009 David Grudl
+ * @copyright  Copyright (c) 2009, 2010 Jan Marek
+ * @copyright  Copyright (c) 2009, 2010 David Grudl
  * @license    MIT
  * @link       http://nettephp.com/cs/extras/jquery-ajax
  */

@@ -4,7 +4,7 @@
  *
  * This script will check if your system meets the requirements for running Nette Framework.
  *
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  */
 
 
