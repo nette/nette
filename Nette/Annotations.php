@@ -197,17 +197,25 @@ final class Annotations
 					}
 				}
 
-				$res[$name][] = count($items) < 2 && $key === '' ? $val : new /*\*/ArrayObject($items, /*\*/ArrayObject::ARRAY_AS_PROPS);
+				$value = count($items) < 2 && $key === '' ? $val : $items;
 
 			} else {
 				$value = trim($value);
 				if (is_numeric($value)) {
-					$res[$name][] = 1 * $value;
+					$value = 1 * $value;
 
 				} else {
 					$lval = strtolower($value);
-					$res[$name][] = array_key_exists($lval, $tokens) ? $tokens[$lval] : $value;
+					$value = array_key_exists($lval, $tokens) ? $tokens[$lval] : $value;
 				}
+			}
+
+			$class = $name . 'Annotation';
+			if (class_exists($class)) {
+				$res[$name][] = new $class(is_array($value) ? $value : array('value' => $value));
+
+			} else {
+				$res[$name][] = is_array($value) ? new /*\*/ArrayObject($value, /*\*/ArrayObject::ARRAY_AS_PROPS) : $value;
 			}
 		}
 
