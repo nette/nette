@@ -3,7 +3,7 @@
 /**
  * My Application
  *
- * @copyright  Copyright (c) 2009 John Doe
+ * @copyright  Copyright (c) 2010 John Doe
  * @package    MyApplication
  */
 

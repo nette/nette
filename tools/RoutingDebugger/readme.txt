@@ -1,6 +1,6 @@
 Routing Debugger for Nette Framework
 ------------------------------------
-Copyright (c) 2009 David Grudl
+Copyright (c) 2009, 2010 David Grudl
 
 
 Usage:

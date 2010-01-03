@@ -3,14 +3,7 @@
 /**
  * Nette Framework
  *
- * Copyright (c) 2004, 2009 David Grudl (http://davidgrudl.com)
- *
- * This source file is subject to the "Nette license" that is bundled
- * with this package in the file license.txt.
- *
- * For more information please see http://nettephp.com
- *
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  * @category   Nette
@@ -27,8 +20,7 @@
 /**
  * Reports information about a class.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class ClassReflection extends /*\*/ReflectionClass
@@ -227,8 +219,7 @@ class ClassReflection extends /*\*/ReflectionClass
 /**
  * Reports information about a object.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class ObjectReflection extends ClassReflection
@@ -246,8 +237,7 @@ class ObjectReflection extends ClassReflection
 /**
  * Reports information about a classes variable.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class PropertyReflection extends /*\*/ReflectionProperty
@@ -374,8 +364,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 /**
  * Reports information about a method.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class MethodReflection extends /*\*/ReflectionMethod
@@ -519,8 +508,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 /**
  * Reports information about a function.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class FunctionReflection extends /*\*/ReflectionFunction
@@ -614,8 +602,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 /**
  * Reports information about a method's parameter.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class MethodParameterReflection extends /*\*/ReflectionParameter
@@ -718,8 +705,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 /**
  * Reports information about a extension.
  *
- * @author     David Grudl
- * @copyright  Copyright (c) 2004, 2009 David Grudl
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
 class ExtensionReflection extends /*\*/ReflectionExtension
