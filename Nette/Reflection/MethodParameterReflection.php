@@ -1,0 +1,119 @@
+<?php
+
+/**
+ * Nette Framework
+ *
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
+ * @license    http://nettephp.com/license  Nette license
+ * @link       http://nettephp.com
+ * @category   Nette
+ * @package    Nette\Reflection
+ */
+
+/*namespace Nette\Reflection;*/
+
+/*use Nette\ObjectMixin;*/
+/*use Nette\Annotations;*/
+
+
+
+/**
+ * Reports information about a method's parameter.
+ *
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
+ * @package    Nette
+ */
+class MethodParameterReflection extends /*\*/ReflectionParameter
+{
+
+	/**
+	 * @return Nette\Reflection\MethodParameterReflection
+	 */
+	static function import(/*\*/ReflectionParameter $ref)
+	{
+		$method = $ref->getDeclaringFunction();
+		return new self($method instanceof /*\*/ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
+	}
+
+
+
+	/**
+	 * @return Nette\Reflection\ClassReflection
+	 */
+	function getClass()
+	{
+		return ($ref = parent::getClass()) ? ClassReflection::import($ref) : NULL;
+	}
+
+
+
+	/**
+	 * @return Nette\Reflection\ClassReflection
+	 */
+	function getDeclaringClass()
+	{
+		return ($ref = parent::getDeclaringClass()) ? ClassReflection::import($ref) : NULL;
+	}
+
+
+
+	/**
+	 * @return Nette\Reflection\MethodReflection | Nette\Reflection\FunctionReflection
+	 */
+	function getDeclaringFunction()
+	{
+		return ($ref = parent::getDeclaringFunction()) instanceof /*\*/ReflectionMethod
+			? MethodReflection::import($ref)
+			: FunctionReflection::import($ref);
+	}
+
+
+
+	/********************* Nette\Object behaviour ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Reflection\ObjectReflection
+	 */
+	function getReflection()
+	{
+		return new ObjectReflection($this);
+	}
+
+
+
+	function __call($name, $args)
+	{
+		return ObjectMixin::call($this, $name, $args);
+	}
+
+
+
+	function &__get($name)
+	{
+		return ObjectMixin::get($this, $name);
+	}
+
+
+
+	function __set($name, $value)
+	{
+		return ObjectMixin::set($this, $name, $value);
+	}
+
+
+
+	function __isset($name)
+	{
+		return ObjectMixin::has($this, $name);
+	}
+
+
+
+	function __unset($name)
+	{
+		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+	}
+
+}
