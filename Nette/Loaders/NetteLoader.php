@@ -38,6 +38,7 @@ class NetteLoader extends AutoLoader
 		'ambiguousserviceexception' => '/ServiceLocator.php',
 		'annotation' => '/Reflection/Annotation.php',
 		'annotations' => '/Annotations.php',
+		'annotationsparser' => '/Reflection/AnnotationsParser.php',
 		'appform' => '/Application/AppForm.php',
 		'application' => '/Application/Application.php',
 		'applicationexception' => '/Application/Exceptions/ApplicationException.php',

@@ -13,7 +13,6 @@
 /*namespace Nette\Reflection;*/
 
 /*use Nette\ObjectMixin;*/
-/*use Nette\Annotations;*/
 
 
 
@@ -136,7 +135,8 @@ class ClassReflection extends /*\*/ReflectionClass
 	 */
 	function hasAnnotation($name)
 	{
-		return Annotations::has($this, $name);
+		$res = AnnotationsParser::getAll($this);
+		return !empty($res[$name]);
 	}
 
 
@@ -144,23 +144,23 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * Returns an annotation value.
 	 * @param  string
-	 * @return array
+	 * @return IAnnotation
 	 */
 	function getAnnotation($name)
 	{
-		return Annotations::get($this, $name);
+		$res = AnnotationsParser::getAll($this);
+		return isset($res[$name]) ? end($res[$name]) : NULL;
 	}
 
 
 
 	/**
 	 * Returns all annotations.
-	 * @param  string
 	 * @return array
 	 */
-	function getAnnotations($name = NULL)
+	function getAnnotations()
 	{
-		return Annotations::getAll($this, $name);
+		return AnnotationsParser::getAll($this);
 	}
 
 
