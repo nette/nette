@@ -5,7 +5,7 @@
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette
+ * @package    Nette\Reflection
  * @subpackage UnitTests
  */
 

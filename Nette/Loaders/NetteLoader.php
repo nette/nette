@@ -36,6 +36,7 @@ class NetteLoader extends AutoLoader
 	public $list = array(
 		'abortexception' => '/Application/Exceptions/AbortException.php',
 		'ambiguousserviceexception' => '/ServiceLocator.php',
+		'annotation' => '/Reflection/Annotation.php',
 		'annotations' => '/Annotations.php',
 		'appform' => '/Application/AppForm.php',
 		'application' => '/Application/Application.php',
@@ -94,6 +95,7 @@ class NetteLoader extends AutoLoader
 		'httprequest' => '/Web/HttpRequest.php',
 		'httpresponse' => '/Web/HttpResponse.php',
 		'httpuploadedfile' => '/Web/HttpUploadedFile.php',
+		'iannotation' => '/Reflection/IAnnotation.php',
 		'iauthenticator' => '/Security/IAuthenticator.php',
 		'iauthorizator' => '/Security/IAuthorizator.php',
 		'icachestorage' => '/Caching/ICacheStorage.php',
