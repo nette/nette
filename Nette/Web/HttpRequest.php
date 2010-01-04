@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-require_once dirname(__FILE__) . '/../Web/IHttpRequest.php';
-
-
-
 /**
  * HttpRequest provides access scheme for request sent via HTTP.
  *

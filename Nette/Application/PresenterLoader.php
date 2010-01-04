@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/IPresenterLoader.php';
-
-
-
 /**
  * Default presenter loader.
  *

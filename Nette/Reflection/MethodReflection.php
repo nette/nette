@@ -30,7 +30,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  string
 	 * @return Nette\Reflection\MethodReflection
 	 */
-	static function create($class, $method)
+	public static function create($class, $method)
 	{
 		return new self(is_object($class) ? get_class($class) : $class, $method);
 	}
@@ -40,7 +40,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\MethodReflection
 	 */
-	static function import(/*\*/ReflectionMethod $ref)
+	public static function import(/*\*/ReflectionMethod $ref)
 	{
 		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
 	}
@@ -50,7 +50,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	function getDeclaringClass()
+	public function getDeclaringClass()
 	{
 		return ClassReflection::import(parent::getDeclaringClass());
 	}
@@ -60,21 +60,21 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\ExtensionReflection
 	 */
-	function getExtension()
+	public function getExtension()
 	{
 		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
 	}
 
 
 
-	function getParameters()
+	public function getParameters()
 	{
 		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
 	}
 
 
 
-	function __toString()
+	public function __toString()
 	{
 		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
 	}
@@ -84,7 +84,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return array
 	 */
-	function getDefaultParameters()
+	public function getDefaultParameters()
 	{
 		$res = array();
 		foreach (parent::getParameters() as $param) {
@@ -105,7 +105,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * Is a method callable? (class is instantiable, method is public and non-abstract).
 	 * @return bool
 	 */
-	function isCallable()
+	public function isCallable()
 	{
 		return parent::getDeclaringClass()->isInstantiable() && $this->isPublic() && !$this->isAbstract();
 	}
@@ -118,7 +118,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  array
 	 * @return mixed
 	 */
-	function invokeNamedArgs($object, $args)
+	public function invokeNamedArgs($object, $args)
 	{
 		$res = array();
 		$i = 0;
@@ -147,7 +147,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  string
 	 * @return bool
 	 */
-	function hasAnnotation($name)
+	public function hasAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return !empty($res[$name]);
@@ -160,7 +160,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  string
 	 * @return IAnnotation
 	 */
-	function getAnnotation($name)
+	public function getAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return isset($res[$name]) ? end($res[$name]) : NULL;
@@ -172,7 +172,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * Returns all annotations.
 	 * @return array
 	 */
-	function getAnnotations()
+	public function getAnnotations()
 	{
 		return AnnotationsParser::getAll($this);
 	}
@@ -186,42 +186,42 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\ObjectReflection
 	 */
-	function getReflection()
+	public function getReflection()
 	{
 		return new ObjectReflection($this);
 	}
 
 
 
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
-	function &__get($name)
+	public function &__get($name)
 	{
 		return ObjectMixin::get($this, $name);
 	}
 
 
 
-	function __set($name, $value)
+	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
-	function __isset($name)
+	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
 
 
 
-	function __unset($name)
+	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../IComponentContainer.php';
-
-
-
 /**
  * Identifies a container that creates a new namespace for form's control hierarchy.
  *

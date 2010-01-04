@@ -29,28 +29,28 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 	/**
 	 * @return Nette\Reflection\ExtensionReflection
 	 */
-	static function import(/*\*/ReflectionExtension $ref)
+	public static function import(/*\*/ReflectionExtension $ref)
 	{
 		return new self($ref->getName());
 	}
 
 
 
-	function getClasses()
+	public function getClasses()
 	{
 		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getClasses());
 	}
 
 
 
-	function getFunctions()
+	public function getFunctions()
 	{
 		return array_map(/*Nette\Reflection\*/'FunctionReflection::import', parent::getFunctions());
 	}
 
 
 
-	function __toString()
+	public function __toString()
 	{
 		return 'Extension ' . $this->getName();
 	}
@@ -64,42 +64,42 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 	/**
 	 * @return Nette\Reflection\ObjectReflection
 	 */
-	function getReflection()
+	public function getReflection()
 	{
 		return new ObjectReflection($this);
 	}
 
 
 
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
-	function &__get($name)
+	public function &__get($name)
 	{
 		return ObjectMixin::get($this, $name);
 	}
 
 
 
-	function __set($name, $value)
+	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
-	function __isset($name)
+	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
 
 
 
-	function __unset($name)
+	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}

@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-require_once dirname(__FILE__) . '/../Loaders/LimitedScope.php';
-
-
-
 /**
  * Auto loader is responsible for loading classes and interfaces.
  *

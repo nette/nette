@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-
-
 /**
  * Single validation rule or condition represented as value object.
  *

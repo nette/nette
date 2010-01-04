@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
-
-
-
 /**
  * Select box control that allows single item selection.
  *

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-
-
 /**
  * Sends e-mails via the PHP internal mail() function.
  *

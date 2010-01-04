@@ -26,7 +26,7 @@ class BadRequestException extends /*\*/Exception
 	protected $defaultCode = 404;
 
 
-	function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)
+	public function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)
 	{
 		if ($code < 200 || $code > 504)	{
 			$code = $this->defaultCode;

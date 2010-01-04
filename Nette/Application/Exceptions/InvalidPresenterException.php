@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Application/Exceptions/InvalidLinkException.php';
-
-
-
 /**
  * The exception that is thrown when a presenter cannot be loaded.
  *

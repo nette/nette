@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Config/IConfigAdapter.php';
-
-
-
 /**
  * Reading and writing XML files.
  *

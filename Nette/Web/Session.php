@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-
-
 /**
  * Provides access to session namespaces as well as session settings and management methods.
  *

@@ -5,7 +5,6 @@
 /*use Nette\Forms\Form;*/
 /*use Nette\Security\AuthenticationException;*/
 
-require_once dirname(__FILE__) . '/BasePresenter.php';
 
 
 class AuthPresenter extends BasePresenter

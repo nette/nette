@@ -14,12 +14,6 @@
 
 
 
-/**/require_once dirname(__FILE__) . '/compatibility.php';/**/
-
-require_once dirname(__FILE__) . '/exceptions.php';
-
-
-
 /**
  * Nette\Object behaviour mixin.
  *

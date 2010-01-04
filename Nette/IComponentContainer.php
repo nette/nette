@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/IComponent.php';
-
-
-
 /**
  * Containers are objects that logically contain zero or more IComponent components.
  *

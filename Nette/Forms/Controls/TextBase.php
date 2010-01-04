@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
-
-
-
 /**
  * Implements the basic functionality common to text input controls.
  *

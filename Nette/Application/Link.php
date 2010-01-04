@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-
-
 /**
  * Lazy encapsulation of PresenterComponent::link().
  * Do not instantiate directly, use PresenterComponent::lazyLink()

@@ -29,7 +29,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	/**
 	 * @return Nette\Reflection\MethodParameterReflection
 	 */
-	static function import(/*\*/ReflectionParameter $ref)
+	public static function import(/*\*/ReflectionParameter $ref)
 	{
 		$method = $ref->getDeclaringFunction();
 		return new self($method instanceof /*\*/ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
@@ -40,7 +40,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	function getClass()
+	public function getClass()
 	{
 		return ($ref = parent::getClass()) ? ClassReflection::import($ref) : NULL;
 	}
@@ -50,7 +50,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	function getDeclaringClass()
+	public function getDeclaringClass()
 	{
 		return ($ref = parent::getDeclaringClass()) ? ClassReflection::import($ref) : NULL;
 	}
@@ -60,7 +60,7 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	/**
 	 * @return Nette\Reflection\MethodReflection | Nette\Reflection\FunctionReflection
 	 */
-	function getDeclaringFunction()
+	public function getDeclaringFunction()
 	{
 		return ($ref = parent::getDeclaringFunction()) instanceof /*\*/ReflectionMethod
 			? MethodReflection::import($ref)
@@ -76,42 +76,42 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 	/**
 	 * @return Nette\Reflection\ObjectReflection
 	 */
-	function getReflection()
+	public function getReflection()
 	{
 		return new ObjectReflection($this);
 	}
 
 
 
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
-	function &__get($name)
+	public function &__get($name)
 	{
 		return ObjectMixin::get($this, $name);
 	}
 
 
 
-	function __set($name, $value)
+	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
-	function __isset($name)
+	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
 
 
 
-	function __unset($name)
+	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}

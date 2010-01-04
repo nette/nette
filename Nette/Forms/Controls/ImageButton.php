@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/SubmitButton.php';
-
-
-
 /**
  * Submittable image button form control.
  *

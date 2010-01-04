@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/TextBase.php';
-
-
-
 /**
  * Single line text input control.
  *

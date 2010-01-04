@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Collections/ICollection.php';
-
-
-
 /**
  * A collection that contains no duplicate elements.
  *

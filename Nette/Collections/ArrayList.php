@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Collections/Collection.php';
-
-require_once dirname(__FILE__) . '/../Collections/IList.php';
-
-
-
 /**
  * Provides the base class for a generic list (items can be accessed by index).
  *

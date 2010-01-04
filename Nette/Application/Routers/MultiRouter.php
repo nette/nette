@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Application/IRouter.php';
-
-require_once dirname(__FILE__) . '/../../Collections/ArrayList.php';
-
-
-
 /**
  * The router broker.
  *

@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Component.php';
-
-require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
-
-
-
 /**
  * Base class that implements the basic functionality common to form controls.
  *

@@ -12,8 +12,6 @@
 
 /*namespace Nette\Application;*/
 
-require_once dirname(__FILE__) . '/../FreezableObject.php';
-
 
 
 /**

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Web/Uri.php';
-
-
-
 /**
  * Extended HTTP URL.
  *
