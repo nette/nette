@@ -410,18 +410,6 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 
 
 
-	/**
-	 * Adds control that repeats a specified prototype for each item in the list.
-	 * @param  string  control name
-	 * @return RepeaterControl
-	 */
-	public function addRepeater($name)
-	{
-		return $this[$name] = new RepeaterControl;
-	}
-
-
-
 	/********************* interface \ArrayAccess ****************d*g**/
 
 
