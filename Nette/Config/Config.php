@@ -30,7 +30,6 @@ class Config extends /*Nette\Collections\*/Hashtable
 	/** @var array */
 	private static $extensions = array(
 		'ini' => /*Nette\Config\*/'ConfigAdapterIni',
-		'xml' => /*Nette\Config\*/'ConfigAdapterXml',
 	);
 
 
