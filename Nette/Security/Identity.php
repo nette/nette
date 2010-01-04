@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Security/IIdentity.php';
-
-require_once dirname(__FILE__) . '/../FreezableObject.php';
-
-
-
 /**
  * Default implementation of IIdentity.
  *
@@ -29,6 +23,8 @@ require_once dirname(__FILE__) . '/../FreezableObject.php';
  * @property   string $name
  * @property   mixed $id
  * @property   array $roles
+ *
+ * @serializationVersion 0.9.3
  */
 class Identity extends /*Nette\*/FreezableObject implements IIdentity
 {

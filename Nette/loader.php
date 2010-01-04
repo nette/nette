@@ -24,9 +24,14 @@ if (version_compare(PHP_VERSION, '5.2.0', '<')) {
 	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
 }
 
-/**/require_once dirname(__FILE__) . '/compatibility/PHP.php';/**/
-
-require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
+/**/require dirname(__FILE__) . '/compatibility/PHP.php';/**/
+require dirname(__FILE__) . '/exceptions.php';
+require dirname(__FILE__) . '/Framework.php';
+require dirname(__FILE__) . '/Object.php';
+require dirname(__FILE__) . '/ObjectMixin.php';
+require dirname(__FILE__) . '/Loaders/LimitedScope.php';
+require dirname(__FILE__) . '/Loaders/AutoLoader.php';
+require dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 
 /*Nette\Loaders\*/NetteLoader::getInstance()->base = dirname(__FILE__);

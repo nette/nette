@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../FreezableObject.php';
-
-
-
 /**
  * URI Syntax (RFC 3986).
  *

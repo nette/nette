@@ -16,10 +16,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-
-
 /**
  * Front Controller.
  *

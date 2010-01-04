@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Caching/FileStorage.php';
-
-
-
 /**
  * Template cache storage.
  *

@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Collections/Collection.php';
-
-require_once dirname(__FILE__) . '/../Collections/IMap.php';
-
-
-
 /**
  * The exception that is thrown when the key specified for accessing
  * an element in a collection does not match any key.

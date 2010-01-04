@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/IComponent.php';
-
-require_once dirname(__FILE__) . '/Object.php';
-
-
-
 /**
  * Component is the base class for all components.
  *

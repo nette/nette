@@ -17,10 +17,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/Presenter.php';
-
-
-
 /**
  * Presenter compatibility with Nette 0.8
  *

@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Forms/Form.php';
-
-require_once dirname(__FILE__) . '/../Application/ISignalReceiver.php';
-
-
-
 /**
  * Web form as presenter component.
  *

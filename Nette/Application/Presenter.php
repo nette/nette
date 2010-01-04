@@ -16,12 +16,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Application/Control.php';
-
-require_once dirname(__FILE__) . '/../Application/IPresenter.php';
-
-
-
 /**
  * Presenter object represents a webpage instance. It executes all the logic for the request.
  *

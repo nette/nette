@@ -28,7 +28,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	/**
 	 * @return Nette\Reflection\PropertyReflection
 	 */
-	static function import(/*\*/ReflectionProperty $ref)
+	public static function import(/*\*/ReflectionProperty $ref)
 	{
 		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
 	}
@@ -38,14 +38,14 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	function getDeclaringClass()
+	public function getDeclaringClass()
 	{
 		return ClassReflection::import(parent::getDeclaringClass());
 	}
 
 
 
-	function __toString()
+	public function __toString()
 	{
 		return 'Property ' . parent::getDeclaringClass()->getName() . '::$' . $this->getName();
 	}
@@ -61,7 +61,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	 * @param  string
 	 * @return bool
 	 */
-	function hasAnnotation($name)
+	public function hasAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return !empty($res[$name]);
@@ -74,7 +74,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	 * @param  string
 	 * @return IAnnotation
 	 */
-	function getAnnotation($name)
+	public function getAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return isset($res[$name]) ? end($res[$name]) : NULL;
@@ -86,7 +86,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	 * Returns all annotations.
 	 * @return array
 	 */
-	function getAnnotations()
+	public function getAnnotations()
 	{
 		return AnnotationsParser::getAll($this);
 	}
@@ -100,42 +100,42 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	/**
 	 * @return Nette\Reflection\ObjectReflection
 	 */
-	function getReflection()
+	public function getReflection()
 	{
 		return new ObjectReflection($this);
 	}
 
 
 
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
-	function &__get($name)
+	public function &__get($name)
 	{
 		return ObjectMixin::get($this, $name);
 	}
 
 
 
-	function __set($name, $value)
+	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
-	function __isset($name)
+	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
 
 
 
-	function __unset($name)
+	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}

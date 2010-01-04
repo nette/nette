@@ -14,16 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Security/IAuthenticator.php';
-
-require_once dirname(__FILE__) . '/../Object.php';
-
-require_once dirname(__FILE__) . '/../Security/Identity.php';
-
-require_once dirname(__FILE__) . '/../Security/AuthenticationException.php';
-
-
-
 /**
  * Trivial implementation of IAuthenticator.
  *

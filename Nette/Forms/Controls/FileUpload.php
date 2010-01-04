@@ -12,10 +12,6 @@
 
 /*namespace Nette\Forms;*/
 
-
-
-require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
-
 /*use Nette\Web\HttpUploadedFile;*/
 
 

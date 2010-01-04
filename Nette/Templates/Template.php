@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Templates/BaseTemplate.php';
-
-require_once dirname(__FILE__) . '/../Templates/IFileTemplate.php';
-
-
-
 /**
  * Template stored in file.
  *

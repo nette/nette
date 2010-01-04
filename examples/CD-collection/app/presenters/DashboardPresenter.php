@@ -5,7 +5,6 @@
 /*use Nette\Forms\Form;*/
 /*use Nette\Web\User;*/
 
-require_once dirname(__FILE__) . '/BasePresenter.php';
 
 
 class DashboardPresenter extends BasePresenter

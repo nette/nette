@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Templates/Filters/LatteMacros.php';
-
-
-
 /**
  * Old macros for filter LatteFilter.
  *

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/FormControl.php';
-
-
-
 /**
  * Hidden form control used to store a non-displayed value.
  *

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/Controls/SelectBox.php';
-
-
-
 /**
  * Select box control that allows multiple item selection.
  *

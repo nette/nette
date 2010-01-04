@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Forms/FormContainer.php';
-
-require_once dirname(__FILE__) . '/../../Forms/IFormControl.php';
-
-
-
 /**
  * A control that repeats a specified prototype for each item in the list.
  *

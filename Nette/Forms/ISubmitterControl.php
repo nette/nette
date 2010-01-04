@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Forms/IFormControl.php';
-
-
-
 /**
  * Defines method that must be implemented to allow a control to submit web form.
  *

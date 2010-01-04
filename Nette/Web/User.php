@@ -16,12 +16,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Object.php';
-
-require_once dirname(__FILE__) . '/../Web/IUser.php';
-
-
-
 /**
  * Authentication and authorization.
  *

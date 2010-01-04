@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Application/Exceptions/BadRequestException.php';
-
-
-
 /**
  * Forbidden request exception - access denied.
  *

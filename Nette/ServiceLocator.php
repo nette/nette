@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/IServiceLocator.php';
-
-require_once dirname(__FILE__) . '/Object.php';
-
-
-
 /**
  * Service locator pattern implementation.
  *

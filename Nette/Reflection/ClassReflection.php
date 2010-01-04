@@ -29,7 +29,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @param  string|object
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	static function create($class)
+	public static function create($class)
 	{
 		return new self(is_object($class) ? get_class($class) : $class);
 	}
@@ -39,7 +39,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	static function import(/*\*/ReflectionClass $ref)
+	public static function import(/*\*/ReflectionClass $ref)
 	{
 		return new self($ref->getName());
 	}
@@ -49,7 +49,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\MethodReflection
 	 */
-	function getConstructor()
+	public function getConstructor()
 	{
 		return ($ref = parent::getConstructor()) ? MethodReflection::import($ref) : NULL;
 	}
@@ -59,14 +59,14 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\ExtensionReflection
 	 */
-	function getExtension()
+	public function getExtension()
 	{
 		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
 	}
 
 
 
-	function getInterfaces()
+	public function getInterfaces()
 	{
 		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getInterfaces());
 	}
@@ -76,14 +76,14 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\MethodReflection
 	 */
-	function getMethod($name)
+	public function getMethod($name)
 	{
 		return MethodReflection::import(parent::getMethod($name));
 	}
 
 
 
-	function getMethods($filter = -1)
+	public function getMethods($filter = -1)
 	{
 		return array_map(/*Nette\Reflection\*/'MethodReflection::import', parent::getMethods($filter));
 	}
@@ -93,14 +93,14 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	function getParentClass()
+	public function getParentClass()
 	{
 		return ($ref = parent::getParentClass()) ? self::import($ref) : NULL;
 	}
 
 
 
-	function getProperties($filter = -1)
+	public function getProperties($filter = -1)
 	{
 		return array_map(/*Nette\Reflection\*/'PropertyReflection::import', parent::getProperties($filter));
 	}
@@ -110,14 +110,14 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\PropertyReflection
 	 */
-	function getProperty($name)
+	public function getProperty($name)
 	{
 		return PropertyReflection::import(parent::getProperty($name));
 	}
 
 
 
-	function __toString()
+	public function __toString()
 	{
 		return 'Class ' . $this->getName();
 	}
@@ -133,7 +133,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @param  string
 	 * @return bool
 	 */
-	function hasAnnotation($name)
+	public function hasAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return !empty($res[$name]);
@@ -146,7 +146,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @param  string
 	 * @return IAnnotation
 	 */
-	function getAnnotation($name)
+	public function getAnnotation($name)
 	{
 		$res = AnnotationsParser::getAll($this);
 		return isset($res[$name]) ? end($res[$name]) : NULL;
@@ -158,7 +158,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * Returns all annotations.
 	 * @return array
 	 */
-	function getAnnotations()
+	public function getAnnotations()
 	{
 		return AnnotationsParser::getAll($this);
 	}
@@ -172,42 +172,42 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\ObjectReflection
 	 */
-	function getReflection()
+	public function getReflection()
 	{
 		return new ObjectReflection($this);
 	}
 
 
 
-	function __call($name, $args)
+	public function __call($name, $args)
 	{
 		return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
-	function &__get($name)
+	public function &__get($name)
 	{
 		return ObjectMixin::get($this, $name);
 	}
 
 
 
-	function __set($name, $value)
+	public function __set($name, $value)
 	{
 		return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
-	function __isset($name)
+	public function __isset($name)
 	{
 		return ObjectMixin::has($this, $name);
 	}
 
 
 
-	function __unset($name)
+	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
@@ -225,7 +225,7 @@ class ClassReflection extends /*\*/ReflectionClass
 class ObjectReflection extends ClassReflection
 {
 
-	function __construct($obj)
+	public function __construct($obj)
 	{
 		parent::__construct(get_class($obj));
 	}

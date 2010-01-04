@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Object.php';
-
-require_once dirname(__FILE__) . '/../../Application/IRouter.php';
-
-
-
 /**
  * The bidirectional route for trivial routing via query string.
  *

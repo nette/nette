@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
-
-
-
 /**
  * Auto loader is responsible for loading classes and interfaces.
  *

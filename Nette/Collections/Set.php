@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Collections/Collection.php';
-
-require_once dirname(__FILE__) . '/../Collections/ISet.php';
-
-
-
 /**
  * Provides the base class for a collection that contains no duplicate elements.
  *

@@ -14,14 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../ComponentContainer.php';
-
-require_once dirname(__FILE__) . '/../Application/ISignalReceiver.php';
-
-require_once dirname(__FILE__) . '/../Application/IStatePersistent.php';
-
-
-
 /**
  * PresenterComponent is the base class for all presenters components.
  *

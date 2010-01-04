@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Collections/ICollection.php';
-
-
-
 /**
  * Represents a generic collection of key/value pairs.
  *

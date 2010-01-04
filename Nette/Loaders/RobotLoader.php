@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Loaders/AutoLoader.php';
-
-require_once dirname(__FILE__) . '/../Framework.php';
-
-
-
 /**
  * Nette auto loader is responsible for loading classes and interfaces.
  *

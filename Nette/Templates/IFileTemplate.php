@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Templates/ITemplate.php';
-
-
-
 /**
  * Defines file-based template methods.
  *

@@ -16,12 +16,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../../Object.php';
-
-require_once dirname(__FILE__) . '/../../Forms/IFormRenderer.php';
-
-
-
 /**
  * Converts a Form into the HTML output.
  *

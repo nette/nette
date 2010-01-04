@@ -14,12 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Security/IIdentity.php';
-
-require_once dirname(__FILE__) . '/../FreezableObject.php';
-
-
-
 /**
  * Old implementation of IIdentity.
  *

@@ -14,10 +14,6 @@
 
 
 
-require_once dirname(__FILE__) . '/../Mail/MailMimePart.php';
-
-
-
 /**
  * Mail provides functionality to compose and send both text and MIME-compliant multipart e-mail messages.
  *
