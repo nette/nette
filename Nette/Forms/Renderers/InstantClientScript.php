@@ -216,10 +216,11 @@ final class InstantClientScript extends /*Nette\*/Object
 			return 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(nette.getValue('.$elem.'));';
 
 		case $operation === ':regexp' && $control instanceof TextBase:
-			if (strncmp($arg, '/', 1)) {
-				throw new /*\*/InvalidStateException("Regular expression '$arg' must be JavaScript compatible.");
+			if (!preg_match('#^(/.*/)([imu]*)$#', $arg, $matches)) {
+				return NULL; // regular expression must be JavaScript compatible
 			}
-			return "res = nette.getValue($elem).test(val);";
+			$arg = $matches[1] . str_replace('u', '', $matches[2]);
+			return "res = $arg.test(nette.getValue($elem));";
 
 		case $operation === ':integer' && $control instanceof TextBase:
 			return "res = /^-?[0-9]+$/.test(nette.getValue($elem));";

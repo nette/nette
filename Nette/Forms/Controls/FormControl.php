@@ -563,7 +563,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 		$value = $control->getValue();
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				if ($val === (string) ($item instanceof IFormControl ? $item->value : $item)) {
+				if ((string) $val === (string) ($item instanceof IFormControl ? $item->value : $item)) {
 					return TRUE;
 				}
 			}
