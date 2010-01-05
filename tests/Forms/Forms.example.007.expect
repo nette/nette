@@ -172,7 +172,9 @@ nette.validateForm = function(sender) {
 	for (var name in validators) {
 		var error = validators[name](sender);
 		if (error) {
-			form[name].focus();
+			if (form[name].focus) {
+				form[name].focus();
+			}
 			alert(error);
 			return false;
 		}

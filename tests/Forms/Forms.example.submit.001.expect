@@ -39,6 +39,10 @@
 <ul class="error">
 	<li>Enter your age</li>
 
+	<li>Enter your shipping address</li>
+
+	<li>Select your country</li>
+
 	<li>Reenter your password</li>
 </ul>
 
@@ -214,7 +218,9 @@ nette.validateForm = function(sender) {
 	for (var name in validators) {
 		var error = validators[name](sender);
 		if (error) {
-			form[name].focus();
+			if (form[name].focus) {
+				form[name].focus();
+			}
 			alert(error);
 			return false;
 		}
