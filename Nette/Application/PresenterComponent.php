@@ -107,9 +107,9 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * Access to reflection.
 	 * @return PresenterComponentReflection
 	 */
-	public function getReflection()
+	public /*static */function getReflection()
 	{
-		return new PresenterComponentReflection($this);
+		return new PresenterComponentReflection(/**/$this/**//*get_called_class()*/);
 	}
 
 

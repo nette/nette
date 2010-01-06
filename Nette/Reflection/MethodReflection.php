@@ -179,9 +179,9 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public function getReflection()
+	public /*static */function getReflection()
 	{
-		return new ClassReflection($this);
+		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
 	}
 
 

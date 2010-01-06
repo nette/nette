@@ -256,9 +256,9 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public function getReflection()
+	public /*static */function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection($this);
+		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
 	}
 
 
