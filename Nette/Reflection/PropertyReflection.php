@@ -20,7 +20,7 @@
  * Reports information about a classes variable.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class PropertyReflection extends /*\*/ReflectionProperty
 {
@@ -38,6 +38,7 @@ class PropertyReflection extends /*\*/ReflectionProperty
 
 	/**
 	 * @return Nette\Reflection\PropertyReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionProperty $ref)
 	{

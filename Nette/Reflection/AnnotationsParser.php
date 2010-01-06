@@ -18,7 +18,7 @@
  * Annotations support for PHP.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 final class AnnotationsParser
 {
@@ -77,7 +77,7 @@ final class AnnotationsParser
 		}
 
 		if (self::$useReflection === NULL) { // detects whether is reflection available
-			self::$useReflection = (bool) /*Nette\Reflection\*/ClassReflection::create(__CLASS__)->getDocComment();
+			self::$useReflection = (bool) /*Nette\Reflection\*/ClassReflection::from(__CLASS__)->getDocComment();
 		}
 
 		if (self::$useReflection) {

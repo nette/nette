@@ -21,7 +21,7 @@
  * Reports information about a function.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class FunctionReflection extends /*\*/ReflectionFunction
 {
@@ -39,6 +39,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 
 	/**
 	 * @return Nette\Reflection\FunctionReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionFunction $ref)
 	{

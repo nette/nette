@@ -154,7 +154,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 
 		if (is_object($data)) {
 			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
-				/*Nette\Reflection\*/ClassReflection::create($data)->getAnnotation('serializationVersion'));
+				/*Nette\Reflection\*/ClassReflection::from($data)->getAnnotation('serializationVersion'));
 		}
 
 		$this->key = NULL;
@@ -327,7 +327,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	private static function checkSerializationVersion($class, $value)
 	{
-		return /*Nette\Reflection\*/ClassReflection::create($class)->getAnnotation('serializationVersion') === $value;
+		return /*Nette\Reflection\*/ClassReflection::from($class)->getAnnotation('serializationVersion') === $value;
 	}
 
 }

@@ -20,7 +20,7 @@
  * Reports information about a class.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class ClassReflection extends /*\*/ReflectionClass
 {
@@ -34,7 +34,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @param  string|object
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public static function create($class)
+	public static function from($class)
 	{
 		return new self($class);
 	}
@@ -137,6 +137,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	/**
 	 * @return Nette\Reflection\ClassReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionClass $ref)
 	{
