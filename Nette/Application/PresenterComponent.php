@@ -93,7 +93,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 		$rc = $this->getReflection();
 		if ($rc->hasMethod($method)) {
 			$rm = $rc->getMethod($method);
-			if ($rm->isCallable() && !$rm->isStatic()) {
+			if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
 				$rm->invokeNamedArgs($this, $params);
 				return TRUE;
 			}

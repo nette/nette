@@ -102,17 +102,6 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 
 	/**
-	 * Is a method callable? (class is instantiable, method is public and non-abstract).
-	 * @return bool
-	 */
-	public function isCallable()
-	{
-		return parent::getDeclaringClass()->isInstantiable() && $this->isPublic() && !$this->isAbstract();
-	}
-
-
-
-	/**
 	 * Invokes method using named parameters.
 	 * @param  object
 	 * @param  array
