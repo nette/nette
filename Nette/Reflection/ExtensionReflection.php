@@ -26,6 +26,17 @@
 class ExtensionReflection extends /*\*/ReflectionExtension
 {
 
+	public function __toString()
+	{
+		return 'Extension ' . $this->getName();
+	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
+
+
+
 	/**
 	 * @return Nette\Reflection\ExtensionReflection
 	 */
@@ -50,23 +61,16 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 
 
 
-	public function __toString()
-	{
-		return 'Extension ' . $this->getName();
-	}
-
-
-
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 

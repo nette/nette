@@ -73,7 +73,7 @@ class PresenterLoader implements IPresenterLoader
 			}
 		}
 
-		$reflection = new /*\*/ReflectionClass($class);
+		$reflection = new /*Nette\Reflection\*/ClassReflection($class);
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface(/*Nette\Application\*/'IPresenter')) {

@@ -74,11 +74,11 @@ class MethodParameterReflection extends /*\*/ReflectionParameter
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 

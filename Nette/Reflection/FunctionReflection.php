@@ -26,6 +26,17 @@
 class FunctionReflection extends /*\*/ReflectionFunction
 {
 
+	public function __toString()
+	{
+		return 'Function ' . $this->getName() . '()';
+	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
+
+
+
 	/**
 	 * @return Nette\Reflection\FunctionReflection
 	 */
@@ -53,23 +64,16 @@ class FunctionReflection extends /*\*/ReflectionFunction
 
 
 
-	public function __toString()
-	{
-		return 'Function ' . $this->getName() . '()';
-	}
-
-
-
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 
