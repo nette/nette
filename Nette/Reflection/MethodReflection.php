@@ -38,50 +38,6 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection
-	 */
-	public static function import(/*\*/ReflectionMethod $ref)
-	{
-		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
-	}
-
-
-
-	/**
-	 * @return Nette\Reflection\ClassReflection
-	 */
-	public function getDeclaringClass()
-	{
-		return ClassReflection::import(parent::getDeclaringClass());
-	}
-
-
-
-	/**
-	 * @return Nette\Reflection\ExtensionReflection
-	 */
-	public function getExtension()
-	{
-		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
-	}
-
-
-
-	public function getParameters()
-	{
-		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
-	}
-
-
-
-	public function __toString()
-	{
-		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
-	}
-
-
-
-	/**
 	 * @return array
 	 */
 	public function getDefaultParameters()
@@ -123,6 +79,54 @@ class MethodReflection extends /*\*/ReflectionMethod
 			}
 		}
 		return $this->invokeArgs($object, $res);
+	}
+
+
+
+	public function __toString()
+	{
+		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
+	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Reflection\MethodReflection
+	 */
+	public static function import(/*\*/ReflectionMethod $ref)
+	{
+		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
+	}
+
+
+
+	/**
+	 * @return Nette\Reflection\ClassReflection
+	 */
+	public function getDeclaringClass()
+	{
+		return ClassReflection::import(parent::getDeclaringClass());
+	}
+
+
+
+	/**
+	 * @return Nette\Reflection\ExtensionReflection
+	 */
+	public function getExtension()
+	{
+		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
+	}
+
+
+
+	public function getParameters()
+	{
+		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
 	}
 
 
@@ -173,11 +177,11 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 

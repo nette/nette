@@ -156,7 +156,6 @@ class NetteLoader extends AutoLoader
 		'notsupportedexception' => '/exceptions.php',
 		'object' => '/Object.php',
 		'objectmixin' => '/ObjectMixin.php',
-		'objectreflection' => '/Reflection/ClassReflection.php',
 		'oldidentity' => '/compatibility/OldIdentity.php',
 		'oldlattemacros' => '/compatibility/OldLatteMacros.php',
 		'oldpresenter' => '/compatibility/OldPresenter.php',

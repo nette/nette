@@ -25,6 +25,17 @@
 class PropertyReflection extends /*\*/ReflectionProperty
 {
 
+	public function __toString()
+	{
+		return 'Property ' . parent::getDeclaringClass()->getName() . '::$' . $this->getName();
+	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
+
+
+
 	/**
 	 * @return Nette\Reflection\PropertyReflection
 	 */
@@ -41,13 +52,6 @@ class PropertyReflection extends /*\*/ReflectionProperty
 	public function getDeclaringClass()
 	{
 		return ClassReflection::import(parent::getDeclaringClass());
-	}
-
-
-
-	public function __toString()
-	{
-		return 'Property ' . parent::getDeclaringClass()->getName() . '::$' . $this->getName();
 	}
 
 
@@ -98,11 +102,11 @@ class PropertyReflection extends /*\*/ReflectionProperty
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 

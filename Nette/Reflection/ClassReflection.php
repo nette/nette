@@ -31,8 +31,19 @@ class ClassReflection extends /*\*/ReflectionClass
 	 */
 	public static function create($class)
 	{
-		return new self(is_object($class) ? get_class($class) : $class);
+		return new self($class);
 	}
+
+
+
+	public function __toString()
+	{
+		return 'Class ' . $this->getName();
+	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
 
 
 
@@ -117,13 +128,6 @@ class ClassReflection extends /*\*/ReflectionClass
 
 
 
-	public function __toString()
-	{
-		return 'Class ' . $this->getName();
-	}
-
-
-
 	/********************* Nette\Annotations support ****************d*g**/
 
 
@@ -170,11 +174,11 @@ class ClassReflection extends /*\*/ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\ObjectReflection
+	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getReflection()
 	{
-		return new ObjectReflection($this);
+		return new ClassReflection($this);
 	}
 
 
@@ -210,24 +214,6 @@ class ClassReflection extends /*\*/ReflectionClass
 	public function __unset($name)
 	{
 		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
-	}
-
-}
-
-
-
-/**
- * Reports information about a object.
- *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
- */
-class ObjectReflection extends ClassReflection
-{
-
-	public function __construct($obj)
-	{
-		parent::__construct(get_class($obj));
 	}
 
 }
