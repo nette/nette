@@ -90,12 +90,12 @@ class PresenterComponentReflection extends /*Nette\Reflection\*/ClassReflection
 	 */
 	public function hasCallableMethod($method)
 	{
-		$class =$this->getName();
+		$class = $this->getName();
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache === NULL) try {
 			$cache = FALSE;
 			$rm = /*Nette\Reflection\*/MethodReflection::create($class, $method);
-			$cache = $rm->isCallable() && !$rm->isStatic();
+			$cache = $this->isInstantiable() && $rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic();
 		} catch (/*\*/ReflectionException $e) {
 		}
 		return $cache;
