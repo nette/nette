@@ -60,7 +60,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	public function setId($id)
 	{
 		$this->updating();
-		$this->id = $id;
+		$this->id = is_numeric($id) ? 1 * $id : $id;
 		return $this;
 	}
 
