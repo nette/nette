@@ -31,11 +31,11 @@ class Bar extends Foo implements /*\*/Countable
 
 
 dump( new ClassReflection("Bar") );
-dump( ClassReflection::create("Bar") );
-dump( ClassReflection::create(new Bar) );
+dump( ClassReflection::from("Bar") );
+dump( ClassReflection::from(new Bar) );
 
 
-$rc = ClassReflection::create("Bar");
+$rc = ClassReflection::from("Bar");
 
 dump( $rc->getExtension() );
 

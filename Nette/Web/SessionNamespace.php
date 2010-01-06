@@ -70,7 +70,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	{
 		$this->data[$name] = $value;
 		if (is_object($value)) {
-			$this->meta[$name]['V'] = /*Nette\Reflection\*/ClassReflection::create($value)->getAnnotation('serializationVersion');
+			$this->meta[$name]['V'] = /*Nette\Reflection\*/ClassReflection::from($value)->getAnnotation('serializationVersion');
 		}
 	}
 

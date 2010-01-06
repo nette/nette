@@ -21,13 +21,14 @@
  * Reports information about a method's parameter.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class MethodParameterReflection extends /*\*/ReflectionParameter
 {
 
 	/**
 	 * @return Nette\Reflection\MethodParameterReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionParameter $ref)
 	{

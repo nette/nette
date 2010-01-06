@@ -94,7 +94,7 @@ class PresenterComponentReflection extends /*Nette\Reflection\*/ClassReflection
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache === NULL) try {
 			$cache = FALSE;
-			$rm = /*Nette\Reflection\*/MethodReflection::create($class, $method);
+			$rm = /*Nette\Reflection\*/MethodReflection::from($class, $method);
 			$cache = $this->isInstantiable() && $rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic();
 		} catch (/*\*/ReflectionException $e) {
 		}

@@ -20,7 +20,7 @@
  * Reports information about a method.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class MethodReflection extends /*\*/ReflectionMethod
 {
@@ -30,7 +30,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @param  string
 	 * @return Nette\Reflection\MethodReflection
 	 */
-	public static function create($class, $method)
+	public static function from($class, $method)
 	{
 		return new self(is_object($class) ? get_class($class) : $class, $method);
 	}
@@ -96,6 +96,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	/**
 	 * @return Nette\Reflection\MethodReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionMethod $ref)
 	{

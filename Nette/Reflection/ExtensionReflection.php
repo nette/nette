@@ -21,7 +21,7 @@
  * Reports information about a extension.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette
+ * @package    Nette\Reflection
  */
 class ExtensionReflection extends /*\*/ReflectionExtension
 {
@@ -39,6 +39,7 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 
 	/**
 	 * @return Nette\Reflection\ExtensionReflection
+	 * @internal
 	 */
 	public static function import(/*\*/ReflectionExtension $ref)
 	{

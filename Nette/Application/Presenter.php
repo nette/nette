@@ -1051,7 +1051,7 @@ abstract class Presenter extends Control implements IPresenter
 		static $cache;
 		$params = & $cache[strtolower($class . ':' . $method)];
 		if ($params === NULL) {
-			$params = /*Nette\Reflection\*/MethodReflection::create($class, $method)->getDefaultParameters();
+			$params = /*Nette\Reflection\*/MethodReflection::from($class, $method)->getDefaultParameters();
 		}
 		$i = 0;
 		foreach ($params as $name => $def) {
@@ -1122,7 +1122,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public static function getPersistentComponents()
 	{
-		return (array) /*Nette\Reflection\*/ClassReflection::create(/**/func_get_arg(0)/**//*get_called_class()*/)->getAnnotation('persistent');
+		return (array) /*Nette\Reflection\*/ClassReflection::from(/**/func_get_arg(0)/**//*get_called_class()*/)->getAnnotation('persistent');
 	}
 
 
