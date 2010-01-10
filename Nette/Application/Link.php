@@ -106,8 +106,7 @@ class Link extends /*Nette\*/Object
 			return $this->component->link($this->destination, $this->params);
 
 		} catch (/*\*/Exception $e) {
-			trigger_error($e->getMessage(), E_USER_WARNING);
-			return '';
+			/*Nette\*/Debug::toStringException($e);
 		}
 	}
 

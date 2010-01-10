@@ -106,8 +106,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 			if (func_num_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
-				trigger_error($e->getMessage(), E_USER_WARNING);
-				return '';
+				/*Nette\*/Debug::toStringException($e);
 			}
 		}
 	}
