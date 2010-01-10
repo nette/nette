@@ -23,6 +23,7 @@
  * @property   string $name
  * @property   mixed $id
  * @property   array $roles
+ * @deprecated
  */
 class OldIdentity extends /*Nette\*/FreezableObject implements IIdentity
 {
