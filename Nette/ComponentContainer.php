@@ -142,7 +142,10 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if (!isset($this->components[$name])) {
-			$this->createComponent($name);
+			$component = $this->createComponent($name);
+			if ($component instanceof IComponent && $component->getParent() === NULL) {
+				$this->addComponent($component, $name);
+			}
 		}
 
 		if (isset($this->components[$name])) {
@@ -165,18 +168,15 @@ class ComponentContainer extends Component implements IComponentContainer
 
 	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
-	 * @param  string  component name
-	 * @return void
+	 * @param  string      component name
+	 * @return IComponent  the created component (optionally)
 	 */
 	protected function createComponent($name)
 	{
 		$ucname = ucfirst($name);
 		$method = 'createComponent' . $ucname;
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
-			$component = $this->$method($name);
-			if ($component instanceof IComponent && $component->getParent() === NULL) {
-				$this->addComponent($component, $name);
-			}
+			return $this->$method($name);
 		}
 	}
 
