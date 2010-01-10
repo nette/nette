@@ -114,9 +114,6 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 */
 	public function setParent(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
 	{
-		if ($name === 'submit') {
-			throw new /*\*/InvalidArgumentException("Name 'submit' is not allowed due to JavaScript limitations.");
-		}
 		return parent::setParent($parent, $name);
 	}
 
@@ -149,7 +146,11 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 				$name = $obj->getName();
 				$obj = $obj->lookup('Nette\Forms\INamingContainer', TRUE);
 			}
-			$this->htmlName = "$name$s";
+			$name .= $s;
+			if ($name === 'submit') {
+				throw new /*\*/InvalidArgumentException("Form control name 'submit' is not allowed due to JavaScript limitations.");
+			}
+			$this->htmlName = $name;
 		}
 		return $this->htmlName;
 	}
