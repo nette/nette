@@ -56,9 +56,6 @@ class HttpUploadedFile extends /*Nette\*/Object
 				return; // or throw exception?
 			}
 		}
-		//if (!is_uploaded_file($value['tmp_name'])) {
-			//throw new /*\*/InvalidStateException("Filename '$value[tmp_name]' is not a valid uploaded file.");
-		//}
 		$this->name = $value['name'];
 		$this->size = $value['size'];
 		$this->tmpName = $value['tmp_name'];
@@ -163,7 +160,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return void
+	 * @return HttpUploadedFile  provides a fluent interface
 	 */
 	public function move($dest)
 	{
@@ -171,12 +168,13 @@ class HttpUploadedFile extends /*Nette\*/Object
 		if (@mkdir($dir, 0755, TRUE)) { // intentionally @
 			chmod($dir, 0755);
 		}
-		if (!move_uploaded_file($this->tmpName, $dest)) {
+		$func = is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename';
+		if (!$func($this->tmpName, $dest)) {
 			throw new /*\*/InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
 		chmod($dest, 0644);
 		$this->tmpName = $dest;
-		return TRUE; // back compatibility
+		return $this;
 	}
 
 
