@@ -646,7 +646,7 @@ final class Debug
 	{
 		if (self::$enabled) {
 			self::_exceptionHandler($exception);
-		} else {	
+		} else {
 			trigger_error($exception->getMessage(), E_USER_ERROR);
 		}
 	}
@@ -960,5 +960,12 @@ final class Debug
 
 Debug::_init();
 
-// hint:
-// if (!function_exists('dump')) { function dump($var) { foreach ($args = func_get_args() as $arg) /*\Nette\*/Debug::dump($arg); return $var; } }
+/*
+if (!function_exists('dump')) {
+	function dump($var)
+	{
+		foreach ($args = func_get_args() as $arg) Debug::dump($arg);
+		return $var;
+	}
+}
+*/

@@ -113,7 +113,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 * @param  string key
 	 * @param  mixed  value
 	 * @param  array  dependencies
-	 * @return void
+	 * @return mixed  value itself
 	 * @throws \InvalidArgumentException
 	 */
 	public function save($key, $data, array $dp = NULL)
@@ -163,6 +163,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 			$data,
 			(array) $dp
 		);
+		return $data;
 	}
 
 
