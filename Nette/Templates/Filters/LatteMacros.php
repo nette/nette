@@ -917,7 +917,7 @@ class LatteMacros extends /*Nette\*/Object
 				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) continue;
 				ob_start();
 				$function = reset($function);
-				$function($params);
+				$function($cb, $params);
 				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
 			}
 		}
