@@ -83,6 +83,16 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 
 
+	/**
+	 * @return Nette\Callback
+	 */
+	public function getCallback()
+	{
+		return new /*Nette\*/Callback(parent::getDeclaringClass()->getName(), $this->getName());
+	}
+
+
+
 	public function __toString()
 	{
 		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
