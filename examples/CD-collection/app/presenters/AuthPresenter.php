@@ -37,13 +37,13 @@ class AuthPresenter extends BasePresenter
 
 		/**/$form->onSubmit[] = callback($this, 'loginFormSubmitted');/**/
 		/* PHP 5.3
-		$that = $this;
-		$form->onSubmit[] = function($form) use ($that) {
+		$presenter = $this;
+		$form->onSubmit[] = function($form) use ($presenter) {
 			try {
 				$user = Environment::getUser();
 				$user->authenticate($form['username']->getValue(), $form['password']->getValue());
-				$that->getApplication()->restoreRequest($that->backlink);
-				$that->redirect('Dashboard:');
+				$presenter->getApplication()->restoreRequest($presenter->backlink);
+				$presenter->redirect('Dashboard:');
 
 			} catch (AuthenticationException $e) {
 				$form->addError($e->getMessage());

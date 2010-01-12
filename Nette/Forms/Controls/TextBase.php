@@ -53,7 +53,7 @@ abstract class TextBase extends FormControl
 	{
 		$value = $this->value;
 		foreach ($this->filters as $filter) {
-			$value = (string) $filter/*->__invoke*/($value);
+			$value = (string) $filter/**/->__invoke/**/($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
 	}

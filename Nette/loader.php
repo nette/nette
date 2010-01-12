@@ -49,7 +49,7 @@ function callback($callback, $m = NULL)
 if (!function_exists('dump')) {
 	function dump($var)
 	{
-		foreach ($args = func_get_args() as $arg) /*Nette\*/Debug::dump($arg);
+		foreach (func_get_args() as $arg) /*Nette\*/Debug::dump($arg);
 		return $var;
 	}
 }
