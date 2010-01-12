@@ -68,4 +68,17 @@ final class Framework
 			($xhtml ? ' />' : '>'), '</a>';
 	}
 
+
+	/**/
+	/**
+	 * Fixes namespaced class/interface in PHP < 5.3
+	 */
+	public static function fixNamespace(& $class)
+	{
+		if ($a = strrpos($class, '\\')) {
+			$class = substr($class, $a + 1);
+		}
+	}
+	/**/
+
 }

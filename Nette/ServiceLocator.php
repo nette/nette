@@ -125,7 +125,7 @@ class ServiceLocator extends Object implements IServiceLocator
 			}
 
 			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
-				/**/fixNamespace($factory);/**/
+				/**/Framework::fixNamespace($factory);/**/
 				if (!class_exists($factory)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
 				}

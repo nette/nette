@@ -55,15 +55,3 @@ if (version_compare(PHP_VERSION , '5.2.2', '<')) {
 		}
 	}
 }
-
-
-/**
- * Fix for namespaced classes/interfaces in PHP < 5.3
- */
-function fixNamespace(& $class)
-{
-	if ($a = strrpos($class, '\\')) {
-		$class = substr($class, $a + 1);
-	}
-}
-/**/
