@@ -43,6 +43,19 @@ function callback($callback, $m = NULL)
 
 
 
+/**
+ * Nette\Debug::dump shortcut.
+ */
+if (!function_exists('dump')) {
+	function dump($var)
+	{
+		foreach ($args = func_get_args() as $arg) /*Nette\*/Debug::dump($arg);
+		return $var;
+	}
+}
+
+
+
 require_once dirname(__FILE__) . '/exceptions.php';
 require_once dirname(__FILE__) . '/Framework.php';
 require_once dirname(__FILE__) . '/Object.php';
