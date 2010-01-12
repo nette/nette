@@ -49,7 +49,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$callback = callback($callback)->check('Filter');
+		$callback = callback($callback);
 		if (in_array($callback, $this->filters)) {
 			throw new /*\*/InvalidStateException("Filter '$callback' was registered twice.");
 		}
@@ -151,7 +151,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = callback($callback)->check('Helper handler');
+		$this->helpers[strtolower($name)] = callback($callback);
 	}
 
 
@@ -163,7 +163,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		$this->helperLoaders[] = callback($callback)->check('Helper loader');
+		$this->helperLoaders[] = callback($callback);
 	}
 
 
