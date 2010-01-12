@@ -100,8 +100,8 @@ class Uri extends /*Nette\*/FreezableObject
 			}
 
 		} elseif ($uri instanceof self) {
-			foreach ($uri as $key => $val) {
-				$this->$key = $val;
+			foreach ($this as $key => $val) {
+				$this->$key = $uri->$key;
 			}
 		}
 	}
