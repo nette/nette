@@ -18,7 +18,9 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 class A {
-    function foo() {}
+    static function foo($a, $b) {
+    	return $a + $b;
+    }
 }
 
 class B extends A {
@@ -30,6 +32,8 @@ dump( $methodInfo->getDeclaringClass() );
 
 dump( $methodInfo->getExtension() );
 
+dump( $methodInfo->callback->__invoke(20, 3) );
+
 
 
 __halt_compiler();
@@ -40,3 +44,5 @@ object(%ns%ClassReflection) (1) {
 }
 
 NULL
+
+int(23)
