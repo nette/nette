@@ -35,7 +35,7 @@ class AuthPresenter extends BasePresenter
 
 		$form->addProtection('Please submit this form again (security token has expired).');
 
-		/**/$form->onSubmit[] = array($this, 'loginFormSubmitted');/**/
+		/**/$form->onSubmit[] = callback($this, 'loginFormSubmitted');/**/
 		/* PHP 5.3
 		$that = $this;
 		$form->onSubmit[] = function($form) use ($that) {

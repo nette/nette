@@ -25,15 +25,32 @@
 if (version_compare(PHP_VERSION, '5.2.0', '<')) {
 	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
 }
-/**/require_once dirname(__FILE__) . '/compatibility.php';/**/
 
-require dirname(__FILE__) . '/exceptions.php';
-require dirname(__FILE__) . '/Framework.php';
-require dirname(__FILE__) . '/Object.php';
-require dirname(__FILE__) . '/ObjectMixin.php';
-require dirname(__FILE__) . '/Loaders/LimitedScope.php';
-require dirname(__FILE__) . '/Loaders/AutoLoader.php';
-require dirname(__FILE__) . '/Loaders/NetteLoader.php';
+@set_magic_quotes_runtime(FALSE); // intentionally @
+
+
+
+/**
+ * Nette\Callback factory.
+ * @param  mixed   class, object, function, callback
+ * @param  string  method
+ * @return Nette\Callback
+ */
+function callback($callback, $m = NULL)
+{
+	return ($m === NULL && $callback instanceof /*Nette\*/Callback) ? $callback : new /*Nette\*/Callback($callback, $m);
+}
+
+
+
+require_once dirname(__FILE__) . '/exceptions.php';
+require_once dirname(__FILE__) . '/Framework.php';
+require_once dirname(__FILE__) . '/Object.php';
+require_once dirname(__FILE__) . '/ObjectMixin.php';
+require_once dirname(__FILE__) . '/Callback.php';
+require_once dirname(__FILE__) . '/Loaders/LimitedScope.php';
+require_once dirname(__FILE__) . '/Loaders/AutoLoader.php';
+require_once dirname(__FILE__) . '/Loaders/NetteLoader.php';
 
 
 /*Nette\Loaders\*/NetteLoader::getInstance()->base = dirname(__FILE__);

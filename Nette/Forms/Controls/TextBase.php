@@ -53,7 +53,7 @@ abstract class TextBase extends FormControl
 	{
 		$value = $this->value;
 		foreach ($this->filters as $filter) {
-			$value = (string) call_user_func($filter, $value);
+			$value = (string) $filter/*->__invoke*/($value);
 		}
 		return $value === $this->translate($this->emptyValue) ? '' : $value;
 	}
@@ -91,12 +91,7 @@ abstract class TextBase extends FormControl
 	 */
 	public function addFilter($filter)
 	{
-		/**/fixCallback($filter);/**/
-		if (!is_callable($filter)) {
-			$able = is_callable($filter, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-		$this->filters[] = $filter;
+		$this->filters[] = callback($filter)->check('Filter');
 		return $this;
 	}
 

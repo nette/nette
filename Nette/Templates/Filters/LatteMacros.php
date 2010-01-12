@@ -258,14 +258,9 @@ class LatteMacros extends /*Nette\*/Object
 	{
 		list($content, $modifiers) = $this->current;
 		if ($m[1]) {
-			$callback = $m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1];
-			/**/fixCallback($callback);/**/
-			if (!is_callable($callback)) {
-				$able = is_callable($callback, TRUE, $textual);
-				throw new /*\*/InvalidStateException("Latte macro handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-			}
-			return call_user_func($callback, $content, $modifiers);
-
+			return callback($m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1])
+				->check('Latte macro handler')
+				->__invoke($content, $modifiers);
 		} else {
 			return $content;
 		}
@@ -352,7 +347,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {$var |modifiers}
 	 */
-	private function macroVar($var, $modifiers)
+	public function macroVar($var, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$' . $var, $modifiers);
 	}
@@ -362,7 +357,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {_$var |modifiers}
 	 */
-	private function macroTranslate($var, $modifiers)
+	public function macroTranslate($var, $modifiers)
 	{
 		return LatteFilter::formatModifiers($var, 'translate|' . $modifiers);
 	}
@@ -372,7 +367,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {syntax ...}
 	 */
-	private function macroSyntax($var)
+	public function macroSyntax($var)
 	{
 		switch ($var) {
 		case '':
@@ -452,7 +447,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {extends ...}
 	 */
-	private function macroExtends($content)
+	public function macroExtends($content)
 	{
 		$destination = LatteFilter::fetchToken($content); // destination
 		if ($destination === NULL) {
@@ -473,7 +468,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {block ...}
 	 */
-	private function macroBlock($content, $modifiers)
+	public function macroBlock($content, $modifiers)
 	{
 		if (substr($content, 0, 1) === '$') { // capture - back compatibility
 			trigger_error("Capturing {block $content} is deprecated; use {capture $content} instead on line {$this->filter->line}.", E_USER_WARNING);
@@ -515,7 +510,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {/block}
 	 */
-	private function macroBlockEnd($content)
+	public function macroBlockEnd($content)
 	{
 		list($type, $name, $modifiers) = array_pop($this->blocks);
 
@@ -540,7 +535,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {snippet ...}
 	 */
-	private function macroSnippet($content)
+	public function macroSnippet($content)
 	{
 		$args = array('');
 		if ($snippet = LatteFilter::fetchToken($content)) {  // [name [,]] [tag]
@@ -557,7 +552,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {snippet ...}
 	 */
-	private function macroSnippetEnd($content)
+	public function macroSnippetEnd($content)
 	{
 		return 'array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) {';
 	}
@@ -567,7 +562,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {capture ...}
 	 */
-	private function macroCapture($content, $modifiers)
+	public function macroCapture($content, $modifiers)
 	{
 		$name = LatteFilter::fetchToken($content); // $variable
 
@@ -584,7 +579,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {/capture}
 	 */
-	private function macroCaptureEnd($content)
+	public function macroCaptureEnd($content)
 	{
 		list($type, $name, $modifiers) = array_pop($this->blocks);
 
@@ -614,7 +609,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {foreach ...}
 	 */
-	private function macroForeach($content)
+	public function macroForeach($content)
 	{
 		return '$iterator = $_cb->its[] = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
 	}
@@ -624,7 +619,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {attr ...}
 	 */
-	private function macroAttr($content)
+	public function macroAttr($content)
 	{
 		return preg_replace('#\)\s+#', ')->', $content . ' ');
 	}
@@ -634,7 +629,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {contentType ...}
 	 */
-	private function macroContentType($content)
+	public function macroContentType($content)
 	{
 		if (strpos($content, 'html') !== FALSE) {
 			$this->filter->escape = 'TemplateHelpers::escapeHtml';
@@ -670,7 +665,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {dump ...}
 	 */
-	private function macroDump($content)
+	public function macroDump($content)
 	{
 		return $content ? "array('$content' => $content)" : 'get_defined_vars()';
 	}
@@ -680,7 +675,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {widget ...}
 	 */
-	private function macroWidget($content)
+	public function macroWidget($content)
 	{
 		$pair = LatteFilter::fetchToken($content); // widget[:method]
 		if ($pair === NULL) {
@@ -701,7 +696,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {link ...}
 	 */
-	private function macroLink($content, $modifiers)
+	public function macroLink($content, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers);
 	}
@@ -711,7 +706,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {plink ...}
 	 */
-	private function macroPlink($content, $modifiers)
+	public function macroPlink($content, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers);
 	}
@@ -721,7 +716,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {ifCurrent ...}
 	 */
-	private function macroIfCurrent($content)
+	public function macroIfCurrent($content)
 	{
 		return $content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (InvalidLinkException $e) {}' : '';
 	}
@@ -741,7 +736,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {assign ...}
 	 */
-	private function macroAssign($content, $modifiers)
+	public function macroAssign($content, $modifiers)
 	{
 		if (!$content) {
 			throw new /*\*/InvalidStateException("Missing arguments in {assign} on line {$this->filter->line}.");
@@ -757,7 +752,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {default ...}
 	 */
-	private function macroDefault($content)
+	public function macroDefault($content)
 	{
 		if (!$content) {
 			throw new /*\*/InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
@@ -770,7 +765,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * Escaping helper.
 	 */
-	private function macroEscape($content)
+	public function macroEscape($content)
 	{
 		return $this->filter->escape;
 	}
@@ -780,7 +775,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * Just modifiers helper.
 	 */
-	private function macroModifiers($content, $modifiers)
+	public function macroModifiers($content, $modifiers)
 	{
 		return LatteFilter::formatModifiers($content, $modifiers);
 	}

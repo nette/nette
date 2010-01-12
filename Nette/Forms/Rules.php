@@ -171,7 +171,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 		{
 			if ($rule->control->isDisabled()) continue;
 
-			$success = ($rule->isNegative xor call_user_func($this->getCallback($rule), $rule->control, $rule->arg));
+			$success = ($rule->isNegative xor $this->getCallback($rule)->__invoke($rule->control, $rule->arg));
 
 			if ($rule->type === Rule::CONDITION && $success) {
 				$success = $rule->subRules->validate($onlyCheck);
@@ -226,8 +226,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 			$rule->operation = ~$rule->operation;
 		}
 
-		// check callback
-		if (!is_callable($this->getCallback($rule))) {
+		if (!$this->getCallback($rule)->isCallable()) {
 			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
 			throw new /*\*/InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
 		}
@@ -239,11 +238,9 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	{
 		$op = $rule->operation;
 		if (is_string($op) && strncmp($op, ':', 1) === 0) {
-			return array(get_class($rule->control), self::VALIDATE_PREFIX . ltrim($op, ':'));
-
+			return callback(get_class($rule->control), self::VALIDATE_PREFIX . ltrim($op, ':'));
 		} else {
-			/**/fixCallback($op);/**/
-			return $op;
+			return callback($op);
 		}
 	}
 
