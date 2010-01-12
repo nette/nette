@@ -35,8 +35,8 @@ class TextInput extends TextBase
 		$this->control->type = 'text';
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->filters[] = array(/*Nette\*/'String', 'trim');
-		$this->filters[] = array($this, 'checkMaxLength');
+		$this->filters[] = callback(/*Nette\*/'String', 'trim');
+		$this->filters[] = callback($this, 'checkMaxLength');
 		$this->value = '';
 	}
 
@@ -46,7 +46,7 @@ class TextInput extends TextBase
 	 * Filter: shortens value to control's max length.
 	 * @return string
 	 */
-	protected function checkMaxLength($value)
+	public function checkMaxLength($value)
 	{
 		if ($this->control->maxlength && iconv_strlen($value, 'UTF-8') > $this->control->maxlength) {
 			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');

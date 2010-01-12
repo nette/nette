@@ -82,14 +82,10 @@ class Session extends /*Nette\*/Object
 
 
 		// additional protection against Session Hijacking & Fixation
+		$verKey = NULL;
 		if ($this->verificationKeyGenerator) {
-			/**/fixCallback($this->verificationKeyGenerator);/**/
-			if (!is_callable($this->verificationKeyGenerator)) {
-				$able = is_callable($this->verificationKeyGenerator, TRUE, $textual);
-				throw new /*\*/InvalidStateException("Verification key generator '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-			}
+			$verKey = (string) callback($this->verificationKeyGenerator)->check('Verification key generator')->__invoke();
 		}
-
 
 		// start session
 		try {
@@ -118,7 +114,6 @@ class Session extends /*Nette\*/Object
 		*/
 
 		// initialize structures
-		$verKey = $this->verificationKeyGenerator ? (string) call_user_func($this->verificationKeyGenerator) : NULL;
 		if (!isset($_SESSION['__NF']['V'])) { // new session
 			$_SESSION['__NF'] = array();
 			$_SESSION['__NF']['C'] = 0;

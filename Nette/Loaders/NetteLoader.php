@@ -49,6 +49,7 @@ class NetteLoader extends AutoLoader
 		'button' => '/Forms/Controls/Button.php',
 		'cache' => '/Caching/Cache.php',
 		'cachinghelper' => '/Templates/Filters/CachingHelper.php',
+		'callback' => '/Callback.php',
 		'checkbox' => '/Forms/Controls/Checkbox.php',
 		'classreflection' => '/Reflection/ClassReflection.php',
 		'clirouter' => '/Application/Routers/CliRouter.php',

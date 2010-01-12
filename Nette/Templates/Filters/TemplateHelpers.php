@@ -40,14 +40,12 @@ final class TemplateHelpers
 	 */
 	public static function loader($helper)
 	{
-		$callback = 'Nette\Templates\TemplateHelpers::' . $helper;
-		/**/fixCallback($callback);/**/
-		if (is_callable($callback)) {
+		$callback = callback(/*Nette\Templates\*/'TemplateHelpers', $helper);
+		if ($callback->isCallable()) {
 			return $callback;
 		}
-		$callback = 'Nette\String::' . $helper;
-		/**/fixCallback($callback);/**/
-		if (is_callable($callback)) {
+		$callback = callback(/*Nette\*/'String', $helper);
+		if ($callback->isCallable()) {
 			return $callback;
 		}
 	}

@@ -135,15 +135,10 @@ class ServiceLocator extends Object implements IServiceLocator
 				}
 
 			} else { // factory callback
-				/**/fixCallback($factory);/**/
-				if (!is_callable($factory)) {
-					$able = is_callable($factory, TRUE, $textual);
-					throw new AmbiguousServiceException("Cannot instantiate service '$name', handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-				}
-				$service = call_user_func($factory, $options);
+				$factory = callback($factory)->check("Cannot instantiate service '$name', handler");
+				$service = $factory/**/->__invoke/**/($options);
 				if (!is_object($service)) {
-					$able = is_callable($factory, TRUE, $textual);
-					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$textual' is not object.");
+					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
 				}
 			}
 

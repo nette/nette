@@ -40,7 +40,7 @@ class LoginPresenter extends BasePresenter
 
 		$form->addSubmit('login', 'Login');
 
-		$form->onSubmit[] = array($this, 'loginFormSubmitted');
+		$form->onSubmit[] = callback($this, 'loginFormSubmitted');
 		return $form;
 	}
 

@@ -49,14 +49,9 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		/**/fixCallback($callback);/**/
-		if (!is_callable($callback)) {
-			$able = is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Filter '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
+		$callback = callback($callback)->check('Filter');
 		if (in_array($callback, $this->filters)) {
-			is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidStateException("Filter '$textual' was registered twice.");
+			throw new /*\*/InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
 	}
@@ -128,12 +123,11 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		try {
 			foreach ($this->filters as $filter) {
 				$content = self::extractPhp($content, $blocks);
-				$content = call_user_func($filter, $content);
+				$content = $filter/**/->__invoke/**/($content);
 				$content = strtr($content, $blocks); // put PHP code back
 			}
 		} catch (/*\*/Exception $e) {
-			is_callable($filter, TRUE, $textual);
-			throw new /*\*/InvalidStateException("Filter $textual: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
+			throw new /*\*/InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
 		}
 
 		if ($label) {
@@ -157,12 +151,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		/**/fixCallback($callback);/**/
-		if (!is_callable($callback)) {
-			$able = is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Helper handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-		$this->helpers[strtolower($name)] = $callback;
+		$this->helpers[strtolower($name)] = callback($callback)->check('Helper handler');
 	}
 
 
@@ -174,12 +163,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		/**/fixCallback($callback);/**/
-		if (!is_callable($callback)) {
-			$able = is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Helper loader '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-		$this->helperLoaders[] = $callback;
+		$this->helperLoaders[] = callback($callback)->check('Helper loader');
 	}
 
 
@@ -206,16 +190,16 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		$lname = strtolower($name);
 		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = call_user_func($loader, $lname);
+				$helper = $loader/**/->__invoke/**/($lname);
 				if ($helper) {
 					$this->registerHelper($lname, $helper);
-					return call_user_func_array($helper, $args);
+					return $this->helpers[$lname]->invokeArgs($args);
 				}
 			}
 			return parent::__call($name, $args);
 		}
 
-		return call_user_func_array($this->helpers[$lname], $args);
+		return $this->helpers[$lname]->invokeArgs($args);
 	}
 
 

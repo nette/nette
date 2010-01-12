@@ -21,7 +21,7 @@ class DefaultPresenter extends /*Nette\Application\*/Presenter
 	protected function createComponentFifteen()
 	{
 		$fifteen = new FifteenControl;
-		$fifteen->onGameOver[] = array($this, 'gameOver');
+		$fifteen->onGameOver[] = callback($this, 'gameOver');
 		$fifteen->invalidateControl();
 		return $fifteen;
 	}

@@ -71,12 +71,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	public function setExtensionMethod($name, $callback)
 	{
 		$l = & self::$extMethods[strtolower($name)];
-		/**/fixCallback($callback);/**/
-		if (!is_callable($callback)) {
-			$able = is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Extension method handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
-		}
-		$l[strtolower($this->getName())] = $callback;
+		$l[strtolower($this->getName())] = callback($callback);
 		$l[''] = NULL;
 		return $this;
 	}
@@ -95,7 +90,7 @@ class ClassReflection extends /*\*/ReflectionClass
 			foreach ($list['user'] as $fce) {
 				$pair = explode('_prototype_', $fce);
 				if (count($pair) === 2) {
-					self::$extMethods[$pair[1]][$pair[0]] = $fce;
+					self::$extMethods[$pair[1]][$pair[0]] = callback($fce);
 					self::$extMethods[$pair[1]][''] = NULL;
 				}
 			}
