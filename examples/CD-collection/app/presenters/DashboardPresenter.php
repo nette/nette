@@ -110,23 +110,23 @@ class DashboardPresenter extends BasePresenter
 		$form->addText('title', 'Title:')
 			->addRule(Form::FILLED, 'Please enter a title.');
 		/* PHP 5.3
-		$that = $this;
-		$form->addSubmit('save', 'Save')->onClick[] = function() use ($form, $that) {
-			$id = (int) $that->getParam('id');
+		$presenter = $this;
+		$form->addSubmit('save', 'Save')->onClick[] = function() use ($form, $presenter) {
+			$id = (int) $presenter->getParam('id');
 			$album = new Albums;
 			if ($id > 0) {
 				$album->update($id, $form->getValues());
-				$that->flashMessage('The album has been updated.');
+				$presenter->flashMessage('The album has been updated.');
 			} else {
 				$album->insert($form->getValues());
-				$that->flashMessage('The album has been added.');
+				$presenter->flashMessage('The album has been added.');
 			}
-			$that->redirect('default');
+			$presenter->redirect('default');
 		};
 		$form['save']->getControlPrototype()->class('default');
 
-		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL)->onClick[] = function() use ($that) {
-			$that->redirect('default');
+		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL)->onClick[] = function() use ($presenter) {
+			$presenter->redirect('default');
 		};
 		*/
 		/**/
@@ -170,15 +170,15 @@ class DashboardPresenter extends BasePresenter
 	{
 		$form = new AppForm;
 		/* PHP 5.3
-		$that = $this;
-		$form->addSubmit('cancel', 'Cancel')->onClick[] = function() use ($that) {
-			$that->redirect('default');
+		$presenter = $this;
+		$form->addSubmit('cancel', 'Cancel')->onClick[] = function() use ($presenter) {
+			$presenter->redirect('default');
 		};
-		$form->addSubmit('delete', 'Delete')->onClick[] = function() use ($that) {
+		$form->addSubmit('delete', 'Delete')->onClick[] = function() use ($presenter) {
 			$album = new Albums;
-			$album->delete($that->getParam('id'));
-			$that->flashMessage('Album has been deleted.');
-			$that->redirect('default');
+			$album->delete($presenter->getParam('id'));
+			$presenter->flashMessage('Album has been deleted.');
+			$presenter->redirect('default');
 		};
 		$form['delete']->getControlPrototype()->class('default');
 		*/

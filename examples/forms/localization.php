@@ -5,7 +5,7 @@
  */
 
 
-require '../../Nette/loader.php';
+require_once '../../Nette/loader.php';
 
 // set_include_path();
 include_once 'Zend/Translate.php';

@@ -8,7 +8,7 @@
  */
 
 
-require '../../Nette/loader.php';
+require_once '../../Nette/loader.php';
 
 /*use Nette\Forms\Form;*/
 /*use Nette\Debug;*/
