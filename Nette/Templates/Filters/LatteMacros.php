@@ -267,7 +267,6 @@ class LatteMacros extends /*Nette\*/Object
 		list($content, $modifiers) = $this->current;
 		if ($m[1]) {
 			return callback($m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1])
-				->check('Latte macro handler')
 				->__invoke($content, $modifiers);
 		} else {
 			return $content;
