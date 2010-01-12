@@ -362,7 +362,7 @@ class Mail extends MailMimePart
 	public function getMailer()
 	{
 		if ($this->mailer === NULL) {
-			/**/fixNamespace(self::$defaultMailer);/**/
+			/**/Framework::fixNamespace(self::$defaultMailer);/**/
 			$this->mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
 		}
 		return $this->mailer;
