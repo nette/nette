@@ -22,6 +22,12 @@
  */
 final class AnnotationsParser
 {
+	/** @internal single & double quoted PHP string */
+	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
+
+	/** @internal PHP identifier */
+	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
+
 	/** @var bool */
 	public static $useReflection;
 
@@ -30,7 +36,6 @@ final class AnnotationsParser
 
 	/** @var array */
 	private static $timestamps;
-
 
 
 
@@ -114,18 +119,24 @@ final class AnnotationsParser
 	{
 		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
-		preg_match_all('#@([a-zA-Z0-9_]+)([\s(].*)#', substr($comment, 0, -2) . ' ', $matches, PREG_SET_ORDER);
+		preg_match_all('~
+			@('.self::RE_IDENTIFIER.')[ \t]*             ##  annotation
+			(
+				\((?>'.self::RE_STRING.'|[^\'")@]+)+\)|  ##  (value)
+				[^(@\r\n][^@\r\n]*|)                     ##  value
+		~xi', trim($comment, '/*'), $matches, PREG_SET_ORDER);
+
 		$res = array();
 		foreach ($matches as $match)
 		{
 			list(, $name, $value) = $match;
 
-			if ($value[0] === '(') {
+			if (substr($value, 0, 1) === '(') {
 				$items = array();
 				$key = '';
 				$val = TRUE;
 				$value[0] = ',';
-				while (preg_match('#\s*,\s*(?>([a-zA-Z0-9_]+)\s*=\s*)?([^\'"),\s][^),]*|\'[^\']*\'|"[^"]*")#A', $value, $m)) {
+				while (preg_match('#\s*,\s*(?>('.self::RE_IDENTIFIER.')\s*=\s*)?('.self::RE_STRING.'|[^\'"),\s][^\'"),]*)#A', $value, $m)) {
 					$value = substr($value, strlen($m[0]));
 					list(, $key, $val) = $m;
 					if ($val[0] === "'" || $val[0] === '"') {
@@ -144,7 +155,7 @@ final class AnnotationsParser
 
 					} else {
 						$items[$key] = $val;
-				}
+					}
 				}
 
 				$value = count($items) < 2 && $key === '' ? $val : $items;
