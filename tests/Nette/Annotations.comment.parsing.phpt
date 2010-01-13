@@ -97,4 +97,3 @@ array(1) {
 		0 => bool(TRUE)
 	}
 }
-

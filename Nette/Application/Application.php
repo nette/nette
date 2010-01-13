@@ -87,8 +87,7 @@ class Application extends /*Nette\*/Object
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
 				$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
-				$method = htmlSpecialChars($method);
-				echo "<h1>Method $method is not implemented</h1>";
+				echo '<h1>Method ' . htmlSpecialChars($method) . ' is not implemented</h1>';
 				return;
 			}
 		}

@@ -1102,7 +1102,7 @@ abstract class Presenter extends Control implements IPresenter
 			return '#';
 
 		} elseif (self::$invalidLinkMode === self::INVALID_LINK_WARNING) {
-			return 'error: ' . htmlSpecialChars($e->getMessage());
+			return 'error: ' . $e->getMessage();
 
 		} else { // self::INVALID_LINK_EXCEPTION
 			throw $e;
