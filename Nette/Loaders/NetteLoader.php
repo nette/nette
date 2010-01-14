@@ -63,6 +63,7 @@ class NetteLoader extends AutoLoader
 		'conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
 		'curlybracketsfilter' => '/compatibility/OldLatteMacros.php',
 		'curlybracketsmacros' => '/compatibility/OldLatteMacros.php',
+		'datetime53' => '/compatibility/DateTime53.php',
 		'debug' => '/Debug.php',
 		'deprecatedexception' => '/exceptions.php',
 		'directorynotfoundexception' => '/exceptions.php',
