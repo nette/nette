@@ -409,7 +409,7 @@ final class Debug
 
 	/**
 	 * Enables displaying or logging errors and exceptions.
-	 * @param  mixed         production, development mode or autodetection
+	 * @param  mixed         production, development mode, autodetection or IP address(es).
 	 * @param  string        error log file (FALSE disables logging in production mode)
 	 * @param  array|string  administrator email or email headers; enables email sending in production mode
 	 * @return void
@@ -421,7 +421,15 @@ final class Debug
 		// production/development mode detection
 		if (is_bool($mode)) {
 			self::$productionMode = $mode;
+
+		} elseif (is_string($mode)) { // IP adresses
+			$mode = preg_split('#[,\s]+#', $mode);
 		}
+
+		if (is_array($mode)) { // IP adresses
+			self::$productionMode = !isset($_SERVER['REMOTE_ADDR']) || !in_array($_SERVER['REMOTE_ADDR'], $mode, TRUE);
+		}
+
 		if (self::$productionMode === self::DETECT) {
 			if (class_exists(/*Nette\*/'Environment')) {
 				self::$productionMode = Environment::isProduction();
