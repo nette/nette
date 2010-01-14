@@ -605,7 +605,7 @@ class Form extends FormContainer
 	 */
 	protected function getHttpRequest()
 	{
-		return class_exists('Nette\Environment') ? Nette\Environment::getHttpRequest() : new Nette\Web\HttpRequest;
+		return Nette\Environment::getHttpRequest();
 	}
 
 

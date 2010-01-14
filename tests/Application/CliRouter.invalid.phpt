@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $_SERVER['argv'] = 1;
-$httpRequest = new HttpRequest;
+$httpRequest = new HttpRequest(new Nette\Web\UriScript());
 
 $router = new CliRouter;
 Assert::null( $router->match($httpRequest) );

@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Web\HttpRequest,
+use Nette\Web\HttpRequestFactory,
 	Nette\Web\HttpUploadedFile;
 
 
@@ -70,7 +70,8 @@ $_FILES = array(
 );
 
 // unfiltered data
-$request = new HttpRequest;
+$factory = new HttpRequestFactory;
+$request = $factory->createHttpRequest();
 
 Assert::true( $request->getQuery('invalid') === INVALID );
 Assert::true( $request->getQuery('control') === CONTROL_CHARACTERS );
@@ -96,7 +97,9 @@ Assert::true( $request->files['file1'] instanceof HttpUploadedFile );
 
 
 // filtered data
-$request->setEncoding('UTF-8');
+$factory = new HttpRequestFactory;
+$factory->setEncoding('UTF-8');
+$request = $factory->createHttpRequest();
 
 Assert::same( "v\xc5\xbe", $request->getQuery('invalid') );
 Assert::same( 'ABC', $request->getQuery('control') );

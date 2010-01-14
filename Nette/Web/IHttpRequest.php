@@ -58,12 +58,6 @@ interface IHttpRequest
 	function getPost($key = NULL, $default = NULL);
 
 	/**
-	 * Returns HTTP POST data in raw format (only for "application/x-www-form-urlencoded").
-	 * @return string
-	 */
-	function getPostRaw();
-
-	/**
 	 * Returns uploaded file.
 	 * @param  string key (or more keys)
 	 * @return HttpUploadedFile

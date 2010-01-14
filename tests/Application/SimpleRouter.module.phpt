@@ -14,18 +14,18 @@ use Nette\Application\SimpleRouter;
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/SimpleRouter.inc';
-
 
 
 $router = new SimpleRouter(array(
 	'module' => 'main:sub',
 ));
 
-$httpRequest = new MockHttpRequest;
-$httpRequest->setQuery(array(
+$uri = new Nette\Web\UriScript('http://nette.org/file.php');
+$uri->setScriptPath('/file.php');
+$uri->setQuery(array(
 	'presenter' => 'myPresenter',
 ));
+$httpRequest = new Nette\Web\HttpRequest($uri);
 
 $req = $router->match($httpRequest);
 Assert::same( 'main:sub:myPresenter',  $req->getPresenterName() );

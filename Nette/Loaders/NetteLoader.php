@@ -189,6 +189,7 @@ class NetteLoader extends AutoLoader
 		'nette\web\html' => '/Web/Html.php',
 		'nette\web\httpcontext' => '/Web/HttpContext.php',
 		'nette\web\httprequest' => '/Web/HttpRequest.php',
+		'nette\web\httprequestfactory' => '/Web/HttpRequestFactory.php',
 		'nette\web\httpresponse' => '/Web/HttpResponse.php',
 		'nette\web\httpuploadedfile' => '/Web/HttpUploadedFile.php',
 		'nette\web\ihttprequest' => '/Web/IHttpRequest.php',

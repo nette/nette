@@ -14,8 +14,6 @@ use Nette\Application\SimpleRouter;
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/SimpleRouter.inc';
-
 
 
 $router = new SimpleRouter(array(
@@ -23,10 +21,12 @@ $router = new SimpleRouter(array(
 	'any' => 'anyvalue',
 ), SimpleRouter::SECURED);
 
-$httpRequest = new MockHttpRequest;
-$httpRequest->setQuery(array(
+$uri = new Nette\Web\UriScript('http://nette.org/file.php');
+$uri->setScriptPath('/file.php');
+$uri->setQuery(array(
 	'presenter' => 'myPresenter',
 ));
+$httpRequest = new Nette\Web\HttpRequest($uri);
 
 $req = new Nette\Application\PresenterRequest(
 	'othermodule:presenter',

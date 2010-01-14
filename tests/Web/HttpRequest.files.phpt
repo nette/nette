@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Web\HttpRequest,
+use Nette\Web\HttpRequestFactory,
 	Nette\Web\HttpUploadedFile;
 
 
@@ -87,7 +87,8 @@ $_FILES = array(
 	),
 );
 
-$request = new HttpRequest;
+$factory = new HttpRequestFactory;
+$request = $factory->createHttpRequest();
 
 Assert::true( $request->files['file1'] instanceof HttpUploadedFile );
 Assert::true( $request->files['file2'][2] instanceof HttpUploadedFile );

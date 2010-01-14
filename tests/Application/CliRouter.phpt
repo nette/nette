@@ -29,7 +29,7 @@ $_SERVER['argv'] = array(
 	'/wait',
 );
 
-$httpRequest = new HttpRequest;
+$httpRequest = new HttpRequest(new Nette\Web\UriScript());
 
 $router = new CliRouter(array(
 	'id' => 12,

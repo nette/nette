@@ -16,9 +16,7 @@ function testRouteIn(Nette\Application\Route $route, $uri, $expectedPresenter=NU
 		'presenter' => 'querypresenter',
 	));
 
-	$httpRequest = new Nette\Web\HttpRequest;
-	$httpRequest->initialize();
-	$httpRequest->setUri($uri);
+	$httpRequest = new Nette\Web\HttpRequest($uri);
 
 	$request = $route->match($httpRequest);
 
