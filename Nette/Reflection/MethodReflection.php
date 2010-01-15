@@ -137,7 +137,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	public function getParameters()
 	{
-		return array_map(/*Nette\Reflection\*/'MethodParameterReflection::import', parent::getParameters());
+		return array_map(array(/*Nette\Reflection\*/'MethodParameterReflection', 'import'), parent::getParameters());
 	}
 
 

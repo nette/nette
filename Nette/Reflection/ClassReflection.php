@@ -163,7 +163,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getInterfaces()
 	{
-		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getInterfaces());
+		return array_map(array(/*Nette\Reflection\*/'ClassReflection', 'import'), parent::getInterfaces());
 	}
 
 
@@ -180,7 +180,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getMethods($filter = -1)
 	{
-		return array_map(/*Nette\Reflection\*/'MethodReflection::import', parent::getMethods($filter));
+		return array_map(array(/*Nette\Reflection\*/'MethodReflection', 'import'), parent::getMethods($filter));
 	}
 
 
@@ -197,7 +197,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getProperties($filter = -1)
 	{
-		return array_map(/*Nette\Reflection\*/'PropertyReflection::import', parent::getProperties($filter));
+		return array_map(array(/*Nette\Reflection\*/'PropertyReflection', 'import'), parent::getProperties($filter));
 	}
 
 
