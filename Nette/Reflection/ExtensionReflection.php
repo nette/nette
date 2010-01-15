@@ -50,14 +50,14 @@ class ExtensionReflection extends /*\*/ReflectionExtension
 
 	public function getClasses()
 	{
-		return array_map(/*Nette\Reflection\*/'ClassReflection::import', parent::getClasses());
+		return array_map(array(/*Nette\Reflection\*/'ClassReflection', 'import'), parent::getClasses());
 	}
 
 
 
 	public function getFunctions()
 	{
-		return array_map(/*Nette\Reflection\*/'FunctionReflection::import', parent::getFunctions());
+		return array_map(array(/*Nette\Reflection\*/'FunctionReflection', 'import'), parent::getFunctions());
 	}
 
 
