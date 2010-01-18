@@ -19,6 +19,7 @@
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
+ * @Annotation
  */
 final class AnnotationsParser
 {
