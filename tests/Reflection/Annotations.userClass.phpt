@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Annotations with class annotations.
+ * Test: Annotations using user classes.
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,7 +9,6 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Annotations;*/
 /*use Nette\Reflection\ClassReflection;*/
 
 

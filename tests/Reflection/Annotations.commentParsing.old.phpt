@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Test: Nette\Annotations with class annotations.
+ * Test: Annotations comment parser I (old API).
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette
+ * @package    Nette\Reflection
  * @subpackage UnitTests
  */
 

@@ -20,4 +20,6 @@ throw new Exception('Something went wrong');
 __halt_compiler();
 
 ------EXPECT------
-Error: Uncaught Exception Exception: Something went wrong
+Error: Uncaught exception 'Exception' with message 'Something went wrong' in %a%
+Stack trace:
+#0 {main}
