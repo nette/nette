@@ -47,7 +47,7 @@
 </tr>
 
 <tr>
-	<th><label onclick="return false" for="frm-country">Country:</label></th>
+	<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-country">Country:</label></th>
 
 	<td><select onfocus="this.onmousewheel=function(){return false}" name="country[]" id="frm-country" multiple="multiple"><option>Select your country</option><optgroup label="Europe"><option selected="selected">&#268;esk&aacute; republika</option><option>Slovakia</option><option>United Kingdom</option></optgroup><option>Canada</option><option>United States</option><option>other</option></select></td>
 </tr>

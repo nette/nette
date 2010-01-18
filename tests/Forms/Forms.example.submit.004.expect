@@ -107,7 +107,7 @@
 
 
 
-	<dt><label onclick="return false" for="frm-gender">Your gender:</label></dt>
+	<dt><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-gender">Your gender:</label></dt>
 
 	<dd><select size="2" onfocus="this.onmousewheel=function(){return false}" name="gender" id="frm-gender"><option style="color: #248bd3">male</option><option style="color: #e948d4">female</option></select></dd>
 
@@ -146,7 +146,7 @@
 
 
 
-	<dt><label onclick="return false" for="frm-country">Country:</label></dt>
+	<dt><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-country">Country:</label></dt>
 
 	<dd class="odd"><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></dd>
 

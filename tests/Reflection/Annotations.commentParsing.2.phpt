@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Annotations and comment parsing.
+ * Test: Annotations comment parser II.
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette
+ * @package    Nette\Reflection
  * @subpackage UnitTests
  */
 
-/*use Nette\Annotations;*/
+/*use Nette\Reflection\ClassReflection;*/
 
 
 

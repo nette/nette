@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Reflection & Nette\Annotations.
+ * Test: Nette\Reflection & annotations.
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Annotations, Nette\Reflection\ClassReflection;*/
+/*use Nette\Reflection\ClassReflection;*/
 
 
 

@@ -96,7 +96,7 @@
 			<td><input type="text" size="35" class="text" name="city" id="frm-city" value="" /></td>
 		</tr>
 		<tr class="required">
-			<th><label onclick="return false" for="frm-country">Country:</label></th>
+			<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-country">Country:</label></th>
 			<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 		</tr>
 		</table>

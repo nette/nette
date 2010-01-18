@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Test: Nette\Annotations and user file parsing.
+ * Test: Annotations file parser.
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette
+ * @package    Nette\Reflection
  * @subpackage UnitTests
  */
 
@@ -25,37 +25,37 @@ NetteTestHelpers::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
 
-Annotations::$useReflection = FALSE;
+AnnotationsParser::$useReflection = FALSE;
 
 
 output('AnnotatedClass1');
 
 $rc = new ReflectionClass(/*Nette\*/'AnnotatedClass1');
-dump( Annotations::getAll($rc) );
-dump( Annotations::getAll($rc->getProperty('a')), '$a' );
-dump( Annotations::getAll($rc->getProperty('b')), '$b' );
-dump( Annotations::getAll($rc->getProperty('c')), '$c' );
-dump( Annotations::getAll($rc->getProperty('d')), '$d' );
-dump( Annotations::getAll($rc->getProperty('e')), '$e' );
-dump( Annotations::getAll($rc->getProperty('f')), '$f' );
-//dump( Annotations::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
-dump( Annotations::getAll($rc->getMethod('a')), 'a()' );
-dump( Annotations::getAll($rc->getMethod('b')), 'b()' );
-dump( Annotations::getAll($rc->getMethod('c')), 'c()' );
-dump( Annotations::getAll($rc->getMethod('d')), 'd()' );
-dump( Annotations::getAll($rc->getMethod('e')), 'e()' );
-dump( Annotations::getAll($rc->getMethod('f')), 'f()' );
-dump( Annotations::getAll($rc->getMethod('g')), 'g()' );
+dump( AnnotationsParser::getAll($rc) );
+dump( AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
+dump( AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
+dump( AnnotationsParser::getAll($rc->getProperty('c')), '$c' );
+dump( AnnotationsParser::getAll($rc->getProperty('d')), '$d' );
+dump( AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
+dump( AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
+//dump( AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
+dump( AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );
+dump( AnnotationsParser::getAll($rc->getMethod('b')), 'b()' );
+dump( AnnotationsParser::getAll($rc->getMethod('c')), 'c()' );
+dump( AnnotationsParser::getAll($rc->getMethod('d')), 'd()' );
+dump( AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
+dump( AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
+dump( AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
 
 output('AnnotatedClass2');
 
 $rc = new ReflectionClass(/*Nette\*/'AnnotatedClass2');
-dump( Annotations::getAll($rc) );
+dump( AnnotationsParser::getAll($rc) );
 
 output('AnnotatedClass3');
 
 $rc = new ReflectionClass(/*Nette\*/'AnnotatedClass3');
-dump( Annotations::getAll($rc) );
+dump( AnnotationsParser::getAll($rc) );
 
 
 

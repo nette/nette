@@ -65,7 +65,7 @@
 </tr>
 
 <tr>
-	<th><label onclick="return false" for="frm-first-country">Country:</label></th>
+	<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-first-country">Country:</label></th>
 
 	<td><select onfocus="this.onmousewheel=function(){return false}" name="first[country]" id="frm-first-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
@@ -101,7 +101,7 @@
 </tr>
 
 <tr>
-	<th><label onclick="return false" for="frm-second-country">Country:</label></th>
+	<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-second-country">Country:</label></th>
 
 	<td><select onfocus="this.onmousewheel=function(){return false}" name="second[country]" id="frm-second-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
