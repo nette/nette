@@ -387,7 +387,7 @@ class LatteMacros extends /*Nette\*/Object
 			break;
 
 		case 'asp':
-			$this->filter->setDelimiters('<%\s*', '\s*%>'); // <%...%>
+			$this->filter->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
 			break;
 
 		case 'python':
