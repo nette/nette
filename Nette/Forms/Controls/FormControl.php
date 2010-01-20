@@ -107,19 +107,6 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 
 
 	/**
-	 * Overloaded parent setter. This method checks for invalid control name.
-	 * @param  IComponentContainer
-	 * @param  string
-	 * @return FormControl  provides a fluent interface
-	 */
-	public function setParent(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
-	{
-		return parent::setParent($parent, $name);
-	}
-
-
-
-	/**
 	 * Returns form.
 	 * @param  bool   throw exception if form doesn't exist?
 	 * @return Form
