@@ -123,7 +123,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		try {
 			foreach ($this->filters as $filter) {
 				$content = self::extractPhp($content, $blocks);
-				$content = $filter/**/->__invoke/**/($content);
+				$content = $filter/**/->invoke/**/($content);
 				$content = strtr($content, $blocks); // put PHP code back
 			}
 		} catch (/*\*/Exception $e) {
@@ -190,7 +190,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		$lname = strtolower($name);
 		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = $loader/**/->__invoke/**/($lname);
+				$helper = $loader/**/->invoke/**/($lname);
 				if ($helper) {
 					$this->registerHelper($lname, $helper);
 					return $this->helpers[$lname]->invokeArgs($args);
