@@ -471,7 +471,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 								if (!/*Nette\*/String::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
-								$v = html_entity_decode($v, ENT_NOQUOTES, 'UTF-8');
+								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
 							}
 							$v = preg_replace($nonChars, '', $v);
 						}
