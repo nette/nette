@@ -213,20 +213,10 @@ abstract class Component extends Object implements IComponent
 
 		// remove from parent?
 		if ($parent === NULL) {
-			// parent cannot be removed if is still this component contains
-			if ($this->parent->getComponent($this->name, FALSE) === $this) {
-				throw new /*\*/InvalidStateException("The current parent still recognizes component '$this->name' as its child.");
-			}
-
 			$this->refreshMonitors(0);
 			$this->parent = NULL;
 
 		} else { // add to parent
-			// Given parent container does not already recognize this component as its child.
-			if ($parent->getComponent($name, FALSE) !== $this) {
-				throw new /*\*/InvalidStateException("The given parent does not recognize component '$name' as its child.");
-			}
-
 			$this->validateParent($parent);
 			$this->parent = $parent;
 			if ($name !== NULL) $this->name = $name;
