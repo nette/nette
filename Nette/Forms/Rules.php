@@ -171,7 +171,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 		{
 			if ($rule->control->isDisabled()) continue;
 
-			$success = ($rule->isNegative xor $this->getCallback($rule)->__invoke($rule->control, $rule->arg));
+			$success = ($rule->isNegative xor $this->getCallback($rule)->invoke($rule->control, $rule->arg));
 
 			if ($rule->type === Rule::CONDITION && $success) {
 				$success = $rule->subRules->validate($onlyCheck);

@@ -84,7 +84,7 @@ class Session extends /*Nette\*/Object
 		// additional protection against Session Hijacking & Fixation
 		$verKey = NULL;
 		if ($this->verificationKeyGenerator) {
-			$verKey = (string) callback($this->verificationKeyGenerator)->__invoke();
+			$verKey = (string) callback($this->verificationKeyGenerator)->invoke();
 		}
 
 		// start session

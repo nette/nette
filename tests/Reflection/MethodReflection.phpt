@@ -32,7 +32,7 @@ dump( $methodInfo->getDeclaringClass() );
 
 dump( $methodInfo->getExtension() );
 
-dump( $methodInfo->callback->__invoke(20, 3) );
+dump( $methodInfo->callback->invoke(20, 3) );
 
 
 
