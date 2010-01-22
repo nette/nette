@@ -188,6 +188,7 @@ class Uri extends /*Nette\*/FreezableObject
 	 */
 	public function setPass($value)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use setPassword() instead.', E_USER_WARNING);
 		$this->setPassword($value);
 	}
 
@@ -198,6 +199,7 @@ class Uri extends /*Nette\*/FreezableObject
 	 */
 	public function getPass()
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use getPassword() instead.', E_USER_WARNING);
 		return $this->pass;
 	}
 

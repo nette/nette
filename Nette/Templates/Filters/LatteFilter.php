@@ -548,6 +548,7 @@ class LatteFilter extends /*Nette\*/Object
 	 */
 	public static function invoke($s)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use non-static __invoke() instead.', E_USER_WARNING);
 		$filter = new self;
 		return $filter->__invoke($s);
 	}

@@ -168,7 +168,7 @@ authenticate as john#2
 isAuthenticated? bool(TRUE)
 
 getIdentity: object(%ns%Identity) (4) {
-	"id" private => string(8) "John Doe"
+	"name" private => string(8) "John Doe"
 	"roles" private => array(1) {
 		0 => string(5) "admin"
 	}
@@ -183,7 +183,7 @@ signing out...
 isAuthenticated? bool(FALSE)
 
 getIdentity: object(%ns%Identity) (4) {
-	"id" private => string(8) "John Doe"
+	"name" private => string(8) "John Doe"
 	"roles" private => array(1) {
 		0 => string(5) "admin"
 	}

@@ -495,6 +495,7 @@ class Form extends FormContainer
 	 */
 	public function processHttpRequest()
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use fireEvents() instead.', E_USER_WARNING);
 		$this->fireEvents();
 	}
 

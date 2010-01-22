@@ -256,6 +256,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	final public function getPhase()
 	{
+		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated.');
 		return $this->phase;
 	}
 

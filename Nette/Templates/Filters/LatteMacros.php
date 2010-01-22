@@ -400,7 +400,7 @@ class LatteMacros extends /*Nette\*/Object
 	/**
 	 * {include ...}
 	 */
-	private function macroInclude($content, $modifiers)
+	public function macroInclude($content, $modifiers)
 	{
 		$destination = LatteFilter::fetchToken($content); // destination [,] [params]
 		$params = LatteFilter::formatArray($content) . ($content ? ' + ' : '');

@@ -37,7 +37,7 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'
 
 output("==> Normal:");
 foreach ($c->getComponents() as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -46,7 +46,7 @@ foreach ($c->getComponents() as $name => $component) {
 
 output("==> Filter:");
 foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -55,7 +55,7 @@ foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) 
 
 output("==> RecursiveIteratorIterator:");
 foreach (new RecursiveIteratorIterator($c->getComponents(), 1) as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -64,7 +64,7 @@ foreach (new RecursiveIteratorIterator($c->getComponents(), 1) as $name => $comp
 
 output("==> Recursive:");
 foreach ($c->getComponents(TRUE) as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -72,7 +72,7 @@ foreach ($c->getComponents(TRUE) as $name => $component) {
 
 output("==> Recursive CHILD_FIRST:");
 foreach ($c->getComponents(-1) as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -80,7 +80,7 @@ foreach ($c->getComponents(-1) as $name => $component) {
 
 output("==> Recursive & filter I:");
 foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 
@@ -88,7 +88,7 @@ foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
 
 output("==> Recursive & filter II:");
 foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $component) {
-	output("$name [$component->class]");
+	output("$name [{$component->reflection->name}]");
 }
 
 

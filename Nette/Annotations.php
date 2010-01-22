@@ -38,6 +38,7 @@ final class Annotations
 	 */
 	public static function has(/*\*/Reflector $r, $name)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->hasAnnotation() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);
 		return !empty($cache[$name]);
 	}
@@ -52,6 +53,7 @@ final class Annotations
 	 */
 	public static function get(/*\*/Reflector $r, $name)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->getAnnotation() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);
 		return isset($cache[$name]) ? end($cache[$name]) : NULL;
 	}
@@ -66,6 +68,7 @@ final class Annotations
 	 */
 	public static function getAll(/*\*/Reflector $r, $name = NULL)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->getAnnotations() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);
 
 		if ($name === NULL) {
