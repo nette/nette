@@ -23,7 +23,6 @@
  * @package    Nette\Application
  *
  * @property-read PresenterRequest $request
- * @property-read int $phase
  * @property-read array $signal
  * @property-read string $action
  * @property   string $view
@@ -59,9 +58,6 @@ abstract class Presenter extends Control implements IPresenter
 
 	/** @var IPresenterResponse */
 	private $response;
-
-	/** @var int */
-	private $phase;
 
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = TRUE;
@@ -153,8 +149,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function run(PresenterRequest $request)
 	{
 		try {
-			// PHASE 1: STARTUP
-			$this->phase = self::PHASE_STARTUP;
+			// STARTUP
 			$this->request = $request;
 			$this->payload = (object) NULL;
 			$this->setParent($this->getParent(), $request->getPresenterName());
@@ -175,14 +170,11 @@ abstract class Presenter extends Control implements IPresenter
 				$this->terminate();
 			}
 
-			// PHASE 2: SIGNAL HANDLING
-			$this->phase = self::PHASE_SIGNAL;
+			// SIGNAL HANDLING
 			// calls $this->handle<Signal>()
 			$this->processSignal();
 
-			// PHASE 3: RENDERING VIEW
-			$this->phase = self::PHASE_RENDER;
-
+			// RENDERING VIEW
 			$this->beforeRender();
 			// calls $this->render<View>()
 			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
@@ -201,13 +193,10 @@ abstract class Presenter extends Control implements IPresenter
 			// continue with shutting down
 		} /* finally */ {
 
-			// PHASE 4: SHUTDOWN
-			$this->phase = self::PHASE_SHUTDOWN;
-
 			if ($this->isAjax()) try {
 				$hasPayload = (array) $this->payload; unset($hasPayload['state']);
 				if ($this->response instanceof RenderResponse && ($this->isControlInvalid() || $hasPayload)) { // snippets - TODO
-					/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
+					///*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
 					$this->response->send();
 					$this->sendPayload();
 
@@ -220,6 +209,7 @@ abstract class Presenter extends Control implements IPresenter
 				$this->getFlashSession()->setExpiration($this->response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
 			}
 
+			// SHUTDOWN
 			$this->onShutdown($this, $this->response);
 			$this->shutdown($this->response);
 
