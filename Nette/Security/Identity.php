@@ -24,7 +24,7 @@
  * @property   mixed $id
  * @property   array $roles
  *
- * @serializationVersion 0.9.3
+ * @serializationVersion 1.0
  */
 class Identity extends /*Nette\*/FreezableObject implements IIdentity
 {
