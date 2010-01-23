@@ -129,7 +129,11 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 		{
 			if (isset($params[$nm])) { // ignore NULL values
 				if (isset($meta['def'])) {
-					settype($params[$nm], gettype($meta['def']));
+					if (is_array($params[$nm]) && !is_array($meta['def'])) {
+						$params[$nm] = $meta['def']; // prevents array to scalar conversion
+					} else {
+						settype($params[$nm], gettype($meta['def']));
+					}
 				}
 				$this->$nm = & $params[$nm];
 			}
