@@ -22,7 +22,7 @@ $uri = new Uri('http://username:password@hostname:60/path?arg=value#anchor');
 Assert::same( 'http://hostname:60/path?arg=value#anchor',  (string) $uri );
 Assert::same( 'http',  $uri->scheme );
 Assert::same( 'username',  $uri->user );
-Assert::same( 'password',  $uri->pass );
+Assert::same( 'password',  $uri->password );
 Assert::same( 'hostname',  $uri->host );
 Assert::same( 60,  $uri->port );
 Assert::same( '/path',  $uri->path );

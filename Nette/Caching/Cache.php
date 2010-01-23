@@ -34,9 +34,6 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	const ALL = 'all';
 	/**#@-*/
 
-	/** @deprecated */
-	const REFRESH = 'sliding';
-
 	/** @internal */
 	const NAMESPACE_SEPARATOR = "\x00";
 

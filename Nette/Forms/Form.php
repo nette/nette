@@ -212,16 +212,6 @@ class Form extends FormContainer
 
 
 	/**
-	 * @deprecated
-	 */
-	public function addTracker()
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; pass form name to the constructor.');
-	}
-
-
-
-	/**
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
 	 * @param  int
@@ -486,16 +476,6 @@ class Form extends FormContainer
 		}
 
 		return $data;
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function processHttpRequest()
-	{
-		$this->fireEvents();
 	}
 
 

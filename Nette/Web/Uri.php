@@ -184,26 +184,6 @@ class Uri extends /*Nette\*/FreezableObject
 
 
 	/**
-	 * @deprecated
-	 */
-	public function setPass($value)
-	{
-		$this->setPassword($value);
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getPass()
-	{
-		return $this->pass;
-	}
-
-
-
-	/**
 	 * Sets the host part of URI.
 	 * @param  string
 	 * @return Uri  provides a fluent interface

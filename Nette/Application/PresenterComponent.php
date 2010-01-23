@@ -311,16 +311,6 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * @deprecated
-	 */
-	public function ajaxLink($destination, $args = array())
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated.');
-	}
-
-
-
-	/**
 	 * Redirect to another presenter, action or signal.
 	 * @param  int      [optional] HTTP error code
 	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"

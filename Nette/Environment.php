@@ -194,16 +194,6 @@ final class Environment
 
 
 
-	/**
-	 * @deprecated
-	 */
-	public static function isDebugging()
-	{
-		throw new /*\*/DeprecatedException;
-	}
-
-
-
 	/********************* environment variables ****************d*g**/
 
 

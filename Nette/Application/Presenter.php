@@ -33,13 +33,6 @@
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/**#@+ @deprecated */
-	const PHASE_STARTUP = 1;
-	const PHASE_SIGNAL = 3;
-	const PHASE_RENDER = 4;
-	const PHASE_SHUTDOWN = 5;
-	/**#@-*/
-
 	/**#@+ bad link handling {@link Presenter::$invalidLinkMode} */
 	const INVALID_LINK_SILENT = 1;
 	const INVALID_LINK_WARNING = 2;
@@ -232,16 +225,6 @@ abstract class Presenter extends Control implements IPresenter
 
 			return $this->response;
 		}
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	final public function getPhase()
-	{
-		return $this->phase;
 	}
 
 

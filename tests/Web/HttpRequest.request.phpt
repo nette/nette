@@ -41,7 +41,7 @@ Assert::same( '192.168.188.66',  $request->getRemoteAddress() );
 Assert::same( '/file.php',  $request->getUri()->scriptPath );
 Assert::same( 'https',  $request->getUri()->scheme );
 Assert::same( '',  $request->getUri()->user );
-Assert::same( '',  $request->getUri()->pass );
+Assert::same( '',  $request->getUri()->password );
 Assert::same( 'nettephp.com',  $request->getUri()->host );
 Assert::same( 8080,  $request->getUri()->port );
 Assert::same( '/file.php',  $request->getUri()->path );
@@ -58,7 +58,7 @@ Assert::same( '',  $request->getUri()->pathInfo );
 // getOriginalUri
 Assert::same( 'https',  $request->getOriginalUri()->scheme );
 Assert::same( '',  $request->getOriginalUri()->user );
-Assert::same( '',  $request->getOriginalUri()->pass );
+Assert::same( '',  $request->getOriginalUri()->password );
 Assert::same( 'nettephp.com',  $request->getOriginalUri()->host );
 Assert::same( 8080,  $request->getOriginalUri()->port );
 Assert::same( '/file.php',  $request->getOriginalUri()->path );

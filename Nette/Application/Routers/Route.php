@@ -455,9 +455,6 @@ class Route extends /*Nette\*/Object implements IRouter
 		$autoOptional = array(0, 0); // strlen($re), count($sequence)
 		do {
 			array_unshift($sequence, $parts[$i]);
-			if (strpos($parts[$i], '{') !== FALSE) {
-				throw new /*\*/DeprecatedException('Optional parts delimited using {...} are deprecated; use [...] instead.');
-			}
 			$re = preg_quote($parts[$i], '#') . $re;
 			if ($i === 0) break;
 			$i--;

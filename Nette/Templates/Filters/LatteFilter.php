@@ -540,16 +540,4 @@ class LatteFilter extends /*Nette\*/Object
 		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : '"' . $s . '"';
 	}
 
-
-
-	/**
-	 * Invokes filter.
-	 * @deprecated
-	 */
-	public static function invoke($s)
-	{
-		$filter = new self;
-		return $filter->__invoke($s);
-	}
-
 }

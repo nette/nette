@@ -161,26 +161,6 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 
 
 
-	/**
-	 * @deprecated
-	 */
-	public function setReadOnly()
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use freeze() instead.');
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function isReadOnly()
-	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use isFrozen() instead.');
-	}
-
-
-
 	/********************* internal notifications ****************d*g**/
 
 
