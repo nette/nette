@@ -688,7 +688,7 @@ class LatteMacros extends /*Nette\*/Object
 	 */
 	public function macroDump($content)
 	{
-		return $content ? "array('$content' => $content)" : 'get_defined_vars()';
+		return $content ? "array(" . var_export($content, TRUE) . " => $content)" : 'get_defined_vars()';
 	}
 
 
