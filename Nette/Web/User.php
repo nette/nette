@@ -141,6 +141,18 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
+	 * Returns current user ID, if any.
+	 * @return mixed
+	 */
+	public function getId()
+	{
+		$identity = $this->getIdentity();
+		return $identity ? $identity->getId() : NULL;
+	}
+
+
+
+	/**
 	 * Sets authentication handler.
 	 * @param  Nette\Security\IAuthenticator
 	 * @return User  provides a fluent interface

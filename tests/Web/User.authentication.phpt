@@ -71,6 +71,8 @@ dump( $user->isAuthenticated(), "isAuthenticated?" );
 
 dump( $user->getIdentity(), "getIdentity" );
 
+dump( $user->getId(), "getId" );
+
 
 // authenticate
 try {
@@ -107,6 +109,8 @@ try {
 dump( $user->isAuthenticated(), "isAuthenticated?" );
 
 dump( $user->getIdentity(), "getIdentity" );
+
+dump( $user->getId(), "getId" );
 
 
 
@@ -149,6 +153,8 @@ isAuthenticated? bool(FALSE)
 
 getIdentity: NULL
 
+getId: NULL
+
 authenticate without handler
 
 Exception InvalidStateException: Service 'Nette\Security\IAuthenticator' not found.
@@ -175,6 +181,8 @@ getIdentity: object(%ns%Identity) (4) {
 	"data" private => array(0)
 	"frozen" private => bool(FALSE)
 }
+
+getId: string(8) "John Doe"
 
 signing out...
 
