@@ -196,7 +196,7 @@ abstract class Presenter extends Control implements IPresenter
 			if ($this->isAjax()) try {
 				$hasPayload = (array) $this->payload; unset($hasPayload['state']);
 				if ($this->response instanceof RenderResponse && ($this->isControlInvalid() || $hasPayload)) { // snippets - TODO
-					///*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
+					/*Nette\Templates\*/SnippetHelper::$outputAllowed = FALSE;
 					$this->response->send();
 					$this->sendPayload();
 
