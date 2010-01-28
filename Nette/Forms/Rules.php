@@ -248,7 +248,10 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 	public static function formatMessage($rule)
 	{
-		$message = $rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL);
+		$message = $rule->message;
+		if ($translator = $rule->control->getForm()->getTranslator()) {
+			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
+		}
 		$message = str_replace('%name', $rule->control->getName(), $message);
 		$message = str_replace('%label', $rule->control->caption, $message);
 		if (strpos($message, '%value') !== FALSE) {
