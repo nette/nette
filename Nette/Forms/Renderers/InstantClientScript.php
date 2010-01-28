@@ -116,7 +116,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			if (!empty($rule->message)) { // this is rule
 				$res .= "$script\n"
 					. "if (" . ($rule->isNegative ? '' : '!') . "res) "
-					. "return " . json_encode((string) vsprintf($rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL), (array) $rule->arg)) . ";\n";
+					. "return " . json_encode((string) Rules::formatMessage($rule)) . ";\n";
 			}
 
 			if ($rule->type === Rule::CONDITION) { // this is condition
