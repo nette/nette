@@ -253,9 +253,9 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
 		}
 		$message = str_replace('%name', $rule->control->getName(), $message);
-		$message = str_replace('%label', $rule->control->caption, $message);
+		$message = str_replace('%label', $rule->control->translate($rule->control->caption), $message);
 		if (strpos($message, '%value') !== FALSE) {
-			str_replace('%value', $rule->control->getValue(), $message);
+			str_replace('%value', (string) $rule->control->getValue(), $message);
 		}	
 		$message = vsprintf($message, (array) $rule->arg);
 		return $message;
