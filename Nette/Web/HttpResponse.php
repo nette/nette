@@ -242,7 +242,7 @@ final class HttpResponse extends /*Nette\*/Object implements IHttpResponse
 	public static function date($time = NULL)
 	{
 		$time = /*Nette\*/Tools::createDateTime($time);
-		$time->setTimezone(new DateTimeZone('GMT'));
+		$time->setTimezone(new /*\*/DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
 
