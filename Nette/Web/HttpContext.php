@@ -87,7 +87,7 @@ class HttpContext extends /*Nette\*/Object
 	 */
 	public function getRequest()
 	{
-		return Environment::getHttpRequest();
+		return /*Nette\*/Environment::getHttpRequest();
 	}
 
 
@@ -97,7 +97,7 @@ class HttpContext extends /*Nette\*/Object
 	 */
 	public function getResponse()
 	{
-		return Environment::getHttpResponse();
+		return /*Nette\*/Environment::getHttpResponse();
 	}
 
 }
