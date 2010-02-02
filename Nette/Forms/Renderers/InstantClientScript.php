@@ -114,9 +114,10 @@ final class InstantClientScript extends /*Nette\*/Object
 			if (!$script) continue;
 
 			if (!empty($rule->message)) { // this is rule
+				$message = Rules::formatMessage($rule, FALSE);
 				$res .= "$script\n"
 					. "if (" . ($rule->isNegative ? '' : '!') . "res) "
-					. "return " . json_encode((string) Rules::formatMessage($rule)) . ";\n";
+					. "return " . json_encode((string) $message) . (strpos($message, '%value') === FALSE ? '' : ".replace('%value', val);\n") . ";\n";
 			}
 
 			if ($rule->type === Rule::CONDITION) { // this is condition
@@ -175,10 +176,10 @@ final class InstantClientScript extends /*Nette\*/Object
 			return NULL;
 
 		case $operation === ':filled' && $control instanceof RadioList:
-			return "res = nette.getValue($elem) !== null;";
+			return "res = (val = nette.getValue($elem)) !== null;";
 
 		case $operation === ':submitted' && $control instanceof SubmitButton:
-			return "res=sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
+			return "res = sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
 
 		case $operation === ':equal' && $control instanceof MultiSelectBox:
 			$tmp = array();
@@ -194,46 +195,46 @@ final class InstantClientScript extends /*Nette\*/Object
 			return "res = $elem.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
 
 		case $operation === ':filled' && $control instanceof TextBase:
-			return "var val = nette.getValue($elem); res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
+			return "val = nette.getValue($elem); res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
 
 		case $operation === ':minlength' && $control instanceof TextBase:
-			return "res = nette.getValue($elem).length>=" . (int) $arg . ";";
+			return "res = (val = nette.getValue($elem)).length>=" . (int) $arg . ";";
 
 		case $operation === ':maxlength' && $control instanceof TextBase:
-			return "res = nette.getValue($elem).length<=" . (int) $arg . ";";
+			return "res = (val = nette.getValue($elem)).length<=" . (int) $arg . ";";
 
 		case $operation === ':length' && $control instanceof TextBase:
 			if (!is_array($arg)) {
 				$arg = array($arg, $arg);
 			}
-			return "var val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "val.length>=" . (int) $arg[0]) . " && "
+			return "val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "val.length>=" . (int) $arg[0]) . " && "
 				. ($arg[1] === NULL ? "true" : "val.length<=" . (int) $arg[1]) . ";";
 
 		case $operation === ':email' && $control instanceof TextBase:
-			return 'res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(nette.getValue('.$elem.'));';
+			return 'res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val = nette.getValue('.$elem.'));';
 
 		case $operation === ':url' && $control instanceof TextBase:
-			return 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(nette.getValue('.$elem.'));';
+			return 'res = /^.+\.[a-z]{2,6}(\\/.*)?$/i.test(val = nette.getValue('.$elem.'));';
 
 		case $operation === ':regexp' && $control instanceof TextBase:
 			if (!preg_match('#^(/.*/)([imu]*)$#', $arg, $matches)) {
 				return NULL; // regular expression must be JavaScript compatible
 			}
 			$arg = $matches[1] . str_replace('u', '', $matches[2]);
-			return "res = $arg.test(nette.getValue($elem));";
+			return "res = $arg.test(val = nette.getValue($elem));";
 
 		case $operation === ':integer' && $control instanceof TextBase:
-			return "res = /^-?[0-9]+$/.test(nette.getValue($elem));";
+			return "res = /^-?[0-9]+$/.test(val = nette.getValue($elem));";
 
 		case $operation === ':float' && $control instanceof TextBase:
-			return "res = /^-?[0-9]*[.,]?[0-9]+$/.test(nette.getValue($elem));";
+			return "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val = nette.getValue($elem));";
 
 		case $operation === ':range' && $control instanceof TextBase:
-			return "var val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
+			return "val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
 				. ($arg[1] === NULL ? "true" : "parseFloat(val)<=" . json_encode((float) $arg[1])) . ";";
 
 		case $operation === ':filled' && $control instanceof FormControl:
-			return "res = nette.getValue($elem) != '';";
+			return "res = (val = nette.getValue($elem)) != '';";
 
 		case $operation === ':valid' && $control instanceof FormControl:
 			return "res = !this[" . json_encode($control->getHtmlName()) . "](sender);";
@@ -248,7 +249,7 @@ final class InstantClientScript extends /*Nette\*/Object
 					$tmp[] = "val==" . json_encode($item);
 				}
 			}
-			return "var val = nette.getValue($elem); res = (" . implode(' || ', $tmp) . ");";
+			return "val = nette.getValue($elem); res = (" . implode(' || ', $tmp) . ");";
 		}
 	}
 

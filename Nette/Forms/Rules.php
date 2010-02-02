@@ -181,7 +181,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 				if ($onlyCheck) {
 					return FALSE;
 				}
-				$rule->control->addError(self::formatMessage($rule));
+				$rule->control->addError(self::formatMessage($rule, TRUE));
 				$valid = FALSE;
 				if ($rule->breakOnFailure) {
 					break;
@@ -246,14 +246,14 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 
 
-	public static function formatMessage($rule)
+	public static function formatMessage($rule, $withValue)
 	{
 		$message = $rule->control->translate($rule->message, is_int($rule->arg) ? $rule->arg : NULL);
 		$message = str_replace('%name', $rule->control->getName(), $message);
 		$message = str_replace('%label', $rule->control->translate($rule->control->caption), $message);
 		if (strpos($message, '%value') !== FALSE) {
-			str_replace('%value', (string) $rule->control->getValue(), $message);
-		}	
+			$message = str_replace('%value', $withValue ? (string) $rule->control->getValue() : '%%value', $message);
+		}
 		$message = vsprintf($message, (array) $rule->arg);
 		return $message;
 	}
