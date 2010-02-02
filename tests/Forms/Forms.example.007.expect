@@ -196,57 +196,57 @@ nette.forms = nette.forms || { };
 nette.forms["frm-"] = {
 	validators: {
 		"name": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["name"]); res = val!='' && val!="";
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["name"]); res = val!='' && val!="";
 			if (!res) return "Enter your name";
 		},
 		"age": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["age"]); res = val!='' && val!="";
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["age"]); res = val!='' && val!="";
 			if (!res) return "Enter your age";
-			res = /^-?[0-9]+$/.test(nette.getValue(form["age"]));
+			res = /^-?[0-9]+$/.test(val = nette.getValue(form["age"]));
 			if (!res) return "Age must be numeric value";
-			var val = nette.getValue(form["age"]); res = parseFloat(val)>=10 && parseFloat(val)<=100;
+			val = nette.getValue(form["age"]); res = parseFloat(val)>=10 && parseFloat(val)<=100;
 			if (!res) return "Age must be in range from 10 to 100";
 		},
 		"email": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["email"]); res = val!='' && val!="@";
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["email"]); res = val!='' && val!="@";
 			if (res) {
-				res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(nette.getValue(form["email"]));
+				res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val = nette.getValue(form["email"]));
 				if (!res) return "Incorrect E-mail Address";
 			}
 		},
 		"city": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["send"]); res = (val==true);
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["send"]); res = (val==true);
 			if (res) {
-				var val = nette.getValue(form["city"]); res = val!='' && val!="";
+				val = nette.getValue(form["city"]); res = val!='' && val!="";
 				if (!res) return "Enter your shipping address";
 			}
 		},
 		"country": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["send"]); res = (val==true);
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["send"]); res = (val==true);
 			if (res) {
 				res = form["country"].selectedIndex >= 1;
 				if (!res) return "Select your country";
 			}
 		},
 		"password": function(sender) {
-			var res, form = sender.form || sender;
-			var val = nette.getValue(form["password"]); res = val!='' && val!="";
+			var res, val, form = sender.form || sender;
+			val = nette.getValue(form["password"]); res = val!='' && val!="";
 			if (!res) return "Choose your password";
-			res = nette.getValue(form["password"]).length>=3;
+			res = (val = nette.getValue(form["password"])).length>=3;
 			if (!res) return "The password is too short: it must be at least 3 characters";
 		},
 		"password2": function(sender) {
-			var res, form = sender.form || sender;
+			var res, val, form = sender.form || sender;
 			res = !this["password"](sender);
 			if (res) {
-				var val = nette.getValue(form["password2"]); res = val!='' && val!="";
+				val = nette.getValue(form["password2"]); res = val!='' && val!="";
 				if (!res) return "Reenter your password";
-				var val = nette.getValue(form["password2"]); res = (val==nette.getValue(form["password"]));
+				val = nette.getValue(form["password2"]); res = (val==nette.getValue(form["password"]));
 				if (!res) return "Passwords do not match";
 			}
 		}
@@ -254,7 +254,7 @@ nette.forms["frm-"] = {
 
 	toggle: function(sender) {
 		var visible, res, form = document.forms["frm-"];
-		visible = true; var val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
+		visible = true; val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
 
 		nette.toggle("sendBox", visible);
 	}
