@@ -44,7 +44,7 @@
 <body>
 	<h1>Nette\Forms custom encoding example</h1>
 
-	<form action="" method="post" name="frm-">
+	<form action="" method="post" id="frm-">
 
 <fieldset>
 <legend>Personal data</legend>

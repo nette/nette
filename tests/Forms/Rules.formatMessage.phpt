@@ -44,11 +44,6 @@ nette.forms["frm-"] = {
 			;
 		}
 	},
-
-	toggle: function(sender) {
-		var visible, res, form = document.forms["frm-"];
-	}
-}
 %A%
 
 array(1) {
