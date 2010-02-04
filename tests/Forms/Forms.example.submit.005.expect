@@ -34,7 +34,7 @@
 <body>
 	<h1>Nette\Forms custom validator example</h1>
 
-	<form action="" method="post" name="frm-">
+	<form action="" method="post" id="frm-">
 
 <ul class="error">
 	<li>First number must be 8 multiple</li>

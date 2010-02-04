@@ -46,8 +46,8 @@ final class InstantClientScript extends /*Nette\*/Object
 	public function enable()
 	{
 		$el = $this->form->getElementPrototype();
-		if (!$el->name) {
-			$el->name = 'frm-' . ($this->form instanceof /*Nette\Application\*/AppForm ? $this->form->lookupPath('Nette\Application\Presenter', TRUE) : $this->form->getName());
+		if (!$el->id) {
+			$el->id = 'frm-' . ($this->form instanceof /*Nette\Application\*/AppForm ? $this->form->lookupPath('Nette\Application\Presenter', TRUE) : $this->form->getName());
 		}
 		$this->validateScripts = array();
 		$this->toggleScript = '';
@@ -91,7 +91,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			return;
 		}
 
-		$formName = json_encode((string) $this->form->getElementPrototype()->name);
+		$formName = json_encode((string) $this->form->getElementPrototype()->id);
 		ob_start();
 		include dirname(__FILE__) . '/InstantClientScript.phtml';
 		return ob_get_clean();
@@ -142,7 +142,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			$s .= "visible = true; {$cond}\n"
 				. "nette.toggle(" . json_encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n";
 		}
-		$formName = json_encode((string) $this->form->getElementPrototype()->name);
+		$formName = json_encode((string) $this->form->getElementPrototype()->id);
 		foreach ($rules as $rule) {
 			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);

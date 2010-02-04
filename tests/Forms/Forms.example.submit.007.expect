@@ -56,7 +56,7 @@
 <body>
 	<h1>Nette\Forms manual form rendering</h1>
 
-	<form action="" method="post" enctype="multipart/form-data" name="frm-" onsubmit="return nette.validateForm(this)">
+	<form action="" method="post" enctype="multipart/form-data" id="frm-" onsubmit="return nette.validateForm(this)">
 	
 	<fieldset>
 		<legend>Personal data</legend>
@@ -275,7 +275,7 @@ nette.forms["frm-"] = {
 	},
 
 	toggle: function(sender) {
-		var visible, res, form = document.forms["frm-"];
+		var visible, res, form = document.getElementById("frm-");
 		visible = true; val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
 
 		nette.toggle("sendBox", visible);

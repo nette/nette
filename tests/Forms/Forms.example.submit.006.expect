@@ -51,7 +51,7 @@
 <body>
 	<h1>Nette\Forms naming containers example</h1>
 
-	<form action="" method="post" name="frm-">
+	<form action="" method="post" id="frm-">
 
 <fieldset>
 <legend>First person</legend>

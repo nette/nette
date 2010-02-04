@@ -115,7 +115,7 @@ nette.forms[<?php echo $formName ?>] = {
 	},
 
 	toggle: function(sender) {
-		var visible, res, form = document.forms[<?php echo $formName ?>];
+		var visible, res, form = document.getElementById(<?php echo $formName ?>);
 <?php echo /*Nette\*/String::indent($this->toggleScript, 2) ?>
 	}
 }
