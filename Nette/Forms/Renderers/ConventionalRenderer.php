@@ -489,7 +489,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 			$description = ' ' . $control->getOption('description');
 
 		} elseif (is_string($description)) {
-			$description = ' ' . $this->getWrapper('control description')->setText($description);
+			$description = ' ' . $this->getWrapper('control description')->setText($control->translate($description));
 
 		} else {
 			$description = '';
