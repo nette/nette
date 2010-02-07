@@ -190,8 +190,8 @@ nette.getValue = function(elem) {
 
 
 nette.getFormValidators = function(form) {
-	var name = form.getAttributeNode('name').nodeValue;
-	return this.forms[name] ? this.forms[name].validators : [];
+	var id = form.getAttributeNode('id').nodeValue;
+	return this.forms[id] ? this.forms[id].validators : [];
 }
 
 
@@ -288,7 +288,7 @@ nette.forms["frm-"] = {
 	},
 
 	toggle: function(sender) {
-		var visible, res, form = document.getElementById("frm-");
+		var visible, res, form = sender.form || sender;
 		visible = true; val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
 
 		nette.toggle("sendBox", visible);
@@ -296,7 +296,7 @@ nette.forms["frm-"] = {
 }
 
 
-nette.forms["frm-"].toggle();
+nette.forms["frm-"].toggle(document.getElementById("frm-"));
 
 /* ]]> */
 </script>
