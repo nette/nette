@@ -64,8 +64,8 @@ nette.getValue = function(elem) {
 
 
 nette.getFormValidators = function(form) {
-	var name = form.getAttributeNode('name').nodeValue;
-	return this.forms[name] ? this.forms[name].validators : [];
+	var id = form.getAttributeNode('id').nodeValue;
+	return this.forms[id] ? this.forms[id].validators : [];
 }
 
 
@@ -115,14 +115,14 @@ nette.forms[<?php echo $formName ?>] = {
 	},
 
 	toggle: function(sender) {
-		var visible, res, form = document.getElementById(<?php echo $formName ?>);
+		var visible, res, form = sender.form || sender;
 <?php echo /*Nette\*/String::indent($this->toggleScript, 2) ?>
 	}
 }
 
 
 <?php if ($this->toggleScript): ?>
-nette.forms[<?php echo $formName ?>].toggle();
+nette.forms[<?php echo $formName ?>].toggle(document.getElementById(<?php echo $formName ?>));
 <?php endif ?>
 
 /* ]]> */
