@@ -148,6 +148,16 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 * @return array of class => filename
+	 */
+	public function getIndexedClasses()
+	{
+		return array_diff_key($this->list, array_keys($this->list, FALSE, TRUE));
+	}
+
+
+
+	/**
 	 * Add directory (or directories) to list.
 	 * @param  string|array
 	 * @return void
