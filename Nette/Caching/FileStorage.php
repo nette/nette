@@ -221,8 +221,8 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		flock($handle, LOCK_EX);
 		ftruncate($handle, 0);
 
-		if ($data instanceof /*Nette\*/Callback) {
-			$data = $data->invoke();
+		if ($data instanceof /*Nette\*/Callback || $data instanceof /*\*/Closure) {
+			$data = $data->__invoke();
 		}
 		if (!is_string($data)) {
 			$data = serialize($data);
