@@ -70,8 +70,6 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	public function __construct($dir)
 	{
 		if (self::$useDirectories === NULL) {
-			self::$useDirectories = !ini_get('safe_mode');
-
 			// checks whether directory is writable
 			$uniq = uniqid('_', TRUE);
 			umask(0000);
@@ -80,6 +78,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			}
 
 			// tests subdirectory mode
+			self::$useDirectories = !ini_get('safe_mode');
 			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // intentionally @
 				self::$useDirectories = TRUE;
 				unlink("$dir/$uniq/_");
