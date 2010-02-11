@@ -138,14 +138,6 @@ class Configurator extends Object
 			}
 		}
 
-		// check temporary directory - TODO: discuss
-		/*
-		$dir = Environment::getVariable('tempDir');
-		if ($dir && !(is_dir($dir) && is_writable($dir))) {
-			trigger_error("Temporary directory '$dir' is not writable", E_USER_NOTICE);
-		}
-		*/
-
 		// process ini settings
 		if (!$config->php) { // backcompatibility
 			$config->php = $config->set;
