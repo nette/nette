@@ -108,7 +108,7 @@ class RobotLoader extends AutoLoader
 			}
 
 			if ($this->autoRebuild) {
-				$this->rebuild(FALSE);
+				$this->rebuild(FALSE); // saves $this->list
 			}
 
 			if ($this->list[$type] !== FALSE) {
@@ -131,18 +131,29 @@ class RobotLoader extends AutoLoader
 		$key = $this->getKey();
 		$this->acceptMask = self::wildcards2re($this->acceptFiles);
 		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
-		$this->timestamps = $cache[$key . 'ts'];
 
-		if ($force || !$this->rebuilded) {
-			foreach (array_unique($this->scanDirs) as $dir) {
-				$this->scanDirectory($dir);
-			}
+		if (!$force && $this->rebuilded) {
+			$cache[$key] = $this->list;
+		} else {
+			$this->timestamps = $cache[$key . 'ts'];
+			$cache[$key] = callback($this, '_rebuildCallback');
+			$cache[$key . 'ts'] = $this->timestamps;
+			$this->timestamps = NULL;
+			$this->rebuilded = TRUE;
 		}
+	}
 
-		$this->rebuilded = TRUE;
-		$cache[$key] = $this->list;
-		$cache[$key . 'ts'] = $this->timestamps;
-		$this->timestamps = NULL;
+
+
+	/**
+	 * @internal
+	 */
+	public function _rebuildCallback()
+	{
+		foreach (array_unique($this->scanDirs) as $dir) {
+			$this->scanDirectory($dir);
+		}
+		return $this->list;
 	}
 
 
