@@ -107,7 +107,7 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 		}
 
 		$meta = array(
-			self::META_DATA => $data instanceof /*Nette\*/Callback ? $data->invoke() : $data,
+			self::META_DATA => $data instanceof /*Nette\*/Callback || $data instanceof /*\*/Closure ? $data->__invoke() : $data,
 		);
 
 		$expire = 0;
