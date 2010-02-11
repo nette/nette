@@ -165,11 +165,6 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			self::META_TIME => microtime(),
 		);
 
-		if (!is_string($data)) {
-			$data = serialize($data);
-			$meta[self::META_SERIALIZED] = TRUE;
-		}
-
 		if (!empty($dp[Cache::EXPIRE])) {
 			if (empty($dp[Cache::SLIDING])) {
 				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRE] + time(); // absolute time
@@ -225,6 +220,14 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 
 		flock($handle, LOCK_EX);
 		ftruncate($handle, 0);
+
+		if ($data instanceof /*Nette\*/Callback) {
+			$data = $data->invoke();
+		}
+		if (!is_string($data)) {
+			$data = serialize($data);
+			$meta[self::META_SERIALIZED] = TRUE;
+		}
 
 		$head = serialize($meta) . '?>';
 		$head = '<?php //netteCache[01]' . str_pad((string) strlen($head), 6, '0', STR_PAD_LEFT) . $head;
