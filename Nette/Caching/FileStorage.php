@@ -214,6 +214,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 				$query .= "INSERT INTO cache (file, priority) VALUES ('$dbFile', '" . (int) $dp[Cache::PRIORITY] . "');";
 			}
 			if (!sqlite_exec($db, "BEGIN; DELETE FROM cache WHERE file = '$dbFile'; $query COMMIT;")) {
+				sqlite_exec($db, "ROLLBACK");
 				return;
 			}
 		}
