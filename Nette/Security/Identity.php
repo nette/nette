@@ -20,7 +20,6 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Security
  *
- * @property   string $name
  * @property   mixed $id
  * @property   array $roles
  *
