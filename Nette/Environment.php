@@ -144,7 +144,7 @@ final class Environment
 	 * Sets the mode.
 	 *
 	 * @param  string mode identifier
-	 * @param  bool   set or unser
+	 * @param  bool   set or unset
 	 * @return void
 	 */
 	public static function setMode($mode, $value = TRUE)
