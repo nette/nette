@@ -599,8 +599,11 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 				$this->headers = array();
 				foreach ($_SERVER as $k => $v) {
 					if (strncmp($k, 'HTTP_', 5) == 0) {
-						$this->headers[ strtr(strtolower(substr($k, 5)), '_', '-') ] = $v;
-					}
+						$k = substr($k, 5);
+					} elseif (strncmp($k, 'CONTENT_', 8)) {
+						continue;
+					}	
+					$this->headers[ strtr(strtolower($k), '_', '-') ] = $v;
 				}
 			}
 		}
