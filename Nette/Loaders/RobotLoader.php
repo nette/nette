@@ -108,7 +108,13 @@ class RobotLoader extends AutoLoader
 			}
 
 			if ($this->autoRebuild) {
-				$this->rebuild(FALSE); // saves $this->list
+				if ($this->rebuilded) {
+					$cache = $this->getCache();
+					$key = $this->getKey();
+					$cache[$key] = $this->list;
+				} else {
+					$this->rebuild();
+				}	
 			}
 
 			if ($this->list[$type] !== FALSE) {
@@ -122,25 +128,17 @@ class RobotLoader extends AutoLoader
 
 	/**
 	 * Rebuilds class list cache.
-	 * @param  bool
 	 * @return void
 	 */
-	public function rebuild($force = TRUE)
+	public function rebuild()
 	{
 		$cache = $this->getCache();
 		$key = $this->getKey();
-		$this->acceptMask = self::wildcards2re($this->acceptFiles);
-		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
-
-		if (!$force && $this->rebuilded) {
-			$cache[$key] = $this->list;
-		} else {
-			$this->timestamps = $cache[$key . 'ts'];
-			$cache[$key] = callback($this, '_rebuildCallback');
-			$cache[$key . 'ts'] = $this->timestamps;
-			$this->timestamps = NULL;
-			$this->rebuilded = TRUE;
-		}
+		$this->timestamps = $cache[$key . 'ts'];
+		$cache[$key] = callback($this, '_rebuildCallback');
+		$cache[$key . 'ts'] = $this->timestamps;
+		$this->timestamps = NULL;
+		$this->rebuilded = TRUE;
 	}
 
 
@@ -150,6 +148,8 @@ class RobotLoader extends AutoLoader
 	 */
 	public function _rebuildCallback()
 	{
+		$this->acceptMask = self::wildcards2re($this->acceptFiles);
+		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
 		foreach (array_unique($this->scanDirs) as $dir) {
 			$this->scanDirectory($dir);
 		}
@@ -193,7 +193,7 @@ class RobotLoader extends AutoLoader
 	 * @param  string
 	 * @return void
 	 */
-	public function addClass($class, $file)
+	private function addClass($class, $file)
 	{
 		$class = strtolower($class);
 		if (!empty($this->list[$class]) && $this->list[$class] !== $file) {
