@@ -38,7 +38,7 @@ class RobotLoader extends AutoLoader
 	private $list = array();
 
 	/** @var array */
-	private $timestamps;
+	private $files;
 
 	/** @var bool */
 	private $rebuilded = FALSE;
@@ -96,7 +96,7 @@ class RobotLoader extends AutoLoader
 		/*$type = ltrim($type, '\\'); // PHP namespace bug #49143 */
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {
-				LimitedScope::load($this->list[$type]);
+				LimitedScope::load($this->list[$type][0]);
 				self::$count++;
 			}
 
@@ -109,16 +109,14 @@ class RobotLoader extends AutoLoader
 
 			if ($this->autoRebuild) {
 				if ($this->rebuilded) {
-					$cache = $this->getCache();
-					$key = $this->getKey();
-					$cache[$key] = $this->list;
+					$this->getCache()->save($this->getKey(), $this->list);
 				} else {
 					$this->rebuild();
-				}	
+				}
 			}
 
 			if ($this->list[$type] !== FALSE) {
-				LimitedScope::load($this->list[$type]);
+				LimitedScope::load($this->list[$type][0]);
 				self::$count++;
 			}
 		}
@@ -132,12 +130,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
-		$cache = $this->getCache();
-		$key = $this->getKey();
-		$this->timestamps = $cache[$key . 'ts'];
-		$cache[$key] = callback($this, '_rebuildCallback');
-		$cache[$key . 'ts'] = $this->timestamps;
-		$this->timestamps = NULL;
+		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'));
 		$this->rebuilded = TRUE;
 	}
 
@@ -150,9 +143,13 @@ class RobotLoader extends AutoLoader
 	{
 		$this->acceptMask = self::wildcards2re($this->acceptFiles);
 		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
+		foreach ($this->list as $pair) {
+			if ($pair) $this->files[$pair[0]] = $pair[1];
+		}
 		foreach (array_unique($this->scanDirs) as $dir) {
 			$this->scanDirectory($dir);
 		}
+		$this->files = NULL;
 		return $this->list;
 	}
 
@@ -163,7 +160,11 @@ class RobotLoader extends AutoLoader
 	 */
 	public function getIndexedClasses()
 	{
-		return array_diff_key($this->list, array_keys($this->list, FALSE, TRUE));
+		$res = array();
+		foreach ($this->list as $class => $pair) {
+			if ($pair) $res[$class] = $pair[0];
+		}
+		return $res;
 	}
 
 
@@ -191,16 +192,17 @@ class RobotLoader extends AutoLoader
 	 * Add class and file name to the list.
 	 * @param  string
 	 * @param  string
+	 * @param  int
 	 * @return void
 	 */
-	private function addClass($class, $file)
+	private function addClass($class, $file, $time)
 	{
 		$class = strtolower($class);
-		if (!empty($this->list[$class]) && $this->list[$class] !== $file) {
+		if (!empty($this->list[$class]) && $this->list[$class][0] !== $file) {
 			spl_autoload_call($class); // hack: enables exceptions
-			throw new /*\*/InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class] . ".");
+			throw new /*\*/InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
 		}
-		$this->list[$class] = $file;
+		$this->list[$class] = array($file, $time);
 	}
 
 
@@ -240,9 +242,7 @@ class RobotLoader extends AutoLoader
 			}
 
 			if (is_file($path) && preg_match($this->acceptMask, $entry)) {
-				$time = filemtime($path);
-				if (!isset($this->timestamps[$path]) || $this->timestamps[$path] !== $time) {
-					$this->timestamps[$path] = $time;
+				if (!isset($this->files[$path]) || $this->files[$path] !== filemtime($path)) {
 					$this->scanScript($path);
 				}
 			}
@@ -268,11 +268,12 @@ class RobotLoader extends AutoLoader
 		$expected = FALSE;
 		$namespace = '';
 		$level = 0;
+		$time = filemtime($file);
 		$s = file_get_contents($file);
 
 		if (preg_match('#//nette'.'loader=(\S*)#', $s, $matches)) {
 			foreach (explode(',', $matches[1]) as $name) {
-				$this->addClass($name, $file);
+				$this->addClass($name, $file, $time);
 			}
 			return;
 		}
@@ -310,7 +311,7 @@ class RobotLoader extends AutoLoader
 				case T_CLASS:
 				case T_INTERFACE:
 					if ($level === 0) {
-						$this->addClass($namespace . $name, $file);
+						$this->addClass($namespace . $name, $file, $time);
 					}
 					break;
 
@@ -369,7 +370,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function getKey()
 	{
-		return md5("$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs));
+		return md5("v2|$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs));
 	}
 
 
