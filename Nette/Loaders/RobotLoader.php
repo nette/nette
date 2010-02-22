@@ -214,6 +214,13 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanDirectory($dir)
 	{
+		if (is_file($dir)) {
+			if (!isset($this->files[$dir]) || $this->files[$dir] !== filemtime($dir)) {
+				$this->scanScript($dir);
+			}
+			return;
+		}
+
 		$iterator = dir($dir);
 		if (!$iterator) return;
 
