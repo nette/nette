@@ -38,7 +38,7 @@ final class Environment
 	private static $configurator;
 
 	/** @var string  the mode of current application */
-	private static $mode = array();
+	private static $modes = array();
 
 	/** @var \ArrayObject */
 	private static $config;
@@ -149,7 +149,7 @@ final class Environment
 	 */
 	public static function setMode($mode, $value = TRUE)
 	{
-		self::$mode[$mode] = (bool) $value;
+		self::$modes[$mode] = (bool) $value;
 	}
 
 
@@ -162,11 +162,11 @@ final class Environment
 	 */
 	public static function getMode($mode)
 	{
-		if (isset(self::$mode[$mode])) {
-			return self::$mode[$mode];
+		if (isset(self::$modes[$mode])) {
+			return self::$modes[$mode];
 
 		} else {
-			return self::$mode[$mode] = self::getConfigurator()->detect($mode);
+			return self::$modes[$mode] = self::getConfigurator()->detect($mode);
 		}
 	}
 

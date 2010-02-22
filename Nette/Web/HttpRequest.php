@@ -602,7 +602,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 						$k = substr($k, 5);
 					} elseif (strncmp($k, 'CONTENT_', 8)) {
 						continue;
-					}	
+					}
 					$this->headers[ strtr(strtolower($k), '_', '-') ] = $v;
 				}
 			}
