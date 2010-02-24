@@ -28,7 +28,6 @@ class Route extends /*Nette\*/Object implements IRouter
 
 	/** flag */
 	const CASE_SENSITIVE = 256;
-	const FULL_META = 128;
 
 	/**#@+ @internal uri type */
 	const HOST = 1;
@@ -116,11 +115,6 @@ class Route extends /*Nette\*/Object implements IRouter
 	public function __construct($mask, array $metadata = array(), $flags = 0)
 	{
 		$this->flags = $flags | self::$defaultFlags;
-		if (!($this->flags & self::FULL_META)) {
-			foreach ($metadata as $name => $def) {
-				$metadata[$name] = array(self::VALUE => $def);
-			}
-		}
 		$this->setMask($mask, $metadata);
 	}
 
@@ -390,7 +384,10 @@ class Route extends /*Nette\*/Object implements IRouter
 		}
 
 		foreach ($metadata as $name => $meta) {
-			if (array_key_exists(self::VALUE, $meta)) {
+			if (!is_array($meta)) {
+				$metadata[$name] = array(self::VALUE => $meta, 'fixity' => self::CONSTANT);
+
+			} elseif (array_key_exists(self::VALUE, $meta)) {
 				$metadata[$name]['fixity'] = self::CONSTANT;
 			}
 		}

@@ -23,7 +23,7 @@ $route = new Route('<presenter>/<id>', array(
 	'id' => array(
 		Route::PATTERN => '\d{1,3}',
 	),
-), Route::FULL_META);
+));
 
 testRoute($route, '/presenter/12/');
 
