@@ -118,7 +118,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		$this->flags = $flags | self::$defaultFlags;
 		if (!($this->flags & self::FULL_META)) {
 			foreach ($metadata as $name => $def) {
-				$metadata[$name] = array(self::VALUE => $def);
+				$metadata[$name] = is_array($def) ? $def : array(self::VALUE => $def);
 			}
 		}
 		$this->setMask($mask, $metadata);
