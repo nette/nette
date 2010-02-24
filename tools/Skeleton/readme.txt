@@ -1,9 +1,8 @@
 Nette Framework skeleton
 ========================
 
-The Basic project structure for our application.
+The basic structure for your application.
 
-See: http://nettephp.com/quick-start
 
 
 Installing
@@ -13,15 +12,13 @@ Download Nette Framework (http://nettephp.com/download) and extract the folder '
 Your library directory should now contain the Nette directory which contains all of the Nette Framework units. Now the Nette Framework is
 successfully installed and ready to use.
 
-
-Application Structure on the File System
-----------------------------------------
-
 Make directories 'app/temp' and 'app/log' writable.
 
 
-Bootstrapping
--------------
 
-Presenters & Views
-------------------
+SECURITY WARNING
+----------------
+
+It is CRITICAL that file 'app/config.ini' & whole 'app' directory are NOT accessible directly via a web browser!
+If you don't protect this directory from direct web access, anybody will be able to see your sensitive data.
+See: http://nettephp.com/security-warning
