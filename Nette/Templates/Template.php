@@ -89,8 +89,10 @@ class Template extends BaseTemplate implements IFileTemplate
 
 		$this->__set('template', $this);
 
+		$shortName = str_replace(/*Nette\*/Environment::getVariable('appDir'), '', $this->file);
+
 		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
-		$key = md5($this->file) . '.' . basename($this->file);
+		$key = trim(strtr($shortName, '\\/@', '.._'), '.') . '-' . md5($this->file);
 		$cached = $content = $cache[$key];
 
 		if ($content === NULL) {
@@ -103,13 +105,7 @@ class Template extends BaseTemplate implements IFileTemplate
 				return;
 			}
 
-			try {
-				$shortName = $this->file;
-				$shortName = str_replace(/*Nette\*/Environment::getVariable('appDir'), "\xE2\x80\xA6", $shortName);
-			} catch (/*\*/Exception $foo) {
-			}
-
-			$content = $this->compile(file_get_contents($this->file), "file $shortName");
+			$content = $this->compile(file_get_contents($this->file), "file \xE2\x80\xA6$shortName");
 			$cache->save(
 				$key,
 				$content,
