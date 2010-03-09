@@ -65,7 +65,7 @@ class RoutingDebugger extends Object
 
 		$this->template = new Template;
 		$this->template->setFile(dirname(__FILE__) . '/RoutingDebugger.phtml');
-		$this->template->routers = array();
+		$this->template->routers = new ArrayObject;
 		$this->analyse($this->router);
 		$this->template->render();
 	}

@@ -556,7 +556,7 @@ abstract class Presenter extends Control implements IPresenter
 	 * @return void
 	 * @throws AbortException
 	 */
-	protected function sendPayload()
+	public function sendPayload()
 	{
 		$this->terminate(new JsonResponse($this->payload));
 	}
