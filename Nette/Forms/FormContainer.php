@@ -253,8 +253,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	{
 		$control = new TextInput($label, $cols, $maxLength);
 		$control->setPasswordMode(TRUE);
-		$this->addComponent($control, $name);
-		return $control;
+		return $this[$name] = $control;
 	}
 
 
@@ -290,11 +289,14 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	/**
 	 * Adds hidden form control used to store a non-displayed value.
 	 * @param  string  control name
+	 * @param  mixed   default value
 	 * @return HiddenField
 	 */
-	public function addHidden($name)
+	public function addHidden($name, $default = NULL)
 	{
-		return $this[$name] = new HiddenField;
+		$control = new HiddenField;
+		$control->setDefaultValue($default);
+		return $this[$name] = $control;
 	}
 
 
