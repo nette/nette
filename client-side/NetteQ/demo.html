@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+	<title>Drag'n'drop demo</title>
+
+	<script type="text/javascript" src="netteQ.js"></script>
+
+	<style type="text/css">
+	.block {
+		background: blue;
+		color: white;
+		position: absolute;
+		cursor: move;
+		width: 50px;
+		height: 50px;
+	}
+
+	.active {
+		background: lightblue;
+	}
+	</style>
+</head>
+
+
+<body>
+<div id="blocks">
+	<div class="block">
+		<span>First</span>
+	</div>
+
+
+	<div class="block">
+		<span>Second</span>
+	</div>
+
+
+	<div class="block">
+		<span>Third</span>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+/* <![CDATA[ */
+
+(function(){
+
+	var $ = function(selector) {
+		return new NetteJs(selector);
+	};
+
+
+	$('.block').draggable().bind('mouseenter', function(e) {
+		$(this).addClass('active');
+
+	}).bind('mouseleave', function(e) {
+		$(this).removeClass('active');
+	});
+
+})();
+
+/* ]]> */
+</script>
+
+</body>
+</html>
