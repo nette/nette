@@ -136,7 +136,7 @@ NetteJs.implement({
 		return res;
 	},
 
-    // move to new position
+	// move to new position
 	move: function(left, top) {
 		var pos = {left: left, top: top};
 		this.nette && this.nette.onmove && this.nette.onmove.call(this, pos);
@@ -145,31 +145,30 @@ NetteJs.implement({
 	},
 
 	// makes element draggable
-	draggable: function(handle) {
-		var el = this, dE = document.documentElement;
+	draggable: function(options) {
+		var el = this, dE = document.documentElement, fn = NetteJs.fn, options = options || {};
 
-		(new NetteJs(handle || this)).bind('mousedown', function(e) {
+		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (el.nette && el.nette.isMoving) { // missed mouseup out of window?
+			if (fn.draggable.dragging) { // missed mouseup out of window?
 				return dE.onmouseup();
 			}
 
-			el.nette = el.nette || {};
-			el.nette.isMoving = true;
+			fn.draggable.dragging = true;
 			var deltaX = el.offsetLeft - e.clientX, deltaY = el.offsetTop - e.clientY;
 
 			dE.onmousemove = function(e) {
 				e = e || event;
-				NetteJs.fn.move.call(el, e.clientX + deltaX, e.clientY + deltaY);
+				fn.move.call(el, e.clientX + deltaX, e.clientY + deltaY);
 				return false;
-			}
+			};
 
 			dE.onmouseup = function() {
-				el.nette.isMoving = dE.onmousemove = dE.onmouseup = null;
+				fn.draggable.dragging = dE.onmousemove = dE.onmouseup = null;
 				return false;
-			}
+			};
 		});
 	}
 });
