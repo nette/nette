@@ -119,17 +119,17 @@ NetteJs.implement({
 
 	// adds class to element
 	addClass: function(className) {
-		this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(\\s|$)', 'g'), ' ') + ' ' + className;
+		this.className = this.className.replace(/^|\s+|$/g, ' ').replace(' '+className+' ', ' ') + ' ' + className;
 	},
 
 	// removes class from element
 	removeClass: function(className) {
-		this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(\\s|$)', 'g'), ' ');
+		this.className = this.className.replace(/^|\s+|$/g, ' ').replace(' '+className+' ', ' ');
 	},
 
 	// tests whether element has given class
 	hasClass: function(className) {
-		return this.className.match(new RegExp('(^|\\s)' + className + '(\\s|$)'), ' ');
+		return this.className.replace(/^|\s+|$/g, ' ').indexOf(' '+className+' ') > -1;
 	},
 
 	show: function() {
