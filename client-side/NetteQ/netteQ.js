@@ -159,7 +159,7 @@ NetteJs.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = new NetteJs(this), dE = document.documentElement, dragging, options = options || {};
+		var $el = new NetteJs(this), dE = document.documentElement, dragging, preventClick, options = options || {};
 
 		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
@@ -177,6 +177,7 @@ NetteJs.implement({
 			dE.onmousemove = function(e) {
 				e = e || event;
 				NetteJs.fn.move.call($el[0], e.clientX + deltaX, e.clientY + deltaY);
+				preventClick = true;
 				return false;
 			};
 
@@ -186,6 +187,12 @@ NetteJs.implement({
 				dragging = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
+
+		}).bind('click', function(e) {
+			if (preventClick) {
+				e.stopImmediatePropagation();
+				preventClick = false;
+			}
 		});
 	}
 });
