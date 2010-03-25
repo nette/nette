@@ -9,7 +9,7 @@
 
 	<style type="text/css">
 	.block {
-		background: blue;
+		background: lightblue;
 		color: white;
 		position: absolute;
 		cursor: move;
@@ -18,7 +18,13 @@
 	}
 
 	.active {
-		background: lightblue;
+		color: blue;
+	}
+
+	.dragged {
+		opacity: .5;
+		=filter: alpha(opacity=50);
+		z-index: 10;
 	}
 	</style>
 </head>
@@ -53,7 +59,10 @@
 	};
 
 
-	$('.block').draggable().bind('mouseenter', function(e) {
+	$('.block').draggable({
+		draggedClass: 'dragged'
+
+	}).bind('mouseenter', function(e) {
 		$(this).addClass('active');
 
 	}).bind('mouseleave', function(e) {

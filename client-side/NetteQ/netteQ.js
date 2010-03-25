@@ -146,27 +146,31 @@ NetteJs.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var el = this, dE = document.documentElement, fn = NetteJs.fn, options = options || {};
+		var $el = new NetteJs(this), dE = document.documentElement, dragging, options = options || {};
 
 		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (fn.draggable.dragging) { // missed mouseup out of window?
+			if (dragging) { // missed mouseup out of window?
 				return dE.onmouseup();
 			}
 
-			fn.draggable.dragging = true;
-			var deltaX = el.offsetLeft - e.clientX, deltaY = el.offsetTop - e.clientY;
+			options.draggedClass && $el.addClass(options.draggedClass);
+			options.start && options.start(e, $el);
+			dragging = true;
+			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
 
 			dE.onmousemove = function(e) {
 				e = e || event;
-				fn.move.call(el, e.clientX + deltaX, e.clientY + deltaY);
+				NetteJs.fn.move.call($el[0], e.clientX + deltaX, e.clientY + deltaY);
 				return false;
 			};
 
-			dE.onmouseup = function() {
-				fn.draggable.dragging = dE.onmousemove = dE.onmouseup = null;
+			dE.onmouseup = function(e) {
+				options.draggedClass && $el.removeClass(options.draggedClass);
+				options.stop && options.stop(e || event, $el);
+				dragging = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 		});
