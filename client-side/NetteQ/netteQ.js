@@ -10,7 +10,7 @@ var NetteJs = function(selector) {
 		this[0] = document;
 		return this.find(selector);
 
-	} else if (!selector || selector.length === void 0) {
+	} else if (!selector || selector.nodeType || selector.length === void 0) {
 		selector = [selector];
 	}
 
@@ -97,7 +97,7 @@ NetteJs.implement({
 
 		if (!events[event]) {
 			var el = this, // fixes 'this' in iE
-				handlers = events[event] = new Array(),
+				handlers = events[event] = [],
 				generic = NetteJs.fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
 					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
@@ -182,7 +182,7 @@ NetteJs.implement({
 
 			dE.onmousemove = function(e) {
 				e = e || event;
-				NetteJs.fn.position.call($el[0], {left: e.clientX + deltaX, top: e.clientY + deltaY});
+				$el.position({left: e.clientX + deltaX, top: e.clientY + deltaY});
 				preventClick = true;
 				return false;
 			};
