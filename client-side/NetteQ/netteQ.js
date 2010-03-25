@@ -81,27 +81,40 @@ NetteJs.implement = function(methods) {
 NetteJs.implement({
 	// cross-browser event attach
 	bind: function(event, handler) {
-		if (document.addEventListener) { // non-IE
-			if (event === 'mouseenter' || event === 'mouseleave') { // simulate mouseenter & mouseleave using mouseover & mouseout
-				this.addEventListener(event === 'mouseenter' ? 'mouseover' : 'mouseout', function(e) {
-					var target = e.relatedTarget;
-					while (target && target !== this) target = target.parentNode; // target must not be this child
-					if (target !== this) {
-						handler.call(this, e);
-					}
-				}, false);
-
-			} else {
-				this.addEventListener(event, handler, false);
-			}
-		} else if (document.attachEvent) { // IE
-			var el = this;
-			this.attachEvent('on' + event, function(e) { // dont worry, 'e' is passed
-				e.preventDefault = function() { this.returnValue = false }; // emulate preventDefault()
-				e.stopPropagation = function() { this.cancelBubble = true }; // emulate stopPropagation()
-				handler.call(el, e); // fix 'this'
-			});
+		if (document.addEventListener && (event === 'mouseenter' || event === 'mouseleave')) { // simulate mouseenter & mouseleave using mouseover & mouseout
+			var old = handler;
+			event = event === 'mouseenter' ? 'mouseover' : 'mouseout';
+			handler = function(e) {
+				for (var target = e.relatedTarget; target; target = target.parentNode) {
+					if (target === this) return; // target must not be inside this
+				}
+				old.call(this, e);
+			};
 		}
+
+		var data = this.nette = this.nette || {},
+			events = data.events = data.events || {}; // use own handler queue
+
+		if (!events[event]) {
+			var el = this, // fixes 'this' in iE
+				handlers = events[event] = new Array(),
+				generic = NetteJs.fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
+					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
+					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
+					e.stopImmediatePropagation = function() { i = handlers.length };
+					for (var i = 0; i < handlers.length; i++) {
+						handlers[i].call(el, e);
+					}
+				};
+
+			if (document.addEventListener) { // non-IE
+				this.addEventListener(event, generic, false);
+			} else if (document.attachEvent) { // IE < 9
+				this.attachEvent('on' + event, generic);
+			}
+		}
+
+		events[event].push(handler);
 	},
 
 	// adds class to element
