@@ -72,7 +72,7 @@
 		$(this).removeClass('active');
 
 	}).each(function() {
-		$(this).move(Math.round(Math.random() * 500), Math.round(Math.random() * 300));
+		$(this).position({left: Math.round(Math.random() * 500), top: Math.round(Math.random() * 300)});
 	});
 
 })();

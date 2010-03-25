@@ -140,21 +140,27 @@ NetteJs.implement({
 		this.style.display = 'none';
 	},
 
-	// returns (total) offset for element
-	offset: function(total) {
-		var el = this, res = {left: el.offsetLeft, top: el.offsetTop, width: el.offsetWidth, height: el.offsetHeight};
-		while (total && (el = el.offsetParent)) {
-			res.left += el.offsetLeft; res.top += el.offsetTop;;
+	// returns total offset for element
+	offset: function(coords) {
+		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.fn.position.call(el);
+		while (el = el.offsetParent) { ofs.left += el.offsetLeft; ofs.top += el.offsetTop; }
+
+		if (coords) {
+			NetteJs.fn.position.call(this, {left: -ofs.left, top: -ofs.top});
+		} else {
+			return ofs;
 		}
-		return res;
 	},
 
-	// move to new position
-	move: function(left, top) {
-		var pos = {left: left, top: top};
-		this.nette && this.nette.onmove && this.nette.onmove.call(this, pos);
-		this.style.left = (pos.left || 0) + 'px';
-		this.style.top = (pos.top || 0) + 'px';
+	// returns current position or move to new position
+	position: function(coords) {
+		if (coords) {
+			this.nette && this.nette.onmove && this.nette.onmove.call(this, coords);
+			this.style.left = (coords.left || 0) + 'px';
+			this.style.top = (coords.top || 0) + 'px';
+		} else {
+			return {left: this.offsetLeft, top: this.offsetTop, width: this.offsetWidth, height: this.offsetHeight};
+		}
 	},
 
 	// makes element draggable
@@ -176,7 +182,7 @@ NetteJs.implement({
 
 			dE.onmousemove = function(e) {
 				e = e || event;
-				NetteJs.fn.move.call($el[0], e.clientX + deltaX, e.clientY + deltaY);
+				NetteJs.fn.position.call($el[0], {left: e.clientX + deltaX, top: e.clientY + deltaY});
 				preventClick = true;
 				return false;
 			};
