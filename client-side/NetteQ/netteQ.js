@@ -5,10 +5,10 @@
  * @license    http://nettephp.com/license  Nette license
  */
 
+// supported cross-browser selectors: #id  |  div  |  div.class  |  .class
 var NetteJs = function(selector) {
 	if (typeof selector === "string") {
-		this[0] = document;
-		return this.find(selector);
+		selector = this._find(document, selector);
 
 	} else if (!selector || selector.nodeType || selector.length === void 0 || selector === window) {
 		selector = [selector];
@@ -25,29 +25,32 @@ NetteJs.prototype = {
 
 	length: 0,
 
-	// supported cross-browser selectors: #id  |  div  |  div.class  |  .class
 	find: function(selector) {
-		if (!this[0] || !selector) {
-			return new NetteJs();
+		return new NetteJs(this._find(this[0], selector));
+	},
+
+	_find: function(context, selector) {
+		if (!context || !selector) {
+			return [];
 
 		} else if (document.querySelectorAll) {
-			return new NetteJs(this[0].querySelectorAll(selector));
+			return context.querySelectorAll(selector);
 
 		} else if (selector.charAt(0) === '#') { // #id
-			return new NetteJs(document.getElementById(selector.substring(1)));
+			return [document.getElementById(selector.substring(1))];
 
 		} else { // div  |  div.class  |  .class
 			selector = selector.split('.');
-			var list = this[0].getElementsByTagName(selector[0] || '*');
+			var elms = context.getElementsByTagName(selector[0] || '*');
 
 			if (selector[1]) {
-				var $ = new NetteJs(), pattern = new RegExp('(^|\\s)' + selector[1] + '(\\s|$)');
-				for (var i = 0, len = list.length; i < len; i++) {
-					if (pattern.test(list[i].className)) $[$.length++] = list[i];
+				var list = [], pattern = new RegExp('(^|\\s)' + selector[1] + '(\\s|$)');
+				for (var i = 0, len = elms.length; i < len; i++) {
+					if (pattern.test(elms[i].className)) list.push(elms[i]);
 				}
-				return $;
+				return list;
 			} else {
-				return new NetteJs(list);
+				return elms;
 			}
 		}
 	},
