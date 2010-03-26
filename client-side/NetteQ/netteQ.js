@@ -184,7 +184,7 @@ NetteJs.implement({
 			e.stopPropagation();
 
 			if (dragging) { // missed mouseup out of window?
-				return dE.onmouseup();
+				return dE.onmouseup(e);
 			}
 
 			options.draggedClass && $el.addClass(options.draggedClass);
