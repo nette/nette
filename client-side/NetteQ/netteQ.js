@@ -140,6 +140,11 @@ NetteJs.implement({
 		this.style.display = 'none';
 	},
 
+	css: function(property) {
+		return this.currentStyle ? this.currentStyle[property]
+			: (window.getComputedStyle ? document.defaultView.getComputedStyle(this, null).getPropertyValue(property) : void 0);
+	},
+
 	// returns total offset for element
 	offset: function(coords) {
 		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.fn.position.call(el);
