@@ -10,7 +10,7 @@ var NetteJs = function(selector) {
 		this[0] = document;
 		return this.find(selector);
 
-	} else if (!selector || selector.nodeType || selector.length === void 0) {
+	} else if (!selector || selector.nodeType || selector.length === void 0 || selector === window) {
 		selector = [selector];
 	}
 
@@ -92,7 +92,7 @@ NetteJs.implement({
 			};
 		}
 
-		var data = this.nette = this.nette || {},
+		var data = NetteJs.fn.data.call(this),
 			events = data.events = data.events || {}; // use own handler queue
 
 		if (!events[event]) {
@@ -143,6 +143,10 @@ NetteJs.implement({
 	css: function(property) {
 		return this.currentStyle ? this.currentStyle[property]
 			: (window.getComputedStyle ? document.defaultView.getComputedStyle(this, null).getPropertyValue(property) : void 0);
+	},
+
+	data: function() {
+		return this.nette = this.nette || {};
 	},
 
 	// returns total offset for element
