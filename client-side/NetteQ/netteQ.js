@@ -5,23 +5,60 @@
  * @license    http://nettephp.com/license  Nette license
  */
 
-// supported cross-browser selectors: #id  |  div  |  div.class  |  .class
-var NetteJs = function(selector) {
-	if (typeof selector === "string") {
-		selector = this._find(document, selector);
+var Nette = Nette || {};
 
-	} else if (!selector || selector.nodeType || selector.length === void 0 || selector === window) {
-		selector = [selector];
+// simple class builder
+Nette.Class = function(def) {
+	var cl = def.constructor || function(){}, nm;
+	delete def.constructor;
+
+	if (def.Extends) {
+		var foo = function() { this.constructor = cl };
+		foo.prototype = def.Extends.prototype;
+		cl.prototype = new foo;
+		delete def.Extends;
 	}
 
-	for (var i = 0, len = selector.length; i < len; i++) {
-		if (selector[i]) this[this.length++] = selector[i];
+	if (def.Static) {
+		for (nm in def.Static) cl[nm] = def.Static[nm];
+		delete def.Static;
 	}
+
+	for (nm in def) cl.prototype[nm] = def[nm];
+	return cl;
 };
 
 
-NetteJs.prototype = {
-	constructor: NetteJs,
+// supported cross-browser selectors: #id  |  div  |  div.class  |  .class
+var NetteJs = Nette.Class({
+
+	Static: {
+		factory: function(selector) {
+			return new NetteJs(selector)
+		},
+
+		implement: function(methods) {
+			for (var name in methods) {
+				NetteJs.implement[name] = methods[name];
+				NetteJs.prototype[name] = (function(name){
+					return function() { return this.each(NetteJs.implement[name], arguments) }
+				}(name));
+			}
+		}
+	},
+
+	constructor: function(selector) {
+		if (typeof selector === "string") {
+			selector = this._find(document, selector);
+
+		} else if (!selector || selector.nodeType || selector.length === void 0 || selector === window) {
+			selector = [selector];
+		}
+
+		for (var i = 0, len = selector.length; i < len; i++) {
+			if (selector[i]) this[this.length++] = selector[i];
+		}
+	},
 
 	length: 0,
 
@@ -65,17 +102,8 @@ NetteJs.prototype = {
 		}
 		return this;
 	}
-};
+});
 
-
-NetteJs.implement = function(methods) {
-	for (var name in methods) {
-		NetteJs.implement[name] = methods[name];
-		NetteJs.prototype[name] = (function(name){
-			return function() { return this.each(NetteJs.implement[name], arguments) }
-		}(name));
-	}
-};
 
 
 NetteJs.implement({
