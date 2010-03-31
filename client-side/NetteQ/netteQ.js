@@ -68,14 +68,11 @@ NetteJs.prototype = {
 };
 
 
-NetteJs.fn = {};
-
-
 NetteJs.implement = function(methods) {
 	for (var name in methods) {
-		NetteJs.fn[name] = methods[name];
+		NetteJs.implement[name] = methods[name];
 		NetteJs.prototype[name] = (function(name){
-			return function() { return this.each(NetteJs.fn[name], arguments) }
+			return function() { return this.each(NetteJs.implement[name], arguments) }
 		}(name));
 	}
 };
@@ -95,13 +92,13 @@ NetteJs.implement({
 			};
 		}
 
-		var data = NetteJs.fn.data.call(this),
+		var data = NetteJs.implement.data.call(this),
 			events = data.events = data.events || {}; // use own handler queue
 
 		if (!events[event]) {
 			var el = this, // fixes 'this' in iE
 				handlers = events[event] = [],
-				generic = NetteJs.fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
+				generic = NetteJs.implement.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
 					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
 					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length };
@@ -154,29 +151,29 @@ NetteJs.implement({
 
 	_trav: function(el, selector, fce) {
 		selector = selector.split('.');
-		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || NetteJs.fn.hasClass.call(el, selector[1])))) el = el[fce];
+		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || NetteJs.implement.hasClass.call(el, selector[1])))) el = el[fce];
 		return new NetteJs(el);
 	},
 
 	closest: function(selector) {
-		return NetteJs.fn._trav(this, selector, 'parentNode');
+		return NetteJs.implement._trav(this, selector, 'parentNode');
 	},
 
 	prev: function(selector) {
-		return NetteJs.fn._trav(this.prevSibling, selector, 'prevSibling');
+		return NetteJs.implement._trav(this.prevSibling, selector, 'prevSibling');
 	},
 
 	next: function(selector) {
-		return NetteJs.fn._trav(this.nextSibling, selector, 'nextSibling');
+		return NetteJs.implement._trav(this.nextSibling, selector, 'nextSibling');
 	},
 
 	// returns total offset for element
 	offset: function(coords) {
-		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.fn.position.call(el);
+		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.implement.position.call(el);
 		while (el = el.offsetParent) { ofs.left += el.offsetLeft; ofs.top += el.offsetTop; }
 
 		if (coords) {
-			NetteJs.fn.position.call(this, {left: -ofs.left, top: -ofs.top});
+			NetteJs.implement.position.call(this, {left: -ofs.left, top: -ofs.top});
 		} else {
 			return ofs;
 		}
@@ -201,12 +198,12 @@ NetteJs.implement({
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (NetteJs.fn.draggable.binded) { // missed mouseup out of window?
+			if (NetteJs.implement.draggable.binded) { // missed mouseup out of window?
 				return dE.onmouseup(e);
 			}
 
 			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
-			NetteJs.fn.draggable.binded = true;
+			NetteJs.implement.draggable.binded = true;
 			started = false;
 
 			dE.onmousemove = function(e) {
@@ -225,7 +222,7 @@ NetteJs.implement({
 					options.draggedClass && $el.removeClass(options.draggedClass);
 					options.stop && options.stop(e || event, $el);
 				}
-				NetteJs.fn.draggable.binded = dE.onmousemove = dE.onmouseup = null;
+				NetteJs.implement.draggable.binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 
