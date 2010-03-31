@@ -152,6 +152,24 @@ NetteJs.implement({
 		return this.nette = this.nette || {};
 	},
 
+	_trav: function(el, selector, fce) {
+		selector = selector.split('.');
+		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || NetteJs.fn.hasClass.call(el, selector[1])))) el = el[fce];
+		return new NetteJs(el);
+	},
+
+	closest: function(selector) {
+		return NetteJs.fn._trav(this, selector, 'parentNode');
+	},
+
+	prev: function(selector) {
+		return NetteJs.fn._trav(this.prevSibling, selector, 'prevSibling');
+	},
+
+	next: function(selector) {
+		return NetteJs.fn._trav(this.nextSibling, selector, 'nextSibling');
+	},
+
 	// returns total offset for element
 	offset: function(coords) {
 		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.fn.position.call(el);
