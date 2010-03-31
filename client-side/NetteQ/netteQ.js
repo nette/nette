@@ -104,7 +104,7 @@ NetteJs.implement({
 				generic = NetteJs.fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
 					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
-					e.stopImmediatePropagation = function() { i = handlers.length };
+					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length };
 					for (var i = 0; i < handlers.length; i++) {
 						handlers[i].call(el, e);
 					}
@@ -177,37 +177,42 @@ NetteJs.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = new NetteJs(this), dE = document.documentElement, dragging, preventClick, options = options || {};
+		var $el = new NetteJs(this), dE = document.documentElement, binded, started, options = options || {};
 
 		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (dragging) { // missed mouseup out of window?
+			if (binded) { // missed mouseup out of window?
 				return dE.onmouseup(e);
 			}
 
-			options.draggedClass && $el.addClass(options.draggedClass);
-			options.start && options.start(e, $el);
-			dragging = true;
 			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
+			binded = true;
+			started = false;
 
 			dE.onmousemove = function(e) {
 				e = e || event;
+				if (!started) {
+					options.draggedClass && $el.addClass(options.draggedClass);
+					options.start && options.start(e, $el);
+					started = true;
+				}
 				$el.position({left: e.clientX + deltaX, top: e.clientY + deltaY});
-				preventClick = true;
 				return false;
 			};
 
 			dE.onmouseup = function(e) {
-				options.draggedClass && $el.removeClass(options.draggedClass);
-				options.stop && options.stop(e || event, $el);
-				dragging = dE.onmousemove = dE.onmouseup = null;
+				if (started) {
+					options.draggedClass && $el.removeClass(options.draggedClass);
+					options.stop && options.stop(e || event, $el);
+				}
+				binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 
 		}).bind('click', function(e) {
-			if (preventClick) {
+			if (started) {
 				e.stopImmediatePropagation();
 				preventClick = false;
 			}
