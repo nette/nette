@@ -7,6 +7,8 @@
 
 var Nette = Nette || {};
 
+(function(){
+
 // simple class builder
 Nette.Class = function(def) {
 	var cl = def.constructor || function(){}, nm;
@@ -38,11 +40,12 @@ Nette.Q = Nette.Class({
 		},
 
 		implement: function(methods) {
-			for (var name in methods) {
-				Nette.Q.implement[name] = methods[name];
-				Nette.Q.prototype[name] = (function(name){
-					return function() { return this.each(Nette.Q.implement[name], arguments) }
-				}(name));
+			var nm, fn = Nette.Q.implement, prot = Nette.Q.prototype;
+			for (nm in methods) {
+				fn[nm] = methods[nm];
+				prot[nm] = (function(nm){
+					return function() { return this.each(fn[nm], arguments) }
+				}(nm));
 			}
 		}
 	},
@@ -105,8 +108,9 @@ Nette.Q = Nette.Class({
 });
 
 
+var $ = Nette.Q.factory, fn = Nette.Q.implement;
 
-Nette.Q.implement({
+fn({
 	// cross-browser event attach
 	bind: function(event, handler) {
 		if (document.addEventListener && (event === 'mouseenter' || event === 'mouseleave')) { // simulate mouseenter & mouseleave using mouseover & mouseout
@@ -120,13 +124,13 @@ Nette.Q.implement({
 			};
 		}
 
-		var data = Nette.Q.implement.data.call(this),
+		var data = fn.data.call(this),
 			events = data.events = data.events || {}; // use own handler queue
 
 		if (!events[event]) {
 			var el = this, // fixes 'this' in iE
 				handlers = events[event] = [],
-				generic = Nette.Q.implement.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
+				generic = fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
 					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
 					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length };
@@ -179,29 +183,29 @@ Nette.Q.implement({
 
 	_trav: function(el, selector, fce) {
 		selector = selector.split('.');
-		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || Nette.Q.implement.hasClass.call(el, selector[1])))) el = el[fce];
-		return new Nette.Q(el);
+		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || fn.hasClass.call(el, selector[1])))) el = el[fce];
+		return $(el);
 	},
 
 	closest: function(selector) {
-		return Nette.Q.implement._trav(this, selector, 'parentNode');
+		return fn._trav(this, selector, 'parentNode');
 	},
 
 	prev: function(selector) {
-		return Nette.Q.implement._trav(this.prevSibling, selector, 'prevSibling');
+		return fn._trav(this.prevSibling, selector, 'prevSibling');
 	},
 
 	next: function(selector) {
-		return Nette.Q.implement._trav(this.nextSibling, selector, 'nextSibling');
+		return fn._trav(this.nextSibling, selector, 'nextSibling');
 	},
 
 	// returns total offset for element
 	offset: function(coords) {
-		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : Nette.Q.implement.position.call(el);
+		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : fn.position.call(el);
 		while (el = el.offsetParent) { ofs.left += el.offsetLeft; ofs.top += el.offsetTop; }
 
 		if (coords) {
-			Nette.Q.implement.position.call(this, {left: -ofs.left, top: -ofs.top});
+			fn.position.call(this, {left: -ofs.left, top: -ofs.top});
 		} else {
 			return ofs;
 		}
@@ -220,18 +224,18 @@ Nette.Q.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = new Nette.Q(this), dE = document.documentElement, started, options = options || {};
+		var $el = $(this), dE = document.documentElement, started, options = options || {};
 
-		(new Nette.Q(options.handle || this)).bind('mousedown', function(e) {
+		$(options.handle || this).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (Nette.Q.implement.draggable.binded) { // missed mouseup out of window?
+			if (fn.draggable.binded) { // missed mouseup out of window?
 				return dE.onmouseup(e);
 			}
 
 			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
-			Nette.Q.implement.draggable.binded = true;
+			fn.draggable.binded = true;
 			started = false;
 
 			dE.onmousemove = function(e) {
@@ -250,7 +254,7 @@ Nette.Q.implement({
 					options.draggedClass && $el.removeClass(options.draggedClass);
 					options.stop && options.stop(e || event, $el);
 				}
-				Nette.Q.implement.draggable.binded = dE.onmousemove = dE.onmouseup = null;
+				fn.draggable.binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 
@@ -262,3 +266,5 @@ Nette.Q.implement({
 		});
 	}
 });
+
+})();
