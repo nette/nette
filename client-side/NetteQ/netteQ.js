@@ -1,8 +1,8 @@
 /**
- * NetteJs
+ * NetteQ
  *
- * @copyright  Copyright (c) 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
+ * This file is part of the Nette Framework.
+ * Copyright (c) 2010 David Grudl (http://davidgrudl.com)
  */
 
 var Nette = Nette || {};
@@ -30,18 +30,18 @@ Nette.Class = function(def) {
 
 
 // supported cross-browser selectors: #id  |  div  |  div.class  |  .class
-var NetteJs = Nette.Class({
+Nette.Q = Nette.Class({
 
 	Static: {
 		factory: function(selector) {
-			return new NetteJs(selector)
+			return new Nette.Q(selector)
 		},
 
 		implement: function(methods) {
 			for (var name in methods) {
-				NetteJs.implement[name] = methods[name];
-				NetteJs.prototype[name] = (function(name){
-					return function() { return this.each(NetteJs.implement[name], arguments) }
+				Nette.Q.implement[name] = methods[name];
+				Nette.Q.prototype[name] = (function(name){
+					return function() { return this.each(Nette.Q.implement[name], arguments) }
 				}(name));
 			}
 		}
@@ -63,7 +63,7 @@ var NetteJs = Nette.Class({
 	length: 0,
 
 	find: function(selector) {
-		return new NetteJs(this._find(this[0], selector));
+		return new Nette.Q(this._find(this[0], selector));
 	},
 
 	_find: function(context, selector) {
@@ -106,7 +106,7 @@ var NetteJs = Nette.Class({
 
 
 
-NetteJs.implement({
+Nette.Q.implement({
 	// cross-browser event attach
 	bind: function(event, handler) {
 		if (document.addEventListener && (event === 'mouseenter' || event === 'mouseleave')) { // simulate mouseenter & mouseleave using mouseover & mouseout
@@ -120,13 +120,13 @@ NetteJs.implement({
 			};
 		}
 
-		var data = NetteJs.implement.data.call(this),
+		var data = Nette.Q.implement.data.call(this),
 			events = data.events = data.events || {}; // use own handler queue
 
 		if (!events[event]) {
 			var el = this, // fixes 'this' in iE
 				handlers = events[event] = [],
-				generic = NetteJs.implement.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
+				generic = Nette.Q.implement.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
 					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
 					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length };
@@ -179,29 +179,29 @@ NetteJs.implement({
 
 	_trav: function(el, selector, fce) {
 		selector = selector.split('.');
-		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || NetteJs.implement.hasClass.call(el, selector[1])))) el = el[fce];
-		return new NetteJs(el);
+		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || Nette.Q.implement.hasClass.call(el, selector[1])))) el = el[fce];
+		return new Nette.Q(el);
 	},
 
 	closest: function(selector) {
-		return NetteJs.implement._trav(this, selector, 'parentNode');
+		return Nette.Q.implement._trav(this, selector, 'parentNode');
 	},
 
 	prev: function(selector) {
-		return NetteJs.implement._trav(this.prevSibling, selector, 'prevSibling');
+		return Nette.Q.implement._trav(this.prevSibling, selector, 'prevSibling');
 	},
 
 	next: function(selector) {
-		return NetteJs.implement._trav(this.nextSibling, selector, 'nextSibling');
+		return Nette.Q.implement._trav(this.nextSibling, selector, 'nextSibling');
 	},
 
 	// returns total offset for element
 	offset: function(coords) {
-		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : NetteJs.implement.position.call(el);
+		var el = this, ofs = coords ? {left: -coords.left || 0, top: -coords.top || 0} : Nette.Q.implement.position.call(el);
 		while (el = el.offsetParent) { ofs.left += el.offsetLeft; ofs.top += el.offsetTop; }
 
 		if (coords) {
-			NetteJs.implement.position.call(this, {left: -ofs.left, top: -ofs.top});
+			Nette.Q.implement.position.call(this, {left: -ofs.left, top: -ofs.top});
 		} else {
 			return ofs;
 		}
@@ -220,18 +220,18 @@ NetteJs.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = new NetteJs(this), dE = document.documentElement, started, options = options || {};
+		var $el = new Nette.Q(this), dE = document.documentElement, started, options = options || {};
 
-		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
+		(new Nette.Q(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (NetteJs.implement.draggable.binded) { // missed mouseup out of window?
+			if (Nette.Q.implement.draggable.binded) { // missed mouseup out of window?
 				return dE.onmouseup(e);
 			}
 
 			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
-			NetteJs.implement.draggable.binded = true;
+			Nette.Q.implement.draggable.binded = true;
 			started = false;
 
 			dE.onmousemove = function(e) {
@@ -250,7 +250,7 @@ NetteJs.implement({
 					options.draggedClass && $el.removeClass(options.draggedClass);
 					options.stop && options.stop(e || event, $el);
 				}
-				NetteJs.implement.draggable.binded = dE.onmousemove = dE.onmouseup = null;
+				Nette.Q.implement.draggable.binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 
