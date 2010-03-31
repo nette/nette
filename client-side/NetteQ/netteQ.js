@@ -195,18 +195,18 @@ NetteJs.implement({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = new NetteJs(this), dE = document.documentElement, binded, started, options = options || {};
+		var $el = new NetteJs(this), dE = document.documentElement, started, options = options || {};
 
 		(new NetteJs(options.handle || this)).bind('mousedown', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			if (binded) { // missed mouseup out of window?
+			if (NetteJs.fn.draggable.binded) { // missed mouseup out of window?
 				return dE.onmouseup(e);
 			}
 
 			var deltaX = $el[0].offsetLeft - e.clientX, deltaY = $el[0].offsetTop - e.clientY;
-			binded = true;
+			NetteJs.fn.draggable.binded = true;
 			started = false;
 
 			dE.onmousemove = function(e) {
@@ -225,7 +225,7 @@ NetteJs.implement({
 					options.draggedClass && $el.removeClass(options.draggedClass);
 					options.stop && options.stop(e || event, $el);
 				}
-				binded = dE.onmousemove = dE.onmouseup = null;
+				NetteJs.fn.draggable.binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
 			};
 
