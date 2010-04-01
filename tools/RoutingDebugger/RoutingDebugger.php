@@ -2,6 +2,7 @@
 
 /*use Nette\Object; */
 /*use Nette\Debug; */
+/*use Nette\IDebugPanel; */
 /*use Nette\Environment; */
 /*use Nette\Application\IRouter; */
 /*use Nette\Application\MultiRouter; */
@@ -18,7 +19,7 @@
  * @license    http://nettephp.com/license  Nette license
  * @link       http://nettephp.com
  */
-class RoutingDebugger extends Object
+class RoutingDebugger extends Object implements IDebugPanel
 {
 	/** @var Nette\Application\IRouter */
 	private $router;
@@ -37,10 +38,7 @@ class RoutingDebugger extends Object
 	 */
 	public static function enable()
 	{
-		if (!Environment::isProduction() && !Environment::getHttpRequest()->isAjax()) {
-			$debugger = new self(Environment::getApplication()->getRouter(), Environment::getHttpRequest());
-			register_shutdown_function(array($debugger, 'paint'));
-		}
+		Debug::addPanel(new self(Environment::getApplication()->getRouter(), Environment::getHttpRequest()));
 	}
 
 
@@ -55,21 +53,49 @@ class RoutingDebugger extends Object
 
 	/**
 	 * Renders debuger output.
-	 * @return void
+	 * @return mixed
 	 */
-	public function paint()
+	public function getTemplate()
 	{
-		if (strncmp(Environment::getHttpResponse()->getHeader('Content-Type', 'text/html'), 'text/html', 9)) {
-			return;
+		if (!$this->template) {
+			$this->template = new Template;
+			$this->template->routers = new ArrayObject;
+			$this->analyse($this->router);
 		}
-
-		$this->template = new Template;
-		$this->template->setFile(dirname(__FILE__) . '/RoutingDebugger.phtml');
-		$this->template->routers = new ArrayObject;
-		$this->analyse($this->router);
-		$this->template->render();
+		return $this->template;
 	}
 
+
+
+	/**
+	 * Renders debuger output.
+	 * @return mixed
+	 */
+	public function getTab()
+	{
+		return $this->getTemplate()->setFile(dirname(__FILE__) . '/RoutingDebugger.tab.phtml')->__toString(TRUE);
+	}
+
+
+
+	/**
+	 * Renders debuger output.
+	 * @return mixed
+	 */
+	public function getPanel()
+	{
+		return $this->getTemplate()->setFile(dirname(__FILE__) . '/RoutingDebugger.panel.phtml')->__toString(TRUE);
+	}
+
+
+	/**
+	 * Returns panel ID.
+	 * @return string
+	 */
+	public function getId()
+	{
+		return $this->reflection->name;
+	}
 
 
 	/**
