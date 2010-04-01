@@ -81,7 +81,7 @@ class Application extends /*Nette\*/Object
 			Environment::setVariable('baseUri', $httpRequest->getUri()->getBasePath());
 		}
 
-        // autostarts session
+		// autostarts session
 		$session = $this->getSession();
 		if (!$session->isStarted() && $session->exists()) {
 			$session->start();
