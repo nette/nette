@@ -20,13 +20,25 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
-interface IDebuggable
+interface IDebugPanel
 {
 
 	/**
-	 * Returns custom panels.
-	 * @return array
+	 * Renders HTML code for custom tab.
+	 * @return void
 	 */
-	function getPanels();
+	function getTab();
+
+	/**
+	 * Renders HTML code for custom panel.
+	 * @return void
+	 */
+	function getPanel();
+
+	/**
+	 * Returns panel ID.
+	 * @return string
+	 */
+	function getId();
 
 }
