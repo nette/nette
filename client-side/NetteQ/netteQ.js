@@ -165,7 +165,12 @@ fn({
 	},
 
 	show: function() {
-		this.style.display = 'block';
+		var dsp = fn.show.display = fn.show.display || {}, tag = this.tagName;
+		if (!dsp[tag]) {
+			var el = document.body.appendChild(document.createElement(tag));
+			dsp[tag] = fn.css.call(el, 'display');
+		}
+		this.style.display = dsp[tag];
 	},
 
 	hide: function() {
@@ -192,7 +197,7 @@ fn({
 	},
 
 	prev: function(selector) {
-		return fn._trav(this.prevSibling, selector, 'prevSibling');
+		return fn._trav(this.previousSibling, selector, 'previousSibling');
 	},
 
 	next: function(selector) {
