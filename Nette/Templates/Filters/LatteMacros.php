@@ -97,7 +97,7 @@ class LatteMacros extends /*Nette\*/Object
 		'status' => '<?php Environment::getHttpResponse()->setCode(%%) ?>',
 		'assign' => '<?php %:macroAssign% ?>', // deprecated?
 		'default' => '<?php %:macroDefault% ?>',
-		'dump' => '<?php Debug::consoleDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
+		'dump' => '<?php Debug::barDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ?>',
 
 		'!_' => '<?php echo %:macroTranslate% ?>',
