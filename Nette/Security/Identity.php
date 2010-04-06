@@ -121,7 +121,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	public function __set($key, $value)
 	{
 		$this->updating();
-		if ($key === 'id' || $key === 'roles') {
+		if (parent::__isset($key)) {
 			parent::__set($key, $value);
 
 		} else {
@@ -138,12 +138,37 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	 */
 	public function &__get($key)
 	{
-		if ($key === 'id' || $key === 'roles') {
+		if (parent::__isset($key)) {
 			return parent::__get($key);
 
 		} else {
 			return $this->data[$key];
 		}
+	}
+
+
+
+	/**
+	 * Is property defined?
+	 * @param  string  property name
+	 * @return bool
+	 */
+	public function __isset($key)
+	{
+		return isset($this->data[$key]) || parent::__isset($key);
+	}
+
+
+
+	/**
+	 * Removes property.
+	 * @param  string  property name
+	 * @return void
+	 * @throws \MemberAccessException
+	 */
+	public function __unset($name)
+	{
+		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }
