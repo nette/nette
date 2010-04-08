@@ -15,6 +15,14 @@
 	<li>{!$hello |h2|h1}</li>
 </ul>
 
+<ul>
+	<li>{$hello*0 |types:0,0.0,"0"}</li>
+	<li>{$hello*1 |types:1:"1"}</li>
+	<li>{$hello |types:true,null,false}</li>
+	<li>{$hello |types:TRUE,NULL,FALSE}</li>
+	<li>{$hello |types:'',"","$hello"}</li>
+</ul>
+
 
 
 {block  |strip}  <a   href="#"

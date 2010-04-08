@@ -537,7 +537,8 @@ class LatteFilter extends /*Nette\*/Object
 	 */
 	public static function formatString($s)
 	{
-		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : '"' . $s . '"';
+		static $keywords = array('true'=>1, 'false'=>1, 'null'=>1);
+		return (is_numeric($s) || strspn($s, '\'"$') || isset($keywords[strtolower($s)])) ? $s : '"' . $s . '"';
 	}
 
 }

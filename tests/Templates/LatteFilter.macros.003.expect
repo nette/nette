@@ -17,6 +17,14 @@ Warning: Capturing {block $capture} is deprecated; use {capture $capture} instea
 	<li>hello world (4 times)</li>
 </ul>
 
+<ul>
+	<li>integer, integer, double, string</li>
+	<li>integer, integer, string</li>
+	<li>string, boolean, NULL, boolean</li>
+	<li>string, boolean, NULL, boolean</li>
+	<li>string, string, string, string</li>
+</ul>
+
 
 
 <a href="#" > test</a > AŠA <script>
