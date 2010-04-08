@@ -62,6 +62,7 @@ class NetteLoader extends AutoLoader
 		'conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
 		'datetime53' => '/compatibility/DateTime53.php',
 		'debug' => '/Debug.php',
+		'debugpanel' => '/Debug.php',
 		'deprecatedexception' => '/exceptions.php',
 		'directorynotfoundexception' => '/exceptions.php',
 		'downloadresponse' => '/Application/Responses/DownloadResponse.php',
