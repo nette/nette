@@ -40,6 +40,12 @@ class MyHelper
 
 }
 
+function types()
+{
+	foreach (func_get_args() as $arg) $res[] = gettype($arg);
+	return implode(', ', $res);
+}
+
 
 
 $template = new Template;
@@ -49,6 +55,7 @@ $template->registerHelper('nl2br', 'nl2br');
 $template->registerHelper('h1', array(new MyHelper, 'invoke'));
 $template->registerHelper('h2', 'strtoupper');
 $template->registerHelper('translate', 'strrev');
+$template->registerHelper('types', 'types');
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 $template->hello = 'Hello World';
