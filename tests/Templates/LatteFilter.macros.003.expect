@@ -8,6 +8,7 @@ Warning: Capturing {block $capture} is deprecated; use {capture $capture} instea
 	<li>truncate: hello…</li>
 	<li>date: 02.01.2008 00:00:00</li>
 	<li>translated: dl…</li>
+	<li>spaces: string, string, string, string</li>
 </ul>
 
 <ul>

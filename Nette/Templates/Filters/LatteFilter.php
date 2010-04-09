@@ -138,7 +138,7 @@ class LatteFilter extends /*Nette\*/Object
 				break;
 
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
-				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"\s]+)*)?$()#is', $matches['macro'], $m2);
+				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"]+)*)?$()#is', $matches['macro'], $m2);
 				list(, $macro, $value, $modifiers) = $m2;
 				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
@@ -436,7 +436,7 @@ class LatteFilter extends /*Nette\*/Object
 		preg_match_all(
 			'~
 				'.self::RE_STRING.'|  ## single or double quoted string
-				[^\'"|:,]+|           ## symbol
+				[^\'"|:,\s]+|         ## symbol
 				[|:,]                 ## separator
 			~xs',
 			$modifiers . '|',
