@@ -95,19 +95,18 @@ class LatteMacros extends /*Nette\*/Object
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'status' => '<?php Environment::getHttpResponse()->setCode(%%) ?>',
-		'assign' => '<?php %:macroAssign% ?>', // deprecated?
+		'assign' => '<?php %:macroAssign% ?>',
 		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php Debug::barDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ?>',
 
 		'!_' => '<?php echo %:macroTranslate% ?>',
-		'!=' => '<?php echo %:macroModifiers% ?>',
 		'_' => '<?php echo %:macroEscape%(%:macroTranslate%) ?>',
+		'!=' => '<?php echo %:macroModifiers% ?>',
 		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
 		'!$' => '<?php echo %:macroVar% ?>',
-		'!' => '<?php echo %:macroVar% ?>', // deprecated
 		'$' => '<?php echo %:macroEscape%(%:macroVar%) ?>',
-		'?' => '<?php %:macroModifiers% ?>', // deprecated?
+		'?' => '<?php %:macroModifiers% ?>',
 	);
 
 	/** @var array */
