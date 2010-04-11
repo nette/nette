@@ -153,9 +153,11 @@ final class TemplateHelpers
 	 */
 	public static function strip($s)
 	{
-		$s = preg_replace_callback('#<(textarea|pre|script).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
-		$s = trim(preg_replace('#[ \t\r\n]+#', ' ', $s));
-		return strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
+		return preg_replace_callback(
+			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
+			create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'),
+			$s
+		);
 	}
 
 
@@ -170,21 +172,11 @@ final class TemplateHelpers
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
 		if ($level >= 1) {
-			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', array(__CLASS__, 'indentCb'), $s);
+			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', create_function('$m', 'return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");'), $s);
 			$s = /*Nette\*/String::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
-	}
-
-
-
-	/**
-	 * Callback for self::indent
-	 */
-	private static function indentCb($m)
-	{
-		return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");
 	}
 
 
