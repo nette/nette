@@ -60,9 +60,15 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
+			$name = $this->lookupPath('Nette\Application\Presenter');
+
+			if (!isset($this->getElementPrototype()->id)) {
+				$this->getElementPrototype()->id = 'frm-' . $name;
+			}
+
 			$this->setAction(new Link(
 				$presenter,
-				$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
+				$name . self::NAME_SEPARATOR . 'submit!',
 				array()
 			));
 
