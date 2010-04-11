@@ -108,9 +108,6 @@
 		<input type="hidden" name="userid" id="frm-userid" value="231" />		<input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" />	</div>
 
 	</form>
-<script type="text/javascript">
-/* <![CDATA[ */
-
 %A%
 nette.forms["frm-"] = {
 	validators: {
@@ -179,8 +176,5 @@ nette.forms["frm-"] = {
 	}
 }
 %A%
-/* ]]> */
-</script>
-
 </body>
 </html>

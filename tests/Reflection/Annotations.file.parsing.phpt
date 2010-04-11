@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Annotations, Nette\Environment;*/
+/*use Nette\Reflection\AnnotationsParser, Nette\Environment;*/
 
 
 
