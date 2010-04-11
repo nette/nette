@@ -87,6 +87,9 @@ class Application extends /*Nette\*/Object
 			$session->start();
 		}
 
+		// enable routing debuggger
+		/*Nette\*/Debug::addPanel(new RoutingDebugger($this->getRouter(), $httpRequest));
+
 		// check HTTP method
 		if ($this->allowedMethods) {
 			$method = $httpRequest->getMethod();

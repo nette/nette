@@ -171,6 +171,7 @@ class NetteLoader extends AutoLoader
 		'renderresponse' => '/Application/Responses/RenderResponse.php',
 		'robotloader' => '/Loaders/RobotLoader.php',
 		'route' => '/Application/Routers/Route.php',
+		'routingdebugger' => '/Application/RoutingDebugger.php',
 		'rule' => '/Forms/Rule.php',
 		'rules' => '/Forms/Rules.php',
 		'safestream' => '/IO/SafeStream.php',
