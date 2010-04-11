@@ -56,7 +56,7 @@
 <body>
 	<h1>Nette\Forms manual form rendering</h1>
 
-	<form action="" method="post" enctype="multipart/form-data" id="frm-" onsubmit="return nette.validateForm(this)">
+	<form action="" method="post" id="frm-" enctype="multipart/form-data" onsubmit="return nette.validateForm(this)">
 	
 	<fieldset>
 		<legend>Personal data</legend>

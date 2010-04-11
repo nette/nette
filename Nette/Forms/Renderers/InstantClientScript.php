@@ -45,10 +45,6 @@ final class InstantClientScript extends /*Nette\*/Object
 
 	public function enable()
 	{
-		$el = $this->form->getElementPrototype();
-		if (!$el->id) {
-			$el->id = 'frm-' . ($this->form instanceof /*Nette\Application\*/AppForm ? $this->form->lookupPath('Nette\Application\Presenter', TRUE) : $this->form->getName());
-		}
 		$this->validateScripts = array();
 		$this->toggleScript = '';
 		$this->central = TRUE;

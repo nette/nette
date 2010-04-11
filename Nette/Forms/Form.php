@@ -123,6 +123,8 @@ class Form extends FormContainer
 		$this->element = /*Nette\Web\*/Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = self::POST;
+		$this->element->id = 'frm-' . $name;
+
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
 			$tracker = new HiddenField($name);

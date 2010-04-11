@@ -83,7 +83,7 @@
 <body>
 	<h1>Nette\Forms custom rendering example</h1>
 
-	<form action="" method="post" enctype="multipart/form-data" id="frm-" onsubmit="return nette.validateForm(this)">
+	<form action="" method="post" id="frm-" enctype="multipart/form-data" onsubmit="return nette.validateForm(this)">
 <div id="form">
 
 <h3>Personal data</h3>
