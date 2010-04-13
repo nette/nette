@@ -55,7 +55,7 @@ class LoginPresenter extends BasePresenter
 			} else {
 				$this->getUser()->setExpiration('+ 20 minutes', TRUE);
 			}
-			$this->getUser()->authenticate($values['username'], $values['password']);
+			$this->getUser()->login($values['username'], $values['password']);
 			$this->redirect('Homepage:');
 
 		} catch (AuthenticationException $e) {

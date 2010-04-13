@@ -14,8 +14,8 @@ class DashboardPresenter extends BasePresenter
 	{
 		// user authentication
 		$user = Environment::getUser();
-		if (!$user->isAuthenticated()) {
-			if ($user->getSignOutReason() === User::INACTIVITY) {
+		if (!$user->isLoggedIn()) {
+			if ($user->getLogoutReason() === User::INACTIVITY) {
 				$this->flashMessage('You have been logged out due to inactivity. Please login again.');
 			}
 			$backlink = $this->getApplication()->storeRequest();
@@ -86,7 +86,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function actionLogout()
 	{
-		Environment::getUser()->signOut();
+		Environment::getUser()->logout();
 		$this->flashMessage('You have been logged off.');
 		$this->redirect('Auth:login');
 	}
