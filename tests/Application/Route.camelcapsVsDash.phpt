@@ -23,11 +23,11 @@ $route = new Route('<presenter>', array(
 	'presenter' => 'DefaultPresenter',
 ));
 
-testRoute($route, '/abc-x-y-z');
+testRouteIn($route, '/abc-x-y-z');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
-testRoute($route, '/--');
+testRouteIn($route, '/--');
 
 
 

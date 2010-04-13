@@ -23,7 +23,7 @@ $route = new Route('<presenter>/<action>/<extra>', array(
 ));
 
 
-testRoute($route, '/presenter/action/12');
+testRouteIn($route, '/presenter/action/12');
 
 
 

@@ -23,11 +23,11 @@ $route = new Route('[!<lang [a-z]{2}>[-<sub>]/]<name>[/page-<page>]', array(
 	'lang' => 'cs',
 ));
 
-testRoute($route, '/cs-cz/name');
+testRouteIn($route, '/cs-cz/name');
 
-testRoute($route, '/cs-xx/name');
+testRouteIn($route, '/cs-xx/name');
 
-testRoute($route, '/name');
+testRouteIn($route, '/name');
 
 
 

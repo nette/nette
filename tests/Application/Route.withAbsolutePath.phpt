@@ -24,7 +24,7 @@ $route = new Route('/<abspath>/', array(
 	'action' => 'default',
 ));
 
-testRoute($route, '/abc');
+testRouteIn($route, '/abc');
 
 
 

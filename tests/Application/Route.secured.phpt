@@ -24,7 +24,7 @@ $route = new Route('<param>', array(
 ), Route::SECURED);
 
 
-testRoute($route, '/any');
+testRouteIn($route, '/any');
 
 
 
@@ -40,4 +40,4 @@ array(2) {
 	"test" => string(9) "testvalue"
 }
 
-string(42) "https://admin.texy.info/any?test=testvalue"
+string(38) "https://example.com/any?test=testvalue"

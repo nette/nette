@@ -21,9 +21,9 @@ require dirname(__FILE__) . '/Route.inc';
 $route = new Route('index[.html]', array(
 ));
 
-testRoute($route, '/index.html');
+testRouteIn($route, '/index.html');
 
-testRoute($route, '/index');
+testRouteIn($route, '/index');
 
 
 

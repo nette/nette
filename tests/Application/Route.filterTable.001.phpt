@@ -29,9 +29,9 @@ Route::setStyleProperty('#xlat', Route::FILTER_TABLE, array(
 
 $route = new Route('<presenter #xlat>', array());
 
-testRoute($route, '/kategorie/');
+testRouteIn($route, '/kategorie/');
 
-testRoute($route, '/other/');
+testRouteIn($route, '/other/');
 
 
 

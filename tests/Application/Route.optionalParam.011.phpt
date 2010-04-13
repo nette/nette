@@ -21,7 +21,7 @@ require dirname(__FILE__) . '/Route.inc';
 $route = new Route('[<one>/][<two>]', array(
 ));
 
-testRoute($route, '/one');
+testRouteIn($route, '/one');
 
 
 output();
@@ -31,7 +31,7 @@ $route = new Route('[<one>/]<two>', array(
 	'two' => NULL,
 ));
 
-testRoute($route, '/one');
+testRouteIn($route, '/one');
 
 
 

@@ -24,7 +24,7 @@ $route = new Route('<param>', array(
 ));
 
 
-testRoute($route, '/a%3Ab');
+testRouteIn($route, '/a%3Ab');
 
 
 

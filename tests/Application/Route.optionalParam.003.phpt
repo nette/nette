@@ -23,13 +23,13 @@ $route = new Route('[<one [a-z]+><two [0-9]+>]', array(
 	'two' => '1',
 ));
 
-testRoute($route, '/a1');
+testRouteIn($route, '/a1');
 
-testRoute($route, '/x1');
+testRouteIn($route, '/x1');
 
-testRoute($route, '/a2');
+testRouteIn($route, '/a2');
 
-testRoute($route, '/x2');
+testRouteIn($route, '/x2');
 
 
 

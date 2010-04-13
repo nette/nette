@@ -25,9 +25,9 @@ $route = new Route('<action> ? <presenter>', array(
 ));
 
 
-testRoute($route, '/action/');
+testRouteIn($route, '/action/');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
 
 

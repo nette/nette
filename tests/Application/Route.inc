@@ -6,11 +6,11 @@
 
 
 
-function testRoute(/*Nette\Application\*/Route $route, $uri)
+function testRouteIn(/*Nette\Application\*/Route $route, $uri)
 {
 	output("==> $uri");
 
-	$uri = new /*Nette\Web\*/UriScript("http://admin.texy.info$uri");
+	$uri = new /*Nette\Web\*/UriScript("http://example.com$uri");
 	$uri->scriptPath = '/';
 	$uri->appendQuery(array(
 		'test' => 'testvalue',
@@ -32,11 +32,29 @@ function testRoute(/*Nette\Application\*/Route $route, $uri)
 		unset($params['extra']);
 		$request->setParams($params);
 		$result = $route->constructUrl($request, $httpRequest);
-		$result = strncmp($result, 'http://admin.texy.info', 22) ? $result : substr($result, 22);
+		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
 		dump( $result );
 
 	} else { // not matched
 		output('not matched');
 	}
+}
+
+
+
+function testRouteOut(/*Nette\Application\*/Route $route, $link, $params = array())
+{
+	output("==> [$link]");
+
+	$uri = new /*Nette\Web\*/UriScript("http://example.com");
+	$uri->scriptPath = '/';
+	$httpRequest = new /*Nette\Web\*/HttpRequest;
+	$httpRequest->initialize();
+	$httpRequest->setUri($uri);
+
+	$request = new /*Nette\Application\*/PresenterRequest($link, 'GET', $params);
+	$result = $route->constructUrl($request, $httpRequest);
+
+	dump( $result );
 }
 

@@ -24,23 +24,23 @@ $route = new Route('<presenter>/<action>/<id \d{1,3}>', array(
 	'id' => NULL,
 ));
 
-testRoute($route, '/presenter/action/12/any');
+testRouteIn($route, '/presenter/action/12/any');
 
-testRoute($route, '/presenter/action/12/');
+testRouteIn($route, '/presenter/action/12/');
 
-testRoute($route, '/presenter/action/12');
+testRouteIn($route, '/presenter/action/12');
 
-testRoute($route, '/presenter/action/1234');
+testRouteIn($route, '/presenter/action/1234');
 
-testRoute($route, '/presenter/action/');
+testRouteIn($route, '/presenter/action/');
 
-testRoute($route, '/presenter/action');
+testRouteIn($route, '/presenter/action');
 
-testRoute($route, '/presenter/');
+testRouteIn($route, '/presenter/');
 
-testRoute($route, '/presenter');
+testRouteIn($route, '/presenter');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
 
 
