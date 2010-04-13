@@ -24,11 +24,11 @@ $route = new Route('[<module admin|image>/]<presenter>/<action>', array(
 	'action' => 'default',
 ));
 
-testRoute($route, '/one');
+testRouteIn($route, '/one');
 
-testRoute($route, '/admin/one');
+testRouteIn($route, '/admin/one');
 
-testRoute($route, '/one/admin');
+testRouteIn($route, '/one/admin');
 
 
 

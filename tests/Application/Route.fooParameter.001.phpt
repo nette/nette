@@ -23,15 +23,15 @@ $route = new Route('index<?.xml \.html?|\.php|>/', array(
 	'presenter' => 'DefaultPresenter',
 ));
 
-testRoute($route, '/index.');
+testRouteIn($route, '/index.');
 
-testRoute($route, '/index.xml');
+testRouteIn($route, '/index.xml');
 
-testRoute($route, '/index.php');
+testRouteIn($route, '/index.php');
 
-testRoute($route, '/index.htm');
+testRouteIn($route, '/index.htm');
 
-testRoute($route, '/index');
+testRouteIn($route, '/index');
 
 
 

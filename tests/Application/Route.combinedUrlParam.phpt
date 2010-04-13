@@ -25,15 +25,15 @@ $route = new Route('extra<presenter>/<action>', array(
 ));
 
 
-testRoute($route, '/presenter/action/');
+testRouteIn($route, '/presenter/action/');
 
-testRoute($route, '/extrapresenter/action/');
+testRouteIn($route, '/extrapresenter/action/');
 
-testRoute($route, '/extradefault/default/');
+testRouteIn($route, '/extradefault/default/');
 
-testRoute($route, '/extra');
+testRouteIn($route, '/extra');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
 
 

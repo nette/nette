@@ -25,11 +25,11 @@ $route = new Route('<presenter>/<id>', array(
 	),
 ), Route::FULL_META);
 
-testRoute($route, '/presenter/12/');
+testRouteIn($route, '/presenter/12/');
 
-testRoute($route, '/presenter/1234');
+testRouteIn($route, '/presenter/1234');
 
-testRoute($route, '/presenter/');
+testRouteIn($route, '/presenter/');
 
 
 

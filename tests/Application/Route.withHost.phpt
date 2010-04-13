@@ -19,13 +19,13 @@ require dirname(__FILE__) . '/Route.inc';
 
 
 
-$route = new Route('//<host>.texy.<domain>/<path>', array(
+$route = new Route('//<host>.<domain>/<path>', array(
 	'presenter' => 'Default',
 	'action' => 'default',
 ));
 
 
-testRoute($route, '/abc');
+testRouteIn($route, '/abc');
 
 
 
@@ -37,8 +37,8 @@ __halt_compiler();
 string(7) "Default"
 
 array(5) {
-	"host" => string(5) "admin"
-	"domain" => string(4) "info"
+	"host" => string(7) "example"
+	"domain" => string(3) "com"
 	"path" => string(3) "abc"
 	"action" => string(7) "default"
 	"test" => string(9) "testvalue"

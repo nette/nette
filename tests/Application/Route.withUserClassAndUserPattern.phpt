@@ -24,11 +24,11 @@ Route::setStyleProperty('#numeric', Route::PATTERN, '\d{1,3}');
 
 $route = new Route('<presenter>/<id [\d.]+#numeric>', array());
 
-testRoute($route, '/presenter/12.34/');
+testRouteIn($route, '/presenter/12.34/');
 
-testRoute($route, '/presenter/123x');
+testRouteIn($route, '/presenter/123x');
 
-testRoute($route, '/presenter/');
+testRouteIn($route, '/presenter/');
 
 
 

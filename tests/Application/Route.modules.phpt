@@ -23,9 +23,12 @@ $route = new Route('<presenter>', array(
 	'module' => 'module:submodule',
 ));
 
-testRoute($route, '/abc');
+testRouteIn($route, '/abc');
+testRouteIn($route, '/');
+testRouteOut($route, 'Homepage');
+testRouteOut($route, 'Module:Homepage');
+testRouteOut($route, 'Module:Submodule:Homepage');
 
-testRoute($route, '/');
 
 
 $route = new Route('<presenter>', array(
@@ -33,9 +36,10 @@ $route = new Route('<presenter>', array(
 	'presenter' => 'Default',
 ));
 
-testRoute($route, '/');
-
-
+testRouteIn($route, '/');
+testRouteOut($route, 'Homepage');
+testRouteOut($route, 'Module:Homepage');
+testRouteOut($route, 'Module:Submodule:Homepage');
 
 
 
@@ -43,7 +47,22 @@ $route = new Route('<module>/<presenter>', array(
 	'presenter' => 'AnyDefault',
 ));
 
-testRoute($route, '/module.submodule');
+testRouteIn($route, '/module.submodule');
+testRouteOut($route, 'Homepage');
+testRouteOut($route, 'Module:Homepage');
+testRouteOut($route, 'Module:Submodule:Homepage');
+
+
+
+$route = new Route('<module>/<presenter>', array(
+	'module' => 'Module:Submodule',
+	'presenter' => 'Default',
+));
+
+testRouteIn($route, '/module.submodule');
+testRouteOut($route, 'Homepage');
+testRouteOut($route, 'Module:Homepage');
+testRouteOut($route, 'Module:Submodule:Homepage');
 
 
 
@@ -64,6 +83,18 @@ string(19) "/abc?test=testvalue"
 
 not matched
 
+==> [Homepage]
+
+NULL
+
+==> [Module:Homepage]
+
+NULL
+
+==> [Module:Submodule:Homepage]
+
+string(27) "http://example.com/homepage"
+
 ==> /
 
 string(24) "Module:Submodule:Default"
@@ -74,6 +105,18 @@ array(1) {
 
 string(16) "/?test=testvalue"
 
+==> [Homepage]
+
+NULL
+
+==> [Module:Homepage]
+
+NULL
+
+==> [Module:Submodule:Homepage]
+
+string(27) "http://example.com/homepage"
+
 ==> /module.submodule
 
 string(27) "Module:Submodule:AnyDefault"
@@ -83,3 +126,37 @@ array(1) {
 }
 
 string(33) "/module.submodule/?test=testvalue"
+
+==> [Homepage]
+
+NULL
+
+==> [Module:Homepage]
+
+string(34) "http://example.com/module/homepage"
+
+==> [Module:Submodule:Homepage]
+
+string(44) "http://example.com/module.submodule/homepage"
+
+==> /module.submodule
+
+string(24) "Module:Submodule:Default"
+
+array(1) {
+	"test" => string(9) "testvalue"
+}
+
+string(16) "/?test=testvalue"
+
+==> [Homepage]
+
+NULL
+
+==> [Module:Homepage]
+
+string(34) "http://example.com/module/homepage"
+
+==> [Module:Submodule:Homepage]
+
+string(44) "http://example.com/module.submodule/homepage"

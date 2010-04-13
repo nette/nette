@@ -24,29 +24,53 @@ $route = new Route('<presenter>/<action>/<id \d{1,3}>', array(
 	'id' => NULL,
 ));
 
-testRoute($route, '/presenter/action/12/any');
+testRouteOut($route, 'Homepage');
 
-testRoute($route, '/presenter/action/12/');
+testRouteOut($route, 'Homepage', array('action' => 'default'));
 
-testRoute($route, '/presenter/action/12');
+testRouteOut($route, 'Homepage', array('id' => 'word'));
 
-testRoute($route, '/presenter/action/1234');
+testRouteOut($route, 'Front:Homepage');
 
-testRoute($route, '/presenter/action/');
+testRouteIn($route, '/presenter/action/12/any');
 
-testRoute($route, '/presenter/action');
+testRouteIn($route, '/presenter/action/12/');
 
-testRoute($route, '/presenter/');
+testRouteIn($route, '/presenter/action/12');
 
-testRoute($route, '/presenter');
+testRouteIn($route, '/presenter/action/1234');
 
-testRoute($route, '/');
+testRouteIn($route, '/presenter/action/');
+
+testRouteIn($route, '/presenter/action');
+
+testRouteIn($route, '/presenter/');
+
+testRouteIn($route, '/presenter');
+
+testRouteIn($route, '/');
 
 
 
 __halt_compiler();
 
 ------EXPECT------
+==> [Homepage]
+
+string(28) "http://example.com/homepage/"
+
+==> [Homepage]
+
+string(28) "http://example.com/homepage/"
+
+==> [Homepage]
+
+NULL
+
+==> [Front:Homepage]
+
+string(34) "http://example.com/front.homepage/"
+
 ==> /presenter/action/12/any
 
 not matched

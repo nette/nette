@@ -23,11 +23,11 @@ $route = new Route('<param č>', array(
 	'presenter' => 'Default',
 ));
 
-testRoute($route, '/č');
+testRouteIn($route, '/č');
 
-testRoute($route, '/%C4%8D');
+testRouteIn($route, '/%C4%8D');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
 
 

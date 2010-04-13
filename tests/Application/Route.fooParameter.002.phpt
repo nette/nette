@@ -24,13 +24,13 @@ $route = new Route('index<?.xml>/', array(
 ));
 
 
-testRoute($route, '/index.');
+testRouteIn($route, '/index.');
 
-testRoute($route, '/index.xml');
+testRouteIn($route, '/index.xml');
 
-testRoute($route, '/index.php');
+testRouteIn($route, '/index.php');
 
-testRoute($route, '/index');
+testRouteIn($route, '/index');
 
 
 

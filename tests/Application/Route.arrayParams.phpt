@@ -24,7 +24,7 @@ $route = new Route(' ? arr=<arr>', array(
 	'arr' => '',
 ));
 
-testRoute($route, '/?arr[1]=1&arr[2]=2');
+testRouteIn($route, '/?arr[1]=1&arr[2]=2');
 
 
 

@@ -23,9 +23,9 @@ $route = new Route('index.php', array(
 	'action' => 'default',
 ));
 
-testRoute($route, '/index.php');
+testRouteIn($route, '/index.php');
 
-testRoute($route, '/');
+testRouteIn($route, '/');
 
 
 

@@ -25,7 +25,7 @@ $route = new Route('<presenter>/<action>', array(
 ), Route::ONE_WAY);
 
 
-testRoute($route, '/presenter/action/');
+testRouteIn($route, '/presenter/action/');
 
 
 
