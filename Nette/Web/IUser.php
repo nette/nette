@@ -15,7 +15,7 @@
 
 
 /**
- * Authentication and authorization.
+ * User authentication and authorization.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web
@@ -31,19 +31,19 @@ interface IUser
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	function authenticate($username, $password, $extra = NULL);
+	function login($username, $password, $extra = NULL);
 
 	/**
-	 * Logs off the user from the current session.
+	 * Logs out the user from the current session.
 	 * @return void
 	 */
-	function signOut($clearIdentity = FALSE);
+	function logout($clearIdentity = FALSE);
 
 	/**
 	 * Is this user authenticated?
 	 * @return bool
 	 */
-	function isAuthenticated();
+	function isLoggedIn();
 
 	/**
 	 * Returns current user identity, if any.

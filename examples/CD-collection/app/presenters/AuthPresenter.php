@@ -41,7 +41,7 @@ class AuthPresenter extends BasePresenter
 		$form->onSubmit[] = function($form) use ($presenter) {
 			try {
 				$user = Environment::getUser();
-				$user->authenticate($form['username']->getValue(), $form['password']->getValue());
+				$user->login($form['username']->getValue(), $form['password']->getValue());
 				$presenter->getApplication()->restoreRequest($presenter->backlink);
 				$presenter->redirect('Dashboard:');
 
@@ -58,7 +58,7 @@ class AuthPresenter extends BasePresenter
 	{
 		try {
 			$user = Environment::getUser();
-			$user->authenticate($form['username']->getValue(), $form['password']->getValue());
+			$user->login($form['username']->getValue(), $form['password']->getValue());
 			$this->getApplication()->restoreRequest($this->backlink);
 			$this->redirect('Dashboard:');
 

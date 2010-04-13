@@ -17,7 +17,7 @@
 
 
 /**
- * Authentication and authorization.
+ * User authentication and authorization.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web
@@ -25,13 +25,13 @@
  * @property-read Nette\Security\IIdentity $identity
  * @property   Nette\Security\IAuthenticator $authenticationHandler
  * @property   Nette\Security\IAuthorizator $authorizationHandler
- * @property-read int $signOutReason
+ * @property-read int $logoutReason
  * @property-read array $roles
  * @property-read bool $authenticated
  */
 class User extends /*Nette\*/Object implements IUser
 {
-	/**#@+ sign-out reason {@link User::getSignOutReason()} */
+	/**#@+ log-out reason {@link User::getLogoutReason()} */
 	const MANUAL = 1;
 	const INACTIVITY = 2;
 	const BROWSER_CLOSED = 3;
@@ -43,11 +43,11 @@ class User extends /*Nette\*/Object implements IUser
 	/** @var string  default role for authenticated user without own identity */
 	public $authenticatedRole = 'authenticated';
 
-	/** @var array of function(User $sender); Occurs when the user is successfully authenticated */
-	public $onAuthenticated;
+	/** @var array of function(User $sender); Occurs when the user is successfully logged in */
+	public $onLoggedIn;
 
-	/** @var array of function(User $sender); Occurs when the user is logged off */
-	public $onSignedOut;
+	/** @var array of function(User $sender); Occurs when the user is logged out */
+	public $onLoggedOut;
 
 	/** @var Nette\Security\IAuthenticator */
 	private $authenticationHandler;
@@ -75,14 +75,14 @@ class User extends /*Nette\*/Object implements IUser
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	public function authenticate($username, $password, $extra = NULL)
+	public function login($username, $password, $extra = NULL)
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {
 			throw new /*\*/InvalidStateException('Authentication handler has not been set.');
 		}
 
-		$this->signOut(TRUE);
+		$this->logout(TRUE);
 
 		$credentials = array(
 			/*Nette\Security\*/IAuthenticator::USERNAME => $username,
@@ -92,21 +92,21 @@ class User extends /*Nette\*/Object implements IUser
 
 		$this->setIdentity($handler->authenticate($credentials));
 		$this->setAuthenticated(TRUE);
-		$this->onAuthenticated($this);
+		$this->onLoggedIn($this);
 	}
 
 
 
 	/**
-	 * Logs off the user from the current session.
+	 * Logs out the user from the current session.
 	 * @param  bool  clear the identity from persistent storage?
 	 * @return void
 	 */
-	final public function signOut($clearIdentity = FALSE)
+	final public function logout($clearIdentity = FALSE)
 	{
-		if ($this->isAuthenticated()) {
+		if ($this->isLoggedIn()) {
 			$this->setAuthenticated(FALSE);
-			$this->onSignedOut($this);
+			$this->onLoggedOut($this);
 		}
 
 		if ($clearIdentity) {
@@ -120,7 +120,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * Is this user authenticated?
 	 * @return bool
 	 */
-	final public function isAuthenticated()
+	final public function isLoggedIn()
 	{
 		$session = $this->getSessionNamespace(FALSE);
 		return $session && $session->authenticated;
@@ -207,9 +207,9 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Enables sign out after inactivity.
+	 * Enables log out after inactivity.
 	 * @param  string|int|DateTime number of seconds or timestamp
-	 * @param  bool  sign out when the browser is closed?
+	 * @param  bool  log out when the browser is closed?
 	 * @param  bool  clear the identity from persistent storage?
 	 * @return User  provides a fluent interface
 	 */
@@ -235,10 +235,10 @@ class User extends /*Nette\*/Object implements IUser
 
 
 	/**
-	 * Why was user signed out?
+	 * Why was user logged out?
 	 * @return int
 	 */
-	final public function getSignOutReason()
+	final public function getLogoutReason()
 	{
 		$session = $this->getSessionNamespace(FALSE);
 		return $session ? $session->reason : NULL;
@@ -270,7 +270,7 @@ class User extends /*Nette\*/Object implements IUser
 		if ($session->authenticated && $session->expireBrowser && !$session->browserCheck) { // check if browser was closed?
 			$session->reason = self::BROWSER_CLOSED;
 			$session->authenticated = FALSE;
-			$this->onSignedOut($this);
+			$this->onLoggedOut($this);
 			if ($session->expireIdentity) {
 				unset($session->identity);
 			}
@@ -280,7 +280,7 @@ class User extends /*Nette\*/Object implements IUser
 			if ($session->expireTime < time()) {
 				$session->reason = self::INACTIVITY;
 				$session->authenticated = FALSE;
-				$this->onSignedOut($this);
+				$this->onLoggedOut($this);
 				if ($session->expireIdentity) {
 					unset($session->identity);
 				}
@@ -347,7 +347,7 @@ class User extends /*Nette\*/Object implements IUser
 	 */
 	public function getRoles()
 	{
-		if (!$this->isAuthenticated()) {
+		if (!$this->isLoggedIn()) {
 			return array($this->guestRole);
 		}
 
@@ -431,5 +431,29 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		return Environment::getSession();
 	}
+
+
+
+	/**#@+ @deprecated */
+	function authenticate($username, $password, $extra = NULL)
+	{
+		return $this->login($username, $password, $extra);
+	}
+	
+	function signOut($clearIdentity = FALSE) 
+	{ 
+		return $this->logout($clearIdentity); 
+	}
+	
+	function isAuthenticated() 
+	{ 
+		return $this->isLoggedIn(); 
+	}
+	
+	function getSignOutReason() 
+	{ 
+		return $this->getLogoutReason(); 
+	}
+	/**#@-*/
 
 }

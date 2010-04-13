@@ -71,7 +71,7 @@ class AuthorizationHandler implements IAuthorizator
 $user = new User;
 
 // guest
-dump( $user->isAuthenticated(), "isAuthenticated?" );
+dump( $user->isLoggedIn(), "isLoggedIn?" );
 
 dump( $user->getRoles(), "getRoles()" );
 
@@ -84,10 +84,10 @@ dump( $user->isInRole('guest'), "is guest?" );
 $handler = new AuthenticationHandler;
 $user->setAuthenticationHandler($handler);
 
-output("authenticate as john");
-$user->authenticate('john', 'xxx');
+output("login as john");
+$user->login('john', 'xxx');
 
-dump( $user->isAuthenticated(), "isAuthenticated?" );
+dump( $user->isLoggedIn(), "isLoggedIn?" );
 
 dump( $user->getRoles(), "getRoles()" );
 
@@ -112,9 +112,9 @@ dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 dump( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
 
 
-// sign out
-output("signing out...");
-$user->signOut(FALSE);
+// log out
+output("logging out...");
+$user->logout(FALSE);
 
 dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 
@@ -123,7 +123,7 @@ dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 __halt_compiler();
 
 ------EXPECT------
-isAuthenticated? bool(FALSE)
+isLoggedIn? bool(FALSE)
 
 getRoles(): array(1) {
 	0 => string(5) "guest"
@@ -133,9 +133,9 @@ is admin? bool(FALSE)
 
 is guest? bool(TRUE)
 
-authenticate as john
+login as john
 
-isAuthenticated? bool(TRUE)
+isLoggedIn? bool(TRUE)
 
 getRoles(): array(1) {
 	0 => string(5) "admin"
@@ -151,6 +151,6 @@ isAllowed('delete_file')? bool(TRUE)
 
 isAllowed('sleep_with_jany')? bool(FALSE)
 
-signing out...
+logging out...
 
 isAllowed('delete_file')? bool(FALSE)
