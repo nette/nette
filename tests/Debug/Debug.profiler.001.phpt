@@ -30,9 +30,7 @@ __halt_compiler();
 
 ------EXPECT------
 
-<style type="text/css">
-%A%
-</style>
+<style type="text/css">%A%</style>
 
 
 <div id="netteProfilerContainer">
@@ -45,8 +43,4 @@ __halt_compiler();
 </div>
 
 
-<script type="text/javascript">
-/* <![CDATA[ */
-%A%
-/* ]]> */
-</script>
+<script type="text/javascript">%A%</script>

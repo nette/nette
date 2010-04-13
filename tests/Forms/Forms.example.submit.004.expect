@@ -201,9 +201,6 @@
 </div>
 <div><input type="hidden" name="userid" id="frm-userid" value="231" /></div>
 </form>
-<script type="text/javascript">
-/* <![CDATA[ */
-
 %A%
 nette.forms["frm-"] = {
 	validators: {
@@ -272,8 +269,5 @@ nette.forms["frm-"] = {
 	}
 }
 %A%
-/* ]]> */
-</script>
-
 </body>
 </html>

@@ -77,7 +77,7 @@ class User extends /*Nette\*/Object implements IUser
 	}
 
 
-	
+
 	/********************* Authentication ****************d*g**/
 
 
@@ -442,20 +442,20 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		return $this->login($username, $password, $extra);
 	}
-	
-	function signOut($clearIdentity = FALSE) 
-	{ 
-		return $this->logout($clearIdentity); 
+
+	function signOut($clearIdentity = FALSE)
+	{
+		return $this->logout($clearIdentity);
 	}
-	
-	function isAuthenticated() 
-	{ 
-		return $this->isLoggedIn(); 
+
+	function isAuthenticated()
+	{
+		return $this->isLoggedIn();
 	}
-	
-	function getSignOutReason() 
-	{ 
-		return $this->getLogoutReason(); 
+
+	function getSignOutReason()
+	{
+		return $this->getLogoutReason();
 	}
 	/**#@-*/
 

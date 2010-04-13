@@ -182,8 +182,6 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	document.body.appendChild(document.getElementById('netteBluescreen'));
-</script>
+<script type="text/javascript">%A%</script>
 </body>
 </html>

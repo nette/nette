@@ -143,91 +143,7 @@
 
 <div><input type="hidden" name="userid" id="frm-userid" value="231" /></div>
 </form>
-<script type="text/javascript">
-/* <![CDATA[ */
-
-var nette = nette || { };
-
-nette.getValue = function(elem) {
-	if (!elem) {
-		var undefined;
-		return undefined;
-	}
-
-	if (!elem.nodeName) { // radio
-		for (var i = 0, len = elem.length; i < len; i++) {
-			if (elem[i].checked) {
-				return elem[i].value;
-			}
-		}
-		return null;
-	}
-
-	if (elem.nodeName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex, options = elem.options;
-
-		if (index < 0) {
-			return null;
-
-		} else if (elem.type === 'select-one') {
-			return options[index].value;
-		}
-
-		for (var i = 0, values = [], len = options.length; i < len; i++) {
-			if (options[i].selected) {
-				values.push(options[i].value);
-			}
-		}
-		return values;
-	}
-
-	if (elem.type === 'checkbox') {
-		return elem.checked;
-	}
-
-	return elem.value.replace(/^\s+|\s+$/g, '');
-}
-
-
-nette.getFormValidators = function(form) {
-	var id = form.getAttributeNode('id').nodeValue;
-	return this.forms[id] ? this.forms[id].validators : [];
-}
-
-
-nette.validateControl = function(control) {
-	var validator = this.getFormValidators(control.form)[control.name];
-	return validator ? validator(control) : null;
-}
-
-
-nette.validateForm = function(sender) {
-	var form = sender.form || sender;
-	var validators = this.getFormValidators(form);
-	for (var name in validators) {
-		var error = validators[name](sender);
-		if (error) {
-			if (form[name].focus) {
-				form[name].focus();
-			}
-			alert(error);
-			return false;
-		}
-	}
-	return true;
-}
-
-
-nette.toggle = function(id, visible) {
-	var elem = document.getElementById(id);
-	if (elem) {
-		elem.style.display = visible ? "" : "none";
-	}
-}
-
-
-nette.forms = nette.forms || { };
-
+%A%
 nette.forms["frm-"] = {
 	validators: {
 		"name": function(sender) {
@@ -297,9 +213,6 @@ nette.forms["frm-"] = {
 
 
 nette.forms["frm-"].toggle(document.getElementById("frm-"));
-
-/* ]]> */
-</script>
-
+%A%
 </body>
 </html>

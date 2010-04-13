@@ -9,8 +9,7 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Forms\TextBase;*/
-/*use Nette\Forms\TextInput;*/
+/*use Nette\Forms\Form;*/
 
 
 

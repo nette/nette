@@ -28,10 +28,11 @@ Warning: Capturing {block $capture} is deprecated; use {capture $capture} instea
 
 
 
-<a href="#" > test</a > AŠA <script>
+<a href="#" > test</a > AŠA<script>
 // comment
 alert();
 </script>
+
 
 
 
