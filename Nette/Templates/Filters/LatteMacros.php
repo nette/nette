@@ -515,7 +515,7 @@ class LatteMacros extends /*Nette\*/Object
 				return "{block $name}";
 
 			} else {
-				return 'if (!$_cb->extends) { ' . $this->macroInclude('#' . $name, $modifiers) . "; } {block $name}";
+				return 'if (!$_cb->extends) { ' . $this->macroInclude('#' . $name, $modifiers, TRUE) . "; } {block $name}";
 			}
 		}
 	}
