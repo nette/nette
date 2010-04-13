@@ -39,6 +39,7 @@
  * - {contentType ...} HTTP Content-Type header
  * - {status ...} HTTP status
  * - {capture ?} ... {/capture} capture block to parameter
+ * - {var var => value} set template parameter
  * - {assign var => value} set template parameter
  * - {default var => value} set default template parameter
  * - {dump $var}
@@ -95,6 +96,7 @@ class LatteMacros extends /*Nette\*/Object
 		'attr' => '<?php echo Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'status' => '<?php Environment::getHttpResponse()->setCode(%%) ?>',
+		'var' => '<?php %:macroAssign% ?>',
 		'assign' => '<?php %:macroAssign% ?>',
 		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php Debug::barDump(%:macroDump%, "Template " . str_replace(Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
@@ -759,7 +761,7 @@ class LatteMacros extends /*Nette\*/Object
 	public function macroAssign($content, $modifiers)
 	{
 		if (!$content) {
-			throw new /*\*/InvalidStateException("Missing arguments in {assign} on line {$this->filter->line}.");
+			throw new /*\*/InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
 		}
 		if (strpos($content, '=>') === FALSE) { // back compatibility
 			return '$' . ltrim(LatteFilter::fetchToken($content), '$') . ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
