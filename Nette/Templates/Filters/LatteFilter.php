@@ -506,6 +506,7 @@ class LatteFilter extends /*Nette\*/Object
 			array(__CLASS__, 'cbArgs'),
 			trim($s)
 		);
+		$s = preg_replace('#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>', $s);
 		return $s === '' ? '' : $prefix . "array($s)";
 	}
 
