@@ -51,7 +51,7 @@
 		<?php foreach ($params as $key => $value): ?>
 		<tr>
 			<td><code><?php echo htmlSpecialChars($key) ?></code></td>
-			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: Debug::dump($value); endif ?></td>
+			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo Debug::dump($value, TRUE); endif ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>
