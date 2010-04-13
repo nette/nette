@@ -263,7 +263,9 @@ class Route extends /*Nette\*/Object implements IRouter
 			} else {
 				$a = strrpos($presenter, ':');
 			}
-			if ($a !== FALSE) {
+			if ($a === FALSE) {
+				$params[self::MODULE_KEY] = '';
+			} else {
 				$params[self::MODULE_KEY] = substr($presenter, 0, $a);
 				$params[self::PRESENTER_KEY] = substr($presenter, $a + 1);
 			}
