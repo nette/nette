@@ -158,7 +158,7 @@ abstract class Presenter extends Control implements IPresenter
 			$this->startup();
 			if (!$this->startupCheck) {
 				$class = $this->reflection->getMethod('startup')->getDeclaringClass()->getName();
-				trigger_error("Method $class::startup() or its descendant doesn't call parent::startup().", E_USER_WARNING);
+				throw new /*\*/InvalidStateException("Method $class::startup() or its descendant doesn't call parent::startup().");
 			}
 			// calls $this->action<Action>()
 			$this->tryCall($this->formatActionMethod($this->getAction()), $this->params);

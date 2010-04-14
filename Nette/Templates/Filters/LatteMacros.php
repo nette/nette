@@ -478,11 +478,6 @@ class LatteMacros extends /*Nette\*/Object
 	 */
 	public function macroBlock($content, $modifiers)
 	{
-		if (substr($content, 0, 1) === '$') { // capture - back compatibility
-			trigger_error("Capturing {block $content} is deprecated; use {capture $content} instead on line {$this->filter->line}.", E_USER_WARNING);
-			return $this->macroCapture($content, $modifiers);
-		}
-
 		$name = LatteFilter::fetchToken($content); // block [,] [params]
 
 		if ($name === NULL) { // anonymous block

@@ -1,5 +1,3 @@
-
-Warning: Capturing {block $capture} is deprecated; use {capture $capture} instead on line %a%
 <ul>
 	<li>lower: hello world</li>
 	<li>upper: HELLO WORLD</li>
@@ -34,12 +32,6 @@ alert();
 </script>
 
 
-
-
-
-<p>
-Captured: deprecated
-</p>
 
 
 
