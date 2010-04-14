@@ -165,6 +165,10 @@ class Configurator extends Object
 					throw new /*\*/InvalidStateException("Configuration value for directive '$key' is not scalar.");
 				}
 
+				if ($key === 'date.timezone') { // PHP bug #47466
+					date_default_timezone_set($value);
+				}
+
 				if (function_exists('ini_set')) {
 					ini_set($key, $value);
 				} else {
