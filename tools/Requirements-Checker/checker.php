@@ -284,5 +284,5 @@ function paint($requirements)
 function iniFlag($var)
 {
 	$status = strtolower(ini_get($var));
-	return $status === 'on' || $status === 'true' || $status === 'yes' || $status % 256;
+	return $status === 'on' || $status === 'true' || $status === 'yes' || (int) $status;
 }
