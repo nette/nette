@@ -118,6 +118,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 		if (!is_string($key) && !is_int($key)) {
 			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
+		$key = $this->namespace . self::NAMESPACE_SEPARATOR . $key;
 
 		// convert expire into relative amount of seconds
 		if (!empty($dp[Cache::EXPIRE])) {
@@ -149,17 +150,23 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 			unset($dp[self::CONSTS]);
 		}
 
+		if ($data instanceof /*Nette\*/Callback || $data instanceof /*\*/Closure) {
+			/*Nette\*/Environment::enterCriticalSection('Nette\Caching/' . $key);
+			$data = $data->__invoke();
+			/*Nette\*/Environment::leaveCriticalSection('Nette\Caching/' . $key);
+		}	
+
 		if (is_object($data)) {
 			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
 				/*Nette\Reflection\*/ClassReflection::from($data)->getAnnotation('serializationVersion'));
 		}
 
 		$this->key = NULL;
-		$this->storage->write(
-			$this->namespace . self::NAMESPACE_SEPARATOR . $key,
-			$data,
-			(array) $dp
-		);
+		if ($data === NULL) {
+			$this->storage->remove($key);
+		} else {
+			$this->storage->write($key, $data, (array) $dp);
+		}
 		return $data;
 	}
 
@@ -195,16 +202,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetSet($key, $data)
 	{
-		if (!is_string($key) && !is_int($key)) { // prevents NULL
-			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
-		}
-
-		$this->key = $this->data = NULL;
-		if ($data === NULL) {
-			$this->storage->remove($this->namespace . self::NAMESPACE_SEPARATOR . $key);
-		} else {
-			$this->storage->write($this->namespace . self::NAMESPACE_SEPARATOR . $key, $data, array());
-		}
+		$this->save($key, $data);
 	}
 
 
