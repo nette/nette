@@ -359,7 +359,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * Adds the component to the container.
 	 * @param  string  component name
 	 * @param  Nette\IComponent
-	 * @return void.
+	 * @return void
 	 */
 	final public function offsetSet($name, $component)
 	{
@@ -394,7 +394,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 
 	/**
-	 * Removes component from the container. Throws exception if component doesn't exist.
+	 * Removes component from the container.
 	 * @param  string  component name
 	 * @return void
 	 */
