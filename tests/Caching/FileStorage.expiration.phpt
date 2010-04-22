@@ -29,30 +29,22 @@ $cache = new Cache(new /*Nette\Caching\*/FileStorage(TEMP_DIR));
 
 output('Writing cache...');
 $cache->save($key, $value, array(
-	Cache::EXPIRE => time() + 2,
+	Cache::EXPIRE => time() + 3,
 ));
 
 
-for($i = 0; $i < 4; $i++) {
-	output('Sleeping 1.2 second');
-	usleep(1100000);
-	clearstatcache();
-	dump( isset($cache[$key]), 'Is cached?' );
-}
+output('Sleeping 1 second');
+sleep(1);
+clearstatcache();
+$cache->release();
+dump( isset($cache[$key]), 'Is cached?' );
 
 
-output('Writing cache with relative expiration...');
-$cache->save($key, $value, array(
-	Cache::EXPIRE => 2,
-));
-
-
-for($i = 0; $i < 4; $i++) {
-	output('Sleeping 1.2 second');
-	usleep(1100000);
-	clearstatcache();
-	dump( isset($cache[$key]), 'Is cached?' );
-}
+output('Sleeping 3 seconds');
+sleep(3);
+clearstatcache();
+$cache->release();
+dump( isset($cache[$key]), 'Is cached?' );
 
 
 
@@ -61,36 +53,10 @@ __halt_compiler();
 ------EXPECT------
 Writing cache...
 
-Sleeping 1.2 second
+Sleeping 1 second
 
 Is cached? bool(TRUE)
 
-Sleeping 1.2 second
-
-Is cached? bool(TRUE)
-
-Sleeping 1.2 second
-
-Is cached? bool(FALSE)
-
-Sleeping 1.2 second
-
-Is cached? bool(FALSE)
-
-Writing cache with relative expiration...
-
-Sleeping 1.2 second
-
-Is cached? bool(TRUE)
-
-Sleeping 1.2 second
-
-Is cached? bool(TRUE)
-
-Sleeping 1.2 second
-
-Is cached? bool(FALSE)
-
-Sleeping 1.2 second
+Sleeping 3 seconds
 
 Is cached? bool(FALSE)

@@ -114,6 +114,7 @@ class Template extends BaseTemplate implements IFileTemplate
 					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
+			$cache->release();
 			$cached = $cache[$key];
 		}
 

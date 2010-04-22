@@ -40,11 +40,13 @@ $cache->save($key, $value, array(
 for($i = 0; $i < 3; $i++) {
 	output('Sleeping 1 second');
 	sleep(1);
+	$cache->release();
 	dump( isset($cache[$key]), 'Is cached?' );
 }
 
 output('Sleeping few seconds...');
 sleep(3);
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 

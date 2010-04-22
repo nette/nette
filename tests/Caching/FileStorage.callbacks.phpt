@@ -39,6 +39,7 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 1)),
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
@@ -47,6 +48,7 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 0)),
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 

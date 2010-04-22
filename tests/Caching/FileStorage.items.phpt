@@ -32,11 +32,13 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => array('dependent'),
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
 output('Modifing dependent cached item');
 $cache['dependent'] = 'hello world';
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
@@ -44,12 +46,14 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
 output('Modifing dependent cached item');
 sleep(2);
 $cache['dependent'] = 'hello europe';
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
@@ -57,11 +61,13 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
 output('Deleting dependent cached item');
 $cache['dependent'] = NULL;
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 

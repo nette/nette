@@ -38,7 +38,8 @@ $cache->save($key, $value, array(
 
 for($i = 0; $i < 4; $i++) {
 	output('Sleeping 1.2 second');
-	usleep(1100000);
+	usleep(1200000);
+	$cache->release();
 	dump( isset($cache[$key]), 'Is cached?' );
 }
 
