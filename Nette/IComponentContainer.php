@@ -49,7 +49,7 @@ interface IComponentContainer extends IComponent
 	 * Iterates over a components.
 	 * @param  bool    recursive?
 	 * @param  string  class types filter
-	 * @return \ArrayIterator
+	 * @return \Iterator
 	 */
 	function getComponents($deep = FALSE, $filterType = NULL);
 
