@@ -38,14 +38,11 @@ class SmartCachingIterator extends /*\*/CachingIterator implements /*\*/Countabl
 		if (is_array($iterator) || $iterator instanceof /*\*/stdClass) {
 			parent::__construct(new /*\*/ArrayIterator($iterator), 0);
 
-		} elseif ($iterator instanceof /*\*/IteratorAggregate) {
-			parent::__construct($iterator->getIterator(), 0);
-
-		} elseif ($iterator instanceof /*\*/Iterator) {
-			parent::__construct($iterator, 0);
+		} elseif ($iterator instanceof /*\*/Traversable) {
+			parent::__construct(new /*\*/IteratorIterator($iterator), 0);
 
 		} else {
-			throw new /*\*/InvalidArgumentException("Invalid argument passed to foreach resp. " . __CLASS__ . "; array or Iterator expected, " . (is_object($iterator) ? get_class($iterator) : gettype($iterator)) ." given.");
+			throw new /*\*/InvalidArgumentException("Invalid argument passed to foreach resp. " . __CLASS__ . "; array or Traversable expected, " . (is_object($iterator) ? get_class($iterator) : gettype($iterator)) ." given.");
 		}
 	}
 
