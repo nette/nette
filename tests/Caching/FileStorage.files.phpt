@@ -37,11 +37,13 @@ $cache->save($key, $value, array(
 		$dependentFile,
 	),
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
 output('Modifing dependent file');
 file_put_contents($dependentFile, 'a');
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
@@ -49,6 +51,7 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
@@ -56,6 +59,7 @@ output('Modifing dependent file');
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 

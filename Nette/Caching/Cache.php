@@ -121,6 +121,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 		if (!is_string($key) && !is_int($key)) {
 			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
 		}
+		$this->key = (string) $key;
 		$key = $this->namespace . self::NAMESPACE_SEPARATOR . $key;
 
 		// convert expire into relative amount of seconds
@@ -157,14 +158,14 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 			/*Nette\*/Environment::enterCriticalSection('Nette\Caching/' . $key);
 			$data = $data->__invoke();
 			/*Nette\*/Environment::leaveCriticalSection('Nette\Caching/' . $key);
-		}	
+		}
 
 		if (is_object($data)) {
 			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
 				/*Nette\Reflection\*/ClassReflection::from($data)->getAnnotation('serializationVersion'));
 		}
 
-		$this->key = NULL;
+		$this->data = $data;
 		if ($data === NULL) {
 			$this->storage->remove($key);
 		} else {
@@ -187,6 +188,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function clean(array $conds = NULL)
 	{
+		$this->release();
 		$this->storage->clean((array) $conds);
 	}
 
@@ -241,13 +243,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetExists($key)
 	{
-		if (!is_string($key) && !is_int($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
-		}
-
-		$this->key = (string) $key;
-		$this->data = $this->storage->read($this->namespace . self::NAMESPACE_SEPARATOR . $key);
-		return $this->data !== NULL;
+		return $this->offsetGet($key) !== NULL;
 	}
 
 
@@ -260,12 +256,7 @@ class Cache extends /*Nette\*/Object implements /*\*/ArrayAccess
 	 */
 	public function offsetUnset($key)
 	{
-		if (!is_string($key) && !is_int($key)) {
-			throw new /*\*/InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
-		}
-
-		$this->key = $this->data = NULL;
-		$this->storage->remove($this->namespace . self::NAMESPACE_SEPARATOR . $key);
+		$this->save($key, NULL);
 	}
 
 

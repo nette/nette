@@ -35,6 +35,7 @@ output('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
+$cache->release();
 
 dump( isset($cache[$key]), 'Is cached?' );
 
