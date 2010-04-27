@@ -105,7 +105,7 @@ class Configurator extends Object
 				$file = $this->defaultConfigFile;
 			}
 			$file = Environment::expand($file);
-			$config = /*Nette\Config\*/Config::fromFile($file, $name, 0);
+			$config = /*Nette\Config\*/Config::fromFile($file, $name);
 		}
 
 		// process environment variables
@@ -222,7 +222,6 @@ class Configurator extends Object
 			$locator->getService($name);
 		}
 
-		$config->freeze();
 		return $config;
 	}
 

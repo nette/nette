@@ -22,11 +22,6 @@
  */
 class Config extends /*Nette\Collections\*/Hashtable
 {
-	/**#@+ flag */
-	const READONLY = 1;
-	const EXPAND = 2;
-	/**#@-*/
-
 	/** @var array */
 	private static $extensions = array(
 		'ini' => /*Nette\Config\*/'ConfigAdapterIni',
@@ -59,39 +54,17 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 * Creates new configuration object from file.
 	 * @param  string  file name
 	 * @param  string  section to load
-	 * @param  int     flags (readOnly, autoexpand variables)
 	 * @return Config
 	 */
-	public static function fromFile($file, $section = NULL, $flags = self::READONLY)
+	public static function fromFile($file, $section = NULL)
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (isset(self::$extensions[$extension])) {
 			$arr = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
-			return new /**/self/**//*static*/($arr, $flags);
+			return new /**/self/**//*static*/($arr);
 
 		} else {
 			throw new /*\*/InvalidArgumentException("Unknown file extension '$file'.");
-		}
-	}
-
-
-
-	/**
-	 * @param  array to wrap
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct($arr = NULL, $flags = self::READONLY)
-	{
-		parent::__construct($arr);
-
-		if ($arr !== NULL) {
-			if ($flags & self::EXPAND) {
-				$this->expand();
-			}
-
-			if ($flags & self::READONLY) {
-				$this->freeze();
-			}
 		}
 	}
 
@@ -126,8 +99,6 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function expand()
 	{
-		$this->updating();
-
 		$data = $this->getArrayCopy();
 		foreach ($data as $key => $val) {
 			if (is_string($val)) {
@@ -149,8 +120,6 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function import($arr)
 	{
-		$this->updating();
-
 		foreach ($arr as $key => $val) {
 			if (is_array($val)) {
 				$arr[$key] = $obj = clone $this;
@@ -175,22 +144,6 @@ class Config extends /*Nette\Collections\*/Hashtable
 			}
 		}
 		return $res;
-	}
-
-
-
-	/**
-	 * Makes the object unmodifiable.
-	 * @return void
-	 */
-	public function freeze()
-	{
-		parent::freeze();
-		foreach ($this->getArrayCopy() as $val) {
-			if ($val instanceof self) {
-				$val->freeze();
-			}
-		}
 	}
 
 

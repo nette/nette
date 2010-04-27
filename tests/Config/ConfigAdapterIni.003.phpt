@@ -32,7 +32,7 @@ readfile('tmp/cfg.ini');
 
 
 output("Load section from INI");
-$config = Config::fromFile('config2.ini', 'development', NULL);
+$config = Config::fromFile('config2.ini', 'development');
 dump( $config );
 
 output("Save INI");

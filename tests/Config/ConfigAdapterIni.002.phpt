@@ -17,7 +17,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 
 
-$config = Config::fromFile('config1.ini', 'development', NULL);
+$config = Config::fromFile('config1.ini', 'development');
 dump( $config );
 
 
