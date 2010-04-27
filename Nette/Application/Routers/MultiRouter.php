@@ -32,7 +32,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 
 	public function __construct()
 	{
-		$this->routes = new /*SplQueue*//**/ArrayList/**/;
+		$this->routes = new /*\SplQueue*//**/ArrayList/**/;
 	}
 
 
@@ -116,7 +116,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 	 */
 	public function offsetSet($index, $route)
 	{
-		if (!($routes instanceof IRouter)) {
+		if (!($route instanceof IRouter)) {
 			throw new /*\*/InvalidArgumentException("Argument must be IRouter descendant.");
 		}
 		$this->routes[$index] = $route;
