@@ -20,8 +20,11 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
+class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess, /*\*/Countable, /*\*/IteratorAggregate
 {
+	/** @var SplQueue */
+	private $routes;
+
 	/** @var array */
 	private $cachedRoutes;
 
@@ -29,7 +32,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 
 	public function __construct()
 	{
-		parent::__construct(NULL, /*Nette\Application\*/'IRouter');
+		$this->routes = new /*SplQueue*//**/ArrayList/**/;
 	}
 
 
@@ -41,7 +44,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 	 */
 	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
 	{
-		foreach ($this as $route) {
+		foreach ($this->routes as $route) {
 			$appRequest = $route->match($httpRequest);
 			if ($appRequest !== NULL) {
 				return $appRequest;
@@ -64,7 +67,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 			$routes = array();
 			$routes['*'] = array();
 
-			foreach ($this as $route) {
+			foreach ($this->routes as $route) {
 				$presenter = $route instanceof Route ? $route->getTargetPresenter() : NULL;
 
 				if ($presenter === FALSE) continue;
@@ -97,6 +100,83 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 		}
 
 		return NULL;
+	}
+
+
+
+	/********************* interfaces ArrayAccess, Countable & IteratorAggregate ****************d*g**/
+
+
+
+	/**
+	 * Adds the router.
+	 * @param  mixed
+	 * @param  IRouter
+	 * @return void
+	 */
+	public function offsetSet($index, $route)
+	{
+		if (!($routes instanceof IRouter)) {
+			throw new /*\*/InvalidArgumentException("Argument must be IRouter descendant.");
+		}
+		$this->routes[$index] = $route;
+	}
+
+
+
+	/**
+	 * Returns router specified by index. Throws exception if router doesn't exist.
+	 * @param  mixed
+	 * @return IRouter
+	 */
+	public function offsetGet($index)
+	{
+		return $this->routes[$index];
+	}
+
+
+
+	/**
+	 * Does router specified by index exists?
+	 * @param  mixed
+	 * @return bool
+	 */
+	public function offsetExists($index)
+	{
+		return isset($this->routes[$index]);
+	}
+
+
+
+	/**
+	 * Removes router.
+	 * @param  mixed
+	 * @return void
+	 */
+	public function offsetUnset($index)
+	{
+		unset($this->routes[$index]);
+	}
+
+
+
+	/**
+	 * Iterates over routers.
+	 * @return \Traversable
+	 */
+	public function getIterator()
+	{
+		return $this->routes;
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	public function count()
+	{
+		return count($this->routes);
 	}
 
 }
