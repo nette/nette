@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Config
  */
-class Config extends /*Nette\Collections\*/Hashtable
+class Config extends /*\*/ArrayObject
 {
 	/** @var array */
 	private static $extensions = array(
@@ -71,6 +71,18 @@ class Config extends /*Nette\Collections\*/Hashtable
 
 
 	/**
+	 * @param  array to wrap
+	 */
+	public function __construct($arr = NULL)
+	{
+		if ($arr) {
+			$this->import($arr);
+		}
+	}
+
+
+
+	/**
 	 * Save configuration to file.
 	 * @param  string  file
 	 * @param  string  section to write
@@ -107,7 +119,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 				$val->expand();
 			}
 		}
-		$this->setArray($data);
+		$this->exchangeArray($data);
 	}
 
 
@@ -126,7 +138,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 				$obj->import($val);
 			}
 		}
-		$this->setArray($arr);
+		$this->exchangeArray($arr);
 	}
 
 
@@ -154,14 +166,13 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function __clone()
 	{
-		parent::__clone();
 		$data = $this->getArrayCopy();
 		foreach ($data as $key => $val) {
 			if ($val instanceof self) {
 				$data[$key] = clone $val;
 			}
 		}
-		$this->setArray($data);
+		$this->exchangeArray($data);
 	}
 
 
@@ -177,7 +188,7 @@ class Config extends /*Nette\Collections\*/Hashtable
 	 */
 	public function &__get($key)
 	{
-		$val = $this->offsetGet($key);
+		$val = $this->offsetExists($key) ? $this->offsetGet($key) : NULL;
 		return $val;
 	}
 
@@ -216,6 +227,13 @@ class Config extends /*Nette\Collections\*/Hashtable
 	public function __unset($key)
 	{
 		$this->offsetUnset($key);
+	}
+
+
+
+	public function getIterator()
+	{
+		return new /*\*/ArrayIterator($this->getArrayCopy());
 	}
 
 }
