@@ -86,7 +86,11 @@ class NetteLoader extends AutoLoader
 		'ftp' => '/Web/Ftp.php',
 		'ftpexception' => '/Web/Ftp.php',
 		'functionreflection' => '/Reflection/FunctionReflection.php',
+<<<<<<< HEAD
 		'hashtable' => '/Collections/Hashtable.php',
+=======
+		'genericrecursiveiterator' => '/iterators/GenericRecursiveIterator.php',
+>>>>>>> dbc9f8b... added GenericRecursiveIterator
 		'hiddenfield' => '/Forms/Controls/HiddenField.php',
 		'html' => '/Web/Html.php',
 		'httpcontext' => '/Web/HttpContext.php',
@@ -116,7 +120,7 @@ class NetteLoader extends AutoLoader
 		'imailer' => '/Mail/IMailer.php',
 		'imap' => '/Collections/IMap.php',
 		'inamingcontainer' => '/Forms/INamingContainer.php',
-		'instancefilteriterator' => '/InstanceFilterIterator.php',
+		'instancefilteriterator' => '/iterators/InstanceFilterIterator.php',
 		'instantclientscript' => '/Forms/Renderers/InstantClientScript.php',
 		'invalidlinkexception' => '/Application/Exceptions/InvalidLinkException.php',
 		'invalidpresenterexception' => '/Application/Exceptions/InvalidPresenterException.php',
@@ -168,7 +172,6 @@ class NetteLoader extends AutoLoader
 		'propertyreflection' => '/Reflection/PropertyReflection.php',
 		'radiolist' => '/Forms/Controls/RadioList.php',
 		'recursivecomponentiterator' => '/ComponentContainer.php',
-		'recursivehtmliterator' => '/Web/Html.php',
 		'redirectingresponse' => '/Application/Responses/RedirectingResponse.php',
 		'renderresponse' => '/Application/Responses/RenderResponse.php',
 		'robotloader' => '/Loaders/RobotLoader.php',
@@ -184,8 +187,13 @@ class NetteLoader extends AutoLoader
 		'set' => '/Collections/Set.php',
 		'simpleauthenticator' => '/Security/SimpleAuthenticator.php',
 		'simplerouter' => '/Application/Routers/SimpleRouter.php',
+<<<<<<< HEAD
 		'smartcachingiterator' => '/SmartCachingIterator.php',
 		'snippethelper' => '/Templates/Filters/SnippetHelper.php',
+=======
+		'smartcachingiterator' => '/iterators/SmartCachingIterator.php',
+		'snippethelper' => '/compatibility/SnippetHelper.php',
+>>>>>>> dbc9f8b... added GenericRecursiveIterator
 		'string' => '/String.php',
 		'submitbutton' => '/Forms/Controls/SubmitButton.php',
 		'template' => '/Templates/Template.php',
