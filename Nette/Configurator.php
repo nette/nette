@@ -115,7 +115,12 @@ class Configurator extends Object
 			}
 		}
 
-		$config->expand();
+		// expand variables
+		$iterator = new /*\*/RecursiveIteratorIterator($config);
+		foreach ($iterator as $key => $value) {
+			$tmp = $iterator->getDepth() ? $iterator->getSubIterator($iterator->getDepth() - 1)->current() : $config;
+			$tmp[$key] = Environment::expand($value);
+		}
 
 		// process services
 		$runServices = array();
@@ -149,7 +154,7 @@ class Configurator extends Object
 				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
 			}
 
-			foreach ($config->php as $key => $value) { // flatten INI dots
+			foreach (clone $config->php as $key => $value) { // flatten INI dots
 				if ($value instanceof /*Nette\Config\*/Config) {
 					unset($config->php->$key);
 					foreach ($value as $k => $v) {

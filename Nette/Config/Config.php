@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Config
  */
-class Config extends /*\*/ArrayObject
+class Config implements /*\*/ArrayAccess, /*\*/IteratorAggregate
 {
 	/** @var array */
 	private static $extensions = array(
@@ -75,8 +75,8 @@ class Config extends /*\*/ArrayObject
 	 */
 	public function __construct($arr = NULL)
 	{
-		if ($arr) {
-			$this->import($arr);
+		foreach ((array) $arr as $k => $v) {
+			$this->$k = is_array($v) ? new self($v) : $v;
 		}
 	}
 
@@ -105,135 +105,126 @@ class Config extends /*\*/ArrayObject
 
 
 
-	/**
-	 * Expand all variables.
-	 * @return void
-	 */
-	public function expand()
+	public function __set($key, $value)
 	{
-		$data = $this->getArrayCopy();
-		foreach ($data as $key => $val) {
-			if (is_string($val)) {
-				$data[$key] = /*Nette\*/Environment::expand($val);
-			} elseif ($val instanceof self) {
-				$val->expand();
-			}
+		if (!is_scalar($key)) {
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer.");
+
+		} elseif ($value === NULL) {
+			unset($this->$key);
+
+		} else {
+			$this->$key = $value;
 		}
-		$this->exchangeArray($data);
+	}
+
+
+
+	public function &__get($key)
+	{
+		if (!is_scalar($key)) {
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer.");
+		}
+		return $this->$key;
+	}
+
+
+
+	public function __isset($key)
+	{
+		return FALSE;
+	}
+
+
+
+	public function __unset($key)
+	{
 	}
 
 
 
 	/**
-	 * Import from array or any traversable object.
-	 * @param  array|\Traversable
+	 * Replaces or appends a item.
+	 * @param  mixed
+	 * @param  mixed
 	 * @return void
-	 * @throws \InvalidArgumentException
 	 */
-	public function import($arr)
+	public function offsetSet($key, $value)
 	{
-		foreach ($arr as $key => $val) {
-			if (is_array($val)) {
-				$arr[$key] = $obj = clone $this;
-				$obj->import($val);
-			}
-		}
-		$this->exchangeArray($arr);
+		$this->__set($key, $value);
 	}
 
 
 
 	/**
-	 * Returns an array containing all of the elements in this collection.
+	 * Returns a item.
+	 * @param  mixed
+	 * @return mixed
+	 */
+	public function offsetGet($key)
+	{
+		if (!is_scalar($key)) {
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer.");
+
+		} elseif (!isset($this->$key)) {
+			return NULL;
+		}
+		return $this->$key;
+	}
+
+
+
+	/**
+	 * Determines whether a item exists.
+	 * @param  mixed
+	 * @return bool
+	 */
+	public function offsetExists($key)
+	{
+		if (!is_scalar($key)) {
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer.");
+		}
+		return isset($this->$key);
+	}
+
+
+
+	/**
+	 * Removes a item.
+	 * @param  mixed
+	 * @return void
+	 */
+	public function offsetUnset($key)
+	{
+		if (!is_scalar($key)) {
+			throw new /*\*/InvalidArgumentException("Key must be either a string or an integer.");
+		}
+		unset($this->$key);
+	}
+
+
+
+	/**
+	 * Returns an iterator over all items.
+	 * @return \RecursiveIterator
+	 */
+	public function getIterator()
+	{
+		return new /*Nette\*/GenericRecursiveIterator(new /*\*/ArrayIterator($this));
+	}
+
+
+
+	/**
 	 * @return array
 	 */
 	public function toArray()
 	{
-		$res = $this->getArrayCopy();
-		foreach ($res as $key => $val) {
-			if ($val instanceof self) {
-				$res[$key] = $val->toArray();
-			}
+		$arr = array();
+		foreach ($this as $k => $v) {
+			$arr[$k] = $v instanceof self ? $v->toArray() : $v;
 		}
-		return $res;
-	}
-
-
-
-	/**
-	 * Creates a modifiable clone of the object.
-	 * @return void
-	 */
-	public function __clone()
-	{
-		$data = $this->getArrayCopy();
-		foreach ($data as $key => $val) {
-			if ($val instanceof self) {
-				$data[$key] = clone $val;
-			}
-		}
-		$this->exchangeArray($data);
-	}
-
-
-
-	/********************* data access via overloading ****************d*g**/
-
-
-
-	/**
-	 * Returns item. Do not call directly.
-	 * @param  int index
-	 * @return mixed
-	 */
-	public function &__get($key)
-	{
-		$val = $this->offsetExists($key) ? $this->offsetGet($key) : NULL;
-		return $val;
-	}
-
-
-
-	/**
-	 * Inserts (replaces) item. Do not call directly.
-	 * @param  int index
-	 * @param  object
-	 * @return void
-	 */
-	public function __set($key, $item)
-	{
-		$this->offsetSet($key, $item);
-	}
-
-
-
-	/**
-	 * Exists item?
-	 * @param  string  name
-	 * @return bool
-	 */
-	public function __isset($key)
-	{
-		return $this->offsetExists($key);
-	}
-
-
-
-	/**
-	 * Removes the element at the specified position in this list.
-	 * @param  string  name
-	 * @return void
-	 */
-	public function __unset($key)
-	{
-		$this->offsetUnset($key);
-	}
-
-
-
-	public function getIterator()
-	{
-		return new /*\*/ArrayIterator($this->getArrayCopy());
+		return $arr;
 	}
 
 }
