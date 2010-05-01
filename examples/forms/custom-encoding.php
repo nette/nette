@@ -36,7 +36,7 @@ $form->encoding = 'ISO-8859-1';
 
 // group Personal data
 $form->addGroup('Personal data');
-$form->addText('name', 'Your name:', 35);
+$form->addText('name', 'Your name:');
 
 $form->addMultiSelect('country', 'Country:')
 	->skipFirst()
@@ -44,7 +44,7 @@ $form->addMultiSelect('country', 'Country:')
 
 $form->addHidden('userid');
 
-$form->addTextArea('note', 'Comment:', 30, 5);
+$form->addTextArea('note', 'Comment:');
 
 
 // group for buttons

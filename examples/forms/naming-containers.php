@@ -40,19 +40,19 @@ $form = new Form;
 // group First person
 $form->addGroup('First person');
 $sub = $form->addContainer('first');
-$sub->addText('name', 'Your name:', 35);
-$sub->addText('email', 'E-mail:', 35);
-$sub->addText('street', 'Street:', 35);
-$sub->addText('city', 'City:', 35);
+$sub->addText('name', 'Your name:');
+$sub->addText('email', 'E-mail:');
+$sub->addText('street', 'Street:');
+$sub->addText('city', 'City:');
 $sub->addSelect('country', 'Country:', $countries);
 
 // group Second person
 $form->addGroup('Second person');
 $sub = $form->addContainer('second');
-$sub->addText('name', 'Your name:', 35);
-$sub->addText('email', 'E-mail:', 35);
-$sub->addText('street', 'Street:', 35);
-$sub->addText('city', 'City:', 35);
+$sub->addText('name', 'Your name:');
+$sub->addText('email', 'E-mail:');
+$sub->addText('street', 'Street:');
+$sub->addText('city', 'City:');
 $sub->addSelect('country', 'Country:', $countries);
 
 // group for buttons

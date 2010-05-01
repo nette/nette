@@ -60,25 +60,25 @@
 <tr>
 	<th><label for="frm-first-name">Your name:</label></th>
 
-	<td><input type="text" size="35" class="text" name="first[name]" id="frm-first-name" value="James Bond" /></td>
+	<td><input type="text" class="text" name="first[name]" id="frm-first-name" value="James Bond" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-first-email">E-mail:</label></th>
 
-	<td><input type="text" size="35" class="text" name="first[email]" id="frm-first-email" value="bond&#64;007.com" /></td>
+	<td><input type="text" class="text" name="first[email]" id="frm-first-email" value="bond&#64;007.com" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-first-street">Street:</label></th>
 
-	<td><input type="text" size="35" class="text" name="first[street]" id="frm-first-street" value="Unknown" /></td>
+	<td><input type="text" class="text" name="first[street]" id="frm-first-street" value="Unknown" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-first-city">City:</label></th>
 
-	<td><input type="text" size="35" class="text" name="first[city]" id="frm-first-city" value="London" /></td>
+	<td><input type="text" class="text" name="first[city]" id="frm-first-city" value="London" /></td>
 </tr>
 
 <tr>
@@ -96,25 +96,25 @@
 <tr>
 	<th><label for="frm-second-name">Your name:</label></th>
 
-	<td><input type="text" size="35" class="text" name="second[name]" id="frm-second-name" value="Jim Beam" /></td>
+	<td><input type="text" class="text" name="second[name]" id="frm-second-name" value="Jim Beam" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-second-email">E-mail:</label></th>
 
-	<td><input type="text" size="35" class="text" name="second[email]" id="frm-second-email" value="jim&#64;beam.com" /></td>
+	<td><input type="text" class="text" name="second[email]" id="frm-second-email" value="jim&#64;beam.com" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-second-street">Street:</label></th>
 
-	<td><input type="text" size="35" class="text" name="second[street]" id="frm-second-street" value="" /></td>
+	<td><input type="text" class="text" name="second[street]" id="frm-second-street" value="" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-second-city">City:</label></th>
 
-	<td><input type="text" size="35" class="text" name="second[city]" id="frm-second-city" value="" /></td>
+	<td><input type="text" class="text" name="second[city]" id="frm-second-city" value="" /></td>
 </tr>
 
 <tr>

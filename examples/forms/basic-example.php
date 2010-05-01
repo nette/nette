@@ -44,17 +44,17 @@ $form = new Form;
 $form->addGroup('Personal data')
 	->setOption('description', 'We value your privacy and we ensure that the information you give to us will not be shared to other entities.');
 
-$form->addText('name', 'Your name:', 35)
+$form->addText('name', 'Your name:')
 	->addRule(Form::FILLED, 'Enter your name');
 
-$form->addText('age', 'Your age:', 5)
+$form->addText('age', 'Your age:')
 	->addRule(Form::FILLED, 'Enter your age')
 	->addRule(Form::INTEGER, 'Age must be numeric value')
 	->addRule(Form::RANGE, 'Age must be in range from %d to %d', array(10, 100));
 
 $form->addRadioList('gender', 'Your gender:', $sex);
 
-$form->addText('email', 'E-mail:', 35)
+$form->addText('email', 'E-mail:')
 	->setEmptyValue('@')
 	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
 		->addRule(Form::EMAIL, 'Incorrect E-mail Address'); // ... then check email
@@ -73,9 +73,9 @@ $form->addCheckbox('send', 'Ship to address')
 $form->addGroup()
 	->setOption('container', Html::el('div')->id('sendBox'));
 
-$form->addText('street', 'Street:', 35);
+$form->addText('street', 'Street:');
 
-$form->addText('city', 'City:', 35)
+$form->addText('city', 'City:')
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
 		->addRule(Form::FILLED, 'Enter your shipping address');
 
@@ -88,11 +88,11 @@ $form->addSelect('country', 'Country:', $countries)
 // group Your account
 $form->addGroup('Your account');
 
-$form->addPassword('password', 'Choose password:', 20)
+$form->addPassword('password', 'Choose password:')
 	->addRule(Form::FILLED, 'Choose your password')
 	->addRule(Form::MIN_LENGTH, 'The password is too short: it must be at least %d characters', 3);
 
-$form->addPassword('password2', 'Reenter password:', 20)
+$form->addPassword('password2', 'Reenter password:')
 	->addConditionOn($form['password'], Form::VALID)
 		->addRule(Form::FILLED, 'Reenter your password')
 		->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
@@ -103,7 +103,7 @@ $form->addFile('avatar', 'Picture:')
 
 $form->addHidden('userid');
 
-$form->addTextArea('note', 'Comment:', 30, 5);
+$form->addTextArea('note', 'Comment:');
 
 
 // group for buttons

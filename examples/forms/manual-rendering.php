@@ -37,23 +37,23 @@ $sex = array(
 
 // Step 1: Define form
 $form = new Form;
-$form->addText('name', 'Your name:', 35);
-$form->addText('age', 'Your age:', 5);
-$form->addRadioList('gender', 'Your gender:', $sex);
-$form->addText('email', 'E-mail:', 35)->setEmptyValue('@');
+$form->addText('name');
+$form->addText('age');
+$form->addRadioList('gender', NULL, $sex);
+$form->addText('email')->setEmptyValue('@');
 
-$form->addCheckbox('send', 'Ship to address');
-$form->addText('street', 'Street:', 35);
-$form->addText('city', 'City:', 35);
-$form->addSelect('country', 'Country:', $countries)->skipFirst();
+$form->addCheckbox('send');
+$form->addText('street');
+$form->addText('city');
+$form->addSelect('country', NULL, $countries)->skipFirst();
 
-$form->addPassword('password', 'Choose password:', 20);
-$form->addPassword('password2', 'Reenter password:', 20);
-$form->addFile('avatar', 'Picture:');
+$form->addPassword('password');
+$form->addPassword('password2');
+$form->addFile('avatar');
 $form->addHidden('userid');
-$form->addTextArea('note', 'Comment:', 30, 5);
+$form->addTextArea('note');
 
-$form->addSubmit('submit1', 'Send');
+$form->addSubmit('submit1');
 
 
 // Step 1b: Define validation rules
@@ -166,20 +166,20 @@ if ($form->isSubmitted()) {
 		<legend>Personal data</legend>
 		<table>
 		<tr class="required">
-			<th><?php echo $form['name']->label ?></th>
-			<td><?php echo $form['name']->control ?></td>
+			<th><?php echo $form['name']->getLabel('Your name:') ?></th>
+			<td><?php echo $form['name']->control->cols(35) ?></td>
 		</tr>
 		<tr class="required">
-			<th><?php echo $form['age']->label ?></th>
-			<td><?php echo $form['age']->control ?></td>
+			<th><?php echo $form['age']->getLabel('Your age:') ?></th>
+			<td><?php echo $form['age']->control->cols(5) ?></td>
 		</tr>
 		<tr>
-			<th><?php echo $form['gender']->label ?></th>
+			<th><?php echo $form['gender']->getLabel('Your gender:') ?></th>
 			<td><?php echo $form['gender']->control ?></td>
 		</tr>
 		<tr>
-			<th><?php echo $form['email']->label ?></th>
-			<td><?php echo $form['email']->control ?></td>
+			<th><?php echo $form['email']->getLabel('E-mail:') ?></th>
+			<td><?php echo $form['email']->control->cols(35) ?></td>
 		</tr>
 		</table>
 	</fieldset>
@@ -188,19 +188,19 @@ if ($form->isSubmitted()) {
 	<fieldset>
 		<legend>Shipping address</legend>
 
-		<p><?php echo $form['send']->control?><?php echo $form['send']->label ?></p>
+		<p><?php echo $form['send']->control?><?php echo $form['send']->getLabel('Ship to address') ?></p>
 
 		<table id="sendBox">
 		<tr>
-			<th><?php echo $form['street']->label ?></th>
-			<td><?php echo $form['street']->control ?></td>
+			<th><?php echo $form['street']->getLabel('Street:') ?></th>
+			<td><?php echo $form['street']->control->cols(35) ?></td>
 		</tr>
 		<tr class="required">
-			<th><?php echo $form['city']->label ?></th>
-			<td><?php echo $form['city']->control ?></td>
+			<th><?php echo $form['city']->getLabel('City:') ?></th>
+			<td><?php echo $form['city']->control->cols(35) ?></td>
 		</tr>
 		<tr class="required">
-			<th><?php echo $form['country']->label ?></th>
+			<th><?php echo $form['country']->getLabel('Country:') ?></th>
 			<td><?php echo $form['country']->control ?></td>
 		</tr>
 		</table>
@@ -212,27 +212,27 @@ if ($form->isSubmitted()) {
 		<legend>Your account</legend>
 		<table>
 		<tr class="required">
-			<th><?php echo $form['password']->label ?></th>
-			<td><?php echo $form['password']->control ?></td>
+			<th><?php echo $form['password']->getLabel('Choose password:') ?></th>
+			<td><?php echo $form['password']->control->cols(20) ?></td>
 		</tr>
 		<tr class="required">
-			<th><?php echo $form['password2']->label ?></th>
-			<td><?php echo $form['password2']->control ?></td>
+			<th><?php echo $form['password2']->getLabel('Reenter password:') ?></th>
+			<td><?php echo $form['password2']->control->cols(20) ?></td>
 		</tr>
 		<tr>
-			<th><?php echo $form['avatar']->label ?></th>
+			<th><?php echo $form['avatar']->getLabel('Picture:') ?></th>
 			<td><?php echo $form['avatar']->control ?></td>
 		</tr>
 		<tr>
-			<th><?php echo $form['note']->label ?></th>
-			<td><?php echo $form['note']->control ?></td>
+			<th><?php echo $form['note']->getLabel('Comment:') ?></th>
+			<td><?php echo $form['note']->control->cols(30)->rows(5) ?></td>
 		</tr>
 		</table>
 	</fieldset>
 
 	<div>
 		<?php echo $form['userid']->control ?>
-		<?php echo $form['submit1']->control ?>
+		<?php echo $form['submit1']->getControl('Send') ?>
 	</div>
 
 	<?php $form->render('end'); ?>
