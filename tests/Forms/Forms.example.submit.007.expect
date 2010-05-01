@@ -63,11 +63,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-name">Your name:</label></th>
-			<td><input type="text" size="35" class="text" name="name" id="frm-name" value="John Doe " /></td>
+			<td><input type="text" class="text" name="name" id="frm-name" value="John Doe " cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label class="required" for="frm-age">Your age:</label></th>
-			<td><input type="text" size="5" class="text" name="age" id="frm-age" value="  12 " /></td>
+			<td><input type="text" class="text" name="age" id="frm-age" value="  12 " cols="5" /></td>
 		</tr>
 		<tr>
 			<th><label>Your gender:</label></th>
@@ -75,7 +75,7 @@
 		</tr>
 		<tr>
 			<th><label for="frm-email">E-mail:</label></th>
-			<td><input type="text" size="35" class="text" name="email" id="frm-email" value="&#64;" /></td>
+			<td><input type="text" class="text" name="email" id="frm-email" value="&#64;" cols="35" /></td>
 		</tr>
 		</table>
 	</fieldset>
@@ -89,11 +89,11 @@
 		<table id="sendBox">
 		<tr>
 			<th><label for="frm-street">Street:</label></th>
-			<td><input type="text" size="35" class="text" name="street" id="frm-street" value="" /></td>
+			<td><input type="text" class="text" name="street" id="frm-street" value="" cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label for="frm-city">City:</label></th>
-			<td><input type="text" size="35" class="text" name="city" id="frm-city" value="" /></td>
+			<td><input type="text" class="text" name="city" id="frm-city" value="" cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-country">Country:</label></th>
@@ -109,11 +109,11 @@
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-password">Choose password:</label></th>
-			<td><input type="password" size="20" class="text" name="password" id="frm-password" /></td>
+			<td><input type="password" class="text" name="password" id="frm-password" cols="20" /></td>
 		</tr>
 		<tr class="required">
 			<th><label for="frm-password2">Reenter password:</label></th>
-			<td><input type="password" size="20" class="text" name="password2" id="frm-password2" /></td>
+			<td><input type="password" class="text" name="password2" id="frm-password2" cols="20" /></td>
 		</tr>
 		<tr>
 			<th><label for="frm-avatar">Picture:</label></th>

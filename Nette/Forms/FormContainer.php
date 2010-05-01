@@ -307,7 +307,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  string  caption
 	 * @return Checkbox
 	 */
-	public function addCheckbox($name, $caption)
+	public function addCheckbox($name, $caption = NULL)
 	{
 		return $this[$name] = new Checkbox($caption);
 	}
@@ -364,7 +364,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @param  string  caption
 	 * @return SubmitButton
 	 */
-	public function addSubmit($name, $caption)
+	public function addSubmit($name, $caption = NULL)
 	{
 		return $this[$name] = new SubmitButton($caption);
 	}
