@@ -86,11 +86,8 @@ class NetteLoader extends AutoLoader
 		'ftp' => '/Web/Ftp.php',
 		'ftpexception' => '/Web/Ftp.php',
 		'functionreflection' => '/Reflection/FunctionReflection.php',
-<<<<<<< HEAD
-		'hashtable' => '/Collections/Hashtable.php',
-=======
 		'genericrecursiveiterator' => '/iterators/GenericRecursiveIterator.php',
->>>>>>> dbc9f8b... added GenericRecursiveIterator
+		'hashtable' => '/Collections/Hashtable.php',
 		'hiddenfield' => '/Forms/Controls/HiddenField.php',
 		'html' => '/Web/Html.php',
 		'httpcontext' => '/Web/HttpContext.php',
@@ -187,13 +184,8 @@ class NetteLoader extends AutoLoader
 		'set' => '/Collections/Set.php',
 		'simpleauthenticator' => '/Security/SimpleAuthenticator.php',
 		'simplerouter' => '/Application/Routers/SimpleRouter.php',
-<<<<<<< HEAD
-		'smartcachingiterator' => '/SmartCachingIterator.php',
-		'snippethelper' => '/Templates/Filters/SnippetHelper.php',
-=======
 		'smartcachingiterator' => '/iterators/SmartCachingIterator.php',
-		'snippethelper' => '/compatibility/SnippetHelper.php',
->>>>>>> dbc9f8b... added GenericRecursiveIterator
+		'snippethelper' => '/Templates/Filters/SnippetHelper.php',
 		'string' => '/String.php',
 		'submitbutton' => '/Forms/Controls/SubmitButton.php',
 		'template' => '/Templates/Template.php',
