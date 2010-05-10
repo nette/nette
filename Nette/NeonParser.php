@@ -29,34 +29,17 @@ class NeonParser extends Object
 		'(:(?=\s|$)|[,=[\]{}()])', // symbol
 		'#.*', // comment
 		'(\n *)(-(?=\s|$))?', // block-array | block-hash
-		'([^#"\',:=@[\]{}()<>\s](?:[^#,:=\]})>\n]+|:(?!\s)|(?<!\s)#)*)(?<!\s)', // literal / boolean / integer / float
+		'literal' => '([^#"\',:=@[\]{}()<>\s](?:[^#,:=\]})>\n]+|:(?!\s)|(?<!\s)#)*)(?<!\s)', // literal / boolean / integer / float
 		' +', // whitespace
 	);
 
 	/** @var string */
 	private static $regexp;
 
-	const T_KEY_VALUE_SEPARATOR = 1;
-	const T_SEPARATOR = 2;
-	const T_BRACKET_OPEN = 3;
-	const T_BRACKET_CLOSE = 4;
-	const T_BULLET = 7;
-	const T_VALUE = 8;
-	const T_OBJECT = 9;
-	const T_INDENT = 10;
-
-	/** @var array */
-	private static $symbols = array(
-		'=' => self::T_KEY_VALUE_SEPARATOR,
-		':' => self::T_KEY_VALUE_SEPARATOR,
-		',' => self::T_SEPARATOR,
-		'[' => self::T_BRACKET_OPEN,
-		']' => self::T_BRACKET_CLOSE,
-		'{' => self::T_BRACKET_OPEN,
-		'}' => self::T_BRACKET_CLOSE,
-		'(' => self::T_BRACKET_OPEN,
-		')' => self::T_BRACKET_CLOSE,
-		'-' => self::T_BULLET,
+	private static $brackets = array(
+		'[' => ']',
+		'{' => '}',
+		'(' => ')',
 	);
 
 	/** @var array */
@@ -76,13 +59,21 @@ class NeonParser extends Object
 	{
 		$this->tokenize($s);
 		$this->n = 0;
-		return $this->parseBlock();
+		return $this->_parse();
 	}
 
 
 
-	private function parseBlock($indent = 0)
+	/**
+	 * Tokenizer & parser.
+	 * @param  int  indentation (for block-parser)
+	 * @param  string  end char (for inline-parser)
+	 * @return array
+	 */
+	private function _parse($indent = 0, $endBracket = NULL)
 	{
+		$inlineParser = $endBracket !== NULL; // block or inline parser?
+
 		$result = array();
 		$value = $key = $object = NULL;
 		$hasValue = $hasKey = FALSE;
@@ -91,49 +82,58 @@ class NeonParser extends Object
 		$count = count($tokens);
 
 		for (; $n < $count; $n++) {
-			list($t, $origT) = $tokens[$n];
+			$t = $tokens[$n];
 
-			if ($t === self::T_VALUE) {
-				if ($hasValue) {
-					$this->error();
-				}
-				$value = $origT;
-				$hasValue = TRUE;
-
-			} elseif ($t === self::T_SEPARATOR) {
+			if ($t === ',') { // ArrayEntry separator
 				if (!$hasValue) {
 					$this->error();
 				}
 				if ($hasKey) $result[$key] = $value; else $result[] = $value;
 				$hasKey = $hasValue = FALSE;
 
-			} elseif ($t === self::T_KEY_VALUE_SEPARATOR) {
-				if ($hasKey) {
+			} elseif ($t === ':' || $t === '=') { // KeyValuePair separator
+				if ($hasKey || !$hasValue) {
 					$this->error();
 				}
 				$key = $value;
 				$hasKey = TRUE;
 				$hasValue = FALSE;
 
-			} elseif ($t === self::T_BRACKET_OPEN) {
+			} elseif ($t === '-') { // BlockArray bullet
+
+			} elseif (isset(self::$brackets[$t])) { // Opening bracket [ ( {
 				if ($hasValue) {
 					$this->error();
 				}
 				$hasValue = TRUE;
-				$value = $this->parseArray();
+				$value = $this->_parse(NULL, self::$brackets[$tokens[$n++]]);
 
-			} elseif ($t === self::T_BRACKET_CLOSE) {
-				$this->error();
+			} elseif ($t === ']' || $t === '}' || $t === ')') { // Closing bracket ] ) }
+				if ($t !== $endBracket) { // unexpected type of bracket or block-parser
+					$this->error();
+				}
+				if ($hasValue) {
+					if ($hasKey) $result[$key] = $value; else $result[] = $value;
+				} elseif ($hasKey) {
+					$this->error();
+				}
+				return $result;
 
-			} elseif ($t === self::T_OBJECT) {
-				$object = $origT; // TODO
+			} elseif ($t[0] === '@') { // Object
+				$object = $t;
 
-			} elseif ($t === self::T_INDENT) { // indent
-				if (isset($tokens[$n+1][0]) && $tokens[$n+1][0] === self::T_INDENT) {
-					continue;
+			} elseif ($t[0] === "\n") { // Indent
+				if ($inlineParser) {
+					if ($hasValue) {
+						if ($hasKey) $result[$key] = $value; else $result[] = $value;
+						$hasKey = $hasValue = FALSE;
+					}
 
 				} else {
-					if ($indent === $origT) {
+					while (isset($tokens[$n+1]) && $tokens[$n+1][0] === "\n") $n++; // skip to last indent
+
+					$newIndent = strlen($tokens[$n]) - 1;
+					if ($indent === $newIndent) {
 						if ($hasKey) {
 							$result[$key] = $hasValue ? $value : NULL;
 						} elseif ($hasValue) {
@@ -141,22 +141,50 @@ class NeonParser extends Object
 						}
 						$hasKey = $hasValue = FALSE;
 
-					} elseif ($indent < $origT) { // open new block-array or hash
+					} elseif ($newIndent > $indent) { // open new block-array or hash
 						if ($hasValue) {
 							$this->error();
 						}
 						if ($hasKey) {
-							$result[$key] = $this->parseBlock($origT);
-						} elseif ($hasValue) {
-							$result[] = $this->parseBlock($origT);
+							$result[$key] = $this->_parse($newIndent);
+						} else {
+							$result[] = $this->_parse($newIndent);
 						}
+						$newIndent = strlen($tokens[$n]) - 1;
 						$hasKey = $hasValue = FALSE;
+					}
 
-					} else { // close block
+					if ($newIndent < $indent) { // close block
 						break;
 					}
 				}
+
+			} else { // Value
+				if ($hasValue) {
+					$this->error();
+				}
+				if ($t[0] === '"') {
+					$value = json_decode($t);
+				} elseif ($t[0] === "'") {
+					$value = substr($t, 1, -1);
+				} elseif (($tl = strtolower($t)) === 'true' || $tl === 'yes') {
+					$value = TRUE;
+				} elseif ($tl === 'false' || $tl === 'no') {
+					$value = FALSE;
+				} elseif ($tl === 'null') {
+					$value = NULL;
+				} elseif (is_numeric($t)) {
+					$value = $t * 1;
+				} else { // literal
+					$value = $t;
+				}
+				$hasValue = TRUE;
 			}
+		}
+
+
+		if ($inlineParser) {
+			$this->error(); // Unexpected end
 		}
 
 		// flush last item
@@ -167,82 +195,6 @@ class NeonParser extends Object
 		}
 
 		return $result;
-	}
-
-
-
-	private function parseArray()
-	{
-		$result = array();
-		$value = $key = $object = NULL;
-		$hasValue = $hasKey = FALSE;
-		$tokens = $this->tokens;
-		$n = & $this->n;
-		$count = count($tokens);
-
-		$pairs = array(
-			'[' => ']',
-			'{' => '}',
-			'(' => ')',
-		);
-		$end = $pairs[$tokens[$n++][1]];
-
-		for (; $n < $count; $n++) {
-			list($t, $origT) = $tokens[$n];
-
-			if ($t === self::T_VALUE) {
-				if ($hasValue) {
-					$this->error();
-				}
-				$value = $origT;
-				$hasValue = TRUE;
-
-			} elseif ($t === self::T_SEPARATOR) {
-				if (!$hasValue) {
-					$this->error();
-				}
-				if ($hasKey) $result[$key] = $value; else $result[] = $value;
-				$hasKey = $hasValue = FALSE;
-
-			} elseif ($t === self::T_KEY_VALUE_SEPARATOR) {
-				if ($hasKey) {
-					$this->error();
-				}
-				$key = $value;
-				$hasKey = TRUE;
-				$hasValue = FALSE;
-
-			} elseif ($t === self::T_BRACKET_OPEN) {
-				if ($hasValue) {
-					$this->error();
-				}
-				$hasValue = TRUE;
-				$value = $this->parseArray();
-
-			} elseif ($t === self::T_BRACKET_CLOSE) {
-				if ($hasValue) {
-					if ($hasKey) $result[$key] = $value; else $result[] = $value;
-				} elseif ($hasKey) {
-					$this->error();
-				}
-
-				if ($origT !== $end) {
-					$this->error();
-				}
-				return $result;
-
-			} elseif ($t === self::T_OBJECT) {
-				$object = $origT;
-
-			} elseif ($t === self::T_INDENT) { // indent
-				if ($hasValue) {
-					if ($hasKey) $result[$key] = $value; else $result[] = $value;
-					$hasKey = $hasValue = FALSE;
-				}
-			}
-		}
-
-		$this->error(); // Unexpected end
 	}
 
 
@@ -260,11 +212,11 @@ class NeonParser extends Object
 
 		$s = str_replace("\r", '', $s);
 		$s = strtr($s, "\t", ' ');
-		$s = "\n" . $s; // required by block-array & block-hash
+		$s = "\n" . $s . "\n"; // first is required by block-array & block-hash; last by tokenize()
 
-		$matches = preg_split(self::$regexp, $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		$this->tokens = preg_split(self::$regexp, $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-		if (count($matches) === 1) { // parse error
+		if (end($this->tokens) !== "\n") { // parse error
 			preg_match_all(self::$regexp, $s, $matches, PREG_SET_ORDER);
 			$len = 0;
 			foreach ($matches as $m) $len += strlen($m[0]);
@@ -272,41 +224,16 @@ class NeonParser extends Object
 			$col = $len - strrpos(substr($s, 0, $len), "\n");
 			throw new /*\*/Exception("Parse error on line $line, column $col");
 		}
-
-		// tokenize
-		$tokens = array();
-		foreach ($matches as $m) {
-			$ch = $m[0];
-			if (isset(self::$symbols[$m])) {
-				$tokens[] = array(self::$symbols[$m], $m);
-			} elseif ($ch === '"') {
-				$tokens[] = array(self::T_VALUE, json_decode($m));
-			} elseif ($ch === "'") {
-				$tokens[] = array(self::T_VALUE, substr($m, 1, -1));
-			} elseif (is_numeric($m)) {
-				$tokens[] = array(self::T_VALUE, $m * 1);
-			} elseif ($ch === '@') {
-				$tokens[] = array(self::T_OBJECT, $m);
-			} elseif ($ch === "\n") {
-				$tokens[] = array(self::T_INDENT, strlen($m) - 1);
-			} elseif (($ml = strtolower($m)) === 'true' || $ml === 'yes') {
-				$tokens[] = array(self::T_VALUE, TRUE);
-			} elseif ($ml === 'false' || $ml === 'no') {
-				$tokens[] = array(self::T_VALUE, FALSE);
-			} elseif ($ml === 'null') {
-				$tokens[] = array(self::T_VALUE, NULL);
-			} else { // literal
-				$tokens[] = array(self::T_VALUE, $m);
-			}
-		}
-		$this->tokens = $tokens;
 	}
 
 
 
 	private function error()
 	{
-		throw new /*\*/Exception('Parse error');
+		$s = '';
+		$n = $this->n;
+		while ($n && strlen($s) < 20) $s = strtr($this->tokens[$n--], "\n", ' ') . $s;
+		throw new /*\*/Exception("Parse error: unexpected {$this->tokens[$this->n]} near $s");
 	}
 
 }
