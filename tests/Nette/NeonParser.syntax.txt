@@ -12,8 +12,8 @@ Comment ::= "#" .*
 Values <value>
 --------------
 Value   ::= Boolean | Null | integer | float | String | Literal | InlineArray | Object
-Boolean ::= "true" | "false" | "yes" | "no" (case insensitive)
-Null    ::=
+Boolean ::= "true" | "TRUE" | "false" | "FALSE" | "yes" | "YES" | "no" | "NO"
+Null    ::= "null" | "NULL" | ""
 String  ::= "word\u231" | 'word'
 Literal ::= trimmed stream of characters [^#"',:=@[\]{}()<>\s] ( [^#,:=\]})>\n] | ":" \S | \S "#" )*
 

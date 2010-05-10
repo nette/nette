@@ -26,9 +26,9 @@ class NeonParser extends Object
 	private static $patterns = array(
 		'(\'[^\'\n]*\'|"(?:\\\\.|[^"\\\\\n])*")', // string
 		'(@[a-zA-Z_0-9\\\\]+)', // object
-		'(:(?=\s|$)|[,=[\]{}()])', // symbol
+		'([:-](?=\s|$)|[,=[\]{}()])', // symbol
 		'#.*', // comment
-		'(\n *)(-(?=\s|$))?', // block-array | block-hash
+		'(\n *)', // indent
 		'literal' => '([^#"\',:=@[\]{}()<>\s](?:[^#,:=\]})>\n]+|:(?!\s)|(?<!\s)#)*)(?<!\s)', // literal / boolean / integer / float
 		' +', // whitespace
 	);
@@ -67,10 +67,10 @@ class NeonParser extends Object
 	/**
 	 * Tokenizer & parser.
 	 * @param  int  indentation (for block-parser)
-	 * @param  string  end char (for inline-parser)
+	 * @param  string  end char (for inline-hash/array parser)
 	 * @return array
 	 */
-	private function _parse($indent = 0, $endBracket = NULL)
+	private function _parse($indent = NULL, $endBracket = NULL)
 	{
 		$inlineParser = $endBracket !== NULL; // block or inline parser?
 
@@ -85,7 +85,7 @@ class NeonParser extends Object
 			$t = $tokens[$n];
 
 			if ($t === ',') { // ArrayEntry separator
-				if (!$hasValue) {
+				if (!$hasValue || !$inlineParser) {
 					$this->error();
 				}
 				if ($hasKey) $result[$key] = $value; else $result[] = $value;
@@ -95,12 +95,12 @@ class NeonParser extends Object
 				if ($hasKey || !$hasValue) {
 					$this->error();
 				}
-				$key = $value;
+				$key = (string) $value;
 				$hasKey = TRUE;
 				$hasValue = FALSE;
 
 			} elseif ($t === '-') { // BlockArray bullet
-				if ($hasKey) {
+				if ($hasKey || $hasValue || $inlineParser) {
 					$this->error();
 				}
 				$key = NULL;
@@ -122,10 +122,10 @@ class NeonParser extends Object
 				} elseif ($hasKey) {
 					$this->error();
 				}
-				return $result;
+				return $result; // inline parser exit point
 
 			} elseif ($t[0] === '@') { // Object
-				$object = $t;
+				$object = $t; // TODO
 
 			} elseif ($t[0] === "\n") { // Indent
 				if ($inlineParser) {
@@ -138,33 +138,34 @@ class NeonParser extends Object
 					while (isset($tokens[$n+1]) && $tokens[$n+1][0] === "\n") $n++; // skip to last indent
 
 					$newIndent = strlen($tokens[$n]) - 1;
-					if ($indent === $newIndent) {
-						if ($hasValue && !$hasKey) { // block items must have "key"; NULL key means list item
-							$this->error();
-						} elseif ($key !== NULL) {
-							$result[$key] = $hasValue ? $value : NULL;
-						} elseif ($hasValue) {
-							$result[] = $value;
-						}
-						$hasKey = $hasValue = FALSE;
-
-					} elseif ($newIndent > $indent) { // open new block-array or hash
-						if ($hasValue) {
-							$this->error();
-						}
-						if (!$hasKey) {
-							$this->error();
-						} elseif ($key !== NULL) {
-							$result[$key] = $this->_parse($newIndent);
-						} else {
-							$result[] = $this->_parse($newIndent);
-						}
-						$newIndent = strlen($tokens[$n]) - 1;
-						$hasKey = $hasValue = FALSE;
+					if ($indent === NULL) { // first iteration
+						$indent = $newIndent;
 					}
 
-					if ($newIndent < $indent) { // close block
-						break;
+					if ($newIndent > $indent) { // open new block-array or hash
+						if ($hasValue || !$hasKey) {
+							$this->error();
+						} elseif ($key === NULL) {
+							$result[] = $this->_parse($newIndent);
+						} else {
+							$result[$key] = $this->_parse($newIndent);
+						}
+						$newIndent = strlen($tokens[$n]) - 1;
+						$hasKey = FALSE;
+
+					} else {
+						if ($hasValue && !$hasKey) { // block items must have "key"; NULL key means list item
+							$this->error();
+
+						} elseif ($hasKey) {
+							$value = $hasValue ? $value : NULL;
+							if ($key === NULL) $result[] = $value; else $result[$key] = $value;
+							$hasKey = $hasValue = FALSE;
+						}
+					}
+
+					if ($newIndent < $indent || !isset($tokens[$n+1])) { // close block
+						return $result; // block parser exit point
 					}
 				}
 
@@ -174,13 +175,16 @@ class NeonParser extends Object
 				}
 				if ($t[0] === '"') {
 					$value = json_decode($t);
+					if ($value === NULL) {
+						$this->error();
+					}
 				} elseif ($t[0] === "'") {
 					$value = substr($t, 1, -1);
-				} elseif (($tl = strtolower($t)) === 'true' || $tl === 'yes') {
+				} elseif ($t === 'true' || $t === 'yes' || $t === 'TRUE' || $t === 'YES') {
 					$value = TRUE;
-				} elseif ($tl === 'false' || $tl === 'no') {
+				} elseif ($t === 'false' || $t === 'no' || $t === 'FALSE' || $t === 'NO') {
 					$value = FALSE;
-				} elseif ($tl === 'null') {
+				} elseif ($t === 'null' || $t === 'NULL') {
 					$value = NULL;
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
@@ -191,21 +195,7 @@ class NeonParser extends Object
 			}
 		}
 
-
-		if ($inlineParser) {
-			$this->error(); // Unexpected end
-		}
-
-		// flush last item
-		if ($hasValue && !$hasKey) {
-			$this->error();
-		} elseif ($key !== NULL) {
-			$result[$key] = $hasValue ? $value : NULL;
-		} elseif ($hasValue) {
-			$result[] = $value;
-		}
-
-		return $result;
+		throw new /*\*/Exception('NEON parse error: unexpected end of file.');
 	}
 
 
@@ -233,7 +223,7 @@ class NeonParser extends Object
 			foreach ($matches as $m) $len += strlen($m[0]);
 			$line = substr_count($s, "\n", 0, $len);
 			$col = $len - strrpos(substr($s, 0, $len), "\n");
-			throw new /*\*/Exception("Parse error on line $line, column $col");
+			throw new /*\*/Exception("NEON parse error on line $line, column $col");
 		}
 	}
 
@@ -244,7 +234,7 @@ class NeonParser extends Object
 		$s = '';
 		$n = $this->n;
 		while ($n && strlen($s) < 20) $s = strtr($this->tokens[$n--], "\n", ' ') . $s;
-		throw new /*\*/Exception("Parse error: unexpected {$this->tokens[$this->n]} near $s");
+		throw new /*\*/Exception("NEON parse error: unexpected {$this->tokens[$this->n]} near $s");
 	}
 
 }
