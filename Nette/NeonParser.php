@@ -100,6 +100,11 @@ class NeonParser extends Object
 				$hasValue = FALSE;
 
 			} elseif ($t === '-') { // BlockArray bullet
+				if ($hasKey) {
+					$this->error();
+				}
+				$key = NULL;
+				$hasKey = TRUE;
 
 			} elseif (isset(self::$brackets[$t])) { // Opening bracket [ ( {
 				if ($hasValue) {
@@ -134,7 +139,9 @@ class NeonParser extends Object
 
 					$newIndent = strlen($tokens[$n]) - 1;
 					if ($indent === $newIndent) {
-						if ($hasKey) {
+						if ($hasValue && !$hasKey) { // block items must have "key"; NULL key means list item
+							$this->error();
+						} elseif ($key !== NULL) {
 							$result[$key] = $hasValue ? $value : NULL;
 						} elseif ($hasValue) {
 							$result[] = $value;
@@ -145,7 +152,9 @@ class NeonParser extends Object
 						if ($hasValue) {
 							$this->error();
 						}
-						if ($hasKey) {
+						if (!$hasKey) {
+							$this->error();
+						} elseif ($key !== NULL) {
 							$result[$key] = $this->_parse($newIndent);
 						} else {
 							$result[] = $this->_parse($newIndent);
@@ -188,7 +197,9 @@ class NeonParser extends Object
 		}
 
 		// flush last item
-		if ($hasKey) {
+		if ($hasValue && !$hasKey) {
+			$this->error();
+		} elseif ($key !== NULL) {
 			$result[$key] = $hasValue ? $value : NULL;
 		} elseif ($hasValue) {
 			$result[] = $value;
