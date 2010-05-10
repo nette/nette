@@ -1,0 +1,47 @@
+Preprocessing
+-------------
+- tabs are converted to single space
+- \r is deleted
+
+
+Comment
+-------
+Comment ::= "#" .*
+
+
+Values <value>
+--------------
+Value   ::= Boolean | Null | integer | float | String | Literal | InlineArray | Object
+Boolean ::= "true" | "false" | "yes" | "no" (case insensitive)
+Null    ::=
+String  ::= "word\u231" | 'word'
+Literal ::= trimmed stream of characters [^#"',:=@[\]{}()<>\s] ( [^#,:=\]})>\n] | ":" \S | \S "#" )*
+
+
+InlineArray
+-----------
+InlineArray  ::= "{" ( ArrayEntry "," )* "}" | "[" ( ArrayEntry "," )* "]"
+
+ArrayEntry   ::= Value | KeyValuePair
+KeyValuePair ::= Key "=" Value | Key ": " Value
+Key          ::= integer | String | Literal
+
+
+Object
+------
+Object       ::= "@" ClassName "(" ( ArrayEntry "," )* ")"
+
+ClassName    ::= [a-zA-Z_0-9\]+
+
+
+BlockArray
+----------
+BlockArray   ::= Indent "- " Value EOL
+
+
+BlockHash
+---------
+BlockHash    ::= Indent Key ": " KeyValuePair EOL
+
+NestedBlockHash ::= Indent Key ":" EOL
+	Indent Value

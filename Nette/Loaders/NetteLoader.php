@@ -145,6 +145,7 @@ class NetteLoader extends AutoLoader
 		'methodreflection' => '/Reflection/MethodReflection.php',
 		'multirouter' => '/Application/Routers/MultiRouter.php',
 		'multiselectbox' => '/Forms/Controls/MultiSelectBox.php',
+		'neonparser' => '/NeonParser.php',
 		'netteloader' => '/Loaders/NetteLoader.php',
 		'notimplementedexception' => '/exceptions.php',
 		'notsupportedexception' => '/exceptions.php',
