@@ -42,6 +42,9 @@ class NeonParser extends Object
 		'(' => ')',
 	);
 
+	/** @var string */
+	private $input;
+
 	/** @var array */
 	private $tokens;
 
@@ -59,7 +62,12 @@ class NeonParser extends Object
 	{
 		$this->tokenize($s);
 		$this->n = 0;
-		return $this->_parse();
+		$res = $this->_parse();
+
+		while (isset($this->tokens[$this->n])) {
+			if ($this->tokens[$this->n][0] === "\n") $this->n++; else $this->error();
+		}
+		return $res;
 	}
 
 
@@ -214,17 +222,14 @@ class NeonParser extends Object
 
 		$s = str_replace("\r", '', $s);
 		$s = strtr($s, "\t", ' ');
-		$s = "\n" . $s . "\n"; // first is required by block-array & block-hash; last by tokenize()
+		$s = $s . "\n"; // required by parse-error check
 
+		$this->input = $s;
 		$this->tokens = preg_split(self::$regexp, $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
-		if (end($this->tokens) !== "\n") { // parse error
-			preg_match_all(self::$regexp, $s, $matches, PREG_SET_ORDER);
-			$len = 0;
-			foreach ($matches as $m) $len += strlen($m[0]);
-			$line = substr_count($s, "\n", 0, $len);
-			$col = $len - strrpos(substr($s, 0, $len), "\n");
-			throw new /*\*/Exception("NEON parse error on line $line, column $col");
+		if (end($this->tokens) !== "\n") { // unable to parse
+			$this->n = key($this->tokens);
+			$this->error();
 		}
 	}
 
@@ -232,10 +237,11 @@ class NeonParser extends Object
 
 	private function error()
 	{
-		$s = '';
-		$n = $this->n;
-		while ($n && strlen($s) < 20) $s = strtr($this->tokens[$n--], "\n", ' ') . $s;
-		throw new /*\*/Exception("NEON parse error: unexpected {$this->tokens[$this->n]} near $s");
+		$tokens = preg_split(self::$regexp, $this->input, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE);
+		list($token, $offset) = $tokens[$this->n];
+		$line = substr_count($this->input, "\n", 0, $offset) + 1;
+		$col = $offset - strrpos(substr($this->input, 0, $offset), "\n");
+		throw new /*\*/Exception('NEON parse error: unexpected ' . str_replace("\n", '\n', substr($token, 0, 10))  . " on line $line, column $col.");
 	}
 
 }
