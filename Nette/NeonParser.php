@@ -74,7 +74,7 @@ class NeonParser extends Object
 	{
 		$inlineParser = $endBracket !== NULL; // block or inline parser?
 
-		$result = array();
+		$result = $inlineParser || $indent ? array() : NULL;
 		$value = $key = $object = NULL;
 		$hasValue = $hasKey = FALSE;
 		$tokens = $this->tokens;
@@ -155,6 +155,7 @@ class NeonParser extends Object
 
 					} else {
 						if ($hasValue && !$hasKey) { // block items must have "key"; NULL key means list item
+							if ($result === NULL) return $value;  // simple value parser exit point
 							$this->error();
 
 						} elseif ($hasKey) {
