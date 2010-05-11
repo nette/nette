@@ -222,7 +222,7 @@ class NeonParser extends Object
 
 		$s = str_replace("\r", '', $s);
 		$s = strtr($s, "\t", ' ');
-		$s = $s . "\n"; // required by parse-error check
+		$s = "\n" . $s . "\n"; // first is required by "Indent", last is required by parse-error check
 
 		$this->input = $s;
 		$this->tokens = preg_split(self::$regexp, $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
