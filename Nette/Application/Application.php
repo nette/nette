@@ -164,11 +164,12 @@ class Application extends /*Nette\*/Object
 					$this->catchExceptions = Environment::isProduction();
 				}
 
+				$this->onError($this, $e);
+
 				if (!$this->catchExceptions) {
+					$this->onShutdown($this, $e);
 					throw $e;
 				}
-
-				$this->onError($this, $e);
 
 				if ($repeatedError) {
 					$e = new ApplicationException('An error occured while executing error-presenter', 0, $e);
