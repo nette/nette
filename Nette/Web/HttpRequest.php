@@ -12,7 +12,8 @@
 
 namespace Nette\Web;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -201,10 +202,10 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 		$this->originalUri->query = isset($tmp[1]) ? $tmp[1] : '';
 		$this->originalUri->freeze();
 
-		$requestUri = preg_replace(array_keys($this->uriFilter[0]), array_values($this->uriFilter[0]), $requestUri);
+		$requestUri = String::replace($requestUri, $this->uriFilter[0]);
 		$tmp = explode('?', $requestUri, 2);
-		$uri->path = preg_replace(array_keys($this->uriFilter[PHP_URL_PATH]), array_values($this->uriFilter[PHP_URL_PATH]), $tmp[0]);
-		$uri->path = Nette\String::fixEncoding($uri->path);
+		$uri->path = String::replace($tmp[0], $this->uriFilter[PHP_URL_PATH]);
+		$uri->path = String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized uri
@@ -467,10 +468,10 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 						}
 						if ($enc) {
 							if ($utf) {
-								$v = Nette\String::fixEncoding($v);
+								$v = String::fixEncoding($v);
 
 							} else {
-								if (!Nette\String::checkEncoding($v)) {
+								if (!String::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -505,7 +506,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($enc) {
-					$v['name'] = preg_replace($nonChars, '', Nette\String::fixEncoding($v['name']));
+					$v['name'] = preg_replace($nonChars, '', String::fixEncoding($v['name']));
 				}
 				$v['@'] = new HttpUploadedFile($v);
 				continue;

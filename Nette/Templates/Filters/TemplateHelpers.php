@@ -12,7 +12,8 @@
 
 namespace Nette\Templates;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -155,10 +156,10 @@ final class TemplateHelpers
 	 */
 	public static function strip($s)
 	{
-		return preg_replace_callback(
+		return String::replace(
+			$s,
 			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
-			create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'),
-			$s
+			callback(create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'))
 		);
 	}
 
@@ -174,8 +175,8 @@ final class TemplateHelpers
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
 		if ($level >= 1) {
-			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', create_function('$m', 'return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");'), $s);
-			$s = Nette\String::indent($s, $level, $chars);
+			$s = String::replace($s, '#<(textarea|pre).*?</\\1#si', callback(create_function('$m', 'return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");')));
+			$s = String::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
@@ -229,7 +230,7 @@ final class TemplateHelpers
 	 */
 	public static function length($var)
 	{
-		return is_string($var) ? Nette\String::length($var) : count($var);
+		return is_string($var) ? String::length($var) : count($var);
 	}
 
 
@@ -244,20 +245,6 @@ final class TemplateHelpers
 	public static function replace($subject, $search, $replacement = '')
 	{
 		return str_replace($search, $replacement, $subject);
-	}
-
-
-
-	/**
-	 * Performs a regular expression search and replace.
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public static function replaceRe($subject, $pattern, $replacement = '')
-	{
-		return preg_replace($pattern, $replacement, $subject);
 	}
 
 

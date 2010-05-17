@@ -12,7 +12,8 @@
 
 namespace Nette\Templates;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -140,8 +141,7 @@ class LatteFilter extends Nette\Object
 				break;
 
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
-				preg_match('#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"]+)*)?$()#is', $matches['macro'], $m2);
-				list(, $macro, $value, $modifiers) = $m2;
+				list(, $macro, $value, $modifiers) = String::match($matches['macro'], '#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"]+)*)?$()#is');
 				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
 					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
@@ -190,7 +190,7 @@ class LatteFilter extends Nette\Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isMacro = Nette\String::startsWith($tag->name, self::HTML_PREFIX);
+			$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -203,7 +203,7 @@ class LatteFilter extends Nette\Object
 					//throw new \InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
-					$tag->isMacro = Nette\String::startsWith($tag->name, self::HTML_PREFIX);
+					$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
@@ -297,7 +297,7 @@ class LatteFilter extends Nette\Object
 			$value = empty($matches['value']) ? TRUE : $matches['value'];
 
 			// special attribute?
-			if ($isSpecial = Nette\String::startsWith($name, self::HTML_PREFIX)) {
+			if ($isSpecial = String::startsWith($name, self::HTML_PREFIX)) {
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$tag = end($this->tags);
@@ -381,7 +381,7 @@ class LatteFilter extends Nette\Object
 	 */
 	private function match($re)
 	{
-		if (preg_match($re, $this->input, $matches, PREG_OFFSET_CAPTURE, $this->offset)) {
+		if ($matches = String::match($this->input, $re, PREG_OFFSET_CAPTURE, $this->offset)) {
 			$this->output .= substr($this->input, $this->offset, $matches[0][1] - $this->offset);
 			$this->offset = $matches[0][1] + strlen($matches[0][0]);
 			foreach ($matches as $k => $v) $matches[$k] = $v[0];
@@ -435,15 +435,16 @@ class LatteFilter extends Nette\Object
 	public static function formatModifiers($var, $modifiers)
 	{
 		if (!$modifiers) return $var;
-		preg_match_all(
+		$tokens = String::matchAll(
+			$modifiers . '|',
 			'~
 				'.self::RE_STRING.'|  ## single or double quoted string
 				[^\'"|:,\s]+|         ## symbol
 				[|:,]                 ## separator
 			~xs',
-			$modifiers . '|',
-			$tokens
+			PREG_PATTERN_ORDER
 		);
+
 		$inside = FALSE;
 		$prev = '';
 		foreach ($tokens[0] as $token) {
@@ -451,7 +452,7 @@ class LatteFilter extends Nette\Object
 				if ($prev === '') {
 
 				} elseif (!$inside) {
-					if (!preg_match('#^'.self::RE_IDENTIFIER.'$#', $prev)) {
+					if (!String::match($prev, '#^'.self::RE_IDENTIFIER.'$#')) {
 						throw new \InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
 					}
 					$var = "\$template->$prev($var";
@@ -483,10 +484,11 @@ class LatteFilter extends Nette\Object
 	 */
 	public static function fetchToken(& $s)
 	{
-		if (preg_match('#^((?>'.self::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#', $s, $matches)) { // token [,] tail
+		if ($matches = String::match($s, '#^((?>'.self::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}
+
 		return NULL;
 	}
 
@@ -500,15 +502,15 @@ class LatteFilter extends Nette\Object
 	 */
 	public static function formatArray($s, $prefix = '')
 	{
-		$s = preg_replace_callback(
+		$s = String::replace(
+			trim($s),
 			'~
 				'.self::RE_STRING.'|                          ## single or double quoted string
 				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)   ## 1) symbol
 			~xi',
-			array(__CLASS__, 'cbArgs'),
-			trim($s)
+			callback(__CLASS__, 'cbArgs')
 		);
-		$s = preg_replace('#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>', $s);
+		$s = String::replace($s, '#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>');
 		return $s === '' ? '' : $prefix . "array($s)";
 	}
 
@@ -516,8 +518,9 @@ class LatteFilter extends Nette\Object
 
 	/**
 	 * Callback for formatArgs().
+     * @internal
 	 */
-	private static function cbArgs($matches)
+	public static function cbArgs($matches)
 	{
 		//    [1] => symbol
 

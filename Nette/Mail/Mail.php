@@ -437,7 +437,7 @@ class Mail extends MailMimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			preg_match_all('#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', $this->html, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+			$matches = Nette\String::matchAll($this->html, '#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', PREG_OFFSET_CAPTURE);
 			foreach (array_reverse($matches) as $m)	{
 				$file = rtrim($this->basePath, '/\\') . '/' . $m[3][0];
 				$cid = isset($cids[$file]) ? $cids[$file] : $cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
@@ -445,7 +445,7 @@ class Mail extends MailMimePart
 			}
 		}
 
-		if (!$this->getSubject() && preg_match('#<title>(.+?)</title>#is', $this->html, $matches)) {
+		if (!$this->getSubject() && $matches = Nette\String::match($this->html, '#<title>(.+?)</title>#is')) {
 			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, $this->charset));
 		}
 	}
@@ -464,10 +464,12 @@ class Mail extends MailMimePart
 			$this->setBody($text->__toString(TRUE));
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
-			$text = preg_replace('#<(style|script|head).*</\\1>#Uis', '', $this->html);
-			$text = preg_replace('#<t[dh][ >]#i', " $0", $text);
-			$text = preg_replace('#[ \t\r\n]+#', ' ', $text);
-			$text = preg_replace('#<(/?p|/?h\d|li|br|/tr)[ >]#i', "\n$0", $text);
+			$text = Nette\String::replace($this->html, array(
+				'#<(style|script|head).*</\\1>#Uis' => '',
+				'#<t[dh][ >]#i' => " $0",
+				'#[ \t\r\n]+#' => ' ',
+				'#<(/?p|/?h\d|li|br|/tr)[ >]#i' => "\n$0",
+			));
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, $this->charset);
 			$this->setBody(trim($text));
 		}

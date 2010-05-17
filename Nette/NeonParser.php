@@ -227,7 +227,7 @@ class NeonParser extends Object
 		$s = "\n" . $s . "\n"; // first is required by "Indent", last is required by parse-error check
 
 		$this->input = $s;
-		$this->tokens = preg_split(self::$regexp, $s, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		$this->tokens = String::split($s, self::$regexp, PREG_SPLIT_NO_EMPTY);
 
 		if (end($this->tokens) !== "\n") { // unable to parse
 			$this->n = key($this->tokens);
@@ -239,7 +239,7 @@ class NeonParser extends Object
 
 	private function error()
 	{
-		$tokens = preg_split(self::$regexp, $this->input, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE);
+		$tokens = String::split($this->input, self::$regexp, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 		list($token, $offset) = $tokens[$this->n];
 		$line = substr_count($this->input, "\n", 0, $offset) + 1;
 		$col = $offset - strrpos(substr($this->input, 0, $offset), "\n");

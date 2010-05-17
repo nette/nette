@@ -12,7 +12,8 @@
 
 namespace Nette\Loaders;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -229,8 +230,8 @@ class RobotLoader extends AutoLoader
 		$disallow = array();
 		if (is_file($dir . '/netterobots.txt')) {
 			foreach (file($dir . '/netterobots.txt') as $s) {
-				if (preg_match('#^disallow\\s*:\\s*(\\S+)#i', $s, $m)) {
-					$disallow[trim($m[1], '/')] = TRUE;
+				if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
+					$disallow[trim($matches[1], '/')] = TRUE;
 				}
 			}
 			if (isset($disallow[''])) return;
@@ -244,13 +245,13 @@ class RobotLoader extends AutoLoader
 			// process subdirectories
 			if (is_dir($path)) {
 				// check ignore mask
-				if (!preg_match($this->ignoreMask, $entry)) {
+				if (!String::match($entry, $this->ignoreMask)) {
 					$this->scanDirectory($path);
 				}
 				continue;
 			}
 
-			if (is_file($path) && preg_match($this->acceptMask, $entry)) {
+			if (is_file($path) && String::match($entry, $this->acceptMask)) {
 				if (!isset($this->files[$path]) || $this->files[$path] !== filemtime($path)) {
 					$this->scanScript($path);
 				}
@@ -280,7 +281,7 @@ class RobotLoader extends AutoLoader
 		$time = filemtime($file);
 		$s = file_get_contents($file);
 
-		if (preg_match('#//nette'.'loader=(\S*)#', $s, $matches)) {
+		if ($matches = String::match($s, '#//nette'.'loader=(\S*)#')) {
 			foreach (explode(',', $matches[1]) as $name) {
 				$this->addClass($name, $file, $time);
 			}

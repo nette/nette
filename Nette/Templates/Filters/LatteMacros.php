@@ -12,7 +12,8 @@
 
 namespace Nette\Templates;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -173,13 +174,13 @@ class LatteMacros extends Nette\Object
 		$filter->escape = 'TemplateHelpers::escapeHtml';
 
 		// remove comments
-		$s = preg_replace('#\\{\\*.*?\\*\\}[\r\n]*#s', '', $s);
+		$s = String::replace($s, '#\\{\\*.*?\\*\\}[\r\n]*#s', '');
 
 		// snippets support (temporary solution)
-		$s = preg_replace(
+		$s = String::replace(
+			$s,
 			'#@(\\{[^}]+?\\})#s',
-			'<?php } ?>$1<?php if (SnippetHelper::\\$outputAllowed) { ?>',
-			$s
+			'<?php } ?>$1<?php if (SnippetHelper::\\$outputAllowed) { ?>'
 		);
 	}
 
@@ -220,7 +221,7 @@ class LatteMacros extends Nette\Object
 		if ($this->namedBlocks) {
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$name = preg_quote($name, '#');
-				$s = preg_replace_callback("#{block ($name)} \?>(.*)<\?php {/block $name}#sU", array($this, 'cbNamedBlocks'), $s);
+				$s = String::replace($s, "#{block ($name)} \?>(.*)<\?php {/block $name}#sU", callback($this, 'cbNamedBlocks'));
 			}
 			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
 		}
@@ -257,15 +258,16 @@ class LatteMacros extends Nette\Object
 			return NULL;
 		}
 		$this->current = array($content, $modifiers);
-		return preg_replace_callback('#%(.*?)%#', array($this, 'cbMacro'), $this->macros[$macro]);
+		return String::replace($this->macros[$macro], '#%(.*?)%#', callback($this, 'cbMacro'));
 	}
 
 
 
 	/**
 	 * Callback for self::macro().
+     * @internal
 	 */
-	private function cbMacro($m)
+	public function cbMacro($m)
 	{
 		list($content, $modifiers) = $this->current;
 		if ($m[1]) {
@@ -421,7 +423,7 @@ class LatteMacros extends Nette\Object
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
-			if (!preg_match('#^' . LatteFilter::RE_IDENTIFIER . '$#', $destination)) {
+			if (!String::match($destination, '#^' . LatteFilter::RE_IDENTIFIER . '$#')) {
 				throw new \InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
@@ -488,7 +490,7 @@ class LatteMacros extends Nette\Object
 
 		} else { // #block
 			$name = ltrim($name, '#');
-			if (!preg_match('#^' . LatteFilter::RE_IDENTIFIER . '$#', $name)) {
+			if (!String::match($name, '#^' . LatteFilter::RE_IDENTIFIER . '$#')) {
 				throw new \InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -613,8 +615,9 @@ class LatteMacros extends Nette\Object
 
 	/**
 	 * Converts {block named}...{/block} to functions.
+     * @internal
 	 */
-	private function cbNamedBlocks($matches)
+	public function cbNamedBlocks($matches)
 	{
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
@@ -640,7 +643,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroAttr($content)
 	{
-		return preg_replace('#\)\s+#', ')->', $content . ' ');
+		return String::replace($content . ' ', '#\)\s+#', ')->');
 	}
 
 
@@ -703,7 +706,7 @@ class LatteMacros extends Nette\Object
 		$pair = explode(':', $pair, 2);
 		$widget = LatteFilter::formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = preg_match('#^(' . LatteFilter::RE_IDENTIFIER . '|)$#', $method) ? "render$method" : "{\"render$method\"}";
+		$method = String::match($method, '#^(' . LatteFilter::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = LatteFilter::formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($widget[0] === '$' ? "if (is_object($widget)) {$widget}->$method($param); else " : '')

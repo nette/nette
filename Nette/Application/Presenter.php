@@ -348,7 +348,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function changeAction($action)
 	{
-		if (preg_match("#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#", $action)) {
+		if (Nette\String::match($action, "#^[a-zA-Z0-9][a-zA-Z0-9_\x7f-\xff]*$#")) {
 			$this->action = $action;
 			$this->view = $action;
 

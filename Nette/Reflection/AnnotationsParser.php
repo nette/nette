@@ -12,7 +12,8 @@
 
 namespace Nette\Reflection;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -122,12 +123,15 @@ final class AnnotationsParser
 	{
 		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
-		preg_match_all('~
-			@('.self::RE_IDENTIFIER.')[ \t]*             ##  annotation
-			(
-				\((?>'.self::RE_STRING.'|[^\'")@]+)+\)|  ##  (value)
-				[^(@\r\n][^@\r\n]*|)                     ##  value
-		~xi', trim($comment, '/*'), $matches, PREG_SET_ORDER);
+		$matches = String::matchAll(
+			trim($comment, '/*'),
+			'~
+				@('.self::RE_IDENTIFIER.')[ \t]*             ##  annotation
+				(
+					\((?>'.self::RE_STRING.'|[^\'")@]+)+\)|  ##  (value)
+					[^(@\r\n][^@\r\n]*|)                     ##  value
+			~xi'
+		);
 
 		$res = array();
 		foreach ($matches as $match)
@@ -139,7 +143,7 @@ final class AnnotationsParser
 				$key = '';
 				$val = TRUE;
 				$value[0] = ',';
-				while (preg_match('#\s*,\s*(?>('.self::RE_IDENTIFIER.')\s*=\s*)?('.self::RE_STRING.'|[^\'"),\s][^\'"),]*)#A', $value, $m)) {
+				while ($m = String::match($value, '#\s*,\s*(?>('.self::RE_IDENTIFIER.')\s*=\s*)?('.self::RE_STRING.'|[^\'"),\s][^\'"),]*)#A')) {
 					$value = substr($value, strlen($m[0]));
 					list(, $key, $val) = $m;
 					if ($val[0] === "'" || $val[0] === '"') {
@@ -202,7 +206,7 @@ final class AnnotationsParser
 
 		$s = file_get_contents($file);
 
-		if (preg_match('#//nette'.'loader=(\S*)#', $s)) {
+		if (String::match($s, '#//nette'.'loader=(\S*)#')) {
 			return; // TODO: allways ignore?
 		}
 
