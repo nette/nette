@@ -72,7 +72,7 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getSelectedItem()
 	{
-		if (!$this->useKeys) {
+		if (!$this->areKeysUsed()) {
 			return $this->getValue();
 
 		} else {
