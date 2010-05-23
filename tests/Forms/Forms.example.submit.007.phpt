@@ -27,4 +27,4 @@ require '../../examples/forms/manual-rendering.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

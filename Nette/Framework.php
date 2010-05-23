@@ -4,8 +4,8 @@
  * Nette Framework
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
  * @category   Nette
  * @package    Nette
  */
@@ -63,8 +63,8 @@ final class Framework
 	 */
 	public static function promo($xhtml = TRUE)
 	{
-		echo '<a href="http://nettephp.com/" title="Nette Framework - The Most Innovative PHP Framework"><img ',
-			'src="http://nettephp.com/images/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
+		echo '<a href="http://nette.org/" title="Nette Framework - The Most Innovative PHP Framework"><img ',
+			'src="http://nette.org/images/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
 			($xhtml ? ' />' : '>'), '</a>';
 	}
 

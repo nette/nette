@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
  *
- * For more information please see http://nettephp.com
+ * For more information please see http://nette.org
  *
  */
 

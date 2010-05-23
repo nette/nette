@@ -33,7 +33,7 @@ dump( TemplateHelpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpe
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 TemplateHelpers::date(NULL): NULL

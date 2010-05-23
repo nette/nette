@@ -55,7 +55,7 @@ dump( $parser->parse("  x") );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 NULL

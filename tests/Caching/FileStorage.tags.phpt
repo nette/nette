@@ -55,7 +55,7 @@ dump( isset($cache['key4']), 'Is cached key4?' );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Writing cache...

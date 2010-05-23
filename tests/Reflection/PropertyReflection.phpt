@@ -31,7 +31,7 @@ dump( $propInfo->getDeclaringClass() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 object(%ns%ClassReflection) (1) {

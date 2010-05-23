@@ -26,7 +26,7 @@ $template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 -----template-----
 Hello<?php echo '?>hacked!'; ?> World!

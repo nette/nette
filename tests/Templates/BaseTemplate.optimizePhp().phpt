@@ -22,4 +22,4 @@ echo BaseTemplate::optimizePhp($input);
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

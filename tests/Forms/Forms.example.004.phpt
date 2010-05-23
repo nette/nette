@@ -21,4 +21,4 @@ require '../../examples/forms/custom-rendering.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

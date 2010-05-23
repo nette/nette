@@ -27,7 +27,7 @@ dump( $parser->parse('{a, b, {c: d}, e: f,}') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 array(11) {

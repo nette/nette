@@ -33,7 +33,7 @@ Assert::false( $acl->isAllowed(NULL, 'area') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Resource 'area' does not exist.

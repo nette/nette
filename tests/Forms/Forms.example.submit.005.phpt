@@ -27,4 +27,4 @@ require '../../examples/forms/custom-validator.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

@@ -40,7 +40,7 @@ $template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 -----template-----
 <a href="nette:action?id=10">link</a>

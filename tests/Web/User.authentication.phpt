@@ -146,7 +146,7 @@ dump( $user->getIdentity(), "getIdentity" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 isLoggedIn? bool(FALSE)

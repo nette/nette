@@ -17,7 +17,7 @@ throw new Exception('Something went wrong');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Error: Uncaught exception 'Exception' with message 'Something went wrong' in %a%

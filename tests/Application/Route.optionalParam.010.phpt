@@ -32,7 +32,7 @@ testRouteIn($route, '/one/admin');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /one

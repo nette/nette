@@ -32,7 +32,7 @@ dump( http_build_query($namespace->getIterator()) );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(25) "a=apple&p=papaya&c=cherry"

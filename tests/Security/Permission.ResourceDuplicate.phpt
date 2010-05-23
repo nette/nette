@@ -27,7 +27,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Resource 'area' already exists in the list.

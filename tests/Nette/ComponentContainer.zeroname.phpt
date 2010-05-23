@@ -23,7 +23,7 @@ dump( $container->getComponent(0)->getName() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(1) "0"

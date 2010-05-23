@@ -262,7 +262,7 @@ $presenter->run($request);
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> Presenter & action link

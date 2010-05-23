@@ -33,7 +33,7 @@ Assert::true( $acl->roleInheritsFrom('child', 'parent2') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 array(2) {

@@ -28,7 +28,7 @@ dump( Environment::getMode('myMode'), "Is enabled?" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Is console? bool(FALSE)

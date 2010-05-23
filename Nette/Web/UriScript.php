@@ -4,8 +4,8 @@
  * Nette Framework
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
  * @category   Nette
  * @package    Nette\Web
  */
@@ -21,14 +21,14 @@
  *                    basePath   relativeUri
  *                       |           |
  *                    /-----\/------------------\
- * http://nettephp.com/admin/script.php/pathinfo/?name=param#fragment
+ * http://nette.org/admin/script.php/pathinfo/?name=param#fragment
  *                    \_______________/\________/
  *                           |              |
  *                      scriptPath       pathInfo
  * </pre>
  *
  * - basePath:    /admin/ (everything before relative URI not including the script name)
- * - baseUri:     http://nettephp.com/admin/
+ * - baseUri:     http://nette.org/admin/
  * - scriptPath:  /admin/script.php
  * - relativeUri: script.php/pathinfo/
  * - pathInfo:    /pathinfo/ (additional path information)

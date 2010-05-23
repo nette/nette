@@ -4,8 +4,8 @@
  * Nette Framework
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
  * @category   Nette
  * @package    Nette\Web
  */
@@ -18,14 +18,14 @@
  * URI Syntax (RFC 3986).
  *
  * <pre>
- * http://user:password@nettephp.com:8042/en/manual.html?name=param#fragment
+ * http://user:password@nette.org:8042/en/manual.html?name=param#fragment
  * \__/^^^\_____________________________/\_____________/^\________/^\______/
  *   |                    |                     |            |         |
  * scheme             authority               path         query    fragment
  * </pre>
  *
  * - authority:   [user[:password]@]host[:port]
- * - hostUri:     http://user:password@nettephp.com:8042
+ * - hostUri:     http://user:password@nette.org:8042
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web

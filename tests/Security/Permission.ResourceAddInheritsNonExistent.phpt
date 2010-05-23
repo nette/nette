@@ -26,7 +26,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Resource 'nonexistent' does not exist.

@@ -34,7 +34,7 @@ dump( $namespace3->a === $namespace3b->a );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 bool(TRUE)

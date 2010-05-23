@@ -31,7 +31,7 @@ dump( Environment::getXyz()->reflection->name, 'Environment::getXyz(...)' );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Environment::getHttpResponse: string(%d%) "%ns%HttpResponse"

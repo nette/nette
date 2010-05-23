@@ -12,7 +12,7 @@ class MockHttpRequest extends /*Nette\Web\*/HttpRequest
 	public function __construct()
 	{
 		$_SERVER = array(
-			'HTTP_HOST' => 'nettephp.com',
+			'HTTP_HOST' => 'nette.org',
 			'REQUEST_METHOD' => 'GET',
 			'REQUEST_URI' => '/file.php',
 			'SCRIPT_FILENAME' => '/public_html/www/file.php',

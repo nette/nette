@@ -33,7 +33,7 @@ testRouteIn($route, '/x2');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /a1

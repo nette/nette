@@ -39,7 +39,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidArgumentException: Session namespace must be a non-empty string.

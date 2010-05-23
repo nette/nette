@@ -25,7 +25,7 @@ dump( class_exists(/*Nette\*/'Debug'), 'Class Nette\Debug loaded?' );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Class Nette\Debug loaded? bool(TRUE)

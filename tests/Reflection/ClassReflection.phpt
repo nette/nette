@@ -68,7 +68,7 @@ dump( $rc->getProperties() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 object(%ns%ClassReflection) (1) {

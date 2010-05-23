@@ -33,7 +33,7 @@ testRouteIn($route, '/?action=kategorie');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /?action=kategorie

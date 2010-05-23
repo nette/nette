@@ -99,7 +99,7 @@ dump( $a->export(), "export 'a'" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 B::ATTACHED(A)

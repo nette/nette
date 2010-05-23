@@ -34,6 +34,6 @@ $ok = is_file('safe://SafeStream.php');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------

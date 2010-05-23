@@ -43,4 +43,4 @@ readfile('tmp/cfg.ini');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
