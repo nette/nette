@@ -45,7 +45,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Removing Jack: bool(TRUE)

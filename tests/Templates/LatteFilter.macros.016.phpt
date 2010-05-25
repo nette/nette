@@ -29,7 +29,7 @@ echo $template->compiled;
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 -----template-----
 {* kód  *}

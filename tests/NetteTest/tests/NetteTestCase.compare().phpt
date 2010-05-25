@@ -31,7 +31,7 @@ Regexp: 123abc 23c
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 

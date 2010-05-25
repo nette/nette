@@ -98,7 +98,7 @@ dump( $form->getValues() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 bool(TRUE)

@@ -67,7 +67,7 @@ dump( $set );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Adding Jack: bool(TRUE)

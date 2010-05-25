@@ -8,11 +8,11 @@
  * This source file is subject to the "Nette license" that is bundled
  * with this package in the file license.txt, and/or GPL license.
  *
- * For more information please see http://nettephp.com
+ * For more information please see http://nette.org
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nettephp.com/license  Nette license
- * @link       http://nettephp.com
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
  * @category   Nette
  * @package    Nette
  */

@@ -41,7 +41,7 @@ dump( isset($cache[$key]), 'Is cached?' );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Changed @serializationVersion

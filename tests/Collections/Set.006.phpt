@@ -39,7 +39,7 @@ dump( $set );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Removing Larry: bool(TRUE)

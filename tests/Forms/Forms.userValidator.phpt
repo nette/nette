@@ -30,6 +30,6 @@ $form->addText('name', 'Text:', 10)
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------

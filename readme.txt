@@ -22,4 +22,4 @@ Documentation and Examples
 Refer to the 'examples' directory for examples. Nette documentation is
 available on the homepage:
 
-http://nettephp.com
+http://nette.org

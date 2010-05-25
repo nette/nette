@@ -46,7 +46,7 @@ dump( $router->constructUrl($req, $httpRequest) ); // NULL
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(8) "homepage"

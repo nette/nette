@@ -31,7 +31,7 @@ testRouteIn($route, '/?act=default');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /?act=action

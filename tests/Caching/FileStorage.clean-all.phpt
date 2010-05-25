@@ -43,7 +43,7 @@ dump($cacheA['test2']);
 dump($cacheB['test1']);
 dump($cacheB['test2']);
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(%i%) "David Grudl divaD ldurG"

@@ -21,4 +21,4 @@ require '../../examples/forms/basic-example.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

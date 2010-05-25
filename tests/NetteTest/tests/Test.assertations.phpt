@@ -42,7 +42,7 @@ Assert::same( 1, fopen(__FILE__, 'r') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 OK

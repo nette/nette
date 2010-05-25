@@ -39,7 +39,7 @@ dump( count($a->getComponents()) );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 int(1)

@@ -27,7 +27,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Role 'guest' already exists in the list.

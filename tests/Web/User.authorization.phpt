@@ -120,7 +120,7 @@ dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 isLoggedIn? bool(FALSE)

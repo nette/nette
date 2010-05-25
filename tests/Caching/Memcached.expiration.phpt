@@ -45,7 +45,7 @@ for($i = 0; $i < 4; $i++) {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Writing cache...

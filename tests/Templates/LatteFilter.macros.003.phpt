@@ -65,4 +65,4 @@ $template->render();
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

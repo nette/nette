@@ -30,7 +30,7 @@ $template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 -----template-----
 <?xml version="1.0" ?>

@@ -66,7 +66,7 @@ testRouteOut($route, 'Module:Submodule:Homepage');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /abc

@@ -38,7 +38,7 @@ $mail->send();
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 MIME-Version: 1.0

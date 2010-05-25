@@ -27,4 +27,4 @@ require '../../examples/forms/naming-containers.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

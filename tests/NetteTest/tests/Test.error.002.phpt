@@ -17,7 +17,7 @@ require dirname(__FILE__) . '/../initialize.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 <br />

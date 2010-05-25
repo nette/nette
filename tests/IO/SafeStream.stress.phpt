@@ -85,6 +85,6 @@ echo "\ntakes $time ms";
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------

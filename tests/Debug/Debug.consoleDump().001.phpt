@@ -33,7 +33,7 @@ Debug::consoleDump('<a href="#">test</a>', 'String');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 

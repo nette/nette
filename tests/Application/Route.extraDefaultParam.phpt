@@ -38,7 +38,7 @@ testRouteIn($route, '/');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /presenter/action/12/any

@@ -34,7 +34,7 @@ dump( headers_list() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 array(1) {

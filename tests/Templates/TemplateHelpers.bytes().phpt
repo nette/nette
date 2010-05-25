@@ -25,7 +25,7 @@ dump( TemplateHelpers::bytes(1e19), "TemplateHelpers::bytes(1e19)" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 TemplateHelpers::bytes(0.1): string(3) "0 B"

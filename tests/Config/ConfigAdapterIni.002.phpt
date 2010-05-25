@@ -22,7 +22,7 @@ dump( $config );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 object(%ns%Config) (6) {

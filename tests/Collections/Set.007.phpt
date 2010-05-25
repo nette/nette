@@ -51,7 +51,7 @@ dump( $set2 );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Construct from array

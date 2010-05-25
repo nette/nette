@@ -59,7 +59,7 @@ dump( AnnotationsParser::getAll($rc) );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 AnnotatedClass1

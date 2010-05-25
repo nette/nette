@@ -51,4 +51,4 @@ dump( $arr );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

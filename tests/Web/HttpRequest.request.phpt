@@ -20,7 +20,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 // Setup environment
 $_SERVER = array(
 	'HTTPS' => 'On',
-	'HTTP_HOST' => 'nettephp.com:8080',
+	'HTTP_HOST' => 'nette.org:8080',
 	'QUERY_STRING' => 'x param=val.&pa%%72am=val2&param3=v%20a%26l%3Du%2Be)',
 	'REMOTE_ADDR' => '192.168.188.66',
 	'REQUEST_METHOD' => 'GET',
@@ -42,24 +42,24 @@ Assert::same( '/file.php',  $request->getUri()->scriptPath );
 Assert::same( 'https',  $request->getUri()->scheme );
 Assert::same( '',  $request->getUri()->user );
 Assert::same( '',  $request->getUri()->password );
-Assert::same( 'nettephp.com',  $request->getUri()->host );
+Assert::same( 'nette.org',  $request->getUri()->host );
 Assert::same( 8080,  $request->getUri()->port );
 Assert::same( '/file.php',  $request->getUri()->path );
 Assert::same( "x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->query );
 Assert::same( '',  $request->getUri()->fragment );
-Assert::same( 'nettephp.com:8080',  $request->getUri()->authority );
-Assert::same( 'https://nettephp.com:8080',  $request->getUri()->hostUri );
-Assert::same( 'https://nettephp.com:8080/',  $request->getUri()->baseUri );
+Assert::same( 'nette.org:8080',  $request->getUri()->authority );
+Assert::same( 'https://nette.org:8080',  $request->getUri()->hostUri );
+Assert::same( 'https://nette.org:8080/',  $request->getUri()->baseUri );
 Assert::same( '/',  $request->getUri()->basePath );
 Assert::same( 'file.php',  $request->getUri()->relativeUri );
-Assert::same( "https://nettephp.com:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->absoluteUri );
+Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->absoluteUri );
 Assert::same( '',  $request->getUri()->pathInfo );
 
 // getOriginalUri
 Assert::same( 'https',  $request->getOriginalUri()->scheme );
 Assert::same( '',  $request->getOriginalUri()->user );
 Assert::same( '',  $request->getOriginalUri()->password );
-Assert::same( 'nettephp.com',  $request->getOriginalUri()->host );
+Assert::same( 'nette.org',  $request->getOriginalUri()->host );
 Assert::same( 8080,  $request->getOriginalUri()->port );
 Assert::same( '/file.php',  $request->getOriginalUri()->path );
 Assert::same( 'x param=val.&pa%%72am=val2&param3=v%20a%26l%3Du%2Be)',  $request->getOriginalUri()->query );
@@ -68,4 +68,4 @@ Assert::same( 'val.',  $request->getQuery('x_param') );
 Assert::same( 'val2',  $request->getQuery('pa%ram') );
 Assert::same( 'v a&l=u+e',  $request->getQuery('param3') );
 Assert::same( '',  $request->getPostRaw() );
-Assert::same( 'nettephp.com:8080',  $request->headers['host'] );
+Assert::same( 'nette.org:8080',  $request->headers['host'] );

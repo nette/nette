@@ -108,7 +108,7 @@ dump( $hashtable->search($mary), "search Mary:" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Contains Jack? bool(TRUE)

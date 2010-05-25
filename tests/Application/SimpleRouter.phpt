@@ -40,4 +40,4 @@ Assert::same( "testvalue",  $req->params["test"] );
 Assert::same( "anyvalue",  $req->params["any"] );
 
 $url = $router->constructUrl($req, $httpRequest);
-Assert::same( "http://nettephp.com/file.php?action=action&test=testvalue&presenter=myPresenter",  $url );
+Assert::same( "http://nette.org/file.php?action=action&test=testvalue&presenter=myPresenter",  $url );

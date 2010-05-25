@@ -42,7 +42,7 @@ dump( Environment::isProduction(), "is production mode?" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(22) "Factory::createService"

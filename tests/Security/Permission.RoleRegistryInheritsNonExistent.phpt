@@ -33,7 +33,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Role 'nonexistent' does not exist.

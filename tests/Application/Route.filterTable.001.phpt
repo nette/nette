@@ -35,7 +35,7 @@ testRouteIn($route, '/other/');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /kategorie/

@@ -36,7 +36,7 @@ try {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 check read-only:

@@ -34,7 +34,7 @@ testRouteIn($route, '/index');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /index.

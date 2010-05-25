@@ -19,7 +19,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 
 $ftp = new Ftp;
 // Opens an FTP connection to the specified host
-$ftp->connect('ftp.nettephp.com');
+$ftp->connect('ftp.nette.org');
 $ftp->pasv(TRUE);
 // Login with username and password
 $ftp->login('nette@php7.org', 'anonymous');
@@ -34,7 +34,7 @@ dump( stream_get_contents($temp) );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 string(22) "Nette Framework rocks!"

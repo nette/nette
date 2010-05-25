@@ -27,4 +27,4 @@ require '../../examples/forms/CSRF-protection.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

@@ -93,7 +93,7 @@ foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $compon
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> Normal:

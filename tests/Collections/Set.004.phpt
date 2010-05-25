@@ -32,7 +32,7 @@ dump( $set );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 object(%ns%Set) (3) {

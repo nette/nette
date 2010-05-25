@@ -33,7 +33,7 @@ Assert::false( $acl->isAllowed('guest') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Exception InvalidStateException: Role 'guest' does not exist.

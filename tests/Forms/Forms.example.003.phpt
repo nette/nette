@@ -21,4 +21,4 @@ require '../../examples/forms/custom-encoding.php';
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

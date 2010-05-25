@@ -108,7 +108,7 @@ dump( $hashtable );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Adding Jack

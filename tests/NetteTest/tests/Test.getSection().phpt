@@ -23,7 +23,7 @@ dump( NetteTestHelpers::getSection(__FILE__, 'options') );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------MySection------
 any

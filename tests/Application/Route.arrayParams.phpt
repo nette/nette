@@ -28,7 +28,7 @@ testRouteIn($route, '/?arr[1]=1&arr[2]=2');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /?arr[1]=1&arr[2]=2

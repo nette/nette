@@ -30,4 +30,4 @@ dump( "a\r\n\tb" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>

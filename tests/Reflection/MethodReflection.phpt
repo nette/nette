@@ -36,7 +36,7 @@ dump( $methodInfo->callback->invoke(20, 3) );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 object(%ns%ClassReflection) (1) {

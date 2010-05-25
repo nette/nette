@@ -46,7 +46,7 @@ dump( $rc->getProperty('foo')->getAnnotations() );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 array(1) {

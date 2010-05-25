@@ -28,7 +28,7 @@ testRouteIn($route, '/any');
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 ==> /any

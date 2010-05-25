@@ -47,7 +47,7 @@ foreach($params as $key => $value) {
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 Function myFunction(), ,

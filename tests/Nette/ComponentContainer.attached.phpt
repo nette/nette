@@ -81,7 +81,7 @@ dump( $a['b-c'] === $b['c'], "checking 'a-b-c'" );
 
 
 
-__halt_compiler();
+__halt_compiler() ?>
 
 ------EXPECT------
 'a' becoming 'b' parent
