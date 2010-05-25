@@ -38,7 +38,6 @@ testRouteIn($route, '/');
 
 
 
-
 __halt_compiler() ?>
 
 ------EXPECT------

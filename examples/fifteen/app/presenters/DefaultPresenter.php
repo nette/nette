@@ -2,7 +2,6 @@
 
 
 
-
 class DefaultPresenter extends /*Nette\Application\*/Presenter
 {
 

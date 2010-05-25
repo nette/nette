@@ -64,7 +64,7 @@ final class Framework
 	public static function promo($xhtml = TRUE)
 	{
 		echo '<a href="http://nette.org/" title="Nette Framework - The Most Innovative PHP Framework"><img ',
-			'src="http://nette.org/images/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
+			'src="http://files.nette.org/icons/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
 			($xhtml ? ' />' : '>'), '</a>';
 	}
 

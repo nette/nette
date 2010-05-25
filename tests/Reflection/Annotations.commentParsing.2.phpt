@@ -49,7 +49,6 @@ dump( $rc->getAnnotations() );
 
 
 
-
 __halt_compiler() ?>
 
 ------EXPECT------

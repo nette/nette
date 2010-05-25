@@ -149,10 +149,8 @@ unset($obj['a']);
 
 
 
-
 output('count($obj):');
 count($obj);
-
 
 
 
@@ -173,14 +171,12 @@ foreach ($obj as $key => $value);
 
 
 
-
 output('$obj->exchangeArray($arr):');
 $obj->exchangeArray($arr);
 
 
 output('$obj->ksort():');
 $obj->ksort();
-
 
 
 
