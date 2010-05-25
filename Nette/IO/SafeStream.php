@@ -59,7 +59,6 @@ final class SafeStream
 
 
 
-
 	/**
 	 * Registers protocol 'safe://'.
 	 *

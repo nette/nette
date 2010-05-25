@@ -252,9 +252,6 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 
-
-
-
 /**
  * Recursive component iterator. See ComponentContainer::getComponents().
  *

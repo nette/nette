@@ -73,7 +73,6 @@ class TestControl extends /*Nette\Application\*/Control
 
 
 
-
 class TestPresenter extends /*Nette\Application\*/Presenter
 {
 	/** @var TestControl */
@@ -138,7 +137,6 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 
 
-
 		output("==> Presenter & signal link");
 
 		$uri = $this->link('buy!', array('var1' => $this->var1));
@@ -176,7 +174,6 @@ class TestPresenter extends /*Nette\Application\*/Presenter
 
 		$uri = $this->link('this!', array('var1' => $this->var1));
 		dump( "2.12 $uri" );
-
 
 
 

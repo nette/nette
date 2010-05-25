@@ -104,8 +104,6 @@ ob_start();
 
 
 
-
-
 	/* bar */
 	#nette-debug-bar {
 		font: normal normal 12px/21px Tahoma, sans-serif;
@@ -457,7 +455,6 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 
 
 
-
 Nette.Debug.Bar = Nette.Class({
 	Extends: Nette.Q,
 
@@ -536,7 +533,6 @@ Nette.Debug.Bar = Nette.Class({
 
 
 
-
 <div id="nette-debug">
 
 <?php foreach ($panels as $id => $panel): ?>
@@ -577,7 +573,7 @@ Nette.Debug.Bar = Nette.Class({
 
 <!-- /Nette Debug Bar -->
 <?php
-echo preg_replace_callback(
+echo "\n\n\n\n" . preg_replace_callback(
 	'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
 	create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'),
 	ob_get_clean()

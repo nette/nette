@@ -36,7 +36,6 @@ $form->addSubmit('submit1', 'Send');
 
 
 
-
 // Step 2: Check if form was submitted?
 if ($form->isSubmitted()) {
 
@@ -60,7 +59,6 @@ if ($form->isSubmitted()) {
 
 	$form->setDefaults($defaults);
 }
-
 
 
 

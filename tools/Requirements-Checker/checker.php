@@ -244,7 +244,6 @@ paint(array(
 
 
 
-
 /**
  * Paints checker.
  * @param  array
