@@ -1,6 +1,8 @@
 <?php
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 ?>
 <style>
@@ -49,7 +51,7 @@
 		<?php foreach ($params as $key => $value): ?>
 		<tr>
 			<td><code><?php echo htmlSpecialChars($key) ?></code></td>
-			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo /*Nette\*/Debug::dump($value, TRUE); endif ?></td>
+			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo Nette\Debug::dump($value, TRUE); endif ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>
@@ -86,7 +88,7 @@
 
 		<td><code>
 		<?php foreach ($router['defaults'] as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', /*Nette\*/Debug::dump($value, TRUE)) ?><br>
+			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Nette\Debug::dump($value, TRUE)) ?><br>
 		<?php endforeach ?>
 		</code></td>
 
@@ -95,7 +97,7 @@
 		<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::$defaultAction)) ?></strong><br>
 		<?php unset($params[Presenter::ACTION_KEY]) ?>
 		<?php foreach ($params as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', /*Nette\*/Debug::dump($value, TRUE)) ?><br>
+			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Nette\Debug::dump($value, TRUE)) ?><br>
 		<?php endforeach ?>
 		</code><?php endif ?></td>
 	</tr>

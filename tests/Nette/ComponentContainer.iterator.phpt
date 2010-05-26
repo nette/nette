@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Component;*/
-/*use Nette\ComponentContainer;*/
-/*use Nette\Forms\Button;*/
+use Nette\Component,
+	Nette\ComponentContainer,
+	Nette\Forms\Button;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

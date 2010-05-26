@@ -9,17 +9,17 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\PropertyReflection;*/
+use Nette\Reflection\PropertyReflection;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
 class A
 {
-    public $prop;
+	public $prop;
 }
 
 class B extends A

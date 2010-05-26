@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Mail\Mail;*/
+use Nette\Mail\Mail;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Mail.inc';
+require __DIR__ . '/Mail.inc';
 
 
 
@@ -27,7 +27,7 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Sample text');
 
-$mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', dirname(__FILE__) . '/files');
+$mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/files');
 // append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mail->addAttachment('files/example.zip');

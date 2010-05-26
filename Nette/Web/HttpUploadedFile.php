@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -29,7 +31,7 @@
  * @property-read array $imageSize
  * @property-read bool $ok
  */
-class HttpUploadedFile extends /*Nette\*/Object
+class HttpUploadedFile extends Nette\Object
 {
 	/* @var string */
 	private $name;
@@ -170,7 +172,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 		}
 		$func = is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename';
 		if (!$func($this->tmpName, $dest)) {
-			throw new /*\*/InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
+			throw new \InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
 		chmod($dest, 0644);
 		$this->tmpName = $dest;
@@ -196,7 +198,7 @@ class HttpUploadedFile extends /*Nette\*/Object
 	 */
 	public function getImage()
 	{
-		return /*Nette\*/Image::fromFile($this->tmpName);
+		return Nette\Image::fromFile($this->tmpName);
 	}
 
 

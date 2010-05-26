@@ -9,12 +9,12 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Forms\Form;*/
-/*use Nette\Web\Html;*/
+use Nette\Forms\Form,
+	Nette\Web\Html;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

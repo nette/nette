@@ -1,9 +1,9 @@
 <?php
 
-/*use Nette\Debug;*/
-/*use Nette\Environment;*/
-/*use Nette\Application\Route;*/
-/*use Nette\Application\SimpleRouter;*/
+use Nette\Debug,
+	Nette\Environment,
+	Nette\Application\Route,
+	Nette\Application\SimpleRouter;
 
 
 
@@ -11,7 +11,7 @@
 // this allows load Nette Framework classes automatically so that
 // you don't have to litter your code with 'require' statements
 // require LIBS_DIR . '/Nette/loader.php';
-require dirname(__FILE__) . '/../../../Nette/loader.php';
+require __DIR__ . '/../../../Nette/loader.php';
 
 
 

@@ -3,7 +3,7 @@ Nette Test Framework (v0.1)
 ---------------------------
 <?php
 
-require_once dirname(__FILE__) . '/NetteTestCase.php';
+require_once __DIR__ . '/NetteTestCase.php';
 
 
 
@@ -31,7 +31,7 @@ Options:
  * Execute tests
  */
 try {
-	@unlink(dirname(__FILE__) . '/coverage.tmp'); // intentionally @
+	@unlink(__DIR__ . '/coverage.tmp'); // intentionally @
 
 	$manager = new NetteTestRunner;
 	$manager->parseConfigFile();
@@ -180,7 +180,7 @@ class NetteTestRunner
 	 */
 	public function parseConfigFile()
 	{
-		$configFile = dirname(__FILE__) .'/config.ini';
+		$configFile = __DIR__ .'/config.ini';
 		if (file_exists($configFile)) {
 			$this->config = parse_ini_file($configFile, TRUE);
 			if ($this->config === FALSE) {

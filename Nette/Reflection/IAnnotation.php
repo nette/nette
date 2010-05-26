@@ -10,7 +10,9 @@
  * @package    Nette\Reflection
  */
 
-/*namespace Nette\Reflection;*/
+namespace Nette\Reflection;
+
+use Nette;
 
 
 

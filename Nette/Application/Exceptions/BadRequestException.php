@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,13 +22,13 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class BadRequestException extends /*\*/Exception
+class BadRequestException extends \Exception
 {
 	/** @var int */
 	protected $defaultCode = 404;
 
 
-	public function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)
+	public function __construct($message = '', $code = 0, \Exception $previous = NULL)
 	{
 		if ($code < 200 || $code > 504)	{
 			$code = $this->defaultCode;

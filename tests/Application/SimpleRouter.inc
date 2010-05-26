@@ -6,7 +6,7 @@
 
 
 
-class MockHttpRequest extends /*Nette\Web\*/HttpRequest
+class MockHttpRequest extends Nette\Web\HttpRequest
 {
 
 	public function __construct()

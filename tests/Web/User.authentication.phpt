@@ -9,14 +9,14 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Web\User;*/
-/*use Nette\Security\IAuthenticator;*/
-/*use Nette\Security\AuthenticationException;*/
-/*use Nette\Security\Identity;*/
+use Nette\Web\User,
+	Nette\Security\IAuthenticator,
+	Nette\Security\AuthenticationException,
+	Nette\Security\Identity;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

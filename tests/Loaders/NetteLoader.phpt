@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Loaders\NetteLoader;*/
+use Nette\Loaders\NetteLoader;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -21,7 +21,7 @@ $loader = NetteLoader::getInstance();
 $loader->base = '../../Nette';
 $loader->register();
 
-dump( class_exists(/*Nette\*/'Debug'), 'Class Nette\Debug loaded?' );
+dump( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
 
 
 

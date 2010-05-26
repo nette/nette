@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,9 +22,9 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess, /*\*/Countable, /*\*/IteratorAggregate
+class MultiRouter extends Nette\Object implements IRouter, \ArrayAccess, \Countable, \IteratorAggregate
 {
-	/** @var SplQueue */
+	/** @var \SplQueue */
 	private $routes;
 
 	/** @var array */
@@ -32,7 +34,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 
 	public function __construct()
 	{
-		$this->routes = new /*\SplQueue*//**/ArrayList/**/;
+		$this->routes = new \SplQueue;
 	}
 
 
@@ -42,7 +44,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
+	public function match(Nette\Web\IHttpRequest $httpRequest)
 	{
 		foreach ($this->routes as $route) {
 			$appRequest = $route->match($httpRequest);
@@ -61,7 +63,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();
@@ -117,7 +119,7 @@ class MultiRouter extends /*Nette\*/Object implements IRouter, /*\*/ArrayAccess,
 	public function offsetSet($index, $route)
 	{
 		if (!($route instanceof IRouter)) {
-			throw new /*\*/InvalidArgumentException("Argument must be IRouter descendant.");
+			throw new \InvalidArgumentException("Argument must be IRouter descendant.");
 		}
 		$this->routes[$index] = $route;
 	}

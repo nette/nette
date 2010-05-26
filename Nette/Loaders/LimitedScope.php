@@ -10,7 +10,9 @@
  * @package    Nette\Loaders
  */
 
-/*namespace Nette\Loaders;*/
+namespace Nette\Loaders;
+
+use Nette;
 
 
 
@@ -29,7 +31,7 @@ final class LimitedScope
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -43,9 +45,8 @@ final class LimitedScope
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			/**/extract(func_get_arg(1));/**/
-			/*self::$vars = func_get_arg(1);*/
-			/*extract(self::$vars);*/
+			self::$vars = func_get_arg(1);
+			extract(self::$vars);
 		}
 		return eval('?>' . func_get_arg(0));
 	}
@@ -61,9 +62,8 @@ final class LimitedScope
 	public static function load(/*$file, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			/**/extract(func_get_arg(1));/**/
-			/*self::$vars = func_get_arg(1);*/
-			/*extract(self::$vars);*/
+			self::$vars = func_get_arg(1);
+			extract(self::$vars);
 		}
 		return include func_get_arg(0);
 	}

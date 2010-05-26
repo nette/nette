@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\ComponentContainer;*/
+use Nette\ComponentContainer;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -51,17 +51,17 @@ class TestClass extends ComponentContainer implements ArrayAccess
 }
 
 
-/*Nette\Object::extensionMethod('Nette\IComponentContainer::export', function($thisObj)*/
-/**/function IComponentContainer_prototype_export($thisObj)/**/
+/**/Nette\Object::extensionMethod('Nette\IComponentContainer::export', function($thisObj)/**/
+/*5.2* function IComponentContainer_prototype_export($thisObj)*/
 {
 	$res = array("({$thisObj->reflection->name})" => $thisObj->name);
-	if ($thisObj instanceof /*Nette\*/IComponentContainer) {
+	if ($thisObj instanceof Nette\IComponentContainer) {
 		foreach ($thisObj->getComponents() as $name => $obj) {
 			$res['children'][$name] = $obj->export();
 		}
 	}
 	return $res;
-}/*);*/
+}/**/);/**/
 
 
 class A extends TestClass {}

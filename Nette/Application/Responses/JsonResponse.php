@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
+class JsonResponse extends Nette\Object implements IPresenterResponse
 {
 	/** @var array|stdClass */
 	private $payload;
@@ -36,8 +38,8 @@ class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 	 */
 	public function __construct($payload, $contentType = NULL)
 	{
-		if (!is_array($payload) && !($payload instanceof /*\*/stdClass)) {
-			throw new /*\*/InvalidArgumentException("Payload must be array or anonymous class, " . gettype($payload) . " given.");
+		if (!is_array($payload) && !($payload instanceof \stdClass)) {
+			throw new \InvalidArgumentException("Payload must be array or anonymous class, " . gettype($payload) . " given.");
 		}
 		$this->payload = $payload;
 		$this->contentType = $contentType ? $contentType : 'application/json';
@@ -61,8 +63,8 @@ class JsonResponse extends /*Nette\*/Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		/*Nette\*/Environment::getHttpResponse()->setContentType($this->contentType);
-		/*Nette\*/Environment::getHttpResponse()->setExpiration(FALSE);
+		Nette\Environment::getHttpResponse()->setContentType($this->contentType);
+		Nette\Environment::getHttpResponse()->setExpiration(FALSE);
 		echo json_encode($this->payload);
 	}
 

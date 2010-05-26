@@ -10,9 +10,10 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
 
-/*use Nette\Web\Html;*/
+use Nette,
+	Nette\Web\Html;
 
 
 
@@ -22,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Forms
  */
-class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
+class ConventionalRenderer extends Nette\Object implements IFormRenderer
 {
 	/**
 	 *  /--- form.container
@@ -372,7 +373,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 	public function renderControls($parent)
 	{
 		if (!($parent instanceof FormContainer || $parent instanceof FormGroup)) {
-			throw new /*\*/InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
+			throw new \InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
 		}
 
 		$container = $this->getWrapper('controls container');
@@ -437,7 +438,7 @@ class ConventionalRenderer extends /*Nette\*/Object implements IFormRenderer
 		$s = array();
 		foreach ($controls as $control) {
 			if (!($control instanceof IFormControl)) {
-				throw new /*\*/InvalidArgumentException("Argument must be array of IFormControl instances.");
+				throw new \InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$s[] = (string) $control->getControl();
 		}

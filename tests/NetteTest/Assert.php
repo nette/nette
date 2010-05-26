@@ -123,7 +123,7 @@ final class Assert
 	/**
 	 * Returns message and file and line from call stack.
 	 * @param  string
-     * @return void
+	 * @return void
 	 */
 	private static function output($message)
 	{

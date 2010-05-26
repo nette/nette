@@ -10,7 +10,9 @@
  * @package    Nette\Caching
  */
 
-/*namespace Nette\Caching;*/
+namespace Nette\Caching;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
-class FileStorage extends /*Nette\*/Object implements ICacheStorage
+class FileStorage extends Nette\Object implements ICacheStorage
 {
 	/**
 	 * Atomic thread safe logic:
@@ -74,7 +76,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 			$uniq = uniqid('_', TRUE);
 			umask(0000);
 			if (!@mkdir("$dir/$uniq", 0777)) { // intentionally @
-				throw new /*\*/InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
+				throw new \InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 			}
 
 			// tests subdirectory mode
@@ -281,7 +283,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 		if ($all || $collector) {
 			$now = time();
 			$base = $this->dir . DIRECTORY_SEPARATOR . 'c';
-			$iterator = new /*\*/RecursiveIteratorIterator(new /*\*/RecursiveDirectoryIterator($this->dir), /*\*/RecursiveIteratorIterator::CHILD_FIRST);
+			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir), \RecursiveIteratorIterator::CHILD_FIRST);
 			foreach ($iterator as $entry) {
 				$path = (string) $entry;
 				if (strncmp($path, $base, strlen($base))) { // skip files out of cache
@@ -441,7 +443,7 @@ class FileStorage extends /*Nette\*/Object implements ICacheStorage
 	{
 		if ($this->db === NULL) {
 			if (!extension_loaded('sqlite')) {
-				throw new /*\*/InvalidStateException("SQLite extension is required for storing tags and priorities.");
+				throw new \InvalidStateException("SQLite extension is required for storing tags and priorities.");
 			}
 			$this->db = sqlite_open($this->dir . '/cachejournal.sdb');
 			@sqlite_exec($this->db, 'CREATE TABLE cache (file VARCHAR NOT NULL, priority, tag VARCHAR);

@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web
  */
-class HttpContext extends /*Nette\*/Object
+class HttpContext extends Nette\Object
 {
 
 
@@ -87,7 +89,7 @@ class HttpContext extends /*Nette\*/Object
 	 */
 	public function getRequest()
 	{
-		return /*Nette\*/Environment::getHttpRequest();
+		return Nette\Environment::getHttpRequest();
 	}
 
 
@@ -97,7 +99,7 @@ class HttpContext extends /*Nette\*/Object
 	 */
 	public function getResponse()
 	{
-		return /*Nette\*/Environment::getHttpResponse();
+		return Nette\Environment::getHttpResponse();
 	}
 
 }

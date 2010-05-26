@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Forms
  */
-final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
+final class Rules extends Nette\Object implements \IteratorAggregate
 {
 	/** @internal */
 	const VALIDATE_PREFIX = 'validate';
@@ -199,7 +201,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 	 */
 	final public function getIterator()
 	{
-		return new /*\*/ArrayIterator($this->rules);
+		return new \ArrayIterator($this->rules);
 	}
 
 
@@ -228,7 +230,7 @@ final class Rules extends /*Nette\*/Object implements /*\*/IteratorAggregate
 
 		if (!$this->getCallback($rule)->isCallable()) {
 			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
-			throw new /*\*/InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
+			throw new \InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
 		}
 	}
 

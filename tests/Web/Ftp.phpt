@@ -9,17 +9,17 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Web\Ftp;*/
+use Nette\Web\Ftp;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
 $ftp = new Ftp;
 // Opens an FTP connection to the specified host
-$ftp->connect('ftp.nette.org');
+$ftp->connect('ftp.nettephp.com');
 $ftp->pasv(TRUE);
 // Login with username and password
 $ftp->login('nette@php7.org', 'anonymous');

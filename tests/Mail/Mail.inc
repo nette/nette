@@ -4,8 +4,8 @@
  * Common code for Mail test cases.
  */
 
-/*use Nette\Mail\Mail;*/
-/*use Nette\Mail\IMailer;*/
+use Nette\Mail\Mail;
+use Nette\Mail\IMailer;
 
 
 

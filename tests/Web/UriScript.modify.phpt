@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Web\UriScript;*/
+use Nette\Web\UriScript;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

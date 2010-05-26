@@ -9,16 +9,15 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Application\Control;*/
-/*use Nette\Templates\Template;*/
-/*use Nette\Templates\LatteFilter;*/
+use Nette\Templates\Template,
+	Nette\Templates\LatteFilter,
+	Nette\Application\Control;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Template.inc';
+require __DIR__ . '/Template.inc';
 
 
 
@@ -37,7 +36,7 @@ class MockControl extends Control
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
 $template->control = new MockControl;
-$template->render(file_get_contents(dirname(__FILE__) . '/templates/latte.snippet.phtml'));
+$template->render(file_get_contents(__DIR__ . '/templates/latte.snippet.phtml'));
 
 echo $template->compiled;
 

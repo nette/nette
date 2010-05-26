@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class RenderResponse extends /*Nette\*/Object implements IPresenterResponse
+class RenderResponse extends Nette\Object implements IPresenterResponse
 {
 	/** @var mixed */
 	private $source;
@@ -53,7 +55,7 @@ class RenderResponse extends /*Nette\*/Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		if ($this->source instanceof /*Nette\Templates\*/ITemplate) {
+		if ($this->source instanceof Nette\Templates\ITemplate) {
 			$this->source->render();
 
 		} else {

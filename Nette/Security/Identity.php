@@ -10,7 +10,9 @@
  * @package    Nette\Security
  */
 
-/*namespace Nette\Security;*/
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -25,7 +27,7 @@
  *
  * @serializationVersion 1.0
  */
-class Identity extends /*Nette\*/FreezableObject implements IIdentity
+class Identity extends Nette\FreezableObject implements IIdentity
 {
 	/** @var mixed */
 	private $id;
@@ -168,7 +170,7 @@ class Identity extends /*Nette\*/FreezableObject implements IIdentity
 	 */
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }

@@ -1,6 +1,8 @@
 <?php
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 $a = 1;
 ${'a'} = "{$a} ${a}";

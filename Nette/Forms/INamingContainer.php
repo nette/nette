@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -20,6 +22,6 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Forms
  */
-interface INamingContainer extends /*Nette\*/IComponentContainer
+interface INamingContainer extends Nette\IComponentContainer
 {
 }

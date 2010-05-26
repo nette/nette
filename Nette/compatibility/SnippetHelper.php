@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -21,7 +23,7 @@
  * @package    Nette\Templates
  * @deprecated
  */
-class SnippetHelper extends /*Nette\*/Object
+class SnippetHelper extends Nette\Object
 {
 	/** @var bool */
 	public static $outputAllowed = TRUE;
@@ -47,7 +49,7 @@ class SnippetHelper extends /*Nette\*/Object
 	 * @param  string  start element
 	 * @return SnippetHelper
 	 */
-	public static function create(/*Nette\Application\*/Control $control, $name = NULL, $tag = 'div')
+	public static function create(Nette\Application\Control $control, $name = NULL, $tag = 'div')
 	{
 		if (self::$outputAllowed) { // rendering flow or non-AJAX request
 			$obj = new self;
@@ -82,7 +84,7 @@ class SnippetHelper extends /*Nette\*/Object
 
 		} else {  // finish snippet buffering
 			if ($this->level !== ob_get_level()) {
-				throw new /*\*/InvalidStateException("Snippet '$this->id' cannot be ended here.");
+				throw new \InvalidStateException("Snippet '$this->id' cannot be ended here.");
 			}
 			$this->payload->snippets[$this->id] = ob_get_clean();
 			self::$outputAllowed = FALSE;

@@ -10,7 +10,9 @@
  * @package    Nette\Loaders
  */
 
-/*namespace Nette\Loaders;*/
+namespace Nette\Loaders;
+
+use Nette;
 
 
 
@@ -56,7 +58,7 @@ class RobotLoader extends AutoLoader
 	public function __construct()
 	{
 		if (!extension_loaded('tokenizer')) {
-			throw new /*\*/Exception("PHP extension Tokenizer is not loaded.");
+			throw new \Exception("PHP extension Tokenizer is not loaded.");
 		}
 	}
 
@@ -76,7 +78,7 @@ class RobotLoader extends AutoLoader
 			$this->rebuild();
 		}
 
-		if (isset($this->list[strtolower(__CLASS__)]) && class_exists(/*Nette\Loaders\*/'NetteLoader', FALSE)) {
+		if (isset($this->list[strtolower(__CLASS__)]) && class_exists('Nette\Loaders\NetteLoader', FALSE)) {
 			NetteLoader::getInstance()->unregister();
 		}
 
@@ -93,7 +95,7 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = strtolower($type);
-		/*$type = ltrim($type, '\\'); // PHP namespace bug #49143 */
+		$type = ltrim($type, '\\'); // PHP namespace bug #49143
 		if (isset($this->list[$type])) {
 			if ($this->list[$type] !== FALSE) {
 				LimitedScope::load($this->list[$type][0]);
@@ -180,7 +182,7 @@ class RobotLoader extends AutoLoader
 		foreach ((array) $path as $val) {
 			$real = realpath($val);
 			if ($real === FALSE) {
-				throw new /*\*/DirectoryNotFoundException("Directory '$val' not found.");
+				throw new \DirectoryNotFoundException("Directory '$val' not found.");
 			}
 			$this->scanDirs[] = $real;
 		}
@@ -200,7 +202,7 @@ class RobotLoader extends AutoLoader
 		$class = strtolower($class);
 		if (!empty($this->list[$class]) && $this->list[$class][0] !== $file) {
 			spl_autoload_call($class); // hack: enables exceptions
-			throw new /*\*/InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
+			throw new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
 		}
 		$this->list[$class] = array($file, $time);
 	}
@@ -367,7 +369,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function getCache()
 	{
-		return /*Nette\*/Environment::getCache('Nette.RobotLoader');
+		return Nette\Environment::getCache('Nette.RobotLoader');
 	}
 
 
@@ -387,7 +389,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function isProduction()
 	{
-		return /*Nette\*/Environment::isProduction();
+		return Nette\Environment::isProduction();
 	}
 
 }

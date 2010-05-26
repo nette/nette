@@ -10,7 +10,9 @@
  * @package    Nette\Mail
  */
 
-/*namespace Nette\Mail;*/
+namespace Nette\Mail;
+
+use Nette;
 
 
 
@@ -317,7 +319,7 @@ class Mail extends MailMimePart
 	private function readFile($file, & $contentType)
 	{
 		if (!is_file($file)) {
-			throw new /*\*/FileNotFoundException("File '$file' not found.");
+			throw new \FileNotFoundException("File '$file' not found.");
 		}
 		if (!$contentType && $info = getimagesize($file)) {
 			$contentType = $info['mime'];
@@ -362,7 +364,7 @@ class Mail extends MailMimePart
 	public function getMailer()
 	{
 		if ($this->mailer === NULL) {
-			/**/Framework::fixNamespace(self::$defaultMailer);/**/
+			/*5.2* if ($a = strrpos(self::$defaultMailer, '\\')) self::$defaultMailer = substr(self::$defaultMailer, $a + 1); // fix namespace*/
 			$this->mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new self::$defaultMailer;
 		}
 		return $this->mailer;
@@ -425,9 +427,9 @@ class Mail extends MailMimePart
 	 */
 	protected function buildHtml()
 	{
-		if ($this->html instanceof /*Nette\Templates\*/ITemplate) {
+		if ($this->html instanceof Nette\Templates\ITemplate) {
 			$this->html->mail = $this;
-			if ($this->basePath === NULL && $this->html instanceof /*Nette\Templates\*/IFileTemplate) {
+			if ($this->basePath === NULL && $this->html instanceof Nette\Templates\IFileTemplate) {
 				$this->basePath = dirname($this->html->getFile());
 			}
 			$this->html = $this->html->__toString(TRUE);
@@ -457,7 +459,7 @@ class Mail extends MailMimePart
 	protected function buildText()
 	{
 		$text = $this->getBody();
-		if ($text instanceof /*Nette\Templates\*/ITemplate) {
+		if ($text instanceof Nette\Templates\ITemplate) {
 			$text->mail = $this;
 			$this->setBody($text->__toString(TRUE));
 

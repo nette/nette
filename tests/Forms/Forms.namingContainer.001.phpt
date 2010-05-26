@@ -9,14 +9,14 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\ComponentContainer;*/
-/*use Nette\Forms\Form;*/
-/*use Nette\Forms\TextInput;*/
-/*use Nette\Forms\FormContainer;*/
+use Nette\ComponentContainer,
+	Nette\Forms\Form,
+	Nette\Forms\TextInput,
+	Nette\Forms\FormContainer;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

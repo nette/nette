@@ -10,7 +10,9 @@
  * @package    Nette\Security
  */
 
-/*namespace Nette\Security;*/
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Security
  */
-class SimpleAuthenticator extends /*Nette\*/Object implements IAuthenticator
+class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 {
 	/** @var array */
 	private $userlist;

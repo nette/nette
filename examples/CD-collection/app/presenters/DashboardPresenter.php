@@ -1,9 +1,9 @@
 <?php
 
-/*use Nette\Environment;*/
-/*use Nette\Application\AppForm;*/
-/*use Nette\Forms\Form;*/
-/*use Nette\Web\User;*/
+use Nette\Environment,
+	Nette\Application\AppForm,
+	Nette\Forms\Form,
+	Nette\Web\User;
 
 
 
@@ -57,7 +57,7 @@ class DashboardPresenter extends BasePresenter
 			$album = new Albums;
 			$row = $album->find($id)->fetch();
 			if (!$row) {
-				throw new /*Nette\Application\*/BadRequestException('Record not found');
+				throw new Nette\Application\BadRequestException('Record not found');
 			}
 			$form->setDefaults($row);
 		}
@@ -74,7 +74,7 @@ class DashboardPresenter extends BasePresenter
 		$album = new Albums;
 		$this->template->album = $album->find($id)->fetch();
 		if (!$this->template->album) {
-			throw new /*Nette\Application\*/BadRequestException('Record not found');
+			throw new Nette\Application\BadRequestException('Record not found');
 		}
 	}
 
@@ -109,31 +109,10 @@ class DashboardPresenter extends BasePresenter
 
 		$form->addText('title', 'Title:')
 			->addRule(Form::FILLED, 'Please enter a title.');
-		/* PHP 5.3
-		$presenter = $this;
-		$form->addSubmit('save', 'Save')->onClick[] = function() use ($form, $presenter) {
-			$id = (int) $presenter->getParam('id');
-			$album = new Albums;
-			if ($id > 0) {
-				$album->update($id, $form->getValues());
-				$presenter->flashMessage('The album has been updated.');
-			} else {
-				$album->insert($form->getValues());
-				$presenter->flashMessage('The album has been added.');
-			}
-			$presenter->redirect('default');
-		};
-		$form['save']->getControlPrototype()->class('default');
 
-		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL)->onClick[] = function() use ($presenter) {
-			$presenter->redirect('default');
-		};
-		*/
-		/**/
 		$form->addSubmit('save', 'Save')->getControlPrototype()->class('default');
 		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL);
 		$form->onSubmit[] = callback($this, 'albumFormSubmitted');
-		/**/
 
 		$form->addProtection('Please submit this form again (security token has expired).');
 		return $form;
@@ -141,7 +120,6 @@ class DashboardPresenter extends BasePresenter
 
 
 
-	/**/
 	public function albumFormSubmitted(AppForm $form)
 	{
 		if ($form['save']->isSubmittedBy()) {
@@ -158,7 +136,6 @@ class DashboardPresenter extends BasePresenter
 
 		$this->redirect('default');
 	}
-	/**/
 
 
 
@@ -169,30 +146,15 @@ class DashboardPresenter extends BasePresenter
 	protected function createComponentDeleteForm()
 	{
 		$form = new AppForm;
-		/* PHP 5.3
-		$presenter = $this;
-		$form->addSubmit('cancel', 'Cancel')->onClick[] = function() use ($presenter) {
-			$presenter->redirect('default');
-		};
-		$form->addSubmit('delete', 'Delete')->onClick[] = function() use ($presenter) {
-			$album = new Albums;
-			$album->delete($presenter->getParam('id'));
-			$presenter->flashMessage('Album has been deleted.');
-			$presenter->redirect('default');
-		};
-		$form['delete']->getControlPrototype()->class('default');
-		*/
-		/**/
 		$form->addSubmit('cancel', 'Cancel');
 		$form->addSubmit('delete', 'Delete')->getControlPrototype()->class('default');
 		$form->onSubmit[] = callback($this, 'deleteFormSubmitted');
-		/**/
 		$form->addProtection('Please submit this form again (security token has expired).');
 		return $form;
 	}
 
 
-	/**/
+
 	public function deleteFormSubmitted(AppForm $form)
 	{
 		if ($form['delete']->isSubmittedBy()) {
@@ -203,6 +165,5 @@ class DashboardPresenter extends BasePresenter
 
 		$this->redirect('default');
 	}
-	/**/
 
 }

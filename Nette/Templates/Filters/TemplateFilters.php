@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -28,7 +30,7 @@ final class TemplateFilters
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 

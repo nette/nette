@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web
  */
-final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAggregate, /*\*/ArrayAccess
+final class SessionNamespace extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
 	/** @var array  session data storage */
 	private $data;
@@ -51,9 +53,9 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	public function getIterator()
 	{
 		if (isset($this->data)) {
-			return new /*\*/ArrayIterator($this->data);
+			return new \ArrayIterator($this->data);
 		} else {
-			return new /*\*/ArrayIterator;
+			return new \ArrayIterator;
 		}
 	}
 
@@ -70,7 +72,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 	{
 		$this->data[$name] = $value;
 		if (is_object($value)) {
-			$this->meta[$name]['V'] = /*Nette\Reflection\*/ClassReflection::from($value)->getAnnotation('serializationVersion');
+			$this->meta[$name]['V'] = Nette\Reflection\ClassReflection::from($value)->getAnnotation('serializationVersion');
 		}
 	}
 
@@ -184,7 +186,7 @@ final class SessionNamespace extends /*Nette\*/Object implements /*\*/IteratorAg
 			$time = NULL;
 			$whenBrowserIsClosed = TRUE;
 		} else {
-			$time = /*Nette\*/Tools::createDateTime($time)->format('U');
+			$time = Nette\Tools::createDateTime($time)->format('U');
 			$whenBrowserIsClosed = FALSE;
 		}
 

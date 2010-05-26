@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -40,7 +42,7 @@ final class Framework
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -67,18 +69,5 @@ final class Framework
 			'src="http://files.nette.org/icons/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
 			($xhtml ? ' />' : '>'), '</a>';
 	}
-
-
-	/**/
-	/**
-	 * Fixes namespaced class/interface in PHP < 5.3
-	 */
-	public static function fixNamespace(& $class)
-	{
-		if ($a = strrpos($class, '\\')) {
-			$class = substr($class, $a + 1);
-		}
-	}
-	/**/
 
 }

@@ -8,10 +8,10 @@
  */
 
 
-/*use Nette\Debug;*/
-/*use Nette\Environment;*/
-/*use Nette\Application\Route;*/
-/*use Nette\Application\SimpleRouter;*/
+use Nette\Debug;
+use Nette\Environment;
+use Nette\Application\Route;
+use Nette\Application\SimpleRouter;
 
 
 

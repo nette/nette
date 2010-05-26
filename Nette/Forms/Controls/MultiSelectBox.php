@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 

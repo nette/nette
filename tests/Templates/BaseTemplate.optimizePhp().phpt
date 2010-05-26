@@ -9,15 +9,15 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Templates\BaseTemplate;*/
+use Nette\Templates\BaseTemplate;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
-$input = file_get_contents(dirname(__FILE__) . '/templates/optimize.phtml');
+$input = file_get_contents(__DIR__ . '/templates/optimize.phtml');
 echo BaseTemplate::optimizePhp($input);
 
 

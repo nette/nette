@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -48,7 +50,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
  */
-class LatteMacros extends /*Nette\*/Object
+class LatteMacros extends Nette\Object
 {
 	/** @var array */
 	public static $defaultMacros = array(
@@ -195,7 +197,7 @@ class LatteMacros extends /*Nette\*/Object
 			$s .= $this->macro('/block', '', '');
 
 		} elseif ($this->blocks) {
-			throw new /*\*/InvalidStateException("There are some unclosed blocks.");
+			throw new \InvalidStateException("There are some unclosed blocks.");
 		}
 
 		// snippets support (temporary solution)
@@ -225,7 +227,7 @@ class LatteMacros extends /*Nette\*/Object
 
 		// internal state holder
 		$s = "<?php\n"
-			/*. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"*/
+			. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"
 			. "\$_cb = LatteMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
@@ -400,7 +402,7 @@ class LatteMacros extends /*Nette\*/Object
 			break;
 
 		default:
-			throw new /*\*/InvalidStateException("Unknown macro syntax '$var' on line {$this->filter->line}.");
+			throw new \InvalidStateException("Unknown macro syntax '$var' on line {$this->filter->line}.");
 		}
 	}
 
@@ -415,12 +417,12 @@ class LatteMacros extends /*Nette\*/Object
 		$params = LatteFilter::formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new /*\*/InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
 			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $destination)) {
-				throw new /*\*/InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
+				throw new \InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
 			$parent = $destination === 'parent';
@@ -428,7 +430,7 @@ class LatteMacros extends /*Nette\*/Object
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new /*\*/InvalidStateException("Cannot include $destination block outside of any block on line {$this->filter->line}.");
+					throw new \InvalidStateException("Cannot include $destination block outside of any block on line {$this->filter->line}.");
 				}
 				$destination = $item[1];
 			}
@@ -459,13 +461,13 @@ class LatteMacros extends /*Nette\*/Object
 	{
 		$destination = LatteFilter::fetchToken($content); // destination
 		if ($destination === NULL) {
-			throw new /*\*/InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
 		}
 		if (!empty($this->blocks)) {
-			throw new /*\*/InvalidStateException("{extends} must be placed outside any block; on line {$this->filter->line}.");
+			throw new \InvalidStateException("{extends} must be placed outside any block; on line {$this->filter->line}.");
 		}
 		if ($this->extends !== NULL) {
-			throw new /*\*/InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
+			throw new \InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
 		}
 		$this->extends = $destination !== 'none';
 		return $this->extends ? '$_cb->extends = ' . LatteFilter::formatString($destination) : '';
@@ -487,10 +489,10 @@ class LatteMacros extends /*Nette\*/Object
 		} else { // #block
 			$name = ltrim($name, '#');
 			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
-				throw new /*\*/InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
+				throw new \InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new /*\*/InvalidStateException("Cannot redeclare block '$name'; on line {$this->filter->line}.");
+				throw new \InvalidStateException("Cannot redeclare block '$name'; on line {$this->filter->line}.");
 			}
 
 			$top = empty($this->blocks);
@@ -530,7 +532,7 @@ class LatteMacros extends /*Nette\*/Object
 		}
 
 		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
-			throw new /*\*/InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
+			throw new \InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
 
 		} elseif ($type === self::BLOCK_NAMED) { // block
 			return "{/block $name}";
@@ -584,7 +586,7 @@ class LatteMacros extends /*Nette\*/Object
 		$name = LatteFilter::fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
-			throw new /*\*/InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
+			throw new \InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
 		}
 
 		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
@@ -601,7 +603,7 @@ class LatteMacros extends /*Nette\*/Object
 		list($type, $name, $modifiers) = array_pop($this->blocks);
 
 		if ($type !== self::BLOCK_CAPTURE || ($content && $content !== $name)) {
-			throw new /*\*/InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
+			throw new \InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
 		}
 
 		return $name . '=' . LatteFilter::formatModifiers('ob_get_clean()', $modifiers);
@@ -674,7 +676,7 @@ class LatteMacros extends /*Nette\*/Object
 		}
 
 		// temporary solution
-		return strpos($content, '/') ? /*\Nette\*/'Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")' : '';
+		return strpos($content, '/') ? '\Nette\Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")' : '';
 	}
 
 
@@ -696,7 +698,7 @@ class LatteMacros extends /*Nette\*/Object
 	{
 		$pair = LatteFilter::fetchToken($content); // widget[:method]
 		if ($pair === NULL) {
-			throw new /*\*/InvalidStateException("Missing widget name in {widget} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing widget name in {widget} on line {$this->filter->line}.");
 		}
 		$pair = explode(':', $pair, 2);
 		$widget = LatteFilter::formatString($pair[0]);
@@ -756,7 +758,7 @@ class LatteMacros extends /*Nette\*/Object
 	public function macroAssign($content, $modifiers)
 	{
 		if (!$content) {
-			throw new /*\*/InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
 		}
 		if (strpos($content, '=>') === FALSE) { // back compatibility
 			return '$' . ltrim(LatteFilter::fetchToken($content), '$') . ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
@@ -772,7 +774,7 @@ class LatteMacros extends /*Nette\*/Object
 	public function macroDefault($content)
 	{
 		if (!$content) {
-			throw new /*\*/InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
 		}
 		return 'extract(' . LatteFilter::formatArray($content) . ', EXTR_SKIP)';
 	}
@@ -813,7 +815,7 @@ class LatteMacros extends /*Nette\*/Object
 	public static function callBlock($context, $name, $params)
 	{
 		if (empty($context->blocks[$name])) {
-			throw new /*\*/InvalidStateException("Call to undefined block '$name'.");
+			throw new \InvalidStateException("Call to undefined block '$name'.");
 		}
 		$block = reset($context->blocks[$name]);
 		$block($context, $params);
@@ -831,7 +833,7 @@ class LatteMacros extends /*Nette\*/Object
 	public static function callBlockParent($context, $name, $params)
 	{
 		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
-			throw new /*\*/InvalidStateException("Call to undefined parent block '$name'.");
+			throw new \InvalidStateException("Call to undefined parent block '$name'.");
 		}
 		$block($context, $params);
 	}
@@ -851,7 +853,7 @@ class LatteMacros extends /*Nette\*/Object
 			$tpl = $destination;
 
 		} elseif ($destination == NULL) { // intentionally ==
-			throw new /*\*/InvalidArgumentException("Template file name was not specified.");
+			throw new \InvalidArgumentException("Template file name was not specified.");
 
 		} else {
 			$tpl = clone $template;

@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -21,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class Link extends /*Nette\*/Object
+class Link extends Nette\Object
 {
 	/** @var PresenterComponent */
 	private $component;
@@ -105,8 +107,8 @@ class Link extends /*Nette\*/Object
 		try {
 			return $this->component->link($this->destination, $this->params);
 
-		} catch (/*\*/Exception $e) {
-			/*Nette\*/Debug::toStringException($e);
+		} catch (\Exception $e) {
+			Nette\Debug::toStringException($e);
 		}
 	}
 

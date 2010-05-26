@@ -1,9 +1,9 @@
 <?php
 
-/*use Nette\Environment;*/
-/*use Nette\Application\AppForm;*/
-/*use Nette\Forms\Form;*/
-/*use Nette\Security\AuthenticationException;*/
+use Nette\Environment,
+	Nette\Application\AppForm,
+	Nette\Forms\Form,
+	Nette\Security\AuthenticationException;
 
 
 
@@ -35,25 +35,12 @@ class AuthPresenter extends BasePresenter
 
 		$form->addProtection('Please submit this form again (security token has expired).');
 
-		/**/$form->onSubmit[] = callback($this, 'loginFormSubmitted');/**/
-		/* PHP 5.3
-		$presenter = $this;
-		$form->onSubmit[] = function($form) use ($presenter) {
-			try {
-				$user = Environment::getUser();
-				$user->login($form['username']->getValue(), $form['password']->getValue());
-				$presenter->getApplication()->restoreRequest($presenter->backlink);
-				$presenter->redirect('Dashboard:');
-
-			} catch (AuthenticationException $e) {
-				$form->addError($e->getMessage());
-			}
-		};*/
+		$form->onSubmit[] = callback($this, 'loginFormSubmitted');
 		return $form;
 	}
 
 
-	/**/
+
 	public function loginFormSubmitted($form)
 	{
 		try {
@@ -66,6 +53,5 @@ class AuthPresenter extends BasePresenter
 			$form->addError($e->getMessage());
 		}
 	}
-	/**/
 
 }

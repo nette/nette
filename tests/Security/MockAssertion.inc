@@ -6,20 +6,20 @@
 
 
 
-class MockAssertion implements /*Nette\Security\*/IPermissionAssertion
+class MockAssertion implements Nette\Security\IPermissionAssertion
 {
-    private $returnValue;
+	private $returnValue;
 
 
-    public function __construct($returnValue)
-    {
-        $this->returnValue = (bool) $returnValue;
-    }
+	public function __construct($returnValue)
+	{
+		$this->returnValue = (bool) $returnValue;
+	}
 
 
-	public function assert(/*Nette\Security\*/Permission $acl, $roleId, $resourceId, $privilege)
-    {
-       return $this->returnValue;
-    }
+	public function assert(Nette\Security\Permission $acl, $roleId, $resourceId, $privilege)
+	{
+	return $this->returnValue;
+	}
 
 }

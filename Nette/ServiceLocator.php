@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -54,7 +56,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -64,13 +66,13 @@ class ServiceLocator extends Object implements IServiceLocator
 
 		if (is_object($service)) {
 			if (!$singleton || $options) {
-				throw new /*\*/InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
+				throw new \InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
 			}
 			$this->registry[$lower] = $service;
 
 		} else {
 			if (!$service) {
-				throw new /*\*/InvalidArgumentException("Service named '$name' is empty.");
+				throw new \InvalidArgumentException("Service named '$name' is empty.");
 			}
 			$this->factories[$lower] = array($service, $singleton, $options);
 		}
@@ -85,7 +87,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function removeService($name)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -103,14 +105,14 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function getService($name, array $options = NULL)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
 
 		if (isset($this->registry[$lower])) { // instantiated singleton
 			if ($options) {
-				throw new /*\*/InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 			}
 			return $this->registry[$lower];
 
@@ -118,14 +120,14 @@ class ServiceLocator extends Object implements IServiceLocator
 			list($factory, $singleton, $defOptions) = $this->factories[$lower];
 
 			if ($singleton && $options) {
-				throw new /*\*/InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 
 			} elseif ($defOptions) {
 				$options = $options ? $options + $defOptions : $defOptions;
 			}
 
 			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
-				/**/Framework::fixNamespace($factory);/**/
+				/*5.2* if ($a = strrpos($factory, '\\')) $factory = substr($factory, $a + 1); // fix namespace*/
 				if (!class_exists($factory)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
 				}
@@ -137,9 +139,9 @@ class ServiceLocator extends Object implements IServiceLocator
 			} else { // factory callback
 				$factory = callback($factory);
 				if (!$factory->isCallable()) {
-					throw new /*\*/InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
+					throw new \InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
-				$service = $factory/**/->invoke/**/($options);
+				$service = $factory/*5.2*->invoke*/($options);
 				if (!is_object($service)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
 				}
@@ -156,7 +158,7 @@ class ServiceLocator extends Object implements IServiceLocator
 			return $this->parent->getService($name, $options);
 
 		} else {
-			throw new /*\*/InvalidStateException("Service '$name' not found.");
+			throw new \InvalidStateException("Service '$name' not found.");
 		}
 	}
 
@@ -171,7 +173,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	public function hasService($name, $created = FALSE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new /*\*/InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -199,6 +201,6 @@ class ServiceLocator extends Object implements IServiceLocator
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
-class AmbiguousServiceException extends /*\*/Exception
+class AmbiguousServiceException extends \Exception
 {
 }

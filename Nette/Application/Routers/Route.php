@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -21,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class Route extends /*Nette\*/Object implements IRouter
+class Route extends Nette\Object implements IRouter
 {
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
@@ -125,7 +127,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
+	public function match(Nette\Web\IHttpRequest $httpRequest)
 	{
 		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
 
@@ -206,11 +208,11 @@ class Route extends /*Nette\*/Object implements IRouter
 
 		// 5) BUILD PresenterRequest
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new /*\*/InvalidStateException('Missing presenter in route definition.');
+			throw new \InvalidStateException('Missing presenter in route definition.');
 		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
 			if (!isset($params[self::MODULE_KEY])) {
-				throw new /*\*/InvalidStateException('Missing module in route definition.');
+				throw new \InvalidStateException('Missing module in route definition.');
 			}
 			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
 			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
@@ -238,7 +240,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
@@ -418,7 +420,7 @@ class Route extends /*Nette\*/Object implements IRouter
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
-						throw new /*\*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+						throw new \InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 					}
 					$meta = self::$styles[$class];
 
@@ -462,7 +464,7 @@ class Route extends /*Nette\*/Object implements IRouter
 			if ($part === '[' || $part === ']' || $part === '[!') {
 				$brackets += $part[0] === '[' ? -1 : 1;
 				if ($brackets < 0) {
-					throw new /*\*/InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
+					throw new \InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
 				}
 				array_unshift($sequence, $part);
 				$re = ($part[0] === '[' ? '(?:' : ')?') . $re;
@@ -483,13 +485,13 @@ class Route extends /*Nette\*/Object implements IRouter
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_-]#i', $name)) {
-				throw new /*\*/InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' given.");
+				throw new \InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' given.");
 			}
 
 			// pattern, condition & metadata
 			if ($class !== '') {
 				if (!isset(self::$styles[$class])) {
-					throw new /*\*/InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+					throw new \InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 				}
 				$meta = self::$styles[$class];
 
@@ -544,7 +546,7 @@ class Route extends /*Nette\*/Object implements IRouter
 		} while (TRUE);
 
 		if ($brackets) {
-			throw new /*\*/InvalidArgumentException("Missing closing ']' in mask '$mask'.");
+			throw new \InvalidArgumentException("Missing closing ']' in mask '$mask'.");
 		}
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
@@ -722,12 +724,12 @@ class Route extends /*Nette\*/Object implements IRouter
 	public static function addStyle($style, $parent = '#')
 	{
 		if (isset(self::$styles[$style])) {
-			throw new /*\*/InvalidArgumentException("Style '$style' already exists.");
+			throw new \InvalidArgumentException("Style '$style' already exists.");
 		}
 
 		if ($parent !== NULL) {
 			if (!isset(self::$styles[$parent])) {
-				throw new /*\*/InvalidArgumentException("Parent style '$parent' doesn't exist.");
+				throw new \InvalidArgumentException("Parent style '$parent' doesn't exist.");
 			}
 			self::$styles[$style] = self::$styles[$parent];
 
@@ -748,7 +750,7 @@ class Route extends /*Nette\*/Object implements IRouter
 	public static function setStyleProperty($style, $key, $value)
 	{
 		if (!isset(self::$styles[$style])) {
-			throw new /*\*/InvalidArgumentException("Style '$style' doesn't exist.");
+			throw new \InvalidArgumentException("Style '$style' doesn't exist.");
 		}
 		self::$styles[$style][$key] = $value;
 	}

@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Application\SimpleRouter;*/
+use Nette\Application\SimpleRouter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/SimpleRouter.inc';
+require __DIR__ . '/SimpleRouter.inc';
 
 
 
@@ -34,9 +34,9 @@ Assert::same( "main:sub:myPresenter",  $req->getPresenterName() );
 $url = $router->constructUrl($req, $httpRequest);
 Assert::same( "http://nette.org/file.php?presenter=myPresenter",  $url );
 
-$req = new /*Nette\Application\*/PresenterRequest(
+$req = new Nette\Application\PresenterRequest(
 	'othermodule:presenter',
-	/*Nette\Web\*/HttpRequest::GET,
+	Nette\Web\HttpRequest::GET,
 	array()
 );
 $url = $router->constructUrl($req, $httpRequest);

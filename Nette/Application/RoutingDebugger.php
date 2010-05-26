@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class RoutingDebugger extends /*Nette\*/DebugPanel
+class RoutingDebugger extends Nette\DebugPanel
 {
 	/** @var Nette\Application\IRouter */
 	private $router;
@@ -36,11 +38,11 @@ class RoutingDebugger extends /*Nette\*/DebugPanel
 
 
 
-	public function __construct(IRouter $router, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function __construct(IRouter $router, Nette\Web\IHttpRequest $httpRequest)
 	{
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
-		$this->routers = new /*\*/ArrayObject;
+		$this->routers = new \ArrayObject;
 		parent::__construct('RoutingDebugger', array($this, 'renderTab'), array($this, 'renderPanel'));
 	}
 
@@ -53,7 +55,7 @@ class RoutingDebugger extends /*Nette\*/DebugPanel
 	public function renderTab()
 	{
 		$this->analyse($this->router);
-		require dirname(__FILE__) . '/templates/RoutingDebugger.tab.phtml';
+		require __DIR__ . '/templates/RoutingDebugger.tab.phtml';
 	}
 
 
@@ -64,7 +66,7 @@ class RoutingDebugger extends /*Nette\*/DebugPanel
 	 */
 	public function renderPanel()
 	{
-		require dirname(__FILE__) . '/templates/RoutingDebugger.panel.phtml';
+		require __DIR__ . '/templates/RoutingDebugger.panel.phtml';
 	}
 
 

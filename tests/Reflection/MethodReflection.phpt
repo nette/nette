@@ -9,22 +9,22 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\MethodReflection;*/
+use Nette\Reflection\MethodReflection;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
 class A {
-    static function foo($a, $b) {
-    	return $a + $b;
-    }
+	static function foo($a, $b) {
+		return $a + $b;
+	}
 }
 
 class B extends A {
-    function bar() {}
+	function bar() {}
 }
 
 $methodInfo = new MethodReflection('B', 'foo');

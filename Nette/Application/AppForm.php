@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -22,13 +24,13 @@
  *
  * @property-read Presenter $presenter
  */
-class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
+class AppForm extends Nette\Forms\Form implements ISignalReceiver
 {
 
 	/**
 	 * Application form constructor.
 	 */
-	public function __construct(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(Nette\IComponentContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct();
 		$this->monitor('Nette\Application\Presenter');
@@ -113,7 +115,7 @@ class AppForm extends /*Nette\Forms\*/Form implements ISignalReceiver
 		}
 
 		if ($isPost) {
-			return /*Nette\*/ArrayTools::mergeTree($request->getPost(), $request->getFiles());
+			return Nette\ArrayTools::mergeTree($request->getPost(), $request->getFiles());
 		} else {
 			return $request->getParams();
 		}

@@ -10,9 +10,11 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
 
-/*use Nette\Caching\Cache, Nette\Environment;*/
+use Nette,
+	Nette\Caching\Cache,
+	Nette\Environment;
 
 
 
@@ -22,7 +24,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
  */
-class CachingHelper extends /*Nette\*/Object
+class CachingHelper extends Nette\Object
 {
 	/** @var array */
 	private $frame;
@@ -106,7 +108,7 @@ class CachingHelper extends /*Nette\*/Object
 	 */
 	protected static function getCache()
 	{
-		return /*Nette\*/Environment::getCache('Nette.Template.Curly');
+		return Nette\Environment::getCache('Nette.Template.Curly');
 	}
 
 }

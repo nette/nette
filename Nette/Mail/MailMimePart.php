@@ -10,7 +10,9 @@
  * @package    Nette\Mail
  */
 
-/*namespace Nette\Mail;*/
+namespace Nette\Mail;
+
+use Nette;
 
 
 
@@ -24,7 +26,7 @@
  * @property   string $body
  * @property-read array $headers
  */
-class MailMimePart extends /*Nette\*/Object
+class MailMimePart extends Nette\Object
 {
 	/**#@+ encoding */
 	const ENCODING_BASE64 = 'base64';
@@ -59,7 +61,7 @@ class MailMimePart extends /*Nette\*/Object
 	public function setHeader($name, $value, $append = FALSE)
 	{
 		if (!$name || preg_match('#[^a-z0-9-]#i', $name)) {
-			throw new /*\*/InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
+			throw new \InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		if ($value == NULL) { // intentionally ==
@@ -75,11 +77,11 @@ class MailMimePart extends /*Nette\*/Object
 
 			foreach ($value as $email => $name) {
 				if (!preg_match('#^[^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
-					throw new /*\*/InvalidArgumentException("Email address '$email' is not valid.");
+					throw new \InvalidArgumentException("Email address '$email' is not valid.");
 				}
 
 				if (preg_match('#[\r\n]#', $name)) {
-					throw new /*\*/InvalidArgumentException("Name cannot contain the line separator.");
+					throw new \InvalidArgumentException("Name cannot contain the line separator.");
 				}
 				$tmp[$email] = $name;
 			}
@@ -285,7 +287,7 @@ class MailMimePart extends /*Nette\*/Object
 				break;
 
 			default:
-				throw new /*\*/InvalidStateException('Unknown encoding');
+				throw new \InvalidStateException('Unknown encoding');
 			}
 		}
 

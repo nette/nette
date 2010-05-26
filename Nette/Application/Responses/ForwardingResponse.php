@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class ForwardingResponse extends /*Nette\*/Object implements IPresenterResponse
+class ForwardingResponse extends Nette\Object implements IPresenterResponse
 {
 	/** @var PresenterRequest */
 	private $request;

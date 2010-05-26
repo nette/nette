@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\ExtensionReflection;*/
+use Nette\Reflection\ExtensionReflection;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

@@ -10,10 +10,11 @@
  * @package    Nette\Reflection
  */
 
-/*namespace Nette\Reflection;*/
+namespace Nette\Reflection;
 
-/*use Nette\ObjectMixin;*/
-/*use Nette\Annotations;*/
+use Nette,
+	Nette\ObjectMixin,
+	Nette\Annotations;
 
 
 
@@ -23,7 +24,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
  */
-class FunctionReflection extends /*\*/ReflectionFunction
+class FunctionReflection extends \ReflectionFunction
 {
 
 	public function __toString()
@@ -41,7 +42,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 	 * @return Nette\Reflection\FunctionReflection
 	 * @internal
 	 */
-	public static function import(/*\*/ReflectionFunction $ref)
+	public static function import(\ReflectionFunction $ref)
 	{
 		return new self($ref->getName());
 	}
@@ -60,7 +61,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 
 	public function getParameters()
 	{
-		return array_map(array(/*Nette\Reflection\*/'MethodParameterReflection', 'import'), parent::getParameters());
+		return array_map(array('Nette\Reflection\MethodParameterReflection', 'import'), parent::getParameters());
 	}
 
 
@@ -72,9 +73,9 @@ class FunctionReflection extends /*\*/ReflectionFunction
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
+		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -109,7 +110,7 @@ class FunctionReflection extends /*\*/ReflectionFunction
 
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }

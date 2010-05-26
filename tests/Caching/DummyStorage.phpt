@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
+use Nette\Caching\Cache;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -21,7 +21,7 @@ require dirname(__FILE__) . '/../NetteTest/initialize.php';
 $key = 'nette';
 $value = '"Hello World"';
 
-$cache = new Cache(new /*Nette\Caching\*/DummyStorage, 'myspace');
+$cache = new Cache(new Nette\Caching\DummyStorage, 'myspace');
 
 
 dump( isset($cache[$key]), "Is cached?" );

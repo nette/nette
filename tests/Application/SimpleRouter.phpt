@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Application\SimpleRouter;*/
+use Nette\Application\SimpleRouter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/SimpleRouter.inc';
+require __DIR__ . '/SimpleRouter.inc';
 
 
 

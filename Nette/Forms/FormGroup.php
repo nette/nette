@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -23,7 +25,7 @@
  * @property-read array $controls
  * @property-read array $options
  */
-class FormGroup extends /*Nette\*/Object
+class FormGroup extends Nette\Object
 {
 	/** @var \SplObjectStorage */
 	protected $controls;
@@ -35,7 +37,7 @@ class FormGroup extends /*Nette\*/Object
 
 	public function __construct()
 	{
-		$this->controls = new /*\*/SplObjectStorage;
+		$this->controls = new \SplObjectStorage;
 	}
 
 
@@ -49,13 +51,13 @@ class FormGroup extends /*Nette\*/Object
 			if ($item instanceof IFormControl) {
 				$this->controls->attach($item);
 
-			} elseif ($item instanceof /*\*/Traversable || is_array($item)) {
+			} elseif ($item instanceof \Traversable || is_array($item)) {
 				foreach ($item as $control) {
 					$this->controls->attach($control);
 				}
 
 			} else {
-				throw new /*\*/InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
+				throw new \InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
 			}
 		}
 		return $this;

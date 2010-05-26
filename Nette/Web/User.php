@@ -10,9 +10,10 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
 
-/*use Nette\Environment;*/
+use Nette,
+	Nette\Environment;
 
 
 
@@ -29,7 +30,7 @@
  * @property-read array $roles
  * @property-read bool $authenticated
  */
-class User extends /*Nette\*/Object implements IUser
+class User extends Nette\Object implements IUser
 {
 	/**#@+ log-out reason {@link User::getLogoutReason()} */
 	const MANUAL = 1;
@@ -79,14 +80,14 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {
-			throw new /*\*/InvalidStateException('Authentication handler has not been set.');
+			throw new \InvalidStateException('Authentication handler has not been set.');
 		}
 
 		$this->logout(TRUE);
 
 		$credentials = array(
-			/*Nette\Security\*/IAuthenticator::USERNAME => $username,
-			/*Nette\Security\*/IAuthenticator::PASSWORD => $password,
+			Nette\Security\IAuthenticator::USERNAME => $username,
+			Nette\Security\IAuthenticator::PASSWORD => $password,
 			'extra' => $extra,
 		);
 
@@ -157,7 +158,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthenticationHandler(/*Nette\Security\*/IAuthenticator $handler)
+	public function setAuthenticationHandler(Nette\Security\IAuthenticator $handler)
 	{
 		$this->authenticationHandler = $handler;
 		return $this;
@@ -217,7 +218,7 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		$session = $this->getSessionNamespace(TRUE);
 		if ($time) {
-			$time = /*Nette\*/Tools::createDateTime($time)->format('U');
+			$time = Nette\Tools::createDateTime($time)->format('U');
 			$session->expireTime = $time;
 			$session->expireDelta = $time - time();
 
@@ -263,7 +264,7 @@ class User extends /*Nette\*/Object implements IUser
 
 		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
 
-		if (!($session->identity instanceof /*Nette\Security\*/IIdentity) || !is_bool($session->authenticated)) {
+		if (!($session->identity instanceof Nette\Security\IIdentity) || !is_bool($session->authenticated)) {
 			$session->remove();
 		}
 
@@ -329,7 +330,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * @param  IIdentity
 	 * @return User  provides a fluent interface
 	 */
-	protected function setIdentity(/*Nette\Security\*/IIdentity $identity = NULL)
+	protected function setIdentity(Nette\Security\IIdentity $identity = NULL)
 	{
 		$this->getSessionNamespace(TRUE)->identity = $identity;
 		return $this;
@@ -380,7 +381,7 @@ class User extends /*Nette\*/Object implements IUser
 	{
 		$handler = $this->getAuthorizationHandler();
 		if (!$handler) {
-			throw new /*\*/InvalidStateException("Authorization handler has not been set.");
+			throw new \InvalidStateException("Authorization handler has not been set.");
 		}
 
 		foreach ($this->getRoles() as $role) {
@@ -397,7 +398,7 @@ class User extends /*Nette\*/Object implements IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthorizationHandler(/*Nette\Security\*/IAuthorizator $handler)
+	public function setAuthorizationHandler(Nette\Security\IAuthorizator $handler)
 	{
 		$this->authorizationHandler = $handler;
 		return $this;

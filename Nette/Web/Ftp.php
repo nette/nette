@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -27,7 +29,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Web
  */
-class Ftp extends /*Nette\*/Object
+class Ftp extends Nette\Object
 {
 	/**#@+ FTP constant alias */
 	const ASCII = FTP_ASCII;
@@ -55,7 +57,7 @@ class Ftp extends /*Nette\*/Object
 	public function __construct()
 	{
 		if (!extension_loaded('ftp')) {
-			throw new /*\*/Exception("PHP extension FTP is not loaded.");
+			throw new \Exception("PHP extension FTP is not loaded.");
 		}
 	}
 
@@ -91,7 +93,7 @@ class Ftp extends /*Nette\*/Object
 		}
 
 
-		/*Nette\*/Tools::tryError();
+		Nette\Tools::tryError();
 
 		if ($func === 'ftp_connect' || $func === 'ftp_ssl_connect') {
 			$this->state = array($name => $args);
@@ -99,7 +101,7 @@ class Ftp extends /*Nette\*/Object
 			$res = NULL;
 
 		} elseif (!is_resource($this->resource)) {
-			/*Nette\*/Tools::catchError($msg);
+			Nette\Tools::catchError($msg);
 			throw new FtpException("Not connected to FTP server. Call connect() or ssl_connect() first.");
 
 		} else {
@@ -115,7 +117,7 @@ class Ftp extends /*Nette\*/Object
 			}
 		}
 
-		if (/*Nette\*/Tools::catchError($msg) && !$silent) {
+		if (Nette\Tools::catchError($msg) && !$silent) {
 			throw new FtpException($msg);
 		}
 
@@ -199,6 +201,6 @@ class Ftp extends /*Nette\*/Object
  *
  * @package    Nette\Web
  */
-class FtpException extends /*\*/Exception
+class FtpException extends \Exception
 {
 }

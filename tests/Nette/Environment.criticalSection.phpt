@@ -9,18 +9,18 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
+use Nette\Environment;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
 $key = '../' . implode('', range("\x00", "\x1F"));
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 Environment::setVariable('tempDir', TEMP_DIR);
 NetteTestHelpers::purge(TEMP_DIR);
 

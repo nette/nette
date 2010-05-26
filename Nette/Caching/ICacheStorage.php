@@ -10,7 +10,9 @@
  * @package    Nette\Caching
  */
 
-/*namespace Nette\Caching;*/
+namespace Nette\Caching;
+
+use Nette;
 
 
 

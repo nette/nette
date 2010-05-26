@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -34,7 +36,7 @@
  * @property-read string $remoteHost
  * @property-read bool $secured
  */
-class HttpRequest extends /*Nette\*/Object implements IHttpRequest
+class HttpRequest extends Nette\Object implements IHttpRequest
 {
 	/** @var array */
 	protected $query;
@@ -202,7 +204,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 		$requestUri = preg_replace(array_keys($this->uriFilter[0]), array_values($this->uriFilter[0]), $requestUri);
 		$tmp = explode('?', $requestUri, 2);
 		$uri->path = preg_replace(array_keys($this->uriFilter[PHP_URL_PATH]), array_values($this->uriFilter[PHP_URL_PATH]), $tmp[0]);
-		$uri->path = /*Nette\*/String::fixEncoding($uri->path);
+		$uri->path = Nette\String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized uri
@@ -342,7 +344,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 			$this->initialize();
 		}
 		$args = func_get_args();
-		return /*Nette\*/ArrayTools::get($this->files, $args);
+		return Nette\ArrayTools::get($this->files, $args);
 	}
 
 
@@ -465,10 +467,10 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 						}
 						if ($enc) {
 							if ($utf) {
-								$v = /*Nette\*/String::fixEncoding($v);
+								$v = Nette\String::fixEncoding($v);
 
 							} else {
-								if (!/*Nette\*/String::checkEncoding($v)) {
+								if (!Nette\String::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -503,7 +505,7 @@ class HttpRequest extends /*Nette\*/Object implements IHttpRequest
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($enc) {
-					$v['name'] = preg_replace($nonChars, '', /*Nette\*/String::fixEncoding($v['name']));
+					$v['name'] = preg_replace($nonChars, '', Nette\String::fixEncoding($v['name']));
 				}
 				$v['@'] = new HttpUploadedFile($v);
 				continue;

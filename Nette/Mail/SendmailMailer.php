@@ -10,7 +10,9 @@
  * @package    Nette\Mail
  */
 
-/*namespace Nette\Mail;*/
+namespace Nette\Mail;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Mail
  */
-class SendmailMailer extends /*Nette\*/Object implements IMailer
+class SendmailMailer extends Nette\Object implements IMailer
 {
 
 	/**
@@ -37,7 +39,7 @@ class SendmailMailer extends /*Nette\*/Object implements IMailer
 		$parts = explode(Mail::EOL . Mail::EOL, $tmp->generateMessage(), 2);
 		$linux = strncasecmp(PHP_OS, 'win', 3);
 
-		/*Nette\*/Tools::tryError();
+		Nette\Tools::tryError();
 		$res = mail(
 			$mail->getEncodedHeader('To'),
 			$mail->getEncodedHeader('Subject'),
@@ -45,11 +47,11 @@ class SendmailMailer extends /*Nette\*/Object implements IMailer
 			$linux ? str_replace(Mail::EOL, "\n", $parts[0]) : $parts[0]
 		);
 
-		if (/*Nette\*/Tools::catchError($msg)) {
-			throw new /*\*/InvalidStateException($msg);
+		if (Nette\Tools::catchError($msg)) {
+			throw new \InvalidStateException($msg);
 
 		} elseif (!$res) {
-			throw new /*\*/InvalidStateException('Unable to send email.');
+			throw new \InvalidStateException('Unable to send email.');
 		}
 	}
 

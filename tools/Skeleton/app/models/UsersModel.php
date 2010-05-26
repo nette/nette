@@ -7,8 +7,8 @@
  * @package    MyApplication
  */
 
-/*use Nette\Object;*/
-/*use Nette\Security\AuthenticationException;*/
+use Nette\Object;
+use Nette\Security\AuthenticationException;
 
 
 /**
@@ -17,7 +17,7 @@
  * @author     John Doe
  * @package    MyApplication
  */
-class UsersModel extends Object implements /*Nette\Security\*/IAuthenticator
+class UsersModel extends Object implements Nette\Security\IAuthenticator
 {
 
 	/**
@@ -42,7 +42,7 @@ class UsersModel extends Object implements /*Nette\Security\*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette\Security\*/Identity($row->id, $row->role, $row);
+		return new Nette\Security\Identity($row->id, $row->role, $row);
 	}
 
 }

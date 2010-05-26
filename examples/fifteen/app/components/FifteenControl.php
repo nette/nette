@@ -16,7 +16,7 @@
  *
  * @author     David Grudl
  */
-class FifteenControl extends /*Nette\Application\*/Control
+class FifteenControl extends Nette\Application\Control
 {
 	/** @var int */
 	protected $width = 4;
@@ -46,7 +46,7 @@ class FifteenControl extends /*Nette\Application\*/Control
 	public function handleClick($x, $y)
 	{
 		if (!$this->isClickable($x, $y)) {
-			throw new /*Nette\Application\*/BadSignalException('Action not allowed.');
+			throw new Nette\Application\BadSignalException('Action not allowed.');
 		}
 
 		$this->move($x, $y);
@@ -131,7 +131,7 @@ class FifteenControl extends /*Nette\Application\*/Control
 	public function render()
 	{
 		$template = $this->template;
-		$template->setFile(dirname(__FILE__) . '/FifteenControl.phtml');
+		$template->setFile(__DIR__ . '/FifteenControl.phtml');
 		$template->width = $this->width;
 		$template->order = $this->order;
 		$template->render();

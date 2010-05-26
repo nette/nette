@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Application\Route;*/
+use Nette\Application\Route;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Route.inc';
+require __DIR__ . '/Route.inc';
 
 
 $route = new Route('[!<lang [a-z]{2}>[-<sub>]/]<name>[/page-<page>]', array(

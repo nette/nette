@@ -9,27 +9,26 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Templates\Template;*/
-/*use Nette\Templates\LatteFilter;*/
+use Nette\Templates\Template,
+	Nette\Templates\LatteFilter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Template.inc';
+require __DIR__ . '/Template.inc';
 
 
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 
 $template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/latte.phtml');
+$template->setFile(__DIR__ . '/templates/latte.phtml');
 $template->registerFilter(new LatteFilter);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
@@ -39,7 +38,7 @@ $template->id = ':/item';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->comment = 'test -- comment';
-$template->el = /*Nette\Web\*/Html::el('div')->title('1/2"');
+$template->el = Nette\Web\Html::el('div')->title('1/2"');
 
 $template->render();
 

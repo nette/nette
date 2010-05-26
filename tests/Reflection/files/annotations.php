@@ -1,6 +1,8 @@
 <?php
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 /**
  * @author john

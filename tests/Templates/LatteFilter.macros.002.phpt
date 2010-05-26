@@ -9,20 +9,20 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Templates\Template;*/
-/*use Nette\Templates\LatteFilter;*/
+use Nette\Environment,
+	Nette\Templates\Template,
+	Nette\Templates\LatteFilter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Template.inc';
+require __DIR__ . '/Template.inc';
 
 
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 Environment::setVariable('tempDir', TEMP_DIR);
@@ -30,7 +30,7 @@ Environment::setVariable('tempDir', TEMP_DIR);
 
 
 $template = new Template;
-$template->setFile(dirname(__FILE__) . '/templates/latte.cache.phtml');
+$template->setFile(__DIR__ . '/templates/latte.cache.phtml');
 $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 

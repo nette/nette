@@ -9,12 +9,12 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Web\HttpRequest;*/
-/*use Nette\Web\HttpUploadedFile;*/
+use Nette\Web\HttpRequest,
+	Nette\Web\HttpUploadedFile;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

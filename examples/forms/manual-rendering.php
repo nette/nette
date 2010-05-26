@@ -10,8 +10,8 @@
 
 require_once '../../Nette/loader.php';
 
-/*use Nette\Forms\Form;*/
-/*use Nette\Debug;*/
+use Nette\Forms\Form,
+	Nette\Debug;
 
 Debug::enable();
 

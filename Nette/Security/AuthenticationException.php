@@ -10,7 +10,9 @@
  * @package    Nette\Security
  */
 
-/*namespace Nette\Security;*/
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -20,6 +22,6 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Security
  */
-class AuthenticationException extends /*\*/Exception
+class AuthenticationException extends \Exception
 {
 }

@@ -1,13 +1,13 @@
 <?php
 
-/*use Nette\Object;*/
-/*use Nette\Security\AuthenticationException;*/
+use Nette\Object,
+	Nette\Security\AuthenticationException;
 
 
 /**
  * Users authenticator.
  */
-class Users extends Object implements /*Nette\Security\*/IAuthenticator
+class Users extends Object implements Nette\Security\IAuthenticator
 {
 
 	/**
@@ -32,7 +32,7 @@ class Users extends Object implements /*Nette\Security\*/IAuthenticator
 		}
 
 		unset($row->password);
-		return new /*Nette\Security\*/Identity($row->id, NULL, $row);
+		return new Nette\Security\Identity($row->id, NULL, $row);
 	}
 
 }

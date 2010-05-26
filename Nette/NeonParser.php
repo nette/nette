@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -204,7 +206,7 @@ class NeonParser extends Object
 			}
 		}
 
-		throw new /*\*/Exception('NEON parse error: unexpected end of file.');
+		throw new \Exception('NEON parse error: unexpected end of file.');
 	}
 
 
@@ -241,7 +243,7 @@ class NeonParser extends Object
 		list($token, $offset) = $tokens[$this->n];
 		$line = substr_count($this->input, "\n", 0, $offset) + 1;
 		$col = $offset - strrpos(substr($this->input, 0, $offset), "\n");
-		throw new /*\*/Exception('NEON parse error: unexpected ' . str_replace("\n", '\n', substr($token, 0, 10))  . " on line $line, column $col.");
+		throw new \Exception('NEON parse error: unexpected ' . str_replace("\n", '\n', substr($token, 0, 10))  . " on line $line, column $col.");
 	}
 
 }

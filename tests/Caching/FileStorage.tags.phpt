@@ -9,21 +9,21 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
+use Nette\Caching\Cache;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 
 
 
-$storage = new /*Nette\Caching\*/FileStorage(TEMP_DIR);
+$storage = new Nette\Caching\FileStorage(TEMP_DIR);
 $cache = new Cache($storage);
 
 

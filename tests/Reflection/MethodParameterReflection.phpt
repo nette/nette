@@ -9,11 +9,12 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\ClassReflection, Nette\Reflection\FunctionReflection;*/
+use Nette\Reflection\ClassReflection,
+	Nette\Reflection\FunctionReflection;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

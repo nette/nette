@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Forms
  */
-final class InstantClientScript extends /*Nette\*/Object
+final class InstantClientScript extends Nette\Object
 {
 	/** @var array */
 	private $validateScripts;
@@ -89,7 +91,7 @@ final class InstantClientScript extends /*Nette\*/Object
 
 		$formName = json_encode((string) $this->form->getElementPrototype()->id);
 		ob_start();
-		include dirname(__FILE__) . '/InstantClientScript.phtml';
+		include __DIR__ . '/InstantClientScript.phtml';
 		return ob_get_clean();
 	}
 
@@ -119,7 +121,7 @@ final class InstantClientScript extends /*Nette\*/Object
 			if ($rule->type === Rule::CONDITION) { // this is condition
 				$innerScript = $this->getValidateScript($rule->subRules);
 				if ($innerScript) {
-					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . /*Nette\*/String::indent($innerScript) . "}\n";
+					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . Nette\String::indent($innerScript) . "}\n";
 					if ($rule->control instanceof ISubmitterControl) {
 						$this->central = FALSE;
 					}
