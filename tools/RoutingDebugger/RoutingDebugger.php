@@ -1,14 +1,14 @@
 <?php
 
-/*use Nette\Object; */
-/*use Nette\Debug; */
-/*use Nette\Environment; */
-/*use Nette\Application\IRouter; */
-/*use Nette\Application\MultiRouter; */
-/*use Nette\Application\SimpleRouter; */
-/*use Nette\Application\Route; */
-/*use Nette\Templates\Template; */
-/*use Nette\Web\IHttpRequest; */
+use Nette\Object,
+	Nette\Debug,
+	Nette\Environment,
+	Nette\Application\IRouter,
+	Nette\Application\MultiRouter,
+	Nette\Application\SimpleRouter,
+	Nette\Application\Route,
+	Nette\Templates\Template,
+	Nette\Web\IHttpRequest;
 
 
 /**
@@ -64,7 +64,7 @@ class RoutingDebugger extends Object
 		}
 
 		$this->template = new Template;
-		$this->template->setFile(dirname(__FILE__) . '/RoutingDebugger.phtml');
+		$this->template->setFile(__DIR__ . '/RoutingDebugger.phtml');
 		$this->template->routers = new ArrayObject;
 		$this->analyse($this->router);
 		$this->template->render();

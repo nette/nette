@@ -9,17 +9,17 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Application\PresenterRequest;*/
-/*use Nette\Application\SimpleRouter;*/
+use Nette\Environment,
+	Nette\Application\PresenterRequest,
+	Nette\Application\SimpleRouter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
-class TestControl extends /*Nette\Application\*/Control
+class TestControl extends Nette\Application\Control
 {
 	/** @persistent array */
 	public $order;
@@ -73,7 +73,7 @@ class TestControl extends /*Nette\Application\*/Control
 
 
 
-class TestPresenter extends /*Nette\Application\*/Presenter
+class TestPresenter extends Nette\Application\Presenter
 {
 	/** @var TestControl */
 	public $mycontrol;
@@ -239,7 +239,7 @@ class Submodule_OtherPresenter extends TestPresenter
 }
 
 
-Environment::setVariable('appDir', dirname(__FILE__));
+Environment::setVariable('appDir', __DIR__);
 
 $httpRequest = Environment::getHttpRequest();
 $uri = clone $httpRequest->getUri();
@@ -250,7 +250,7 @@ $httpRequest->setUri($uri);
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());
 
-$request = new PresenterRequest('Test', /*Nette\Web\*/HttpRequest::GET, array());
+$request = new PresenterRequest('Test', Nette\Web\HttpRequest::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter;

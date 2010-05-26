@@ -9,14 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Templates\Template;*/
+use Nette\Templates\Template;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Template.inc';
+require __DIR__ . '/Template.inc';
 
 
 

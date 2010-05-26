@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class SimpleRouter extends /*Nette\*/Object implements IRouter
+class SimpleRouter extends Nette\Object implements IRouter
 {
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
@@ -66,14 +68,14 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
+	public function match(Nette\Web\IHttpRequest $httpRequest)
 	{
 		// combine with precedence: get, (post,) defaults
 		$params = $httpRequest->getQuery();
 		$params += $this->defaults;
 
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new /*\*/InvalidStateException('Missing presenter.');
+			throw new \InvalidStateException('Missing presenter.');
 		}
 
 		$presenter = $this->module . $params[self::PRESENTER_KEY];
@@ -97,7 +99,7 @@ class SimpleRouter extends /*Nette\*/Object implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
 	{
 		$params = $appRequest->getParams();
 

@@ -16,11 +16,13 @@
  * @return     void
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
-if (!function_exists(/*Nette\*/'_netteDebugPrintCode')) {
+if (!function_exists('Nette\_netteDebugPrintCode')) {
 
 /**
  * Prints source code.
@@ -87,7 +89,7 @@ function _netteDebugPrintCode($file, $line, $count = 15)
  */
 function _netteDump($dump)
 {
-	return '<pre class="dump">' . preg_replace_callback('#(^|\s+)?(.*)\((\d+)\) <code>#', /*Nette\*/'_netteDumpCb', $dump) . '</pre>';
+	return '<pre class="dump">' . preg_replace_callback('#(^|\s+)?(.*)\((\d+)\) <code>#', 'Nette\_netteDumpCb', $dump) . '</pre>';
 }
 
 function _netteDumpCb($m)
@@ -152,7 +154,7 @@ static $errorTypes = array(
 	E_DEPRECATED => 'Deprecated',
 	E_USER_DEPRECATED => 'User Deprecated',
 );
-$title = ($exception instanceof /*\*/FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
+$title = ($exception instanceof \FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
 $rn = 0;
 
 if (headers_sent()) {
@@ -396,9 +398,9 @@ if (headers_sent()) {
 						<table>
 						<?php
 						try {
-							$r = isset($row['class']) ? new /*\*/ReflectionMethod($row['class'], $row['function']) : new /*\*/ReflectionFunction($row['function']);
+							$r = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) : new \ReflectionFunction($row['function']);
 							$params = $r->getParameters();
-						} catch (/*\*/Exception $e) {
+						} catch (\Exception $e) {
 							$params = array();
 						}
 						foreach ($row['args'] as $k => $v) {

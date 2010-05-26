@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -65,7 +67,7 @@ class PresenterLoader implements IPresenterLoader
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				/*Nette\Loaders\*/LimitedScope::load($file);
+				Nette\Loaders\LimitedScope::load($file);
 			}
 
 			if (!class_exists($class)) {
@@ -73,10 +75,10 @@ class PresenterLoader implements IPresenterLoader
 			}
 		}
 
-		$reflection = new /*Nette\Reflection\*/ClassReflection($class);
+		$reflection = new Nette\Reflection\ClassReflection($class);
 		$class = $reflection->getName();
 
-		if (!$reflection->implementsInterface(/*Nette\Application\*/'IPresenter')) {
+		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {
 			throw new InvalidPresenterException("Cannot load presenter '$name', class '$class' is not Nette\\Application\\IPresenter implementor.");
 		}
 
@@ -109,9 +111,8 @@ class PresenterLoader implements IPresenterLoader
 	 */
 	public function formatPresenterClass($presenter)
 	{
-		// PHP 5.3
-		/*return str_replace(':', 'Module\\', $presenter) . 'Presenter';*/
-		return strtr($presenter, ':', '_') . 'Presenter';
+		/*5.2*return strtr($presenter, ':', '_') . 'Presenter';*/
+		return str_replace(':', 'Module\\', $presenter) . 'Presenter';
 	}
 
 
@@ -123,9 +124,8 @@ class PresenterLoader implements IPresenterLoader
 	 */
 	public function unformatPresenterClass($class)
 	{
-		// PHP 5.3
-		/*return str_replace('Module\\', ':', substr($class, 0, -9));*/
-		return strtr(substr($class, 0, -9), '_', ':');
+		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
+		return str_replace('Module\\', ':', substr($class, 0, -9));
 	}
 
 

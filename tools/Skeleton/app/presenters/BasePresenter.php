@@ -7,7 +7,7 @@
  * @package    MyApplication
  */
 
-/*use Nette\Application\Presenter;*/
+use Nette\Application\Presenter;
 
 
 /**

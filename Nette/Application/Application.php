@@ -10,9 +10,10 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
 
-/*use Nette\Environment;*/
+use Nette,
+	Nette\Environment;
 
 
 
@@ -22,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class Application extends /*Nette\*/Object
+class Application extends Nette\Object
 {
 	/** @var int */
 	public static $maxLoop = 20;
@@ -91,7 +92,7 @@ class Application extends /*Nette\*/Object
 		if ($this->allowedMethods) {
 			$method = $httpRequest->getMethod();
 			if (!in_array($method, $this->allowedMethods, TRUE)) {
-				$httpResponse->setCode(/*Nette\Web\*/IHttpResponse::S501_NOT_IMPLEMENTED);
+				$httpResponse->setCode(Nette\Web\IHttpResponse::S501_NOT_IMPLEMENTED);
 				$httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
 				echo '<h1>Method ' . htmlSpecialChars($method) . ' is not implemented</h1>';
 				return;
@@ -158,7 +159,7 @@ class Application extends /*Nette\*/Object
 				}
 				break;
 
-			} catch (/*\*/Exception $e) {
+			} catch (\Exception $e) {
 				// fault barrier
 				if ($this->catchExceptions === NULL) {
 					$this->catchExceptions = Environment::isProduction();
@@ -194,7 +195,7 @@ class Application extends /*Nette\*/Object
 						echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 
 					} else {
-						/*Nette\*/Debug::processException($e, FALSE);
+						Nette\Debug::processException($e, FALSE);
 						echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
 							"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
 					}
@@ -242,7 +243,7 @@ class Application extends /*Nette\*/Object
 	final public function getServiceLocator()
 	{
 		if ($this->serviceLocator === NULL) {
-			$this->serviceLocator = new /*Nette\*/ServiceLocator(Environment::getServiceLocator());
+			$this->serviceLocator = new Nette\ServiceLocator(Environment::getServiceLocator());
 
 			foreach ($this->defaultServices as $name => $service) {
 				if (!$this->serviceLocator->hasService($name)) {

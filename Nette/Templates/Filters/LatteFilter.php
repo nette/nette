@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
  */
-class LatteFilter extends /*Nette\*/Object
+class LatteFilter extends Nette\Object
 {
 	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
@@ -142,7 +144,7 @@ class LatteFilter extends /*Nette\*/Object
 				list(, $macro, $value, $modifiers) = $m2;
 				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
-					throw new /*\*/InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
+					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
 				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
@@ -158,7 +160,7 @@ class LatteFilter extends /*Nette\*/Object
 
 		foreach ($this->tags as $tag) {
 			if (!$tag->isMacro && !empty($tag->attrs)) {
-				throw new /*\*/InvalidStateException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX . implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".");
+				throw new \InvalidStateException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX . implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".");
 			}
 		}
 
@@ -188,7 +190,7 @@ class LatteFilter extends /*Nette\*/Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isMacro = /*Nette\*/String::startsWith($tag->name, self::HTML_PREFIX);
+			$tag->isMacro = Nette\String::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -198,10 +200,10 @@ class LatteFilter extends /*Nette\*/Object
 			do {
 				$tag = array_pop($this->tags);
 				if (!$tag) {
-					//throw new /*\*/InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
+					//throw new \InvalidStateException("End tag for element '$matches[tag]' which is not open on line $this->line.");
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
-					$tag->isMacro = /*Nette\*/String::startsWith($tag->name, self::HTML_PREFIX);
+					$tag->isMacro = Nette\String::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
@@ -252,13 +254,13 @@ class LatteFilter extends /*Nette\*/Object
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$tag = end($this->tags);
-			$isEmpty = !$tag->closing && ($matches['end'][0] === '/' || isset(/*Nette\Web\*/Html::$emptyElements[strtolower($tag->name)]));
+			$isEmpty = !$tag->closing && ($matches['end'][0] === '/' || isset(Nette\Web\Html::$emptyElements[strtolower($tag->name)]));
 
 			if ($tag->isMacro || !empty($tag->attrs)) {
 				if ($tag->isMacro) {
 					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
 					if ($code === NULL) {
-						throw new /*\*/InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
+						throw new \InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
 					}
 					if ($isEmpty) {
 						$code .= $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, TRUE);
@@ -267,7 +269,7 @@ class LatteFilter extends /*Nette\*/Object
 					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 					$code = $this->handler->attrsMacro($code, $tag->attrs, $tag->closing);
 					if ($code === NULL) {
-						throw new /*\*/InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
+						throw new \InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
 					}
 					if ($isEmpty) {
 						$code = $this->handler->attrsMacro($code, $tag->attrs, TRUE);
@@ -295,7 +297,7 @@ class LatteFilter extends /*Nette\*/Object
 			$value = empty($matches['value']) ? TRUE : $matches['value'];
 
 			// special attribute?
-			if ($isSpecial = /*Nette\*/String::startsWith($name, self::HTML_PREFIX)) {
+			if ($isSpecial = Nette\String::startsWith($name, self::HTML_PREFIX)) {
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$tag = end($this->tags);
@@ -450,7 +452,7 @@ class LatteFilter extends /*Nette\*/Object
 
 				} elseif (!$inside) {
 					if (!preg_match('#^'.self::RE_IDENTIFIER.'$#', $prev)) {
-						throw new /*\*/InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
+						throw new \InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
 					}
 					$var = "\$template->$prev($var";
 					$prev = '';

@@ -185,7 +185,7 @@ paint(array(
 	array(
 		'title' => 'ImageMagick library',
 		'required' => FALSE,
-		'passed' => @exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/assets/logo.gif', ' ')) === '176,104,GIF', // intentionally @
+		'passed' => @exec('identify -format "%w,%h,%m" ' . addcslashes(__DIR__ . '/assets/logo.gif', ' ')) === '176,104,GIF', // intentionally @
 		'description' => 'ImageMagick server library is absent. You will not be able to use <code>Nette\ImageMagick</code>.',
 	),
 
@@ -196,7 +196,7 @@ paint(array(
 		'description' => 'Fileinfo extension or function <code>mime_content_type()</code> are absent. You will not be able to determine mime type of uploaded files.',
 	),
 
-	/**/array(
+	/*5.2* array(
 		'title' => 'HTTP extension',
 		'required' => FALSE,
 		'passed' => !extension_loaded('http'),
@@ -204,7 +204,7 @@ paint(array(
 		'errorMessage' => 'Enabled',
 		'description' => 'HTTP extension has naming conflict with Nette Framework. You have to disable this extension or use „prefixed“ version.',
 	),
-	/**/
+	*/
 	array(
 		'title' => 'HTTP_HOST or SERVER_NAME',
 		'required' => TRUE,
@@ -270,7 +270,7 @@ function paint($requirements)
 		}
 	}
 
-	require dirname(__FILE__) . '/assets/checker.phtml';
+	require __DIR__ . '/assets/checker.phtml';
 }
 
 

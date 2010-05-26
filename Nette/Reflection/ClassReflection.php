@@ -10,9 +10,10 @@
  * @package    Nette\Reflection
  */
 
-/*namespace Nette\Reflection;*/
+namespace Nette\Reflection;
 
-/*use Nette\ObjectMixin;*/
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -22,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
  */
-class ClassReflection extends /*\*/ReflectionClass
+class ClassReflection extends \ReflectionClass
 {
 
 	/** @var array (method => array(type => callback)) */
@@ -85,7 +86,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 */
 	public function getExtensionMethod($name)
 	{
-		/**/if (self::$extMethods === NULL || $name === NULL) { // for backwards compatibility
+		/*5.2* if (self::$extMethods === NULL || $name === NULL) { // for backwards compatibility
 			$list = get_defined_functions(); // names are lowercase!
 			foreach ($list['user'] as $fce) {
 				$pair = explode('_prototype_', $fce);
@@ -96,7 +97,7 @@ class ClassReflection extends /*\*/ReflectionClass
 			}
 			if ($name === NULL) return NULL;
 		}
-		/**/
+		*/
 
 		$class = strtolower($this->getName());
 		$l = & self::$extMethods[strtolower($name)];
@@ -134,7 +135,7 @@ class ClassReflection extends /*\*/ReflectionClass
 	 * @return Nette\Reflection\ClassReflection
 	 * @internal
 	 */
-	public static function import(/*\*/ReflectionClass $ref)
+	public static function import(\ReflectionClass $ref)
 	{
 		return new self($ref->getName());
 	}
@@ -163,7 +164,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getInterfaces()
 	{
-		return array_map(array(/*Nette\Reflection\*/'ClassReflection', 'import'), parent::getInterfaces());
+		return array_map(array('Nette\Reflection\ClassReflection', 'import'), parent::getInterfaces());
 	}
 
 
@@ -180,7 +181,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getMethods($filter = -1)
 	{
-		return array_map(array(/*Nette\Reflection\*/'MethodReflection', 'import'), parent::getMethods($filter));
+		return array_map(array('Nette\Reflection\MethodReflection', 'import'), parent::getMethods($filter));
 	}
 
 
@@ -197,7 +198,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function getProperties($filter = -1)
 	{
-		return array_map(array(/*Nette\Reflection\*/'PropertyReflection', 'import'), parent::getProperties($filter));
+		return array_map(array('Nette\Reflection\PropertyReflection', 'import'), parent::getProperties($filter));
 	}
 
 
@@ -260,9 +261,9 @@ class ClassReflection extends /*\*/ReflectionClass
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
+		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -297,7 +298,7 @@ class ClassReflection extends /*\*/ReflectionClass
 
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }

@@ -9,12 +9,12 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
-/*use Nette\Caching\MemcachedStorage;*/
+use Nette\Caching\Cache,
+	Nette\Caching\MemcachedStorage;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -30,7 +30,7 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-$dependentFile = dirname(__FILE__) . '/tmp/spec.file';
+$dependentFile = __DIR__ . '/tmp/spec.file';
 @unlink($dependentFile);
 
 output('Writing cache...');

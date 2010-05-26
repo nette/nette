@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -42,7 +44,7 @@
  * @property-read string $authority
  * @property-read string $hostUri
  */
-class Uri extends /*Nette\*/FreezableObject
+class Uri extends Nette\FreezableObject
 {
 	/** @var array */
 	public static $defaultPorts = array(
@@ -88,7 +90,7 @@ class Uri extends /*Nette\*/FreezableObject
 		if (is_string($uri)) {
 			$parts = @parse_url($uri); // intentionally @
 			if ($parts === FALSE) {
-				throw new /*\*/InvalidArgumentException("Malformed or unsupported URI '$uri'.");
+				throw new \InvalidArgumentException("Malformed or unsupported URI '$uri'.");
 			}
 
 			foreach ($parts as $key => $val) {

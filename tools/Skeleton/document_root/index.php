@@ -1,7 +1,7 @@
 <?php
 
 // absolute filesystem path to the web root
-define('WWW_DIR', dirname(__FILE__));
+define('WWW_DIR', __DIR__);
 
 // absolute filesystem path to the application root
 define('APP_DIR', WWW_DIR . '/../app');

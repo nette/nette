@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -35,7 +37,7 @@ class TextInput extends TextBase
 		$this->control->type = 'text';
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->filters[] = callback(/*Nette\*/'String', 'trim');
+		$this->filters[] = callback('Nette\String', 'trim');
 		$this->filters[] = callback($this, 'checkMaxLength');
 		$this->value = '';
 	}

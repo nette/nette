@@ -1,7 +1,7 @@
 <?php
 
-/*use Nette\Object;*/
-/*use Nette\Environment;*/
+use Nette\Object,
+	Nette\Environment;
 
 
 /**

@@ -9,16 +9,15 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Object;*/
-/*use Nette\Environment;*/
-/*use Nette\Templates\Template;*/
-/*use Nette\Templates\LatteFilter;*/
+use Nette\Object,
+	Nette\Templates\Template,
+	Nette\Templates\LatteFilter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Template.inc';
+require __DIR__ . '/Template.inc';
 
 
 

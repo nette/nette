@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -60,8 +62,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function lookup($type, $need = TRUE)
 	{
-		/**/Framework::fixNamespace($type);/**/
-
+		/*5.2* if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1); // fix namespace*/
 		if (!isset($this->monitors[$type])) { // not monitored or not processed yet
 			$obj = $this->parent;
 			$path = self::NAME_SEPARATOR . $this->name;
@@ -83,7 +84,7 @@ abstract class Component extends Object implements IComponent
 		}
 
 		if ($need && $this->monitors[$type][0] === NULL) {
-			throw new /*\*/InvalidStateException("Component '$this->name' is not attached to '$type'.");
+			throw new \InvalidStateException("Component '$this->name' is not attached to '$type'.");
 		}
 
 		return $this->monitors[$type][0];
@@ -100,7 +101,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function lookupPath($type, $need = TRUE)
 	{
-		/**/Framework::fixNamespace($type);/**/
+		/*5.2* if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1); // fix namespace*/
 		$this->lookup($type, $need);
 		return $this->monitors[$type][2];
 	}
@@ -114,7 +115,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function monitor($type)
 	{
-		/**/Framework::fixNamespace($type);/**/
+		/*5.2* if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1); // fix namespace*/
 		if (empty($this->monitors[$type][3])) {
 			if ($obj = $this->lookup($type, FALSE)) {
 				$this->attached($obj);
@@ -132,7 +133,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	public function unmonitor($type)
 	{
-		/**/Framework::fixNamespace($type);/**/
+		/*5.2* if ($a = strrpos($type, '\\')) $type = substr($type, $a + 1); // fix namespace*/
 		unset($this->monitors[$type]);
 	}
 
@@ -208,7 +209,7 @@ abstract class Component extends Object implements IComponent
 
 		// A component cannot be given a parent if it already has a parent.
 		if ($this->parent !== NULL && $parent !== NULL) {
-			throw new /*\*/InvalidStateException("Component '$this->name' already has a parent.");
+			throw new \InvalidStateException("Component '$this->name' already has a parent.");
 		}
 
 		// remove from parent?
@@ -335,7 +336,7 @@ abstract class Component extends Object implements IComponent
 	 */
 	final public function __wakeup()
 	{
-		throw new /*\*/NotImplementedException;
+		throw new \NotImplementedException;
 	}
 
 }

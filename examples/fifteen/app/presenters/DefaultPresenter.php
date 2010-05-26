@@ -2,7 +2,7 @@
 
 
 
-class DefaultPresenter extends /*Nette\Application\*/Presenter
+class DefaultPresenter extends Nette\Application\Presenter
 {
 
 

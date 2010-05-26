@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -75,9 +77,9 @@ abstract class Object
 	 *
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
+		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -108,7 +110,7 @@ abstract class Object
 	public static function __callStatic($name, $args)
 	{
 		$class = get_called_class();
-		throw new /*\*/MemberAccessException("Call to undefined static method $class::$name().");
+		throw new \MemberAccessException("Call to undefined static method $class::$name().");
 	}
 
 
@@ -127,7 +129,7 @@ abstract class Object
 		} else {
 			list($class, $name) = explode('::', $name);
 		}
-		$class = new /*Nette\Reflection\*/ClassReflection($class);
+		$class = new Nette\Reflection\ClassReflection($class);
 		if ($callback === NULL) {
 			return $class->getExtensionMethod($name);
 		} else {
@@ -188,7 +190,7 @@ abstract class Object
 	 */
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }

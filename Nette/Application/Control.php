@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -43,9 +45,9 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!($value instanceof /*Nette\Templates\*/ITemplate || $value === NULL)) {
+			if (!($value instanceof Nette\Templates\ITemplate || $value === NULL)) {
 				$class = get_class($value);
-				throw new /*\*/UnexpectedValueException("Object returned by {$this->reflection->name}::createTemplate() must be instance of Nette\\Templates\\ITemplate, '$class' given.");
+				throw new \UnexpectedValueException("Object returned by {$this->reflection->name}::createTemplate() must be instance of Nette\\Templates\\ITemplate, '$class' given.");
 			}
 			$this->template = $value;
 		}
@@ -59,7 +61,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 */
 	protected function createTemplate()
 	{
-		$template = new /*Nette\Templates\*/Template;
+		$template = new Nette\Templates\Template;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = array($this, 'templatePrepareFilters');
 
@@ -67,7 +69,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->component = $this; // DEPRECATED!
 		$template->control = $this;
 		$template->presenter = $presenter;
-		$template->baseUri = /*Nette\*/Environment::getVariable('baseUri');
+		$template->baseUri = Nette\Environment::getVariable('baseUri');
 		$template->basePath = rtrim($template->baseUri, '/');
 
 		// flash message
@@ -103,7 +105,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	public function templatePrepareFilters($template)
 	{
 		// default filters
-		$template->registerFilter(new /*Nette\Templates\*/LatteFilter);
+		$template->registerFilter(new Nette\Templates\LatteFilter);
 	}
 
 

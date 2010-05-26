@@ -10,7 +10,9 @@
  * @package    Nette\Web
  */
 
-/*namespace Nette\Web;*/
+namespace Nette\Web;
+
+use Nette;
 
 
 
@@ -56,7 +58,7 @@ interface IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return void
 	 */
-	function setAuthenticationHandler(/*Nette\Security\*/IAuthenticator $handler);
+	function setAuthenticationHandler(Nette\Security\IAuthenticator $handler);
 
 	/**
 	 * Returns authentication handler.
@@ -101,7 +103,7 @@ interface IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return void
 	 */
-	function setAuthorizationHandler(/*Nette\Security\*/IAuthorizator $handler);
+	function setAuthorizationHandler(Nette\Security\IAuthorizator $handler);
 
 	/**
 	 * Returns current authorization handler.

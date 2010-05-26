@@ -9,18 +9,21 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Mail\Mail, Nette\Environment, Nette\Templates\Template, Nette\Templates\LatteFilter;*/
+use Nette\Mail\Mail,
+	Nette\Environment,
+	Nette\Templates\Template,
+	Nette\Templates\LatteFilter;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Mail.inc';
+require __DIR__ . '/Mail.inc';
 
 
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 

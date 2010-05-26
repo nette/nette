@@ -10,7 +10,9 @@
  * @package    Nette\Collections
  */
 
-/*namespace Nette\Collections;*/
+namespace Nette\Collections;
+
+use Nette;
 
 
 

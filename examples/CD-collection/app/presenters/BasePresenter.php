@@ -1,7 +1,7 @@
 <?php
 
-/*use Nette\Environment;*/
-/*use Nette\Application\Presenter;*/
+use Nette\Environment,
+	Nette\Application\Presenter;
 
 
 abstract class BasePresenter extends Presenter

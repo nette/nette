@@ -10,7 +10,9 @@
  * @package    Nette\Collections
  */
 
-/*namespace Nette\Collections;*/
+namespace Nette\Collections;
+
+use Nette;
 
 
 
@@ -37,7 +39,7 @@ class ArrayList extends Collection implements IList
 	{
 		$index -= $this->base;
 		if ($index < 0 || $index > count($this)) {
-			throw new /*\*/ArgumentOutOfRangeException;
+			throw new \ArgumentOutOfRangeException;
 		}
 
 		$this->beforeAdd($item);
@@ -107,7 +109,7 @@ class ArrayList extends Collection implements IList
 		} else { // replace
 			$index -= $this->base;
 			if ($index < 0 || $index >= count($this)) {
-				throw new /*\*/ArgumentOutOfRangeException;
+				throw new \ArgumentOutOfRangeException;
 			}
 			parent::offsetSet($index, $item);
 		}
@@ -125,7 +127,7 @@ class ArrayList extends Collection implements IList
 	{
 		$index -= $this->base;
 		if ($index < 0 || $index >= count($this)) {
-			throw new /*\*/ArgumentOutOfRangeException;
+			throw new \ArgumentOutOfRangeException;
 		}
 
 		return parent::offsetGet($index);
@@ -158,7 +160,7 @@ class ArrayList extends Collection implements IList
 
 		$index -= $this->base;
 		if ($index < 0 || $index >= count($this)) {
-			throw new /*\*/ArgumentOutOfRangeException;
+			throw new \ArgumentOutOfRangeException;
 		}
 
 		$data = $this->getArrayCopy();

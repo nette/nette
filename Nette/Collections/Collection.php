@@ -10,9 +10,10 @@
  * @package    Nette\Collections
  */
 
-/*namespace Nette\Collections;*/
+namespace Nette\Collections;
 
-/*use Nette\ObjectMixin;*/
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -24,7 +25,7 @@
  *
  * @property-read bool $frozen
  */
-abstract class Collection extends /*\*/ArrayObject implements ICollection
+abstract class Collection extends \ArrayObject implements ICollection
 {
 	/** @var string  type (class, interface, PHP type) */
 	private $itemType;
@@ -138,8 +139,8 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function import($arr)
 	{
-		if (!(is_array($arr) || $arr instanceof /*\*/Traversable)) {
-			throw new /*\*/InvalidArgumentException("Argument must be traversable.");
+		if (!(is_array($arr) || $arr instanceof \Traversable)) {
+			throw new \InvalidArgumentException("Argument must be traversable.");
 		}
 
 		$this->clear();
@@ -166,7 +167,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function setReadOnly()
 	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use freeze() instead.');
+		throw new \DeprecatedException(__METHOD__ . '() is deprecated; use freeze() instead.');
 	}
 
 
@@ -176,7 +177,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function isReadOnly()
 	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated; use isFrozen() instead.');
+		throw new \DeprecatedException(__METHOD__ . '() is deprecated; use isFrozen() instead.');
 	}
 
 
@@ -198,12 +199,12 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 		if ($this->itemType !== NULL) {
 			if ($this->checkFunc === NULL) {
 				if (!($item instanceof $this->itemType)) {
-					throw new /*\*/InvalidArgumentException("Item must be '$this->itemType' object.");
+					throw new \InvalidArgumentException("Item must be '$this->itemType' object.");
 				}
 			} else {
 				$fnc = $this->checkFunc;
 				if (!$fnc($item)) {
-					throw new /*\*/InvalidArgumentException("Item must be $this->itemType type.");
+					throw new \InvalidArgumentException("Item must be $this->itemType type.");
 				}
 			}
 		}
@@ -221,7 +222,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function getIterator()
 	{
-		return new /*\*/ArrayIterator($this->getArrayCopy());
+		return new \ArrayIterator($this->getArrayCopy());
 	}
 
 
@@ -231,7 +232,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function exchangeArray($array)
 	{
-		throw new /*\*/NotSupportedException('Use ' . __CLASS__ . '::import()');
+		throw new \NotSupportedException('Use ' . __CLASS__ . '::import()');
 	}
 
 
@@ -256,9 +257,9 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
+		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -283,7 +284,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	public static function __callStatic($name, $args)
 	{
 		$class = get_called_class();
-		throw new /*\*/MemberAccessException("Call to undefined static method $class::$name().");
+		throw new \MemberAccessException("Call to undefined static method $class::$name().");
 	}
 
 
@@ -332,7 +333,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	 */
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 
@@ -381,7 +382,7 @@ abstract class Collection extends /*\*/ArrayObject implements ICollection
 	{
 		if ($this->frozen) {
 			$class = get_class($this);
-			throw new /*\*/InvalidStateException("Cannot modify a frozen object '$class'.");
+			throw new \InvalidStateException("Cannot modify a frozen object '$class'.");
 		}
 	}
 

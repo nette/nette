@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\ClassReflection;*/
+use Nette\Reflection\ClassReflection;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -22,7 +22,7 @@ class Foo
 	public function f() {}
 }
 
-class Bar extends Foo implements /*\*/Countable
+class Bar extends Foo implements \Countable
 {
 	public $var;
 

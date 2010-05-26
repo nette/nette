@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -28,7 +30,7 @@ final class TemplateHelpers
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -40,11 +42,11 @@ final class TemplateHelpers
 	 */
 	public static function loader($helper)
 	{
-		$callback = callback(/*Nette\Templates\*/'TemplateHelpers', $helper);
+		$callback = callback('Nette\Templates\TemplateHelpers', $helper);
 		if ($callback->isCallable()) {
 			return $callback;
 		}
-		$callback = callback(/*Nette\*/'String', $helper);
+		$callback = callback('Nette\String', $helper);
 		if ($callback->isCallable()) {
 			return $callback;
 		}
@@ -59,7 +61,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeHtml($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Nette\Web\Html || $s instanceof Nette\Forms\Form)) {
 			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, ENT_QUOTES);
@@ -126,7 +128,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeJs($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof /*Nette\Web\*/Html || $s instanceof /*Nette\Forms\*/Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Nette\Web\Html || $s instanceof Nette\Forms\Form)) {
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(']]>', ']]\x3E', json_encode($s));
@@ -173,7 +175,7 @@ final class TemplateHelpers
 	{
 		if ($level >= 1) {
 			$s = preg_replace_callback('#<(textarea|pre).*?</\\1#si', create_function('$m', 'return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");'), $s);
-			$s = /*Nette\*/String::indent($s, $level, $chars);
+			$s = Nette\String::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
@@ -193,7 +195,7 @@ final class TemplateHelpers
 			return NULL;
 		}
 
-		$time = /*Nette\*/Tools::createDateTime($time);
+		$time = Nette\Tools::createDateTime($time);
 		return strpos($format, '%') === FALSE
 			? $time->format($format) // formats using date()
 			: strftime($format, $time->format('U')); // formats according to locales

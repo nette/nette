@@ -6,18 +6,18 @@
 
 
 
-function testRouteIn(/*Nette\Application\*/Route $route, $uri)
+function testRouteIn(Nette\Application\Route $route, $uri)
 {
 	output("==> $uri");
 
-	$uri = new /*Nette\Web\*/UriScript("http://example.com$uri");
+	$uri = new Nette\Web\UriScript("http://example.com$uri");
 	$uri->scriptPath = '/';
 	$uri->appendQuery(array(
 		'test' => 'testvalue',
 		'presenter' => 'querypresenter',
 	));
 
-	$httpRequest = new /*Nette\Web\*/HttpRequest;
+	$httpRequest = new Nette\Web\HttpRequest;
 	$httpRequest->initialize();
 	$httpRequest->setUri($uri);
 
@@ -42,17 +42,17 @@ function testRouteIn(/*Nette\Application\*/Route $route, $uri)
 
 
 
-function testRouteOut(/*Nette\Application\*/Route $route, $link, $params = array())
+function testRouteOut(Nette\Application\Route $route, $link, $params = array())
 {
 	output("==> [$link]");
 
-	$uri = new /*Nette\Web\*/UriScript("http://example.com");
+	$uri = new Nette\Web\UriScript("http://example.com");
 	$uri->scriptPath = '/';
-	$httpRequest = new /*Nette\Web\*/HttpRequest;
+	$httpRequest = new Nette\Web\HttpRequest;
 	$httpRequest->initialize();
 	$httpRequest->setUri($uri);
 
-	$request = new /*Nette\Application\*/PresenterRequest($link, 'GET', $params);
+	$request = new Nette\Application\PresenterRequest($link, 'GET', $params);
 	$result = $route->constructUrl($request, $httpRequest);
 
 	dump( $result );

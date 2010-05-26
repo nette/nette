@@ -10,7 +10,9 @@
  * @package    Nette\Security
  */
 
-/*namespace Nette\Security;*/
+namespace Nette\Security;
+
+use Nette;
 
 
 

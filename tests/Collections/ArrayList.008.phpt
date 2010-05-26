@@ -9,21 +9,21 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Collections\ArrayList;*/
+use Nette\Collections\ArrayList;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Collections.inc';
+require __DIR__ . '/Collections.inc';
 
 
 
-/*Nette\Object::extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $that, $separator)*/
-/**/function ICollection_prototype_join(ICollection $that, $separator)/**/
+/**/Nette\Object::extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $that, $separator)/**/
+/*5.2* function ICollection_prototype_join(ICollection $that, $separator)*/
 {
 	return implode($separator, (array) $that);
-}/*);*/
+}/**/);/**/
 
 
 

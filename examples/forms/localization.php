@@ -14,14 +14,14 @@ if (!class_exists('Zend_Translate')) {
 	die('This example requires Zend Framework');
 }
 
-/*use Nette\Forms\Form;*/
-/*use Nette\Debug;*/
-/*use Nette\Web\Html;*/
+use Nette\Forms\Form,
+	Nette\Debug,
+	Nette\Web\Html;
 
 Debug::enable();
 
 
-class MyTranslator extends Zend_Translate implements /*Nette\*/ITranslator
+class MyTranslator extends Zend_Translate implements Nette\ITranslator
 {
 	/**
 	 * Translates the given string.
@@ -56,7 +56,7 @@ $sex = array(
 // Step 1: Define form with validation rules
 $form = new Form;
 // enable translator
-$translator = new MyTranslator('gettext', dirname(__FILE__) . '/messages.mo', 'cs');
+$translator = new MyTranslator('gettext', __DIR__ . '/messages.mo', 'cs');
 $translator->setLocale('cs');
 $form->setTranslator($translator);
 

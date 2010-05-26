@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class CliRouter extends /*Nette\*/Object implements IRouter
+class CliRouter extends Nette\Object implements IRouter
 {
 	const PRESENTER_KEY = 'action';
 
@@ -44,7 +46,7 @@ class CliRouter extends /*Nette\*/Object implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
+	public function match(Nette\Web\IHttpRequest $httpRequest)
 	{
 		if (empty($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
 			return NULL;
@@ -84,7 +86,7 @@ class CliRouter extends /*Nette\*/Object implements IRouter
 		}
 
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new /*\*/InvalidStateException('Missing presenter & action in route definition.');
+			throw new \InvalidStateException('Missing presenter & action in route definition.');
 		}
 		$presenter = $params[self::PRESENTER_KEY];
 		if ($a = strrpos($presenter, ':')) {
@@ -107,7 +109,7 @@ class CliRouter extends /*Nette\*/Object implements IRouter
 	 * @param  PresenterRequest
 	 * @return NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
 	{
 		return NULL;
 	}

@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class DownloadResponse extends /*Nette\*/Object implements IPresenterResponse
+class DownloadResponse extends Nette\Object implements IPresenterResponse
 {
 	/** @var string */
 	private $file;
@@ -90,8 +92,8 @@ class DownloadResponse extends /*Nette\*/Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		/*Nette\*/Environment::getHttpResponse()->setContentType($this->contentType);
-		/*Nette\*/Environment::getHttpResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
+		Nette\Environment::getHttpResponse()->setContentType($this->contentType);
+		Nette\Environment::getHttpResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
 		readfile($this->file);
 	}
 

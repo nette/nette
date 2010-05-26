@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -96,7 +98,7 @@ class Configurator extends Object
 	{
 		$name = Environment::getName();
 
-		if ($file instanceof /*Nette\Config\*/Config) {
+		if ($file instanceof Nette\Config\Config) {
 			$config = $file;
 			$file = NULL;
 
@@ -105,11 +107,11 @@ class Configurator extends Object
 				$file = $this->defaultConfigFile;
 			}
 			$file = Environment::expand($file);
-			$config = /*Nette\Config\*/Config::fromFile($file, $name, 0);
+			$config = Nette\Config\Config::fromFile($file, $name, 0);
 		}
 
 		// process environment variables
-		if ($config->variable instanceof /*Nette\Config\*/Config) {
+		if ($config->variable instanceof Nette\Config\Config) {
 			foreach ($config->variable as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
@@ -120,7 +122,7 @@ class Configurator extends Object
 		// process services
 		$runServices = array();
 		$locator = Environment::getServiceLocator();
-		if ($config->service instanceof /*Nette\Config\*/Config) {
+		if ($config->service instanceof Nette\Config\Config) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
@@ -144,13 +146,13 @@ class Configurator extends Object
 			unset($config->set);
 		}
 
-		if ($config->php instanceof /*Nette\Config\*/Config) {
+		if ($config->php instanceof Nette\Config\Config) {
 			if (PATH_SEPARATOR !== ';' && isset($config->php->include_path)) {
 				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
 			}
 
 			foreach ($config->php as $key => $value) { // flatten INI dots
-				if ($value instanceof /*Nette\Config\*/Config) {
+				if ($value instanceof Nette\Config\Config) {
 					unset($config->php->$key);
 					foreach ($value as $k => $v) {
 						$config->php->{"$key.$k"} = $v;
@@ -162,7 +164,7 @@ class Configurator extends Object
 				$key = strtr($key, '-', '.'); // backcompatibility
 
 				if (!is_scalar($value)) {
-					throw new /*\*/InvalidStateException("Configuration value for directive '$key' is not scalar.");
+					throw new \InvalidStateException("Configuration value for directive '$key' is not scalar.");
 				}
 
 				if ($key === 'date.timezone') { // PHP bug #47466
@@ -196,7 +198,7 @@ class Configurator extends Object
 						break;
 					default:
 						if (ini_get($key) != $value) { // intentionally ==
-							throw new /*\*/NotSupportedException('Required function ini_set() is disabled.');
+							throw new \NotSupportedException('Required function ini_set() is disabled.');
 						}
 					}
 				}
@@ -204,7 +206,7 @@ class Configurator extends Object
 		}
 
 		// define constants
-		if ($config->const instanceof /*Nette\Config\*/Config) {
+		if ($config->const instanceof Nette\Config\Config) {
 			foreach ($config->const as $key => $value) {
 				define($key, $value);
 			}
@@ -252,7 +254,7 @@ class Configurator extends Object
 	 */
 	public static function createCacheStorage()
 	{
-		return new /*Nette\Caching\*/FileStorage(Environment::getVariable('tempDir'));
+		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir'));
 	}
 
 
@@ -262,7 +264,7 @@ class Configurator extends Object
 	 */
 	public static function createRobotLoader($options)
 	{
-		$loader = new /*Nette\Loaders\*/RobotLoader;
+		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = !Environment::isProduction();
 		//$loader->setCache(Environment::getCache('Nette.RobotLoader'));
 		$dirs = isset($options['directory']) ? $options['directory'] : array(Environment::getVariable('appDir'), Environment::getVariable('libsDir'));

@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
+use Nette\Caching\Cache;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -40,7 +40,7 @@ function checkStr($s)
 define('COUNT_FILES', 3);
 
 
-$storage = new /*Nette\Caching\*/FileStorage(dirname(__FILE__) . '/tmp');
+$storage = new Nette\Caching\FileStorage(__DIR__ . '/tmp');
 
 
 // clear playground
@@ -50,7 +50,7 @@ for ($i=0; $i<=COUNT_FILES; $i++) {
 
 
 // test loop
-/*Nette\*/Debug::timer();
+Nette\Debug::timer();
 
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
@@ -70,7 +70,7 @@ for ($counter=0; $counter<1000; $counter++) {
 	elseif (checkStr($res)) $hits['ok']++;
 	else $hits['error']++;
 }
-$time = /*Nette\*/Debug::timer();
+$time = Nette\Debug::timer();
 
 
 dump( $hits );

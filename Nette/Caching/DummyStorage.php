@@ -10,7 +10,9 @@
  * @package    Nette\Caching
  */
 
-/*namespace Nette\Caching;*/
+namespace Nette\Caching;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
-class DummyStorage extends /*Nette\*/Object implements ICacheStorage
+class DummyStorage extends Nette\Object implements ICacheStorage
 {
 
 	/**

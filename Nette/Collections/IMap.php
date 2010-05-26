@@ -10,7 +10,9 @@
  * @package    Nette\Collections
  */
 
-/*namespace Nette\Collections;*/
+namespace Nette\Collections;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Collections
  */
-interface IMap extends ICollection, /*\*/ArrayAccess
+interface IMap extends ICollection, \ArrayAccess
 {
 	function add($key, $value);
 	function search($item);

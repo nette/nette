@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
  */
-class TemplateCacheStorage extends /*Nette\Caching\*/FileStorage
+class TemplateCacheStorage extends Nette\Caching\FileStorage
 {
 
 	/**

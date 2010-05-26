@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
  */
-abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
+abstract class BaseTemplate extends Nette\Object implements ITemplate
 {
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
@@ -51,7 +53,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	{
 		$callback = callback($callback);
 		if (in_array($callback, $this->filters)) {
-			throw new /*\*/InvalidStateException("Filter '$callback' was registered twice.");
+			throw new \InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
 	}
@@ -96,12 +98,12 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 			$this->render();
 			return ob_get_clean();
 
-		} catch (/*\*/Exception $e) {
+		} catch (\Exception $e) {
 			ob_end_clean();
 			if (func_num_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
-				/*Nette\*/Debug::toStringException($e);
+				Nette\Debug::toStringException($e);
 			}
 		}
 	}
@@ -123,11 +125,11 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		try {
 			foreach ($this->filters as $filter) {
 				$content = self::extractPhp($content, $blocks);
-				$content = $filter/**/->invoke/**/($content);
+				$content = $filter/*5.2*->invoke*/($content);
 				$content = strtr($content, $blocks); // put PHP code back
 			}
-		} catch (/*\*/Exception $e) {
-			throw new /*\*/InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
+		} catch (\Exception $e) {
+			throw new \InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
 		}
 
 		if ($label) {
@@ -190,7 +192,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 		$lname = strtolower($name);
 		if (!isset($this->helpers[$lname])) {
 			foreach ($this->helperLoaders as $loader) {
-				$helper = $loader/**/->invoke/**/($lname);
+				$helper = $loader/*5.2*->invoke*/($lname);
 				if ($helper) {
 					$this->registerHelper($lname, $helper);
 					return $this->helpers[$lname]->invokeArgs($args);
@@ -209,7 +211,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	 * @param  Nette\ITranslator
 	 * @return BaseTemplate  provides a fluent interface
 	 */
-	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
+	public function setTranslator(Nette\ITranslator $translator = NULL)
 	{
 		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
 		return $this;
@@ -230,7 +232,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	public function add($name, $value)
 	{
 		if (array_key_exists($name, $this->params)) {
-			throw new /*\*/InvalidStateException("The variable '$name' exists yet.");
+			throw new \InvalidStateException("The variable '$name' exists yet.");
 		}
 
 		$this->params[$name] = $value;
@@ -364,7 +366,7 @@ abstract class BaseTemplate extends /*Nette\*/Object implements ITemplate
 	{
 		$res = $php = '';
 		$lastChar = ';';
-		$tokens = new /*\*/ArrayIterator(token_get_all($source));
+		$tokens = new \ArrayIterator(token_get_all($source));
 		foreach ($tokens as $key => $token) {
 			if (is_array($token)) {
 				if ($token[0] === T_INLINE_HTML) {

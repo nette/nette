@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -25,7 +27,7 @@
  * @property-read bool $valid
  * @property   array $values
  */
-class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAccess, INamingContainer
+class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, INamingContainer
 {
 	/** @var array of function(Form $sender); Occurs when the form is validated */
 	public $onValidate;
@@ -67,11 +69,11 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 */
 	public function setValues($values, $erase = FALSE)
 	{
-		if ($values instanceof /*\*/Traversable) {
+		if ($values instanceof \Traversable) {
 			$values = iterator_to_array($values);
 
 		} elseif (!is_array($values)) {
-			throw new /*\*/InvalidArgumentException("Values must be an array, " . gettype($values) ." given.");
+			throw new \InvalidArgumentException("Values must be an array, " . gettype($values) ." given.");
 		}
 
 		$cursor = & $values;
@@ -82,7 +84,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 				$sub->cursor = & $cursor;
 			}
 			if ($control instanceof IFormControl) {
-				if ((is_array($sub->cursor) || $sub->cursor instanceof /*\*/ArrayAccess) && array_key_exists($name, $sub->cursor)) {
+				if ((is_array($sub->cursor) || $sub->cursor instanceof \ArrayAccess) && array_key_exists($name, $sub->cursor)) {
 					$control->setValue($sub->cursor[$name]);
 
 				} elseif ($erase) {
@@ -90,7 +92,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 				}
 			}
 			if ($control instanceof INamingContainer) {
-				if ((is_array($sub->cursor) || $sub->cursor instanceof /*\*/ArrayAccess) && isset($sub->cursor[$name])) {
+				if ((is_array($sub->cursor) || $sub->cursor instanceof \ArrayAccess) && isset($sub->cursor[$name])) {
 					$cursor = & $sub->cursor[$name];
 				} else {
 					unset($cursor);
@@ -189,7 +191,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 * @return void
 	 * @throws \InvalidStateException
 	 */
-	public function addComponent(/*Nette\*/IComponent $component, $name, $insertBefore = NULL)
+	public function addComponent(Nette\IComponent $component, $name, $insertBefore = NULL)
 	{
 		parent::addComponent($component, $name, $insertBefore);
 		if ($this->currentGroup !== NULL && $component instanceof IFormControl) {
@@ -474,7 +476,7 @@ class FormContainer extends /*Nette\*/ComponentContainer implements /*\*/ArrayAc
 	 */
 	final public function __clone()
 	{
-		throw new /*\*/NotImplementedException('Form cloning is not supported yet.');
+		throw new \NotImplementedException('Form cloning is not supported yet.');
 	}
 
 }

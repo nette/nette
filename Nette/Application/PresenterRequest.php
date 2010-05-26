@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -25,7 +27,7 @@
  * @property   array $post
  * @property   array $files
  */
-final class PresenterRequest extends /*Nette\*/FreezableObject
+final class PresenterRequest extends Nette\FreezableObject
 {
 	/** method */
 	const FORWARD = 'FORWARD';

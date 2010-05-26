@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
+use Nette\Caching\Cache;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -21,12 +21,12 @@ $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 
 
 
-$cache = new Cache(new /*Nette\Templates\*/TemplateCacheStorage(TEMP_DIR));
+$cache = new Cache(new Nette\Templates\TemplateCacheStorage(TEMP_DIR));
 
 
 dump( isset($cache[$key]), 'Is cached?' );

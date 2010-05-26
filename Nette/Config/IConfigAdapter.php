@@ -10,7 +10,9 @@
  * @package    Nette\Config
  */
 
-/*namespace Nette\Config;*/
+namespace Nette\Config;
+
+use Nette;
 
 
 

@@ -10,9 +10,10 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
 
-/*use Nette\Environment;*/
+use Nette,
+	Nette\Environment;
 
 
 
@@ -125,7 +126,7 @@ final class Debug
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -171,7 +172,7 @@ final class Debug
 				$error['message'] = html_entity_decode(strip_tags($error['message']), ENT_QUOTES, 'UTF-8');
 			}
 
-			self::processException(new /*\*/FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL), TRUE);
+			self::processException(new \FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL), TRUE);
 		}
 
 
@@ -200,7 +201,7 @@ final class Debug
 
 			if (!self::$ajaxDetected) {
 				$colophons = self::$colophons;
-				require dirname(__FILE__) . '/Debug.templates/profiler.phtml';
+				require __DIR__ . '/Debug.templates/profiler.phtml';
 			}
 		}
 
@@ -208,7 +209,7 @@ final class Debug
 		// 3) console
 		if (self::$consoleData) {
 			$payload = self::$consoleData;
-			require dirname(__FILE__) . '/Debug.templates/console.phtml';
+			require __DIR__ . '/Debug.templates/console.phtml';
 		}
 	}
 
@@ -430,7 +431,7 @@ final class Debug
 		}
 
 		if (self::$productionMode === self::DETECT) {
-			if (class_exists(/*Nette\*/'Environment')) {
+			if (class_exists('Nette\Environment')) {
 				self::$productionMode = Environment::isProduction();
 
 			} elseif (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) { // IP address based detection
@@ -448,14 +449,14 @@ final class Debug
 		if (self::$productionMode && $logFile !== FALSE) {
 			self::$logFile = 'log/php_error.log';
 
-			if (class_exists(/*Nette\*/'Environment')) {
+			if (class_exists('Nette\Environment')) {
 				if (is_string($logFile)) {
 					self::$logFile = Environment::expand($logFile);
 
 				} else try {
 					self::$logFile = Environment::expand('%logDir%/php_error.log');
 
-				} catch (/*\*/InvalidStateException $e) {
+				} catch (\InvalidStateException $e) {
 				}
 
 			} elseif (is_string($logFile)) {
@@ -473,7 +474,7 @@ final class Debug
 
 		} elseif (ini_get('log_errors') != (bool) self::$logFile || // intentionally ==
 			(ini_get('display_errors') != !self::$productionMode && ini_get('display_errors') !== (self::$productionMode ? 'stderr' : 'stdout'))) {
-			throw new /*\*/LogicException('Function ini_set() must be enabled.');
+			throw new \LogicException('Function ini_set() must be enabled.');
 		}
 
 		self::$sendEmails = self::$logFile && $email;
@@ -519,7 +520,7 @@ final class Debug
 	 * @return void
 	 * @internal
 	 */
-	public static function _exceptionHandler(/*\*/Exception $exception)
+	public static function _exceptionHandler(\Exception $exception)
 	{
 		if (!headers_sent()) {
 			header('HTTP/1.1 500 Internal Server Error');
@@ -545,13 +546,13 @@ final class Debug
 	public static function _errorHandler($severity, $message, $file, $line, $context)
 	{
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
-			throw new /*\*/FatalErrorException($message, 0, $severity, $file, $line, $context);
+			throw new \FatalErrorException($message, 0, $severity, $file, $line, $context);
 
 		} elseif (($severity & error_reporting()) !== $severity) {
 			return NULL; // nothing to do
 
 		} elseif (self::$strictMode) {
-			self::_exceptionHandler(new /*\*/FatalErrorException($message, 0, $severity, $file, $line, $context), TRUE);
+			self::_exceptionHandler(new \FatalErrorException($message, 0, $severity, $file, $line, $context), TRUE);
 		}
 
 		static $types = array(
@@ -589,16 +590,16 @@ final class Debug
 	 * @param  bool  is writing to standard output buffer allowed?
 	 * @return void
 	 */
-	public static function processException(/*\*/Exception $exception, $outputAllowed = FALSE)
+	public static function processException(\Exception $exception, $outputAllowed = FALSE)
 	{
 		if (!self::$enabled) {
 			return;
 
 		} elseif (self::$logFile) {
 			try {
-				$hash = md5($exception/**/ . (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))/**/);
+				$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
 				error_log("PHP Fatal error:  Uncaught $exception");
-				foreach (new /*\*/DirectoryIterator(dirname(self::$logFile)) as $entry) {
+				foreach (new \DirectoryIterator(dirname(self::$logFile)) as $entry) {
 					if (strpos($entry, $hash)) {
 						$skip = TRUE;
 						break;
@@ -616,7 +617,7 @@ final class Debug
 				if (self::$sendEmails) {
 					self::sendEmail((string) $exception);
 				}
-			} catch (/*\*/Exception $e) {
+			} catch (\Exception $e) {
 				if (!headers_sent()) {
 					header('HTTP/1.1 500 Internal Server Error');
 				}
@@ -641,8 +642,8 @@ final class Debug
 		} elseif ($outputAllowed) { // dump to browser
 			if (!headers_sent()) {
 				@ob_end_clean(); while (ob_get_level() && @ob_end_clean());
-				/*header_remove('Content-Encoding');*/
-				/**/if (in_array('Content-Encoding: gzip', headers_list())) header('Content-Encoding: identity', TRUE);/**/ // override gzhandler
+				/**/header_remove('Content-Encoding');/**/
+				/*5.2* if (in_array('Content-Encoding: gzip', headers_list())) header('Content-Encoding: identity', TRUE); // override gzhandler*/
 			}
 			self::_paintBlueScreen($exception);
 
@@ -662,7 +663,7 @@ final class Debug
 	 * @param  \Exception
 	 * @return void
 	 */
-	public static function toStringException(/*\*/Exception $exception)
+	public static function toStringException(\Exception $exception)
 	{
 		if (self::$enabled) {
 			self::_exceptionHandler($exception);
@@ -679,22 +680,22 @@ final class Debug
 	 * @return void
 	 * @internal
 	 */
-	public static function _paintBlueScreen(/*\*/Exception $exception)
+	public static function _paintBlueScreen(\Exception $exception)
 	{
 		$internals = array();
-		foreach (array(/*Nette\*/'Object', /*Nette\*/'ObjectMixin') as $class) {
+		foreach (array('Nette\Object', 'Nette\ObjectMixin') as $class) {
 			if (class_exists($class, FALSE)) {
-				$rc = new /*\*/ReflectionClass($class);
+				$rc = new \ReflectionClass($class);
 				$internals[$rc->getFileName()] = TRUE;
 			}
 		}
 
-		if (class_exists(/*Nette\*/'Environment', FALSE)) {
+		if (class_exists('Nette\Environment', FALSE)) {
 			$application = Environment::getServiceLocator()->hasService('Nette\Application\Application', TRUE) ? Environment::getServiceLocator()->getService('Nette\Application\Application') : NULL;
 		}
 
 		$colophons = self::$colophons;
-		require dirname(__FILE__) . '/Debug.templates/bluescreen.phtml';
+		require __DIR__ . '/Debug.templates/bluescreen.phtml';
 	}
 
 
@@ -801,7 +802,7 @@ final class Debug
 	{
 		if (!is_callable($callback)) {
 			$able = is_callable($callback, TRUE, $textual);
-			throw new /*\*/InvalidArgumentException("Colophon handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
+			throw new \InvalidArgumentException("Colophon handler '$textual' is not " . ($able ? 'callable.' : 'valid PHP callback.'));
 		}
 
 		if (!in_array($callback, self::$colophons, TRUE)) {
@@ -826,12 +827,12 @@ final class Debug
 				$arr[] = htmlSpecialChars($name) . ' = <strong>' . htmlSpecialChars($value) . '</strong>';
 			}
 
-			$autoloaded = class_exists(/*Nette\Loaders\*/'AutoLoader', FALSE) ? /*Nette\Loaders\*/AutoLoader::$count : 0;
+			$autoloaded = class_exists('Nette\Loaders\AutoLoader', FALSE) ? Nette\Loaders\AutoLoader::$count : 0;
 			$s = '<span>' . count(get_included_files()) . '/' .  $autoloaded . ' files</span>, ';
 
 			$exclude = array('stdClass', 'Exception', 'ErrorException', 'Traversable', 'IteratorAggregate', 'Iterator', 'ArrayAccess', 'Serializable', 'Closure');
 			foreach (get_loaded_extensions() as $ext) {
-				$ref = new /*\*/ReflectionExtension($ext);
+				$ref = new \ReflectionExtension($ext);
 				$exclude = array_merge($exclude, $ref->getClassNames());
 			}
 			$classes = array_diff(get_declared_classes(), $exclude);
@@ -854,7 +855,7 @@ final class Debug
 			}
 			$arr[] = 'PHP ' . htmlSpecialChars(PHP_VERSION);
 			if (isset($_SERVER['SERVER_SOFTWARE'])) $arr[] = htmlSpecialChars($_SERVER['SERVER_SOFTWARE']);
-			if (class_exists(/*Nette\*/'Framework')) $arr[] = htmlSpecialChars('Nette Framework ' . Framework::VERSION) . ' <i>(revision ' . htmlSpecialChars(Framework::REVISION) . ')</i>';
+			if (class_exists('Nette\Framework')) $arr[] = htmlSpecialChars('Nette Framework ' . Framework::VERSION) . ' <i>(revision ' . htmlSpecialChars(Framework::REVISION) . ')</i>';
 		}
 		return $arr;
 	}
@@ -888,7 +889,7 @@ final class Debug
 	 */
 	public static function fireLog($message, $priority = self::LOG, $label = NULL)
 	{
-		if ($message instanceof /*\*/Exception) {
+		if ($message instanceof \Exception) {
 			if ($priority !== self::EXCEPTION && $priority !== self::TRACE) {
 				$priority = self::TRACE;
 			}

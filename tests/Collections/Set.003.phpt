@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Collections\Set;*/
+use Nette\Collections\Set;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Collections.inc';
+require __DIR__ . '/Collections.inc';
 
 
 

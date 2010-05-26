@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -32,7 +34,7 @@ interface IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	function match(/*Nette\Web\*/IHttpRequest $httpRequest);
+	function match(Nette\Web\IHttpRequest $httpRequest);
 
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
@@ -40,6 +42,6 @@ interface IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest);
+	function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest);
 
 }

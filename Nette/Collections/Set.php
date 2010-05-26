@@ -10,7 +10,9 @@
  * @package    Nette\Collections
  */
 
-/*namespace Nette\Collections;*/
+namespace Nette\Collections;
+
+use Nette;
 
 
 
@@ -86,7 +88,7 @@ class Set extends Collection implements ISet
 		if ($key === NULL) {
 			$this->append($item);
 		} else {
-			throw new /*\*/NotSupportedException;
+			throw new \NotSupportedException;
 		}
 	}
 
@@ -97,7 +99,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetGet($key)
 	{
-		throw new /*\*/NotSupportedException;
+		throw new \NotSupportedException;
 	}
 
 
@@ -107,7 +109,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetExists($key)
 	{
-		throw new /*\*/NotSupportedException;
+		throw new \NotSupportedException;
 	}
 
 
@@ -117,7 +119,7 @@ class Set extends Collection implements ISet
 	 */
 	public function offsetUnset($key)
 	{
-		throw new /*\*/NotSupportedException;
+		throw new \NotSupportedException;
 	}
 
 }

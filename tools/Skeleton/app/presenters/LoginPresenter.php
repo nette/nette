@@ -7,10 +7,10 @@
  * @package    MyApplication
  */
 
-/*use Nette\Environment;*/
-/*use Nette\Application\AppForm;*/
-/*use Nette\Forms\Form;*/
-/*use Nette\Security\AuthenticationException;*/
+use Nette\Environment,
+	Nette\Application\AppForm,
+	Nette\Forms\Form,
+	Nette\Security\AuthenticationException;
 
 
 /**

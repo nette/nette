@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -73,7 +75,7 @@ final class Environment
 	 */
 	final public function __construct()
 	{
-		throw new /*\*/LogicException("Cannot instantiate static class " . get_class($this));
+		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
 
@@ -120,7 +122,7 @@ final class Environment
 			self::setVariable('environment', $name, FALSE);
 
 		} else {
-			throw new /*\*/InvalidStateException('Environment name has been already set.');
+			throw new \InvalidStateException('Environment name has been already set.');
 		}
 	}
 
@@ -201,7 +203,7 @@ final class Environment
 	 */
 	public static function isDebugging()
 	{
-		throw new /*\*/DeprecatedException;
+		throw new \DeprecatedException;
 	}
 
 
@@ -303,7 +305,7 @@ final class Environment
 
 		static $livelock;
 		if (isset($livelock[$var])) {
-			throw new /*\*/InvalidStateException("Circular reference detected for variables: "
+			throw new \InvalidStateException("Circular reference detected for variables: "
 				. implode(', ', array_keys($livelock)) . ".");
 		}
 
@@ -311,16 +313,16 @@ final class Environment
 			$livelock[$var] = TRUE;
 			$val = self::getVariable($var);
 			unset($livelock[$var]);
-		} catch (/*\*/Exception $e) {
+		} catch (\Exception $e) {
 			$livelock = array();
 			throw $e;
 		}
 
 		if ($val === NULL) {
-			throw new /*\*/InvalidStateException("Unknown environment variable '$var'.");
+			throw new \InvalidStateException("Unknown environment variable '$var'.");
 
 		} elseif (!is_scalar($val)) {
-			throw new /*\*/InvalidStateException("Environment variable '$var' is not scalar.");
+			throw new \InvalidStateException("Environment variable '$var' is not scalar.");
 		}
 
 		return $val;
@@ -383,7 +385,7 @@ final class Environment
 		if (isset(self::$aliases[$name])) {
 			return self::getServiceLocator()->getService(self::$aliases[$name], $args);
 		} else {
-			throw new /*\*/MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
+			throw new \MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
 	}
 
@@ -449,7 +451,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new /*Nette\Caching\*/Cache(
+		return new Nette\Caching\Cache(
 			self::getService('Nette\Caching\ICacheStorage'),
 			$namespace
 		);
@@ -531,7 +533,7 @@ final class Environment
 	public static function leaveCriticalSection($key)
 	{
 		if (!isset(self::$criticalSections[$key])) {
-			throw new /*\*/InvalidStateException('Critical section has not been initialized.');
+			throw new \InvalidStateException('Critical section has not been initialized.');
 		}
 		list($file, $handle) = self::$criticalSections[$key];
 		@unlink($file);

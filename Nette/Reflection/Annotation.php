@@ -10,7 +10,9 @@
  * @package    Nette\Reflection
  */
 
-/*namespace Nette\Reflection;*/
+namespace Nette\Reflection;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
  */
-class Annotation extends /*Nette\*/Object implements IAnnotation
+class Annotation extends Nette\Object implements IAnnotation
 {
 
 	public function __construct(array $values)

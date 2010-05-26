@@ -10,7 +10,9 @@
  * @package    Nette\IO
  */
 
-/*namespace Nette\IO;*/
+namespace Nette\IO;
+
+use Nette;
 
 
 

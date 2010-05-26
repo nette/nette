@@ -9,18 +9,19 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Reflection\AnnotationsParser, Nette\Environment;*/
+use Nette\Reflection\AnnotationsParser,
+	Nette\Environment;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/files/annotations.php';
+require __DIR__ . '/files/annotations.php';
 
 
 
 // temporary directory
-define('TEMP_DIR', dirname(__FILE__) . '/tmp');
+define('TEMP_DIR', __DIR__ . '/tmp');
 NetteTestHelpers::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
@@ -30,7 +31,7 @@ AnnotationsParser::$useReflection = FALSE;
 
 output('AnnotatedClass1');
 
-$rc = new ReflectionClass(/*Nette\*/'AnnotatedClass1');
+$rc = new ReflectionClass('Nette\AnnotatedClass1');
 dump( AnnotationsParser::getAll($rc) );
 dump( AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
 dump( AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
@@ -49,12 +50,12 @@ dump( AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
 
 output('AnnotatedClass2');
 
-$rc = new ReflectionClass(/*Nette\*/'AnnotatedClass2');
+$rc = new ReflectionClass('Nette\AnnotatedClass2');
 dump( AnnotationsParser::getAll($rc) );
 
 output('AnnotatedClass3');
 
-$rc = new ReflectionClass(/*Nette\*/'AnnotatedClass3');
+$rc = new ReflectionClass('Nette\AnnotatedClass3');
 dump( AnnotationsParser::getAll($rc) );
 
 

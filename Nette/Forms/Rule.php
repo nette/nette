@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Forms
  */
-final class Rule extends /*Nette\*/Object
+final class Rule extends Nette\Object
 {
 	/** type */
 	const CONDITION = 1;

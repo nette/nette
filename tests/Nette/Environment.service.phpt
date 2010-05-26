@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Environment;*/
+use Nette\Environment;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -21,7 +21,7 @@ dump( Environment::getHttpResponse()->reflection->name, 'Environment::getHttpRes
 
 dump( Environment::getApplication()->reflection->name, 'Environment::getApplication' );
 
-Environment::setVariable('tempDir', dirname(__FILE__) . '/tmp');
+Environment::setVariable('tempDir', __DIR__ . '/tmp');
 dump( Environment::getCache('my')->reflection->name, 'Environment::getCache(...)' );
 
 /* in PHP 5.3

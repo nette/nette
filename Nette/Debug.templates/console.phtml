@@ -13,11 +13,13 @@
  * @return     void
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
-if (!function_exists(/*Nette\*/'_netteDumpCb2')) {
+if (!function_exists('Nette\_netteDumpCb2')) {
 
 	function _netteDumpCb2($m)
 	{
@@ -169,7 +171,7 @@ ob_start();
 	<?php foreach ($item['dump'] as $key => $dump): ?>
 	<tr class="<?php echo $i++ % 2 ? 'odd' : 'even' ?>">
 		<th><?php echo htmlspecialchars($key) ?></th>
-		<td><?php echo preg_replace_callback('#(<pre class="dump">|\s+)?(.*)\((\d+)\) <code>#', /*Nette\*/'_netteDumpCb2', $dump) ?></td>
+		<td><?php echo preg_replace_callback('#(<pre class="dump">|\s+)?(.*)\((\d+)\) <code>#', 'Nette\_netteDumpCb2', $dump) ?></td>
 	</tr>
 	<?php endforeach ?>
 	</table>

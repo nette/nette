@@ -10,7 +10,9 @@
  * @package    Nette\Forms
  */
 
-/*namespace Nette\Forms;*/
+namespace Nette\Forms;
+
+use Nette;
 
 
 
@@ -36,7 +38,7 @@
  * @property   bool $rendered
  * @property   bool $required
 */
-abstract class FormControl extends /*Nette\*/Component implements IFormControl
+abstract class FormControl extends Nette\Component implements IFormControl
 {
 	/** @var string */
 	public static $idMask = 'frm%s-%s';
@@ -83,8 +85,8 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	{
 		$this->monitor('Nette\Forms\Form');
 		parent::__construct();
-		$this->control = /*Nette\Web\*/Html::el('input');
-		$this->label = /*Nette\Web\*/Html::el('label');
+		$this->control = Nette\Web\Html::el('input');
+		$this->label = Nette\Web\Html::el('label');
 		$this->caption = $caption;
 		$this->rules = new Rules($this);
 	}
@@ -135,7 +137,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 			}
 			$name .= $s;
 			if ($name === 'submit') {
-				throw new /*\*/InvalidArgumentException("Form control name 'submit' is not allowed due to JavaScript limitations.");
+				throw new \InvalidArgumentException("Form control name 'submit' is not allowed due to JavaScript limitations.");
 			}
 			$this->htmlName = $name;
 		}
@@ -233,7 +235,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	 * @param  Nette\ITranslator
 	 * @return FormControl  provides a fluent interface
 	 */
-	public function setTranslator(/*Nette\*/ITranslator $translator = NULL)
+	public function setTranslator(Nette\ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 		return $this;
@@ -320,7 +322,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 	public function loadHttpData()
 	{
 		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		$this->setValue(/*Nette\*/ArrayTools::get($this->getForm()->getHttpData(), $path));
+		$this->setValue(Nette\ArrayTools::get($this->getForm()->getHttpData(), $path));
 	}
 
 
@@ -381,7 +383,7 @@ abstract class FormControl extends /*Nette\*/Component implements IFormControl
 		if ($caption !== NULL) {
 			$label->setText($this->translate($caption));
 
-		} elseif ($this->caption instanceof /*Nette\Web\*/Html) {
+		} elseif ($this->caption instanceof Nette\Web\Html) {
 			$label->add($this->caption);
 
 		} else {

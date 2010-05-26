@@ -10,7 +10,9 @@
  * @package    Nette\Templates
  */
 
-/*namespace Nette\Templates;*/
+namespace Nette\Templates;
+
+use Nette;
 
 
 
@@ -54,7 +56,7 @@ class Template extends BaseTemplate implements IFileTemplate
 	public function setFile($file)
 	{
 		if (!is_file($file)) {
-			throw new /*\*/FileNotFoundException("Missing template file '$file'.");
+			throw new \FileNotFoundException("Missing template file '$file'.");
 		}
 		$this->file = $file;
 		return $this;
@@ -84,12 +86,12 @@ class Template extends BaseTemplate implements IFileTemplate
 	public function render()
 	{
 		if ($this->file == NULL) { // intentionally ==
-			throw new /*\*/InvalidStateException("Template file name was not specified.");
+			throw new \InvalidStateException("Template file name was not specified.");
 		}
 
 		$this->__set('template', $this);
 
-		$cache = new /*Nette\Caching\*/Cache($this->getCacheStorage(), 'Nette.Template');
+		$cache = new Nette\Caching\Cache($this->getCacheStorage(), 'Nette.Template');
 		$key = md5($this->file) . '.' . basename($this->file);
 		$cached = $content = $cache[$key];
 
@@ -99,14 +101,14 @@ class Template extends BaseTemplate implements IFileTemplate
 			}
 
 			if (!$this->getFilters()) {
-				/*Nette\Loaders\*/LimitedScope::load($this->file, $this->getParams());
+				Nette\Loaders\LimitedScope::load($this->file, $this->getParams());
 				return;
 			}
 
 			try {
 				$shortName = $this->file;
-				$shortName = str_replace(/*Nette\*/Environment::getVariable('appDir'), "\xE2\x80\xA6", $shortName);
-			} catch (/*\*/Exception $foo) {
+				$shortName = str_replace(Nette\Environment::getVariable('appDir'), "\xE2\x80\xA6", $shortName);
+			} catch (\Exception $foo) {
 			}
 
 			$content = $this->compile(file_get_contents($this->file), "file $shortName");
@@ -114,8 +116,8 @@ class Template extends BaseTemplate implements IFileTemplate
 				$key,
 				$content,
 				array(
-					/*Nette\Caching\*/Cache::FILES => $this->file,
-					/*Nette\Caching\*/Cache::EXPIRE => self::$cacheExpire,
+					Nette\Caching\Cache::FILES => $this->file,
+					Nette\Caching\Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
 			$cache->release();
@@ -123,11 +125,11 @@ class Template extends BaseTemplate implements IFileTemplate
 		}
 
 		if ($cached !== NULL && self::$cacheStorage instanceof TemplateCacheStorage) {
-			/*Nette\Loaders\*/LimitedScope::load($cached['file'], $this->getParams());
+			Nette\Loaders\LimitedScope::load($cached['file'], $this->getParams());
 			fclose($cached['handle']);
 
 		} else {
-			/*Nette\Loaders\*/LimitedScope::evaluate($content, $this->getParams());
+			Nette\Loaders\LimitedScope::evaluate($content, $this->getParams());
 		}
 	}
 
@@ -142,7 +144,7 @@ class Template extends BaseTemplate implements IFileTemplate
 	 * @param  Nette\Caching\Cache
 	 * @return void
 	 */
-	public static function setCacheStorage(/*Nette\Caching\*/ICacheStorage $storage)
+	public static function setCacheStorage(Nette\Caching\ICacheStorage $storage)
 	{
 		self::$cacheStorage = $storage;
 	}
@@ -155,7 +157,7 @@ class Template extends BaseTemplate implements IFileTemplate
 	public static function getCacheStorage()
 	{
 		if (self::$cacheStorage === NULL) {
-			self::$cacheStorage = new TemplateCacheStorage(/*Nette\*/Environment::getVariable('tempDir'));
+			self::$cacheStorage = new TemplateCacheStorage(Nette\Environment::getVariable('tempDir'));
 		}
 		return self::$cacheStorage;
 	}

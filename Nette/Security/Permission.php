@@ -10,7 +10,9 @@
  * @package    Nette\Security
  */
 
-/*namespace Nette\Security;*/
+namespace Nette\Security;
+
+use Nette;
 
 
 
@@ -23,7 +25,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Security
  */
-class Permission extends /*Nette\*/Object implements IAuthorizator
+class Permission extends Nette\Object implements IAuthorizator
 {
 	/** @var array  Role storage */
 	private $roles = array();
@@ -77,7 +79,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 		$this->checkRole($role, FALSE);
 
 		if (isset($this->roles[$role])) {
-			throw new /*\*/InvalidStateException("Role '$role' already exists in the list.");
+			throw new \InvalidStateException("Role '$role' already exists in the list.");
 		}
 
 		$roleParents = array();
@@ -127,10 +129,10 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	private function checkRole($role, $need = TRUE)
 	{
 		if (!is_string($role) || $role === '') {
-			throw new /*\*/InvalidArgumentException("Role must be a non-empty string.");
+			throw new \InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
-			throw new /*\*/InvalidStateException("Role '$role' does not exist.");
+			throw new \InvalidStateException("Role '$role' does not exist.");
 		}
 	}
 
@@ -273,7 +275,7 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 		$this->checkResource($resource, FALSE);
 
 		if (isset($this->resources[$resource])) {
-			throw new /*\*/InvalidStateException("Resource '$resource' already exists in the list.");
+			throw new \InvalidStateException("Resource '$resource' already exists in the list.");
 		}
 
 		if ($parent !== NULL) {
@@ -314,10 +316,10 @@ class Permission extends /*Nette\*/Object implements IAuthorizator
 	private function checkResource($resource, $need = TRUE)
 	{
 		if (!is_string($resource) || $resource === '') {
-			throw new /*\*/InvalidArgumentException("Resource must be a non-empty string.");
+			throw new \InvalidArgumentException("Resource must be a non-empty string.");
 
 		} elseif ($need && !isset($this->resources[$resource])) {
-			throw new /*\*/InvalidStateException("Resource '$resource' does not exist.");
+			throw new \InvalidStateException("Resource '$resource' does not exist.");
 		}
 	}
 

@@ -9,13 +9,13 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Mail\Mail;*/
+use Nette\Mail\Mail;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
-require dirname(__FILE__) . '/Mail.inc';
+require __DIR__ . '/Mail.inc';
 
 
 

@@ -4,10 +4,10 @@
  * Common code for Template test cases.
  */
 
-/*use Nette\Loaders\LimitedScope;*/
-/*use Nette\Templates\BaseTemplate;*/
-/*use Nette\Templates\Template;*/
-/*use Nette\Templates\TemplateCacheStorage;*/
+use Nette\Loaders\LimitedScope,
+	Nette\Templates\BaseTemplate,
+	Nette\Templates\Template,
+	Nette\Templates\TemplateCacheStorage;
 
 
 
@@ -18,7 +18,7 @@ class MockCacheStorage extends TemplateCacheStorage
 
 	public function write($key, $data, array $dp)
 	{
-		file_put_contents(dirname(__FILE__) . '/compiled/' . preg_replace('#^.*[a-f0-9]{32}\.#', '', $key) . '.php', $data);
+		file_put_contents(__DIR__ . '/compiled/' . preg_replace('#^.*[a-f0-9]{32}\.#', '', $key) . '.php', $data);
 		return parent::write($key, $data, $dp);
 	}
 

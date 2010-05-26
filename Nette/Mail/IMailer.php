@@ -10,7 +10,9 @@
  * @package    Nette\Mail
  */
 
-/*namespace Nette\Mail;*/
+namespace Nette\Mail;
+
+use Nette;
 
 
 

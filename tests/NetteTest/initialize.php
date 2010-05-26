@@ -7,11 +7,11 @@
  * @package    Nette\Test
  */
 
-require dirname(__FILE__) . '/NetteTestCase.php';
+require __DIR__ . '/NetteTestCase.php';
 
-require dirname(__FILE__) . '/NetteTestHelpers.php';
+require __DIR__ . '/NetteTestHelpers.php';
 
-require dirname(__FILE__) . '/Assert.php';
+require __DIR__ . '/Assert.php';
 
 
 
@@ -19,7 +19,7 @@ NetteTestHelpers::startup();
 
 
 
-require dirname(__FILE__) . '/../../Nette/loader.php';
+require __DIR__ . '/../../Nette/loader.php';
 
 
 

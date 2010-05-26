@@ -10,9 +10,10 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
 
-/*use Nette\Reflection\AnnotationsParser;*/
+use Nette,
+	Nette\Reflection\AnnotationsParser;
 
 
 
@@ -36,7 +37,7 @@ final class Annotations
 	 * @param  string    annotation name
 	 * @return bool
 	 */
-	public static function has(/*\*/Reflector $r, $name)
+	public static function has(\Reflector $r, $name)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->hasAnnotation() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);
@@ -51,7 +52,7 @@ final class Annotations
 	 * @param  string    annotation name
 	 * @return array
 	 */
-	public static function get(/*\*/Reflector $r, $name)
+	public static function get(\Reflector $r, $name)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->getAnnotation() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);
@@ -66,7 +67,7 @@ final class Annotations
 	 * @param  string    annotation name
 	 * @return array
 	 */
-	public static function getAll(/*\*/Reflector $r, $name = NULL)
+	public static function getAll(\Reflector $r, $name = NULL)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getReflection()->getAnnotations() instead.', E_USER_WARNING);
 		$cache = AnnotationsParser::getAll($r);

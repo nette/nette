@@ -10,11 +10,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Security\Permission;*/
+use Nette\Security\Permission;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

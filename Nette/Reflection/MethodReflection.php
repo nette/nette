@@ -10,9 +10,10 @@
  * @package    Nette\Reflection
  */
 
-/*namespace Nette\Reflection;*/
+namespace Nette\Reflection;
 
-/*use Nette\ObjectMixin;*/
+use Nette,
+	Nette\ObjectMixin;
 
 
 
@@ -22,7 +23,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
  */
-class MethodReflection extends /*\*/ReflectionMethod
+class MethodReflection extends \ReflectionMethod
 {
 
 	/**
@@ -88,7 +89,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 */
 	public function getCallback()
 	{
-		return new /*Nette\*/Callback(parent::getDeclaringClass()->getName(), $this->getName());
+		return new Nette\Callback(parent::getDeclaringClass()->getName(), $this->getName());
 	}
 
 
@@ -108,7 +109,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 	 * @return Nette\Reflection\MethodReflection
 	 * @internal
 	 */
-	public static function import(/*\*/ReflectionMethod $ref)
+	public static function import(\ReflectionMethod $ref)
 	{
 		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
 	}
@@ -137,7 +138,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	public function getParameters()
 	{
-		return array_map(array(/*Nette\Reflection\*/'MethodParameterReflection', 'import'), parent::getParameters());
+		return array_map(array('Nette\Reflection\MethodParameterReflection', 'import'), parent::getParameters());
 	}
 
 
@@ -190,9 +191,9 @@ class MethodReflection extends /*\*/ReflectionMethod
 	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new /*Nette\Reflection\*/ClassReflection(/**/$this/**//*get_called_class()*/);
+		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -227,7 +228,7 @@ class MethodReflection extends /*\*/ReflectionMethod
 
 	public function __unset($name)
 	{
-		throw new /*\*/MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
 	}
 
 }

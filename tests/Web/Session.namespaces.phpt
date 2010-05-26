@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Web\Session;*/
+use Nette\Web\Session;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 
@@ -29,7 +29,7 @@ $namespace->hello = 'world';
 Assert::true( $session->hasNamespace('trees'), 'hasNamespace() should have returned TRUE for a namespace with keys set' );
 
 $namespace = $session->getNamespace('default');
-Assert::true( $namespace instanceof /*Nette\Web\*/SessionNamespace );
+Assert::true( $namespace instanceof Nette\Web\SessionNamespace );
 
 try {
 	$namespace = $session->getNamespace('');

@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,10 +22,10 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class ApplicationException extends /*\*/Exception
+class ApplicationException extends \Exception
 {
-	/**/
-	public function __construct($message = '', $code = 0, /*\*/Exception $previous = NULL)
+	/*5.2*
+	public function __construct($message = '', $code = 0, \Exception $previous = NULL)
 	{
 		if (version_compare(PHP_VERSION , '5.3', '<')) {
 			$this->previous = $previous;
@@ -32,5 +34,5 @@ class ApplicationException extends /*\*/Exception
 			parent::__construct($message, $code, $previous);
 		}
 	}
-	/**/
+	*/
 }

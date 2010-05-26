@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Application
  */
-class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
+class MultiRouter extends Nette\Collections\ArrayList implements IRouter
 {
 	/** @var array */
 	private $cachedRoutes;
@@ -29,7 +31,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 
 	public function __construct()
 	{
-		parent::__construct(NULL, /*Nette\Application\*/'IRouter');
+		parent::__construct(NULL, 'Nette\Application\IRouter');
 	}
 
 
@@ -39,7 +41,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 	 * @param  Nette\Web\IHttpRequest
 	 * @return PresenterRequest|NULL
 	 */
-	public function match(/*Nette\Web\*/IHttpRequest $httpRequest)
+	public function match(Nette\Web\IHttpRequest $httpRequest)
 	{
 		foreach ($this as $route) {
 			$appRequest = $route->match($httpRequest);
@@ -58,7 +60,7 @@ class MultiRouter extends /*Nette\Collections\*/ArrayList implements IRouter
 	 * @param  PresenterRequest
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, /*Nette\Web\*/IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();

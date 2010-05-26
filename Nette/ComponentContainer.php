@@ -10,7 +10,9 @@
  * @package    Nette
  */
 
-/*namespace Nette;*/
+namespace Nette;
+
+use Nette;
 
 
 
@@ -54,21 +56,21 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
 
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
+			throw new \InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		if (isset($this->components[$name])) {
-			throw new /*\*/InvalidStateException("Component with name '$name' already exists.");
+			throw new \InvalidStateException("Component with name '$name' already exists.");
 		}
 
 		// check circular reference
 		$obj = $this;
 		do {
 			if ($obj === $component) {
-				throw new /*\*/InvalidStateException("Circular reference detected while adding component '$name'.");
+				throw new \InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);
@@ -89,7 +91,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			}
 			$component->setParent($this, $name);
 
-		} catch (/*\*/Exception $e) {
+		} catch (\Exception $e) {
 			unset($this->components[$name]); // undo
 			throw $e;
 		}
@@ -106,7 +108,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	{
 		$name = $component->getName();
 		if (!isset($this->components[$name]) || $this->components[$name] !== $component) {
-			throw new /*\*/InvalidArgumentException("Component named '$name' is not located in this container.");
+			throw new \InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
 		unset($this->components[$name]);
@@ -127,7 +129,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new /*\*/InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new \InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
 
 		} else {
 			$a = strpos($name, self::NAME_SEPARATOR);
@@ -137,7 +139,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			}
 
 			if ($name === '') {
-				throw new /*\*/InvalidArgumentException("Component or subcomponent name must not be empty string.");
+				throw new \InvalidArgumentException("Component or subcomponent name must not be empty string.");
 			}
 		}
 
@@ -156,11 +158,11 @@ class ComponentContainer extends Component implements IComponentContainer
 				return $this->components[$name]->getComponent($ext, $need);
 
 			} elseif ($need) {
-				throw new /*\*/InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
+				throw new \InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
 			}
 
 		} elseif ($need) {
-			throw new /*\*/InvalidArgumentException("Component with name '$name' does not exist.");
+			throw new \InvalidArgumentException("Component with name '$name' does not exist.");
 		}
 	}
 
@@ -192,11 +194,11 @@ class ComponentContainer extends Component implements IComponentContainer
 	{
 		$iterator = new RecursiveComponentIterator($this->components);
 		if ($deep) {
-			$deep = $deep > 0 ? /*\*/RecursiveIteratorIterator::SELF_FIRST : /*\*/RecursiveIteratorIterator::CHILD_FIRST;
-			$iterator = new /*\*/RecursiveIteratorIterator($iterator, $deep);
+			$deep = $deep > 0 ? \RecursiveIteratorIterator::SELF_FIRST : \RecursiveIteratorIterator::CHILD_FIRST;
+			$iterator = new \RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
-			/**/Framework::fixNamespace($filterType);/**/
+			/*5.2* if ($a = strrpos($filterType, '\\')) $filterType = substr($filterType, $a + 1); // fix namespace*/
 			$iterator = new InstanceFilterIterator($iterator, $filterType);
 		}
 		return $iterator;
@@ -258,7 +260,7 @@ class ComponentContainer extends Component implements IComponentContainer
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
-class RecursiveComponentIterator extends /*\*/RecursiveArrayIterator implements /*\*/Countable
+class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Countable
 {
 
 	/**

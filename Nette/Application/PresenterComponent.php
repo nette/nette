@@ -10,7 +10,9 @@
  * @package    Nette\Application
  */
 
-/*namespace Nette\Application;*/
+namespace Nette\Application;
+
+use Nette;
 
 
 
@@ -26,7 +28,7 @@
  *
  * @property-read Presenter $presenter
  */
-abstract class PresenterComponent extends /*Nette\*/ComponentContainer implements ISignalReceiver, IStatePersistent, /*\*/ArrayAccess
+abstract class PresenterComponent extends Nette\ComponentContainer implements ISignalReceiver, IStatePersistent, \ArrayAccess
 {
 	/** @var array */
 	protected $params = array();
@@ -35,7 +37,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 
 	/**
 	 */
-	public function __construct(/*Nette\*/IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(Nette\IComponentContainer $parent = NULL, $name = NULL)
 	{
 		$this->monitor('Nette\Application\Presenter');
 		parent::__construct($parent, $name);
@@ -107,9 +109,9 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 * Access to reflection.
 	 * @return PresenterComponentReflection
 	 */
-	public /*static */function getReflection()
+	public /**/static/**/ function getReflection()
 	{
-		return new PresenterComponentReflection(/**/$this/**//*get_called_class()*/);
+		return new PresenterComponentReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -168,7 +170,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 			}
 
 			if (is_object($val)) {
-				throw new /*\*/InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
+				throw new \InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
 
 			} else {
 				if (isset($meta['def'])) {
@@ -225,9 +227,9 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public static function getPersistentParams()
 	{
-		$rc = new /*Nette\Reflection\*/ClassReflection(/**/func_get_arg(0)/**//*get_called_class()*/);
+		$rc = new Nette\Reflection\ClassReflection(/*5.2*func_get_arg(0)*//**/get_called_class()/**/);
 		$params = array();
-		foreach ($rc->getProperties(/*\*/ReflectionProperty::IS_PUBLIC) as $rp) {
+		foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $rp) {
 			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
 				$params[] = $rp->getName();
 			}
@@ -319,7 +321,7 @@ abstract class PresenterComponent extends /*Nette\*/ComponentContainer implement
 	 */
 	public function ajaxLink($destination, $args = array())
 	{
-		throw new /*\*/DeprecatedException(__METHOD__ . '() is deprecated.');
+		throw new \DeprecatedException(__METHOD__ . '() is deprecated.');
 	}
 
 

@@ -9,12 +9,12 @@
  * @subpackage UnitTests
  */
 
-/*use Nette\Caching\Cache;*/
-/*use Nette\Caching\MemcachedStorage;*/
+use Nette\Caching\Cache,
+	Nette\Caching\MemcachedStorage;
 
 
 
-require dirname(__FILE__) . '/../NetteTest/initialize.php';
+require __DIR__ . '/../NetteTest/initialize.php';
 
 
 

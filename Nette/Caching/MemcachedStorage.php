@@ -10,7 +10,9 @@
  * @package    Nette\Caching
  */
 
-/*namespace Nette\Caching;*/
+namespace Nette\Caching;
+
+use Nette;
 
 
 
@@ -20,7 +22,7 @@
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
-class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
+class MemcachedStorage extends Nette\Object implements ICacheStorage
 {
 	/**#@+ @internal cache structure */
 	const META_CALLBACKS = 'callbacks';
@@ -50,11 +52,11 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
 	{
 		if (!self::isAvailable()) {
-			throw new /*\*/Exception("PHP extension 'memcache' is not loaded.");
+			throw new \Exception("PHP extension 'memcache' is not loaded.");
 		}
 
 		$this->prefix = $prefix;
-		$this->memcache = new /*\*/Memcache;
+		$this->memcache = new \Memcache;
 		$this->memcache->connect($host, $port);
 	}
 
@@ -103,7 +105,7 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 	public function write($key, $data, array $dp)
 	{
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY]) || !empty($dp[Cache::ITEMS])) {
-			throw new /*\*/NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
+			throw new \NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
 		}
 
 		$meta = array(
@@ -150,7 +152,7 @@ class MemcachedStorage extends /*Nette\*/Object implements ICacheStorage
 			$this->memcache->flush();
 
 		} elseif (isset($conds[Cache::TAGS]) || isset($conds[Cache::PRIORITY])) {
-			throw new /*\*/NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
+			throw new \NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
 		}
 	}
 
