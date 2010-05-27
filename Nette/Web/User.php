@@ -173,7 +173,7 @@ class User extends Nette\Object implements IUser
 	final public function getAuthenticationHandler()
 	{
 		if ($this->authenticationHandler === NULL) {
-			$this->authenticationHandler = Environment::getService('Nette\Security\IAuthenticator');
+			$this->authenticationHandler = Environment::getService('Nette\\Security\\IAuthenticator');
 		}
 		return $this->authenticationHandler;
 	}
@@ -413,7 +413,7 @@ class User extends Nette\Object implements IUser
 	final public function getAuthorizationHandler()
 	{
 		if ($this->authorizationHandler === NULL) {
-			$this->authorizationHandler = Environment::getService('Nette\Security\IAuthorizator');
+			$this->authorizationHandler = Environment::getService('Nette\\Security\\IAuthorizator');
 		}
 		return $this->authorizationHandler;
 	}

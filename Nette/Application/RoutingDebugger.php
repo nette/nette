@@ -43,7 +43,7 @@ class RoutingDebugger extends Nette\DebugPanel
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
 		$this->routers = new \ArrayObject;
-		parent::__construct('RoutingDebugger', array($this, 'renderTab'), array($this, 'renderPanel'));
+		parent::__construct("RoutingDebugger", array($this, 'renderTab'), array($this, 'renderPanel'));
 	}
 
 

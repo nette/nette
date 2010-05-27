@@ -36,4 +36,4 @@ dump( class_exists('Nette\TestClass'), 'Class Nette\TestClass loaded?' );
 __halt_compiler() ?>
 
 ------EXPECT------
-Class Nette\TestClass loaded? bool(TRUE)
+Class %ns%TestClass loaded? bool(TRUE)
