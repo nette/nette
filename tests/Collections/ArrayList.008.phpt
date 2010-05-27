@@ -19,7 +19,7 @@ require __DIR__ . '/Collections.inc';
 
 
 
-/**/Nette\Object::extensionMethod('Nette\Collections\ICollection::join', function(Nette\Collections\ICollection $that, $separator)/**/
+/**/Nette\Object::extensionMethod('Nette\\Collections\\ICollection::join', function(Nette\Collections\ICollection $that, $separator)/**/
 /*5.2* function ICollection_prototype_join(ICollection $that, $separator)*/
 {
 	return implode($separator, (array) $that);

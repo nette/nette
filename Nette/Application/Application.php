@@ -30,8 +30,8 @@ class Application extends Nette\Object
 
 	/** @var array */
 	public $defaultServices = array(
-		'Nette\Application\IRouter' => 'Nette\Application\MultiRouter',
-		'Nette\Application\IPresenterLoader' => array(__CLASS__, 'createPresenterLoader'),
+		'Nette\\Application\\IRouter' => 'Nette\Application\MultiRouter',
+		'Nette\\Application\\IPresenterLoader' => array(__CLASS__, 'createPresenterLoader'),
 	);
 
 	/** @var bool enable fault barrier? */
@@ -275,7 +275,7 @@ class Application extends Nette\Object
 	 */
 	public function getRouter()
 	{
-		return $this->getServiceLocator()->getService('Nette\Application\IRouter');
+		return $this->getServiceLocator()->getService('Nette\\Application\\IRouter');
 	}
 
 
@@ -287,7 +287,7 @@ class Application extends Nette\Object
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->getServiceLocator()->addService('Nette\Application\IRouter', $router);
+		$this->getServiceLocator()->addService('Nette\\Application\\IRouter', $router);
 		return $this;
 	}
 
@@ -299,7 +299,7 @@ class Application extends Nette\Object
 	 */
 	public function getPresenterLoader()
 	{
-		return $this->getServiceLocator()->getService('Nette\Application\IPresenterLoader');
+		return $this->getServiceLocator()->getService('Nette\\Application\\IPresenterLoader');
 	}
 
 

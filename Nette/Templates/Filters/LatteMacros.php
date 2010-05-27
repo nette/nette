@@ -220,7 +220,7 @@ class LatteMacros extends Nette\Object
 
 		// internal state holder
 		$s = "<?php\n"
-			. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"
+			/**/. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"/**/
 			. "\$_cb = LatteMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
@@ -414,7 +414,7 @@ class LatteMacros extends Nette\Object
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
-			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $destination)) {
+			if (!preg_match('#^' . LatteFilter::RE_IDENTIFIER . '$#', $destination)) {
 				throw new \InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
 			}
 
@@ -431,7 +431,7 @@ class LatteMacros extends Nette\Object
 			$params .= 'get_defined_vars()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
 				? "call_user_func(reset(\$_cb->blocks[$name]), $params)"
-				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
+				: 'LatteMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . LatteFilter::formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
@@ -440,8 +440,8 @@ class LatteMacros extends Nette\Object
 			$destination = LatteFilter::formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . LatteFilter::formatModifiers('LatteMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
-				: 'LatteMacros::includeTemplate(' . $destination . ', ' . $params . ', $_cb->templates[' . var_export($this->uniq, TRUE) . '])->render()';
+				? 'echo ' . LatteFilter::formatModifiers('LatteMacros::includeTemplate' . "($destination, $params, \$_cb->templates[" . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
+				: 'LatteMacros::includeTemplate' . "($destination, $params, \$_cb->templates[" . var_export($this->uniq, TRUE) . '])->render()';
 		}
 	}
 
@@ -486,7 +486,7 @@ class LatteMacros extends Nette\Object
 
 		} else { // #block
 			$name = ltrim($name, '#');
-			if (!preg_match('#^'.LatteFilter::RE_IDENTIFIER.'$#', $name)) {
+			if (!preg_match('#^' . LatteFilter::RE_IDENTIFIER . '$#', $name)) {
 				throw new \InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -660,7 +660,7 @@ class LatteMacros extends Nette\Object
 		}
 
 		// temporary solution
-		return strpos($content, '/') ? '\Nette\Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")' : '';
+		return strpos($content, '/') ? 'Environment::getHttpResponse' . '()->setHeader("Content-Type", "' . $content . '")' : '';
 	}
 
 
@@ -687,7 +687,7 @@ class LatteMacros extends Nette\Object
 		$pair = explode(':', $pair, 2);
 		$widget = LatteFilter::formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = preg_match('#^('.LatteFilter::RE_IDENTIFIER.'|)$#', $method) ? "render$method" : "{\"render$method\"}";
+		$method = preg_match('#^(' . LatteFilter::RE_IDENTIFIER . '|)$#', $method) ? "render$method" : "{\"render$method\"}";
 		$param = LatteFilter::formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($widget[0] === '$' ? "if (is_object($widget)) {$widget}->$method($param); else " : '')
