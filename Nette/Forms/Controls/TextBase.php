@@ -118,7 +118,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMinLength(TextBase $control, $length)
 	{
-		return iconv_strlen($control->getValue(), 'UTF-8') >= $length;
+		return Nette\String::length($control->getValue()) >= $length;
 	}
 
 
@@ -131,7 +131,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMaxLength(TextBase $control, $length)
 	{
-		return iconv_strlen($control->getValue(), 'UTF-8') <= $length;
+		return Nette\String::length($control->getValue()) <= $length;
 	}
 
 
@@ -147,7 +147,7 @@ abstract class TextBase extends FormControl
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		$len = iconv_strlen($control->getValue(), 'UTF-8');
+		$len = Nette\String::length($control->getValue());
 		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
 	}
 

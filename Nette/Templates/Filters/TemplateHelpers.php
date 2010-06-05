@@ -229,7 +229,7 @@ final class TemplateHelpers
 	 */
 	public static function length($var)
 	{
-		return is_string($var) ? iconv_strlen($var, 'UTF-8') : count($var);
+		return is_string($var) ? Nette\String::length($var) : count($var);
 	}
 
 

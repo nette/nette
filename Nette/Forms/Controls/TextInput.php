@@ -50,7 +50,7 @@ class TextInput extends TextBase
 	 */
 	public function checkMaxLength($value)
 	{
-		if ($this->control->maxlength && iconv_strlen($value, 'UTF-8') > $this->control->maxlength) {
+		if ($this->control->maxlength && Nette\String::length($value) > $this->control->maxlength) {
 			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');
 		}
 		return $value;
