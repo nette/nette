@@ -77,7 +77,6 @@ class FormGroup extends Nette\Object
 
 	/**
 	 * Sets user-specific option.
-	 *
 	 * Options recognized by ConventionalRenderer
 	 * - 'label' - textual or Html object label
 	 * - 'visual' - indicates visual group

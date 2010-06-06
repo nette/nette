@@ -146,7 +146,6 @@ final class Environment
 
 	/**
 	 * Sets the mode.
-	 *
 	 * @param  string mode identifier
 	 * @param  bool   set or unset
 	 * @return void
@@ -160,7 +159,6 @@ final class Environment
 
 	/**
 	 * Returns the mode.
-	 *
 	 * @param  string mode identifier
 	 * @return bool
 	 */

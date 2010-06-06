@@ -63,7 +63,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Sets a variable in this session namespace.
-	 *
 	 * @param  string  name
 	 * @param  mixed   value
 	 * @return void
@@ -80,7 +79,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Gets a variable from this session namespace.
-	 *
 	 * @param  string    name
 	 * @return mixed
 	 */
@@ -97,7 +95,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Determines whether a variable in this session namespace is set.
-	 *
 	 * @param  string    name
 	 * @return bool
 	 */
@@ -110,7 +107,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Unsets a variable in this session namespace.
-	 *
 	 * @param  string    name
 	 * @return void
 	 */
@@ -123,7 +119,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Sets a variable in this session namespace.
-	 *
 	 * @param  string  name
 	 * @param  mixed   value
 	 * @return void
@@ -137,7 +132,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Gets a variable from this session namespace.
-	 *
 	 * @param  string    name
 	 * @return mixed
 	 */
@@ -150,7 +144,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Determines whether a variable in this session namespace is set.
-	 *
 	 * @param  string    name
 	 * @return bool
 	 */
@@ -163,7 +156,6 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Unsets a variable in this session namespace.
-	 *
 	 * @param  string    name
 	 * @return void
 	 */
