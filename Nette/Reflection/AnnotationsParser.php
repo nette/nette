@@ -195,10 +195,8 @@ final class AnnotationsParser
 	 */
 	private static function parseScript($file)
 	{
-		if (!defined('T_NAMESPACE')) {
-			define('T_NAMESPACE', -1);
-			define('T_NS_SEPARATOR', -1);
-		}
+		$T_NAMESPACE = PHP_VERSION_ID < 50300 ? -1 : T_NAMESPACE;
+		$T_NS_SEPARATOR = PHP_VERSION_ID < 50300 ? -1 : T_NS_SEPARATOR;
 
 		$s = file_get_contents($file);
 
@@ -220,7 +218,7 @@ final class AnnotationsParser
 					continue 2;
 
 				case T_STRING:
-				case T_NS_SEPARATOR:
+				case $T_NS_SEPARATOR:
 				case T_VARIABLE:
 					if ($expected) {
 						$name .= $token[1];
@@ -231,7 +229,7 @@ final class AnnotationsParser
 				case T_VAR:
 				case T_PUBLIC:
 				case T_PROTECTED:
-				case T_NAMESPACE:
+				case $T_NAMESPACE:
 				case T_CLASS:
 				case T_INTERFACE:
 					$expected = $token[0];
@@ -267,7 +265,7 @@ final class AnnotationsParser
 					}
 					break;
 
-				case T_NAMESPACE:
+				case $T_NAMESPACE:
 					$namespace = $name . '\\';
 				}
 
