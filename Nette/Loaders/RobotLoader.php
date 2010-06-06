@@ -270,10 +270,8 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanScript($file)
 	{
-		if (!defined('T_NAMESPACE')) {
-			define('T_NAMESPACE', -1);
-			define('T_NS_SEPARATOR', -1);
-		}
+		$T_NAMESPACE = PHP_VERSION_ID < 50300 ? -1 : T_NAMESPACE;
+		$T_NS_SEPARATOR = PHP_VERSION_ID < 50300 ? -1 : T_NS_SEPARATOR;
 
 		$expected = FALSE;
 		$namespace = '';
@@ -297,14 +295,14 @@ class RobotLoader extends AutoLoader
 				case T_WHITESPACE:
 					continue 2;
 
-				case T_NS_SEPARATOR:
+				case $T_NS_SEPARATOR:
 				case T_STRING:
 					if ($expected) {
 						$name .= $token[1];
 					}
 					continue 2;
 
-				case T_NAMESPACE:
+				case $T_NAMESPACE:
 				case T_CLASS:
 				case T_INTERFACE:
 					$expected = $token[0];
@@ -325,7 +323,7 @@ class RobotLoader extends AutoLoader
 					}
 					break;
 
-				case T_NAMESPACE:
+				case $T_NAMESPACE:
 					$namespace = $name . '\\';
 				}
 
