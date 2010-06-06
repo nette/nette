@@ -63,7 +63,6 @@ final class SafeStream
 
 	/**
 	 * Registers protocol 'safe://'.
-	 *
 	 * @return bool
 	 */
 	public static function register()
@@ -75,7 +74,6 @@ final class SafeStream
 
 	/**
 	 * Opens file.
-	 *
 	 * @param  string    file name with stream protocol
 	 * @param  string    mode - see fopen()
 	 * @param  int       STREAM_USE_PATH, STREAM_REPORT_ERRORS
@@ -163,7 +161,6 @@ final class SafeStream
 
 	/**
 	 * Closes file.
-	 *
 	 * @return void
 	 */
 	public function stream_close()
@@ -187,7 +184,6 @@ final class SafeStream
 
 	/**
 	 * Reads up to length bytes from the file.
-	 *
 	 * @param  int    length
 	 * @return string
 	 */
@@ -200,7 +196,6 @@ final class SafeStream
 
 	/**
 	 * Writes the string to the file.
-	 *
 	 * @param  string    data to write
 	 * @return int      number of bytes that were successfully stored
 	 */
@@ -220,7 +215,6 @@ final class SafeStream
 
 	/**
 	 * Returns the position of the file.
-	 *
 	 * @return int
 	 */
 	public function stream_tell()
@@ -232,7 +226,6 @@ final class SafeStream
 
 	/**
 	 * Returns TRUE if the file pointer is at end-of-file.
-	 *
 	 * @return bool
 	 */
 	public function stream_eof()
@@ -244,7 +237,6 @@ final class SafeStream
 
 	/**
 	 * Sets the file position indicator for the file.
-	 *
 	 * @param  int    position
 	 * @param  int    see fseek()
 	 * @return int   Return TRUE on success
@@ -258,7 +250,6 @@ final class SafeStream
 
 	/**
 	 * Gets information about a file referenced by $this->handle.
-	 *
 	 * @return array
 	 */
 	public function stream_stat()
@@ -270,7 +261,6 @@ final class SafeStream
 
 	/**
 	 * Gets information about a file referenced by filename.
-	 *
 	 * @param  string    file name
 	 * @param  int       STREAM_URL_STAT_LINK, STREAM_URL_STAT_QUIET
 	 * @return array
@@ -287,7 +277,6 @@ final class SafeStream
 	/**
 	 * Deletes a file.
 	 * On Windows unlink is not allowed till file is opened
-	 *
 	 * @param  string    file name with stream protocol
 	 * @return bool      TRUE on success or FALSE on failure
 	 */

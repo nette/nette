@@ -266,7 +266,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Call to undefined method.
-	 *
 	 * @throws \MemberAccessException
 	 */
 	public function __call($name, $args)
@@ -278,7 +277,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Call to undefined static method.
-	 *
 	 * @throws \MemberAccessException
 	 */
 	public static function __callStatic($name, $args)
@@ -291,7 +289,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Returns property value. Do not call directly.
-	 *
 	 * @throws \MemberAccessException if the property is not defined.
 	 */
 	public function &__get($name)
@@ -303,7 +300,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Sets value of a property. Do not call directly.
-	 *
 	 * @throws \MemberAccessException if the property is not defined or is read-only
 	 */
 	public function __set($name, $value)
@@ -315,7 +311,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Is property defined?
-	 *
 	 * @param  string  property name
 	 * @return bool
 	 */
@@ -328,7 +323,6 @@ abstract class Collection extends \ArrayObject implements ICollection
 
 	/**
 	 * Access to undeclared property.
-	 *
 	 * @throws \MemberAccessException
 	 */
 	public function __unset($name)

@@ -179,12 +179,10 @@ abstract class FormControl extends Nette\Component implements IFormControl
 
 	/**
 	 * Sets user-specific option.
-	 *
 	 * Common options:
 	 * - 'rendered' - indicate if method getControl() have been called
 	 * - 'required' - indicate if ':required' rule has been applied
 	 * - 'description' - textual or Html object description (recognized by ConventionalRenderer)
-	 *
 	 * @param  string key
 	 * @param  mixed  value
 	 * @return FormControl  provides a fluent interface

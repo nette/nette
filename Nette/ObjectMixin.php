@@ -41,7 +41,6 @@ final class ObjectMixin
 
 	/**
 	 * Call to undefined method.
-	 *
 	 * @param  string  method name
 	 * @param  array   arguments
 	 * @return mixed
@@ -78,7 +77,6 @@ final class ObjectMixin
 
 	/**
 	 * Returns property value.
-	 *
 	 * @param  string  property name
 	 * @return mixed   property value
 	 * @throws \MemberAccessException if the property is not defined.
@@ -124,7 +122,6 @@ final class ObjectMixin
 
 	/**
 	 * Sets value of a property.
-	 *
 	 * @param  string  property name
 	 * @param  mixed   property value
 	 * @return void
@@ -164,7 +161,6 @@ final class ObjectMixin
 
 	/**
 	 * Is property defined?
-	 *
 	 * @param  string  property name
 	 * @return bool
 	 */

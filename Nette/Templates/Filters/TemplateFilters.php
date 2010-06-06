@@ -41,7 +41,6 @@ final class TemplateFilters
 
 	/**
 	 * Filters out PHP code.
-	 *
 	 * @param  string
 	 * @return string
 	 */

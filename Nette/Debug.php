@@ -221,7 +221,6 @@ final class Debug
 
 	/**
 	 * Dumps information about a variable in readable format.
-	 *
 	 * @param  mixed  variable to dump
 	 * @param  bool   return output instead of printing it? (bypasses $productionMode)
 	 * @return mixed  variable itself or dump
@@ -259,7 +258,6 @@ final class Debug
 
 	/**
 	 * Dumps information about a variable in Nette Debug Console.
-	 *
 	 * @param  mixed  variable to dump
 	 * @param  string optional title
 	 * @return mixed  variable itself
@@ -280,7 +278,6 @@ final class Debug
 
 	/**
 	 * Internal dump() implementation.
-	 *
 	 * @param  mixed  variable to dump
 	 * @param  int    current recursion level
 	 * @return string
@@ -515,7 +512,6 @@ final class Debug
 
 	/**
 	 * Debug exception handler.
-	 *
 	 * @param  \Exception
 	 * @return void
 	 * @internal
@@ -533,7 +529,6 @@ final class Debug
 
 	/**
 	 * Own error handler.
-	 *
 	 * @param  int    level of the error raised
 	 * @param  string error message
 	 * @param  string file that the error was raised in

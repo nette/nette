@@ -514,7 +514,6 @@ class Image extends Object
 
 	/**
 	 * Call to undefined method.
-	 *
 	 * @param  string  method name
 	 * @param  array   arguments
 	 * @return mixed
