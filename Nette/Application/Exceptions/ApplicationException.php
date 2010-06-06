@@ -27,7 +27,7 @@ class ApplicationException extends \Exception
 	/*5.2*
 	public function __construct($message = '', $code = 0, \Exception $previous = NULL)
 	{
-		if (version_compare(PHP_VERSION , '5.3', '<')) {
+		if (PHP_VERSION_ID < 50300) {
 			$this->previous = $previous;
 			parent::__construct($message, $code);
 		} else {

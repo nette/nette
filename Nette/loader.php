@@ -22,8 +22,13 @@
 /**
  * Check PHP configuration.
  */
+if (!defined('PHP_VERSION_ID')) {
+	$tmp = explode('.', PHP_VERSION);
+	define('PHP_VERSION_ID', ($tmp[0] * 10000 + $tmp[1] * 100 + $tmp[2]));
+}
+
 /*5.2*
-if (version_compare(PHP_VERSION, '5.2.0', '<')) {
+if (PHP_VERSION_ID < 50200) {
 	throw new Exception('Nette Framework requires PHP 5.2.0 or newer.');
 }
 */
