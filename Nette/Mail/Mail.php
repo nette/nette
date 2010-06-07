@@ -379,7 +379,7 @@ class Mail extends MailMimePart
 	protected function build()
 	{
 		$mail = clone $this;
-		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost');
 		$mail->setHeader('Message-ID', '<' . md5(uniqid('', TRUE)) . "@$hostname>");
 
 		$mail->buildHtml();
