@@ -226,7 +226,7 @@ class NetteLoader extends AutoLoader
 	 */
 	public function tryLoad($type)
 	{
-		$type = strtolower($type);
+		$type = ltrim(strtolower($type), '\\');
 		if (isset($this->list[$type])) {
 			LimitedScope::load($this->base . $this->list[$type]);
 			self::$count++;
