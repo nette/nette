@@ -16,6 +16,14 @@ use Nette;
 
 
 
+define('NETTE', TRUE);
+
+define('NETTE_VERSION_ID', 10000); // v1.0.0
+
+define('NETTE_PACKAGE', '5.3');
+
+
+
 /**
  * The Nette Framework.
  *
@@ -31,8 +39,6 @@ final class Framework
 	const VERSION = '1.0-dev';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
-
-	const PACKAGE = '';
 	/**#@-*/
 
 
@@ -48,26 +54,13 @@ final class Framework
 
 
 	/**
-	 * Compares current Nette Framework version with given version.
-	 * @param  string
-	 * @return int
-	 */
-	public static function compareVersion($version)
-	{
-		return version_compare($version, self::VERSION);
-	}
-
-
-
-	/**
 	 * Nette Framework promotion.
 	 * @return void
 	 */
-	public static function promo($xhtml = TRUE)
+	public static function promo()
 	{
-		echo '<a href="http://nette.org/" title="Nette Framework - The Most Innovative PHP Framework"><img ',
-			'src="http://files.nette.org/icons/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15"',
-			($xhtml ? ' />' : '>'), '</a>';
+		echo '<a href="http://nette.org" title="Nette Framework - The Most Innovative PHP Framework"><img ',
+			'src="http://files.nette.org/icons/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15" /></a>';
 	}
 
 }
