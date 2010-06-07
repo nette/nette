@@ -47,15 +47,14 @@ __halt_compiler() ?>
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-From: =?UTF-8?Q?=C5=BDlu=C5=A5ou=C4=8Dk=C3=BD=20k=C5=AF=C5=88?=
-	 <kun1@example.com>
-Reply-To: =?UTF-8?Q?=C5=BDlu=C5=A5ou=C4=8Dk=C3=BD=20k=C5=AF=C5=88?=
-	 <kun2@example.com>,John Doe <doe2@example.com>
-To: =?UTF-8?Q?=C5=BDlu=C5=A5ou=C4=8Dk=C3=BD=20"k=C5=AF=C5=88"?=
-	 <kun3@example.com>,John 'jd' Doe <doe3@example.com>
+From: =?UTF-8?B?xb1sdcWlb3XEjWvDvSBrxa/FiA==?= <kun1@example.com>
+Reply-To: =?UTF-8?B?xb1sdcWlb3XEjWvDvSBrxa/FiA==?= <kun2@example.com>,John Doe
+	 <doe2@example.com>
+To: =?UTF-8?B?xb1sdcWlb3XEjWvDvSAia8WvxYgi?= <kun3@example.com>,John 'jd' Doe
+	 <doe3@example.com>
 Cc: Nette\Mail <nette@example.com>,John Doe <doe4@example.com>
-Bcc: =?UTF-8?Q?=C5=BDlu=C5=A5ou=C4=8Dk=C3=BD=20k=C5=AF=C5=88?=
-	 <kun5@example.com>,doe5@example.com
+Bcc: =?UTF-8?B?xb1sdcWlb3XEjWvDvSBrxa/FiA==?= <kun5@example.com>,
+	doe5@example.com
 Return-Path: doe@example.com
 Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
