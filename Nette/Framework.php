@@ -16,6 +16,14 @@ use Nette;
 
 
 
+define('NETTE', TRUE);
+
+define('NETTE_VERSION_ID', 905); // v0.9.5
+
+define('NETTE_PACKAGE', '5.3');
+
+
+
 /**
  * The Nette Framework.
  *
@@ -31,8 +39,6 @@ final class Framework
 	const VERSION = '0.9.5-dev';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
-
-	const PACKAGE = '';
 	/**#@-*/
 
 
