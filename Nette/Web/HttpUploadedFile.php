@@ -196,9 +196,18 @@ class HttpUploadedFile extends Nette\Object
 	 * Returns the image.
 	 * @return Nette\Image
 	 */
-	public function getImage()
+	public function toImage()
 	{
 		return Nette\Image::fromFile($this->tmpName);
+	}
+
+
+
+	/** @deprecated */
+	public function getImage()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use toImage() instead.', E_USER_WARNING);
+		return $this->toImage();
 	}
 
 
