@@ -135,7 +135,7 @@ class MailMimePart extends Nette\Object
 	 */
 	public function getEncodedHeader($name)
 	{
-		$len = strlen($name) + 2;
+		$offset = strlen($name) + 2; // color + space
 
 		if (!isset($this->headers[$name])) {
 			return NULL;
@@ -144,23 +144,24 @@ class MailMimePart extends Nette\Object
 			$s = '';
 			foreach ($this->headers[$name] as $email => $name) {
 				if ($name != NULL) { // intentionally ==
-					$s .= self::encodeQuotedPrintableHeader(
+					$s .= self::encodeHeader(
 						strspn($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
-						$len
+						$offset
 					);
 					$email = " <$email>";
 				}
-				if ($len + strlen($email) + 1 > self::LINE_LENGTH) {
+				$email .= ',';
+				if ($s !== '' && $offset + strlen($email) > self::LINE_LENGTH) {
 					$s .= self::EOL . "\t";
-					$len = 1;
+					$offset = 1;
 				}
-				$s .= "$email,";
-				$len += strlen($email) + 1;
+				$s .= $email;
+				$offset += strlen($email);
 			}
-			return substr($s, 0, -1);
+			return substr($s, 0, -1); // last comma
 
 		} else {
-			return self::encodeQuotedPrintableHeader($this->headers[$name], $len);
+			return self::encodeHeader($this->headers[$name], $offset);
 		}
 	}
 
@@ -323,44 +324,22 @@ class MailMimePart extends Nette\Object
 	 * @param  int
 	 * @return string
 	 */
-	private static function encodeQuotedPrintableHeader($s, & $len = 0)
+	private static function encodeHeader($s, & $offset = 0)
 	{
-		$range = '!"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}'; // \x21-\x7E without \x3D \x3F \x5F
-
-		if (strspn($s, $range . "=? _\r\n\t") === strlen($s)) {
+		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
+			&& ($offset + strlen($s) <= self::LINE_LENGTH)) {
+			$offset += strlen($s);
 			return $s;
 		}
 
-		$prefix = "=?UTF-8?Q?";
-		$pos = 0;
-		$len += strlen($prefix);
-		$o = $prefix;
-		$size = strlen($s);
-		while ($pos < $size) {
-			if ($l = strspn($s, $range, $pos)) {
-				while ($len + $l > self::LINE_LENGTH - 2) { // 2 = length of suffix ?=
-					$lx = self::LINE_LENGTH - $len - 2;
-					$o .= substr($s, $pos, $lx) . '?=' . self::EOL . "\t" . $prefix;
-					$pos += $lx;
-					$l -= $lx;
-					$len = strlen($prefix) + 1;
-				}
-				$o .= substr($s, $pos, $l);
-				$len += $l;
-				$pos += $l;
+		$o = str_replace("\n ", "\n\t", substr(iconv_mime_encode(str_repeat(' ', $offset), $s, array(
+			'scheme' => 'B', // Q is broken
+			'input-charset' => 'UTF-8',
+			'output-charset' => 'UTF-8',
+		)), $offset + 2));
 
-			} else {
-				$len += 3;
-				// \xC0 tests UTF-8 character boudnary; 9 is reserved space for 4bytes UTF-8 character
-				if (($s[$pos] & "\xC0") !== "\x80" && $len > self::LINE_LENGTH - 2 - 9) {
-					$o .= '?=' . self::EOL . "\t" . $prefix;
-					$len = strlen($prefix) + 1 + 3;
-				}
-				$o .= '=' . strtoupper(bin2hex($s[$pos]));
-				$pos++;
-			}
-		}
-		return $o . '?=';
+		$offset = strlen($o) - strrpos($o, "\n");
+		return $o;
 	}
 
 
@@ -369,7 +348,7 @@ class MailMimePart extends Nette\Object
 	 * Converts a 8 bit string to a quoted-printable string.
 	 * @param  string
 	 * @return string
-	 */
+	 *//*5.2*
 	public static function encodeQuotedPrintable($s)
 	{
 		$range = '!"#$%&\'()*+,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}'; // \x21-\x7E without \x3D
@@ -401,6 +380,6 @@ class MailMimePart extends Nette\Object
 			}
 		}
 		return rtrim($o, '=' . self::EOL);
-	}
+	}*/
 
 }

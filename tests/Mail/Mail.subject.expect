@@ -1,8 +1,8 @@
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Subject: =?UTF-8?Q?Testovac=C3=AD=20!=20<email>=20od=20=C5=BElu?=
-	=?UTF-8?Q?=C5=A5ou=C4=8Dk=C3=A9ho=20kon=C4=9B=20...?=
+Subject: =?UTF-8?B?VGVzdG92YWPDrSAhIDxlbWFpbD4gb2Qgxb5sdcWlb3XEjWs=?=
+	=?UTF-8?B?w6lobyBrb27EmyAuLi4=?=
 Message-ID: <%h%@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -12,7 +12,9 @@ Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Subject: veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail
+Subject: =?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXI=?=
+	=?UTF-8?B?eXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnk=?=
+	=?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnlsb25nZW1haWw=?=
 Message-ID: <%h%@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -22,10 +24,10 @@ Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Subject: =?UTF-8?Q?veryveryveryveryveryveryveryveryveryveryveryveryveryver?=
-	=?UTF-8?Q?yveryveryveryveryveryveryverylongemail=C5=A1=C5=A1=C5=A1?=
-	=?UTF-8?Q?=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1?=
-	=?UTF-8?Q?=C5=A1=C5=A1=C5=A1=C5=A1?=
+Subject: =?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXI=?=
+	=?UTF-8?B?eXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnk=?=
+	=?UTF-8?B?dmVyeXZlcnlsb25nZW1haWzFocWhxaHFocWhxaHFocWhxaHFocWhxaE=?=
+	=?UTF-8?B?xaHFocWhxaE=?=
 Message-ID: <%h%@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -35,13 +37,10 @@ Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Subject: =?UTF-8?Q?=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D?=
-	=?UTF-8?Q?=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D?=
-	=?UTF-8?Q?=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D?=
-	=?UTF-8?Q?=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D?=
-	=?UTF-8?Q?=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D?=
-	=?UTF-8?Q?=3D=3D=3D=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1?=
-	=?UTF-8?Q?=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1=C5=A1?=
+Subject: =?UTF-8?B?PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0=?=
+	=?UTF-8?B?PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0=?=
+	=?UTF-8?B?PT09PT09PT09PT09PT3FocWhxaHFocWhxaHFocWhxaHFocWhxaHFoQ==?=
+	=?UTF-8?B?xaHFocWhxaE=?=
 Message-ID: <%h%@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
