@@ -76,6 +76,10 @@ class MailMimePart extends Nette\Object
 			}
 
 			foreach ($value as $email => $name) {
+				if ($name !== NULL && !Nette\String::checkEncoding($name)) {
+					throw new \InvalidArgumentException("Name is not valid UTF-8 string.");
+				}
+
 				if (!preg_match('#^[^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
 					throw new \InvalidArgumentException("Email address '$email' is not valid.");
 				}
@@ -87,6 +91,10 @@ class MailMimePart extends Nette\Object
 			}
 
 		} else {
+			$value = (string) $value;
+			if (!Nette\String::checkEncoding($value)) {
+				throw new \InvalidArgumentException("Header is not valid UTF-8 string.");
+			}
 			$this->headers[$name] = preg_replace('#[\r\n]+#', ' ', $value);
 		}
 		return $this;
@@ -125,7 +133,7 @@ class MailMimePart extends Nette\Object
 	 * @param  string
 	 * @return string
 	 */
-	public function getEncodedHeader($name, $charset = 'UTF-8')
+	public function getEncodedHeader($name)
 	{
 		$len = strlen($name) + 2;
 
@@ -138,7 +146,7 @@ class MailMimePart extends Nette\Object
 				if ($name != NULL) { // intentionally ==
 					$s .= self::encodeQuotedPrintableHeader(
 						strspn($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
-						$charset, $len
+						$len
 					);
 					$email = " <$email>";
 				}
@@ -152,7 +160,7 @@ class MailMimePart extends Nette\Object
 			return substr($s, 0, -1);
 
 		} else {
-			return self::encodeQuotedPrintableHeader($this->headers[$name], $charset, $len);
+			return self::encodeQuotedPrintableHeader($this->headers[$name], $len);
 		}
 	}
 
@@ -315,7 +323,7 @@ class MailMimePart extends Nette\Object
 	 * @param  int
 	 * @return string
 	 */
-	private static function encodeQuotedPrintableHeader($s, $charset = 'UTF-8', & $len = 0)
+	private static function encodeQuotedPrintableHeader($s, & $len = 0)
 	{
 		$range = '!"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}'; // \x21-\x7E without \x3D \x3F \x5F
 
@@ -323,7 +331,7 @@ class MailMimePart extends Nette\Object
 			return $s;
 		}
 
-		$prefix = "=?$charset?Q?";
+		$prefix = "=?UTF-8?Q?";
 		$pos = 0;
 		$len += strlen($prefix);
 		$o = $prefix;

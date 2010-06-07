@@ -63,8 +63,7 @@ Content-Transfer-Encoding: 7bit
 ----------%h%
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
-Content-Disposition: =?UTF-8?Q?attachment;=20filename=3D"=9Elu=9Dou?=
-	=?UTF-8?Q?=E8k=FD.zip"?=
+Content-Disposition: attachment; filename="luouk"
 
 UEsDBBQAAAAIACeIMjsmkSpnQAAAAEEAAAALAAAAdmVyc2lvbi50eHTzSy0pSVVwK0rMTS3PL8pW
 MNCz1DNU0ChKLcsszszPU0hJNjMwTzNQKErNSU0sTk1RAIoZGRhY6gKRoYUmLxcAUEsBAhQAFAAA

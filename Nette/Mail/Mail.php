@@ -12,7 +12,8 @@
 
 namespace Nette\Mail;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -47,9 +48,6 @@ class Mail extends MailMimePart
 
 	/** @var IMailer */
 	private $mailer;
-
-	/** @var string */
-	private $charset = 'UTF-8';
 
 	/** @var array */
 	private $attachments = array();
@@ -284,7 +282,7 @@ class Mail extends MailMimePart
 		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
 		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
 		$part->setEncoding(self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"');
+		$part->setHeader('Content-Disposition', 'inline; filename="' . String::fixEncoding(basename($file)) . '"');
 		$part->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
 		return $this->inlines[$file] = $part;
 	}
@@ -304,7 +302,7 @@ class Mail extends MailMimePart
 		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
 		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
 		$part->setEncoding(self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
+		$part->setHeader('Content-Disposition', 'attachment; filename="' . String::fixEncoding(basename($file)) . '"');
 		return $this->attachments[] = $part;
 	}
 
@@ -405,14 +403,14 @@ class Mail extends MailMimePart
 					$tmp->addPart($value);
 				}
 			}
-			$alt->setContentType('text/html', $mail->charset)
+			$alt->setContentType('text/html', 'UTF-8')
 				->setEncoding(preg_match('#[\x80-\xFF]#', $mail->html) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
 				->setBody($mail->html);
 		}
 
 		$text = $mail->getBody();
 		$mail->setBody(NULL);
-		$cursor->setContentType('text/plain', $mail->charset)
+		$cursor->setContentType('text/plain', 'UTF-8')
 			->setEncoding(preg_match('#[\x80-\xFF]#', $text) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
 			->setBody($text);
 
@@ -437,7 +435,7 @@ class Mail extends MailMimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			$matches = Nette\String::matchAll($this->html, '#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', PREG_OFFSET_CAPTURE);
+			$matches = String::matchAll($this->html, '#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', PREG_OFFSET_CAPTURE);
 			foreach (array_reverse($matches) as $m)	{
 				$file = rtrim($this->basePath, '/\\') . '/' . $m[3][0];
 				$cid = isset($cids[$file]) ? $cids[$file] : $cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
@@ -445,8 +443,8 @@ class Mail extends MailMimePart
 			}
 		}
 
-		if (!$this->getSubject() && $matches = Nette\String::match($this->html, '#<title>(.+?)</title>#is')) {
-			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, $this->charset));
+		if (!$this->getSubject() && $matches = String::match($this->html, '#<title>(.+?)</title>#is')) {
+			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8'));
 		}
 	}
 
@@ -464,13 +462,13 @@ class Mail extends MailMimePart
 			$this->setBody($text->__toString(TRUE));
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
-			$text = Nette\String::replace($this->html, array(
+			$text = String::replace($this->html, array(
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
 				'#[ \t\r\n]+#' => ' ',
 				'#<(/?p|/?h\d|li|br|/tr)[ >]#i' => "\n$0",
 			));
-			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, $this->charset);
+			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
 			$this->setBody(trim($text));
 		}
 	}
