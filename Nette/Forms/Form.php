@@ -68,6 +68,7 @@ class Form extends FormContainer
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize';
 	const MIME_TYPE = ':mimeType';
+	const IMAGE = ':image';
 
 	// special case
 	const SCRIPT = 'Nette\\Forms\\InstantClientScript::javascript';

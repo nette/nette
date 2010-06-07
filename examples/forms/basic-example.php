@@ -99,7 +99,7 @@ $form->addPassword('password2', 'Reenter password:')
 
 $form->addFile('avatar', 'Picture:')
 	->addCondition(Form::FILLED)
-		->addRule(Form::MIME_TYPE, 'Uploaded file is not image', 'image/*');
+		->addRule(Form::IMAGE, 'Uploaded file is not image');
 
 $form->addHidden('userid');
 

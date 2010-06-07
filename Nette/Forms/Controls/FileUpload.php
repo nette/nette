@@ -130,4 +130,17 @@ class FileUpload extends FormControl
 		return FALSE;
 	}
 
+
+
+	/**
+	 * Image validator: is file image?
+	 * @param  FileUpload
+	 * @return bool
+	 */
+	public static function validateImage(FileUpload $control)
+	{
+		$file = $control->getValue();
+		return $file instanceof HttpUploadedFile && $file->isImage();
+	}
+
 }
