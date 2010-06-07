@@ -37,14 +37,13 @@ class SendmailMailer extends Nette\Object implements IMailer
 		$tmp->setHeader('To', NULL);
 
 		$parts = explode(Mail::EOL . Mail::EOL, $tmp->generateMessage(), 2);
-		$linux = strncasecmp(PHP_OS, 'win', 3);
 
 		Nette\Tools::tryError();
 		$res = mail(
-			$mail->getEncodedHeader('To'),
-			$mail->getEncodedHeader('Subject'),
-			$linux ? str_replace(Mail::EOL, "\n", $parts[1]) : $parts[1],
-			$linux ? str_replace(Mail::EOL, "\n", $parts[0]) : $parts[0]
+			str_replace(Mail::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
+			str_replace(Mail::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
+			str_replace(Mail::EOL, PHP_EOL, $parts[1]),
+			str_replace(Mail::EOL, PHP_EOL, $parts[0])
 		);
 
 		if (Nette\Tools::catchError($msg)) {
