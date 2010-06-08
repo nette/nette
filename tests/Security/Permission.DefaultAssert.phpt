@@ -15,10 +15,15 @@ use Nette\Security\Permission;
 
 require __DIR__ . '/../NetteTest/initialize.php';
 
-require __DIR__ . '/MockAssertion.inc';
+
+
+function falseAssertion()
+{
+	return FALSE;
+}
 
 
 
 $acl = new Permission;
-$acl->deny(NULL, NULL, NULL, new MockAssertion(FALSE));
+$acl->deny(NULL, NULL, NULL, 'falseAssertion');
 Assert::true( $acl->isAllowed(NULL, NULL, 'somePrivilege') );

@@ -15,13 +15,21 @@ use Nette\Security\Permission;
 
 require __DIR__ . '/../NetteTest/initialize.php';
 
-require __DIR__ . '/MockAssertion.inc';
 
+function falseAssertion()
+{
+	return FALSE;
+}
+
+function trueAssertion()
+{
+	return TRUE;
+}
 
 
 $acl = new Permission;
 $acl->addRole('guest');
-$acl->allow('guest', NULL, 'somePrivilege', new MockAssertion(TRUE));
+$acl->allow('guest', NULL, 'somePrivilege', 'trueAssertion');
 Assert::true( $acl->isAllowed('guest', NULL, 'somePrivilege') );
-$acl->allow('guest', NULL, 'somePrivilege', new MockAssertion(FALSE));
+$acl->allow('guest', NULL, 'somePrivilege', 'falseAssertion');
 Assert::false( $acl->isAllowed('guest', NULL, 'somePrivilege') );

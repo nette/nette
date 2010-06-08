@@ -156,7 +156,6 @@ class NetteLoader extends AutoLoader
 		'nette\security\iauthorizator' => '/Security/IAuthorizator.php',
 		'nette\security\identity' => '/Security/Identity.php',
 		'nette\security\iidentity' => '/Security/IIdentity.php',
-		'nette\security\ipermissionassertion' => '/Security/IPermissionAssertion.php',
 		'nette\security\iresource' => '/Security/IResource.php',
 		'nette\security\irole' => '/Security/IRole.php',
 		'nette\security\permission' => '/Security/Permission.php',

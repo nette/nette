@@ -448,10 +448,10 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  IPermissionAssertion  assertion
+	 * @param  callback    assertion
 	 * @return Permission  provides a fluent interface
 	 */
-	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assertion = NULL)
+	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
 		$this->setRule(TRUE, self::ALLOW, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -477,10 +477,10 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  IPermissionAssertion  assertion
+	 * @param  callback    assertion
 	 * @return Permission  provides a fluent interface
 	 */
-	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, IPermissionAssertion $assertion = NULL)
+	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
 	{
 		$this->setRule(TRUE, self::DENY, $roles, $resources, $privileges, $assertion);
 		return $this;
@@ -532,11 +532,11 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  IPermissionAssertion assertion
+	 * @param  callback    assertion
 	 * @throws \InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
-	protected function setRule($toAdd, $type, $roles, $resources, $privileges, IPermissionAssertion $assertion = NULL)
+	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
 	{
 		// ensure that all specified Roles exist; normalize input to array of Roles or NULL
 		if ($roles === self::ALL) {
@@ -574,6 +574,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			$privileges = array($privileges);
 		}
 
+		$assertion = $assertion ? callback($assertion) : NULL;
 
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {
@@ -737,7 +738,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns real currently queried Role. Use by {@link IPermissionAssertion::asert()}.
+	 * Returns real currently queried Role. Use by assertion.
 	 * @return mixed
 	 */
 	public function getQueriedRole()
@@ -748,7 +749,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns real currently queried Resource. Use by {@link IPermissionAssertion::asert()}.
+	 * Returns real currently queried Resource. Use by assertion.
 	 * @return mixed
 	 */
 	public function getQueriedResource()
@@ -937,7 +938,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		// check assertion if necessary
-		if ($rule['assert'] === NULL || $rule['assert']->assert($this, $role, $resource, $privilege)) {
+		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this, $role, $resource, $privilege)) {
 			return $rule['type'];
 
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
