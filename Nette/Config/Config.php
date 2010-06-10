@@ -78,7 +78,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function __construct($arr = NULL)
 	{
 		foreach ((array) $arr as $k => $v) {
-			$this->$k = is_array($v) ? new self($v) : $v;
+			$this->$k = is_array($v) ? new static($v) : $v;
 		}
 	}
 
