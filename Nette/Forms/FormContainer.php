@@ -184,6 +184,17 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, IN
 
 
 	/**
+	 * Returns current group.
+	 * @return FormGroup
+	 */
+	public function getCurrentGroup()
+	{
+		return $this->currentGroup;
+	}
+
+
+
+	/**
 	 * Adds the specified component to the IComponentContainer.
 	 * @param  IComponent
 	 * @param  string
