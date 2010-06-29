@@ -201,7 +201,7 @@ final class Debug
 
 			if (!self::$ajaxDetected) {
 				$colophons = self::$colophons;
-				require __DIR__ . '/Debug.templates/profiler.phtml';
+				require __DIR__ . '/templates/profiler.phtml';
 			}
 		}
 
@@ -209,7 +209,7 @@ final class Debug
 		// 3) console
 		if (self::$consoleData) {
 			$payload = self::$consoleData;
-			require __DIR__ . '/Debug.templates/console.phtml';
+			require __DIR__ . '/templates/console.phtml';
 		}
 	}
 
@@ -690,7 +690,7 @@ final class Debug
 		}
 
 		$colophons = self::$colophons;
-		require __DIR__ . '/Debug.templates/bluescreen.phtml';
+		require __DIR__ . '/templates/bluescreen.phtml';
 	}
 
 
