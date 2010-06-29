@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact="compact">
+<ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact>
 	<li>Escaped: &lt;i&gt;Hello&lt;/i&gt;</li>
 	<li>Non-escaped: <i>Hello</i></li>
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
@@ -11,9 +11,9 @@
 	<li>Non-escaped and translated: yraM</li>
 </ul>
 
-<input /> <input /> <input /> 
+<input> <input> <input> 
 
-<input checked /> <input checked="checked" />
+<input checked> <input checked="checked">
 
 { test} {"test} {'test}
 
@@ -21,11 +21,11 @@
 
 <p val = "a"> </p>
 
-<p val0 val1 = tmp val2=tmp val3="x" /> </p>
+<p val0 val1 = tmp val2=tmp val3="x"> </p>
 
 <p val = :/item> </p>
 
-<p val = />:/item</p>
+<p val =>:/item</p>
 
 	&lt;i&gt;Hello&lt;/i&gt;
 
