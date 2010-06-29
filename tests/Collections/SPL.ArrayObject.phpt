@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 use Nette\Collections\Hashtable;
 
@@ -22,7 +22,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function exchangeArray($array)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::exchangeArray($array);
 	}
 
@@ -32,7 +32,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function getIterator()
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::getIterator();
 	}
 
@@ -42,7 +42,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetExists($index)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::offsetExists($index);
 	}
 
@@ -52,7 +52,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetGet($index)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::offsetGet($index);
 	}
 
@@ -62,7 +62,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetSet($index, $newval)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::offsetSet($index, $newval);
 	}
 
@@ -71,7 +71,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function offsetUnset($index)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::offsetUnset($index);
 	}
 
@@ -82,7 +82,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function append($value)
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::append($value);
 	}
 
@@ -93,7 +93,7 @@ class TestArrayObject extends ArrayObject
 	 */
 	function getArrayCopy()
 	{
-		output('> ' . __METHOD__);
+		T::note('> ' . __METHOD__);
 		return parent::getArrayCopy();
 	}
 
@@ -104,99 +104,99 @@ class TestArrayObject extends ArrayObject
 $arr = array(1, 2, 'test', 'null' => NULL);
 
 
-output('$obj = new TestArrayObject($arr):');
+T::note('$obj = new TestArrayObject($arr):');
 $obj = new TestArrayObject($arr);
 
 
-output('$obj->append("Mary"):');
+T::note('$obj->append("Mary"):');
 $obj->append('Mary');
 
 
-output('$obj[] = "Jack":');
+T::note('$obj[] = "Jack":');
 $obj[] = 'Jack';
 
 
-output('$obj[array(3)] = "Jack":');
+T::note('$obj[array(3)] = "Jack":');
 $obj[array(3)] = 'Jack';
 
 
-output('$obj->offsetSet(array(3), "Jack"):');
+T::note('$obj->offsetSet(array(3), "Jack"):');
 $obj->offsetSet(array(3), 'Jack');
 
 
-output('$obj["a"] = "Jim":');
+T::note('$obj["a"] = "Jim":');
 $obj['a'] = 'Jim';
 
 
-output('echo $obj["a"]:');
+T::note('echo $obj["a"]:');
 echo $obj['a'];
 
 
-output('echo $obj["unknown"]:');
+T::note('echo $obj["unknown"]:');
 echo $obj['unknown'];
 
 
-output('isset($obj["a"]):');
+T::note('isset($obj["a"]):');
 isset($obj['a']);
 
 
-output('isset($obj["null"]):');
-dump( isset($obj['null']) );
+T::note('isset($obj["null"]):');
+T::dump( isset($obj['null']) );
 
 
-output('unset($obj["a"]):');
+T::note('unset($obj["a"]):');
 unset($obj['a']);
 
 
 
-output('count($obj):');
+T::note('count($obj):');
 count($obj);
 
 
 
-output('dump($obj):');
-dump( $obj );
+T::note('T::dump($obj):');
+T::dump( $obj );
 
 
-output('$tmp = (array) $obj:');
+T::note('$tmp = (array) $obj:');
 $tmp = (array) $obj;
 
 
-output('$tmp = $obj->getArrayCopy():');
+T::note('$tmp = $obj->getArrayCopy():');
 $tmp = $obj->getArrayCopy();
 
 
-output('foreach ($obj as $key => $value):');
+T::note('foreach ($obj as $key => $value):');
 foreach ($obj as $key => $value);
 
 
 
-output('$obj->exchangeArray($arr):');
+T::note('$obj->exchangeArray($arr):');
 $obj->exchangeArray($arr);
 
 
-output('$obj->ksort():');
+T::note('$obj->ksort():');
 $obj->ksort();
 
 
 
-output('$obj->setFlags(TestArrayObject::ARRAY_AS_PROPS):');
+T::note('$obj->setFlags(TestArrayObject::ARRAY_AS_PROPS):');
 $obj->setFlags(TestArrayObject::ARRAY_AS_PROPS);
 
 
-output('$obj->a = "Jack":');
+T::note('$obj->a = "Jack":');
 $obj->a = 'Jack';
 
 
-output('echo $obj->a:');
+T::note('echo $obj->a:');
 echo $obj->a;
 
 
-output('isset($obj->a):');
+T::note('isset($obj->a):');
 isset($obj->a);
 
 
-output('unset($obj->a):');
+T::note('unset($obj->a):');
 unset($obj->a);
 
 
@@ -258,7 +258,7 @@ unset($obj["a"]):
 
 count($obj):
 
-dump($obj):
+T::dump($obj):
 
 object(TestArrayObject) (6) {
 	"0" => int(1)

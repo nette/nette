@@ -16,7 +16,7 @@ use Nette\ComponentContainer,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -65,7 +65,7 @@ $form->setDefaults(array(
 	'age' => '50',
 ));
 
-dump( $form->getValues() );
+T::dump( $form->getValues() );
 
 
 

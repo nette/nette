@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -24,28 +24,28 @@ $value = '"Hello World"';
 $cache = new Cache(new Nette\Caching\DummyStorage, 'myspace');
 
 
-dump( isset($cache[$key]), "Is cached?" );
-dump( $cache[$key], "Cache content:" );
+T::dump( isset($cache[$key]), "Is cached?" );
+T::dump( $cache[$key], "Cache content:" );
 
-output("Writing cache...");
+T::note("Writing cache...");
 $cache[$key] = $value;
 $cache->release();
 
-dump( isset($cache[$key]), "Is cached?" );
-dump( $cache[$key] === $value, "Is cache ok?" );
+T::dump( isset($cache[$key]), "Is cached?" );
+T::dump( $cache[$key] === $value, "Is cache ok?" );
 
-output("Removing from cache using unset()...");
+T::note("Removing from cache using unset()...");
 unset($cache[$key]);
 $cache->release();
 
-dump( isset($cache[$key]), "Is cached?" );
+T::dump( isset($cache[$key]), "Is cached?" );
 
-output("Removing from cache using set NULL...");
+T::note("Removing from cache using set NULL...");
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();
 
-dump( isset($cache[$key]), "Is cached?" );
+T::dump( isset($cache[$key]), "Is cached?" );
 
 
 

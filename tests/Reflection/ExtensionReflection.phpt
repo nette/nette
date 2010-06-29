@@ -13,17 +13,17 @@ use Nette\Reflection\ExtensionReflection;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $ext = new ExtensionReflection("standard");
 $funcs = $ext->getFunctions();
-dump( $funcs['sleep'] );
+T::dump( $funcs['sleep'] );
 
 
 $ext = new ExtensionReflection('reflection');
-dump( $ext->getClasses() );
+T::dump( $ext->getClasses() );
 
 
 

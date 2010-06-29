@@ -13,7 +13,7 @@ use Nette\Templates\BaseTemplate;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 

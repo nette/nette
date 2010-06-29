@@ -10,6 +10,7 @@
  * @package    Nette\Test
  */
 
+require __DIR__ . '/TestCase.php';
 
 
 /**
@@ -18,7 +19,7 @@
  * @author     David Grudl
  * @package    Nette\Test
  */
-final class NetteTestHelpers
+class TestHelpers
 {
 	/** @var int */
 	static public $maxDepth = 5;
@@ -89,7 +90,7 @@ final class NetteTestHelpers
 	public static function getSection($file, $section)
 	{
 		if (!isset(self::$sections[$file])) {
-			self::$sections[$file] = NetteTestCase::parseSections($file);
+			self::$sections[$file] = TestCase::parseSections($file);
 		}
 
 		$lowerSection = strtolower($section);
@@ -98,7 +99,7 @@ final class NetteTestHelpers
 		}
 
 		if (in_array($section, array('GET', 'POST', 'SERVER'), TRUE)) {
-			return NetteTestCase::parseLines(self::$sections[$file][$lowerSection], '=');
+			return TestCase::parseLines(self::$sections[$file][$lowerSection], '=');
 		} else {
 			return self::$sections[$file][$lowerSection];
 		}
@@ -107,12 +108,37 @@ final class NetteTestHelpers
 
 
 	/**
+	 * Writes new message.
+	 * @param  string
+	 * @return void
+	 */
+	public static function note($message = NULL)
+	{
+		echo $message ? "$message\n\n" : "===\n\n";
+	}
+
+
+
+	/**
 	 * Dumps information about a variable in readable format.
 	 * @param  mixed  variable to dump
-	 * @return void
-	 * @internal
+	 * @param  string
+	 * @return mixed  variable itself or dump
 	 */
-	public static function dump(& $var, $level = 0)
+	public static function dump($var, $message = NULL)
+	{
+		if ($message) {
+			echo $message . (preg_match('#[.:?]$#', $message) ? ' ' : ': ');
+		}
+
+		self::_dump($var, 0);
+		echo "\n";
+		return $var;
+	}
+
+
+
+	private static function _dump(& $var, $level = 0)
 	{
 		static $tableUtf, $tableBin, $re = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
 		if ($tableUtf === NULL) {
@@ -158,7 +184,7 @@ final class NetteTestHelpers
 					if ($k === $marker) continue;
 					$k = is_int($k) ? $k : '"' . strtr($k, preg_match($re, $k) || preg_last_error() ? $tableBin : $tableUtf) . '"';
 					echo "$space\t$k => ";
-					self::dump($v, $level + 1);
+					self::_dump($v, $level + 1);
 				}
 				unset($var[$marker]);
 				echo "$space}";
@@ -194,7 +220,7 @@ final class NetteTestHelpers
 					}
 					$k = strtr($k, preg_match($re, $k) || preg_last_error() ? $tableBin : $tableUtf);
 					echo "$space\t\"$k\"$m => ";
-					echo self::dump($v, $level + 1);
+					echo self::_dump($v, $level + 1);
 				}
 				array_pop($list);
 				echo "$space}";

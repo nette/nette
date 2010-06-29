@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -21,17 +21,17 @@ require __DIR__ . '/Collections.inc';
 
 $set = new Set(NULL, ':numeric');
 
-output("Adding numeric");
+T::note("Adding numeric");
 $set->append('10.3');
 
-output("Adding numeric");
+T::note("Adding numeric");
 $set->append(12.2);
 
 try {
-	output("Adding non-numeric");
+	T::note("Adding non-numeric");
 	$set->append('hello');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

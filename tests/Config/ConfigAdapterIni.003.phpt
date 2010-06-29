@@ -13,29 +13,29 @@ use Nette\Config\Config;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-output("Load INI");
+T::note("Load INI");
 $config = Config::fromFile('config2.ini');
-dump( $config );
+T::dump( $config );
 
-output("Save INI");
+T::note("Save INI");
 $config->save('tmp/cfg.ini');
 readfile('tmp/cfg.ini');
 
 
-output("Save section to INI");
+T::note("Save section to INI");
 $config->save('tmp/cfg.ini', 'mysection');
 readfile('tmp/cfg.ini');
 
 
-output("Load section from INI");
+T::note("Load section from INI");
 $config = Config::fromFile('config2.ini', 'development', NULL);
-dump( $config );
+T::dump( $config );
 
-output("Save INI");
+T::note("Save INI");
 $config->display_errors = true;
 $config->html_errors = false;
 $config->save('tmp/cfg.ini', 'mysection');

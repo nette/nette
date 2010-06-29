@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,28 +26,28 @@ $arr = array(
 );
 
 try {
-	output("Construct from array");
+	T::note("Construct from array");
 	$set = new Set($arr, 'Person');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Construct from array II.");
+T::note("Construct from array II.");
 $set = new Set($arr);
-dump( $set );
+T::dump( $set );
 
 
 try {
-	output("Construct from collection");
+	T::note("Construct from collection");
 	$set2 = new Set($set, 'Person');
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Construct from collection II.");
+T::note("Construct from collection II.");
 $set2 = new Set($set);
-dump( $set2 );
+T::dump( $set2 );
 
 
 

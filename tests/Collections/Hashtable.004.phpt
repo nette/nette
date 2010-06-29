@@ -13,7 +13,7 @@ use Nette\Collections\Hashtable;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -23,24 +23,24 @@ $hashtable = new Hashtable(NULL, 'Person');
 $hashtable['jack'] = $jack = new Person('Jack');
 $hashtable['mary'] = new Person('Mary');
 
-dump( $hashtable->remove($jack), "Removing Jack" );
+T::dump( $hashtable->remove($jack), "Removing Jack" );
 
-dump( $hashtable->remove($jack), "Removing Jack second time" );
+T::dump( $hashtable->remove($jack), "Removing Jack second time" );
 
 
 try {
-	output("Removing using unset(['unknown'])");
+	T::note("Removing using unset(['unknown'])");
 	unset($hashtable['unknown']);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output("Removing using unset(->unknown)");
+	T::note("Removing using unset(->unknown)");
 	unset($hashtable->unknown);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

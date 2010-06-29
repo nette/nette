@@ -15,7 +15,7 @@ use Nette\Environment,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -97,126 +97,126 @@ class TestPresenter extends Nette\Application\Presenter
 
 
 
-		output("==> Presenter & action link");
+		T::note("==> Presenter & action link");
 
 		$uri = $this->link('product', array('var1' => $this->var1));
-		dump( "1.1 $uri" );
+		T::dump( "1.1 $uri" );
 
 		$uri = $this->link('product', array('var1' => $this->var1 * 2, 'ok' => TRUE));
-		dump( "1.2 $uri" );
+		T::dump( "1.2 $uri" );
 
 		$uri = $this->link('product', array('var1' => TRUE, 'ok' => '0'));
-		dump( "1.3 $uri" );
+		T::dump( "1.3 $uri" );
 
 		$uri = $this->link('product', array('var1' => NULL, 'ok' => 'a'));
-		dump( "1.4 $uri" );
+		T::dump( "1.4 $uri" );
 
 		$uri = $this->link('product', array('var1' => array(1), 'ok' => FALSE));
-		dump( "1.5 $uri" );
+		T::dump( "1.5 $uri" );
 
 		$uri = $this->link('product', 1, 2);
-		dump( "1.6 $uri" );
+		T::dump( "1.6 $uri" );
 
 		$uri = $this->link('product', array('x' => 1, 'y' => 2));
-		dump( "1.7 $uri" );
+		T::dump( "1.7 $uri" );
 
 		$uri = $this->link('product');
-		dump( "1.8 $uri" );
+		T::dump( "1.8 $uri" );
 
 		$uri = $this->link('');
-		dump( "1.9 $uri" );
+		T::dump( "1.9 $uri" );
 
 		$uri = $this->link('product?x=1&y=2');
-		dump( "1.10 $uri" );
+		T::dump( "1.10 $uri" );
 
 		$uri = $this->link('product?x=1&y=2#fragment');
-		dump( "1.11 $uri" );
+		T::dump( "1.11 $uri" );
 
 		$uri = $this->link('//product?x=1&y=2#fragment');
-		dump( "1.12 $uri" );
+		T::dump( "1.12 $uri" );
 
 
 
-		output("==> Presenter & signal link");
+		T::note("==> Presenter & signal link");
 
 		$uri = $this->link('buy!', array('var1' => $this->var1));
-		dump( "2.1 $uri" );
+		T::dump( "2.1 $uri" );
 
 		$uri = $this->link('buy!', array('var1' => $this->var1 * 2));
-		dump( "2.2 $uri" );
+		T::dump( "2.2 $uri" );
 
 		$uri = $this->link('buy!', 1, 2);
-		dump( "2.3 $uri" );
+		T::dump( "2.3 $uri" );
 
 		$uri = $this->link('buy!', '1', '2');
-		dump( "2.4 $uri" );
+		T::dump( "2.4 $uri" );
 
 		$uri = $this->link('buy!', '1a', NULL);
-		dump( "2.5 $uri" );
+		T::dump( "2.5 $uri" );
 
 		$uri = $this->link('buy!', TRUE, FALSE);
-		dump( "2.6 $uri" );
+		T::dump( "2.6 $uri" );
 
 		$uri = $this->link('buy!', array(1), (object) array(1));
-		dump( "2.7 $uri" );
+		T::dump( "2.7 $uri" );
 
 		$uri = $this->link('buy!', array(1, 'y' => 2));
-		dump( "2.8 $uri" );
+		T::dump( "2.8 $uri" );
 
 		$uri = $this->link('buy!', array('x' => 1, 'y' => 2, 'var1' => $this->var1));
-		dump( "2.9 $uri" );
+		T::dump( "2.9 $uri" );
 
 		$uri = $this->link('!');
-		dump( "2.10 $uri" );
+		T::dump( "2.10 $uri" );
 
 		$uri = $this->link('this', array('var1' => $this->var1));
-		dump( "2.11 $uri" );
+		T::dump( "2.11 $uri" );
 
 		$uri = $this->link('this!', array('var1' => $this->var1));
-		dump( "2.12 $uri" );
+		T::dump( "2.12 $uri" );
 
 
 
-		output("==> Component link");
+		T::note("==> Component link");
 
 		$uri = $this->mycontrol->link('', 0, 1);
-		dump( "3.1 $uri" );
+		T::dump( "3.1 $uri" );
 
 		$uri = $this->mycontrol->link('click', 0, 1);
-		dump( "3.2 $uri" );
+		T::dump( "3.2 $uri" );
 
 		$uri = $this->mycontrol->link('click', '0a', '1a');
-		dump( "3.3 $uri" );
+		T::dump( "3.3 $uri" );
 
 		$uri = $this->mycontrol->link('click', array(1), (object) array(1));
-		dump( "3.4 $uri" );
+		T::dump( "3.4 $uri" );
 
 		$uri = $this->mycontrol->link('click', TRUE, FALSE);
-		dump( "3.5 $uri" );
+		T::dump( "3.5 $uri" );
 
 		$uri = $this->mycontrol->link('click', NULL, '');
-		dump( "3.6 $uri" );
+		T::dump( "3.6 $uri" );
 
 		$uri = $this->mycontrol->link('click', 1, 2, 3);
-		dump( "3.7 $uri" );
+		T::dump( "3.7 $uri" );
 
 		$uri = $this->mycontrol->link('click!', array('x' => 1, 'y' => 2, 'round' => 0));
-		dump( "3.8 $uri" );
+		T::dump( "3.8 $uri" );
 
 		$uri = $this->mycontrol->link('click', array('x' => 1, 'round' => 1));
-		dump( "3.9 $uri" );
+		T::dump( "3.9 $uri" );
 
 		$uri = $this->mycontrol->link('this', array('x' => 1, 'round' => 1));
-		dump( "3.10 $uri" );
+		T::dump( "3.10 $uri" );
 
 		$uri = $this->mycontrol->link('this?x=1&round=1');
-		dump( "3.11 $uri" );
+		T::dump( "3.11 $uri" );
 
 		$uri = $this->mycontrol->link('this?x=1&round=1#frag');
-		dump( "3.12 $uri" );
+		T::dump( "3.12 $uri" );
 
 		$uri = $this->mycontrol->link('//this?x=1&round=1#frag');
-		dump( "3.13 $uri" );
+		T::dump( "3.13 $uri" );
 	}
 
 

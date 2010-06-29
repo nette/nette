@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,13 +22,13 @@ $acl->addRole('parent1');
 $acl->addRole('parent2');
 $acl->addRole('child', array('parent1', 'parent2'));
 
-dump( $acl->getRoleParents('child') );
+T::dump( $acl->getRoleParents('child') );
 
 Assert::true( $acl->roleInheritsFrom('child', 'parent1') );
 Assert::true( $acl->roleInheritsFrom('child', 'parent2') );
 
 $acl->removeRole('parent1');
-dump( $acl->getRoleParents('child') );
+T::dump( $acl->getRoleParents('child') );
 Assert::true( $acl->roleInheritsFrom('child', 'parent2') );
 
 

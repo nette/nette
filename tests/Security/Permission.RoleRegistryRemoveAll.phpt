@@ -13,14 +13,14 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $acl = new Permission;
 $acl->addRole('guest');
 $acl->removeAllRoles();
-dump( $acl->hasRole('guest') );
+T::dump( $acl->hasRole('guest') );
 
 
 

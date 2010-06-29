@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -25,16 +25,16 @@ $list[] = new Person('Mary');
 
 $larry = new Person('Larry');
 
-dump( $list->insertAt(0, $larry) );
-dump( (array) $list);
+T::dump( $list->insertAt(0, $larry) );
+T::dump( (array) $list);
 
-dump( $list->insertAt(3, $larry) );
-dump( (array) $list);
+T::dump( $list->insertAt(3, $larry) );
+T::dump( (array) $list);
 
 try {
-	dump( $list->insertAt(6, $larry) );
+	T::dump( $list->insertAt(6, $larry) );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

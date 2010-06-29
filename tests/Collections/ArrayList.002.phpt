@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -24,36 +24,36 @@ $jack = new Person('Jack');
 $list[] = new Person('Mary');
 $list[] = new Person('Larry');
 
-dump( $list->isFrozen() );
+T::dump( $list->isFrozen() );
 $list->freeze();
-dump( $list->isFrozen() );
+T::dump( $list->isFrozen() );
 
 try {
-	output("Adding Jack using []");
+	T::note("Adding Jack using []");
 	$list[] = $jack;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Jack using insertAt");
+	T::note("Adding Jack using insertAt");
 	$list->insertAt(0, $jack);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Removing using unset");
+	T::note("Removing using unset");
 	unset($list[1]);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Changing using []");
+	T::note("Changing using []");
 	$list[1] = $jack;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

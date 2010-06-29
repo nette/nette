@@ -13,7 +13,7 @@ use Nette\ComponentContainer;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,12 +21,12 @@ class TestClass extends ComponentContainer implements ArrayAccess
 {
 	protected function attached($obj)
 	{
-		output(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		T::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	protected function detached($obj)
 	{
-		output(get_class($this) . '::detached(' . get_class($obj) . ')');
+		T::note(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	final public function offsetSet($name, $component)
@@ -80,22 +80,22 @@ $a['b']->monitor('a');
 $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
-dump( $a['b']['c']['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
+T::dump( $a['b']['c']['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
 
-output("==> clone 'c'");
+T::note("==> clone 'c'");
 $dolly = clone $a['b']['c'];
 
-dump( $dolly['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
+T::dump( $dolly['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
 
-dump( $dolly['d']['e']->lookupPath('C', FALSE), "'e' looking 'c'" );
+T::dump( $dolly['d']['e']->lookupPath('C', FALSE), "'e' looking 'c'" );
 
-output("==> clone 'b'");
+T::note("==> clone 'b'");
 $dolly = clone $a['b'];
 
-output("==> a['dolly'] = 'b'");
+T::note("==> a['dolly'] = 'b'");
 $a['dolly'] = $dolly;
 
-dump( $a->export(), "export 'a'" );
+T::dump( $a->export(), "export 'a'" );
 
 
 

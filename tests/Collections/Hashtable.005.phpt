@@ -13,7 +13,7 @@ use Nette\Collections\Hashtable;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,15 +26,15 @@ $arr = array(
 );
 
 try {
-	output("Construct from array");
+	T::note("Construct from array");
 	$hashtable = new Hashtable($arr, 'Person');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Construct from array II.");
+T::note("Construct from array II.");
 $hashtable = new Hashtable($arr);
-dump( $hashtable );
+T::dump( $hashtable );
 
 
 

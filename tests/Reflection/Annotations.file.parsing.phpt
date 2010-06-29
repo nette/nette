@@ -14,7 +14,7 @@ use Nette\Reflection\AnnotationsParser,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/files/annotations.php';
 
@@ -22,41 +22,41 @@ require __DIR__ . '/files/annotations.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
 
 AnnotationsParser::$useReflection = FALSE;
 
 
-output('AnnotatedClass1');
+T::note('AnnotatedClass1');
 
 $rc = new ReflectionClass('Nette\AnnotatedClass1');
-dump( AnnotationsParser::getAll($rc) );
-dump( AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
-dump( AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
-dump( AnnotationsParser::getAll($rc->getProperty('c')), '$c' );
-dump( AnnotationsParser::getAll($rc->getProperty('d')), '$d' );
-dump( AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
-dump( AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
-//dump( AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
-dump( AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );
-dump( AnnotationsParser::getAll($rc->getMethod('b')), 'b()' );
-dump( AnnotationsParser::getAll($rc->getMethod('c')), 'c()' );
-dump( AnnotationsParser::getAll($rc->getMethod('d')), 'd()' );
-dump( AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
-dump( AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
-dump( AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
+T::dump( AnnotationsParser::getAll($rc) );
+T::dump( AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
+T::dump( AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
+T::dump( AnnotationsParser::getAll($rc->getProperty('c')), '$c' );
+T::dump( AnnotationsParser::getAll($rc->getProperty('d')), '$d' );
+T::dump( AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
+T::dump( AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
+//T::dump( AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
+T::dump( AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('b')), 'b()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('c')), 'c()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('d')), 'd()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
+T::dump( AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
 
-output('AnnotatedClass2');
+T::note('AnnotatedClass2');
 
 $rc = new ReflectionClass('Nette\AnnotatedClass2');
-dump( AnnotationsParser::getAll($rc) );
+T::dump( AnnotationsParser::getAll($rc) );
 
-output('AnnotatedClass3');
+T::note('AnnotatedClass3');
 
 $rc = new ReflectionClass('Nette\AnnotatedClass3');
-dump( AnnotationsParser::getAll($rc) );
+T::dump( AnnotationsParser::getAll($rc) );
 
 
 

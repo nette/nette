@@ -13,27 +13,27 @@ use Nette\Config\Config;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $config = Config::fromFile('config1.ini', 'development', NULL);
 
 try {
-	output("check read-only config:");
+	T::note("check read-only config:");
 	$config->freeze();
 	$config->database->adapter = 'new value';
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("check read-only clone:");
+	T::note("check read-only clone:");
 	$dolly = clone $config;
 	$dolly->database->adapter = 'works good';
 	unset($dolly);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,38 +26,38 @@ $foo = new ArrayObject();
 
 
 
-dump( $list->contains($jack), "Contains Jack?" );
+T::dump( $list->contains($jack), "Contains Jack?" );
 
-dump( $list->indexOf($jack), "indexOf Jack:" );
+T::dump( $list->indexOf($jack), "indexOf Jack:" );
 
-dump( $list->contains($mary), "Contains Mary?" );
+T::dump( $list->contains($mary), "Contains Mary?" );
 
-dump( $list->indexOf($mary), "indexOf Mary:" );
+T::dump( $list->indexOf($mary), "indexOf Mary:" );
 
-dump( $list->contains($foo), "Contains foo?" );
+T::dump( $list->contains($foo), "Contains foo?" );
 
-dump( $list->indexOf($foo), "indexOf foo?" );
+T::dump( $list->indexOf($foo), "indexOf foo?" );
 
 
 
-dump( isset($list[-1]), "Contains index -1?" );
+T::dump( isset($list[-1]), "Contains index -1?" );
 
-dump( isset($list[0]), "Contains index 0?" );
+T::dump( isset($list[0]), "Contains index 0?" );
 
-dump( isset($list[5]), "Contains index 5?" );
+T::dump( isset($list[5]), "Contains index 5?" );
 
 
 
 try {
-	dump( $list[-1], "Getting index -1" );
+	T::dump( $list[-1], "Getting index -1" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	dump( $list[0], "Getting index 0" );
+	T::dump( $list[0], "Getting index 0" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

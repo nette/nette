@@ -13,7 +13,7 @@ use Nette\Web\Session;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -33,7 +33,7 @@ sleep(3);
 $session->start();
 
 $namespace = $session->getNamespace('expire');
-dump( http_build_query($namespace->getIterator()) );
+T::dump( http_build_query($namespace->getIterator()) );
 
 // try to expire only 1 of the keys
 $namespace = $session->getNamespace('expireSingle');
@@ -46,7 +46,7 @@ sleep(3);
 $session->start();
 
 $namespace = $session->getNamespace('expireSingle');
-dump( http_build_query($namespace->getIterator()) );
+T::dump( http_build_query($namespace->getIterator()) );
 
 
 

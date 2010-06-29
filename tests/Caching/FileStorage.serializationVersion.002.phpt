@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -35,9 +35,9 @@ class Foo
 }
 
 
-output('Changed @serializationVersion');
+T::note('Changed @serializationVersion');
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

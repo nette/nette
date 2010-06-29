@@ -13,7 +13,7 @@ use Nette\Templates\Template;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Template.inc';
 
@@ -35,7 +35,7 @@ $template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'netteLinks'));
 $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->control = new MockPresenterComponent;
-$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
+$template->render(T::getSection(__FILE__, 'template'));
 
 
 

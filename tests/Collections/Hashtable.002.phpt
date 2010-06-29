@@ -13,7 +13,7 @@ use Nette\Collections\Hashtable;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -23,36 +23,36 @@ $hashtable = new Hashtable(NULL, 'Person');
 $hashtable['jack'] = $jack = new Person('Jack');
 $hashtable['mary'] = new Person('Mary');
 
-dump( $hashtable->isFrozen() );
+T::dump( $hashtable->isFrozen() );
 $hashtable->freeze();
-dump( $hashtable->isFrozen() );
+T::dump( $hashtable->isFrozen() );
 
 try {
-	output("Adding Jack using []");
+	T::note("Adding Jack using []");
 	$hashtable['new'] = $jack;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Jack using add");
+	T::note("Adding Jack using add");
 	$hashtable->add('new', $jack);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Removing using unset");
+	T::note("Removing using unset");
 	unset($hashtable['jack']);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Changing using []");
+	T::note("Changing using []");
 	$hashtable['jack'] = $jack;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

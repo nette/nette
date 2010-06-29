@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,13 +22,13 @@ $acl->addResource('area');
 try {
 	$acl->resourceInheritsFrom('nonexistent', 'area');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
 	$acl->resourceInheritsFrom('area', 'nonexistent');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

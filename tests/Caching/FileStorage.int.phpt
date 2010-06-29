@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -23,34 +23,34 @@ $value = range("\x00", "\xFF");
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
-dump( isset($cache[$key]), 'Is cached?' );
-dump( $cache[$key], 'Cache content' );
+T::dump( isset($cache[$key]), 'Is cached?' );
+T::dump( $cache[$key], 'Cache content' );
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache[$key] = $value;
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
-dump( $cache[$key] === $value, 'Is cache ok?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
+T::dump( $cache[$key] === $value, 'Is cache ok?' );
 
-output('Removing from cache using unset()...');
+T::note('Removing from cache using unset()...');
 unset($cache[$key]);
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Removing from cache using set NULL...');
+T::note('Removing from cache using set NULL...');
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

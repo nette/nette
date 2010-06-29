@@ -13,7 +13,7 @@ use Nette\Templates\Template;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Template.inc';
 
@@ -21,7 +21,7 @@ require __DIR__ . '/Template.inc';
 
 $template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'removePhp'));
-$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
+$template->render(T::getSection(__FILE__, 'template'));
 
 
 

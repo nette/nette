@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -27,43 +27,43 @@ $larry = new Person('Larry');
 $foo = new ArrayObject();
 
 
-dump( $set->append($jack), "Adding Jack" );
+T::dump( $set->append($jack), "Adding Jack" );
 
-dump( $set->append($mary), "Adding Mary" );
+T::dump( $set->append($mary), "Adding Mary" );
 
-dump( $set->append($mary), "Adding Mary second time" );
+T::dump( $set->append($mary), "Adding Mary second time" );
 
-dump( $set->append($larry), "Adding Larry" );
+T::dump( $set->append($larry), "Adding Larry" );
 
 try {
-	dump( $set->append($foo), "Adding foo" );
+	T::dump( $set->append($foo), "Adding foo" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 
-dump( $set->count(), 'count:' );
-dump( count($set) );
+T::dump( $set->count(), 'count:' );
+T::dump( count($set) );
 
 
-dump( $set );
+T::dump( $set );
 
-dump( (array) $set );
+T::dump( (array) $set );
 
 
 
-output("Get Interator:");
+T::note("Get Interator:");
 foreach ($set as $person) {
 	echo $person->sayHi();
 }
 
 
 
-output("Clearing");
+T::note("Clearing");
 $set->clear();
 
-dump( $set );
+T::dump( $set );
 
 
 

@@ -14,12 +14,12 @@ use Nette\Caching\Cache,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 if (!MemcachedStorage::isAvailable()) {
-	NetteTestHelpers::skip('Requires PHP extension Memcache.');
+	T::skip('Requires PHP extension Memcache.');
 }
 
 
@@ -30,17 +30,17 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 ));
 
 
 for($i = 0; $i < 4; $i++) {
-	output('Sleeping 1.2 second');
+	T::note('Sleeping 1.2 second');
 	usleep(1200000);
 	$cache->release();
-	dump( isset($cache[$key]), 'Is cached?' );
+	T::dump( isset($cache[$key]), 'Is cached?' );
 }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestCase::compare() mask
+ * Test: TestCase::compare() mask
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 

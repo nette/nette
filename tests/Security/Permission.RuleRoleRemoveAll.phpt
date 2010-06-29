@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -25,7 +25,7 @@ $acl->removeAllRoles();
 try {
 	$acl->isAllowed('guest');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 $acl->addRole('guest');

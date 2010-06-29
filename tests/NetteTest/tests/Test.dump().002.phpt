@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestHelpers::dump() extra characters
+ * Test: TestHelpers::dump() extra characters
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 
@@ -22,11 +22,11 @@ $arr["\x01\xF5"] = "\x01\xF5";
 $arr['bin'] = implode('', range("\x00", "\xFF"));
 
 
-dump( $arr );
+TestHelpers::dump( $arr );
 
-dump( (object) $arr );
+TestHelpers::dump( (object) $arr );
 
-dump( "a\r\n\tb" );
+TestHelpers::dump( "a\r\n\tb" );
 
 
 

@@ -13,12 +13,12 @@ use Nette\Config\Config;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 if (PHP_VERSION < '5.3') {
-	NetteTestHelpers::skip('ArrayObject serialization is flawed in PHP 5.2.');
+	T::skip('ArrayObject serialization is flawed in PHP 5.2.');
 }
 
 
@@ -27,11 +27,11 @@ $config = Config::fromFile('config1.ini', 'development', NULL);
 $config->freeze();
 
 try {
-	output("check read-only:");
+	T::note("check read-only:");
 	$dolly = unserialize(serialize($config));
 	$dolly->database->adapter = 'works good';
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

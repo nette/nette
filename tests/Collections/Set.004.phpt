@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -28,7 +28,7 @@ foreach ($set as & $person) {
 	$person = 10;
 }
 
-dump( $set );
+T::dump( $set );
 
 
 

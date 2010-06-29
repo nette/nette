@@ -13,7 +13,7 @@ use Nette\ComponentContainer;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,12 +21,12 @@ class TestClass extends ComponentContainer implements ArrayAccess
 {
 	protected function attached($obj)
 	{
-		output(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		T::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	protected function detached($obj)
 	{
-		output(get_class($this) . '::detached(' . get_class($obj) . ')');
+		T::note(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	final public function offsetSet($name, $component)
@@ -65,19 +65,19 @@ $b['c'] = new C;
 $b['c']->monitor('a');
 $b['c']['d'] = $d;
 
-output("'a' becoming 'b' parent");
+T::note("'a' becoming 'b' parent");
 $a = new A;
 $a['b'] = $b;
 
-output("removing 'b' from 'a'");
+T::note("removing 'b' from 'a'");
 unset($a['b']);
 
-output("'a' becoming 'b' parent");
+T::note("'a' becoming 'b' parent");
 $a['b'] = $b;
 
-dump( $d['e']->lookupPath('A'), "'e' looking 'a'" );
+T::dump( $d['e']->lookupPath('A'), "'e' looking 'a'" );
 
-dump( $a['b-c'] === $b['c'], "checking 'a-b-c'" );
+T::dump( $a['b-c'] === $b['c'], "checking 'a-b-c'" );
 
 
 

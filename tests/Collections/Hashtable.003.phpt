@@ -13,7 +13,7 @@ use Nette\Collections\Hashtable;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,85 +26,85 @@ $foo = new ArrayObject();
 
 
 
-dump( $hashtable->contains($jack), "Contains Jack?" );
+T::dump( $hashtable->contains($jack), "Contains Jack?" );
 
-dump( $hashtable->contains($mary), "Contains Mary?" );
+T::dump( $hashtable->contains($mary), "Contains Mary?" );
 
 try {
-	dump( $hashtable->contains($foo), "Contains foo?" );
+	T::dump( $hashtable->contains($foo), "Contains foo?" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
-dump( isset($hashtable['jim']), "Contains ['jim']?" );
+T::dump( isset($hashtable['jim']), "Contains ['jim']?" );
 
-dump( isset($hashtable['jack']), "Contains ['jack']?" );
+T::dump( isset($hashtable['jack']), "Contains ['jack']?" );
 
-dump( isset($hashtable['mary']), "Contains ['mary']?" );
+T::dump( isset($hashtable['mary']), "Contains ['mary']?" );
 
 
 
-dump( isset($hashtable->jim), "Contains ->jim?" );
+T::dump( isset($hashtable->jim), "Contains ->jim?" );
 
-dump( isset($hashtable->jack), "Contains ->jack?" );
+T::dump( isset($hashtable->jack), "Contains ->jack?" );
 
-dump( isset($hashtable->mary), "Contains ->mary?" );
+T::dump( isset($hashtable->mary), "Contains ->mary?" );
 
 
 
 try {
-	dump( $hashtable['jim'], "Getting ['jim']" );
+	T::dump( $hashtable['jim'], "Getting ['jim']" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Getting ['jim'] with throwKeyNotFound");
+	T::note("Getting ['jim'] with throwKeyNotFound");
 	$hashtable->throwKeyNotFound();
-	dump( $hashtable['jim'] );
+	T::dump( $hashtable['jim'] );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	dump( $hashtable['mary'], "Getting ['mary']" );
+	T::dump( $hashtable['mary'], "Getting ['mary']" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	dump( $hashtable->jim, "Getting ->jim" );
+	T::dump( $hashtable->jim, "Getting ->jim" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	dump( $hashtable->mary, "Getting ->mary" );
+	T::dump( $hashtable->mary, "Getting ->mary" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 
 try {
-	dump( $hashtable->get('jim', 'default'), "Getting get('jim')" );
+	T::dump( $hashtable->get('jim', 'default'), "Getting get('jim')" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	dump( $hashtable->get('mary', 'default'), "Getting get('mary')" );
+	T::dump( $hashtable->get('mary', 'default'), "Getting get('mary')" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 
-dump( $hashtable->search($jack), "search Jack:" );
+T::dump( $hashtable->search($jack), "search Jack:" );
 
-dump( $hashtable->search($mary), "search Mary:" );
+T::dump( $hashtable->search($mary), "search Mary:" );
 
 
 

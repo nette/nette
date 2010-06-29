@@ -13,23 +13,23 @@ use Nette\Templates\TemplateHelpers;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-dump( TemplateHelpers::date(NULL), "TemplateHelpers::date(NULL)" );
+T::dump( TemplateHelpers::date(NULL), "TemplateHelpers::date(NULL)" );
 
-dump( TemplateHelpers::date(254400000), "TemplateHelpers::date(timestamp)" );
+T::dump( TemplateHelpers::date(254400000), "TemplateHelpers::date(timestamp)" );
 
-dump( TemplateHelpers::date('1978-05-05'), "TemplateHelpers::date(string)" );
+T::dump( TemplateHelpers::date('1978-05-05'), "TemplateHelpers::date(string)" );
 
-dump( TemplateHelpers::date(new DateTime('1978-05-05')), "TemplateHelpers::date(DateTime)" );
+T::dump( TemplateHelpers::date(new DateTime('1978-05-05')), "TemplateHelpers::date(DateTime)" );
 
-dump( TemplateHelpers::date(254400000, 'Y-m-d'), "TemplateHelpers::date(timestamp, format)" );
+T::dump( TemplateHelpers::date(254400000, 'Y-m-d'), "TemplateHelpers::date(timestamp, format)" );
 
-dump( TemplateHelpers::date('1212-09-26', 'Y-m-d'), "TemplateHelpers::date(string, format)" );
+T::dump( TemplateHelpers::date('1212-09-26', 'Y-m-d'), "TemplateHelpers::date(string, format)" );
 
-dump( TemplateHelpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpers::date(DateTime, format)" );
+T::dump( TemplateHelpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpers::date(DateTime, format)" );
 
 
 

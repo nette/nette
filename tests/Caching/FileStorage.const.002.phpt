@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -27,9 +27,9 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 
-output('Deleting dependent const');
+T::note('Deleting dependent const');
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

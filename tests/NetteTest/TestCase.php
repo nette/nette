@@ -18,7 +18,7 @@
  * @author     David Grudl
  * @package    Nette\Test
  */
-class NetteTestCase
+class TestCase
 {
 	/** @var string  test file */
 	private $file;
@@ -66,7 +66,7 @@ class NetteTestCase
 		$options = $this->sections['options'];
 		if (isset($options['skip'])) {
 			$message = $options['skip'] ? $options['skip'] : 'No message.';
-			throw new NetteTestCaseException($message, NetteTestCaseException::SKIPPED);
+			throw new TestCaseException($message, TestCaseException::SKIPPED);
 
 		} elseif (isset($options['phpversion'])) {
 			$operator = '>=';
@@ -75,7 +75,7 @@ class NetteTestCase
 				$operator = $matches[1];
 			}
 			if (version_compare($options['phpversion'], $this->phpVersion, $operator)) {
-				throw new NetteTestCaseException("Requires PHP $operator $options[phpversion].", NetteTestCaseException::SKIPPED);
+				throw new TestCaseException("Requires PHP $operator $options[phpversion].", TestCaseException::SKIPPED);
 			}
 		}
 
@@ -86,7 +86,7 @@ class NetteTestCase
 
 		// post-skip?
 		if (isset($headers['x-nette-test-skip'])) {
-			throw new NetteTestCaseException($headers['x-nette-test-skip'], NetteTestCaseException::SKIPPED);
+			throw new TestCaseException($headers['x-nette-test-skip'], TestCaseException::SKIPPED);
 		}
 
 		// compare output
@@ -96,14 +96,14 @@ class NetteTestCase
 			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $output);
 			if ($binary) {
 				if ($expectedOutput !== $output) {
-					throw new NetteTestCaseException("Binary output doesn't match.");
+					throw new TestCaseException("Binary output doesn't match.");
 				}
 			} else {
 				$trim = isset($this->sections['expect']);
 				$output = self::normalize($output, $trim);
 				$expectedOutput = self::normalize($expectedOutput, $trim);
 				if (!$this->compare($output, $expectedOutput)) {
-					throw new NetteTestCaseException("Output doesn't match.");
+					throw new TestCaseException("Output doesn't match.");
 				}
 			}
 		}
@@ -116,17 +116,17 @@ class NetteTestCase
 			$expectedHeaders = array_change_key_case(self::parseLines($expectedHeaders, ':'), CASE_LOWER);
 			foreach ($expectedHeaders as $name => $header) {
 				if (!isset($headers[$name])) {
-					throw new NetteTestCaseException("Missing header '$name'.");
+					throw new TestCaseException("Missing header '$name'.");
 
 				} elseif (!$this->compare($headers[$name], $header)) {
-					throw new NetteTestCaseException("Header '$name' doesn't match.");
+					throw new TestCaseException("Header '$name' doesn't match.");
 				}
 			}
 		}
 
 		if (!$tests) { // expecting no output
 			if (trim($output) !== '') {
-				throw new NetteTestCaseException("Empty output doesn't match.");
+				throw new TestCaseException("Empty output doesn't match.");
 			}
 		}
 	}
@@ -138,7 +138,7 @@ class NetteTestCase
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return NetteTestCase  provides a fluent interface
+	 * @return TestCase  provides a fluent interface
 	 */
 	public function setPhp($binary, $args, $environment)
 	{
@@ -396,7 +396,7 @@ class NetteTestCase
  * @author     David Grudl
  * @package    Nette\Test
  */
-class NetteTestCaseException extends Exception
+class TestCaseException extends Exception
 {
 	const SKIPPED = 1;
 

@@ -13,7 +13,7 @@ use Nette\Forms\Form;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -26,7 +26,7 @@ echo $form;
 
 $form->validate();
 
-dump( $form->getErrors() );
+T::dump( $form->getErrors() );
 
 
 

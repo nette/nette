@@ -14,7 +14,7 @@ use Nette\IO\SafeStream;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -71,7 +71,7 @@ for ($counter=0; $counter<1000; $counter++) {
 $time = Nette\Debug::timer();
 
 
-dump( $hits );
+T::dump( $hits );
 
 // expected results are:
 //    [ok] => 1000       // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000

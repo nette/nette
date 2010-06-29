@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -25,14 +25,14 @@ $set->append(new Person('Mary'));
 $larry = new Person('Larry');
 $foo = new ArrayObject;
 
-dump( $set->contains($jack), "Contains Jack?" );
+T::dump( $set->contains($jack), "Contains Jack?" );
 
-dump( $set->contains($larry), "Contains Larry?" );
+T::dump( $set->contains($larry), "Contains Larry?" );
 
 try {
-	dump( $set->contains($foo), "Contains foo?" );
+	T::dump( $set->contains($foo), "Contains foo?" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

@@ -13,7 +13,7 @@ use Nette\Collections\Set;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -24,28 +24,28 @@ $set->append($jack = new Person('Jack'));
 $set->append(new Person('Mary'));
 $set->append(new Person('Larry'));
 
-dump( $set->isFrozen() );
+T::dump( $set->isFrozen() );
 $set->freeze();
-dump( $set->isFrozen() );
+T::dump( $set->isFrozen() );
 
 try {
-	dump( $set->append($jack), "Adding Jack" );
+	T::dump( $set->append($jack), "Adding Jack" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Removing Jack");
+	T::note("Removing Jack");
 	$set->remove($jack);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Clearing");
+	T::note("Clearing");
 	$set->clear();
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

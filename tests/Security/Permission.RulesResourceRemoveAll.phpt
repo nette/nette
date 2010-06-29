@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -25,7 +25,7 @@ $acl->removeAllResources();
 try {
 	$acl->isAllowed(NULL, 'area');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 $acl->addResource('area');

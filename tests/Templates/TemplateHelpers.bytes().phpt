@@ -13,15 +13,15 @@ use Nette\Templates\TemplateHelpers;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-dump( TemplateHelpers::bytes(0.1), "TemplateHelpers::bytes(0.1)" );
+T::dump( TemplateHelpers::bytes(0.1), "TemplateHelpers::bytes(0.1)" );
 
-dump( TemplateHelpers::bytes(-1024 * 1024 * 1050), "TemplateHelpers::bytes(-1024 * 1024 * 1050)" );
+T::dump( TemplateHelpers::bytes(-1024 * 1024 * 1050), "TemplateHelpers::bytes(-1024 * 1024 * 1050)" );
 
-dump( TemplateHelpers::bytes(1e19), "TemplateHelpers::bytes(1e19)" );
+T::dump( TemplateHelpers::bytes(1e19), "TemplateHelpers::bytes(1e19)" );
 
 
 

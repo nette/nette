@@ -14,25 +14,25 @@ use Nette\Forms\TextBase,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $control = new TextInput();
 $control->value = '';
-dump( TextBase::validateEmail($control) );
+T::dump( TextBase::validateEmail($control) );
 
 $control->value = '@.';
-dump( TextBase::validateEmail($control) );
+T::dump( TextBase::validateEmail($control) );
 
 $control->value = 'name@a-b-c.cz';
-dump( TextBase::validateEmail($control) );
+T::dump( TextBase::validateEmail($control) );
 
 $control->value = "name@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@luouèkı.cz
-dump( TextBase::validateEmail($control) );
+T::dump( TextBase::validateEmail($control) );
 
 $control->value = "\xc5\xbename@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@luouèkı.cz
-dump( TextBase::validateEmail($control) );
+T::dump( TextBase::validateEmail($control) );
 
 
 

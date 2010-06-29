@@ -13,13 +13,13 @@ use Nette\ComponentContainer;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $container = new ComponentContainer;
 $container->addComponent(new ComponentContainer, 0);
-dump( $container->getComponent(0)->getName() );
+T::dump( $container->getComponent(0)->getName() );
 
 
 

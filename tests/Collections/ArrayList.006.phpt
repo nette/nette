@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,15 +26,15 @@ $arr = array(
 );
 
 try {
-	output("Construct from array");
+	T::note("Construct from array");
 	$list = new ArrayList($arr, 'Person');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Construct from array II.");
+T::note("Construct from array II.");
 $list = new ArrayList($arr);
-dump( $list );
+T::dump( $list );
 
 
 

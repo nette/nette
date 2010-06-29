@@ -13,14 +13,14 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $acl = new Permission;
 $acl->addResource('area');
 $acl->removeAllResources();
-dump( $acl->hasResource('area') );
+T::dump( $acl->hasResource('area') );
 
 
 

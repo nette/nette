@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -25,26 +25,26 @@ $list[] = new Person('Mary');
 $list[] = $larry = new Person('Larry');
 
 
-dump( $list->remove($larry), "Removing Larry" );
+T::dump( $list->remove($larry), "Removing Larry" );
 
-dump( $list->remove($larry), "Removing Larry second time" );
+T::dump( $list->remove($larry), "Removing Larry second time" );
 
 
 try {
-	output("unset -1");
+	T::note("unset -1");
 	unset($list[-1]);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("unset 1");
+	T::note("unset 1");
 	unset($list[1]);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-dump( $list );
+T::dump( $list );
 
 
 

@@ -13,7 +13,7 @@ use Nette\Web\Session;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -34,7 +34,7 @@ Assert::true( $namespace instanceof Nette\Web\SessionNamespace );
 try {
 	$namespace = $session->getNamespace('');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

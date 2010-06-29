@@ -13,7 +13,7 @@ use Nette\Mail\Mail;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Mail.inc';
 
@@ -23,19 +23,19 @@ $mail = new Mail();
 $mail->setSubject('Testovací ! <email> od žluťoučkého koně ...');
 $mail->send();
 
-output();
+T::note();
 
 $mail = new Mail();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail');
 $mail->send();
 
-output();
+T::note();
 
 $mail = new Mail();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemailšššššššššššššššš');
 $mail->send();
 
-output();
+T::note();
 
 $mail = new Mail();
 $mail->setSubject('==========================================================================================ššššššššššššššššš');

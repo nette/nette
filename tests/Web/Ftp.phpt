@@ -13,7 +13,7 @@ use Nette\Web\Ftp;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -30,7 +30,7 @@ $ftp->fget($temp, 'README', Ftp::ASCII);
 
 // echo file
 fseek($temp, 0);
-dump( stream_get_contents($temp) );
+T::dump( stream_get_contents($temp) );
 
 
 

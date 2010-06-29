@@ -13,7 +13,7 @@ use Nette\Application\SimpleRouter;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/SimpleRouter.inc';
 

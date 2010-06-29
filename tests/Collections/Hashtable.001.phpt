@@ -13,7 +13,7 @@ use Nette\Collections\Hashtable;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -26,84 +26,84 @@ $mary = new Person('Mary');
 $foo = new ArrayObject();
 
 
-output("Adding Jack");
+T::note("Adding Jack");
 $hashtable->add('jack', $jack);
 
 try {
-	output("Adding invalid key");
+	T::note("Adding invalid key");
 	$hashtable->add($foo, $foo);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding foo");
+	T::note("Adding foo");
 	$hashtable->add('foo', $foo);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Mary using []");
+	T::note("Adding Mary using []");
 	$hashtable[] = $mary;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Adding Mary using ['mary']");
+T::note("Adding Mary using ['mary']");
 $hashtable['mary'] = $mary;
 
 try {
-	output("Adding Mary twice using ['mary']");
+	T::note("Adding Mary twice using ['mary']");
 	$hashtable['mary'] = $mary;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Mary twice using add()");
+	T::note("Adding Mary twice using add()");
 	$hashtable->add('mary', $mary);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Mary twice using __set()");
+	T::note("Adding Mary twice using __set()");
 	$hashtable->mary = $mary;
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("Adding Jack using append");
+	T::note("Adding Jack using append");
 	$hashtable->append($jack);
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 
-dump( $hashtable->count(), 'count:' );
-dump( count($hashtable) );
+T::dump( $hashtable->count(), 'count:' );
+T::dump( count($hashtable) );
 
 
-dump( $hashtable );
-dump( (array) $hashtable );
-dump( $hashtable->getKeys(), "getKeys:" );
+T::dump( $hashtable );
+T::dump( (array) $hashtable );
+T::dump( $hashtable->getKeys(), "getKeys:" );
 
 
 
-output("Get Interator:");
+T::note("Get Interator:");
 foreach ($hashtable as $key => $person) {
 	echo $key, ' => ', $person->sayHi();
 }
 
 
 
-output("Clearing");
+T::note("Clearing");
 $hashtable->clear();
 
-dump( $hashtable );
+T::dump( $hashtable );
 
 
 

@@ -15,7 +15,7 @@ use Nette\Component,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -35,51 +35,51 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'
 
 
 
-output("==> Normal:");
+T::note("==> Normal:");
 foreach ($c->getComponents() as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> Filter:");
+T::note("==> Filter:");
 foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> RecursiveIteratorIterator:");
+T::note("==> RecursiveIteratorIterator:");
 foreach (new RecursiveIteratorIterator($c->getComponents(), 1) as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> Recursive:");
+T::note("==> Recursive:");
 foreach ($c->getComponents(TRUE) as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> Recursive CHILD_FIRST:");
+T::note("==> Recursive CHILD_FIRST:");
 foreach ($c->getComponents(-1) as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> Recursive & filter I:");
+T::note("==> Recursive & filter I:");
 foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 
 
-output("==> Recursive & filter II:");
+T::note("==> Recursive & filter II:");
 foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $component) {
-	output("$name [{$component->reflection->name}]");
+	T::note("$name [{$component->reflection->name}]");
 }
 
 

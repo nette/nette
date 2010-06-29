@@ -13,7 +13,7 @@ use Nette\Reflection\PropertyReflection;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -27,7 +27,7 @@ class B extends A
 }
 
 $propInfo = new PropertyReflection('B', 'prop');
-dump( $propInfo->getDeclaringClass() );
+T::dump( $propInfo->getDeclaringClass() );
 
 
 

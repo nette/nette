@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,25 +22,25 @@ $value = '<?php echo "Hello World" ?>';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 
 $cache = new Cache(new Nette\Templates\TemplateCacheStorage(TEMP_DIR));
 
 
-dump( isset($cache[$key]), 'Is cached?' );
-dump( $cache[$key], 'Cache content' );
-output('Writing cache...');
+T::dump( isset($cache[$key]), 'Is cached?' );
+T::dump( $cache[$key], 'Cache content' );
+T::note('Writing cache...');
 $cache[$key] = $value;
 
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
-dump( $cache[$key], 'Cache content' );
+T::dump( isset($cache[$key]), 'Is cached?' );
+T::dump( $cache[$key], 'Cache content' );
 $var = $cache[$key];
 
-output('Test include');
+T::note('Test include');
 
 // this is impossible
 // $cache[$key] = NULL;

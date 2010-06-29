@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -27,54 +27,54 @@ $foo = new ArrayObject();
 
 
 
-output("Adding Jack");
+T::note("Adding Jack");
 $list->append($jack);
 
-output("Adding Mary");
+T::note("Adding Mary");
 $list->append($mary);
 
 try {
-	output("Adding invalid item");
+	T::note("Adding invalid item");
 	$list->append($foo);
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-output("Adding Jack using []");
+T::note("Adding Jack using []");
 $list[] = $jack;
 
 try {
-	output("Adding invalid item using []");
+	T::note("Adding invalid item using []");
 	$list[] = $foo;
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 
-dump( $list->count(), 'count:' );
-dump( count($list) );
+T::dump( $list->count(), 'count:' );
+T::dump( count($list) );
 
 
-dump( $list );
+T::dump( $list );
 
-dump( (array) $list );
+T::dump( (array) $list );
 
 
 
-output("Get Interator:");
+T::note("Get Interator:");
 foreach ($list as $key => $person) {
 	echo $key, ' => ', $person->sayHi();
 }
 
 
 
-output("Clearing");
+T::note("Clearing");
 $list->clear();
 
-dump( $list );
+T::dump( $list );
 
 
 

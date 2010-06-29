@@ -13,7 +13,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Collections.inc';
 
@@ -33,14 +33,14 @@ $list[] = new Person('Jack');
 $list[] = new Person('Mary');
 $list[] = new Person('Larry');
 
-dump( $list->join(', ') );
+T::dump( $list->join(', ') );
 
 // undeclared method
 try {
 	$list->test();
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
