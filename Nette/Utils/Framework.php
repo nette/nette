@@ -16,14 +16,6 @@ use Nette;
 
 
 
-define('NETTE', TRUE);
-
-define('NETTE_VERSION_ID', 10000); // v1.0.0
-
-define('NETTE_PACKAGE', '5.3');
-
-
-
 /**
  * The Nette Framework.
  *

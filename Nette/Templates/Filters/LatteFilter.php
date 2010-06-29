@@ -255,7 +255,7 @@ class LatteFilter extends Nette\Object
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$tag = end($this->tags);
 			$isEmpty = !$tag->closing && (strpos($matches['end'], '/') !== FALSE || isset(Nette\Web\Html::$emptyElements[strtolower($tag->name)]));
-			
+
 			if ($isEmpty) {
 				$matches[0] = (Nette\Web\Html::$xhtml ? ' />' : '>') . (isset($matches['tagnewline']) ? $matches['tagnewline'] : '');
 			}
