@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -29,7 +29,7 @@ $cacheA['test2'] = 'Grudl';
 $cacheB['test1'] = 'divaD';
 $cacheB['test2'] = 'ldurG';
 
-dump(implode(' ',array(
+T::dump(implode(' ',array(
 	$cacheA['test1'],
 	$cacheA['test2'],
 	$cacheB['test1'],
@@ -38,10 +38,10 @@ dump(implode(' ',array(
 
 $storage->clean(array(Cache::ALL => TRUE));
 
-dump($cacheA['test1']);
-dump($cacheA['test2']);
-dump($cacheB['test1']);
-dump($cacheB['test2']);
+T::dump($cacheA['test1']);
+T::dump($cacheA['test2']);
+T::dump($cacheB['test1']);
+T::dump($cacheB['test2']);
 
 __halt_compiler() ?>
 

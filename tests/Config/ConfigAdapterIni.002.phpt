@@ -13,12 +13,12 @@ use Nette\Config\Config;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $config = Config::fromFile('config1.ini', 'development');
-dump( $config );
+T::dump( $config );
 
 
 

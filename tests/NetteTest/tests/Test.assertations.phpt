@@ -9,11 +9,11 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 
-output('OK');
+TestHelpers::note('OK');
 
 Assert::true( TRUE );
 
@@ -24,7 +24,7 @@ Assert::null( NULL );
 Assert::same( 1, 1 );
 
 
-output('FAILURE');
+TestHelpers::note('FAILURE');
 
 Assert::true( FALSE );
 

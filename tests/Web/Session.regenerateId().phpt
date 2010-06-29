@@ -13,7 +13,7 @@ use Nette\Web\Session;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,7 +22,7 @@ $session->start();
 $oldId = $session->getId();
 $session->regenerateId();
 $newId = $session->getId();
-dump( $newId != $oldId );
+T::dump( $newId != $oldId );
 
 
 

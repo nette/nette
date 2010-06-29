@@ -13,13 +13,13 @@ use Nette\Web\Uri;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $uri = new Uri('http://exampl%65.COM?text=foo%20bar+foo');
 $uri->canonicalize();
-dump( $uri->isEqual('http://example.com/?text=foo+bar%20foo') );
+T::dump( $uri->isEqual('http://example.com/?text=foo+bar%20foo') );
 
 
 

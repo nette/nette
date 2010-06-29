@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -73,7 +73,7 @@ for ($counter=0; $counter<1000; $counter++) {
 $time = Nette\Debug::timer();
 
 
-dump( $hits );
+T::dump( $hits );
 // expected results are:
 //    [ok] => 1000       // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000
 //    [notfound] => 0    // means "file not found", should be 0 if delete() is not used
@@ -81,8 +81,8 @@ dump( $hits );
 //    [cantwrite] => ?,  // means "somebody else is writing this file"
 //    [cantdelete] => 0  // means "delete() has timeout",  should be 0
 
-output($hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!');
-output("takes $time ms");
+T::note($hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!');
+T::note("takes $time ms");
 
 
 

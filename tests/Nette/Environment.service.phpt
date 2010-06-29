@@ -13,20 +13,20 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-dump( Environment::getHttpResponse()->reflection->name, 'Environment::getHttpResponse' );
+T::dump( Environment::getHttpResponse()->reflection->name, 'Environment::getHttpResponse' );
 
-dump( Environment::getApplication()->reflection->name, 'Environment::getApplication' );
+T::dump( Environment::getApplication()->reflection->name, 'Environment::getApplication' );
 
 Environment::setVariable('tempDir', __DIR__ . '/tmp');
-dump( Environment::getCache('my')->reflection->name, 'Environment::getCache(...)' );
+T::dump( Environment::getCache('my')->reflection->name, 'Environment::getCache(...)' );
 
 /* in PHP 5.3
 Environment::setServiceAlias('Nette\Web\IUser', 'xyz');
-dump( Environment::getXyz()->reflection->name, 'Environment::getXyz(...)' );
+T::dump( Environment::getXyz()->reflection->name, 'Environment::getXyz(...)' );
 */
 
 

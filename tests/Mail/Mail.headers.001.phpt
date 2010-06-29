@@ -13,7 +13,7 @@ use Nette\Mail\Mail;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Mail.inc';
 
@@ -22,24 +22,24 @@ require __DIR__ . '/Mail.inc';
 $mail = new Mail();
 
 try {
-	output();
+	T::note();
 	$mail->setHeader('', 'value');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output();
+	T::note();
 	$mail->setHeader(' name', 'value');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output();
+	T::note();
 	$mail->setHeader('n*ame', 'value');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

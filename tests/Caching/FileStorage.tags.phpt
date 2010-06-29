@@ -13,13 +13,13 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 
@@ -27,7 +27,7 @@ $storage = new Nette\Caching\FileStorage(TEMP_DIR);
 $cache = new Cache($storage);
 
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save('key1', 'value1', array(
 	Cache::TAGS => array('one', 'two'),
 ));
@@ -43,15 +43,15 @@ $cache->save('key3', 'value3', array(
 $cache['key4'] = 'value4';
 
 
-output('Cleaning by tags...');
+T::note('Cleaning by tags...');
 $cache->clean(array(
 	Cache::TAGS => 'one',
 ));
 
-dump( isset($cache['key1']), 'Is cached key1?' );
-dump( isset($cache['key2']), 'Is cached key2?' );
-dump( isset($cache['key3']), 'Is cached key3?' );
-dump( isset($cache['key4']), 'Is cached key4?' );
+T::dump( isset($cache['key1']), 'Is cached key1?' );
+T::dump( isset($cache['key2']), 'Is cached key2?' );
+T::dump( isset($cache['key3']), 'Is cached key3?' );
+T::dump( isset($cache['key4']), 'Is cached key4?' );
 
 
 

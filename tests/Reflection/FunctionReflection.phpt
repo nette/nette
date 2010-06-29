@@ -13,17 +13,17 @@ use Nette\Reflection\FunctionReflection;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 function bar() {}
 
 $function = new FunctionReflection('bar');
-dump( $function->getExtension() );
+T::dump( $function->getExtension() );
 
 $function = new FunctionReflection('sort');
-dump( $function->getExtension() );
+T::dump( $function->getExtension() );
 
 
 

@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,13 +22,13 @@ $acl->addRole('guest');
 try {
 	$acl->roleInheritsFrom('nonexistent', 'guest');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
 	$acl->roleInheritsFrom('guest', 'nonexistent');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

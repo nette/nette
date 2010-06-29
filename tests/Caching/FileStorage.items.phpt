@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,54 +22,54 @@ $value = 'rulez';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => array('dependent'),
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Modifing dependent cached item');
+T::note('Modifing dependent cached item');
 $cache['dependent'] = 'hello world';
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Modifing dependent cached item');
+T::note('Modifing dependent cached item');
 sleep(2);
 $cache['dependent'] = 'hello europe';
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::ITEMS => 'dependent',
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Deleting dependent cached item');
+T::note('Deleting dependent cached item');
 $cache['dependent'] = NULL;
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

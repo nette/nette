@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestHelpers::getSection()
+ * Test: TestHelpers::getSection()
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,17 +9,17 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 
-dump( NetteTestHelpers::getSection(__FILE__, 'MySection') );
+TestHelpers::dump( TestHelpers::getSection(__FILE__, 'MySection') );
 
-dump( NetteTestHelpers::getSection(__FILE__, 'mysection') );
+TestHelpers::dump( TestHelpers::getSection(__FILE__, 'mysection') );
 
-dump( NetteTestHelpers::getSection(__FILE__, 'POST') );
+TestHelpers::dump( TestHelpers::getSection(__FILE__, 'POST') );
 
-dump( NetteTestHelpers::getSection(__FILE__, 'options') );
+TestHelpers::dump( TestHelpers::getSection(__FILE__, 'options') );
 
 
 
@@ -54,5 +54,5 @@ array(5) {
 	"category" => string(5) "Nette"
 	"package" => string(10) "%ns%Test"
 	"subpackage" => string(9) "UnitTests"
-	"name" => string(30) "NetteTestHelpers::getSection()"
+	"name" => string(25) "TestHelpers::getSection()"
 }

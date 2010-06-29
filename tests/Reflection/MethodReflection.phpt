@@ -13,7 +13,7 @@ use Nette\Reflection\MethodReflection;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -28,11 +28,11 @@ class B extends A {
 }
 
 $methodInfo = new MethodReflection('B', 'foo');
-dump( $methodInfo->getDeclaringClass() );
+T::dump( $methodInfo->getDeclaringClass() );
 
-dump( $methodInfo->getExtension() );
+T::dump( $methodInfo->getExtension() );
 
-dump( $methodInfo->callback->invoke(20, 3) );
+T::dump( $methodInfo->callback->invoke(20, 3) );
 
 
 

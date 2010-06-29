@@ -13,7 +13,7 @@ use Nette\Reflection\ClassReflection;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -39,13 +39,13 @@ class TestClass3 {
 
 
 $rc = new ClassReflection('TestClass1');
-dump( $rc->getAnnotations() );
+T::dump( $rc->getAnnotations() );
 
 $rc = new ClassReflection('TestClass2');
-dump( $rc->getAnnotations() );
+T::dump( $rc->getAnnotations() );
 
 $rc = new ClassReflection('TestClass3');
-dump( $rc->getAnnotations() );
+T::dump( $rc->getAnnotations() );
 
 
 

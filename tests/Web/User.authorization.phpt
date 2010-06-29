@@ -17,7 +17,7 @@ use Nette\Web\User,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -71,52 +71,52 @@ class AuthorizationHandler implements IAuthorizator
 $user = new User;
 
 // guest
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getRoles(), "getRoles()" );
+T::dump( $user->getRoles(), "getRoles()" );
 
-dump( $user->isInRole('admin'), "is admin?" );
+T::dump( $user->isInRole('admin'), "is admin?" );
 
-dump( $user->isInRole('guest'), "is guest?" );
+T::dump( $user->isInRole('guest'), "is guest?" );
 
 
 // authenticated
 $handler = new AuthenticationHandler;
 $user->setAuthenticationHandler($handler);
 
-output("login as john");
+T::note("login as john");
 $user->login('john', 'xxx');
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getRoles(), "getRoles()" );
+T::dump( $user->getRoles(), "getRoles()" );
 
-dump( $user->isInRole('admin'), "is admin?" );
+T::dump( $user->isInRole('admin'), "is admin?" );
 
-dump( $user->isInRole('guest'), "is guest?" );
+T::dump( $user->isInRole('guest'), "is guest?" );
 
 
 
 // authorization
 try {
-	dump( $user->isAllowed('delete_file'), "authorize without handler" );
+	T::dump( $user->isAllowed('delete_file'), "authorize without handler" );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 $handler = new AuthorizationHandler;
 $user->setAuthorizationHandler($handler);
 
-dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
+T::dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 
-dump( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
+T::dump( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
 
 
 // log out
-output("logging out...");
+T::note("logging out...");
 $user->logout(FALSE);
 
-dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
+T::dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 
 
 

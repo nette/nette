@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,7 +22,7 @@ $value = 'rulez';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
@@ -30,7 +30,7 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 $dependentFile = TEMP_DIR . '/spec.file';
 @unlink($dependentFile);
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => array(
 		__FILE__,
@@ -39,29 +39,29 @@ $cache->save($key, $value, array(
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Modifing dependent file');
+T::note('Modifing dependent file');
 file_put_contents($dependentFile, 'a');
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Modifing dependent file');
+T::note('Modifing dependent file');
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

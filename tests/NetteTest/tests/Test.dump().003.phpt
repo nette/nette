@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestHelpers::dump() nesting and recursion
+ * Test: TestHelpers::dump() nesting and recursion
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 
@@ -42,12 +42,12 @@ $obj = (object) $arr;
 
 $obj->tmp = & $obj;
 
-dump( $obj );
+TestHelpers::dump( $obj );
 
 
 $arr[] = & $arr;
 
-dump( $arr );
+TestHelpers::dump( $arr );
 
 
 

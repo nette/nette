@@ -13,7 +13,7 @@ use Nette\Web\Session;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -24,11 +24,11 @@ $namespace->p = 'papaya';
 $namespace['c'] = 'cherry';
 
 $namespace = $session->getNamespace('three');
-dump( http_build_query($namespace->getIterator()) );
+T::dump( http_build_query($namespace->getIterator()) );
 
-output('removing');
+T::note('removing');
 $namespace->remove();
-dump( http_build_query($namespace->getIterator()) );
+T::dump( http_build_query($namespace->getIterator()) );
 
 
 

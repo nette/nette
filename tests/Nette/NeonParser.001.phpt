@@ -13,45 +13,45 @@ use Nette\NeonParser;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $parser = new NeonParser;
 
-dump( $parser->parse('') );
+T::dump( $parser->parse('') );
 
-dump( $parser->parse('   ') );
+T::dump( $parser->parse('   ') );
 
-dump( $parser->parse('1') );
+T::dump( $parser->parse('1') );
 
-dump( $parser->parse('-1.2') );
+T::dump( $parser->parse('-1.2') );
 
-dump( $parser->parse('-1.2e2') );
+T::dump( $parser->parse('-1.2e2') );
 
-dump( $parser->parse('true') );
+T::dump( $parser->parse('true') );
 
-dump( $parser->parse('null') );
+T::dump( $parser->parse('null') );
 
-dump( $parser->parse('the"string#literal') );
+T::dump( $parser->parse('the"string#literal') );
 
-dump( $parser->parse('the"string #literal') );
+T::dump( $parser->parse('the"string #literal') );
 
-dump( $parser->parse('"the\'string #literal"') );
+T::dump( $parser->parse('"the\'string #literal"') );
 
-dump( $parser->parse("'the\"string #literal'") );
+T::dump( $parser->parse("'the\"string #literal'") );
 
-dump( $parser->parse("''") );
+T::dump( $parser->parse("''") );
 
-dump( $parser->parse('""') );
+T::dump( $parser->parse('""') );
 
-dump( $parser->parse('x') );
+T::dump( $parser->parse('x') );
 
-dump( $parser->parse("\nx\n") );
+T::dump( $parser->parse("\nx\n") );
 
-dump( $parser->parse("\n  x  \n") );
+T::dump( $parser->parse("\n  x  \n") );
 
-dump( $parser->parse("  x") );
+T::dump( $parser->parse("  x") );
 
 
 

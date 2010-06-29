@@ -13,17 +13,17 @@ use Nette\NeonParser;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $parser = new NeonParser;
 
-dump( $parser->parse('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
+T::dump( $parser->parse('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
 
-dump( $parser->parse('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
+T::dump( $parser->parse('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
 
-dump( $parser->parse('{a, b, {c: d}, e: f,}') );
+T::dump( $parser->parse('{a, b, {c: d}, e: f,}') );
 
 
 

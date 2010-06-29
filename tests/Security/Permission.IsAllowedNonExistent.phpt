@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,14 +21,14 @@ try {
 	$acl = new Permission;
 	$acl->isAllowed('nonexistent');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
 	$acl = new Permission;
 	$acl->isAllowed(NULL, 'nonexistent');
 } catch (InvalidStateException $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

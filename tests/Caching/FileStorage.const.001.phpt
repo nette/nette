@@ -13,7 +13,7 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,7 +22,7 @@ $value = 'rulez';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
@@ -31,13 +31,13 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 define('ANY_CONST', 10);
 
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

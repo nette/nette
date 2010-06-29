@@ -13,13 +13,13 @@ use Nette\Mail\Mail;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Mail.inc';
 
 
 
-output('ENCODING_BASE64');
+T::note('ENCODING_BASE64');
 
 
 $mail = new Mail();
@@ -27,7 +27,7 @@ $mail->addAttachment('files/example.zip');
 $mail->send();
 
 
-output('ENCODING_QUOTED_PRINTABLE');
+T::note('ENCODING_QUOTED_PRINTABLE');
 
 
 $mail = new Mail();
@@ -35,7 +35,7 @@ $mail->addAttachment('files/example.zip')->setEncoding(Mail::ENCODING_QUOTED_PRI
 $mail->send();
 
 
-output('nonASCII name');
+T::note('nonASCII name');
 
 
 $mail = new Mail();

@@ -13,7 +13,7 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -22,20 +22,20 @@ $key = '../' . implode('', range("\x00", "\x1F"));
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 Environment::setVariable('tempDir', TEMP_DIR);
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
-output('entering');
+T::note('entering');
 Environment::enterCriticalSection($key);
 
-output('leaving');
+T::note('leaving');
 Environment::leaveCriticalSection($key);
 
 try {
-	output('leaving not entered');
+	T::note('leaving not entered');
 	Environment::leaveCriticalSection('notEntered');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

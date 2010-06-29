@@ -13,46 +13,46 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-dump( Environment::getVariable('foo'), "Getting variable 'foo':" );
+T::dump( Environment::getVariable('foo'), "Getting variable 'foo':" );
 
 try {
-	dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir':" );
+	T::dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir':" );
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
-output("Defining constant 'APP_DIR':");
+T::note("Defining constant 'APP_DIR':");
 define('APP_DIR', '/myApp');
 
-dump( Environment::getVariable('appDir'), "Getting variable 'appDir':" );
+T::dump( Environment::getVariable('appDir'), "Getting variable 'appDir':" );
 
-dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir' #2:" );
+T::dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir' #2:" );
 
 
-output("Setting variable 'test'...");
+T::note("Setting variable 'test'...");
 Environment::setVariable('test', '%appDir%/test');
 
-dump( Environment::getVariable('test'), "Getting variable 'test':" );
+T::dump( Environment::getVariable('test'), "Getting variable 'test':" );
 
-dump( Environment::getVariables(), "Getting variables:" );
+T::dump( Environment::getVariables(), "Getting variables:" );
 
 
 try {
-	output("Setting circular variables...");
+	T::note("Setting circular variables...");
 	Environment::setVariable('bar', '%foo%');
 	Environment::setVariable('foo', '%foobar%');
 	Environment::setVariable('foobar', '%bar%');
 
-	dump( Environment::getVariable('bar'), "Getting circular variable:" );
+	T::dump( Environment::getVariable('bar'), "Getting circular variable:" );
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

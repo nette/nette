@@ -13,89 +13,89 @@ use Nette\Mail\Mail;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 $mail = new Mail();
 
 try {
-	output('From');
+	T::note('From');
 	$mail->setFrom('John Doe <doe@example. com>');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output();
+	T::note();
 	$mail->setFrom('John Doe <>');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output();
+	T::note();
 	$mail->setFrom('John Doe <doe@examplecom>');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output();
+	T::note();
 	$mail->setFrom('John Doe <doe@examplecom>');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output();
+	T::note();
 	$mail->setFrom('John Doe');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output();
+	T::note();
 	$mail->setFrom('doe;@examplecom');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output('addReplyTo');
+	T::note('addReplyTo');
 	$mail->addReplyTo('@');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output('addTo');
+	T::note('addTo');
 	$mail->addTo('@');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output('addCc');
+	T::note('addCc');
 	$mail->addCc('@');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output('addBcc');
+	T::note('addBcc');
 	$mail->addBcc('@');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

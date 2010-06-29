@@ -16,7 +16,7 @@ use Nette\ComponentContainer,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -93,8 +93,8 @@ $form->addText('age', 'Your age:', 5);
 
 $form->addSubmit('submit1', 'Send');
 
-dump( (bool) $form->isSubmitted() );
-dump( $form->getValues() );
+T::dump( (bool) $form->isSubmitted() );
+T::dump( $form->getValues() );
 
 
 

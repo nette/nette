@@ -13,7 +13,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,9 +21,9 @@ $acl = new Permission;
 $acl->addRole('guest');
 $acl->addRole('member', 'guest');
 $acl->addRole('editor', 'member');
-dump( $acl->getRoleParents('guest') );
-dump( $acl->getRoleParents('member') );
-dump( $acl->getRoleParents('editor') );
+T::dump( $acl->getRoleParents('guest') );
+T::dump( $acl->getRoleParents('member') );
+T::dump( $acl->getRoleParents('editor') );
 
 Assert::true( $acl->roleInheritsFrom('member', 'guest', TRUE) );
 Assert::true( $acl->roleInheritsFrom('editor', 'member', TRUE) );
@@ -34,7 +34,7 @@ Assert::false( $acl->roleInheritsFrom('member', 'editor') );
 Assert::false( $acl->roleInheritsFrom('guest', 'editor') );
 
 $acl->removeRole('member');
-dump( $acl->getRoleParents('editor') );
+T::dump( $acl->getRoleParents('editor') );
 Assert::false( $acl->roleInheritsFrom('editor', 'guest') );
 
 

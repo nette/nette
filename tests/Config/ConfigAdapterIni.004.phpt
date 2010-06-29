@@ -13,34 +13,34 @@ use Nette\Config\Config;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 try {
-	output("Example 3");
+	T::note("Example 3");
 	$config = Config::fromFile('config3.ini');
-	dump( $config );
+	T::dump( $config );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output("Example 4");
+	T::note("Example 4");
 	$config = Config::fromFile('config4.ini');
-	dump( $config );
+	T::dump( $config );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 
 try {
-	output("Example 5");
+	T::note("Example 5");
 	$config = Config::fromFile('config5.ini');
-	dump( $config );
+	T::dump( $config );
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

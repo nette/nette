@@ -13,7 +13,7 @@ use Nette\ComponentContainer;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -29,7 +29,7 @@ class TestClass extends ComponentContainer
 
 
 $a = new TestClass;
-dump( $a->getComponent('b')->name );
+T::dump( $a->getComponent('b')->name );
 
 
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: NetteTestHelpers::dump() basic types & output()
+ * Test: TestHelpers::dump() basic types & TestHelpers::note()
  *
  * @author     David Grudl
  * @category   Nette
@@ -9,29 +9,29 @@
  * @subpackage UnitTests
  */
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/initialize.php';
 
 
 
-dump( 10 );
+TestHelpers::dump( 10 );
 
-dump( 20.2 );
+TestHelpers::dump( 20.2 );
 
-dump( TRUE );
+TestHelpers::dump( TRUE );
 
-dump( FALSE );
+TestHelpers::dump( FALSE );
 
-dump( NULL );
+TestHelpers::dump( NULL );
 
-dump( 'hello' );
+TestHelpers::dump( 'hello' );
 
-dump( (object) NULL );
+TestHelpers::dump( (object) NULL );
 
-dump( array() );
+TestHelpers::dump( array() );
 
-dump( fopen(__FILE__, 'r') );
+TestHelpers::dump( fopen(__FILE__, 'r') );
 
-dump( array(10, 20.2, TRUE, FALSE, NULL, 'hello', (object) NULL, array(), fopen(__FILE__, 'r')) );
+TestHelpers::dump( array(10, 20.2, TRUE, FALSE, NULL, 'hello', (object) NULL, array(), fopen(__FILE__, 'r')) );
 
 
 class TestClass
@@ -43,11 +43,11 @@ class TestClass
 	protected $z = 30;
 }
 
-dump( new TestClass );
+TestHelpers::dump( new TestClass );
 
-output('message');
+TestHelpers::note('message');
 
-output();
+TestHelpers::note();
 
 echo 'EOF';
 

@@ -13,7 +13,7 @@ use Nette\Loaders\NetteLoader;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,7 +21,7 @@ $loader = NetteLoader::getInstance();
 $loader->base = '../../Nette';
 $loader->register();
 
-dump( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
+T::dump( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
 
 
 

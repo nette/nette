@@ -18,7 +18,7 @@
  * @author     David Grudl
  * @package    Nette\Test
  */
-final class Assert
+class Assert
 {
 
 	/**
@@ -30,7 +30,7 @@ final class Assert
 	public static function same($expected, $actual)
 	{
 		if ($actual !== $expected) {
-			self::output('Failed asserting that ' . self::dump($actual) . ' is not identical to ' . self::dump($expected));
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not identical to ' . self::dump($expected));
 		}
 	}
 
@@ -44,7 +44,7 @@ final class Assert
 	public static function true($actual)
 	{
 		if ($actual !== TRUE) {
-			self::output('Failed asserting that ' . self::dump($actual) . ' is not TRUE');
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not TRUE');
 		}
 	}
 
@@ -58,7 +58,7 @@ final class Assert
 	public static function false($actual)
 	{
 		if ($actual !== FALSE) {
-			self::output('Failed asserting that ' . self::dump($actual) . ' is not FALSE');
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not FALSE');
 		}
 	}
 
@@ -72,7 +72,7 @@ final class Assert
 	public static function null($actual)
 	{
 		if ($actual !== NULL) {
-			self::output('Failed asserting that ' . self::dump($actual) . ' is not NULL');
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not NULL');
 		}
 	}
 
@@ -125,7 +125,7 @@ final class Assert
 	 * @param  string
 	 * @return void
 	 */
-	private static function output($message)
+	private static function note($message)
 	{
 		echo $message;
 		$trace = debug_backtrace();

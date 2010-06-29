@@ -14,7 +14,7 @@ use Nette\Reflection\ClassReflection,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 

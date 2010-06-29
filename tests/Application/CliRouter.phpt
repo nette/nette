@@ -14,7 +14,7 @@ use Nette\Application\CliRouter,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -38,11 +38,11 @@ $router = new CliRouter(array(
 ));
 $req = $router->match($httpRequest);
 
-dump( $req->getPresenterName() ); // "homepage"
-dump( $req->params );
-dump( $req->isMethod('cli') ); // TRUE
+T::dump( $req->getPresenterName() ); // "homepage"
+T::dump( $req->params );
+T::dump( $req->isMethod('cli') ); // TRUE
 
-dump( $router->constructUrl($req, $httpRequest) ); // NULL
+T::dump( $router->constructUrl($req, $httpRequest) ); // NULL
 
 
 

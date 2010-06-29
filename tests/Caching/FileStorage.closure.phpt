@@ -15,7 +15,7 @@ use Nette\Caching\Cache,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -25,44 +25,44 @@ $value = range("\x00", "\xFF");
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
-output('Writing cache using Closure...');
+T::note('Writing cache using Closure...');
 $res = $cache->save($key, function() use ($value) {
 	return $value;
 });
 $cache->release();
 
-dump( $res === $value, 'Is result ok?' );
-dump( $cache[$key] === $value, 'Is cache ok?' );
+T::dump( $res === $value, 'Is result ok?' );
+T::dump( $cache[$key] === $value, 'Is cache ok?' );
 
-output('Removing from cache using unset()...');
+T::note('Removing from cache using unset()...');
 unset($cache[$key]);
 $cache->release();
 
-output('Writing cache using Nette\Callback...');
+T::note('Writing cache using Nette\Callback...');
 $res = $cache->save($key, callback(function() use ($value) {
 	return $value;
 }));
 $cache->release();
 
-dump( $res === $value, 'Is result ok?' );
-dump( $cache[$key] === $value, 'Is cache ok?' );
+T::dump( $res === $value, 'Is result ok?' );
+T::dump( $cache[$key] === $value, 'Is cache ok?' );
 
-output('Removing from cache using NULL callback...');
+T::note('Removing from cache using NULL callback...');
 $cache->save($key, function() {
 	return NULL;
 });
 $cache->release();
 
-dump( isset($cache[$key]), 'Is cached?' );
+T::dump( isset($cache[$key]), 'Is cached?' );
 
 
 

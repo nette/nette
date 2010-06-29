@@ -13,7 +13,7 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -21,8 +21,8 @@ class Factory
 {
 	static function createService($options)
 	{
-		dump( __METHOD__ );
-		dump( $options );
+		T::dump( __METHOD__ );
+		T::dump( $options );
 		return (object) NULL;
 	}
 }
@@ -30,15 +30,15 @@ class Factory
 Environment::setName(Environment::PRODUCTION);
 Environment::loadConfig('config.ini');
 
-dump( Environment::getVariable('foo'), "Variable foo:" );
+T::dump( Environment::getVariable('foo'), "Variable foo:" );
 
-dump( constant('HELLO_WORLD'), "Constant HELLO_WORLD:" );
+T::dump( constant('HELLO_WORLD'), "Constant HELLO_WORLD:" );
 
-dump( Environment::getConfig('php'), "php.ini config:" );
+T::dump( Environment::getConfig('php'), "php.ini config:" );
 
-dump( Environment::getConfig('database'), "Database config:" );
+T::dump( Environment::getConfig('database'), "Database config:" );
 
-dump( Environment::isProduction(), "is production mode?" );
+T::dump( Environment::isProduction(), "is production mode?" );
 
 
 

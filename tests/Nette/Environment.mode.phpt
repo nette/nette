@@ -13,18 +13,18 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
-dump( Environment::isConsole(), "Is console?" );
+T::dump( Environment::isConsole(), "Is console?" );
 
-dump( Environment::isProduction(), "Is production mode?" );
+T::dump( Environment::isProduction(), "Is production mode?" );
 
-output("Setting my mode...");
+T::note("Setting my mode...");
 Environment::setMode('myMode', 123);
 
-dump( Environment::getMode('myMode'), "Is enabled?" );
+T::dump( Environment::getMode('myMode'), "Is enabled?" );
 
 
 

@@ -13,13 +13,13 @@ use Nette\Caching\Cache;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-NetteTestHelpers::purge(TEMP_DIR);
+T::purge(TEMP_DIR);
 
 
 $storage = new Nette\Caching\FileStorage(TEMP_DIR);
@@ -27,22 +27,22 @@ $cacheA = new Cache($storage, 'a');
 $cacheB = new Cache($storage, 'b');
 
 
-output('Writing cache...');
+T::note('Writing cache...');
 $cacheA['key'] = 'hello';
 $cacheB['key'] = 'world';
 
-dump( isset($cacheA['key']), 'Is cached #1?' );
-dump( isset($cacheB['key']), 'Is cached #2?' );
-dump( $cacheA['key'] === 'hello', 'Is cache ok #1?' );
-dump( $cacheB['key'] === 'world', 'Is cache ok #2?' );
+T::dump( isset($cacheA['key']), 'Is cached #1?' );
+T::dump( isset($cacheB['key']), 'Is cached #2?' );
+T::dump( $cacheA['key'] === 'hello', 'Is cache ok #1?' );
+T::dump( $cacheB['key'] === 'world', 'Is cache ok #2?' );
 
-output('Removing from cache #2 using unset()...');
+T::note('Removing from cache #2 using unset()...');
 unset($cacheB['key']);
 $cacheA->release();
 $cacheB->release();
 
-dump( isset($cacheA['key']), 'Is cached #1?' );
-dump( isset($cacheB['key']), 'Is cached #2?' );
+T::dump( isset($cacheA['key']), 'Is cached #1?' );
+T::dump( isset($cacheB['key']), 'Is cached #2?' );
 
 
 

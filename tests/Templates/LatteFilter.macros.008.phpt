@@ -15,7 +15,7 @@ use Nette\Object,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 require __DIR__ . '/Template.inc';
 
@@ -26,7 +26,7 @@ class MockControl extends Object
 	function getWidget($name)
 	{
 		echo __METHOD__;
-		dump( func_get_args() );
+		T::dump( func_get_args() );
 		return new MockWidget;
 	}
 
@@ -40,7 +40,7 @@ class MockWidget extends Object
 	function __call($name, $args)
 	{
 		echo __METHOD__;
-		dump( func_get_args() );
+		T::dump( func_get_args() );
 	}
 
 }
@@ -55,7 +55,7 @@ $template->control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 
-$template->render(NetteTestHelpers::getSection(__FILE__, 'template'));
+$template->render(T::getSection(__FILE__, 'template'));
 
 
 

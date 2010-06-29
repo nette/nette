@@ -16,7 +16,7 @@ use Nette\Web\User,
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -51,7 +51,7 @@ class AuthenticationHandler implements IAuthenticator
 
 
 function onLoggedIn($user) {
-	output("[onLoggedIn]");
+	T::note("[onLoggedIn]");
 }
 
 
@@ -67,82 +67,82 @@ $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getIdentity(), "getIdentity" );
+T::dump( $user->getIdentity(), "getIdentity" );
 
-dump( $user->getId(), "getId" );
+T::dump( $user->getId(), "getId" );
 
 
 // authenticate
 try {
-	output("login without handler");
+	T::note("login without handler");
 	$user->login('jane', '');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 $handler = new AuthenticationHandler;
 $user->setAuthenticationHandler($handler);
 
 try {
-	output("login as jane");
+	T::note("login as jane");
 	$user->login('jane', '');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("login as john");
+	T::note("login as john");
 	$user->login('john', '');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 try {
-	output("login as john#2");
+	T::note("login as john#2");
 	$user->login('john', 'xxx');
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getIdentity(), "getIdentity" );
+T::dump( $user->getIdentity(), "getIdentity" );
 
-dump( $user->getId(), "getId" );
+T::dump( $user->getId(), "getId" );
 
 
 
 // log out
-output("logging out...");
+T::note("logging out...");
 $user->logout(FALSE);
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getIdentity(), "getIdentity" );
+T::dump( $user->getIdentity(), "getIdentity" );
 
-output("logging out and clearing identity...");
+T::note("logging out and clearing identity...");
 $user->logout(TRUE);
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getIdentity(), "getIdentity" );
+T::dump( $user->getIdentity(), "getIdentity" );
 
 
 
 // namespace
-output("login as john#2?");
+T::note("login as john#2?");
 $user->login('john', 'xxx');
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-output("setNamespace(...)");
+T::note("setNamespace(...)");
 $user->setNamespace('other');
 
-dump( $user->isLoggedIn(), "isLoggedIn?" );
+T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-dump( $user->getIdentity(), "getIdentity" );
+T::dump( $user->getIdentity(), "getIdentity" );
 
 
 

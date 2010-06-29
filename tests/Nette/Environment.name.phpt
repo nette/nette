@@ -13,22 +13,22 @@ use Nette\Environment;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
 //define('ENVIRONMENT', 'lab');
 
-dump( Environment::getName(), "Name:" );
+T::dump( Environment::getName(), "Name:" );
 
 
 try {
-	output("Setting name:");
+	T::note("Setting name:");
 	Environment::setName('lab2');
-	dump( Environment::getName() );
+	T::dump( Environment::getName() );
 
 } catch (Exception $e) {
-	dump( $e );
+	T::dump( $e );
 }
 
 

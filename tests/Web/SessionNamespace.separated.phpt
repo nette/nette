@@ -13,7 +13,7 @@ use Nette\Web\Session;
 
 
 
-require __DIR__ . '/../NetteTest/initialize.php';
+require __DIR__ . '/../initialize.php';
 
 
 
@@ -27,10 +27,10 @@ $namespace3b = $session->getNamespace('default');
 $namespace1->a = 'apple';
 $namespace2->a = 'pear';
 $namespace3->a = 'orange';
-dump( $namespace1->a !== $namespace2->a && $namespace1->a !== $namespace3->a && $namespace2->a !== $namespace3->a ); // Test session improperly shared namespaces
-dump( $namespace1->a === $namespace1b->a );
-dump( $namespace2->a === $namespace2b->a );
-dump( $namespace3->a === $namespace3b->a );
+T::dump( $namespace1->a !== $namespace2->a && $namespace1->a !== $namespace3->a && $namespace2->a !== $namespace3->a ); // Test session improperly shared namespaces
+T::dump( $namespace1->a === $namespace1b->a );
+T::dump( $namespace2->a === $namespace2b->a );
+T::dump( $namespace3->a === $namespace3b->a );
 
 
 
