@@ -29,13 +29,11 @@ use Nette;
  * @example    forms/custom-validator.php  How to use custom validator
  * @example    forms/naming-containers.php  How to use naming containers
  * @example    forms/CSRF-protection.php  How to use Cross-Site Request Forgery (CSRF) form protection
- * @example    forms/custom-encoding.php  How to change charset
  *
  * @property   string $action
  * @property   string $method
  * @property-read array $groups
  * @property-read array $httpData
- * @property   string $encoding
  * @property   Nette\ITranslator $translator
  * @property-read array $errors
  * @property-read Nette\Web\Html $elementPrototype
@@ -111,9 +109,6 @@ class Form extends FormContainer
 
 	/** @var array */
 	private $errors = array();
-
-	/** @var array */
-	private $encoding = 'UTF-8';
 
 
 
@@ -313,33 +308,6 @@ class Form extends FormContainer
 
 
 
-	/**
-	 * Set the encoding for the values.
-	 * @param  string
-	 * @return Form  provides a fluent interface
-	 */
-	public function setEncoding($value)
-	{
-		$this->encoding = empty($value) ? 'UTF-8' : strtoupper($value);
-		if ($this->encoding !== 'UTF-8' && !extension_loaded('mbstring')) {
-			throw new \Exception("The PHP extension 'mbstring' is required for this encoding but is not loaded.");
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Returns the encoding.
-	 * @return string
-	 */
-	final public function getEncoding()
-	{
-		return $this->encoding;
-	}
-
-
-
 	/********************* translator ****************d*g**/
 
 
@@ -467,7 +435,7 @@ class Form extends FormContainer
 			return;
 		}
 
-		$httpRequest->setEncoding($this->encoding);
+		$httpRequest->setEncoding('utf-8');
 		if ($httpRequest->isMethod('post')) {
 			$data = Nette\ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {
@@ -603,13 +571,7 @@ class Form extends FormContainer
 	{
 		$args = func_get_args();
 		array_unshift($args, $this);
-		$s = call_user_func_array(array($this->getRenderer(), 'render'), $args);
-
-		if (strcmp($this->encoding, 'UTF-8')) {
-			echo mb_convert_encoding($s, 'HTML-ENTITIES', 'UTF-8');
-		} else {
-			echo $s;
-		}
+		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
 
 
@@ -622,11 +584,7 @@ class Form extends FormContainer
 	public function __toString()
 	{
 		try {
-			if (strcmp($this->encoding, 'UTF-8')) {
-				return mb_convert_encoding($this->getRenderer()->render($this), 'HTML-ENTITIES', 'UTF-8');
-			} else {
-				return $this->getRenderer()->render($this);
-			}
+			return $this->getRenderer()->render($this);
 
 		} catch (\Exception $e) {
 			if (func_get_args() && func_get_arg(0)) {
