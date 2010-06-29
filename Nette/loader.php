@@ -33,7 +33,11 @@ if (PHP_VERSION_ID < 50200) {
 }
 */
 
+error_reporting(E_ALL | E_STRICT);
 @set_magic_quotes_runtime(FALSE); // intentionally @
+iconv_set_encoding('internal_encoding', 'UTF-8');
+extension_loaded('mbstring') && mb_internal_encoding('UTF-8');
+header('X-Powered-By: Nette Framework');
 
 
 

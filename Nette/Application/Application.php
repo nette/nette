@@ -76,7 +76,6 @@ class Application extends Nette\Object
 		$httpResponse = $this->getHttpResponse();
 
 		$httpRequest->setEncoding('UTF-8');
-		$httpResponse->setHeader('X-Powered-By', 'Nette Framework');
 
 		if (Environment::getVariable('baseUri') === NULL) {
 			Environment::setVariable('baseUri', $httpRequest->getUri()->getBasePath());
