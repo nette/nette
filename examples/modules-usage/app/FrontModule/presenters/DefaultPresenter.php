@@ -4,10 +4,7 @@ namespace FrontModule;
 
 use Nette;
 
-
-/* use only DefaultPresenter in PHP 5.3 */
-
-class Front_DefaultPresenter extends \BasePresenter
+class /*5.2*Front_*/DefaultPresenter extends \BasePresenter
 {
 
 }
