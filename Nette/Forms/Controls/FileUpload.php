@@ -114,11 +114,7 @@ class FileUpload extends FormControl
 	{
 		$file = $control->getValue();
 		if ($file instanceof HttpUploadedFile) {
-			$type = $file->getContentType();
-			$type = strtolower(preg_replace('#\s*;.*$#', '', $type));
-			if (!$type) {
-				return FALSE; // cannot verify :-(
-			}
+			$type = strtolower($file->getContentType());
 			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
 				return TRUE;

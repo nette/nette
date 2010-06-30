@@ -97,7 +97,9 @@ class HttpUploadedFile extends Nette\Object
 
 			if (!$this->type) {
 				$this->type = 'application/octet-stream';
-			}
+			} else {
+				$this->type = preg_replace('#[\s;].*$#', '', $this->type);
+			}	
 		}
 		return $this->type;
 	}
