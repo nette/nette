@@ -152,7 +152,9 @@
 		<h2><a href="#" onclick="return !netteToggle(this, 'pnl3')">Environment <abbr>&#x25ba;</abbr></a></h2>
 
 		<div id="pnl3" class="collapsed inner">
-				
+							<h3><a href="#" onclick="return !netteToggle(this, 'pnl-env-const')">Constants <abbr>&#x25bc;</abbr></a></h3>
+			<table id="pnl-env-const">%A%</table>
+			
 
 			<h3><a href="#" onclick="return !netteToggle(this, 'pnl-env-files')">Included files <abbr>&#x25ba;</abbr></a>(%d%)</h3>
 			<table id="pnl-env-files" class="collapsed">%A%</table>
