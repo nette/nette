@@ -93,15 +93,14 @@ class TestCase
 		$expectedOutput = $this->getExpectedOutput();
 		if ($expectedOutput !== NULL) {
 			$tests++;
-			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $output);
+			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $expectedOutput);
 			if ($binary) {
 				if ($expectedOutput !== $output) {
 					throw new TestCaseException("Binary output doesn't match.");
 				}
 			} else {
-				$trim = isset($this->sections['expect']);
-				$output = self::normalize($output, $trim);
-				$expectedOutput = self::normalize($expectedOutput, $trim);
+				$output = self::normalize($output, isset($options['keeptrailingspaces']));
+				$expectedOutput = self::normalize($expectedOutput, isset($options['keeptrailingspaces']));
 				if (!$this->compare($output, $expectedOutput)) {
 					throw new TestCaseException("Output doesn't match.");
 				}
@@ -112,7 +111,7 @@ class TestCase
 		$expectedHeaders = $this->getExpectedHeaders();
 		if ($expectedHeaders !== NULL) {
 			$tests++;
-			$expectedHeaders = self::normalize($expectedHeaders, TRUE);
+			$expectedHeaders = self::normalize($expectedHeaders, FALSE);
 			$expectedHeaders = array_change_key_case(self::parseLines($expectedHeaders, ':'), CASE_LOWER);
 			foreach ($expectedHeaders as $name => $header) {
 				if (!isset($headers[$name])) {
@@ -297,7 +296,7 @@ class TestCase
 		$phpDoc = preg_match('#^/\*\*(.*?)\*/#ms', $content, $matches) ? trim($matches[1]) : '';
 		preg_match_all('#^\s*\*\s*@(\S+)(.*)#mi', $phpDoc, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-			$sections['options'][$match[1]] = isset($match[2]) ? trim($match[2]) : TRUE;
+			$sections['options'][strtolower($match[1])] = isset($match[2]) ? trim($match[2]) : TRUE;
 		}
 		$sections['options']['name'] = preg_match('#^\s*\*\s*TEST:(.*)#mi', $phpDoc, $matches) ? trim($matches[1]) : $testFile;
 
@@ -376,10 +375,10 @@ class TestCase
 	 * @param  bool
 	 * @return string
 	 */
-	public static function normalize($s, $trim = FALSE)
+	public static function normalize($s, $keepTrailingSpaces)
 	{
 		$s = str_replace("\n", PHP_EOL, str_replace("\r\n", "\n", $s));  // normalize EOL
-		if ($trim) {
+		if (!$keepTrailingSpaces) {
 			$s = preg_replace("#[\t ]+(\r?\n)#", '$1', $s); // multiline right trim
 			$s = rtrim($s); // ending trim
 		}

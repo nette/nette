@@ -1,0 +1,56 @@
+Test case file *.phpt
+=====================
+
+<?php
+
+/**
+ * Test: some test name
+ *
+ * @author     John Doe
+ * @phpVersion < 5.3   default operator is >=
+ * @skip       some reason why test is skipped
+ * @phpIni     short_open_tag=on
+ * @keepTrailingSpaces
+ */
+
+require __DIR__ . '/NetteTest/TestHelpers.php';
+TestHelpers::startup();
+
+...test code...
+
+	dump variables using TestHelpers::dump()
+	note messages using TestHelpers::note()
+
+
+__halt_compiler() ?>
+
+------EXPECT------
+
+	The expected output from the test script. It uses a number
+	of substitution tags for strings, spaces, digits, etc:
+
+		%a%    one or more of anything except the end of line characters
+		%a?%   zero or more of anything except the end of line characters
+		%A%    one or more of anything including the end of line characters
+		%A?%   zero or more of anything including the end of line characters
+		%s%    one or more white space characters except the end of line characters
+		%s?%   zero or more white space characters except the end of line characters
+		%S%    one or more of characters except the white space
+		%S?%   zero or more of characters except the white space
+		%c%    a single character of any sort (except the end of line)
+		%d%    one or more digits
+		%d?%   zero or more digits
+		%i%    signed integer value
+		%f%    floating point number
+		%h%    one or more HEX digits
+		%ns%   PHP namespace
+		%[..]% reg-exp
+
+
+---EXPECTHEADERS---
+	The expected HTTP headers. Any header specified here must exist
+	in the response and have the same value or the test fails.
+	Additional headers found in the actual tests while running are ignored.
+
+		Content-type: text/html; charset=UTF-8
+		Status: 403 Access Denied
