@@ -34,7 +34,7 @@ class MethodParameterReflection extends \ReflectionParameter
 	public static function import(\ReflectionParameter $ref)
 	{
 		$method = $ref->getDeclaringFunction();
-		return new self($method instanceof \ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
+		return new static($method instanceof \ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
 	}
 
 

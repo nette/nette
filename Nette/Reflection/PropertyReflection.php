@@ -43,7 +43,7 @@ class PropertyReflection extends \ReflectionProperty
 	 */
 	public static function import(\ReflectionProperty $ref)
 	{
-		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
+		return new static($ref->getDeclaringClass()->getName(), $ref->getName());
 	}
 
 
