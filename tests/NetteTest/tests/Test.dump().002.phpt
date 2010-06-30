@@ -7,6 +7,7 @@
  * @category   Nette
  * @package    Nette\Test
  * @subpackage UnitTests
+ * @keepTrailingSpaces
  */
 
 require __DIR__ . '/initialize.php';

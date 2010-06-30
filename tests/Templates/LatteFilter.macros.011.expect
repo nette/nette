@@ -7,12 +7,12 @@
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
 	<li>Non-escaped expression: <b>hello</b></li>
 	<li>Array access: Mary</li>
-	<li>Html: <div title="1/2&quot;"></div></li>
+	<li>Html: &lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;</li>
 </ul>
 
 <style type="text/css">
 <!--
-#\:\/item {
+#:/item {
 	background: blue;
 }
 -->
@@ -22,34 +22,35 @@
 
 <script>
 <!--
-var html = "<div title=\"1\/2&quot;\"><\/div>";
+var html = &lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;;
 -->
 </script>
 
 
 <p onclick =
-'alert(&quot;:\/item&quot;);alert("hello");'
+'alert(:/item);alert("hello");'
  title=':/item"'
  style =
- "color:\:\/item;'"
- alt='<div title="1/2&quot;"></div>'
- onfocus="alert(&quot;&lt;div title=\&quot;1\/2&amp;quot;\&quot;&gt;&lt;\/div&gt;&quot;)"
+ "color::/item;'"
+ alt='&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;'
+ onfocus="alert(&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;)"
 >click on me</p>
 
 
-<!-- test --><!-- comment -->
+<!-- test -- comment -->
 
 
 </ul>
 
 
-<ul>	<li>John</li>
-	<li>Mary</li>
-	<li>Paul</li>
-	<li>]]&gt;</li>
+<ul>
+	<li n:foreach="$people as $person">
+Notice: Undefined variable: person in %a% on line %d%
+</li>
 </ul>
-<p>
 
+<p n:if="true">
 	<div><p>true</div>
 </p>
-
+
+<n:default vary=3>
