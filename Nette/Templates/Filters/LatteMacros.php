@@ -176,7 +176,7 @@ class LatteMacros extends Nette\Object
 		// snippets support (temporary solution)
 		$s = preg_replace(
 			'#@(\\{[^}]+?\\})#s',
-			'<?php } ?>$1<?php if (SnippetHelper::\\$outputAllowed) { ?>',
+			'<?php } ?>$1<?php if (' . 'SnippetHelper::$outputAllowed' . ') { ?>',
 			$s
 		);
 	}
@@ -199,14 +199,14 @@ class LatteMacros extends Nette\Object
 		}
 
 		// snippets support (temporary solution)
-		$s = "<?php\nif (SnippetHelper::\$outputAllowed) {\n?>$s<?php\n}\n?>";
+		$s = "<?php\nif (" . 'SnippetHelper::$outputAllowed' . ") {\n?>$s<?php\n}\n?>";
 
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
 			$s = "<?php\n"
 				. 'if ($_cb->extends) { ob_start(); }' . "\n"
 				. '?>' . $s . "<?php\n"
-				. 'if ($_cb->extends) { ob_end_clean(); LatteMacros::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
+				. 'if ($_cb->extends) { ob_end_clean(); ' . 'LatteMacros::includeTemplate' . '($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
 		}
 
 		// named blocks
@@ -220,8 +220,8 @@ class LatteMacros extends Nette\Object
 
 		// internal state holder
 		$s = "<?php\n"
-			/**/. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper, Nette\Application\InvalidLinkException;' . "\n\n"/**/
-			. "\$_cb = LatteMacros::initRuntime(\$template, " . var_export($this->extends, TRUE) . ", " . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
+			/**/. 'use Nette\Templates\LatteMacros, Nette\Templates\TemplateHelpers, Nette\SmartCachingIterator, Nette\Web\Html, Nette\Templates\SnippetHelper, Nette\Debug, Nette\Environment, Nette\Templates\CachingHelper;' . "\n\n"/**/
+			. '$_cb = ' . 'LatteMacros::initRuntime' . '($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
 
@@ -547,7 +547,7 @@ class LatteMacros extends Nette\Object
 		if ($content) {
 			$args[] = LatteFilter::formatString($content);
 		}
-		return '} if ($_cb->foo = SnippetHelper::create($control' . implode(', ', $args) . ')) { $_cb->snippets[] = $_cb->foo';
+		return '} if ($_cb->foo = ' . 'SnippetHelper::create' . '($control' . implode(', ', $args) . ')) { $_cb->snippets[] = $_cb->foo';
 	}
 
 
@@ -557,7 +557,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroSnippetEnd($content)
 	{
-		return 'array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) {';
+		return 'array_pop($_cb->snippets)->finish(); } if (' . 'SnippetHelper::$outputAllowed' . ') {';
 	}
 
 
@@ -614,7 +614,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_cb->its[] = new SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
+		return '$iterator = $_cb->its[] = new ' . 'SmartCachingIterator' . '(' . preg_replace('# +as +#i', ') as ', $content, 1);
 	}
 
 
@@ -721,7 +721,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroIfCurrent($content)
 	{
-		return $content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (InvalidLinkException $e) {}' : '';
+		return $content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (' . 'Nette\Application\InvalidLinkException' . ' $e) {}' : '';
 	}
 
 
