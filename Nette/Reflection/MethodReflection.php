@@ -33,7 +33,7 @@ class MethodReflection extends \ReflectionMethod
 	 */
 	public static function from($class, $method)
 	{
-		return new self(is_object($class) ? get_class($class) : $class, $method);
+		return new static(is_object($class) ? get_class($class) : $class, $method);
 	}
 
 
@@ -111,7 +111,7 @@ class MethodReflection extends \ReflectionMethod
 	 */
 	public static function import(\ReflectionMethod $ref)
 	{
-		return new self($ref->getDeclaringClass()->getName(), $ref->getName());
+		return new static($ref->getDeclaringClass()->getName(), $ref->getName());
 	}
 
 

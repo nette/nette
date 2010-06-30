@@ -44,7 +44,7 @@ class FunctionReflection extends \ReflectionFunction
 	 */
 	public static function import(\ReflectionFunction $ref)
 	{
-		return new self($ref->getName());
+		return new static($ref->getName());
 	}
 
 

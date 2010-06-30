@@ -44,7 +44,7 @@ class ExtensionReflection extends \ReflectionExtension
 	 */
 	public static function import(\ReflectionExtension $ref)
 	{
-		return new self($ref->getName());
+		return new static($ref->getName());
 	}
 
 
