@@ -41,7 +41,7 @@ if (PHP_VERSION_ID < 50200) {
  * Load and configure Nette Framework
  */
 define('NETTE', TRUE);
-define('NETTE_VERSION_ID', 905); // v0.9.5
+define('NETTE_VERSION_ID', 906); // v0.9.6
 define('NETTE_PACKAGE', '5.3');
 
 
