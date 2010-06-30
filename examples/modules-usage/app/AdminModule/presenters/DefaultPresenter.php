@@ -4,10 +4,7 @@ namespace AdminModule;
 
 use Nette;
 
-
-/* use only DefaultPresenter in PHP 5.3 */
-
-class Admin_DefaultPresenter extends \BasePresenter
+class /*5.2*Admin_*/DefaultPresenter extends \BasePresenter
 {
 
 }

@@ -4,10 +4,7 @@ namespace FrontModule;
 
 use Nette;
 
-
-/* use only CatalogListPresenter in PHP 5.3 */
-
-class Front_CatalogListPresenter extends \BasePresenter
+class /*5.2*Front_*/CatalogListPresenter extends \BasePresenter
 {
 
 }
