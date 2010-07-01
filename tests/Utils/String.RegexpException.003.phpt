@@ -48,16 +48,16 @@ __halt_compiler();
 ------EXPECT------
 
 Warning: preg_split(): Compilation failed: nothing to repeat at offset 0 in %a% on line %d%
-Exception Nette\RegexpException: preg_split(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
+Exception %ns%RegexpException: preg_split(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
 
 
 Warning: preg_match(): Compilation failed: nothing to repeat at offset 0 in %a% on line %d%
-Exception Nette\RegexpException: preg_match(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
+Exception %ns%RegexpException: preg_match(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
 
 
 Warning: preg_match_all(): Compilation failed: nothing to repeat at offset 0 in %a% on line %d%
-Exception Nette\RegexpException: preg_match_all(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
+Exception %ns%RegexpException: preg_match_all(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
 
 
 Warning: preg_replace(): Compilation failed: nothing to repeat at offset 0 in %a% on line %d%
-Exception Nette\RegexpException: preg_replace(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#
+Exception %ns%RegexpException: preg_replace(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#

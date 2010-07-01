@@ -45,10 +45,10 @@ __halt_compiler() ?>
 <?php
 %A%
 
-if (SnippetHelper::$outputAllowed) {
-} if (TRUE): if (SnippetHelper::$outputAllowed) { ?>
-		<?php } ;else: if (SnippetHelper::$outputAllowed) { ?>
-		<?php } endif ;if (SnippetHelper::$outputAllowed) { ?>
+if (%ns%SnippetHelper::$outputAllowed) {
+} if (TRUE): if (%ns%SnippetHelper::$outputAllowed) { ?>
+		<?php } ;else: if (%ns%SnippetHelper::$outputAllowed) { ?>
+		<?php } endif ;if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 <?php
 }
