@@ -111,7 +111,7 @@ class PresenterLoader implements IPresenterLoader
 	 */
 	public function formatPresenterClass($presenter)
 	{
-		/*5.2*return strtr($presenter, ':', '_') . "Presenter";*/
+		/*5.2*return strtr($presenter, ':', '_') . 'Presenter';*/
 		return str_replace(':', 'Module\\', $presenter) . 'Presenter';
 	}
 
