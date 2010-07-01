@@ -7,6 +7,7 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
+ * @keepTrailingSpaces
  */
 
 use Nette\Mail\Mail;

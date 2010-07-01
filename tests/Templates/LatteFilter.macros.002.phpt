@@ -7,6 +7,7 @@
  * @category   Nette
  * @package    Nette\Templates
  * @subpackage UnitTests
+ * @keepTrailingSpaces
  */
 
 use Nette\Environment,
