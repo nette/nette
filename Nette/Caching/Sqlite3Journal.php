@@ -60,11 +60,11 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 	 */
 	public function write($key, array $dependencies)
 	{
-		$entry = sqlite_escape_string($key);
+		$entry = \SQLite3::escapeString($key);
 		$query = '';
 		if (!empty($dependencies[Cache::TAGS])) {
 			foreach ((array) $dependencies[Cache::TAGS] as $tag) {
-				$query .= "INSERT INTO cache (entry, tag) VALUES ('$entry', '" . sqlite_escape_string($tag) . "'); ";
+				$query .= "INSERT INTO cache (entry, tag) VALUES ('$entry', '" . \SQLite3::escapeString($tag) . "'); ";
 			}
 		}
 		if (!empty($dependencies[Cache::PRIORITY])) {
@@ -99,7 +99,7 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 			if (!empty($conditions[Cache::TAGS])) {
 				$tags = array();
 				foreach ((array) $conditions[Cache::TAGS] as $tag) {
-					$tags[] = "'" . sqlite_escape_string($tag) . "'";
+					$tags[] = "'" . \SQLite3::escapeString($tag) . "'";
 				}
 				$query[] = 'tag IN(' . implode(', ', $tags) . ')';
 			}
@@ -114,7 +114,7 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 				$entries = array();
 				while ($entry = $result->fetchArray(SQLITE3_NUM)) {
 					$entries[] = $entry[0];
-				}				
+				}
 				$this->getDatabase()->exec("DELETE FROM cache WHERE $query");
 				return $entries;
 			} else {
