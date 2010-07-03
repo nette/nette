@@ -18,17 +18,17 @@ use Nette;
 
 
 /**
- * Provides SQLite based cache journal backend.
+ * Provides SQLite3 based cache journal backend.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
-class SqliteJournal extends Nette\Object implements ICacheJournal
+class Sqlite3Journal extends Nette\Object implements ICacheJournal
 {
 	/** @var string */
 	private $dir;
 
-	/** @var \SQLiteDatabase */
+	/** @var \SQLite3 */
 	private $database;
 
 
@@ -47,7 +47,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	 */
 	public function isSupported()
 	{
-		return extension_loaded('sqlite');
+		return extension_loaded('sqlite3');
 	}
 
 
@@ -71,8 +71,8 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 			$query .= "INSERT INTO cache (entry, priority) VALUES ('$entry', '" . ((int) $dependencies[Cache::PRIORITY]) . "'); ";
 		}
 		
-		if (!$this->getDatabase()->queryExec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
-			$this->getDatabase()->queryExec('ROLLBACK');
+		if (!$this->getDatabase()->exec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
+			$this->getDatabase()->exec('ROLLBACK');
 			return FALSE;
 		}
 		
@@ -90,7 +90,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	{
 		if (!empty($conditions[Cache::ALL])) {
 			if ($this->isSupported())
-				$this->getDatabase()->queryExec('DELETE FROM CACHE;');
+				$this->getDatabase()->exec('DELETE FROM CACHE;');
 			
 			return;
 		} else {
@@ -110,8 +110,12 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 			
 			if (!empty($query)) {
 				$query = implode(' OR ', $query);
-				$entries = $this->getDatabase()->singleQuery("SELECT entry FROM cache WHERE $query", FALSE);
-				$this->getDatabase()->queryExec("DELETE FROM cache WHERE $query");
+				$result = $this->getDatabase()->query("SELECT entry FROM cache WHERE $query");
+				$entries = array();
+				while ($entry = $result->fetchArray(SQLITE3_NUM)) {
+					$entries[] = $entry[0];
+				}				
+				$this->getDatabase()->exec("DELETE FROM cache WHERE $query");
 				return $entries;
 			} else {
 				return array();
@@ -123,20 +127,20 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 
 	/**
 	 * Gets the database object.
-	 * @return \SQLiteDatabase
+	 * @return \SQLite3
 	 */
 	protected function getDatabase()
 	{
 		if ($this->database === NULL) {
 			if (!$this->isSupported()) {
-				throw new \InvalidStateException("SQLite extension is required for storing tags and priorities.");
+				throw new \InvalidStateException("SQLite3 extension is required for storing tags and priorities.");
 			}
-
+			
 			// init the journal
-			$initialized = file_exists($file = ($this->dir . '/cachejournal.sdb'));
-			$this->database = new \SQLiteDatabase($file);
+			$initialized = file_exists($file = ($this->dir . '/cachejournal.db'));
+			$this->database = new \SQLite3($file);
 			if (!$initialized) {
-				$this->database->queryExec(
+				$this->database->exec(
 					'CREATE TABLE cache (entry VARCHAR NOT NULL, priority INTEGER, tag VARCHAR); '
 					. 'CREATE INDEX IDX_ENTRY ON cache (entry); '
 					. 'CREATE INDEX IDX_PRI ON cache (priority); '
