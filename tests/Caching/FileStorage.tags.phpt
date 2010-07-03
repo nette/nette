@@ -19,6 +19,7 @@ require __DIR__ . '/../initialize.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
+Nette\Environment::setVariable('tempDir', TEMP_DIR);
 T::purge(TEMP_DIR);
 
 

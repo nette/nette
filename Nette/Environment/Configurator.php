@@ -35,6 +35,7 @@ class Configurator extends Object
 		'Nette\\Web\\IHttpResponse' => 'Nette\Web\HttpResponse',
 		'Nette\\Web\\IUser' => 'Nette\Web\User',
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
+		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
@@ -259,6 +260,16 @@ class Configurator extends Object
 	public static function createCacheStorage()
 	{
 		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir'));
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\SqliteCacheJournal
+	 */
+	public static function createCacheJournal()
+	{
+		return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir'));
 	}
 
 
