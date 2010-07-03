@@ -35,6 +35,9 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 	/** @var string */
 	private $prefix;
+	
+	/** @var ICacheJournal */
+	private $journal;
 
 
 
@@ -104,8 +107,8 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY]) || !empty($dp[Cache::ITEMS])) {
-			throw new \NotSupportedException('Tags, priority and dependent items are not supported by MemcachedStorage.');
+		if (!empty($dp[Cache::ITEMS])) {
+			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
 		}
 
 		$meta = array(
@@ -122,6 +125,10 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 		if (!empty($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
+		}
+		
+		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
+			$this->getJournal()->write($this->prefix . $key, $dp);
 		}
 
 		$this->memcache->set($this->prefix . $key, $meta, 0, $expire);
@@ -151,9 +158,25 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		if (!empty($conds[Cache::ALL])) {
 			$this->memcache->flush();
 
-		} elseif (isset($conds[Cache::TAGS]) || isset($conds[Cache::PRIORITY])) {
-			throw new \NotSupportedException('Tags and priority is not supported by MemcachedStorage.');
+		} else {
+			foreach ($this->getJournal()->clean($conds) as $entry) {
+				$this->memcache->delete($entry);
+			}
 		}
+	}
+
+
+
+	/**
+	 * Returns the ICacheJournal
+	 * @return ICacheJournal
+	 */
+	protected function getJournal()
+	{
+		if ($this->journal === NULL) {
+			$this->journal = Nette\Environment::getService('Nette\\Caching\\ICacheJournal');
+		}
+		return $this->journal;
 	}
 
 }
