@@ -45,7 +45,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	 * Returns whether the SqliteCacheJournal is able to operate.
 	 * @return bool
 	 */
-	public function isSupported()
+	public static function isAvailable()
 	{
 		return extension_loaded('sqlite');
 	}
@@ -89,7 +89,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	public function clean(array $conditions)
 	{
 		if (!empty($conditions[Cache::ALL])) {
-			if ($this->isSupported())
+			if (self::isAvailable())
 				$this->getDatabase()->queryExec('DELETE FROM CACHE;');
 			
 			return;
@@ -128,8 +128,8 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	protected function getDatabase()
 	{
 		if ($this->database === NULL) {
-			if (!$this->isSupported()) {
-				throw new \InvalidStateException("SQLite extension is required for storing tags and priorities.");
+			if (!self::isAvailable()) {
+				throw new \NotSupportedException("SQLite extension is required for storing tags and priorities.");
 			}
 
 			// init the journal

@@ -1,28 +1,14 @@
 <?php
 
-/**
- * Nette Framework
- *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nette.org/license  Nette license
- * @link       http://nette.org
- * @category   Nette
- * @package    Nette\Caching
- */
-
 namespace Nette\Caching;
 
 use Nette;
 
-
-
 /**
- * Memcached storage.
- *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette\Caching
+ * APC caching storage
+ * @author Michael Moravec
  */
-class MemcachedStorage extends Nette\Object implements ICacheStorage
+class ApcStorage implements ICacheStorage
 {
 	/**#@+ @internal cache structure */
 	const META_CALLBACKS = 'callbacks';
@@ -30,37 +16,33 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	const META_DELTA = 'delta';
 	/**#@-*/
 
-	/** @var Memcache */
-	private $memcache;
 
 	/** @var string */
 	private $prefix;
-	
+
 	/** @var ICacheJournal */
 	private $journal;
 
 
 
 	/**
-	 * Checks if Memcached extension is available.
+	 * Checks if APC extension is available.
 	 * @return bool
 	 */
 	public static function isAvailable()
 	{
-		return extension_loaded('memcache');
+		return extension_loaded('apc');
 	}
 
 
 
-	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
+	public function  __construct($prefix = '')
 	{
 		if (!self::isAvailable()) {
-			throw new \NotSupportedException("PHP extension 'memcache' is not loaded.");
+			throw new \NotSupportedException("PHP extension 'apc' is not loaded.");
 		}
 
-		$this->prefix = $prefix;
-		$this->memcache = new \Memcache;
-		$this->memcache->connect($host, $port);
+		$this->prefix = (string) $prefix;
 	}
 
 
@@ -72,8 +54,8 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		$key = $this->prefix . $key;
-		$meta = $this->memcache->get($key);
+		$this->_normalizeKey($key);
+		$meta = apc_fetch($key);
 		if (!$meta) return NULL;
 
 		// meta structure:
@@ -85,12 +67,13 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 		// verify dependencies
 		if (!empty($meta[self::META_CALLBACKS]) && !Cache::checkCallbacks($meta[self::META_CALLBACKS])) {
-			$this->memcache->delete($key);
+			apc_delete($key);
 			return NULL;
 		}
 
 		if (!empty($meta[self::META_DELTA])) {
-			$this->memcache->replace($key, $meta, 0, $meta[self::META_DELTA] + time());
+			apc_delete($key);
+			apc_store($key, $meta, 0, $meta[self::META_DELTA] + time());
 		}
 
 		return $meta[self::META_DATA];
@@ -107,9 +90,11 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		if (!empty($dp[Cache::ITEMS])) {
-			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
+		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY]) || !empty($dp[Cache::ITEMS])) {
+			throw new \NotSupportedException('Dependent items are not supported by ApcStorage.');
 		}
+
+		$this->_normalizeKey($key);
 
 		$meta = array(
 			self::META_DATA => $data,
@@ -131,7 +116,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			$this->getJournal()->write($this->prefix . $key, $dp);
 		}
 
-		$this->memcache->set($this->prefix . $key, $meta, 0, $expire);
+		apc_store($this->prefix . $key, $meta, $expire);
 	}
 
 
@@ -143,7 +128,8 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function remove($key)
 	{
-		$this->memcache->delete($this->prefix . $key);
+		$this->_normalizeKey($key);
+		apc_delete($key);
 	}
 
 
@@ -156,7 +142,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	public function clean(array $conds)
 	{
 		if (!empty($conds[Cache::ALL])) {
-			$this->memcache->flush();
+			apc_clear_cache('user');
 
 		} else {
 			foreach ($this->getJournal()->clean($conds) as $entry) {
@@ -179,4 +165,10 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		return $this->journal;
 	}
 
+
+
+	private function _normalizeKey(&$key)
+	{
+		$key = $this->prefix . str_replace("\x00", '~', $key);
+	}
 }
