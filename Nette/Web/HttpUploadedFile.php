@@ -169,7 +169,7 @@ class HttpUploadedFile extends Nette\Object
 	public function move($dest)
 	{
 		$dir = dirname($dest);
-		if (@mkdir($dir, 0755, TRUE)) { // intentionally @
+		if (@mkdir($dir, 0755, TRUE)) { // @ - $dir may already exist
 			chmod($dir, 0755);
 		}
 		$func = is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename';

@@ -136,7 +136,7 @@ class TestRunner
 	public function log($testFile, $content, $type, $section = '')
 	{
 		$file = dirname($testFile) . '/' . $type . '/' . basename($testFile, '.phpt') . ($section ? ".$section" : '') . '.raw';
-		@mkdir(dirname($file)); // intentionally @
+		@mkdir(dirname($file)); // @ - directory may already exist
 		file_put_contents($file, $content);
 	}
 

@@ -67,7 +67,7 @@ class TestHelpers
 	 */
 	public static function purge($dir)
 	{
-		@mkdir($dir); // intentionally @
+		@mkdir($dir); // @ - directory may already exist
 		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
 			if ($entry->getBasename() === '.gitignore') {
 				// ignore

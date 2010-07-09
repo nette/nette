@@ -29,7 +29,7 @@ Options:
  * Execute tests
  */
 try {
-	@unlink(__DIR__ . '/coverage.tmp'); // intentionally @
+	@unlink(__DIR__ . '/coverage.tmp'); // @ - file may not exist
 
 	$manager = new TestRunner;
 	$manager->parseConfigFile();

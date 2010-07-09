@@ -132,7 +132,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		if (isset($dp[self::FILES])) {
 			//clearstatcache();
 			foreach ((array) $dp[self::FILES] as $item) {
-				$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkFile'), $item, @filemtime($item)); // intentionally @
+				$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkFile'), $item, @filemtime($item)); // @ - stat may fail
 			}
 			unset($dp[self::FILES]);
 		}
@@ -303,7 +303,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	private static function checkFile($file, $time)
 	{
-		return @filemtime($file) == $time; // intentionally @
+		return @filemtime($file) == $time; // @ - stat may fail
 	}
 
 
