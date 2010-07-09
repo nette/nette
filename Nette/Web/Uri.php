@@ -88,7 +88,7 @@ class Uri extends Nette\FreezableObject
 	public function __construct($uri = NULL)
 	{
 		if (is_string($uri)) {
-			$parts = @parse_url($uri); // intentionally @
+			$parts = @parse_url($uri); // @ - is escalated to exception
 			if ($parts === FALSE) {
 				throw new \InvalidArgumentException("Malformed or unsupported URI '$uri'.");
 			}

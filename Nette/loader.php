@@ -33,7 +33,7 @@ if (PHP_VERSION_ID < 50200) {
 }
 */
 
-@set_magic_quotes_runtime(FALSE); // intentionally @
+@set_magic_quotes_runtime(FALSE); // @ - deprecated since PHP 5.3.0
 
 
 

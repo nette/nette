@@ -75,13 +75,13 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			// checks whether directory is writable
 			$uniq = uniqid('_', TRUE);
 			umask(0000);
-			if (!@mkdir("$dir/$uniq", 0777)) { // intentionally @
+			if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
 				throw new \InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 			}
 
 			// tests subdirectory mode
 			self::$useDirectories = !ini_get('safe_mode');
-			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // intentionally @
+			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // @ - error is expected
 				self::$useDirectories = TRUE;
 				unlink("$dir/$uniq/_");
 			}
@@ -195,9 +195,9 @@ class FileStorage extends Nette\Object implements ICacheStorage
 				return;
 			}
 		}
-		$handle = @fopen($cacheFile, 'r+b'); // intentionally @
+		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
 		if (!$handle) {
-			$handle = fopen($cacheFile, 'wb'); // intentionally @
+			$handle = fopen($cacheFile, 'wb');
 			if (!$handle) {
 				return;
 			}
@@ -290,7 +290,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 					continue;
 				}
 				if ($entry->isDir()) { // collector: remove empty dirs
-					@rmdir($path); // intentionally @
+					@rmdir($path); // @ - removing dirs is not necessary
 					continue;
 				}
 				if ($all) {
@@ -349,7 +349,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	 */
 	protected function readMeta($file, $lock)
 	{
-		$handle = @fopen($file, 'r+b'); // intentionally @
+		$handle = @fopen($file, 'r+b'); // @ - file may not exist
 		if (!$handle) return NULL;
 
 		flock($handle, $lock);
@@ -417,19 +417,19 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	 */
 	private static function delete($file, $handle = NULL)
 	{
-		if (@unlink($file)) { // intentionally @
+		if (@unlink($file)) { // @ - file may not already exist
 			if ($handle) fclose($handle);
 			return;
 		}
 
 		if (!$handle) {
-			$handle = @fopen($file, 'r+'); // intentionally @
+			$handle = @fopen($file, 'r+'); // @ - file may not exist
 		}
 		if ($handle) {
 			flock($handle, LOCK_EX);
 			ftruncate($handle, 0);
 			fclose($handle);
-			@unlink($file); // intentionally @; not atomic
+			@unlink($file); // @ - file may not already exist
 		}
 	}
 
@@ -447,7 +447,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			}
 			$this->db = sqlite_open($this->dir . '/cachejournal.sdb');
 			@sqlite_exec($this->db, 'CREATE TABLE cache (file VARCHAR NOT NULL, priority, tag VARCHAR);
-			CREATE INDEX IDX_FILE ON cache (file); CREATE INDEX IDX_PRI ON cache (priority); CREATE INDEX IDX_TAG ON cache (tag);'); // intentionally @
+			CREATE INDEX IDX_FILE ON cache (file); CREATE INDEX IDX_PRI ON cache (priority); CREATE INDEX IDX_TAG ON cache (tag);'); // @ - table may already exist
 		}
 		return $this->db;
 	}
