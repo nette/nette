@@ -711,7 +711,7 @@ class Route extends Nette\Object implements IRouter
 	 * Creates new style.
 	 * @param  string  style name (#style, urlParameter, ?queryParameter)
 	 * @param  string  optional parent style name
-	 * @param  void
+	 * @return void
 	 */
 	public static function addStyle($style, $parent = '#')
 	{
@@ -737,7 +737,7 @@ class Route extends Nette\Object implements IRouter
 	 * @param  string  style name (#style, urlParameter, ?queryParameter)
 	 * @param  string  property name (Route::PATTERN, Route::FILTER_IN, Route::FILTER_OUT, Route::FILTER_TABLE)
 	 * @param  mixed   property value
-	 * @param  void
+	 * @return void
 	 */
 	public static function setStyleProperty($style, $key, $value)
 	{
