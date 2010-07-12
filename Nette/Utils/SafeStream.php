@@ -7,10 +7,10 @@
  * @license    http://nette.org/license  Nette license
  * @link       http://nette.org
  * @category   Nette
- * @package    Nette\IO
+ * @package    Nette
  */
 
-namespace Nette\IO;
+namespace Nette;
 
 use Nette;
 
@@ -29,7 +29,7 @@ use Nette;
  *
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette\IO
+ * @package    Nette
  */
 final class SafeStream
 {

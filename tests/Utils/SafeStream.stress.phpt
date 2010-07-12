@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\IO\SafeStream stress test.
+ * Test: Nette\SafeStream stress test.
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette\IO
+ * @package    Nette
  * @subpackage UnitTests
  * @skip       Requires more robust NetteTestCase implementation.
  */
 
-use Nette\IO\SafeStream;
+use Nette\SafeStream;
 
 
 
