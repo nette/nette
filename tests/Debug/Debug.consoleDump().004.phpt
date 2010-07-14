@@ -34,6 +34,6 @@ __halt_compiler() ?>
 
 <script type="text/javascript">
 %A%
-_netteConsole.document.body.innerHTML = _netteConsole.document.body.innerHTML + "\t\r\n\t<table>\r\n\t\t\t<tr class=\"even\">\r\n\t\t<th><\/th>\r\n\t\t<td><pre class=\"dump\"><span>string<\/span>(5) \"value\"\n<\/pre>\n<\/td>\r\n\t<\/tr>\r\n\t\t<\/table>\r\n";
+_netteConsole.document.body.innerHTML = _netteConsole.document.body.innerHTML + "\t\r\n\t<table>\r\n\t\t\t<tr class=\"even\">\r\n\t\t<th><\/th>\r\n\t\t<td><pre class=\"dump\">\"value\" (5)\n<\/pre>\n<\/td>\r\n\t<\/tr>\r\n\t\t<\/table>\r\n";
 %A%
 </script>

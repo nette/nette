@@ -1,23 +1,23 @@
 <h2>Form was submitted and successfully validated</h2>array(13) {
-   "name" => string(8) "John Doe"
-   "age" => string(2) "12"
+   "name" => "John Doe" (8)
+   "age" => "12" (2)
    "gender" => NULL
-   "email" => string(0) ""
-   "send" => bool(FALSE)
-   "street" => string(0) ""
-   "city" => string(0) ""
-   "country" => string(2) "CZ"
-   "password" => string(3) "xxx"
-   "password2" => string(3) "xxx"
-   "avatar" => object(%ns%HttpUploadedFile) (5) {
+   "email" => ""
+   "send" => FALSE
+   "street" => ""
+   "city" => ""
+   "country" => "CZ" (2)
+   "password" => "xxx" (3)
+   "password2" => "xxx" (3)
+   "avatar" => %ns%HttpUploadedFile(5) {
       "name" private => NULL
       "type" private => NULL
       "size" private => NULL
       "tmpName" private => NULL
-      "error" private => int(4)
+      "error" private => 4
    }
-   "userid" => string(3) "231"
-   "note" => string(0) ""
+   "userid" => "231" (3)
+   "note" => ""
 }
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

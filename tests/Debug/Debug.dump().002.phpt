@@ -31,5 +31,5 @@ Debug::dump('xxx');
 __halt_compiler() ?>
 
 ------EXPECT------
-<pre class="dump"><span>string</span>(3) "xxx" <small>in file %a%</small>
+<pre class="dump">"xxx" (3) <small>in file %a% on line %d%</small>
 </pre>

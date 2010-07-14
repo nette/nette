@@ -1,17 +1,17 @@
 <h2>Form was submitted and successfully validated</h2>array(2) {
    "first" => array(5) {
-      "name" => string(10) "James Bond"
-      "email" => string(12) "bond@007.com"
-      "street" => string(7) "Unknown"
-      "city" => string(6) "London"
-      "country" => string(2) "GB"
+      "name" => "James Bond" (10)
+      "email" => "bond@007.com" (12)
+      "street" => "Unknown" (7)
+      "city" => "London" (6)
+      "country" => "GB" (2)
    }
    "second" => array(5) {
-      "name" => string(8) "Jim Beam"
-      "email" => string(12) "jim@beam.com"
-      "street" => string(0) ""
-      "city" => string(0) ""
-      "country" => string(2) "US"
+      "name" => "Jim Beam" (8)
+      "email" => "jim@beam.com" (12)
+      "street" => ""
+      "city" => ""
+      "country" => "US" (2)
    }
 }
 
