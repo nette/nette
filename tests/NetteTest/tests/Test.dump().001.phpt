@@ -56,44 +56,44 @@ echo 'EOF';
 __halt_compiler() ?>
 
 ------EXPECT------
-int(10)
+10
 
-float(20.2)
+20.2
 
-bool(TRUE)
+TRUE
 
-bool(FALSE)
+FALSE
 
 NULL
 
-string(5) "hello"
+"hello"
 
-object(stdClass) (0) {}
+stdClass()
 
-array(0)
+array()
 
-resource of type(stream)
+stream resource
 
-array(9) {
-	0 => int(10)
-	1 => float(20.2)
-	2 => bool(TRUE)
-	3 => bool(FALSE)
-	4 => NULL
-	5 => string(5) "hello"
-	6 => object(stdClass) (0) {}
-	7 => array(0)
-	8 => resource of type(stream)
-}
+array(
+	10
+	20.2
+	TRUE
+	FALSE
+	NULL
+	"hello"
+	stdClass()
+	array()
+	stream resource
+)
 
-object(TestClass) (3) {
-	"x" => array(2) {
-		0 => int(10)
-		1 => NULL
-	}
-	"y" private => string(5) "hello"
-	"z" protected => int(30)
-}
+TestClass(
+	"x" => array(
+		10
+		NULL
+	)
+	"y" private => "hello"
+	"z" protected => 30
+)
 
 message
 

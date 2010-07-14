@@ -1,78 +1,63 @@
-object(stdClass) (4) {
-	"key" => string(5) "value"
-	"0" => array(1) {
-		0 => array(1) {
-			0 => array(1) {
-				0 => array(1) {
-					0 => array(1) {
-						...
-					}
-				}
-			}
-		}
-	}
-	"1" => object(stdClass) (1) {
-		"0" => object(stdClass) (1) {
-			"0" => object(stdClass) (1) {
-				"0" => object(stdClass) (1) {
-					"0" => object(stdClass) (1) {
-						...
-					}
-				}
-			}
-		}
-	}
-	"tmp" => object(stdClass) (4) {
-		*RECURSION*
-	}
-}
+stdClass(
+	"key" => "value"
+	"0" => array(
+		array(
+			array(
+				array(
+					array( ... )
+				)
+			)
+		)
+	)
+	"1" => stdClass(
+		"0" => stdClass(
+			"0" => stdClass(
+				"0" => stdClass(
+					"0" => stdClass( ... )
+				)
+			)
+		)
+	)
+	"tmp" => stdClass( *RECURSION* )
+)
 
-array(4) {
-	"key" => string(5) "value"
-	0 => array(1) {
-		0 => array(1) {
-			0 => array(1) {
-				0 => array(1) {
-					0 => array(1) {
-						...
-					}
-				}
-			}
-		}
-	}
-	1 => object(stdClass) (1) {
-		"0" => object(stdClass) (1) {
-			"0" => object(stdClass) (1) {
-				"0" => object(stdClass) (1) {
-					"0" => object(stdClass) (1) {
-						...
-					}
-				}
-			}
-		}
-	}
-	2 => array(4) {
-		"key" => string(5) "value"
-		0 => array(1) {
-			0 => array(1) {
-				0 => array(1) {
-					0 => array(1) {
-						...
-					}
-				}
-			}
-		}
-		1 => object(stdClass) (1) {
-			"0" => object(stdClass) (1) {
-				"0" => object(stdClass) (1) {
-					"0" => object(stdClass) (1) {
-						...
-					}
-				}
-			}
-		}
-		2 => array(5) {
-			*RECURSION*
-		}
-	}
-}
+array(
+	"key" => "value"
+	0 => array(
+		array(
+			array(
+				array(
+					array( ... )
+				)
+			)
+		)
+	)
+	1 => stdClass(
+		"0" => stdClass(
+			"0" => stdClass(
+				"0" => stdClass(
+					"0" => stdClass( ... )
+				)
+			)
+		)
+	)
+	2 => array(
+		"key" => "value"
+		0 => array(
+			array(
+				array(
+					array( ... )
+				)
+			)
+		)
+		1 => stdClass(
+			"0" => stdClass(
+				"0" => stdClass(
+					"0" => stdClass( ... )
+				)
+			)
+		)
+		2 => array( *RECURSION* )
+	)
+)
+

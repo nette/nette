@@ -140,34 +140,40 @@ class TestHelpers
 
 	private static function _dump(& $var, $level = 0)
 	{
-		static $tableUtf, $tableBin, $re = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
+		static $tableUtf, $tableBin, $reBinary = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
 		if ($tableUtf === NULL) {
 			foreach (range("\x00", "\xFF") as $ch) {
 				if (ord($ch) < 32 && strpos("\r\n\t", $ch) === FALSE) $tableUtf[$ch] = $tableBin[$ch] = '\\x' . str_pad(dechex(ord($ch)), 2, '0', STR_PAD_LEFT);
 				elseif (ord($ch) < 127) $tableUtf[$ch] = $tableBin[$ch] = $ch;
 				else { $tableUtf[$ch] = $ch; $tableBin[$ch] = '\\x' . dechex(ord($ch)); }
 			}
+			$tableBin["\\"] = '\\\\';
+			$tableBin["\r"] = '\\r';
+			$tableBin["\n"] = '\\n';
+			$tableBin["\t"] = '\\t';
 			$tableUtf['\\x'] = $tableBin['\\x'] = '\\\\x';
 		}
 
 		if (is_bool($var)) {
-			echo "bool(" . ($var ? 'TRUE' : 'FALSE') . ")\n";
+			echo ($var ? 'TRUE' : 'FALSE') . "\n";
 
 		} elseif ($var === NULL) {
 			echo "NULL\n";
 
 		} elseif (is_int($var)) {
-			echo "int($var)\n";
+			echo "$var\n";
 
 		} elseif (is_float($var)) {
-			echo "float($var)\n";
+			$var = (string) $var;
+			if (strpos($var, '.') === FALSE) $var .= '.0';
+			echo "$var\n";
 
 		} elseif (is_string($var)) {
-			$s = strtr($var, preg_match($re, $var) || preg_last_error() ? $tableBin : $tableUtf);
-			echo "string(" . strlen($var) . ") \"$s\"\n";
+			$s = strtr($var, preg_match($reBinary, $var) || preg_last_error() ? $tableBin : $tableUtf);
+			echo "\"$s\"\n";
 
 		} elseif (is_array($var)) {
-			echo "array(" . count($var) . ") ";
+			echo "array(";
 			$space = str_repeat("\t", $level);
 
 			static $marker;
@@ -175,42 +181,46 @@ class TestHelpers
 			if (empty($var)) {
 
 			} elseif (isset($var[$marker])) {
-				echo "{\n$space\t*RECURSION*\n$space}";
+				echo " *RECURSION* ";
 
 			} elseif ($level < self::$maxDepth) {
-				echo "{\n";
+				echo "\n";
+				$vector = range(0, count($var) - 1) === array_keys($var);
 				$var[$marker] = 0;
 				foreach ($var as $k => &$v) {
 					if ($k === $marker) continue;
-					$k = is_int($k) ? $k : '"' . strtr($k, preg_match($re, $k) || preg_last_error() ? $tableBin : $tableUtf) . '"';
-					echo "$space\t$k => ";
+					if ($vector) {
+						echo "$space\t";
+					} else {
+						$k = is_int($k) ? $k : '"' . strtr($k, preg_match($reBinary, $k) || preg_last_error() ? $tableBin : $tableUtf) . '"';
+						echo "$space\t$k => ";
+					}
 					self::_dump($v, $level + 1);
 				}
 				unset($var[$marker]);
-				echo "$space}";
+				echo "$space";
 
 			} else {
-				echo "{\n$space\t...\n$space}";
+				echo " ... ";
 			}
-			echo "\n";
+			echo ")\n";
 
 		} elseif ($var instanceof Exception) {
 			echo 'Exception ', get_class($var), ': ', ($var->getCode() ? '#' . $var->getCode() . ' ' : '') . $var->getMessage(), "\n";
 
 		} elseif (is_object($var)) {
 			$arr = (array) $var;
-			echo "object(" . get_class($var) . ") (" . count($arr) . ") ";
+			echo get_class($var) . "(";
 			$space = str_repeat("\t", $level);
 
 			static $list = array();
 			if (empty($arr)) {
-				echo "{}";
 
 			} elseif (in_array($var, $list, TRUE)) {
-				echo "{\n$space\t*RECURSION*\n$space}";
+				echo " *RECURSION* ";
 
 			} elseif ($level < self::$maxDepth) {
-				echo "{\n";
+				echo "\n";
 				$list[] = $var;
 				foreach ($arr as $k => &$v) {
 					$m = '';
@@ -218,20 +228,20 @@ class TestHelpers
 						$m = $k[1] === '*' ? ' protected' : ' private';
 						$k = substr($k, strrpos($k, "\x00") + 1);
 					}
-					$k = strtr($k, preg_match($re, $k) || preg_last_error() ? $tableBin : $tableUtf);
+					$k = strtr($k, preg_match($reBinary, $k) || preg_last_error() ? $tableBin : $tableUtf);
 					echo "$space\t\"$k\"$m => ";
 					echo self::_dump($v, $level + 1);
 				}
 				array_pop($list);
-				echo "$space}";
+				echo "$space";
 
 			} else {
-				echo "{\n$space\t...\n$space}";
+				echo " ... ";
 			}
-			echo "\n";
+			echo ")\n";
 
 		} elseif (is_resource($var)) {
-			echo "resource of type(" . get_resource_type($var) . ")\n";
+			echo get_resource_type($var) . " resource\n";
 
 		} else {
 			echo "unknown type\n";
