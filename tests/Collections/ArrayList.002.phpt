@@ -61,9 +61,9 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(FALSE)
+FALSE
 
-bool(TRUE)
+TRUE
 
 Adding Jack using []
 

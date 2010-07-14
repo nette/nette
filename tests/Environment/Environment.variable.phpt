@@ -66,23 +66,23 @@ Exception InvalidStateException: Unknown environment variable 'appDir'.
 
 Defining constant 'APP_DIR':
 
-Getting variable 'appDir': string(6) "/myApp"
+Getting variable 'appDir': "/myApp"
 
-Getting variable 'tempDir' #2: string(11) "/myApp/temp"
+Getting variable 'tempDir' #2: "/myApp/temp"
 
 Setting variable 'test'...
 
-Getting variable 'test': string(11) "/myApp/test"
+Getting variable 'test': "/myApp/test"
 
-Getting variables: array(7) {
-	"encoding" => string(5) "UTF-8"
-	"lang" => string(2) "en"
-	"cacheBase" => string(11) "/myApp/temp"
-	"tempDir" => string(11) "/myApp/temp"
-	"logDir" => string(10) "/myApp/log"
-	"appDir" => string(6) "/myApp"
-	"test" => string(11) "/myApp/test"
-}
+Getting variables: array(
+	"encoding" => "UTF-8"
+	"lang" => "en"
+	"cacheBase" => "/myApp/temp"
+	"tempDir" => "/myApp/temp"
+	"logDir" => "/myApp/log"
+	"appDir" => "/myApp"
+	"test" => "/myApp/test"
+)
 
 Setting circular variables...
 

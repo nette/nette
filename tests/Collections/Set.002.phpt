@@ -53,9 +53,9 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(FALSE)
+FALSE
 
-bool(TRUE)
+TRUE
 
 Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.
 

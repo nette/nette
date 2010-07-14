@@ -31,10 +31,10 @@ T::dump( Environment::getMode('myMode'), "Is enabled?" );
 __halt_compiler() ?>
 
 ------EXPECT------
-Is console? bool(FALSE)
+Is console? FALSE
 
-Is production mode? bool(TRUE)
+Is production mode? TRUE
 
 Setting my mode...
 
-Is enabled? bool(TRUE)
+Is enabled? TRUE

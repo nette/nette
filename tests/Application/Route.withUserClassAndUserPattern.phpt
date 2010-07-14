@@ -37,14 +37,14 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /presenter/12.34/
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"id" => string(5) "12.34"
-	"test" => string(9) "testvalue"
-}
+array(
+	"id" => "12.34"
+	"test" => "testvalue"
+)
 
-string(31) "/presenter/12.34?test=testvalue"
+"/presenter/12.34?test=testvalue"
 
 ==> /presenter/123x
 

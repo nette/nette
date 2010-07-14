@@ -37,4 +37,4 @@ T::dump( stream_get_contents($temp) );
 __halt_compiler() ?>
 
 ------EXPECT------
-string(22) "Nette Framework rocks!"
+"Nette Framework rocks!"

@@ -36,7 +36,7 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-Name: string(10) "production"
+Name: "production"
 
 Setting name:
 

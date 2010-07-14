@@ -35,14 +35,14 @@ T::dump( $set );
 __halt_compiler() ?>
 
 ------EXPECT------
-object(%ns%Set) (3) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-}
+%ns%Set(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+	"%h%" => Person(
+		"name" private => "Larry"
+	)
+)

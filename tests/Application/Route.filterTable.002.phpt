@@ -38,10 +38,10 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /?action=kategorie
 
-string(8) "Category"
+"Category"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(33) "/?test=testvalue&action=kategorie"
+"/?test=testvalue&action=kategorie"

@@ -27,4 +27,4 @@ T::dump( $acl->hasResource('area') );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(FALSE)
+FALSE

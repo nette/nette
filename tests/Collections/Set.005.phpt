@@ -40,8 +40,8 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-Contains Jack? bool(TRUE)
+Contains Jack? TRUE
 
-Contains Larry? bool(FALSE)
+Contains Larry? FALSE
 
-Contains foo? bool(FALSE)
+Contains foo? FALSE

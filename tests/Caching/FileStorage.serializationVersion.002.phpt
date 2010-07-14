@@ -46,4 +46,4 @@ __halt_compiler() ?>
 ------EXPECT------
 Changed @serializationVersion
 
-Is cached? bool(FALSE)
+Is cached? FALSE

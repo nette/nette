@@ -142,7 +142,7 @@ HTML mode
 </pre>
 <pre class="dump"><span>stream resource</span>
 </pre>
-<pre class="dump"><span>stdClass</span>(0) 
+<pre class="dump"><span>stdClass</span>(0)
 </pre>
 <pre class="dump"><span>Test</span>(3) <code>{
    "x" => <span>array</span>(2) <code>[
@@ -192,7 +192,7 @@ array(5) [
 
 stream resource
 
-stdClass(0) 
+stdClass(0)
 
 Test(3) {
    "x" => array(2) [

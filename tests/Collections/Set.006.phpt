@@ -42,17 +42,17 @@ T::dump( $set );
 __halt_compiler() ?>
 
 ------EXPECT------
-Removing Larry: bool(TRUE)
+Removing Larry: TRUE
 
-Removing Larry second time: bool(FALSE)
+Removing Larry second time: FALSE
 
-Removing foo: bool(FALSE)
+Removing foo: FALSE
 
-object(%ns%Set) (2) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-}
+%ns%Set(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+)

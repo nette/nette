@@ -36,23 +36,23 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /abc-x-y-z
 
-string(6) "AbcXYZ"
+"AbcXYZ"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(25) "/abc-x-y-z?test=testvalue"
+"/abc-x-y-z?test=testvalue"
 
 ==> /
 
-string(16) "DefaultPresenter"
+"DefaultPresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(16) "/?test=testvalue"
+"/?test=testvalue"
 
 ==> /--
 

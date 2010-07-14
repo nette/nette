@@ -65,26 +65,26 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-Contains Jack? bool(TRUE)
+Contains Jack? TRUE
 
-indexOf Jack: int(0)
+indexOf Jack: 0
 
-Contains Mary? bool(TRUE)
+Contains Mary? TRUE
 
-indexOf Mary: int(1)
+indexOf Mary: 1
 
-Contains foo? bool(FALSE)
+Contains foo? FALSE
 
-indexOf foo? bool(FALSE)
+indexOf foo? FALSE
 
-Contains index -1? bool(FALSE)
+Contains index -1? FALSE
 
-Contains index 0? bool(TRUE)
+Contains index 0? TRUE
 
-Contains index 5? bool(FALSE)
+Contains index 5? FALSE
 
 Exception ArgumentOutOfRangeException:
 
-Getting index 0: object(Person) (1) {
-	"name" private => string(4) "Jack"
-}
+Getting index 0: Person(
+	"name" private => "Jack"
+)

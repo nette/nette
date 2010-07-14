@@ -49,22 +49,22 @@ T::dump( $rc->getProperty('foo')->getAnnotations() );
 __halt_compiler() ?>
 
 ------EXPECT------
-array(1) {
-	"secured" => array(1) {
-		0 => object(SecuredAnnotation) (3) {
+array(
+	"secured" => array(
+		SecuredAnnotation(
 			"role" => NULL
 			"level" => NULL
-			"value" => string(8) "disabled"
-		}
-	}
-}
+			"value" => "disabled"
+		)
+	)
+)
 
-array(1) {
-	"secured" => array(1) {
-		0 => object(SecuredAnnotation) (3) {
-			"role" => string(5) "admin"
-			"level" => int(2)
+array(
+	"secured" => array(
+		SecuredAnnotation(
+			"role" => "admin"
+			"level" => 2
 			"value" => NULL
-		}
-	}
-}
+		)
+	)
+)

@@ -40,26 +40,26 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /one
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(3) {
-	"one" => string(3) "one"
+array(
+	"one" => "one"
 	"two" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(45) "/one/?test=testvalue&presenter=querypresenter"
+"/one/?test=testvalue&presenter=querypresenter"
 
 ===
 
 ==> /one
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(3) {
-	"one" => string(3) "one"
+array(
+	"one" => "one"
 	"two" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(45) "/one/?test=testvalue&presenter=querypresenter"
+"/one/?test=testvalue&presenter=querypresenter"

@@ -40,20 +40,20 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /kategorie/
 
-string(8) "Category"
+"Category"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(25) "/kategorie?test=testvalue"
+"/kategorie?test=testvalue"
 
 ==> /other/
 
-string(5) "Other"
+"Other"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(21) "/other?test=testvalue"
+"/other?test=testvalue"

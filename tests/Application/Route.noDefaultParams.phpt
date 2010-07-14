@@ -32,12 +32,12 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /presenter/action/12
 
-string(9) "Presenter"
+"Presenter"
 
-array(3) {
-	"action" => string(6) "action"
-	"extra" => string(2) "12"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"extra" => "12"
+	"test" => "testvalue"
+)
 
 NULL

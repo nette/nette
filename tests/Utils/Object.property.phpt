@@ -62,11 +62,11 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-string(5) "hello"
+"hello"
 
-string(5) "hello"
+"hello"
 
-string(11) "hello world"
+"hello world"
 
 Undeclared property writing
 
@@ -74,16 +74,16 @@ Exception MemberAccessException: Cannot assign to an undeclared property TestCla
 
 Undeclared property reading
 
-bool(FALSE)
+FALSE
 
-bool(FALSE)
+FALSE
 
-bool(FALSE)
+FALSE
 
 Exception MemberAccessException: Cannot read an undeclared property TestClass::$s.
 
 Read-only property
 
-string(5) "World"
+"World"
 
 Exception MemberAccessException: Cannot assign to a read-only property TestClass::$bar.

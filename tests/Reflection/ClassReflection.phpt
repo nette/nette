@@ -71,60 +71,60 @@ T::dump( $rc->getProperties() );
 __halt_compiler() ?>
 
 ------EXPECT------
-object(%ns%ClassReflection) (1) {
-	"name" => string(3) "Bar"
-}
+%ns%ClassReflection(
+	"name" => "Bar"
+)
 
-object(%ns%ClassReflection) (1) {
-	"name" => string(3) "Bar"
-}
+%ns%ClassReflection(
+	"name" => "Bar"
+)
 
-object(%ns%ClassReflection) (1) {
-	"name" => string(3) "Bar"
-}
-
-NULL
-
-array(1) {
-	"Countable" => object(%ns%ClassReflection) (1) {
-		"name" => string(9) "Countable"
-	}
-}
-
-object(%ns%ClassReflection) (1) {
-	"name" => string(3) "Foo"
-}
+%ns%ClassReflection(
+	"name" => "Bar"
+)
 
 NULL
 
-object(%ns%MethodReflection) (2) {
-	"name" => string(1) "f"
-	"class" => string(3) "Foo"
-}
+array(
+	"Countable" => %ns%ClassReflection(
+		"name" => "Countable"
+	)
+)
+
+%ns%ClassReflection(
+	"name" => "Foo"
+)
+
+NULL
+
+%ns%MethodReflection(
+	"name" => "f"
+	"class" => "Foo"
+)
 
 Exception %ns%ReflectionException: Method doesntExist does not exist
 
-array(2) {
-	0 => object(%ns%MethodReflection) (2) {
-		"name" => string(5) "count"
-		"class" => string(3) "Bar"
-	}
-	1 => object(%ns%MethodReflection) (2) {
-		"name" => string(1) "f"
-		"class" => string(3) "Foo"
-	}
-}
+array(
+	%ns%MethodReflection(
+		"name" => "count"
+		"class" => "Bar"
+	)
+	%ns%MethodReflection(
+		"name" => "f"
+		"class" => "Foo"
+	)
+)
 
-object(%ns%PropertyReflection) (2) {
-	"name" => string(3) "var"
-	"class" => string(3) "Bar"
-}
+%ns%PropertyReflection(
+	"name" => "var"
+	"class" => "Bar"
+)
 
 Exception %ns%ReflectionException: Property doesntExist does not exist
 
-array(1) {
-	0 => object(%ns%PropertyReflection) (2) {
-		"name" => string(3) "var"
-		"class" => string(3) "Bar"
-	}
-}
+array(
+	%ns%PropertyReflection(
+		"name" => "var"
+		"class" => "Bar"
+	)
+)

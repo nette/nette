@@ -37,10 +37,10 @@ T::dump( $namespace3->a === $namespace3b->a );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(TRUE)
+TRUE
 
-bool(TRUE)
+TRUE
 
-bool(TRUE)
+TRUE
 
-bool(TRUE)
+TRUE

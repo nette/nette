@@ -38,4 +38,4 @@ __halt_compiler() ?>
 ------EXPECT------
 Deleting dependent const
 
-Is cached? bool(FALSE)
+Is cached? FALSE

@@ -48,9 +48,9 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-Removing Jack: bool(TRUE)
+Removing Jack: TRUE
 
-Removing Jack second time: bool(FALSE)
+Removing Jack second time: FALSE
 
 Removing using unset(['unknown'])
 

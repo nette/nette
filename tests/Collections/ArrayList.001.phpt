@@ -95,33 +95,33 @@ Adding invalid item using []
 
 Exception InvalidArgumentException: Item must be 'Person' object.
 
-count: int(3)
+count: 3
 
-int(3)
+3
 
-object(%ns%ArrayList) (3) {
-	"0" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"1" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"2" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-}
+%ns%ArrayList(
+	"0" => Person(
+		"name" private => "Jack"
+	)
+	"1" => Person(
+		"name" private => "Mary"
+	)
+	"2" => Person(
+		"name" private => "Jack"
+	)
+)
 
-array(3) {
-	0 => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	1 => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	2 => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-}
+array(
+	Person(
+		"name" private => "Jack"
+	)
+	Person(
+		"name" private => "Mary"
+	)
+	Person(
+		"name" private => "Jack"
+	)
+)
 
 Get Interator:
 
@@ -133,4 +133,4 @@ Get Interator:
 
 Clearing
 
-object(%ns%ArrayList) (0) {}
+%ns%ArrayList()

@@ -111,23 +111,23 @@ T::dump( $hashtable->search($mary), "search Mary:" );
 __halt_compiler() ?>
 
 ------EXPECT------
-Contains Jack? bool(TRUE)
+Contains Jack? TRUE
 
-Contains Mary? bool(TRUE)
+Contains Mary? TRUE
 
-Contains foo? bool(FALSE)
+Contains foo? FALSE
 
-Contains ['jim']? bool(FALSE)
+Contains ['jim']? FALSE
 
-Contains ['jack']? bool(TRUE)
+Contains ['jack']? TRUE
 
-Contains ['mary']? bool(TRUE)
+Contains ['mary']? TRUE
 
-Contains ->jim? bool(FALSE)
+Contains ->jim? FALSE
 
-Contains ->jack? bool(FALSE)
+Contains ->jack? FALSE
 
-Contains ->mary? bool(FALSE)
+Contains ->mary? FALSE
 
 Getting ['jim']: NULL
 
@@ -135,20 +135,20 @@ Getting ['jim'] with throwKeyNotFound
 
 Exception %ns%KeyNotFoundException:
 
-Getting ['mary']: object(Person) (1) {
-	"name" private => string(4) "Mary"
-}
+Getting ['mary']: Person(
+	"name" private => "Mary"
+)
 
 Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$jim.
 
 Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$mary.
 
-Getting get('jim'): string(7) "default"
+Getting get('jim'): "default"
 
-Getting get('mary'): object(Person) (1) {
-	"name" private => string(4) "Mary"
-}
+Getting get('mary'): Person(
+	"name" private => "Mary"
+)
 
-search Jack: string(4) "jack"
+search Jack: "jack"
 
-search Mary: string(4) "mary"
+search Mary: "mary"

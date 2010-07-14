@@ -250,7 +250,7 @@ isset($obj["null"]):
 
 > TestArrayObject::offsetExists
 
-bool(TRUE)
+TRUE
 
 unset($obj["a"]):
 
@@ -260,14 +260,14 @@ count($obj):
 
 T::dump($obj):
 
-object(TestArrayObject) (6) {
-	"0" => int(1)
-	"1" => int(2)
-	"2" => string(4) "test"
+TestArrayObject(
+	"0" => 1
+	"1" => 2
+	"2" => "test"
 	"null" => NULL
-	"3" => string(4) "Mary"
-	"4" => string(4) "Jack"
-}
+	"3" => "Mary"
+	"4" => "Jack"
+)
 
 $tmp = (array) $obj:
 

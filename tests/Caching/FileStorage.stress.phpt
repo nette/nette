@@ -89,13 +89,13 @@ T::note("takes $time ms");
 __halt_compiler() ?>
 
 ------EXPECT------
-array(5) {
-	"ok" => int(1000)
-	"notfound" => int(0)
-	"error" => int(0)
-	"cantwrite" => int(0)
-	"cantdelete" => int(0)
-}
+array(
+	"ok" => 1000
+	"notfound" => 0
+	"error" => 0
+	"cantwrite" => 0
+	"cantdelete" => 0
+)
 
 PASSED
 

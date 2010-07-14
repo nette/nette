@@ -78,24 +78,24 @@ __halt_compiler() ?>
 ------EXPECT------
 Writing cache...
 
-Is cached? bool(TRUE)
+Is cached? TRUE
 
 Modifing dependent cached item
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Writing cache...
 
-Is cached? bool(TRUE)
+Is cached? TRUE
 
 Modifing dependent cached item
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Writing cache...
 
-Is cached? bool(TRUE)
+Is cached? TRUE
 
 Deleting dependent cached item
 
-Is cached? bool(FALSE)
+Is cached? FALSE

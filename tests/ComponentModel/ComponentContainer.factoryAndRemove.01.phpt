@@ -42,6 +42,6 @@ T::dump( count($a->getComponents()) );
 __halt_compiler() ?>
 
 ------EXPECT------
-int(1)
+1
 
-int(0)
+0

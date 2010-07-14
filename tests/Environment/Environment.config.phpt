@@ -45,30 +45,30 @@ T::dump( Environment::isProduction(), "is production mode?" );
 __halt_compiler() ?>
 
 ------EXPECT------
-string(22) "Factory::createService"
+"Factory::createService"
 
-array(1) {
-	"anyValue" => string(11) "hello world"
-}
+array(
+	"anyValue" => "hello world"
+)
 
-Variable foo: string(11) "hello world"
+Variable foo: "hello world"
 
-Constant HELLO_WORLD: string(11) "hello world"
+Constant HELLO_WORLD: "hello world"
 
-php.ini config: object(%ns%Config) (3) {
-	"mbstring-internal_encoding" => string(5) "UTF-8"
-	"date.timezone" => string(13) "Europe/Prague"
-	"iconv.internal_encoding" => string(5) "UTF-8"
-}
+php.ini config: %ns%Config(
+	"mbstring-internal_encoding" => "UTF-8"
+	"date.timezone" => "Europe/Prague"
+	"iconv.internal_encoding" => "UTF-8"
+)
 
-Database config: object(%ns%Config) (2) {
-	"adapter" => string(9) "pdo_mysql"
-	"params" => object(%ns%Config) (4) {
-		"host" => string(14) "db.example.com"
-		"username" => string(6) "dbuser"
-		"password" => string(6) "secret"
-		"dbname" => string(6) "dbname"
-	}
-}
+Database config: %ns%Config(
+	"adapter" => "pdo_mysql"
+	"params" => %ns%Config(
+		"host" => "db.example.com"
+		"username" => "dbuser"
+		"password" => "secret"
+		"dbname" => "dbname"
+	)
+)
 
-is production mode? bool(TRUE)
+is production mode? TRUE

@@ -45,6 +45,6 @@ nette.forms["frm-"] = {
 	},
 %A%
 
-array(1) {
-	0 => string(35) "E-mail xyz is invalid [field email]"
-}
+array(
+	"E-mail xyz is invalid [field email]"
+)

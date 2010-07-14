@@ -48,6 +48,6 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-string(17) "Jack, Mary, Larry"
+"Jack, Mary, Larry"
 
 Exception MemberAccessException: Call to undefined method %ns%ArrayList::test().

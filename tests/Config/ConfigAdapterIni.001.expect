@@ -1,72 +1,72 @@
 Load INI
 
-object(%ns%Config) (2) {
-	"production" => object(%ns%Config) (2) {
-		"webname" => string(11) "the example"
-		"database" => object(%ns%Config) (2) {
-			"params" => object(%ns%Config) (4) {
-				"host" => string(14) "db.example.com"
-				"username" => string(6) "dbuser"
-				"password" => string(6) "secret"
-				"dbname" => string(6) "dbname"
-			}
-			"adapter" => string(9) "pdo_mysql"
-		}
-	}
-	"development" => object(%ns%Config) (6) {
-		"database" => object(%ns%Config) (2) {
-			"params" => object(%ns%Config) (4) {
-				"host" => string(15) "dev.example.com"
-				"username" => string(7) "devuser"
-				"password" => string(9) "devsecret"
-				"dbname" => string(6) "dbname"
-			}
-			"adapter" => string(9) "pdo_mysql"
-		}
-		"timeout" => string(2) "10"
-		"display_errors" => string(1) "1"
-		"html_errors" => string(0) ""
-		"items" => object(%ns%Config) (2) {
-			"0" => string(2) "10"
-			"1" => string(2) "20"
-		}
-		"webname" => string(11) "the example"
-	}
-}
+%ns%Config(
+	"production" => %ns%Config(
+		"webname" => "the example"
+		"database" => %ns%Config(
+			"params" => %ns%Config(
+				"host" => "db.example.com"
+				"username" => "dbuser"
+				"password" => "secret"
+				"dbname" => "dbname"
+			)
+			"adapter" => "pdo_mysql"
+		)
+	)
+	"development" => %ns%Config(
+		"database" => %ns%Config(
+			"params" => %ns%Config(
+				"host" => "dev.example.com"
+				"username" => "devuser"
+				"password" => "devsecret"
+				"dbname" => "dbname"
+			)
+			"adapter" => "pdo_mysql"
+		)
+		"timeout" => "10"
+		"display_errors" => "1"
+		"html_errors" => ""
+		"items" => %ns%Config(
+			"0" => "10"
+			"1" => "20"
+		)
+		"webname" => "the example"
+	)
+)
 
-toArray(): array(2) {
-	"production" => array(2) {
-		"webname" => string(11) "the example"
-		"database" => array(2) {
-			"params" => array(4) {
-				"host" => string(14) "db.example.com"
-				"username" => string(6) "dbuser"
-				"password" => string(6) "secret"
-				"dbname" => string(6) "dbname"
-			}
-			"adapter" => string(9) "pdo_mysql"
-		}
-	}
-	"development" => array(6) {
-		"database" => array(2) {
-			"params" => array(4) {
-				"host" => string(15) "dev.example.com"
-				"username" => string(7) "devuser"
-				"password" => string(9) "devsecret"
-				"dbname" => string(6) "dbname"
-			}
-			"adapter" => string(9) "pdo_mysql"
-		}
-		"timeout" => string(2) "10"
-		"display_errors" => string(1) "1"
-		"html_errors" => string(0) ""
-		"items" => array(2) {
-			0 => string(2) "10"
-			1 => string(2) "20"
-		}
-		"webname" => string(11) "the example"
-	}
-}
+toArray(): array(
+	"production" => array(
+		"webname" => "the example"
+		"database" => array(
+			"params" => array(
+				"host" => "db.example.com"
+				"username" => "dbuser"
+				"password" => "secret"
+				"dbname" => "dbname"
+			)
+			"adapter" => "pdo_mysql"
+		)
+	)
+	"development" => array(
+		"database" => array(
+			"params" => array(
+				"host" => "dev.example.com"
+				"username" => "devuser"
+				"password" => "devsecret"
+				"dbname" => "dbname"
+			)
+			"adapter" => "pdo_mysql"
+		)
+		"timeout" => "10"
+		"display_errors" => "1"
+		"html_errors" => ""
+		"items" => array(
+			"10"
+			"20"
+		)
+		"webname" => "the example"
+	)
+)
 
 Save INI
 

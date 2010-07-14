@@ -46,7 +46,7 @@ T::dump($cacheB['test2']);
 __halt_compiler() ?>
 
 ------EXPECT------
-string(%i%) "David Grudl divaD ldurG"
+"David Grudl divaD ldurG"
 
 NULL
 

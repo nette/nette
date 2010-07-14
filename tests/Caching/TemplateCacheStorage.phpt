@@ -54,18 +54,18 @@ fclose($var['handle']);
 __halt_compiler() ?>
 
 ------EXPECT------
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Cache content: NULL
 
 Writing cache...
 
-Is cached? bool(TRUE)
+Is cached? TRUE
 
-Cache content: array(2) {
-	"file" => string(%d%) "%a%nette.php"
-	"handle" => resource of type(stream)
-}
+Cache content: array(
+	"file" => "%a%nette.php"
+	"handle" => stream resource
+)
 
 Test include
 

@@ -34,14 +34,14 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /index.php
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(50) "/index.php?test=testvalue&presenter=querypresenter"
+"/index.php?test=testvalue&presenter=querypresenter"
 
 ==> /
 

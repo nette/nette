@@ -43,6 +43,6 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-string(1) "b"
+"b"
 
 Exception InvalidArgumentException: Component with name 'B' does not exist.

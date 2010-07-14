@@ -47,12 +47,12 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(%ns%Hashtable) (3) {
-	"a" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"b" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"c" => object(ArrayObject) (0) {}
-}
+%ns%Hashtable(
+	"a" => Person(
+		"name" private => "Jack"
+	)
+	"b" => Person(
+		"name" private => "Mary"
+	)
+	"c" => ArrayObject()
+)

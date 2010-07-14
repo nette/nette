@@ -37,33 +37,33 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /one
 
-string(9) "Front:One"
+"Front:One"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(20) "/one/?test=testvalue"
+"/one/?test=testvalue"
 
 ==> /admin/one
 
-string(9) "Admin:One"
+"Admin:One"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(26) "/admin/one/?test=testvalue"
+"/admin/one/?test=testvalue"
 
 ==> /one/admin
 
-string(9) "Front:One"
+"Front:One"
 
-array(2) {
-	"action" => string(5) "admin"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "admin"
+	"test" => "testvalue"
+)
 
-string(25) "/one/admin?test=testvalue"
+"/one/admin?test=testvalue"

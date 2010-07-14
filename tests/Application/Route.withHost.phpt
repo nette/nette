@@ -34,14 +34,14 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /abc
 
-string(7) "Default"
+"Default"
 
-array(5) {
-	"host" => string(7) "example"
-	"domain" => string(3) "com"
-	"path" => string(3) "abc"
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"host" => "example"
+	"domain" => "com"
+	"path" => "abc"
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(19) "/abc?test=testvalue"
+"/abc?test=testvalue"

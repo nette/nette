@@ -1,11 +1,11 @@
 <h2>Form was submitted and successfully validated</h2>array(4) {
-   "name" => string(17) "luťoučký kůň"
+   "name" => "luťoučký kůň" (17)
    "country" => array(2) {
-      0 => string(17) "Česká republika"
-      2 => string(6) "Canada"
+      0 => "Česká republika" (17)
+      2 => "Canada" (6)
    }
-   "userid" => string(5) "kůň"
-   "note" => string(6) "жед"
+   "userid" => "kůň" (5)
+   "note" => "жед" (6)
 }
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

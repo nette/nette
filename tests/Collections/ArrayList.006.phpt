@@ -47,12 +47,12 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(%ns%ArrayList) (3) {
-	"0" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"1" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"2" => object(ArrayObject) (0) {}
-}
+%ns%ArrayList(
+	"0" => Person(
+		"name" private => "Jack"
+	)
+	"1" => Person(
+		"name" private => "Mary"
+	)
+	"2" => ArrayObject()
+)

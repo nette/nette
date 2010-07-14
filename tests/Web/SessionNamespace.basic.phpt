@@ -42,8 +42,8 @@ Assert::same( '', http_build_query($namespace->getIterator()) );
 __halt_compiler() ?>
 
 ------EXPECT------
-string(7) "a=apple"
+"a=apple"
 
-string(6) "p=pear"
+"p=pear"
 
-string(8) "o=orange"
+"o=orange"

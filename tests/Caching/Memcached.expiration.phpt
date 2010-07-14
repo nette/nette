@@ -52,16 +52,16 @@ Writing cache...
 
 Sleeping 1.2 second
 
-Is cached? bool(TRUE)
+Is cached? TRUE
 
 Sleeping 1.2 second
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Sleeping 1.2 second
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Sleeping 1.2 second
 
-Is cached? bool(FALSE)
+Is cached? FALSE

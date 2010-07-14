@@ -51,9 +51,9 @@ T::dump( $list );
 __halt_compiler() ?>
 
 ------EXPECT------
-Removing Larry: bool(TRUE)
+Removing Larry: TRUE
 
-Removing Larry second time: bool(FALSE)
+Removing Larry second time: FALSE
 
 unset -1
 
@@ -61,8 +61,8 @@ Exception ArgumentOutOfRangeException:
 
 unset 1
 
-object(%ns%ArrayList) (1) {
-	"0" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-}
+%ns%ArrayList(
+	"0" => Person(
+		"name" private => "Jack"
+	)
+)

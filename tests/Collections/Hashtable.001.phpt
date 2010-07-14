@@ -140,32 +140,32 @@ Adding Jack using append
 
 Exception NotSupportedException:
 
-count: int(2)
+count: 2
 
-int(2)
+2
 
-object(%ns%Hashtable) (2) {
-	"jack" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"mary" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-}
+%ns%Hashtable(
+	"jack" => Person(
+		"name" private => "Jack"
+	)
+	"mary" => Person(
+		"name" private => "Mary"
+	)
+)
 
-array(2) {
-	"jack" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"mary" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-}
+array(
+	"jack" => Person(
+		"name" private => "Jack"
+	)
+	"mary" => Person(
+		"name" private => "Mary"
+	)
+)
 
-getKeys: array(2) {
-	0 => string(4) "jack"
-	1 => string(4) "mary"
-}
+getKeys: array(
+	"jack"
+	"mary"
+)
 
 Get Interator:
 
@@ -175,4 +175,4 @@ mary => My name is Mary
 
 Clearing
 
-object(%ns%Hashtable) (0) {}
+%ns%Hashtable()

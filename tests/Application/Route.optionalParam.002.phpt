@@ -32,20 +32,20 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /index.html
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(46) "/index?test=testvalue&presenter=querypresenter"
+"/index?test=testvalue&presenter=querypresenter"
 
 ==> /index
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(46) "/index?test=testvalue&presenter=querypresenter"
+"/index?test=testvalue&presenter=querypresenter"

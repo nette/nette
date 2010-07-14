@@ -44,40 +44,40 @@ not matched
 
 ==> /index.xml
 
-string(16) "DefaultPresenter"
+"DefaultPresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(26) "/index.xml/?test=testvalue"
+"/index.xml/?test=testvalue"
 
 ==> /index.php
 
-string(16) "DefaultPresenter"
+"DefaultPresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(26) "/index.xml/?test=testvalue"
+"/index.xml/?test=testvalue"
 
 ==> /index.htm
 
-string(16) "DefaultPresenter"
+"DefaultPresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(26) "/index.xml/?test=testvalue"
+"/index.xml/?test=testvalue"
 
 ==> /index
 
-string(16) "DefaultPresenter"
+"DefaultPresenter"
 
-array(1) {
-	"test" => string(9) "testvalue"
-}
+array(
+	"test" => "testvalue"
+)
 
-string(26) "/index.xml/?test=testvalue"
+"/index.xml/?test=testvalue"

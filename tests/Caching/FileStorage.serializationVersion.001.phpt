@@ -45,4 +45,4 @@ __halt_compiler() ?>
 ------EXPECT------
 Writing cache...
 
-Is cached? bool(TRUE)
+Is cached? TRUE

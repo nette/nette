@@ -52,20 +52,20 @@ T::dump( isset($cache[$key]), "Is cached?" );
 __halt_compiler() ?>
 
 ------EXPECT------
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Cache content: NULL
 
 Writing cache...
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
-Is cache ok? bool(FALSE)
+Is cache ok? FALSE
 
 Removing from cache using unset()...
 
-Is cached? bool(FALSE)
+Is cached? FALSE
 
 Removing from cache using set NULL...
 
-Is cached? bool(FALSE)
+Is cached? FALSE

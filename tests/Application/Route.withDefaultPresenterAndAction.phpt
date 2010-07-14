@@ -40,44 +40,44 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /presenter/action/
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"action" => string(6) "action"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"test" => "testvalue"
+)
 
-string(32) "/presenter/action?test=testvalue"
+"/presenter/action?test=testvalue"
 
 ==> /default/default/
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(16) "/?test=testvalue"
+"/?test=testvalue"
 
 ==> /presenter
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(26) "/presenter/?test=testvalue"
+"/presenter/?test=testvalue"
 
 ==> /
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(16) "/?test=testvalue"
+"/?test=testvalue"

@@ -72,22 +72,22 @@ T::dump( $form->getValues() );
 __halt_compiler() ?>
 
 ------EXPECT------
-array(7) {
-	"name" => string(3) "jim"
-	"text1" => string(5) "hello"
-	"text2" => string(5) "world"
-	"formCont" => array(2) {
-		"name" => string(4) "jack"
-		"age" => string(2) "23"
-	}
-	"firstperson" => array(2) {
-		"name" => string(5) "david"
-		"age" => string(2) "30"
-	}
-	"secondperson" => array(3) {
-		"name" => string(3) "jim"
-		"age" => string(2) "40"
+array(
+	"name" => "jim"
+	"text1" => "hello"
+	"text2" => "world"
+	"formCont" => array(
+		"name" => "jack"
+		"age" => "23"
+	)
+	"firstperson" => array(
+		"name" => "david"
+		"age" => "30"
+	)
+	"secondperson" => array(
+		"name" => "jim"
+		"age" => "40"
 		"avatar" => NULL
-	}
-	"age" => string(2) "50"
-}
+	)
+	"age" => "50"
+)

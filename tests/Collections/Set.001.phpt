@@ -70,43 +70,43 @@ T::dump( $set );
 __halt_compiler() ?>
 
 ------EXPECT------
-Adding Jack: bool(TRUE)
+Adding Jack: TRUE
 
-Adding Mary: bool(TRUE)
+Adding Mary: TRUE
 
-Adding Mary second time: bool(FALSE)
+Adding Mary second time: FALSE
 
-Adding Larry: bool(TRUE)
+Adding Larry: TRUE
 
 Exception InvalidArgumentException: Item must be 'Person' object.
 
-count: int(3)
+count: 3
 
-int(3)
+3
 
-object(%ns%Set) (3) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-}
+%ns%Set(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+	"%h%" => Person(
+		"name" private => "Larry"
+	)
+)
 
-array(3) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-}
+array(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+	"%h%" => Person(
+		"name" private => "Larry"
+	)
+)
 
 Get Interator:
 
@@ -118,4 +118,4 @@ My name is Larry
 
 Clearing
 
-object(%ns%Set) (0) {}
+%ns%Set()

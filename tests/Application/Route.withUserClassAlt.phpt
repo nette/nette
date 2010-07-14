@@ -38,14 +38,14 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /presenter/12/
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"id" => string(2) "12"
-	"test" => string(9) "testvalue"
-}
+array(
+	"id" => "12"
+	"test" => "testvalue"
+)
 
-string(28) "/presenter/12?test=testvalue"
+"/presenter/12?test=testvalue"
 
 ==> /presenter/1234
 

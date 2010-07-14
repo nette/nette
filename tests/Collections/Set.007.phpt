@@ -60,15 +60,15 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from array II.
 
-object(%ns%Set) (3) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"%h%" => object(ArrayObject) (0) {}
-}
+%ns%Set(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+	"%h%" => ArrayObject()
+)
 
 Construct from collection
 
@@ -76,12 +76,12 @@ Exception InvalidArgumentException: Item must be 'Person' object.
 
 Construct from collection II.
 
-object(%ns%Set) (3) {
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	"%h%" => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	"%h%" => object(ArrayObject) (0) {}
-}
+%ns%Set(
+	"%h%" => Person(
+		"name" private => "Jack"
+	)
+	"%h%" => Person(
+		"name" private => "Mary"
+	)
+	"%h%" => ArrayObject()
+)

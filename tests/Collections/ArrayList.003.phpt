@@ -42,35 +42,35 @@ try {
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(TRUE)
+TRUE
 
-array(3) {
-	0 => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-	1 => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	2 => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-}
+array(
+	Person(
+		"name" private => "Larry"
+	)
+	Person(
+		"name" private => "Jack"
+	)
+	Person(
+		"name" private => "Mary"
+	)
+)
 
-bool(TRUE)
+TRUE
 
-array(4) {
-	0 => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-	1 => object(Person) (1) {
-		"name" private => string(4) "Jack"
-	}
-	2 => object(Person) (1) {
-		"name" private => string(4) "Mary"
-	}
-	3 => object(Person) (1) {
-		"name" private => string(5) "Larry"
-	}
-}
+array(
+	Person(
+		"name" private => "Larry"
+	)
+	Person(
+		"name" private => "Jack"
+	)
+	Person(
+		"name" private => "Mary"
+	)
+	Person(
+		"name" private => "Larry"
+	)
+)
 
 Exception ArgumentOutOfRangeException:

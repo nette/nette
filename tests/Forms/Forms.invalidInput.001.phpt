@@ -93,35 +93,35 @@ T::dump( $form->getValues() );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(TRUE)
+TRUE
 
-array(11) {
-	"name" => string(0) ""
-	"note" => string(0) ""
+array(
+	"name" => ""
+	"note" => ""
 	"gender" => NULL
-	"send" => bool(FALSE)
+	"send" => FALSE
 	"country" => NULL
-	"countrym" => array(0)
-	"password" => string(0) ""
-	"avatar" => object(%ns%HttpUploadedFile) (5) {
+	"countrym" => array()
+	"password" => ""
+	"avatar" => %ns%HttpUploadedFile(
 		"name" private => NULL
 		"type" private => NULL
 		"size" private => NULL
 		"tmpName" private => NULL
-		"error" private => int(4)
-	}
-	"userid" => string(0) ""
-	"firstperson" => array(1) {
-		"age" => string(0) ""
-	}
-	"secondperson" => array(2) {
-		"age" => string(0) ""
-		"avatar" => object(%ns%HttpUploadedFile) (5) {
+		"error" private => 4
+	)
+	"userid" => ""
+	"firstperson" => array(
+		"age" => ""
+	)
+	"secondperson" => array(
+		"age" => ""
+		"avatar" => %ns%HttpUploadedFile(
 			"name" private => NULL
 			"type" private => NULL
 			"size" private => NULL
 			"tmpName" private => NULL
-			"error" private => int(4)
-		}
-	}
-}
+			"error" private => 4
+		)
+	)
+)

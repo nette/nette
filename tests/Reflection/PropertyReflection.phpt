@@ -34,6 +34,6 @@ T::dump( $propInfo->getDeclaringClass() );
 __halt_compiler() ?>
 
 ------EXPECT------
-object(%ns%ClassReflection) (1) {
-	"name" => string(1) "A"
-}
+%ns%ClassReflection(
+	"name" => "A"
+)

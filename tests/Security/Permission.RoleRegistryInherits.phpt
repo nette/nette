@@ -42,14 +42,14 @@ Assert::false( $acl->roleInheritsFrom('editor', 'guest') );
 __halt_compiler() ?>
 
 ------EXPECT------
-array(0)
+array()
 
-array(1) {
-	0 => string(5) "guest"
-}
+array(
+	"guest"
+)
 
-array(1) {
-	0 => string(6) "member"
-}
+array(
+	"member"
+)
 
-array(0)
+array()
