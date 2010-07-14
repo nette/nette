@@ -53,27 +53,27 @@ not matched
 
 ==> /presenter/action/12/
 
-string(9) "Presenter"
+"Presenter"
 
-array(3) {
-	"action" => string(6) "action"
-	"id" => string(2) "12"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"id" => "12"
+	"test" => "testvalue"
+)
 
-string(35) "/presenter/action/12?test=testvalue"
+"/presenter/action/12?test=testvalue"
 
 ==> /presenter/action/12
 
-string(9) "Presenter"
+"Presenter"
 
-array(3) {
-	"action" => string(6) "action"
-	"id" => string(2) "12"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"id" => "12"
+	"test" => "testvalue"
+)
 
-string(35) "/presenter/action/12?test=testvalue"
+"/presenter/action/12?test=testvalue"
 
 ==> /presenter/action/1234
 
@@ -81,51 +81,51 @@ not matched
 
 ==> /presenter/action/
 
-string(9) "Presenter"
+"Presenter"
 
-array(3) {
-	"action" => string(6) "action"
+array(
+	"action" => "action"
 	"id" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(33) "/presenter/action/?test=testvalue"
+"/presenter/action/?test=testvalue"
 
 ==> /presenter/action
 
-string(9) "Presenter"
+"Presenter"
 
-array(3) {
-	"action" => string(6) "action"
+array(
+	"action" => "action"
 	"id" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(33) "/presenter/action/?test=testvalue"
+"/presenter/action/?test=testvalue"
 
 ==> /presenter/
 
-string(7) "Default"
+"Default"
 
-array(3) {
-	"action" => string(9) "presenter"
+array(
+	"action" => "presenter"
 	"id" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(26) "/presenter/?test=testvalue"
+"/presenter/?test=testvalue"
 
 ==> /presenter
 
-string(7) "Default"
+"Default"
 
-array(3) {
-	"action" => string(9) "presenter"
+array(
+	"action" => "presenter"
 	"id" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(26) "/presenter/?test=testvalue"
+"/presenter/?test=testvalue"
 
 ==> /
 

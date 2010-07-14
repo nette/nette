@@ -30,32 +30,32 @@ T::dump( $parser->parse('{a, b, {c: d}, e: f,}') );
 __halt_compiler() ?>
 
 ------EXPECT------
-array(11) {
-	0 => bool(TRUE)
-	1 => string(4) "tRuE"
-	2 => bool(TRUE)
-	3 => bool(FALSE)
-	4 => bool(FALSE)
-	5 => bool(TRUE)
-	6 => bool(TRUE)
-	7 => bool(FALSE)
-	8 => bool(FALSE)
-	9 => NULL
-	10 => NULL
-}
+array(
+	TRUE
+	"tRuE"
+	TRUE
+	FALSE
+	FALSE
+	TRUE
+	TRUE
+	FALSE
+	FALSE
+	NULL
+	NULL
+)
 
-array(4) {
-	1 => int(1)
-	"" => int(1)
-	-5 => int(1)
-	"5.3" => int(1)
-}
+array(
+	1 => 1
+	"" => 1
+	-5 => 1
+	"5.3" => 1
+)
 
-array(4) {
-	0 => string(1) "a"
-	1 => string(1) "b"
-	2 => array(1) {
-		"c" => string(1) "d"
-	}
-	"e" => string(1) "f"
-}
+array(
+	0 => "a"
+	1 => "b"
+	2 => array(
+		"c" => "d"
+	)
+	"e" => "f"
+)

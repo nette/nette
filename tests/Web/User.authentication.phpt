@@ -149,7 +149,7 @@ T::dump( $user->getIdentity(), "getIdentity" );
 __halt_compiler() ?>
 
 ------EXPECT------
-isLoggedIn? bool(FALSE)
+isLoggedIn? FALSE
 
 getIdentity: NULL
 
@@ -171,37 +171,37 @@ login as john#2
 
 [onLoggedIn]
 
-isLoggedIn? bool(TRUE)
+isLoggedIn? TRUE
 
-getIdentity: object(%ns%Identity) (4) {
-	"id" private => string(8) "John Doe"
-	"roles" private => array(1) {
-		0 => string(5) "admin"
-	}
-	"data" private => array(0)
-	"frozen" private => bool(FALSE)
-}
+getIdentity: %ns%Identity(
+	"id" private => "John Doe"
+	"roles" private => array(
+		"admin"
+	)
+	"data" private => array()
+	"frozen" private => FALSE
+)
 
-getId: string(8) "John Doe"
+getId: "John Doe"
 
 logging out...
 
 
 [onLoggedOut 1]
-isLoggedIn? bool(FALSE)
+isLoggedIn? FALSE
 
-getIdentity: object(%ns%Identity) (4) {
-	"id" private => string(8) "John Doe"
-	"roles" private => array(1) {
-		0 => string(5) "admin"
-	}
-	"data" private => array(0)
-	"frozen" private => bool(FALSE)
-}
+getIdentity: %ns%Identity(
+	"id" private => "John Doe"
+	"roles" private => array(
+		"admin"
+	)
+	"data" private => array()
+	"frozen" private => FALSE
+)
 
 logging out and clearing identity...
 
-isLoggedIn? bool(FALSE)
+isLoggedIn? FALSE
 
 getIdentity: NULL
 
@@ -209,10 +209,10 @@ login as john#2?
 
 [onLoggedIn]
 
-isLoggedIn? bool(TRUE)
+isLoggedIn? TRUE
 
 setNamespace(...)
 
-isLoggedIn? bool(FALSE)
+isLoggedIn? FALSE
 
 getIdentity: NULL

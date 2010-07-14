@@ -34,8 +34,8 @@ T::dump( Environment::getXyz()->reflection->name, 'Environment::getXyz(...)' );
 __halt_compiler() ?>
 
 ------EXPECT------
-Environment::getHttpResponse: string(%d%) "%ns%HttpResponse"
+Environment::getHttpResponse: "%ns%HttpResponse"
 
-Environment::getApplication: string(%d%) "%ns%Application"
+Environment::getApplication: "%ns%Application"
 
-Environment::getCache(...): string(%d%) "%ns%Cache"
+Environment::getCache(...): "%ns%Cache"

@@ -106,7 +106,7 @@ B::ATTACHED(A)
 
 C::ATTACHED(A)
 
-'e' looking 'a': string(7) "b-c-d-e"
+'e' looking 'a': "b-c-d-e"
 
 ==> clone 'c'
 
@@ -114,7 +114,7 @@ C::detached(A)
 
 'e' looking 'a': NULL
 
-'e' looking 'c': string(3) "d-e"
+'e' looking 'c': "d-e"
 
 ==> clone 'b'
 
@@ -128,30 +128,26 @@ C::ATTACHED(A)
 
 B::ATTACHED(A)
 
-export 'a': array(2) {
+export 'a': array(
 	"(A)" => NULL
-	"children" => array(2) {
-		"b" => array(2) {
-			"(B)" => string(1) "b"
-			"children" => array(1) {
-				"c" => array(2) {
-					"(C)" => string(1) "c"
-					"children" => array(1) {
-						...
-					}
-				}
-			}
-		}
-		"dolly" => array(2) {
-			"(B)" => string(5) "dolly"
-			"children" => array(1) {
-				"c" => array(2) {
-					"(C)" => string(1) "c"
-					"children" => array(1) {
-						...
-					}
-				}
-			}
-		}
-	}
-}
+	"children" => array(
+		"b" => array(
+			"(B)" => "b"
+			"children" => array(
+				"c" => array(
+					"(C)" => "c"
+					"children" => array( ... )
+				)
+			)
+		)
+		"dolly" => array(
+			"(B)" => "dolly"
+			"children" => array(
+				"c" => array(
+					"(C)" => "c"
+					"children" => array( ... )
+				)
+			)
+		)
+	)
+)

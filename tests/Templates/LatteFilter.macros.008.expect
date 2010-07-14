@@ -1,97 +1,97 @@
-MockControl::getWidgetarray(1) {
-	0 => string(4) "name"
-}
+MockControl::getWidgetarray(
+	"name"
+)
 
-MockWidget::__callarray(2) {
-	0 => string(6) "render"
-	1 => array(0) 
-}
-
-
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
-
-MockWidget::__callarray(2) {
-	0 => string(6) "render"
-	1 => array(0) 
-}
+MockWidget::__callarray(
+	"render"
+	array()
+)
 
 
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
+MockControl::getWidgetarray(
+	"form"
+)
 
-MockWidget::__callarray(2) {
-	0 => string(10) "renderTest"
-	1 => array(0) 
-}
-
-
-MockWidget::__callarray(2) {
-	0 => string(10) "renderTest"
-	1 => array(0) 
-}
+MockWidget::__callarray(
+	"render"
+	array()
+)
 
 
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
+MockControl::getWidgetarray(
+	"form"
+)
 
-MockWidget::__callarray(2) {
-	0 => string(10) "renderTest"
-	1 => array(0) 
-}
-
-
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
-
-MockWidget::__callarray(2) {
-	0 => string(10) "renderform"
-	1 => array(0) 
-}
+MockWidget::__callarray(
+	"renderTest"
+	array()
+)
 
 
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
-
-MockWidget::__callarray(2) {
-	0 => string(6) "render"
-	1 => array(1) {
-		0 => string(4) "var1"
-	}
-}
+MockWidget::__callarray(
+	"renderTest"
+	array()
+)
 
 
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
+MockControl::getWidgetarray(
+	"form"
+)
 
-MockWidget::__callarray(2) {
-	0 => string(6) "render"
-	1 => array(3) {
-		0 => string(4) "var1"
-		1 => int(1)
-		2 => int(2)
-	}
-}
+MockWidget::__callarray(
+	"renderTest"
+	array()
+)
 
 
-MockControl::getWidgetarray(1) {
-	0 => string(4) "form"
-}
+MockControl::getWidgetarray(
+	"form"
+)
 
-MockWidget::__callarray(2) {
-	0 => string(6) "render"
-	1 => array(1) {
-		0 => array(3) {
-			"var1" => int(5)
-			0 => int(1)
-			1 => int(2)
-		}
-	}
-}
+MockWidget::__callarray(
+	"renderform"
+	array()
+)
+
+
+MockControl::getWidgetarray(
+	"form"
+)
+
+MockWidget::__callarray(
+	"render"
+	array(
+		"var1"
+	)
+)
+
+
+MockControl::getWidgetarray(
+	"form"
+)
+
+MockWidget::__callarray(
+	"render"
+	array(
+		"var1"
+		1
+		2
+	)
+)
+
+
+MockControl::getWidgetarray(
+	"form"
+)
+
+MockWidget::__callarray(
+	"render"
+	array(
+		array(
+			"var1" => 5
+			0 => 1
+			1 => 2
+		)
+	)
+)
 

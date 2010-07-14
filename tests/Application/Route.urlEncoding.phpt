@@ -33,11 +33,11 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /a%3Ab
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"param" => string(3) "a:b"
-	"test" => string(9) "testvalue"
-}
+array(
+	"param" => "a:b"
+	"test" => "testvalue"
+)
 
-string(21) "/a%3Ab?test=testvalue"
+"/a%3Ab?test=testvalue"

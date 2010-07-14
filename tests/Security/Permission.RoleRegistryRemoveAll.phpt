@@ -27,4 +27,4 @@ T::dump( $acl->hasRole('guest') );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(FALSE)
+FALSE

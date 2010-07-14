@@ -51,16 +51,16 @@ __halt_compiler() ?>
 ------EXPECT------
 Writing cache...
 
-Is cached #1? bool(TRUE)
+Is cached #1? TRUE
 
-Is cached #2? bool(TRUE)
+Is cached #2? TRUE
 
-Is cache ok #1? bool(TRUE)
+Is cache ok #1? TRUE
 
-Is cache ok #2? bool(TRUE)
+Is cache ok #2? TRUE
 
 Removing from cache #2 using unset()...
 
-Is cached #1? bool(TRUE)
+Is cached #1? TRUE
 
-Is cached #2? bool(FALSE)
+Is cached #2? FALSE

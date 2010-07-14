@@ -46,36 +46,36 @@ not matched
 
 ==> /extrapresenter/action/
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"action" => string(6) "action"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"test" => "testvalue"
+)
 
-string(37) "/extrapresenter/action?test=testvalue"
+"/extrapresenter/action?test=testvalue"
 
 ==> /extradefault/default/
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(21) "/extra?test=testvalue"
+"/extra?test=testvalue"
 
 ==> /extra
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(21) "/extra?test=testvalue"
+"/extra?test=testvalue"
 
 ==> /
 

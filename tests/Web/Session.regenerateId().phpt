@@ -29,4 +29,4 @@ T::dump( $newId != $oldId );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(TRUE)
+TRUE

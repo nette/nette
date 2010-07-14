@@ -62,32 +62,32 @@ NULL
 
 NULL
 
-int(1)
+1
 
-float(-1.2)
+-1.2
 
-float(-120)
+-120.0
 
-bool(TRUE)
+TRUE
 
 NULL
 
-string(18) "the"string#literal"
+"the"string#literal"
 
-string(10) "the"string"
+"the"string"
 
-string(19) "the'string #literal"
+"the'string #literal"
 
-string(19) "the"string #literal"
+"the"string #literal"
 
-string(0) ""
+""
 
-string(0) ""
+""
 
-string(1) "x"
+"x"
 
-string(1) "x"
+"x"
 
-string(1) "x"
+"x"
 
-string(1) "x"
+"x"

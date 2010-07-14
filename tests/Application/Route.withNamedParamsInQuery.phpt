@@ -36,22 +36,22 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /?act=action
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(6) "action"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"test" => "testvalue"
+)
 
-string(27) "/?act=action&test=testvalue"
+"/?act=action&test=testvalue"
 
 ==> /?act=default
 
-string(7) "Default"
+"Default"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(16) "/?test=testvalue"
+"/?test=testvalue"

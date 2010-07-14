@@ -49,18 +49,18 @@ T::dump( $router->constructUrl($req, $httpRequest) ); // NULL
 __halt_compiler() ?>
 
 ------EXPECT------
-string(8) "homepage"
+"homepage"
 
-array(7) {
-	"id" => int(12)
-	"user" => string(8) "john doe"
-	"action" => string(7) "default"
-	0 => string(4) "name"
-	"verbose" => bool(TRUE)
-	"pass" => string(7) "se cret"
-	"wait" => bool(TRUE)
-}
+array(
+	"id" => 12
+	"user" => "john doe"
+	"action" => "default"
+	0 => "name"
+	"verbose" => TRUE
+	"pass" => "se cret"
+	"wait" => TRUE
+)
 
-bool(TRUE)
+TRUE
 
 NULL

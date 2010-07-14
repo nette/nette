@@ -123,34 +123,34 @@ T::dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 __halt_compiler() ?>
 
 ------EXPECT------
-isLoggedIn? bool(FALSE)
+isLoggedIn? FALSE
 
-getRoles(): array(1) {
-	0 => string(5) "guest"
-}
+getRoles(): array(
+	"guest"
+)
 
-is admin? bool(FALSE)
+is admin? FALSE
 
-is guest? bool(TRUE)
+is guest? TRUE
 
 login as john
 
-isLoggedIn? bool(TRUE)
+isLoggedIn? TRUE
 
-getRoles(): array(1) {
-	0 => string(5) "admin"
-}
+getRoles(): array(
+	"admin"
+)
 
-is admin? bool(TRUE)
+is admin? TRUE
 
-is guest? bool(FALSE)
+is guest? FALSE
 
 Exception InvalidStateException: Service 'Nette\Security\IAuthorizator' not found.
 
-isAllowed('delete_file')? bool(TRUE)
+isAllowed('delete_file')? TRUE
 
-isAllowed('sleep_with_jany')? bool(FALSE)
+isAllowed('sleep_with_jany')? FALSE
 
 logging out...
 
-isAllowed('delete_file')? bool(FALSE)
+isAllowed('delete_file')? FALSE

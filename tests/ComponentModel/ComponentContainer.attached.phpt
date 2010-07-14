@@ -102,6 +102,6 @@ C::ATTACHED(A)
 
 B::ATTACHED(A)
 
-'e' looking 'a': string(7) "b-c-d-e"
+'e' looking 'a': "b-c-d-e"
 
-checking 'a-b-c': bool(TRUE)
+checking 'a-b-c': TRUE

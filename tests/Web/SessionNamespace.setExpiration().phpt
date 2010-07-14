@@ -53,6 +53,6 @@ T::dump( http_build_query($namespace->getIterator()) );
 __halt_compiler() ?>
 
 ------EXPECT------
-string(0) ""
+""
 
-string(6) "p=plum"
+"p=plum"

@@ -65,90 +65,90 @@ __halt_compiler() ?>
 ------EXPECT------
 AnnotatedClass1
 
-array(1) {
-	"author" => array(1) {
-		0 => string(4) "john"
-	}
-}
+array(
+	"author" => array(
+		"john"
+	)
+)
 
-$a: array(1) {
-	"var" => array(1) {
-		0 => string(1) "a"
-	}
-}
+$a: array(
+	"var" => array(
+		"a"
+	)
+)
 
-$b: array(1) {
-	"var" => array(1) {
-		0 => string(1) "b"
-	}
-}
+$b: array(
+	"var" => array(
+		"b"
+	)
+)
 
-$c: array(1) {
-	"var" => array(1) {
-		0 => string(1) "c"
-	}
-}
+$c: array(
+	"var" => array(
+		"c"
+	)
+)
 
-$d: array(1) {
-	"var" => array(1) {
-		0 => string(1) "d"
-	}
-}
+$d: array(
+	"var" => array(
+		"d"
+	)
+)
 
-$e: array(1) {
-	"var" => array(1) {
-		0 => string(1) "e"
-	}
-}
+$e: array(
+	"var" => array(
+		"e"
+	)
+)
 
-$f: array(0)
+$f: array()
 
-a(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "a"
-	}
-}
+a(): array(
+	"return" => array(
+		"a"
+	)
+)
 
-b(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "b"
-	}
-}
+b(): array(
+	"return" => array(
+		"b"
+	)
+)
 
-c(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "c"
-	}
-}
+c(): array(
+	"return" => array(
+		"c"
+	)
+)
 
-d(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "d"
-	}
-}
+d(): array(
+	"return" => array(
+		"d"
+	)
+)
 
-e(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "e"
-	}
-}
+e(): array(
+	"return" => array(
+		"e"
+	)
+)
 
-f(): array(0)
+f(): array()
 
-g(): array(1) {
-	"return" => array(1) {
-		0 => string(1) "g"
-	}
-}
+g(): array(
+	"return" => array(
+		"g"
+	)
+)
 
 AnnotatedClass2
 
-array(1) {
-	"author" => array(1) {
-		0 => string(4) "jack"
-	}
-}
+array(
+	"author" => array(
+		"jack"
+	)
+)
 
 AnnotatedClass3
 
-array(0)
+array()

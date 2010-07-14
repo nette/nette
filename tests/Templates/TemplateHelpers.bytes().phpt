@@ -28,8 +28,8 @@ T::dump( TemplateHelpers::bytes(1e19), "TemplateHelpers::bytes(1e19)" );
 __halt_compiler() ?>
 
 ------EXPECT------
-TemplateHelpers::bytes(0.1): string(3) "0 B"
+TemplateHelpers::bytes(0.1): "0 B"
 
-TemplateHelpers::bytes(-1024 * 1024 * 1050): string(8) "-1.03 GB"
+TemplateHelpers::bytes(-1024 * 1024 * 1050): "-1.03 GB"
 
-TemplateHelpers::bytes(1e19): string(10) "8881.78 PB"
+TemplateHelpers::bytes(1e19): "8881.78 PB"

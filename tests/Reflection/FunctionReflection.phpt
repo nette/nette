@@ -32,6 +32,6 @@ __halt_compiler() ?>
 ------EXPECT------
 NULL
 
-object(%ns%ExtensionReflection) (1) {
-	"name" => string(8) "standard"
-}
+%ns%ExtensionReflection(
+	"name" => "standard"
+)

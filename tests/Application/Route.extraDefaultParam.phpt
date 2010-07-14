@@ -47,16 +47,16 @@ not matched
 
 ==> /presenter/action/12
 
-string(9) "Presenter"
+"Presenter"
 
-array(4) {
-	"action" => string(6) "action"
-	"id" => string(2) "12"
+array(
+	"action" => "action"
+	"id" => "12"
 	"extra" => NULL
-	"test" => string(9) "testvalue"
-}
+	"test" => "testvalue"
+)
 
-string(36) "/presenter/action/12/?test=testvalue"
+"/presenter/action/12/?test=testvalue"
 
 ==> /presenter/action/1234
 

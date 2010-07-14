@@ -39,12 +39,12 @@ T::dump( TextBase::validateEmail($control) );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(FALSE)
+FALSE
 
-bool(FALSE)
+FALSE
 
-bool(TRUE)
+TRUE
 
-bool(TRUE)
+TRUE
 
-bool(FALSE)
+FALSE

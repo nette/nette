@@ -52,47 +52,47 @@ T::dump( $rc->getAnnotations() );
 __halt_compiler() ?>
 
 ------EXPECT------
-array(9) {
-	"one" => array(1) {
-		0 => string(5) "value"
-	}
-	"two" => array(1) {
-		0 => string(5) "value"
-	}
-	"three" => array(1) {
-		0 => bool(TRUE)
-	}
-	"five" => array(1) {
-		0 => bool(TRUE)
-	}
-	"brackets" => array(1) {
-		0 => object(ArrayObject) (2) {
-			"single" => string(6) "()@\'""
-			"double" => string(6) "()@'\""
-		}
-	}
-	"line1" => array(1) {
-		0 => bool(TRUE)
-	}
-	"line2" => array(1) {
-		0 => bool(TRUE)
-	}
-	"line3" => array(1) {
-		0 => string(5) "value"
-	}
-	"line4" => array(1) {
-		0 => bool(TRUE)
-	}
-}
+array(
+	"one" => array(
+		"value"
+	)
+	"two" => array(
+		"value"
+	)
+	"three" => array(
+		TRUE
+	)
+	"five" => array(
+		TRUE
+	)
+	"brackets" => array(
+		ArrayObject(
+			"single" => "()@\'""
+			"double" => "()@'\""
+		)
+	)
+	"line1" => array(
+		TRUE
+	)
+	"line2" => array(
+		TRUE
+	)
+	"line3" => array(
+		"value"
+	)
+	"line4" => array(
+		TRUE
+	)
+)
 
-array(1) {
-	"one" => array(1) {
-		0 => string(5) "value"
-	}
-}
+array(
+	"one" => array(
+		"value"
+	)
+)
 
-array(1) {
-	"one" => array(1) {
-		0 => bool(TRUE)
-	}
-}
+array(
+	"one" => array(
+		TRUE
+	)
+)

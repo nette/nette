@@ -33,11 +33,11 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /any
 
-string(9) "Presenter"
+"Presenter"
 
-array(2) {
-	"para-meter" => string(3) "any"
-	"test" => string(9) "testvalue"
-}
+array(
+	"para-meter" => "any"
+	"test" => "testvalue"
+)
 
-string(19) "/any?test=testvalue"
+"/any?test=testvalue"

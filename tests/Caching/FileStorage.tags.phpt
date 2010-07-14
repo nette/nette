@@ -62,10 +62,10 @@ Writing cache...
 
 Cleaning by tags...
 
-Is cached key1? bool(FALSE)
+Is cached key1? FALSE
 
-Is cached key2? bool(FALSE)
+Is cached key2? FALSE
 
-Is cached key3? bool(TRUE)
+Is cached key3? TRUE
 
-Is cached key4? bool(TRUE)
+Is cached key4? TRUE

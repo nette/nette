@@ -36,22 +36,22 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> /action/
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(2) {
-	"action" => string(6) "action"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "action"
+	"test" => "testvalue"
+)
 
-string(47) "/action?test=testvalue&presenter=querypresenter"
+"/action?test=testvalue&presenter=querypresenter"
 
 ==> /
 
-string(14) "querypresenter"
+"querypresenter"
 
-array(2) {
-	"action" => string(7) "default"
-	"test" => string(9) "testvalue"
-}
+array(
+	"action" => "default"
+	"test" => "testvalue"
+)
 
-string(41) "/?test=testvalue&presenter=querypresenter"
+"/?test=testvalue&presenter=querypresenter"

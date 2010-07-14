@@ -38,14 +38,14 @@ __halt_compiler() ?>
 ------EXPECT------
 TemplateHelpers::date(NULL): NULL
 
-TemplateHelpers::date(timestamp): string(8) "01/23/78"
+TemplateHelpers::date(timestamp): "01/23/78"
 
-TemplateHelpers::date(string): string(8) "05/05/78"
+TemplateHelpers::date(string): "05/05/78"
 
-TemplateHelpers::date(DateTime): string(8) "05/05/78"
+TemplateHelpers::date(DateTime): "05/05/78"
 
-TemplateHelpers::date(timestamp, format): string(10) "1978-01-23"
+TemplateHelpers::date(timestamp, format): "1978-01-23"
 
-TemplateHelpers::date(string, format): string(10) "1212-09-26"
+TemplateHelpers::date(string, format): "1212-09-26"
 
-TemplateHelpers::date(DateTime, format): string(10) "1212-09-26"
+TemplateHelpers::date(DateTime, format): "1212-09-26"

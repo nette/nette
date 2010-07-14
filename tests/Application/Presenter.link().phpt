@@ -264,80 +264,80 @@ __halt_compiler() ?>
 ------EXPECT------
 ==> Presenter & action link
 
-string(44) "1.1 /index.php?action=product&presenter=Test"
+"1.1 /index.php?action=product&presenter=Test"
 
-string(52) "1.2 /index.php?var1=20&action=product&presenter=Test"
+"1.2 /index.php?var1=20&action=product&presenter=Test"
 
-string(56) "1.3 /index.php?var1=1&ok=0&action=product&presenter=Test"
+"1.3 /index.php?var1=1&ok=0&action=product&presenter=Test"
 
-string(44) "1.4 /index.php?action=product&presenter=Test"
+"1.4 /index.php?action=product&presenter=Test"
 
-string(56) "1.5 /index.php?var1=1&ok=0&action=product&presenter=Test"
+"1.5 /index.php?var1=1&ok=0&action=product&presenter=Test"
 
-string(46) "1.6 error: Extra parameter for 'Test:product'."
+"1.6 error: Extra parameter for 'Test:product'."
 
-string(52) "1.7 /index.php?x=1&y=2&action=product&presenter=Test"
+"1.7 /index.php?x=1&y=2&action=product&presenter=Test"
 
-string(44) "1.8 /index.php?action=product&presenter=Test"
+"1.8 /index.php?action=product&presenter=Test"
 
-string(48) "1.9 error: Destination must be non-empty string."
+"1.9 error: Destination must be non-empty string."
 
-string(53) "1.10 /index.php?x=1&y=2&action=product&presenter=Test"
+"1.10 /index.php?x=1&y=2&action=product&presenter=Test"
 
-string(62) "1.11 /index.php?x=1&y=2&action=product&presenter=Test#fragment"
+"1.11 /index.php?x=1&y=2&action=product&presenter=Test#fragment"
 
-string(78) "1.12 http://localhost/index.php?x=1&y=2&action=product&presenter=Test#fragment"
+"1.12 http://localhost/index.php?x=1&y=2&action=product&presenter=Test#fragment"
 
 ==> Presenter & signal link
 
-string(51) "2.1 /index.php?action=default&do=buy&presenter=Test"
+"2.1 /index.php?action=default&do=buy&presenter=Test"
 
-string(59) "2.2 /index.php?var1=20&action=default&do=buy&presenter=Test"
+"2.2 /index.php?var1=20&action=default&do=buy&presenter=Test"
 
-string(55) "2.3 /index.php?y=2&action=default&do=buy&presenter=Test"
+"2.3 /index.php?y=2&action=default&do=buy&presenter=Test"
 
-string(55) "2.4 /index.php?y=2&action=default&do=buy&presenter=Test"
+"2.4 /index.php?y=2&action=default&do=buy&presenter=Test"
 
-string(55) "2.5 /index.php?y=0&action=default&do=buy&presenter=Test"
+"2.5 /index.php?y=0&action=default&do=buy&presenter=Test"
 
-string(55) "2.6 /index.php?y=0&action=default&do=buy&presenter=Test"
+"2.6 /index.php?y=0&action=default&do=buy&presenter=Test"
 
-string(51) "2.7 /index.php?action=default&do=buy&presenter=Test"
+"2.7 /index.php?action=default&do=buy&presenter=Test"
 
-string(55) "2.8 /index.php?y=2&action=default&do=buy&presenter=Test"
+"2.8 /index.php?y=2&action=default&do=buy&presenter=Test"
 
-string(55) "2.9 /index.php?y=2&action=default&do=buy&presenter=Test"
+"2.9 /index.php?y=2&action=default&do=buy&presenter=Test"
 
-string(44) "2.10 error: Signal must be non-empty string."
+"2.10 error: Signal must be non-empty string."
 
-string(45) "2.11 /index.php?action=default&presenter=Test"
+"2.11 /index.php?action=default&presenter=Test"
 
-string(45) "2.12 /index.php?action=default&presenter=Test"
+"2.12 /index.php?action=default&presenter=Test"
 
 ==> Component link
 
-string(43) "3.1 error: Signal must be non-empty string."
+"3.1 error: Signal must be non-empty string."
 
-string(91) "3.2 /index.php?mycontrol-x=0&mycontrol-y=1&action=default&do=mycontrol-click&presenter=Test"
+"3.2 /index.php?mycontrol-x=0&mycontrol-y=1&action=default&do=mycontrol-click&presenter=Test"
 
-string(93) "3.3 /index.php?mycontrol-x=0a&mycontrol-y=1a&action=default&do=mycontrol-click&presenter=Test"
+"3.3 /index.php?mycontrol-x=0a&mycontrol-y=1a&action=default&do=mycontrol-click&presenter=Test"
 
-string(77) "3.4 /index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test"
+"3.4 /index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test"
 
-string(77) "3.5 /index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test"
+"3.5 /index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test"
 
-string(63) "3.6 /index.php?action=default&do=mycontrol-click&presenter=Test"
+"3.6 /index.php?action=default&do=mycontrol-click&presenter=Test"
 
-string(64) "3.7 error: Extra parameter for signal 'TestControl:handleclick'."
+"3.7 error: Extra parameter for signal 'TestControl:handleclick'."
 
-string(91) "3.8 /index.php?mycontrol-x=1&mycontrol-y=2&action=default&do=mycontrol-click&presenter=Test"
+"3.8 /index.php?mycontrol-x=1&mycontrol-y=2&action=default&do=mycontrol-click&presenter=Test"
 
-string(95) "3.9 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&do=mycontrol-click&presenter=Test"
+"3.9 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&do=mycontrol-click&presenter=Test"
 
-string(77) "3.10 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test"
+"3.10 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test"
 
-string(77) "3.11 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test"
+"3.11 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test"
 
-string(82) "3.12 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag"
+"3.12 /index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag"
 
-string(98) "3.13 http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag"
+"3.13 http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag"

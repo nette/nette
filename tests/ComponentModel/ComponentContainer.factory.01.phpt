@@ -36,4 +36,4 @@ T::dump( $a->getComponent('b')->name );
 __halt_compiler() ?>
 
 ------EXPECT------
-string(1) "b"
+"b"

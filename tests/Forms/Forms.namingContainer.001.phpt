@@ -101,30 +101,30 @@ T::dump( $form->getValues() );
 __halt_compiler() ?>
 
 ------EXPECT------
-bool(TRUE)
+TRUE
 
-array(7) {
-	"name" => string(3) "jim"
-	"text1" => string(5) "hello"
-	"text2" => string(5) "world"
-	"formCont" => array(2) {
-		"name" => string(4) "jack"
-		"age" => string(2) "23"
-	}
-	"firstperson" => array(2) {
-		"name" => string(5) "david"
-		"age" => string(2) "30"
-	}
-	"secondperson" => array(3) {
-		"name" => string(3) "jim"
-		"age" => string(2) "40"
-		"avatar" => object(%ns%HttpUploadedFile) (5) {
-			"name" private => string(11) "license.txt"
+array(
+	"name" => "jim"
+	"text1" => "hello"
+	"text2" => "world"
+	"formCont" => array(
+		"name" => "jack"
+		"age" => "23"
+	)
+	"firstperson" => array(
+		"name" => "david"
+		"age" => "30"
+	)
+	"secondperson" => array(
+		"name" => "jim"
+		"age" => "40"
+		"avatar" => %ns%HttpUploadedFile(
+			"name" private => "license.txt"
 			"type" private => NULL
-			"size" private => int(3013)
-			"tmpName" private => string(23) "C:\PHP\temp\php1D5C.tmp"
-			"error" private => int(0)
-		}
-	}
-	"age" => string(2) "50"
-}
+			"size" private => 3013
+			"tmpName" private => "C:\PHP\temp\php1D5C.tmp"
+			"error" private => 0
+		)
+	)
+	"age" => "50"
+)
