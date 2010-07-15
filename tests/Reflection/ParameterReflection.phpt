@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: MethodParameterReflection tests.
+ * Test: ParameterReflection tests.
  *
  * @author     David Grudl
  * @category   Nette

@@ -24,11 +24,11 @@ use Nette,
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Reflection
  */
-class MethodParameterReflection extends \ReflectionParameter
+class ParameterReflection extends \ReflectionParameter
 {
 
 	/**
-	 * @return Nette\Reflection\MethodParameterReflection
+	 * @return Nette\Reflection\ParameterReflection
 	 * @internal
 	 */
 	public static function import(\ReflectionParameter $ref)
