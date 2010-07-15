@@ -37,23 +37,22 @@ class TextInput extends TextBase
 		$this->control->type = 'text';
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->filters[] = callback('Nette\String', 'trim');
-		$this->filters[] = callback($this, 'checkMaxLength');
+		$this->filters[] = callback($this, 'sanitize');
 		$this->value = '';
 	}
 
 
 
 	/**
-	 * Filter: shortens value to control's max length.
+	 * Filter: removes unnecessary whitespace and shortens value to control's max length.
 	 * @return string
 	 */
-	public function checkMaxLength($value)
+	public function sanitize($value)
 	{
 		if ($this->control->maxlength && Nette\String::length($value) > $this->control->maxlength) {
 			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');
 		}
-		return $value;
+		return Nette\String::trim(strtr($value, "\r\n", '  '));
 	}
 
 
