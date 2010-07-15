@@ -48,6 +48,15 @@ foreach($params as $key => $value) {
 
 
 
+$reflect = new FunctionReflection(function ($x, $y) {});
+$params = $reflect->getParameters();
+
+foreach($params as $key => $value) {
+	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
+}
+
+
+
 __halt_compiler() ?>
 
 ------EXPECT------
@@ -55,3 +64,5 @@ Function myFunction(), ,
 Function myFunction(), ,
 Method Foo::myMethod(), , Class Foo
 Method Foo::myMethod(), , Class Foo
+Function {closure}(), ,
+Function {closure}(), ,

@@ -26,15 +26,13 @@ use Nette,
  */
 class ParameterReflection extends \ReflectionParameter
 {
+	/** @var mixed */
+	private $function;
 
-	/**
-	 * @return Nette\Reflection\ParameterReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionParameter $ref)
+
+	public function __construct($function, $parameter)
 	{
-		$method = $ref->getDeclaringFunction();
-		return new static($method instanceof \ReflectionMethod ? array($ref->getDeclaringClass()->getName(), $method->getName()) : $method->getName(), $ref->getName());
+		parent::__construct($this->function = $function, $parameter);
 	}
 
 
@@ -64,9 +62,7 @@ class ParameterReflection extends \ReflectionParameter
 	 */
 	public function getDeclaringFunction()
 	{
-		return ($ref = parent::getDeclaringFunction()) instanceof \ReflectionMethod
-			? MethodReflection::import($ref)
-			: FunctionReflection::import($ref);
+		return is_array($this->function) ? new MethodReflection($this->function[0], $this->function[1]) : new FunctionReflection($this->function);
 	}
 
 

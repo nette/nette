@@ -26,6 +26,16 @@ use Nette,
  */
 class FunctionReflection extends \ReflectionFunction
 {
+	/** @var string|Closure */
+	private $value;
+
+
+	public function __construct($name)
+	{
+		parent::__construct($this->value = $name);
+	}
+
+
 
 	public function __toString()
 	{
@@ -61,7 +71,17 @@ class FunctionReflection extends \ReflectionFunction
 
 	public function getParameters()
 	{
-		return array_map(array('Nette\Reflection\ParameterReflection', 'import'), parent::getParameters());
+		foreach ($res = parent::getParameters() as $key => $val) {
+			$res[$key] = new ParameterReflection($this->value, $val->getName());
+		}
+		return $res;
+	}
+
+
+
+	public function getClosure()
+	{
+		return $this->isClosure() ? $this->value : NULL;
 	}
 
 

@@ -138,7 +138,11 @@ class MethodReflection extends \ReflectionMethod
 
 	public function getParameters()
 	{
-		return array_map(array('Nette\Reflection\ParameterReflection', 'import'), parent::getParameters());
+		$me = array(parent::getDeclaringClass()->getName(), $this->getName());
+		foreach ($res = parent::getParameters() as $key => $val) {
+			$res[$key] = new ParameterReflection($me, $val->getName());
+		}
+		return $res;
 	}
 
 
