@@ -508,8 +508,8 @@ final class Debug
 
 
 	/**
-	 * Unregister error handler routine.
-	 * @return void
+	 * Is Debug enabled?
+	 * @return bool
 	 */
 	public static function isEnabled()
 	{

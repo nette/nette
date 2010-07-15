@@ -13,7 +13,10 @@
 namespace Nette\Web;
 
 use Nette,
-	Nette\Environment;
+	Nette\Environment,
+	Nette\Security\IAuthenticator,
+	Nette\Security\IAuthorizator,
+	Nette\Security\IIdentity;
 
 
 
@@ -101,8 +104,8 @@ class User extends Nette\Object implements IUser
 		$this->logout(TRUE);
 
 		$credentials = array(
-			Nette\Security\IAuthenticator::USERNAME => $username,
-			Nette\Security\IAuthenticator::PASSWORD => $password,
+			IAuthenticator::USERNAME => $username,
+			IAuthenticator::PASSWORD => $password,
 			'extra' => $extra,
 		);
 
@@ -161,7 +164,7 @@ class User extends Nette\Object implements IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthenticationHandler(Nette\Security\IAuthenticator $handler)
+	public function setAuthenticationHandler(IAuthenticator $handler)
 	{
 		$this->authenticationHandler = $handler;
 		return $this;
@@ -267,7 +270,7 @@ class User extends Nette\Object implements IUser
 
 		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
 
-		if (!($session->identity instanceof Nette\Security\IIdentity) || !is_bool($session->authenticated)) {
+		if (!($session->identity instanceof IIdentity) || !is_bool($session->authenticated)) {
 			$session->remove();
 		}
 
@@ -333,7 +336,7 @@ class User extends Nette\Object implements IUser
 	 * @param  IIdentity
 	 * @return User  provides a fluent interface
 	 */
-	protected function setIdentity(Nette\Security\IIdentity $identity = NULL)
+	protected function setIdentity(IIdentity $identity = NULL)
 	{
 		$this->getSessionNamespace(TRUE)->identity = $identity;
 		return $this;
@@ -380,7 +383,7 @@ class User extends Nette\Object implements IUser
 	 * @param  string  privilege
 	 * @return bool
 	 */
-	public function isAllowed($resource = NULL, $privilege = NULL)
+	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
 		$handler = $this->getAuthorizationHandler();
 		if (!$handler) {
@@ -401,7 +404,7 @@ class User extends Nette\Object implements IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthorizationHandler(Nette\Security\IAuthorizator $handler)
+	public function setAuthorizationHandler(IAuthorizator $handler)
 	{
 		$this->authorizationHandler = $handler;
 		return $this;
