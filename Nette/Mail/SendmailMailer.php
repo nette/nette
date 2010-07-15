@@ -38,7 +38,7 @@ class SendmailMailer extends Nette\Object implements IMailer
 
 		$parts = explode(Mail::EOL . Mail::EOL, $tmp->generateMessage(), 2);
 
-		Nette\Tools::tryError();
+		Nette\Debug::tryError();
 		$res = mail(
 			str_replace(Mail::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
 			str_replace(Mail::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
@@ -46,7 +46,7 @@ class SendmailMailer extends Nette\Object implements IMailer
 			str_replace(Mail::EOL, PHP_EOL, $parts[0])
 		);
 
-		if (Nette\Tools::catchError($msg)) {
+		if (Nette\Debug::catchError($msg)) {
 			throw new \InvalidStateException($msg);
 
 		} elseif (!$res) {

@@ -80,9 +80,9 @@ class Session extends Nette\Object
 			// ignore?
 		}
 
-		Nette\Tools::tryError();
+		Nette\Debug::tryError();
 		session_start();
-		if (Nette\Tools::catchError($msg)) {
+		if (Nette\Debug::catchError($msg)) {
 			@session_write_close(); // this is needed
 			throw new \InvalidStateException($msg);
 		}
