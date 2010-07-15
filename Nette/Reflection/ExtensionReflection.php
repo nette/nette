@@ -38,27 +38,23 @@ class ExtensionReflection extends \ReflectionExtension
 
 
 
-	/**
-	 * @return Nette\Reflection\ExtensionReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionExtension $ref)
-	{
-		return new static($ref->getName());
-	}
-
-
-
 	public function getClasses()
 	{
-		return array_map(array('Nette\Reflection\ClassReflection', 'import'), parent::getClasses());
+		$res = array();
+		foreach (parent::getClassNames() as $val) {
+			$res[$val] = new ClassReflection($val);
+		}
+		return $res;
 	}
 
 
 
 	public function getFunctions()
 	{
-		return array_map(array('Nette\Reflection\FunctionReflection', 'import'), parent::getFunctions());
+		foreach ($res = parent::getFunctions() as $key => $val) {
+			$res[$key] = new FunctionReflection($key);
+		}
+		return $res;
 	}
 
 

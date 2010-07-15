@@ -132,17 +132,6 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionClass $ref)
-	{
-		return new static($ref->getName());
-	}
-
-
-
-	/**
 	 * @return Nette\Reflection\MethodReflection
 	 */
 	public function getConstructor()
@@ -157,14 +146,18 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function getExtension()
 	{
-		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
+		return ($name = $this->getExtensionName()) ? new ExtensionReflection($name) : NULL;
 	}
 
 
 
 	public function getInterfaces()
 	{
-		return array_map(array('Nette\Reflection\ClassReflection', 'import'), parent::getInterfaces());
+		$res = array();
+		foreach (parent::getInterfaceNames() as $val) {
+			$res[$val] = new static($val);
+		}
+		return $res;
 	}
 
 
@@ -174,14 +167,17 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function getMethod($name)
 	{
-		return MethodReflection::import(parent::getMethod($name));
+		return new MethodReflection($this->getName(), $name);
 	}
 
 
 
 	public function getMethods($filter = -1)
 	{
-		return array_map(array('Nette\Reflection\MethodReflection', 'import'), parent::getMethods($filter));
+		foreach ($res = parent::getMethods($filter) as $key => $val) {
+			$res[$key] = new MethodReflection($this->getName(), $val->getName());
+		}
+		return $res;
 	}
 
 
@@ -191,14 +187,17 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function getParentClass()
 	{
-		return ($ref = parent::getParentClass()) ? self::import($ref) : NULL;
+		return ($ref = parent::getParentClass()) ? new static($ref->getName()) : NULL;
 	}
 
 
 
 	public function getProperties($filter = -1)
 	{
-		return array_map(array('Nette\Reflection\PropertyReflection', 'import'), parent::getProperties($filter));
+		foreach ($res = parent::getProperties($filter) as $key => $val) {
+			$res[$key] = new PropertyReflection($this->getName(), $val->getName());
+		}
+		return $res;
 	}
 
 
@@ -208,7 +207,7 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function getProperty($name)
 	{
-		return PropertyReflection::import(parent::getProperty($name));
+		return new PropertyReflection($this->getName(), $name);
 	}
 
 
