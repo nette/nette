@@ -205,11 +205,11 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 		$requestUri = String::replace($requestUri, $this->uriFilter[0]);
 		$tmp = explode('?', $requestUri, 2);
 		$uri->path = String::replace($tmp[0], $this->uriFilter[PHP_URL_PATH]);
-		$uri->path = String::fixEncoding($uri->path);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized uri
 		$uri->canonicalize();
+		$uri->path = String::fixEncoding($uri->path);
 
 		// detect base URI-path - inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
 		$filename = isset($_SERVER['SCRIPT_FILENAME']) ? basename($_SERVER['SCRIPT_FILENAME']) : NULL;
