@@ -102,7 +102,7 @@ NULL
 	"class" => "Foo"
 )
 
-Exception %ns%ReflectionException: Method doesntExist does not exist
+Exception ReflectionException: Method Bar::doesntExist() does not exist
 
 array(
 	%ns%MethodReflection(
@@ -120,7 +120,7 @@ array(
 	"class" => "Bar"
 )
 
-Exception %ns%ReflectionException: Property doesntExist does not exist
+Exception ReflectionException: Property Bar::$doesntExist does not exist
 
 array(
 	%ns%PropertyReflection(

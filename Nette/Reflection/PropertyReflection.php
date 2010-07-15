@@ -38,22 +38,11 @@ class PropertyReflection extends \ReflectionProperty
 
 
 	/**
-	 * @return Nette\Reflection\PropertyReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionProperty $ref)
-	{
-		return new static($ref->getDeclaringClass()->getName(), $ref->getName());
-	}
-
-
-
-	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getDeclaringClass()
 	{
-		return ClassReflection::import(parent::getDeclaringClass());
+		return new ClassReflection(parent::getDeclaringClass()->getName());
 	}
 
 

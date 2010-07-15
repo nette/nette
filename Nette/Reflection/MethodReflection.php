@@ -106,22 +106,11 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionMethod $ref)
-	{
-		return new static($ref->getDeclaringClass()->getName(), $ref->getName());
-	}
-
-
-
-	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getDeclaringClass()
 	{
-		return ClassReflection::import(parent::getDeclaringClass());
+		return new ClassReflection(parent::getDeclaringClass()->getName());
 	}
 
 
@@ -131,7 +120,7 @@ class MethodReflection extends \ReflectionMethod
 	 */
 	public function getExtension()
 	{
-		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
+		return ($name = $this->getExtensionName()) ? new ExtensionReflection($name) : NULL;
 	}
 
 

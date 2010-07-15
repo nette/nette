@@ -44,18 +44,14 @@ class FunctionReflection extends \ReflectionFunction
 
 
 
-	/********************* Reflection layer ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Reflection\FunctionReflection
-	 * @internal
-	 */
-	public static function import(\ReflectionFunction $ref)
+	public function getClosure()
 	{
-		return new static($ref->getName());
+		return $this->isClosure() ? $this->value : NULL;
 	}
+
+
+
+	/********************* Reflection layer ****************d*g**/
 
 
 
@@ -64,7 +60,7 @@ class FunctionReflection extends \ReflectionFunction
 	 */
 	public function getExtension()
 	{
-		return ($ref = parent::getExtension()) ? ExtensionReflection::import($ref) : NULL;
+		return ($name = $this->getExtensionName()) ? new ExtensionReflection($name) : NULL;
 	}
 
 
@@ -75,13 +71,6 @@ class FunctionReflection extends \ReflectionFunction
 			$res[$key] = new ParameterReflection($this->value, $val->getName());
 		}
 		return $res;
-	}
-
-
-
-	public function getClosure()
-	{
-		return $this->isClosure() ? $this->value : NULL;
 	}
 
 

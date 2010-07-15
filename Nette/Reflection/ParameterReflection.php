@@ -42,7 +42,7 @@ class ParameterReflection extends \ReflectionParameter
 	 */
 	public function getClass()
 	{
-		return ($ref = parent::getClass()) ? ClassReflection::import($ref) : NULL;
+		return ($ref = parent::getClass()) ? new ClassReflection($ref->getName()) : NULL;
 	}
 
 
@@ -52,7 +52,7 @@ class ParameterReflection extends \ReflectionParameter
 	 */
 	public function getDeclaringClass()
 	{
-		return ($ref = parent::getDeclaringClass()) ? ClassReflection::import($ref) : NULL;
+		return ($ref = parent::getDeclaringClass()) ? new ClassReflection($ref->getName()) : NULL;
 	}
 
 
