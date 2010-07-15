@@ -31,6 +31,7 @@ __halt_compiler() ?>
 
 ------EXPECT------
 %ns%FunctionReflection(
+	"value" private => "sleep"
 	"name" => "sleep"
 )
 
