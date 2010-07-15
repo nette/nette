@@ -167,7 +167,10 @@ if (headers_sent()) {
 	<meta name="robots" content="noindex,noarchive">
 	<meta name="generator" content="Nette Framework">
 
-	<title><?php echo htmlspecialchars($title) ?></title><!-- <?php echo $exception->getMessage(), ($exception->getCode() ? ' #' . $exception->getCode() : '') ?> -->
+	<title><?php echo htmlspecialchars($title) ?></title><!-- <?php
+		$ex = $exception; echo $ex->getMessage(), ($ex->getCode() ? ' #' . $ex->getCode() : '');
+		while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)) echo '; caused by ', get_class($ex), ' ', $ex->getMessage(), ($ex->getCode() ? ' #' . $ex->getCode() : '');
+	 ?> -->
 
 	<style type="text/css">
 
