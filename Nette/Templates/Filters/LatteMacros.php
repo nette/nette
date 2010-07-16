@@ -264,7 +264,7 @@ class LatteMacros extends Nette\Object
 
 	/**
 	 * Callback for self::macro().
-     * @internal
+	 * @internal
 	 */
 	public function cbMacro($m)
 	{
@@ -614,7 +614,7 @@ class LatteMacros extends Nette\Object
 
 	/**
 	 * Converts {block named}...{/block} to functions.
-     * @internal
+	 * @internal
 	 */
 	public function cbNamedBlocks($matches)
 	{

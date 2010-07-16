@@ -10,7 +10,6 @@
  * @package    Nette\Caching
  */
 
-
 namespace Nette\Caching;
 
 use Nette;
@@ -20,6 +19,7 @@ use Nette;
 /**
  * Provides SQLite3 based cache journal backend.
  *
+ * @author     Jan Smitka
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
@@ -70,12 +70,12 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 		if (!empty($dependencies[Cache::PRIORITY])) {
 			$query .= "INSERT INTO cache (entry, priority) VALUES ('$entry', '" . ((int) $dependencies[Cache::PRIORITY]) . "'); ";
 		}
-		
+
 		if (!$this->getDatabase()->exec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
 			$this->getDatabase()->exec('ROLLBACK');
 			return FALSE;
 		}
-		
+
 		return TRUE;
 	}
 
@@ -91,11 +91,11 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 		if (!empty($conditions[Cache::ALL])) {
 			if (self::isAvailable())
 				$this->getDatabase()->exec('DELETE FROM CACHE;');
-			
+
 			return;
 		} else {
 			$query = array();
-			
+
 			if (!empty($conditions[Cache::TAGS])) {
 				$tags = array();
 				foreach ((array) $conditions[Cache::TAGS] as $tag) {
@@ -103,11 +103,11 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 				}
 				$query[] = 'tag IN(' . implode(', ', $tags) . ')';
 			}
-			
+
 			if (isset($conditions[Cache::PRIORITY])) {
 				$query[] = 'priority <= ' . ((int) $conditions[Cache::PRIORITY]);
 			}
-			
+
 			if (!empty($query)) {
 				$query = implode(' OR ', $query);
 				$result = $this->getDatabase()->query("SELECT entry FROM cache WHERE $query");
@@ -135,7 +135,7 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 			if (!self::isAvailable()) {
 				throw new \InvalidStateException("SQLite3 extension is required for storing tags and priorities.");
 			}
-			
+
 			// init the journal
 			$initialized = file_exists($file = ($this->dir . '/cachejournal.db'));
 			$this->database = new \SQLite3($file);
@@ -148,7 +148,7 @@ class Sqlite3Journal extends Nette\Object implements ICacheJournal
 				);
 			}
 		}
-		
+
 		return $this->database;
 	}
 

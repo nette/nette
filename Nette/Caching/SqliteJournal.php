@@ -10,7 +10,6 @@
  * @package    Nette\Caching
  */
 
-
 namespace Nette\Caching;
 
 use Nette;
@@ -20,6 +19,7 @@ use Nette;
 /**
  * Provides SQLite based cache journal backend.
  *
+ * @author     Jan Smitka
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
@@ -70,12 +70,12 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 		if (!empty($dependencies[Cache::PRIORITY])) {
 			$query .= "INSERT INTO cache (entry, priority) VALUES ('$entry', '" . ((int) $dependencies[Cache::PRIORITY]) . "'); ";
 		}
-		
+
 		if (!$this->getDatabase()->queryExec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
 			$this->getDatabase()->queryExec('ROLLBACK');
 			return FALSE;
 		}
-		
+
 		return TRUE;
 	}
 
@@ -91,11 +91,11 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 		if (!empty($conditions[Cache::ALL])) {
 			if (self::isAvailable())
 				$this->getDatabase()->queryExec('DELETE FROM CACHE;');
-			
+
 			return;
 		} else {
 			$query = array();
-			
+
 			if (!empty($conditions[Cache::TAGS])) {
 				$tags = array();
 				foreach ((array) $conditions[Cache::TAGS] as $tag) {
@@ -103,11 +103,11 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 				}
 				$query[] = 'tag IN(' . implode(', ', $tags) . ')';
 			}
-			
+
 			if (isset($conditions[Cache::PRIORITY])) {
 				$query[] = 'priority <= ' . ((int) $conditions[Cache::PRIORITY]);
 			}
-			
+
 			if (!empty($query)) {
 				$query = implode(' OR ', $query);
 				$entries = $this->getDatabase()->singleQuery("SELECT entry FROM cache WHERE $query", FALSE);
@@ -144,7 +144,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 				);
 			}
 		}
-		
+
 		return $this->database;
 	}
 

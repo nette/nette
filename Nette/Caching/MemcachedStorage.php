@@ -35,7 +35,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 	/** @var string */
 	private $prefix;
-	
+
 	/** @var ICacheJournal */
 	private $journal;
 
@@ -126,7 +126,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		if (!empty($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
-		
+
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			$this->getJournal()->write($this->prefix . $key, $dp);
 		}

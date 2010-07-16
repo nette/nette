@@ -96,7 +96,7 @@ final class TemplateFilters
 	/**
 	 * Callback for self::netteLinks.
 	 * Parses a "nette" URI (scheme is 'nette') and converts to real URI
-     * @internal
+	 * @internal
 	 */
 	public static function netteLinksCb($m)
 	{
@@ -144,7 +144,7 @@ final class TemplateFilters
 
 	/**
 	 * Callback for self::texyBlocks.
-     * @internal
+	 * @internal
 	 */
 	public static function texyCb($m)
 	{

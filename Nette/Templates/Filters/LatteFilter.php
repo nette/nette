@@ -522,7 +522,7 @@ class LatteFilter extends Nette\Object
 
 	/**
 	 * Callback for formatArgs().
-     * @internal
+	 * @internal
 	 */
 	public static function cbArgs($matches)
 	{

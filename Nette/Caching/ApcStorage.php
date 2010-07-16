@@ -1,12 +1,27 @@
 <?php
 
+/**
+ * Nette Framework
+ *
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
+ * @license    http://nette.org/license  Nette license
+ * @link       http://nette.org
+ * @category   Nette
+ * @package    Nette\Caching
+ */
+
 namespace Nette\Caching;
 
 use Nette;
 
+
+
 /**
- * APC caching storage
- * @author Michael Moravec
+ * APC caching storage.
+ *
+ * @author     Michael Moravec
+ * @copyright  Copyright (c) 2004, 2010 David Grudl
+ * @package    Nette\Caching
  */
 class ApcStorage implements ICacheStorage
 {
@@ -111,7 +126,7 @@ class ApcStorage implements ICacheStorage
 		if (!empty($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
-		
+
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			$this->getJournal()->write($this->prefix . $key, $dp);
 		}
@@ -171,4 +186,5 @@ class ApcStorage implements ICacheStorage
 	{
 		$key = $this->prefix . str_replace("\x00", '~', $key);
 	}
+
 }

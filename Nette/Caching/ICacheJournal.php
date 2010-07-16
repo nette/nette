@@ -10,7 +10,6 @@
  * @package    Nette\Caching
  */
 
-
 namespace Nette\Caching;
 
 use Nette;
@@ -19,7 +18,8 @@ use Nette;
 
 /**
  * Cache journal provider
- * 
+ *
+ * @author     Jan Smitka
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Caching
  */
