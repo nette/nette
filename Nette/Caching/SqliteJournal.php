@@ -30,10 +30,21 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 
 
 
+	/**
+	 * Returns whether the SqliteCacheJournal is able to operate.
+	 * @return bool
+	 */
+	public static function isAvailable()
+	{
+		return extension_loaded('sqlite') || extension_loaded('sqlite3');
+	}
+
+
+
 	public function __construct($dir)
 	{
 		if (!self::isAvailable()) {
-			throw new \InvalidStateException("SQLite or SQLite3 extension is required for storing tags and priorities.");
+			throw new \NotSupportedException("SQLite or SQLite3 extension is required for storing tags and priorities.");
 		}
 
 		$initialized = file_exists($file = $dir . '/cachejournal.db');
@@ -46,17 +57,6 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 				. 'CREATE INDEX IDX_TAG ON cache (tag);'
 			);
 		}
-	}
-
-
-
-	/**
-	 * Returns whether the SqliteCacheJournal is able to operate.
-	 * @return bool
-	 */
-	public static function isAvailable()
-	{
-		return extension_loaded('sqlite') || extension_loaded('sqlite3');
 	}
 
 

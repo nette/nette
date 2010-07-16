@@ -161,7 +161,7 @@ class ApcStorage implements ICacheStorage
 
 		} else {
 			foreach ($this->getJournal()->clean($conds) as $entry) {
-				$this->memcache->delete($entry);
+				apc_delete($entry);
 			}
 		}
 	}
@@ -184,7 +184,7 @@ class ApcStorage implements ICacheStorage
 
 	private function _normalizeKey(&$key)
 	{
-		$key = $this->prefix . str_replace("\x00", '~', $key);
+		$key = $this->prefix . str_replace("\x00", '~', $key); // PHP bug 17597
 	}
 
 }
