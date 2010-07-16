@@ -269,17 +269,7 @@ class Configurator extends Object
 	 */
 	public static function createCacheJournal()
 	{
-		$tempDir = Environment::getVariable('tempDir');
-
-		if (Nette\Caching\Sqlite3Journal::isAvailable()) {
-			return new Nette\Caching\Sqlite3Journal($tempDir);
-
-		} else if (Nette\Caching\SqliteJournal::isAvailable()) {
-			return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir'));
-
-		} else {
-			throw new \NotSupportedException('No ICacheJournal available.');
-		}
+		return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir'));
 	}
 
 
