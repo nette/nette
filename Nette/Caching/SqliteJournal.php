@@ -41,13 +41,13 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 
 
 
-	public function __construct($dir)
+	public function __construct($file)
 	{
 		if (!self::isAvailable()) {
 			throw new \NotSupportedException("SQLite or SQLite3 extension is required for storing tags and priorities.");
 		}
 
-		$initialized = file_exists($file = $dir . '/cachejournal.db');
+		$initialized = file_exists($file);
 		$this->database = extension_loaded('sqlite3') ? new \SQLite3($file) : new SQLiteMimic($file);
 		if (!$initialized) {
 			$this->database->exec(
