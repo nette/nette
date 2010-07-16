@@ -25,18 +25,27 @@ use Nette;
  */
 class SqliteJournal extends Nette\Object implements ICacheJournal
 {
-	/** @var string */
-	private $dir;
-
 	/** @var \SQLiteDatabase */
 	private $database;
 
 
 
-
 	public function __construct($dir)
 	{
-		$this->dir = $dir;
+		if (!self::isAvailable()) {
+			throw new \NotSupportedException("SQLite extension is required for storing tags and priorities.");
+		}
+
+		$initialized = file_exists($file = $dir . '/cachejournal.sdb');
+		$this->database = new \SQLiteDatabase($file);
+		if (!$initialized) {
+			$this->database->queryExec(
+				'CREATE TABLE cache (entry VARCHAR NOT NULL, priority INTEGER, tag VARCHAR); '
+				. 'CREATE INDEX IDX_ENTRY ON cache (entry); '
+				. 'CREATE INDEX IDX_PRI ON cache (priority); '
+				. 'CREATE INDEX IDX_TAG ON cache (tag);'
+			);
+		}
 	}
 
 
@@ -71,8 +80,8 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 			$query .= "INSERT INTO cache (entry, priority) VALUES ('$entry', '" . ((int) $dependencies[Cache::PRIORITY]) . "'); ";
 		}
 
-		if (!$this->getDatabase()->queryExec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
-			$this->getDatabase()->queryExec('ROLLBACK');
+		if (!$this->database->queryExec("BEGIN; DELETE FROM cache WHERE entry = '$entry'; $query COMMIT;")) {
+			$this->database->queryExec('ROLLBACK');
 			return FALSE;
 		}
 
@@ -89,63 +98,33 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	public function clean(array $conditions)
 	{
 		if (!empty($conditions[Cache::ALL])) {
-			if (self::isAvailable())
-				$this->getDatabase()->queryExec('DELETE FROM CACHE;');
-
+			$this->database->queryExec('DELETE FROM CACHE;');
 			return;
+		}
+
+		$query = array();
+
+		if (!empty($conditions[Cache::TAGS])) {
+			$tags = array();
+			foreach ((array) $conditions[Cache::TAGS] as $tag) {
+				$tags[] = "'" . sqlite_escape_string($tag) . "'";
+			}
+			$query[] = 'tag IN(' . implode(', ', $tags) . ')';
+		}
+
+		if (isset($conditions[Cache::PRIORITY])) {
+			$query[] = 'priority <= ' . ((int) $conditions[Cache::PRIORITY]);
+		}
+
+		if (!empty($query)) {
+			$query = implode(' OR ', $query);
+			$entries = $this->database->singleQuery("SELECT entry FROM cache WHERE $query", FALSE);
+			$this->database->queryExec("DELETE FROM cache WHERE $query");
+			return $entries;
+
 		} else {
-			$query = array();
-
-			if (!empty($conditions[Cache::TAGS])) {
-				$tags = array();
-				foreach ((array) $conditions[Cache::TAGS] as $tag) {
-					$tags[] = "'" . sqlite_escape_string($tag) . "'";
-				}
-				$query[] = 'tag IN(' . implode(', ', $tags) . ')';
-			}
-
-			if (isset($conditions[Cache::PRIORITY])) {
-				$query[] = 'priority <= ' . ((int) $conditions[Cache::PRIORITY]);
-			}
-
-			if (!empty($query)) {
-				$query = implode(' OR ', $query);
-				$entries = $this->getDatabase()->singleQuery("SELECT entry FROM cache WHERE $query", FALSE);
-				$this->getDatabase()->queryExec("DELETE FROM cache WHERE $query");
-				return $entries;
-			} else {
-				return array();
-			}
+			return array();
 		}
-	}
-
-
-
-	/**
-	 * Gets the database object.
-	 * @return \SQLiteDatabase
-	 */
-	protected function getDatabase()
-	{
-		if ($this->database === NULL) {
-			if (!self::isAvailable()) {
-				throw new \NotSupportedException("SQLite extension is required for storing tags and priorities.");
-			}
-
-			// init the journal
-			$initialized = file_exists($file = ($this->dir . '/cachejournal.sdb'));
-			$this->database = new \SQLiteDatabase($file);
-			if (!$initialized) {
-				$this->database->queryExec(
-					'CREATE TABLE cache (entry VARCHAR NOT NULL, priority INTEGER, tag VARCHAR); '
-					. 'CREATE INDEX IDX_ENTRY ON cache (entry); '
-					. 'CREATE INDEX IDX_PRI ON cache (priority); '
-					. 'CREATE INDEX IDX_TAG ON cache (tag);'
-				);
-			}
-		}
-
-		return $this->database;
 	}
 
 }
