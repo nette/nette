@@ -47,7 +47,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 			throw new \NotSupportedException("SQLite or SQLite3 extension is required for storing tags and priorities.");
 		}
 
-		$this->database = extension_loaded('sqlite3') ? new \SQLite3($file) : new SQLiteMimic($file);
+		$this->database = extension_loaded('sqlite') ? new SQLiteMimic($file) : new \SQLite3($file);
 		@$this->database->exec( // simulates IGNORE IF EXISTS (available since SQLite3 )
 			'CREATE TABLE cache (entry VARCHAR NOT NULL, priority INTEGER, tag VARCHAR); '
 			. 'CREATE INDEX IDX_ENTRY ON cache (entry); '
