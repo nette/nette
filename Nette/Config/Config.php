@@ -25,6 +25,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	/** @var array */
 	private static $extensions = array(
 		'ini' => 'Nette\Config\ConfigAdapterIni',
+		'neon' => 'Nette\Config\ConfigAdapterNeon',
 	);
 
 
