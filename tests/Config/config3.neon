@@ -1,0 +1,5 @@
+scalar: 10
+
+extra < scalar:
+	date:
+		timezone = "Europe/Paris"
