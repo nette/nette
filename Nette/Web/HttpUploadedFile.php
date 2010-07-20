@@ -89,16 +89,14 @@ class HttpUploadedFile extends Nette\Object
 				$this->type = $info['mime'];
 
 			} elseif (extension_loaded('fileinfo')) {
-				$this->type = finfo_file(finfo_open(FILEINFO_MIME), $this->tmpName);
+				$this->type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->tmpName);
 
 			} elseif (function_exists('mime_content_type')) {
 				$this->type = mime_content_type($this->tmpName);
 			}
 
-			if (!$this->type) {
+			if (!preg_match('#^\S+/\S+$#', $this->type)) {
 				$this->type = 'application/octet-stream';
-			} else {
-				$this->type = preg_replace('#[\s;].*$#', '', $this->type);
 			}
 		}
 		return $this->type;
