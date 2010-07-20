@@ -133,6 +133,8 @@ class NetteLoader extends AutoLoader
 		'nette\instancefilteriterator' => '/Utils/Iterators/InstanceFilterIterator.php',
 		'nette\iservicelocator' => '/Environment/IServiceLocator.php',
 		'nette\itranslator' => '/Utils/ITranslator.php',
+		'nette\json' => '/Utils/Json.php',
+		'nette\jsonexception' => '/Utils/Json.php',
 		'nette\loaders\aliasloader' => '/Loaders/AliasLoader.php',
 		'nette\loaders\autoloader' => '/Loaders/AutoLoader.php',
 		'nette\loaders\limitedscope' => '/Loaders/LimitedScope.php',
