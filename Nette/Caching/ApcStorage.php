@@ -184,7 +184,7 @@ class ApcStorage implements ICacheStorage
 
 	private function _normalizeKey(&$key)
 	{
-		$key = $this->prefix . str_replace("\x00", '~', $key); // PHP bug 17597
+		$key = $this->prefix . str_replace("\x00", '~', $key); // due http://pecl.php.net/bugs/bug.php?id=17597
 	}
 
 }
