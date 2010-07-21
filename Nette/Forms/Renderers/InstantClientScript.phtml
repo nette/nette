@@ -115,7 +115,7 @@ nette.forms[<?php echo $formName ?>] = {
 	validators: {
 <?php $count = count($this->validateScripts); ?>
 <?php foreach ($this->validateScripts as $name => $validateScript): ?>
-		<?php echo json_encode((string) $name) ?>: function(sender) {
+		<?php echo Nette\Json::encode((string) $name) ?>: function(sender) {
 			var res, val, form = sender.form || sender;
 <?php echo Nette\String::indent($validateScript, 3) ?>
 		}<?php echo --$count ? ',' : '' ?>

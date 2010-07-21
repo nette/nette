@@ -132,7 +132,7 @@ final class TemplateHelpers
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Nette\Web\Html || $s instanceof Nette\Forms\Form)) {
 			$s = $s->__toString(TRUE);
 		}
-		return str_replace(']]>', ']]\x3E', json_encode($s));
+		return str_replace(']]>', ']]\x3E', Nette\Json::encode($s));
 	}
 
 

@@ -89,7 +89,7 @@ final class InstantClientScript extends Nette\Object
 			return;
 		}
 
-		$formName = json_encode((string) $this->form->getElementPrototype()->id);
+		$formName = Nette\Json::encode((string) $this->form->getElementPrototype()->id);
 		ob_start();
 		include __DIR__ . '/InstantClientScript.phtml';
 		return ob_get_clean();
@@ -115,7 +115,7 @@ final class InstantClientScript extends Nette\Object
 				$message = Rules::formatMessage($rule, FALSE);
 				$res .= "$script\n"
 					. "if (" . ($rule->isNegative ? '' : '!') . "res) "
-					. "return " . json_encode((string) $message) . (strpos($message, '%value') === FALSE ? '' : ".replace('%value', val);\n") . ";\n";
+					. "return " . Nette\Json::encode((string) $message) . (strpos($message, '%value') === FALSE ? '' : ".replace('%value', val);\n") . ";\n";
 			}
 
 			if ($rule->type === Rule::CONDITION) { // this is condition
@@ -138,9 +138,9 @@ final class InstantClientScript extends Nette\Object
 		$s = '';
 		foreach ($rules->getToggles() as $id => $visible) {
 			$s .= "visible = true; {$cond}\n"
-				. "nette.toggle(" . json_encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n";
+				. "nette.toggle(" . Nette\Json::encode((string) $id) . ", " . ($visible ? '' : '!') . "visible);\n";
 		}
-		$formName = json_encode((string) $this->form->getElementPrototype()->id);
+		$formName = Nette\Json::encode((string) $this->form->getElementPrototype()->id);
 		foreach ($rules as $rule) {
 			if ($rule->type === Rule::CONDITION && is_string($rule->operation)) {
 				$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
@@ -167,7 +167,7 @@ final class InstantClientScript extends Nette\Object
 	private function getClientScript(IFormControl $control, $operation, $arg)
 	{
 		$operation = strtolower($operation);
-		$elem = 'form[' . json_encode($control->getHtmlName()) . ']';
+		$elem = 'form[' . Nette\Json::encode($control->getHtmlName()) . ']';
 
 		switch (TRUE) {
 		case $control instanceof HiddenField || $control->isDisabled():
@@ -177,12 +177,12 @@ final class InstantClientScript extends Nette\Object
 			return "res = (val = nette.getValue($elem)) !== null;";
 
 		case $operation === ':submitted' && $control instanceof SubmitButton:
-			return "res = sender && sender.name==" . json_encode($control->getHtmlName()) . ";";
+			return "res = sender && sender.name==" . Nette\Json::encode($control->getHtmlName()) . ";";
 
 		case $operation === ':equal' && $control instanceof MultiSelectBox:
 			$tmp = array();
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
-				$tmp[] = "options[i].value==" . json_encode((string) $item);
+				$tmp[] = "options[i].value==" . Nette\Json::encode((string) $item);
 			}
 			$first = $control->isFirstSkipped() ? 1 : 0;
 			return "var options = $elem.options; res = false;\n"
@@ -193,7 +193,7 @@ final class InstantClientScript extends Nette\Object
 			return "res = $elem.selectedIndex >= " . ($control->isFirstSkipped() ? 1 : 0) . ";";
 
 		case $operation === ':filled' && $control instanceof TextBase:
-			return "val = nette.getValue($elem); res = val!='' && val!=" . json_encode((string) $control->getEmptyValue()) . ";";
+			return "val = nette.getValue($elem); res = val!='' && val!=" . Nette\Json::encode((string) $control->getEmptyValue()) . ";";
 
 		case $operation === ':minlength' && $control instanceof TextBase:
 			return "res = (val = nette.getValue($elem)).length>=" . (int) $arg . ";";
@@ -228,23 +228,23 @@ final class InstantClientScript extends Nette\Object
 			return "res = /^-?[0-9]*[.,]?[0-9]+$/.test(val = nette.getValue($elem));";
 
 		case $operation === ':range' && $control instanceof TextBase:
-			return "val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . json_encode((float) $arg[0])) . " && "
-				. ($arg[1] === NULL ? "true" : "parseFloat(val)<=" . json_encode((float) $arg[1])) . ";";
+			return "val = nette.getValue($elem); res = " . ($arg[0] === NULL ? "true" : "parseFloat(val)>=" . Nette\Json::encode((float) $arg[0])) . " && "
+				. ($arg[1] === NULL ? "true" : "parseFloat(val)<=" . Nette\Json::encode((float) $arg[1])) . ";";
 
 		case $operation === ':filled' && $control instanceof FormControl:
 			return "res = (val = nette.getValue($elem)) != '';";
 
 		case $operation === ':valid' && $control instanceof FormControl:
-			return "res = !this[" . json_encode($control->getHtmlName()) . "](sender);";
+			return "res = !this[" . Nette\Json::encode($control->getHtmlName()) . "](sender);";
 
 		case $operation === ':equal' && $control instanceof FormControl:
 			if ($control instanceof Checkbox) $arg = (bool) $arg;
 			$tmp = array();
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 				if ($item instanceof IFormControl) { // compare with another form control?
-					$tmp[] = "val==nette.getValue(form[" . json_encode($item->getHtmlName()) . "])";
+					$tmp[] = "val==nette.getValue(form[" . Nette\Json::encode($item->getHtmlName()) . "])";
 				} else {
-					$tmp[] = "val==" . json_encode($item);
+					$tmp[] = "val==" . Nette\Json::encode($item);
 				}
 			}
 			return "val = nette.getValue($elem); res = (" . implode(' || ', $tmp) . ");";
