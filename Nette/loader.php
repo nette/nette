@@ -45,6 +45,7 @@ header('X-Powered-By: Nette Framework');
  * Load and configure Nette Framework
  */
 define('NETTE', TRUE);
+define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 10000); // v1.0.0
 define('NETTE_PACKAGE', '5.3');
 
@@ -61,5 +62,4 @@ require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 
-Nette\Loaders\NetteLoader::getInstance()->base = __DIR__;
 Nette\Loaders\NetteLoader::getInstance()->register();

@@ -25,10 +25,7 @@ use Nette;
 class NetteLoader extends AutoLoader
 {
 	/** @var NetteLoader */
-	public static $instance;
-
-	/** @var string  base file path */
-	public $base;
+	private static $instance;
 
 	/** @var array */
 	public $list = array(
@@ -226,7 +223,7 @@ class NetteLoader extends AutoLoader
 	{
 		$type = ltrim(strtolower($type), '\\');
 		if (isset($this->list[$type])) {
-			LimitedScope::load($this->base . $this->list[$type]);
+			LimitedScope::load(NETTE_DIR . $this->list[$type]);
 			self::$count++;
 		}
 	}
