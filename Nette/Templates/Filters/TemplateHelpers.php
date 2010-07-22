@@ -12,7 +12,9 @@
 
 namespace Nette\Templates;
 
-use Nette;
+use Nette,
+	Nette\Forms\Form,
+	Nette\Web\Html;
 
 
 
@@ -61,7 +63,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeHtml($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Nette\Web\Html || $s instanceof Nette\Forms\Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, ENT_QUOTES);
@@ -128,7 +130,7 @@ final class TemplateHelpers
 	 */
 	public static function escapeJs($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Nette\Web\Html || $s instanceof Nette\Forms\Form)) {
+		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(']]>', ']]\x3E', json_encode($s));

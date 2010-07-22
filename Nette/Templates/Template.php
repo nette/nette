@@ -12,7 +12,10 @@
 
 namespace Nette\Templates;
 
-use Nette;
+use Nette,
+	Nette\Environment,
+	Nette\Caching\Cache,
+	Nette\Loaders\LimitedScope;
 
 
 
@@ -91,7 +94,7 @@ class Template extends BaseTemplate implements IFileTemplate
 
 		$this->__set('template', $this);
 
-		$cache = new Nette\Caching\Cache($this->getCacheStorage(), 'Nette.Template');
+		$cache = new Cache($this->getCacheStorage(), 'Nette.Template');
 		$key = md5($this->file) . '.' . basename($this->file);
 		$cached = $content = $cache[$key];
 
@@ -101,13 +104,13 @@ class Template extends BaseTemplate implements IFileTemplate
 			}
 
 			if (!$this->getFilters()) {
-				Nette\Loaders\LimitedScope::load($this->file, $this->getParams());
+				LimitedScope::load($this->file, $this->getParams());
 				return;
 			}
 
 			try {
 				$shortName = $this->file;
-				$shortName = str_replace(Nette\Environment::getVariable('appDir'), "\xE2\x80\xA6", $shortName);
+				$shortName = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", $shortName);
 			} catch (\Exception $foo) {
 			}
 
@@ -116,8 +119,8 @@ class Template extends BaseTemplate implements IFileTemplate
 				$key,
 				$content,
 				array(
-					Nette\Caching\Cache::FILES => $this->file,
-					Nette\Caching\Cache::EXPIRE => self::$cacheExpire,
+					Cache::FILES => $this->file,
+					Cache::EXPIRE => self::$cacheExpire,
 				)
 			);
 			$cache->release();
@@ -125,11 +128,11 @@ class Template extends BaseTemplate implements IFileTemplate
 		}
 
 		if ($cached !== NULL && self::$cacheStorage instanceof TemplateCacheStorage) {
-			Nette\Loaders\LimitedScope::load($cached['file'], $this->getParams());
+			LimitedScope::load($cached['file'], $this->getParams());
 			fclose($cached['handle']);
 
 		} else {
-			Nette\Loaders\LimitedScope::evaluate($content, $this->getParams());
+			LimitedScope::evaluate($content, $this->getParams());
 		}
 	}
 
@@ -157,7 +160,7 @@ class Template extends BaseTemplate implements IFileTemplate
 	public static function getCacheStorage()
 	{
 		if (self::$cacheStorage === NULL) {
-			self::$cacheStorage = new TemplateCacheStorage(Nette\Environment::getVariable('tempDir'));
+			self::$cacheStorage = new TemplateCacheStorage(Environment::getVariable('tempDir'));
 		}
 		return self::$cacheStorage;
 	}

@@ -12,7 +12,8 @@
 
 namespace Nette;
 
-use Nette;
+use Nette,
+	Nette\Config\Config;
 
 
 
@@ -98,7 +99,7 @@ class Configurator extends Object
 	{
 		$name = Environment::getName();
 
-		if ($file instanceof Nette\Config\Config) {
+		if ($file instanceof Config) {
 			$config = $file;
 			$file = NULL;
 
@@ -107,11 +108,11 @@ class Configurator extends Object
 				$file = $this->defaultConfigFile;
 			}
 			$file = Environment::expand($file);
-			$config = Nette\Config\Config::fromFile($file, $name, 0);
+			$config = Config::fromFile($file, $name, 0);
 		}
 
 		// process environment variables
-		if ($config->variable instanceof Nette\Config\Config) {
+		if ($config->variable instanceof Config) {
 			foreach ($config->variable as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
@@ -122,7 +123,7 @@ class Configurator extends Object
 		// process services
 		$runServices = array();
 		$locator = Environment::getServiceLocator();
-		if ($config->service instanceof Nette\Config\Config) {
+		if ($config->service instanceof Config) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
@@ -146,13 +147,13 @@ class Configurator extends Object
 			unset($config->set);
 		}
 
-		if ($config->php instanceof Nette\Config\Config) {
+		if ($config->php instanceof Config) {
 			if (PATH_SEPARATOR !== ';' && isset($config->php->include_path)) {
 				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
 			}
 
 			foreach ($config->php as $key => $value) { // flatten INI dots
-				if ($value instanceof Nette\Config\Config) {
+				if ($value instanceof Config) {
 					unset($config->php->$key);
 					foreach ($value as $k => $v) {
 						$config->php->{"$key.$k"} = $v;
@@ -206,7 +207,7 @@ class Configurator extends Object
 		}
 
 		// define constants
-		if ($config->const instanceof Nette\Config\Config) {
+		if ($config->const instanceof Config) {
 			foreach ($config->const as $key => $value) {
 				define($key, $value);
 			}

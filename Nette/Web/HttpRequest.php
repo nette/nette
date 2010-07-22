@@ -12,7 +12,8 @@
 
 namespace Nette\Web;
 
-use Nette;
+use Nette,
+	Nette\String;
 
 
 
@@ -208,7 +209,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 
 		// normalized uri
 		$uri->canonicalize();
-		$uri->path = Nette\String::fixEncoding($uri->path);
+		$uri->path = String::fixEncoding($uri->path);
 
 		// detect base URI-path - inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
 		$filename = isset($_SERVER['SCRIPT_FILENAME']) ? basename($_SERVER['SCRIPT_FILENAME']) : NULL;
@@ -467,10 +468,10 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 						}
 						if ($enc) {
 							if ($utf) {
-								$v = Nette\String::fixEncoding($v);
+								$v = String::fixEncoding($v);
 
 							} else {
-								if (!Nette\String::checkEncoding($v)) {
+								if (!String::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -505,7 +506,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($enc) {
-					$v['name'] = preg_replace($nonChars, '', Nette\String::fixEncoding($v['name']));
+					$v['name'] = preg_replace($nonChars, '', String::fixEncoding($v['name']));
 				}
 				$v['@'] = new HttpUploadedFile($v);
 				continue;
