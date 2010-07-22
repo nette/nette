@@ -18,7 +18,6 @@ require __DIR__ . '/../initialize.php';
 
 
 $loader = NetteLoader::getInstance();
-$loader->base = '../../Nette';
 $loader->register();
 
 T::dump( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
