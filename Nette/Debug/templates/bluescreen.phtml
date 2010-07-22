@@ -11,9 +11,7 @@
  *
  * @param      array     $exception
  * @param      array     $colophons
- * @param      array     $internals
- * @param      Nette\Application\Application $application
- * @return     void
+ * @param      Nette\Application\Application $application * @return     void
  */
 
 namespace Nette;
@@ -154,7 +152,11 @@ static $errorTypes = array(
 	E_DEPRECATED => 'Deprecated',
 	E_USER_DEPRECATED => 'User Deprecated',
 );
+
 $title = ($exception instanceof \FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
+
+$expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
+
 $rn = 0;
 
 if (headers_sent()) {
@@ -367,9 +369,14 @@ if (headers_sent()) {
 				</div>
 			<?php endif ?>
 
-			<?php $collapsed = isset($internals[$ex->getFile()]); ?>
+			<?php $stack = $ex->getTrace(); $expanded = NULL ?>
+			<?php if (strpos($ex->getFile(), $expandPath) === 0) {
+				foreach ($stack as $key => $row) {
+					if (isset($row['file']) && strpos($row['file'], $expandPath) !== 0) { $expanded = $key; break; }
+				}
+			} ?>
 			<?php if (is_file($ex->getFile())): ?>
-			<?php _netteOpenPanel('Source file', $collapsed) ?>
+			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
 				<p><strong>File:</strong> <?php echo htmlspecialchars($ex->getFile()) ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
 			<?php _netteClosePanel() ?>
@@ -379,7 +386,7 @@ if (headers_sent()) {
 
 			<?php _netteOpenPanel('Call stack', FALSE) ?>
 				<ol>
-					<?php foreach ($ex->getTrace() as $key => $row): ?>
+					<?php foreach ($stack as $key => $row): ?>
 					<li><p>
 
 					<?php if (isset($row['file'])): ?>
@@ -418,7 +425,7 @@ if (headers_sent()) {
 
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<pre <?php if (!$collapsed || isset($internals[$row['file']])) echo 'class="collapsed"'; else $collapsed = FALSE ?> id="src<?php echo "$level-$key" ?>"><?php _netteDebugPrintCode($row['file'], $row['line']) ?></pre>
+						<pre <?php if ($expanded !== $key) echo 'class="collapsed"'; ?> id="src<?php echo "$level-$key" ?>"><?php _netteDebugPrintCode($row['file'], $row['line']) ?></pre>
 					<?php endif ?>
 
 					</li>
