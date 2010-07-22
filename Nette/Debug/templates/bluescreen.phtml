@@ -384,6 +384,8 @@ if (headers_sent()) {
 
 
 
+			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Debug' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
+			<?php if ($stack): ?>
 			<?php _netteOpenPanel('Call stack', FALSE) ?>
 				<ol>
 					<?php foreach ($stack as $key => $row): ?>
@@ -430,12 +432,9 @@ if (headers_sent()) {
 
 					</li>
 					<?php endforeach ?>
-
-					<?php if (!isset($row)):?>
-					<li><i>empty</i></li>
-					<?php endif ?>
 				</ol>
 			<?php _netteClosePanel() ?>
+			<?php endif ?>
 
 
 
