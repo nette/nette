@@ -12,7 +12,8 @@
 
 namespace Nette\Forms;
 
-use Nette;
+use Nette,
+	Nette\Web\Html;
 
 
 
@@ -85,8 +86,8 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	{
 		$this->monitor('Nette\Forms\Form');
 		parent::__construct();
-		$this->control = Nette\Web\Html::el('input');
-		$this->label = Nette\Web\Html::el('label');
+		$this->control = Html::el('input');
+		$this->label = Html::el('label');
 		$this->caption = $caption;
 		$this->rules = new Rules($this);
 	}
@@ -382,7 +383,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		if ($caption !== NULL) {
 			$label->setText($this->translate($caption));
 
-		} elseif ($this->caption instanceof Nette\Web\Html) {
+		} elseif ($this->caption instanceof Html) {
 			$label->add($this->caption);
 
 		} else {

@@ -12,7 +12,8 @@
 
 namespace Nette\Forms;
 
-use Nette;
+use Nette,
+	Nette\Web\Html;
 
 
 
@@ -47,8 +48,8 @@ class RadioList extends FormControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'radio';
-		$this->container = Nette\Web\Html::el();
-		$this->separator = Nette\Web\Html::el('br');
+		$this->container = Html::el();
+		$this->separator = Html::el('br');
 		if ($items !== NULL) $this->setItems($items);
 	}
 
@@ -131,7 +132,7 @@ class RadioList extends FormControl
 		$id = $control->id;
 		$counter = -1;
 		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = Nette\Web\Html::el('label');
+		$label = Html::el('label');
 
 		foreach ($this->items as $k => $val) {
 			$counter++;
@@ -141,7 +142,7 @@ class RadioList extends FormControl
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
 
-			if ($val instanceof Nette\Web\Html) {
+			if ($val instanceof Html) {
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate($val));

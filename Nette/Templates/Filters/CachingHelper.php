@@ -13,8 +13,8 @@
 namespace Nette\Templates;
 
 use Nette,
-	Nette\Caching\Cache,
-	Nette\Environment;
+	Nette\Environment,
+	Nette\Caching\Cache;
 
 
 
@@ -108,7 +108,7 @@ class CachingHelper extends Nette\Object
 	 */
 	protected static function getCache()
 	{
-		return Nette\Environment::getCache('Nette.Template.Curly');
+		return Environment::getCache('Nette.Template.Curly');
 	}
 
 }
