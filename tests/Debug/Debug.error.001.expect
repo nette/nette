@@ -29,7 +29,7 @@
 
 
 
-										<div class="panel">
+													<div class="panel">
 		<h2><a href="#" onclick="return !netteToggle(this, 'pnl1')">Source file <abbr>&#x25bc;</abbr></a></h2>
 
 		<div id="pnl1" class="inner">
