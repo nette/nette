@@ -85,7 +85,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 		// verify dependencies
 		if (!empty($meta[self::META_CALLBACKS]) && !Cache::checkCallbacks($meta[self::META_CALLBACKS])) {
-			$this->memcache->delete($key);
+			$this->memcache->delete($key, 0);
 			return NULL;
 		}
 
@@ -143,7 +143,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function remove($key)
 	{
-		$this->memcache->delete($this->prefix . $key);
+		$this->memcache->delete($this->prefix . $key, 0);
 	}
 
 
@@ -160,7 +160,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 		} else {
 			foreach ($this->getJournal()->clean($conds) as $entry) {
-				$this->memcache->delete($entry);
+				$this->memcache->delete($entry, 0);
 			}
 		}
 	}
