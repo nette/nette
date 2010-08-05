@@ -52,6 +52,9 @@ class RobotLoader extends AutoLoader
 	/** @var string */
 	private $ignoreMask;
 
+	/** @var array */
+	private $disallow = array();
+
 
 
 	/**
@@ -226,20 +229,18 @@ class RobotLoader extends AutoLoader
 		$iterator = dir($dir);
 		if (!$iterator) return;
 
-		$disallow = array();
+		$base = $dir . DIRECTORY_SEPARATOR;
 		if (is_file($dir . '/netterobots.txt')) {
 			foreach (file($dir . '/netterobots.txt') as $s) {
 				if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
-					$disallow[trim($matches[1], '/')] = TRUE;
+					$this->disallow[$base . str_replace('/', DIRECTORY_SEPARATOR, trim($matches[1], '/'))] = TRUE;
 				}
 			}
-			if (isset($disallow[''])) return;
+			if (isset($this->disallow[$base])) return;
 		}
 
 		while (FALSE !== ($entry = $iterator->read())) {
-			if ($entry == '.' || $entry == '..' || isset($disallow[$entry])) continue;
-
-			$path = $dir . DIRECTORY_SEPARATOR . $entry;
+			if ($entry == '.' || $entry == '..' || isset($this->disallow[$path = $base . $entry])) continue;
 
 			// process subdirectories
 			if (is_dir($path)) {
