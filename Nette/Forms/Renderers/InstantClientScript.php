@@ -91,7 +91,7 @@ final class InstantClientScript extends Nette\Object
 
 		$formName = Nette\Json::encode((string) $this->form->getElementPrototype()->id);
 		ob_start();
-		include __DIR__ . '/InstantClientScript.phtml';
+		require __DIR__ . '/InstantClientScript.phtml';
 		return ob_get_clean();
 	}
 
@@ -111,14 +111,13 @@ final class InstantClientScript extends Nette\Object
 			$script = $this->getClientScript($rule->control, $rule->operation, $rule->arg);
 			if (!$script) continue;
 
-			if (!empty($rule->message)) { // this is rule
+			if ($rule->type === Rule::VALIDATOR && !empty($rule->message)) {
 				$message = Rules::formatMessage($rule, FALSE);
 				$res .= "$script\n"
 					. "if (" . ($rule->isNegative ? '' : '!') . "res) "
 					. "return " . Nette\Json::encode((string) $message) . (strpos($message, '%value') === FALSE ? '' : ".replace('%value', val);\n") . ";\n";
-			}
 
-			if ($rule->type === Rule::CONDITION) { // this is condition
+			} elseif ($rule->type === Rule::CONDITION) {
 				$innerScript = $this->getValidateScript($rule->subRules);
 				if ($innerScript) {
 					$res .= "$script\nif (" . ($rule->isNegative ? '!' : '') . "res) {\n" . Nette\String::indent($innerScript) . "}\n";

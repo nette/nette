@@ -33,9 +33,6 @@ final class Rule extends Nette\Object
 	/** type */
 	const FILTER = 3;
 
-	/** type */
-	const TERMINATOR = 4;
-
 	/** @var IFormControl */
 	public $control;
 
