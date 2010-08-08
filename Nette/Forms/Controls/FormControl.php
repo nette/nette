@@ -266,7 +266,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	public function translate($s, $count = NULL)
 	{
 		$translator = $this->getTranslator();
-		return $translator === NULL ? $s : $translator->translate($s, $count);
+		return $translator === NULL || $s == NULL ? $s : $translator->translate($s, $count); // intentionally ==
 	}
 
 
