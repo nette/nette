@@ -366,6 +366,10 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		$control->name = $this->getHtmlName();
 		$control->disabled = $this->disabled;
 		$control->id = $this->getHtmlId();
+		if (!isset($control->data['rules'])) {
+			$rules = self::exportRules($this->rules);
+			$control->data['rules'] = $rules ? json_encode($rules) : NULL;
+		}
 		return $control;
 	}
 
@@ -534,6 +538,43 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		if (is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
 			$this->setOption('required', TRUE);
 		}
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	private static function exportRules($rules)
+	{
+		$payload = array();
+		foreach ($rules as $rule) {
+			if (!is_string($rule->operation)) {
+				continue;
+
+			} elseif ($rule->type === Rule::VALIDATOR) {
+				$item = array('operation' => $rule->operation, 'message' => $rules->formatMessage($rule, FALSE), 'control' => $rule->control->getHtmlName());
+				if ($rule->isNegative) $item['neg'] = TRUE;
+
+			} elseif ($rule->type === Rule::CONDITION) {
+				$item = array('cond' => 1, 'operation' => $rule->operation, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
+				if ($rule->isNegative) $item['neg'] = TRUE;
+				if ($rule->subRules->getToggles()) {
+					$item['toggle'] = $rule->subRules->getToggles();
+				}
+			}
+
+			if (is_array($rule->arg)) {
+				foreach ($rule->arg as $key => $value) {
+					$item['arg'][$key] = $value instanceof IFormControl ? (object) array('control' => $value->getHtmlName()) : $value;
+				}
+			} elseif ($rule->arg !== NULL) {
+				$item['arg'] = $rule->arg instanceof IFormControl ? (object) array('control' => $rule->arg->getHtmlName()) : $rule->arg;
+			}
+
+			$payload[] = $item;
+		}
+		return $payload;
 	}
 
 

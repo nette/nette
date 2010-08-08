@@ -128,6 +128,7 @@ class RadioList extends FormControl
 			return NULL;
 		}
 
+        // TODO: solve data-rules attribute
 		$control = parent::getControl();
 		$id = $control->id;
 		$counter = -1;

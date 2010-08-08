@@ -203,6 +203,9 @@ class SelectBox extends FormControl
 	public function getControl()
 	{
 		$control = parent::getControl();
+		if ($this->skipFirst) {
+			$control->data['first-skip'] = '';
+		}
 		$selected = $this->getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
 		$option = Nette\Web\Html::el('option');

@@ -33,6 +33,7 @@ class HiddenField extends FormControl
 	{
 		parent::__construct();
 		$this->control->type = 'hidden';
+		$this->control->data['rules'] = FALSE;
 		$this->value = (string) $forcedValue;
 		$this->forcedValue = $forcedValue;
 	}

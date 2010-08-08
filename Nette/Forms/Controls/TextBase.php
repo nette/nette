@@ -100,6 +100,13 @@ abstract class TextBase extends FormControl
 
 
 
+	public function getControl()
+	{
+		return parent::getControl()->data('empty-value', $this->emptyValue === '' ? NULL : $this->translate($this->emptyValue));
+	}
+
+
+
 	public function notifyRule(Rule $rule)
 	{
 		if (is_string($rule->operation) && strcasecmp($rule->operation, ':float') === 0) {
