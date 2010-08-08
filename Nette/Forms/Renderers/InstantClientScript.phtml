@@ -274,6 +274,20 @@ nette.initForm = function(form) {
 	for (var i = 0; i < form.elements.length; i++) {
 		nette.toggleControl(form.elements[i], null, true);
 	}
+
+	if (/MSIE/.exec(navigator.userAgent)) {
+		var labels = {};
+		for (i = 0, elms = form.getElementsByTagName('label'); i < elms.length; i++) {
+			labels[elms[i].htmlFor] = elms[i];
+		}
+
+		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
+			elms[i].onmousewheel = function() { return false };	// prevents accidental change in IE
+			if (labels[elms[i].htmlId]) {
+				labels[elms[i].htmlId].onclick = function() { document.getElementById(this.htmlFor).focus(); return false }; // prevents deselect in IE 5 - 6
+			}
+		}
+	}
 }
 
 

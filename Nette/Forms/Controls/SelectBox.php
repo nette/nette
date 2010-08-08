@@ -53,8 +53,6 @@ class SelectBox extends FormControl
 		parent::__construct($label);
 		$this->control->setName('select');
 		$this->control->size = $size > 1 ? (int) $size : NULL;
-		$this->control->onfocus = 'this.onmousewheel=function(){return false}';  // prevents accidental change in IE
-		$this->label->onclick = 'document.getElementById(this.htmlFor).focus();return false';  // prevents deselect in IE 5 - 6
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
