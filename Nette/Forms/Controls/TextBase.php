@@ -69,7 +69,7 @@ abstract class TextBase extends FormControl
 	 */
 	public function setEmptyValue($value)
 	{
-		$this->emptyValue = $value;
+		$this->emptyValue = (string) $value;
 		return $this;
 	}
 
