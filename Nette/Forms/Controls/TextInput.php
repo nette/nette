@@ -58,10 +58,19 @@ class TextInput extends TextBase
 
 
 	/**
-	 * Sets or unsets the password mode.
-	 * @param  bool
-	 * @return TextInput  provides a fluent interface
+	 * Changes control's type attribute.
+	 * @param  string
+	 * @return FormControl  provides a fluent interface
 	 */
+	public function setType($type)
+	{
+		$this->control->type = $type;
+		return $this;
+	}
+
+
+
+	/** @deprecated */
 	public function setPasswordMode($mode = TRUE)
 	{
 		$this->control->type = $mode ? 'password' : 'text';

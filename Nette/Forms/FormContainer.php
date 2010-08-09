@@ -265,7 +265,7 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, IN
 	public function addPassword($name, $label = NULL, $cols = NULL, $maxLength = NULL)
 	{
 		$control = new TextInput($label, $cols, $maxLength);
-		$control->setPasswordMode(TRUE);
+		$control->setType('password');
 		return $this[$name] = $control;
 	}
 

@@ -179,6 +179,20 @@ abstract class FormControl extends Nette\Component implements IFormControl
 
 
 	/**
+	 * Changes control's HTML attribute.
+	 * @param  string name
+	 * @param  mixed  value
+	 * @return FormControl  provides a fluent interface
+	 */
+	public function setAttribute($name, $value = TRUE)
+	{
+		$this->control->$name = $value;
+		return $this;
+	}
+
+
+
+	/**
 	 * Sets user-specific option.
 	 * Common options:
 	 * - 'rendered' - indicate if method getControl() have been called
@@ -372,7 +386,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 			$rules = preg_replace('#"([a-z0-9]+)":#i', '$1:', $rules);
 			$rules = preg_replace('#"([^\\\\"\']*)"#i', "'$1'", $rules);
 			$control->data['rules'] = $rules ? $rules : NULL;
-		}	
+		}
 		return $control;
 	}
 

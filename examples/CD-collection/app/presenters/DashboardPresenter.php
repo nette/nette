@@ -110,7 +110,7 @@ class DashboardPresenter extends BasePresenter
 		$form->addText('title', 'Title:')
 			->addRule(Form::FILLED, 'Please enter a title.');
 
-		$form->addSubmit('save', 'Save')->getControlPrototype()->class('default');
+		$form->addSubmit('save', 'Save')->setAttribute('class', 'default');
 		$form->addSubmit('cancel', 'Cancel')->setValidationScope(NULL);
 		$form->onSubmit[] = callback($this, 'albumFormSubmitted');
 
@@ -147,7 +147,7 @@ class DashboardPresenter extends BasePresenter
 	{
 		$form = new AppForm;
 		$form->addSubmit('cancel', 'Cancel');
-		$form->addSubmit('delete', 'Delete')->getControlPrototype()->class('default');
+		$form->addSubmit('delete', 'Delete')->setAttribute('class', 'default');
 		$form->onSubmit[] = callback($this, 'deleteFormSubmitted');
 		$form->addProtection('Please submit this form again (security token has expired).');
 		return $form;
