@@ -96,13 +96,9 @@ class TextInput extends TextBase
 
 	public function notifyRule(Rule $rule)
 	{
-		if (is_string($rule->operation) && strcasecmp($rule->operation, ':length') === 0 && !$rule->isNegative) {
-			$this->control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
-
-		} elseif (is_string($rule->operation) && strcasecmp($rule->operation, ':maxLength') === 0 && !$rule->isNegative) {
-			$this->control->maxlength = $rule->arg;
+		if (is_string($rule->operation) && strcasecmp($rule->operation, ':range') === 0 && !$rule->isNegative && $this->control->type !== 'text') {
+			list($this->control->min, $this->control->max) = $rule->arg; // for HTML 5
 		}
-
 		parent::notifyRule($rule);
 	}
 
