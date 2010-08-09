@@ -121,9 +121,6 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 	/** @var Form */
 	protected $form;
 
-	/** @var object */
-	protected $clientScript = TRUE; // means autodetect
-
 	/** @var int */
 	protected $counter;
 
@@ -160,29 +157,11 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 
 
 
-	/**
-	 * Sets JavaScript handler.
-	 * @param  object
-	 * @return ConventionalRenderer  provides a fluent interface
-	 */
-	public function setClientScript($clientScript = NULL)
+	/** @deprecated */
+	public function setClientScript()
 	{
-		$this->clientScript = $clientScript;
+		trigger_error(__METHOD__ . '() is deprecated; use unobstructive JavaScript instead.', E_USER_WARNING);
 		return $this;
-	}
-
-
-
-	/**
-	 * Returns JavaScript handler.
-	 * @return mixed
-	 */
-	public function getClientScript()
-	{
-		if ($this->clientScript === TRUE) {
-			$this->clientScript = new InstantClientScript($this->form);
-		}
-		return $this->clientScript;
 	}
 
 
@@ -193,11 +172,6 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 	 */
 	protected function init()
 	{
-		$clientScript = $this->getClientScript();
-		if ($clientScript !== NULL) {
-			$clientScript->enable();
-		}
-
 		// TODO: only for back compatiblity - remove?
 		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
@@ -267,14 +241,7 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 			$s = $this->getWrapper('hidden container')->setHtml($s) . "\n";
 		}
 
-		$s .= $this->form->getElementPrototype()->endTag() . "\n";
-
-		$clientScript = $this->getClientScript();
-		if ($clientScript !== NULL) {
-			$s .= $clientScript->renderClientScript() . "\n";
-		}
-
-		return $s;
+		return $s . $this->form->getElementPrototype()->endTag() . "\n";
 	}
 
 

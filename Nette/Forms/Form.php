@@ -67,9 +67,6 @@ class Form extends FormContainer
 	const MAX_FILE_SIZE = ':fileSize';
 	const MIME_TYPE = ':mimeType';
 	const IMAGE = ':image';
-
-	// special case
-	const SCRIPT = 'Nette\\Forms\\InstantClientScript::javascript';
 	/**#@-*/
 
 	/**#@+ method */

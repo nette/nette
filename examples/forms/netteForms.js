@@ -1,28 +1,12 @@
-<?php
-
 /**
- * Nette Framework - InstantClientScript template.
+ * Nette Framework - simple form validation.
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @license    http://nette.org/license  Nette license
  * @link       http://nette.org
  * @category   Nette
  * @package    Nette\Forms
- *
- * @param      string    $formName
- * @param      this      InstantClientScript
- * @return     void
  */
-
-namespace Nette\Forms;
-
-use Nette;
-
-?>
-<!-- Nette Form validator -->
-
-<script type="text/javascript">
-/* <![CDATA[ */
 
 var nette = nette || { };
 
@@ -288,12 +272,12 @@ nette.initForm = function(form) {
 			}
 		}
 	}
-}
+};
 
 
-nette.initForm(document.getElementById(<?php echo $formName ?>));
-
-/* ]]> */
-</script>
-
-<!-- /Nette Form validator -->
+(function(){
+	var init = function() {
+		for (var i = 0; i < document.forms.length; i++) nette.initForm(document.forms[i]);
+	};
+	typeof jQuery == 'function' ? jQuery(init) : window.onload = init;
+})();

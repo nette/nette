@@ -189,6 +189,8 @@ if ($form->isSubmitted()) {
 	}
 	-->
 	</style>
+
+	<script src="netteForms.js"></script>
 </head>
 
 <body>
