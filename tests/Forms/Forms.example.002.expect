@@ -46,6 +46,5 @@
 
 <div><input type="hidden" name="_token_" id="frm-_token_" value="%h%" /><input type="hidden" name="id" id="frm-id" value="123" /></div>
 </form>
-
 </body>
 </html>

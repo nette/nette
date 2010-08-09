@@ -29,12 +29,14 @@
 	}
 	-->
 	</style>
+
+	<script src="netteForms.js"></script>
 </head>
 
 <body>
 	<h1>Nette\Forms basic example</h1>
 
-	<form action="" method="post" id="frm-" enctype="multipart/form-data" onsubmit="return nette.validateForm(this)">
+	<form action="" method="post" id="frm-" enctype="multipart/form-data">
 
 <fieldset>
 <legend>Personal data</legend>
@@ -44,13 +46,13 @@
 <tr class="required">
 	<th><label class="required" for="frm-name">Your name:</label></th>
 
-	<td><input type="text" class="text" name="name" id="frm-name" value="John Doe" /></td>
+	<td><input type="text" class="text" name="name" id="frm-name" data-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" /></td>
 </tr>
 
 <tr class="required">
 	<th><label class="required" for="frm-age">Your age:</label></th>
 
-	<td><input type="text" class="text" name="age" id="frm-age" value="" /></td>
+	<td><input type="text" class="text" name="age" id="frm-age" data-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" /></td>
 </tr>
 
 <tr>
@@ -62,7 +64,7 @@
 <tr>
 	<th><label for="frm-email">E-mail:</label></th>
 
-	<td><input type="text" class="text" name="email" id="frm-email" value="&#64;" /></td>
+	<td><input type="text" class="text" name="email" id="frm-email" data-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" data-empty-value="&#64;" value="&#64;" /></td>
 </tr>
 </table>
 </fieldset>
@@ -74,7 +76,7 @@
 <tr>
 	<th>&nbsp;</th>
 
-	<td><input type="checkbox" onclick="nette.forms[&quot;frm-&quot;].toggle(this)" name="send" id="frm-send" /><label for="frm-send">Ship to address</label></td>
+	<td><input type="checkbox" name="send" id="frm-send" data-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" /><label for="frm-send">Ship to address</label></td>
 </tr>
 </table>
 
@@ -89,13 +91,13 @@
 <tr>
 	<th><label for="frm-city">City:</label></th>
 
-	<td><input type="text" class="text" name="city" id="frm-city" value="" /></td>
+	<td><input type="text" class="text" name="city" id="frm-city" data-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" /></td>
 </tr>
 
 <tr>
-	<th><label onclick="document.getElementById(this.htmlFor).focus();return false" for="frm-country">Country:</label></th>
+	<th><label for="frm-country">Country:</label></th>
 
-	<td><select onfocus="this.onmousewheel=function(){return false}" name="country" id="frm-country"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
+	<td><select name="country" id="frm-country" data-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-first-skip=""><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
 </table>
 </div>
@@ -108,13 +110,13 @@
 <tr class="required">
 	<th><label class="required" for="frm-password">Choose password:</label></th>
 
-	<td><input type="password" class="text" name="password" id="frm-password" /></td>
+	<td><input type="password" class="text" name="password" id="frm-password" data-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-password2">Reenter password:</label></th>
 
-	<td><input type="password" class="text" name="password2" id="frm-password2" /></td>
+	<td><input type="password" class="text" name="password2" id="frm-password2" data-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" /></td>
 </tr>
 
 <tr>
@@ -143,76 +145,5 @@
 
 <div><input type="hidden" name="userid" id="frm-userid" value="231" /></div>
 </form>
-%A%
-nette.forms["frm-"] = {
-	validators: {
-		"name": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["name"]); res = val!='' && val!="";
-			if (!res) return "Enter your name";
-		},
-		"age": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["age"]); res = val!='' && val!="";
-			if (!res) return "Enter your age";
-			res = /^-?[0-9]+$/.test(val = nette.getValue(form["age"]));
-			if (!res) return "Age must be numeric value";
-			val = nette.getValue(form["age"]); res = parseFloat(val)>=10 && parseFloat(val)<=100;
-			if (!res) return "Age must be in range from 10 to 100";
-		},
-		"email": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["email"]); res = val!='' && val!="@";
-			if (res) {
-				res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val = nette.getValue(form["email"]));
-				if (!res) return "Incorrect E-mail Address";
-			}
-		},
-		"city": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["send"]); res = (val==true);
-			if (res) {
-				val = nette.getValue(form["city"]); res = val!='' && val!="";
-				if (!res) return "Enter your shipping address";
-			}
-		},
-		"country": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["send"]); res = (val==true);
-			if (res) {
-				res = form["country"].selectedIndex >= 1;
-				if (!res) return "Select your country";
-			}
-		},
-		"password": function(sender) {
-			var res, val, form = sender.form || sender;
-			val = nette.getValue(form["password"]); res = val!='' && val!="";
-			if (!res) return "Choose your password";
-			res = (val = nette.getValue(form["password"])).length>=3;
-			if (!res) return "The password is too short: it must be at least 3 characters";
-		},
-		"password2": function(sender) {
-			var res, val, form = sender.form || sender;
-			res = !this["password"](sender);
-			if (res) {
-				val = nette.getValue(form["password2"]); res = val!='' && val!="";
-				if (!res) return "Reenter your password";
-				val = nette.getValue(form["password2"]); res = (val==nette.getValue(form["password"]));
-				if (!res) return "Passwords do not match";
-			}
-		}
-	},
-
-	toggle: function(sender) {
-		var visible, res, form = sender.form || sender;
-		visible = true; val = nette.getValue(form["send"]); res = (val==true); visible = visible && res;
-
-		nette.toggle("sendBox", visible);
-	}
-}
-
-
-nette.forms["frm-"].toggle(document.getElementById("frm-"));
-%A%
 </body>
 </html>

@@ -33,18 +33,7 @@ T::dump( $form->getErrors() );
 __halt_compiler() ?>
 
 ------EXPECT------
-%A%
-nette.forms["frm-"] = {
-	validators: {
-		"email": function(sender) {
-			var res, val, form = sender.form || sender;
-			res = /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val = nette.getValue(form["email"]));
-			if (!res) return "E-mail %value is invalid [field email]".replace('%value', val);
-			;
-		}
-	},
-%A%
-
+%A%data-rules="{op:':email',msg:'E-mail %value is invalid [field email]'}"%A%
 array(
 	"E-mail xyz is invalid [field email]"
 )
