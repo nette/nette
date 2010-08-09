@@ -368,8 +368,11 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		$control->id = $this->getHtmlId();
 		if (!isset($control->data['rules'])) {
 			$rules = self::exportRules($this->rules);
-			$control->data['rules'] = $rules ? json_encode($rules) : NULL;
-		}
+			$rules = substr(json_encode($rules), 1, -1);
+			$rules = preg_replace('#"([a-z0-9]+)":#i', '$1:', $rules);
+			$rules = preg_replace('#"([^\\\\"\']*)"#i', "'$1'", $rules);
+			$control->data['rules'] = $rules ? $rules : NULL;
+		}	
 		return $control;
 	}
 
@@ -553,12 +556,10 @@ abstract class FormControl extends Nette\Component implements IFormControl
 				continue;
 
 			} elseif ($rule->type === Rule::VALIDATOR) {
-				$item = array('operation' => $rule->operation, 'message' => $rules->formatMessage($rule, FALSE), 'control' => $rule->control->getHtmlName());
-				if ($rule->isNegative) $item['neg'] = TRUE;
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'msg' => $rules->formatMessage($rule, FALSE));
 
 			} elseif ($rule->type === Rule::CONDITION) {
-				$item = array('cond' => 1, 'operation' => $rule->operation, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
-				if ($rule->isNegative) $item['neg'] = TRUE;
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
 				if ($rule->subRules->getToggles()) {
 					$item['toggle'] = $rule->subRules->getToggles();
 				}

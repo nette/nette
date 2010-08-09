@@ -51,25 +51,26 @@ nette.getValue = function(elem) {
 
 
 nette.validateControl = function(elem, rules, onlyCheck) {
-	rules = rules || eval(elem.getAttribute('data-rules'));
-	if (!rules) return true;
-
+	rules = rules || eval('[' + (elem.getAttribute('data-rules') || '') + ']');
 	for (var id in rules) {
-		var rule = rules[id];
-		var el = elem.form.elements[rule.control];
+		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
+		rule.neg = op[1];
+		rule.op = op[2];
+		rule.condition = !!rule.rules;
+		var el = rule.control ? elem.form.elements[rule.control] : elem;
 
-		var success = nette.validateRule(el, rule.operation, rule.arg);
+		var success = nette.validateRule(el, rule.op, rule.arg);
 		if (success === null) continue;
 		if (rule.neg) success = !success;
 
-		if (rule.cond && success) {
+		if (rule.condition && success) {
 			if (!nette.validateControl(elem, rule.rules, onlyCheck)) {
 				return false;
 			}
-		} else if (!rule.cond && !success) {
+		} else if (!rule.condition && !success) {
 			if (el.disabled) continue;
 			if (!onlyCheck) {
-				nette.addError(el, rule.message.replace('%value', nette.getValue(el)));
+				nette.addError(el, rule.msg.replace('%value', nette.getValue(el)));
 			}
 			return false;
 		}
@@ -201,16 +202,17 @@ nette.toggleForm = function(form) {
 
 
 nette.toggleControl = function(elem, rules, firsttime) {
-	rules = rules || eval(elem.getAttribute('data-rules'));
-	if (!rules) return;
-
+	rules = rules || eval('[' + (elem.getAttribute('data-rules') || '') + ']');
 	var has = false;
 	for (var id in rules) {
-		var rule = rules[id];
-		if (!rule.cond) continue;
+		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
+		rule.neg = op[1];
+		rule.op = op[2];
+		rule.condition = !!rule.rules;
+		if (!rule.condition) continue;
 
-		var el = elem.form.elements[rule.control];
-		var success = nette.validateRule(el, rule.operation, rule.arg);
+		var el = rule.control ? elem.form.elements[rule.control] : elem;
+		var success = nette.validateRule(el, rule.op, rule.arg);
 		if (success === null) continue;
 		if (rule.neg) success = !success;
 
