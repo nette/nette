@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="content-language" content="en" />
+
+	<title>Nette\Forms and HTML5 | Nette Framework</title>
+
+	<style type="text/css">
+	<!--
+	.required {
+		color: darkred
+	}
+
+	fieldset {
+		padding: .5em;
+		margin: .3em 0;
+		background: #EAF3FA;
+		border: 1px solid #b2d1eb;
+	}
+
+	input.button {
+		font-size: 120%;
+	}
+
+	th {
+		width: 8em;
+		text-align: right;
+	}
+	-->
+	</style>
+
+	<script src="netteForms.js"></script>
+</head>
+
+<body>
+	<h1>Nette\Forms and HTML5</h1>
+
+	<form action="" method="post" id="frm-">
+
+<fieldset>
+<table>
+<tr>
+	<th><label for="frm-query">Search:</label></th>
+
+	<td><input type="search" autofocus="autofocus" name="query" id="frm-query" value="" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-count">Number of results:</label></th>
+
+	<td><input type="number" max="100" min="1" name="count" id="frm-count" data-rules="{op:':integer',msg:'Must be numeric value'},{op:':range',msg:'Must be in range from 1 to 100',arg:[1,100]}" value="10" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-precision">Precision:</label></th>
+
+	<td><input type="range" max="100" min="0" name="precision" id="frm-precision" data-rules="{op:':integer',msg:'Precision must be numeric value'},{op:':range',msg:'Precision must be in range from 0 to 100',arg:[0,100]}" value="50" /></td>
+</tr>
+
+<tr>
+	<th><label for="frm-email">Send to e-mail:</label></th>
+
+	<td><input type="email" autocomplete="off" placeholder="Optional, but Recommended" name="email" id="frm-email" data-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" value="" /></td>
+</tr>
+
+<tr>
+	<th>&nbsp;</th>
+
+	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></td>
+</tr>
+</table>
+</fieldset>
+
+</form>
+</body>
+</html>
