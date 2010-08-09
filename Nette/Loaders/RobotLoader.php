@@ -44,7 +44,7 @@ class RobotLoader extends AutoLoader
 	private $files;
 
 	/** @var bool */
-	private $rebuilded = FALSE;
+	private $rebuilt = FALSE;
 
 	/** @var string */
 	private $acceptMask;
@@ -113,7 +113,7 @@ class RobotLoader extends AutoLoader
 			}
 
 			if ($this->autoRebuild) {
-				if ($this->rebuilded) {
+				if ($this->rebuilt) {
 					$this->getCache()->save($this->getKey(), $this->list);
 				} else {
 					$this->rebuild();
@@ -136,7 +136,7 @@ class RobotLoader extends AutoLoader
 	public function rebuild()
 	{
 		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'));
-		$this->rebuilded = TRUE;
+		$this->rebuilt = TRUE;
 	}
 
 
