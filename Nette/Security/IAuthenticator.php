@@ -25,8 +25,8 @@ use Nette;
 interface IAuthenticator
 {
 	/**#@+ Credential key */
-	const USERNAME = 'username';
-	const PASSWORD = 'password';
+	const USERNAME = 0;
+	const PASSWORD = 1;
 	/**#@-*/
 
 	/**#@+ Exception error code */

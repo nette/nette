@@ -72,14 +72,13 @@ class User extends Nette\Object implements IUser
 
 
 	/**
-	 * Conducts the authentication process.
-	 * @param  string
-	 * @param  string
-	 * @param  mixed
+	 * Conducts the authentication process. Parameters are optional.
+	 * @param  mixed optional parameter (e.g. username)
+	 * @param  mixed optional parameter (e.g. password)
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	public function login($username, $password, $extra = NULL)
+	public function login($username = NULL, $password = NULL)
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {
@@ -88,12 +87,7 @@ class User extends Nette\Object implements IUser
 
 		$this->logout(TRUE);
 
-		$credentials = array(
-			IAuthenticator::USERNAME => $username,
-			IAuthenticator::PASSWORD => $password,
-			'extra' => $extra,
-		);
-
+		$credentials = func_get_args();
 		$this->setIdentity($handler->authenticate($credentials));
 		$this->setAuthenticated(TRUE);
 		$this->onLoggedIn($this);

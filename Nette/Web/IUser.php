@@ -27,13 +27,12 @@ interface IUser
 
 	/**
 	 * Conducts the authentication process.
-	 * @param  string
-	 * @param  string
-	 * @param  mixed
+	 * @param  mixed optional parameter (e.g. username)
+	 * @param  mixed optional parameter (e.g. password)
 	 * @return void
 	 * @throws Nette\Security\AuthenticationException if authentication was not successful
 	 */
-	function login($username, $password, $extra = NULL);
+	function login();
 
 	/**
 	 * Logs out the user from the current session.
