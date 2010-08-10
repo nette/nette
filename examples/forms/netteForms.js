@@ -13,18 +13,16 @@ var nette = nette || { };
 nette.getValue = function(elem) {
 	if (!elem) {
 		return void 0;
-	}
 
-	if (!elem.nodeName) { // radio
+	} else if (!elem.nodeName) { // radio
 		for (var i = 0, len = elem.length; i < len; i++) {
 			if (elem[i].checked) {
 				return elem[i].value;
 			}
 		}
 		return null;
-	}
 
-	if (elem.nodeName.toLowerCase() === 'select') {
+	} else if (elem.nodeName.toLowerCase() === 'select') {
 		var index = elem.selectedIndex, options = elem.options;
 
 		if (index < 0) {
@@ -40,13 +38,16 @@ nette.getValue = function(elem) {
 			}
 		}
 		return values;
-	}
 
-	if (elem.type === 'checkbox') {
+	} else if (elem.type === 'checkbox') {
 		return elem.checked;
-	}
 
-	return elem.value.replace(/^\s+|\s+$/g, '');
+	} else if (elem.type === 'radio') {
+		return nette.getValue(elem.form.elements[elem.name]);
+
+	} else {
+		return elem.value.replace(/^\s+|\s+$/g, '');
+	}	
 }
 
 
@@ -103,7 +104,7 @@ nette.addError = function(elem, message) {
 nette.validateRule = function(elem, op, arg) {
 	var val = nette.getValue(elem);
 
-	if (!elem.nodeName) { // radio
+	if (!elem.nodeName || elem.type === 'radio') { // radio
 		if (op === ':filled') {
 			return val !== null;
 		}
@@ -127,12 +128,12 @@ nette.validateRule = function(elem, op, arg) {
 			return elem.selectedIndex >= first;
 		}
 
-	} else if (elem.type.toLowerCase() in {submit:1, image:1, button:1}) { // button
+	} else if (elem.type in {submit:1, image:1, button:1}) { // button
 		if (op === ':submitted') {
 			return elem.form['nette-submittedBy'] === elem.name;
 		}
 
-	} else if (elem.type.toLowerCase() in {checkbox:1, file:1, reset:1, hidden:1}) {
+	} else if (elem.type in {checkbox:1, file:1, reset:1, hidden:1}) {
 		// continue to common rules
 
 	} else if (elem.nodeName.toLowerCase() === 'textarea' || elem.nodeName.toLowerCase() === 'input') { // textual element

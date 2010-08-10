@@ -128,7 +128,6 @@ class RadioList extends FormControl
 			return NULL;
 		}
 
-        // TODO: solve data-rules attribute
 		$control = parent::getControl();
 		$id = $control->id;
 		$counter = -1;
@@ -154,6 +153,7 @@ class RadioList extends FormControl
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
+			unset($control->data['rules']);
 			// TODO: separator after last item?
 		}
 
