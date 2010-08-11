@@ -153,7 +153,7 @@ class RadioList extends FormControl
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
-			unset($control->data['rules']);
+			unset($control->data['nette-rules']);
 			// TODO: separator after last item?
 		}
 

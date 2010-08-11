@@ -52,7 +52,7 @@ nette.getValue = function(elem) {
 
 
 nette.validateControl = function(elem, rules, onlyCheck) {
-	rules = rules || eval('[' + (elem.getAttribute('data-rules') || '') + ']');
+	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	for (var id in rules) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
@@ -113,7 +113,7 @@ nette.validateRule = function(elem, op, arg) {
 		}
 
 	} else if (elem.nodeName.toLowerCase() === 'select') { // select box
-		var first = elem.getAttribute('data-first-skip') === null ? 0 : 1;
+		var first = elem.getAttribute('data-nette-first-skip') === null ? 0 : 1;
 
 		if (op === ':equal' && elem.type !== 'select-one') {
 			arg = arg instanceof Array ? arg : [arg];
@@ -142,7 +142,7 @@ nette.validateRule = function(elem, op, arg) {
 	} else if (elem.nodeName.toLowerCase() === 'textarea' || elem.nodeName.toLowerCase() === 'input') { // textual element
 		switch (op) {
 		case ':filled':
-			return val != '' && val != elem.getAttribute('data-empty-value');
+			return val != '' && val != elem.getAttribute('data-nette-empty-value');
 
 		case ':minLength':
 			return val.length >= arg;
@@ -206,7 +206,7 @@ nette.toggleForm = function(form) {
 
 
 nette.toggleControl = function(elem, rules, firsttime) {
-	rules = rules || eval('[' + (elem.getAttribute('data-rules') || '') + ']');
+	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	var has = false;
 	for (var id in rules) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);

@@ -37,13 +37,13 @@
 <tr>
 	<th><label for="frm-num1">Multiple of 8:</label></th>
 
-	<td><input type="text" class="text" name="num1" id="frm-num1" data-rules="{op:'myValidator',msg:'First number must be 8 multiple',arg:8}" value="5" /></td>
+	<td><input type="text" class="text" name="num1" id="frm-num1" data-nette-rules="{op:'myValidator',msg:'First number must be 8 multiple',arg:8}" value="5" /></td>
 </tr>
 
 <tr>
 	<th><label for="frm-num2">Not multiple of 5:</label></th>
 
-	<td><input type="text" class="text" name="num2" id="frm-num2" data-rules="{op:'~myValidator',msg:'Second number must not be 5 multiple',arg:5}" value="5" /></td>
+	<td><input type="text" class="text" name="num2" id="frm-num2" data-nette-rules="{op:'~myValidator',msg:'Second number must not be 5 multiple',arg:5}" value="5" /></td>
 </tr>
 
 <tr>

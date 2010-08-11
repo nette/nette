@@ -102,7 +102,7 @@ abstract class TextBase extends FormControl
 
 	public function getControl()
 	{
-		return parent::getControl()->data('empty-value', $this->emptyValue === '' ? NULL : $this->translate($this->emptyValue));
+		return parent::getControl()->data('nette-empty-value', $this->emptyValue === '' ? NULL : $this->translate($this->emptyValue));
 	}
 
 

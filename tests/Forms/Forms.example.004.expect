@@ -91,13 +91,13 @@
 
 	<dt><label class="required" for="frm-name">Your name:</label></dt>
 
-	<dd><input type="text" class="text" name="name" id="frm-name" data-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" /> •</dd>
+	<dd><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" /> •</dd>
 
 
 
 	<dt><label class="required" for="frm-age">Your age:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" data-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" /> •</dd>
+	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" /> •</dd>
 
 
 
@@ -109,7 +109,7 @@
 
 	<dt><label for="frm-email">E-mail:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="email" id="frm-email" data-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" data-empty-value="&#64;" value="&#64;" /></dd>
+	<dd class="odd"><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" /></dd>
 
 </dl>
 
@@ -121,7 +121,7 @@
 
 	<dt></dt>
 
-	<dd><input type="checkbox" name="send" id="frm-send" data-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" /><label for="frm-send">Ship to address</label></dd>
+	<dd><input type="checkbox" name="send" id="frm-send" data-nette-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" /><label for="frm-send">Ship to address</label></dd>
 
 </dl>
 
@@ -136,13 +136,13 @@
 
 	<dt><label for="frm-city">City:</label></dt>
 
-	<dd><input type="text" class="text" name="city" id="frm-city" data-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" /></dd>
+	<dd><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" /></dd>
 
 
 
 	<dt><label for="frm-country">Country:</label></dt>
 
-	<dd class="odd"><select name="country" id="frm-country" data-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-first-skip=""><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></dd>
+	<dd class="odd"><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-first-skip=""><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></dd>
 
 </dl>
 </div>
@@ -155,13 +155,13 @@
 
 	<dt><label class="required" for="frm-password">Choose password:</label></dt>
 
-	<dd><input type="password" class="text" name="password" id="frm-password" data-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small></dd>
+	<dd><input type="password" class="text" name="password" id="frm-password" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small></dd>
 
 
 
 	<dt><label for="frm-password2">Reenter password:</label></dt>
 
-	<dd class="odd"><input type="password" class="text" name="password2" id="frm-password2" data-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" /></dd>
+	<dd class="odd"><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" /></dd>
 
 
 
