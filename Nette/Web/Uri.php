@@ -388,8 +388,11 @@ class Uri extends Nette\FreezableObject
 		}
 
 		// compare query strings
-		$part = self::unescape(strtr((string) strtok('?#'), '+', ' '), '%&;=+');
-		return $part === $this->query;
+		$part = preg_split('#[&;]#', self::unescape(strtr((string) strtok('?#'), '+', ' '), '%&;=+'));
+		sort($part);
+		$query = preg_split('#[&;]#', $this->query);
+		sort($query);
+		return $part === $query;
 	}
 
 
