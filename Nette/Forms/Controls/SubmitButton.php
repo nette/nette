@@ -87,6 +87,7 @@ class SubmitButton extends Button implements ISubmitterControl
 	{
 		// TODO: implement groups
 		$this->validationScope = (bool) $scope;
+		$this->control->formnovalidate = !$this->validationScope;	
 		return $this;
 	}
 
