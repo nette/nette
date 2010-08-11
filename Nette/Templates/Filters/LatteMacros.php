@@ -47,6 +47,7 @@ use Nette,
  * - {default var => value} set default template parameter
  * - {dump $var}
  * - {debugbreak}
+ * - {l} {r} to display { }
  *
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette\Templates
@@ -104,6 +105,8 @@ class LatteMacros extends Nette\Object
 		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php Nette\Debug::barDump(%:macroDump%, "Template " . str_replace(Nette\Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
 		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ?>',
+		'l' => '{',
+		'r' => '}',
 
 		'!_' => '<?php echo %:macroTranslate% ?>',
 		'_' => '<?php echo %:macroEscape%(%:macroTranslate%) ?>',

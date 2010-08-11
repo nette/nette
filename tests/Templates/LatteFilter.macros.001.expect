@@ -181,4 +181,5 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 3
 7
 
-test	
+test
+{ }
