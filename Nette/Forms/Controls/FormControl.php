@@ -137,8 +137,8 @@ abstract class FormControl extends Nette\Component implements IFormControl
 				$obj = $obj->lookup('Nette\Forms\INamingContainer', TRUE);
 			}
 			$name .= $s;
-			if ($name === 'submit') {
-				throw new \InvalidArgumentException("Form control name 'submit' is not allowed due to JavaScript limitations.");
+			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
+				$name .= '_';
 			}
 			$this->htmlName = $name;
 		}
