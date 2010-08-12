@@ -107,83 +107,13 @@ nette.addError = function(elem, message) {
 nette.validateRule = function(elem, op, arg) {
 	var val = nette.getValue(elem);
 
-	if (!elem.nodeName || elem.type === 'radio') { // radio
-		if (op === ':filled') {
-			return val !== null;
-		}
-
-	} else if (elem.nodeName.toLowerCase() === 'select') { // select box
-		var first = elem.getAttribute('data-nette-first-skip') === null ? 0 : 1;
-
-		if (op === ':equal' && elem.type !== 'select-one') {
-			arg = arg instanceof Array ? arg : [arg];
-			for (var len = elem.options.length, option; first < len; first++) {
-				if ((option = elem.options[first]).selected) {
-					for (var i in arg) {
-						if (option.value == (arg[i].control ? nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		if (op === ':filled') {
-			return elem.selectedIndex >= first;
-		}
-
-	} else if (elem.type in {submit:1, image:1, button:1}) { // button
-		if (op === ':submitted') {
-			return elem.form['nette-submittedBy'] === elem.name;
-		}
-
-	} else if (elem.type in {checkbox:1, file:1, reset:1, hidden:1}) {
-		// continue to common rules
-
-	} else if (elem.nodeName.toLowerCase() === 'textarea' || elem.nodeName.toLowerCase() === 'input') { // textual element
-		switch (op) {
-		case ':filled':
-			return val != '' && val != elem.getAttribute('data-nette-empty-value');
-
-		case ':minLength':
-			return val.length >= arg;
-
-		case ':maxLength':
-			return val.length <= arg;
-
-		case ':length':
-			if (typeof arg !== 'object') {
-				arg = [arg, arg];
-			}
-			return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
-
-		case ':email':
-			return /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);
-
-		case ':url':
-			return /^.+\.[a-z]{2,6}(\/.*)?$/i.test(val);
-
-		case ':regexp':
-			var parts = arg.match(/^\/(.*)\/([imu]*)$/);
-			if (parts) try {
-				return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-			} catch (e) {}
-			return;
-
-		case ':integer':
-			return /^-?[0-9]+$/.test(val);
-
-		case ':float':
-			return /^-?[0-9]*[.,]?[0-9]+$/.test(val);
-
-		case ':range':
-			return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
-		}
+	if (elem.getAttribute) {
+		if (val === elem.getAttribute('data-nette-empty-value')) val = null;
 	}
 
-	// common rules
 	switch (op) {
 	case ':filled':
-		return val != '';
+		return val !== '' && val !== false && val !== null;
 
 	case ':valid':
 		return nette.validateControl(elem, null, true);
@@ -191,9 +121,46 @@ nette.validateRule = function(elem, op, arg) {
 	case ':equal':
 		arg = arg instanceof Array ? arg : [arg];
 		for (var i in arg) {
-			if (val == (arg[i].control ? nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
+			if (val === (arg[i].control ? nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
 		}
 		return false;
+
+	case ':minLength':
+		return val.length >= arg;
+
+	case ':maxLength':
+		return val.length <= arg;
+
+	case ':length':
+		if (typeof arg !== 'object') {
+			arg = [arg, arg];
+		}
+		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
+
+	case ':email':
+		return /^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i.test(val);
+
+	case ':url':
+		return /^.+\.[a-z]{2,6}(\/.*)?$/i.test(val);
+
+	case ':regexp':
+		var parts = arg.match(/^\/(.*)\/([imu]*)$/);
+		if (parts) try {
+			return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
+		} catch (e) {}
+		return;
+
+	case ':integer':
+		return /^-?[0-9]+$/.test(val);
+
+	case ':float':
+		return /^-?[0-9]*[.,]?[0-9]+$/.test(val);
+
+	case ':range':
+		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
+
+	case ':submitted':
+		return elem.form['nette-submittedBy'] === elem.name;
 	}
 }
 
@@ -285,5 +252,5 @@ nette.initForm = function(form) {
 	var init = function() {
 		for (var i = 0; i < document.forms.length; i++) nette.initForm(document.forms[i]);
 	};
-	typeof jQuery == 'function' ? jQuery(init) : window.onload = init;
+	typeof jQuery === 'function' ? jQuery(init) : window.onload = init;
 })();

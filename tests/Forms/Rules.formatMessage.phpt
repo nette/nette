@@ -33,7 +33,7 @@ T::dump( $form->getErrors() );
 __halt_compiler() ?>
 
 ------EXPECT------
-%A%data-rules="{op:':email',msg:'E-mail %value is invalid [field email]'}"%A%
+%A%data-nette-rules="{op:':email',msg:'E-mail %value is invalid [field email]'}"%A%
 array(
 	"E-mail xyz is invalid [field email]"
 )

@@ -202,7 +202,8 @@ class SelectBox extends FormControl
 	{
 		$control = parent::getControl();
 		if ($this->skipFirst) {
-			$control->data['nette-first-skip'] = '';
+			reset($this->items);
+			$control->data['nette-empty-value'] = $this->useKeys ? key($this->items) : current($this->items);
 		}
 		$selected = $this->getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
