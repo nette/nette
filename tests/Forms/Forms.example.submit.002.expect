@@ -42,7 +42,7 @@
 <tr>
 	<th>&nbsp;</th>
 
-	<td><input type="submit" class="button" name="submit1" id="frm-submit1" value="Delete item" /></td>
+	<td><input type="submit" class="button" name="submit_" id="frm-submit_" value="Delete item" /></td>
 </tr>
 </table>
 

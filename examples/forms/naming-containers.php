@@ -58,7 +58,7 @@ $sub->addSelect('country', 'Country:', $countries);
 // group for buttons
 $form->addGroup();
 
-$form->addSubmit('submit1', 'Send');
+$form->addSubmit('submit', 'Send');
 
 
 

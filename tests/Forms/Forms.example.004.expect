@@ -183,7 +183,7 @@
 
 	<dt></dt>
 
-	<dd><input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" /></dd>
+	<dd><input type="submit" class="button" name="submit_" id="frm-submit_" value="Send" /></dd>
 
 </dl>
 

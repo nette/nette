@@ -43,7 +43,7 @@ $form->addText('email', 'Send to e-mail:')
 	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
 		->addRule(Form::EMAIL, 'Incorrect E-mail Address'); // ... then check email
 
-$form->addSubmit('submit1', 'Send');
+$form->addSubmit('submit', 'Send');
 
 
 

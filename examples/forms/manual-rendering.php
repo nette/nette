@@ -53,7 +53,7 @@ $form->addFile('avatar');
 $form->addHidden('userid');
 $form->addTextArea('note');
 
-$form->addSubmit('submit1');
+$form->addSubmit('submit');
 
 
 // Step 1b: Define validation rules
@@ -228,7 +228,7 @@ if ($form->isSubmitted()) {
 
 	<div>
 		<?php echo $form['userid']->control ?>
-		<?php echo $form['submit1']->getControl('Send') ?>
+		<?php echo $form['submit']->getControl('Send') ?>
 	</div>
 
 	<?php $form->render('end'); ?>

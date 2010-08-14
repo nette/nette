@@ -19,7 +19,7 @@ $form = new Form;
 $form->addProtection('Security token did not match. Possible CSRF attack.', 3);
 
 $form->addHidden('id')->setDefaultValue(123);
-$form->addSubmit('submit1', 'Delete item');
+$form->addSubmit('submit', 'Delete item');
 
 
 

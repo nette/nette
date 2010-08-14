@@ -104,7 +104,7 @@
 	</fieldset>
 
 	<div>
-		<input type="hidden" name="userid" id="frm-userid" value="231" />		<input type="submit" class="button" name="submit1" id="frm-submit1" value="Send" />	</div>
+		<input type="hidden" name="userid" id="frm-userid" value="231" />		<input type="submit" class="button" name="submit_" id="frm-submit_" value="Send" />	</div>
 
 	</form>
 </body>

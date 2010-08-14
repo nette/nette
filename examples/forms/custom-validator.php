@@ -32,7 +32,7 @@ $form->addText('num2', 'Not multiple of 5:')
 	->addRule(~'myValidator', 'Second number must not be %d multiple', 5); // negative
 
 
-$form->addSubmit('submit1', 'Send');
+$form->addSubmit('submit', 'Send');
 
 
 
