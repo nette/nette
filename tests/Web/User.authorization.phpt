@@ -36,11 +36,11 @@ class AuthenticationHandler implements IAuthenticator
 	 */
 	function authenticate(array $credentials)
 	{
-		if ($credentials['username'] !== 'john') {
+		if ($credentials[self::USERNAME] !== 'john') {
 			throw new AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 		}
 
-		if ($credentials['password'] !== 'xxx') {
+		if ($credentials[self::PASSWORD] !== 'xxx') {
 			throw new AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 		}
 
