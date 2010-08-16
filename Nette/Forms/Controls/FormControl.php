@@ -122,7 +122,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 
 
 	/**
-	 * Returns name of control within a Form & INamingContainer scope.
+	 * Returns HTML name of control.
 	 * @return string
 	 */
 	public function getHtmlName()

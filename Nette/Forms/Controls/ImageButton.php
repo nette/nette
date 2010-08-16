@@ -40,7 +40,7 @@ class ImageButton extends SubmitButton
 
 
 	/**
-	 * Returns name of control within a Form & INamingContainer scope.
+	 * Returns HTML name of control.
 	 * @return string
 	 */
 	public function getHtmlName()
