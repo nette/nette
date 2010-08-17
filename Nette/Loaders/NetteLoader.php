@@ -107,7 +107,6 @@ class NetteLoader extends AutoLoader
 		'nette\forms\iformcontrol' => '/Forms/IFormControl.php',
 		'nette\forms\iformrenderer' => '/Forms/IFormRenderer.php',
 		'nette\forms\imagebutton' => '/Forms/Controls/ImageButton.php',
-		'nette\forms\inamingcontainer' => '/Forms/INamingContainer.php',
 		'nette\forms\isubmittercontrol' => '/Forms/ISubmitterControl.php',
 		'nette\forms\multiselectbox' => '/Forms/Controls/MultiSelectBox.php',
 		'nette\forms\radiolist' => '/Forms/Controls/RadioList.php',

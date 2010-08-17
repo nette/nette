@@ -130,11 +130,11 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		if ($this->htmlName === NULL) {
 			$s = '';
 			$name = $this->getName();
-			$obj = $this->lookup('Nette\Forms\INamingContainer', TRUE);
+			$obj = $this->lookup('Nette\Forms\FormContainer', TRUE);
 			while (!($obj instanceof Form)) {
 				$s = "[$name]$s";
 				$name = $obj->getName();
-				$obj = $obj->lookup('Nette\Forms\INamingContainer', TRUE);
+				$obj = $obj->lookup('Nette\Forms\FormContainer', TRUE);
 			}
 			$name .= $s;
 			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {

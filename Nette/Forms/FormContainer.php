@@ -27,7 +27,7 @@ use Nette;
  * @property-read bool $valid
  * @property   array $values
  */
-class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, INamingContainer
+class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 {
 	/** @var array of function(Form $sender); Occurs when the form is validated */
 	public $onValidate;
@@ -91,7 +91,7 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, IN
 					$control->setValue(NULL);
 				}
 			}
-			if ($control instanceof INamingContainer) {
+			if ($control instanceof FormContainer) {
 				if ((is_array($sub->cursor) || $sub->cursor instanceof \ArrayAccess) && isset($sub->cursor[$name])) {
 					$cursor = & $sub->cursor[$name];
 				} else {
@@ -122,7 +122,7 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess, IN
 			if ($control instanceof IFormControl && !$control->isDisabled() && !($control instanceof ISubmitterControl)) {
 				$sub->cursor[$name] = $control->getValue();
 			}
-			if ($control instanceof INamingContainer) {
+			if ($control instanceof FormContainer) {
 				$cursor = & $sub->cursor[$name];
 				$cursor = array();
 			}
