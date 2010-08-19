@@ -1,17 +1,26 @@
-body {
+html {
 	font: 16px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+	border-top: 4.7em solid #F4EFE5;
+}
+
+body {
+	max-width: 990px;
+	margin: -4.7em auto 0;
+	background: white;
 	color: #333;
-	background-color: #fff;
 }
 
 h1 {
-	font-size: 150%;
-	color: #165ca3;
+	font: 1.9em/1.5 sans-serif;
+	margin: .5em 0 1.5em;
+	background: url(http://files.nette.org/icons/logo-e1.png) right center no-repeat;
+	color: #7A7772;
+	text-shadow: 1px 1px 0 white;
 }
 
 h2 {
 	font-size: 120%;
-	color: #165ca3;
+	color: #3484D2;
 }
 
 #content {

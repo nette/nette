@@ -7,25 +7,25 @@
 </head>
 
 <body>
+	<h1>Modules demo</h1>
+
 	<div id="path">
 		<span id="module">{$moduleName}<span id="presenter">{$presenterName}:<span id="view">{$viewName}</span></span></span>
 	</div>
 
 	<fieldset>
-		<legend>This is layout template <em>{$template->getFile()}</em></legend>
-
-		<h1>Modules demo</h1>
+		<legend>This is layout template <code>{$template->getFile() |replace:$root}</code></legend>
 
 		<fieldset>
-			<legend>This is content block template <em>{$presenter->template->getFile()}</em></legend>
+			<legend>This is content block template <code>{$presenter->template->getFile() |replace:$root}</code></legend>
 			{include #content}
 		</fieldset>
 
 
 		<h2>Absolute links</h2>
 		<ul>
-			<li><a href="{link :Front:Default:}"><code>:Front:Default:</code></a> - link to presenter <em>Front:Default</em></li>
-			<li><a href="{link :Admin:Default:}"><code>:Admin:Default:</code></a> - link to presenter <em>Admin:Default</em></li>
+			<li><a href="{link :Front:Default:}"><code>:Front:Default:</code></a> - link to presenter <code>Front:Default</code></li>
+			<li><a href="{link :Admin:Default:}"><code>:Admin:Default:</code></a> - link to presenter <code>Admin:Default</code></li>
 		</ul>
 	</fieldset>
 </body>

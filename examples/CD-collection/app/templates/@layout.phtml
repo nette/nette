@@ -16,22 +16,20 @@
 	<meta http-equiv="Content-Language" content="en" />
 
 	<meta name="description" content="Nette Framework example" />
-	{if isset($robots)}<meta name="robots" content="{$robots}" />{/if}
+	<meta n:ifset="$robots" name="robots" content="{$robots}">
 
-	<title>{block #title|upper}{/block} Nette example</title>
+	<title>{block #title|striptags|trim}{/block} | Nette example</title>
 
 	<link rel="stylesheet" type="text/css" media="screen" href="{$basePath}/css/site.css" />
 </head>
 
 <body>
-	{foreach $flashes as $flash}<div class="flash {$flash->type}">{$flash->message}</div>{/foreach}
+	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 
 	<div id="content">
 		{include #content}
 	</div>
 
-	{if isset($user)}
-	<p id="logged-in">Logged in as {$user->real_name}. <a href="{link logout}">Logout</a></p>
-	{/if}
+	<p id="logged-in" n:ifset="$user">Logged in as {$user->real_name}. <a href="{link logout}">Logout</a></p>
 </body>
 </html>

@@ -15,35 +15,7 @@
    }
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-	<title>Nette\Forms naming containers example | Nette Framework</title>
-
-	<style type="text/css">
-	.required {
-		color: darkred
-	}
-
-	fieldset {
-		padding: .5em;
-		margin: .3em 0;
-		background: #EAF3FA;
-		border: 1px solid #b2d1eb;
-	}
-
-	input.button {
-		font-size: 120%;
-	}
-
-	th {
-		width: 8em;
-		text-align: right;
-	}
-	</style>
-</head>
+<!DOCTYPE html>%A%</head>
 
 <body>
 	<h1>Nette\Forms naming containers example</h1>

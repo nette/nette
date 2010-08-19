@@ -72,15 +72,35 @@ if ($form->isSubmitted()) {
 	<title>Nette\Forms custom validator example | Nette Framework</title>
 
 	<style type="text/css">
+	html {
+		font: 16px/1.5 sans-serif;
+		border-top: 4.7em solid #F4EFE5;
+	}
+
+	body {
+		max-width: 990px;
+		margin: -4.7em auto 0;
+		background: white;
+		color: #333;
+	}
+
+	h1 {
+		font-size: 1.9em;
+		margin: .5em 0 1.5em;
+		background: url(http://files.nette.org/icons/logo-e1.png) right center no-repeat;
+		color: #7A7772;
+		text-shadow: 1px 1px 0 white;
+	}
+
 	.required {
 		color: darkred
 	}
 
 	fieldset {
 		padding: .5em;
-		margin: .3em 0;
+		margin: .5em 0;
 		background: #EAF3FA;
-		border: 1px solid #b2d1eb;
+		border: 1px solid #B2D1EB;
 	}
 
 	input.button {
@@ -88,7 +108,7 @@ if ($form->isSubmitted()) {
 	}
 
 	th {
-		width: 8em;
+		width: 10em;
 		text-align: right;
 	}
 	</style>

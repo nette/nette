@@ -18,10 +18,10 @@
 <body>
 	<h1>Fifteen example &ndash; {snippet round <span>}round #{$presenter['fifteen']->round + 1}{/snippet}</h1>
 
-	{snippet flash}{if isset($flash)}<h2>{$flash}</h2>{/if}{/snippet}
+	{snippet flash}<h2 n:ifset="$flash">{$flash}</h2>{/snippet}
 
 	<p><a href="{link fifteen:shuffle!}" class="ajax">Shuffle!</a></p>
 
-	@{widget fifteen}
+	@{control fifteen}
 </body>
 </html>

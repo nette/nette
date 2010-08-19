@@ -2,16 +2,17 @@ body {
 	font: 16px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
 	color: #333;
 	background-color: #fff;
+	margin: 2em;
 }
 
 h1 {
-	font-size: 150%;
-	color: #165ca3;
+	font-size: 1.9em;
+	color: #3484D2;
 }
 
 h2 {
-	font-size: 120%;
-	color: #165ca3;
+	font-size: 1.2em;
+	color: #3484D2;
 }
 
 #content {
@@ -19,33 +20,8 @@ h2 {
 	margin: 0 5px;
 }
 
-label {
-	width: 100px;
-	display: block;
-	float: left;
-}
-
-form input {
-	margin-bottom: 2px;
-	font-size: 100%;
-}
-
-form input.default {
-	font-weight: bold;
-	font-size: 105%;
-}
-
-#formbutton {
-	margin-left: 100px;
-}
-
 a {
 	color: #000080;
-}
-
-#message {
-	margin: 10px 0;
-	color: #f00;
 }
 
 #logged-in {
@@ -62,6 +38,10 @@ div.flash {
 }
 
 
+
+/*------------------------------------------------------------------*/
+
+
 table.grid {
 	padding: 0;
 	margin: 0;
@@ -69,18 +49,60 @@ table.grid {
 }
 
 table.grid td, table.grid th {
-	color: #525b37;
 	background: #fff;
-	border: 1px solid #d1cdab;
+	border: 1px solid #add4fb;
 	padding: 6px 6px 6px 12px;
 }
 
 table.grid th {
-	color: #505767;
-	background: #e3e9ba;
+	color: #7a7772;
+	background: #EAF3FA;
 	text-align: left;
+	font-weight: normal;
+	font-size: 80%;
 }
 
 table.grid .alt td {
 	background: #f8f8f0;
+}
+
+
+
+/*------------------------------------------------------------------*/
+
+
+
+form {
+	max-width: 500px;
+	padding: .8em 1.6em;
+	background: #EAF3FA;
+	border: solid 2px #add4fb;
+}
+
+form input {
+	margin: 2px 0;
+	font-size: 100%;
+}
+
+form input.default {
+	font-weight: bold;
+	font-size: 105%;
+}
+
+form input.text {
+	padding: 4px 2px;
+	border: solid 1px #add4fb;
+	min-width: 200px;
+}
+
+form label {
+	width: 100px;
+	display: block;
+	text-align: right;
+	margin-right: 5px;
+	font-weight: normal;
+}
+
+form .required label {
+	font-weight: bold;
 }

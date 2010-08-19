@@ -158,8 +158,24 @@ if ($form->isSubmitted()) {
 	<title>Nette\Forms custom rendering example | Nette Framework</title>
 
 	<style type="text/css">
+	html {
+		font: 16px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+		border-top: 4.7em solid #F4EFE5;
+	}
+
 	body {
-		font-family: "Trebuchet MS", "Geneva CE", lucida, sans-serif;
+		max-width: 780px;
+		margin: -4.7em auto 0;
+		background: white;
+		color: #333;
+	}
+
+	h1 {
+		font-size: 1.9em;
+		margin: .5em 0 1.5em;
+		background: url(http://files.nette.org/icons/logo-e1.png) right center no-repeat;
+		color: #7A7772;
+		text-shadow: 1px 1px 0 white;
 	}
 
 	.required {
@@ -171,7 +187,7 @@ if ($form->isSubmitted()) {
 	}
 
 	input.text {
-		border: 1px solid #78bd3f;
+		border: 1px solid #78BD3F;
 		padding: 3px;
 		color: black;
 		background: white;
@@ -185,12 +201,8 @@ if ($form->isSubmitted()) {
 		padding: .5em 1em;
 	}
 
-	#form {
-		width: 550px;
-	}
-
 	#form h3 {
-		background: #78bd3f;
+		background: #78BD3F;
 		color: white;
 		margin: 0;
 		padding: .1em 1em;
