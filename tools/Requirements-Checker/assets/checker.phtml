@@ -21,23 +21,36 @@ header('Content-Type: text/html; charset=utf-8');
 	<title>Nette Framework Requirements Checker</title>
 
 	<style type="text/css">
-	body {
-		font: 9pt/1.5 Verdana, sans-serif;
-		color: #222;
-		background: #fff url('assets/logo.gif') no-repeat 97% 5px;
-		margin: 10px auto;
-		padding: 0 10px;
-		width: 700px;
+	html {
+		font: 13px/1.5 Verdana, sans-serif;
+		border-top: 5.3em solid #F4EFE5;
 	}
 
-	h1, h2 {
-		font: 22pt/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
-		color: #165ca3;
-		margin: .7em 0;
+	body {
+		border-top: 1px solid #E4DED5;
+		margin: 0;
+		background: white;
+		color: #333;
+	}
+
+	#wrapper {
+		max-width: 780px;
+		margin: -5.3em auto 0;
+	}
+
+	h1 {
+		font: 2.3em/1.5 sans-serif;
+		margin: .5em 0 1.5em;
+		background: url(assets/logo.png) right center no-repeat;
+		color: #7A7772;
+		text-shadow: 1px 1px 0 white;
 	}
 
 	h2 {
-		font-size: 17pt;
+		font-size: 2em;
+		font-weight: normal;
+		color: #3484D2;
+		margin: .7em 0;
 	}
 
 	p {
@@ -45,22 +58,20 @@ header('Content-Type: text/html; charset=utf-8');
 	}
 
 	.result {
-		font-size: 15pt;
 		margin: 1.5em 0;
 		padding: 0 1em;
 		border: 2px solid white;
 	}
 
 	.passed h2 {
-		color: #091;
+		color: #1A7E1E;
 	}
 
 	.failed h2 {
-		color: #A30;
+		color: white;
 	}
 
 	table {
-		font: 9pt/1.5 Verdana, sans-serif;
 		padding: 0;
 		margin: 0;
 		border-collapse: collapse;
@@ -85,8 +96,8 @@ header('Content-Type: text/html; charset=utf-8');
 	}
 
 	.passed, .info {
-		background-color: #DFD;
-		border-color: #BEB;
+		background-color: #E4F9E3;
+		border-color: #C6E5C4;
 	}
 
 	.passed th {
@@ -98,8 +109,8 @@ header('Content-Type: text/html; charset=utf-8');
 	}
 
 	.warning {
-		background-color: #FCF9CF;
-		border-color: #EE9;
+		background-color: #FEFAD4;
+		border-color: #EEEE99;
 	}
 
 	.warning th {
@@ -108,7 +119,12 @@ header('Content-Type: text/html; charset=utf-8');
 
 	.failed {
 		background-color: #F4D2D2;
-		border-color: #EAA;
+		border-color: #D2B994;
+	}
+
+	div.failed {
+		background-color: #A21C1C;
+		border-color: #A21C1C;
 	}
 
 	.failed th {
@@ -126,11 +142,12 @@ header('Content-Type: text/html; charset=utf-8');
 </head>
 
 <body>
+<div id="wrapper">
 	<h1>Nette Framework Requirements Checker</h1>
 
 	<p>This script checks if your server and PHP configuration meets the requirements
-	for running <a href="http://nette.org/">Nette Framework</a>.</p>
-
+	for running <a href="http://nette.org/">Nette Framework</a>. It checks version of PHP,
+	if appropriate PHP extensions have been loaded, and if PHP directives are set correctly.</p>
 
 	<?php if ($errors): ?>
 	<div class="failed result">
@@ -139,7 +156,7 @@ header('Content-Type: text/html; charset=utf-8');
 	<?php else: ?>
 	<div class="passed result">
 		<h2>Congratulations! Server configuration meets the minimum requirements for Nette Framework.</h2>
-		<?php if ($warnings):?><p>Please see the warnings listed below.</p><?php endif ?>
+		<?php if ($warnings):?><p><strong>Please see the warnings listed below.</strong></p><?php endif ?>
 	</div>
 	<?php endif ?>
 
@@ -178,6 +195,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 	<?php if ($errors): ?><p>Please check the error messages and <a href="?">try again</a>.</p><?php endif ?>
 
-	<p><i>Requirements Checker version <?php echo CHECKER_VERSION ?></i></p>
+	<p><small>Requirements Checker version <?php echo CHECKER_VERSION ?></small></p>
+</div>
 </body>
 </html>
