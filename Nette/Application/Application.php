@@ -192,17 +192,25 @@ class Application extends Nette\Object
 					// continue
 
 				} else { // default error handler
+					if ($e instanceof BadRequestException) {
+						$code = $e->getCode();
+					} else {
+						$code = 500;
+						Nette\Debug::processException($e, FALSE);
+					}
 					echo "<!DOCTYPE html><meta name=robots content=noindex><meta name=generator content='Nette Framework'>\n\n";
 					echo "<style>body{color:#333;background:white;width:500px;margin:100px auto}h1{font:bold 47px/1.5 sans-serif;margin:.6em 0}p{font:21px/1.5 Georgia,serif;margin:1.5em 0}small{font-size:70%;color:gray}</style>\n\n";
-					if ($e instanceof BadRequestException) {
-						echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
-
-					} else {
-						Nette\Debug::processException($e, FALSE);
-						echo "<title>500 Internal Server Error</title>\n\n<h1>Server Error</h1>\n\n",
-							"<p>The server encountered an internal error and was unable to complete your request. Please try again later.</p>";
-					}
-					echo "\n\n<hr>\n<small><i>Nette Framework</i></small>";
+					static $messages = array(
+					    0 => array('Oops...', 'Your browser sent a request that this server could not understand or process.'),
+						403 => array('Access Denied', 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'),
+						404 => array('Page Not Found', 'The page you requested could not be found. It is possible that the address is incorrect, or that the page no longer exists. Please try the search engine to find what you are looking for.'),
+						405 => array('Method Not Allowed', 'The requested method is not allowed for the URL.'),
+						410 => array('Page Not Found', 'The page you requested has been taken off the site. We apologize for the inconvenience.'),
+						500 => array('Server Error', 'We\'re sorry! The server encountered an internal error and was unable to complete your request. Please try again later.'),
+					);
+					$message = isset($messages[$code]) ? $messages[$code] : $messages[0];
+					echo "<title>$message[0]</title>\n\n<h1>$message[0]</h1>\n\n<p>$message[1]</p>\n\n";
+					if ($code) echo "<p><small>$code error</small></p>";
 					break;
 				}
 			}
