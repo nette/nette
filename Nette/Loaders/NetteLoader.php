@@ -78,6 +78,7 @@ class NetteLoader extends AutoLoader
 		'nette\arraytools' => '/Utils/ArrayTools.php',
 		'nette\caching\cache' => '/Caching/Cache.php',
 		'nette\caching\dummystorage' => '/Caching/DummyStorage.php',
+		'nette\caching\filejournal' => '/Caching/FileJournal.php',
 		'nette\caching\filestorage' => '/Caching/FileStorage.php',
 		'nette\caching\icachejournal' => '/Caching/ICacheJournal.php',
 		'nette\caching\icachestorage' => '/Caching/ICacheStorage.php',
