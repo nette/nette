@@ -20,7 +20,7 @@ class HomepagePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
-		$this->template->message = 'We hope you enjoy this framework!';
+		$this->template->anyVariable = 'any value';
 	}
 
 }

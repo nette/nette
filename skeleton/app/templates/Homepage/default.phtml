@@ -1,44 +1,119 @@
+{* This is temporary page, you can delete it *}
+
 {block content}
+<div id="wrapper">
+	<div id="logo"></div>
 
-<div id="header">
-	<h1>It works!</h1>
+	<h1>Congratulations!</h1>
 
-	<h2>Congratulations on your first Nette Framework powered page.</h2>
-</div>
+	<h2>You have successfully created your Nette Framework project.</h2>
 
-<div>
-	<p>{$message}</p>
+	<hr>
 
-	<a href="http://nette.org" title="Nette Framework - The most innovative PHP framework"><img
-	src="{$basePath}/images/nette-powered2.gif" width="80" height="15" alt="Nette Framework powered"></a>
+	<h2>What to do next?</h2>
+
+	<ol>
+		<li><h3>Edit this page</h3>
+		<p>To change the content of this page, modify file <code>/app/templates/Homepage/default.phtml</code> and layout
+		<code>/app/templates/@layout.phtml</code>. The corresponding  presenter is found at <code>/app/presenters/HomepagePresenter.php</code>.</p>
+
+		<li><h3>Add new pages</h3>
+		<p>Add new actions in <code>HomepagePresenter.php</code> (or create new presenters)
+		and create corresponding templates under <code>/app/templates</code>.<p>
+
+		<li><h3>Learn more form the documentation</h3>
+		<p>If you are exploring Nette Framework for the very first time, you should start by reading the
+		<a href="http://doc.nette.org">documentation</a>, <a href="http://pla.nette.org">tutorials</a> and <a href="http://forum.nette.org">forum</a>.</p>
+	</ol>
+
+	<h2>We hope you enjoy this framework! <img src="{$basePath}/images/nette-powered2.gif" width="80" height="15" alt="Nette Framework powered"></h2>
+
+	<ul id="environment">
+		<li>PHP {=PHP_VERSION}</li>
+		<li n:ifset="$_SERVER['SERVER_SOFTWARE']">Server {$_SERVER['SERVER_SOFTWARE']}</li>
+		<li>Nette Framework {=Nette\Framework::VERSION}</li>
+	</ul>
 </div>
 
 <style>
+	html {
+		font: 16px/1.5 sans-serif;
+		border-top: 8.7em solid #F4EFE5;
+	}
+
 	body {
+		font: inherit;
+		border-top: 5px solid #E4DED5;
+		margin: 0;
+		background: white;
+		color: #333;
+	}
+
+	#wrapper {
+		max-width: 600px;
+		margin: -8.7em auto 0;
+	}
+
+	#logo {
+		position: absolute;
+		width: 150px;
+		height: 8.7em;
+		top: 0;
+		right: 3em;
+		background: url('data:image/png;base64,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') right center no-repeat;
+	}
+
+	h1 {
+		font-size: 47px;
+		color: #3484D2;
+		margin: .4em 0 -.3em;
+		text-shadow: 1px 1px 0 white;
+	}
+
+	h2, h3 {
+		font-size: 18px;
+		color: #7A7772;
+		margin: .6em 0;
+		text-shadow: 1px 1px 0 white;
+	}
+
+	h3 {
+		font-size: 16px;
+		color: #3484D2;
+	}
+
+	ol {
 		margin: 0;
 		padding: 0;
 	}
 
-	div {
-		padding: .2em 1em;
+	ol li {
+		margin: 1em 0;
 	}
 
-	#header {
-		background: #EEE;
-		border-bottom: 1px #DDD solid;
+	ol li p {
+		font-size: 90%;
 	}
 
-	h1 {
-		color: #0056ad;
-		font-size: 30px;
+	code {
+		color: #666;
 	}
 
-	h2 {
-		color: gray;
-		font-size: 20px;
+	hr {
+		visibility: hidden;
+		height: 2em;
 	}
 
 	img {
 		border: none;
+	}
+
+	#environment {
+		font-size: 70%;
+		margin: 3em 0;
+		padding: 1em 0;
+		border-top: 1px solid #EEE;
+		list-style: none;
+		color: gray;
 	}
 </style>

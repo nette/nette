@@ -14,6 +14,9 @@ use Nette\Application\Route;
 use Nette\Application\SimpleRouter;
 
 
+// REMOVE THIS LINE
+if (!is_file(LIBS_DIR . '/Nette/loader.php')) die('Copy Nette Framework to /libs/ directory.');
+
 
 // Step 1: Load Nette Framework
 // this allows load Nette Framework classes automatically so that

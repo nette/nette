@@ -7,10 +7,8 @@
  * @package    MyApplication
  */
 
-use Nette\Environment;
-use Nette\Application\AppForm;
-use Nette\Forms\Form;
-use Nette\Security\AuthenticationException;
+use Nette\Application\AppForm,
+	Nette\Security\AuthenticationException;
 
 
 /**
@@ -31,10 +29,10 @@ class LoginPresenter extends BasePresenter
 	{
 		$form = new AppForm;
 		$form->addText('username', 'Username:')
-			->addRule(Form::FILLED, 'Please provide a username.');
+			->addRule(AppForm::FILLED, 'Please provide a username.');
 
 		$form->addPassword('password', 'Password:')
-			->addRule(Form::FILLED, 'Please provide a password.');
+			->addRule(AppForm::FILLED, 'Please provide a password.');
 
 		$form->addCheckbox('remember', 'Remember me on this computer');
 
