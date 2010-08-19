@@ -31,7 +31,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 
 
 	/**
-	 * Returns whether the SqliteCacheJournal is able to operate.
+	 * Returns whether the SqliteJournal is able to operate.
 	 * @return bool
 	 */
 	public static function isAvailable()

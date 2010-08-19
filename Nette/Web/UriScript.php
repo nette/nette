@@ -20,13 +20,13 @@ use Nette;
  * Extended HTTP URL.
  *
  * <pre>
- *                    basePath   relativeUri
- *                       |           |
- *                    /-----\/------------------\
+ *                 basePath   relativeUri
+ *                    |           |
+ *                 /-----\/------------------\
  * http://nette.org/admin/script.php/pathinfo/?name=param#fragment
- *                    \_______________/\________/
- *                           |              |
- *                      scriptPath       pathInfo
+ *                 \_______________/\________/
+ *                        |              |
+ *                   scriptPath       pathInfo
  * </pre>
  *
  * - basePath:    /admin/ (everything before relative URI not including the script name)

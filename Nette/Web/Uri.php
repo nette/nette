@@ -21,9 +21,9 @@ use Nette;
  *
  * <pre>
  * http://user:password@nette.org:8042/en/manual.html?name=param#fragment
- * \__/^^^\_____________________________/\_____________/^\________/^\______/
- *   |                    |                     |            |         |
- * scheme             authority               path         query    fragment
+ * \__/^^^\__________________________/\_____________/^\________/^\______/
+ *   |                 |                     |            |         |
+ * scheme          authority               path         query    fragment
  * </pre>
  *
  * - authority:   [user[:password]@]host[:port]
