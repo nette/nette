@@ -192,7 +192,8 @@ class Application extends Nette\Object
 					// continue
 
 				} else { // default error handler
-					echo "<meta name='robots' content='noindex'>\n\n";
+					echo "<!DOCTYPE html><meta name=robots content=noindex><meta name=generator content='Nette Framework'>\n\n";
+					echo "<style>body{color:#333;background:white;width:500px;margin:100px auto}h1{font:bold 47px/1.5 sans-serif;margin:.6em 0}p{font:21px/1.5 Georgia,serif;margin:1.5em 0}small{font-size:70%;color:gray}</style>\n\n";
 					if ($e instanceof BadRequestException) {
 						echo "<title>404 Not Found</title>\n\n<h1>Not Found</h1>\n\n<p>The requested URL was not found on this server.</p>";
 
