@@ -570,8 +570,10 @@ if (headers_sent()) {
 
 		<ul>
 			<li>Report generated at <?php echo @date('Y/m/d H:i:s', self::$time) ?></li>
-			<?php if (self::$uri): ?>
-				<li><a href="<?php echo htmlSpecialChars(self::$uri) ?>"><?php echo htmlSpecialChars(self::$uri) ?></a></li>
+			<?php if (preg_match('#^https?://#', self::$source)): ?>
+				<li><a href="<?php echo htmlSpecialChars(self::$source) ?>"><?php echo htmlSpecialChars(self::$source) ?></a></li>
+			<?php elseif (self::$source): ?>
+				<li><?php echo htmlSpecialChars(self::$source) ?></li>
 			<?php endif ?>
 			<li>PHP <?php echo htmlSpecialChars(PHP_VERSION) ?></li>
 			<?php if (isset($_SERVER['SERVER_SOFTWARE'])): ?><li><?php echo htmlSpecialChars($_SERVER['SERVER_SOFTWARE']) ?></li><?php endif ?>
