@@ -48,7 +48,7 @@ nette.getValue = function(elem) {
 	} else {
 		return elem.value.replace(/^\s+|\s+$/g, '');
 	}
-}
+};
 
 
 nette.validateControl = function(elem, rules, onlyCheck) {
@@ -77,7 +77,7 @@ nette.validateControl = function(elem, rules, onlyCheck) {
 		}
 	}
 	return true;
-}
+};
 
 
 nette.validateForm = function(sender) {
@@ -91,7 +91,7 @@ nette.validateForm = function(sender) {
 		}
 	}
 	return true;
-}
+};
 
 
 nette.addError = function(elem, message) {
@@ -101,7 +101,7 @@ nette.addError = function(elem, message) {
 	if (message) {
 		alert(message);
 	}
-}
+};
 
 
 nette.validateRule = function(elem, op, arg) {
@@ -162,14 +162,14 @@ nette.validateRule = function(elem, op, arg) {
 	case ':submitted':
 		return elem.form['nette-submittedBy'] === elem.name;
 	}
-}
+};
 
 
 nette.toggleForm = function(form) {
 	for (var i = 0; i < form.elements.length; i++) {
 		nette.toggleControl(form.elements[i]);
 	}
-}
+};
 
 
 nette.toggleControl = function(elem, rules, firsttime) {
@@ -206,7 +206,7 @@ nette.toggleControl = function(elem, rules, firsttime) {
 		}
 	}
 	return has;
-}
+};
 
 
 nette.toggle = function(id, visible) {
@@ -214,7 +214,7 @@ nette.toggle = function(id, visible) {
 	if (elem) {
 		elem.style.display = visible ? "" : "none";
 	}
-}
+};
 
 
 nette.initForm = function(form) {
