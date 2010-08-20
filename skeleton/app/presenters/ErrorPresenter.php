@@ -36,7 +36,7 @@ class ErrorPresenter extends BasePresenter
 
 		} else {
 			$this->setView('500'); // load template 500.phtml
-			Debug::processException($exception); // and handle error by Nette\Debug
+			Debug::log($exception); // and log exception
 		}
 	}
 
