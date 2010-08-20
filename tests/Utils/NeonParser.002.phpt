@@ -19,43 +19,34 @@ require __DIR__ . '/../initialize.php';
 
 $parser = new NeonParser;
 
-T::dump( $parser->parse('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
+Assert::same( array(
+	TRUE,
+	'tRuE',
+	TRUE,
+	FALSE,
+	FALSE,
+	TRUE,
+	TRUE,
+	FALSE,
+	FALSE,
+	NULL,
+	NULL,
+), $parser->parse('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
 
-T::dump( $parser->parse('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
 
-T::dump( $parser->parse('{a, b, {c: d}, e: f,}') );
+Assert::same( array(
+	1 => 1,
+	'' => 1,
+	-5 => 1,
+	'5.3' => 1,
+), $parser->parse('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
 
 
-
-__halt_compiler() ?>
-
-------EXPECT------
-array(
-	TRUE
-	"tRuE"
-	TRUE
-	FALSE
-	FALSE
-	TRUE
-	TRUE
-	FALSE
-	FALSE
-	NULL
-	NULL
-)
-
-array(
-	1 => 1
-	"" => 1
-	-5 => 1
-	"5.3" => 1
-)
-
-array(
-	0 => "a"
-	1 => "b"
+Assert::same( array(
+	0 => 'a',
+	1 => 'b',
 	2 => array(
-		"c" => "d"
-	)
-	"e" => "f"
-)
+		'c' => 'd',
+	),
+	'e' => 'f',
+), $parser->parse('{a, b, {c: d}, e: f,}') );

@@ -31,9 +31,3 @@ unlink('safe://myfile.txt');
 
 // this is not thread safe - don't relay on returned value
 $ok = is_file('safe://SafeStream.php');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------

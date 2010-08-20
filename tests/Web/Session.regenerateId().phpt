@@ -22,11 +22,4 @@ $session->start();
 $oldId = $session->getId();
 $session->regenerateId();
 $newId = $session->getId();
-T::dump( $newId != $oldId );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-TRUE
+Assert::true( $newId != $oldId );

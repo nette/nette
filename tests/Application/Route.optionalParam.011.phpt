@@ -21,45 +21,20 @@ require __DIR__ . '/Route.inc';
 $route = new Route('[<one>/][<two>]', array(
 ));
 
-testRouteIn($route, '/one');
+testRouteIn($route, '/one', 'querypresenter', array(
+	'one' => 'one',
+	'two' => NULL,
+	'test' => 'testvalue',
+), '/one/?test=testvalue&presenter=querypresenter');
 
-
-T::note();
 
 
 $route = new Route('[<one>/]<two>', array(
 	'two' => NULL,
 ));
 
-testRouteIn($route, '/one');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /one
-
-"querypresenter"
-
-array(
-	"one" => "one"
-	"two" => NULL
-	"test" => "testvalue"
-)
-
-"/one/?test=testvalue&presenter=querypresenter"
-
-===
-
-==> /one
-
-"querypresenter"
-
-array(
-	"one" => "one"
-	"two" => NULL
-	"test" => "testvalue"
-)
-
-"/one/?test=testvalue&presenter=querypresenter"
+testRouteIn($route, '/one', 'querypresenter', array(
+	'one' => 'one',
+	'two' => NULL,
+	'test' => 'testvalue',
+), '/one/?test=testvalue&presenter=querypresenter');

@@ -33,16 +33,7 @@ class Foo
 }
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, new Foo);
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Is cached? TRUE
+Assert::true( isset($cache[$key]), 'Is cached?' );

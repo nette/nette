@@ -31,7 +31,3 @@ $mail->setBody('Sample text');
 $mail->setHTMLBody('<b>Žluťoučký kůň</b>');
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

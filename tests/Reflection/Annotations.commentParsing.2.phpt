@@ -39,60 +39,31 @@ class TestClass3 {
 
 
 $rc = new ClassReflection('TestClass1');
-T::dump( $rc->getAnnotations() );
+Assert::equal( array(
+	'one' => array('value'),
+	'two' => array('value'),
+	'three' => array(TRUE),
+	'five' => array(TRUE),
+	'brackets' => array(
+		new ArrayObject(array(
+			'single' => "()@'\"",
+			'double' => "()@'\"",
+		)),
+	),
+	'line1' => array(TRUE),
+	'line2' => array(TRUE),
+	'line3' => array('value'),
+	'line4' => array(TRUE),
+), $rc->getAnnotations() );
+
 
 $rc = new ClassReflection('TestClass2');
-T::dump( $rc->getAnnotations() );
+Assert::same( array(
+	'one' => array('value'),
+), $rc->getAnnotations() );
+
 
 $rc = new ClassReflection('TestClass3');
-T::dump( $rc->getAnnotations() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-array(
-	"one" => array(
-		"value"
-	)
-	"two" => array(
-		"value"
-	)
-	"three" => array(
-		TRUE
-	)
-	"five" => array(
-		TRUE
-	)
-	"brackets" => array(
-		ArrayObject(
-			"single" => "()@\'""
-			"double" => "()@'\""
-		)
-	)
-	"line1" => array(
-		TRUE
-	)
-	"line2" => array(
-		TRUE
-	)
-	"line3" => array(
-		"value"
-	)
-	"line4" => array(
-		TRUE
-	)
-)
-
-array(
-	"one" => array(
-		"value"
-	)
-)
-
-array(
-	"one" => array(
-		TRUE
-	)
-)
+Assert::same( array(
+	'one' => array(TRUE),
+), $rc->getAnnotations() );

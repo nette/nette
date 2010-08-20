@@ -19,25 +19,14 @@ require __DIR__ . '/../initialize.php';
 
 //define('ENVIRONMENT', 'lab');
 
-T::dump( Environment::getName(), "Name:" );
+Assert::same( 'production', Environment::getName(), 'Name:' );
+
 
 
 try {
-	T::note("Setting name:");
+	// Setting name:
 	Environment::setName('lab2');
-	T::dump( Environment::getName() );
-
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', 'Environment name has been already set.', $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Name: "production"
-
-Setting name:
-
-Exception InvalidStateException: Environment name has been already set.

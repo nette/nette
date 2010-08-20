@@ -32,7 +32,3 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 // append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

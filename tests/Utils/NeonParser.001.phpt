@@ -19,75 +19,20 @@ require __DIR__ . '/../initialize.php';
 
 $parser = new NeonParser;
 
-T::dump( $parser->parse('') );
-
-T::dump( $parser->parse('   ') );
-
-T::dump( $parser->parse('1') );
-
-T::dump( $parser->parse('-1.2') );
-
-T::dump( $parser->parse('-1.2e2') );
-
-T::dump( $parser->parse('true') );
-
-T::dump( $parser->parse('null') );
-
-T::dump( $parser->parse('the"string#literal') );
-
-T::dump( $parser->parse('the"string #literal') );
-
-T::dump( $parser->parse('"the\'string #literal"') );
-
-T::dump( $parser->parse("'the\"string #literal'") );
-
-T::dump( $parser->parse("''") );
-
-T::dump( $parser->parse('""') );
-
-T::dump( $parser->parse('x') );
-
-T::dump( $parser->parse("\nx\n") );
-
-T::dump( $parser->parse("\n  x  \n") );
-
-T::dump( $parser->parse("  x") );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-NULL
-
-NULL
-
-1
-
--1.2
-
--120.0
-
-TRUE
-
-NULL
-
-"the"string#literal"
-
-"the"string"
-
-"the'string #literal"
-
-"the"string #literal"
-
-""
-
-""
-
-"x"
-
-"x"
-
-"x"
-
-"x"
+Assert::null( $parser->parse('') );
+Assert::null( $parser->parse('   ') );
+Assert::same( 1, $parser->parse('1') );
+Assert::same( -1.2, $parser->parse('-1.2') );
+Assert::same( -120.0, $parser->parse('-1.2e2') );
+Assert::true( $parser->parse('true') );
+Assert::null( $parser->parse('null') );
+Assert::same( 'the"string#literal', $parser->parse('the"string#literal') );
+Assert::same( 'the"string', $parser->parse('the"string #literal') );
+Assert::same( "the'string #literal", $parser->parse('"the\'string #literal"') );
+Assert::same( 'the"string #literal', $parser->parse("'the\"string #literal'") );
+Assert::same( "", $parser->parse("''") );
+Assert::same( "", $parser->parse('""') );
+Assert::same( 'x', $parser->parse('x') );
+Assert::same( "x", $parser->parse("\nx\n") );
+Assert::same( "x", $parser->parse("\n  x  \n") );
+Assert::same( "x", $parser->parse("  x") );

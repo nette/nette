@@ -30,101 +30,54 @@ class Bar extends Foo implements \Countable
 }
 
 
-T::dump( new ClassReflection("Bar") );
-T::dump( ClassReflection::from("Bar") );
-T::dump( ClassReflection::from(new Bar) );
+Assert::equal( new Nette\Reflection\ClassReflection('Bar'), ClassReflection::from('Bar') );
+Assert::equal( new Nette\Reflection\ClassReflection('Bar'), ClassReflection::from(new Bar) );
 
 
-$rc = ClassReflection::from("Bar");
 
-T::dump( $rc->getExtension() );
+$rc = ClassReflection::from('Bar');
 
-T::dump( $rc->getInterfaces() );
+Assert::null( $rc->getExtension() );
 
-T::dump( $rc->getParentClass() );
 
-T::dump( $rc->getConstructor() );
+Assert::equal( array(
+	'Countable' => new Nette\Reflection\ClassReflection('Countable'),
+), $rc->getInterfaces() );
 
-T::dump($rc->getMethod("f"));
+
+Assert::equal( new Nette\Reflection\ClassReflection('Foo'), $rc->getParentClass() );
+
+
+Assert::null( $rc->getConstructor() );
+
+
+Assert::equal( new Nette\Reflection\MethodReflection('Foo', 'f'), $rc->getMethod('f') );
+
 
 try {
-	T::dump($rc->getMethod("doesntExist"));
+	$rc->getMethod('doesntExist');
 } catch (Exception $e) {
-	T::dump($e);
+	Assert::same( 'Method Bar::doesntExist() does not exist', $e->getMessage() );
+
 }
 
-T::dump( $rc->getMethods() );
+Assert::equal( array(
+	new Nette\Reflection\MethodReflection('Bar', 'count'),
+	new Nette\Reflection\MethodReflection('Foo', 'f'),
+), $rc->getMethods() );
 
 
-T::dump($rc->getProperty("var"));
+
+Assert::equal( new Nette\Reflection\PropertyReflection('Bar', 'var'), $rc->getProperty('var') );
+
 
 try {
-	T::dump($rc->getProperty("doesntExist"));
+	$rc->getProperty('doesntExist');
 } catch (exception $e) {
-	T::dump($e);
+	Assert::same( 'Property Bar::$doesntExist does not exist', $e->getMessage() );
+
 }
 
-T::dump( $rc->getProperties() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-%ns%ClassReflection(
-	"name" => "Bar"
-)
-
-%ns%ClassReflection(
-	"name" => "Bar"
-)
-
-%ns%ClassReflection(
-	"name" => "Bar"
-)
-
-NULL
-
-array(
-	"Countable" => %ns%ClassReflection(
-		"name" => "Countable"
-	)
-)
-
-%ns%ClassReflection(
-	"name" => "Foo"
-)
-
-NULL
-
-%ns%MethodReflection(
-	"name" => "f"
-	"class" => "Foo"
-)
-
-Exception ReflectionException: Method Bar::doesntExist() does not exist
-
-array(
-	%ns%MethodReflection(
-		"name" => "count"
-		"class" => "Bar"
-	)
-	%ns%MethodReflection(
-		"name" => "f"
-		"class" => "Foo"
-	)
-)
-
-%ns%PropertyReflection(
-	"name" => "var"
-	"class" => "Bar"
-)
-
-Exception ReflectionException: Property Bar::$doesntExist does not exist
-
-array(
-	%ns%PropertyReflection(
-		"name" => "var"
-		"class" => "Bar"
-	)
-)
+Assert::equal( array(
+	new Nette\Reflection\PropertyReflection('Bar', 'var'),
+), $rc->getProperties() );

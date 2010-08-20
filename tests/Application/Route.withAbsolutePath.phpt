@@ -24,21 +24,8 @@ $route = new Route('/<abspath>/', array(
 	'action' => 'default',
 ));
 
-testRouteIn($route, '/abc');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /abc
-
-"Default"
-
-array(
-	"abspath" => "abc"
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/abc/?test=testvalue"
+testRouteIn($route, '/abc', 'Default', array(
+	'abspath' => 'abc',
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/abc/?test=testvalue');

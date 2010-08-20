@@ -25,33 +25,13 @@ $route = new Route('?action=<presenter> & act=<action [a-z]+>', array(
 ));
 
 
-testRouteIn($route, '/?act=action');
+testRouteIn($route, '/?act=action', 'Default', array(
+	'action' => 'action',
+	'test' => 'testvalue',
+), '/?act=action&test=testvalue');
 
-testRouteIn($route, '/?act=default');
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /?act=action
-
-"Default"
-
-array(
-	"action" => "action"
-	"test" => "testvalue"
-)
-
-"/?act=action&test=testvalue"
-
-==> /?act=default
-
-"Default"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/?test=testvalue"
+testRouteIn($route, '/?act=default', 'Default', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/?test=testvalue');

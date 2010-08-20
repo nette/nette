@@ -27,15 +27,6 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 
-T::note('Deleting dependent const');
+// Deleting dependent const
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Deleting dependent const
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

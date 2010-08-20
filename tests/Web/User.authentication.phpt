@@ -51,13 +51,13 @@ class AuthenticationHandler implements IAuthenticator
 
 
 function onLoggedIn($user) {
-	T::note("[onLoggedIn]");
+	// TODO: add test
 }
 
 
 
 function onLoggedOut($user) {
-	echo "\n[onLoggedOut $user->logoutReason]\n";
+	// TODO: add test
 }
 
 
@@ -67,152 +67,74 @@ $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
+Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::null( $user->getIdentity(), 'getIdentity' );
+Assert::null( $user->getId(), 'getId' );
 
-T::dump( $user->getIdentity(), "getIdentity" );
-
-T::dump( $user->getId(), "getId" );
 
 
 // authenticate
 try {
-	T::note("login without handler");
+	// login without handler
 	$user->login('jane', '');
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Service 'Nette\\Security\\IAuthenticator' not found.", $e );
 }
 
 $handler = new AuthenticationHandler;
 $user->setAuthenticationHandler($handler);
 
 try {
-	T::note("login as jane");
+	// login as jane
 	$user->login('jane', '');
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('Nette\Security\AuthenticationException', 'Unknown user', $e );
 }
 
 try {
-	T::note("login as john");
+	// login as john
 	$user->login('john', '');
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('Nette\Security\AuthenticationException', 'Password not match', $e );
 }
 
-try {
-	T::note("login as john#2");
-	$user->login('john', 'xxx');
-} catch (Exception $e) {
-	T::dump( $e );
-}
+// login as john#2
+$user->login('john', 'xxx');
+Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::equal( new Nette\Security\Identity('John Doe', 'admin'), $user->getIdentity(), 'getIdentity' );
+Assert::same( 'John Doe', $user->getId(), 'getId' );
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
-
-T::dump( $user->getIdentity(), "getIdentity" );
-
-T::dump( $user->getId(), "getId" );
 
 
 
 // log out
-T::note("logging out...");
+// logging out...
 $user->logout(FALSE);
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
+Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::equal( new Nette\Security\Identity('John Doe', 'admin'), $user->getIdentity(), 'getIdentity' );
 
-T::dump( $user->getIdentity(), "getIdentity" );
 
-T::note("logging out and clearing identity...");
+// logging out and clearing identity...
 $user->logout(TRUE);
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
+Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::null( $user->getIdentity(), 'getIdentity' );
 
-T::dump( $user->getIdentity(), "getIdentity" );
 
 
 
 // namespace
-T::note("login as john#2?");
+// login as john#2?
 $user->login('john', 'xxx');
+Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
 
-T::note("setNamespace(...)");
+// setNamespace(...)
 $user->setNamespace('other');
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
-
-T::dump( $user->getIdentity(), "getIdentity" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-isLoggedIn? FALSE
-
-getIdentity: NULL
-
-getId: NULL
-
-login without handler
-
-Exception InvalidStateException: Service 'Nette\Security\IAuthenticator' not found.
-
-login as jane
-
-Exception %ns%AuthenticationException: #1 Unknown user
-
-login as john
-
-Exception %ns%AuthenticationException: #2 Password not match
-
-login as john#2
-
-[onLoggedIn]
-
-isLoggedIn? TRUE
-
-getIdentity: %ns%Identity(
-	"id" private => "John Doe"
-	"roles" private => array(
-		"admin"
-	)
-	"data" private => array()
-	"frozen" private => FALSE
-)
-
-getId: "John Doe"
-
-logging out...
-
-
-[onLoggedOut 1]
-isLoggedIn? FALSE
-
-getIdentity: %ns%Identity(
-	"id" private => "John Doe"
-	"roles" private => array(
-		"admin"
-	)
-	"data" private => array()
-	"frozen" private => FALSE
-)
-
-logging out and clearing identity...
-
-isLoggedIn? FALSE
-
-getIdentity: NULL
-
-login as john#2?
-
-[onLoggedIn]
-
-isLoggedIn? TRUE
-
-setNamespace(...)
-
-isLoggedIn? FALSE
-
-getIdentity: NULL
+Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::null( $user->getIdentity(), 'getIdentity' );

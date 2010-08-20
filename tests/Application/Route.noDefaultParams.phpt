@@ -23,21 +23,8 @@ $route = new Route('<presenter>/<action>/<extra>', array(
 ));
 
 
-testRouteIn($route, '/presenter/action/12');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /presenter/action/12
-
-"Presenter"
-
-array(
-	"action" => "action"
-	"extra" => "12"
-	"test" => "testvalue"
-)
-
-NULL
+testRouteIn($route, '/presenter/action/12', 'Presenter', array(
+	'action' => 'action',
+	'extra' => '12',
+	'test' => 'testvalue',
+), NULL);

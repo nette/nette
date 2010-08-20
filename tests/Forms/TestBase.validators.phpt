@@ -20,31 +20,20 @@ require __DIR__ . '/../initialize.php';
 
 $control = new TextInput();
 $control->value = '';
-T::dump( TextBase::validateEmail($control) );
+Assert::false( TextBase::validateEmail($control) );
+
 
 $control->value = '@.';
-T::dump( TextBase::validateEmail($control) );
+Assert::false( TextBase::validateEmail($control) );
+
 
 $control->value = 'name@a-b-c.cz';
-T::dump( TextBase::validateEmail($control) );
+Assert::true( TextBase::validateEmail($control) );
+
 
 $control->value = "name@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@žluouèký.cz
-T::dump( TextBase::validateEmail($control) );
+Assert::true( TextBase::validateEmail($control) );
+
 
 $control->value = "\xc5\xbename@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // žname@žluouèký.cz
-T::dump( TextBase::validateEmail($control) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-FALSE
-
-TRUE
-
-TRUE
-
-FALSE
+Assert::false( TextBase::validateEmail($control) );

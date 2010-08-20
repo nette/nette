@@ -30,7 +30,7 @@ $cacheA['test2'] = 'Grudl';
 $cacheB['test1'] = 'divaD';
 $cacheB['test2'] = 'ldurG';
 
-T::dump(implode(' ',array(
+Assert::same( 'David Grudl divaD ldurG', implode(' ',array(
 	$cacheA['test1'],
 	$cacheA['test2'],
 	$cacheB['test1'],
@@ -39,20 +39,10 @@ T::dump(implode(' ',array(
 
 $storage->clean(array(Cache::ALL => TRUE));
 
-T::dump($cacheA['test1']);
-T::dump($cacheA['test2']);
-T::dump($cacheB['test1']);
-T::dump($cacheB['test2']);
+Assert::null( $cacheA['test1'] );
 
-__halt_compiler() ?>
+Assert::null( $cacheA['test2'] );
 
-------EXPECT------
-"David Grudl divaD ldurG"
+Assert::null( $cacheB['test1'] );
 
-NULL
-
-NULL
-
-NULL
-
-NULL
+Assert::null( $cacheB['test2'] );

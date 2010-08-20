@@ -71,86 +71,46 @@ class AuthorizationHandler implements IAuthorizator
 $user = new User;
 
 // guest
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
+Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
 
-T::dump( $user->getRoles(), "getRoles()" );
 
-T::dump( $user->isInRole('admin'), "is admin?" );
+Assert::same( array('guest'), $user->getRoles(), 'getRoles()' );
+Assert::false( $user->isInRole('admin'), 'is admin?' );
+Assert::true( $user->isInRole('guest'), 'is guest?' );
 
-T::dump( $user->isInRole('guest'), "is guest?" );
 
 
 // authenticated
 $handler = new AuthenticationHandler;
 $user->setAuthenticationHandler($handler);
 
-T::note("login as john");
+// login as john
 $user->login('john', 'xxx');
 
-T::dump( $user->isLoggedIn(), "isLoggedIn?" );
-
-T::dump( $user->getRoles(), "getRoles()" );
-
-T::dump( $user->isInRole('admin'), "is admin?" );
-
-T::dump( $user->isInRole('guest'), "is guest?" );
-
+Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::same( array('admin'), $user->getRoles(), 'getRoles()' );
+Assert::true( $user->isInRole('admin'), 'is admin?' );
+Assert::false( $user->isInRole('guest'), 'is guest?' );
 
 
 // authorization
 try {
-	T::dump( $user->isAllowed('delete_file'), "authorize without handler" );
+	$user->isAllowed('delete_file');
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Service 'Nette\\Security\\IAuthorizator' not found.", $e );
 }
 
 $handler = new AuthorizationHandler;
 $user->setAuthorizationHandler($handler);
 
-T::dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
+Assert::true( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
+Assert::false( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
 
-T::dump( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
 
 
 // log out
-T::note("logging out...");
+// logging out...
 $user->logout(FALSE);
 
-T::dump( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-isLoggedIn? FALSE
-
-getRoles(): array(
-	"guest"
-)
-
-is admin? FALSE
-
-is guest? TRUE
-
-login as john
-
-isLoggedIn? TRUE
-
-getRoles(): array(
-	"admin"
-)
-
-is admin? TRUE
-
-is guest? FALSE
-
-Exception InvalidStateException: Service 'Nette\Security\IAuthorizator' not found.
-
-isAllowed('delete_file')? TRUE
-
-isAllowed('sleep_with_jany')? FALSE
-
-logging out...
-
-isAllowed('delete_file')? FALSE
+Assert::false( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );

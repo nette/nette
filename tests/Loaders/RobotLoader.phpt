@@ -30,10 +30,4 @@ $loader->addDirectory(__DIR__);
 $loader->addDirectory(__DIR__); // purposely doubled
 $loader->register();
 
-T::dump( class_exists('Nette\TestClass'), 'Class Nette\TestClass loaded?' );
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Class %ns%TestClass loaded? TRUE
+Assert::true( class_exists('Nette\TestClass'), 'Class Nette\TestClass loaded?' );

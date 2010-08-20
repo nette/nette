@@ -33,7 +33,3 @@ $mail->setHTMLBody('<b>Sample text</b>');
 $mail->addAttachment('files/example.zip');
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

@@ -20,11 +20,4 @@ require __DIR__ . '/../initialize.php';
 $acl = new Permission;
 $acl->addResource('area');
 $acl->removeAllResources();
-T::dump( $acl->hasResource('area') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
+Assert::false( $acl->hasResource('area') );

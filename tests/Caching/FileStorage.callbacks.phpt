@@ -35,32 +35,20 @@ function dependency($val)
 }
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 1)),
 ));
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
 
 
-T::note('Writing cache...');
+
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::CALLBACKS => array(array('dependency', 0)),
 ));
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Is cached? TRUE
-
-Writing cache...
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

@@ -31,19 +31,10 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 define('ANY_CONST', 10);
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Is cached? TRUE
+Assert::true( isset($cache[$key]), 'Is cached?' );

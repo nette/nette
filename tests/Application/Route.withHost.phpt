@@ -25,23 +25,10 @@ $route = new Route('//<host>.<domain>/<path>', array(
 ));
 
 
-testRouteIn($route, '/abc');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /abc
-
-"Default"
-
-array(
-	"host" => "example"
-	"domain" => "com"
-	"path" => "abc"
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/abc?test=testvalue"
+testRouteIn($route, '/abc', 'Default', array(
+	'host' => 'example',
+	'domain' => 'com',
+	'path' => 'abc',
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/abc?test=testvalue');

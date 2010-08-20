@@ -22,9 +22,16 @@ $namespace = $session->getNamespace('one');
 $namespace->a = 'apple';
 $namespace->p = 'pear';
 $namespace['o'] = 'orange';
+
 foreach ($namespace as $key => $val) {
-	T::dump( "$key=$val" );
+	$tmp[] = "$key=$val";
 }
+Assert::same( array(
+	'a=apple',
+	'p=pear',
+	'o=orange',
+), $tmp );
+
 
 Assert::true( isset($namespace['p']) );
 Assert::true( isset($namespace->o) );
@@ -36,14 +43,3 @@ unset($namespace->o);
 unset($namespace->undef);
 
 Assert::same( '', http_build_query($namespace->getIterator()) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"a=apple"
-
-"p=pear"
-
-"o=orange"

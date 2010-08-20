@@ -34,7 +34,3 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 $mail->addAttachment('files/example.zip');
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

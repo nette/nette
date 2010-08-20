@@ -33,11 +33,11 @@ $httpRequest->setQuery(array(
 ));
 
 $req = $router->match($httpRequest);
-Assert::same( "myPresenter",  $req->getPresenterName() );
-Assert::same( "action",  $req->params["action"] );
-Assert::same( "12",  $req->params["id"] );
-Assert::same( "testvalue",  $req->params["test"] );
-Assert::same( "anyvalue",  $req->params["any"] );
+Assert::same( 'myPresenter',  $req->getPresenterName() );
+Assert::same( 'action',  $req->params['action'] );
+Assert::same( '12',  $req->params['id'] );
+Assert::same( 'testvalue',  $req->params['test'] );
+Assert::same( 'anyvalue',  $req->params['any'] );
 
 $url = $router->constructUrl($req, $httpRequest);
-Assert::same( "http://nette.org/file.php?action=action&test=testvalue&presenter=myPresenter",  $url );
+Assert::same( 'http://nette.org/file.php?action=action&test=testvalue&presenter=myPresenter',  $url );

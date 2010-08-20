@@ -29,7 +29,3 @@ $mail->setSubject('Hello Jane!');
 $mail->setBody('Žluťoučký kůň');
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

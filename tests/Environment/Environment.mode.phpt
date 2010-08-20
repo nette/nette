@@ -17,24 +17,13 @@ require __DIR__ . '/../initialize.php';
 
 
 
-T::dump( Environment::isConsole(), "Is console?" );
+Assert::false( Environment::isConsole(), 'Is console?' );
 
-T::dump( Environment::isProduction(), "Is production mode?" );
 
-T::note("Setting my mode...");
+Assert::true( Environment::isProduction(), 'Is production mode?' );
+
+
+// Setting my mode...
 Environment::setMode('myMode', 123);
 
-T::dump( Environment::getMode('myMode'), "Is enabled?" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Is console? FALSE
-
-Is production mode? TRUE
-
-Setting my mode...
-
-Is enabled? TRUE
+Assert::true( Environment::getMode('myMode'), 'Is enabled?' );

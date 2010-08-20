@@ -29,19 +29,6 @@ Route::setStyleProperty('#xlat', Route::FILTER_TABLE, array(
 
 $route = new Route(' ? action=<presenter #xlat>', array());
 
-testRouteIn($route, '/?action=kategorie');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /?action=kategorie
-
-"Category"
-
-array(
-	"test" => "testvalue"
-)
-
-"/?test=testvalue&action=kategorie"
+testRouteIn($route, '/?action=kategorie', 'Category', array(
+	'test' => 'testvalue',
+), '/?test=testvalue&action=kategorie');

@@ -30,7 +30,7 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 $dependentFile = TEMP_DIR . '/spec.file';
 @unlink($dependentFile);
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::FILES => array(
 		__FILE__,
@@ -39,47 +39,29 @@ $cache->save($key, $value, array(
 ));
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
 
-T::note('Modifing dependent file');
+
+// Modifing dependent file
 file_put_contents($dependentFile, 'a');
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note('Writing cache...');
+
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
 
-T::note('Modifing dependent file');
+
+// Modifing dependent file
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Is cached? TRUE
-
-Modifing dependent file
-
-Is cached? FALSE
-
-Writing cache...
-
-Is cached? TRUE
-
-Modifing dependent file
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

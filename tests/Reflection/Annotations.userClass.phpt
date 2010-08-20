@@ -40,31 +40,23 @@ class TestClass {
 // Class annotations
 
 $rc = new ClassReflection('TestClass');
-T::dump( $rc->getAnnotations() );
+Assert::equal( array(
+	'secured' => array(
+		new SecuredAnnotation(array(
+			'role' => NULL,
+			'level' => NULL,
+			'value' => 'disabled',
+		)),
+	),
+), $rc->getAnnotations() );
 
-T::dump( $rc->getProperty('foo')->getAnnotations() );
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-array(
-	"secured" => array(
-		SecuredAnnotation(
-			"role" => NULL
-			"level" => NULL
-			"value" => "disabled"
-		)
-	)
-)
-
-array(
-	"secured" => array(
-		SecuredAnnotation(
-			"role" => "admin"
-			"level" => 2
-			"value" => NULL
-		)
-	)
-)
+Assert::equal( array(
+	'secured' => array(
+		new SecuredAnnotation(array(
+			'role' => 'admin',
+			'level' => 2,
+			'value' => NULL,
+		)),
+	),
+), $rc->getProperty('foo')->getAnnotations() );

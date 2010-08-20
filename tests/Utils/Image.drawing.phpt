@@ -32,7 +32,3 @@ $image->filledEllipse(187, 125, $radius, $radius, Image::rgb(0, 0, 255, 75));
 $image->copyResampled($image, 200, 200, 0, 0, 80, 80, $size, $size);
 
 $image->send(Image::GIF);
-
-
-
-__halt_compiler() ?>

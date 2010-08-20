@@ -26,7 +26,3 @@ if (GD_BUNDLED === 0) {
 $image = Image::fromFile('images/logo.gif');
 $image->rotate(30, Image::rgb(0, 0, 0));
 $image->send(Image::GIF);
-
-
-
-__halt_compiler() ?>

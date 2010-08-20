@@ -26,7 +26,7 @@ $reflect = new FunctionReflection('myFunction');
 $params = $reflect->getParameters();
 
 foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
+	echo $value->declaringFunction . ', ', $value->class, ', ', $value->declaringClass . "\n";
 }
 
 
@@ -43,7 +43,7 @@ $reflect = new ClassReflection('Foo');
 $params = $reflect->getMethod('myMethod')->getParameters();
 
 foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
+	echo $value->declaringFunction . ', ', $value->class, ', ', $value->declaringClass . "\n";
 }
 
 
@@ -52,7 +52,7 @@ $reflect = new FunctionReflection(function ($x, $y) {});
 $params = $reflect->getParameters();
 
 foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
+	echo $value->declaringFunction . ', ', $value->class, ', ', $value->declaringClass . "\n";
 }
 
 

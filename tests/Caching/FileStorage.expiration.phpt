@@ -27,36 +27,22 @@ T::purge(TEMP_DIR);
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 3,
 ));
 
 
-T::note('Sleeping 1 second');
+// Sleeping 1 second
 sleep(1);
 clearstatcache();
 $cache->release();
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
 
 
-T::note('Sleeping 3 seconds');
+
+// Sleeping 3 seconds
 sleep(3);
 clearstatcache();
 $cache->release();
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Sleeping 1 second
-
-Is cached? TRUE
-
-Sleeping 3 seconds
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

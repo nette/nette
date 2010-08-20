@@ -38,7 +38,3 @@ $mail->htmlBody->setFile('files/template.phtml');
 $mail->htmlBody->registerFilter(new LatteFilter);
 
 $mail->send();
-
-
-
-__halt_compiler() ?>

@@ -36,4 +36,4 @@ $req = new Nette\Application\PresenterRequest(
 );
 
 $url = $router->constructUrl($req, $httpRequest);
-Assert::same( "https://nette.org/file.php?presenter=othermodule%3Apresenter",  $url );
+Assert::same( 'https://nette.org/file.php?presenter=othermodule%3Apresenter',  $url );

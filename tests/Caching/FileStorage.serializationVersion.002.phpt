@@ -35,15 +35,6 @@ class Foo
 }
 
 
-T::note('Changed @serializationVersion');
+// Changed @serializationVersion
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Changed @serializationVersion
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

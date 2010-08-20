@@ -18,19 +18,10 @@ require __DIR__ . '/../initialize.php';
 
 
 $acl = new Permission;
-T::dump( $acl->hasRole('guest') );
+Assert::false( $acl->hasRole('guest') );
+
 $acl->addRole('guest');
-T::dump( $acl->hasRole('guest') );
+Assert::true( $acl->hasRole('guest') );
+
 $acl->removeRole('guest');
-T::dump( $acl->hasRole('guest') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-TRUE
-
-FALSE
+Assert::false( $acl->hasRole('guest') );
