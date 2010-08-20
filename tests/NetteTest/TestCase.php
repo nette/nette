@@ -364,7 +364,11 @@ class TestCase
 			'{' => '\{', '}' => '\}', '=' => '\=', '!' => '\!', '>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#', // preg quote
 		));
 
-		return (bool) preg_match("#^$right$#s", $left);
+		$res = preg_match("#^$right$#s", $left);
+		if ($res === FALSE || preg_last_error()) {
+			throw new Exception("Error while executing regular expression.");
+		}
+		return (bool) $res;
 	}
 
 
