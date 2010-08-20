@@ -37,6 +37,21 @@ class Assert
 
 
 	/**
+	 * Checks assertation.
+	 * @param  mixed  expected
+	 * @param  mixed  actual
+	 * @return void
+	 */
+	public static function equal($expected, $actual)
+	{
+		if ($actual != $expected) {
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not equal to ' . self::dump($expected));
+		}
+	}
+
+
+
+	/**
 	 * Checks TRUE assertation.
 	 * @param  mixed  actual
 	 * @return void
@@ -74,6 +89,36 @@ class Assert
 		if ($actual !== NULL) {
 			self::note('Failed asserting that ' . self::dump($actual) . ' is not NULL');
 		}
+	}
+
+
+
+	/**
+	 * Checks exception assertation.
+	 * @param  string class
+	 * @param  string message
+	 * @param  Exception
+	 * @return void
+	 */
+	public static function exception($class, $message, $actual)
+	{
+		if (!($actual instanceof $class)) {
+			self::note('Failed asserting that ' . get_class($actual) . " is class $class");
+		}
+		if ($message && $message !== $actual->getMessage()) {
+			self::note('Failed asserting that ' . self::dump($actual->getMessage()) . " is " . self::dump($message));
+		}
+	}
+
+
+
+	/**
+	 * Failed assertion
+	 * @return void
+	 */
+	public static function failed()
+	{
+		self::note('Failed asserting');
 	}
 
 
@@ -129,8 +174,9 @@ class Assert
 	{
 		echo $message;
 		$trace = debug_backtrace();
-		if (isset($trace[1]['file'], $trace[1]['line'])) {
-			echo ' in file ' . $trace[1]['file'] . ' on line ' . $trace[1]['line'];
+		$trace = end($trace);
+		if (isset($trace['file'], $trace['line'])) {
+			echo ' in file ' . $trace['file'] . ' on line ' . $trace['line'];
 		}
 		echo "\n\n";
 	}
