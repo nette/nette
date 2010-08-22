@@ -527,7 +527,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	 */
 	final public function setRequired($message = NULL)
 	{
-		$this->rules->addRule(':Filled', $message);
+		$this->rules->addRule(Form::FILLED, $message);
 		return $this;
 	}
 
