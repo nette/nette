@@ -23,7 +23,6 @@ $route = new Route('<param>', array(
 	'presenter' => 'Presenter',
 ), Route::SECURED);
 
-
 testRouteIn($route, '/any', 'Presenter', array(
 	'param' => 'any',
 	'test' => 'testvalue',

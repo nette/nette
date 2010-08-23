@@ -21,54 +21,34 @@ class Factory
 {
 	static function createService($options)
 	{
-		T::dump( __METHOD__ );
-		T::dump( $options );
+		T::note( 'Factory::createService', __METHOD__ );
+		Assert::same( array('anyValue' => 'hello world'), $options );
 		return (object) NULL;
 	}
 }
 
 Environment::setName(Environment::PRODUCTION);
 Environment::loadConfig('config.ini');
+Assert::same(array('Factory::createService'), T::fetchNotes());
 
-T::dump( Environment::getVariable('foo'), "Variable foo:" );
+Assert::same( 'hello world', Environment::getVariable('foo') );
 
-T::dump( constant('HELLO_WORLD'), "Constant HELLO_WORLD:" );
+Assert::same( 'hello world', constant('HELLO_WORLD') );
 
-T::dump( Environment::getConfig('php'), "php.ini config:" );
+Assert::same( array(
+	'mbstring-internal_encoding' => 'UTF-8',
+	'date.timezone' => 'Europe/Prague',
+	'iconv.internal_encoding' => 'UTF-8',
+), Environment::getConfig('php')->toArray() );
 
-T::dump( Environment::getConfig('database'), "Database config:" );
+Assert::same( array(
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'db.example.com',
+		'username' => 'dbuser',
+		'password' => 'secret',
+		'dbname' => 'dbname',
+	),
+), Environment::getConfig('database')->toArray() );
 
-T::dump( Environment::isProduction(), "is production mode?" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"Factory::createService"
-
-array(
-	"anyValue" => "hello world"
-)
-
-Variable foo: "hello world"
-
-Constant HELLO_WORLD: "hello world"
-
-php.ini config: %ns%Config(
-	"mbstring-internal_encoding" => "UTF-8"
-	"date.timezone" => "Europe/Prague"
-	"iconv.internal_encoding" => "UTF-8"
-)
-
-Database config: %ns%Config(
-	"adapter" => "pdo_mysql"
-	"params" => %ns%Config(
-		"host" => "db.example.com"
-		"username" => "dbuser"
-		"password" => "secret"
-		"dbname" => "dbname"
-	)
-)
-
-is production mode? TRUE
+Assert::true( Environment::isProduction() );

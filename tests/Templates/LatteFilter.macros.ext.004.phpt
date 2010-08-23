@@ -32,11 +32,7 @@ $template = new Template;
 $template->setFile(__DIR__ . '/templates/latte.inheritance.child4.phtml');
 $template->registerFilter(new LatteFilter);
 
-$template->render();
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+Assert::match(<<<EOD
 	Content
+EOD
+, (string) $template);

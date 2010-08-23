@@ -27,10 +27,8 @@ testRouteIn($route, '/abc-x-y-z', 'AbcXYZ', array(
 	'test' => 'testvalue',
 ), '/abc-x-y-z?test=testvalue');
 
-
 testRouteIn($route, '/', 'DefaultPresenter', array(
 	'test' => 'testvalue',
 ), '/?test=testvalue');
-
 
 testRouteIn($route, '/--');

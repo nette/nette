@@ -39,8 +39,4 @@ $template->registerFilter(new LatteFilter);
 $template->control = new MockControl;
 $template->render(file_get_contents(__DIR__ . '/templates/latte.snippet.phtml'));
 
-echo $template->compiled;
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.006.expect'), $template->compiled);

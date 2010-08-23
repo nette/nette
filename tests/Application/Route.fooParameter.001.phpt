@@ -29,16 +29,13 @@ testRouteIn($route, '/index.xml', 'DefaultPresenter', array(
 	'test' => 'testvalue',
 ), '/index.xml/?test=testvalue');
 
-
 testRouteIn($route, '/index.php', 'DefaultPresenter', array(
 	'test' => 'testvalue',
 ), '/index.xml/?test=testvalue');
 
-
 testRouteIn($route, '/index.htm', 'DefaultPresenter', array(
 	'test' => 'testvalue',
 ), '/index.xml/?test=testvalue');
-
 
 testRouteIn($route, '/index', 'DefaultPresenter', array(
 	'test' => 'testvalue',

@@ -38,13 +38,7 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
 
-$template->render(T::getSection(__FILE__, 'template'));
-
-
-
-__halt_compiler() ?>
-
------template-----
+$result = $template->render(<<<'EOD'
 {block|lower|texy}
 {$hello}
 ---------
@@ -59,8 +53,10 @@ __halt_compiler() ?>
 
 [* image.jpg *]
 {/block}
+EOD
+);
 
-------EXPECT------
+Assert::match(<<<EOD
 <pre>&lt;i&gt;hello&lt;/i&gt;
 ---------
 - escaped: &lt;i&gt;hello&lt;/i&gt;
@@ -74,3 +70,5 @@ __halt_compiler() ?>
 
 [* image.jpg *]
 </pre>
+EOD
+, $result);

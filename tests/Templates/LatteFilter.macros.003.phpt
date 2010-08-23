@@ -61,8 +61,4 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.003.expect'), (string) $template);

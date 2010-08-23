@@ -33,13 +33,18 @@ TemplateFilters::$texy = new MockTexy;
 
 $template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'texyElements'));
-$template->render(T::getSection(__FILE__, 'template'));
+
+Assert::match(<<<EOD
+<...>
 
 
+<...>
 
-__halt_compiler() ?>
 
------template-----
+<...>
+EOD
+
+, $template->render(<<<EOD
 <texy>**Hello World**</texy>
 
 
@@ -57,12 +62,5 @@ Second multi line
 
 example
 </texy>
-
-------EXPECT------
-<...>
-
-
-<...>
-
-
-<...>
+EOD
+));

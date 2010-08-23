@@ -29,11 +29,8 @@ testRouteIn($route, '/abc', 'module:submodule:Abc', array(
 
 testRouteIn($route, '/');
 Assert::null( testRouteOut($route, 'Homepage') );
-
 Assert::null( testRouteOut($route, 'Module:Homepage') );
-
 Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
-
 
 
 
@@ -47,11 +44,8 @@ testRouteIn($route, '/', 'Module:Submodule:Default', array(
 ), '/?test=testvalue');
 
 Assert::null( testRouteOut($route, 'Homepage') );
-
 Assert::null( testRouteOut($route, 'Module:Homepage') );
-
 Assert::same( 'http://example.com/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
-
 
 
 
@@ -64,9 +58,7 @@ testRouteIn($route, '/module.submodule', 'Module:Submodule:AnyDefault', array(
 ), '/module.submodule/?test=testvalue');
 
 Assert::null( testRouteOut($route, 'Homepage') );
-
 Assert::same( 'http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage') );
-
 Assert::same( 'http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );
 
 
@@ -82,7 +74,5 @@ testRouteIn($route, '/module.submodule', 'Module:Submodule:Default', array(
 ), '/?test=testvalue');
 
 Assert::null( testRouteOut($route, 'Homepage') );
-
 Assert::same( 'http://example.com/module/homepage', testRouteOut($route, 'Module:Homepage') );
-
 Assert::same( 'http://example.com/module.submodule/homepage', testRouteOut($route, 'Module:Submodule:Homepage') );

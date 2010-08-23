@@ -39,11 +39,7 @@ $mail->setReturnPath('doe@example.com');
 
 $mail->send();
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -59,3 +55,5 @@ Return-Path: doe@example.com
 Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+EOD
+, TestMailer::$output );

@@ -23,8 +23,6 @@ $_POST = array('first'=>array('name'=>'James Bond','email'=>'bond@007.com','stre
 Nette\Debug::$productionMode = FALSE;
 Nette\Debug::$consoleMode = TRUE;
 
+ob_start();
 require '../../examples/forms/naming-containers.php';
-
-
-
-__halt_compiler() ?>
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.submit.006.expect'), ob_get_clean() );

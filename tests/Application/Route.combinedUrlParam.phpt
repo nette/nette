@@ -32,17 +32,14 @@ testRouteIn($route, '/extrapresenter/action/', 'Presenter', array(
 	'test' => 'testvalue',
 ), '/extrapresenter/action?test=testvalue');
 
-
 testRouteIn($route, '/extradefault/default/', 'Default', array(
 	'action' => 'default',
 	'test' => 'testvalue',
 ), '/extra?test=testvalue');
 
-
 testRouteIn($route, '/extra', 'Default', array(
 	'action' => 'default',
 	'test' => 'testvalue',
 ), '/extra?test=testvalue');
-
 
 testRouteIn($route, '/');

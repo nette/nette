@@ -31,7 +31,7 @@ $storage = new Nette\Caching\MemcachedStorage('localhost');
 $cache = new Cache($storage);
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save('key1', 'value1', array(
 	Cache::PRIORITY => 100,
 ));
@@ -47,29 +47,12 @@ $cache->save('key3', 'value3', array(
 $cache['key4'] = 'value4';
 
 
-T::note('Cleaning by priority...');
+// Cleaning by priority...
 $cache->clean(array(
 	Cache::PRIORITY => '200',
 ));
 
-T::dump( isset($cache['key1']), 'Is cached key1?' );
-T::dump( isset($cache['key2']), 'Is cached key2?' );
-T::dump( isset($cache['key3']), 'Is cached key3?' );
-T::dump( isset($cache['key4']), 'Is cached key4?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Cleaning by priority...
-
-Is cached key1? bool(FALSE)
-
-Is cached key2? bool(FALSE)
-
-Is cached key3? bool(TRUE)
-
-Is cached key4? bool(TRUE)
+Assert::false( isset($cache['key1']), 'Is cached key1?' );
+Assert::false( isset($cache['key2']), 'Is cached key2?' );
+Assert::true( isset($cache['key3']), 'Is cached key3?' );
+Assert::true( isset($cache['key4']), 'Is cached key4?' );

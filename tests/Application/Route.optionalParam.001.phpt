@@ -30,7 +30,6 @@ testRouteIn($route, '/cs-cz/name', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/cs/name?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/cs-xx/name', 'querypresenter', array(
 	'lang' => 'cs',
 	'sub' => 'xx',
@@ -38,7 +37,6 @@ testRouteIn($route, '/cs-xx/name', 'querypresenter', array(
 	'page' => NULL,
 	'test' => 'testvalue',
 ), '/cs-xx/name?test=testvalue&presenter=querypresenter');
-
 
 testRouteIn($route, '/cs/name', 'querypresenter', array(
 	'lang' => 'cs',
@@ -48,7 +46,6 @@ testRouteIn($route, '/cs/name', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/cs/name?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/name', 'querypresenter', array(
 	'name' => 'name',
 	'sub' => 'cz',
@@ -57,7 +54,6 @@ testRouteIn($route, '/name', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/name?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/name/page-0', 'querypresenter', array(
 	'name' => 'name',
 	'page' => '0',
@@ -65,7 +61,6 @@ testRouteIn($route, '/name/page-0', 'querypresenter', array(
 	'lang' => NULL,
 	'test' => 'testvalue',
 ), '/name/page-0?test=testvalue&presenter=querypresenter');
-
 
 testRouteIn($route, '/name/page-');
 

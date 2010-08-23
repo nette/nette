@@ -28,5 +28,4 @@ testRouteIn($route, '/index.php', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/index.php?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/');

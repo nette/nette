@@ -35,120 +35,75 @@ $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'
 
 
 
-T::note("==> Normal:");
-foreach ($c->getComponents() as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// Normal
+$list = $c->getComponents();
+Assert::same( array(
+	"one",
+	"two",
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> Filter:");
-foreach ($c->getComponents(FALSE, 'Nette\Forms\Button') as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// Filter
+$list = $c->getComponents(FALSE, 'Nette\Forms\Button');
+Assert::same( array(
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> RecursiveIteratorIterator:");
-foreach (new RecursiveIteratorIterator($c->getComponents(), 1) as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// RecursiveIteratorIterator
+$list = new RecursiveIteratorIterator($c->getComponents(), 1);
+Assert::same( array(
+	"one",
+	"inner",
+	"inner2",
+	"button2",
+	"two",
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> Recursive:");
-foreach ($c->getComponents(TRUE) as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// Recursive
+$list = $c->getComponents(TRUE);
+Assert::same( array(
+	"one",
+	"inner",
+	"inner2",
+	"button2",
+	"two",
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> Recursive CHILD_FIRST:");
-foreach ($c->getComponents(-1) as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// Recursive CHILD_FIRST
+$list = $c->getComponents(-1);
+Assert::same( array(
+	"inner",
+	"button2",
+	"inner2",
+	"one",
+	"two",
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> Recursive & filter I:");
-foreach ($c->getComponents(TRUE, 'Nette\Forms\Button') as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
+// Recursive & filter I
+$list = $c->getComponents(TRUE, 'Nette\Forms\Button');
+Assert::same( array(
+	"button2",
+	"button1",
+), array_keys(iterator_to_array($list)) );
 
 
 
-T::note("==> Recursive & filter II:");
-foreach ($c->getComponents(TRUE, 'Nette\ComponentContainer') as $name => $component) {
-	T::note("$name [{$component->reflection->name}]");
-}
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> Normal:
-
-one [%ns%ComponentContainer]
-
-two [ComponentX]
-
-button1 [%ns%Button]
-
-==> Filter:
-
-button1 [%ns%Button]
-
-==> RecursiveIteratorIterator:
-
-one [%ns%ComponentContainer]
-
-inner [ComponentX]
-
-inner2 [%ns%ComponentContainer]
-
-button2 [%ns%Button]
-
-two [ComponentX]
-
-button1 [%ns%Button]
-
-==> Recursive:
-
-one [%ns%ComponentContainer]
-
-inner [ComponentX]
-
-inner2 [%ns%ComponentContainer]
-
-button2 [%ns%Button]
-
-two [ComponentX]
-
-button1 [%ns%Button]
-
-==> Recursive CHILD_FIRST:
-
-inner [ComponentX]
-
-button2 [%ns%Button]
-
-inner2 [%ns%ComponentContainer]
-
-one [%ns%ComponentContainer]
-
-two [ComponentX]
-
-button1 [%ns%Button]
-
-==> Recursive & filter I:
-
-button2 [%ns%Button]
-
-button1 [%ns%Button]
-
-==> Recursive & filter II:
-
-one [%ns%ComponentContainer]
-
-inner2 [%ns%ComponentContainer]
+// Recursive & filter II
+$list = $c->getComponents(TRUE, 'Nette\ComponentContainer');
+Assert::same( array(
+	"one",
+	"inner2",
+), array_keys(iterator_to_array($list)) );

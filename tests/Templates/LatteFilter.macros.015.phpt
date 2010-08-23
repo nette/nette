@@ -22,18 +22,8 @@ require __DIR__ . '/Template.inc';
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
 try {
-	$template->render(T::getSection(__FILE__, 'template'));
+	$template->render('Block{/block}');
+	Assert::failed();
 } catch (Exception $e) {
-	T::dump($e);
+	Assert::exception('InvalidStateException', 'Filter Nette\Templates\LatteFilter::__invoke: Tag {/block } was not expected here on line %a%.', $e );
 }
-
-
-
-__halt_compiler() ?>
-
------template-----
-Block
-{/block}
-
-------EXPECT------
-Exception InvalidStateException: Filter %ns%LatteFilter::__invoke: Tag {/block } was not expected here on line 2.

@@ -7,7 +7,6 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
- * @keepTrailingSpaces
  */
 
 use Nette\Mail\Mail,
@@ -38,3 +37,5 @@ $mail->htmlBody->setFile('files/template.phtml');
 $mail->htmlBody->registerFilter(new LatteFilter);
 
 $mail->send();
+
+Assert::match(file_get_contents(__DIR__ . '/Mail.template.expect'), TestMailer::$output);

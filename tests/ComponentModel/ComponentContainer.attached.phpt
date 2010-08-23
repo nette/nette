@@ -65,43 +65,26 @@ $b['c'] = new C;
 $b['c']->monitor('a');
 $b['c']['d'] = $d;
 
-T::note("'a' becoming 'b' parent");
+// 'a' becoming 'b' parent
 $a = new A;
 $a['b'] = $b;
+Assert::same( array(
+	'C::ATTACHED(A)',
+	'B::ATTACHED(A)',
+), T::fetchNotes());
 
-T::note("removing 'b' from 'a'");
+
+
+// removing 'b' from 'a'
 unset($a['b']);
+Assert::same( array(
+	'C::detached(A)',
+	'B::detached(A)',
+), T::fetchNotes());
 
-T::note("'a' becoming 'b' parent");
+// 'a' becoming 'b' parent
 $a['b'] = $b;
 
-T::dump( $d['e']->lookupPath('A'), "'e' looking 'a'" );
+Assert::same( 'b-c-d-e', $d['e']->lookupPath('A') );
 
-T::dump( $a['b-c'] === $b['c'], "checking 'a-b-c'" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-'a' becoming 'b' parent
-
-C::ATTACHED(A)
-
-B::ATTACHED(A)
-
-removing 'b' from 'a'
-
-C::detached(A)
-
-B::detached(A)
-
-'a' becoming 'b' parent
-
-C::ATTACHED(A)
-
-B::ATTACHED(A)
-
-'e' looking 'a': "b-c-d-e"
-
-checking 'a-b-c': TRUE
+Assert::true( $a['b-c'] === $b['c'] );

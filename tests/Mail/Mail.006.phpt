@@ -7,7 +7,6 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
- * @keepTrailingSpaces
  */
 
 use Nette\Mail\Mail;
@@ -32,3 +31,5 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 // append automatically $mail->addEmbeddedFile('files/background.png');
 
 $mail->send();
+
+Assert::match(file_get_contents(__DIR__ . '/Mail.006.expect'), TestMailer::$output);

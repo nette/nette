@@ -38,8 +38,4 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->title = 'Hello';
 $template->id = 456;
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.002.expect'), (string) $template);

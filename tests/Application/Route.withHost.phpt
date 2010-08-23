@@ -24,7 +24,6 @@ $route = new Route('//<host>.<domain>/<path>', array(
 	'action' => 'default',
 ));
 
-
 testRouteIn($route, '/abc', 'Default', array(
 	'host' => 'example',
 	'domain' => 'com',

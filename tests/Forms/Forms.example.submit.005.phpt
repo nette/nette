@@ -23,8 +23,6 @@ $_POST = array('num1'=>'5','num2'=>'5','submit1'=>'Send',);
 Nette\Debug::$productionMode = FALSE;
 Nette\Debug::$consoleMode = TRUE;
 
+ob_start();
 require '../../examples/forms/custom-validator.php';
-
-
-
-__halt_compiler() ?>
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.submit.005.expect'), ob_get_clean() );

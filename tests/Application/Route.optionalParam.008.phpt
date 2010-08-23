@@ -31,7 +31,6 @@ testRouteIn($route, '/cs-cz/name', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/cs/name?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/cs-xx/name', 'querypresenter', array(
 	'lang' => 'cs',
 	'sub' => 'xx',
@@ -39,7 +38,6 @@ testRouteIn($route, '/cs-xx/name', 'querypresenter', array(
 	'page' => NULL,
 	'test' => 'testvalue',
 ), '/cs-xx/name?test=testvalue&presenter=querypresenter');
-
 
 testRouteIn($route, '/name', 'querypresenter', array(
 	'name' => 'name',

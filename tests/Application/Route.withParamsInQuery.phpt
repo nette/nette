@@ -24,12 +24,10 @@ $route = new Route('<action> ? <presenter>', array(
 	'action' => 'default',
 ));
 
-
 testRouteIn($route, '/action/', 'querypresenter', array(
 	'action' => 'action',
 	'test' => 'testvalue',
 ), '/action?test=testvalue&presenter=querypresenter');
-
 
 testRouteIn($route, '/', 'querypresenter', array(
 	'action' => 'default',

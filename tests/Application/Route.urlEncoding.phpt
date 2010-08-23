@@ -23,7 +23,6 @@ $route = new Route('<param>', array(
 	'presenter' => 'Presenter',
 ));
 
-
 testRouteIn($route, '/a%3Ab', 'Presenter', array(
 	'param' => 'a:b',
 	'test' => 'testvalue',

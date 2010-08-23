@@ -85,43 +85,22 @@ $sub->addFile('avatar', 'Picture:');
 
 $form->addSubmit('submit1', 'Send');
 
-T::dump( (bool) $form->isSubmitted() );
-T::dump( $form->getValues() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-TRUE
-
-array(
-	"name" => ""
-	"note" => ""
-	"gender" => NULL
-	"send" => FALSE
-	"country" => NULL
-	"countrym" => array()
-	"password" => ""
-	"avatar" => %ns%HttpUploadedFile(
-		"name" private => NULL
-		"type" private => NULL
-		"size" private => NULL
-		"tmpName" private => NULL
-		"error" private => 4
-	)
-	"userid" => ""
-	"firstperson" => array(
-		"age" => ""
-	)
-	"secondperson" => array(
-		"age" => ""
-		"avatar" => %ns%HttpUploadedFile(
-			"name" private => NULL
-			"type" private => NULL
-			"size" private => NULL
-			"tmpName" private => NULL
-			"error" private => 4
-		)
-	)
-)
+Assert::true( (bool) $form->isSubmitted() );
+Assert::equal( array(
+	'name' => '',
+	'note' => '',
+	'gender' => NULL,
+	'send' => FALSE,
+	'country' => NULL,
+	'countrym' => array(),
+	'password' => '',
+	'avatar' => new Nette\Web\HttpUploadedFile(array()),
+	'userid' => '',
+	'firstperson' => array(
+		'age' => '',
+	),
+	'secondperson' => array(
+		'age' => '',
+		'avatar' => new Nette\Web\HttpUploadedFile(array()),
+	),
+), $form->getValues() );

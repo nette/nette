@@ -27,8 +27,6 @@ testRouteIn($route, '/one', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/one/?test=testvalue&presenter=querypresenter');
 
-
-
 $route = new Route('[<one>/]<two>', array(
 	'two' => NULL,
 ));

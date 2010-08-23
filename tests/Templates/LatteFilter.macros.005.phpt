@@ -62,34 +62,7 @@ $template->presenter = new MockPresenter;
 $template->action = 'login';
 $template->arr = array('link' => 'login', 'param' => 123);
 
-$template->render(T::getSection(__FILE__, 'template'));
-
-
-
-__halt_compiler() ?>
-
------template-----
-{plink Homepage:}
-
-{plink  Homepage: }
-
-{plink Homepage:action }
-
-{plink 'Homepage:action' }
-
-{plink Homepage:action 10, 20, '{one}&two'}
-
-{plink : 10 }
-
-{plink default 10, 'a' => 20, 'b' => 30}
-
-{link  $action}
-
-{plink $arr['link'], $arr['param']}
-
-{link default 10, 'a' => 20, 'b' => 30}
-
-------EXPECT------
+Assert::match(<<<EOD
 PLINK(Homepage:)
 
 PLINK(Homepage:)
@@ -109,3 +82,27 @@ LINK(login)
 PLINK(login, 123)
 
 LINK(default, 10, 20, 30)
+EOD
+
+, $template->render(<<<'EOD'
+{plink Homepage:}
+
+{plink  Homepage: }
+
+{plink Homepage:action }
+
+{plink 'Homepage:action' }
+
+{plink Homepage:action 10, 20, '{one}&two'}
+
+{plink : 10 }
+
+{plink default 10, 'a' => 20, 'b' => 30}
+
+{link  $action}
+
+{plink $arr['link'], $arr['param']}
+
+{link default 10, 'a' => 20, 'b' => 30}
+EOD
+));

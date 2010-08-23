@@ -29,12 +29,10 @@ testRouteIn($route, '/one', 'Front:One', array(
 	'test' => 'testvalue',
 ), '/one/?test=testvalue');
 
-
 testRouteIn($route, '/admin/one', 'Admin:One', array(
 	'action' => 'default',
 	'test' => 'testvalue',
 ), '/admin/one/?test=testvalue');
-
 
 testRouteIn($route, '/one/admin', 'Front:One', array(
 	'action' => 'admin',

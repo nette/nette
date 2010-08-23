@@ -25,13 +25,13 @@ Assert::same( '<ul class="hello"><li>one</li><li>two</li></ul>', (string) $el );
 
 
 // with indentation
-Assert::same( '
+Assert::match( '
 		<ul class="hello">
 			<li>one</li>
 
 			<li>two</li>
 		</ul>
-	', $el->render(2), 'indentation' );
+', $el->render(2), 'indentation' );
 
 
 

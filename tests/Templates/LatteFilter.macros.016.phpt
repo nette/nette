@@ -22,14 +22,8 @@ require __DIR__ . '/Template.inc';
 
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
-$template->render(T::getSection(__FILE__, 'template'));
-echo $template->compiled;
 
-
-
-__halt_compiler() ?>
-
------template-----
+$template->render(<<<EOD
 {* kód  *}
 
 @{if TRUE}
@@ -40,8 +34,10 @@ __halt_compiler() ?>
 
 {* kód  *}
 
-------EXPECT------
+EOD
+);
 
+Assert::match(<<<'EOD'
 <?php
 %A%
 
@@ -52,3 +48,6 @@ if (%ns%SnippetHelper::$outputAllowed) {
 
 <?php
 }
+
+EOD
+, $template->compiled);

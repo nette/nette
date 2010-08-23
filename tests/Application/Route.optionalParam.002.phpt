@@ -25,7 +25,6 @@ testRouteIn($route, '/index.html', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/index?test=testvalue&presenter=querypresenter');
 
-
 testRouteIn($route, '/index', 'querypresenter', array(
 	'test' => 'testvalue',
 ), '/index?test=testvalue&presenter=querypresenter');

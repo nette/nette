@@ -22,18 +22,10 @@ $form->addText('email', 'E-mail')
 	->addRule(Form::EMAIL, '%label %value is invalid [field %name]')
 	->setDefaultValue('xyz');
 
-echo $form;
+Assert::match("%A%data-nette-rules=\"{op:':email',msg:'E-mail %value is invalid [field email]'}\"%A%", (string) $form);
 
 $form->validate();
 
-T::dump( $form->getErrors() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-%A%data-nette-rules="{op:':email',msg:'E-mail %value is invalid [field email]'}"%A%
-array(
-	"E-mail xyz is invalid [field email]"
-)
+Assert::same( array(
+	"E-mail xyz is invalid [field email]",
+), $form->getErrors() );

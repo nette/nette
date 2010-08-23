@@ -34,8 +34,4 @@ $template->registerFilter(new LatteFilter);
 
 $template->people = array('John', 'Mary', 'Paul');
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.002.expect'), (string) $template);

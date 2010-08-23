@@ -18,29 +18,22 @@ require __DIR__ . '/../initialize.php';
 
 
 $config = Config::fromFile('config1.ini', 'development');
-T::dump( $config );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-%ns%Config(
-	"database" => %ns%Config(
-		"params" => %ns%Config(
-			"host" => "dev.example.com"
-			"username" => "devuser"
-			"password" => "devsecret"
-			"dbname" => "dbname"
-		)
-		"adapter" => "pdo_mysql"
-	)
-	"timeout" => "10"
-	"display_errors" => "1"
-	"html_errors" => ""
-	"items" => %ns%Config(
-		"0" => "10"
-		"1" => "20"
-	)
-	"webname" => "the example"
-)
+Assert::equal( new Nette\Config\Config(array(
+	'database' => new Nette\Config\Config(array(
+		'params' => new Nette\Config\Config(array(
+			'host' => 'dev.example.com',
+			'username' => 'devuser',
+			'password' => 'devsecret',
+			'dbname' => 'dbname',
+		)),
+		'adapter' => 'pdo_mysql',
+	)),
+	'timeout' => '10',
+	'display_errors' => '1',
+	'html_errors' => '',
+	'items' => new Nette\Config\Config(array(
+		'0' => '10',
+		'1' => '20',
+	)),
+	'webname' => 'the example',
+)), $config );

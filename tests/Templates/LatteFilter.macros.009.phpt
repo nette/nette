@@ -34,8 +34,4 @@ $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->people = array('John', 'Mary', 'Paul');
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.009.expect'), (string) $template);
