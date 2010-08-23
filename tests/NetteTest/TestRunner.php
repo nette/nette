@@ -84,12 +84,7 @@ class TestRunner
 					$failed[] = array($testCase->getName(), $entry, $e->getMessage());
 
 					$this->log($entry, $testCase->getOutput(), self::OUTPUT);
-					$this->log($entry, $testCase->getExpectedOutput(), self::EXPECTED);
-
-					if ($testCase->getExpectedHeaders() !== NULL) {
-						$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
-						$this->log($entry, $testCase->getExpectedHeaders(), self::EXPECTED, self::HEADERS);
-					}
+					//$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
 				}
 			}
 		}

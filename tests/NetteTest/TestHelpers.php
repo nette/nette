@@ -21,12 +21,7 @@ require __DIR__ . '/TestCase.php';
  */
 class TestHelpers
 {
-	/** @var int */
-	static public $maxDepth = 5;
-
-	/** @var array */
-	private static $sections;
-
+	static public $notes = array();
 
 
 	/**
@@ -82,170 +77,25 @@ class TestHelpers
 
 
 	/**
-	 * Returns current test section.
-	 * @param  string
-	 * @param  string
-	 * @return mixed
-	 */
-	public static function getSection($file, $section)
-	{
-		if (!isset(self::$sections[$file])) {
-			self::$sections[$file] = TestCase::parseSections($file);
-		}
-
-		$lowerSection = strtolower($section);
-		if (!isset(self::$sections[$file][$lowerSection])) {
-			throw new Exception("Missing section '$section' in file '$file'.");
-		}
-
-		if (in_array($section, array('GET', 'POST', 'SERVER'), TRUE)) {
-			return TestCase::parseLines(self::$sections[$file][$lowerSection], '=');
-		} else {
-			return self::$sections[$file][$lowerSection];
-		}
-	}
-
-
-
-	/**
-	 * Writes new message.
-	 * @param  string
+	 * Log info.
 	 * @return void
 	 */
-	public static function note($message = NULL)
+	public static function note($message)
 	{
-		echo $message ? "$message\n\n" : "===\n\n";
+		self::$notes[] = $message;
 	}
 
 
 
 	/**
-	 * Dumps information about a variable in readable format.
-	 * @param  mixed  variable to dump
-	 * @param  string
-	 * @return mixed  variable itself or dump
+	 * Returns notes.
+	 * @return array
 	 */
-	public static function dump($var, $message = NULL)
+	public static function fetchNotes()
 	{
-		if ($message) {
-			echo $message . (preg_match('#[.:?]$#', $message) ? ' ' : ': ');
-		}
-
-		self::_dump($var, 0);
-		echo "\n";
-		return $var;
-	}
-
-
-
-	private static function _dump(& $var, $level = 0)
-	{
-		static $tableUtf, $tableBin, $reBinary = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
-		if ($tableUtf === NULL) {
-			foreach (range("\x00", "\xFF") as $ch) {
-				if (ord($ch) < 32 && strpos("\r\n\t", $ch) === FALSE) $tableUtf[$ch] = $tableBin[$ch] = '\\x' . str_pad(dechex(ord($ch)), 2, '0', STR_PAD_LEFT);
-				elseif (ord($ch) < 127) $tableUtf[$ch] = $tableBin[$ch] = $ch;
-				else { $tableUtf[$ch] = $ch; $tableBin[$ch] = '\\x' . dechex(ord($ch)); }
-			}
-			$tableBin["\\"] = '\\\\';
-			$tableBin["\r"] = '\\r';
-			$tableBin["\n"] = '\\n';
-			$tableBin["\t"] = '\\t';
-			$tableUtf['\\x'] = $tableBin['\\x'] = '\\\\x';
-		}
-
-		if (is_bool($var)) {
-			echo ($var ? 'TRUE' : 'FALSE') . "\n";
-
-		} elseif ($var === NULL) {
-			echo "NULL\n";
-
-		} elseif (is_int($var)) {
-			echo "$var\n";
-
-		} elseif (is_float($var)) {
-			$var = (string) $var;
-			if (strpos($var, '.') === FALSE) $var .= '.0';
-			echo "$var\n";
-
-		} elseif (is_string($var)) {
-			$s = strtr($var, preg_match($reBinary, $var) || preg_last_error() ? $tableBin : $tableUtf);
-			echo "\"$s\"\n";
-
-		} elseif (is_array($var)) {
-			echo "array(";
-			$space = str_repeat("\t", $level);
-
-			static $marker;
-			if ($marker === NULL) $marker = uniqid("\x00", TRUE);
-			if (empty($var)) {
-
-			} elseif (isset($var[$marker])) {
-				echo " *RECURSION* ";
-
-			} elseif ($level < self::$maxDepth) {
-				echo "\n";
-				$vector = range(0, count($var) - 1) === array_keys($var);
-				$var[$marker] = 0;
-				foreach ($var as $k => &$v) {
-					if ($k === $marker) continue;
-					if ($vector) {
-						echo "$space\t";
-					} else {
-						$k = is_int($k) ? $k : '"' . strtr($k, preg_match($reBinary, $k) || preg_last_error() ? $tableBin : $tableUtf) . '"';
-						echo "$space\t$k => ";
-					}
-					self::_dump($v, $level + 1);
-				}
-				unset($var[$marker]);
-				echo "$space";
-
-			} else {
-				echo " ... ";
-			}
-			echo ")\n";
-
-		} elseif ($var instanceof Exception) {
-			echo 'Exception ', get_class($var), ': ', ($var->getCode() ? '#' . $var->getCode() . ' ' : '') . $var->getMessage(), "\n";
-
-		} elseif (is_object($var)) {
-			$arr = (array) $var;
-			echo get_class($var) . "(";
-			$space = str_repeat("\t", $level);
-
-			static $list = array();
-			if (empty($arr)) {
-
-			} elseif (in_array($var, $list, TRUE)) {
-				echo " *RECURSION* ";
-
-			} elseif ($level < self::$maxDepth) {
-				echo "\n";
-				$list[] = $var;
-				foreach ($arr as $k => &$v) {
-					$m = '';
-					if ($k[0] === "\x00") {
-						$m = $k[1] === '*' ? ' protected' : ' private';
-						$k = substr($k, strrpos($k, "\x00") + 1);
-					}
-					$k = strtr($k, preg_match($reBinary, $k) || preg_last_error() ? $tableBin : $tableUtf);
-					echo "$space\t\"$k\"$m => ";
-					echo self::_dump($v, $level + 1);
-				}
-				array_pop($list);
-				echo "$space";
-
-			} else {
-				echo " ... ";
-			}
-			echo ")\n";
-
-		} elseif (is_resource($var)) {
-			echo get_resource_type($var) . " resource\n";
-
-		} else {
-			echo "unknown type\n";
-		}
+		$res = self::$notes;
+		self::$notes = array();
+		return $res;
 	}
 
 

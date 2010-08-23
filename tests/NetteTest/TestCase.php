@@ -23,8 +23,8 @@ class TestCase
 	/** @var string  test file */
 	private $file;
 
-	/** @var array   test file multiparts */
-	private $sections;
+	/** @var array  */
+	private $options;
 
 	/** @var string  test output */
 	private $output;
@@ -51,7 +51,7 @@ class TestCase
 	public function __construct($testFile)
 	{
 		$this->file = (string) $testFile;
-		$this->sections = self::parseSections($this->file);
+		$this->options = self::parseOptions($this->file);
 	}
 
 
@@ -63,70 +63,31 @@ class TestCase
 	public function run()
 	{
 		// pre-skip?
-		$options = $this->sections['options'];
-		if (isset($options['skip'])) {
-			$message = $options['skip'] ? $options['skip'] : 'No message.';
+		if (isset($this->options['skip'])) {
+			$message = $this->options['skip'] ? $this->options['skip'] : 'No message.';
 			throw new TestCaseException($message, TestCaseException::SKIPPED);
 
-		} elseif (isset($options['phpversion'])) {
+		} elseif (isset($this->options['phpversion'])) {
 			$operator = '>=';
-			if (preg_match('#^(<=|le|<|lt|==|=|eq|!=|<>|ne|>=|ge|>|gt)#', $options['phpversion'], $matches)) {
-				$options['phpversion'] = trim(substr($options['phpversion'], strlen($matches[1])));
+			if (preg_match('#^(<=|le|<|lt|==|=|eq|!=|<>|ne|>=|ge|>|gt)#', $this->options['phpversion'], $matches)) {
+				$this->options['phpversion'] = trim(substr($this->options['phpversion'], strlen($matches[1])));
 				$operator = $matches[1];
 			}
-			if (version_compare($options['phpversion'], $this->phpVersion, $operator)) {
-				throw new TestCaseException("Requires PHP $operator $options[phpversion].", TestCaseException::SKIPPED);
+			if (version_compare($this->options['phpversion'], $this->phpVersion, $operator)) {
+				throw new TestCaseException("Requires PHP $operator {$this->options['phpversion']}.", TestCaseException::SKIPPED);
 			}
 		}
 
 		$this->execute();
-		$output = $this->output;
-		$headers = array_change_key_case(self::parseLines($this->headers, ':'), CASE_LOWER);
-		$tests = 0;
 
 		// post-skip?
-		if (isset($headers['x-nette-test-skip'])) {
-			throw new TestCaseException($headers['x-nette-test-skip'], TestCaseException::SKIPPED);
+		if (isset($this->headers['X-Nette-Test-Skip'])) {
+			throw new TestCaseException($this->headers['X-Nette-Test-Skip'], TestCaseException::SKIPPED);
 		}
 
 		// compare output
-		$expectedOutput = $this->getExpectedOutput();
-		if ($expectedOutput !== NULL) {
-			$tests++;
-			$binary = (bool) preg_match('#[\x00-\x08\x0B\x0C\x0E-\x1F]#', $expectedOutput);
-			if ($binary) {
-				if ($expectedOutput !== $output) {
-					throw new TestCaseException("Binary output doesn't match.");
-				}
-			} else {
-				$output = self::normalize($output, isset($options['keeptrailingspaces']));
-				$expectedOutput = self::normalize($expectedOutput, isset($options['keeptrailingspaces']));
-				if (!$this->compare($output, $expectedOutput)) {
-					throw new TestCaseException("Output doesn't match.");
-				}
-			}
-		}
-
-		// compare headers
-		$expectedHeaders = $this->getExpectedHeaders();
-		if ($expectedHeaders !== NULL) {
-			$tests++;
-			$expectedHeaders = self::normalize($expectedHeaders, FALSE);
-			$expectedHeaders = array_change_key_case(self::parseLines($expectedHeaders, ':'), CASE_LOWER);
-			foreach ($expectedHeaders as $name => $header) {
-				if (!isset($headers[$name])) {
-					throw new TestCaseException("Missing header '$name'.");
-
-				} elseif (!$this->compare($headers[$name], $header)) {
-					throw new TestCaseException("Header '$name' doesn't match.");
-				}
-			}
-		}
-
-		if (!$tests) { // expecting no output
-			if (trim($output) !== '') {
-				throw new TestCaseException("Empty output doesn't match.");
-			}
+		if (trim($this->output) !== '') {
+			throw new TestCaseException("Empty output doesn't match.");
 		}
 	}
 
@@ -177,8 +138,8 @@ class TestCase
 		}
 
 		$command = $this->cmdLine;
-		if (isset($this->sections['options']['phpini'])) {
-			foreach (explode(';', $this->sections['options']['phpini']) as $item) {
+		if (isset($this->options['phpini'])) {
+			foreach (explode(';', $this->options['phpini']) as $item) {
 				$command .= " -d " . escapeshellarg(trim($item));
 			}
 		}
@@ -197,18 +158,15 @@ class TestCase
 		$this->output = file_get_contents($tempFile);
 		unlink($tempFile);
 
-		list($this->headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
-	}
+		list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
 
-
-
-	/**
-	 * Returns test file section.
-	 * @return string
-	 */
-	public function getSection($name)
-	{
-		return isset($this->sections[$name]) ? $this->sections[$name] : NULL;
+		$this->headers = array();
+		foreach (explode("\r\n", $headers) as $header) {
+			$a = strpos($header, ':');
+			if ($a !== FALSE) {
+				$this->headers[trim(substr($header, 0, $a))] = (string) trim(substr($header, $a + 1));
+			}
+		}
 	}
 
 
@@ -219,7 +177,7 @@ class TestCase
 	 */
 	public function getName()
 	{
-		return $this->sections['options']['name'];
+		return $this->options['name'];
 	}
 
 
@@ -246,147 +204,26 @@ class TestCase
 
 
 
-	/**
-	 * Returns expected output.
-	 * @return string
-	 */
-	public function getExpectedOutput()
-	{
-		if (isset($this->sections['expect'])) {
-			return $this->sections['expect'];
-
-		} elseif (is_file($expFile = str_replace('.phpt', '', $this->file) . '.expect')) {
-			return file_get_contents($expFile);
-
-		} else {
-			return NULL;
-		}
-	}
-
-
-
-	/**
-	 * Returns expected headers.
-	 * @return string
-	 */
-	public function getExpectedHeaders()
-	{
-		return $this->getSection('expectheaders');
-	}
-
-
-
 	/********************* helpers ****************d*g**/
 
 
 
 	/**
-	 * Splits file into sections.
+	 * Parse phpDoc.
 	 * @param  string  file
 	 * @return array
 	 */
-	public static function parseSections($testFile)
+	public static function parseOptions($testFile)
 	{
 		$content = file_get_contents($testFile);
-		$sections = array(
-			'options' => array(),
-		);
-
-		// phpDoc
+		$options = array();
 		$phpDoc = preg_match('#^/\*\*(.*?)\*/#ms', $content, $matches) ? trim($matches[1]) : '';
 		preg_match_all('#^\s*\*\s*@(\S+)(.*)#mi', $phpDoc, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-			$sections['options'][strtolower($match[1])] = isset($match[2]) ? trim($match[2]) : TRUE;
+			$options[strtolower($match[1])] = isset($match[2]) ? trim($match[2]) : TRUE;
 		}
-		$sections['options']['name'] = preg_match('#^\s*\*\s*TEST:(.*)#mi', $phpDoc, $matches) ? trim($matches[1]) : $testFile;
-
-		// file parts
-		$tmp = preg_split('#^-{3,}([^\s-]+)-{1,}(?:\r?\n|$)#m', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$i = 1;
-		while (isset($tmp[$i])) {
-			$sections[strtolower($tmp[$i])] = $tmp[$i+1];
-			$i += 2;
-		}
-		return $sections;
-	}
-
-
-
-	/**
-	 * Splits HTTP headers into array.
-	 * @param  string
-	 * @param  string
-	 * @return array
-	 */
-	public static function parseLines($raw, $separator)
-	{
-		$headers = array();
-		foreach (explode("\r\n", $raw) as $header) {
-			$a = strpos($header, $separator);
-			if ($a !== FALSE) {
-				$headers[trim(substr($header, 0, $a))] = (string) trim(substr($header, $a + 1));
-			}
-		}
-		return $headers;
-	}
-
-
-
-	/**
-	 * Compares results.
-	 * @param  string
-	 * @param  string
-	 * @return bool
-	 */
-	public static function compare($left, $right)
-	{
-		$right = strtr($right, array(
-			'%a%' => '[^\r\n]+',    // one or more of anything except the end of line characters
-			'%a?%'=> '[^\r\n]*',    // zero or more of anything except the end of line characters
-			'%A%' => '.+',          // one or more of anything including the end of line characters
-			'%A?%'=> '.*',          // zero or more of anything including the end of line characters
-			'%s%' => '[\t ]+',      // one or more white space characters except the end of line characters
-			'%s?%'=> '[\t ]*',      // zero or more white space characters except the end of line characters
-			'%S%' => '\S+',         // one or more of characters except the white space
-			'%S?%'=> '\S*',         // zero or more of characters except the white space
-			'%c%' => '[^\r\n]',     // a single character of any sort (except the end of line)
-			'%d%' => '[0-9]+',      // one or more digits
-			'%d?%'=> '[0-9]*',      // zero or more digits
-			'%i%' => '[+-]?[0-9]+', // signed integer value
-			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
-			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
-			'%ns%'=> '(?:[_0-9a-zA-Z\\\\]+\\\\|N)?',// PHP namespace
-			'%[^' => '[^',          // reg-exp
-			'%['  => '[',           // reg-exp
-			']%'  => ']+',          // reg-exp
-
-			'.' => '\.', '\\' => '\\\\', '+' => '\+', '*' => '\*', '?' => '\?', '[' => '\[', '^' => '\^', ']' => '\]', '$' => '\$', '(' => '\(', ')' => '\)', // preg quote
-			'{' => '\{', '}' => '\}', '=' => '\=', '!' => '\!', '>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#', // preg quote
-		));
-
-		$res = preg_match("#^$right$#s", $left);
-		if ($res === FALSE || preg_last_error()) {
-			throw new Exception("Error while executing regular expression.");
-		}
-		return (bool) $res;
-	}
-
-
-
-	/**
-	 * Normalizes whitespace
-	 * @param  string
-	 * @param  bool
-	 * @return string
-	 */
-	public static function normalize($s, $keepTrailingSpaces)
-	{
-		$s = str_replace("\n", PHP_EOL, str_replace("\r\n", "\n", $s));  // normalize EOL
-		if (!$keepTrailingSpaces) {
-			$s = preg_replace("#[\t ]+(\r?\n)#", '$1', $s); // multiline right trim
-			$s = rtrim($s); // ending trim
-		}
-		return $s;
+		$options['name'] = preg_match('#^\s*\*\s*TEST:(.*)#mi', $phpDoc, $matches) ? trim($matches[1]) : $testFile;
+		return $options;
 	}
 
 }

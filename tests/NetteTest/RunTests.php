@@ -1,5 +1,5 @@
 
-Nette Test Framework (v0.3)
+Nette Test Framework (v0.4)
 ---------------------------
 <?php
 
