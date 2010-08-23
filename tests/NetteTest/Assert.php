@@ -105,8 +105,8 @@ class Assert
 		if (!($actual instanceof $class)) {
 			self::note('Failed asserting that ' . get_class($actual) . " is class $class");
 		}
-		if ($message && $message !== $actual->getMessage()) {
-			self::note('Failed asserting that ' . self::dump($actual->getMessage()) . " is " . self::dump($message));
+		if ($message) {
+			self::match($message, $actual->getMessage());
 		}
 	}
 
@@ -119,6 +119,52 @@ class Assert
 	public static function failed()
 	{
 		self::note('Failed asserting');
+	}
+
+
+
+	/**
+	 * Compares results.
+	 * @param  string
+	 * @param  string
+	 * @return bool
+	 */
+	public static function match($expected, $actual)
+	{
+		$expected = rtrim(preg_replace("#[\t ]+\n#", "\n", str_replace("\r\n", "\n", $expected)));
+		$actual = rtrim(preg_replace("#[\t ]+\n#", "\n", str_replace("\r\n", "\n", $actual)));
+
+		$re = strtr($expected, array(
+			'%a%' => '[^\r\n]+',    // one or more of anything except the end of line characters
+			'%a?%'=> '[^\r\n]*',    // zero or more of anything except the end of line characters
+			'%A%' => '.+',          // one or more of anything including the end of line characters
+			'%A?%'=> '.*',          // zero or more of anything including the end of line characters
+			'%s%' => '[\t ]+',      // one or more white space characters except the end of line characters
+			'%s?%'=> '[\t ]*',      // zero or more white space characters except the end of line characters
+			'%S%' => '\S+',         // one or more of characters except the white space
+			'%S?%'=> '\S*',         // zero or more of characters except the white space
+			'%c%' => '[^\r\n]',     // a single character of any sort (except the end of line)
+			'%d%' => '[0-9]+',      // one or more digits
+			'%d?%'=> '[0-9]*',      // zero or more digits
+			'%i%' => '[+-]?[0-9]+', // signed integer value
+			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
+			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
+			'%ns%'=> '(?:[_0-9a-zA-Z\\\\]+\\\\|N)?',// PHP namespace
+			'%[^' => '[^',          // reg-exp
+			'%['  => '[',           // reg-exp
+			']%'  => ']+',          // reg-exp
+
+			'.' => '\.', '\\' => '\\\\', '+' => '\+', '*' => '\*', '?' => '\?', '[' => '\[', '^' => '\^', ']' => '\]', '$' => '\$', '(' => '\(', ')' => '\)', // preg quote
+			'{' => '\{', '}' => '\}', '=' => '\=', '!' => '\!', '>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#', // preg quote
+		));
+
+		$res = preg_match("#^$re$#s", $actual);
+		if ($res === FALSE || preg_last_error()) {
+			throw new Exception("Error while executing regular expression.");
+		}
+		if (!$res) {
+			self::note('Failed asserting that ' . self::dump($actual) . ' is not identical to ' . self::dump($expected));
+		}
 	}
 
 
