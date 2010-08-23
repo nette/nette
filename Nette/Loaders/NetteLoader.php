@@ -76,7 +76,6 @@ class NetteLoader extends AutoLoader
 		'nette\application\simplerouter' => '/Application/Routers/SimpleRouter.php',
 		'nette\arraylist' => '/Utils/ArrayList.php',
 		'nette\arraytools' => '/Utils/ArrayTools.php',
-		'nette\caching\apcstorage' => '/Caching/ApcStorage.php',
 		'nette\caching\cache' => '/Caching/Cache.php',
 		'nette\caching\dummystorage' => '/Caching/DummyStorage.php',
 		'nette\caching\filestorage' => '/Caching/FileStorage.php',
