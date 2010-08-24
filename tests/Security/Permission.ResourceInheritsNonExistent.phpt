@@ -21,14 +21,14 @@ $acl = new Permission;
 $acl->addResource('area');
 try {
 	$acl->resourceInheritsFrom('nonexistent', 'area');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }
 
 try {
 	$acl->resourceInheritsFrom('area', 'nonexistent');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

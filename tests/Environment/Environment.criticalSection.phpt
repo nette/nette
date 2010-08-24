@@ -34,7 +34,7 @@ Environment::leaveCriticalSection($key);
 try {
 	// leaving not entered
 	Environment::leaveCriticalSection('notEntered');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Critical section has not been initialized.', $e );
 }

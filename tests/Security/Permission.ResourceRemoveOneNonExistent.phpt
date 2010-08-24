@@ -20,7 +20,7 @@ require __DIR__ . '/../initialize.php';
 $acl = new Permission;
 try {
 	$acl->removeResource('nonexistent');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

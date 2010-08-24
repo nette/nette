@@ -22,10 +22,6 @@ require __DIR__ . '/TestCase.php';
  */
 class TestRunner
 {
-	const OUTPUT = 'output';
-	const EXPECTED = 'expect';
-	const HEADERS = 'headers';
-
 	/** @var string  path to test file/directory */
 	public $path;
 
@@ -82,9 +78,6 @@ class TestRunner
 				} else {
 					echo 'F';
 					$failed[] = array($testCase->getName(), $entry, $e->getMessage());
-
-					$this->log($entry, $testCase->getOutput(), self::OUTPUT);
-					//$this->log($entry, $testCase->getHeaders(), self::OUTPUT, self::HEADERS);
 				}
 			}
 		}
@@ -116,23 +109,6 @@ class TestRunner
 			echo "\n\nOK ($count tests, $skippedCount skipped)\n";
 		}
 		return TRUE;
-	}
-
-
-
-	/**
-	 * Returns output file for logging.
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @param  string
-	 * @return void
-	 */
-	public function log($testFile, $content, $type, $section = '')
-	{
-		$file = dirname($testFile) . '/' . $type . '/' . basename($testFile, '.phpt') . ($section ? ".$section" : '') . '.raw';
-		@mkdir(dirname($file)); // @ - directory may already exist
-		file_put_contents($file, $content);
 	}
 
 

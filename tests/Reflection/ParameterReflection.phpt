@@ -51,15 +51,3 @@ Assert::same( 'Class Foo', (string) $params[0]->declaringClass );
 Assert::same( 'Method Foo::myMethod()', (string) $params[1]->declaringFunction );
 Assert::null( $params[1]->class );
 Assert::same( 'Class Foo', (string) $params[1]->declaringClass );
-
-
-
-$reflect = new FunctionReflection(function ($x, $y) {});
-$params = $reflect->getParameters();
-Assert::same( 2, count($params) );
-Assert::same( 'Function {closure}()', (string) $params[0]->declaringFunction );
-Assert::null( $params[0]->class );
-Assert::null( $params[0]->declaringClass );
-Assert::same( 'Function {closure}()', (string) $params[1]->declaringFunction );
-Assert::null( $params[1]->class );
-Assert::null( $params[1]->declaringClass );

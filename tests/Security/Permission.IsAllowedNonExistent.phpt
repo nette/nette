@@ -20,7 +20,7 @@ require __DIR__ . '/../initialize.php';
 try {
 	$acl = new Permission;
 	$acl->isAllowed('nonexistent');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
@@ -28,7 +28,7 @@ try {
 try {
 	$acl = new Permission;
 	$acl->isAllowed(NULL, 'nonexistent');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

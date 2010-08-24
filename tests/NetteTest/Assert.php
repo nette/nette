@@ -30,7 +30,7 @@ class Assert
 	public static function same($expected, $actual)
 	{
 		if ($actual !== $expected) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not identical to ' . self::dump($expected));
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' is identical to expected ' . self::dump($expected));
 		}
 	}
 
@@ -45,7 +45,7 @@ class Assert
 	public static function equal($expected, $actual)
 	{
 		if ($actual != $expected) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not equal to ' . self::dump($expected));
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' is equal to expected ' . self::dump($expected));
 		}
 	}
 
@@ -59,7 +59,7 @@ class Assert
 	public static function true($actual)
 	{
 		if ($actual !== TRUE) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not TRUE');
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' is TRUE');
 		}
 	}
 
@@ -73,7 +73,7 @@ class Assert
 	public static function false($actual)
 	{
 		if ($actual !== FALSE) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not FALSE');
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' is FALSE');
 		}
 	}
 
@@ -87,7 +87,7 @@ class Assert
 	public static function null($actual)
 	{
 		if ($actual !== NULL) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not NULL');
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' is NULL');
 		}
 	}
 
@@ -103,7 +103,7 @@ class Assert
 	public static function exception($class, $message, $actual)
 	{
 		if (!($actual instanceof $class)) {
-			self::note('Failed asserting that ' . get_class($actual) . " is class $class");
+			self::doFail('Failed asserting that ' . get_class($actual) . " is an instance of class $class");
 		}
 		if ($message) {
 			self::match($message, $actual->getMessage());
@@ -116,9 +116,21 @@ class Assert
 	 * Failed assertion
 	 * @return void
 	 */
-	public static function failed()
+	public static function fail($message)
 	{
-		self::note('Failed asserting');
+		self::doFail($message);
+	}
+
+
+
+	/**
+	 * Initializes shutdown handler.
+	 * @return void
+	 */
+	public static function handler($handler)
+	{
+		ob_start();
+		register_shutdown_function($handler);
 	}
 
 
@@ -158,13 +170,33 @@ class Assert
 			'{' => '\{', '}' => '\}', '=' => '\=', '!' => '\!', '>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#', // preg quote
 		));
 
+		$old = ini_set('pcre.backtrack_limit', '1000000');
 		$res = preg_match("#^$re$#s", $actual);
+		ini_set('pcre.backtrack_limit', $old);
 		if ($res === FALSE || preg_last_error()) {
 			throw new Exception("Error while executing regular expression.");
 		}
 		if (!$res) {
-			self::note('Failed asserting that ' . self::dump($actual) . ' is not identical to ' . self::dump($expected));
+			self::doFail('Failed asserting that ' . self::dump($actual) . ' matches expected ' . self::dump($expected));
 		}
+	}
+
+
+
+	/**
+	 * Returns message and file and line from call stack.
+	 * @param  string
+	 * @return void
+	 */
+	private static function doFail($message)
+	{
+		$trace = debug_backtrace();
+		$trace = end($trace);
+		if (isset($trace['line'])) {
+			$message .= " on line $trace[line]";
+		}
+		echo "\n$message";
+		exit(254);
 	}
 
 
@@ -189,7 +221,7 @@ class Assert
 			return "$var";
 
 		} elseif (is_string($var)) {
-			return var_export($var, TRUE);
+			return var_export(strlen($var) > 100 ? (substr($var, 0, 100) . ' ... ') : $var, TRUE);
 
 		} elseif (is_array($var)) {
 			return "array(" . count($var) . ")";
@@ -207,24 +239,6 @@ class Assert
 		} else {
 			return "unknown type";
 		}
-	}
-
-
-
-	/**
-	 * Returns message and file and line from call stack.
-	 * @param  string
-	 * @return void
-	 */
-	private static function note($message)
-	{
-		echo $message;
-		$trace = debug_backtrace();
-		$trace = end($trace);
-		if (isset($trace['file'], $trace['line'])) {
-			echo ' in file ' . $trace['file'] . ' on line ' . $trace['line'];
-		}
-		echo "\n\n";
 	}
 
 }

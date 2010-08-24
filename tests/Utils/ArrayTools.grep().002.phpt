@@ -19,7 +19,7 @@ require __DIR__ . '/../initialize.php';
 
 try {
 	ArrayTools::grep(array('a', '1', 'c'), '#*#');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\RegexpException', 'preg_grep(): Compilation failed: nothing to repeat at offset 0 in pattern: #*#', $e );
 }
@@ -27,7 +27,7 @@ try {
 
 try {
 	ArrayTools::grep(array('a', "1\xFF", 'c'), '#\d#u');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\RegexpException', 'Malformed UTF-8 data (pattern: #\d#u)', $e );
 }

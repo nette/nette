@@ -24,7 +24,7 @@ Assert::same( 'e',  String::trim("\xc5\x98e-", "\xc5\x98-") ); // Ře-
 
 try {
 	String::trim("\xC2x\xA0");
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\RegexpException', NULL, $e );
 }

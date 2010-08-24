@@ -57,7 +57,7 @@ try {
 	$obj->onPrivate(123);
 	$this->fail('called private event');
 
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('MemberAccessException', 'Call to undefined method TestClass::onPrivate().', $e );
 }
@@ -67,7 +67,7 @@ try {
 	$obj->onUndefined(123);
 	$this->fail('called undefined event');
 
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('MemberAccessException', 'Call to undefined method TestClass::onUndefined().', $e );
 }

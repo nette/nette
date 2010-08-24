@@ -26,7 +26,7 @@ Assert::same( 'production', Environment::getName(), 'Name:' );
 try {
 	// Setting name:
 	Environment::setName('lab2');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Environment name has been already set.', $e );
 }

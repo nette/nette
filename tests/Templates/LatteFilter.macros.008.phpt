@@ -56,8 +56,8 @@ $template->control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 
-$template->render(<<<'EOD'
-{widget 'name'}
+$template->render('
+{widget \'name\'}
 
 {widget form}
 
@@ -74,8 +74,7 @@ $template->render(<<<'EOD'
 {widget form var1, 1, 2}
 
 {widget form var1 => 5, 1, 2}
-EOD
-);
+');
 
 Assert::same( array(
 	"MockControl::getWidget", array("name"),

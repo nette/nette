@@ -79,7 +79,7 @@ Assert::same( array(
 try {
 	$dolly = $arr;
 	$item = & ArrayTools::getRef($dolly, array(7, 'item', 3));
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', 'Traversed item is not an array.', $e );
 }

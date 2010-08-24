@@ -30,7 +30,6 @@ Options:
  */
 try {
 	@unlink(__DIR__ . '/coverage.tmp'); // @ - file may not exist
-	ini_set('pcre.backtrack_limit', '1000000');
 
 
 	$manager = new TestRunner;

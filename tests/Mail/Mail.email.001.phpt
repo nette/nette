@@ -22,7 +22,7 @@ $mail = new Mail();
 try {
 	// From
 	$mail->setFrom('John Doe <doe@example. com>');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address 'doe@example. com' is not valid.", $e );
 }
@@ -30,7 +30,7 @@ try {
 
 try {
 	$mail->setFrom('John Doe <>');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address '' is not valid.", $e );
 }
@@ -38,7 +38,7 @@ try {
 
 try {
 	$mail->setFrom('John Doe <doe@examplecom>');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address 'doe@examplecom' is not valid.", $e );
 }
@@ -46,7 +46,7 @@ try {
 
 try {
 	$mail->setFrom('John Doe <doe@examplecom>');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address 'doe@examplecom' is not valid.", $e );
 }
@@ -54,7 +54,7 @@ try {
 
 try {
 	$mail->setFrom('John Doe');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address 'John Doe' is not valid.", $e );
 }
@@ -62,7 +62,7 @@ try {
 
 try {
 	$mail->setFrom('doe;@examplecom');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address 'doe;@examplecom' is not valid.", $e );
 }
@@ -71,7 +71,7 @@ try {
 try {
 	// addReplyTo
 	$mail->addReplyTo('@');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address '@' is not valid.", $e );
 }
@@ -80,7 +80,7 @@ try {
 try {
 	// addTo
 	$mail->addTo('@');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address '@' is not valid.", $e );
 }
@@ -89,7 +89,7 @@ try {
 try {
 	// addCc
 	$mail->addCc('@');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address '@' is not valid.", $e );
 }
@@ -98,7 +98,7 @@ try {
 try {
 	// addBcc
 	$mail->addBcc('@');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Email address '@' is not valid.", $e );
 }

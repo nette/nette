@@ -49,8 +49,6 @@ class TestHelpers
 			xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
 			register_shutdown_function(array(__CLASS__, 'prepareSaveCoverage'));
 		}
-
-		set_exception_handler(array(__CLASS__, 'exceptionHandler'));
 	}
 
 
@@ -101,19 +99,6 @@ class TestHelpers
 
 
 	/**
-	 * Custom exception handler.
-	 * @param  \Exception
-	 * @return void
-	 */
-	public static function exceptionHandler(Exception $exception)
-	{
-		echo 'Error: Uncaught ';
-		echo $exception;
-	}
-
-
-
-	/**
 	 * Coverage saving helper.
 	 * @return void
 	 */
@@ -153,10 +138,10 @@ class TestHelpers
 	 * Skips this test.
 	 * @return void
 	 */
-	public static function skip($message = 'No message.')
+	public static function skip($message = '')
 	{
-		header('X-Nette-Test-Skip: '. $message);
-		exit;
+		echo "\nSkipped $message";
+		die(253);
 	}
 
 }

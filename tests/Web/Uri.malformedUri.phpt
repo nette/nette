@@ -20,7 +20,7 @@ require __DIR__ . '/../initialize.php';
 try {
 	$uri = new Uri(':');
 
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Malformed or unsupported URI ':'.", $e );
 }

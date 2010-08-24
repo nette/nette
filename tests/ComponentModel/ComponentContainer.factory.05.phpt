@@ -35,7 +35,7 @@ Assert::same( 'b', $a->getComponent('b')->name );
 
 try {
 	$a->getComponent('B')->name;
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Component with name 'B' does not exist.", $e );
 }

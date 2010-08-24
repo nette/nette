@@ -21,7 +21,7 @@ try {
 	$acl = new Permission;
 	$acl->addResource('area');
 	$acl->addResource('area');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'area' already exists in the list.", $e );
 }

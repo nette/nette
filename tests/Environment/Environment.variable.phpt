@@ -22,7 +22,7 @@ Assert::null( Environment::getVariable('foo'), "Getting variable 'foo':" );
 
 try {
 	Environment::getVariable('tempDir');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Unknown environment variable 'appDir'.", $e );
 }
@@ -63,7 +63,7 @@ try {
 	Environment::setVariable('foobar', '%bar%');
 	Environment::getVariable('bar');
 
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Circular reference detected for variables: foo, foobar, bar.', $e );
 }

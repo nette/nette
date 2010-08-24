@@ -23,7 +23,7 @@ $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
 try {
 	$template->render('Block{/block}');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Filter Nette\Templates\LatteFilter::__invoke: Tag {/block } was not expected here on line %a%.', $e );
 }

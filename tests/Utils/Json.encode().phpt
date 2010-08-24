@@ -24,7 +24,7 @@ Assert::same( '"ok"', Json::encode('ok') );
 
 try {
 	Json::encode(array("bad utf\xFF"));
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\JsonException', 'json_encode(): Invalid UTF-8 sequence in argument', $e );
 }
@@ -35,7 +35,7 @@ try {
 	$arr = array('recursive');
 	$arr[] = & $arr;
 	Json::encode($arr);
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\JsonException', 'json_encode(): recursion detected', $e );
 }

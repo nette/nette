@@ -20,7 +20,7 @@ require __DIR__ . '/../initialize.php';
 $acl = new Permission;
 try {
 	$acl->addRole('guest', 'nonexistent');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }

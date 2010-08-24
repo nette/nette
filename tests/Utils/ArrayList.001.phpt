@@ -87,7 +87,7 @@ Assert::same( array(
 try {
 	// unset -1
 	unset($list[-1]);
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('OutOfRangeException', 'Offset invalid or out of range', $e );
 }

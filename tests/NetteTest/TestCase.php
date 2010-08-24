@@ -80,14 +80,12 @@ class TestCase
 
 		$this->execute();
 
-		// post-skip?
-		if (isset($this->headers['X-Nette-Test-Skip'])) {
-			throw new TestCaseException($this->headers['X-Nette-Test-Skip'], TestCaseException::SKIPPED);
-		}
-
-		// compare output
-		if (trim($this->output) !== '') {
-			throw new TestCaseException("Empty output doesn't match.");
+		// HTTP code check
+		if (isset($this->options['assertcode'])) {
+			$code = isset($this->headers['Status']) ? (int) $this->headers['Status'] : 200;
+			if ($code !== (int) $this->options['assertcode']) {
+				throw new TestCaseException('Expected HTTP code ' . $this->options['assertcode'] . ' is not same as actual code ' . $code);
+			}
 		}
 	}
 
@@ -147,18 +145,12 @@ class TestCase
 
 		chdir(dirname($this->file));
 		exec($command, $foo, $res);
-		if ($res === 255) {
-			// exit_status 255 => parse or fatal error
-
-		} elseif ($res !== 0) {
-			throw new Exception("Unable to execute '$command'.");
-
-		}
 
 		$this->output = file_get_contents($tempFile);
 		unlink($tempFile);
 
 		list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
+		$line = @end(explode("\n", $this->output));
 
 		$this->headers = array();
 		foreach (explode("\r\n", $headers) as $header) {
@@ -166,6 +158,20 @@ class TestCase
 			if ($a !== FALSE) {
 				$this->headers[trim(substr($header, 0, $a))] = (string) trim(substr($header, $a + 1));
 			}
+		}
+
+		if ($res === 255) {
+			throw new TestCaseException("Fatal error");
+
+		} elseif ($res === 254) {
+			throw new TestCaseException($line);
+
+		} elseif ($res === 253) { // skip
+			throw new TestCaseException($line, TestCaseException::SKIPPED);
+
+		} elseif ($res !== 0) {
+			throw new Exception("Unable to execute '$command'.");
+
 		}
 	}
 

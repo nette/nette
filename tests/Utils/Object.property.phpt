@@ -33,7 +33,7 @@ Assert::same( 'hello world', $obj->foo );
 // Undeclared property writing
 try {
 	$obj->undeclared = 'value';
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('MemberAccessException', 'Cannot write to an undeclared property TestClass::$undeclared.', $e );
 }
@@ -46,7 +46,7 @@ Assert::false( isset($obj->undeclared) );
 
 try {
 	$val = $obj->s;
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('MemberAccessException', 'Cannot read an undeclared property TestClass::$s.', $e );
 }
@@ -59,7 +59,7 @@ Assert::same( 'World', $obj->bar );
 
 try {
 	$obj->bar = 'value';
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('MemberAccessException', 'Cannot write to a read-only property TestClass::$bar.', $e );
 }

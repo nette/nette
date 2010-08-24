@@ -77,7 +77,7 @@ Assert::null( $user->getId(), 'getId' );
 try {
 	// login without handler
 	$user->login('jane', '');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Service 'Nette\\Security\\IAuthenticator' not found.", $e );
 }
@@ -88,7 +88,7 @@ $user->setAuthenticationHandler($handler);
 try {
 	// login as jane
 	$user->login('jane', '');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\Security\AuthenticationException', 'Unknown user', $e );
 }
@@ -96,7 +96,7 @@ try {
 try {
 	// login as john
 	$user->login('john', '');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\Security\AuthenticationException', 'Password not match', $e );
 }

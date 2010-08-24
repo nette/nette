@@ -24,7 +24,7 @@ Assert::true( $acl->isAllowed('guest') );
 $acl->removeAllRoles();
 try {
 	$acl->isAllowed('guest');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Role 'guest' does not exist.", $e );
 }

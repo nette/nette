@@ -84,7 +84,7 @@ PLINK(login, 123)
 LINK(default, 10, 20, 30)
 EOD
 
-, $template->render(<<<'EOD'
+, $template->render("
 {plink Homepage:}
 
 {plink  Homepage: }
@@ -99,10 +99,9 @@ EOD
 
 {plink default 10, 'a' => 20, 'b' => 30}
 
-{link  $action}
+{link  \$action}
 
-{plink $arr['link'], $arr['param']}
+{plink \$arr['link'], \$arr['param']}
 
 {link default 10, 'a' => 20, 'b' => 30}
-EOD
-));
+"));

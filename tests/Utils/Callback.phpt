@@ -43,14 +43,14 @@ Assert::true( $cb->isCallable() );
 
 try {
 	callback('undefined')->invoke();
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Callback 'undefined' is not callable.", $e );
 }
 
 try {
 	callback(NULL)->invoke();
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', 'Invalid callback.', $e );
 }

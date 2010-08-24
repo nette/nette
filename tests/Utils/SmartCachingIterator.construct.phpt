@@ -81,7 +81,7 @@ Assert::same( array(
 try {
 	$arr = dir('.');
 	foreach (new SmartCachingIterator($arr) as $k => $v);
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', NULL, $e );
 }

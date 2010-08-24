@@ -24,7 +24,7 @@ Assert::true( $acl->isAllowed(NULL, 'area') );
 $acl->removeResource('area');
 try {
 	$acl->isAllowed(NULL, 'area');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Resource 'area' does not exist.", $e );
 }

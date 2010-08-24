@@ -33,7 +33,7 @@ Assert::true( $namespace instanceof Nette\Web\SessionNamespace );
 
 try {
 	$namespace = $session->getNamespace('');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', 'Session namespace must be a non-empty string.', $e );
 }

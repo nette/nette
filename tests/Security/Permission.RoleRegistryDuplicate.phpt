@@ -21,7 +21,7 @@ $acl = new Permission;
 try {
 	$acl->addRole('guest');
 	$acl->addRole('guest');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Role 'guest' already exists in the list.", $e );
 }

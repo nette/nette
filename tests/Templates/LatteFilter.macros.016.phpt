@@ -37,7 +37,7 @@ $template->render(<<<EOD
 EOD
 );
 
-Assert::match(<<<'EOD'
+Assert::match('
 <?php
 %A%
 
@@ -49,5 +49,4 @@ if (%ns%SnippetHelper::$outputAllowed) {
 <?php
 }
 
-EOD
-, $template->compiled);
+', $template->compiled);

@@ -30,7 +30,7 @@ Assert::same( array('a' => 1), Json::decode('{"a":1}', Json::FORCE_ARRAY) );
 
 try {
 	Json::decode('{');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\JsonException', 'Syntax error, malformed JSON', $e );
 }
@@ -39,7 +39,7 @@ try {
 
 try {
 	Json::decode('{}}');
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\JsonException', 'Syntax error, malformed JSON', $e );
 }
@@ -48,7 +48,7 @@ try {
 
 try {
 	Json::decode("\x00");
-	Assert::failed();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\JsonException', 'Unexpected control character found', $e );
 }
