@@ -160,7 +160,7 @@ if ($form->isSubmitted()) {
 	<style type="text/css">
 	html {
 		font: 16px/1.5 "Trebuchet MS", "Geneva CE", lucida, sans-serif;
-		border-top: 4.7em solid #F4EFE5;
+		border-top: 4.7em solid #F4EBDB;
 	}
 
 	body {

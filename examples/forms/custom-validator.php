@@ -74,7 +74,7 @@ if ($form->isSubmitted()) {
 	<style type="text/css">
 	html {
 		font: 16px/1.5 sans-serif;
-		border-top: 4.7em solid #F4EFE5;
+		border-top: 4.7em solid #F4EBDB;
 	}
 
 	body {
@@ -99,7 +99,7 @@ if ($form->isSubmitted()) {
 	fieldset {
 		padding: .5em;
 		margin: .5em 0;
-		background: #EAF3FA;
+		background: #E4F1FC;
 		border: 1px solid #B2D1EB;
 	}
 

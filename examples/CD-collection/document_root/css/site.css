@@ -56,7 +56,7 @@ table.grid td, table.grid th {
 
 table.grid th {
 	color: #7a7772;
-	background: #EAF3FA;
+	background: #E4F1FC;
 	text-align: left;
 	font-weight: normal;
 	font-size: 80%;
@@ -75,7 +75,7 @@ table.grid .alt td {
 form {
 	max-width: 500px;
 	padding: .8em 1.6em;
-	background: #EAF3FA;
+	background: #E4F1FC;
 	border: solid 2px #add4fb;
 }
 
