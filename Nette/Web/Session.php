@@ -66,7 +66,7 @@ class Session extends Nette\Object
 	public function start()
 	{
 		if (self::$started) {
-			throw new \InvalidStateException('Session has already been started.');
+			return;
 
 		} elseif (self::$started === NULL && defined('SID')) {
 			throw new \InvalidStateException('A session had already been started by session.auto-start or session_start().');
