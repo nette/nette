@@ -1,9 +1,7 @@
 <?php
 
-use Nette\Environment,
-	Nette\Application\AppForm,
-	Nette\Forms\Form,
-	Nette\Web\User;
+use Nette\Application\AppForm,
+	Nette\Forms\Form;
 
 
 
@@ -13,9 +11,8 @@ class DashboardPresenter extends BasePresenter
 	protected function startup()
 	{
 		// user authentication
-		$user = Environment::getUser();
-		if (!$user->isLoggedIn()) {
-			if ($user->getLogoutReason() === User::INACTIVITY) {
+		if (!$this->getUser()->isLoggedIn()) {
+			if ($this->getUser()->getLogoutReason() === Nette\Web\User::INACTIVITY) {
 				$this->flashMessage('You have been logged out due to inactivity. Please login again.');
 			}
 			$backlink = $this->getApplication()->storeRequest();
@@ -86,7 +83,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function actionLogout()
 	{
-		Environment::getUser()->logout();
+		$this->getUser()->logout();
 		$this->flashMessage('You have been logged off.');
 		$this->redirect('Auth:login');
 	}

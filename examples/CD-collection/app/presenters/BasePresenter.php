@@ -1,7 +1,6 @@
 <?php
 
-use Nette\Environment,
-	Nette\Application\Presenter;
+use Nette\Application\Presenter;
 
 
 abstract class BasePresenter extends Presenter
@@ -11,7 +10,8 @@ abstract class BasePresenter extends Presenter
 
 	protected function beforeRender()
 	{
-		$user = Environment::getUser();
+		$this->getSession()->start();
+		$user = $this->getUser();
 		$this->template->user = $user->isLoggedIn() ? $user->getIdentity() : NULL;
 	}
 

@@ -1,7 +1,6 @@
 <?php
 
-use Nette\Environment,
-	Nette\Application\AppForm,
+use Nette\Application\AppForm,
 	Nette\Forms\Form,
 	Nette\Security\AuthenticationException;
 
@@ -44,7 +43,7 @@ class AuthPresenter extends BasePresenter
 	public function loginFormSubmitted($form)
 	{
 		try {
-			$user = Environment::getUser();
+			$user = $this->getUser();
 			$user->login($form['username']->getValue(), $form['password']->getValue());
 			$this->getApplication()->restoreRequest($this->backlink);
 			$this->redirect('Dashboard:');
