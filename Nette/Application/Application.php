@@ -184,11 +184,19 @@ class Application extends Nette\Object
 
 				if (!$repeatedError && $this->errorPresenter) {
 					$repeatedError = TRUE;
-					$request = new PresenterRequest(
-						$this->errorPresenter,
-						PresenterRequest::FORWARD,
-						array('exception' => $e)
-					);
+					if ($this->presenter) {
+						try {
+							$this->presenter->forward("$this->errorPresenter:", array('exception' => $e));
+						} catch (AbortException $foo) {
+							$request = $this->presenter->getLastCreatedRequest();
+						}
+					} else {
+						$request = new PresenterRequest(
+							$this->errorPresenter,
+							PresenterRequest::FORWARD,
+							array('exception' => $e)
+						);
+					}
 					// continue
 
 				} else { // default error handler
@@ -201,7 +209,7 @@ class Application extends Nette\Object
 					echo "<!DOCTYPE html><meta name=robots content=noindex><meta name=generator content='Nette Framework'>\n\n";
 					echo "<style>body{color:#333;background:white;width:500px;margin:100px auto}h1{font:bold 47px/1.5 sans-serif;margin:.6em 0}p{font:21px/1.5 Georgia,serif;margin:1.5em 0}small{font-size:70%;color:gray}</style>\n\n";
 					static $messages = array(
-					    0 => array('Oops...', 'Your browser sent a request that this server could not understand or process.'),
+						0 => array('Oops...', 'Your browser sent a request that this server could not understand or process.'),
 						403 => array('Access Denied', 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'),
 						404 => array('Page Not Found', 'The page you requested could not be found. It is possible that the address is incorrect, or that the page no longer exists. Please try the search engine to find what you are looking for.'),
 						405 => array('Method Not Allowed', 'The requested method is not allowed for the URL.'),
