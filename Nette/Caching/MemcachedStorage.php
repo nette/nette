@@ -114,6 +114,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
 		}
 
+		$key = $this->prefix . $key;
 		$meta = array(
 			self::META_DATA => $data,
 		);
@@ -134,10 +135,10 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			if (!$this->context) {
 				throw new \InvalidStateException('CacheJournal has not been provided.');
 			}
-			$this->getJournal()->write($this->prefix . $key, $dp);
+			$this->getJournal()->write($key, $dp);
 		}
 
-		$this->memcache->set($this->prefix . $key, $meta, 0, $expire);
+		$this->memcache->set($key, $meta, 0, $expire);
 	}
 
 

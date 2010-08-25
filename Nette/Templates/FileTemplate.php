@@ -92,11 +92,11 @@ class FileTemplate extends Template implements IFileTemplate
 
 		$this->__set('template', $this);
 
-		$shortName = str_replace(dirname(dirname($this->file)), '', $this->file);
-
-		$cache = new Cache($this->getCacheStorage(), 'Nette.FileTemplate');
-		$key = trim(strtr($shortName, '\\/@', '.._'), '.') . '-' . md5($this->file);
-		$cached = $content = $cache[$key];
+		$cache = new Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
+		if ($storage instanceof TemplateCacheStorage) {
+			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
+		}
+		$cached = $content = $cache[$this->file];
 
 		if ($content === NULL) {
 			if (!$this->getFilters()) {
@@ -118,7 +118,7 @@ class FileTemplate extends Template implements IFileTemplate
 			}
 
 			$cache->save(
-				$key,
+				$this->file,
 				$content,
 				array(
 					Cache::FILES => $this->file,
@@ -127,10 +127,10 @@ class FileTemplate extends Template implements IFileTemplate
 				)
 			);
 			$cache->release();
-			$cached = $cache[$key];
+			$cached = $cache[$this->file];
 		}
 
-		if ($cached !== NULL && self::$cacheStorage instanceof TemplateCacheStorage) {
+		if ($cached !== NULL && $storage instanceof TemplateCacheStorage) {
 			LimitedScope::load($cached['file'], $this->getParams());
 			fclose($cached['handle']);
 

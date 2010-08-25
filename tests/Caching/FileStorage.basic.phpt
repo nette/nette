@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 // key and data with special chars
-$key = '../' . implode('', range("\x00", "\x1F"));
+$key = array(1, TRUE);
 $value = range("\x00", "\xFF");
 
 // temporary directory

@@ -39,7 +39,7 @@ $cache->release();
 
 Assert::true( isset($cache[$key]), 'Is cached?' );
 
-Assert::true( (bool) preg_match('#nette\.php$#', $cache[$key]['file']) );
+Assert::true( (bool) preg_match('#[0-9a-f]+\.php$#', $cache[$key]['file']) );
 Assert::true( is_resource($cache[$key]['handle']) );
 
 $var = $cache[$key];

@@ -374,7 +374,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function getKey()
 	{
-		return md5("v2|$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs));
+		return "v2|$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs);
 	}
 
 }

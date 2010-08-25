@@ -367,8 +367,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	protected function getCacheFile($key)
 	{
 		if ($this->useDirs) {
-			$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
-			return $this->dir . '/' . (isset($key[1]) ? urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
+			return $this->dir . '/_' . str_replace('%00', '/_', urlencode($key)); // %00 = urlencode(Cache::NAMESPACE_SEPARATOR)
 		} else {
 			return $this->dir . '/_' . urlencode($key);
 		}

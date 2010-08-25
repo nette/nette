@@ -22,6 +22,9 @@ use Nette;
  */
 class TemplateCacheStorage extends Nette\Caching\FileStorage
 {
+	/** @var string */
+	public $hint;
+
 
 	/**
 	 * Reads cache data from disk.
@@ -45,6 +48,7 @@ class TemplateCacheStorage extends Nette\Caching\FileStorage
 	 */
 	protected function getCacheFile($key)
 	{
+		$key = substr_replace($key, trim(strtr($this->hint, '\\/@', '.._'), '.') . '-', strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1, 0);
 		return parent::getCacheFile($key) . '.php';
 	}
 
