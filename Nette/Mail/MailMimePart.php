@@ -145,7 +145,7 @@ class MailMimePart extends Nette\Object
 			foreach ($this->headers[$name] as $email => $name) {
 				if ($name != NULL) { // intentionally ==
 					$s .= self::encodeHeader(
-						strspn($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
+						strpbrk($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
 						$offset
 					);
 					$email = " <$email>";
