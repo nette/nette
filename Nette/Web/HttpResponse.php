@@ -251,35 +251,6 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 
 
 	/**
-	 * Enables compression. (warning: may not work)
-	 * @return bool
-	 */
-	public function enableCompression()
-	{
-		if (headers_sent()) {
-			return FALSE;
-		}
-
-		if ($this->getHeader('Content-Encoding') !== NULL) {
-			return FALSE; // called twice
-		}
-
-		$ok = ob_gzhandler('', PHP_OUTPUT_HANDLER_START);
-		if ($ok === FALSE) {
-			return FALSE; // not allowed
-		}
-
-		if (function_exists('ini_set')) {
-			ini_set('zlib.output_compression', 'Off');
-			ini_set('zlib.output_compression_level', '6');
-		}
-		ob_start('ob_gzhandler', 1);
-		return TRUE;
-	}
-
-
-
-	/**
 	 * @return void
 	 */
 	public function __destruct()
