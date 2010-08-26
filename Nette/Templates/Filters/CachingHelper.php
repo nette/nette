@@ -37,12 +37,19 @@ class CachingHelper extends Nette\Object
 	/**
 	 * Starts the output cache. Returns CachingHelper object if buffering was started.
 	 * @param  string
-	 * @param  string
+	 * @param  CachingHelper
 	 * @param  array
 	 * @return CachingHelper
 	 */
-	public static function create($key, $file, $tags)
+	public static function create($key, & $parents, $args = NULL)
 	{
+		if ($args) {
+			$key .= md5(serialize($args));
+		}
+		if ($parents) {
+			end($parents)->frame[Cache::ITEMS][] = $key;
+		}
+
 		$cache = self::getCache();
 		if (isset($cache[$key])) {
 			echo $cache[$key];
@@ -52,12 +59,11 @@ class CachingHelper extends Nette\Object
 			$obj = new self;
 			$obj->key = $key;
 			$obj->frame = array(
-				Cache::FILES => array($file),
-				Cache::TAGS => $tags,
-				Cache::EXPIRE => rand(86400 * 4, 86400 * 7),
+				Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
+				Cache::EXPIRE => isset($args['expire']) ? $args['expire'] : '+ 7 days',
 			);
 			ob_start();
-			return $obj;
+			return $parents[] = $obj;
 		}
 	}
 
@@ -87,18 +93,6 @@ class CachingHelper extends Nette\Object
 
 
 
-	/**
-	 * Adds the cached item dependency.
-	 * @param  string
-	 * @return void
-	 */
-	public function addItem($item)
-	{
-		$this->frame[Cache::ITEMS][] = $item;
-	}
-
-
-
 	/********************* backend ****************d*g**/
 
 
@@ -108,7 +102,7 @@ class CachingHelper extends Nette\Object
 	 */
 	protected static function getCache()
 	{
-		return Environment::getCache('Nette.Template.Curly');
+		return Environment::getCache('Nette.Template.Cache');
 	}
 
 }

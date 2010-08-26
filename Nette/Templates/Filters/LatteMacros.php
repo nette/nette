@@ -68,8 +68,8 @@ class LatteMacros extends Nette\Object
 		'snippet' => '<?php %:macroSnippet% ?>',
 		'/snippet' => '<?php %:macroSnippetEnd% ?>',
 
-		'cache' => '<?php if ($_l->foo = Nette\Templates\CachingHelper::create($_l->key = md5(__FILE__) . __LINE__, $template->getFile(), array(%%))) { $_l->caches[] = $_l->foo ?>',
-		'/cache' => '<?php array_pop($_l->caches)->save(); } if (!empty($_l->caches)) end($_l->caches)->addItem($_l->key) ?>',
+		'cache' => '<?php %:macroCache% ?>',
+		'/cache' => '<?php array_pop($_l->g->caches)->save(); } ?>',
 
 		'if' => '<?php if (%%): ?>',
 		'elseif' => '<?php elseif (%%): ?>',
@@ -138,6 +138,9 @@ class LatteMacros extends Nette\Object
 	/** @var string */
 	private $uniq;
 
+	/** @var int */
+	private $cacheCounter;
+
 	/** @var bool */
 	private $oldSnippetMode = TRUE;
 
@@ -172,6 +175,7 @@ class LatteMacros extends Nette\Object
 		$this->namedBlocks = array();
 		$this->extends = NULL;
 		$this->uniq = substr(md5(uniqid('', TRUE)), 0, 10);
+		$this->cacheCounter = 0;
 
 		$filter->context = LatteFilter::CONTEXT_TEXT;
 		$filter->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
@@ -618,6 +622,18 @@ class LatteMacros extends Nette\Object
 
 
 	/**
+	 * {cache ...}
+	 */
+	public function macroCache($content)
+	{
+		return 'if (Nette\Templates\CachingHelper::create('
+			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
+			. ', $_l->g->caches' . LatteFilter::formatArray($content, ', ') . ')) {';
+	}
+
+
+
+	/**
 	 * Converts {block named}...{/block} to functions.
 	 * @internal
 	 */
@@ -920,8 +936,8 @@ class LatteMacros extends Nette\Object
 		$local->g = $template->_g;
 
 		// cache support
-		if (!empty($local->caches)) {
-			end($local->caches)->addFile($template->getFile());
+		if (!empty($local->g->caches)) {
+			end($local->g->caches)->addFile($template->getFile());
 		}
 
 		return $local;
