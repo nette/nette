@@ -1,30 +1,30 @@
 %A%
 
 if (%ns%SnippetHelper::$outputAllowed) {
-} if ($_cb->foo = %ns%SnippetHelper::create($control)) { $_cb->snippets[] = $_cb->foo ?>
+} if ($_l->foo = %ns%SnippetHelper::create($control)) { $_l->snippets[] = $_l->foo ?>
 
-<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 
 
-<?php } if ($_cb->foo = %ns%SnippetHelper::create($control, "outer")) { $_cb->snippets[] = $_cb->foo ?>
+<?php } if ($_l->foo = %ns%SnippetHelper::create($control, "outer")) { $_l->snippets[] = $_l->foo ?>
 	Outer
-		<?php } if ($_cb->foo = %ns%SnippetHelper::create($control, "inner")) { $_cb->snippets[] = $_cb->foo ?>Inner<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+		<?php } if ($_l->foo = %ns%SnippetHelper::create($control, "inner")) { $_l->snippets[] = $_l->foo ?>Inner<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 	/Outer
-<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 
 
 	<?php } if (true): if (%ns%SnippetHelper::$outputAllowed) { ?> Hello World <?php } endif ;if (%ns%SnippetHelper::$outputAllowed) { ?>
 
-	<?php } if ($_cb->foo = %ns%SnippetHelper::create($control, "title", "h2")) { $_cb->snippets[] = $_cb->foo ?>Title 1<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+	<?php } if ($_l->foo = %ns%SnippetHelper::create($control, "title", "h2")) { $_l->snippets[] = $_l->foo ?>Title 1<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 
-	<?php } if ($_cb->foo = %ns%SnippetHelper::create($control, "title2", "<h2>")) { $_cb->snippets[] = $_cb->foo ?>Title 2<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+	<?php } if ($_l->foo = %ns%SnippetHelper::create($control, "title2", "<h2>")) { $_l->snippets[] = $_l->foo ?>Title 2<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 
-	<?php } if ($_cb->foo = %ns%SnippetHelper::create($control, "title3", "<h2>")) { $_cb->snippets[] = $_cb->foo ?>Title 3<?php array_pop($_cb->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
+	<?php } if ($_l->foo = %ns%SnippetHelper::create($control, "title3", "<h2>")) { $_l->snippets[] = $_l->foo ?>Title 3<?php array_pop($_l->snippets)->finish(); } if (%ns%SnippetHelper::$outputAllowed) { ?>
 
 <?php
 }

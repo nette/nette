@@ -68,8 +68,8 @@ class LatteMacros extends Nette\Object
 		'snippet' => '<?php %:macroSnippet% ?>',
 		'/snippet' => '<?php %:macroSnippetEnd% ?>',
 
-		'cache' => '<?php if ($_cb->foo = Nette\Templates\CachingHelper::create($_cb->key = md5(__FILE__) . __LINE__, $template->getFile(), array(%%))) { $_cb->caches[] = $_cb->foo ?>',
-		'/cache' => '<?php array_pop($_cb->caches)->save(); } if (!empty($_cb->caches)) end($_cb->caches)->addItem($_cb->key) ?>',
+		'cache' => '<?php if ($_l->foo = Nette\Templates\CachingHelper::create($_l->key = md5(__FILE__) . __LINE__, $template->getFile(), array(%%))) { $_l->caches[] = $_l->foo ?>',
+		'/cache' => '<?php array_pop($_l->caches)->save(); } if (!empty($_l->caches)) end($_l->caches)->addItem($_l->key) ?>',
 
 		'if' => '<?php if (%%): ?>',
 		'elseif' => '<?php elseif (%%): ?>',
@@ -79,7 +79,7 @@ class LatteMacros extends Nette\Object
 		'/ifset' => '<?php endif ?>',
 		'elseifset' => '<?php elseif (isset(%%)): ?>',
 		'foreach' => '<?php foreach (%:macroForeach%): ?>',
-		'/foreach' => '<?php endforeach; array_pop($_cb->its); $iterator = end($_cb->its) ?>',
+		'/foreach' => '<?php endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>',
 		'for' => '<?php for (%%): ?>',
 		'/for' => '<?php endfor ?>',
 		'while' => '<?php while (%%): ?>',
@@ -210,13 +210,13 @@ class LatteMacros extends Nette\Object
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
 			$s = "<?php\n"
-				. 'if ($_cb->extends) { ob_start(); }' . "\n"
-				. 'elseif (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_cb, get_defined_vars()); }' . "\n"
+				. 'if ($_l->extends) { ob_start(); }' . "\n"
+				. 'elseif (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars()); }' . "\n"
 				. '?>' . $s . "<?php\n"
-				. 'if ($_cb->extends) { ob_end_clean(); Nette\Templates\LatteMacros::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
+				. 'if ($_l->extends) { ob_end_clean(); Nette\Templates\LatteMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }' . "\n";
 		} else {
 			$s = "<?php\n"
-				. 'if (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_cb, get_defined_vars()); }' . "\n"
+				. 'if (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars()); }' . "\n"
 				. '?>' . $s;
 		}
 
@@ -231,7 +231,7 @@ class LatteMacros extends Nette\Object
 
 		// internal state holder
 		$s = "<?php\n"
-			. '$_cb = Nette\Templates\LatteMacros::initRuntime($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
+			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
 			. '?>' . $s;
 	}
 
@@ -260,7 +260,7 @@ class LatteMacros extends Nette\Object
 			return NULL;
 		}
 		$this->current = array($content, $modifiers);
-		return String::replace($this->macros[$macro], '#%(.*?)%#', callback($this, 'cbMacro'));
+		return String::replace($this->macros[$macro], '#%(.*?)%#', callback($this, 'lMacro'));
 	}
 
 
@@ -269,7 +269,7 @@ class LatteMacros extends Nette\Object
 	 * Callback for self::macro().
 	 * @internal
 	 */
-	public function cbMacro($m)
+	public function lMacro($m)
 	{
 		list($content, $modifiers) = $this->current;
 		if ($m[1]) {
@@ -441,8 +441,8 @@ class LatteMacros extends Nette\Object
 			$name = var_export($destination, TRUE);
 			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
-				? "call_user_func(reset(\$_cb->blocks[$name]), \$_cb, $params)"
-				: 'Nette\Templates\LatteMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_cb, $name, $params)";
+				? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
+				: 'Nette\Templates\LatteMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . LatteFilter::formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
@@ -451,8 +451,8 @@ class LatteMacros extends Nette\Object
 			$destination = LatteFilter::formatString($destination);
 			$params .= '$template->getParams()';
 			return $modifiers
-				? 'echo ' . LatteFilter::formatModifiers('Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_cb->templates[" . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
-				: 'Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_cb->templates[" . var_export($this->uniq, TRUE) . '])->render()';
+				? 'echo ' . LatteFilter::formatModifiers('Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_l->templates[" . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
+				: 'Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_l->templates[" . var_export($this->uniq, TRUE) . '])->render()';
 		}
 	}
 
@@ -474,7 +474,7 @@ class LatteMacros extends Nette\Object
 			throw new \InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
 		}
 		$this->extends = $destination !== 'none';
-		return $this->extends ? '$_cb->extends = ' . LatteFilter::formatString($destination) : '';
+		return $this->extends ? '$_l->extends = ' . LatteFilter::formatString($destination) : '';
 	}
 
 
@@ -516,7 +516,7 @@ class LatteMacros extends Nette\Object
 				return "{block $name}";
 
 			} else {
-				return 'if (!$_cb->extends) { ' . $this->macroInclude('#' . $name, $modifiers, TRUE) . "; } {block $name}";
+				return 'if (!$_l->extends) { ' . $this->macroInclude('#' . $name, $modifiers, TRUE) . "; } {block $name}";
 			}
 		}
 	}
@@ -564,7 +564,7 @@ class LatteMacros extends Nette\Object
 		if ($content) {
 			$args[] = LatteFilter::formatString($content);
 		}
-		return '} if ($_cb->foo = Nette\Templates\SnippetHelper::create($control' . implode(', ', $args) . ')) { $_cb->snippets[] = $_cb->foo';
+		return '} if ($_l->foo = Nette\Templates\SnippetHelper::create($control' . implode(', ', $args) . ')) { $_l->snippets[] = $_l->foo';
 	}
 
 
@@ -577,7 +577,7 @@ class LatteMacros extends Nette\Object
 		if (!$this->oldSnippetMode) {
 			return $this->macroBlockEnd('', '');
 		}
-		return 'array_pop($_cb->snippets)->finish(); } if (Nette\Templates\SnippetHelper::$outputAllowed) {';
+		return 'array_pop($_l->snippets)->finish(); } if (Nette\Templates\SnippetHelper::$outputAllowed) {';
 	}
 
 
@@ -622,9 +622,9 @@ class LatteMacros extends Nette\Object
 	public function cbNamedBlocks($matches)
 	{
 		list(, $name, $content) = $matches;
-		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+		$func = '_lb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_cb, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -635,7 +635,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_cb->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
+		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
 	}
 
 
@@ -877,7 +877,7 @@ class LatteMacros extends Nette\Object
 
 
 	/**
-	 * Initializes state holder $_cb in template.
+	 * Initializes local storage in template.
 	 * @param  ITemplate
 	 * @param  bool
 	 * @param  string
@@ -885,36 +885,36 @@ class LatteMacros extends Nette\Object
 	 */
 	public static function initRuntime($template, $extends, $realFile)
 	{
-		$cb = (object) NULL;
+		$local = (object) NULL;
 
 		// extends support
-		if (isset($template->_cb)) {
-			$cb->blocks = & $template->_cb->blocks;
-			$cb->templates = & $template->_cb->templates;
+		if (isset($template->_l)) {
+			$local->blocks = & $template->_l->blocks;
+			$local->templates = & $template->_l->templates;
 		}
-		$cb->templates[$realFile] = $template;
-		$cb->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
-		unset($template->_cb, $template->_extends);
+		$local->templates[$realFile] = $template;
+		$local->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
+		unset($template->_l, $template->_extends);
 
 		// cache support
-		if (!empty($cb->caches)) {
-			end($cb->caches)->addFile($template->getFile());
+		if (!empty($local->caches)) {
+			end($local->caches)->addFile($template->getFile());
 		}
 
-		return $cb;
+		return $local;
 	}
 
 
 
-	public static function renderSnippets($control, $cb, $params)
+	public static function renderSnippets($control, $local, $params)
 	{
 		$payload = $control->getPresenter()->getPayload();
-		if (isset($cb->blocks)) {
-			foreach ($cb->blocks as $name => $function) {
+		if (isset($local->blocks)) {
+			foreach ($local->blocks as $name => $function) {
 				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) continue;
 				ob_start();
 				$function = reset($function);
-				$function($cb, $params);
+				$function($local, $params);
 				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
 			}
 		}

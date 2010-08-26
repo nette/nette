@@ -37,8 +37,7 @@ $template->render(<<<EOD
 EOD
 );
 
-Assert::match('
-<?php
+Assert::match('<?php
 %A%
 
 if (%ns%SnippetHelper::$outputAllowed) {
