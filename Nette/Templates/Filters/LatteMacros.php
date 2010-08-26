@@ -93,7 +93,7 @@ class LatteMacros extends Nette\Object
 
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
-		'ifCurrent' => '<?php %:macroIfCurrent%; if ($presenter->getLastCreatedRequestFlag("current")): ?>',
+		'ifCurrent' => '<?php %:macroIfCurrent% ?>',
 		'widget' => '<?php %:macroWidget% ?>',
 		'control' => '<?php %:macroWidget% ?>',
 
@@ -103,8 +103,8 @@ class LatteMacros extends Nette\Object
 		'var' => '<?php %:macroAssign% ?>',
 		'assign' => '<?php %:macroAssign% ?>',
 		'default' => '<?php %:macroDefault% ?>',
-		'dump' => '<?php Nette\Debug::barDump(%:macroDump%, "Template " . str_replace(Nette\Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile())) ?>',
-		'debugbreak' => '<?php if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break() ?>',
+		'dump' => '<?php %:macroDump% ?>',
+		'debugbreak' => '<?php %:macroDebugbreak% ?>',
 		'l' => '{',
 		'r' => '}',
 
@@ -231,8 +231,8 @@ class LatteMacros extends Nette\Object
 
 		// internal state holder
 		$s = "<?php\n"
-			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . "); unset(\$_extends);\n"
-			. '?>' . $s;
+			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . '); unset($_extends);'
+			. "\n?>" . $s;
 	}
 
 
@@ -449,10 +449,10 @@ class LatteMacros extends Nette\Object
 
 		} else { // include "file"
 			$destination = LatteFilter::formatString($destination);
-			$params .= '$template->getParams()';
+			$cmd = 'Nette\Templates\LatteMacros::includeTemplate(' . $destination . ', ' . $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
 			return $modifiers
-				? 'echo ' . LatteFilter::formatModifiers('Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_l->templates[" . var_export($this->uniq, TRUE) . '])->__toString(TRUE)', $modifiers)
-				: 'Nette\Templates\LatteMacros::includeTemplate' . "($destination, $params, \$_l->templates[" . var_export($this->uniq, TRUE) . '])->render()';
+				? 'echo ' . LatteFilter::formatModifiers($cmd . '->__toString(TRUE)', $modifiers)
+				: $cmd . '->render()';
 		}
 	}
 
@@ -507,7 +507,9 @@ class LatteMacros extends Nette\Object
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
 				if (!$tag) $tag = 'div';
-				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php " . $this->macroInclude('#' . $name, $modifiers) . " ?></$tag><?php {block $name}";
+				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
+					. $this->macroInclude('#' . $name, $modifiers)
+					. " ?></$tag><?php {block $name}";
 
 			} elseif (!$top) {
 				return $this->macroInclude('#' . $name, $modifiers, TRUE) . "{block $name}";
@@ -624,7 +626,8 @@ class LatteMacros extends Nette\Object
 		list(, $name, $content) = $matches;
 		$func = '_lb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
+			. "function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -691,7 +694,19 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroDump($content)
 	{
-		return $content ? "array(" . var_export($content, TRUE) . " => $content)" : 'get_defined_vars()';
+		return 'Nette\Debug::barDump('
+			. ($content ? 'array(' . var_export($content, TRUE) . " => $content)" : 'get_defined_vars()')
+			. ', "Template " . str_replace(Nette\Environment::getVariable("appDir"), "\xE2\x80\xA6", $template->getFile()))';
+	}
+
+
+
+	/**
+	 * {debugbreak}
+	 */
+	public function macroDebugbreak()
+	{
+		return 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()';
 	}
 
 
@@ -742,7 +757,8 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroIfCurrent($content)
 	{
-		return $content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (Nette\Application\InvalidLinkException $e) {}' : '';
+		return ($content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (Nette\Application\InvalidLinkException $e) {}' : '')
+			. '; if ($presenter->getLastCreatedRequestFlag("current")):';
 	}
 
 
@@ -766,7 +782,8 @@ class LatteMacros extends Nette\Object
 			throw new \InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
 		}
 		if (strpos($content, '=>') === FALSE) { // back compatibility
-			return '$' . ltrim(LatteFilter::fetchToken($content), '$') . ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
+			return '$' . ltrim(LatteFilter::fetchToken($content), '$')
+				. ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
 		}
 		return 'extract(' . LatteFilter::formatArray($content) . ')';
 	}
