@@ -877,7 +877,7 @@ class LatteMacros extends Nette\Object
 
 
 	/**
-	 * Initializes local storage in template.
+	 * Initializes local & global storage in template.
 	 * @param  ITemplate
 	 * @param  bool
 	 * @param  string
@@ -895,6 +895,12 @@ class LatteMacros extends Nette\Object
 		$local->templates[$realFile] = $template;
 		$local->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
 		unset($template->_l, $template->_extends);
+
+		// global storage
+		if (!isset($template->_g)) {
+			$template->_g = (object) NULL;
+		}
+		$local->g = $template->_g;
 
 		// cache support
 		if (!empty($local->caches)) {
