@@ -30,6 +30,7 @@ class Assert
 	public static function same($expected, $actual)
 	{
 		if ($actual !== $expected) {
+			self::log($expected, $actual);
 			self::doFail('Failed asserting that ' . self::dump($actual) . ' is identical to expected ' . self::dump($expected));
 		}
 	}
@@ -45,6 +46,7 @@ class Assert
 	public static function equal($expected, $actual)
 	{
 		if ($actual != $expected) {
+			self::log($expected, $actual);
 			self::doFail('Failed asserting that ' . self::dump($actual) . ' is equal to expected ' . self::dump($expected));
 		}
 	}
@@ -177,6 +179,7 @@ class Assert
 			throw new Exception("Error while executing regular expression.");
 		}
 		if (!$res) {
+			self::log($expected, $actual);
 			self::doFail('Failed asserting that ' . self::dump($actual) . ' matches expected ' . self::dump($expected));
 		}
 	}
@@ -238,6 +241,34 @@ class Assert
 
 		} else {
 			return "unknown type";
+		}
+	}
+
+
+
+	/**
+	 * Logs big variables to file.
+	 * @param  mixed
+	 * @param  mixed
+	 * @return void
+	 */
+	private function log($expected, $actual)
+	{
+		$trace = debug_backtrace();
+		$trace = end($trace);
+		if (!isset($trace['file'])) {
+			return;
+		}
+		$file = dirname($trace['file']) . '/output/' . basename($trace['file'], '.phpt');
+
+		if (is_object($expected) || is_array($expected) || (is_string($expected) && strlen($expected) > 100)) {
+			@mkdir(dirname($file)); // @ - directory may already exist
+			file_put_contents($file . '.expected', is_string($expected) ? $expected : var_export($expected, TRUE));
+		}
+
+		if (is_object($actual) || is_array($actual) || (is_string($actual) && strlen($actual) > 100)) {
+			@mkdir(dirname($file)); // @ - directory may already exist
+			file_put_contents($file . '.actual', is_string($actual) ? $actual : var_export($actual, TRUE));
 		}
 	}
 
