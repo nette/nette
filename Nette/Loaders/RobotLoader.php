@@ -99,13 +99,8 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
-		if (isset($this->list[$type])) {
-			if ($this->list[$type] !== FALSE) {
-				LimitedScope::load($this->list[$type][0]);
-				self::$count++;
-			}
 
-		} else {
+		if (!isset($this->list[$type]) || ($this->list[$type] !== FALSE && !is_file($this->list[$type][0]))) {
 			$this->list[$type] = FALSE;
 
 			if ($this->autoRebuild === NULL) {
@@ -124,6 +119,10 @@ class RobotLoader extends AutoLoader
 				LimitedScope::load($this->list[$type][0]);
 				self::$count++;
 			}
+
+		} elseif ($this->list[$type] !== FALSE) {
+			LimitedScope::load($this->list[$type][0]);
+			self::$count++;
 		}
 	}
 
@@ -203,7 +202,7 @@ class RobotLoader extends AutoLoader
 	private function addClass($class, $file, $time)
 	{
 		$class = strtolower($class);
-		if (!empty($this->list[$class]) && $this->list[$class][0] !== $file) {
+		if (!empty($this->list[$class]) && $this->list[$class][0] !== $file && is_file($this->list[$class][0])) {
 			spl_autoload_call($class); // hack: enables exceptions
 			throw new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
 		}
