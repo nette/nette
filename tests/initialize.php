@@ -29,9 +29,3 @@ if (extension_loaded('xdebug')) {
 	xdebug_disable();
 	TestHelpers::startCodeCoverage(__DIR__ . '/coverage.dat');
 }
-
-if (function_exists('class_alias')) {
-	class_alias('TestHelpers', 'T');
-} else {
-	class T extends TestHelpers {}
-}

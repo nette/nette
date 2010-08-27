@@ -23,7 +23,7 @@ $value = range("\x00", "\xFF");
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 

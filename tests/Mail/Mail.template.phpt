@@ -24,7 +24,7 @@ require __DIR__ . '/Mail.inc';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
 

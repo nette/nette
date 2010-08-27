@@ -23,7 +23,7 @@ require __DIR__ . '/Template.inc';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 

@@ -17,14 +17,14 @@ require __DIR__ . '/../initialize.php';
 
 
 if (!Nette\Caching\MemcachedStorage::isAvailable()) {
-	T::skip('Requires PHP extension Memcache.');
+	TestHelpers::skip('Requires PHP extension Memcache.');
 }
 
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 Nette\Environment::setVariable('tempDir', TEMP_DIR);
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 $storage = new Nette\Caching\MemcachedStorage('localhost');

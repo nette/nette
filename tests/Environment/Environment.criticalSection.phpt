@@ -22,7 +22,7 @@ $key = '../' . implode('', range("\x00", "\x1F"));
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 Environment::setVariable('tempDir', TEMP_DIR);
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 // entering

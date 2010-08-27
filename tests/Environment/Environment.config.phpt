@@ -21,7 +21,7 @@ class Factory
 {
 	static function createService($options)
 	{
-		T::note( 'Factory::createService', __METHOD__ );
+		TestHelpers::note( 'Factory::createService', __METHOD__ );
 		Assert::same( array('anyValue' => 'hello world'), $options );
 		return (object) NULL;
 	}
@@ -29,7 +29,7 @@ class Factory
 
 Environment::setName(Environment::PRODUCTION);
 Environment::loadConfig('config.ini');
-Assert::same(array('Factory::createService'), T::fetchNotes());
+Assert::same(array('Factory::createService'), TestHelpers::fetchNotes());
 
 Assert::same( 'hello world', Environment::getVariable('foo') );
 

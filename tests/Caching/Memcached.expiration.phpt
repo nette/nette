@@ -19,7 +19,7 @@ require __DIR__ . '/../initialize.php';
 
 
 if (!MemcachedStorage::isAvailable()) {
-	T::skip('Requires PHP extension Memcache.');
+	TestHelpers::skip('Requires PHP extension Memcache.');
 }
 
 

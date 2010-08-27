@@ -26,8 +26,8 @@ class MockControl extends Object
 {
 	function getWidget($name)
 	{
-		T::note( __METHOD__ );
-		T::note( func_get_args() );
+		TestHelpers::note( __METHOD__ );
+		TestHelpers::note( func_get_args() );
 		return new MockWidget;
 	}
 
@@ -40,8 +40,8 @@ class MockWidget extends Object
 
 	function __call($name, $args)
 	{
-		T::note( __METHOD__ );
-		T::note( func_get_args() );
+		TestHelpers::note( __METHOD__ );
+		TestHelpers::note( func_get_args() );
 	}
 
 }
@@ -94,4 +94,4 @@ Assert::same( array(
 	"MockWidget::__call", array("render", array("var1", 1, 2)),
 	"MockControl::getWidget", array("form"),
 	"MockWidget::__call", array("render", array(array("var1" => 5, 0 => 1, 1 => 2))),
-), T::fetchNotes() );
+), TestHelpers::fetchNotes() );
