@@ -222,11 +222,10 @@ class SelectBox extends FormControl
 				if ($value2 instanceof Nette\Web\Html) {
 					$dest->add((string) $value2->selected(isset($selected[$key2])));
 
-				} elseif ($this->useKeys) {
-					$dest->add((string) $option->value($key2)->selected(isset($selected[$key2]))->setText($this->translate($value2)));
-
 				} else {
-					$dest->add((string) $option->selected(isset($selected[$value2]))->setText($this->translate($value2)));
+					$key2 = $this->useKeys ? $key2 : $value2;
+					$value2 = $this->translate($value2);
+					$dest->add((string) $option->value($key2 === $value2 ? NULL : $key2)->selected(isset($selected[$key2]))->setText($value2));
 				}
 			}
 		}
