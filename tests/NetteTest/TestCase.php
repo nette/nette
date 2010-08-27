@@ -20,6 +20,12 @@
  */
 class TestCase
 {
+	const
+		CODE_OK = 0,
+		CODE_SKIP = 253,
+		CODE_ERROR = 255,
+		CODE_FAIL = 254;
+
 	/** @var string  test file */
 	private $file;
 
@@ -105,7 +111,7 @@ class TestCase
 
 		} else {
 			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
-			if ($res !== 0 && $res !== 255) {
+			if ($res !== self::CODE_OK && $res !== self::CODE_ERROR) {
 				throw new Exception("Unable to execute '$binary -v'.");
 			}
 
@@ -160,16 +166,16 @@ class TestCase
 			}
 		}
 
-		if ($res === 255) {
+		if ($res === self::CODE_ERROR) {
 			throw new TestCaseException("Fatal error");
 
-		} elseif ($res === 254) {
+		} elseif ($res === self::CODE_FAIL) {
 			throw new TestCaseException($line);
 
-		} elseif ($res === 253) { // skip
+		} elseif ($res === self::CODE_SKIP) { // skip
 			throw new TestCaseException($line, TestCaseException::SKIPPED);
 
-		} elseif ($res !== 0) {
+		} elseif ($res !== self::CODE_OK) {
 			throw new Exception("Unable to execute '$command'.");
 
 		}

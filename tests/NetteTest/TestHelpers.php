@@ -141,7 +141,7 @@ class TestHelpers
 	public static function skip($message = '')
 	{
 		echo "\nSkipped $message";
-		die(253);
+		die(TestCase::CODE_SKIP);
 	}
 
 }

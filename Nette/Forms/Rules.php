@@ -67,7 +67,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
 		$rule->type = Rule::VALIDATOR;
-		if ($message === NULL && isset(self::$defaultMessages[$rule->operation])) {
+		if ($message === NULL && is_string($rule->operation) && isset(self::$defaultMessages[$rule->operation])) {
 			$rule->message = self::$defaultMessages[$rule->operation];
 		} else {
 			$rule->message = $message;

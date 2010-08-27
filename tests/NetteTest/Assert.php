@@ -199,7 +199,7 @@ class Assert
 			$message .= " on line $trace[line]";
 		}
 		echo "\n$message";
-		exit(254);
+		exit(TestCase::CODE_FAIL);
 	}
 
 
@@ -252,7 +252,7 @@ class Assert
 	 * @param  mixed
 	 * @return void
 	 */
-	private function log($expected, $actual)
+	private static function log($expected, $actual)
 	{
 		$trace = debug_backtrace();
 		$trace = end($trace);
