@@ -21,35 +21,11 @@ require __DIR__ . '/TestCase.php';
  */
 class TestHelpers
 {
+	/** @var array */
 	static public $notes = array();
 
-
-	/**
-	 * Configures PHP and environment.
-	 * @return void
-	 */
-	public static function startup()
-	{
-		error_reporting(E_ALL | E_STRICT);
-		ini_set('display_errors', TRUE);
-		ini_set('html_errors', FALSE);
-		ini_set('log_errors', FALSE);
-
-
-		$_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS')));
-		$_SERVER['REQUEST_TIME'] = 1234567890;
-		$_ENV = array();
-
-		if (PHP_SAPI !== 'cli') {
-			header('Content-Type: text/plain; charset=utf-8');
-		}
-
-		if (extension_loaded('xdebug')) {
-			xdebug_disable();
-			xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
-			register_shutdown_function(array(__CLASS__, 'prepareSaveCoverage'));
-		}
-	}
+	/** @var string */
+	static public $coverageFile;
 
 
 
@@ -99,8 +75,35 @@ class TestHelpers
 
 
 	/**
-	 * Coverage saving helper.
+	 * Skips this test.
 	 * @return void
+	 */
+	public static function skip($message = '')
+	{
+		echo "\nSkipped $message";
+		die(TestCase::CODE_SKIP);
+	}
+
+
+
+	/**
+	 * Starts gathering the information for code coverage.
+	 * @param  string
+	 * @return void
+	 */
+	public static function startCodeCoverage($file)
+	{
+		self::$coverageFile = $file;
+		xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+		register_shutdown_function(array(__CLASS__, 'prepareSaveCoverage'));
+	}
+
+
+
+	/**
+	 * Coverage saving helper. Do not call directly.
+	 * @return void
+	 * @internal
 	 */
 	public static function prepareSaveCoverage()
 	{
@@ -110,8 +113,9 @@ class TestHelpers
 
 
 	/**
-	 * Saves information about code coverage.
+	 * Saves information about code coverage. Do not call directly.
 	 * @return void
+	 * @internal
 	 */
 	public static function saveCoverage()
 	{
@@ -130,18 +134,6 @@ class TestHelpers
 		}
 
 		file_put_contents($file, serialize($coverage));
-	}
-
-
-
-	/**
-	 * Skips this test.
-	 * @return void
-	 */
-	public static function skip($message = '')
-	{
-		echo "\nSkipped $message";
-		die(TestCase::CODE_SKIP);
 	}
 
 }
