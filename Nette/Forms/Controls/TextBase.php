@@ -192,7 +192,8 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateUrl(TextBase $control)
 	{
-		return (bool) String::match($control->getValue(), '/^.+\.[a-z]{2,6}(?:\\/.*)?$/i');
+		$chars = "a-z0-9\x80-\xFF";
+		return (bool) String::match($control->getValue(), "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i");
 	}
 
 
