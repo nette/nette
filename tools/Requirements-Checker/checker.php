@@ -185,7 +185,7 @@ paint(array(
 	array(
 		'title' => 'ImageMagick library',
 		'required' => FALSE,
-		'passed' => @exec('identify -format "%w,%h,%m" ' . addcslashes(__DIR__ . '/assets/logo.gif', ' ')) === '176,104,GIF', // @ - may be disabled
+		'passed' => @exec('identify -format "%w,%h,%m" ' . addcslashes(__DIR__ . '/assets/logo.png', ' ')) === '108,46,PNG', // @ - may be disabled
 		'description' => 'ImageMagick server library is absent. You will not be able to use <code>Nette\ImageMagick</code>.',
 	),
 
