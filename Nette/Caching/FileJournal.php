@@ -234,7 +234,11 @@ class FileJournal extends Nette\Object implements ICacheJournal
 					} // else file already reopened by rebuild()
 				}
 
-			} // else log opened, now new log, everything ok
+			} // else log opened, no new log, everything ok
+
+			// instance retains shared lock, so nobody can rebuild and change opened
+			// files without us knowing
+
 		} else {
 			// being rebuilt, open new log
 			$doMergeFirst = TRUE;
@@ -247,16 +251,21 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		if ($doMergeFirst) {
 			$this->logMerge = $this->mergeLogFile($this->logHandle, 0);
-			fclose($this->logHandle);
 		}
 
 		if ($reopen) {
+			fclose($this->logHandle);
 			if (!($this->logHandle = @fopen($logfile = $this->file . self::EXTLOG, 'a+b'))) {
 				throw new \InvalidStateException('Cannot open logfile ' . $logfile . '.');
+			}
+
+			if (!flock($this->logHandle, LOCK_SH)) {
+				throw new \InvalidStateException('Cannot acquite shared lock on log.');
 			}
 		}
 
 		if ($openNewLog) {
+			fclose($this->logHandle);
 			if (!($this->logHandle = @fopen($logfile = $this->file . self::EXTLOGNEW, 'a+b'))) { // intentionally @
 				throw new \InvalidStateException('Cannot open logfile ' . $logfile . '.');
 			}
@@ -266,6 +275,24 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		$this->logMerge = $this->mergeLogFile($this->logHandle, 0, $this->logMerge);
 		$this->logMergeP = ftell($this->logHandle);
+
+		// empty-log Windows fix
+		if ($this->logMergeP === 0) {
+			if (!flock($this->logHandle, LOCK_EX)) {
+				throw new \InvalidStateException('Cannot acquite exclusive lock on log.');
+			}
+
+			$data = serialize(array());
+			$data = pack('N', strlen($data)) . $data;
+			$written = fwrite($this->logHandle, $data);
+			if ($written === FALSE || $written !== strlen($data)) {
+				throw new \InvalidStateException('Cannot write empty packet to log.');
+			}
+
+			if (!flock($this->logHandle, LOCK_SH)) {
+				throw new \InvalidStateException('Cannot acquite shared lock on log.');
+			}
+		}
 	}
 
 
@@ -359,8 +386,11 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		// let's assume the data won't be larger than filesystem block size, so it
 		// should be atomic
 		$data = serialize($data);
-		if (fwrite($this->logHandle, pack('N', strlen($data)) . $data) === FALSE) {
-			return FALSE;
+		$data = pack('N', strlen($data)) . $data;
+
+		$written = fwrite($this->logHandle, $data);
+		if ($written === FALSE || $written !== strlen($data)) {
+			throw new \InvalidStateException('Cannot write to log.');
 		}
 
 
@@ -389,7 +419,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return TRUE;
 		}
 
-		if (!($newhandle = fopen($this->file . self::EXTNEW, 'wb'))) {
+		if (!($newhandle = @fopen($this->file . self::EXTNEW, 'wb'))) { // intentionally @
 			flock($this->logHandle, LOCK_UN);
 			return FALSE;
 		}
@@ -674,7 +704,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return FALSE;
 		}
 
-		ftruncate($this->logHandle, 0);
+		ftruncate($this->logHandle, 4 + strlen(serialize(array()))); // retain empty record at beginning
 		flock($this->logHandle, LOCK_UN);
 		fclose($this->logHandle);
 
@@ -697,7 +727,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		$this->logMergeP = 0;
 
 		if (!($this->handle = @fopen($this->file, 'rb'))) {
-			throw new \InvalidStateException('Cannot reopen file ' . $this-> file . '.');
+			throw new \InvalidStateException('Cannot reopen file ' . $this->file . '.');
 		}
 
 		clearstatcache();
