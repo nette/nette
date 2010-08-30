@@ -270,9 +270,9 @@ class Configurator extends Object
 	 */
 	public static function createCacheJournal()
 	{
-		if (Nette\Caching\SqliteJournal::isAvailable()) {
+		/*if (Nette\Caching\SqliteJournal::isAvailable()) {
 			return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir') . '/cachejournal.db');
-		} else {
+		} else*/ {
 			return new Nette\Caching\FileJournal(Environment::getVariable('tempDir'));
 		}
 	}
