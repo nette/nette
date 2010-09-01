@@ -12,7 +12,7 @@ var nette = nette || { };
 
 nette.getValue = function(elem) {
 	if (!elem) {
-		return void 0;
+		return null;
 
 	} else if (!elem.nodeName) { // radio
 		for (var i = 0, len = elem.length; i < len; i++) {
@@ -125,7 +125,7 @@ nette.validateRule = function(elem, op, arg) {
 	case ':equal':
 		arg = arg instanceof Array ? arg : [arg];
 		for (var i in arg) {
-			if (val === (arg[i].control ? nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
+			if (val == (arg[i].control ? nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) return true;
 		}
 		return false;
 
