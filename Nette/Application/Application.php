@@ -186,7 +186,7 @@ class Application extends Nette\Object
 					$repeatedError = TRUE;
 					if ($this->presenter) {
 						try {
-							$this->presenter->forward("$this->errorPresenter:", array('exception' => $e));
+							$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
 						} catch (AbortException $foo) {
 							$request = $this->presenter->getLastCreatedRequest();
 						}
