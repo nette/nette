@@ -35,7 +35,7 @@ function _netteDebugPrintCode($file, $line, $count = 15)
 		ini_set('highlight.comment', '#999; font-style: italic');
 		ini_set('highlight.default', '#000');
 		ini_set('highlight.html', '#06B');
-		ini_set('highlight.keyword', '#C22; font-weight: bold');
+		ini_set('highlight.keyword', '#D24; font-weight: bold');
 		ini_set('highlight.string', '#080');
 	}
 
@@ -182,8 +182,8 @@ if (headers_sent()) {
 
 		#netteBluescreen {
 			font: 9pt/1.5 Verdana, sans-serif;
-			background: #F6EEE0;
-			color: #3A3A32;
+			background: white;
+			color: #333;
 			position: absolute;
 			left: 0;
 			top: 0;
@@ -214,7 +214,6 @@ if (headers_sent()) {
 
 		#netteBluescreenError {
 			background: #CD1818;
-			border-bottom: 1px solid #AB9D8B;
 			color: white;
 			font-weight: bold;
 			font-style: normal;
@@ -235,12 +234,12 @@ if (headers_sent()) {
 
 		#netteBluescreen a {
 			text-decoration: none;
-			color: #A27B30;
+			color: #328ADC;
 		}
 
 		#netteBluescreen a abbr {
 			font-family: sans-serif;
-			color: #D0C1A7;
+			color: #BBB;
 		}
 
 		#netteBluescreen h3 {
@@ -258,9 +257,9 @@ if (headers_sent()) {
 		}
 
 		#netteBluescreen pre, #netteBluescreen table {
-			background: #E4F1FC;
+			background: #FDF5CE;
 			padding: .4em .7em;
-			border: 1px hidden white;
+			border: 1px dotted silver;
 			overflow: auto;
 		}
 
@@ -283,7 +282,7 @@ if (headers_sent()) {
 		}
 
 		#netteBluescreen div.inner {
-			background: white;
+			background: #F4F3F1;
 			padding: .1em 1em 1em;
 			border-radius: 8px;
 			-moz-border-radius: 8px;
@@ -303,7 +302,7 @@ if (headers_sent()) {
 			vertical-align: top;
 			text-align: left;
 			padding: 2px 6px;
-			border: 1px solid #CEDEEA;
+			border: 1px solid #e6dfbf;
 		}
 
 		#netteBluescreen th {
@@ -312,7 +311,7 @@ if (headers_sent()) {
 		}
 
 		#netteBluescreen .odd, #netteBluescreen .odd pre {
-			background-color: #DEE9F4;
+			background-color: #F7F0CB;
 		}
 
 		#netteBluescreen ol {
@@ -324,9 +323,9 @@ if (headers_sent()) {
 			font: 7pt/1.5 Verdana, sans-serif !important;
 			padding: 2em 4em;
 			margin: 1em 0 0;
-			color: #817969;
-			background: #FBF8F2 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAAjCAMAAADbuxbOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF/fz24d7Y7Onj5uLd9vPu3drUzMvG09LN39zW8e7o2NbQ3NnT29jS0M7J1tXQAAAApvmsFgAAABB0Uk5T////////////////////AOAjXRkAAAKlSURBVHja7FbbsqQgDAwENEgc//9vN+SCWDtbtXPmZR/Wc6o02mlC58LA9ckFAOszvMV8xNgyUjyXhojfMVKvRL0ZHavxXYy5JrmchMdzou8YlTClxajtK8ZGGpWRoBr1+gFjKfHkJPbizabLgzE3pH7Iu4K980xgFvlrVzMZoVBWhtvouCDdcTDmTgMCJdVxJ9MKO6XxnliM7hxi5lbj2ZVM4l8DqYyKoNLYcfqBB1/LpHYxEcfVG6ZpMDgyFUVWY/Q1sSYPpIdSAKWqLWL0XqWiMWc4hpH0OQOMOAgdycY4N9Sb7wWANQs3rsDSdLAYiuxi5siVfOhBWIrtH0G3kNaF/8Q4kCPE1kMucG/ZMUBUCOgiKJkPuWWTLGVgLGpwns1DraUayCtoBqERyaYtVsm85NActRooezvSLO/sKZP/nq8n4+xcyjNsRu8zW6KWpdb7wjiQd4WrtFZYFiKHENSmWp6xshh96c2RQ+c7Lt+qbijyEjHWUJ/pZsy8MGIUuzNiPySK2Gqoh6ZTRF6ko6q3nVTkaA//itIrDpW6l3SLo8juOmqMXkYknu5FdQxWbhCfKHEGDhxxyTVaXJF3ZjSl3jMksjSOOKmne9pI+mcG5QvaUJhI9HpkmRo2NpCrDJvsktRhRE2MM6F2n7dt4OaMUq8bCctk0+PoMRzL+1l5PZ2eyM/Owr86gf8z/tOM53lom5+nVcFuB+eJVzlXwAYy9TZ9s537tfqcsJWbEU4nBngZo6FfO9T9CdhfBtmk2dLiAy8uS4zwOpMx2HqYbTC+amNeAYTpsP4SIgvWfUBWXxn3CMHW3ffd7k3+YIkx7w0t/CVGvcPejoeOlzOWzeGbawOHqXQGUTMZRcfj4XPCgW9y/fuvVn8zD9P1QHzv80uAAQA0i3Jer7Jr7gAAAABJRU5ErkJggg==') 99% 10px no-repeat;
-			border-top: 1px solid #E4DED5;
+			color: #777;
+			background: #F6F5F3 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAAjCAMAAADbuxbOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF/fz24d7Y7Onj5uLd9vPu3drUzMvG09LN39zW8e7o2NbQ3NnT29jS0M7J1tXQAAAApvmsFgAAABB0Uk5T////////////////////AOAjXRkAAAKlSURBVHja7FbbsqQgDAwENEgc//9vN+SCWDtbtXPmZR/Wc6o02mlC58LA9ckFAOszvMV8xNgyUjyXhojfMVKvRL0ZHavxXYy5JrmchMdzou8YlTClxajtK8ZGGpWRoBr1+gFjKfHkJPbizabLgzE3pH7Iu4K980xgFvlrVzMZoVBWhtvouCDdcTDmTgMCJdVxJ9MKO6XxnliM7hxi5lbj2ZVM4l8DqYyKoNLYcfqBB1/LpHYxEcfVG6ZpMDgyFUVWY/Q1sSYPpIdSAKWqLWL0XqWiMWc4hpH0OQOMOAgdycY4N9Sb7wWANQs3rsDSdLAYiuxi5siVfOhBWIrtH0G3kNaF/8Q4kCPE1kMucG/ZMUBUCOgiKJkPuWWTLGVgLGpwns1DraUayCtoBqERyaYtVsm85NActRooezvSLO/sKZP/nq8n4+xcyjNsRu8zW6KWpdb7wjiQd4WrtFZYFiKHENSmWp6xshh96c2RQ+c7Lt+qbijyEjHWUJ/pZsy8MGIUuzNiPySK2Gqoh6ZTRF6ko6q3nVTkaA//itIrDpW6l3SLo8juOmqMXkYknu5FdQxWbhCfKHEGDhxxyTVaXJF3ZjSl3jMksjSOOKmne9pI+mcG5QvaUJhI9HpkmRo2NpCrDJvsktRhRE2MM6F2n7dt4OaMUq8bCctk0+PoMRzL+1l5PZ2eyM/Owr86gf8z/tOM53lom5+nVcFuB+eJVzlXwAYy9TZ9s537tfqcsJWbEU4nBngZo6FfO9T9CdhfBtmk2dLiAy8uS4zwOpMx2HqYbTC+amNeAYTpsP4SIgvWfUBWXxn3CMHW3ffd7k3+YIkx7w0t/CVGvcPejoeOlzOWzeGbawOHqXQGUTMZRcfj4XPCgW9y/fuvVn8zD9P1QHzv80uAAQA0i3Jer7Jr7gAAAABJRU5ErkJggg==') 99% 10px no-repeat;
+			border-top: 1px solid #DDD;
 		}
 
 		#netteBluescreen .highlight {
@@ -340,7 +339,7 @@ if (headers_sent()) {
 		}
 
 		#netteBluescreen .line {
-			color: #909DA4;
+			color: #9F9C7F;
 			font-weight: normal;
 			font-style: normal;
 		}
