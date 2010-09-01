@@ -82,7 +82,7 @@ nette.validateControl = function(elem, rules, onlyCheck) {
 
 nette.validateForm = function(sender) {
 	var form = sender.form || sender;
-	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate')) {
+	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate')) {
 		return true;
 	}
 	for (var i = 0; i < form.elements.length; i++) {
