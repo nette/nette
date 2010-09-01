@@ -78,8 +78,9 @@ use Nette;
 	</thead>
 
 	<tbody>
+	<?php $rn = 0; ?>
 	<?php foreach ($this->routers as $router): ?>
-	<tr class="<?php echo $router['matched'] ?>">
+	<tr class="<?php echo $router['matched'], ' ', ($rn++%2?'nette-alt':'') ?>">
 		<td><?php echo $router['matched'] ?></td>
 
 		<td><code><?php echo htmlSpecialChars($router['class']) ?></code></td>

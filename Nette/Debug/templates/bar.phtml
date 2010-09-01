@@ -55,17 +55,17 @@ ob_start();
 	}
 
 	#nette-debug a {
-		color: #125eae;
+		color: #125EAE;
 		text-decoration: none;
 	}
 
 	#nette-debug .nette-panel a {
-		color: #125eae;
+		color: #125EAE;
 		text-decoration: none;
 	}
 
 	#nette-debug a:hover, #nette-debug a:active, #nette-debug a:focus {
-		background-color: #125eae;
+		background-color: #125EAE;
 		color: white;
 	}
 
@@ -75,23 +75,23 @@ ob_start();
 
 	#nette-debug .nette-panel table {
 		border-collapse: collapse;
-		background: #fcfae5;
+		background: #FDF5CE;
 	}
 
 	#nette-debug .nette-panel .nette-alt td {
-		background: #f5f2db;
+		background: #F7F0CB;
 	}
 
 	#nette-debug .nette-panel td, #nette-debug .nette-panel th {
-		border: 1px solid #dcd7c8;
+		border: 1px solid #E6DFBF;
 		padding: 2px 5px;
 		vertical-align: top;
 		text-align: left;
 	}
 
 	#nette-debug .nette-panel th {
-		background: #f0eee6;
-		color: #655e5e;
+		background: #F4F3F1;
+		color: #655E5E;
 		font-size: 90%;
 		font-weight: bold;
 	}
@@ -110,10 +110,9 @@ ob_start();
 	#nette-debug-bar {
 		font: normal normal 12px/21px Tahoma, sans-serif;
 		color: #333;
-		background: #edeae0;
+		border: 1px solid #c9c9c9;
+		background: #EDEAE0 url('data:image/png;base64,R0lGODlhAQAVALMAAOTh1/Px6eHe1fHv5e/s4vLw6Ofk2u3q4PPw6PPx6PDt5PLw5+Dd1OXi2Ojm3Orn3iH5BAAAAAAALAAAAAABABUAAAQPMISEyhpYkfOcaQAgCEwEADs=') repeat-x;
 		position: relative;
-		top: -5px;
-		left: -5px;
 		height: 21px;
 		_float: left;
 
@@ -122,6 +121,12 @@ ob_start();
 
 		z-index: 23181;
 		opacity: .9;
+		
+		border-radius: 3px;
+		-moz-border-radius: 3px;
+		box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
+		-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
+		-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
 	}
 
 	#nette-debug-bar:hover {
@@ -130,6 +135,7 @@ ob_start();
 
 	#nette-debug-bar ul {
 		list-style: none none;
+		margin-left: 4px;
 	}
 
 	#nette-debug-bar li {
@@ -155,7 +161,7 @@ ob_start();
 	}
 
 	#nette-debug-bar li .nette-warning {
-		color: #d32b2b;
+		color: #D32B2B;
 		font-weight: bold;
 	}
 
@@ -180,25 +186,6 @@ ob_start();
 		height: 37px;
 	}
 
-	#nette-debug-bar-bgl {
-		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAlCAMAAABBCPgrAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAALdQTFRFPj4+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAISEhAAAAIyMjAAAAHR0dISEhNzc3Nzc3NjY2NTU1PT09PT09PDw8Pj4+SkpJS0tKy8nDxcO7zMrEx8S97evj4+HY5uPb7uzk5+Ta6OXb6Obc6ebd6ufe6+jf7Onf7erg7uvh7+zi8O3j8O3k8e7k8e7l8e/l8u/m8u/n8vDn8vDo8/Do8/Ho8/HpTk+bYwAAACd0Uk5TAAECAwQFBgcICQoLDA0ODxAQERMVLi8wM0hJSk9TU6qsrLDs7vHxx6CxnwAAAKJJREFUGBkFwUGKVEEARMF49WuEQdy5Ee9/R6HpTiMCCIEQISRFpNSFUlVSVacuqO8f93Gp+vmr+8eN6uv5i6N07hccVOc3HKr4jAtgc0UZuUjGXBKDCxhcwIYLGHMBM7uAjV3AZrvM+JhdzMy2a9lstgN8/m3bYdveL9ueSj338zl7orx7v1+vVJ1zzjnnEcLskcJsD2Ha9hAwHgQzgRABhP+DAUz8vYhDMAAAAABJRU5ErkJggg==') no-repeat;
-		left: -12px;
-		width: 12px;
-	}
-
-	#nette-debug-bar-bgx {
-		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAlCAYAAACDKIOpAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAF5JREFUeNpUjjEOgDAMA932DXynA/8X6sAnGBErjYlLW8Fy8jlRFAAI0RH/SC9yziuu86AUDjroiR+ldA6a0hDNHLUqSWmj6yvo2i6rS1vZi2xRd0/UNL4ypSDgEWAAvWU1L9Te5UYAAAAASUVORK5CYII=') repeat-x;
-		left: 0;
-		right: 5px;
-	}
-
-	#nette-debug-bar-bgr {
-		background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAlCAYAAACZFGMnAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAb5JREFUeNq8Vb1OwzAQtlNTIoRYYIhEFfUVGLp2YykDA48FG8/AUvEKqFIGQDwEA20CKv9UUFWkPuzUTi/pOW0XTjolvfrL951/PnPGGGelaLfbwIiIoih7aoBX+g9cH7AgHcJkzaRnkuNU4BygC3XEAI73ggqB5EFpsFOylYVB0vEBMMqgprR2wjDcD4JAy/wZjUayiiWLz7cBPD/dv9xe97pHnc5Jo9HYU+Utlb7pV6AJ4jno41VnH+5uepetVutAlbcNcFPlBuo9m0kPYC692QwPfd8P0AAPLb6d/uwLTAN1CiF2OOd1MxhQ8xz3JixgxlhYPypn6ySlzAEI55mpJ8MwsWVMuA6KybKQG5uXnohpcf04AZj3BCCrmKp6Wh2Qz966IdZlMSD2P0yeA0Qdd8Ant2r2KJ9YykQd+ZmpWGCapl9qCX6RT9A94R8P/fhqPB4PCSZY6EkxvA/ix+j07PwiSZLYMLlcKXPOYy1pMpkM4zhWmORb1acGNEW2lkvWO3cXFaQjCzK1vJQwSnIw7ild0WELtjwldoGsugwEMpBVbo2C68hSPwvy8OUmCKuCZVepoOhdd66NPwEGACivHvMuwfIKAAAAAElFTkSuQmCC') no-repeat;
-		right: -8px;
-		width: 13px;
-	}
-
-
 
 	/* panels */
 	#nette-debug .nette-panel {
@@ -210,7 +197,7 @@ ob_start();
 	#nette-debug h1 {
 		font: normal normal 23px/1.4 Tahoma, sans-serif;
 		color: #575753;
-		background: #edeae0;
+		background: #EDEAE0;
 		margin: -5px -5px 5px;
 		padding: 0 25px 5px 5px;
 	}
@@ -232,7 +219,7 @@ ob_start();
 		padding: 5px;
 		min-width: 150px;
 		min-height: 50px;
-		border: 5px solid #edeae0;
+		border: 5px solid #EDEAE0;
 		border-radius: 5px;
 		-moz-border-radius: 5px;
 	}
@@ -247,13 +234,13 @@ ob_start();
 		padding: 5px;
 		min-width: 150px;
 		min-height: 50px;
-		border: 5px solid #edeae0;
+		border: 5px solid #EDEAE0;
 		border-radius: 5px;
 		-moz-border-radius: 5px;
 		opacity: .9;
-		-moz-box-shadow: 1px 1px 6px #666;
-		-webkit-box-shadow: 1px 1px 6px #666;
 		box-shadow: 1px 1px 6px #666;
+		-moz-box-shadow: 1px 1px 6px rgba(0, 0, 0, .45);
+		-webkit-box-shadow: 1px 1px 6px #666;
 	}
 
 	#nette-debug .nette-focused {
@@ -558,8 +545,6 @@ Nette.Debug.Bar = Nette.Class({
 			<?php endforeach ?>
 			<li><a href="#" rel="close" title="close debug bar">&times;</a></li>
 		</ul>
-
-		<div id="nette-debug-bar-bgl"></div><div id="nette-debug-bar-bgx"></div><div id="nette-debug-bar-bgr"></div>
 	</div>
 </div>
 
