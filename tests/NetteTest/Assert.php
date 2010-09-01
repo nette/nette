@@ -255,11 +255,14 @@ class Assert
 	private static function log($expected, $actual)
 	{
 		$trace = debug_backtrace();
-		$trace = end($trace);
-		if (!isset($trace['file'])) {
-			return;
+		$item = end($trace);
+		if (!isset($item['file'])) { // shutdown handler?
+			$item = prev($trace);
+			if (!isset($item['file'])) {
+				return;
+			}
 		}
-		$file = dirname($trace['file']) . '/output/' . basename($trace['file'], '.phpt');
+		$file = dirname($item['file']) . '/output/' . basename($item['file'], '.phpt');
 
 		if (is_object($expected) || is_array($expected) || (is_string($expected) && strlen($expected) > 100)) {
 			@mkdir(dirname($file)); // @ - directory may already exist
