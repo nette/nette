@@ -157,8 +157,6 @@ $title = ($exception instanceof \FatalErrorException && isset($errorTypes[$excep
 
 $expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
 
-$rn = 0;
-
 if (headers_sent()) {
 	echo '</pre></xmp></table>';
 }
@@ -184,7 +182,7 @@ if (headers_sent()) {
 
 		#netteBluescreen {
 			font: 9pt/1.5 Verdana, sans-serif;
-			background: #F4EFE5;
+			background: #F6EEE0;
 			color: #3A3A32;
 			position: absolute;
 			left: 0;
@@ -197,7 +195,11 @@ if (headers_sent()) {
 		#netteBluescreen * {
 			color: inherit;
 			background: transparent;
+			border: none;
+			margin: 0;
+			padding: 0;
 			text-align: inherit;
+			text-indent: 0;
 		}
 
 		#netteBluescreenIcon {
@@ -259,6 +261,7 @@ if (headers_sent()) {
 			background: #E4F1FC;
 			padding: .4em .7em;
 			border: 1px hidden white;
+			overflow: auto;
 		}
 
 		#netteBluescreen table pre {
@@ -292,6 +295,10 @@ if (headers_sent()) {
 			width: 100%;
 		}
 
+		#netteBluescreen .outer {
+			overflow: auto;
+		}
+
 		#netteBluescreen td, #netteBluescreen th {
 			vertical-align: top;
 			text-align: left;
@@ -306,6 +313,11 @@ if (headers_sent()) {
 
 		#netteBluescreen .odd, #netteBluescreen .odd pre {
 			background-color: #DEE9F4;
+		}
+
+		#netteBluescreen ol {
+			margin: 1em 0;
+			padding-left: 2.5em;
 		}
 
 		#netteBluescreen ul {
@@ -420,7 +432,7 @@ if (headers_sent()) {
 					</p>
 
 					<?php if (!empty($row['args'])): ?>
-						<div class="collapsed" id="netteBsArgs<?php echo "$level-$key" ?>">
+						<div class="collapsed outer" id="netteBsArgs<?php echo "$level-$key" ?>">
 						<table>
 						<?php
 						try {
@@ -429,8 +441,9 @@ if (headers_sent()) {
 						} catch (\Exception $e) {
 							$params = array();
 						}
+						$rn = 0;
 						foreach ($row['args'] as $k => $v) {
-							echo '<tr><th>', (isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
+							echo '<tr'.($rn++%2?' class="odd"':'').'><th>', (isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
 							echo _netteDump(self::_dump($v, 0));
 							echo "</td></tr>\n";
 						}
@@ -462,13 +475,16 @@ if (headers_sent()) {
 
 			<?php if (isset($ex->context) && is_array($ex->context)):?>
 			<?php _netteOpenPanel('Variables', TRUE) ?>
+			<div class="outer">
 			<table>
 			<?php
+			$rn = 0;
 			foreach ($ex->context as $k => $v) {
-				echo '<tr><th>$', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
+				echo '<tr'.($rn++%2?' class="odd"':'').'><th>$', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			}
 			?>
 			</table>
+			</div>
 			<?php _netteClosePanel() ?>
 			<?php endif ?>
 
@@ -494,36 +510,45 @@ if (headers_sent()) {
 			$list = get_defined_constants(TRUE);
 			if (!empty($list['user'])):?>
 			<h3><a href="#" onclick="return !netteToggle(this, 'netteBsPnl-env-const')">Constants <abbr>&#x25bc;</abbr></a></h3>
+			<div class="outer">
 			<table id="netteBsPnl-env-const">
 			<?php
+			$rn = 0;
 			foreach ($list['user'] as $k => $v) {
 				echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th>';
 				echo '<td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			}
 			?>
 			</table>
+			</div>
 			<?php endif ?>
 
 
 			<h3><a href="#" onclick="return !netteToggle(this, 'netteBsPnl-env-files')">Included files <abbr>&#x25ba;</abbr></a> (<?php echo count(get_included_files()) ?>)</h3>
+			<div class="outer">
 			<table id="netteBsPnl-env-files" class="collapsed">
 			<?php
+			$rn = 0;
 			foreach (get_included_files() as $v) {
 				echo '<tr'.($rn++%2?' class="odd"':'').'><td>', htmlspecialchars($v), "</td></tr>\n";
 			}
 			?>
 			</table>
+			</div>
 
 
 			<h3>$_SERVER</h3>
 			<?php if (empty($_SERVER)):?>
 			<p><i>empty</i></p>
 			<?php else: ?>
+			<div class="outer">
 			<table>
 			<?php
+			$rn = 0;
 			foreach ($_SERVER as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			?>
 			</table>
+			</div>
 			<?php endif ?>
 		<?php _netteClosePanel() ?>
 
@@ -532,11 +557,14 @@ if (headers_sent()) {
 		<?php _netteOpenPanel('HTTP request', TRUE) ?>
 			<?php if (function_exists('apache_request_headers')): ?>
 			<h3>Headers</h3>
+			<div class="outer">
 			<table>
 			<?php
+			$rn = 0;
 			foreach (apache_request_headers() as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', htmlspecialchars($v), "</td></tr>\n";
 			?>
 			</table>
+			</div>
 			<?php endif ?>
 
 
@@ -545,11 +573,14 @@ if (headers_sent()) {
 			<?php if (empty($GLOBALS[$name])):?>
 			<p><i>empty</i></p>
 			<?php else: ?>
+			<div class="outer">
 			<table>
 			<?php
+			$rn = 0;
 			foreach ($GLOBALS[$name] as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			?>
 			</table>
+			</div>
 			<?php endif ?>
 			<?php endforeach ?>
 		<?php _netteClosePanel() ?>
