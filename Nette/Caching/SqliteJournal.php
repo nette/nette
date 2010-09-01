@@ -36,7 +36,7 @@ class SqliteJournal extends Nette\Object implements ICacheJournal
 	 */
 	public static function isAvailable()
 	{
-		return extension_loaded('sqlite') || extension_loaded('sqlite3');
+		return extension_loaded('sqlite');/* || extension_loaded('sqlite3');*/ // SQLite3 disabled due PHP bug #51680
 	}
 
 
