@@ -248,7 +248,7 @@ if (headers_sent()) {
 			padding: 0;
 		}
 
-		#netteBluescreen p {
+		#netteBluescreen p, #netteBluescreen pre {
 			margin: .8em 0
 		}
 
@@ -310,7 +310,7 @@ if (headers_sent()) {
 			font-weight: bold;
 		}
 
-		#netteBluescreen .odd, #netteBluescreen .odd pre {
+		#netteBluescreen tr:nth-child(2n), #netteBluescreen tr:nth-child(2n) pre {
 			background-color: #F7F0CB;
 		}
 
@@ -440,9 +440,8 @@ if (headers_sent()) {
 						} catch (\Exception $e) {
 							$params = array();
 						}
-						$rn = 0;
 						foreach ($row['args'] as $k => $v) {
-							echo '<tr'.($rn++%2?' class="odd"':'').'><th>', (isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
+							echo '<tr><th>', (isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
 							echo _netteDump(self::_dump($v, 0));
 							echo "</td></tr>\n";
 						}
@@ -477,9 +476,8 @@ if (headers_sent()) {
 			<div class="outer">
 			<table>
 			<?php
-			$rn = 0;
 			foreach ($ex->context as $k => $v) {
-				echo '<tr'.($rn++%2?' class="odd"':'').'><th>$', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
+				echo '<tr><th>$', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			}
 			?>
 			</table>
@@ -512,9 +510,8 @@ if (headers_sent()) {
 			<div class="outer">
 			<table id="netteBsPnl-env-const">
 			<?php
-			$rn = 0;
 			foreach ($list['user'] as $k => $v) {
-				echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th>';
+				echo '<tr><th>', htmlspecialchars($k), '</th>';
 				echo '<td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			}
 			?>
@@ -527,9 +524,8 @@ if (headers_sent()) {
 			<div class="outer">
 			<table id="netteBsPnl-env-files" class="collapsed">
 			<?php
-			$rn = 0;
 			foreach (get_included_files() as $v) {
-				echo '<tr'.($rn++%2?' class="odd"':'').'><td>', htmlspecialchars($v), "</td></tr>\n";
+				echo '<tr><td>', htmlspecialchars($v), "</td></tr>\n";
 			}
 			?>
 			</table>
@@ -543,8 +539,7 @@ if (headers_sent()) {
 			<div class="outer">
 			<table>
 			<?php
-			$rn = 0;
-			foreach ($_SERVER as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
+			foreach ($_SERVER as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			?>
 			</table>
 			</div>
@@ -559,8 +554,7 @@ if (headers_sent()) {
 			<div class="outer">
 			<table>
 			<?php
-			$rn = 0;
-			foreach (apache_request_headers() as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', htmlspecialchars($v), "</td></tr>\n";
+			foreach (apache_request_headers() as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', htmlspecialchars($v), "</td></tr>\n";
 			?>
 			</table>
 			</div>
@@ -575,8 +569,7 @@ if (headers_sent()) {
 			<div class="outer">
 			<table>
 			<?php
-			$rn = 0;
-			foreach ($GLOBALS[$name] as $k => $v) echo '<tr'.($rn++%2?' class="odd"':'').'><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
+			foreach ($GLOBALS[$name] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', _netteDump(self::_dump($v, 0)), "</td></tr>\n";
 			?>
 			</table>
 			</div>
