@@ -121,7 +121,7 @@ ob_start();
 
 		z-index: 23181;
 		opacity: .9;
-		
+
 		border-radius: 3px;
 		-moz-border-radius: 3px;
 		box-shadow: 1px 1px 10px rgba(0, 0, 0, .15);
@@ -474,6 +474,8 @@ Nette.Debug.Bar = Nette.Class({
 		bar.find('a').bind('click', function(e) {
 			if (this.rel === 'close') {
 				$('#nette-debug').hide();
+				if (window.opera) $('body').show();
+				
 			} else if (this.rel) {
 				var panel = Panel.factory(this.rel);
 				if (e.shiftKey) {
