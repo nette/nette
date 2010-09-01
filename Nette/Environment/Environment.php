@@ -507,6 +507,9 @@ final class Environment
 	{
 		$file = self::getVariable('tempDir') . "/criticalSection-" . md5($key);
 		$handle = fopen($file, 'w');
+		if (!$handle) {
+			throw new \InvalidStateException('Unable initialize critical section.');
+		}
 		flock($handle, LOCK_EX);
 		self::$criticalSections[$key] = array($file, $handle);
 	}
