@@ -86,7 +86,11 @@ nette.validateForm = function(sender) {
 		return true;
 	}
 	for (var i = 0; i < form.elements.length; i++) {
-		if (!nette.validateControl(form.elements[i])) {
+		var elem = form.elements[i];
+		if (!(elem.nodeName.toLowerCase() in {input:1, select:1, textarea:1}) || (elem.type in {hidden:1, submit:1, image:1, reset: 1}) || elem.disabled || elem.readonly) {
+			continue;
+		}
+		if (!nette.validateControl(elem)) {
 			return false;
 		}
 	}
@@ -162,12 +166,15 @@ nette.validateRule = function(elem, op, arg) {
 	case ':submitted':
 		return elem.form['nette-submittedBy'] === elem.name;
 	}
+	return null;
 };
 
 
 nette.toggleForm = function(form) {
 	for (var i = 0; i < form.elements.length; i++) {
-		nette.toggleControl(form.elements[i]);
+		if (form.elements[i].nodeName.toLowerCase() in {input:1, select:1, textarea:1, button:1}) {
+			nette.toggleControl(form.elements[i]);
+		}
 	}
 };
 
