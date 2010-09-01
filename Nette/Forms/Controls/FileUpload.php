@@ -33,7 +33,6 @@ class FileUpload extends FormControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'file';
-		$this->control->data['nette-rules'] = FALSE;
 	}
 
 

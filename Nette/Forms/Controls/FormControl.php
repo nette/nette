@@ -380,13 +380,11 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		$control->name = $this->getHtmlName();
 		$control->disabled = $this->disabled;
 		$control->id = $this->getHtmlId();
-		if (!isset($control->data['nette-rules'])) {
-			$rules = self::exportRules($this->rules);
-			$rules = substr(json_encode($rules), 1, -1);
-			$rules = preg_replace('#"([a-z0-9]+)":#i', '$1:', $rules);
-			$rules = preg_replace('#(?<!\\\\)"([^\\\\\',]*)"#i', "'$1'", $rules);
-			$control->data['nette-rules'] = $rules ? $rules : NULL;
-		}
+		$rules = self::exportRules($this->rules);
+		$rules = substr(json_encode($rules), 1, -1);
+		$rules = preg_replace('#"([a-z0-9]+)":#i', '$1:', $rules);
+		$rules = preg_replace('#(?<!\\\\)"([^\\\\\',]*)"#i', "'$1'", $rules);
+		$control->data['nette-rules'] = $rules ? $rules : NULL;
 		return $control;
 	}
 

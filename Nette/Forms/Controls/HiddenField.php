@@ -33,7 +33,6 @@ class HiddenField extends FormControl
 	{
 		parent::__construct();
 		$this->control->type = 'hidden';
-		$this->control->data['nette-rules'] = FALSE;
 		$this->value = (string) $forcedValue;
 		$this->forcedValue = $forcedValue;
 	}
@@ -70,7 +69,7 @@ class HiddenField extends FormControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->value($this->forcedValue === NULL ? $this->value : $this->forcedValue);
+		return parent::getControl()->value($this->forcedValue === NULL ? $this->value : $this->forcedValue)->data('nette-rules', NULL);
 	}
 
 }

@@ -89,7 +89,7 @@
 <tr>
 	<th><label for="frm-avatar">Picture:</label></th>
 
-	<td><input type="file" class="text" name="avatar" id="frm-avatar" /></td>
+	<td><input type="file" class="text" name="avatar" id="frm-avatar" data-nette-rules="{op:':filled',rules:[{op:':image',msg:'Uploaded file is not image'}],control:'avatar'}" /></td>
 </tr>
 
 <tr>
