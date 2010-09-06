@@ -274,7 +274,7 @@ class RobotLoader extends AutoLoader
 
 		$expected = FALSE;
 		$namespace = '';
-		$level = 0;
+		$level = $minLevel = 0;
 		$time = filemtime($file);
 		$s = file_get_contents($file);
 
@@ -317,13 +317,14 @@ class RobotLoader extends AutoLoader
 				switch ($expected) {
 				case T_CLASS:
 				case T_INTERFACE:
-					if ($level === 0) {
+					if ($level === $minLevel) {
 						$this->addClass($namespace . $name, $file, $time);
 					}
 					break;
 
 				case $T_NAMESPACE:
-					$namespace = $name . '\\';
+					$namespace = $name ? $name . '\\' : '';
+					$minLevel = $token === '{' ? 1 : 0;
 				}
 
 				$expected = NULL;

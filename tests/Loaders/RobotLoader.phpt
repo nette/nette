@@ -30,4 +30,7 @@ $loader->addDirectory(__DIR__);
 $loader->addDirectory(__DIR__); // purposely doubled
 $loader->register();
 
-Assert::true( class_exists('Nette\TestClass'), 'Class Nette\TestClass loaded?' );
+Assert::false( class_exists('ConditionalClass') );
+Assert::true( class_exists('TestClass') );
+Assert::true( class_exists('MySpace1\TestClass') );
+Assert::true( class_exists('MySpace2\TestClass') );
