@@ -19,8 +19,9 @@ namespace Nette;
 
 use Nette;
 
-ob_start();
 ?>
+
+
 
 <!-- Nette Debug Bar -->
 
@@ -561,9 +562,3 @@ Nette.Debug.Bar = Nette.Class({
 </script>
 
 <!-- /Nette Debug Bar -->
-<?php
-echo "\n\n\n\n" . preg_replace_callback(
-	'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
-	create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'),
-	ob_get_clean()
-);

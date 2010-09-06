@@ -87,7 +87,7 @@ function _netteDebugPrintCode($file, $line, $count = 15)
  */
 function _netteDump($dump)
 {
-	return '<pre class="nette-dump">' . preg_replace_callback('#(^|\s+)?(.*)\((\d+)\) <code>#', 'Nette\_netteDumpCb', $dump) . '</pre>';
+	return '<pre class="nette-dump">' . preg_replace_callback('#^( *)((?>[^(]{1,200}))\((\d+)\) <code>#m', 'Nette\_netteDumpCb', $dump) . '</pre>';
 }
 
 function _netteDumpCb($m)
