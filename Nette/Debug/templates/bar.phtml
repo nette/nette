@@ -23,6 +23,7 @@ use Nette;
 
 
 
+
 <!-- Nette Debug Bar -->
 
 <style id="nette-debug-style">
@@ -286,6 +287,22 @@ use Nette;
 (function(){
 Nette.Debug = {};
 
+Nette.base64Decode = function(s) {
+	var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	var out = '', i = 0;
+	var c1, c2, c3, c4;
+	do {
+		c1 = set.indexOf(s.charAt(i++));
+		c2 = set.indexOf(s.charAt(i++));
+		c3 = set.indexOf(s.charAt(i++));
+		c4 = set.indexOf(s.charAt(i++));
+		out += String.fromCharCode((c1 << 2) | (c2 >> 4))
+			+ (c3 === -1 ? '' : String.fromCharCode(((c2 & 15) << 4) | (c3 >> 2)))
+			+ (c4 === -1 ? '' : String.fromCharCode(((c3 & 3) << 6) | c4));
+	} while (i < s.length);
+	return out;
+};
+
 var $ = Nette.Q.factory;
 
 var Panel = Nette.Debug.Panel = Nette.Class({
@@ -476,7 +493,7 @@ Nette.Debug.Bar = Nette.Class({
 			if (this.rel === 'close') {
 				$('#nette-debug').hide();
 				if (window.opera) $('body').show();
-				
+
 			} else if (this.rel) {
 				var panel = Panel.factory(this.rel);
 				if (e.shiftKey) {
@@ -526,7 +543,7 @@ Nette.Debug.Bar = Nette.Class({
 
 
 <div id="nette-debug">
-
+<?php ob_start() ?>
 <?php foreach ($panels as $id => $panel): ?>
 <div class="nette-fixed-coords">
 	<div class="nette-panel" id="nette-debug-panel-<?php echo $panel['id'] ?>">
@@ -550,12 +567,13 @@ Nette.Debug.Bar = Nette.Class({
 		</ul>
 	</div>
 </div>
-
+<?php $output = ob_get_clean(); ?>
 </div>
 
 
 <script>
 (function(){
+	document.getElementById('nette-debug').innerHTML = Nette.base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
 	(new Nette.Debug.Bar).init();
 	document.body.appendChild( Nette.Q.factory('#nette-debug').show().dom() );
 })();
