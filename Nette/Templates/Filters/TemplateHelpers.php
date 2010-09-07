@@ -79,7 +79,7 @@ final class TemplateHelpers
 	public static function escapeHtmlComment($s)
 	{
 		// -- has special meaning in different browsers
-		return str_replace('--', '--><!--', $s); // HTML tags have no meaning inside comments
+		return str_replace('--', '--><!-- ', $s); // HTML tags have no meaning inside comments
 	}
 
 
