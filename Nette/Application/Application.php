@@ -211,14 +211,14 @@ class Application extends Nette\Object
 					static $messages = array(
 						0 => array('Oops...', 'Your browser sent a request that this server could not understand or process.'),
 						403 => array('Access Denied', 'You do not have permission to view this page. Please try contact the web site administrator if you believe you should be able to view this page.'),
-						404 => array('Page Not Found', 'The page you requested could not be found. It is possible that the address is incorrect, or that the page no longer exists. Please try the search engine to find what you are looking for.'),
+						404 => array('Page Not Found', 'The page you requested could not be found. It is possible that the address is incorrect, or that the page no longer exists. Please use a search engine to find what you are looking for.'),
 						405 => array('Method Not Allowed', 'The requested method is not allowed for the URL.'),
 						410 => array('Page Not Found', 'The page you requested has been taken off the site. We apologize for the inconvenience.'),
 						500 => array('Server Error', 'We\'re sorry! The server encountered an internal error and was unable to complete your request. Please try again later.'),
 					);
 					$message = isset($messages[$code]) ? $messages[$code] : $messages[0];
 					echo "<title>$message[0]</title>\n\n<h1>$message[0]</h1>\n\n<p>$message[1]</p>\n\n";
-					if ($code) echo "<p><small>$code error</small></p>";
+					if ($code) echo "<p><small>error $code</small></p>";
 					break;
 				}
 			}
