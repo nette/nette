@@ -22,7 +22,7 @@ use Nette;
  * @copyright  Copyright (c) 2004, 2010 David Grudl
  * @package    Nette
  */
-class ServiceLocator extends Object implements IServiceLocator
+class ServiceLocator extends FreezableObject implements IServiceLocator
 {
 	/** @var IServiceLocator */
 	private $parent;
@@ -55,6 +55,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	 */
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
+		$this->updating();
 		if (!is_string($name) || $name === '') {
 			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
@@ -86,6 +87,7 @@ class ServiceLocator extends Object implements IServiceLocator
 	 */
 	public function removeService($name)
 	{
+		$this->updating();
 		if (!is_string($name) || $name === '') {
 			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
