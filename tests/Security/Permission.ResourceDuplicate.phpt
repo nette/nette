@@ -21,13 +21,7 @@ try {
 	$acl = new Permission;
 	$acl->addResource('area');
 	$acl->addResource('area');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Resource 'area' already exists in the list.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Exception InvalidStateException: Resource 'area' already exists in the list.

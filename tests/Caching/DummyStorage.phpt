@@ -24,48 +24,30 @@ $value = '"Hello World"';
 $cache = new Cache(new Nette\Caching\DummyStorage, 'myspace');
 
 
-T::dump( isset($cache[$key]), "Is cached?" );
-T::dump( $cache[$key], "Cache content:" );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note("Writing cache...");
+Assert::null( $cache[$key], 'Cache content:' );
+
+
+// Writing cache...
 $cache[$key] = $value;
 $cache->release();
 
-T::dump( isset($cache[$key]), "Is cached?" );
-T::dump( $cache[$key] === $value, "Is cache ok?" );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note("Removing from cache using unset()...");
+Assert::false( $cache[$key] === $value, 'Is cache ok?' );
+
+
+// Removing from cache using unset()...
 unset($cache[$key]);
 $cache->release();
 
-T::dump( isset($cache[$key]), "Is cached?" );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note("Removing from cache using set NULL...");
+
+// Removing from cache using set NULL...
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();
 
-T::dump( isset($cache[$key]), "Is cached?" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Is cached? FALSE
-
-Cache content: NULL
-
-Writing cache...
-
-Is cached? FALSE
-
-Is cache ok? FALSE
-
-Removing from cache using unset()...
-
-Is cached? FALSE
-
-Removing from cache using set NULL...
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

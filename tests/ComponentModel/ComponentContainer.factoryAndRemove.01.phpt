@@ -31,17 +31,9 @@ class TestClass extends ComponentContainer
 $a = new TestClass;
 $b = $a->getComponent('b');
 
-T::dump( count($a->getComponents()) );
+Assert::same( 1, count($a->getComponents()) );
+
 
 $a->removeComponent($b);
 
-T::dump( count($a->getComponents()) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-1
-
-0
+Assert::same( 0, count($a->getComponents()) );

@@ -23,21 +23,7 @@ $route = new Route('<param>', array(
 	'presenter' => 'Presenter',
 ), Route::SECURED);
 
-
-testRouteIn($route, '/any');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /any
-
-"Presenter"
-
-array(
-	"param" => "any"
-	"test" => "testvalue"
-)
-
-"https://example.com/any?test=testvalue"
+testRouteIn($route, '/any', 'Presenter', array(
+	'param' => 'any',
+	'test' => 'testvalue',
+), 'https://example.com/any?test=testvalue');

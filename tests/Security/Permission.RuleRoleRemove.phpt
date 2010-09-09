@@ -24,16 +24,10 @@ Assert::true( $acl->isAllowed('guest') );
 $acl->removeRole('guest');
 try {
 	$acl->isAllowed('guest');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Role 'guest' does not exist.", $e );
 }
 
 $acl->addRole('guest');
 Assert::false( $acl->isAllowed('guest') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Exception InvalidStateException: Role 'guest' does not exist.

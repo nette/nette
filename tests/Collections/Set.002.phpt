@@ -24,45 +24,30 @@ $set->append($jack = new Person('Jack'));
 $set->append(new Person('Mary'));
 $set->append(new Person('Larry'));
 
-T::dump( $set->isFrozen() );
+Assert::false( $set->isFrozen() );
 $set->freeze();
-T::dump( $set->isFrozen() );
+Assert::true( $set->isFrozen() );
 
 try {
-	T::dump( $set->append($jack), "Adding Jack" );
+	$set->append($jack);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Set'.", $e );
 }
 
 try {
-	T::note("Removing Jack");
+	// Removing Jack
 	$set->remove($jack);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Set'.", $e );
 }
 
 try {
-	T::note("Clearing");
+	// Clearing
 	$set->clear();
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Set'.", $e );
 }
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-TRUE
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.
-
-Removing Jack
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.
-
-Clearing
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Set'.

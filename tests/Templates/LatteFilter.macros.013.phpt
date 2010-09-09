@@ -22,17 +22,14 @@ require __DIR__ . '/Template.inc';
 
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
-$template->render(T::getSection(__FILE__, 'template'));
+Assert::match(<<<EOD
 
+asdfgh
+EOD
 
-
-__halt_compiler() ?>
-
------template-----
+, $template->render(<<<EOD
 
 {contentType text}
 asdfgh
-
-------EXPECT------
-
-asdfgh
+EOD
+));

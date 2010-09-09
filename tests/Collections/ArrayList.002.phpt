@@ -24,59 +24,38 @@ $jack = new Person('Jack');
 $list[] = new Person('Mary');
 $list[] = new Person('Larry');
 
-T::dump( $list->isFrozen() );
+Assert::false( $list->isFrozen() );
 $list->freeze();
-T::dump( $list->isFrozen() );
+Assert::true( $list->isFrozen() );
 
 try {
-	T::note("Adding Jack using []");
+	// Adding Jack using []
 	$list[] = $jack;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%ArrayList'.", $e );
 }
 
 try {
-	T::note("Adding Jack using insertAt");
+	// Adding Jack using insertAt
 	$list->insertAt(0, $jack);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%ArrayList'.", $e );
 }
 
 try {
-	T::note("Removing using unset");
+	// Removing using unset
 	unset($list[1]);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%ArrayList'.", $e);
 }
 
 try {
-	T::note("Changing using []");
+	// Changing using []
 	$list[1] = $jack;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%ArrayList'.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-TRUE
-
-Adding Jack using []
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
-
-Adding Jack using insertAt
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
-
-Removing using unset
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.
-
-Changing using []
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%ArrayList'.

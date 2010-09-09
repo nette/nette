@@ -23,8 +23,6 @@ $_POST = array('name'=>'John Doe ','age'=>'  12 ','email'=>'@','street'=>'','cit
 Nette\Debug::$productionMode = FALSE;
 Nette\Debug::$consoleMode = TRUE;
 
+ob_start();
 require '../../examples/forms/manual-rendering.php';
-
-
-
-__halt_compiler() ?>
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.submit.007.expect'), ob_get_clean() );

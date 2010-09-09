@@ -38,29 +38,19 @@ $router = new CliRouter(array(
 ));
 $req = $router->match($httpRequest);
 
-T::dump( $req->getPresenterName() ); // "homepage"
-T::dump( $req->params );
-T::dump( $req->isMethod('cli') ); // TRUE
+Assert::same( 'homepage', $req->getPresenterName() );
 
-T::dump( $router->constructUrl($req, $httpRequest) ); // NULL
+Assert::same( array(
+	'id' => 12,
+	'user' => 'john doe',
+	'action' => 'default',
+	0 => 'name',
+	'verbose' => TRUE,
+	'pass' => 'se cret',
+	'wait' => TRUE,
+), $req->params );
+
+Assert::true( $req->isMethod('cli') );
 
 
-
-__halt_compiler() ?>
-
-------EXPECT------
-"homepage"
-
-array(
-	"id" => 12
-	"user" => "john doe"
-	"action" => "default"
-	0 => "name"
-	"verbose" => TRUE
-	"pass" => "se cret"
-	"wait" => TRUE
-)
-
-TRUE
-
-NULL
+Assert::null( $router->constructUrl($req, $httpRequest) );

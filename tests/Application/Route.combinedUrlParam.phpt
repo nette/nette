@@ -27,56 +27,19 @@ $route = new Route('extra<presenter>/<action>', array(
 
 testRouteIn($route, '/presenter/action/');
 
-testRouteIn($route, '/extrapresenter/action/');
+testRouteIn($route, '/extrapresenter/action/', 'Presenter', array(
+	'action' => 'action',
+	'test' => 'testvalue',
+), '/extrapresenter/action?test=testvalue');
 
-testRouteIn($route, '/extradefault/default/');
+testRouteIn($route, '/extradefault/default/', 'Default', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/extra?test=testvalue');
 
-testRouteIn($route, '/extra');
+testRouteIn($route, '/extra', 'Default', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/extra?test=testvalue');
 
 testRouteIn($route, '/');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /presenter/action/
-
-not matched
-
-==> /extrapresenter/action/
-
-"Presenter"
-
-array(
-	"action" => "action"
-	"test" => "testvalue"
-)
-
-"/extrapresenter/action?test=testvalue"
-
-==> /extradefault/default/
-
-"Default"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/extra?test=testvalue"
-
-==> /extra
-
-"Default"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/extra?test=testvalue"
-
-==> /
-
-not matched

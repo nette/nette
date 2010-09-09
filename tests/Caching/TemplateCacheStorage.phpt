@@ -22,51 +22,36 @@ $value = '<?php echo "Hello World" ?>';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 
 $cache = new Cache(new Nette\Templates\TemplateCacheStorage(TEMP_DIR));
 
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-T::dump( $cache[$key], 'Cache content' );
-T::note('Writing cache...');
+Assert::false( isset($cache[$key]), 'Is cached?' );
+
+Assert::null( $cache[$key], 'Cache content' );
+
+// Writing cache...
 $cache[$key] = $value;
 
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-T::dump( $cache[$key], 'Cache content' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
+
+Assert::true( (bool) preg_match('#nette\.php$#', $cache[$key]['file']) );
+Assert::true( is_resource($cache[$key]['handle']) );
+
 $var = $cache[$key];
 
-T::note('Test include');
+// Test include
 
 // this is impossible
 // $cache[$key] = NULL;
 
+ob_start();
 include $var['file'];
+Assert::same( 'Hello World', ob_get_clean() );
 
 fclose($var['handle']);
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Is cached? FALSE
-
-Cache content: NULL
-
-Writing cache...
-
-Is cached? TRUE
-
-Cache content: array(
-	"file" => "%a%nette.php"
-	"handle" => stream resource
-)
-
-Test include
-
-Hello World

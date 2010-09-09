@@ -31,11 +31,4 @@ class TestClass extends ComponentContainer
 
 
 $a = new TestClass;
-T::dump( $a->getComponent('b')->name );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"b"
+Assert::same( 'b', $a->getComponent('b')->name );

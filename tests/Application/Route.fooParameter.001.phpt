@@ -25,59 +25,18 @@ $route = new Route('index<?.xml \.html?|\.php|>/', array(
 
 testRouteIn($route, '/index.');
 
-testRouteIn($route, '/index.xml');
+testRouteIn($route, '/index.xml', 'DefaultPresenter', array(
+	'test' => 'testvalue',
+), '/index.xml/?test=testvalue');
 
-testRouteIn($route, '/index.php');
+testRouteIn($route, '/index.php', 'DefaultPresenter', array(
+	'test' => 'testvalue',
+), '/index.xml/?test=testvalue');
 
-testRouteIn($route, '/index.htm');
+testRouteIn($route, '/index.htm', 'DefaultPresenter', array(
+	'test' => 'testvalue',
+), '/index.xml/?test=testvalue');
 
-testRouteIn($route, '/index');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /index.
-
-not matched
-
-==> /index.xml
-
-"DefaultPresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.xml/?test=testvalue"
-
-==> /index.php
-
-"DefaultPresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.xml/?test=testvalue"
-
-==> /index.htm
-
-"DefaultPresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.xml/?test=testvalue"
-
-==> /index
-
-"DefaultPresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.xml/?test=testvalue"
+testRouteIn($route, '/index', 'DefaultPresenter', array(
+	'test' => 'testvalue',
+), '/index.xml/?test=testvalue');

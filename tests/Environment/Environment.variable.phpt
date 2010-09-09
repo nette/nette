@@ -17,73 +17,53 @@ require __DIR__ . '/../initialize.php';
 
 
 
-T::dump( Environment::getVariable('foo'), "Getting variable 'foo':" );
+Assert::null( Environment::getVariable('foo'), "Getting variable 'foo':" );
+
 
 try {
-	T::dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir':" );
-
+	Environment::getVariable('tempDir');
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Unknown environment variable 'appDir'.", $e );
 }
 
 
-T::note("Defining constant 'APP_DIR':");
+// Defining constant 'APP_DIR':
 define('APP_DIR', '/myApp');
 
-T::dump( Environment::getVariable('appDir'), "Getting variable 'appDir':" );
-
-T::dump( Environment::getVariable('tempDir'), "Getting variable 'tempDir' #2:" );
+Assert::same( '/myApp', Environment::getVariable('appDir') );
 
 
-T::note("Setting variable 'test'...");
+Assert::same( '/myApp/temp', Environment::getVariable('tempDir') );
+
+
+
+// Setting variable 'test'...
 Environment::setVariable('test', '%appDir%/test');
 
-T::dump( Environment::getVariable('test'), "Getting variable 'test':" );
+Assert::same( '/myApp/test', Environment::getVariable('test') );
 
-T::dump( Environment::getVariables(), "Getting variables:" );
+
+Assert::same( array(
+	'encoding' => 'UTF-8',
+	'lang' => 'en',
+	'cacheBase' => '/myApp/temp',
+	'tempDir' => '/myApp/temp',
+	'logDir' => '/myApp/log',
+	'appDir' => '/myApp',
+	'test' => '/myApp/test',
+), Environment::getVariables());
+
 
 
 try {
-	T::note("Setting circular variables...");
+	// Setting circular variables...
 	Environment::setVariable('bar', '%foo%');
 	Environment::setVariable('foo', '%foobar%');
 	Environment::setVariable('foobar', '%bar%');
+	Environment::getVariable('bar');
 
-	T::dump( Environment::getVariable('bar'), "Getting circular variable:" );
-
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', 'Circular reference detected for variables: foo, foobar, bar.', $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Getting variable 'foo': NULL
-
-Exception InvalidStateException: Unknown environment variable 'appDir'.
-
-Defining constant 'APP_DIR':
-
-Getting variable 'appDir': "/myApp"
-
-Getting variable 'tempDir' #2: "/myApp/temp"
-
-Setting variable 'test'...
-
-Getting variable 'test': "/myApp/test"
-
-Getting variables: array(
-	"encoding" => "UTF-8"
-	"lang" => "en"
-	"cacheBase" => "/myApp/temp"
-	"tempDir" => "/myApp/temp"
-	"logDir" => "/myApp/log"
-	"appDir" => "/myApp"
-	"test" => "/myApp/test"
-)
-
-Setting circular variables...
-
-Exception InvalidStateException: Circular reference detected for variables: foo, foobar, bar.

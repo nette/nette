@@ -34,7 +34,9 @@ class MockTemplate extends BaseTemplate
 	{
 		$this->__set('template', $this);
 		$this->compiled = $this->compile($content);
+		ob_start();
 		LimitedScope::evaluate($this->compiled, $this->getParams());
+		return ob_get_clean();
 	}
 
 }

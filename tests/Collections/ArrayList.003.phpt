@@ -25,52 +25,24 @@ $list[] = new Person('Mary');
 
 $larry = new Person('Larry');
 
-T::dump( $list->insertAt(0, $larry) );
-T::dump( (array) $list);
+Assert::true( $list->insertAt(0, $larry) );
+Assert::equal( array(
+	new Person("Larry"),
+	new Person("Jack"),
+	new Person("Mary"),
+), (array) $list );
 
-T::dump( $list->insertAt(3, $larry) );
-T::dump( (array) $list);
+Assert::true( $list->insertAt(3, $larry) );
+Assert::equal( array(
+	new Person("Larry"),
+	new Person("Jack"),
+	new Person("Mary"),
+	new Person("Larry"),
+), (array) $list );
 
 try {
-	T::dump( $list->insertAt(6, $larry) );
+	$list->insertAt(6, $larry);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('ArgumentOutOfRangeException', '', $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-TRUE
-
-array(
-	Person(
-		"name" private => "Larry"
-	)
-	Person(
-		"name" private => "Jack"
-	)
-	Person(
-		"name" private => "Mary"
-	)
-)
-
-TRUE
-
-array(
-	Person(
-		"name" private => "Larry"
-	)
-	Person(
-		"name" private => "Jack"
-	)
-	Person(
-		"name" private => "Mary"
-	)
-	Person(
-		"name" private => "Larry"
-	)
-)
-
-Exception ArgumentOutOfRangeException:

@@ -30,11 +30,4 @@ $ftp->fget($temp, 'README', Ftp::ASCII);
 
 // echo file
 fseek($temp, 0);
-T::dump( stream_get_contents($temp) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"Nette Framework rocks!"
+Assert::same( "Nette Framework rocks!", stream_get_contents($temp) );

@@ -23,26 +23,9 @@ $route = new Route('index.php', array(
 	'action' => 'default',
 ));
 
-testRouteIn($route, '/index.php');
+testRouteIn($route, '/index.php', 'querypresenter', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/index.php?test=testvalue&presenter=querypresenter');
 
 testRouteIn($route, '/');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /index.php
-
-"querypresenter"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/index.php?test=testvalue&presenter=querypresenter"
-
-==> /
-
-not matched

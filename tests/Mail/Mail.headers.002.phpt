@@ -36,11 +36,7 @@ $mail->setHeader('X-Gmail-Label', 'love');
 
 $mail->send();
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -56,3 +52,5 @@ X-Gmail-Label: love
 Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+EOD
+, TestMailer::$output );

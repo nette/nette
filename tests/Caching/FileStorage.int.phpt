@@ -23,54 +23,36 @@ $value = range("\x00", "\xFF");
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-T::dump( $cache[$key], 'Cache content' );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note('Writing cache...');
+Assert::null( $cache[$key], 'Cache content' );
+
+
+// Writing cache...
 $cache[$key] = $value;
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-T::dump( $cache[$key] === $value, 'Is cache ok?' );
+Assert::true( isset($cache[$key]), 'Is cached?' );
 
-T::note('Removing from cache using unset()...');
+Assert::true( $cache[$key] === $value, 'Is cache ok?' );
+
+
+// Removing from cache using unset()...
 unset($cache[$key]);
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
+Assert::false( isset($cache[$key]), 'Is cached?' );
 
-T::note('Removing from cache using set NULL...');
+
+// Removing from cache using set NULL...
 $cache[$key] = $value;
 $cache[$key] = NULL;
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Is cached? FALSE
-
-Cache content: NULL
-
-Writing cache...
-
-Is cached? TRUE
-
-Is cache ok? TRUE
-
-Removing from cache using unset()...
-
-Is cached? FALSE
-
-Removing from cache using set NULL...
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

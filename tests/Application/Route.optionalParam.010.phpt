@@ -24,46 +24,17 @@ $route = new Route('[<module admin|image>/]<presenter>/<action>', array(
 	'action' => 'default',
 ));
 
-testRouteIn($route, '/one');
+testRouteIn($route, '/one', 'Front:One', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/one/?test=testvalue');
 
-testRouteIn($route, '/admin/one');
+testRouteIn($route, '/admin/one', 'Admin:One', array(
+	'action' => 'default',
+	'test' => 'testvalue',
+), '/admin/one/?test=testvalue');
 
-testRouteIn($route, '/one/admin');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /one
-
-"Front:One"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/one/?test=testvalue"
-
-==> /admin/one
-
-"Admin:One"
-
-array(
-	"action" => "default"
-	"test" => "testvalue"
-)
-
-"/admin/one/?test=testvalue"
-
-==> /one/admin
-
-"Front:One"
-
-array(
-	"action" => "admin"
-	"test" => "testvalue"
-)
-
-"/one/admin?test=testvalue"
+testRouteIn($route, '/one/admin', 'Front:One', array(
+	'action' => 'admin',
+	'test' => 'testvalue',
+), '/one/admin?test=testvalue');

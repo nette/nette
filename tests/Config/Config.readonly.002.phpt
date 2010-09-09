@@ -18,7 +18,7 @@ require __DIR__ . '/../initialize.php';
 
 
 if (PHP_VERSION < '5.3') {
-	T::skip('ArrayObject serialization is flawed in PHP 5.2.');
+	TestHelpers::skip('ArrayObject serialization is flawed in PHP 5.2.');
 }
 
 
@@ -27,18 +27,8 @@ $config = Config::fromFile('config1.ini', 'development', NULL);
 $config->freeze();
 
 try {
-	T::note("check read-only:");
 	$dolly = unserialize(serialize($config));
 	$dolly->database->adapter = 'works good';
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Config'.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-check read-only:
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Config'.

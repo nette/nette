@@ -20,18 +20,8 @@ require __DIR__ . '/../initialize.php';
 function bar() {}
 
 $function = new FunctionReflection('bar');
-T::dump( $function->getExtension() );
+Assert::null( $function->getExtension() );
+
 
 $function = new FunctionReflection('sort');
-T::dump( $function->getExtension() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-NULL
-
-%ns%ExtensionReflection(
-	"name" => "standard"
-)
+Assert::equal( new Nette\Reflection\ExtensionReflection('standard'), $function->getExtension() );

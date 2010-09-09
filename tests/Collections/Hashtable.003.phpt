@@ -26,129 +26,40 @@ $foo = new ArrayObject();
 
 
 
-T::dump( $hashtable->contains($jack), "Contains Jack?" );
+Assert::true( $hashtable->contains($jack), "Contains Jack?" );
 
-T::dump( $hashtable->contains($mary), "Contains Mary?" );
+Assert::true( $hashtable->contains($mary), "Contains Mary?" );
 
-try {
-	T::dump( $hashtable->contains($foo), "Contains foo?" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
+Assert::false( $hashtable->contains($foo), "Contains foo?" );
 
 
-T::dump( isset($hashtable['jim']), "Contains ['jim']?" );
+Assert::false( isset($hashtable['jim']), "Contains ['jim']?" );
 
-T::dump( isset($hashtable['jack']), "Contains ['jack']?" );
+Assert::true( isset($hashtable['jack']), "Contains ['jack']?" );
 
-T::dump( isset($hashtable['mary']), "Contains ['mary']?" );
+Assert::true( isset($hashtable['mary']), "Contains ['mary']?" );
 
 
 
-T::dump( isset($hashtable->jim), "Contains ->jim?" );
+Assert::false( isset($hashtable->jim), "Contains ->jim?" );
 
-T::dump( isset($hashtable->jack), "Contains ->jack?" );
+Assert::false( isset($hashtable->jack), "Contains ->jack?" );
 
-T::dump( isset($hashtable->mary), "Contains ->mary?" );
+Assert::false( isset($hashtable->mary), "Contains ->mary?" );
 
 
+
+Assert::null( $hashtable['jim'], "Getting ['jim']" );
 
 try {
-	T::dump( $hashtable['jim'], "Getting ['jim']" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-try {
-	T::note("Getting ['jim'] with throwKeyNotFound");
+	// Getting ['jim'] with throwKeyNotFound
 	$hashtable->throwKeyNotFound();
-	T::dump( $hashtable['jim'] );
+	$hashtable['jim'];
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	//Assert::exception('KeyNotFoundException', '', $e );
 }
 
-try {
-	T::dump( $hashtable['mary'], "Getting ['mary']" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
+Assert::equal( new Person("Mary"), $hashtable['mary'], "Getting ['mary']" );
 
 
-try {
-	T::dump( $hashtable->jim, "Getting ->jim" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-try {
-	T::dump( $hashtable->mary, "Getting ->mary" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-
-
-try {
-	T::dump( $hashtable->get('jim', 'default'), "Getting get('jim')" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-try {
-	T::dump( $hashtable->get('mary', 'default'), "Getting get('mary')" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-
-
-T::dump( $hashtable->search($jack), "search Jack:" );
-
-T::dump( $hashtable->search($mary), "search Mary:" );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Contains Jack? TRUE
-
-Contains Mary? TRUE
-
-Contains foo? FALSE
-
-Contains ['jim']? FALSE
-
-Contains ['jack']? TRUE
-
-Contains ['mary']? TRUE
-
-Contains ->jim? FALSE
-
-Contains ->jack? FALSE
-
-Contains ->mary? FALSE
-
-Getting ['jim']: NULL
-
-Getting ['jim'] with throwKeyNotFound
-
-Exception %ns%KeyNotFoundException:
-
-Getting ['mary']: Person(
-	"name" private => "Mary"
-)
-
-Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$jim.
-
-Exception MemberAccessException: Cannot read an undeclared property %ns%Hashtable::$mary.
-
-Getting get('jim'): "default"
-
-Getting get('mary'): Person(
-	"name" private => "Mary"
-)
-
-search Jack: "jack"
-
-search Mary: "mary"

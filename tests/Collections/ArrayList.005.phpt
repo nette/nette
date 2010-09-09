@@ -25,44 +25,18 @@ $list[] = new Person('Mary');
 $list[] = $larry = new Person('Larry');
 
 
-T::dump( $list->remove($larry), "Removing Larry" );
+Assert::true( $list->remove($larry), "Removing Larry" );
 
-T::dump( $list->remove($larry), "Removing Larry second time" );
+Assert::false( $list->remove($larry), "Removing Larry second time" );
 
 
 try {
-	T::note("unset -1");
+	// unset -1
 	unset($list[-1]);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('ArgumentOutOfRangeException', '', $e );
 }
 
-try {
-	T::note("unset 1");
-	unset($list[1]);
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-T::dump( $list );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Removing Larry: TRUE
-
-Removing Larry second time: FALSE
-
-unset -1
-
-Exception ArgumentOutOfRangeException:
-
-unset 1
-
-%ns%ArrayList(
-	"0" => Person(
-		"name" private => "Jack"
-	)
-)
+// unset 1
+unset($list[1]);

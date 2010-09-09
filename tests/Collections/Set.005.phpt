@@ -25,23 +25,8 @@ $set->append(new Person('Mary'));
 $larry = new Person('Larry');
 $foo = new ArrayObject;
 
-T::dump( $set->contains($jack), "Contains Jack?" );
+Assert::true( $set->contains($jack), "Contains Jack?" );
 
-T::dump( $set->contains($larry), "Contains Larry?" );
+Assert::false( $set->contains($larry), "Contains Larry?" );
 
-try {
-	T::dump( $set->contains($foo), "Contains foo?" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Contains Jack? TRUE
-
-Contains Larry? FALSE
-
-Contains foo? FALSE
+Assert::false( $set->contains($foo), "Contains foo?" );

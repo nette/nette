@@ -24,16 +24,10 @@ Assert::true( $acl->isAllowed(NULL, 'area') );
 $acl->removeAllResources();
 try {
 	$acl->isAllowed(NULL, 'area');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Resource 'area' does not exist.", $e );
 }
 
 $acl->addResource('area');
 Assert::false( $acl->isAllowed(NULL, 'area') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Exception InvalidStateException: Resource 'area' does not exist.

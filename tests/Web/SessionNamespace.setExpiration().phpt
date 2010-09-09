@@ -33,7 +33,8 @@ sleep(3);
 $session->start();
 
 $namespace = $session->getNamespace('expire');
-T::dump( http_build_query($namespace->getIterator()) );
+Assert::same( '', http_build_query($namespace->getIterator()) );
+
 
 // try to expire only 1 of the keys
 $namespace = $session->getNamespace('expireSingle');
@@ -46,13 +47,4 @@ sleep(3);
 $session->start();
 
 $namespace = $session->getNamespace('expireSingle');
-T::dump( http_build_query($namespace->getIterator()) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-""
-
-"p=plum"
+Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );

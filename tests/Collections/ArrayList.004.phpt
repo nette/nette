@@ -26,65 +26,33 @@ $foo = new ArrayObject();
 
 
 
-T::dump( $list->contains($jack), "Contains Jack?" );
+Assert::true( $list->contains($jack), "Contains Jack?" );
 
-T::dump( $list->indexOf($jack), "indexOf Jack:" );
+Assert::same( 0, $list->indexOf($jack), "indexOf Jack:" );
 
-T::dump( $list->contains($mary), "Contains Mary?" );
+Assert::true( $list->contains($mary), "Contains Mary?" );
 
-T::dump( $list->indexOf($mary), "indexOf Mary:" );
+Assert::same( 1, $list->indexOf($mary), "indexOf Mary:" );
 
-T::dump( $list->contains($foo), "Contains foo?" );
+Assert::false( $list->contains($foo), "Contains foo?" );
 
-T::dump( $list->indexOf($foo), "indexOf foo?" );
+Assert::false( $list->indexOf($foo), "indexOf foo?" );
 
 
 
-T::dump( isset($list[-1]), "Contains index -1?" );
+Assert::false( isset($list[-1]), "Contains index -1?" );
 
-T::dump( isset($list[0]), "Contains index 0?" );
+Assert::true( isset($list[0]), "Contains index 0?" );
 
-T::dump( isset($list[5]), "Contains index 5?" );
+Assert::false( isset($list[5]), "Contains index 5?" );
 
 
 
 try {
-	T::dump( $list[-1], "Getting index -1" );
+	$list[-1];
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('ArgumentOutOfRangeException', '', $e );
 }
 
-try {
-	T::dump( $list[0], "Getting index 0" );
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Contains Jack? TRUE
-
-indexOf Jack: 0
-
-Contains Mary? TRUE
-
-indexOf Mary: 1
-
-Contains foo? FALSE
-
-indexOf foo? FALSE
-
-Contains index -1? FALSE
-
-Contains index 0? TRUE
-
-Contains index 5? FALSE
-
-Exception ArgumentOutOfRangeException:
-
-Getting index 0: Person(
-	"name" private => "Jack"
-)
+Assert::equal( new Person("Jack"), $list[0], "Getting index 0" );

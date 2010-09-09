@@ -18,8 +18,9 @@ require __DIR__ . '/../initialize.php';
 require __DIR__ . '/Object.inc';
 
 
+
 if (NETTE_PACKAGE === '5.3') {
-	T::skip('Requires Nette Framework package < PHP 5.3');
+	TestHelpers::skip('Requires Nette Framework package < PHP 5.3');
 }
 
 
@@ -30,11 +31,4 @@ function TestClass_prototype_join(TestClass $that, $separator)
 }
 
 $obj = new TestClass('Hello', 'World');
-T::dump( $obj->join('*') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"Hello*World"
+Assert::same( 'Hello*World', $obj->join('*') );

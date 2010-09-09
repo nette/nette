@@ -22,133 +22,79 @@ require __DIR__ . '/files/annotations.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Environment::setVariable('tempDir', TEMP_DIR);
 
 
 AnnotationsParser::$useReflection = FALSE;
 
 
-T::note('AnnotatedClass1');
+// AnnotatedClass1
 
 $rc = new ReflectionClass('Nette\AnnotatedClass1');
-T::dump( AnnotationsParser::getAll($rc) );
-T::dump( AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
-T::dump( AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
-T::dump( AnnotationsParser::getAll($rc->getProperty('c')), '$c' );
-T::dump( AnnotationsParser::getAll($rc->getProperty('d')), '$d' );
-T::dump( AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
-T::dump( AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
-//T::dump( AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
-T::dump( AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('b')), 'b()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('c')), 'c()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('d')), 'd()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
-T::dump( AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
+Assert::same( array(
+	'author' => array('john'),
+), AnnotationsParser::getAll($rc) );
 
-T::note('AnnotatedClass2');
+Assert::same( array(
+	'var' => array('a'),
+), AnnotationsParser::getAll($rc->getProperty('a')), '$a' );
+
+Assert::same( array(
+	'var' => array('b'),
+), AnnotationsParser::getAll($rc->getProperty('b')), '$b' );
+
+Assert::same( array(
+	'var' => array('c'),
+), AnnotationsParser::getAll($rc->getProperty('c')), '$c' );
+
+Assert::same( array(
+	'var' => array('d'),
+), AnnotationsParser::getAll($rc->getProperty('d')), '$d' );
+
+Assert::same( array(
+	'var' => array('e'),
+), AnnotationsParser::getAll($rc->getProperty('e')), '$e' );
+
+Assert::same( array(), AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
+
+// AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
+Assert::same( array(
+	'return' => array('a'),
+), AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );
+
+Assert::same( array(
+	'return' => array('b'),
+), AnnotationsParser::getAll($rc->getMethod('b')), 'b()' );
+
+Assert::same( array(
+	'return' => array('c'),
+), AnnotationsParser::getAll($rc->getMethod('c')), 'c()' );
+
+Assert::same( array(
+	'return' => array('d'),
+), AnnotationsParser::getAll($rc->getMethod('d')), 'd()' );
+
+Assert::same( array(
+	'return' => array('e'),
+), AnnotationsParser::getAll($rc->getMethod('e')), 'e()' );
+
+Assert::same( array(), AnnotationsParser::getAll($rc->getMethod('f')), 'f()' );
+
+Assert::same( array(
+	'return' => array('g'),
+), AnnotationsParser::getAll($rc->getMethod('g')), 'g()' );
+
+
+// AnnotatedClass2
 
 $rc = new ReflectionClass('Nette\AnnotatedClass2');
-T::dump( AnnotationsParser::getAll($rc) );
+Assert::same( array(
+	'author' => array('jack'),
+), AnnotationsParser::getAll($rc) );
 
-T::note('AnnotatedClass3');
+
+// AnnotatedClass3
 
 $rc = new ReflectionClass('Nette\AnnotatedClass3');
-T::dump( AnnotationsParser::getAll($rc) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-AnnotatedClass1
-
-array(
-	"author" => array(
-		"john"
-	)
-)
-
-$a: array(
-	"var" => array(
-		"a"
-	)
-)
-
-$b: array(
-	"var" => array(
-		"b"
-	)
-)
-
-$c: array(
-	"var" => array(
-		"c"
-	)
-)
-
-$d: array(
-	"var" => array(
-		"d"
-	)
-)
-
-$e: array(
-	"var" => array(
-		"e"
-	)
-)
-
-$f: array()
-
-a(): array(
-	"return" => array(
-		"a"
-	)
-)
-
-b(): array(
-	"return" => array(
-		"b"
-	)
-)
-
-c(): array(
-	"return" => array(
-		"c"
-	)
-)
-
-d(): array(
-	"return" => array(
-		"d"
-	)
-)
-
-e(): array(
-	"return" => array(
-		"e"
-	)
-)
-
-f(): array()
-
-g(): array(
-	"return" => array(
-		"g"
-	)
-)
-
-AnnotatedClass2
-
-array(
-	"author" => array(
-		"jack"
-	)
-)
-
-AnnotatedClass3
-
-array()
+Assert::same( array(), AnnotationsParser::getAll($rc) );

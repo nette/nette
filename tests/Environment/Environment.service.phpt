@@ -17,25 +17,17 @@ require __DIR__ . '/../initialize.php';
 
 
 
-T::dump( Environment::getHttpResponse()->reflection->name, 'Environment::getHttpResponse' );
+Assert::same( 'Nette\Web\HttpResponse', Environment::getHttpResponse()->reflection->name );
 
-T::dump( Environment::getApplication()->reflection->name, 'Environment::getApplication' );
+
+Assert::same( 'Nette\Application\Application', Environment::getApplication()->reflection->name );
+
 
 Environment::setVariable('tempDir', __DIR__ . '/tmp');
-T::dump( Environment::getCache('my')->reflection->name, 'Environment::getCache(...)' );
+Assert::same( 'Nette\Caching\Cache', Environment::getCache('my')->reflection->name );
+
 
 /* in PHP 5.3
 Environment::setServiceAlias('Nette\Web\IUser', 'xyz');
-T::dump( Environment::getXyz()->reflection->name, 'Environment::getXyz(...)' );
+Assert::same('xyz', Environment::getXyz()->reflection->name );
 */
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Environment::getHttpResponse: "%ns%HttpResponse"
-
-Environment::getApplication: "%ns%Application"
-
-Environment::getCache(...): "%ns%Cache"

@@ -18,8 +18,5 @@ require __DIR__ . '/../initialize.php';
 
 
 $input = file_get_contents(__DIR__ . '/templates/optimize.phtml');
-echo BaseTemplate::optimizePhp($input);
-
-
-
-__halt_compiler() ?>
+$expected = file_get_contents(__DIR__ . '/BaseTemplate.optimizePhp().expect');
+Assert::match($expected, BaseTemplate::optimizePhp($input));

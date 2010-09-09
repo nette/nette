@@ -19,13 +19,11 @@ require __DIR__ . '/../initialize.php';
 
 Debug::$consoleMode = FALSE;
 Debug::$productionMode = FALSE;
-
 header('Content-Type: text/plain');
 
-Debug::consoleDump('value');
+Debug::enable();
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+function shutdown() {
+	Assert::same('', ob_get_clean());
+}
+Assert::handler('shutdown');

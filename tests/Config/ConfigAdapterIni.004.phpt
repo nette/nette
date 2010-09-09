@@ -18,44 +18,24 @@ require __DIR__ . '/../initialize.php';
 
 
 try {
-	T::note("Example 3");
 	$config = Config::fromFile('config3.ini');
-	T::dump( $config );
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception( 'InvalidStateException', "Missing parent section [scalar] in 'config3.ini'.", $e );
 }
 
 
 try {
-	T::note("Example 4");
 	$config = Config::fromFile('config4.ini');
-	T::dump( $config );
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception( 'InvalidStateException', "Invalid section [scalar.set] in 'config4.ini'.", $e );
 }
 
 
 try {
-	T::note("Example 5");
 	$config = Config::fromFile('config5.ini');
-	T::dump( $config );
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception( 'InvalidStateException', "Invalid key 'date.timezone' in section [set] in 'config5.ini'.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Example 3
-
-Exception InvalidStateException: Missing parent section [scalar] in 'config3.ini'.
-
-Example 4
-
-Exception InvalidStateException: Invalid section [scalar.set] in 'config4.ini'.
-
-Example 5
-
-Exception InvalidStateException: Invalid key 'date.timezone' in section [set] in 'config5.ini'.

@@ -20,29 +20,17 @@ require __DIR__ . '/../initialize.php';
 $config = Config::fromFile('config1.ini', 'development', NULL);
 
 try {
-	T::note("check read-only config:");
 	$config->freeze();
 	$config->database->adapter = 'new value';
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Config'.", $e );
 }
 
 try {
-	T::note("check read-only clone:");
 	$dolly = clone $config;
 	$dolly->database->adapter = 'works good';
 	unset($dolly);
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-check read-only config:
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Config'.
-
-check read-only clone:

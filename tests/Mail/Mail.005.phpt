@@ -7,7 +7,6 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
- * @keepTrailingSpaces
  */
 
 use Nette\Mail\Mail;
@@ -34,6 +33,4 @@ $mail->addAttachment('files/example.zip');
 
 $mail->send();
 
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/Mail.005.expect'), TestMailer::$output);

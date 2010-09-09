@@ -23,37 +23,12 @@ $route = new Route('<presenter>', array(
 	'presenter' => 'DefaultPresenter',
 ));
 
-testRouteIn($route, '/abc-x-y-z');
+testRouteIn($route, '/abc-x-y-z', 'AbcXYZ', array(
+	'test' => 'testvalue',
+), '/abc-x-y-z?test=testvalue');
 
-testRouteIn($route, '/');
+testRouteIn($route, '/', 'DefaultPresenter', array(
+	'test' => 'testvalue',
+), '/?test=testvalue');
 
 testRouteIn($route, '/--');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /abc-x-y-z
-
-"AbcXYZ"
-
-array(
-	"test" => "testvalue"
-)
-
-"/abc-x-y-z?test=testvalue"
-
-==> /
-
-"DefaultPresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/?test=testvalue"
-
-==> /--
-
-not matched

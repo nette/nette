@@ -24,18 +24,17 @@ function xml($v) { echo $v; }
 
 $template = new MockTemplate;
 $template->registerFilter(new LatteFilter);
-$template->render(T::getSection(__FILE__, 'template'));
 
+Assert::match(<<<EOD
+<?xml version="1.0" ?>
+12ok
 
+EOD
 
-__halt_compiler() ?>
-
------template-----
+, $template->render(<<<EOD
 <?xml version="1.0" ?>
 <?php xml(1) ?>
 <? xml(2) ?>
 <?php echo 'ok' ?>
-
-------EXPECT------
-<?xml version="1.0" ?>
-12ok
+EOD
+));

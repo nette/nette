@@ -29,20 +29,13 @@ class TestClass extends ComponentContainer
 
 
 $a = new TestClass;
-T::dump( $a->getComponent('b')->name );
+Assert::same( 'b', $a->getComponent('b')->name );
+
 
 
 try {
-	T::dump( $a->getComponent('B')->name );
+	$a->getComponent('B')->name;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Component with name 'B' does not exist.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"b"
-
-Exception InvalidArgumentException: Component with name 'B' does not exist.

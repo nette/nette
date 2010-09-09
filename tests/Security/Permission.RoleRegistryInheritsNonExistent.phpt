@@ -21,21 +21,14 @@ $acl = new Permission;
 $acl->addRole('guest');
 try {
 	$acl->roleInheritsFrom('nonexistent', 'guest');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
 
 try {
 	$acl->roleInheritsFrom('guest', 'nonexistent');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Exception InvalidStateException: Role 'nonexistent' does not exist.
-
-Exception InvalidStateException: Role 'nonexistent' does not exist.

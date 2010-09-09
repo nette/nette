@@ -19,7 +19,8 @@ require __DIR__ . '/../initialize.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+Nette\Environment::setVariable('tempDir', TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 
@@ -27,7 +28,7 @@ $storage = new Nette\Caching\FileStorage(TEMP_DIR);
 $cache = new Cache($storage);
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save('key1', 'value1', array(
 	Cache::TAGS => array('one', 'two'),
 ));
@@ -43,29 +44,12 @@ $cache->save('key3', 'value3', array(
 $cache['key4'] = 'value4';
 
 
-T::note('Cleaning by tags...');
+// Cleaning by tags...
 $cache->clean(array(
 	Cache::TAGS => 'one',
 ));
 
-T::dump( isset($cache['key1']), 'Is cached key1?' );
-T::dump( isset($cache['key2']), 'Is cached key2?' );
-T::dump( isset($cache['key3']), 'Is cached key3?' );
-T::dump( isset($cache['key4']), 'Is cached key4?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Cleaning by tags...
-
-Is cached key1? FALSE
-
-Is cached key2? FALSE
-
-Is cached key3? TRUE
-
-Is cached key4? TRUE
+Assert::false( isset($cache['key1']), 'Is cached key1?' );
+Assert::false( isset($cache['key2']), 'Is cached key2?' );
+Assert::true( isset($cache['key3']), 'Is cached key3?' );
+Assert::true( isset($cache['key4']), 'Is cached key4?' );

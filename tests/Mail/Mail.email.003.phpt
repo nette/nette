@@ -29,11 +29,7 @@ $mail->addBcc('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryv
 
 $mail->send();
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
@@ -47,3 +43,5 @@ Bcc: =?UTF-8?B?dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmVyeXZlcnl2ZXJ5dmU=?=
 Message-ID: <%a%@%a%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+EOD
+, TestMailer::$output );

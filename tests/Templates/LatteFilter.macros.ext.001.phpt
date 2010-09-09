@@ -23,7 +23,7 @@ require __DIR__ . '/Template.inc';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
@@ -34,8 +34,4 @@ $template->registerFilter(new LatteFilter);
 
 $template->people = array('John', 'Mary', 'Paul');
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.001.expect'), (string) $template);

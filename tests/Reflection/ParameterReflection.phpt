@@ -24,10 +24,13 @@ function myFunction($test, $test2 = null) {
 
 $reflect = new FunctionReflection('myFunction');
 $params = $reflect->getParameters();
-
-foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
-}
+Assert::same( 2, count($params) );
+Assert::same( 'Function myFunction()', (string) $params[0]->declaringFunction );
+Assert::null( $params[0]->class );
+Assert::null( $params[0]->declaringClass );
+Assert::same( 'Function myFunction()', (string) $params[1]->declaringFunction );
+Assert::null( $params[1]->class );
+Assert::null( $params[1]->declaringClass );
 
 
 
@@ -41,28 +44,10 @@ class Foo
 
 $reflect = new ClassReflection('Foo');
 $params = $reflect->getMethod('myMethod')->getParameters();
-
-foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
-}
-
-
-
-$reflect = new FunctionReflection(function ($x, $y) {});
-$params = $reflect->getParameters();
-
-foreach($params as $key => $value) {
-	echo $value->declaringFunction . ", ", $value->class, ", ", $value->declaringClass . "\n";
-}
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Function myFunction(), ,
-Function myFunction(), ,
-Method Foo::myMethod(), , Class Foo
-Method Foo::myMethod(), , Class Foo
-Function {closure}(), ,
-Function {closure}(), ,
+Assert::same( 2, count($params) );
+Assert::same( 'Method Foo::myMethod()', (string) $params[0]->declaringFunction );
+Assert::null( $params[0]->class );
+Assert::same( 'Class Foo', (string) $params[0]->declaringClass );
+Assert::same( 'Method Foo::myMethod()', (string) $params[1]->declaringFunction );
+Assert::null( $params[1]->class );
+Assert::same( 'Class Foo', (string) $params[1]->declaringClass );

@@ -23,59 +23,38 @@ $hashtable = new Hashtable(NULL, 'Person');
 $hashtable['jack'] = $jack = new Person('Jack');
 $hashtable['mary'] = new Person('Mary');
 
-T::dump( $hashtable->isFrozen() );
+Assert::false( $hashtable->isFrozen() );
 $hashtable->freeze();
-T::dump( $hashtable->isFrozen() );
+Assert::true( $hashtable->isFrozen() );
 
 try {
-	T::note("Adding Jack using []");
+	// Adding Jack using []
 	$hashtable['new'] = $jack;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Hashtable'.", $e );
 }
 
 try {
-	T::note("Adding Jack using add");
+	// Adding Jack using add
 	$hashtable->add('new', $jack);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Hashtable'.", $e );
 }
 
 try {
-	T::note("Removing using unset");
+	// Removing using unset
 	unset($hashtable['jack']);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Hashtable'.", $e );
 }
 
 try {
-	T::note("Changing using []");
+	// Changing using []
 	$hashtable['jack'] = $jack;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Hashtable'.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-TRUE
-
-Adding Jack using []
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
-
-Adding Jack using add
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
-
-Removing using unset
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.
-
-Changing using []
-
-Exception InvalidStateException: Cannot modify a frozen object '%ns%Hashtable'.

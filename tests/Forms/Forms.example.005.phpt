@@ -17,8 +17,6 @@ require __DIR__ . '/../initialize.php';
 
 
 
+ob_start();
 require '../../examples/forms/custom-validator.php';
-
-
-
-__halt_compiler() ?>
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.005.expect'), ob_get_clean() );

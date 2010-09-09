@@ -23,7 +23,7 @@ require __DIR__ . '/Template.inc';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
@@ -41,8 +41,4 @@ $template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->comment = 'test -- comment';
 $template->el = Nette\Web\Html::el('div')->title('1/2"');
 
-$template->render();
-
-
-
-__halt_compiler() ?>
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.001.expect'), (string) $template);

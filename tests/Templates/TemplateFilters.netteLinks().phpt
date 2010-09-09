@@ -35,24 +35,8 @@ $template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'netteLinks'));
 $template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
 $template->control = new MockPresenterComponent;
-$template->render(T::getSection(__FILE__, 'template'));
 
-
-
-__halt_compiler() ?>
-
------template-----
-<a href="nette:action?id=10">link</a>
-
-<a href="nette:">link</a>
-
-<a href="nette:#fragment">link</a>
-
-<a href='nette:'>link</a>
-
-<a href='nette:#fragment'>link</a>
-
-------EXPECT------
+Assert::match(<<<EOD
 <a href="LINK(action?id=10 )">link</a>
 
 <a href="LINK(this! )">link</a>
@@ -62,3 +46,17 @@ __halt_compiler() ?>
 <a href='LINK(this! )'>link</a>
 
 <a href='LINK(this! )#fragment'>link</a>
+EOD
+
+, $template->render(<<<EOD
+<a href="nette:action?id=10">link</a>
+
+<a href="nette:">link</a>
+
+<a href="nette:#fragment">link</a>
+
+<a href='nette:'>link</a>
+
+<a href='nette:#fragment'>link</a>
+EOD
+));

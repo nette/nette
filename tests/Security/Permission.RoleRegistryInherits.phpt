@@ -21,9 +21,10 @@ $acl = new Permission;
 $acl->addRole('guest');
 $acl->addRole('member', 'guest');
 $acl->addRole('editor', 'member');
-T::dump( $acl->getRoleParents('guest') );
-T::dump( $acl->getRoleParents('member') );
-T::dump( $acl->getRoleParents('editor') );
+Assert::same( array(), $acl->getRoleParents('guest') );
+Assert::same( array('guest'), $acl->getRoleParents('member') );
+Assert::same( array('member'), $acl->getRoleParents('editor') );
+
 
 Assert::true( $acl->roleInheritsFrom('member', 'guest', TRUE) );
 Assert::true( $acl->roleInheritsFrom('editor', 'member', TRUE) );
@@ -34,22 +35,5 @@ Assert::false( $acl->roleInheritsFrom('member', 'editor') );
 Assert::false( $acl->roleInheritsFrom('guest', 'editor') );
 
 $acl->removeRole('member');
-T::dump( $acl->getRoleParents('editor') );
+Assert::same( array(), $acl->getRoleParents('editor') );
 Assert::false( $acl->roleInheritsFrom('editor', 'guest') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-array()
-
-array(
-	"guest"
-)
-
-array(
-	"member"
-)
-
-array()

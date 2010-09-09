@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\IO\SafeStream stress test.
+ * Test: Nette\SafeStream stress test.
  *
  * @author     David Grudl
  * @category   Nette
- * @package    Nette\IO
+ * @package    Nette
  * @subpackage UnitTests
  * @skip       Requires more robust NetteTestCase implementation.
  */
 
-use Nette\IO\SafeStream;
+use Nette\SafeStream;
 
 
 
@@ -71,20 +71,13 @@ for ($counter=0; $counter<1000; $counter++) {
 $time = Nette\Debug::timer();
 
 
-T::dump( $hits );
+Assert::same(0, $hits['error']);
 
 // expected results are:
 //    [ok] => 1000       // should be 1000. If unlink() is used, sum [ok] + [notfound] should be 1000
-//    [notfound] => 0    // means "file not found", should be 0 if unlink() is not used
-//    [error] => 0,      // means "file contents is damaged", MUST be 0
-//    [cantwrite] => ?,  // means "somebody else is writing this file"
-//    [cantdelete] => 0  // means "unlink() has timeout",  should be 0
+//    [notfound] => 0    // means 'file not found', should be 0 if unlink() is not used
+//    [error] => 0,      // means 'file contents is damaged', MUST be 0
+//    [cantwrite] => ?,  // means 'somebody else is writing this file'
+//    [cantdelete] => 0  // means 'unlink() has timeout',  should be 0
 
-echo $hits['error'] == 0 ? 'PASSED' : 'NOT PASSED!';
-echo "\ntakes $time ms";
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+//echo "\ntakes $time ms";

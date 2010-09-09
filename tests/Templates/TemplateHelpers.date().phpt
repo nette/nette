@@ -17,35 +17,22 @@ require __DIR__ . '/../initialize.php';
 
 
 
-T::dump( TemplateHelpers::date(NULL), "TemplateHelpers::date(NULL)" );
-
-T::dump( TemplateHelpers::date(254400000), "TemplateHelpers::date(timestamp)" );
-
-T::dump( TemplateHelpers::date('1978-05-05'), "TemplateHelpers::date(string)" );
-
-T::dump( TemplateHelpers::date(new DateTime('1978-05-05')), "TemplateHelpers::date(DateTime)" );
-
-T::dump( TemplateHelpers::date(254400000, 'Y-m-d'), "TemplateHelpers::date(timestamp, format)" );
-
-T::dump( TemplateHelpers::date('1212-09-26', 'Y-m-d'), "TemplateHelpers::date(string, format)" );
-
-T::dump( TemplateHelpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpers::date(DateTime, format)" );
+Assert::null( TemplateHelpers::date(NULL), "TemplateHelpers::date(NULL)" );
 
 
+Assert::same( "01/23/78", TemplateHelpers::date(254400000), "TemplateHelpers::date(timestamp)" );
 
-__halt_compiler() ?>
 
-------EXPECT------
-TemplateHelpers::date(NULL): NULL
+Assert::same( "05/05/78", TemplateHelpers::date('1978-05-05'), "TemplateHelpers::date(string)" );
 
-TemplateHelpers::date(timestamp): "01/23/78"
 
-TemplateHelpers::date(string): "05/05/78"
+Assert::same( "05/05/78", TemplateHelpers::date(new DateTime('1978-05-05')), "TemplateHelpers::date(DateTime)" );
 
-TemplateHelpers::date(DateTime): "05/05/78"
 
-TemplateHelpers::date(timestamp, format): "1978-01-23"
+Assert::same( "1978-01-23", TemplateHelpers::date(254400000, 'Y-m-d'), "TemplateHelpers::date(timestamp, format)" );
 
-TemplateHelpers::date(string, format): "1212-09-26"
 
-TemplateHelpers::date(DateTime, format): "1212-09-26"
+Assert::same( "1212-09-26", TemplateHelpers::date('1212-09-26', 'Y-m-d'), "TemplateHelpers::date(string, format)" );
+
+
+Assert::same( "1212-09-26", TemplateHelpers::date(new DateTime('1212-09-26'), 'Y-m-d'), "TemplateHelpers::date(DateTime, format)" );

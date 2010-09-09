@@ -19,7 +19,7 @@ require __DIR__ . '/../initialize.php';
 
 
 if (!MemcachedStorage::isAvailable()) {
-	T::skip('Requires PHP extension Memcache.');
+	TestHelpers::skip('Requires PHP extension Memcache.');
 }
 
 
@@ -30,7 +30,7 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, $value, array(
 	Cache::EXPIRE => time() + 2,
 	Cache::SLIDING => TRUE,
@@ -38,37 +38,15 @@ $cache->save($key, $value, array(
 
 
 for($i = 0; $i < 3; $i++) {
-	T::note('Sleeping 1 second');
+	// Sleeping 1 second
 	sleep(1);
 	$cache->release();
-	T::dump( isset($cache[$key]), 'Is cached?' );
+	Assert::true( isset($cache[$key]), 'Is cached?' );
+
 }
 
-T::note('Sleeping few seconds...');
+// Sleeping few seconds...
 sleep(3);
 $cache->release();
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Sleeping 1 second
-
-Is cached? TRUE
-
-Sleeping 1 second
-
-Is cached? TRUE
-
-Sleeping 1 second
-
-Is cached? TRUE
-
-Sleeping few seconds...
-
-Is cached? FALSE
+Assert::false( isset($cache[$key]), 'Is cached?' );

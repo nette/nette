@@ -26,8 +26,8 @@ class MockControl extends Object
 {
 	function getWidget($name)
 	{
-		echo __METHOD__;
-		T::dump( func_get_args() );
+		TestHelpers::note( __METHOD__ );
+		TestHelpers::note( func_get_args() );
 		return new MockWidget;
 	}
 
@@ -40,8 +40,8 @@ class MockWidget extends Object
 
 	function __call($name, $args)
 	{
-		echo __METHOD__;
-		T::dump( func_get_args() );
+		TestHelpers::note( __METHOD__ );
+		TestHelpers::note( func_get_args() );
 	}
 
 }
@@ -56,14 +56,8 @@ $template->control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 
-$template->render(T::getSection(__FILE__, 'template'));
-
-
-
-__halt_compiler() ?>
-
------template-----
-{widget 'name'}
+$template->render('
+{widget \'name\'}
 
 {widget form}
 
@@ -80,3 +74,24 @@ __halt_compiler() ?>
 {widget form var1, 1, 2}
 
 {widget form var1 => 5, 1, 2}
+');
+
+Assert::same( array(
+	"MockControl::getWidget", array("name"),
+	"MockWidget::__call", array("render", array()),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("render", array()),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("renderTest", array()),
+	"MockWidget::__call", array("renderTest", array()),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("renderTest", array()),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("renderform", array()),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("render", array("var1")),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("render", array("var1", 1, 2)),
+	"MockControl::getWidget", array("form"),
+	"MockWidget::__call", array("render", array(array("var1" => 5, 0 => 1, 1 => 2))),
+), TestHelpers::fetchNotes() );

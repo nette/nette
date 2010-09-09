@@ -20,11 +20,4 @@ require __DIR__ . '/../initialize.php';
 $loader = NetteLoader::getInstance();
 $loader->register();
 
-T::dump( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Class %ns%Debug loaded? TRUE
+Assert::true( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );

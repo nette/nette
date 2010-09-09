@@ -33,21 +33,12 @@ $list[] = new Person('Jack');
 $list[] = new Person('Mary');
 $list[] = new Person('Larry');
 
-T::dump( $list->join(', ') );
+Assert::same( "Jack, Mary, Larry", $list->join(', ') );
 
 // undeclared method
 try {
 	$list->test();
-
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('MemberAccessException', "Call to undefined method %ns%ArrayList::test().", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"Jack, Mary, Larry"
-
-Exception MemberAccessException: Call to undefined method %ns%ArrayList::test().

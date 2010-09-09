@@ -7,7 +7,6 @@
  * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
- * @keepTrailingSpaces
  */
 
 use Nette\Mail\Mail;
@@ -30,6 +29,17 @@ $mail->setBody('Žluťoučký kůň');
 
 $mail->send();
 
+Assert::match( <<<EOD
+MIME-Version: 1.0
+X-Mailer: Nette Framework
+Date: %a%
+From: John Doe <doe@example.com>
+To: Lady Jane <jane@example.com>
+Subject: Hello Jane!
+Message-ID: <%h%@localhost>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-__halt_compiler() ?>
+Žluťoučký kůň
+EOD
+, TestMailer::$output );

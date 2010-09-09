@@ -24,19 +24,9 @@ $namespace->p = 'papaya';
 $namespace['c'] = 'cherry';
 
 $namespace = $session->getNamespace('three');
-T::dump( http_build_query($namespace->getIterator()) );
+Assert::same( 'a=apple&p=papaya&c=cherry', http_build_query($namespace->getIterator()) );
 
-T::note('removing');
+
+// removing
 $namespace->remove();
-T::dump( http_build_query($namespace->getIterator()) );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-"a=apple&p=papaya&c=cherry"
-
-removing
-
-""
+Assert::same( '', http_build_query($namespace->getIterator()) );

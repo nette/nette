@@ -26,153 +26,76 @@ $mary = new Person('Mary');
 $foo = new ArrayObject();
 
 
-T::note("Adding Jack");
+// Adding Jack
 $hashtable->add('jack', $jack);
 
 try {
-	T::note("Adding invalid key");
+	// Adding invalid key
 	$hashtable->add($foo, $foo);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Key must be either a string or an integer, object given.", $e );
 }
 
 try {
-	T::note("Adding foo");
+	// Adding foo
 	$hashtable->add('foo', $foo);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Item must be 'Person' object.", $e );
 }
 
 try {
-	T::note("Adding Mary using []");
+	// Adding Mary using []
 	$hashtable[] = $mary;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Key must be either a string or an integer, NULL given.", $e );
 }
 
-T::note("Adding Mary using ['mary']");
+// Adding Mary using ['mary']
+$hashtable['mary'] = $mary;
+
+// Adding Mary twice using ['mary']
 $hashtable['mary'] = $mary;
 
 try {
-	T::note("Adding Mary twice using ['mary']");
-	$hashtable['mary'] = $mary;
-} catch (Exception $e) {
-	T::dump( $e );
-}
-
-try {
-	T::note("Adding Mary twice using add()");
+	// Adding Mary twice using add()
 	$hashtable->add('mary', $mary);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidStateException', "An element with the same key already exists.", $e );
 }
 
 try {
-	T::note("Adding Mary twice using __set()");
+	// Adding Mary twice using __set()
 	$hashtable->mary = $mary;
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('MemberAccessException', "Cannot assign to an undeclared property %ns%Hashtable::\$mary.", $e );
 }
 
 try {
-	T::note("Adding Jack using append");
+	// Adding Jack using append
 	$hashtable->append($jack);
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('NotSupportedException', '', $e );
 }
 
 
 
-T::dump( $hashtable->count(), 'count:' );
-T::dump( count($hashtable) );
+Assert::same( 2, $hashtable->count(), 'count:' );
+Assert::same( 2, count($hashtable) );
 
 
-T::dump( $hashtable );
-T::dump( (array) $hashtable );
-T::dump( $hashtable->getKeys(), "getKeys:" );
+Assert::equal( array(
+	"jack" => new Person("Jack"),
+	"mary" => new Person("Mary"),
+), (array) $hashtable );
+Assert::same( array(
+	"jack",
+	"mary",
+), $hashtable->getKeys(), "getKeys:" );
 
 
-
-T::note("Get Interator:");
-foreach ($hashtable as $key => $person) {
-	echo $key, ' => ', $person->sayHi();
-}
-
-
-
-T::note("Clearing");
-$hashtable->clear();
-
-T::dump( $hashtable );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Adding Jack
-
-Adding invalid key
-
-Exception InvalidArgumentException: Key must be either a string or an integer, object given.
-
-Adding foo
-
-Exception InvalidArgumentException: Item must be 'Person' object.
-
-Adding Mary using []
-
-Exception InvalidArgumentException: Key must be either a string or an integer, NULL given.
-
-Adding Mary using ['mary']
-
-Adding Mary twice using ['mary']
-
-Adding Mary twice using add()
-
-Exception InvalidStateException: An element with the same key already exists.
-
-Adding Mary twice using __set()
-
-Exception MemberAccessException: Cannot assign to an undeclared property %ns%Hashtable::$mary.
-
-Adding Jack using append
-
-Exception NotSupportedException:
-
-count: 2
-
-2
-
-%ns%Hashtable(
-	"jack" => Person(
-		"name" private => "Jack"
-	)
-	"mary" => Person(
-		"name" private => "Mary"
-	)
-)
-
-array(
-	"jack" => Person(
-		"name" private => "Jack"
-	)
-	"mary" => Person(
-		"name" private => "Mary"
-	)
-)
-
-getKeys: array(
-	"jack"
-	"mary"
-)
-
-Get Interator:
-
-jack => My name is Jack
-
-mary => My name is Mary
-
-Clearing
-
-%ns%Hashtable()

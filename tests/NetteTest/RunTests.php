@@ -1,5 +1,5 @@
 
-Nette Test Framework (v0.3)
+Nette Test Framework (v0.4)
 ---------------------------
 <?php
 
@@ -30,7 +30,6 @@ Options:
  */
 try {
 	@unlink(__DIR__ . '/coverage.tmp'); // @ - file may not exist
-	ini_set('pcre.backtrack_limit', '1000000');
 
 
 	$manager = new TestRunner;

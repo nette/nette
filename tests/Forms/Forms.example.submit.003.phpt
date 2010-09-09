@@ -23,8 +23,7 @@ $_POST = array('name'=>'Žlu&#357;ou&#269;ký k&#367;&#328;','country'=>array(0=>'
 Nette\Debug::$productionMode = FALSE;
 Nette\Debug::$consoleMode = TRUE;
 
+
+ob_start();
 require '../../examples/forms/custom-encoding.php';
-
-
-
-__halt_compiler() ?>
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.submit.003.expect'), ob_get_clean() );

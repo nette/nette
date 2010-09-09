@@ -26,33 +26,10 @@ $arr = array(
 );
 
 try {
-	T::note("Construct from array");
+	// Construct from array
 	$list = new ArrayList($arr, 'Person');
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Item must be 'Person' object.", $e );
 }
 
-T::note("Construct from array II.");
-$list = new ArrayList($arr);
-T::dump( $list );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Construct from array
-
-Exception InvalidArgumentException: Item must be 'Person' object.
-
-Construct from array II.
-
-%ns%ArrayList(
-	"0" => Person(
-		"name" private => "Jack"
-	)
-	"1" => Person(
-		"name" private => "Mary"
-	)
-	"2" => ArrayObject()
-)

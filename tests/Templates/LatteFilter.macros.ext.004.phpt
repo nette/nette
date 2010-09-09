@@ -23,7 +23,7 @@ require __DIR__ . '/Template.inc';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
@@ -32,11 +32,7 @@ $template = new Template;
 $template->setFile(__DIR__ . '/templates/latte.inheritance.child4.phtml');
 $template->registerFilter(new LatteFilter);
 
-$template->render();
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
+Assert::match(<<<EOD
 	Content
+EOD
+, (string) $template);

@@ -18,19 +18,10 @@ require __DIR__ . '/../initialize.php';
 
 
 $acl = new Permission;
-T::dump( $acl->hasResource('area') );
+Assert::false( $acl->hasResource('area') );
+
 $acl->addResource('area');
-T::dump( $acl->hasResource('area') );
+Assert::true( $acl->hasResource('area') );
+
 $acl->removeResource('area');
-T::dump( $acl->hasResource('area') );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-FALSE
-
-TRUE
-
-FALSE
+Assert::false( $acl->hasResource('area') );

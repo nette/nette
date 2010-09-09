@@ -21,28 +21,16 @@ require __DIR__ . '/Collections.inc';
 
 $set = new Set(NULL, ':numeric');
 
-T::note("Adding numeric");
+// Adding numeric
 $set->append('10.3');
 
-T::note("Adding numeric");
+// Adding numeric
 $set->append(12.2);
 
 try {
-	T::note("Adding non-numeric");
+	// Adding non-numeric
 	$set->append('hello');
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	T::dump( $e );
+	Assert::exception('InvalidArgumentException', "Item must be numeric type.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Adding numeric
-
-Adding numeric
-
-Adding non-numeric
-
-Exception InvalidArgumentException: Item must be numeric type.

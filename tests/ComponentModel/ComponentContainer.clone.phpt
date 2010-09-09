@@ -21,12 +21,12 @@ class TestClass extends ComponentContainer implements ArrayAccess
 {
 	protected function attached($obj)
 	{
-		T::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		TestHelpers::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	protected function detached($obj)
 	{
-		T::note(get_class($this) . '::detached(' . get_class($obj) . ')');
+		TestHelpers::note(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	final public function offsetSet($name, $component)
@@ -80,74 +80,84 @@ $a['b']->monitor('a');
 $a['b']->monitor('a');
 $a['b']['c']->monitor('a');
 
-T::dump( $a['b']['c']['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
+Assert::same( array(
+	'B::ATTACHED(A)',
+	'C::ATTACHED(A)',
+), TestHelpers::fetchNotes());
 
-T::note("==> clone 'c'");
+Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
+
+
+
+// ==> clone 'c'
 $dolly = clone $a['b']['c'];
 
-T::dump( $dolly['d']['e']->lookupPath('A', FALSE), "'e' looking 'a'" );
+Assert::same( array(
+	'C::detached(A)',
+), TestHelpers::fetchNotes());
 
-T::dump( $dolly['d']['e']->lookupPath('C', FALSE), "'e' looking 'c'" );
+Assert::null( $dolly['d']['e']->lookupPath('A', FALSE) );
 
-T::note("==> clone 'b'");
+Assert::same( 'd-e', $dolly['d']['e']->lookupPath('C', FALSE) );
+
+
+
+// ==> clone 'b'
 $dolly = clone $a['b'];
 
-T::note("==> a['dolly'] = 'b'");
+Assert::same( array(
+	'C::detached(A)',
+	'B::detached(A)',
+), TestHelpers::fetchNotes());
+
+
+
+// ==> a['dolly'] = 'b'
 $a['dolly'] = $dolly;
 
-T::dump( $a->export(), "export 'a'" );
+Assert::same( array(
+	'C::ATTACHED(A)',
+	'B::ATTACHED(A)',
+), TestHelpers::fetchNotes());
 
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-B::ATTACHED(A)
-
-C::ATTACHED(A)
-
-'e' looking 'a': "b-c-d-e"
-
-==> clone 'c'
-
-C::detached(A)
-
-'e' looking 'a': NULL
-
-'e' looking 'c': "d-e"
-
-==> clone 'b'
-
-C::detached(A)
-
-B::detached(A)
-
-==> a['dolly'] = 'b'
-
-C::ATTACHED(A)
-
-B::ATTACHED(A)
-
-export 'a': array(
-	"(A)" => NULL
-	"children" => array(
-		"b" => array(
-			"(B)" => "b"
-			"children" => array(
-				"c" => array(
-					"(C)" => "c"
-					"children" => array( ... )
-				)
-			)
-		)
-		"dolly" => array(
-			"(B)" => "dolly"
-			"children" => array(
-				"c" => array(
-					"(C)" => "c"
-					"children" => array( ... )
-				)
-			)
-		)
-	)
-)
+Assert::same( array(
+	'(A)' => NULL,
+	'children' => array(
+		'b' => array(
+			'(B)' => 'b',
+			'children' => array(
+				'c' => array(
+					'(C)' => 'c',
+					'children' => array(
+						'd' => array(
+							'(D)' => 'd',
+							'children' => array(
+								'e' => array(
+									'(E)' => 'e',
+								),
+							),
+						),
+					),
+				),
+			),
+		),
+		'dolly' => array(
+			'(B)' => 'dolly',
+			'children' => array(
+				'c' => array(
+					'(C)' => 'c',
+					'children' => array(
+						'd' => array(
+							'(D)' => 'd',
+							'children' => array(
+								'e' => array(
+									'(E)' => 'e',
+								),
+							),
+						),
+					),
+				),
+			),
+		),
+	),
+), $a->export() );

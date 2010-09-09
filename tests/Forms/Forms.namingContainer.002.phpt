@@ -65,29 +65,22 @@ $form->setDefaults(array(
 	'age' => '50',
 ));
 
-T::dump( $form->getValues() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-array(
-	"name" => "jim"
-	"text1" => "hello"
-	"text2" => "world"
+Assert::same( array(
+	"name" => "jim",
+	"text1" => "hello",
+	"text2" => "world",
 	"formCont" => array(
-		"name" => "jack"
-		"age" => "23"
-	)
+		"name" => "jack",
+		"age" => "23",
+	),
 	"firstperson" => array(
-		"name" => "david"
-		"age" => "30"
-	)
+		"name" => "david",
+		"age" => "30",
+	),
 	"secondperson" => array(
-		"name" => "jim"
-		"age" => "40"
-		"avatar" => NULL
-	)
-	"age" => "50"
-)
+		"name" => "jim",
+		"age" => "40",
+		"avatar" => NULL,
+	),
+	"age" => "50",
+), $form->getValues() );

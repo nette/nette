@@ -18,16 +18,10 @@ TestHelpers::startup();
 
 ...test code...
 
-	dump variables using TestHelpers::dump()
-	note messages using TestHelpers::note()
+	test variables using Assert::*()
 
 
-__halt_compiler() ?>
-
-------EXPECT------
-
-	The expected output from the test script. It uses a number
-	of substitution tags for strings, spaces, digits, etc:
+	Assert::match() uses a number of substitution tags for strings, spaces, digits, etc:
 
 		%a%    one or more of anything except the end of line characters
 		%a?%   zero or more of anything except the end of line characters
@@ -45,12 +39,3 @@ __halt_compiler() ?>
 		%h%    one or more HEX digits
 		%ns%   PHP namespace
 		%[..]% reg-exp
-
-
----EXPECTHEADERS---
-	The expected HTTP headers. Any header specified here must exist
-	in the response and have the same value or the test fails.
-	Additional headers found in the actual tests while running are ignored.
-
-		Content-type: text/html; charset=UTF-8
-		Status: 403 Access Denied

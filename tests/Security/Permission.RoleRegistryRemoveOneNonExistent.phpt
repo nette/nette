@@ -20,13 +20,7 @@ require __DIR__ . '/../initialize.php';
 $acl = new Permission;
 try {
 	$acl->removeRole('nonexistent');
-} catch (InvalidStateException $e) {
-	T::dump( $e );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Exception InvalidStateException: Role 'nonexistent' does not exist.

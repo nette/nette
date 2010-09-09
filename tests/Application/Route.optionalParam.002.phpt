@@ -21,31 +21,10 @@ require __DIR__ . '/Route.inc';
 $route = new Route('index[.html]', array(
 ));
 
-testRouteIn($route, '/index.html');
+testRouteIn($route, '/index.html', 'querypresenter', array(
+	'test' => 'testvalue',
+), '/index?test=testvalue&presenter=querypresenter');
 
-testRouteIn($route, '/index');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /index.html
-
-"querypresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index?test=testvalue&presenter=querypresenter"
-
-==> /index
-
-"querypresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index?test=testvalue&presenter=querypresenter"
+testRouteIn($route, '/index', 'querypresenter', array(
+	'test' => 'testvalue',
+), '/index?test=testvalue&presenter=querypresenter');

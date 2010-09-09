@@ -10,15 +10,16 @@ use Nette\Mail\IMailer;
 
 
 // Setup environment
-Mail::$defaultMailer = 'FileMailer';
+Mail::$defaultMailer = 'TestMailer';
 
 
-class FileMailer implements IMailer
+class TestMailer implements IMailer
 {
+	public static $output;
 
 	function send(Mail $mail)
 	{
-		echo $mail->generateMessage();
+		self::$output = $mail->generateMessage();
 	}
 
 }

@@ -28,21 +28,10 @@ class B extends A {
 }
 
 $methodInfo = new MethodReflection('B', 'foo');
-T::dump( $methodInfo->getDeclaringClass() );
-
-T::dump( $methodInfo->getExtension() );
-
-T::dump( $methodInfo->callback->invoke(20, 3) );
+Assert::equal( new Nette\Reflection\ClassReflection('A'), $methodInfo->getDeclaringClass() );
 
 
+Assert::null( $methodInfo->getExtension() );
 
-__halt_compiler() ?>
 
-------EXPECT------
-%ns%ClassReflection(
-	"name" => "A"
-)
-
-NULL
-
-23
+Assert::same( 23, $methodInfo->callback->invoke(20, 3) );

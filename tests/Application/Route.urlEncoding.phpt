@@ -23,21 +23,7 @@ $route = new Route('<param>', array(
 	'presenter' => 'Presenter',
 ));
 
-
-testRouteIn($route, '/a%3Ab');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /a%3Ab
-
-"Presenter"
-
-array(
-	"param" => "a:b"
-	"test" => "testvalue"
-)
-
-"/a%3Ab?test=testvalue"
+testRouteIn($route, '/a%3Ab', 'Presenter', array(
+	'param' => 'a:b',
+	'test' => 'testvalue',
+), '/a%3Ab?test=testvalue');

@@ -93,38 +93,29 @@ $form->addText('age', 'Your age:', 5);
 
 $form->addSubmit('submit1', 'Send');
 
-T::dump( (bool) $form->isSubmitted() );
-T::dump( $form->getValues() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-TRUE
-
-array(
-	"name" => "jim"
-	"text1" => "hello"
-	"text2" => "world"
-	"formCont" => array(
-		"name" => "jack"
-		"age" => "23"
-	)
-	"firstperson" => array(
-		"name" => "david"
-		"age" => "30"
-	)
-	"secondperson" => array(
-		"name" => "jim"
-		"age" => "40"
-		"avatar" => %ns%HttpUploadedFile(
-			"name" private => "license.txt"
-			"type" private => NULL
-			"size" private => 3013
-			"tmpName" private => "C:\PHP\temp\php1D5C.tmp"
-			"error" private => 0
-		)
-	)
-	"age" => "50"
-)
+Assert::true( (bool) $form->isSubmitted() );
+Assert::equal( array(
+	'name' => 'jim',
+	'text1' => 'hello',
+	'text2' => 'world',
+	'formCont' => array(
+		'name' => 'jack',
+		'age' => '23',
+	),
+	'firstperson' => array(
+		'name' => 'david',
+		'age' => '30',
+	),
+	'secondperson' => array(
+		'name' => 'jim',
+		'age' => '40',
+		'avatar' => new Nette\Web\HttpUploadedFile(array(
+			'name' => 'license.txt',
+			'type' => '',
+			'size' => 3013,
+			'tmp_name' => 'C:\PHP\temp\php1D5C.tmp',
+			'error' => 0,
+		)),
+	),
+	'age' => '50',
+), $form->getValues() );

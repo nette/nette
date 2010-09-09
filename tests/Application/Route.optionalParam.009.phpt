@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with "required" optional sequence.
+ * Test: Nette\Application\Route with 'required' optional sequence.
  *
  * @author     David Grudl
  * @category   Nette
@@ -21,31 +21,10 @@ require __DIR__ . '/Route.inc';
 $route = new Route('index[!.html]', array(
 ));
 
-testRouteIn($route, '/index.html');
+testRouteIn($route, '/index.html', 'querypresenter', array(
+	'test' => 'testvalue',
+), '/index.html?test=testvalue&presenter=querypresenter');
 
-testRouteIn($route, '/index');
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-==> /index.html
-
-"querypresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.html?test=testvalue&presenter=querypresenter"
-
-==> /index
-
-"querypresenter"
-
-array(
-	"test" => "testvalue"
-)
-
-"/index.html?test=testvalue&presenter=querypresenter"
+testRouteIn($route, '/index', 'querypresenter', array(
+	'test' => 'testvalue',
+), '/index.html?test=testvalue&presenter=querypresenter');

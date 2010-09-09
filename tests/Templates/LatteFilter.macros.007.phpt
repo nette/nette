@@ -38,29 +38,25 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
 
-$template->render(T::getSection(__FILE__, 'template'));
-
-
-
-__halt_compiler() ?>
-
------template-----
+$result = $template->render('
 {block|lower|texy}
 {$hello}
 ---------
 - Escaped: {$hello}
 - Non-escaped: {!$hello}
 
-- Escaped expression: {='<' . 'b' . '>hello' . '</b>'}
+- Escaped expression: {="<" . "b" . ">hello" . "</b>"}
 
-- Non-escaped expression: {!='<' . 'b' . '>hello' . '</b>'}
+- Non-escaped expression: {!="<" . "b" . ">hello" . "</b>"}
 
 - Array access: {$people[1]}
 
 [* image.jpg *]
 {/block}
+');
 
-------EXPECT------
+Assert::match(<<<EOD
+
 <pre>&lt;i&gt;hello&lt;/i&gt;
 ---------
 - escaped: &lt;i&gt;hello&lt;/i&gt;
@@ -74,3 +70,5 @@ __halt_compiler() ?>
 
 [* image.jpg *]
 </pre>
+EOD
+, $result);

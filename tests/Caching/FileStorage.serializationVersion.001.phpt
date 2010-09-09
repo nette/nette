@@ -22,7 +22,7 @@ $value = 'rulez';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-T::purge(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
@@ -33,16 +33,7 @@ class Foo
 }
 
 
-T::note('Writing cache...');
+// Writing cache...
 $cache->save($key, new Foo);
 
-T::dump( isset($cache[$key]), 'Is cached?' );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-Writing cache...
-
-Is cached? TRUE
+Assert::true( isset($cache[$key]), 'Is cached?' );

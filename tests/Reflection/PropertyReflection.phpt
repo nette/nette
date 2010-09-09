@@ -27,13 +27,4 @@ class B extends A
 }
 
 $propInfo = new PropertyReflection('B', 'prop');
-T::dump( $propInfo->getDeclaringClass() );
-
-
-
-__halt_compiler() ?>
-
-------EXPECT------
-%ns%ClassReflection(
-	"name" => "A"
-)
+Assert::equal( new Nette\Reflection\ClassReflection('A'), $propInfo->getDeclaringClass() );
