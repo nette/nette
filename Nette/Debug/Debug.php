@@ -357,7 +357,7 @@ final class Debug
 	/**
 	 * Starts/stops stopwatch.
 	 * @param  string  name
-	 * @return elapsed seconds
+	 * @return float   elapsed seconds
 	 */
 	public static function timer($name = NULL)
 	{

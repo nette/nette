@@ -114,7 +114,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	/**
 	 * Returns widget component specified by name.
 	 * @param  string
-	 * @return IComponent
+	 * @return Nette\IComponent
 	 */
 	public function getWidget($name)
 	{
