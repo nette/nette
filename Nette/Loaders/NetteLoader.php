@@ -28,7 +28,6 @@ class NetteLoader extends AutoLoader
 	/** @var array */
 	public $list = array(
 		'argumentoutofrangeexception' => '/Utils/exceptions.php',
-		'configloaderini' => '/Config/ConfigLoaderIni.php',
 		'datetime53' => '/Utils/DateTime53.php',
 		'deprecatedexception' => '/Utils/exceptions.php',
 		'directorynotfoundexception' => '/Utils/exceptions.php',
@@ -84,6 +83,7 @@ class NetteLoader extends AutoLoader
 		'nette\caching\sqlitejournal' => '/Caching/SqliteJournal.php',
 		'nette\caching\sqlitemimic' => '/Caching/SqliteJournal.php',
 		'nette\callback' => '/Utils/Callback.php',
+		'nette\callbackfilteriterator' => '/Utils/Iterators/CallbackFilterIterator.php',
 		'nette\component' => '/ComponentModel/Component.php',
 		'nette\componentcontainer' => '/ComponentModel/ComponentContainer.php',
 		'nette\config\config' => '/Config/Config.php',
@@ -128,7 +128,6 @@ class NetteLoader extends AutoLoader
 		'nette\itranslator' => '/Utils/ITranslator.php',
 		'nette\json' => '/Utils/Json.php',
 		'nette\jsonexception' => '/Utils/Json.php',
-		'nette\loaders\aliasloader' => '/Loaders/AliasLoader.php',
 		'nette\loaders\autoloader' => '/Loaders/AutoLoader.php',
 		'nette\loaders\limitedscope' => '/Loaders/LimitedScope.php',
 		'nette\loaders\netteloader' => '/Loaders/NetteLoader.php',
@@ -141,6 +140,7 @@ class NetteLoader extends AutoLoader
 		'nette\object' => '/Utils/Object.php',
 		'nette\objectmixin' => '/Utils/ObjectMixin.php',
 		'nette\paginator' => '/Utils/Paginator.php',
+		'nette\recursivecallbackfilteriterator' => '/Utils/Iterators/CallbackFilterIterator.php',
 		'nette\recursivecomponentiterator' => '/ComponentModel/ComponentContainer.php',
 		'nette\reflection\annotation' => '/Reflection/Annotation.php',
 		'nette\reflection\annotationsparser' => '/Reflection/AnnotationsParser.php',
