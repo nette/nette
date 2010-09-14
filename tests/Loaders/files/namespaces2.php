@@ -2,5 +2,5 @@
 
 namespace MySpace2;
 
-class TestClass
+class TestClassC
 {}

@@ -2,12 +2,12 @@
 
 namespace
 {
-	class TestClass
+	class TestClassA
 	{}
 }
 
 namespace MySpace1
 {
-	class TestClass
+	class TestClassB
 	{}
 }

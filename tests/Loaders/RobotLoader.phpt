@@ -30,6 +30,6 @@ $loader->addDirectory(__DIR__); // purposely doubled
 $loader->register();
 
 Assert::false( class_exists('ConditionalClass') );
-Assert::true( class_exists('TestClass') );
-Assert::true( class_exists('MySpace1\TestClass') );
-Assert::true( class_exists('MySpace2\TestClass') );
+Assert::true( class_exists('TestClassA') );
+Assert::true( class_exists('MySpace1\TestClassB') );
+Assert::true( class_exists('MySpace2\TestClassC') );
