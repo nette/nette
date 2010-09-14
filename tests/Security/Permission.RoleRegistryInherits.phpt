@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Tests basic Role inheritance.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

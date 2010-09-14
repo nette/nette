@@ -4,7 +4,6 @@
  * Test: Nette\Application\SimpleRouter basic functions.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

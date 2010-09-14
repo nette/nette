@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route first optional parameter.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

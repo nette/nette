@@ -5,7 +5,6 @@
  * rule on the entire ACL.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Role is specified to each parameter of inherits().
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

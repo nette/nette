@@ -4,7 +4,6 @@
  * Test: Nette\Environment critical sections.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

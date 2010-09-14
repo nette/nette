@@ -14,9 +14,10 @@ use Nette\Object,
 /**
  * Routing debugger for Nette Framework.
  *
- * @copyright  Copyright (c) 2010 David Grudl
- * @license    http://nette.org/license  Nette license
- * @link       http://nette.org
+ * This file is part of the Nette Framework.
+ * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ *
+ * @author     David Grudl
  */
 class RoutingDebugger extends Object
 {

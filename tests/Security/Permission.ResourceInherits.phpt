@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Tests basic Resource inheritance.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

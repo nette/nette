@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that removing the default allow rule results in default deny rule being assigned.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Mail - textual and HTML body with embedded image and attachment.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage int keys.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

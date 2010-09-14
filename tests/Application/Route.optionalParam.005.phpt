@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route and auto-optional as optional sequences II.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Annotations file parser.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */

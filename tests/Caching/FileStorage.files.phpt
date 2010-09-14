@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage files dependency test.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

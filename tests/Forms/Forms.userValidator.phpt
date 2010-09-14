@@ -4,7 +4,6 @@
  * Test: Nette\Forms user validator.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

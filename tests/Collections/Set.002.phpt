@@ -4,7 +4,6 @@
  * Test: Nette\Collections\Set readonly collection.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */
@@ -50,4 +49,3 @@ try {
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', "Cannot modify a frozen object '%ns%Set'.", $e );
 }
-

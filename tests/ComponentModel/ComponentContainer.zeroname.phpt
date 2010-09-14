@@ -4,7 +4,6 @@
  * Test: Nette\ComponentContainer and '0' name.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

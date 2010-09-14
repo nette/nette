@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Nette Framework
+ * This file is part of the Nette Framework.
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nette.org/license  Nette license
- * @link       http://nette.org
- * @category   Nette
- * @package    Nette\Web
+ * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ *
+ * This source file is subject to the "Nette license", and/or
+ * GPL license. For more information please see http://nette.org
  */
 
 namespace Nette\Web;
@@ -29,8 +28,7 @@ use Nette;
  * - authority:   [user[:password]@]host[:port]
  * - hostUri:     http://user:password@nette.org:8042
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette\Web
+ * @author     David Grudl
  *
  * @property   string $scheme
  * @property   string $user

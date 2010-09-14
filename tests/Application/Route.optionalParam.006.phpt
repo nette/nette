@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route with 'required' optional sequences I.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

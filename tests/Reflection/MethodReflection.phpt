@@ -4,7 +4,6 @@
  * Test: MethodReflection tests.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */

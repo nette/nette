@@ -4,7 +4,6 @@
  * Test: Nette\Templates\LatteFilter::formatArray()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Templates
  * @subpackage UnitTests
  */

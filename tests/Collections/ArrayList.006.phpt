@@ -4,7 +4,6 @@
  * Test: Nette\Collections\ArrayList::__construct()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */
@@ -32,4 +31,3 @@ try {
 } catch (Exception $e) {
 	Assert::exception('InvalidArgumentException', "Item must be 'Person' object.", $e );
 }
-

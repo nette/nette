@@ -4,7 +4,6 @@
  * Test: Nette\Web\Uri malformed URI.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

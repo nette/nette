@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that removal of all Resources results in Resource-specific rules being removed.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

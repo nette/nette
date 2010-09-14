@@ -4,7 +4,6 @@
  * Test: Nette\Forms naming container.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

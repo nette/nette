@@ -4,7 +4,6 @@
  * Test: Nette\Config\ConfigAdapterIni section.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Config
  * @subpackage UnitTests
  */

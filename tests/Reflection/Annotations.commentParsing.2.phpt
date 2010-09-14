@@ -4,7 +4,6 @@
  * Test: Annotations comment parser II.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */

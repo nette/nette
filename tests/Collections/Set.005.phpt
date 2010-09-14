@@ -4,7 +4,6 @@
  * Test: Nette\Collections\Set::contains()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */

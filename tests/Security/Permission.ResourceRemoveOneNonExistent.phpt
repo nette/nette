@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that an exception is thrown when a non-existent Resource is specified for removal.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

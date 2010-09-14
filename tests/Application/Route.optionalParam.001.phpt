@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route with nested optional sequences.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

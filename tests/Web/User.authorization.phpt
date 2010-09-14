@@ -4,7 +4,6 @@
  * Test: Nette\Web\User authorization.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

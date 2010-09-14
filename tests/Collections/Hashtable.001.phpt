@@ -4,7 +4,6 @@
  * Test: Nette\Collections\Hashtable adding items.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */
@@ -97,5 +96,3 @@ Assert::same( array(
 	"jack",
 	"mary",
 ), $hashtable->getKeys(), "getKeys:" );
-
-

@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensure that basic rule removal works.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

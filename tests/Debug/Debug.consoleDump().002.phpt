@@ -4,7 +4,6 @@
  * Test: Nette\Debug::consoleDump() in non-HTML mode.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

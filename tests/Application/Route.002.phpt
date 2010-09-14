@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route default usage.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

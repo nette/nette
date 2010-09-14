@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that by default denies access to everything by all.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

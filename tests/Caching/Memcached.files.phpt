@@ -4,7 +4,6 @@
  * Test: Nette\Caching\Memcached files dependency test.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\ComponentContainer::attached()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Collections\ArrayList and removing items.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */

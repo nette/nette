@@ -4,7 +4,6 @@
  * Test: Nette\Collections\Hashtable and get & contains, indexOf.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */
@@ -61,5 +60,3 @@ try {
 }
 
 Assert::equal( new Person("Mary"), $hashtable['mary'], "Getting ['mary']" );
-
-

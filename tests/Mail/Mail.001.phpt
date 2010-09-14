@@ -4,7 +4,6 @@
  * Test: Nette\Mail\Mail - textual body.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

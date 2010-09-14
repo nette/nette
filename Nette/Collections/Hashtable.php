@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Nette Framework
+ * This file is part of the Nette Framework.
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nette.org/license  Nette license
- * @link       http://nette.org
- * @category   Nette
- * @package    Nette\Collections
+ * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ *
+ * This source file is subject to the "Nette license", and/or
+ * GPL license. For more information please see http://nette.org
  */
 
 namespace Nette\Collections;
@@ -19,7 +18,6 @@ use Nette;
 /**
  * The exception that is thrown when the key specified for accessing
  * an element in a collection does not match any key.
- * @package    Nette\Collections
  */
 class KeyNotFoundException extends \RuntimeException
 {
@@ -30,8 +28,7 @@ class KeyNotFoundException extends \RuntimeException
 /**
  * Provides the base class for a generic collection of keys and values.
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette\Collections
+ * @author     David Grudl
  */
 class Hashtable extends Collection implements IMap
 {

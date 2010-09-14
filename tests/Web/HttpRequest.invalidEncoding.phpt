@@ -4,7 +4,6 @@
  * Test: Nette\Web\HttpRequest invalid encoding.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

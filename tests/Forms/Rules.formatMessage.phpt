@@ -4,7 +4,6 @@
  * Test: Nette\Forms\Rules::validateMessage()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

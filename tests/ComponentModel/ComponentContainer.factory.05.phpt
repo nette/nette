@@ -4,7 +4,6 @@
  * Test: Nette\ComponentContainer component named factory 5.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

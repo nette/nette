@@ -4,7 +4,6 @@
  * Test: Nette\ComponentContainer component factory & remove inside.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

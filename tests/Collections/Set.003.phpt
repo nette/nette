@@ -4,7 +4,6 @@
  * Test: Nette\Collections\Set adding numeric items.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Collections
  * @subpackage UnitTests
  */

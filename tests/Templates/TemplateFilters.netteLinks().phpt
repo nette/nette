@@ -4,7 +4,6 @@
  * Test: Nette\Templates\TemplateFilters::netteLinks()
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Templates
  * @subpackage UnitTests
  */

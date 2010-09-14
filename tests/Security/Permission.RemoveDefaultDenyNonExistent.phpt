@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that removing non-existent default deny rule does nothing.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

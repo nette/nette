@@ -4,7 +4,6 @@
  * Test: Nette\Web\Uri ftp://
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */
