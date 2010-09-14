@@ -4,7 +4,6 @@
  * Test: Annotations using user classes.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */

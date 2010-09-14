@@ -4,7 +4,6 @@
  * Test: Nette\Web\SessionNamespace remove.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

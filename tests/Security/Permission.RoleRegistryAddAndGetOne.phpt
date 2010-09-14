@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that basic addition and retrieval of a single Role works.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

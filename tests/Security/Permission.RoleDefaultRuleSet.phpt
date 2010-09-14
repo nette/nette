@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that ACL-wide rules (all Resources and privileges) work properly for a particular Role.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage clean with Cache::ALL
  *
  * @author     Petr Procházka
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

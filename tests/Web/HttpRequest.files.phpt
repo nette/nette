@@ -4,7 +4,6 @@
  * Test: Nette\Web\HttpRequest files.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

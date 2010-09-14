@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\NetteLoader basic usage.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Loaders
  * @subpackage UnitTests
  */

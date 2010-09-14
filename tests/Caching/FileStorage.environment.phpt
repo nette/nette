@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage and Environment.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Application\Route with optional sequence precedence.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Application
  * @subpackage UnitTests
  */

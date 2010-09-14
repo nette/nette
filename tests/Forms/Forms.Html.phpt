@@ -4,7 +4,6 @@
  * Test: Nette\Forms and Html.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

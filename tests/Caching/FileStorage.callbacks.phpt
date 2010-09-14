@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage callbacks dependency.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\NeonParser simple values.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

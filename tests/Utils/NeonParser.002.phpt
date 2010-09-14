@@ -4,7 +4,6 @@
  * Test: Nette\NeonParser inline hash and array.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

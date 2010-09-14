@@ -4,7 +4,6 @@
  * Test: Nette\SafeStream basic usage.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  */

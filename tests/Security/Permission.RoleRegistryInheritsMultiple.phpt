@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Tests basic Role multiple inheritance.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

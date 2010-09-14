@@ -4,7 +4,6 @@
  * Test: Nette\Security\Permission Ensures that multiple privileges work properly.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Security
  * @subpackage UnitTests
  */

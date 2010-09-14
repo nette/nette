@@ -4,7 +4,6 @@
  * Test: Nette\Web\UriScript modify.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Web
  * @subpackage UnitTests
  */

@@ -4,7 +4,6 @@
  * Test: Nette\Forms\TextBase validators.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

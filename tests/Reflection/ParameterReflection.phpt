@@ -4,7 +4,6 @@
  * Test: ParameterReflection tests.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */

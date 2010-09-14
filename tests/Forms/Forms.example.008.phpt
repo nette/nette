@@ -4,7 +4,6 @@
  * Test: Nette\Forms example.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Forms
  * @subpackage UnitTests
  */

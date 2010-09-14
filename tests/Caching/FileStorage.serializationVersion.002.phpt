@@ -4,7 +4,6 @@
  * Test: Nette\Caching\FileStorage @serializationVersion dependency test (continue...).
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Caching
  * @subpackage UnitTests
  */

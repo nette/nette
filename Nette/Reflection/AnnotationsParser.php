@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Nette Framework
+ * This file is part of the Nette Framework.
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @license    http://nette.org/license  Nette license
- * @link       http://nette.org
- * @category   Nette
- * @package    Nette\Reflection
+ * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ *
+ * This source file is subject to the "Nette license", and/or
+ * GPL license. For more information please see http://nette.org
  */
 
 namespace Nette\Reflection;
@@ -20,8 +19,7 @@ use Nette,
 /**
  * Annotations support for PHP.
  *
- * @copyright  Copyright (c) 2004, 2010 David Grudl
- * @package    Nette\Reflection
+ * @author     David Grudl
  * @Annotation
  */
 final class AnnotationsParser

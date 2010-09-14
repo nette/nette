@@ -4,7 +4,6 @@
  * Test: Nette\Loaders\RobotLoader basic usage.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Loaders
  * @subpackage UnitTests
  */

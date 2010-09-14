@@ -4,7 +4,6 @@
  * Test: Nette\SafeStream stress test.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette
  * @subpackage UnitTests
  * @skip       Requires more robust NetteTestCase implementation.

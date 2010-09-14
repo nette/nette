@@ -4,7 +4,6 @@
  * Test: Nette\Reflection & annotations.
  *
  * @author     David Grudl
- * @category   Nette
  * @package    Nette\Reflection
  * @subpackage UnitTests
  */
