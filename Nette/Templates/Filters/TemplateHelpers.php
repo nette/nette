@@ -159,8 +159,9 @@ final class TemplateHelpers
 		return String::replace(
 			$s,
 			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
-			callback(create_function('$m', 'return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));'))
-		);
+			function($m) {
+				return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));
+			});
 	}
 
 
@@ -175,7 +176,9 @@ final class TemplateHelpers
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
 		if ($level >= 1) {
-			$s = String::replace($s, '#<(textarea|pre).*?</\\1#si', callback(create_function('$m', 'return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");')));
+			$s = String::replace($s, '#<(textarea|pre).*?</\\1#si', function($m) {
+				return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");
+			});
 			$s = String::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
