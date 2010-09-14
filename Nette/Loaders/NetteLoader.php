@@ -93,6 +93,7 @@ class NetteLoader extends AutoLoader
 		'nette\debug' => '/Debug/Debug.php',
 		'nette\debugpanel' => '/Debug/DebugPanel.php',
 		'nette\environment' => '/Environment/Environment.php',
+		'nette\finder' => '/Utils/Finder.php',
 		'nette\forms\button' => '/Forms/Controls/Button.php',
 		'nette\forms\checkbox' => '/Forms/Controls/Checkbox.php',
 		'nette\forms\conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
