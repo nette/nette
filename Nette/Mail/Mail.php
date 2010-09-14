@@ -463,7 +463,8 @@ class Mail extends MailMimePart
 			$text = preg_replace('#<(style|script|head).*</\\1>#Uis', '', $this->html);
 			$text = preg_replace('#<t[dh][ >]#i', " $0", $text);
 			$text = preg_replace('#[ \t\r\n]+#', ' ', $text);
-			$text = preg_replace('#<(/?p|/?h\d|li|br|/tr)[ >]#i', "\n$0", $text);
+			$text = preg_replace('#<(/?p|/?h\d|li|br|/tr)[ >/]#i', "\n$0", $text);
+
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
 			$this->setBody(trim($text));
 		}
