@@ -43,7 +43,6 @@ use Nette,
  * - {status ...} HTTP status
  * - {capture ?} ... {/capture} capture block to parameter
  * - {var var => value} set template parameter
- * - {assign var => value} set template parameter
  * - {default var => value} set default template parameter
  * - {dump $var}
  * - {debugbreak}
