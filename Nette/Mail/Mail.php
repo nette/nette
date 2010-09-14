@@ -466,7 +466,7 @@ class Mail extends MailMimePart
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
 				'#[ \t\r\n]+#' => ' ',
-				'#<(/?p|/?h\d|li|br|/tr)[ >]#i' => "\n$0",
+				'#<(/?p|/?h\d|li|br|/tr)[ >/]#i' => "\n$0",
 			));
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
 			$this->setBody(trim($text));
