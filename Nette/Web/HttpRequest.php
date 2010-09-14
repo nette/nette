@@ -421,7 +421,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 
 
 	/**
-	 * Initializes $this->query, $this->files, $this->cookies and $this->files arrays
+	 * Initializes $this->query, $this->files, $this->cookies and $this->files arrays.
 	 * @return void
 	 */
 	public function initialize()

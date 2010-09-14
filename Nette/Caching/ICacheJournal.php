@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Cache journal provider
+ * Cache journal provider.
  *
  * @author     Jan Smitka
  */

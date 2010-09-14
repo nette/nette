@@ -170,7 +170,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 
 	/**
-	 * Returns the ICacheJournal
+	 * Returns the ICacheJournal.
 	 * @return ICacheJournal
 	 */
 	protected function getJournal()

@@ -31,6 +31,7 @@ class Annotation extends Nette\Object implements IAnnotation
 	}
 
 
+
 	/**
 	 * Returns default annotation.
 	 * @return string
