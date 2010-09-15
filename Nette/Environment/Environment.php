@@ -62,6 +62,7 @@ final class Environment
 		'getHttpResponse' => 'Nette\\Web\\IHttpResponse',
 		'getApplication' => 'Nette\\Application\\Application',
 		'getUser' => 'Nette\\Web\\IUser',
+		'getRobotLoader' => 'Nette\\Loaders\\RobotLoader',
 	);
 
 	/** @var array */
@@ -415,6 +416,16 @@ final class Environment
 	 * @return Nette\Web\User
 	 */
 	public static function getUser()
+	{
+		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+	}
+
+
+
+	/**
+	 * @return Nette\Loaders\RobotLoader
+	 */
+	public static function getRobotLoader()
 	{
 		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
 	}

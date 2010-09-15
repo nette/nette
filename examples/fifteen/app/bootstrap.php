@@ -19,7 +19,7 @@ require __DIR__ . '/../../../Nette/loader.php';
 Debug::enable();
 
 // 2b) enable RobotLoader - this allows load all classes automatically
-$loader = new RobotLoader();
+$loader = Environment::getRobotLoader();
 $loader->addDirectory(APP_DIR);
 $loader->register();
 
