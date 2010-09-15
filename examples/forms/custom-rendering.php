@@ -239,7 +239,7 @@ if ($form->isSubmitted()) {
 		background: #EEE;
 	}
 	</style>
-
+	<link rel="stylesheet" type="text/css" media="screen" href="files/style.css" />
 	<script src="netteForms.js"></script>
 </head>
 

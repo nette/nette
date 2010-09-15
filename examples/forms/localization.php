@@ -166,26 +166,6 @@ if ($form->isSubmitted()) {
 	<title>Nette\Forms localization example | Nette Framework</title>
 
 	<style type="text/css">
-	html {
-		font: 16px/1.5 sans-serif;
-		border-top: 4.7em solid #F4EBDB;
-	}
-
-	body {
-		max-width: 990px;
-		margin: -4.7em auto 0;
-		background: white;
-		color: #333;
-	}
-
-	h1 {
-		font-size: 1.9em;
-		margin: .5em 0 1.5em;
-		background: url(http://files.nette.org/icons/logo-e1.png) right center no-repeat;
-		color: #7A7772;
-		text-shadow: 1px 1px 0 white;
-	}
-
 	.required {
 		color: darkred
 	}
@@ -206,7 +186,7 @@ if ($form->isSubmitted()) {
 		text-align: right;
 	}
 	</style>
-
+	<link rel="stylesheet" type="text/css" media="screen" href="files/style.css" />
 	<script src="netteForms.js"></script>
 </head>
 
