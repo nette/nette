@@ -194,7 +194,7 @@ class HttpUploadedFile extends Nette\Object
 	 */
 	public function getImageSize()
 	{
-		return $this->isOk() ? getimagesize($this->tmpName) : NULL;
+		return $this->isOk() ? @getimagesize($this->tmpName) : NULL; // @ - files smaller than 12 bytes causes read error
 	}
 
 }
