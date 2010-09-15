@@ -153,7 +153,7 @@ class RobotLoader extends AutoLoader
 	{
 		$res = array();
 		foreach ($this->list as $class => $pair) {
-			if ($pair) $res[$class] = $pair[0];
+			if ($pair) $res[$pair[2]] = $pair[0];
 		}
 		return $res;
 	}
@@ -188,12 +188,12 @@ class RobotLoader extends AutoLoader
 	 */
 	private function addClass($class, $file, $time)
 	{
-		$class = strtolower($class);
-		if (!empty($this->list[$class]) && $this->list[$class][0] !== $file && is_file($this->list[$class][0])) {
+		$lClass = strtolower($class);
+		if (!empty($this->list[$lClass]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
 			spl_autoload_call($class); // hack: enables exceptions
 			throw new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
 		}
-		$this->list[$class] = array($file, $time);
+		$this->list[$lClass] = array($file, $time, $class);
 	}
 
 
