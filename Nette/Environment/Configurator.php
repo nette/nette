@@ -284,7 +284,7 @@ class Configurator extends Object
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = !Environment::isProduction();
-		//$loader->setCache(Environment::getCache('Nette.RobotLoader'));
+		$loader->setCacheStorage(Environment::getService('Nette\\Caching\\ICacheStorage'));
 		$dirs = isset($options['directory']) ? $options['directory'] : array(Environment::getVariable('appDir'), Environment::getVariable('libsDir'));
 		$loader->addDirectory($dirs);
 		$loader->register();

@@ -33,7 +33,7 @@ class RobotLoader extends AutoLoader
 	public $acceptFiles = '*.php, *.php5';
 
 	/** @var bool */
-	public $autoRebuild;
+	public $autoRebuild = FALSE;
 
 	/** @var array */
 	private $list = array();
@@ -43,6 +43,9 @@ class RobotLoader extends AutoLoader
 
 	/** @var bool */
 	private $rebuilt = FALSE;
+
+	/** @var Nette\Caching\ICacheStorage */
+	private $cacheStorage;
 
 
 
@@ -91,10 +94,6 @@ class RobotLoader extends AutoLoader
 
 		if (!isset($this->list[$type]) || ($this->list[$type] !== FALSE && !is_file($this->list[$type][0]))) {
 			$this->list[$type] = FALSE;
-
-			if ($this->autoRebuild === NULL) {
-				$this->autoRebuild = !$this->isProduction();
-			}
 
 			if ($this->autoRebuild) {
 				if ($this->rebuilt) {
@@ -327,11 +326,37 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 * @param  Nette\Caching\Cache
+	 * @return RobotLoader
+	 */
+	public function setCacheStorage(Nette\Caching\ICacheStorage $storage)
+	{
+		$this->cacheStorage = $storage;
+		return $this;
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	public function getCacheStorage()
+	{
+		return $this->cacheStorage;
+	}
+
+
+
+	/**
 	 * @return Nette\Caching\Cache
 	 */
 	protected function getCache()
 	{
-		return Nette\Environment::getCache('Nette.RobotLoader');
+		if (!$this->cacheStorage) {
+			trigger_error('Missing cache storage.', E_USER_WARNING);
+			$this->cacheStorage = new Nette\Caching\DummyStorage;
+		}
+		return new Nette\Caching\Cache($this->cacheStorage, 'Nette.RobotLoader');
 	}
 
 
@@ -342,16 +367,6 @@ class RobotLoader extends AutoLoader
 	protected function getKey()
 	{
 		return md5("v2|$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs));
-	}
-
-
-
-	/**
-	 * @return bool
-	 */
-	protected function isProduction()
-	{
-		return Nette\Environment::isProduction();
 	}
 
 }

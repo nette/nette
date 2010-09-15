@@ -17,13 +17,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
-TestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
-
-
 $loader = new RobotLoader;
+$loader->setCacheStorage(new Nette\Caching\DummyStorage);
 $loader->addDirectory(__DIR__ . '/files');
 $loader->addDirectory(__DIR__ . '/files/'); // purposely doubled
 $loader->addDirectory(__DIR__ . '/file/interface.php'); // as file
