@@ -44,15 +44,6 @@ class RobotLoader extends AutoLoader
 	/** @var bool */
 	private $rebuilt = FALSE;
 
-	/** @var string */
-	private $acceptMask;
-
-	/** @var string */
-	private $ignoreMask;
-
-	/** @var array */
-	private $disallow = array();
-
 
 
 	/**
@@ -143,8 +134,6 @@ class RobotLoader extends AutoLoader
 	 */
 	public function _rebuildCallback()
 	{
-		$this->acceptMask = self::wildcards2re($this->acceptFiles);
-		$this->ignoreMask = self::wildcards2re($this->ignoreDirs);
 		foreach ($this->list as $pair) {
 			if ($pair) $this->files[$pair[0]] = $pair[1];
 		}
@@ -216,46 +205,35 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanDirectory($dir)
 	{
-		if (is_file($dir)) {
-			if (!isset($this->files[$dir]) || $this->files[$dir] !== filemtime($dir)) {
-				$this->scanScript($dir);
-			}
-			return;
-		}
+		$disallow = array();
+		$iterator = new \AppendIterator;
+		$iterator->append(new \ArrayIterator(array(new \SplFileInfo($dir))));
+		if (is_dir($dir)) {
+			$iterator->append(Nette\Finder::find(String::split($this->acceptFiles, '#[,\s]+#'))
+				->from($dir)
+				->exclude(String::split($this->ignoreDirs, '#[,\s]+#'))
+				->filter(function($file) use (&$disallow){
+					return !isset($disallow[$file->getPathname()]);
+				})->getIterator()
+			);
+		};
 
-		$iterator = dir($dir);
-		if (!$iterator) return;
-
-		$base = $dir . DIRECTORY_SEPARATOR;
-		if (is_file($dir . '/netterobots.txt')) {
-			foreach (file($dir . '/netterobots.txt') as $s) {
-				if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
-					$this->disallow[$base . str_replace('/', DIRECTORY_SEPARATOR, trim($matches[1], '/'))] = TRUE;
+		foreach ($iterator as $entry) {
+			$path = (string) $entry;
+			if ($entry->isDir() && is_file("$path/netterobots.txt")) {
+				foreach (file("$path/netterobots.txt") as $s) {
+					if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
+						$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, '/' . trim($matches[1], '/'))] = TRUE;
+					}
 				}
 			}
-			if (isset($this->disallow[$base])) return;
-		}
 
-		while (FALSE !== ($entry = $iterator->read())) {
-			if ($entry == '.' || $entry == '..' || isset($this->disallow[$path = $base . $entry])) continue;
-
-			// process subdirectories
-			if (is_dir($path)) {
-				// check ignore mask
-				if (!String::match($entry, $this->ignoreMask)) {
-					$this->scanDirectory($path);
-				}
-				continue;
-			}
-
-			if (is_file($path) && String::match($entry, $this->acceptMask)) {
+			if ($entry->isFile()) {
 				if (!isset($this->files[$path]) || $this->files[$path] !== filemtime($path)) {
 					$this->scanScript($path);
 				}
 			}
 		}
-
-		$iterator->close();
 	}
 
 
@@ -334,25 +312,6 @@ class RobotLoader extends AutoLoader
 				$level--;
 			}
 		}
-	}
-
-
-
-	/**
-	 * Converts comma separated wildcards to regular expression.
-	 * @param  string
-	 * @return string
-	 */
-	private static function wildcards2re($wildcards)
-	{
-		$mask = array();
-		foreach (explode(',', $wildcards) as $wildcard) {
-			$wildcard = trim($wildcard);
-			$wildcard = addcslashes($wildcard, '.\\+[^]$(){}=!><|:#');
-			$wildcard = strtr($wildcard, array('*' => '.*', '?' => '.'));
-			$mask[] = $wildcard;
-		}
-		return '#^(' . implode('|', $mask) . ')$#i';
 	}
 
 

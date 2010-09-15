@@ -266,13 +266,8 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		// cleaning using file iterator
 		if ($all || $collector) {
 			$now = time();
-			$base = $this->dir . DIRECTORY_SEPARATOR . 'c';
-			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->dir), \RecursiveIteratorIterator::CHILD_FIRST);
-			foreach ($iterator as $entry) {
+			foreach (Nette\Finder::find('/c*', '/c*/*')->from($this->dir)->limitDepth(1)->childFirst() as $entry) {
 				$path = (string) $entry;
-				if (strncmp($path, $base, strlen($base))) { // skip files out of cache
-					continue;
-				}
 				if ($entry->isDir()) { // collector: remove empty dirs
 					@rmdir($path); // @ - removing dirs is not necessary
 					continue;
