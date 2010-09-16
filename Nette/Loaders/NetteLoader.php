@@ -122,6 +122,7 @@ class NetteLoader extends AutoLoader
 		'nette\icomponent' => '/ComponentModel/IComponent.php',
 		'nette\icomponentcontainer' => '/ComponentModel/IComponentContainer.php',
 		'nette\idebugpanel' => '/Debug/IDebugPanel.php',
+		'nette\ifreezable' => '/Utils/IFreezable.php',
 		'nette\image' => '/Utils/Image.php',
 		'nette\imagemagick' => '/Utils/ImageMagick.php',
 		'nette\instancefilteriterator' => '/Utils/Iterators/InstanceFilterIterator.php',
