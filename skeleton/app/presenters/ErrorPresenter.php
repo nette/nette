@@ -37,7 +37,7 @@ class ErrorPresenter extends BasePresenter
 
 		} else {
 			$this->setView('500'); // load template 500.phtml
-			Debug::log($exception); // and log exception
+			Debug::log($exception, Debug::ERROR); // and log exception
 		}
 	}
 
