@@ -122,6 +122,11 @@ class Route extends Nette\Object implements Application\IRouter
 				self::PRESENTER_KEY => substr($metadata, 0, $a),
 				'action' => $a === strlen($metadata) - 1 ? Application\UI\Presenter::DEFAULT_ACTION : substr($metadata, $a + 1),
 			);
+		} elseif ($metadata instanceof \Closure || $metadata instanceof Nette\Callback) {
+			$metadata = array(
+				self::PRESENTER_KEY => 'Nette:Simple',
+				'callback' => $metadata,
+			);
 		}
 
 		$this->flags = $flags | self::$defaultFlags;

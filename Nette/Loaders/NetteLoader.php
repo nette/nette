@@ -245,6 +245,7 @@ class NetteLoader extends AutoLoader
 		'nette\utils\strings' => '/Utils/Strings.php',
 		'nette\utils\tokenizer' => '/Utils/Tokenizer.php',
 		'nette\utils\tokenizerexception' => '/Utils/Tokenizer.php',
+		'nettemodule\simplepresenter' => '/Application/SimplePresenter.php',
 	);
 
 
