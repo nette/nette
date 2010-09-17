@@ -13,7 +13,7 @@ use Nette\Forms\TextBase,
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

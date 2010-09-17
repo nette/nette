@@ -12,7 +12,7 @@ use Nette\Security\Permission;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

@@ -13,7 +13,7 @@ use Nette\SafeStream;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

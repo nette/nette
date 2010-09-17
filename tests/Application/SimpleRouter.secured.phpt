@@ -12,7 +12,7 @@ use Nette\Application\SimpleRouter;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/SimpleRouter.inc';
 

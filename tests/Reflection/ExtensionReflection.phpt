@@ -12,7 +12,7 @@ use Nette\Reflection\ExtensionReflection;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

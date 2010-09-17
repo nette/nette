@@ -13,7 +13,7 @@ use Nette\Loaders\RobotLoader,
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

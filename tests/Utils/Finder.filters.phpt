@@ -14,7 +14,7 @@ use Nette\Finder,
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 
