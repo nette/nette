@@ -12,7 +12,7 @@ use Nette\Templates\BaseTemplate;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

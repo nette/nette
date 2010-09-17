@@ -12,7 +12,7 @@ use Nette\Collections\ArrayList;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Collections.inc';
 

@@ -14,7 +14,7 @@ use Nette\Caching\Cache,
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 
 

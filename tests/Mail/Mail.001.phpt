@@ -12,7 +12,7 @@ use Nette\Mail\Mail;
 
 
 
-require __DIR__ . '/../initialize.php';
+require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
 
