@@ -114,37 +114,6 @@ class TestRunner
 
 
 	/**
-	 * Parses configuration file.
-	 * @return void
-	 */
-	public function parseConfigFile()
-	{
-		$configFile = __DIR__ . '/config.ini';
-		if (file_exists($configFile)) {
-			$this->config = parse_ini_file($configFile, TRUE);
-			if ($this->config === FALSE) {
-				throw new Exception('Config file parsing failed.');
-			}
-			foreach ($this->config as & $environment) {
-				$environment += array(
-					'binary' => 'php-cgi',
-					'args' => '',
-					'environment' => '',
-				);
-				// shorthand options
-				if (isset($environment['php.ini'])) {
-					$environment['args'] .= ' -c '. escapeshellarg($environment['php.ini']);
-				}
-				if (isset($environment['libraries'])) {
-					$environment['environment'] .= 'LD_LIBRARY_PATH='. escapeshellarg($environment['libraries']) .' ';
-				}
-			}
-		}
-	}
-
-
-
-	/**
 	 * Parses command line arguments.
 	 * @return void
 	 */
@@ -177,16 +146,6 @@ class TestRunner
 				case 'l':
 					$args->next();
 					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
-					break;
-				case 'e':
-					$args->next();
-					$name = $args->current();
-					if (!isset($this->config[$name])) {
-						throw new Exception("Unknown environment name '$name'.");
-					}
-					$this->phpBinary = $this->config[$name]['binary'];
-					$this->phpArgs = $this->config[$name]['args'];
-					$this->phpEnvironment = $this->config[$name]['environment'];
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;

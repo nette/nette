@@ -1,8 +1,0 @@
-[php-5.2.0]
-binary = "D:\Www\PHP-5.2.0\php-cgi.exe"
-php.ini = "D:\Www\PHP-5.2.0\php.ini"
-
-[php-5.3.0]
-binary = "D:\Www\PHP-5.3.0\php-cgi.exe"
-php.ini = "D:\Www\PHP-5.3.0\php.ini"
-
