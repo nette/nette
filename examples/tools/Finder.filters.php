@@ -3,6 +3,7 @@
 /**
  * Nette\Finder custom filters.
  * @author     David Grudl
+ * @phpversion 5.3
  */
 
 
