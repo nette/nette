@@ -138,7 +138,23 @@ class Assert
 
 
 	/**
-	 * Compares results.
+	 * Compares results using mask:
+	 *   %a%    one or more of anything except the end of line characters
+	 *   %a?%   zero or more of anything except the end of line characters
+	 *   %A%    one or more of anything including the end of line characters
+	 *   %A?%   zero or more of anything including the end of line characters
+	 *   %s%    one or more white space characters except the end of line characters
+	 *   %s?%   zero or more white space characters except the end of line characters
+	 *   %S%    one or more of characters except the white space
+	 *   %S?%   zero or more of characters except the white space
+	 *   %c%    a single character of any sort (except the end of line)
+	 *   %d%    one or more digits
+	 *   %d?%   zero or more digits
+	 *   %i%    signed integer value
+	 *   %f%    floating point number
+	 *   %h%    one or more HEX digits
+	 *   %ns%   PHP namespace
+	 *   %[..]% reg-exp
 	 * @param  string
 	 * @param  string
 	 * @return bool
