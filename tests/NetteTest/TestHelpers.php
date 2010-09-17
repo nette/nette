@@ -119,7 +119,7 @@ class TestHelpers
 	 */
 	public static function saveCoverage()
 	{
-		$file = __DIR__ . '/coverage.tmp';
+		$file = __DIR__ . '/coverage.dat';
 		$coverage = @unserialize(file_get_contents($file));
 		$root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 
