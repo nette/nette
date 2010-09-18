@@ -1248,7 +1248,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * @return Nette\Web\Session
 	 */
-	protected function getSession($namespace = NULL)
+	public function getSession($namespace = NULL)
 	{
 		return Environment::getSession($namespace);
 	}
@@ -1258,7 +1258,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * @return Nette\Web\User
 	 */
-	protected function getUser()
+	public function getUser()
 	{
 		return Environment::getUser();
 	}
