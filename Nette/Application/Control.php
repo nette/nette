@@ -66,6 +66,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		// default parameters
 		$template->control = $this;
 		$template->presenter = $presenter;
+		$template->user = Nette\Environment::getUser();
 		$template->baseUri = Nette\Environment::getVariable('baseUri');
 		$template->basePath = rtrim($template->baseUri, '/');
 
