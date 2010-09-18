@@ -428,32 +428,4 @@ class User extends Nette\Object implements IUser
 		return Environment::getSession();
 	}
 
-
-
-	/**#@+ @deprecated */
-	function authenticate($username, $password, $extra = NULL)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use login() instead.', E_USER_WARNING);
-		return $this->login($username, $password, $extra);
-	}
-
-	function signOut($clearIdentity = FALSE)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use logout() instead.', E_USER_WARNING);
-		return $this->logout($clearIdentity);
-	}
-
-	function isAuthenticated()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use isLoggedIn() instead.', E_USER_WARNING);
-		return $this->isLoggedIn();
-	}
-
-	function getSignOutReason()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getLogoutReason() instead.', E_USER_WARNING);
-		return $this->getLogoutReason();
-	}
-	/**#@-*/
-
 }

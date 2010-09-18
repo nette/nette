@@ -188,15 +188,6 @@ class HttpUploadedFile extends Nette\Object
 
 
 
-	/** @deprecated */
-	public function getImage()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use toImage() instead.', E_USER_WARNING);
-		return $this->toImage();
-	}
-
-
-
 	/**
 	 * Returns the dimensions of an uploaded image as array.
 	 * @return array
