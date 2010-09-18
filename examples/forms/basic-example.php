@@ -120,8 +120,7 @@ if ($form->isSubmitted()) {
 	if ($form->isValid()) {
 		echo '<h2>Form was submitted and successfully validated</h2>';
 
-		$values = $form->getValues();
-		Debug::dump($values);
+		Debug::dump($form->values);
 
 		// this is the end, my friend :-)
 		if (empty($disableExit)) exit;

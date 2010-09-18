@@ -13,6 +13,14 @@ class AuthPresenter extends BasePresenter
 
 
 
+	public function startup()
+	{
+		parent::startup();
+		$this->session->start(); // required by $form->addProtection()
+	}
+	
+	
+	
 	/********************* component factories *********************/
 
 
@@ -32,7 +40,7 @@ class AuthPresenter extends BasePresenter
 
 		$form->addSubmit('login', 'Login');
 
-		$form->addProtection('Please submit this form again (security token has expired).');
+		$form->addProtection('Please submit this form again (security token has expired or you have disabled cookies).');
 
 		$form->onSubmit[] = callback($this, 'loginFormSubmitted');
 		return $form;
@@ -43,9 +51,8 @@ class AuthPresenter extends BasePresenter
 	public function loginFormSubmitted($form)
 	{
 		try {
-			$user = $this->getUser();
-			$user->login($form['username']->getValue(), $form['password']->getValue());
-			$this->getApplication()->restoreRequest($this->backlink);
+			$this->user->login($form['username']->value, $form['password']->value);
+			$this->application->restoreRequest($this->backlink);
 			$this->redirect('Dashboard:');
 
 		} catch (AuthenticationException $e) {

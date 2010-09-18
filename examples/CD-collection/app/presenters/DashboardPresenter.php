@@ -11,11 +11,11 @@ class DashboardPresenter extends BasePresenter
 	protected function startup()
 	{
 		// user authentication
-		if (!$this->getUser()->isLoggedIn()) {
-			if ($this->getUser()->getLogoutReason() === Nette\Web\User::INACTIVITY) {
+		if (!$this->user->isLoggedIn()) {
+			if ($this->user->logoutReason === Nette\Web\User::INACTIVITY) {
 				$this->flashMessage('You have been logged out due to inactivity. Please login again.');
 			}
-			$backlink = $this->getApplication()->storeRequest();
+			$backlink = $this->application->storeRequest();
 			$this->redirect('Auth:login', array('backlink' => $backlink));
 		}
 
@@ -83,7 +83,7 @@ class DashboardPresenter extends BasePresenter
 
 	public function actionLogout()
 	{
-		$this->getUser()->logout();
+		$this->user->logout();
 		$this->flashMessage('You have been logged off.');
 		$this->redirect('Auth:login');
 	}
@@ -123,10 +123,10 @@ class DashboardPresenter extends BasePresenter
 			$id = (int) $this->getParam('id');
 			$album = new Albums;
 			if ($id > 0) {
-				$album->update($id, $form->getValues());
+				$album->update($id, $form->values);
 				$this->flashMessage('The album has been updated.');
 			} else {
-				$album->insert($form->getValues());
+				$album->insert($form->values);
 				$this->flashMessage('The album has been added.');
 			}
 		}

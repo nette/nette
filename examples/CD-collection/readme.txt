@@ -8,8 +8,4 @@ not used inside the application including the templates. The URLs are in
 responsibility of the router and can be changed anytime. The target of a link
 is always a combination "Presenter:action" or "Presenter:signal!".
 
-To sign in:
-username: demo
-password: xxx
-
 Source: http://akrabat.com/zend-framework-tutorial/ (Getting Started with the Zend Framework 1.5)

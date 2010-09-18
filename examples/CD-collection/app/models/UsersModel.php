@@ -7,7 +7,7 @@ use Nette\Object,
 /**
  * Users authenticator.
  */
-class Users extends Object implements Nette\Security\IAuthenticator
+class UsersModel extends Object implements Nette\Security\IAuthenticator
 {
 
 	/**

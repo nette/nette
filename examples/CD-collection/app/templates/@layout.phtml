@@ -6,7 +6,7 @@
  * @param string   $robots   tell robots how to index the content of a page (optinal)
  * @param string   $basePath web base path
  * @param array    $flashes  flash messages
- * @param Identity $user     logged user (optinal)
+ * @param Nette\Web\User $user  current user
  *}
 
 <!DOCTYPE html>
@@ -30,6 +30,6 @@
 		{include #content}
 	</div>
 
-	<p id="logged-in" n:ifset="$user">Logged in as {$user->real_name}. <a href="{link logout}">Logout</a></p>
+	<p id="logged-in" n:if="$user->loggedIn">Logged in as {$user->identity->real_name}. <a href="{link logout}">Logout</a></p>
 </body>
 </html>

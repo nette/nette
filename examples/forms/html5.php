@@ -51,7 +51,7 @@ $form->addSubmit('submit', 'Send');
 if ($form->isSubmitted() && $form->isValid()) {
 	echo '<h2>Form was submitted and successfully validated</h2>';
 
-	$values = $form->getValues();
+	$values = $form->values;
 	Debug::dump($values);
 
 	// this is the end, my friend :-)
