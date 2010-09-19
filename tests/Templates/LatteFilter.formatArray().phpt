@@ -40,3 +40,15 @@ Assert::same( 'array(func (10))',  LatteFilter::formatArray('func (10)') );
 
 Assert::same( "array('symbol1' =>'value','symbol2'=>'value')",  LatteFilter::formatArray('symbol1 => value,symbol2=>value') );
 Assert::same( "array('symbol1' => array ('symbol2' =>'value'))",  LatteFilter::formatArray('symbol1 => array (symbol2 => value)') );
+
+// special
+
+Assert::same( 'array($var)',  LatteFilter::formatArray('$var') );
+Assert::same( 'array("var" => $var)',  LatteFilter::formatArray('$var => $var') );
+Assert::same( "array('symbol' => Class::CONST,)",  LatteFilter::formatArray('symbol => Class::CONST, ') );
+Assert::same( "array('symbol' => Class::method(),)",  LatteFilter::formatArray('symbol => Class::method(), ') );
+Assert::same( "array('symbol' => Namespace\\Class::method())",  LatteFilter::formatArray('symbol => Namespace\Class::method()') );
+Assert::same( "array('symbol' => Namespace \\ Class :: method ())",  LatteFilter::formatArray('symbol => Namespace \ Class :: method ()') );
+Assert::same( "array('symbol' => \$this->var,)",  LatteFilter::formatArray('symbol => $this->var, ') );
+Assert::same( "array('symbol' => \$this -> var,)",  LatteFilter::formatArray('symbol => $this -> var, ') );
+Assert::same( "array('symbol' => \$this -> var)",  LatteFilter::formatArray('symbol => $this -> var') );
