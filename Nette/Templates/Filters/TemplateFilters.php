@@ -134,5 +134,5 @@ final class TemplateFilters
 			}
 		);
 	}
-	
+
 }

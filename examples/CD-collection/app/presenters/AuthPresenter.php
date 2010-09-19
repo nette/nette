@@ -18,9 +18,9 @@ class AuthPresenter extends BasePresenter
 		parent::startup();
 		$this->session->start(); // required by $form->addProtection()
 	}
-	
-	
-	
+
+
+
 	/********************* component factories *********************/
 
 

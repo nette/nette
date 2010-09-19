@@ -85,7 +85,7 @@ function _netteDebugPrintCode($file, $line, $count = 15)
 function _netteDump($dump)
 {
 	return '<pre class="nette-dump">' . preg_replace_callback(
-		'#^( *)((?>[^(]{1,200}))\((\d+)\) <code>#m', 
+		'#^( *)((?>[^(]{1,200}))\((\d+)\) <code>#m',
 		function ($m) {
 			return "$m[1]<a href='#' onclick='return !netteToggle(this)'>$m[2]($m[3]) " . (trim($m[1]) || $m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="collapsed">');
 		},

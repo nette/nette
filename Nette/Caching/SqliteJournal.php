@@ -132,7 +132,7 @@ if (class_exists('SQLiteDatabase')) {
 	 * SQLite3 API mimic for SQLiteDatabase.
 	 *
 	 * @author     David Grudl
-		 * @internal
+	 * @internal
 	 */
 	class SQLiteMimic extends \SQLiteDatabase
 	{
