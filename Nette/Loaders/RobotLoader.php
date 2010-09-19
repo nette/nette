@@ -210,11 +210,13 @@ class RobotLoader extends AutoLoader
 		$iterator->append(new \ArrayIterator(array(new \SplFileInfo($dir))));
 		if (is_dir($dir)) {
 			$iterator->append(Nette\Finder::find(String::split($this->acceptFiles, '#[,\s]+#'))
+				->filter($filter = function($file) use (&$disallow){
+					return !isset($disallow[$file->getPathname()]);
+				})
 				->from($dir)
 				->exclude(String::split($this->ignoreDirs, '#[,\s]+#'))
-				->filter(function($file) use (&$disallow){
-					return !isset($disallow[$file->getPathname()]);
-				})->getIterator()
+				->filter($filter)
+				->getIterator()
 			);
 		};
 
