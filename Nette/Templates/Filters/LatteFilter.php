@@ -510,30 +510,19 @@ class LatteFilter extends Nette\Object
 				'.self::RE_STRING.'|                          ## single or double quoted string
 				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)   ## 1) symbol
 			~xi',
-			callback(__CLASS__, 'cbArgs')
+			function ($matches) {
+				if (!empty($matches[1])) { // symbol
+					list(, $symbol) = $matches;
+					static $keywords = array('true'=>1, 'false'=>1, 'null'=>1, 'and'=>1, 'or'=>1, 'xor'=>1, 'clone'=>1, 'new'=>1);
+					return is_numeric($symbol) || isset($keywords[strtolower($symbol)]) ? $matches[0] : "'$symbol'";
+
+				} else {
+					return $matches[0];
+				}
+			}
 		);
 		$s = String::replace($s, '#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>');
 		return $s === '' ? '' : $prefix . "array($s)";
-	}
-
-
-
-	/**
-	 * Callback for formatArgs().
-	 * @internal
-	 */
-	public static function cbArgs($matches)
-	{
-		//    [1] => symbol
-
-		if (!empty($matches[1])) { // symbol
-			list(, $symbol) = $matches;
-			static $keywords = array('true'=>1, 'false'=>1, 'null'=>1, 'and'=>1, 'or'=>1, 'xor'=>1, 'clone'=>1, 'new'=>1);
-			return is_numeric($symbol) || isset($keywords[strtolower($symbol)]) ? $matches[0] : "'$symbol'";
-
-		} else {
-			return $matches[0];
-		}
 	}
 
 

@@ -121,9 +121,6 @@ class LatteMacros extends Nette\Object
 	private $filter;
 
 	/** @var array */
-	private $current;
-
-	/** @var array */
 	private $blocks = array();
 
 	/** @var array */
@@ -223,9 +220,21 @@ class LatteMacros extends Nette\Object
 
 		// named blocks
 		if ($this->namedBlocks) {
+			$uniq = $this->uniq;
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
-				$name = preg_quote($name, '#');
-				$s = String::replace($s, "#{block ($name)} \?>(.*)<\?php {/block $name}#sU", callback($this, 'cbNamedBlocks'));
+				$code = & $this->namedBlocks[$name];
+				$namere = preg_quote($name, '#');
+				$s = String::replace($s,
+					"#{block $namere} \?>(.*)<\?php {/block $namere}#sU",
+					function ($matches) use ($name, & $code, $uniq) {
+						list(, $content) = $matches;
+						$func = '_lb' . substr(md5($uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+						$code = "//\n// block $name\n//\n"
+							. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
+							. "function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
+						return '';
+					}
+				);
 			}
 			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
 		}
@@ -260,25 +269,19 @@ class LatteMacros extends Nette\Object
 		} elseif (!isset($this->macros[$macro])) {
 			return NULL;
 		}
-		$this->current = array($content, $modifiers);
-		return String::replace($this->macros[$macro], '#%(.*?)%#', callback($this, 'lMacro'));
-	}
-
-
-
-	/**
-	 * Callback for self::macro().
-	 * @internal
-	 */
-	public function lMacro($m)
-	{
-		list($content, $modifiers) = $this->current;
-		if ($m[1]) {
-			return callback($m[1][0] === ':' ? array($this, substr($m[1], 1)) : $m[1])
-				->invoke($content, $modifiers);
-		} else {
-			return $content;
-		}
+		$This = $this;
+		return String::replace(
+			$this->macros[$macro],
+			'#%(.*?)%#',
+			function ($m) use ($This, $content, $modifiers) {
+				if ($m[1]) {
+					return callback($m[1][0] === ':' ? array($This, substr($m[1], 1)) : $m[1])
+						->invoke($content, $modifiers);
+				} else {
+					return $content;
+				}
+			}
+		);
 	}
 
 
@@ -626,22 +629,6 @@ class LatteMacros extends Nette\Object
 		return 'if (Nette\Templates\CachingHelper::create('
 			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
 			. ', $_l->g->caches' . LatteFilter::formatArray($content, ', ') . ')) {';
-	}
-
-
-
-	/**
-	 * Converts {block named}...{/block} to functions.
-	 * @internal
-	 */
-	public function cbNamedBlocks($matches)
-	{
-		list(, $name, $content) = $matches;
-		$func = '_lb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
-			. "function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
-		return '';
 	}
 
 

@@ -271,47 +271,41 @@ final class Environment
 	 */
 	public static function expand($var)
 	{
+		static $livelock;
 		if (is_string($var) && strpos($var, '%') !== FALSE) {
-			return @preg_replace_callback('#%([a-z0-9_-]*)%#i', array(__CLASS__, 'expandCb'), $var); // intentionally @ due PHP bug #39257
+			return @preg_replace_callback(
+				'#%([a-z0-9_-]*)%#i',
+				function ($m) use (& $livelock) {
+					list(, $var) = $m;
+					if ($var === '') return '%';
+
+					if (isset($livelock[$var])) {
+						throw new \InvalidStateException("Circular reference detected for variables: "
+							. implode(', ', array_keys($livelock)) . ".");
+					}
+
+					try {
+						$livelock[$var] = TRUE;
+						$val = Environment::getVariable($var);
+						unset($livelock[$var]);
+					} catch (\Exception $e) {
+						$livelock = array();
+						throw $e;
+					}
+
+					if ($val === NULL) {
+						throw new \InvalidStateException("Unknown environment variable '$var'.");
+
+					} elseif (!is_scalar($val)) {
+						throw new \InvalidStateException("Environment variable '$var' is not scalar.");
+					}
+
+					return $val;
+				},
+				$var
+			); // intentionally @ due PHP bug #39257
 		}
 		return $var;
-	}
-
-
-
-	/**
-	 * @see Environment::expand()
-	 * @param  array
-	 * @return string
-	 */
-	private static function expandCb($m)
-	{
-		list(, $var) = $m;
-		if ($var === '') return '%';
-
-		static $livelock;
-		if (isset($livelock[$var])) {
-			throw new \InvalidStateException("Circular reference detected for variables: "
-				. implode(', ', array_keys($livelock)) . ".");
-		}
-
-		try {
-			$livelock[$var] = TRUE;
-			$val = self::getVariable($var);
-			unset($livelock[$var]);
-		} catch (\Exception $e) {
-			$livelock = array();
-			throw $e;
-		}
-
-		if ($val === NULL) {
-			throw new \InvalidStateException("Unknown environment variable '$var'.");
-
-		} elseif (!is_scalar($val)) {
-			throw new \InvalidStateException("Environment variable '$var' is not scalar.");
-		}
-
-		return $val;
 	}
 
 

@@ -82,35 +82,21 @@ final class TemplateFilters
 	 */
 	public static function netteLinks($s)
 	{
-		return String::replace(
-			$s,
-			'#(src|href|action)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',
-			callback(__CLASS__, 'netteLinksCb')
+		return String::replace($s, '#(src|href|action)\s*=\s*(["\'])(nette:.*?)([\#"\'])#',	function ($m) {
+				list(, $attr, $quote, $uri, $fragment) = $m;
+				$parts = parse_url($uri);
+				if (isset($parts['scheme']) && $parts['scheme'] === 'nette') {
+					return $attr . '=' . $quote . '<?php echo $template->escape($control->'
+						. "link('"
+						. (isset($parts['path']) ? $parts['path'] : 'this!')
+						. (isset($parts['query']) ? '?' . $parts['query'] : '')
+						. '\'))?>'
+						. $fragment;
+				} else {
+					return $m[0];
+				}
+			}
 		);
-	}
-
-
-
-	/**
-	 * Callback for self::netteLinks.
-	 * Parses a "nette" URI (scheme is 'nette') and converts to real URI
-	 * @internal
-	 */
-	public static function netteLinksCb($m)
-	{
-		list(, $attr, $quote, $uri, $fragment) = $m;
-
-		$parts = parse_url($uri);
-		if (isset($parts['scheme']) && $parts['scheme'] === 'nette') {
-			return $attr . '=' . $quote . '<?php echo $template->escape($control->'
-				. "link('"
-				. (isset($parts['path']) ? $parts['path'] : 'this!')
-				. (isset($parts['query']) ? '?' . $parts['query'] : '')
-				. '\'))?>'
-				. $fragment;
-		} else {
-			return $m[0];
-		}
 	}
 
 
@@ -131,36 +117,22 @@ final class TemplateFilters
 	 */
 	public static function texyElements($s)
 	{
-		return String::replace(
-			$s,
-			'#<texy([^>]*)>(.*?)</texy>#s',
-			callback(__CLASS__, 'texyCb')
+		return String::replace($s, '#<texy([^>]*)>(.*?)</texy>#s', function ($m) {
+				list(, $mAttrs, $mContent) = $m;
+				// parse attributes
+				$attrs = array();
+				if ($mAttrs) {
+					foreach (String::matchAll($mAttrs, '#([a-z0-9:-]+)\s*(?:=\s*(\'[^\']*\'|"[^"]*"|[^\'"\s]+))?()#isu') as $m) {
+						$key = strtolower($m[1]);
+						$val = $m[2];
+						if ($val == NULL) $attrs[$key] = TRUE;
+						elseif ($val{0} === '\'' || $val{0} === '"') $attrs[$key] = html_entity_decode(substr($val, 1, -1), ENT_QUOTES, 'UTF-8');
+						else $attrs[$key] = html_entity_decode($val, ENT_QUOTES, 'UTF-8');
+					}
+				}
+				return TemplateFilters::$texy->process($m[2]);
+			}
 		);
 	}
-
-
-
-	/**
-	 * Callback for self::texyBlocks.
-	 * @internal
-	 */
-	public static function texyCb($m)
-	{
-		list(, $mAttrs, $mContent) = $m;
-
-		// parse attributes
-		$attrs = array();
-		if ($mAttrs) {
-			foreach (String::matchAll($mAttrs, '#([a-z0-9:-]+)\s*(?:=\s*(\'[^\']*\'|"[^"]*"|[^\'"\s]+))?()#isu') as $m) {
-				$key = strtolower($m[1]);
-				$val = $m[2];
-				if ($val == NULL) $attrs[$key] = TRUE;
-				elseif ($val{0} === '\'' || $val{0} === '"') $attrs[$key] = html_entity_decode(substr($val, 1, -1), ENT_QUOTES, 'UTF-8');
-				else $attrs[$key] = html_entity_decode($val, ENT_QUOTES, 'UTF-8');
-			}
-		}
-
-		return self::$texy->process($m[2]);
-	}
-
+	
 }
