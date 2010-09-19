@@ -785,7 +785,7 @@ class LatteMacros extends Nette\Object
 			return '$' . ltrim(LatteFilter::fetchToken($content), '$')
 				. ' = ' . LatteFilter::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
 		}
-		return 'extract(' . LatteFilter::formatArray($content) . ')';
+		return 'extract(' . String::replace(LatteFilter::formatArray($content), '#\$(' . LatteFilter::RE_IDENTIFIER . ')\s*=>#', '"$1" =>') . ')';
 	}
 
 
@@ -798,7 +798,7 @@ class LatteMacros extends Nette\Object
 		if (!$content) {
 			throw new \InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
 		}
-		return 'extract(' . LatteFilter::formatArray($content) . ', EXTR_SKIP)';
+		return 'extract(' . String::replace(LatteFilter::formatArray($content), '#\$(' . LatteFilter::RE_IDENTIFIER . ')\s*=>#', '"$1" =>') . ', EXTR_SKIP)';
 	}
 
 

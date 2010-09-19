@@ -521,7 +521,6 @@ class LatteFilter extends Nette\Object
 				}
 			}
 		);
-		$s = String::replace($s, '#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>');
 		return $s === '' ? '' : $prefix . "array($s)";
 	}
 
