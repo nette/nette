@@ -91,14 +91,14 @@ class LatteMacros extends Nette\Object
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent% ?>',
-		'widget' => '<?php %:macroWidget% ?>',
-		'control' => '<?php %:macroWidget% ?>',
+		'widget' => '<?php %:macroControl% ?>',
+		'control' => '<?php %:macroControl% ?>',
 
 		'attr' => '<?php echo Nette\Web\Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'status' => '<?php Nette\Environment::getHttpResponse()->setCode(%%) ?>',
-		'var' => '<?php %:macroAssign% ?>',
-		'assign' => '<?php %:macroAssign% ?>',
+		'var' => '<?php %:macroVar% ?>',
+		'assign' => '<?php %:macroVar% ?>', // deprecated
 		'default' => '<?php %:macroDefault% ?>',
 		'dump' => '<?php %:macroDump% ?>',
 		'debugbreak' => '<?php %:macroDebugbreak% ?>',
@@ -109,8 +109,8 @@ class LatteMacros extends Nette\Object
 		'_' => '<?php echo %:macroEscape%(%:macroTranslate%) ?>',
 		'!=' => '<?php echo %:macroModifiers% ?>',
 		'=' => '<?php echo %:macroEscape%(%:macroModifiers%) ?>',
-		'!$' => '<?php echo %:macroVar% ?>',
-		'$' => '<?php echo %:macroEscape%(%:macroVar%) ?>',
+		'!$' => '<?php echo %:macroDollar% ?>',
+		'$' => '<?php echo %:macroEscape%(%:macroDollar%) ?>',
 		'?' => '<?php %:macroModifiers% ?>',
 	);
 
@@ -365,7 +365,7 @@ class LatteMacros extends Nette\Object
 	/**
 	 * {$var |modifiers}
 	 */
-	public function macroVar($var, $modifiers)
+	public function macroDollar($var, $modifiers)
 	{
 		return LatteFilter::formatModifiers('$' . $var, $modifiers);
 	}
@@ -712,22 +712,22 @@ class LatteMacros extends Nette\Object
 
 
 	/**
-	 * {widget ...}
+	 * {control ...}
 	 */
-	public function macroWidget($content)
+	public function macroControl($content)
 	{
-		$pair = LatteFilter::fetchToken($content); // widget[:method]
+		$pair = LatteFilter::fetchToken($content); // control[:method]
 		if ($pair === NULL) {
-			throw new \InvalidStateException("Missing widget name in {widget} on line {$this->filter->line}.");
+			throw new \InvalidStateException("Missing control name in {control} on line {$this->filter->line}.");
 		}
 		$pair = explode(':', $pair, 2);
-		$widget = LatteFilter::formatString($pair[0]);
+		$name = LatteFilter::formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = String::match($method, '#^(' . LatteFilter::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = LatteFilter::formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
-		return ($widget[0] === '$' ? "if (is_object($widget)) {$widget}->$method($param); else " : '')
-			. "\$control->getWidget($widget)->$method($param)";
+		return ($name[0] === '$' ? "if (is_object($name)) {$name}->$method($param); else " : '')
+			. "\$control->getWidget($name)->$method($param)";
 	}
 
 
@@ -774,9 +774,9 @@ class LatteMacros extends Nette\Object
 
 
 	/**
-	 * {assign ...}
+	 * {var ...}
 	 */
-	public function macroAssign($content, $modifiers)
+	public function macroVar($content, $modifiers)
 	{
 		if (!$content) {
 			throw new \InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
