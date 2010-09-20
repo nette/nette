@@ -57,3 +57,4 @@ Assert::same( "array('symbol' => Namespace \\ Class :: method ())",  LatteMacros
 Assert::same( "array('symbol' => \$this->var, )",  LatteMacros::formatArray('symbol => $this->var, ') );
 Assert::same( "array('symbol' => \$this -> var, )",  LatteMacros::formatArray('symbol => $this -> var, ') );
 Assert::same( "array('symbol' => \$this -> var)",  LatteMacros::formatArray('symbol => $this -> var') );
+Assert::same( "array('symbol1' => 'value')",  LatteMacros::formatArray('symbol1 => /*value,* /symbol2=>*/value/**/') );

@@ -912,9 +912,9 @@ class LatteMacros extends Nette\Object
 	{
 		$tokenizer = new Tokenizer(array(
 			Tokenizer::T_WHITESPACE => '\s+',
+			Tokenizer::T_COMMENT => '/\*.*?\*/',
 			Tokenizer::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof',
-			'\$[_a-z0-9\x7F-\xFF]+', // variable
+			'true|false|null|and|or|xor|clone|new|instanceof',			'\$[_a-z0-9\x7F-\xFF]+', // variable
 			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
 			'=>|[^"\']', // =>, any char except quotes
 		), 'i');
@@ -924,7 +924,10 @@ class LatteMacros extends Nette\Object
 		foreach ($tokenizer->tokenize($input) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === self::T_SYMBOL && $quote && !is_numeric($token)
+			if ($name === Tokenizer::T_COMMENT) {
+				continue;
+
+			} elseif ($name === self::T_SYMBOL && $quote && !is_numeric($token)
 				&& in_array($tokenizer->nextToken($n), array(',', '=>', ')', NULL), TRUE)) {
 				$token = "'$token'";
 			}
