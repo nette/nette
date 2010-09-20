@@ -26,9 +26,6 @@ class LatteFilter extends Nette\Object
 	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
-	/** @internal PHP identifier */
-	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
-
 	/** @internal special HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
@@ -420,121 +417,6 @@ class LatteFilter extends Nette\Object
 			(?P<newline>[\ \t]*(?=\r|\n))?
 		';
 		return $this;
-	}
-
-
-
-	/********************* compile-time helpers ****************d*g**/
-
-
-
-	/**
-	 * Applies modifiers.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public static function formatModifiers($var, $modifiers)
-	{
-		if (!$modifiers) return $var;
-		$tokens = String::matchAll(
-			$modifiers . '|',
-			'~
-				'.self::RE_STRING.'|  ## single or double quoted string
-				[^\'"|:,\s]+|         ## symbol
-				[|:,]                 ## separator
-			~xs',
-			PREG_PATTERN_ORDER
-		);
-
-		$inside = FALSE;
-		$prev = '';
-		foreach ($tokens[0] as $token) {
-			if ($token === '|' || $token === ':' || $token === ',') {
-				if ($prev === '') {
-
-				} elseif (!$inside) {
-					if (!String::match($prev, '#^'.self::RE_IDENTIFIER.'$#')) {
-						throw new \InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
-					}
-					$var = "\$template->$prev($var";
-					$prev = '';
-					$inside = TRUE;
-
-				} else {
-					$var .= ', ' . self::formatString($prev);
-					$prev = '';
-				}
-
-				if ($token === '|' && $inside) {
-					$var .= ')';
-					$inside = FALSE;
-				}
-			} else {
-				$prev .= $token;
-			}
-		}
-		return $var;
-	}
-
-
-
-	/**
-	 * Reads single token (optionally delimited by comma) from string.
-	 * @param  string
-	 * @return string
-	 */
-	public static function fetchToken(& $s)
-	{
-		if ($matches = String::match($s, '#^((?>'.self::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
-			$s = $matches[2];
-			return $matches[1];
-		}
-
-		return NULL;
-	}
-
-
-
-	/**
-	 * Formats parameters to PHP array.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public static function formatArray($s, $prefix = '')
-	{
-		$s = String::replace(
-			trim($s),
-			'~
-				'.self::RE_STRING.'|                          ## single or double quoted string
-				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)   ## 1) symbol
-			~xi',
-			function ($matches) {
-				if (!empty($matches[1])) { // symbol
-					list(, $symbol) = $matches;
-					static $keywords = array('true'=>1, 'false'=>1, 'null'=>1, 'and'=>1, 'or'=>1, 'xor'=>1, 'clone'=>1, 'new'=>1);
-					return is_numeric($symbol) || isset($keywords[strtolower($symbol)]) ? $matches[0] : "'$symbol'";
-
-				} else {
-					return $matches[0];
-				}
-			}
-		);
-		return $s === '' ? '' : $prefix . "array($s)";
-	}
-
-
-
-	/**
-	 * Formats parameter to PHP string.
-	 * @param  string
-	 * @return string
-	 */
-	public static function formatString($s)
-	{
-		static $keywords = array('true'=>1, 'false'=>1, 'null'=>1);
-		return (is_numeric($s) || strspn($s, '\'"$') || isset($keywords[strtolower($s)])) ? $s : '"' . $s . '"';
 	}
 
 }
