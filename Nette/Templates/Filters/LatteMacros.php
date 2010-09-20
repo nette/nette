@@ -12,7 +12,8 @@
 namespace Nette\Templates;
 
 use Nette,
-	Nette\String;
+	Nette\String,
+	Nette\Tokenizer;
 
 
 
@@ -116,6 +117,9 @@ class LatteMacros extends Nette\Object
 
 	/** @internal PHP identifier */
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
+
+	/** @internal */
+	const T_SYMBOL = -1;
 
 	/** @var array */
 	public $macros;
@@ -842,7 +846,7 @@ class LatteMacros extends Nette\Object
 		$tokens = String::matchAll(
 			$modifiers . '|',
 			'~
-				'.LatteFilter::RE_STRING.'|  ## single or double quoted string
+				'.Tokenizer::RE_STRING.'|  ## single or double quoted string
 				[^\'"|:,\s]+|         ## symbol
 				[|:,]                 ## separator
 			~xs',
@@ -888,7 +892,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public static function fetchToken(& $s)
 	{
-		if ($matches = String::match($s, '#^((?>'.LatteFilter::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
+		if ($matches = String::match($s, '#^((?>'.Tokenizer::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}
@@ -904,26 +908,32 @@ class LatteMacros extends Nette\Object
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatArray($s, $prefix = '')
+	public static function formatArray($input, $prefix = '')
 	{
-		$s = String::replace(
-			trim($s),
-			'~
-				'.LatteFilter::RE_STRING.'|                          ## single or double quoted string
-				(?<=[,=(]|=>|^)\s*([a-z\d_]+)(?=\s*[,=)]|$)   ## 1) symbol
-			~xi',
-			function ($matches) {
-				if (!empty($matches[1])) { // symbol
-					list(, $symbol) = $matches;
-					static $keywords = array('true'=>1, 'false'=>1, 'null'=>1, 'and'=>1, 'or'=>1, 'xor'=>1, 'clone'=>1, 'new'=>1);
-					return is_numeric($symbol) || isset($keywords[strtolower($symbol)]) ? $matches[0] : "'$symbol'";
+		$tokenizer = new Tokenizer(array(
+			Tokenizer::T_WHITESPACE => '\s+',
+			Tokenizer::RE_STRING,
+			'true|false|null|and|or|xor|clone|new|instanceof',
+			'\$[_a-z0-9\x7F-\xFF]+', // variable
+			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
+			'=>|[^"\']', // =>, any char except quotes
+		), 'i');
 
-				} else {
-					return $matches[0];
-				}
+		$out = '';
+		$quote = TRUE;
+		foreach ($tokenizer->tokenize($input) as $n => $token) {
+			list($token, $name) = $token;
+
+			if ($name === self::T_SYMBOL && $quote && !is_numeric($token)
+				&& in_array($tokenizer->nextToken($n), array(',', '=>', ')', NULL), TRUE)) {
+				$token = "'$token'";
 			}
-		);
-		return $s === '' ? '' : $prefix . "array($s)";
+			if ($name !== Tokenizer::T_WHITESPACE) {
+				$quote = in_array($token, array('[', ',', '=', '(', '=>'));
+			}
+			$out .= $token;
+		}
+		return $out === '' ? '' : $prefix . "array($out)";
 	}
 
 

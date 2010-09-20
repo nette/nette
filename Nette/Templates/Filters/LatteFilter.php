@@ -12,7 +12,8 @@
 namespace Nette\Templates;
 
 use Nette,
-	Nette\String;
+	Nette\String,
+	Nette\Tokenizer;
 
 
 
@@ -23,9 +24,6 @@ use Nette,
  */
 class LatteFilter extends Nette\Object
 {
-	/** @internal single & double quoted PHP string */
-	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
-
 	/** @internal special HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
@@ -136,7 +134,7 @@ class LatteFilter extends Nette\Object
 				break;
 
 			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
-				list(, $macro, $value, $modifiers) = String::match($matches['macro'], '#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.self::RE_STRING.'|[^\'"]+)*)?$()#is');
+				list(, $macro, $value, $modifiers) = String::match($matches['macro'], '#^(/?[a-z]+)?(.*?)(\\|[a-z](?:'.Tokenizer::RE_STRING.'|[^\'"]+)*)?$()#is');
 				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
 				if ($code === NULL) {
 					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
@@ -412,7 +410,7 @@ class LatteFilter extends Nette\Object
 		$this->macroRe = '
 			(?P<indent>\n[\ \t]*)?
 			' . $left . '
-				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
+				(?P<macro>(?:' . Tokenizer::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '
 			(?P<newline>[\ \t]*(?=\r|\n))?
 		';
