@@ -83,7 +83,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 				self::$useDirectories = TRUE;
 				unlink("$dir/$uniq/_");
 			}
-			rmdir("$dir/$uniq");
+			@rmdir("$dir/$uniq"); // @ - directory may not already exist
 		}
 
 		$this->dir = $dir;
