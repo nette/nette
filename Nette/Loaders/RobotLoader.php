@@ -210,35 +210,34 @@ class RobotLoader extends AutoLoader
 	 */
 	private function scanDirectory($dir)
 	{
-		$disallow = array();
-		$iterator = new \AppendIterator;
-		$iterator->append(new \ArrayIterator(array(new \SplFileInfo($dir))));
 		if (is_dir($dir)) {
-			$iterator->append(Nette\Finder::find(String::split($this->acceptFiles, '#[,\s]+#'))
-				->filter($filter = function($file) use (&$disallow){
+			$disallow = array();
+			$iterator = Nette\Finder::findFiles(String::split($this->acceptFiles, '#[,\s]+#'))
+				->filter(function($file) use (&$disallow){
 					return !isset($disallow[$file->getPathname()]);
 				})
 				->from($dir)
 				->exclude(String::split($this->ignoreDirs, '#[,\s]+#'))
-				->filter($filter)
-				->getIterator()
-			);
-		};
+				->filter($filter = function($dir) use (&$disallow){
+					$path = $dir->getPathname();
+					if (is_file("$path/netterobots.txt")) {
+						foreach (file("$path/netterobots.txt") as $s) {
+							if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
+								$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
+							}
+						}
+					}
+					return !isset($disallow[$path]);
+				});
+			$filter(new \SplFileInfo($dir));
+		} else {
+			$iterator = new \ArrayIterator(array(new \SplFileInfo($dir)));
+		}
 
 		foreach ($iterator as $entry) {
-			$path = (string) $entry;
-			if ($entry->isDir() && is_file("$path/netterobots.txt")) {
-				foreach (file("$path/netterobots.txt") as $s) {
-					if ($matches = String::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
-						$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, '/' . trim($matches[1], '/'))] = TRUE;
-					}
-				}
-			}
-
-			if ($entry->isFile()) {
-				if (!isset($this->files[$path]) || $this->files[$path] !== $entry->getMTime()) {
-					$this->scanScript($path);
-				}
+			$path = $entry->getPathname();
+			if (!isset($this->files[$path]) || $this->files[$path] !== $entry->getMTime()) {
+				$this->scanScript($path);
 			}
 		}
 	}
