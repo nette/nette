@@ -384,7 +384,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroTranslate($var, $modifiers)
 	{
-		return self::formatModifiers($var, 'translate|' . $modifiers);
+		return self::formatModifiers($var, '|translate' . $modifiers);
 	}
 
 
@@ -843,44 +843,49 @@ class LatteMacros extends Nette\Object
 	public static function formatModifiers($var, $modifiers)
 	{
 		if (!$modifiers) return $var;
-		$tokens = String::matchAll(
-			$modifiers . '|',
-			'~
-				'.Tokenizer::RE_STRING.'|  ## single or double quoted string
-				[^\'"|:,\s]+|         ## symbol
-				[|:,]                 ## separator
-			~xs',
-			PREG_PATTERN_ORDER
-		);
+		$tokenizer = new Tokenizer(array(
+			Tokenizer::T_WHITESPACE => '\s+',
+			Tokenizer::RE_STRING,
+			'true|false|null|and|or|xor|clone|new|instanceof',
+			'\$[_a-z0-9\x7F-\xFF]+', // variable
+			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
+			'[^"\']', // =>, any char except quotes
+		), 'i');
 
 		$inside = FALSE;
-		$prev = '';
-		foreach ($tokens[0] as $token) {
-			if ($token === '|' || $token === ':' || $token === ',') {
-				if ($prev === '') {
+		foreach ($tokenizer->tokenize(ltrim($modifiers, '|')) as $n => $token) {
+			list($token, $name) = $token;
+			if ($name === Tokenizer::T_WHITESPACE) {
+				$var = rtrim($var) . ' ';
 
-				} elseif (!$inside) {
-					if (!String::match($prev, '#^'.self::RE_IDENTIFIER.'$#')) {
-						throw new \InvalidStateException("Modifier name must be alphanumeric string, '$prev' given.");
-					}
-					$var = "\$template->$prev($var";
-					$prev = '';
+			} elseif (!$inside) {
+				if ($name === self::T_SYMBOL) {
+					$var = "\$template->$token($var";
 					$inside = TRUE;
-
 				} else {
-					$var .= ', ' . self::formatString($prev);
-					$prev = '';
-				}
-
-				if ($token === '|' && $inside) {
-					$var .= ')';
-					$inside = FALSE;
+					throw new \InvalidStateException("Modifier name must be alphanumeric string, '$token' given.");
 				}
 			} else {
-				$prev .= $token;
+				if ($token === ':' || $token === ',') {
+					$var = $var . ', ';
+
+				} elseif ($token === '|') {
+					$var = $var . ')';
+					$inside = FALSE;
+
+				} elseif ($name === self::T_SYMBOL && $quote && !is_numeric($token)
+					&& in_array($tokenizer->nextToken($n), array(',', ':', ')', '|', NULL), TRUE)) {
+					$var .= "'$token'";
+
+				} else {
+					$var .= $token;
+				}
+			}
+			if ($name !== Tokenizer::T_WHITESPACE) {
+				$quote = in_array($token, array('[', ',', '=', '(', ':'));
 			}
 		}
-		return $var;
+		return $inside ? "$var)" : $var;
 	}
 
 
@@ -914,7 +919,8 @@ class LatteMacros extends Nette\Object
 			Tokenizer::T_WHITESPACE => '\s+',
 			Tokenizer::T_COMMENT => '/\*.*?\*/',
 			Tokenizer::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof',			'\$[_a-z0-9\x7F-\xFF]+', // variable
+			'true|false|null|and|or|xor|clone|new|instanceof',
+			'\$[_a-z0-9\x7F-\xFF]+', // variable
 			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
 			'=>|[^"\']', // =>, any char except quotes
 		), 'i');
