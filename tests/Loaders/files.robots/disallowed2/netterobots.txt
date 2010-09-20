@@ -1,0 +1,3 @@
+# testing disallowing this folder
+
+Disallow: /

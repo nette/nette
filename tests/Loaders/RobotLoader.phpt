@@ -24,12 +24,24 @@ Environment::setVariable('tempDir', TEMP_DIR);
 
 
 $loader = new RobotLoader;
-$loader->addDirectory('../../Nette/');
-$loader->addDirectory(__DIR__);
-$loader->addDirectory(__DIR__); // purposely doubled
+$loader->addDirectory(__DIR__ . '/files');
+$loader->addDirectory(__DIR__ . '/files/'); // purposely doubled
+$loader->addDirectory(__DIR__ . '/file/interface.php'); // as file
+$loader->addDirectory(__DIR__ . '/files.robots');
 $loader->register();
 
-Assert::false( class_exists('ConditionalClass') );
-Assert::true( class_exists('TestClassA') );
-Assert::true( class_exists('MySpace1\TestClassB') );
-Assert::true( class_exists('MySpace2\TestClassC') );
+Assert::false( class_exists('ConditionalClass') );   // files/conditional.class.php
+Assert::true( class_exists('TestClass') );           // files/namespaces1.php
+Assert::true( class_exists('MySpace1\TestClass1') ); // files/namespaces1.php
+Assert::true( class_exists('MySpace2\TestClass2') ); // files/namespaces2.php
+Assert::true( class_exists('MySpace3\TestClass3') ); // files/namespaces2.php
+Assert::true( interface_exists('TestInterface') );   // file/interface.php
+
+Assert::false( class_exists('Disallowed1') );   // files.robots\disallowed1\class.php
+Assert::false( class_exists('Disallowed2') );   // files.robots\disallowed2\class.php
+Assert::false( class_exists('Disallowed3') );   // files.robots\subdir\class.php
+Assert::true( class_exists('Allowed1') );       // files.robots\subdir\allowed.php
+Assert::false( class_exists('Disallowed4') );   // files.robots\subdir\disallowed4\class.php
+Assert::false( class_exists('Disallowed5') );   // files.robots\subdir\subdir2\disallowed5\class.php
+Assert::false( class_exists('Disallowed6') );   // files.robots\subdir\subdir2\class.php
+Assert::true( class_exists('Allowed2') );       // files.robots\subdir\subdir2\allowed.php
