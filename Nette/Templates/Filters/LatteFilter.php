@@ -417,4 +417,32 @@ class LatteFilter extends Nette\Object
 		return $this;
 	}
 
+
+
+	/**#@+ @deprecated */
+	static function formatModifiers($var, $modifiers)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatModifiers() instead.', E_USER_WARNING);
+		return LatteMacros::formatModifiers($var, $modifiers);
+	}
+
+	static function fetchToken(& $s)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::fetchToken() instead.', E_USER_WARNING);
+		return LatteMacros::fetchToken($s);
+	}
+
+	static function formatArray($input, $prefix = '')
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatArray() instead.', E_USER_WARNING);
+		return LatteMacros::formatArray($input, $prefix);
+	}
+
+	static function formatString($s)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatString() instead.', E_USER_WARNING);
+		return LatteMacros::formatString($s);
+	}
+	/**#@-*/
+
 }
