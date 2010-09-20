@@ -311,7 +311,9 @@ class LatteMacros extends Nette\Object
 		);
 		return $this->macro(
 			$closing ? "/$name" : $name,
-			isset($knownTags[$name], $attrs[$knownTags[$name]]) ? $attrs[$knownTags[$name]] : substr(var_export($attrs, TRUE), 8, -1),
+			isset($knownTags[$name], $attrs[$knownTags[$name]])
+				? $attrs[$knownTags[$name]]
+				: preg_replace("#'([^\\'$]+)'#", '$1', substr(var_export($attrs, TRUE), 8, -1)),
 			isset($attrs['modifiers']) ? $attrs['modifiers'] : ''
 		);
 	}
@@ -783,16 +785,53 @@ class LatteMacros extends Nette\Object
 	/**
 	 * {var ...}
 	 */
-	public function macroVar($content, $modifiers)
+	public function macroVar($content, $modifiers, $extract = FALSE)
 	{
-		if (!$content) {
-			throw new \InvalidStateException("Missing arguments in {var} or {assign} on line {$this->filter->line}.");
+		$tokenizer = new Tokenizer(array(
+			Tokenizer::T_WHITESPACE => '\s+',
+			Tokenizer::RE_STRING,
+			'true|false|null|and|or|xor|clone|new|instanceof',
+			self::T_SYMBOL => '\$?[0-9a-zA-Z]+', // variable, string, number
+			'=>|[^"\']', // =>, any char except quotes
+		), 'i');
+
+		$out = '';
+		$quote = $var = TRUE;
+		$depth = 0;
+		foreach ($tokenizer->tokenize($content) as $n => $token) {
+			list($token, $name) = $token;
+
+			if ($name === self::T_SYMBOL) {
+				if ($var) {
+					if ($extract) {
+						$token = "'" . ($token[0] === '$' ? substr($token, 1) : $token) . "'";
+					} else {
+						$token = $token[0] === '$' ? $token : '$' . $token;
 		}
-		if (strpos($content, '=>') === FALSE) { // back compatibility
-			return '$' . ltrim(self::fetchToken($content), '$')
-				. ' = ' . self::formatModifiers($content === '' ? 'NULL' : $content, $modifiers);
+				} elseif ($quote && $token[0] !== '$' && !is_numeric($token) && in_array($tokenizer->nextToken($n), array(',', '=>', ')', NULL), TRUE)) {
+					$token = "'$token'";
 		}
-		return 'extract(' . String::replace(self::formatArray($content), '#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>') . ')';
+			} elseif ($token === '(') {
+				$depth++;
+
+			} elseif ($token === ')') {
+				$depth--;
+
+			} elseif (($token === '=' || $token === '=>') && $depth === 0) {
+				$token = $extract ? '=>' : '=';
+				$var = FALSE;
+
+			} elseif ($token === ',' && $depth === 0) {
+				$token = $extract ? ',' : ';';
+				$var = TRUE;
+	}
+
+			if ($name !== Tokenizer::T_WHITESPACE) {
+				$quote = in_array($token, array('[', ',', '=', '(', '=>'));
+			}
+			$out .= $token;
+		}
+		return $out;
 	}
 
 
@@ -802,11 +841,8 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroDefault($content)
 	{
-		if (!$content) {
-			throw new \InvalidStateException("Missing arguments in {default} on line {$this->filter->line}.");
+		return 'extract(array(' . $this->macroVar($content, '', TRUE) . '), EXTR_SKIP)';
 		}
-		return 'extract(' . String::replace(self::formatArray($content), '#\$(' . self::RE_IDENTIFIER . ')\s*=>#', '"$1" =>') . ', EXTR_SKIP)';
-	}
 
 
 
