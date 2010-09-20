@@ -190,8 +190,13 @@ class RobotLoader extends AutoLoader
 	{
 		$lClass = strtolower($class);
 		if (!empty($this->list[$lClass]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
-			spl_autoload_call($class); // hack: enables exceptions
-			throw new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$class][0] . ".");
+			$e = new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$lClass][0] . ".");
+			if (PHP_VERSION_ID >= 50300) {
+				throw $e;
+			} else { // hack
+				Nette\Debug::_exceptionHandler($e);
+				exit;
+			}
 		}
 		$this->list[$lClass] = array($file, $time, $class);
 	}
@@ -231,7 +236,7 @@ class RobotLoader extends AutoLoader
 			}
 
 			if ($entry->isFile()) {
-				if (!isset($this->files[$path]) || $this->files[$path] !== filemtime($path)) {
+				if (!isset($this->files[$path]) || $this->files[$path] !== $entry->getMTime()) {
 					$this->scanScript($path);
 				}
 			}
