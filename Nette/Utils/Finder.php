@@ -140,10 +140,13 @@ class Finder extends Object implements \IteratorAggregate
 	 */
 	public function from($path)
 	{
+		if ($this->paths) {
+			throw new \InvalidStateException('Directory to search is already specified.');
+		}
 		if (!is_array($path)) {
 			$path = func_get_args();
 		}
-		$this->paths = array_merge($this->paths, $path);
+		$this->paths = $path;
 		$this->cursor = & $this->exclude;
 		return $this;
 	}

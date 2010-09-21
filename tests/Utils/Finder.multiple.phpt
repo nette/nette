@@ -26,13 +26,6 @@ function export($iterator)
 
 
 // recursive
-$finder = Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
-Assert::same(array(
-	'files/subdir/subdir2/file.txt',
-	'files/images/logo.gif',
-), export($finder));
-
-
 $finder = Finder::find('*')->from('files/subdir/subdir2', 'files/images');
 Assert::same(array(
 	'files/subdir/subdir2/file.txt',
@@ -46,16 +39,17 @@ Assert::same(array(
 	'files/images/logo.gif',
 ), export($finder));
 
+try {
+	Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', '', $e );
+}
+
+
 
 
 // non-recursive
-$finder = Finder::find('*')->in('files/subdir/subdir2')->in('files/images');
-Assert::same(array(
-	'files/subdir/subdir2/file.txt',
-	'files/images/logo.gif',
-), export($finder));
-
-
 $finder = Finder::find('*')->in('files/subdir/subdir2', 'files/images');
 Assert::same(array(
 	'files/subdir/subdir2/file.txt',
@@ -68,3 +62,12 @@ Assert::same(array(
 	'files/subdir/subdir2/file.txt',
 	'files/images/logo.gif',
 ), export($finder));
+
+try {
+	Finder::find('*')->in('files/subdir/subdir2')->in('files/images');
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('InvalidStateException', '', $e );
+}
+
+
