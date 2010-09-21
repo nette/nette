@@ -324,12 +324,21 @@ class Finder extends Object implements \IteratorAggregate
 
 	/**
 	 * Restricts the search by size.
-	 * @param  string
+	 * @param  string  "[operator] [size] [unit]" example: >=10kB
 	 * @param  int
 	 * @return Finder  provides a fluent interface
 	 */
-	public function size($operator, $size)
+	public function size($operator, $size = NULL)
 	{
+		if (func_num_args() === 1) { // in $operator is predicate
+			if (!preg_match('#^(?:([=<>!]=?|<>)\s*)?((?:\d*\.)?\d+)\s*(K|M|G|)B?$#i', $operator, $matches)) {
+				throw new \InvalidArgumentException('Invalid size predicate format.');
+			}
+			list(, $operator, $size, $unit) = $matches;
+			static $units = array('' => 1, 'k' => 1e3, 'm' => 1e6, 'g' => 1e9);
+			$size *= $units[strtolower($unit)];
+			$operator = $operator ? $operator : '=';
+		}
 		return $this->filter(function($file) use ($operator, $size) {
 			return Tools::compare($file->getSize(), $operator, $size);
 		});
@@ -339,12 +348,19 @@ class Finder extends Object implements \IteratorAggregate
 
 	/**
 	 * Restricts the search by modified time.
-	 * @param  string
+	 * @param  string  "[operator] [date]" example: >1978-01-23
 	 * @param  mixed
 	 * @return Finder  provides a fluent interface
 	 */
-	public function date($operator, $date)
+	public function date($operator, $date = NULL)
 	{
+		if (func_num_args() === 1) { // in $operator is predicate
+			if (!preg_match('#^(?:([=<>!]=?|<>)\s*)?(.+)$#i', $operator, $matches)) {
+				throw new \InvalidArgumentException('Invalid date predicate format.');
+			}
+			list(, $operator, $date) = $matches;
+			$operator = $operator ? $operator : '=';
+		}
 		$date = Tools::createDateTime($date)->format('U');
 		return $this->filter(function($file) use ($operator, $date) {
 			return Tools::compare($file->getMTime(), $operator, $date);

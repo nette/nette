@@ -19,34 +19,18 @@ Debug::enable();
 
 
 /**
- * Restricts the search by modified time.
- * @param  string in format "[operator] date" example: >1978-01-23
+ * Restricts the search by number of lines.
+ * @param  string
  * @return Finder  provides a fluent interface
  */
-Finder::extensionMethod('fancyDate', function($finder, $predicate) {
-	if (!preg_match('#^(?:([!<>=]=?|<>)\s*)?(.+)$#i', $predicate, $matches)) {
-		throw new \InvalidArgumentException('Date predicate format invalid.');
+Finder::extensionMethod('lines', function($finder, $predicate){
+	if (!preg_match('#^([=<>!]+)\s*(\d+)$#i', $predicate, $matches)) {
+		throw new \InvalidArgumentException('Invalid lines predicate format.');
 	}
-	list(, $operator, $date) = $matches;
-	$date = strtotime($date);
-	return $finder->date($operator ? $operator : '=', $date);
-});
-
-
-
-/**
- * Restricts the search by size.
- * @param  string in format "[operator] size[unit]" example: >=10kB
- * @return Finder  provides a fluent interface
- */
-Finder::extensionMethod('fancySize', function($finder, $predicate) {
-	if (!preg_match('#^(?:([!<>=]=?|<>)\s*)?((?:\d*\.)?\d+)\s*(K|M|G|)B?$#i', $predicate, $matches)) {
-		throw new \InvalidArgumentException('Size predicate format invalid.');
-	}
-	static $units = array('' => 1, 'k' => 1e3, 'm' => 1e6, 'g' => 1e9);
-	list(, $operator, $size, $unit) = $matches;
-	$size * $units[strtolower($unit)];
-	return $finder->size($operator ? $operator : '=', $size * $units[strtolower($unit)]);
+	list(, $operator, $nubmer) = $matches;
+	return $finder->filter(function($file) use ($operator, $nubmer) {
+		return Tools::compare(count(file($file->getPathname())), $operator, $nubmer);
+	});
 });
 
 
@@ -58,8 +42,8 @@ Finder::extensionMethod('fancySize', function($finder, $predicate) {
  * @return Finder  provides a fluent interface
  */
 Finder::extensionMethod('dimensions', function($finder, $width, $height){
-	if (!preg_match('#^(\D+)(\d+)$#i', $width, $mW) || !preg_match('#^(\D+)?(\d+)$#i', $height, $mH)) {
-		throw new \InvalidArgumentException('Dimensions predicate format invalid.');
+	if (!preg_match('#^([=<>!]+)\s*(\d+)$#i', $width, $mW) || !preg_match('#^([=<>!]+)\s*(\d+)$#i', $height, $mH)) {
+		throw new \InvalidArgumentException('Invalid dimensions predicate format.');
 	}
 	return $finder->filter(function($file) use ($mW, $mH) {
 		return $file->getSize() >= 12 && ($size = getimagesize($file->getPathname()))
@@ -86,17 +70,9 @@ Finder::extensionMethod('dimensions', function($finder, $width, $height){
 <body>
 	<h1>Nette\Finder custom filters</h1>
 
-	<h2>Find files modified in the last two weeks</h2>
+	<h2>Find PHP files longer than 100 lines</h2>
 	<?php
-	foreach (Finder::findFiles('*')->fancyDate('> - 2 days')->from('..')->exclude('temp') as $file) {
-		echo $file, "<br>";
-	}
-	?>
-
-
-	<h2>Find files larger than 4 kilobytes</h2>
-	<?php
-	foreach (Finder::findFiles('*')->fancySize('> 4kB')->from('..')->exclude('temp') as $file) {
+	foreach (Finder::findFiles('*.php')->lines('> 100')->from('..')->exclude('temp') as $file) {
 		echo $file, "<br>";
 	}
 	?>

@@ -28,13 +28,13 @@ function export($iterator)
 
 
 // size filter
-$finder = Finder::findFiles('*')->size('>', 8e3)->from('files');
+$finder = Finder::findFiles('*')->size('>8kB')->from('files');
 Assert::same(array(
 	'files/images/logo.gif',
 ), export($finder));
 
 
-$finder = Finder::findFiles('*')->size('>', 10)->size('<', 100)->from('files');
+$finder = Finder::findFiles('*')->size('> 10')->size('< 100b')->from('files');
 Assert::same(array(
 	'files/file.txt',
 	'files/subdir/file.txt',
@@ -43,7 +43,7 @@ Assert::same(array(
 
 
 
-$finder = Finder::find('*')->size('>', 10)->size('<', 100)->from('files');
+$finder = Finder::find('*')->size('>', 10)->size('< 100b')->from('files');
 Assert::same(array(
 	'files/file.txt',
 	'files/images',
@@ -55,13 +55,13 @@ Assert::same(array(
 
 
 
-$finder = Finder::findDirectories('*')->size('>', 10)->size('<', 100)->from('files');
+$finder = Finder::findDirectories('*')->size('>', 10)->size('< 100b')->from('files');
 Assert::same(array(), export($finder));
 
 
 
 // date filter
-$finder = Finder::findFiles('*')->date('>', new DateTime)->from('files');
+$finder = Finder::findFiles('*')->date('> 2020-01-02')->from('files');
 Assert::same(array(), export($finder));
 
 

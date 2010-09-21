@@ -69,5 +69,3 @@ try {
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', '', $e );
 }
-
-
