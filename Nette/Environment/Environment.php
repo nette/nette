@@ -65,9 +65,7 @@ final class Environment
 		'getRobotLoader' => 'Nette\\Loaders\\RobotLoader',
 	);
 
-	/** @var array */
-	private static $criticalSections;
-
+	
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -493,46 +491,6 @@ final class Environment
 		} else {
 			return self::$config;
 		}
-	}
-
-
-
-	/********************* critical section ****************d*g**/
-
-
-
-	/**
-	 * Enters the critical section, other threads are locked out.
-	 * @param  string
-	 * @return void
-	 */
-	public static function enterCriticalSection($key)
-	{
-		$file = self::getVariable('tempDir') . "/criticalSection-" . md5($key);
-		$handle = fopen($file, 'w');
-		if (!$handle) {
-			throw new \InvalidStateException('Unable initialize critical section.');
-		}
-		flock($handle, LOCK_EX);
-		self::$criticalSections[$key] = array($file, $handle);
-	}
-
-
-
-	/**
-	 * Leaves the critical section, other threads can now enter it.
-	 * @param  string
-	 * @return void
-	 */
-	public static function leaveCriticalSection($key)
-	{
-		if (!isset(self::$criticalSections[$key])) {
-			throw new \InvalidStateException('Critical section has not been initialized.');
-		}
-		list($file, $handle) = self::$criticalSections[$key];
-		@unlink($file);
-		fclose($handle);
-		unset(self::$criticalSections[$key]);
 	}
 
 }

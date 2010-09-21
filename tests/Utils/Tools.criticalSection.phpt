@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Environment critical sections.
+ * Test: Nette\Tools critical sections.
  *
  * @author     David Grudl
  * @package    Nette
  * @subpackage UnitTests
  */
 
-use Nette\Environment;
+use Nette\Tools;
 
 
 
@@ -20,19 +20,19 @@ $key = '../' . implode('', range("\x00", "\x1F"));
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-Environment::setVariable('tempDir', TEMP_DIR);
+Nette\Environment::setVariable('tempDir', TEMP_DIR);
 TestHelpers::purge(TEMP_DIR);
 
 
 // entering
-Environment::enterCriticalSection($key);
+Tools::enterCriticalSection($key);
 
 // leaving
-Environment::leaveCriticalSection($key);
+Tools::leaveCriticalSection($key);
 
 try {
 	// leaving not entered
-	Environment::leaveCriticalSection('notEntered');
+	Tools::leaveCriticalSection('notEntered');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Critical section has not been initialized.', $e );
