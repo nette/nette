@@ -109,6 +109,7 @@ class Finder extends Object implements \IteratorAggregate
 		if ($type || $pattern) {
 			$this->filter(function($file) use ($type, $pattern) {
 				return (!$type || $file->getType() === $type)
+					&& !$file->isDot()
 					&& (!$pattern || preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/')));
 			});
 		}
