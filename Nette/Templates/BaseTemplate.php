@@ -230,7 +230,7 @@ abstract class BaseTemplate extends Nette\Object implements ITemplate
 	public function add($name, $value)
 	{
 		if (array_key_exists($name, $this->params)) {
-			throw new \InvalidStateException("The variable '$name' exists yet.");
+			throw new \InvalidStateException("The variable '$name' already exists.");
 		}
 
 		$this->params[$name] = $value;

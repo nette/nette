@@ -167,7 +167,7 @@ class ServiceLocator extends FreezableObject implements IServiceLocator
 	/**
 	 * Exists the service?
 	 * @param  string service name
-	 * @param  bool   must be created yet?
+	 * @param  bool   must be created?
 	 * @return bool
 	 */
 	public function hasService($name, $created = FALSE)
