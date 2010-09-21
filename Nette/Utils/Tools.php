@@ -40,7 +40,7 @@ final class Tools
 	/** average year in seconds */
 	const YEAR = 31557600;
 
-	/** @var array {@link Tools::enterCriticalSection()} */
+	/** @var resource {@link Tools::enterCriticalSection()} */
 	private static $criticalSections;
 	
 
@@ -167,36 +167,30 @@ final class Tools
 
 	/**
 	 * Enters the critical section, other threads are locked out.
-	 * @param  string  machine unique key
 	 * @return void
 	 */
-	public static function enterCriticalSection($key)
+	public static function enterCriticalSection()
 	{
-		$file = Environment::getVariable('tempDir') . "/criticalSection-" . md5($key);
-		$handle = fopen($file, 'w');
-		if (!$handle) {
-			throw new \InvalidStateException('Unable initialize critical section.');
+		if (self::$criticalSections) {
+			throw new \InvalidStateException('Critical section has been already entered.');
 		}
-		flock($handle, LOCK_EX);
-		self::$criticalSections[$key] = array($file, $handle);
+		self::$criticalSections = fopen(__FILE__, 'r');
+		flock(self::$criticalSections, LOCK_EX);
 	}
 
 
 
 	/**
 	 * Leaves the critical section, other threads can now enter it.
-	 * @param  string
 	 * @return void
 	 */
-	public static function leaveCriticalSection($key)
+	public static function leaveCriticalSection()
 	{
-		if (!isset(self::$criticalSections[$key])) {
+		if (!self::$criticalSections) {
 			throw new \InvalidStateException('Critical section has not been initialized.');
 		}
-		list($file, $handle) = self::$criticalSections[$key];
-		@unlink($file); // @ - deleting must precede fclose on the Linux, but fails to delete on NTFS
-		fclose($handle);
-		unset(self::$criticalSections[$key]);
+		fclose(self::$criticalSections);
+		self::$criticalSections = NULL;
 	}
 
 }
