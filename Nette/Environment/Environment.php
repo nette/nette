@@ -51,8 +51,7 @@ final class Environment
 		'encoding' => array('UTF-8', FALSE),
 		'lang' => array('en', FALSE),
 		'cacheBase' => array('%tempDir%', TRUE),
-		'tempDir' => array('%appDir%/temp', TRUE),
-		'logDir' => array('%appDir%/log', TRUE),
+		'tempDir' => array('%appDir%/../temp', TRUE),
 	);
 
 	/** @var array */
