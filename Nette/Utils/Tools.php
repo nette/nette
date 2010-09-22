@@ -42,7 +42,7 @@ final class Tools
 
 	/** @var resource {@link Tools::enterCriticalSection()} */
 	private static $criticalSections;
-	
+
 
 
 	/**
@@ -174,8 +174,11 @@ final class Tools
 		if (self::$criticalSections) {
 			throw new \InvalidStateException('Critical section has been already entered.');
 		}
-		self::$criticalSections = fopen(__FILE__, 'r');
-		flock(self::$criticalSections, LOCK_EX);
+		$handle = fopen((defined('TEMP_DIR') ? TEMP_DIR : __DIR__) . '/criticalSection.lock', 'w');
+		if (!$handle) {
+			throw new \InvalidStateException('Unable initialize critical section.');
+		}
+		flock(self::$criticalSections = $handle, LOCK_EX);
 	}
 
 
