@@ -190,11 +190,11 @@ class RobotLoader extends AutoLoader
 		$lClass = strtolower($class);
 		if (!empty($this->list[$lClass]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
 			$e = new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$lClass][0] . ".");
-			if (PHP_VERSION_ID >= 50300) {
-				throw $e;
-			} else { // hack
+			/*5.2*if (PHP_VERSION_ID < 50300) {
 				Nette\Debug::_exceptionHandler($e);
 				exit;
+			} else*/ {
+				throw $e;
 			}
 		}
 		$this->list[$lClass] = array($file, $time, $class);

@@ -32,10 +32,10 @@ class BadRequestException extends \Exception
 			$code = $this->defaultCode;
 		}
 
-		if (PHP_VERSION_ID < 50300) {
+		/*5.2*if (PHP_VERSION_ID < 50300) {
 			$this->previous = $previous;
 			parent::__construct($message, $code);
-		} else {
+		} else*/ {
 			parent::__construct($message, $code, $previous);
 		}
 	}
