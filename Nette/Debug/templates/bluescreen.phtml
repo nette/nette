@@ -606,6 +606,12 @@ if (headers_sent()) {
 
 <script type="text/javascript">
 	document.body.appendChild(document.getElementById('netteBluescreen'));
+	document.onkeypress = function(e) {
+		e = e || window.event;
+		if (e.keyCode == 27) {
+			return document.getElementById('netteBluescreenIcon').onclick();
+		}
+	};
 </script>
 </body>
 </html>
