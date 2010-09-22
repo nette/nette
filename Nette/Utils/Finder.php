@@ -59,7 +59,7 @@ class Finder extends Object implements \IteratorAggregate
 			$mask = func_get_args();
 		}
 		$finder = new self;
-		return $finder->select(array(), 'dir')->select($mask, 'file');
+		return $finder->select(array(), 'isDir')->select($mask, 'isFile');
 	}
 
 
@@ -75,7 +75,7 @@ class Finder extends Object implements \IteratorAggregate
 			$mask = func_get_args();
 		}
 		$finder = new self;
-		return $finder->select($mask, 'file');
+		return $finder->select($mask, 'isFile');
 	}
 
 
@@ -91,7 +91,7 @@ class Finder extends Object implements \IteratorAggregate
 			$mask = func_get_args();
 		}
 		$finder = new self;
-		return $finder->select($mask, 'dir');
+		return $finder->select($mask, 'isDir');
 	}
 
 
@@ -108,7 +108,7 @@ class Finder extends Object implements \IteratorAggregate
 		$pattern = self::buildPattern($masks);
 		if ($type || $pattern) {
 			$this->filter(function($file) use ($type, $pattern) {
-				return (!$type || $file->getType() === $type)
+				return (!$type || $file->$type())
 					&& !$file->isDot()
 					&& (!$pattern || preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/')));
 			});
