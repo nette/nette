@@ -50,7 +50,6 @@ final class Environment
 	private static $vars = array( // all deprecated
 		'encoding' => array('UTF-8', FALSE),
 		'lang' => array('en', FALSE),
-		'cacheBase' => array('%tempDir%', TRUE),
 		'tempDir' => array('%appDir%/../temp', TRUE),
 	);
 
@@ -64,7 +63,7 @@ final class Environment
 		'getRobotLoader' => 'Nette\\Loaders\\RobotLoader',
 	);
 
-	
+
 
 	/**
 	 * Static class - cannot be instantiated.

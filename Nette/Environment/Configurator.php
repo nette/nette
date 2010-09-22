@@ -258,7 +258,7 @@ class Configurator extends Object
 	 */
 	public static function createCacheStorage()
 	{
-		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir'));
+		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir') . '/cache');
 	}
 
 
@@ -269,9 +269,9 @@ class Configurator extends Object
 	public static function createCacheJournal()
 	{
 		/*if (Nette\Caching\SqliteJournal::isAvailable()) {
-			return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir') . '/cachejournal.db');
+			return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir') . '/cache/cachejournal.db');
 		} else*/ {
-			return new Nette\Caching\FileJournal(Environment::getVariable('tempDir'));
+			return new Nette\Caching\FileJournal(Environment::getVariable('tempDir') . '/cache');
 		}
 	}
 

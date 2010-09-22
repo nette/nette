@@ -154,7 +154,7 @@ class Template extends BaseTemplate implements IFileTemplate
 	public static function getCacheStorage()
 	{
 		if (self::$cacheStorage === NULL) {
-			self::$cacheStorage = new TemplateCacheStorage(Environment::getVariable('tempDir'));
+			self::$cacheStorage = new TemplateCacheStorage(Environment::getVariable('tempDir') . '/cache');
 		}
 		return self::$cacheStorage;
 	}
