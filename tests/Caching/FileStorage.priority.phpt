@@ -21,7 +21,9 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 
-$storage = new Nette\Caching\FileStorage(TEMP_DIR);
+$context = new Nette\Context;
+$context->addService('Nette\\Caching\\ICacheJournal', new Nette\Caching\FileJournal(TEMP_DIR));
+$storage = new Nette\Caching\FileStorage(TEMP_DIR, $context);
 $cache = new Cache($storage);
 
 

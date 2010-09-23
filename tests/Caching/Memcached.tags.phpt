@@ -26,7 +26,9 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$storage = new Nette\Caching\MemcachedStorage('localhost');
+$context = new Nette\Context;
+$context->addService('Nette\\Caching\\ICacheJournal', new Nette\Caching\FileJournal(TEMP_DIR));
+$storage = new Nette\Caching\MemcachedStorage('localhost', NULL, NULL, $context);
 $cache = new Cache($storage);
 
 

@@ -287,7 +287,9 @@ class Configurator extends Object
 	 */
 	public static function createCacheStorage()
 	{
-		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir') . '/cache');
+		$context = new Context;
+		$context->addService('Nette\\Caching\\ICacheJournal', array(__CLASS__, 'createCacheJournal'));
+		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir') . '/cache', $context);
 	}
 
 

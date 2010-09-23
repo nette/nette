@@ -34,8 +34,8 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	/** @var string */
 	private $prefix;
 
-	/** @var ICacheJournal */
-	private $journal;
+	/** @var Nette\Context */
+	private $context;
 
 
 
@@ -50,13 +50,14 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 
 
-	public function __construct($host = 'localhost', $port = 11211, $prefix = '')
+	public function __construct($host = 'localhost', $port = 11211, $prefix = '', Nette\Context $context = NULL)
 	{
 		if (!self::isAvailable()) {
 			throw new \NotSupportedException("PHP extension 'memcache' is not loaded.");
 		}
 
 		$this->prefix = $prefix;
+		$this->context = $context;
 		$this->memcache = new \Memcache;
 		Nette\Debug::tryError();
 		$this->memcache->connect($host, $port);
@@ -130,6 +131,9 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		}
 
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
+			if (!$this->context) {
+				throw new \InvalidStateException('CacheJournal has not been provided.');
+			}
 			$this->getJournal()->write($this->prefix . $key, $dp);
 		}
 
@@ -160,7 +164,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		if (!empty($conds[Cache::ALL])) {
 			$this->memcache->flush();
 
-		} else {
+		} elseif ($this->context) {
 			foreach ($this->getJournal()->clean($conds) as $entry) {
 				$this->memcache->delete($entry, 0);
 			}
@@ -170,15 +174,11 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 
 	/**
-	 * Returns the ICacheJournal.
 	 * @return ICacheJournal
 	 */
 	protected function getJournal()
 	{
-		if ($this->journal === NULL) {
-			$this->journal = Nette\Environment::getService('Nette\\Caching\\ICacheJournal');
-		}
-		return $this->journal;
+		return $this->context->getService('Nette\\Caching\\ICacheJournal');
 	}
 
 }

@@ -62,12 +62,12 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	/** @var bool */
 	private $useDirs;
 
-	/** @var ICacheJournal */
-	private $journal;
+	/** @var Nette\Context */
+	private $context;
 
 
 
-	public function __construct($dir)
+	public function __construct($dir, Nette\Context $context = NULL)
 	{
 		if (self::$useDirectories === NULL) {
 			// checks whether directory is writable
@@ -88,6 +88,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 		$this->dir = $dir;
 		$this->useDirs = (bool) self::$useDirectories;
+		$this->context = $context;
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
 			$this->clean(array());
@@ -202,6 +203,9 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		}
 
 		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
+			if (!$this->context) {
+				throw new \InvalidStateException('CacheJournal has not been provided.');
+			}
 			$this->getJournal()->write($cacheFile, $dp);
 		}
 
@@ -288,13 +292,17 @@ class FileStorage extends Nette\Object implements ICacheStorage
 				}
 			}
 
-			$this->getJournal()->clean($conds);
+			if ($this->context) {
+				$this->getJournal()->clean($conds);
+			}
 			return;
 		}
 
 		// cleaning using journal
-		foreach ($this->getJournal()->clean($conds) as $file) {
-			$this->delete($file);
+		if ($this->context) {
+			foreach ($this->getJournal()->clean($conds) as $file) {
+				$this->delete($file);
+			}
 		}
 	}
 
@@ -395,15 +403,11 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 
 	/**
-	 * Returns the ICacheJournal
 	 * @return ICacheJournal
 	 */
 	protected function getJournal()
 	{
-		if ($this->journal === NULL) {
-			$this->journal = Nette\Environment::getService('Nette\\Caching\\ICacheJournal');
-		}
-		return $this->journal;
+		return $this->context->getService('Nette\\Caching\\ICacheJournal');
 	}
 
 }
