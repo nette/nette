@@ -35,6 +35,9 @@ class RobotLoader extends AutoLoader
 	/** @var bool */
 	public $autoRebuild = FALSE;
 
+	/** @var bool */
+	public $rememberMissing = FALSE;
+
 	/** @var array */
 	private $list = array();
 
@@ -93,22 +96,18 @@ class RobotLoader extends AutoLoader
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
 
 		if (!isset($this->list[$type]) || ($this->list[$type] !== FALSE && !is_file($this->list[$type][0]))) {
-			$this->list[$type] = FALSE;
+			$this->list[$type] = $this->rememberMissing ? FALSE : NULL;
 
 			if ($this->autoRebuild) {
-				if ($this->rebuilt) {
-					$this->getCache()->save($this->getKey(), $this->list);
-				} else {
+				if (!$this->rebuilt) {
 					$this->rebuild();
+				} elseif (isset($this->list[$type])) {
+					$this->getCache()->save($this->getKey(), $this->list);
 				}
 			}
+		}
 
-			if ($this->list[$type] !== FALSE) {
-				LimitedScope::load($this->list[$type][0]);
-				self::$count++;
-			}
-
-		} elseif ($this->list[$type] !== FALSE) {
+		if (!empty($this->list[$type])) {
 			LimitedScope::load($this->list[$type][0]);
 			self::$count++;
 		}
