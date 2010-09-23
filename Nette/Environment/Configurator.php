@@ -126,17 +126,17 @@ class Configurator extends Object
 
 		// process services
 		$runServices = array();
-		$locator = Environment::getServiceLocator();
+		$context = Environment::getContext();
 		if ($config->service instanceof Config) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
-					$locator->removeService($key);
-					$locator->addService($key, $value);
+					$context->removeService($key);
+					$context->addService($key, $value);
 				} else {
 					if ($value->factory) {
-						$locator->removeService($key);
-						$locator->addService($key, $value->factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
+						$context->removeService($key);
+						$context->addService($key, $value->factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
 					}
 					if ($value->run) {
 						$runServices[] = $key;
@@ -226,7 +226,7 @@ class Configurator extends Object
 
 		// auto-start services
 		foreach ($runServices as $name) {
-			$locator->getService($name);
+			$context->getService($name);
 		}
 
 		return $config;
@@ -239,16 +239,16 @@ class Configurator extends Object
 
 
 	/**
-	 * Get initial instance of service locator.
-	 * @return IServiceLocator
+	 * Get initial instance of context.
+	 * @return IContext
 	 */
-	public function createServiceLocator()
+	public function createContext()
 	{
-		$locator = new ServiceLocator;
+		$context = new Context;
 		foreach ($this->defaultServices as $name => $service) {
-			$locator->addService($name, $service);
+			$context->addService($name, $service);
 		}
-		return $locator;
+		return $context;
 	}
 
 
@@ -262,20 +262,20 @@ class Configurator extends Object
 			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBasePath());
 		}
 
-		$serviceLocator = new ServiceLocator(Environment::getServiceLocator());
-		$serviceLocator->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
-		$serviceLocator->addService('defaultRouter', function() {
+		$context = new Context(Environment::getContext());
+		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
+		$context->addService('defaultRouter', function() {
 			return new Nette\Application\SimpleRouter(array(
 				'presenter' => 'Default',
 				'action' => 'default',
 			));
 		});
-		$serviceLocator->addService('Nette\\Application\\IPresenterLoader', function() {
+		$context->addService('Nette\\Application\\IPresenterLoader', function() {
 			return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
 		});
 
 		$application = new Nette\Application\Application;
-		$application->setServiceLocator($serviceLocator);
+		$application->setContext($context);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
 	}

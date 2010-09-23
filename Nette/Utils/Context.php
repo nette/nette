@@ -16,13 +16,13 @@ use Nette;
 
 
 /**
- * Service locator pattern implementation.
+ * The dependency injection container default implementation.
  *
  * @author     David Grudl
  */
-class ServiceLocator extends FreezableObject implements IServiceLocator
+class Context extends FreezableObject implements IContext
 {
-	/** @var IServiceLocator */
+	/** @var IContext */
 	private $parent;
 
 	/** @var array  storage for shared objects */
@@ -34,9 +34,9 @@ class ServiceLocator extends FreezableObject implements IServiceLocator
 
 
 	/**
-	 * @param  IServiceLocator
+	 * @param  IContext
 	 */
-	public function __construct(IServiceLocator $parent = NULL)
+	public function __construct(IContext $parent = NULL)
 	{
 		$this->parent = $parent;
 	}
@@ -184,7 +184,7 @@ class ServiceLocator extends FreezableObject implements IServiceLocator
 
 	/**
 	 * Returns the parent container if any.
-	 * @return IServiceLocator|NULL
+	 * @return IContext|NULL
 	 */
 	public function getParent()
 	{

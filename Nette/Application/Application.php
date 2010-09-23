@@ -52,8 +52,8 @@ class Application extends Nette\Object
 	/** @var Presenter */
 	private $presenter;
 
-	/** @var Nette\ServiceLocator */
-	private $serviceLocator;
+	/** @var Nette\Context */
+	private $context;
 
 
 
@@ -98,10 +98,10 @@ class Application extends Nette\Object
 					$this->onStartup($this);
 
 					// default router
-					if ($this->serviceLocator->hasService('Nette\\Application\\IRouter', TRUE)) {
+					if ($this->context->hasService('Nette\\Application\\IRouter', TRUE)) {
 						$router = $this->getRouter();
 					} else {
-						$this->setRouter($router = $this->serviceLocator->getService('defaultRouter'));
+						$this->setRouter($router = $this->context->getService('defaultRouter'));
 					}
 
 					// enable routing debuggger
@@ -238,24 +238,24 @@ class Application extends Nette\Object
 
 
 	/**
-	 * Gets the service locator.
+	 * Gets the context.
 	 * @return Application  provides a fluent interface
 	 */
-	public function setServiceLocator(Nette\IServiceLocator $locator)
+	public function setContext(Nette\IContext $context)
 	{
-		$this->serviceLocator = $locator;
+		$this->context = $context;
 		return $this;
 	}
 
 
 
 	/**
-	 * Gets the service locator.
-	 * @return Nette\IServiceLocator
+	 * Gets the context.
+	 * @return Nette\IContext
 	 */
-	final public function getServiceLocator()
+	final public function getContext()
 	{
-		return $this->serviceLocator;
+		return $this->context;
 	}
 
 
@@ -268,7 +268,7 @@ class Application extends Nette\Object
 	 */
 	final public function getService($name, array $options = NULL)
 	{
-		return $this->serviceLocator->getService($name, $options);
+		return $this->context->getService($name, $options);
 	}
 
 
@@ -279,7 +279,7 @@ class Application extends Nette\Object
 	 */
 	public function getRouter()
 	{
-		return $this->serviceLocator->getService('Nette\\Application\\IRouter');
+		return $this->context->getService('Nette\\Application\\IRouter');
 	}
 
 
@@ -291,7 +291,7 @@ class Application extends Nette\Object
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->serviceLocator->addService('Nette\\Application\\IRouter', $router);
+		$this->context->addService('Nette\\Application\\IRouter', $router);
 		return $this;
 	}
 
@@ -303,7 +303,7 @@ class Application extends Nette\Object
 	 */
 	public function getPresenterLoader()
 	{
-		return $this->serviceLocator->getService('Nette\\Application\\IPresenterLoader');
+		return $this->context->getService('Nette\\Application\\IPresenterLoader');
 	}
 
 
@@ -313,7 +313,7 @@ class Application extends Nette\Object
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->serviceLocator->getService('Nette\\Web\\IHttpRequest');
+		return $this->context->getService('Nette\\Web\\IHttpRequest');
 	}
 
 
@@ -323,7 +323,7 @@ class Application extends Nette\Object
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->serviceLocator->getService('Nette\\Web\\IHttpResponse');
+		return $this->context->getService('Nette\\Web\\IHttpResponse');
 	}
 
 
@@ -333,7 +333,7 @@ class Application extends Nette\Object
 	 */
 	protected function getSession($namespace = NULL)
 	{
-		$handler = $this->serviceLocator->getService('Nette\\Web\\Session');
+		$handler = $this->context->getService('Nette\\Web\\Session');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 

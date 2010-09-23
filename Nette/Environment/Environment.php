@@ -37,8 +37,8 @@ final class Environment
 	/** @var \ArrayObject */
 	private static $config;
 
-	/** @var IServiceLocator */
-	private static $serviceLocator;
+	/** @var IContext */
+	private static $context;
 
 	/** @var array */
 	private static $vars = array(
@@ -298,20 +298,20 @@ final class Environment
 
 
 
-	/********************* service locator ****************d*g**/
+	/********************* context ****************d*g**/
 
 
 
 	/**
-	 * Get initial instance of service locator.
-	 * @return IServiceLocator
+	 * Get initial instance of context.
+	 * @return IContext
 	 */
-	public static function getServiceLocator()
+	public static function getContext()
 	{
-		if (self::$serviceLocator === NULL) {
-			self::$serviceLocator = self::getConfigurator()->createServiceLocator();
+		if (self::$context === NULL) {
+			self::$context = self::getConfigurator()->createContext();
 		}
-		return self::$serviceLocator;
+		return self::$context;
 	}
 
 
@@ -324,7 +324,7 @@ final class Environment
 	 */
 	public static function getService($name, array $options = NULL)
 	{
-		return self::getServiceLocator()->getService($name, $options);
+		return self::getContext()->getService($name, $options);
 	}
 
 
@@ -351,7 +351,7 @@ final class Environment
 	public static function __callStatic($name, $args)
 	{
 		if (isset(self::$aliases[$name])) {
-			return self::getServiceLocator()->getService(self::$aliases[$name], $args);
+			return self::getContext()->getService(self::$aliases[$name], $args);
 		} else {
 			throw new \MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
@@ -364,7 +364,7 @@ final class Environment
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -374,7 +374,7 @@ final class Environment
 	 */
 	public static function getHttpContext()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -384,7 +384,7 @@ final class Environment
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -394,7 +394,7 @@ final class Environment
 	 */
 	public static function getApplication()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -404,7 +404,7 @@ final class Environment
 	 */
 	public static function getUser()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 
@@ -414,7 +414,7 @@ final class Environment
 	 */
 	public static function getRobotLoader()
 	{
-		return self::getServiceLocator()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
 	}
 
 

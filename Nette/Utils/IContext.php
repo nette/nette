@@ -16,11 +16,11 @@ use Nette;
 
 
 /**
- * The service locator.
+ * The dependency injection container.
  *
  * @author     David Grudl
  */
-interface IServiceLocator
+interface IContext
 {
 
 	/**
