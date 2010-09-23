@@ -282,9 +282,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Application\Application
 	 */
-	public static function createApplication(array $options = NULL)
+	public static function createApplication(IContainer $container, array $options = NULL)
 	{
-		$container = clone Environment::getContext();
+		$container = clone $container;
 		$container->addService('Nette\\Application\\IRouter', 'Nette\Application\Routers\RouteList');
 
 		if (!$container->hasService('Nette\\Application\\IPresenterFactory')) {
@@ -321,11 +321,11 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\Context
 	 */
-	public static function createHttpContext()
+	public static function createHttpContext(IContainer $container)
 	{
 		return new Nette\Http\Context(
-			Environment::getService('Nette\\Web\\IHttpRequest'),
-			Environment::getService('Nette\\Web\\IHttpResponse')
+			$container->getService('Nette\\Web\\IHttpRequest'),
+			$container->getService('Nette\\Web\\IHttpResponse')
 		);
 	}
 
@@ -334,11 +334,11 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\Session
 	 */
-	public static function createHttpSession()
+	public static function createHttpSession(IContainer $container)
 	{
 		return new Nette\Http\Session(
-			Environment::getService('Nette\\Web\\IHttpRequest'),
-			Environment::getService('Nette\\Web\\IHttpResponse')
+			$container->getService('Nette\\Web\\IHttpRequest'),
+			$container->getService('Nette\\Web\\IHttpResponse')
 		);
 	}
 
@@ -347,11 +347,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\User
 	 */
-	public static function createHttpUser()
+	public static function createHttpUser(IContainer $container)
 	{
-		return new Nette\Http\User(
-			clone Environment::getContext()
-		);
+		return new Nette\Http\User(clone $container);
 	}
 
 
@@ -359,12 +357,12 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createCacheStorage()
+	public static function createCacheStorage(IContainer $container)
 	{
 		$dir = Environment::getVariable('tempDir') . '/cache';
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\Storages\FileStorage($dir, Environment::getService('Nette\\Caching\\ICacheJournal'));
+		return new Nette\Caching\Storages\FileStorage($dir, $container->getService('Nette\\Caching\\ICacheJournal'));
 	}
 
 
@@ -395,7 +393,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Mail\IMailer
 	 */
-	public static function createMailer(array $options = NULL)
+	public static function createMailer(IContainer $container, array $options = NULL)
 	{
 		if (empty($options['smtp'])) {
 			return new Nette\Mail\SendmailMailer;
@@ -409,11 +407,11 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
-	public static function createRobotLoader(array $options = NULL)
+	public static function createRobotLoader(IContainer $container, array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !Environment::isProduction();
-		$loader->setCacheStorage(Environment::getService('Nette\\Caching\\ICacheStorage'));
+		$loader->setCacheStorage($container->getService('Nette\\Caching\\ICacheStorage'));
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
 		} else {

@@ -139,7 +139,7 @@ class Container extends Nette\FreezableObject implements IContainer
 				if (!$factory->isCallable()) {
 					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
-				$service = $factory/*5.2*->invoke*/($options);
+				$service = $factory/*5.2*->invoke*/($this, $options);
 				if (!is_object($service)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
 				}

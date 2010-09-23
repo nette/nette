@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 class Factory
 {
-	static function createService($options)
+	static function createService($context, $options)
 	{
 		TestHelpers::note( 'Factory::createService', __METHOD__ );
 		Assert::same( array('anyValue' => 'hello world'), $options );
