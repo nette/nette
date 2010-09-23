@@ -22,24 +22,11 @@ use Nette;
  */
 class Context extends FreezableObject implements IContext
 {
-	/** @var IContext */
-	private $parent;
-
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
 	/** @var array  storage for service factories */
 	private $factories = array();
-
-
-
-	/**
-	 * @param  IContext
-	 */
-	public function __construct(IContext $parent = NULL)
-	{
-		$this->parent = $parent;
-	}
 
 
 
@@ -152,10 +139,6 @@ class Context extends FreezableObject implements IContext
 				unset($this->factories[$lower]);
 			}
 			return $service;
-		}
-
-		if ($this->parent !== NULL) {
-			return $this->parent->getService($name, $options);
 
 		} else {
 			throw new \InvalidStateException("Service '$name' not found.");
@@ -177,18 +160,7 @@ class Context extends FreezableObject implements IContext
 		}
 
 		$lower = strtolower($name);
-		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower])) || ($this->parent !== NULL && $this->parent->hasService($name, $created));
-	}
-
-
-
-	/**
-	 * Returns the parent container if any.
-	 * @return IContext|NULL
-	 */
-	public function getParent()
-	{
-		return $this->parent;
+		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower]));
 	}
 
 }

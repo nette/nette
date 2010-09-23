@@ -262,7 +262,7 @@ class Configurator extends Object
 			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBasePath());
 		}
 
-		$context = new Context(Environment::getContext());
+		$context = clone Environment::getContext();
 		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
 		$context->addService('defaultRouter', function() {
 			return new Nette\Application\SimpleRouter(array(
