@@ -63,7 +63,7 @@ class ServiceLocator extends FreezableObject implements IServiceLocator
 			throw new AmbiguousServiceException("Service named '$name' has been already registered.");
 		}
 
-		if (is_object($service)) {
+		if (is_object($service) && !($service instanceof \Closure || $service instanceof Callback)) {
 			if (!$singleton || $options) {
 				throw new \InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
 			}
