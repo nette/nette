@@ -22,7 +22,6 @@ if (!Nette\Caching\MemcachedStorage::isAvailable()) {
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-Nette\Environment::setVariable('tempDir', TEMP_DIR);
 TestHelpers::purge(TEMP_DIR);
 
 

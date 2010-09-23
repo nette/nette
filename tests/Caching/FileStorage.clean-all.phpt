@@ -18,7 +18,6 @@ require __DIR__ . '/../bootstrap.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
-Nette\Environment::setVariable('tempDir', TEMP_DIR);
 
 $storage = new Nette\Caching\FileStorage(TEMP_DIR);
 $cacheA = new Cache($storage);

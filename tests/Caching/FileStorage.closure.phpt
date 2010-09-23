@@ -25,7 +25,6 @@ $value = range("\x00", "\xFF");
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
-Environment::setVariable('tempDir', TEMP_DIR);
 
 
 

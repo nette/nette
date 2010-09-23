@@ -26,12 +26,6 @@ final class Environment
 	const DEVELOPMENT = 'development';
 	const PRODUCTION = 'production';
 	const CONSOLE = 'console';
-	const LAB = 'lab';
-	/**#@-*/
-
-	/**#@+ mode name */
-	const DEBUG = 'debug';
-	const PERFORMANCE = 'performance';
 	/**#@-*/
 
 	/** @var Configurator */
@@ -47,10 +41,7 @@ final class Environment
 	private static $serviceLocator;
 
 	/** @var array */
-	private static $vars = array( // all deprecated
-		'encoding' => array('UTF-8', FALSE),
-		'lang' => array('en', FALSE),
-		'tempDir' => array('%appDir%/../temp', TRUE),
+	private static $vars = array(
 	);
 
 	/** @var array */

@@ -25,7 +25,6 @@ require __DIR__ . '/Mail.inc';
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 mkdir(TEMP_DIR . '/cache');
-Environment::setVariable('tempDir', TEMP_DIR);
 
 
 

@@ -33,10 +33,6 @@ define('APP_DIR', '/myApp');
 Assert::same( '/myApp', Environment::getVariable('appDir') );
 
 
-Assert::same( '/myApp/../temp', Environment::getVariable('tempDir') );
-
-
-
 // Setting variable 'test'...
 Environment::setVariable('test', '%appDir%/test');
 
@@ -44,9 +40,6 @@ Assert::same( '/myApp/test', Environment::getVariable('test') );
 
 
 Assert::same( array(
-	'encoding' => 'UTF-8',
-	'lang' => 'en',
-	'tempDir' => '/myApp/../temp',
 	'appDir' => '/myApp',
 	'test' => '/myApp/test',
 ), Environment::getVariables());

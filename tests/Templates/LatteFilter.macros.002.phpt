@@ -26,7 +26,6 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 mkdir(TEMP_DIR . '/cache');
 Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
-Environment::setVariable('tempDir', TEMP_DIR);
 
 
 
