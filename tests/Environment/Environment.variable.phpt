@@ -16,14 +16,14 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::null( Environment::getVariable('foo'), "Getting variable 'foo':" );
+Assert::null( Environment::getVariable('foo', NULL), "Getting variable 'foo':" );
 
 
 try {
-	Environment::getVariable('tempDir');
+	Environment::getVariable('foo');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Unknown environment variable 'appDir'.", $e );
+	Assert::exception('InvalidStateException', "Unknown environment variable 'foo'.", $e );
 }
 
 
@@ -33,7 +33,7 @@ define('APP_DIR', '/myApp');
 Assert::same( '/myApp', Environment::getVariable('appDir') );
 
 
-Assert::same( '/myApp/temp', Environment::getVariable('tempDir') );
+Assert::same( '/myApp/../temp', Environment::getVariable('tempDir') );
 
 
 
@@ -46,9 +46,7 @@ Assert::same( '/myApp/test', Environment::getVariable('test') );
 Assert::same( array(
 	'encoding' => 'UTF-8',
 	'lang' => 'en',
-	'cacheBase' => '/myApp/temp',
-	'tempDir' => '/myApp/temp',
-	'logDir' => '/myApp/log',
+	'tempDir' => '/myApp/../temp',
 	'appDir' => '/myApp',
 	'test' => '/myApp/test',
 ), Environment::getVariables());

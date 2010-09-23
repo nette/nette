@@ -75,7 +75,7 @@ class Application extends Nette\Object
 
 		$httpRequest->setEncoding('UTF-8');
 
-		if (Environment::getVariable('baseUri') === NULL) {
+		if (Environment::getVariable('baseUri', NULL) === NULL) {
 			Environment::setVariable('baseUri', $httpRequest->getUri()->getBasePath());
 		}
 

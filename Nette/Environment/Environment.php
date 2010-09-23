@@ -129,7 +129,7 @@ final class Environment
 	 */
 	public static function getName()
 	{
-		$name = self::getVariable('environment');
+		$name = self::getVariable('environment', NULL);
 		if ($name === NULL) {
 			$name = self::getConfigurator()->detect('environment');
 			self::setVariable('environment', $name, FALSE);
@@ -237,8 +237,11 @@ final class Environment
 				self::$vars[$name] = array($list['user'][$const], FALSE);
 				return $list['user'][$const];
 
-			} else {
+			} elseif (func_num_args() > 1) {
 				return $default;
+
+			} else {
+				throw new \InvalidStateException("Unknown environment variable '$name'.");
 			}
 		}
 	}
@@ -290,10 +293,7 @@ final class Environment
 						throw $e;
 					}
 
-					if ($val === NULL) {
-						throw new \InvalidStateException("Unknown environment variable '$var'.");
-
-					} elseif (!is_scalar($val)) {
+					if (!is_scalar($val)) {
 						throw new \InvalidStateException("Environment variable '$var' is not scalar.");
 					}
 
