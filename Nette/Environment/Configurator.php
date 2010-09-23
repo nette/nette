@@ -28,7 +28,7 @@ class Configurator extends Object
 
 	/** @var array */
 	public $defaultServices = array(
-		'Nette\\Application\\Application' => 'Nette\Application\Application',
+		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
 		'Nette\\Web\\HttpContext' => 'Nette\Web\HttpContext',
 		'Nette\\Web\\IHttpRequest' => 'Nette\Web\HttpRequest',
 		'Nette\\Web\\IHttpResponse' => 'Nette\Web\HttpResponse',
@@ -249,6 +249,35 @@ class Configurator extends Object
 			$locator->addService($name, $service);
 		}
 		return $locator;
+	}
+
+
+
+	/**
+	 * @return Nette\Application\Application
+	 */
+	public static function createApplication()
+	{
+		if (Environment::getVariable('baseUri', NULL) === NULL) {
+			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBasePath());
+		}
+
+		$serviceLocator = new ServiceLocator(Environment::getServiceLocator());
+		$serviceLocator->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
+		$serviceLocator->addService('defaultRouter', function() {
+			return new Nette\Application\SimpleRouter(array(
+				'presenter' => 'Default',
+				'action' => 'default',
+			));
+		});
+		$serviceLocator->addService('Nette\\Application\\IPresenterLoader', function() {
+			return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
+		});
+
+		$application = new Nette\Application\Application;
+		$application->setServiceLocator($serviceLocator);
+		$application->catchExceptions = Environment::isProduction();
+		return $application;
 	}
 
 

@@ -11,8 +11,7 @@
 
 namespace Nette\Application;
 
-use Nette,
-	Nette\Environment;
+use Nette;
 
 
 
@@ -25,12 +24,6 @@ class Application extends Nette\Object
 {
 	/** @var int */
 	public static $maxLoop = 20;
-
-	/** @var array */
-	public $defaultServices = array(
-		'Nette\\Application\\IRouter' => 'Nette\Application\MultiRouter',
-		'Nette\\Application\\IPresenterLoader' => array(__CLASS__, 'createPresenterLoader'),
-	);
 
 	/** @var bool enable fault barrier? */
 	public $catchExceptions;
@@ -75,18 +68,11 @@ class Application extends Nette\Object
 
 		$httpRequest->setEncoding('UTF-8');
 
-		if (Environment::getVariable('baseUri', NULL) === NULL) {
-			Environment::setVariable('baseUri', $httpRequest->getUri()->getBasePath());
-		}
-
 		// autostarts session
 		$session = $this->getSession();
 		if (!$session->isStarted() && $session->exists()) {
 			$session->start();
 		}
-
-		// enable routing debuggger
-		Nette\Debug::addPanel(new RoutingDebugger($this->getRouter(), $httpRequest));
 
 		// check HTTP method
 		if ($this->allowedMethods) {
@@ -112,13 +98,15 @@ class Application extends Nette\Object
 					$this->onStartup($this);
 
 					// default router
-					$router = $this->getRouter();
-					if ($router instanceof MultiRouter && !count($router)) {
-						$router[] = new SimpleRouter(array(
-							'presenter' => 'Default',
-							'action' => 'default',
-						));
+					if ($this->serviceLocator->hasService('Nette\\Application\\IRouter', TRUE)) {
+						$router = $this->getRouter();
+					} else {
+						$this->setRouter($router = $this->serviceLocator->getService('defaultRouter'));
 					}
+
+					// enable routing debuggger
+					Nette\Debug::addPanel(new RoutingDebugger($router, $httpRequest));
+
 
 					// routing
 					$request = $router->match($httpRequest);
@@ -161,10 +149,6 @@ class Application extends Nette\Object
 
 			} catch (\Exception $e) {
 				// fault barrier
-				if ($this->catchExceptions === NULL) {
-					$this->catchExceptions = Environment::isProduction();
-				}
-
 				$this->onError($this, $e);
 
 				if (!$this->catchExceptions) {
@@ -254,20 +238,23 @@ class Application extends Nette\Object
 
 
 	/**
-	 * Gets the service locator (experimental).
+	 * Gets the service locator.
+	 * @return Application  provides a fluent interface
+	 */
+	public function setServiceLocator(Nette\IServiceLocator $locator)
+	{
+		$this->serviceLocator = $locator;
+		return $this;
+	}
+
+
+
+	/**
+	 * Gets the service locator.
 	 * @return Nette\IServiceLocator
 	 */
 	final public function getServiceLocator()
 	{
-		if ($this->serviceLocator === NULL) {
-			$this->serviceLocator = new Nette\ServiceLocator(Environment::getServiceLocator());
-
-			foreach ($this->defaultServices as $name => $service) {
-				if (!$this->serviceLocator->hasService($name)) {
-					$this->serviceLocator->addService($name, $service);
-				}
-			}
-		}
 		return $this->serviceLocator;
 	}
 
@@ -281,7 +268,7 @@ class Application extends Nette\Object
 	 */
 	final public function getService($name, array $options = NULL)
 	{
-		return $this->getServiceLocator()->getService($name, $options);
+		return $this->serviceLocator->getService($name, $options);
 	}
 
 
@@ -292,7 +279,7 @@ class Application extends Nette\Object
 	 */
 	public function getRouter()
 	{
-		return $this->getServiceLocator()->getService('Nette\\Application\\IRouter');
+		return $this->serviceLocator->getService('Nette\\Application\\IRouter');
 	}
 
 
@@ -304,7 +291,7 @@ class Application extends Nette\Object
 	 */
 	public function setRouter(IRouter $router)
 	{
-		$this->getServiceLocator()->addService('Nette\\Application\\IRouter', $router);
+		$this->serviceLocator->addService('Nette\\Application\\IRouter', $router);
 		return $this;
 	}
 
@@ -316,21 +303,38 @@ class Application extends Nette\Object
 	 */
 	public function getPresenterLoader()
 	{
-		return $this->getServiceLocator()->getService('Nette\\Application\\IPresenterLoader');
+		return $this->serviceLocator->getService('Nette\\Application\\IPresenterLoader');
 	}
 
 
 
-	/********************* service factories ****************d*g**/
+	/**
+	 * @return Nette\Web\IHttpRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return $this->serviceLocator->getService('Nette\\Web\\IHttpRequest');
+	}
 
 
 
 	/**
-	 * @return IPresenterLoader
+	 * @return Nette\Web\IHttpResponse
 	 */
-	public static function createPresenterLoader()
+	protected function getHttpResponse()
 	{
-		return new PresenterLoader(Environment::getVariable('appDir'));
+		return $this->serviceLocator->getService('Nette\\Web\\IHttpResponse');
+	}
+
+
+
+	/**
+	 * @return Nette\Web\Session
+	 */
+	protected function getSession($namespace = NULL)
+	{
+		$handler = $this->serviceLocator->getService('Nette\\Web\\Session');
+		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
 
@@ -372,40 +376,6 @@ class Application extends Nette\Object
 			$request->setFlag(PresenterRequest::RESTORED, TRUE);
 			$this->presenter->terminate(new ForwardingResponse($request));
 		}
-	}
-
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Web\IHttpRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\IHttpResponse
-	 */
-	protected function getHttpResponse()
-	{
-		return Environment::getHttpResponse();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\Session
-	 */
-	protected function getSession($namespace = NULL)
-	{
-		return Environment::getSession($namespace);
 	}
 
 }
