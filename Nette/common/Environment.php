@@ -320,12 +320,11 @@ final class Environment
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  array  options in case service is not singleton
 	 * @return object
 	 */
-	public static function getService($name, array $options = NULL)
+	public static function getService($name)
 	{
-		return self::getContext()->getService($name, $options);
+		return self::getContext()->getService($name);
 	}
 
 

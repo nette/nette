@@ -248,12 +248,11 @@ class Application extends Nette\Object
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  array  options in case service is not singleton
 	 * @return object
 	 */
-	final public function getService($name, array $options = NULL)
+	final public function getService($name)
 	{
-		return $this->context->getService($name, $options);
+		return $this->context->getService($name);
 	}
 
 

@@ -154,13 +154,14 @@ class Configurator extends Nette\Object
 					$container->addService($key, $value);
 				} else {
 					if (!empty($value->factory) || isset($this->defaultServices[$key])) {
+						$factory = empty($value->factory) ? $this->defaultServices[$key] : $value->factory;
+						if (!empty($value->option)) {
+							$factory = function() use ($container, $factory, $value) {
+								return call_user_func($factory, $container, (array) $value->option);
+							};
+						}
 						$container->removeService($key);
-						$container->addService(
-							$key,
-							empty($value->factory) ? $this->defaultServices[$key] : $value->factory,
-							isset($value->singleton) ? $value->singleton : TRUE,
-							isset($value->option) ? (array) $value->option : NULL
-						);
+						$container->addService($key, $factory, isset($value->singleton) ? $value->singleton : TRUE);
 					} else {
 						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
 					}

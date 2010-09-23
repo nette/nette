@@ -28,18 +28,16 @@ interface IContainer
 	 * @param  string service name
 	 * @param  mixed  object, class name or factory callback
 	 * @param  bool   is singleton?
-	 * @param  array  factory options
 	 * @return void
 	 */
-	function addService($name, $service, $singleton = TRUE, array $options = NULL);
+	function addService($name, $service, $singleton = TRUE);
 
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  array  options in case service is not singleton
 	 * @return mixed
 	 */
-	function getService($name, array $options = NULL);
+	function getService($name);
 
 	/**
 	 * Removes the specified service type from the service container.

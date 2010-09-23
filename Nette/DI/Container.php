@@ -35,11 +35,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * @param  string service name
 	 * @param  mixed  object, class name or factory callback
 	 * @param  bool   is singleton?
-	 * @param  array  factory options
-	 * @return void
 	 * @return Container  provides a fluent interface
 	 */
-	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
+	public function addService($name, $service, $singleton = TRUE)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -56,16 +54,13 @@ class Container extends Nette\FreezableObject implements IContainer
 			$this->factories[$lower] = & $service->factories[$lower];
 
 		} elseif (is_object($service) && !($service instanceof \Closure || $service instanceof Nette\Callback)) {
-			if (!$singleton || $options) {
-				throw new Nette\InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
-			}
 			$this->registry[$lower] = $service;
 
 		} else {
 			if (!$service) {
 				throw new Nette\InvalidArgumentException("Service named '$name' is empty.");
 			}
-			$this->factories[$lower] = array($service, $singleton, $options);
+			$this->factories[$lower] = array($service, $singleton);
 			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
 		}
 		return $this;
@@ -93,10 +88,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @param  array  options in case service is not singleton
 	 * @return mixed
 	 */
-	public function getService($name, array $options = NULL)
+	public function getService($name)
 	{
 		if (!is_string($name) || $name === '') {
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
@@ -105,20 +99,10 @@ class Container extends Nette\FreezableObject implements IContainer
 		$lower = strtolower($name);
 
 		if (isset($this->registry[$lower])) { // instantiated singleton
-			if ($options) {
-				throw new Nette\InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
-			}
 			return $this->registry[$lower];
 
 		} elseif (isset($this->factories[$lower])) {
-			list($factory, $singleton, $defOptions) = $this->factories[$lower];
-
-			if ($singleton && $options) {
-				throw new Nette\InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
-
-			} elseif ($defOptions) {
-				$options = $options ? $options + $defOptions : $defOptions;
-			}
+			list($factory, $singleton) = $this->factories[$lower];
 
 			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
 				/*5.2* if ($a = strrpos($factory, '\\')) $factory = substr($factory, $a + 1); // fix namespace*/
@@ -126,20 +110,13 @@ class Container extends Nette\FreezableObject implements IContainer
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
 				}
 				$service = new $factory;
-				if ($options) {
-					if (method_exists($service, 'setOptions')) {
-						$service->setOptions($options); // TODO: better!
-					} else {
-						throw new Nette\InvalidStateException("Unable to set options, method $factory::setOptions() is missing.");
-					}
-				}
 
 			} else { // factory callback
 				$factory = callback($factory);
 				if (!$factory->isCallable()) {
 					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
-				$service = $factory/*5.2*->invoke*/($this, $options);
+				$service = $factory/*5.2*->invoke*/($this);
 				if (!is_object($service)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
 				}
