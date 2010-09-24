@@ -38,7 +38,7 @@ extension_loaded('mbstring') && mb_internal_encoding('UTF-8');
  */
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
-define('NETTE_VERSION_ID', 10000); // v1.0.0
+define('NETTE_VERSION_ID', 20000); // v2.0.0
 define('NETTE_PACKAGE', '5.3');
 
 

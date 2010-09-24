@@ -26,7 +26,7 @@ final class Framework
 	/**#@+ Nette Framework version identification */
 	const NAME = 'Nette Framework';
 
-	const VERSION = '1.0-dev';
+	const VERSION = '2.0-dev';
 
 	const REVISION = '$WCREV$ released on $WCDATE$';
 	/**#@-*/

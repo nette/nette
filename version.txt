@@ -1,1 +1,1 @@
-Nette Framework 1.0-dev (revision $WCREV$ released on $WCDATE$)
+Nette Framework 2.0-dev (revision $WCREV$ released on $WCDATE$)
