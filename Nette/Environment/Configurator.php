@@ -289,7 +289,10 @@ class Configurator extends Object
 	{
 		$context = new Context;
 		$context->addService('Nette\\Caching\\ICacheJournal', array(__CLASS__, 'createCacheJournal'));
-		return new Nette\Caching\FileStorage(Environment::getVariable('tempDir') . '/cache', $context);
+		$dir = Environment::getVariable('tempDir') . '/cache';
+		umask(0000);
+		@mkdir($dir, 0755); // @ - directory may exists
+		return new Nette\Caching\FileStorage($dir, $context);
 	}
 
 

@@ -22,7 +22,6 @@ $value = '<?php echo "Hello World" ?>';
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
-mkdir(TEMP_DIR . '/cache');
 
 
 

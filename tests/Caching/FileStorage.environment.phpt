@@ -24,7 +24,6 @@ $value = range("\x00", "\xFF");
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
-mkdir(TEMP_DIR . '/cache');
 
 
 $cache = Environment::getCache();
