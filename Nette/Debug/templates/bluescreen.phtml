@@ -401,7 +401,11 @@ if (headers_sent()) {
 			} ?>
 			<?php if (is_file($ex->getFile())): ?>
 			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
-				<p><strong>File:</strong> <?php echo htmlspecialchars($ex->getFile()) ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
+				<p><strong>File:</strong> <?php if (self::$editorLink) {
+					echo '<a href="' . htmlspecialchars(strtr(self::$editorLink, array('%filename' => $ex->getFile(), '%line' => $ex->getLine()))) . '">' . htmlspecialchars($ex->getFile()) . '</a>';
+				} else {
+					echo htmlspecialchars($ex->getFile());
+				} ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
 			<?php _netteClosePanel() ?>
 			<?php endif?>
