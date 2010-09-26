@@ -137,6 +137,9 @@ class Configurator extends Object
 					if ($value->factory) {
 						$context->removeService($key);
 						$context->addService($key, $value->factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
+					} elseif (isset($this->defaultServices[$key])) {
+						$context->removeService($key);
+						$context->addService($key, $this->defaultServices[$key], isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
 					}
 					if ($value->run) {
 						$runServices[] = $key;
@@ -317,7 +320,7 @@ class Configurator extends Object
 	public static function createRobotLoader($options)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->autoRebuild = !Environment::isProduction();
+		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !Environment::isProduction();
 		$loader->setCacheStorage(Environment::getService('Nette\\Caching\\ICacheStorage'));
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
