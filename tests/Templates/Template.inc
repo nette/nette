@@ -5,7 +5,7 @@
  */
 
 use Nette\Loaders\LimitedScope,
-	Nette\Templates\BaseTemplate,
+	Nette\Templates\Template,
 	Nette\Templates\TemplateCacheStorage;
 
 
@@ -25,7 +25,7 @@ class MockCacheStorage extends TemplateCacheStorage
 
 
 
-class MockTemplate extends BaseTemplate
+class MockTemplate extends Template
 {
 	public $compiled;
 

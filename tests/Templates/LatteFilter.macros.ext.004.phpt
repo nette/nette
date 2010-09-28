@@ -9,7 +9,7 @@
  * @keepTrailingSpaces
  */
 
-use Nette\Templates\Template,
+use Nette\Templates\FileTemplate,
 	Nette\Templates\LatteFilter;
 
 
@@ -23,11 +23,11 @@ require __DIR__ . '/Template.inc';
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
-Template::setCacheStorage(new MockCacheStorage(TEMP_DIR));
+FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 
-$template = new Template;
+$template = new FileTemplate;
 $template->setFile(__DIR__ . '/templates/latte.inheritance.child4.phtml');
 $template->registerFilter(new LatteFilter);
 

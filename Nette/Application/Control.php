@@ -59,7 +59,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 */
 	protected function createTemplate()
 	{
-		$template = new Nette\Templates\Template;
+		$template = new Nette\Templates\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
 
