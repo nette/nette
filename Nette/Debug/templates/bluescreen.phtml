@@ -234,6 +234,8 @@ if (headers_sent()) {
 		#netteBluescreen a {
 			text-decoration: none;
 			color: #328ADC;
+			padding: 2px 4px;
+			margin: -2px -4px;
 		}
 
 		#netteBluescreen a abbr {
@@ -343,6 +345,10 @@ if (headers_sent()) {
 			font-style: normal;
 		}
 
+		#netteBluescreen a[href^=editor\:] {
+			color: inherit;
+			border-bottom: 1px dotted #328ADC;
+		}
 	</style>
 
 
@@ -401,11 +407,8 @@ if (headers_sent()) {
 			} ?>
 			<?php if (is_file($ex->getFile())): ?>
 			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
-				<p><strong>File:</strong> <?php if (self::$editorLink) {
-					echo '<a href="' . htmlspecialchars(strtr(self::$editorLink, array('%filename' => $ex->getFile(), '%line' => $ex->getLine()))) . '">' . htmlspecialchars($ex->getFile()) . '</a>';
-				} else {
-					echo htmlspecialchars($ex->getFile());
-				} ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
+				<p><strong>File:</strong> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
+				<?php echo htmlspecialchars($ex->getFile()), (self::$editor ? '</a>':'') ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
 			<?php _netteClosePanel() ?>
 			<?php endif?>
@@ -419,10 +422,11 @@ if (headers_sent()) {
 					<?php foreach ($stack as $key => $row): ?>
 					<li><p>
 
-					<?php if (isset($row['file'])): ?>
-						<span title="<?php echo htmlSpecialChars($row['file'])?>"><?php echo htmlSpecialChars(basename(dirname($row['file']))), '/<b>', htmlSpecialChars(basename($row['file'])), '</b></span> (', $row['line'], ')' ?>
+					<?php if (isset($row['file']) && is_file($row['file'])): ?>
+						<?php echo self::$editor ? '<a href="' . htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($row['file']), '%line' => $row['line']))) . '"' : '<span'; ?> title="<?php echo htmlSpecialChars($row['file'])?>">
+						<?php echo htmlSpecialChars(basename(dirname($row['file']))), '/<b>', htmlSpecialChars(basename($row['file'])), '</b>', (self::$editor ? '</a>':'</span>'), ' (', $row['line'], ')' ?>
 					<?php else: ?>
-						&lt;PHP inner-code&gt;
+						<i>inner-code</i><?php if (isset($row['line'])) echo ' (', $row['line'], ')' ?>
 					<?php endif ?>
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#" onclick="return !netteToggle(this, 'netteBsSrc<?php echo "$level-$key" ?>')">source <abbr>&#x25ba;</abbr></a>&nbsp; <?php endif ?>
