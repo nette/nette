@@ -114,6 +114,17 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
+	 * @return Nette\Reflection\MethodReflection
+	 */
+	public function getPrototype()
+	{
+		$prototype = parent::getPrototype();
+		return new MethodReflection($prototype->getDeclaringClass()->getName(), $prototype->getName());
+	}
+
+
+
+	/**
 	 * @return Nette\Reflection\ExtensionReflection
 	 */
 	public function getExtension()
