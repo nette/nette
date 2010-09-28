@@ -791,7 +791,7 @@ class LatteMacros extends Nette\Object
 			Tokenizer::T_WHITESPACE => '\s+',
 			Tokenizer::RE_STRING,
 			'true|false|null|and|or|xor|clone|new|instanceof',
-			self::T_SYMBOL => '\$?[0-9a-zA-Z]+', // variable, string, number
+			self::T_SYMBOL => '\$?[0-9a-zA-Z_]+', // variable, string, number
 			'=>|[^"\']', // =>, any char except quotes
 		), 'i');
 
