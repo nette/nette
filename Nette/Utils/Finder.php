@@ -230,9 +230,9 @@ class Finder extends Object implements \IteratorAggregate
 	 */
 	private function buildIterator($path)
 	{
-		/*5.2*if (PHP_VERSION_ID < 50211) {
+		if (PHP_VERSION_ID < 50301) {
 			$iterator = new \RecursiveDirectoryIteratorFixed($path);
-		} else*/ {
+		} else {
 			$iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
 		}
 
@@ -376,8 +376,8 @@ class Finder extends Object implements \IteratorAggregate
 
 
 
-/*5.2*
-if (PHP_VERSION_ID < 50211) {
+if (PHP_VERSION_ID < 50301) {
+	/** @internal */
 	class RecursiveDirectoryIteratorFixed extends \RecursiveDirectoryIterator
 	{
 		function hasChildren()
@@ -386,4 +386,3 @@ if (PHP_VERSION_ID < 50211) {
 		}
 	}
 }
-*/
