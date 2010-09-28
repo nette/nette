@@ -9,8 +9,7 @@
  * @keepTrailingSpaces
  */
 
-use Nette\Templates\Template,
-	Nette\Templates\LatteFilter,
+use Nette\Templates\LatteFilter,
 	Nette\Application\Control;
 
 

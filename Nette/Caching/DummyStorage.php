@@ -30,7 +30,6 @@ class DummyStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		return NULL;
 	}
 
 

@@ -6,7 +6,6 @@
 
 use Nette\Loaders\LimitedScope,
 	Nette\Templates\BaseTemplate,
-	Nette\Templates\Template,
 	Nette\Templates\TemplateCacheStorage;
 
 

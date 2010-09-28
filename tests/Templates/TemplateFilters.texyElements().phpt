@@ -8,8 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Templates\Template,
-	Nette\Templates\TemplateFilters;
+use Nette\Templates\TemplateFilters;
 
 
 

@@ -10,7 +10,6 @@
  */
 
 use Nette\Object,
-	Nette\Templates\Template,
 	Nette\Templates\LatteFilter;
 
 

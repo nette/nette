@@ -9,8 +9,7 @@
  * @phpini     short_open_tag=on
  */
 
-use Nette\Templates\Template,
-	Nette\Templates\LatteFilter;
+use Nette\Templates\LatteFilter;
 
 
 
