@@ -84,6 +84,12 @@ class LatteMacros extends Nette\Object
 		'/while' => '<?php endwhile ?>',
 		'continueIf' => '<?php if (%%) continue ?>',
 		'breakIf' => '<?php if (%%) break ?>',
+		'first' => '<?php if ($iterator->isFirst(%%)): ?>',
+		'/first' => '<?php endif ?>',
+		'last' => '<?php if ($iterator->isLast(%%)): ?>',
+		'/last' => '<?php endif ?>',
+		'sep' => '<?php if (!$iterator->isLast(%%)): ?>',
+		'/sep' => '<?php endif ?>',
 
 		'include' => '<?php %:macroInclude% ?>',
 		'extends' => '<?php %:macroExtends% ?>',
