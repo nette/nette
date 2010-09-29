@@ -34,18 +34,3 @@ function dump($var)
 	foreach (func_get_args() as $arg) Nette\Debug::dump($arg);
 	return $var;
 }
-
-
-
-/*5.2*
-class NClosureFix
-{
-	static $vars = array();
-
-	static function uses($args)
-	{
-		self::$vars[] = $args;
-		return count(self::$vars)-1;
-	}
-}
-*/
