@@ -291,7 +291,7 @@ class LatteFilter extends Nette\Object
 
 		} else { // HTML attribute
 			$name = $matches['attr'];
-			$value = empty($matches['value']) ? TRUE : $matches['value'];
+			$value = isset($matches['value']) ? $matches['value'] : '';
 
 			// special attribute?
 			if ($isSpecial = String::startsWith($name, self::HTML_PREFIX)) {
