@@ -297,7 +297,7 @@ Nette.base64Decode = function(s) {
 			+ (c3 === -1 ? '' : String.fromCharCode(((c2 & 15) << 4) | (c3 >> 2)))
 			+ (c4 === -1 ? '' : String.fromCharCode(((c3 & 3) << 6) | c4));
 	} while (i < s.length);
-	return out;
+	return decodeURIComponent(escape(out));
 };
 
 var $ = Nette.Q.factory;
