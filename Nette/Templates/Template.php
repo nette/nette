@@ -85,6 +85,20 @@ abstract class Template extends Nette\Object implements ITemplate
 
 
 	/**
+	 * Renders template to file.
+	 * @param  string
+	 * @return void
+	 */
+	public function save($file)
+	{
+		if (file_put_contents($file, $this->__toString(TRUE)) === FALSE) {
+			throw new \IOException("Unable to save file '$file'.");
+		}
+	}
+
+
+
+	/**
 	 * Renders template to string.
 	 * @param  bool  can throw exceptions? (hidden parameter)
 	 * @return string
