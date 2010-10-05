@@ -570,9 +570,12 @@ Nette.Debug.Bar = Nette.Class({
 
 <script>
 (function(){
-	document.getElementById('nette-debug').innerHTML = Nette.base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
+	var debug = document.getElementById('nette-debug');
+	debug.innerHTML = Nette.base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
 	(new Nette.Debug.Bar).init();
-	document.body.appendChild( Nette.Q.factory('#nette-debug').show().dom() );
+	document.body.appendChild(debug);
+	for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
+	Nette.Q.factory(debug).show();
 })();
 </script>
 
