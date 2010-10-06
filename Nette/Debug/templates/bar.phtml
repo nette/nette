@@ -23,6 +23,9 @@ use Nette;
 
 <!-- Nette Debug Bar -->
 
+<?php ob_start() ?>
+&nbsp;
+
 <style id="nette-debug-style">
 
 	/* common styles */
@@ -284,22 +287,6 @@ use Nette;
 (function(){
 Nette.Debug = {};
 
-Nette.base64Decode = function(s) {
-	var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-	var out = '', i = 0;
-	var c1, c2, c3, c4;
-	do {
-		c1 = set.indexOf(s.charAt(i++));
-		c2 = set.indexOf(s.charAt(i++));
-		c3 = set.indexOf(s.charAt(i++));
-		c4 = set.indexOf(s.charAt(i++));
-		out += String.fromCharCode((c1 << 2) | (c2 >> 4))
-			+ (c3 === -1 ? '' : String.fromCharCode(((c2 & 15) << 4) | (c3 >> 2)))
-			+ (c4 === -1 ? '' : String.fromCharCode(((c3 & 3) << 6) | c4));
-	} while (i < s.length);
-	return decodeURIComponent(escape(out));
-};
-
 var $ = Nette.Q.factory;
 
 var Panel = Nette.Debug.Panel = Nette.Class({
@@ -538,9 +525,6 @@ Nette.Debug.Bar = Nette.Class({
 </script>
 
 
-
-<div id="nette-debug">
-<?php ob_start() ?>
 <?php foreach ($panels as $id => $panel): ?>
 <div class="nette-fixed-coords">
 	<div class="nette-panel" id="nette-debug-panel-<?php echo $panel['id'] ?>">
@@ -565,16 +549,35 @@ Nette.Debug.Bar = Nette.Class({
 	</div>
 </div>
 <?php $output = ob_get_clean(); ?>
-</div>
 
+
+<div id="nette-debug"></div>
+
+<script>
+Nette_base64Decode = function(s) {
+	var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	var out = '', i = 0;
+	var c1, c2, c3, c4;
+	do {
+		c1 = set.indexOf(s.charAt(i++));
+		c2 = set.indexOf(s.charAt(i++));
+		c3 = set.indexOf(s.charAt(i++));
+		c4 = set.indexOf(s.charAt(i++));
+		out += String.fromCharCode((c1 << 2) | (c2 >> 4))
+			+ (c3 === -1 ? '' : String.fromCharCode(((c2 & 15) << 4) | (c3 >> 2)))
+			+ (c4 === -1 ? '' : String.fromCharCode(((c3 & 3) << 6) | c4));
+	} while (i < s.length);
+	return decodeURIComponent(escape(out));
+};
+</script>
 
 <script>
 window.onload = function(){
 	var debug = document.getElementById('nette-debug');
-	debug.innerHTML = Nette.base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
-	(new Nette.Debug.Bar).init();
 	document.body.appendChild(debug);
+	debug.innerHTML = Nette_base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
 	for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
+	(new Nette.Debug.Bar).init();
 	Nette.Q.factory(debug).show();
 };
 </script>
