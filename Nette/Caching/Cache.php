@@ -116,7 +116,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function save($key, $data, array $dp = NULL)
 	{
 		if (!is_string($key) && !is_int($key)) {
-			throw new \InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
+			throw new \InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) . " given.");
 		}
 		$this->key = (string) $key;
 		$key = $this->namespace . self::NAMESPACE_SEPARATOR . $key;
@@ -218,7 +218,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function offsetGet($key)
 	{
 		if (!is_string($key) && !is_int($key)) {
-			throw new \InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) ." given.");
+			throw new \InvalidArgumentException("Cache key name must be string or integer, " . gettype($key) . " given.");
 		}
 
 		$key = (string) $key;
