@@ -110,7 +110,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		if (!empty($dp[Cache::ITEMS])) {
+		if (isset($dp[Cache::ITEMS])) {
 			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
 		}
 
@@ -119,18 +119,18 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		);
 
 		$expire = 0;
-		if (!empty($dp[Cache::EXPIRE])) {
+		if (isset($dp[Cache::EXPIRE])) {
 			$expire = (int) $dp[Cache::EXPIRE];
 			if (!empty($dp[Cache::SLIDING])) {
 				$meta[self::META_DELTA] = $expire; // sliding time
 			}
 		}
 
-		if (!empty($dp[Cache::CALLBACKS])) {
+		if (isset($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
-		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
+		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->context) {
 				throw new \InvalidStateException('CacheJournal has not been provided.');
 			}

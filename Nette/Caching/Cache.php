@@ -122,7 +122,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$key = $this->namespace . self::NAMESPACE_SEPARATOR . $key;
 
 		// convert expire into relative amount of seconds
-		if (!empty($dp[Cache::EXPIRE])) {
+		if (isset($dp[Cache::EXPIRE])) {
 			$dp[Cache::EXPIRE] = Nette\Tools::createDateTime($dp[Cache::EXPIRE])->format('U') - time();
 		}
 

@@ -166,7 +166,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			self::META_TIME => microtime(),
 		);
 
-		if (!empty($dp[Cache::EXPIRE])) {
+		if (isset($dp[Cache::EXPIRE])) {
 			if (empty($dp[Cache::SLIDING])) {
 				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRE] + time(); // absolute time
 			} else {
@@ -174,7 +174,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($dp[Cache::ITEMS])) {
+		if (isset($dp[Cache::ITEMS])) {
 			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMeta($depFile, LOCK_SH);
@@ -183,7 +183,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($dp[Cache::CALLBACKS])) {
+		if (isset($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
@@ -202,7 +202,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			}
 		}
 
-		if (!empty($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
+		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->context) {
 				throw new \InvalidStateException('CacheJournal has not been provided.');
 			}
