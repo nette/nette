@@ -111,14 +111,14 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		);
 
 		$expire = 0;
-		if (!empty($dp[Cache::EXPIRE])) {
+		if (isset($dp[Cache::EXPIRE])) {
 			$expire = (int) $dp[Cache::EXPIRE];
 			if (!empty($dp[Cache::SLIDING])) {
 				$meta[self::META_DELTA] = $expire; // sliding time
 			}
 		}
 
-		if (!empty($dp[Cache::CALLBACKS])) {
+		if (isset($dp[Cache::CALLBACKS])) {
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
