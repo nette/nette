@@ -192,6 +192,7 @@ if (headers_sent()) {
 		}
 
 		#netteBluescreen * {
+			font: inherit;
 			color: inherit;
 			background: transparent;
 			border: none;
@@ -201,6 +202,14 @@ if (headers_sent()) {
 			text-indent: 0;
 		}
 
+		#netteBluescreen b {
+			font-weight: bold;
+		}
+		
+		#netteBluescreen i {
+			font-style: italic;
+		}
+		
 		#netteBluescreenIcon {
 			position: absolute;
 			right: .5em;
@@ -407,8 +416,8 @@ if (headers_sent()) {
 			} ?>
 			<?php if (is_file($ex->getFile())): ?>
 			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
-				<p><strong>File:</strong> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
-				<?php echo htmlspecialchars($ex->getFile()), (self::$editor ? '</a>':'') ?> &nbsp; <strong>Line:</strong> <?php echo $ex->getLine() ?></p>
+				<p><b>File:</b> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
+				<?php echo htmlspecialchars($ex->getFile()), (self::$editor ? '</a>':'') ?> &nbsp; <b>Line:</b> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
 			<?php _netteClosePanel() ?>
 			<?php endif?>
