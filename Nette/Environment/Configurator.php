@@ -273,9 +273,12 @@ class Configurator extends Object
 				'action' => 'default',
 			));
 		});
-		$context->addService('Nette\\Application\\IPresenterLoader', function() {
-			return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
-		});
+
+		if (!$context->hasService('Nette\\Application\\IPresenterLoader')) {
+			$context->addService('Nette\\Application\\IPresenterLoader', function() {
+				return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
+			});
+		}
 
 		$application = new Nette\Application\Application;
 		$application->setContext($context);
