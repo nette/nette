@@ -26,7 +26,7 @@ use Nette,
 class FileTemplate extends Template implements IFileTemplate
 {
 	/** @var int */
-	public static $cacheExpire = FALSE;
+	public static $cacheExpire = NULL;
 
 	/** @var Nette\Caching\ICacheStorage */
 	private static $cacheStorage;
@@ -115,6 +115,7 @@ class FileTemplate extends Template implements IFileTemplate
 				array(
 					Cache::FILES => $this->file,
 					Cache::EXPIRE => self::$cacheExpire,
+					Cache::CONSTS => 'Nette\Framework::REVISION',
 				)
 			);
 			$cache->release();
