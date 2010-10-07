@@ -148,9 +148,6 @@ class LatteMacros extends Nette\Object
 	/** @var int */
 	private $cacheCounter;
 
-	/** @var bool */
-	private $oldSnippetMode = TRUE;
-
 	/**#@+ @internal block type */
 	const BLOCK_NAMED = 1;
 	const BLOCK_CAPTURE = 2;
@@ -189,13 +186,6 @@ class LatteMacros extends Nette\Object
 
 		// remove comments
 		$s = String::replace($s, '#\\{\\*.*?\\*\\}[\r\n]*#s', '');
-
-		// snippets support (temporary solution)
-		$s = String::replace(
-			$s,
-			'#@(\\{[^}]+?\\})#s',
-			'<?php } ?>$1<?php if (Nette\Templates\SnippetHelper::$outputAllowed) { ?>'
-		);
 	}
 
 
@@ -214,9 +204,6 @@ class LatteMacros extends Nette\Object
 		} elseif ($this->blocks) {
 			throw new \InvalidStateException("There are unclosed blocks.");
 		}
-
-		// snippets support (temporary solution)
-		$s = "<?php\nif (" . 'Nette\Templates\SnippetHelper::$outputAllowed' . ") {\n?>$s<?php\n}\n?>";
 
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
@@ -521,7 +508,7 @@ class LatteMacros extends Nette\Object
 			$top = empty($this->blocks);
 			$this->namedBlocks[$name] = $name;
 			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
-			if ($name[0] === '_') { // snippet - experimental
+			if ($name[0] === '_') { // snippet
 				$tag = self::fetchToken($content);  // [name [,]] [tag]
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
@@ -574,18 +561,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroSnippet($content)
 	{
-		if (substr($content, 0, 1) === ':' || !$this->oldSnippetMode) { // experimental behaviour
-			$this->oldSnippetMode = FALSE;
-			return $this->macroBlock('_' . ltrim($content, ':'), '');
-		}
-		$args = array('');
-		if ($snippet = self::fetchToken($content)) {  // [name [,]] [tag]
-			$args[] = self::formatString($snippet);
-		}
-		if ($content) {
-			$args[] = self::formatString($content);
-		}
-		return '} if ($_l->foo = Nette\Templates\SnippetHelper::create($control' . implode(', ', $args) . ')) { $_l->snippets[] = $_l->foo';
+		return $this->macroBlock('_' . $content, '');
 	}
 
 
@@ -595,10 +571,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroSnippetEnd($content)
 	{
-		if (!$this->oldSnippetMode) {
-			return $this->macroBlockEnd('', '');
-		}
-		return 'array_pop($_l->snippets)->finish(); } if (Nette\Templates\SnippetHelper::$outputAllowed) {';
+		return $this->macroBlockEnd('', '');
 	}
 
 

@@ -176,7 +176,6 @@ class NetteLoader extends AutoLoader
 		'nette\templates\itemplate' => '/Templates/ITemplate.php',
 		'nette\templates\lattefilter' => '/Templates/Filters/LatteFilter.php',
 		'nette\templates\lattemacros' => '/Templates/Filters/LatteMacros.php',
-		'nette\templates\snippethelper' => '/Templates/Filters/SnippetHelper.php',
 		'nette\templates\template' => '/Templates/Template.php',
 		'nette\templates\templatecachestorage' => '/Templates/TemplateCacheStorage.php',
 		'nette\templates\templatefilters' => '/Templates/Filters/TemplateFilters.php',
