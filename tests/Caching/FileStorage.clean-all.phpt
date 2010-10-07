@@ -18,6 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
+TestHelpers::purge(TEMP_DIR);
 
 $storage = new Nette\Caching\FileStorage(TEMP_DIR);
 $cacheA = new Cache($storage);

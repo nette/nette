@@ -270,7 +270,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		// cleaning using file iterator
 		if ($all || $collector) {
 			$now = time();
-			foreach (Nette\Finder::find('/c*', '/c*/*')->from($this->dir)->limitDepth(1)->childFirst() as $entry) {
+			foreach (Nette\Finder::find('*')->from($this->dir)->childFirst() as $entry) {
 				$path = (string) $entry;
 				if ($entry->isDir()) { // collector: remove empty dirs
 					@rmdir($path); // @ - removing dirs is not necessary
@@ -368,9 +368,9 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	{
 		if ($this->useDirs) {
 			$key = explode(Cache::NAMESPACE_SEPARATOR, $key, 2);
-			return $this->dir . '/c' . (isset($key[1]) ? '-' . urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
+			return $this->dir . '/' . (isset($key[1]) ? urlencode($key[0]) . '/_' . urlencode($key[1]) : '_' . urlencode($key[0]));
 		} else {
-			return $this->dir . '/c_' . urlencode($key);
+			return $this->dir . '/_' . urlencode($key);
 		}
 	}
 
