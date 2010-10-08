@@ -27,8 +27,8 @@ final class AnnotationsParser
 	/** @internal single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
-	/** @internal PHP identifier */
-	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
+	/** @internal identifier */
+	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF-]*';
 
 	/** @var bool */
 	public static $useReflection;
@@ -124,7 +124,7 @@ final class AnnotationsParser
 		$matches = String::matchAll(
 			trim($comment, '/*'),
 			'~
-				@('.self::RE_IDENTIFIER.')[ \t]*             ##  annotation
+				(?<=\s)@('.self::RE_IDENTIFIER.')[ \t]*      ##  annotation
 				(
 					\((?>'.self::RE_STRING.'|[^\'")@]+)+\)|  ##  (value)
 					[^(@\r\n][^@\r\n]*|)                     ##  value
