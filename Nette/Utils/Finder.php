@@ -19,10 +19,12 @@ use Nette,
 /**
  * Finder allows searching through directory trees using iterator.
  *
- * Example: Finder::findFiles('*.php')
+ * <code>
+ * Finder::findFiles('*.php')
  *     ->size('> 10kB')
  *     ->from('.')
  *     ->exclude('temp');
+ * </code>
  *
  * @author     David Grudl
  */

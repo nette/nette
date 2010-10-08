@@ -18,6 +18,7 @@ use Nette;
 /**
  * File journal.
  *
+ * <pre>
  * fj structure
  *
  *     Header : ( Magic : int32
@@ -42,6 +43,7 @@ use Nette;
  *                   Serialized : N*byte
  *                 )
  *      )
+ * </pre>
  *
  * @author     Jakub Kulhan
  */
