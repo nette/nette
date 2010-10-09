@@ -253,9 +253,9 @@ nette.initForm = function(form) {
 };
 
 
-(function(){
-	var init = function() {
+(function(onloadOrig) {
+	window.onload = function() {
+		if (typeof onloadOrig === 'function') onloadOrig();
 		for (var i = 0; i < document.forms.length; i++) nette.initForm(document.forms[i]);
 	};
-	typeof jQuery === 'function' ? jQuery(init) : window.onload = init;
-})();
+})(window.onload);

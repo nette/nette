@@ -572,14 +572,17 @@ Nette_base64Decode = function(s) {
 </script>
 
 <script>
-window.onload = function(){
-	var debug = document.getElementById('nette-debug');
-	document.body.appendChild(debug);
-	debug.innerHTML = Nette_base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
-	for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
-	(new Nette.Debug.Bar).init();
-	Nette.Q.factory(debug).show();
-};
+(function (onloadOrig) {
+	window.onload = function() {
+		if (typeof onloadOrig === 'function') onloadOrig();
+		var debug = document.getElementById('nette-debug');
+		document.body.appendChild(debug);
+		debug.innerHTML = Nette_base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
+		for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
+		(new Nette.Debug.Bar).init();
+		Nette.Q.factory(debug).show();
+	};
+})(window.onload);
 </script>
 
 <!-- /Nette Debug Bar -->
