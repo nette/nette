@@ -274,7 +274,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 
 	/**
 	 * Generates URL to presenter, action or signal.
-	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!"
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!" or "this"
 	 * @param  array|mixed
 	 * @return string
 	 * @throws InvalidLinkException
