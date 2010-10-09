@@ -38,6 +38,9 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 	/** @var string Whether the cookie is available only through HTTPS */
 	public $cookieSecure = FALSE;
 
+	/** @var string Whether the cookie is hidden from client-side */
+	public $cookieHttponly = TRUE;
+
 	/** @var int HTTP response code */
 	private $code = self::S200_OK;
 
@@ -274,10 +277,11 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 	 * @param  string
 	 * @param  string
 	 * @param  bool
+	 * @param  bool
 	 * @return HttpResponse  provides a fluent interface
 	 * @throws \InvalidStateException  if HTTP headers have been sent
 	 */
-	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL)
+	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httponly = NULL)
 	{
 		if (headers_sent($file, $line)) {
 			throw new \InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
@@ -288,9 +292,9 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 			$value,
 			$time ? Nette\Tools::createDateTime($time)->format('U') : 0,
 			$path === NULL ? $this->cookiePath : (string) $path,
-			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
+			$domain === NULL ? $this->cookieDomain : (string) $domain,
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
-			TRUE // added in PHP 5.2.0.
+			$httponly === NULL ? $this->cookieHttponly : (bool) $httponly
 		);
 		return $this;
 	}
@@ -317,9 +321,9 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 			FALSE,
 			254400000,
 			$path === NULL ? $this->cookiePath : (string) $path,
-			$domain === NULL ? $this->cookieDomain : (string) $domain, //  . '; httponly'
+			$domain === NULL ? $this->cookieDomain : (string) $domain,
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
-			TRUE // added in PHP 5.2.0.
+			TRUE // doesn't matter with delete
 		);
 	}
 
