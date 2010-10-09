@@ -46,6 +46,9 @@ class Form extends FormContainer
 	const FILLED = ':filled';
 	const VALID = ':valid';
 
+	// CSRF protection, handled as :equal
+	const PROTECTION = ':protection';
+
 	// button
 	const SUBMITTED = ':submitted';
 
@@ -223,7 +226,7 @@ class Form extends FormContainer
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(':equal', empty($message) ? 'Security token did not match. Possible CSRF attack.' : $message, $token);
+		$this[self::PROTECTOR_ID]->addRule(':protection', $message, $token);
 	}
 
 

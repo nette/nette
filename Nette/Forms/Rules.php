@@ -27,6 +27,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/** @var array */
 	public static $defaultMessages = array(
+		':protection' => 'Security token did not match. Possible CSRF attack.',
 	);
 
 	/** @var array of Rule */
@@ -61,12 +62,12 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$rule = new Rule;
 		$rule->control = $this->control;
-		$rule->operation = $operation;
+		$rule->operation = ($operation === ':protection' ? ':equal' : $operation);
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
 		$rule->type = Rule::VALIDATOR;
-		if ($message === NULL && is_string($rule->operation) && isset(self::$defaultMessages[$rule->operation])) {
-			$rule->message = self::$defaultMessages[$rule->operation];
+		if ($message === NULL && is_string($operation) && isset(self::$defaultMessages[$operation])) {
+			$rule->message = self::$defaultMessages[$operation];
 		} else {
 			$rule->message = $message;
 		}
