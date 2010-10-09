@@ -172,7 +172,7 @@ if (headers_sent()) {
 		while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)) echo '; caused by ', get_class($ex), ' ', $ex->getMessage(), ($ex->getCode() ? ' #' . $ex->getCode() : '');
 	?> -->
 
-	<style type="text/css">
+	<style type="text/css" class="nette">
 
 		body {
 			margin: 0 0 2em;
@@ -205,11 +205,11 @@ if (headers_sent()) {
 		#netteBluescreen b {
 			font-weight: bold;
 		}
-		
+
 		#netteBluescreen i {
 			font-style: italic;
 		}
-		
+
 		#netteBluescreenIcon {
 			position: absolute;
 			right: .5em;
@@ -363,7 +363,7 @@ if (headers_sent()) {
 
 	<script type="text/javascript">
 	/* <![CDATA[ */
-		document.write('<style> .collapsed { display: none; } <\/style>');
+		document.write('<style class="nette"> .collapsed { display: none; } <\/style>');
 
 		function netteToggle(link, panelId)
 		{
@@ -374,6 +374,14 @@ if (headers_sent()) {
 
 			try { arrow.innerHTML = String.fromCharCode(collapsed ? 0x25bc : 0x25ba); } catch(e){} // ie6
 			panel.style.display = collapsed ? (panel.tagName.toLowerCase() === 'code' ? 'inline' : 'block') : 'none';
+
+			if (link.id === 'netteBluescreenIcon') {
+				for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
+					if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
+						styles[i].disabled = collapsed ? true : styles[i].oldDisabled;
+					}
+				}
+			}
 
 			return true;
 		}
@@ -629,6 +637,12 @@ if (headers_sent()) {
 			return document.getElementById('netteBluescreenIcon').onclick();
 		}
 	};
+	for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
+		if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
+			styles[i].oldDisabled = styles[i].disabled;
+			styles[i].disabled = true;
+		}
+	}
 </script>
 </body>
 </html>
