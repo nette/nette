@@ -814,7 +814,7 @@ abstract class Presenter extends Control implements IPresenter
 	/**
 	 * PresenterRequest/URL factory.
 	 * @param  PresenterComponent  base
-	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!"
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!" or "this"
 	 * @param  array    array of arguments
 	 * @param  string   forward|redirect|link
 	 * @return string   URL
