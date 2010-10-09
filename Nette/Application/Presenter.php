@@ -449,7 +449,7 @@ abstract class Presenter extends Control implements IPresenter
 			}
 		}
 
-		$this->terminate(new RenderResponse($template));
+		$this->sendResponse(new RenderResponse($template));
 	}
 
 
@@ -557,12 +557,42 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function sendPayload()
 	{
-		$this->terminate(new JsonResponse($this->payload));
+		$this->sendResponse(new JsonResponse($this->payload));
 	}
 
 
 
 	/********************* navigation & flow ****************d*g**/
+
+
+
+	/**
+	 * Sends response and terminates presenter.
+	 * @param  IPresenterResponse
+	 * @return void
+	 * @throws AbortException
+	 */
+	public function sendResponse(IPresenterResponse $response)
+	{
+		$this->response = $response;
+		$this->terminate();
+	}
+	
+	
+	
+	/**
+	 * Correctly terminates presenter.
+	 * @return void
+	 * @throws AbortException
+	 */
+	public function terminate()
+	{
+		if (func_num_args() !== 0) {
+			trigger_error(__METHOD__ . ' is not intended to send a PresenterResponse; use sendResponse() instead.', E_USER_WARNING);
+			$this->sendResponse(func_get_arg(0));
+		}
+		throw new AbortException();
+	}
 
 
 
@@ -576,7 +606,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function forward($destination, $args = array())
 	{
 		if ($destination instanceof PresenterRequest) {
-			$this->terminate(new ForwardingResponse($destination));
+			$this->sendResponse(new ForwardingResponse($destination));
 
 		} elseif (!is_array($args)) {
 			$args = func_get_args();
@@ -584,7 +614,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		$this->createRequest($this, $destination, $args, 'forward');
-		$this->terminate(new ForwardingResponse($this->lastCreatedRequest));
+		$this->sendResponse(new ForwardingResponse($this->lastCreatedRequest));
 	}
 
 
@@ -605,7 +635,7 @@ abstract class Presenter extends Control implements IPresenter
 		} elseif (!$code) {
 			$code = $this->getHttpRequest()->isMethod('post') ? Nette\Web\IHttpResponse::S303_POST_GET : Nette\Web\IHttpResponse::S302_FOUND;
 		}
-		$this->terminate(new RedirectingResponse($uri, $code));
+		$this->sendResponse(new RedirectingResponse($uri, $code));
 	}
 
 
@@ -645,20 +675,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Correctly terminates presenter.
-	 * @param  IPresenterResponse
-	 * @return void
-	 * @throws AbortException
-	 */
-	public function terminate(IPresenterResponse $response = NULL)
-	{
-		$this->response = $response;
-		throw new AbortException();
-	}
-
-
-
-	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
 	 * @throws AbortException
@@ -668,7 +684,7 @@ abstract class Presenter extends Control implements IPresenter
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
-				$this->terminate(new RedirectingResponse($uri, Nette\Web\IHttpResponse::S301_MOVED_PERMANENTLY));
+				$this->sendResponse(new RedirectingResponse($uri, Nette\Web\IHttpResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
 	}

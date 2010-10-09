@@ -374,7 +374,7 @@ class Application extends Nette\Object
 			$request = clone $session[$key];
 			unset($session[$key]);
 			$request->setFlag(PresenterRequest::RESTORED, TRUE);
-			$this->presenter->terminate(new ForwardingResponse($request));
+			$this->presenter->sendResponse(new ForwardingResponse($request));
 		}
 	}
 
