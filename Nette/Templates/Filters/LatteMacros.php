@@ -711,7 +711,7 @@ class LatteMacros extends Nette\Object
 	{
 		return 'Nette\Debug::barDump('
 			. ($content ? 'array(' . var_export($content, TRUE) . " => $content)" : 'get_defined_vars()')
-			. ', "Template " . str_replace(Nette\Environment::getVariable("appDir", ""), "\xE2\x80\xA6", $template->getFile()))';
+			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
 

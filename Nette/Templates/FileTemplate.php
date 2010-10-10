@@ -92,7 +92,7 @@ class FileTemplate extends Template implements IFileTemplate
 
 		$this->__set('template', $this);
 
-		$shortName = str_replace(Environment::getVariable('appDir', ''), '', $this->file);
+		$shortName = str_replace(dirname(dirname($this->file)), '', $this->file);
 
 		$cache = new Cache($this->getCacheStorage(), 'Nette.FileTemplate');
 		$key = trim(strtr($shortName, '\\/@', '.._'), '.') . '-' . md5($this->file);
