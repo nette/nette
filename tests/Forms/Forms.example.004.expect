@@ -1,9 +1,4 @@
-<!DOCTYPE html>%A%</head>
-
-<body>
-	<h1>Nette\Forms custom rendering example</h1>
-
-	<form action="" method="post" id="frm-" enctype="multipart/form-data">
+<form action="" method="post" id="frm-" enctype="multipart/form-data">
 <div id="form">
 
 <h3>Personal data</h3>
@@ -12,13 +7,18 @@
 
 	<dt><label class="required" for="frm-name">Your name:</label></dt>
 
-	<dd><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" /> •</dd>
+	<dd><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " /> •</dd>
 
 
 
 	<dt><label class="required" for="frm-age">Your age:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" /> •</dd>
+	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="9.9" /> •
+
+<ul class="error">
+	<li>Age must be numeric value</li>
+</ul>
+</dd>
 
 
 
@@ -57,13 +57,13 @@
 
 	<dt><label for="frm-city">City:</label></dt>
 
-	<dd><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" /></dd>
+	<dd><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="Troubsko" /></dd>
 
 
 
 	<dt><label for="frm-country">Country:</label></dt>
 
-	<dd class="odd"><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-empty-value="0"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></dd>
+	<dd class="odd"><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-empty-value="0"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></dd>
 
 </dl>
 </div>
@@ -76,7 +76,12 @@
 
 	<dt><label class="required" for="frm-password">Choose password:</label></dt>
 
-	<dd><input type="password" class="text" name="password" id="frm-password" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small></dd>
+	<dd><input type="password" class="text" name="password" id="frm-password" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small>
+
+<ul class="error">
+	<li>The password is too short: it must be at least 3 characters</li>
+</ul>
+</dd>
 
 
 
@@ -111,5 +116,3 @@
 </div>
 <div><input type="hidden" name="userid" id="frm-userid" value="231" /></div>
 </form>
-</body>
-</html>

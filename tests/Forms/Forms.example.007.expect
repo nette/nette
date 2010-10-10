@@ -1,20 +1,15 @@
-<!DOCTYPE html>%A%</head>
-
-<body>
-	<h1>Nette\Forms manual form rendering</h1>
-
 	<form action="" method="post" id="frm-" enctype="multipart/form-data">
-	
+
 	<fieldset>
 		<legend>Personal data</legend>
 		<table>
 		<tr class="required">
 			<th><label class="required" for="frm-name">Your name:</label></th>
-			<td><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" cols="35" /></td>
+			<td><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " cols="35" /></td>
 		</tr>
 		<tr class="required">
 			<th><label class="required" for="frm-age">Your age:</label></th>
-			<td><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" cols="5" /></td>
+			<td><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="  12 " cols="5" /></td>
 		</tr>
 		<tr>
 			<th><label>Your gender:</label></th>
@@ -77,5 +72,3 @@
 		<input type="hidden" name="userid" id="frm-userid" value="231" />		<input type="submit" class="button" name="submit_" id="frm-submit_" value="Send" />	</div>
 
 	</form>
-</body>
-</html>

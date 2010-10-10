@@ -1,9 +1,15 @@
-<!DOCTYPE html>%A%</head>
+<form action="" method="post" id="frm-" enctype="multipart/form-data">
 
-<body>
-	<h1>Nette\Forms basic example</h1>
+<ul class="error">
+	<li>Enter your age</li>
 
-	<form action="" method="post" id="frm-" enctype="multipart/form-data">
+	<li>Enter your shipping address</li>
+
+	<li>Select your country</li>
+
+	<li>Reenter your password</li>
+</ul>
+
 
 <fieldset>
 <legend>Personal data</legend>
@@ -13,7 +19,7 @@
 <tr class="required">
 	<th><label class="required" for="frm-name">Your name:</label></th>
 
-	<td><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe" /></td>
+	<td><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " /></td>
 </tr>
 
 <tr class="required">
@@ -43,7 +49,7 @@
 <tr>
 	<th>&nbsp;</th>
 
-	<td><input type="checkbox" name="send" id="frm-send" data-nette-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" /><label for="frm-send">Ship to address</label></td>
+	<td><input type="checkbox" name="send" id="frm-send" data-nette-rules="{op:':equal',rules:[],control:'send',toggle:{sendBox:true},arg:true}" checked="checked" /><label for="frm-send">Ship to address</label></td>
 </tr>
 </table>
 
@@ -64,7 +70,7 @@
 <tr>
 	<th><label for="frm-country">Country:</label></th>
 
-	<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-empty-value="0"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ" selected="selected">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
+	<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-empty-value="0"><option value="0">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
 </table>
 </div>
@@ -112,5 +118,3 @@
 
 <div><input type="hidden" name="userid" id="frm-userid" value="231" /></div>
 </form>
-</body>
-</html>

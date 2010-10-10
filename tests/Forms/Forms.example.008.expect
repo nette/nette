@@ -1,9 +1,4 @@
-<!DOCTYPE html>%A%</head>
-
-<body>
-	<h1>Nette\Forms and HTML5</h1>
-
-	<form action="" method="post" id="frm-">
+<form action="" method="post" id="frm-">
 
 <fieldset>
 <table>
@@ -40,5 +35,3 @@
 </fieldset>
 
 </form>
-</body>
-</html>

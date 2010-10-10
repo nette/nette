@@ -1,25 +1,25 @@
-Nette Framework (c) David Grudl, 2004-2010 (http://davidgrudl.com)
+Welcome to Nette Framework
+==========================
 
+Nette Framework is a powerful, component-based and event-driven framework
+for creating web applications and services in PHP 5.2 & 5.3. Nette Framework
+is designed with simplicity, speed and flexibility in mind. It allows developers
+to easy built better websites.
 
-Introduction
-------------
-
-Thank you for downloading Nette Framework!
-
-The files in this archive are released under the Nette license.
-See license.txt in this directory for a copy of the license.
+Nette Framework focuses on security and performance and is definitely one of
+the safest and fastest PHP frameworks. Nette Framework support the latest
+technologies and approaches like AJAX, HTML5, SEO, DRY, KISS, MVC, etc.
 
 
 Requirements
 ------------
 
-Requires PHP 5.2.0 or higher.
+Nette Framework requires PHP 5.2.0 and/or 5.3.0.
 
 
-Documentation and Examples
---------------------------
+Documentation, Examples, Sandbox, Tools
+---------------------------------------
 
-Refer to the 'examples' directory for examples. Nette documentation is
-available on the homepage:
-
-http://nette.org
+Nette Framework: homepage http://nette.org and repository http://github.com/nette/nette
+Sandbox, pre-packaged and configured project: http://github.com/nette/sandbox
+Examples repository: http://github.com/nette/examples

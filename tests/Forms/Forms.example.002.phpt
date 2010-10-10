@@ -16,6 +16,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-ob_start();
-require '../../examples/forms/CSRF-protection.php';
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.002.expect'), ob_get_clean() );
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST = array('text'=>'a','submit1'=>'Send',);
+
+
+$form = new Form;
+
+$form->addProtection('Security token did not match. Possible CSRF attack.', 3);
+
+$form->addHidden('id')->setDefaultValue(123);
+$form->addSubmit('submit', 'Delete item');
+$form->fireEvents();
+
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.002.expect'), (string) $form );

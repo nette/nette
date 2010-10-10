@@ -577,9 +577,9 @@ abstract class Presenter extends Control implements IPresenter
 		$this->response = $response;
 		$this->terminate();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Correctly terminates presenter.
 	 * @return void
