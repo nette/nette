@@ -26,6 +26,7 @@ use Nette,
 final class TemplateHelpers
 {
 
+	/** @var string default date format */
 	public static $dateFormat = '%x';
 
 	/**
