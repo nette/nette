@@ -424,7 +424,7 @@ if (headers_sent()) {
 			} ?>
 			<?php if (is_file($ex->getFile())): ?>
 			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
-				<p><b>File:</b> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
+				<p><b>File:</b> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => rawurlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
 				<?php echo htmlspecialchars($ex->getFile()), (self::$editor ? '</a>':'') ?> &nbsp; <b>Line:</b> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
 			<?php _netteClosePanel() ?>
@@ -440,7 +440,7 @@ if (headers_sent()) {
 					<li><p>
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<?php echo self::$editor ? '<a href="' . htmlspecialchars(strtr(self::$editor, array('%file' => urlencode($row['file']), '%line' => $row['line']))) . '"' : '<span'; ?> title="<?php echo htmlSpecialChars($row['file'])?>">
+						<?php echo self::$editor ? '<a href="' . htmlspecialchars(strtr(self::$editor, array('%file' => rawurlencode($row['file']), '%line' => $row['line']))) . '"' : '<span'; ?> title="<?php echo htmlSpecialChars($row['file'])?>">
 						<?php echo htmlSpecialChars(basename(dirname($row['file']))), '/<b>', htmlSpecialChars(basename($row['file'])), '</b>', (self::$editor ? '</a>':'</span>'), ' (', $row['line'], ')' ?>
 					<?php else: ?>
 						<i>inner-code</i><?php if (isset($row['line'])) echo ' (', $row['line'], ')' ?>
