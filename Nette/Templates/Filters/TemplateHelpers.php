@@ -26,6 +26,8 @@ use Nette,
 final class TemplateHelpers
 {
 
+	public static $dateFormat = '%x';
+
 	/**
 	 * Static class - cannot be instantiated.
 	 */
@@ -193,10 +195,14 @@ final class TemplateHelpers
 	 * @param  string
 	 * @return string
 	 */
-	public static function date($time, $format = "%x")
+	public static function date($time, $format = NULL)
 	{
 		if ($time == NULL) { // intentionally ==
 			return NULL;
+		}
+
+		if (!isset($format)) {
+			$format = self::$dateFormat;
 		}
 
 		$time = Nette\Tools::createDateTime($time);
