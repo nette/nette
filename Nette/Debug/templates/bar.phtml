@@ -113,9 +113,10 @@ use Nette;
 		font: normal normal 12px/21px Tahoma, sans-serif;
 		color: #333;
 		border: 1px solid #c9c9c9;
-		background: #EDEAE0 url('data:image/png;base64,R0lGODlhAQAVALMAAOTh1/Px6eHe1fHv5e/s4vLw6Ofk2u3q4PPw6PPx6PDt5PLw5+Dd1OXi2Ojm3Orn3iH5BAAAAAAALAAAAAABABUAAAQPMISEyhpYkfOcaQAgCEwEADs=') repeat-x;
+		background: #EDEAE0 url('data:image/png;base64,R0lGODlhAQAVALMAAOTh1/Px6eHe1fHv5e/s4vLw6Ofk2u3q4PPw6PPx6PDt5PLw5+Dd1OXi2Ojm3Orn3iH5BAAAAAAALAAAAAABABUAAAQPMISEyhpYkfOcaQAgCEwEADs=') repeat-x bottom;
 		position: relative;
-		height: 21px;
+		height: 1.75em;
+		min-height: 21px;
 		_float: left;
 
 		min-width: 50px;
@@ -167,7 +168,7 @@ use Nette;
 		font-weight: bold;
 	}
 
-	#nette-debug-bar li div {
+	#nette-debug-bar li span {
 		padding: 0 4px;
 	}
 
@@ -542,7 +543,7 @@ Nette.Debug.Bar = Nette.Class({
 		<ul>
 			<li id="nette-debug-logo">&nbsp;<span>Nette Framework</span></li>
 			<?php foreach ($panels as $panel): if (!$panel['tab']) continue; ?>
-			<li><?php if ($panel['panel']): ?><a href="#" rel="<?php echo $panel['id'] ?>"><?php echo trim($panel['tab']) ?></a><?php else: echo '<div>', trim($panel['tab']), '</div>'; endif ?></li>
+			<li><?php if ($panel['panel']): ?><a href="#" rel="<?php echo $panel['id'] ?>"><?php echo trim($panel['tab']) ?></a><?php else: echo '<span>', trim($panel['tab']), '</span>'; endif ?></li>
 			<?php endforeach ?>
 			<li><a href="#" rel="close" title="close debug bar">&times;</a></li>
 		</ul>
