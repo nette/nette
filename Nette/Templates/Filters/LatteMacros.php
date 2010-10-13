@@ -207,15 +207,24 @@ class LatteMacros extends Nette\Object
 
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
-			$s = "<?php\n"
-				. 'if ($_l->extends) { ob_start(); }' . "\n"
-				. 'elseif (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars()); }' . "\n"
-				. '?>' . $s . "<?php\n"
-				. 'if ($_l->extends) { ob_end_clean(); Nette\Templates\LatteMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }' . "\n";
+			$s = '<?php
+if ($_l->extends) {
+	ob_start();
+} elseif (isset($presenter, $control) && $presenter->isAjax()) {
+	Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+?>' . $s . '<?php
+if ($_l->extends) {
+	ob_end_clean();
+	Nette\Templates\LatteMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
+}
+';
 		} else {
-			$s = "<?php\n"
-				. 'if (isset($presenter, $control) && $presenter->isAjax()) { Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars()); }' . "\n"
-				. '?>' . $s;
+			$s = '<?php
+if (isset($presenter, $control) && $presenter->isAjax()) {
+	Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+?>' . $s;
 		}
 
 		// named blocks
