@@ -267,12 +267,6 @@ class Configurator extends Object
 
 		$context = clone Environment::getContext();
 		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
-		$context->addService('defaultRouter', function() {
-			return new Nette\Application\SimpleRouter(array(
-				'presenter' => 'Default',
-				'action' => 'default',
-			));
-		});
 		$context->addService('Nette\\Application\\IPresenterLoader', function() {
 			return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
 		});

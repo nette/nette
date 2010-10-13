@@ -100,18 +100,12 @@ class Application extends Nette\Object
 				if (!$request) {
 					$this->onStartup($this);
 
-					// default router
-					if ($this->context->hasService('Nette\\Application\\IRouter', TRUE)) {
-						$router = $this->getRouter();
-					} else {
-						$this->setRouter($router = $this->context->getService('defaultRouter'));
-					}
+					// routing
+					$router = $this->getRouter();
 
 					// enable routing debuggger
 					Nette\Debug::addPanel(new RoutingDebugger($router, $httpRequest));
 
-
-					// routing
 					$request = $router->match($httpRequest);
 					if (!($request instanceof PresenterRequest)) {
 						$request = NULL;
