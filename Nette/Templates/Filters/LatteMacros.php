@@ -212,7 +212,7 @@ class LatteMacros extends Nette\Object
 			$s .= $this->macro('/block', '', '');
 
 		} elseif ($this->blocks) {
-			throw new \InvalidStateException("There are some unclosed blocks.");
+			throw new \InvalidStateException("There are unclosed blocks.");
 		}
 
 		// snippets support (temporary solution)
@@ -425,7 +425,7 @@ class LatteMacros extends Nette\Object
 			break;
 
 		default:
-			throw new \InvalidStateException("Unknown macro syntax '$var' on line {$this->filter->line}.");
+			throw new \InvalidStateException("Unknown syntax '$var' on line {$this->filter->line}.");
 		}
 	}
 
@@ -1016,7 +1016,7 @@ class LatteMacros extends Nette\Object
 	public static function callBlock($context, $name, $params)
 	{
 		if (empty($context->blocks[$name])) {
-			throw new \InvalidStateException("Call to undefined block '$name'.");
+			throw new \InvalidStateException("Cannot include undefined block '$name'.");
 		}
 		$block = reset($context->blocks[$name]);
 		$block($context, $params);
@@ -1034,7 +1034,7 @@ class LatteMacros extends Nette\Object
 	public static function callBlockParent($context, $name, $params)
 	{
 		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
-			throw new \InvalidStateException("Call to undefined parent block '$name'.");
+			throw new \InvalidStateException("Cannot include undefined parent block '$name'.");
 		}
 		$block($context, $params);
 	}

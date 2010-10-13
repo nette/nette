@@ -47,7 +47,7 @@ class Context extends FreezableObject implements IContext
 
 		$lower = strtolower($name);
 		if (isset($this->registry[$lower])) { // only for instantiated services?
-			throw new AmbiguousServiceException("Service named '$name' has been already registered.");
+			throw new AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 
 		if (is_object($service) && !($service instanceof \Closure || $service instanceof Callback)) {

@@ -71,7 +71,7 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 			$values = iterator_to_array($values);
 
 		} elseif (!is_array($values)) {
-			throw new \InvalidArgumentException("Values must be an array, " . gettype($values) ." given.");
+			throw new \InvalidArgumentException("First parameter must be an array, " . gettype($values) ." given.");
 		}
 
 		$cursor = & $values;

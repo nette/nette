@@ -116,7 +116,7 @@ class Application extends Nette\Object
 					}
 
 					if (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
-						throw new BadRequestException('Invalid request.');
+						throw new BadRequestException('Invalid request. Presenter is not achievable.');
 					}
 				}
 

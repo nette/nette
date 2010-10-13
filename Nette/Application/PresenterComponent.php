@@ -250,7 +250,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	public function signalReceived($signal)
 	{
 		if (!$this->tryCall($this->formatSignalMethod($signal), $this->params)) {
-			throw new BadSignalException("There is no handler for signal '$signal' in {$this->reflection->name} class.");
+			throw new BadSignalException("There is no handler for signal '$signal' in class {$this->reflection->name}.");
 		}
 	}
 

@@ -819,14 +819,14 @@ abstract class Presenter extends Control implements IPresenter
 			if ($signal === 'this') { // means "no signal"
 				$signal = '';
 				if (array_key_exists(0, $args)) {
-					throw new InvalidLinkException("Extra parameter for signal '{$reflection->name}:$signal!'.");
+					throw new InvalidLinkException("Unable to pass parameters to 'this!' signal.");
 				}
 
 			} elseif (strpos($signal, self::NAME_SEPARATOR) === FALSE) { // TODO: AppForm exception
 				// counterpart of signalReceived() & tryCall()
 				$method = $component->formatSignalMethod($signal);
 				if (!$reflection->hasCallableMethod($method)) {
-					throw new InvalidLinkException("Unknown signal '{$reflection->name}:$signal!'.");
+					throw new InvalidLinkException("Unknown signal '$signal', missing handler {$reflection->name}::$method()");
 				}
 				if ($args) { // convert indexed parameters to named
 					self::argsToParams(get_class($component), $method, $args);
@@ -871,7 +871,7 @@ abstract class Presenter extends Control implements IPresenter
 				// convert indexed parameters to named
 				if ($method === NULL) {
 					if (array_key_exists(0, $args)) {
-						throw new InvalidLinkException("Extra parameter for '$presenter:$action'.");
+						throw new InvalidLinkException("Unable to pass parameters to action '$presenter:$action', missing corresponding method.");
 					}
 
 				} elseif ($destination === 'this') {
@@ -984,7 +984,8 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		if (array_key_exists($i, $args)) {
-			throw new InvalidLinkException("Extra parameter for signal '$class:$method'.");
+			$method = Nette\Reflection\MethodReflection::from($class, $method)->getName();
+			throw new InvalidLinkException("Passed more parameters than method $class::$method() expects.");
 		}
 	}
 

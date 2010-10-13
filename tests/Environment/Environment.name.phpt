@@ -27,5 +27,5 @@ try {
 	Environment::setName('lab2');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Environment name has been already set.', $e );
+	Assert::exception('InvalidStateException', 'Environment name has already been set.', $e );
 }

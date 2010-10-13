@@ -147,7 +147,7 @@ class SelectBox extends FormControl
 			foreach ($value as $key2 => $value2) {
 				if (!$this->useKeys) {
 					if (!is_scalar($value2)) {
-						throw new \InvalidArgumentException("All items must be scalars.");
+						throw new \InvalidArgumentException("All items must be scalar.");
 					}
 					$key2 = $value2;
 				}

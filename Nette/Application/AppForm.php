@@ -136,7 +136,7 @@ class AppForm extends Nette\Forms\Form implements ISignalReceiver
 			$this->fireEvents();
 
 		} else {
-			throw new BadSignalException("There is no handler for signal '$signal' in {$this->reflection->name}.");
+			throw new BadSignalException("Missing handler for signal '$signal' in {$this->reflection->name}.");
 		}
 	}
 
