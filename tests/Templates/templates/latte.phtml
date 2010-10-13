@@ -126,15 +126,15 @@ var prop2 = {$people};
 </ul>
 
 
-<ul>
+<ul title="foreach">
 	<li n:foreach="$people as $person">{$person}</li>
 </ul>
 
-<ul>
+<ul title="for">
 	<li n:for="$i=0;$i<3;$i++">{$i}</li>
 </ul>
 
-<ul>
+<ul title="white">
 	<li n:while="--$i>0">{$i}</li>
 </ul>
 
@@ -147,24 +147,28 @@ var prop2 = {$people};
 </p>
 
 <p n:if="false">
-	<div><p>true</div>
+	<div><p>false</div>
 </p>
 
 <p n:if="false">
-	<div><p>true</p></div>
+	<div><p>false</p></div>
 </p>
 
 <p n:if="strlen('{$id}') == 5">noLatte</p>
 
-<ul>
+<ul title="if + foreach">
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 
-<ul n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">
+<ul title="if + inner-if + inner-foreach">
+	<li n:if="empty($iterator)" n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">{$person}</li>
+</ul>
+
+<ul title="inner-if + inner-foreach" n:inner-if="strlen($person)===4" n:inner-foreach="$people as $person">
 	<li>{$person|lower}</li>
 </ul>
 
-<ul n:block="#bl">
+<ul title="block + if + foreach" n:block="#bl">
 	<li n:if="strlen($person)===4" n:foreach="$people as $person">{$person}</li>
 </ul>
 

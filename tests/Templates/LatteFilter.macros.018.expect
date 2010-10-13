@@ -32,14 +32,14 @@
 
 	<ul id=":/item">
 	<li id="item-1" class="odd">John</li>
-	
-	
+
+
 	<li id="item-2" class="even">Mary</li>
-	
-	
+
+
 	<li id="item-3" class="odd">Paul</li>
-	
-	
+
+
 	<li id="item-4" class="even">]]&gt;</li>
 	</ul>
 
@@ -136,18 +136,18 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 </ul>
 
 
-<ul>	<li>John</li>
+<ul title="foreach">	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 	<li>]]&gt;</li>
 </ul>
 
-<ul>	<li>0</li>
+<ul title="for">	<li>0</li>
 	<li>1</li>
 	<li>2</li>
 </ul>
 
-<ul>	<li>2</li>
+<ul title="white">	<li>2</li>
 	<li>1</li>
 </ul>
 <p>
@@ -160,20 +160,23 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 </p>
 <p>noLatte</p>
 
-<ul>	<li>John</li>
+<ul title="if + foreach">	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 </ul>
 
-<ul>
+<ul title="if + inner-if + inner-foreach">	<li>JohnMaryPaul</li>
+</ul>
+
+<ul title="inner-if + inner-foreach">
 	<li>john</li>	<li>mary</li>	<li>paul</li></ul>
 
-<ul>
+<ul title="block + if + foreach">
 	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 </ul>
-<b>bold</b> normal<UL>
+<b>bold</b> normal<UL TITLE="BLOCK + IF + FOREACH">
 	<LI>JOHN</LI>
 	<LI>MARY</LI>
 	<LI>PAUL</LI>
