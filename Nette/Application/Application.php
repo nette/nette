@@ -40,6 +40,9 @@ class Application extends Nette\Object
 	/** @var array of function(Application $sender, PresenterRequest $request); Occurs when a new request is ready for dispatch */
 	public $onRequest;
 
+	/** @var array of function(Application $sender, IPresenterResponse $response); Occurs when a new response is received */
+	public $onResponse;
+
 	/** @var array of function(Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
 	public $onError;
 
@@ -136,6 +139,7 @@ class Application extends Nette\Object
 				// Execute presenter
 				$this->presenter = new $class;
 				$response = $this->presenter->run($request);
+				$this->onResponse($this, $response);
 
 				// Send response
 				if ($response instanceof ForwardingResponse) {
