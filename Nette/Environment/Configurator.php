@@ -24,6 +24,8 @@ use Nette,
 class Configurator extends Object
 {
 	/** @var string */
+	public static $contextClass = 'Nette\Context';
+	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.ini';
 
 	/** @var array */
@@ -247,7 +249,7 @@ class Configurator extends Object
 	 */
 	public function createContext()
 	{
-		$context = new Context;
+		$context = new static::$contextClass;
 		foreach ($this->defaultServices as $name => $service) {
 			$context->addService($name, $service);
 		}
