@@ -33,12 +33,12 @@ class RobotLoader extends AutoLoader
 	public $acceptFiles = '*.php, *.php5';
 
 	/** @var bool */
-	public $autoRebuild = FALSE;
+	public $autoRebuild = TRUE;
 
-	/** @var array */
+	/** @var array of lowered-class => [file, mtime, class] or FALSE */
 	private $list = array();
 
-	/** @var array */
+	/** @var array of file => mtime */
 	private $files;
 
 	/** @var bool */
@@ -92,19 +92,26 @@ class RobotLoader extends AutoLoader
 	{
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
 
-		if (!isset($this->list[$type]) || ($this->list[$type] !== FALSE && !is_file($this->list[$type][0]))) {
-			$this->list[$type] = FALSE;
+		if (isset($this->list[$type][0]) && !is_file($this->list[$type][0])) {
+			unset($this->list[$type]);
+		}
 
-			if ($this->autoRebuild) {
-				if ($this->rebuilt) {
+		if (!isset($this->list[$type])) {
+			$trace = debug_backtrace();
+			$initiator = & $trace[2]['function'];
+			if ($initiator === 'class_exists' || $initiator === 'interface_exists') {
+				$this->list[$type] = FALSE;
+				if ($this->autoRebuild && $this->rebuilt) {
 					$this->getCache()->save($this->getKey(), $this->list);
-				} else {
-					$this->rebuild();
 				}
+			}
+
+			if ($this->autoRebuild && !$this->rebuilt) {
+				$this->rebuild();
 			}
 		}
 
-		if (!empty($this->list[$type])) {
+		if (isset($this->list[$type][0])) {
 			LimitedScope::load($this->list[$type][0]);
 			self::$count++;
 		}
@@ -184,7 +191,7 @@ class RobotLoader extends AutoLoader
 	private function addClass($class, $file, $time)
 	{
 		$lClass = strtolower($class);
-		if (!empty($this->list[$lClass]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
+		if (isset($this->list[$lClass][0]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
 			$e = new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$lClass][0] . ".");
 			/*5.2*if (PHP_VERSION_ID < 50300) {
 				Nette\Debug::_exceptionHandler($e);
