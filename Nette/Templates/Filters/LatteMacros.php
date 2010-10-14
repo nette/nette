@@ -211,7 +211,7 @@ class LatteMacros extends Nette\Object
 if ($_l->extends) {
 	ob_start();
 } elseif (isset($presenter, $control) && $presenter->isAjax()) {
-	Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s . '<?php
 if ($_l->extends) {
@@ -222,7 +222,7 @@ if ($_l->extends) {
 		} else {
 			$s = '<?php
 if (isset($presenter, $control) && $presenter->isAjax()) {
-	Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s;
 		}
@@ -1100,6 +1100,13 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$function = reset($function);
 				$function($local, $params);
 				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
+			}
+		}
+		if ($control instanceof Nette\Application\Control) {
+			foreach ($control->getComponents(FALSE, 'Nette\Application\Control') as $child) {
+				if ($child->isControlInvalid()) {
+					$child->render();
+				}
 			}
 		}
 	}
