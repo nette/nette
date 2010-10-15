@@ -31,7 +31,7 @@ use Nette,
  * - {link destination ...} control link
  * - {plink destination ...} presenter link
  * - {if ?} ... {elseif ?} ... {else} ... {/if}
- * - {ifset ?} ... {elseifset ?} ... {/if}
+ * - {ifset ?} ... {elseifset ?} ... {/ifset}
  * - {for ?} ... {/for}
  * - {foreach ?} ... {/foreach}
  * - {include ?}
