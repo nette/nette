@@ -488,8 +488,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		if ($this->extends !== NULL) {
 			throw new \InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
 		}
-		$this->extends = $destination !== 'none' && $destination !== 'auto';
-		return $this->extends ? '$_l->extends = ' . self::formatString($destination) : '';
+		$this->extends = $destination !== 'none';
+		return $this->extends ? '$_l->extends = ' . ($destination === 'auto' ? '$layout' : self::formatString($destination)) : '';
 	}
 
 
