@@ -154,7 +154,7 @@ static $errorTypes = array(
 
 $title = ($exception instanceof \FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
 
-$expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
+$expandPath = Nette\DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
 
 if (headers_sent()) {
 	echo '</pre></xmp></table>';

@@ -9,7 +9,7 @@
  * GPL license. For more information please see http://nette.org
  */
 
-
+namespace Nette;
 
 /**
  * Check and reset PHP configuration.
@@ -36,10 +36,10 @@ extension_loaded('mbstring') && mb_internal_encoding('UTF-8');
 /**
  * Load and configure Nette Framework
  */
-define('NETTE', TRUE);
-define('NETTE_DIR', __DIR__);
-define('NETTE_VERSION_ID', 20000); // v2.0.0
-define('NETTE_PACKAGE', '5.3');
+const IS_PRESENT = TRUE;
+const DIR = __DIR__;
+const VERSION_ID = 20000; // v2.0.0
+const PACKAGE = '5.3';
 
 
 
@@ -54,4 +54,4 @@ require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 
-Nette\Loaders\NetteLoader::getInstance()->register();
+Loaders\NetteLoader::getInstance()->register();

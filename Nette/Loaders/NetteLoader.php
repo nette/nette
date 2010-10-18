@@ -225,7 +225,7 @@ class NetteLoader extends AutoLoader
 	{
 		$type = ltrim(strtolower($type), '\\');
 		if (isset($this->list[$type])) {
-			LimitedScope::load(NETTE_DIR . $this->list[$type]);
+			LimitedScope::load(Nette\DIR . $this->list[$type]);
 			self::$count++;
 		}
 	}

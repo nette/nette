@@ -174,9 +174,9 @@ final class Tools
 		if (self::$criticalSections) {
 			throw new \InvalidStateException('Critical section has already been entered.');
 		}
-		$handle = fopen(NETTE_DIR . '/lockfile', 'r') ?: fopen(NETTE_DIR . '/lockfile', 'w');
+		$handle = fopen(Nette\DIR . '/lockfile', 'r') ?: fopen(Nette\DIR . '/lockfile', 'w');
 		if (!$handle) {
-			throw new \InvalidStateException("Unable initialize critical section (missing file '" . NETTE_DIR . "/lockfile').");
+			throw new \InvalidStateException("Unable initialize critical section (missing file '" . Nette\DIR . "/lockfile').");
 		}
 		flock(self::$criticalSections = $handle, LOCK_EX);
 	}
