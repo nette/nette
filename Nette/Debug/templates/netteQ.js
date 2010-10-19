@@ -1,8 +1,7 @@
 /**
- * NetteJs
+ * NetteQ
  *
- * This file is part of the Nette Framework.
- * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ * This is copy of code located at http://github.com/nette/javascript
  */
 
 var Nette = Nette || {};
