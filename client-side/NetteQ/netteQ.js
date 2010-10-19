@@ -187,6 +187,37 @@ fn({
 		return this.nette = this.nette || {};
 	},
 
+	val: function() {
+		if (!this.nodeName) { // radio
+			for (var i = 0, len = this.length; i < len; i++) {
+				if (this[i].checked) return this[i].value;
+			}
+			return null;
+		}
+
+		if (this.nodeName.toLowerCase() === 'select') {
+			var index = this.selectedIndex, options = this.options;
+
+			if (index < 0) {
+				return null;
+
+			} else if (this.type === 'select-one') {
+				return options[index].value;
+			}
+
+			for (var i = 0, values = [], len = options.length; i < len; i++) {
+				if (options[i].selected) values.push(options[i].value);
+			}
+			return values;
+		}
+
+		if (this.type === 'checkbox') {
+			return this.checked;
+		}
+
+		return this.value.replace(/^\s+|\s+$/g, '');
+	},
+
 	_trav: function(el, selector, fce) {
 		selector = selector.split('.');
 		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || fn.hasClass.call(el, selector[1])))) el = el[fce];
