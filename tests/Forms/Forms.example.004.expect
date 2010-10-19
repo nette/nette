@@ -7,13 +7,13 @@
 
 	<dt><label class="required" for="frm-name">Your name:</label></dt>
 
-	<dd><input type="text" class="text" name="name" id="frm-name" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " /> •</dd>
+	<dd><input type="text" class="text" name="name" id="frm-name" required="required" data-nette-rules="{op:':filled',msg:'Enter your name'}" value="John Doe " /> •</dd>
 
 
 
 	<dt><label class="required" for="frm-age">Your age:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="9.9" /> •
+	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="9.9" /> •
 
 <ul class="error">
 	<li>Age must be numeric value</li>
@@ -76,7 +76,7 @@
 
 	<dt><label class="required" for="frm-password">Choose password:</label></dt>
 
-	<dd><input type="password" class="text" name="password" id="frm-password" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small>
+	<dd><input type="password" class="text" name="password" id="frm-password" required="required" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small>
 
 <ul class="error">
 	<li>The password is too short: it must be at least 3 characters</li>
