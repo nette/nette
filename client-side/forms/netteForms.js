@@ -207,7 +207,7 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 			has = true;
 			if (firsttime) {
 				if (!el.nodeName) { // radio
-					for (var i in el) {
+					for (var i = 0; i < el.length; i++) {
 						Nette.addEvent(el[i], 'click', function() { Nette.toggleForm(elem.form); });
 					}
 				} else if (el.nodeName.toLowerCase() === 'select') {
