@@ -191,11 +191,6 @@ abstract class FormControl extends Nette\Component implements IFormControl
 
 	/**
 	 * Sets user-specific option.
-	 * Common options:
-	 * - 'rendered' - indicate if method getControl() have been called
-	 * - 'required' - indicate if ':required' rule has been applied
-	 * - 'description' - textual or Html object description (recognized by ConventionalRenderer)
-	 *
 	 * @param  string key
 	 * @param  mixed  value
 	 * @return FormControl  provides a fluent interface
@@ -492,12 +487,10 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	 * Makes control mandatory.
 	 * @param  string  error message
 	 * @return FormControl  provides a fluent interface
-	 * @deprecated
 	 */
 	final public function setRequired($message = NULL)
 	{
-		$this->rules->addRule(Form::FILLED, $message);
-		return $this;
+		return $this->addRule(Form::FILLED, $message);
 	}
 
 
@@ -505,25 +498,15 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	/**
 	 * Is control mandatory?
 	 * @return bool
-	 * @deprecated
 	 */
 	final public function isRequired()
 	{
-		return !empty($this->options['required']);
-	}
-
-
-
-	/**
-	 * New rule or condition notification callback.
-	 * @param  Rule
-	 * @return void
-	 */
-	public function notifyRule(Rule $rule)
-	{
-		if (is_string($rule->operation) && strcasecmp($rule->operation, ':filled') === 0) {
-			$this->setOption('required', TRUE);
+		foreach ($this->rules as $rule) {
+			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative && $rule->operation === Form::FILLED) {
+				return TRUE;
+			}
 		}
+		return FALSE;
 	}
 
 

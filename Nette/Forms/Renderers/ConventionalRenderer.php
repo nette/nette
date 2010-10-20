@@ -173,7 +173,7 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 		// TODO: only for back compatiblity - remove?
 		$wrapper = & $this->wrappers['control'];
 		foreach ($this->form->getControls() as $control) {
-			if ($control->getOption('required') && isset($wrapper['.required'])) {
+			if ($control->isRequired() && isset($wrapper['.required'])) {
 				$control->getLabelPrototype()->class($wrapper['.required'], TRUE);
 			}
 
@@ -384,7 +384,7 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
 		$pair->add($this->renderControl($control));
-		$pair->class($this->getValue($control->getOption('required') ? 'pair .required' : 'pair .optional'), TRUE);
+		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
 		$pair->class($control->getOption('class'), TRUE);
 		if (++$this->counter % 2) $pair->class($this->getValue('pair .odd'), TRUE);
 		$pair->id = $control->getOption('id');
@@ -429,7 +429,7 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 
 		} else {
 			$label = $control->getLabel();
-			$suffix = $this->getValue('label suffix') . ($control->getOption('required') ? $this->getValue('label requiredsuffix') : '');
+			$suffix = $this->getValue('label suffix') . ($control->isRequired() ? $this->getValue('label requiredsuffix') : '');
 			if ($label instanceof Html) {
 				$label->setHtml($label->getHtml() . $suffix);
 				$suffix = '';
@@ -461,7 +461,7 @@ class ConventionalRenderer extends Nette\Object implements IFormRenderer
 			$description = '';
 		}
 
-		if ($control->getOption('required')) {
+		if ($control->isRequired()) {
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
