@@ -84,21 +84,20 @@ class TextInput extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		if ($this->control->type !== 'password') {
+		foreach ($this->getRules() as $rule) {
+			if ($rule->isNegative || $rule->type !== Rule::VALIDATOR) {
+
+			} elseif ($rule->operation === Form::RANGE && $control->type !== 'text') {
+				list($control->min, $control->max) = $rule->arg; // HTML 5
+
+			} elseif ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH) {
+				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
+			}
+		}
+		if ($control->type !== 'password') {
 			$control->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
 		}
 		return $control;
 	}
-
-
-
-	public function notifyRule(Rule $rule)
-	{
-		if (is_string($rule->operation) && strcasecmp($rule->operation, ':range') === 0 && !$rule->isNegative && $this->control->type !== 'text') {
-			list($this->control->min, $this->control->max) = $rule->arg; // for HTML 5
-		}
-		parent::notifyRule($rule);
-	}
-
 
 }

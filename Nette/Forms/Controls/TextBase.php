@@ -105,21 +105,12 @@ abstract class TextBase extends FormControl
 
 
 
-	public function notifyRule(Rule $rule)
+	public function addRule($operation, $message = NULL, $arg = NULL)
 	{
-		if (is_string($rule->operation) && !$rule->isNegative) {
-			if (strcasecmp($rule->operation, ':float') === 0) {
-				$this->addFilter(callback(__CLASS__, 'filterFloat'));
-
-			} elseif (strcasecmp($rule->operation, ':length') === 0) {
-				$this->control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
-
-			} elseif (strcasecmp($rule->operation, ':maxLength') === 0) {
-				$this->control->maxlength = $rule->arg;
-			}
+		if ($operation === Form::FLOAT) {
+			$this->addFilter(callback(__CLASS__, 'filterFloat'));
 		}
-
-		parent::notifyRule($rule);
+		return parent::addRule($operation, $message, $arg);
 	}
 
 

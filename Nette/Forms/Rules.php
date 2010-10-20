@@ -71,11 +71,6 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		} else {
 			$rule->message = $message;
 		}
-
-		if ($this->parent === NULL) {
-			// notify only direct rules
-			$this->control->notifyRule($rule);
-		}
 		$this->rules[] = $rule;
 		return $this;
 	}
