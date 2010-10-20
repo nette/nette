@@ -160,6 +160,9 @@ Nette.validateRule = function(elem, op, arg) {
 		} catch (e) {}
 		return;
 
+	case ':pattern':
+		return (new RegExp(arg)).test(val);
+
 	case ':integer':
 		return /^-?[0-9]+$/.test(val);
 
