@@ -223,14 +223,14 @@ if (headers_sent()) {
 		#netteBluescreenError {
 			background: #CD1818;
 			color: white;
-			font: 14pt/1.5 Verdana, sans-serif !important;
-			text-shadow: 1px 1px 0 rgba(0, 0, 0, .4);
+			font: 13pt/1.5 Verdana, sans-serif !important;
 			display: block;
 		}
 
 		#netteBluescreen h1 {
 			font-size: 18pt;
 			font-weight: normal;
+			text-shadow: 1px 1px 0 rgba(0, 0, 0, .4);
 			margin: .7em 0;
 		}
 
@@ -412,7 +412,7 @@ if (headers_sent()) {
 				<div class="panel">
 					<h1><?php echo htmlspecialchars(get_class($ex)), ($ex->getCode() ? ' #' . $ex->getCode() : '') ?></h1>
 
-					<p><?php echo htmlspecialchars($ex->getMessage()) ?></p>
+					<p><b><?php echo htmlspecialchars($ex->getMessage()) ?></b></p>
 				</div>
 			<?php endif ?>
 
