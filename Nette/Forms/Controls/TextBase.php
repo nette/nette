@@ -100,7 +100,17 @@ abstract class TextBase extends FormControl
 
 	public function getControl()
 	{
-		return parent::getControl()->data('nette-empty-value', $this->emptyValue === '' ? NULL : $this->translate($this->emptyValue));
+		$control = parent::getControl();
+		foreach ($this->getRules() as $rule) {
+			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative
+				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)) {
+				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
+			}
+		}
+		if ($this->emptyValue !== '') {
+			$control->data('nette-empty-value', $this->translate($this->emptyValue));
+		}
+		return $control;
 	}
 
 

@@ -89,9 +89,6 @@ class TextInput extends TextBase
 
 			} elseif ($rule->operation === Form::RANGE && $control->type !== 'text') {
 				list($control->min, $control->max) = $rule->arg; // HTML 5
-
-			} elseif ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH) {
-				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
 			}
 		}
 		if ($control->type !== 'password') {
