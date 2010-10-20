@@ -34,7 +34,6 @@ use Nette,
  * @property-read Rules $rules
  * @property-read array $errors
  * @property   bool $disabled
- * @property   bool $rendered
  * @property   bool $required
 */
 abstract class FormControl extends Nette\Component implements IFormControl
@@ -429,32 +428,6 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	final public function getLabelPrototype()
 	{
 		return $this->label;
-	}
-
-
-
-	/**
-	 * Sets 'rendered' indicator.
-	 * @param  bool
-	 * @return FormControl  provides a fluent interface
-	 * @deprecated
-	 */
-	public function setRendered($value = TRUE)
-	{
-		$this->setOption('rendered', $value);
-		return $this;
-	}
-
-
-
-	/**
-	 * Does method getControl() have been called?
-	 * @return bool
-	 * @deprecated
-	 */
-	public function isRendered()
-	{
-		return !empty($this->options['rendered']);
 	}
 
 
