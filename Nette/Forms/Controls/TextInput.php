@@ -88,7 +88,10 @@ class TextInput extends TextBase
 			if ($rule->isNegative || $rule->type !== Rule::VALIDATOR) {
 
 			} elseif ($rule->operation === Form::RANGE && $control->type !== 'text') {
-				list($control->min, $control->max) = $rule->arg; // HTML 5
+				list($control->min, $control->max) = $rule->arg;
+				
+			} elseif ($rule->operation === Form::PATTERN) {
+				$control->pattern = $rule->arg;
 			}
 		}
 		if ($control->type !== 'password') {

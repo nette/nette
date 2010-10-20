@@ -197,15 +197,23 @@ abstract class TextBase extends FormControl
 
 
 
+	/** @deprecated */
+	public static function validateRegexp(TextBase $control, $regexp)
+	{
+		return (bool) String::match($control->getValue(), $regexp);
+	}
+
+
+
 	/**
 	 * Regular expression validator: matches control's value regular expression?
 	 * @param  TextBase
 	 * @param  string
 	 * @return bool
 	 */
-	public static function validateRegexp(TextBase $control, $regexp)
+	public static function validatePattern(TextBase $control, $pattern)
 	{
-		return (bool) String::match($control->getValue(), $regexp);
+		return (bool) String::match($control->getValue(), "\x01^($pattern)$\x01");
 	}
 
 

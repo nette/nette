@@ -59,6 +59,7 @@ class Form extends FormContainer
 	const EMAIL = ':email';
 	const URL = ':url';
 	const REGEXP = ':regexp';
+	const PATTERN = ':pattern';
 	const INTEGER = ':integer';
 	const NUMERIC = ':integer';
 	const FLOAT = ':float';

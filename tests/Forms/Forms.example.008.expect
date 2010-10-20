@@ -5,7 +5,7 @@
 <tr>
 	<th><label for="frm-query">Search:</label></th>
 
-	<td><input type="search" autofocus="autofocus" name="query" id="frm-query" value="" /></td>
+	<td><input type="search" autofocus="autofocus" name="query" id="frm-query" data-nette-rules="{op:':pattern',msg:'Must be alphanumeric string',arg:'[a-z0-9]+'}" pattern="[a-z0-9]+" value="" /></td>
 </tr>
 
 <tr>

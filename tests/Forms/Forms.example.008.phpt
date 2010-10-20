@@ -22,7 +22,8 @@ $form->addGroup();
 
 $form->addText('query', 'Search:')
 	->setType('search')
-	->setAttribute('autofocus');
+	->setAttribute('autofocus')
+	->addRule(Form::PATTERN, 'Must be alphanumeric string', '[a-z0-9]+');
 
 $form->addText('count', 'Number of results:')
 	->setType('number')
