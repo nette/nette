@@ -382,7 +382,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 		$rules = substr(json_encode($rules), 1, -1);
 		$rules = preg_replace('#"([a-z0-9]+)":#i', '$1:', $rules);
 		$rules = preg_replace('#(?<!\\\\)"([^\\\\\',]*)"#i', "'$1'", $rules);
-		$control->data['nette-rules'] = $rules ? $rules : NULL;
+		$control->data('nette-rules', $rules ? $rules : NULL);
 		return $control;
 	}
 
