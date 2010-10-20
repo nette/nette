@@ -147,9 +147,10 @@ class HttpUploadedFile extends Nette\Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
+	 * @param  int
 	 * @return HttpUploadedFile  provides a fluent interface
 	 */
-	public function move($dest)
+	public function move($dest, $mode = 0644)
 	{
 		$dir = dirname($dest);
 		if (@mkdir($dir, 0755, TRUE)) { // @ - $dir may already exist
@@ -159,7 +160,7 @@ class HttpUploadedFile extends Nette\Object
 		if (!$func($this->tmpName, $dest)) {
 			throw new \InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
-		chmod($dest, 0644);
+		chmod($dest, $mode);
 		$this->tmpName = $dest;
 		return $this;
 	}
