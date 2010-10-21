@@ -48,6 +48,10 @@ class MockPresenter extends MockControl
 		return 'PLINK(' . implode(', ', $args) . ')';
 	}
 
+	public function isAjax() {
+		return FALSE;
+	}
+
 }
 
 
@@ -61,6 +65,7 @@ $template->action = 'login';
 $template->arr = array('link' => 'login', 'param' => 123);
 
 Assert::match(<<<EOD
+
 PLINK(Homepage:)
 
 PLINK(Homepage:)
