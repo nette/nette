@@ -63,6 +63,9 @@ class Configurator extends Object
 			if (PHP_SAPI === 'cli') {
 				return FALSE;
 
+			} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+				return TRUE;
+
 			} elseif (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) {
 				$addr = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 				$oct = explode('.', $addr);
