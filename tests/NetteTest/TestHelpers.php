@@ -38,7 +38,7 @@ class TestHelpers
 	{
 		@mkdir($dir); // @ - directory may already exist
 		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
-			if ($entry->getBasename() === '.gitignore') {
+			if ($entry->isDot() || $entry->getBasename() === '.gitignore') {
 				// ignore
 			} elseif ($entry->isDir()) {
 				rmdir($entry);
