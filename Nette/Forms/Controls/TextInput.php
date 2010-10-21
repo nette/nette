@@ -89,7 +89,7 @@ class TextInput extends TextBase
 
 			} elseif ($rule->operation === Form::RANGE && $control->type !== 'text') {
 				list($control->min, $control->max) = $rule->arg;
-				
+
 			} elseif ($rule->operation === Form::PATTERN) {
 				$control->pattern = $rule->arg;
 			}
