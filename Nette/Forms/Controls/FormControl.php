@@ -306,6 +306,17 @@ abstract class FormControl extends Nette\Component implements IFormControl
 
 
 	/**
+	 * Is control filled?
+	 * @return bool
+	 */
+	public function isFilled()
+	{
+		return (string) $this->getValue() !== ''; // NULL, FALSE, '' ==> FALSE
+	}
+
+
+
+	/**
 	 * Sets control's default value.
 	 * @param  mixed
 	 * @return FormControl  provides a fluent interface
@@ -582,7 +593,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	 */
 	public static function validateFilled(IFormControl $control)
 	{
-		return (string) $control->getValue() !== ''; // NULL, FALSE, '' ==> FALSE
+		return $control->isFilled();
 	}
 
 

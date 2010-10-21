@@ -76,14 +76,12 @@ class FileUpload extends FormControl
 
 
 	/**
-	 * Filled validator: has been any file uploaded?
-	 * @param  IFormControl
+	 * Has been any file uploaded?
 	 * @return bool
 	 */
-	public static function validateFilled(IFormControl $control)
+	public function isFilled()
 	{
-		$file = $control->getValue();
-		return $file instanceof HttpUploadedFile && $file->isOK();
+		return $this->value instanceof HttpUploadedFile && $this->value->isOK();
 	}
 
 
