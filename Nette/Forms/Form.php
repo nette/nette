@@ -46,8 +46,8 @@ class Form extends FormContainer
 	const FILLED = ':filled';
 	const VALID = ':valid';
 
-	// CSRF protection, handled as :equal
-	const PROTECTION = ':protection';
+	// CSRF protection
+	const PROTECTION = 'Nette\\Forms\\HiddenField::validateEqual';
 
 	// button
 	const SUBMITTED = ':submitted';
@@ -226,7 +226,7 @@ class Form extends FormContainer
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(':protection', $message, $token);
+		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
 	}
 
 
