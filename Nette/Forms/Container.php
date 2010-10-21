@@ -146,7 +146,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	{
 		$this->onValidate($this);
 		foreach ($this->getControls() as $control) {
-			$control->getRules()->validate();
+			$control->validate();
 		}
 		$this->validated = TRUE;
 	}

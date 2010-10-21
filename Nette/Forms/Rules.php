@@ -169,11 +169,11 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Validates against ruleset.
-	 * @param  bool    stop before first error?
-	 * @return bool    is valid?
+	 * @return string[]
 	 */
-	public function validate($onlyCheck = FALSE)
+	public function validate()
 	{
+		$errors = array();
 		foreach ($this->rules as $rule) {
 			if ($rule->control->isDisabled()) {
 				continue;
@@ -182,18 +182,17 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 			$success = ($rule->isNegative xor $this->getCallback($rule)->invoke($rule->control, $rule->arg));
 
 			if ($rule->type === Rule::CONDITION && $success) {
-				if (!$rule->subRules->validate($onlyCheck)) {
-					return FALSE;
+				if ($tmp = $rule->subRules->validate()) {
+					$errors = array_merge($errors, $tmp);
+					break;
 				}
 
 			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
-				if (!$onlyCheck) {
-					$rule->control->addError(static::formatMessage($rule, TRUE));
-				}
-				return FALSE;
+				$errors[] = static::formatMessage($rule, TRUE);
+				break;
 			}
 		}
-		return TRUE;
+		return $errors;
 	}
 
 

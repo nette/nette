@@ -43,9 +43,9 @@ interface IControl
 	function getValue();
 
 	/**
-	 * @return Rules
+	 * @return void
 	 */
-	function getRules();
+	function validate();
 
 	/**
 	 * Returns errors corresponding to control.

@@ -580,6 +580,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
+	 * Performs the server side validation.
+	 * @return void
+	 */
+	public function validate()
+	{
+		$this->errors = $this->rules->validate();
+	}
+
+
+
+	/**
 	 * Equal validator: are control's value and second parameter equal?
 	 * @param  Nette\Forms\IControl
 	 * @param  mixed
@@ -618,7 +629,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public static function validateValid(IControl $control)
 	{
-		return $control->rules->validate(TRUE);
+		return !$control->rules->validate();
 	}
 
 
