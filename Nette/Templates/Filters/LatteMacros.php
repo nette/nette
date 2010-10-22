@@ -126,9 +126,14 @@ class LatteMacros extends Nette\Object
 
 	/** @internal */
 	const T_SYMBOL = -1;
+	const T_NUMBER = -2;
+	const T_VARIABLE = -3;
 
 	/** @var array */
 	public $macros;
+
+	/** @var Nette\Tokenizer */
+	private static $tokenizer;
 
 	/** @var LatteFilter */
 	private $filter;
@@ -162,6 +167,17 @@ class LatteMacros extends Nette\Object
 	public function __construct()
 	{
 		$this->macros = self::$defaultMacros;
+
+		self::$tokenizer = new Tokenizer(array(
+			Tokenizer::T_WHITESPACE => '\s+',
+			Tokenizer::T_COMMENT => '/\*.*?\*/',
+			Tokenizer::RE_STRING,
+			'true|false|null|and|or|xor|clone|new|instanceof',
+			self::T_VARIABLE => '\$[_a-z0-9\x7F-\xFF]+',
+			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
+			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+',
+			'::|=>|[^"\']', // =>, any char except quotes
+		), 'i');
 	}
 
 
@@ -792,30 +808,25 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function macroVar($content, $modifiers, $extract = FALSE)
 	{
-		$tokenizer = new Tokenizer(array(
-			Tokenizer::T_WHITESPACE => '\s+',
-			Tokenizer::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof',
-			self::T_SYMBOL => '\$?[0-9a-zA-Z_]+', // variable, string, number
-			'=>|[^"\']', // =>, any char except quotes
-		), 'i');
-
 		$out = '';
 		$quote = $var = TRUE;
 		$depth = 0;
-		foreach ($tokenizer->tokenize($content) as $n => $token) {
+		foreach (self::$tokenizer->tokenize($content) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === self::T_SYMBOL) {
+			if ($name === Tokenizer::T_COMMENT) {
+				continue;
+
+			} elseif ($name === self::T_SYMBOL || $name === self::T_VARIABLE) {
 				if ($var) {
 					if ($extract) {
-						$token = "'" . ($token[0] === '$' ? substr($token, 1) : $token) . "'";
+						$token = "'" . ($name === self::T_VARIABLE ? substr($token, 1) : $token) . "'";
 					} else {
-						$token = $token[0] === '$' ? $token : '$' . $token;
-		}
-				} elseif ($quote && $token[0] !== '$' && !is_numeric($token) && in_array($tokenizer->nextToken($n), array(',', '=>', ')', NULL), TRUE)) {
+						$token = $name === self::T_VARIABLE ? $token : '$' . $token;
+					}
+				} elseif ($quote && $name === self::T_SYMBOL && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 					$token = "'$token'";
-		}
+				}
 			} elseif ($token === '(') {
 				$depth++;
 
@@ -829,10 +840,10 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			} elseif ($token === ',' && $depth === 0) {
 				$token = $extract ? ',' : ';';
 				$var = TRUE;
-	}
+			}
 
 			if ($name !== Tokenizer::T_WHITESPACE) {
-				$quote = in_array($token, array('[', ',', '=', '(', '=>'));
+				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 			$out .= $token;
 		}
@@ -884,19 +895,14 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public static function formatModifiers($var, $modifiers)
 	{
 		if (!$modifiers) return $var;
-		$tokenizer = new Tokenizer(array(
-			Tokenizer::T_WHITESPACE => '\s+',
-			Tokenizer::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof',
-			'\$[_a-z0-9\x7F-\xFF]+', // variable
-			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
-			'[^"\']', // =>, any char except quotes
-		), 'i');
-
 		$inside = FALSE;
-		foreach ($tokenizer->tokenize(ltrim($modifiers, '|')) as $n => $token) {
+		foreach (self::$tokenizer->tokenize(ltrim($modifiers, '|')) as $n => $token) {
 			list($token, $name) = $token;
-			if ($name === Tokenizer::T_WHITESPACE) {
+
+			if ($name === Tokenizer::T_COMMENT) {
+				continue;
+
+			} elseif ($name === Tokenizer::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
@@ -914,8 +920,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					$var = $var . ')';
 					$inside = FALSE;
 
-				} elseif ($name === self::T_SYMBOL && $quote && !is_numeric($token)
-					&& in_array($tokenizer->nextToken($n), array(',', ':', ')', '|', NULL), TRUE)) {
+				} elseif ($name === self::T_SYMBOL && $quote && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 					$var .= "'$token'";
 
 				} else {
@@ -923,7 +928,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				}
 			}
 			if ($name !== Tokenizer::T_WHITESPACE) {
-				$quote = in_array($token, array('[', ',', '=', '(', ':'));
+				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 		}
 		return $inside ? "$var)" : $var;
@@ -956,30 +961,19 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public static function formatArray($input, $prefix = '')
 	{
-		$tokenizer = new Tokenizer(array(
-			Tokenizer::T_WHITESPACE => '\s+',
-			Tokenizer::T_COMMENT => '/\*.*?\*/',
-			Tokenizer::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof',
-			'\$[_a-z0-9\x7F-\xFF]+', // variable
-			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+', // string, number
-			'=>|[^"\']', // =>, any char except quotes
-		), 'i');
-
 		$out = '';
 		$quote = TRUE;
-		foreach ($tokenizer->tokenize($input) as $n => $token) {
+		foreach (self::$tokenizer->tokenize($input) as $n => $token) {
 			list($token, $name) = $token;
 
 			if ($name === Tokenizer::T_COMMENT) {
 				continue;
 
-			} elseif ($name === self::T_SYMBOL && $quote && !is_numeric($token)
-				&& in_array($tokenizer->nextToken($n), array(',', '=>', ')', NULL), TRUE)) {
+			} elseif ($name === self::T_SYMBOL && $quote && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 				$token = "'$token'";
 			}
 			if ($name !== Tokenizer::T_WHITESPACE) {
-				$quote = in_array($token, array('[', ',', '=', '(', '=>'));
+				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 			$out .= $token;
 		}

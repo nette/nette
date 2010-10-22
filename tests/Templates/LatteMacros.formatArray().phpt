@@ -16,6 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+new LatteMacros;
+
 // symbols
 
 Assert::same( '',  LatteMacros::formatArray('') );

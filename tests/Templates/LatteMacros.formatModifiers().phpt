@@ -16,6 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+new LatteMacros;
+
 // special
 
 Assert::same( '@',  LatteMacros::formatModifiers('@', '') );
