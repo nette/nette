@@ -25,7 +25,7 @@ Assert::same( '',  LatteMacros::formatArray('', '&') );
 Assert::same( 'array(1)',  LatteMacros::formatArray('1') );
 Assert::same( '&array(1)',  LatteMacros::formatArray('1', '&') );
 Assert::same( "array('symbol')",  LatteMacros::formatArray('symbol') );
-Assert::same( "array(1, 2, 'symbol1', 'symbol2')",  LatteMacros::formatArray('1, 2, symbol1, symbol2') );
+Assert::same( "array(1, 2, 'symbol1', 'symbol-2')",  LatteMacros::formatArray('1, 2, symbol1, symbol-2') );
 
 // strings
 

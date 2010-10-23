@@ -176,7 +176,7 @@ class LatteMacros extends Nette\Object
 			'true|false|null|and|or|xor|clone|new|instanceof',
 			self::T_VARIABLE => '\$[_a-z0-9\x7F-\xFF]+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
-			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+',
+			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+(?:-[_a-z0-9\x7F-\xFF]+)*',
 			'::|=>|[^"\']', // =>, any char except quotes
 		), 'i');
 	}
