@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<ul{attr class('item') style('background', 'white') title($hello) compact(TRUE)}>
+<ul>
 	<li>Escaped: {$hello}</li>
 	<li>Non-escaped: {!$hello}</li>
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>
@@ -8,7 +8,10 @@
 	<li>Array access: {$people[1]}</li>
 	<li>Html: {$el}</li>
 	<li>Translated: {_$people[1]}</li>
+	<li>Translated string: {_ahoj}</li>
 	<li>Non-escaped and translated: {!_$people[1]}</li>
+	<li>Condition: {$hello ? yes}</li>
+	<li>Array: {$hello ? [a, b, c]|join}</li>
 </ul>
 
 <input/> <input /> <input>

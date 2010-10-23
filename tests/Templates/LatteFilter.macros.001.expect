@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<ul class="item" style="background:white" title="&lt;i&gt;Hello&lt;/i&gt;" compact="compact">
+<ul>
 	<li>Escaped: &lt;i&gt;Hello&lt;/i&gt;</li>
 	<li>Non-escaped: <i>Hello</i></li>
 	<li>Escaped expression: &lt;b&gt;hello&lt;/b&gt;</li>
@@ -8,7 +8,10 @@
 	<li>Array access: Mary</li>
 	<li>Html: <div title="1/2&quot;"></div></li>
 	<li>Translated: yraM</li>
+	<li>Translated string: joha</li>
 	<li>Non-escaped and translated: yraM</li>
+	<li>Condition: yes</li>
+	<li>Array: abc</li>
 </ul>
 
 <input /> <input /> <input />

@@ -2,7 +2,7 @@
 
 {contentType application/xml}
 
-<ul{attr class('item') style('background', 'white') title($hello) compact(TRUE)}>
+<ul>
 	<li>Escaped: {$hello}</li>
 	<li>Non-escaped: {!$hello}</li>
 	<li>Escaped expression: {='<' . 'b' . '>hello' . '</b>'}</li>

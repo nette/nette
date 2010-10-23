@@ -31,6 +31,7 @@ $template = new FileTemplate;
 $template->setFile(__DIR__ . '/templates/latte.phtml');
 $template->registerFilter(new LatteFilter);
 $template->registerHelper('translate', 'strrev');
+$template->registerHelper('join', 'implode');
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 
 $template->hello = '<i>Hello</i>';
