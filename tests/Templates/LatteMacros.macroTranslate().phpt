@@ -18,5 +18,5 @@ require __DIR__ . '/../bootstrap.php';
 $macros = new LatteMacros;
 
 // {_...}
-Assert::same( '$template->translate(var)',  $macros->macroTranslate('var', '') );
-Assert::same( '$template->filter($template->translate(var))',  $macros->macroTranslate('var', '|filter') );
+Assert::same( '$template->translate(\'var\')',  $macros->macroTranslate('var', '') );
+Assert::same( '$template->filter($template->translate(\'var\'))',  $macros->macroTranslate('var', '|filter') );

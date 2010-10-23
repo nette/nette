@@ -312,7 +312,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					return callback($m[1][0] === ':' ? array($This, substr($m[1], 1)) : $m[1])
 						->invoke($content, $modifiers);
 				} else {
-					return $content;
+					return LatteMacros::format($content, '#');
 				}
 			}
 		);
@@ -415,7 +415,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function macroDollar($var, $modifiers)
 	{
-		return self::formatModifiers('$' . $var, $modifiers);
+		return self::formatModifiers(self::format('$' . $var), $modifiers);
 	}
 
 
@@ -425,7 +425,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function macroTranslate($var, $modifiers)
 	{
-		return self::formatModifiers($var, '|translate' . $modifiers);
+		return self::formatModifiers(self::format($var), '|translate' . $modifiers);
 	}
 
 
@@ -672,7 +672,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
+		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', self::format($content), 1);
 	}
 
 
@@ -729,7 +729,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public function macroDump($content)
 	{
 		return 'Nette\Debug::barDump('
-			. ($content ? 'array(' . var_export($content, TRUE) . " => $content)" : 'get_defined_vars()')
+			. ($content ? 'array(' . var_export(self::format($content), TRUE) . " => $content)" : 'get_defined_vars()')
 			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
@@ -937,18 +937,32 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 
 
 	/**
-	 * Formats parameters to PHP array.
+	 * Reformats Latte to PHP code.
 	 * @param  string
 	 * @param  string
 	 * @return string
 	 */
-	public static function formatArray($input, $prefix = '')
+	public static function format($input)
 	{
 		$out = '';
 		foreach (self::parse($input) as $n => $token) {
 			list($token, $name) = $token;
 			$out .= $token;
 		}
+		return $out;
+	}
+
+
+
+	/**
+	 * Reformats Latte to PHP array.
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	public static function formatArray($input, $prefix = '')
+	{
+		$out = self::format($input);
 		return $out === '' ? '' : $prefix . "array($out)";
 	}
 
