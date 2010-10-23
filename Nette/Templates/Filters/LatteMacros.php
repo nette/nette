@@ -810,23 +810,16 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public function macroVar($content, $modifiers, $extract = FALSE)
 	{
 		$out = '';
-		$quote = $var = TRUE;
+		$var = TRUE;
 		$depth = 0;
-		foreach (self::$tokenizer->tokenize($content) as $n => $token) {
+		foreach (self::parse($content) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === self::T_COMMENT) {
-				continue;
-
-			} elseif ($name === self::T_SYMBOL || $name === self::T_VARIABLE) {
-				if ($var) {
-					if ($extract) {
-						$token = "'" . ($name === self::T_VARIABLE ? substr($token, 1) : $token) . "'";
-					} else {
-						$token = $name === self::T_VARIABLE ? $token : '$' . $token;
-					}
-				} elseif ($quote && $name === self::T_SYMBOL && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
-					$token = "'$token'";
+			if ($var && $name === self::T_SYMBOL || $name === self::T_VARIABLE) {
+				if ($extract) {
+					$token = "'" . trim($token, "'$") . "'";
+				} else {
+					$token = '$' . trim($token, "'$");
 				}
 			} elseif ($token === '(') {
 				$depth++;
@@ -841,10 +834,6 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			} elseif ($token === ',' && $depth === 0) {
 				$token = $extract ? ',' : ';';
 				$var = TRUE;
-			}
-
-			if ($name !== self::T_WHITESPACE) {
-				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 			$out .= $token;
 		}
@@ -897,18 +886,15 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		if (!$modifiers) return $var;
 		$inside = FALSE;
-		foreach (self::$tokenizer->tokenize(ltrim($modifiers, '|')) as $n => $token) {
+		foreach (self::parse(ltrim($modifiers, '|')) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === self::T_COMMENT) {
-				continue;
-
-			} elseif ($name === self::T_WHITESPACE) {
+			if ($name === self::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
 				if ($name === self::T_SYMBOL) {
-					$var = "\$template->$token($var";
+					$var = "\$template->" . trim($token, "'") . "($var";
 					$inside = TRUE;
 				} else {
 					throw new \InvalidStateException("Modifier name must be alphanumeric string, '$token' given.");
@@ -921,15 +907,9 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					$var = $var . ')';
 					$inside = FALSE;
 
-				} elseif ($name === self::T_SYMBOL && $quote && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
-					$var .= "'$token'";
-
 				} else {
 					$var .= $token;
 				}
-			}
-			if ($name !== self::T_WHITESPACE) {
-				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 		}
 		return $inside ? "$var)" : $var;
@@ -963,19 +943,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public static function formatArray($input, $prefix = '')
 	{
 		$out = '';
-		$quote = TRUE;
-		foreach (self::$tokenizer->tokenize($input) as $n => $token) {
+		foreach (self::parse($input) as $n => $token) {
 			list($token, $name) = $token;
-
-			if ($name === self::T_COMMENT) {
-				continue;
-
-			} elseif ($name === self::T_SYMBOL && $quote && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
-				$token = "'$token'";
-			}
-			if ($name !== self::T_WHITESPACE) {
-				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
-			}
 			$out .= $token;
 		}
 		return $out === '' ? '' : $prefix . "array($out)";
@@ -996,14 +965,43 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 
 
 
-	private static function nextToken($i)
+	/**
+	 * Tokenizer and preparser.
+	 * @return array
+	 */
+	private static function parse($input)
 	{
-		while (isset(self::$tokenizer->tokens[++$i])) {
-			$name = self::$tokenizer->tokens[$i][1];
-			if ($name !== self::T_WHITESPACE && $name !== self::T_COMMENT) {
-				return self::$tokenizer->tokens[$i][0];
+		self::$tokenizer->tokenize($input);
+		self::$tokenizer->tokens[] = NULL; // sentinel
+
+		$lastSymbol = $prev = NULL;
+		$tokens = array();
+		$n = -1;
+		while (++$n < count(self::$tokenizer->tokens)) {
+			list($token, $name) = $pair = self::$tokenizer->tokens[$n];
+			if ($name === self::T_COMMENT) {
+				continue; // remove comments
+
+			} elseif ($name === self::T_WHITESPACE) {
+				$tokens[] = $pair;
+				continue;
+
+			} elseif ($name === self::T_SYMBOL && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
+				$lastSymbol = count($tokens); // quoting pre-requirements
+
+			} elseif (is_int($lastSymbol) && in_array($token, array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
+				$tokens[$lastSymbol][0] = "'" . $tokens[$lastSymbol][0] . "'"; // quote symbols
+				$lastSymbol = NULL;
+
+			} else {
+				$lastSymbol = NULL;
+			}
+
+			if ($pair) {
+				$tokens[] = $prev = $pair;
 			}
 		}
+		return $tokens;
 	}
 
 
