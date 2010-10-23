@@ -48,6 +48,10 @@ Assert::same( 'array(func (10))',  LatteMacros::formatArray('func (10)') );
 Assert::same( "array('symbol1' => 'value','symbol2'=>'value')",  LatteMacros::formatArray('symbol1 => value,symbol2=>value') );
 Assert::same( "array('symbol1' => array ('symbol2' => 'value'))",  LatteMacros::formatArray('symbol1 => array (symbol2 => value)') );
 
+// simplified arrays
+
+Assert::same( 'array(array(\'item\', 123, array(), $item[1]))',  LatteMacros::formatArray('[item, 123, [], $item[1]]') );
+
 // special
 
 Assert::same( 'array($var)',  LatteMacros::formatArray('$var') );

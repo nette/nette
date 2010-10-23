@@ -928,7 +928,6 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			$s = $matches[2];
 			return $matches[1];
 		}
-
 		return NULL;
 	}
 
@@ -975,7 +974,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		self::$tokenizer->tokens[] = NULL; // sentinel
 
 		$lastSymbol = $prev = NULL;
-		$tokens = array();
+		$tokens = $arrays = array();
 		$n = -1;
 		while (++$n < count(self::$tokenizer->tokens)) {
 			list($token, $name) = $pair = self::$tokenizer->tokens[$n];
@@ -995,6 +994,17 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 
 			} else {
 				$lastSymbol = NULL;
+			}
+
+			if ($token === '[') { // simplified array syntax [...]
+				if ($arrays[] = $prev[0] !== ']' && $prev[1] !== self::T_SYMBOL && $prev[1] !== self::T_VARIABLE) {
+					$tokens[] = array('array', NULL);
+					$pair = array('(', NULL);
+				}
+			} elseif ($token === ']') {
+				if (array_pop($arrays)) {
+					$pair = array(')', NULL);
+				}
 			}
 
 			if ($pair) {
