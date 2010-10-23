@@ -199,7 +199,7 @@ class LatteMacros extends Nette\Object
 	{
 		// blocks closing check
 		if (count($this->blocks) === 1) { // auto-close last block
-			$s .= $this->macro('/block', '', '');
+			$s .= $this->macro('/block');
 
 		} elseif ($this->blocks) {
 			throw new \InvalidStateException("There are unclosed blocks.");
@@ -263,8 +263,13 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 * @param  string
 	 * @return string
 	 */
-	public function macro($macro, $content, $modifiers)
+	public function macro($macro, $content = '', $modifiers = '')
 	{
+		if (func_num_args() === 1) {  // {macro val|modifiers}
+			list(, $macro, $content, $modifiers) = String::match($macro, '#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.LatteFilter::RE_STRING.'|[^\'"]+)*)?$()#is');
+			$content = trim($content);
+		}
+
 		if ($macro === '') {
 			$macro = substr($content, 0, 2);
 			if (!isset($this->macros[$macro])) {
@@ -333,6 +338,18 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		$left = $right = '';
 		foreach ($this->macros as $name => $foo) {
+			if ($name[0] === '@') {
+				$name = substr($name, 1);
+				if (isset($attrs[$name])) {
+					if (!$closing) {
+						$pos = strrpos($code, '>');
+						if ($code[$pos-1] === '/') $pos--;
+						$code = substr_replace($code, $this->macro("@$name", $attrs[$name]), $pos, 0);
+					}
+					unset($attrs[$name]);
+				}
+			}
+
 			if (!isset($this->macros["/$name"])) { // must be pair-macro
 				continue;
 			}
@@ -340,25 +357,25 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			$macro = $closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
 				if ($closing) {
-					$right .= $this->macro($macro, '', '');
+					$right .= $this->macro($macro);
 				} else {
-					$left = $this->macro($macro, $attrs[$name], '') . $left;
+					$left = $this->macro($macro, $attrs[$name]) . $left;
 				}
 			}
 
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
 				if ($closing) {
-					$left .= $this->macro($macro, '', '');
+					$left .= $this->macro($macro);
 				} else {
-					$right = $this->macro($macro, $attrs[$innerName], '') . $right;
+					$right = $this->macro($macro, $attrs[$innerName]) . $right;
 				}
 			}
 
 			$tagName = "tag-$name";
 			if (isset($attrs[$tagName])) {
-				$left = $this->macro($name, $attrs[$tagName], '') . $left;
-				$right .= $this->macro("/$name", '', '');
+				$left = $this->macro($name, $attrs[$tagName]) . $left;
+				$right .= $this->macro("/$name");
 			}
 
 			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);

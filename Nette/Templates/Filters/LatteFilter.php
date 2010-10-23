@@ -133,9 +133,8 @@ class LatteFilter extends Nette\Object
 			if (!$matches) { // EOF
 				break;
 
-			} elseif (!empty($matches['macro'])) { // {macro|modifiers}
-				list(, $macro, $value, $modifiers) = String::match($matches['macro'], '#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Tokenizer::RE_STRING.'|[^\'"]+)*)?$()#is');
-				$code = $this->handler->macro($macro, trim($value), isset($modifiers) ? $modifiers : '');
+			} elseif (!empty($matches['macro'])) { // {macro}
+				$code = $this->handler->macro($matches['macro']);
 				if ($code === NULL) {
 					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
