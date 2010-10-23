@@ -186,3 +186,8 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 
 test
 { }
+
+<p class="foo">n:class</p>
+
+
+<p>n:class empty</p>

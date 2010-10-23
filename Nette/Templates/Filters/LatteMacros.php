@@ -100,6 +100,8 @@ class LatteMacros extends Nette\Object
 		'widget' => '<?php %:macroControl% ?>',
 		'control' => '<?php %:macroControl% ?>',
 
+		'@class' => '<?php echo ($_l->tmp = trim(implode(" ", array_unique(%:formatArray%)))) ? \' class="\' . %:macroEscape%($_l->tmp) . \'"\' : "" ?>',
+		
 		'attr' => '<?php echo Nette\Web\Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'status' => '<?php Nette\Environment::getHttpResponse()->setCode(%%) ?>',
