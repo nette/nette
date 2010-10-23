@@ -16,19 +16,12 @@ use Nette;
 
 
 /**
- * Simple tokenizer.
+ * Simple lexical analyser.
  *
  * @author     David Grudl
  */
-class Tokenizer extends Object implements \IteratorAggregate
+class Tokenizer extends Object
 {
-	/** regular expression for single & double quoted PHP string */
-	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
-
-	const T_WHITESPACE = T_WHITESPACE;
-
-	const T_COMMENT = T_COMMENT;
-
 	/** @var string */
 	private $input;
 
@@ -44,11 +37,10 @@ class Tokenizer extends Object implements \IteratorAggregate
 
 
 	/**
-	 * Lexical scanner.
-	 * @param  string
-	 * @return void
+	 * @param  array of [symbol name => pattern]
+	 * @param  string  regular expression flag
 	 */
-	function __construct(array $patterns, $flags = '')
+	public function __construct(array $patterns, $flags = '')
 	{
 		$this->re = '~(' . implode(')|(', $patterns) . ')~A' . $flags;
 		$keys = array_keys($patterns);
@@ -57,7 +49,12 @@ class Tokenizer extends Object implements \IteratorAggregate
 
 
 
-	function tokenize($input)
+	/**
+	 * Tokenize string.
+	 * @param  string
+	 * @return array
+	 */
+	public function tokenize($input)
 	{
 		$this->input = $input;
 		if ($this->names) {
@@ -93,30 +90,16 @@ class Tokenizer extends Object implements \IteratorAggregate
 			$token = str_replace("\n", '\n', substr($input, $errorOffset, 10));
 			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
-		return $this;
+		return $this->tokens;
 	}
 
 
 
-	function getIterator()
-	{
-		return new \ArrayIterator($this->tokens);
-	}
-
-
-
-	function nextToken($i)
-	{
-		while (isset($this->tokens[++$i])) {
-			$name = $this->tokens[$i][1];
-			if ($name !== self::T_WHITESPACE && $name !== self::T_COMMENT) {
-				return $this->tokens[$i][0];
-			}
-		}
-	}
-
-
-
+	/**
+	 * Returns position of token in input string
+	 * @param  int token number
+	 * @return int
+	 */
 	public function getOffset($i)
 	{
 		$tokens = String::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);

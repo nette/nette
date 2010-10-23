@@ -12,8 +12,7 @@
 namespace Nette\Templates;
 
 use Nette,
-	Nette\String,
-	Nette\Tokenizer;
+	Nette\String;
 
 
 
@@ -125,6 +124,8 @@ class LatteMacros extends Nette\Object
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
 	/** @internal */
+	const T_WHITESPACE = T_WHITESPACE;
+	const T_COMMENT = T_COMMENT;
 	const T_SYMBOL = -1;
 	const T_NUMBER = -2;
 	const T_VARIABLE = -3;
@@ -168,10 +169,10 @@ class LatteMacros extends Nette\Object
 	{
 		$this->macros = self::$defaultMacros;
 
-		self::$tokenizer = new Tokenizer(array(
-			Tokenizer::T_WHITESPACE => '\s+',
-			Tokenizer::T_COMMENT => '/\*.*?\*/',
-			Tokenizer::RE_STRING,
+		self::$tokenizer = new Nette\Tokenizer(array(
+			self::T_WHITESPACE => '\s+',
+			self::T_COMMENT => '/\*.*?\*/',
+			LatteFilter::RE_STRING,
 			'true|false|null|and|or|xor|clone|new|instanceof',
 			self::T_VARIABLE => '\$[_a-z0-9\x7F-\xFF]+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
@@ -814,7 +815,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		foreach (self::$tokenizer->tokenize($content) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === Tokenizer::T_COMMENT) {
+			if ($name === self::T_COMMENT) {
 				continue;
 
 			} elseif ($name === self::T_SYMBOL || $name === self::T_VARIABLE) {
@@ -824,7 +825,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					} else {
 						$token = $name === self::T_VARIABLE ? $token : '$' . $token;
 					}
-				} elseif ($quote && $name === self::T_SYMBOL && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
+				} elseif ($quote && $name === self::T_SYMBOL && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 					$token = "'$token'";
 				}
 			} elseif ($token === '(') {
@@ -842,7 +843,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$var = TRUE;
 			}
 
-			if ($name !== Tokenizer::T_WHITESPACE) {
+			if ($name !== self::T_WHITESPACE) {
 				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 			$out .= $token;
@@ -858,7 +859,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public function macroDefault($content)
 	{
 		return 'extract(array(' . $this->macroVar($content, '', TRUE) . '), EXTR_SKIP)';
-		}
+	}
 
 
 
@@ -899,10 +900,10 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		foreach (self::$tokenizer->tokenize(ltrim($modifiers, '|')) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === Tokenizer::T_COMMENT) {
+			if ($name === self::T_COMMENT) {
 				continue;
 
-			} elseif ($name === Tokenizer::T_WHITESPACE) {
+			} elseif ($name === self::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
@@ -920,14 +921,14 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					$var = $var . ')';
 					$inside = FALSE;
 
-				} elseif ($name === self::T_SYMBOL && $quote && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
+				} elseif ($name === self::T_SYMBOL && $quote && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 					$var .= "'$token'";
 
 				} else {
 					$var .= $token;
 				}
 			}
-			if ($name !== Tokenizer::T_WHITESPACE) {
+			if ($name !== self::T_WHITESPACE) {
 				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 		}
@@ -943,7 +944,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public static function fetchToken(& $s)
 	{
-		if ($matches = String::match($s, '#^((?>'.Tokenizer::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
+		if ($matches = String::match($s, '#^((?>'.LatteFilter::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}
@@ -966,13 +967,13 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		foreach (self::$tokenizer->tokenize($input) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($name === Tokenizer::T_COMMENT) {
+			if ($name === self::T_COMMENT) {
 				continue;
 
-			} elseif ($name === self::T_SYMBOL && $quote && in_array(self::$tokenizer->nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
+			} elseif ($name === self::T_SYMBOL && $quote && in_array(self::nextToken($n), array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
 				$token = "'$token'";
 			}
-			if ($name !== Tokenizer::T_WHITESPACE) {
+			if ($name !== self::T_WHITESPACE) {
 				$quote = in_array($token, array(',', '(', '[', '=', '=>', ':', '?'));
 			}
 			$out .= $token;
@@ -991,6 +992,18 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		static $keywords = array('true'=>1, 'false'=>1, 'null'=>1);
 		return (is_numeric($s) || strspn($s, '\'"$') || isset($keywords[strtolower($s)])) ? $s : '"' . $s . '"';
+	}
+
+
+
+	private static function nextToken($i)
+	{
+		while (isset(self::$tokenizer->tokens[++$i])) {
+			$name = self::$tokenizer->tokens[$i][1];
+			if ($name !== self::T_WHITESPACE && $name !== self::T_COMMENT) {
+				return self::$tokenizer->tokens[$i][0];
+			}
+		}
 	}
 
 

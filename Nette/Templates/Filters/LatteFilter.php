@@ -24,6 +24,9 @@ use Nette,
  */
 class LatteFilter extends Nette\Object
 {
+	/** regular expression for single & double quoted PHP string */
+	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
+
 	/** @internal special HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
@@ -409,7 +412,7 @@ class LatteFilter extends Nette\Object
 		$this->macroRe = '
 			(?P<indent>\n[\ \t]*)?
 			' . $left . '
-				(?P<macro>(?:' . Tokenizer::RE_STRING . '|[^\'"]+?)*?)
+				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '
 			(?P<newline>[\ \t]*(?=\r|\n))?
 		';
