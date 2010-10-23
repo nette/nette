@@ -973,7 +973,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		self::$tokenizer->tokenize($input);
 		self::$tokenizer->tokens[] = NULL; // sentinel
 
-		$lastSymbol = $prev = NULL;
+		$inTernary = $lastSymbol = $prev = NULL;
 		$tokens = $arrays = array();
 		$n = -1;
 		while (++$n < count(self::$tokenizer->tokens)) {
@@ -996,15 +996,32 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$lastSymbol = NULL;
 			}
 
+			if ($token === '?') { // short ternary operators without :
+				$inTernary = count($arrays);
+
+			} elseif ($token === ':') {
+				$inTernary = NULL;
+
+			} elseif ($inTernary === count($arrays) && ($token === ',' || $token === ')' || $pair === NULL)) { // close ternary
+				$tokens[] = array(':', NULL);
+				$tokens[] = array('null', NULL);
+				$inTernary = NULL;
+			}
+
 			if ($token === '[') { // simplified array syntax [...]
 				if ($arrays[] = $prev[0] !== ']' && $prev[1] !== self::T_SYMBOL && $prev[1] !== self::T_VARIABLE) {
 					$tokens[] = array('array', NULL);
 					$pair = array('(', NULL);
 				}
 			} elseif ($token === ']') {
-				if (array_pop($arrays)) {
+				if (array_pop($arrays) === TRUE) {
 					$pair = array(')', NULL);
 				}
+			} elseif ($token === '(') { // only count
+				$arrays[] = '(';
+
+			} elseif ($token === ')') { // only count
+				array_pop($arrays);
 			}
 
 			if ($pair) {

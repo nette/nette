@@ -52,6 +52,10 @@ Assert::same( "array('symbol1' => array ('symbol2' => 'value'))",  LatteMacros::
 
 Assert::same( 'array(array(\'item\', 123, array(), $item[1]))',  LatteMacros::formatArray('[item, 123, [], $item[1]]') );
 
+// short ternary operators
+
+Assert::same( 'array(($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo\':null)',  LatteMacros::formatArray('($first ? first), $var ? foo : bar, $var ? foo') );
+
 // special
 
 Assert::same( 'array($var)',  LatteMacros::formatArray('$var') );
