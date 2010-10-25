@@ -123,6 +123,10 @@ var prop2 = {$people};
 {var varx => 8}{$varx}
 {var $varx => 9}{$varx}
 
+{var $now = new DateTime}
+{var $foo = $now->format('u')}
+{default $foo = $now->format('u')}
+
 <!-- {$comment} -->
 
 

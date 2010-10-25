@@ -818,7 +818,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		foreach (self::parse($content) as $n => $token) {
 			list($token, $name) = $token;
 
-			if ($var && $name === self::T_SYMBOL || $name === self::T_VARIABLE) {
+			if ($var && ($name === self::T_SYMBOL || $name === self::T_VARIABLE)) {
 				if ($extract) {
 					$token = "'" . trim($token, "'$") . "'";
 				} else {
