@@ -138,7 +138,7 @@ class LatteFilter extends Nette\Object
 
 			} elseif (!empty($matches['macro'])) { // {macro}
 				$code = $this->handler->macro($matches['macro']);
-				if ($code === NULL) {
+				if ($code === FALSE) {
 					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
 				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
@@ -258,7 +258,7 @@ class LatteFilter extends Nette\Object
 			if ($tag->isMacro || !empty($tag->attrs)) {
 				if ($tag->isMacro) {
 					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
-					if ($code === NULL) {
+					if ($code === FALSE) {
 						throw new \InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
 					}
 					if ($isEmpty) {
@@ -267,7 +267,7 @@ class LatteFilter extends Nette\Object
 				} else {
 					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 					$code = $this->handler->attrsMacro($code, $tag->attrs, $tag->closing);
-					if ($code === NULL) {
+					if ($code === FALSE) {
 						throw new \InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
 					}
 					if ($isEmpty) {
