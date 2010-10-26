@@ -1019,7 +1019,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			} elseif ($token === ':') {
 				$inTernary = NULL;
 
-			} elseif ($inTernary === count($arrays) && ($token === ',' || $token === ')' || $pair === NULL)) { // close ternary
+			} elseif ($inTernary === count($arrays) && ($token === ',' || $token === ')' || $token === ']' || $pair === NULL)) { // close ternary
 				$tokens[] = array(':', NULL);
 				$tokens[] = array('null', NULL);
 				$inTernary = NULL;
