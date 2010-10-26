@@ -860,7 +860,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function macroModifiers($content, $modifiers)
 	{
-		return $this->formatModifiers($content, $modifiers);
+		return $this->formatModifiers($this->formatMacroArgs($content), $modifiers);
 	}
 
 

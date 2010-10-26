@@ -10,8 +10,8 @@
 	<li>Translated: yraM</li>
 	<li>Translated string: joha</li>
 	<li>Non-escaped and translated: yraM</li>
-	<li>Condition: yes</li>
-	<li>Array: abc</li>
+	<li>Condition: yes yes</li>
+	<li>Array: abc abc</li>
 </ul>
 
 <input> <input> <input>
