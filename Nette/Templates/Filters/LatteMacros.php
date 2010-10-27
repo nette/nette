@@ -827,8 +827,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$out = '';
 		$var = TRUE;
 		$depth = 0;
-		foreach ($this->parseMacro($content) as $n => $token) {
-			list($token, $name) = $token;
+		foreach ($this->parseMacro($content) as $rec) {
+			list($token, $name) = $rec;
 
 			if ($var && ($name === self::T_SYMBOL || $name === self::T_VARIABLE)) {
 				if ($extract) {
@@ -901,8 +901,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		if (!$modifiers) return $var;
 		$inside = FALSE;
-		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $n => $token) {
-			list($token, $name) = $token;
+		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $rec) {
+			list($token, $name) = $rec;
 
 			if ($name === self::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
@@ -957,9 +957,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public function formatMacroArgs($input)
 	{
 		$out = '';
-		foreach ($this->parseMacro($input) as $n => $token) {
-			list($token, $name) = $token;
-			$out .= $token;
+		foreach ($this->parseMacro($input) as $token) {
+			$out .= $token[0];
 		}
 		return $out;
 	}
@@ -1006,12 +1005,14 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$tokens = $arrays = array();
 		$n = -1;
 		while (++$n < count($this->tokenizer->tokens)) {
-			list($token, $name) = $pair = $this->tokenizer->tokens[$n];
+			list($token, $name) = $current = $this->tokenizer->tokens[$n];
+			$depth = count($arrays);
+
 			if ($name === self::T_COMMENT) {
 				continue; // remove comments
 
 			} elseif ($name === self::T_WHITESPACE) {
-				$tokens[] = $pair;
+				$tokens[] = $current;
 				continue;
 
 			} elseif ($name === self::T_SYMBOL && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
@@ -1026,12 +1027,12 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			}
 
 			if ($token === '?') { // short ternary operators without :
-				$inTernary = count($arrays);
+				$inTernary = $depth;
 
 			} elseif ($token === ':') {
 				$inTernary = NULL;
 
-			} elseif ($inTernary === count($arrays) && ($token === ',' || $token === ')' || $token === ']' || $pair === NULL)) { // close ternary
+			} elseif ($inTernary === $depth && ($token === ',' || $token === ')' || $token === ']' || $token === NULL)) { // close ternary
 				$tokens[] = array(':', NULL);
 				$tokens[] = array('null', NULL);
 				$inTernary = NULL;
@@ -1040,11 +1041,11 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			if ($token === '[') { // simplified array syntax [...]
 				if ($arrays[] = $prev[0] !== ']' && $prev[1] !== self::T_SYMBOL && $prev[1] !== self::T_VARIABLE) {
 					$tokens[] = array('array', NULL);
-					$pair = array('(', NULL);
+					$current = array('(', NULL);
 				}
 			} elseif ($token === ']') {
 				if (array_pop($arrays) === TRUE) {
-					$pair = array(')', NULL);
+					$current = array(')', NULL);
 				}
 			} elseif ($token === '(') { // only count
 				$arrays[] = '(';
@@ -1053,8 +1054,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				array_pop($arrays);
 			}
 
-			if ($pair) {
-				$tokens[] = $prev = $pair;
+			if ($current) {
+				$tokens[] = $prev = $current;
 			}
 		}
 		return $tokens;
