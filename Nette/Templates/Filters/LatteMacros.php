@@ -101,7 +101,8 @@ class LatteMacros extends Nette\Object
 		'control' => '<?php %:macroControl% ?>',
 
 		'@href' => ' href="<?php echo %:escape%(%:macroLink%) ?>"',
-		'@class' => '<?php echo ($_l->tmp = trim(implode(" ", array_unique(%:formatArray%)))) ? \' class="\' . %:escape%($_l->tmp) . \'"\' : "" ?>',
+		'@class' => '<?php if ($_l->tmp = trim(implode(" ", array_unique(%:formatArray%)))) echo \' class="\' . %:escape%($_l->tmp) . \'"\' ?>',
+		'@attr' => '<?php if (($_l->tmp = (string) (%%)) !== \'\') echo \' @@="\' . %:escape%($_l->tmp) . \'"\' ?>',
 
 		'attr' => '<?php echo Nette\Web\Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
@@ -356,6 +357,17 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function attrsMacro($code, $attrs, $closing)
 	{
+		foreach ($attrs as $name => $content) {
+			if (substr($name, 0, 5) === 'attr-') {
+				if (!$closing) {
+					$pos = strrpos($code, '>');
+					if ($code[$pos-1] === '/') $pos--;
+					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $content)), $pos, 0);
+				}
+				unset($attrs[$name]);
+			}
+		}
+
 		$left = $right = '';
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') {
