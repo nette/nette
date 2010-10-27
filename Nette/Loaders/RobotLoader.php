@@ -12,7 +12,8 @@
 namespace Nette\Loaders;
 
 use Nette,
-	Nette\String;
+	Nette\String,
+	Nette\Caching\Cache;
 
 
 
@@ -102,7 +103,9 @@ class RobotLoader extends AutoLoader
 			if ($initiator === 'class_exists' || $initiator === 'interface_exists') {
 				$this->list[$type] = FALSE;
 				if ($this->autoRebuild && $this->rebuilt) {
-					$this->getCache()->save($this->getKey(), $this->list);
+					$this->getCache()->save($this->getKey(), $this->list, array(
+						Cache::CONSTS => 'Nette\Framework::REVISION',
+					));
 				}
 			}
 
@@ -125,7 +128,9 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
-		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'));
+		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'), array(
+			Cache::CONSTS => 'Nette\Framework::REVISION',
+		));
 		$this->rebuilt = TRUE;
 	}
 
@@ -359,7 +364,7 @@ class RobotLoader extends AutoLoader
 			trigger_error('Missing cache storage.', E_USER_WARNING);
 			$this->cacheStorage = new Nette\Caching\DummyStorage;
 		}
-		return new Nette\Caching\Cache($this->cacheStorage, 'Nette.RobotLoader');
+		return new Cache($this->cacheStorage, 'Nette.RobotLoader');
 	}
 
 
