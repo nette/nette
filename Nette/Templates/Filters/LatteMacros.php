@@ -966,8 +966,26 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	 */
 	public function formatArray($input, $prefix = '')
 	{
-		$out = $this->formatMacroArgs($input);
-		return $out === '' ? '' : $prefix . "array($out)";
+		$tokens = $this->parseMacro($input);
+		if (!$tokens) {
+			return '';
+		}
+		$out = '';
+		$expand = NULL;
+		$tokens[] = NULL; // sentinel
+		foreach ($tokens as $rec) {
+			list($token, $name, $depth) = $rec;
+			if ($token === '(expand)' && $depth === 0) {
+				$expand = TRUE;
+				$token = '),';
+
+			} elseif ($expand && ($token === ',' || $token === NULL) && !$depth) {
+				$expand = FALSE;
+				$token = ', array(';
+			}
+			$out .= $token;
+		}
+		return $prefix . ($expand === NULL ? "array($out)" : "array_merge(array($out))");
 	}
 
 

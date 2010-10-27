@@ -56,6 +56,10 @@ Assert::same( 'array(array(\'item\', 123, array(), $item[1]))',  $latte->formatA
 
 Assert::same( 'array(($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo\':null)',  $latte->formatArray('($first ? first), $var ? foo : bar, $var ? foo') );
 
+// expand
+
+Assert::same( 'array_merge(array(\'item\', $list, ), $list, array())',  $latte->formatArray('item, $list, (expand) $list') );
+
 // special
 
 Assert::same( 'array($var)',  $latte->formatArray('$var') );
