@@ -32,4 +32,4 @@ $template->setFile(__DIR__ . '/templates/latte.first-sep-last.phtml');
 $template->registerFilter(new LatteFilter);
 $template->people = array('John', 'Mary', 'Paul');
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.019.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.019.expect'), $template->__toString(TRUE));

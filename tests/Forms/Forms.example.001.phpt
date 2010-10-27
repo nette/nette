@@ -125,4 +125,4 @@ $defaults = array(
 $form->setDefaults($defaults);
 $form->fireEvents();
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.001.expect'), (string) $form );
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.001.expect'), $form->__toString(TRUE) );

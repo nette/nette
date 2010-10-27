@@ -84,4 +84,4 @@ Assert::same( array(
 )
 , $form->getValues() );
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.006.expect'), (string) $form );
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.006.expect'), $form->__toString(TRUE) );

@@ -25,4 +25,4 @@ Assert::match(<<<EOD
 	<th><label for="frm-input"><b>Strong text.</b></label></th>
 %A%
 EOD
-, (string) $form);
+, $form->__toString(TRUE));

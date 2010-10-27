@@ -33,4 +33,4 @@ $template->registerFilter(new LatteFilter);
 
 $template->people = array('John', 'Mary', 'Paul');
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.001.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.001.expect'), $template->__toString(TRUE));

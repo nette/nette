@@ -46,4 +46,4 @@ $form->addText('email', 'Send to e-mail:')
 
 $form->addSubmit('submit', 'Send');
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.008.expect'), (string) $form );
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.008.expect'), $form->__toString(TRUE) );

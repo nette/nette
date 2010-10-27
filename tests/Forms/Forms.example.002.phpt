@@ -28,4 +28,4 @@ $form->addHidden('id')->setDefaultValue(123);
 $form->addSubmit('submit', 'Delete item');
 $form->fireEvents();
 
-Assert::match( file_get_contents(__DIR__ . '/Forms.example.002.expect'), (string) $form );
+Assert::match( file_get_contents(__DIR__ . '/Forms.example.002.expect'), $form->__toString(TRUE) );

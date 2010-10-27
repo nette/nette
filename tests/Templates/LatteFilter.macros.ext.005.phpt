@@ -33,4 +33,4 @@ $template->registerFilter(new LatteFilter);
 
 $template->ext = 'latte.inheritance.parent.phtml';
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.005.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.005.expect'), $template->__toString(TRUE));

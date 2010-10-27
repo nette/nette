@@ -41,4 +41,4 @@ $template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->comment = 'test -- comment';
 $template->el = Nette\Web\Html::el('div')->title('1/2"');
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.018.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.018.expect'), $template->__toString(TRUE));

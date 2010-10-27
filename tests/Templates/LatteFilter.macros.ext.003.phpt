@@ -35,4 +35,4 @@ Assert::match(<<<EOD
 
 	Content
 EOD
-, (string) $template);
+, $template->__toString(TRUE));

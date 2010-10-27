@@ -36,4 +36,4 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->title = 'Hello';
 $template->id = 456;
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.002.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.002.expect'), $template->__toString(TRUE));

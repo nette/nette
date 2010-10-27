@@ -21,7 +21,7 @@ $form->addText('email', 'E-mail')
 	->addRule(Form::EMAIL, '%label %value is invalid [field %name]')
 	->setDefaultValue('xyz');
 
-Assert::match("%A%data-nette-rules=\"{op:':email',msg:'E-mail %value is invalid [field email]'}\"%A%", (string) $form);
+Assert::match("%A%data-nette-rules=\"{op:':email',msg:'E-mail %value is invalid [field email]'}\"%A%", $form->__toString(TRUE));
 
 $form->validate();
 

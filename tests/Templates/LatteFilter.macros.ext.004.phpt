@@ -34,4 +34,4 @@ $template->registerFilter(new LatteFilter);
 Assert::match(<<<EOD
 	Content
 EOD
-, (string) $template);
+, $template->__toString(TRUE));

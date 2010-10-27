@@ -38,4 +38,4 @@ $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->comment = 'test -- comment';
 $template->el = Nette\Web\Html::el('div')->title('1/2"');
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.011.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.011.expect'), $template->__toString(TRUE));

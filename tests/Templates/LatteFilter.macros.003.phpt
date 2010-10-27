@@ -60,4 +60,4 @@ $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');
 
-Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.003.expect'), (string) $template);
+Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.003.expect'), $template->__toString(TRUE));
