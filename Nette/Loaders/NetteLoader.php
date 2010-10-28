@@ -170,6 +170,8 @@ class NetteLoader extends AutoLoader
 		'nette\iterators\recursor' => '/Iterators/Recursor.php',
 		'nette\latte\defaultmacros' => '/Latte/DefaultMacros.php',
 		'nette\latte\engine' => '/Latte/Engine.php',
+		'nette\latte\htmlnode' => '/Latte/HtmlNode.php',
+		'nette\latte\macronode' => '/Latte/MacroNode.php',
 		'nette\latte\parseexception' => '/Latte/ParseException.php',
 		'nette\latte\parser' => '/Latte/Parser.php',
 		'nette\loaders\autoloader' => '/Loaders/AutoLoader.php',

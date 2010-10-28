@@ -111,7 +111,7 @@ class Parser extends Nette\Object
 		}
 
 		foreach ($this->htmlNodes as $node) {
-			if (!$node->isMacro && !empty($node->attrs)) {
+			if (!$node instanceof MacroNode && !empty($node->attrs)) {
 				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::HTML_PREFIX
 					. implode(' and ' . self::HTML_PREFIX, array_keys($node->attrs)) . ".", 0, $this->line);
 			}
@@ -140,11 +140,12 @@ class Parser extends Nette\Object
 			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtmlComment';
 
 		} elseif (empty($matches['closing'])) { // <tag
-			$node = $this->htmlNodes[] = (object) NULL;
-			$node->name = $matches['tag'];
-			$node->closing = FALSE;
-			$node->isMacro = Strings::startsWith($node->name, self::HTML_PREFIX);
-			$node->attrs = array();
+			if (Strings::startsWith($matches['tag'], self::HTML_PREFIX)) {
+				$node = new MacroNode($matches['tag']);
+			} else {
+				$node = new HtmlNode($matches['tag']);
+			}
+			$this->htmlNodes[] = $node;
 			$node->offset = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
@@ -153,10 +154,10 @@ class Parser extends Nette\Object
 			do {
 				$node = array_pop($this->htmlNodes);
 				if (!$node) {
-					//throw new ParseException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
-					$node = (object) NULL;
-					$node->name = $matches['tag'];
-					$node->isMacro = Strings::startsWith($node->name, self::HTML_PREFIX);
+					if (Strings::startsWith($matches['tag'], self::HTML_PREFIX)) {
+						throw new ParseException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
+					}
+					$node = new HtmlNode($matches['tag']);
 				}
 			} while (strcasecmp($node->name, $matches['tag']));
 			$this->htmlNodes[] = $node;
@@ -207,15 +208,15 @@ class Parser extends Nette\Object
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$node = end($this->htmlNodes);
-			$isEmpty = !$node->closing && (strpos($matches['end'], '/') !== FALSE || isset(Nette\Utils\Html::$emptyElements[strtolower($node->name)]));
+			$isEmpty = !$node->closing && (strpos($matches['end'], '/') !== FALSE || $node->isEmpty);
 
 			if ($isEmpty) {
 				$matches[0] = (Nette\Utils\Html::$xhtml ? ' />' : '>')
 					. (isset($matches['tagnewline']) ? $matches['tagnewline'] : '');
 			}
 
-			if ($node->isMacro || !empty($node->attrs)) {
-				if ($node->isMacro) {
+			if ($node instanceof MacroNode || !empty($node->attrs)) {
+				if ($node instanceof MacroNode) {
 					$code = $this->handler->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, $node->closing);
 					if ($code === FALSE) {
 						throw new ParseException("Unknown tag-macro <$node->name>", 0, $this->line);
@@ -260,7 +261,7 @@ class Parser extends Nette\Object
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$node = end($this->htmlNodes);
-			if ($isSpecial || $node->isMacro) {
+			if ($isSpecial || $node instanceof MacroNode) {
 				if ($value === '"' || $value === "'") {
 					if ($matches = $this->match('~(.*?)' . $value . '~xsi')) { // overwrites $matches
 						$value = $matches[1];

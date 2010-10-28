@@ -329,11 +329,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$node->content = $node->modifiers = ''; // back compatibility
 
 		} else {
-			$node = (object) NULL;
-			$node->name = $macro;
-			$node->content = $content;
-			$node->modifiers = $modifiers;
+			$node = new MacroNode($macro, $content, $modifiers);
 			if (isset($this->macros["/$macro"])) {
+				$node->isEmpty = TRUE;
 				$this->macroNodes[] = $node;
 			}
 		}
