@@ -15,7 +15,7 @@ Nette.Class = function(def) {
 	delete def.constructor;
 
 	if (def.Extends) {
-		var foo = function() { this.constructor = cl };
+		var foo = function() { this.constructor = cl; };
 		foo.prototype = def.Extends.prototype;
 		cl.prototype = new foo;
 		delete def.Extends;
@@ -36,7 +36,7 @@ Nette.Q = Nette.Class({
 
 	Static: {
 		factory: function(selector) {
-			return new Nette.Q(selector)
+			return new Nette.Q(selector);
 		},
 
 		implement: function(methods) {
@@ -44,7 +44,7 @@ Nette.Q = Nette.Class({
 			for (nm in methods) {
 				fn[nm] = methods[nm];
 				prot[nm] = (function(nm){
-					return function() { return this.each(fn[nm], arguments) }
+					return function() { return this.each(fn[nm], arguments); };
 				}(nm));
 			}
 		}
@@ -132,9 +132,9 @@ fn({
 				handlers = events[event] = [],
 				generic = fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
 					if (!e.target) e.target = e.srcElement;
-					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false }; // emulate preventDefault()
-					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true }; // emulate stopPropagation()
-					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length };
+					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false; }; // emulate preventDefault()
+					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true; }; // emulate stopPropagation()
+					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length; };
 					for (var i = 0; i < handlers.length; i++) {
 						handlers[i].call(el, e);
 					}
