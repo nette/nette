@@ -257,9 +257,9 @@ Nette.initForm = function(form) {
 		}
 
 		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
-			Nette.addEvent(elms[i], 'mousewheel', function() { return false }); // prevents accidental change in IE
+			Nette.addEvent(elms[i], 'mousewheel', function() { return false; }); // prevents accidental change in IE
 			if (labels[elms[i].htmlId]) {
-				Nette.addEvent(labels[elms[i].htmlId], 'click', function() { document.getElementById(this.htmlFor).focus(); return false }); // prevents deselect in IE 5 - 6
+				Nette.addEvent(labels[elms[i].htmlId], 'click', function() { document.getElementById(this.htmlFor).focus(); return false; }); // prevents deselect in IE 5 - 6
 			}
 		}
 	}
