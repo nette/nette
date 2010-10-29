@@ -63,19 +63,28 @@ class Configurator extends Object
 			if (PHP_SAPI === 'cli') {
 				return FALSE;
 
-			} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
-				return TRUE;
-
 			} elseif (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) {
-				$addr = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
-				$oct = explode('.', $addr);
-				// 10.0.0.0/8   Private network
-				// 127.0.0.0/8  Loopback
-				// 169.254.0.0/16 & ::1  Link-Local
-				// 172.16.0.0/12  Private network
-				// 192.168.0.0/16  Private network
-				return $addr !== '::1' && (count($oct) !== 4 || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '172' || $oct[1] < 16 || $oct[1] > 31)
-					&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')));
+				$addrs = array();
+				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+					$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+				}
+				if (isset($_SERVER['REMOTE_ADDR'])) {
+					$addrs[] = $_SERVER['REMOTE_ADDR'];
+				}
+				$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
+				foreach ($addrs as $addr) {
+					$oct = explode('.', $addr);
+					// 10.0.0.0/8   Private network
+					// 127.0.0.0/8  Loopback
+					// 169.254.0.0/16 & ::1  Link-Local
+					// 172.16.0.0/12  Private network
+					// 192.168.0.0/16  Private network
+					if ($addr !== '::1' && (count($oct) !== 4 || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '172' || $oct[1] < 16 || $oct[1] > 31)
+						&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')))) {
+						return TRUE;
+					}
+				}
+				return FALSE;
 
 			} else {
 				return TRUE;
