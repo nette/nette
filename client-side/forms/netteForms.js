@@ -88,7 +88,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender;
-	if (form['nette-submittedBy'] && form.elements[form['nette-submittedBy']] && form.elements[form['nette-submittedBy']].getAttribute('formnovalidate') !== null) {
+	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
 		return true;
 	}
 	for (var i = 0; i < form.elements.length; i++) {
@@ -173,7 +173,7 @@ Nette.validateRule = function(elem, op, arg) {
 		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
 
 	case ':submitted':
-		return elem.form['nette-submittedBy'] === elem.name;
+		return elem.form['nette-submittedBy'] === elem;
 	}
 	return null;
 };
@@ -243,7 +243,7 @@ Nette.initForm = function(form) {
 	Nette.addEvent(form, 'click', function(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
-		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target.name : null;
+		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
 	});
 
 	for (var i = 0; i < form.elements.length; i++) {
