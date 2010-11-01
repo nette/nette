@@ -47,8 +47,8 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
 	 * @param  PresenterRequest
+	 * @param  Nette\Web\IHttpRequest
 	 * @return string|NULL
 	 */
 	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
