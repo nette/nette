@@ -7,6 +7,7 @@
  * @package    Nette\Templates
  * @subpackage UnitTests
  * @keepTrailingSpaces
+ * @skip
  */
 
 use Nette\Templates\LatteFilter,

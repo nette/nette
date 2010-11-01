@@ -6,6 +6,7 @@
  * @author     David Grudl
  * @package    Nette\Templates
  * @subpackage UnitTests
+ * @skip
  */
 
 use Nette\Templates\LatteFilter;
