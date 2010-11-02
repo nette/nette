@@ -315,7 +315,7 @@ class Mail extends MailMimePart
 			$part->setBody((string) $content);
 		}
 		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
-		$part->setEncoding(self::ENCODING_BASE64);
+		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', $disposition . '; filename="' . String::fixEncoding(basename($file)) . '"');
 		return $part;
 	}
