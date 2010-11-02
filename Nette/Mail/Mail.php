@@ -276,13 +276,8 @@ class Mail extends MailMimePart
 	 */
 	public function addEmbeddedFile($file, $content = NULL, $contentType = NULL)
 	{
-		$part = new MailMimePart;
-		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
-		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
-		$part->setEncoding(self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', 'inline; filename="' . String::fixEncoding(basename($file)) . '"');
-		$part->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
-		return $this->inlines[$file] = $part;
+		return $this->inlines[$file] = $this->createAttachment($file, $content, $contentType, 'inline')
+			->setHeader('Content-ID', '<' . md5(uniqid('', TRUE)) . '>');
 	}
 
 
@@ -296,31 +291,33 @@ class Mail extends MailMimePart
 	 */
 	public function addAttachment($file, $content = NULL, $contentType = NULL)
 	{
-		$part = new MailMimePart;
-		$part->setBody($content === NULL ? $this->readFile($file, $contentType) : (string) $content);
-		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
-		$part->setEncoding(self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', 'attachment; filename="' . String::fixEncoding(basename($file)) . '"');
-		return $this->attachments[] = $part;
+		return $this->attachments[] = $this->createAttachment($file, $content, $contentType, 'attachment');
 	}
 
 
 
 	/**
 	 * Creates file MIME part.
-	 * @param  string
-	 * @param  string
-	 * @return string
+	 * @return MailMimePart
 	 */
-	private function readFile($file, & $contentType)
+	private function createAttachment($file, $content, $contentType, $disposition)
 	{
-		if (!is_file($file)) {
-			throw new \FileNotFoundException("File '$file' not found.");
+		$part = new MailMimePart;
+		if ($content === NULL) {
+			if (!is_file($file)) {
+				throw new \FileNotFoundException("File '$file' not found.");
+			}
+			if (!$contentType && $info = getimagesize($file)) {
+				$contentType = $info['mime'];
+			}
+			$part->setBody(file_get_contents($file));
+		} else {
+			$part->setBody((string) $content);
 		}
-		if (!$contentType && $info = getimagesize($file)) {
-			$contentType = $info['mime'];
-		}
-		return file_get_contents($file);
+		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
+		$part->setEncoding(self::ENCODING_BASE64);
+		$part->setHeader('Content-Disposition', $disposition . '; filename="' . String::fixEncoding(basename($file)) . '"');
+		return $part;
 	}
 
 
