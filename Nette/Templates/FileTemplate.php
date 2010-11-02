@@ -157,7 +157,7 @@ class FileTemplate extends Template implements IFileTemplate
 		if (self::$cacheStorage === NULL) {
 			$dir = Environment::getVariable('tempDir') . '/cache';
 			umask(0000);
-			@mkdir($dir, 0755); // @ - directory may exists
+			@mkdir($dir, 0777); // @ - directory may exists
 			self::$cacheStorage = new TemplateCacheStorage($dir);
 		}
 		return self::$cacheStorage;
