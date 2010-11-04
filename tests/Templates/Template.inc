@@ -39,4 +39,3 @@ class MockTemplate extends Template
 	}
 
 }
-

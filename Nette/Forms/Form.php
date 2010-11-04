@@ -47,7 +47,7 @@ class Form extends FormContainer
 	const VALID = ':valid';
 
 	// CSRF protection
-	const PROTECTION = 'Nette\\Forms\\HiddenField::validateEqual';
+	const PROTECTION = 'Nette\Forms\HiddenField::validateEqual';
 
 	// button
 	const SUBMITTED = ':submitted';

@@ -108,7 +108,7 @@ class Uri extends Nette\FreezableObject
 			if (!$this->port && isset(self::$defaultPorts[$this->scheme])) {
 				$this->port = self::$defaultPorts[$this->scheme];
 			}
-			
+
 			if ($this->path === '' && ($this->scheme === 'http' || $this->scheme === 'https')) {
 				$this->path = '/';
 			}

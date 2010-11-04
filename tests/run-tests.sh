@@ -12,4 +12,3 @@ fi
 php "$dir/NetteTest/RunTests.php" $*
 
 # returns what script returned
-
