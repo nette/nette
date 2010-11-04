@@ -30,7 +30,7 @@ $httpRequest->setQuery(array(
 $req = $router->match($httpRequest);
 Assert::same( 'main:sub:myPresenter',  $req->getPresenterName() );
 
-$url = $router->constructUrl($req, $httpRequest);
+$url = $router->constructUrl($req, $httpRequest->uri);
 Assert::same( 'http://nette.org/file.php?presenter=myPresenter',  $url );
 
 $req = new Nette\Application\PresenterRequest(
@@ -38,5 +38,5 @@ $req = new Nette\Application\PresenterRequest(
 	Nette\Web\HttpRequest::GET,
 	array()
 );
-$url = $router->constructUrl($req, $httpRequest);
+$url = $router->constructUrl($req, $httpRequest->uri);
 Assert::null( $url );

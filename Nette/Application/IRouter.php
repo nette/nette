@@ -37,9 +37,9 @@ interface IRouter
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  PresenterRequest
-	 * @param  Nette\Web\IHttpRequest
+	 * @param  Nette\Web\Uri referential URI
 	 * @return string|NULL
 	 */
-	function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest);
+	function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri);
 
 }

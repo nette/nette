@@ -48,10 +48,10 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  PresenterRequest
-	 * @param  Nette\Web\IHttpRequest
+	 * @param  Nette\Web\Uri
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();
@@ -83,7 +83,7 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 		if (!isset($this->cachedRoutes[$presenter])) $presenter = '*';
 
 		foreach ($this->cachedRoutes[$presenter] as $route) {
-			$uri = $route->constructUrl($appRequest, $httpRequest);
+			$uri = $route->constructUrl($appRequest, $refUri);
 			if ($uri !== NULL) {
 				return $uri;
 			}

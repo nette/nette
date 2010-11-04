@@ -163,7 +163,7 @@ Environment::setVariable('appDir', __DIR__);
 
 $httpRequest = Environment::getHttpRequest();
 $uri = clone $httpRequest->getUri();
-$uri->scriptPath = '/index.php';
+$uri->path = $uri->scriptPath = '/index.php';
 $uri->host = 'localhost';
 $httpRequest->setUri($uri);
 

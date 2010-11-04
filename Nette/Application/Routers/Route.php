@@ -236,10 +236,10 @@ class Route extends Nette\Object implements IRouter
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  PresenterRequest
-	 * @param  Nette\Web\IHttpRequest
+	 * @param  Nette\Web\Uri
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
@@ -348,10 +348,10 @@ class Route extends Nette\Object implements IRouter
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
-			$uri = '//' . $httpRequest->getUri()->getAuthority() . $httpRequest->getUri()->getBasePath() . $uri;
+			$uri = '//' . $refUri->getAuthority() . $refUri->getBasePath() . $uri;
 
 		} elseif ($this->type === self::PATH) {
-			$uri = '//' . $httpRequest->getUri()->getAuthority() . $uri;
+			$uri = '//' . $refUri->getAuthority() . $uri;
 		}
 
 		if (strpos($uri, '//', 2) !== FALSE) {

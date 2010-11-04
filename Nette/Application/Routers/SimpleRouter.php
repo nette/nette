@@ -97,10 +97,10 @@ class SimpleRouter extends Nette\Object implements IRouter
 	/**
 	 * Constructs absolute URL from PresenterRequest object.
 	 * @param  PresenterRequest
-	 * @param  Nette\Web\IHttpRequest
+	 * @param  Nette\Web\Uri
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\IHttpRequest $httpRequest)
+	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
 	{
 		$params = $appRequest->getParams();
 
@@ -119,8 +119,7 @@ class SimpleRouter extends Nette\Object implements IRouter
 			}
 		}
 
-		$uri = $httpRequest->getUri();
-		$uri = ($this->flags & self::SECURED ? 'https://' : 'http://') . $uri->getAuthority() . $uri->getScriptPath();
+		$uri = ($this->flags & self::SECURED ? 'https://' : 'http://') . $refUri->getAuthority() . $refUri->getPath();
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') { // intentionally ==

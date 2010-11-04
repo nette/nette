@@ -921,7 +921,7 @@ abstract class Presenter extends Control implements IPresenter
 		if ($mode === 'forward') return;
 
 		// CONSTRUCT URL
-		$uri = $router->constructUrl($this->lastCreatedRequest, $httpRequest);
+		$uri = $router->constructUrl($this->lastCreatedRequest, $httpRequest->getUri());
 		if ($uri === NULL) {
 			unset($args[self::ACTION_KEY]);
 			$params = urldecode(http_build_query($args, NULL, ', '));

@@ -30,7 +30,7 @@ function testRouteIn(Nette\Application\Route $route, $uri, $expectedPresenter=NU
 
 		unset($params['extra']);
 		$request->setParams($params);
-		$result = $route->constructUrl($request, $httpRequest);
+		$result = $route->constructUrl($request, $uri);
 		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
 		Assert::same( $expectedUri, $result );
 
@@ -44,12 +44,7 @@ function testRouteIn(Nette\Application\Route $route, $uri, $expectedPresenter=NU
 
 function testRouteOut(Nette\Application\Route $route, $link, $params = array())
 {
-	$uri = new Nette\Web\UriScript('http://example.com');
-	$httpRequest = new Nette\Web\HttpRequest;
-	$httpRequest->initialize();
-	$httpRequest->setUri($uri);
-
+	$uri = new Nette\Web\Uri('http://example.com');
 	$request = new Nette\Application\PresenterRequest($link, 'GET', $params);
-	return $route->constructUrl($request, $httpRequest);
+	return $route->constructUrl($request, $uri);
 }
-
