@@ -172,7 +172,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 			$pair = array('');
 		}
 
-		$uri->host = $pair[0];
+		$uri->host = preg_match('#^[-.a-z0-9]+$#', $pair[0]) ? $pair[0] : '';
 
 		if (isset($pair[1])) {
 			$uri->port = (int) $pair[1];
