@@ -209,55 +209,16 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 		$uri->canonicalize();
 		$uri->path = String::fixEncoding($uri->path);
 
-		// detect base URI-path - inspired by Zend Framework (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
-		$filename = isset($_SERVER['SCRIPT_FILENAME']) ? basename($_SERVER['SCRIPT_FILENAME']) : NULL;
-		$scriptPath = '';
+		// detect script path
+		$uri->scriptPath = '/';
+		if (isset($_SERVER['SCRIPT_NAME'])) {
+			$script = $_SERVER['SCRIPT_NAME'];
+			if (strncmp($uri->path . '/', $script . '/', strlen($script) + 1) === 0) { // whole SCRIPT_NAME in URL
+				$uri->scriptPath = $script;
 
-		if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $filename) {
-			$scriptPath = rtrim($_SERVER['SCRIPT_NAME'], '/');
-
-		} elseif (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
-			$scriptPath = $_SERVER['PHP_SELF'];
-
-		} elseif (isset($_SERVER['ORIG_SCRIPT_NAME']) && basename($_SERVER['ORIG_SCRIPT_NAME']) === $filename) {
-			$scriptPath = $_SERVER['ORIG_SCRIPT_NAME']; // 1and1 shared hosting compatibility
-
-		} elseif (isset($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME'])) {
-			// Backtrack up the script_filename to find the portion matching php_self
-			$path = $_SERVER['PHP_SELF'];
-			$segs = explode('/', trim($_SERVER['SCRIPT_FILENAME'], '/'));
-			$segs = array_reverse($segs);
-			$index = 0;
-			$last = count($segs);
-			do {
-				$seg = $segs[$index];
-				$scriptPath = '/' . $seg . $scriptPath;
-				$index++;
-			} while (($last > $index) && (FALSE !== ($pos = strpos($path, $scriptPath))) && (0 != $pos));
-		}
-
-		// Does the scriptPath have anything in common with the request_uri?
-		if (strncmp($uri->path, $scriptPath, strlen($scriptPath)) === 0) {
-			// whole $scriptPath in URL
-			$uri->scriptPath = $scriptPath;
-
-		} elseif (strncmp($uri->path, $scriptPath, strrpos($scriptPath, '/') + 1) === 0) {
-			// directory portion of $scriptPath in URL
-			$uri->scriptPath = substr($scriptPath, 0, strrpos($scriptPath, '/') + 1);
-
-		} elseif (strpos($uri->path, basename($scriptPath)) === FALSE) {
-			// no match whatsoever; set it blank
-			$uri->scriptPath = '/';
-
-		} elseif ((strlen($uri->path) >= strlen($scriptPath))
-			&& ((FALSE !== ($pos = strpos($uri->path, $scriptPath))) && ($pos !== 0))) {
-			// If using mod_rewrite or ISAPI_Rewrite strip the script filename
-			// out of scriptPath. $pos !== 0 makes sure it is not matching a value
-			// from PATH_INFO or QUERY_STRING
-			$uri->scriptPath = substr($uri->path, 0, $pos + strlen($scriptPath));
-
-		} else {
-			$uri->scriptPath = $scriptPath;
+			} elseif (strncmp($uri->path, $script, strrpos($script, '/') + 1) === 0) { // directory part of SCRIPT_NAME in URL
+				$uri->scriptPath = substr($script, 0, strrpos($script, '/') + 1);
+			}
 		}
 
 		$uri->freeze();
