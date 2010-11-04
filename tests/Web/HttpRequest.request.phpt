@@ -50,7 +50,7 @@ Assert::same( 'nette.org:8080',  $request->getUri()->authority );
 Assert::same( 'https://nette.org:8080',  $request->getUri()->hostUri );
 Assert::same( 'https://nette.org:8080/',  $request->getUri()->baseUri );
 Assert::same( '/',  $request->getUri()->basePath );
-Assert::same( 'file.php',  $request->getUri()->relativeUri );
+Assert::same( "file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->relativeUri );
 Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->absoluteUri );
 Assert::same( '',  $request->getUri()->pathInfo );
 

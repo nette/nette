@@ -32,4 +32,4 @@ Assert::same( 'hostname:60',  $uri->authority );
 Assert::same( 'http://hostname:60',  $uri->hostUri );
 Assert::same( 'http://hostname:60/path/script.php?arg=value#anchor',  $uri->absoluteUri );
 Assert::same( 'http://hostname:60/path/',  $uri->baseUri );
-Assert::same( 'script.php',  $uri->relativeUri );
+Assert::same( 'script.php?arg=value#anchor',  $uri->relativeUri );

@@ -19,9 +19,9 @@ use Nette;
  * URI Syntax (RFC 3986).
  *
  * <pre>
- *                                   basePath relativeUri
- *                                      |      |
- *                                    /--\/--------\
+ *                                   basePath     relativeUri
+ *                                      |             |
+ *                                    /--\/----------------------------\
  * http://user:password@nette.org:8042/en/manual.php?name=param#fragment
  * \__/^^^\__________________________/\____________/^\________/^\______/
  *   |                 |                     |           |         |
@@ -409,7 +409,7 @@ class Uri extends Nette\FreezableObject
 	 */
 	public function getRelativeUri()
 	{
-		return (string) substr($this->path, strlen($this->getBasePath()));
+		return (string) substr($this->getAbsoluteUri(), strlen($this->getBaseUri()));
 	}
 
 
