@@ -19,27 +19,18 @@ use Nette;
  * Extended HTTP URL.
  *
  * <pre>
- *                 basePath   relativeUri
- *                    |           |
- *                 /-----\/------------------\
  * http://nette.org/admin/script.php/pathinfo/?name=param#fragment
  *                 \_______________/\________/
  *                        |              |
  *                   scriptPath       pathInfo
  * </pre>
  *
- * - basePath:    /admin/ (everything before relative URI not including the script name)
- * - baseUri:     http://nette.org/admin/
- * - scriptPath:  /admin/script.php
- * - relativeUri: script.php/pathinfo/
+ * - scriptPath:  /admin/script.php (or simply /admin/ when script is directory index)
  * - pathInfo:    /pathinfo/ (additional path information)
  *
  * @author     David Grudl
  *
  * @property   string $scriptPath
- * @property-read string $basePath
- * @property-read string $baseUri
- * @property-read string $relativeUri
  * @property-read string $pathInfo
  */
 class UriScript extends Uri
@@ -80,29 +71,8 @@ class UriScript extends Uri
 	 */
 	public function getBasePath()
 	{
-		return (string) substr($this->scriptPath, 0, strrpos($this->scriptPath, '/') + 1);
-	}
-
-
-
-	/**
-	 * Returns the base-URI.
-	 * @return string
-	 */
-	public function getBaseUri()
-	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
-	}
-
-
-
-	/**
-	 * Returns the relative-URI.
-	 * @return string
-	 */
-	public function getRelativeUri()
-	{
-		return (string) substr($this->path, strrpos($this->scriptPath, '/') + 1);
+		$pos = strrpos($this->scriptPath, '/');
+		return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
 	}
 
 

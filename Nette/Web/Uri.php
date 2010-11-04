@@ -19,14 +19,21 @@ use Nette;
  * URI Syntax (RFC 3986).
  *
  * <pre>
- * http://user:password@nette.org:8042/en/manual.html?name=param#fragment
- * \__/^^^\__________________________/\_____________/^\________/^\______/
- *   |                 |                     |            |         |
- * scheme          authority               path         query    fragment
+ *                                   basePath relativeUri
+ *                                      |      |
+ *                                    /--\/--------\
+ * http://user:password@nette.org:8042/en/manual.php?name=param#fragment
+ * \__/^^^\__________________________/\____________/^\________/^\______/
+ *   |                 |                     |           |         |
+ * scheme          authority               path        query    fragment
  * </pre>
  *
  * - authority:   [user[:password]@]host[:port]
  * - hostUri:     http://user:password@nette.org:8042
+ * - basePath:    /en/ (everything before relative URI not including the script name)
+ * - baseUri:     http://user:password@nette.org:8042/en/
+ * - relativeUri: manual.php
+ * <pre>
  *
  * @author     David Grudl
  *
@@ -41,6 +48,9 @@ use Nette;
  * @property-read string $absoluteUri
  * @property-read string $authority
  * @property-read string $hostUri
+ * @property-read string $basePath
+ * @property-read string $baseUri
+ * @property-read string $relativeUri
  */
 class Uri extends Nette\FreezableObject
 {
@@ -366,6 +376,40 @@ class Uri extends Nette\FreezableObject
 	public function getHostUri()
 	{
 		return $this->scheme . '://' . $this->getAuthority();
+	}
+
+
+
+	/**
+	 * Returns the base-path.
+	 * @return string
+	 */
+	public function getBasePath()
+	{
+		$pos = strrpos($this->path, '/');
+		return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
+	}
+
+
+
+	/**
+	 * Returns the base-URI.
+	 * @return string
+	 */
+	public function getBaseUri()
+	{
+		return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
+	}
+
+
+
+	/**
+	 * Returns the relative-URI.
+	 * @return string
+	 */
+	public function getRelativeUri()
+	{
+		return (string) substr($this->path, strlen($this->getBasePath()));
 	}
 
 
