@@ -11,7 +11,6 @@ function testRouteIn(Nette\Application\Route $route, $uri, $expectedPresenter=NU
 	// ==> $uri
 
 	$uri = new Nette\Web\UriScript("http://example.com$uri");
-	$uri->scriptPath = '/';
 	$uri->appendQuery(array(
 		'test' => 'testvalue',
 		'presenter' => 'querypresenter',
@@ -46,7 +45,6 @@ function testRouteIn(Nette\Application\Route $route, $uri, $expectedPresenter=NU
 function testRouteOut(Nette\Application\Route $route, $link, $params = array())
 {
 	$uri = new Nette\Web\UriScript('http://example.com');
-	$uri->scriptPath = '/';
 	$httpRequest = new Nette\Web\HttpRequest;
 	$httpRequest->initialize();
 	$httpRequest->setUri($uri);

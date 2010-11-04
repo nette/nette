@@ -45,7 +45,7 @@ use Nette;
 class UriScript extends Uri
 {
 	/** @var string */
-	private $scriptPath = '';
+	private $scriptPath = '/';
 
 
 
