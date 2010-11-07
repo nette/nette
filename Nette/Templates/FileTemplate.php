@@ -114,7 +114,7 @@ class FileTemplate extends Template implements IFileTemplate
 				$content,
 				array(
 					Cache::FILES => $this->file,
-					Cache::EXPIRE => self::$cacheExpire,
+					Cache::EXPIRATION => self::$cacheExpire,
 					Cache::CONSTS => 'Nette\Framework::REVISION',
 				)
 			);

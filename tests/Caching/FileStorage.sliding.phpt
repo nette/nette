@@ -29,7 +29,7 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 // Writing cache...
 $cache->save($key, $value, array(
-	Cache::EXPIRE => time() + 2,
+	Cache::EXPIRATION => time() + 2,
 	Cache::SLIDING => TRUE,
 ));
 

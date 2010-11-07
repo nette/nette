@@ -58,7 +58,7 @@ class CachingHelper extends Nette\Object
 			$obj->key = $key;
 			$obj->frame = array(
 				Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
-				Cache::EXPIRE => isset($args['expire']) ? $args['expire'] : '+ 7 days',
+				Cache::EXPIRATION => isset($args['expire']) ? $args['expire'] : '+ 7 days',
 			);
 			ob_start();
 			return $parents[] = $obj;

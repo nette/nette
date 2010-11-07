@@ -24,6 +24,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 {
 	/**#@+ dependency */
 	const PRIORITY = 'priority';
+	const EXPIRATION = 'expire';
 	const EXPIRE = 'expire';
 	const SLIDING = 'sliding';
 	const TAGS = 'tags';
@@ -100,7 +101,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * Writes item into the cache.
 	 * Dependencies are:
 	 * - Cache::PRIORITY => (int) priority
-	 * - Cache::EXPIRE => (timestamp) expiration
+	 * - Cache::EXPIRATION => (timestamp) expiration
 	 * - Cache::SLIDING => (bool) use sliding expiration?
 	 * - Cache::TAGS => (array) tags
 	 * - Cache::FILES => (array|string) file names
@@ -122,8 +123,8 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$key = $this->namespace . self::NAMESPACE_SEPARATOR . $key;
 
 		// convert expire into relative amount of seconds
-		if (isset($dp[Cache::EXPIRE])) {
-			$dp[Cache::EXPIRE] = Nette\Tools::createDateTime($dp[Cache::EXPIRE])->format('U') - time();
+		if (isset($dp[Cache::EXPIRATION])) {
+			$dp[Cache::EXPIRATION] = Nette\Tools::createDateTime($dp[Cache::EXPIRATION])->format('U') - time();
 		}
 
 		// convert FILES into CALLBACKS

@@ -166,11 +166,11 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			self::META_TIME => microtime(),
 		);
 
-		if (isset($dp[Cache::EXPIRE])) {
+		if (isset($dp[Cache::EXPIRATION])) {
 			if (empty($dp[Cache::SLIDING])) {
-				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRE] + time(); // absolute time
+				$meta[self::META_EXPIRE] = $dp[Cache::EXPIRATION] + time(); // absolute time
 			} else {
-				$meta[self::META_DELTA] = (int) $dp[Cache::EXPIRE]; // sliding time
+				$meta[self::META_DELTA] = (int) $dp[Cache::EXPIRATION]; // sliding time
 			}
 		}
 
