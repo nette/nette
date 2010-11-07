@@ -62,11 +62,12 @@ function _netteDebugPrintCode($file, $line, $count = 15)
 		$spans += substr_count($s, '<span') - substr_count($s, '</span');
 		$s = str_replace(array("\r", "\n"), array('', ''), $s);
 		if ($n === $line) {
+			$postfix = preg_replace('#[^>]*(<[^>]+>)[^<]*#', '$1', $s);
 			printf(
 				"<span class='highlight'>Line %{$numWidth}s:    %s\n</span>%s",
 				$n,
 				strip_tags($s),
-				preg_replace('#[^>]*(<[^>]+>)[^<]*#', '$1', $s)
+				$postfix !== strip_tags($s) ? $postfix : ''
 			);
 		} else {
 			printf("<span class='line'>Line %{$numWidth}s:</span>    %s\n", $n, $s);
