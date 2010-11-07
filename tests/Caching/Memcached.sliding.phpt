@@ -31,7 +31,7 @@ $cache = new Cache(new MemcachedStorage('localhost'));
 
 // Writing cache...
 $cache->save($key, $value, array(
-	Cache::EXPIRE => time() + 2,
+	Cache::EXPIRATION => time() + 2,
 	Cache::SLIDING => TRUE,
 ));
 

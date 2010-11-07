@@ -28,7 +28,7 @@ $cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
 
 // Writing cache...
 $cache->save($key, $value, array(
-	Cache::EXPIRE => time() + 3,
+	Cache::EXPIRATION => time() + 3,
 ));
 
 

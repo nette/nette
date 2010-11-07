@@ -52,7 +52,7 @@ class CachingHelper extends Nette\Object
 			$obj->frame = array(
 				Cache::FILES => array($file),
 				Cache::TAGS => $tags,
-				Cache::EXPIRE => rand(86400 * 4, 86400 * 7),
+				Cache::EXPIRATION => rand(86400 * 4, 86400 * 7),
 			);
 			ob_start();
 			return $obj;
