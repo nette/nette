@@ -31,6 +31,9 @@ final class Framework
 	const REVISION = '$WCREV$ released on $WCDATE$';
 	/**#@-*/
 
+	/** @var bool set to TRUE if your host has disabled function ini_set */
+	public static $iAmUsingBadHost = FALSE;
+
 
 
 	/**
