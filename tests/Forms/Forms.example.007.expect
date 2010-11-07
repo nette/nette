@@ -16,8 +16,8 @@
 			<td><input type="radio" name="gender" id="frm-gender-0" value="m" /><label for="frm-gender-0">male</label><br /><input type="radio" name="gender" id="frm-gender-1" value="f" /><label for="frm-gender-1">female</label><br /></td>
 		</tr>
 		<tr>
-			<th><label for="frm-email">E-mail:</label></th>
-			<td><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" cols="35" /></td>
+			<th><label for="frm-email">Email:</label></th>
+			<td><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect email address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" cols="35" /></td>
 		</tr>
 		</table>
 	</fieldset>

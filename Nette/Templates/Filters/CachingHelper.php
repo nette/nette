@@ -35,7 +35,7 @@ class CachingHelper extends Nette\Object
 	/**
 	 * Starts the output cache. Returns CachingHelper object if buffering was started.
 	 * @param  string
-	 * @param  CachingHelper
+	 * @param  array of CachingHelper
 	 * @param  array
 	 * @return CachingHelper
 	 */

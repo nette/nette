@@ -21,9 +21,9 @@
 </tr>
 
 <tr>
-	<th><label for="frm-email">Send to e-mail:</label></th>
+	<th><label for="frm-email">Send to email:</label></th>
 
-	<td><input type="email" autocomplete="off" placeholder="Optional, but Recommended" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" value="" /></td>
+	<td><input type="email" autocomplete="off" placeholder="Optional, but Recommended" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect email address'}],control:'email'}" value="" /></td>
 </tr>
 
 <tr>

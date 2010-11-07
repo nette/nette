@@ -57,10 +57,10 @@ $form->addText('age', 'Your age:')
 
 $form->addRadioList('gender', 'Your gender:', $sex);
 
-$form->addText('email', 'E-mail:')
+$form->addText('email', 'Email:')
 	->setEmptyValue('@')
 	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
-		->addRule(Form::EMAIL, 'Incorrect E-mail Address'); // ... then check email
+		->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
 
 
 // group Shipping address

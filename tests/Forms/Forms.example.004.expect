@@ -28,9 +28,9 @@
 
 
 
-	<dt><label for="frm-email">E-mail:</label></dt>
+	<dt><label for="frm-email">Email:</label></dt>
 
-	<dd class="odd"><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect E-mail Address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" /></dd>
+	<dd class="odd"><input type="text" class="text" name="email" id="frm-email" data-nette-rules="{op:':filled',rules:[{op:':email',msg:'Incorrect email address'}],control:'email'}" data-nette-empty-value="&#64;" value="&#64;" /></dd>
 
 </dl>
 

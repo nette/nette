@@ -11,7 +11,7 @@
 </tr>
 
 <tr>
-	<th><label for="frm-first-email">E-mail:</label></th>
+	<th><label for="frm-first-email">Email:</label></th>
 
 	<td><input type="text" class="text" name="first[email]" id="frm-first-email" value="bond&#64;007.com" /></td>
 </tr>
@@ -47,7 +47,7 @@
 </tr>
 
 <tr>
-	<th><label for="frm-second-email">E-mail:</label></th>
+	<th><label for="frm-second-email">Email:</label></th>
 
 	<td><input type="text" class="text" name="second[email]" id="frm-second-email" value="jim&#64;beam.com" /></td>
 </tr>

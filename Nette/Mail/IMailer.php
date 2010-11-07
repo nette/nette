@@ -24,7 +24,7 @@ interface IMailer
 {
 
 	/**
-	 * Sends e-mail.
+	 * Sends email.
 	 * @param  Mail
 	 * @return void
 	 */

@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Sends e-mails via the SMTP server.
+ * Sends emails via the SMTP server.
  *
  * @author     David Grudl
  */
@@ -66,7 +66,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 
 
 	/**
-	 * Sends e-mail.
+	 * Sends email.
 	 * @param	Mail
 	 * @return	void
 	 */

@@ -69,7 +69,7 @@ $form['age']->addRule(Form::RANGE, 'Age must be in range from %d to %d', array(1
 
 // conditional rule: if is email filled, ...
 $form['email']->addCondition(Form::FILLED)
-	->addRule(Form::EMAIL, 'Incorrect E-mail Address'); // ... then check email
+	->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
 
 // another conditional rule: if is checkbox checked...
 $form['send']->addCondition(Form::EQUAL, TRUE)
@@ -146,7 +146,7 @@ ob_start();
 			<td><?php echo $form['gender']->control ?></td>
 		</tr>
 		<tr>
-			<th><?php echo $form['email']->getLabel('E-mail:') ?></th>
+			<th><?php echo $form['email']->getLabel('Email:') ?></th>
 			<td><?php echo $form['email']->control->cols(35) ?></td>
 		</tr>
 		</table>

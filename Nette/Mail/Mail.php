@@ -17,7 +17,7 @@ use Nette,
 
 
 /**
- * Mail provides functionality to compose and send both text and MIME-compliant multipart e-mail messages.
+ * Mail provides functionality to compose and send both text and MIME-compliant multipart email messages.
  *
  * @author     David Grudl
  *
@@ -73,7 +73,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Sets the sender of the message.
-	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
 	 * @return Mail  provides a fluent interface
 	 */
@@ -98,7 +98,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Adds the reply-to address.
-	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
 	 * @return Mail  provides a fluent interface
 	 */
@@ -136,7 +136,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Adds email recipient.
-	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
 	 * @return Mail  provides a fluent interface
 	 */
@@ -150,7 +150,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Adds carbon copy email recipient.
-	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
 	 * @return Mail  provides a fluent interface
 	 */
@@ -164,7 +164,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Adds blind carbon copy email recipient.
-	 * @param  string  e-mail or format "John Doe" <doe@example.com>
+	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
 	 * @return Mail  provides a fluent interface
 	 */
@@ -177,7 +177,7 @@ class Mail extends MailMimePart
 
 
 	/**
-	 * Formats recipient e-mail.
+	 * Formats recipient email.
 	 * @param  string
 	 * @param  string
 	 * @return array
@@ -195,7 +195,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Sets the Return-Path header of the message.
-	 * @param  string  e-mail
+	 * @param  string  email
 	 * @return Mail  provides a fluent interface
 	 */
 	public function setReturnPath($email)
@@ -327,7 +327,7 @@ class Mail extends MailMimePart
 
 
 	/**
-	 * Sends e-mail.
+	 * Sends email.
 	 * @return void
 	 */
 	public function send()
@@ -366,7 +366,7 @@ class Mail extends MailMimePart
 
 
 	/**
-	 * Builds e-mail.
+	 * Builds email.
 	 * @return void
 	 */
 	protected function build()
