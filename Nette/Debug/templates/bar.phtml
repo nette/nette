@@ -559,30 +559,12 @@ Nette.Debug.Bar = Nette.Class({
 <div id="nette-debug"></div>
 
 <script>
-Nette_base64Decode = function(s) {
-	var set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-	var out = '', i = 0;
-	var c1, c2, c3, c4;
-	do {
-		c1 = set.indexOf(s.charAt(i++));
-		c2 = set.indexOf(s.charAt(i++));
-		c3 = set.indexOf(s.charAt(i++));
-		c4 = set.indexOf(s.charAt(i++));
-		out += String.fromCharCode((c1 << 2) | (c2 >> 4))
-			+ (c3 === -1 ? '' : String.fromCharCode(((c2 & 15) << 4) | (c3 >> 2)))
-			+ (c4 === -1 ? '' : String.fromCharCode(((c3 & 3) << 6) | c4));
-	} while (i < s.length);
-	return decodeURIComponent(escape(out));
-};
-</script>
-
-<script>
 (function (onloadOrig) {
 	window.onload = function() {
 		if (typeof onloadOrig === 'function') onloadOrig();
 		var debug = document.getElementById('nette-debug');
 		document.body.appendChild(debug);
-		debug.innerHTML = Nette_base64Decode(<?php echo json_encode(base64_encode($output)) ?>);
+		debug.innerHTML = <?php echo json_encode(@iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', $output))) ?>;
 		for (var i = 0, scripts = debug.getElementsByTagName('script'); i < scripts.length; i++) eval(scripts[i].innerHTML);
 		(new Nette.Debug.Bar).init();
 		Nette.Q.factory(debug).show();
