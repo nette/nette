@@ -534,6 +534,10 @@ final class Debug
 		);
 		$error = error_get_last();
 		if (isset($types[$error['type']])) {
+			$template = String::match($error['file'], '~(?P<module>[A-z0-9_-]*)_(?P<presenter>[A-z0-9_-]+).(?P<action>[A-z0-9_-]+).phtml~im');
+			if ($template !== NULL) {
+				self::paintTemplateError(APP_DIR . ($template['module'] !== '' ? '/' . $template['module'] : '') . '/templates/' . $template['presenter'] . '/' . $template['action'] . '.phtml', $error['message'], $error['file'], $error['line'] - 1);
+			}
 			self::_exceptionHandler(new \FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL));
 			return;
 		}
@@ -579,6 +583,9 @@ final class Debug
 					echo "$exception\n";
 
 				} elseif ($htmlMode) { // dump to browser
+					if ($exception instanceof \Nette\Templates\MacroException) {
+						self::paintTemplateError($exception->getFile(), $exception->getMessage());
+					}
 					self::paintBlueScreen($exception);
 
 				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
@@ -626,6 +633,10 @@ final class Debug
 			return FALSE; // calls normal error handler to fill-in error_get_last()
 
 		} elseif (self::$strictMode && !self::$productionMode) {
+			$template = String::match($file, '~(?P<module>[A-z0-9_-]*)_(?P<presenter>[A-z0-9_-]+).(?P<action>[A-z0-9_-]+).phtml~im'); // missing modules
+			if ($template !== NULL) {
+				self::paintTemplateError(APP_DIR . ($template['module'] !== '' ? '/' . $template['module'] : '') . '/templates/' . $template['presenter'] . '/' . $template['action'] . '.phtml', $message);
+			}
 			self::_exceptionHandler(new \FatalErrorException($message, 0, $severity, $file, $line, $context));
 			exit;
 		}
@@ -657,6 +668,95 @@ final class Debug
 		}
 
 		return FALSE; // call normal error handler
+	}
+
+
+
+	/**
+	 * Processes template errors and paints bluescreen. Exits the application.
+	 * @author Mikulas Dite
+	 * @param string $file
+	 * @param string $message
+	 * @param string $originalFile
+	 * @param int $originalLine
+	 */
+	public static function paintTemplateError($file, $message, $originalFile = NULL, $originalLine = NULL)
+	{
+		$content = file_get_contents($file);
+		$shortpath = String::replace($file, "~" . APP_DIR . "~i");
+
+		if ($originalFile !== NULL) {
+			$originalContent = file_get_contents($originalFile);
+			$lines = explode("\n", $originalContent);
+			$errorContent = $lines[$originalLine];
+		}
+		
+
+		// undefined variable
+		if (($match = String::match($message, '~^Undefined variable: (?P<var>[A-z0-9_]+)$~im')) !== NULL) {
+			$block = String::match($content, '~.*?' . preg_quote('$' . $match['var']) . '~s');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Undefined variable `$" . "{$match['var']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+			exit;
+
+		// invalid eval call {=foo()}
+		} elseif (($match = String::match($message, '~^Call to undefined function (?P<function>[A-z_]+)~im')) !== NULL) {
+			$block = String::match($content, '~.*?\{(\?|!)?=?' . $match['function'] . '\(~is');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Called undefined function `{$match['function']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+			exit;
+
+		// unopened macro
+		} elseif (($match = String::match($message, '~^syntax error, unexpected T_END(?P<keyword>[A-Z_]+)~im')) !== NULL) {
+			$keyword = String::lower($match['keyword']);
+			$block = String::match($content, '~.*?\{/' . $keyword . '~is');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Unopened macro `$keyword` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+			exit;
+
+		// unknown macro
+		} elseif (($match = String::match($message, '~Unknown macro (?P<macro>\{.*\}) on line~im')) !== NULL) {
+			$block = String::match($content, '~.*?' . preg_quote($match['macro']) . '~s');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Unknown macro `{$match['macro']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+			exit;
+
+		// unclosed command macro (for, foreach, while, if)
+		} elseif (String::match($message, '~^syntax error, unexpected \'}\'$~im')) {
+			$block = String::match($originalContent, '~.*: \?>~s');
+			$line = substr_count($block[0], "\n");
+			$errorContent = $lines[$line];
+
+		// unclosed macro
+		} elseif (String::match($message, '~^syntax error, unexpected \$end$~im')) {
+			$block = String::match($originalContent, '~.*?\{ \?>~s');
+			$line = substr_count($block[0], "\n");
+			$errorContent = $lines[$line];
+		}
+
+		// unclosed cache
+		if (($match = String::match($errorContent, '~if \(Nette\\\\Templates\\\\Caching~ims')) !== NULL) {
+			$block = String::match($content, '~.*\{cache~s');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Unclosed macro `cache` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+
+		// invalid foreach
+		} elseif (($match = String::match($errorContent, '~^<\?php foreach.*?Iterator\((?P<value>[^)]*)\)~ims')) !== NULL) {
+			$block = String::match($content, '~.*?\{foreach ?' . preg_quote($match['value']) . '~s');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `foreach` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+
+		// invalid macro
+		} elseif (($match = String::match($errorContent, '~^<\?php (?P<keyword>[A-z]+).*?\((?P<value>[^)]*)\)~ims')) !== NULL) {
+			$block = String::match($content, '~.*?\{' . $match['keyword'] . ' ?' . preg_quote($match['value']) . '~s');
+			$line = substr_count($block[0], "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `{$match['keyword']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
+
+		} else {
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Unknown template macro error in `$shortpath`.", 0, NULL, $file, 0));
+		}
+
+		exit;
 	}
 
 

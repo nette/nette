@@ -128,8 +128,9 @@ abstract class Template extends Nette\Object implements ITemplate
 	 * @param  string
 	 * @return string
 	 */
-	protected function compile($content, $label = NULL)
+	protected function compile($file, $label = NULL)
 	{
+		$content = file_get_contents($file);
 		if (!$this->filters) {
 			$this->onPrepareFilters($this);
 		}
@@ -141,6 +142,9 @@ abstract class Template extends Nette\Object implements ITemplate
 				$content = strtr($content, $blocks); // put PHP code back
 			}
 		} catch (\Exception $e) {
+			if ($e instanceof MacroException) {
+				throw new MacroException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e, $file);
+			}
 			throw new \InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
 		}
 

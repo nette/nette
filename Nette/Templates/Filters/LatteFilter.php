@@ -139,7 +139,7 @@ class LatteFilter extends Nette\Object
 			} elseif (!empty($matches['macro'])) { // {macro}
 				$code = $this->handler->macro($matches['macro']);
 				if ($code === FALSE) {
-					throw new \InvalidStateException("Unknown macro {{$matches['macro']}} on line $this->line.");
+					throw new MacroException("Unknown macro {{$matches['macro']}} on line $this->line.");
 				}
 				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
@@ -155,7 +155,7 @@ class LatteFilter extends Nette\Object
 
 		foreach ($this->tags as $tag) {
 			if (!$tag->isMacro && !empty($tag->attrs)) {
-				throw new \InvalidStateException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX . implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".");
+				throw new \MacroException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX . implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".");
 			}
 		}
 
@@ -259,7 +259,7 @@ class LatteFilter extends Nette\Object
 				if ($tag->isMacro) {
 					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
 					if ($code === FALSE) {
-						throw new \InvalidStateException("Unknown tag-macro <$tag->name> on line $this->line.");
+						throw new \MacroException("Unknown tag-macro <$tag->name> on line $this->line.");
 					}
 					if ($isEmpty) {
 						$code .= $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, TRUE);
@@ -268,7 +268,7 @@ class LatteFilter extends Nette\Object
 					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 					$code = $this->handler->attrsMacro($code, $tag->attrs, $tag->closing);
 					if ($code === FALSE) {
-						throw new \InvalidStateException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
+						throw new \MacroException("Unknown macro-attribute " . self::HTML_PREFIX . implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)) . " on line $this->line.");
 					}
 					if ($isEmpty) {
 						$code = $this->handler->attrsMacro($code, $tag->attrs, TRUE);

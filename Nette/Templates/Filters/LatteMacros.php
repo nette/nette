@@ -1204,3 +1204,21 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	}
 
 }
+
+
+class MacroException extends \InvalidStateException
+{
+
+	public function __construct($message = '', $code = 0, \Exception $previous = NULL, $file = NULL, $line = NULL)
+	{
+		parent::__construct($message, $code, $previous);
+
+		if ($file !== NULL) {
+			$this->file = (string) $file;
+		}
+
+		if ($line !== NULL) {
+			$this->line = (int) $line;
+		}
+	}
+}

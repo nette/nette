@@ -108,7 +108,7 @@ class FileTemplate extends Template implements IFileTemplate
 				return;
 			}
 
-			$content = $this->compile(file_get_contents($this->file), "file \xE2\x80\xA6$shortName");
+			$content = $this->compile($this->file, "file \xE2\x80\xA6$shortName");
 			$cache->save(
 				$key,
 				$content,
