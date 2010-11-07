@@ -44,16 +44,4 @@ final class Framework
 		throw new \LogicException("Cannot instantiate static class " . get_class($this));
 	}
 
-
-
-	/**
-	 * Nette Framework promotion.
-	 * @return void
-	 */
-	public static function promo()
-	{
-		echo '<a href="http://nette.org" title="Nette Framework - The Most Innovative PHP Framework"><img ',
-			'src="http://files.nette.org/icons/nette-powered.gif" alt="Powered by Nette Framework" width="80" height="15" /></a>';
-	}
-
 }
