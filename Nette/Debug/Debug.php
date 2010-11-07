@@ -723,9 +723,10 @@ final class Debug
 
 		// unclosed command macro (for, foreach, while, if)
 		} elseif (String::match($message, '~^syntax error, unexpected \'}\'$~im')) {
-			$block = String::match($originalContent, '~.*: \?>~s');
-			$line = substr_count($block[0], "\n");
-			$errorContent = $lines[$line];
+			$match = String::match($content, '~\{(?P<keyword>for|foreach|while|if)(?P<content>[^}]*?)\}(?<rest>(.(?!\{/$1\}))*)~ism');
+			$block = String::replace($content, '~' . \preg_quote($match['rest']) . '~');
+			$line = substr_count($block, "\n") + 1;
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Unclosed macro `{$match['keyword']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
 
 		// unclosed macro
 		} elseif (String::match($message, '~^syntax error, unexpected \$end$~im')) {
@@ -734,6 +735,7 @@ final class Debug
 			$errorContent = $lines[$line];
 		}
 
+
 		// unclosed cache
 		if (($match = String::match($errorContent, '~if \(Nette\\\\Templates\\\\Caching~ims')) !== NULL) {
 			$block = String::match($content, '~.*\{cache~s');
@@ -741,13 +743,13 @@ final class Debug
 			self::paintBlueScreen(new \Nette\Templates\MacroException("Unclosed macro `cache` on line $line in `$shortpath`.", 0, NULL, $file, $line));
 
 		// invalid foreach
-		} elseif (($match = String::match($errorContent, '~^<\?php foreach.*?Iterator\((?P<value>[^)]*)\)~ims')) !== NULL) {
+		} elseif (($match = String::match($errorContent, '~<\?php foreach.*?Iterator\((?P<value>[^)]*)\)~ims')) !== NULL) {
 			$block = String::match($content, '~.*?\{foreach ?' . preg_quote($match['value']) . '~s');
 			$line = substr_count($block[0], "\n") + 1;
 			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `foreach` on line $line in `$shortpath`.", 0, NULL, $file, $line));
 
 		// invalid macro
-		} elseif (($match = String::match($errorContent, '~^<\?php (?P<keyword>[A-z]+).*?\((?P<value>[^)]*)\)~ims')) !== NULL) {
+		} elseif (($match = String::match($errorContent, '~<\?php (?P<keyword>[A-z]+).*?\((?P<value>[^)]*)\)~ims')) !== NULL) {
 			$block = String::match($content, '~.*?\{' . $match['keyword'] . ' ?' . preg_quote($match['value']) . '~s');
 			$line = substr_count($block[0], "\n") + 1;
 			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `{$match['keyword']}` on line $line in `$shortpath`.", 0, NULL, $file, $line));
