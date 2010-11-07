@@ -42,7 +42,10 @@ class CachingHelper extends Nette\Object
 	public static function create($key, & $parents, $args = NULL)
 	{
 		if ($args) {
-			$key .= md5(serialize($args));
+			$key .= md5(serialize(array_intersect_key($args, range(0, count($args)))));
+			if (array_key_exists('if', $args) && !$args['if']) {
+				return $parents[] = new self;
+			}
 		}
 		if ($parents) {
 			end($parents)->frame[Cache::ITEMS][] = $key;
@@ -73,7 +76,9 @@ class CachingHelper extends Nette\Object
 	 */
 	public function save()
 	{
-		$this->getCache()->save($this->key, ob_get_flush(), $this->frame);
+		if ($this->key !== NULL) {
+			$this->getCache()->save($this->key, ob_get_flush(), $this->frame);
+		}
 		$this->key = $this->frame = NULL;
 	}
 
