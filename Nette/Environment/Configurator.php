@@ -274,7 +274,7 @@ class Configurator extends Object
 	public static function createApplication()
 	{
 		if (Environment::getVariable('baseUri', NULL) === NULL) {
-			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBasePath());
+			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBaseUri());
 		}
 
 		$context = clone Environment::getContext();
