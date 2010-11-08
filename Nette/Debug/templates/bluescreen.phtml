@@ -94,41 +94,6 @@ function _netteDump($dump)
 	) . '</pre>';
 }
 
-
-
-
-/**
- * Opens panel.
- * @param  string
- * @param  bool
- * @return void
- */
-function _netteOpenPanel($name, $collapsed)
-{
-	static $id;
-	$id++;
-	?>
-	<div class="panel">
-		<h2><a href="#" rel="netteBsPnl<?php echo $id ?>"><?php echo htmlSpecialChars($name) ?> <abbr><?php echo $collapsed ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
-
-		<div id="netteBsPnl<?php echo $id ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
-	<?php
-}
-
-
-
-/**
- * Closes panel.
- * @return void
- */
-function _netteClosePanel()
-{
-	?>
-		</div>
-	</div>
-	<?php
-}
-
 }
 
 
@@ -156,6 +121,7 @@ static $errorTypes = array(
 $title = ($exception instanceof \FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
 
 $expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
+$counter = 0;
 
 if (headers_sent()) {
 	echo '</pre></xmp></table>';
@@ -381,7 +347,10 @@ if (headers_sent()) {
 		<?php do { ?>
 
 			<?php if ($level++): ?>
-				<?php _netteOpenPanel('Caused by', $level > 2) ?>
+			<div class="panel">
+			<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Caused by <abbr><?php echo ($collapsed = $level > 2) ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
+
+			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
 				<div class="panel">
 					<h1><?php echo htmlspecialchars(get_class($ex)), ($ex->getCode() ? ' #' . $ex->getCode() : '') ?></h1>
 
@@ -396,18 +365,24 @@ if (headers_sent()) {
 				}
 			} ?>
 			<?php if (is_file($ex->getFile())): ?>
-			<?php _netteOpenPanel('Source file', $expanded !== NULL) ?>
+			<div class="panel">
+			<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Source file <abbr><?php echo ($collapsed = $expanded !== NULL) ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
+
+			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
 				<p><b>File:</b> <?php if (self::$editor) echo '<a href="', htmlspecialchars(strtr(self::$editor, array('%file' => rawurlencode($ex->getFile()), '%line' => $ex->getLine()))), '">' ?>
 				<?php echo htmlspecialchars($ex->getFile()), (self::$editor ? '</a>':'') ?> &nbsp; <b>Line:</b> <?php echo $ex->getLine() ?></p>
 				<pre><?php _netteDebugPrintCode($ex->getFile(), $ex->getLine()) ?></pre>
-			<?php _netteClosePanel() ?>
+			</div></div>
 			<?php endif?>
 
 
 
 			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Debug' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
 			<?php if ($stack): ?>
-			<?php _netteOpenPanel('Call stack', FALSE) ?>
+			<div class="panel">
+				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Call stack <abbr>&#x25bc;</abbr></a></h2>
+
+				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
 				<ol>
 					<?php foreach ($stack as $key => $row): ?>
 					<li><p>
@@ -455,21 +430,27 @@ if (headers_sent()) {
 					</li>
 					<?php endforeach ?>
 				</ol>
-			<?php _netteClosePanel() ?>
+			</div></div>
 			<?php endif ?>
 
 
 
 			<?php if ($ex instanceof IDebugPanel && ($tab = $ex->getTab()) && ($panel = $ex->getPanel())): ?>
-			<?php _netteOpenPanel($tab, FALSE) ?>
+			<div class="panel">
+				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($tab) ?> <abbr>&#x25bc;</abbr></a></h2>
+
+				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
 				<?php echo $panel ?>
-			<?php _netteClosePanel() ?>
+			</div></div>
 			<?php endif ?>
 
 
 
 			<?php if (isset($ex->context) && is_array($ex->context)):?>
-			<?php _netteOpenPanel('Variables', TRUE) ?>
+			<div class="panel">
+			<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Variables <abbr>&#x25ba;</abbr></a></h2>
+
+			<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
 			<div class="outer">
 			<table>
 			<?php
@@ -479,27 +460,33 @@ if (headers_sent()) {
 			?>
 			</table>
 			</div>
-			<?php _netteClosePanel() ?>
+			</div></div>
 			<?php endif ?>
 
 		<?php } while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)); ?>
-		<?php while (--$level) _netteClosePanel() ?>
+		<?php while (--$level) echo '</div></div>' ?>
 
 
 
 		<?php if (!empty($application)):?>
-		<?php _netteOpenPanel('Nette Application', TRUE) ?>
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Nette Application <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
 			<h3>Requests</h3>
 			<?php $tmp = $application->getRequests(); echo _netteDump(self::_dump($tmp, 0)) ?>
 
 			<h3>Presenter</h3>
 			<?php $tmp = $application->getPresenter(); echo _netteDump(self::_dump($tmp, 0)) ?>
-		<?php _netteClosePanel() ?>
+		</div></div>
 		<?php endif ?>
 
 
 
-		<?php _netteOpenPanel('Environment', TRUE) ?>
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Environment <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
 			<?php
 			$list = get_defined_constants(TRUE);
 			if (!empty($list['user'])):?>
@@ -541,11 +528,14 @@ if (headers_sent()) {
 			</table>
 			</div>
 			<?php endif ?>
-		<?php _netteClosePanel() ?>
+		</div></div>
 
 
 
-		<?php _netteOpenPanel('HTTP request', TRUE) ?>
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">HTTP request <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
 			<?php if (function_exists('apache_request_headers')): ?>
 			<h3>Headers</h3>
 			<div class="outer">
@@ -572,11 +562,14 @@ if (headers_sent()) {
 			</div>
 			<?php endif ?>
 			<?php endforeach ?>
-		<?php _netteClosePanel() ?>
+		</div></div>
 
 
 
-		<?php _netteOpenPanel('HTTP response', TRUE) ?>
+		<div class="panel">
+		<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">HTTP response <abbr>&#x25ba;</abbr></a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
 			<h3>Headers</h3>
 			<?php if (headers_list()): ?>
 			<pre><?php
@@ -585,7 +578,7 @@ if (headers_sent()) {
 			<?php else: ?>
 			<p><i>no headers</i></p>
 			<?php endif ?>
-		<?php _netteClosePanel() ?>
+		</div></div>
 
 
 		<ul>

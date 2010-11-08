@@ -15,7 +15,7 @@ if (!function_exists('Nette\_netteDumpCb2')) {
 
 	function _netteDumpCb2($m)
 	{
-		return "$m[1]<a href='#' class='nette-toggler'>$m[2]($m[3]) " . ($m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="nette-hidden">');
+		return "$m[1]<a href='#' rel='next'>$m[2]($m[3]) " . ($m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="nette-collapsed">');
 	}
 }
 

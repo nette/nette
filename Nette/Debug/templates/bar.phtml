@@ -106,7 +106,7 @@ use Nette;
 		text-align: right;
 	}
 
-	.nette-hidden {
+	.nette-hidden, .nette-collapsed {
 		display: none;
 	}
 
@@ -307,8 +307,8 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 			return new Panel(selector)
 		},
 
-		_toggle: function(link) { // .nette-toggler
-			var rel = link.rel, el = rel.charAt(0) === '#' ? $(rel) : $(link)[rel.charAt(0) === '<' ? 'prev' : 'next'](rel.substring(1));
+		_toggle: function(link) {
+			var rel = link.rel, el = rel.charAt(0) === '#' ? $(rel) : $(link)[rel === 'prev' ? 'prev' : 'next'](rel.substring(4));
 			if (el.css('display') === 'none') {
 				el.show(); link.innerHTML = link.innerHTML.replace("\u25ba", "\u25bc");
 			} else {
@@ -434,11 +434,11 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 		}
 	},
 
-	initToggler: function() { // enable .nette-toggler
+	initToggler: function() { // enable <a rel="..."> togglers
 		var panel = this;
 		this.bind('click', function(e) {
 			var $link = $(e.target).closest('a'), link = $link.dom();
-			if (link && $link.hasClass('nette-toggler')) {
+			if (link && link.rel) {
 				Panel._toggle(link);
 				e.preventDefault();
 				panel.reposition();
