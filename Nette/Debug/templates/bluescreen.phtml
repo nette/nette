@@ -363,8 +363,6 @@ if (headers_sent()) {
 
 	<script type="text/javascript">
 	/* <![CDATA[ */
-		document.write('<style class="nette"> .collapsed { display: none; } <\/style>');
-
 		function netteToggle(link, panelId)
 		{
 			var arrow = link.getElementsByTagName('abbr')[0];
@@ -641,6 +639,11 @@ if (headers_sent()) {
 		if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
 			styles[i].oldDisabled = styles[i].disabled;
 			styles[i].disabled = true;
+
+		} else if (styles[i].addRule) {
+        	styles[i].addRule('.collapsed', 'display: none');
+		} else {
+        	styles[i].insertRule('.collapsed { display: none }', 0);
 		}
 	}
 </script>
