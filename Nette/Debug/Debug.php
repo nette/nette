@@ -536,7 +536,7 @@ final class Debug
 		if (isset($types[$error['type']])) {
 			$template = String::match($error['file'], '~(?P<module>[A-z0-9_-]*)_(?P<presenter>[A-z0-9_-]+).(?P<action>[A-z0-9_-]+).phtml~im');
 			if ($template !== NULL) {
-				self::paintTemplateError($error['file'], $error['message'], $error['line'] - 1);
+				self::paintTemplateError($error['message'], $error['file'], $error['line'] - 1);
 			}
 			self::_exceptionHandler(new \FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL));
 			return;
@@ -584,7 +584,7 @@ final class Debug
 
 				} elseif ($htmlMode) { // dump to browser
 					if ($exception instanceof \Nette\Templates\MacroException) {
-						self::paintTemplateError($exception->getFile(), $exception->getMessage());
+						self::paintTemplateException($exception->getMessage(), $exception->getCode(), $exception->getFile(), $exception->getLine());
 					}
 					self::paintBlueScreen($exception);
 
@@ -635,7 +635,7 @@ final class Debug
 		} elseif (self::$strictMode && !self::$productionMode) {
 			$template = String::match($file, '~(?P<module>[A-z0-9_-]*)_(?P<presenter>[A-z0-9_-]+).(?P<action>[A-z0-9_-]+).phtml~im');
 			if ($template !== NULL) {
-				self::paintTemplateError($file, $message, $line);
+				self::paintTemplateError($message, $file, $line);
 			}
 			self::_exceptionHandler(new \FatalErrorException($message, 0, $severity, $file, $line, $context));
 			exit;
@@ -675,108 +675,97 @@ final class Debug
 	/**
 	 * Processes template errors and paints bluescreen. Exits the application.
 	 * @author Mikulas Dite
-	 * @param string $file
-	 * @param string $message
-	 * @param string $originalFile
-	 * @param int $originalLine
+	 * 
+	 * @param stirng $message
+	 * @param message $code
+	 * @param file $file
+	 *
+	 * @todo fix displaying action template when error is in layout
 	 */
-	public static function paintTemplateError($cacheFile, $message, $cacheLine = NULL)
+	public static function paintTemplateException($message, $code, $file, $line)
 	{
-		dump($cacheFile);
 		$templateFile = Environment::getApplication()->getPresenter()->getTemplate()->getFile();
+		$templateContent = file_get_contents($templateFile);
 
 		$shortName = str_replace(dirname(dirname($templateFile)), '', $templateFile);
-		$key = trim(strtr($shortName, '\\/@', '.._'), '.') . '-' . md5($templateFile);
 		
-		$cache = new Caching\Cache(Templates\FileTemplate::getCacheStorage(), 'Nette.FileTemplate');
-		$key = trim(strtr($shortName, '\\/@', '.._'), '.') . '-' . md5($templateFile);
-		$cached = $cache[$key];
-
-		if ($cached === NULL) {
-			throw new \InvalidStateException('Fatal error: Template cache not found.');
-			exit;
+		switch ($code) {
+			case Templates\MacroException::BLOCK_UNCLOSED:
+				$block = String::match($templateContent, '~.*\{block\}~s');
+				$line = substr_count($block[0], "\n") + 1;
 		}
+		self::paintBlueScreen(new \Nette\Templates\MacroException("Macro error: $message (in {$shortName})", 0, NULL, $templateFile, $line));
+		exit;
+	}
 
-		$templateContent = fread($cached['handle'], \filesize($cached['file']));
-		fclose($cached['handle']);
 
-		$content = file_get_contents($file);
 
-		if ($originalFile !== NULL) {
-			$originalContent = file_get_contents($originalFile);
-			$lines = explode("\n", $originalContent);
-			$errorContent = $lines[$originalLine];
-		}
-		
+	/**
+	 * Processes template errors and paints bluescreen. Exits the application.
+	 * @author Mikulas Dite
+	 * @param string $message
+	 * @param string $cacheFile
+	 * @param int $cacheLine
+	 *
+	 * @todo fix displaying action template when error is in layout
+	 */
+	public static function paintTemplateError($message, $cacheFile, $cacheLine = NULL)
+	{
+		$templateFile = Environment::getApplication()->getPresenter()->getTemplate()->getFile();
+		$templateContent = file_get_contents($templateFile);
+
+		$shortName = str_replace(dirname(dirname($templateFile)), '', $templateFile);
 
 		// undefined variable
 		if (($match = String::match($message, '~^Undefined variable: (?P<var>[A-z0-9_]+)$~im')) !== NULL) {
-			$block = String::match($content, '~.*?' . preg_quote('$' . $match['var']) . '~s');
+			$block = String::match($templateContent, '~.*?' . preg_quote('$' . $match['var']) . '~s');
 			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Undefined variable `$" . "{$match['var']}` on line $line in `$shortName`.", 0, NULL, $file, $line));
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Undefined variable `$" . "{$match['var']}` on line $line in `$shortName`.", 0, NULL, $templateFile, $line));
 			exit;
 
-		// invalid eval call {=foo()}
+		// invalid function call
 		} elseif (($match = String::match($message, '~^Call to undefined function (?P<function>[A-z_]+)~im')) !== NULL) {
-			$block = String::match($content, '~.*?\{(\?|!)?=?' . $match['function'] . '\(~is');
+			$block = String::match($templateContent, '~.*?\{(\?|!)?=?' . $match['function'] . '\(~is');
 			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Called undefined function `{$match['function']}` on line $line in `$shortName`.", 0, NULL, $file, $line));
+			self::paintBlueScreen(new \Nette\Templates\MacroException("Called undefined function `{$match['function']}()` on line $line in `$shortName`.", 0, NULL, $templateFile, $line));
 			exit;
 
-		// unopened macro
-		} elseif (($match = String::match($message, '~^syntax error, unexpected T_END(?P<keyword>[A-Z_]+)~im')) !== NULL) {
-			$keyword = String::lower($match['keyword']);
-			$block = String::match($content, '~.*?\{/' . $keyword . '~is');
-			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Unopened macro `$keyword` on line $line in `$shortName`.", 0, NULL, $file, $line));
-			exit;
-
-		// unknown macro
-		} elseif (($match = String::match($message, '~Unknown macro (?P<macro>\{.*\}) on line~im')) !== NULL) {
-			$block = String::match($content, '~.*?' . preg_quote($match['macro']) . '~s');
-			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Unknown macro `{$match['macro']}` on line $line in `$shortName`.", 0, NULL, $file, $line));
-			exit;
-
-		// unclosed command macro (for, foreach, while, if)
-		} elseif (String::match($message, '~^syntax error, unexpected \'}\'$~im')) {
-			$match = String::match($content, '~\{(?P<keyword>for|foreach|while|if)(?P<content>[^}]*?)\}(?<rest>(.(?!\{/$1\}))*)~ism');
-			if ($match !== NULL) {
-				$block = String::replace($content, '~' . \preg_quote($match['rest']) . '~');
-				$line = substr_count($block, "\n") + 1;
-				self::paintBlueScreen(new \Nette\Templates\MacroException("Unclosed macro `{$match['keyword']}` on line $line in `$shortName`.", 0, NULL, $file, $line));
-				exit;
+		// invalid for loop usage
+		} elseif (count($match = String::matchAll($templateContent, '~\{for(\s+(?P<var>[^;]*?);?(?P<condition>[^;]*?);?(?P<do>.*?))?\s*\}~ims')) !== 0) {
+			foreach ($match as $loop) {
+				if (!isset($loop['var']) || trim($loop['var'] === '') || trim($loop['condition']) === '') {
+					$block = String::match($templateContent, '~.*?' . preg_quote($loop[0]) . '~s');
+					$line = substr_count($block[0], "\n") + 1;
+					self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid `for` usage on line $line in `$shortName`.", 0, NULL, $templateFile, $line));
+					exit;
+				}
 			}
 
-		// unclosed macro
-		} elseif (String::match($message, '~^syntax error, unexpected \$end$~im')) {
-			$block = String::match($originalContent, '~.*?\{ \?>~s');
-			$line = substr_count($block[0], "\n");
-			$errorContent = $lines[$line];
+		// invalid foreach loop usage
+		} elseif (count($match = String::matchAll($templateContent, '~\{foreach(?P<content>(|\s+[^}]*?))\}~imsx')) !== 0) {
+			foreach ($match as $loop) {
+				if (!String::match($loop['content'], ('~^\s*(?P<var>[^ \t]*?)\s+as\s+((?P<key>[^ \t]*?)\s+=>\s+)?(?P<do>[^ \t]*?)\s*$~ims'))) {
+					$block = String::match($templateContent, '~.*?' . preg_quote($loop[0]) . '~s');
+					$line = substr_count($block[0], "\n") + 1;
+					self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid `foreach` usage on line $line in `$shortName`.", 0, NULL, $templateFile, $line));
+					exit;
+				}
+			}
+
+		// invalid while loop usage
+		} elseif (count($match = String::matchAll($templateContent, '~\{while(?P<content>(|\s+[^}]*?))\}~imsx')) !== 0) {
+			foreach ($match as $loop) {
+				if (!String::match($loop['content'], ('~^\s*(\$[A-z0-9_]|[A-z0-9_]\([^)]\)(\s+(&{1,2}|[|]{1,2})\s+)?)(?R)*\s*$~ims'))) {
+					$block = String::match($templateContent, '~.*?' . preg_quote($loop[0]) . '~s');
+					$line = substr_count($block[0], "\n") + 1;
+					self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid `while` usage on line $line in `$shortName`.", 0, NULL, $templateFile, $line));
+					exit;
+				}
+			}
 		}
-
-
-		// unclosed cache
-		if (($match = String::match($errorContent, '~if \(Nette\\\\Templates\\\\Caching~ims')) !== NULL) {
-			$block = String::match($content, '~.*\{cache~s');
-			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Unclosed macro `cache` on line $line in `$shortName`.", 0, NULL, $file, $line));
-
-		// invalid foreach
-		} elseif (($match = String::match($errorContent, '~<\?php foreach.*?Iterator\((?P<value>[^)]*)\)~ims')) !== NULL) {
-			$block = String::match($content, '~.*?\{foreach ?' . preg_quote($match['value']) . '~s');
-			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `foreach` on line $line in `$shortName`.", 0, NULL, $file, $line));
-
-		// invalid macro
-		} elseif (($match = String::match($errorContent, '~<\?php (?P<keyword>[A-z]+).*?\((?P<value>[^)]*)\)~ims')) !== NULL) {
-			$block = String::match($content, '~.*?\{' . $match['keyword'] . ' ?' . preg_quote($match['value']) . '~s');
-			$line = substr_count($block[0], "\n") + 1;
-			self::paintBlueScreen(new \Nette\Templates\MacroException("Invalid macro `{$match['keyword']}` on line $line in `$shortName`.", 0, NULL, $file, $line));
-
-		}
-
-		self::paintBlueScreen(new \Nette\Templates\MacroException("Macro error: $message on line $cacheLine in `$shortName`.", 0, NULL, $cacheFile, $cacheLine));
+		
+		self::paintBlueScreen(new \Nette\Templates\MacroException("Unknown macro error: $message on line $cacheLine in `$shortName`.", 0, NULL, $cacheFile, $cacheLine));
+		exit;
 	}
 
 

@@ -143,7 +143,7 @@ abstract class Template extends Nette\Object implements ITemplate
 			}
 		} catch (\Exception $e) {
 			if ($e instanceof MacroException) {
-				throw new MacroException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e, $file);
+				throw new MacroException($e->getMessage(), $e->getCode(), $e, $file, $e->getLine());
 			}
 			throw new \InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
 		}

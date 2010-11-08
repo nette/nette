@@ -223,7 +223,7 @@ class LatteMacros extends Nette\Object
 			$s .= $this->macro('/block');
 
 		} elseif ($this->blocks) {
-			throw new \InvalidStateException("There are unclosed blocks.");
+			throw new MacroException("There are unclosed blocks.", MacroException::BLOCK_UNCLOSED, NULL, NULL, $this->filter->line);
 		}
 
 		// extends support
@@ -485,12 +485,12 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$params = $this->formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new \InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
+			throw new MacroException("Missing destination in {include} on line {$this->filter->line}.", MacroException::INCLUDE_NO_DESTINATION, NULL, NULL, $this->filter->line);
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
 			if (!String::match($destination, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new \InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
+				throw new MacroException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.", MacroException::BLOCK_INVALID_NAME, NULL, NULL, $this->filter->line);
 			}
 
 			$parent = $destination === 'parent';
@@ -498,7 +498,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new \InvalidStateException("Cannot include $destination block outside of any block on line {$this->filter->line}.");
+					throw new MacroException("Cannot include $destination block outside of any block on line {$this->filter->line}.", MacroException::BLOCK_INVALID_INCLUDE, NULL, NULL, $this->filter->line);
 				}
 				$destination = $item[1];
 			}
@@ -529,13 +529,13 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		$destination = $this->fetchToken($content); // destination
 		if ($destination === NULL) {
-			throw new \InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
+			throw new MacroException("Missing destination in {extends} on line {$this->filter->line}.", MacroException::EXTENDS_NO_DESTINATION, NULL, NULL, $this->filter->line);
 		}
 		if (!empty($this->blocks)) {
-			throw new \InvalidStateException("{extends} must be placed outside any block; on line {$this->filter->line}.");
+			throw new MacroException("{extends} must be placed outside any block; on line {$this->filter->line}.", MacroException::EXTENDS_INVALID_PLACEMENT, NULL, NULL, $this->filter->line);
 		}
 		if ($this->extends !== NULL) {
-			throw new \InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
+			throw new MacroException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.", MacroException::EXTENDS_MULTIPLE, NULL, NULL, $this->filter->line);
 		}
 		$this->extends = $destination !== 'none';
 		return $this->extends ? '$_l->extends = ' . ($destination === 'auto' ? '$layout' : $this->formatString($destination)) : '';
@@ -557,10 +557,10 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		} else { // #block
 			$name = ltrim($name, '#');
 			if (!String::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new \InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
+				throw new MacroException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.", MacroException::BLOCK_INVALID_NAME, NULL, NULL, $this->filter->line);
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new \InvalidStateException("Cannot redeclare block '$name'; on line {$this->filter->line}.");
+				throw new MacroException("Cannot redeclare block '$name'; on line {$this->filter->line}.", MacroException::BLOCK_REDECLARED, NULL, NULL, $this->filter->line);
 			}
 
 			$top = empty($this->blocks);
@@ -642,7 +642,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$name = $this->fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
-			throw new \InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
+			throw new MacroException("Invalid capture block parameter '$name' on line {$this->filter->line}.", MacroException::CAPTURE_INVALID_PARAM, NULL, NULL, $this->filter->line);
 		}
 
 		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
@@ -659,7 +659,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		list($type, $name, $modifiers) = array_pop($this->blocks);
 
 		if ($type !== self::BLOCK_CAPTURE || ($content && $content !== $name)) {
-			throw new \InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
+			throw new MacroException("Tag {/capture $content} was not expected here on line {$this->filter->line}.", MacroException::CAPTURE_UNEXPECTED, NULL, NULL, $this->filter->line);
 		}
 
 		return $name . '=' . $this->formatModifiers('ob_get_clean()', $modifiers);
@@ -764,7 +764,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		$pair = $this->fetchToken($content); // control[:method]
 		if ($pair === NULL) {
-			throw new \InvalidStateException("Missing control name in {control} on line {$this->filter->line}.");
+			throw new MacroException("Missing control name in {control} on line {$this->filter->line}.", MacroException::CONTROL_INVALID_NAME, NULL, NULL, $this->filter->line);
 		}
 		$pair = explode(':', $pair, 2);
 		$name = $this->formatString($pair[0]);
@@ -905,7 +905,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					$var = "\$template->" . trim($token, "'") . "($var";
 					$inside = TRUE;
 				} else {
-					throw new \InvalidStateException("Modifier name must be alphanumeric string, '$token' given.");
+					throw new MacroException("Modifier name must be alphanumeric string, '$token' given.", MacroException::MODIFIER_INVALID, NULL, NULL, $this->filter->line);
 				}
 			} else {
 				if ($token === ':' || $token === ',') {
@@ -1090,7 +1090,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public static function callBlock($context, $name, $params)
 	{
 		if (empty($context->blocks[$name])) {
-			throw new \InvalidStateException("Cannot include undefined block '$name'.");
+			throw new MacroException("Cannot include undefined block '$name'.", MacroException::BLOCK_INCLUDE_UNDEFINED, NULL, NULL, $this->filter->line);
 		}
 		$block = reset($context->blocks[$name]);
 		$block($context, $params);
@@ -1108,7 +1108,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public static function callBlockParent($context, $name, $params)
 	{
 		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
-			throw new \InvalidStateException("Cannot include undefined parent block '$name'.");
+			throw new MacroException("Cannot include undefined parent block '$name'.", MacroException::BLOCK_INCLUDE_UNDEFINED, NULL, NULL, $this->filter->line);
 		}
 		$block($context, $params);
 	}
@@ -1128,7 +1128,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			$tpl = $destination;
 
 		} elseif ($destination == NULL) { // intentionally ==
-			throw new \InvalidArgumentException("Template file name was not specified.");
+			throw new MacroException("Template file name was not specified.", MacroException::INCLUDE_NO_FILENAME, NULL, NULL, $this->filter->line);
 
 		} else {
 			$tpl = clone $template;
@@ -1208,6 +1208,23 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 
 class MacroException extends \InvalidStateException
 {
+
+	const INCLUDE_NO_DESTINATION = 1;
+	const INCLUDE_NO_FILENAME = 14;
+	const BLOCK_UNCLOSED = 2;
+	const BLOCK_INVALID_NAME = 3;
+	const BLOCK_INVALID_INCLUDE = 4;
+	const BLOCK_INCLUDE_UNDEFINED = 13;
+	const BLOCK_REDECLARED = 5;
+	const EXTENDS_NO_DESTINATION = 6;
+	const EXTENDS_INVALID_PLACEMENT = 7;
+	const EXTENDS_MULTIPLE = 8;
+	const CAPTURE_INVALID_PARAM = 9;
+	const CAPTURE_UNEXPECTED = 10;
+	const CONTROL_INVALID_NAME = 11;
+	const MODIFIER_INVALID = 12;
+	
+
 
 	public function __construct($message = '', $code = 0, \Exception $previous = NULL, $file = NULL, $line = NULL)
 	{
