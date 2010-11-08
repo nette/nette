@@ -92,6 +92,7 @@ class NetteLoader extends AutoLoader
 		'nette\configurator' => '/Environment/Configurator.php',
 		'nette\context' => '/Utils/Context.php',
 		'nette\debug' => '/Debug/Debug.php',
+		'nette\debughelpers' => '/Debug/DebugHelpers.php',
 		'nette\debugpanel' => '/Debug/DebugPanel.php',
 		'nette\environment' => '/Environment/Environment.php',
 		'nette\finder' => '/Utils/Finder.php',

@@ -11,14 +11,6 @@ namespace Nette;
 
 use Nette;
 
-if (!function_exists('Nette\_netteDumpCb2')) {
-
-	function _netteDumpCb2($m)
-	{
-		return "$m[1]<a href='#' rel='next'>$m[2]($m[3]) " . ($m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="nette-collapsed">');
-	}
-}
-
 ?>
 <style>
 
@@ -54,7 +46,7 @@ if (!function_exists('Nette\_netteDumpCb2')) {
 <h1>Dumped variables</h1>
 
 <div class="nette-inner">
-<?php foreach (self::$dumps as $item): ?>
+<?php foreach ($data as $item): ?>
 	<?php if ($item['title']):?>
 	<h2><?php echo htmlspecialchars($item['title']) ?></h2>
 	<?php endif ?>
@@ -64,7 +56,7 @@ if (!function_exists('Nette\_netteDumpCb2')) {
 	<?php foreach ($item['dump'] as $key => $dump): ?>
 	<tr class="<?php echo $i++ % 2 ? 'nette-alt' : '' ?>">
 		<th><?php echo htmlspecialchars($key) ?></th>
-		<td><pre class="nette-dump"><?php echo preg_replace_callback('#^( *)((?>[^(]{1,200}))\((\d+)\) <code>#m', 'Nette\_netteDumpCb2', $dump) ?></pre></td>
+		<td><?php echo $dump ?></td>
 	</tr>
 	<?php endforeach ?>
 	</table>

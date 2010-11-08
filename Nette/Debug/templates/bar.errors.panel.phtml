@@ -18,15 +18,15 @@ use Nette;
 <div class="nette-inner">
 <table>
 <?php $i = 0 ?>
-<?php foreach (self::$errors as $item => $count): list($message, $file, $line) = explode('|', $item) ?>
+<?php foreach ($data as $item => $count): list($message, $file, $line) = explode('|', $item) ?>
 <tr class="<?php echo $i++ % 2 ? 'nette-alt' : '' ?>">
 	<td class="nette-right"><?php echo $count ? "$count\xC3\x97" : '' ?></td>
 	<td><pre><?php echo
 		htmlspecialchars($message), ' in ',
-		(self::$editor ? '<a href="' . htmlspecialchars(strtr(self::$editor, array('%file' => rawurlencode($file), '%line' => $line))) . '">' : ''),
+		(Debug::$editor ? '<a href="' . DebugHelpers::editorLink($file, $line) . '">' : ''),
 		htmlspecialchars(($relative ? str_replace($relative, "...", $file) : $file)),
 		':', $line,
-		(self::$editor ? '</a>' : '')
+		(Debug::$editor ? '</a>' : '')
 	?></pre></td>
 </tr>
 <?php endforeach ?>
