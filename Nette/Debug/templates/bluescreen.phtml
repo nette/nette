@@ -61,15 +61,16 @@ function _netteDebugPrintCode($file, $line, $count = 15)
 	foreach ($source as $n => $s) {
 		$spans += substr_count($s, '<span') - substr_count($s, '</span');
 		$s = str_replace(array("\r", "\n"), array('', ''), $s);
+		preg_match_all('#<[^>]+>#', $s, $tags);
 		if ($n === $line) {
 			printf(
-				"<span class='highlight'>Line %{$numWidth}s:    %s\n</span>%s",
+				"<span class='highlight'>%{$numWidth}s:    %s\n</span>%s",
 				$n,
 				strip_tags($s),
-				preg_replace('#[^>]*(<[^>]+>)[^<]*#', '$1', $s)
+				implode('', $tags[0])
 			);
 		} else {
-			printf("<span class='line'>Line %{$numWidth}s:</span>    %s\n", $n, $s);
+			printf("<span class='line'>%{$numWidth}s:</span>    %s\n", $n, $s);
 		}
 	}
 	echo str_repeat('</span>', $spans), '</code>';
