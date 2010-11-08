@@ -204,9 +204,6 @@ class LatteMacros extends Nette\Object
 
 		$filter->context = LatteFilter::CONTEXT_TEXT;
 		$filter->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
-
-		// remove comments
-		$s = String::replace($s, '#\\{\\*.*?\\*\\}[\r\n]*#s', '');
 	}
 
 

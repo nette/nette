@@ -97,7 +97,7 @@ class LatteFilter extends Nette\Object
 	public function __invoke($s)
 	{
 		if (!$this->macroRe) {
-			$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
+			$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		}
 
 		// context-aware escaping
@@ -136,6 +136,8 @@ class LatteFilter extends Nette\Object
 			if (!$matches) { // EOF
 				break;
 
+			} elseif (!empty($matches['comment'])) { // {* *}
+
 			} elseif (!empty($matches['macro'])) { // {macro}
 				$code = $this->handler->macro($matches['macro']);
 				if ($code === FALSE) {
@@ -171,13 +173,13 @@ class LatteFilter extends Nette\Object
 	{
 		$matches = $this->match('~
 			(?:\n[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-			<(?P<comment>!--)|           ##  begin of HTML comment <!--
+			<(?P<htmlcomment>!--)|           ##  begin of HTML comment <!--
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
-		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
+		if (!$matches || !empty($matches['macro']) || !empty($matches['comment'])) { // EOF or {macro}
 
-		} elseif (!empty($matches['comment'])) { // <!--
+		} elseif (!empty($matches['htmlcomment'])) { // <!--
 			$this->context = self::CONTEXT_COMMENT;
 			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtmlComment';
 
@@ -223,7 +225,7 @@ class LatteFilter extends Nette\Object
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
-		if ($matches && empty($matches['macro'])) { // </tag
+		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // </tag
 			$tag->closing = TRUE;
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -245,7 +247,7 @@ class LatteFilter extends Nette\Object
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
 
-		if (!$matches || !empty($matches['macro'])) { // EOF or {macro}
+		if (!$matches || !empty($matches['macro']) || !empty($matches['comment'])) { // EOF or {macro}
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$tag = end($this->tags);
@@ -332,7 +334,7 @@ class LatteFilter extends Nette\Object
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
-		if ($matches && empty($matches['macro'])) { // (attribute end) '"
+		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // (attribute end) '"
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
 		}
@@ -351,7 +353,7 @@ class LatteFilter extends Nette\Object
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
 
-		if ($matches && empty($matches['macro'])) { // --\s*>
+		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // --\s*>
 			$this->context = self::CONTEXT_TEXT;
 			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
 		}
@@ -410,6 +412,7 @@ class LatteFilter extends Nette\Object
 	public function setDelimiters($left, $right)
 	{
 		$this->macroRe = '
+			(?:\r?\n?)(?P<comment>\\{\\*.*?\\*\\}[\r\n]{0,2})|
 			(?P<indent>\n[\ \t]*)?
 			' . $left . '
 				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
