@@ -88,7 +88,7 @@ function _netteDump($dump)
 	return '<pre class="nette-dump">' . preg_replace_callback(
 		'#^( *)((?>[^(]{1,200}))\((\d+)\) <code>#m',
 		function ($m) {
-			return "$m[1]<a href='#' onclick='return !netteToggle(this)'>$m[2]($m[3]) " . (trim($m[1]) || $m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="collapsed">');
+			return "$m[1]<a href='#' rel='next'>$m[2]($m[3]) " . (trim($m[1]) || $m[3] < 7 ? '<abbr>&#x25bc;</abbr> </a><code>' : '<abbr>&#x25ba;</abbr> </a><code class="nette-collapsed">');
 		},
 		$dump
 	) . '</pre>';
@@ -109,9 +109,9 @@ function _netteOpenPanel($name, $collapsed)
 	$id++;
 	?>
 	<div class="panel">
-		<h2><a href="#" onclick="return !netteToggle(this, 'netteBsPnl<?php echo $id ?>')"><?php echo htmlSpecialChars($name) ?> <abbr><?php echo $collapsed ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
+		<h2><a href="#" rel="netteBsPnl<?php echo $id ?>"><?php echo htmlSpecialChars($name) ?> <abbr><?php echo $collapsed ? '&#x25ba;' : '&#x25bc;' ?></abbr></a></h2>
 
-		<div id="netteBsPnl<?php echo $id ?>" class="<?php echo $collapsed ? 'collapsed ' : '' ?>inner">
+		<div id="netteBsPnl<?php echo $id ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
 	<?php
 }
 
@@ -360,39 +360,13 @@ if (headers_sent()) {
 			border-bottom: 1px dotted #328ADC;
 		}
 	</style>
-
-
-	<script type="text/javascript">
-	/* <![CDATA[ */
-		function netteToggle(link, panelId)
-		{
-			var arrow = link.getElementsByTagName('abbr')[0];
-			var panel = panelId ? document.getElementById(panelId) : link.nextSibling;
-			while (panel.nodeType !== 1) panel = panel.nextSibling;
-			var collapsed = panel.currentStyle ? panel.currentStyle.display == 'none' : getComputedStyle(panel, null).display == 'none';
-
-			try { arrow.innerHTML = String.fromCharCode(collapsed ? 0x25bc : 0x25ba); } catch(e){} // ie6
-			panel.style.display = collapsed ? (panel.tagName.toLowerCase() === 'code' ? 'inline' : 'block') : 'none';
-
-			if (link.id === 'netteBluescreenIcon') {
-				for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
-					if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
-						styles[i].disabled = collapsed ? true : styles[i].oldDisabled;
-					}
-				}
-			}
-
-			return true;
-		}
-	/* ]]> */
-	</script>
 </head>
 
 
 
 <body>
 <div id="netteBluescreen">
-	<a id="netteBluescreenIcon" href="#" onclick="return !netteToggle(this)"><abbr>&#x25bc;</abbr></a
+	<a id="netteBluescreenIcon" href="#" rel="next"><abbr>&#x25bc;</abbr></a
 
 	><div>
 		<div id="netteBluescreenError" class="panel">
@@ -445,16 +419,16 @@ if (headers_sent()) {
 						<i>inner-code</i><?php if (isset($row['line'])) echo ' (', $row['line'], ')' ?>
 					<?php endif ?>
 
-					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#" onclick="return !netteToggle(this, 'netteBsSrc<?php echo "$level-$key" ?>')">source <abbr>&#x25ba;</abbr></a>&nbsp; <?php endif ?>
+					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#" rel="netteBsSrc<?php echo "$level-$key" ?>">source <abbr>&#x25ba;</abbr></a>&nbsp; <?php endif ?>
 
 					<?php if (isset($row['class'])) echo $row['class'] . $row['type'] ?>
 					<?php echo $row['function'] ?>
 
-					(<?php if (!empty($row['args'])): ?><a href="#" onclick="return !netteToggle(this, 'netteBsArgs<?php echo "$level-$key" ?>')">arguments <abbr>&#x25ba;</abbr></a><?php endif ?>)
+					(<?php if (!empty($row['args'])): ?><a href="#" rel="netteBsArgs<?php echo "$level-$key" ?>">arguments <abbr>&#x25ba;</abbr></a><?php endif ?>)
 					</p>
 
 					<?php if (!empty($row['args'])): ?>
-						<div class="collapsed outer" id="netteBsArgs<?php echo "$level-$key" ?>">
+						<div class="nette-collapsed outer" id="netteBsArgs<?php echo "$level-$key" ?>">
 						<table>
 						<?php
 						try {
@@ -475,7 +449,7 @@ if (headers_sent()) {
 
 
 					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<pre <?php if ($expanded !== $key) echo 'class="collapsed"'; ?> id="netteBsSrc<?php echo "$level-$key" ?>"><?php _netteDebugPrintCode($row['file'], $row['line']) ?></pre>
+						<pre <?php if ($expanded !== $key) echo 'class="nette-collapsed"'; ?> id="netteBsSrc<?php echo "$level-$key" ?>"><?php _netteDebugPrintCode($row['file'], $row['line']) ?></pre>
 					<?php endif ?>
 
 					</li>
@@ -529,7 +503,7 @@ if (headers_sent()) {
 			<?php
 			$list = get_defined_constants(TRUE);
 			if (!empty($list['user'])):?>
-			<h3><a href="#" onclick="return !netteToggle(this, 'netteBsPnl-env-const')">Constants <abbr>&#x25bc;</abbr></a></h3>
+			<h3><a href="#" rel="netteBsPnl-env-const">Constants <abbr>&#x25bc;</abbr></a></h3>
 			<div class="outer">
 			<table id="netteBsPnl-env-const">
 			<?php
@@ -543,9 +517,9 @@ if (headers_sent()) {
 			<?php endif ?>
 
 
-			<h3><a href="#" onclick="return !netteToggle(this, 'netteBsPnl-env-files')">Included files <abbr>&#x25ba;</abbr></a> (<?php echo count(get_included_files()) ?>)</h3>
+			<h3><a href="#" rel="netteBsPnl-env-files">Included files <abbr>&#x25ba;</abbr></a> (<?php echo count(get_included_files()) ?>)</h3>
 			<div class="outer">
-			<table id="netteBsPnl-env-files" class="collapsed">
+			<table id="netteBsPnl-env-files" class="nette-collapsed">
 			<?php
 			foreach (get_included_files() as $v) {
 				echo '<tr><td>', htmlspecialchars($v), "</td></tr>\n";
@@ -629,24 +603,53 @@ if (headers_sent()) {
 </div>
 
 <script type="text/javascript">
-	document.body.appendChild(document.getElementById('netteBluescreen'));
+	var bs = document.getElementById('netteBluescreen');
+	document.body.appendChild(bs);
 	document.onkeyup = function(e) {
 		e = e || window.event;
 		if (e.keyCode == 27) {
-			return document.getElementById('netteBluescreenIcon').onclick();
+			bs.onclick({target: document.getElementById('netteBluescreenIcon')});
 		}
 	};
+
 	for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
 		if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
 			styles[i].oldDisabled = styles[i].disabled;
 			styles[i].disabled = true;
 
 		} else if (styles[i].addRule) {
-        	styles[i].addRule('.collapsed', 'display: none');
+        	styles[i].addRule('.nette-collapsed', 'display: none');
 		} else {
-        	styles[i].insertRule('.collapsed { display: none }', 0);
+        	styles[i].insertRule('.nette-collapsed { display: none }', 0);
 		}
 	}
+
+	bs.onclick = function(e) {
+		e = e || window.event;
+		var link = e.target || e.srcElement;
+		while (link && link.tagName && link.tagName.toLowerCase() !== 'a') {
+			link = link.parentNode;
+		}
+		if (!link || !link.rel) {
+			return true;
+		}
+		var arrow = link.getElementsByTagName('abbr')[0];
+		var panel = link.rel === 'next' ? link.nextSibling : document.getElementById(link.rel);
+		while (panel.nodeType !== 1) panel = panel.nextSibling;
+		var collapsed = panel.currentStyle ? panel.currentStyle.display == 'none' : getComputedStyle(panel, null).display == 'none';
+
+		try { arrow.innerHTML = String.fromCharCode(collapsed ? 0x25bc : 0x25ba); } catch(e){} // ie6
+		panel.style.display = collapsed ? (panel.tagName.toLowerCase() === 'code' ? 'inline' : 'block') : 'none';
+
+		if (link.id === 'netteBluescreenIcon') {
+			for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
+				if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette') {
+					styles[i].disabled = collapsed ? true : styles[i].oldDisabled;
+				}
+			}
+		}
+		return false;
+	};
 </script>
 </body>
 </html>
