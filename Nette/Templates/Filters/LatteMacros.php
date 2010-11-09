@@ -1024,7 +1024,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$tokens[] = $current;
 				continue;
 
-			} elseif ($name === self::T_SYMBOL && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
+			} elseif ($name === self::T_SYMBOL && !String::match($token, '#^[A-Z][A-Z0-9_]{2,}$#') && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
 				$lastSymbol = count($tokens); // quoting pre-requirements
 
 			} elseif (is_int($lastSymbol) && in_array($token, array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {

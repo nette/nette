@@ -40,7 +40,7 @@ try {
 
 // key words
 
-Assert::same( 'array(TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class)',  $latte->formatArray('TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class') );
+Assert::same( 'array(TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class, M_PI)',  $latte->formatArray('TRUE, false, null, 1 or 1 and 2 xor 3, clone $obj, new Class, M_PI') );
 Assert::same( 'array(func (10))',  $latte->formatArray('func (10)') );
 
 // associative arrays
