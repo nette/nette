@@ -95,6 +95,10 @@ class LatteFilter extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
+		if (!String::checkEncoding($s)) {
+			throw new LatteException('Template is not valid UTF-8 stream.');
+		}
+
 		if (!$this->macroRe) {
 			$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		}
