@@ -46,6 +46,16 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
+	 * @return string
+	 */
+	public function getClassName()
+	{
+		return ($tmp = Nette\String::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
+	}
+
+
+
+	/**
 	 * @return Nette\Reflection\ClassReflection
 	 */
 	public function getDeclaringClass()
