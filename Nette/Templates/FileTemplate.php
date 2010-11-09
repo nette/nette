@@ -56,10 +56,10 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function setFile($file)
 	{
-		if (!is_file($file)) {
+		$this->file = realpath($file);
+		if (!$this->file) {
 			throw new \FileNotFoundException("Missing template file '$file'.");
 		}
-		$this->file = $file;
 		return $this;
 	}
 
@@ -108,7 +108,15 @@ class FileTemplate extends Template implements IFileTemplate
 				return;
 			}
 
-			$content = $this->compile(file_get_contents($this->file), "file \xE2\x80\xA6$shortName");
+			try {
+				$content = $this->compile(file_get_contents($this->file));
+				$content = "<?php\n\n// source file: $this->file\n\n?>$content";
+
+			} catch (TemplateException $e) {
+				$e->setSourceFile($this->file);
+				throw $e;
+			}
+
 			$cache->save(
 				$key,
 				$content,

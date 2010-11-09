@@ -23,5 +23,5 @@ try {
 	$template->render('Block{/block}');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Filter Nette\Templates\LatteFilter::__invoke: Tag {/block } was not expected here on line %a%.', $e );
+	Assert::exception('Nette\Templates\LatteException', 'Tag {/block } was not expected here.', $e );
 }

@@ -125,27 +125,18 @@ abstract class Template extends Nette\Object implements ITemplate
 	/**
 	 * Applies filters on template content.
 	 * @param  string
-	 * @param  string
 	 * @return string
 	 */
-	protected function compile($content, $label = NULL)
+	protected function compile($content)
 	{
 		if (!$this->filters) {
 			$this->onPrepareFilters($this);
 		}
 
-		try {
-			foreach ($this->filters as $filter) {
-				$content = self::extractPhp($content, $blocks);
-				$content = $filter/*5.2*->invoke*/($content);
-				$content = strtr($content, $blocks); // put PHP code back
-			}
-		} catch (\Exception $e) {
-			throw new \InvalidStateException("Filter $filter: " . $e->getMessage() . ($label ? " (in $label)" : ''), 0, $e);
-		}
-
-		if ($label) {
-			$content = "<?php\n// $label\n//\n?>$content";
+		foreach ($this->filters as $filter) {
+			$content = self::extractPhp($content, $blocks);
+			$content = $filter/*5.2*->invoke*/($content);
+			$content = strtr($content, $blocks); // put PHP code back
 		}
 
 		return self::optimizePhp($content);

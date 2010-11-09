@@ -220,7 +220,7 @@ class LatteMacros extends Nette\Object
 			$s .= $this->macro('/block');
 
 		} elseif ($this->blocks) {
-			throw new \InvalidStateException("There are unclosed blocks.");
+			throw new LatteException("There are unclosed blocks.", 0, $this->filter->line);
 		}
 
 		// extends support
@@ -467,7 +467,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			break;
 
 		default:
-			throw new \InvalidStateException("Unknown syntax '$var' on line {$this->filter->line}.");
+			throw new LatteException("Unknown syntax '$var'", 0, $this->filter->line);
 		}
 	}
 
@@ -482,12 +482,12 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$params = $this->formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new \InvalidStateException("Missing destination in {include} on line {$this->filter->line}.");
+			throw new LatteException("Missing destination in {include}", 0, $this->filter->line);
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
 			if (!String::match($destination, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new \InvalidStateException("Included block name must be alphanumeric string, '$destination' given on line {$this->filter->line}.");
+				throw new LatteException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
 			}
 
 			$parent = $destination === 'parent';
@@ -495,7 +495,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new \InvalidStateException("Cannot include $destination block outside of any block on line {$this->filter->line}.");
+					throw new LatteException("Cannot include $destination block outside of any block.", 0, $this->filter->line);
 				}
 				$destination = $item[1];
 			}
@@ -526,13 +526,13 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		$destination = $this->fetchToken($content); // destination
 		if ($destination === NULL) {
-			throw new \InvalidStateException("Missing destination in {extends} on line {$this->filter->line}.");
+			throw new LatteException("Missing destination in {extends}", 0, $this->filter->line);
 		}
 		if (!empty($this->blocks)) {
-			throw new \InvalidStateException("{extends} must be placed outside any block; on line {$this->filter->line}.");
+			throw new LatteException("{extends} must be placed outside any block.", 0, $this->filter->line);
 		}
 		if ($this->extends !== NULL) {
-			throw new \InvalidStateException("Multiple {extends} declarations are not allowed; on line {$this->filter->line}.");
+			throw new LatteException("Multiple {extends} declarations are not allowed.", 0, $this->filter->line);
 		}
 		$this->extends = $destination !== 'none';
 		return $this->extends ? '$_l->extends = ' . ($destination === 'auto' ? '$layout' : $this->formatString($destination)) : '';
@@ -554,10 +554,10 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		} else { // #block
 			$name = ltrim($name, '#');
 			if (!String::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new \InvalidStateException("Block name must be alphanumeric string, '$name' given on line {$this->filter->line}.");
+				throw new LatteException("Block name must be alphanumeric string, '$name' given.", 0, $this->filter->line);
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new \InvalidStateException("Cannot redeclare block '$name'; on line {$this->filter->line}.");
+				throw new LatteException("Cannot redeclare block '$name'", 0, $this->filter->line);
 			}
 
 			$top = empty($this->blocks);
@@ -599,7 +599,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		}
 
 		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
-			throw new \InvalidStateException("Tag {/block $content} was not expected here on line {$this->filter->line}.");
+			throw new LatteException("Tag {/block $content} was not expected here.", 0, $this->filter->line);
 
 		} elseif ($type === self::BLOCK_NAMED) { // block
 			return "{/block $name}";
@@ -639,7 +639,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$name = $this->fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
-			throw new \InvalidStateException("Invalid capture block parameter '$name' on line {$this->filter->line}.");
+			throw new LatteException("Invalid capture block parameter '$name'", 0, $this->filter->line);
 		}
 
 		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
@@ -656,7 +656,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		list($type, $name, $modifiers) = array_pop($this->blocks);
 
 		if ($type !== self::BLOCK_CAPTURE || ($content && $content !== $name)) {
-			throw new \InvalidStateException("Tag {/capture $content} was not expected here on line {$this->filter->line}.");
+			throw new LatteException("Tag {/capture $content} was not expected here.", 0, $this->filter->line);
 		}
 
 		return $name . '=' . $this->formatModifiers('ob_get_clean()', $modifiers);
@@ -761,7 +761,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	{
 		$pair = $this->fetchToken($content); // control[:method]
 		if ($pair === NULL) {
-			throw new \InvalidStateException("Missing control name in {control} on line {$this->filter->line}.");
+			throw new LatteException("Missing control name in {control}", 0, $this->filter->line);
 		}
 		$pair = explode(':', $pair, 2);
 		$name = $this->formatString($pair[0]);
@@ -902,7 +902,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					$var = "\$template->" . trim($token, "'") . "($var";
 					$inside = TRUE;
 				} else {
-					throw new \InvalidStateException("Modifier name must be alphanumeric string, '$token' given.");
+					throw new LatteException("Modifier name must be alphanumeric string, '$token' given.", 0, $this->filter->line);
 				}
 			} else {
 				if ($token === ':' || $token === ',') {
