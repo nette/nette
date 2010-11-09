@@ -12,8 +12,7 @@
 namespace Nette\Templates;
 
 use Nette,
-	Nette\String,
-	Nette\Tokenizer;
+	Nette\String;
 
 
 
@@ -143,11 +142,11 @@ class LatteFilter extends Nette\Object
 				if ($code === FALSE) {
 					throw new LatteException("Unknown macro {{$matches['macro']}}", 0, $this->line);
 				}
-				$nl = isset($matches['newline']) ? "\n" : ''; // double newline
-				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
-					$this->output .= "\n" . $code; // remove indent, single newline
+				$nl = isset($matches['newline']) ? "\n" : '';
+				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) { // the only macro on line "without" output
+					$this->output .= "\n" . $code; // preserve new line from 'indent', remove indentation
 				} else {
-					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' ? $nl : '');
+					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' ? $nl : ''); // double newline to avoid newline eating by PHP
 				}
 
 			} else { // common behaviour

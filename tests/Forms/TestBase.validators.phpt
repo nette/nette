@@ -30,9 +30,9 @@ $control->value = 'name@a-b-c.cz';
 Assert::true( TextBase::validateEmail($control) );
 
 
-$control->value = "name@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@luouèkı.cz
+$control->value = "name@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@Å¾luÅ¥ouÄkÃ½.cz
 Assert::true( TextBase::validateEmail($control) );
 
 
-$control->value = "\xc5\xbename@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // name@luouèkı.cz
+$control->value = "\xc5\xbename@\xc5\xbelu\xc5\xa5ou\xc4\x8dk\xc3\xbd.cz"; // Å¾name@Å¾luÅ¥ouÄkÃ½.cz
 Assert::false( TextBase::validateEmail($control) );
