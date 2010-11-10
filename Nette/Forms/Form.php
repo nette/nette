@@ -434,7 +434,6 @@ class Form extends FormContainer
 			return;
 		}
 
-		$httpRequest->setEncoding('utf-8');
 		if ($httpRequest->isMethod('post')) {
 			$data = Nette\ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {

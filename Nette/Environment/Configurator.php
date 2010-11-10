@@ -300,6 +300,7 @@ class Configurator extends Object
 	public static function createHttpRequest()
 	{
 		$factory = new Nette\Web\HttpRequestFactory;
+		$factory->setEncoding('UTF-8');
 		return $factory->createHttpRequest();
 	}
 

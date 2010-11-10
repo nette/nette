@@ -69,8 +69,6 @@ class Application extends Nette\Object
 		$httpRequest = $this->getHttpRequest();
 		$httpResponse = $this->getHttpResponse();
 
-		$httpRequest->setEncoding('UTF-8');
-
 		// autostarts session
 		$session = $this->getSession();
 		if (!$session->isStarted() && $session->exists()) {
