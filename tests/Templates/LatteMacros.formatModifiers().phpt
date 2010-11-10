@@ -57,5 +57,5 @@ Assert::same( '$template->mod(@ , \'param\' , \'param\')',  $latte->formatModifi
 Assert::same( '$template->mod(@, $var, 0, -0.0, "str", \'str\')',  $latte->formatModifiers('@', 'mod, $var, 0, -0.0, "str", \'str\'') );
 Assert::same( '$template->mod(@, true, false, null)',  $latte->formatModifiers('@', 'mod: true, false, null') );
 Assert::same( '$template->mod(@, TRUE, FALSE, NULL)',  $latte->formatModifiers('@', 'mod: TRUE, FALSE, NULL') );
-Assert::same( '$template->mod(@, True, False, Null)',  $latte->formatModifiers('@', 'mod: True, False, Null') );
+Assert::same( '$template->mod(@, \'True\', \'False\', \'Null\')',  $latte->formatModifiers('@', 'mod: True, False, Null') );
 Assert::same( '$template->mod(@, array(1))',  $latte->formatModifiers('@', 'mod: array(1)') );

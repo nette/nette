@@ -175,14 +175,15 @@ class LatteMacros extends Nette\Object
 
 		$this->tokenizer = new Nette\Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
-			self::T_COMMENT => '/\*.*?\*/',
+			self::T_COMMENT => '(?s)/\*.*?\*/',
 			LatteFilter::RE_STRING,
-			'true|false|null|and|or|xor|clone|new|instanceof|\([a-z]+\)',
-			self::T_VARIABLE => '\$[_a-z0-9\x7F-\xFF]+',
+			'(?:true|false|null|TRUE|FALSE|NULL|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?!\w)', // keyword or const
+			'\([a-z]+\)', // type casting
+			self::T_VARIABLE => '\$\w+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
-			self::T_SYMBOL => '[_a-z0-9\x7F-\xFF]+(?:-[_a-z0-9\x7F-\xFF]+)*',
+			self::T_SYMBOL => '\w+(?:-\w+)*',
 			'::|=>|[^"\']', // =>, any char except quotes
-		), 'i');
+		), 'u');
 	}
 
 
@@ -1024,7 +1025,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 				$tokens[] = $current;
 				continue;
 
-			} elseif ($name === self::T_SYMBOL && !String::match($token, '#^[A-Z][A-Z0-9_]{2,}$#') && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
+			} elseif ($name === self::T_SYMBOL && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
 				$lastSymbol = count($tokens); // quoting pre-requirements
 
 			} elseif (is_int($lastSymbol) && in_array($token, array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
