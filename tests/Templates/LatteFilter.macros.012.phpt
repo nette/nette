@@ -32,3 +32,17 @@ qwerty
 
 EOD
 ));
+
+
+
+Assert::match(<<<EOD
+
+asdfgh
+EOD
+
+, $template->render(<<<EOD
+
+{contentType text}
+asdfgh
+EOD
+));

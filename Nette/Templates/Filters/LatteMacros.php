@@ -177,7 +177,7 @@ class LatteMacros extends Nette\Object
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			LatteFilter::RE_STRING,
-			'(?:true|false|null|TRUE|FALSE|NULL|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?!\w)', // keyword or const
+			'(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?!\w)', // keyword or const
 			'\([a-z]+\)', // type casting
 			self::T_VARIABLE => '\$\w+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
@@ -311,7 +311,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 					return callback($m[1][0] === ':' ? array($This, substr($m[1], 1)) : $m[1])
 						->invoke($content, $modifiers);
 				} else {
-					return $This->formatMacroArgs($content, '#');
+					return $This->formatMacroArgs($content);
 				}
 			}
 		);

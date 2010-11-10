@@ -17,7 +17,7 @@ class MockCacheStorage extends TemplateCacheStorage
 
 	public function write($key, $data, array $dp)
 	{
-		file_put_contents(__DIR__ . '/compiled/' . preg_replace('#^.*\x00(.+)-[a-f0-9]{32}#', '\1', $key) . '.php', $data);
+		file_put_contents(__DIR__ . '/compiled/' . trim(str_replace(DIRECTORY_SEPARATOR, '.', $this->hint), '.') . '.php', preg_replace('#[a-f0-9]{10,}#', '...', $data));
 		return parent::write($key, $data, $dp);
 	}
 
