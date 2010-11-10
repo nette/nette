@@ -144,6 +144,9 @@ class LatteMacros extends Nette\Object
 	private $filter;
 
 	/** @var array */
+	private $nodes = array();
+
+	/** @var array */
 	private $blocks = array();
 
 	/** @var array */
@@ -197,6 +200,7 @@ class LatteMacros extends Nette\Object
 	public function initialize($filter, & $s)
 	{
 		$this->filter = $filter;
+		$this->nodes = array();
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
@@ -302,16 +306,37 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		} elseif (!isset($this->macros[$macro])) {
 			return FALSE;
 		}
+
+		$closing = $macro[0] === '/';
+		if ($closing) {
+			$node = array_pop($this->nodes);
+			if (!$node || "/$node->name" !== $macro || ($content && !String::startsWith("$node->content ", "$content ")) || $modifiers) {
+				$macro .= $content ? ' ' : '';				
+				throw new LatteException("Unexpected macro {{$macro}{$content}{$modifiers}}"
+					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''), 0, $this->filter->line);
+			}
+			$node->content = $node->modifiers = ''; // back compatibility
+
+		} else {
+			$node = (object) NULL;
+			$node->name = $macro;
+			$node->content = $content;
+			$node->modifiers = $modifiers;
+			if (isset($this->macros["/$macro"])) {
+				$this->nodes[] = $node;
+			}
+		}
+
 		$This = $this;
 		return String::replace(
 			$this->macros[$macro],
 			'#%(.*?)%#',
-			function ($m) use ($This, $content, $modifiers) {
+			function ($m) use ($This, $node) {
 				if ($m[1]) {
 					return callback($m[1][0] === ':' ? array($This, substr($m[1], 1)) : $m[1])
-						->invoke($content, $modifiers);
+						->invoke($node->content, $node->modifiers);
 				} else {
-					return $This->formatMacroArgs($content);
+					return $This->formatMacroArgs($node->content);
 				}
 			}
 		);
@@ -366,7 +391,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			}
 		}
 
-		$left = $right = '';
+		$left = $right = array();
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') {
 				$name = substr($name, 1);
@@ -387,31 +412,41 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 			$macro = $closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
 				if ($closing) {
-					$right .= $this->macro($macro);
+					$right[] = array($macro, '');
 				} else {
-					$left = $this->macro($macro, $attrs[$name]) . $left;
+					array_unshift($left, array($macro, $attrs[$name]));
 				}
 			}
 
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
 				if ($closing) {
-					$left .= $this->macro($macro);
+					$left[] = array($macro, '');
 				} else {
-					$right = $this->macro($macro, $attrs[$innerName]) . $right;
+					array_unshift($right, array($macro, $attrs[$innerName]));
 				}
 			}
 
 			$tagName = "tag-$name";
 			if (isset($attrs[$tagName])) {
-				$left = $this->macro($name, $attrs[$tagName]) . $left;
-				$right .= $this->macro("/$name");
+				array_unshift($left, array($name, $attrs[$tagName]));
+				$right[] = array("/$name", '');
 			}
 
 			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
-
-		return $attrs ? FALSE : $left . $code . $right;
+		if ($attrs) {
+			return FALSE;
+		}
+		$s = '';
+		foreach ($left as $item) {
+			$s .= $this->macro($item[0], $item[1]);
+		}
+		$s .= $code;
+		foreach ($right as $item) {
+			$s .= $this->macro($item[0], $item[1]);
+		}
+		return $s;
 	}
 
 
@@ -597,10 +632,6 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		if ($type === self::BLOCK_CAPTURE) { // capture - back compatibility
 			$this->blocks[] = array($type, $name, $modifiers);
 			return $this->macroCaptureEnd($content);
-		}
-
-		if (($type !== self::BLOCK_NAMED && $type !== self::BLOCK_ANONYMOUS) || ($content && $content !== $name)) {
-			throw new LatteException("Tag {/block $content} was not expected here.", 0, $this->filter->line);
 
 		} elseif ($type === self::BLOCK_NAMED) { // block
 			return "{/block $name}";
@@ -655,11 +686,6 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 	public function macroCaptureEnd($content)
 	{
 		list($type, $name, $modifiers) = array_pop($this->blocks);
-
-		if ($type !== self::BLOCK_CAPTURE || ($content && $content !== $name)) {
-			throw new LatteException("Tag {/capture $content} was not expected here.", 0, $this->filter->line);
-		}
-
 		return $name . '=' . $this->formatModifiers('ob_get_clean()', $modifiers);
 	}
 
