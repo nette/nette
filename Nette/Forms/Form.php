@@ -554,7 +554,7 @@ class Form extends FormContainer
 	final public function getRenderer()
 	{
 		if ($this->renderer === NULL) {
-			$this->renderer = new ConventionalRenderer;
+			$this->renderer = new DefaultFormRenderer;
 		}
 		return $this->renderer;
 	}

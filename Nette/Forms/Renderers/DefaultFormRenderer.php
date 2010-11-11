@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ConventionalRenderer extends Nette\Object implements IFormRenderer
+class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 {
 	/**
 	 *  /--- form.container

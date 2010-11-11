@@ -98,7 +98,7 @@ class NetteLoader extends AutoLoader
 		'nette\finder' => '/Utils/Finder.php',
 		'nette\forms\button' => '/Forms/Controls/Button.php',
 		'nette\forms\checkbox' => '/Forms/Controls/Checkbox.php',
-		'nette\forms\conventionalrenderer' => '/Forms/Renderers/ConventionalRenderer.php',
+		'nette\forms\defaultformrenderer' => '/Forms/Renderers/DefaultFormRenderer.php',
 		'nette\forms\fileupload' => '/Forms/Controls/FileUpload.php',
 		'nette\forms\form' => '/Forms/Form.php',
 		'nette\forms\formcontainer' => '/Forms/FormContainer.php',
