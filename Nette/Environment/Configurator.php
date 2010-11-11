@@ -35,6 +35,7 @@ class Configurator extends Object
 		'Nette\\Web\\IUser' => 'Nette\Web\User',
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
+		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
@@ -330,6 +331,20 @@ class Configurator extends Object
 			return new Nette\Caching\SqliteJournal(Environment::getVariable('tempDir') . '/cache/cachejournal.db');
 		} else*/ {
 			return new Nette\Caching\FileJournal(Environment::getVariable('tempDir') . '/cache');
+		}
+	}
+
+
+
+	/**
+	 * @return Nette\Mail\IMailer
+	 */
+	public static function createMailer($options)
+	{
+		if (isset($options['smtp'])) {
+			return new Nette\Mail\SmtpMailer($options);
+		} else {
+			return new Nette\Mail\SendmailMailer;
 		}
 	}
 
