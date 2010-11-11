@@ -190,7 +190,7 @@ class NeonParser extends Object
 				if ($t[0] === '"') {
 					$value = json_decode($t);
 					if ($value === NULL) {
-						$this->error();
+						$this->error('Invalid string %s');
 					}
 				} elseif ($t[0] === "'") {
 					$value = substr($t, 1, -1);
@@ -214,11 +214,11 @@ class NeonParser extends Object
 
 
 
-	private function error()
+	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		throw new NeonException("Unexpected '" . str_replace("\n", '\n', substr(self::$tokenizer->tokens[$this->n], 0, 10))
-			. "' on line " . ($line - 1) . ", column $col.");
+		$token = str_replace("\n", '\n', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40));
+		throw new NeonException(str_replace('%s', $token, $message) . "' on line " . ($line - 1) . ", column $col.");
 	}
 
 }
