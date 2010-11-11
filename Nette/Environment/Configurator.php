@@ -344,7 +344,7 @@ class Configurator extends Object
 	 */
 	public static function createMailer(array $options = NULL)
 	{
-		if (isset($options['smtp'])) {
+		if (isset($options['smtp']) && $options['smtp']) {
 			return new Nette\Mail\SmtpMailer($options);
 		} else {
 			return new Nette\Mail\SendmailMailer;
