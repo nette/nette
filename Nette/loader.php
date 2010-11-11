@@ -34,7 +34,7 @@ if (PHP_VERSION_ID < 50200) {
  */
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);
-define('NETTE_VERSION_ID', 906); // v0.9.6
+define('NETTE_VERSION_ID', 907); // v0.9.7
 define('NETTE_PACKAGE', '5.3');
 
 
