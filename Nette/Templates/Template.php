@@ -80,6 +80,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 */
 	public function render()
 	{
+		throw new \NotImplementedException;
 	}
 
 
@@ -127,7 +128,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 * @param  string
 	 * @return string
 	 */
-	protected function compile($content)
+	public function compile($content)
 	{
 		if (!$this->filters) {
 			$this->onPrepareFilters($this);

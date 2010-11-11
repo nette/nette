@@ -99,15 +99,6 @@ class FileTemplate extends Template implements IFileTemplate
 		$cached = $content = $cache[$this->file];
 
 		if ($content === NULL) {
-			if (!$this->getFilters()) {
-				$this->onPrepareFilters($this);
-			}
-
-			if (!$this->getFilters()) {
-				LimitedScope::load($this->file, $this->getParams());
-				return;
-			}
-
 			try {
 				$content = $this->compile(file_get_contents($this->file));
 				$content = "<?php\n\n// source file: $this->file\n\n?>$content";
