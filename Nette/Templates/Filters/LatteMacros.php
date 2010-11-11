@@ -264,7 +264,9 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 						$func = '_lb' . substr(md5($uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 						$code = "//\n// block $name\n//\n"
 							. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
-							. "function $func(\$_l, \$_args) { extract(\$_args)\n?>$content<?php\n}}";
+							. "function $func(\$_l, \$_args) { extract(\$_args)"
+							. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
+							. "\n?>$content<?php\n}}";
 						return '';
 					}
 				);
@@ -312,7 +314,7 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		if ($closing) {
 			$node = array_pop($this->nodes);
 			if (!$node || "/$node->name" !== $macro || ($content && !String::startsWith("$node->content ", "$content ")) || $modifiers) {
-				$macro .= $content ? ' ' : '';				
+				$macro .= $content ? ' ' : '';
 				throw new LatteException("Unexpected macro {{$macro}{$content}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''), 0, $this->filter->line);
 			}
