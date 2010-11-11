@@ -89,6 +89,7 @@ class LatteMacros extends Nette\Object
 		'plink' => '<?php echo %:macroEscape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:macroEscape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent%; if ($presenter->getLastCreatedRequestFlag("current")): ?>',
+		'/ifCurrent' => '<?php endif ?>',
 		'widget' => '<?php %:macroWidget% ?>',
 		'control' => '<?php %:macroWidget% ?>',
 
