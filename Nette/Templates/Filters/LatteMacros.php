@@ -563,8 +563,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroExtends($content)
 	{
-		$destination = $this->fetchToken($content); // destination
-		if ($destination === NULL) {
+		if (!$content) {
 			throw new LatteException("Missing destination in {extends}", 0, $this->filter->line);
 		}
 		if (!empty($this->blocks)) {
@@ -573,8 +572,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		if ($this->extends !== NULL) {
 			throw new LatteException("Multiple {extends} declarations are not allowed.", 0, $this->filter->line);
 		}
-		$this->extends = $destination !== 'none';
-		return $this->extends ? '$_l->extends = ' . ($destination === 'auto' ? '$layout' : $this->formatString($destination)) : '';
+		$this->extends = $content !== 'none';
+		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->formatMacroArgs($content)) : '';
 	}
 
 
