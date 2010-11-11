@@ -234,7 +234,7 @@ class LatteMacros extends Nette\Object
 			$s = '<?php
 if ($_l->extends) {
 	ob_start();
-} elseif (isset($presenter, $control) && $presenter->isAjax()) {
+} elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s . '<?php
@@ -245,7 +245,7 @@ if ($_l->extends) {
 ';
 		} else {
 			$s = '<?php
-if (isset($presenter, $control) && $presenter->isAjax()) {
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s;
@@ -799,8 +799,8 @@ if (isset($presenter, $control) && $presenter->isAjax()) {
 		$method = String::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = $this->formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
-		return ($name[0] === '$' ? "if (is_object($name)) {$name}->$method($param); else " : '')
-			. "\$control->getWidget($name)->$method($param)";
+		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
+			. "\$_ctrl = \$control->getWidget($name); if (\$_ctrl instanceof Nette\\Application\\IPartiallyRenderable) \$_ctrl->validateControl(); \$_ctrl->$method($param)";
 	}
 
 
