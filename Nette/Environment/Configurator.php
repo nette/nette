@@ -272,7 +272,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Application\Application
 	 */
-	public static function createApplication()
+	public static function createApplication(array $options = NULL)
 	{
 		if (Environment::getVariable('baseUri', NULL) === NULL) {
 			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBaseUri());
@@ -287,7 +287,8 @@ class Configurator extends Object
 			});
 		}
 
-		$application = new Nette\Application\Application;
+		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
+		$application = new $class;
 		$application->setContext($context);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
@@ -339,7 +340,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Mail\IMailer
 	 */
-	public static function createMailer($options)
+	public static function createMailer(array $options = NULL)
 	{
 		if (isset($options['smtp'])) {
 			return new Nette\Mail\SmtpMailer($options);
@@ -353,7 +354,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
-	public static function createRobotLoader($options)
+	public static function createRobotLoader(array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !Environment::isProduction();
