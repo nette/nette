@@ -123,8 +123,12 @@ class Context extends FreezableObject implements IContext
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
 				}
 				$service = new $factory;
-				if ($options && method_exists($service, 'setOptions')) {
-					$service->setOptions($options); // TODO: better!
+				if ($options) {
+					if (method_exists($service, 'setOptions')) {
+						$service->setOptions($options); // TODO: better!
+					} else {
+						throw new \InvalidStateException("Unable to set options, method $factory::setOptions() is missing.");
+					}
 				}
 
 			} else { // factory callback
