@@ -147,12 +147,12 @@ class Configurator extends Object
 					$context->removeService($key);
 					$context->addService($key, $value);
 				} else {
-					if ($value->factory) {
+					$factory = $value->factory ? $value->factory : (isset($this->defaultServices[$key]) ? $this->defaultServices[$key] : NULL);
+					if ($factory) {
 						$context->removeService($key);
-						$context->addService($key, $value->factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
-					} elseif (isset($this->defaultServices[$key])) {
-						$context->removeService($key);
-						$context->addService($key, $this->defaultServices[$key], isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
+						$context->addService($key, $factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
+					} else {
+						throw new \InvalidStateException("Factory method is not specified for service $key.");
 					}
 					if ($value->run) {
 						$runServices[] = $key;
