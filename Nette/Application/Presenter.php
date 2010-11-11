@@ -414,9 +414,7 @@ abstract class Presenter extends Control implements IPresenter
 		$template = $this->getTemplate();
 		if (!$template) return;
 
-		if ($template instanceof Nette\Templates\IFileTemplate && !$template->getFile()) {
-
-			// content template
+		if ($template instanceof Nette\Templates\IFileTemplate && !$template->getFile()) { // content template
 			$files = $this->formatTemplateFiles($this->getName(), $this->view);
 			foreach ($files as $file) {
 				if (is_file($file)) {
@@ -429,22 +427,21 @@ abstract class Presenter extends Control implements IPresenter
 				$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
 				throw new BadRequestException("Page not found. Missing template '$file'.");
 			}
+		}
 
-			// layout template
-			if ($this->layout !== FALSE) {
-				$files = $this->formatLayoutTemplateFiles($this->getName(), $this->layout ? $this->layout : 'layout');
-				foreach ($files as $file) {
-					if (is_file($file)) {
-						$template->layout = $file;
-						$template->_extends = $file;
-						break;
-					}
+		if ($this->layout !== FALSE) { // layout template
+			$files = $this->formatLayoutTemplateFiles($this->getName(), $this->layout ? $this->layout : 'layout');
+			foreach ($files as $file) {
+				if (is_file($file)) {
+					$template->layout = $file;
+					$template->_extends = $file;
+					break;
 				}
+			}
 
-				if (empty($template->layout) && $this->layout !== NULL) {
-					$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
-					throw new \FileNotFoundException("Layout not found. Missing template '$file'.");
-				}
+			if (empty($template->layout) && $this->layout !== NULL) {
+				$file = str_replace(Environment::getVariable('appDir'), "\xE2\x80\xA6", reset($files));
+				throw new \FileNotFoundException("Layout not found. Missing template '$file'.");
 			}
 		}
 
