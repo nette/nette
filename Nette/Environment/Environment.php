@@ -353,7 +353,7 @@ final class Environment
 		if (isset(self::$aliases[$name])) {
 			return self::getContext()->getService(self::$aliases[$name], $args);
 		} else {
-			throw new \MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
+			throw new \MemberAccessException("Call to undefined static method " . 'Nette\Environment' . "::$name().");
 		}
 	}
 

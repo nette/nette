@@ -42,7 +42,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 		}
 
 		if (!Nette\Reflection\ClassReflection::from($class)->implementsInterface('Nette\Config\IConfigAdapter')) {
-			throw new \InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IConfigAdapter implementor.");
+			throw new \InvalidArgumentException("Configuration adapter '$class' is not " . 'Nette\Config\IConfigAdapter' . " implementor.");
 		}
 
 		self::$extensions[strtolower($extension)] = $class;
