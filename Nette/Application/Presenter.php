@@ -676,27 +676,6 @@ abstract class Presenter extends Control implements IPresenter
 
 
 	/**
-	 * Returns if link is current
-	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!" or "this"
-	 * @param  array|mixed
-	 * @return bool
-	 * @throws InvalidLinkException
-	 */
-	public function isLinkCurrent($destination, $args = array())
-	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-
-		$this->link($destination, $args);
-
-		return $this->getLastCreatedRequestFlag('current');
-	}
-
-
-
-	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
 	 * @throws AbortException

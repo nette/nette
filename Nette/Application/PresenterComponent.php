@@ -315,6 +315,26 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 
 
 	/**
+	 * Determines whether it links to the current page.
+	 * @param  string   destination in format "[[module:]presenter:]action" or "signal!" or "this"
+	 * @param  array|mixed
+	 * @return bool
+	 * @throws InvalidLinkException
+	 */
+	public function isLinkCurrent($destination, $args = array())
+	{
+		if (!is_array($args)) {
+			$args = func_get_args();
+			array_shift($args);
+		}
+
+		$this->link($destination, $args);
+		return $this->getPresenter()->getLastCreatedRequestFlag('current');
+	}
+
+
+
+	/**
 	 * Redirect to another presenter, action or signal.
 	 * @param  int      [optional] HTTP error code
 	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
