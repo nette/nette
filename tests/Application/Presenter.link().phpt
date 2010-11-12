@@ -163,7 +163,7 @@ Environment::setVariable('appDir', __DIR__);
 
 $uri = new Nette\Web\UriScript('http://localhost/index.php');
 $uri->setScriptPath('/index.php');
-Environment::getContext()->addService('Nette\Web\IHttpRequest', new Nette\Web\HttpRequest($uri));
+Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Nette\Web\HttpRequest($uri));
 
 $application = Environment::getApplication();
 $application->setRouter(new SimpleRouter());

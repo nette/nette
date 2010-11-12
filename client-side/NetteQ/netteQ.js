@@ -17,16 +17,16 @@ Nette.Class = function(def) {
 	if (def.Extends) {
 		var foo = function() { this.constructor = cl; };
 		foo.prototype = def.Extends.prototype;
-		cl.prototype = new foo;
+		cl.prototype = new foo();
 		delete def.Extends;
 	}
 
 	if (def.Static) {
-		for (nm in def.Static) cl[nm] = def.Static[nm];
+		for (nm in def.Static) { cl[nm] = def.Static[nm]; }
 		delete def.Static;
 	}
 
-	for (nm in def) cl.prototype[nm] = def[nm];
+	for (nm in def) { cl.prototype[nm] = def[nm]; }
 	return cl;
 };
 
@@ -54,12 +54,12 @@ Nette.Q = Nette.Class({
 		if (typeof selector === "string") {
 			selector = this._find(document, selector);
 
-		} else if (!selector || selector.nodeType || selector.length === void 0 || selector === window) {
+		} else if (!selector || selector.nodeType || selector.length === undefined || selector === window) {
 			selector = [selector];
 		}
 
 		for (var i = 0, len = selector.length; i < len; i++) {
-			if (selector[i]) this[this.length++] = selector[i];
+			if (selector[i]) { this[this.length++] = selector[i]; }
 		}
 	},
 
@@ -86,7 +86,7 @@ Nette.Q = Nette.Class({
 			if (selector[1]) {
 				var list = [], pattern = new RegExp('(^|\\s)' + selector[1] + '(\\s|$)');
 				for (var i = 0, len = elms.length; i < len; i++) {
-					if (pattern.test(elms[i].className)) list.push(elms[i]);
+					if (pattern.test(elms[i].className)) { list.push(elms[i]); }
 				}
 				return list;
 			} else {
@@ -101,7 +101,7 @@ Nette.Q = Nette.Class({
 
 	each: function(callback, args) {
 		for (var i = 0, res; i < this.length; i++) {
-			if ((res = callback.apply(this[i], args || [])) !== void 0) { return res; }
+			if ((res = callback.apply(this[i], args || [])) !== undefined) { return res; }
 		}
 		return this;
 	}
@@ -118,7 +118,7 @@ fn({
 			event = event === 'mouseenter' ? 'mouseover' : 'mouseout';
 			handler = function(e) {
 				for (var target = e.relatedTarget; target; target = target.parentNode) {
-					if (target === this) return; // target must not be inside this
+					if (target === this) { return; } // target must not be inside this
 				}
 				old.call(this, e);
 			};
@@ -131,9 +131,15 @@ fn({
 			var el = this, // fixes 'this' in iE
 				handlers = events[event] = [],
 				generic = fn.bind.genericHandler = function(e) { // dont worry, 'e' is passed in IE
-					if (!e.target) e.target = e.srcElement;
-					if (!e.preventDefault) e.preventDefault = function() { e.returnValue = false; }; // emulate preventDefault()
-					if (!e.stopPropagation) e.stopPropagation = function() { e.cancelBubble = true; }; // emulate stopPropagation()
+					if (!e.target) {
+						e.target = e.srcElement;
+					}
+					if (!e.preventDefault) {
+						e.preventDefault = function() { e.returnValue = false; };
+					}
+					if (!e.stopPropagation) {
+						e.stopPropagation = function() { e.cancelBubble = true; };
+					}
 					e.stopImmediatePropagation = function() { this.stopPropagation(); i = handlers.length; };
 					for (var i = 0; i < handlers.length; i++) {
 						handlers[i].call(el, e);
@@ -180,17 +186,18 @@ fn({
 
 	css: function(property) {
 		return this.currentStyle ? this.currentStyle[property]
-			: (window.getComputedStyle ? document.defaultView.getComputedStyle(this, null).getPropertyValue(property) : void 0);
+			: (window.getComputedStyle ? document.defaultView.getComputedStyle(this, null).getPropertyValue(property) : undefined);
 	},
 
 	data: function() {
-		return this.nette = this.nette || {};
+		return this.nette ? this.nette : this.nette = {};
 	},
 
 	val: function() {
+		var i;
 		if (!this.nodeName) { // radio
-			for (var i = 0, len = this.length; i < len; i++) {
-				if (this[i].checked) return this[i].value;
+			for (i = 0, len = this.length; i < len; i++) {
+				if (this[i].checked) { return this[i].value; }
 			}
 			return null;
 		}
@@ -205,8 +212,8 @@ fn({
 				return options[index].value;
 			}
 
-			for (var i = 0, values = [], len = options.length; i < len; i++) {
-				if (options[i].selected) values.push(options[i].value);
+			for (i = 0, values = [], len = options.length; i < len; i++) {
+				if (options[i].selected) { values.push(options[i].value); }
 			}
 			return values;
 		}
@@ -220,7 +227,11 @@ fn({
 
 	_trav: function(el, selector, fce) {
 		selector = selector.split('.');
-		while (el && !(el.nodeType === 1 && (!selector[0] || el.tagName.toLowerCase() === selector[0]) && (!selector[1] || fn.hasClass.call(el, selector[1])))) el = el[fce];
+		while (el && !(el.nodeType === 1 &&
+			(!selector[0] || el.tagName.toLowerCase() === selector[0]) &&
+			(!selector[1] || fn.hasClass.call(el, selector[1])))) {
+			el = el[fce];
+		}
 		return $(el);
 	},
 
@@ -251,7 +262,9 @@ fn({
 	// returns current position or move to new position
 	position: function(coords) {
 		if (coords) {
-			this.nette && this.nette.onmove && this.nette.onmove.call(this, coords);
+			if (this.nette && this.nette.onmove) {
+				this.nette.onmove.call(this, coords);
+			}
 			this.style.left = (coords.left || 0) + 'px';
 			this.style.top = (coords.top || 0) + 'px';
 		} else {
@@ -261,7 +274,8 @@ fn({
 
 	// makes element draggable
 	draggable: function(options) {
-		var $el = $(this), dE = document.documentElement, started, options = options || {};
+		var $el = $(this), dE = document.documentElement, started;
+		options = options || {};
 
 		$(options.handle || this).bind('mousedown', function(e) {
 			e.preventDefault();
@@ -278,8 +292,12 @@ fn({
 			dE.onmousemove = function(e) {
 				e = e || event;
 				if (!started) {
-					options.draggedClass && $el.addClass(options.draggedClass);
-					options.start && options.start(e, $el);
+					if (options.draggedClass) {
+						$el.addClass(options.draggedClass);
+					}
+					if (options.start) {
+						options.start(e, $el);
+					}
 					started = true;
 				}
 				$el.position({left: e.clientX + deltaX, top: e.clientY + deltaY});
@@ -288,8 +306,12 @@ fn({
 
 			dE.onmouseup = function(e) {
 				if (started) {
-					options.draggedClass && $el.removeClass(options.draggedClass);
-					options.stop && options.stop(e || event, $el);
+					if (options.draggedClass) {
+						$el.removeClass(options.draggedClass);
+					}
+					if (options.stop) {
+						options.stop(e || event, $el);
+					}
 				}
 				fn.draggable.binded = dE.onmousemove = dE.onmouseup = null;
 				return false;
