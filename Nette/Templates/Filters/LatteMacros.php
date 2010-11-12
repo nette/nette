@@ -799,7 +799,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$param = $this->formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
-			. "\$_ctrl = \$control->getWidget($name); if (\$_ctrl instanceof Nette\\Application\\IPartiallyRenderable) \$_ctrl->validateControl(); \$_ctrl->$method($param)";
+			. '$_ctrl = $control->getWidget(' . $name . '); '
+			. 'if ($_ctrl instanceof Nette\Application\IPartiallyRenderable) $_ctrl->validateControl(); '
+			. "\$_ctrl->$method($param)";
 	}
 
 
