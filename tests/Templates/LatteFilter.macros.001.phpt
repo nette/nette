@@ -28,7 +28,7 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.phtml');
+$template->setFile(__DIR__ . '/templates/common.latte');
 $template->registerFilter(new LatteFilter);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');

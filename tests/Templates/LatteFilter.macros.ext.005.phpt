@@ -28,9 +28,9 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.inheritance.child5.phtml');
+$template->setFile(__DIR__ . '/templates/inheritance.child5.latte');
 $template->registerFilter(new LatteFilter);
 
-$template->ext = 'latte.inheritance.parent.phtml';
+$template->ext = 'inheritance.parent.latte';
 
 Assert::match(file_get_contents(__DIR__ . '/LatteFilter.macros.ext.005.expect'), $template->__toString(TRUE));

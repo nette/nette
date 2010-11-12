@@ -28,7 +28,7 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.xml.phtml');
+$template->setFile(__DIR__ . '/templates/xml.latte');
 $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 

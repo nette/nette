@@ -29,7 +29,7 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.cache.phtml');
+$template->setFile(__DIR__ . '/templates/cache.latte');
 $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
 

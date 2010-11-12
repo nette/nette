@@ -1,0 +1,5 @@
+<ul>
+	{foreach $menu as $item}
+	<li>{if is_array($item)} {include '@menu.latte', 'menu' => $item} {else}{$item}{/if}</li>
+	{/foreach}
+</ul>

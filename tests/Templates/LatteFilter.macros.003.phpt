@@ -48,7 +48,7 @@ function types()
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.helpers.phtml');
+$template->setFile(__DIR__ . '/templates/helpers.latte');
 $template->registerFilter(new LatteFilter);
 $template->registerHelper('nl2br', 'nl2br');
 $template->registerHelper('h1', array(new MyHelper, 'invoke'));

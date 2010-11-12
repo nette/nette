@@ -28,7 +28,7 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.inheritance.child4.phtml');
+$template->setFile(__DIR__ . '/templates/inheritance.child4.latte');
 $template->registerFilter(new LatteFilter);
 
 Assert::match(<<<EOD

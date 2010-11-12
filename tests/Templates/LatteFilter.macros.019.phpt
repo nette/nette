@@ -28,7 +28,7 @@ FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 $template = new FileTemplate;
-$template->setFile(__DIR__ . '/templates/latte.first-sep-last.phtml');
+$template->setFile(__DIR__ . '/templates/first-sep-last.latte');
 $template->registerFilter(new LatteFilter);
 $template->people = array('John', 'Mary', 'Paul');
 

@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$input = file_get_contents(__DIR__ . '/templates/optimize.phtml');
+$input = file_get_contents(__DIR__ . '/templates/optimize.latte');
 $expected = file_get_contents(__DIR__ . '/Template.optimizePhp().expect');
 Assert::match($expected, Template::optimizePhp($input));
