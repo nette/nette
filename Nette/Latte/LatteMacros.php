@@ -525,7 +525,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
-			if (!String::match($destination, '#^' . self::RE_IDENTIFIER . '$#')) {
+			if ($destination[0] !== '$' && !String::match($destination, '#^' . self::RE_IDENTIFIER . '$#')) {
 				throw new LatteException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
 			}
 
@@ -538,7 +538,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				}
 				$destination = $item[1];
 			}
-			$name = var_export($destination, TRUE);
+			$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
 			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
 				? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
