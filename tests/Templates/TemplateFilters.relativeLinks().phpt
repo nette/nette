@@ -17,7 +17,7 @@ require __DIR__ . '/Template.inc';
 $template = new MockTemplate;
 $template->registerFilter(array('Nette\Templates\TemplateFilters', 'relativeLinks'));
 
-$template->baseUri = 'http://example.com/~my/';
+$template->basePath = 'http://example.com/~my';
 
 Assert::match(<<<EOD
 <a href="http://example.com/~my/relative">link</a>

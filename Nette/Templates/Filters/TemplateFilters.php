@@ -64,7 +64,7 @@ final class TemplateFilters
 		return String::replace(
 			$s,
 			'#(src|href|action)\s*=\s*(["\'])(?![a-z]+:|[\x01/\\#])#', // \x01 is PHP snippet
-			'$1=$2<?php echo \\$baseUri ?>'
+			'$1=$2<?php echo \\$basePath ?>/'
 		);
 	}
 
