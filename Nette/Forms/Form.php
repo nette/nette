@@ -549,7 +549,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns form renderer.
-	 * @return IFormRenderer|NULL
+	 * @return IFormRenderer
 	 */
 	final public function getRenderer()
 	{

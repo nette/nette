@@ -33,7 +33,6 @@ use Nette;
  * - basePath:    /en/ (everything before relative URI not including the script name)
  * - baseUri:     http://user:password@nette.org:8042/en/
  * - relativeUri: manual.php
- * <pre>
  *
  * @author     David Grudl
  *
