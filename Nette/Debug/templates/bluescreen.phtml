@@ -295,7 +295,14 @@ if (headers_sent()) {
 			</div></div>
 			<?php endif?>
 
+			<?php if ($ex instanceof IDebugPanel && ($tab = $ex->getTab()) && ($panel = $ex->getPanel())): ?>
+			<div class="panel">
+				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($tab) ?> <abbr>&#x25bc;</abbr></a></h2>
 
+				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
+				<?php echo $panel ?>
+			</div></div>
+			<?php endif ?>
 
 			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Debug' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
 			<?php if ($stack): ?>
@@ -355,14 +362,7 @@ if (headers_sent()) {
 
 
 
-			<?php if ($ex instanceof IDebugPanel && ($tab = $ex->getTab()) && ($panel = $ex->getPanel())): ?>
-			<div class="panel">
-				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($tab) ?> <abbr>&#x25bc;</abbr></a></h2>
-
-				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
-				<?php echo $panel ?>
-			</div></div>
-			<?php endif ?>
+			
 
 
 
