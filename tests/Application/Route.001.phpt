@@ -18,10 +18,7 @@ require __DIR__ . '/Route.inc';
 
 
 
-$route = new Route('<presenter>/<action>/<id \d{1,3}>', array(
-	'action' => 'default',
-	'id' => NULL,
-));
+$route = new Route('<presenter>/<action=default>/<id= \d{1,3}>');
 
 Assert::same( 'http://example.com/homepage/', testRouteOut($route, 'Homepage') );
 
@@ -49,25 +46,25 @@ testRouteIn($route, '/presenter/action/1234');
 
 testRouteIn($route, '/presenter/action/', 'Presenter', array(
 	'action' => 'action',
-	'id' => NULL,
+	'id' => '',
 	'test' => 'testvalue',
 ), '/presenter/action/?test=testvalue');
 
 testRouteIn($route, '/presenter/action', 'Presenter', array(
 	'action' => 'action',
-	'id' => NULL,
+	'id' => '',
 	'test' => 'testvalue',
 ), '/presenter/action/?test=testvalue');
 
 testRouteIn($route, '/presenter/', 'Presenter', array(
+	'id' => '',
 	'action' => 'default',
-	'id' => NULL,
 	'test' => 'testvalue',
 ), '/presenter/?test=testvalue');
 
 testRouteIn($route, '/presenter', 'Presenter', array(
+	'id' => '',
 	'action' => 'default',
-	'id' => NULL,
 	'test' => 'testvalue',
 ), '/presenter/?test=testvalue');
 

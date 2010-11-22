@@ -407,7 +407,7 @@ class Route extends Nette\Object implements IRouter
 		}
 
 		// PARSE MASK
-		$parts = String::split($mask, '/<([^># ]+) *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/'); // <parameter-name [pattern] [#class]> or [ or ] or ?...
+		$parts = String::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/'); // <parameter-name[=default] [pattern] [#class]> or [ or ] or ?...
 
 		$this->xlat = array();
 		$i = count($parts) - 1;
@@ -448,9 +448,10 @@ class Route extends Nette\Object implements IRouter
 					$this->xlat[$name] = $param;
 				}
 			}
-			$i -= 5;
+			$i -= 6;
 		}
 
+		// PARSE PATH PART OF MASK
 		$brackets = 0; // optional level
 		$re = '';
 		$sequence = array();
@@ -469,12 +470,13 @@ class Route extends Nette\Object implements IRouter
 				}
 				array_unshift($sequence, $part);
 				$re = ($part[0] === '[' ? '(?:' : ')?') . $re;
-				$i -= 4;
+				$i -= 5;
 				continue;
 			}
 
 			$class = $parts[$i]; $i--; // validation class
 			$pattern = trim($parts[$i]); $i--; // validation condition (as regexp)
+			$default = $parts[$i]; $i--; // default value
 			$name = $parts[$i]; $i--; // parameter name
 			array_unshift($sequence, $name);
 
@@ -509,6 +511,11 @@ class Route extends Nette\Object implements IRouter
 
 			if ($pattern == '' && isset($meta[self::PATTERN])) {
 				$pattern = $meta[self::PATTERN];
+			}
+
+			if ($default !== '') {
+				$meta[self::VALUE] = (string) substr($default, 1);
+				$meta['fixity'] = self::PATH_OPTIONAL;
 			}
 
 			$meta['filterTable2'] = empty($meta[self::FILTER_TABLE]) ? NULL : array_flip($meta[self::FILTER_TABLE]);
