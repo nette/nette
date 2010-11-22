@@ -733,11 +733,12 @@ abstract class Presenter extends Control implements IPresenter
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
 		// cached services for better performance
-		static $presenterLoader, $router, $httpRequest;
+		static $presenterLoader, $router, $refUri;
 		if ($presenterLoader === NULL) {
 			$presenterLoader = $this->getApplication()->getPresenterLoader();
 			$router = $this->getApplication()->getRouter();
-			$httpRequest = $this->getHttpRequest();
+			$refUri = new Nette\Web\Uri($this->getHttpRequest()->getUri());
+			$refUri->setPath($this->getHttpRequest()->getUri()->getScriptPath());
 		}
 
 		$this->lastCreatedRequest = $this->lastCreatedRequestFlag = NULL;
@@ -923,7 +924,7 @@ abstract class Presenter extends Control implements IPresenter
 		if ($mode === 'forward') return;
 
 		// CONSTRUCT URL
-		$uri = $router->constructUrl($this->lastCreatedRequest, $httpRequest->getUri());
+		$uri = $router->constructUrl($this->lastCreatedRequest, $refUri);
 		if ($uri === NULL) {
 			unset($args[self::ACTION_KEY]);
 			$params = urldecode(http_build_query($args, NULL, ', '));
@@ -932,7 +933,7 @@ abstract class Presenter extends Control implements IPresenter
 
 		// make URL relative if possible
 		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
-			$hostUri = $httpRequest->getUri()->getHostUri();
+			$hostUri = $refUri->getHostUri();
 			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
 				$uri = substr($uri, strlen($hostUri));
 			}
