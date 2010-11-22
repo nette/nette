@@ -44,9 +44,12 @@ class SimpleRouter extends Nette\Object implements IRouter
 	{
 		if (is_string($defaults)) {
 			$a = strrpos($defaults, ':');
+			if (!$a) {
+				throw new \InvalidArgumentException("Argument must be array or string in format Presenter:action, '$defaults' given.");
+			}
 			$defaults = array(
 				self::PRESENTER_KEY => substr($defaults, 0, $a),
-				'action' => substr($defaults, $a + 1),
+				'action' => $a === strlen($defaults) - 1 ? 'default' : substr($defaults, $a + 1),
 			);
 		}
 
