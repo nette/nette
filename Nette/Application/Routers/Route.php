@@ -110,11 +110,22 @@ class Route extends Nette\Object implements IRouter
 
 	/**
 	 * @param  string  URL mask, e.g. '<presenter>/<action>/<id \d{1,3}>'
-	 * @param  array   default values or metadata
+	 * @param  array|string   default values or metadata
 	 * @param  int     flags
 	 */
-	public function __construct($mask, array $metadata = array(), $flags = 0)
+	public function __construct($mask, $metadata = array(), $flags = 0)
 	{
+		if (is_string($metadata)) {
+			$a = strrpos($metadata, ':');
+			if (!$a) {
+				throw new \InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
+			}
+			$metadata = array(
+				self::PRESENTER_KEY => substr($metadata, 0, $a),
+				'action' => $a === strlen($metadata) - 1 ? 'default' : substr($metadata, $a + 1),
+			);
+		}
+
 		$this->flags = $flags | self::$defaultFlags;
 		$this->setMask($mask, $metadata);
 	}
