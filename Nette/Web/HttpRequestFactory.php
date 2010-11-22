@@ -72,7 +72,7 @@ class HttpRequestFactory extends Nette\Object
 			$pair = array('');
 		}
 
-		$uri->host = preg_match('#^[-.a-z0-9]+$#', $pair[0]) ? $pair[0] : '';
+		$uri->host = preg_match('#^[-._a-z0-9]+$#', $pair[0]) ? $pair[0] : '';
 
 		if (isset($pair[1])) {
 			$uri->port = (int) $pair[1];
