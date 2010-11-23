@@ -9,31 +9,17 @@
  * GPL license. For more information please see http://nette.org
  */
 
-namespace Nette\Application;
+namespace Nette\Mail;
 
 use Nette;
 
 
 
 /**
- *
+ * SMTP mailer exception.
  *
  * @author     David Grudl
  */
-interface IRenderable
+class SmtpException extends \Exception
 {
-
-	/**
-	 * Forces control to repaint.
-	 * @param  string
-	 * @return void
-	 */
-	function invalidateControl();
-
-	/**
-	 * Is required to repaint the control?
-	 * @return bool
-	 */
-	function isControlInvalid();
-
 }

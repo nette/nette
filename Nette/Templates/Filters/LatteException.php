@@ -9,31 +9,17 @@
  * GPL license. For more information please see http://nette.org
  */
 
-namespace Nette\Application;
+namespace Nette\Templates;
 
 use Nette;
 
 
 
 /**
- *
+ * The exception occured during Latte compilation.
  *
  * @author     David Grudl
  */
-interface IRenderable
+class LatteException extends TemplateException
 {
-
-	/**
-	 * Forces control to repaint.
-	 * @param  string
-	 * @return void
-	 */
-	function invalidateControl();
-
-	/**
-	 * Is required to repaint the control?
-	 * @return bool
-	 */
-	function isControlInvalid();
-
 }

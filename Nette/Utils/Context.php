@@ -172,14 +172,3 @@ class Context extends FreezableObject implements IContext
 	}
 
 }
-
-
-
-/**
- * Ambiguous service resolution exception.
- *
- * @author     David Grudl
- */
-class AmbiguousServiceException extends \Exception
-{
-}

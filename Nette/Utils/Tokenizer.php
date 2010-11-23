@@ -112,12 +112,3 @@ class Tokenizer extends Object
 	}
 
 }
-
-
-
-/**
- * The exception that indicates tokenizer error.
- */
-class TokenizerException extends \Exception
-{
-}

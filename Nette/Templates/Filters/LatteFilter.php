@@ -454,14 +454,3 @@ class LatteFilter extends Nette\Object
 	/**#@-*/
 
 }
-
-
-
-/**
- * The exception occured during Latte compilation.
- *
- * @author     David Grudl
- */
-class LatteException extends TemplateException
-{
-}

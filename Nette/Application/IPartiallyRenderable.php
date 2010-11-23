@@ -20,20 +20,21 @@ use Nette;
  *
  * @author     David Grudl
  */
-interface IRenderable
+interface IPartiallyRenderable extends IRenderable
 {
 
 	/**
-	 * Forces control to repaint.
+	 * Forces control or its snippet to repaint.
 	 * @param  string
 	 * @return void
 	 */
-	function invalidateControl();
+	//function invalidateControl($snippet = NULL);
 
 	/**
-	 * Is required to repaint the control?
+	 * Is required to repaint the control or its snippet?
+	 * @param  string  snippet name
 	 * @return bool
 	 */
-	function isControlInvalid();
+	//function isControlInvalid($snippet = NULL);
 
 }
