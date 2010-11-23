@@ -50,5 +50,11 @@ require_once __DIR__ . '/Loaders/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
+/**/
+class_alias('Nette\Object', 'NObject');
+class_alias('Nette\Loaders\LimitedScope', 'NLimitedScope');
+class_alias('Nette\Loaders\AutoLoader', 'NAutoLoader');
+class_alias('Nette\Loaders\NetteLoader', 'NNetteLoader');
+/**/
 
 Nette\Loaders\NetteLoader::getInstance()->register();
