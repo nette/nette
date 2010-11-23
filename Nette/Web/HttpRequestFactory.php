@@ -104,15 +104,22 @@ class HttpRequestFactory extends Nette\Object
 		$uri->path = String::fixEncoding($uri->path);
 
 		// detect script path
-		$uri->scriptPath = '/';
-		if (isset($_SERVER['SCRIPT_NAME'])) {
+		if (isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME']) && strncmp($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT'])) === 0) {
+			$script = '/' . ltrim(strtr(substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT'])), '\\', '/'), '/');
+		} elseif (isset($_SERVER['SCRIPT_NAME'])) {
 			$script = $_SERVER['SCRIPT_NAME'];
-			if (strncmp($uri->path . '/', $script . '/', strlen($script) + 1) === 0) { // whole SCRIPT_NAME in URL
-				$uri->scriptPath = $script;
+		} else {
+			$script = '/';
+		}
 
-			} elseif (strncmp($uri->path, $script, strrpos($script, '/') + 1) === 0) { // directory part of SCRIPT_NAME in URL
-				$uri->scriptPath = substr($script, 0, strrpos($script, '/') + 1);
-			}
+		if (strncasecmp($uri->path . '/', $script . '/', strlen($script) + 1) === 0) { // whole script in URL
+			$uri->scriptPath = substr($uri->path, 0, strlen($script));
+
+		} elseif (strncasecmp($uri->path, $script, strrpos($script, '/') + 1) === 0) { // directory part of script in URL
+			$uri->scriptPath = substr($uri->path, 0, strrpos($script, '/') + 1);
+
+		} else {
+			$uri->scriptPath = '/';
 		}
 
 
