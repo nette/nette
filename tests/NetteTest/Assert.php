@@ -13,7 +13,7 @@
 
 
 /**
- * Asseratation test helpers.
+ * Assertation test helpers.
  *
  * @author     David Grudl
  * @package    Nette\Test
