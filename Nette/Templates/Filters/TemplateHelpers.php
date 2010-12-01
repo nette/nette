@@ -108,7 +108,7 @@ final class TemplateHelpers
 	public static function escapeCss($s)
 	{
 		// http://www.w3.org/TR/2006/WD-CSS21-20060411/syndata.html#q6
-		return addcslashes($s, "\x00..\x2C./:;<=>?@[\\]^`{|}~");
+		return addcslashes($s, "\x00..\x1F!\"#$%&'()*+,./:;<=>?@[\\]^`{|}~");
 	}
 
 
