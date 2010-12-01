@@ -56,6 +56,17 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 
 
 	/**
+	 * Returns the MIME content type of a downloaded file.
+	 * @return string
+	 */
+	final public function getContentType()
+	{
+		return $this->contentType;
+	}
+
+
+
+	/**
 	 * Sends response to output.
 	 * @return void
 	 */
