@@ -1,14 +1,19 @@
+# Apache configuration file (see httpd.apache.org/docs/2.2/mod/quickreference.html)
+
 # disable directory listing
 Options -Indexes
 
+# allows symbolic links in this directory
+Options +FollowSymLinks
+
 # configure PHP
 # <IfModule mod_php5.c>
-#    php_flag magic_quotes_gpc off
 #    php_flag register_globals off
 #    php_flag zend.ze1_compatibility_mode off
+#	php_flag session.auto_start off
 # </IfModule>
 
-# mod_rewrite
+# enable cool URL
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	# RewriteBase /
