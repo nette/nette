@@ -25,11 +25,8 @@ use Nette,
  */
 class FileTemplate extends Template implements IFileTemplate
 {
-	/** @var int */
-	public static $cacheExpire = NULL;
-
 	/** @var Nette\Caching\ICacheStorage */
-	private static $cacheStorage;
+	private $cacheStorage;
 
 	/** @var string */
 	private $file;
@@ -113,7 +110,6 @@ class FileTemplate extends Template implements IFileTemplate
 				$content,
 				array(
 					Cache::FILES => $this->file,
-					Cache::EXPIRATION => self::$cacheExpire,
 					Cache::CONSTS => 'Nette\Framework::REVISION',
 				)
 			);
@@ -141,9 +137,9 @@ class FileTemplate extends Template implements IFileTemplate
 	 * @param  Nette\Caching\Cache
 	 * @return void
 	 */
-	public static function setCacheStorage(Nette\Caching\ICacheStorage $storage)
+	public function setCacheStorage(Nette\Caching\ICacheStorage $storage)
 	{
-		self::$cacheStorage = $storage;
+		$this->cacheStorage = $storage;
 	}
 
 
@@ -151,15 +147,15 @@ class FileTemplate extends Template implements IFileTemplate
 	/**
 	 * @return Nette\Caching\ICacheStorage
 	 */
-	public static function getCacheStorage()
+	public function getCacheStorage()
 	{
-		if (self::$cacheStorage === NULL) {
+		if ($this->cacheStorage === NULL) {
 			$dir = Environment::getVariable('tempDir') . '/cache';
 			umask(0000);
 			@mkdir($dir, 0777); // @ - directory may exists
-			self::$cacheStorage = new TemplateCacheStorage($dir);
+			$this->cacheStorage = new TemplateCacheStorage($dir);
 		}
-		return self::$cacheStorage;
+		return $this->cacheStorage;
 	}
 
 }

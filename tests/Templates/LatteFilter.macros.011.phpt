@@ -23,11 +23,11 @@ require __DIR__ . '/Template.inc';
 // temporary directory
 define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
-FileTemplate::setCacheStorage(new MockCacheStorage(TEMP_DIR));
 
 
 
 $template = new FileTemplate;
+$template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template->setFile(__DIR__ . '/templates/xml.latte');
 $template->registerFilter(new LatteFilter);
 $template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
