@@ -142,6 +142,7 @@ class NetteLoader extends AutoLoader
 		'nette\mail\sendmailmailer' => '/Mail/SendmailMailer.php',
 		'nette\mail\smtpexception' => '/Mail/SmtpException.php',
 		'nette\mail\smtpmailer' => '/Mail/SmtpMailer.php',
+		'nette\mapiterator' => '/Utils/Iterators/MapIterator.php',
 		'nette\neonexception' => '/Utils/NeonException.php',
 		'nette\neonparser' => '/Utils/NeonParser.php',
 		'nette\object' => '/Utils/Object.php',
