@@ -71,12 +71,13 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	/**
 	 * Read from cache.
 	 * @param  string key
+	 * @param  int|array flag
 	 * @return mixed|NULL
 	 */
-	public function read($key)
+	public function read($key, $flag = 0)
 	{
 		$key = $this->prefix . $key;
-		$meta = $this->memcache->get($key);
+		$meta = $this->memcache->get($key, $flag);
 		if (!$meta) return NULL;
 
 		// meta structure:
@@ -93,7 +94,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		}
 
 		if (!empty($meta[self::META_DELTA])) {
-			$this->memcache->replace($key, $meta, 0, $meta[self::META_DELTA] + time());
+			$this->memcache->replace($key, $meta, $flag, $meta[self::META_DELTA] + time());
 		}
 
 		return $meta[self::META_DATA];
@@ -106,9 +107,10 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	 * @param  string key
 	 * @param  mixed  data
 	 * @param  array  dependencies
+         * @param  int    flag
 	 * @return void
 	 */
-	public function write($key, $data, array $dp)
+	public function write($key, $data, array $dp, $flag = 0)
 	{
 		if (isset($dp[Cache::ITEMS])) {
 			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
@@ -138,7 +140,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			$this->getJournal()->write($key, $dp);
 		}
 
-		$this->memcache->set($key, $meta, 0, $expire);
+		$this->memcache->set($key, $meta, $flag, $expire);
 	}
 
 
