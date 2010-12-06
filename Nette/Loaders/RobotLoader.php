@@ -192,7 +192,11 @@ class RobotLoader extends AutoLoader
 	private function addClass($class, $file, $time)
 	{
 		$lClass = strtolower($class);
-		if (isset($this->list[$lClass][0]) && $this->list[$lClass][0] !== $file && is_file($this->list[$lClass][0])) {
+		if (isset($this->list[$lClass][0]) && ($file2 = $this->list[$lClass][0]) !== $file && is_file($file2)) {
+			if ($this->files[$file2] !== filemtime($file2)) {
+				$this->scanScript($file2);
+				return $this->addClass($class, $file, $time);
+			}
 			$e = new \InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$lClass][0] . ".");
 			/*5.2*if (PHP_VERSION_ID < 50300) {
 				Nette\Debug::_exceptionHandler($e);
@@ -202,6 +206,7 @@ class RobotLoader extends AutoLoader
 			}
 		}
 		$this->list[$lClass] = array($file, $time, $class);
+		$this->files[$file] = $time;
 	}
 
 
@@ -262,6 +267,10 @@ class RobotLoader extends AutoLoader
 		$level = $minLevel = 0;
 		$time = filemtime($file);
 		$s = file_get_contents($file);
+
+		foreach ($this->list as $class => $pair) {
+			if ($pair && $pair[0] === $file) unset($this->list[$class]);
+		}
 
 		if ($matches = String::match($s, '#//nette'.'loader=(\S*)#')) {
 			foreach (explode(',', $matches[1]) as $name) {
