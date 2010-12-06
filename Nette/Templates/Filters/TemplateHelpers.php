@@ -260,6 +260,22 @@ final class TemplateHelpers
 
 
 	/**
+	 * The data: URI generator.
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	public static function dataStream($data, $type = NULL)
+	{
+		if ($type === NULL) {
+			$type = Nette\Tools::detectMimeTypeFromString($data, NULL);
+		}
+		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
+	}
+
+
+
+	/**
 	 * /dev/null.
 	 * @param  mixed
 	 * @return string
