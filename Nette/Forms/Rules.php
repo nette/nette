@@ -28,6 +28,18 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	/** @var array */
 	public static $defaultMessages = array(
 		Form::PROTECTION => 'Security token did not match. Possible CSRF attack.',
+		Form::EQUAL => 'Please enter %s.',
+		Form::FILLED => 'Please complete mandatory field.',
+		Form::MIN_LENGTH => 'Please enter a value of at least %d characters.',
+		Form::MAX_LENGTH => 'Please enter a value no longer than %d characters.',
+		Form::LENGTH => 'Please enter a value between %d and %d characters long.',
+		Form::EMAIL => 'Please enter a valid email address.',
+		Form::URL => 'Please enter a valid URL.',
+		Form::INTEGER => 'Please enter a numeric value.',
+		Form::FLOAT => 'Please enter a numeric value.',
+		Form::RANGE => 'Please enter a value between %d and %d.',
+		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
+		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
 	);
 
 	/** @var array of Rule */
