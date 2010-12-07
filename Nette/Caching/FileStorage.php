@@ -104,7 +104,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function read($key)
 	{
-		$meta = $this->readMeta($this->getCacheFile($key), LOCK_SH);
+		$meta = $this->readMetaAndLock($this->getCacheFile($key), LOCK_SH);
 		if ($meta && $this->verify($meta)) {
 			return $this->readData($meta); // calls fclose()
 
@@ -124,7 +124,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	{
 		do {
 			if (!empty($meta[self::META_DELTA])) {
-				// meta[file] was added by readMeta()
+				// meta[file] was added by readMetaAndLock()
 				if (filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < time()) break;
 				touch($meta[self::FILE]);
 
@@ -138,7 +138,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 			if (!empty($meta[self::META_ITEMS])) {
 				foreach ($meta[self::META_ITEMS] as $depFile => $time) {
-					$m = $this->readMeta($depFile, LOCK_SH);
+					$m = $this->readMetaAndLock($depFile, LOCK_SH);
 					if ($m[self::META_TIME] !== $time) break 2;
 					if ($m && !$this->verify($m)) break 2;
 				}
@@ -147,7 +147,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			return TRUE;
 		} while (FALSE);
 
-		$this->delete($meta[self::FILE], $meta[self::HANDLE]); // meta[handle] & meta[file] was added by readMeta()
+		$this->delete($meta[self::FILE], $meta[self::HANDLE]); // meta[handle] & meta[file] was added by readMetaAndLock()
 		return FALSE;
 	}
 
@@ -177,7 +177,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		if (isset($dp[Cache::ITEMS])) {
 			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
-				$m = $this->readMeta($depFile, LOCK_SH);
+				$m = $this->readMetaAndLock($depFile, LOCK_SH);
 				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME];
 				unset($m);
 			}
@@ -281,7 +281,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 					$this->delete($path);
 
 				} else { // collector
-					$meta = $this->readMeta($path, LOCK_SH);
+					$meta = $this->readMetaAndLock($path, LOCK_SH);
 					if (!$meta) continue;
 
 					if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
@@ -316,7 +316,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	 * @param  int     lock mode
 	 * @return array|NULL
 	 */
-	protected function readMeta($file, $lock)
+	protected function readMetaAndLock($file, $lock)
 	{
 		$handle = @fopen($file, 'r+b'); // @ - file may not exist
 		if (!$handle) return NULL;
