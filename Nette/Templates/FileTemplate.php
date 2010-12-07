@@ -119,6 +119,7 @@ class FileTemplate extends Template implements IFileTemplate
 
 		if ($cached !== NULL && $storage instanceof TemplateCacheStorage) {
 			LimitedScope::load($cached['file'], $this->getParams());
+			flock($cached['handle'], LOCK_UN);
 			fclose($cached['handle']);
 
 		} else {

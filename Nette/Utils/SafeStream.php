@@ -166,6 +166,7 @@ final class SafeStream
 			ftruncate($this->handle, $this->startPos);
 		}
 
+		flock($this->handle, LOCK_UN);
 		fclose($this->handle);
 
 		// are we working with temporary file?

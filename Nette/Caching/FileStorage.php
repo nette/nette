@@ -236,6 +236,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 				break;
 			}
 
+			flock($handle, LOCK_UN);
 			fclose($handle);
 			return TRUE;
 		} while (FALSE);
@@ -288,6 +289,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 						continue;
 					}
 
+					flock($meta[self::HANDLE], LOCK_UN);
 					fclose($meta[self::HANDLE]);
 				}
 			}
@@ -334,6 +336,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			}
 		}
 
+		flock($handle, LOCK_UN);
 		fclose($handle);
 		return NULL;
 	}
@@ -348,6 +351,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	protected function readData($meta)
 	{
 		$data = stream_get_contents($meta[self::HANDLE]);
+		flock($meta[self::HANDLE], LOCK_UN);
 		fclose($meta[self::HANDLE]);
 
 		if (empty($meta[self::META_SERIALIZED])) {
@@ -384,7 +388,10 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	private static function delete($file, $handle = NULL)
 	{
 		if (@unlink($file)) { // @ - file may not already exist
-			if ($handle) fclose($handle);
+			if ($handle) {
+				flock($handle, LOCK_UN);
+				fclose($handle);
+			}
 			return;
 		}
 
@@ -394,6 +401,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		if ($handle) {
 			flock($handle, LOCK_EX);
 			ftruncate($handle, 0);
+			flock($handle, LOCK_UN);
 			fclose($handle);
 			@unlink($file); // @ - file may not already exist
 		}
