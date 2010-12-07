@@ -26,7 +26,7 @@ use Nette,
 class Template extends BaseTemplate implements IFileTemplate
 {
 	/** @var int */
-	public static $cacheExpire = FALSE;
+	public static $cacheExpire = NULL;
 
 	/** @var Nette\Caching\ICacheStorage */
 	private static $cacheStorage;
