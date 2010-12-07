@@ -189,7 +189,25 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 
-	/********************* interface \ArrayAccess ****************d*g**/
+	/**
+	 * Caches results of function/method calls.
+	 * @param  mixed
+	 * @return mixed
+	 */
+	public function call($function)
+	{
+		$key = func_get_args();
+		if ($this->offsetGet($key) === NULL) {
+			array_shift($key);
+			return $this->save($this->key, call_user_func_array($function, $key));
+		} else {
+			return $this->data;
+		}
+	}
+
+
+
+	/********************* interface ArrayAccess ****************d*g**/
 
 
 
