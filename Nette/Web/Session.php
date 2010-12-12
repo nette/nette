@@ -454,7 +454,7 @@ class Session extends Nette\Object
 			));
 
 		} else {
-			$time = Nette\Tools::createDateTime($time)->format('U');
+			$time = Nette\Tools::createDateTime($time)->format('U') - time();
 			return $this->setOptions(array(
 				'gc_maxlifetime' => $time,
 				'cookie_lifetime' => $time,
@@ -513,8 +513,8 @@ class Session extends Nette\Object
 	private function sendCookie()
 	{
 		$cookie = $this->getCookieParams();
-		$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
-		$this->getHttpResponse()->setCookie('nette-browser', $_SESSION['__NF']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'] ? $cookie['lifetime'] + time() : 0, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		$this->getHttpResponse()->setCookie('nette-browser', $_SESSION['__NF']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain']);
 	}
 
 
