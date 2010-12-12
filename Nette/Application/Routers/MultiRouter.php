@@ -90,17 +90,16 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 			$this->cachedRoutes = $routes;
 		}
 
-		$presenter = strtolower($appRequest->getPresenterName());
-
 		if ($this->module) {
-			if (strncasecmp($presenter, $this->module, strlen($this->module)) === 0) {
+			if (strncasecmp($tmp = $appRequest->getPresenterName(), $this->module, strlen($this->module)) === 0) {
 				$appRequest = clone $appRequest;
-				$appRequest->setPresenterName(substr($appRequest->getPresenterName(), strlen($this->module)));
+				$appRequest->setPresenterName(substr($tmp, strlen($this->module)));
 			} else {
 				return NULL;
 			}
 		}
 
+		$presenter = strtolower($appRequest->getPresenterName());
 		if (!isset($this->cachedRoutes[$presenter])) $presenter = '*';
 
 		foreach ($this->cachedRoutes[$presenter] as $route) {
