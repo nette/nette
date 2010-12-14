@@ -119,8 +119,7 @@ class TestHelpers
 	 */
 	public static function saveCoverage()
 	{
-		$file = __DIR__ . '/coverage.dat';
-		$coverage = @unserialize(file_get_contents($file));
+		$coverage = @unserialize(file_get_contents(self::$coverageFile));
 		$root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 
 		foreach (xdebug_get_code_coverage() as $filename => $lines) {
@@ -133,7 +132,7 @@ class TestHelpers
 			}
 		}
 
-		file_put_contents($file, serialize($coverage));
+		file_put_contents(self::$coverageFile, serialize($coverage));
 	}
 
 }
