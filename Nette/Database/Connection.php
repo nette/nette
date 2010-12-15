@@ -49,6 +49,11 @@ class Connection extends PDO
 			$this->driver = new $class($this, $options);
 		}
 
+		if (!Nette\Debug::$productionMode) {
+			Nette\Debug::addPanel($panel = new DatabasePanel($dsn));
+			$this->onQuery[] = callback($panel, 'logQuery');
+		}
+
 		$this->preprocessor = new SqlPreprocessor($this);
 	}
 

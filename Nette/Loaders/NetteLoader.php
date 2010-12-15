@@ -92,6 +92,7 @@ class NetteLoader extends AutoLoader
 		'nette\configurator' => '/Environment/Configurator.php',
 		'nette\context' => '/Utils/Context.php',
 		'nette\database\connection' => '/Database/Connection.php',
+		'nette\database\databasepanel' => '/Database/DatabasePanel.php',
 		'nette\database\drivers\pdomssqldriver' => '/Database/Drivers/PdoMsSqlDriver.php',
 		'nette\database\drivers\pdomysqldriver' => '/Database/Drivers/PdoMySqlDriver.php',
 		'nette\database\drivers\pdoocidriver' => '/Database/Drivers/PdoOciDriver.php',
