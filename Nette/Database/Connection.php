@@ -67,10 +67,10 @@ class Connection extends PDO
 	 * @param  mixed   [parameters, ...]
 	 * @return Statement
 	 */
-	public function query($sql)
+	public function query($statement)
 	{
 		$args = func_get_args();
-		return $this->queryArgs($args);
+		return $this->queryArgs(array_shift($args), $args);
 	}
 
 
@@ -81,32 +81,31 @@ class Connection extends PDO
 	 * @param  mixed   [parameters, ...]
 	 * @return int     number of affected rows
 	 */
-	public function exec($sql)
+	public function exec($statement)
 	{
 		$args = func_get_args();
-		return $this->queryArgs($args)->rowCount();
+		return $this->queryArgs(array_shift($args), $args)->rowCount();
 	}
 
 
 
 	/**
+	 * @param  string  statement
 	 * @param  array
 	 * @return Statement
 	 */
-	private function queryArgs($params)
+	public function queryArgs($statement, $params)
 	{
-		$sql = array_shift($params);
-
 		foreach ($params as $value) {
 			if (is_array($value) || is_object($value)) {
 				$need = TRUE; break;
 			}
 		}
-		if (isset($need) || strpos(':', $sql) !== FALSE) {
-			list($sql, $params) = $this->preprocessor->process($sql, $params);
+		if (isset($need) || strpos(':', $statement) !== FALSE) {
+			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
 
-		return $this->prepare($sql)->execute($params);
+		return $this->prepare($statement)->execute($params);
 	}
 
 
@@ -124,7 +123,7 @@ class Connection extends PDO
 	public function fetch($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs($args)->fetch();
+		return $this->queryArgs(array_shift($args), $args)->fetch();
 	}
 
 
@@ -138,7 +137,7 @@ class Connection extends PDO
 	public function fetchColumn($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs($args)->fetchColumn();
+		return $this->queryArgs(array_shift($args), $args)->fetchColumn();
 	}
 
 
@@ -152,7 +151,7 @@ class Connection extends PDO
 	public function fetchPairs($args)
 	{
 		$args = func_get_args();
-		return $this->queryArgs($args)->fetchPairs();
+		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
 	}
 
 
