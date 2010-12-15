@@ -186,7 +186,7 @@ class Connection extends PDO
 			$s = fgets($handle);
 			$sql .= $s;
 			if (substr(rtrim($s), -1) === ';') {
-				$this->query($sql);
+				parent::exec($sql); // native query without logging
 				$sql = '';
 				$count++;
 			}
