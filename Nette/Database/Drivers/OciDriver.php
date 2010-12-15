@@ -102,4 +102,57 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 		return $row;
 	}
 
+
+
+	/********************* reflection ****************d*g**/
+
+
+
+	/**
+	 * Returns list of tables.
+	 */
+	public function getTables()
+	{
+		$tables = array();
+		foreach ($this->connection->query('SELECT * FROM cat', \PDO::FETCH_NUM) as $row) {
+			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
+				$tables[] = array(
+					'name' => $row[0],
+					'view' => $row[1] === 'VIEW',
+				);
+			}
+		}
+		return $tables;
+	}
+
+
+
+	/**
+	 * Returns metadata for all columns in a table.
+	 */
+	public function getColumns($table)
+	{
+		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * Returns metadata for all indexes in a table.
+	 */
+	public function getIndexes($table)
+	{
+		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * Returns metadata for all foreign keys in a table.
+	 */
+	public function getForeignKeys($table)
+	{
+		throw new NotImplementedException;
+	}
+
 }

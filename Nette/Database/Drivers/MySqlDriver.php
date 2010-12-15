@@ -112,4 +112,93 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		return $row;
 	}
 
+
+
+	/********************* reflection ****************d*g**/
+
+
+
+	/**
+	 * Returns list of tables.
+	 */
+	public function getTables()
+	{
+		/*$this->connection->query("
+			SELECT TABLE_NAME as name, TABLE_TYPE = 'VIEW' as view
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_SCHEMA = DATABASE()
+		");*/
+		$tables = array();
+		foreach ($this->connection->query('SHOW FULL TABLES', \PDO::FETCH_NUM) as $row) {
+			$tables[] = array(
+				'name' => $row[0],
+				'view' => isset($row[1]) && $row[1] === 'VIEW',
+			);
+		}
+		return $tables;
+	}
+
+
+
+	/**
+	 * Returns metadata for all columns in a table.
+	 */
+	public function getColumns($table)
+	{
+		/*$this->connection->query("
+			SELECT *
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_NAME = {$this->connection->quote($table)} AND TABLE_SCHEMA = DATABASE()
+		");*/
+		$columns = array();
+		foreach ($this->connection->query('SHOW FULL COLUMNS FROM ' . $this->delimite($table)) as $row) {
+			$type = explode('(', $row['Type']);
+			$columns[] = array(
+				'name' => $row['Field'],
+				'table' => $table,
+				'nativetype' => strtoupper($type[0]),
+				'size' => isset($type[1]) ? (int) $type[1] : NULL,
+				'unsigned' => (bool) strstr($row['Type'], 'unsigned'),
+				'nullable' => $row['Null'] === 'YES',
+				'default' => $row['Default'],
+				'autoincrement' => $row['Extra'] === 'auto_increment',
+				'vendor' => (array) $row,
+			);
+		}
+		return $columns;
+	}
+
+
+
+	/**
+	 * Returns metadata for all indexes in a table.
+	 */
+	public function getIndexes($table)
+	{
+		/*$this->connection->query("
+			SELECT *
+			FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+			WHERE TABLE_NAME = {$this->connection->quote($table)} AND TABLE_SCHEMA = DATABASE()
+			AND REFERENCED_COLUMN_NAME IS NULL
+		");*/
+		$indexes = array();
+		foreach ($this->connection->query('SHOW INDEX FROM ' . $this->delimite($table)) as $row) {
+			$indexes[$row['Key_name']]['name'] = $row['Key_name'];
+			$indexes[$row['Key_name']]['unique'] = !$row['Non_unique'];
+			$indexes[$row['Key_name']]['primary'] = $row['Key_name'] === 'PRIMARY';
+			$indexes[$row['Key_name']]['columns'][$row['Seq_in_index'] - 1] = $row['Column_name'];
+		}
+		return array_values($indexes);
+	}
+
+
+
+	/**
+	 * Returns metadata for all foreign keys in a table.
+	 */
+	public function getForeignKeys($table)
+	{
+		throw new NotImplementedException;
+	}
+
 }

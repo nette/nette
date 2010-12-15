@@ -98,4 +98,48 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		return $row;
 	}
 
+
+
+	/********************* reflection ****************d*g**/
+
+
+
+	/**
+	 * Returns list of tables.
+	 */
+	public function getTables()
+	{
+		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * Returns metadata for all columns in a table.
+	 */
+	public function getColumns($table)
+	{
+		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * Returns metadata for all indexes in a table.
+	 */
+	public function getIndexes($table)
+	{
+		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * Returns metadata for all foreign keys in a table.
+	 */
+	public function getForeignKeys($table)
+	{
+		throw new NotImplementedException;
+	}
+
 }

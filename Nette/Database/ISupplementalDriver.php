@@ -62,4 +62,35 @@ interface ISupplementalDriver
 	 */
 	function normalizeRow($row, $statement);
 
+
+	/********************* reflection ****************d*g**/
+
+
+	/**
+	 * Returns list of tables.
+	 * @return array of [name [, (bool) view]]
+	 */
+	function getTables();
+
+	/**
+	 * Returns metadata for all columns in a table.
+	 * @param  string
+	 * @return array of [name, nativetype [, table, fullname, (int) size, (bool) nullable, (mixed) default, (bool) autoincrement, (array) vendor]]
+	 */
+	function getColumns($table);
+
+	/**
+	 * Returns metadata for all indexes in a table.
+	 * @param  string
+	 * @return array of [name, (array of names) columns [, (bool) unique, (bool) primary]]
+	 */
+	function getIndexes($table);
+
+	/**
+	 * Returns metadata for all foreign keys in a table.
+	 * @param  string
+	 * @return array
+	 */
+	function getForeignKeys($table);
+
 }

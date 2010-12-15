@@ -55,4 +55,14 @@ class Sqlite2Driver extends SqliteDriver
 		return $row;
 	}
 
+
+
+	/**
+	 * Returns metadata for all foreign keys in a table.
+	 */
+	public function getForeignKeys($table)
+	{
+		throw new NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
+	}
+
 }
