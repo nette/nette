@@ -24,8 +24,14 @@ use Nette,
  */
 class Connection extends PDO
 {
-	/** @var Nette\Database\ISupplementalDriver */
+	/** @var ISupplementalDriver */
 	private $driver;
+
+	/** @var SqlPreprocessor */
+	private $preprocessor;
+
+	/** @var array */
+	public $substitutions = array();
 
 	public $profiler;
 
@@ -41,6 +47,8 @@ class Connection extends PDO
 		if (class_exists($class)) {
 			$this->driver = new $class($this, $options);
 		}
+
+		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
@@ -88,6 +96,16 @@ class Connection extends PDO
 	private function queryArgs($params)
 	{
 		$sql = array_shift($params);
+
+		foreach ($params as $value) {
+			if (is_array($value) || is_object($value)) {
+				$need = TRUE; break;
+			}
+		}
+		if (isset($need) || strpos(':', $sql) !== FALSE) {
+			list($sql, $params) = $this->preprocessor->process($sql, $params);
+		}
+
 		return $this->prepare($sql)->execute($params);
 	}
 

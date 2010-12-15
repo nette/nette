@@ -102,6 +102,7 @@ class NetteLoader extends AutoLoader
 		'nette\database\isupplementaldriver' => '/Database/ISupplementalDriver.php',
 		'nette\database\row' => '/Database/Row.php',
 		'nette\database\sqlliteral' => '/Database/SqlLiteral.php',
+		'nette\database\sqlpreprocessor' => '/Database/SqlPreprocessor.php',
 		'nette\database\statement' => '/Database/Statement.php',
 		'nette\debug' => '/Debug/Debug.php',
 		'nette\debughelpers' => '/Debug/DebugHelpers.php',

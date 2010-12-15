@@ -45,12 +45,6 @@ class Statement extends \PDOStatement
 	{
 		static $types = array('boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT, 'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL);
 		foreach ($params as $key => $value) {
-			if ($value instanceof \DateTime) {
-				$value = $this->connection->getSupplementalDriver()->formatDateTime($value);
-
-			} elseif ($value instanceof SqlLiteral) {
-				// TODO!
-			}
 			$type = gettype($value);
 			$this->bindValue(is_int($key) ? $key + 1 : ":$key", $value, isset($types[$type]) ? $types[$type] : PDO::PARAM_STR);
 		}
