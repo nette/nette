@@ -33,7 +33,8 @@ class Connection extends PDO
 	/** @var array */
 	public $substitutions = array();
 
-	public $profiler;
+	/** @var array of function(Statement $result, $params); Occurs after query is executed */
+	public $onQuery;
 
 
 

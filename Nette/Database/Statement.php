@@ -27,6 +27,10 @@ class Statement extends \PDOStatement
 	/** @var Connection */
 	private $connection;
 
+	/** @var float */
+	public $time;
+
+
 
 	protected function __construct(Connection $connection)
 	{
@@ -50,12 +54,9 @@ class Statement extends \PDOStatement
 		}
 
 		$time = microtime(TRUE);
-
 		parent::execute();
-
-		if ($this->connection->profiler) {
-			$this->connection->profiler->logQuery($this->queryString, $params, microtime(TRUE) - $time, $this->rowCount());
-		}
+		$this->time = microtime(TRUE) - $time;
+		$this->connection->onQuery($this, $params);
 
 		return $this;
 	}
