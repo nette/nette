@@ -30,6 +30,12 @@ class Connection extends PDO
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
+	/** @var Nette\Database\Reflection\DatabaseReflection */
+	public $databaseReflection;
+
+	/** @var Nette\Caching\Cache */
+	public $cache;
+
 	/** @var array */
 	public $substitutions = array();
 
@@ -50,6 +56,8 @@ class Connection extends PDO
 		}
 
 		$this->preprocessor = new SqlPreprocessor($this);
+
+		$this->databaseReflection = new Nette\Database\Reflection\DatabaseReflection; // TODO
 
 		if (!Nette\Debug::$productionMode) {
 			Nette\Debug::addPanel($panel = new DatabasePanel($dsn));
@@ -158,6 +166,22 @@ class Connection extends PDO
 	{
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
+	}
+
+
+
+	/********************* selector ****************d*g**/
+
+
+
+	/**
+	 * Creates selector for table.
+	 * @param  string
+	 * @return Nette\Database\Selector\TableSelection
+	 */
+	public function table($table)
+	{
+		return new Nette\Database\Selector\TableSelection($table, $this);
 	}
 
 
