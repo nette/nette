@@ -38,7 +38,7 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = array())
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
 	{
 		parent::__construct($dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -46,15 +46,15 @@ class Connection extends PDO
 
 		$class = 'Nette\Database\Drivers\Pdo' . $this->getAttribute(PDO::ATTR_DRIVER_NAME) . 'Driver';
 		if (class_exists($class)) {
-			$this->driver = new $class($this, $options);
+			$this->driver = new $class($this, (array) $options);
 		}
+
+		$this->preprocessor = new SqlPreprocessor($this);
 
 		if (!Nette\Debug::$productionMode) {
 			Nette\Debug::addPanel($panel = new DatabasePanel($dsn));
 			$this->onQuery[] = callback($panel, 'logQuery');
 		}
-
-		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
