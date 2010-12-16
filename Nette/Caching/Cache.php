@@ -55,11 +55,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function __construct(ICacheStorage $storage, $namespace = NULL)
 	{
 		$this->storage = $storage;
-		$this->namespace = (string) $namespace;
-
-		if (strpos($this->namespace, self::NAMESPACE_SEPARATOR) !== FALSE) {
-			throw new \InvalidArgumentException("Namespace name contains forbidden NUL character.");
-		}
+		$this->namespace = $namespace . self::NAMESPACE_SEPARATOR;
 	}
 
 
@@ -81,7 +77,20 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function getNamespace()
 	{
-		return $this->namespace;
+		return (string) substr($this->namespace, 0, -1);
+	}
+
+
+
+	/**
+	 * Returns new nested cache object.
+	 * @param  string
+	 * @return Cache
+	 */
+	public function derive($namespace)
+	{
+		$derived = new self($this->storage, $this->namespace . $namespace);
+		return $derived;
 	}
 
 
@@ -117,7 +126,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function save($key, $data, array $dp = NULL)
 	{
 		$this->key = is_scalar($key) ? (string) $key : serialize($key);
-		$key = $this->namespace . self::NAMESPACE_SEPARATOR . md5($this->key);
+		$key = $this->namespace . md5($this->key);
 
 		// convert expire into relative amount of seconds
 		if (isset($dp[Cache::EXPIRATION])) {
@@ -137,7 +146,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		if (isset($dp[self::ITEMS])) {
 			$dp[self::ITEMS] = (array) $dp[self::ITEMS];
 			foreach ($dp[self::ITEMS] as $k => $item) {
-				$dp[self::ITEMS][$k] = $this->namespace . self::NAMESPACE_SEPARATOR . md5(is_scalar($item) ? $item : serialize($item));
+				$dp[self::ITEMS][$k] = $this->namespace . md5(is_scalar($item) ? $item : serialize($item));
 			}
 		}
 
@@ -238,7 +247,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 			return $this->data;
 		}
 		$this->key = $key;
-		$this->data = $this->storage->read($this->namespace . self::NAMESPACE_SEPARATOR . md5($key));
+		$this->data = $this->storage->read($this->namespace . md5($key));
 		return $this->data;
 	}
 
