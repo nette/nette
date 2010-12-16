@@ -186,6 +186,20 @@ class Connection extends PDO
 
 
 
+	/**
+	 * Creates instance of table row.
+	 * @param  string
+	 * @param  mixed value of primary key
+	 * @return Nette\Database\Selector\TableRow or false if the row doesn't exist
+	 */
+	public function row($table, $id)
+	{
+		$primary = $this->databaseReflection->getPrimary($table);
+		return $this->table($table)->where($primary, $id)->fetch();
+	}
+
+
+
 	/********************* misc ****************d*g**/
 
 
