@@ -139,7 +139,8 @@ class GroupedTableSelection extends TableSelection
 		$referencing = & $this->refTable->referencing[$this->__toString()];
 		if ($referencing === NULL) {
 			$limit = $this->limit;
-			if ($this->limit && count($this->refTable->rows) > 1) {
+			$rows = count($this->refTable->rows);
+			if ($this->limit && $rows > 1) {
 				$this->limit = NULL;
 			}
 			parent::execute();
@@ -149,7 +150,7 @@ class GroupedTableSelection extends TableSelection
 			foreach ($this->rows as $key => $row) {
 				$ref = & $referencing[$row[$this->column]];
 				$skip = & $offset[$row[$this->column]];
-				if ($limit === NULL || (count($ref) < $limit && $skip >= $this->offset)) {
+				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->offset)) {
 					$ref[$key] = $row;
 				} else {
 					unset($this->rows[$key]);
