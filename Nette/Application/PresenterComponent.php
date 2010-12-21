@@ -321,14 +321,15 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 * @return bool
 	 * @throws InvalidLinkException
 	 */
-	public function isLinkCurrent($destination, $args = array())
+	public function isLinkCurrent($destination = NULL, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
+		if ($destination !== NULL) {
+			if (!is_array($args)) {
+				$args = func_get_args();
+				array_shift($args);
+			}
+			$this->link($destination, $args);
 		}
-
-		$this->link($destination, $args);
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
 	}
 

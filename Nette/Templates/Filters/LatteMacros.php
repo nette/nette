@@ -96,7 +96,7 @@ class LatteMacros extends Nette\Object
 
 		'plink' => '<?php echo %:escape%(%:macroPlink%) ?>',
 		'link' => '<?php echo %:escape%(%:macroLink%) ?>',
-		'ifCurrent' => '<?php %:macroIfCurrent% ?>',
+		'ifCurrent' => '<?php %:macroIfCurrent% ?>', // deprecated; use n:class="$presenter->linkCurrent ? ..."
 		'/ifCurrent' => '<?php endif ?>',
 		'widget' => '<?php %:macroControl% ?>',
 		'control' => '<?php %:macroControl% ?>',
