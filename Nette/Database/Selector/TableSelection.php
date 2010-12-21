@@ -348,7 +348,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		$join = array();
 
 		foreach (array(
-			'where' => implode(',', $this->where),
+			'where' => implode(',', $this->conditions),
 			'rest' => implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order)
 		) as $key => $val) {
 			preg_match_all('~\\b(\\w+)\\.(\\w+)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
