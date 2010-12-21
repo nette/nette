@@ -52,7 +52,7 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function hasEventProperty($name)
 	{
-		if (preg_match('#^on[A-Z]#', $name) && $this->hasProperty($name)) {
+		if (preg_match('#^on[A-Z]#'/*5.2* . 'i'*/, $name) && $this->hasProperty($name)) {
 			$rp = $this->getProperty($name);
 			return $rp->isPublic() && !$rp->isStatic();
 		}
