@@ -195,7 +195,7 @@ class Connection extends PDO
 	 * @param  string  filename
 	 * @return int  count of commands
 	 */
-	public function loadFile()
+	public function loadFile($file)
 	{
 		@set_time_limit(0); // intentionally @
 
