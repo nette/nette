@@ -22,9 +22,7 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$context = new Nette\Context;
-$context->addService('Nette\\Caching\\ICacheJournal', new Nette\Caching\FileJournal(TEMP_DIR));
-$storage = new Nette\Caching\FileStorage(TEMP_DIR, $context);
+$storage = new Nette\Caching\FileStorage(TEMP_DIR, new Nette\Caching\FileJournal(TEMP_DIR));
 $cache = new Cache($storage);
 
 
