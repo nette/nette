@@ -81,7 +81,6 @@ class NetteLoader extends AutoLoader
 		'nette\caching\icachestorage' => '/Caching/ICacheStorage.php',
 		'nette\caching\memcachedstorage' => '/Caching/MemcachedStorage.php',
 		'nette\caching\memorystorage' => '/Caching/MemoryStorage.php',
-		'nette\caching\sqlitejournal' => '/Caching/SqliteJournal.php',
 		'nette\callback' => '/Utils/Callback.php',
 		'nette\callbackfilteriterator' => '/Utils/Iterators/CallbackFilterIterator.php',
 		'nette\component' => '/ComponentModel/Component.php',
