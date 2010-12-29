@@ -16,59 +16,59 @@ use Nette;
 
 
 /**
- * File journal.
+ * Btree+ based file journal.
  *
- * <pre>
- * fj structure
- *
- *     Header : ( Magic : int32
- *                SectionCount : int32
- *                Sections : SectionCount*( Name : int32
- *                                          Offset : int32
- *                                          KeyLength : int32
- *                                          KeyCount : int32
- *                                        )
- *                Padding : ... to 4096*byte
- *              )
- *     SectionCount*( Sections[i].KeyCount*( Key : Sections[i].KeyLength*byte
- *                                           ValueOffset : int32
- *                                           ValueLength : int32
- *                                         )
- *     Data : *byte
- *
- *
- * fj.log structure
- *
- *     *( Record : ( N : int32
- *                   Serialized : N*byte
- *                 )
- *      )
- * </pre>
- *
- * @author     Jakub Kulhan
+ * @author     Jakub Onderka
  */
 class FileJournal extends Nette\Object implements ICacheJournal
 {
-	const
-		MAGIC = 0x666a3030,// "fj00"
-		FILE = 'fj',
-		EXTNEW = '.new',
-		EXTLOG = '.log',
-		EXTLOGNEW = '.log.new',
-		LOGMAXSIZE = 65536, // 64KiB
-		INT32 = 4,
-		TAGS = 0x74616773, // "tags"
-		PRIORITY = 0x7072696f, // "prio"
-		ENTRIES = 0x656e7473, // "ents"
-		DELETE = 'd',
-		ADD = 'a',
-		CLEAN = 'c';
+	/** Filename with journal */
+	const FILE = 'btfj.dat';
 
-	/** @var array */
-	private static $ops = array(
-		self::ADD => self::DELETE,
-		self::DELETE => self::ADD
-	);
+	/** 4 bytes file header magic (btfj) */
+	const FILEMAGIC  = 0x6274666A;
+
+	/** 4 bytes index node magic (inde) */
+	const INDEXMAGIC = 0x696E6465;
+
+	/** 4 bytes data node magic (data) */
+	const DATAMAGIC  = 0x64617461;
+
+	/** Node size in bytes */
+	const NODESIZE = 4096;
+
+	/** Bit rotation for saving data into nodes. BITROT = log2(NODESIZE) */
+	const BITROT = 12;
+
+	/** Header size in bytes */
+	const HEADERSIZE = 4096;
+
+	/** Size of 32 bit integer in bytes. INT32SIZE = 32 / 8 :-) */
+	const INT32SIZE  = 4;
+
+	/** Use json_decode and json_encode instead of unserialize and serialize (JSON is smaller and mostly faster) */
+	const USEJSON = FALSE;
+
+	const INFO = 'i',
+		TYPE = 't', // TAGS, PRIORITY or DATA
+		ISLEAF = 'il', // TRUE or FALSE
+		PREVNODE = 'p', // Prev node id
+		END = 'e',
+		MAX = 'm', // Maximal key in node or -1 when is last node
+		INDEXDATA = 'id',
+		LASTINDEX = 'l';
+
+	// Indexes
+	const TAGS = 't',
+		PRIORITY = 'p',
+		ENTRIES = 'e';
+
+	const DATA = 'd',
+		KEY = 'k', // string
+		DELETED = 'd'; // TRUE or FALSE
+
+	/** Debug mode, only for testing purposes */
+	public static $debug = FALSE;
 
 	/** @var string */
 	private $file;
@@ -76,222 +76,85 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	/** @var resource */
 	private $handle;
 
-	/** @var int */
-	private $mtime = 0;
+	/** @var int Last complete free node */
+	private $lastNode = 2;
+
+	/** @var int Last modification time of journal file */
+	private $lastModTime = NULL;
+
+	/** @var array Cache and uncommited but changed nodes */
+	public $nodeCache = array();
 
 	/** @var array */
-	private $sections = array();
-
-	/** @var resource */
-	private $logHandle;
-
-	/** @var bool */
-	private $isLogNew = FALSE;
+	private $nodeChanged = array();
 
 	/** @var array */
-	private $logMerge = array();
+	private $deletedLinks = array();
 
-	/** @var int */
-	private $logMergeP = 0;
+	/** @var array Free space in data nodes */
+	private $dataNodeFreeSpace = array();
+
+	/** @var array */
+	private static $startNode = array(
+		self::TAGS     => 0,
+		self::PRIORITY => 1,
+		self::ENTRIES  => 2,
+		self::DATA     => 3,
+	);
+
+
 
 	/**
-	 * Initalizes instance
-	 * @param  string
+	 * @param  string  Directory location with journal file
+	 * @return void
 	 */
 	public function __construct($dir)
 	{
 		$this->file = $dir . '/' . self::FILE;
-		$this->open();
+
+		// Create jorunal file when not exists
+		if (!file_exists($this->file)) {
+			$init = @fopen($this->file, 'xb');
+			if (!$init) {
+				clearstatcache();
+				if (!file_exists($this->file)) {
+					throw new \InvalidStateException("Cannot create journal file $this->file.");
+				}
+			} else {
+				$writen = fwrite($init, pack('N2', self::FILEMAGIC, $this->lastNode));
+				fclose($init);
+				if ($writen === FALSE || $writen !== self::INT32SIZE * 2) {
+					throw new \InvalidStateException("Cannot write journal header.");
+				}
+			}
+		}
+
+		$this->handle = fopen($this->file, 'r+b');
+
+		if (!$this->handle) {
+			throw new \InvalidStateException("Cannot open journal file '$this->file'.");
+		}
+
+		$header = stream_get_contents($this->handle, 2 * self::INT32SIZE, 0);
+		list(, $fileMagic, $this->lastNode) = unpack('N2', $header);
+
+		if ($fileMagic !== self::FILEMAGIC) {
+			fclose($this->handle);
+			throw new \InvalidStateException("Malformed journal file '$this->file'.");
+		}
 	}
 
 
 
 	/**
-	 * Destructor.
+	 * @return void
 	 */
 	public function __destruct()
 	{
 		if ($this->handle) {
+			$this->headerCommit();
+			flock($this->handle, LOCK_UN); // Since PHP 5.3.3 is manual unlock necesary
 			fclose($this->handle);
-		}
-
-		if ($this->logHandle) {
-			fclose($this->logHandle);
-		}
-	}
-
-
-
-	/**
-	 * Reload.
-	 */
-	private function reload()
-	{
-		if (($mtime = @filemtime($this->file)) === FALSE) {
-			$mtime = 0;
-		}
-
-		if ($this->mtime < $mtime) {
-			fclose($this->handle);
-			fclose($this->logHandle);
-			$this->handle = $this->logHandle = NULL;
-			$this->open();
-		}
-
-		$this->logMerge = $this->mergeLogFile($this->logHandle, $this->logMergeP, $this->logMerge);
-	}
-
-
-
-	/**
-	 * Opens files.
-	 */
-	private function open()
-	{
-		$this->handle = $this->logHandle = NULL;
-		$this->mtime = $this->logMergeP = 0;
-		$this->sections = $this->logMerge = array();
-
-		clearstatcache();
-		if (($this->mtime = @filemtime($this->file)) === FALSE) {
-			$this->mtime = 0;
-		}
-
-		$tries = 3;
-		do {
-			if (!$tries--) {
-				throw new \InvalidStateException("Cannot open journal file '$this->file'.");
-			}
-
-			if (!($this->handle = @fopen($this->file, 'rb'))) { // intentionally @
-				// file is not present
-				$this->handle = NULL;
-
-			} else {
-				list(,$magic, $sectionCount) = unpack('N2', fread($this->handle, 2 * self::INT32));
-
-				if ($magic !== self::MAGIC) {
-					fclose($this->handle);
-					throw new \InvalidStateException("Malformed journal file '$this->file'.");
-				}
-
-				for ($i = 0; $i < $sectionCount; ++$i) {
-					list(,$name, $offset, $keyLength, $keyCount) =
-						unpack('N4', fread($this->handle, 4 * self::INT32));
-
-					$this->sections[$name] = (object) array(
-						'offset' => $offset,
-						'keyLength' => $keyLength,
-						'keyCount' => $keyCount,
-					);
-				}
-			}
-
-			// what if it was rebuilt in the meantime?
-			clearstatcache();
-			if (($mtime = @filemtime($this->file)) === FALSE) {
-				$mtime = 0;
-			}
-		} while ($this->mtime < $mtime);
-
-
-		if (!($this->logHandle = @fopen($logfile = $this->file . self::EXTLOG, 'a+b'))) { // intentionally @
-			throw new \InvalidStateException("Cannot open logfile '$logfile' for journal.");
-		}
-
-		$doMergeFirst = FALSE;
-		$openNewLog = FALSE;
-		$reopen = FALSE;
-		if (flock($this->logHandle, LOCK_SH | LOCK_NB)) {
-			if (file_exists($logfile = $this->file . self::EXTLOGNEW)) {
-				if (($logmtime = @filemtime($this->file . self::EXTLOG)) === FALSE) {
-					throw new \InvalidStateException("Cannot determine modification time of logfile '$this->file" . self::EXTLOG . "'.");
-				}
-
-				if ($logmtime < $this->mtime) {
-					// rebuild completed, but log not removed
-					fclose($this->logHandle);
-					if (!@rename($this->file . self::EXTLOGNEW, $this->file . self::EXTLOG)) { // intentionally @
-						clearstatcache();
-						if (!file_exists($this->file . self::EXTLOGNEW)) {
-							// someone else renamed it
-							$reopen = TRUE;
-						} else {
-							// cannot rename and still exists -- open it
-							$openNewLog = TRUE;
-						}
-					} else {
-						// success fully renamed
-						$reopen = TRUE;
-					}
-
-				} else {
-					// rebuild not completed
-					if (!$this->rebuild()) {
-						$doMergeFirst = TRUE;
-						$openNewLog = TRUE;
-
-					} // else file already reopened by rebuild()
-				}
-
-			} // else log opened, no new log, everything ok
-
-			// instance retains shared lock, so nobody can rebuild and change opened
-			// files without us knowing
-
-		} else {
-			// being rebuilt, open new log
-			$doMergeFirst = TRUE;
-			$openNewLog = TRUE;
-		}
-
-		if ($reopen && $openNewLog) {
-			throw new \LogicException('Something bad with algorithm.');
-		}
-
-		if ($doMergeFirst) {
-			$this->logMerge = $this->mergeLogFile($this->logHandle, 0);
-		}
-
-		if ($reopen) {
-			fclose($this->logHandle);
-			if (!($this->logHandle = @fopen($logfile = $this->file . self::EXTLOG, 'a+b'))) {
-				throw new \InvalidStateException("Cannot open logfile '$logfile'.");
-			}
-
-			if (!flock($this->logHandle, LOCK_SH)) {
-				throw new \InvalidStateException('Cannot acquite shared lock on log.');
-			}
-		}
-
-		if ($openNewLog) {
-			fclose($this->logHandle);
-			if (!($this->logHandle = @fopen($logfile = $this->file . self::EXTLOGNEW, 'a+b'))) { // intentionally @
-				throw new \InvalidStateException("Cannot open logfile '$logfile'.");
-			}
-
-			$this->isLogNew = TRUE;
-		}
-
-		$this->logMerge = $this->mergeLogFile($this->logHandle, 0, $this->logMerge);
-		$this->logMergeP = ftell($this->logHandle);
-
-		// empty-log Windows fix
-		if ($this->logMergeP === 0) {
-			if (!flock($this->logHandle, LOCK_EX)) {
-				throw new \InvalidStateException('Cannot acquite exclusive lock on log.');
-			}
-
-			$data = serialize(array());
-			$data = pack('N', strlen($data)) . $data;
-			$written = fwrite($this->logHandle, $data);
-			if ($written === FALSE || $written !== strlen($data)) {
-				throw new \InvalidStateException('Cannot write empty packet to log.');
-			}
-
-			if (!flock($this->logHandle, LOCK_SH)) {
-				throw new \InvalidStateException('Cannot acquite shared lock on log.');
-			}
 		}
 	}
 
@@ -305,605 +168,109 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	public function write($key, array $dependencies)
 	{
-		$log = array();
-		$delete = $this->get(self::ENTRIES, $key);
+		$this->lock();
 
-		if ($delete !== NULL && isset($delete[$key])) {
-			foreach ($delete[$key] as $id) {
-				list($sectionName, $k) = explode(':', $id, 2);
-				$sectionName = intval($sectionName);
-				if (!isset($log[$sectionName])) {
-					$log[$sectionName] = array();
-				}
+		$priority = !isset($dependencies[Cache::PRIORITY]) ? FALSE : (int) $dependencies[Cache::PRIORITY];
+		$tags = empty($dependencies[Cache::TAGS]) ? FALSE : (array) $dependencies[Cache::TAGS];
 
-				if (!isset($log[$sectionName][self::DELETE])) {
-					$log[$sectionName][self::DELETE] = array();
-				}
+		$exists = FALSE;
+		$keyHash = crc32($key);
+		list($entriesNodeId, $entriesNode) = $this->findIndexNode(self::ENTRIES, $keyHash);
 
-				$log[$sectionName][self::DELETE][$k][] = $key;
-			}
-		}
-
-		if (!empty($dependencies[Cache::TAGS])) {
-			if (!isset($log[self::TAGS])) {
-				$log[self::TAGS] = array();
-			}
-
-			if (!isset($log[self::TAGS][self::ADD])) {
-				$log[self::TAGS][self::ADD] = array();
-			}
-
-			foreach ((array) $dependencies[Cache::TAGS] as $tag) {
-				$log[self::TAGS][self::ADD][$tag] = (array) $key;
-			}
-		}
-
-		if (!empty($dependencies[Cache::PRIORITY])) {
-			if (!isset($log[self::PRIORITY])) {
-				$log[self::PRIORITY] = array();
-			}
-
-			if (!isset($log[self::PRIORITY][self::ADD])) {
-				$log[self::PRIORITY][self::ADD] = array();
-			}
-
-			$log[self::PRIORITY][self::ADD][sprintf('%010u', (int) $dependencies[Cache::PRIORITY])] = (array) $key;
-		}
-
-		if (empty($log)) {
-			return ;
-		}
-
-		$entriesSection = array(self::ADD => array());
-
-		foreach ($log as $sectionName => $section) {
-			if (!isset($section[self::ADD])) {
-				continue;
-			}
-
-			foreach ($section[self::ADD] as $k => $_) {
-				$entriesSection[self::ADD][$key][] = "$sectionName:$k";
-			}
-		}
-
-		$entriesSection[self::ADD][$key][] = self::ENTRIES . ':' . $key;
-		$log[self::ENTRIES] = $entriesSection;
-
-		$this->log($log);
-	}
-
-
-
-	/**
-	 * Adds item to log.
-	 * @param  array
-	 * @return bool
-	 */
-	private function log(array $data)
-	{
-		$data = $this->mergeLogRecords(array(), $data);
-
-		// let's assume the data won't be larger than filesystem block size, so it
-		// should be atomic
-		$data = serialize($data);
-		$data = pack('N', strlen($data)) . $data;
-
-		$written = fwrite($this->logHandle, $data);
-		if ($written === FALSE || $written !== strlen($data)) {
-			throw new \InvalidStateException('Cannot write to log.');
-		}
-
-
-		// rebuild main journal file if needed
-		if (!$this->isLogNew) {
-			fseek($this->logHandle, 0, SEEK_END);
-			$size = ftell($this->logHandle);
-			if ($size > self::LOGMAXSIZE) {
-				$this->rebuild();
-			}
-		}
-
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Rebuilds main journal file.
-	 * @return bool
-	 */
-	private function rebuild()
-	{
-		if (!flock($this->logHandle, LOCK_EX | LOCK_NB)) {
-			// already being rebuilt
-			return TRUE;
-		}
-
-		if (!($newhandle = @fopen($this->file . self::EXTNEW, 'wb'))) { // intentionally @
-			flock($this->logHandle, LOCK_UN);
-			return FALSE;
-		}
-
-		// get modifications
-		$merged = $this->mergeLogFile($this->logHandle);
-
-		$sections = array_unique(
-			array_merge(array_keys($this->sections), array_keys($merged)),
-			SORT_NUMERIC
-		);
-		sort($sections);
-
-		// determine new sections
-		$offset = 4096; // 4 KiB for header
-		$newsections = array();
-
-		foreach ($sections as $section) {
-			$maxKeyLength = 0;
-			$keyCount = 0;
-
-			if (isset($this->sections[$section])) {
-				$maxKeyLength = $this->sections[$section]->keyLength;
-				$keyCount = $this->sections[$section]->keyCount;
-			}
-
-			if (isset($merged[$section][self::ADD])) {
-				foreach ($merged[$section][self::ADD] as $k => $_) {
-					if (($len = strlen((string) $k)) > $maxKeyLength) {
-						$maxKeyLength = $len;
+		if (isset($entriesNode[$keyHash])) {
+			$entries = $this->mergeIndexData($entriesNode[$keyHash]);
+			foreach ($entries as $link => $foo) {
+				$dataNode = $this->getNode($link >> self::BITROT);
+				if ($dataNode[$link][self::KEY] === $key) {
+					if ($dataNode[$link][self::TAGS] == $tags && $dataNode[$link][self::PRIORITY] === $priority)  { // is same
+						if ($dataNode[$link][self::DELETED]) {
+							$dataNode[$link][self::DELETED] = FALSE;
+							$this->saveNode($link >> self::BITROT, $dataNode);
+						}
+						$exists = TRUE;
+					} else { // Alredy exists, but with other tags or priority
+						$toDelete = array();
+						foreach ($dataNode[$link][self::TAGS] as $tag) {
+							$toDelete[self::TAGS][$tag][$link] = TRUE;
+						}
+				 		if ($dataNode[$link][self::PRIORITY] !== FALSE) {
+				 			$toDelete[self::PRIORITY][$dataNode[$link][self::PRIORITY]][$link] = TRUE;
+				 		}
+				 		$toDelete[self::ENTRIES][$keyHash][$link] = TRUE;
+				 		$this->cleanFromIndex($toDelete);
+				 		unset($dataNode[$link]);
+				 		$this->saveNode($link >> self::BITROT, $dataNode);
 					}
-
-					$keyCount++; // let's assume that everything to add is not already in there
+					break;
 				}
 			}
-
-			$newsections[$section] = (object) array(
-				'keyLength' => $maxKeyLength,
-				'keyCount' => $keyCount,
-				'offset' => $offset,
-			);
-
-			$offset += $keyCount * ($maxKeyLength + 2 * self::INT32);
 		}
 
-		$dataOffset = $offset;
-		$dataWrite = array();
-		$clean = isset($merged[self::CLEAN]);
-		unset($merged[self::CLEAN]);
-
-		// copy from old to new
-		foreach ($sections as $section) {
-			fseek($newhandle, $newsections[$section]->offset, SEEK_SET);
-
-			$pack = 'a' . $newsections[$section]->keyLength . 'NN';
-			$realKeyCount = 0;
-
-			foreach (self::$ops as $op) {
-				if (isset($merged[$section][$op])) {
-					reset($merged[$section][$op]);
-				}
-			}
-
-			if ($this->handle && isset($this->sections[$section]) && !$clean) {
-				$unpack = 'a' . $this->sections[$section]->keyLength . 'key/NvalueOffset/NvalueLength';
-				$recordSize = $this->sections[$section]->keyLength + 2 * self::INT32;
-				$batchSize = intval(65536 / $recordSize); // load at most 64 KiB in one batch
-				$i = 0;
-
-				while ($i < $this->sections[$section]->keyCount) {
-					// load batch
-					fseek($this->handle, $this->sections[$section]->offset + $i * $recordSize, SEEK_SET);
-					$size = min($batchSize, $this->sections[$section]->keyCount - $i);
-					$data = stream_get_contents($this->handle, $size * $recordSize);
-
-					if (!($data !== FALSE && strlen($data) === $size * $recordSize)) {
-						flock($this->logHandle, LOCK_UN);
-						fclose($newhandle);
-						return FALSE;
-					}
-
-					// process batch
-					for ($j = 0; $j < $size && $i < $this->sections[$section]->keyCount; ++$j, ++$i) {
-						$record = (object) unpack($unpack, substr($data, $j * $recordSize, $recordSize));
-						$value = NULL;
-
-						// check for deletes
-						if (isset($merged[$section][self::DELETE])) {
-
-							// skip already deleted
-							while (current($merged[$section][self::DELETE]) &&
-								strcmp(key($merged[$section][self::DELETE]), $record->key) < 0)
-							{
-								next($merged[$section][self::DELETE]);
-							}
-
-							// alter value of this key?
-							if (strcmp(key($merged[$section][self::DELETE]), $record->key) === 0) {
-								fseek($this->handle, $record->valueOffset, SEEK_SET);
-								$value = @unserialize(fread($this->handle, $record->valueLength)); // intentionally @
-
-								if ($value === FALSE) {
-									flock($this->logHandle, LOCK_UN);
-									fclose($newhandle);
-									return FALSE;
-								}
-
-								$value = array_flip($value);
-								foreach (current($merged[$section][self::DELETE]) as $delete) {
-									unset($value[$delete]);
-								}
-								$value = array_keys($value);
-
-								next($merged[$section][self::DELETE]);
-							}
-						}
-
-						// additions
-						if (isset($merged[$section][self::ADD])) {
-
-							// add not added yet
-							while (current($merged[$section][self::ADD]) &&
-								strcmp(key($merged[$section][self::ADD]), $record->key) < 0)
-							{
-								$dataWrite[] = ($serialized = serialize(current($merged[$section][self::ADD])));
-								$packed = pack($pack, key($merged[$section][self::ADD]), $dataOffset, strlen($serialized));
-
-								if (!$this->writeAll($newhandle, $packed)) {
-									flock($this->logHandle, LOCK_UN);
-									fclose($newhandle);
-									return FALSE;
-								}
-
-								$realKeyCount++;
-								$dataOffset += strlen($serialized);
-								next($merged[$section][self::ADD]);
-							}
-
-							// alter value of this key?
-							if (strcmp(key($merged[$section][self::ADD]), $record->key) === 0) {
-
-								// if value hasn't been already loaded, load it
-								if ($value === NULL) {
-									$value = $this->loadValue($this->handle, $record->valueOffset, $record->valueLength);
-								}
-
-								if ($value === NULL) {
-									flock($this->logHandle, LOCK_UN);
-									fclose($newhandle);
-									return FALSE;
-								}
-
-								$value = array_unique(array_merge(
-									$value,
-									current($merged[$section][self::ADD])
-								));
-
-								sort($value);
-
-								next($merged[$section][self::ADD]);
-							}
-						}
-
-
-						if (is_array($value) && !empty($value) || $value === NULL) {
-							if ($value !== NULL) {
-								$dataWrite[] = ($serialized = serialize($value));
-								$newValueLength = strlen($serialized);
-
-							} else {
-								$dataWrite[] = array($record->valueOffset, $record->valueLength);
-								$newValueLength = $record->valueLength;
-							}
-
-							if (!$this->writeAll($newhandle, pack($pack, $record->key, $dataOffset, $newValueLength))) {
-								flock($this->logHandle, LOCK_UN);
-								fclose($newhandle);
-								return FALSE;
-							}
-
-							$realKeyCount++;
-							$dataOffset += $newValueLength;
-						}
+		if ($exists === FALSE) {
+			// Magical constants
+			if (self::USEJSON) {
+				$requiredSize = strlen($key) + 45 + substr_count($key, '/');
+				if ($tags) {
+					foreach ($tags as $tag) {
+						$requiredSize += strlen($tag) + 3 + substr_count($tag, '/');
 					}
 				}
-			}
-
-			while (isset($merged[$section][self::ADD]) && current($merged[$section][self::ADD])) {
-				$dataWrite[] = ($serialized = serialize(current($merged[$section][self::ADD])));
-				$valueLength = strlen($serialized);
-				$packed = pack($pack, key($merged[$section][self::ADD]), $dataOffset, $valueLength);
-
-				if (!$this->writeAll($newhandle, $packed)) {
-					flock($this->logHandle, LOCK_UN);
-					fclose($newhandle);
-					return FALSE;
-				}
-
-				$realKeyCount++;
-				$dataOffset += $valueLength;
-				next($merged[$section][self::ADD]);
-			}
-
-			$newsections[$section]->keyCount = $realKeyCount;
-
-			if ($realKeyCount < 1) {
-				unset($newsections[$section]);
-			}
-		}
-
-		// write header
-		fseek($newhandle, 0, SEEK_SET);
-		$data = pack('NN', self::MAGIC, count($newsections));
-		foreach ($newsections as $name => $section) {
-			$data .= pack('NNNN', $name, $section->offset, $section->keyLength, $section->keyCount);
-		}
-
-		if (!$this->writeAll($newhandle, $data)) {
-			flock($this->logHandle, LOCK_UN);
-			fclose($newhandle);
-			return FALSE;
-		}
-
-		// write values data
-		fseek($newhandle, $offset, SEEK_SET);
-		reset($dataWrite);
-
-		while (!empty($dataWrite)) {
-			$data = array_shift($dataWrite);
-			if (is_string($data)) {
-
-				// join sequential writes
-				while (is_string(current($dataWrite))) {
-					$data .= array_shift($dataWrite);
-				}
-
-				if (!$this->writeAll($newhandle, $data)) {
-					flock($this->logHandle, LOCK_UN);
-					fclose($newhandle);
-					return FALSE;
-				}
+				$requiredSize += $priority ? strlen($priority) : 5;
 			} else {
-				if (!is_array($data)) {
-					throw new \LogicException('Something bad with algorithm, it has to be array.');
-				}
-
-				list($readOffset, $readLength) = $data;
-
-				// join sequential reads
-				while (!empty($dataWrite) && is_array(current($dataWrite))) {
-					list($nextReadOffset, $nextReadLength) = current($dataWrite);
-
-					if ($readOffset + $readLength !== $nextReadOffset) {
-						break;
+				$requiredSize = strlen($key) + 75;
+				if ($tags) {
+					foreach ($tags as $tag) {
+						$requiredSize += strlen($tag) + 13;
 					}
-
-					$readLength += $nextReadLength;
-					array_shift($dataWrite);
 				}
-
-				fseek($this->handle, $readOffset, SEEK_SET);
-
-				while (($readLength -=
-					stream_copy_to_stream($this->handle, $newhandle, $readLength)) > 0);
-			}
-		}
-
-
-		// final renaming etc.
-
-		fflush($newhandle); // I want fsync(2), dammit!
-		fclose($newhandle);
-		$newhandle = NULL;
-
-		if ($this->handle) {
-			fclose($this->handle);
-			$this->handle = NULL;
-		}
-
-		if (!@rename($this->file . self::EXTNEW, $this->file)) { // intentionally @
-			flock($this->logHandle, LOCK_UN);
-			return FALSE;
-		}
-
-		ftruncate($this->logHandle, 4 + strlen(serialize(array()))); // retain empty record at beginning
-		flock($this->logHandle, LOCK_UN);
-		fclose($this->logHandle);
-
-		if (!@rename($this->file . self::EXTLOGNEW, $this->file . self::EXTLOG) && // intentionally @
-			file_exists($this->file . self::EXTLOGNEW))
-		{
-			$this->isLogNew = TRUE;
-			$logfile = $this->file . self::EXTLOGNEW;
-
-		} else {
-			// someone else already renamed it, or it wasn't created by anyone else yet
-			$logfile = $this->file . self::EXTLOG;
-		}
-
-		if (!($this->logHandle = @fopen($logfile, 'a+b'))) { // intentionally @
-			throw new \InvalidStateException("Cannot reopen logfile '$logfile'.");
-		}
-
-		$this->logMerge = array();
-		$this->logMergeP = 0;
-
-		if (!($this->handle = @fopen($this->file, 'rb'))) {
-			throw new \InvalidStateException("Cannot reopen file '$this->file'.");
-		}
-
-		clearstatcache();
-		$this->mtime = (int) @filemtime($this->file);
-		$this->sections = $newsections;
-
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Writes all data to handle.
-	 * @param  resource
-	 * @param  string
-	 * @return bool TRUE if everything is ok
-	 */
-	private function writeAll($handle, $data)
-	{
-		$bytesLeft = strlen($data);
-
-		while ($bytesLeft > 0) {
-			$written = fwrite($handle, substr($data, strlen($data) - $bytesLeft));
-			if ($written === FALSE) {
-				return FALSE;
-			}
-			$bytesLeft -= $written;
-		}
-
-		return TRUE;
-	}
-
-
-
-	/**
-	 * Loads one value from given handle.
-	 * @param  resource
-	 * @param  int
-	 * @param  int
-	 * @return array|NULL
-	 */
-	private function loadValue($handle, $offset, $length)
-	{
-		fseek($handle, $offset, SEEK_SET);
-		$data = '';
-		$bytesLeft = $length;
-
-		while ($bytesLeft > 0) {
-			$read = fread($handle, $bytesLeft);
-			if ($read === FALSE) {
-				return NULL;
+				$requiredSize += $priority ? 10 : 1;
 			}
 
-			$data .= $read;
-			$bytesLeft -= strlen($read);
-		}
-
-		$value = @unserialize($data); // intentionally @
-
-		if ($value === FALSE) {
-			return NULL;
-		}
-
-		return $value;
-	}
-
-
-
-	/**
-	 * Merges all records in given handle into one record.
-	 * @param  resource
-	 * @return array|NULL
-	 */
-	private function mergeLogFile($handle, $startp = 0, $merged = array())
-	{
-		fseek($handle, $startp, SEEK_SET);
-
-		while (!feof($handle) && strlen($data = fread($handle, self::INT32)) === self::INT32) {
-			list(,$size) = unpack('N', $data);
-			$data = @unserialize(fread($handle, $size)); // intentionally @
+			$freeDataNode = $this->findFreeDataNode($requiredSize);
+			$data = $this->getNode($freeDataNode);
 
 			if ($data === FALSE) {
-				continue; // skip record
+				$data = array(
+					self::INFO => array(
+						self::LASTINDEX => ($freeDataNode << self::BITROT),
+						self::TYPE => self::DATA,
+					)
+				);
 			}
 
-			$merged = $this->mergeLogRecords($merged, $data);
-		}
+			$dataNodeKey = ++$data[self::INFO][self::LASTINDEX];
+			$data[$dataNodeKey] = array(
+				self::KEY => $key,
+				self::TAGS => $tags ? $tags : array(),
+				self::PRIORITY => $priority,
+				self::DELETED => FALSE,
+			);
 
-		ksort($merged);
+			$this->saveNode($freeDataNode, $data);
 
-		return $merged;
-	}
+			// Save to entries tree, ...
+			$entriesNode[$keyHash][$dataNodeKey] = 1;
+			$this->saveNode($entriesNodeId, $entriesNode);
 
-
-
-	/**
-	 * Merges log records.
-	 * @param  array
-	 * @param  array
-	 * @return array
-	 */
-	private function mergeLogRecords(array $a, array $b)
-	{
-		$clean = isset($a[self::CLEAN]);
-		unset($a[self::CLEAN], $b[self::CLEAN]);
-
-		if (isset($b[self::CLEAN])) {
-			return $b;
-		}
-
-		foreach ($b as $section => $data) {
-			if (!isset($a[$section])) {
-				$a[$section] = array();
-			}
-
-			foreach (self::$ops as $op) {
-				if (!isset($data[$op])) {
-					continue;
-				}
-
-				if (!isset($a[$section][$op])) {
-					$a[$section][$op] = array();
-				}
-
-				foreach ($data[$op] as $k => $v) {
-					if (!isset($a[$section][$op][$k])) {
-						$a[$section][$op][$k] = array();
-					}
-
-					$a[$section][$op][$k] = array_unique(array_merge(
-						$a[$section][$op][$k],
-						$v
-					));
-
-					if (isset($a[$section][self::$ops[$op]][$k])) {
-						$a[$section][self::$ops[$op]][$k] =
-							array_flip($a[$section][self::$ops[$op]][$k]);
-
-						foreach ($v as $unsetk) {
-							unset($a[$section][self::$ops[$op]][$k][$unsetk]);
-						}
-
-						$a[$section][self::$ops[$op]][$k] =
-							array_keys($a[$section][self::$ops[$op]][$k]);
-					}
+			// ...tags tree...
+			if ($tags) {
+				foreach ($tags as $tag) {
+					list($nodeId, $node) = $this->findIndexNode(self::TAGS, $tag);
+					$node[$tag][$dataNodeKey] = 1;
+					$this->saveNode($nodeId, $node);
 				}
 			}
 
-			foreach (self::$ops as $op) {
-				if (!isset($a[$section][$op])) {
-					continue;
-				}
-
-				foreach ($a[$section][$op] as $k => $v) {
-					if (empty($v)) {
-						unset($a[$section][$op][$k]);
-						continue;
-					}
-
-					sort($a[$section][$op][$k]);
-				}
-
-				if (empty($a[$section][$op])) {
-					unset($a[$section][$op]);
-					continue;
-				}
-
-				ksort($a[$section][$op]);
+			// ...and priority tree.
+			if ($priority) {
+				list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
+				$node[$priority][$dataNodeKey] = 1;
+				$this->saveNode($nodeId, $node);
 			}
 		}
 
-		if ($clean) {
-			$a[self::CLEAN] = TRUE;
-		}
-
-		return $a;
+		$this->commit();
+		$this->unlock();
 	}
 
 
@@ -915,226 +282,881 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	public function clean(array $conditions)
 	{
+		$this->lock();
+
 		if (!empty($conditions[Cache::ALL])) {
-			$this->log(array(self::CLEAN => TRUE));
-			return NULL;
-
-		} else {
-			$log = array();
-			$entries = array();
-
-			if (!empty($conditions[Cache::TAGS])) {
-				$tagEntries = array();
-
-				foreach ((array) $conditions[Cache::TAGS] as $tag) {
-					$tagEntries = array_merge($tagEntries, $tagEntry = $this->get(self::TAGS, $tag));
-
-					if (isset($tagEntry[$tag])) {
-						foreach ($tagEntry[$tag] as $entry) {
-							$entries[] = $entry;
-						}
-					}
-				}
-
-				if (!empty($tagEntries)) {
-					if (!isset($log[self::TAGS])) {
-						$log[self::TAGS] = array();
-					}
-
-					$log[self::TAGS][self::DELETE] = $tagEntries;
-				}
-			}
-
-			if (isset($conditions[Cache::PRIORITY])) {
-				$priorityEntries = $this->getLte(self::PRIORITY, sprintf('%010u', (int) $conditions[Cache::PRIORITY]));
-				foreach ($priorityEntries as $priorityEntry) {
-					foreach ($priorityEntry as $entry) {
-						$entries[] = $entry;
-					}
-				}
-
-				if (!empty($priorityEntries)) {
-					if (!isset($log[self::PRIORITY])) {
-						$log[self::PRIORITY] = array();
-					}
-
-					$log[self::PRIORITY][self::DELETE] = $priorityEntries;
-				}
-			}
-
-			if (!empty($log)) {
-				if (!$this->log($log)) {
-					return array();
-				}
-			}
-
-			return array_values(array_unique($entries));
+			$this->nodeCache = $this->nodeChanged = $this->dataNodeFreeSpace = array();
+			$this->deleteAll();
+			$this->unlock();
+			return;
 		}
+
+		$toDelete = array(
+			self::TAGS => array(),
+			self::PRIORITY => array(),
+			self::ENTRIES => array()
+		);
+
+		$entries = array();
+
+		if (!empty($conditions[Cache::TAGS])) {
+			$entries = $this->cleanTags((array) $conditions[Cache::TAGS], $toDelete);
+		}
+
+		if (isset($conditions[Cache::PRIORITY])) {
+			$this->arrayAppend($entries, $this->cleanPriority((int) $conditions[Cache::PRIORITY], $toDelete));
+		}
+
+		$this->deletedLinks = array();
+		$this->cleanFromIndex($toDelete);
+
+		$this->commit();
+		$this->unlock();
+
+		return $entries;
 	}
 
 
 
 	/**
-	 * Gets value by section and key.
-	 * @param  int
-	 * @param  string
-	 * @return array
+	 * Cleans entries from journal by tags.
+	 * @param  array
+	 * @return array of removed items
 	 */
-	private function get($section, $key)
+	private function cleanTags(array $tags, array &$toDelete)
 	{
-		$this->reload();
+		$entries = array();
 
-		$ret = $this->logMerge;
+		foreach ($tags as $tag) {
+			list($nodeId, $node) = $this->findIndexNode(self::TAGS, $tag);
 
-		if (!isset($ret[self::CLEAN])) {
-			list($offset, $record) = $this->lowerBound($section, $key);
-
-			if ($offset !== -1 && $record->key === $key && !isset($ret[self::CLEAN])) {
-				$entries = $this->loadValue($this->handle, $record->valueOffset, $record->valueLength);
-
-				$ret = $this->mergeLogRecords(
-					array($section => array(self::ADD => array($key => $entries))),
-					$ret
-				);
+			if (isset($node[$tag])) {
+				$ent = $this->cleanLinks($this->mergeIndexData($node[$tag]), $toDelete);
+				$this->arrayAppend($entries, $ent);
 			}
 		}
 
-		return isset($ret[$section][self::ADD][$key])
-			? array($key => $ret[$section][self::ADD][$key])
-			: array();
+		return $entries;
 	}
 
 
 
 	/**
-	 * Gets values by section where key is less than or equal given key.
-	 * @param  int
-	 * @param  string
-	 * @return array
+	 * Cleans entries from journal by priority.
+	 * @param  integer
+	 * @param  array
+	 * @return array of removed items
 	 */
-	private function getLte($section, $key)
+	private function cleanPriority($priority, array &$toDelete)
 	{
-		$this->reload();
-		$ret = array();
+		list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
 
-		if (!isset($this->logMerge[self::CLEAN])) {
-			list($offset, $record) = $this->lowerBound($section, $key);
+		ksort($node);
 
-			if ($offset !== -1) {
-				$unpack = 'a' . $this->sections[$section]->keyLength . 'key/NvalueOffset/NvalueLength';
-				$recordSize = $this->sections[$section]->keyLength + 2 * self::INT32;
-				$batchSize = intval(65536 / $recordSize);
-				$i = 0;
-				$count = ($offset - $this->sections[$section]->offset) / $recordSize;
+		$allData = array();
 
-				if ($record->key === $key) {
-					$count += 1;
-				}
+		foreach ($node as $prior => $data) {
+			if ($prior === self::INFO) {
+				continue;
+			} elseif ($prior > $priority) {
+				break;
+			}
 
-				while ($i < $count) {
-					// load batch
-					fseek($this->handle, $this->sections[$section]->offset + $i * $recordSize, SEEK_SET);
-					$size = min($batchSize, $count - $i);
-					$data = stream_get_contents($this->handle, $size * $recordSize);
+			$this->arrayAppendKeys($allData, $this->mergeIndexData($data));
+		}
 
-					if (!($data !== FALSE && strlen($data) === $size * $recordSize)) {
-						return NULL;
-					}
+		$nodeInfo = $node[self::INFO];
+		while ($nodeInfo[self::PREVNODE] !== -1) {
+			$nodeId = $nodeInfo[self::PREVNODE];
+			$node = $this->getNode($nodeId);
 
-					// process batch
-					for ($j = 0; $j < $size && $i < $count; ++$j, ++$i) {
-						$record = (object) unpack($unpack, substr($data, $j * $recordSize, $recordSize));
-						$ret[$record->key] = $this->loadValue($this->handle, $record->valueOffset, $record->valueLength);
+			if ($node === FALSE) {
+				if (self::$debug) throw new \InvalidStateException("Cannot load node number $nodeId.");
+				break;
+			}
 
-						if ($ret[$record->key] === NULL) {
-							unset($ret[$record->key]);
-						}
-					}
-				}
+			$nodeInfo = $node[self::INFO];
+			unset($node[self::INFO]);
+
+			foreach ($node as $prior => $data) {
+				$this->arrayAppendKeys($allData, $this->mergeIndexData($data));
 			}
 		}
 
-		if (isset($this->logMerge[$section][self::DELETE])) {
-			$ret = $this->mergeLogRecords(
-				array($section => array(self::DELETE => $this->logMerge[$section][self::DELETE])),
-				array($section => array(self::ADD => $ret))
-			);
+		return $this->cleanLinks($allData, $toDelete);
+	}
 
-			if (!isset($ret[$section][self::ADD])) {
-				$ret = array();
 
-			} else {
-				$ret = $ret[$section][self::ADD];
+
+	/**
+	 * Cleans links from $data.
+	 * @param  array
+	 * @param  array
+	 * @return array of removed items
+	 */
+	private function cleanLinks(array $data, array &$toDelete)
+	{
+		$return = array();
+
+		$data = array_keys($data);
+		sort($data);
+		$max = count($data);
+		$data[] = 0;
+		$i = 0;
+
+		while ($i < $max) {
+			$searchLink = $data[$i];
+
+			if (isset($this->deletedLinks[$searchLink])) {
+				++$i;
+				continue;
 			}
-		}
 
-		if (isset($this->logMerge[$section][self::ADD])) {
-			foreach ($this->logMerge[$section][self::ADD] as $k => $v) {
-				if (strcmp($k, $key) > 0) {
+			$nodeId = $searchLink >> self::BITROT;
+			$node = $this->getNode($nodeId);
+
+			if ($node === FALSE) {
+				if (self::$debug) throw new \InvalidStateException('Cannot load node number ' . ($nodeId) . '.');
+				++$i;
+				continue;
+			}
+
+			do {
+				$link = $data[$i];
+
+				if (!isset($node[$link])){
+					if (self::$debug) throw new \InvalidStateException("Link with ID $searchLink is not in node ". ($nodeId) . '.');
+					continue;
+				} elseif (isset($this->deletedLinks[$link])) {
 					continue;
 				}
 
-				if (!isset($ret[$k])) {
-					$ret[$k] = array();
+				$nodeLink = &$node[$link];
+				if (!$nodeLink[self::DELETED]) {
+					$nodeLink[self::DELETED] = TRUE;
+					$return[] = $nodeLink[self::KEY];
+				} else {
+					foreach ($nodeLink[self::TAGS] as $tag) {
+						$toDelete[self::TAGS][$tag][$link] = TRUE;
+					}
+					if ($nodeLink[self::PRIORITY] !== FALSE) {
+						$toDelete[self::PRIORITY][$nodeLink[self::PRIORITY]][$link] = TRUE;
+					}
+					$toDelete[self::ENTRIES][crc32($nodeLink[self::KEY])][$link] = TRUE;
+					unset($node[$link]);
+					$this->deletedLinks[$link] = TRUE;
 				}
+			} while (($data[++$i] >> self::BITROT) == $nodeId);
 
-				$ret[$k] = array_values(array_unique(array_merge($ret[$k], $v)));
-			}
+			$this->saveNode($nodeId, $node);
 		}
 
-		return $ret;
+		return $return;
 	}
 
 
 
 	/**
-	 * Finds value by section and key.
-	 * @param  int
-	 * @param  string
-	 * @return (int,object) (-1,-1,-1) on failure, (upperOffset,0,0) if not found,
-	 *                      (offset,valueOffset,valueLength) otherwise
+	 * Remove links to deleted keys from index.
+	 * @param  array
 	 */
-	private function lowerBound($section, $key)
+	private function cleanFromIndex(array $toDeleteFromIndex)
 	{
-		if (!isset($this->sections[$section])) {
-			return array(-1, NULL);
-		}
+		foreach ($toDeleteFromIndex as $type => $toDelete) {
+			ksort($toDelete);
 
-		$l = 0;
-		$r = $this->sections[$section]->keyCount;
-		$unpack = 'a' . $this->sections[$section]->keyLength . 'key/NvalueOffset/NvalueLength';
-		$recordSize = $this->sections[$section]->keyLength + 2 * self::INT32;
+			while (!empty($toDelete)) {
+				reset($toDelete);
+				$searchKey = key($toDelete);
+				list($masterNodeId, $masterNode) = $this->findIndexNode($type, $searchKey);
 
-		while ($l < $r) {
-			$m = intval(($l + $r) / 2);
-			fseek($this->handle, $this->sections[$section]->offset + $m * $recordSize);
-			$data = stream_get_contents($this->handle, $recordSize);
+				if (!isset($masterNode[$searchKey])) {
+					if (self::$debug) throw new \InvalidStateException('Bad index.');
+					unset($toDelete[$searchKey]);
+					continue;
+				}
 
-			if (!($data !== FALSE && strlen($data) === $recordSize)) {
-				return array(-1, NULL);
+				foreach ($toDelete as $key => $links) {
+					if (isset($masterNode[$key])) {
+						foreach ($links as $link => $foo) {
+							if (isset($masterNode[$key][$link])) {
+								unset($masterNode[$key][$link], $links[$link]);
+							}
+						}
+
+						if (!empty($links) && isset($masterNode[$key][self::INDEXDATA])) {
+							$this->cleanIndexData($masterNode[$key][self::INDEXDATA], $links, $masterNode[$key]);
+						}
+
+						if (empty($masterNode[$key])) {
+							unset($masterNode[$key]);
+						}
+						unset($toDelete[$key]);
+					} else {
+						break;
+					}
+				}
+				$this->saveNode($masterNodeId, $masterNode);
 			}
-
-			$record = (object) unpack($unpack, $data);
-
-			if (strcmp($record->key, $key) < 0) {
-				$l = $m + 1;
-			} else {
-				$r = $m;
-			}
 		}
-
-		fseek($this->handle, $this->sections[$section]->offset + $l * $recordSize);
-		$data = stream_get_contents($this->handle, $recordSize);
-
-		if (!($data !== FALSE && strlen($data) === $recordSize)) {
-			return array(-1, NULL);
-		}
-
-		$record = (object) unpack($unpack, $data);
-
-		return array(
-			$this->sections[$section]->offset + $l * $recordSize,
-			$record,
-		);
 	}
+
+
+
+	/**
+	 * Merge data with index data in other nodes.
+	 * @param  array
+	 * @return array of merged items
+	 */
+	private function mergeIndexData(array $data)
+	{
+		while (isset($data[self::INDEXDATA])) {
+			$id = $data[self::INDEXDATA];
+			unset($data[self::INDEXDATA]);
+			$childNode = $this->getNode($id);
+
+			if ($childNode === FALSE) {
+				if (self::$debug) throw new \InvalidStateException("Cannot load node number $id.");
+				break;
+			}
+
+			$this->arrayAppendKeys($data, $childNode[self::INDEXDATA]);
+		}
+
+		return $data;
+	}
+
+
+
+	/**
+	 * Cleans links from other nodes.
+	 * @param  int
+	 * @param  array
+	 * @param  array
+	 * @return void
+	 */
+	private function cleanIndexData($nextNodeId, array $links, &$masterNodeLink)
+	{
+		$prev = -1;
+
+		while ($nextNodeId && !empty($links)) {
+			$nodeId = $nextNodeId;
+			$node = $this->getNode($nodeId);
+
+			if ($node === FALSE) {
+				if (self::$debug) throw new \InvalidStateException("Cannot load node number $nodeId.");
+				break;
+			}
+
+			foreach ($links as $link => $foo) {
+				if (isset($node[self::INDEXDATA][$link])) {
+					unset($node[self::INDEXDATA][$link], $links[$link]);
+				}
+			}
+
+			if (isset($node[self::INDEXDATA][self::INDEXDATA])) {
+				$nextNodeId = $node[self::INDEXDATA][self::INDEXDATA];
+			} else {
+				$nextNodeId = FALSE;
+			}
+
+			if (empty($node[self::INDEXDATA]) || (count($node[self::INDEXDATA]) === 1 && $nextNodeId)) {
+				if ($prev === -1) {
+					if ($nextNodeId === FALSE) {
+						unset($masterNodeLink[self::INDEXDATA]);
+					} else {
+						$masterNodeLink[self::INDEXDATA] = $nextNodeId;
+					}
+				} else {
+					$prevNode = $this->getNode($prev);
+					if ($prevNode === FALSE) {
+						if (self::$debug) throw new \InvalidStateException("Cannot load node number $prev.");
+					} else {
+						if ($nextNodeId === FALSE) {
+							unset($prevNode[self::INDEXDATA][self::INDEXDATA]);
+							if (empty($prevNode[self::INDEXDATA])) {
+								unset($prevNode[self::INDEXDATA]);
+							}
+						} else {
+							$prevNode[self::INDEXDATA][self::INDEXDATA] = $nextNodeId;
+						}
+
+						$this->saveNode($prev, $prevNode);
+					}
+				}
+				unset($node[self::INDEXDATA]);
+			} else {
+				$prev = $nodeId;
+			}
+
+			$this->saveNode($nodeId, $node);
+		}
+	}
+
+
+
+	/**
+	 * Get node from journal.
+	 * @param  integer
+	 * @return array
+	 */
+	private function getNode($id)
+	{
+		// Load from cache
+		if (isset($this->nodeCache[$id])) {
+			return $this->nodeCache[$id];
+		}
+
+		$binary = stream_get_contents($this->handle, self::NODESIZE, self::HEADERSIZE + self::NODESIZE * $id);
+
+		if (empty($binary)) {
+			// empty node, no Exception
+			return FALSE;
+		}
+
+		list(, $magic, $lenght) = unpack('N2', $binary);
+		if ($magic !== self::INDEXMAGIC && $magic !== self::DATAMAGIC) {
+			if (!empty($magic)) {
+				if (self::$debug) throw new \InvalidStateException("Node $id has malformed header.");
+				$this->deleteNode($id);
+			}
+			return FALSE;
+		}
+
+		$data = substr($binary, 2 * self::INT32SIZE, $lenght - 2 * self::INT32SIZE);
+
+		if (self::USEJSON) {
+			$node = @json_decode($data, TRUE);
+		} else {
+			$node = @unserialize($data);
+		}
+
+		if ($node === FALSE) {
+			$this->deleteNode($id);
+			if (self::$debug) throw new \InvalidStateException("Cannot deserialize node number $id.");
+			return FALSE;
+		}
+
+		// Save to cache and return
+		return $this->nodeCache[$id] = $node;
+	}
+
+
+
+	/**
+	 * Save node to cache.
+	 * @param  integer
+	 * @param  array
+	 * @return void
+	 */
+	private function saveNode($id, array $node)
+	{
+		if (count($node) === 1) { // Nod contains only INFO
+			$nodeInfo = $node[self::INFO];
+			if ($nodeInfo[self::TYPE] !== self::DATA) {
+
+				if ($nodeInfo[self::END] !== -1) {
+					$this->nodeCache[$id] = $node;
+					$this->nodeChanged[$id] = TRUE;
+					return;
+				}
+
+				if ($nodeInfo[self::MAX] === -1) {
+					$max = PHP_INT_MAX;
+				} else {
+					$max = $nodeInfo[self::MAX];
+				}
+
+				list(, , $parentId) = $this->findIndexNode($nodeInfo[self::TYPE], $max, $id);
+				if ($parentId != -1 && $parentId != $id) {
+					$parentNode = $this->getNode($parentId);
+					if ($parentNode === FALSE) {
+						if (self::$debug) throw new \InvalidStateException("Cannot load node number $parentId.");
+					} else {
+						if ($parentNode[self::INFO][self::END] == $id) {
+							if (count($parentNode) === 1) {
+								$parentNode[self::INFO][self::END] = -1;
+							} else {
+								end($parentNode);
+								$lastKey = key($parentNode);
+								$parentNode[self::INFO][self::END] = $parentNode[$lastKey];
+								unset($parentNode[$lastKey]);
+							}
+						} else {
+							unset($parentNode[$nodeInfo[self::MAX]]);
+						}
+
+						$this->saveNode($parentId, $parentNode);
+					}
+				}
+
+				if ($nodeInfo[self::TYPE] === self::PRIORITY) { // only priority tree has link to prevNode
+					if ($nodeInfo[self::MAX] === -1) {
+						if ($nodeInfo[self::PREVNODE] !== -1) {
+							$prevNode = $this->getNode($nodeInfo[self::PREVNODE]);
+							if ($prevNode === FALSE) {
+								if (self::$debug) throw new \InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREVNODE] . '.');
+							} else {
+								$prevNode[self::INFO][self::MAX] = -1;
+								$this->saveNode($nodeInfo[self::PREVNODE], $prevNode);
+							}
+						}
+					} else {
+						list($nextId, $nextNode) = $this->findIndexNode($nodeInfo[self::TYPE], $nodeInfo[self::MAX] + 1, NULL, $id);
+						if ($nextId != -1 && $nextId != $id) {
+							$nextNode[self::INFO][self::PREVNODE] = $nodeInfo[self::PREVNODE];
+							$this->saveNode($nextId, $nextNode);
+						}
+					}
+				}
+			}
+			$this->nodeCache[$id] = FALSE;
+		} else {
+			$this->nodeCache[$id] = $node;
+		}
+		$this->nodeChanged[$id] = TRUE;
+	}
+
+
+
+	/**
+	 * Commit all changed nodes from cache to journal file.
+	 * @return void
+	 */
+	private function commit()
+	{
+		do {
+			foreach ($this->nodeChanged as $id => $foo) {
+				if ($this->commitNode($id, $this->nodeCache[$id])) {
+					unset($this->nodeChanged[$id]);
+				}
+			}
+		} while (!empty($this->nodeChanged));
+	}
+
+
+
+	/**
+	 * Commit node to journal file.
+	 * @param  integer
+	 * @param  array|bool
+	 * @return bool Sucessfully commited
+	 */
+	private function commitNode($id, $node)
+	{
+		if ($node === FALSE) {
+			if ($id < $this->lastNode) {
+				$this->lastNode = $id;
+			}
+			unset($this->nodeCache[$id]);
+			unset($this->dataNodeFreeSpace[$id]);
+			$this->deleteNode($id);
+			return TRUE;
+		}
+
+		if (self::USEJSON) {
+			$data = json_encode($node);
+		} else {
+			$data = serialize($node);
+		}
+
+		$dataSize = strlen($data) + 2 * self::INT32SIZE;
+
+		$isData = $node[self::INFO][self::TYPE] === self::DATA;
+		if ($dataSize > self::NODESIZE) {
+			if ($isData) {
+				throw new \InvalidStateException('Saving node is bigger than maximum node size.');
+			} else {
+				$this->bisectNode($id, $node);
+				return FALSE;
+			}
+		}
+
+		fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
+		$writen = fwrite($this->handle, pack('N2', $isData ? self::DATAMAGIC : self::INDEXMAGIC, $dataSize) . $data);
+		if ($writen === FALSE || $writen != $dataSize) {
+			throw new \InvalidStateException("Cannot write node number $id to journal.");
+		}
+
+		if ($this->lastNode < $id) {
+			$this->lastNode = $id;
+		}
+		if ($isData) {
+			$this->dataNodeFreeSpace[$id] = self::NODESIZE - $dataSize;
+		}
+
+		return TRUE;
+	}
+
+
+
+	/**
+	 * Find right node in B+tree. .
+	 * @param  string Tree type (TAGS, PRIORITY or ENTRIES)
+	 * @param  int    Searched item
+	 * @return array Node
+	 */
+	private function findIndexNode($type, $search, $childId = NULL, $prevId = NULL)
+	{
+		$nodeId = self::$startNode[$type];
+
+		$parentId = -1;
+		while (TRUE) {
+			$node = $this->getNode($nodeId);
+
+			if ($node === FALSE) {
+				return array(
+					$nodeId,
+					array(
+						self::INFO => array(
+							self::TYPE => $type,
+							self::ISLEAF => TRUE,
+							self::PREVNODE => -1,
+							self::END => -1,
+							self::MAX => -1,
+						)
+					),
+					$parentId,
+				); // Init empty node
+			}
+
+			if ($node[self::INFO][self::ISLEAF] || $nodeId === $childId || $node[self::INFO][self::PREVNODE] === $prevId) {
+				return array($nodeId, $node, $parentId);
+			}
+
+			$parentId = $nodeId;
+
+			if (isset($node[$search])) {
+				$nodeId = $node[$search];
+			} else {
+				foreach ($node as $key => $childNode) {
+					if ($key > $search and $key !== self::INFO) {
+						$nodeId = $childNode;
+						continue 2;
+					}
+				}
+
+				$nodeId = $node[self::INFO][self::END];
+			}
+		}
+	}
+
+
+
+	/**
+	 * Find complete free node.
+	 * @param  integer
+	 * @return array|integer Node ID
+	 */
+	private function findFreeNode($count = 1)
+	{
+		$id = $this->lastNode;
+		$nodesId = array();
+
+		do {
+			if (isset($this->nodeCache[$id])) {
+				++$id;
+				continue;
+			}
+
+			$offset = self::HEADERSIZE + self::NODESIZE * $id;
+
+			$binary = stream_get_contents($this->handle, self::INT32SIZE, $offset);
+
+			if (empty($binary)) {
+				$nodesId[] = $id;
+			} else {
+				list(, $magic) = unpack('N', $binary);
+				if ($magic != self::INDEXMAGIC && $magic != self::DATAMAGIC) {
+					$nodesId[] = $from;
+				}
+			}
+
+			++$id;
+		} while (count($nodesId) != $count);
+
+		if ($count == 1) {
+			return $nodesId[0];
+		} else {
+			return $nodesId;
+		}
+	}
+
+
+
+	/**
+	 * Find free data node that has $size bytes of free space.
+	 * @param  integer size in bytes
+	 * @return integer Node ID
+	 */
+	private function findFreeDataNode($size)
+	{
+		foreach ($this->dataNodeFreeSpace as $id => $freeSpace) {
+			if ($freeSpace > $size) {
+				return $id;
+			}
+		}
+
+		$id = self::$startNode[self::DATA];
+		while (TRUE) {
+			if (isset($this->dataNodeFreeSpace[$id]) || isset($this->nodeCache[$id])) {
+				++$id;
+				continue;
+			}
+
+			$offset = self::HEADERSIZE + self::NODESIZE * $id;
+			$binary = stream_get_contents($this->handle, 2 * self::INT32SIZE, $offset);
+
+			if (empty($binary)) {
+				$this->dataNodeFreeSpace[$id] = self::NODESIZE;
+				return $id;
+			}
+
+			list(, $magic, $nodeSize) = unpack('N2', $binary);
+			if (empty($magic)) {
+				$this->dataNodeFreeSpace[$id] = self::NODESIZE;
+				return $id;
+			} elseif ($magic === self::DATAMAGIC) {
+				$freeSpace = self::NODESIZE - $nodeSize;
+				$this->dataNodeFreeSpace[$id] = $freeSpace;
+
+				if ($freeSpace > $size) {
+					return $id;
+				}
+			}
+
+			++$id;
+		}
+	}
+
+
+
+	/**
+	 * Bisect node or when has only one key, move part to data node.
+	 * @param  integer Node ID
+	 * @param  array Node
+	 * @return void
+	 */
+	private function bisectNode($id, array $node)
+	{
+		$nodeInfo = $node[self::INFO];
+		unset($node[self::INFO]);
+
+		if (count($node) === 1) {
+			$key = key($node);
+
+			$dataId = $this->findFreeDataNode(self::NODESIZE);
+			$this->saveNode($dataId, array(
+				self::INDEXDATA => $node[$key],
+				self::INFO => array(
+					self::TYPE => self::DATA,
+					self::LASTINDEX => ($dataId << self::BITROT),
+			)));
+
+			unset($node[$key]);
+			$node[$key][self::INDEXDATA] = $dataId;
+			$node[self::INFO] = $nodeInfo;
+
+			$this->saveNode($id, $node);
+			return;
+		}
+
+		ksort($node);
+		$halfCount = ceil(count($node) / 2);
+
+		list($first, $second) = array_chunk($node, $halfCount, TRUE);
+
+		end($first);
+		$halfKey = key($first);
+
+		if ($id <= 2) { // Root
+			list($firstId, $secondId) = $this->findFreeNode(2);
+
+			$first[self::INFO] = array(
+				self::TYPE => $nodeInfo[self::TYPE],
+				self::ISLEAF => $nodeInfo[self::ISLEAF],
+				self::PREVNODE => -1,
+				self::END => -1,
+				self::MAX => $halfKey,
+			);
+			$this->saveNode($firstId, $first);
+
+			$second[self::INFO] = array(
+				self::TYPE => $nodeInfo[self::TYPE],
+				self::ISLEAF => $nodeInfo[self::ISLEAF],
+				self::PREVNODE => $firstId,
+				self::END => $nodeInfo[self::END],
+				self::MAX => -1,
+			);
+			$this->saveNode($secondId, $second);
+
+			$parentNode = array(
+				self::INFO => array(
+					self::TYPE => $nodeInfo[self::TYPE],
+					self::ISLEAF => FALSE,
+					self::PREVNODE => -1,
+					self::END => $secondId,
+					self::MAX => -1,
+				),
+				$halfKey => $firstId,
+			);
+			$this->saveNode($id, $parentNode);
+		} else {
+			$firstId = $this->findFreeNode();
+
+			$first[self::INFO] = array(
+				self::TYPE => $nodeInfo[self::TYPE],
+				self::ISLEAF => $nodeInfo[self::ISLEAF],
+				self::PREVNODE => $nodeInfo[self::PREVNODE],
+				self::END => -1,
+				self::MAX => $halfKey,
+			);
+			$this->saveNode($firstId, $first);
+
+			$second[self::INFO] = array(
+				self::TYPE => $nodeInfo[self::TYPE],
+				self::ISLEAF => $nodeInfo[self::ISLEAF],
+				self::PREVNODE => $firstId,
+				self::END => $nodeInfo[self::END],
+				self::MAX => $nodeInfo[self::MAX],
+			);
+			$this->saveNode($id, $second);
+
+			list(,, $parent) = $this->findIndexNode($nodeInfo[self::TYPE], $halfKey);
+			$parentNode = $this->getNode($parent);
+			if ($parentNode === FALSE) {
+				if (self::$debug) throw new \InvalidStateException("Cannot load node number $parent.");
+			} else {
+				$parentNode[$halfKey] = $firstId;
+				ksort($parentNode); // Parent index must be always sorted.
+				$this->saveNode($parent, $parentNode);
+			}
+		}
+	}
+
+
+
+	/**
+	 * Commit header to journal file.
+	 * @return void
+	 */
+	private function headerCommit()
+	{
+		fseek($this->handle, self::INT32SIZE);
+		@fwrite($this->handle, pack('N', $this->lastNode));  // @, save is not necceseary
+	}
+
+
+
+	/**
+	 * Remove node from journal file.
+	 * @param  integer
+	 * @return void
+	 */
+	private function deleteNode($id)
+	{
+		fseek($this->handle, 0, SEEK_END);
+		$end = ftell($this->handle);
+
+		if ($end <= (self::HEADERSIZE + self::NODESIZE * ($id + 1))) {
+			$packedNull = pack('N', 0);
+
+			do {
+				$binary = stream_get_contents($this->handle, self::INT32SIZE, (self::HEADERSIZE + self::NODESIZE * --$id));
+			} while (empty($binary) || $binary === $packedNull);
+
+			if (!ftruncate($this->handle, self::HEADERSIZE + self::NODESIZE * ($id + 1))) {
+				throw new \InvalidStateException("Cannot truncate journal file.");
+			}
+		} else {
+			fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
+			$writen = fwrite($this->handle, pack('N', 0));
+			if ($writen === FALSE || $writen !== self::INT32SIZE) {
+				throw new \InvalidStateException("Cannot delete node number $id from journal.");
+			}
+		}
+	}
+
+
+
+	/**
+	 * Complete delete all nodes from file.
+	 * @return void
+	 */
+	private function deleteAll()
+	{
+		if (!ftruncate($this->handle, self::HEADERSIZE)) {
+			throw new \InvalidStateException("Cannot truncate journal file.");
+		}
+	}
+
+
+
+	/**
+	 * Lock file for writing and reading and delete node cache when file has changed.
+	 * @return void
+	 */
+	private function lock()
+	{
+		if ($this->handle) {
+			if (!flock($this->handle, LOCK_EX)) {
+				throw new \InvalidStateException('Cannot acquite exclusive lock on journal.');
+			}
+			if ($this->lastModTime !== NULL) {
+				clearstatcache();
+				if ($this->lastModTime < @filemtime($this->file)) {
+					$this->nodeCache = $this->dataNodeFreeSpace = array();
+				}
+			}
+		}
+	}
+
+
+
+	/**
+	 * Unlock file and save last modified time.
+	 * @return void
+	 */
+	private function unlock()
+	{
+		if ($this->handle) {
+			fflush($this->handle);
+			flock($this->handle, LOCK_UN);
+			clearstatcache();
+			$this->lastModTime = @filemtime($this->file);
+		}
+	}
+
+
+
+	/**
+	 * Append $append to $array
+	 * This function is mutch faster then $array = array_merge($array, $append)
+	 * @param  array
+	 * @param  array
+	 * @return void
+	 */
+	private function arrayAppend(array &$array, array $append)
+	{
+		foreach ($append as $value) {
+			$array[] = $value;
+		}
+	}
+
+
+
+	/**
+	 * Append $append to $array with preserve keys
+	 * This function is mutch faster then $array = $array + $append
+	 * @param  array
+	 * @param  array
+	 * @return void
+	 */
+	private function arrayAppendKeys(array &$array, array $append)
+	{
+		foreach ($append as $key => $value) {
+			$array[$key] = $value;
+		}
+	}
+
 }
