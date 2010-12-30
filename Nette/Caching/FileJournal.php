@@ -89,6 +89,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	private $nodeChanged = array();
 
 	/** @var array */
+	private $toCommit = array();
+
+	/** @var array */
 	private $deletedLinks = array();
 
 	/** @var array Free space in data nodes */
@@ -134,15 +137,15 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		if (!$this->handle) {
 			throw new \InvalidStateException("Cannot open journal file '$this->file'.");
 		}
-		
+
 		if (!flock($this->handle, LOCK_SH)) {
 		  throw new \InvalidStateException('Cannot acquite shared lock on journal.');
 		}
 
 		$header = stream_get_contents($this->handle, 2 * self::INT32SIZE, 0);
-		
+
 		flock($this->handle, LOCK_UN);
-		
+
 		list(, $fileMagic, $this->lastNode) = unpack('N2', $header);
 
 		if ($fileMagic !== self::FILEMAGIC) {
@@ -734,22 +737,27 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	{
 		do {
 			foreach ($this->nodeChanged as $id => $foo) {
-				if ($this->commitNode($id, $this->nodeCache[$id])) {
+				if ($this->prepareNode($id, $this->nodeCache[$id])) {
 					unset($this->nodeChanged[$id]);
 				}
 			}
 		} while (!empty($this->nodeChanged));
+
+		foreach ($this->toCommit as $node => $str) {
+			$this->commitNode($node, $str);
+		}
+		$this->toCommit = array();
 	}
 
 
 
 	/**
-	 * Commit node to journal file.
+	 * Prepare node to journal file structure.
 	 * @param  integer
 	 * @param  array|bool
 	 * @return bool Sucessfully commited
 	 */
-	private function commitNode($id, $node)
+	private function prepareNode($id, $node)
 	{
 		if ($node === FALSE) {
 			if ($id < $this->lastNode) {
@@ -779,11 +787,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			}
 		}
 
-		fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
-		$writen = fwrite($this->handle, pack('N2', $isData ? self::DATAMAGIC : self::INDEXMAGIC, $dataSize) . $data);
-		if ($writen === FALSE || $writen !== $dataSize) {
-			throw new \InvalidStateException("Cannot write node number $id to journal.");
-		}
+		$this->toCommit[$id] = pack('N2', $isData ? self::DATAMAGIC : self::INDEXMAGIC, $dataSize) . $data;
 
 		if ($this->lastNode < $id) {
 			$this->lastNode = $id;
@@ -793,6 +797,23 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		}
 
 		return TRUE;
+	}
+
+
+
+	/**
+	 * Commit node string to journal file.
+	 * @param  integer
+	 * @param  string
+	 * @return void
+	 */
+	private function commitNode($id, $str)
+	{
+		fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
+		$writen = fwrite($this->handle, $str);
+		if ($writen === FALSE) {
+			throw new \InvalidStateException("Cannot write node number $id to journal.");
+		}
 	}
 
 
