@@ -710,7 +710,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $this->formatMacroArgs($content), 1);
+		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
 	}
 
 
