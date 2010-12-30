@@ -82,6 +82,12 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 	/** @var array of primary key values */
 	protected $keys = array();
+	
+	/** @var string */
+	protected $delimitedName;
+	
+	/** @var string */
+	protected $delimitedPrimary;
 
 
 
@@ -94,6 +100,8 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		$this->name = $table;
 		$this->connection = $connection;
 		$this->primary = $this->getPrimary($table);
+		$this->delimitedName = $this->connection->getSupplementalDriver()->delimite($this->name);
+		$this->delimitedPrimary = $this->connection->getSupplementalDriver()->delimite($this->primary);
 	}
 
 
@@ -124,7 +132,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	{
 		// can also use array_pop($this->where) instead of clone to save memory
 		$clone = clone $this;
-		$clone->where($this->primary, $key);
+		$clone->where($this->delimitedPrimary, $key);
 		return $clone->fetch();
 	}
 
@@ -151,7 +159,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function find($key)
 	{
-		return $this->where($this->primary, $key);
+		return $this->where($this->delimitedPrimary, $key);
 	}
 
 
@@ -275,7 +283,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function aggregation($function)
 	{
-		$query = "SELECT $function FROM $this->name";
+		$query = "SELECT $function FROM $this->delimitedName";
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
@@ -358,8 +366,8 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
 					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 					$primary = $this->getPrimary($table);
-					$prefix = $this->name . '.';
-					$join[$name] = ' ' . (!isset($join[$name]) && $key === 'where' && !isset($match[3]) ? 'INNER' : 'LEFT') . " JOIN $table" . ($table !== $name ? " AS $name" : '') . " ON $prefix$column = $name.$primary";
+					$prefix = $this->delimitedName . '.';
+					$join[$name] = ' ' . (!isset($join[$name]) && $key === 'where' && !isset($match[3]) ? 'INNER' : 'LEFT') . ' JOIN ' . $this->connection->getSupplementalDriver()->delimite($table) . ($table !== $name ? ' AS ' . $this->connection->getSupplementalDriver()->delimite($name) : '') . " ON $prefix" . $this->connection->getSupplementalDriver()->delimite($column) . ' = ' . $this->connection->getSupplementalDriver()->delimite($name) . '.' . $this->connection->getSupplementalDriver()->delimite($primary);
 				}
 			}
 		}
@@ -372,13 +380,13 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			$cols = implode(', ', $this->select);
 
 		} elseif ($this->prevAccessed) {
-			$cols = $prefix . implode(', ' . $prefix, array_keys($this->prevAccessed));
+			$cols = $prefix . implode(', ' . $prefix, array_map(callback($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
 
 		} else {
 			$cols = $prefix . '*';
 		}
 
-		return "SELECT{$this->topString()} $cols FROM $this->name" . implode($join) . $this->whereString();
+		return "SELECT{$this->topString()} $cols FROM $this->delimitedName" . implode($join) . $this->whereString();
 	}
 
 
@@ -512,7 +520,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			$data = iterator_to_array($data);
 		}
 
-		$return = $this->connection->query("INSERT INTO $this->name", $data);
+		$return = $this->connection->query("INSERT INTO $this->delimitedName", $data);
 
 		$this->rows = NULL;
 		if (!is_array($data)) {
@@ -538,7 +546,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			return 0;
 		}
 		// joins in UPDATE are supported only in MySQL
-		return $this->connection->queryArgs('UPDATE' . $this->topString() . " $this->name SET ?" . $this->whereString(),
+		return $this->connection->queryArgs('UPDATE' . $this->topString() . " $this->delimitedName SET ?" . $this->whereString(),
 			array_merge(array($data), $this->parameters))->rowCount();
 	}
 
@@ -550,7 +558,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function delete()
 	{
-		return $this->query('DELETE' . $this->topString() . " FROM $this->name" . $this->whereString())->rowCount();
+		return $this->query('DELETE' . $this->topString() . " FROM $this->delimitedName" . $this->whereString())->rowCount();
 	}
 
 
@@ -575,7 +583,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 				$keys[$row[$column]] = NULL;
 			}
 			$referenced = new TableSelection($table, $this->connection);
-			$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
+			$referenced->where($this->connection->getSupplementalDriver()->delimite($table) . '.' . $this->connection->getSupplementalDriver()->delimite($this->getPrimary($table)), array_keys($keys));
 		}
 		return $referenced;
 	}
@@ -591,7 +599,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	{
 		$column = $this->connection->databaseReflection->getReferencingColumn($table, $this->name);
 		$referencing = new GroupedTableSelection($table, $this, $column);
-		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
+		$referencing->where($this->connection->getSupplementalDriver()->delimite($table) . '.' . $this->connection->getSupplementalDriver()->delimite($column), array_keys((array) $this->rows)); // (array) - is NULL after insert
 		return $referencing;
 	}
 

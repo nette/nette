@@ -29,9 +29,12 @@ class GroupedTableSelection extends TableSelection
 	/** @var string grouping column name */
 	private $column;
 
+	/** @var string */
+	private $delimitedColumn;
+
 	/** @var */
 	public $active;
-
+	
 
 
 	public function __construct($name, TableSelection $refTable, $column)
@@ -39,6 +42,7 @@ class GroupedTableSelection extends TableSelection
 		parent::__construct($name, $refTable->connection);
 		$this->refTable = $refTable;
 		$this->column = $column;
+		$this->delimitedColumn = $refTable->connection->getSupplementalDriver()->delimite($this->column);
 	}
 
 
@@ -51,6 +55,7 @@ class GroupedTableSelection extends TableSelection
 	public function through($column)
 	{
 		$this->column = $column;
+		$this->delimitedColumn = $this->refTable->connection->getSupplementalDriver()->delimite($this->column);
 		return $this;
 	}
 
@@ -59,7 +64,7 @@ class GroupedTableSelection extends TableSelection
 	public function select($columns)
 	{
 		if (!$this->select) {
-			$this->select[] = "$this->name.$this->column";
+			$this->select[] = "$this->delimitedName.$this->delimitedColumn";
 		}
 		return parent::select($columns);
 	}
@@ -69,7 +74,7 @@ class GroupedTableSelection extends TableSelection
 	public function order($columns)
 	{
 		if (!$this->order) { // improve index utilization
-			$this->order[] = "$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : '');
+			$this->order[] = "$this->delimitedName.$this->delimitedColumn" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : '');
 		}
 		return parent::order($columns);
 	}
@@ -78,11 +83,11 @@ class GroupedTableSelection extends TableSelection
 
 	public function aggregation($function)
 	{
-		$query = "SELECT $function, $this->column FROM $this->name";
+		$query = "SELECT $function, $this->delimitedColumn FROM $this->delimitedName";
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
-		$query .= " GROUP BY $this->column";
+		$query .= " GROUP BY $this->delimitedColumn";
 		$aggregation = & $this->refTable->aggregation[$query];
 		if ($aggregation === NULL) {
 			$aggregation = array();
@@ -111,7 +116,7 @@ class GroupedTableSelection extends TableSelection
 	public function update(array $data)
 	{
 		$where = $this->where;
-		$this->where[0] = "$this->column = " . $this->connection->quote($this->active);
+		$this->where[0] = "$this->delimitedColumn = " . $this->connection->quote($this->active);
 		$return = parent::update($data);
 		$this->where = $where;
 		return $return;
@@ -122,7 +127,7 @@ class GroupedTableSelection extends TableSelection
 	public function delete()
 	{
 		$where = $this->where;
-		$this->where[0] = "$this->column = " . $this->connection->quote($this->active);
+		$this->where[0] = "$this->delimitedColumn = " . $this->connection->quote($this->active);
 		$return = parent::delete();
 		$this->where = $where;
 		return $return;
