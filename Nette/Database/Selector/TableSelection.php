@@ -82,10 +82,10 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 	/** @var array of primary key values */
 	protected $keys = array();
-	
+
 	/** @var string */
 	protected $delimitedName;
-	
+
 	/** @var string */
 	protected $delimitedPrimary;
 
@@ -350,7 +350,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 * Returns SQL query.
 	 * @return string
 	 */
-	public function __toString()
+	public function getSql()
 	{
 		$cols = $prefix = '';
 		$join = array();
@@ -405,13 +405,13 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		}
 
 		try {
-			$result = $this->query($this->__toString());
+			$result = $this->query($this->getSql());
 
 		} catch (\PDOException $exception) {
 			if (!$this->select && $this->prevAccessed) {
 				$this->prevAccessed = '';
 				$this->accessed = array();
-				$result = $this->query($this->__toString());
+				$result = $this->query($this->getSql());
 			} else {
 				throw $exception;
 			}
@@ -517,7 +517,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	public function insert($data)
 	{
 		if ($data instanceof TableSelection) {
-			$data = (string) $data;
+			$data = $data->getSql();
 
 		} elseif ($data instanceof \Traversable) {
 			$data = iterator_to_array($data);

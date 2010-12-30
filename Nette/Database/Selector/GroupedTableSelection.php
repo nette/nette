@@ -34,7 +34,7 @@ class GroupedTableSelection extends TableSelection
 
 	/** @var */
 	public $active;
-	
+
 
 
 	public function __construct($name, TableSelection $refTable, $column)
@@ -140,7 +140,7 @@ class GroupedTableSelection extends TableSelection
 			return;
 		}
 
-		$referencing = & $this->refTable->referencing[$this->__toString()];
+		$referencing = & $this->refTable->referencing[$this->getSql()];
 		if ($referencing === NULL) {
 			$limit = $this->limit;
 			$rows = count($this->refTable->rows);
