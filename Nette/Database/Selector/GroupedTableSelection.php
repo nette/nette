@@ -41,8 +41,7 @@ class GroupedTableSelection extends TableSelection
 	{
 		parent::__construct($name, $refTable->connection);
 		$this->refTable = $refTable;
-		$this->column = $column;
-		$this->delimitedColumn = $refTable->connection->getSupplementalDriver()->delimite($this->column);
+		$this->through($column);
 	}
 
 

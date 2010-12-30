@@ -100,8 +100,8 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		$this->name = $table;
 		$this->connection = $connection;
 		$this->primary = $this->getPrimary($table);
-		$this->delimitedName = $this->connection->getSupplementalDriver()->delimite($this->name);
-		$this->delimitedPrimary = $this->connection->getSupplementalDriver()->delimite($this->primary);
+		$this->delimitedName = $connection->getSupplementalDriver()->delimite($this->name);
+		$this->delimitedPrimary = $connection->getSupplementalDriver()->delimite($this->primary);
 	}
 
 
@@ -354,6 +354,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	{
 		$cols = $prefix = '';
 		$join = array();
+		$supplementalDriver = $this->connection->getSupplementalDriver();
 
 		foreach (array(
 			'where' => implode(',', $this->conditions),
@@ -367,7 +368,9 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 					$primary = $this->getPrimary($table);
 					$prefix = $this->delimitedName . '.';
-					$join[$name] = ' ' . (!isset($join[$name]) && $key === 'where' && !isset($match[3]) ? 'INNER' : 'LEFT') . ' JOIN ' . $this->connection->getSupplementalDriver()->delimite($table) . ($table !== $name ? ' AS ' . $this->connection->getSupplementalDriver()->delimite($name) : '') . " ON $prefix" . $this->connection->getSupplementalDriver()->delimite($column) . ' = ' . $this->connection->getSupplementalDriver()->delimite($name) . '.' . $this->connection->getSupplementalDriver()->delimite($primary);
+					$join[$name] = ' ' . (!isset($join[$name]) && $key === 'where' && !isset($match[3]) ? 'INNER' : 'LEFT')
+						. ' JOIN ' . $supplementalDriver->delimite($table) . ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
+						. " ON $prefix" . $supplementalDriver->delimite($column) . ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
 				}
 			}
 		}
@@ -380,7 +383,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			$cols = implode(', ', $this->select);
 
 		} elseif ($this->prevAccessed) {
-			$cols = $prefix . implode(', ' . $prefix, array_map(callback($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
+			$cols = $prefix . implode(', ' . $prefix, array_map(array($supplementalDriver, 'delimite'), array_keys($this->prevAccessed)));
 
 		} else {
 			$cols = $prefix . '*';
