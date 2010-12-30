@@ -126,7 +126,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			} else {
 				$writen = fwrite($init, pack('N2', self::FILEMAGIC, $this->lastNode));
 				fclose($init);
-				if ($writen === FALSE || $writen !== self::INT32SIZE * 2) {
+				if ($writen !== self::INT32SIZE * 2) {
 					throw new \InvalidStateException("Cannot write journal header.");
 				}
 			}
@@ -139,7 +139,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		}
 
 		if (!flock($this->handle, LOCK_SH)) {
-		  throw new \InvalidStateException('Cannot acquite shared lock on journal.');
+			throw new \InvalidStateException('Cannot acquite shared lock on journal.');
 		}
 
 		$header = stream_get_contents($this->handle, 2 * self::INT32SIZE, 0);
@@ -203,13 +203,13 @@ class FileJournal extends Nette\Object implements ICacheJournal
 						foreach ($dataNode[$link][self::TAGS] as $tag) {
 							$toDelete[self::TAGS][$tag][$link] = TRUE;
 						}
-				 		if ($dataNode[$link][self::PRIORITY] !== FALSE) {
-				 			$toDelete[self::PRIORITY][$dataNode[$link][self::PRIORITY]][$link] = TRUE;
-				 		}
-				 		$toDelete[self::ENTRIES][$keyHash][$link] = TRUE;
-				 		$this->cleanFromIndex($toDelete);
-				 		unset($dataNode[$link]);
-				 		$this->saveNode($link >> self::BITROT, $dataNode);
+						if ($dataNode[$link][self::PRIORITY] !== FALSE) {
+							$toDelete[self::PRIORITY][$dataNode[$link][self::PRIORITY]][$link] = TRUE;
+						}
+						$toDelete[self::ENTRIES][$keyHash][$link] = TRUE;
+						$this->cleanFromIndex($toDelete);
+						unset($dataNode[$link]);
+						$this->saveNode($link >> self::BITROT, $dataNode);
 					}
 					break;
 				}
@@ -1099,7 +1099,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		} else {
 			fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
 			$writen = fwrite($this->handle, pack('N', 0));
-			if ($writen === FALSE || $writen !== self::INT32SIZE) {
+			if ($writen !== self::INT32SIZE) {
 				throw new \InvalidStateException("Cannot delete node number $id from journal.");
 			}
 		}
