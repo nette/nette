@@ -611,7 +611,7 @@ class LatteMacros extends Nette\Object
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_cb->its[] = new Nette\SmartCachingIterator(' . preg_replace('# +as +#i', ') as ', $content, 1);
+		return '$iterator = $_cb->its[] = new Nette\SmartCachingIterator(' . preg_replace('#(.*)\s+as\s+#i', '$1) as ', $content, 1);
 	}
 
 
