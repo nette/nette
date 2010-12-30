@@ -134,8 +134,15 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		if (!$this->handle) {
 			throw new \InvalidStateException("Cannot open journal file '$this->file'.");
 		}
+		
+		if (!flock($this->handle, LOCK_SH)) {
+		  throw new \InvalidStateException('Cannot acquite shared lock on journal.');
+		}
 
 		$header = stream_get_contents($this->handle, 2 * self::INT32SIZE, 0);
+		
+		flock($this->handle, LOCK_UN);
+		
 		list(, $fileMagic, $this->lastNode) = unpack('N2', $header);
 
 		if ($fileMagic !== self::FILEMAGIC) {
