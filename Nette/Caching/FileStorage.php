@@ -69,6 +69,11 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 	public function __construct($dir, ICacheJournal $journal = NULL)
 	{
+		$this->dir = realpath($dir);
+		if ($this->dir === FALSE) {
+			throw new \DirectoryNotFoundException("Directory '$dir' not found.");
+		}
+
 		if (self::$useDirectories === NULL) {
 			// checks whether directory is writable
 			$uniq = uniqid('_', TRUE);
@@ -86,7 +91,6 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			@rmdir("$dir/$uniq"); // @ - directory may not already exist
 		}
 
-		$this->dir = $dir;
 		$this->useDirs = (bool) self::$useDirectories;
 		$this->journal = $journal;
 
