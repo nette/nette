@@ -115,7 +115,7 @@ class Connection extends PDO
 				$need = TRUE; break;
 			}
 		}
-		if (isset($need) || strpos(':', $statement) !== FALSE) {
+		if (isset($need) || strpos($statement, ':') !== FALSE && $this->preprocessor !== NULL) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
 
