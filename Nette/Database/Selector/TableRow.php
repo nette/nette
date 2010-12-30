@@ -194,24 +194,39 @@ class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function &__get($key)
 	{
-		$this->access($key);
-		if (!array_key_exists($key, $this->data)) {
-			$this->access($key, TRUE);
+		if (array_key_exists($key, $this->data)) {
+			$this->access($key);
+			return $this->data[$key];
+		}
 
-			$column = $this->table->connection->databaseReflection->getReferencedColumn($key, $this->table->name);
-			$this->access($column);
-			if (!array_key_exists($column, $this->data)) {
-				$this->access($column, TRUE);
-				trigger_error("Unknown column $key", E_USER_WARNING);
-				$ret = NULL;
-				return $ret;
-			}
+		$column = $this->table->connection->databaseReflection->getReferencedColumn($key, $this->table->name);
+		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
 			$referenced = $this->table->getReferencedTable($key);
 			$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
 			return $ret;
 		}
-		return $this->data[$key];
+
+		$this->access($key);
+		if (array_key_exists($key, $this->data)) {
+			return $this->data[$key];
+
+		} else {
+			$this->access($key, TRUE);
+
+			$this->access($column);
+			if (array_key_exists($column, $this->data)) {
+				$value = $this->data[$column];
+				$referenced = $this->table->getReferencedTable($key);
+				$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
+
+			} else {
+				$this->access($column, TRUE);
+				trigger_error("Unknown column $key", E_USER_WARNING);
+				$ret = NULL;
+			}
+			return $ret;
+		}
 	}
 
 
