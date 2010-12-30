@@ -146,7 +146,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	public function select($columns)
 	{
 		$this->__destruct();
-		$this->select[] = $columns;
+		$this->select[] = $this->tryDelimite($columns);
 		return $this;
 	}
 
@@ -182,7 +182,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 		$this->__destruct();
 
-		$this->conditions[] = $condition;
+		$this->conditions[] = $condition = $this->tryDelimite($condition);
 
 		$args = func_num_args();
 		if ($args !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
@@ -238,7 +238,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	public function order($columns)
 	{
 		$this->rows = NULL;
-		$this->order[] = $columns;
+		$this->order[] = $this->tryDelimite($columns);
 		return $this;
 	}
 
@@ -269,7 +269,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	public function group($columns, $having = '')
 	{
 		$this->__destruct();
-		$this->group = $columns;
+		$this->group = $this->tryDelimite($columns);
 		$this->having = $having;
 		return $this;
 	}
@@ -305,7 +305,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			$this->execute();
 			return count($this->data);
 		}
-		return $this->aggregation("COUNT($column)");
+		return $this->aggregation("COUNT({$this->tryDelimite($column)})");
 	}
 
 
@@ -317,7 +317,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function min($column)
 	{
-		return $this->aggregation("MIN($column)");
+		return $this->aggregation("MIN({$this->tryDelimite($column)})");
 	}
 
 
@@ -329,7 +329,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function max($column)
 	{
-		return $this->aggregation("MAX($column)");
+		return $this->aggregation("MAX({$this->tryDelimite($column)})");
 	}
 
 
@@ -341,7 +341,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function sum($column)
 	{
-		return $this->aggregation("SUM($column)");
+		return $this->aggregation("SUM({$this->tryDelimite($column)})");
 	}
 
 
@@ -472,6 +472,15 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 
 
+	protected function tryDelimite($s)
+	{
+		return preg_match('#^[a-z_][a-z0-9_.]*$#i', $s) // is identifier?
+			? implode('.', array_map(array($this->connection->getSupplementalDriver(), 'delimite'), explode('.', $s)))
+			: $s;
+	}
+
+
+
 	protected function query($query)
 	{
 		return $this->connection->queryArgs($query, $this->parameters);
@@ -586,7 +595,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 				$keys[$row[$column]] = NULL;
 			}
 			$referenced = new TableSelection($table, $this->connection);
-			$referenced->where($this->connection->getSupplementalDriver()->delimite($table) . '.' . $this->connection->getSupplementalDriver()->delimite($this->getPrimary($table)), array_keys($keys));
+			$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
 		}
 		return $referenced;
 	}
@@ -602,7 +611,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	{
 		$column = $this->connection->databaseReflection->getReferencingColumn($table, $this->name);
 		$referencing = new GroupedTableSelection($table, $this, $column);
-		$referencing->where($this->connection->getSupplementalDriver()->delimite($table) . '.' . $this->connection->getSupplementalDriver()->delimite($column), array_keys((array) $this->rows)); // (array) - is NULL after insert
+		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
 		return $referencing;
 	}
 
