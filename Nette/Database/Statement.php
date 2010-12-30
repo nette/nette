@@ -56,7 +56,7 @@ class Statement extends \PDOStatement
 		$time = microtime(TRUE);
 		parent::execute();
 		$this->time = microtime(TRUE) - $time;
-		$this->connection->onQuery($this, $params);
+		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
 
 		return $this;
 	}
