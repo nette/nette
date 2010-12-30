@@ -114,7 +114,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		// Create jorunal file when not exists
 		if (!file_exists($this->file)) {
-			$init = @fopen($this->file, 'xb');
+			$init = @fopen($this->file, 'xb'); // intentionally @
 			if (!$init) {
 				clearstatcache();
 				if (!file_exists($this->file)) {
@@ -182,7 +182,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			foreach ($entries as $link => $foo) {
 				$dataNode = $this->getNode($link >> self::BITROT);
 				if ($dataNode[$link][self::KEY] === $key) {
-					if ($dataNode[$link][self::TAGS] == $tags && $dataNode[$link][self::PRIORITY] === $priority)  { // is same
+					if ($dataNode[$link][self::TAGS] == $tags && $dataNode[$link][self::PRIORITY] === $priority)  { // intentionally ==, the order of tags does not matter
 						if ($dataNode[$link][self::DELETED]) {
 							$dataNode[$link][self::DELETED] = FALSE;
 							$this->saveNode($link >> self::BITROT, $dataNode);
@@ -446,7 +446,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 					unset($node[$link]);
 					$this->deletedLinks[$link] = TRUE;
 				}
-			} while (($data[++$i] >> self::BITROT) == $nodeId);
+			} while (($data[++$i] >> self::BITROT) === $nodeId);
 
 			$this->saveNode($nodeId, $node);
 		}
@@ -626,9 +626,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		$data = substr($binary, 2 * self::INT32SIZE, $lenght - 2 * self::INT32SIZE);
 
 		if (self::USEJSON) {
-			$node = @json_decode($data, TRUE);
+			$node = @json_decode($data, TRUE); // intentionally @
 		} else {
-			$node = @unserialize($data);
+			$node = @unserialize($data); // intentionally @
 		}
 
 		if ($node === FALSE) {
@@ -668,12 +668,12 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				}
 
 				list(, , $parentId) = $this->findIndexNode($nodeInfo[self::TYPE], $max, $id);
-				if ($parentId != -1 && $parentId != $id) {
+				if ($parentId !== -1 && $parentId !== $id) {
 					$parentNode = $this->getNode($parentId);
 					if ($parentNode === FALSE) {
 						if (self::$debug) throw new \InvalidStateException("Cannot load node number $parentId.");
 					} else {
-						if ($parentNode[self::INFO][self::END] == $id) {
+						if ($parentNode[self::INFO][self::END] === $id) {
 							if (count($parentNode) === 1) {
 								$parentNode[self::INFO][self::END] = -1;
 							} else {
@@ -703,7 +703,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 						}
 					} else {
 						list($nextId, $nextNode) = $this->findIndexNode($nodeInfo[self::TYPE], $nodeInfo[self::MAX] + 1, NULL, $id);
-						if ($nextId != -1 && $nextId != $id) {
+						if ($nextId !== -1 && $nextId !== $id) {
 							$nextNode[self::INFO][self::PREVNODE] = $nodeInfo[self::PREVNODE];
 							$this->saveNode($nextId, $nextNode);
 						}
@@ -774,7 +774,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
 		$writen = fwrite($this->handle, pack('N2', $isData ? self::DATAMAGIC : self::INDEXMAGIC, $dataSize) . $data);
-		if ($writen === FALSE || $writen != $dataSize) {
+		if ($writen === FALSE || $writen !== $dataSize) {
 			throw new \InvalidStateException("Cannot write node number $id to journal.");
 		}
 
@@ -867,15 +867,15 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				$nodesId[] = $id;
 			} else {
 				list(, $magic) = unpack('N', $binary);
-				if ($magic != self::INDEXMAGIC && $magic != self::DATAMAGIC) {
+				if ($magic !== self::INDEXMAGIC && $magic !== self::DATAMAGIC) {
 					$nodesId[] = $from;
 				}
 			}
 
 			++$id;
-		} while (count($nodesId) != $count);
+		} while (count($nodesId) !== $count);
 
-		if ($count == 1) {
+		if ($count === 1) {
 			return $nodesId[0];
 		} else {
 			return $nodesId;
@@ -1043,7 +1043,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	private function headerCommit()
 	{
 		fseek($this->handle, self::INT32SIZE);
-		@fwrite($this->handle, pack('N', $this->lastNode));  // @, save is not necceseary
+		@fwrite($this->handle, pack('N', $this->lastNode));  // intentionally @, save is not necceseary
 	}
 
 
@@ -1104,7 +1104,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			}
 			if ($this->lastModTime !== NULL) {
 				clearstatcache();
-				if ($this->lastModTime < @filemtime($this->file)) {
+				if ($this->lastModTime < @filemtime($this->file)) { // intentionally @
 					$this->nodeCache = $this->dataNodeFreeSpace = array();
 				}
 			}
@@ -1123,7 +1123,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			fflush($this->handle);
 			flock($this->handle, LOCK_UN);
 			clearstatcache();
-			$this->lastModTime = @filemtime($this->file);
+			$this->lastModTime = @filemtime($this->file); // intentionally @
 		}
 	}
 
