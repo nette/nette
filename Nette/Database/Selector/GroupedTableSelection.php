@@ -82,7 +82,9 @@ class GroupedTableSelection extends TableSelection
 
 	public function aggregation($function)
 	{
-		$query = "SELECT $function, $this->delimitedColumn FROM $this->delimitedName";
+		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
+		$column = ($join ? "$this->table." : '') . $this->column;
+		$query = "SELECT $function, $this->delimitedColumn FROM $this->delimitedName" . implode($join);
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}

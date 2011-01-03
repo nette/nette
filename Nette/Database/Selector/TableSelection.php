@@ -283,7 +283,8 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function aggregation($function)
 	{
-		$query = "SELECT $function FROM $this->delimitedName";
+		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
+		$query = "SELECT $function FROM $this->delimitedName" . implode($join);
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
@@ -352,44 +353,46 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function getSql()
 	{
-		$cols = $prefix = '';
-		$join = array();
-		$supplementalDriver = $this->connection->getSupplementalDriver();
-
-		foreach (array(
-			'where' => implode(',', $this->conditions),
-			'rest' => implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order)
-		) as $key => $val) {
-			preg_match_all('~\\b(\\w+)\\.(\\w+)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
-			foreach ($matches as $match) {
-				$name = $match[1];
-				if ($name !== $this->name) { // case-sensitive
-					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
-					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
-					$primary = $this->getPrimary($table);
-					$prefix = $this->delimitedName . '.';
-					$join[$name] = ' ' . (!isset($join[$name]) && $key === 'where' && !isset($match[3]) ? 'INNER' : 'LEFT')
-						. ' JOIN ' . $supplementalDriver->delimite($table) . ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
-						. " ON $prefix" . $supplementalDriver->delimite($column) . ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
-				}
-			}
-		}
+		$join = $this->createJoins(implode(',', $this->conditions), TRUE)
+			+ $this->createJoins(implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order));
 
 		if ($this->rows === NULL && $this->connection->cache && !is_string($this->prevAccessed)) {
 			$this->accessed = $this->prevAccessed = $this->connection->cache[array(__CLASS__, $this->name, $this->conditions)];
 		}
 
+		$prefix = $join ? "$this->delimitedName." : '';
 		if ($this->select) {
 			$cols = implode(', ', $this->select);
 
 		} elseif ($this->prevAccessed) {
-			$cols = $prefix . implode(', ' . $prefix, array_map(array($supplementalDriver, 'delimite'), array_keys($this->prevAccessed)));
+			$cols = $prefix . implode(', ' . $prefix, array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
 
 		} else {
 			$cols = $prefix . '*';
 		}
 
 		return "SELECT{$this->topString()} $cols FROM $this->delimitedName" . implode($join) . $this->whereString();
+	}
+
+
+
+	protected function createJoins($val, $inner = FALSE)
+	{
+		$supplementalDriver = $this->connection->getSupplementalDriver();
+		$joins = array();
+		preg_match_all('~\\b(\\w+)\\.(\\w+)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			$name = $match[1];
+			if ($name !== $this->name) { // case-sensitive
+				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
+				$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
+				$primary = $this->getPrimary($table);
+				$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
+					. ' JOIN ' . $supplementalDriver->delimite($table) . ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
+					. " ON $this->delimitedName." . $supplementalDriver->delimite($column) . ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+			}
+		}
+		return $joins;
 	}
 
 
