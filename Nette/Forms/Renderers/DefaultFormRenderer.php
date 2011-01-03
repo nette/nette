@@ -402,7 +402,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 	{
 		$s = array();
 		foreach ($controls as $control) {
-			if (!($control instanceof IFormControl)) {
+			if (!$control instanceof IFormControl) {
 				throw new \InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$s[] = (string) $control->getControl();

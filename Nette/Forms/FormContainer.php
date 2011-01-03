@@ -117,7 +117,7 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 			if (!isset($sub->cursor)) {
 				$sub->cursor = & $cursor;
 			}
-			if ($control instanceof IFormControl && !$control->isDisabled() && !($control instanceof ISubmitterControl)) {
+			if ($control instanceof IFormControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
 				$sub->cursor[$name] = $control->getValue();
 			}
 			if ($control instanceof FormContainer) {

@@ -36,7 +36,7 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 	 */
 	public function __construct($payload, $contentType = NULL)
 	{
-		if (!is_array($payload) && !($payload instanceof \stdClass)) {
+		if (!is_array($payload) && !$payload instanceof \stdClass) {
 			throw new \InvalidArgumentException("Payload must be array or anonymous class, " . gettype($payload) . " given.");
 		}
 		$this->payload = $payload;

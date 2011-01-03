@@ -259,7 +259,7 @@ class User extends Nette\Object implements IUser
 
 		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
 
-		if (!($session->identity instanceof IIdentity) || !is_bool($session->authenticated)) {
+		if (!$session->identity instanceof IIdentity || !is_bool($session->authenticated)) {
 			$session->remove();
 		}
 

@@ -128,7 +128,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 			$s = '';
 			$name = $this->getName();
 			$obj = $this->lookup('Nette\Forms\FormContainer', TRUE);
-			while (!($obj instanceof Form)) {
+			while (!$obj instanceof Form) {
 				$s = "[$name]$s";
 				$name = $obj->getName();
 				$obj = $obj->lookup('Nette\Forms\FormContainer', TRUE);

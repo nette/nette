@@ -770,7 +770,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// 4) signal or empty
-		if (!($component instanceof Presenter) || substr($destination, -1) === '!') {
+		if (!$component instanceof Presenter || substr($destination, -1) === '!') {
 			$signal = rtrim($destination, '!');
 			$a = strrpos($signal, ':');
 			if ($a !== FALSE) {

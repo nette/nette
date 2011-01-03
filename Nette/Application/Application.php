@@ -105,7 +105,7 @@ class Application extends Nette\Object
 					Nette\Debug::addPanel(new RoutingDebugger($router, $httpRequest));
 
 					$request = $router->match($httpRequest);
-					if (!($request instanceof PresenterRequest)) {
+					if (!$request instanceof PresenterRequest) {
 						$request = NULL;
 						throw new BadRequestException('No route for HTTP request.');
 					}

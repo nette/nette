@@ -43,7 +43,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!($value instanceof Nette\Templates\ITemplate || $value === NULL)) {
+			if (!$value instanceof Nette\Templates\ITemplate && $value !== NULL) {
 				$class = get_class($value);
 				throw new \UnexpectedValueException("Object returned by {$this->reflection->name}::createTemplate() must be instance of Nette\\Templates\\ITemplate, '$class' given.");
 			}

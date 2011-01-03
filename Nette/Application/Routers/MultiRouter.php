@@ -122,7 +122,7 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 	 */
 	public function offsetSet($index, $route)
 	{
-		if (!($route instanceof IRouter)) {
+		if (!$route instanceof IRouter) {
 			throw new \InvalidArgumentException("Argument must be IRouter descendant.");
 		}
 		parent::offsetSet($index, $route);
