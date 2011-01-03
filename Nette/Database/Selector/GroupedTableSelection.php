@@ -104,7 +104,10 @@ class GroupedTableSelection extends TableSelection
 
 	public function insert($data)
 	{
-		if (is_array($data) || $data instanceof \ArrayAccess) {
+		if ($data instanceof \Traversable && !$data instanceof TableSelection) {
+			$data = iterator_to_array($data);
+		}
+		if (is_array($data)) {
 			$data[$this->column] = $this->active;
 		}
 		return parent::insert($data);
