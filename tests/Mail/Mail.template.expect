@@ -2,13 +2,13 @@ MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
 To: Lady Jane <jane@example.com>
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 From: John Doe <doe@example.com>
 Subject: Hello Jane!
 Content-Type: multipart/alternative;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -18,11 +18,11 @@ One
 two
    three four 
   five six
-----------%h%
+----------%S%
 Content-Type: multipart/related;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -33,16 +33,16 @@ Content-Transfer-Encoding: 7bit
         <title>Hello Jane!</title>
 <style>
 	p {
-		background: yellow url("cid:%h%")
+		background: yellow url("cid:%S%")
 	}
 </style>
 </head>
 
-<body background="cid:%h%">
+<body background="cid:%S%">
 
 	<p>Hello!</p>
 
-	<img src="cid:%h%" width="50">
+	<img src="cid:%S%" width="50">
 
 	<P>One<br>two<p>
 
@@ -60,11 +60,11 @@ Content-Transfer-Encoding: 7bit
 </body>
 </html>
 
-----------%h%
+----------%S%
 Content-Type: image/png
 Content-Transfer-Encoding: base64
 Content-Disposition: inline; filename="background.png"
-Content-ID: <%h%>
+Content-ID: <%S%>
 
 iVBORw0KGgoAAAANSUhEUgAABAAAAAAGCAMAAABq1Ry/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
 bWFnZVJlYWR5ccllPAAAADlQTFRFIYzeKYzeMZTeOZTeQpTeQpzeSpzeUpzeY6Xee73nhL3nlMbn
@@ -72,5 +72,5 @@ nMbnrc7nvdbvxt7v1ufv5+fv7+/vqVk59gAAAKFJREFUeNrsmMEKgzAQRHcTq63WJPr/H9ska4vQ
 2rOG5+CEgT0JPiYrqiKiJue723Afp+ccQlqWFSHUtqQCQCoFVF0BwCMDYI4p8XUQal3269ubAeB7
 A0CI1gBWDMMattIA1BBQAdC9G0DcrgAfVuwPDMOaMHGqtgEo5o8bwDcKiETi1aP4QoDtyQWgtyXg
 bgdwzIDfxeBfYphhhk81/BJgAHfwneqeqMofAAAAAElFTkSuQmCC
-----------%h%--
-----------%h%--
+----------%S%--
+----------%S%--

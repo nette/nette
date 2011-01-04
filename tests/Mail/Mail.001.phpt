@@ -35,7 +35,7 @@ Date: %a%
 From: John Doe <doe@example.com>
 To: Lady Jane <jane@example.com>
 Subject: Hello Jane!
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 

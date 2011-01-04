@@ -205,7 +205,7 @@ class LatteMacros extends Nette\Object
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
-		$this->uniq = substr(md5(uniqid('', TRUE)), 0, 10);
+		$this->uniq = String::random();
 		$this->cacheCounter = 0;
 
 		$filter->context = LatteFilter::CONTEXT_TEXT;

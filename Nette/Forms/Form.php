@@ -223,7 +223,7 @@ class Form extends FormContainer
 		if (isset($session->$key)) {
 			$token = $session->$key;
 		} else {
-			$session->$key = $token = md5(uniqid('', TRUE));
+			$session->$key = $token = Nette\String::random();
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new HiddenField($token);

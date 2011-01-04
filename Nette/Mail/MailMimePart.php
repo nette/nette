@@ -261,7 +261,7 @@ class MailMimePart extends Nette\Object
 	public function generateMessage()
 	{
 		$output = '';
-		$boundary = '--------' . md5(uniqid('', TRUE));
+		$boundary = '--------' . Nette\String::random();
 
 		foreach ($this->headers as $name => $value) {
 			$output .= $name . ': ' . $this->getEncodedHeader($name);

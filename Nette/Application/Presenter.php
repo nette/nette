@@ -1213,7 +1213,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function getFlashSession()
 	{
 		if (empty($this->params[self::FLASH_KEY])) {
-			$this->params[self::FLASH_KEY] = substr(md5(lcg_value()), 0, 4);
+			$this->params[self::FLASH_KEY] = Nette\String::random(4);
 		}
 		return $this->getSession('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}

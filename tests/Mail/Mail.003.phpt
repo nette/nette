@@ -37,20 +37,20 @@ Date: %a%
 From: John Doe <doe@example.com>
 To: Lady Jane <jane@example.com>
 Subject: Hello Jane!
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 Content-Type: multipart/alternative;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Sample text
-----------%h%
+----------%S%
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 <b>Žluťoučký kůň</b>
-----------%h%--
+----------%S%--
 EOD
 , TestMailer::$output );

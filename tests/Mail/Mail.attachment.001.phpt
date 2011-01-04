@@ -26,16 +26,16 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 Content-Type: multipart/mixed;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-----------%h%
+----------%S%
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="example.zip"
@@ -44,7 +44,7 @@ UEsDBBQAAAAIACeIMjsmkSpnQAAAAEEAAAALAAAAdmVyc2lvbi50eHTzSy0pSVVwK0rMTS3PL8pW
 MNCz1DNU0ChKLcsszszPU0hJNjMwTzNQKErNSU0sTk1RAIoZGRhY6gKRoYUmLxcAUEsBAhQAFAAA
 AAgAJ4gyOyaRKmdAAAAAQQAAAAsAAAAAAAAAAAAgAAAAAAAAAHZlcnNpb24udHh0UEsFBgAAAAAB
 AAEAOQAAAGkAAAAAAA==
-----------%h%--
+----------%S%--
 EOD
 , TestMailer::$output );
 
@@ -58,16 +58,16 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 Content-Type: multipart/mixed;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-----------%h%
+----------%S%
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="example.zip"
@@ -78,7 +78,7 @@ IM,NMQ=00=8A=19=19=18X=EA=02=91=A1=85&/=17=00PK=01=02=14=00=14=00=00=00=08=
 =00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00=00=00=00=00=00=00 =00=00=00=
 =00=00=00=00version.txtPK=05=06=00=00=00=00=01=00=01=009=00=00=00i=00=00=00=
 =00=00
-----------%h%--
+----------%S%--
 EOD
 , TestMailer::$output );
 
@@ -92,16 +92,16 @@ Assert::match( <<<EOD
 MIME-Version: 1.0
 X-Mailer: Nette Framework
 Date: %a%
-Message-ID: <%h%@localhost>
+Message-ID: <%S%@localhost>
 Content-Type: multipart/mixed;
-	boundary="--------%h%"
+	boundary="--------%S%"
 
-----------%h%
+----------%S%
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-----------%h%
+----------%S%
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="luouk"
@@ -110,6 +110,6 @@ UEsDBBQAAAAIACeIMjsmkSpnQAAAAEEAAAALAAAAdmVyc2lvbi50eHTzSy0pSVVwK0rMTS3PL8pW
 MNCz1DNU0ChKLcsszszPU0hJNjMwTzNQKErNSU0sTk1RAIoZGRhY6gKRoYUmLxcAUEsBAhQAFAAA
 AAgAJ4gyOyaRKmdAAAAAQQAAAAsAAAAAAAAAAAAgAAAAAAAAAHZlcnNpb24udHh0UEsFBgAAAAAB
 AAEAOQAAAGkAAAAAAA==
-----------%h%--
+----------%S%--
 EOD
 , TestMailer::$output );
