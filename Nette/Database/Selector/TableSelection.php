@@ -592,13 +592,19 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 		$referenced = & $this->referenced[$name];
 		if ($referenced === NULL) {
-			$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
 			$keys = array();
 			foreach ($this->rows as $row) {
-				$keys[$row[$column]] = NULL;
+				if ($row[$column] !== NULL) {
+					$keys[$row[$column]] = NULL;
+				}
 			}
-			$referenced = new TableSelection($table, $this->connection);
-			$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
+			if ($keys) {
+				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
+				$referenced = new TableSelection($table, $this->connection);
+				$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
+			} else {
+				$referenced = array();
+			}
 		}
 		return $referenced;
 	}
