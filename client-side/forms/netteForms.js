@@ -2,7 +2,7 @@
  * NetteForms - simple form validation.
  *
  * This file is part of the Nette Framework.
- * Copyright (c) 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
  */
 
 var Nette = Nette || {};
