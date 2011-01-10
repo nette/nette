@@ -54,4 +54,12 @@ interface ISupplementalDriver
 	 */
 	function applyLimit(&$sql, $limit, $offset);
 
+	/**
+	 * Normalizes result row.
+	 * @param  array
+	 * @param  Statement
+	 * @return array
+	 */
+	function normalizeRow($row, $statement);
+
 }

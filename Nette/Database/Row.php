@@ -25,6 +25,7 @@ class Row implements \ArrayAccess, \IteratorAggregate, \Countable
 
 	public function __construct($statement)
 	{
+		$statement->normalizeRow($this);
 	}
 
 

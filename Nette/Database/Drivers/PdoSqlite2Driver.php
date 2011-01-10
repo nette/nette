@@ -31,4 +31,21 @@ class PdoSqlite2Driver extends PdoSqliteDriver
 		throw new NotSupportedException;
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		foreach ($row as $key => $value) {
+			if ($key[0] === '[') {
+				unset($row[$key]);
+				$key = substr($key, 1, -1);
+				$row[$key] = $value;
+			}
+		}
+		return $row;
+	}
+
 }

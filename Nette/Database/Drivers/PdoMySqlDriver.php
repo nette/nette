@@ -95,4 +95,14 @@ class PdoMySqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 			. ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }

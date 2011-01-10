@@ -82,4 +82,14 @@ class PdoSqliteDriver extends Nette\Object implements Nette\Database\ISupplement
 		$sql .= ' LIMIT ' . $limit . ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }

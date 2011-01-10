@@ -74,6 +74,18 @@ class Statement extends \PDOStatement
 
 
 
+	/**
+	 * Normalizes result row.
+	 * @param  array
+	 * @return array
+	 */
+	public function normalizeRow($row)
+	{
+		return $this->connection->getSupplementalDriver()->normalizeRow($row, $this);
+	}
+
+
+
 	/********************* misc tools ****************d*g**/
 
 

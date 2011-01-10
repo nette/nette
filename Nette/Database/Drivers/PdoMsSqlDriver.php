@@ -85,4 +85,14 @@ class PdoMsSqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 		}
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }

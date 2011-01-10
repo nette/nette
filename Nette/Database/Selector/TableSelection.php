@@ -423,6 +423,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		$this->rows = array();
 		$result->setFetchMode(\PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
+			$row = $result->normalizeRow($row);
 			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = new TableRow($row, $this);
 		}
 		$this->data = $this->rows;

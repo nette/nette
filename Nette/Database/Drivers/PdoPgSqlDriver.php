@@ -81,4 +81,14 @@ class PdoPgSqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 			$sql .= ' OFFSET ' . (int) $offset;
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }

@@ -82,4 +82,14 @@ class PdoOdbcDriver extends Nette\Object implements Nette\Database\ISupplemental
 		if ($offset) throw new InvalidArgumentException('Offset is not implemented in driver odbc.');
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }

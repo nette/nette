@@ -87,4 +87,14 @@ class PdoOciDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		}
 	}
 
+
+
+	/**
+	 * Normalizes result row.
+	 */
+	public function normalizeRow($row, $statement)
+	{
+		return $row;
+	}
+
 }
