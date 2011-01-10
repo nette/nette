@@ -382,7 +382,7 @@ var Panel = Nette.Debug.Panel = Nette.Class({
 		});
 
 		$(doc).bind('keyup', function(e) {
-			if (e.keyCode === 27) win.close();
+			if (e.keyCode === 27 && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) win.close();
 		});
 
 		document.cookie = id + '=window; path=/'; // save position

@@ -520,7 +520,7 @@ if (headers_sent()) {
 	document.body.appendChild(bs);
 	document.onkeyup = function(e) {
 		e = e || window.event;
-		if (e.keyCode == 27) {
+		if (e.keyCode == 27 && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
 			bs.onclick({target: document.getElementById('netteBluescreenIcon')});
 		}
 	};
