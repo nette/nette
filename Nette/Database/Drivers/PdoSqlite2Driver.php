@@ -38,12 +38,19 @@ class PdoSqlite2Driver extends PdoSqliteDriver
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		foreach ($row as $key => $value) {
-			if ($key[0] === '[') {
-				unset($row[$key]);
+		if (!is_object($row)) {
+			$iterator = $row;
+		} elseif ($row instanceof \Traversable) {
+			$iterator = iterator_to_array($row);
+		} else {
+			$iterator = (array) $row;
+		}
+		foreach ($iterator as $key => $value) {
+			unset($row[$key]);
+			if ($key[0] === '[' || $key[0] === '"') {
 				$key = substr($key, 1, -1);
-				$row[$key] = $value;
 			}
+			$row[$key] = $value;
 		}
 		return $row;
 	}
