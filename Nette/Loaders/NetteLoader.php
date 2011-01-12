@@ -222,9 +222,6 @@ class NetteLoader extends AutoLoader
 		'notsupportedexception' => '/Utils/exceptions.php',
 	);
 
-	/** @var array */
-	private $aliases;
-
 
 
 	/**
@@ -235,11 +232,6 @@ class NetteLoader extends AutoLoader
 	{
 		if (self::$instance === NULL) {
 			self::$instance = new self;
-			foreach (self::$instance->list as $type => $foo) {
-				if ($a = strrpos($type, '\\')) {
-					self::$instance->aliases['n' . substr($type, $a + 1)] = $type;
-				}
-			}
 		}
 		return self::$instance;
 	}
@@ -254,14 +246,8 @@ class NetteLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim(strtolower($type), '\\');
-		if (isset($this->aliases[$type])) {
-			$type = $this->aliases[$type];
-		}
 		if (isset($this->list[$type])) {
 			LimitedScope::load(NETTE_DIR . $this->list[$type]);
-			if ($a = strrpos($type, '\\')) {
-				class_alias($type, 'n' . substr($type, $a + 1));
-			}
 			self::$count++;
 		}
 	}
