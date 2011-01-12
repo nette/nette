@@ -184,7 +184,7 @@ class Application extends Nette\Object
 						$code = 500;
 						Nette\Debug::log($e, Nette\Debug::ERROR);
 					}
-					echo "<!DOCTYPE html><meta name=robots content=noindex><meta name=generator content='Nette Framework'>\n\n";
+					echo "<!DOCTYPE html><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><meta name=robots content=noindex><meta name=generator content='Nette Framework'>\n\n";
 					echo "<style>body{color:#333;background:white;width:500px;margin:100px auto}h1{font:bold 47px/1.5 sans-serif;margin:.6em 0}p{font:21px/1.5 Georgia,serif;margin:1.5em 0}small{font-size:70%;color:gray}</style>\n\n";
 					static $messages = array(
 						0 => array('Oops...', 'Your browser sent a request that this server could not understand or process.'),
