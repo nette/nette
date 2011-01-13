@@ -162,7 +162,7 @@ class Application extends Nette\Object
 
 				if (!$repeatedError && $this->errorPresenter) {
 					$repeatedError = TRUE;
-					if ($this->presenter) {
+					if ($this->presenter instanceof Presenter) {
 						try {
 							$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
 						} catch (AbortException $foo) {
