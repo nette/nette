@@ -304,17 +304,15 @@ class Mail extends MailMimePart
 	{
 		$part = new MailMimePart;
 		if ($content === NULL) {
-			if (!is_file($file)) {
-				throw new \FileNotFoundException("File '$file' not found.");
+			$content = file_get_contents($file);
+			if ($content === FALSE) {
+				throw new \FileNotFoundException("Unable to read file '$file'.");
 			}
-			if (!$contentType && $info = getimagesize($file)) {
-				$contentType = $info['mime'];
-			}
-			$part->setBody(file_get_contents($file));
 		} else {
-			$part->setBody((string) $content);
+			$content = (string) $content;
 		}
-		$part->setContentType($contentType ? $contentType : 'application/octet-stream');
+		$part->setBody($content);
+		$part->setContentType($contentType ? $contentType : Nette\Tools::detectMimeTypeFromString($content));
 		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', $disposition . '; filename="' . String::fixEncoding(basename($file)) . '"');
 		return $part;
