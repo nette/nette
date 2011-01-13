@@ -366,8 +366,23 @@ class Mail extends MailMimePart
 
 
 	/**
-	 * Builds email.
-	 * @return void
+	 * Returns encoded message.
+	 * @return string
+	 */
+	public function generateMessage()
+	{
+		if ($this->getHeader('Message-ID')) {
+			return parent::generateMessage();
+		} else {
+			return $this->build()->generateMessage();
+		}
+	}
+
+
+
+	/**
+	 * Builds email. Does not modify itself, but returns a new object.
+	 * @return Mail
 	 */
 	protected function build()
 	{
