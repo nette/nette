@@ -26,37 +26,37 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	const FILE = 'btfj.dat';
 
 	/** 4 bytes file header magic (btfj) */
-	const FILEMAGIC  = 0x6274666A;
+	const FILE_MAGIC  = 0x6274666A;
 
 	/** 4 bytes index node magic (inde) */
-	const INDEXMAGIC = 0x696E6465;
+	const INDEX_MAGIC = 0x696E6465;
 
 	/** 4 bytes data node magic (data) */
-	const DATAMAGIC  = 0x64617461;
+	const DATA_MAGIC  = 0x64617461;
 
 	/** Node size in bytes */
-	const NODESIZE = 4096;
+	const NODE_SIZE = 4096;
 
-	/** Bit rotation for saving data into nodes. BITROT = log2(NODESIZE) */
+	/** Bit rotation for saving data into nodes. BITROT = log2(NODE_SIZE) */
 	const BITROT = 12;
 
 	/** Header size in bytes */
-	const HEADERSIZE = 4096;
+	const HEADER_SIZE = 4096;
 
-	/** Size of 32 bit integer in bytes. INT32SIZE = 32 / 8 :-) */
-	const INT32SIZE  = 4;
+	/** Size of 32 bit integer in bytes. INT32_SIZE = 32 / 8 :-) */
+	const INT32_SIZE  = 4;
 
 	/** Use json_decode and json_encode instead of unserialize and serialize (JSON is smaller and mostly faster) */
-	const USEJSON = FALSE;
+	const USE_JSON = FALSE;
 
 	const INFO = 'i',
 		TYPE = 't', // TAGS, PRIORITY or DATA
-		ISLEAF = 'il', // TRUE or FALSE
-		PREVNODE = 'p', // Prev node id
+		IS_LEAF = 'il', // TRUE or FALSE
+		PREV_NODE = 'p', // Prev node id
 		END = 'e',
 		MAX = 'm', // Maximal key in node or -1 when is last node
-		INDEXDATA = 'id',
-		LASTINDEX = 'l';
+		INDEX_DATA = 'id',
+		LAST_INDEX = 'l';
 
 	// Indexes
 	const TAGS = 't',
@@ -124,9 +124,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 					throw new \InvalidStateException("Cannot create journal file $this->file.");
 				}
 			} else {
-				$writen = fwrite($init, pack('N2', self::FILEMAGIC, $this->lastNode));
+				$writen = fwrite($init, pack('N2', self::FILE_MAGIC, $this->lastNode));
 				fclose($init);
-				if ($writen !== self::INT32SIZE * 2) {
+				if ($writen !== self::INT32_SIZE * 2) {
 					throw new \InvalidStateException("Cannot write journal header.");
 				}
 			}
@@ -142,13 +142,13 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			throw new \InvalidStateException('Cannot acquite shared lock on journal.');
 		}
 
-		$header = stream_get_contents($this->handle, 2 * self::INT32SIZE, 0);
+		$header = stream_get_contents($this->handle, 2 * self::INT32_SIZE, 0);
 
 		flock($this->handle, LOCK_UN);
 
 		list(, $fileMagic, $this->lastNode) = unpack('N2', $header);
 
-		if ($fileMagic !== self::FILEMAGIC) {
+		if ($fileMagic !== self::FILE_MAGIC) {
 			fclose($this->handle);
 			throw new \InvalidStateException("Malformed journal file '$this->file'.");
 		}
@@ -218,7 +218,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		if ($exists === FALSE) {
 			// Magical constants
-			if (self::USEJSON) {
+			if (self::USE_JSON) {
 				$requiredSize = strlen($key) + 45 + substr_count($key, '/');
 				if ($tags) {
 					foreach ($tags as $tag) {
@@ -242,13 +242,13 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			if ($data === FALSE) {
 				$data = array(
 					self::INFO => array(
-						self::LASTINDEX => ($freeDataNode << self::BITROT),
+						self::LAST_INDEX => ($freeDataNode << self::BITROT),
 						self::TYPE => self::DATA,
 					)
 				);
 			}
 
-			$dataNodeKey = ++$data[self::INFO][self::LASTINDEX];
+			$dataNodeKey = ++$data[self::INFO][self::LAST_INDEX];
 			$data[$dataNodeKey] = array(
 				self::KEY => $key,
 				self::TAGS => $tags ? $tags : array(),
@@ -376,8 +376,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		}
 
 		$nodeInfo = $node[self::INFO];
-		while ($nodeInfo[self::PREVNODE] !== -1) {
-			$nodeId = $nodeInfo[self::PREVNODE];
+		while ($nodeInfo[self::PREV_NODE] !== -1) {
+			$nodeId = $nodeInfo[self::PREV_NODE];
 			$node = $this->getNode($nodeId);
 
 			if ($node === FALSE) {
@@ -494,8 +494,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 							}
 						}
 
-						if (!empty($links) && isset($masterNode[$key][self::INDEXDATA])) {
-							$this->cleanIndexData($masterNode[$key][self::INDEXDATA], $links, $masterNode[$key]);
+						if (!empty($links) && isset($masterNode[$key][self::INDEX_DATA])) {
+							$this->cleanIndexData($masterNode[$key][self::INDEX_DATA], $links, $masterNode[$key]);
 						}
 
 						if (empty($masterNode[$key])) {
@@ -520,9 +520,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	private function mergeIndexData(array $data)
 	{
-		while (isset($data[self::INDEXDATA])) {
-			$id = $data[self::INDEXDATA];
-			unset($data[self::INDEXDATA]);
+		while (isset($data[self::INDEX_DATA])) {
+			$id = $data[self::INDEX_DATA];
+			unset($data[self::INDEX_DATA]);
 			$childNode = $this->getNode($id);
 
 			if ($childNode === FALSE) {
@@ -530,7 +530,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				break;
 			}
 
-			$this->arrayAppendKeys($data, $childNode[self::INDEXDATA]);
+			$this->arrayAppendKeys($data, $childNode[self::INDEX_DATA]);
 		}
 
 		return $data;
@@ -559,23 +559,23 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			}
 
 			foreach ($links as $link => $foo) {
-				if (isset($node[self::INDEXDATA][$link])) {
-					unset($node[self::INDEXDATA][$link], $links[$link]);
+				if (isset($node[self::INDEX_DATA][$link])) {
+					unset($node[self::INDEX_DATA][$link], $links[$link]);
 				}
 			}
 
-			if (isset($node[self::INDEXDATA][self::INDEXDATA])) {
-				$nextNodeId = $node[self::INDEXDATA][self::INDEXDATA];
+			if (isset($node[self::INDEX_DATA][self::INDEX_DATA])) {
+				$nextNodeId = $node[self::INDEX_DATA][self::INDEX_DATA];
 			} else {
 				$nextNodeId = FALSE;
 			}
 
-			if (empty($node[self::INDEXDATA]) || (count($node[self::INDEXDATA]) === 1 && $nextNodeId)) {
+			if (empty($node[self::INDEX_DATA]) || (count($node[self::INDEX_DATA]) === 1 && $nextNodeId)) {
 				if ($prev === -1) {
 					if ($nextNodeId === FALSE) {
-						unset($masterNodeLink[self::INDEXDATA]);
+						unset($masterNodeLink[self::INDEX_DATA]);
 					} else {
-						$masterNodeLink[self::INDEXDATA] = $nextNodeId;
+						$masterNodeLink[self::INDEX_DATA] = $nextNodeId;
 					}
 				} else {
 					$prevNode = $this->getNode($prev);
@@ -583,18 +583,18 @@ class FileJournal extends Nette\Object implements ICacheJournal
 						if (self::$debug) throw new \InvalidStateException("Cannot load node number $prev.");
 					} else {
 						if ($nextNodeId === FALSE) {
-							unset($prevNode[self::INDEXDATA][self::INDEXDATA]);
-							if (empty($prevNode[self::INDEXDATA])) {
-								unset($prevNode[self::INDEXDATA]);
+							unset($prevNode[self::INDEX_DATA][self::INDEX_DATA]);
+							if (empty($prevNode[self::INDEX_DATA])) {
+								unset($prevNode[self::INDEX_DATA]);
 							}
 						} else {
-							$prevNode[self::INDEXDATA][self::INDEXDATA] = $nextNodeId;
+							$prevNode[self::INDEX_DATA][self::INDEX_DATA] = $nextNodeId;
 						}
 
 						$this->saveNode($prev, $prevNode);
 					}
 				}
-				unset($node[self::INDEXDATA]);
+				unset($node[self::INDEX_DATA]);
 			} else {
 				$prev = $nodeId;
 			}
@@ -617,7 +617,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return $this->nodeCache[$id];
 		}
 
-		$binary = stream_get_contents($this->handle, self::NODESIZE, self::HEADERSIZE + self::NODESIZE * $id);
+		$binary = stream_get_contents($this->handle, self::NODE_SIZE, self::HEADER_SIZE + self::NODE_SIZE * $id);
 
 		if (empty($binary)) {
 			// empty node, no Exception
@@ -625,7 +625,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		}
 
 		list(, $magic, $lenght) = unpack('N2', $binary);
-		if ($magic !== self::INDEXMAGIC && $magic !== self::DATAMAGIC) {
+		if ($magic !== self::INDEX_MAGIC && $magic !== self::DATA_MAGIC) {
 			if (!empty($magic)) {
 				if (self::$debug) throw new \InvalidStateException("Node $id has malformed header.");
 				$this->deleteNode($id);
@@ -633,9 +633,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return FALSE;
 		}
 
-		$data = substr($binary, 2 * self::INT32SIZE, $lenght - 2 * self::INT32SIZE);
+		$data = substr($binary, 2 * self::INT32_SIZE, $lenght - 2 * self::INT32_SIZE);
 
-		if (self::USEJSON) {
+		if (self::USE_JSON) {
 			$node = @json_decode($data, TRUE); // intentionally @
 		} else {
 			$node = @unserialize($data); // intentionally @
@@ -702,19 +702,19 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 				if ($nodeInfo[self::TYPE] === self::PRIORITY) { // only priority tree has link to prevNode
 					if ($nodeInfo[self::MAX] === -1) {
-						if ($nodeInfo[self::PREVNODE] !== -1) {
-							$prevNode = $this->getNode($nodeInfo[self::PREVNODE]);
+						if ($nodeInfo[self::PREV_NODE] !== -1) {
+							$prevNode = $this->getNode($nodeInfo[self::PREV_NODE]);
 							if ($prevNode === FALSE) {
-								if (self::$debug) throw new \InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREVNODE] . '.');
+								if (self::$debug) throw new \InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREV_NODE] . '.');
 							} else {
 								$prevNode[self::INFO][self::MAX] = -1;
-								$this->saveNode($nodeInfo[self::PREVNODE], $prevNode);
+								$this->saveNode($nodeInfo[self::PREV_NODE], $prevNode);
 							}
 						}
 					} else {
 						list($nextId, $nextNode) = $this->findIndexNode($nodeInfo[self::TYPE], $nodeInfo[self::MAX] + 1, NULL, $id);
 						if ($nextId !== -1 && $nextId !== $id) {
-							$nextNode[self::INFO][self::PREVNODE] = $nodeInfo[self::PREVNODE];
+							$nextNode[self::INFO][self::PREV_NODE] = $nodeInfo[self::PREV_NODE];
 							$this->saveNode($nextId, $nextNode);
 						}
 					}
@@ -769,16 +769,16 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return TRUE;
 		}
 
-		if (self::USEJSON) {
+		if (self::USE_JSON) {
 			$data = json_encode($node);
 		} else {
 			$data = serialize($node);
 		}
 
-		$dataSize = strlen($data) + 2 * self::INT32SIZE;
+		$dataSize = strlen($data) + 2 * self::INT32_SIZE;
 
 		$isData = $node[self::INFO][self::TYPE] === self::DATA;
-		if ($dataSize > self::NODESIZE) {
+		if ($dataSize > self::NODE_SIZE) {
 			if ($isData) {
 				throw new \InvalidStateException('Saving node is bigger than maximum node size.');
 			} else {
@@ -787,13 +787,13 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			}
 		}
 
-		$this->toCommit[$id] = pack('N2', $isData ? self::DATAMAGIC : self::INDEXMAGIC, $dataSize) . $data;
+		$this->toCommit[$id] = pack('N2', $isData ? self::DATA_MAGIC : self::INDEX_MAGIC, $dataSize) . $data;
 
 		if ($this->lastNode < $id) {
 			$this->lastNode = $id;
 		}
 		if ($isData) {
-			$this->dataNodeFreeSpace[$id] = self::NODESIZE - $dataSize;
+			$this->dataNodeFreeSpace[$id] = self::NODE_SIZE - $dataSize;
 		}
 
 		return TRUE;
@@ -809,7 +809,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	private function commitNode($id, $str)
 	{
-		fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
+		fseek($this->handle, self::HEADER_SIZE + self::NODE_SIZE * $id);
 		$writen = fwrite($this->handle, $str);
 		if ($writen === FALSE) {
 			throw new \InvalidStateException("Cannot write node number $id to journal.");
@@ -838,8 +838,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 					array(
 						self::INFO => array(
 							self::TYPE => $type,
-							self::ISLEAF => TRUE,
-							self::PREVNODE => -1,
+							self::IS_LEAF => TRUE,
+							self::PREV_NODE => -1,
 							self::END => -1,
 							self::MAX => -1,
 						)
@@ -848,7 +848,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				); // Init empty node
 			}
 
-			if ($node[self::INFO][self::ISLEAF] || $nodeId === $childId || $node[self::INFO][self::PREVNODE] === $prevId) {
+			if ($node[self::INFO][self::IS_LEAF] || $nodeId === $childId || $node[self::INFO][self::PREV_NODE] === $prevId) {
 				return array($nodeId, $node, $parentId);
 			}
 
@@ -887,15 +887,15 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				continue;
 			}
 
-			$offset = self::HEADERSIZE + self::NODESIZE * $id;
+			$offset = self::HEADER_SIZE + self::NODE_SIZE * $id;
 
-			$binary = stream_get_contents($this->handle, self::INT32SIZE, $offset);
+			$binary = stream_get_contents($this->handle, self::INT32_SIZE, $offset);
 
 			if (empty($binary)) {
 				$nodesId[] = $id;
 			} else {
 				list(, $magic) = unpack('N', $binary);
-				if ($magic !== self::INDEXMAGIC && $magic !== self::DATAMAGIC) {
+				if ($magic !== self::INDEX_MAGIC && $magic !== self::DATA_MAGIC) {
 					$nodesId[] = $from;
 				}
 			}
@@ -932,20 +932,20 @@ class FileJournal extends Nette\Object implements ICacheJournal
 				continue;
 			}
 
-			$offset = self::HEADERSIZE + self::NODESIZE * $id;
-			$binary = stream_get_contents($this->handle, 2 * self::INT32SIZE, $offset);
+			$offset = self::HEADER_SIZE + self::NODE_SIZE * $id;
+			$binary = stream_get_contents($this->handle, 2 * self::INT32_SIZE, $offset);
 
 			if (empty($binary)) {
-				$this->dataNodeFreeSpace[$id] = self::NODESIZE;
+				$this->dataNodeFreeSpace[$id] = self::NODE_SIZE;
 				return $id;
 			}
 
 			list(, $magic, $nodeSize) = unpack('N2', $binary);
 			if (empty($magic)) {
-				$this->dataNodeFreeSpace[$id] = self::NODESIZE;
+				$this->dataNodeFreeSpace[$id] = self::NODE_SIZE;
 				return $id;
-			} elseif ($magic === self::DATAMAGIC) {
-				$freeSpace = self::NODESIZE - $nodeSize;
+			} elseif ($magic === self::DATA_MAGIC) {
+				$freeSpace = self::NODE_SIZE - $nodeSize;
 				$this->dataNodeFreeSpace[$id] = $freeSpace;
 
 				if ($freeSpace > $size) {
@@ -973,16 +973,16 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		if (count($node) === 1) {
 			$key = key($node);
 
-			$dataId = $this->findFreeDataNode(self::NODESIZE);
+			$dataId = $this->findFreeDataNode(self::NODE_SIZE);
 			$this->saveNode($dataId, array(
-				self::INDEXDATA => $node[$key],
+				self::INDEX_DATA => $node[$key],
 				self::INFO => array(
 					self::TYPE => self::DATA,
-					self::LASTINDEX => ($dataId << self::BITROT),
+					self::LAST_INDEX => ($dataId << self::BITROT),
 			)));
 
 			unset($node[$key]);
-			$node[$key][self::INDEXDATA] = $dataId;
+			$node[$key][self::INDEX_DATA] = $dataId;
 			$node[self::INFO] = $nodeInfo;
 
 			$this->saveNode($id, $node);
@@ -1002,8 +1002,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 			$first[self::INFO] = array(
 				self::TYPE => $nodeInfo[self::TYPE],
-				self::ISLEAF => $nodeInfo[self::ISLEAF],
-				self::PREVNODE => -1,
+				self::IS_LEAF => $nodeInfo[self::IS_LEAF],
+				self::PREV_NODE => -1,
 				self::END => -1,
 				self::MAX => $halfKey,
 			);
@@ -1011,8 +1011,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 			$second[self::INFO] = array(
 				self::TYPE => $nodeInfo[self::TYPE],
-				self::ISLEAF => $nodeInfo[self::ISLEAF],
-				self::PREVNODE => $firstId,
+				self::IS_LEAF => $nodeInfo[self::IS_LEAF],
+				self::PREV_NODE => $firstId,
 				self::END => $nodeInfo[self::END],
 				self::MAX => -1,
 			);
@@ -1021,8 +1021,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			$parentNode = array(
 				self::INFO => array(
 					self::TYPE => $nodeInfo[self::TYPE],
-					self::ISLEAF => FALSE,
-					self::PREVNODE => -1,
+					self::IS_LEAF => FALSE,
+					self::PREV_NODE => -1,
 					self::END => $secondId,
 					self::MAX => -1,
 				),
@@ -1034,8 +1034,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 			$first[self::INFO] = array(
 				self::TYPE => $nodeInfo[self::TYPE],
-				self::ISLEAF => $nodeInfo[self::ISLEAF],
-				self::PREVNODE => $nodeInfo[self::PREVNODE],
+				self::IS_LEAF => $nodeInfo[self::IS_LEAF],
+				self::PREV_NODE => $nodeInfo[self::PREV_NODE],
 				self::END => -1,
 				self::MAX => $halfKey,
 			);
@@ -1043,8 +1043,8 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 			$second[self::INFO] = array(
 				self::TYPE => $nodeInfo[self::TYPE],
-				self::ISLEAF => $nodeInfo[self::ISLEAF],
-				self::PREVNODE => $firstId,
+				self::IS_LEAF => $nodeInfo[self::IS_LEAF],
+				self::PREV_NODE => $firstId,
 				self::END => $nodeInfo[self::END],
 				self::MAX => $nodeInfo[self::MAX],
 			);
@@ -1070,7 +1070,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	private function headerCommit()
 	{
-		fseek($this->handle, self::INT32SIZE);
+		fseek($this->handle, self::INT32_SIZE);
 		@fwrite($this->handle, pack('N', $this->lastNode));  // intentionally @, save is not necceseary
 	}
 
@@ -1086,20 +1086,20 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		fseek($this->handle, 0, SEEK_END);
 		$end = ftell($this->handle);
 
-		if ($end <= (self::HEADERSIZE + self::NODESIZE * ($id + 1))) {
+		if ($end <= (self::HEADER_SIZE + self::NODE_SIZE * ($id + 1))) {
 			$packedNull = pack('N', 0);
 
 			do {
-				$binary = stream_get_contents($this->handle, self::INT32SIZE, (self::HEADERSIZE + self::NODESIZE * --$id));
+				$binary = stream_get_contents($this->handle, self::INT32_SIZE, (self::HEADER_SIZE + self::NODE_SIZE * --$id));
 			} while (empty($binary) || $binary === $packedNull);
 
-			if (!ftruncate($this->handle, self::HEADERSIZE + self::NODESIZE * ($id + 1))) {
+			if (!ftruncate($this->handle, self::HEADER_SIZE + self::NODE_SIZE * ($id + 1))) {
 				throw new \InvalidStateException("Cannot truncate journal file.");
 			}
 		} else {
-			fseek($this->handle, self::HEADERSIZE + self::NODESIZE * $id);
+			fseek($this->handle, self::HEADER_SIZE + self::NODE_SIZE * $id);
 			$writen = fwrite($this->handle, pack('N', 0));
-			if ($writen !== self::INT32SIZE) {
+			if ($writen !== self::INT32_SIZE) {
 				throw new \InvalidStateException("Cannot delete node number $id from journal.");
 			}
 		}
@@ -1113,7 +1113,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	private function deleteAll()
 	{
-		if (!ftruncate($this->handle, self::HEADERSIZE)) {
+		if (!ftruncate($this->handle, self::HEADER_SIZE)) {
 			throw new \InvalidStateException("Cannot truncate journal file.");
 		}
 	}
