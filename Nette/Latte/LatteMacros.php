@@ -151,10 +151,10 @@ class LatteMacros extends Nette\Object
 	private $blocks = array();
 
 	/** @var array */
-	private $namedBlocks = array();
+	protected $namedBlocks = array();
 
 	/** @var bool */
-	private $extends;
+	protected $extends;
 
 	/** @var string */
 	private $uniq;
@@ -854,7 +854,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * Formats {*link ...} parameters.
 	 */
-	private function formatLink($content)
+	protected function formatLink($content)
 	{
 		return $this->formatString($this->fetchToken($content)) . $this->formatArray($content, ', '); // destination [,] args
 	}
@@ -1049,7 +1049,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 * Tokenizer and preparser.
 	 * @return array
 	 */
-	private function parseMacro($input)
+	protected function parseMacro($input)
 	{
 		$this->tokenizer->tokenize($input);
 		$this->tokenizer->tokens[] = NULL; // sentinel
