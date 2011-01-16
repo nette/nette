@@ -324,13 +324,19 @@ class MailMimePart extends Nette\Object
 	 */
 	private static function encodeHeader($s, & $offset = 0)
 	{
+		$o = '';
+		if ($offset >= 55) { // maximum for iconv_mime_encode
+			$o = self::EOL . "\t";
+			$offset = 1;
+		}
+
 		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
 			&& ($offset + strlen($s) <= self::LINE_LENGTH)) {
 			$offset += strlen($s);
-			return $s;
+			return $o . $s;
 		}
 
-		$o = str_replace("\n ", "\n\t", substr(iconv_mime_encode(str_repeat(' ', $offset), $s, array(
+		$o .= str_replace("\n ", "\n\t", substr(iconv_mime_encode(str_repeat(' ', $offset), $s, array(
 			'scheme' => 'B', // Q is broken
 			'input-charset' => 'UTF-8',
 			'output-charset' => 'UTF-8',
