@@ -41,8 +41,15 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 
 	public function logQuery(Statement $result, array $params = NULL)
 	{
+		$source = NULL;
+		foreach (debug_backtrace(FALSE) as $row) {
+			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+				$source = array($row['file'], (int) $row['line']);
+				break;
+			}
+		}
 		$this->totalTime += $result->time;
-		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection());
+		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection(), $source);
 	}
 
 
@@ -70,7 +77,7 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 		$s = '';
 		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
-			list($sql, $params, $time, $rows, $connection) = $query;
+			list($sql, $params, $time, $rows, $connection, $source) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
 			if ($this->explain && preg_match('#\s*SELECT\s#iA', $sql)) {
@@ -100,6 +107,12 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 				}
 				$s .= "</table>";
 			}
+			if ($source) {
+				list($file, $line) = $source;
+				$s .= (Nette\Debug::$editor ? "<a href='{$h(Nette\DebugHelpers::editorLink($file, $line))}'" : '<span')
+					. " class='database-source' title='{$h($file)}:$line'>"
+					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Nette\Debug::$editor ? '</a>' : '</span>');
+			}
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
@@ -110,7 +123,9 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 		}
 
 		return empty($this->queries) ? '' :
-			'<style> #nette-debug-database td.database-sql { background: white !important } #nette-debug-database tr table { margin-top: 10px; max-height: 150px; overflow:auto } </style>
+			'<style> #nette-debug-database td.database-sql { background: white !important }
+			#nette-debug-database .database-source { color: #BBB !important }
+			#nette-debug-database tr table { margin: 8px 0; max-height: 150px; overflow:auto } </style>
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner">
 			<table>
