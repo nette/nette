@@ -61,6 +61,10 @@ if (headers_sent()) {
 
 	<style type="text/css" class="nette">
 
+		html {
+			overflow-y: scroll;
+		}
+
 		body {
 			margin: 0 0 2em;
 			padding: 0;
@@ -97,6 +101,22 @@ if (headers_sent()) {
 			font-style: italic;
 		}
 
+		#netteBluescreen a {
+			text-decoration: none;
+			color: #328ADC;
+			padding: 2px 4px;
+			margin: -2px -4px;
+		}
+
+		#netteBluescreen a:hover, #netteBluescreen a:active, #netteBluescreen a:focus {
+			color: #085AA3;
+		}
+
+		#netteBluescreen a abbr {
+			font-family: sans-serif;
+			color: #BBB;
+		}
+
 		#netteBluescreenIcon {
 			position: absolute;
 			right: .5em;
@@ -125,18 +145,6 @@ if (headers_sent()) {
 			font: 14pt/1.5 sans-serif !important;
 			color: #888;
 			margin: .6em 0;
-		}
-
-		#netteBluescreen a {
-			text-decoration: none;
-			color: #328ADC;
-			padding: 2px 4px;
-			margin: -2px -4px;
-		}
-
-		#netteBluescreen a abbr {
-			font-family: sans-serif;
-			color: #BBB;
 		}
 
 		#netteBluescreen h3 {
@@ -243,7 +251,7 @@ if (headers_sent()) {
 
 		#netteBluescreen a[href^=editor\:] {
 			color: inherit;
-			border-bottom: 1px dotted #328ADC;
+			border-bottom: 1px dotted #C1D2E1;
 		}
 	</style>
 </head>
