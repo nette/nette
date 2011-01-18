@@ -170,6 +170,20 @@ class Connection extends PDO
 
 
 
+	/**
+	 * Shortcut for query()->fetchAll()
+	 * @param  string  statement
+	 * @param  mixed   [parameters, ...]
+	 * @return array
+	 */
+	public function fetchAll($args)
+	{
+		$args = func_get_args();
+		return $this->queryArgs(array_shift($args), $args)->fetchAll();
+	}
+
+
+
 	/********************* selector ****************d*g**/
 
 

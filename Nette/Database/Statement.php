@@ -41,6 +41,16 @@ class Statement extends \PDOStatement
 
 
 	/**
+	 * @return Connection
+	 */
+	public function getConnection()
+	{
+		return $this->connection;
+	}
+
+
+
+	/**
 	 * Executes statement.
 	 * @param  array
 	 * @return Statement  provides a fluent interface
