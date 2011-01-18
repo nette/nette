@@ -134,6 +134,15 @@ if (headers_sent()) {
 			display: block;
 		}
 
+		#netteBluescreenError #netteBsSearch {
+			color: #CD1818;
+			font-size: .7em;
+		}
+
+		#netteBluescreenError:hover #netteBsSearch {
+			color: #ED8383;
+		}
+
 		#netteBluescreen h1 {
 			font-size: 18pt;
 			font-weight: normal;
@@ -266,7 +275,7 @@ if (headers_sent()) {
 		<div id="netteBluescreenError" class="panel">
 			<h1><?php echo htmlspecialchars($title), ($exception->getCode() ? ' #' . $exception->getCode() : '') ?></h1>
 
-			<p><?php echo htmlspecialchars($exception->getMessage()) ?></p>
+			<p><?php echo htmlspecialchars($exception->getMessage()) ?> <a href="http://www.google.cz/search?sourceid=nette&amp;q=<?php echo urlencode($title . ' ' . preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>" id="netteBsSearch">search&#x25ba;</a></p>
 		</div>
 
 
