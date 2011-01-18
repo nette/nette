@@ -34,12 +34,15 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 	/** @var string */
 	public $name;
 
+	/** @var bool explain queries? */
+	public $explain = TRUE;
+
 
 
 	public function logQuery(Statement $result, array $params = NULL)
 	{
 		$this->totalTime += $result->time;
-		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount());
+		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection());
 	}
 
 
@@ -65,14 +68,49 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 	public function getPanel()
 	{
 		$s = '';
-		foreach ($this->queries as $query) {
-			list($sql, $params, $time, $rows) = $query;
-			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000) . '</td><td class="database-sql">' . Connection::highlightSql(Nette\String::truncate($sql, self::$maxLength))
-				. '</td><td>' . htmlSpecialChars(implode(', ', $params)) . '</td><td>' . $rows . '</td></tr>';
+		$h = 'htmlSpecialChars';
+		foreach ($this->queries as $i => $query) {
+			list($sql, $params, $time, $rows, $connection) = $query;
+
+			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
+			if ($this->explain && preg_match('#\s*SELECT\s#iA', $sql)) {
+				try {
+				    $explain = $connection->queryArgs('EXPLAIN ' . $sql, $params)->fetchAll();
+				} catch (\PDOException $e) {}
+			}
+
+			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
+			if ($explain) {
+				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-debug-database-row-{$h($this->name)}-$i'>explain&nbsp;&#x25ba;</a>";
+			}
+
+			$s .= '</td><td class="database-sql">' . Connection::highlightSql(Nette\String::truncate($sql, self::$maxLength));
+			if ($explain) {
+				$s .= "<table id='nette-debug-database-row-{$h($this->name)}-$i' class='nette-collapsed'><tr>";
+				foreach ($explain[0] as $col => $foo) {
+					$s .= "<th>{$h($col)}</th>";
+				}
+				$s .= "</tr>";
+				foreach ($explain as $row) {
+					$s .= "<tr>";
+					foreach ($row as $col) {
+						$s .= "<td>{$h($col)}</td>";
+					}
+					$s .= "</tr>";
+				}
+				$s .= "</table>";
+			}
+
+			$s .= '</td><td>';
+			foreach ($params as $param) {
+				$s .= "{$h(Nette\String::truncate($param, self::$maxLength))}<br>";
+			}
+
+			$s .= '</td><td>' . $rows . '</td></tr>';
 		}
 
 		return empty($this->queries) ? '' :
-			'<style> #nette-debug-database td.database-sql { background: white !important } </style>
+			'<style> #nette-debug-database td.database-sql { background: white !important } #nette-debug-database tr table { margin-top: 10px; max-height: 150px; overflow:auto } </style>
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner">
 			<table>
