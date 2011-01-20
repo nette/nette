@@ -53,6 +53,9 @@ final class Debug
 	/** @var int  how long strings display {@link Debug::dump()} */
 	public static $maxLen = 150;
 
+	/** @var int  minimal number of array/object properties to be displayed as collapsed {@link DebugHelpers::htmlDump()}*/
+	public static $minCollapsed = 7;
+
 	/** @var int  display location? {@link Debug::dump()} */
 	public static $showLocation = FALSE;
 
