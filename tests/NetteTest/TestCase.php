@@ -136,7 +136,7 @@ class TestCase
 	{
 		$this->headers = $this->output = NULL;
 
-		$tempFile = tempnam('', 'tmp');
+		$tempFile = tempnam(sys_get_temp_dir(), 'tmp');
 		if (!$tempFile) {
 			throw new Exception("Unable to create temporary file.");
 		}
