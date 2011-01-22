@@ -42,8 +42,11 @@ class TestCase
 	/** @var string  PHP-CGI command line */
 	private $cmdLine;
 
-	/** @var string  PHP-CGI command line */
+	/** @var string  PHP version */
 	private $phpVersion;
+	
+	/** @var string PHP type (CGI or CLI) */
+	private $phpType;
 
 	/** @var array */
 	private static $cachedPhp;
@@ -116,11 +119,12 @@ class TestCase
 				throw new Exception("Unable to execute '$binary -v'.");
 			}
 
-			if (!preg_match('#^PHP (\S+).*cgi#i', $output[0], $matches)) {
+			if (!preg_match('#^PHP (\S+).*c(g|l)i#i', $output[0], $matches)) {
 				throw new Exception("Unable to detect PHP version (output: $output[0]).");
 			}
 
 			$this->phpVersion = self::$cachedPhp[$binary] = $matches[1];
+			$this->phpType = ($matches[2] == 'g') ? 'CGI' : 'CLI';
 		}
 
 		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
@@ -156,7 +160,11 @@ class TestCase
 		$this->output = file_get_contents($tempFile);
 		unlink($tempFile);
 
-		list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
+		if ($this->phpType == 'CGI') {
+			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
+		} else {
+			$headers = '';
+		}
 		$line = @end(explode("\n", $this->output));
 
 		$this->headers = array();
