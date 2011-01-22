@@ -54,6 +54,7 @@ class Statement extends \PDOStatement
 	 * Executes statement.
 	 * @param  array
 	 * @return Statement  provides a fluent interface
+	 * @throws DatabaseException
 	 */
 	public function execute($params = array())
 	{
@@ -64,7 +65,11 @@ class Statement extends \PDOStatement
 		}
 
 		$time = microtime(TRUE);
-		parent::execute();
+		try {
+			parent::execute();
+		} catch (\PDOException $e) {
+			throw new DatabaseException($e->getMessage(), $e->getCode(), NULL, $this->queryString, $params);
+		}
 		$this->time = microtime(TRUE) - $time;
 		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
 
