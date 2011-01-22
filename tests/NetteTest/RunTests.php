@@ -28,7 +28,9 @@ Options:
  * Execute tests
  */
 try {
-	@unlink(__DIR__ . '/coverage.dat'); // @ - file may not exist
+	if (file_exists(__DIR__ . '/coverage.dat')) {
+		unlink(__DIR__ . '/coverage.dat');
+	}
 
 
 	$manager = new TestRunner;
