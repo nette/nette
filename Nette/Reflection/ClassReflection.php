@@ -134,7 +134,7 @@ class ClassReflection extends \ReflectionClass
 	 */
 	public function getConstructor()
 	{
-		return ($ref = parent::getConstructor()) ? MethodReflection::import($ref) : NULL;
+		return ($ref = parent::getConstructor()) ? MethodReflection::from($this->getName(), $ref->getName()) : NULL;
 	}
 
 
