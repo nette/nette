@@ -83,7 +83,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	private $lastModTime = NULL;
 
 	/** @var array Cache and uncommited but changed nodes */
-	public $nodeCache = array();
+	private $nodeCache = array();
 
 	/** @var array */
 	private $nodeChanged = array();
