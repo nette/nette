@@ -64,7 +64,12 @@ class Statement extends \PDOStatement
 		}
 
 		$time = microtime(TRUE);
-		parent::execute();
+		try {
+			parent::execute();
+		} catch (\PDOException $e) {
+			$e->queryString = $this->queryString;
+			throw $e;
+		}
 		$this->time = microtime(TRUE) - $time;
 		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
 
