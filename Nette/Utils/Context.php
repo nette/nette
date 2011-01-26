@@ -65,6 +65,7 @@ class Context extends FreezableObject implements IContext
 				throw new \InvalidArgumentException("Service named '$name' is empty.");
 			}
 			$this->factories[$lower] = array($service, $singleton, $options);
+			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
 		}
 	}
 
