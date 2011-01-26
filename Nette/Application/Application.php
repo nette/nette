@@ -69,12 +69,6 @@ class Application extends Nette\Object
 		$httpRequest = $this->getHttpRequest();
 		$httpResponse = $this->getHttpResponse();
 
-		// autostarts session
-		$session = $this->getSession();
-		if (!$session->isStarted() && $session->exists()) {
-			$session->start();
-		}
-
 		// check HTTP method
 		if ($this->allowedMethods) {
 			$method = $httpRequest->getMethod();
@@ -97,6 +91,12 @@ class Application extends Nette\Object
 
 				if (!$request) {
 					$this->onStartup($this);
+
+					// autostarts session
+					$session = $this->getSession();
+					if (!$session->isStarted() && $session->exists()) {
+						$session->start();
+					}
 
 					// routing
 					$router = $this->getRouter();
