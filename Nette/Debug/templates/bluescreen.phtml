@@ -295,6 +295,19 @@ if (headers_sent()) {
 				</div>
 			<?php endif ?>
 
+
+
+			<?php if ($ex instanceof IDebugPanel && ($tab = $ex->getTab()) && ($panel = $ex->getPanel())): ?>
+			<div class="panel">
+				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($tab) ?> <abbr>&#x25bc;</abbr></a></h2>
+
+				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
+				<?php echo $panel ?>
+			</div></div>
+			<?php endif ?>
+
+
+
 			<?php $stack = $ex->getTrace(); $expanded = NULL ?>
 			<?php if (strpos($ex->getFile(), $expandPath) === 0) {
 				foreach ($stack as $key => $row) {
@@ -367,17 +380,6 @@ if (headers_sent()) {
 					</li>
 					<?php endforeach ?>
 				</ol>
-			</div></div>
-			<?php endif ?>
-
-
-
-			<?php if ($ex instanceof IDebugPanel && ($tab = $ex->getTab()) && ($panel = $ex->getPanel())): ?>
-			<div class="panel">
-				<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($tab) ?> <abbr>&#x25bc;</abbr></a></h2>
-
-				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
-				<?php echo $panel ?>
 			</div></div>
 			<?php endif ?>
 
