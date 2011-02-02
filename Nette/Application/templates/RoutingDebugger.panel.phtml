@@ -29,7 +29,7 @@ use Nette;
 <?php if (empty($this->request)): ?>
 	no route
 <?php else: ?>
-	<?php echo $this->request->getPresenterName() . ':' . (isset($this->request->params[Presenter::ACTION_KEY]) ? $this->request->params[Presenter::ACTION_KEY] : Presenter::$defaultAction) ?>
+	<?php echo $this->request->getPresenterName() . ':' . (isset($this->request->params[Presenter::ACTION_KEY]) ? $this->request->params[Presenter::ACTION_KEY] : Presenter::$defaultAction) . (isset($this->request->params[Presenter::SIGNAL_KEY]) ? " {$this->request->params[Presenter::SIGNAL_KEY]}!" : '') ?>
 <?php endif ?>
 </h1>
 
@@ -47,7 +47,7 @@ use Nette;
 		</tr>
 		</thead>
 		<tbody>
-		<?php unset($params[Presenter::ACTION_KEY]) ?>
+		<?php unset($params[Presenter::ACTION_KEY], $params[Presenter::SIGNAL_KEY]) ?>
 		<?php foreach ($params as $key => $value): ?>
 		<tr>
 			<td><code><?php echo htmlSpecialChars($key) ?></code></td>
