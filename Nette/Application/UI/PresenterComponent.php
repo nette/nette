@@ -291,7 +291,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string
 	 * @return string
 	 */
-	public function formatSignalMethod($signal)
+	public static function formatSignalMethod($signal)
 	{
 		return $signal == NULL ? NULL : 'handle' . $signal; // intentionally ==
 	}
