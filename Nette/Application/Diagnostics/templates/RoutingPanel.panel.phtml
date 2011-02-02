@@ -4,6 +4,7 @@ namespace Nette\Application\Diagnostics;
 
 use Nette,
 	Nette\Application\UI\Presenter,
+	Nette\Diagnostics\Helpers,
 	Nette\Diagnostics\Dumper;
 
 ?>
@@ -89,5 +90,7 @@ use Nette,
 	</tbody>
 	</table>
 <?php endif ?>
+
+	<p><?php echo $this->source ?> in <?php echo Helpers::editorLink($this->source->getFileName(), $this->source->getStartLine()) ?></p>
 </div>
 </div>
