@@ -44,7 +44,7 @@ class TestCase
 
 	/** @var string  PHP version */
 	private $phpVersion;
-	
+
 	/** @var string PHP type (CGI or CLI) */
 	private $phpType;
 

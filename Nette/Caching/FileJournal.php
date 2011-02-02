@@ -139,7 +139,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 		}
 
 		if (!flock($this->handle, LOCK_SH)) {
-			throw new \InvalidStateException('Cannot acquite shared lock on journal.');
+			throw new \InvalidStateException('Cannot acquire shared lock on journal.');
 		}
 
 		$header = stream_get_contents($this->handle, 2 * self::INT32_SIZE, 0);
@@ -1128,7 +1128,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	{
 		if ($this->handle) {
 			if (!flock($this->handle, LOCK_EX)) {
-				throw new \InvalidStateException('Cannot acquite exclusive lock on journal.');
+				throw new \InvalidStateException('Cannot acquire exclusive lock on journal.');
 			}
 			if ($this->lastModTime !== NULL) {
 				clearstatcache();
