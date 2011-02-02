@@ -47,7 +47,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 
 	public function __construct(array $options = array())
 	{
-		if ($options['host']) {
+		if (isset($options['host'])) {
 			$this->host = $options['host'];
 			$this->port = isset($options['port']) ? (int) $options['port'] : NULL;
 		} else {
