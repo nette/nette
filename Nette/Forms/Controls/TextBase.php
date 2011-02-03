@@ -213,7 +213,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
 	{
-		return (bool) String::match($control->getValue(), "\x01^($pattern)$\x01u");
+		return (bool) String::match($control->getValue(), "{^($pattern)$}u");
 	}
 
 
