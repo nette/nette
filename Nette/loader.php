@@ -49,6 +49,7 @@ require_once __DIR__ . '/Utils/Object.php';
 require_once __DIR__ . '/Loaders/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
+require_once __DIR__ . '/Debug/DebugHelpers.php';
 
 
 Nette\Loaders\NetteLoader::getInstance()->register();
