@@ -111,7 +111,7 @@ class TestCase
 	public function setPhp($binary, $args, $environment)
 	{
 		if (isset(self::$cachedPhp[$binary])) {
-			$this->phpVersion = self::$cachedPhp[$binary];
+			list($this->phpVersion, $this->phpType) = self::$cachedPhp[$binary];
 
 		} else {
 			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
@@ -123,8 +123,9 @@ class TestCase
 				throw new Exception("Unable to detect PHP version (output: $output[0]).");
 			}
 
-			$this->phpVersion = self::$cachedPhp[$binary] = $matches[1];
-			$this->phpType = ($matches[2] == 'g') ? 'CGI' : 'CLI';
+			$this->phpVersion = $matches[1];
+			$this->phpType = strcasecmp($matches[2], 'g') ? 'CLI' : 'CGI';
+			self::$cachedPhp[$binary] = array($this->phpVersion, $this->phpType);
 		}
 
 		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
@@ -160,8 +161,8 @@ class TestCase
 		$this->output = file_get_contents($tempFile);
 		unlink($tempFile);
 
-		if ($this->phpType == 'CGI') {
-			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
+		if ($this->phpType === 'CGI') {
+			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2);
 		} else {
 			$headers = '';
 		}
