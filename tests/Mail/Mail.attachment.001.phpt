@@ -85,7 +85,10 @@ EOD
 
 
 $mail = new Mail();
-$mail->addAttachment(iconv('UTF-8', 'WINDOWS-1250', "files/žluťoučký.zip"));
+$name = iconv('UTF-8', 'WINDOWS-1250', 'files/žluťoučký.zip');
+copy('files/example.zip', $name);
+$mail->addAttachment($name);
+unlink($name);
 $mail->send();
 
 Assert::match( <<<EOD
