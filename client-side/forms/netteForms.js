@@ -116,69 +116,97 @@ Nette.addError = function(elem, message) {
 	}
 };
 
+Nette.validators = { };
+
+Nette.validators['filled'] = function(elem, op, arg, val) {
+	return val !== '' && val !== false && val !== null;
+}
+
+Nette.validators['valid'] = function(elem, op, arg, val) {
+	return Nette.validateControl(elem, null, true);
+}
+
+Nette.validators['equal'] = function(elem, op, arg, val) {
+	arg = arg instanceof Array ? arg : [arg];
+	for (var i in arg) {
+		if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Nette.validators['minLength'] = function(elem, op, arg, val) {
+	return val.length >= arg;
+}
+
+Nette.validators['maxLength'] = function(elem, op, arg, val) {
+	return val.length <= arg;
+}
+
+Nette.validators['length'] = function(elem, op, arg, val) {
+	if (typeof arg !== 'object') {
+		arg = [arg, arg];
+	}
+	return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
+}
+
+Nette.validators['email'] = function(elem, op, arg, val) {
+	return (/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i).test(val);
+}
+
+Nette.validators['url'] = function(elem, op, arg, val) {
+	return (/^.+\.[a-z]{2,6}(\/.*)?$/i).test(val);
+}
+
+Nette.validators['regexp'] = function(elem, op, arg, val) {
+	var parts = arg.match(/^\/(.*)\/([imu]*)$/);
+	if (parts) { try {
+		return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
+	} catch (e) {} }
+	return;
+}
+
+Nette.validators['pattern'] = function(elem, op, arg, val) {
+	return (new RegExp(arg)).test(val);
+}
+
+Nette.validators['integer'] = function(elem, op, arg, val) {
+	return (/^-?[0-9]+$/).test(val);
+}
+
+Nette.validators['float'] = function(elem, op, arg, val) {
+	return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
+}
+
+Nette.validators['range'] = function(elem, op, arg, val) {
+	return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
+}
+
+Nette.validators['submitted'] = function(elem, op, arg, val) {
+	return elem.form['nette-submittedBy'] === elem;
+}
 
 Nette.validateRule = function(elem, op, arg) {
 	var val = Nette.getValue(elem);
 
 	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-nette-empty-value')) { val = null; }
+		if (val === elem.getAttribute('data-nette-empty-value')) val = null;
 	}
 
-	switch (op) {
-	case ':filled':
-		return val !== '' && val !== false && val !== null;
-
-	case ':valid':
-		return Nette.validateControl(elem, null, true);
-
-	case ':equal':
-		arg = arg instanceof Array ? arg : [arg];
-		for (var i in arg) {
-			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
-				return true;
-			}
+	var fnc;
+	if(op.charAt(0) == ':') {
+		fnc = Nette.validators[op.substr(1)];
+		if(fnc) {
+			return fnc(elem, op, arg, val);
 		}
-		return false;
-
-	case ':minLength':
-		return val.length >= arg;
-
-	case ':maxLength':
-		return val.length <= arg;
-
-	case ':length':
-		if (typeof arg !== 'object') {
-			arg = [arg, arg];
+	} else {
+		var name = op.match(/::(validate)?(.*)$/)[2];
+		name = name.charAt(0).toLowerCase() + name.substr(1);
+		fnc = Nette.validators[name];
+		if(fnc) {
+			return fnc(elem, op, arg, val);
 		}
-		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
-
-	case ':email':
-		return (/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i).test(val);
-
-	case ':url':
-		return (/^.+\.[a-z]{2,6}(\/.*)?$/i).test(val);
-
-	case ':regexp':
-		var parts = arg.match(/^\/(.*)\/([imu]*)$/);
-		if (parts) { try {
-			return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-		} catch (e) {} }
-		return;
-
-	case ':pattern':
-		return (new RegExp(arg)).test(val);
-
-	case ':integer':
-		return (/^-?[0-9]+$/).test(val);
-
-	case ':float':
-		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
-
-	case ':range':
-		return (arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1]);
-
-	case ':submitted':
-		return elem.form['nette-submittedBy'] === elem;
 	}
 	return null;
 };

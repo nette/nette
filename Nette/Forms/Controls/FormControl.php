@@ -533,14 +533,24 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	{
 		$payload = array();
 		foreach ($rules as $rule) {
-			if (!is_string($rule->operation)) {
+			$item = array('op' => ($rule->isNegative ? '~' : ''));
+			if ($rule->operation instanceof Closure || is_array($rule->operation->getNative())) {
 				continue;
-
 			} elseif ($rule->type === Rule::VALIDATOR) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'msg' => $rules->formatMessage($rule, FALSE));
-
+				$item['msg'] = $rules->formatMessage($rule, FALSE);
+				if (!is_string($rule->operation)) {
+					$item['op'] .= $rule->operation->getNative();
+				} else {
+					$item['op'] .= $rule->operation;
+				}
 			} elseif ($rule->type === Rule::CONDITION) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
+				$item['rules'] = self::exportRules($rule->subRules);
+				$item['control'] = $rule->control->getHtmlName();
+				if (!is_string($rule->operation)) {
+					$item['op'] .= $rule->operation->getNative();
+				} else {
+					$item['op'] .= $rule->operation;
+				}
 				if ($rule->subRules->getToggles()) {
 					$item['toggle'] = $rule->subRules->getToggles();
 				}
