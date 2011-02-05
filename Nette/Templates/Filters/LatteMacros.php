@@ -710,20 +710,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroIfset($content)
 	{
-		$s = "";
-		$i = 0;
-		while(($name = $this->fetchToken($content)) != null) {
-			if($i != 0)
-				$s .= ',';
-			if(String::startsWith($name, '#')) {
-				$name = ltrim($name, '#');
-				$s .= "\$_l->blocks['$name']";
-			} else {
-				$s .= $name;
-			}
-			$i++;
+		if (strpos($content, '#') === FALSE) return $content;
+		$list = array();
+		while (($name = $this->fetchToken($content)) !== NULL) {
+			if ($name[0] === '#') $name = '$_l->blocks["' . substr($name, 1) . '"]';
+			$list[] = $name;
 		}
-		return $s;
+		return implode(', ', $list);
 	}
 
 
