@@ -62,7 +62,7 @@ Nette.getValue = function(elem) {
 
 Nette.validateControl = function(elem, rules, onlyCheck) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
-	for (var id in rules) {
+	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
 		rule.op = op[2];
@@ -133,7 +133,7 @@ Nette.validateRule = function(elem, op, arg) {
 
 	case ':equal':
 		arg = arg instanceof Array ? arg : [arg];
-		for (var i in arg) {
+		for (var i = 0, len = arg.length; i < len; i++) {
 			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
 				return true;
 			}
@@ -197,7 +197,7 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	var has = false, handler = function() { Nette.toggleForm(elem.form); };
 
-	for (var id in rules) {
+	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
 		rule.neg = op[1];
 		rule.op = op[2];
@@ -222,7 +222,7 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 					Nette.addEvent(el, 'click', handler);
 				}
 			}
-			for (var id2 in rule.toggle || []) {
+			for (var id2 = 0, len2 = rule.toggle ? rule.toggle.length : 0; id2 < len2; id2++) {
 				Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]);
 			}
 		}

@@ -11,7 +11,7 @@ var Nette = Nette || {};
 
 // simple class builder
 Nette.Class = function(def) {
-	var cl = def.constructor || function(){}, nm;
+	var cl = def.constructor || function(){}, nm, __hasProp = Object.prototype.hasOwnProperty;
 	delete def.constructor;
 
 	if (def.Extends) {
@@ -22,11 +22,11 @@ Nette.Class = function(def) {
 	}
 
 	if (def.Static) {
-		for (nm in def.Static) { cl[nm] = def.Static[nm]; }
+		for (nm in def.Static) { if (__hasProp.call(def.Static, nm)) cl[nm] = def.Static[nm]; }
 		delete def.Static;
 	}
 
-	for (nm in def) { cl.prototype[nm] = def[nm]; }
+	for (nm in def) { if (__hasProp.call(def, nm)) cl.prototype[nm] = def[nm]; }
 	return cl;
 };
 
@@ -40,8 +40,11 @@ Nette.Q = Nette.Class({
 		},
 
 		implement: function(methods) {
-			var nm, fn = Nette.Q.implement, prot = Nette.Q.prototype;
+			var nm, fn = Nette.Q.implement, prot = Nette.Q.prototype, __hasProp = Object.prototype.hasOwnProperty;
 			for (nm in methods) {
+				if (!__hasProp.call(methods, nm)) {
+					continue;
+				}
 				fn[nm] = methods[nm];
 				prot[nm] = (function(nm){
 					return function() { return this.each(fn[nm], arguments); };
