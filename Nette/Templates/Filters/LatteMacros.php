@@ -72,7 +72,7 @@ class LatteMacros extends Nette\Object
 		'elseif' => '<?php elseif (%%): ?>',
 		'else' => '<?php else: ?>',
 		'/if' => '<?php endif ?>',
-		'ifset' => '<?php if (isset(%%)): ?>',
+		'ifset' => '<?php if (isset(%:macroIfset%)): ?>',
 		'/ifset' => '<?php endif ?>',
 		'elseifset' => '<?php elseif (isset(%%)): ?>',
 		'foreach' => '<?php foreach (%:macroForeach%): ?>',
@@ -711,6 +711,21 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroForeach($content)
 	{
 		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
+	}
+
+
+
+	/**
+	 * {ifset ...}
+	 */
+	public function macroIfset($content)
+	{
+		if (strpos($content, '#') === FALSE) return $content;
+		$list = array();
+		while (($name = $this->fetchToken($content)) !== NULL) {
+			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
+		}
+		return implode(', ', $list);
 	}
 
 
