@@ -533,14 +533,17 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	{
 		$payload = array();
 		foreach ($rules as $rule) {
-			if (!is_string($rule->operation)) {
-				continue;
-
-			} elseif ($rule->type === Rule::VALIDATOR) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'msg' => $rules->formatMessage($rule, FALSE));
+			if (!is_string($op = $rule->operation)) {
+				$op = callback($op);
+				if (!$op->isStatic()) {
+					continue;
+				}
+			}
+			if ($rule->type === Rule::VALIDATOR) {
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => $rules->formatMessage($rule, FALSE));
 
 			} elseif ($rule->type === Rule::CONDITION) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $rule->operation, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
+				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
 				if ($rule->subRules->getToggles()) {
 					$item['toggle'] = $rule->subRules->getToggles();
 				}
