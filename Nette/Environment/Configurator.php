@@ -24,7 +24,7 @@ use Nette,
 class Configurator extends Object
 {
 	/** @var string */
-	public $defaultConfigFile = '%appDir%/config.ini';
+	public $defaultConfigFile = '%appDir%/config.neon';
 
 	/** @var array */
 	public $defaultServices = array(
@@ -120,6 +120,9 @@ class Configurator extends Object
 				$file = $this->defaultConfigFile;
 			}
 			$file = Environment::expand($file);
+			if (!is_file($file)) {
+				$file = preg_replace('#\.neon$#', '.ini', $file); // backcompatibility
+			}
 			$config = Config::fromFile($file, $name);
 		}
 
