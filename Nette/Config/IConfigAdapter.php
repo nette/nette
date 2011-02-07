@@ -26,18 +26,16 @@ interface IConfigAdapter
 	/**
 	 * Reads configuration from file.
 	 * @param  string  file name
-	 * @param  string  section to load
 	 * @return array
 	 */
-	static function load($file, $section = NULL);
+	static function load($file);
 
 	/**
 	 * Writes configuration to file.
 	 * @param  Config to save
 	 * @param  string  file
-	 * @param  string  section name
 	 * @return void
 	 */
-	static function save($config, $file, $section = NULL);
+	static function save($config, $file);
 
 }

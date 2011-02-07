@@ -60,13 +60,18 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public static function fromFile($file, $section = NULL)
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		if (isset(self::$extensions[$extension])) {
-			$arr = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
-			return new static($arr);
-
-		} else {
+		if (!isset(self::$extensions[$extension])) {
 			throw new \InvalidArgumentException("Unknown file extension '$file'.");
 		}
+
+		$data = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
+		if ($section) {
+			if (!isset($data[$section]) || !is_array($data[$section])) {
+				throw new \InvalidStateException("There is not section [$section] in '$file'.");
+			}
+			$data = $data[$section];
+		}
+		return new static($data);
 	}
 
 
@@ -86,18 +91,15 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Save configuration to file.
 	 * @param  string  file
-	 * @param  string  section to write
 	 * @return void
 	 */
-	public function save($file, $section = NULL)
+	public function save($file)
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		if (isset(self::$extensions[$extension])) {
-			return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file, $section);
-
-		} else {
+		if (!isset(self::$extensions[$extension])) {
 			throw new \InvalidArgumentException("Unknown file extension '$file'.");
 		}
+		return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file);
 	}
 
 
