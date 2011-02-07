@@ -63,7 +63,7 @@
 										<li><p>
 
 											<a href="editor:%a%" title="%a%Debug.error-in-eval.phpt">
-						Debug/<b>Debug.error-in-eval.phpt</b></a> (%d%)
+						Diagnostics/<b>Debug.error-in-eval.phpt</b></a> (%d%)
 					<a href="#" rel="netteBsSrc1-2">source <abbr>&#x25ba;</abbr></a>&nbsp;
 										eval
 					()
@@ -77,7 +77,7 @@
 										<li><p>
 
 											<a href="editor:%a%" title="%a%Debug.error-in-eval.phpt">
-						Debug/<b>Debug.error-in-eval.phpt</b></a> (%d%)
+						Diagnostics/<b>Debug.error-in-eval.phpt</b></a> (%d%)
 					<a href="#" rel="netteBsSrc1-3">source <abbr>&#x25ba;</abbr></a>&nbsp;
 										first
 					(<a href="#" rel="netteBsArgs1-3">arguments <abbr>&#x25ba;</abbr></a>)

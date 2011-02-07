@@ -43,13 +43,13 @@ define('NETTE_PACKAGE', '5.3');
 
 
 
-require_once __DIR__ . '/Utils/shortcuts.php';
-require_once __DIR__ . '/Utils/exceptions.php';
-require_once __DIR__ . '/Utils/Object.php';
+require_once __DIR__ . '/tools/shortcuts.php';
+require_once __DIR__ . '/tools/exceptions.php';
+require_once __DIR__ . '/tools/Object.php';
 require_once __DIR__ . '/Loaders/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
-require_once __DIR__ . '/Debug/DebugHelpers.php';
+require_once __DIR__ . '/Diagnostics/DebugHelpers.php';
 
 
 Nette\Loaders\NetteLoader::getInstance()->register();
