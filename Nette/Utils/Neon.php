@@ -16,12 +16,14 @@ use Nette;
 
 
 /**
- * Simple parser for Nette Object Notation.
+ * Simple parser & generator for Nette Object Notation.
  *
  * @author     David Grudl
  */
-class NeonParser extends Object
+class Neon extends Object
 {
+	const BLOCK = 1;
+
 	/** @var array */
 	private static $patterns = array(
 		'\'[^\'\n]*\'|"(?:\\\\.|[^"\\\\\n])*"', // string
@@ -43,33 +45,86 @@ class NeonParser extends Object
 	);
 
 	/** @var int */
-	private $n;
+	private $n = 0;
+
+
+	/**
+	 * Returns the NEON representation of a value.
+	 * @param  mixed
+	 * @param  int
+	 * @return string
+	 */
+	public static function encode($var, $options = NULL)
+	{
+		if (is_object($var)) {
+			$obj = $var; $var = array();
+			foreach ($obj as $k => $v) {
+				$var[$k] = $v;
+			}
+		}
+		if (is_array($var)) {
+			$isArray = array_keys($var) === range(0, count($var) - 1);
+			$s = '';
+			if ($options & self::BLOCK) {
+				foreach ($var as $k => $v) {
+					$s .= $isArray ? '- ' : self::encode($k) . ':';
+					if (is_object($v) || is_array($v)) {
+						$c = 0;
+						foreach ($v as $k2 => $v2) {
+							if (is_array($v2) || is_object($v2) || (string) $k2 !== (string) $c++) {
+								$s .= "\n\t" . str_replace("\n", "\n\t", self::encode($v, self::BLOCK)) . "\n";
+								continue 2;
+							}
+						}
+					}
+					$s .= (!$isArray && $v === NULL) ? "\n" : ' ' . self::encode($v) . "\n";
+				}
+				return $s;
+
+			} else {
+				foreach ($var as $k => $v) {
+					$s .= ($isArray ? '' : self::encode($k) . ': ') . self::encode($v) . ', ';
+				}
+				return ($isArray ? '[' : '{') . substr($s, 0, -2) . ($isArray ? ']' : '}');
+			}
+
+		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^(true|false|yes|no|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
+			return $var;
+
+		} else {
+			return json_encode($var);
+		}
+	}
 
 
 
 	/**
-	 * Parser.
+	 * Decodes a NEON string.
 	 * @param  string
-	 * @return array
+	 * @return mixed
 	 */
-	public function parse($input)
+	public static function decode($input)
 	{
-		if (!self::$tokenizer) { // speed-up
+		if (!is_string($input)) {
+			throw new \InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
+		}
+		if (!self::$tokenizer) {
 			self::$tokenizer = new Tokenizer(self::$patterns, 'mi');
 		}
+
 		$input = str_replace("\r", '', $input);
 		$input = strtr($input, "\t", ' ');
 		$input = "\n" . $input . "\n"; // first \n is required by "Indent"
 		self::$tokenizer->tokenize($input);
 
-		$this->n = 0;
-		$res = $this->_parse();
+		$parser = new self;
+		$res = $parser->parse();
 
-		while (isset(self::$tokenizer->tokens[$this->n])) {
-			if (self::$tokenizer->tokens[$this->n][0] === "\n") {
-				$this->n++;
+		while (isset(self::$tokenizer->tokens[$parser->n])) {
+			if (self::$tokenizer->tokens[$parser->n][0] === "\n") {
+				$parser->n++;
 			} else {
-				$this->error();
+				$parser->error();
 			}
 		}
 		return $res;
@@ -78,12 +133,11 @@ class NeonParser extends Object
 
 
 	/**
-	 * Tokenizer & parser.
 	 * @param  int  indentation (for block-parser)
 	 * @param  string  end char (for inline-hash/array parser)
 	 * @return array
 	 */
-	private function _parse($indent = NULL, $endBracket = NULL)
+	private function parse($indent = NULL, $endBracket = NULL)
 	{
 		$inlineParser = $endBracket !== NULL; // block or inline parser?
 
@@ -124,7 +178,7 @@ class NeonParser extends Object
 					$this->error();
 				}
 				$hasValue = TRUE;
-				$value = $this->_parse(NULL, self::$brackets[$tokens[$n++]]);
+				$value = $this->parse(NULL, self::$brackets[$tokens[$n++]]);
 
 			} elseif ($t === ']' || $t === '}' || $t === ')') { // Closing bracket ] ) }
 				if ($t !== $endBracket) { // unexpected type of bracket or block-parser
@@ -159,9 +213,9 @@ class NeonParser extends Object
 						if ($hasValue || !$hasKey) {
 							$this->error();
 						} elseif ($key === NULL) {
-							$result[] = $this->_parse($newIndent);
+							$result[] = $this->parse($newIndent);
 						} else {
-							$result[$key] = $this->_parse($newIndent);
+							$result[$key] = $this->parse($newIndent);
 						}
 						$newIndent = strlen($tokens[$n]) - 1;
 						$hasKey = FALSE;
@@ -221,4 +275,13 @@ class NeonParser extends Object
 		throw new NeonException(str_replace('%s', $token, $message) . "' on line " . ($line - 1) . ", column $col.");
 	}
 
+}
+
+
+
+/**
+ * The exception that indicates error of NEON decoding.
+ */
+class NeonException extends \Exception
+{
 }

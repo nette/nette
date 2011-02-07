@@ -8,15 +8,13 @@
  * @subpackage UnitTests
  */
 
-use Nette\NeonParser;
+use Nette\Neon;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-
-$parser = new NeonParser;
 
 Assert::same( array(
 	TRUE,
@@ -30,7 +28,7 @@ Assert::same( array(
 	FALSE,
 	NULL,
 	NULL,
-), $parser->parse('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
+), Neon::decode('[true, tRuE, TRUE, false, FALSE, yes, YES, no, NO, null, NULL,]') );
 
 
 Assert::same( array(
@@ -38,7 +36,7 @@ Assert::same( array(
 	'' => 1,
 	-5 => 1,
 	'5.3' => 1,
-), $parser->parse('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
+), Neon::decode('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
 
 
 Assert::same( array(
@@ -48,4 +46,4 @@ Assert::same( array(
 		'c' => 'd',
 	),
 	'e' => 'f',
-), $parser->parse('{a, b, {c: d}, e: f,}') );
+), Neon::decode('{a, b, {c: d}, e: f,}') );
