@@ -343,7 +343,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * @param  Nette\Caching\Cache
+	 * @param  Nette\Caching\ICacheStorage
 	 * @return RobotLoader
 	 */
 	public function setCacheStorage(Nette\Caching\ICacheStorage $storage)
@@ -355,7 +355,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * @return Nette\Caching\Cache
+	 * @return Nette\Caching\ICacheStorage
 	 */
 	public function getCacheStorage()
 	{
