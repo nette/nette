@@ -187,12 +187,13 @@ abstract class Component extends Object implements IComponent
 
 
 	/**
-	 * Sets the parent of this component. This method is managed by containers and should.
+	 * Sets the parent of this component. This method is managed by containers and should
 	 * not be called by applications
 	 * @param  IComponentContainer  New parent or null if this component is being removed from a parent
 	 * @param  string
 	 * @return Component  provides a fluent interface
 	 * @throws \InvalidStateException
+	 * @internal
 	 */
 	public function setParent(IComponentContainer $parent = NULL, $name = NULL)
 	{
