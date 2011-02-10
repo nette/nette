@@ -176,7 +176,11 @@ class ComponentContainer extends Component implements IComponentContainer
 		$ucname = ucfirst($name);
 		$method = 'createComponent' . $ucname;
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
-			return $this->$method($name);
+			$component = $this->$method($name);
+			if (!$component instanceof IComponent && !isset($this->components[$name])) {
+				throw new \UnexpectedValueException("Method {$this->reflection->name}::$method() did not return or create the desired component.");
+			}
+			return $component;
 		}
 	}
 
