@@ -129,7 +129,7 @@ class Application extends Nette\Object
 				$request->freeze();
 
 				// Execute presenter
-				$this->presenter = new $class;
+				$this->presenter = $this->getPresenterFactory()->createPresenter($class);
 				$response = $this->presenter->run($request);
 				$this->onResponse($this, $response);
 
@@ -288,6 +288,17 @@ class Application extends Nette\Object
 	public function getPresenterLoader()
 	{
 		return $this->context->getService('Nette\\Application\\IPresenterLoader');
+	}
+
+
+
+	/**
+	 * Returns presenter factory.
+	 * @return IPresenterFactory
+	 */
+	public function getPresenterFactory()
+	{
+		return $this->context->getService('Nette\\Application\\IPresenterFactory');
 	}
 
 
