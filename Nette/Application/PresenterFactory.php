@@ -20,7 +20,7 @@ use Nette;
  *
  * @author Jan Tichý <tichy@medio.cz>
  */
-interface IPresenterFactory
+class PresenterFactory implements IPresenterFactory
 {
 
 	/**
