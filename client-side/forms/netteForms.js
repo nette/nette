@@ -121,7 +121,7 @@ Nette.validateRule = function(elem, op, arg) {
 	var val = Nette.getValue(elem);
 
 	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-nette-empty-value')) { val = null; }
+		if (val === elem.getAttribute('data-nette-empty-value')) { val = ''; }
 	}
 
 	if (op.charAt(0) === ':') {
