@@ -38,6 +38,7 @@ class Configurator extends Object
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+    'Nette\\Templates\\IFileTemplate' => 'Nette\\Templates\\FileTemplate',
 	);
 
 
