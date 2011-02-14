@@ -89,11 +89,12 @@ class FileTemplate extends Template implements IFileTemplate
 
 		$this->__set('template', $this);
 
-		$cache = new Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
+		$cache = new Cache($storage = $this->getCacheStorage(), $this->getCacheNamespace());
 		if ($storage instanceof TemplateCacheStorage) {
 			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
 		}
-		$cached = $content = $cache[$this->file];
+    $cacheKey = $this->getCacheKey();
+		$cached = $content = $cache[$cacheKey];
 
 		if ($content === NULL) {
 			try {
@@ -106,7 +107,7 @@ class FileTemplate extends Template implements IFileTemplate
 			}
 
 			$cache->save(
-				$this->file,
+				$cacheKey,
 				$content,
 				array(
 					Cache::FILES => $this->file,
@@ -131,7 +132,25 @@ class FileTemplate extends Template implements IFileTemplate
 
 	/********************* caching ****************d*g**/
 
+  /**
+   * Get namespace to be used in cache
+   * (allow it to be overridden)
+   * @return string
+   */
+  protected function getCacheNamespace()
+  {
+    return 'Nette.FileTemplate';
+  }
 
+  /**
+   * Get key to be asked from/saved to cache
+   * (allow it to be overridden)
+   * @return string
+   */
+  protected function getCacheKey()
+  {
+    return $this->file;
+  }
 
 	/**
 	 * Set cache storage.
