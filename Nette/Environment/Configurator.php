@@ -38,6 +38,9 @@ class Configurator extends Object
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+		'Nette\\Application\\IRouter' => 'Nette\Application\MultiRouter',
+		'Nette\\Application\\IPresenterFactory' => 'Nette\Application\PresenterFactory',
+		'Nette\\Application\\IPresenterLoader' => array(__CLASS__, 'createPresenterLoader'),
 	);
 
 
@@ -273,6 +276,16 @@ class Configurator extends Object
 
 
 	/**
+	 * @return Nette\Application\IPresenterLoader
+	 */
+	public function createPresenterLoader()
+	{
+		return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
+	}
+
+
+
+	/**
 	 * @return Nette\Application\Application
 	 */
 	public static function createApplication(array $options = NULL)
@@ -281,21 +294,9 @@ class Configurator extends Object
 			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBaseUri());
 		}
 
-		$context = clone Environment::getContext();
-		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
-
-		if (!$context->hasService('Nette\\Application\\IPresenterFactory')) {
-			$context->addService('Nette\\Application\\IPresenterFactory', 'Nette\Application\PresenterFactory');
-		}
-		if (!$context->hasService('Nette\\Application\\IPresenterLoader')) {
-			$context->addService('Nette\\Application\\IPresenterLoader', function() {
-				return new Nette\Application\PresenterLoader(Environment::getVariable('appDir'));
-			});
-		}
-
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class;
-		$application->setContext($context);
+		$application->setContext(Environment::getContext());
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
 	}
