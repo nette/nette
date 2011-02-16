@@ -172,5 +172,6 @@ $request = new PresenterRequest('Test', Nette\Web\HttpRequest::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter;
+$presenter->setContext(Environment::getContext());
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);

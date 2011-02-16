@@ -130,6 +130,9 @@ class Application extends Nette\Object
 
 				// Execute presenter
 				$this->presenter = $this->getPresenterFactory()->createPresenter($class);
+				if ($this->presenter instanceof Nette\IContextAware) {
+					$this->presenter->setContext($this->getContext());
+				}
 				$response = $this->presenter->run($request);
 				$this->onResponse($this, $response);
 

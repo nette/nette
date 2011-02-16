@@ -144,6 +144,7 @@ class NetteLoader extends AutoLoader
 		'nette\icomponent' => '/ComponentModel/IComponent.php',
 		'nette\icomponentcontainer' => '/ComponentModel/IComponentContainer.php',
 		'nette\icontext' => '/Injection/IContext.php',
+		'nette\icontextaware' => '/Injection/IContextAware.php',
 		'nette\idebugpanel' => '/Diagnostics/IDebugPanel.php',
 		'nette\ifreezable' => '/tools/IFreezable.php',
 		'nette\image' => '/tools/Image.php',
