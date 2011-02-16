@@ -28,14 +28,19 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 	/** @var string */
 	private $contentType;
 
+	/** @var Nette\Web\IHttpResponse */
+	private $httpResponse;
+
 
 
 	/**
+	 * @param  Nette\Web\IHttpResponse  http response
 	 * @param  array|stdClass  payload
 	 * @param  string    MIME content type
 	 */
-	public function __construct($payload, $contentType = NULL)
+	public function __construct(Nette\Web\IHttpResponse $httpResponse, $payload, $contentType = NULL)
 	{
+		$this->httpResponse = $httpResponse;
 		if (!is_array($payload) && !$payload instanceof \stdClass) {
 			throw new \InvalidArgumentException("Payload must be array or anonymous class, " . gettype($payload) . " given.");
 		}
@@ -72,8 +77,8 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		Nette\Environment::getHttpResponse()->setContentType($this->contentType);
-		Nette\Environment::getHttpResponse()->setExpiration(FALSE);
+		$this->httpResponse->setContentType($this->contentType);
+		$this->httpResponse->setExpiration(FALSE);
 		echo Nette\Json::encode($this->payload);
 	}
 

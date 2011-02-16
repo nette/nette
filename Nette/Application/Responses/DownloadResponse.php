@@ -31,15 +31,21 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 	/** @var string */
 	private $name;
 
+	/** @var Nette\Web\IHttpResponse */
+	private $httpResponse;
+
 
 
 	/**
+	 * @param  Nette\Web\IHttpResponse  http response
 	 * @param  string  file path
 	 * @param  string  user name name
 	 * @param  string  MIME content type
 	 */
-	public function __construct($file, $name = NULL, $contentType = NULL)
+	public function __construct(Nette\Web\IHttpResponse $httpResponse, $file, $name = NULL, $contentType = NULL)
 	{
+		$this->httpResponse = $httpResponse;
+
 		if (!is_file($file)) {
 			throw new BadRequestException("File '$file' doesn't exist.");
 		}
@@ -90,8 +96,8 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		Nette\Environment::getHttpResponse()->setContentType($this->contentType);
-		Nette\Environment::getHttpResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
+		$this->httpResponse->setContentType($this->contentType);
+		$this->httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
 		readfile($this->file);
 	}
 

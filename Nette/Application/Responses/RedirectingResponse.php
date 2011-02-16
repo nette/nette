@@ -28,14 +28,19 @@ class RedirectingResponse extends Nette\Object implements IPresenterResponse
 	/** @var int */
 	private $code;
 
+	/** @var Nette\Web\IHttpResponse */
+	private $httpResponse;
+
 
 
 	/**
+	 * @param  Nette\Web\IHttpResponse  http response
 	 * @param  string  URI
 	 * @param  int     HTTP code 3xx
 	 */
-	public function __construct($uri, $code = Nette\Web\IHttpResponse::S302_FOUND)
+	public function __construct(Nette\Web\IHttpResponse $httpResponse, $uri, $code = Nette\Web\IHttpResponse::S302_FOUND)
 	{
+		$this->httpResponse = $httpResponse;
 		$this->uri = (string) $uri;
 		$this->code = (int) $code;
 	}
@@ -68,7 +73,7 @@ class RedirectingResponse extends Nette\Object implements IPresenterResponse
 	 */
 	public function send()
 	{
-		Nette\Environment::getHttpResponse()->redirect($this->uri, $this->code);
+		$this->httpResponse->redirect($this->uri, $this->code);
 	}
 
 }

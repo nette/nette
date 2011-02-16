@@ -582,7 +582,7 @@ abstract class Presenter extends Control implements IPresenter, Nette\IContextAw
 	 */
 	public function sendPayload()
 	{
-		$this->sendResponse(new JsonResponse($this->payload));
+		$this->sendResponse(new JsonResponse($this->getHttpResponse(), $this->payload));
 	}
 
 
@@ -660,7 +660,7 @@ abstract class Presenter extends Control implements IPresenter, Nette\IContextAw
 		} elseif (!$code) {
 			$code = $this->getHttpRequest()->isMethod('post') ? Nette\Web\IHttpResponse::S303_POST_GET : Nette\Web\IHttpResponse::S302_FOUND;
 		}
-		$this->sendResponse(new RedirectingResponse($uri, $code));
+		$this->sendResponse(new RedirectingResponse($this->getHttpResponse(), $uri, $code));
 	}
 
 
@@ -709,7 +709,7 @@ abstract class Presenter extends Control implements IPresenter, Nette\IContextAw
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
 			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
-				$this->sendResponse(new RedirectingResponse($uri, Nette\Web\IHttpResponse::S301_MOVED_PERMANENTLY));
+				$this->sendResponse(new RedirectingResponse($this->getHttpResponse(), $uri, Nette\Web\IHttpResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
 	}
