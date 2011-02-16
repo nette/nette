@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Thread safe / atomic file manipulation. Stream safe://
+ * Provides atomicity and isolation for thread safe file manipulation using stream safe://
  *
  * <code>
  * file_put_contents('safe://myfile.txt', $content);
@@ -36,14 +36,17 @@ final class SafeStream
 	/** @var resource  orignal file handle */
 	private $handle;
 
+	/** @var resource  temporary file handle */
+	private $tempHandle;
+
 	/** @var string  orignal file path */
-	private $filePath;
+	private $file;
 
 	/** @var string  temporary file path */
 	private $tempFile;
 
-	/** @var int  starting position in file (for appending) */
-	private $startPos = 0;
+	/** @var bool */
+	private $deleteFile;
 
 	/** @var bool  error detected? */
 	private $writeError = FALSE;
@@ -77,74 +80,98 @@ final class SafeStream
 		$mode = trim($mode, 'tb');     // mode
 		$use_path = (bool) (STREAM_USE_PATH & $options); // use include_path?
 
-		$append = FALSE;
+		// open file
+		if ($mode === 'r') { // provides only isolation
+			return $this->checkAndLock($this->tempHandle = fopen($path, 'r'.$flag, $use_path), LOCK_SH);
 
-		switch ($mode) {
-		case 'r':
-		case 'r+':
-			// enter critical section: open and lock EXISTING file for reading/writing
-			$handle = @fopen($path, $mode.$flag, $use_path); // intentionally @
-			if (!$handle) return FALSE;
-			if (flock($handle, $mode == 'r' ? LOCK_SH : LOCK_EX)) {
-				$this->handle = $handle;
-				return TRUE;
+		} elseif ($mode === 'r+' || $mode[0] === 'a') {
+			if (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
+				return FALSE;
 			}
+
+		} elseif ($mode[0] === 'x') {
+			if (!$this->checkAndLock($this->handle = fopen($path, 'x'.$flag, $use_path), LOCK_EX)) {
+				return FALSE;
+			}
+			$this->deleteFile = TRUE;
+
+		} elseif ($mode[0] === 'w') {
+			if ($this->checkAndLock($this->handle = @fopen($path, 'x'.$flag, $use_path), LOCK_EX)) { // intentionally @
+				$this->deleteFile = TRUE;
+
+			} elseif (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
+				return FALSE;
+			}
+
+		} else {
+			trigger_error("Unknown mode $mode", E_USER_WARNING);
+			return FALSE;
+		}
+
+		// create temporary file in the same directory to provide atomicity
+		$tmp = '~~' . lcg_value() . '.tmp';
+		if (!$this->tempHandle = fopen($path . $tmp, (strpos($mode, '+') ? 'x+' : 'x').$flag, $use_path)) {
+			$this->clean();
+			return FALSE;
+		}
+		$this->tempFile = realpath($path . $tmp);
+		$this->file = substr($this->tempFile, 0, -strlen($tmp));
+
+		// copy to temporary file
+		if ($mode === 'r+' || $mode[0] === 'a') {
+			while (!feof($this->handle)) {
+				$s = fread($this->handle, 8192);
+				$len = fwrite($this->tempHandle, $s, strlen($s));
+				if ($len !== strlen($s) || true) {
+					$this->clean();
+					return FALSE;
+				}
+			}
+
+			if ($mode[0] === 'a') { // emulate append mode
+				fseek($this->tempHandle, 0, SEEK_END);
+			}
+		}
+
+		return TRUE;
+	}
+
+
+
+	/**
+	 * Checks handle and locks file.
+	 * @return bool
+	 */
+	private function checkAndLock($handle, $lock)
+	{
+		if (!$handle) {
+			return FALSE;
+
+		} elseif (!flock($handle, $lock)) {
 			fclose($handle);
 			return FALSE;
+		}
 
-		case 'a':
-		case 'a+': $append = TRUE;
-		case 'w':
-		case 'w+':
-			// try enter critical section: open and lock EXISTING file for rewriting
-			$handle = @fopen($path, 'r+'.$flag, $use_path); // intentionally @
+		return TRUE;
+	}
 
-			if ($handle) {
-				if (flock($handle, LOCK_EX)) {
-					if ($append) {
-						fseek($handle, 0, SEEK_END);
-						$this->startPos = ftell($handle);
-					} else {
-						ftruncate($handle, 0);
-					}
-					$this->handle = $handle;
-					return TRUE;
-				}
-				fclose($handle);
-			}
-			// file doesn't exists, continue...
-			$mode{0} = 'x'; // x || x+
 
-		case 'x':
-		case 'x+':
-			if (file_exists($path)) return FALSE;
 
-			// create temporary file in the same directory
-			$tmp = '~~' . time() . '.tmp';
-
-			// enter critical section: create temporary file
-			$handle = @fopen($path . $tmp, $mode . $flag, $use_path); // intentionally @
-			if ($handle) {
-				if (flock($handle, LOCK_EX)) {
-					$this->handle = $handle;
-					if (!@rename($path . $tmp, $path)) { // intentionally @
-						// rename later - for windows
-						$this->tempFile = realpath($path . $tmp);
-						$this->filePath = substr($this->tempFile, 0, -strlen($tmp));
-					}
-					return TRUE;
-				}
-				fclose($handle);
-				unlink($path . $tmp);
-			}
-			return FALSE;
-
-		default:
-			trigger_error("Unsupported mode $mode", E_USER_WARNING);
-			return FALSE;
-		} // switch
-
-	} // stream_open
+	/**
+	 * Error destructor.
+	 */
+	private function clean()
+	{
+		flock($this->handle, LOCK_UN);
+		fclose($this->handle);
+		if ($this->deleteFile) {
+			unlink($this->file);
+		}
+		if ($this->tempHandle) {
+			fclose($this->tempHandle);
+			unlink($this->tempFile);
+		}
+	}
 
 
 
@@ -154,18 +181,20 @@ final class SafeStream
 	 */
 	public function stream_close()
 	{
-		if ($this->writeError) {
-			ftruncate($this->handle, $this->startPos);
+		if (!$this->tempFile) { // 'r' mode
+			flock($this->tempHandle, LOCK_UN);
+			fclose($this->tempHandle);
+			return;
 		}
 
 		flock($this->handle, LOCK_UN);
 		fclose($this->handle);
+		fclose($this->tempHandle);
 
-		// are we working with temporary file?
-		if ($this->tempFile) {
-			// try to rename temp file, otherwise delete temp file
-			if (!@rename($this->tempFile, $this->filePath)) { // intentionally @
-				unlink($this->tempFile);
+		if ($this->writeError || !rename($this->tempFile, $this->file)) { // try to rename temp file
+			unlink($this->tempFile); // otherwise delete temp file
+			if ($this->deleteFile) {
+				unlink($this->file);
 			}
 		}
 	}
@@ -179,7 +208,7 @@ final class SafeStream
 	 */
 	public function stream_read($length)
 	{
-		return fread($this->handle, $length);
+		return fread($this->tempHandle, $length);
 	}
 
 
@@ -192,7 +221,7 @@ final class SafeStream
 	public function stream_write($data)
 	{
 		$len = strlen($data);
-		$res = fwrite($this->handle, $data, $len);
+		$res = fwrite($this->tempHandle, $data, $len);
 
 		if ($res !== $len) { // disk full?
 			$this->writeError = TRUE;
@@ -209,7 +238,7 @@ final class SafeStream
 	 */
 	public function stream_tell()
 	{
-		return ftell($this->handle);
+		return ftell($this->tempHandle);
 	}
 
 
@@ -220,7 +249,7 @@ final class SafeStream
 	 */
 	public function stream_eof()
 	{
-		return feof($this->handle);
+		return feof($this->tempHandle);
 	}
 
 
@@ -233,18 +262,18 @@ final class SafeStream
 	 */
 	public function stream_seek($offset, $whence)
 	{
-		return fseek($this->handle, $offset, $whence) === 0; // ???
+		return fseek($this->tempHandle, $offset, $whence) === 0; // ???
 	}
 
 
 
 	/**
-	 * Gets information about a file referenced by $this->handle.
+	 * Gets information about a file referenced by $this->tempHandle.
 	 * @return array
 	 */
 	public function stream_stat()
 	{
-		return fstat($this->handle);
+		return fstat($this->tempHandle);
 	}
 
 
