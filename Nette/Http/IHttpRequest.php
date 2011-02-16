@@ -22,14 +22,13 @@ use Nette;
  */
 interface IHttpRequest
 {
-	/**#@+ HTTP request method */
+	/** HTTP request method */
 	const
 		GET = 'GET',
 		POST = 'POST',
 		HEAD = 'HEAD',
 		PUT = 'PUT',
 		DELETE = 'DELETE';
-	/**#@-*/
 
 	/**
 	 * Returns URL object.

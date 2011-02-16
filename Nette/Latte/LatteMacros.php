@@ -129,11 +129,11 @@ class LatteMacros extends Nette\Object
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
 	/** @internal */
-	const T_WHITESPACE = T_WHITESPACE;
-	const T_COMMENT = T_COMMENT;
-	const T_SYMBOL = -1;
-	const T_NUMBER = -2;
-	const T_VARIABLE = -3;
+	const T_WHITESPACE = T_WHITESPACE,
+		T_COMMENT = T_COMMENT,
+		T_SYMBOL = -1,
+		T_NUMBER = -2,
+		T_VARIABLE = -3;
 
 	/** @var array */
 	public $macros;
@@ -162,11 +162,10 @@ class LatteMacros extends Nette\Object
 	/** @var int */
 	private $cacheCounter;
 
-	/**#@+ @internal block type */
-	const BLOCK_NAMED = 1;
-	const BLOCK_CAPTURE = 2;
-	const BLOCK_ANONYMOUS = 3;
-	/**#@-*/
+	/** @internal block type */
+	const BLOCK_NAMED = 1,
+		BLOCK_CAPTURE = 2,
+		BLOCK_ANONYMOUS = 3;
 
 
 

@@ -28,7 +28,7 @@ interface IHttpResponse
 	/** @var int cookie expiration: until the browser is closed */
 	const BROWSER = 0;
 
-	/**#@+ HTTP 1.1 response code */
+	/** HTTP 1.1 response code */
 	const
 		S200_OK = 200,
 		S204_NO_CONTENT = 204,
@@ -48,7 +48,6 @@ interface IHttpResponse
 		S500_INTERNAL_SERVER_ERROR = 500,
 		S501_NOT_IMPLEMENTED = 501,
 		S503_SERVICE_UNAVAILABLE = 503;
-	/**#@-*/
 
 	/**
 	 * Sets HTTP response code.

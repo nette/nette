@@ -33,11 +33,10 @@ use Nette,
  */
 class User extends Nette\Object implements IUser
 {
-	/**#@+ log-out reason {@link User::getLogoutReason()} */
-	const MANUAL = 1;
-	const INACTIVITY = 2;
-	const BROWSER_CLOSED = 3;
-	/**#@-*/
+	/** log-out reason {@link User::getLogoutReason()} */
+	const MANUAL = 1,
+		INACTIVITY = 2,
+		BROWSER_CLOSED = 3;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';

@@ -40,11 +40,11 @@ use Nette;
  */
 class Form extends FormContainer
 {
-	/**#@+ operation name */
-	const EQUAL = ':equal';
-	const IS_IN = ':equal';
-	const FILLED = ':filled';
-	const VALID = ':valid';
+	/** validator */
+	const EQUAL = ':equal',
+		IS_IN = ':equal',
+		FILLED = ':filled',
+		VALID = ':valid';
 
 	// CSRF protection
 	const PROTECTION = 'Nette\Forms\HiddenField::validateEqual';
@@ -53,28 +53,26 @@ class Form extends FormContainer
 	const SUBMITTED = ':submitted';
 
 	// text
-	const MIN_LENGTH = ':minLength';
-	const MAX_LENGTH = ':maxLength';
-	const LENGTH = ':length';
-	const EMAIL = ':email';
-	const URL = ':url';
-	const REGEXP = ':regexp';
-	const PATTERN = ':pattern';
-	const INTEGER = ':integer';
-	const NUMERIC = ':integer';
-	const FLOAT = ':float';
-	const RANGE = ':range';
+	const MIN_LENGTH = ':minLength',
+		MAX_LENGTH = ':maxLength',
+		LENGTH = ':length',
+		EMAIL = ':email',
+		URL = ':url',
+		REGEXP = ':regexp',
+		PATTERN = ':pattern',
+		INTEGER = ':integer',
+		NUMERIC = ':integer',
+		FLOAT = ':float',
+		RANGE = ':range';
 
 	// file upload
-	const MAX_FILE_SIZE = ':fileSize';
-	const MIME_TYPE = ':mimeType';
-	const IMAGE = ':image';
-	/**#@-*/
+	const MAX_FILE_SIZE = ':fileSize',
+		MIME_TYPE = ':mimeType',
+		IMAGE = ':image';
 
-	/**#@+ method */
-	const GET = 'get';
-	const POST = 'post';
-	/**#@-*/
+	/** method */
+	const GET = 'get',
+		POST = 'post';
 
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';

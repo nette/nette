@@ -31,17 +31,15 @@ use Nette,
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/**#@+ bad link handling {@link Presenter::$invalidLinkMode} */
-	const INVALID_LINK_SILENT = 1;
-	const INVALID_LINK_WARNING = 2;
-	const INVALID_LINK_EXCEPTION = 3;
-	/**#@-*/
+	/** bad link handling {@link Presenter::$invalidLinkMode} */
+	const INVALID_LINK_SILENT = 1,
+		INVALID_LINK_WARNING = 2,
+		INVALID_LINK_EXCEPTION = 3;
 
-	/**#@+ @internal special parameter key */
-	const SIGNAL_KEY = 'do';
-	const ACTION_KEY = 'action';
-	const FLASH_KEY = '_fid';
-	/**#@-*/
+	/** @internal special parameter key */
+	const SIGNAL_KEY = 'do',
+		ACTION_KEY = 'action',
+		FLASH_KEY = '_fid';
 
 	/** @var string */
 	public static $defaultAction = 'default';

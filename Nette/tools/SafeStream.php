@@ -30,30 +30,22 @@ use Nette;
  */
 final class SafeStream
 {
-	/**
-	 * Name of stream protocol - safe://
-	 */
+	/** Name of stream protocol - safe:// */
 	const PROTOCOL = 'safe';
 
-	/**
-	 * Current file handle.
-	 */
+	/** @var resource  orignal file handle */
 	private $handle;
 
-	/**
-	 * Renaming of temporary file.
-	 */
+	/** @var string  orignal file path */
 	private $filePath;
+
+	/** @var string  temporary file path */
 	private $tempFile;
 
-	/**
-	 * Starting position in file (for appending).
-	 */
+	/** @var int  starting position in file (for appending) */
 	private $startPos = 0;
 
-	/**
-	 * Write-error detected?
-	 */
+	/** @var bool  error detected? */
 	private $writeError = FALSE;
 
 

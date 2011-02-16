@@ -58,11 +58,10 @@ final class Debug
 
 	/********************* errors and exceptions reporing ****************d*g**/
 
-	/**#@+ server modes {@link Debug::enable()} */
-	const DEVELOPMENT = FALSE;
-	const PRODUCTION = TRUE;
-	const DETECT = NULL;
-	/**#@-*/
+	/** server modes {@link Debug::enable()} */
+	const DEVELOPMENT = FALSE,
+		PRODUCTION = TRUE,
+		DETECT = NULL;
 
 	/** @var bool determines whether any error will cause immediate death */
 	public static $strictMode = FALSE; // $immediateDeath
@@ -107,13 +106,12 @@ final class Debug
 
 	/********************* Firebug extension ****************d*g**/
 
-	/**#@+ {@link Debug::log()} and {@link Debug::fireLog()} */
-	const DEBUG = 'debug';
-	const INFO = 'info';
-	const WARNING = 'warning';
-	const ERROR = 'error';
-	const CRITICAL = 'critical';
-	/**#@-*/
+	/** {@link Debug::log()} and {@link Debug::fireLog()} */
+	const DEBUG = 'debug',
+		INFO = 'info',
+		WARNING = 'warning',
+		ERROR = 'error',
+		CRITICAL = 'critical';
 
 
 
