@@ -50,14 +50,13 @@ class LatteFilter extends Nette\Object
 	/** @var string */
 	public $context, $escape;
 
-	/**#@+ @internal Context-aware escaping states */
-	const CONTEXT_TEXT = 'text';
-	const CONTEXT_CDATA = 'cdata';
-	const CONTEXT_TAG = 'tag';
-	const CONTEXT_ATTRIBUTE = 'attribute';
-	const CONTEXT_NONE = 'none';
-	const CONTEXT_COMMENT = 'comment';
-	/**#@-*/
+	/** @internal Context-aware escaping states */
+	const CONTEXT_TEXT = 'text',
+		CONTEXT_CDATA = 'cdata',
+		CONTEXT_TAG = 'tag',
+		CONTEXT_ATTRIBUTE = 'attribute',
+		CONTEXT_NONE = 'none',
+		CONTEXT_COMMENT = 'comment';
 
 
 
@@ -427,30 +426,32 @@ class LatteFilter extends Nette\Object
 
 
 
-	/**#@+ @deprecated */
+	/** @deprecated */
 	static function formatModifiers($var, $modifiers)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatModifiers() instead.', E_USER_WARNING);
 		return LatteMacros::formatModifiers($var, $modifiers);
 	}
 
+	/** @deprecated */
 	static function fetchToken(& $s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::fetchToken() instead.', E_USER_WARNING);
 		return LatteMacros::fetchToken($s);
 	}
 
+	/** @deprecated */
 	static function formatArray($input, $prefix = '')
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatArray() instead.', E_USER_WARNING);
 		return LatteMacros::formatArray($input, $prefix);
 	}
 
+	/** @deprecated */
 	static function formatString($s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatString() instead.', E_USER_WARNING);
 		return LatteMacros::formatString($s);
 	}
-	/**#@-*/
 
 }

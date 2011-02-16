@@ -22,11 +22,10 @@ use Nette;
  */
 final class Environment
 {
-	/**#@+ environment name */
-	const DEVELOPMENT = 'development';
-	const PRODUCTION = 'production';
-	const CONSOLE = 'console';
-	/**#@-*/
+	/** environment name */
+	const DEVELOPMENT = 'development',
+		PRODUCTION = 'production',
+		CONSOLE = 'console';
 
 	/** @var Configurator */
 	private static $configurator;

@@ -22,11 +22,10 @@ use Nette;
  */
 class MemcachedStorage extends Nette\Object implements ICacheStorage
 {
-	/**#@+ @internal cache structure */
-	const META_CALLBACKS = 'callbacks';
-	const META_DATA = 'data';
-	const META_DELTA = 'delta';
-	/**#@-*/
+	/** @internal cache structure */
+	const META_CALLBACKS = 'callbacks',
+		META_DATA = 'data',
+		META_DELTA = 'delta';
 
 	/** @var Memcache */
 	private $memcache;

@@ -33,21 +33,19 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	 * delete* = try unlink, if fails (on NTFS) { lock(EX), truncate, close, unlink } else close (on ext3)
 	 */
 
-	/**#@+ @internal cache file structure */
-	const META_HEADER_LEN = 28; // 22b signature + 6b meta-struct size + serialized meta-struct + data
+	/** @internal cache file structure */
+	const META_HEADER_LEN = 28, // 22b signature + 6b meta-struct size + serialized meta-struct + data
 	// meta structure: array of
-	const META_TIME = 'time'; // timestamp
-	const META_SERIALIZED = 'serialized'; // is content serialized?
-	const META_EXPIRE = 'expire'; // expiration timestamp
-	const META_DELTA = 'delta'; // relative (sliding) expiration
-	const META_ITEMS = 'di'; // array of dependent items (file => timestamp)
-	const META_CALLBACKS = 'callbacks'; // array of callbacks (function, args)
-	/**#@-*/
+		META_TIME = 'time', // timestamp
+		META_SERIALIZED = 'serialized', // is content serialized?
+		META_EXPIRE = 'expire', // expiration timestamp
+		META_DELTA = 'delta', // relative (sliding) expiration
+		META_ITEMS = 'di', // array of dependent items (file => timestamp)
+		META_CALLBACKS = 'callbacks'; // array of callbacks (function, args)
 
-	/**#@+ additional cache structure */
-	const FILE = 'file';
-	const HANDLE = 'handle';
-	/**#@-*/
+	/** additional cache structure */
+	const FILE = 'file',
+		HANDLE = 'handle';
 
 
 	/** @var float  probability that the clean() routine is started */

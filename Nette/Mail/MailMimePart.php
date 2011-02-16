@@ -26,17 +26,15 @@ use Nette;
  */
 class MailMimePart extends Nette\Object
 {
-	/**#@+ encoding */
-	const ENCODING_BASE64 = 'base64';
-	const ENCODING_7BIT = '7bit';
-	const ENCODING_8BIT = '8bit';
-	const ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
-	/**#@-*/
+	/** encoding */
+	const ENCODING_BASE64 = 'base64',
+		ENCODING_7BIT = '7bit',
+		ENCODING_8BIT = '8bit',
+		ENCODING_QUOTED_PRINTABLE = 'quoted-printable';
 
-	/**#@+ @internal */
+	/** @internal */
 	const EOL = "\r\n";
 	const LINE_LENGTH = 76;
-	/**#@-*/
 
 	/** @var array */
 	private $headers = array();

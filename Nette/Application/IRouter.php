@@ -22,10 +22,11 @@ use Nette;
  */
 interface IRouter
 {
-	/**#@+ flag */
+	/** only matching route */
 	const ONE_WAY = 1;
+
+	/** HTTPS route */
 	const SECURED = 2;
-	/**#@-*/
 
 	/**
 	 * Maps HTTP request to a PresenterRequest object.

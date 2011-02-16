@@ -29,11 +29,10 @@ use Nette,
  */
 class Mail extends MailMimePart
 {
-	/**#@+ Priority */
-	const HIGH = 1;
-	const NORMAL = 3;
-	const LOW = 5;
-	/**#@-*/
+	/** Priority */
+	const HIGH = 1,
+		NORMAL = 3,
+		LOW = 5;
 
 	/** @var IMailer */
 	public static $defaultMailer = 'Nette\Mail\SendmailMailer';
