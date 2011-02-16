@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Context extends FreezableObject implements IContext
+class Context extends FreezableObject implements IContext, \ArrayAccess
 {
 	/** @var array  storage for shared objects */
 	private $registry = array();
@@ -170,6 +170,38 @@ class Context extends FreezableObject implements IContext
 
 		$lower = strtolower($name);
 		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower]));
+	}
+
+
+
+	public function offsetExists($offset)
+	{
+		return $this->hasService($offset);
+	}
+
+
+
+	public function offsetGet($offset)
+	{
+		return $this->getService($offset);
+	}
+
+
+
+	public function offsetSet($offset, $value)
+	{
+		if ($this->hasService($offset)) {
+			$this->removeService($offset);
+		}
+
+		$this->addService($offset, $value);
+	}
+
+
+
+	public function offsetUnset($offset)
+	{
+		$this->removeService($offset);
 	}
 
 }
