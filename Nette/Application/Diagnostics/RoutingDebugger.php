@@ -28,8 +28,8 @@ class RoutingDebugger extends Nette\DebugPanel
 	/** @var Nette\Web\IHttpRequest */
 	private $httpRequest;
 
-	/** @var ArrayObject */
-	private $routers;
+	/** @var array */
+	private $routers = array();
 
 	/** @var Nette\Application\PresenterRequest */
 	private $request;
@@ -40,7 +40,6 @@ class RoutingDebugger extends Nette\DebugPanel
 	{
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
-		$this->routers = new \ArrayObject;
 		parent::__construct('RoutingDebugger', array($this, 'renderTab'), array($this, 'renderPanel'));
 	}
 

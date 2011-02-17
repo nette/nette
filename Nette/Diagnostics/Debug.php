@@ -698,7 +698,7 @@ final class Debug
 				$frame += array('file' => NULL, 'line' => NULL, 'class' => NULL, 'type' => NULL, 'function' => NULL, 'object' => NULL, 'args' => NULL);
 				$item['exc_info'][2][] = array($frame['file'], $frame['line'], "$frame[class]$frame[type]$frame[function]", $frame['object']);
 				$item['exc_frames'][] = $frame['args'];
-			};
+			}
 
 			$file = str_replace(dirname(dirname(dirname($e->getFile()))), "\xE2\x80\xA6", $e->getFile());
 			$item['template'] = ($e instanceof \ErrorException ? '' : get_class($e) . ': ') . $e->getMessage() . ($e->getCode() ? ' #' . $e->getCode() : '') . ' in ' . $file . ':' . $e->getLine();
