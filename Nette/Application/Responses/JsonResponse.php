@@ -70,10 +70,10 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send()
+	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
 	{
-		Nette\Environment::getHttpResponse()->setContentType($this->contentType);
-		Nette\Environment::getHttpResponse()->setExpiration(FALSE);
+		$httpResponse->setContentType($this->contentType);
+		$httpResponse->setExpiration(FALSE);
 		echo Nette\Json::encode($this->payload);
 	}
 

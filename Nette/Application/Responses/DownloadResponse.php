@@ -90,18 +90,17 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send()
+	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
 	{
-		$response = Nette\Environment::getHttpResponse();
-		$response->setContentType($this->contentType);
-		$response->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
+		$httpResponse->setContentType($this->contentType);
+		$httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
 
 		$filesize = $length = filesize($this->file);
 		$handle = fopen($this->file, 'r');
 
 		if ($this->resuming) {
-			$response->setHeader('Accept-Ranges', 'bytes');
-			$range = Nette\Environment::getHttpRequest()->getHeader('Range');
+			$httpResponse->setHeader('Accept-Ranges', 'bytes');
+			$range = $httpRequest->getHeader('Range');
 			if ($range !== NULL) {
 				$range = substr($range, 6); // 6 == strlen('bytes=')
 				list($start, $end) = explode('-', $range);
@@ -113,21 +112,21 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 				}
 
 				if ($start < 0 || $end <= $start || $end > $filesize -1) {
-					$response->setCode(416); // requested range not satisfiable
+					$httpResponse->setCode(416); // requested range not satisfiable
 					return;
 				}
 
-				$response->setCode(206);
-				$response->setHeader('Content-Range', 'bytes ' . $start . '-' . $end . '/' . $filesize);
+				$httpResponse->setCode(206);
+				$httpResponse->setHeader('Content-Range', 'bytes ' . $start . '-' . $end . '/' . $filesize);
 				$length = $end - $start + 1;
 				fseek($handle, $start);
 
 			} else {
-				$response->setHeader('Content-Range', 'bytes 0-' . ($filesize - 1) . '/' . $filesize);
+				$httpResponse->setHeader('Content-Range', 'bytes 0-' . ($filesize - 1) . '/' . $filesize);
 			}
 		}
 
-		$response->setHeader('Content-Length', $length);
+		$httpResponse->setHeader('Content-Length', $length);
 		while (!feof($handle)) {
 			echo fread($handle, 4e6);
 		}

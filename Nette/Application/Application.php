@@ -139,7 +139,7 @@ class Application extends Nette\Object
 					continue;
 
 				} elseif ($response instanceof IPresenterResponse) {
-					$response->send();
+					$response->send($httpRequest, $httpResponse);
 				}
 				break;
 

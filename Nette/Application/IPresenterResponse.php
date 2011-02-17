@@ -27,6 +27,6 @@ interface IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	function send();
+	function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse);
 
 }
