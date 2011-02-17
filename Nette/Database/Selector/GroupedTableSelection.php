@@ -117,7 +117,7 @@ class GroupedTableSelection extends TableSelection
 
 
 
-	public function update(array $data)
+	public function update($data)
 	{
 		$where = $this->where;
 		$this->where[0] = "$this->delimitedColumn = " . $this->connection->quote($this->active);

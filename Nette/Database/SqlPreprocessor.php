@@ -121,7 +121,7 @@ class SqlPreprocessor extends Nette\Object
 		} elseif ($value === NULL) {
 			return 'NULL';
 
-		} elseif (is_array($value)) {
+		} elseif (is_array($value) || $value instanceof \Traversable) {
 			$vx = $kx = array();
 
 			if (isset($value[0])) { // non-associative; value, value, value

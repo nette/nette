@@ -556,8 +556,15 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 * @param  array ($column => $value)
 	 * @return int number of affected rows or FALSE in case of an error
 	 */
-	public function update(array $data)
+	public function update($data)
 	{
+		if ($data instanceof \Traversable) {
+			$data = iterator_to_array($data);
+
+		} elseif (!is_array($data)) {
+			throw new \InvalidArgumentException;
+		}
+
 		if (!$data) {
 			return 0;
 		}
