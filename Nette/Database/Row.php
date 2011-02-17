@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Row implements \ArrayAccess, \IteratorAggregate, \Countable
+class Row extends Nette\ArrayHash
 {
 
 	public function __construct($statement)
@@ -30,48 +30,18 @@ class Row implements \ArrayAccess, \IteratorAggregate, \Countable
 
 
 
-	public function count()
+	/**
+	 * Returns a item.
+	 * @param  mixed  key or index
+	 * @return mixed
+	 */
+	public function offsetGet($key)
 	{
-		return count((array) $this);
-	}
-
-
-
-	public function getIterator()
-	{
-		return new \ArrayIterator($this);
-	}
-
-
-
-	public function offsetSet($nm, $val)
-	{
-		$this->$nm = $val;
-	}
-
-
-
-	public function offsetGet($nm)
-	{
-		if (is_int($nm)) {
+		if (is_int($key)) {
 			$arr = array_values((array) $this);
-			return $arr[$nm];
+			return $arr[$key];
 		}
-		return $this->$nm;
-	}
-
-
-
-	public function offsetExists($nm)
-	{
-		return isset($this->$nm);
-	}
-
-
-
-	public function offsetUnset($nm)
-	{
-		unset($this->$nm);
+		return $this->$key;
 	}
 
 }
