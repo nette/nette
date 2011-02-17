@@ -84,7 +84,7 @@ final class SafeStream
 		if ($mode === 'r') { // provides only isolation
 			return $this->checkAndLock($this->tempHandle = fopen($path, 'r'.$flag, $use_path), LOCK_SH);
 
-		} elseif ($mode === 'r+' || $mode[0] === 'a') {
+		} elseif ($mode === 'r+') {
 			if (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
 				return FALSE;
 			}
@@ -95,11 +95,11 @@ final class SafeStream
 			}
 			$this->deleteFile = TRUE;
 
-		} elseif ($mode[0] === 'w') {
+		} elseif ($mode[0] === 'w' || $mode[0] === 'a') {
 			if ($this->checkAndLock($this->handle = @fopen($path, 'x'.$flag, $use_path), LOCK_EX)) { // intentionally @
 				$this->deleteFile = TRUE;
 
-			} elseif (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
+			} elseif (!$this->checkAndLock($this->handle = fopen($path, 'a+'.$flag, $use_path), LOCK_EX)) {
 				return FALSE;
 			}
 
@@ -119,13 +119,11 @@ final class SafeStream
 
 		// copy to temporary file
 		if ($mode === 'r+' || $mode[0] === 'a') {
-			while (!feof($this->handle)) {
-				$s = fread($this->handle, 8192);
-				$len = fwrite($this->tempHandle, $s, strlen($s));
-				if ($len !== strlen($s) || true) {
-					$this->clean();
-					return FALSE;
-				}
+			$stat = fstat($this->handle);
+			fseek($this->handle, 0);
+			if (stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
+				$this->clean();
+				return FALSE;
 			}
 
 			if ($mode[0] === 'a') { // emulate append mode
