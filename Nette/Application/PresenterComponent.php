@@ -88,13 +88,13 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 * @param  array
 	 * @return bool  does method exist?
 	 */
-	protected function tryCall($method, array $params)
+	protected function tryCall($method, array $params, $needAllArgs = false)
 	{
 		$rc = $this->getReflection();
 		if ($rc->hasMethod($method)) {
 			$rm = $rc->getMethod($method);
 			if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
-				$rm->invokeNamedArgs($this, $params);
+				$rm->invokeNamedArgs($this, $params, $needAllArgs);
 				return TRUE;
 			}
 		}

@@ -62,7 +62,7 @@ class MethodReflection extends \ReflectionMethod
 	 * @param  array
 	 * @return mixed
 	 */
-	public function invokeNamedArgs($object, $args)
+	public function invokeNamedArgs($object, $args, $needAllArgs = false)
 	{
 		$res = array();
 		$i = 0;
@@ -74,7 +74,12 @@ class MethodReflection extends \ReflectionMethod
 				}
 				$res[$i++] = $val;
 			} else {
-				$res[$i++] = $def;
+        if($needAllArgs && !array_key_exists($name, $args)) {
+          throw new \InvalidArgumentException("Missing argument '$name'");
+        }
+				else {
+          $res[$i++] = $def;
+        }
 			}
 		}
 		return $this->invokeArgs($object, $res);

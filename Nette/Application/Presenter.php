@@ -177,7 +177,7 @@ abstract class Presenter extends Control implements IPresenter
 			// RENDERING VIEW
 			$this->beforeRender();
 			// calls $this->render<View>()
-			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
+			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params, true);
 			$this->afterRender();
 
 			// save component tree persistent state
