@@ -255,6 +255,16 @@ abstract class Template extends Nette\Object implements ITemplate
 		return $this;
 	}
 
+	/**
+ 	 * Add new parameters.
+	 * @param  array
+	 * @return Template  provides a fluent interface
+	 */
+	public function addParams(array $params)
+	{
+		$this->params += $params;
+		return $this;
+	}
 
 
 	/**
