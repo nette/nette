@@ -8,7 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\ArrayHash;
 
 
 
@@ -66,22 +67,21 @@ $form->addGroup();
 $form->addSubmit('submit', 'Send');
 $form->fireEvents();
 
-Assert::same( array(
-   'first' => array(
+Assert::equal( ArrayHash::from(array(
+   'first' => ArrayHash::from(array(
       'name' => 'James Bond',
       'email' => 'bond@007.com',
       'street' => 'Unknown',
       'city' => 'London',
       'country' => 'GB',
-   ),
-   'second' => array(
+   )),
+   'second' => ArrayHash::from(array(
       'name' => 'Jim Beam',
       'email' => 'jim@beam.com',
       'street' => '',
       'city' => '',
       'country' => 'US',
-   ),
-)
-, $form->getValues() );
+   )),
+)), $form->getValues() );
 
 Assert::match( file_get_contents(__DIR__ . '/Forms.example.006.expect'), $form->__toString(TRUE) );

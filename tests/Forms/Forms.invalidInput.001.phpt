@@ -8,7 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Forms\Form;
+use Nette\Forms\Form,
+	Nette\ArrayHash;
 
 
 
@@ -85,7 +86,7 @@ $sub->addFile('avatar', 'Picture:');
 $form->addSubmit('submit1', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
-Assert::equal( array(
+Assert::equal( ArrayHash::from(array(
 	'name' => '',
 	'note' => '',
 	'gender' => NULL,
@@ -95,11 +96,11 @@ Assert::equal( array(
 	'password' => '',
 	'avatar' => new Nette\Web\HttpUploadedFile(array()),
 	'userid' => '',
-	'firstperson' => array(
+	'firstperson' => ArrayHash::from(array(
 		'age' => '',
-	),
-	'secondperson' => array(
+	)),
+	'secondperson' => ArrayHash::from(array(
 		'age' => '',
 		'avatar' => new Nette\Web\HttpUploadedFile(array()),
-	),
-), $form->getValues() );
+	)),
+)), $form->getValues() );

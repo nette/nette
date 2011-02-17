@@ -118,7 +118,7 @@ Assert::equal( array(
    )),
    'userid' => '231',
    'note' => '',
-), $form->getValues() );
+), (array) $form->getValues() );
 
 ob_start();
 

@@ -105,24 +105,23 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 
 	/**
 	 * Returns the values submitted by the form.
-	 * @return array
+	 * @return Nette\ArrayHash
 	 */
 	public function getValues()
 	{
-		$values = array();
-		$cursor = & $values;
+		$values = new Nette\ArrayHash;
+		$cursor = $values;
 		$iterator = $this->getComponents(TRUE);
 		foreach ($iterator as $name => $control) {
 			$sub = $iterator->getSubIterator();
 			if (!isset($sub->cursor)) {
-				$sub->cursor = & $cursor;
+				$sub->cursor = $cursor;
 			}
 			if ($control instanceof IFormControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
-				$sub->cursor[$name] = $control->getValue();
+				$sub->cursor->$name = $control->getValue();
 			}
 			if ($control instanceof FormContainer) {
-				$cursor = & $sub->cursor[$name];
-				$cursor = array();
+				$cursor = $sub->cursor->$name = new Nette\ArrayHash;
 			}
 		}
 		return $values;

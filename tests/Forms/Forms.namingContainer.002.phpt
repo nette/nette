@@ -11,7 +11,8 @@
 use Nette\ComponentContainer,
 	Nette\Forms\Form,
 	Nette\Forms\TextInput,
-	Nette\Forms\FormContainer;
+	Nette\Forms\FormContainer,
+	Nette\ArrayHash;
 
 
 
@@ -47,10 +48,10 @@ $form->setDefaults(array(
 	'text1' => 'hello',
 	'text2' => 'world',
 	'formCont' =>
-	array(
+	ArrayHash::from(array(
 		'name' => 'jack',
 		'age' => '23',
-	),
+	)),
 	'firstperson' =>
 	array(
 		'name' => 'david',
@@ -64,22 +65,22 @@ $form->setDefaults(array(
 	'age' => '50',
 ));
 
-Assert::same( array(
+Assert::equal( ArrayHash::from(array(
 	"name" => "jim",
 	"text1" => "hello",
 	"text2" => "world",
-	"formCont" => array(
+	"formCont" => ArrayHash::from(array(
 		"name" => "jack",
 		"age" => "23",
-	),
-	"firstperson" => array(
+	)),
+	"firstperson" => ArrayHash::from(array(
 		"name" => "david",
 		"age" => "30",
-	),
-	"secondperson" => array(
+	)),
+	"secondperson" => ArrayHash::from(array(
 		"name" => "jim",
 		"age" => "40",
 		"avatar" => NULL,
-	),
+	)),
 	"age" => "50",
-), $form->getValues() );
+)), $form->getValues() );

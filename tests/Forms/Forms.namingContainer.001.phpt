@@ -11,7 +11,8 @@
 use Nette\ComponentContainer,
 	Nette\Forms\Form,
 	Nette\Forms\TextInput,
-	Nette\Forms\FormContainer;
+	Nette\Forms\FormContainer,
+	Nette\ArrayHash;
 
 
 
@@ -93,19 +94,19 @@ $form->addText('age', 'Your age:', 5);
 $form->addSubmit('submit1', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
-Assert::equal( array(
+Assert::equal( ArrayHash::from(array(
 	'name' => 'jim',
 	'text1' => 'hello',
 	'text2' => 'world',
-	'formCont' => array(
+	'formCont' => ArrayHash::from(array(
 		'name' => 'jack',
 		'age' => '23',
-	),
-	'firstperson' => array(
+	)),
+	'firstperson' => ArrayHash::from(array(
 		'name' => 'david',
 		'age' => '30',
-	),
-	'secondperson' => array(
+	)),
+	'secondperson' => ArrayHash::from(array(
 		'name' => 'jim',
 		'age' => '40',
 		'avatar' => new Nette\Web\HttpUploadedFile(array(
@@ -115,6 +116,6 @@ Assert::equal( array(
 			'tmp_name' => 'C:\PHP\temp\php1D5C.tmp',
 			'error' => 0,
 		)),
-	),
+	)),
 	'age' => '50',
-), $form->getValues() );
+)), $form->getValues() );
