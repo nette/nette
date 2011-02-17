@@ -119,17 +119,18 @@ class Application extends Nette\Object
 				$this->onRequest($this, $request);
 
 				// Instantiate presenter
-				$presenter = $request->getPresenterName();
+				$presenterName = $request->getPresenterName();
 				try {
-					$class = $this->getPresenterLoader()->getPresenterClass($presenter);
-					$request->setPresenterName($presenter);
+					$this->presenter = $this->getPresenterFactory()->createPresenter($presenterName);
 				} catch (InvalidPresenterException $e) {
 					throw new BadRequestException($e->getMessage(), 404, $e);
 				}
+
+				$this->getPresenterFactory()->getPresenterClass($presenterName);
+				$request->setPresenterName($presenterName);
 				$request->freeze();
 
 				// Execute presenter
-				$this->presenter = $this->getPresenterFactory()->createPresenter($class);
 				$response = $this->presenter->run($request);
 				$this->onResponse($this, $response);
 
@@ -277,17 +278,6 @@ class Application extends Nette\Object
 	{
 		$this->context->addService('Nette\\Application\\IRouter', $router);
 		return $this;
-	}
-
-
-
-	/**
-	 * Returns presenter loader.
-	 * @return IPresenterLoader
-	 */
-	public function getPresenterLoader()
-	{
-		return $this->context->getService('Nette\\Application\\IPresenterLoader');
 	}
 
 

@@ -24,10 +24,17 @@ interface IPresenterFactory
 {
 
 	/**
+	 * @param  string  presenter name
+	 * @return string  class name
+	 * @throws InvalidPresenterException
+	 */
+	function getPresenterClass(& $name);
+
+	/**
 	 * Create new presenter instance.
-	 * @param string $class Presenter class name
+	 * @param  string  presenter name
 	 * @return Nette\Application\IPresenter
 	 */
-	public function createPresenter($class);
+	function createPresenter($name);
 
 }

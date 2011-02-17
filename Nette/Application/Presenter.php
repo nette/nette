@@ -731,9 +731,9 @@ abstract class Presenter extends Control implements IPresenter
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
 		// cached services for better performance
-		static $presenterLoader, $router, $refUri;
-		if ($presenterLoader === NULL) {
-			$presenterLoader = $this->getApplication()->getPresenterLoader();
+		static $presenterFactory, $router, $refUri;
+		if ($presenterFactory === NULL) {
+			$presenterFactory = $this->getApplication()->getPresenterFactory();
 			$router = $this->getApplication()->getRouter();
 			$refUri = new Nette\Web\Uri($this->getHttpRequest()->getUri());
 			$refUri->setPath($this->getHttpRequest()->getUri()->getScriptPath());
@@ -810,7 +810,7 @@ abstract class Presenter extends Control implements IPresenter
 					$presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
 				}
 			}
-			$presenterClass = $presenterLoader->getPresenterClass($presenter);
+			$presenterClass = $presenterFactory->getPresenterClass($presenter);
 		}
 
 		// PROCESS SIGNAL ARGUMENTS
