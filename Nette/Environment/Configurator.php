@@ -285,8 +285,8 @@ class Configurator extends Object
 		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
 
 		if (!$context->hasService('Nette\\Application\\IPresenterFactory')) {
-			$context->addService('Nette\\Application\\IPresenterFactory', function() {
-				return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'));
+			$context->addService('Nette\\Application\\IPresenterFactory', function() use ($context) {
+				return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $context);
 			});
 		}
 

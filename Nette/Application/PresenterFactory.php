@@ -31,14 +31,18 @@ class PresenterFactory implements IPresenterFactory
 	/** @var array */
 	private $cache = array();
 
+	/** @var Nette\IContext */
+	private $context;
+
 
 
 	/**
 	 * @param  string
 	 */
-	public function __construct($baseDir)
+	public function __construct($baseDir, Nette\IContext $context)
 	{
 		$this->baseDir = $baseDir;
+		$this->context = $context;
 	}
 
 
@@ -51,7 +55,9 @@ class PresenterFactory implements IPresenterFactory
 	public function createPresenter($name)
 	{
 		$class = $this->getPresenterClass($name);
-	    return new $class;
+		$presenter = new $class;
+		$presenter->setContext($this->context);
+	    return $presenter;
 	}
 
 

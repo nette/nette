@@ -55,7 +55,7 @@ class Application extends Nette\Object
 	/** @var Presenter */
 	private $presenter;
 
-	/** @var Nette\Context */
+	/** @var Nette\IContext */
 	private $context;
 
 

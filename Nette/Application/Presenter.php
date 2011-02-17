@@ -101,6 +101,9 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
+	/** @var Nette\IContext */
+	private $context;
+
 
 
 	/**
@@ -1218,7 +1221,30 @@ abstract class Presenter extends Control implements IPresenter
 
 
 
-	/********************* backend ****************d*g**/
+	/********************* services ****************d*g**/
+
+
+
+	/**
+	 * Gets the context.
+	 * @return Presenter  provides a fluent interface
+	 */
+	public function setContext(Nette\IContext $context)
+	{
+		$this->context = $context;
+		return $this;
+	}
+
+
+
+	/**
+	 * Gets the context.
+	 * @return Nette\IContext
+	 */
+	final public function getContext()
+	{
+		return $this->context;
+	}
 
 
 
@@ -1227,7 +1253,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function getHttpRequest()
 	{
-		return Environment::getHttpRequest();
+		return $this->context->getService('Nette\\Web\\IHttpRequest');
 	}
 
 
@@ -1237,7 +1263,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function getHttpResponse()
 	{
-		return Environment::getHttpResponse();
+		return $this->context->getService('Nette\\Web\\IHttpResponse');
 	}
 
 
@@ -1247,7 +1273,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	protected function getHttpContext()
 	{
-		return Environment::getHttpContext();
+		return $this->context->getService('Nette\\Web\\HttpContext');
 	}
 
 
@@ -1257,7 +1283,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function getApplication()
 	{
-		return Environment::getApplication();
+		return $this->context->getService('Nette\\Application\\Application');
 	}
 
 
@@ -1267,7 +1293,8 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		return Environment::getSession($namespace);
+		$handler = $this->context->getService('Nette\\Web\\Session');
+		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
 
@@ -1277,7 +1304,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function getUser()
 	{
-		return Environment::getUser();
+		return $this->context->getService('Nette\\Web\\IUser');
 	}
 
 }
