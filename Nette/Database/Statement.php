@@ -13,6 +13,7 @@ namespace Nette\Database;
 
 use Nette,
 	Nette\ObjectMixin,
+	Nette\Database\Reflection\DatabaseReflection,
 	PDO;
 
 
@@ -29,6 +30,9 @@ class Statement extends \PDOStatement
 
 	/** @var float */
 	public $time;
+
+	/** @var array */
+	private $types;
 
 
 
@@ -96,6 +100,31 @@ class Statement extends \PDOStatement
 	 */
 	public function normalizeRow($row)
 	{
+		if ($this->types === NULL) {
+			try {
+				$this->types = array();
+				foreach ($row as $key => $foo) {
+					$type = $this->getColumnMeta(count($this->types));
+					$this->types[$key] = DatabaseReflection::detectType($type['native_type']);
+				}
+			} catch (\PDOException $e) {
+			}
+		}
+		foreach ($this->types as $key => $type) {
+			$value = $row[$key];
+			if ($value === NULL || $value === FALSE || $type === DatabaseReflection::FIELD_TEXT) {
+
+			} elseif ($type === DatabaseReflection::FIELD_INTEGER) {
+				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
+
+			} elseif ($type === DatabaseReflection::FIELD_FLOAT) {
+				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
+
+			} elseif ($type === DatabaseReflection::FIELD_BOOL) {
+				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
+			}
+		}
+
 		return $this->connection->getSupplementalDriver()->normalizeRow($row, $this);
 	}
 
