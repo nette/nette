@@ -215,7 +215,7 @@ class SelectBox extends FormControl
 			reset($this->items);
 			$control->data('nette-empty-value', $this->useKeys ? key($this->items) : current($this->items));
 		}
-		$selected = $this->getValue();
+		$selected = self::getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
 		$option = Nette\Web\Html::el('option');
 
