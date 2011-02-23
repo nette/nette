@@ -242,10 +242,7 @@ class Neon extends Object
 					$this->error();
 				}
 				if ($t[0] === '"') {
-					$value = json_decode($t);
-					if ($value === NULL) {
-						$this->error('Invalid string %s');
-					}
+					$value = preg_replace_callback('#\\\\(?:u[0-9a-f]{4}|x[0-9a-f]{2}|.)#i', array($this, 'cbString'), substr($t, 1, -1));
 				} elseif ($t[0] === "'") {
 					$value = substr($t, 1, -1);
 				} elseif ($t === 'true' || $t === 'yes' || $t === 'TRUE' || $t === 'YES') {
@@ -264,6 +261,23 @@ class Neon extends Object
 		}
 
 		throw new NeonException('Unexpected end of file.');
+	}
+
+
+
+	private function cbString($m)
+	{
+		static $mapping = array('t' => "\t", 'n' => "\n", '"' => '"', '\\' => '\\', '_' => "\xc2\xa0");
+		$sq = $m[0];
+		if (isset($mapping[$sq[1]])) {
+			return $mapping[$sq[1]];
+		} elseif ($sq[1] === 'u' && strlen($sq) === 6) {
+			return String::chr(hexdec(substr($sq, 2)));
+		} elseif ($sq[1] === 'x' && strlen($sq) === 4) {
+			return chr(hexdec(substr($sq, 2)));
+		} else {
+			$this->error("Invalid escaping sequence $sq");
+		}
 	}
 
 
