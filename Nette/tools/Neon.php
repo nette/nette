@@ -30,9 +30,9 @@ class Neon extends Object
 		'@[a-zA-Z_0-9\\\\]+', // object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
-		'\n *', // indent
+		'\n[\t ]*', // new line + indent
 		'[^#"\',:=@[\]{}()<>\x00-\x20](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
-		'?: +', // whitespace
+		'?:[\t ]+', // whitespace
 	);
 
 	/** @var Tokenizer */
@@ -46,6 +46,9 @@ class Neon extends Object
 
 	/** @var int */
 	private $n = 0;
+
+	/** @var bool */
+	private $indentTabs;
 
 
 	/**
@@ -113,7 +116,6 @@ class Neon extends Object
 		}
 
 		$input = str_replace("\r", '', $input);
-		$input = strtr($input, "\t", ' ');
 		self::$tokenizer->tokenize($input);
 
 		$parser = new self;
@@ -196,10 +198,19 @@ class Neon extends Object
 
 				} else {
 					while (isset($tokens[$n+1]) && $tokens[$n+1][0] === "\n") $n++; // skip to last indent
+					if (!isset($tokens[$n+1])) break;
 
 					$newIndent = strlen($tokens[$n]) - 1;
 					if ($indent === NULL) { // first iteration
 						$indent = $newIndent;
+					}
+					if ($newIndent) {
+						if ($this->indentTabs === NULL) {
+							$this->indentTabs = $tokens[$n][1] === "\t";
+						}
+						if (strpos($tokens[$n], $this->indentTabs ? ' ' : "\t")) {
+							$this->error('Either tabs or spaces may be used as indenting chars, but not both.');
+						}
 					}
 
 					if ($newIndent > $indent) { // open new block-array or hash
