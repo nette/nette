@@ -31,5 +31,4 @@ Assert::same( "", Neon::decode("''") );
 Assert::same( "", Neon::decode('""') );
 Assert::same( 'x', Neon::decode('x') );
 Assert::same( "x", Neon::decode("\nx\n") );
-Assert::same( "x", Neon::decode("\n  x  \n") );
 Assert::same( "x", Neon::decode("  x") );

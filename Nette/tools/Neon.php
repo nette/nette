@@ -31,7 +31,7 @@ class Neon extends Object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n *', // indent
-		'[^#"\',:=@[\]{}()<>\x00-\x20](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',:=@[\]{}()<>\x00-\x20](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?: +', // whitespace
 	);
 
@@ -114,11 +114,10 @@ class Neon extends Object
 
 		$input = str_replace("\r", '', $input);
 		$input = strtr($input, "\t", ' ');
-		$input = "\n" . $input . "\n"; // first \n is required by "Indent"
 		self::$tokenizer->tokenize($input);
 
 		$parser = new self;
-		$res = $parser->parse();
+		$res = $parser->parse(0);
 
 		while (isset(self::$tokenizer->tokens[$parser->n])) {
 			if (self::$tokenizer->tokens[$parser->n][0] === "\n") {
@@ -134,14 +133,12 @@ class Neon extends Object
 
 	/**
 	 * @param  int  indentation (for block-parser)
-	 * @param  string  end char (for inline-hash/array parser)
+	 * @param  mixed
 	 * @return array
 	 */
-	private function parse($indent = NULL, $endBracket = NULL)
+	private function parse($indent = NULL, $result = NULL)
 	{
-		$inlineParser = $endBracket !== NULL; // block or inline parser?
-
-		$result = $inlineParser || $indent ? array() : NULL;
+		$inlineParser = $indent === NULL;
 		$value = $key = $object = NULL;
 		$hasValue = $hasKey = FALSE;
 		$tokens = self::$tokenizer->tokens;
@@ -177,19 +174,15 @@ class Neon extends Object
 				if ($hasValue) {
 					$this->error();
 				}
+				$endBracket = self::$brackets[$tokens[$n++]];
 				$hasValue = TRUE;
-				$value = $this->parse(NULL, self::$brackets[$tokens[$n++]]);
+				$value = $this->parse(NULL, array());
+				if ($tokens[$n] !== $endBracket) { // unexpected type of bracket or block-parser
+					$this->error();
+				}
 
 			} elseif ($t === ']' || $t === '}' || $t === ')') { // Closing bracket ] ) }
-				if ($t !== $endBracket) { // unexpected type of bracket or block-parser
-					$this->error();
-				}
-				if ($hasValue) {
-					if ($hasKey) $result[$key] = $value; else $result[] = $value;
-				} elseif ($hasKey) {
-					$this->error();
-				}
-				return $result; // inline parser exit point
+				break;
 
 			} elseif ($t[0] === '@') { // Object
 				$object = $t; // TODO
@@ -211,13 +204,14 @@ class Neon extends Object
 
 					if ($newIndent > $indent) { // open new block-array or hash
 						if ($hasValue || !$hasKey) {
-							$this->error();
+							$n++;
+							$this->error('Unexpected indentation.');
 						} elseif ($key === NULL) {
 							$result[] = $this->parse($newIndent);
 						} else {
 							$result[$key] = $this->parse($newIndent);
 						}
-						$newIndent = strlen($tokens[$n]) - 1;
+						$newIndent = isset($tokens[$n]) ? strlen($tokens[$n]) - 1 : 0;
 						$hasKey = FALSE;
 
 					} else {
@@ -232,7 +226,7 @@ class Neon extends Object
 						}
 					}
 
-					if ($newIndent < $indent || !isset($tokens[$n+1])) { // close block
+					if ($newIndent < $indent) { // close block
 						return $result; // block parser exit point
 					}
 				}
@@ -241,14 +235,18 @@ class Neon extends Object
 				if ($hasValue) {
 					$this->error();
 				}
+				static $consts = array(
+					'true' => TRUE, 'TRUE' => TRUE,
+					'yes' => TRUE, 'YES' => TRUE,
+					'false' => FALSE, 'FALSE' => FALSE,
+					'no' => FALSE, 'NO' => FALSE,
+				);
 				if ($t[0] === '"') {
 					$value = preg_replace_callback('#\\\\(?:u[0-9a-f]{4}|x[0-9a-f]{2}|.)#i', array($this, 'cbString'), substr($t, 1, -1));
 				} elseif ($t[0] === "'") {
 					$value = substr($t, 1, -1);
-				} elseif ($t === 'true' || $t === 'yes' || $t === 'TRUE' || $t === 'YES') {
-					$value = TRUE;
-				} elseif ($t === 'false' || $t === 'no' || $t === 'FALSE' || $t === 'NO') {
-					$value = FALSE;
+				} elseif (isset($consts[$t])) {
+					$value = $consts[$t];
 				} elseif ($t === 'null' || $t === 'NULL') {
 					$value = NULL;
 				} elseif (is_numeric($t)) {
@@ -260,7 +258,23 @@ class Neon extends Object
 			}
 		}
 
-		throw new NeonException('Unexpected end of file.');
+
+		if ($hasValue) {
+			if ($hasKey) {
+				if ($key === NULL) $result[] = $value; else $result[$key] = $value;
+			} elseif ($result === NULL) { // simple value
+				$result = $value;
+			} else {
+				$result[] = $value;
+			}
+		} elseif ($hasKey) {
+			if ($inlineParser) {
+				$this->error();
+			} else {
+				$result[$key] = NULL;
+			}
+		}
+		return $result;
 	}
 
 
@@ -285,8 +299,8 @@ class Neon extends Object
 	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		$token = str_replace("\n", '\n', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40));
-		throw new NeonException(str_replace('%s', $token, $message) . "' on line " . ($line - 1) . ", column $col.");
+		$token = str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40));
+		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 
 }
