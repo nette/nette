@@ -31,7 +31,7 @@ class Neon extends Object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n *', // indent
-		'[^#"\',:=@[\]{}()<>\s](?:[^#,:=\]})>\n]+|:(?!\s)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',:=@[\]{}()<>\x00-\x20](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?: +', // whitespace
 	);
 
