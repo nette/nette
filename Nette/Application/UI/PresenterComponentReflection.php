@@ -53,7 +53,14 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 					'since' => $class,
 				);
 			}
-			$params = $this->getPersistentParams(get_parent_class($class)) + $params; // TODO
+			foreach ($this->getPersistentParams(get_parent_class($class)) as $name => $param) {
+				if (isset($params[$name])) {
+					$params[$name]['since'] = $param['since'];
+					continue;
+				}
+
+				$params[$name] = $param;
+			}
 		}
 		return $params;
 	}
