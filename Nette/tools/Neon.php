@@ -184,6 +184,9 @@ class Neon extends Object
 				}
 
 			} elseif ($t === ']' || $t === '}' || $t === ')') { // Closing bracket ] ) }
+				if (!$inlineParser) {
+					$this->error();
+				}
 				break;
 
 			} elseif ($t[0] === '@') { // Object
@@ -292,7 +295,7 @@ class Neon extends Object
 
 	private function cbString($m)
 	{
-		static $mapping = array('t' => "\t", 'n' => "\n", '"' => '"', '\\' => '\\', '_' => "\xc2\xa0");
+		static $mapping = array('t' => "\t", 'n' => "\n", '"' => '"', '\\' => '\\',  '/' => '/', '_' => "\xc2\xa0");
 		$sq = $m[0];
 		if (isset($mapping[$sq[1]])) {
 			return $mapping[$sq[1]];
