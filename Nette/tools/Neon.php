@@ -161,7 +161,11 @@ class Neon extends Object
 				if ($hasKey || !$hasValue) {
 					$this->error();
 				}
-				$key = (string) $value;
+				if (is_array($value) || (is_object($value) && !method_exists($value, '__toString'))) {
+					$this->error('Unacceptable key');
+				} else {
+					$key = (string) $value;
+				}
 				$hasKey = TRUE;
 				$hasValue = FALSE;
 
