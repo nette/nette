@@ -37,10 +37,16 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 	/** @var bool explain queries? */
 	public $explain = TRUE;
 
+	/** @var bool */
+	public $disabled = FALSE;
+
 
 
 	public function logQuery(Statement $result, array $params = NULL)
 	{
+		if ($this->disabled) {
+			return;
+		}
 		$source = NULL;
 		foreach (debug_backtrace(FALSE) as $row) {
 			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
@@ -74,6 +80,7 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 
 	public function getPanel()
 	{
+		$this->disabled = TRUE;
 		$s = '';
 		$h = 'htmlSpecialChars';
 		foreach ($this->queries as $i => $query) {
