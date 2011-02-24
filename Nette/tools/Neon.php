@@ -31,7 +31,7 @@ class Neon extends Object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n[\t ]*', // new line + indent
-		'[^#"\',:=@[\]{}()<>\x00-\x20](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',:=@[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?:[\t ]+', // whitespace
 	);
 
@@ -86,7 +86,7 @@ class Neon extends Object
 				return ($isArray ? '[' : '{') . substr($s, 0, -2) . ($isArray ? ']' : '}');
 			}
 
-		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
+		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
 			return $var;
 
 		} else {
@@ -248,10 +248,8 @@ class Neon extends Object
 					$this->error();
 				}
 				static $consts = array(
-					'true' => TRUE, 'TRUE' => TRUE,
-					'yes' => TRUE, 'YES' => TRUE,
-					'false' => FALSE, 'FALSE' => FALSE,
-					'no' => FALSE, 'NO' => FALSE,
+					'true' => TRUE, 'True' => TRUE, 'TRUE' => TRUE, 'yes' => TRUE, 'Yes' => TRUE, 'YES' => TRUE, 'on' => TRUE, 'On' => TRUE, 'ON' => TRUE,
+					'false' => FALSE, 'False' => FALSE, 'FALSE' => FALSE, 'no' => FALSE, 'No' => FALSE, 'NO' => FALSE, 'off' => FALSE, 'Off' => FALSE, 'OFF' => FALSE,
 				);
 				if ($t[0] === '"') {
 					$value = preg_replace_callback('#\\\\(?:u[0-9a-f]{4}|x[0-9a-f]{2}|.)#i', array($this, 'cbString'), substr($t, 1, -1));
@@ -259,7 +257,7 @@ class Neon extends Object
 					$value = substr($t, 1, -1);
 				} elseif (isset($consts[$t])) {
 					$value = $consts[$t];
-				} elseif ($t === 'null' || $t === 'NULL') {
+				} elseif ($t === 'null' || $t === 'Null' || $t === 'NULL') {
 					$value = NULL;
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
