@@ -179,7 +179,7 @@ class Neon extends Object
 				$endBracket = self::$brackets[$tokens[$n++]];
 				$hasValue = TRUE;
 				$value = $this->parse(NULL, array());
-				if ($tokens[$n] !== $endBracket) { // unexpected type of bracket or block-parser
+				if (!isset($tokens[$n]) || $tokens[$n] !== $endBracket) { // unexpected type of bracket or block-parser
 					$this->error();
 				}
 
@@ -310,7 +310,7 @@ class Neon extends Object
 	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		$token = str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40));
+		$token = isset(self::$tokenizer->tokens[$this->n]) ? str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40)) : 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 

@@ -98,12 +98,12 @@ class Tokenizer extends Object
 	/**
 	 * Returns position of token in input string
 	 * @param  int token number
-	 * @return int
+	 * @return array [offset, line, column]
 	 */
 	public function getOffset($i)
 	{
 		$tokens = String::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
-		list(, $offset) = $tokens[$i];
+		$offset = isset($tokens[$i]) ? $tokens[$i][1] : strlen($this->input);
 		return array(
 			$offset,
 			($offset ? substr_count($this->input, "\n", 0, $offset) + 1 : 1),
