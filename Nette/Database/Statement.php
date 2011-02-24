@@ -105,7 +105,9 @@ class Statement extends \PDOStatement
 				$this->types = array();
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta(count($this->types));
-					$this->types[$key] = DatabaseReflection::detectType($type['native_type']);
+					if (isset($type['native_type'])) {
+						$this->types[$key] = DatabaseReflection::detectType($type['native_type']);
+					}
 				}
 			} catch (\PDOException $e) {
 			}
