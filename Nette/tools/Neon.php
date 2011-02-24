@@ -59,6 +59,9 @@ class Neon extends Object
 	 */
 	public static function encode($var, $options = NULL)
 	{
+		if ($var instanceof \DateTime) {
+			return $var->format('Y-m-d H:i:s O');
+		}
 		if (is_object($var)) {
 			$obj = $var; $var = array();
 			foreach ($obj as $k => $v) {
@@ -70,17 +73,9 @@ class Neon extends Object
 			$s = '';
 			if ($options & self::BLOCK) {
 				foreach ($var as $k => $v) {
-					$s .= $isArray ? '- ' : self::encode($k) . ':';
-					if (is_object($v) || is_array($v)) {
-						$c = 0;
-						foreach ($v as $k2 => $v2) {
-							if (is_array($v2) || is_object($v2) || (string) $k2 !== (string) $c++) {
-								$s .= "\n\t" . str_replace("\n", "\n\t", self::encode($v, self::BLOCK)) . "\n";
-								continue 2;
-							}
-						}
-					}
-					$s .= (!$isArray && $v === NULL) ? "\n" : ' ' . self::encode($v) . "\n";
+					$v = self::encode($v, self::BLOCK);
+					$s .= ($isArray ? '-' : self::encode($k) . ':') . (strpos($v, "\n") === FALSE ? ' ' . $v : "\n\t" . str_replace("\n", "\n\t", $v)) . "\n";
+					continue;
 				}
 				return $s;
 
@@ -91,7 +86,7 @@ class Neon extends Object
 				return ($isArray ? '[' : '{') . substr($s, 0, -2) . ($isArray ? ']' : '}');
 			}
 
-		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^(true|false|yes|no|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
+		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
 			return $var;
 
 		} else {
@@ -268,6 +263,8 @@ class Neon extends Object
 					$value = NULL;
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
+				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
+					$value = new \DateTime($t);
 				} else { // literal
 					$value = $t;
 				}
