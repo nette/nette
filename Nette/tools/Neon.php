@@ -230,8 +230,7 @@ class Neon extends Object
 
 					} else {
 						if ($hasValue && !$hasKey) { // block items must have "key"; NULL key means list item
-							if ($result === NULL) return $value;  // simple value parser exit point
-							$this->error();
+							break;
 
 						} elseif ($hasKey) {
 							$value = $hasValue ? $value : NULL;
@@ -272,20 +271,22 @@ class Neon extends Object
 			}
 		}
 
-
-		if ($hasValue) {
-			if ($hasKey) {
-				if ($key === NULL) $result[] = $value; else $result[$key] = $value;
-			} elseif ($result === NULL) { // simple value
-				$result = $value;
-			} else {
-				$result[] = $value;
-			}
-		} elseif ($hasKey) {
-			if ($inlineParser) {
+		if ($inlineParser) {
+			if ($hasValue) {
+				if ($hasKey) $result[$key] = $value; else $result[] = $value;
+			} elseif ($hasKey) {
 				$this->error();
-			} else {
-				$result[$key] = NULL;
+			}
+		} else {
+			if ($hasValue && !$hasKey) { // block items must have "key"
+				if ($result === NULL) {
+					$result = $value; // simple value parser
+				} else {
+					$this->error();
+				}
+			} elseif ($hasKey) {
+				$value = $hasValue ? $value : NULL;
+				if ($key === NULL) $result[] = $value; else $result[$key] = $value;
 			}
 		}
 		return $result;
