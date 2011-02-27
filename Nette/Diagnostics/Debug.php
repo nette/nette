@@ -298,7 +298,14 @@ final class Debug
 				. " in " . $exception->getFile() . ":" . $exception->getLine();
 		}
 
-		$exceptionFilename = NULL;
+		error_log(@date('[Y-m-d H-i-s] ') . trim($message) . (self::$source ? '  @  ' . self::$source : '') . PHP_EOL, 3, self::$logDirectory . '/' . strtolower($priority) . '.log');
+
+		if (($priority === self::ERROR || $priority === self::CRITICAL) && self::$email
+			&& @filemtime(self::$logDirectory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
+			&& @file_put_contents(self::$logDirectory . '/email-sent', 'sent')) { // @ - file may not be writable
+			call_user_func(self::$mailer, $message);
+		}
+
 		if (isset($exception)) {
 			$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
 			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
@@ -306,30 +313,14 @@ final class Debug
 					$skip = TRUE; break;
 				}
 			}
-			$exceptionFilename = "exception " . @date('Y-m-d H-i-s') . " $hash.html";
-			if (empty($skip) && $logHandle = @fopen(self::$logDirectory . '/'. $exceptionFilename, 'w')) {
+			if (empty($skip) && $logHandle = @fopen(self::$logDirectory . "/exception " . @date('Y-m-d H-i-s') . " $hash.html", 'w')) {
 				ob_start(); // double buffer prevents sending HTTP headers in some PHP
 				ob_start(function($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 1);
 				DebugHelpers::renderBlueScreen($exception);
 				ob_end_flush();
 				ob_end_clean();
 				fclose($logHandle);
-			} else {
-				$exceptionFilename = NULL;
 			}
-		}
-			
-		error_log(
-			@date('[Y-m-d H-i-s] ') . trim($message) .
-			(self::$source ? '  @  ' . self::$source : '') .
-			($exceptionFilename !== NULL ? ' @@ ' . $exceptionFilename : '') . PHP_EOL,
-		3, self::$logDirectory . '/' . strtolower($priority) . '.log');
-
-
-		if (($priority === self::ERROR || $priority === self::CRITICAL) && self::$email
-			&& @filemtime(self::$logDirectory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
-			&& @file_put_contents(self::$logDirectory . '/email-sent', 'sent')) { // @ - file may not be writable
-			call_user_func(self::$mailer, $message);
 		}
 	}
 
