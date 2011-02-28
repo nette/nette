@@ -275,8 +275,9 @@ class Mail extends MailMimePart
 	 */
 	public function addEmbeddedFile($file, $content = NULL, $contentType = NULL)
 	{
+		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost');
 		return $this->inlines[$file] = $this->createAttachment($file, $content, $contentType, 'inline')
-			->setHeader('Content-ID', '<' . String::random() . '>');
+			->setHeader('Content-ID', '<' . String::random() . "@$hostname>");
 	}
 
 
