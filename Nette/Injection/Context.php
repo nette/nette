@@ -37,6 +37,7 @@ class Context extends FreezableObject implements IContext
 	 * @param  bool   is singleton?
 	 * @param  array  factory options
 	 * @return void
+	 * @return Context  provides a fluent interface
 	 */
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{
@@ -67,6 +68,7 @@ class Context extends FreezableObject implements IContext
 			$this->factories[$lower] = array($service, $singleton, $options);
 			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
 		}
+		return $this;
 	}
 
 
