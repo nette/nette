@@ -85,7 +85,10 @@ development:
 	timeout: 10
 	display_errors: true
 	html_errors: false
-	items: [10, 20]
+	items:
+		- 10
+		- 20
+
 	webname: the example
 EOD
 , file_get_contents(TEMP_FILE) );

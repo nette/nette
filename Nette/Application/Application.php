@@ -223,7 +223,7 @@ class Application extends Nette\Object
 
 
 	/**
-	 * Gets the context.
+	 * Sets the context.
 	 * @return Application  provides a fluent interface
 	 */
 	public function setContext(Nette\IContext $context)

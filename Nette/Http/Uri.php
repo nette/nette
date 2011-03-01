@@ -19,13 +19,13 @@ use Nette;
  * URI Syntax (RFC 3986).
  *
  * <pre>
- *                                   basePath     relativeUri
- *                                      |             |
- *                                    /--\/----------------------------\
- * http://user:password@nette.org:8042/en/manual.php?name=param#fragment
- * \__/^^^\__________________________/\____________/^\________/^\______/
- *   |                 |                     |           |         |
- * scheme          authority               path        query    fragment
+ * scheme  user  password  host  port  basePath   relativeUri
+ *   |      |      |        |      |    |             |
+ * /--\   /--\ /------\ /-------\ /--\/--\/----------------------------\
+ * http://john:x0y17575@nette.org:8042/en/manual.php?name=param#fragment  <-- absoluteUri
+ *        \__________________________/\____________/^\________/^\______/
+ *                     |                     |           |         |
+ *                 authority               path        query    fragment
  * </pre>
  *
  * - authority:   [user[:password]@]host[:port]
