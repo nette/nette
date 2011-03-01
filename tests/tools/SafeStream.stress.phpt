@@ -37,7 +37,6 @@ function checkStr($s)
 
 define('COUNT_FILES', 3);
 set_time_limit(0);
-SafeStream::register();
 
 
 // clear playground
