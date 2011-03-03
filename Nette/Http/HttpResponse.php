@@ -323,5 +323,137 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 			TRUE // doesn't matter with delete
 		);
 	}
+	
+	
+	
+	/********************* sessions ****************d*g**/
+	
+	
+	
+	/**
+	 * Returns reference to the session array.
+	 * @return array
+	 */
+	public function & getSession()
+	{
+		return $_SESSION;
+	}
+	
+	
+	
+	/**
+	 * Returns reference to session cookie parameters.
+	 * @return array
+	 */
+	public function getSessionCookieParams()
+	{
+		return session_get_cookie_params();
+	}
+	
+	
+	
+	/**
+	 * Updates session cookie parameters.
+	 * @param  int
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @param  bool
+	 * @return void
+	 */
+	public function setSessionCookieParams($lifetime, $path = '', $domain = '', $secure = FALSE, $httpOnly = FALSE)
+	{
+		session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
+	}
+	
+	
+	
+	/**
+	 * Starts the session.
+	 * @return void
+	 * @throws InvalidStateException	 
+	 */
+	public function sessionStart()
+	{
+		Nette\Debug::tryError();
+		session_start();
+		if (Nette\Debug::catchError($e)) {
+			@session_write_close(); // this is needed
+			throw new \InvalidStateException($e->getMessage());
+		}
+	}
+	
+	
+	
+	/**
+	 * Flushes and closes the session.
+	 * @return void
+	 */
+	public function sessionWriteClose()
+	{
+		session_write_close();
+	}
+	
+	
+	
+	/**
+	 * Destroys the session.
+	 * @return void
+	 */
+	public function sessionDestroy()
+	{
+		session_destroy();
+	}
+	
+	
+	
+	/**
+	 * Returns session name.
+	 * @return string
+	 */
+	public function getSessionName()
+	{
+		return session_name();
+	}
+	
+	
+	/**
+	 * Updated session name.
+	 * @param  string
+	 * @return void
+	 */
+	public function setSessionName($name)
+	{
+		session_name($name);
+	}
+	
+	
+	/**
+	 * Update the session id with a newly generated one.
+	 * @param  bool	 
+	 * @return void
+	 * @throws InvalidStateException	 
+	 */
+	public function sessionRegenerateId($deleteOldSession = FALSE)
+	{
+		if (headers_sent($file, $line)) {
+			throw new \InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+		}
+		if (!session_regenerate_id($deleteOldSession)) {
+			throw new \InvalidStateException('Session ID regeneration failed.');
+		}
+	}
+	
+	
+	
+	/**
+	 * Returns session ID.
+	 * @return string|NULL
+	 */
+	public function getSessionId()
+	{
+		$id = session_id();
+		return $id ? $id : NULL;
+	}
 
 }

@@ -135,5 +135,76 @@ interface IHttpResponse
 	 * @return void
 	 */
 	function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL);
+	
+	/********************* sessions ****************d*g**/
+	
+	/**
+	 * Returns reference to the session array.
+	 * @return array	 
+	 */
+	function & getSession();
+	
+	/**
+	 * Returns session cookie parameters.
+	 * @return array
+	 */
+	function getSessionCookieParams();
+	
+	/**
+	 * Updates session cookie parameters.
+	 * @param  int
+	 * @param  string
+	 * @param  string
+	 * @param  bool
+	 * @param  bool
+	 * @return void
+	 */
+	function setSessionCookieParams($lifetime, $path = '', $domain = '', $secure = FALSE, $httpOnly = FALSE);
+	
+	/**
+	 * Starts the session.
+	 * @return void
+	 * @throws InvalidStateException	 	 
+	 */
+	function sessionStart();
+	
+	/**
+	 * Flushes and closes the session.
+	 * @return void	 
+	 */
+	function sessionWriteClose();
+	
+	/**
+	 * Destroys the session.
+	 * @return void
+	 */
+	function sessionDestroy();
+
+	/**
+	 * Returns session name.
+	 * @return string
+	 */
+	function getSessionName();
+	
+	/**
+	 * Updated session name.
+	 * @param  string
+	 * @return void
+	 */
+	function setSessionName($name);
+	
+	/**
+	 * Update the session ID with a newly generated one.
+	 * @return void
+	 * @throws InvalidStateException	 
+	 */
+	function sessionRegenerateId($deleteOldSession = FALSE);
+	
+	/**
+	 * Returns session ID.
+	 * @return string|NULL
+	 */
+	function getSessionId();
+	
 
 }
