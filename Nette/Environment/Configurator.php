@@ -36,7 +36,7 @@ class Configurator extends Object
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\ISession' => 'Nette\Web\Session',
+		'Nette\\Web\\ISession' => array(__CLASS__, 'createSession'),
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
 
@@ -307,6 +307,16 @@ class Configurator extends Object
 		$factory = new Nette\Web\HttpRequestFactory;
 		$factory->setEncoding('UTF-8');
 		return $factory->createHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Web\Session
+	 */
+	public static function createSession()
+	{
+		return new Nette\Web\Session(Environment::getHttpRequest(), Environment::getHttpResponse());
 	}
 
 

@@ -22,6 +22,12 @@ use Nette;
  */
 class Session extends Nette\Object implements ISession
 {
+	/** @var IHttpRequest */
+	private $httpRequest;
+	
+	/** @var IHttpResponse */
+	private $httpResponse;
+	
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;
 
@@ -53,9 +59,21 @@ class Session extends Nette\Object implements ISession
 		'hash_function' => NULL,  // (default "0", means MD5)
 		'hash_bits_per_character' => NULL, // (default "4")
 	);
-
-
-
+	
+	
+	
+	/**
+	 * @param IHttpRequest
+	 * @param IHttpResponse
+	 */
+	public function __construct(IHttpRequest $request, IHttpResponse $response)
+	{
+		$this->httpRequest = $request;
+		$this->httpResponse = $response;
+	}
+	
+	
+	
 	/**
 	 * Starts and initializes session data.
 	 * @throws \InvalidStateException
@@ -72,11 +90,11 @@ class Session extends Nette\Object implements ISession
 
 		$this->configure($this->options);
 
-		$this->getHttpResponse()->sessionStart();
+		$this->httpResponse->sessionStart();
 
 		self::$started = TRUE;
 		if ($this->regenerationNeeded) {
-			$this->getHttpResponse()->sessionRegenerateId(TRUE);
+			$this->httpResponse->sessionRegenerateId(TRUE);
 			$this->regenerationNeeded = FALSE;
 		}
 
@@ -86,7 +104,7 @@ class Session extends Nette\Object implements ISession
 				META: namespace->variable = Timestamp, Browser, Version
 		*/
 		
-		$session = & $this->getHttpResponse()->getSession();
+		$session = & $this->httpResponse->getSession();
 
 		unset($session['__NT'], $session['__NS'], $session['__NM']); // old unused structures
 
@@ -99,7 +117,7 @@ class Session extends Nette\Object implements ISession
 		}
 
 		// browser closing detection
-		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
+		$browserKey = $this->httpRequest->getCookie('nette-browser');
 		if (!$browserKey) {
 			$browserKey = Nette\String::random();
 		}
@@ -155,7 +173,7 @@ class Session extends Nette\Object implements ISession
 	{
 		if (self::$started) {
 			$this->clean();
-			$this->getHttpResponse()->sessionWriteClose();
+			$this->httpResponse->sessionWriteClose();
 			self::$started = FALSE;
 		}
 	}
@@ -172,13 +190,13 @@ class Session extends Nette\Object implements ISession
 			throw new \InvalidStateException('Session is not started.');
 		}
 
-		$this->getHttpResponse()->sessionDestroy();
-		$session = & $this->getHttpResponse()->getSession();
+		$this->httpResponse->sessionDestroy();
+		$session = & $this->httpResponse->getSession();
 		$session = NULL;
 		self::$started = FALSE;
-		if (!$this->getHttpResponse()->isSent()) {
-			$params = $this->getHttpResponse()->getSessionCookieParams();
-			$this->getHttpResponse()->deleteCookie($this->getHttpResponse()->getSessionName(), $params['path'], $params['domain'], $params['secure']);
+		if (!$this->httpResponse->isSent()) {
+			$params = $this->httpResponse->getSessionCookieParams();
+			$this->httpResponse->deleteCookie($this->httpResponse->getSessionName(), $params['path'], $params['domain'], $params['secure']);
 		}
 	}
 
@@ -190,7 +208,7 @@ class Session extends Nette\Object implements ISession
 	 */
 	public function exists()
 	{
-		return self::$started || $this->getHttpRequest()->getCookie($this->getHttpResponse()->getSessionName()) !== NULL;
+		return self::$started || $this->httpRequest->getCookie($this->httpResponse->getSessionName()) !== NULL;
 	}
 
 
@@ -203,7 +221,7 @@ class Session extends Nette\Object implements ISession
 	public function regenerateId()
 	{
 		if (self::$started) {
-			$this->getHttpResponse()->sessionRegenerateId(TRUE);
+			$this->httpResponse->sessionRegenerateId(TRUE);
 
 		} else {
 			$this->regenerationNeeded = TRUE;
@@ -218,7 +236,7 @@ class Session extends Nette\Object implements ISession
 	 */
 	public function getId()
 	{
-		return $this->getHttpResponse()->getSessionId();
+		return $this->httpResponse->getSessionId();
 	}
 
 
@@ -234,7 +252,7 @@ class Session extends Nette\Object implements ISession
 			throw new \InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 
-		$this->getHttpResponse()->setSessionName($name);
+		$this->httpResponse->setSessionName($name);
 		return $this->setOptions(array(
 			'name' => $name,
 		));
@@ -248,7 +266,7 @@ class Session extends Nette\Object implements ISession
 	 */
 	public function getName()
 	{
-		return $this->getHttpResponse()->getSessionName();
+		return $this->httpResponse->getSessionName();
 	}
 
 
@@ -274,7 +292,7 @@ class Session extends Nette\Object implements ISession
 			$this->start();
 		}
 
-	 	$session = & $this->getHttpResponse()->getSession();
+	 	$session = & $this->httpResponse->getSession();
 		return new $class($session['__NF']['DATA'][$namespace], $session['__NF']['META'][$namespace]);
 	}
 
@@ -291,7 +309,7 @@ class Session extends Nette\Object implements ISession
 			$this->start();
 		}
 		
-		$session = & $this->getHttpResponse()->getSession();
+		$session = & $this->httpResponse->getSession();
 		return !empty($session['__NF']['DATA'][$namespace]);
 	}
 
@@ -307,7 +325,7 @@ class Session extends Nette\Object implements ISession
 			$this->start();
 		}
 		
-		$session = & $this->getHttpResponse()->getSession();
+		$session = & $this->httpResponse->getSession();
 		if (isset($session['__NF']['DATA'])) {
 			return new \ArrayIterator(array_keys($session['__NF']['DATA']));
 
@@ -324,7 +342,7 @@ class Session extends Nette\Object implements ISession
 	 */
 	public function clean()
 	{
-		$session = & $this->getHttpResponse()->getSession();
+		$session = & $this->httpResponse->getSession();
 		if (!self::$started || empty($session)) {
 			return;
 		}
@@ -414,7 +432,7 @@ class Session extends Nette\Object implements ISession
 
 			} elseif (strncmp($key, 'cookie_', 7) === 0) {
 				if (!isset($cookie)) {
-					$cookie = $this->getHttpResponse()->getSessionCookieParams();
+					$cookie = $this->httpResponse->getSessionCookieParams();
 				}
 				$cookie[substr($key, 7)] = $value;
 
@@ -432,7 +450,7 @@ class Session extends Nette\Object implements ISession
 		}
 
 		if (isset($cookie)) {
-			$this->getHttpResponse()->setSessionCookieParams($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+			$this->httpResponse->setSessionCookieParams($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 			if (self::$started) {
 				$this->sendCookie();
 			}
@@ -489,7 +507,7 @@ class Session extends Nette\Object implements ISession
 	 */
 	public function getCookieParams()
 	{
-		return $this->getHttpResponse()->getSessionCookieParams();
+		return $this->httpResponse->getSessionCookieParams();
 	}
 
 
@@ -514,35 +532,11 @@ class Session extends Nette\Object implements ISession
 	private function sendCookie()
 	{
 		$cookie = $this->getCookieParams();
-		$response = $this->getHttpResponse();
-		$this->getHttpResponse()->setCookie($response->getSessionName(), $response->getSessionId(), $cookie['lifetime'] ? $cookie['lifetime'] + time() : 0, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+		$response = $this->httpResponse;
+		$this->httpResponse->setCookie($response->getSessionName(), $response->getSessionId(), $cookie['lifetime'] ? $cookie['lifetime'] + time() : 0, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 		
-		$session = & $this->getHttpResponse()->getSession();
-		$this->getHttpResponse()->setCookie('nette-browser', $session['__NF']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain']);
-	}
-
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Web\IHttpRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return Nette\Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\IHttpResponse
-	 */
-	protected function getHttpResponse()
-	{
-		return Nette\Environment::getHttpResponse();
+		$session = & $this->httpResponse->getSession();
+		$this->httpResponse->setCookie('nette-browser', $session['__NF']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain']);
 	}
 
 }
