@@ -23,6 +23,24 @@ use Nette;
 class HttpContext extends Nette\Object
 {
 
+	/** @var IHttpRequest */
+	private $request;
+	
+	/** @var IHttpResponse */
+	private $response;
+	
+	
+	/**
+	 * @param IHttpRequest
+	 * @param IHttpResponse	 
+	 */
+	public function __construct(IHttpRequest $request, IHttpResponse $response)
+	{
+		$this->request = $request;
+		$this->response = $response;
+	}
+
+
 
 	/**
 	 * Attempts to cache the sent entity by its last modification date
@@ -32,8 +50,8 @@ class HttpContext extends Nette\Object
 	 */
 	public function isModified($lastModified = NULL, $etag = NULL)
 	{
-		$response = $this->getResponse();
-		$request = $this->getRequest();
+		$response = $this->response;
+		$request = $this->request;
 
 		if ($lastModified) {
 			$response->setHeader('Last-Modified', $response->date($lastModified));
@@ -74,30 +92,6 @@ class HttpContext extends Nette\Object
 
 		$response->setCode(IHttpResponse::S304_NOT_MODIFIED);
 		return FALSE;
-	}
-
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Web\IHttpRequest
-	 */
-	public function getRequest()
-	{
-		return Nette\Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Web\IHttpResponse
-	 */
-	public function getResponse()
-	{
-		return Nette\Environment::getHttpResponse();
 	}
 
 }

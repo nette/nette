@@ -29,7 +29,7 @@ class Configurator extends Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
-		'Nette\\Web\\HttpContext' => 'Nette\Web\HttpContext',
+		'Nette\\Web\\HttpContext' => array(__CLASS__, 'createHttpContext'),
 		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
 		'Nette\\Web\\IHttpResponse' => 'Nette\Web\HttpResponse',
 		'Nette\\Web\\IUser' => 'Nette\Web\User',
@@ -295,6 +295,16 @@ class Configurator extends Object
 		$application->setContext($context);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
+	}
+	
+	
+	
+	/**
+	 * @return Nette\Web\HttpContext
+	 */
+	public static function createHttpContext()
+	{
+		return new Nette\Web\HttpContext(Environment::getService('Nette\\Web\\IHttpRequest'), Environment::getService('Nette\\Web\\IHttpResponse'));
 	}
 
 
