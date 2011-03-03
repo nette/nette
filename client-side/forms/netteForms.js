@@ -179,11 +179,12 @@ Nette.validators = {
 		if (parts) { try {
 			return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
 		} catch (e) {} }
-		return;
 	},
 
 	pattern: function(elem, arg, val) {
-		return (new RegExp(arg)).test(val);
+		try {
+			return (new RegExp('^(' + arg + ')$')).test(val);
+		} catch (e) {}
 	},
 
 	integer: function(elem, arg, val) {

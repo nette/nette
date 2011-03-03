@@ -154,7 +154,7 @@ class RadioList extends FormControl
 			if ($val instanceof Html) {
 				$label->setHtml($val);
 			} else {
-				$label->setText($this->translate($val));
+				$label->setText($this->translate((string) $val));
 			}
 
 			if ($key !== NULL) {
