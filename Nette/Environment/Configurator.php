@@ -36,7 +36,7 @@ class Configurator extends Object
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\Session' => 'Nette\Web\Session',
+		'Nette\\Web\\ISession' => 'Nette\Web\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
 

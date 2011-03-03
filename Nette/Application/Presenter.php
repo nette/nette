@@ -1293,7 +1293,7 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getService('Nette\\Web\\Session');
+		$handler = $this->context->getService('Nette\\Web\\ISession');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 

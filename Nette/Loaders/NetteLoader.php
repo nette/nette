@@ -213,6 +213,7 @@ class NetteLoader extends AutoLoader
 		'nette\web\httpuploadedfile' => '/Http/HttpUploadedFile.php',
 		'nette\web\ihttprequest' => '/Http/IHttpRequest.php',
 		'nette\web\ihttpresponse' => '/Http/IHttpResponse.php',
+		'nette\web\isession' => '/Http/ISession.php',
 		'nette\web\iuser' => '/Http/IUser.php',
 		'nette\web\session' => '/Http/Session.php',
 		'nette\web\sessionnamespace' => '/Http/SessionNamespace.php',

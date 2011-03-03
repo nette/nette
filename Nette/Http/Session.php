@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Session extends Nette\Object
+class Session extends Nette\Object implements ISession
 {
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;

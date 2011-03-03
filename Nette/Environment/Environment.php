@@ -443,7 +443,7 @@ final class Environment
 	 */
 	public static function getSession($namespace = NULL)
 	{
-		$handler = self::getService('Nette\\Web\\Session');
+		$handler = self::getService('Nette\\Web\\ISession');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 

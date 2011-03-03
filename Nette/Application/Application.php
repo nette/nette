@@ -318,7 +318,7 @@ class Application extends Nette\Object
 	 */
 	protected function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getService('Nette\\Web\\Session');
+		$handler = $this->context->getService('Nette\\Web\\ISession');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
