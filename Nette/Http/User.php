@@ -14,8 +14,7 @@ namespace Nette\Web;
 use Nette,
 	Nette\Environment,
 	Nette\Security\IAuthenticator,
-	Nette\Security\IAuthorizator,
-	Nette\Security\IIdentity;
+	Nette\Security\IAuthorizator;
 
 
 
@@ -34,9 +33,9 @@ use Nette,
 class User extends Nette\Object implements IUser
 {
 	/** log-out reason {@link User::getLogoutReason()} */
-	const MANUAL = 1,
-		INACTIVITY = 2,
-		BROWSER_CLOSED = 3;
+	const MANUAL = IUserStorage::MANUAL,
+		INACTIVITY = IUserStorage::INACTIVITY,
+		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -56,11 +55,8 @@ class User extends Nette\Object implements IUser
 	/** @var Nette\Security\IAuthorizator */
 	private $authorizationHandler;
 
-	/** @var string */
-	private $namespace = '';
-
-	/** @var SessionNamespace */
-	private $session;
+	/** @var UserStorage Session storage for current user */
+	private $storage;
 
 
 
@@ -85,8 +81,7 @@ class User extends Nette\Object implements IUser
 		$this->logout(TRUE);
 
 		$credentials = func_get_args();
-		$this->setIdentity($handler->authenticate($credentials));
-		$this->setAuthenticated(TRUE);
+		$this->getStorage()->login($handler->authenticate($credentials));
 		$this->onLoggedIn($this);
 	}
 
@@ -99,13 +94,10 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function logout($clearIdentity = FALSE)
 	{
-		if ($this->isLoggedIn()) {
-			$this->setAuthenticated(FALSE);
+		$loggedIn = $this->isLoggedIn();
+		$this->getStorage()->logout($clearIdentity);
+		if ($loggedIn) {
 			$this->onLoggedOut($this);
-		}
-
-		if ($clearIdentity) {
-			$this->setIdentity(NULL);
 		}
 	}
 
@@ -117,8 +109,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function isLoggedIn()
 	{
-		$session = $this->getSessionNamespace(FALSE);
-		return $session && $session->authenticated;
+		return $this->getStorage()->isLoggedIn();
 	}
 
 
@@ -129,8 +120,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getIdentity()
 	{
-		$session = $this->getSessionNamespace(FALSE);
-		return $session ? $session->identity : NULL;
+		return $this->getStorage()->getIdentity();
 	}
 
 
@@ -181,10 +171,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setNamespace($namespace)
 	{
-		if ($this->namespace !== $namespace) {
-			$this->namespace = (string) $namespace;
-			$this->session = NULL;
-		}
+		$this->getStorage()->setNamespace($namespace);
 		return $this;
 	}
 
@@ -196,7 +183,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getNamespace()
 	{
-		return $this->namespace;
+		return $this->getStorage()->getNamespace();
 	}
 
 
@@ -210,20 +197,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$session = $this->getSessionNamespace(TRUE);
-		if ($time) {
-			$time = Nette\Tools::createDateTime($time)->format('U');
-			$session->expireTime = $time;
-			$session->expireDelta = $time - time();
-
-		} else {
-			unset($session->expireTime, $session->expireDelta);
-		}
-
-		$session->expireIdentity = (bool) $clearIdentity;
-		$session->expireBrowser = (bool) $whenBrowserIsClosed;
-		$session->browserCheck = TRUE;
-		$session->setExpiration(0, 'browserCheck');
+		$this->getStorage()->setExpiration($time, $whenBrowserIsClosed, $clearIdentity);
 		return $this;
 	}
 
@@ -235,103 +209,25 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getLogoutReason()
 	{
-		$session = $this->getSessionNamespace(FALSE);
-		return $session ? $session->reason : NULL;
+		return $this->getStorage()->getLogoutReason();
 	}
 
 
 
 	/**
-	 * Returns and initializes $this->session.
-	 * @return SessionNamespace
+	 * Returns user session storage.
+	 * @return Nette\Web\UserStorage
 	 */
-	protected function getSessionNamespace($need)
+	protected function getStorage()
 	{
-		if ($this->session !== NULL) {
-			return $this->session;
+		if (!$this->storage) {
+			$this->storage = new UserStorage(Environment::getSession());
 		}
-
-		$sessionHandler = $this->getSession();
-		if (!$need && !$sessionHandler->exists()) {
-			return NULL;
-		}
-
-		$this->session = $session = $sessionHandler->getNamespace('Nette.Web.User/' . $this->namespace);
-
-		if (!$session->identity instanceof IIdentity || !is_bool($session->authenticated)) {
-			$session->remove();
-		}
-
-		if ($session->authenticated && $session->expireBrowser && !$session->browserCheck) { // check if browser was closed?
-			$session->reason = self::BROWSER_CLOSED;
-			$session->authenticated = FALSE;
-			$this->onLoggedOut($this);
-			if ($session->expireIdentity) {
-				unset($session->identity);
-			}
-		}
-
-		if ($session->authenticated && $session->expireDelta > 0) { // check time expiration
-			if ($session->expireTime < time()) {
-				$session->reason = self::INACTIVITY;
-				$session->authenticated = FALSE;
-				$this->onLoggedOut($this);
-				if ($session->expireIdentity) {
-					unset($session->identity);
-				}
-			}
-			$session->expireTime = time() + $session->expireDelta; // sliding expiration
-		}
-
-		if (!$session->authenticated) {
-			unset($session->expireTime, $session->expireDelta, $session->expireIdentity,
-				$session->expireBrowser, $session->browserCheck, $session->authTime);
-		}
-
-		return $this->session;
+		return $this->storage;
 	}
 
 
-
-	/**
-	 * Sets the authenticated status of this user.
-	 * @param  bool  flag indicating the authenticated status of user
-	 * @return User  provides a fluent interface
-	 */
-	protected function setAuthenticated($state)
-	{
-		$session = $this->getSessionNamespace(TRUE);
-		$session->authenticated = (bool) $state;
-
-		// Session Fixation defence
-		$this->getSession()->regenerateId();
-
-		if ($state) {
-			$session->reason = NULL;
-			$session->authTime = time(); // informative value
-
-		} else {
-			$session->reason = self::MANUAL;
-			$session->authTime = NULL;
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Sets the user identity.
-	 * @param  IIdentity
-	 * @return User  provides a fluent interface
-	 */
-	protected function setIdentity(IIdentity $identity = NULL)
-	{
-		$this->getSessionNamespace(TRUE)->identity = $identity;
-		return $this;
-	}
-
-
-
+	
 	/********************* Authorization ****************d*g**/
 
 
@@ -412,19 +308,5 @@ class User extends Nette\Object implements IUser
 		return $this->authorizationHandler;
 	}
 
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * Returns session handler.
-	 * @return Nette\Web\Session
-	 */
-	protected function getSession()
-	{
-		return Environment::getSession();
-	}
 
 }
