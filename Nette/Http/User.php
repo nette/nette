@@ -13,8 +13,7 @@ namespace Nette\Http;
 
 use Nette,
 	Nette\Security\IAuthenticator,
-	Nette\Security\IAuthorizator,
-	Nette\Security\IIdentity;
+	Nette\Security\IAuthorizator;
 
 
 
@@ -34,10 +33,10 @@ use Nette,
  */
 class User extends Nette\Object implements IUser
 {
-	/** log-out reason {@link User::getLogoutReason()} */
-	const MANUAL = 1,
-		INACTIVITY = 2,
-		BROWSER_CLOSED = 3;
+	/** @deprecated */
+	const MANUAL = IUserStorage::MANUAL,
+		INACTIVITY = IUserStorage::INACTIVITY,
+		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -51,14 +50,8 @@ class User extends Nette\Object implements IUser
 	/** @var array of function(User $sender); Occurs when the user is logged out */
 	public $onLoggedOut;
 
-	/** @var string */
-	private $namespace = '';
-
-	/** @var Session */
-	private $session;
-
-	/** @var SessionSection */
-	private $section;
+	/** @var UserStorage Session storage for current user */
+	private $storage;
 
 	/** @var Nette\Security\IAuthenticator */
 	private $authenticator;
@@ -71,9 +64,9 @@ class User extends Nette\Object implements IUser
 
 
 
-	public function __construct(Session $session, Nette\DI\IContainer $context)
+	public function __construct(UserStorage $storage, Nette\DI\IContainer $context)
 	{
-		$this->session = $session;
+		$this->storage = $storage;
 		$this->context = $context; // with Nette\Security\IAuthenticator, Nette\Security\IAuthorizator
 	}
 
@@ -94,8 +87,7 @@ class User extends Nette\Object implements IUser
 	{
 		$this->logout(TRUE);
 		$credentials = func_get_args();
-		$this->setIdentity($this->getAuthenticator()->authenticate($credentials));
-		$this->setAuthenticated(TRUE);
+		$this->storage->login($this->getAuthenticator()->authenticate($credentials));
 		$this->onLoggedIn($this);
 	}
 
@@ -108,13 +100,10 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function logout($clearIdentity = FALSE)
 	{
-		if ($this->isLoggedIn()) {
-			$this->setAuthenticated(FALSE);
+		$loggedIn = $this->isLoggedIn();
+		$this->storage->logout($clearIdentity);
+		if ($loggedIn) {
 			$this->onLoggedOut($this);
-		}
-
-		if ($clearIdentity) {
-			$this->setIdentity(NULL);
 		}
 	}
 
@@ -126,8 +115,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function isLoggedIn()
 	{
-		$section = $this->getSessionSection(FALSE);
-		return $section && $section->authenticated;
+		return $this->storage->isLoggedIn();
 	}
 
 
@@ -138,8 +126,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getIdentity()
 	{
-		$section = $this->getSessionSection(FALSE);
-		return $section ? $section->identity : NULL;
+		return $this->storage->getIdentity();
 	}
 
 
@@ -187,10 +174,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setNamespace($namespace)
 	{
-		if ($this->namespace !== $namespace) {
-			$this->namespace = (string) $namespace;
-			$this->section = NULL;
-		}
+		$this->storage->setNamespace($namespace);
 		return $this;
 	}
 
@@ -202,7 +186,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getNamespace()
 	{
-		return $this->namespace;
+		return $this->storage->getNamespace();
 	}
 
 
@@ -216,20 +200,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$section = $this->getSessionSection(TRUE);
-		if ($time) {
-			$time = Nette\DateTime::from($time)->format('U');
-			$section->expireTime = $time;
-			$section->expireDelta = $time - time();
-
-		} else {
-			unset($section->expireTime, $section->expireDelta);
-		}
-
-		$section->expireIdentity = (bool) $clearIdentity;
-		$section->expireBrowser = (bool) $whenBrowserIsClosed;
-		$section->browserCheck = TRUE;
-		$section->setExpiration(0, 'browserCheck');
+		$this->storage->setExpiration($time, $whenBrowserIsClosed, $clearIdentity);
 		return $this;
 	}
 
@@ -241,98 +212,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getLogoutReason()
 	{
-		$section = $this->getSessionSection(FALSE);
-		return $section ? $section->reason : NULL;
-	}
-
-
-
-	/**
-	 * Returns and initializes $this->section.
-	 * @return SessionSection
-	 */
-	protected function getSessionSection($need)
-	{
-		if ($this->section !== NULL) {
-			return $this->section;
-		}
-
-		if (!$need && !$this->session->exists()) {
-			return NULL;
-		}
-
-		$this->section = $section = $this->session->getSection('Nette.Web.User/' . $this->namespace);
-
-		if (!$section->identity instanceof IIdentity || !is_bool($section->authenticated)) {
-			$section->remove();
-		}
-
-		if ($section->authenticated && $section->expireBrowser && !$section->browserCheck) { // check if browser was closed?
-			$section->reason = self::BROWSER_CLOSED;
-			$section->authenticated = FALSE;
-			$this->onLoggedOut($this);
-			if ($section->expireIdentity) {
-				unset($section->identity);
-			}
-		}
-
-		if ($section->authenticated && $section->expireDelta > 0) { // check time expiration
-			if ($section->expireTime < time()) {
-				$section->reason = self::INACTIVITY;
-				$section->authenticated = FALSE;
-				$this->onLoggedOut($this);
-				if ($section->expireIdentity) {
-					unset($section->identity);
-				}
-			}
-			$section->expireTime = time() + $section->expireDelta; // sliding expiration
-		}
-
-		if (!$section->authenticated) {
-			unset($section->expireTime, $section->expireDelta, $section->expireIdentity,
-				$section->expireBrowser, $section->browserCheck, $section->authTime);
-		}
-
-		return $this->section;
-	}
-
-
-
-	/**
-	 * Sets the authenticated status of this user.
-	 * @param  bool  flag indicating the authenticated status of user
-	 * @return User  provides a fluent interface
-	 */
-	protected function setAuthenticated($state)
-	{
-		$section = $this->getSessionSection(TRUE);
-		$section->authenticated = (bool) $state;
-
-		// Session Fixation defence
-		$this->session->regenerateId();
-
-		if ($state) {
-			$section->reason = NULL;
-			$section->authTime = time(); // informative value
-
-		} else {
-			$section->reason = self::MANUAL;
-			$section->authTime = NULL;
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Sets the user identity.
-	 * @param  Nette\Security\IIdentity
-	 * @return User  provides a fluent interface
-	 */
-	protected function setIdentity(IIdentity $identity = NULL)
-	{
-		$this->getSessionSection(TRUE)->identity = $identity;
-		return $this;
+		return $this->storage->getLogoutReason();
 	}
 
 

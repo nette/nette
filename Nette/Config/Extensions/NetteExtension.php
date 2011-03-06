@@ -70,6 +70,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$session->addSetup('setOptions', array($config['session']));
 		}
 
+		$container->addDefinition('userStorage')
+			->setClass('Nette\Http\UserStorage');
+
 		$container->addDefinition('user')
 			->setClass('Nette\Http\User');
 
