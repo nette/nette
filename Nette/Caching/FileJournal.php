@@ -150,6 +150,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		if ($fileMagic !== self::FILE_MAGIC) {
 			fclose($this->handle);
+			$this->handle = false;
 			throw new \InvalidStateException("Malformed journal file '$this->file'.");
 		}
 	}
@@ -165,6 +166,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			$this->headerCommit();
 			flock($this->handle, LOCK_UN); // Since PHP 5.3.3 is manual unlock necesary
 			fclose($this->handle);
+			$this->handle = false;
 		}
 	}
 
@@ -896,7 +898,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			} else {
 				list(, $magic) = unpack('N', $binary);
 				if ($magic !== self::INDEX_MAGIC && $magic !== self::DATA_MAGIC) {
-					$nodesId[] = $from;
+					$nodesId[] = $id;
 				}
 			}
 
@@ -1094,7 +1096,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			} while (empty($binary) || $binary === $packedNull);
 
 			if (!ftruncate($this->handle, self::HEADER_SIZE + self::NODE_SIZE * ($id + 1))) {
-				throw new \InvalidStateException("Cannot truncate journal file.");
+				throw new \InvalidStateException('Cannot truncate journal file.');
 			}
 		} else {
 			fseek($this->handle, self::HEADER_SIZE + self::NODE_SIZE * $id);
@@ -1114,7 +1116,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	private function deleteAll()
 	{
 		if (!ftruncate($this->handle, self::HEADER_SIZE)) {
-			throw new \InvalidStateException("Cannot truncate journal file.");
+			throw new \InvalidStateException('Cannot truncate journal file.');
 		}
 	}
 
@@ -1126,15 +1128,18 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	 */
 	private function lock()
 	{
-		if ($this->handle) {
-			if (!flock($this->handle, LOCK_EX)) {
-				throw new \InvalidStateException('Cannot acquire exclusive lock on journal.');
-			}
-			if ($this->lastModTime !== NULL) {
-				clearstatcache();
-				if ($this->lastModTime < @filemtime($this->file)) { // intentionally @
-					$this->nodeCache = $this->dataNodeFreeSpace = array();
-				}
+		if (!$this->handle) {
+			throw new \InvalidStateException('File journal file is not opened');
+		}
+
+		if (!flock($this->handle, LOCK_EX)) {
+			throw new \InvalidStateException('Cannot acquire exclusive lock on journal.');
+		}
+
+		if ($this->lastModTime !== NULL) {
+			clearstatcache();
+			if ($this->lastModTime < @filemtime($this->file)) { // intentionally @
+				$this->nodeCache = $this->dataNodeFreeSpace = array();
 			}
 		}
 	}
