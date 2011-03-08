@@ -507,6 +507,20 @@ class Session extends Nette\Object
 
 
 	/**
+	 * Sets user session storage.
+	 * @return Session  provides a fluent interface
+	 */
+	public function setStorage(ISessionStorage $storage)
+	{
+		if (self::$started) {
+			throw new \InvalidStateException("Unable to set storage when session has been started.");
+		}
+		session_set_save_handler(array($storage, 'open'), array($storage, 'close'), array($storage, 'read'), array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean'));
+	}
+
+
+
+	/**
 	 * Sends the session cookies.
 	 * @return void
 	 */
