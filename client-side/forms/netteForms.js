@@ -216,7 +216,7 @@ Nette.toggleForm = function(form) {
 
 Nette.toggleControl = function(elem, rules, firsttime) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
-	var has = false, handler = function() { Nette.toggleForm(elem.form); };
+	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() { Nette.toggleForm(elem.form); };
 
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
@@ -243,8 +243,8 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 					Nette.addEvent(el, 'click', handler);
 				}
 			}
-			for (var id2 = 0, len2 = rule.toggle ? rule.toggle.length : 0; id2 < len2; id2++) {
-				Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]);
+			for (var id2 in rule.toggle || []) {
+				if (__hasProp.call(rule.toggle, id2)) { Nette.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]); }
 			}
 		}
 	}
