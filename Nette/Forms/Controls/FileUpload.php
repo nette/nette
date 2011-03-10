@@ -27,9 +27,10 @@ class FileUpload extends FormControl
 	/**
 	 * @param  string  label
 	 */
-	public function __construct($label = NULL)
+	public function __construct($label = NULL, $multiple = FALSE)
 	{
 		parent::__construct($label);
+		$this->control->multiple = (bool) $multiple;
 		$this->control->type = 'file';
 	}
 
@@ -62,8 +63,11 @@ class FileUpload extends FormControl
 	public function setValue($value)
 	{
 		if (is_array($value)) {
-			$this->value = new HttpUploadedFile($value);
-
+			if (isset($value[0])) {
+				$this->value = $value;
+			} else {
+				$this->value = new HttpUploadedFile($value);
+			}
 		} elseif ($value instanceof HttpUploadedFile) {
 			$this->value = $value;
 
@@ -82,6 +86,16 @@ class FileUpload extends FormControl
 	public function isFilled()
 	{
 		return $this->value instanceof HttpUploadedFile && $this->value->isOK();
+	}
+
+
+
+	/**
+	 * Returns HTML name of control.
+	 * @return string
+	 */
+	public function getHtmlName(){
+		return parent::getHtmlName() . ($this->control->multiple ? '[]' : '');
 	}
 
 
