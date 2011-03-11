@@ -117,7 +117,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			if (is_array($accessed)) {
 				$accessed = array_filter($accessed);
 			}
-			$this->connection->cache[array(__CLASS__, $this->name, $this->conditions)] = $accessed;
+			$this->connection->cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
 		}
 		$this->rows = NULL;
 	}
@@ -358,7 +358,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			+ $this->createJoins(implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order));
 
 		if ($this->rows === NULL && $this->connection->cache && !is_string($this->prevAccessed)) {
-			$this->accessed = $this->prevAccessed = $this->connection->cache[array(__CLASS__, $this->name, $this->conditions)];
+			$this->accessed = $this->prevAccessed = $this->connection->cache->load(array(__CLASS__, $this->name, $this->conditions));
 		}
 
 		$prefix = $join ? "$this->delimitedName." : '';
