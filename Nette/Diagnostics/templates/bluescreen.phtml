@@ -43,11 +43,8 @@ $title = ($exception instanceof \FatalErrorException && isset($errorTypes[$excep
 $expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
 $counter = 0;
 
-if (headers_sent()) {
-	echo '</pre></xmp></table>';
-}
-
-?><!DOCTYPE html>
+?><!-- "' --></script></style></pre></xmp></table>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
