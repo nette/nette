@@ -263,7 +263,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 						$func = '_lb' . substr(md5($uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 						$code = "//\n// block $name\n//\n"
 							. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
-							. "function $func(\$_l, \$_args) { extract(\$_args)"
+							. "function $func(\$_l, \$_args) { "
+							. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
 							. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
 							. "\n?>$content<?php\n}}";
 						return '';
