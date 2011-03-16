@@ -600,7 +600,9 @@ class LatteMacros extends Nette\Object
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_args) { extract(\$_args)\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_args) { "
+			. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
+			. "\n?>$content<?php\n}}";
 		return '';
 	}
 
