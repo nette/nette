@@ -20,7 +20,8 @@ require __DIR__ . '/../bootstrap.php';
  * @author John Doe
  * @renderable
  */
-class TestClass {
+class TestClass
+{
 
 	/** @secured */
 	public $foo;

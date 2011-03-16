@@ -235,7 +235,9 @@ class SelectBox extends FormControl
 				} else {
 					$key2 = $this->useKeys ? $key2 : $value2;
 					$value2 = $this->translate((string) $value2);
-					$dest->add((string) $option->value($key2 === $value2 ? NULL : $key2)->selected(isset($selected[$key2]))->setText($value2));
+					$dest->add((string) $option->value($key2 === $value2 ? NULL : $key2)
+						->selected(isset($selected[$key2]))
+						->setText($value2));
 				}
 			}
 		}

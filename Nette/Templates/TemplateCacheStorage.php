@@ -48,8 +48,12 @@ class TemplateCacheStorage extends Nette\Caching\FileStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		$key = substr_replace($key, trim(strtr($this->hint, '\\/@', '.._'), '.') . '-', strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1, 0);
-		return parent::getCacheFile($key) . '.php';
+		return parent::getCacheFile(substr_replace(
+			$key,
+			trim(strtr($this->hint, '\\/@', '.._'), '.') . '-',
+			strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1,
+			0
+		)) . '.php';
 	}
 
 }

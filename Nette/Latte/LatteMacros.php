@@ -276,7 +276,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// internal state holder
 		$s = "<?php\n"
-			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, ' . var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . '); unset($_extends);'
+			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, '
+			. var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . '); unset($_extends);'
 			. "\n?>" . $s;
 	}
 
@@ -292,7 +293,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macro($macro, $content = '', $modifiers = '')
 	{
 		if (func_num_args() === 1) {  // {macro val|modifiers}
-			list(, $macro, $content, $modifiers) = String::match($macro, '#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.LatteFilter::RE_STRING.'|[^\'"]+)*)?$()#is');
+			list(, $macro, $content, $modifiers) = String::match(
+				$macro,
+				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.LatteFilter::RE_STRING.'|[^\'"]+)*)?$()#is'
+			);
 			$content = trim($content);
 		}
 
@@ -313,10 +317,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$closing = $macro[0] === '/';
 		if ($closing) {
 			$node = array_pop($this->nodes);
-			if (!$node || "/$node->name" !== $macro || ($content && !String::startsWith("$node->content ", "$content ")) || $modifiers) {
+			if (!$node || "/$node->name" !== $macro
+				|| ($content && !String::startsWith("$node->content ", "$content ")) || $modifiers
+			) {
 				$macro .= $content ? ' ' : '';
 				throw new LatteException("Unexpected macro {{$macro}{$content}{$modifiers}}"
-					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''), 0, $this->filter->line);
+					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''),
+					0, $this->filter->line);
 			}
 			$node->content = $node->modifiers = ''; // back compatibility
 
@@ -549,7 +556,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} else { // include "file"
 			$destination = $this->formatString($destination);
-			$cmd = 'Nette\Templates\LatteMacros::includeTemplate(' . $destination . ', ' . $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
+			$cmd = 'Nette\Templates\LatteMacros::includeTemplate(' . $destination . ', '
+				. $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
 			return $modifiers
 				? 'echo ' . $this->formatModifiers($cmd . '->__toString(TRUE)', $modifiers)
 				: $cmd . '->render()';
@@ -710,7 +718,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator(' . preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
+		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator('
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
 	}
 
 
@@ -771,7 +780,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		}
 
 		// temporary solution
-		return strpos($content, '/') ? 'Nette\Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")' : '';
+		if (strpos($content, '/')) {
+			return 'Nette\Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")';
+		}
 	}
 
 

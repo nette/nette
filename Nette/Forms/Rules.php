@@ -174,8 +174,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	 */
 	public function validate($onlyCheck = FALSE)
 	{
-		foreach ($this->rules as $rule)
-		{
+		foreach ($this->rules as $rule) {
 			if ($rule->control->isDisabled()) continue;
 
 			$success = ($rule->isNegative xor $this->getCallback($rule)->invoke($rule->control, $rule->arg));

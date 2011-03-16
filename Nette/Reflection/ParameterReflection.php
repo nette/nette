@@ -70,7 +70,9 @@ class ParameterReflection extends \ReflectionParameter
 	 */
 	public function getDeclaringFunction()
 	{
-		return is_array($this->function) ? new MethodReflection($this->function[0], $this->function[1]) : new FunctionReflection($this->function);
+		return is_array($this->function)
+			? new MethodReflection($this->function[0], $this->function[1])
+			: new FunctionReflection($this->function);
 	}
 
 

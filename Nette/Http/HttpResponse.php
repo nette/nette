@@ -156,7 +156,9 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
-		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE']) && $this->getHeader('Set-Cookie') !== NULL) {
+		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE'])
+			&& $this->getHeader('Set-Cookie') !== NULL
+		) {
 			$this->setHeader('Refresh', "0;url=$url");
 			return;
 		}
@@ -258,7 +260,8 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 	{
 		if (self::$fixIE && isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== FALSE
 			&& in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)
-			&& $this->getHeader('Content-Type', 'text/html') === 'text/html') {
+			&& $this->getHeader('Content-Type', 'text/html') === 'text/html'
+		) {
 			echo Nette\String::random(2e3, " \t\r\n"); // sends invisible garbage for IE
 			self::$fixIE = FALSE;
 		}

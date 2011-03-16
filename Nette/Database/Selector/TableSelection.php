@@ -21,7 +21,7 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable // not IteratorAggregate because $this->data can be changed during iteration
+class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	public $connection;
@@ -388,8 +388,10 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 				$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 				$primary = $this->getPrimary($table);
 				$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-					. ' JOIN ' . $supplementalDriver->delimite($table) . ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
-					. " ON $this->delimitedName." . $supplementalDriver->delimite($column) . ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+					. ' JOIN ' . $supplementalDriver->delimite($table)
+					. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
+					. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
+					. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
 			}
 		}
 		return $joins;
@@ -569,8 +571,10 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			return 0;
 		}
 		// joins in UPDATE are supported only in MySQL
-		return $this->connection->queryArgs('UPDATE' . $this->topString() . " $this->delimitedName SET ?" . $this->whereString(),
-			array_merge(array($data), $this->parameters))->rowCount();
+		return $this->connection->queryArgs(
+			'UPDATE' . $this->topString() . " $this->delimitedName SET ?" . $this->whereString(),
+			array_merge(array($data), $this->parameters)
+		)->rowCount();
 	}
 
 
@@ -581,7 +585,9 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 */
 	public function delete()
 	{
-		return $this->query('DELETE' . $this->topString() . " FROM $this->delimitedName" . $this->whereString())->rowCount();
+		return $this->query(
+			'DELETE' . $this->topString() . " FROM $this->delimitedName" . $this->whereString()
+		)->rowCount();
 	}
 
 

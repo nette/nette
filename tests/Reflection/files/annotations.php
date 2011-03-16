@@ -32,23 +32,30 @@ class AnnotatedClass1
 
 
 	/** @return a */
-	public function a() {}
+	public function a()
+	{}
 
 	/** @return b */
-	public static function b() {}
+	public static function b()
+	{}
 
 	/** @return c */
-	static public function c() {}
+	static public function c()
+	{}
 
 	/** @return d */
-	protected function d() {}
+	protected function d()
+	{}
 
 	/** @return e */
-	function e() {}
-	function f() {}
+	function e()
+	{}
+	function f()
+	{}
 
 	/** @return g */
-	function & g() {}
+	function & g()
+	{}
 
 
 	/**#@+ @multiple */
@@ -61,16 +68,15 @@ class AnnotatedClass1
 
 /** @out of class */
 function a()
-{
-}
+{}
 
 
 /**
  * @author jack
  */
-class AnnotatedClass2 {
-}
+class AnnotatedClass2
+{}
 
 
-class AnnotatedClass3 {
-}
+class AnnotatedClass3
+{}

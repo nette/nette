@@ -28,7 +28,7 @@ if (!$coverageInfo) {
 $root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 $files = array();
 $totalSum = $coveredSum = 0;
-foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root)) as $entry) {
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root)) as $entry) {
 	$entry = (string) $entry;
 
 	$coverage = $covered = $total = 0;
@@ -159,19 +159,19 @@ ini_set('highlight.string', '#080');
 </head>
 
 <body>
-	<h1>Nette Framework Code coverage <?= round($coveredSum * 100 / $totalSum) ?>&nbsp;%</h1>
+	<h1>Nette Framework Code coverage <?php echo round($coveredSum * 100 / $totalSum) ?>&nbsp;%</h1>
 
 	<?php foreach ($files as $id => $info): ?>
 	<div>
 		<table>
-		<tr <?echo $info->light ? 'class="light"' : '' ?>>
-			<td class="number"><small><?= $info->coverage ?> %</small></td>
-			<td><div class="bar"><div style="width: <?= $info->coverage ?>%"></div></div></td>
-			<td><a href="#fragment<?=$id?>"><span><?= $info->name ?></span></a></td>
+		<tr <?php echo $info->light ? 'class="light"' : '' ?>>
+			<td class="number"><small><?php echo $info->coverage ?> %</small></td>
+			<td><div class="bar"><div style="width: <?php echo $info->coverage ?>%"></div></div></td>
+			<td><a href="#fragment<?php echo $id ?>"><span><?php echo $info->name ?></span></a></td>
 		</tr>
 		</table>
 
-		<div class="code" id="fragment<?=$id?>">
+		<div class="code" id="fragment<?php echo $id ?>">
 		<?php
 			$source = explode('<br />', highlight_file($info->file, TRUE));
 

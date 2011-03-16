@@ -275,9 +275,8 @@ class Mail extends MailMimePart
 	 */
 	public function addEmbeddedFile($file, $content = NULL, $contentType = NULL)
 	{
-		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost');
 		return $this->inlines[$file] = $this->createAttachment($file, $content, $contentType, 'inline')
-			->setHeader('Content-ID', '<' . String::random() . "@$hostname>");
+			->setHeader('Content-ID', $this->getRandomId());
 	}
 
 
@@ -385,8 +384,7 @@ class Mail extends MailMimePart
 	protected function build()
 	{
 		$mail = clone $this;
-		$hostname = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost');
-		$mail->setHeader('Message-ID', '<' . String::random() . "@$hostname>");
+		$mail->setHeader('Message-ID', $this->getRandomId());
 
 		$mail->buildHtml();
 		$mail->buildText();
@@ -443,11 +441,20 @@ class Mail extends MailMimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			$matches = String::matchAll($this->html, '#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i', PREG_OFFSET_CAPTURE);
-			foreach (array_reverse($matches) as $m)	{
+			$matches = String::matchAll(
+				$this->html,
+				'#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i',
+				PREG_OFFSET_CAPTURE
+			);
+			foreach (array_reverse($matches) as $m) {
 				$file = rtrim($this->basePath, '/\\') . '/' . $m[3][0];
-				$cid = isset($cids[$file]) ? $cids[$file] : $cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
-				$this->html = substr_replace($this->html, "{$m[1][0]}{$m[2][0]}cid:$cid{$m[2][0]}", $m[0][1], strlen($m[0][0]));
+				if (!isset($cids[$file])) {
+					$cids[$file] = substr($this->addEmbeddedFile($file)->getHeader("Content-ID"), 1, -1);
+				}
+				$this->html = substr_replace($this->html,
+					"{$m[1][0]}{$m[2][0]}cid:{$cids[$file]}{$m[2][0]}",
+					$m[0][1], strlen($m[0][0])
+				);
 			}
 		}
 
@@ -479,6 +486,16 @@ class Mail extends MailMimePart
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
 			$this->setBody(trim($text));
 		}
+	}
+
+
+
+	/** @return string */
+	private function getRandomId()
+	{
+		return '<' . String::random() . '@' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST']
+			: (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'))
+			. '>';
 	}
 
 }

@@ -125,8 +125,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 */
 	public function loadState(array $params)
 	{
-		foreach ($this->getReflection()->getPersistentParams() as $nm => $meta)
-		{
+		foreach ($this->getReflection()->getPersistentParams() as $nm => $meta) {
 			if (isset($params[$nm])) { // ignore NULL values
 				if (isset($meta['def'])) {
 					if (is_array($params[$nm]) && !is_array($meta['def'])) {
@@ -152,8 +151,8 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	public function saveState(array & $params, $reflection = NULL)
 	{
 		$reflection = $reflection === NULL ? $this->getReflection() : $reflection;
-		foreach ($reflection->getPersistentParams() as $nm => $meta)
-		{
+		foreach ($reflection->getPersistentParams() as $nm => $meta) {
+
 			if (isset($params[$nm])) {
 				$val = $params[$nm]; // injected value
 

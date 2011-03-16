@@ -283,8 +283,7 @@ class RobotLoader extends AutoLoader
 			return;
 		}
 
-		foreach (token_get_all($s) as $token)
-		{
+		foreach (token_get_all($s) as $token) {
 			if (is_array($token)) {
 				switch ($token[0]) {
 				case T_COMMENT:

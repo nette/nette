@@ -383,8 +383,12 @@ abstract class Template extends Nette\Object implements ITemplate
 						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
 					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
-						if ($lastChar !== ';' && $lastChar !== '{' && $lastChar !== '}' && $lastChar !== ':' && $lastChar !== '/' ) $php .= $lastChar = ';';
-						if (substr($next[1], -1) === "\n") $php .= "\n";
+						if (!strspn($lastChar, ';{}:/')) {
+							$php .= $lastChar = ';';
+						}
+						if (substr($next[1], -1) === "\n") {
+							$php .= "\n";
+						}
 						$tokens->next();
 
 					} elseif ($next) {
@@ -392,16 +396,22 @@ abstract class Template extends Nette\Object implements ITemplate
 						$php = '';
 
 					} else { // remove last ?)
-						if ($lastChar !== '}' && $lastChar !== ';') $php .= ';';
+						if (!strspn($lastChar, '};')) {
+							$php .= ';';
+						}
 					}
 
 				} elseif ($token[0] === T_ELSE || $token[0] === T_ELSEIF) {
-					if ($tokens[$key + 1] === ':' && $lastChar === '}') $php .= ';'; // semicolon needed in if(): ... if() ... else:
+					if ($tokens[$key + 1] === ':' && $lastChar === '}') {
+						$php .= ';'; // semicolon needed in if(): ... if() ... else:
+					}
 					$lastChar = '';
 					$php .= $token[1];
 
 				} else {
-					if (!in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG))) $lastChar = '';
+					if (!in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG))) {
+						$lastChar = '';
+					}
 					$php .= $token[1];
 				}
 			} else {

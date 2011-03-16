@@ -74,7 +74,9 @@ class Neon extends Object
 			if ($options & self::BLOCK) {
 				foreach ($var as $k => $v) {
 					$v = self::encode($v, self::BLOCK);
-					$s .= ($isArray ? '-' : self::encode($k) . ':') . (strpos($v, "\n") === FALSE ? ' ' . $v : "\n\t" . str_replace("\n", "\n\t", $v)) . "\n";
+					$s .= ($isArray ? '-' : self::encode($k) . ':')
+						. (strpos($v, "\n") === FALSE ? ' ' . $v : "\n\t" . str_replace("\n", "\n\t", $v))
+						. "\n";
 					continue;
 				}
 				return $s;
@@ -86,7 +88,10 @@ class Neon extends Object
 				return ($isArray ? '[' : '{') . substr($s, 0, -2) . ($isArray ? ']' : '}');
 			}
 
-		} elseif (is_string($var) && !is_numeric($var) && !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var) && preg_match('~^' . self::$patterns[5] . '$~', $var)) {
+		} elseif (is_string($var) && !is_numeric($var)
+			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var)
+			&& preg_match('~^' . self::$patterns[5] . '$~', $var)
+		) {
 			return $var;
 
 		} else {
@@ -313,7 +318,9 @@ class Neon extends Object
 	private function error($message = "Unexpected '%s'")
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
-		$token = isset(self::$tokenizer->tokens[$this->n]) ? str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40)) : 'end';
+		$token = isset(self::$tokenizer->tokens[$this->n])
+			? str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40))
+			: 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 

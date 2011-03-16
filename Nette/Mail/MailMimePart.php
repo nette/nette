@@ -329,7 +329,8 @@ class MailMimePart extends Nette\Object
 		}
 
 		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
-			&& ($offset + strlen($s) <= self::LINE_LENGTH)) {
+			&& ($offset + strlen($s) <= self::LINE_LENGTH)
+		) {
 			$offset += strlen($s);
 			return $o . $s;
 		}

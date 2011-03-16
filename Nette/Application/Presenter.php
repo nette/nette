@@ -635,7 +635,9 @@ abstract class Presenter extends Control implements IPresenter
 			$this->sendPayload();
 
 		} elseif (!$code) {
-			$code = $this->getHttpRequest()->isMethod('post') ? Nette\Web\IHttpResponse::S303_POST_GET : Nette\Web\IHttpResponse::S302_FOUND;
+			$code = $this->getHttpRequest()->isMethod('post')
+				? Nette\Web\IHttpResponse::S303_POST_GET
+				: Nette\Web\IHttpResponse::S302_FOUND;
 		}
 		$this->sendResponse(new RedirectingResponse($uri, $code));
 	}
@@ -1031,7 +1033,8 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public static function getPersistentComponents()
 	{
-		return (array) Nette\Reflection\ClassReflection::from(/*5.2*func_get_arg(0)*//**/get_called_class()/**/)->getAnnotation('persistent');
+		return (array) Nette\Reflection\ClassReflection::from(/*5.2*func_get_arg(0)*//**/get_called_class()/**/)
+			->getAnnotation('persistent');
 	}
 
 
@@ -1063,8 +1066,8 @@ abstract class Presenter extends Control implements IPresenter
 
 			$components = $this->getReflection()->getPersistentComponents();
 			$iterator = $this->getComponents(TRUE, 'Nette\Application\IStatePersistent');
-			foreach ($iterator as $name => $component)
-			{
+
+			foreach ($iterator as $name => $component) {
 				if ($iterator->getDepth() === 0) {
 					// counts with RecursiveIteratorIterator::SELF_FIRST
 					$since = isset($components[$name]['since']) ? $components[$name]['since'] : FALSE; // FALSE = nonpersistent

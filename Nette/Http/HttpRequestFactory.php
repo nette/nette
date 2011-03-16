@@ -104,7 +104,9 @@ class HttpRequestFactory extends Nette\Object
 		$uri->path = String::fixEncoding($uri->path);
 
 		// detect script path
-		if (isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME']) && strncmp($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT'])) === 0) {
+		if (isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'])
+			&& strncmp($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT'])) === 0
+		) {
 			$script = '/' . ltrim(strtr(substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT'])), '\\', '/'), '/');
 		} elseif (isset($_SERVER['SCRIPT_NAME'])) {
 			$script = $_SERVER['SCRIPT_NAME'];

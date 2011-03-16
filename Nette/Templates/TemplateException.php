@@ -41,7 +41,8 @@ class TemplateException extends \InvalidStateException implements Nette\IDebugPa
 	function setSourceFile($file)
 	{
 		$this->sourceFile = (string) $file;
-		$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file) . ($this->sourceLine ? ":$this->sourceLine" : '');
+		$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file)
+			. ($this->sourceLine ? ":$this->sourceLine" : '');
 	}
 
 

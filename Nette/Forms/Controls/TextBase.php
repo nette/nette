@@ -103,7 +103,8 @@ abstract class TextBase extends FormControl
 		$control = parent::getControl();
 		foreach ($this->getRules() as $rule) {
 			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative
-				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)) {
+				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)
+			) {
 				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
 			}
 		}
@@ -192,7 +193,10 @@ abstract class TextBase extends FormControl
 	public static function validateUrl(TextBase $control)
 	{
 		$chars = "a-z0-9\x80-\xFF";
-		return (bool) String::match($control->getValue(), "#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i");
+		return (bool) String::match(
+			$control->getValue(),
+			"#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i"
+		);
 	}
 
 
@@ -250,7 +254,8 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateRange(TextBase $control, $range)
 	{
-		return ($range[0] === NULL || $control->getValue() >= $range[0]) && ($range[1] === NULL || $control->getValue() <= $range[1]);
+		return ($range[0] === NULL || $control->getValue() >= $range[0])
+			&& ($range[1] === NULL || $control->getValue() <= $range[1]);
 	}
 
 

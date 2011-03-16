@@ -67,7 +67,9 @@ class HiddenField extends FormControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->value($this->forcedValue === NULL ? $this->value : $this->forcedValue)->data('nette-rules', NULL);
+		return parent::getControl()
+			->value($this->forcedValue === NULL ? $this->value : $this->forcedValue)
+			->data('nette-rules', NULL);
 	}
 
 }

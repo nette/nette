@@ -81,7 +81,8 @@ class Configurator extends Object
 					// 172.16.0.0/12  Private network
 					// 192.168.0.0/16  Private network
 					if ($addr !== '::1' && (count($oct) !== 4 || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '172' || $oct[1] < 16 || $oct[1] > 31)
-						&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')))) {
+						&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')))
+					) {
 						return TRUE;
 					}
 				}
@@ -150,10 +151,14 @@ class Configurator extends Object
 					$context->removeService($key);
 					$context->addService($key, $value);
 				} else {
-					$factory = $value->factory ? $value->factory : (isset($this->defaultServices[$key]) ? $this->defaultServices[$key] : NULL);
-					if ($factory) {
+					if ($value->factory || isset($this->defaultServices[$key])) {
 						$context->removeService($key);
-						$context->addService($key, $factory, isset($value->singleton) ? $value->singleton : TRUE, (array) $value->option);
+						$context->addService(
+							$key,
+							$value->factory ? $value->factory : $this->defaultServices[$key],
+							isset($value->singleton) ? $value->singleton : TRUE,
+							(array) $value->option
+						);
 					} else {
 						throw new \InvalidStateException("Factory method is not specified for service $key.");
 					}
@@ -238,7 +243,7 @@ class Configurator extends Object
 
 		// set modes
 		if (isset($config->mode)) {
-			foreach($config->mode as $mode => $state) {
+			foreach ($config->mode as $mode => $state) {
 				Environment::setMode($mode, $state);
 			}
 		}

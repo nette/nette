@@ -543,7 +543,11 @@ abstract class FormControl extends Nette\Component implements IFormControl
 				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'msg' => $rules->formatMessage($rule, FALSE));
 
 			} elseif ($rule->type === Rule::CONDITION) {
-				$item = array('op' => ($rule->isNegative ? '~' : '') . $op, 'rules' => self::exportRules($rule->subRules), 'control' => $rule->control->getHtmlName());
+				$item = array(
+					'op' => ($rule->isNegative ? '~' : '') . $op,
+					'rules' => self::exportRules($rule->subRules),
+					'control' => $rule->control->getHtmlName()
+				);
 				if ($rule->subRules->getToggles()) {
 					$item['toggle'] = $rule->subRules->getToggles();
 				}

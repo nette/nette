@@ -73,7 +73,8 @@ class GroupedTableSelection extends TableSelection
 	public function order($columns)
 	{
 		if (!$this->order) { // improve index utilization
-			$this->order[] = "$this->delimitedName.$this->delimitedColumn" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : '');
+			$this->order[] = "$this->delimitedName.$this->delimitedColumn"
+				. (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : '');
 		}
 		return parent::order($columns);
 	}

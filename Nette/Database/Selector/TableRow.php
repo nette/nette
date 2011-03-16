@@ -104,7 +104,9 @@ class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
-		return $this->table->connection->table($this->table->name)->where($this->table->primary, $this[$this->table->primary])->update($data);
+		return $this->table->connection->table($this->table->name)
+			->where($this->table->primary, $this[$this->table->primary])
+			->update($data);
 	}
 
 
@@ -115,7 +117,9 @@ class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function delete()
 	{
-		return $this->table->connection->table($this->table->name)->where($this->table->primary, $this[$this->table->primary])->delete();
+		return $this->table->connection->table($this->table->name)
+			->where($this->table->primary, $this[$this->table->primary])
+			->delete();
 	}
 
 

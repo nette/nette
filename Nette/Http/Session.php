@@ -121,8 +121,8 @@ class Session extends Nette\Object
 					foreach ($metadata as $variable => $value) {
 						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T']) // whenBrowserIsClosed || Time
 							|| ($variable !== '' && is_object($nf['DATA'][$namespace][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
-								!== Nette\Reflection\ClassReflection::from($nf['DATA'][$namespace][$variable])->getAnnotation('serializationVersion'))) {
-
+								!== Nette\Reflection\ClassReflection::from($nf['DATA'][$namespace][$variable])->getAnnotation('serializationVersion'))
+						) {
 							if ($variable === '') { // expire whole namespace
 								unset($nf['META'][$namespace], $nf['DATA'][$namespace]);
 								continue 2;
@@ -431,7 +431,10 @@ class Session extends Nette\Object
 		}
 
 		if (isset($cookie)) {
-			session_set_cookie_params($cookie['lifetime'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
+			session_set_cookie_params(
+				$cookie['lifetime'], $cookie['path'], $cookie['domain'],
+				$cookie['secure'], $cookie['httponly']
+			);
 			if (self::$started) {
 				$this->sendCookie();
 			}
@@ -515,7 +518,10 @@ class Session extends Nette\Object
 		if (self::$started) {
 			throw new \InvalidStateException("Unable to set storage when session has been started.");
 		}
-		session_set_save_handler(array($storage, 'open'), array($storage, 'close'), array($storage, 'read'), array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean'));
+		session_set_save_handler(
+			array($storage, 'open'), array($storage, 'close'), array($storage, 'read'),
+			array($storage, 'write'), array($storage, 'remove'), array($storage, 'clean')
+		);
 	}
 
 
@@ -527,8 +533,15 @@ class Session extends Nette\Object
 	private function sendCookie()
 	{
 		$cookie = $this->getCookieParams();
-		$this->getHttpResponse()->setCookie(session_name(), session_id(), $cookie['lifetime'] ? $cookie['lifetime'] + time() : 0, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
-		$this->getHttpResponse()->setCookie('nette-browser', $_SESSION['__NF']['B'], HttpResponse::BROWSER, $cookie['path'], $cookie['domain']);
+		$this->getHttpResponse()->setCookie(
+			session_name(), session_id(),
+			$cookie['lifetime'] ? $cookie['lifetime'] + time() : 0,
+			$cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']
+
+		)->setCookie(
+			'nette-browser', $_SESSION['__NF']['B'],
+			HttpResponse::BROWSER, $cookie['path'], $cookie['domain']
+		);
 	}
 
 

@@ -194,7 +194,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			foreach ($entries as $link => $foo) {
 				$dataNode = $this->getNode($link >> self::BITROT);
 				if ($dataNode[$link][self::KEY] === $key) {
-					if ($dataNode[$link][self::TAGS] == $tags && $dataNode[$link][self::PRIORITY] === $priority)  { // intentionally ==, the order of tags does not matter
+					if ($dataNode[$link][self::TAGS] == $tags && $dataNode[$link][self::PRIORITY] === $priority) { // intentionally ==, the order of tags does not matter
 						if ($dataNode[$link][self::DELETED]) {
 							$dataNode[$link][self::DELETED] = FALSE;
 							$this->saveNode($link >> self::BITROT, $dataNode);
@@ -437,7 +437,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			do {
 				$link = $data[$i];
 
-				if (!isset($node[$link])){
+				if (!isset($node[$link])) {
 					if (self::$debug) throw new \InvalidStateException("Link with ID $searchLink is not in node ". ($nodeId) . '.');
 					continue;
 				} elseif (isset($this->deletedLinks[$link])) {
@@ -708,7 +708,9 @@ class FileJournal extends Nette\Object implements ICacheJournal
 						if ($nodeInfo[self::PREV_NODE] !== -1) {
 							$prevNode = $this->getNode($nodeInfo[self::PREV_NODE]);
 							if ($prevNode === FALSE) {
-								if (self::$debug) throw new \InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREV_NODE] . '.');
+								if (self::$debug) {
+									throw new \InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREV_NODE] . '.');
+								}
 							} else {
 								$prevNode[self::INFO][self::MAX] = -1;
 								$this->saveNode($nodeInfo[self::PREV_NODE], $prevNode);
