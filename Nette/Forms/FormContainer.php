@@ -74,27 +74,27 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 			throw new \InvalidArgumentException("First parameter must be an array, " . gettype($values) ." given.");
 		}
 
-		$cursor = & $values;
-		$iterator = $this->getComponents(TRUE);
+		$iterator = $this->getComponents();
 		foreach ($iterator as $name => $control) {
-			$sub = $iterator->getSubIterator();
-			if (!isset($sub->cursor)) {
-				$sub->cursor = & $cursor;
-			}
 			if ($control instanceof IFormControl) {
-				if ((is_array($sub->cursor) || $sub->cursor instanceof \ArrayAccess) && array_key_exists($name, $sub->cursor)) {
-					$control->setValue($sub->cursor[$name]);
+				if (array_key_exists($name, $values)) {
+					$control->setValue($values[$name]);
 
 				} elseif ($erase) {
 					$control->setValue(NULL);
 				}
-			}
-			if ($control instanceof FormContainer) {
-				if ((is_array($sub->cursor) || $sub->cursor instanceof \ArrayAccess) && isset($sub->cursor[$name])) {
-					$cursor = & $sub->cursor[$name];
-				} else {
-					unset($cursor);
-					$cursor = NULL;
+
+			} elseif ($control instanceof FormContainer) {
+				if (array_key_exists($name, $values)) {
+					$control->setValues($values[$name], $erase);
+
+				} elseif ($erase) {
+					$control->setValues(array(), $erase);
+				}
+
+			} elseif ($control instanceof Nette\IComponentContainer) { // Take out all components from non-named container
+				foreach ($control->getComponents() as $name => $component) {
+					$iterator[$name] = $component;
 				}
 			}
 		}
@@ -110,18 +110,18 @@ class FormContainer extends Nette\ComponentContainer implements \ArrayAccess
 	public function getValues()
 	{
 		$values = new Nette\ArrayHash;
-		$cursor = $values;
-		$iterator = $this->getComponents(TRUE);
+		$iterator = $this->getComponents();
 		foreach ($iterator as $name => $control) {
-			$sub = $iterator->getSubIterator();
-			if (!isset($sub->cursor)) {
-				$sub->cursor = $cursor;
-			}
 			if ($control instanceof IFormControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
-				$sub->cursor->$name = $control->getValue();
-			}
-			if ($control instanceof FormContainer) {
-				$cursor = $sub->cursor->$name = new Nette\ArrayHash;
+				$values->$name = $control->getValue();
+
+			} elseif ($control instanceof FormContainer) {
+				$values->$name = $control->getValues();
+
+			} elseif ($control instanceof Nette\IComponentContainer) { // Take out all components from non-named container
+				foreach ($control->getComponents() as $name => $component) {
+					$iterator[$name] = $component;
+				}
 			}
 		}
 		return $values;
