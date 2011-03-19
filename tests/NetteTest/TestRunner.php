@@ -37,6 +37,9 @@ class TestRunner
 
 	/** @var bool  display skipped tests information? */
 	public $displaySkipped = FALSE;
+	
+	/** @var bool  display numbers in failure list */
+	public $displayFailureNumbers = TRUE;
 
 
 
@@ -101,7 +104,7 @@ class TestRunner
 			echo "\n\nFailures:\n";
 			foreach ($failed as $i => $item) {
 				list($name, $file, $message) = $item;
-				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
+				echo "\n", ($this->displayFailureNumbers ? $i + 1 : ''), ") $name\n   $message\n   $file\n";
 			}
 			echo "\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n";
 			return FALSE;
@@ -150,6 +153,9 @@ class TestRunner
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;
+					break;
+				case 'n':
+					$this->displayFailureNumbers = FALSE;
 					break;
 				default:
 					throw new Exception("Unknown option -$arg[1].");
