@@ -111,7 +111,7 @@
 <tr>
 	<th>&nbsp;</th>
 
-	<td><input type="submit" class="button" name="submit_" id="frm-submit_" value="Send" /></td>
+	<td><input type="submit" class="button" name="submit_" id="frm-submit" value="Send" /></td>
 </tr>
 </table>
 </fieldset>

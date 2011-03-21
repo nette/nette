@@ -125,15 +125,10 @@ abstract class FormControl extends Nette\Component implements IFormControl
 	public function getHtmlName()
 	{
 		if ($this->htmlName === NULL) {
-			$s = '';
-			$name = $this->getName();
-			$obj = $this->lookup('Nette\Forms\FormContainer', TRUE);
-			while (!$obj instanceof Form) {
-				$s = "[$name]$s";
-				$name = $obj->getName();
-				$obj = $obj->lookup('Nette\Forms\FormContainer', TRUE);
+			$name = str_replace(self::NAME_SEPARATOR, '][', $this->lookupPath('Nette\Forms\Form'), $count);
+			if ($count) {
+				$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
 			}
-			$name .= $s;
 			if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
 				$name .= '_';
 			}
@@ -167,8 +162,7 @@ abstract class FormControl extends Nette\Component implements IFormControl
 			return NULL;
 
 		} elseif ($this->htmlId === NULL) {
-			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->getHtmlName());
-			$this->htmlId = str_replace(array('[]', '[', ']'), array('', '-', ''), $this->htmlId);
+			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'));
 		}
 		return $this->htmlId;
 	}
