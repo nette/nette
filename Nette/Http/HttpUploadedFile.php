@@ -156,6 +156,7 @@ class HttpUploadedFile extends Nette\Object
 			chmod($dir, 0755);
 		}
 		$func = is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename';
+		/*5.2*if (substr(PHP_OS, 0, 3) === 'WIN') { @unlink($dest); }*/
 		if (!$func($this->tmpName, $dest)) {
 			throw new \InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
