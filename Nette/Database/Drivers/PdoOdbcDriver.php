@@ -79,7 +79,9 @@ class PdoOdbcDriver extends Nette\Object implements Nette\Database\ISupplemental
 			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ')';
 		}
 
-		if ($offset) throw new InvalidArgumentException('Offset is not implemented in driver odbc.');
+		if ($offset) {
+			throw new \InvalidArgumentException('Offset is not implemented in driver odbc.');
+		}
 	}
 
 

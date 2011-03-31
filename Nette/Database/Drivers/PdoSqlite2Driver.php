@@ -28,7 +28,7 @@ class PdoSqlite2Driver extends PdoSqliteDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new NotSupportedException;
+		throw new \NotSupportedException;
 	}
 
 

@@ -29,7 +29,7 @@ AnnotationsParser::$useReflection = FALSE;
 
 // AnnotatedClass1
 
-$rc = new ReflectionClass('Nette\AnnotatedClass1');
+$rc = new ReflectionClass('Test\AnnotatedClass1');
 Assert::same( array(
 	'author' => array('john'),
 ), AnnotationsParser::getAll($rc) );
@@ -86,7 +86,7 @@ Assert::same( array(
 
 // AnnotatedClass2
 
-$rc = new ReflectionClass('Nette\AnnotatedClass2');
+$rc = new ReflectionClass('Test\AnnotatedClass2');
 Assert::same( array(
 	'author' => array('jack'),
 ), AnnotationsParser::getAll($rc) );
@@ -94,5 +94,5 @@ Assert::same( array(
 
 // AnnotatedClass3
 
-$rc = new ReflectionClass('Nette\AnnotatedClass3');
+$rc = new ReflectionClass('Test\AnnotatedClass3');
 Assert::same( array(), AnnotationsParser::getAll($rc) );

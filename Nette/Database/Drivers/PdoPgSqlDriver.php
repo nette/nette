@@ -64,7 +64,7 @@ class PdoPgSqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new NotImplementedException;
+		throw new \NotImplementedException;
 	}
 
 

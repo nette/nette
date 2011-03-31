@@ -27,7 +27,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		META_DATA = 'data',
 		META_DELTA = 'delta';
 
-	/** @var Memcache */
+	/** @var \Memcache */
 	private $memcache;
 
 	/** @var string */

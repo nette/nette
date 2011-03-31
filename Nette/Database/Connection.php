@@ -215,7 +215,7 @@ class Connection extends PDO
 
 		$handle = @fopen($file, 'r'); // intentionally @
 		if (!$handle) {
-			throw new FileNotFoundException("Cannot open file '$file'.");
+			throw new \FileNotFoundException("Cannot open file '$file'.");
 		}
 
 		$count = 0;

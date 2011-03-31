@@ -68,7 +68,7 @@ class PdoOciDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new NotImplementedException;
+		throw new \NotImplementedException;
 	}
 
 

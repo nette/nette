@@ -81,7 +81,7 @@ class PdoMsSqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 		}
 
 		if ($offset) {
-			throw new NotImplementedException('Offset is not implemented.');
+			throw new \NotImplementedException('Offset is not implemented.');
 		}
 	}
 
