@@ -46,9 +46,6 @@ class FileJournal extends Nette\Object implements ICacheJournal
 	/** Size of 32 bit integer in bytes. INT32_SIZE = 32 / 8 :-) */
 	const INT32_SIZE  = 4;
 
-	/** Use json_decode and json_encode instead of unserialize and serialize (JSON is smaller and mostly faster) */
-	const USE_JSON = FALSE;
-
 	const INFO = 'i',
 		TYPE = 't', // TAGS, PRIORITY or DATA
 		IS_LEAF = 'il', // TRUE or FALSE
@@ -221,23 +218,13 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		if ($exists === FALSE) {
 			// Magical constants
-			if (self::USE_JSON) {
-				$requiredSize = strlen($key) + 45 + substr_count($key, '/');
-				if ($tags) {
-					foreach ($tags as $tag) {
-						$requiredSize += strlen($tag) + 3 + substr_count($tag, '/');
-					}
+			$requiredSize = strlen($key) + 75;
+			if ($tags) {
+				foreach ($tags as $tag) {
+					$requiredSize += strlen($tag) + 13;
 				}
-				$requiredSize += $priority ? strlen($priority) : 5;
-			} else {
-				$requiredSize = strlen($key) + 75;
-				if ($tags) {
-					foreach ($tags as $tag) {
-						$requiredSize += strlen($tag) + 13;
-					}
-				}
-				$requiredSize += $priority ? 10 : 1;
 			}
+			$requiredSize += $priority ? 10 : 1;
 
 			$freeDataNode = $this->findFreeDataNode($requiredSize);
 			$data = $this->getNode($freeDataNode);
@@ -638,12 +625,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 
 		$data = substr($binary, 2 * self::INT32_SIZE, $lenght - 2 * self::INT32_SIZE);
 
-		if (self::USE_JSON) {
-			$node = @json_decode($data, TRUE); // intentionally @
-		} else {
-			$node = @unserialize($data); // intentionally @
-		}
-
+		$node = @unserialize($data); // intentionally @
 		if ($node === FALSE) {
 			$this->deleteNode($id);
 			if (self::$debug) throw new \InvalidStateException("Cannot deserialize node number $id.");
@@ -774,12 +756,7 @@ class FileJournal extends Nette\Object implements ICacheJournal
 			return TRUE;
 		}
 
-		if (self::USE_JSON) {
-			$data = json_encode($node);
-		} else {
-			$data = serialize($node);
-		}
-
+		$data = serialize($node);
 		$dataSize = strlen($data) + 2 * self::INT32_SIZE;
 
 		$isData = $node[self::INFO][self::TYPE] === self::DATA;
