@@ -141,49 +141,33 @@ class Application extends Nette\Object
 				break;
 
 			} catch (\Exception $e) {
-				// fault barrier
 				$this->onError($this, $e);
 
-				if (!$this->catchExceptions) {
+				if ($repeatedError) {
+					$e = new ApplicationException("An error occurred while executing error-presenter '$this->errorPresenter'.", 0, $e);
+				}
+				if ($repeatedError || !$this->catchExceptions) {
 					$this->onShutdown($this, $e);
 					throw $e;
 				}
 
-				if ($repeatedError) {
-					$e = new ApplicationException('An error occurred while executing error-presenter', 0, $e);
-				}
+				$repeatedError = TRUE;
+				$this->errorPresenter = $this->errorPresenter ?: 'Nette:Error';
 
 				if (!$this->httpResponse->isSent()) {
 					$this->httpResponse->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
 				}
 
-				if (!$repeatedError && $this->errorPresenter) {
-					$repeatedError = TRUE;
-					if ($this->presenter instanceof UI\Presenter) {
-						try {
-							$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
-						} catch (AbortException $foo) {
-							$request = $this->presenter->getLastCreatedRequest();
-						}
-					} else {
-						$request = new Request(
-							$this->errorPresenter,
-							Request::FORWARD,
-							array('exception' => $e)
-						);
+				if ($this->presenter instanceof UI\Presenter) {
+					try {
+						$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
+					} catch (AbortException $foo) {
+						$request = $this->presenter->getLastCreatedRequest();
 					}
-					// continue
-
-				} else { // default error handler
-					if ($e instanceof BadRequestException) {
-						$code = $e->getCode();
-					} else {
-						$code = 500;
-						Nette\Diagnostics\Debugger::log($e, Nette\Diagnostics\Debugger::ERROR);
-					}
-					require __DIR__ . '/templates/error.phtml';
-					break;
+				} else {
+					$request = new Request($this->errorPresenter, Request::FORWARD, array('exception' => $e));
 				}
+				// continue
 			}
 		} while (1);
 

@@ -35,6 +35,7 @@ class NetteLoader extends AutoLoader
 
 	/** @var array */
 	public $list = array(
+		'NetteModule\ErrorPresenter' => '/Application/ErrorPresenter',
 		'NetteModule\MicroPresenter' => '/Application/MicroPresenter',
 		'Nette\Application\AbortException' => '/Application/exceptions',
 		'Nette\Application\ApplicationException' => '/Application/exceptions',
