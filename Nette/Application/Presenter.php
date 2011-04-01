@@ -17,7 +17,7 @@ use Nette,
 
 
 /**
- * Presenter object represents a webpage instance. It executes all the logic for the request.
+ * Presenter component represents a webpage instance. It converts PresenterRequest to IPresenterResponse.
  *
  * @author     David Grudl
  *
@@ -189,8 +189,6 @@ abstract class Presenter extends Control implements IPresenter
 
 		} catch (AbortException $e) {
 			// continue with shutting down
-		} /* finally */ {
-
 			if ($this->isAjax()) try {
 				$hasPayload = (array) $this->payload; unset($hasPayload['state']);
 				if ($this->response instanceof RenderResponse && $this->isControlInvalid()) { // snippets - TODO

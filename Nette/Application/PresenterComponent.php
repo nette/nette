@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * PresenterComponent is the base class for all presenters components.
+ * PresenterComponent is the base class for all Presenter components.
  *
  * Components are persistent objects located on a presenter. They have ability to own
  * other child components, and interact with user. Components have properties

@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Control is renderable component.
+ * Control is renderable Presenter component.
  *
  * @author     David Grudl
  *

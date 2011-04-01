@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Rendering presenter response.
+ * String output response.
  *
  * @author     David Grudl
  */

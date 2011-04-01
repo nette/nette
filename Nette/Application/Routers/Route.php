@@ -18,7 +18,7 @@ use Nette,
 
 /**
  * The bidirectional route is responsible for mapping
- * HTTP request to a PresenterRoute object for dispatch and vice-versa.
+ * HTTP request to a PresenterRequest object for dispatch and vice-versa.
  *
  * @author     David Grudl
  */

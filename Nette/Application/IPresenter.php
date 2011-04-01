@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Defines method that must be implemented to allow a component to act like a presenter.
+ * Presenter converts PresenterRequest to IPresenterResponse.
  *
  * @author     David Grudl
  */

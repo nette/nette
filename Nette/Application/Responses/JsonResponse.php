@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * JSON response used for AJAX requests.
+ * JSON response used mainly for AJAX requests.
  *
  * @author     David Grudl
  */

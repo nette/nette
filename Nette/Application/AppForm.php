@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Web form as presenter component.
+ * Web form adapted for Presenter.
  *
  * @author     David Grudl
  *

@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Redirects to new request.
+ * Redirects to new URI.
  *
  * @author     David Grudl
  */

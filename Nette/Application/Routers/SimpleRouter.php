@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * The bidirectional route for trivial routing via query string.
+ * The bidirectional route for trivial routing via query parameters.
  *
  * @author     David Grudl
  */
