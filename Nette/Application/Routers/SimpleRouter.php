@@ -49,7 +49,7 @@ class SimpleRouter extends Nette\Object implements IRouter
 			}
 			$defaults = array(
 				self::PRESENTER_KEY => substr($defaults, 0, $a),
-				'action' => $a === strlen($defaults) - 1 ? 'default' : substr($defaults, $a + 1),
+				'action' => $a === strlen($defaults) - 1 ? Presenter::DEFAULT_ACTION : substr($defaults, $a + 1),
 			);
 		}
 

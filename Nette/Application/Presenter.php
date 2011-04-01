@@ -39,10 +39,8 @@ abstract class Presenter extends Control implements IPresenter
 	/** @internal special parameter key */
 	const SIGNAL_KEY = 'do',
 		ACTION_KEY = 'action',
-		FLASH_KEY = '_fid';
-
-	/** @var string */
-	public static $defaultAction = 'default';
+		FLASH_KEY = '_fid',
+		DEFAULT_ACTION = 'default';
 
 	/** @var int */
 	public static $invalidLinkMode;
@@ -855,7 +853,7 @@ abstract class Presenter extends Control implements IPresenter
 		// PROCESS ARGUMENTS
 		if (is_subclass_of($presenterClass, __CLASS__)) {
 			if ($action === '') {
-				$action = /**/$presenterClass/**//*5.2*self*/::$defaultAction;
+				$action = self::DEFAULT_ACTION;
 			}
 
 			$current = ($action === '*' || $action === $this->action) && $presenterClass === get_class($this); // TODO
@@ -1151,7 +1149,7 @@ abstract class Presenter extends Control implements IPresenter
 		}
 
 		// init & validate $this->action & $this->view
-		$this->changeAction(isset($selfParams[self::ACTION_KEY]) ? $selfParams[self::ACTION_KEY] : self::$defaultAction);
+		$this->changeAction(isset($selfParams[self::ACTION_KEY]) ? $selfParams[self::ACTION_KEY] : self::DEFAULT_ACTION);
 
 		// init $this->signalReceiver and key 'signal' in appropriate params array
 		$this->signalReceiver = $this->getUniqueId();

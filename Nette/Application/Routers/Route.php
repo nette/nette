@@ -119,7 +119,7 @@ class Route extends Nette\Object implements IRouter
 			}
 			$metadata = array(
 				self::PRESENTER_KEY => substr($metadata, 0, $a),
-				'action' => $a === strlen($metadata) - 1 ? 'default' : substr($metadata, $a + 1),
+				'action' => $a === strlen($metadata) - 1 ? Presenter::DEFAULT_ACTION : substr($metadata, $a + 1),
 			);
 		}
 
