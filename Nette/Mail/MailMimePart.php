@@ -131,7 +131,7 @@ class MailMimePart extends Nette\Object
 	 */
 	public function getEncodedHeader($name)
 	{
-		$offset = strlen($name) + 2; // color + space
+		$offset = strlen($name) + 2; // colon + space
 
 		if (!isset($this->headers[$name])) {
 			return NULL;
