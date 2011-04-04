@@ -134,7 +134,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			if (!$this->journal) {
 				throw new \InvalidStateException('CacheJournal has not been provided.');
 			}
-			$this->getJournal()->write($key, $dp);
+			$this->journal->write($key, $dp);
 		}
 
 		$this->memcache->set($key, $meta, 0, $expire);
@@ -165,7 +165,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 			$this->memcache->flush();
 
 		} elseif ($this->journal) {
-			foreach ($this->getJournal()->clean($conds) as $entry) {
+			foreach ($this->journal->clean($conds) as $entry) {
 				$this->memcache->delete($entry, 0);
 			}
 		}
