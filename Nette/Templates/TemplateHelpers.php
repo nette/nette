@@ -269,7 +269,7 @@ final class TemplateHelpers
 	public static function dataStream($data, $type = NULL)
 	{
 		if ($type === NULL) {
-			$type = Nette\Tools::detectMimeTypeFromString($data, NULL);
+			$type = Nette\MimeTypeDetector::fromString($data, NULL);
 		}
 		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
 	}

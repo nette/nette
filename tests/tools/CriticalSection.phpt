@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Tools critical sections.
+ * Test: Nette\CriticalSection.
  *
  * @author     David Grudl
  * @package    Nette
  * @subpackage UnitTests
  */
 
-use Nette\Tools;
+use Nette\CriticalSection;
 
 
 
@@ -17,14 +17,14 @@ require __DIR__ . '/../bootstrap.php';
 
 
 // entering
-Tools::enterCriticalSection();
+CriticalSection::enter();
 
 // leaving
-Tools::leaveCriticalSection();
+CriticalSection::leave();
 
 try {
 	// leaving not entered
-	Tools::leaveCriticalSection();
+	CriticalSection::leave();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Critical section has not been initialized.', $e );
@@ -32,8 +32,8 @@ try {
 
 try {
 	// doubled entering
-	Tools::enterCriticalSection();
-	Tools::enterCriticalSection();
+	CriticalSection::enter();
+	CriticalSection::enter();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('InvalidStateException', 'Critical section has already been entered.', $e );

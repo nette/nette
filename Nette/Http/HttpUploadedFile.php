@@ -82,7 +82,7 @@ class HttpUploadedFile extends Nette\Object
 	public function getContentType()
 	{
 		if ($this->isOk() && $this->type === NULL) {
-			$this->type = Nette\Tools::detectMimeType($this->tmpName);
+			$this->type = Nette\MimeTypeDetector::fromFile($this->tmpName);
 		}
 		return $this->type;
 	}

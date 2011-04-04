@@ -311,7 +311,7 @@ class Mail extends MailMimePart
 			$content = (string) $content;
 		}
 		$part->setBody($content);
-		$part->setContentType($contentType ? $contentType : Nette\Tools::detectMimeTypeFromString($content));
+		$part->setContentType($contentType ? $contentType : Nette\MimeTypeDetector::fromString($content));
 		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
 		$part->setHeader('Content-Disposition', $disposition . '; filename="' . String::fixEncoding(basename($file)) . '"');
 		return $part;

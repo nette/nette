@@ -158,9 +158,9 @@ class Cache extends Nette\Object implements \ArrayAccess
 		}
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
-			Nette\Tools::enterCriticalSection();
+			Nette\CriticalSection::enter();
 			$data = $data->__invoke();
-			Nette\Tools::leaveCriticalSection();
+			Nette\CriticalSection::leave();
 		}
 
 		if (is_object($data)) {
