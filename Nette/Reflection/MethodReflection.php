@@ -230,7 +230,7 @@ class MethodReflection extends \ReflectionMethod
 
 	public function __unset($name)
 	{
-		throw new \MemberAccessException("Cannot unset the property {$this->reflection->name}::\$$name.");
+		ObjectMixin::remove($this, $name);
 	}
 
 }
