@@ -457,7 +457,7 @@ class Session extends Nette\Object
 			));
 
 		} else {
-			$time = Nette\Tools::createDateTime($time)->format('U') - time();
+			$time = Nette\DateTime::from($time)->format('U') - time();
 			return $this->setOptions(array(
 				'gc_maxlifetime' => $time,
 				'cookie_lifetime' => $time,

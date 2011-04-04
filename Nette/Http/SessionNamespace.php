@@ -176,7 +176,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 			$time = NULL;
 			$whenBrowserIsClosed = TRUE;
 		} else {
-			$time = Nette\Tools::createDateTime($time)->format('U');
+			$time = Nette\DateTime::from($time)->format('U');
 			$whenBrowserIsClosed = FALSE;
 		}
 

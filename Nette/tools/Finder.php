@@ -368,7 +368,7 @@ class Finder extends Object implements \IteratorAggregate
 			list(, $operator, $date) = $matches;
 			$operator = $operator ? $operator : '=';
 		}
-		$date = Tools::createDateTime($date)->format('U');
+		$date = DateTime::from($date)->format('U');
 		return $this->filter(function($file) use ($operator, $date) {
 			return Tools::compare($file->getMTime(), $operator, $date);
 		});

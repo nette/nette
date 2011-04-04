@@ -184,7 +184,7 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 			return $this;
 		}
 
-		$time = Nette\Tools::createDateTime($time);
+		$time = Nette\DateTime::from($time);
 		$this->setHeader('Cache-Control', 'max-age=' . ($time->format('U') - time()));
 		$this->setHeader('Expires', self::date($time));
 		return $this;
@@ -246,7 +246,7 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 	 */
 	public static function date($time = NULL)
 	{
-		$time = Nette\Tools::createDateTime($time);
+		$time = Nette\DateTime::from($time);
 		$time->setTimezone(new \DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
@@ -290,7 +290,7 @@ final class HttpResponse extends Nette\Object implements IHttpResponse
 		setcookie(
 			$name,
 			$value,
-			$time ? Nette\Tools::createDateTime($time)->format('U') : 0,
+			$time ? Nette\DateTime::from($time)->format('U') : 0,
 			$path === NULL ? $this->cookiePath : (string) $path,
 			$domain === NULL ? $this->cookieDomain : (string) $domain,
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,

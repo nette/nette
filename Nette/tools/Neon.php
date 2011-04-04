@@ -267,7 +267,7 @@ class Neon extends Object
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
 				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
-					$value = new \DateTime($t);
+					$value = new DateTime($t);
 				} else { // literal
 					$value = $t;
 				}

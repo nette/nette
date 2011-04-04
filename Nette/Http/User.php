@@ -212,7 +212,7 @@ class User extends Nette\Object implements IUser
 	{
 		$session = $this->getSessionNamespace(TRUE);
 		if ($time) {
-			$time = Nette\Tools::createDateTime($time)->format('U');
+			$time = Nette\DateTime::from($time)->format('U');
 			$session->expireTime = $time;
 			$session->expireDelta = $time - time();
 
