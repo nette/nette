@@ -202,7 +202,6 @@ class NetteLoader extends AutoLoader
 		'nette\templates\template' => '/Templates/Template.php',
 		'nette\templates\templatecachestorage' => '/Templates/TemplateCacheStorage.php',
 		'nette\templates\templateexception' => '/Templates/TemplateException.php',
-		'nette\templates\templatefilters' => '/Templates/TemplateFilters.php',
 		'nette\templates\templatehelpers' => '/Templates/TemplateHelpers.php',
 		'nette\tokenizer' => '/tools/Tokenizer.php',
 		'nette\tokenizerexception' => '/tools/TokenizerException.php',
