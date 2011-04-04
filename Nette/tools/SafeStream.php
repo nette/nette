@@ -27,6 +27,7 @@ use Nette;
  * </code>
  *
  * @author     David Grudl
+ * @internal
  */
 final class SafeStream
 {

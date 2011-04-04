@@ -551,7 +551,7 @@ class Session extends Nette\Object
 
 
 	/**
-	 * @return Nette\Web\IHttpRequest
+	 * @return IHttpRequest
 	 */
 	protected function getHttpRequest()
 	{
@@ -561,7 +561,7 @@ class Session extends Nette\Object
 
 
 	/**
-	 * @return Nette\Web\IHttpResponse
+	 * @return IHttpResponse
 	 */
 	protected function getHttpResponse()
 	{

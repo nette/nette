@@ -36,7 +36,7 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public function getClass()
 	{
@@ -56,7 +56,7 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public function getDeclaringClass()
 	{
@@ -66,7 +66,7 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection | Nette\Reflection\FunctionReflection
+	 * @return MethodReflection | FunctionReflection
 	 */
 	public function getDeclaringFunction()
 	{
@@ -82,11 +82,11 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

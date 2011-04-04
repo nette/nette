@@ -84,7 +84,7 @@ final class AnnotationsParser
 		}
 
 		if (self::$useReflection === NULL) { // detects whether is reflection available
-			self::$useReflection = (bool) Nette\Reflection\ClassReflection::from(__CLASS__)->getDocComment();
+			self::$useReflection = (bool) ClassReflection::from(__CLASS__)->getDocComment();
 		}
 
 		if (self::$useReflection) {

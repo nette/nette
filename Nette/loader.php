@@ -43,7 +43,6 @@ define('NETTE_PACKAGE', '5.3');
 
 
 
-require_once __DIR__ . '/tools/shortcuts.php';
 require_once __DIR__ . '/tools/exceptions.php';
 require_once __DIR__ . '/tools/Object.php';
 require_once __DIR__ . '/Loaders/LimitedScope.php';
@@ -55,3 +54,27 @@ require_once __DIR__ . '/Diagnostics/DebugHelpers.php';
 Nette\Loaders\NetteLoader::getInstance()->register();
 
 Nette\SafeStream::register();
+
+
+
+/**
+ * Nette\Callback factory.
+ * @param  mixed   class, object, function, callback
+ * @param  string  method
+ * @return Nette\Callback
+ */
+function callback($callback, $m = NULL)
+{
+	return ($m === NULL && $callback instanceof Nette\Callback) ? $callback : new Nette\Callback($callback, $m);
+}
+
+
+
+/**
+ * Nette\Debug::dump shortcut.
+ */
+function dump($var)
+{
+	foreach (func_get_args() as $arg) Nette\Debug::dump($arg);
+	return $var;
+}

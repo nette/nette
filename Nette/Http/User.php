@@ -321,7 +321,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Sets the user identity.
-	 * @param  IIdentity
+	 * @param  Nette\Security\IIdentity
 	 * @return User  provides a fluent interface
 	 */
 	protected function setIdentity(IIdentity $identity = NULL)
@@ -420,7 +420,7 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Returns session handler.
-	 * @return Nette\Web\Session
+	 * @return Session
 	 */
 	protected function getSession()
 	{

@@ -22,7 +22,7 @@ use Nette;
  */
 class RoutingDebugger extends Nette\DebugPanel
 {
-	/** @var Nette\Application\IRouter */
+	/** @var IRouter */
 	private $router;
 
 	/** @var Nette\Web\IHttpRequest */
@@ -31,7 +31,7 @@ class RoutingDebugger extends Nette\DebugPanel
 	/** @var array */
 	private $routers = array();
 
-	/** @var Nette\Application\PresenterRequest */
+	/** @var PresenterRequest */
 	private $request;
 
 
@@ -70,7 +70,7 @@ class RoutingDebugger extends Nette\DebugPanel
 
 	/**
 	 * Analyses simple route.
-	 * @param  Nette\Application\IRouter
+	 * @param  IRouter
 	 * @return void
 	 */
 	private function analyse($router)

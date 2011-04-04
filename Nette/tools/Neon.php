@@ -319,7 +319,7 @@ class Neon extends Object
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
 		$token = isset(self::$tokenizer->tokens[$this->n])
-			? str_replace("\n", '<new line>', Nette\String::truncate(self::$tokenizer->tokens[$this->n], 40))
+			? str_replace("\n", '<new line>', String::truncate(self::$tokenizer->tokens[$this->n], 40))
 			: 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}

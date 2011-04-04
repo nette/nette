@@ -33,7 +33,7 @@ interface IPresenterFactory
 	/**
 	 * Create new presenter instance.
 	 * @param  string  presenter name
-	 * @return Nette\Application\IPresenter
+	 * @return IPresenter
 	 */
 	function createPresenter($name);
 

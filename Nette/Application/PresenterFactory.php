@@ -50,7 +50,7 @@ class PresenterFactory implements IPresenterFactory
 	/**
 	 * Create new presenter instance.
 	 * @param  string  presenter name
-	 * @return Nette\Application\IPresenter
+	 * @return IPresenter
 	 */
 	public function createPresenter($name)
 	{

@@ -19,6 +19,7 @@ use Nette;
  * Simple lexical analyser.
  *
  * @author     David Grudl
+ * @internal
  */
 class Tokenizer extends Object
 {
@@ -111,4 +112,14 @@ class Tokenizer extends Object
 		);
 	}
 
+}
+
+
+
+/**
+ * The exception that indicates tokenizer error.
+ * @internal
+ */
+class TokenizerException extends \Exception
+{
 }

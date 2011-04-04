@@ -31,7 +31,7 @@ class ClassReflection extends \ReflectionClass
 
 	/**
 	 * @param  string|object
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public static function from($class)
 	{
@@ -130,7 +130,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection
+	 * @return MethodReflection
 	 */
 	public function getConstructor()
 	{
@@ -140,7 +140,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\ExtensionReflection
+	 * @return ExtensionReflection
 	 */
 	public function getExtension()
 	{
@@ -161,7 +161,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection
+	 * @return MethodReflection
 	 */
 	public function getMethod($name)
 	{
@@ -181,7 +181,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public function getParentClass()
 	{
@@ -201,7 +201,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\PropertyReflection
+	 * @return PropertyReflection
 	 */
 	public function getProperty($name)
 	{
@@ -256,11 +256,11 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

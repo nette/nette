@@ -83,7 +83,7 @@ class HttpContext extends Nette\Object
 
 
 	/**
-	 * @return Nette\Web\IHttpRequest
+	 * @return IHttpRequest
 	 */
 	public function getRequest()
 	{
@@ -93,7 +93,7 @@ class HttpContext extends Nette\Object
 
 
 	/**
-	 * @return Nette\Web\IHttpResponse
+	 * @return IHttpResponse
 	 */
 	public function getResponse()
 	{

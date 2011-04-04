@@ -27,7 +27,7 @@ class MethodReflection extends \ReflectionMethod
 	/**
 	 * @param  string|object
 	 * @param  string
-	 * @return Nette\Reflection\MethodReflection
+	 * @return MethodReflection
 	 */
 	public static function from($class, $method)
 	{
@@ -104,7 +104,7 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public function getDeclaringClass()
 	{
@@ -114,7 +114,7 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\MethodReflection
+	 * @return MethodReflection
 	 */
 	public function getPrototype()
 	{
@@ -125,7 +125,7 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\ExtensionReflection
+	 * @return ExtensionReflection
 	 */
 	public function getExtension()
 	{
@@ -191,11 +191,11 @@ class MethodReflection extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

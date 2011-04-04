@@ -54,7 +54,7 @@ class FunctionReflection extends \ReflectionFunction
 
 
 	/**
-	 * @return Nette\Reflection\ExtensionReflection
+	 * @return ExtensionReflection
 	 */
 	public function getExtension()
 	{
@@ -78,11 +78,11 @@ class FunctionReflection extends \ReflectionFunction
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return ClassReflection
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
