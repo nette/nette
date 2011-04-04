@@ -45,7 +45,7 @@ class SendmailMailer extends Nette\Object implements IMailer
 		);
 
 		if (Nette\Debug::catchError($e)) {
-			throw new \InvalidStateException($e->getMessage());
+			throw new \InvalidStateException('mail(): ' . $e->getMessage(), 0, $e);
 
 		} elseif (!$res) {
 			throw new \InvalidStateException('Unable to send email.');

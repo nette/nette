@@ -76,7 +76,7 @@ class Session extends Nette\Object
 		session_start();
 		if (Nette\Debug::catchError($e)) {
 			@session_write_close(); // this is needed
-			throw new \InvalidStateException($e->getMessage());
+			throw new \InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
 		}
 
 		self::$started = TRUE;

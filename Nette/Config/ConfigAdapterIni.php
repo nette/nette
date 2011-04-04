@@ -59,7 +59,7 @@ final class ConfigAdapterIni implements IConfigAdapter
 		Nette\Debug::tryError();
 		$ini = parse_ini_file($file, TRUE);
 		if (Nette\Debug::catchError($e)) {
-			throw $e;
+			throw new \InvalidStateException('parse_ini_file(): ' . $e->getMessage(), 0, $e);
 		}
 
 		$separator = trim(self::$sectionSeparator);

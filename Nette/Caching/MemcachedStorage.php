@@ -61,7 +61,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 		Nette\Debug::tryError();
 		$this->memcache->connect($host, $port);
 		if (Nette\Debug::catchError($e)) {
-			throw new \InvalidStateException($e->getMessage());
+			throw new \InvalidStateException('Memcache::connect(): ' . $e->getMessage(), 0, $e);
 		}
 	}
 
