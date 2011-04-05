@@ -101,7 +101,7 @@ class Application extends Nette\Object
 					// routing
 					$router = $this->getRouter();
 
-					// enable routing debuggger
+					// enable routing debugger
 					Nette\Debug::addPanel(new RoutingDebugger($router, $httpRequest));
 
 					$request = $router->match($httpRequest);
@@ -154,7 +154,7 @@ class Application extends Nette\Object
 				}
 
 				if ($repeatedError) {
-					$e = new ApplicationException('An error occured while executing error-presenter', 0, $e);
+					$e = new ApplicationException('An error occurred while executing error-presenter', 0, $e);
 				}
 
 				if (!$httpResponse->isSent()) {

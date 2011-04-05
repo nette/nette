@@ -155,7 +155,7 @@ final class Debug
 
 
 
-	/********************* errors and exceptions reporing ****************d*g**/
+	/********************* errors and exceptions reporting ****************d*g**/
 
 
 
@@ -487,7 +487,7 @@ final class Debug
 
 
 	/**
-	 * Handles exception throwed in __toString().
+	 * Handles exception thrown in __toString().
 	 * @param  \Exception
 	 * @return void
 	 */
