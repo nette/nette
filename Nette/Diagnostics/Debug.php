@@ -330,6 +330,8 @@ class Debug
 			ob_end_clean();
 			fclose($logHandle);
 		}
+		
+		return $exceptionFilename;
 	}
 
 
