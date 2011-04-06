@@ -25,7 +25,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-final class Debug
+class Debug
 {
 	/** @var bool in production mode is suppressed any debugging output */
 	public static $productionMode;
