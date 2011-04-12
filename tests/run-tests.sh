@@ -9,6 +9,6 @@ if echo $dir | grep -v ^/ > /dev/null; then
 fi
 
 # runs RunTests.php with script's arguments
-php "$dir/NetteTest/RunTests.php" $*
+php "$dir/Test/RunTests.php" $*
 
 # returns what script returned
