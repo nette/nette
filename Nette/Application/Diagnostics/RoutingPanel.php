@@ -40,7 +40,7 @@ class RoutingDebugger extends Nette\DebugPanel
 	{
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
-		parent::__construct('RoutingDebugger', array($this, 'renderTab'), array($this, 'renderPanel'));
+		parent::__construct('RoutingPanel', array($this, 'renderTab'), array($this, 'renderPanel'));
 	}
 
 
@@ -52,7 +52,7 @@ class RoutingDebugger extends Nette\DebugPanel
 	public function renderTab()
 	{
 		$this->analyse($this->router);
-		require __DIR__ . '/templates/RoutingDebugger.tab.phtml';
+		require __DIR__ . '/templates/RoutingPanel.tab.phtml';
 	}
 
 
@@ -63,7 +63,7 @@ class RoutingDebugger extends Nette\DebugPanel
 	 */
 	public function renderPanel()
 	{
-		require __DIR__ . '/templates/RoutingDebugger.panel.phtml';
+		require __DIR__ . '/templates/RoutingPanel.panel.phtml';
 	}
 
 
