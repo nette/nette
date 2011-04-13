@@ -1182,7 +1182,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$tpl = $destination;
 
 		} elseif ($destination == NULL) { // intentionally ==
-			throw new \InvalidArgumentException("Template file name was not specified.");
+			throw new Nette\InvalidArgumentException("Template file name was not specified.");
 
 		} else {
 			$tpl = clone $template;

@@ -64,7 +64,7 @@ abstract class AutoLoader extends Nette\Object
 	public function register()
 	{
 		if (!function_exists('spl_autoload_register')) {
-			throw new \RuntimeException('spl_autoload does not exist in this PHP installation.');
+			throw new Nette\NotSupportedException('spl_autoload does not exist in this PHP installation.');
 		}
 
 		spl_autoload_register(array($this, 'tryLoad'));

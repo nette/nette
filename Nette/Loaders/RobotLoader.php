@@ -55,7 +55,7 @@ class RobotLoader extends AutoLoader
 	public function __construct()
 	{
 		if (!extension_loaded('tokenizer')) {
-			throw new \Exception("PHP extension Tokenizer is not loaded.");
+			throw new Nette\NotSupportedException("PHP extension Tokenizer is not loaded.");
 		}
 	}
 

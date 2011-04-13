@@ -39,7 +39,7 @@ final class IniAdapter implements IAdapter
 	 */
 	final public function __construct()
 	{
-		throw new \LogicException("Cannot instantiate static class " . get_class($this));
+		throw new Nette\StaticClassException;
 	}
 
 
@@ -185,7 +185,7 @@ final class IniAdapter implements IAdapter
 				$output[] = "$prefix$key = \"$val\"";
 
 			} else {
-				throw new \InvalidArgumentException("The '$prefix$key' item must be scalar or array, " . gettype($val) ." given.");
+				throw new Nette\InvalidArgumentException("The '$prefix$key' item must be scalar or array, " . gettype($val) ." given.");
 			}
 		}
 	}

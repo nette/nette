@@ -382,7 +382,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
 	 * @return Nette\ComponentModel\IComponent
-	 * @throws \InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	final public function offsetGet($name)
 	{

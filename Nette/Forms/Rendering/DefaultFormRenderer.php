@@ -338,7 +338,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	public function renderControls($parent)
 	{
 		if (!($parent instanceof Nette\Forms\Container || $parent instanceof Nette\Forms\ControlGroup)) {
-			throw new \InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
+			throw new Nette\InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
 		}
 
 		$container = $this->getWrapper('controls container');
@@ -403,7 +403,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$s = array();
 		foreach ($controls as $control) {
 			if (!$control instanceof Nette\Forms\IControl) {
-				throw new \InvalidArgumentException("Argument must be array of IFormControl instances.");
+				throw new Nette\InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$s[] = (string) $control->getControl();
 		}

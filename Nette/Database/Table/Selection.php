@@ -565,7 +565,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$data = iterator_to_array($data);
 
 		} elseif (!is_array($data)) {
-			throw new \InvalidArgumentException;
+			throw new Nette\InvalidArgumentException;
 		}
 
 		if (!$data) {

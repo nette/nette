@@ -270,7 +270,7 @@ class Form extends Container
 			$name = array_search($group, $this->groups, TRUE);
 
 		} else {
-			throw new \InvalidArgumentException("Group not found in form '$this->name'");
+			throw new Nette\InvalidArgumentException("Group not found in form '$this->name'");
 		}
 
 		foreach ($group->getControls() as $control) {

@@ -39,11 +39,11 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public static function registerExtension($extension, $class)
 	{
 		if (!class_exists($class)) {
-			throw new \InvalidArgumentException("Class '$class' was not found.");
+			throw new Nette\InvalidArgumentException("Class '$class' was not found.");
 		}
 
 		if (!Nette\Reflection\ClassType::from($class)->implementsInterface('Nette\Config\IAdapter')) {
-			throw new \InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IAdapter implementor.");
+			throw new Nette\InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IAdapter implementor.");
 		}
 
 		self::$extensions[strtolower($extension)] = $class;
@@ -61,7 +61,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (!isset(self::$extensions[$extension])) {
-			throw new \InvalidArgumentException("Unknown file extension '$file'.");
+			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
 		}
 
 		$data = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
@@ -97,7 +97,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (!isset(self::$extensions[$extension])) {
-			throw new \InvalidArgumentException("Unknown file extension '$file'.");
+			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
 		}
 		return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file);
 	}
@@ -111,7 +111,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function __set($key, $value)
 	{
 		if (!is_scalar($key)) {
-			throw new \InvalidArgumentException("Key must be either a string or an integer.");
+			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
 
 		} elseif ($value === NULL) {
 			unset($this->$key);
@@ -126,7 +126,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function &__get($key)
 	{
 		if (!is_scalar($key)) {
-			throw new \InvalidArgumentException("Key must be either a string or an integer.");
+			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
 		}
 		return $this->$key;
 	}
@@ -167,7 +167,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function offsetGet($key)
 	{
 		if (!is_scalar($key)) {
-			throw new \InvalidArgumentException("Key must be either a string or an integer.");
+			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
 
 		} elseif (!isset($this->$key)) {
 			return NULL;
@@ -185,7 +185,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function offsetExists($key)
 	{
 		if (!is_scalar($key)) {
-			throw new \InvalidArgumentException("Key must be either a string or an integer.");
+			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
 		}
 		return isset($this->$key);
 	}
@@ -200,7 +200,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	public function offsetUnset($key)
 	{
 		if (!is_scalar($key)) {
-			throw new \InvalidArgumentException("Key must be either a string or an integer.");
+			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
 		}
 		unset($this->$key);
 	}

@@ -55,7 +55,7 @@ class ControlGroup extends Nette\Object
 				}
 
 			} else {
-				throw new \InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
+				throw new Nette\InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
 			}
 		}
 		return $this;

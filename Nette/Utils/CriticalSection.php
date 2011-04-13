@@ -32,7 +32,7 @@ final class CriticalSection
 	 */
 	final public function __construct()
 	{
-		throw new \LogicException("Cannot instantiate static class " . get_class($this));
+		throw new Nette\StaticClassException;
 	}
 
 

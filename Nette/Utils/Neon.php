@@ -109,7 +109,7 @@ class Neon extends Nette\Object
 	public static function decode($input)
 	{
 		if (!is_string($input)) {
-			throw new \InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
+			throw new Nette\InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
 		}
 		if (!self::$tokenizer) {
 			self::$tokenizer = new Tokenizer(self::$patterns, 'mi');

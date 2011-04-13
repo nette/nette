@@ -159,13 +159,13 @@ class SelectBox extends BaseControl
 			foreach ($value as $key2 => $value2) {
 				if (!$this->useKeys) {
 					if (!is_scalar($value2)) {
-						throw new \InvalidArgumentException("All items must be scalar.");
+						throw new Nette\InvalidArgumentException("All items must be scalar.");
 					}
 					$key2 = $value2;
 				}
 
 				if (isset($this->allowed[$key2])) {
-					throw new \InvalidArgumentException("Items contain duplication for key '$key2'.");
+					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key2'.");
 				}
 
 				$this->allowed[$key2] = $value2;

@@ -116,7 +116,7 @@ class Route extends Nette\Object implements Application\IRouter
 		if (is_string($metadata)) {
 			$a = strrpos($metadata, ':');
 			if (!$a) {
-				throw new \InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
+				throw new Nette\InvalidArgumentException("Second argument must be array or string in format Presenter:action, '$metadata' given.");
 			}
 			$metadata = array(
 				self::PRESENTER_KEY => substr($metadata, 0, $a),
@@ -466,7 +466,7 @@ class Route extends Nette\Object implements Application\IRouter
 			if ($part === '[' || $part === ']' || $part === '[!') {
 				$brackets += $part[0] === '[' ? -1 : 1;
 				if ($brackets < 0) {
-					throw new \InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
+					throw new Nette\InvalidArgumentException("Unexpected '$part' in mask '$mask'.");
 				}
 				array_unshift($sequence, $part);
 				$re = ($part[0] === '[' ? '(?:' : ')?') . $re;
@@ -488,7 +488,7 @@ class Route extends Nette\Object implements Application\IRouter
 
 			// check name (limitation by regexp)
 			if (preg_match('#[^a-z0-9_-]#i', $name)) {
-				throw new \InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' given.");
+				throw new Nette\InvalidArgumentException("Parameter name must be alphanumeric string due to limitations of PCRE, '$name' given.");
 			}
 
 			// pattern, condition & metadata
@@ -554,7 +554,7 @@ class Route extends Nette\Object implements Application\IRouter
 		} while (TRUE);
 
 		if ($brackets) {
-			throw new \InvalidArgumentException("Missing closing ']' in mask '$mask'.");
+			throw new Nette\InvalidArgumentException("Missing closing ']' in mask '$mask'.");
 		}
 
 		$this->re = '#' . $re . '/?$#A' . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
@@ -732,12 +732,12 @@ class Route extends Nette\Object implements Application\IRouter
 	public static function addStyle($style, $parent = '#')
 	{
 		if (isset(self::$styles[$style])) {
-			throw new \InvalidArgumentException("Style '$style' already exists.");
+			throw new Nette\InvalidArgumentException("Style '$style' already exists.");
 		}
 
 		if ($parent !== NULL) {
 			if (!isset(self::$styles[$parent])) {
-				throw new \InvalidArgumentException("Parent style '$parent' doesn't exist.");
+				throw new Nette\InvalidArgumentException("Parent style '$parent' doesn't exist.");
 			}
 			self::$styles[$style] = self::$styles[$parent];
 
@@ -758,7 +758,7 @@ class Route extends Nette\Object implements Application\IRouter
 	public static function setStyleProperty($style, $key, $value)
 	{
 		if (!isset(self::$styles[$style])) {
-			throw new \InvalidArgumentException("Style '$style' doesn't exist.");
+			throw new Nette\InvalidArgumentException("Style '$style' doesn't exist.");
 		}
 		self::$styles[$style][$key] = $value;
 	}

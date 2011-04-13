@@ -50,7 +50,7 @@ final class Response extends Nette\Object implements IResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return Response  provides a fluent interface
-	 * @throws \InvalidArgumentException  if code is invalid
+	 * @throws Nette\InvalidArgumentException  if code is invalid
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCode($code)
@@ -65,7 +65,7 @@ final class Response extends Nette\Object implements IResponse
 		);
 
 		if (!isset($allowed[$code])) {
-			throw new \InvalidArgumentException("Bad HTTP response '$code'.");
+			throw new Nette\InvalidArgumentException("Bad HTTP response '$code'.");
 
 		} elseif (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException("Cannot set HTTP code after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));

@@ -54,10 +54,10 @@ class Container extends Component implements IContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new \InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
 
 		} elseif (!preg_match('#^[a-zA-Z0-9_]+$#', $name)) {
-			throw new \InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
+			throw new Nette\InvalidArgumentException("Component name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		if (isset($this->components[$name])) {
@@ -106,7 +106,7 @@ class Container extends Component implements IContainer
 	{
 		$name = $component->getName();
 		if (!isset($this->components[$name]) || $this->components[$name] !== $component) {
-			throw new \InvalidArgumentException("Component named '$name' is not located in this container.");
+			throw new Nette\InvalidArgumentException("Component named '$name' is not located in this container.");
 		}
 
 		unset($this->components[$name]);
@@ -127,7 +127,7 @@ class Container extends Component implements IContainer
 			$name = (string) $name;
 
 		} elseif (!is_string($name)) {
-			throw new \InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Component name must be integer or string, " . gettype($name) . " given.");
 
 		} else {
 			$a = strpos($name, self::NAME_SEPARATOR);
@@ -137,7 +137,7 @@ class Container extends Component implements IContainer
 			}
 
 			if ($name === '') {
-				throw new \InvalidArgumentException("Component or subcomponent name must not be empty string.");
+				throw new Nette\InvalidArgumentException("Component or subcomponent name must not be empty string.");
 			}
 		}
 
@@ -156,11 +156,11 @@ class Container extends Component implements IContainer
 				return $this->components[$name]->getComponent($ext, $need);
 
 			} elseif ($need) {
-				throw new \InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
+				throw new Nette\InvalidArgumentException("Component with name '$name' is not container and cannot have '$ext' component.");
 			}
 
 		} elseif ($need) {
-			throw new \InvalidArgumentException("Component with name '$name' does not exist.");
+			throw new Nette\InvalidArgumentException("Component with name '$name' does not exist.");
 		}
 	}
 
@@ -178,7 +178,7 @@ class Container extends Component implements IContainer
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			$component = $this->$method($name);
 			if (!$component instanceof IComponent && !isset($this->components[$name])) {
-				throw new \UnexpectedValueException("Method {$this->reflection->name}::$method() did not return or create the desired component.");
+				throw new Nette\UnexpectedValueException("Method {$this->reflection->name}::$method() did not return or create the desired component.");
 			}
 			return $component;
 		}

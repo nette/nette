@@ -80,7 +80,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 		}
 
 		if ($offset) {
-			throw new \InvalidArgumentException('Offset is not implemented in driver odbc.');
+			throw new Nette\InvalidArgumentException('Offset is not implemented in driver odbc.');
 		}
 	}
 

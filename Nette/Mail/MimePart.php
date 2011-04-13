@@ -58,7 +58,7 @@ class MimePart extends Nette\Object
 	public function setHeader($name, $value, $append = FALSE)
 	{
 		if (!$name || preg_match('#[^a-z0-9-]#i', $name)) {
-			throw new \InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
+			throw new Nette\InvalidArgumentException("Header name must be non-empty alphanumeric string, '$name' given.");
 		}
 
 		if ($value == NULL) { // intentionally ==
@@ -74,15 +74,15 @@ class MimePart extends Nette\Object
 
 			foreach ($value as $email => $name) {
 				if ($name !== NULL && !StringUtils::checkEncoding($name)) {
-					throw new \InvalidArgumentException("Name is not valid UTF-8 string.");
+					throw new Nette\InvalidArgumentException("Name is not valid UTF-8 string.");
 				}
 
 				if (!preg_match('#^[^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
-					throw new \InvalidArgumentException("Email address '$email' is not valid.");
+					throw new Nette\InvalidArgumentException("Email address '$email' is not valid.");
 				}
 
 				if (preg_match('#[\r\n]#', $name)) {
-					throw new \InvalidArgumentException("Name must not contain line separator.");
+					throw new Nette\InvalidArgumentException("Name must not contain line separator.");
 				}
 				$tmp[$email] = $name;
 			}
@@ -90,7 +90,7 @@ class MimePart extends Nette\Object
 		} else {
 			$value = (string) $value;
 			if (!StringUtils::checkEncoding($value)) {
-				throw new \InvalidArgumentException("Header is not valid UTF-8 string.");
+				throw new Nette\InvalidArgumentException("Header is not valid UTF-8 string.");
 			}
 			$this->headers[$name] = preg_replace('#[\r\n]+#', ' ', $value);
 		}

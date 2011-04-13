@@ -43,7 +43,7 @@ class Context extends Nette\FreezableObject implements IContext
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -57,13 +57,13 @@ class Context extends Nette\FreezableObject implements IContext
 
 		} elseif (is_object($service) && !($service instanceof \Closure || $service instanceof Nette\Callback)) {
 			if (!$singleton || $options) {
-				throw new \InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
+				throw new Nette\InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
 			}
 			$this->registry[$lower] = $service;
 
 		} else {
 			if (!$service) {
-				throw new \InvalidArgumentException("Service named '$name' is empty.");
+				throw new Nette\InvalidArgumentException("Service named '$name' is empty.");
 			}
 			$this->factories[$lower] = array($service, $singleton, $options);
 			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
@@ -81,7 +81,7 @@ class Context extends Nette\FreezableObject implements IContext
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
@@ -99,14 +99,14 @@ class Context extends Nette\FreezableObject implements IContext
 	public function getService($name, array $options = NULL)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);
 
 		if (isset($this->registry[$lower])) { // instantiated singleton
 			if ($options) {
-				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+				throw new Nette\InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 			}
 			return $this->registry[$lower];
 
@@ -114,7 +114,7 @@ class Context extends Nette\FreezableObject implements IContext
 			list($factory, $singleton, $defOptions) = $this->factories[$lower];
 
 			if ($singleton && $options) {
-				throw new \InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
+				throw new Nette\InvalidArgumentException("Service named '$name' is singleton and therefore can not have options.");
 
 			} elseif ($defOptions) {
 				$options = $options ? $options + $defOptions : $defOptions;
@@ -167,7 +167,7 @@ class Context extends Nette\FreezableObject implements IContext
 	public function hasService($name, $created = FALSE)
 	{
 		if (!is_string($name) || $name === '') {
-			throw new \InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
 		$lower = strtolower($name);

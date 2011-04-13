@@ -236,7 +236,7 @@ class Session extends Nette\Object
 	public function setName($name)
 	{
 		if (!is_string($name) || !preg_match('#[^0-9.][^.]*$#A', $name)) {
-			throw new \InvalidArgumentException('Session name must be a string and cannot contain dot.');
+			throw new Nette\InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 
 		session_name($name);
@@ -267,12 +267,12 @@ class Session extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @return SessionNamespace
-	 * @throws \InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public function getNamespace($namespace, $class = 'Nette\Http\SessionNamespace')
 	{
 		if (!is_string($namespace) || $namespace === '') {
-			throw new \InvalidArgumentException('Session namespace must be a non-empty string.');
+			throw new Nette\InvalidArgumentException('Session namespace must be a non-empty string.');
 		}
 
 		if (!self::$started) {

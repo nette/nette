@@ -339,7 +339,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	{
 		if (func_num_args() === 1) { // in $operator is predicate
 			if (!preg_match('#^(?:([=<>!]=?|<>)\s*)?((?:\d*\.)?\d+)\s*(K|M|G|)B?$#i', $operator, $matches)) {
-				throw new \InvalidArgumentException('Invalid size predicate format.');
+				throw new Nette\InvalidArgumentException('Invalid size predicate format.');
 			}
 			list(, $operator, $size, $unit) = $matches;
 			static $units = array('' => 1, 'k' => 1e3, 'm' => 1e6, 'g' => 1e9);
@@ -363,7 +363,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	{
 		if (func_num_args() === 1) { // in $operator is predicate
 			if (!preg_match('#^(?:([=<>!]=?|<>)\s*)?(.+)$#i', $operator, $matches)) {
-				throw new \InvalidArgumentException('Invalid date predicate format.');
+				throw new Nette\InvalidArgumentException('Invalid date predicate format.');
 			}
 			list(, $operator, $date) = $matches;
 			$operator = $operator ? $operator : '=';
@@ -401,7 +401,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		case '<>':
 			return $l != $r;
 		}
-		throw new \InvalidArgumentException("Unknown operator $operator.");
+		throw new Nette\InvalidArgumentException("Unknown operator $operator.");
 	}
 
 }

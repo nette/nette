@@ -68,7 +68,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string|array
-	 * @throws \InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
@@ -127,7 +127,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	private function checkRole($role, $need = TRUE)
 	{
 		if (!is_string($role) || $role === '') {
-			throw new \InvalidArgumentException("Role must be a non-empty string.");
+			throw new Nette\InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
 			throw new Nette\InvalidStateException("Role '$role' does not exist.");
@@ -264,7 +264,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string
-	 * @throws \InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
@@ -314,7 +314,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	private function checkResource($resource, $need = TRUE)
 	{
 		if (!is_string($resource) || $resource === '') {
-			throw new \InvalidArgumentException("Resource must be a non-empty string.");
+			throw new Nette\InvalidArgumentException("Resource must be a non-empty string.");
 
 		} elseif ($need && !isset($this->resources[$resource])) {
 			throw new Nette\InvalidStateException("Resource '$resource' does not exist.");
