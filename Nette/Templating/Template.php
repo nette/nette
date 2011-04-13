@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Templating;
 
 use Nette;
 
@@ -51,7 +51,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	{
 		$callback = callback($callback);
 		if (in_array($callback, $this->filters)) {
-			throw new \InvalidStateException("Filter '$callback' was registered twice.");
+			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
 	}
@@ -80,7 +80,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 */
 	public function render()
 	{
-		throw new \NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
 
 
@@ -93,7 +93,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	public function save($file)
 	{
 		if (file_put_contents($file, $this->__toString(TRUE)) === FALSE) {
-			throw new \IOException("Unable to save file '$file'.");
+			throw new Nette\IOException("Unable to save file '$file'.");
 		}
 	}
 
@@ -116,7 +116,7 @@ abstract class Template extends Nette\Object implements ITemplate
 			if (func_num_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
-				Nette\Debug::toStringException($e);
+				Nette\Diagnostics\Debugger::toStringException($e);
 			}
 		}
 	}
@@ -212,10 +212,10 @@ abstract class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\ITranslator
+	 * @param  Nette\Localization\ITranslator
 	 * @return Template  provides a fluent interface
 	 */
-	public function setTranslator(Nette\ITranslator $translator = NULL)
+	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
 		return $this;
@@ -236,7 +236,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	public function add($name, $value)
 	{
 		if (array_key_exists($name, $this->params)) {
-			throw new \InvalidStateException("The variable '$name' already exists.");
+			throw new Nette\InvalidStateException("The variable '$name' already exists.");
 		}
 
 		$this->params[$name] = $value;

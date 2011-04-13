@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -26,7 +26,7 @@ use Nette;
  *
  * @property-read Presenter $presenter
  */
-abstract class PresenterComponent extends Nette\ComponentContainer implements ISignalReceiver, IStatePersistent, \ArrayAccess
+abstract class PresenterComponent extends Nette\ComponentModel\Container implements ISignalReceiver, IStatePersistent, \ArrayAccess
 {
 	/** @var array */
 	protected $params = array();
@@ -35,9 +35,9 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 
 	/**
 	 */
-	public function __construct(Nette\IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
-		$this->monitor('Nette\Application\Presenter');
+		$this->monitor('Nette\Application\UI\Presenter');
 		parent::__construct($parent, $name);
 	}
 
@@ -50,7 +50,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		return $this->lookup('Nette\Application\Presenter', $need);
+		return $this->lookup('Nette\Application\UI\Presenter', $need);
 	}
 
 
@@ -62,7 +62,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 */
 	public function getUniqueId()
 	{
-		return $this->lookupPath('Nette\Application\Presenter', TRUE);
+		return $this->lookupPath('Nette\Application\UI\Presenter', TRUE);
 	}
 
 
@@ -70,7 +70,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  IComponent
+	 * @param  Nette\Application\IComponent
 	 * @return void
 	 */
 	protected function attached($presenter)
@@ -167,7 +167,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 			}
 
 			if (is_object($val)) {
-				throw new \InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
+				throw new Nette\InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
 
 			} else {
 				if (isset($meta['def'])) {
@@ -224,7 +224,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 */
 	public static function getPersistentParams()
 	{
-		$rc = new Nette\Reflection\ClassReflection(/*5.2*func_get_arg(0)*//**/get_called_class()/**/);
+		$rc = new Nette\Reflection\ClassType(/*5.2*func_get_arg(0)*//**/get_called_class()/**/);
 		$params = array();
 		foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $rp) {
 			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
@@ -340,7 +340,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
 	 * @param  array|mixed
 	 * @return void
-	 * @throws AbortException
+	 * @throws Nette\Application\AbortException
 	 */
 	public function redirect($code, $destination = NULL, $args = array())
 	{
@@ -368,7 +368,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	/**
 	 * Adds the component to the container.
 	 * @param  string  component name
-	 * @param  Nette\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	final public function offsetSet($name, $component)
@@ -381,7 +381,7 @@ abstract class PresenterComponent extends Nette\ComponentContainer implements IS
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
-	 * @return Nette\IComponent
+	 * @return Nette\ComponentModel\IComponent
 	 * @throws \InvalidArgumentException
 	 */
 	final public function offsetGet($name)

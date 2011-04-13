@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database\Selector;
+namespace Nette\Database\Table;
 
 use Nette;
 
@@ -21,9 +21,9 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class GroupedTableSelection extends TableSelection
+class GroupedSelection extends Selection
 {
-	/** @var TableSelection referenced table */
+	/** @var Selection referenced table */
 	private $refTable;
 
 	/** @var string grouping column name */
@@ -37,7 +37,7 @@ class GroupedTableSelection extends TableSelection
 
 
 
-	public function __construct($name, TableSelection $refTable, $column)
+	public function __construct($name, Selection $refTable, $column)
 	{
 		parent::__construct($name, $refTable->connection);
 		$this->refTable = $refTable;
@@ -49,7 +49,7 @@ class GroupedTableSelection extends TableSelection
 	/**
 	 * Specify referencing column.
 	 * @param  string
-	 * @return GroupedTableSelection provides a fluent interface
+	 * @return GroupedSelection provides a fluent interface
 	 */
 	public function through($column)
 	{
@@ -107,7 +107,7 @@ class GroupedTableSelection extends TableSelection
 
 	public function insert($data)
 	{
-		if ($data instanceof \Traversable && !$data instanceof TableSelection) {
+		if ($data instanceof \Traversable && !$data instanceof Selection) {
 			$data = iterator_to_array($data);
 		}
 		if (is_array($data)) {

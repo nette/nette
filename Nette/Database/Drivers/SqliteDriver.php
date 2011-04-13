@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoSqliteDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
 	/** @var Nette\Database\Connection */
 	private $connection;

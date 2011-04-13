@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Caching;
+namespace Nette\Caching\Storages;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     Jan Smitka
  */
-interface ICacheJournal
+interface IJournal
 {
 
 	/**

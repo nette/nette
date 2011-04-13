@@ -31,7 +31,7 @@ class PresenterFactory implements IPresenterFactory
 	/** @var array */
 	private $cache = array();
 
-	/** @var Nette\IContext */
+	/** @var Nette\DI\IContext */
 	private $context;
 
 
@@ -39,7 +39,7 @@ class PresenterFactory implements IPresenterFactory
 	/**
 	 * @param  string
 	 */
-	public function __construct($baseDir, Nette\IContext $context)
+	public function __construct($baseDir, Nette\DI\IContext $context)
 	{
 		$this->baseDir = $baseDir;
 		$this->context = $context;
@@ -74,7 +74,7 @@ class PresenterFactory implements IPresenterFactory
 			return $class;
 		}
 
-		if (!is_string($name) || !Nette\String::match($name, "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#")) {
+		if (!is_string($name) || !Nette\StringUtils::match($name, "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*$#")) {
 			throw new InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
 		}
 
@@ -84,7 +84,7 @@ class PresenterFactory implements IPresenterFactory
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				Nette\Loaders\LimitedScope::load($file);
+				Nette\Utils\LimitedScope::load($file);
 			}
 
 			if (!class_exists($class)) {
@@ -92,7 +92,7 @@ class PresenterFactory implements IPresenterFactory
 			}
 		}
 
-		$reflection = new Nette\Reflection\ClassReflection($class);
+		$reflection = new Nette\Reflection\ClassType($class);
 		$class = $reflection->getName();
 
 		if (!$reflection->implementsInterface('Nette\Application\IPresenter')) {

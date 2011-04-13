@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\Utils;
 
 use Nette;
 
@@ -44,7 +44,7 @@ final class CriticalSection
 	public static function enter()
 	{
 		if (self::$criticalSections) {
-			throw new \InvalidStateException('Critical section has already been entered.');
+			throw new Nette\InvalidStateException('Critical section has already been entered.');
 		}
 		// locking on Windows causes that a file seems to be empty
 		$handle = substr(PHP_OS, 0, 3) === 'WIN'
@@ -52,7 +52,7 @@ final class CriticalSection
 			: @fopen(__FILE__, 'r'); // @ - file may not already exist
 
 		if (!$handle) {
-			throw new \InvalidStateException("Unable initialize critical section.");
+			throw new Nette\InvalidStateException("Unable initialize critical section.");
 		}
 		flock(self::$criticalSections = $handle, LOCK_EX);
 	}
@@ -66,7 +66,7 @@ final class CriticalSection
 	public static function leave()
 	{
 		if (!self::$criticalSections) {
-			throw new \InvalidStateException('Critical section has not been initialized.');
+			throw new Nette\InvalidStateException('Critical section has not been initialized.');
 		}
 		flock(self::$criticalSections, LOCK_UN);
 		fclose(self::$criticalSections);

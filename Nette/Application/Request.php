@@ -25,7 +25,7 @@ use Nette;
  * @property   array $post
  * @property   array $files
  */
-final class PresenterRequest extends Nette\FreezableObject
+final class Request extends Nette\FreezableObject
 {
 	/** method */
 	const FORWARD = 'FORWARD';
@@ -78,7 +78,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	/**
 	 * Sets the presenter name.
 	 * @param  string
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setPresenterName($name)
 	{
@@ -103,7 +103,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	/**
 	 * Sets variables provided to the presenter.
 	 * @param  array
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setParams(array $params)
 	{
@@ -128,7 +128,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	/**
 	 * Sets variables provided to the presenter via POST.
 	 * @param  array
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setPost(array $params)
 	{
@@ -153,7 +153,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	/**
 	 * Sets all uploaded files.
 	 * @param  array
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setFiles(array $files)
 	{
@@ -178,7 +178,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	/**
 	 * Sets the method.
 	 * @param  string
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setMethod($method)
 	{
@@ -226,7 +226,7 @@ final class PresenterRequest extends Nette\FreezableObject
 	 * Sets the flag.
 	 * @param  string
 	 * @param  bool
-	 * @return PresenterRequest  provides a fluent interface
+	 * @return Request  provides a fluent interface
 	 */
 	public function setFlag($flag, $value = TRUE)
 	{

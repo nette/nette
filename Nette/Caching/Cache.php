@@ -37,7 +37,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	/** @internal */
 	const NAMESPACE_SEPARATOR = "\x00";
 
-	/** @var ICacheStorage */
+	/** @var IStorage */
 	private $storage;
 
 	/** @var string */
@@ -51,7 +51,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 
-	public function __construct(ICacheStorage $storage, $namespace = NULL)
+	public function __construct(IStorage $storage, $namespace = NULL)
 	{
 		$this->storage = $storage;
 		$this->namespace = $namespace . self::NAMESPACE_SEPARATOR;
@@ -61,7 +61,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 	/**
 	 * Returns cache storage.
-	 * @return ICacheStorage
+	 * @return IStorage
 	 */
 	public function getStorage()
 	{
@@ -158,14 +158,14 @@ class Cache extends Nette\Object implements \ArrayAccess
 		}
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
-			Nette\CriticalSection::enter();
+			Nette\Utils\CriticalSection::enter();
 			$data = $data->__invoke();
-			Nette\CriticalSection::leave();
+			Nette\Utils\CriticalSection::leave();
 		}
 
 		if (is_object($data)) {
 			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
-				Nette\Reflection\ClassReflection::from($data)->getAnnotation('serializationVersion'));
+				Nette\Reflection\ClassType::from($data)->getAnnotation('serializationVersion'));
 		}
 
 		$this->data = $data;
@@ -334,7 +334,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	private static function checkSerializationVersion($class, $value)
 	{
-		return Nette\Reflection\ClassReflection::from($class)->getAnnotation('serializationVersion') === $value;
+		return Nette\Reflection\ClassType::from($class)->getAnnotation('serializationVersion') === $value;
 	}
 
 }

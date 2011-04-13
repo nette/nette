@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Rendering;
 
 use Nette,
-	Nette\Web\Html;
+	Nette\Utils\Html;
 
 
 
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class DefaultFormRenderer extends Nette\Object implements IFormRenderer
+class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRenderer
 {
 	/**
 	 *  /--- form.container
@@ -116,7 +116,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 		),
 	);
 
-	/** @var Form */
+	/** @var Nette\Forms\Form */
 	protected $form;
 
 	/** @var int */
@@ -126,11 +126,11 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Provides complete form rendering.
-	 * @param  Form
+	 * @param  Nette\Forms\Form
 	 * @param  string 'begin', 'errors', 'body', 'end' or empty to render all
 	 * @return string
 	 */
-	public function render(Form $form, $mode = NULL)
+	public function render(Nette\Forms\Form $form, $mode = NULL)
 	{
 		if ($this->form !== $form) {
 			$this->form = $form;
@@ -231,7 +231,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 	{
 		$s = '';
 		foreach ($this->form->getControls() as $control) {
-			if ($control instanceof HiddenField && !$control->getOption('rendered')) {
+			if ($control instanceof Nette\Forms\Controls\HiddenField && !$control->getOption('rendered')) {
 				$s .= (string) $control->getControl();
 			}
 		}
@@ -246,10 +246,10 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Renders validation errors (per form or per control).
-	 * @param  IFormControl
+	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
-	public function renderErrors(IFormControl $control = NULL)
+	public function renderErrors(Nette\Forms\IControl $control = NULL)
 	{
 		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
 		if (count($errors)) {
@@ -332,12 +332,12 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Renders group of controls.
-	 * @param  FormContainer|FormGroup
+	 * @param  Nette\Forms\Container|FormGroup
 	 * @return string
 	 */
 	public function renderControls($parent)
 	{
-		if (!($parent instanceof FormContainer || $parent instanceof FormGroup)) {
+		if (!($parent instanceof Nette\Forms\Container || $parent instanceof Nette\Forms\ControlGroup)) {
 			throw new \InvalidArgumentException("Argument must be FormContainer or FormGroup instance.");
 		}
 
@@ -345,10 +345,10 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 		$buttons = NULL;
 		foreach ($parent->getControls() as $control) {
-			if ($control->getOption('rendered') || $control instanceof HiddenField || $control->getForm(FALSE) !== $this->form) {
+			if ($control->getOption('rendered') || $control instanceof Nette\Forms\Controls\HiddenField || $control->getForm(FALSE) !== $this->form) {
 				// skip
 
-			} elseif ($control instanceof Button) {
+			} elseif ($control instanceof Nette\Forms\Controls\Button) {
 				$buttons[] = $control;
 
 			} else {
@@ -376,10 +376,10 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Renders single visual row.
-	 * @param  IFormControl
+	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
-	public function renderPair(IFormControl $control)
+	public function renderPair(Nette\Forms\IControl $control)
 	{
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
@@ -402,7 +402,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 	{
 		$s = array();
 		foreach ($controls as $control) {
-			if (!$control instanceof IFormControl) {
+			if (!$control instanceof Nette\Forms\IControl) {
 				throw new \InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
 			$s[] = (string) $control->getControl();
@@ -417,14 +417,14 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Renders 'label' part of visual row of controls.
-	 * @param  IFormControl
+	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
-	public function renderLabel(IFormControl $control)
+	public function renderLabel(Nette\Forms\IControl $control)
 	{
 		$head = $this->getWrapper('label container');
 
-		if ($control instanceof Checkbox || $control instanceof Button) {
+		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
 			return $head->setHtml(($head->getName() === 'td' || $head->getName() === 'th') ? '&nbsp;' : '');
 
 		} else {
@@ -442,10 +442,10 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * Renders 'control' part of visual row of controls.
-	 * @param  IFormControl
+	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
-	public function renderControl(IFormControl $control)
+	public function renderControl(Nette\Forms\IControl $control)
 	{
 		$body = $this->getWrapper('control container');
 		if ($this->counter % 2) $body->class($this->getValue('control .odd'), TRUE);
@@ -469,7 +469,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 			$description .= $this->renderErrors($control);
 		}
 
-		if ($control instanceof Checkbox || $control instanceof Button) {
+		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
 			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel() . $description);
 
 		} else {
@@ -481,7 +481,7 @@ class DefaultFormRenderer extends Nette\Object implements IFormRenderer
 
 	/**
 	 * @param  string
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	protected function getWrapper($name)
 	{

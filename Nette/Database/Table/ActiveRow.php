@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database\Selector;
+namespace Nette\Database\Table;
 
 use Nette;
 
@@ -21,20 +21,20 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
-	/** @var TableSelection */
+	/** @var Selection */
 	protected $table;
 
 	/** @var array of row data */
 	protected $data;
 
-	/** @var array of new values {@see TableRow::update()} */
+	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
 
 
-	public function __construct(array $data, TableSelection $table)
+	public function __construct(array $data, Selection $table)
 	{
 		$this->data = $data;
 		$this->table = $table;
@@ -67,7 +67,7 @@ class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Returns referenced row.
 	 * @param  string
-	 * @return TableRow or NULL if the row does not exist
+	 * @return ActiveRow or NULL if the row does not exist
 	 */
 	public function ref($name)
 	{
@@ -83,7 +83,7 @@ class TableRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Returns referencing rows.
 	 * @param  string table name
-	 * @return GroupedTableSelection
+	 * @return GroupedSelection
 	 */
 	public function related($table)
 	{

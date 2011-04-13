@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -21,7 +21,7 @@ use Nette;
  * @author     David Grudl
  * @internal
  */
-class PresenterComponentReflection extends Nette\Reflection\ClassReflection
+class PresenterComponentReflection extends Nette\Reflection\ClassType
 {
 	/** @var array getPersistentParams cache */
 	private static $ppCache = array();
@@ -43,7 +43,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassReflection
 		$params = & self::$ppCache[$class];
 		if ($params !== NULL) return $params;
 		$params = array();
-		if (is_subclass_of($class, 'Nette\Application\PresenterComponent')) {
+		if (is_subclass_of($class, 'Nette\Application\UI\PresenterComponent')) {
 			// $class::getPersistentParams() in PHP 5.3
 			$defaults = get_class_vars($class);
 			foreach (call_user_func(array($class, 'getPersistentParams'), $class) as $name => $meta) {
@@ -69,7 +69,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassReflection
 		$components = & self::$pcCache[$class];
 		if ($components !== NULL) return $components;
 		$components = array();
-		if (is_subclass_of($class, 'Nette\Application\Presenter')) {
+		if (is_subclass_of($class, 'Nette\Application\UI\Presenter')) {
 			// $class::getPersistentComponents() in PHP 5.3
 			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $meta) {
 				if (is_string($meta)) $name = $meta;
@@ -94,7 +94,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassReflection
 		$cache = & self::$mcCache[strtolower($class . ':' . $method)];
 		if ($cache === NULL) try {
 			$cache = FALSE;
-			$rm = Nette\Reflection\MethodReflection::from($class, $method);
+			$rm = Nette\Reflection\Method::from($class, $method);
 			$cache = $this->isInstantiable() && $rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic();
 		} catch (\ReflectionException $e) {
 		}

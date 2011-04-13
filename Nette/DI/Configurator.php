@@ -9,9 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\DI;
 
 use Nette,
+	Nette\Environment,
 	Nette\Config\Config;
 
 
@@ -21,7 +22,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Configurator extends Object
+class Configurator extends Nette\Object
 {
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.neon';
@@ -29,14 +30,14 @@ class Configurator extends Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
-		'Nette\\Web\\HttpContext' => 'Nette\Web\HttpContext',
+		'Nette\\Web\\HttpContext' => 'Nette\Http\Context',
 		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
-		'Nette\\Web\\IHttpResponse' => 'Nette\Web\HttpResponse',
-		'Nette\\Web\\IUser' => 'Nette\Web\User',
+		'Nette\\Web\\IHttpResponse' => 'Nette\Http\Response',
+		'Nette\\Web\\IUser' => 'Nette\Http\User',
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\Session' => 'Nette\Web\Session',
+		'Nette\\Web\\Session' => 'Nette\Http\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
 
@@ -160,7 +161,7 @@ class Configurator extends Object
 							(array) $value->option
 						);
 					} else {
-						throw new \InvalidStateException("Factory method is not specified for service $key.");
+						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
 					}
 					if ($value->run) {
 						$runServices[] = $key;
@@ -193,7 +194,7 @@ class Configurator extends Object
 				$key = strtr($key, '-', '.'); // backcompatibility
 
 				if (!is_scalar($value)) {
-					throw new \InvalidStateException("Configuration value for directive '$key' is not scalar.");
+					throw new Nette\InvalidStateException("Configuration value for directive '$key' is not scalar.");
 				}
 
 				if ($key === 'date.timezone') { // PHP bug #47466
@@ -227,7 +228,7 @@ class Configurator extends Object
 						break;
 					default:
 						if (ini_get($key) != $value) { // intentionally ==
-							throw new \NotSupportedException('Required function ini_set() is disabled.');
+							throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 						}
 					}
 				}
@@ -287,7 +288,7 @@ class Configurator extends Object
 		}
 
 		$context = clone Environment::getContext();
-		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\MultiRouter');
+		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\Routers\RouteList');
 
 		if (!$context->hasService('Nette\\Application\\IPresenterFactory')) {
 			$context->addService('Nette\\Application\\IPresenterFactory', function() use ($context) {
@@ -305,11 +306,11 @@ class Configurator extends Object
 
 
 	/**
-	 * @return Nette\Web\HttpRequest
+	 * @return Nette\Http\Request
 	 */
 	public static function createHttpRequest()
 	{
-		$factory = new Nette\Web\HttpRequestFactory;
+		$factory = new Nette\Http\RequestFactory;
 		$factory->setEncoding('UTF-8');
 		return $factory->createHttpRequest();
 	}
@@ -317,24 +318,24 @@ class Configurator extends Object
 
 
 	/**
-	 * @return Nette\Caching\ICacheStorage
+	 * @return Nette\Caching\IStorage
 	 */
 	public static function createCacheStorage()
 	{
 		$dir = Environment::getVariable('tempDir') . '/cache';
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\FileStorage($dir, Environment::getService('Nette\\Caching\\ICacheJournal'));
+		return new Nette\Caching\Storages\FileStorage($dir, Environment::getService('Nette\\Caching\\ICacheJournal'));
 	}
 
 
 
 	/**
-	 * @return Nette\Caching\ICacheJournal
+	 * @return Nette\Caching\Storages\IJournal
 	 */
 	public static function createCacheJournal()
 	{
-		return new Nette\Caching\FileJournal(Environment::getVariable('tempDir'));
+		return new Nette\Caching\Storages\FileJournal(Environment::getVariable('tempDir'));
 	}
 
 

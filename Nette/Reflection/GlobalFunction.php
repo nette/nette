@@ -12,8 +12,7 @@
 namespace Nette\Reflection;
 
 use Nette,
-	Nette\ObjectMixin,
-	Nette\Annotations;
+	Nette\ObjectMixin;
 
 
 
@@ -22,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class FunctionReflection extends \ReflectionFunction
+class GlobalFunction extends \ReflectionFunction
 {
 	/** @var string|Closure */
 	private $value;
@@ -54,11 +53,11 @@ class FunctionReflection extends \ReflectionFunction
 
 
 	/**
-	 * @return ExtensionReflection
+	 * @return Extension
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new ExtensionReflection($name) : NULL;
+		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
@@ -66,7 +65,7 @@ class FunctionReflection extends \ReflectionFunction
 	public function getParameters()
 	{
 		foreach ($res = parent::getParameters() as $key => $val) {
-			$res[$key] = new ParameterReflection($this->value, $val->getName());
+			$res[$key] = new Parameter($this->value, $val->getName());
 		}
 		return $res;
 	}
@@ -78,11 +77,11 @@ class FunctionReflection extends \ReflectionFunction
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

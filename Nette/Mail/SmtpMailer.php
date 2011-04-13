@@ -67,10 +67,10 @@ class SmtpMailer extends Nette\Object implements IMailer
 
 	/**
 	 * Sends email.
-	 * @param	Mail
+	 * @param	Message
 	 * @return	void
 	 */
-	public function send(Mail $mail)
+	public function send(Message $mail)
 	{
 		$data = $mail->generateMessage();
 
@@ -161,7 +161,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 */
 	private function write($line, $expectedCode = NULL, $message = NULL)
 	{
-		fwrite($this->connection, $line . Mail::EOL);
+		fwrite($this->connection, $line . Message::EOL);
 		if ($expectedCode && !in_array((int) $this->read(), (array) $expectedCode)) {
 			throw new SmtpException('SMTP server did not accept ' . ($message ? $message : $line));
 		}

@@ -9,9 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Routers;
 
-use Nette;
+use Nette,
+	Nette\Application;
 
 
 
@@ -20,7 +21,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class CliRouter extends Nette\Object implements IRouter
+class CliRouter extends Nette\Object implements Application\IRouter
 {
 	const PRESENTER_KEY = 'action';
 
@@ -40,11 +41,11 @@ class CliRouter extends Nette\Object implements IRouter
 
 
 	/**
-	 * Maps command line arguments to a PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
-	 * @return PresenterRequest|NULL
+	 * Maps command line arguments to a Request object.
+	 * @param  Nette\Http\IRequest
+	 * @return Nette\Application\Request|NULL
 	 */
-	public function match(Nette\Web\IHttpRequest $httpRequest)
+	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		if (empty($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
 			return NULL;
@@ -84,7 +85,7 @@ class CliRouter extends Nette\Object implements IRouter
 		}
 
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new \InvalidStateException('Missing presenter & action in route definition.');
+			throw new Nette\InvalidStateException('Missing presenter & action in route definition.');
 		}
 		$presenter = $params[self::PRESENTER_KEY];
 		if ($a = strrpos($presenter, ':')) {
@@ -92,7 +93,7 @@ class CliRouter extends Nette\Object implements IRouter
 			$presenter = substr($presenter, 0, $a);
 		}
 
-		return new PresenterRequest(
+		return new Application\Request(
 			$presenter,
 			'CLI',
 			$params
@@ -103,11 +104,11 @@ class CliRouter extends Nette\Object implements IRouter
 
 	/**
 	 * This router is only unidirectional.
-	 * @param  PresenterRequest
-	 * @param  Nette\Web\Uri
+	 * @param  Nette\Application\Request
+	 * @param  Nette\Http\Url
 	 * @return NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUri)
 	{
 		return NULL;
 	}

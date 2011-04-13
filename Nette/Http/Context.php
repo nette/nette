@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class HttpContext extends Nette\Object
+class Context extends Nette\Object
 {
 
 
@@ -72,7 +72,7 @@ class HttpContext extends Nette\Object
 			return TRUE;
 		}
 
-		$response->setCode(IHttpResponse::S304_NOT_MODIFIED);
+		$response->setCode(IResponse::S304_NOT_MODIFIED);
 		return FALSE;
 	}
 
@@ -83,7 +83,7 @@ class HttpContext extends Nette\Object
 
 
 	/**
-	 * @return IHttpRequest
+	 * @return IRequest
 	 */
 	public function getRequest()
 	{
@@ -93,7 +93,7 @@ class HttpContext extends Nette\Object
 
 
 	/**
-	 * @return IHttpResponse
+	 * @return IResponse
 	 */
 	public function getResponse()
 	{

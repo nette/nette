@@ -12,7 +12,7 @@
 namespace Nette\Mail;
 
 use Nette,
-	Nette\String;
+	Nette\StringUtils;
 
 
 
@@ -27,7 +27,7 @@ use Nette,
  * @property   int $priority
  * @property   string $htmlBody
  */
-class Mail extends MailMimePart
+class Message extends MimePart
 {
 	/** Priority */
 	const HIGH = 1,
@@ -74,7 +74,7 @@ class Mail extends MailMimePart
 	 * Sets the sender of the message.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setFrom($email, $name = NULL)
 	{
@@ -99,7 +99,7 @@ class Mail extends MailMimePart
 	 * Adds the reply-to address.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function addReplyTo($email, $name = NULL)
 	{
@@ -112,7 +112,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sets the subject of the message.
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setSubject($subject)
 	{
@@ -137,7 +137,7 @@ class Mail extends MailMimePart
 	 * Adds email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function addTo($email, $name = NULL) // addRecipient()
 	{
@@ -151,7 +151,7 @@ class Mail extends MailMimePart
 	 * Adds carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function addCc($email, $name = NULL)
 	{
@@ -165,7 +165,7 @@ class Mail extends MailMimePart
 	 * Adds blind carbon copy email recipient.
 	 * @param  string  email or format "John Doe" <doe@example.com>
 	 * @param  string
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function addBcc($email, $name = NULL)
 	{
@@ -195,7 +195,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sets the Return-Path header of the message.
 	 * @param  string  email
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setReturnPath($email)
 	{
@@ -219,7 +219,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sets email priority.
 	 * @param  int
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setPriority($priority)
 	{
@@ -242,9 +242,9 @@ class Mail extends MailMimePart
 
 	/**
 	 * Sets HTML body.
-	 * @param  string|Nette\Templates\ITemplate
+	 * @param  string|Nette\Templating\ITemplate
 	 * @param  mixed base-path or FALSE to disable parsing
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setHtmlBody($html, $basePath = NULL)
 	{
@@ -271,7 +271,7 @@ class Mail extends MailMimePart
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return MailMimePart
+	 * @return MimePart
 	 */
 	public function addEmbeddedFile($file, $content = NULL, $contentType = NULL)
 	{
@@ -286,7 +286,7 @@ class Mail extends MailMimePart
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return MailMimePart
+	 * @return MimePart
 	 */
 	public function addAttachment($file, $content = NULL, $contentType = NULL)
 	{
@@ -297,23 +297,23 @@ class Mail extends MailMimePart
 
 	/**
 	 * Creates file MIME part.
-	 * @return MailMimePart
+	 * @return MimePart
 	 */
 	private function createAttachment($file, $content, $contentType, $disposition)
 	{
-		$part = new MailMimePart;
+		$part = new MimePart;
 		if ($content === NULL) {
 			$content = file_get_contents($file);
 			if ($content === FALSE) {
-				throw new \FileNotFoundException("Unable to read file '$file'.");
+				throw new Nette\FileNotFoundException("Unable to read file '$file'.");
 			}
 		} else {
 			$content = (string) $content;
 		}
 		$part->setBody($content);
-		$part->setContentType($contentType ? $contentType : Nette\MimeTypeDetector::fromString($content));
+		$part->setContentType($contentType ? $contentType : Nette\Utils\MimeTypeDetector::fromString($content));
 		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', $disposition . '; filename="' . String::fixEncoding(basename($file)) . '"');
+		$part->setHeader('Content-Disposition', $disposition . '; filename="' . StringUtils::fixEncoding(basename($file)) . '"');
 		return $part;
 	}
 
@@ -337,7 +337,7 @@ class Mail extends MailMimePart
 	/**
 	 * Sets the mailer.
 	 * @param  IMailer
-	 * @return Mail  provides a fluent interface
+	 * @return Message  provides a fluent interface
 	 */
 	public function setMailer(IMailer $mailer)
 	{
@@ -379,7 +379,7 @@ class Mail extends MailMimePart
 
 	/**
 	 * Builds email. Does not modify itself, but returns a new object.
-	 * @return Mail
+	 * @return Message
 	 */
 	protected function build()
 	{
@@ -431,9 +431,9 @@ class Mail extends MailMimePart
 	 */
 	protected function buildHtml()
 	{
-		if ($this->html instanceof Nette\Templates\ITemplate) {
+		if ($this->html instanceof Nette\Templating\ITemplate) {
 			$this->html->mail = $this;
-			if ($this->basePath === NULL && $this->html instanceof Nette\Templates\IFileTemplate) {
+			if ($this->basePath === NULL && $this->html instanceof Nette\Templating\IFileTemplate) {
 				$this->basePath = dirname($this->html->getFile());
 			}
 			$this->html = $this->html->__toString(TRUE);
@@ -441,7 +441,7 @@ class Mail extends MailMimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			$matches = String::matchAll(
+			$matches = StringUtils::matchAll(
 				$this->html,
 				'#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i',
 				PREG_OFFSET_CAPTURE
@@ -458,7 +458,7 @@ class Mail extends MailMimePart
 			}
 		}
 
-		if (!$this->getSubject() && $matches = String::match($this->html, '#<title>(.+?)</title>#is')) {
+		if (!$this->getSubject() && $matches = StringUtils::match($this->html, '#<title>(.+?)</title>#is')) {
 			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8'));
 		}
 	}
@@ -472,12 +472,12 @@ class Mail extends MailMimePart
 	protected function buildText()
 	{
 		$text = $this->getBody();
-		if ($text instanceof Nette\Templates\ITemplate) {
+		if ($text instanceof Nette\Templating\ITemplate) {
 			$text->mail = $this;
 			$this->setBody($text->__toString(TRUE));
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
-			$text = String::replace($this->html, array(
+			$text = StringUtils::replace($this->html, array(
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
 				'#[ \t\r\n]+#' => ' ',
@@ -493,7 +493,7 @@ class Mail extends MailMimePart
 	/** @return string */
 	private function getRandomId()
 	{
-		return '<' . String::random() . '@' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST']
+		return '<' . StringUtils::random() . '@' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST']
 			: (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'))
 			. '>';
 	}

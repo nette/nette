@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Caching;
+namespace Nette\Caching\Storages;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MemoryStorage extends Nette\Object implements ICacheStorage
+class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/** @var array */
 	private $data = array();
@@ -72,7 +72,7 @@ class MemoryStorage extends Nette\Object implements ICacheStorage
 	 */
 	public function clean(array $conds)
 	{
-		if (!empty($conds[Cache::ALL])) {
+		if (!empty($conds[Nette\Caching\Cache::ALL])) {
 			$this->data = array();
 		}
 	}

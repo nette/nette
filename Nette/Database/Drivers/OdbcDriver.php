@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoOdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
 	/** @var Nette\Database\Connection */
 	private $connection;

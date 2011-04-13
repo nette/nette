@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Responses;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class RenderResponse extends Nette\Object implements IPresenterResponse
+class TextResponse extends Nette\Object implements Nette\Application\IResponse
 {
 	/** @var mixed */
 	private $source;
@@ -51,9 +51,9 @@ class RenderResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		if ($this->source instanceof Nette\Templates\ITemplate) {
+		if ($this->source instanceof Nette\Templating\ITemplate) {
 			$this->source->render();
 
 		} else {

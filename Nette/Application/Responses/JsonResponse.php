@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Responses;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class JsonResponse extends Nette\Object implements IPresenterResponse
+class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 {
 	/** @var array|stdClass */
 	private $payload;
@@ -70,11 +70,11 @@ class JsonResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$httpResponse->setContentType($this->contentType);
 		$httpResponse->setExpiration(FALSE);
-		echo Nette\Json::encode($this->payload);
+		echo Nette\Utils\Json::encode($this->payload);
 	}
 
 }

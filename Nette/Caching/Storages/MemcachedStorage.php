@@ -9,9 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Caching;
+namespace Nette\Caching\Storages;
 
-use Nette;
+use Nette,
+	Nette\Caching\Cache;
 
 
 
@@ -20,7 +21,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MemcachedStorage extends Nette\Object implements ICacheStorage
+class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/** @internal cache structure */
 	const META_CALLBACKS = 'callbacks',
@@ -33,7 +34,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	/** @var string */
 	private $prefix;
 
-	/** @var ICacheJournal */
+	/** @var IJournal */
 	private $journal;
 
 
@@ -49,19 +50,19 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 
 
-	public function __construct($host = 'localhost', $port = 11211, $prefix = '', ICacheJournal $journal = NULL)
+	public function __construct($host = 'localhost', $port = 11211, $prefix = '', IJournal $journal = NULL)
 	{
 		if (!self::isAvailable()) {
-			throw new \NotSupportedException("PHP extension 'memcache' is not loaded.");
+			throw new Nette\NotSupportedException("PHP extension 'memcache' is not loaded.");
 		}
 
 		$this->prefix = $prefix;
 		$this->journal = $journal;
 		$this->memcache = new \Memcache;
-		Nette\Debug::tryError();
+		Nette\Diagnostics\Debugger::tryError();
 		$this->memcache->connect($host, $port);
-		if (Nette\Debug::catchError($e)) {
-			throw new \InvalidStateException('Memcache::connect(): ' . $e->getMessage(), 0, $e);
+		if (Nette\Diagnostics\Debugger::catchError($e)) {
+			throw new Nette\InvalidStateException('Memcache::connect(): ' . $e->getMessage(), 0, $e);
 		}
 	}
 
@@ -110,7 +111,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 	public function write($key, $data, array $dp)
 	{
 		if (isset($dp[Cache::ITEMS])) {
-			throw new \NotSupportedException('Dependent items are not supported by MemcachedStorage.');
+			throw new Nette\NotSupportedException('Dependent items are not supported by MemcachedStorage.');
 		}
 
 		$key = $this->prefix . $key;
@@ -132,7 +133,7 @@ class MemcachedStorage extends Nette\Object implements ICacheStorage
 
 		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->journal) {
-				throw new \InvalidStateException('CacheJournal has not been provided.');
+				throw new Nette\InvalidStateException('CacheJournal has not been provided.');
 			}
 			$this->journal->write($key, $dp);
 		}

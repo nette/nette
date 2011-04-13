@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-interface IFormControl
+interface IControl
 {
 
 	/**

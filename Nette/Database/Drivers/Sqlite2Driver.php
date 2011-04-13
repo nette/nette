@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoSqlite2Driver extends PdoSqliteDriver
+class Sqlite2Driver extends SqliteDriver
 {
 
 	/**
@@ -28,7 +28,7 @@ class PdoSqlite2Driver extends PdoSqliteDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new \NotSupportedException;
+		throw new Nette\NotSupportedException;
 	}
 
 

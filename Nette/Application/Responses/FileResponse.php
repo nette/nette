@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Responses;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class DownloadResponse extends Nette\Object implements IPresenterResponse
+class FileResponse extends Nette\Object implements Nette\Application\IResponse
 {
 	/** @var string */
 	private $file;
@@ -43,7 +43,7 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 	public function __construct($file, $name = NULL, $contentType = NULL)
 	{
 		if (!is_file($file)) {
-			throw new BadRequestException("File '$file' doesn't exist.");
+			throw new Nette\Application\BadRequestException("File '$file' doesn't exist.");
 		}
 
 		$this->file = $file;
@@ -90,7 +90,7 @@ class DownloadResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$httpResponse->setContentType($this->contentType);
 		$httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');

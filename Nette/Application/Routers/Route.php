@@ -9,20 +9,21 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Routers;
 
 use Nette,
-	Nette\String;
+	Nette\Application,
+	Nette\StringUtils;
 
 
 
 /**
  * The bidirectional route is responsible for mapping
- * HTTP request to a PresenterRequest object for dispatch and vice-versa.
+ * HTTP request to a Request object for dispatch and vice-versa.
  *
  * @author     David Grudl
  */
-class Route extends Nette\Object implements IRouter
+class Route extends Nette\Object implements Application\IRouter
 {
 	const PRESENTER_KEY = 'presenter';
 	const MODULE_KEY = 'module';
@@ -119,7 +120,7 @@ class Route extends Nette\Object implements IRouter
 			}
 			$metadata = array(
 				self::PRESENTER_KEY => substr($metadata, 0, $a),
-				'action' => $a === strlen($metadata) - 1 ? Presenter::DEFAULT_ACTION : substr($metadata, $a + 1),
+				'action' => $a === strlen($metadata) - 1 ? Application\UI\Presenter::DEFAULT_ACTION : substr($metadata, $a + 1),
 			);
 		}
 
@@ -130,11 +131,11 @@ class Route extends Nette\Object implements IRouter
 
 
 	/**
-	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
-	 * @return PresenterRequest|NULL
+	 * Maps HTTP request to a Request object.
+	 * @param  Nette\Http\IRequest
+	 * @return Nette\Application\Request|NULL
 	 */
-	public function match(Nette\Web\IHttpRequest $httpRequest)
+	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
 
@@ -159,7 +160,7 @@ class Route extends Nette\Object implements IRouter
 			$path = rtrim($path, '/') . '/';
 		}
 
-		if (!$matches = String::match($path, $this->re)) {
+		if (!$matches = StringUtils::match($path, $this->re)) {
 			// stop, not matched
 			return NULL;
 		}
@@ -213,13 +214,13 @@ class Route extends Nette\Object implements IRouter
 		}
 
 
-		// 5) BUILD PresenterRequest
+		// 5) BUILD Request
 		if (!isset($params[self::PRESENTER_KEY])) {
-			throw new \InvalidStateException('Missing presenter in route definition.');
+			throw new Nette\InvalidStateException('Missing presenter in route definition.');
 		}
 		if (isset($this->metadata[self::MODULE_KEY])) {
 			if (!isset($params[self::MODULE_KEY])) {
-				throw new \InvalidStateException('Missing module in route definition.');
+				throw new Nette\InvalidStateException('Missing module in route definition.');
 			}
 			$presenter = $params[self::MODULE_KEY] . ':' . $params[self::PRESENTER_KEY];
 			unset($params[self::MODULE_KEY], $params[self::PRESENTER_KEY]);
@@ -229,25 +230,25 @@ class Route extends Nette\Object implements IRouter
 			unset($params[self::PRESENTER_KEY]);
 		}
 
-		return new PresenterRequest(
+		return new Application\Request(
 			$presenter,
 			$httpRequest->getMethod(),
 			$params,
 			$httpRequest->getPost(),
 			$httpRequest->getFiles(),
-			array(PresenterRequest::SECURED => $httpRequest->isSecured())
+			array(Application\Request::SECURED => $httpRequest->isSecured())
 		);
 	}
 
 
 
 	/**
-	 * Constructs absolute URL from PresenterRequest object.
-	 * @param  PresenterRequest
-	 * @param  Nette\Web\Uri
+	 * Constructs absolute URL from Request object.
+	 * @param  Nette\Application\Request
+	 * @param  Nette\Http\Url
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUri)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
@@ -405,7 +406,7 @@ class Route extends Nette\Object implements IRouter
 
 		// PARSE MASK
 		// <parameter-name[=default] [pattern] [#class]> or [ or ] or ?...
-		$parts = String::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/');
+		$parts = StringUtils::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/');
 
 		$this->xlat = array();
 		$i = count($parts) - 1;
@@ -413,14 +414,14 @@ class Route extends Nette\Object implements IRouter
 		// PARSE QUERY PART OF MASK
 		if (isset($parts[$i - 1]) && substr(ltrim($parts[$i - 1]), 0, 1) === '?') {
 			// name=<parameter-name [pattern][#class]>
-			$matches = String::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/');
+			$matches = StringUtils::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/');
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is not used
 
 				if ($class !== '') {
 					if (!isset(self::$styles[$class])) {
-						throw new \InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+						throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 					}
 					$meta = self::$styles[$class];
 
@@ -493,7 +494,7 @@ class Route extends Nette\Object implements IRouter
 			// pattern, condition & metadata
 			if ($class !== '') {
 				if (!isset(self::$styles[$class])) {
-					throw new \InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
+					throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 				}
 				$meta = self::$styles[$class];
 

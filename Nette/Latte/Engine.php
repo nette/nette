@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Latte;
 
 use Nette,
-	Nette\String;
+	Nette\StringUtils;
 
 
 
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class LatteFilter extends Nette\Object
+class Engine extends Nette\Object
 {
 	/** regular expression for single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
@@ -29,7 +29,7 @@ class LatteFilter extends Nette\Object
 	/** @internal special HTML tag or attribute prefix */
 	const HTML_PREFIX = 'n:';
 
-	/** @var ILatteHandler */
+	/** @var Nette\Templates\ILatteHandler */
 	private $handler;
 
 	/** @var string */
@@ -62,8 +62,8 @@ class LatteFilter extends Nette\Object
 
 	/**
 	 * Sets a macro handler.
-	 * @param  ILatteHandler
-	 * @return LatteFilter  provides a fluent interface
+	 * @param  Nette\Templates\ILatteHandler
+	 * @return Engine  provides a fluent interface
 	 */
 	public function setHandler($handler)
 	{
@@ -75,12 +75,12 @@ class LatteFilter extends Nette\Object
 
 	/**
 	 * Returns macro handler.
-	 * @return ILatteHandler
+	 * @return Nette\Templates\ILatteHandler
 	 */
 	public function getHandler()
 	{
 		if ($this->handler === NULL) {
-			$this->handler = new LatteMacros;
+			$this->handler = new DefaultMacros;
 		}
 		return $this->handler;
 	}
@@ -94,8 +94,8 @@ class LatteFilter extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		if (!String::checkEncoding($s)) {
-			throw new LatteException('Template is not valid UTF-8 stream.');
+		if (!StringUtils::checkEncoding($s)) {
+			throw new ParseException('Template is not valid UTF-8 stream.');
 		}
 
 		if (!$this->macroRe) {
@@ -103,7 +103,7 @@ class LatteFilter extends Nette\Object
 		}
 
 		// context-aware escaping
-		$this->context = LatteFilter::CONTEXT_NONE;
+		$this->context = Engine::CONTEXT_NONE;
 		$this->escape = '$template->escape';
 
 		// initialize handlers
@@ -143,7 +143,7 @@ class LatteFilter extends Nette\Object
 			} elseif (!empty($matches['macro'])) { // {macro}
 				$code = $this->handler->macro($matches['macro']);
 				if ($code === FALSE) {
-					throw new LatteException("Unknown macro {{$matches['macro']}}", 0, $this->line);
+					throw new ParseException("Unknown macro {{$matches['macro']}}", 0, $this->line);
 				}
 				$nl = isset($matches['newline']) ? "\n" : '';
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) { // the only macro on line "without" output
@@ -160,7 +160,7 @@ class LatteFilter extends Nette\Object
 
 		foreach ($this->tags as $tag) {
 			if (!$tag->isMacro && !empty($tag->attrs)) {
-				throw new LatteException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX
+				throw new ParseException("Missing end tag </$tag->name> for macro-attribute " . self::HTML_PREFIX
 					. implode(' and ' . self::HTML_PREFIX, array_keys($tag->attrs)) . ".", 0, $this->line);
 			}
 		}
@@ -185,33 +185,33 @@ class LatteFilter extends Nette\Object
 
 		} elseif (!empty($matches['htmlcomment'])) { // <!--
 			$this->context = self::CONTEXT_COMMENT;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtmlComment';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtmlComment';
 
 		} elseif (empty($matches['closing'])) { // <tag
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
+			$tag->isMacro = StringUtils::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 
 		} else { // </tag
 			do {
 				$tag = array_pop($this->tags);
 				if (!$tag) {
-					//throw new LatteException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
+					//throw new ParseException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
-					$tag->isMacro = String::startsWith($tag->name, self::HTML_PREFIX);
+					$tag->isMacro = StringUtils::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
 			$tag->closing = TRUE;
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 		}
 		return $matches;
 	}
@@ -233,7 +233,7 @@ class LatteFilter extends Nette\Object
 			$tag->closing = TRUE;
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 		}
 		return $matches;
 	}
@@ -255,10 +255,10 @@ class LatteFilter extends Nette\Object
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$tag = end($this->tags);
-			$isEmpty = !$tag->closing && (strpos($matches['end'], '/') !== FALSE || isset(Nette\Web\Html::$emptyElements[strtolower($tag->name)]));
+			$isEmpty = !$tag->closing && (strpos($matches['end'], '/') !== FALSE || isset(Nette\Utils\Html::$emptyElements[strtolower($tag->name)]));
 
 			if ($isEmpty) {
-				$matches[0] = (Nette\Web\Html::$xhtml ? ' />' : '>')
+				$matches[0] = (Nette\Utils\Html::$xhtml ? ' />' : '>')
 					. (isset($matches['tagnewline']) ? $matches['tagnewline'] : '');
 			}
 
@@ -266,7 +266,7 @@ class LatteFilter extends Nette\Object
 				if ($tag->isMacro) {
 					$code = $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, $tag->closing);
 					if ($code === FALSE) {
-						throw new LatteException("Unknown tag-macro <$tag->name>", 0, $this->line);
+						throw new ParseException("Unknown tag-macro <$tag->name>", 0, $this->line);
 					}
 					if ($isEmpty) {
 						$code .= $this->handler->tagMacro(substr($tag->name, strlen(self::HTML_PREFIX)), $tag->attrs, TRUE);
@@ -275,7 +275,7 @@ class LatteFilter extends Nette\Object
 					$code = substr($this->output, $tag->pos) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 					$code = $this->handler->attrsMacro($code, $tag->attrs, $tag->closing);
 					if ($code === FALSE) {
-						throw new LatteException("Unknown macro-attribute " . self::HTML_PREFIX
+						throw new ParseException("Unknown macro-attribute " . self::HTML_PREFIX
 							. implode(' or ' . self::HTML_PREFIX, array_keys($tag->attrs)), 0, $this->line);
 					}
 					if ($isEmpty) {
@@ -292,10 +292,10 @@ class LatteFilter extends Nette\Object
 
 			if (!$tag->closing && (strcasecmp($tag->name, 'script') === 0 || strcasecmp($tag->name, 'style') === 0)) {
 				$this->context = self::CONTEXT_CDATA;
-				$this->escape = 'Nette\Templates\TemplateHelpers::escape' . (strcasecmp($tag->name, 'style') ? 'Js' : 'Css');
+				$this->escape = 'Nette\Templating\DefaultHelpers::escape' . (strcasecmp($tag->name, 'style') ? 'Js' : 'Css');
 			} else {
 				$this->context = self::CONTEXT_TEXT;
-				$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+				$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 				if ($tag->closing) array_pop($this->tags);
 			}
 
@@ -304,7 +304,7 @@ class LatteFilter extends Nette\Object
 			$value = isset($matches['value']) ? $matches['value'] : '';
 
 			// special attribute?
-			if ($isSpecial = String::startsWith($name, self::HTML_PREFIX)) {
+			if ($isSpecial = StringUtils::startsWith($name, self::HTML_PREFIX)) {
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$tag = end($this->tags);
@@ -321,8 +321,8 @@ class LatteFilter extends Nette\Object
 				$this->context = self::CONTEXT_ATTRIBUTE;
 				$this->quote = $value;
 				$this->escape = strncasecmp($name, 'on', 2)
-					? ('Nette\Templates\TemplateHelpers::escape' . (strcasecmp($name, 'style') ? 'Html' : 'Css'))
-					: 'Nette\Templates\TemplateHelpers::escapeHtmlJs';
+					? ('Nette\Templating\DefaultHelpers::escape' . (strcasecmp($name, 'style') ? 'Html' : 'Css'))
+					: 'Nette\Templating\DefaultHelpers::escapeHtmlJs';
 			}
 		}
 		return $matches;
@@ -342,7 +342,7 @@ class LatteFilter extends Nette\Object
 
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // (attribute end) '"
 			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 		}
 		return $matches;
 	}
@@ -361,7 +361,7 @@ class LatteFilter extends Nette\Object
 
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // --\s*>
 			$this->context = self::CONTEXT_TEXT;
-			$this->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 		}
 		return $matches;
 	}
@@ -388,7 +388,7 @@ class LatteFilter extends Nette\Object
 	 */
 	private function match($re)
 	{
-		if ($matches = String::match($this->input, $re, PREG_OFFSET_CAPTURE, $this->offset)) {
+		if ($matches = StringUtils::match($this->input, $re, PREG_OFFSET_CAPTURE, $this->offset)) {
 			$this->output .= substr($this->input, $this->offset, $matches[0][1] - $this->offset);
 			$this->offset = $matches[0][1] + strlen($matches[0][0]);
 			foreach ($matches as $k => $v) $matches[$k] = $v[0];
@@ -413,7 +413,7 @@ class LatteFilter extends Nette\Object
 	 * Changes macro delimiters.
 	 * @param  string  left regular expression
 	 * @param  string  right regular expression
-	 * @return LatteFilter  provides a fluent interface
+	 * @return Engine  provides a fluent interface
 	 */
 	public function setDelimiters($left, $right)
 	{
@@ -434,28 +434,28 @@ class LatteFilter extends Nette\Object
 	static function formatModifiers($var, $modifiers)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatModifiers() instead.', E_USER_WARNING);
-		return LatteMacros::formatModifiers($var, $modifiers);
+		return DefaultMacros::formatModifiers($var, $modifiers);
 	}
 
 	/** @deprecated */
 	static function fetchToken(& $s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::fetchToken() instead.', E_USER_WARNING);
-		return LatteMacros::fetchToken($s);
+		return DefaultMacros::fetchToken($s);
 	}
 
 	/** @deprecated */
 	static function formatArray($input, $prefix = '')
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatArray() instead.', E_USER_WARNING);
-		return LatteMacros::formatArray($input, $prefix);
+		return DefaultMacros::formatArray($input, $prefix);
 	}
 
 	/** @deprecated */
 	static function formatString($s)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use LatteMacros::formatString() instead.', E_USER_WARNING);
-		return LatteMacros::formatString($s);
+		return DefaultMacros::formatString($s);
 	}
 
 }

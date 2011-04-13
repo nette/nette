@@ -24,8 +24,8 @@ class Config implements \ArrayAccess, \IteratorAggregate
 {
 	/** @var array */
 	private static $extensions = array(
-		'ini' => 'Nette\Config\ConfigAdapterIni',
-		'neon' => 'Nette\Config\ConfigAdapterNeon',
+		'ini' => 'Nette\Config\IniAdapter',
+		'neon' => 'Nette\Config\NeonAdapter',
 	);
 
 
@@ -42,8 +42,8 @@ class Config implements \ArrayAccess, \IteratorAggregate
 			throw new \InvalidArgumentException("Class '$class' was not found.");
 		}
 
-		if (!Nette\Reflection\ClassReflection::from($class)->implementsInterface('Nette\Config\IConfigAdapter')) {
-			throw new \InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IConfigAdapter implementor.");
+		if (!Nette\Reflection\ClassType::from($class)->implementsInterface('Nette\Config\IAdapter')) {
+			throw new \InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IAdapter implementor.");
 		}
 
 		self::$extensions[strtolower($extension)] = $class;
@@ -67,7 +67,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 		$data = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
 		if ($section) {
 			if (!isset($data[$section]) || !is_array($data[$section])) {
-				throw new \InvalidStateException("There is not section [$section] in '$file'.");
+				throw new Nette\InvalidStateException("There is not section [$section] in '$file'.");
 			}
 			$data = $data[$section];
 		}
@@ -213,7 +213,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator()
 	{
-		return new Nette\GenericRecursiveIterator(new \ArrayIterator($this));
+		return new Nette\Iterators\Recursor(new \ArrayIterator($this));
 	}
 
 

@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database;
+namespace Nette\Database\Diagnostics;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
+class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 {
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;
@@ -42,7 +42,7 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 
 
 
-	public function logQuery(Statement $result, array $params = NULL)
+	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
 	{
 		if ($this->disabled) {
 			return;
@@ -98,7 +98,7 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-debug-database-row-{$h($this->name)}-$i'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="database-sql">' . Connection::highlightSql(Nette\String::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="database-sql">' . Nette\Database\Connection::highlightSql(Nette\StringUtils::truncate($sql, self::$maxLength));
 			if ($explain) {
 				$s .= "<table id='nette-debug-database-row-{$h($this->name)}-$i' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
@@ -116,14 +116,14 @@ class DatabasePanel extends Nette\Object implements Nette\IDebugPanel
 			}
 			if ($source) {
 				list($file, $line) = $source;
-				$s .= (Nette\Debug::$editor ? "<a href='{$h(Nette\DebugHelpers::editorLink($file, $line))}'" : '<span')
+				$s .= (Nette\Diagnostics\Debugger::$editor ? "<a href='{$h(Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
 					. " class='database-source' title='{$h($file)}:$line'>"
-					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Nette\Debug::$editor ? '</a>' : '</span>');
+					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Nette\Diagnostics\Debugger::$editor ? '</a>' : '</span>');
 			}
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= "{$h(Nette\String::truncate($param, self::$maxLength))}<br>";
+				$s .= "{$h(Nette\StringUtils::truncate($param, self::$maxLength))}<br>";
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';

@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-interface IHttpRequest
+interface IRequest
 {
 	/** HTTP request method */
 	const
@@ -32,7 +32,7 @@ interface IHttpRequest
 
 	/**
 	 * Returns URL object.
-	 * @return UriScript
+	 * @return UrlScript
 	 */
 	function getUri();
 
@@ -59,7 +59,7 @@ interface IHttpRequest
 	/**
 	 * Returns uploaded file.
 	 * @param  string key (or more keys)
-	 * @return HttpUploadedFile
+	 * @return FileUpload
 	 */
 	function getFile($key);
 

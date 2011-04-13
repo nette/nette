@@ -53,7 +53,7 @@ require_once __DIR__ . '/Diagnostics/Helpers.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
-Nette\SafeStream::register();
+Nette\Utils\SafeStream::register();
 
 
 
@@ -71,10 +71,10 @@ function callback($callback, $m = NULL)
 
 
 /**
- * Nette\Debug::dump shortcut.
+ * Nette\Diagnostics\Debugger::dump shortcut.
  */
 function dump($var)
 {
-	foreach (func_get_args() as $arg) Nette\Debug::dump($arg);
+	foreach (func_get_args() as $arg) Nette\Diagnostics\Debugger::dump($arg);
 	return $var;
 }

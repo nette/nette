@@ -9,10 +9,11 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette,
-	Nette\String;
+	Nette\Forms\Form,
+	Nette\StringUtils;
 
 
 
@@ -23,7 +24,7 @@ use Nette,
  *
  * @property   string $emptyValue
  */
-abstract class TextBase extends FormControl
+abstract class TextBase extends BaseControl
 {
 	/** @var string */
 	protected $emptyValue = '';
@@ -102,7 +103,7 @@ abstract class TextBase extends FormControl
 	{
 		$control = parent::getControl();
 		foreach ($this->getRules() as $rule) {
-			if ($rule->type === Rule::VALIDATOR && !$rule->isNegative
+			if ($rule->type === Nette\Forms\Rule::VALIDATOR && !$rule->isNegative
 				&& ($rule->operation === Form::LENGTH || $rule->operation === Form::MAX_LENGTH)
 			) {
 				$control->maxlength = is_array($rule->arg) ? $rule->arg[1] : $rule->arg;
@@ -134,7 +135,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMinLength(TextBase $control, $length)
 	{
-		return String::length($control->getValue()) >= $length;
+		return StringUtils::length($control->getValue()) >= $length;
 	}
 
 
@@ -147,7 +148,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateMaxLength(TextBase $control, $length)
 	{
-		return String::length($control->getValue()) <= $length;
+		return StringUtils::length($control->getValue()) <= $length;
 	}
 
 
@@ -163,7 +164,7 @@ abstract class TextBase extends FormControl
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		$len = String::length($control->getValue());
+		$len = StringUtils::length($control->getValue());
 		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
 	}
 
@@ -180,7 +181,7 @@ abstract class TextBase extends FormControl
 		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) String::match($control->getValue(), "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
+		return (bool) StringUtils::match($control->getValue(), "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
 	}
 
 
@@ -193,7 +194,7 @@ abstract class TextBase extends FormControl
 	public static function validateUrl(TextBase $control)
 	{
 		$chars = "a-z0-9\x80-\xFF";
-		return (bool) String::match(
+		return (bool) StringUtils::match(
 			$control->getValue(),
 			"#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i"
 		);
@@ -204,7 +205,7 @@ abstract class TextBase extends FormControl
 	/** @deprecated */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
-		return (bool) String::match($control->getValue(), $regexp);
+		return (bool) StringUtils::match($control->getValue(), $regexp);
 	}
 
 
@@ -217,7 +218,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
 	{
-		return (bool) String::match($control->getValue(), "\x01^($pattern)$\x01u");
+		return (bool) StringUtils::match($control->getValue(), "\x01^($pattern)$\x01u");
 	}
 
 
@@ -229,7 +230,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateInteger(TextBase $control)
 	{
-		return (bool) String::match($control->getValue(), '/^-?[0-9]+$/');
+		return (bool) StringUtils::match($control->getValue(), '/^-?[0-9]+$/');
 	}
 
 
@@ -241,7 +242,7 @@ abstract class TextBase extends FormControl
 	 */
 	public static function validateFloat(TextBase $control)
 	{
-		return (bool) String::match($control->getValue(), '/^-?[0-9]*[.,]?[0-9]+$/');
+		return (bool) StringUtils::match($control->getValue(), '/^-?[0-9]*[.,]?[0-9]+$/');
 	}
 
 

@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Responses;
 
 use Nette;
 
@@ -20,17 +20,17 @@ use Nette;
  *
  * @author     David Grudl
  */
-class ForwardingResponse extends Nette\Object implements IPresenterResponse
+class ForwardResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	/** @var PresenterRequest */
+	/** @var Nette\Application\Request */
 	private $request;
 
 
 
 	/**
-	 * @param  PresenterRequest  new request
+	 * @param  Nette\Application\Request  new request
 	 */
-	public function __construct(PresenterRequest $request)
+	public function __construct(Nette\Application\Request $request)
 	{
 		$this->request = $request;
 	}
@@ -38,7 +38,7 @@ class ForwardingResponse extends Nette\Object implements IPresenterResponse
 
 
 	/**
-	 * @return PresenterRequest
+	 * @return Nette\Application\Request
 	 */
 	final public function getRequest()
 	{
@@ -51,7 +51,7 @@ class ForwardingResponse extends Nette\Object implements IPresenterResponse
 	 * Sends response to output.
 	 * @return void
 	 */
-	public function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse)
+	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 	}
 

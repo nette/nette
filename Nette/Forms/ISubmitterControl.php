@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-interface ISubmitterControl extends IFormControl
+interface ISubmitterControl extends IControl
 {
 
 	/**

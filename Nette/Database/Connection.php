@@ -50,7 +50,7 @@ class Connection extends PDO
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$class = 'Nette\Database\Drivers\Pdo' . $this->getAttribute(PDO::ATTR_DRIVER_NAME) . 'Driver';
+		$class = 'Nette\Database\Drivers\\' . $this->getAttribute(PDO::ATTR_DRIVER_NAME) . 'Driver';
 		if (class_exists($class)) {
 			$this->driver = new $class($this, (array) $options);
 		}
@@ -59,8 +59,8 @@ class Connection extends PDO
 
 		$this->databaseReflection = new Reflection\DatabaseReflection; // TODO
 
-		if (!Nette\Debug::$productionMode) {
-			Nette\Debug::addPanel($panel = new DatabasePanel($dsn));
+		if (!Nette\Diagnostics\Debugger::$productionMode) {
+			Nette\Diagnostics\Debugger::addPanel($panel = new Diagnostics\ConnectionPanel($dsn));
 			$this->onQuery[] = callback($panel, 'logQuery');
 		}
 	}
@@ -191,11 +191,11 @@ class Connection extends PDO
 	/**
 	 * Creates selector for table.
 	 * @param  string
-	 * @return Nette\Database\Selector\TableSelection
+	 * @return Nette\Database\Table\Selection
 	 */
 	public function table($table)
 	{
-		return new Selector\TableSelection($table, $this);
+		return new Table\Selection($table, $this);
 	}
 
 
@@ -215,7 +215,7 @@ class Connection extends PDO
 
 		$handle = @fopen($file, 'r'); // intentionally @
 		if (!$handle) {
-			throw new \FileNotFoundException("Cannot open file '$file'.");
+			throw new Nette\FileNotFoundException("Cannot open file '$file'.");
 		}
 
 		$count = 0;
@@ -281,11 +281,11 @@ class Connection extends PDO
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return Nette\Reflection\ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class BadSignalException extends BadRequestException
+class BadSignalException extends Nette\Application\BadRequestException
 {
 	/** @var int */
 	protected $defaultCode = 403;

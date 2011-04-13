@@ -9,9 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Caching;
+namespace Nette\Caching\Storages;
 
-use Nette;
+use Nette,
+	Nette\Caching\Cache;
 
 
 
@@ -20,7 +21,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class FileStorage extends Nette\Object implements ICacheStorage
+class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 	/**
 	 * Atomic thread safe logic:
@@ -60,16 +61,16 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	/** @var bool */
 	private $useDirs;
 
-	/** @var ICacheJournal */
+	/** @var IJournal */
 	private $journal;
 
 
 
-	public function __construct($dir, ICacheJournal $journal = NULL)
+	public function __construct($dir, IJournal $journal = NULL)
 	{
 		$this->dir = realpath($dir);
 		if ($this->dir === FALSE) {
-			throw new \DirectoryNotFoundException("Directory '$dir' not found.");
+			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
 		}
 
 		if (self::$useDirectories === NULL) {
@@ -77,7 +78,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 			$uniq = uniqid('_', TRUE);
 			umask(0000);
 			if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
-				throw new \InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
+				throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 			}
 
 			// tests subdirectory mode
@@ -206,7 +207,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->journal) {
-				throw new \InvalidStateException('CacheJournal has not been provided.');
+				throw new Nette\InvalidStateException('CacheJournal has not been provided.');
 			}
 			$this->journal->write($cacheFile, $dp);
 		}
@@ -273,7 +274,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 		// cleaning using file iterator
 		if ($all || $collector) {
 			$now = time();
-			foreach (Nette\Finder::find('*')->from($this->dir)->childFirst() as $entry) {
+			foreach (Nette\Utils\Finder::find('*')->from($this->dir)->childFirst() as $entry) {
 				$path = (string) $entry;
 				if ($entry->isDir()) { // collector: remove empty dirs
 					@rmdir($path); // @ - removing dirs is not necessary
@@ -373,7 +374,7 @@ class FileStorage extends Nette\Object implements ICacheStorage
 	protected function getCacheFile($key)
 	{
 		if ($this->useDirs) {
-			return $this->dir . '/_' . str_replace('%00', '/_', urlencode($key)); // %00 = urlencode(Cache::NAMESPACE_SEPARATOR)
+			return $this->dir . '/_' . str_replace('%00', '/_', urlencode($key)); // %00 = urlencode(Nette\Caching\Cache::NAMESPACE_SEPARATOR)
 		} else {
 			return $this->dir . '/_' . urlencode($key);
 		}

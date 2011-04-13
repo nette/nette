@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -20,24 +20,24 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property   UriScript $uri
+ * @property   UrlScript $uri
  * @property-read array $query
  * @property-read array $post
  * @property-read array $files
  * @property-read array $cookies
  * @property-read string $method
  * @property-read array $headers
- * @property-read Uri $referer
+ * @property-read Url $referer
  * @property-read string $remoteAddress
  * @property-read string $remoteHost
  * @property-read bool $secured
  */
-class HttpRequest extends Nette\Object implements IHttpRequest
+class Request extends Nette\Object implements IRequest
 {
 	/** @var string */
 	private $method;
 
-	/** @var UriScript */
+	/** @var UrlScript */
 	private $uri;
 
 	/** @var array */
@@ -63,7 +63,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 
 
 
-	public function __construct(UriScript $uri, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
+	public function __construct(UrlScript $uri, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
 		$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
 	{
 		$this->uri = $uri;
@@ -86,7 +86,7 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 
 	/**
 	 * Returns URL object.
-	 * @return UriScript
+	 * @return UrlScript
 	 */
 	final public function getUri()
 	{
@@ -146,12 +146,12 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 	/**
 	 * Returns uploaded file.
 	 * @param  string key (or more keys)
-	 * @return HttpUploadedFile
+	 * @return FileUpload
 	 */
 	final public function getFile($key)
 	{
 		$args = func_get_args();
-		return Nette\ArrayTools::get($this->files, $args);
+		return Nette\ArrayUtils::get($this->files, $args);
 	}
 
 
@@ -269,11 +269,11 @@ class HttpRequest extends Nette\Object implements IHttpRequest
 
 	/**
 	 * Returns referrer.
-	 * @return Uri|NULL
+	 * @return Url|NULL
 	 */
 	final public function getReferer()
 	{
-		return isset($this->headers['referer']) ? new Uri($this->headers['referer']) : NULL;
+		return isset($this->headers['referer']) ? new Url($this->headers['referer']) : NULL;
 	}
 
 

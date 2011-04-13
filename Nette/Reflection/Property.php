@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class PropertyReflection extends \ReflectionProperty
+class Property extends \ReflectionProperty
 {
 
 	public function __toString()
@@ -36,11 +36,11 @@ class PropertyReflection extends \ReflectionProperty
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public function getDeclaringClass()
 	{
-		return new ClassReflection(parent::getDeclaringClass()->getName());
+		return new ClassType(parent::getDeclaringClass()->getName());
 	}
 
 
@@ -91,11 +91,11 @@ class PropertyReflection extends \ReflectionProperty
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

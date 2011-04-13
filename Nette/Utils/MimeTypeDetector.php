@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\Utils;
 
 use Nette;
 
@@ -41,7 +41,7 @@ final class MimeTypeDetector
 	public static function fromFile($file)
 	{
 		if (!is_file($file)) {
-			throw new \FileNotFoundException("File '$file' not found.");
+			throw new Nette\FileNotFoundException("File '$file' not found.");
 		}
 
 		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error

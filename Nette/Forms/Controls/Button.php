@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Button extends FormControl
+class Button extends BaseControl
 {
 
 	/**
@@ -48,7 +48,7 @@ class Button extends FormControl
 	/**
 	 * Generates control's HTML element.
 	 * @param  string
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl($caption = NULL)
 	{

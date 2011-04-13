@@ -9,9 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database\Selector;
+namespace Nette\Database\Table;
 
-use Nette;
+use Nette,
+	PDO;
 
 
 
@@ -21,7 +22,7 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	public $connection;
@@ -126,7 +127,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Returns row specified by primary key.
 	 * @param  mixed
-	 * @return TableRow or NULL if there is no such row
+	 * @return ActiveRow or NULL if there is no such row
 	 */
 	public function get($key)
 	{
@@ -141,7 +142,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Adds select clause, more calls appends to the end.
 	 * @param  string for example "column, MD5(column) AS column_md5"
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function select($columns)
 	{
@@ -155,7 +156,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Selects by primary key.
 	 * @param  mixed
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function find($key)
 	{
@@ -169,7 +170,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 * @param  string condition possibly containing ?
 	 * @param  mixed
 	 * @param  mixed ...
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function where($condition, $parameters = array())
 	{
@@ -195,12 +196,12 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		} elseif ($parameters === NULL) { // where('column', NULL)
 			$condition .= ' IS NULL';
 
-		} elseif ($parameters instanceof TableSelection) { // where('column', $db->$table())
+		} elseif ($parameters instanceof Selection) { // where('column', $db->$table())
 			$clone = clone $parameters;
 			if (!$clone->select) {
 				$clone->select = array($this->getPrimary($clone->name));
 			}
-			if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+			if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
 				$condition .= " IN ($clone)";
 			} else {
 				$in = array();
@@ -233,7 +234,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Adds order clause, more calls appends to the end.
 	 * @param  string for example 'column1, column2 DESC'
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function order($columns)
 	{
@@ -248,7 +249,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 * Sets limit clause, more calls rewrite old values.
 	 * @param  int
 	 * @param  int
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function limit($limit, $offset = NULL)
 	{
@@ -264,7 +265,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	 * Sets group clause, more calls rewrite old values.
 	 * @param  string
 	 * @param  string
-	 * @return TableSelection provides a fluent interface
+	 * @return Selection provides a fluent interface
 	 */
 	public function group($columns, $having = '')
 	{
@@ -423,10 +424,10 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		}
 
 		$this->rows = array();
-		$result->setFetchMode(\PDO::FETCH_ASSOC);
+		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
 			$row = $result->normalizeRow($row);
-			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = new TableRow($row, $this);
+			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = new ActiveRow($row, $this);
 		}
 		$this->data = $this->rows;
 
@@ -440,7 +441,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	protected function whereString()
 	{
 		$return = '';
-		$driver = $this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
+		$driver = $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME);
 		$where = $this->where;
 		if ($this->limit !== NULL && $driver === 'oci') {
 			$where[] = ($this->offset ? "rownum > $this->offset AND " : '') . 'rownum <= ' . ($this->limit + $this->offset);
@@ -470,7 +471,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 	protected function topString()
 	{
-		if ($this->limit !== NULL && $this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'dblib') {
+		if ($this->limit !== NULL && $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'dblib') {
 			return " TOP ($this->limit)"; //! offset is not supported
 		}
 		return '';
@@ -527,11 +528,11 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Inserts row in a table.
 	 * @param  mixed array($column => $value)|Traversable for single row insert or TableSelection|string for INSERT ... SELECT
-	 * @return TableRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
+	 * @return ActiveRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
 	 */
 	public function insert($data)
 	{
-		if ($data instanceof TableSelection) {
+		if ($data instanceof Selection) {
 			$data = $data->getSql();
 
 		} elseif ($data instanceof \Traversable) {
@@ -548,7 +549,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId())) {
 			$data[$this->primary] = $id;
 		}
-		return new TableRow($data, $this);
+		return new ActiveRow($data, $this);
 	}
 
 
@@ -599,7 +600,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Returns referenced row.
 	 * @param  string
-	 * @return TableRow or NULL if the row does not exist
+	 * @return ActiveRow or NULL if the row does not exist
 	 */
 	public function getReferencedTable($name, & $column = NULL)
 	{
@@ -614,7 +615,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 			}
 			if ($keys) {
 				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
-				$referenced = new TableSelection($table, $this->connection);
+				$referenced = new Selection($table, $this->connection);
 				$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
 			} else {
 				$referenced = array();
@@ -628,12 +629,12 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Returns referencing rows.
 	 * @param  string table name
-	 * @return GroupedTableSelection
+	 * @return GroupedSelection
 	 */
 	public function getReferencingTable($table)
 	{
 		$column = $this->connection->databaseReflection->getReferencingColumn($table, $this->name);
-		$referencing = new GroupedTableSelection($table, $this, $column);
+		$referencing = new GroupedSelection($table, $this, $column);
 		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
 		return $referencing;
 	}
@@ -660,7 +661,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 
 
-	/** @return TableRow */
+	/** @return ActiveRow */
 	public function current()
 	{
 		return $this->data[current($this->keys)];
@@ -699,7 +700,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Mimic row.
 	 * @param  string row ID
-	 * @param  TableRow
+	 * @param  ActiveRow
 	 * @return NULL
 	 */
 	public function offsetSet($key, $value)
@@ -713,7 +714,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 	/**
 	 * Returns specified row.
 	 * @param  string row ID
-	 * @return TableRow or NULL if there is no such row
+	 * @return ActiveRow or NULL if there is no such row
 	 */
 	public function offsetGet($key)
 	{
@@ -751,7 +752,7 @@ class TableSelection extends Nette\Object implements \Iterator, \ArrayAccess, \C
 
 	/**
 	 * Returns next row of result.
-	 * @return TableRow or FALSE if there is no row
+	 * @return ActiveRow or FALSE if there is no row
 	 */
 	public function fetch()
 	{

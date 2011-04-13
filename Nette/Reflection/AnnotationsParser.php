@@ -12,7 +12,7 @@
 namespace Nette\Reflection;
 
 use Nette,
-	Nette\String;
+	Nette\StringUtils;
 
 
 
@@ -84,7 +84,7 @@ final class AnnotationsParser
 		}
 
 		if (self::$useReflection === NULL) { // detects whether is reflection available
-			self::$useReflection = (bool) ClassReflection::from(__CLASS__)->getDocComment();
+			self::$useReflection = (bool) ClassType::from(__CLASS__)->getDocComment();
 		}
 
 		if (self::$useReflection) {
@@ -121,7 +121,7 @@ final class AnnotationsParser
 	{
 		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
-		$matches = String::matchAll(
+		$matches = StringUtils::matchAll(
 			trim($comment, '/*'),
 			'~
 				(?<=\s)@('.self::RE_IDENTIFIER.')[ \t]*      ##  annotation
@@ -140,7 +140,7 @@ final class AnnotationsParser
 				$key = '';
 				$val = TRUE;
 				$value[0] = ',';
-				while ($m = String::match(
+				while ($m = StringUtils::match(
 					$value,
 					'#\s*,\s*(?>(' . self::RE_IDENTIFIER . ')\s*=\s*)?(' . self::RE_STRING . '|[^\'"),\s][^\'"),]*)#A')
 				) {
@@ -204,7 +204,7 @@ final class AnnotationsParser
 
 		$s = file_get_contents($file);
 
-		if (String::match($s, '#//nette'.'loader=(\S*)#')) {
+		if (StringUtils::match($s, '#//nette'.'loader=(\S*)#')) {
 			return; // TODO: allways ignore?
 		}
 

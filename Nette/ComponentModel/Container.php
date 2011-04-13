@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\ComponentModel;
 
 use Nette;
 
@@ -22,7 +22,7 @@ use Nette;
  *
  * @property-read \ArrayIterator $components
  */
-class ComponentContainer extends Component implements IComponentContainer
+class Container extends Component implements IContainer
 {
 	/** @var array of IComponent */
 	private $components = array();
@@ -42,7 +42,7 @@ class ComponentContainer extends Component implements IComponentContainer
 	 * @param  string
 	 * @param  string
 	 * @return void
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 */
 	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
 	{
@@ -61,14 +61,14 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 
 		if (isset($this->components[$name])) {
-			throw new \InvalidStateException("Component with name '$name' already exists.");
+			throw new Nette\InvalidStateException("Component with name '$name' already exists.");
 		}
 
 		// check circular reference
 		$obj = $this;
 		do {
 			if ($obj === $component) {
-				throw new \InvalidStateException("Circular reference detected while adding component '$name'.");
+				throw new Nette\InvalidStateException("Circular reference detected while adding component '$name'.");
 			}
 			$obj = $obj->getParent();
 		} while ($obj !== NULL);
@@ -152,7 +152,7 @@ class ComponentContainer extends Component implements IComponentContainer
 			if (!isset($ext)) {
 				return $this->components[$name];
 
-			} elseif ($this->components[$name] instanceof IComponentContainer) {
+			} elseif ($this->components[$name] instanceof IContainer) {
 				return $this->components[$name]->getComponent($ext, $need);
 
 			} elseif ($need) {
@@ -201,7 +201,7 @@ class ComponentContainer extends Component implements IComponentContainer
 		}
 		if ($filterType) {
 			/*5.2* if ($a = strrpos($filterType, '\\')) $filterType = substr($filterType, $a + 1); // fix namespace*/
-			$iterator = new InstanceFilterIterator($iterator, $filterType);
+			$iterator = new Nette\Iterators\InstanceFilter($iterator, $filterType);
 		}
 		return $iterator;
 	}
@@ -209,10 +209,10 @@ class ComponentContainer extends Component implements IComponentContainer
 
 
 	/**
-	 * Descendant can override this method to disallow insert a child by throwing an \InvalidStateException.
+	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
 	 * @param  IComponent
 	 * @return void
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 */
 	protected function validateChildComponent(IComponent $child)
 	{

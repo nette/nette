@@ -12,9 +12,8 @@
 namespace Nette\Database;
 
 use Nette,
-	Nette\ObjectMixin,
-	Nette\Database\Reflection\DatabaseReflection,
-	PDO;
+	PDO,
+	Nette\ObjectMixin;
 
 
 
@@ -108,7 +107,7 @@ class Statement extends \PDOStatement
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta(count($this->types));
 					if (isset($type['native_type'])) {
-						$this->types[$key] = DatabaseReflection::detectType($type['native_type']);
+						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
 					}
 				}
 			} catch (\PDOException $e) {
@@ -116,15 +115,15 @@ class Statement extends \PDOStatement
 		}
 		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
-			if ($value === NULL || $value === FALSE || $type === DatabaseReflection::FIELD_TEXT) {
+			if ($value === NULL || $value === FALSE || $type === Reflection\DatabaseReflection::FIELD_TEXT) {
 
-			} elseif ($type === DatabaseReflection::FIELD_INTEGER) {
+			} elseif ($type === Reflection\DatabaseReflection::FIELD_INTEGER) {
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
-			} elseif ($type === DatabaseReflection::FIELD_FLOAT) {
+			} elseif ($type === Reflection\DatabaseReflection::FIELD_FLOAT) {
 				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
 
-			} elseif ($type === DatabaseReflection::FIELD_BOOL) {
+			} elseif ($type === Reflection\DatabaseReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 			}
 		}
@@ -181,11 +180,11 @@ class Statement extends \PDOStatement
 
 
 	/**
-	 * @return Nette\Reflection\ClassReflection
+	 * @return Nette\Reflection\ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

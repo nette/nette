@@ -27,7 +27,7 @@ final class Environment
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
 
-	/** @var Configurator */
+	/** @var Nette\DI\Configurator */
 	private static $configurator;
 
 	/** @var string  the mode of current application */
@@ -36,7 +36,7 @@ final class Environment
 	/** @var \ArrayObject */
 	private static $config;
 
-	/** @var IContext */
+	/** @var Nette\DI\IContext */
 	private static $context;
 
 	/** @var array */
@@ -67,10 +67,10 @@ final class Environment
 
 	/**
 	 * Sets "class behind Environment" configurator.
-	 * @param  Configurator
+	 * @param  Nette\DI\Configurator
 	 * @return void
 	 */
-	public static function setConfigurator(Configurator $configurator)
+	public static function setConfigurator(DI\Configurator $configurator)
 	{
 		self::$configurator = $configurator;
 	}
@@ -79,12 +79,12 @@ final class Environment
 
 	/**
 	 * Gets "class behind Environment" configurator.
-	 * @return Configurator
+	 * @return Nette\DI\Configurator
 	 */
 	public static function getConfigurator()
 	{
 		if (self::$configurator === NULL) {
-			self::$configurator = new Configurator;
+			self::$configurator = new DI\Configurator;
 		}
 		return self::$configurator;
 	}
@@ -99,7 +99,7 @@ final class Environment
 	 * Sets the current environment name.
 	 * @param  string
 	 * @return void
-	 * @throws \InvalidStateException
+	 * @throws InvalidStateException
 	 */
 	public static function setName($name)
 	{
@@ -107,7 +107,7 @@ final class Environment
 			self::setVariable('environment', $name, FALSE);
 
 		} else {
-			throw new \InvalidStateException('Environment name has already been set.');
+			throw new InvalidStateException('Environment name has already been set.');
 		}
 	}
 
@@ -207,7 +207,7 @@ final class Environment
 	 * @param  string
 	 * @param  mixed  default value to use if key not found
 	 * @return mixed
-	 * @throws \InvalidStateException
+	 * @throws InvalidStateException
 	 */
 	public static function getVariable($name, $default = NULL)
 	{
@@ -231,7 +231,7 @@ final class Environment
 				return $default;
 
 			} else {
-				throw new \InvalidStateException("Unknown environment variable '$name'.");
+				throw new InvalidStateException("Unknown environment variable '$name'.");
 			}
 		}
 	}
@@ -257,7 +257,7 @@ final class Environment
 	 * Returns expanded variable.
 	 * @param  string
 	 * @return string
-	 * @throws \InvalidStateException
+	 * @throws InvalidStateException
 	 */
 	public static function expand($var)
 	{
@@ -270,7 +270,7 @@ final class Environment
 					if ($var === '') return '%';
 
 					if (isset($livelock[$var])) {
-						throw new \InvalidStateException("Circular reference detected for variables: "
+						throw new InvalidStateException("Circular reference detected for variables: "
 							. implode(', ', array_keys($livelock)) . ".");
 					}
 
@@ -284,7 +284,7 @@ final class Environment
 					}
 
 					if (!is_scalar($val)) {
-						throw new \InvalidStateException("Environment variable '$var' is not scalar.");
+						throw new InvalidStateException("Environment variable '$var' is not scalar.");
 					}
 
 					return $val;
@@ -303,7 +303,7 @@ final class Environment
 
 	/**
 	 * Get initial instance of context.
-	 * @return IContext
+	 * @return Nette\DI\IContext
 	 */
 	public static function getContext()
 	{
@@ -352,14 +352,14 @@ final class Environment
 		if (isset(self::$aliases[$name])) {
 			return self::getContext()->getService(self::$aliases[$name], $args);
 		} else {
-			throw new \MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
+			throw new MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
 	}
 
 
 
 	/**
-	 * @return Nette\Web\HttpRequest
+	 * @return Nette\Http\Request
 	 */
 	public static function getHttpRequest()
 	{
@@ -369,7 +369,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\HttpContext
+	 * @return Nette\Http\Context
 	 */
 	public static function getHttpContext()
 	{
@@ -379,7 +379,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\HttpResponse
+	 * @return Nette\Http\Response
 	 */
 	public static function getHttpResponse()
 	{
@@ -399,7 +399,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Web\User
+	 * @return Nette\Http\User
 	 */
 	public static function getUser()
 	{
@@ -428,7 +428,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Nette\Caching\Cache(
+		return new Caching\Cache(
 			self::getService('Nette\\Caching\\ICacheStorage'),
 			$namespace
 		);
@@ -439,7 +439,7 @@ final class Environment
 	/**
 	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return Nette\Web\Session
+	 * @return Nette\Http\Session
 	 */
 	public static function getSession($namespace = NULL)
 	{

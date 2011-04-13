@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Presenter converts PresenterRequest to IPresenterResponse.
+ * Presenter converts Request to IResponse.
  *
  * @author     David Grudl
  */
@@ -24,9 +24,9 @@ interface IPresenter
 {
 
 	/**
-	 * @param  PresenterRequest
-	 * @return IPresenterResponse
+	 * @param  Request
+	 * @return IResponse
 	 */
-	function run(PresenterRequest $request);
+	function run(Request $request);
 
 }

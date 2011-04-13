@@ -12,8 +12,7 @@
 namespace Nette\Reflection;
 
 use Nette,
-	Nette\ObjectMixin,
-	Nette\Annotations;
+	Nette\ObjectMixin;
 
 
 
@@ -22,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ParameterReflection extends \ReflectionParameter
+class Parameter extends \ReflectionParameter
 {
 	/** @var mixed */
 	private $function;
@@ -36,11 +35,11 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public function getClass()
 	{
-		return ($ref = parent::getClass()) ? new ClassReflection($ref->getName()) : NULL;
+		return ($ref = parent::getClass()) ? new ClassType($ref->getName()) : NULL;
 	}
 
 
@@ -50,29 +49,29 @@ class ParameterReflection extends \ReflectionParameter
 	 */
 	public function getClassName()
 	{
-		return ($tmp = Nette\String::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
+		return ($tmp = Nette\StringUtils::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
 	}
 
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public function getDeclaringClass()
 	{
-		return ($ref = parent::getDeclaringClass()) ? new ClassReflection($ref->getName()) : NULL;
+		return ($ref = parent::getDeclaringClass()) ? new ClassType($ref->getName()) : NULL;
 	}
 
 
 
 	/**
-	 * @return MethodReflection | FunctionReflection
+	 * @return Method | FunctionReflection
 	 */
 	public function getDeclaringFunction()
 	{
 		return is_array($this->function)
-			? new MethodReflection($this->function[0], $this->function[1])
-			: new FunctionReflection($this->function);
+			? new Method($this->function[0], $this->function[1])
+			: new GlobalFunction($this->function);
 	}
 
 
@@ -82,11 +81,11 @@ class ParameterReflection extends \ReflectionParameter
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

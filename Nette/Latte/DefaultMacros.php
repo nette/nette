@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Latte;
 
 use Nette,
-	Nette\String;
+	Nette\StringUtils;
 
 
 
@@ -49,7 +49,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class LatteMacros extends Nette\Object
+class DefaultMacros extends Nette\Object
 {
 	/** @var array */
 	public static $defaultMacros = array(
@@ -105,7 +105,7 @@ class LatteMacros extends Nette\Object
 		'@class' => '<?php if ($_l->tmp = trim(implode(" ", array_unique(%:formatArray%)))) echo \' class="\' . %:escape%($_l->tmp) . \'"\' ?>',
 		'@attr' => '<?php if (($_l->tmp = (string) (%%)) !== \'\') echo \' @@="\' . %:escape%($_l->tmp) . \'"\' ?>',
 
-		'attr' => '<?php echo Nette\Web\Html::el(NULL)->%:macroAttr%attributes() ?>',
+		'attr' => '<?php echo Nette\Utils\Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
 		'status' => '<?php Nette\Environment::getHttpResponse()->setCode(%%) ?>',
 		'var' => '<?php %:macroVar% ?>',
@@ -138,10 +138,10 @@ class LatteMacros extends Nette\Object
 	/** @var array */
 	public $macros;
 
-	/** @var Nette\Tokenizer */
+	/** @var Nette\Utils\Tokenizer */
 	private $tokenizer;
 
-	/** @var LatteFilter */
+	/** @var Engine */
 	private $filter;
 
 	/** @var array */
@@ -176,10 +176,10 @@ class LatteMacros extends Nette\Object
 	{
 		$this->macros = self::$defaultMacros;
 
-		$this->tokenizer = new Nette\Tokenizer(array(
+		$this->tokenizer = new Nette\Utils\Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
-			LatteFilter::RE_STRING,
+			Engine::RE_STRING,
 			'(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?!\w)', // keyword or const
 			'\([a-z]+\)', // type casting
 			self::T_VARIABLE => '\$\w+',
@@ -193,7 +193,7 @@ class LatteMacros extends Nette\Object
 
 	/**
 	 * Initializes parsing.
-	 * @param  LatteFilter
+	 * @param  Engine
 	 * @param  string
 	 * @return void
 	 */
@@ -204,11 +204,11 @@ class LatteMacros extends Nette\Object
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
-		$this->uniq = String::random();
+		$this->uniq = StringUtils::random();
 		$this->cacheCounter = 0;
 
-		$filter->context = LatteFilter::CONTEXT_TEXT;
-		$filter->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
+		$filter->context = Engine::CONTEXT_TEXT;
+		$filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 	}
 
 
@@ -225,7 +225,7 @@ class LatteMacros extends Nette\Object
 			$s .= $this->macro('/block');
 
 		} elseif ($this->blocks) {
-			throw new LatteException("There are unclosed blocks.", 0, $this->filter->line);
+			throw new ParseException("There are unclosed blocks.", 0, $this->filter->line);
 		}
 
 		// extends support
@@ -234,18 +234,18 @@ class LatteMacros extends Nette\Object
 if ($_l->extends) {
 	ob_start();
 } elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
-	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s . '<?php
 if ($_l->extends) {
 	ob_end_clean();
-	Nette\Templates\LatteMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
+	Nette\Latte\DefaultMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
 }
 ';
 		} else {
 			$s = '<?php
 if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
-	return Nette\Templates\LatteMacros::renderSnippets($control, $_l, get_defined_vars());
+	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . $s;
 		}
@@ -256,7 +256,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$code = & $this->namedBlocks[$name];
 				$namere = preg_quote($name, '#');
-				$s = String::replace($s,
+				$s = StringUtils::replace($s,
 					"#{block $namere} \?>(.*)<\?php {/block $namere}#sU",
 					function ($matches) use ($name, & $code, $uniq) {
 						list(, $content) = $matches;
@@ -276,7 +276,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// internal state holder
 		$s = "<?php\n"
-			. '$_l = Nette\Templates\LatteMacros::initRuntime($template, '
+			. '$_l = Nette\Latte\DefaultMacros::initRuntime($template, '
 			. var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . '); unset($_extends);'
 			. "\n?>" . $s;
 	}
@@ -293,9 +293,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macro($macro, $content = '', $modifiers = '')
 	{
 		if (func_num_args() === 1) {  // {macro val|modifiers}
-			list(, $macro, $content, $modifiers) = String::match(
+			list(, $macro, $content, $modifiers) = StringUtils::match(
 				$macro,
-				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.LatteFilter::RE_STRING.'|[^\'"]+)*)?$()#is'
+				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Engine::RE_STRING.'|[^\'"]+)*)?$()#is'
 			);
 			$content = trim($content);
 		}
@@ -318,10 +318,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		if ($closing) {
 			$node = array_pop($this->nodes);
 			if (!$node || "/$node->name" !== $macro
-				|| ($content && !String::startsWith("$node->content ", "$content ")) || $modifiers
+				|| ($content && !StringUtils::startsWith("$node->content ", "$content ")) || $modifiers
 			) {
 				$macro .= $content ? ' ' : '';
-				throw new LatteException("Unexpected macro {{$macro}{$content}{$modifiers}}"
+				throw new ParseException("Unexpected macro {{$macro}{$content}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''),
 					0, $this->filter->line);
 			}
@@ -338,7 +338,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		}
 
 		$This = $this;
-		return String::replace(
+		return StringUtils::replace(
 			$this->macros[$macro],
 			'#%(.*?)%#',
 			function ($m) use ($This, $node) {
@@ -513,7 +513,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			break;
 
 		default:
-			throw new LatteException("Unknown syntax '$var'", 0, $this->filter->line);
+			throw new ParseException("Unknown syntax '$var'", 0, $this->filter->line);
 		}
 	}
 
@@ -528,12 +528,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$params = $this->formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new LatteException("Missing destination in {include}", 0, $this->filter->line);
+			throw new ParseException("Missing destination in {include}", 0, $this->filter->line);
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
-			if (!String::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
-				throw new LatteException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
+			if (!StringUtils::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
+				throw new ParseException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
 			}
 
 			$parent = $destination === 'parent';
@@ -541,7 +541,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new LatteException("Cannot include $destination block outside of any block.", 0, $this->filter->line);
+					throw new ParseException("Cannot include $destination block outside of any block.", 0, $this->filter->line);
 				}
 				$destination = $item[1];
 			}
@@ -549,14 +549,14 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
 				? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
-				: 'Nette\Templates\LatteMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
+				: 'Nette\Latte\DefaultMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . $this->formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
 
 		} else { // include "file"
 			$destination = $this->formatString($destination);
-			$cmd = 'Nette\Templates\LatteMacros::includeTemplate(' . $destination . ', '
+			$cmd = 'Nette\Latte\DefaultMacros::includeTemplate(' . $destination . ', '
 				. $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
 			return $modifiers
 				? 'echo ' . $this->formatModifiers($cmd . '->__toString(TRUE)', $modifiers)
@@ -572,13 +572,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroExtends($content)
 	{
 		if (!$content) {
-			throw new LatteException("Missing destination in {extends}", 0, $this->filter->line);
+			throw new ParseException("Missing destination in {extends}", 0, $this->filter->line);
 		}
 		if (!empty($this->blocks)) {
-			throw new LatteException("{extends} must be placed outside any block.", 0, $this->filter->line);
+			throw new ParseException("{extends} must be placed outside any block.", 0, $this->filter->line);
 		}
 		if ($this->extends !== NULL) {
-			throw new LatteException("Multiple {extends} declarations are not allowed.", 0, $this->filter->line);
+			throw new ParseException("Multiple {extends} declarations are not allowed.", 0, $this->filter->line);
 		}
 		$this->extends = $content !== 'none';
 		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->formatMacroArgs($content)) : '';
@@ -599,11 +599,11 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} else { // #block
 			$name = ltrim($name, '#');
-			if (!String::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new LatteException("Block name must be alphanumeric string, '$name' given.", 0, $this->filter->line);
+			if (!StringUtils::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
+				throw new ParseException("Block name must be alphanumeric string, '$name' given.", 0, $this->filter->line);
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new LatteException("Cannot redeclare block '$name'", 0, $this->filter->line);
+				throw new ParseException("Cannot redeclare block '$name'", 0, $this->filter->line);
 			}
 
 			$top = empty($this->blocks);
@@ -681,7 +681,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$name = $this->fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
-			throw new LatteException("Invalid capture block parameter '$name'", 0, $this->filter->line);
+			throw new ParseException("Invalid capture block parameter '$name'", 0, $this->filter->line);
 		}
 
 		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
@@ -706,7 +706,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroCache($content)
 	{
-		return 'if (Nette\Templates\CachingHelper::create('
+		return 'if (Nette\Caching\OutputHelper::create('
 			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
 			. ', $_l->g->caches' . $this->formatArray($content, ', ') . ')) {';
 	}
@@ -718,7 +718,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroForeach($content)
 	{
-		return '$iterator = $_l->its[] = new Nette\SmartCachingIterator('
+		return '$iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
 			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
 	}
 
@@ -744,7 +744,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroAttr($content)
 	{
-		return String::replace($content . ' ', '#\)\s+#', ')->');
+		return StringUtils::replace($content . ' ', '#\)\s+#', ')->');
 	}
 
 
@@ -755,28 +755,28 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroContentType($content)
 	{
 		if (strpos($content, 'html') !== FALSE) {
-			$this->filter->escape = 'Nette\Templates\TemplateHelpers::escapeHtml';
-			$this->filter->context = LatteFilter::CONTEXT_TEXT;
+			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->filter->context = Engine::CONTEXT_TEXT;
 
 		} elseif (strpos($content, 'xml') !== FALSE) {
-			$this->filter->escape = 'Nette\Templates\TemplateHelpers::escapeXml';
-			$this->filter->context = LatteFilter::CONTEXT_NONE;
+			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
+			$this->filter->context = Engine::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'javascript') !== FALSE) {
-			$this->filter->escape = 'Nette\Templates\TemplateHelpers::escapeJs';
-			$this->filter->context = LatteFilter::CONTEXT_NONE;
+			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
+			$this->filter->context = Engine::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'css') !== FALSE) {
-			$this->filter->escape = 'Nette\Templates\TemplateHelpers::escapeCss';
-			$this->filter->context = LatteFilter::CONTEXT_NONE;
+			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
+			$this->filter->context = Engine::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'plain') !== FALSE) {
 			$this->filter->escape = '';
-			$this->filter->context = LatteFilter::CONTEXT_NONE;
+			$this->filter->context = Engine::CONTEXT_NONE;
 
 		} else {
 			$this->filter->escape = '$template->escape';
-			$this->filter->context = LatteFilter::CONTEXT_NONE;
+			$this->filter->context = Engine::CONTEXT_NONE;
 		}
 
 		// temporary solution
@@ -792,7 +792,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroDump($content)
 	{
-		return 'Nette\Debug::barDump('
+		return 'Nette\Diagnostics\Debugger::barDump('
 			. ($content ? 'array(' . var_export($this->formatMacroArgs($content), TRUE) . " => $content)" : 'get_defined_vars()')
 			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
@@ -816,17 +816,17 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$pair = $this->fetchToken($content); // control[:method]
 		if ($pair === NULL) {
-			throw new LatteException("Missing control name in {control}", 0, $this->filter->line);
+			throw new ParseException("Missing control name in {control}", 0, $this->filter->line);
 		}
 		$pair = explode(':', $pair, 2);
 		$name = $this->formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = String::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
+		$method = StringUtils::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = $this->formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
 			. '$_ctrl = $control->getWidget(' . $name . '); '
-			. 'if ($_ctrl instanceof Nette\Application\IPartiallyRenderable) $_ctrl->validateControl(); '
+			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->validateControl(); '
 			. "\$_ctrl->$method($param)";
 	}
 
@@ -857,7 +857,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroIfCurrent($content)
 	{
-		return ($content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (Nette\Application\InvalidLinkException $e) {}' : '')
+		return ($content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($presenter->getLastCreatedRequestFlag("current")):';
 	}
 
@@ -959,7 +959,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 					$var = "\$template->" . trim($token, "'") . "($var";
 					$inside = TRUE;
 				} else {
-					throw new LatteException("Modifier name must be alphanumeric string, '$token' given.", 0, $this->filter->line);
+					throw new ParseException("Modifier name must be alphanumeric string, '$token' given.", 0, $this->filter->line);
 				}
 			} else {
 				if ($token === ':' || $token === ',') {
@@ -986,7 +986,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function fetchToken(& $s)
 	{
-		if ($matches = String::match($s, '#^((?>'.LatteFilter::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
+		if ($matches = StringUtils::match($s, '#^((?>'.Engine::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}
@@ -1144,7 +1144,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public static function callBlock($context, $name, $params)
 	{
 		if (empty($context->blocks[$name])) {
-			throw new \InvalidStateException("Cannot include undefined block '$name'.");
+			throw new Nette\InvalidStateException("Cannot include undefined block '$name'.");
 		}
 		$block = reset($context->blocks[$name]);
 		$block($context, $params);
@@ -1162,7 +1162,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public static function callBlockParent($context, $name, $params)
 	{
 		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
-			throw new \InvalidStateException("Cannot include undefined parent block '$name'.");
+			throw new Nette\InvalidStateException("Cannot include undefined parent block '$name'.");
 		}
 		$block($context, $params);
 	}
@@ -1173,12 +1173,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 * Includes subtemplate.
 	 * @param  mixed      included file name or template
 	 * @param  array      parameters
-	 * @param  ITemplate  current template
-	 * @return Template
+	 * @param  Nette\Templating\ITemplate  current template
+	 * @return Nette\Templating\Template
 	 */
 	public static function includeTemplate($destination, $params, $template)
 	{
-		if ($destination instanceof ITemplate) {
+		if ($destination instanceof Nette\Templating\ITemplate) {
 			$tpl = $destination;
 
 		} elseif ($destination == NULL) { // intentionally ==
@@ -1186,7 +1186,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} else {
 			$tpl = clone $template;
-			if ($template instanceof IFileTemplate) {
+			if ($template instanceof Nette\Templating\IFileTemplate) {
 				if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
 					$destination = dirname($template->getFile()) . '/' . $destination;
 				}
@@ -1202,7 +1202,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 	/**
 	 * Initializes local & global storage in template.
-	 * @param  ITemplate
+	 * @param  Nette\Templating\ITemplate
 	 * @param  bool
 	 * @param  string
 	 * @return stdClass
@@ -1248,8 +1248,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
 			}
 		}
-		if ($control instanceof Nette\Application\Control) {
-			foreach ($control->getComponents(FALSE, 'Nette\Application\Control') as $child) {
+		if ($control instanceof Nette\Application\UI\Control) {
+			foreach ($control->getComponents(FALSE, 'Nette\Application\UI\Control') as $child) {
 				if ($child->isControlInvalid()) {
 					$child->render();
 				}

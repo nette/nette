@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\Routers;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class MultiRouter extends Nette\ArrayList implements IRouter
+class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 {
 	/** @var array */
 	private $cachedRoutes;
@@ -38,11 +38,11 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 
 
 	/**
-	 * Maps HTTP request to a PresenterRequest object.
-	 * @param  Nette\Web\IHttpRequest
-	 * @return PresenterRequest|NULL
+	 * Maps HTTP request to a Request object.
+	 * @param  Nette\Http\IRequest
+	 * @return Nette\Application\Request|NULL
 	 */
-	public function match(Nette\Web\IHttpRequest $httpRequest)
+	public function match(Nette\Http\IRequest $httpRequest)
 	{
 		foreach ($this as $route) {
 			$appRequest = $route->match($httpRequest);
@@ -57,12 +57,12 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 
 
 	/**
-	 * Constructs absolute URL from PresenterRequest object.
-	 * @param  PresenterRequest
-	 * @param  Nette\Web\Uri
+	 * Constructs absolute URL from Request object.
+	 * @param  Nette\Application\Request
+	 * @param  Nette\Http\Url
 	 * @return string|NULL
 	 */
-	public function constructUrl(PresenterRequest $appRequest, Nette\Web\Uri $refUri)
+	public function constructUrl(Nette\Application\Request $appRequest, Nette\Http\Url $refUri)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();
@@ -117,12 +117,12 @@ class MultiRouter extends Nette\ArrayList implements IRouter
 	/**
 	 * Adds the router.
 	 * @param  mixed
-	 * @param  IRouter
+	 * @param  Nette\Application\IRouter
 	 * @return void
 	 */
 	public function offsetSet($index, $route)
 	{
-		if (!$route instanceof IRouter) {
+		if (!$route instanceof Nette\Application\IRouter) {
 			throw new \InvalidArgumentException("Argument must be IRouter descendant.");
 		}
 		parent::offsetSet($index, $route);

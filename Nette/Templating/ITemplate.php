@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Templating;
 
 use Nette;
 

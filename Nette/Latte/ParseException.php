@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Latte;
 
 use Nette;
 
@@ -20,6 +20,6 @@ use Nette;
  *
  * @author     David Grudl
  */
-class LatteException extends TemplateException
+class ParseException extends Nette\Templating\FilterException
 {
 }

@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette;
 
@@ -47,10 +47,10 @@ class TextInput extends TextBase
 	 */
 	public function sanitize($value)
 	{
-		if ($this->control->maxlength && Nette\String::length($value) > $this->control->maxlength) {
+		if ($this->control->maxlength && Nette\StringUtils::length($value) > $this->control->maxlength) {
 			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');
 		}
-		return Nette\String::trim(strtr($value, "\r\n", '  '));
+		return Nette\StringUtils::trim(strtr($value, "\r\n", '  '));
 	}
 
 
@@ -58,7 +58,7 @@ class TextInput extends TextBase
 	/**
 	 * Changes control's type attribute.
 	 * @param  string
-	 * @return FormControl  provides a fluent interface
+	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setType($type)
 	{
@@ -79,18 +79,18 @@ class TextInput extends TextBase
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{
 		$control = parent::getControl();
 		foreach ($this->getRules() as $rule) {
-			if ($rule->isNegative || $rule->type !== Rule::VALIDATOR) {
+			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
-			} elseif ($rule->operation === Form::RANGE && $control->type !== 'text') {
+			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
 				list($control->min, $control->max) = $rule->arg;
 
-			} elseif ($rule->operation === Form::PATTERN) {
+			} elseif ($rule->operation === Nette\Forms\Form::PATTERN) {
 				$control->pattern = $rule->arg;
 			}
 		}

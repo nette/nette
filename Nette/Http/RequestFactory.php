@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette,
-	Nette\String;
+	Nette\StringUtils;
 
 
 
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class HttpRequestFactory extends Nette\Object
+class RequestFactory extends Nette\Object
 {
 	/** @internal */
 	const NONCHARS = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
@@ -39,7 +39,7 @@ class HttpRequestFactory extends Nette\Object
 
 	/**
 	 * @param  string
-	 * @return HttpRequestFactory  provides a fluent interface
+	 * @return RequestFactory  provides a fluent interface
 	 */
 	public function setEncoding($encoding)
 	{
@@ -51,12 +51,12 @@ class HttpRequestFactory extends Nette\Object
 
 	/**
 	 * Creates current HttpRequest object.
-	 * @return HttpRequest
+	 * @return Request
 	 */
 	public function createHttpRequest()
 	{
 		// DETECTS URI, base path and script path of the request.
-		$uri = new UriScript;
+		$uri = new UrlScript;
 		$uri->scheme = isset($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https' : 'http';
 		$uri->user = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '';
 		$uri->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
@@ -94,14 +94,14 @@ class HttpRequestFactory extends Nette\Object
 			$requestUri = '';
 		}
 
-		$requestUri = String::replace($requestUri, $this->uriFilters['uri']);
+		$requestUri = StringUtils::replace($requestUri, $this->uriFilters['uri']);
 		$tmp = explode('?', $requestUri, 2);
-		$uri->path = String::replace($tmp[0], $this->uriFilters['path']);
+		$uri->path = StringUtils::replace($tmp[0], $this->uriFilters['path']);
 		$uri->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized uri
 		$uri->canonicalize();
-		$uri->path = String::fixEncoding($uri->path);
+		$uri->path = StringUtils::fixEncoding($uri->path);
 
 		// detect script path
 		if (isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'])
@@ -163,10 +163,10 @@ class HttpRequestFactory extends Nette\Object
 						}
 						if ($this->encoding) {
 							if ($utf) {
-								$v = String::fixEncoding($v);
+								$v = StringUtils::fixEncoding($v);
 
 							} else {
-								if (!String::checkEncoding($v)) {
+								if (!StringUtils::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -201,9 +201,9 @@ class HttpRequestFactory extends Nette\Object
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($this->encoding) {
-					$v['name'] = preg_replace(self::NONCHARS, '', String::fixEncoding($v['name']));
+					$v['name'] = preg_replace(self::NONCHARS, '', StringUtils::fixEncoding($v['name']));
 				}
-				$v['@'] = new HttpUploadedFile($v);
+				$v['@'] = new FileUpload($v);
 				continue;
 			}
 
@@ -238,7 +238,7 @@ class HttpRequestFactory extends Nette\Object
 			}
 		}
 
-		return new HttpRequest($uri, $query, $post, $files, $cookies, $headers,
+		return new Request($uri, $query, $post, $files, $cookies, $headers,
 			isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
 			isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL,
 			isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL

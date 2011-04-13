@@ -31,7 +31,7 @@ final class Rule extends Nette\Object
 	/** type */
 	const FILTER = 3;
 
-	/** @var IFormControl */
+	/** @var IControl */
 	public $control;
 
 	/** @var mixed */

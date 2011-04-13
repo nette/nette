@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette,
 	Nette\Environment,
@@ -79,7 +79,7 @@ class User extends Nette\Object implements IUser
 	{
 		$handler = $this->getAuthenticationHandler();
 		if ($handler === NULL) {
-			throw new \InvalidStateException('Authentication handler has not been set.');
+			throw new Nette\InvalidStateException('Authentication handler has not been set.');
 		}
 
 		$this->logout(TRUE);
@@ -375,7 +375,7 @@ class User extends Nette\Object implements IUser
 	{
 		$handler = $this->getAuthorizationHandler();
 		if (!$handler) {
-			throw new \InvalidStateException("Authorization handler has not been set.");
+			throw new Nette\InvalidStateException("Authorization handler has not been set.");
 		}
 
 		foreach ($this->getRoles() as $role) {

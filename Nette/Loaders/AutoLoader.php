@@ -39,7 +39,7 @@ abstract class AutoLoader extends Nette\Object
 	{
 		foreach (func_get_args() as $type) {
 			if (!class_exists($type)) {
-				throw new \InvalidStateException("Unable to load class or interface '$type'.");
+				throw new Nette\InvalidStateException("Unable to load class or interface '$type'.");
 			}
 		}
 	}

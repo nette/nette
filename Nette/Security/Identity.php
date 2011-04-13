@@ -164,7 +164,7 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	 * Removes property.
 	 * @param  string  property name
 	 * @return void
-	 * @throws \MemberAccessException
+	 * @throws Nette\MemberAccessException
 	 */
 	public function __unset($name)
 	{

@@ -9,14 +9,14 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\ComponentModel;
 
 use Nette;
 
 
 
 /**
- * Recursive component iterator. See ComponentContainer::getComponents().
+ * Recursive component iterator. See Container::getComponents().
  *
  * @author     David Grudl
  * @internal
@@ -30,7 +30,7 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	 */
 	public function hasChildren()
 	{
-		return $this->current() instanceof IComponentContainer;
+		return $this->current() instanceof IContainer;
 	}
 
 

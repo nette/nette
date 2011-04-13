@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoMySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
 	/** @var Nette\Database\Connection */
 	private $connection;

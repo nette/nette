@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -69,7 +69,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	{
 		$this->data[$name] = $value;
 		if (is_object($value)) {
-			$this->meta[$name]['V'] = Nette\Reflection\ClassReflection::from($value)->getAnnotation('serializationVersion');
+			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
 		}
 	}
 

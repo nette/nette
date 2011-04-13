@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoOciDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
 	/** @var Nette\Database\Connection */
 	private $connection;
@@ -68,7 +68,7 @@ class PdoOciDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new \NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
 
 

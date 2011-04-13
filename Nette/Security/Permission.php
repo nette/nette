@@ -69,7 +69,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string|array
 	 * @throws \InvalidArgumentException
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addRole($role, $parents = NULL)
@@ -77,7 +77,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkRole($role, FALSE);
 
 		if (isset($this->roles[$role])) {
-			throw new \InvalidStateException("Role '$role' already exists in the list.");
+			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
 
 		$roleParents = array();
@@ -121,7 +121,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Checks whether Role is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkRole($role, $need = TRUE)
@@ -130,7 +130,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			throw new \InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
-			throw new \InvalidStateException("Role '$role' does not exist.");
+			throw new Nette\InvalidStateException("Role '$role' does not exist.");
 		}
 	}
 
@@ -167,7 +167,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  boolean
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function roleInheritsFrom($role, $inherit, $onlyParents = FALSE)
@@ -196,7 +196,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Removes the Role from the list.
 	 *
 	 * @param  string
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeRole($role)
@@ -265,7 +265,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @throws \InvalidArgumentException
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addResource($resource, $parent = NULL)
@@ -273,7 +273,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		$this->checkResource($resource, FALSE);
 
 		if (isset($this->resources[$resource])) {
-			throw new \InvalidStateException("Resource '$resource' already exists in the list.");
+			throw new Nette\InvalidStateException("Resource '$resource' already exists in the list.");
 		}
 
 		if ($parent !== NULL) {
@@ -308,7 +308,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Checks whether Resource is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkResource($resource, $need = TRUE)
@@ -317,7 +317,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			throw new \InvalidArgumentException("Resource must be a non-empty string.");
 
 		} elseif ($need && !isset($this->resources[$resource])) {
-			throw new \InvalidStateException("Resource '$resource' does not exist.");
+			throw new Nette\InvalidStateException("Resource '$resource' does not exist.");
 		}
 	}
 
@@ -334,7 +334,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  boolean
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function resourceInheritsFrom($resource, $inherit, $onlyParent = FALSE)
@@ -370,7 +370,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Removes a Resource and all of its children.
 	 *
 	 * @param  string
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeResource($resource)
@@ -531,7 +531,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callback    assertion
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
@@ -657,7 +657,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|Permission::ALL|IRole  role
 	 * @param  string|Permission::ALL|IResource  resource
 	 * @param  string|Permission::ALL  privilege
-	 * @throws \InvalidStateException
+	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)

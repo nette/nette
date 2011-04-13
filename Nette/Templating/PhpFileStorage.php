@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Templating;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class TemplateCacheStorage extends Nette\Caching\FileStorage
+class PhpFileStorage extends Nette\Caching\Storages\FileStorage
 {
 	/** @var string */
 	public $hint;

@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class ClassReflection extends \ReflectionClass
+class ClassType extends \ReflectionClass
 {
 
 	/** @var array (method => array(type => callback)) */
@@ -31,7 +31,7 @@ class ClassReflection extends \ReflectionClass
 
 	/**
 	 * @param  string|object
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public static function from($class)
 	{
@@ -65,7 +65,7 @@ class ClassReflection extends \ReflectionClass
 	 * Adds a method to class.
 	 * @param  string  method name
 	 * @param  mixed   callback or closure
-	 * @return ClassReflection  provides a fluent interface
+	 * @return ClassType  provides a fluent interface
 	 */
 	public function setExtensionMethod($name, $callback)
 	{
@@ -130,21 +130,21 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return MethodReflection
+	 * @return Method
 	 */
 	public function getConstructor()
 	{
-		return ($ref = parent::getConstructor()) ? MethodReflection::from($this->getName(), $ref->getName()) : NULL;
+		return ($ref = parent::getConstructor()) ? Method::from($this->getName(), $ref->getName()) : NULL;
 	}
 
 
 
 	/**
-	 * @return ExtensionReflection
+	 * @return Extension
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new ExtensionReflection($name) : NULL;
+		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
@@ -161,11 +161,11 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return MethodReflection
+	 * @return Method
 	 */
 	public function getMethod($name)
 	{
-		return new MethodReflection($this->getName(), $name);
+		return new Method($this->getName(), $name);
 	}
 
 
@@ -173,7 +173,7 @@ class ClassReflection extends \ReflectionClass
 	public function getMethods($filter = -1)
 	{
 		foreach ($res = parent::getMethods($filter) as $key => $val) {
-			$res[$key] = new MethodReflection($this->getName(), $val->getName());
+			$res[$key] = new Method($this->getName(), $val->getName());
 		}
 		return $res;
 	}
@@ -181,7 +181,7 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public function getParentClass()
 	{
@@ -193,7 +193,7 @@ class ClassReflection extends \ReflectionClass
 	public function getProperties($filter = -1)
 	{
 		foreach ($res = parent::getProperties($filter) as $key => $val) {
-			$res[$key] = new PropertyReflection($this->getName(), $val->getName());
+			$res[$key] = new Property($this->getName(), $val->getName());
 		}
 		return $res;
 	}
@@ -201,11 +201,11 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return PropertyReflection
+	 * @return Property
 	 */
 	public function getProperty($name)
 	{
-		return new PropertyReflection($this->getName(), $name);
+		return new Property($this->getName(), $name);
 	}
 
 
@@ -256,11 +256,11 @@ class ClassReflection extends \ReflectionClass
 
 
 	/**
-	 * @return ClassReflection
+	 * @return ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassReflection(/*5.2*$this*//**/get_called_class()/**/);
+		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 

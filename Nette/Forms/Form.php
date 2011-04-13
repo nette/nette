@@ -32,13 +32,13 @@ use Nette;
  * @property   string $method
  * @property-read array $groups
  * @property-read array $httpData
- * @property   Nette\ITranslator $translator
+ * @property   Nette\Localization\ITranslator $translator
  * @property-read array $errors
- * @property-read Nette\Web\Html $elementPrototype
+ * @property-read Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer
  * @property-read boold $submitted
  */
-class Form extends FormContainer
+class Form extends Container
 {
 	/** validator */
 	const EQUAL = ':equal',
@@ -47,7 +47,7 @@ class Form extends FormContainer
 		VALID = ':valid';
 
 	// CSRF protection
-	const PROTECTION = 'Nette\Forms\HiddenField::validateEqual';
+	const PROTECTION = 'Nette\Forms\Controls\HiddenField::validateEqual';
 
 	// button
 	const SUBMITTED = ':submitted';
@@ -98,10 +98,10 @@ class Form extends FormContainer
 	/** @var IFormRenderer */
 	private $renderer;
 
-	/** @var Nette\ITranslator */
+	/** @var Nette\Localization\ITranslator */
 	private $translator;
 
-	/** @var array of FormGroup */
+	/** @var array of ControlGroup */
 	private $groups = array();
 
 	/** @var array */
@@ -115,14 +115,14 @@ class Form extends FormContainer
 	 */
 	public function __construct($name = NULL)
 	{
-		$this->element = Nette\Web\Html::el('form');
+		$this->element = Nette\Utils\Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = self::POST;
 		$this->element->id = 'frm-' . $name;
 
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$tracker = new HiddenField($name);
+			$tracker = new Controls\HiddenField($name);
 			$tracker->unmonitor(__CLASS__);
 			$this[self::TRACKER_ID] = $tracker;
 		}
@@ -140,7 +140,7 @@ class Form extends FormContainer
 	protected function attached($obj)
 	{
 		if ($obj instanceof self) {
-			throw new \InvalidStateException('Nested forms are forbidden.');
+			throw new Nette\InvalidStateException('Nested forms are forbidden.');
 		}
 	}
 
@@ -189,7 +189,7 @@ class Form extends FormContainer
 	public function setMethod($method)
 	{
 		if ($this->httpData !== NULL) {
-			throw new \InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
+			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
 		$this->element->method = strtolower($method);
 		return $this;
@@ -221,10 +221,10 @@ class Form extends FormContainer
 		if (isset($session->$key)) {
 			$token = $session->$key;
 		} else {
-			$session->$key = $token = Nette\String::random();
+			$session->$key = $token = Nette\StringUtils::random();
 		}
 		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new HiddenField($token);
+		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
 		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
 	}
 
@@ -234,11 +234,11 @@ class Form extends FormContainer
 	 * Adds fieldset group to the form.
 	 * @param  string  caption
 	 * @param  bool    set this group as current
-	 * @return FormGroup
+	 * @return ControlGroup
 	 */
 	public function addGroup($caption = NULL, $setAsCurrent = TRUE)
 	{
-		$group = new FormGroup;
+		$group = new ControlGroup;
 		$group->setOption('label', $caption);
 		$group->setOption('visual', TRUE);
 
@@ -265,7 +265,7 @@ class Form extends FormContainer
 		if (is_string($name) && isset($this->groups[$name])) {
 			$group = $this->groups[$name];
 
-		} elseif ($name instanceof FormGroup && in_array($name, $this->groups, TRUE)) {
+		} elseif ($name instanceof ControlGroup && in_array($name, $this->groups, TRUE)) {
 			$group = $name;
 			$name = array_search($group, $this->groups, TRUE);
 
@@ -296,7 +296,7 @@ class Form extends FormContainer
 	/**
 	 * Returns the specified group.
 	 * @param  string  name
-	 * @return FormGroup
+	 * @return ControlGroup
 	 */
 	public function getGroup($name)
 	{
@@ -311,10 +311,10 @@ class Form extends FormContainer
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\ITranslator
+	 * @param  Nette\Localization\ITranslator
 	 * @return Form  provides a fluent interface
 	 */
-	public function setTranslator(Nette\ITranslator $translator = NULL)
+	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
 		$this->translator = $translator;
 		return $this;
@@ -324,7 +324,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns translate adapter.
-	 * @return Nette\ITranslator|NULL
+	 * @return Nette\Localization\ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
@@ -384,7 +384,7 @@ class Form extends FormContainer
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
-				throw new \InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
+				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 			}
 			$this->httpData = (array) $this->receiveHttpData();
 		}
@@ -433,7 +433,7 @@ class Form extends FormContainer
 		}
 
 		if ($httpRequest->isMethod('post')) {
-			$data = Nette\ArrayTools::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+			$data = Nette\ArrayUtils::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {
 			$data = $httpRequest->getQuery();
 		}
@@ -523,7 +523,7 @@ class Form extends FormContainer
 
 	/**
 	 * Returns form's HTML element template.
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	public function getElementPrototype()
 	{
@@ -552,7 +552,7 @@ class Form extends FormContainer
 	final public function getRenderer()
 	{
 		if ($this->renderer === NULL) {
-			$this->renderer = new DefaultFormRenderer;
+			$this->renderer = new Rendering\DefaultFormRenderer;
 		}
 		return $this->renderer;
 	}
@@ -586,7 +586,7 @@ class Form extends FormContainer
 			if (func_get_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
-				Nette\Debug::toStringException($e);
+				Nette\Diagnostics\Debugger::toStringException($e);
 			}
 		}
 	}
@@ -598,7 +598,7 @@ class Form extends FormContainer
 
 
 	/**
-	 * @return Nette\Web\IHttpRequest
+	 * @return Nette\Http\IRequest
 	 */
 	protected function getHttpRequest()
 	{
@@ -608,7 +608,7 @@ class Form extends FormContainer
 
 
 	/**
-	 * @return Nette\Web\Session
+	 * @return Nette\Http\Session
 	 */
 	protected function getSession()
 	{

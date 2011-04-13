@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\Utils;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Neon extends Object
+class Neon extends Nette\Object
 {
 	const BLOCK = 1;
 
@@ -267,7 +267,7 @@ class Neon extends Object
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
 				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
-					$value = new DateTime($t);
+					$value = new Nette\DateTime($t);
 				} else { // literal
 					$value = $t;
 				}
@@ -305,7 +305,7 @@ class Neon extends Object
 		if (isset($mapping[$sq[1]])) {
 			return $mapping[$sq[1]];
 		} elseif ($sq[1] === 'u' && strlen($sq) === 6) {
-			return String::chr(hexdec(substr($sq, 2)));
+			return Nette\StringUtils::chr(hexdec(substr($sq, 2)));
 		} elseif ($sq[1] === 'x' && strlen($sq) === 4) {
 			return chr(hexdec(substr($sq, 2)));
 		} else {
@@ -319,7 +319,7 @@ class Neon extends Object
 	{
 		list(, $line, $col) = self::$tokenizer->getOffset($this->n);
 		$token = isset(self::$tokenizer->tokens[$this->n])
-			? str_replace("\n", '<new line>', String::truncate(self::$tokenizer->tokens[$this->n], 40))
+			? str_replace("\n", '<new line>', Nette\StringUtils::truncate(self::$tokenizer->tokens[$this->n], 40))
 			: 'end';
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}

@@ -51,12 +51,12 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	/** @var array */
 	private $toggles = array();
 
-	/** @var IFormControl */
+	/** @var IControl */
 	private $control;
 
 
 
-	public function __construct(IFormControl $control)
+	public function __construct(IControl $control)
 	{
 		$this->control = $control;
 	}
@@ -104,12 +104,12 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Adds a validation condition on specified control a returns new branch.
-	 * @param  IFormControl form control
+	 * @param  IControl form control
 	 * @param  mixed      condition type
 	 * @param  mixed      optional condition arguments
 	 * @return Rules      new branch
 	 */
-	public function addConditionOn(IFormControl $control, $operation, $arg = NULL)
+	public function addConditionOn(IControl $control, $operation, $arg = NULL)
 	{
 		$rule = new Rule;
 		$rule->control = $control;

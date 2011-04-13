@@ -25,9 +25,9 @@ interface IMailer
 
 	/**
 	 * Sends email.
-	 * @param  Mail
+	 * @param  Message
 	 * @return void
 	 */
-	function send(Mail $mail);
+	function send(Message $mail);
 
 }

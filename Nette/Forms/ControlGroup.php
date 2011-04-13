@@ -23,7 +23,7 @@ use Nette;
  * @property-read array $controls
  * @property-read array $options
  */
-class FormGroup extends Nette\Object
+class ControlGroup extends Nette\Object
 {
 	/** @var \SplObjectStorage */
 	protected $controls;
@@ -41,12 +41,12 @@ class FormGroup extends Nette\Object
 
 
 	/**
-	 * @return FormGroup  provides a fluent interface
+	 * @return ControlGroup  provides a fluent interface
 	 */
 	public function add()
 	{
 		foreach (func_get_args() as $num => $item) {
-			if ($item instanceof IFormControl) {
+			if ($item instanceof IControl) {
 				$this->controls->attach($item);
 
 			} elseif ($item instanceof \Traversable || is_array($item)) {
@@ -84,7 +84,7 @@ class FormGroup extends Nette\Object
 	 *
 	 * @param  string key
 	 * @param  mixed  value
-	 * @return FormGroup  provides a fluent interface
+	 * @return ControlGroup  provides a fluent interface
 	 */
 	public function setOption($key, $value)
 	{

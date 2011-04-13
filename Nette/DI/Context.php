@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\DI;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Context extends FreezableObject implements IContext
+class Context extends Nette\FreezableObject implements IContext
 {
 	/** @var array  storage for shared objects */
 	private $registry = array();
@@ -55,7 +55,7 @@ class Context extends FreezableObject implements IContext
 			$this->registry[$lower] = & $service->registry[$lower];
 			$this->factories[$lower] = & $service->factories[$lower];
 
-		} elseif (is_object($service) && !($service instanceof \Closure || $service instanceof Callback)) {
+		} elseif (is_object($service) && !($service instanceof \Closure || $service instanceof Nette\Callback)) {
 			if (!$singleton || $options) {
 				throw new \InvalidArgumentException("Service named '$name' is an instantiated object and must therefore be singleton without options.");
 			}
@@ -130,14 +130,14 @@ class Context extends FreezableObject implements IContext
 					if (method_exists($service, 'setOptions')) {
 						$service->setOptions($options); // TODO: better!
 					} else {
-						throw new \InvalidStateException("Unable to set options, method $factory::setOptions() is missing.");
+						throw new Nette\InvalidStateException("Unable to set options, method $factory::setOptions() is missing.");
 					}
 				}
 
 			} else { // factory callback
 				$factory = callback($factory);
 				if (!$factory->isCallable()) {
-					throw new \InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
+					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
 				$service = $factory/*5.2*->invoke*/($options);
 				if (!is_object($service)) {
@@ -152,7 +152,7 @@ class Context extends FreezableObject implements IContext
 			return $service;
 
 		} else {
-			throw new \InvalidStateException("Service '$name' not found.");
+			throw new Nette\InvalidStateException("Service '$name' not found.");
 		}
 	}
 

@@ -9,10 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette,
-	Nette\Web\HttpUploadedFile;
+	Nette\Http;
 
 
 
@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class FileUpload extends FormControl
+class UploadControl extends BaseControl
 {
 
 	/**
@@ -38,14 +38,14 @@ class FileUpload extends FormControl
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  IComponent
+	 * @param  Nette\Forms\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
 	{
-		if ($form instanceof Form) {
-			if ($form->getMethod() !== Form::POST) {
-				throw new \InvalidStateException('File upload requires method POST.');
+		if ($form instanceof Nette\Forms\Form) {
+			if ($form->getMethod() !== Nette\Forms\Form::POST) {
+				throw new Nette\InvalidStateException('File upload requires method POST.');
 			}
 			$form->getElementPrototype()->enctype = 'multipart/form-data';
 		}
@@ -56,19 +56,19 @@ class FileUpload extends FormControl
 
 	/**
 	 * Sets control's value.
-	 * @param  array|Nette\Web\HttpUploadedFile
-	 * @return FileUpload  provides a fluent interface
+	 * @param  array|Nette\Http\FileUpload
+	 * @return Nette\Http\FileUpload  provides a fluent interface
 	 */
 	public function setValue($value)
 	{
 		if (is_array($value)) {
-			$this->value = new HttpUploadedFile($value);
+			$this->value = new Http\FileUpload($value);
 
-		} elseif ($value instanceof HttpUploadedFile) {
+		} elseif ($value instanceof Http\FileUpload) {
 			$this->value = $value;
 
 		} else {
-			$this->value = new HttpUploadedFile(NULL);
+			$this->value = new Http\FileUpload(NULL);
 		}
 		return $this;
 	}
@@ -81,35 +81,35 @@ class FileUpload extends FormControl
 	 */
 	public function isFilled()
 	{
-		return $this->value instanceof HttpUploadedFile && $this->value->isOK();
+		return $this->value instanceof Http\FileUpload && $this->value->isOK();
 	}
 
 
 
 	/**
 	 * FileSize validator: is file size in limit?
-	 * @param  FileUpload
+	 * @param  UploadControl
 	 * @param  int  file size limit
 	 * @return bool
 	 */
-	public static function validateFileSize(FileUpload $control, $limit)
+	public static function validateFileSize(UploadControl $control, $limit)
 	{
 		$file = $control->getValue();
-		return $file instanceof HttpUploadedFile && $file->getSize() <= $limit;
+		return $file instanceof UploadControl && $file->getSize() <= $limit;
 	}
 
 
 
 	/**
 	 * MimeType validator: has file specified mime type?
-	 * @param  FileUpload
+	 * @param  UploadControl
 	 * @param  array|string  mime type
 	 * @return bool
 	 */
-	public static function validateMimeType(FileUpload $control, $mimeType)
+	public static function validateMimeType(UploadControl $control, $mimeType)
 	{
 		$file = $control->getValue();
-		if ($file instanceof HttpUploadedFile) {
+		if ($file instanceof UploadControl) {
 			$type = strtolower($file->getContentType());
 			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
@@ -126,13 +126,13 @@ class FileUpload extends FormControl
 
 	/**
 	 * Image validator: is file image?
-	 * @param  FileUpload
+	 * @param  UploadControl
 	 * @return bool
 	 */
-	public static function validateImage(FileUpload $control)
+	public static function validateImage(UploadControl $control)
 	{
 		$file = $control->getValue();
-		return $file instanceof HttpUploadedFile && $file->isImage();
+		return $file instanceof UploadControl && $file->isImage();
 	}
 
 }

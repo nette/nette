@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -29,7 +29,7 @@ use Nette;
  * @property-read array $imageSize
  * @property-read bool $ok
  */
-class HttpUploadedFile extends Nette\Object
+class FileUpload extends Nette\Object
 {
 	/** @var string */
 	private $name;
@@ -82,7 +82,7 @@ class HttpUploadedFile extends Nette\Object
 	public function getContentType()
 	{
 		if ($this->isOk() && $this->type === NULL) {
-			$this->type = Nette\MimeTypeDetector::fromFile($this->tmpName);
+			$this->type = Nette\Utils\MimeTypeDetector::fromFile($this->tmpName);
 		}
 		return $this->type;
 	}
@@ -147,7 +147,7 @@ class HttpUploadedFile extends Nette\Object
 	/**
 	 * Move uploaded file to new location.
 	 * @param  string
-	 * @return HttpUploadedFile  provides a fluent interface
+	 * @return FileUpload  provides a fluent interface
 	 */
 	public function move($dest)
 	{
@@ -158,7 +158,7 @@ class HttpUploadedFile extends Nette\Object
 		$func = is_uploaded_file($this->tmpName) ? 'move_uploaded_file' : 'rename';
 		/*5.2*if (substr(PHP_OS, 0, 3) === 'WIN') { @unlink($dest); }*/
 		if (!$func($this->tmpName, $dest)) {
-			throw new \InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
+			throw new Nette\InvalidStateException("Unable to move uploaded file '$this->tmpName' to '$dest'.");
 		}
 		chmod($dest, 0644);
 		$this->tmpName = $dest;

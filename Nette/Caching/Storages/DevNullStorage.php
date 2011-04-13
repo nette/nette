@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Caching;
+namespace Nette\Caching\Storages;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class DummyStorage extends Nette\Object implements ICacheStorage
+class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 {
 
 	/**

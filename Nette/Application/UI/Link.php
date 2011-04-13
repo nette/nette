@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -107,7 +107,7 @@ class Link extends Nette\Object
 			return $this->component->link($this->destination, $this->params);
 
 		} catch (\Exception $e) {
-			Nette\Debug::toStringException($e);
+			Nette\Diagnostics\Debugger::toStringException($e);
 		}
 	}
 

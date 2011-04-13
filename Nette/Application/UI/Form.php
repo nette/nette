@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -22,16 +22,16 @@ use Nette;
  *
  * @property-read Presenter $presenter
  */
-class AppForm extends Nette\Forms\Form implements ISignalReceiver
+class Form extends Nette\Forms\Form implements ISignalReceiver
 {
 
 	/**
 	 * Application form constructor.
 	 */
-	public function __construct(Nette\IComponentContainer $parent = NULL, $name = NULL)
+	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct();
-		$this->monitor('Nette\Application\Presenter');
+		$this->monitor('Nette\Application\UI\Presenter');
 		if ($parent !== NULL) {
 			$parent->addComponent($this, $name);
 		}
@@ -46,7 +46,7 @@ class AppForm extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		return $this->lookup('Nette\Application\Presenter', $need);
+		return $this->lookup('Nette\Application\UI\Presenter', $need);
 	}
 
 
@@ -54,13 +54,13 @@ class AppForm extends Nette\Forms\Form implements ISignalReceiver
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  IComponent
+	 * @param  Nette\Application\IComponent
 	 * @return void
 	 */
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$name = $this->lookupPath('Nette\Application\Presenter');
+			$name = $this->lookupPath('Nette\Application\UI\Presenter');
 
 			if (!isset($this->getElementPrototype()->id)) {
 				$this->getElementPrototype()->id = 'frm-' . $name;
@@ -113,7 +113,7 @@ class AppForm extends Nette\Forms\Form implements ISignalReceiver
 		}
 
 		if ($isPost) {
-			return Nette\ArrayTools::mergeTree($request->getPost(), $request->getFiles());
+			return Nette\ArrayUtils::mergeTree($request->getPost(), $request->getFiles());
 		} else {
 			return $request->getParams();
 		}

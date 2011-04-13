@@ -20,13 +20,13 @@ use Nette;
  *
  * @author     David Grudl
  */
-interface IPresenterResponse
+interface IResponse
 {
 
 	/**
 	 * Sends response to output.
 	 * @return void
 	 */
-	function send(Nette\Web\IHttpRequest $httpRequest, Nette\Web\IHttpResponse $httpResponse);
+	function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse);
 
 }

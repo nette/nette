@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette;
 
@@ -99,7 +99,7 @@ class MultiSelectBox extends SelectBox
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{

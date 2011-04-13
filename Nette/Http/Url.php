@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -51,7 +51,7 @@ use Nette;
  * @property-read string $baseUri
  * @property-read string $relativeUri
  */
-class Uri extends Nette\FreezableObject
+class Url extends Nette\FreezableObject
 {
 	/** @var array */
 	public static $defaultPorts = array(
@@ -90,7 +90,7 @@ class Uri extends Nette\FreezableObject
 
 	/**
 	 * @param  string  URL
-	 * @throws InvalidArgumentException
+	 * @throws Nette\Web\InvalidArgumentException
 	 */
 	public function __construct($uri = NULL)
 	{
@@ -124,7 +124,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the scheme part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setScheme($value)
 	{
@@ -149,7 +149,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the user name part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setUser($value)
 	{
@@ -174,7 +174,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the password part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPassword($value)
 	{
@@ -199,7 +199,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the host part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setHost($value)
 	{
@@ -224,7 +224,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the port part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPort($value)
 	{
@@ -249,7 +249,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the path part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setPath($value)
 	{
@@ -274,7 +274,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the query part of URI.
 	 * @param  string|array
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setQuery($value)
 	{
@@ -313,7 +313,7 @@ class Uri extends Nette\FreezableObject
 	/**
 	 * Sets the fragment part of URI.
 	 * @param  string
-	 * @return Uri  provides a fluent interface
+	 * @return Url  provides a fluent interface
 	 */
 	public function setFragment($value)
 	{

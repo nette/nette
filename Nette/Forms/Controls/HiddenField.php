@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Forms;
+namespace Nette\Forms\Controls;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class HiddenField extends FormControl
+class HiddenField extends BaseControl
 {
 	/** @var string */
 	private $forcedValue;
@@ -63,7 +63,7 @@ class HiddenField extends FormControl
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Web\Html
+	 * @return Nette\Utils\Html
 	 */
 	public function getControl()
 	{

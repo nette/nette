@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Templating;
 
 use Nette;
 
@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class TemplateException extends \InvalidStateException implements Nette\IDebugPanel
+class FilterException extends Nette\InvalidStateException implements Nette\Diagnostics\IPanel
 {
 	/** @var string */
 	public $sourceFile;
@@ -56,10 +56,10 @@ class TemplateException extends \InvalidStateException implements Nette\IDebugPa
 
 	function getPanel()
 	{
-		$link = Nette\DebugHelpers::editorLink($this->sourceFile, $this->sourceLine);
+		$link = Nette\Diagnostics\Helpers::editorLink($this->sourceFile, $this->sourceLine);
 		return '<p><b>File:</b> ' . ($link ? '<a href="' . htmlspecialchars($link) . '">' : '') . htmlspecialchars($this->sourceFile) . ($link ? '</a>' : '')
 			. '&nbsp; <b>Line:</b> ' . ($this->sourceLine ? $this->sourceLine : 'n/a') . '</p>'
-			. ($this->sourceLine ? '<pre>' . Nette\DebugHelpers::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
+			. ($this->sourceLine ? '<pre>' . Nette\Diagnostics\Helpers::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
 	}
 
 

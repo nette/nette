@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class PdoPgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
 	/** @var Nette\Database\Connection */
 	private $connection;
@@ -64,7 +64,7 @@ class PdoPgSqlDriver extends Nette\Object implements Nette\Database\ISupplementa
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new \NotImplementedException;
+		throw new Nette\NotImplementedException;
 	}
 
 

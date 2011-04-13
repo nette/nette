@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Web;
+namespace Nette\Http;
 
 use Nette;
 
@@ -33,7 +33,7 @@ use Nette;
  * @property   string $scriptPath
  * @property-read string $pathInfo
  */
-class UriScript extends Uri
+class UrlScript extends Url
 {
 	/** @var string */
 	private $scriptPath = '/';
@@ -43,7 +43,7 @@ class UriScript extends Uri
 	/**
 	 * Sets the script-path part of URI.
 	 * @param  string
-	 * @return UriScript  provides a fluent interface
+	 * @return UrlScript  provides a fluent interface
 	 */
 	public function setScriptPath($value)
 	{

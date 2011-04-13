@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Application;
+namespace Nette\Application\UI;
 
 use Nette;
 
@@ -20,11 +20,11 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read Nette\Templates\ITemplate $template
+ * @property-read Nette\Templating\ITemplate $template
  */
 abstract class Control extends PresenterComponent implements IPartiallyRenderable
 {
-	/** @var Nette\Templates\ITemplate */
+	/** @var Nette\Templating\ITemplate */
 	private $template;
 
 	/** @var array */
@@ -37,15 +37,15 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 * @return Nette\Templates\ITemplate
+	 * @return Nette\Templating\ITemplate
 	 */
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!$value instanceof Nette\Templates\ITemplate && $value !== NULL) {
+			if (!$value instanceof Nette\Templating\ITemplate && $value !== NULL) {
 				$class = get_class($value);
-				throw new \UnexpectedValueException("Object returned by {$this->reflection->name}::createTemplate() must be instance of Nette\\Templates\\ITemplate, '$class' given.");
+				throw new \UnexpectedValueException("Object returned by {$this->reflection->name}::createTemplate() must be instance of Nette\\Templating\\ITemplate, '$class' given.");
 			}
 			$this->template = $value;
 		}
@@ -55,11 +55,11 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 * @return Nette\Templates\ITemplate
+	 * @return Nette\Templating\ITemplate
 	 */
 	protected function createTemplate()
 	{
-		$template = new Nette\Templates\FileTemplate;
+		$template = new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
 
@@ -80,16 +80,16 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		}
 
 		// default helpers
-		$template->registerHelper('escape', 'Nette\Templates\TemplateHelpers::escapeHtml');
+		$template->registerHelper('escape', 'Nette\Templating\DefaultHelpers::escapeHtml');
 		$template->registerHelper('escapeUrl', 'rawurlencode');
 		$template->registerHelper('stripTags', 'strip_tags');
 		$template->registerHelper('nl2br', 'nl2br');
 		$template->registerHelper('substr', 'iconv_substr');
 		$template->registerHelper('repeat', 'str_repeat');
-		$template->registerHelper('replaceRE', 'Nette\String::replace');
+		$template->registerHelper('replaceRE', 'Nette\StringUtils::replace');
 		$template->registerHelper('implode', 'implode');
 		$template->registerHelper('number', 'number_format');
-		$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 		return $template;
 	}
@@ -98,13 +98,13 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
-	 * @param  Nette\Templates\Template
+	 * @param  Nette\Templating\Template
 	 * @return void
 	 */
 	public function templatePrepareFilters($template)
 	{
 		// default filters
-		$template->registerFilter(new Nette\Templates\LatteFilter);
+		$template->registerFilter(new Nette\Latte\Engine);
 	}
 
 
@@ -112,7 +112,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	/**
 	 * Returns widget component specified by name.
 	 * @param  string
-	 * @return Nette\IComponent
+	 * @return Nette\ComponentModel\IComponent
 	 */
 	public function getWidget($name)
 	{

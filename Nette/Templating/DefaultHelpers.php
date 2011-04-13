@@ -9,12 +9,12 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templates;
+namespace Nette\Templating;
 
 use Nette,
-	Nette\String,
+	Nette\StringUtils,
 	Nette\Forms\Form,
-	Nette\Web\Html;
+	Nette\Utils\Html;
 
 
 
@@ -23,7 +23,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-final class TemplateHelpers
+final class DefaultHelpers
 {
 
 	/** @var string default date format */
@@ -46,11 +46,11 @@ final class TemplateHelpers
 	 */
 	public static function loader($helper)
 	{
-		$callback = callback('Nette\Templates\TemplateHelpers', $helper);
+		$callback = callback('Nette\Templating\DefaultHelpers', $helper);
 		if ($callback->isCallable()) {
 			return $callback;
 		}
-		$callback = callback('Nette\String', $helper);
+		$callback = callback('Nette\StringUtils', $helper);
 		if ($callback->isCallable()) {
 			return $callback;
 		}
@@ -136,7 +136,7 @@ final class TemplateHelpers
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			$s = $s->__toString(TRUE);
 		}
-		return str_replace(']]>', ']]\x3E', Nette\Json::encode($s));
+		return str_replace(']]>', ']]\x3E', Nette\Utils\Json::encode($s));
 	}
 
 
@@ -160,7 +160,7 @@ final class TemplateHelpers
 	 */
 	public static function strip($s)
 	{
-		return String::replace(
+		return StringUtils::replace(
 			$s,
 			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
 			function($m) {
@@ -180,10 +180,10 @@ final class TemplateHelpers
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
 		if ($level >= 1) {
-			$s = String::replace($s, '#<(textarea|pre).*?</\\1#si', function($m) {
+			$s = StringUtils::replace($s, '#<(textarea|pre).*?</\\1#si', function($m) {
 				return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");
 			});
-			$s = String::indent($s, $level, $chars);
+			$s = StringUtils::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
@@ -241,7 +241,7 @@ final class TemplateHelpers
 	 */
 	public static function length($var)
 	{
-		return is_string($var) ? String::length($var) : count($var);
+		return is_string($var) ? StringUtils::length($var) : count($var);
 	}
 
 
@@ -269,7 +269,7 @@ final class TemplateHelpers
 	public static function dataStream($data, $type = NULL)
 	{
 		if ($type === NULL) {
-			$type = Nette\MimeTypeDetector::fromString($data, NULL);
+			$type = Nette\Utils\MimeTypeDetector::fromString($data, NULL);
 		}
 		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
 	}
