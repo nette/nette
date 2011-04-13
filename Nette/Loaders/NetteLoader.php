@@ -43,7 +43,7 @@ class NetteLoader extends AutoLoader
 		'nette\application\responses\fileresponse' => '/Application/Responses/FileResponse.php',
 		'nette\application\responses\forwardresponse' => '/Application/Responses/ForwardResponse.php',
 		'nette\application\responses\jsonresponse' => '/Application/Responses/JsonResponse.php',
-		'nette\application\responses\redirectingresponse' => '/Application/Responses/RedirectResponse.php',
+		'nette\application\responses\redirectresponse' => '/Application/Responses/RedirectResponse.php',
 		'nette\application\responses\textresponse' => '/Application/Responses/TextResponse.php',
 		'nette\application\routers\routelist' => '/Application/Routers/RouteList.php',
 		'nette\application\routers\clirouter' => '/Application/Routers/CliRouter.php',

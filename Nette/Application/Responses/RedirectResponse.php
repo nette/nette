@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class RedirectingResponse extends Nette\Object implements Nette\Application\IResponse
+class RedirectResponse extends Nette\Object implements Nette\Application\IResponse
 {
 	/** @var string */
 	private $uri;

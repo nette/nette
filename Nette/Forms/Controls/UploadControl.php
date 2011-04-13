@@ -95,7 +95,7 @@ class UploadControl extends BaseControl
 	public static function validateFileSize(UploadControl $control, $limit)
 	{
 		$file = $control->getValue();
-		return $file instanceof UploadControl && $file->getSize() <= $limit;
+		return $file instanceof Http\FileUpload && $file->getSize() <= $limit;
 	}
 
 
@@ -109,7 +109,7 @@ class UploadControl extends BaseControl
 	public static function validateMimeType(UploadControl $control, $mimeType)
 	{
 		$file = $control->getValue();
-		if ($file instanceof UploadControl) {
+		if ($file instanceof Http\FileUpload) {
 			$type = strtolower($file->getContentType());
 			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
 			if (in_array($type, $mimeTypes, TRUE)) {
@@ -132,7 +132,7 @@ class UploadControl extends BaseControl
 	public static function validateImage(UploadControl $control)
 	{
 		$file = $control->getValue();
-		return $file instanceof UploadControl && $file->isImage();
+		return $file instanceof Http\FileUpload && $file->isImage();
 	}
 
 }

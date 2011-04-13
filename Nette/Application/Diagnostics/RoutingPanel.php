@@ -12,7 +12,9 @@
 namespace Nette\Application\Diagnostics;
 
 use Nette,
-	Nette\Application\Routers;
+	Nette\Application\Routers,
+	Nette\Application\UI\Presenter, // templates
+	Nette\Diagnostics\Debugger;
 
 
 
