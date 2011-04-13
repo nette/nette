@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\ComponentContainer and '0' name.
+ * Test: Nette\ComponentModel\Container and '0' name.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\ComponentModel
  * @subpackage UnitTests
  */
 
-use Nette\ComponentContainer;
+use Nette\ComponentModel\Container;
 
 
 
@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$container = new ComponentContainer;
-$container->addComponent(new ComponentContainer, 0);
+$container = new Container;
+$container->addComponent(new Container, 0);
 Assert::same( '0', $container->getComponent(0)->getName() );

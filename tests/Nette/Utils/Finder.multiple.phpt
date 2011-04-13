@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Finder multiple sources.
+ * Test: Nette\Utils\Finder multiple sources.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  */
 
-use Nette\Finder;
+use Nette\Utils\Finder;
 
 
 
@@ -43,7 +43,7 @@ try {
 	Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', '', $e );
+	Assert::exception('Nette\InvalidStateException', '', $e );
 }
 
 
@@ -67,5 +67,5 @@ try {
 	Finder::find('*')->in('files/subdir/subdir2')->in('files/images');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', '', $e );
+	Assert::exception('Nette\InvalidStateException', '', $e );
 }

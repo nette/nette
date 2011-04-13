@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Uri query manipulation.
+ * Test: Nette\Http\Url query manipulation.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Uri;
+use Nette\Http\Url;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Uri('http://hostname/path?arg=value');
+$uri = new Url('http://hostname/path?arg=value');
 Assert::same( 'arg=value',  $uri->query );
 
 $uri->appendQuery(NULL);

@@ -21,5 +21,5 @@ try {
 	$acl->removeResource('nonexistent');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

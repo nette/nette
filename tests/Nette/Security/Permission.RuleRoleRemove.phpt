@@ -25,7 +25,7 @@ try {
 	$acl->isAllowed('guest');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Role 'guest' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Role 'guest' does not exist.", $e );
 }
 
 $acl->addRole('guest');

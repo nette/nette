@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileStorage callbacks dependency.
+ * Test: Nette\Caching\Storages\FileStorage callbacks dependency.
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Cache,
+	Nette\Caching\Storages\FileStorage;
 
 
 
@@ -25,7 +26,7 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
+$cache = new Cache(new FileStorage(TEMP_DIR));
 
 
 function dependency($val)

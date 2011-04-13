@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileStorage sliding expiration test.
+ * Test: Nette\Caching\Storages\FileStorage sliding expiration test.
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage,
+	Nette\Diagnostics\Debugger;
 
 
 
@@ -39,7 +40,7 @@ function checkStr($s)
 define('COUNT_FILES', 3);
 
 
-$storage = new Nette\Caching\FileStorage(__DIR__ . '/tmp');
+$storage = new FileStorage(__DIR__ . '/tmp');
 
 
 // clear playground
@@ -49,7 +50,7 @@ for ($i=0; $i<=COUNT_FILES; $i++) {
 
 
 // test loop
-Nette\Debug::timer();
+Debugger::timer();
 
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
@@ -69,7 +70,7 @@ for ($counter=0; $counter<1000; $counter++) {
 	elseif (checkStr($res)) $hits['ok']++;
 	else $hits['error']++;
 }
-$time = Nette\Debug::timer();
+$time = Debugger::timer();
 
 
 Assert::same( array(

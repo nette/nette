@@ -8,8 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\MemcachedStorage;
+use Nette\Caching\Storages\MemcachedStorage,
+	Nette\Caching\Cache;
 
 
 

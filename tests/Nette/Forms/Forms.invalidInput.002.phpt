@@ -8,7 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Forms\Form,
+use Nette\Http,
+	Nette\Forms\Form,
 	Nette\ArrayHash;
 
 
@@ -94,13 +95,13 @@ Assert::equal( ArrayHash::from(array(
 	'country' => NULL,
 	'countrym' => array(),
 	'password' => '',
-	'avatar' => new Nette\Web\HttpUploadedFile(array()),
+	'avatar' => new Http\FileUpload(array()),
 	'userid' => 'invalidutf',
 	'firstperson' => ArrayHash::from(array(
 		'age' => '',
 	)),
 	'secondperson' => ArrayHash::from(array(
 		'age' => '',
-		'avatar' => new Nette\Web\HttpUploadedFile(array()),
+		'avatar' => new Http\FileUpload(array()),
 	)),
 )), $form->getValues() );

@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection;
 
 
 
@@ -46,7 +46,7 @@ class TestClass {
 
 // Class annotations
 
-$rc = new ClassReflection('TestClass');
+$rc = new Reflection\ClassType('TestClass');
 $tmp = $rc->getAnnotations();
 
 Assert::same( "Johno's addendum",  $tmp['title'][0]->value );
@@ -67,7 +67,7 @@ Assert::same( 'John Doe',  $tmp['author'][4] );
 Assert::true( $tmp['renderable'][0] );
 
 Assert::true( $tmp === $rc->getAnnotations(), 'cache test' );
-Assert::true( $tmp !== ClassReflection::from('ReflectionClass')->getAnnotations(), 'cache test' );
+Assert::true( $tmp !== Reflection\ClassType::from('ReflectionClass')->getAnnotations(), 'cache test' );
 
 Assert::true( $rc->hasAnnotation('title'), "has('title')' );
 Assert::same( 'Three (Four)",  $rc->getAnnotation('title')->value );

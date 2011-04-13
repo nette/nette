@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection;
 
 
 
@@ -36,7 +36,7 @@ class TestClass
 
 // Class annotations
 
-$rc = new ClassReflection('TestClass');
+$rc = new Reflection\ClassType('TestClass');
 $tmp = $rc->getAnnotations();
 
 Assert::same( 'John Doe',  $tmp['author'][0] );

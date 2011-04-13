@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @phpini     short_open_tag=on
  */
 
-use Nette\Templates\LatteFilter;
+use Nette\Latte;
 
 
 
@@ -21,7 +21,7 @@ require __DIR__ . '/Template.inc';
 function xml($v) { echo $v; }
 
 $template = new MockTemplate;
-$template->registerFilter(new LatteFilter);
+$template->registerFilter(new Latte\Engine);
 
 Assert::match(<<<EOD
 <?xml version="1.0" ?>

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Templates\Template::optimizePhp()
+ * Test: Nette\Templating\Template::optimizePhp()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Templating
  * @subpackage UnitTests
  */
 
-use Nette\Templates\Template;
+use Nette\Templating\Template;
 
 
 

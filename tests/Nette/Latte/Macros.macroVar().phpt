@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::macroVar() & macroDefault()
+ * Test: Nette\Latte\DefaultMacros::macroVar() & macroDefault()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new LatteMacros;
+$macros = new DefaultMacros;
 
 // {var ... }
 Assert::same( '$var = \'hello\'',  $macros->macroVar('var => hello', '') );
@@ -28,7 +28,7 @@ try {
 	$macros->macroVar('$var => "123', '');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\TokenizerException', 'Unexpected %a% on line 1, column 9.', $e );
+	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.', $e );
 }
 
 

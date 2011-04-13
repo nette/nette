@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\SessionNamespace undefined property.
+ * Test: Nette\Http\SessionNamespace undefined property.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Session;
+use Nette\Http\Session;
 
 
 

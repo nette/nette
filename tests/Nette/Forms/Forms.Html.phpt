@@ -9,7 +9,7 @@
  */
 
 use Nette\Forms\Form,
-	Nette\Web\Html;
+	Nette\Utils\Html;
 
 
 

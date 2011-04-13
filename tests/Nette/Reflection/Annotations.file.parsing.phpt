@@ -8,8 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\AnnotationsParser,
-	Nette\Environment;
+use Nette\Reflection\AnnotationsParser;
 
 
 
@@ -56,7 +55,7 @@ Assert::same( array(
 
 Assert::same( array(), AnnotationsParser::getAll($rc->getProperty('f')), '$f' );
 
-// AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
+// Nette\Reflection\AnnotationsParser::getAll($rc->getProperty('g')), '$g' ); // ignore due PHP bug #50174
 Assert::same( array(
 	'return' => array('a'),
 ), AnnotationsParser::getAll($rc->getMethod('a')), 'a()' );

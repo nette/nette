@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileStorage & Nette\Callback & Closure.
+ * Test: Nette\Caching\Storages\FileStorage & Nette\Callback & Closure.
  *
  * @author     David Grudl
  * @package    Nette\Caching
@@ -10,7 +10,7 @@
  */
 
 use Nette\Caching\Cache,
-	Nette\Environment;
+	Nette\Caching\Storages\FileStorage;
 
 
 
@@ -28,7 +28,7 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
+$cache = new Cache(new FileStorage(TEMP_DIR));
 
 Assert::false( isset($cache[$key]), 'Is cached?' );
 

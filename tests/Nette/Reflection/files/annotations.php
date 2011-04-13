@@ -2,7 +2,6 @@
 
 namespace Test;
 
-use Test;
 
 /**
  * @author john

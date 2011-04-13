@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Application\Route default usage.
+ * Test: Nette\Application\Routers\Route default usage.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\Route;
+use Nette\Application\Routers\Route;
 
 
 

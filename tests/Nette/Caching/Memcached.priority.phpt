@@ -1,21 +1,23 @@
 <?php
 
 /**
- * Test: Nette\Caching\MemcachedStorage priority test.
+ * Test: Nette\Caching\Storages\MemcachedStorage priority test.
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Storages\MemcachedStorage,
+	Nette\Caching\Storages\FileJournal,
+	Nette\Caching\Cache;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-if (!Nette\Caching\MemcachedStorage::isAvailable()) {
+if (!MemcachedStorage::isAvailable()) {
 	TestHelpers::skip('Requires PHP extension Memcache.');
 }
 
@@ -25,7 +27,7 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 
-$storage = new Nette\Caching\MemcachedStorage('localhost', 11211, '', new Nette\Caching\FileJournal(TEMP_DIR));
+$storage = new MemcachedStorage('localhost', 11211, '', new FileJournal(TEMP_DIR));
 $cache = new Cache($storage);
 
 

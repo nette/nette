@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\ConfigAdapterIni
+ * Test: Nette\Config\IniAdapter
  *
  * @author     David Grudl
  * @package    Nette\Config

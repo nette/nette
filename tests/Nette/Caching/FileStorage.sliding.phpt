@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileStorage sliding expiration test.
+ * Test: Nette\Caching\Storages\FileStorage sliding expiration test.
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Cache,
+	Nette\Caching\Storages\FileStorage;
 
 
 
@@ -24,7 +25,7 @@ define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 
-$cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
+$cache = new Cache(new FileStorage(TEMP_DIR));
 
 
 // Writing cache...

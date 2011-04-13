@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Application\Presenter::link()
+ * Test: Nette\Application\UI\Presenter::link()
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Environment,
-	Nette\Application\PresenterRequest,
-	Nette\Application\SimpleRouter;
+use Nette\Http,
+	Nette\Application,
+	Nette\Environment;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-class TestControl extends Nette\Application\Control
+class TestControl extends Application\UI\Control
 {
 	/** @persistent array */
 	public $order;
@@ -72,7 +72,7 @@ class TestControl extends Nette\Application\Control
 
 
 
-class TestPresenter extends Nette\Application\Presenter
+class TestPresenter extends Application\UI\Presenter
 {
 	/** @var TestControl */
 	public $mycontrol;
@@ -161,14 +161,14 @@ class Submodule_OtherPresenter extends TestPresenter
 
 Environment::setVariable('appDir', __DIR__);
 
-$uri = new Nette\Web\UriScript('http://localhost/index.php');
+$uri = new Http\UrlScript('http://localhost/index.php');
 $uri->setScriptPath('/index.php');
-$context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Nette\Web\HttpRequest($uri));
+$context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Http\Request($uri));
 
 $application = Environment::getApplication();
-$application->setRouter(new SimpleRouter());
+$application->setRouter(new Application\Routers\SimpleRouter());
 
-$request = new PresenterRequest('Test', Nette\Web\HttpRequest::GET, array());
+$request = new Application\Request('Test', Http\Request::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter;

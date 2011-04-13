@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\HttpRequest URI.
+ * Test: Nette\Http\Request URI.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\HttpRequestFactory;
+use Nette\Http;
 
 
 
@@ -28,7 +28,7 @@ $_SERVER = array(
 	'SCRIPT_NAME' => '/file.php',
 );
 
-$factory = new HttpRequestFactory;
+$factory = new Http\RequestFactory;
 $factory->uriFilters['path'] = array('#%20#' => '');
 $factory->uriFilters['uri'] = array('#[.,)]$#' => '');
 $request = $factory->createHttpRequest();
@@ -55,7 +55,7 @@ Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param
 Assert::same( '',  $request->getUri()->pathInfo );
 
 
-$factory = new HttpRequestFactory;
+$factory = new Http\RequestFactory;
 $factory->uriFilters['path'] = array();
 $factory->uriFilters['uri'] = array();
 $request = $factory->createHttpRequest();

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\MimeTypeDetector::fromString()
+ * Test: Nette\Utils\MimeTypeDetector::fromString()
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  */
 
-use Nette\MimeTypeDetector;
+use Nette\Utils\MimeTypeDetector;
 
 
 

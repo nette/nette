@@ -25,7 +25,7 @@ try {
 	$acl->isAllowed(NULL, 'area');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'area' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'area' does not exist.", $e );
 }
 
 $acl->addResource('area');

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Mail\Mail - HTML body.
+ * Test: Nette\Mail\Message - HTML body.
  *
  * @author     David Grudl
  * @package    Nette\Application
  * @subpackage UnitTests
  */
 
-use Nette\Mail\Mail;
+use Nette\Mail\Message;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/Mail.inc';
 
 
 
-$mail = new Mail();
+$mail = new Message();
 
 $mail->setFrom('John Doe <doe@example.com>');
 $mail->addTo('Lady Jane <jane@example.com>');

@@ -1,18 +1,17 @@
 <?php
 
 /**
- * Test: Nette\Web\User authorization.
+ * Test: Nette\Http\User authorization.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\User,
-	Nette\Security\IAuthenticator,
-	Nette\Security\AuthenticationException,
+use Nette\Security\IAuthenticator,
 	Nette\Security\Identity,
-	Nette\Security\IAuthorizator;
+	Nette\Security\IAuthorizator,
+	Nette\Http\User;
 
 
 
@@ -31,16 +30,16 @@ class AuthenticationHandler implements IAuthenticator
 	/*
 	 * @param  array
 	 * @return IIdentity
-	 * @throws AuthenticationException
+	 * @throws Nette\Security\AuthenticationException
 	 */
 	function authenticate(array $credentials)
 	{
 		list($username, $password) = $credentials;
 		if ($username !== 'john') {
-			throw new AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
+			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
 		} elseif ($password !== 'xxx') {
-			throw new AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
+			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
 		} else {
 			return new Identity('John Doe', array('admin'));
@@ -98,7 +97,7 @@ try {
 	$user->isAllowed('delete_file');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Service 'Nette\\Security\\IAuthorizator' not found.", $e );
+	Assert::exception('Nette\InvalidStateException', "Service 'Nette\\Security\\IAuthorizator' not found.", $e );
 }
 
 $handler = new AuthorizationHandler;

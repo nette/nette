@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\SessionNamespace remove.
+ * Test: Nette\Http\SessionNamespace remove.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Session;
+use Nette\Http\Session;
 
 
 

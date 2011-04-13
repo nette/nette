@@ -22,12 +22,12 @@ try {
 	$acl->resourceInheritsFrom('nonexistent', 'area');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }
 
 try {
 	$acl->resourceInheritsFrom('area', 'nonexistent');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

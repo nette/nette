@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and first/sep/last test.
+ * Test: Nette\Latte\Engine and first/sep/last test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 
-use Nette\Templates\FileTemplate,
-	Nette\Templates\LatteFilter;
+use Nette\Latte,
+	Nette\Templating\FileTemplate;
 
 
 
@@ -29,7 +29,7 @@ TestHelpers::purge(TEMP_DIR);
 $template = new FileTemplate;
 $template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template->setFile(__DIR__ . '/templates/first-sep-last.latte');
-$template->registerFilter(new LatteFilter);
+$template->registerFilter(new Latte\Engine);
 $template->people = array('John', 'Mary', 'Paul');
 
 Assert::match(file_get_contents(__DIR__ . '/test.019.expect'), $template->__toString(TRUE));

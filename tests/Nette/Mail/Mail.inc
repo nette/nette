@@ -4,20 +4,20 @@
  * Common code for Mail test cases.
  */
 
-use Nette\Mail\Mail;
-use Nette\Mail\IMailer;
+use Nette\Mail\Message,
+	Nette\Mail\IMailer;
 
 
 
 // Setup environment
-Mail::$defaultMailer = 'TestMailer';
+Message::$defaultMailer = 'TestMailer';
 
 
 class TestMailer implements IMailer
 {
 	public static $output;
 
-	function send(Mail $mail)
+	function send(Message $mail)
 	{
 		self::$output = $mail->generateMessage();
 	}

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Application\CliRouter basic usage
+ * Test: Nette\Application\Routers\CliRouter basic usage
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\CliRouter,
-	Nette\Web\HttpRequest;
+use Nette\Http,
+	Nette\Application\Routers\CliRouter;
 
 
 
@@ -29,7 +29,7 @@ $_SERVER['argv'] = array(
 	'/wait',
 );
 
-$httpRequest = new HttpRequest(new Nette\Web\UriScript());
+$httpRequest = new Http\Request(new Http\UrlScript());
 
 $router = new CliRouter(array(
 	'id' => 12,

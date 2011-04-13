@@ -4,15 +4,15 @@
  * Common code for Template test cases.
  */
 
-use Nette\Loaders\LimitedScope,
-	Nette\Templates\Template,
-	Nette\Templates\TemplateCacheStorage;
+use Nette\Templating\PhpFileStorage,
+	Nette\Templating\Template,
+	Nette\Utils\LimitedScope;
 
 
 
 // Setup caching storage
 
-class MockCacheStorage extends TemplateCacheStorage
+class MockCacheStorage extends PhpFileStorage
 {
 
 	public function write($key, $data, array $dp)

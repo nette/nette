@@ -19,4 +19,4 @@ require __DIR__ . '/../bootstrap.php';
 $loader = NetteLoader::getInstance();
 $loader->register();
 
-Assert::true( class_exists('Nette\Debug'), 'Class Nette\Debug loaded?' );
+Assert::true( class_exists('Nette\Diagnostics\Debugger'), 'Class Nette\Diagnostics\Debugger loaded?' );

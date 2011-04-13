@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Finder result test.
+ * Test: Nette\Utils\Finder result test.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  */
 
-use Nette\Finder;
+use Nette\Utils\Finder;
 
 
 
@@ -33,5 +33,5 @@ try {
 	$finder->getIterator();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Call in() or from() to specify directory to search.', $e );
+	Assert::exception('Nette\InvalidStateException', 'Call in() or from() to specify directory to search.', $e );
 }

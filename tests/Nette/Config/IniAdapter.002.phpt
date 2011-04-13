@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\ConfigAdapterIni section.
+ * Test: Nette\Config\IniAdapter section.
  *
  * @author     David Grudl
  * @package    Nette\Config
@@ -17,9 +17,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $config = Config::fromFile('config1.ini', 'development');
-Assert::equal( new Nette\Config\Config(array(
-	'database' => new Nette\Config\Config(array(
-		'params' => new Nette\Config\Config(array(
+Assert::equal( new Config(array(
+	'database' => new Config(array(
+		'params' => new Config(array(
 			'host' => 'dev.example.com',
 			'username' => 'devuser',
 			'password' => 'devsecret',
@@ -30,7 +30,7 @@ Assert::equal( new Nette\Config\Config(array(
 	'timeout' => '10',
 	'display_errors' => '1',
 	'html_errors' => '',
-	'items' => new Nette\Config\Config(array(
+	'items' => new Config(array(
 		'0' => '10',
 		'1' => '20',
 	)),

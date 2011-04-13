@@ -8,8 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Forms\Form,
-	Nette\Web\HttpUploadedFile;
+use Nette\Http,
+	Nette\Forms\Form;
 
 
 
@@ -109,7 +109,7 @@ Assert::equal( array(
    'country' => 'CZ',
    'password' => 'xxx',
    'password2' => 'xxx',
-   'avatar' => new HttpUploadedFile(array(
+   'avatar' => new Http\FileUpload(array(
       'name' => NULL,
       'type' => NULL,
       'size' => NULL,

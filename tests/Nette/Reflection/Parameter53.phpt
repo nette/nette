@@ -9,8 +9,7 @@
  * @phpversion 5.3
  */
 
-use Nette\Reflection\ClassReflection,
-	Nette\Reflection\FunctionReflection;
+use Nette\Reflection;
 
 
 
@@ -18,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$reflect = new FunctionReflection(function ($x, $y) {});
+$reflect = new Reflection\GlobalFunction(function ($x, $y) {});
 $params = $reflect->getParameters();
 Assert::same( 2, count($params) );
 Assert::same( 'Function {closure}()', (string) $params[0]->declaringFunction );

@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-class SecuredAnnotation extends Nette\Reflection\Annotation
+class SecuredAnnotation extends Reflection\Annotation
 {
 	public $role;
 	public $level;
@@ -38,7 +38,7 @@ class TestClass {
 
 // Class annotations
 
-$rc = new ClassReflection('TestClass');
+$rc = new Reflection\ClassType('TestClass');
 Assert::equal( array(
 	'secured' => array(
 		new SecuredAnnotation(array(

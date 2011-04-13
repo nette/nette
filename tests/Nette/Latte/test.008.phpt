@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 
-use Nette\Object,
-	Nette\Templates\LatteFilter;
+use Nette\Latte,
+	Nette\Object;
 
 
 
@@ -47,8 +47,8 @@ class MockWidget extends Object
 
 
 $template = new MockTemplate;
-$template->registerFilter(new LatteFilter);
-$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+$template->registerFilter(new Latte\Engine);
+$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 $template->control = new MockControl;
 $template->form = new MockWidget;

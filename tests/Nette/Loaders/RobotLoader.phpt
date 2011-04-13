@@ -9,7 +9,7 @@
  */
 
 use Nette\Loaders\RobotLoader,
-	Nette\Environment;
+	Nette\Caching\Storages\DevNullStorage;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $loader = new RobotLoader;
-$loader->setCacheStorage(new Nette\Caching\DummyStorage);
+$loader->setCacheStorage(new DevNullStorage);
 $loader->addDirectory(__DIR__ . '/files');
 $loader->addDirectory(__DIR__ . '/files/'); // purposely doubled
 $loader->addDirectory(__DIR__ . '/file/interface.php'); // as file

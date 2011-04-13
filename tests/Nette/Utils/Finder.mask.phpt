@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Finder mask tests.
+ * Test: Nette\Utils\Finder mask tests.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  */
 
-use Nette\Finder;
+use Nette\Utils\Finder;
 
 
 

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::fetchToken()
+ * Test: Nette\Latte\DefaultMacros::fetchToken()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$latte = new LatteMacros;
+$latte = new DefaultMacros;
 
 $s = '';
 Assert::same( NULL,  $latte->fetchToken($s) );

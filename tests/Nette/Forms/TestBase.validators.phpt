@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Forms\TextBase validators.
+ * Test: Nette\Forms\Controls\TextBase validators.
  *
  * @author     David Grudl
  * @package    Nette\Forms
  * @subpackage UnitTests
  */
 
-use Nette\Forms\TextBase,
-	Nette\Forms\TextInput;
+use Nette\Forms\Controls\TextInput,
+	Nette\Forms\Controls\TextBase;
 
 
 

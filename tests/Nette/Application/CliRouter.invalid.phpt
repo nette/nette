@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Application\CliRouter invalid argument
+ * Test: Nette\Application\Routers\CliRouter invalid argument
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\CliRouter,
-	Nette\Web\HttpRequest;
+use Nette\Http,
+	Nette\Application\Routers\CliRouter;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $_SERVER['argv'] = 1;
-$httpRequest = new HttpRequest(new Nette\Web\UriScript());
+$httpRequest = new Http\Request(new Http\UrlScript());
 
 $router = new CliRouter;
 Assert::null( $router->match($httpRequest) );

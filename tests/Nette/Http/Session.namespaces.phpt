@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Web\Session namespaces.
+ * Test: Nette\Http\Session namespaces.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Session;
+use Nette\Http\Session,
+	Nette\Http\SessionNamespace;
 
 
 
@@ -28,7 +29,7 @@ $namespace->hello = 'world';
 Assert::true( $session->hasNamespace('trees'), 'hasNamespace() should have returned TRUE for a namespace with keys set' );
 
 $namespace = $session->getNamespace('default');
-Assert::true( $namespace instanceof Nette\Web\SessionNamespace );
+Assert::true( $namespace instanceof SessionNamespace );
 
 try {
 	$namespace = $session->getNamespace('');

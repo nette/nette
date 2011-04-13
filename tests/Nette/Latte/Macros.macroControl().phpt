@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::macroControl()
+ * Test: Nette\Latte\DefaultMacros::macroControl()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new LatteMacros;
+$macros = new DefaultMacros;
 
 // {control ...}
 Assert::match( '%a% $control->getWidget("form"); %a%->render()',  $macros->macroControl('form', '') );

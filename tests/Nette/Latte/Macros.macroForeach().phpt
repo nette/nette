@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::macroForeach()
+ * Test: Nette\Latte\DefaultMacros::macroForeach()
  *
  * @author     Matej Kravjar
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new LatteMacros;
-$prefix = '$iterator = $_l->its[] = new Nette\SmartCachingIterator(';
+$macros = new DefaultMacros;
+$prefix = '$iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
 
 Assert::same( $prefix . '$array) as $value',  $macros->macroForeach('$array as $value') );
 Assert::same( $prefix . '$array) as $key => $value',  $macros->macroForeach('$array as $key => $value') );

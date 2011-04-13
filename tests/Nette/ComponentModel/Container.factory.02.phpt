@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\ComponentContainer component factory 2.
+ * Test: Nette\ComponentModel\Container component factory 2.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\ComponentModel
  * @subpackage UnitTests
  */
 
-use Nette\ComponentContainer;
+use Nette\ComponentModel\Container;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-class TestClass extends ComponentContainer
+class TestClass extends Container
 {
 
 	public function createComponent($name)

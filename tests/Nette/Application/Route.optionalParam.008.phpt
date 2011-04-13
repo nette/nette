@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with 'required' optional sequences III.
+ * Test: Nette\Application\Routers\Route with 'required' optional sequences III.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\Route;
+use Nette\Application\Routers\Route;
 
 
 

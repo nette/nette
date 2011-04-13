@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with WithAbsolutePath
+ * Test: Nette\Application\Routers\Route with WithAbsolutePath
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\Route;
+use Nette\Application\Routers\Route;
 
 
 

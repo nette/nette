@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Uri ftp://
+ * Test: Nette\Http\Url ftp://
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Uri;
+use Nette\Http\Url;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Uri('ftp://ftp.is.co.za/rfc/rfc3986.txt');
+$uri = new Url('ftp://ftp.is.co.za/rfc/rfc3986.txt');
 
 Assert::same( 'ftp',  $uri->scheme );
 Assert::same( '',  $uri->user );

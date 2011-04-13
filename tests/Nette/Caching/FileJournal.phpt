@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileJournal basic test.
+ * Test: Nette\Caching\Storages\FileJournal basic test.
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache,
-	Nette\Caching\FileJournal;
+use Nette\Caching\Storages\FileJournal,
+	Nette\Caching\Cache;
 
 
 

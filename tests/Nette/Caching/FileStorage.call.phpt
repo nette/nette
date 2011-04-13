@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Caching\FileStorage call().
+ * Test: Nette\Caching\Storages\FileStorage call().
  *
  * @author     David Grudl
  * @package    Nette\Caching
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Cache,
+	Nette\Caching\Storages\FileStorage;
 
 
 
@@ -29,7 +30,7 @@ function mockFunction($x, $y)
 }
 
 
-$cache = new Cache(new Nette\Caching\FileStorage(TEMP_DIR));
+$cache = new Cache(new FileStorage(TEMP_DIR));
 
 $called = FALSE;
 Assert::same( 55, $cache->call('mockFunction', 5, 50) );

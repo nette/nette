@@ -1,17 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 
-use Nette\Environment,
-	Nette\Templates\FileTemplate,
-	Nette\Templates\LatteFilter;
+use Nette\Latte,
+	Nette\Templating\FileTemplate;
 
 
 
@@ -30,8 +29,8 @@ TestHelpers::purge(TEMP_DIR);
 $template = new FileTemplate;
 $template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template->setFile(__DIR__ . '/templates/cache.latte');
-$template->registerFilter(new LatteFilter);
-$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+$template->registerFilter(new Latte\Engine);
+$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 $template->title = 'Hello';
 $template->id = 456;

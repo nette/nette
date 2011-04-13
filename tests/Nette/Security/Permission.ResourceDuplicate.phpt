@@ -22,5 +22,5 @@ try {
 	$acl->addResource('area');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'area' already exists in the list.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'area' already exists in the list.", $e );
 }

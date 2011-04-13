@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection;
 
 
 
@@ -37,7 +37,7 @@ class TestClass3 {
 }
 
 
-$rc = new ClassReflection('TestClass1');
+$rc = new Reflection\ClassType('TestClass1');
 Assert::equal( array(
 	'one' => array('value'),
 	'two' => array('value'),
@@ -56,13 +56,13 @@ Assert::equal( array(
 ), $rc->getAnnotations() );
 
 
-$rc = new ClassReflection('TestClass2');
+$rc = new Reflection\ClassType('TestClass2');
 Assert::same( array(
 	'one' => array('value'),
 ), $rc->getAnnotations() );
 
 
-$rc = new ClassReflection('TestClass3');
+$rc = new Reflection\ClassType('TestClass3');
 Assert::same( array(
 	'one' => array(TRUE),
 ), $rc->getAnnotations() );

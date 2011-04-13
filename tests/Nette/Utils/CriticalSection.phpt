@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\CriticalSection.
+ * Test: Nette\Utils\CriticalSection.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  */
 
-use Nette\CriticalSection;
+use Nette\Utils\CriticalSection;
 
 
 
@@ -27,7 +27,7 @@ try {
 	CriticalSection::leave();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Critical section has not been initialized.', $e );
+	Assert::exception('Nette\InvalidStateException', 'Critical section has not been initialized.', $e );
 }
 
 try {
@@ -36,5 +36,5 @@ try {
 	CriticalSection::enter();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Critical section has already been entered.', $e );
+	Assert::exception('Nette\InvalidStateException', 'Critical section has already been entered.', $e );
 }

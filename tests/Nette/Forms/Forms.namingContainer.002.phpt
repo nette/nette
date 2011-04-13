@@ -8,10 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\ComponentContainer,
-	Nette\Forms\Form,
-	Nette\Forms\TextInput,
-	Nette\Forms\FormContainer,
+use Nette\Forms\Form,
 	Nette\ArrayHash;
 
 

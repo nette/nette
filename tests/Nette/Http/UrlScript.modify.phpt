@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\UriScript modify.
+ * Test: Nette\Http\UrlScript modify.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\UriScript;
+use Nette\Http\UrlScript;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new UriScript('http://nette.org:8080/file.php?q=search');
+$uri = new UrlScript('http://nette.org:8080/file.php?q=search');
 $uri->path = '/test/';
 $uri->scriptPath = '/test/index.php';
 

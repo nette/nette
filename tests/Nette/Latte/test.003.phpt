@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 
-use Nette\Templates\FileTemplate,
-	Nette\Templates\LatteFilter;
+use Nette\Latte,
+	Nette\Templating\FileTemplate;
 
 
 
@@ -49,13 +49,13 @@ function types()
 $template = new FileTemplate;
 $template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template->setFile(__DIR__ . '/templates/helpers.latte');
-$template->registerFilter(new LatteFilter);
+$template->registerFilter(new Latte\Engine);
 $template->registerHelper('nl2br', 'nl2br');
 $template->registerHelper('h1', array(new MyHelper, 'invoke'));
 $template->registerHelper('h2', 'strtoupper');
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('types', 'types');
-$template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 $template->hello = 'Hello World';
 $template->date = strtotime('2008-01-02');

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Test: Nette\SafeStream stress test.
+ * Test: Nette\Utils\SafeStream stress test.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\Utils
  * @subpackage UnitTests
  * @skip       Requires more robust NetteTestCase implementation.
  */
 
-use Nette\SafeStream;
+use Nette\Diagnostics\Debugger;
 
 
 
@@ -46,7 +46,7 @@ for ($i=0; $i<=COUNT_FILES; $i++) {
 
 
 // test loop
-Nette\Debug::timer();
+Debugger::timer();
 
 $hits = array('ok' => 0, 'notfound' => 0, 'error' => 0, 'cantwrite' => 0, 'cantdelete' => 0);
 for ($counter=0; $counter<1000; $counter++) {
@@ -66,7 +66,7 @@ for ($counter=0; $counter<1000; $counter++) {
 	elseif (checkStr($res)) $hits['ok']++;
 	else $hits['error']++;
 }
-$time = Nette\Debug::timer();
+$time = Debugger::timer();
 
 
 Assert::same(0, $hits['error']);

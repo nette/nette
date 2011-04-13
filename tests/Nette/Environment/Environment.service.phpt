@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::same( 'Nette\Web\HttpResponse', Environment::getHttpResponse()->reflection->name );
+Assert::same( 'Nette\Http\Response', Environment::getHttpResponse()->reflection->name );
 
 
 Assert::same( 'Nette\Application\Application', Environment::getApplication()->reflection->name );
@@ -27,6 +27,6 @@ Assert::same( 'Nette\Caching\Cache', Environment::getCache('my')->reflection->na
 
 
 /* in PHP 5.3
-Environment::setServiceAlias('Nette\Web\IUser', 'xyz');
-Assert::same('xyz', Environment::getXyz()->reflection->name );
+Nette\Environment::setServiceAlias('Nette\Http\IUser', 'xyz');
+Assert::same('xyz', Nette\Environment::getXyz()->reflection->name );
 */

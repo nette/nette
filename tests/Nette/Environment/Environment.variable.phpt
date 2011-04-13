@@ -23,7 +23,7 @@ try {
 	Environment::getVariable('foo');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Unknown environment variable 'foo'.", $e );
+	Assert::exception('Nette\InvalidStateException', "Unknown environment variable 'foo'.", $e );
 }
 
 
@@ -55,5 +55,5 @@ try {
 
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Circular reference detected for variables: foo, foobar, bar.', $e );
+	Assert::exception('Nette\InvalidStateException', 'Circular reference detected for variables: foo, foobar, bar.', $e );
 }

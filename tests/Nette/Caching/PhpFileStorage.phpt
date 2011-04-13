@@ -8,7 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Caching\Cache;
+use Nette\Caching\Cache,
+	Nette\Templating\PhpFileStorage;
 
 
 
@@ -25,7 +26,7 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$cache = new Cache(new Nette\Templates\TemplateCacheStorage(TEMP_DIR));
+$cache = new Cache(new PhpFileStorage(TEMP_DIR));
 
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

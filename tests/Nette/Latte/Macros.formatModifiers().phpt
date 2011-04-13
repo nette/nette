@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::formatModifiers()
+ * Test: Nette\Latte\DefaultMacros::formatModifiers()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$latte = new LatteMacros;
+$latte = new DefaultMacros;
 
 // special
 
@@ -26,19 +26,19 @@ try {
 	$latte->formatModifiers('@', ':');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
+	Assert::exception('Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
 }
 try {
 	$latte->formatModifiers('@', 'mod::||:|');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
+	Assert::exception('Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
 }
 try {
 	Assert::same( '$template->mod(@, \'\\\\\', "a", "b", "c", "arg2")',  $latte->formatModifiers('@', "mod:'\\\\':a:b:c':arg2") );
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\TokenizerException', 'Unexpected %a% on line 1, column 15.', $e );
+	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 15.', $e );
 }
 
 // common

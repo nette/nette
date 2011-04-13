@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Session::regenerateId()
+ * Test: Nette\Http\Session::regenerateId()
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Session;
+use Nette\Http\Session;
 
 
 

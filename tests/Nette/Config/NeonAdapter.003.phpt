@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\ConfigAdapterNeon section.
+ * Test: Nette\Config\NeonAdapter section.
  *
  * @author     David Grudl
  * @package    Nette\Config

@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\ClassReflection;
+use Nette\Reflection;
 
 
 
@@ -21,7 +21,7 @@ class Foo
 	public function f() {}
 }
 
-class Bar extends Foo implements \Countable
+class Bar extends Foo implements Countable
 {
 	public $var;
 
@@ -29,28 +29,28 @@ class Bar extends Foo implements \Countable
 }
 
 
-Assert::equal( new Nette\Reflection\ClassReflection('Bar'), ClassReflection::from('Bar') );
-Assert::equal( new Nette\Reflection\ClassReflection('Bar'), ClassReflection::from(new Bar) );
+Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from('Bar') );
+Assert::equal( new Reflection\ClassType('Bar'), Reflection\ClassType::from(new Bar) );
 
 
 
-$rc = ClassReflection::from('Bar');
+$rc = Reflection\ClassType::from('Bar');
 
 Assert::null( $rc->getExtension() );
 
 
 Assert::equal( array(
-	'Countable' => new Nette\Reflection\ClassReflection('Countable'),
+	'Countable' => new Reflection\ClassType('Countable'),
 ), $rc->getInterfaces() );
 
 
-Assert::equal( new Nette\Reflection\ClassReflection('Foo'), $rc->getParentClass() );
+Assert::equal( new Reflection\ClassType('Foo'), $rc->getParentClass() );
 
 
 Assert::null( $rc->getConstructor() );
 
 
-Assert::equal( new Nette\Reflection\MethodReflection('Foo', 'f'), $rc->getMethod('f') );
+Assert::equal( new Reflection\Method('Foo', 'f'), $rc->getMethod('f') );
 
 
 try {
@@ -61,13 +61,13 @@ try {
 }
 
 Assert::equal( array(
-	new Nette\Reflection\MethodReflection('Bar', 'count'),
-	new Nette\Reflection\MethodReflection('Foo', 'f'),
+	new Reflection\Method('Bar', 'count'),
+	new Reflection\Method('Foo', 'f'),
 ), $rc->getMethods() );
 
 
 
-Assert::equal( new Nette\Reflection\PropertyReflection('Bar', 'var'), $rc->getProperty('var') );
+Assert::equal( new Reflection\Property('Bar', 'var'), $rc->getProperty('var') );
 
 
 try {
@@ -78,5 +78,5 @@ try {
 }
 
 Assert::equal( array(
-	new Nette\Reflection\PropertyReflection('Bar', 'var'),
+	new Reflection\Property('Bar', 'var'),
 ), $rc->getProperties() );

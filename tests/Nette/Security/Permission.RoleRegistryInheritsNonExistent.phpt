@@ -22,12 +22,12 @@ try {
 	$acl->roleInheritsFrom('nonexistent', 'guest');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
 
 try {
 	$acl->roleInheritsFrom('guest', 'nonexistent');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }

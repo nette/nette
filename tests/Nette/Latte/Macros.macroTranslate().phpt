@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::macroTranslate()
+ * Test: Nette\Latte\DefaultMacros::macroTranslate()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new LatteMacros;
+$macros = new DefaultMacros;
 
 // {_...}
 Assert::same( '$template->translate(\'var\')',  $macros->macroTranslate('var', '') );

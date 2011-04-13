@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Mail\Mail subject.
+ * Test: Nette\Mail\Message subject.
  *
  * @author     David Grudl
  * @package    Nette\Application
  * @subpackage UnitTests
  */
 
-use Nette\Mail\Mail;
+use Nette\Mail\Message;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/Mail.inc';
 
 
 
-$mail = new Mail();
+$mail = new Message();
 $mail->setSubject('Testovací ! <email> od žluťoučkého koně ...');
 $mail->send();
 
@@ -32,7 +32,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 ', TestMailer::$output );
 
-$mail = new Mail();
+$mail = new Message();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail');
 $mail->send();
 
@@ -47,7 +47,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 ', TestMailer::$output );
 
-$mail = new Mail();
+$mail = new Message();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemailšššššššššššššššš');
 $mail->send();
 
@@ -63,7 +63,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 ', TestMailer::$output );
 
-$mail = new Mail();
+$mail = new Message();
 $mail->setSubject('==========================================================================================ššššššššššššššššš');
 $mail->send();
 

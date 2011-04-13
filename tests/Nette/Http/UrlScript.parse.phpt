@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\UriScript parse.
+ * Test: Nette\Http\UrlScript parse.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\UriScript;
+use Nette\Http\UrlScript;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new UriScript('http://nette.org:8080/file.php?q=search');
+$uri = new UrlScript('http://nette.org:8080/file.php?q=search');
 Assert::same( '/', $uri->scriptPath );
 Assert::same( 'http://nette.org:8080/',  $uri->baseUri );
 Assert::same( '/', $uri->basePath );

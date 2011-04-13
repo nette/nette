@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Application\SimpleRouter basic functions.
+ * Test: Nette\Application\Routers\SimpleRouter basic functions.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\SimpleRouter;
+use Nette\Http,
+	Nette\Application\Routers\SimpleRouter;
 
 
 
@@ -21,7 +22,7 @@ $router = new SimpleRouter(array(
 	'any' => 'anyvalue',
 ));
 
-$uri = new Nette\Web\UriScript('http://nette.org/file.php');
+$uri = new Http\UrlScript('http://nette.org/file.php');
 $uri->setScriptPath('/file.php');
 $uri->setQuery(array(
 	'presenter' => 'myPresenter',
@@ -29,7 +30,7 @@ $uri->setQuery(array(
 	'id' => '12',
 	'test' => 'testvalue',
 ));
-$httpRequest = new Nette\Web\HttpRequest($uri);
+$httpRequest = new Http\Request($uri);
 
 $req = $router->match($httpRequest);
 Assert::same( 'myPresenter',  $req->getPresenterName() );

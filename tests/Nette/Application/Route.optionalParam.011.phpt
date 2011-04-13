@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Application\Route with optional sequence precedence.
+ * Test: Nette\Application\Routers\Route with optional sequence precedence.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\Route;
+use Nette\Application\Routers\Route;
 
 
 

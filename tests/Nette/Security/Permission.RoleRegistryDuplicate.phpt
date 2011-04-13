@@ -22,5 +22,5 @@ try {
 	$acl->addRole('guest');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Role 'guest' already exists in the list.", $e );
+	Assert::exception('Nette\InvalidStateException', "Role 'guest' already exists in the list.", $e );
 }

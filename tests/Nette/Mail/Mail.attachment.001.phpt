@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Mail\Mail - attachments.
+ * Test: Nette\Mail\Message - attachments.
  *
  * @author     David Grudl
  * @package    Nette\Application
  * @subpackage UnitTests
  */
 
-use Nette\Mail\Mail;
+use Nette\Mail\Message;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/Mail.inc';
 
 
 
-$mail = new Mail();
+$mail = new Message();
 $mail->addAttachment('files/example.zip');
 $mail->send();
 
@@ -50,8 +50,8 @@ EOD
 
 
 
-$mail = new Mail();
-$mail->addAttachment('files/example.zip')->setEncoding(Mail::ENCODING_QUOTED_PRINTABLE);
+$mail = new Message();
+$mail->addAttachment('files/example.zip')->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
 $mail->send();
 
 Assert::match( <<<EOD
@@ -84,7 +84,7 @@ EOD
 
 
 
-$mail = new Mail();
+$mail = new Message();
 $name = iconv('UTF-8', 'WINDOWS-1250', 'files/žluťoučký.zip');
 copy('files/example.zip', $name);
 $mail->addAttachment($name);

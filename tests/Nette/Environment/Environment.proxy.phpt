@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Configurator;
+use Nette\DI\Configurator;
 
 
 

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Mail\Mail valid email addresses.
+ * Test: Nette\Mail\Message valid email addresses.
  *
  * @author     David Grudl
  * @package    Nette\Application
  * @subpackage UnitTests
  */
 
-use Nette\Mail\Mail;
+use Nette\Mail\Message;
 
 
 
@@ -18,7 +18,7 @@ require __DIR__ . '/Mail.inc';
 
 
 
-$mail = new Mail();
+$mail = new Message();
 
 $mail->addTo('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail@example.com');
 

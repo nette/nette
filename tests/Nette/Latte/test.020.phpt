@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 
-use Nette\Templates\FileTemplate,
-	Nette\Templates\LatteFilter;
+use Nette\Latte,
+	Nette\Templating\FileTemplate;
 
 
 
@@ -28,6 +28,6 @@ TestHelpers::purge(TEMP_DIR);
 
 $template = new FileTemplate;
 $template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
-$template->registerFilter(new LatteFilter);
+$template->registerFilter(new Latte\Engine);
 
 Assert::match(file_get_contents(__DIR__ . '/test.020.expect'), $template->compile(file_get_contents(__DIR__ . '/templates/isLinkCurrent.latte')));

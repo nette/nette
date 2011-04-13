@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Mail\Mail invalid email addresses.
+ * Test: Nette\Mail\Message invalid email addresses.
  *
  * @author     David Grudl
  * @package    Nette\Application
  * @subpackage UnitTests
  */
 
-use Nette\Mail\Mail;
+use Nette\Mail\Message;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$mail = new Mail();
+$mail = new Message();
 
 try {
 	// From

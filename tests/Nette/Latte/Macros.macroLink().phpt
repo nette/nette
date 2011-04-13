@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::macroLink()
+ * Test: Nette\Latte\DefaultMacros::macroLink()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new LatteMacros;
+$macros = new DefaultMacros;
 
 // {link ...}
 Assert::same( '$control->link("p")',  $macros->macroLink('p', '') );

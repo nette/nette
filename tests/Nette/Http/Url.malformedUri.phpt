@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Uri malformed URI.
+ * Test: Nette\Http\Url malformed URI.
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Uri;
+use Nette\Http\Url;
 
 
 
@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 try {
-	$uri = new Uri(':');
+	$uri = new Url(':');
 
 	Assert::fail('Expected exception');
 } catch (Exception $e) {

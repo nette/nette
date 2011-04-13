@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteMacros::formatMacroArgs()
+ * Test: Nette\Latte\DefaultMacros::formatMacroArgs()
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteMacros;
+use Nette\Latte\DefaultMacros;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$latte = new LatteMacros;
+$latte = new DefaultMacros;
 
 // symbols
 
@@ -33,7 +33,7 @@ try {
 	$latte->formatMacroArgs("'\\\\'1, 2, symbol1, symbol2'");
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\TokenizerException', 'Unexpected %a% on line 1, column 27.', $e );
+	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 27.', $e );
 }
 
 // key words

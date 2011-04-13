@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\SessionNamespace::setExpiration()
+ * Test: Nette\Http\SessionNamespace::setExpiration()
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Session;
+use Nette\Http\Session;
 
 
 

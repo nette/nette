@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Templates\LatteFilter and macros test.
+ * Test: Nette\Latte\Engine and macros test.
  *
  * @author     David Grudl
- * @package    Nette\Templates
+ * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Templates\LatteFilter;
+use Nette\Latte;
 
 
 
@@ -19,7 +19,7 @@ require __DIR__ . '/Template.inc';
 
 
 $template = new MockTemplate;
-$template->registerFilter(new LatteFilter);
+$template->registerFilter(new Latte\Engine);
 
 Assert::match(<<<EOD
 Block

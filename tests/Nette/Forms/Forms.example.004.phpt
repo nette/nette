@@ -8,8 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Forms\Form,
-	Nette\Web\Html;
+use Nette\Utils\Html,
+	Nette\Forms\Form;
 
 
 

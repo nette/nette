@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Test: Nette\Application\SimpleRouter and modules.
+ * Test: Nette\Application\Routers\SimpleRouter and modules.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\SimpleRouter;
+use Nette\Http,
+	Nette\Application;
 
 
 
@@ -16,16 +17,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$router = new SimpleRouter(array(
+$router = new Application\Routers\SimpleRouter(array(
 	'module' => 'main:sub',
 ));
 
-$uri = new Nette\Web\UriScript('http://nette.org/file.php');
+$uri = new Http\UrlScript('http://nette.org/file.php');
 $uri->setScriptPath('/file.php');
 $uri->setQuery(array(
 	'presenter' => 'myPresenter',
 ));
-$httpRequest = new Nette\Web\HttpRequest($uri);
+$httpRequest = new Http\Request($uri);
 
 $req = $router->match($httpRequest);
 Assert::same( 'main:sub:myPresenter',  $req->getPresenterName() );
@@ -33,9 +34,9 @@ Assert::same( 'main:sub:myPresenter',  $req->getPresenterName() );
 $url = $router->constructUrl($req, $httpRequest->uri);
 Assert::same( 'http://nette.org/file.php?presenter=myPresenter',  $url );
 
-$req = new Nette\Application\PresenterRequest(
+$req = new Application\Request(
 	'othermodule:presenter',
-	Nette\Web\HttpRequest::GET,
+	Http\Request::GET,
 	array()
 );
 $url = $router->constructUrl($req, $httpRequest->uri);

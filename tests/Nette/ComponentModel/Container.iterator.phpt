@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Test: Nette\ComponentContainer iterator.
+ * Test: Nette\ComponentModel\Container iterator.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\ComponentModel
  * @subpackage UnitTests
  */
 
-use Nette\Component,
-	Nette\ComponentContainer,
-	Nette\Forms\Button;
+use Nette\ComponentModel\Component,
+	Nette\ComponentModel\Container,
+	Nette\Forms\Controls\Button;
 
 
 
@@ -22,14 +22,14 @@ class ComponentX extends Component
 {
 }
 
-$c = new ComponentContainer(NULL, 'top');
+$c = new Container(NULL, 'top');
 
-$c->addComponent(new ComponentContainer, 'one');
+$c->addComponent(new Container, 'one');
 $c->addComponent(new ComponentX, 'two');
 $c->addComponent(new Button('label'), 'button1');
 
 $c->getComponent('one')->addComponent(new ComponentX, 'inner');
-$c->getComponent('one')->addComponent(new ComponentContainer, 'inner2');
+$c->getComponent('one')->addComponent(new Container, 'inner2');
 $c->getComponent('one')->getComponent('inner2')->addComponent(new Button('label'), 'button2');
 
 
@@ -45,7 +45,7 @@ Assert::same( array(
 
 
 // Filter
-$list = $c->getComponents(FALSE, 'Nette\Forms\Button');
+$list = $c->getComponents(FALSE, 'Nette\Forms\Controls\Button');
 Assert::same( array(
 	"button1",
 ), array_keys(iterator_to_array($list)) );
@@ -92,7 +92,7 @@ Assert::same( array(
 
 
 // Recursive & filter I
-$list = $c->getComponents(TRUE, 'Nette\Forms\Button');
+$list = $c->getComponents(TRUE, 'Nette\Forms\Controls\Button');
 Assert::same( array(
 	"button2",
 	"button1",
@@ -101,7 +101,7 @@ Assert::same( array(
 
 
 // Recursive & filter II
-$list = $c->getComponents(TRUE, 'Nette\ComponentContainer');
+$list = $c->getComponents(TRUE, 'Nette\ComponentModel\Container');
 Assert::same( array(
 	"one",
 	"inner2",

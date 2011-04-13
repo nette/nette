@@ -21,7 +21,7 @@ try {
 	$acl->isAllowed('nonexistent');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Role 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Role 'nonexistent' does not exist.", $e );
 }
 
 try {
@@ -29,5 +29,5 @@ try {
 	$acl->isAllowed(NULL, 'nonexistent');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
+	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
 }

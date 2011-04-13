@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Uri http://
+ * Test: Nette\Http\Url http://
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Uri;
+use Nette\Http\Url;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Uri('http://username:password@hostname:60/path/script.php?arg=value#anchor');
+$uri = new Url('http://username:password@hostname:60/path/script.php?arg=value#anchor');
 
 Assert::same( 'http://hostname:60/path/script.php?arg=value#anchor',  (string) $uri );
 Assert::same( 'http',  $uri->scheme );

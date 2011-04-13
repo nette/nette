@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Web\Uri file://
+ * Test: Nette\Http\Url file://
  *
  * @author     David Grudl
- * @package    Nette\Web
+ * @package    Nette\Http
  * @subpackage UnitTests
  */
 
-use Nette\Web\Uri;
+use Nette\Http\Url;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Uri('file://localhost/D:/dokumentace/rfc3986.txt');
+$uri = new Url('file://localhost/D:/dokumentace/rfc3986.txt');
 Assert::same( 'file://localhost/D:/dokumentace/rfc3986.txt',  (string) $uri );
 Assert::same( 'file',  $uri->scheme );
 Assert::same( '',  $uri->user );
@@ -28,7 +28,7 @@ Assert::same( '',  $uri->query );
 Assert::same( '',  $uri->fragment );
 
 
-$uri = new Uri('file:///D:/dokumentace/rfc3986.txt');
+$uri = new Url('file:///D:/dokumentace/rfc3986.txt');
 Assert::same( 'file://D:/dokumentace/rfc3986.txt',  (string) $uri );
 Assert::same( 'file',  $uri->scheme );
 Assert::same( '',  $uri->user );

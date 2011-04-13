@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Application\Route UTF-8 parameter.
+ * Test: Nette\Application\Routers\Route UTF-8 parameter.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Application\Routers
  * @subpackage UnitTests
  */
 
-use Nette\Application\Route;
+use Nette\Application\Routers\Route;
 
 
 

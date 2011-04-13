@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Reflection\MethodReflection;
+use Nette\Reflection;
 
 
 
@@ -26,8 +26,8 @@ class B extends A {
 	function bar() {}
 }
 
-$methodInfo = new MethodReflection('B', 'foo');
-Assert::equal( new Nette\Reflection\ClassReflection('A'), $methodInfo->getDeclaringClass() );
+$methodInfo = new Reflection\Method('B', 'foo');
+Assert::equal( new Reflection\ClassType('A'), $methodInfo->getDeclaringClass() );
 
 
 Assert::null( $methodInfo->getExtension() );
