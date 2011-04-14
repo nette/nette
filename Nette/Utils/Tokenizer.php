@@ -62,9 +62,10 @@ class Tokenizer extends Nette\Object
 		if ($this->names) {
 			$this->tokens = StringUtils::matchAll($input, $this->re);
 			$len = 0;
+			$count = count($this->names);
 			foreach ($this->tokens as & $match) {
 				$name = NULL;
-				for ($i = 1; $i < count($this->names); $i++) {
+				for ($i = 1; $i <= $count; $i++) {
 					if (!isset($match[$i])) {
 						break;
 					} elseif ($match[$i] != NULL) {
