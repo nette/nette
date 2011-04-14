@@ -26,6 +26,9 @@ class TestRunner
 	/** @var string  path to test file/directory */
 	public $path;
 
+	/** @var resource */
+	private $logFile;
+
 	/** @var string  php-cgi binary */
 	public $phpBinary;
 
@@ -68,16 +71,16 @@ class TestRunner
 
 			try {
 				$testCase->run();
-				echo '.';
+				$this->out('.');
 				$passed[] = array($testCase->getName(), $entry);
 
 			} catch (TestCaseException $e) {
 				if ($e->getCode() === TestCaseException::SKIPPED) {
-					echo 's';
+					$this->out('s');
 					$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
 
 				} else {
-					echo 'F';
+					$this->out('F');
 					$failed[] = array($testCase->getName(), $entry, $e->getMessage());
 				}
 			}
@@ -87,27 +90,27 @@ class TestRunner
 		$skippedCount = count($skipped);
 
 		if ($this->displaySkipped && $skippedCount) {
-			echo "\n\nSkipped:\n";
+			$this->out("\n\nSkipped:\n");
 			foreach ($skipped as $i => $item) {
 				list($name, $file, $message) = $item;
-				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
+				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $file\n");
 			}
 		}
 
 		if (!$count) {
-			echo "No tests found\n";
+			$this->out("No tests found\n");
 
 		} elseif ($failedCount) {
-			echo "\n\nFailures:\n";
+			$this->out("\n\nFailures:\n");
 			foreach ($failed as $i => $item) {
 				list($name, $file, $message) = $item;
-				echo "\n", ($i + 1), ") $name\n   $message\n   $file\n";
+				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $file\n");
 			}
-			echo "\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n";
+			$this->out("\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n");
 			return FALSE;
 
 		} else {
-			echo "\n\nOK ($count tests, $skippedCount skipped)\n";
+			$this->out("\n\nOK ($count tests, $skippedCount skipped)\n");
 		}
 		return TRUE;
 	}
@@ -127,17 +130,21 @@ class TestRunner
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
 		foreach ($args as $arg) {
-			if (!preg_match('#^[-/][a-z]$#', $arg)) {
+			if (!preg_match('#^[-/][a-z]+$#', $arg)) {
 				if ($path = realpath($arg)) {
 					$this->path = $path;
 				} else {
 					throw new Exception("Invalid path '$arg'.");
 				}
 
-			} else switch ($arg[1]) {
+			} else switch (substr($arg, 1)) {
 				case 'p':
 					$args->next();
 					$this->phpBinary = $args->current();
+					break;
+				case 'log':
+					$args->next();
+					$this->logFile = fopen($args->current(), 'w');
 					break;
 				case 'c':
 				case 'd':
@@ -155,6 +162,20 @@ class TestRunner
 					throw new Exception("Unknown option -$arg[1].");
 					exit;
 			}
+		}
+	}
+
+
+
+	/**
+	 * Writes to display and log
+	 * @return void
+	 */
+	private function out($s)
+	{
+		echo $s;
+		if ($this->logFile) {
+			fputs($this->logFile, $s);
 		}
 	}
 
