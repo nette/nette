@@ -24,17 +24,26 @@ use Nette,
  */
 class Tokenizer extends Nette\Object
 {
-	/** @var string */
-	private $input;
-
 	/** @var array */
 	public $tokens;
+
+	/** @var int */
+	public $position = 0;
+
+	/** @var array */
+	public $ignored = array();
+
+	/** @var string */
+	private $input;
 
 	/** @var string */
 	private $re;
 
 	/** @var array */
 	private $types;
+
+	/** @var array|string */
+	private $current;
 
 
 
@@ -121,6 +130,97 @@ class Tokenizer extends Nette\Object
 			($offset ? substr_count($this->input, "\n", 0, $offset) + 1 : 1),
 			$offset - strrpos(substr($this->input, 0, $offset), "\n"),
 		);
+	}
+
+
+
+	/**
+	 * Returns next token.
+	 * @param  desired token
+	 * @return string
+	 */
+	public function fetch()
+	{
+		return $this->scan(func_get_args(), TRUE);
+	}
+
+
+
+	/**
+	 * Returns all next tokens.
+	 * @param  desired token
+	 * @return string
+	 */
+	public function fetchAll()
+	{
+		return $this->scan(func_get_args(), FALSE);
+	}
+
+
+
+	/**
+	 * Returns all next tokens until it sees a token with the given value.
+	 * @param  tokens
+	 * @return string
+	 */
+	public function fetchUntil($arg)
+	{
+		return $this->scan(func_get_args(), FALSE, TRUE, TRUE);
+	}
+
+
+
+	/**
+	 * Checks the next token.
+	 * @param  token
+	 * @return string
+	 */
+	public function isNext($arg)
+	{
+		return (bool) $this->scan(func_get_args(), TRUE, FALSE);
+	}
+
+
+
+	/**
+	 * Checks the current token.
+	 * @param  token
+	 * @return string
+	 */
+	public function isCurrent($arg)
+	{
+		return in_array($this->current, func_get_args(), TRUE);
+	}
+
+
+
+	/**
+	 * Looks for (first) (not) wanted tokens.
+	 * @param  int token number
+	 * @return array
+	 */
+	private function scan($wanted, $first, $advance = TRUE, $neg = FALSE)
+	{
+		$res = FALSE;
+		$pos = $this->position;
+		while (isset($this->tokens[$pos])) {
+			$token = $this->tokens[$pos++];
+			$r = is_array($token) ? $token['type'] : $token;
+			if (!$wanted || in_array($r, $wanted, TRUE) ^ $neg) {
+				if ($advance) {
+					$this->position = $pos;
+					$this->current = $r;
+				}
+				$res .= is_array($token) ? $token['value'] : $token;
+				if ($first) {
+					break;
+				}
+
+			} elseif (!in_array($r, $this->ignored, TRUE)) {
+				break;
+			}
+		}
+		return $res;
 	}
 
 }
