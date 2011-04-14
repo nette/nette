@@ -3,10 +3,11 @@
 /**
  * This file is part of the Nette Framework.
  *
- * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
+ *
  * @package    Nette\Test
  */
 
@@ -38,7 +39,7 @@ class TestHelpers
 	{
 		@mkdir($dir); // @ - directory may already exist
 		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
-			if ($entry->getBasename() === '.gitignore') {
+			if (substr($entry->getBasename(), 0, 1) === '.') { // . or .. or .gitignore
 				// ignore
 			} elseif ($entry->isDir()) {
 				rmdir($entry);
@@ -119,8 +120,7 @@ class TestHelpers
 	 */
 	public static function saveCoverage()
 	{
-		$file = __DIR__ . '/coverage.tmp';
-		$coverage = @unserialize(file_get_contents($file));
+		$coverage = @unserialize(file_get_contents(self::$coverageFile));
 		$root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 
 		foreach (xdebug_get_code_coverage() as $filename => $lines) {
@@ -133,7 +133,7 @@ class TestHelpers
 			}
 		}
 
-		file_put_contents($file, serialize($coverage));
+		file_put_contents(self::$coverageFile, serialize($coverage));
 	}
 
 }

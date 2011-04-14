@@ -15,6 +15,7 @@ Usage:
 Options:
 	-p <php>    Specify PHP-CGI executable to run.
 	-c <path>   Look for php.ini in directory <path> or use <path> as php.ini.
+	-log <path> Write log to file <path>.
 	-d key=val  Define INI entry 'key' with value 'val'.
 	-l <path>   Specify path to shared library files (LD_LIBRARY_PATH)
 	-s          Show information about skipped tests
@@ -28,7 +29,7 @@ Options:
  * Execute tests
  */
 try {
-	@unlink(__DIR__ . '/coverage.tmp'); // @ - file may not exist
+	@unlink(__DIR__ . '/coverage.dat'); // @ - file may not exist
 
 
 	$manager = new TestRunner;

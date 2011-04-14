@@ -3,10 +3,11 @@
 /**
  * This file is part of the Nette Framework.
  *
- * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
+ *
  * @package    Nette\Test
  */
 
@@ -41,8 +42,11 @@ class TestCase
 	/** @var string  PHP-CGI command line */
 	private $cmdLine;
 
-	/** @var string  PHP-CGI command line */
+	/** @var string  PHP version */
 	private $phpVersion;
+
+	/** @var string PHP type (CGI or CLI) */
+	private $phpType;
 
 	/** @var array */
 	private static $cachedPhp;
@@ -107,7 +111,7 @@ class TestCase
 	public function setPhp($binary, $args, $environment)
 	{
 		if (isset(self::$cachedPhp[$binary])) {
-			$this->phpVersion = self::$cachedPhp[$binary];
+			list($this->phpVersion, $this->phpType) = self::$cachedPhp[$binary];
 
 		} else {
 			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
@@ -115,11 +119,13 @@ class TestCase
 				throw new Exception("Unable to execute '$binary -v'.");
 			}
 
-			if (!preg_match('#^PHP (\S+).*cgi#i', $output[0], $matches)) {
+			if (!preg_match('#^PHP (\S+).*c(g|l)i#i', $output[0], $matches)) {
 				throw new Exception("Unable to detect PHP version (output: $output[0]).");
 			}
 
-			$this->phpVersion = self::$cachedPhp[$binary] = $matches[1];
+			$this->phpVersion = $matches[1];
+			$this->phpType = strcasecmp($matches[2], 'g') ? 'CLI' : 'CGI';
+			self::$cachedPhp[$binary] = array($this->phpVersion, $this->phpType);
 		}
 
 		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
@@ -136,7 +142,7 @@ class TestCase
 	{
 		$this->headers = $this->output = NULL;
 
-		$tempFile = tempnam('', 'tmp');
+		$tempFile = tempnam(sys_get_temp_dir(), 'tmp');
 		if (!$tempFile) {
 			throw new Exception("Unable to create temporary file.");
 		}
@@ -155,7 +161,11 @@ class TestCase
 		$this->output = file_get_contents($tempFile);
 		unlink($tempFile);
 
-		list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2); // CGI
+		if ($this->phpType === 'CGI') {
+			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2);
+		} else {
+			$headers = '';
+		}
 		$line = @end(explode("\n", $this->output));
 
 		$this->headers = array();
