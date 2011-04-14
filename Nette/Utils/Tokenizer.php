@@ -34,19 +34,19 @@ class Tokenizer extends Nette\Object
 	private $re;
 
 	/** @var array */
-	private $names;
+	private $types;
 
 
 
 	/**
-	 * @param  array of [symbol name => pattern]
+	 * @param  array of [symbol type => pattern]
 	 * @param  string  regular expression flag
 	 */
 	public function __construct(array $patterns, $flags = '')
 	{
 		$this->re = '~(' . implode(')|(', $patterns) . ')~A' . $flags;
 		$keys = array_keys($patterns);
-		$this->names = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
+		$this->types = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
 	}
 
 
@@ -59,21 +59,23 @@ class Tokenizer extends Nette\Object
 	public function tokenize($input)
 	{
 		$this->input = $input;
-		if ($this->names) {
+		if ($this->types) {
 			$this->tokens = StringUtils::matchAll($input, $this->re);
 			$len = 0;
-			$count = count($this->names);
+			$count = count($this->types);
+			$line = 1;
 			foreach ($this->tokens as & $match) {
-				$name = NULL;
+				$type = NULL;
 				for ($i = 1; $i <= $count; $i++) {
 					if (!isset($match[$i])) {
 						break;
 					} elseif ($match[$i] != NULL) {
-						$name = $this->names[$i - 1]; break;
+						$type = $this->types[$i - 1]; break;
 					}
 				}
-				$match = array($match[0], $name);
-				$len += strlen($match[0]);
+				$match = self::createToken($match[0], $type, $line);
+				$len += strlen($match['value']);
+				$line += substr_count($match['value'], "\n");
 			}
 			if ($len !== strlen($input)) {
 				$errorOffset = $len;
@@ -94,6 +96,13 @@ class Tokenizer extends Nette\Object
 			throw new TokenizerException("Unexpected '$token' on line $line, column $col.");
 		}
 		return $this->tokens;
+	}
+
+
+
+	public static function createToken($value, $type = NULL, $line = NULL)
+	{
+		return array('value' => $value, 'type' => $type, 'line' => $line);
 	}
 
 

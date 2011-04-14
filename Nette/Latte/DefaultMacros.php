@@ -12,7 +12,8 @@
 namespace Nette\Latte;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\StringUtils,
+	Nette\Utils\Tokenizer;
 
 
 
@@ -176,7 +177,7 @@ class DefaultMacros extends Nette\Object
 	{
 		$this->macros = self::$defaultMacros;
 
-		$this->tokenizer = new Nette\Utils\Tokenizer(array(
+		$this->tokenizer = new Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
 			Engine::RE_STRING,
@@ -880,24 +881,23 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$out = '';
 		$var = TRUE;
-		foreach ($this->parseMacro($content) as $rec) {
-			list($token, $name, $depth) = $rec;
-
-			if ($var && ($name === self::T_SYMBOL || $name === self::T_VARIABLE)) {
+		foreach ($this->parseMacro($content) as $token) {
+			if ($var && ($token['type'] === self::T_SYMBOL || $token['type'] === self::T_VARIABLE)) {
 				if ($extract) {
-					$token = "'" . trim($token, "'$") . "'";
+					$out .= "'" . trim($token['value'], "'$") . "'";
 				} else {
-					$token = '$' . trim($token, "'$");
+					$out .= '$' . trim($token['value'], "'$");
 				}
-			} elseif (($token === '=' || $token === '=>') && $depth === 0) {
-				$token = $extract ? '=>' : '=';
+			} elseif (($token['value'] === '=' || $token['value'] === '=>') && $token['depth'] === 0) {
+				$out .= $extract ? '=>' : '=';
 				$var = FALSE;
 
-			} elseif ($token === ',' && $depth === 0) {
-				$token = $extract ? ',' : ';';
+			} elseif ($token['value'] === ',' && $token['depth'] === 0) {
+				$out .= $extract ? ',' : ';';
 				$var = TRUE;
+			} else {
+				$out .= $token['value'];
 			}
-			$out .= $token;
 		}
 		return $out;
 	}
@@ -948,29 +948,27 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		if (!$modifiers) return $var;
 		$inside = FALSE;
-		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $rec) {
-			list($token, $name) = $rec;
-
-			if ($name === self::T_WHITESPACE) {
+		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $token) {
+			if ($token['type'] === self::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
-				if ($name === self::T_SYMBOL) {
-					$var = "\$template->" . trim($token, "'") . "($var";
+				if ($token['type'] === self::T_SYMBOL) {
+					$var = "\$template->" . trim($token['value'], "'") . "($var";
 					$inside = TRUE;
 				} else {
-					throw new ParseException("Modifier name must be alphanumeric string, '$token' given.", 0, $this->filter->line);
+					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->filter->line);
 				}
 			} else {
-				if ($token === ':' || $token === ',') {
+				if ($token['value'] === ':' || $token['value'] === ',') {
 					$var = $var . ', ';
 
-				} elseif ($token === '|') {
+				} elseif ($token['value'] === '|') {
 					$var = $var . ')';
 					$inside = FALSE;
 
 				} else {
-					$var .= $token;
+					$var .= $token['value'];
 				}
 			}
 		}
@@ -1005,7 +1003,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$out = '';
 		foreach ($this->parseMacro($input) as $token) {
-			$out .= $token[0];
+			$out .= $token['value'];
 		}
 		return $out;
 	}
@@ -1027,17 +1025,17 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$out = '';
 		$expand = NULL;
 		$tokens[] = NULL; // sentinel
-		foreach ($tokens as $rec) {
-			list($token, $name, $depth) = $rec;
-			if ($token === '(expand)' && $depth === 0) {
+		foreach ($tokens as $token) {
+			if ($token['value'] === '(expand)' && $token['depth'] === 0) {
 				$expand = TRUE;
-				$token = '),';
+				$out .= '),';
 
-			} elseif ($expand && ($token === ',' || $token === NULL) && !$depth) {
+			} elseif ($expand && ($token['value'] === ',' || $token['value'] === NULL) && !$token['depth']) {
 				$expand = FALSE;
-				$token = ', array(';
+				$out .= ', array(';
+			} else {
+				$out .= $token['value'];
 			}
-			$out .= $token;
 		}
 		return $prefix . ($expand === NULL ? "array($out)" : "array_merge(array($out))");
 	}
@@ -1064,67 +1062,71 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	private function parseMacro($input)
 	{
 		$this->tokenizer->tokenize($input);
-		$this->tokenizer->tokens[] = NULL; // sentinel
 
 		$inTernary = $lastSymbol = $prev = NULL;
 		$tokens = $arrays = array();
 		$n = -1;
 		while (++$n < count($this->tokenizer->tokens)) {
-			list($token, $name) = $current = $this->tokenizer->tokens[$n];
-			$depth = count($arrays);
+			$token = $this->tokenizer->tokens[$n];
+			$token['depth'] = $depth = count($arrays);
 
-			if ($name === self::T_COMMENT) {
+			if ($token['type'] === self::T_COMMENT) {
 				continue; // remove comments
 
-			} elseif ($name === self::T_WHITESPACE) {
-				$current[2] = $depth;
-				$tokens[] = $current;
+			} elseif ($token['type'] === self::T_WHITESPACE) {
+				$tokens[] = $token;
 				continue;
 
-			} elseif ($name === self::T_SYMBOL && in_array($prev[0], array(',', '(', '[', '=', '=>', ':', '?', NULL), TRUE)) {
+			} elseif ($token['type'] === self::T_SYMBOL && ($prev === NULL || in_array($prev['value'], array(',', '(', '[', '=', '=>', ':', '?')))) {
 				$lastSymbol = count($tokens); // quoting pre-requirements
 
-			} elseif (is_int($lastSymbol) && in_array($token, array(',', ')', ']', '=', '=>', ':', '|', NULL), TRUE)) {
-				$tokens[$lastSymbol][0] = "'" . $tokens[$lastSymbol][0] . "'"; // quote symbols
+			} elseif (is_int($lastSymbol) && in_array($token['value'], array(',', ')', ']', '=', '=>', ':', '|'))) {
+				$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
 				$lastSymbol = NULL;
 
 			} else {
 				$lastSymbol = NULL;
 			}
 
-			if ($token === '?') { // short ternary operators without :
+			if ($token['value'] === '?') { // short ternary operators without :
 				$inTernary = $depth;
 
-			} elseif ($token === ':') {
+			} elseif ($token['value'] === ':') {
 				$inTernary = NULL;
 
-			} elseif ($inTernary === $depth && ($token === ',' || $token === ')' || $token === ']' || $token === NULL)) { // close ternary
-				$tokens[] = array(':', NULL, $depth);
-				$tokens[] = array('null', NULL, $depth);
+			} elseif ($inTernary === $depth && ($token['value'] === ',' || $token['value'] === ')' || $token['value'] === ']')) { // close ternary
+				$tokens[] = Tokenizer::createToken(':') + array('depth' => $depth);
+				$tokens[] = Tokenizer::createToken('null') + array('depth' => $depth);
 				$inTernary = NULL;
 			}
 
-			if ($token === '[') { // simplified array syntax [...]
-				if ($arrays[] = $prev[0] !== ']' && $prev[1] !== self::T_SYMBOL && $prev[1] !== self::T_VARIABLE) {
-					$tokens[] = array('array', NULL, $depth);
-					$current = array('(', NULL);
+			if ($token['value'] === '[') { // simplified array syntax [...]
+				if ($arrays[] = $prev['value'] !== ']' && $prev['type'] !== self::T_SYMBOL && $prev['type'] !== self::T_VARIABLE) {
+					$tokens[] = Tokenizer::createToken('array') + array('depth' => $depth);
+					$token = Tokenizer::createToken('(');
 				}
-			} elseif ($token === ']') {
+			} elseif ($token['value'] === ']') {
 				if (array_pop($arrays) === TRUE) {
-					$current = array(')', NULL);
+					$token = Tokenizer::createToken(')');
 				}
-			} elseif ($token === '(') { // only count
+			} elseif ($token['value'] === '(') { // only count
 				$arrays[] = '(';
 
-			} elseif ($token === ')') { // only count
+			} elseif ($token['value'] === ')') { // only count
 				array_pop($arrays);
 			}
 
-			if ($current) {
-				$current[2] = $depth;
-				$tokens[] = $prev = $current;
-			}
+			$tokens[] = $prev = $token;
 		}
+
+		if (is_int($lastSymbol)) {
+			$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
+		}
+		if ($inTernary !== NULL) { // close ternary
+			$tokens[] = Tokenizer::createToken(':') + array('depth' => count($arrays));
+			$tokens[] = Tokenizer::createToken('null') + array('depth' => count($arrays));
+		}
+
 		return $tokens;
 	}
 

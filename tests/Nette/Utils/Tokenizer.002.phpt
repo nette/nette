@@ -23,9 +23,9 @@ $tokenizer = new Tokenizer(array(
 ));
 $tokenizer->tokenize("say \n123");
 Assert::same( array(
-	array('say', 'string'),
-	array(" \n", 'whitespace'),
-	array('123', 'number'),
+	array('value' => 'say', 'type' => 'string', 'line' => 1),
+	array('value' => " \n", 'type' => 'whitespace', 'line' => 1),
+	array('value' => '123', 'type' => 'number', 'line' => 2),
 ), $tokenizer->tokens );
 
 try {
