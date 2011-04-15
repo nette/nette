@@ -28,7 +28,6 @@ class NetteLoader extends AutoLoader
 	/** @var array */
 	public $list = array(
 		'argumentoutofrangeexception' => '/Utils/exceptions.php',
-		'datetime53' => '/Utils/DateTime53.php',
 		'deprecatedexception' => '/Utils/exceptions.php',
 		'directorynotfoundexception' => '/Utils/exceptions.php',
 		'fatalerrorexception' => '/Utils/exceptions.php',
@@ -93,6 +92,7 @@ class NetteLoader extends AutoLoader
 		'nette\config\configadapterini' => '/Config/ConfigAdapterIni.php',
 		'nette\config\iconfigadapter' => '/Config/IConfigAdapter.php',
 		'nette\configurator' => '/Environment/Configurator.php',
+		'nette\datetime' => '/Utils/DateTime.php',
 		'nette\debug' => '/Debug/Debug.php',
 		'nette\environment' => '/Environment/Environment.php',
 		'nette\forms\button' => '/Forms/Controls/Button.php',

@@ -195,7 +195,7 @@ final class TemplateHelpers
 			return NULL;
 		}
 
-		$time = Nette\Tools::createDateTime($time);
+		$time = Nette\DateTime::from($time);
 		return strpos($format, '%') === FALSE
 			? $time->format($format) // formats using date()
 			: strftime($format, $time->format('U')); // formats according to locales
