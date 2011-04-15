@@ -150,7 +150,7 @@ class Engine extends Nette\Object
 					$this->output .= "\n" . $code; // preserve new line from 'indent', remove indentation
 				} else {
 					// double newline to avoid newline eating by PHP
-					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' ? $nl : '');
+					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' && $this->output !== '' ? $nl : '');
 				}
 
 			} else { // common behaviour
