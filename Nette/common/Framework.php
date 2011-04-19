@@ -38,7 +38,7 @@ final class Framework
 	 */
 	final public function __construct()
 	{
-		throw new Nette\StaticClassException;
+		throw new StaticClassException;
 	}
 
 }
