@@ -180,7 +180,7 @@ class DefaultMacros extends Nette\Object
 		$this->tokenizer = new Tokenizer(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
-			Engine::RE_STRING,
+			Parser::RE_STRING,
 			'(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?!\w)', // keyword or const
 			'\([a-z]+\)', // type casting
 			self::T_VARIABLE => '\$\w+',
@@ -208,7 +208,7 @@ class DefaultMacros extends Nette\Object
 		$this->uniq = StringUtils::random();
 		$this->cacheCounter = 0;
 
-		$filter->context = Engine::CONTEXT_TEXT;
+		$filter->context = Parser::CONTEXT_TEXT;
 		$filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 	}
 
@@ -296,7 +296,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		if (func_num_args() === 1) {  // {macro val|modifiers}
 			list(, $macro, $content, $modifiers) = StringUtils::match(
 				$macro,
-				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Engine::RE_STRING.'|[^\'"]+)*)?$()#is'
+				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?$()#is'
 			);
 			$content = trim($content);
 		}
@@ -757,27 +757,27 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		if (strpos($content, 'html') !== FALSE) {
 			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
-			$this->filter->context = Engine::CONTEXT_TEXT;
+			$this->filter->context = Parser::CONTEXT_TEXT;
 
 		} elseif (strpos($content, 'xml') !== FALSE) {
 			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
-			$this->filter->context = Engine::CONTEXT_NONE;
+			$this->filter->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'javascript') !== FALSE) {
 			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
-			$this->filter->context = Engine::CONTEXT_NONE;
+			$this->filter->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'css') !== FALSE) {
 			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
-			$this->filter->context = Engine::CONTEXT_NONE;
+			$this->filter->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'plain') !== FALSE) {
 			$this->filter->escape = '';
-			$this->filter->context = Engine::CONTEXT_NONE;
+			$this->filter->context = Parser::CONTEXT_NONE;
 
 		} else {
 			$this->filter->escape = '$template->escape';
-			$this->filter->context = Engine::CONTEXT_NONE;
+			$this->filter->context = Parser::CONTEXT_NONE;
 		}
 
 		// temporary solution
@@ -984,7 +984,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function fetchToken(& $s)
 	{
-		if ($matches = StringUtils::match($s, '#^((?>'.Engine::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
+		if ($matches = StringUtils::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}
