@@ -147,7 +147,7 @@ final class IniAdapter implements IAdapter
 
 		foreach ($config as $secName => $secData) {
 			if (!(is_array($secData) || $secData instanceof \Traversable)) {
-				throw new Nette\InvalidStateException("Invalid section '$section'.");
+				throw new Nette\InvalidStateException("Invalid section '$secName'.");
 			}
 
 			$output[] = "[$secName]";
