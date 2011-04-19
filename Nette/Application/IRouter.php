@@ -41,6 +41,6 @@ interface IRouter
 	 * @param  Nette\Http\Url referential URI
 	 * @return string|NULL
 	 */
-	function constructUrl(Request $appRequest, Nette\Http\Url $refUri);
+	function constructUrl(Request $appRequest, Nette\Http\Url $refUrl);
 
 }

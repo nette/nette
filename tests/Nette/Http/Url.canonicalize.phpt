@@ -16,8 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Url('http://hostname/path?arg=value&arg2=v%20a%26l%3Du%2Be');
-Assert::same( 'arg=value&arg2=v%20a%26l%3Du%2Be',  $uri->query );
+$url = new Url('http://hostname/path?arg=value&arg2=v%20a%26l%3Du%2Be');
+Assert::same( 'arg=value&arg2=v%20a%26l%3Du%2Be',  $url->query );
 
-$uri->canonicalize();
-Assert::same( 'arg=value&arg2=v a%26l%3Du%2Be',  $uri->query );
+$url->canonicalize();
+Assert::same( 'arg=value&arg2=v a%26l%3Du%2Be',  $url->query );

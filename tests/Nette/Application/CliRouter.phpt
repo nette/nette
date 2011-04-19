@@ -52,4 +52,4 @@ Assert::same( array(
 Assert::true( $req->isMethod('cli') );
 
 
-Assert::null( $router->constructUrl($req, $httpRequest->uri) );
+Assert::null( $router->constructUrl($req, $httpRequest->url) );

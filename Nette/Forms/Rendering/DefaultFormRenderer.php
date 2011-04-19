@@ -200,11 +200,11 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 		if (strcasecmp($this->form->getMethod(), 'get') === 0) {
 			$el = clone $this->form->getElementPrototype();
-			$uri = explode('?', (string) $el->action, 2);
-			$el->action = $uri[0];
+			$url = explode('?', (string) $el->action, 2);
+			$el->action = $url[0];
 			$s = '';
-			if (isset($uri[1])) {
-				foreach (preg_split('#[;&]#', $uri[1]) as $param) {
+			if (isset($url[1])) {
+				foreach (preg_split('#[;&]#', $url[1]) as $param) {
 					$parts = explode('=', $param, 2);
 					$name = urldecode($parts[0]);
 					if (!isset($this->form[$name])) {

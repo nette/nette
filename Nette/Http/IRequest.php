@@ -34,7 +34,7 @@ interface IRequest
 	 * Returns URL object.
 	 * @return UrlScript
 	 */
-	function getUri();
+	function getUrl();
 
 	/********************* query, post, files & cookies ****************d*g**/
 

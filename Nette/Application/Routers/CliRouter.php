@@ -108,7 +108,7 @@ class CliRouter extends Nette\Object implements Application\IRouter
 	 * @param  Nette\Http\Url
 	 * @return NULL
 	 */
-	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUri)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		return NULL;
 	}

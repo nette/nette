@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property   UrlScript $uri
+ * @property   UrlScript $url
  * @property-read array $query
  * @property-read array $post
  * @property-read array $files
@@ -38,7 +38,7 @@ class Request extends Nette\Object implements IRequest
 	private $method;
 
 	/** @var UrlScript */
-	private $uri;
+	private $url;
 
 	/** @var array */
 	private $query;
@@ -63,13 +63,13 @@ class Request extends Nette\Object implements IRequest
 
 
 
-	public function __construct(UrlScript $uri, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
+	public function __construct(UrlScript $url, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
 		$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
 	{
-		$this->uri = $uri;
-		$this->uri->freeze();
+		$this->url = $url;
+		$this->url->freeze();
 		if ($query === NULL) {
-			parse_str($uri->query, $this->query);
+			parse_str($url->query, $this->query);
 		} else {
 			$this->query = (array) $query;
 		}
@@ -88,9 +88,18 @@ class Request extends Nette\Object implements IRequest
 	 * Returns URL object.
 	 * @return UrlScript
 	 */
-	final public function getUri()
+	final public function getUrl()
 	{
-		return $this->uri;
+		return $this->url;
+	}
+
+
+
+	/** @deprecated */
+	function getUri()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getUrl() instead.', E_USER_WARNING);
+		return $this->getUrl();
 	}
 
 
@@ -284,7 +293,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isSecured()
 	{
-		return $this->uri->scheme === 'https';
+		return $this->url->scheme === 'https';
 	}
 
 

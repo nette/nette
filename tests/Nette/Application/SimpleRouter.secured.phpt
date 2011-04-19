@@ -22,12 +22,12 @@ $router = new Application\Routers\SimpleRouter(array(
 	'any' => 'anyvalue',
 ), Application\Routers\SimpleRouter::SECURED);
 
-$uri = new Http\UrlScript('http://nette.org/file.php');
-$uri->setScriptPath('/file.php');
-$uri->setQuery(array(
+$url = new Http\UrlScript('http://nette.org/file.php');
+$url->setScriptPath('/file.php');
+$url->setQuery(array(
 	'presenter' => 'myPresenter',
 ));
-$httpRequest = new Http\Request($uri);
+$httpRequest = new Http\Request($url);
 
 $req = new Application\Request(
 	'othermodule:presenter',
@@ -35,5 +35,5 @@ $req = new Application\Request(
 	array()
 );
 
-$url = $router->constructUrl($req, $httpRequest->uri);
+$url = $router->constructUrl($req, $httpRequest->url);
 Assert::same( 'https://nette.org/file.php?presenter=othermodule%3Apresenter',  $url );

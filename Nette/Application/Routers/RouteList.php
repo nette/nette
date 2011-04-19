@@ -62,7 +62,7 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	 * @param  Nette\Http\Url
 	 * @return string|NULL
 	 */
-	public function constructUrl(Nette\Application\Request $appRequest, Nette\Http\Url $refUri)
+	public function constructUrl(Nette\Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		if ($this->cachedRoutes === NULL) {
 			$routes = array();
@@ -103,9 +103,9 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 		if (!isset($this->cachedRoutes[$presenter])) $presenter = '*';
 
 		foreach ($this->cachedRoutes[$presenter] as $route) {
-			$uri = $route->constructUrl($appRequest, $refUri);
-			if ($uri !== NULL) {
-				return $uri;
+			$url = $route->constructUrl($appRequest, $refUrl);
+			if ($url !== NULL) {
+				return $url;
 			}
 		}
 

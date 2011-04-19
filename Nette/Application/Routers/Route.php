@@ -31,7 +31,7 @@ class Route extends Nette\Object implements Application\IRouter
 	/** flag */
 	const CASE_SENSITIVE = 256;
 
-	/** @internal uri type */
+	/** @internal url type */
 	const HOST = 1,
 		PATH = 2,
 		RELATIVE = 3;
@@ -140,20 +140,20 @@ class Route extends Nette\Object implements Application\IRouter
 		// combine with precedence: mask (params in URL-path), fixity, query, (post,) defaults
 
 		// 1) URL MASK
-		$uri = $httpRequest->getUri();
+		$url = $httpRequest->getUrl();
 
 		if ($this->type === self::HOST) {
-			$path = '//' . $uri->getHost() . $uri->getPath();
+			$path = '//' . $url->getHost() . $url->getPath();
 
 		} elseif ($this->type === self::RELATIVE) {
-			$basePath = $uri->getBasePath();
-			if (strncmp($uri->getPath(), $basePath, strlen($basePath)) !== 0) {
+			$basePath = $url->getBasePath();
+			if (strncmp($url->getPath(), $basePath, strlen($basePath)) !== 0) {
 				return NULL;
 			}
-			$path = (string) substr($uri->getPath(), strlen($basePath));
+			$path = (string) substr($url->getPath(), strlen($basePath));
 
 		} else {
-			$path = $uri->getPath();
+			$path = $url->getPath();
 		}
 
 		if ($path !== '') {
@@ -248,7 +248,7 @@ class Route extends Nette\Object implements Application\IRouter
 	 * @param  Nette\Http\Url
 	 * @return string|NULL
 	 */
-	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUri)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		if ($this->flags & self::ONE_WAY) {
 			return NULL;
@@ -307,23 +307,23 @@ class Route extends Nette\Object implements Application\IRouter
 		$sequence = $this->sequence;
 		$brackets = array();
 		$required = 0;
-		$uri = '';
+		$url = '';
 		$i = count($sequence) - 1;
 		do {
-			$uri = $sequence[$i] . $uri;
+			$url = $sequence[$i] . $url;
 			if ($i === 0) break;
 			$i--;
 
 			$name = $sequence[$i]; $i--; // parameter name
 
 			if ($name === ']') { // opening optional part
-				$brackets[] = $uri;
+				$brackets[] = $url;
 
 			} elseif ($name[0] === '[') { // closing optional part
 				$tmp = array_pop($brackets);
 				if ($required < count($brackets) + 1) { // is this level optional?
 					if ($name !== '[!') { // and not "required"-optional
-						$uri = $tmp;
+						$url = $tmp;
 					}
 				} else {
 					$required = count($brackets);
@@ -334,11 +334,11 @@ class Route extends Nette\Object implements Application\IRouter
 
 			} elseif (isset($params[$name]) && $params[$name] != '') { // intentionally ==
 				$required = count($brackets); // make this level required
-				$uri = $params[$name] . $uri;
+				$url = $params[$name] . $url;
 				unset($params[$name]);
 
 			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
-				$uri = $metadata[$name]['defOut'] . $uri;
+				$url = $metadata[$name]['defOut'] . $url;
 
 			} else {
 				return NULL; // missing parameter '$name'
@@ -353,23 +353,23 @@ class Route extends Nette\Object implements Application\IRouter
 
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
-		if ($query != '') $uri .= '?' . $query; // intentionally ==
+		if ($query != '') $url .= '?' . $query; // intentionally ==
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
-			$uri = '//' . $refUri->getAuthority() . $refUri->getBasePath() . $uri;
+			$url = '//' . $refUrl->getAuthority() . $refUrl->getBasePath() . $url;
 
 		} elseif ($this->type === self::PATH) {
-			$uri = '//' . $refUri->getAuthority() . $uri;
+			$url = '//' . $refUrl->getAuthority() . $url;
 		}
 
-		if (strpos($uri, '//', 2) !== FALSE) {
+		if (strpos($url, '//', 2) !== FALSE) {
 			return NULL; // TODO: implement counterpart in match() ?
 		}
 
-		$uri = ($this->flags & self::SECURED ? 'https:' : 'http:') . $uri;
+		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
 
-		return $uri;
+		return $url;
 	}
 
 

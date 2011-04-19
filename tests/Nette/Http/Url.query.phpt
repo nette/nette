@@ -16,20 +16,20 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Url('http://hostname/path?arg=value');
-Assert::same( 'arg=value',  $uri->query );
+$url = new Url('http://hostname/path?arg=value');
+Assert::same( 'arg=value',  $url->query );
 
-$uri->appendQuery(NULL);
-Assert::same( 'arg=value',  $uri->query );
+$url->appendQuery(NULL);
+Assert::same( 'arg=value',  $url->query );
 
-$uri->appendQuery(array(NULL));
-Assert::same( 'arg=value',  $uri->query );
+$url->appendQuery(array(NULL));
+Assert::same( 'arg=value',  $url->query );
 
-$uri->appendQuery('arg2=value2');
-Assert::same( 'arg=value&arg2=value2',  $uri->query );
+$url->appendQuery('arg2=value2');
+Assert::same( 'arg=value&arg2=value2',  $url->query );
 
-$uri->appendQuery(array('arg3' => 'value3'));
-Assert::same( 'arg=value&arg2=value2&arg3=value3',  $uri->query );
+$url->appendQuery(array('arg3' => 'value3'));
+Assert::same( 'arg=value&arg2=value2&arg3=value3',  $url->query );
 
-$uri->setQuery(array('arg3' => 'value3'));
-Assert::same( 'arg3=value3',  $uri->query );
+$url->setQuery(array('arg3' => 'value3'));
+Assert::same( 'arg3=value3',  $url->query );

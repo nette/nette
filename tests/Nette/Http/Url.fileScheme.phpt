@@ -16,25 +16,25 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Url('file://localhost/D:/dokumentace/rfc3986.txt');
-Assert::same( 'file://localhost/D:/dokumentace/rfc3986.txt',  (string) $uri );
-Assert::same( 'file',  $uri->scheme );
-Assert::same( '',  $uri->user );
-Assert::same( '',  $uri->password );
-Assert::same( 'localhost',  $uri->host );
-Assert::null( $uri->port );
-Assert::same( '/D:/dokumentace/rfc3986.txt',  $uri->path );
-Assert::same( '',  $uri->query );
-Assert::same( '',  $uri->fragment );
+$url = new Url('file://localhost/D:/dokumentace/rfc3986.txt');
+Assert::same( 'file://localhost/D:/dokumentace/rfc3986.txt',  (string) $url );
+Assert::same( 'file',  $url->scheme );
+Assert::same( '',  $url->user );
+Assert::same( '',  $url->password );
+Assert::same( 'localhost',  $url->host );
+Assert::null( $url->port );
+Assert::same( '/D:/dokumentace/rfc3986.txt',  $url->path );
+Assert::same( '',  $url->query );
+Assert::same( '',  $url->fragment );
 
 
-$uri = new Url('file:///D:/dokumentace/rfc3986.txt');
-Assert::same( 'file://D:/dokumentace/rfc3986.txt',  (string) $uri );
-Assert::same( 'file',  $uri->scheme );
-Assert::same( '',  $uri->user );
-Assert::same( '',  $uri->password );
-Assert::same( '',  $uri->host );
-Assert::null( $uri->port );
-Assert::same( 'D:/dokumentace/rfc3986.txt',  $uri->path );
-Assert::same( '',  $uri->query );
-Assert::same( '',  $uri->fragment );
+$url = new Url('file:///D:/dokumentace/rfc3986.txt');
+Assert::same( 'file://D:/dokumentace/rfc3986.txt',  (string) $url );
+Assert::same( 'file',  $url->scheme );
+Assert::same( '',  $url->user );
+Assert::same( '',  $url->password );
+Assert::same( '',  $url->host );
+Assert::null( $url->port );
+Assert::same( 'D:/dokumentace/rfc3986.txt',  $url->path );
+Assert::same( '',  $url->query );
+Assert::same( '',  $url->fragment );

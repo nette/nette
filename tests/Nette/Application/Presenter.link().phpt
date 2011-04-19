@@ -161,9 +161,9 @@ class Submodule_OtherPresenter extends TestPresenter
 
 Environment::setVariable('appDir', __DIR__);
 
-$uri = new Http\UrlScript('http://localhost/index.php');
-$uri->setScriptPath('/index.php');
-$context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Http\Request($uri));
+$url = new Http\UrlScript('http://localhost/index.php');
+$url->setScriptPath('/index.php');
+$context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Http\Request($url));
 
 $application = Environment::getApplication();
 $application->setRouter(new Application\Routers\SimpleRouter());

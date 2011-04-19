@@ -16,16 +16,16 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new Url('ftp://ftp.is.co.za/rfc/rfc3986.txt');
+$url = new Url('ftp://ftp.is.co.za/rfc/rfc3986.txt');
 
-Assert::same( 'ftp',  $uri->scheme );
-Assert::same( '',  $uri->user );
-Assert::same( '',  $uri->password );
-Assert::same( 'ftp.is.co.za',  $uri->host );
-Assert::same( 21,  $uri->port );
-Assert::same( '/rfc/rfc3986.txt',  $uri->path );
-Assert::same( '',  $uri->query );
-Assert::same( '',  $uri->fragment );
-Assert::same( 'ftp.is.co.za',  $uri->authority );
-Assert::same( 'ftp://ftp.is.co.za',  $uri->hostUri );
-Assert::same( 'ftp://ftp.is.co.za/rfc/rfc3986.txt',  $uri->absoluteUri );
+Assert::same( 'ftp',  $url->scheme );
+Assert::same( '',  $url->user );
+Assert::same( '',  $url->password );
+Assert::same( 'ftp.is.co.za',  $url->host );
+Assert::same( 21,  $url->port );
+Assert::same( '/rfc/rfc3986.txt',  $url->path );
+Assert::same( '',  $url->query );
+Assert::same( '',  $url->fragment );
+Assert::same( 'ftp.is.co.za',  $url->authority );
+Assert::same( 'ftp://ftp.is.co.za',  $url->hostUrl );
+Assert::same( 'ftp://ftp.is.co.za/rfc/rfc3986.txt',  $url->absoluteUrl );

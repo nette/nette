@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 try {
-	$uri = new Url(':');
+	$url = new Url(':');
 
 	Assert::fail('Expected exception');
 } catch (Exception $e) {

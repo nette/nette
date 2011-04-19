@@ -628,10 +628,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @return void
 	 * @throws Nette\Application\AbortException
 	 */
-	public function redirectUri($uri, $code = NULL)
+	public function redirectUrl($url, $code = NULL)
 	{
 		if ($this->isAjax()) {
-			$this->payload->redirect = (string) $uri;
+			$this->payload->redirect = (string) $url;
 			$this->sendPayload();
 
 		} elseif (!$code) {
@@ -639,7 +639,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				? Http\IResponse::S303_POST_GET
 				: Http\IResponse::S302_FOUND;
 		}
-		$this->sendResponse(new Responses\RedirectResponse($uri, $code));
+		$this->sendResponse(new Responses\RedirectResponse($url, $code));
 	}
 
 
@@ -686,9 +686,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$uri = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
-			if ($uri !== NULL && !$this->getHttpRequest()->getUri()->isEqual($uri)) {
-				$this->sendResponse(new Responses\RedirectResponse($uri, Http\IResponse::S301_MOVED_PERMANENTLY));
+			$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
+			if ($url !== NULL && !$this->getHttpRequest()->getUrl()->isEqual($url)) {
+				$this->sendResponse(new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
 	}
@@ -736,12 +736,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 		// note: createRequest supposes that saveState(), run() & tryCall() behaviour is final
 
 		// cached services for better performance
-		static $presenterFactory, $router, $refUri;
+		static $presenterFactory, $router, $refUrl;
 		if ($presenterFactory === NULL) {
 			$presenterFactory = $this->getApplication()->getPresenterFactory();
 			$router = $this->getApplication()->getRouter();
-			$refUri = new Http\Url($this->getHttpRequest()->getUri());
-			$refUri->setPath($this->getHttpRequest()->getUri()->getScriptPath());
+			$refUrl = new Http\Url($this->getHttpRequest()->getUrl());
+			$refUrl->setPath($this->getHttpRequest()->getUrl()->getScriptPath());
 		}
 
 		$this->lastCreatedRequest = $this->lastCreatedRequestFlag = NULL;
@@ -927,8 +927,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 		if ($mode === 'forward') return;
 
 		// CONSTRUCT URL
-		$uri = $router->constructUrl($this->lastCreatedRequest, $refUri);
-		if ($uri === NULL) {
+		$url = $router->constructUrl($this->lastCreatedRequest, $refUrl);
+		if ($url === NULL) {
 			unset($args[self::ACTION_KEY]);
 			$params = urldecode(http_build_query($args, NULL, ', '));
 			throw new InvalidLinkException("No route for $presenter:$action($params)");
@@ -936,13 +936,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		// make URL relative if possible
 		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
-			$hostUri = $refUri->getHostUri();
-			if (strncmp($uri, $hostUri, strlen($hostUri)) === 0) {
-				$uri = substr($uri, strlen($hostUri));
+			$hostUrl = $refUrl->getHostUrl();
+			if (strncmp($url, $hostUrl, strlen($hostUrl)) === 0) {
+				$url = substr($url, strlen($hostUrl));
 			}
 		}
 
-		return $uri . $fragment;
+		return $url . $fragment;
 	}
 
 

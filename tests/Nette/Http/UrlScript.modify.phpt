@@ -16,13 +16,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$uri = new UrlScript('http://nette.org:8080/file.php?q=search');
-$uri->path = '/test/';
-$uri->scriptPath = '/test/index.php';
+$url = new UrlScript('http://nette.org:8080/file.php?q=search');
+$url->path = '/test/';
+$url->scriptPath = '/test/index.php';
 
-Assert::same( '/test/index.php',  $uri->scriptPath );
-Assert::same( 'http://nette.org:8080/test/',  $uri->baseUri );
-Assert::same( '/test/',  $uri->basePath );
-Assert::same( '?q=search',  $uri->relativeUri );
-Assert::same( '',  $uri->pathInfo );
-Assert::same( 'http://nette.org:8080/test/?q=search',  $uri->absoluteUri );
+Assert::same( '/test/index.php',  $url->scriptPath );
+Assert::same( 'http://nette.org:8080/test/',  $url->baseUrl );
+Assert::same( '/test/',  $url->basePath );
+Assert::same( '?q=search',  $url->relativeUrl );
+Assert::same( '',  $url->pathInfo );
+Assert::same( 'http://nette.org:8080/test/?q=search',  $url->absoluteUrl);

@@ -19,20 +19,20 @@ use Nette;
  * URI Syntax (RFC 3986).
  *
  * <pre>
- * scheme  user  password  host  port  basePath   relativeUri
+ * scheme  user  password  host  port  basePath   relativeUrl
  *   |      |      |        |      |    |             |
  * /--\   /--\ /------\ /-------\ /--\/--\/----------------------------\
- * http://john:x0y17575@nette.org:8042/en/manual.php?name=param#fragment  <-- absoluteUri
+ * http://john:x0y17575@nette.org:8042/en/manual.php?name=param#fragment  <-- absoluteUrl
  *        \__________________________/\____________/^\________/^\______/
  *                     |                     |           |         |
  *                 authority               path        query    fragment
  * </pre>
  *
  * - authority:   [user[:password]@]host[:port]
- * - hostUri:     http://user:password@nette.org:8042
+ * - hostUrl:     http://user:password@nette.org:8042
  * - basePath:    /en/ (everything before relative URI not including the script name)
- * - baseUri:     http://user:password@nette.org:8042/en/
- * - relativeUri: manual.php
+ * - baseUrl:     http://user:password@nette.org:8042/en/
+ * - relativeUrl: manual.php
  *
  * @author     David Grudl
  *
@@ -44,12 +44,12 @@ use Nette;
  * @property   string $path
  * @property   string $query
  * @property   string $fragment
- * @property-read string $absoluteUri
+ * @property-read string $absoluteUrl
  * @property-read string $authority
- * @property-read string $hostUri
+ * @property-read string $hostUrl
  * @property-read string $basePath
- * @property-read string $baseUri
- * @property-read string $relativeUri
+ * @property-read string $baseUrl
+ * @property-read string $relativeUrl
  */
 class Url extends Nette\FreezableObject
 {
@@ -92,12 +92,12 @@ class Url extends Nette\FreezableObject
 	 * @param  string  URL
 	 * @throws Nette\WebNette\InvalidArgumentException
 	 */
-	public function __construct($uri = NULL)
+	public function __construct($url = NULL)
 	{
-		if (is_string($uri)) {
-			$parts = @parse_url($uri); // @ - is escalated to exception
+		if (is_string($url)) {
+			$parts = @parse_url($url); // @ - is escalated to exception
 			if ($parts === FALSE) {
-				throw new Nette\InvalidArgumentException("Malformed or unsupported URI '$uri'.");
+				throw new Nette\InvalidArgumentException("Malformed or unsupported URI '$url'.");
 			}
 
 			foreach ($parts as $key => $val) {
@@ -112,9 +112,9 @@ class Url extends Nette\FreezableObject
 				$this->path = '/';
 			}
 
-		} elseif ($uri instanceof self) {
+		} elseif ($url instanceof self) {
 			foreach ($this as $key => $val) {
-				$this->$key = $uri->$key;
+				$this->$key = $url->$key;
 			}
 		}
 	}
@@ -339,7 +339,7 @@ class Url extends Nette\FreezableObject
 	 * Returns the entire URI including query string and fragment.
 	 * @return string
 	 */
-	public function getAbsoluteUri()
+	public function getAbsoluteUrl()
 	{
 		return $this->scheme . '://' . $this->getAuthority() . $this->path
 			. ($this->query === '' ? '' : '?' . $this->query)
@@ -372,7 +372,7 @@ class Url extends Nette\FreezableObject
 	 * Returns the scheme and authority part of URI.
 	 * @return string
 	 */
-	public function getHostUri()
+	public function getHostUrl()
 	{
 		return $this->scheme . '://' . $this->getAuthority();
 	}
@@ -395,7 +395,7 @@ class Url extends Nette\FreezableObject
 	 * Returns the base-URI.
 	 * @return string
 	 */
-	public function getBaseUri()
+	public function getBaseUrl()
 	{
 		return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
 	}
@@ -406,9 +406,9 @@ class Url extends Nette\FreezableObject
 	 * Returns the relative-URI.
 	 * @return string
 	 */
-	public function getRelativeUri()
+	public function getRelativeUrl()
 	{
-		return (string) substr($this->getAbsoluteUri(), strlen($this->getBaseUri()));
+		return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
 	}
 
 
@@ -418,10 +418,10 @@ class Url extends Nette\FreezableObject
 	 * @param  string
 	 * @return bool
 	 */
-	public function isEqual($uri)
+	public function isEqual($url)
 	{
 		// compare host + path
-		$part = self::unescape(strtok($uri, '?#'), '%/');
+		$part = self::unescape(strtok($url, '?#'), '%/');
 		if (strncmp($part, '//', 2) === 0) { // absolute URI without scheme
 			if ($part !== '//' . $this->getAuthority() . $this->path) return FALSE;
 
@@ -461,7 +461,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function __toString()
 	{
-		return $this->getAbsoluteUri();
+		return $this->getAbsoluteUrl();
 	}
 
 
@@ -485,6 +485,36 @@ class Url extends Nette\FreezableObject
 			}
 		}
 		return $s;
+	}
+
+
+
+	/** @deprecated */
+	function getRelativeUri()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getRelativeUrl() instead.', E_USER_WARNING);
+		return $this->getRelativeUrl();
+	}
+
+	/** @deprecated */
+	function getAbsoluteUri()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getAbsoluteUrl() instead.', E_USER_WARNING);
+		return $this->getAbsoluteUrl();
+	}
+
+	/** @deprecated */
+	function getHostUri()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getHostUrl() instead.', E_USER_WARNING);
+		return $this->getHostUrl();
+	}
+
+	/** @deprecated */
+	function getBaseUri()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getBaseUrl() instead.', E_USER_WARNING);
+		return $this->getBaseUrl();
 	}
 
 }

@@ -29,45 +29,45 @@ $_SERVER = array(
 );
 
 $factory = new Http\RequestFactory;
-$factory->uriFilters['path'] = array('#%20#' => '');
-$factory->uriFilters['uri'] = array('#[.,)]$#' => '');
+$factory->urlFilters['path'] = array('#%20#' => '');
+$factory->urlFilters['url'] = array('#[.,)]$#' => '');
 $request = $factory->createHttpRequest();
 
 Assert::same( 'GET',  $request->getMethod() );
 Assert::true( $request->isSecured() );
 Assert::same( '192.168.188.66',  $request->getRemoteAddress() );
 
-Assert::same( '/file.php',  $request->getUri()->scriptPath );
-Assert::same( 'https',  $request->getUri()->scheme );
-Assert::same( '',  $request->getUri()->user );
-Assert::same( '',  $request->getUri()->password );
-Assert::same( 'nette.org',  $request->getUri()->host );
-Assert::same( 8080,  $request->getUri()->port );
-Assert::same( '/file.php',  $request->getUri()->path );
-Assert::same( "x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->query );
-Assert::same( '',  $request->getUri()->fragment );
-Assert::same( 'nette.org:8080',  $request->getUri()->authority );
-Assert::same( 'https://nette.org:8080',  $request->getUri()->hostUri );
-Assert::same( 'https://nette.org:8080/',  $request->getUri()->baseUri );
-Assert::same( '/',  $request->getUri()->basePath );
-Assert::same( "file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->relativeUri );
-Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUri()->absoluteUri );
-Assert::same( '',  $request->getUri()->pathInfo );
+Assert::same( '/file.php',  $request->getUrl()->scriptPath );
+Assert::same( 'https',  $request->getUrl()->scheme );
+Assert::same( '',  $request->getUrl()->user );
+Assert::same( '',  $request->getUrl()->password );
+Assert::same( 'nette.org',  $request->getUrl()->host );
+Assert::same( 8080,  $request->getUrl()->port );
+Assert::same( '/file.php',  $request->getUrl()->path );
+Assert::same( "x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUrl()->query );
+Assert::same( '',  $request->getUrl()->fragment );
+Assert::same( 'nette.org:8080',  $request->getUrl()->authority );
+Assert::same( 'https://nette.org:8080',  $request->getUrl()->hostUrl );
+Assert::same( 'https://nette.org:8080/',  $request->getUrl()->baseUrl );
+Assert::same( '/',  $request->getUrl()->basePath );
+Assert::same( "file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUrl()->relativeUrl );
+Assert::same( "https://nette.org:8080/file.php?x param=val.&pa%\x72am=val2&param3=v a%26l%3Du%2Be",  $request->getUrl()->absoluteUrl );
+Assert::same( '',  $request->getUrl()->pathInfo );
 
 
 $factory = new Http\RequestFactory;
-$factory->uriFilters['path'] = array();
-$factory->uriFilters['uri'] = array();
+$factory->urlFilters['path'] = array();
+$factory->urlFilters['url'] = array();
 $request = $factory->createHttpRequest();
 
-Assert::same( 'https',  $request->getUri()->scheme );
-Assert::same( '',  $request->getUri()->user );
-Assert::same( '',  $request->getUri()->password );
-Assert::same( 'nette.org',  $request->getUri()->host );
-Assert::same( 8080,  $request->getUri()->port );
-Assert::same( '/file.php',  $request->getUri()->path );
-Assert::same( 'x param=val.&pa%ram=val2&param3=v a%26l%3Du%2Be)',  $request->getUri()->query );
-Assert::same( '',  $request->getUri()->fragment );
+Assert::same( 'https',  $request->getUrl()->scheme );
+Assert::same( '',  $request->getUrl()->user );
+Assert::same( '',  $request->getUrl()->password );
+Assert::same( 'nette.org',  $request->getUrl()->host );
+Assert::same( 8080,  $request->getUrl()->port );
+Assert::same( '/file.php',  $request->getUrl()->path );
+Assert::same( 'x param=val.&pa%ram=val2&param3=v a%26l%3Du%2Be)',  $request->getUrl()->query );
+Assert::same( '',  $request->getUrl()->fragment );
 Assert::same( 'val.',  $request->getQuery('x_param') );
 Assert::same( 'val2',  $request->getQuery('pa%ram') );
 Assert::same( 'v a&l=u+e)',  $request->getQuery('param3') );

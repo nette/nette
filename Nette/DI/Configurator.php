@@ -284,7 +284,7 @@ class Configurator extends Nette\Object
 	public static function createApplication(array $options = NULL)
 	{
 		if (Environment::getVariable('baseUri', NULL) === NULL) {
-			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUri()->getBaseUri());
+			Environment::setVariable('baseUri', Environment::getHttpRequest()->getUrl()->getBaseUrl());
 		}
 
 		$context = clone Environment::getContext();

@@ -72,7 +72,7 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
-		if ($httpRequest->getUri()->getPathInfo() !== '') {
+		if ($httpRequest->getUrl()->getPathInfo() !== '') {
 			return NULL;
 		}
 		// combine with precedence: get, (post,) defaults
@@ -104,7 +104,7 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 * @param  Nette\Http\Url
 	 * @return string|NULL
 	 */
-	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUri)
+	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		$params = $appRequest->getParams();
 
@@ -123,13 +123,13 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 			}
 		}
 
-		$uri = ($this->flags & self::SECURED ? 'https://' : 'http://') . $refUri->getAuthority() . $refUri->getPath();
+		$url = ($this->flags & self::SECURED ? 'https://' : 'http://') . $refUrl->getAuthority() . $refUrl->getPath();
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
 		if ($query != '') { // intentionally ==
-			$uri .= '?' . $query;
+			$url .= '?' . $query;
 		}
-		return $uri;
+		return $url;
 	}
 
 

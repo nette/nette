@@ -356,7 +356,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		}
 
 		$presenter = $this->getPresenter();
-		$presenter->redirectUri($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
+		$presenter->redirectUrl($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
 	}
 
 

@@ -21,17 +21,17 @@ $router = new Application\Routers\SimpleRouter(array(
 	'module' => 'main:sub',
 ));
 
-$uri = new Http\UrlScript('http://nette.org/file.php');
-$uri->setScriptPath('/file.php');
-$uri->setQuery(array(
+$url = new Http\UrlScript('http://nette.org/file.php');
+$url->setScriptPath('/file.php');
+$url->setQuery(array(
 	'presenter' => 'myPresenter',
 ));
-$httpRequest = new Http\Request($uri);
+$httpRequest = new Http\Request($url);
 
 $req = $router->match($httpRequest);
 Assert::same( 'main:sub:myPresenter',  $req->getPresenterName() );
 
-$url = $router->constructUrl($req, $httpRequest->uri);
+$url = $router->constructUrl($req, $httpRequest->url);
 Assert::same( 'http://nette.org/file.php?presenter=myPresenter',  $url );
 
 $req = new Application\Request(
@@ -39,5 +39,5 @@ $req = new Application\Request(
 	Http\Request::GET,
 	array()
 );
-$url = $router->constructUrl($req, $httpRequest->uri);
+$url = $router->constructUrl($req, $httpRequest->url);
 Assert::null( $url );
