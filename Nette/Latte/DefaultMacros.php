@@ -67,7 +67,7 @@ class DefaultMacros extends Nette\Object
 		'/snippet' => '<?php %:macroSnippetEnd% ?>',
 
 		'cache' => '<?php %:macroCache% ?>',
-		'/cache' => '<?php array_pop($_l->g->caches)->save(); } ?>',
+		'/cache' => '<?php $_l->tmp = array_pop($_l->g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); } ?>',
 
 		'if' => '<?php if (%%): ?>',
 		'elseif' => '<?php elseif (%%): ?>',
@@ -707,7 +707,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroCache($content)
 	{
-		return 'if (Nette\Caching\OutputHelper::create('
+		return 'if (Nette\Latte\DefaultMacros::createCache('
 			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
 			. ', $_l->g->caches' . $this->formatArray($content, ', ') . ')) {';
 	}
@@ -1230,7 +1230,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// cache support
 		if (!empty($local->g->caches)) {
-			end($local->g->caches)->addFile($template->getFile());
+			end($local->g->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
 		}
 
 		return $local;
@@ -1257,6 +1257,37 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 * Starts the output cache. Returns Nette\Caching\OutputHelper object if buffering was started.
+	 * @param  string
+	 * @param  array of Nette\Caching\OutputHelper
+	 * @param  array
+	 * @return Nette\Caching\OutputHelper
+	 */
+	public static function createCache($key, & $parents, $args = NULL)
+	{
+		if ($args) {
+			if (array_key_exists('if', $args) && !$args['if']) {
+				return $parents[] = (object) NULL;
+			}
+			$key = array_merge(array($key), array_intersect_key($args, range(0, count($args))));
+		}
+		if ($parents) {
+			end($parents)->dependencies[Nette\Caching\Cache::ITEMS][] = $key;
+		}
+
+		if ($helper = Nette\Environment::getCache('Nette.Template.Cache')->start($key)) {
+			$helper->dependencies = array(
+				Nette\Caching\Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
+				Nette\Caching\Cache::EXPIRATION => isset($args['expire']) ? $args['expire'] : '+ 7 days',
+			);
+			$parents[] = $helper;
+		}
+		return $helper;
 	}
 
 }

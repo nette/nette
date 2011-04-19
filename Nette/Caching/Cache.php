@@ -215,6 +215,22 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 
+	/**
+	 * Starts the output cache.
+	 * @param  mixed  key
+	 * @return OutputHelper|NULL
+	 */
+	public function start($key)
+	{
+		if ($this->offsetGet($key) === NULL) {
+			return new OutputHelper($this, $key);
+		} else {
+			echo $this->data;
+		}
+	}
+
+
+
 	/********************* interface ArrayAccess ****************d*g**/
 
 
