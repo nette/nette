@@ -12,7 +12,7 @@
 namespace Nette\Mail;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -73,7 +73,7 @@ class MimePart extends Nette\Object
 			}
 
 			foreach ($value as $email => $name) {
-				if ($name !== NULL && !StringUtils::checkEncoding($name)) {
+				if ($name !== NULL && !Strings::checkEncoding($name)) {
 					throw new Nette\InvalidArgumentException("Name is not valid UTF-8 string.");
 				}
 
@@ -89,7 +89,7 @@ class MimePart extends Nette\Object
 
 		} else {
 			$value = (string) $value;
-			if (!StringUtils::checkEncoding($value)) {
+			if (!Strings::checkEncoding($value)) {
 				throw new Nette\InvalidArgumentException("Header is not valid UTF-8 string.");
 			}
 			$this->headers[$name] = preg_replace('#[\r\n]+#', ' ', $value);
@@ -260,7 +260,7 @@ class MimePart extends Nette\Object
 	public function generateMessage()
 	{
 		$output = '';
-		$boundary = '--------' . StringUtils::random();
+		$boundary = '--------' . Strings::random();
 
 		foreach ($this->headers as $name => $value) {
 			$output .= $name . ': ' . $this->getEncodedHeader($name);

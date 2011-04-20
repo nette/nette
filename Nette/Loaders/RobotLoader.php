@@ -12,7 +12,7 @@
 namespace Nette\Loaders;
 
 use Nette,
-	Nette\StringUtils,
+	Nette\Utils\Strings,
 	Nette\Caching\Cache;
 
 
@@ -224,17 +224,17 @@ class RobotLoader extends AutoLoader
 	{
 		if (is_dir($dir)) {
 			$disallow = array();
-			$iterator = Nette\Utils\Finder::findFiles(StringUtils::split($this->acceptFiles, '#[,\s]+#'))
+			$iterator = Nette\Utils\Finder::findFiles(Strings::split($this->acceptFiles, '#[,\s]+#'))
 				->filter(function($file) use (&$disallow){
 					return !isset($disallow[$file->getPathname()]);
 				})
 				->from($dir)
-				->exclude(StringUtils::split($this->ignoreDirs, '#[,\s]+#'))
+				->exclude(Strings::split($this->ignoreDirs, '#[,\s]+#'))
 				->filter($filter = function($dir) use (&$disallow){
 					$path = $dir->getPathname();
 					if (is_file("$path/netterobots.txt")) {
 						foreach (file("$path/netterobots.txt") as $s) {
-							if ($matches = StringUtils::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
+							if ($matches = Strings::match($s, '#^disallow\\s*:\\s*(\\S+)#i')) {
 								$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
 							}
 						}
@@ -276,7 +276,7 @@ class RobotLoader extends AutoLoader
 			if ($pair && $pair[0] === $file) unset($this->list[$class]);
 		}
 
-		if ($matches = StringUtils::match($s, '#//nette'.'loader=(\S*)#')) {
+		if ($matches = Strings::match($s, '#//nette'.'loader=(\S*)#')) {
 			foreach (explode(',', $matches[1]) as $name) {
 				$this->addClass($name, $file, $time);
 			}

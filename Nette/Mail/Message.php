@@ -12,7 +12,7 @@
 namespace Nette\Mail;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -313,7 +313,7 @@ class Message extends MimePart
 		$part->setBody($content);
 		$part->setContentType($contentType ? $contentType : Nette\Utils\MimeTypeDetector::fromString($content));
 		$part->setEncoding(preg_match('#(multipart|message)/#A', $contentType) ? self::ENCODING_8BIT : self::ENCODING_BASE64);
-		$part->setHeader('Content-Disposition', $disposition . '; filename="' . StringUtils::fixEncoding(basename($file)) . '"');
+		$part->setHeader('Content-Disposition', $disposition . '; filename="' . Strings::fixEncoding(basename($file)) . '"');
 		return $part;
 	}
 
@@ -441,7 +441,7 @@ class Message extends MimePart
 
 		if ($this->basePath !== FALSE) {
 			$cids = array();
-			$matches = StringUtils::matchAll(
+			$matches = Strings::matchAll(
 				$this->html,
 				'#(src\s*=\s*|background\s*=\s*|url\()(["\'])(?![a-z]+:|[/\\#])(.+?)\\2#i',
 				PREG_OFFSET_CAPTURE
@@ -458,7 +458,7 @@ class Message extends MimePart
 			}
 		}
 
-		if (!$this->getSubject() && $matches = StringUtils::match($this->html, '#<title>(.+?)</title>#is')) {
+		if (!$this->getSubject() && $matches = Strings::match($this->html, '#<title>(.+?)</title>#is')) {
 			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8'));
 		}
 	}
@@ -477,7 +477,7 @@ class Message extends MimePart
 			$this->setBody($text->__toString(TRUE));
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
-			$text = StringUtils::replace($this->html, array(
+			$text = Strings::replace($this->html, array(
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
 				'#[ \t\r\n]+#' => ' ',
@@ -493,7 +493,7 @@ class Message extends MimePart
 	/** @return string */
 	private function getRandomId()
 	{
-		return '<' . StringUtils::random() . '@' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST']
+		return '<' . Strings::random() . '@' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST']
 			: (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'))
 			. '>';
 	}

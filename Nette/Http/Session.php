@@ -104,7 +104,7 @@ class Session extends Nette\Object
 		// browser closing detection
 		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
 		if (!$browserKey) {
-			$browserKey = Nette\StringUtils::random();
+			$browserKey = Nette\Utils\Strings::random();
 		}
 		$browserClosed = !isset($nf['B']) || $nf['B'] !== $browserKey;
 		$nf['B'] = $browserKey;

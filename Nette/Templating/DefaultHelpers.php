@@ -12,7 +12,7 @@
 namespace Nette\Templating;
 
 use Nette,
-	Nette\StringUtils,
+	Nette\Utils\Strings,
 	Nette\Forms\Form,
 	Nette\Utils\Html;
 
@@ -50,7 +50,7 @@ final class DefaultHelpers
 		if ($callback->isCallable()) {
 			return $callback;
 		}
-		$callback = callback('Nette\StringUtils', $helper);
+		$callback = callback('Nette\Utils\Strings', $helper);
 		if ($callback->isCallable()) {
 			return $callback;
 		}
@@ -160,7 +160,7 @@ final class DefaultHelpers
 	 */
 	public static function strip($s)
 	{
-		return StringUtils::replace(
+		return Strings::replace(
 			$s,
 			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
 			function($m) {
@@ -180,10 +180,10 @@ final class DefaultHelpers
 	public static function indent($s, $level = 1, $chars = "\t")
 	{
 		if ($level >= 1) {
-			$s = StringUtils::replace($s, '#<(textarea|pre).*?</\\1#si', function($m) {
+			$s = Strings::replace($s, '#<(textarea|pre).*?</\\1#si', function($m) {
 				return strtr($m[0], " \t\r\n", "\x1F\x1E\x1D\x1A");
 			});
-			$s = StringUtils::indent($s, $level, $chars);
+			$s = Strings::indent($s, $level, $chars);
 			$s = strtr($s, "\x1F\x1E\x1D\x1A", " \t\r\n");
 		}
 		return $s;
@@ -241,7 +241,7 @@ final class DefaultHelpers
 	 */
 	public static function length($var)
 	{
-		return is_string($var) ? StringUtils::length($var) : count($var);
+		return is_string($var) ? Strings::length($var) : count($var);
 	}
 
 

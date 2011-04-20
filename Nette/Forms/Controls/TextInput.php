@@ -47,10 +47,10 @@ class TextInput extends TextBase
 	 */
 	public function sanitize($value)
 	{
-		if ($this->control->maxlength && Nette\StringUtils::length($value) > $this->control->maxlength) {
+		if ($this->control->maxlength && Nette\Utils\Strings::length($value) > $this->control->maxlength) {
 			$value = iconv_substr($value, 0, $this->control->maxlength, 'UTF-8');
 		}
-		return Nette\StringUtils::trim(strtr($value, "\r\n", '  '));
+		return Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
 	}
 
 

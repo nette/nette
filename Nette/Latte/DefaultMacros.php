@@ -12,7 +12,7 @@
 namespace Nette\Latte;
 
 use Nette,
-	Nette\StringUtils,
+	Nette\Utils\Strings,
 	Nette\Utils\Tokenizer;
 
 
@@ -205,7 +205,7 @@ class DefaultMacros extends Nette\Object
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
-		$this->uniq = StringUtils::random();
+		$this->uniq = Strings::random();
 		$this->cacheCounter = 0;
 
 		$filter->context = Parser::CONTEXT_TEXT;
@@ -257,7 +257,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$code = & $this->namedBlocks[$name];
 				$namere = preg_quote($name, '#');
-				$s = StringUtils::replace($s,
+				$s = Strings::replace($s,
 					"#{block $namere} \?>(.*)<\?php {/block $namere}#sU",
 					function ($matches) use ($name, & $code, $uniq) {
 						list(, $content) = $matches;
@@ -294,7 +294,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macro($macro, $content = '', $modifiers = '')
 	{
 		if (func_num_args() === 1) {  // {macro val|modifiers}
-			list(, $macro, $content, $modifiers) = StringUtils::match(
+			list(, $macro, $content, $modifiers) = Strings::match(
 				$macro,
 				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?$()#is'
 			);
@@ -319,7 +319,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		if ($closing) {
 			$node = array_pop($this->nodes);
 			if (!$node || "/$node->name" !== $macro
-				|| ($content && !StringUtils::startsWith("$node->content ", "$content ")) || $modifiers
+				|| ($content && !Strings::startsWith("$node->content ", "$content ")) || $modifiers
 			) {
 				$macro .= $content ? ' ' : '';
 				throw new ParseException("Unexpected macro {{$macro}{$content}{$modifiers}}"
@@ -339,7 +339,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		}
 
 		$This = $this;
-		return StringUtils::replace(
+		return Strings::replace(
 			$this->macros[$macro],
 			'#%(.*?)%#',
 			function ($m) use ($This, $node) {
@@ -533,7 +533,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
-			if (!StringUtils::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
+			if (!Strings::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
 				throw new ParseException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
 			}
 
@@ -600,7 +600,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		} else { // #block
 			$name = ltrim($name, '#');
-			if (!StringUtils::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
+			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
 				throw new ParseException("Block name must be alphanumeric string, '$name' given.", 0, $this->filter->line);
 
 			} elseif (isset($this->namedBlocks[$name])) {
@@ -745,7 +745,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroAttr($content)
 	{
-		return StringUtils::replace($content . ' ', '#\)\s+#', ')->');
+		return Strings::replace($content . ' ', '#\)\s+#', ')->');
 	}
 
 
@@ -822,7 +822,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$pair = explode(':', $pair, 2);
 		$name = $this->formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = StringUtils::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
+		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = $this->formatArray($content);
 		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
@@ -984,7 +984,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function fetchToken(& $s)
 	{
-		if ($matches = StringUtils::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
+		if ($matches = Strings::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
 			$s = $matches[2];
 			return $matches[1];
 		}

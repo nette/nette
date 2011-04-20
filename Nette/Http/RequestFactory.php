@@ -12,7 +12,7 @@
 namespace Nette\Http;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -94,14 +94,14 @@ class RequestFactory extends Nette\Object
 			$requestUrl = '';
 		}
 
-		$requestUrl = StringUtils::replace($requestUrl, $this->urlFilters['url']);
+		$requestUrl = Strings::replace($requestUrl, $this->urlFilters['url']);
 		$tmp = explode('?', $requestUrl, 2);
-		$url->path = StringUtils::replace($tmp[0], $this->urlFilters['path']);
+		$url->path = Strings::replace($tmp[0], $this->urlFilters['path']);
 		$url->query = isset($tmp[1]) ? $tmp[1] : '';
 
 		// normalized url
 		$url->canonicalize();
-		$url->path = StringUtils::fixEncoding($url->path);
+		$url->path = Strings::fixEncoding($url->path);
 
 		// detect script path
 		if (isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME'])
@@ -163,10 +163,10 @@ class RequestFactory extends Nette\Object
 						}
 						if ($this->encoding) {
 							if ($utf) {
-								$v = StringUtils::fixEncoding($v);
+								$v = Strings::fixEncoding($v);
 
 							} else {
-								if (!StringUtils::checkEncoding($v)) {
+								if (!Strings::checkEncoding($v)) {
 									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
 								}
 								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
@@ -201,7 +201,7 @@ class RequestFactory extends Nette\Object
 					$v['name'] = stripSlashes($v['name']);
 				}
 				if ($this->encoding) {
-					$v['name'] = preg_replace(self::NONCHARS, '', StringUtils::fixEncoding($v['name']));
+					$v['name'] = preg_replace(self::NONCHARS, '', Strings::fixEncoding($v['name']));
 				}
 				$v['@'] = new FileUpload($v);
 				continue;

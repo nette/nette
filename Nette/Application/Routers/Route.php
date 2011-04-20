@@ -13,7 +13,7 @@ namespace Nette\Application\Routers;
 
 use Nette,
 	Nette\Application,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -160,7 +160,7 @@ class Route extends Nette\Object implements Application\IRouter
 			$path = rtrim($path, '/') . '/';
 		}
 
-		if (!$matches = StringUtils::match($path, $this->re)) {
+		if (!$matches = Strings::match($path, $this->re)) {
 			// stop, not matched
 			return NULL;
 		}
@@ -406,7 +406,7 @@ class Route extends Nette\Object implements Application\IRouter
 
 		// PARSE MASK
 		// <parameter-name[=default] [pattern] [#class]> or [ or ] or ?...
-		$parts = StringUtils::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/');
+		$parts = Strings::split($mask, '/<([^>#= ]+)(=[^># ]*)? *([^>#]*)(#?[^>\[\]]*)>|(\[!?|\]|\s*\?.*)/');
 
 		$this->xlat = array();
 		$i = count($parts) - 1;
@@ -414,7 +414,7 @@ class Route extends Nette\Object implements Application\IRouter
 		// PARSE QUERY PART OF MASK
 		if (isset($parts[$i - 1]) && substr(ltrim($parts[$i - 1]), 0, 1) === '?') {
 			// name=<parameter-name [pattern][#class]>
-			$matches = StringUtils::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/');
+			$matches = Strings::matchAll($parts[$i - 1], '/(?:([a-zA-Z0-9_.-]+)=)?<([^># ]+) *([^>#]*)(#?[^>]*)>/');
 
 			foreach ($matches as $match) {
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is not used

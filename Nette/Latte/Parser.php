@@ -12,7 +12,7 @@
 namespace Nette\Latte;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -70,7 +70,7 @@ class Parser extends Nette\Object
 	 */
 	public function parse($s)
 	{
-		if (!StringUtils::checkEncoding($s)) {
+		if (!Strings::checkEncoding($s)) {
 			throw new ParseException('Template is not valid UTF-8 stream.');
 		}
 		if (!$this->macroRe) {
@@ -143,7 +143,7 @@ class Parser extends Nette\Object
 			$tag = $this->tags[] = (object) NULL;
 			$tag->name = $matches['tag'];
 			$tag->closing = FALSE;
-			$tag->isMacro = StringUtils::startsWith($tag->name, self::HTML_PREFIX);
+			$tag->isMacro = Strings::startsWith($tag->name, self::HTML_PREFIX);
 			$tag->attrs = array();
 			$tag->pos = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
@@ -156,7 +156,7 @@ class Parser extends Nette\Object
 					//throw new ParseException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
 					$tag = (object) NULL;
 					$tag->name = $matches['tag'];
-					$tag->isMacro = StringUtils::startsWith($tag->name, self::HTML_PREFIX);
+					$tag->isMacro = Strings::startsWith($tag->name, self::HTML_PREFIX);
 				}
 			} while (strcasecmp($tag->name, $matches['tag']));
 			$this->tags[] = $tag;
@@ -256,7 +256,7 @@ class Parser extends Nette\Object
 			$value = isset($matches['value']) ? $matches['value'] : '';
 
 			// special attribute?
-			if ($isSpecial = StringUtils::startsWith($name, self::HTML_PREFIX)) {
+			if ($isSpecial = Strings::startsWith($name, self::HTML_PREFIX)) {
 				$name = substr($name, strlen(self::HTML_PREFIX));
 			}
 			$tag = end($this->tags);
@@ -340,7 +340,7 @@ class Parser extends Nette\Object
 	 */
 	private function match($re)
 	{
-		if ($matches = StringUtils::match($this->input, $re, PREG_OFFSET_CAPTURE, $this->offset)) {
+		if ($matches = Strings::match($this->input, $re, PREG_OFFSET_CAPTURE, $this->offset)) {
 			$this->output .= substr($this->input, $this->offset, $matches[0][1] - $this->offset);
 			$this->offset = $matches[0][1] + strlen($matches[0][0]);
 			foreach ($matches as $k => $v) $matches[$k] = $v[0];

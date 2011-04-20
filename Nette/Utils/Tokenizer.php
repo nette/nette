@@ -12,7 +12,7 @@
 namespace Nette\Utils;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -69,7 +69,7 @@ class Tokenizer extends Nette\Object
 	{
 		$this->input = $input;
 		if ($this->types) {
-			$this->tokens = StringUtils::matchAll($input, $this->re);
+			$this->tokens = Strings::matchAll($input, $this->re);
 			$len = 0;
 			$count = count($this->types);
 			$line = 1;
@@ -91,9 +91,9 @@ class Tokenizer extends Nette\Object
 			}
 
 		} else {
-			$this->tokens = StringUtils::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
-			if ($this->tokens && !StringUtils::match(end($this->tokens), $this->re)) {
-				$tmp = StringUtils::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+			$this->tokens = Strings::split($input, $this->re, PREG_SPLIT_NO_EMPTY);
+			if ($this->tokens && !Strings::match(end($this->tokens), $this->re)) {
+				$tmp = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 				list(, $errorOffset) = end($tmp);
 			}
 		}
@@ -123,7 +123,7 @@ class Tokenizer extends Nette\Object
 	 */
 	public function getOffset($i)
 	{
-		$tokens = StringUtils::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
+		$tokens = Strings::split($this->input, $this->re, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_OFFSET_CAPTURE);
 		$offset = isset($tokens[$i]) ? $tokens[$i][1] : strlen($this->input);
 		return array(
 			$offset,

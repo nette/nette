@@ -69,7 +69,7 @@ class SqlPreprocessor extends Nette\Object
 			:[a-zA-Z0-9_]+:| ## :substitution:
 			\?               ## placeholder
 		~xs*/
-		$sql = Nette\StringUtils::replace($sql, '~\'.*?\'|".*?"|:[a-zA-Z0-9_]+:|\?~s', array($this, 'callback'));
+		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|:[a-zA-Z0-9_]+:|\?~s', array($this, 'callback'));
 
 		while ($this->counter < count($params)) {
 			$sql .= ' ' . $this->formatValue($params[$this->counter++]);

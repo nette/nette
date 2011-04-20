@@ -13,7 +13,7 @@ namespace Nette\Forms\Controls;
 
 use Nette,
 	Nette\Forms\Form,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -135,7 +135,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateMinLength(TextBase $control, $length)
 	{
-		return StringUtils::length($control->getValue()) >= $length;
+		return Strings::length($control->getValue()) >= $length;
 	}
 
 
@@ -148,7 +148,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateMaxLength(TextBase $control, $length)
 	{
-		return StringUtils::length($control->getValue()) <= $length;
+		return Strings::length($control->getValue()) <= $length;
 	}
 
 
@@ -164,7 +164,7 @@ abstract class TextBase extends BaseControl
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		$len = StringUtils::length($control->getValue());
+		$len = Strings::length($control->getValue());
 		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
 	}
 
@@ -181,7 +181,7 @@ abstract class TextBase extends BaseControl
 		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
 		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
 		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) StringUtils::match($control->getValue(), "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
+		return (bool) Strings::match($control->getValue(), "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
 	}
 
 
@@ -194,7 +194,7 @@ abstract class TextBase extends BaseControl
 	public static function validateUrl(TextBase $control)
 	{
 		$chars = "a-z0-9\x80-\xFF";
-		return (bool) StringUtils::match(
+		return (bool) Strings::match(
 			$control->getValue(),
 			"#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i"
 		);
@@ -205,7 +205,7 @@ abstract class TextBase extends BaseControl
 	/** @deprecated */
 	public static function validateRegexp(TextBase $control, $regexp)
 	{
-		return (bool) StringUtils::match($control->getValue(), $regexp);
+		return (bool) Strings::match($control->getValue(), $regexp);
 	}
 
 
@@ -218,7 +218,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validatePattern(TextBase $control, $pattern)
 	{
-		return (bool) StringUtils::match($control->getValue(), "\x01^($pattern)$\x01u");
+		return (bool) Strings::match($control->getValue(), "\x01^($pattern)$\x01u");
 	}
 
 
@@ -230,7 +230,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateInteger(TextBase $control)
 	{
-		return (bool) StringUtils::match($control->getValue(), '/^-?[0-9]+$/');
+		return (bool) Strings::match($control->getValue(), '/^-?[0-9]+$/');
 	}
 
 
@@ -242,7 +242,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateFloat(TextBase $control)
 	{
-		return (bool) StringUtils::match($control->getValue(), '/^-?[0-9]*[.,]?[0-9]+$/');
+		return (bool) Strings::match($control->getValue(), '/^-?[0-9]*[.,]?[0-9]+$/');
 	}
 
 

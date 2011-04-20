@@ -337,7 +337,7 @@ class Application extends Nette\Object
 	{
 		$session = $this->getSession('Nette.Application/requests');
 		do {
-			$key = Nette\StringUtils::random(5);
+			$key = Nette\Utils\Strings::random(5);
 		} while (isset($session[$key]));
 
 		$session[$key] = end($this->requests);

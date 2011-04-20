@@ -12,7 +12,7 @@
 namespace Nette\Reflection;
 
 use Nette,
-	Nette\StringUtils;
+	Nette\Utils\Strings;
 
 
 
@@ -121,7 +121,7 @@ final class AnnotationsParser
 	{
 		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
-		$matches = StringUtils::matchAll(
+		$matches = Strings::matchAll(
 			trim($comment, '/*'),
 			'~
 				(?<=\s)@('.self::RE_IDENTIFIER.')[ \t]*      ##  annotation
@@ -140,7 +140,7 @@ final class AnnotationsParser
 				$key = '';
 				$val = TRUE;
 				$value[0] = ',';
-				while ($m = StringUtils::match(
+				while ($m = Strings::match(
 					$value,
 					'#\s*,\s*(?>(' . self::RE_IDENTIFIER . ')\s*=\s*)?(' . self::RE_STRING . '|[^\'"),\s][^\'"),]*)#A')
 				) {
@@ -204,7 +204,7 @@ final class AnnotationsParser
 
 		$s = file_get_contents($file);
 
-		if (StringUtils::match($s, '#//nette'.'loader=(\S*)#')) {
+		if (Strings::match($s, '#//nette'.'loader=(\S*)#')) {
 			return; // TODO: allways ignore?
 		}
 

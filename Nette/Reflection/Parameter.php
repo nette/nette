@@ -49,7 +49,7 @@ class Parameter extends \ReflectionParameter
 	 */
 	public function getClassName()
 	{
-		return ($tmp = Nette\StringUtils::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
+		return ($tmp = Nette\Utils\Strings::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
 	}
 
 

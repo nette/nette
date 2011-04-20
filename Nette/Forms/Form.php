@@ -221,7 +221,7 @@ class Form extends Container
 		if (isset($session->$key)) {
 			$token = $session->$key;
 		} else {
-			$session->$key = $token = Nette\StringUtils::random();
+			$session->$key = $token = Nette\Utils\Strings::random();
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
@@ -433,7 +433,7 @@ class Form extends Container
 		}
 
 		if ($httpRequest->isMethod('post')) {
-			$data = Nette\ArrayUtils::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+			$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
 		} else {
 			$data = $httpRequest->getQuery();
 		}

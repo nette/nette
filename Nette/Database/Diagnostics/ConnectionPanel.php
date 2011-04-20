@@ -98,7 +98,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-debug-database-row-{$h($this->name)}-$i'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="database-sql">' . Nette\Database\Connection::highlightSql(Nette\StringUtils::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="database-sql">' . Nette\Database\Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
 			if ($explain) {
 				$s .= "<table id='nette-debug-database-row-{$h($this->name)}-$i' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
@@ -123,7 +123,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= "{$h(Nette\StringUtils::truncate($param, self::$maxLength))}<br>";
+				$s .= "{$h(Nette\Utils\Strings::truncate($param, self::$maxLength))}<br>";
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';

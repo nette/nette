@@ -99,7 +99,7 @@ final class IniAdapter implements IAdapter
 							throw new Nette\InvalidStateException("Missing parent section [$parent] in '$file'.");
 						}
 					}
-					$secData = Nette\ArrayUtils::mergeTree($secData, $cursor);
+					$secData = Nette\Utils\Arrays::mergeTree($secData, $cursor);
 				}
 
 				$secName = trim($parts[0]);
@@ -122,7 +122,7 @@ final class IniAdapter implements IAdapter
 			}
 
 			if (is_array($secData) && is_array($cursor)) {
-				$secData = Nette\ArrayUtils::mergeTree($secData, $cursor);
+				$secData = Nette\Utils\Arrays::mergeTree($secData, $cursor);
 			}
 
 			$cursor = $secData;
