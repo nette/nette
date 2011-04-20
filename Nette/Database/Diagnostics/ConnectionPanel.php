@@ -60,13 +60,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public function getId()
-	{
-		return 'database';
-	}
-
-
-
 	public function getTab()
 	{
 		return '<span title="Nette\\Database ' . htmlSpecialChars($this->name) . '">'

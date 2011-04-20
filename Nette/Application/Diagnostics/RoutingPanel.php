@@ -23,7 +23,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class RoutingPanel extends Nette\Diagnostics\Panel
+class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
 	/** @var Nette\Application\IRouter */
 	private $router;
@@ -43,30 +43,33 @@ class RoutingPanel extends Nette\Diagnostics\Panel
 	{
 		$this->router = $router;
 		$this->httpRequest = $httpRequest;
-		parent::__construct('RoutingPanel', array($this, 'renderTab'), array($this, 'renderPanel'));
 	}
 
 
 
 	/**
-	 * Renders debuger tab.
-	 * @return void
+	 * Renders tab.
+	 * @return string
 	 */
-	public function renderTab()
+	public function getTab()
 	{
 		$this->analyse($this->router);
+		ob_start();
 		require __DIR__ . '/templates/RoutingPanel.tab.phtml';
+		return ob_get_clean();
 	}
 
 
 
 	/**
-	 * Renders debuger panel.
-	 * @return void
+	 * Renders panel.
+	 * @return string
 	 */
-	public function renderPanel()
+	public function getPanel()
 	{
+		ob_start();
 		require __DIR__ . '/templates/RoutingPanel.panel.phtml';
+		return ob_get_clean();
 	}
 
 

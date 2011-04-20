@@ -62,10 +62,4 @@ class FilterException extends Nette\InvalidStateException implements Nette\Diagn
 			. ($this->sourceLine ? '<pre>' . Nette\Diagnostics\Helpers::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
 	}
 
-
-
-	function getId()
-	{
-	}
-
 }
