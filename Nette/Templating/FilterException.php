@@ -59,7 +59,7 @@ class FilterException extends Nette\InvalidStateException implements Nette\Diagn
 		$link = Nette\Diagnostics\Helpers::editorLink($this->sourceFile, $this->sourceLine);
 		return '<p><b>File:</b> ' . ($link ? '<a href="' . htmlspecialchars($link) . '">' : '') . htmlspecialchars($this->sourceFile) . ($link ? '</a>' : '')
 			. '&nbsp; <b>Line:</b> ' . ($this->sourceLine ? $this->sourceLine : 'n/a') . '</p>'
-			. ($this->sourceLine ? '<pre>' . Nette\Diagnostics\Helpers::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
+			. ($this->sourceLine ? '<pre>' . Nette\Diagnostics\BlueScreen::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
 	}
 
 }
