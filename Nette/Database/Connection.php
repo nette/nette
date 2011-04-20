@@ -59,10 +59,7 @@ class Connection extends PDO
 
 		$this->databaseReflection = new Reflection\DatabaseReflection; // TODO
 
-		if (!Nette\Diagnostics\Debugger::$productionMode) {
-			Nette\Diagnostics\Debugger::$bar->addPanel($panel = new Diagnostics\ConnectionPanel($dsn));
-			$this->onQuery[] = callback($panel, 'logQuery');
-		}
+		Diagnostics\ConnectionPanel::initialize($this);
 	}
 
 

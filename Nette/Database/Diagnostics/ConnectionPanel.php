@@ -11,7 +11,9 @@
 
 namespace Nette\Database\Diagnostics;
 
-use Nette;
+use Nette,
+	Nette\Database\Connection,
+	Nette\Diagnostics\Debugger;
 
 
 
@@ -42,6 +44,18 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
+	public static function initialize(Connection $connection)
+	{
+		if (!Debugger::$productionMode) {
+			$panel = new self;
+			$connection->onQuery[] = callback($panel, 'logQuery');
+			Debugger::$bar->addPanel($panel);
+			Debugger::$blueScreen->addPanel(callback($panel, 'renderException'), __CLASS__);
+		}
+	}
+
+
+
 	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
 	{
 		if ($this->disabled) {
@@ -56,6 +70,18 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		}
 		$this->totalTime += $result->time;
 		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection(), $source);
+	}
+
+
+
+	public function renderException($e)
+	{
+		if ($e instanceof \PDOException && isset($e->queryString)) {
+			return array(
+				'tab' => 'SQL',
+				'panel' => Connection::highlightSql($e->queryString),
+			);
+		}
 	}
 
 
@@ -93,7 +119,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Nette\Database\Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
@@ -111,9 +137,9 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			}
 			if ($source) {
 				list($file, $line) = $source;
-				$s .= (Nette\Diagnostics\Debugger::$editor ? "<a href='{$h(Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
+				$s .= (Debugger::$editor ? "<a href='{$h(Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
 					. " class='nette-DbConnectionPanel-source' title='{$h($file)}:$line'>"
-					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Nette\Diagnostics\Debugger::$editor ? '</a>' : '</span>');
+					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Debugger::$editor ? '</a>' : '</span>');
 			}
 
 			$s .= '</td><td>';
