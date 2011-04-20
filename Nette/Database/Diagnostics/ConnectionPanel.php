@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
+class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
 	/** @var int maximum SQL length */
 	static public $maxLength = 1000;

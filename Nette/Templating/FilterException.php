@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class FilterException extends Nette\InvalidStateException implements Nette\Diagnostics\IPanel
+class FilterException extends Nette\InvalidStateException implements Nette\Diagnostics\IBarPanel
 {
 	/** @var string */
 	public $sourceFile;

@@ -110,7 +110,7 @@ class NetteLoader extends AutoLoader
 		'nette\diagnostics\bar' => '/Diagnostics/Bar.php',
 		'nette\diagnostics\debugger' => '/Diagnostics/Debugger.php',
 		'nette\diagnostics\helpers' => '/Diagnostics/Helpers.php',
-		'nette\diagnostics\ipanel' => '/Diagnostics/IPanel.php',
+		'nette\diagnostics\ibarpanel' => '/Diagnostics/IBarPanel.php',
 		'nette\diagnostics\panel' => '/Diagnostics/Panel.php',
 		'nette\directorynotfoundexception' => '/common/exceptions.php',
 		'nette\environment' => '/common/Environment.php',
