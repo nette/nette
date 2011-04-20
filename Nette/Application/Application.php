@@ -102,7 +102,7 @@ class Application extends Nette\Object
 					$router = $this->getRouter();
 
 					// enable routing debuggger
-					Nette\Diagnostics\Debugger::addPanel(new Diagnostics\RoutingPanel($router, $httpRequest));
+					Nette\Diagnostics\Debugger::$bar->addPanel(new Diagnostics\RoutingPanel($router, $httpRequest));
 
 					$request = $router->match($httpRequest);
 					if (!$request instanceof Request) {

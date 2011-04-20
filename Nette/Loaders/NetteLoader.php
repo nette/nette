@@ -107,6 +107,7 @@ class NetteLoader extends AutoLoader
 		'nette\di\configurator' => '/DI/Configurator.php',
 		'nette\di\context' => '/DI/Context.php',
 		'nette\di\icontext' => '/DI/IContext.php',
+		'nette\diagnostics\bar' => '/Diagnostics/Bar.php',
 		'nette\diagnostics\debugger' => '/Diagnostics/Debugger.php',
 		'nette\diagnostics\helpers' => '/Diagnostics/Helpers.php',
 		'nette\diagnostics\ipanel' => '/Diagnostics/IPanel.php',
