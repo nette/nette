@@ -111,6 +111,7 @@ class NetteLoader extends AutoLoader
 		'nette\diagnostics\bluescreen' => '/Diagnostics/BlueScreen.php',
 		'nette\diagnostics\debugger' => '/Diagnostics/Debugger.php',
 		'nette\diagnostics\defaultbarpanel' => '/Diagnostics/DefaultBarPanel.php',
+		'nette\diagnostics\firelogger' => '/Diagnostics/FireLogger.php',
 		'nette\diagnostics\helpers' => '/Diagnostics/Helpers.php',
 		'nette\diagnostics\ibarpanel' => '/Diagnostics/IBarPanel.php',
 		'nette\diagnostics\logger' => '/Diagnostics/Logger.php',
