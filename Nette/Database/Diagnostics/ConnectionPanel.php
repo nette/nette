@@ -95,12 +95,14 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 
 			$s .= '<tr><td>' . sprintf('%0.3f', $time * 1000);
 			if ($explain) {
-				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-debug-database-row-{$h($this->name)}-$i'>explain&nbsp;&#x25ba;</a>";
+				static $counter;
+				$counter++;
+				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="database-sql">' . Nette\Database\Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Nette\Database\Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
 			if ($explain) {
-				$s .= "<table id='nette-debug-database-row-{$h($this->name)}-$i' class='nette-collapsed'><tr>";
+				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
 					$s .= "<th>{$h($col)}</th>";
 				}
@@ -117,7 +119,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 			if ($source) {
 				list($file, $line) = $source;
 				$s .= (Nette\Diagnostics\Debugger::$editor ? "<a href='{$h(Nette\Diagnostics\Helpers::editorLink($file, $line))}'" : '<span')
-					. " class='database-source' title='{$h($file)}:$line'>"
+					. " class='nette-DbConnectionPanel-source' title='{$h($file)}:$line'>"
 					. "{$h(basename(dirname($file)) . '/' . basename($file))}:$line" . (Nette\Diagnostics\Debugger::$editor ? '</a>' : '</span>');
 			}
 
@@ -130,11 +132,11 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IPanel
 		}
 
 		return empty($this->queries) ? '' :
-			'<style> #nette-debug-database td.database-sql { background: white !important }
-			#nette-debug-database .database-source { color: #BBB !important }
-			#nette-debug-database tr table { margin: 8px 0; max-height: 150px; overflow:auto } </style>
+			'<style> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
+			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important }
+			#nette-debug nette-DbConnectionPanel tr table { margin: 8px 0; max-height: 150px; overflow:auto } </style>
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
-			<div class="nette-inner">
+			<div class="nette-inner nette-DbConnectionPanel">
 			<table>
 				<tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Params</th><th>Rows</th></tr>' . $s . '
 			</table>

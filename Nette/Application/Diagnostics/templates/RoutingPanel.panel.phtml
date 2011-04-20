@@ -9,24 +9,25 @@ use Nette,
 ?>
 <style>
 
-	#nette-debug-RoutingDebugger table {
+	#nette-debug .nette-RoutingPanel table {
 		font: 9pt/1.5 Consolas, monospace;
 	}
 
-	#nette-debug-RoutingDebugger .yes td {
+	#nette-debug .nette-RoutingPanel .yes td {
 		color: green;
 	}
 
-	#nette-debug-RoutingDebugger .may td {
+	#nette-debug .nette-RoutingPanel .may td {
 		color: #67F;
 	}
 
-	#nette-debug-RoutingDebugger pre, #nette-debug-RoutingDebugger code {
+	#nette-debug .nette-RoutingPanel pre, #nette-debug .nette-RoutingPanel code {
 		display: inline;
 	}
 
 </style>
 
+<div class="nette-RoutingPanel">
 <h1>
 <?php if (empty($this->request)): ?>
 	no route
@@ -108,3 +109,4 @@ use Nette,
 	</table>
 	</div>
 <?php endif ?>
+</div>
