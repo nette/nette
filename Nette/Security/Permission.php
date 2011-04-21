@@ -36,7 +36,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		'allResources' => array(
 			'allRoles' => array(
 				'allPrivileges' => array(
-					'type'   => self::DENY,
+					'type' => self::DENY,
 					'assert' => NULL,
 				),
 				'byPrivilege' => array(),
@@ -54,18 +54,10 @@ class Permission extends Nette\Object implements IAuthorizator
 	/********************* roles ****************d*g**/
 
 
+
 	/**
-	 * Adds a Role to the list.
-	 *
-	 * The $parents parameter may be a Role identifier (or array of identifiers)
-	 * to indicate the Roles from which the newly added Role will directly inherit.
-	 *
-	 * In order to resolve potential ambiguities with conflicting rules inherited
-	 * from different parents, the most recently added parent takes precedence over
-	 * parents that were previously added. In other words, the first parent added
-	 * will have the least priority, and the last parent added will have the
-	 * highest priority.
-	 *
+	 * Adds a Role to the list. The most recently added parent
+	 * takes precedence over parents that were previously added.
 	 * @param  string
 	 * @param  string|array
 	 * @throws Nette\InvalidArgumentException
@@ -75,7 +67,6 @@ class Permission extends Nette\Object implements IAuthorizator
 	public function addRole($role, $parents = NULL)
 	{
 		$this->checkRole($role, FALSE);
-
 		if (isset($this->roles[$role])) {
 			throw new Nette\InvalidStateException("Role '$role' already exists in the list.");
 		}
@@ -137,14 +128,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns an array of an existing Role's parents.
-	 *
-	 * The parent Roles are ordered in this array by ascending priority.
-	 * The highest priority parent Role, last in the array, corresponds with
-	 * the parent Role most recently added.
-	 *
-	 * If the Role does not have any parents, then an empty array is returned.
-	 *
+	 * Returns existing Role's parents ordered by ascending priority.
 	 * @param  string
 	 * @return array
 	 */
@@ -157,16 +141,11 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns TRUE if $role inherits from $inherit.
-	 *
-	 * If $onlyParents is TRUE, then $role must inherit directly from
-	 * $inherit in order to return TRUE. By default, this method looks
-	 * through the entire inheritance DAG to determine whether $role
-	 * inherits from $inherit through its ancestor Roles.
-	 *
+	 * Returns TRUE if $role inherits from $inherit. If $onlyParents is TRUE,
+	 * then $role must inherit directly from $inherit.
 	 * @param  string
 	 * @param  string
-	 * @param  boolean
+	 * @param  bool
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
@@ -203,11 +182,13 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		$this->checkRole($role);
 
-		foreach ($this->roles[$role]['children'] as $child => $foo)
+		foreach ($this->roles[$role]['children'] as $child => $foo) {
 			unset($this->roles[$child]['parents'][$role]);
+		}
 
-		foreach ($this->roles[$role]['parents'] as $parent => $foo)
+		foreach ($this->roles[$role]['parents'] as $parent => $foo) {
 			unset($this->roles[$parent]['children'][$role]);
+		}
 
 		unset($this->roles[$role]);
 
@@ -241,8 +222,9 @@ class Permission extends Nette\Object implements IAuthorizator
 	{
 		$this->roles = array();
 
-		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules)
+		foreach ($this->rules['allResources']['byRole'] as $roleCurrent => $rules) {
 			unset($this->rules['allResources']['byRole'][$roleCurrent]);
+		}
 
 		foreach ($this->rules['byResource'] as $resourceCurrent => $visitor) {
 			foreach ($visitor['byRole'] as $roleCurrent => $rules) {
@@ -324,16 +306,12 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns TRUE if $resource inherits from $inherit.
-	 *
-	 * If $onlyParents is TRUE, then $resource must inherit directly from
-	 * $inherit in order to return TRUE. By default, this method looks
-	 * through the entire inheritance tree to determine whether $resource
-	 * inherits from $inherit through its ancestor Resources.
+	 * Returns TRUE if $resource inherits from $inherit. If $onlyParents is TRUE,
+	 * then $resource must inherit directly from $inherit.
 	 *
 	 * @param  string
 	 * @param  string
-	 * @param  boolean
+	 * @param  bool
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
@@ -397,7 +375,6 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		unset($this->resources[$resource]);
-
 		return $this;
 	}
 
@@ -405,7 +382,6 @@ class Permission extends Nette\Object implements IAuthorizator
 
 	/**
 	 * Removes all Resources.
-	 *
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeAllResources()
@@ -429,19 +405,8 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Adds an "allow" rule to the list. A rule is added that would allow one
-	 * or more Roles access to [certain $privileges upon] the specified Resource(s).
-	 *
-	 * If either $roles or $resources is Permission::ALL, then the rule applies to all Roles or all Resources,
-	 * respectively. Both may be Permission::ALL in order to work with the default rule of the ACL.
-	 *
-	 * The $privileges parameter may be used to further specify that the rule applies only
-	 * to certain privileges upon the Resource(s) in question. This may be specified to be a single
-	 * privilege with a string, and multiple privileges may be specified as an array of strings.
-	 *
-	 * If $assertion is provided, then its assert() method must return TRUE in order for
-	 * the rule to apply. If $assertion is provided with $roles, $resources, and $privileges all
-	 * equal to NULL, then a rule will imply a type of DENY when the rule's assertion fails.
+	 * Allows one or more Roles access to [certain $privileges upon] the specified Resource(s).
+	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
@@ -458,19 +423,8 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Adds a "deny" rule to the list. A rule is added that would deny one
-	 * or more Roles access to [certain $privileges upon] the specified Resource(s).
-	 *
-	 * If either $roles or $resources is Permission::ALL, then the rule applies to all Roles or all Resources,
-	 * respectively. Both may be Permission::ALL in order to work with the default rule of the ACL.
-	 *
-	 * The $privileges parameter may be used to further specify that the rule applies only
-	 * to certain privileges upon the Resource(s) in question. This may be specified to be a single
-	 * privilege with a string, and multiple privileges may be specified as an array of strings.
-	 *
-	 * If $assertion is provided, then its assert() method must return TRUE in order for
-	 * the rule to apply. If $assertion is provided with $roles, $resources, and $privileges all
-	 * equal to NULL, then a rule will imply a type of ALLOW when the rule's assertion fails.
+	 * Denies one or more Roles access to [certain $privileges upon] the specified Resource(s).
+	 * If $assertion is provided, then it must return TRUE in order for rule to apply.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
@@ -487,9 +441,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Removes "allow" permissions from the list. The rule is removed only in the context
-	 * of the given Roles, Resources, and privileges. Existing rules to which the remove
-	 * operation does not apply would remain in the
+	 * Removes "allow" permissions from the list in the context of the given Roles, Resources, and privileges.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
@@ -505,9 +457,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Removes "deny" restrictions from the list. The rule is removed only in the context
-	 * of the given Roles, Resources, and privileges. Existing rules to which the remove
-	 * operation does not apply would remain in the
+	 * Removes "deny" restrictions from the list in the context of the given Roles, Resources, and privileges.
 	 *
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
@@ -524,7 +474,6 @@ class Permission extends Nette\Object implements IAuthorizator
 
 	/**
 	 * Performs operations on Access Control List rules.
-	 *
 	 * @param  bool  operation add?
 	 * @param  bool  type
 	 * @param  string|array|Permission::ALL  roles
@@ -605,7 +554,7 @@ class Permission extends Nette\Object implements IAuthorizator
 							if ($type === $rules['allPrivileges']['type']) {
 								$rules = array(
 									'allPrivileges' => array(
-										'type'   => self::DENY,
+										'type' => self::DENY,
 										'assert' => NULL
 										),
 									'byPrivilege' => array()
@@ -637,17 +586,7 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns TRUE if and only if the Role has access to the Resource.
-	 *
-	 * If either $role or $resource is Permission::ALL, then the query applies to all Roles or all Resources,
-	 * respectively. Both may be Permission::ALL to query whether the ACL has a "blacklist" rule
-	 * (allow everything to all). By default, Permission creates a "whitelist" rule (deny
-	 * everything to all), and this method would return FALSE unless this default has
-	 * been overridden (i.e., by executing $acl->allow()).
-	 *
-	 * If a $privilege is not provided, then this method returns FALSE if and only if the
-	 * Role is denied access to at least one privilege upon the Resource. In other words, this
-	 * method returns TRUE if and only if the Role is allowed all privileges on the Resource.
+	 * Returns TRUE if and only if the Role has access to [certain $privileges upon] the Resource.
 	 *
 	 * This method checks Role inheritance using a depth-first traversal of the Role list.
 	 * The highest priority parent (i.e., the parent most recently added) is checked first,
@@ -678,56 +617,34 @@ class Permission extends Nette\Object implements IAuthorizator
 			$this->checkResource($resource);
 		}
 
-		if ($privilege === self::ALL) {
-			// query on all privileges
-			do {
-				// depth-first search on $role if it is not 'allRoles' pseudo-parent
-				if ($role !== NULL && NULL !== ($result = $this->roleDFSAllPrivileges($role, $resource))) {
-					break;
-				}
+		do {
+			// depth-first search on $role if it is not 'allRoles' pseudo-parent
+			if ($role !== NULL && NULL !== ($result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege))) {
+				break;
+			}
 
-				// look for rule on 'allRoles' psuedo-parent
-				if (NULL !== ($rules = $this->getRules($resource, self::ALL))) {
+			if ($privilege === self::ALL) {
+				if ($rules = $this->getRules($resource, self::ALL)) { // look for rule on 'allRoles' psuedo-parent
 					foreach ($rules['byPrivilege'] as $privilege => $rule) {
-						if (self::DENY === ($ruleTypeOnePrivilege = $this->getRuleType($resource, NULL, $privilege))) {
-							$result = self::DENY;
+						if (self::DENY === ($result = $this->getRuleType($resource, NULL, $privilege))) {
 							break 2;
 						}
 					}
-					if (NULL !== ($ruleTypeAllPrivileges = $this->getRuleType($resource, NULL, NULL))) {
-						$result = self::ALLOW === $ruleTypeAllPrivileges;
+					if (NULL !== ($result = $this->getRuleType($resource, NULL, NULL))) {
 						break;
 					}
 				}
+			} else {
+				if (NULL !== ($result = $this->getRuleType($resource, NULL, $privilege))) { // look for rule on 'allRoles' pseudo-parent
+					break;
 
-				// try next Resource
-				$resource = $this->resources[$resource]['parent'];
-
-			} while (TRUE); // loop terminates at 'allResources' pseudo-parent
-
-		} else {
-			// query on one privilege
-			do {
-				// depth-first search on $role if it is not 'allRoles' pseudo-parent
-				if ($role !== NULL && NULL !== ($result = $this->roleDFSOnePrivilege($role, $resource, $privilege))) {
+				} elseif (NULL !== ($result = $this->getRuleType($resource, NULL, NULL))) {
 					break;
 				}
+			}
 
-				// look for rule on 'allRoles' pseudo-parent
-				if (NULL !== ($ruleType = $this->getRuleType($resource, NULL, $privilege))) {
-					$result = self::ALLOW === $ruleType;
-					break;
-
-				} elseif (NULL !== ($ruleTypeAllPrivileges = $this->getRuleType($resource, NULL, NULL))) {
-					$result = self::ALLOW === $ruleTypeAllPrivileges;
-					break;
-				}
-
-				// try next Resource
-				$resource = $this->resources[$resource]['parent'];
-
-			} while (TRUE); // loop terminates at 'allResources' pseudo-parent
-		}
+			$resource = $this->resources[$resource]['parent']; // try next Resource
+		} while (TRUE);
 
 		$this->queriedRole = $this->queriedResource = NULL;
 		return $result;
@@ -762,132 +679,50 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Performs a depth-first search of the Role DAG, starting at $role, in order to find a rule.
-	 * allowing/denying $role access to all privileges upon $resource
-	 *
-	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
-	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.
-	 *
-	 * @param  string  role
-	 * @param  string  resource
-	 * @return bool|NULL
+	 * Performs a depth-first search of the Role DAG, starting at $role, in order to find a rule
+	 * allowing/denying $role access to a/all $privilege upon $resource.
+	 * @param  bool  all (true) or one?
+	 * @param  string
+	 * @param  string
+	 * @param  string  only for one
+	 * @return mixed  NULL if no applicable rule is found, otherwise returns ALLOW or DENY
 	 */
-	private function roleDFSAllPrivileges($role, $resource)
+	private function searchRolePrivileges($all, $role, $resource, $privilege)
 	{
 		$dfs = array(
 			'visited' => array(),
-			'stack'   => array($role),
+			'stack' => array($role),
 		);
 
 		while (NULL !== ($role = array_pop($dfs['stack']))) {
-			if (!isset($dfs['visited'][$role])) {
-				if (NULL !== ($result = $this->roleDFSVisitAllPrivileges($role, $resource, $dfs))) {
-					return $result;
+			if (isset($dfs['visited'][$role])) {
+				continue;
+			}
+			if ($all) {
+				if ($rules = $this->getRules($resource, $role)) {
+					foreach ($rules['byPrivilege'] as $privilege2 => $rule) {
+						if (self::DENY === $this->getRuleType($resource, $role, $privilege2)) {
+							return self::DENY;
+						}
+					}
+					if (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
+						return $type;
+					}
+				}
+			} else {
+				if (NULL !== ($type = $this->getRuleType($resource, $role, $privilege))) {
+					return $type;
+
+				} elseif (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
+					return $type;
 				}
 			}
-		}
 
-		return NULL;
-	}
-
-
-
-	/**
-	 * Visits a $role in order to look for a rule allowing/denying $role access to all privileges upon $resource.
-	 *
-	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
-	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.
-	 *
-	 * This method is used by the internal depth-first search algorithm and may modify the DFS data structure.
-	 *
-	 * @param  string  role
-	 * @param  string  resource
-	 * @param  array   dfs
-	 * @return bool|NULL
-	 */
-	private function roleDFSVisitAllPrivileges($role, $resource, &$dfs)
-	{
-		if (NULL !== ($rules = $this->getRules($resource, $role))) {
-			foreach ($rules['byPrivilege'] as $privilege => $rule) {
-				if (self::DENY === $this->getRuleType($resource, $role, $privilege)) {
-					return self::DENY;
-				}
-			}
-			if (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
-				return self::ALLOW === $type;
+			$dfs['visited'][$role] = TRUE;
+			foreach ($this->roles[$role]['parents'] as $roleParent => $foo) {
+				$dfs['stack'][] = $roleParent;
 			}
 		}
-
-		$dfs['visited'][$role] = TRUE;
-		foreach ($this->roles[$role]['parents'] as $roleParent => $foo) {
-			$dfs['stack'][] = $roleParent;
-		}
-
-		return NULL;
-	}
-
-
-
-	/**
-	 * Performs a depth-first search of the Role DAG, starting at $role, in order to find a rule.
-	 * allowing/denying $role access to a $privilege upon $resource
-	 *
-	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
-	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.
-	 *
-	 * @param  string  role
-	 * @param  string  resource
-	 * @param  string  privilege
-	 * @return bool|NULL
-	 */
-	private function roleDFSOnePrivilege($role, $resource, $privilege)
-	{
-		$dfs = array(
-			'visited' => array(),
-			'stack'   => array($role),
-		);
-
-		while (NULL !== ($role = array_pop($dfs['stack']))) {
-			if (!isset($dfs['visited'][$role])) {
-				if (NULL !== ($result = $this->roleDFSVisitOnePrivilege($role, $resource, $privilege, $dfs))) {
-					return $result;
-				}
-			}
-		}
-
-		return NULL;
-	}
-
-
-
-	/**
-	 * Visits a $role in order to look for a rule allowing/denying $role access to a $privilege upon $resource.
-	 *
-	 * This method returns TRUE if a rule is found and allows access. If a rule exists and denies access,
-	 * then this method returns FALSE. If no applicable rule is found, then this method returns NULL.
-	 *
-	 * This method is used by the internal depth-first search algorithm and may modify the DFS data structure.
-	 *
-	 * @param  string  role
-	 * @param  string  resource
-	 * @param  string  privilege
-	 * @param  array   dfs
-	 * @return bool|NULL
-	 */
-	private function roleDFSVisitOnePrivilege($role, $resource, $privilege, &$dfs)
-	{
-		if (NULL !== ($type = $this->getRuleType($resource, $role, $privilege))) {
-			return self::ALLOW === $type;
-		}
-
-		if (NULL !== ($type = $this->getRuleType($resource, $role, NULL))) {
-			return self::ALLOW === $type;
-		}
-
-		$dfs['visited'][$role] = TRUE;
-		foreach ($this->roles[$role]['parents'] as $roleParent => $foo)
-			$dfs['stack'][] = $roleParent;
-
 		return NULL;
 	}
 
@@ -895,33 +730,17 @@ class Permission extends Nette\Object implements IAuthorizator
 
 	/**
 	 * Returns the rule type associated with the specified Resource, Role, and privilege.
-	 * combination.
-	 *
-	 * If a rule does not exist or its attached assertion fails, which means that
-	 * the rule is not applicable, then this method returns NULL. Otherwise, the
-	 * rule type applies and is returned as either ALLOW or DENY.
-	 *
-	 * If $resource or $role is Permission::ALL, then this means that the rule must apply to
-	 * all Resources or Roles, respectively.
-	 *
-	 * If $privilege is Permission::ALL, then the rule must apply to all privileges.
-	 *
-	 * If all three parameters are Permission::ALL, then the default ACL rule type is returned,
-	 * based on whether its assertion method passes.
-	 *
-	 * @param  string|Permission::ALL  role
-	 * @param  string|Permission::ALL  resource
-	 * @param  string|Permission::ALL  privilege
-	 * @return bool|NULL
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
+	 * @return mixed  NULL if a rule does not exist or assertion fails, otherwise returns ALLOW or DENY
 	 */
 	private function getRuleType($resource, $role, $privilege)
 	{
-		// get the rules for the $resource and $role
-		if (NULL === ($rules = $this->getRules($resource, $role))) {
+		if (!$rules = $this->getRules($resource, $role)) {
 			return NULL;
 		}
 
-		// follow $privilege
 		if ($privilege === self::ALL) {
 			if (isset($rules['allPrivileges'])) {
 				$rule = $rules['allPrivileges'];
@@ -935,7 +754,6 @@ class Permission extends Nette\Object implements IAuthorizator
 			$rule = $rules['byPrivilege'][$privilege];
 		}
 
-		// check assertion if necessary
 		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this, $role, $resource, $privilege)) {
 			return $rule['type'];
 
@@ -954,26 +772,20 @@ class Permission extends Nette\Object implements IAuthorizator
 
 	/**
 	 * Returns the rules associated with a Resource and a Role, or NULL if no such rules exist.
-	 *
-	 * If either $resource or $role is Permission::ALL, this means that the rules returned are for all Resources or all Roles,
-	 * respectively. Both can be Permission::ALL to return the default rule set for all Resources and all Roles.
-	 *
 	 * If the $create parameter is TRUE, then a rule set is first created and then returned to the caller.
-	 *
-	 * @param  string|Permission::ALL  resource
-	 * @param  string|Permission::ALL  role
-	 * @param  boolean  create
+	 * @param  string|Permission::ALL
+	 * @param  string|Permission::ALL
+	 * @param  bool
 	 * @return array|NULL
 	 */
 	private function & getRules($resource, $role, $create = FALSE)
 	{
-		// follow $resource
+		$null = NULL;
 		if ($resource === self::ALL) {
 			$visitor = & $this->rules['allResources'];
 		} else {
 			if (!isset($this->rules['byResource'][$resource])) {
 				if (!$create) {
-					$null = NULL;
 					return $null;
 				}
 				$this->rules['byResource'][$resource] = array();
@@ -981,12 +793,9 @@ class Permission extends Nette\Object implements IAuthorizator
 			$visitor = & $this->rules['byResource'][$resource];
 		}
 
-
-		// follow $role
 		if ($role === self::ALL) {
 			if (!isset($visitor['allRoles'])) {
 				if (!$create) {
-					$null = NULL;
 					return $null;
 				}
 				$visitor['allRoles']['byPrivilege'] = array();
@@ -996,7 +805,6 @@ class Permission extends Nette\Object implements IAuthorizator
 
 		if (!isset($visitor['byRole'][$role])) {
 			if (!$create) {
-				$null = NULL;
 				return $null;
 			}
 			$visitor['byRole'][$role]['byPrivilege'] = array();
