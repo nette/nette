@@ -31,6 +31,9 @@ final class Debugger
 
 	/** @var bool in console mode is omitted HTML output */
 	public static $consoleMode;
+	
+	/** @var bool in logger mode saves is suppressed any debugging output */
+	public static $loggerMode = FALSE;
 
 	/** @var int timestamp with microseconds of the start of the request */
 	public static $time;
@@ -408,6 +411,10 @@ final class Debugger
 				}
 
 			} else {
+				if (self::$loggerMode) {
+					self::log($exception);
+				}
+				
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
 
@@ -419,7 +426,7 @@ final class Debugger
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX with FireLogger or non-HTML mode
+				} elseif (!self::fireLog($exception, self::ERROR) && !self::$loggerMode) { // AJAX with FireLogger or non-HTML mode
 					self::log($exception);
 				}
 			}
