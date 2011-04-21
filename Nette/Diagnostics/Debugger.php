@@ -46,6 +46,9 @@ final class Debugger
 
 	/** @var string URL pattern mask to open editor */
 	public static $editor = 'editor://open/?file=%file&line=%line';
+	
+	/** @var string run pattern mask to open browser */
+	public static $browser = NULL;
 
 	/********************* Debugger::dump() ****************d*g**/
 
@@ -416,6 +419,7 @@ final class Debugger
 				}
 				
 				if (self::$consoleMode) { // dump to console
+					self::openInBrowser($exception);
 					echo "$exception\n";
 
 				} elseif (self::$ajaxDetected && !self::$fireLogger) { // AJAX without FireLogger
@@ -633,6 +637,39 @@ final class Debugger
 
 
 
+	/**
+	 * Open blue screen in browser
+	 * @param \Exception
+	 * @author Ondřej Mirtes
+	 */
+	protected static function openInBrowser($exception)
+	{
+		if (self::$consoleMode && self::$browser) {
+			try {
+				if (!self::$loggerMode) {
+					self::log($exception);
+				}
+
+				$hash = md5($exception);
+				foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
+					if (strpos($entry, $hash)) {
+						$file = (string) $entry;
+						break;
+					}
+				}
+
+				if (isset($file)) {
+					exec(sprintf(self::$browser, escapeshellarg('file://' . self::$logDirectory . '/' . $file)));
+					self::$browser = NULL; // open in browser only once
+				}
+			} catch (\Exception $e) {
+				echo $e->getMessage();
+			}
+		}
+	}
+	
+	
+	
 	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
