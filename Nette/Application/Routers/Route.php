@@ -533,7 +533,7 @@ class Route extends Nette\Object implements Application\IRouter
 			$meta[self::PATTERN] = "#(?:$pattern)$#A" . ($this->flags & self::CASE_SENSITIVE ? '' : 'iu');
 
 			// include in expression
-			$re = '(?P<' . str_replace('-', '___', $name) . '>' . $pattern . ')' . $re; // str_replace is dirty trick to enable '-' in parameter name
+			$re = '(?P<' . str_replace('-', '___', $name) . '>(?U)' . $pattern . ')' . $re; // str_replace is dirty trick to enable '-' in parameter name
 			if ($brackets) { // is in brackets?
 				if (!isset($meta[self::VALUE])) {
 					$meta[self::VALUE] = $meta['defOut'] = NULL;
