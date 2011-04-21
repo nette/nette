@@ -20,6 +20,7 @@ function export($iterator)
 {
 	$arr = array();
 	foreach ($iterator as $key => $value) $arr[] = strtr($key, '\\', '/');
+	sort($arr);
 	return $arr;
 }
 
@@ -28,15 +29,15 @@ function export($iterator)
 // recursive
 $finder = Finder::find('*')->from('files/subdir/subdir2', 'files/images');
 Assert::same(array(
-	'files/subdir/subdir2/file.txt',
 	'files/images/logo.gif',
+	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
 
 $finder = Finder::find('*')->from(array('files/subdir/subdir2', 'files/images'));
 Assert::same(array(
-	'files/subdir/subdir2/file.txt',
 	'files/images/logo.gif',
+	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
 try {
@@ -52,15 +53,15 @@ try {
 // non-recursive
 $finder = Finder::find('*')->in('files/subdir/subdir2', 'files/images');
 Assert::same(array(
-	'files/subdir/subdir2/file.txt',
 	'files/images/logo.gif',
+	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
 
 $finder = Finder::find('*')->in(array('files/subdir/subdir2', 'files/images'));
 Assert::same(array(
-	'files/subdir/subdir2/file.txt',
 	'files/images/logo.gif',
+	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
 try {

@@ -20,6 +20,7 @@ function export($iterator)
 {
 	$arr = array();
 	foreach ($iterator as $key => $value) $arr[] = strtr($key, '\\', '/');
+	sort($arr);
 	return $arr;
 }
 
@@ -73,10 +74,10 @@ $finder = Finder::find('file.txt')->from('files')->childFirst();
 Assert::same(array(
 	'files/file.txt',
 	'files/images',
-	'files/subdir/file.txt',
-	'files/subdir/subdir2/file.txt',
-	'files/subdir/subdir2',
 	'files/subdir',
+	'files/subdir/file.txt',
+	'files/subdir/subdir2',
+	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
 
