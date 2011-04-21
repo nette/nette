@@ -6,17 +6,17 @@
 
 
 
-function testRouteIn(Nette\Application\Routers\Route $route, $uri, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUri=NULL)
+function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPresenter=NULL, $expectedParams=NULL, $expectedUrl=NULL)
 {
-	// ==> $uri
+	// ==> $url
 
-	$uri = new Nette\Http\UrlScript("http://example.com$uri");
-	$uri->appendQuery(array(
+	$url = new Nette\Http\UrlScript("http://example.com$url");
+	$url->appendQuery(array(
 		'test' => 'testvalue',
 		'presenter' => 'querypresenter',
 	));
 
-	$httpRequest = new Nette\Http\Request($uri);
+	$httpRequest = new Nette\Http\Request($url);
 
 	$request = $route->match($httpRequest);
 
@@ -28,9 +28,9 @@ function testRouteIn(Nette\Application\Routers\Route $route, $uri, $expectedPres
 
 		unset($params['extra']);
 		$request->setParams($params);
-		$result = $route->constructUrl($request, $uri);
+		$result = $route->constructUrl($request, $url);
 		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
-		Assert::same( $expectedUri, $result );
+		Assert::same( $expectedUrl, $result );
 
 	} else { // not matched
 		// not matched
@@ -42,7 +42,7 @@ function testRouteIn(Nette\Application\Routers\Route $route, $uri, $expectedPres
 
 function testRouteOut(Nette\Application\Routers\Route $route, $link, $params = array())
 {
-	$uri = new Nette\Http\Url('http://example.com');
+	$url = new Nette\Http\Url('http://example.com');
 	$request = new Nette\Application\Request($link, 'GET', $params);
-	return $route->constructUrl($request, $uri);
+	return $route->constructUrl($request, $url);
 }
