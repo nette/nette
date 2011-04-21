@@ -14,7 +14,7 @@
 
 
 /**
- * Assertation test helpers.
+ * Assertion test helpers.
  *
  * @author     David Grudl
  * @package    Nette\Test
@@ -23,7 +23,7 @@ class Assert
 {
 
 	/**
-	 * Checks assertation.
+	 * Checks assertion.
 	 * @param  mixed  expected
 	 * @param  mixed  actual
 	 * @return void
@@ -39,7 +39,7 @@ class Assert
 
 
 	/**
-	 * Checks assertation.
+	 * Checks assertion.
 	 * @param  mixed  expected
 	 * @param  mixed  actual
 	 * @return void
@@ -55,7 +55,7 @@ class Assert
 
 
 	/**
-	 * Checks TRUE assertation.
+	 * Checks TRUE assertion.
 	 * @param  mixed  actual
 	 * @return void
 	 */
@@ -69,7 +69,7 @@ class Assert
 
 
 	/**
-	 * Checks FALSE assertation.
+	 * Checks FALSE assertion.
 	 * @param  mixed  actual
 	 * @return void
 	 */
@@ -83,7 +83,7 @@ class Assert
 
 
 	/**
-	 * Checks NULL assertation.
+	 * Checks NULL assertion.
 	 * @param  mixed  actual
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ class Assert
 
 
 	/**
-	 * Checks exception assertation.
+	 * Checks exception assertion.
 	 * @param  string class
 	 * @param  string message
 	 * @param  Exception
