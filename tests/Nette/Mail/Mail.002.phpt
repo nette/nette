@@ -47,7 +47,7 @@ Content-Transfer-Encoding: 7bit
 
 Sample text
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/%S%
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="example.zip"
 

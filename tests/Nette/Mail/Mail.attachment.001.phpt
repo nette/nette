@@ -36,7 +36,7 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/%S%
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="example.zip"
 
@@ -68,7 +68,7 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/%S%
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="example.zip"
 
@@ -105,9 +105,9 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/%S%
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="luouk"
+Content-Disposition: attachment; filename="luouk.zip"
 
 UEsDBBQAAAAIACeIMjsmkSpnQAAAAEEAAAALAAAAdmVyc2lvbi50eHTzSy0pSVVwK0rMTS3PL8pW
 MNCz1DNU0ChKLcsszszPU0hJNjMwTzNQKErNSU0sTk1RAIoZGRhY6gKRoYUmLxcAUEsBAhQAFAAA
