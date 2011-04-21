@@ -27,28 +27,34 @@ function export($iterator)
 
 // multiple mask
 $finder = Finder::findFiles('*.txt', '*.gif')->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/file.txt',
 	'files/images/logo.gif',
 	'files/subdir/file.txt',
 	'files/subdir/subdir2/file.txt',
-), export($finder));
+), $actual);
 
 $finder = Finder::findFiles(array('*.txt', '*.gif'))->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/file.txt',
 	'files/images/logo.gif',
 	'files/subdir/file.txt',
 	'files/subdir/subdir2/file.txt',
-), export($finder));
+), $actual);
 
 
 // * mask
 $finder = Finder::findFiles('*.txt', '*')->in('files/subdir');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/subdir/file.txt',
 	'files/subdir/readme',
-), export($finder));
+), $actual);
 
 
 // *.* mask
@@ -74,10 +80,12 @@ Assert::same(array(
 
 // subdir excluding mask
 $finder = Finder::findFiles('*')->exclude('*i*/*')->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/bad.ppt',
 	'files/file.txt',
-), export($finder));
+), $actual);
 
 
 // complex mask
@@ -107,7 +115,9 @@ Assert::same(array(
 
 // multidirs mask
 $finder = Finder::findFiles('/**/f*')->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/subdir/file.txt',
 	'files/subdir/subdir2/file.txt',
-), export($finder));
+), $actual);

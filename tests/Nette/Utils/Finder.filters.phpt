@@ -34,15 +34,19 @@ Assert::same(array(
 
 
 $finder = Finder::findFiles('*')->size('> 10')->size('< 100b')->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/file.txt',
 	'files/subdir/file.txt',
 	'files/subdir/readme',
-), export($finder));
+), $actual);
 
 
 
 $finder = Finder::find('*')->size('>', 10)->size('< 100b')->from('files');
+$actual = export($finder);
+sort($actual);
 Assert::same(array(
 	'files/file.txt',
 	'files/images',
@@ -50,7 +54,7 @@ Assert::same(array(
 	'files/subdir/file.txt',
 	'files/subdir/readme',
 	'files/subdir/subdir2',
-), export($finder));
+), $actual);
 
 
 
