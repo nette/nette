@@ -158,7 +158,9 @@ final class Debugger
 		self::$logger->mailer = & self::$mailer;
 		Logger::$emailSnooze = & self::$emailSnooze;
 
-		self::$fireLogger = new FireLogger;
+		if (isset($_SERVER['HTTP_X_FIRELOGGER']) && $_SERVER['HTTP_X_FIRELOGGER']) {
+			self::$fireLogger = new FireLogger;
+		}
 
 		self::$blueScreen = new BlueScreen;
 		self::$blueScreen->addPanel(function($e) {
@@ -409,13 +411,15 @@ final class Debugger
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
 
+				} elseif (self::$ajaxDetected && !self::$fireLogger) { // AJAX without FireLogger
+					self::$blueScreen->render($exception);
 				} elseif ($htmlMode) { // dump to browser
 					self::$blueScreen->render($exception);
 					if (self::$bar) {
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
+				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX with FireLogger or non-HTML mode
 					self::log($exception);
 				}
 			}
@@ -629,7 +633,7 @@ final class Debugger
 	 */
 	public static function fireLog($message)
 	{
-		if (!self::$productionMode) {
+		if (!self::$productionMode && self::$fireLogger) {
 			return self::$fireLogger->log($message);
 		}
 	}
