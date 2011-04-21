@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class FilterException extends Nette\InvalidStateException implements Nette\Diagnostics\IBarPanel
+class FilterException extends Nette\InvalidStateException
 {
 	/** @var string */
 	public $sourceFile;
@@ -43,23 +43,6 @@ class FilterException extends Nette\InvalidStateException implements Nette\Diagn
 		$this->sourceFile = (string) $file;
 		$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file)
 			. ($this->sourceLine ? ":$this->sourceLine" : '');
-	}
-
-
-
-	function getTab()
-	{
-		return 'Template';
-	}
-
-
-
-	function getPanel()
-	{
-		$link = Nette\Diagnostics\Helpers::editorLink($this->sourceFile, $this->sourceLine);
-		return '<p><b>File:</b> ' . ($link ? '<a href="' . htmlspecialchars($link) . '">' : '') . htmlspecialchars($this->sourceFile) . ($link ? '</a>' : '')
-			. '&nbsp; <b>Line:</b> ' . ($this->sourceLine ? $this->sourceLine : 'n/a') . '</p>'
-			. ($this->sourceLine ? '<pre>' . Nette\Diagnostics\BlueScreen::highlightFile($this->sourceFile, $this->sourceLine) . '</pre>' : '');
 	}
 
 }
