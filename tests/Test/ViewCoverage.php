@@ -29,6 +29,9 @@ $root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 $files = array();
 $totalSum = $coveredSum = 0;
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root)) as $entry) {
+	if (substr($entry->getBasename(), 0, 1) === '.') { // . or .. or .gitignore
+		continue;
+	}
 	$entry = (string) $entry;
 
 	$coverage = $covered = $total = 0;
