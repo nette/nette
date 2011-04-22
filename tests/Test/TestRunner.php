@@ -159,7 +159,7 @@ class TestRunner
 					$this->displaySkipped = TRUE;
 					break;
 				default:
-					throw new Exception("Unknown option -$arg[1].");
+					throw new Exception("Unknown option $arg.");
 					exit;
 			}
 		}
