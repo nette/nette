@@ -19,7 +19,7 @@ require __DIR__ . '/Mail.inc';
 
 
 $mail = new Message();
-$mail->addAttachment('files/example.zip', NULL, 'application/zip');
+$mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 $mail->send();
 
 Assert::match( <<<EOD
@@ -51,7 +51,7 @@ EOD
 
 
 $mail = new Message();
-$mail->addAttachment('files/example.zip', NULL, 'application/zip')
+$mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip')
 	->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
 $mail->send();
 
@@ -88,7 +88,7 @@ EOD
 $mail = new Message();
 $name = iconv('UTF-8', 'WINDOWS-1250', 'files/žluťoučký.zip');
 copy('files/example.zip', $name);
-$mail->addAttachment($name, NULL, 'application/zip');
+$mail->addAttachment(__DIR__ . "/$name", NULL, 'application/zip');
 unlink($name);
 $mail->send();
 

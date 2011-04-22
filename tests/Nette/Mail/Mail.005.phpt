@@ -28,7 +28,7 @@ $mail->setBody('Sample text');
 
 $mail->setHTMLBody('<b>Sample text</b>');
 
-$mail->addAttachment('files/example.zip', NULL, 'application/zip');
+$mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 
 $mail->send();
 
