@@ -86,10 +86,8 @@ EOD
 
 
 $mail = new Message();
-$name = iconv('UTF-8', 'WINDOWS-1250', 'files/žluťoučký.zip');
-copy('files/example.zip', $name);
-$mail->addAttachment(__DIR__ . "/$name", NULL, 'application/zip');
-unlink($name);
+$name = iconv('UTF-8', 'WINDOWS-1250', 'žluťoučký.zip');
+$mail->addAttachment($name, file_get_contents(__DIR__ . '/files/example.zip'), 'application/zip');
 $mail->send();
 
 Assert::match( <<<EOD
@@ -108,7 +106,7 @@ Content-Transfer-Encoding: 7bit
 ----------%S%
 Content-Type: application/zip
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="luouk"
+Content-Disposition: attachment; filename="luouk.zip"
 
 UEsDBBQAAAAIACeIMjsmkSpnQAAAAEEAAAALAAAAdmVyc2lvbi50eHTzSy0pSVVwK0rMTS3PL8pW
 MNCz1DNU0ChKLcsszszPU0hJNjMwTzNQKErNSU0sTk1RAIoZGRhY6gKRoYUmLxcAUEsBAhQAFAAA
