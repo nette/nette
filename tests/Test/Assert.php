@@ -274,9 +274,12 @@ class Assert
 	{
 		$trace = debug_backtrace();
 		$item = end($trace);
-		if (!isset($item['file'])) { // shutdown handler?
+		// in case of shutdown handler, we want to skip inner-code blocks
+		// and debugging calls (e.g. those of Nette\Diagnostics\Debugger)
+		// to get correct path to test file (which is the only purpose of this)
+		while (!isset($item['file']) || substr($item['file'], -5) !== '.phpt') {
 			$item = prev($trace);
-			if (!isset($item['file'])) {
+			if ($item === FALSE) {
 				return;
 			}
 		}
