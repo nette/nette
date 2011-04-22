@@ -19,7 +19,7 @@ require __DIR__ . '/Mail.inc';
 
 
 $mail = new Message();
-$mail->addAttachment('files/example.zip');
+$mail->addAttachment('files/example.zip', NULL, 'application/zip');
 $mail->send();
 
 Assert::match( <<<EOD
@@ -36,7 +36,7 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/zip
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="example.zip"
 
@@ -51,7 +51,8 @@ EOD
 
 
 $mail = new Message();
-$mail->addAttachment('files/example.zip')->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
+$mail->addAttachment('files/example.zip', NULL, 'application/zip')
+	->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
 $mail->send();
 
 Assert::match( <<<EOD
@@ -68,7 +69,7 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/zip
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="example.zip"
 
@@ -87,7 +88,7 @@ EOD
 $mail = new Message();
 $name = iconv('UTF-8', 'WINDOWS-1250', 'files/žluťoučký.zip');
 copy('files/example.zip', $name);
-$mail->addAttachment($name);
+$mail->addAttachment($name, NULL, 'application/zip');
 unlink($name);
 $mail->send();
 
@@ -105,7 +106,7 @@ Content-Transfer-Encoding: 7bit
 
 
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/zip
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="luouk"
 

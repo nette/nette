@@ -26,7 +26,7 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Sample text');
 
-$mail->addAttachment('files/example.zip');
+$mail->addAttachment('files/example.zip', NULL, 'application/zip');
 
 $mail->send();
 
@@ -47,7 +47,7 @@ Content-Transfer-Encoding: 7bit
 
 Sample text
 ----------%S%
-Content-Type: application/octet-stream
+Content-Type: application/zip
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="example.zip"
 
