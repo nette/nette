@@ -20,8 +20,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 

@@ -22,8 +22,6 @@ if (!MemcachedStorage::isAvailable()) {
 }
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 

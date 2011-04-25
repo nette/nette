@@ -20,8 +20,6 @@ require __DIR__ . '/../bootstrap.php';
 $key = 'nette';
 $value = 'rulez';
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
 
 
 $cache = new Cache(new FileStorage(TEMP_DIR));

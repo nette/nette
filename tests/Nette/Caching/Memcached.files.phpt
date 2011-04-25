@@ -29,7 +29,7 @@ $value = 'rulez';
 $cache = new Cache(new MemcachedStorage('localhost'));
 
 
-$dependentFile = __DIR__ . '/tmp/spec.file';
+$dependentFile = TEMP_DIR . '/spec.file';
 @unlink($dependentFile);
 
 // Writing cache...

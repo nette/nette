@@ -40,7 +40,7 @@ function checkStr($s)
 define('COUNT_FILES', 3);
 
 
-$storage = new FileStorage(__DIR__ . '/tmp');
+$storage = new FileStorage(TEMP_DIR);
 
 
 // clear playground

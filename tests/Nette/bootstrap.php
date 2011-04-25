@@ -17,6 +17,10 @@ ini_set('display_errors', TRUE);
 ini_set('html_errors', FALSE);
 ini_set('log_errors', FALSE);
 
+// create temporary directory
+define('TEMP_DIR', __DIR__ . '/../tmp');
+@mkdir(TEMP_DIR);
+
 $_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS')));
 $_SERVER['REQUEST_TIME'] = 1234567890;
 $_ENV = array();

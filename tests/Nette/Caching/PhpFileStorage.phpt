@@ -20,8 +20,6 @@ require __DIR__ . '/../bootstrap.php';
 $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
 TestHelpers::purge(TEMP_DIR);
 
 
