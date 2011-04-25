@@ -17,12 +17,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
+// create cache directory
+mkdir(TEMP_DIR . '/cache');
 
 
-$storage = new FileStorage(TEMP_DIR);
+$storage = new FileStorage(TEMP_DIR . '/cache');
 $cacheA = new Cache($storage, 'a');
 $cacheB = new Cache($storage, 'b');
 

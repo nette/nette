@@ -22,7 +22,7 @@ Assert::same( 'Nette\Http\Response', Environment::getHttpResponse()->reflection-
 Assert::same( 'Nette\Application\Application', Environment::getApplication()->reflection->name );
 
 
-Environment::setVariable('tempDir', __DIR__ . '/tmp');
+Environment::setVariable('tempDir', TEMP_DIR);
 Assert::same( 'Nette\Caching\Cache', Environment::getCache('my')->reflection->name );
 
 

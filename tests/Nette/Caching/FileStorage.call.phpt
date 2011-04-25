@@ -17,9 +17,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
+// create cache directory
+mkdir(TEMP_DIR . '/cache');
 
 
 
@@ -30,7 +31,7 @@ function mockFunction($x, $y)
 }
 
 
-$cache = new Cache(new FileStorage(TEMP_DIR));
+$cache = new Cache(new FileStorage(TEMP_DIR . '/cache'));
 
 $called = FALSE;
 Assert::same( 55, $cache->call('mockFunction', 5, 50) );

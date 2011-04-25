@@ -14,7 +14,7 @@ use Nette\Config\Config;
 
 require __DIR__ . '/../bootstrap.php';
 
-define('TEMP_FILE', __DIR__ . '/tmp/cfg.ini');
+define('TEMP_FILE', TEMP_DIR . '/cfg.ini');
 
 
 // Load INI

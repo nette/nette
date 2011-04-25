@@ -11,6 +11,8 @@ require __DIR__ . '/../Test/TestHelpers.php';
 require __DIR__ . '/../Test/Assert.php';
 require __DIR__ . '/../../Nette/loader.php';
 
+define('TEMP_DIR', __DIR__ . '/../tmp');
+
 // configure environment
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', TRUE);
