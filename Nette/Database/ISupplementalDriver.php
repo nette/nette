@@ -33,6 +33,13 @@ interface ISupplementalDriver
 	function delimite($name);
 
 	/**
+	 * Formats boolean for use in a SQL statement.
+	 * @param  bool
+	 * @return mixed
+	 */
+	function formatBool($value);
+
+	/**
 	 * Formats date-time for use in a SQL statement.
 	 * @param  \DateTime
 	 * @return string
