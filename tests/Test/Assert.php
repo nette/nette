@@ -229,6 +229,24 @@ class Assert
 	 */
 	private static function dump($var)
 	{
+		static $tableUtf, $tableBin, $reBinary = '#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u';
+		if ($tableUtf === NULL) {
+			foreach (range("\x00", "\xFF") as $ch) {
+				if (ord($ch) < 32 && strpos("\r\n\t", $ch) === FALSE) {
+					$tableUtf[$ch] = $tableBin[$ch] = '\\x' . str_pad(dechex(ord($ch)), 2, '0', STR_PAD_LEFT);
+				} elseif (ord($ch) < 127) {
+					$tableUtf[$ch] = $tableBin[$ch] = $ch;
+				} else {
+					$tableUtf[$ch] = $ch; $tableBin[$ch] = '\\x' . dechex(ord($ch));
+				}
+			}
+			$tableBin["\\"] = '\\\\';
+			$tableBin["\r"] = '\\r';
+			$tableBin["\n"] = '\\n';
+			$tableBin["\t"] = '\\t';
+			$tableUtf['\\x'] = $tableBin['\\x'] = '\\\\x';
+		}
+
 		if (is_bool($var)) {
 			return $var ? 'TRUE' : 'FALSE';
 
@@ -242,7 +260,12 @@ class Assert
 			return "$var";
 
 		} elseif (is_string($var)) {
-			return var_export(strlen($var) > 100 ? (substr($var, 0, 100) . ' ... ') : $var, TRUE);
+			if ($cut = @iconv_strlen($var, 'UTF-8') > 100) {
+				$var = iconv_substr($var, 0, 100, 'UTF-8');
+			} elseif ($cut = strlen($var) > 100) {
+				$var = substr($var, 0, 100);
+			}
+			return '"' . strtr($var, preg_match($reBinary, $var) || preg_last_error() ? $tableBin : $tableUtf) . '"' . ($cut ? ' ...' : '');
 
 		} elseif (is_array($var)) {
 			return "array(" . count($var) . ")";
