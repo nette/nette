@@ -58,8 +58,8 @@ Assert::same( '($first ? \'first\':null), $var ? \'foo\' : \'bar\', $var ? \'foo
 
 Assert::same( '$var',  $latte->formatMacroArgs('$var') );
 Assert::same( '$var => $var',  $latte->formatMacroArgs('$var => $var') );
-Assert::same( "'Iñtërnâtiônàlizætiøn' => 'Iñtërnâtiônàlizætiøn'",  $latte->formatMacroArgs('Iñtërnâtiônàlizætiøn => Iñtërnâtiônàlizætiøn') );
 Assert::same( "'truex' => 0word, 0true, true-true, true-1",  $latte->formatMacroArgs('truex => 0word, 0true, true-true, true-1') );
+Assert::same( "'symbol' => 'PI'",  $latte->formatMacroArgs('symbol => PI') );
 Assert::same( "'symbol' => CONST, M_PI ",  $latte->formatMacroArgs('symbol => CONST, M_PI ') );
 Assert::same( "'symbol' => Class::CONST, ",  $latte->formatMacroArgs('symbol => Class::CONST, ') );
 Assert::same( "'symbol' => Class::method(), ",  $latte->formatMacroArgs('symbol => Class::method(), ') );
@@ -69,3 +69,10 @@ Assert::same( "'symbol' => \$this->var, ",  $latte->formatMacroArgs('symbol => $
 Assert::same( "'symbol' => \$this -> var, ",  $latte->formatMacroArgs('symbol => $this -> var, ') );
 Assert::same( "'symbol' => \$this -> var",  $latte->formatMacroArgs('symbol => $this -> var') );
 Assert::same( "'symbol1' => 'value'",  $latte->formatMacroArgs('symbol1 => /*value,* /symbol2=>*/value/**/') );
+
+// special UTF-8
+
+Assert::same( "'Iñtërnâtiônàlizætiøn' => 'Iñtërnâtiônàlizætiøn'",  $latte->formatMacroArgs('Iñtërnâtiônàlizætiøn => Iñtërnâtiônàlizætiøn') );
+Assert::same( '$våŕìăbłë',  $latte->formatMacroArgs('$våŕìăbłë') );
+Assert::same( "'M_PIÁNO'",  $latte->formatMacroArgs('M_PIÁNO') );
+Assert::same( "'symbôl-1' => 'vålue-2'",  $latte->formatMacroArgs('symbôl-1 => vålue-2') );
