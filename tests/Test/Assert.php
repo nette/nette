@@ -242,7 +242,12 @@ class Assert
 			return "$var";
 
 		} elseif (is_string($var)) {
-			return var_export(strlen($var) > 100 ? (substr($var, 0, 100) . ' ... ') : $var, TRUE);
+			if (mb_strlen($var) > 30) {
+				$var = mb_substr($var, 0, 30);
+				$cut = TRUE;
+			}
+			$var = strtr($var, array('"' => '\"', '\\' => '\\\\'));
+			return '"' . self::escape($var) . '"' . (isset($cut) ? '...' : '');
 
 		} elseif (is_array($var)) {
 			return "array(" . count($var) . ")";
@@ -260,6 +265,24 @@ class Assert
 		} else {
 			return "unknown type";
 		}
+	}
+
+
+
+	/**
+	 * Escapes non-printable and invalid UTF-8 characters in string
+	 * @param string
+	 * @return string
+	 */
+	private static function escape($s)
+	{
+		$s = strtr($s, array("\t" => '\t', "\n" => '\n', "\r" => '\r')); // \v, \f do not make sense
+		if ($s !== @iconv('UTF-16', $encoding . '//IGNORE', iconv($encoding, 'UTF-16//IGNORE', $s))) {
+			$re = '/[\x00-\x1F\x7F-\xFF]/';
+		} else {
+			$re = '/[\x00-\x1F\x7F]/';
+		}
+		return preg_replace_callback($re, function($m) { return '\x' . bin2hex($m[0]); }, $s);
 	}
 
 

@@ -18,8 +18,7 @@ require __DIR__ . '/files/annotations.php';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
 
 

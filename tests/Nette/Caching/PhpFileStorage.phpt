@@ -20,13 +20,14 @@ require __DIR__ . '/../bootstrap.php';
 $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
+// create cache directory
+mkdir(TEMP_DIR . '/cache');
 
 
 
-$cache = new Cache(new PhpFileStorage(TEMP_DIR));
+$cache = new Cache(new PhpFileStorage(TEMP_DIR . '/cache'));
 
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

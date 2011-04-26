@@ -22,12 +22,13 @@ if (!MemcachedStorage::isAvailable()) {
 }
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
+// create cache directory
+mkdir(TEMP_DIR . '/cache');
 
 
-$storage = new MemcachedStorage('localhost', 11211, '', new FileJournal(TEMP_DIR));
+$storage = new MemcachedStorage('localhost', 11211, '', new FileJournal(TEMP_DIR . '/cache'));
 $cache = new Cache($storage);
 
 

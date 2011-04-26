@@ -17,9 +17,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-// temporary directory
-define('TEMP_DIR', __DIR__ . '/tmp');
+// purge temporary directory
 TestHelpers::purge(TEMP_DIR);
+// create cache directory
+mkdir(TEMP_DIR . '/cache');
 
 
 
@@ -30,7 +31,7 @@ function test($result, $condition, $name)
 
 
 
-$journal = new FileJournal(TEMP_DIR);
+$journal = new FileJournal(TEMP_DIR . '/cache');
 
 $journal->write('ok_test1', array(
 	Cache::TAGS => array('test:homepage'),
