@@ -822,7 +822,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 					$presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);
 				}
 			}
-			$presenterClass = $presenterFactory->getPresenterClass($presenter);
+			try {
+				$presenterClass = $presenterFactory->getPresenterClass($presenter);
+			} catch (Application\InvalidPresenterException $e) {
+				throw new InvalidLinkException($e->getMessage(), NULL, $e);
+			}
 		}
 
 		// PROCESS SIGNAL ARGUMENTS
