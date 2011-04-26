@@ -45,7 +45,13 @@ class Parser extends Nette\Object
 	private $quote;
 
 	/** @var array */
+	public $macros;
+
+	/** @var array */
 	private $htmlNodes;
+
+	/** @var array */
+	private $macroNodes = array();
 
 	/** @var string */
 	public $context = Parser::CONTEXT_NONE;
@@ -76,12 +82,13 @@ class Parser extends Nette\Object
 		if (!$this->macroRe) {
 			$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		}
+		$this->handler->initialize($this);
 		$s = "\n" . $s;
 
 		$this->input = & $s;
 		$this->offset = 0;
 		$this->output = '';
-		$this->htmlNodes = array();
+		$this->htmlNodes = $this->macroNodes = array();
 		$len = strlen($s);
 
 		while ($this->offset < $len) {
@@ -93,7 +100,7 @@ class Parser extends Nette\Object
 			} elseif (!empty($matches['comment'])) { // {* *}
 
 			} elseif (!empty($matches['macro'])) { // {macro}
-				$code = $this->handler->macro($matches['macro']);
+				$code = $this->macro($matches['macro']);
 				if ($code === FALSE) {
 					throw new ParseException("Unknown macro {{$matches['macro']}}", 0, $this->line);
 				}
@@ -110,6 +117,8 @@ class Parser extends Nette\Object
 			}
 		}
 
+		$this->output .= substr($this->input, $this->offset);
+
 		foreach ($this->htmlNodes as $node) {
 			if (!$node instanceof MacroNode && !empty($node->attrs)) {
 				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::HTML_PREFIX
@@ -117,7 +126,13 @@ class Parser extends Nette\Object
 			}
 		}
 
-		return $this->output . substr($this->input, $this->offset);
+		$this->handler->finalize($this->output);
+
+		if ($this->macroNodes) {
+			throw new ParseException("There are unclosed macros.", 0, $this->line);
+		}
+
+		return $this->output;
 	}
 
 
@@ -217,22 +232,22 @@ class Parser extends Nette\Object
 
 			if ($node instanceof MacroNode || !empty($node->attrs)) {
 				if ($node instanceof MacroNode) {
-					$code = $this->handler->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, $node->closing);
+					$code = $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, $node->closing);
 					if ($code === FALSE) {
 						throw new ParseException("Unknown tag-macro <$node->name>", 0, $this->line);
 					}
 					if ($isEmpty) {
-						$code .= $this->handler->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, TRUE);
+						$code .= $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, TRUE);
 					}
 				} else {
 					$code = substr($this->output, $node->offset) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
-					$code = $this->handler->attrsMacro($code, $node->attrs, $node->closing);
+					$code = $this->attrsMacro($code, $node->attrs, $node->closing);
 					if ($code === FALSE) {
 						throw new ParseException("Unknown macro-attribute " . self::HTML_PREFIX
 							. implode(' or ' . self::HTML_PREFIX, array_keys($node->attrs)), 0, $this->line);
 					}
 					if ($isEmpty) {
-						$code = $this->handler->attrsMacro($code, $node->attrs, TRUE);
+						$code = $this->attrsMacro($code, $node->attrs, TRUE);
 					}
 				}
 				$this->output = substr_replace($this->output, $code, $node->offset);
@@ -379,6 +394,186 @@ class Parser extends Nette\Object
 			(?P<newline>[\ \t]*(?=\r|\n))?
 		';
 		return $this;
+	}
+
+
+
+	/********************* macros ****************d*g**/
+
+
+
+	/**
+	 * Process {macro content | modifiers}
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return string
+	 */
+	public function macro($macro, $content = '', $modifiers = '')
+	{
+		if (func_num_args() === 1) {  // {macro val|modifiers}
+			list(, $macro, $content, $modifiers) = Strings::match(
+				$macro,
+				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?$()#is'
+			);
+			$content = trim($content);
+		}
+
+		if ($macro === '') {
+			$macro = substr($content, 0, 2);
+			if (!isset($this->macros[$macro])) {
+				$macro = substr($content, 0, 1);
+				if (!isset($this->macros[$macro])) {
+					return FALSE;
+				}
+			}
+			$content = substr($content, strlen($macro));
+
+		} elseif (!isset($this->macros[$macro])) {
+			return FALSE;
+		}
+
+		$closing = $macro[0] === '/';
+		if ($closing) {
+			$node = array_pop($this->macroNodes);
+			if (!$node || "/$node->name" !== $macro
+				|| ($content && !Strings::startsWith("$node->content ", "$content ")) || $modifiers
+			) {
+				$macro .= $content ? ' ' : '';
+				throw new ParseException("Unexpected macro {{$macro}{$content}{$modifiers}}"
+					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''),
+					0, $this->line);
+			}
+			$node->content = $node->modifiers = ''; // back compatibility
+
+		} else {
+			$node = new MacroNode($macro, $content, $modifiers);
+			if (isset($this->macros["/$macro"])) {
+				$node->isEmpty = TRUE;
+				$this->macroNodes[] = $node;
+			}
+		}
+
+		$handler = $this->handler;
+		return Strings::replace(
+			$this->macros[$macro],
+			'#%(.*?)%#',
+			function ($m) use ($handler, $node) {
+				if ($m[1]) {
+					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
+						->invoke($node->content, $node->modifiers);
+				} else {
+					return $handler->formatMacroArgs($node->content);
+				}
+			}
+		);
+	}
+
+
+
+	/**
+	 * Process <n:tag attr> (experimental).
+	 * @param  string
+	 * @param  array
+	 * @param  bool
+	 * @return string
+	 */
+	public function tagMacro($name, $attrs, $closing)
+	{
+		$knownTags = array(
+			'include' => 'block',
+			'for' => 'each',
+			'block' => 'name',
+			'if' => 'cond',
+			'elseif' => 'cond',
+		);
+		return $this->macro(
+			$closing ? "/$name" : $name,
+			isset($knownTags[$name], $attrs[$knownTags[$name]])
+				? $attrs[$knownTags[$name]]
+				: preg_replace("#'([^\\'$]+)'#", '$1', substr(var_export($attrs, TRUE), 8, -1)),
+			isset($attrs['modifiers']) ? $attrs['modifiers'] : ''
+		);
+	}
+
+
+
+	/**
+	 * Process <tag n:attr> (experimental).
+	 * @param  string
+	 * @param  array
+	 * @param  bool
+	 * @return string
+	 */
+	public function attrsMacro($code, $attrs, $closing)
+	{
+		foreach ($attrs as $name => $content) {
+			if (substr($name, 0, 5) === 'attr-') {
+				if (!$closing) {
+					$pos = strrpos($code, '>');
+					if ($code[$pos-1] === '/') $pos--;
+					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $content)), $pos, 0);
+				}
+				unset($attrs[$name]);
+			}
+		}
+
+		$left = $right = array();
+		foreach ($this->macros as $name => $foo) {
+			if ($name[0] === '@') {
+				$name = substr($name, 1);
+				if (isset($attrs[$name])) {
+					if (!$closing) {
+						$pos = strrpos($code, '>');
+						if ($code[$pos-1] === '/') $pos--;
+						$code = substr_replace($code, $this->macro("@$name", $attrs[$name]), $pos, 0);
+					}
+					unset($attrs[$name]);
+				}
+			}
+
+			if (!isset($this->macros["/$name"])) { // must be pair-macro
+				continue;
+			}
+
+			$macro = $closing ? "/$name" : $name;
+			if (isset($attrs[$name])) {
+				if ($closing) {
+					$right[] = array($macro, '');
+				} else {
+					array_unshift($left, array($macro, $attrs[$name]));
+				}
+			}
+
+			$innerName = "inner-$name";
+			if (isset($attrs[$innerName])) {
+				if ($closing) {
+					$left[] = array($macro, '');
+				} else {
+					array_unshift($right, array($macro, $attrs[$innerName]));
+				}
+			}
+
+			$tagName = "tag-$name";
+			if (isset($attrs[$tagName])) {
+				array_unshift($left, array($name, $attrs[$tagName]));
+				$right[] = array("/$name", '');
+			}
+
+			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
+		}
+		if ($attrs) {
+			return FALSE;
+		}
+		$s = '';
+		foreach ($left as $item) {
+			$s .= $this->macro($item[0], $item[1]);
+		}
+		$s .= $code;
+		foreach ($right as $item) {
+			$s .= $this->macro($item[0], $item[1]);
+		}
+		return $s;
 	}
 
 }

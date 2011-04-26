@@ -22,6 +22,19 @@ use Nette;
  */
 class Engine extends Nette\Object
 {
+	/** @var Parser */
+	public $parser;
+
+
+
+	public function __construct()
+	{
+		$this->parser = new Parser;
+		$this->parser->handler = new DefaultMacros;
+		$this->parser->macros = DefaultMacros::$defaultMacros;
+	}
+
+
 
 	/**
 	 * Invokes filter.
@@ -30,22 +43,10 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		$parser = new Parser;
-		$parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
-
-		// context-aware escaping
-		$parser->escape = '$template->escape';
-
-		// initialize handlers
-		$parser->handler = new DefaultMacros;
-		$parser->handler->initialize($parser, $s);
-
-		// process all {tags} and <tags/>
-		$s = $parser->parse($s);
-
-		$parser->handler->finalize($s);
-
-		return $s;
+		$this->parser->context = Parser::CONTEXT_TEXT;
+		$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+		$this->parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
+		return $this->parser->parse($s);
 	}
 
 }
