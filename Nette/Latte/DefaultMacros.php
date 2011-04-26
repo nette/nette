@@ -142,11 +142,11 @@ class DefaultMacros extends Nette\Object
 	/** @var Nette\Utils\Tokenizer */
 	private $tokenizer;
 
-	/** @var Engine */
-	private $filter;
+	/** @var Parser */
+	private $parser;
 
 	/** @var array */
-	private $nodes = array();
+	private $macroNodes = array();
 
 	/** @var array */
 	private $blocks = array();
@@ -194,22 +194,22 @@ class DefaultMacros extends Nette\Object
 
 	/**
 	 * Initializes parsing.
-	 * @param  Engine
+	 * @param  Parser
 	 * @param  string
 	 * @return void
 	 */
-	public function initialize($filter, & $s)
+	public function initialize($parser, & $s)
 	{
-		$this->filter = $filter;
-		$this->nodes = array();
+		$this->parser = $parser;
+		$this->macroNodes = array();
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
 		$this->uniq = Strings::random();
 		$this->cacheCounter = 0;
 
-		$filter->context = Parser::CONTEXT_TEXT;
-		$filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+		$parser->context = Parser::CONTEXT_TEXT;
+		$parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
 	}
 
 
@@ -226,7 +226,7 @@ class DefaultMacros extends Nette\Object
 			$s .= $this->macro('/block');
 
 		} elseif ($this->blocks) {
-			throw new ParseException("There are unclosed blocks.", 0, $this->filter->line);
+			throw new ParseException("There are unclosed blocks.", 0, $this->parser->line);
 		}
 
 		// extends support
@@ -317,14 +317,14 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		$closing = $macro[0] === '/';
 		if ($closing) {
-			$node = array_pop($this->nodes);
+			$node = array_pop($this->macroNodes);
 			if (!$node || "/$node->name" !== $macro
 				|| ($content && !Strings::startsWith("$node->content ", "$content ")) || $modifiers
 			) {
 				$macro .= $content ? ' ' : '';
 				throw new ParseException("Unexpected macro {{$macro}{$content}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''),
-					0, $this->filter->line);
+					0, $this->parser->line);
 			}
 			$node->content = $node->modifiers = ''; // back compatibility
 
@@ -334,7 +334,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$node->content = $content;
 			$node->modifiers = $modifiers;
 			if (isset($this->macros["/$macro"])) {
-				$this->nodes[] = $node;
+				$this->macroNodes[] = $node;
 			}
 		}
 
@@ -494,27 +494,27 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		switch ($var) {
 		case '':
 		case 'latte':
-			$this->filter->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
+			$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
 			break;
 
 		case 'double':
-			$this->filter->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
+			$this->parser->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
 			break;
 
 		case 'asp':
-			$this->filter->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
+			$this->parser->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
 			break;
 
 		case 'python':
-			$this->filter->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
+			$this->parser->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
 			break;
 
 		case 'off':
-			$this->filter->setDelimiters('[^\x00-\xFF]', '');
+			$this->parser->setDelimiters('[^\x00-\xFF]', '');
 			break;
 
 		default:
-			throw new ParseException("Unknown syntax '$var'", 0, $this->filter->line);
+			throw new ParseException("Unknown syntax '$var'", 0, $this->parser->line);
 		}
 	}
 
@@ -529,12 +529,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$params = $this->formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
-			throw new ParseException("Missing destination in {include}", 0, $this->filter->line);
+			throw new ParseException("Missing destination in {include}", 0, $this->parser->line);
 
 		} elseif ($destination[0] === '#') { // include #block
 			$destination = ltrim($destination, '#');
 			if (!Strings::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
-				throw new ParseException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->filter->line);
+				throw new ParseException("Included block name must be alphanumeric string, '$destination' given.", 0, $this->parser->line);
 			}
 
 			$parent = $destination === 'parent';
@@ -542,7 +542,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$item = end($this->blocks);
 				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
 				if (!$item) {
-					throw new ParseException("Cannot include $destination block outside of any block.", 0, $this->filter->line);
+					throw new ParseException("Cannot include $destination block outside of any block.", 0, $this->parser->line);
 				}
 				$destination = $item[1];
 			}
@@ -573,13 +573,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroExtends($content)
 	{
 		if (!$content) {
-			throw new ParseException("Missing destination in {extends}", 0, $this->filter->line);
+			throw new ParseException("Missing destination in {extends}", 0, $this->parser->line);
 		}
 		if (!empty($this->blocks)) {
-			throw new ParseException("{extends} must be placed outside any block.", 0, $this->filter->line);
+			throw new ParseException("{extends} must be placed outside any block.", 0, $this->parser->line);
 		}
 		if ($this->extends !== NULL) {
-			throw new ParseException("Multiple {extends} declarations are not allowed.", 0, $this->filter->line);
+			throw new ParseException("Multiple {extends} declarations are not allowed.", 0, $this->parser->line);
 		}
 		$this->extends = $content !== 'none';
 		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->formatMacroArgs($content)) : '';
@@ -601,10 +601,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		} else { // #block
 			$name = ltrim($name, '#');
 			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new ParseException("Block name must be alphanumeric string, '$name' given.", 0, $this->filter->line);
+				throw new ParseException("Block name must be alphanumeric string, '$name' given.", 0, $this->parser->line);
 
 			} elseif (isset($this->namedBlocks[$name])) {
-				throw new ParseException("Cannot redeclare block '$name'", 0, $this->filter->line);
+				throw new ParseException("Cannot redeclare block '$name'", 0, $this->parser->line);
 			}
 
 			$top = empty($this->blocks);
@@ -682,7 +682,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$name = $this->fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
-			throw new ParseException("Invalid capture block parameter '$name'", 0, $this->filter->line);
+			throw new ParseException("Invalid capture block parameter '$name'", 0, $this->parser->line);
 		}
 
 		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
@@ -756,28 +756,28 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroContentType($content)
 	{
 		if (strpos($content, 'html') !== FALSE) {
-			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
-			$this->filter->context = Parser::CONTEXT_TEXT;
+			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->parser->context = Parser::CONTEXT_TEXT;
 
 		} elseif (strpos($content, 'xml') !== FALSE) {
-			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
-			$this->filter->context = Parser::CONTEXT_NONE;
+			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
+			$this->parser->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'javascript') !== FALSE) {
-			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
-			$this->filter->context = Parser::CONTEXT_NONE;
+			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
+			$this->parser->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'css') !== FALSE) {
-			$this->filter->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
-			$this->filter->context = Parser::CONTEXT_NONE;
+			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
+			$this->parser->context = Parser::CONTEXT_NONE;
 
 		} elseif (strpos($content, 'plain') !== FALSE) {
-			$this->filter->escape = '';
-			$this->filter->context = Parser::CONTEXT_NONE;
+			$this->parser->escape = '';
+			$this->parser->context = Parser::CONTEXT_NONE;
 
 		} else {
-			$this->filter->escape = '$template->escape';
-			$this->filter->context = Parser::CONTEXT_NONE;
+			$this->parser->escape = '$template->escape';
+			$this->parser->context = Parser::CONTEXT_NONE;
 		}
 
 		// temporary solution
@@ -817,7 +817,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$pair = $this->fetchToken($content); // control[:method]
 		if ($pair === NULL) {
-			throw new ParseException("Missing control name in {control}", 0, $this->filter->line);
+			throw new ParseException("Missing control name in {control}", 0, $this->parser->line);
 		}
 		$pair = explode(':', $pair, 2);
 		$name = $this->formatString($pair[0]);
@@ -929,7 +929,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function escape($content)
 	{
-		return $this->filter->escape;
+		return $this->parser->escape;
 	}
 
 
@@ -957,7 +957,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 					$var = "\$template->" . trim($token['value'], "'") . "($var";
 					$inside = TRUE;
 				} else {
-					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->filter->line);
+					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->parser->line);
 				}
 			} else {
 				if ($token['value'] === ':' || $token['value'] === ',') {
