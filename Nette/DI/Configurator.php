@@ -325,7 +325,7 @@ class Configurator extends Nette\Object
 		$dir = Environment::getVariable('tempDir') . '/cache';
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\Storages\FileStorage($dir, Environment::getService('Nette\\Caching\\ICacheJournal'));
+		return new Nette\Caching\Storages\FileStorage($dir, Environment::getService('Nette\\Caching\\Storages\\IJournal'));
 	}
 
 
@@ -361,7 +361,7 @@ class Configurator extends Nette\Object
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !Environment::isProduction();
-		$loader->setCacheStorage(Environment::getService('Nette\\Caching\\ICacheStorage'));
+		$loader->setCacheStorage(Environment::getService('Nette\\Caching\\IStorage'));
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
 		} else {
