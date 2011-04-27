@@ -298,7 +298,7 @@ class Application extends Nette\Object
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->context->getService('Nette\\Web\\IHttpRequest');
+		return $this->context->getService('Nette\\Http\\IRequest');
 	}
 
 
@@ -308,7 +308,7 @@ class Application extends Nette\Object
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->context->getService('Nette\\Web\\IHttpResponse');
+		return $this->context->getService('Nette\\Http\\IResponse');
 	}
 
 
@@ -318,7 +318,7 @@ class Application extends Nette\Object
 	 */
 	protected function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getService('Nette\\Web\\Session');
+		$handler = $this->context->getService('Nette\\Http\\Session');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
