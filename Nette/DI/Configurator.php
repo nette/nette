@@ -30,14 +30,14 @@ class Configurator extends Nette\Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
-		'Nette\\Web\\HttpContext' => 'Nette\Http\Context',
-		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
-		'Nette\\Web\\IHttpResponse' => 'Nette\Http\Response',
-		'Nette\\Web\\IUser' => 'Nette\Http\User',
-		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
-		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
+		'Nette\\Http\\Context' => 'Nette\Http\Context',
+		'Nette\\Http\\IRequest' => array(__CLASS__, 'createHttpRequest'),
+		'Nette\\Http\\IResponse' => 'Nette\Http\Response',
+		'Nette\\Http\\IUser' => 'Nette\Http\User',
+		'Nette\\Caching\\IStorage' => array(__CLASS__, 'createCacheStorage'),
+		'Nette\\Caching\\Storages\\IJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\Session' => 'Nette\Http\Session',
+		'Nette\\Http\\Session' => 'Nette\Http\Session',
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
 
