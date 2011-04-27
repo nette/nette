@@ -17,6 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 /**
+ * This is my favorite class.
  * @one( value), out
  * @two (value)
  * @three(
@@ -39,6 +40,7 @@ class TestClass3 {
 
 $rc = new Reflection\ClassType('TestClass1');
 Assert::equal( array(
+	'description' => array('This is my favorite class.'),
 	'one' => array('value'),
 	'two' => array('value'),
 	'three' => array(TRUE),

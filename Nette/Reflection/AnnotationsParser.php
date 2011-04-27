@@ -121,17 +121,25 @@ final class AnnotationsParser
 	{
 		static $tokens = array('true' => TRUE, 'false' => FALSE, 'null' => NULL, '' => TRUE);
 
+		$res = array();
+		$comment = preg_replace('#^\s*\*\s?#ms', '', trim($comment, '/*'));
+		$parts = preg_split('#^\s*(?=@'.self::RE_IDENTIFIER.')#m', $comment, 2);
+
+		$description = trim($parts[0]);
+		if ($description !== '') {
+			$res['description'] = array($description);
+		}
+
 		$matches = Strings::matchAll(
-			trim($comment, '/*'),
+			isset($parts[1]) ? $parts[1] : '',
 			'~
-				(?<=\s)@('.self::RE_IDENTIFIER.')[ \t]*      ##  annotation
+				(?<=\s|^)@('.self::RE_IDENTIFIER.')[ \t]*      ##  annotation
 				(
 					\((?>'.self::RE_STRING.'|[^\'")@]+)+\)|  ##  (value)
 					[^(@\r\n][^@\r\n]*|)                     ##  value
 			~xi'
 		);
 
-		$res = array();
 		foreach ($matches as $match) {
 			list(, $name, $value) = $match;
 

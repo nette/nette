@@ -17,6 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 /**
+ * This is my favorite class.
  * @title(value ="Johno's addendum", mode=True,) , out
  * @title( value= 'One, Two', mode= true or false)
  * @title( value = 'Three (Four)', mode = 'false')
@@ -49,6 +50,7 @@ class TestClass {
 $rc = new Reflection\ClassType('TestClass');
 $tmp = $rc->getAnnotations();
 
+Assert::same( "This is my favorite class.",  $tmp['description'][0] );
 Assert::same( "Johno's addendum",  $tmp['title'][0]->value );
 Assert::true( $tmp['title'][0]->mode );
 Assert::same( 'One, Two',  $tmp['title'][1]->value );

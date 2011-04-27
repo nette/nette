@@ -186,6 +186,17 @@ class Method extends \ReflectionMethod
 
 
 
+	/**
+	 * Returns value of annotation 'description'.
+	 * @return string
+	 */
+	public function getDescription()
+	{
+		return $this->getAnnotation('description');
+	}
+
+
+
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
