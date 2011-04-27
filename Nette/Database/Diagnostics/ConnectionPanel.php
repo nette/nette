@@ -144,7 +144,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 			$s .= '</td><td>';
 			foreach ($params as $param) {
-				$s .= "{$h(Nette\Utils\Strings::truncate($param, self::$maxLength))}<br>";
+				$s .= Debugger::dump($param, TRUE);
 			}
 
 			$s .= '</td><td>' . $rows . '</td></tr>';

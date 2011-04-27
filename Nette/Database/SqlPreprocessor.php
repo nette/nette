@@ -116,7 +116,8 @@ class SqlPreprocessor extends Nette\Object
 			return rtrim(rtrim(number_format($value, 10, '.', ''), '0'), '.');
 
 		} elseif (is_bool($value)) {
-			return $value ? 1 : 0;
+			$this->remaining[] = $value;
+			return '?';
 
 		} elseif ($value === NULL) {
 			return 'NULL';
