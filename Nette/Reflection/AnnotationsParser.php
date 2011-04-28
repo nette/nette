@@ -34,6 +34,9 @@ final class AnnotationsParser
 	public static $useReflection;
 
 	/** @var array */
+	public static $inherited = array('description', 'param', 'return');
+
+	/** @var array */
 	private static $cache;
 
 	/** @var array */
@@ -88,7 +91,7 @@ final class AnnotationsParser
 		}
 
 		if (self::$useReflection) {
-			return self::$cache[$type][$member] = self::parseComment($r->getDocComment());
+			$annotations = self::parseComment($r->getDocComment());
 
 		} else {
 			if (self::$cache === NULL) {
@@ -103,11 +106,28 @@ final class AnnotationsParser
 			}
 
 			if (isset(self::$cache[$type][$member])) {
-				return self::$cache[$type][$member];
+				$annotations = self::$cache[$type][$member];
 			} else {
-				return self::$cache[$type][$member] = array();
+				$annotations = array();
 			}
 		}
+
+		if ($r instanceof \ReflectionMethod && !$r->isPrivate()
+			&& (!$r->isConstructor() || !empty($annotations['inheritdoc'][0])))
+		{
+			try {
+				$inherited = self::getAll(new \ReflectionMethod(get_parent_class($type), $member));
+			} catch (\ReflectionException $e) {
+				try {
+					$inherited = self::getAll($r->getPrototype());
+				} catch (\ReflectionException $e) {
+					$inherited = array();
+				}
+			}
+			$annotations += array_intersect_key($inherited, array_flip(self::$inherited));
+		}
+
+		return self::$cache[$type][$member] = $annotations;
 	}
 
 
