@@ -124,6 +124,17 @@ class CachingIterator extends \CachingIterator implements \Countable
 
 
 	/**
+	 * Returns the counter.
+	 * @return int
+	 */
+	public function __toString()
+	{
+		return $this->getCounter();
+	}
+
+
+
+	/**
 	 * Returns the count of elements.
 	 * @return int
 	 */
