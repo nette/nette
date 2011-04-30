@@ -45,11 +45,11 @@ final class Environment
 
 	/** @var array */
 	private static $aliases = array(
-		'getHttpContext' => 'Nette\\Web\\HttpContext',
-		'getHttpRequest' => 'Nette\\Web\\IHttpRequest',
-		'getHttpResponse' => 'Nette\\Web\\IHttpResponse',
+		'getHttpContext' => 'Nette\\Http\\Context',
+		'getHttpRequest' => 'Nette\\Http\\IRequest',
+		'getHttpResponse' => 'Nette\\Http\\IResponse',
 		'getApplication' => 'Nette\\Application\\Application',
-		'getUser' => 'Nette\\Web\\IUser',
+		'getUser' => 'Nette\\Http\\IUser',
 		'getRobotLoader' => 'Nette\\Loaders\\RobotLoader',
 	);
 
@@ -429,7 +429,7 @@ final class Environment
 	public static function getCache($namespace = '')
 	{
 		return new Caching\Cache(
-			self::getService('Nette\\Caching\\ICacheStorage'),
+			self::getService('Nette\\Caching\\IStorage'),
 			$namespace
 		);
 	}
@@ -443,7 +443,7 @@ final class Environment
 	 */
 	public static function getSession($namespace = NULL)
 	{
-		$handler = self::getService('Nette\\Web\\Session');
+		$handler = self::getService('Nette\\Http\\Session');
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
