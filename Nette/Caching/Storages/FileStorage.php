@@ -380,11 +380,11 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		if ($this->useDirs) {
-			return $this->dir . '/_' . str_replace('%00', '/_', urlencode($key)); // %00 = urlencode(Nette\Caching\Cache::NAMESPACE_SEPARATOR)
-		} else {
-			return $this->dir . '/_' . urlencode($key);
+		$file = urlencode($key);
+		if ($this->useDirs && $a = strrpos($file, '%00')) { // %00 = urlencode(Nette\Caching\Cache::NAMESPACE_SEPARATOR)
+			$file = substr_replace($file, '/_', $a, 3);
 		}
+		return $this->dir . '/_' . $file;
 	}
 
 
