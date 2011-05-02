@@ -60,7 +60,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		if (!is_array($mask)) {
 			$mask = func_get_args();
 		}
-		$finder = new self;
+		$finder = new static;
 		return $finder->select(array(), 'isDir')->select($mask, 'isFile');
 	}
 
@@ -76,7 +76,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		if (!is_array($mask)) {
 			$mask = func_get_args();
 		}
-		$finder = new self;
+		$finder = new static;
 		return $finder->select($mask, 'isFile');
 	}
 
@@ -92,7 +92,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		if (!is_array($mask)) {
 			$mask = func_get_args();
 		}
-		$finder = new self;
+		$finder = new static;
 		return $finder->select($mask, 'isDir');
 	}
 

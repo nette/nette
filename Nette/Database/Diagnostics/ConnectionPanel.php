@@ -47,7 +47,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	public static function initialize(Connection $connection)
 	{
 		if (!Debugger::$productionMode) {
-			$panel = new self;
+			$panel = new static;
 			$connection->onQuery[] = callback($panel, 'logQuery');
 			Debugger::$bar->addPanel($panel);
 			Debugger::$blueScreen->addPanel(callback($panel, 'renderException'), __CLASS__);

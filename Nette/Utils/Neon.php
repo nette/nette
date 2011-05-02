@@ -118,7 +118,7 @@ class Neon extends Nette\Object
 		$input = str_replace("\r", '', $input);
 		self::$tokenizer->tokenize($input);
 
-		$parser = new self;
+		$parser = new static;
 		$res = $parser->parse(0);
 
 		while (isset(self::$tokenizer->tokens[$parser->n])) {

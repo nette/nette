@@ -245,7 +245,7 @@ class NetteLoader extends AutoLoader
 	public static function getInstance()
 	{
 		if (self::$instance === NULL) {
-			self::$instance = new self;
+			self::$instance = new static;
 		}
 		return self::$instance;
 	}
