@@ -108,6 +108,10 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?x=1&y=2&action=product&presenter=Test#fragment', $this->link('product?x=1&y=2#fragment') );
 		Assert::same( 'http://localhost/index.php?x=1&y=2&action=product&presenter=Test#fragment', $this->link('//product?x=1&y=2#fragment') );
 
+		// Other presenter & action link
+		Assert::same( '/index.php?var1=10&action=product&presenter=Other', $this->link('Other:product', array('var1' => $this->var1)) );
+		Assert::same( '/index.php?action=product&presenter=Other', $this->link('Other:product', array('var1' => $this->var1 * 2)) );
+
 		// Presenter & signal link
 		Assert::same( '/index.php?action=default&do=buy&presenter=Test', $this->link('buy!', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?var1=20&action=default&do=buy&presenter=Test', $this->link('buy!', array('var1' => $this->var1 * 2)) );
@@ -152,6 +156,8 @@ class TestPresenter extends Application\UI\Presenter
 
 class OtherPresenter extends TestPresenter
 {
+	/** @persistent */
+	public $var1 = 20;
 }
 
 
