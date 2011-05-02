@@ -276,7 +276,9 @@ class Route extends Nette\Object implements Application\IRouter
 		}
 
 		foreach ($metadata as $name => $meta) {
-			if (!isset($params[$name])) continue; // retains NULL values
+			if (!isset($params[$name])) {
+				continue; // retains NULL values
+			}
 
 			if (isset($meta['fixity'])) {
 				if (is_scalar($params[$name]) && strcasecmp($params[$name], $meta[self::VALUE]) === 0) {
@@ -311,7 +313,9 @@ class Route extends Nette\Object implements Application\IRouter
 		$i = count($sequence) - 1;
 		do {
 			$url = $sequence[$i] . $url;
-			if ($i === 0) break;
+			if ($i === 0) {
+				break;
+			}
 			$i--;
 
 			$name = $sequence[$i]; $i--; // parameter name
@@ -353,7 +357,9 @@ class Route extends Nette\Object implements Application\IRouter
 
 		$sep = ini_get('arg_separator.input');
 		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
-		if ($query != '') $url .= '?' . $query; // intentionally ==
+		if ($query != '') { // intentionally ==
+			$url .= '?' . $query;
+		}
 
 		// absolutize path
 		if ($this->type === self::RELATIVE) {
@@ -459,7 +465,9 @@ class Route extends Nette\Object implements Application\IRouter
 		do {
 			array_unshift($sequence, $parts[$i]);
 			$re = preg_quote($parts[$i], '#') . $re;
-			if ($i === 0) break;
+			if ($i === 0) {
+				break;
+			}
 			$i--;
 
 			$part = $parts[$i]; // [ or ]
@@ -633,7 +641,9 @@ class Route extends Nette\Object implements Application\IRouter
 	 */
 	private static function renameKeys($arr, $xlat)
 	{
-		if (empty($xlat)) return $arr;
+		if (empty($xlat)) {
+			return $arr;
+		}
 
 		$res = array();
 		$occupied = array_flip($xlat);

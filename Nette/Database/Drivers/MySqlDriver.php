@@ -88,11 +88,11 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function applyLimit(&$sql, $limit, $offset)
 	{
-		if ($limit < 0 && $offset < 1) return;
-
-		// see http://dev.mysql.com/doc/refman/5.0/en/select.html
-		$sql .= ' LIMIT ' . ($limit < 0 ? '18446744073709551615' : (int) $limit)
-			. ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
+		if ($limit >= 0 || $offset > 0) {
+			// see http://dev.mysql.com/doc/refman/5.0/en/select.html
+			$sql .= ' LIMIT ' . ($limit < 0 ? '18446744073709551615' : (int) $limit)
+				. ($offset > 0 ? ' OFFSET ' . (int) $offset : '');
+		}
 	}
 
 

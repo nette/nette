@@ -80,7 +80,7 @@ class TestPresenter extends Application\UI\Presenter
 	/** @persistent */
 	public $var1 = 10;
 
-	/** @persistent bool */
+	/** @persistent @var bool */
 	public $ok = TRUE;
 
 
@@ -151,10 +151,6 @@ class TestPresenter extends Application\UI\Presenter
 
 
 class OtherPresenter extends TestPresenter
-{
-}
-
-class Submodule_OtherPresenter extends TestPresenter
 {
 }
 

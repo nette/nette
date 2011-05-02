@@ -372,7 +372,9 @@ class FileJournal extends Nette\Object implements IJournal
 			$node = $this->getNode($nodeId);
 
 			if ($node === FALSE) {
-				if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $nodeId.");
+				if (self::$debug) {
+					throw new Nette\InvalidStateException("Cannot load node number $nodeId.");
+				}
 				break;
 			}
 
@@ -417,7 +419,9 @@ class FileJournal extends Nette\Object implements IJournal
 			$node = $this->getNode($nodeId);
 
 			if ($node === FALSE) {
-				if (self::$debug) throw new Nette\InvalidStateException('Cannot load node number ' . ($nodeId) . '.');
+				if (self::$debug) {
+					throw new Nette\InvalidStateException('Cannot load node number ' . ($nodeId) . '.');
+				}
 				++$i;
 				continue;
 			}
@@ -426,7 +430,9 @@ class FileJournal extends Nette\Object implements IJournal
 				$link = $data[$i];
 
 				if (!isset($node[$link])) {
-					if (self::$debug) throw new Nette\InvalidStateException("Link with ID $searchLink is not in node ". ($nodeId) . '.');
+					if (self::$debug) {
+						throw new Nette\InvalidStateException("Link with ID $searchLink is not in node ". ($nodeId) . '.');
+					}
 					continue;
 				} elseif (isset($this->deletedLinks[$link])) {
 					continue;
@@ -472,7 +478,9 @@ class FileJournal extends Nette\Object implements IJournal
 				list($masterNodeId, $masterNode) = $this->findIndexNode($type, $searchKey);
 
 				if (!isset($masterNode[$searchKey])) {
-					if (self::$debug) throw new Nette\InvalidStateException('Bad index.');
+					if (self::$debug) {
+						throw new Nette\InvalidStateException('Bad index.');
+					}
 					unset($toDelete[$searchKey]);
 					continue;
 				}
@@ -517,7 +525,9 @@ class FileJournal extends Nette\Object implements IJournal
 			$childNode = $this->getNode($id);
 
 			if ($childNode === FALSE) {
-				if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $id.");
+				if (self::$debug) {
+					throw new Nette\InvalidStateException("Cannot load node number $id.");
+				}
 				break;
 			}
 
@@ -545,7 +555,9 @@ class FileJournal extends Nette\Object implements IJournal
 			$node = $this->getNode($nodeId);
 
 			if ($node === FALSE) {
-				if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $nodeId.");
+				if (self::$debug) {
+					throw new Nette\InvalidStateException("Cannot load node number $nodeId.");
+				}
 				break;
 			}
 
@@ -571,7 +583,9 @@ class FileJournal extends Nette\Object implements IJournal
 				} else {
 					$prevNode = $this->getNode($prev);
 					if ($prevNode === FALSE) {
-						if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $prev.");
+						if (self::$debug) {
+							throw new Nette\InvalidStateException("Cannot load node number $prev.");
+						}
 					} else {
 						if ($nextNodeId === FALSE) {
 							unset($prevNode[self::INDEX_DATA][self::INDEX_DATA]);
@@ -618,7 +632,9 @@ class FileJournal extends Nette\Object implements IJournal
 		list(, $magic, $lenght) = unpack('N2', $binary);
 		if ($magic !== self::INDEX_MAGIC && $magic !== self::DATA_MAGIC) {
 			if (!empty($magic)) {
-				if (self::$debug) throw new Nette\InvalidStateException("Node $id has malformed header.");
+				if (self::$debug) {
+					throw new Nette\InvalidStateException("Node $id has malformed header.");
+				}
 				$this->deleteNode($id);
 			}
 			return FALSE;
@@ -629,7 +645,9 @@ class FileJournal extends Nette\Object implements IJournal
 		$node = @unserialize($data); // intentionally @
 		if ($node === FALSE) {
 			$this->deleteNode($id);
-			if (self::$debug) throw new Nette\InvalidStateException("Cannot deserialize node number $id.");
+			if (self::$debug) {
+				throw new Nette\InvalidStateException("Cannot deserialize node number $id.");
+			}
 			return FALSE;
 		}
 
@@ -667,7 +685,9 @@ class FileJournal extends Nette\Object implements IJournal
 				if ($parentId !== -1 && $parentId !== $id) {
 					$parentNode = $this->getNode($parentId);
 					if ($parentNode === FALSE) {
-						if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $parentId.");
+						if (self::$debug) {
+							throw new Nette\InvalidStateException("Cannot load node number $parentId.");
+						}
 					} else {
 						if ($parentNode[self::INFO][self::END] === $id) {
 							if (count($parentNode) === 1) {
@@ -1036,7 +1056,9 @@ class FileJournal extends Nette\Object implements IJournal
 			list(,, $parent) = $this->findIndexNode($nodeInfo[self::TYPE], $halfKey);
 			$parentNode = $this->getNode($parent);
 			if ($parentNode === FALSE) {
-				if (self::$debug) throw new Nette\InvalidStateException("Cannot load node number $parent.");
+				if (self::$debug) {
+					throw new Nette\InvalidStateException("Cannot load node number $parent.");
+				}
 			} else {
 				$parentNode[$halfKey] = $firstId;
 				ksort($parentNode); // Parent index must be always sorted.

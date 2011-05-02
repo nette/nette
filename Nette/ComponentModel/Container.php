@@ -80,7 +80,9 @@ class Container extends Component implements IContainer
 			if (isset($this->components[$insertBefore])) {
 				$tmp = array();
 				foreach ($this->components as $k => $v) {
-					if ($k === $insertBefore) $tmp[$name] = $component;
+					if ($k === $insertBefore) {
+						$tmp[$name] = $component;
+					}
 					$tmp[$k] = $v;
 				}
 				$this->components = $tmp;

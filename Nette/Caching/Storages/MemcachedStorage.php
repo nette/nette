@@ -77,7 +77,9 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		$key = $this->prefix . $key;
 		$meta = $this->memcache->get($key);
-		if (!$meta) return NULL;
+		if (!$meta) {
+			return NULL;
+		}
 
 		// meta structure:
 		// array(

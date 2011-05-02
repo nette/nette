@@ -267,7 +267,9 @@ final class Environment
 				'#%([a-z0-9_-]*)%#i',
 				function ($m) use (& $livelock) {
 					list(, $var) = $m;
-					if ($var === '') return '%';
+					if ($var === '') {
+						return '%';
+					}
 
 					if (isset($livelock[$var])) {
 						throw new InvalidStateException("Circular reference detected for variables: "

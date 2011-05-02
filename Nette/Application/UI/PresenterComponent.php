@@ -172,9 +172,13 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 			} else {
 				if (isset($meta['def'])) {
 					settype($val, gettype($meta['def']));
-					if ($val === $meta['def']) $val = NULL;
+					if ($val === $meta['def']) {
+						$val = NULL;
+					}
 				} else {
-					if ((string) $val === '') $val = NULL;
+					if ((string) $val === '') {
+						$val = NULL;
+					}
 				}
 				$params[$nm] = $val;
 			}
@@ -352,7 +356,9 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 		if (!is_array($args)) {
 			$args = func_get_args();
-			if (is_numeric(array_shift($args))) array_shift($args);
+			if (is_numeric(array_shift($args))) {
+				array_shift($args);
+			}
 		}
 
 		$presenter = $this->getPresenter();

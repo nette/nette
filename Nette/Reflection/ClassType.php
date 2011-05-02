@@ -93,7 +93,9 @@ class ClassType extends \ReflectionClass
 					self::$extMethods[$pair[1]][''] = NULL;
 				}
 			}
-			if ($name === NULL) return NULL;
+			if ($name === NULL) {
+				return NULL;
+			}
 		}
 		*/
 

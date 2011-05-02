@@ -124,7 +124,9 @@ class TestHelpers
 		$root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 
 		foreach (xdebug_get_code_coverage() as $filename => $lines) {
-			if (strncmp($root, $filename, strlen($root))) continue;
+			if (strncmp($root, $filename, strlen($root))) {
+				continue;
+			}
 
 			foreach ($lines as $num => $val) {
 				if (empty($coverage[$filename][$num]) || $val > 0) {

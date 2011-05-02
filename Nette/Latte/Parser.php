@@ -264,7 +264,9 @@ class Parser extends Nette\Object
 			} else {
 				$this->context = self::CONTEXT_TEXT;
 				$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
-				if ($node->closing) array_pop($this->htmlNodes);
+				if ($node->closing) {
+					array_pop($this->htmlNodes);
+				}
 			}
 
 		} else { // HTML attribute
@@ -511,7 +513,9 @@ class Parser extends Nette\Object
 			if (substr($name, 0, 5) === 'attr-') {
 				if (!$closing) {
 					$pos = strrpos($code, '>');
-					if ($code[$pos-1] === '/') $pos--;
+					if ($code[$pos-1] === '/') {
+						$pos--;
+					}
 					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $content)), $pos, 0);
 				}
 				unset($attrs[$name]);
@@ -525,7 +529,9 @@ class Parser extends Nette\Object
 				if (isset($attrs[$name])) {
 					if (!$closing) {
 						$pos = strrpos($code, '>');
-						if ($code[$pos-1] === '/') $pos--;
+						if ($code[$pos-1] === '/') {
+							$pos--;
+						}
 						$code = substr_replace($code, $this->macro("@$name", $attrs[$name]), $pos, 0);
 					}
 					unset($attrs[$name]);

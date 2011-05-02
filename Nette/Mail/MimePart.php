@@ -298,7 +298,9 @@ class MimePart extends Nette\Object
 		}
 
 		if ($this->parts) {
-			if (substr($output, -strlen(self::EOL)) !== self::EOL) $output .= self::EOL;
+			if (substr($output, -strlen(self::EOL)) !== self::EOL) {
+				$output .= self::EOL;
+			}
 			foreach ($this->parts as $part) {
 				$output .= '--' . $boundary . self::EOL . $part->generateMessage() . self::EOL;
 			}

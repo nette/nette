@@ -288,7 +288,9 @@ final class AnnotationsParser
 					$name = '';
 					// break intentionally omitted
 				case T_FUNCTION:
-					if ($token === '&') continue 2; // ignore
+					if ($token === '&') {
+						continue 2; // ignore
+					}
 				case T_VAR:
 				case T_PUBLIC:
 				case T_PROTECTED:

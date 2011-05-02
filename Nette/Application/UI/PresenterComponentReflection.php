@@ -41,13 +41,17 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	{
 		$class = $class === NULL ? $this->getName() : $class; // TODO
 		$params = & self::$ppCache[$class];
-		if ($params !== NULL) return $params;
+		if ($params !== NULL) {
+			return $params;
+		}
 		$params = array();
 		if (is_subclass_of($class, 'Nette\Application\UI\PresenterComponent')) {
 			// $class::getPersistentParams() in PHP 5.3
 			$defaults = get_class_vars($class);
 			foreach (call_user_func(array($class, 'getPersistentParams'), $class) as $name => $meta) {
-				if (is_string($meta)) $name = $meta;
+				if (is_string($meta)) {
+					$name = $meta;
+				}
 				$params[$name] = array(
 					'def' => $defaults[$name],
 					'since' => $class,
@@ -74,12 +78,16 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	{
 		$class = $this->getName();
 		$components = & self::$pcCache[$class];
-		if ($components !== NULL) return $components;
+		if ($components !== NULL) {
+			return $components;
+		}
 		$components = array();
 		if (is_subclass_of($class, 'Nette\Application\UI\Presenter')) {
 			// $class::getPersistentComponents() in PHP 5.3
 			foreach (call_user_func(array($class, 'getPersistentComponents'), $class) as $name => $meta) {
-				if (is_string($meta)) $name = $meta;
+				if (is_string($meta)) {
+					$name = $meta;
+				}
 				$components[$name] = array('since' => $class);
 			}
 			$components = self::getPersistentComponents(get_parent_class($class)) + $components;

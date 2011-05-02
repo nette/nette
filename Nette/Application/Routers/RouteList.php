@@ -71,7 +71,9 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 			foreach ($this as $route) {
 				$presenter = $route instanceof Route ? $route->getTargetPresenter() : NULL;
 
-				if ($presenter === FALSE) continue;
+				if ($presenter === FALSE) {
+					continue;
+				}
 
 				if (is_string($presenter)) {
 					$presenter = strtolower($presenter);
@@ -100,7 +102,9 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 		}
 
 		$presenter = strtolower($appRequest->getPresenterName());
-		if (!isset($this->cachedRoutes[$presenter])) $presenter = '*';
+		if (!isset($this->cachedRoutes[$presenter])) {
+			$presenter = '*';
+		}
 
 		foreach ($this->cachedRoutes[$presenter] as $route) {
 			$url = $route->constructUrl($appRequest, $refUrl);

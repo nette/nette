@@ -154,7 +154,11 @@ class Neon extends Nette\Object
 				if (!$hasValue || !$inlineParser) {
 					$this->error();
 				}
-				if ($hasKey) $result[$key] = $value; else $result[] = $value;
+				if ($hasKey) {
+					$result[$key] = $value;
+				} else {
+					$result[] = $value;
+				}
 				$hasKey = $hasValue = FALSE;
 
 			} elseif ($t === ':' || $t === '=') { // KeyValuePair separator
@@ -199,13 +203,19 @@ class Neon extends Nette\Object
 			} elseif ($t[0] === "\n") { // Indent
 				if ($inlineParser) {
 					if ($hasValue) {
-						if ($hasKey) $result[$key] = $value; else $result[] = $value;
+						if ($hasKey) {
+							$result[$key] = $value;
+						} else {
+							$result[] = $value;
+						}
 						$hasKey = $hasValue = FALSE;
 					}
 
 				} else {
 					while (isset($tokens[$n+1]) && $tokens[$n+1][0] === "\n") $n++; // skip to last indent
-					if (!isset($tokens[$n+1])) break;
+					if (!isset($tokens[$n+1])) {
+						break;
+					}
 
 					$newIndent = strlen($tokens[$n]) - 1;
 					if ($indent === NULL) { // first iteration
@@ -238,7 +248,11 @@ class Neon extends Nette\Object
 
 						} elseif ($hasKey) {
 							$value = $hasValue ? $value : NULL;
-							if ($key === NULL) $result[] = $value; else $result[$key] = $value;
+							if ($key === NULL) {
+								$result[] = $value;
+							} else {
+								$result[$key] = $value;
+							}
 							$hasKey = $hasValue = FALSE;
 						}
 					}
@@ -277,7 +291,11 @@ class Neon extends Nette\Object
 
 		if ($inlineParser) {
 			if ($hasValue) {
-				if ($hasKey) $result[$key] = $value; else $result[] = $value;
+				if ($hasKey) {
+					$result[$key] = $value;
+				} else {
+					$result[] = $value;
+				}
 			} elseif ($hasKey) {
 				$this->error();
 			}
@@ -290,7 +308,11 @@ class Neon extends Nette\Object
 				}
 			} elseif ($hasKey) {
 				$value = $hasValue ? $value : NULL;
-				if ($key === NULL) $result[] = $value; else $result[$key] = $value;
+				if ($key === NULL) {
+					$result[] = $value;
+				} else {
+					$result[$key] = $value;
+				}
 			}
 		}
 		return $result;

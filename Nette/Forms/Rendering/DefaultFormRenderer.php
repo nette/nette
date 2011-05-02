@@ -283,7 +283,9 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$translator = $this->form->getTranslator();
 
 		foreach ($this->form->getGroups() as $group) {
-			if (!$group->getControls() || !$group->getOption('visual')) continue;
+			if (!$group->getControls() || !$group->getOption('visual')) {
+				continue;
+			}
 
 			$container = $group->getOption('container', $defaultContainer);
 			$container = $container instanceof Html ? clone $container : Html::el($container);
@@ -386,7 +388,9 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		$pair->add($this->renderControl($control));
 		$pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
 		$pair->class($control->getOption('class'), TRUE);
-		if (++$this->counter % 2) $pair->class($this->getValue('pair .odd'), TRUE);
+		if (++$this->counter % 2) {
+			$pair->class($this->getValue('pair .odd'), TRUE);
+		}
 		$pair->id = $control->getOption('id');
 		return $pair->render(0);
 	}
@@ -448,7 +452,9 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	public function renderControl(Nette\Forms\IControl $control)
 	{
 		$body = $this->getWrapper('control container');
-		if ($this->counter % 2) $body->class($this->getValue('control .odd'), TRUE);
+		if ($this->counter % 2) {
+			$body->class($this->getValue('control .odd'), TRUE);
+		}
 
 		$description = $control->getOption('description');
 		if ($description instanceof Html) {

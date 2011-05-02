@@ -423,13 +423,19 @@ class Url extends Nette\FreezableObject
 		// compare host + path
 		$part = self::unescape(strtok($url, '?#'), '%/');
 		if (strncmp($part, '//', 2) === 0) { // absolute URI without scheme
-			if ($part !== '//' . $this->getAuthority() . $this->path) return FALSE;
+			if ($part !== '//' . $this->getAuthority() . $this->path) {
+				return FALSE;
+			}
 
 		} elseif (strncmp($part, '/', 1) === 0) { // absolute path
-			if ($part !== $this->path) return FALSE;
+			if ($part !== $this->path) {
+				return FALSE;
+			}
 
 		} else {
-			if ($part !== $this->scheme . '://' . $this->getAuthority() . $this->path) return FALSE;
+			if ($part !== $this->scheme . '://' . $this->getAuthority() . $this->path) {
+				return FALSE;
+			}
 		}
 
 		// compare query strings

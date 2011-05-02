@@ -39,8 +39,12 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root)) as
 	if (isset($coverageInfo[$entry])) {
 		$lines = $coverageInfo[$entry];
 		foreach ($lines as $flag) {
-			if ($flag >= -1) $total++;
-			if ($flag >= 1) $covered++;
+			if ($flag >= -1) {
+				$total++;
+			}
+			if ($flag >= 1) {
+				$covered++;
+			}
 		}
 		$coverage = round($covered * 100 / $total);
 		$totalSum += $total;

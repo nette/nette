@@ -268,7 +268,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function processSignal()
 	{
-		if ($this->signal === NULL) return;
+		if ($this->signal === NULL) {
+			return;
+		}
 
 		$component = $this->signalReceiver === '' ? $this : $this->getComponent($this->signalReceiver, FALSE);
 		if ($component === NULL) {
@@ -413,7 +415,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function sendTemplate()
 	{
 		$template = $this->getTemplate();
-		if (!$template) return;
+		if (!$template) {
+			return;
+		}
 
 		if ($template instanceof Nette\Templating\IFileTemplate && !$template->getFile()) { // content template
 			$files = $this->formatTemplateFiles($this->getName(), $this->view);
@@ -935,7 +939,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 		);
 		$this->lastCreatedRequestFlag = array('current' => $current);
 
-		if ($mode === 'forward') return;
+		if ($mode === 'forward') {
+			return;
+		}
 
 		// CONSTRUCT URL
 		$url = $router->constructUrl($this->lastCreatedRequest, $refUrl);
@@ -992,10 +998,14 @@ abstract class Presenter extends Control implements Application\IPresenter
 			}
 
 			if ($def === NULL) {
-				if ((string) $args[$name] === '') $args[$name] = NULL; // value transmit is unnecessary
+				if ((string) $args[$name] === '') {
+					$args[$name] = NULL; // value transmit is unnecessary
+				}
 			} else {
 				settype($args[$name], gettype($def));
-				if ($args[$name] === $def) $args[$name] = NULL;
+				if ($args[$name] === $def) {
+					$args[$name] = NULL;
+				}
 			}
 		}
 

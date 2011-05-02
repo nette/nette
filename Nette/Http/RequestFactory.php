@@ -186,7 +186,9 @@ class RequestFactory extends Nette\Object
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) continue;
+				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+					continue;
+				}
 				$v['@'] = & $files[$k];
 				$list[] = $v;
 			}
@@ -208,7 +210,9 @@ class RequestFactory extends Nette\Object
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) continue;
+				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+					continue;
+				}
 				$list[] = array(
 					'name' => $v['name'][$k],
 					'type' => $v['type'][$k],

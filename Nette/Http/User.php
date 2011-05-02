@@ -379,7 +379,9 @@ class User extends Nette\Object implements IUser
 		}
 
 		foreach ($this->getRoles() as $role) {
-			if ($handler->isAllowed($role, $resource, $privilege)) return TRUE;
+			if ($handler->isAllowed($role, $resource, $privilege)) {
+				return TRUE;
+			}
 		}
 
 		return FALSE;

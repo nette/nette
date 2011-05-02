@@ -226,7 +226,9 @@ final class DefaultHelpers
 		$bytes = round($bytes);
 		$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 		foreach ($units as $unit) {
-			if (abs($bytes) < 1024 || $unit === end($units)) break;
+			if (abs($bytes) < 1024 || $unit === end($units)) {
+				break;
+			}
 			$bytes = $bytes / 1024;
 		}
 		return round($bytes, $precision) . ' ' . $unit;

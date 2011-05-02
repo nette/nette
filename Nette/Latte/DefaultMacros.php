@@ -423,7 +423,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$tag = $this->fetchToken($content);  // [name [,]] [tag]
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
-				if (!$tag) $tag = 'div';
+				$tag = $tag ? $tag : 'div';
 				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
 					. $this->macroInclude('#' . $name, $modifiers)
 					. " ?></$tag><?php {block $name}";
@@ -539,7 +539,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroIfset($content)
 	{
-		if (strpos($content, '#') === FALSE) return $content;
+		if (strpos($content, '#') === FALSE) {
+			return $content;
+		}
 		$list = array();
 		while (($name = $this->fetchToken($content)) !== NULL) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
@@ -633,7 +635,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = $this->formatArray($content);
-		if (strpos($content, '=>') === FALSE) $param = substr($param, 6, -1); // removes array()
+		if (strpos($content, '=>') === FALSE) {
+			$param = substr($param, 6, -1); // removes array()
+		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
 			. '$_ctrl = $control->getWidget(' . $name . '); '
 			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->validateControl(); '
@@ -755,7 +759,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function formatModifiers($var, $modifiers)
 	{
-		if (!$modifiers) return $var;
+		if (!$modifiers) {
+			return $var;
+		}
 		$inside = FALSE;
 		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $token) {
 			if ($token['type'] === self::T_WHITESPACE) {
@@ -1052,7 +1058,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$payload = $control->getPresenter()->getPayload();
 		if (isset($local->blocks)) {
 			foreach ($local->blocks as $name => $function) {
-				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) continue;
+				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) {
+					continue;
+				}
 				ob_start();
 				$function = reset($function);
 				$function($local, $params);

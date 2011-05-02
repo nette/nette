@@ -66,11 +66,15 @@ abstract class Component extends Nette\Object implements IComponent
 			$path = self::NAME_SEPARATOR . $this->name;
 			$depth = 1;
 			while ($obj !== NULL) {
-				if ($obj instanceof $type) break;
+				if ($obj instanceof $type) {
+					break;
+				}
 				$path = self::NAME_SEPARATOR . $obj->getName() . $path;
 				$depth++;
 				$obj = $obj->getParent(); // IComponent::getParent()
-				if ($obj === $this) $obj = NULL; // prevent cycling
+				if ($obj === $this) {
+					$obj = NULL; // prevent cycling
+				}
 			}
 
 			if ($obj) {
@@ -218,7 +222,9 @@ abstract class Component extends Nette\Object implements IComponent
 		} else { // add to parent
 			$this->validateParent($parent);
 			$this->parent = $parent;
-			if ($name !== NULL) $this->name = $name;
+			if ($name !== NULL) {
+				$this->name = $name;
+			}
 
 			$tmp = array();
 			$this->refreshMonitors(0, $tmp);

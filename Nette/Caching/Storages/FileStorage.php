@@ -128,7 +128,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		do {
 			if (!empty($meta[self::META_DELTA])) {
 				// meta[file] was added by readMetaAndLock()
-				if (filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < time()) break;
+				if (filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < time()) {
+					break;
+				}
 				touch($meta[self::FILE]);
 
 			} elseif (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < time()) {
@@ -142,8 +144,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			if (!empty($meta[self::META_ITEMS])) {
 				foreach ($meta[self::META_ITEMS] as $depFile => $time) {
 					$m = $this->readMetaAndLock($depFile, LOCK_SH);
-					if ($m[self::META_TIME] !== $time) break 2;
-					if ($m && !$this->verify($m)) break 2;
+					if ($m[self::META_TIME] !== $time || ($m && !$this->verify($m))) {
+						break 2;
+					}
 				}
 			}
 
@@ -181,7 +184,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMetaAndLock($depFile, LOCK_SH);
-				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME];
+				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME]; // may be NULL
 				unset($m);
 			}
 		}
@@ -285,7 +288,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 				} else { // collector
 					$meta = $this->readMetaAndLock($path, LOCK_SH);
-					if (!$meta) continue;
+					if (!$meta) {
+						continue;
+					}
 
 					if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
 						$this->delete($path, $meta[self::HANDLE]);
@@ -322,7 +327,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	protected function readMetaAndLock($file, $lock)
 	{
 		$handle = @fopen($file, 'r+b'); // @ - file may not exist
-		if (!$handle) return NULL;
+		if (!$handle) {
+			return NULL;
+		}
 
 		flock($handle, $lock);
 
