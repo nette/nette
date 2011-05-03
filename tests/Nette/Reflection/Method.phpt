@@ -33,4 +33,7 @@ Assert::equal( new Reflection\ClassType('A'), $methodInfo->getDeclaringClass() )
 Assert::null( $methodInfo->getExtension() );
 
 
-Assert::same( 23, $methodInfo->callback->invoke(20, 3) );
+Assert::same( 20, $method->invokeNamedArgs(NULL, array('b' => 20)) );
+
+
+Assert::same( 23, $method->toCallback()->invoke(20, 3) );
