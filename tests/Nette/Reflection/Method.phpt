@@ -26,11 +26,11 @@ class B extends A {
 	function bar() {}
 }
 
-$methodInfo = new Reflection\Method('B', 'foo');
-Assert::equal( new Reflection\ClassType('A'), $methodInfo->getDeclaringClass() );
+$method = new Reflection\Method('B', 'foo');
+Assert::equal( new Reflection\ClassType('A'), $method->getDeclaringClass() );
 
 
-Assert::null( $methodInfo->getExtension() );
+Assert::null( $method->getExtension() );
 
 
 Assert::same( 20, $method->invokeNamedArgs(NULL, array('b' => 20)) );

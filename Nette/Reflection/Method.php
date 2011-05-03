@@ -41,17 +41,7 @@ class Method extends \ReflectionMethod
 	 */
 	public function getDefaultParameters()
 	{
-		$res = array();
-		foreach (parent::getParameters() as $param) {
-			$res[$param->getName()] = $param->isDefaultValueAvailable()
-				? $param->getDefaultValue()
-				: NULL;
-
-			if ($param->isArray()) {
-				settype($res[$param->getName()], 'array');
-			}
-		}
-		return $res;
+		return self::buildDefaultParameters(parent::getParameters());
 	}
 
 
@@ -64,20 +54,7 @@ class Method extends \ReflectionMethod
 	 */
 	public function invokeNamedArgs($object, $args)
 	{
-		$res = array();
-		$i = 0;
-		foreach ($this->getDefaultParameters() as $name => $def) {
-			if (isset($args[$name])) { // NULL treats as none value
-				$val = $args[$name];
-				if ($def !== NULL) {
-					settype($val, gettype($def));
-				}
-				$res[$i++] = $val;
-			} else {
-				$res[$i++] = $def;
-			}
-		}
-		return $this->invokeArgs($object, $res);
+		return $this->invokeArgs($object, self::combineArgs($this->getDefaultParameters(), $args));
 	}
 
 
@@ -242,6 +219,49 @@ class Method extends \ReflectionMethod
 	public function __unset($name)
 	{
 		ObjectMixin::remove($this, $name);
+	}
+
+
+
+	/********************* helpers ****************d*g**/
+
+
+
+	/** @internal */
+	public static function buildDefaultParameters($params)
+	{
+		$res = array();
+		foreach ($params as $param) {
+			$res[$param->getName()] = $param->isDefaultValueAvailable()
+				? $param->getDefaultValue()
+				: NULL;
+
+			if ($param->isArray()) {
+				settype($res[$param->getName()], 'array');
+			}
+		}
+		return $res;
+	}
+
+
+
+	/** @internal */
+	public static function combineArgs($params, $args)
+	{
+		$res = array();
+		$i = 0;
+		foreach ($params as $name => $def) {
+			if (isset($args[$name])) { // NULL treats as none value
+				$val = $args[$name];
+				if ($def !== NULL) {
+					settype($val, gettype($def));
+				}
+				$res[$i++] = $val;
+			} else {
+				$res[$i++] = $def;
+			}
+		}
+		return $res;
 	}
 
 }
