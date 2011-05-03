@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 $session->start();
 $oldId = $session->getId();
 $session->regenerateId();

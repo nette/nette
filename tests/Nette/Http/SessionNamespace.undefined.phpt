@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 $namespace = $session->getNamespace('one');
 Assert::false( isset($namespace->undefined) );
 Assert::null( $namespace->undefined, 'Getting value of non-existent key' );

@@ -30,14 +30,14 @@ class Configurator extends Nette\Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
-		'Nette\\Web\\HttpContext' => 'Nette\Http\Context',
+		'Nette\\Web\\HttpContext' => array(__CLASS__, 'createHttpContext'),
 		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
 		'Nette\\Web\\IHttpResponse' => 'Nette\Http\Response',
-		'Nette\\Web\\IUser' => 'Nette\Http\User',
+		'Nette\\Web\\IUser' => array(__CLASS__, 'createHttpUser'),
 		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
 		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\Session' => 'Nette\Http\Session',
+		'Nette\\Web\\Session' => array(__CLASS__, 'createHttpSession'),
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
 	);
 
@@ -313,6 +313,44 @@ class Configurator extends Nette\Object
 		$factory = new Nette\Http\RequestFactory;
 		$factory->setEncoding('UTF-8');
 		return $factory->createHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Http\Context
+	 */
+	public static function createHttpContext()
+	{
+		return new Nette\Http\Context(
+			Environment::getService('Nette\\Web\\IHttpRequest'),
+			Environment::getService('Nette\\Web\\IHttpResponse')
+		);
+	}
+
+
+
+	/**
+	 * @return Nette\Http\Session
+	 */
+	public static function createHttpSession()
+	{
+		return new Nette\Http\Session(
+			Environment::getService('Nette\\Web\\IHttpRequest'),
+			Environment::getService('Nette\\Web\\IHttpResponse')
+		);
+	}
+
+
+
+	/**
+	 * @return Nette\Http\User
+	 */
+	public static function createHttpUser()
+	{
+		return new Nette\Http\User(
+			clone Environment::getContext()
+		);
 	}
 
 

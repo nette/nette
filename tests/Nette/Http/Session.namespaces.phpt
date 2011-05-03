@@ -19,7 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 
 ob_start();
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 Assert::false( $session->hasNamespace('trees'), 'hasNamespace() should have returned FALSE for a namespace with no keys set' );
 
 $namespace = $session->getNamespace('trees');

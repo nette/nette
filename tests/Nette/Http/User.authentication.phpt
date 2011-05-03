@@ -61,7 +61,7 @@ function onLoggedOut($user) {
 
 
 
-$user = new User;
+$user = Nette\Environment::getUser();
 $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 

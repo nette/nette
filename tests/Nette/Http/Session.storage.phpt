@@ -58,6 +58,6 @@ class MySessionStorage extends Object implements ISessionStorage
 }
 
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 $session->setStorage(new MySessionStorage);
 $session->start();

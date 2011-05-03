@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 
 ob_start();
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 
 // try to expire whole namespace
 $namespace = $session->getNamespace('expire');

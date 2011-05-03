@@ -54,6 +54,20 @@ class Session extends Nette\Object
 		'hash_bits_per_character' => NULL, // (default "4")
 	);
 
+	/** @var IRequest */
+	private $request;
+
+	/** @var IResponse */
+	private $response;
+
+
+
+	public function __construct(IRequest $request, IResponse $response)
+	{
+		$this->request = $request;
+		$this->response = $response;
+	}
+
 
 
 	/**
@@ -102,7 +116,7 @@ class Session extends Nette\Object
 		}
 
 		// browser closing detection
-		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
+		$browserKey = $this->request->getCookie('nette-browser');
 		if (!$browserKey) {
 			$browserKey = Nette\Utils\Strings::random();
 		}
@@ -178,9 +192,9 @@ class Session extends Nette\Object
 		session_destroy();
 		$_SESSION = NULL;
 		self::$started = FALSE;
-		if (!$this->getHttpResponse()->isSent()) {
+		if (!$this->response->isSent()) {
 			$params = session_get_cookie_params();
-			$this->getHttpResponse()->deleteCookie(session_name(), $params['path'], $params['domain'], $params['secure']);
+			$this->response->deleteCookie(session_name(), $params['path'], $params['domain'], $params['secure']);
 		}
 	}
 
@@ -192,7 +206,7 @@ class Session extends Nette\Object
 	 */
 	public function exists()
 	{
-		return self::$started || $this->getHttpRequest()->getCookie(session_name()) !== NULL;
+		return self::$started || $this->request->getCookie(session_name()) !== NULL;
 	}
 
 
@@ -533,7 +547,7 @@ class Session extends Nette\Object
 	private function sendCookie()
 	{
 		$cookie = $this->getCookieParams();
-		$this->getHttpResponse()->setCookie(
+		$this->response->setCookie(
 			session_name(), session_id(),
 			$cookie['lifetime'] ? $cookie['lifetime'] + time() : 0,
 			$cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']
@@ -542,30 +556,6 @@ class Session extends Nette\Object
 			'nette-browser', $_SESSION['__NF']['B'],
 			Response::BROWSER, $cookie['path'], $cookie['domain']
 		);
-	}
-
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * @return IRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return Nette\Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return IResponse
-	 */
-	protected function getHttpResponse()
-	{
-		return Nette\Environment::getHttpResponse();
 	}
 
 }

@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = new Session;
+$session = Nette\Environment::getSession();
 $namespace = $session->getNamespace('one');
 $namespace->a = 'apple';
 $namespace->p = 'pear';

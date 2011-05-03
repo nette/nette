@@ -12,7 +12,6 @@
 namespace Nette\Http;
 
 use Nette,
-	Nette\Environment,
 	Nette\Security\IAuthenticator,
 	Nette\Security\IAuthorizator,
 	Nette\Security\IIdentity;
@@ -61,6 +60,16 @@ class User extends Nette\Object implements IUser
 
 	/** @var SessionNamespace */
 	private $session;
+
+	/** @var Nette\DI\IContext */
+	private $context;
+
+
+
+	public function __construct(Nette\DI\IContext $context)
+	{
+		$this->context = $context;
+	}
 
 
 
@@ -167,7 +176,7 @@ class User extends Nette\Object implements IUser
 	final public function getAuthenticationHandler()
 	{
 		if ($this->authenticationHandler === NULL) {
-			$this->authenticationHandler = Environment::getService('Nette\\Security\\IAuthenticator');
+			$this->authenticationHandler = $this->context->getService('Nette\\Security\\IAuthenticator');
 		}
 		return $this->authenticationHandler;
 	}
@@ -251,7 +260,7 @@ class User extends Nette\Object implements IUser
 			return $this->session;
 		}
 
-		$sessionHandler = $this->getSession();
+		$sessionHandler = $this->context->getService('Nette\\Web\\Session');
 		if (!$need && !$sessionHandler->exists()) {
 			return NULL;
 		}
@@ -304,7 +313,7 @@ class User extends Nette\Object implements IUser
 		$session->authenticated = (bool) $state;
 
 		// Session Fixation defence
-		$this->getSession()->regenerateId();
+		$this->context->getService('Nette\\Web\\Session')->regenerateId();
 
 		if ($state) {
 			$session->reason = NULL;
@@ -409,24 +418,9 @@ class User extends Nette\Object implements IUser
 	final public function getAuthorizationHandler()
 	{
 		if ($this->authorizationHandler === NULL) {
-			$this->authorizationHandler = Environment::getService('Nette\\Security\\IAuthorizator');
+			$this->authorizationHandler = $this->context->getService('Nette\\Security\\IAuthorizator');
 		}
 		return $this->authorizationHandler;
-	}
-
-
-
-	/********************* backend ****************d*g**/
-
-
-
-	/**
-	 * Returns session handler.
-	 * @return Session
-	 */
-	protected function getSession()
-	{
-		return Environment::getSession();
 	}
 
 }

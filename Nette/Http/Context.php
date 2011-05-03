@@ -22,6 +22,20 @@ use Nette;
  */
 class Context extends Nette\Object
 {
+	/** @var IRequest */
+	private $request;
+
+	/** @var IResponse */
+	private $response;
+
+
+
+	public function __construct(IRequest $request, IResponse $response)
+	{
+		$this->request = $request;
+		$this->response = $response;
+	}
+
 
 
 	/**
@@ -32,22 +46,19 @@ class Context extends Nette\Object
 	 */
 	public function isModified($lastModified = NULL, $etag = NULL)
 	{
-		$response = $this->getResponse();
-		$request = $this->getRequest();
-
 		if ($lastModified) {
-			$response->setHeader('Last-Modified', $response->date($lastModified));
+			$this->response->setHeader('Last-Modified', $this->response->date($lastModified));
 		}
 		if ($etag) {
-			$response->setHeader('ETag', '"' . addslashes($etag) . '"');
+			$this->response->setHeader('ETag', '"' . addslashes($etag) . '"');
 		}
 
-		$ifNoneMatch = $request->getHeader('If-None-Match');
+		$ifNoneMatch = $this->request->getHeader('If-None-Match');
 		if ($ifNoneMatch === '*') {
 			$match = TRUE; // match, check if-modified-since
 
 		} elseif ($ifNoneMatch !== NULL) {
-			$etag = $response->getHeader('ETag');
+			$etag = $this->response->getHeader('ETag');
 
 			if ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
 				return TRUE;
@@ -57,9 +68,9 @@ class Context extends Nette\Object
 			}
 		}
 
-		$ifModifiedSince = $request->getHeader('If-Modified-Since');
+		$ifModifiedSince = $this->request->getHeader('If-Modified-Since');
 		if ($ifModifiedSince !== NULL) {
-			$lastModified = $response->getHeader('Last-Modified');
+			$lastModified = $this->response->getHeader('Last-Modified');
 			if ($lastModified != NULL && strtotime($lastModified) <= strtotime($ifModifiedSince)) {
 				$match = TRUE;
 
@@ -72,13 +83,9 @@ class Context extends Nette\Object
 			return TRUE;
 		}
 
-		$response->setCode(IResponse::S304_NOT_MODIFIED);
+		$this->response->setCode(IResponse::S304_NOT_MODIFIED);
 		return FALSE;
 	}
-
-
-
-	/********************* backend ****************d*g**/
 
 
 
@@ -87,7 +94,7 @@ class Context extends Nette\Object
 	 */
 	public function getRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+		return $this->request;
 	}
 
 
@@ -97,7 +104,7 @@ class Context extends Nette\Object
 	 */
 	public function getResponse()
 	{
-		return Nette\Environment::getHttpResponse();
+		return $this->response;
 	}
 
 }

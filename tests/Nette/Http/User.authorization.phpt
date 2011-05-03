@@ -67,7 +67,7 @@ class AuthorizationHandler implements IAuthorizator
 
 
 
-$user = new User;
+$user = Nette\Environment::getUser();
 
 // guest
 Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
