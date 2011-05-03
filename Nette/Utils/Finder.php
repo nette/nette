@@ -233,7 +233,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	private function buildIterator($path)
 	{
 		if (PHP_VERSION_ID < 50301) {
-			$iterator = new Nette\RecursiveDirectoryIteratorFixed($path);
+			$iterator = new Nette\Utils\RecursiveDirectoryIteratorFixed($path);
 		} else {
 			$iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
 		}
