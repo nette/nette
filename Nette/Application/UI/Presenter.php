@@ -15,8 +15,7 @@ use Nette,
 	Nette\Application,
 	Nette\Application\Responses,
 	Nette\Http,
-	Nette\Reflection,
-	Nette\Environment;
+	Nette\Reflection;
 
 
 
@@ -715,10 +714,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
 	{
-		if (!Environment::isProduction()) {
-			return;
-		}
-
 		if ($expire !== NULL) {
 			$this->getHttpResponse()->setExpiration($expire);
 		}
@@ -1023,11 +1018,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function handleInvalidLink($e)
 	{
-		if (self::$invalidLinkMode === NULL) {
-			self::$invalidLinkMode = Environment::isProduction()
-				? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
-		}
-
 		if (self::$invalidLinkMode === self::INVALID_LINK_SILENT) {
 			return '#';
 

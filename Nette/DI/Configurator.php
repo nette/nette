@@ -293,6 +293,10 @@ class Configurator extends Nette\Object
 			});
 		}
 
+		Nette\Application\UI\Presenter::$invalidLinkMode = Environment::isProduction()
+			? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
+			: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
+
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class;
 		$application->setContext($context);
