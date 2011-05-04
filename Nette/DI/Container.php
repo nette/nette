@@ -31,9 +31,9 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Adds the specified service to the service container.
-	 * @param  string service name
-	 * @param  mixed  object, class name or factory callback
+	 * Adds the specified service or service factory to the container.
+	 * @param  string
+	 * @param  mixed  object, class name or callback
 	 * @return Container  provides a fluent interface
 	 */
 	public function addService($name, $service)
@@ -44,7 +44,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$lower = strtolower($name);
-		if (isset($this->registry[$lower])) { // only for instantiated services?
+		if (isset($this->registry[$lower])) {
 			throw new AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 
@@ -56,11 +56,10 @@ class Container extends Nette\FreezableObject implements IContainer
 			$this->registry[$lower] = $service;
 
 		} else {
-			if (!$service) {
-				throw new Nette\InvalidArgumentException("Service named '$name' is empty.");
-			}
+			$service = is_string($service) && strpos($service, ':') === FALSE // class name?
+				? $service : callback($service);
 			$this->factories[$lower] = array($service);
-			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
+			$this->registry[$lower] = & $this->factories[$lower][1]; // forces cloning using reference
 		}
 		return $this;
 	}
@@ -68,16 +67,12 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Removes the specified service type from the service container.
+	 * Removes the specified service type from the container.
 	 * @return void
 	 */
 	public function removeService($name)
 	{
 		$this->updating();
-		if (!is_string($name) || $name === '') {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
-
 		$lower = strtolower($name);
 		unset($this->registry[$lower], $this->factories[$lower]);
 	}
@@ -91,19 +86,14 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function getService($name)
 	{
-		if (!is_string($name) || $name === '') {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
-
 		$lower = strtolower($name);
-
-		if (isset($this->registry[$lower])) { // already instantiated
+		if (isset($this->registry[$lower])) {
 			return $this->registry[$lower];
 
 		} elseif (isset($this->factories[$lower])) {
 			list($factory) = $this->factories[$lower];
 
-			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
+			if (is_string($factory)) { // class name
 				/*5.2* if ($a = strrpos($factory, '\\')) $factory = substr($factory, $a + 1); // fix namespace*/
 				if (!class_exists($factory)) {
 					throw new AmbiguousServiceException("Cannot instantiate service '$name', class '$factory' not found.");
@@ -111,7 +101,6 @@ class Container extends Nette\FreezableObject implements IContainer
 				$service = new $factory;
 
 			} else { // factory callback
-				$factory = callback($factory);
 				if (!$factory->isCallable()) {
 					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
@@ -139,10 +128,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function hasService($name, $created = FALSE)
 	{
-		if (!is_string($name) || $name === '') {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
-
 		$lower = strtolower($name);
 		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower]));
 	}
