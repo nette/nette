@@ -22,6 +22,9 @@ use Nette;
  */
 class Container extends Nette\FreezableObject implements IContainer
 {
+	/** @var array  user parameters */
+	private $params = array();
+
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
@@ -136,6 +139,63 @@ class Container extends Nette\FreezableObject implements IContainer
 		return isset($this->registry[$lower])
 			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "create{$name}Service")));
 	}
+
+
+
+	/********************* parameters ****************d*g**/
+
+
+
+	/**
+	 * Sets all parameters.
+	 * @param  array
+	 * @return Container  provides a fluent interface
+	 */
+	public function setParams(array $params)
+	{
+		$this->updating();
+		$this->params = $params;
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns array of all parameters.
+	 * @return array
+	 */
+	public function getParams()
+	{
+		return $this->params;
+	}
+
+
+
+	/**
+	 * Set parameter.
+	 * @return Container  provides a fluent interface
+	 */
+	public function setParam($key, $value)
+	{
+		$this->updating();
+		$this->params[$key] = $value;
+		return $this;
+	}
+
+
+
+	/**
+	 * Gets parameter.
+	 * @return mixed
+	 */
+	public function getParam($key)
+	{
+		return $this->params[$key];
+	}
+
+
+
+	/********************* shortcuts ****************d*g**/
 
 
 
