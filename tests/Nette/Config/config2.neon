@@ -32,10 +32,3 @@ development < production:
 			host: dev.example.com
 			username: devuser
 			password: devsecret
-
-
-development.test < development.database:
-	host: localhost
-
-extra.set < common.set:
-	date.timezone: "Europe/Paris"

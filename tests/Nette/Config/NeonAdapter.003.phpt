@@ -88,24 +88,6 @@ Assert::equal( Nette\ArrayHash::from(array(
 			'mbstring.internal_encoding' => '%encoding%',
 			'include_path' => '%appDir%/../_trunk;%appDir%/libs',
 		),
-		'test' => array(
-			'host' => 'localhost',
-			'params' => array(
-				'host' => 'dev.example.com',
-				'username' => 'devuser',
-				'password' => 'devsecret',
-				'dbname' => 'dbname',
-			),
-			'adapter' => 'pdo_mysql',
-		),
-	),
-	'extra' => array(
-		'set' => array(
-			'date.timezone' => 'Europe/Paris',
-			'iconv.internal_encoding' => '%encoding%',
-			'mbstring.internal_encoding' => '%encoding%',
-			'include_path' => '%appDir%/../_trunk;%appDir%/libs',
-		),
 	),
 ), TRUE), $config );
 
@@ -183,24 +165,6 @@ development:
 		iconv.internal_encoding: %encoding%
 		mbstring.internal_encoding: %encoding%
 		include_path: %appDir%/../_trunk;%appDir%/libs
-
-	test:
-		host: localhost
-		params:
-			host: dev.example.com
-			username: devuser
-			password: devsecret
-			dbname: dbname
-
-		adapter: pdo_mysql
-
-
-extra:
-	set:
-		date.timezone: Europe/Paris
-		iconv.internal_encoding: %encoding%
-		mbstring.internal_encoding: %encoding%
-		include_path: %appDir%/../_trunk;%appDir%/libs
 EOD
 , file_get_contents(TEMP_FILE) );
 
@@ -233,16 +197,6 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'iconv.internal_encoding' => '%encoding%',
 		'mbstring.internal_encoding' => '%encoding%',
 		'include_path' => '%appDir%/../_trunk;%appDir%/libs',
-	),
-	'test' => array(
-		'host' => 'localhost',
-		'params' => array(
-			'host' => 'dev.example.com',
-			'username' => 'devuser',
-			'password' => 'devsecret',
-			'dbname' => 'dbname',
-		),
-		'adapter' => 'pdo_mysql',
 	),
 ), TRUE), $config );
 
@@ -277,16 +231,6 @@ set:
 	iconv.internal_encoding: %encoding%
 	mbstring.internal_encoding: %encoding%
 	include_path: %appDir%/../_trunk;%appDir%/libs
-
-test:
-	host: localhost
-	params:
-		host: dev.example.com
-		username: devuser
-		password: devsecret
-		dbname: dbname
-
-	adapter: pdo_mysql
 
 display_errors: true
 html_errors: false

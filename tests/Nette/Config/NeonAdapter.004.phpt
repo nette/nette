@@ -20,5 +20,5 @@ try {
 	$config = Config::fromFile('config3.neon');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception( 'Nette\InvalidStateException', "Missing parent section scalar in 'config3.neon'.", $e );
+	Assert::exception( 'Nette\InvalidStateException', "Missing parent section 'scalar' in 'config3.neon'.", $e );
 }

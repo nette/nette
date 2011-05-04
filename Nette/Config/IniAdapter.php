@@ -91,20 +91,14 @@ final class IniAdapter implements IAdapter
 				$parts = $separator ? explode($separator, strtr($secName, ':', $separator)) : array($secName);
 				if (count($parts) > 1) {
 					$parent = trim($parts[1]);
-					$cursor = & $data;
-					foreach (self::$keySeparator ? explode(self::$keySeparator, $parent) : array($parent) as $part) {
-						if (isset($cursor[$part]) && is_array($cursor[$part])) {
-							$cursor = & $cursor[$part];
-						} else {
-							throw new Nette\InvalidStateException("Missing parent section [$parent] in '$file'.");
-						}
+					if (!isset($data[$parent]) || !is_array($data[$parent])) {
+						throw new Nette\InvalidStateException("Missing parent section [$parent] in '$file'.");
 					}
-					$secData = Nette\Utils\Arrays::mergeTree($secData, $cursor);
-				}
-
-				$secName = trim($parts[0]);
-				if ($secName === '') {
-					throw new Nette\InvalidStateException("Invalid empty section name in '$file'.");
+					$secData = Nette\Utils\Arrays::mergeTree($secData, $data[$parent]);
+					$secName = trim($parts[0]);
+					if ($secName === '') {
+						throw new Nette\InvalidStateException("Invalid empty section name in '$file'.");
+					}
 				}
 			}
 
