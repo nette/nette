@@ -42,6 +42,9 @@ final class AnnotationsParser
 	/** @var array */
 	private static $timestamps;
 
+	/** @var Nette\Caching\IStorage */
+	private static $cacheStorage;
+
 
 
 	/**
@@ -94,15 +97,21 @@ final class AnnotationsParser
 			$annotations = self::parseComment($r->getDocComment());
 
 		} else {
+			if (!self::$cacheStorage) {
+				// trigger_error('Set a cache storage for annotations parser via Nette\Reflection\AnnotationParser::setCacheStorage().', E_USER_WARNING);
+				self::$cacheStorage = new Nette\Caching\Storages\DevNullStorage;
+			}
+			$outerCache = new Nette\Caching\Cache(self::$cacheStorage, 'Nette.Reflection.Annotations');
+
 			if (self::$cache === NULL) {
-				self::$cache = (array) self::getCache()->offsetGet('list');
+				self::$cache = (array) $outerCache->offsetGet('list');
 				self::$timestamps = isset(self::$cache['*']) ? self::$cache['*'] : array();
 			}
 
 			if (!isset(self::$cache[$type]) && $file) {
 				self::$cache['*'][$file] = filemtime($file);
 				self::parseScript($file);
-				self::getCache()->save('list', self::$cache);
+				$outerCache->save('list', self::$cache);
 			}
 
 			if (isset(self::$cache[$type][$member])) {
@@ -327,11 +336,22 @@ final class AnnotationsParser
 
 
 	/**
-	 * @return Nette\Caching\Cache
+	 * @param  Nette\Caching\IStorage
+	 * @return void
 	 */
-	protected static function getCache()
+	public static function setCacheStorage(Nette\Caching\IStorage $storage)
 	{
-		return Nette\Environment::getCache('Nette.Annotations');
+		self::$cacheStorage = $storage;
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\IStorage
+	 */
+	public static function getCacheStorage()
+	{
+		return self::$this->cacheStorage;
 	}
 
 }
