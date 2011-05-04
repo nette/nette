@@ -145,17 +145,17 @@ class Configurator extends Nette\Object
 
 		// process services
 		$runServices = array();
-		$context = Environment::getContext();
+		$container = Environment::getContext();
 		if (isset($config->service) && $config->service instanceof \Traversable) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
-					$context->removeService($key);
-					$context->addService($key, $value);
+					$container->removeService($key);
+					$container->addService($key, $value);
 				} else {
 					if (!empty($value->factory) || isset($this->defaultServices[$key])) {
-						$context->removeService($key);
-						$context->addService(
+						$container->removeService($key);
+						$container->addService(
 							$key,
 							empty($value->factory) ? $this->defaultServices[$key] : $value->factory,
 							isset($value->singleton) ? $value->singleton : TRUE,
@@ -252,7 +252,7 @@ class Configurator extends Nette\Object
 
 		// auto-start services
 		foreach ($runServices as $name) {
-			$context->getService($name);
+			$container->getService($name);
 		}
 
 		return $config;
@@ -266,15 +266,15 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Get initial instance of context.
-	 * @return IContext
+	 * @return IContainer
 	 */
-	public function createContext()
+	public function createContainer()
 	{
-		$context = new Context;
+		$container = new Container;
 		foreach ($this->defaultServices as $name => $service) {
-			$context->addService($name, $service);
+			$container->addService($name, $service);
 		}
-		return $context;
+		return $container;
 	}
 
 
@@ -284,12 +284,12 @@ class Configurator extends Nette\Object
 	 */
 	public static function createApplication(array $options = NULL)
 	{
-		$context = clone Environment::getContext();
-		$context->addService('Nette\\Application\\IRouter', 'Nette\Application\Routers\RouteList');
+		$container = clone Environment::getContext();
+		$container->addService('Nette\\Application\\IRouter', 'Nette\Application\Routers\RouteList');
 
-		if (!$context->hasService('Nette\\Application\\IPresenterFactory')) {
-			$context->addService('Nette\\Application\\IPresenterFactory', function() use ($context) {
-				return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $context);
+		if (!$container->hasService('Nette\\Application\\IPresenterFactory')) {
+			$container->addService('Nette\\Application\\IPresenterFactory', function() use ($container) {
+				return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $container);
 			});
 		}
 
@@ -299,7 +299,7 @@ class Configurator extends Nette\Object
 
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class;
-		$application->setContext($context);
+		$application->setContext($container);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
 	}

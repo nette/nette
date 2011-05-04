@@ -55,7 +55,7 @@ class Application extends Nette\Object
 	/** @var IPresenter */
 	private $presenter;
 
-	/** @var Nette\DI\IContext */
+	/** @var Nette\DI\IContainer */
 	private $context;
 
 
@@ -226,7 +226,7 @@ class Application extends Nette\Object
 	 * Sets the context.
 	 * @return Application  provides a fluent interface
 	 */
-	public function setContext(Nette\DI\IContext $context)
+	public function setContext(Nette\DI\IContainer $context)
 	{
 		$this->context = $context;
 		return $this;
@@ -236,7 +236,7 @@ class Application extends Nette\Object
 
 	/**
 	 * Gets the context.
-	 * @return Nette\DI\IContext
+	 * @return Nette\DI\IContainer
 	 */
 	final public function getContext()
 	{

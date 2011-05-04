@@ -31,7 +31,7 @@ class PresenterFactory implements IPresenterFactory
 	/** @var array */
 	private $cache = array();
 
-	/** @var Nette\DI\IContext */
+	/** @var Nette\DI\IContainer */
 	private $context;
 
 
@@ -39,7 +39,7 @@ class PresenterFactory implements IPresenterFactory
 	/**
 	 * @param  string
 	 */
-	public function __construct($baseDir, Nette\DI\IContext $context)
+	public function __construct($baseDir, Nette\DI\IContainer $context)
 	{
 		$this->baseDir = $baseDir;
 		$this->context = $context;

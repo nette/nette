@@ -36,7 +36,7 @@ final class Environment
 	/** @var \ArrayObject */
 	private static $config;
 
-	/** @var Nette\DI\IContext */
+	/** @var Nette\DI\IContainer */
 	private static $context;
 
 	/** @var array */
@@ -305,12 +305,12 @@ final class Environment
 
 	/**
 	 * Get initial instance of context.
-	 * @return Nette\DI\IContext
+	 * @return Nette\DI\IContainer
 	 */
 	public static function getContext()
 	{
 		if (self::$context === NULL) {
-			self::$context = self::getConfigurator()->createContext();
+			self::$context = self::getConfigurator()->createContainer();
 		}
 		return self::$context;
 	}

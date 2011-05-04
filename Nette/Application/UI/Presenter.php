@@ -102,7 +102,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
-	/** @var Nette\DI\IContext */
+	/** @var Nette\DI\IContainer */
 	private $context;
 
 
@@ -1241,7 +1241,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * Gets the context.
 	 * @return Presenter  provides a fluent interface
 	 */
-	public function setContext(Nette\DI\IContext $context)
+	public function setContext(Nette\DI\IContainer $context)
 	{
 		$this->context = $context;
 		return $this;
@@ -1251,7 +1251,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return Nette\DI\IContext
+	 * @return Nette\DI\IContainer
 	 */
 	final public function getContext()
 	{

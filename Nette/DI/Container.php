@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Context extends Nette\FreezableObject implements IContext
+class Container extends Nette\FreezableObject implements IContainer
 {
 	/** @var array  storage for shared objects */
 	private $registry = array();
@@ -37,7 +37,7 @@ class Context extends Nette\FreezableObject implements IContext
 	 * @param  bool   is singleton?
 	 * @param  array  factory options
 	 * @return void
-	 * @return Context  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
 	public function addService($name, $service, $singleton = TRUE, array $options = NULL)
 	{

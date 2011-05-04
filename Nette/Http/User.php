@@ -61,12 +61,12 @@ class User extends Nette\Object implements IUser
 	/** @var SessionNamespace */
 	private $session;
 
-	/** @var Nette\DI\IContext */
+	/** @var Nette\DI\IContainer */
 	private $context;
 
 
 
-	public function __construct(Nette\DI\IContext $context)
+	public function __construct(Nette\DI\IContainer $context)
 	{
 		$this->context = $context;
 	}
