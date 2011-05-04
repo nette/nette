@@ -167,7 +167,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 			}
 
 			if (is_object($val)) {
-				throw new Nette\InvalidStateException("Persistent parameter must be scalar or array, {$this->reflection->name}::\$$nm is " . gettype($val));
+				$class = get_class($this);
+				throw new Nette\InvalidStateException("Persistent parameter must be scalar or array, $class::\$$nm is " . gettype($val));
 
 			} else {
 				if (isset($meta['def'])) {
@@ -253,7 +254,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function signalReceived($signal)
 	{
 		if (!$this->tryCall($this->formatSignalMethod($signal), $this->params)) {
-			throw new BadSignalException("There is no handler for signal '$signal' in class {$this->reflection->name}.");
+			$class = get_class($this);
+			throw new BadSignalException("There is no handler for signal '$signal' in class $class.");
 		}
 	}
 

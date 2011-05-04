@@ -180,7 +180,8 @@ class Container extends Component implements IContainer
 		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			$component = $this->$method($name);
 			if (!$component instanceof IComponent && !isset($this->components[$name])) {
-				throw new Nette\UnexpectedValueException("Method {$this->reflection->name}::$method() did not return or create the desired component.");
+				$class = get_class($this);
+				throw new Nette\UnexpectedValueException("Method $class::$method() did not return or create the desired component.");
 			}
 			return $component;
 		}

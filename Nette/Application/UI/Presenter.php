@@ -158,7 +158,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->initGlobalParams();
 			$this->startup();
 			if (!$this->startupCheck) {
-				$class = $this->reflection->getMethod('startup')->getDeclaringClass()->getName();
+				$class = $this->getReflection()->getMethod('startup')->getDeclaringClass()->getName();
 				throw new Nette\InvalidStateException("Method $class::startup() or its descendant doesn't call parent::startup().");
 			}
 			// calls $this->action<Action>()
