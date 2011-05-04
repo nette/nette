@@ -57,7 +57,7 @@ class PresenterFactory implements IPresenterFactory
 		$class = $this->getPresenterClass($name);
 		$presenter = new $class;
 		$presenter->setContext($this->context);
-	    return $presenter;
+		return $presenter;
 	}
 
 

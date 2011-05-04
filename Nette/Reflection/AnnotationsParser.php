@@ -351,7 +351,7 @@ final class AnnotationsParser
 	 */
 	public static function getCacheStorage()
 	{
-		return self::$this->cacheStorage;
+		return self::$cacheStorage;
 	}
 
 }

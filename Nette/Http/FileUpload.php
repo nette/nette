@@ -201,7 +201,7 @@ class FileUpload extends Nette\Object
 
 
 	/**
-	 * Get file contents
+	 * Get file contents.
 	 * @return string
 	 */
 	public function getContents()

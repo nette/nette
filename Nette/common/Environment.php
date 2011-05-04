@@ -263,7 +263,7 @@ final class Environment
 	{
 		static $livelock;
 		if (is_string($var) && strpos($var, '%') !== FALSE) {
-			return @preg_replace_callback(
+			return @preg_replace_callback( // intentionally @
 				'#%([a-z0-9_-]*)%#i',
 				function ($m) use (& $livelock) {
 					list(, $var) = $m;

@@ -27,7 +27,7 @@ class MyContainer extends Container
 	protected function createTwoService()
 	{
 	}
-	
+
 }
 
 

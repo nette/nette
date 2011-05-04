@@ -34,7 +34,7 @@ extension_loaded('mbstring') && mb_internal_encoding('UTF-8');
 
 
 /**
- * Load and configure Nette Framework
+ * Load and configure Nette Framework.
  */
 define('NETTE', TRUE);
 define('NETTE_DIR', __DIR__);

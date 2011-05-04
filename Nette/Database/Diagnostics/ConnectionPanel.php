@@ -18,7 +18,7 @@ use Nette,
 
 
 /**
- * Debug panel for Nette\Database
+ * Debug panel for Nette\Database.
  *
  * @author     David Grudl
  */
@@ -108,7 +108,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
 			if ($this->explain && preg_match('#\s*SELECT\s#iA', $sql)) {
 				try {
-				    $explain = $connection->queryArgs('EXPLAIN ' . $sql, $params)->fetchAll();
+					$explain = $connection->queryArgs('EXPLAIN ' . $sql, $params)->fetchAll();
 				} catch (\PDOException $e) {}
 			}
 
