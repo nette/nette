@@ -35,6 +35,7 @@ $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->comment = 'test -- comment';
+$template->netteHttpResponse = Nette\Environment::getHttpResponse();
 $template->el = Html::el('div')->title('1/2"');
 
 Assert::match(file_get_contents(__DIR__ . '/test.011.expect'), $template->__toString(TRUE));

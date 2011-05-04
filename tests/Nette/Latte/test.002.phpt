@@ -30,6 +30,7 @@ $template->setFile(__DIR__ . '/templates/cache.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
+$template->netteCacheStorage = new Nette\Caching\Storages\DevNullStorage;
 $template->title = 'Hello';
 $template->id = 456;
 

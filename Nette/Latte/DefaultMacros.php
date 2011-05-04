@@ -108,7 +108,7 @@ class DefaultMacros extends Nette\Object
 
 		'attr' => '<?php echo Nette\Utils\Html::el(NULL)->%:macroAttr%attributes() ?>',
 		'contentType' => '<?php %:macroContentType% ?>',
-		'status' => '<?php Nette\Environment::getHttpResponse()->setCode(%%) ?>',
+		'status' => '<?php $netteHttpResponse->setCode(%%) ?>',
 		'var' => '<?php %:macroVar% ?>',
 		'assign' => '<?php %:macroVar% ?>', // deprecated
 		'default' => '<?php %:macroDefault% ?>',
@@ -516,7 +516,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroCache($content)
 	{
-		return 'if (Nette\Latte\DefaultMacros::createCache('
+		return 'if (Nette\Latte\DefaultMacros::createCache($netteCacheStorage, '
 			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
 			. ', $_l->g->caches' . $this->formatArray($content, ', ') . ')) {';
 	}
@@ -593,7 +593,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// temporary solution
 		if (strpos($content, '/')) {
-			return 'Nette\Environment::getHttpResponse()->setHeader("Content-Type", "' . $content . '")';
+			return '$netteHttpResponse->setHeader("Content-Type", "' . $content . '")';
 		}
 	}
 
@@ -1080,12 +1080,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 	/**
 	 * Starts the output cache. Returns Nette\Caching\OutputHelper object if buffering was started.
+	 * @param  Nette\Caching\IStorage
 	 * @param  string
 	 * @param  array of Nette\Caching\OutputHelper
 	 * @param  array
 	 * @return Nette\Caching\OutputHelper
 	 */
-	public static function createCache($key, & $parents, $args = NULL)
+	public static function createCache(Nette\Caching\IStorage $cacheStorage, $key, & $parents, $args = NULL)
 	{
 		if ($args) {
 			if (array_key_exists('if', $args) && !$args['if']) {
@@ -1097,7 +1098,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			end($parents)->dependencies[Nette\Caching\Cache::ITEMS][] = $key;
 		}
 
-		if ($helper = Nette\Environment::getCache('Nette.Template.Cache')->start($key)) {
+		$cache = new Nette\Caching\Cache($cacheStorage, 'Nette.Templating.Cache');
+		if ($helper = $cache->start($key)) {
 			$helper->dependencies = array(
 				Nette\Caching\Cache::TAGS => isset($args['tags']) ? $args['tags'] : NULL,
 				Nette\Caching\Cache::EXPIRATION => isset($args['expire']) ? $args['expire'] : '+ 7 days',

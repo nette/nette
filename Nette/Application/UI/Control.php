@@ -69,6 +69,8 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		if ($presenter instanceof Presenter) {
 			$template->setCacheStorage($presenter->getContext()->getService('templateCacheStorage'));
 			$template->user = $presenter->getUser();
+			$template->netteHttpResponse = $presenter->getHttpResponse();
+			$template->netteCacheStorage = $presenter->getContext()->getService('Nette\\Caching\\ICacheStorage');
 			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
 			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
 
