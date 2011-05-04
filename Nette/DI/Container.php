@@ -82,7 +82,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Gets the service object of the specified type.
 	 * @param  string service name
-	 * @return mixed
+	 * @return object
 	 */
 	public function getService($name)
 	{
@@ -130,6 +130,55 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		$lower = strtolower($name);
 		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower]));
+	}
+
+
+
+	/**
+	 * Gets the service object, shortcut for getService().
+	 * @param  string
+	 * @return object
+	 */
+	public function &__get($name)
+	{
+		$service = $this->getService($name);
+		return $service;
+	}
+
+
+
+	/**
+	 * Adds the service, shortcut for addService().
+	 * @param  string
+	 * @param  object
+	 * @return void
+	 */
+	public function __set($name, $value)
+	{
+		$this->addService($name, $value);
+	}
+
+
+
+	/**
+	 * Exists the service?
+	 * @param  string
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		return $this->hasService($name);
+	}
+
+
+
+	/**
+	 * Removes the service, shortcut for removeService().
+	 * @return void
+	 */
+	public function __unset($name)
+	{
+		$this->removeService($name);
 	}
 
 }
