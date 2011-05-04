@@ -44,7 +44,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$lower = strtolower($name);
-		if (isset($this->registry[$lower])) {
+		if (isset($this->registry[$lower]) || method_exists($this, "create{$name}Service")) {
 			throw new AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 
@@ -105,17 +105,21 @@ class Container extends Nette\FreezableObject implements IContainer
 					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
 				$service = $factory/*5.2*->invoke*/($this);
-				if (!is_object($service)) {
-					throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
-				}
 			}
 
-				unset($this->factories[$lower]);
-			return $this->registry[$lower] = $service;
+		} elseif (method_exists($this, $factory = "create{$name}Service")) { // static method
+			$service = $this->$factory();
 
 		} else {
 			throw new Nette\InvalidStateException("Service '$name' not found.");
 		}
+
+		if (!is_object($service)) {
+			throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
+		}
+
+		unset($this->factories[$lower]);
+		return $this->registry[$lower] = $service;
 	}
 
 
@@ -129,7 +133,8 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function hasService($name, $created = FALSE)
 	{
 		$lower = strtolower($name);
-		return isset($this->registry[$lower]) || (!$created && isset($this->factories[$lower]));
+		return isset($this->registry[$lower])
+			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "create{$name}Service")));
 	}
 
 
