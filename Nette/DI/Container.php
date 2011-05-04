@@ -31,6 +31,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	/** @var array  storage for service factories */
 	private $factories = array();
 
+	/** @var array circular reference detector */
+	private $creating;
+
 
 
 	/**
@@ -93,6 +96,10 @@ class Container extends Nette\FreezableObject implements IContainer
 		if (isset($this->registry[$lower])) {
 			return $this->registry[$lower];
 
+		} elseif (isset($this->creating[$lower])) {
+			throw new Nette\InvalidStateException("Circular reference detected for services: "
+				. implode(', ', array_keys($this->creating)) . ".");
+
 		} elseif (isset($this->factories[$lower])) {
 			list($factory) = $this->factories[$lower];
 
@@ -107,17 +114,28 @@ class Container extends Nette\FreezableObject implements IContainer
 				if (!$factory->isCallable()) {
 					throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
 				}
-				$service = $factory/*5.2*->invoke*/($this);
+
+				$this->creating[$lower] = TRUE;
+				try {
+					$service = $factory/*5.2*->invoke*/($this);
+				} catch (\Exception $e) {}
 			}
 
 		} elseif (method_exists($this, $factory = "create{$name}Service")) { // static method
-			$service = $this->$factory();
+			$this->creating[$lower] = TRUE;
+			try {
+				$service = $this->$factory();
+			} catch (\Exception $e) {}
 
 		} else {
 			throw new Nette\InvalidStateException("Service '$name' not found.");
 		}
 
-		if (!is_object($service)) {
+		unset($this->creating[$lower]);
+
+		if (isset($e)) {
+			throw $e;
+		} elseif (!is_object($service)) {
 			throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
 		}
 
