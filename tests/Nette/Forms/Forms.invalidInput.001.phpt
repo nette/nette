@@ -104,4 +104,4 @@ Assert::equal( ArrayHash::from(array(
 		'age' => '',
 		'avatar' => new Http\FileUpload(array()),
 	)),
-)), $form->getValues() );
+), FALSE), $form->getValues() );
