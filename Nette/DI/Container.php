@@ -34,10 +34,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Adds the specified service to the service container.
 	 * @param  string service name
 	 * @param  mixed  object, class name or factory callback
-	 * @param  bool   is singleton?
 	 * @return Container  provides a fluent interface
 	 */
-	public function addService($name, $service, $singleton = TRUE)
+	public function addService($name, $service)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -60,7 +59,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			if (!$service) {
 				throw new Nette\InvalidArgumentException("Service named '$name' is empty.");
 			}
-			$this->factories[$lower] = array($service, $singleton);
+			$this->factories[$lower] = array($service);
 			$this->registry[$lower] = & $this->factories[$lower][3]; // forces cloning using reference
 		}
 		return $this;
@@ -98,11 +97,11 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		$lower = strtolower($name);
 
-		if (isset($this->registry[$lower])) { // instantiated singleton
+		if (isset($this->registry[$lower])) { // already instantiated
 			return $this->registry[$lower];
 
 		} elseif (isset($this->factories[$lower])) {
-			list($factory, $singleton) = $this->factories[$lower];
+			list($factory) = $this->factories[$lower];
 
 			if (is_string($factory) && strpos($factory, ':') === FALSE) { // class name
 				/*5.2* if ($a = strrpos($factory, '\\')) $factory = substr($factory, $a + 1); // fix namespace*/
@@ -122,11 +121,8 @@ class Container extends Nette\FreezableObject implements IContainer
 				}
 			}
 
-			if ($singleton) {
-				$this->registry[$lower] = $service;
 				unset($this->factories[$lower]);
-			}
-			return $service;
+			return $this->registry[$lower] = $service;
 
 		} else {
 			throw new Nette\InvalidStateException("Service '$name' not found.");

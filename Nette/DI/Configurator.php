@@ -161,7 +161,7 @@ class Configurator extends Nette\Object
 							};
 						}
 						$container->removeService($key);
-						$container->addService($key, $factory, isset($value->singleton) ? $value->singleton : TRUE);
+						$container->addService($key, $factory);
 					} else {
 						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
 					}

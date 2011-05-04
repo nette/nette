@@ -27,10 +27,9 @@ interface IContainer
 	 * Adds the specified service to the service container.
 	 * @param  string service name
 	 * @param  mixed  object, class name or factory callback
-	 * @param  bool   is singleton?
 	 * @return void
 	 */
-	function addService($name, $service, $singleton = TRUE);
+	function addService($name, $service);
 
 	/**
 	 * Gets the service object of the specified type.
