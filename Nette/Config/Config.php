@@ -20,13 +20,23 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Config implements \ArrayAccess, \IteratorAggregate
+class Config
 {
 	/** @var array */
 	private static $extensions = array(
 		'ini' => 'Nette\Config\IniAdapter',
 		'neon' => 'Nette\Config\NeonAdapter',
 	);
+
+
+
+	/**
+	 * Static class - cannot be instantiated.
+	 */
+	final public function __construct()
+	{
+		throw new Nette\StaticClassException;
+	}
 
 
 
@@ -55,7 +65,7 @@ class Config implements \ArrayAccess, \IteratorAggregate
 	 * Creates new configuration object from file.
 	 * @param  string  file name
 	 * @param  string  section to load
-	 * @return Config
+	 * @return Nette\ArrayHash
 	 */
 	public static function fromFile($file, $section = NULL)
 	{
@@ -71,163 +81,24 @@ class Config implements \ArrayAccess, \IteratorAggregate
 			}
 			$data = $data[$section];
 		}
-		return new static($data);
-	}
-
-
-
-	/**
-	 * @param  array to wrap
-	 */
-	public function __construct($arr = NULL)
-	{
-		foreach ((array) $arr as $k => $v) {
-			$this->$k = is_array($v) ? new static($v) : $v;
-		}
+		return Nette\ArrayHash::from($data, TRUE);
 	}
 
 
 
 	/**
 	 * Save configuration to file.
+	 * @param  mixed
 	 * @param  string  file
 	 * @return void
 	 */
-	public function save($file)
+	public static function save($config, $file)
 	{
 		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 		if (!isset(self::$extensions[$extension])) {
 			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
 		}
-		return call_user_func(array(self::$extensions[$extension], 'save'), $this, $file);
-	}
-
-
-
-	/********************* data access ****************d*g**/
-
-
-
-	public function __set($key, $value)
-	{
-		if (!is_scalar($key)) {
-			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
-
-		} elseif ($value === NULL) {
-			unset($this->$key);
-
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-
-
-	public function &__get($key)
-	{
-		if (!is_scalar($key)) {
-			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
-		}
-		return $this->$key;
-	}
-
-
-
-	public function __isset($key)
-	{
-		return FALSE;
-	}
-
-
-
-	public function __unset($key)
-	{
-	}
-
-
-
-	/**
-	 * Replaces or appends a item.
-	 * @param  mixed
-	 * @param  mixed
-	 * @return void
-	 */
-	public function offsetSet($key, $value)
-	{
-		$this->__set($key, $value);
-	}
-
-
-
-	/**
-	 * Returns a item.
-	 * @param  mixed
-	 * @return mixed
-	 */
-	public function offsetGet($key)
-	{
-		if (!is_scalar($key)) {
-			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
-
-		} elseif (!isset($this->$key)) {
-			return NULL;
-		}
-		return $this->$key;
-	}
-
-
-
-	/**
-	 * Determines whether a item exists.
-	 * @param  mixed
-	 * @return bool
-	 */
-	public function offsetExists($key)
-	{
-		if (!is_scalar($key)) {
-			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
-		}
-		return isset($this->$key);
-	}
-
-
-
-	/**
-	 * Removes a item.
-	 * @param  mixed
-	 * @return void
-	 */
-	public function offsetUnset($key)
-	{
-		if (!is_scalar($key)) {
-			throw new Nette\InvalidArgumentException("Key must be either a string or an integer.");
-		}
-		unset($this->$key);
-	}
-
-
-
-	/**
-	 * Returns an iterator over all items.
-	 * @return \RecursiveIterator
-	 */
-	public function getIterator()
-	{
-		return new Nette\Iterators\Recursor(new \ArrayIterator($this));
-	}
-
-
-
-	/**
-	 * @return array
-	 */
-	public function toArray()
-	{
-		$arr = array();
-		foreach ($this as $k => $v) {
-			$arr[$k] = $v instanceof self ? $v->toArray() : $v;
-		}
-		return $arr;
+		return call_user_func(array(self::$extensions[$extension], 'save'), $config, $file);
 	}
 
 }

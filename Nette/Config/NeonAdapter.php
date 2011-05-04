@@ -112,7 +112,7 @@ final class NeonAdapter implements IAdapter
 
 	/**
 	 * Write NEON file.
-	 * @param  Config to save
+	 * @param  mixed
 	 * @param  string  file
 	 * @return void
 	 */

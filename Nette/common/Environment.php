@@ -457,7 +457,7 @@ final class Environment
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Nette\Config\Config  file name or Config object
+	 * @param  string  file name
 	 * @return \ArrayObject
 	 */
 	public static function loadConfig($file = NULL)

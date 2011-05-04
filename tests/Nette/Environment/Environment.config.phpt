@@ -34,13 +34,13 @@ Assert::same( 'hello world', Environment::getVariable('foo') );
 
 Assert::same( 'hello world', constant('HELLO_WORLD') );
 
-Assert::same( array(
+Assert::equal( Nette\ArrayHash::from(array(
 	'mbstring-internal_encoding' => 'UTF-8',
 	'date.timezone' => 'Europe/Prague',
 	'iconv.internal_encoding' => 'UTF-8',
-), Environment::getConfig('php')->toArray() );
+)), Environment::getConfig('php') );
 
-Assert::same( array(
+Assert::equal( Nette\ArrayHash::from(array(
 	'adapter' => 'pdo_mysql',
 	'params' => array(
 		'host' => 'db.example.com',
@@ -48,6 +48,6 @@ Assert::same( array(
 		'password' => 'secret',
 		'dbname' => 'dbname',
 	),
-), Environment::getConfig('database')->toArray() );
+)), Environment::getConfig('database') );
 
 Assert::true( Environment::isProduction() );

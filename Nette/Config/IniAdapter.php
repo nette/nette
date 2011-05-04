@@ -135,7 +135,7 @@ final class IniAdapter implements IAdapter
 
 	/**
 	 * Write INI file.
-	 * @param  Config to save
+	 * @param  mixed
 	 * @param  string  file
 	 * @return void
 	 */

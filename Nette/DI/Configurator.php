@@ -12,8 +12,8 @@
 namespace Nette\DI;
 
 use Nette,
-	Nette\Environment,
-	Nette\Config\Config;
+	Nette\ArrayHash,
+	Nette\Environment;
 
 
 
@@ -107,14 +107,14 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string|Nette\Config\Config  file name or Config object
-	 * @return Nette\Config\Config
+	 * @param  string  file name
+	 * @return Nette\ArrayHash
 	 */
 	public function loadConfig($file)
 	{
 		$name = Environment::getName();
 
-		if ($file instanceof Config) {
+		if ($file instanceof ArrayHash) {
 			$config = $file;
 			$file = NULL;
 
@@ -126,11 +126,11 @@ class Configurator extends Nette\Object
 			if (!is_file($file)) {
 				$file = preg_replace('#\.neon$#', '.ini', $file); // backcompatibility
 			}
-			$config = Config::fromFile($file, $name);
+			$config = Nette\Config\Config::fromFile($file, $name);
 		}
 
 		// process environment variables
-		if ($config->variable instanceof Config) {
+		if (isset($config->variable) && $config->variable instanceof \Traversable) {
 			foreach ($config->variable as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
@@ -146,25 +146,25 @@ class Configurator extends Nette\Object
 		// process services
 		$runServices = array();
 		$context = Environment::getContext();
-		if ($config->service instanceof Config) {
+		if (isset($config->service) && $config->service instanceof \Traversable) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (is_string($value)) {
 					$context->removeService($key);
 					$context->addService($key, $value);
 				} else {
-					if ($value->factory || isset($this->defaultServices[$key])) {
+					if (!empty($value->factory) || isset($this->defaultServices[$key])) {
 						$context->removeService($key);
 						$context->addService(
 							$key,
-							$value->factory ? $value->factory : $this->defaultServices[$key],
+							empty($value->factory) ? $this->defaultServices[$key] : $value->factory,
 							isset($value->singleton) ? $value->singleton : TRUE,
-							(array) $value->option
+							isset($value->option) ? (array) $value->option : NULL
 						);
 					} else {
 						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
 					}
-					if ($value->run) {
+					if (!empty($value->run)) {
 						$runServices[] = $key;
 					}
 				}
@@ -172,18 +172,18 @@ class Configurator extends Nette\Object
 		}
 
 		// process ini settings
-		if (!$config->php) { // backcompatibility
+		if (!isset($config->php) && isset($config->set)) { // backcompatibility
 			$config->php = $config->set;
 			unset($config->set);
 		}
 
-		if ($config->php instanceof Config) {
+		if (isset($config->php) && $config->php instanceof \Traversable) {
 			if (PATH_SEPARATOR !== ';' && isset($config->php->include_path)) {
 				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
 			}
 
 			foreach (clone $config->php as $key => $value) { // flatten INI dots
-				if ($value instanceof Config) {
+				if ($value instanceof \Traversable) {
 					unset($config->php->$key);
 					foreach ($value as $k => $v) {
 						$config->php->{"$key.$k"} = $v;
@@ -237,14 +237,14 @@ class Configurator extends Nette\Object
 		}
 
 		// define constants
-		if ($config->const instanceof Config) {
+		if (isset($config->const) && $config->const instanceof \Traversable) {
 			foreach ($config->const as $key => $value) {
 				define($key, $value);
 			}
 		}
 
 		// set modes
-		if (isset($config->mode)) {
+		if (isset($config->mode) && isset($config->mode)) {
 			foreach ($config->mode as $mode => $state) {
 				Environment::setMode($mode, $state);
 			}
