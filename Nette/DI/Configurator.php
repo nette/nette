@@ -39,6 +39,7 @@ class Configurator extends Nette\Object
 		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
 		'Nette\\Web\\Session' => array(__CLASS__, 'createHttpSession'),
 		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+		'templateCacheStorage' => array(__CLASS__, 'createTemplateCacheStorage'),
 	);
 
 
@@ -364,6 +365,19 @@ class Configurator extends Nette\Object
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 		return new Nette\Caching\Storages\FileStorage($dir, Environment::getService('Nette\\Caching\\ICacheJournal'));
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\IStorage
+	 */
+	public static function createTemplateCacheStorage()
+	{
+		$dir = Environment::getVariable('tempDir') . '/cache';
+		umask(0000);
+		@mkdir($dir, 0777); // @ - directory may exists
+		return new Nette\Templating\PhpFileStorage($dir);
 	}
 
 

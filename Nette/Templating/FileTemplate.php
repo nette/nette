@@ -149,10 +149,7 @@ class FileTemplate extends Template implements IFileTemplate
 	public function getCacheStorage()
 	{
 		if ($this->cacheStorage === NULL) {
-			$dir = Nette\Environment::getVariable('tempDir') . '/cache';
-			umask(0000);
-			@mkdir($dir, 0777); // @ - directory may exists
-			$this->cacheStorage = new PhpFileStorage($dir);
+			return new Nette\Caching\Storages\DevNullStorage;
 		}
 		return $this->cacheStorage;
 	}
