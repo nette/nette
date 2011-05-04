@@ -62,5 +62,3 @@ $cache->save($key, $value);
 $cache->release();
 
 Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
-
-
