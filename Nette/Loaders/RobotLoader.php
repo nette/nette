@@ -174,7 +174,7 @@ class RobotLoader extends AutoLoader
 	/**
 	 * Add directory (or directories) to list.
 	 * @param  string|array
-	 * @return void
+	 * @return RobotLoader  provides a fluent interface
 	 * @throws Nette\DirectoryNotFoundException if path is not found
 	 */
 	public function addDirectory($path)
@@ -186,6 +186,7 @@ class RobotLoader extends AutoLoader
 			}
 			$this->scanDirs[] = $real;
 		}
+		return $this;
 	}
 
 
