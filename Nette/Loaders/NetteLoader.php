@@ -107,6 +107,8 @@ class NetteLoader extends AutoLoader
 		'nette\di\configurator' => '/DI/Configurator.php',
 		'nette\di\container' => '/DI/Container.php',
 		'nette\di\icontainer' => '/DI/IContainer.php',
+		'nette\di\iservicebuilder' => '/DI/IServiceBuilder.php',
+		'nette\di\servicebuilder' => '/DI/ServiceBuilder.php',
 		'nette\diagnostics\bar' => '/Diagnostics/Bar.php',
 		'nette\diagnostics\bluescreen' => '/Diagnostics/BlueScreen.php',
 		'nette\diagnostics\debugger' => '/Diagnostics/Debugger.php',
