@@ -23,7 +23,7 @@ use Nette;
 class Container extends Nette\FreezableObject implements IContainer
 {
 	/** @var array  user parameters */
-	private $params = array();
+	public $params = array();
 
 	/** @var array  storage for shared objects */
 	private $registry = array();
