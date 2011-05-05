@@ -22,7 +22,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Configurator extends Nette\Object
+class Configurator extends Nette\Object implements IConfigurator
 {
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.neon';

@@ -27,7 +27,7 @@ final class Environment
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
 
-	/** @var Nette\DI\Configurator */
+	/** @var Nette\DI\IConfigurator */
 	private static $configurator;
 
 	/** @var string  the mode of current application */
@@ -67,10 +67,10 @@ final class Environment
 
 	/**
 	 * Sets "class behind Environment" configurator.
-	 * @param  Nette\DI\Configurator
+	 * @param  Nette\DI\IConfigurator
 	 * @return void
 	 */
-	public static function setConfigurator(DI\Configurator $configurator)
+	public static function setConfigurator(DI\IConfigurator $configurator)
 	{
 		self::$configurator = $configurator;
 	}
@@ -79,7 +79,7 @@ final class Environment
 
 	/**
 	 * Gets "class behind Environment" configurator.
-	 * @return Nette\DI\Configurator
+	 * @return Nette\DI\IConfigurator
 	 */
 	public static function getConfigurator()
 	{
