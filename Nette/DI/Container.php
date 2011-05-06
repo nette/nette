@@ -50,7 +50,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$lower = strtolower($name);
-		if (isset($this->registry[$lower]) || method_exists($this, "create{$name}Service")) {
+		if (isset($this->registry[$lower]) || method_exists($this, "createService$name")) {
 			throw new AmbiguousServiceException("Service named '$name' has already been registered.");
 		}
 
@@ -120,8 +120,9 @@ class Container extends Nette\FreezableObject implements IContainer
 				$service = $factory/*5.2*->invoke*/($this);
 			} catch (\Exception $e) {}
 
-		} elseif (method_exists($this, $factory = "create{$name}Service")) { // static method
+		} elseif (method_exists($this, "createService$name")) { // static method
 			$this->creating[$lower] = TRUE;
+			$factory = 'createService' . ucfirst($name);
 			try {
 				$service = $this->$factory();
 			} catch (\Exception $e) {}
@@ -154,7 +155,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		$lower = strtolower($name);
 		return isset($this->registry[$lower])
-			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "create{$name}Service")));
+			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "createService$name")));
 	}
 
 

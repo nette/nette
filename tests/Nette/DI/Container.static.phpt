@@ -19,12 +19,12 @@ require __DIR__ . '/../bootstrap.php';
 class MyContainer extends Container
 {
 
-	protected function createOneService()
+	protected function createServiceOne()
 	{
 		return (object) NULL;
 	}
 
-	protected function createTwoService()
+	protected function createServiceTwo()
 	{
 	}
 
@@ -53,5 +53,5 @@ try {
 	$container->getService('two');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Cannot instantiate service 'two', value returned by 'createtwoService' is not object.", $e );
+	Assert::exception('Nette\DI\AmbiguousServiceException', "Cannot instantiate service 'two', value returned by 'createServiceTwo' is not object.", $e );
 }

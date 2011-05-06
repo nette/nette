@@ -19,12 +19,12 @@ require __DIR__ . '/../bootstrap.php';
 class MyContainer extends Container
 {
 
-	protected function createOneService()
+	protected function createServiceOne()
 	{
 		return $this->two;
 	}
 
-	protected function createTwoService()
+	protected function createServiceTwo()
 	{
 		return $this->one;
 	}
