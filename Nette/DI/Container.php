@@ -31,6 +31,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	/** @var array  storage for service factories */
 	private $factories = array();
 
+	/** @var array  */
+	private $types = array();
+
 	/** @var array circular reference detector */
 	private $creating;
 
@@ -40,9 +43,10 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Adds the specified service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callback
+	 * @param  string
 	 * @return Container|ServiceBuilder  provides a fluent interface
 	 */
-	public function addService($name, $service)
+	public function addService($name, $service, $typeHint = NULL)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -57,9 +61,11 @@ class Container extends Nette\FreezableObject implements IContainer
 		if ($service instanceof self) {
 			$this->registry[$lower] = & $service->registry[$lower];
 			$this->factories[$lower] = & $service->factories[$lower];
+			$this->types[$lower] = !$typeHint && isset($service->types[$lower]) ? $service->types[$lower] : $typeHint;
 			return $this;
 
 		} elseif (is_string($service) && strpos($service, ':') === FALSE) { // class name
+			$typeHint = $typeHint ?: $service;
 			$service = new ServiceBuilder($service);
 		}
 
@@ -68,6 +74,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		} elseif (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$lower] = $service;
+			$this->types[$lower] = $typeHint;
 			return $this;
 
 		} else {
@@ -75,6 +82,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$this->factories[$lower] = array(callback($factory));
+		$this->types[$lower] = $typeHint;
 		$this->registry[$lower] = & $this->factories[$lower][1]; // forces cloning using reference
 		return $service;
 	}
@@ -141,10 +149,35 @@ class Container extends Nette\FreezableObject implements IContainer
 		} elseif (!is_object($service)) {
 			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
 
+		} elseif (isset($this->types[$lower]) && !$service instanceof $this->types[$lower]) {
+			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not '{$this->types[$lower]}' type.");
 		}
 
 		unset($this->factories[$lower]);
 		return $this->registry[$lower] = $service;
+	}
+
+
+
+	/**
+	 * Gets the service object of the specified type.
+	 * @param  string service name
+	 * @return object
+	 */
+	public function getServiceByType($type)
+	{
+		foreach ($this->registry as $name => $service) {
+			if (isset($this->types[$name]) ? !strcasecmp($this->types[$name], $type) : $service instanceof $type) {
+				$found[] = $name;
+			}
+		}
+		if (!isset($found)) {
+			throw new MissingServiceException("Service matching '$type' type not found.");
+
+		} elseif (count($found) > 1) {
+			throw new AmbiguousServiceException("Found more than one service ('" . implode("', '", $found) . "') matching '$type' type.");
+		}
+		return $this->getService($found[0]);
 	}
 
 
@@ -160,6 +193,22 @@ class Container extends Nette\FreezableObject implements IContainer
 		$lower = strtolower($name);
 		return isset($this->registry[$lower])
 			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "createService$name")));
+	}
+
+
+
+	/**
+	 * Checks the service type.
+	 * @param  string
+	 * @param  string
+	 * @return bool
+	 */
+	public function checkServiceType($name, $type)
+	{
+		$lower = strtolower($name);
+		return isset($this->types[$lower])
+			? !strcasecmp($this->types[$lower], $type)
+			: (isset($this->registry[$lower]) && $this->registry[$lower] instanceof $type);
 	}
 
 
