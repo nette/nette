@@ -45,7 +45,7 @@ Assert::true( $container->hasService('one') );
 Assert::false( $container->hasService('undefined') );
 
 Assert::true( $container->getService('one') instanceof stdClass );
-Assert::true( $container->getService('one') === $container->getService('one') ); // shared
+Assert::same( $container->getService('one'), $container->getService('one') ); // shared
 
 
 // bad method

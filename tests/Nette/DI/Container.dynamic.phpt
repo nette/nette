@@ -42,7 +42,7 @@ $builder = $container->addService('three', 'Service');
 Assert::true( $builder instanceof Nette\DI\IServiceBuilder );
 Assert::true( $container->hasService('three') );
 Assert::true( $container->getService('three') instanceof Service );
-Assert::true( $container->getService('three') === $container->getService('three') ); // shared
+Assert::same( $container->getService('three'), $container->getService('three') ); // shared
 
 
 // factory
@@ -53,7 +53,7 @@ $container->addService('four', function($container){
 
 Assert::true( $container->hasService('four') );
 Assert::true( $container->getService('four') instanceof Service );
-Assert::true( $container->getService('four') === $container->getService('four') ); // shared
+Assert::same( $container->getService('four'), $container->getService('four') ); // shared
 
 
 // bad factory

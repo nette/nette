@@ -39,7 +39,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Adds the specified service or service factory to the container.
 	 * @param  string
-	 * @param  mixed  object, class name or callback
+	 * @param  mixed   object, class name or callback
 	 * @return Container|ServiceBuilder  provides a fluent interface
 	 */
 	public function addService($name, $service)
@@ -95,8 +95,8 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Gets the service object of the specified type.
-	 * @param  string service name
+	 * Gets the service object by name.
+	 * @param  string
 	 * @return object
 	 */
 	public function getService($name)
@@ -104,12 +104,14 @@ class Container extends Nette\FreezableObject implements IContainer
 		$lower = strtolower($name);
 		if (isset($this->registry[$lower])) {
 			return $this->registry[$lower];
+		}
 
-		} elseif (isset($this->creating[$lower])) {
+		if (isset($this->creating[$lower])) {
 			throw new Nette\InvalidStateException("Circular reference detected for services: "
 				. implode(', ', array_keys($this->creating)) . ".");
+		}
 
-		} elseif (isset($this->factories[$lower])) {
+		if (isset($this->factories[$lower])) {
 			list($factory) = $this->factories[$lower];
 			if (!$factory->isCallable()) {
 				throw new Nette\InvalidStateException("Cannot instantiate service '$name', handler '$factory' is not callable.");
@@ -135,8 +137,10 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		if (isset($e)) {
 			throw $e;
+			
 		} elseif (!is_object($service)) {
 			throw new AmbiguousServiceException("Cannot instantiate service '$name', value returned by '$factory' is not object.");
+			
 		}
 
 		unset($this->factories[$lower]);

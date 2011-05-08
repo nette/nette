@@ -32,9 +32,9 @@ $container->addService('three', function($container){
 
 $dolly = clone $container;
 
-Assert::true( $dolly->getService('one') === $container->getService('one') );
-Assert::true( $dolly->getService('two') === $container->getService('two') );
-Assert::true( $dolly->getService('three') === $container->getService('three') );
+Assert::same( $dolly->getService('one'), $container->getService('one') );
+Assert::same( $dolly->getService('two'), $container->getService('two') );
+Assert::same( $dolly->getService('three'), $container->getService('three') );
 
 
 $container->addService('oneX', $service);

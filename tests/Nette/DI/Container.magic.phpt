@@ -34,4 +34,4 @@ Assert::false( isset($container->undefined) );
 
 Assert::same( $one, $container->one );
 Assert::true( $container->two instanceof Service );
-Assert::true( $container->two === $container->getService('two') );
+Assert::same( $container->two, $container->getService('two') );

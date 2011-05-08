@@ -27,21 +27,27 @@ class ServiceBuilder extends Nette\Object implements IServiceBuilder
 
 
 
-	function __construct($class)
+	public function __construct($class)
 	{
+		/*5.2* if ($a = strrpos($class, '\\')) $class = substr($class, $a + 1); // fix namespace*/
 		$this->class = $class;
 	}
 
 
 
-	function createService(Nette\DI\IContainer $container)
+	public function getClass()
 	{
-		$class = $this->class;
-		/*5.2* if ($a = strrpos($class, '\\')) $class = substr($class, $a + 1); // fix namespace*/
-		if (!class_exists($class)) {
-			throw new AmbiguousServiceException("Cannot instantiate service, class '$class' not found.");
+		return $this->class;
+	}
+
+
+
+	public function createService(Nette\DI\IContainer $container)
+	{
+		if (!class_exists($this->class)) {
+			throw new Nette\InvalidStateException("Cannot instantiate service, class '$this->class' not found.");
 		}
-		return new $class;
+		return new $this->class;
 	}
 
 }

@@ -26,7 +26,7 @@ class SqlLiteral
 	public $value = '';
 
 
-	function __construct($value)
+	public function __construct($value)
 	{
 		$this->value = (string) $value;
 	}
