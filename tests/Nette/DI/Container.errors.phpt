@@ -37,7 +37,7 @@ try {
 	$container->getService('one');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'one' not found.", $e );
+	Assert::exception('Nette\DI\MissingServiceException', "Service 'one' not found.", $e );
 }
 
 try {
@@ -45,7 +45,7 @@ try {
 	$container->addService('one', $service);
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Service named 'one' has already been registered.", $e );
+	Assert::exception('Nette\InvalidStateException', "Service 'one' has already been registered.", $e );
 }
 
 try {

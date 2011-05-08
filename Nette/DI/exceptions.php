@@ -16,10 +16,17 @@ use Nette;
 
 
 /**
- * Ambiguous service resolution exception.
- *
- * @author     David Grudl
+ * Service not found exception.
  */
-class AmbiguousServiceException extends \Exception
+class MissingServiceException extends Nette\InvalidStateException
+{
+}
+
+
+
+/**
+ * Ambiguous service resolution exception.
+ */
+class AmbiguousServiceException extends Nette\InvalidStateException
 {
 }

@@ -62,5 +62,5 @@ try {
 	$container->getService('five');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Cannot instantiate service 'five', value returned by '%a%' is not object.", $e );
+	Assert::exception('Nette\UnexpectedValueException', "Unable to create service 'five', value returned by factory '%a%' is not object.", $e );
 }

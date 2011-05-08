@@ -38,7 +38,7 @@ try {
 	$container->addService('one', (object) NULL);
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Service named 'one' has already been registered.", $e );
+	Assert::exception('Nette\InvalidStateException', "Service 'one' has already been registered.", $e );
 }
 
 Assert::true( $container->hasService('one') );
@@ -53,5 +53,5 @@ try {
 	$container->getService('two');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Cannot instantiate service 'two', value returned by 'createServiceTwo' is not object.", $e );
+	Assert::exception('Nette\UnexpectedValueException', "Unable to create service 'two', value returned by factory 'createServiceTwo' is not object.", $e );
 }
