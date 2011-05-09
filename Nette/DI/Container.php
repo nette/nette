@@ -58,13 +58,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
-		if ($service instanceof self) {
-			$this->registry[$lower] = & $service->registry[$lower];
-			$this->factories[$lower] = & $service->factories[$lower];
-			$this->types[$lower] = !$typeHint && isset($service->types[$lower]) ? $service->types[$lower] : $typeHint;
-			return $this;
-
-		} elseif (is_string($service) && strpos($service, ':') === FALSE) { // class name
+		if (is_string($service) && strpos($service, ':') === FALSE) { // class name
 			$typeHint = $typeHint ?: $service;
 			$service = new ServiceBuilder($service);
 		}
@@ -185,14 +179,12 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Exists the service?
 	 * @param  string service name
-	 * @param  bool   must be created?
 	 * @return bool
 	 */
-	public function hasService($name, $created = FALSE)
+	public function hasService($name)
 	{
 		$lower = strtolower($name);
-		return isset($this->registry[$lower])
-			|| (!$created && (isset($this->factories[$lower]) || method_exists($this, "createService$name")));
+		return isset($this->registry[$lower]) || isset($this->factories[$lower]) || method_exists($this, "createService$name");
 	}
 
 
