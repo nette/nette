@@ -168,7 +168,7 @@ $url->setScriptPath('/index.php');
 $context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Http\Request($url));
 
 $application = Environment::getApplication();
-$application->setRouter(new Application\Routers\SimpleRouter());
+$application->router[] = new Application\Routers\SimpleRouter();
 
 $request = new Application\Request('Test', Http\Request::GET, array());
 

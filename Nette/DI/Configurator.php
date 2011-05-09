@@ -299,8 +299,7 @@ class Configurator extends Nette\Object
 			: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
 
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
-		$application = new $class;
-		$application->setContext($container);
+		$application = new $class($container);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
 	}

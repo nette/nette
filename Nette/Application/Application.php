@@ -60,6 +60,13 @@ class Application extends Nette\Object
 
 
 
+	public function __construct(Nette\DI\IContainer $context)
+	{
+		$this->context = $context;
+	}
+
+
+
 	/**
 	 * Dispatch a HTTP request to a front controller.
 	 * @return void
@@ -223,18 +230,6 @@ class Application extends Nette\Object
 
 
 	/**
-	 * Sets the context.
-	 * @return Application  provides a fluent interface
-	 */
-	public function setContext(Nette\DI\IContainer $context)
-	{
-		$this->context = $context;
-		return $this;
-	}
-
-
-
-	/**
 	 * Gets the context.
 	 * @return Nette\DI\IContainer
 	 */
@@ -246,37 +241,12 @@ class Application extends Nette\Object
 
 
 	/**
-	 * Gets the service object of the specified type.
-	 * @param  string service name
-	 * @return object
-	 */
-	final public function getService($name)
-	{
-		return $this->context->getService($name);
-	}
-
-
-
-	/**
 	 * Returns router.
 	 * @return IRouter
 	 */
 	public function getRouter()
 	{
 		return $this->context->getService('Nette\\Application\\IRouter');
-	}
-
-
-
-	/**
-	 * Changes router.
-	 * @param  IRouter
-	 * @return Application  provides a fluent interface
-	 */
-	public function setRouter(IRouter $router)
-	{
-		$this->context->addService('Nette\\Application\\IRouter', $router);
-		return $this;
 	}
 
 
