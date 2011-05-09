@@ -102,17 +102,17 @@ class Statement extends \PDOStatement
 	public function normalizeRow($row)
 	{
 		if ($this->types === NULL) {
-			try {
-				$this->types = array();
+			$this->types = array();
+			if ($this->connection->supportsMeta) {
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta(count($this->types));
 					if (isset($type['native_type'])) {
 						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
 					}
 				}
-			} catch (\PDOException $e) {
 			}
 		}
+
 		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
 			if ($value === NULL || $value === FALSE || $type === Reflection\DatabaseReflection::FIELD_TEXT) {

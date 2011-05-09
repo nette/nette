@@ -42,13 +42,17 @@ class Connection extends PDO
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
+	/** @internal */
+	public $supportsMeta;
+
 
 
 	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
 	{
 		parent::__construct($dsn, $username, $password, $options);
-		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+		$this->supportsMeta = (bool) @$this->query('SELECT 1')->getColumnMeta(0); // workaround for PHP bugs #53782, #54695
+		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$class = 'Nette\Database\Drivers\\' . $this->getAttribute(PDO::ATTR_DRIVER_NAME) . 'Driver';
 		if (class_exists($class)) {
