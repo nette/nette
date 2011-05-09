@@ -6,6 +6,7 @@
  * @author     David Grudl
  * @package    Nette\Reflection
  * @subpackage UnitTests
+ * @phpversion 5.3
  */
 
 use Nette\Reflection\AnnotationsParser;

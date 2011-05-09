@@ -35,9 +35,9 @@ Assert::equal( Nette\ArrayHash::from(array(
 	),
 	'production' => array(
 		'service' => array(
-			'Nette\Application\IRouter' => 'Nette\\Application\\MultiRouter',
+			'Nette\\Application\\IRouter' => 'Nette\\Application\\MultiRouter',
 			'User' => 'Nette\\Security\\User',
-			'Nette\Autoloader' => 'Nette\\AutoLoader',
+			'Nette\\Autoloader' => 'Nette\\AutoLoader',
 		),
 		'webhost' => 'www.example.com',
 		'database' => array(
@@ -72,9 +72,9 @@ Assert::equal( Nette\ArrayHash::from(array(
 			'adapter' => 'pdo_mysql',
 		),
 		'service' => array(
-			'Nette\Application\IRouter' => 'Nette\\Application\\MultiRouter',
+			'Nette\\Application\\IRouter' => 'Nette\\Application\\MultiRouter',
 			'User' => 'Nette\\Security\\User',
-			'Nette\Autoloader' => 'Nette\\AutoLoader',
+			'Nette\\Autoloader' => 'Nette\\AutoLoader',
 		),
 		'webhost' => 'www.example.com',
 		'variable' => array(
@@ -113,9 +113,9 @@ common:
 
 production:
 	service:
-		Nette\Application\IRouter: Nette\Application\MultiRouter
+		Nette\\Application\\IRouter: Nette\Application\MultiRouter
 		User: Nette\Security\User
-		Nette\Autoloader: Nette\AutoLoader
+		Nette\\Autoloader: Nette\AutoLoader
 
 	webhost: www.example.com
 	database:
@@ -150,9 +150,9 @@ development:
 		adapter: pdo_mysql
 
 	service:
-		Nette\Application\IRouter: Nette\Application\MultiRouter
+		Nette\\Application\\IRouter: Nette\Application\MultiRouter
 		User: Nette\Security\User
-		Nette\Autoloader: Nette\AutoLoader
+		Nette\\Autoloader: Nette\AutoLoader
 
 	webhost: www.example.com
 	variable:
@@ -182,9 +182,9 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'adapter' => 'pdo_mysql',
 	),
 	'service' => array(
-		'Nette\Application\IRouter' => 'Nette\Application\MultiRouter',
-		'User' => 'Nette\Security\User',
-		'Nette\Autoloader' => 'Nette\AutoLoader',
+		'Nette\\Application\\IRouter' => 'Nette\\Application\\MultiRouter',
+		'User' => 'Nette\\Security\\User',
+		'Nette\\Autoloader' => 'Nette\\AutoLoader',
 	),
 	'webhost' => 'www.example.com',
 	'variable' => array(
@@ -216,9 +216,9 @@ database:
 	adapter: pdo_mysql
 
 service:
-	Nette\Application\IRouter: Nette\Application\MultiRouter
+	Nette\\Application\\IRouter: Nette\Application\MultiRouter
 	User: Nette\Security\User
-	Nette\Autoloader: Nette\AutoLoader
+	Nette\\Autoloader: Nette\AutoLoader
 
 webhost: www.example.com
 variable:

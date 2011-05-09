@@ -160,9 +160,9 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'adapter' => 'pdo_mysql',
 	),
 	'service' => array(
-		'Nette-Application-IRouter' => 'Nette\Application\MultiRouter',
-		'User' => 'Nette\Security\User',
-		'Nette-Autoloader' => 'Nette\AutoLoader',
+		'Nette-Application-IRouter' => 'Nette\\Application\\MultiRouter',
+		'User' => 'Nette\\Security\\User',
+		'Nette-Autoloader' => 'Nette\\AutoLoader',
 	),
 	'webhost' => 'www.example.com',
 	'variable' => array(
