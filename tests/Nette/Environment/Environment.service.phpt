@@ -19,6 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 Assert::same( 'Nette\Http\Response', Environment::getHttpResponse()->reflection->name );
 
 
+Environment::setVariable('appDir', TEMP_DIR);
 Assert::same( 'Nette\Application\Application', Environment::getApplication()->reflection->name );
 
 

@@ -73,8 +73,8 @@ class Application extends Nette\Object
 	 */
 	public function run()
 	{
-		$httpRequest = $this->getHttpRequest();
-		$httpResponse = $this->getHttpResponse();
+		$httpRequest = $this->context->httpRequest;
+		$httpResponse = $this->context->httpResponse;
 
 		// check HTTP method
 		if ($this->allowedMethods) {
@@ -100,7 +100,7 @@ class Application extends Nette\Object
 					$this->onStartup($this);
 
 					// autostarts session
-					$session = $this->getSession();
+					$session = $this->context->session;
 					if (!$session->isStarted() && $session->exists()) {
 						$session->start();
 					}
@@ -246,7 +246,7 @@ class Application extends Nette\Object
 	 */
 	public function getRouter()
 	{
-		return $this->context->getService('Nette\\Application\\IRouter');
+		return $this->context->router;
 	}
 
 
@@ -257,38 +257,7 @@ class Application extends Nette\Object
 	 */
 	public function getPresenterFactory()
 	{
-		return $this->context->getService('Nette\\Application\\IPresenterFactory');
-	}
-
-
-
-	/**
-	 * @return Nette\Http\IRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return $this->context->getService('Nette\\Web\\IHttpRequest');
-	}
-
-
-
-	/**
-	 * @return Nette\Http\IResponse
-	 */
-	protected function getHttpResponse()
-	{
-		return $this->context->getService('Nette\\Web\\IHttpResponse');
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Session
-	 */
-	protected function getSession($namespace = NULL)
-	{
-		$handler = $this->context->getService('Nette\\Web\\Session');
-		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
+		return $this->context->presenterFactory;
 	}
 
 
@@ -304,7 +273,7 @@ class Application extends Nette\Object
 	 */
 	public function storeRequest($expiration = '+ 10 minutes')
 	{
-		$session = $this->getSession('Nette.Application/requests');
+		$session = $this->context->session->getNamespace('Nette.Application/requests');
 		do {
 			$key = Nette\Utils\Strings::random(5);
 		} while (isset($session[$key]));
@@ -323,7 +292,7 @@ class Application extends Nette\Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->getSession('Nette.Application/requests');
+		$session = $this->context->session->getNamespace('Nette.Application/requests');
 		if (isset($session[$key])) {
 			$request = clone $session[$key];
 			unset($session[$key]);

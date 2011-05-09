@@ -30,6 +30,7 @@ class Configurator extends Nette\Object
 	/** @var array */
 	public $defaultServices = array(
 		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
+		'Nette\\Application\\IPresenterFactory' => array(__CLASS__, 'createPresenterFactory'),
 		'Nette\\Web\\HttpContext' => array(__CLASS__, 'createHttpContext'),
 		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
 		'Nette\\Web\\IHttpResponse' => 'Nette\Http\Response',
@@ -285,23 +286,31 @@ class Configurator extends Nette\Object
 	 */
 	public static function createApplication(IContainer $container, array $options = NULL)
 	{
-		$container = clone $container;
-		$container->addService('Nette\\Application\\IRouter', 'Nette\Application\Routers\RouteList');
-
-		if (!$container->hasService('Nette\\Application\\IPresenterFactory')) {
-			$container->addService('Nette\\Application\\IPresenterFactory', function() use ($container) {
-				return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $container);
-			});
-		}
+		$context = new Nette\DI\Container;
+		$context->addService('httpRequest', $container->getService('Nette\\Web\\IHttpRequest'));
+		$context->addService('httpResponse', $container->getService('Nette\\Web\\IHttpResponse'));
+		$context->addService('session', $container->getService('Nette\\Web\\Session'));
+		$context->addService('presenterFactory', $container->getService('Nette\\Application\\IPresenterFactory'));
+		$context->addService('router', 'Nette\Application\Routers\RouteList');
 
 		Nette\Application\UI\Presenter::$invalidLinkMode = Environment::isProduction()
 			? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
 			: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
 
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
-		$application = new $class($container);
+		$application = new $class($context);
 		$application->catchExceptions = Environment::isProduction();
 		return $application;
+	}
+
+
+
+	/**
+	 * @return Nette\Application\IPresenterFactory
+	 */
+	public static function createPresenterFactory(IContainer $container)
+	{
+		return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $container);
 	}
 
 
