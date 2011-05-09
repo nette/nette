@@ -263,6 +263,30 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
+	/**
+	 * Expands %placeholders% in string.
+	 * @param  string
+	 * @return string
+	 * @throws Nette\InvalidStateException
+	 */
+	public function expand($s)
+	{
+		if (is_string($s) && strpos($s, '%') !== FALSE) {
+			$that = $this;
+			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
+				list(, $param) = $m;
+				$val = $param === '' ? '%' : $that->getParam($param);
+				if (!is_scalar($val)) {
+					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
+				}
+				return $val;
+			}, $s);
+		}
+		return $s;
+	}
+
+
+
 	/********************* shortcuts ****************d*g**/
 
 
