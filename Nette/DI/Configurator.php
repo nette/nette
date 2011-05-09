@@ -358,7 +358,16 @@ class Configurator extends Nette\Object
 	 */
 	public static function createHttpUser(IContainer $container)
 	{
-		return new Nette\Http\User(clone $container);
+		$context = new Nette\DI\Container;
+		// copies services from $container and preserves lazy loading
+		$context->addService('authenticator', function() use ($container) {
+			return $container->getService('Nette\\Security\\IAuthenticator');
+		});
+		$context->addService('authorizator', function() use ($container) {
+			return $container->getService('Nette\\Security\\IAuthorizator');
+		});
+		$context->addService('session', $container->getService('Nette\\Web\\Session'));
+		return new Nette\Http\User($context);
 	}
 
 
