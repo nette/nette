@@ -206,6 +206,7 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 7
 
 test
+
 { }
 
 <p class="foo">n:class</p>

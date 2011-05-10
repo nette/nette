@@ -117,12 +117,8 @@ class DefaultMacros extends Nette\Object
 		'l' => '{',
 		'r' => '}',
 
-		'!_' => '<?php echo %:macroTranslate% ?>',
-		'_' => '<?php echo %:escape%(%:macroTranslate%) ?>',
-		'!=' => '<?php echo %:macroModifiers% ?>',
-		'=' => '<?php echo %:escape%(%:macroModifiers%) ?>',
-		'!$' => '<?php echo %:macroDollar% ?>',
-		'$' => '<?php echo %:escape%(%:macroDollar%) ?>',
+		'_' => '<?php echo %:macroTranslate% ?>',
+		'=' => '<?php echo %:macroModifiers% ?>',
 		'?' => '<?php %:macroModifiers% ?>',
 	);
 
@@ -272,16 +268,6 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 
 	/********************* macros ****************d*g**/
-
-
-
-	/**
-	 * {$var |modifiers}
-	 */
-	public function macroDollar($var, $modifiers)
-	{
-		return $this->formatModifiers($this->formatMacroArgs('$' . $var), $modifiers);
-	}
 
 
 
@@ -769,7 +755,11 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 			} elseif (!$inside) {
 				if ($token['type'] === self::T_SYMBOL) {
-					$var = "\$template->" . trim($token['value'], "'") . "($var";
+					if (trim($token['value'], "'") === 'contextEscape') {
+						$var = $this->parser->escape . "($var";
+					} else {
+						$var = "\$template->" . trim($token['value'], "'") . "($var";
+					}
 					$inside = TRUE;
 				} else {
 					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->parser->line);

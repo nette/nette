@@ -416,24 +416,31 @@ class Parser extends Nette\Object
 	public function macro($macro, $content = '', $modifiers = '')
 	{
 		if (func_num_args() === 1) {  // {macro val|modifiers}
-			list(, $macro, $content, $modifiers) = Strings::match(
-				$macro,
-				'#^(/?[a-z0-9.:]+)?(.*?)(\\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?$()#is'
-			);
-			$content = trim($content);
-		}
+			$match = Strings::match($macro, '~
+				^(
+					(?P<macro>\?|/?[a-z0-9]++(?:[.:][a-z0-9]+)*+(?!::|\())|  ## ?, macro, /macro, but not function(, class::
+					(?P<noescape>!?)(?P<print>[=\~#%^&_]?)                   ## [!] [=] $var
+				)(?P<content>.*?)
+				(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
+				()$
+			~isx');
+			if (!$match) {
+				return FALSE;
+			}
 
-		if ($macro === '') {
-			$macro = substr($content, 0, 2);
-			if (!isset($this->macros[$macro])) {
-				$macro = substr($content, 0, 1);
-				if (!isset($this->macros[$macro])) {
-					return FALSE;
+			$content = trim($match['content']);
+			$macro = $match['macro'];
+			$modifiers = $match['modifiers'];
+
+			if ($macro === '') { // print macro
+				$macro = $match['print'] ?: '=';
+				if (!$match['noescape']) {
+					$modifiers .= '|contextEscape';
 				}
 			}
-			$content = substr($content, strlen($macro));
+		}
 
-		} elseif (!isset($this->macros[$macro])) {
+		if (!isset($this->macros[$macro])) {
 			return FALSE;
 		}
 
