@@ -53,7 +53,6 @@ EOD
 
 
 Assert::match(<<<EOD
-
 qwerty
 
 EOD

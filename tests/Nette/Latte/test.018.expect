@@ -33,7 +33,6 @@
 
 1
 
-
 	&lt;i&gt;Hello&lt;/i&gt;
 
 
@@ -144,53 +143,73 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 </ul>
 
 
-<ul title="foreach">	<li>John</li>
+<ul title="foreach">
+	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 	<li>]]&gt;</li>
 </ul>
 
-<ul title="for">	<li>0</li>
+<ul title="for">
+	<li>0</li>
 	<li>1</li>
 	<li>2</li>
 </ul>
 
-<ul title="white">	<li>2</li>
+<ul title="white">
+	<li>2</li>
 	<li>1</li>
 </ul>
-<p>
+
+<p>
 
 	<div><p>true</div>
 </p>
-<p>
+
+<p>
 
 	<div><p>true</p></div>
 </p>
-<p>noLatte</p>
 
-<ul title="if + foreach">	<li>John</li>
+
+
+<p>noLatte</p>
+
+<ul title="if + foreach">
+	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 </ul>
 
-<ul title="if + inner-if + inner-foreach">	<li>JohnMaryPaul</li>
+<ul title="if + inner-if + inner-foreach">
+	<li>JohnMaryPaul</li>
 </ul>
 
 <ul title="inner-if + inner-foreach">
-	<li>john</li>	<li>mary</li>	<li>paul</li></ul>
+	<li>john</li>
+	<li>mary</li>
+	<li>paul</li>
+</ul>
 
-<ul title="block + if + foreach">
-	<li>John</li>
+
+<ul title="block + if + foreach">
+
+	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
 </ul>
-<b>bold</b> normal<UL TITLE="BLOCK + IF + FOREACH">
-	<LI>JOHN</LI>
+
+<b>bold</b> normal
+<UL TITLE="BLOCK + IF + FOREACH">
+
+	<LI>JOHN</LI>
 	<LI>MARY</LI>
 	<LI>PAUL</LI>
 </UL>
-3
-7
+
+3
+
+7
 
 test
 { }

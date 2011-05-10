@@ -83,6 +83,8 @@ class Parser extends Nette\Object
 			$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		}
 		$this->handler->initialize($this);
+
+		$s = str_replace("\r\n", "\n", $s);
 		$s = "\n" . $s;
 
 		$this->input = & $s;
@@ -143,7 +145,7 @@ class Parser extends Nette\Object
 	private function contextText()
 	{
 		$matches = $this->match('~
-			(?:\n[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+			(?:(?<=\n)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
 			<(?P<htmlcomment>!--)|           ##  begin of HTML comment <!--
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
@@ -214,7 +216,7 @@ class Parser extends Nette\Object
 	private function contextTag()
 	{
 		$matches = $this->match('~
-			(?P<end>\ ?/?>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
+			(?P<end>\ ?/?>)(?P<tagnewline>[\ \t]*(?=\n))?|  ##  end of HTML tag
 			'.$this->macroRe.'|          ##  curly tag
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
@@ -388,12 +390,12 @@ class Parser extends Nette\Object
 	public function setDelimiters($left, $right)
 	{
 		$this->macroRe = '
-			(?:\r?\n?)(?P<comment>\\{\\*.*?\\*\\}[\r\n]{0,2})|
+			(?:\n?)(?P<comment>\\{\\*.*?\\*\\}\n{0,2})|
 			(?P<indent>\n[\ \t]*)?
 			' . $left . '
 				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '
-			(?P<newline>[\ \t]*(?=\r|\n))?
+			(?P<newline>[\ \t]*(?=\n))?
 		';
 		return $this;
 	}
