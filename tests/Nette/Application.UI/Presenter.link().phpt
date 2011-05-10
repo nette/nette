@@ -165,7 +165,7 @@ Environment::setVariable('appDir', __DIR__);
 
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');
-$context = Environment::getContext()->addService('Nette\\Web\\IHttpRequest', new Http\Request($url));
+Environment::getContext()->httpRequest = new Http\Request($url);
 
 $application = Environment::getApplication();
 $application->router[] = new Application\Routers\SimpleRouter();
@@ -174,6 +174,6 @@ $request = new Application\Request('Test', Http\Request::GET, array());
 
 TestPresenter::$invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter = new TestPresenter;
-$presenter->setContext($context);
+$presenter->setContext(Environment::getContext());
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);

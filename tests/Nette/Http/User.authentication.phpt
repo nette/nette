@@ -78,7 +78,7 @@ try {
 	$user->login('jane', '');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'Nette\\Security\\IAuthenticator' not found.", $e );
+	Assert::exception('Nette\InvalidStateException', "Service 'authenticator' not found.", $e );
 }
 
 $handler = new AuthenticationHandler;

@@ -37,16 +37,6 @@ final class Environment
 	private static $vars = array(
 	);
 
-	/** @var array */
-	private static $aliases = array(
-		'getHttpContext' => 'Nette\\Web\\HttpContext',
-		'getHttpRequest' => 'Nette\\Web\\IHttpRequest',
-		'getHttpResponse' => 'Nette\\Web\\IHttpResponse',
-		'getApplication' => 'Nette\\Application\\Application',
-		'getUser' => 'Nette\\Web\\IUser',
-		'getRobotLoader' => 'Nette\\Loaders\\RobotLoader',
-	);
-
 
 
 	/**
@@ -325,19 +315,6 @@ final class Environment
 
 
 	/**
-	 * Adds new Environment::get<Service>() method.
-	 * @param  string  service name
-	 * @param  string  alias name
-	 * @return void
-	 */
-	public static function setServiceAlias($service, $alias)
-	{
-		self::$aliases['get' . ucfirst($alias)] = $service;
-	}
-
-
-
-	/**
 	 * Calling to undefined static method.
 	 * @param  string  method name
 	 * @param  array   arguments
@@ -345,8 +322,8 @@ final class Environment
 	 */
 	public static function __callStatic($name, $args)
 	{
-		if (isset(self::$aliases[$name])) {
-			return self::getContext()->getService(self::$aliases[$name], $args);
+		if (!$args && strncasecmp($name, 'get', 3) === 0) {
+			return self::getContext()->getService(lcfirst(substr($name, 3)));
 		} else {
 			throw new MemberAccessException("Call to undefined static method Nette\\Environment::$name().");
 		}
@@ -359,7 +336,7 @@ final class Environment
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->httpRequest;
 	}
 
 
@@ -369,7 +346,7 @@ final class Environment
 	 */
 	public static function getHttpContext()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->httpContext;
 	}
 
 
@@ -379,7 +356,7 @@ final class Environment
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->httpResponse;
 	}
 
 
@@ -389,7 +366,7 @@ final class Environment
 	 */
 	public static function getApplication()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->application;
 	}
 
 
@@ -399,7 +376,7 @@ final class Environment
 	 */
 	public static function getUser()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->user;
 	}
 
 
@@ -409,7 +386,7 @@ final class Environment
 	 */
 	public static function getRobotLoader()
 	{
-		return self::getContext()->getService(self::$aliases[__FUNCTION__]);
+		return self::getContext()->robotLoader;
 	}
 
 
@@ -424,10 +401,7 @@ final class Environment
 	 */
 	public static function getCache($namespace = '')
 	{
-		return new Caching\Cache(
-			self::getService('Nette\\Caching\\ICacheStorage'),
-			$namespace
-		);
+		return new Caching\Cache(self::getContext()->cacheStorage, $namespace);
 	}
 
 
@@ -439,8 +413,9 @@ final class Environment
 	 */
 	public static function getSession($namespace = NULL)
 	{
-		$handler = self::getService('Nette\\Web\\Session');
-		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
+		return $namespace === NULL
+			? self::getContext()->session
+			: self::getContext()->session->getNamespace($namespace);
 	}
 
 

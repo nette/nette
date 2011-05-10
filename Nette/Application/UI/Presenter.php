@@ -1265,7 +1265,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->context->getService('Nette\\Web\\IHttpRequest');
+		return $this->context->httpRequest;
 	}
 
 
@@ -1275,7 +1275,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->context->getService('Nette\\Web\\IHttpResponse');
+		return $this->context->httpResponse;
 	}
 
 
@@ -1285,7 +1285,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpContext()
 	{
-		return $this->context->getService('Nette\\Web\\HttpContext');
+		return $this->context->httpContext;
 	}
 
 
@@ -1295,7 +1295,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getApplication()
 	{
-		return $this->context->getService('Nette\\Application\\Application');
+		return $this->context->application;
 	}
 
 
@@ -1305,7 +1305,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getService('Nette\\Web\\Session');
+		$handler = $this->context->session;
 		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
 	}
 
@@ -1316,7 +1316,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getUser()
 	{
-		return $this->context->getService('Nette\\Web\\IUser');
+		return $this->context->user;
 	}
 
 }

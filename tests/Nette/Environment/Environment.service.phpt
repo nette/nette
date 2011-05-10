@@ -16,18 +16,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::same( 'Nette\Http\Response', Environment::getHttpResponse()->reflection->name );
+Assert::same( 'Nette\Http\Response', get_class(Environment::getHttpResponse()) );
 
 
 Environment::setVariable('appDir', TEMP_DIR);
-Assert::same( 'Nette\Application\Application', Environment::getApplication()->reflection->name );
+Assert::same( 'Nette\Application\Application', get_class(Environment::getApplication()) );
 
 
 Environment::setVariable('tempDir', TEMP_DIR);
-Assert::same( 'Nette\Caching\Cache', Environment::getCache('my')->reflection->name );
-
-
-/* in PHP 5.3
-Nette\Environment::setServiceAlias('Nette\Http\IUser', 'xyz');
-Assert::same('xyz', Nette\Environment::getXyz()->reflection->name );
-*/
+Assert::same( 'Nette\Caching\Cache', get_class(Environment::getCache('my')) );

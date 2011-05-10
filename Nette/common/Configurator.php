@@ -28,17 +28,17 @@ class Configurator extends Object
 
 	/** @var array */
 	public $defaultServices = array(
-		'Nette\\Application\\Application' => array(__CLASS__, 'createApplication'),
-		'Nette\\Application\\IPresenterFactory' => array(__CLASS__, 'createPresenterFactory'),
-		'Nette\\Web\\HttpContext' => array(__CLASS__, 'createHttpContext'),
-		'Nette\\Web\\IHttpRequest' => array(__CLASS__, 'createHttpRequest'),
-		'Nette\\Web\\IHttpResponse' => 'Nette\Http\Response',
-		'Nette\\Web\\IUser' => array(__CLASS__, 'createHttpUser'),
-		'Nette\\Caching\\ICacheStorage' => array(__CLASS__, 'createCacheStorage'),
-		'Nette\\Caching\\ICacheJournal' => array(__CLASS__, 'createCacheJournal'),
-		'Nette\\Mail\\IMailer' => array(__CLASS__, 'createMailer'),
-		'Nette\\Web\\Session' => array(__CLASS__, 'createHttpSession'),
-		'Nette\\Loaders\\RobotLoader' => array(__CLASS__, 'createRobotLoader'),
+		'application' => array(__CLASS__, 'createApplication'),
+		'presenterFactory' => array(__CLASS__, 'createPresenterFactory'),
+		'httpContext' => array(__CLASS__, 'createHttpContext'),
+		'httpRequest' => array(__CLASS__, 'createHttpRequest'),
+		'httpResponse' => 'Nette\Http\Response',
+		'user' => array(__CLASS__, 'createHttpUser'),
+		'cacheStorage' => array(__CLASS__, 'createCacheStorage'),
+		'cacheJournal' => array(__CLASS__, 'createCacheJournal'),
+		'mailer' => array(__CLASS__, 'createMailer'),
+		'session' => array(__CLASS__, 'createHttpSession'),
+		'robotLoader' => array(__CLASS__, 'createRobotLoader'),
 		'templateCacheStorage' => array(__CLASS__, 'createTemplateCacheStorage'),
 	);
 
@@ -150,6 +150,12 @@ class Configurator extends Object
 		if (isset($config->service) && $config->service instanceof \Traversable) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
+				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', $key, $m)) { // backcompatibility
+					$m[1][0] = strtolower($m[1][0]);
+					trigger_error(basename($file) . ": service name '$key' has been renamed to '$m[1]'", E_USER_WARNING);
+					$key = $m[1];
+				}
+
 				if (is_string($value)) {
 					$container->removeService($key);
 					$container->addService($key, $value);
@@ -293,10 +299,10 @@ class Configurator extends Object
 	public static function createApplication(DI\IContainer $container, array $options = NULL)
 	{
 		$context = new DI\Container;
-		$context->addService('httpRequest', $container->getService('Nette\\Web\\IHttpRequest'));
-		$context->addService('httpResponse', $container->getService('Nette\\Web\\IHttpResponse'));
-		$context->addService('session', $container->getService('Nette\\Web\\Session'));
-		$context->addService('presenterFactory', $container->getService('Nette\\Application\\IPresenterFactory'));
+		$context->addService('httpRequest', $container->httpRequest);
+		$context->addService('httpResponse', $container->httpResponse);
+		$context->addService('session', $container->session);
+		$context->addService('presenterFactory', $container->presenterFactory);
 		$context->addService('router', 'Nette\Application\Routers\RouteList');
 
 		Nette\Application\UI\Presenter::$invalidLinkMode = $container->getParam('productionMode')
@@ -338,10 +344,7 @@ class Configurator extends Object
 	 */
 	public static function createHttpContext(DI\IContainer $container)
 	{
-		return new Nette\Http\Context(
-			$container->getService('Nette\\Web\\IHttpRequest'),
-			$container->getService('Nette\\Web\\IHttpResponse')
-		);
+		return new Nette\Http\Context($container->httpRequest, $container->httpResponse);
 	}
 
 
@@ -351,10 +354,7 @@ class Configurator extends Object
 	 */
 	public static function createHttpSession(DI\IContainer $container)
 	{
-		return new Nette\Http\Session(
-			$container->getService('Nette\\Web\\IHttpRequest'),
-			$container->getService('Nette\\Web\\IHttpResponse')
-		);
+		return new Nette\Http\Session($container->httpRequest, $container->httpResponse);
 	}
 
 
@@ -367,12 +367,12 @@ class Configurator extends Object
 		$context = new DI\Container;
 		// copies services from $container and preserves lazy loading
 		$context->addService('authenticator', function() use ($container) {
-			return $container->getService('Nette\\Security\\IAuthenticator');
+			return $container->authenticator;
 		});
 		$context->addService('authorizator', function() use ($container) {
-			return $container->getService('Nette\\Security\\IAuthorizator');
+			return $container->authorizator;
 		});
-		$context->addService('session', $container->getService('Nette\\Web\\Session'));
+		$context->addService('session', $container->session);
 		return new Nette\Http\User($context);
 	}
 
@@ -386,7 +386,7 @@ class Configurator extends Object
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\Storages\FileStorage($dir, $container->getService('Nette\\Caching\\ICacheJournal'));
+		return new Nette\Caching\Storages\FileStorage($dir, $container->cacheJournal);
 	}
 
 
@@ -435,7 +435,7 @@ class Configurator extends Object
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->getParam('productionMode');
-		$loader->setCacheStorage($container->getService('Nette\\Caching\\ICacheStorage'));
+		$loader->setCacheStorage($container->cacheStorage);
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
 		} else {

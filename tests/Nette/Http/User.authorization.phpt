@@ -97,7 +97,7 @@ try {
 	$user->isAllowed('delete_file');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'Nette\\Security\\IAuthorizator' not found.", $e );
+	Assert::exception('Nette\InvalidStateException', "Service 'authorizator' not found.", $e );
 }
 
 $handler = new AuthorizationHandler;
