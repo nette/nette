@@ -9,11 +9,10 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\DI;
+namespace Nette;
 
 use Nette,
-	Nette\ArrayHash,
-	Nette\Environment;
+	Nette\DI;
 
 
 
@@ -22,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Configurator extends Nette\Object
+class Configurator extends Object
 {
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.neon';
@@ -107,11 +106,12 @@ class Configurator extends Nette\Object
 
 
 	/**
-	 * Loads global configuration from file and process it.
+	 * Loads configuration from file and process it.
+	 * @param
 	 * @param  string  file name
 	 * @return Nette\ArrayHash
 	 */
-	public function loadConfig($container, $file)
+	public function loadConfig(DI\IContainer $container, $file)
 	{
 		$name = Environment::getName();
 
@@ -268,11 +268,11 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Get initial instance of context.
-	 * @return IContainer
+	 * @return DI\IContainer
 	 */
 	public function createContainer()
 	{
-		$container = new Container;
+		$container = new DI\Container;
 		foreach ($this->defaultServices as $name => $service) {
 			$container->addService($name, $service);
 		}
@@ -290,9 +290,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Application\Application
 	 */
-	public static function createApplication(IContainer $container, array $options = NULL)
+	public static function createApplication(DI\IContainer $container, array $options = NULL)
 	{
-		$context = new Container;
+		$context = new DI\Container;
 		$context->addService('httpRequest', $container->getService('Nette\\Web\\IHttpRequest'));
 		$context->addService('httpResponse', $container->getService('Nette\\Web\\IHttpResponse'));
 		$context->addService('session', $container->getService('Nette\\Web\\Session'));
@@ -314,7 +314,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Application\IPresenterFactory
 	 */
-	public static function createPresenterFactory(IContainer $container)
+	public static function createPresenterFactory(DI\IContainer $container)
 	{
 		return new Nette\Application\PresenterFactory($container->getParam('appDir'), $container);
 	}
@@ -336,7 +336,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\Context
 	 */
-	public static function createHttpContext(IContainer $container)
+	public static function createHttpContext(DI\IContainer $container)
 	{
 		return new Nette\Http\Context(
 			$container->getService('Nette\\Web\\IHttpRequest'),
@@ -349,7 +349,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\Session
 	 */
-	public static function createHttpSession(IContainer $container)
+	public static function createHttpSession(DI\IContainer $container)
 	{
 		return new Nette\Http\Session(
 			$container->getService('Nette\\Web\\IHttpRequest'),
@@ -362,9 +362,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Http\User
 	 */
-	public static function createHttpUser(IContainer $container)
+	public static function createHttpUser(DI\IContainer $container)
 	{
-		$context = new Container;
+		$context = new DI\Container;
 		// copies services from $container and preserves lazy loading
 		$context->addService('authenticator', function() use ($container) {
 			return $container->getService('Nette\\Security\\IAuthenticator');
@@ -381,7 +381,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createCacheStorage(IContainer $container)
+	public static function createCacheStorage(DI\IContainer $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -394,7 +394,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createTemplateCacheStorage(IContainer $container)
+	public static function createTemplateCacheStorage(DI\IContainer $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -407,7 +407,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\Storages\IJournal
 	 */
-	public static function createCacheJournal(IContainer $container)
+	public static function createCacheJournal(DI\IContainer $container)
 	{
 		return new Nette\Caching\Storages\FileJournal($container->getParam('tempDir'));
 	}
@@ -417,7 +417,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Mail\IMailer
 	 */
-	public static function createMailer(IContainer $container, array $options = NULL)
+	public static function createMailer(DI\IContainer $container, array $options = NULL)
 	{
 		if (empty($options['smtp'])) {
 			return new Nette\Mail\SendmailMailer;
@@ -431,7 +431,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
-	public static function createRobotLoader(IContainer $container, array $options = NULL)
+	public static function createRobotLoader(DI\IContainer $container, array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->getParam('productionMode');
