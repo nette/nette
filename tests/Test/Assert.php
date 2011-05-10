@@ -181,6 +181,7 @@ class Assert
 			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
 			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
 			'%ns%'=> '(?:[_0-9a-zA-Z\\\\]+\\\\|N)?',// PHP namespace
+			'%ds%'=> '[\\\\/]',     // directory separator
 			'%[^' => '[^',          // reg-exp
 			'%['  => '[',           // reg-exp
 			']%'  => ']+',          // reg-exp
