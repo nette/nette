@@ -111,7 +111,7 @@ class Configurator extends Nette\Object
 	 * @param  string  file name
 	 * @return Nette\ArrayHash
 	 */
-	public function loadConfig($file)
+	public function loadConfig($container, $file)
 	{
 		$name = Environment::getName();
 
@@ -129,6 +129,7 @@ class Configurator extends Nette\Object
 			}
 			$config = Nette\Config\Config::fromFile($file, $name);
 		}
+		$container->config = $config;
 
 		// process environment variables
 		if (isset($config->variable) && $config->variable instanceof \Traversable) {
@@ -146,7 +147,6 @@ class Configurator extends Nette\Object
 
 		// process services
 		$runServices = array();
-		$container = Environment::getContext();
 		if (isset($config->service) && $config->service instanceof \Traversable) {
 			foreach ($config->service as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
@@ -248,7 +248,7 @@ class Configurator extends Nette\Object
 		// set modes
 		if (isset($config->mode) && isset($config->mode)) {
 			foreach ($config->mode as $mode => $state) {
-				Environment::setMode($mode, $state);
+				$container->setParam($mode . 'Mode', (bool) $state);
 			}
 		}
 
@@ -276,6 +276,12 @@ class Configurator extends Nette\Object
 		foreach ($this->defaultServices as $name => $service) {
 			$container->addService($name, $service);
 		}
+
+		defined('APP_DIR') && $container->setParam('appDir', APP_DIR);
+		defined('LIBS_DIR') && $container->setParam('libsDir', LIBS_DIR);
+		defined('TEMP_DIR') && $container->setParam('tempDir', TEMP_DIR);
+		$container->setParam('productionMode', $this->detect('production'));
+
 		return $container;
 	}
 
@@ -286,20 +292,20 @@ class Configurator extends Nette\Object
 	 */
 	public static function createApplication(IContainer $container, array $options = NULL)
 	{
-		$context = new Nette\DI\Container;
+		$context = new Container;
 		$context->addService('httpRequest', $container->getService('Nette\\Web\\IHttpRequest'));
 		$context->addService('httpResponse', $container->getService('Nette\\Web\\IHttpResponse'));
 		$context->addService('session', $container->getService('Nette\\Web\\Session'));
 		$context->addService('presenterFactory', $container->getService('Nette\\Application\\IPresenterFactory'));
 		$context->addService('router', 'Nette\Application\Routers\RouteList');
 
-		Nette\Application\UI\Presenter::$invalidLinkMode = Environment::isProduction()
+		Nette\Application\UI\Presenter::$invalidLinkMode = $container->getParam('productionMode')
 			? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
 			: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
 
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class($context);
-		$application->catchExceptions = Environment::isProduction();
+		$application->catchExceptions = $container->getParam('productionMode');
 		return $application;
 	}
 
@@ -310,7 +316,7 @@ class Configurator extends Nette\Object
 	 */
 	public static function createPresenterFactory(IContainer $container)
 	{
-		return new Nette\Application\PresenterFactory(Environment::getVariable('appDir'), $container);
+		return new Nette\Application\PresenterFactory($container->getParam('appDir'), $container);
 	}
 
 
@@ -358,7 +364,7 @@ class Configurator extends Nette\Object
 	 */
 	public static function createHttpUser(IContainer $container)
 	{
-		$context = new Nette\DI\Container;
+		$context = new Container;
 		// copies services from $container and preserves lazy loading
 		$context->addService('authenticator', function() use ($container) {
 			return $container->getService('Nette\\Security\\IAuthenticator');
@@ -377,7 +383,7 @@ class Configurator extends Nette\Object
 	 */
 	public static function createCacheStorage(IContainer $container)
 	{
-		$dir = Environment::getVariable('tempDir') . '/cache';
+		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 		return new Nette\Caching\Storages\FileStorage($dir, $container->getService('Nette\\Caching\\ICacheJournal'));
@@ -388,9 +394,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createTemplateCacheStorage()
+	public static function createTemplateCacheStorage(IContainer $container)
 	{
-		$dir = Environment::getVariable('tempDir') . '/cache';
+		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 		return new Nette\Templating\PhpFileStorage($dir);
@@ -401,9 +407,9 @@ class Configurator extends Nette\Object
 	/**
 	 * @return Nette\Caching\Storages\IJournal
 	 */
-	public static function createCacheJournal()
+	public static function createCacheJournal(IContainer $container)
 	{
-		return new Nette\Caching\Storages\FileJournal(Environment::getVariable('tempDir'));
+		return new Nette\Caching\Storages\FileJournal($container->getParam('tempDir'));
 	}
 
 
@@ -428,13 +434,13 @@ class Configurator extends Nette\Object
 	public static function createRobotLoader(IContainer $container, array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !Environment::isProduction();
+		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->getParam('productionMode');
 		$loader->setCacheStorage($container->getService('Nette\\Caching\\ICacheStorage'));
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
 		} else {
 			foreach (array('appDir', 'libsDir') as $var) {
-				if ($dir = Environment::getVariable($var, NULL)) {
+				if ($dir = $container->getParam($var, NULL)) {
 					$loader->addDirectory($dir);
 				}
 			}

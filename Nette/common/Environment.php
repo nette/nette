@@ -30,12 +30,6 @@ final class Environment
 	/** @var Nette\DI\Configurator */
 	private static $configurator;
 
-	/** @var string  the mode of current application */
-	private static $modes = array();
-
-	/** @var \ArrayObject */
-	private static $config;
-
 	/** @var Nette\DI\IContainer */
 	private static $context;
 
@@ -137,7 +131,7 @@ final class Environment
 	 */
 	public static function setMode($mode, $value = TRUE)
 	{
-		self::$modes[$mode] = (bool) $value;
+		self::getContext()->setParam($mode . 'Mode', (bool) $value);
 	}
 
 
@@ -149,11 +143,11 @@ final class Environment
 	 */
 	public static function getMode($mode)
 	{
-		if (isset(self::$modes[$mode])) {
-			return self::$modes[$mode];
+		if (isset(self::getContext()->params[$mode . 'Mode'])) {
+			return self::getContext()->params[$mode . 'Mode'];
 
 		} else {
-			return self::$modes[$mode] = self::getConfigurator()->detect($mode);
+			return self::getContext()->params[$mode . 'Mode'] = self::getConfigurator()->detect($mode);
 		}
 	}
 
@@ -194,10 +188,11 @@ final class Environment
 	 */
 	public static function setVariable($name, $value, $expand = TRUE)
 	{
-		if (!is_string($value)) {
-			$expand = FALSE;
+		$expand = $expand && is_string($value) && strpos($value, '%') !== FALSE;
+		if (!$expand) {
+			self::getContext()->setParam($name, $value);
 		}
-		self::$vars[$name] = array($value, (bool) $expand);
+		self::$vars[$name] = array($value, $expand);
 	}
 
 
@@ -461,7 +456,7 @@ final class Environment
 	 */
 	public static function loadConfig($file = NULL)
 	{
-		return self::$config = self::getConfigurator()->loadConfig($file);
+		return self::getConfigurator()->loadConfig(self::getContext(), $file);
 	}
 
 
@@ -474,11 +469,12 @@ final class Environment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
+		$config = self::getContext()->config;
 		if (func_num_args()) {
-			return isset(self::$config[$key]) ? self::$config[$key] : $default;
+			return isset($config[$key]) ? $config[$key] : $default;
 
 		} else {
-			return self::$config;
+			return $config;
 		}
 	}
 
