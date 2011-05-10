@@ -23,7 +23,7 @@ use Nette;
 class Container extends Nette\FreezableObject implements IContainer
 {
 	/** @var array  user parameters */
-	public $params = array();
+	private $params = array();
 
 	/** @var array  storage for shared objects */
 	private $registry = array();
@@ -265,8 +265,12 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function &__get($name)
 	{
-		$service = $this->getService($name);
-		return $service;
+		if ($name === 'params') {
+			return $this->params;
+		} elseif (!isset($this->registry[$name])) {
+			$this->getService($name);
+		}
+		return $this->registry[$name];
 	}
 
 
