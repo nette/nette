@@ -575,12 +575,15 @@ class Parser extends Nette\Object
 		}
 		$s = '';
 		foreach ($left as $item) {
-			$s .= $this->macro($item[0], $item[1]);
+			$m = $this->macro($item[0], $item[1]);
+			$s .= $m . (substr($m, -2) === '?>' ? "\n" : '');
 		}
 		$s .= $code;
 		foreach ($right as $item) {
-			$s .= $this->macro($item[0], $item[1]);
+			$m = $this->macro($item[0], $item[1]);
+			$s .= $m . (substr($m, -2) === '?>' ? "\n" : '');
 		}
+		$s = rtrim($s, "\n");
 		return $s;
 	}
 

@@ -22,7 +22,6 @@
 
 <p title="&lt;i&gt;Hello&lt;/i&gt;"> </p>
 
-
 <p val = "a"> </p>
 
 <p val0 val1 = tmp val2=tmp val3="x"> </p>
@@ -162,12 +161,10 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 </ul>
 
 <p>
-
 	<div><p>true</div>
 </p>
 
 <p>
-
 	<div><p>true</p></div>
 </p>
 
@@ -191,9 +188,7 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 	<li>paul</li>
 </ul>
 
-
 <ul title="block + if + foreach">
-
 	<li>John</li>
 	<li>Mary</li>
 	<li>Paul</li>
@@ -201,7 +196,6 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 
 <b>bold</b> normal
 <UL TITLE="BLOCK + IF + FOREACH">
-
 	<LI>JOHN</LI>
 	<LI>MARY</LI>
 	<LI>PAUL</LI>
@@ -215,6 +209,5 @@ test
 { }
 
 <p class="foo">n:class</p>
-
 
 <p>n:class empty</p>

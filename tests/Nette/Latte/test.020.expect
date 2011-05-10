@@ -1,11 +1,8 @@
 %A%
 <a href="%a%"%a%>n:href before n:class</a>
 
-
 <a href="%a%"%a%>n:href after n:class</a>
 
-
 <a href="%a%"%a%>href before n:class</a>
-
 
 <a href="%a%"%a%>href after n:class</a>
