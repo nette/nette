@@ -245,11 +245,20 @@ class Container extends Nette\FreezableObject implements IContainer
 
 	/**
 	 * Gets parameter.
+	 * @param  string
+	 * @param  mixed
 	 * @return mixed
+	 * @throws Nette\InvalidStateException
 	 */
-	public function getParam($key)
+	public function getParam($key, $default = NULL)
 	{
-		return $this->params[$key];
+		if (array_key_exists($key, $this->params)) {
+			return $this->params[$key];
+		} elseif (func_num_args() > 1) {
+			return $default;
+		} else {
+			throw new Nette\InvalidStateException("Missing parameter '$key'.");
+		}
 	}
 
 
