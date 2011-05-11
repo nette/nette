@@ -33,7 +33,7 @@ class MacroNode extends Nette\Object
 	public $attrs = array();
 
 	/** @var string */
-	public $content;
+	public $args;
 
 	/** @var string */
 	public $modifiers;
@@ -46,10 +46,10 @@ class MacroNode extends Nette\Object
 
 
 
-	public function __construct($name, $content = NULL, $modifiers = NULL)
+	public function __construct($name, $args = NULL, $modifiers = NULL)
 	{
 		$this->name = $name;
-		$this->content = $content;
+		$this->args = $args;
 		$this->modifiers = $modifiers;
 	}
 

@@ -407,20 +407,20 @@ class Parser extends Nette\Object
 
 
 	/**
-	 * Process {macro content | modifiers}
+	 * Expands macro and appends new node.
 	 * @param  string
 	 * @param  string
 	 * @param  string
 	 * @return string
 	 */
-	public function macro($macro, $content = '', $modifiers = '')
+	public function macro($name, $args = '', $modifiers = '')
 	{
 		if (func_num_args() === 1) {  // {macro val|modifiers}
-			$match = Strings::match($macro, '~
+			$match = Strings::match($name, '~
 				^(
-					(?P<macro>\?|/?[a-z0-9]++(?:[.:][a-z0-9]+)*+(?!::|\())|  ## ?, macro, /macro, but not function(, class::
-					(?P<noescape>!?)(?P<print>[=\~#%^&_]?)                   ## [!] [=] $var
-				)(?P<content>.*?)
+					(?P<name>\?|/?[a-z]++(?:[.:][a-z0-9]+)*+(?!::|\())|  ## ?, name, /name, but not function(, class::
+					(?P<noescape>!?)(?P<shortname>[=\~#%^&_]?)           ## [!] [=] $var
+				)(?P<args>.*?)
 				(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
 				()$
 			~isx');
@@ -428,38 +428,38 @@ class Parser extends Nette\Object
 				return FALSE;
 			}
 
-			$content = trim($match['content']);
-			$macro = $match['macro'];
+			$args = trim($match['args']);
+			$name = $match['name'];
 			$modifiers = $match['modifiers'];
 
-			if ($macro === '') { // print macro
-				$macro = $match['print'] ?: '=';
+			if ($name === '') {
+				$name = $match['shortname'] ?: '=';
 				if (!$match['noescape']) {
 					$modifiers .= '|contextEscape';
 				}
 			}
 		}
 
-		if (!isset($this->macros[$macro])) {
+		if (!isset($this->macros[$name])) {
 			return FALSE;
 		}
 
-		$closing = $macro[0] === '/';
+		$closing = $name[0] === '/';
 		if ($closing) {
 			$node = array_pop($this->macroNodes);
-			if (!$node || "/$node->name" !== $macro
-				|| ($content && !Strings::startsWith("$node->content ", "$content ")) || $modifiers
+			if (!$node || "/$node->name" !== $name
+				|| ($args && !Strings::startsWith("$node->args ", "$args ")) || $modifiers
 			) {
-				$macro .= $content ? ' ' : '';
-				throw new ParseException("Unexpected macro {{$macro}{$content}{$modifiers}}"
-					. ($node ? ", expecting {/$node->name}" . ($content && $node->content ? " or eventually {/$node->name $node->content}" : '') : ''),
+				$name .= $args ? ' ' : '';
+				throw new ParseException("Unexpected macro {{$name}{$args}{$modifiers}}"
+					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''),
 					0, $this->line);
 			}
-			$node->content = $node->modifiers = ''; // back compatibility
+			$node->args = $node->modifiers = ''; // back compatibility
 
 		} else {
-			$node = new MacroNode($macro, $content, $modifiers);
-			if (isset($this->macros["/$macro"])) {
+			$node = new MacroNode($name, $args, $modifiers);
+			if (isset($this->macros["/$name"])) {
 				$node->isEmpty = TRUE;
 				$this->macroNodes[] = $node;
 			}
@@ -467,14 +467,14 @@ class Parser extends Nette\Object
 
 		$handler = $this->handler;
 		return Strings::replace(
-			$this->macros[$macro],
+			$this->macros[$name],
 			'#%(.*?)%#',
 			function ($m) use ($handler, $node) {
 				if ($m[1]) {
 					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
-						->invoke($node->content, $node->modifiers);
+						->invoke($node->args, $node->modifiers);
 				} else {
-					return $handler->formatMacroArgs($node->content);
+					return $handler->formatMacroArgs($node->args);
 				}
 			}
 		);
@@ -483,7 +483,7 @@ class Parser extends Nette\Object
 
 
 	/**
-	 * Process <n:tag attr> (experimental).
+	 * Expands macro <n:tag attr> and appends new node (experimental).
 	 * @param  string
 	 * @param  array
 	 * @param  bool
@@ -510,7 +510,7 @@ class Parser extends Nette\Object
 
 
 	/**
-	 * Process <tag n:attr> (experimental).
+	 * Expands macro <tag n:attr> and appends new node.
 	 * @param  string
 	 * @param  array
 	 * @param  bool
@@ -518,14 +518,14 @@ class Parser extends Nette\Object
 	 */
 	public function attrsMacro($code, $attrs, $closing)
 	{
-		foreach ($attrs as $name => $content) {
+		foreach ($attrs as $name => $args) {
 			if (substr($name, 0, 5) === 'attr-') {
 				if (!$closing) {
 					$pos = strrpos($code, '>');
 					if ($code[$pos-1] === '/') {
 						$pos--;
 					}
-					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $content)), $pos, 0);
+					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $args)), $pos, 0);
 				}
 				unset($attrs[$name]);
 			}

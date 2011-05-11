@@ -680,7 +680,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$out = '';
 		$var = TRUE;
-		foreach ($this->parseMacro($content) as $token) {
+		foreach ($this->parseMacroArgs($content) as $token) {
 			if ($var && ($token['type'] === self::T_SYMBOL || $token['type'] === self::T_VARIABLE)) {
 				if ($extract) {
 					$out .= "'" . trim($token['value'], "'$") . "'";
@@ -749,7 +749,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $var;
 		}
 		$inside = FALSE;
-		foreach ($this->parseMacro(ltrim($modifiers, '|')) as $token) {
+		foreach ($this->parseMacroArgs(ltrim($modifiers, '|')) as $token) {
 			if ($token['type'] === self::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
@@ -807,7 +807,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function formatMacroArgs($input)
 	{
 		$out = '';
-		foreach ($this->parseMacro($input) as $token) {
+		foreach ($this->parseMacroArgs($input) as $token) {
 			$out .= $token['value'];
 		}
 		return $out;
@@ -823,7 +823,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function formatArray($input, $prefix = '')
 	{
-		$tokens = $this->parseMacro($input);
+		$tokens = $this->parseMacroArgs($input);
 		if (!$tokens) {
 			return '';
 		}
@@ -864,7 +864,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 * Tokenizer and preparser.
 	 * @return array
 	 */
-	private function parseMacro($input)
+	private function parseMacroArgs($input)
 	{
 		$this->tokenizer->tokenize($input);
 
