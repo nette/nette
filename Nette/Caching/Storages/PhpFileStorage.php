@@ -9,18 +9,18 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Templating;
+namespace Nette\Caching\Storages;
 
 use Nette;
 
 
 
 /**
- * Template cache storage.
+ * PHP files cache storage.
  *
  * @author     David Grudl
  */
-class PhpFileStorage extends Nette\Caching\Storages\FileStorage
+class PhpFileStorage extends FileStorage
 {
 	/** @var string */
 	public $hint;

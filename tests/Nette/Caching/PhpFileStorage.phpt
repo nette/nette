@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Caching\TemplateCacheStorage test.
+ * Test: Nette\Caching\Storages\PhpFileStorage test.
  *
  * @author     David Grudl
  * @package    Nette\Caching
@@ -9,7 +9,7 @@
  */
 
 use Nette\Caching\Cache,
-	Nette\Templating\PhpFileStorage;
+	Nette\Caching\Storages\PhpFileStorage;
 
 
 

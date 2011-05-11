@@ -12,7 +12,7 @@
 namespace Nette\Templating;
 
 use Nette,
-	Nette\Caching\Cache;
+	Nette\Caching;
 
 
 
@@ -87,8 +87,8 @@ class FileTemplate extends Template implements IFileTemplate
 
 		$this->__set('template', $this);
 
-		$cache = new Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
-		if ($storage instanceof PhpFileStorage) {
+		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
+		if ($storage instanceof Caching\Storages\PhpFileStorage) {
 			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
 		}
 		$cached = $content = $cache->load($this->file);
@@ -107,15 +107,15 @@ class FileTemplate extends Template implements IFileTemplate
 				$this->file,
 				$content,
 				array(
-					Cache::FILES => $this->file,
-					Cache::CONSTS => 'Nette\Framework::REVISION',
+					Caching\Cache::FILES => $this->file,
+					Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
 				)
 			);
 			$cache->release();
 			$cached = $cache->load($this->file);
 		}
 
-		if ($cached !== NULL && $storage instanceof PhpFileStorage) {
+		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
 			Nette\Utils\LimitedScope::load($cached['file'], $this->getParams());
 			flock($cached['handle'], LOCK_UN);
 			fclose($cached['handle']);
@@ -136,7 +136,7 @@ class FileTemplate extends Template implements IFileTemplate
 	 * @param  Nette\Caching\Cache
 	 * @return void
 	 */
-	public function setCacheStorage(Nette\Caching\IStorage $storage)
+	public function setCacheStorage(Caching\IStorage $storage)
 	{
 		$this->cacheStorage = $storage;
 	}
@@ -149,7 +149,7 @@ class FileTemplate extends Template implements IFileTemplate
 	public function getCacheStorage()
 	{
 		if ($this->cacheStorage === NULL) {
-			return new Nette\Caching\Storages\DevNullStorage;
+			return new Caching\Storages\DevNullStorage;
 		}
 		return $this->cacheStorage;
 	}

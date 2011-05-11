@@ -4,7 +4,7 @@
  * Common code for Template test cases.
  */
 
-use Nette\Templating\PhpFileStorage,
+use Nette\Caching\Storages\PhpFileStorage,
 	Nette\Templating\Template,
 	Nette\Utils\LimitedScope;
 

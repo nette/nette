@@ -399,7 +399,7 @@ class Configurator extends Object
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Templating\PhpFileStorage($dir);
+		return new Nette\Caching\Storages\PhpFileStorage($dir);
 	}
 
 
