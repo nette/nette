@@ -23,7 +23,7 @@ define('TEMP_DIR', __DIR__ . '/../tmp');
 
 $_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS')));
 $_SERVER['REQUEST_TIME'] = 1234567890;
-$_ENV = array();
+$_ENV = $_GET = $_POST = array();
 
 if (PHP_SAPI !== 'cli') {
 	header('Content-Type: text/plain; charset=utf-8');
