@@ -207,9 +207,6 @@ class DefaultMacros extends Nette\Object
 		// blocks closing check
 		if (count($this->blocks) === 1) { // auto-close last block
 			$s .= $this->parser->macro('/block');
-
-		} elseif ($this->blocks) {
-			throw new ParseException("There are unclosed blocks.", 0, $this->parser->line);
 		}
 
 		// extends support
@@ -755,7 +752,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 			} elseif (!$inside) {
 				if ($token['type'] === self::T_SYMBOL) {
-					if (trim($token['value'], "'") === 'contextEscape') {
+					if (trim($token['value'], "'") === 'escape') {
 						$var = $this->parser->escape . "($var";
 					} else {
 						$var = "\$template->" . trim($token['value'], "'") . "($var";

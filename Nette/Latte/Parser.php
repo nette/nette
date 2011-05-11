@@ -102,10 +102,8 @@ class Parser extends Nette\Object
 			} elseif (!empty($matches['comment'])) { // {* *}
 
 			} elseif (!empty($matches['macro'])) { // {macro}
-				$code = $this->macro($matches['macro']);
-				if ($code === FALSE) {
-					throw new ParseException("Unknown macro {{$matches['macro']}}", 0, $this->line);
-				}
+				list($macroName, $macroArgs, $macroModifiers) = $this->parseMacro($matches['macro']);
+				$code = $this->macro($macroName, $macroArgs, $macroModifiers);
 				$nl = isset($matches['newline']) ? "\n" : '';
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) { // the only macro on line "without" output
 					$this->output .= "\n" . $code; // preserve new line from 'indent', remove indentation
@@ -235,19 +233,12 @@ class Parser extends Nette\Object
 			if ($node instanceof MacroNode || !empty($node->attrs)) {
 				if ($node instanceof MacroNode) {
 					$code = $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, $node->closing);
-					if ($code === FALSE) {
-						throw new ParseException("Unknown tag-macro <$node->name>", 0, $this->line);
-					}
 					if ($isEmpty) {
 						$code .= $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, TRUE);
 					}
 				} else {
 					$code = substr($this->output, $node->offset) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
 					$code = $this->attrsMacro($code, $node->attrs, $node->closing);
-					if ($code === FALSE) {
-						throw new ParseException("Unknown macro-attribute " . self::HTML_PREFIX
-							. implode(' or ' . self::HTML_PREFIX, array_keys($node->attrs)), 0, $this->line);
-					}
 					if ($isEmpty) {
 						$code = $this->attrsMacro($code, $node->attrs, TRUE);
 					}
@@ -415,33 +406,8 @@ class Parser extends Nette\Object
 	 */
 	public function macro($name, $args = '', $modifiers = '')
 	{
-		if (func_num_args() === 1) {  // {macro val|modifiers}
-			$match = Strings::match($name, '~
-				^(
-					(?P<name>\?|/?[a-z]++(?:[.:][a-z0-9]+)*+(?!::|\())|  ## ?, name, /name, but not function(, class::
-					(?P<noescape>!?)(?P<shortname>[=\~#%^&_]?)           ## [!] [=] $var
-				)(?P<args>.*?)
-				(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
-				()$
-			~isx');
-			if (!$match) {
-				return FALSE;
-			}
-
-			$args = trim($match['args']);
-			$name = $match['name'];
-			$modifiers = $match['modifiers'];
-
-			if ($name === '') {
-				$name = $match['shortname'] ?: '=';
-				if (!$match['noescape']) {
-					$modifiers .= '|contextEscape';
-				}
-			}
-		}
-
 		if (!isset($this->macros[$name])) {
-			return FALSE;
+			throw new ParseException("Unknown macro {{$name}}", 0, $this->line);
 		}
 
 		$closing = $name[0] === '/';
@@ -498,6 +464,9 @@ class Parser extends Nette\Object
 			'if' => 'cond',
 			'elseif' => 'cond',
 		);
+		if (!isset($this->macros[$name])) {
+			throw new ParseException("Unknown tag-macro <$name>", 0, $this->line);
+		}
 		return $this->macro(
 			$closing ? "/$name" : $name,
 			isset($knownTags[$name], $attrs[$knownTags[$name]])
@@ -578,7 +547,8 @@ class Parser extends Nette\Object
 			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
 		if ($attrs) {
-			return FALSE;
+			throw new ParseException("Unknown macro-attribute " . self::HTML_PREFIX
+				. implode(' and ' . self::HTML_PREFIX, array_keys($attrs)), 0, $this->line);
 		}
 		$s = '';
 		foreach ($left as $item) {
@@ -592,6 +562,35 @@ class Parser extends Nette\Object
 		}
 		$s = rtrim($s, "\n");
 		return $s;
+	}
+
+
+
+	/**
+	 * Parses macro to name, arguments a modifiers parts.
+	 * @param  string {name arguments | modifiers}
+	 * @return array
+	 */
+	public function parseMacro($macro)
+	{
+		$match = Strings::match($macro, '~^
+			(
+				(?P<name>\?|/?[a-z]++(?:[.:][a-z0-9]+)*+(?!::|\())|   ## ?, name, /name, but not function( or class::
+				(?P<noescape>!?)(?P<shortname>[=\~#%^&_]?)            ## [!] [=] expression to print
+			)(?P<args>.*?)
+			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
+		()$~isx');
+
+		if (!$match) {
+			return FALSE;
+		}
+		if ($match['name'] === '') {
+			$match['name'] = $match['shortname'] ?: '=';
+			if (!$match['noescape']) {
+				$match['modifiers'] .= '|escape';
+			}
+		}
+		return array($match['name'], trim($match['args']), $match['modifiers']);
 	}
 
 }
