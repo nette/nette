@@ -4,7 +4,7 @@
  * Test: Nette\DI\Container magic properties.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\DI
  * @subpackage UnitTests
  */
 

@@ -4,7 +4,7 @@
  * Test: Nette\Application\UI\Presenter::link()
  *
  * @author     David Grudl
- * @package    Nette\Application\Routers
+ * @package    Nette\Application\UI
  * @subpackage UnitTests
  */
 

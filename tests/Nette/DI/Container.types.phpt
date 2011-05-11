@@ -4,7 +4,7 @@
  * Test: Nette\DI\Container by type.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\DI
  * @subpackage UnitTests
  */
 

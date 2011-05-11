@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Annotations using user classes.
+ * Test: Nette\Reflection\AnnotationsParser using user classes.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

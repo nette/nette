@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: PropertyReflection tests.
+ * Test: Nette\Reflection\Property tests.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

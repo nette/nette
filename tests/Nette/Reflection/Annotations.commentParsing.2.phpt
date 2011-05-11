@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Annotations comment parser II.
+ * Test: Nette\Reflection\AnnotationsParser comment parser II.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

@@ -4,7 +4,7 @@
  * Test: Nette\Mail\Message - textual body.
  *
  * @author     Stork Dork
- * @package    Nette\Application
+ * @package    Nette\Mail
  * @subpackage UnitTests
  */
 

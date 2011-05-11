@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Caching\Memcached files dependency test.
+ * Test: Nette\Caching\Storages\MemcachedStorage files dependency test.
  *
  * @author     David Grudl
  * @package    Nette\Caching

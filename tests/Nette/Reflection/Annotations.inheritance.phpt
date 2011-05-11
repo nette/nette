@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Annotations inheritance.
+ * Test: Nette\Reflection\AnnotationsParser inheritance.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

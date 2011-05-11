@@ -4,7 +4,7 @@
  * Test: Nette\Mail\Message valid email addresses.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Mail
  * @subpackage UnitTests
  */
 

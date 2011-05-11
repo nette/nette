@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: MethodReflection tests.
+ * Test: Nette\Reflection\Method tests.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

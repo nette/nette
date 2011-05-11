@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: FunctionReflection tests.
+ * Test: Nette\Reflection\GlobalFunction tests.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

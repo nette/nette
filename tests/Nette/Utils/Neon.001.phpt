@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\NeonParser simple values.
+ * Test: Nette\Utils\Neon::decode simple values.
  *
  * @author     David Grudl
  * @package    Nette\Utils

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine and invalid UTF-8.
+ * Test: Nette\Latte\Parser and invalid UTF-8.
  *
  * @author     David Grudl
  * @package    Nette\Latte

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Caching\Memcached expiration test.
+ * Test: Nette\Caching\Storages\MemcachedStorage expiration test.
  *
  * @author     David Grudl
  * @package    Nette\Caching

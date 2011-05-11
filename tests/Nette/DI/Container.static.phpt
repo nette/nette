@@ -4,7 +4,7 @@
  * Test: Nette\DI\Container static usage.
  *
  * @author     David Grudl
- * @package    Nette
+ * @package    Nette\DI
  * @subpackage UnitTests
  */
 

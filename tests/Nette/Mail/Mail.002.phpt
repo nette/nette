@@ -4,7 +4,7 @@
  * Test: Nette\Mail\Message - textual body with attachment.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Mail
  * @subpackage UnitTests
  */
 

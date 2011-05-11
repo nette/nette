@@ -33,13 +33,14 @@ interface IContainer
 
 	/**
 	 * Gets the service object of the specified type.
-	 * @param  string service name
+	 * @param  string
 	 * @return mixed
 	 */
 	function getService($name);
 
 	/**
 	 * Removes the specified service type from the container.
+	 * @param  string
 	 * @return void
 	 */
 	function removeService($name);

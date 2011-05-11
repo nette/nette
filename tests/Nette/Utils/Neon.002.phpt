@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\NeonParser inline hash and array.
+ * Test: Nette\Utils\Neon::decode inline hash and array.
  *
  * @author     David Grudl
  * @package    Nette\Utils

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: ParameterReflection tests.
+ * Test: Nette\Reflection\Parameter tests.
  *
  * @author     David Grudl
  * @package    Nette\Reflection

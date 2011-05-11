@@ -4,7 +4,7 @@
  * Test: Nette\Mail\Message valid headers.
  *
  * @author     David Grudl
- * @package    Nette\Application
+ * @package    Nette\Mail
  * @subpackage UnitTests
  */
 
