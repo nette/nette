@@ -81,9 +81,15 @@ class Form extends Container
 	const PROTECTOR_ID = '_token_';
 
 	/** @var array of function(Form $sender); Occurs when the form is submitted and successfully validated */
+	public $onSuccess;
+
+	/** @var array of function(Form $sender); Occurs when the form is submitted and is not valid */
+	public $onError;
+
+	/** @var array of function(Form $sender); Occurs when the form is submitted */
 	public $onSubmit;
 
-	/** @var array of function(Form $sender); Occurs when the form is submitted and not validated */
+	/** @deprecated */
 	public $onInvalidSubmit;
 
 	/** @var mixed or NULL meaning: not detected yet */
@@ -405,17 +411,28 @@ class Form extends Container
 		} elseif ($this->submittedBy instanceof ISubmitterControl) {
 			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
 				$this->submittedBy->click();
-				$this->onSubmit($this);
 			} else {
 				$this->submittedBy->onInvalidClick($this->submittedBy);
+			}
+		}
+
+		if ($this->isValid()) {
+			$this->onSuccess($this);
+		} else {
+			$this->onError($this);
+			if ($this->onInvalidSubmit) {
+				trigger_error(__CLASS__ . '->onInvalidSubmit is deprecated; use onError instead.', E_USER_WARNING);
 				$this->onInvalidSubmit($this);
 			}
+		}
 
-		} elseif ($this->isValid()) {
+		if ($this->onSuccess) { // back compatibility
 			$this->onSubmit($this);
-
-		} else {
-			$this->onInvalidSubmit($this);
+		} elseif ($this->onSubmit) {
+			trigger_error(__CLASS__ . '->onSubmit changed its behavior; use onSuccess instead.', E_USER_WARNING);
+			if ($this->isValid()) {
+				$this->onSubmit($this);
+			}
 		}
 	}
 
