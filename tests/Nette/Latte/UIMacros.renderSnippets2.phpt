@@ -75,7 +75,7 @@ $control->snippetMode = true;
 
 
 $control->emptyPayload();
-$control['multi-1']->invalidateControl();
+$control['multi-1']->redrawControl();
 $control->render();
 Assert::equal((object) array(
 	'snippets' => array(

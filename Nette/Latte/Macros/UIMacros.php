@@ -99,7 +99,7 @@ class UIMacros extends MacroSet
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { foreach (\$_args as \$__k => \$__v) \$\$__k = \$__v"
-					. ($snippet ? '; $_control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
+					. ($snippet ? '; $_control->redrawControl(' . var_export(substr($name, 1), TRUE) . ', FALSE)' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -358,7 +358,7 @@ if (!empty($_control->snippetMode)) {
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
 			. '$_ctrl = $_control->getComponent(' . $name . '); '
-			. 'if ($_ctrl instanceof Nette\Application\UI\IRenderable) $_ctrl->validateControl(); '
+			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->redrawControl(NULL, FALSE); '
 			. ($node->modifiers === '' ? "\$_ctrl->$method($param)" : $writer->write("ob_start(); \$_ctrl->$method($param); echo %modify(ob_get_clean())"));
 	}
 

@@ -41,7 +41,7 @@ class MultiControl extends Nette\Application\UI\Presenter
 		$this->payload = new stdClass;
 		return new Nette\Application\UI\Multiplier(function($name) {
 			$control = new InnerControl();
-			$control->invalidateControl();
+			$control->redrawControl();
 			return $control;
 		});
 	}

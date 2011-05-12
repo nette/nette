@@ -1,14 +1,14 @@
 %A%
 // block _
 //
-if (!function_exists($_l->blocks['_'][] = '_xxx__')) { function _xxx__($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl(false)
+if (!function_exists($_l->blocks['_'][] = '_xxx__')) { function _xxx__($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl(false, FALSE)
 ;
 }}
 
 //
 // block _outer
 //
-if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('outer')
+if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('outer', FALSE)
 ?>	Outer
 		<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
@@ -19,21 +19,21 @@ if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__
 //
 // block _inner
 //
-if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('inner')
+if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('inner', FALSE)
 ?>Inner<?php
 }}
 
 //
 // block _title
 //
-if (!function_exists($_l->blocks['_title'][] = '_xxx__title')) { function _xxx__title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('title')
+if (!function_exists($_l->blocks['_title'][] = '_xxx__title')) { function _xxx__title($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('title', FALSE)
 ?>Title 1<?php
 }}
 
 //
 // block _title2
 //
-if (!function_exists($_l->blocks['_title2'][] = '_xxx__title2')) { function _xxx__title2($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->validateControl('title2')
+if (!function_exists($_l->blocks['_title2'][] = '_xxx__title2')) { function _xxx__title2($_l, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('title2', FALSE)
 ?>Title 2<?php
 }}
 

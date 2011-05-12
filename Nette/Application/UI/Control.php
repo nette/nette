@@ -126,28 +126,32 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 	/**
 	 * Forces control or its snippet to repaint.
-	 * @param  string
 	 * @return void
 	 */
-	public function invalidateControl($snippet = NULL)
+	public function redrawControl($snippet = NULL, $redraw = TRUE)
 	{
-		$this->invalidSnippets[$snippet] = TRUE;
-	}
+		if ($redraw) {
+			$this->invalidSnippets[$snippet] = TRUE;
 
-
-	/**
-	 * Allows control or its snippet to not repaint.
-	 * @param  string
-	 * @return void
-	 */
-	public function validateControl($snippet = NULL)
-	{
-		if ($snippet === NULL) {
+		} elseif ($snippet === NULL) {
 			$this->invalidSnippets = array();
 
 		} else {
 			unset($this->invalidSnippets[$snippet]);
 		}
+	}
+
+
+	/** @deprecated */
+	function invalidateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet);
+	}
+
+	/** @deprecated */
+	function validateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet, FALSE);
 	}
 
 
