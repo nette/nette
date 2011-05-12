@@ -27,7 +27,7 @@ $sub->addText('age', 'Your age:', 5);
 $sub = $form->addContainer('secondperson');
 $sub->addText('name', 'Your name:', 35);
 $sub->addText('age', 'Your age:', 5);
-$sub->addFile('avatar', 'Picture:');
+$sub->addUpload('avatar', 'Picture:');
 
 $form->addText('age', 'Your age:', 5);
 

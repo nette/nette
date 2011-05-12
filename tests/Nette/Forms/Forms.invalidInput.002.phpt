@@ -73,7 +73,7 @@ $form->addCheckbox('send', 'Ship to address');
 $form->addSelect('country', 'Country:', $countries)->setPrompt('Select your country');
 $form->addMultiSelect('countrym', 'Country:', $countries);
 $form->addPassword('password', 'Choose password:', 20);
-$form->addFile('avatar', 'Picture:');
+$form->addUpload('avatar', 'Picture:');
 $form->addHidden('userid');
 
 $sub = $form->addContainer('firstperson');
@@ -81,7 +81,7 @@ $sub->addText('age', 'Your age:', 5);
 
 $sub = $form->addContainer('secondperson');
 $sub->addText('age', 'Your age:', 5);
-$sub->addFile('avatar', 'Picture:');
+$sub->addUpload('avatar', 'Picture:');
 
 $form->addSubmit('submit1', 'Send');
 

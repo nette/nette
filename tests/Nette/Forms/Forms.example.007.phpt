@@ -52,7 +52,7 @@ $form->addSelect('country', NULL, $countries);
 
 $form->addPassword('password');
 $form->addPassword('password2');
-$form->addFile('avatar');
+$form->addUpload('avatar');
 $form->addHidden('userid');
 $form->addTextArea('note');
 

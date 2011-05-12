@@ -277,7 +277,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  string  label
 	 * @return Nette\Forms\Controls\UploadControl
 	 */
-	public function addFile($name, $label = NULL)
+	public function addUpload($name, $label = NULL)
 	{
 		return $this[$name] = new Controls\UploadControl($label);
 	}
@@ -473,6 +473,17 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	final public function __clone()
 	{
 		throw new Nette\NotImplementedException('Form cloning is not supported yet.');
+	}
+
+
+
+	/********************* deprecated ****************d*g**/
+
+	/** @deprecated */
+	function addFile($name, $label = NULL)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use addUpload() instead.', E_USER_WARNING);
+		return $this->addUpload($name, $label);
 	}
 
 }

@@ -113,7 +113,7 @@ $form->addPassword('password2', 'Reenter password')
 		->addRule(Form::FILLED, 'Reenter your password')
 		->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
 
-$form->addFile('avatar', 'Picture');
+$form->addUpload('avatar', 'Picture');
 
 $form->addHidden('userid');
 
