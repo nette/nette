@@ -79,7 +79,7 @@ final class IniAdapter implements IAdapter
 							if (!isset($cursor[$part]) || is_array($cursor[$part])) {
 								$cursor = & $cursor[$part];
 							} else {
-								throw new Nette\InvalidStateException("Invalid key '$key' in section [$secName] in '$file'.");
+								throw new Nette\InvalidStateException("Invalid key '$key' in section [$secName] in file '$file'.");
 							}
 						}
 						$cursor = $val;
@@ -92,12 +92,12 @@ final class IniAdapter implements IAdapter
 				if (count($parts) > 1) {
 					$parent = trim($parts[1]);
 					if (!isset($data[$parent]) || !is_array($data[$parent])) {
-						throw new Nette\InvalidStateException("Missing parent section [$parent] in '$file'.");
+						throw new Nette\InvalidStateException("Missing parent section [$parent] in file '$file'.");
 					}
 					$secData = Nette\Utils\Arrays::mergeTree($secData, $data[$parent]);
 					$secName = trim($parts[0]);
 					if ($secName === '') {
-						throw new Nette\InvalidStateException("Invalid empty section name in '$file'.");
+						throw new Nette\InvalidStateException("Invalid empty section name in file '$file'.");
 					}
 				}
 			}
@@ -108,7 +108,7 @@ final class IniAdapter implements IAdapter
 					if (!isset($cursor[$part]) || is_array($cursor[$part])) {
 						$cursor = & $cursor[$part];
 					} else {
-						throw new Nette\InvalidStateException("Invalid section [$secName] in '$file'.");
+						throw new Nette\InvalidStateException("Invalid section [$secName] in file '$file'.");
 					}
 				}
 			} else {

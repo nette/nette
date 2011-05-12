@@ -77,7 +77,7 @@ class Config
 		$data = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
 		if ($section) {
 			if (!isset($data[$section]) || !is_array($data[$section])) {
-				throw new Nette\InvalidStateException("There is not section [$section] in '$file'.");
+				throw new Nette\InvalidStateException("There is not section [$section] in file '$file'.");
 			}
 			$data = $data[$section];
 		}

@@ -18,7 +18,7 @@ define('TEMP_FILE', TEMP_DIR . '/cfg.ini');
 
 
 // Load INI
-$config = Config::fromFile('config1.ini');
+$config = Config::fromFile('config.ini');
 Assert::equal( Nette\ArrayHash::from(array(
 	'production' => array(
 		'webname' => 'the example',
@@ -41,6 +41,9 @@ Assert::equal( Nette\ArrayHash::from(array(
 				'dbname' => 'dbname',
 			),
 			'adapter' => 'pdo_mysql',
+		),
+		'set' => array(
+			'date.timezone' => 'Europe/Prague',
 		),
 		'timeout' => '10',
 		'display_errors' => '1',
@@ -80,5 +83,32 @@ html_errors = ""
 items.0 = 10
 items.1 = 20
 webname = "the example"
+set.date.timezone = "Europe/Prague"
 EOD
 , file_get_contents(TEMP_FILE) );
+
+
+// Section
+$config = Config::fromFile('config.ini', 'development');
+Assert::equal( Nette\ArrayHash::from(array(
+	'database' => array(
+		'params' => array(
+			'host' => 'dev.example.com',
+			'username' => 'devuser',
+			'password' => 'devsecret',
+			'dbname' => 'dbname',
+		),
+		'adapter' => 'pdo_mysql',
+	),
+	'set' => array(
+		'date.timezone' => 'Europe/Prague',
+	),
+	'timeout' => '10',
+	'display_errors' => '1',
+	'html_errors' => '',
+	'items' => array(
+		'0' => '10',
+		'1' => '20',
+	),
+	'webname' => 'the example',
+), TRUE), $config );
