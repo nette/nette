@@ -24,8 +24,8 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read Nette\Security\IIdentity $identity
- * @property   Nette\Security\IAuthenticator $authenticationHandler
- * @property   Nette\Security\IAuthorizator $authorizationHandler
+ * @property   Nette\Security\IAuthenticator $authenticator
+ * @property   Nette\Security\IAuthorizator $authorizator
  * @property-read int $logoutReason
  * @property-read array $roles
  * @property-read bool $authenticated
@@ -149,7 +149,7 @@ class User extends Nette\Object implements IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthenticationHandler(IAuthenticator $handler)
+	public function setAuthenticator(IAuthenticator $handler)
 	{
 		$this->context->removeService('authenticator');
 		$this->context->authenticator = $handler;
@@ -162,7 +162,7 @@ class User extends Nette\Object implements IUser
 	 * Returns authentication handler.
 	 * @return Nette\Security\IAuthenticator
 	 */
-	final public function getAuthenticationHandler()
+	final public function getAuthenticator()
 	{
 		return $this->context->authenticator;
 	}
@@ -384,7 +384,7 @@ class User extends Nette\Object implements IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
-	public function setAuthorizationHandler(IAuthorizator $handler)
+	public function setAuthorizator(IAuthorizator $handler)
 	{
 		$this->context->removeService('authorizator');
 		$this->context->authorizator = $handler;
@@ -397,9 +397,27 @@ class User extends Nette\Object implements IUser
 	 * Returns current authorization handler.
 	 * @return Nette\Security\IAuthorizator
 	 */
-	final public function getAuthorizationHandler()
+	final public function getAuthorizator()
 	{
 		return $this->context->authorizator;
+	}
+
+
+
+	/********************* deprecated ****************d*g**/
+
+	/** @deprecated */
+	function setAuthenticationHandler($v)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setAuthenticator() instead.', E_USER_WARNING);
+		return $this->setAuthenticator($v);
+	}
+
+	/** @deprecated */
+	function setAuthorizationHandler($v)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setAuthorizator() instead.', E_USER_WARNING);
+		return $this->setAuthorizator($v);
 	}
 
 }

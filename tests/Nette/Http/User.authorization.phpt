@@ -25,7 +25,7 @@ ob_start();
 
 
 
-class AuthenticationHandler implements IAuthenticator
+class Authenticator implements IAuthenticator
 {
 	/*
 	 * @param  array
@@ -50,7 +50,7 @@ class AuthenticationHandler implements IAuthenticator
 
 
 
-class AuthorizationHandler implements IAuthorizator
+class Authorizator implements IAuthorizator
 {
 	/**
 	 * @param  string  role
@@ -80,8 +80,8 @@ Assert::true( $user->isInRole('guest'), 'is guest?' );
 
 
 // authenticated
-$handler = new AuthenticationHandler;
-$user->setAuthenticationHandler($handler);
+$handler = new Authenticator;
+$user->setAuthenticator($handler);
 
 // login as john
 $user->login('john', 'xxx');
@@ -100,8 +100,8 @@ try {
 	Assert::exception('Nette\InvalidStateException', "Service 'authorizator' not found.", $e );
 }
 
-$handler = new AuthorizationHandler;
-$user->setAuthorizationHandler($handler);
+$handler = new Authorizator;
+$user->setAuthorizator($handler);
 
 Assert::true( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
 Assert::false( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );

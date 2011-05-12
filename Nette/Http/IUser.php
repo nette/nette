@@ -55,13 +55,13 @@ interface IUser
 	 * @param  Nette\Security\IAuthenticator
 	 * @return void
 	 */
-	function setAuthenticationHandler(Nette\Security\IAuthenticator $handler);
+	function setAuthenticator(Nette\Security\IAuthenticator $handler);
 
 	/**
 	 * Returns authentication handler.
 	 * @return Nette\Security\IAuthenticator
 	 */
-	function getAuthenticationHandler();
+	function getAuthenticator();
 
 	/**
 	 * Changes namespace; allows more users to share a session.
@@ -100,12 +100,12 @@ interface IUser
 	 * @param  Nette\Security\IAuthorizator
 	 * @return void
 	 */
-	function setAuthorizationHandler(Nette\Security\IAuthorizator $handler);
+	function setAuthorizator(Nette\Security\IAuthorizator $handler);
 
 	/**
 	 * Returns current authorization handler.
 	 * @return Nette\Security\IAuthorizator
 	 */
-	function getAuthorizationHandler();
+	function getAuthorizator();
 
 }

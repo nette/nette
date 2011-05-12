@@ -24,7 +24,7 @@ ob_start();
 
 
 
-class AuthenticationHandler implements IAuthenticator
+class Authenticator implements IAuthenticator
 {
 	/*
 	 * @param  array
@@ -81,8 +81,8 @@ try {
 	Assert::exception('Nette\InvalidStateException', "Service 'authenticator' not found.", $e );
 }
 
-$handler = new AuthenticationHandler;
-$user->setAuthenticationHandler($handler);
+$handler = new Authenticator;
+$user->setAuthenticator($handler);
 
 try {
 	// login as jane
