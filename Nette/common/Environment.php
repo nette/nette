@@ -121,7 +121,7 @@ final class Environment
 	 */
 	public static function setMode($mode, $value = TRUE)
 	{
-		self::getContext()->setParam($mode . 'Mode', (bool) $value);
+		self::getContext()->params[$mode . 'Mode'] = (bool) $value;
 	}
 
 
@@ -180,7 +180,7 @@ final class Environment
 	{
 		$expand = $expand && is_string($value) && strpos($value, '%') !== FALSE;
 		if (!$expand) {
-			self::getContext()->setParam($name, $value);
+			self::getContext()->params[$name] = $value;
 		}
 		self::$vars[$name] = array($value, $expand);
 	}

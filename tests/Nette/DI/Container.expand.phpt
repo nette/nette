@@ -25,7 +25,7 @@ try {
 	$container->expand('%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Missing parameter 'bar'.", $e );
+	Assert::exception('Nette\InvalidArgumentException', "Missing parameter 'bar'.", $e );
 }
 
 try {

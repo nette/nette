@@ -23,7 +23,7 @@ use Nette;
 class Container extends Nette\FreezableObject implements IContainer
 {
 	/** @var array  user parameters */
-	private $params = array();
+	public $params = array();
 
 	/** @var array  storage for shared objects */
 	private $registry = array();
@@ -201,65 +201,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
-	/********************* parameters ****************d*g**/
-
-
-
-	/**
-	 * Sets all parameters.
-	 * @param  array
-	 * @return Container  provides a fluent interface
-	 */
-	public function setParams(array $params)
-	{
-		$this->updating();
-		$this->params = $params;
-		return $this;
-	}
-
-
-
-	/**
-	 * Returns array of all parameters.
-	 * @return array
-	 */
-	public function getParams()
-	{
-		return $this->params;
-	}
-
-
-
-	/**
-	 * Set parameter.
-	 * @return Container  provides a fluent interface
-	 */
-	public function setParam($key, $value)
-	{
-		$this->updating();
-		$this->params[$key] = $value;
-		return $this;
-	}
-
-
-
-	/**
-	 * Gets parameter.
-	 * @param  string
-	 * @param  mixed
-	 * @return mixed
-	 * @throws Nette\InvalidStateException
-	 */
-	public function getParam($key, $default = NULL)
-	{
-		if (array_key_exists($key, $this->params)) {
-			return $this->params[$key];
-		} elseif (func_num_args() > 1) {
-			return $default;
-		} else {
-			throw new Nette\InvalidStateException("Missing parameter '$key'.");
-		}
-	}
+	/********************* tools ****************d*g**/
 
 
 
@@ -275,8 +217,11 @@ class Container extends Nette\FreezableObject implements IContainer
 			$that = $this;
 			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
 				list(, $param) = $m;
-				$val = $param === '' ? '%' : $that->getParam($param);
-				if (!is_scalar($val)) {
+				if ($param === '') {
+					return '%';
+				} elseif (!isset($that->params[$param])) {
+					throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
+				} elseif (!is_scalar($val = $that->params[$param])) {
 					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
 				}
 				return $val;
@@ -298,9 +243,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function &__get($name)
 	{
-		if ($name === 'params') {
-			return $this->params;
-		} elseif (!isset($this->registry[$name])) {
+		if (!isset($this->registry[$name])) {
 			$this->getService($name);
 		}
 		return $this->registry[$name];

@@ -111,7 +111,7 @@ class Configurator extends Object
 	 * @param  string  file name
 	 * @return Nette\ArrayHash
 	 */
-	public function loadConfig(DI\IContainer $container, $file)
+	public function loadConfig(DI\Container $container, $file)
 	{
 		$name = Environment::getName();
 
@@ -254,7 +254,7 @@ class Configurator extends Object
 		// set modes
 		if (isset($config->mode) && isset($config->mode)) {
 			foreach ($config->mode as $mode => $state) {
-				$container->setParam($mode . 'Mode', (bool) $state);
+				$container->params[$mode . 'Mode'] = (bool) $state;
 			}
 		}
 
@@ -274,7 +274,7 @@ class Configurator extends Object
 
 	/**
 	 * Get initial instance of context.
-	 * @return DI\IContainer
+	 * @return DI\Container
 	 */
 	public function createContainer()
 	{
@@ -283,10 +283,10 @@ class Configurator extends Object
 			$container->addService($name, $service);
 		}
 
-		defined('APP_DIR') && $container->setParam('appDir', APP_DIR);
-		defined('LIBS_DIR') && $container->setParam('libsDir', LIBS_DIR);
-		defined('TEMP_DIR') && $container->setParam('tempDir', TEMP_DIR);
-		$container->setParam('productionMode', $this->detect('production'));
+		defined('APP_DIR') && $container->params['appDir'] = APP_DIR;
+		defined('LIBS_DIR') && $container->params['libsDir'] = LIBS_DIR;
+		defined('TEMP_DIR') && $container->params['tempDir'] = TEMP_DIR;
+		$container->params['productionMode'] = $this->detect('production');
 
 		return $container;
 	}
@@ -296,7 +296,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Application\Application
 	 */
-	public static function createApplication(DI\IContainer $container, array $options = NULL)
+	public static function createApplication(DI\Container $container, array $options = NULL)
 	{
 		$context = new DI\Container;
 		$context->addService('httpRequest', $container->httpRequest);
@@ -305,13 +305,13 @@ class Configurator extends Object
 		$context->addService('presenterFactory', $container->presenterFactory);
 		$context->addService('router', 'Nette\Application\Routers\RouteList');
 
-		Nette\Application\UI\Presenter::$invalidLinkMode = $container->getParam('productionMode')
+		Nette\Application\UI\Presenter::$invalidLinkMode = $container->params['productionMode']
 			? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
 			: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
 
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class($context);
-		$application->catchExceptions = $container->getParam('productionMode');
+		$application->catchExceptions = $container->params['productionMode'];
 		return $application;
 	}
 
@@ -320,9 +320,9 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Application\IPresenterFactory
 	 */
-	public static function createPresenterFactory(DI\IContainer $container)
+	public static function createPresenterFactory(DI\Container $container)
 	{
-		return new Nette\Application\PresenterFactory($container->getParam('appDir'), $container);
+		return new Nette\Application\PresenterFactory($container->params['appDir'], $container);
 	}
 
 
@@ -342,7 +342,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\Context
 	 */
-	public static function createHttpContext(DI\IContainer $container)
+	public static function createHttpContext(DI\Container $container)
 	{
 		return new Nette\Http\Context($container->httpRequest, $container->httpResponse);
 	}
@@ -352,7 +352,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\Session
 	 */
-	public static function createHttpSession(DI\IContainer $container)
+	public static function createHttpSession(DI\Container $container)
 	{
 		return new Nette\Http\Session($container->httpRequest, $container->httpResponse);
 	}
@@ -362,7 +362,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\User
 	 */
-	public static function createHttpUser(DI\IContainer $container)
+	public static function createHttpUser(DI\Container $container)
 	{
 		$context = new DI\Container;
 		// copies services from $container and preserves lazy loading
@@ -381,7 +381,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createCacheStorage(DI\IContainer $container)
+	public static function createCacheStorage(DI\Container $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -394,7 +394,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createTemplateCacheStorage(DI\IContainer $container)
+	public static function createTemplateCacheStorage(DI\Container $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -407,9 +407,9 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\Storages\IJournal
 	 */
-	public static function createCacheJournal(DI\IContainer $container)
+	public static function createCacheJournal(DI\Container $container)
 	{
-		return new Nette\Caching\Storages\FileJournal($container->getParam('tempDir'));
+		return new Nette\Caching\Storages\FileJournal($container->params['tempDir']);
 	}
 
 
@@ -417,7 +417,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Mail\IMailer
 	 */
-	public static function createMailer(DI\IContainer $container, array $options = NULL)
+	public static function createMailer(DI\Container $container, array $options = NULL)
 	{
 		if (empty($options['smtp'])) {
 			return new Nette\Mail\SendmailMailer;
@@ -431,17 +431,17 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
-	public static function createRobotLoader(DI\IContainer $container, array $options = NULL)
+	public static function createRobotLoader(DI\Container $container, array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->getParam('productionMode');
+		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->params['productionMode'];
 		$loader->setCacheStorage($container->cacheStorage);
 		if (isset($options['directory'])) {
 			$loader->addDirectory($options['directory']);
 		} else {
 			foreach (array('appDir', 'libsDir') as $var) {
-				if ($dir = $container->getParam($var, NULL)) {
-					$loader->addDirectory($dir);
+				if (isset($container->params[$var])) {
+					$loader->addDirectory($container->params[$var]);
 				}
 			}
 		}
