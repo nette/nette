@@ -44,7 +44,7 @@ class Engine extends Nette\Object
 	public function __invoke($s)
 	{
 		$this->parser->context = Parser::CONTEXT_TEXT;
-		$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+		$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
 		$this->parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		return $this->parser->parse($s);
 	}

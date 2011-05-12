@@ -34,7 +34,7 @@ $template->registerHelper('join', 'implode');
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 $template->hello = '<i>Hello</i>';
-$template->id = ':/item';
+$template->xss = 'some&<>"\'/chars';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->menu = array('about', array('product1', 'product2'), 'contact');
 $template->comment = 'test -- comment';

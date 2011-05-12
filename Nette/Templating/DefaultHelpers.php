@@ -61,14 +61,15 @@ final class DefaultHelpers
 	/**
 	 * Escapes string for use inside HTML template.
 	 * @param  mixed  UTF-8 encoding or 8-bit
+	 * @param  string optional attribute quotes
 	 * @return string
 	 */
-	public static function escapeHtml($s)
+	public static function escapeHtml($s, $quotes = NULL)
 	{
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			return $s->__toString(TRUE);
 		}
-		return htmlSpecialChars($s, ENT_QUOTES);
+		return htmlSpecialChars($s, $quotes === '' ? ENT_NOQUOTES : ($quotes === '"' ? ENT_COMPAT : ENT_QUOTES));
 	}
 
 
@@ -144,11 +145,12 @@ final class DefaultHelpers
 	/**
 	 * Escapes string for use inside HTML JavaScript attribute.
 	 * @param  mixed  UTF-8 encoding
+	 * @param  string attribute quotes
 	 * @return string
 	 */
-	public static function escapeHtmlJs($s)
+	public static function escapeHtmlJs($s, $quotes = NULL)
 	{
-		return htmlSpecialChars(self::escapeJs($s), ENT_QUOTES);
+		return htmlSpecialChars(self::escapeJs($s), $quotes === '"' ? ENT_COMPAT : ENT_QUOTES);
 	}
 
 

@@ -256,7 +256,7 @@ class Parser extends Nette\Object
 				$this->escape = 'Nette\Templating\DefaultHelpers::escape' . (strcasecmp($node->name, 'style') ? 'Js' : 'Css');
 			} else {
 				$this->context = self::CONTEXT_TEXT;
-				$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+				$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
 				if ($node->closing) {
 					array_pop($this->htmlNodes);
 				}
@@ -284,8 +284,8 @@ class Parser extends Nette\Object
 				$this->context = self::CONTEXT_ATTRIBUTE;
 				$this->quote = $value;
 				$this->escape = strncasecmp($name, 'on', 2)
-					? ('Nette\Templating\DefaultHelpers::escape' . (strcasecmp($name, 'style') ? 'Html' : 'Css'))
-					: 'Nette\Templating\DefaultHelpers::escapeHtmlJs';
+					? ('Nette\Templating\DefaultHelpers::escapeHtml' . (strcasecmp($name, 'style') ? "|$value" : 'Css'))
+					: "Nette\\Templating\\DefaultHelpers::escapeHtmlJs|$value";
 			}
 		}
 		return $matches;
@@ -324,7 +324,7 @@ class Parser extends Nette\Object
 
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // --\s*>
 			$this->context = self::CONTEXT_TEXT;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
 		}
 		return $matches;
 	}

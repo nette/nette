@@ -550,7 +550,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroContentType($content)
 	{
 		if (strpos($content, 'html') !== FALSE) {
-			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
 			$this->parser->context = Parser::CONTEXT_TEXT;
 
 		} elseif (strpos($content, 'xml') !== FALSE) {
@@ -723,9 +723,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * Escaping helper.
 	 */
-	public function escape($content)
+	public function escape()
 	{
-		return $this->parser->escape;
+		$tmp = explode('|', $this->parser->escape);
+		return $tmp[0];
 	}
 
 
@@ -753,7 +754,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			} elseif (!$inside) {
 				if ($token['type'] === self::T_SYMBOL) {
 					if (trim($token['value'], "'") === 'escape') {
-						$var = $this->parser->escape . "($var";
+						$tmp = explode('|', $this->parser->escape);
+						$var = $tmp[0] . "($var" . (isset($tmp[1]) ? ', ' . var_export($tmp[1], TRUE) : '');
 					} else {
 						$var = "\$template->" . trim($token['value'], "'") . "($var";
 					}

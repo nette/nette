@@ -26,16 +26,16 @@
 
 <p val0 val1 = tmp val2=tmp val3="x" /> </p>
 
-<p val = :/item> </p>
+<p val = some&amp;&lt;&gt;&quot;&#039;/chars> </p>
 
-<p val = />:/item</p>
+<p val = />some&amp;&lt;&gt;"'/chars</p>
 
 1
 
 	&lt;i&gt;Hello&lt;/i&gt;
 
 
-	<ul id=":/item">
+	<ul>
 	<li id="item-1" class="odd">John</li>
 
 
@@ -64,7 +64,7 @@ pre
 
 <style type="text/css">
 <!--
-#\:\/item {
+#some\&\<\>\"\'\/chars {
 	background: blue;
 }
 -->
@@ -78,7 +78,7 @@ alert('</div>');
 
 var prop = ["John","Mary","Paul","]]\x3E"];
 
-document.getElementById(":\/item").style.backgroundColor = 'red';
+document.getElementById("some&<>\"'\/chars").style.backgroundColor = 'red';
 
 var html = "<div title=\"1\/2&quot;\"><\/div>";
 -->
@@ -95,13 +95,15 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 
 
 <p onclick =
-'alert(&quot;:\/item&quot;);alert("hello");'
- title=':/item"'
+'alert(&quot;some&amp;&lt;&gt;\&quot;&#039;\/chars&quot;);alert("hello");'
+ title='some&amp;&lt;&gt;&quot;&#039;/chars'
  style =
- "color:\:\/item;'"
+ "color:some\&amp;\&lt;\&gt;\&quot;\&#039;\/chars;"
+ rel="some&amp;&lt;&gt;&quot;'/chars"
+ onblur="alert(&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;)"
  alt='<div title="1/2&quot;"></div>'
  onfocus="alert(&quot;&lt;div title=\&quot;1\/2&amp;quot;\&quot;&gt;&lt;\/div&gt;&quot;)"
->click on me</p>
+>click on me some&amp;&lt;&gt;"'/chars</p>
 
 
 
