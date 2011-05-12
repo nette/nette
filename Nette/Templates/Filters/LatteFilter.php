@@ -109,6 +109,7 @@ class LatteFilter extends Nette\Object
 		$this->getHandler()->initialize($this, $s);
 
 		// process all {tags} and <tags/>
+		$s = str_replace("\r\n", "\n", $s);
 		$s = $this->parse("\n" . $s);
 
 		$this->getHandler()->finalize($s);
@@ -148,7 +149,7 @@ class LatteFilter extends Nette\Object
 				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) {
 					$this->output .= "\n" . $code; // remove indent, single newline
 				} else {
-					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' ? $nl : '');
+					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' && $this->output !== '' ? $nl : '');
 				}
 
 			} else { // common behaviour
@@ -173,7 +174,7 @@ class LatteFilter extends Nette\Object
 	private function contextText()
 	{
 		$matches = $this->match('~
-			(?:\n[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+			(?:(?<=\n)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
 			<(?P<comment>!--)|           ##  begin of HTML comment <!--
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
@@ -243,7 +244,7 @@ class LatteFilter extends Nette\Object
 	private function contextTag()
 	{
 		$matches = $this->match('~
-			(?P<end>/?>)(?P<tagnewline>[\ \t]*(?=\r|\n))?|  ##  end of HTML tag
+			(?P<end>/?>)(?P<tagnewline>[\ \t]*(?=\n))?|  ##  end of HTML tag
 			'.$this->macroRe.'|          ##  curly tag
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
@@ -413,7 +414,7 @@ class LatteFilter extends Nette\Object
 			' . $left . '
 				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '
-			(?P<newline>[\ \t]*(?=\r|\n))?
+			(?P<newline>[\ \t]*(?=\n))?
 		';
 		return $this;
 	}
