@@ -22,7 +22,6 @@ $_POST = array('name'=>'John Doe ','age'=>'','email'=>'  @ ','send'=>'on','stree
 
 
 $countries = array(
-	'Select your country',
 	'Europe' => array(
 		'CZ' => 'Czech Republic',
 		'SK' => 'Slovakia',
@@ -83,7 +82,7 @@ $form->addText('city', 'City:')
 		->addRule(Form::FILLED, 'Enter your shipping address');
 
 $form->addSelect('country', 'Country:', $countries)
-	->skipFirst()
+	->setPrompt('Select your country')
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
 		->addRule(Form::FILLED, 'Select your country');
 

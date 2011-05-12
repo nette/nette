@@ -52,7 +52,6 @@ $_FILES = array(
 );
 
 $countries = array(
-	'Select your country',
 	'Europe' => array(
 		1 => 'Czech Republic',
 		2 => 'Slovakia',
@@ -71,7 +70,7 @@ $form->addText('name', 'Your name:', 35);  // item name, label, size, maxlength
 $form->addTextArea('note', 'Comment:', 30, 5);
 $form->addRadioList('gender', 'Your gender:', $sex);
 $form->addCheckbox('send', 'Ship to address');
-$form->addSelect('country', 'Country:', $countries)->skipFirst();
+$form->addSelect('country', 'Country:', $countries)->setPrompt('Select your country');
 $form->addMultiSelect('countrym', 'Country:', $countries);
 $form->addPassword('password', 'Choose password:', 20);
 $form->addFile('avatar', 'Picture:');

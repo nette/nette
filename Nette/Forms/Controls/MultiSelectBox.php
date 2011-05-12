@@ -31,7 +31,7 @@ class MultiSelectBox extends SelectBox
 	public function getValue()
 	{
 		$allowed = array_keys($this->allowed);
-		if ($this->isFirstSkipped()) {
+		if ($this->getPrompt()) {
 			unset($allowed[0]);
 		}
 		return array_intersect($this->getRawValue(), $allowed);

@@ -34,7 +34,7 @@ class SelectBox extends BaseControl
 	protected $allowed = array();
 
 	/** @var bool */
-	private $skipFirst = FALSE;
+	private $prompt = FALSE;
 
 	/** @var bool */
 	private $useKeys = TRUE;
@@ -65,7 +65,7 @@ class SelectBox extends BaseControl
 	public function getValue()
 	{
 		$allowed = $this->allowed;
-		if ($this->skipFirst) {
+		if ($this->prompt) {
 			$allowed = array_slice($allowed, 1, count($allowed), TRUE);
 		}
 
@@ -102,14 +102,14 @@ class SelectBox extends BaseControl
 	 * @param  string
 	 * @return SelectBox  provides a fluent interface
 	 */
-	public function skipFirst($item = NULL)
+	public function setPrompt($prompt)
 	{
-		if (is_bool($item)) {
-			$this->skipFirst = $item;
+		if (is_bool($prompt)) {
+			$this->prompt = $prompt;
 		} else {
-			$this->skipFirst = TRUE;
-			if ($item !== NULL) {
-				$this->items = array('' => $item) + $this->items;
+			$this->prompt = TRUE;
+			if ($prompt !== NULL) {
+				$this->items = array('' => $prompt) + $this->items;
 				$this->allowed = array('' => '') + $this->allowed;
 			}
 		}
@@ -118,13 +118,22 @@ class SelectBox extends BaseControl
 
 
 
+	/** @deprecated */
+	function skipFirst($v = NULL)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setPrompt() instead.', E_USER_WARNING);
+		return $this->setPrompt($v);
+	}
+
+
+
 	/**
 	 * Is first item in select box ignored?
 	 * @return bool
 	 */
-	final public function isFirstSkipped()
+	final public function getPrompt()
 	{
-		return $this->skipFirst;
+		return $this->prompt;
 	}
 
 
@@ -211,7 +220,7 @@ class SelectBox extends BaseControl
 	public function getControl()
 	{
 		$control = parent::getControl();
-		if ($this->skipFirst) {
+		if ($this->prompt) {
 			reset($this->items);
 			$control->data('nette-empty-value', $this->useKeys ? key($this->items) : current($this->items));
 		}

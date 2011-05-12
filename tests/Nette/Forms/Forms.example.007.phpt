@@ -21,7 +21,6 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array('name'=>'John Doe ','age'=>'  12 ','email'=>'@','street'=>'','city'=>'','country'=>'CZ','password'=>'xxx','password2'=>'xxx','note'=>'','userid'=>'231','submit1'=>'Send',);
 
 $countries = array(
-	'Select your country',
 	'Europe' => array(
 		'CZ' => 'Czech Republic',
 		'SK' => 'Slovakia',
@@ -49,7 +48,7 @@ $form->addText('email')->setEmptyValue('@');
 $form->addCheckbox('send');
 $form->addText('street');
 $form->addText('city');
-$form->addSelect('country', NULL, $countries)->skipFirst();
+$form->addSelect('country', NULL, $countries);
 
 $form->addPassword('password');
 $form->addPassword('password2');
@@ -169,7 +168,7 @@ ob_start();
 		</tr>
 		<tr class="required">
 			<th><?php echo $form['country']->getLabel('Country:') ?></th>
-			<td><?php echo $form['country']->control ?></td>
+			<td><?php echo $form['country']->setPrompt('Select your country')->control ?></td>
 		</tr>
 		</table>
 	</fieldset>
