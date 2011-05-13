@@ -22,6 +22,9 @@ use Nette;
  */
 class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
+	/** @var array */
+	public $supports = array('meta' => FALSE);
+
 	/** @var Nette\Database\Connection */
 	private $connection;
 

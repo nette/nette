@@ -103,7 +103,7 @@ class Statement extends \PDOStatement
 	{
 		if ($this->types === NULL) {
 			$this->types = array();
-			if ($this->connection->supportsMeta) {
+			if ($this->connection->getSupplementalDriver()->supports['meta']) { // workaround for PHP bugs #53782, #54695
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta(count($this->types));
 					if (isset($type['native_type'])) {

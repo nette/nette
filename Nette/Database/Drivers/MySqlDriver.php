@@ -22,6 +22,9 @@ use Nette;
  */
 class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
+	/** @var array */
+	public $supports = array('meta' => TRUE);
+
 	/** @var Nette\Database\Connection */
 	private $connection;
 
