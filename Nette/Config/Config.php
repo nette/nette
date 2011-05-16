@@ -65,7 +65,7 @@ class Config
 	 * Creates new configuration object from file.
 	 * @param  string  file name
 	 * @param  string  section to load
-	 * @return Nette\ArrayHash
+	 * @return array
 	 */
 	public static function fromFile($file, $section = NULL)
 	{
@@ -81,7 +81,7 @@ class Config
 			}
 			$data = $data[$section];
 		}
-		return Nette\ArrayHash::from($data, TRUE);
+		return $data;
 	}
 
 

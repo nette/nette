@@ -19,7 +19,7 @@ define('TEMP_FILE', TEMP_DIR . '/cfg.neon');
 
 // Load
 $config = Config::fromFile('config.neon');
-Assert::equal( Nette\ArrayHash::from(array(
+Assert::equal( array(
 	'production' => array(
 		'webname' => 'the example',
 		'database' => array(
@@ -52,7 +52,7 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'webname' => 'the example',
 	),
 	'nothing' => array(),
-), TRUE), $config );
+), $config );
 
 
 
@@ -100,7 +100,7 @@ EOD
 
 // Section
 $config = Config::fromFile('config.neon', 'development');
-Assert::equal( Nette\ArrayHash::from(array(
+Assert::equal( array(
 	'database' => array(
 		'params' => array(
 			'host' => 'dev.example.com',
@@ -118,4 +118,4 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'1' => '20',
 	),
 	'webname' => 'the example',
-), TRUE), $config );
+), $config );

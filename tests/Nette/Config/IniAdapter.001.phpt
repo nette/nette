@@ -19,7 +19,7 @@ define('TEMP_FILE', TEMP_DIR . '/cfg.ini');
 
 // Load INI
 $config = Config::fromFile('config.ini');
-Assert::equal( Nette\ArrayHash::from(array(
+Assert::equal( array(
 	'production' => array(
 		'webname' => 'the example',
 		'database' => array(
@@ -54,7 +54,7 @@ Assert::equal( Nette\ArrayHash::from(array(
 		),
 		'webname' => 'the example',
 	),
-), TRUE), $config );
+), $config );
 
 
 
@@ -90,7 +90,7 @@ EOD
 
 // Section
 $config = Config::fromFile('config.ini', 'development');
-Assert::equal( Nette\ArrayHash::from(array(
+Assert::equal( array(
 	'database' => array(
 		'params' => array(
 			'host' => 'dev.example.com',
@@ -111,4 +111,4 @@ Assert::equal( Nette\ArrayHash::from(array(
 		'1' => '20',
 	),
 	'webname' => 'the example',
-), TRUE), $config );
+), $config );

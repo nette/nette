@@ -129,26 +129,23 @@ class Configurator extends Object
 			}
 			$config = Nette\Config\Config::fromFile($file, $name);
 		}
-		$container->config = $config;
 
 		// process environment variables
-		if (isset($config->variable) && $config->variable instanceof \Traversable) {
-			foreach ($config->variable as $key => $value) {
+		if (isset($config['variable']) && is_array($config['variable'])) {
+			foreach ($config['variable'] as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
 		}
 
 		// expand variables
-		$iterator = new \RecursiveIteratorIterator($config);
-		foreach ($iterator as $key => $value) {
-			$tmp = $iterator->getDepth() ? $iterator->getSubIterator($iterator->getDepth() - 1)->current() : $config;
-			$tmp[$key] = Environment::expand($value);
-		}
+		array_walk_recursive($config, function(&$val) {
+			$val = Environment::expand($val);
+		});
 
 		// process services
 		$runServices = array();
-		if (isset($config->service) && $config->service instanceof \Traversable) {
-			foreach ($config->service as $key => $value) {
+		if (isset($config['service']) && is_array($config['service'])) {
+			foreach ($config['service'] as $key => $value) {
 				$key = strtr($key, '-', '\\'); // limited INI chars
 				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', $key, $m)) { // backcompatibility
 					$m[1][0] = strtolower($m[1][0]);
@@ -160,11 +157,11 @@ class Configurator extends Object
 					$container->removeService($key);
 					$container->addService($key, $value);
 				} else {
-					if (!empty($value->factory) || isset($this->defaultServices[$key])) {
-						$factory = empty($value->factory) ? $this->defaultServices[$key] : $value->factory;
-						if (!empty($value->option)) {
+					if (!empty($value['factory']) || isset($this->defaultServices[$key])) {
+						$factory = empty($value['factory']) ? $this->defaultServices[$key] : $value['factory'];
+						if (!empty($value['option'])) {
 							$factory = function() use ($container, $factory, $value) {
-								return call_user_func($factory, $container, (array) $value->option);
+								return call_user_func($factory, $container, $value['option']);
 							};
 						}
 						$container->removeService($key);
@@ -172,7 +169,7 @@ class Configurator extends Object
 					} else {
 						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
 					}
-					if (!empty($value->run)) {
+					if (!empty($value['run'])) {
 						$runServices[] = $key;
 					}
 				}
@@ -180,26 +177,26 @@ class Configurator extends Object
 		}
 
 		// process ini settings
-		if (!isset($config->php) && isset($config->set)) { // backcompatibility
-			$config->php = $config->set;
-			unset($config->set);
+		if (!isset($config['php']) && isset($config['set'])) { // backcompatibility
+			$config['php'] = $config['set'];
+			unset($config['set']);
 		}
 
-		if (isset($config->php) && $config->php instanceof \Traversable) {
-			if (PATH_SEPARATOR !== ';' && isset($config->php->include_path)) {
-				$config->php->include_path = str_replace(';', PATH_SEPARATOR, $config->php->include_path);
+		if (isset($config['php']) && is_array($config['php'])) {
+			if (PATH_SEPARATOR !== ';' && isset($config['php']['include_path'])) {
+				$config['php']['include_path'] = str_replace(';', PATH_SEPARATOR, $config['php']['include_path']);
 			}
 
-			foreach (clone $config->php as $key => $value) { // flatten INI dots
-				if ($value instanceof \Traversable) {
-					unset($config->php->$key);
+			foreach ($config['php'] as $key => $value) { // flatten INI dots
+				if (is_array($value)) {
+					unset($config['php'][$key]);
 					foreach ($value as $k => $v) {
-						$config->php->{"$key.$k"} = $v;
+						$config['php']["$key.$k"] = $v;
 					}
 				}
 			}
 
-			foreach ($config->php as $key => $value) {
+			foreach ($config['php'] as $key => $value) {
 				$key = strtr($key, '-', '.'); // backcompatibility
 
 				if (!is_scalar($value)) {
@@ -245,15 +242,15 @@ class Configurator extends Object
 		}
 
 		// define constants
-		if (isset($config->const) && $config->const instanceof \Traversable) {
-			foreach ($config->const as $key => $value) {
+		if (isset($config['const']) && is_array($config['const'])) {
+			foreach ($config['const'] as $key => $value) {
 				define($key, $value);
 			}
 		}
 
 		// set modes
-		if (isset($config->mode) && isset($config->mode)) {
-			foreach ($config->mode as $mode => $state) {
+		if (isset($config['mode']) && is_array($config['mode'])) {
+			foreach ($config['mode'] as $mode => $state) {
 				$container->params[$mode . 'Mode'] = (bool) $state;
 			}
 		}
@@ -263,7 +260,7 @@ class Configurator extends Object
 			$container->getService($name);
 		}
 
-		return $config;
+		return $container->config = Nette\ArrayHash::from($config, TRUE);
 	}
 
 
