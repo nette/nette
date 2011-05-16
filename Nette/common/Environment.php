@@ -369,11 +369,12 @@ final class Environment
 	/**
 	 * Loads global configuration from file and process it.
 	 * @param  string  file name
-	 * @return \ArrayObject
+	 * @return Nette\ArrayHash
 	 */
 	public static function loadConfig($file = NULL)
 	{
-		return self::getConfigurator()->loadConfig(self::getContext(), $file);
+		self::getConfigurator()->loadConfig(self::getContext(), $file);
+		return self::getContext()->params;
 	}
 
 
@@ -386,11 +387,11 @@ final class Environment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
-		$config = self::getContext()->config;
+		$params = self::getContext()->params;
 		if (func_num_args()) {
-			return isset($config[$key]) ? $config[$key] : $default;
+			return isset($params[$key]) ? $params[$key] : $default;
 		} else {
-			return $config;
+			return $params;
 		}
 	}
 

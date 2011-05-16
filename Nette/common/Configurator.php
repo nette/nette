@@ -42,6 +42,7 @@ class Configurator extends Object
 			}
 		}
 
+		$container->params = new ArrayHash;
 		defined('APP_DIR') && $container->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $container->params['libsDir'] = realpath(LIBS_DIR);
 		defined('TEMP_DIR') && $container->params['tempDir'] = realpath(TEMP_DIR);
@@ -56,7 +57,7 @@ class Configurator extends Object
 	 * Loads configuration from file and process it.
 	 * @param
 	 * @param  string  file name
-	 * @return Nette\ArrayHash
+	 * @return void
 	 */
 	public function loadConfig(DI\Container $container, $file)
 	{
@@ -98,6 +99,7 @@ class Configurator extends Object
 						. implode(', ', array_keys($old)) . ".");
 			}
 		}
+		unset($config['variables']);
 
 		// process services
 		if (isset($config['services'])) {
@@ -125,6 +127,7 @@ class Configurator extends Object
 			}
 			$builder = new DI\ContainerBuilder;
 			$builder->addDefinitions($container, $config['services']);
+			unset($config['services']);
 		}
 
 		// expand variables
@@ -143,6 +146,7 @@ class Configurator extends Object
 					$this->configurePhp($key, $value);
 				}
 			}
+			unset($config['php']);
 		}
 
 		// define constants
@@ -150,6 +154,7 @@ class Configurator extends Object
 			foreach ($config['const'] as $key => $value) {
 				define($key, $value);
 			}
+			unset($config['const']);
 		}
 
 		// set modes - back compatibility
@@ -158,14 +163,18 @@ class Configurator extends Object
 			foreach ($config['mode'] as $mode => $state) {
 				$container->params[$mode . 'Mode'] = (bool) $state;
 			}
+			unset($config['mode']);
+		}
+
+		// other
+		foreach ($config as $key => $value) {
+			$container->params[$key] = is_array($value) ? Nette\ArrayHash::from($value) : $value;
 		}
 
 		// auto-start services
 		foreach ($container->getServiceNamesByTag('run') as $name => $foo) {
 			$container->getService($name);
 		}
-
-		return $container->config = Nette\ArrayHash::from($config, TRUE);
 	}
 
 
