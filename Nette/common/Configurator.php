@@ -47,6 +47,7 @@ class Configurator extends Object
 		defined('LIBS_DIR') && $container->params['libsDir'] = realpath(LIBS_DIR);
 		defined('TEMP_DIR') && $container->params['tempDir'] = realpath(TEMP_DIR);
 		$container->params['productionMode'] = self::detectProductionMode();
+		$container->params['consoleMode'] = PHP_SAPI === 'cli';
 
 		return $container;
 	}

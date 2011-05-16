@@ -145,7 +145,7 @@ final class Environment
 	 */
 	public static function isConsole()
 	{
-		return self::getMode('console');
+		return self::getContext()->params['consoleMode'];
 	}
 
 
@@ -156,7 +156,19 @@ final class Environment
 	 */
 	public static function isProduction()
 	{
-		return self::getMode('production');
+		return self::getContext()->params['productionMode'];
+	}
+
+
+
+	/**
+	 * Enables or disables production mode.
+	 * @param  bool
+	 * @return void
+	 */
+	public static function setProductionMode($value = TRUE)
+	{
+		self::getContext()->params['productionMode'] = (bool) $value;
 	}
 
 
@@ -227,6 +239,17 @@ final class Environment
 
 
 	/********************* context ****************d*g**/
+
+
+
+	/**
+	 * Sets initial instance of context.
+	 * @return void
+	 */
+	public static function setContext(DI\IContainer $context)
+	{
+		self::$context = $context;
+	}
 
 
 
