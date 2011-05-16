@@ -68,7 +68,7 @@ class Configurator extends Object
 			if ($file === NULL) {
 				$file = $this->defaultConfigFile;
 			}
-			$file = Environment::expand($file);
+			$file = $container->expand($file);
 			if (!is_file($file)) {
 				$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility
 			}
@@ -84,13 +84,18 @@ class Configurator extends Object
 			}
 		}
 
-		// process environment variables
-		if (isset($config['variables'])) {
+		// add expanded variables
+		while (!empty($config['variables'])) {
+			$old = $config['variables'];
 			foreach ($config['variables'] as $key => $value) {
-				Environment::setVariable($key, $value);
+				try {
+					$container->params[$key] = $container->expand($value);
+					unset($config['variables'][$key]);
+				} catch (Nette\InvalidArgumentException $e) {}
 			}
-			foreach ($config['variables'] as $key => $value) {
-				$container->params[$key] = Environment::expand($value);
+			if ($old === $config['variables']) {
+				throw new InvalidStateException("Circular reference detected for variables: "
+						. implode(', ', array_keys($old)) . ".");
 			}
 		}
 

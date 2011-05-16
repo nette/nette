@@ -33,10 +33,6 @@ final class Environment
 	/** @var Nette\DI\IContainer */
 	private static $context;
 
-	/** @var array */
-	private static $vars = array(
-	);
-
 
 
 	/**
@@ -87,7 +83,7 @@ final class Environment
 	 */
 	public static function setName($name)
 	{
-		if (!isset(self::$vars['environment'])) {
+		if (!isset(self::getContext()->params['environment'])) {
 			self::setVariable('environment', $name, FALSE);
 
 		} else {
@@ -178,11 +174,10 @@ final class Environment
 	 */
 	public static function setVariable($name, $value, $expand = TRUE)
 	{
-		$expand = $expand && is_string($value) && strpos($value, '%') !== FALSE;
-		if (!$expand) {
-			self::getContext()->params[$name] = $value;
+		if ($expand && is_string($value)) {
+			$value = self::getContext()->expand($value);
 		}
-		self::$vars[$name] = array($value, $expand);
+		self::getContext()->params[$name] = $value;
 	}
 
 
@@ -196,28 +191,12 @@ final class Environment
 	 */
 	public static function getVariable($name, $default = NULL)
 	{
-		if (isset(self::$vars[$name])) {
-			list($var, $exp) = self::$vars[$name];
-			if ($exp) {
-				$var = self::expand($var);
-				self::$vars[$name] = array($var, FALSE);
-			}
-			return $var;
-
+		if (isset(self::getContext()->params[$name])) {
+			return self::getContext()->params[$name];
+		} elseif (func_num_args() > 1) {
+			return $default;
 		} else {
-			// convert from camelCaps (or PascalCaps) to ALL_CAPS
-			$const = strtoupper(preg_replace('#(.)([A-Z]+)#', '$1_$2', $name));
-			$list = get_defined_constants(TRUE);
-			if (isset($list['user'][$const])) {
-				self::$vars[$name] = array($list['user'][$const], FALSE);
-				return $list['user'][$const];
-
-			} elseif (func_num_args() > 1) {
-				return $default;
-
-			} else {
-				throw new InvalidStateException("Unknown environment variable '$name'.");
-			}
+			throw new InvalidStateException("Unknown environment variable '$name'.");
 		}
 	}
 
@@ -229,11 +208,7 @@ final class Environment
 	 */
 	public static function getVariables()
 	{
-		$res = array();
-		foreach (self::$vars as $name => $foo) {
-			$res[$name] = self::getVariable($name);
-		}
-		return $res;
+		return self::getContext()->params;
 	}
 
 
@@ -244,42 +219,9 @@ final class Environment
 	 * @return string
 	 * @throws InvalidStateException
 	 */
-	public static function expand($var)
+	public static function expand($s)
 	{
-		static $livelock;
-		if (is_string($var) && strpos($var, '%') !== FALSE) {
-			return @preg_replace_callback( // intentionally @
-				'#%([a-z0-9_-]*)%#i',
-				function ($m) use (& $livelock) {
-					list(, $var) = $m;
-					if ($var === '') {
-						return '%';
-					}
-
-					if (isset($livelock[$var])) {
-						throw new InvalidStateException("Circular reference detected for variables: "
-							. implode(', ', array_keys($livelock)) . ".");
-					}
-
-					try {
-						$livelock[$var] = TRUE;
-						$val = Environment::getVariable($var);
-						unset($livelock[$var]);
-					} catch (\Exception $e) {
-						$livelock = array();
-						throw $e;
-					}
-
-					if (!is_scalar($val)) {
-						throw new InvalidStateException("Environment variable '$var' is not scalar.");
-					}
-
-					return $val;
-				},
-				$var
-			); // intentionally @ due PHP bug #39257
-		}
-		return $var;
+		return self::getContext()->expand($s);
 	}
 
 
@@ -447,7 +389,6 @@ final class Environment
 		$config = self::getContext()->config;
 		if (func_num_args()) {
 			return isset($config[$key]) ? $config[$key] : $default;
-
 		} else {
 			return $config;
 		}
