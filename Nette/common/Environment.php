@@ -76,36 +76,6 @@ final class Environment
 
 
 	/**
-	 * Sets the mode.
-	 * @param  string mode identifier
-	 * @param  bool   set or unset
-	 * @return void
-	 */
-	public static function setMode($mode, $value = TRUE)
-	{
-		self::getContext()->params[$mode . 'Mode'] = (bool) $value;
-	}
-
-
-
-	/**
-	 * Returns the mode.
-	 * @param  string mode identifier
-	 * @return bool
-	 */
-	public static function getMode($mode)
-	{
-		if (isset(self::getContext()->params[$mode . 'Mode'])) {
-			return self::getContext()->params[$mode . 'Mode'];
-
-		} else {
-			return self::getContext()->params[$mode . 'Mode'] = self::getConfigurator()->detect($mode);
-		}
-	}
-
-
-
-	/**
 	 * Detects console (non-HTTP) mode.
 	 * @return bool
 	 */

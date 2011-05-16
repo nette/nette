@@ -183,26 +183,6 @@ class Configurator extends Object
 
 
 
-	public function detect($name)
-	{
-		switch ($name) {
-		case 'environment':
-			if ($this->detect('console')) {
-				return Environment::CONSOLE;
-			} else {
-				return Environment::getMode('production') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
-			}
-
-		case 'production':
-			return self::detectProductionMode();
-
-		case 'console':
-			return PHP_SAPI === 'cli';
-		}
-	}
-
-
-
 	/**
 	 * Detects production mode by IP address.
 	 * @return bool
