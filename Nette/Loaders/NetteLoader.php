@@ -107,6 +107,7 @@ class NetteLoader extends AutoLoader
 		'nette\deprecatedexception' => '/common/exceptions.php',
 		'nette\di\ambiguousserviceexception' => '/DI/exceptions.php',
 		'nette\di\container' => '/DI/Container.php',
+		'nette\di\containerbuilder' => '/DI/ContainerBuilder.php',
 		'nette\di\icontainer' => '/DI/IContainer.php',
 		'nette\di\iservicebuilder' => '/DI/IServiceBuilder.php',
 		'nette\di\missingserviceexception' => '/DI/exceptions.php',
