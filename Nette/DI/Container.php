@@ -22,6 +22,8 @@ use Nette;
  */
 class Container extends Nette\FreezableObject implements IContainer
 {
+	const TAG_TYPEHINT = 'typeHint';
+
 	/** @var array  user parameters */
 	public $params = array();
 
@@ -32,7 +34,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	private $factories = array();
 
 	/** @var array  */
-	private $types = array();
+	private $tags = array();
 
 	/** @var array circular reference detector */
 	private $creating;
@@ -43,10 +45,10 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Adds the specified service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callback
-	 * @param  string
+	 * @param  mixed   array of tags or string typeHint
 	 * @return Container|ServiceBuilder  provides a fluent interface
 	 */
-	public function addService($name, $service, $typeHint = NULL)
+	public function addService($name, $service, $tags = NULL)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -57,8 +59,23 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
+		if (is_string($tags)) {
+			$tags = array(self::TAG_TYPEHINT => array($tags));
+		} elseif (is_array($tags)) {
+			foreach ($tags as $id => $attrs) {
+				if (is_int($id) && is_string($attrs)) {
+					$tags[$attrs] = array();
+					unset($tags[$id]);
+				} elseif (!is_array($attrs)) {
+					$tags[$id] = (array) $attrs;
+				}
+			}
+		}
+
 		if (is_string($service) && strpos($service, ':') === FALSE) { // class name
-			$typeHint = $typeHint ?: $service;
+			if (!isset($tags[self::TAG_TYPEHINT][0])) {
+				$tags[self::TAG_TYPEHINT][0] = $service;
+			}
 			$service = new ServiceBuilder($service);
 		}
 
@@ -67,7 +84,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		} elseif (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$name] = $service;
-			$this->types[$name] = $typeHint;
+			$this->tags[$name] = $tags;
 			return $this;
 
 		} else {
@@ -75,7 +92,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$this->factories[$name] = array(callback($factory));
-		$this->types[$name] = $typeHint;
+		$this->tags[$name] = $tags;
 		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
 		return $service;
 	}
@@ -139,8 +156,8 @@ class Container extends Nette\FreezableObject implements IContainer
 		} elseif (!is_object($service)) {
 			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
 
-		} elseif (isset($this->types[$name]) && !$service instanceof $this->types[$name]) {
-			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not '{$this->types[$name]}' type.");
+		} elseif (isset($this->tags[$name][self::TAG_TYPEHINT][0]) && !$service instanceof $this->tags[$name][self::TAG_TYPEHINT][0]) {
+			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not '{$this->tags[$name][self::TAG_TYPEHINT][0]}' type.");
 		}
 
 		unset($this->factories[$name]);
@@ -151,13 +168,13 @@ class Container extends Nette\FreezableObject implements IContainer
 
 	/**
 	 * Gets the service object of the specified type.
-	 * @param  string service name
+	 * @param  string
 	 * @return object
 	 */
 	public function getServiceByType($type)
 	{
 		foreach ($this->registry as $name => $service) {
-			if (isset($this->types[$name]) ? !strcasecmp($this->types[$name], $type) : $service instanceof $type) {
+			if (isset($this->tags[$name][self::TAG_TYPEHINT][0]) ? !strcasecmp($this->tags[$name][self::TAG_TYPEHINT][0], $type) : $service instanceof $type) {
 				$found[] = $name;
 			}
 		}
@@ -168,6 +185,24 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new AmbiguousServiceException("Found more than one service ('" . implode("', '", $found) . "') matching '$type' type.");
 		}
 		return $this->getService($found[0]);
+	}
+
+
+
+	/**
+	 * Gets the service objects of the specified tag.
+	 * @param  string
+	 * @return array of [service name => tag attributes]
+	 */
+	public function getServiceNamesByTag($tag)
+	{
+		$found = array();
+		foreach ($this->registry as $name => $service) {
+			if (isset($this->tags[$name][$tag])) {
+				$found[$name] = $this->tags[$name][$tag];
+			}
+		}
+		return $found;
 	}
 
 
@@ -194,8 +229,8 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function checkServiceType($name, $type)
 	{
-		return isset($this->types[$name])
-			? !strcasecmp($this->types[$name], $type)
+		return isset($this->tags[$name][self::TAG_TYPEHINT][0])
+			? !strcasecmp($this->tags[$name][self::TAG_TYPEHINT][0], $type)
 			: (isset($this->registry[$name]) && $this->registry[$name] instanceof $type);
 	}
 
