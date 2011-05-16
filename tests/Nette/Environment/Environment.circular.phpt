@@ -17,8 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 try {
-	Environment::setName(Environment::PRODUCTION);
-	Environment::loadConfig('config.circular.ini');
+	Environment::loadConfig('config.circular.ini', 'production');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\InvalidStateException', 'Circular reference detected for variables: bar, foo, foobar.', $e );

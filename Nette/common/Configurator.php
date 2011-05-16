@@ -56,26 +56,25 @@ class Configurator extends Object
 
 	/**
 	 * Loads configuration from file and process it.
-	 * @param
-	 * @param  string  file name
 	 * @return void
 	 */
-	public function loadConfig(DI\Container $container, $file)
+	public function loadConfig(DI\Container $container, $file, $section = NULL)
 	{
-		if ($file instanceof ArrayHash) {
-			$config = $file;
-			$file = NULL;
-
-		} else {
-			if ($file === NULL) {
-				$file = $this->defaultConfigFile;
-			}
-			$file = $container->expand($file);
-			if (!is_file($file)) {
-				$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility
-			}
-			$config = Nette\Config\Config::fromFile($file, Environment::getName());
+		if ($file === NULL) {
+			$file = $this->defaultConfigFile;
 		}
+		$file = $container->expand($file);
+		if (!is_file($file)) {
+			$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility
+		}
+		if ($section === NULL) {
+			if (PHP_SAPI === 'cli') {
+				$section = Environment::CONSOLE;
+			} else {
+				$section = $container->params['productionMode'] ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+		}
+		}
+		$config = Nette\Config\Config::fromFile($file, $section);
 
 		// back compatibility with singular names
 		foreach (array('service', 'variable') as $item) {

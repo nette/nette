@@ -71,41 +71,7 @@ final class Environment
 
 
 
-	/********************* environment name and modes ****************d*g**/
-
-
-
-	/**
-	 * Sets the current environment name.
-	 * @param  string
-	 * @return void
-	 * @throws InvalidStateException
-	 */
-	public static function setName($name)
-	{
-		if (!isset(self::getContext()->params['environment'])) {
-			self::setVariable('environment', $name, FALSE);
-
-		} else {
-			throw new InvalidStateException('Environment name has already been set.');
-		}
-	}
-
-
-
-	/**
-	 * Returns the current environment name.
-	 * @return string
-	 */
-	public static function getName()
-	{
-		$name = self::getVariable('environment', NULL);
-		if ($name === NULL) {
-			$name = self::getConfigurator()->detect('environment');
-			self::setVariable('environment', $name, FALSE);
-		}
-		return $name;
-	}
+	/********************* environment modes ****************d*g**/
 
 
 
@@ -391,12 +357,13 @@ final class Environment
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string  file name
+	 * @param  string
+	 * @param  string
 	 * @return Nette\ArrayHash
 	 */
-	public static function loadConfig($file = NULL)
+	public static function loadConfig($file = NULL, $section = NULL)
 	{
-		self::getConfigurator()->loadConfig(self::getContext(), $file);
+		self::getConfigurator()->loadConfig(self::getContext(), $file, $section);
 		return self::getContext()->params;
 	}
 

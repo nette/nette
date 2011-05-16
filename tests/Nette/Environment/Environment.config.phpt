@@ -26,8 +26,7 @@ class Factory
 	}
 }
 
-Environment::setName(Environment::PRODUCTION);
-Environment::loadConfig('config.ini');
+Environment::loadConfig('config.ini', 'production');
 Assert::same(array('Factory::createService'), TestHelpers::fetchNotes());
 
 Assert::same( 'hello world', Environment::getVariable('foo') );
