@@ -75,19 +75,28 @@ class Configurator extends Object
 			$config = Nette\Config\Config::fromFile($file, Environment::getName());
 		}
 
+		// back compatibility with singular names
+		foreach (array('service', 'variable') as $item) {
+			if (isset($config[$item])) {
+				trigger_error(basename($file) . ": Section '$item' is deprecated; use plural form '{$item}s' instead.", E_USER_WARNING);
+				$config[$item . 's'] = $config[$item];
+				unset($config[$item]);
+			}
+		}
+
 		// process environment variables
-		if (isset($config['variable']) && is_array($config['variable'])) {
-			foreach ($config['variable'] as $key => $value) {
+		if (isset($config['variables'])) {
+			foreach ($config['variables'] as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
-			foreach ($config['variable'] as $key => $value) {
+			foreach ($config['variables'] as $key => $value) {
 				$container->params[$key] = Environment::expand($value);
 			}
 		}
 
 		// process services
-		if (isset($config['service'])) {
-			foreach ($config['service'] as $key => & $def) {
+		if (isset($config['services'])) {
+			foreach ($config['services'] as $key => & $def) {
 				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', strtr($key, '-', '\\'), $m)) { // back compatibility
 					$m[1][0] = strtolower($m[1][0]);
 					trigger_error(basename($file) . ": service name '$key' has been renamed to '$m[1]'", E_USER_WARNING);
@@ -110,7 +119,7 @@ class Configurator extends Object
 				}
 			}
 			$builder = new DI\ContainerBuilder;
-			$builder->addDefinitions($container, $config['service']);
+			$builder->addDefinitions($container, $config['services']);
 		}
 
 		// expand variables
@@ -138,8 +147,9 @@ class Configurator extends Object
 			}
 		}
 
-		// set modes
+		// set modes - back compatibility
 		if (isset($config['mode'])) {
+			trigger_error(basename($file) . ": Section 'mode' is deprecated.", E_USER_WARNING);
 			foreach ($config['mode'] as $mode => $state) {
 				$container->params[$mode . 'Mode'] = (bool) $state;
 			}
