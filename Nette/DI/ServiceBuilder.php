@@ -29,7 +29,6 @@ class ServiceBuilder extends Nette\Object implements IServiceBuilder
 
 	public function __construct($class)
 	{
-		/*5.2* if ($a = strrpos($class, '\\')) $class = substr($class, $a + 1); // fix namespace*/
 		$this->class = $class;
 	}
 

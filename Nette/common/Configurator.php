@@ -17,7 +17,7 @@ use Nette,
 
 
 /**
- * Nette\Environment helper.
+ * Initial system DI container generator.
  *
  * @author     David Grudl
  */
@@ -26,81 +26,28 @@ class Configurator extends Object
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.neon';
 
-	/** @var array */
-	public $defaultServices = array(
-		'application' => array(__CLASS__, 'createApplication'),
-		'presenterFactory' => array(__CLASS__, 'createPresenterFactory'),
-		'httpContext' => array(__CLASS__, 'createHttpContext'),
-		'httpRequest' => array(__CLASS__, 'createHttpRequest'),
-		'httpResponse' => 'Nette\Http\Response',
-		'user' => array(__CLASS__, 'createHttpUser'),
-		'cacheStorage' => array(__CLASS__, 'createCacheStorage'),
-		'cacheJournal' => array(__CLASS__, 'createCacheJournal'),
-		'mailer' => array(__CLASS__, 'createMailer'),
-		'session' => array(__CLASS__, 'createHttpSession'),
-		'robotLoader' => array(__CLASS__, 'createRobotLoader'),
-		'templateCacheStorage' => array(__CLASS__, 'createTemplateCacheStorage'),
-	);
-
 
 
 	/**
-	 * Detect environment mode.
-	 * @param  string mode name
-	 * @return bool
+	 * Get initial instance of DI container.
+	 * @return DI\Container
 	 */
-	public function detect($name)
+	public static function createContainer($containerClass = 'Nette\DI\Container')
 	{
-		switch ($name) {
-		case 'environment':
-			// environment name autodetection
-			if ($this->detect('console')) {
-				return Environment::CONSOLE;
+		$container = new $containerClass;
 
-			} else {
-				return Environment::getMode('production') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+		foreach (get_class_methods(__CLASS__) as $name) {
+			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
+				$container->addService(strtolower($name[13]) . substr($name, 14), array(__CLASS__, $name));
 			}
-
-		case 'production':
-			// detects production mode by server IP address
-			if (PHP_SAPI === 'cli') {
-				return FALSE;
-
-			} elseif (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) {
-				$addrs = array();
-				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
-					$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
-				}
-				if (isset($_SERVER['REMOTE_ADDR'])) {
-					$addrs[] = $_SERVER['REMOTE_ADDR'];
-				}
-				$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
-				foreach ($addrs as $addr) {
-					$oct = explode('.', $addr);
-					// 10.0.0.0/8   Private network
-					// 127.0.0.0/8  Loopback
-					// 169.254.0.0/16 & ::1  Link-Local
-					// 172.16.0.0/12  Private network
-					// 192.168.0.0/16  Private network
-					if ($addr !== '::1' && (count($oct) !== 4 || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '172' || $oct[1] < 16 || $oct[1] > 31)
-						&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')))
-					) {
-						return TRUE;
-					}
-				}
-				return FALSE;
-
-			} else {
-				return TRUE;
-			}
-
-		case 'console':
-			return PHP_SAPI === 'cli';
-
-		default:
-			// unknown mode
-			return NULL;
 		}
+
+		defined('APP_DIR') && $container->params['appDir'] = realpath(APP_DIR);
+		defined('LIBS_DIR') && $container->params['libsDir'] = realpath(LIBS_DIR);
+		defined('TEMP_DIR') && $container->params['tempDir'] = realpath(TEMP_DIR);
+		$container->params['productionMode'] = self::detectProductionMode();
+
+		return $container;
 	}
 
 
@@ -113,8 +60,6 @@ class Configurator extends Object
 	 */
 	public function loadConfig(DI\Container $container, $file)
 	{
-		$name = Environment::getName();
-
 		if ($file instanceof ArrayHash) {
 			$config = $file;
 			$file = NULL;
@@ -125,9 +70,9 @@ class Configurator extends Object
 			}
 			$file = Environment::expand($file);
 			if (!is_file($file)) {
-				$file = preg_replace('#\.neon$#', '.ini', $file); // backcompatibility
+				$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility
 			}
-			$config = Nette\Config\Config::fromFile($file, $name);
+			$config = Nette\Config\Config::fromFile($file, Environment::getName());
 		}
 
 		// process environment variables
@@ -135,6 +80,37 @@ class Configurator extends Object
 			foreach ($config['variable'] as $key => $value) {
 				Environment::setVariable($key, $value);
 			}
+			foreach ($config['variable'] as $key => $value) {
+				$container->params[$key] = Environment::expand($value);
+			}
+		}
+
+		// process services
+		if (isset($config['service'])) {
+			foreach ($config['service'] as $key => & $def) {
+				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', strtr($key, '-', '\\'), $m)) { // back compatibility
+					$m[1][0] = strtolower($m[1][0]);
+					trigger_error(basename($file) . ": service name '$key' has been renamed to '$m[1]'", E_USER_WARNING);
+					$key = $m[1];
+				}
+
+				if (method_exists(__CLASS__, "createService$key")) {
+					$container->removeService($key);
+					if (!is_scalar($def) && !isset($def['factory']) && !isset($def['class'])) {
+						$def['factory'] = array(__CLASS__, "createService$key");
+					}
+				}
+
+				if (!is_scalar($def) && isset($def['option'])) {
+					$def['arguments'][] = $def['option'];
+				}
+
+				if (!is_scalar($def) && !empty($def['run'])) {
+					$def['tags'] = array('run');
+				}
+			}
+			$builder = new DI\ContainerBuilder;
+			$builder->addDefinitions($container, $config['service']);
 		}
 
 		// expand variables
@@ -142,125 +118,128 @@ class Configurator extends Object
 			$val = Environment::expand($val);
 		});
 
-		// process services
-		$runServices = array();
-		if (isset($config['service']) && is_array($config['service'])) {
-			foreach ($config['service'] as $key => $value) {
-				$key = strtr($key, '-', '\\'); // limited INI chars
-				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', $key, $m)) { // backcompatibility
-					$m[1][0] = strtolower($m[1][0]);
-					trigger_error(basename($file) . ": service name '$key' has been renamed to '$m[1]'", E_USER_WARNING);
-					$key = $m[1];
-				}
-
-				if (is_string($value)) {
-					$container->removeService($key);
-					$container->addService($key, $value);
-				} else {
-					if (!empty($value['factory']) || isset($this->defaultServices[$key])) {
-						$factory = empty($value['factory']) ? $this->defaultServices[$key] : $value['factory'];
-						if (!empty($value['option'])) {
-							$factory = function() use ($container, $factory, $value) {
-								return call_user_func($factory, $container, $value['option']);
-							};
-						}
-						$container->removeService($key);
-						$container->addService($key, $factory);
-					} else {
-						throw new Nette\InvalidStateException("Factory method is not specified for service $key.");
-					}
-					if (!empty($value['run'])) {
-						$runServices[] = $key;
-					}
-				}
-			}
-		}
-
-		// process ini settings
-		if (!isset($config['php']) && isset($config['set'])) { // backcompatibility
-			$config['php'] = $config['set'];
-			unset($config['set']);
-		}
-
-		if (isset($config['php']) && is_array($config['php'])) {
-			if (PATH_SEPARATOR !== ';' && isset($config['php']['include_path'])) {
-				$config['php']['include_path'] = str_replace(';', PATH_SEPARATOR, $config['php']['include_path']);
-			}
-
-			foreach ($config['php'] as $key => $value) { // flatten INI dots
-				if (is_array($value)) {
-					unset($config['php'][$key]);
-					foreach ($value as $k => $v) {
-						$config['php']["$key.$k"] = $v;
-					}
-				}
-			}
-
+		// PHP settings
+		if (isset($config['php'])) {
 			foreach ($config['php'] as $key => $value) {
-				$key = strtr($key, '-', '.'); // backcompatibility
-
-				if (!is_scalar($value)) {
-					throw new Nette\InvalidStateException("Configuration value for directive '$key' is not scalar.");
-				}
-
-				if ($key === 'date.timezone') { // PHP bug #47466
-					date_default_timezone_set($value);
-				}
-
-				if (function_exists('ini_set')) {
-					ini_set($key, $value);
-				} else {
-					switch ($key) {
-					case 'include_path':
-						set_include_path($value);
-						break;
-					case 'iconv.internal_encoding':
-						iconv_set_encoding('internal_encoding', $value);
-						break;
-					case 'mbstring.internal_encoding':
-						mb_internal_encoding($value);
-						break;
-					case 'date.timezone':
-						date_default_timezone_set($value);
-						break;
-					case 'error_reporting':
-						error_reporting($value);
-						break;
-					case 'ignore_user_abort':
-						ignore_user_abort($value);
-						break;
-					case 'max_execution_time':
-						set_time_limit($value);
-						break;
-					default:
-						if (ini_get($key) != $value) { // intentionally ==
-							throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
-						}
+				if (is_array($value)) { // back compatibility - flatten INI dots
+					foreach ($value as $k => $v) {
+						$this->configurePhp("$key.$k", $v);
 					}
+				} else {
+					$this->configurePhp($key, $value);
 				}
 			}
 		}
 
 		// define constants
-		if (isset($config['const']) && is_array($config['const'])) {
+		if (isset($config['const'])) {
 			foreach ($config['const'] as $key => $value) {
 				define($key, $value);
 			}
 		}
 
 		// set modes
-		if (isset($config['mode']) && is_array($config['mode'])) {
+		if (isset($config['mode'])) {
 			foreach ($config['mode'] as $mode => $state) {
 				$container->params[$mode . 'Mode'] = (bool) $state;
 			}
 		}
 
 		// auto-start services
-		foreach ($runServices as $name) {
+		foreach ($container->getServiceNamesByTag('run') as $name => $foo) {
 			$container->getService($name);
 		}
 
 		return $container->config = Nette\ArrayHash::from($config, TRUE);
+	}
+
+
+
+	/********************* tools ****************d*g**/
+
+
+
+	public function detect($name)
+	{
+		switch ($name) {
+		case 'environment':
+			if ($this->detect('console')) {
+				return Environment::CONSOLE;
+			} else {
+				return Environment::getMode('production') ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+			}
+
+		case 'production':
+			return self::detectProductionMode();
+
+		case 'console':
+			return PHP_SAPI === 'cli';
+		}
+	}
+
+
+
+	/**
+	 * Detects production mode by IP address.
+	 * @return bool
+	 */
+	public static function detectProductionMode()
+	{
+		if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
+			return TRUE;
+		}
+		$addrs = array();
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+			$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+		}
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$addrs[] = $_SERVER['REMOTE_ADDR'];
+		}
+		$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
+		foreach ($addrs as $addr) {
+			$oct = explode('.', $addr);
+			// 10.0.0.0/8   Private network
+			// 127.0.0.0/8  Loopback
+			// 169.254.0.0/16 & ::1  Link-Local
+			// 172.16.0.0/12  Private network
+			// 192.168.0.0/16  Private network
+			if ($addr !== '::1' && (count($oct) !== 4 || ($oct[0] !== '10' && $oct[0] !== '127' && ($oct[0] !== '172' || $oct[1] < 16 || $oct[1] > 31)
+				&& ($oct[0] !== '169' || $oct[1] !== '254') && ($oct[0] !== '192' || $oct[1] !== '168')))
+			) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+
+
+	public function configurePhp($name, $value)
+	{
+		if (!is_scalar($value)) {
+			throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
+		}
+
+		switch ($name) {
+		case 'include_path':
+			set_include_path(str_replace(';', PATH_SEPARATOR, $value));
+			return;
+		case 'ignore_user_abort':
+			ignore_user_abort($value);
+			return;
+		case 'max_execution_time':
+			set_time_limit($value);
+			return;
+		case 'date.timezone':
+			date_default_timezone_set($value);
+			// intentionally call ini_set, PHP bug #47466
+		}
+
+		if (function_exists('ini_set')) {
+			ini_set($name, $value);
+		} elseif (ini_get($name) != $value) { // intentionally ==
+			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
+		}
 	}
 
 
@@ -270,30 +249,9 @@ class Configurator extends Object
 
 
 	/**
-	 * Get initial instance of context.
-	 * @return DI\Container
-	 */
-	public function createContainer()
-	{
-		$container = new DI\Container;
-		foreach ($this->defaultServices as $name => $service) {
-			$container->addService($name, $service);
-		}
-
-		defined('APP_DIR') && $container->params['appDir'] = APP_DIR;
-		defined('LIBS_DIR') && $container->params['libsDir'] = LIBS_DIR;
-		defined('TEMP_DIR') && $container->params['tempDir'] = TEMP_DIR;
-		$container->params['productionMode'] = $this->detect('production');
-
-		return $container;
-	}
-
-
-
-	/**
 	 * @return Nette\Application\Application
 	 */
-	public static function createApplication(DI\Container $container, array $options = NULL)
+	public static function createServiceApplication(DI\Container $container, array $options = NULL)
 	{
 		$context = new DI\Container;
 		$context->addService('httpRequest', $container->httpRequest);
@@ -317,7 +275,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Application\IPresenterFactory
 	 */
-	public static function createPresenterFactory(DI\Container $container)
+	public static function createServicePresenterFactory(DI\Container $container)
 	{
 		return new Nette\Application\PresenterFactory($container->params['appDir'], $container);
 	}
@@ -327,7 +285,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\Request
 	 */
-	public static function createHttpRequest()
+	public static function createServiceHttpRequest()
 	{
 		$factory = new Nette\Http\RequestFactory;
 		$factory->setEncoding('UTF-8');
@@ -337,9 +295,19 @@ class Configurator extends Object
 
 
 	/**
+	 * @return Nette\Http\Request
+	 */
+	public static function createServiceHttpResponse()
+	{
+		return new Nette\Http\Response;
+	}
+
+
+
+	/**
 	 * @return Nette\Http\Context
 	 */
-	public static function createHttpContext(DI\Container $container)
+	public static function createServiceHttpContext(DI\Container $container)
 	{
 		return new Nette\Http\Context($container->httpRequest, $container->httpResponse);
 	}
@@ -349,7 +317,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\Session
 	 */
-	public static function createHttpSession(DI\Container $container)
+	public static function createServiceSession(DI\Container $container)
 	{
 		return new Nette\Http\Session($container->httpRequest, $container->httpResponse);
 	}
@@ -359,7 +327,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\User
 	 */
-	public static function createHttpUser(DI\Container $container)
+	public static function createServiceUser(DI\Container $container)
 	{
 		$context = new DI\Container;
 		// copies services from $container and preserves lazy loading
@@ -378,7 +346,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createCacheStorage(DI\Container $container)
+	public static function createServiceCacheStorage(DI\Container $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -391,7 +359,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\IStorage
 	 */
-	public static function createTemplateCacheStorage(DI\Container $container)
+	public static function createServiceTemplateCacheStorage(DI\Container $container)
 	{
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
@@ -404,7 +372,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Caching\Storages\IJournal
 	 */
-	public static function createCacheJournal(DI\Container $container)
+	public static function createServiceCacheJournal(DI\Container $container)
 	{
 		return new Nette\Caching\Storages\FileJournal($container->params['tempDir']);
 	}
@@ -414,7 +382,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Mail\IMailer
 	 */
-	public static function createMailer(DI\Container $container, array $options = NULL)
+	public static function createServiceMailer(DI\Container $container, array $options = NULL)
 	{
 		if (empty($options['smtp'])) {
 			return new Nette\Mail\SendmailMailer;
@@ -428,7 +396,7 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
-	public static function createRobotLoader(DI\Container $container, array $options = NULL)
+	public static function createServiceRobotLoader(DI\Container $container, array $options = NULL)
 	{
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->params['productionMode'];

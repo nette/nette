@@ -35,12 +35,6 @@ Assert::same( 'hello world', Environment::getVariable('foo') );
 Assert::same( 'hello world', constant('HELLO_WORLD') );
 
 Assert::equal( Nette\ArrayHash::from(array(
-	'mbstring-internal_encoding' => 'UTF-8',
-	'date.timezone' => 'Europe/Prague',
-	'iconv.internal_encoding' => 'UTF-8',
-)), Environment::getConfig('php') );
-
-Assert::equal( Nette\ArrayHash::from(array(
 	'adapter' => 'pdo_mysql',
 	'params' => array(
 		'host' => 'db.example.com',

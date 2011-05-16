@@ -120,9 +120,8 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		if (isset($this->registry[$name])) {
 			return $this->registry[$name];
-		}
 
-		if (isset($this->creating[$name])) {
+		} elseif (isset($this->creating[$name])) {
 			throw new Nette\InvalidStateException("Circular reference detected for services: "
 				. implode(', ', array_keys($this->creating)) . ".");
 		}

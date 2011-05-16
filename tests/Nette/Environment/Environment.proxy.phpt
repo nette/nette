@@ -13,24 +13,23 @@ use Nette\Configurator;
 
 
 require __DIR__ . '/../bootstrap.php';
-$configurator = new Configurator;
 
 
 
 $_SERVER["SERVER_ADDR"] = "192.0.32.10";
-Assert::true( $configurator->detect('production'), 'Is production mode?' );
+Assert::true( Configurator::detectProductionMode(), 'Is production mode?' );
 
 
 
 $_SERVER["SERVER_ADDR"] = "127.0.0.1";
-Assert::false( $configurator->detect('production'), 'Is production mode without proxy?' );
+Assert::false( Configurator::detectProductionMode(), 'Is production mode without proxy?' );
 
 
 
 $_SERVER["HTTP_X_FORWARDED_FOR"] = "192.0.32.10";
-Assert::true( $configurator->detect('production'), 'Is production mode with proxy?' );
+Assert::true( Configurator::detectProductionMode(), 'Is production mode with proxy?' );
 
 
 
 $_SERVER["HTTP_X_FORWARDED_FOR"] = "127.0.0.1";
-Assert::false( $configurator->detect('production'), 'Is production mode with local proxy?' );
+Assert::false( Configurator::detectProductionMode(), 'Is production mode with local proxy?' );
