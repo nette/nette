@@ -289,8 +289,7 @@ class Session extends Nette\Object
 			throw new Nette\InvalidArgumentException('Session namespace must be a non-empty string.');
 		}
 
-
-		return new $class($_SESSION['__NF']['DATA'][$namespace], $_SESSION['__NF']['META'][$namespace]);
+		return new $class($this, $namespace);
 	}
 
 

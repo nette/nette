@@ -28,6 +28,12 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	/** @var array  session metadata storage */
 	private $meta;
 
+	/** @var Nette\Http\Session session instance */
+	private $session;
+
+	/** @var string session namespace */
+	private $namespace;
+
 	/** @var bool */
 	public $warnOnUndefined = FALSE;
 
@@ -35,13 +41,19 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 
 	/**
 	 * Do not call directly. Use Session::getNamespace().
+	 * @param Nette\Http\Session
+	 * @param string
 	 */
-	public function __construct(& $data, & $meta)
+	public function __construct(Session $session, $namespace)
 	{
-		$this->data = & $data;
-		$this->meta = & $meta;
-	}
+		$this->session = $session;
+		$this->namespace = $namespace;
 
+		if ($session->isStarted()) {
+			$this->data = & $_SESSION['__NF']['DATA'][$this->namespace];
+			$this->meta = & $_SESSION['__NF']['META'][$this->namespace];
+		}
+	}
 
 
 	/**
