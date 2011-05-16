@@ -55,6 +55,12 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 		}
 	}
 
+	public function start()
+	{
+		$this->session->start();
+		$this->data = & $_SESSION['__NF']['DATA'][$this->namespace];
+		$this->meta = & $_SESSION['__NF']['META'][$this->namespace];
+	}
 
 	/**
 	 * Returns an iterator over all namespace variables.
@@ -79,6 +85,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __set($name, $value)
 	{
+		if (!$this->session->isStarted()) {
+			$this->start();
+		}
+
 		$this->data[$name] = $value;
 		if (is_object($value)) {
 			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
@@ -94,6 +104,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function &__get($name)
 	{
+		if (!$this->session->isStarted() && $this->session->exists()) {
+			$this->start();
+		}
+
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
 			trigger_error("The variable '$name' does not exist in session namespace", E_USER_NOTICE);
 		}
@@ -110,6 +124,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __isset($name)
 	{
+		if (!$this->session->isStarted() && $this->session->exists()) {
+			$this->start();
+		}
+
 		return isset($this->data[$name]);
 	}
 
@@ -122,6 +140,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __unset($name)
 	{
+		if (!$this->session->isStarted()) {
+			$this->start();
+		}
+
 		unset($this->data[$name], $this->meta[$name]);
 	}
 
@@ -184,6 +206,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function setExpiration($time, $variables = NULL)
 	{
+		if (!$this->session->isStarted()) {
+			$this->start();
+		}
+
 		if (empty($time)) {
 			$time = NULL;
 			$whenBrowserIsClosed = TRUE;
@@ -218,6 +244,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function removeExpiration($variables = NULL)
 	{
+		if (!$this->session->isStarted()) {
+			$this->start();
+		}
+
 		if ($variables === NULL) {
 			// from entire namespace
 			unset($this->meta['']['T'], $this->meta['']['B']);
