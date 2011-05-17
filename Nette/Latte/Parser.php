@@ -435,14 +435,14 @@ class Parser extends Nette\Object
 		return Strings::replace(
 			$this->macros[$name],
 			'#%(.*?)%#',
-			function ($m) use ($handler, $node) {
+			/*5.2* callback(*/function ($m) use ($handler, $node) {
 				if ($m[1]) {
 					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
 						->invoke($node->args, $node->modifiers);
 				} else {
 					return $handler->formatMacroArgs($node->args);
 				}
-			}
+			}/*5.2* )*/
 		);
 	}
 

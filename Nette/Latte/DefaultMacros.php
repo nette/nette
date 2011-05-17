@@ -239,7 +239,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$namere = preg_quote($name, '#');
 				$s = Strings::replace($s,
 					"#{block $namere} \?>(.*)<\?php {/block $namere}#sU",
-					function ($matches) use ($name, & $code, $uniq) {
+					/*5.2* callback(*/function ($matches) use ($name, & $code, $uniq) {
 						list(, $content) = $matches;
 						$func = '_lb' . substr(md5($uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 						$code = "//\n// block $name\n//\n"
@@ -249,7 +249,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 							. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
 							. "\n?>$content<?php\n}}";
 						return '';
-					}
+					}/*5.2* )*/
 				);
 			}
 			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
