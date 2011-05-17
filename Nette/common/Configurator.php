@@ -311,7 +311,7 @@ class Configurator extends Object
 		$context->addService('httpResponse', $container->httpResponse);
 		$context->addService('session', $container->session);
 		$context->addService('presenterFactory', $container->presenterFactory);
-		$context->addService('router', 'Nette\Application\Routers\RouteList');
+		$context->addService('router', $container->router);
 
 		Nette\Application\UI\Presenter::$invalidLinkMode = $container->params['productionMode']
 			? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
@@ -336,6 +336,16 @@ class Configurator extends Object
 	public static function createServicePresenterFactory(DI\Container $container)
 	{
 		return new Nette\Application\PresenterFactory($container->params['appDir'], $container);
+	}
+
+
+
+	/**
+	 * @return Nette\Application\IRouter
+	 */
+	public static function createServiceRouter(DI\Container $container)
+	{
+		return new Nette\Application\Routers\RouteList;
 	}
 
 
