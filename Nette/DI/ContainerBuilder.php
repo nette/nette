@@ -89,4 +89,60 @@ class ContainerBuilder extends Nette\Object
 		}
 	}
 
+
+
+	public function generateCode(array $definitions)
+	{
+		$code = '';
+		foreach ($definitions as $name => $definition) {
+			$name = $this->varExport($name);
+			if (is_scalar($definition)) {
+				$factory = $this->varExport($definition);
+				$code .= "\$container->addService($name, $factory);\n\n";
+				continue;
+			}
+
+			$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
+
+			if (isset($definition['class'])) {
+				$class = $this->argsExport(array($definition['class']));
+				$methods = isset($definition['methods']) ? $definition['methods'] : array();
+				$factory = "function(\$container) {\n\t\$class = $class; \$service = new \$class($arguments);\n";
+				foreach ($methods as $method) {
+					$args = isset($method[1]) ? $this->argsExport($method[1]) : '';
+					$factory .= "\t\$service->$method[0]($args);\n";
+				}
+				$factory .= "\treturn \$service;\n}";
+
+			} elseif (isset($definition['factory'])) {
+				$factory = $this->argsExport(array($definition['factory']));
+				$factory = "function(\$container) {\n\treturn call_user_func(\n\t\t$factory,\n\t\t\$container"
+					. ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n}";
+			} else {
+				throw new Nette\InvalidStateException("Factory method is not specified.");
+			}
+
+			$tags = isset($definition['tags']) ? $this->argsExport(array($definition['tags'])) : 'NULL';
+			$code .= "\$container->addService($name, $factory, $tags);\n\n";
+		}
+		return $code;
+	}
+
+
+
+	private function argsExport($args)
+	{
+		$args = implode(', ', array_map(array($this, 'varExport'), $args));
+		$args = preg_replace("#'@(\w+)'#", '\$container->getService(\'$1\')', $args);
+		$args = preg_replace("#('[^']*%[^']*')#", '\$container->expand($1)', $args);
+		return $args;
+	}
+
+
+
+	private function varExport($arg)
+	{
+		return preg_replace('#\n *#', ' ', var_export($arg, TRUE));
+	}
+
 }
