@@ -12,6 +12,7 @@
 namespace Nette;
 
 use Nette,
+	Nette\Caching\Cache,
 	Nette\DI;
 
 
@@ -72,9 +73,20 @@ class Configurator extends Object
 				$section = Environment::CONSOLE;
 			} else {
 				$section = $container->params['productionMode'] ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+			}
 		}
+
+		$cache = new Cache($container->templateCacheStorage, __CLASS__);
+		$cacheKey = array((array) $container->params, $file, $section);
+		$cached = $cache->load($cacheKey);
+		if ($cached) {
+			require $cached['file'];
+			fclose($cached['handle']);
+			return;
 		}
+
 		$config = Nette\Config\Config::fromFile($file, $section);
+		$code = "<?php\n// source file $file\n\n";
 
 		// back compatibility with singular names
 		foreach (array('service', 'variable') as $item) {
@@ -90,7 +102,7 @@ class Configurator extends Object
 			$old = $config['variables'];
 			foreach ($config['variables'] as $key => $value) {
 				try {
-					$container->params[$key] = $container->expand($value);
+					$code .= $this->generateCode('$container->params[?] = ?', $key, $container->params[$key] = $container->expand($value));
 					unset($config['variables'][$key]);
 				} catch (Nette\InvalidArgumentException $e) {}
 			}
@@ -126,7 +138,8 @@ class Configurator extends Object
 				}
 			}
 			$builder = new DI\ContainerBuilder;
-			$builder->addDefinitions($container, $config['services']);
+			/**/$code .= $builder->generateCode($config['services']);/**/
+			/*5.2* $code .= $this->generateCode('$builder = new '.get_class($builder).'; $builder->addDefinitions($container, ?)', $config['services']);*/
 			unset($config['services']);
 		}
 
@@ -140,10 +153,10 @@ class Configurator extends Object
 			foreach ($config['php'] as $key => $value) {
 				if (is_array($value)) { // back compatibility - flatten INI dots
 					foreach ($value as $k => $v) {
-						$this->configurePhp("$key.$k", $v);
+						$code .= $this->configurePhp("$key.$k", $v);
 					}
 				} else {
-					$this->configurePhp($key, $value);
+					$code .= $this->configurePhp($key, $value);
 				}
 			}
 			unset($config['php']);
@@ -152,29 +165,33 @@ class Configurator extends Object
 		// define constants
 		if (isset($config['const'])) {
 			foreach ($config['const'] as $key => $value) {
-				define($key, $value);
+				$code .= $this->generateCode('define', $key, $value);
 			}
 			unset($config['const']);
 		}
 
 		// set modes - back compatibility
 		if (isset($config['mode'])) {
-			trigger_error(basename($file) . ": Section 'mode' is deprecated.", E_USER_WARNING);
+			trigger_error(basename($file) . ": Section 'mode' is deprecated; use 'params' instead.", E_USER_WARNING);
 			foreach ($config['mode'] as $mode => $state) {
-				$container->params[$mode . 'Mode'] = (bool) $state;
+				$code .= $this->generateCode('$container->params[?] = ?', $mode . 'Mode', (bool) $state);
 			}
 			unset($config['mode']);
 		}
 
 		// other
 		foreach ($config as $key => $value) {
-			$container->params[$key] = is_array($value) ? Nette\ArrayHash::from($value) : $value;
+			$code .= $this->generateCode('$container->params[?] = ' . (is_array($value) ? 'Nette\ArrayHash::from(?)' : '?'), $key, $value);
 		}
 
 		// auto-start services
-		foreach ($container->getServiceNamesByTag('run') as $name => $foo) {
-			$container->getService($name);
-		}
+		$code .= 'foreach ($container->getServiceNamesByTag("run") as $name => $foo) { $container->getService($name); }' . "\n";
+
+		$cache->save($cacheKey, $code, array(
+			Cache::FILES => $file,
+		));
+
+		eval('?>' . $code);
 	}
 
 
@@ -226,24 +243,42 @@ class Configurator extends Object
 
 		switch ($name) {
 		case 'include_path':
-			set_include_path(str_replace(';', PATH_SEPARATOR, $value));
-			return;
+			return $this->generateCode('set_include_path', str_replace(';', PATH_SEPARATOR, $value));
 		case 'ignore_user_abort':
-			ignore_user_abort($value);
-			return;
+			return $this->generateCode('ignore_user_abort', $value);
 		case 'max_execution_time':
-			set_time_limit($value);
-			return;
+			return $this->generateCode('set_time_limit', $value);
 		case 'date.timezone':
-			date_default_timezone_set($value);
-			// intentionally call ini_set, PHP bug #47466
+			return $this->generateCode('date_default_timezone_set', $value);
 		}
 
 		if (function_exists('ini_set')) {
-			ini_set($name, $value);
+			return $this->generateCode('ini_set', $name, $value);
 		} elseif (ini_get($name) != $value) { // intentionally ==
 			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 		}
+	}
+
+
+
+	private static function generateCode($statement)
+	{
+		$args = func_get_args();
+		unset($args[0]);
+		foreach ($args as &$arg) {
+			$arg = var_export($arg, TRUE);
+		}
+		if (strpos($statement, '?') === FALSE) {
+			return $statement .= '(' . implode(', ', $args) . ");\n\n";
+		}
+		$a = strpos($statement, '?');
+		$i = 1;
+		while ($a !== FALSE) {
+			$statement = substr_replace($statement, $args[$i], $a, 1);
+			$a = strpos($statement, '?', $a + strlen($args[$i]));
+			$i++;
+		}
+		return $statement . ";\n\n";
 	}
 
 
