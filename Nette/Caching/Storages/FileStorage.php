@@ -53,7 +53,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	public static $gcProbability = 0.001;
 
 	/** @var bool */
-	public static $useDirectories;
+	public static $useDirectories = TRUE;
 
 	/** @var string */
 	private $dir;
@@ -71,23 +71,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		$this->dir = realpath($dir);
 		if ($this->dir === FALSE) {
 			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
-		}
-
-		if (self::$useDirectories === NULL) {
-			// checks whether directory is writable
-			$uniq = uniqid('_', TRUE);
-			umask(0000);
-			if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
-				throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
-			}
-
-			// tests subdirectory mode
-			self::$useDirectories = !ini_get('safe_mode');
-			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // @ - error is expected
-				self::$useDirectories = TRUE;
-				unlink("$dir/$uniq/_");
-			}
-			@rmdir("$dir/$uniq"); // @ - directory may not already exist
 		}
 
 		$this->useDirs = (bool) self::$useDirectories;

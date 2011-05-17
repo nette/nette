@@ -184,6 +184,9 @@ class Configurator extends Object
 			$code .= $this->generateCode('$container->params[?] = ' . (is_array($value) ? 'Nette\ArrayHash::from(?)' : '?'), $key, $value);
 		}
 
+		// pre-loading
+		$code .= self::preloadEnvironment($container);
+
 		// auto-start services
 		$code .= 'foreach ($container->getServiceNamesByTag("run") as $name => $foo) { $container->getService($name); }' . "\n";
 
@@ -404,6 +407,7 @@ class Configurator extends Object
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 		return new Nette\Caching\Storages\PhpFileStorage($dir);
+		return new Nette\Caching\Storages\PhpFileStorage($container->expand('%tempDir%/cache'));
 	}
 
 
@@ -451,6 +455,31 @@ class Configurator extends Object
 		}
 		$loader->register();
 		return $loader;
+	}
+
+
+
+	public static function preloadEnvironment(DI\Container $container)
+	{
+		$code = '';
+		$dir = $container->expand('%tempDir%/cache');
+		umask(0000);
+		@mkdir($dir, 0777); // @ - directory may exists
+
+		// checks whether directory is writable
+		$uniq = uniqid('_', TRUE);
+		umask(0000);
+		if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
+			throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
+		}
+
+		// tests subdirectory mode
+		$useDirs = @file_put_contents("$dir/$uniq/_", '') !== FALSE; // @ - error is expected
+		@unlink("$dir/$uniq/_");
+		@rmdir("$dir/$uniq"); // @ - directory may not already exist
+
+		$code .= self::generateCode('Nette\Caching\Storages\FileStorage::$useDirectories = ?', $useDirs);
+		return $code;
 	}
 
 }
