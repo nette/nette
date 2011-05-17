@@ -36,7 +36,7 @@ use Nette;
  * @property-read array $errors
  * @property-read Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer
- * @property-read boold $submitted
+ * @property-read bool $submitted
  */
 class Form extends Container
 {
