@@ -37,6 +37,9 @@ final class Debugger
 
 	/** @var bool in console mode is omitted HTML output */
 	public static $consoleMode;
+	
+	/** @var bool in logger mode saves is suppressed any debugging output */
+	public static $loggerMode = FALSE;
 
 	/** @var int timestamp with microseconds of the start of the request */
 	public static $time;
@@ -49,6 +52,9 @@ final class Debugger
 
 	/** @var string URL pattern mask to open editor */
 	public static $editor = 'editor://open/?file=%file&line=%line';
+	
+	/** @var string run pattern mask to open browser */
+	public static $browser = NULL;
 
 	/********************* Debugger::dump() ****************d*g**/
 
@@ -164,7 +170,9 @@ final class Debugger
 		self::$mailer = & self::$logger->mailer;
 		self::$emailSnooze = & Logger::$emailSnooze;
 
-		self::$fireLogger = new FireLogger;
+		if (isset($_SERVER['HTTP_X_FIRELOGGER']) && $_SERVER['HTTP_X_FIRELOGGER']) {
+			self::$fireLogger = new FireLogger;
+		}
 
 		self::$blueScreen = new BlueScreen;
 		self::$blueScreen->addPanel(function($e) {
@@ -411,16 +419,23 @@ final class Debugger
 				}
 
 			} else {
+				if (self::$loggerMode) {
+					self::log($exception);
+				}
+				
 				if (self::$consoleMode) { // dump to console
+					self::openInBrowser($exception);
 					echo "$exception\n";
 
+				} elseif (self::$ajaxDetected && !self::$fireLogger) { // AJAX without FireLogger
+					self::$blueScreen->render($exception);
 				} elseif ($htmlMode) { // dump to browser
 					self::$blueScreen->render($exception);
 					if ($drawBar && self::$bar) {
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
+				} elseif (!self::fireLog($exception, self::ERROR) && !self::$loggerMode) { // AJAX with FireLogger or non-HTML mode
 					self::log($exception);
 				}
 			}
@@ -637,13 +652,46 @@ final class Debugger
 
 
 	/**
+	 * Open blue screen in browser
+	 * @param \Exception
+	 * @author Ondřej Mirtes
+	 */
+	protected static function openInBrowser($exception)
+	{
+		if (self::$consoleMode && self::$browser) {
+			try {
+				if (!self::$loggerMode) {
+					self::log($exception);
+				}
+
+				$hash = md5($exception);
+				foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
+					if (strpos($entry, $hash)) {
+						$file = (string) $entry;
+						break;
+					}
+				}
+
+				if (isset($file)) {
+					exec(sprintf(self::$browser, escapeshellarg('file://' . self::$logDirectory . '/' . $file)));
+					self::$browser = NULL; // open in browser only once
+				}
+			} catch (\Exception $e) {
+				echo $e->getMessage();
+			}
+		}
+	}
+	
+	
+	
+	/**
 	 * Sends message to FireLogger console.
 	 * @param  mixed   message to log
 	 * @return bool    was successful?
 	 */
 	public static function fireLog($message)
 	{
-		if (!self::$productionMode) {
+		if (!self::$productionMode && self::$fireLogger) {
 			return self::$fireLogger->log($message);
 		}
 	}
