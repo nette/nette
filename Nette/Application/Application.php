@@ -99,12 +99,6 @@ class Application extends Nette\Object
 				if (!$request) {
 					$this->onStartup($this);
 
-					// autostarts session
-					$session = $this->context->session;
-					if (!$session->isStarted() && $session->exists()) {
-						$session->start();
-					}
-
 					// routing
 					$router = $this->getRouter();
 

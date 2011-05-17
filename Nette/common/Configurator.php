@@ -320,6 +320,11 @@ class Configurator extends Object
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class($context);
 		$application->catchExceptions = $container->params['productionMode'];
+		if ($container->session->exists()) {
+			$application->onStartup[] = function() use ($container) {
+				$container->session->start(); // opens already started session
+			};
+		}
 		return $application;
 	}
 
