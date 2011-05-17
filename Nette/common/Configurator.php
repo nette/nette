@@ -38,7 +38,7 @@ class Configurator extends Object
 		self::$instance = $this;
 		$this->container = new $containerClass;
 
-		foreach (get_class_methods(get_called_class()) as $name) {
+		foreach (get_class_methods($this) as $name) {
 			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
 				$this->container->addService(strtolower($name[13]) . substr($name, 14), array(get_called_class(), $name));
 			}
@@ -133,10 +133,10 @@ class Configurator extends Object
 					$key = $m[1];
 				}
 
-				if (method_exists(__CLASS__, "createService$key")) {
+				if (method_exists(get_called_class(), "createService$key")) {
 					$container->removeService($key);
 					if (!is_scalar($def) && !isset($def['factory']) && !isset($def['class'])) {
-						$def['factory'] = array(__CLASS__, "createService$key");
+						$def['factory'] = array(get_called_class(), "createService$key");
 					}
 				}
 
