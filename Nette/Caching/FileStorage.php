@@ -69,25 +69,12 @@ class FileStorage extends Nette\Object implements ICacheStorage
 
 	public function __construct($dir)
 	{
-		if (self::$useDirectories === NULL) {
-			// checks whether directory is writable
-			$uniq = uniqid('_', TRUE);
-			umask(0000);
-			if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
-				throw new \InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
-			}
-
-			// tests subdirectory mode
-			self::$useDirectories = !ini_get('safe_mode');
-			if (!self::$useDirectories && @file_put_contents("$dir/$uniq/_", '') !== FALSE) { // @ - error is expected
-				self::$useDirectories = TRUE;
-				unlink("$dir/$uniq/_");
-			}
-			@rmdir("$dir/$uniq"); // @ - directory may not already exist
+		if (!is_dir($dir)) {
+			throw new DirectoryNotFoundException("Directory '$dir' is not found or is not directory.");
 		}
 
 		$this->dir = $dir;
-		$this->useDirs = (bool) self::$useDirectories;
+		$this->useDirs = self::$useDirectories === NULL ? !ini_get('safe_mode') : (bool) self::$useDirectories;
 
 		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
 			$this->clean(array());
