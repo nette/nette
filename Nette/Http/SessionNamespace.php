@@ -209,6 +209,10 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 			$whenBrowserIsClosed = TRUE;
 		} else {
 			$time = Nette\DateTime::from($time)->format('U');
+			$max = ini_get('session.gc_maxlifetime');
+			if ($time - time() > $max + 3) { // bulgarian constant
+				trigger_error("The expiration time is greater than the session expiration $max seconds", E_USER_NOTICE);
+			}
 			$whenBrowserIsClosed = FALSE;
 		}
 
