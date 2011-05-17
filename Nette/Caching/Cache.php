@@ -124,6 +124,18 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 	/**
+	 * Exists item in cache?
+	 * @param  mixed key
+	 * @return bool
+	 */
+	public function has($key)
+	{
+		return $this->load($key) !== NULL;
+	}
+
+
+
+	/**
 	 * Writes item into the cache.
 	 * Dependencies are:
 	 * - Cache::PRIORITY => (int) priority
@@ -288,7 +300,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function offsetExists($key)
 	{
-		return $this->load($key) !== NULL;
+		return $this->has($key);
 	}
 
 
