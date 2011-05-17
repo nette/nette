@@ -22,11 +22,17 @@ use Nette;
  */
 final class SessionNamespace extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
+	/** @var Session */
+	private $session;
+
+	/** @var string */
+	private $name;
+
 	/** @var array  session data storage */
 	private $data;
 
 	/** @var array  session metadata storage */
-	private $meta;
+	private $meta = FALSE;
 
 	/** @var bool */
 	public $warnOnUndefined = FALSE;
@@ -36,10 +42,28 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	/**
 	 * Do not call directly. Use Session::getNamespace().
 	 */
-	public function __construct(& $data, & $meta)
+	public function __construct(Session $session, $name)
 	{
-		$this->data = & $data;
-		$this->meta = & $meta;
+		if (!is_string($name)) {
+			throw new Nette\InvalidArgumentException("Session namespace must be a string, " . gettype($name) ." given.");
+		}
+
+		$this->session = $session;
+		$this->name = $name;
+	}
+
+
+
+	/**
+	 * Do not call directly. Use Session::getNamespace().
+	 */
+	private function start()
+	{
+		if ($this->meta === FALSE) {
+			$this->session->start();
+			$this->data = & $_SESSION['__NF']['DATA'][$this->name];
+			$this->meta = & $_SESSION['__NF']['META'][$this->name];
+		}
 	}
 
 
@@ -50,6 +74,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function getIterator()
 	{
+		$this->start();
 		if (isset($this->data)) {
 			return new \ArrayIterator($this->data);
 		} else {
@@ -67,6 +92,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __set($name, $value)
 	{
+		$this->start();
 		$this->data[$name] = $value;
 		if (is_object($value)) {
 			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
@@ -82,6 +108,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function &__get($name)
 	{
+		$this->start();
 		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
 			trigger_error("The variable '$name' does not exist in session namespace", E_USER_NOTICE);
 		}
@@ -98,6 +125,9 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __isset($name)
 	{
+		if ($this->session->exists()) {
+			$this->start();
+		}
 		return isset($this->data[$name]);
 	}
 
@@ -110,6 +140,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function __unset($name)
 	{
+		$this->start();
 		unset($this->data[$name], $this->meta[$name]);
 	}
 
@@ -172,6 +203,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function setExpiration($time, $variables = NULL)
 	{
+		$this->start();
 		if (empty($time)) {
 			$time = NULL;
 			$whenBrowserIsClosed = TRUE;
@@ -206,6 +238,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function removeExpiration($variables = NULL)
 	{
+		$this->start();
 		if ($variables === NULL) {
 			// from entire namespace
 			unset($this->meta['']['T'], $this->meta['']['B']);
@@ -228,6 +261,7 @@ final class SessionNamespace extends Nette\Object implements \IteratorAggregate,
 	 */
 	public function remove()
 	{
+		$this->start();
 		$this->data = NULL;
 		$this->meta = NULL;
 	}

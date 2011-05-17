@@ -30,10 +30,3 @@ Assert::true( $session->hasNamespace('trees'), 'hasNamespace() should have retur
 
 $namespace = $session->getNamespace('default');
 Assert::true( $namespace instanceof SessionNamespace );
-
-try {
-	$namespace = $session->getNamespace('');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('InvalidArgumentException', 'Session namespace must be a non-empty string.', $e );
-}

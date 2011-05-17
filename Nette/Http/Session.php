@@ -283,17 +283,9 @@ class Session extends Nette\Object
 	 * @return SessionNamespace
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function getNamespace($namespace, $class = 'Nette\Http\SessionNamespace')
+	public function getNamespace($name, $class = 'Nette\Http\SessionNamespace')
 	{
-		if (!is_string($namespace) || $namespace === '') {
-			throw new Nette\InvalidArgumentException('Session namespace must be a non-empty string.');
-		}
-
-		if (!self::$started) {
-			$this->start();
-		}
-
-		return new $class($_SESSION['__NF']['DATA'][$namespace], $_SESSION['__NF']['META'][$namespace]);
+		return new $class($this, $name);
 	}
 
 
@@ -303,13 +295,13 @@ class Session extends Nette\Object
 	 * @param  string
 	 * @return bool
 	 */
-	public function hasNamespace($namespace)
+	public function hasNamespace($name)
 	{
 		if ($this->exists() && !self::$started) {
 			$this->start();
 		}
 
-		return !empty($_SESSION['__NF']['DATA'][$namespace]);
+		return !empty($_SESSION['__NF']['DATA'][$name]);
 	}
 
 
