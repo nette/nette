@@ -38,9 +38,9 @@ class Configurator extends Object
 		self::$instance = $this;
 		$this->container = new $containerClass;
 
-		foreach (get_class_methods(__CLASS__) as $name) {
+		foreach (get_class_methods(get_called_class()) as $name) {
 			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
-				$this->container->addService(strtolower($name[13]) . substr($name, 14), array(__CLASS__, $name));
+				$this->container->addService(strtolower($name[13]) . substr($name, 14), array(get_called_class(), $name));
 			}
 		}
 
