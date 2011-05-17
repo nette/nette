@@ -24,8 +24,33 @@ use Nette,
  */
 class Configurator extends Object
 {
+	public static $instance;
+
 	/** @var string */
 	public $defaultConfigFile = '%appDir%/config.neon';
+
+	/** @var DI\Container */
+	private $container;
+
+
+	public function __construct($containerClass = 'Nette\DI\Container')
+	{
+		self::$instance = $this;
+		$this->container = new $containerClass;
+
+		foreach (get_class_methods(__CLASS__) as $name) {
+			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
+				$this->container->addService(strtolower($name[13]) . substr($name, 14), array(__CLASS__, $name));
+			}
+		}
+
+		$this->container->params = new ArrayHash;
+		defined('APP_DIR') && $this->container->params['appDir'] = realpath(APP_DIR);
+		defined('LIBS_DIR') && $this->container->params['libsDir'] = realpath(LIBS_DIR);
+		defined('TEMP_DIR') && $this->container->params['tempDir'] = realpath(TEMP_DIR);
+		$this->container->params['productionMode'] = self::detectProductionMode();
+		$this->container->params['consoleMode'] = PHP_SAPI === 'cli';
+	}
 
 
 
@@ -33,24 +58,9 @@ class Configurator extends Object
 	 * Get initial instance of DI container.
 	 * @return DI\Container
 	 */
-	public static function createContainer($containerClass = 'Nette\DI\Container')
+	public function getContainer()
 	{
-		$container = new $containerClass;
-
-		foreach (get_class_methods(__CLASS__) as $name) {
-			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
-				$container->addService(strtolower($name[13]) . substr($name, 14), array(__CLASS__, $name));
-			}
-		}
-
-		$container->params = new ArrayHash;
-		defined('APP_DIR') && $container->params['appDir'] = realpath(APP_DIR);
-		defined('LIBS_DIR') && $container->params['libsDir'] = realpath(LIBS_DIR);
-		defined('TEMP_DIR') && $container->params['tempDir'] = realpath(TEMP_DIR);
-		$container->params['productionMode'] = self::detectProductionMode();
-		$container->params['consoleMode'] = PHP_SAPI === 'cli';
-
-		return $container;
+		return $this->container;
 	}
 
 
@@ -59,11 +69,12 @@ class Configurator extends Object
 	 * Loads configuration from file and process it.
 	 * @return void
 	 */
-	public function loadConfig(DI\Container $container, $file, $section = NULL)
+	public function loadConfig($file, $section = NULL)
 	{
 		if ($file === NULL) {
 			$file = $this->defaultConfigFile;
 		}
+		$container = $this->container;
 		$file = $container->expand($file);
 		if (!is_file($file)) {
 			$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility

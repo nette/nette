@@ -64,7 +64,7 @@ final class Environment
 	public static function getConfigurator()
 	{
 		if (self::$configurator === NULL) {
-			self::$configurator = new Configurator;
+			self::$configurator = Configurator::$instance ?: new Configurator;
 		}
 		return self::$configurator;
 	}
@@ -196,7 +196,7 @@ final class Environment
 	public static function getContext()
 	{
 		if (self::$context === NULL) {
-			self::$context = self::getConfigurator()->createContainer();
+			self::$context = self::getConfigurator()->getContainer();
 		}
 		return self::$context;
 	}
@@ -333,7 +333,7 @@ final class Environment
 	 */
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
-		self::getConfigurator()->loadConfig(self::getContext(), $file, $section);
+		self::getConfigurator()->loadConfig($file, $section);
 		return self::getContext()->params;
 	}
 
