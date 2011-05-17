@@ -39,37 +39,26 @@ class ContainerBuilder extends Nette\Object
 	public function addDefinitions(IContainer $container, array $definitions)
 	{
 		foreach ($definitions as $name => $definition) {
-			if (is_string($definition)) {
+			if (!is_array($definition)) {
 				$definition = array('class' => $definition);
 			}
-			array_walk_recursive($definition, function(&$val) use ($container) {
-				$val = $container->expand($val);
-			});
-			list($factory, $tags) = $this->parseDefinition($definition);
-			$container->addService($name, $factory, $tags);
-		}
-	}
 
+			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
+			$expander = function(&$val) use ($container) {
+				$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
+			};
 
-
-	private function parseDefinition(array $definition)
-	{
-		$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
-
-		if (isset($definition['class'])) {
-			$factory = $definition['class'];
-			$methods = isset($definition['methods']) ? $definition['methods'] : array();
-
-			if ($methods || $arguments) {
-				$factory = function($container) use ($factory, $arguments, $methods) {
-					$expander = function(&$val) use ($container) {
-						$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $val;
-					};
-
-					array_walk_recursive($arguments, $expander);
-					$service = $arguments
-						? Nette\Reflection\ClassType::from($factory)->newInstanceArgs($arguments)
-						: new $factory;
+			if (isset($definition['class'])) {
+				$class = $definition['class'];
+				$methods = isset($definition['methods']) ? $definition['methods'] : array();
+				$factory = function($container) use ($class, $arguments, $methods, $expander) {
+					$class = $container->expand($class);
+					if ($arguments) {
+						array_walk_recursive($arguments, $expander);
+						$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
+					} else {
+						$service = new $class;
+					}
 
 					array_walk_recursive($methods, $expander);
 					foreach ($methods as $method) {
@@ -78,24 +67,26 @@ class ContainerBuilder extends Nette\Object
 
 					return $service;
 				};
-			}
 
-		} elseif (isset($definition['factory'])) {
-			$factory = $definition['factory'];
-			if ($arguments) {
-				$factory = function($container) use ($factory, $arguments) {
-					array_walk_recursive($arguments, function(&$val) use ($container) {
-						$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $val;
-					});
-					array_unshift($arguments, $container);
+			} elseif (isset($definition['factory'])) {
+				array_unshift($arguments, $definition['factory']);
+				$factory = function($container) use ($arguments, $expander) {
+					array_walk_recursive($arguments, $expander);
+					$factory = $arguments[0]; $arguments[0] = $container;
 					return call_user_func_array($factory, $arguments);
 				};
+			} else {
+				throw new Nette\InvalidStateException("Factory method is not specified.");
 			}
-		} else {
-			throw new Nette\InvalidStateException("Factory method is not specified.");
-		}
 
-		return array($factory, isset($definition['tags']) ? (array) $definition['tags'] : NULL);
+			if (isset($definition['tags'])) {
+				$tags = (array) $definition['tags'];
+				array_walk_recursive($tags, $expander);
+			} else {
+				$tags = NULL;
+			}
+			$container->addService($name, $factory, $tags);
+		}
 	}
 
 }

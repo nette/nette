@@ -63,10 +63,13 @@ $builder->addDefinitions($container, array(
 		)
 	),
 	'two' => array(
-		'factory' => 'Service::create',
+		'factory' => '%serviceClass%::create',
 		'arguments' => array(
 			'%arg1%', '@one',
 		),
+	),
+	'three' => array(
+		'factory' => array('%serviceClass%', 'create'),
 	),
 ));
 
@@ -78,14 +81,16 @@ Assert::same( array('one' => array('attrs')), $container->getServiceNamesByTag('
 Assert::true( $container->getService('two') instanceof Service );
 Assert::equal( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
 
+Assert::true( $container->getService('three') instanceof Service );
 
 
+$builder->addDefinitions($container, array(
+	'bad' => array(
+		'class' => '%missing%',
+	)
+));
 try {
-	$builder->addDefinitions($container, array(
-		'three' => array(
-			'class' => '%missing%',
-		)
-	));
+	$container->getService('bad');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\InvalidArgumentException', "Missing parameter 'missing'.", $e );
