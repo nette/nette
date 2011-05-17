@@ -348,7 +348,7 @@ class Configurator extends Object
 
 
 	/**
-	 * @return Nette\Http\Request
+	 * @return Nette\Http\Response
 	 */
 	public static function createServiceHttpResponse()
 	{
@@ -418,7 +418,6 @@ class Configurator extends Object
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 		return new Nette\Caching\Storages\PhpFileStorage($dir);
-		return new Nette\Caching\Storages\PhpFileStorage($container->expand('%tempDir%/cache'));
 	}
 
 
