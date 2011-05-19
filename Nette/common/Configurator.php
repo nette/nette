@@ -39,7 +39,7 @@ class Configurator extends Object
 		$this->container = new $containerClass;
 
 		foreach (get_class_methods($this) as $name) {
-			if ($name !== __FUNCTION__ && substr($name, 0, 13) === 'createService' ) {
+			if (substr($name, 0, 13) === 'createService' ) {
 				$this->container->addService(strtolower($name[13]) . substr($name, 14), array(get_called_class(), $name));
 			}
 		}
