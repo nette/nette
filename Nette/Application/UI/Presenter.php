@@ -1238,7 +1238,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Gets the context.
+	 * Set the context.
 	 * @return Presenter  provides a fluent interface
 	 */
 	public function setContext(Nette\DI\IContainer $context)
