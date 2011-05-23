@@ -1261,6 +1261,18 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
+	 * Gets the service object by name.
+	 * @param  string
+	 * @return mixed.
+	 */
+	final public function getService($name)
+	{
+		return $this->context->getService($name);
+	}
+
+
+
+	/**
 	 * @return Nette\Http\Request
 	 */
 	protected function getHttpRequest()

@@ -76,7 +76,7 @@ class ContainerBuilder extends Nette\Object
 					return call_user_func_array($factory, $arguments);
 				};
 			} else {
-				throw new Nette\InvalidStateException("Factory method is not specified.");
+				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
 			}
 
 			if (isset($definition['tags'])) {
@@ -119,7 +119,7 @@ class ContainerBuilder extends Nette\Object
 				$factory = "function(\$container) {\n\treturn call_user_func(\n\t\t$factory,\n\t\t\$container"
 					. ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n}";
 			} else {
-				throw new Nette\InvalidStateException("Factory method is not specified.");
+				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
 			}
 
 			$tags = isset($definition['tags']) ? $this->argsExport(array($definition['tags'])) : 'NULL';
