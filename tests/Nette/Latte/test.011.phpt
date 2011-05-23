@@ -22,6 +22,7 @@ require __DIR__ . '/Template.inc';
 
 
 TestHelpers::purge(TEMP_DIR);
+restore_error_handler();
 
 
 

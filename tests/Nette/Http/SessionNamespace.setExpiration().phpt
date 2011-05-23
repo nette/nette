@@ -16,8 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-ob_start();
-
 $session = Nette\Environment::getSession();
 $session->setExpiration('+10 seconds');
 
@@ -51,8 +49,9 @@ Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );
 
 
 // small expiration
-ob_start();
-$namespace->setExpiration(100);
-Assert::match("
-Notice: The expiration time is greater than the session expiration 10 seconds in %a% on line %d%
-", ob_get_clean());
+try {
+	$namespace->setExpiration(100);
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('TestErrorException', "The expiration time is greater than the session expiration 10 seconds in %a%:%d%", $e );
+}

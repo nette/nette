@@ -761,7 +761,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 					}
 					$inside = TRUE;
 				} else {
-					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->parser->line);
+					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->parser ? $this->parser->line : NULL);
 				}
 			} else {
 				if ($token['value'] === ':' || $token['value'] === ',') {
