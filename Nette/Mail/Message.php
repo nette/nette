@@ -354,7 +354,6 @@ class Message extends MimePart
 	public function getMailer()
 	{
 		if ($this->mailer === NULL) {
-			/*5.2* if (is_string(self::$defaultMailer) && $a = strrpos(self::$defaultMailer, '\\')) self::$defaultMailer = substr(self::$defaultMailer, $a + 1); // fix namespace*/
 			$this->mailer = is_object(self::$defaultMailer) ? self::$defaultMailer : new static::$defaultMailer;
 		}
 		return $this->mailer;

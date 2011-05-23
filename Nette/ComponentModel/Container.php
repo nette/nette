@@ -203,7 +203,6 @@ class Container extends Component implements IContainer
 			$iterator = new \RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
-			/*5.2* if ($a = strrpos($filterType, '\\')) $filterType = substr($filterType, $a + 1); // fix namespace*/
 			$iterator = new Nette\Iterators\InstanceFilter($iterator, $filterType);
 		}
 		return $iterator;
