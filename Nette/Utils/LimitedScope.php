@@ -46,7 +46,11 @@ final class LimitedScope
 			self::$vars = func_get_arg(1);
 			extract(self::$vars);
 		}
-		return eval('?>' . func_get_arg(0));
+		$res = eval('?>' . func_get_arg(0));
+		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
+			throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
+		}
+		return $res;
 	}
 
 
