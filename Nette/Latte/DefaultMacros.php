@@ -139,9 +139,6 @@ class DefaultMacros extends Nette\Object
 	/** @var bool */
 	private $extends;
 
-	/** @var string */
-	private $uniq;
-
 	/** @var int */
 	private $cacheCounter;
 
@@ -164,7 +161,6 @@ class DefaultMacros extends Nette\Object
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
-		$this->uniq = Strings::random();
 		$this->cacheCounter = 0;
 	}
 
@@ -206,7 +202,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// named blocks
 		if ($this->namedBlocks) {
-			$uniq = $this->uniq;
+			$uniq = $this->parser->templateId;
 			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
 				$code = & $this->namedBlocks[$name];
 				$namere = preg_quote($name, '#');
@@ -231,7 +227,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		// internal state holder
 		$s = "<?php\n"
 			. '$_l = Nette\Latte\DefaultMacros::initRuntime($template, '
-			. var_export($this->extends, TRUE) . ', ' . var_export($this->uniq, TRUE) . '); unset($_extends);'
+			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
 			. "\n?>" . $s;
 	}
 
@@ -323,7 +319,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		} else { // include "file"
 			$destination = $this->writer->formatWord($destination);
 			$cmd = 'Nette\Latte\DefaultMacros::includeTemplate(' . $destination . ', '
-				. $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
+				. $params . '$template->getParams(), $_l->templates[' . var_export($this->parser->templateId, TRUE) . '])';
 			return $modifiers
 				? 'echo ' . $this->writer->formatModifiers($cmd . '->__toString(TRUE)', $modifiers, $this->parser->escape)
 				: $cmd . '->render()';
@@ -473,7 +469,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroCache($content)
 	{
 		return 'if (Nette\Latte\DefaultMacros::createCache($netteCacheStorage, '
-			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
+			. var_export($this->parser->templateId . ':' . $this->cacheCounter++, TRUE)
 			. ', $_l->g->caches' . $this->writer->formatArray($content, ', ') . ')) {';
 	}
 
@@ -792,7 +788,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 * @param  string
 	 * @return stdClass
 	 */
-	public static function initRuntime($template, $extends, $realFile)
+	public static function initRuntime($template, $extends, $templateId)
 	{
 		$local = (object) NULL;
 
@@ -801,7 +797,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$local->blocks = & $template->_l->blocks;
 			$local->templates = & $template->_l->templates;
 		}
-		$local->templates[$realFile] = $template;
+		$local->templates[$templateId] = $template;
 		$local->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
 		unset($template->_l, $template->_extends);
 

@@ -59,6 +59,9 @@ class Parser extends Nette\Object
 	/** @var string  context-aware escaping function */
 	public $escape;
 
+	/** @var string */
+	public $templateId;
+
 	/** @internal Context-aware escaping states */
 	const CONTEXT_TEXT = 'text',
 		CONTEXT_CDATA = 'cdata',
@@ -87,6 +90,7 @@ class Parser extends Nette\Object
 		$s = str_replace("\r\n", "\n", $s);
 		$s = "\n" . $s;
 
+		$this->templateId = Strings::random();
 		$this->input = & $s;
 		$this->offset = 0;
 		$this->output = '';
