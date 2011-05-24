@@ -66,7 +66,7 @@ class DefaultMacros extends Nette\Object
 		'/snippet' => '<?php %:macroSnippetEnd% ?>',
 
 		'cache' => '<?php %:macroCache% ?>',
-		'/cache' => '<?php $_l->tmp = array_pop($_l->g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); } ?>',
+		'/cache' => '<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); } ?>',
 
 		'if' => '<?php if (%%): ?>',
 		'elseif' => '<?php elseif (%%): ?>',
@@ -226,7 +226,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// internal state holder
 		$s = "<?php\n"
-			. '$_l = Nette\Latte\DefaultMacros::initRuntime($template, '
+			. 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
 			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
 			. "\n?>" . $s;
 	}
@@ -470,7 +470,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		return 'if (Nette\Latte\DefaultMacros::createCache($netteCacheStorage, '
 			. var_export($this->parser->templateId . ':' . $this->cacheCounter++, TRUE)
-			. ', $_l->g->caches' . $this->writer->formatArray($content, ', ') . ')) {';
+			. ', $_g->caches' . $this->writer->formatArray($content, ', ') . ')) {';
 	}
 
 
@@ -790,29 +790,31 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public static function initRuntime($template, $extends, $templateId)
 	{
-		$local = (object) NULL;
-
-		// extends support
+		// local storage
 		if (isset($template->_l)) {
-			$local->blocks = & $template->_l->blocks;
-			$local->templates = & $template->_l->templates;
+			$local = $template->_l;
+			unset($template->_l);
+		} else {
+		$local = (object) NULL;
 		}
 		$local->templates[$templateId] = $template;
-		$local->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
-		unset($template->_l, $template->_extends);
 
 		// global storage
 		if (!isset($template->_g)) {
 			$template->_g = (object) NULL;
 		}
-		$local->g = $template->_g;
+		$global = $template->_g;
+
+		// extends support
+		$local->extends = is_bool($extends) ? $extends : (empty($template->_extends) ? FALSE : $template->_extends);
+		unset($template->_extends);
 
 		// cache support
-		if (!empty($local->g->caches)) {
-			end($local->g->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
+		if (!empty($global->caches)) {
+			end($global->caches)->dependencies[Nette\Caching\Cache::FILES][] = $template->getFile();
 		}
 
-		return $local;
+		return array($local, $global);
 	}
 
 
