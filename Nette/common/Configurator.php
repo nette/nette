@@ -87,7 +87,7 @@ class Configurator extends Object
 			}
 		}
 
-		$cache = new Cache($container->templateCacheStorage, __CLASS__);
+		$cache = new Cache($container->templateCacheStorage, str_replace('\\', '.', __CLASS__));
 		$cacheKey = array((array) $container->params, $file, $section);
 		$cached = $cache->load($cacheKey);
 		if ($cached) {
