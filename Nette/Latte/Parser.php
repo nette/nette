@@ -23,7 +23,7 @@ use Nette,
  */
 class Parser extends Nette\Object
 {
-	/** regular expression for single & double quoted PHP string */
+	/** @internal regular expression for single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
 	/** @internal special HTML tag or attribute prefix */
