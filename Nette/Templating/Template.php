@@ -366,7 +366,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 * @param  string
 	 * @return string
 	 */
-	public static function optimizePhp($source, $lineLength = 80)
+	public static function optimizePhp($source, $lineLength = 80, $existenceOfThisParameterSolvesDamnBugInPHP535 = NULL)
 	{
 		$res = $php = '';
 		$lastChar = ';';
