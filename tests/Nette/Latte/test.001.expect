@@ -197,16 +197,6 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 </ul>
 
 <b>bold</b> normal
-<UL TITLE="BLOCK + IF + FOREACH">
-	<LI>JOHN</LI>
-	<LI>MARY</LI>
-	<LI>PAUL</LI>
-</UL>
-
-3
-
-7
-
 test
 
 { }

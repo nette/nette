@@ -120,7 +120,7 @@ class Parser extends Nette\Object
 		$this->output .= substr($this->input, $this->offset);
 
 		foreach ($this->htmlNodes as $node) {
-			if (!$node instanceof MacroNode && !empty($node->attrs)) {
+			if (!empty($node->attrs)) {
 				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::HTML_PREFIX
 					. implode(' and ' . self::HTML_PREFIX, array_keys($node->attrs)) . ".", 0, $this->line);
 			}
@@ -155,12 +155,7 @@ class Parser extends Nette\Object
 			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtmlComment';
 
 		} elseif (empty($matches['closing'])) { // <tag
-			if (Strings::startsWith($matches['tag'], self::HTML_PREFIX)) {
-				$node = new MacroNode($matches['tag']);
-			} else {
-				$node = new HtmlNode($matches['tag']);
-			}
-			$this->htmlNodes[] = $node;
+			$this->htmlNodes[] = $node = new HtmlNode($matches['tag']);
 			$node->offset = strlen($this->output);
 			$this->context = self::CONTEXT_TAG;
 			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
@@ -169,9 +164,6 @@ class Parser extends Nette\Object
 			do {
 				$node = array_pop($this->htmlNodes);
 				if (!$node) {
-					if (Strings::startsWith($matches['tag'], self::HTML_PREFIX)) {
-						throw new ParseException("End tag for element '$matches[tag]' which is not open.", 0, $this->line);
-					}
 					$node = new HtmlNode($matches['tag']);
 				}
 			} while (strcasecmp($node->name, $matches['tag']));
@@ -230,18 +222,11 @@ class Parser extends Nette\Object
 					. (isset($matches['tagnewline']) ? $matches['tagnewline'] : '');
 			}
 
-			if ($node instanceof MacroNode || !empty($node->attrs)) {
-				if ($node instanceof MacroNode) {
-					$code = $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, $node->closing);
-					if ($isEmpty) {
-						$code .= $this->tagMacro(substr($node->name, strlen(self::HTML_PREFIX)), $node->attrs, TRUE);
-					}
-				} else {
-					$code = substr($this->output, $node->offset) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
-					$code = $this->attrsMacro($code, $node->attrs, $node->closing);
-					if ($isEmpty) {
-						$code = $this->attrsMacro($code, $node->attrs, TRUE);
-					}
+			if (!empty($node->attrs)) {
+				$code = substr($this->output, $node->offset) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
+				$code = $this->attrsMacro($code, $node->attrs, $node->closing);
+				if ($isEmpty) {
+					$code = $this->attrsMacro($code, $node->attrs, TRUE);
 				}
 				$this->output = substr_replace($this->output, $code, $node->offset);
 				$matches[0] = ''; // remove from output
@@ -265,13 +250,10 @@ class Parser extends Nette\Object
 		} else { // HTML attribute
 			$name = $matches['attr'];
 			$value = isset($matches['value']) ? $matches['value'] : '';
-
-			// special attribute?
-			if ($isSpecial = Strings::startsWith($name, self::HTML_PREFIX)) {
-				$name = substr($name, strlen(self::HTML_PREFIX));
-			}
 			$node = end($this->htmlNodes);
-			if ($isSpecial || $node instanceof MacroNode) {
+
+			if (Strings::startsWith($name, self::HTML_PREFIX)) {
+				$name = substr($name, strlen(self::HTML_PREFIX));
 				if ($value === '"' || $value === "'") {
 					if ($matches = $this->match('~(.*?)' . $value . '~xsi')) { // overwrites $matches
 						$value = $matches[1];
@@ -443,36 +425,6 @@ class Parser extends Nette\Object
 					return $handler->formatMacroArgs($node->args);
 				}
 			}/*5.2* )*/
-		);
-	}
-
-
-
-	/**
-	 * Expands macro <n:tag attr> and appends new node (experimental).
-	 * @param  string
-	 * @param  array
-	 * @param  bool
-	 * @return string
-	 */
-	public function tagMacro($name, $attrs, $closing)
-	{
-		$knownTags = array(
-			'include' => 'block',
-			'for' => 'each',
-			'block' => 'name',
-			'if' => 'cond',
-			'elseif' => 'cond',
-		);
-		if (!isset($this->macros[$name])) {
-			throw new ParseException("Unknown tag-macro <$name>", 0, $this->line);
-		}
-		return $this->macro(
-			$closing ? "/$name" : $name,
-			isset($knownTags[$name], $attrs[$knownTags[$name]])
-				? $attrs[$knownTags[$name]]
-				: preg_replace("#'([^\\'$]+)'#", '$1', substr(var_export($attrs, TRUE), 8, -1)),
-			isset($attrs['modifiers']) ? $attrs['modifiers'] : ''
 		);
 	}
 

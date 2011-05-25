@@ -52,5 +52,3 @@ Notice: Undefined variable: person in %a% on line %d%
 <p n:if="true">
 	<div><p>true</div>
 </p>
-
-<n:default vary=3>
