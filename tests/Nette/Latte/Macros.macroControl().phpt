@@ -15,16 +15,16 @@ use Nette\Latte\DefaultMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new DefaultMacros;
 $parser = new Nette\Latte\Parser;
-$macros->initialize($parser);
+DefaultMacros::install($parser);
+function item1($a) { return $a[1]; }
 
 // {control ...}
-Assert::match( '%a% $control->getWidget("form"); %a%->render()',  $macros->macroControl('form', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->render()',  $macros->macroControl('form', 'filter') );
-Assert::match( 'if (is_object($form)) %a% else %a% $control->getWidget($form); %a%->render()',  $macros->macroControl('$form', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->renderType()',  $macros->macroControl('form:type', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->{"render$type"}()',  $macros->macroControl('form:$type', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->renderType(\'param\')',  $macros->macroControl('form:type param', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->renderType(array(\'param\' => 123))',  $macros->macroControl('form:type param => 123', '') );
-Assert::match( '%a% $control->getWidget("form"); %a%->renderType(array(\'param\' => 123))',  $macros->macroControl('form:type, param => 123', '') );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->render() ?>',  item1($parser->expandMacro('control', 'form', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->render() ?>',  item1($parser->expandMacro('control', 'form', 'filter')) );
+Assert::match( '<?php if (is_object($form)) %a% else %a% $control->getWidget($form); %a%->render() ?>',  item1($parser->expandMacro('control', '$form', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->renderType() ?>',  item1($parser->expandMacro('control', 'form:type', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->{"render$type"}() ?>',  item1($parser->expandMacro('control', 'form:$type', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->renderType(\'param\') ?>',  item1($parser->expandMacro('control', 'form:type param', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->renderType(array(\'param\' => 123)) ?>',  item1($parser->expandMacro('control', 'form:type param => 123', '')) );
+Assert::match( '<?php %a% $control->getWidget("form"); %a%->renderType(array(\'param\' => 123)) ?>',  item1($parser->expandMacro('control', 'form:type, param => 123', '')) );

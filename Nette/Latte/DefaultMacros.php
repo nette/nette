@@ -49,7 +49,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class DefaultMacros extends Nette\Object
+class DefaultMacros extends Nette\Object implements IMacro
 {
 	/** @var array */
 	public static $defaultMacros = array(
@@ -149,15 +149,27 @@ class DefaultMacros extends Nette\Object
 
 
 
+	public static function install(Parser $parser)
+	{
+		$me = new static;
+		$me->parser = $parser;
+		$me->writer = new PhpWriter;
+
+		foreach (self::$defaultMacros as $name => $foo) {
+			if ($name[0] !== '/') {
+				$parser->addMacro($name, $me);
+			}
+		}
+	}
+
+
+
 	/**
-	 * Initializes parsing.
-	 * @param  Parser
+	 * Initializes before template parsing.
 	 * @return void
 	 */
-	public function initialize($parser)
+	public function initialize()
 	{
-		$this->writer = new PhpWriter;
-		$this->parser = $parser;
 		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
@@ -167,37 +179,39 @@ class DefaultMacros extends Nette\Object
 
 
 	/**
-	 * Finishes parsing.
+	 * Finishes template parsing.
 	 * @param  string
-	 * @return void
+	 * @return
 	 */
 	public function finalize(& $s)
 	{
 		// blocks closing check
 		if (count($this->blocks) === 1) { // auto-close last block
-			$s .= $this->parser->writeMacro('/block');
+			$this->parser->writeMacro('/block');
 		}
 
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
-			$s = '<?php
+			$prolog = '<?php
 if ($_l->extends) {
 	ob_start();
 } elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
-?>' . "\n" . $s . '<?php
+?>' . "\n";
+			$epilog = '<?php
 if ($_l->extends) {
 	ob_end_clean();
 	Nette\Latte\DefaultMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
 }
 ';
 		} else {
-			$s = '<?php
+			$prolog = '<?php
 if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
-?>' . "\n" . $s;
+?>' . "\n";
+			$epilog = '';
 		}
 
 		// named blocks
@@ -221,14 +235,64 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 					}/*5.2* )*/
 				);
 			}
-			$s = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $s;
+			$prolog = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $prolog;
 		}
 
 		// internal state holder
-		$s = "<?php\n"
+		$prolog = "<?php\n"
 			. 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
 			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
-			. "\n?>" . $s;
+			. "\n?>" . $prolog;
+
+		$s = $prolog . $s . $epilog;
+	}
+
+
+
+	/**
+	 * New node is found. Returns FALSE to reject or code.
+	 * @return bool|string
+	 */
+	public function nodeOpened(MacroNode $node)
+	{
+		$node->isEmpty = !isset(self::$defaultMacros["/$node->name"]);
+		return $this->compile($node, $node->name);
+	}
+
+
+
+	/**
+	 * Node is closed. Returns code.
+	 * @return string
+	 */
+	public function nodeClosed(MacroNode $node)
+	{
+		return $this->compile($node, "/$node->name");
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	private function compile(MacroNode $node, $name)
+	{
+		$me = $this;
+		$args = $node->args;
+		$modifiers = $node->modifiers;
+		$code = Strings::replace(
+			self::$defaultMacros[$name],
+			'#%(.*?)%#',
+			/*5.2* callback(*/function ($m) use ($me, $args, $modifiers) {
+				if ($m[1]) {
+					return callback($m[1][0] === ':' ? array($me, substr($m[1], 1)) : $m[1])
+						->invoke($args, $modifiers);
+				} else {
+					return $me->writer->formatArgs($args);
+				}
+			}/*5.2* )*/
+		);
+		return $code;
 	}
 
 

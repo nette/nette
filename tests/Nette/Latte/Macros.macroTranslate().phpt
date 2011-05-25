@@ -15,10 +15,10 @@ use Nette\Latte\DefaultMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new DefaultMacros;
 $parser = new Nette\Latte\Parser;
-$macros->initialize($parser);
+DefaultMacros::install($parser);
+function item1($a) { return $a[1]; }
 
 // {_...}
-Assert::same( '$template->translate(\'var\')',  $macros->macroTranslate('var', '') );
-Assert::same( '$template->filter($template->translate(\'var\'))',  $macros->macroTranslate('var', '|filter') );
+Assert::same( '<?php echo $template->translate(\'var\') ?>',  item1($parser->expandMacro('_', 'var', '')) );
+Assert::same( '<?php echo $template->filter($template->translate(\'var\')) ?>',  item1($parser->expandMacro('_', 'var', '|filter')) );

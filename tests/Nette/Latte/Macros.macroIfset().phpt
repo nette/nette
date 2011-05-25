@@ -15,12 +15,14 @@ use Nette\Latte\DefaultMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new DefaultMacros;
 $parser = new Nette\Latte\Parser;
-$macros->initialize($parser);
+DefaultMacros::install($parser);
+function item1($a) { return $a[1]; }
+
+$prefix = '<?php foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
 
 // {ifset ... }
-Assert::same( '$var',  $macros->macroIfset('$var') );
-Assert::same( '$item->var["test"]',  $macros->macroIfset('$item->var["test"]') );
-Assert::same( '$_l->blocks["block"]',  $macros->macroIfset('#block') );
-Assert::same( '$item->var["#test"], $_l->blocks["block"]',  $macros->macroIfset('$item->var["#test"], #block') );
+Assert::same( '<?php if (isset($var)): ?>',  item1($parser->expandMacro('ifset', '$var')) );
+Assert::same( '<?php if (isset($item->var["test"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["test"]')) );
+Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '#block')) );
+Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["#test"], #block')) );

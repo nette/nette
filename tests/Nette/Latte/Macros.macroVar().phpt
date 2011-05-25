@@ -15,19 +15,19 @@ use Nette\Latte\DefaultMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$macros = new DefaultMacros;
 $parser = new Nette\Latte\Parser;
-$macros->initialize($parser);
+DefaultMacros::install($parser);
+function item1($a) { return $a[1]; }
 
 // {var ... }
-Assert::same( '$var = \'hello\'',  $macros->macroVar('var => hello', '') );
-Assert::same( '$var = 123',  $macros->macroVar('$var => 123', '') );
-Assert::same( '$var = 123',  $macros->macroVar('$var = 123', '') );
-Assert::same( '$var = 123',  $macros->macroVar('$var => 123', 'filter') );
-Assert::same( '$var1 = 123; $var2 = "nette framework"',  $macros->macroVar('var1 = 123, $var2 => "nette framework"', '') );
+Assert::same( '<?php $var = \'hello\' ?>',  item1($parser->expandMacro('var', 'var => hello', '')) );
+Assert::same( '<?php $var = 123 ?>',  item1($parser->expandMacro('var', '$var => 123', '')) );
+Assert::same( '<?php $var = 123 ?>',  item1($parser->expandMacro('var', '$var = 123', '')) );
+Assert::same( '<?php $var = 123 ?>',  item1($parser->expandMacro('var', '$var => 123', 'filter')) );
+Assert::same( '<?php $var1 = 123; $var2 = "nette framework" ?>',  item1($parser->expandMacro('var', 'var1 = 123, $var2 => "nette framework"', '')) );
 
 try {
-	$macros->macroVar('$var => "123', '');
+	item1($parser->expandMacro('var', '$var => "123', ''));
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.', $e );
@@ -35,8 +35,8 @@ try {
 
 
 // {default ...}
-Assert::same( "extract(array('var' => 'hello'), EXTR_SKIP)",  $macros->macroDefault('var => hello', '') );
-Assert::same( "extract(array('var' => 123), EXTR_SKIP)",  $macros->macroDefault('$var => 123', '') );
-Assert::same( "extract(array('var' => 123), EXTR_SKIP)",  $macros->macroDefault('$var = 123', '') );
-Assert::same( "extract(array('var' => 123), EXTR_SKIP)",  $macros->macroDefault('$var => 123', 'filter') );
-Assert::same( "extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP)",  $macros->macroDefault('var1 = 123, $var2 => "nette framework"', '') );
+Assert::same( "<?php extract(array('var' => 'hello'), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', 'var => hello', '')) );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', '$var => 123', '')) );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', '$var = 123', '')) );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', '$var => 123', 'filter')) );
+Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')) );

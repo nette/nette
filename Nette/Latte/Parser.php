@@ -29,9 +29,6 @@ class Parser extends Nette\Object
 	/** @internal special HTML tag or attribute prefix */
 	const N_PREFIX = 'n:';
 
-	/** @var Nette\Templates\ILatteHandler */
-	public $handler;
-
 	/** @var string */
 	private $macroRe;
 
@@ -47,8 +44,11 @@ class Parser extends Nette\Object
 	/** @var strng (for CONTEXT_ATTRIBUTE) */
 	private $quote;
 
-	/** @var array */
-	public $macros;
+	/** @var array of [name => array of IMacro] */
+	private $macros;
+
+	/** @var SplObjectStorage */
+	private $macroHandlers;
 
 	/** @var array of HtmlNode */
 	private $htmlNodes = array();
@@ -75,6 +75,27 @@ class Parser extends Nette\Object
 
 
 
+	public function __construct()
+	{
+		$this->macroHandlers = new \SplObjectStorage;
+	}
+
+
+
+	/**
+	 * Adds new macro
+	 * @param
+	 * @return Parser  provides a fluent interface
+	 */
+	public function addMacro($name, IMacro $macro)
+	{
+		$this->macros[$name][] = $macro;
+		$this->macroHandlers->attach($macro);
+		return $this;
+	}
+
+
+
 	/**
 	 * Process all {macros} and <tags/>.
 	 * @param  string
@@ -93,9 +114,12 @@ class Parser extends Nette\Object
 		$this->offset = 0;
 		$this->output = '';
 		$this->htmlNodes = $this->macroNodes = array();
-		$len = strlen($s);
 
-		$this->handler->initialize($this);
+		foreach ($this->macroHandlers as $handler) {
+			$handler->initialize($this);
+		}
+
+		$len = strlen($s);
 
 		while ($this->offset < $len) {
 			$matches = $this->{"context$this->context"}();
@@ -124,7 +148,9 @@ class Parser extends Nette\Object
 			}
 		}
 
-		$this->handler->finalize($this->output);
+		foreach ($this->macroHandlers as $handler) {
+			$handler->finalize($this->output);
+		}
 
 		if ($this->macroNodes) {
 			throw new ParseException("There are unclosed macros.", 0, $this->line);
@@ -401,7 +427,10 @@ class Parser extends Nette\Object
 			}
 
 			array_pop($this->macroNodes);
-			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
+			if (!$node->args) {
+				$node->args = (string) $args;
+			}
+			$code = $node->close();
 
 		} else { // opening
 			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
@@ -522,28 +551,17 @@ class Parser extends Nette\Object
 	 */
 	public function expandMacro($name, $args, $modifiers = NULL)
 	{
-		if (!isset($this->macros[$name])) {
+		if (empty($this->macros[$name])) {
 			throw new ParseException("Unknown macro {{$name}}", 0, $this->line);
 		}
-
-		$handler = $this->handler;
-		$node = new MacroNode($name, $args, $modifiers);
-		$node->isEmpty = !isset($this->macros["/$name"]);
-
-		$code = Strings::replace(
-			$this->macros[$name],
-			'#%(.*?)%#',
-			/*5.2* callback(*/function ($m) use ($handler, $node) {
-				if ($m[1]) {
-					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
-						->invoke($node->args, $node->modifiers);
-				} else {
-					return $handler->writer->formatArgs($node->args);
-				}
-			}/*5.2* )*/
-		);
-
-		return array($node, $code);
+		foreach (array_reverse($this->macros[$name]) as $macro) {
+			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL);
+			$code = $macro->nodeOpened($node);
+			if ($code !== FALSE) {
+				return array($node, $code);
+			}
+		}
+		throw new ParseException("Unhandled macro {{$name}}", 0, $this->line);
 	}
 
 

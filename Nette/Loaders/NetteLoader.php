@@ -176,6 +176,7 @@ class NetteLoader extends AutoLoader
 		'nette\latte\defaultmacros' => '/Latte/DefaultMacros.php',
 		'nette\latte\engine' => '/Latte/Engine.php',
 		'nette\latte\htmlnode' => '/Latte/HtmlNode.php',
+		'nette\latte\imacro' => '/Latte/IMacro.php',
 		'nette\latte\macronode' => '/Latte/MacroNode.php',
 		'nette\latte\macrotokenizer' => '/Latte/MacroTokenizer.php',
 		'nette\latte\macrotokenizer' => '/Latte/MacroTokenizer.php',

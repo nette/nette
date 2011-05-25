@@ -19,35 +19,50 @@ use Nette;
  * Macro element node.
  *
  * @author     David Grudl
- * @internal
  */
 class MacroNode extends Nette\Object
 {
+	/** @var IMacro */
+	public $macro;
+
 	/** @var string */
 	public $name;
 
 	/** @var bool */
 	public $isEmpty = FALSE;
 
-	/** @var string */
+	/** @var string  raw arguments */
 	public $args;
 
-	/** @var string */
+	/** @var string  raw modifier */
 	public $modifiers;
 
 	/** @var bool */
 	public $closing = FALSE;
 
-	/** @var int */
+	/** @var int @internal */
 	public $offset;
 
+	/** @var MacroNode */
+	public $parentNode;
 
 
-	public function __construct($name, $args = NULL, $modifiers = NULL)
+
+	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL)
 	{
-		$this->name = $name;
-		$this->args = $args;
-		$this->modifiers = $modifiers;
+		$this->macro = $macro;
+		$this->name = (string) $name;
+		$this->args = (string) $args;
+		$this->modifiers = (string) $modifiers;
+		$this->parentNode = $parentNode;
+	}
+
+
+
+	function close()
+	{
+		$this->closing = TRUE;
+		return $this->macro->nodeClosed($this);
 	}
 
 }
