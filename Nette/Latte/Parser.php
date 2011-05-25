@@ -27,7 +27,7 @@ class Parser extends Nette\Object
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
 	/** @internal special HTML tag or attribute prefix */
-	const HTML_PREFIX = 'n:';
+	const N_PREFIX = 'n:';
 
 	/** @var Nette\Templates\ILatteHandler */
 	public $handler;
@@ -121,8 +121,8 @@ class Parser extends Nette\Object
 
 		foreach ($this->htmlNodes as $node) {
 			if (!empty($node->attrs)) {
-				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::HTML_PREFIX
-					. implode(' and ' . self::HTML_PREFIX, array_keys($node->attrs)) . ".", 0, $this->line);
+				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::N_PREFIX
+					. implode(' and ' . self::N_PREFIX, array_keys($node->attrs)) . ".", 0, $this->line);
 			}
 		}
 
@@ -252,8 +252,8 @@ class Parser extends Nette\Object
 			$value = isset($matches['value']) ? $matches['value'] : '';
 			$node = end($this->htmlNodes);
 
-			if (Strings::startsWith($name, self::HTML_PREFIX)) {
-				$name = substr($name, strlen(self::HTML_PREFIX));
+			if (Strings::startsWith($name, self::N_PREFIX)) {
+				$name = substr($name, strlen(self::N_PREFIX));
 				if ($value === '"' || $value === "'") {
 					if ($matches = $this->match('~(.*?)' . $value . '~xsi')) { // overwrites $matches
 						$value = $matches[1];
@@ -499,8 +499,8 @@ class Parser extends Nette\Object
 			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
 		if ($attrs) {
-			throw new ParseException("Unknown macro-attribute " . self::HTML_PREFIX
-				. implode(' and ' . self::HTML_PREFIX, array_keys($attrs)), 0, $this->line);
+			throw new ParseException("Unknown macro-attribute " . self::N_PREFIX
+				. implode(' and ' . self::N_PREFIX, array_keys($attrs)), 0, $this->line);
 		}
 		$s = '';
 		foreach ($left as $item) {
