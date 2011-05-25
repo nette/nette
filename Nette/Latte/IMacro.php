@@ -31,10 +31,9 @@ interface IMacro
 
 	/**
 	 * Finishes template parsing.
-	 * @param  string
-	 * @return
+	 * @return array(prolog, epilog)
 	 */
-	function finalize(& $output);
+	function finalize();
 
 	/**
 	 * New node is found. Returns FALSE to reject or code.

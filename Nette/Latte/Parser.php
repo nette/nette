@@ -155,9 +155,13 @@ class Parser extends Nette\Object
 			}
 		}
 
+		$prologs = $epilogs = '';
 		foreach ($this->macroHandlers as $handler) {
-			$handler->finalize($this->output);
+			$res = $handler->finalize();
+			$prologs .= isset($res[0]) ? "<?php $res[0]\n?>" : '';
+			$epilogs .= isset($res[1]) ? "<?php $res[1]\n?>" : '';
 		}
+		$this->output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $this->output . $epilogs;
 
 		if ($this->macroNodes) {
 			throw new ParseException("There are unclosed macros.", 0, $this->line);

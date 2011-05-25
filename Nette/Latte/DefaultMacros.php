@@ -171,10 +171,9 @@ class DefaultMacros extends Nette\Object implements IMacro
 
 	/**
 	 * Finishes template parsing.
-	 * @param  string
-	 * @return
+	 * @return array(prolog, epilog)
 	 */
-	public function finalize(& $s)
+	public function finalize()
 	{
 		// try close last block
 		try {
@@ -183,51 +182,46 @@ class DefaultMacros extends Nette\Object implements IMacro
 		}
 
 		// internal state holder
-		$epilog = '';
-		$prolog = "<?php\n"
-			. 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
-			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
-			. "\n?>";
+		$epilog = $prolog = array();
+		$prolog[] = 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
+			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);';
 
 		// named blocks
 		if ($this->namedBlocks) {
-			$prolog .= "<?php\n\n";
+			$prolog[] = '';
 			foreach ($this->namedBlocks as $name => $code) {
 				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-				$prolog .= "//\n// block $name\n//\n"
+				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
 					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
 					. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
-					. "\n?>$code<?php\n}}\n\n\n";
+					. "\n?>$code<?php\n}}\n\n";
 			}
-			$prolog .= "//\n// end of blocks\n//\n?>";
+			$prolog[] = "//\n// end of blocks\n//";
 		}
 
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
-			$prolog .= '<?php
+			$prolog[] = '
 if ($_l->extends) {
 	ob_start();
 } elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
-}
-?>' . "\n";
-			$epilog .= '<?php
+}';
+			$epilog[] = '
 if ($_l->extends) {
 	ob_end_clean();
 	Nette\Latte\DefaultMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
-}
-';
+}';
 		} else {
-			$prolog .= '<?php
+			$prolog[] = '
 if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
-}
-?>' . "\n";
+}';
 		}
 
-		$s = $prolog . $s . $epilog;
+		return array(implode("\n", $prolog), implode("\n", $epilog));
 	}
 
 
