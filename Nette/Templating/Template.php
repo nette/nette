@@ -366,7 +366,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 * @param  string
 	 * @return string
 	 */
-	public static function optimizePhp($source)
+	public static function optimizePhp($source, $lineLength = 80)
 	{
 		$res = $php = '';
 		$lastChar = ';';
@@ -393,6 +393,11 @@ abstract class Template extends Nette\Object implements ITemplate
 
 					} elseif ($next) {
 						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1]; // remove last semicolon before ?)
+						if (strlen($res) - strrpos($res, "\n") > $lineLength
+							&& (!is_array($next) || strpos($next[1], "\n") === FALSE)
+						) {
+							$res .= "\n";
+						}
 						$php = '';
 
 					} else { // remove last ?)
