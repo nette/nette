@@ -121,22 +121,29 @@ class Parser extends Nette\Object
 
 		$len = strlen($s);
 
-		while ($this->offset < $len) {
-			$matches = $this->{"context$this->context"}();
+		try {
+			while ($this->offset < $len) {
+				$matches = $this->{"context$this->context"}();
 
-			if (!$matches) { // EOF
-				break;
+				if (!$matches) { // EOF
+					break;
 
-			} elseif (!empty($matches['comment'])) { // {* *}
+				} elseif (!empty($matches['comment'])) { // {* *}
 
-			} elseif (!empty($matches['macro'])) { // {macro}
-				list($macroName, $macroArgs, $macroModifiers) = $this->parseMacro($matches['macro']);
-				$isRightmost = $this->offset >= $len || $this->input[$this->offset] === "\n";
-				$this->writeMacro($macroName, $macroArgs, $macroModifiers, $isRightmost);
+				} elseif (!empty($matches['macro'])) { // {macro}
+					list($macroName, $macroArgs, $macroModifiers) = $this->parseMacro($matches['macro']);
+					$isRightmost = $this->offset >= $len || $this->input[$this->offset] === "\n";
+					$this->writeMacro($macroName, $macroArgs, $macroModifiers, $isRightmost);
 
-			} else { // common behaviour
-				$this->output .= $matches[0];
+				} else { // common behaviour
+					$this->output .= $matches[0];
+				}
 			}
+		} catch (ParseException $e) {
+			if (!$e->sourceLine) {
+				$e->sourceLine = $this->getLine();
+			}
+			throw $e;
 		}
 
 		$this->output .= substr($this->input, $this->offset);
