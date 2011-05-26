@@ -19,7 +19,7 @@ $parser = new Nette\Latte\Parser;
 CoreMacros::install($parser);
 function item1($a) { return $a[1]; }
 
-$prefix = '<?php foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
+$prefix = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
 
 Assert::same( $prefix . '$array) as $value): ?>',  item1($parser->expandMacro('foreach', '$array as $value')) );
 Assert::same( $prefix . '$array) as $key => $value): ?>',  item1($parser->expandMacro('foreach', '$array as $key => $value')) );
