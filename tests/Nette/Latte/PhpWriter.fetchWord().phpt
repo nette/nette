@@ -19,7 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 $latte = new PhpWriter;
 
 $s = '';
-Assert::same( NULL,  $latte->fetchWord($s) );
+Assert::same( FALSE,  $latte->fetchWord($s) );
 Assert::same( '',  $s );
 
 $s = '$1d-,a';

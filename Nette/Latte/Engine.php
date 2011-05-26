@@ -30,7 +30,9 @@ class Engine extends Nette\Object
 	public function __construct()
 	{
 		$this->parser = new Parser;
-		DefaultMacros::install($this->parser);
+		Macros\CoreMacros::install($this->parser);
+		$this->parser->addMacro('cache', new Macros\CacheMacro($this->parser));
+		Macros\UIMacros::install($this->parser);
 	}
 
 

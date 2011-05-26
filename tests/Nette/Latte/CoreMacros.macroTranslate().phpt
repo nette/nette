@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Latte\DefaultMacros::macroTranslate()
+ * Test: Nette\Latte\Macros\CoreMacros::macroTranslate()
  *
  * @author     David Grudl
  * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Latte\DefaultMacros;
+use Nette\Latte\Macros\CoreMacros;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $parser = new Nette\Latte\Parser;
-DefaultMacros::install($parser);
+CoreMacros::install($parser);
 function item1($a) { return $a[1]; }
 
 // {_...}

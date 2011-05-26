@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Latte\DefaultMacros::macroControl()
+ * Test: Nette\Latte\Macros\UIMacros::macroControl()
  *
  * @author     David Grudl
  * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Latte\DefaultMacros;
+use Nette\Latte\Macros\UIMacros;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $parser = new Nette\Latte\Parser;
-DefaultMacros::install($parser);
+UIMacros::install($parser);
 function item1($a) { return $a[1]; }
 
 // {control ...}

@@ -83,7 +83,7 @@ class PhpWriter extends Nette\Object
 			$s = $matches[2];
 			return $matches[1];
 		}
-		return NULL;
+		return FALSE;
 	}
 
 
