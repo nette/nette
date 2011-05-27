@@ -32,6 +32,7 @@
 
 1
 
+
 	&lt;i&gt;Hello&lt;/i&gt;
 
 
@@ -204,3 +205,9 @@ test
 <p class="foo">n:class</p>
 
 <p>n:class empty</p>
+
+<meta />
+<meta />
+<meta />
+<meta />
+<meta />

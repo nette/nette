@@ -175,7 +175,7 @@ class DefaultMacros extends Nette\Object
 	{
 		// blocks closing check
 		if (count($this->blocks) === 1) { // auto-close last block
-			$s .= $this->parser->macro('/block');
+			$s .= $this->parser->writeMacro('/block');
 		}
 
 		// extends support
@@ -186,7 +186,7 @@ if ($_l->extends) {
 } elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
-?>' . $s . '<?php
+?>' . "\n" . $s . '<?php
 if ($_l->extends) {
 	ob_end_clean();
 	Nette\Latte\DefaultMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
@@ -197,7 +197,7 @@ if ($_l->extends) {
 if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
-?>' . $s;
+?>' . "\n" . $s;
 		}
 
 		// named blocks

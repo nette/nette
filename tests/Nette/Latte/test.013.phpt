@@ -53,6 +53,7 @@ EOD
 
 
 Assert::match(<<<EOD
+
 qwerty
 
 EOD
@@ -85,7 +86,6 @@ EOD
 ));
 
 
-/* TODO
 Assert::match(<<<EOD
 qwerty
 
@@ -99,20 +99,3 @@ qwerty
 
 EOD
 ));
-
-
-
-Assert::match(<<<EOD
-qwerty
-
-EOD
-
-, $template->render(<<<EOD
-{* comment
-*}
-{contentType text/plain}
-qwerty
-
-EOD
-));
-*/

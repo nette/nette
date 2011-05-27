@@ -65,7 +65,6 @@ $template->action = 'login';
 $template->arr = array('link' => 'login', 'param' => 123);
 
 Assert::match(<<<EOD
-
 PLINK(Homepage:)
 
 PLINK(Homepage:)
@@ -87,7 +86,7 @@ PLINK(login, 123)
 LINK(default, 10, 20, 30)
 EOD
 
-, $template->render("
+, $template->render(<<<EOD
 {plink Homepage:}
 
 {plink  Homepage: }
@@ -107,4 +106,5 @@ EOD
 {plink \$arr['link'], \$arr['param']}
 
 {link default 10, 'a' => 20, 'b' => 30}
-"));
+EOD
+));

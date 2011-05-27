@@ -35,10 +35,13 @@ class Parser extends Nette\Object
 	/** @var string */
 	private $macroRe;
 
-	/** @var string */
-	private $input, $output;
+	/** @var string source template */
+	private $input;
 
-	/** @var int */
+	/** @var string output code */
+	private $output;
+
+	/** @var int  position on source template */
 	private $offset;
 
 	/** @var strng (for CONTEXT_ATTRIBUTE) */
@@ -47,10 +50,10 @@ class Parser extends Nette\Object
 	/** @var array */
 	public $macros;
 
-	/** @var array */
-	private $htmlNodes;
+	/** @var array of HtmlNode */
+	private $htmlNodes = array();
 
-	/** @var array */
+	/** @var array of MacroNode */
 	private $macroNodes = array();
 
 	/** @var string */
@@ -82,20 +85,17 @@ class Parser extends Nette\Object
 		if (!Strings::checkEncoding($s)) {
 			throw new ParseException('Template is not valid UTF-8 stream.');
 		}
-		if (!$this->macroRe) {
-			$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
-		}
-		$this->handler->initialize($this);
-
 		$s = str_replace("\r\n", "\n", $s);
-		$s = "\n" . $s;
 
+		$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		$this->templateId = Strings::random();
 		$this->input = & $s;
 		$this->offset = 0;
 		$this->output = '';
 		$this->htmlNodes = $this->macroNodes = array();
 		$len = strlen($s);
+
+		$this->handler->initialize($this);
 
 		while ($this->offset < $len) {
 			$matches = $this->{"context$this->context"}();
@@ -107,14 +107,8 @@ class Parser extends Nette\Object
 
 			} elseif (!empty($matches['macro'])) { // {macro}
 				list($macroName, $macroArgs, $macroModifiers) = $this->parseMacro($matches['macro']);
-				$code = $this->macro($macroName, $macroArgs, $macroModifiers);
-				$nl = isset($matches['newline']) ? "\n" : '';
-				if ($nl && $matches['indent'] && strncmp($code, '<?php echo ', 11)) { // the only macro on line "without" output
-					$this->output .= "\n" . $code; // preserve new line from 'indent', remove indentation
-				} else {
-					// double newline to avoid newline eating by PHP
-					$this->output .= $matches['indent'] . $code . (substr($code, -2) === '?>' && $this->output !== '' ? $nl : '');
-				}
+				$isRightmost = $this->offset >= $len || $this->input[$this->offset] === "\n";
+				$this->writeMacro($macroName, $macroArgs, $macroModifiers, $isRightmost);
 
 			} else { // common behaviour
 				$this->output .= $matches[0];
@@ -147,7 +141,7 @@ class Parser extends Nette\Object
 	private function contextText()
 	{
 		$matches = $this->match('~
-			(?:(?<=\n)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
+			(?:(?<=\n|^)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
 			<(?P<htmlcomment>!--)|           ##  begin of HTML comment <!--
 			'.$this->macroRe.'           ##  curly tag
 		~xsi');
@@ -210,7 +204,7 @@ class Parser extends Nette\Object
 	private function contextTag()
 	{
 		$matches = $this->match('~
-			(?P<end>\ ?/?>)(?P<tagnewline>[\ \t]*(?=\n))?|  ##  end of HTML tag
+			(?P<end>\ ?/?>)(?P<tagnewline>[ \t]*\n)?|  ##  end of HTML tag
 			'.$this->macroRe.'|          ##  curly tag
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
@@ -227,12 +221,12 @@ class Parser extends Nette\Object
 			}
 
 			if (!empty($node->attrs)) {
-				$code = substr($this->output, $node->offset) . $matches[0] . (isset($matches['tagnewline']) ? "\n" : '');
-				$code = $this->attrsMacro($code, $node->attrs, $node->closing);
+				$code = substr($this->output, $node->offset) . $matches[0];
+				$this->output = substr($this->output, 0, $node->offset);
+				$this->writeAttrsMacro($code, $node->attrs, $node->closing);
 				if ($isEmpty) {
-					$code = $this->attrsMacro($code, $node->attrs, TRUE);
+					$this->writeAttrsMacro('', $node->attrs, TRUE);
 				}
-				$this->output = substr_replace($this->output, $code, $node->offset);
 				$matches[0] = ''; // remove from output
 			}
 
@@ -353,7 +347,7 @@ class Parser extends Nette\Object
 	 */
 	public function getLine()
 	{
-		return substr_count($this->input, "\n", 0, $this->offset);
+		return $this->input && $this->offset ? substr_count($this->input, "\n", 0, $this->offset) + 1 : NULL;
 	}
 
 
@@ -367,12 +361,11 @@ class Parser extends Nette\Object
 	public function setDelimiters($left, $right)
 	{
 		$this->macroRe = '
-			(?:\n?)(?P<comment>\\{\\*.*?\\*\\}\n{0,2})|
-			(?P<indent>\n[\ \t]*)?
+			(?P<comment>\\{\\*.*?\\*\\}\n{0,2})|
 			' . $left . '
 				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '
-			(?P<newline>[\ \t]*(?=\n))?
+			(?P<rmargin>[ \t]*(?=\n))?
 		';
 		return $this;
 	}
@@ -384,64 +377,60 @@ class Parser extends Nette\Object
 
 
 	/**
-	 * Expands macro and appends new node.
+	 * Generates code for {macro ...} to the output.
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return string
+	 * @param  bool
+	 * @return void
 	 */
-	public function macro($name, $args = '', $modifiers = '')
+	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE)
 	{
-		if (!isset($this->macros[$name])) {
-			throw new ParseException("Unknown macro {{$name}}", 0, $this->line);
-		}
+		$isLeftmost = trim(substr($this->output, $leftOfs = strrpos("\n$this->output", "\n"))) === '';
 
-		$closing = $name[0] === '/';
-		if ($closing) {
-			$node = array_pop($this->macroNodes);
-			if (!$node || "/$node->name" !== $name
-				|| ($args && !Strings::startsWith("$node->args ", "$args ")) || $modifiers
+		if ($name[0] === '/') { // closing
+			$node = end($this->macroNodes);
+
+			if (!$node || "/$node->name" !== $name || $modifiers
+				|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
 			) {
 				$name .= $args ? ' ' : '';
 				throw new ParseException("Unexpected macro {{$name}{$args}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''),
 					0, $this->line);
 			}
-			$node->args = $node->modifiers = ''; // back compatibility
 
-		} else {
-			$node = new MacroNode($name, $args, $modifiers);
-			if (isset($this->macros["/$name"])) {
-				$node->isEmpty = TRUE;
+			array_pop($this->macroNodes);
+			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
+
+		} else { // opening
+			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
+			if (!$node->isEmpty) {
 				$this->macroNodes[] = $node;
 			}
 		}
 
-		$handler = $this->handler;
-		return Strings::replace(
-			$this->macros[$name],
-			'#%(.*?)%#',
-			/*5.2* callback(*/function ($m) use ($handler, $node) {
-				if ($m[1]) {
-					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
-						->invoke($node->args, $node->modifiers);
-				} else {
-					return $handler->writer->formatArgs($node->args);
-				}
-			}/*5.2* )*/
-		);
+		if ($isRightmost) {
+			if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
+				$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
+			} elseif (substr($code, -2) === '?>') {
+				$code .= "\n"; // double newline to avoid newline eating by PHP
+			}
+		}
+
+		$this->output .= $code;
 	}
 
 
 
 	/**
-	 * Expands macro <tag n:attr> and appends new node.
+	 * Generates code for macro <tag n:attr> to the output.
 	 * @param  string
 	 * @param  array
 	 * @param  bool
-	 * @return string
+	 * @return void
 	 */
-	public function attrsMacro($code, $attrs, $closing)
+	public function writeAttrsMacro($code, $attrs, $closing)
 	{
 		foreach ($attrs as $name => $args) {
 			if (substr($name, 0, 5) === 'attr-') {
@@ -450,7 +439,8 @@ class Parser extends Nette\Object
 					if ($code[$pos-1] === '/') {
 						$pos--;
 					}
-					$code = substr_replace($code, str_replace('@@', substr($name, 5), $this->macro("@attr", $args)), $pos, 0);
+					list(, $macroCode) = $this->expandMacro('@attr', $args);
+					$code = substr_replace($code, str_replace('@@', substr($name, 5), $macroCode), $pos, 0);
 				}
 				unset($attrs[$name]);
 			}
@@ -466,14 +456,11 @@ class Parser extends Nette\Object
 						if ($code[$pos-1] === '/') {
 							$pos--;
 						}
-						$code = substr_replace($code, $this->macro("@$name", $attrs[$name]), $pos, 0);
+						list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name]);
+						$code = substr_replace($code, $macroCode, $pos, 0);
 					}
 					unset($attrs[$name]);
 				}
-			}
-
-			if (!isset($this->macros["/$name"])) { // must be pair-macro
-				continue;
 			}
 
 			$macro = $closing ? "/$name" : $name;
@@ -502,22 +489,61 @@ class Parser extends Nette\Object
 
 			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
+
 		if ($attrs) {
 			throw new ParseException("Unknown macro-attribute " . self::N_PREFIX
 				. implode(' and ' . self::N_PREFIX, array_keys($attrs)), 0, $this->line);
 		}
-		$s = '';
+
 		foreach ($left as $item) {
-			$m = $this->macro($item[0], $item[1]);
-			$s .= $m . (substr($m, -2) === '?>' ? "\n" : '');
+			$this->writeMacro($item[0], $item[1]);
+			if (substr($this->output, -2) === '?>') {
+				$this->output .= "\n";
+			}
 		}
-		$s .= $code;
+		$this->output .= $code;
+
 		foreach ($right as $item) {
-			$m = $this->macro($item[0], $item[1]);
-			$s .= $m . (substr($m, -2) === '?>' ? "\n" : '');
+			$this->writeMacro($item[0], $item[1]);
+			if (substr($this->output, -2) === '?>') {
+				$this->output .= "\n";
+			}
 		}
-		$s = rtrim($s, "\n");
-		return $s;
+	}
+
+
+
+	/**
+	 * Expands macro and returns node & code.
+	 * @param  string
+	 * @param  string
+	 * @param  string
+	 * @return array(MacroNode, string)
+	 */
+	public function expandMacro($name, $args, $modifiers = NULL)
+	{
+		if (!isset($this->macros[$name])) {
+			throw new ParseException("Unknown macro {{$name}}", 0, $this->line);
+		}
+
+		$handler = $this->handler;
+		$node = new MacroNode($name, $args, $modifiers);
+		$node->isEmpty = !isset($this->macros["/$name"]);
+
+		$code = Strings::replace(
+			$this->macros[$name],
+			'#%(.*?)%#',
+			/*5.2* callback(*/function ($m) use ($handler, $node) {
+				if ($m[1]) {
+					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
+						->invoke($node->args, $node->modifiers);
+				} else {
+					return $handler->writer->formatArgs($node->args);
+				}
+			}/*5.2* )*/
+		);
+
+		return array($node, $code);
 	}
 
 

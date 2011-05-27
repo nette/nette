@@ -29,9 +29,6 @@ class MacroNode extends Nette\Object
 	/** @var bool */
 	public $isEmpty = FALSE;
 
-	/** @var array */
-	public $attrs = array();
-
 	/** @var string */
 	public $args;
 

@@ -36,25 +36,25 @@ $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
 
-$result = $template->render('
+$result = $template->render(<<<EOD
 {block|lower|texy}
-{$hello}
+{\$hello}
 ---------
-- Escaped: {$hello}
-- Non-escaped: {!$hello}
+- Escaped: {\$hello}
+- Non-escaped: {!\$hello}
 
 - Escaped expression: {="<" . "b" . ">hello" . "</b>"}
 
 - Non-escaped expression: {!="<" . "b" . ">hello" . "</b>"}
 
-- Array access: {$people[1]}
+- Array access: {\$people[1]}
 
 [* image.jpg *]
 {/block}
-');
+EOD
+);
 
 Assert::match(<<<EOD
-
 <pre>&lt;i&gt;hello&lt;/i&gt;
 ---------
 - escaped: &lt;i&gt;hello&lt;/i&gt;
