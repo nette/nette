@@ -47,6 +47,7 @@ class UIMacros extends MacroSet
 	{
 		$me = new static($parser);
 		$me->addMacro('include', array($me, 'macroInclude'));
+		$me->addMacro('includeblock', array($me, 'macroIncludeBlock'));
 		$me->addMacro('extends', array($me, 'macroExtends'));
 		$me->addMacro('layout', array($me, 'macroExtends'));
 		$me->addMacro('block', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
@@ -184,6 +185,17 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		} else {
 			return $writer->write($cmd);
 		}
+	}
+
+
+
+	/**
+	 * {includeblock "file"}
+	 */
+	public function macroIncludeBlock(MacroNode $node, $writer)
+	{
+		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
+			$this->parser->templateId);
 	}
 
 
