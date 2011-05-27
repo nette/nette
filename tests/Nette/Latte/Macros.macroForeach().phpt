@@ -16,6 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $macros = new DefaultMacros;
+$parser = new Nette\Latte\Parser;
+$macros->initialize($parser);
 $prefix = '$iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
 
 Assert::same( $prefix . '$array) as $value',  $macros->macroForeach('$array as $value') );

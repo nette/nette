@@ -12,8 +12,7 @@
 namespace Nette\Latte;
 
 use Nette,
-	Nette\Utils\Strings,
-	Nette\Utils\Tokenizer;
+	Nette\Utils\Strings;
 
 
 
@@ -125,18 +124,11 @@ class DefaultMacros extends Nette\Object
 	/** @internal PHP identifier */
 	const RE_IDENTIFIER = '[_a-zA-Z\x7F-\xFF][_a-zA-Z0-9\x7F-\xFF]*';
 
-	/** @internal */
-	const T_WHITESPACE = T_WHITESPACE,
-		T_COMMENT = T_COMMENT,
-		T_SYMBOL = -1,
-		T_NUMBER = -2,
-		T_VARIABLE = -3;
-
-	/** @var Nette\Utils\Tokenizer */
-	private $tokenizer;
-
 	/** @var Parser */
-	private $parser;
+	public $parser;
+
+	/** @var PhpWriter */
+	public $writer;
 
 	/** @var array */
 	private $blocks = array();
@@ -161,32 +153,13 @@ class DefaultMacros extends Nette\Object
 
 
 	/**
-	 * Constructor.
-	 */
-	public function __construct()
-	{
-		$this->tokenizer = new Tokenizer(array(
-			self::T_WHITESPACE => '\s+',
-			self::T_COMMENT => '(?s)/\*.*?\*/',
-			Parser::RE_STRING,
-			'(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\d\pL_])', // keyword or const
-			'\([a-z]+\)', // type casting
-			self::T_VARIABLE => '\$[\d\pL_]+',
-			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
-			self::T_SYMBOL => '[\d\pL_]+(?:-[\d\pL_]+)*',
-			'::|=>|[^"\']', // =>, any char except quotes
-		), 'u');
-	}
-
-
-
-	/**
 	 * Initializes parsing.
 	 * @param  Parser
 	 * @return void
 	 */
 	public function initialize($parser)
 	{
+		$this->writer = new PhpWriter;
 		$this->parser = $parser;
 		$this->blocks = array();
 		$this->namedBlocks = array();
@@ -273,7 +246,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroTranslate($var, $modifiers)
 	{
-		return $this->formatModifiers($this->formatMacroArgs($var), '|translate' . $modifiers);
+		return $this->writer->formatModifiers($this->writer->formatMacroArgs($var), '|translate' . $modifiers, $this->parser->escape);
 	}
 
 
@@ -317,8 +290,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroInclude($content, $modifiers, $isDefinition = FALSE)
 	{
-		$destination = $this->fetchToken($content); // destination [,] [params]
-		$params = $this->formatArray($content) . ($content ? ' + ' : '');
+		$destination = $this->writer->fetchToken($content); // destination [,] [params]
+		$params = $this->writer->formatArray($content) . ($content ? ' + ' : '');
 
 		if ($destination === NULL) {
 			throw new ParseException("Missing destination in {include}", 0, $this->parser->line);
@@ -344,15 +317,15 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
 				: 'Nette\Latte\DefaultMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
 			return $modifiers
-				? "ob_start(); $cmd; echo " . $this->formatModifiers('ob_get_clean()', $modifiers)
+				? "ob_start(); $cmd; echo " . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape)
 				: $cmd;
 
 		} else { // include "file"
-			$destination = $this->formatString($destination);
+			$destination = $this->writer->formatString($destination);
 			$cmd = 'Nette\Latte\DefaultMacros::includeTemplate(' . $destination . ', '
 				. $params . '$template->getParams(), $_l->templates[' . var_export($this->uniq, TRUE) . '])';
 			return $modifiers
-				? 'echo ' . $this->formatModifiers($cmd . '->__toString(TRUE)', $modifiers)
+				? 'echo ' . $this->writer->formatModifiers($cmd . '->__toString(TRUE)', $modifiers, $this->parser->escape)
 				: $cmd . '->render()';
 		}
 	}
@@ -374,7 +347,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			throw new ParseException("Multiple {extends} declarations are not allowed.", 0, $this->parser->line);
 		}
 		$this->extends = $content !== 'none';
-		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->formatMacroArgs($content)) : '';
+		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->writer->formatMacroArgs($content)) : '';
 	}
 
 
@@ -384,7 +357,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroBlock($content, $modifiers)
 	{
-		$name = $this->fetchToken($content); // block [,] [params]
+		$name = $this->writer->fetchToken($content); // block [,] [params]
 
 		if ($name === NULL) { // anonymous block
 			$this->blocks[] = array(self::BLOCK_ANONYMOUS, NULL, $modifiers);
@@ -403,7 +376,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$this->namedBlocks[$name] = $name;
 			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
 			if ($name[0] === '_') { // snippet
-				$tag = $this->fetchToken($content);  // [name [,]] [tag]
+				$tag = $this->writer->fetchToken($content);  // [name [,]] [tag]
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
 				$tag = $tag ? $tag : 'div';
@@ -440,7 +413,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return "{/block $name}";
 
 		} else { // anonymous block
-			return $modifiers === '' ? '' : 'echo ' . $this->formatModifiers('ob_get_clean()', $modifiers);
+			return $modifiers === '' ? '' : 'echo ' . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape);
 		}
 	}
 
@@ -471,7 +444,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroCapture($content, $modifiers)
 	{
-		$name = $this->fetchToken($content); // $variable
+		$name = $this->writer->fetchToken($content); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
 			throw new ParseException("Invalid capture block parameter '$name'", 0, $this->parser->line);
@@ -489,7 +462,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroCaptureEnd($content)
 	{
 		list($type, $name, $modifiers) = array_pop($this->blocks);
-		return $name . '=' . $this->formatModifiers('ob_get_clean()', $modifiers);
+		return $name . '=' . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape);
 	}
 
 
@@ -501,7 +474,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		return 'if (Nette\Latte\DefaultMacros::createCache($netteCacheStorage, '
 			. var_export($this->uniq . ':' . $this->cacheCounter++, TRUE)
-			. ', $_l->g->caches' . $this->formatArray($content, ', ') . ')) {';
+			. ', $_l->g->caches' . $this->writer->formatArray($content, ', ') . ')) {';
 	}
 
 
@@ -512,7 +485,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroForeach($content)
 	{
 		return '$iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
-			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->formatMacroArgs($content), 1);
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->writer->formatMacroArgs($content), 1);
 	}
 
 
@@ -526,7 +499,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $content;
 		}
 		$list = array();
-		while (($name = $this->fetchToken($content)) !== NULL) {
+		while (($name = $this->writer->fetchToken($content)) !== NULL) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
 		}
 		return implode(', ', $list);
@@ -588,7 +561,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroDump($content)
 	{
 		return 'Nette\Diagnostics\Debugger::barDump('
-			. ($content ? 'array(' . var_export($this->formatMacroArgs($content), TRUE) . " => $content)" : 'get_defined_vars()')
+			. ($content ? 'array(' . var_export($this->writer->formatMacroArgs($content), TRUE) . " => $content)" : 'get_defined_vars()')
 			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
@@ -609,15 +582,15 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroControl($content)
 	{
-		$pair = $this->fetchToken($content); // control[:method]
+		$pair = $this->writer->fetchToken($content); // control[:method]
 		if ($pair === NULL) {
 			throw new ParseException("Missing control name in {control}", 0, $this->parser->line);
 		}
 		$pair = explode(':', $pair, 2);
-		$name = $this->formatString($pair[0]);
+		$name = $this->writer->formatString($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
-		$param = $this->formatArray($content);
+		$param = $this->writer->formatArray($content);
 		if (strpos($content, '=>') === FALSE) {
 			$param = substr($param, 6, -1); // removes array()
 		}
@@ -634,7 +607,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroLink($content, $modifiers)
 	{
-		return $this->formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers);
+		return $this->writer->formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers, $this->parser->escape);
 	}
 
 
@@ -644,7 +617,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroPlink($content, $modifiers)
 	{
-		return $this->formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers);
+		return $this->writer->formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers, $this->parser->escape);
 	}
 
 
@@ -665,7 +638,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	private function formatLink($content)
 	{
-		return $this->formatString($this->fetchToken($content)) . $this->formatArray($content, ', '); // destination [,] args
+		return $this->writer->formatString($this->writer->fetchToken($content)) . $this->writer->formatArray($content, ', '); // destination [,] args
 	}
 
 
@@ -677,8 +650,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$out = '';
 		$var = TRUE;
-		foreach ($this->parseMacroArgs($content) as $token) {
-			if ($var && ($token['type'] === self::T_SYMBOL || $token['type'] === self::T_VARIABLE)) {
+		foreach ($this->writer->parseMacroArgs($content) as $token) {
+			if ($var && ($token['type'] === MacroTokenizer::T_SYMBOL || $token['type'] === MacroTokenizer::T_VARIABLE)) {
 				if ($extract) {
 					$out .= "'" . trim($token['value'], "'$") . "'";
 				} else {
@@ -715,7 +688,17 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroModifiers($content, $modifiers)
 	{
-		return $this->formatModifiers($this->formatMacroArgs($content), $modifiers);
+		return $this->writer->formatModifiers($this->writer->formatMacroArgs($content), $modifiers, $this->parser->escape);
+	}
+
+
+
+	/**
+	 * Argument formating helper.
+	 */
+	public function formatArray($content)
+	{
+		return $this->writer->formatArray($content);
 	}
 
 
@@ -727,211 +710,6 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	{
 		$tmp = explode('|', $this->parser->escape);
 		return $tmp[0];
-	}
-
-
-
-	/********************* compile-time helpers ****************d*g**/
-
-
-
-	/**
-	 * Applies modifiers.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public function formatModifiers($var, $modifiers)
-	{
-		if (!$modifiers) {
-			return $var;
-		}
-		$inside = FALSE;
-		foreach ($this->parseMacroArgs(ltrim($modifiers, '|')) as $token) {
-			if ($token['type'] === self::T_WHITESPACE) {
-				$var = rtrim($var) . ' ';
-
-			} elseif (!$inside) {
-				if ($token['type'] === self::T_SYMBOL) {
-					if (trim($token['value'], "'") === 'escape') {
-						$tmp = explode('|', $this->parser->escape);
-						$var = $tmp[0] . "($var" . (isset($tmp[1]) ? ', ' . var_export($tmp[1], TRUE) : '');
-					} else {
-						$var = "\$template->" . trim($token['value'], "'") . "($var";
-					}
-					$inside = TRUE;
-				} else {
-					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.", 0, $this->parser ? $this->parser->line : NULL);
-				}
-			} else {
-				if ($token['value'] === ':' || $token['value'] === ',') {
-					$var = $var . ', ';
-
-				} elseif ($token['value'] === '|') {
-					$var = $var . ')';
-					$inside = FALSE;
-
-				} else {
-					$var .= $token['value'];
-				}
-			}
-		}
-		return $inside ? "$var)" : $var;
-	}
-
-
-
-	/**
-	 * Reads single token (optionally delimited by comma) from string.
-	 * @param  string
-	 * @return string
-	 */
-	public function fetchToken(& $s)
-	{
-		if ($matches = Strings::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
-			$s = $matches[2];
-			return $matches[1];
-		}
-		return NULL;
-	}
-
-
-
-	/**
-	 * Reformats Latte to PHP code.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public function formatMacroArgs($input)
-	{
-		$out = '';
-		foreach ($this->parseMacroArgs($input) as $token) {
-			$out .= $token['value'];
-		}
-		return $out;
-	}
-
-
-
-	/**
-	 * Reformats Latte to PHP array.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public function formatArray($input, $prefix = '')
-	{
-		$tokens = $this->parseMacroArgs($input);
-		if (!$tokens) {
-			return '';
-		}
-		$out = '';
-		$expand = NULL;
-		$tokens[] = NULL; // sentinel
-		foreach ($tokens as $token) {
-			if ($token['value'] === '(expand)' && $token['depth'] === 0) {
-				$expand = TRUE;
-				$out .= '),';
-
-			} elseif ($expand && ($token['value'] === ',' || $token['value'] === NULL) && !$token['depth']) {
-				$expand = FALSE;
-				$out .= ', array(';
-			} else {
-				$out .= $token['value'];
-			}
-		}
-		return $prefix . ($expand === NULL ? "array($out)" : "array_merge(array($out))");
-	}
-
-
-
-	/**
-	 * Formats parameter to PHP string.
-	 * @param  string
-	 * @return string
-	 */
-	public function formatString($s)
-	{
-		static $keywords = array('true'=>1, 'false'=>1, 'null'=>1);
-		return (is_numeric($s) || strspn($s, '\'"$') || isset($keywords[strtolower($s)])) ? $s : '"' . $s . '"';
-	}
-
-
-
-	/**
-	 * Tokenizer and preparser.
-	 * @return array
-	 */
-	private function parseMacroArgs($input)
-	{
-		$this->tokenizer->tokenize($input);
-
-		$inTernary = $lastSymbol = $prev = NULL;
-		$tokens = $arrays = array();
-		$n = -1;
-		while (++$n < count($this->tokenizer->tokens)) {
-			$token = $this->tokenizer->tokens[$n];
-			$token['depth'] = $depth = count($arrays);
-
-			if ($token['type'] === self::T_COMMENT) {
-				continue; // remove comments
-
-			} elseif ($token['type'] === self::T_WHITESPACE) {
-				$tokens[] = $token;
-				continue;
-
-			} elseif ($token['type'] === self::T_SYMBOL && ($prev === NULL || in_array($prev['value'], array(',', '(', '[', '=', '=>', ':', '?')))) {
-				$lastSymbol = count($tokens); // quoting pre-requirements
-
-			} elseif (is_int($lastSymbol) && in_array($token['value'], array(',', ')', ']', '=', '=>', ':', '|'))) {
-				$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
-				$lastSymbol = NULL;
-
-			} else {
-				$lastSymbol = NULL;
-			}
-
-			if ($token['value'] === '?') { // short ternary operators without :
-				$inTernary = $depth;
-
-			} elseif ($token['value'] === ':') {
-				$inTernary = NULL;
-
-			} elseif ($inTernary === $depth && ($token['value'] === ',' || $token['value'] === ')' || $token['value'] === ']')) { // close ternary
-				$tokens[] = Tokenizer::createToken(':') + array('depth' => $depth);
-				$tokens[] = Tokenizer::createToken('null') + array('depth' => $depth);
-				$inTernary = NULL;
-			}
-
-			if ($token['value'] === '[') { // simplified array syntax [...]
-				if ($arrays[] = $prev['value'] !== ']' && $prev['type'] !== self::T_SYMBOL && $prev['type'] !== self::T_VARIABLE) {
-					$tokens[] = Tokenizer::createToken('array') + array('depth' => $depth);
-					$token = Tokenizer::createToken('(');
-				}
-			} elseif ($token['value'] === ']') {
-				if (array_pop($arrays) === TRUE) {
-					$token = Tokenizer::createToken(')');
-				}
-			} elseif ($token['value'] === '(') { // only count
-				$arrays[] = '(';
-
-			} elseif ($token['value'] === ')') { // only count
-				array_pop($arrays);
-			}
-
-			$tokens[] = $prev = $token;
-		}
-
-		if (is_int($lastSymbol)) {
-			$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
-		}
-		if ($inTernary !== NULL) { // close ternary
-			$tokens[] = Tokenizer::createToken(':') + array('depth' => count($arrays));
-			$tokens[] = Tokenizer::createToken('null') + array('depth' => count($arrays));
-		}
-
-		return $tokens;
 	}
 
 

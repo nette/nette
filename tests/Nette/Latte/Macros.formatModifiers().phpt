@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Latte\DefaultMacros::formatModifiers()
+ * Test: Nette\Latte\PhpWriter::formatModifiers()
  *
  * @author     David Grudl
  * @package    Nette\Latte
  * @subpackage UnitTests
  */
 
-use Nette\Latte\DefaultMacros;
+use Nette\Latte\PhpWriter;
 
 
 
@@ -16,10 +16,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$latte = new DefaultMacros;
+$latte = new PhpWriter;
+
 
 // special
-
 Assert::same( '@',  $latte->formatModifiers('@', '') );
 Assert::same( '@',  $latte->formatModifiers('@', '|') );
 try {
@@ -41,13 +41,13 @@ try {
 	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 15.', $e );
 }
 
-// common
 
+// common
 Assert::same( '$template->mod(@)',  $latte->formatModifiers('@', 'mod') );
 Assert::same( '$template->mod3($template->mod2($template->mod1(@)))',  $latte->formatModifiers('@', 'mod1|mod2|mod3') );
 
-// arguments
 
+// arguments
 Assert::same( '$template->mod(@, \'arg1\', 2, $var["pocet"])',  $latte->formatModifiers('@', 'mod:arg1:2:$var["pocet"]') );
 Assert::same( '$template->mod(@, \'arg1\', 2, $var["pocet"])',  $latte->formatModifiers('@', 'mod,arg1,2,$var["pocet"]') );
 Assert::same( '$template->mod(@, " :a:b:c", "", 3, "")',  $latte->formatModifiers('@', 'mod:" :a:b:c":"":3:""') );

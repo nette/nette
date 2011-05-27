@@ -16,6 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $macros = new DefaultMacros;
+$parser = new Nette\Latte\Parser;
+$macros->initialize($parser);
 
 // {link ...}
 Assert::same( '$control->link("p")',  $macros->macroLink('p', '') );

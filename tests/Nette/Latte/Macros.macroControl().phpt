@@ -16,6 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $macros = new DefaultMacros;
+$parser = new Nette\Latte\Parser;
+$macros->initialize($parser);
 
 // {control ...}
 Assert::match( '%a% $control->getWidget("form"); %a%->render()',  $macros->macroControl('form', '') );

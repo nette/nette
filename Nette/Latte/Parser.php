@@ -422,7 +422,7 @@ class Parser extends Nette\Object
 					return callback($m[1][0] === ':' ? array($handler, substr($m[1], 1)) : $m[1])
 						->invoke($node->args, $node->modifiers);
 				} else {
-					return $handler->formatMacroArgs($node->args);
+					return $handler->writer->formatMacroArgs($node->args);
 				}
 			}/*5.2* )*/
 		);
