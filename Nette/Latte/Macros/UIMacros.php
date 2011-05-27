@@ -64,7 +64,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), 'endif'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
 
 		$me->addMacro('contentType', array($me, 'macroContentType'));
-		$me->addMacro('status', '$netteHttpResponse->setCode(%%)');
+		$me->addMacro('status', '$netteHttpResponse->setCode(%node.args)');
 	}
 
 
@@ -149,7 +149,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {include #block}
 	 */
-	public function macroInclude(MacroNode $node, $writer, $isDefinition = FALSE)
+	public function macroInclude(MacroNode $node, $writer)
 	{
 		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
 		if (substr($destination, 0, 1) !== '#') {
@@ -169,19 +169,20 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				throw new ParseException("Cannot include $destination block outside of any block.");
 			}
 			$destination = $item->data->name;
-
 		}
-		$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
-		$params = $writer->formatArray();
-		$params .= $params ? ' + ' : '';
-		$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
-		$cmd = isset($this->namedBlocks[$destination]) && !$parent
-			? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
-			: 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
 
-		return $node->modifiers
-			? "ob_start(); $cmd; echo " . $writer->formatModifiers('ob_get_clean()')
-			: $cmd;
+		$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
+		if (isset($this->namedBlocks[$destination]) && !$parent) {
+			$cmd = "call_user_func(reset(\$_l->blocks[$name]), \$_l, %node.array? + \$template->getParams())";
+		} else {
+			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + \$template->getParams())";
+		}
+
+		if ($node->modifiers) {
+			return $writer->write("ob_start(); $cmd; echo %modify", 'ob_get_clean()');
+		} else {
+			return $writer->write($cmd);
+		}
 	}
 
 
@@ -212,7 +213,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroBlock(MacroNode $node, $writer)
 	{
-		$name = $node->tokenizer->fetchWord(); // block [,] [params]
+		$name = $node->tokenizer->fetchWord();
 
 		if ($node->name === 'block' && $name === FALSE) { // anonymous block
 			return $node->modifiers === '' ? '' : 'ob_start()';
@@ -229,23 +230,28 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$top = empty($node->parentNode);
 			$this->namedBlocks[$name] = TRUE;
 			$node->data->name = $name;
+
+			$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
+			if ($node->modifiers) {
+				$include = "ob_start(); $include; echo %modify";
+			}
+
 			if ($node->name === 'snippet') {
-				$tag = $node->tokenizer->fetchWord();  // [name [,]] [tag]
+				$tag = $node->tokenizer->fetchWord();
 				$tag = trim($tag, '<>');
-				$namePhp = var_export(substr($name, 1), TRUE);
 				$tag = $tag ? $tag : 'div';
-				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
-					. $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer)
-					. " ?></$tag><?php ";
+				return $writer->write("?><$tag id=\"<?php echo \$control->getSnippetId(%var) ?>\"><?php $include ?></$tag><?php ",
+					(string) substr($name, 1), $name, 'ob_get_clean()'
+				);
 
 			} elseif (!$top) {
-				return $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer, TRUE);
+				return $writer->write($include, $name, 'ob_get_clean()');
 
 			} elseif ($this->extends) {
 				return '';
 
 			} else {
-				return 'if (!$_l->extends) { ' . $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer, TRUE) . '; }';
+				return $writer->write("if (!\$_l->extends) { $include; }", $name, 'ob_get_clean()');
 			}
 		}
 	}
@@ -265,8 +271,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$this->namedBlocks[$node->data->name] = $node->content;
 			return $node->content = '';
 
-		} else { // anonymous block
-			return $node->modifiers === '' ? '' : 'echo ' . $writer->formatModifiers('ob_get_clean()');
+		} elseif ($node->modifiers) { // anonymous block with modifier
+			return $writer->write('echo %modify', 'ob_get_clean()');
 		}
 	}
 
@@ -294,7 +300,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroControl(MacroNode $node, $writer)
 	{
-		$pair = $node->tokenizer->fetchWord(); // control[:method]
+		$pair = $node->tokenizer->fetchWord();
 		if ($pair === FALSE) {
 			throw new ParseException("Missing control name in {control}");
 		}
@@ -321,9 +327,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroLink(MacroNode $node, $writer)
 	{
-		$link = $writer->formatWord($node->tokenizer->fetchWord()) . $writer->formatArray(', '); // destination [,] args
-		return 'echo ' . $this->escape() . '(' . $writer->formatModifiers(($node->name === 'plink' ? '$presenter' : '$control')
-			. '->link(' . $link .')', $node->modifiers, $this->parser->escape) . ')';
+		return $writer->write('echo %escape(' . ($node->name === 'plink' ? '$presenter' : '$control') . '->link(%node.word, %node.array?))');
 	}
 
 
@@ -333,9 +337,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroIfCurrent(MacroNode $node, $writer)
 	{
-		$link = $writer->formatWord($node->tokenizer->fetchWord()) . $writer->formatArray(', '); // destination [,] args
-		return ($node->args ? 'try { $presenter->link(' . $link . '); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
-			. '; if ($presenter->getLastCreatedRequestFlag("current")):';
+		return $writer->write(($node->args ? 'try { $presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
+			. '; if ($presenter->getLastCreatedRequestFlag("current")):');
 	}
 
 
@@ -372,24 +375,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		// temporary solution
 		if (strpos($node->args, '/')) {
-			return '$netteHttpResponse->setHeader("Content-Type", "' . $node->args . '")';
+			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %node.word)');
 		}
 	}
 
 
 
-	/**
-	 * Escaping helper.
-	 */
-	public function escape()
-	{
-		$tmp = explode('|', $this->parser->escape);
-		return $tmp[0];
-	}
-
-
-
-	/********************* run-time helpers ****************d*g**/
+	/********************* run-time writers ****************d*g**/
 
 
 

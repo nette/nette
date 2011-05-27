@@ -17,17 +17,15 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-function formatArray($args, $prefix = NULL) {
+function formatArray($args) {
 	$writer = new PhpWriter(new MacroTokenizer($args));
-	return $writer->formatArray($prefix);
+	return $writer->formatArray();
 }
 
 
 // symbols
-Assert::same( '',  formatArray('') );
-Assert::same( '',  formatArray('', '&') );
+Assert::same( 'array()',  formatArray('') );
 Assert::same( 'array(1)',  formatArray('1') );
-Assert::same( '&array(1)',  formatArray('1', '&') );
 Assert::same( "array('symbol')",  formatArray('symbol') );
 Assert::same( "array(1, 2, 'symbol1', 'symbol-2')",  formatArray('1, 2, symbol1, symbol-2') );
 

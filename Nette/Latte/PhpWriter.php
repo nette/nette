@@ -50,6 +50,46 @@ class PhpWriter extends Nette\Object
 
 
 	/**
+	 * Expands %node.word, %node.array, %node.args, %escape, %modify, %var in code.
+	 * @param  string
+	 * @return string
+	 */
+	public function write($mask)
+	{
+		$args = func_get_args();
+		array_shift($args);
+		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
+		$mask = str_replace('%escape', $this->escape[0], $mask);
+		$me = $this;
+		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|modify|var)(\?)?(\s*\+\s*)?()#',
+			/*5.2* callback(*/function($m) use ($me, $word, & $args) {
+			list(, $l, $macro, $cond, $r) = $m;
+
+			switch ($macro) {
+			case 'node.word':
+				$code = $me->formatWord($word); break;
+			case 'node.args':
+				$code = $me->formatArgs(); break;
+			case 'node.array':
+				$code = $me->formatArray();
+				$code = $cond && $code === 'array()' ? '' : $code; break;
+			case 'modify':
+				$code = $me->formatModifiers(array_shift($args)); break;
+			case 'var':
+				$code = var_export(array_shift($args), TRUE); break;
+			}
+
+			if ($cond && $code === '') {
+				return $r ? $l : $r;
+			} else {
+				return $l . $code . $r;
+			}
+		}/*5.2* )*/);
+	}
+
+
+
+	/**
 	 * Formats modifiers calling.
 	 * @param  string
 	 * @return string
@@ -116,14 +156,11 @@ class PhpWriter extends Nette\Object
 	 * Formats macro arguments to PHP array.
 	 * @return string
 	 */
-	public function formatArray($prefix = '')
+	public function formatArray()
 	{
 		$out = '';
 		$expand = NULL;
 		$tokenizer = $this->preprocess();
-		if (!$tokenizer->tokens) {
-			return '';
-		}
 		while ($token = $tokenizer->fetchToken()) {
 			if ($token['value'] === '(expand)' && $token['depth'] === 0) {
 				$expand = TRUE;
@@ -137,9 +174,9 @@ class PhpWriter extends Nette\Object
 			}
 		}
 		if ($expand === NULL) {
-			return $prefix . "array($out)";
+			return "array($out)";
 		} else {
-			return $prefix . "array_merge(array($out" . ($expand ? ', array(' : '') ."))";
+			return "array_merge(array($out" . ($expand ? ', array(' : '') ."))";
 		}
 	}
 

@@ -50,20 +50,20 @@ class CoreMacros extends MacroSet
 	{
 		$me = new static($parser);
 
-		$me->addMacro('if', 'if (%%):', 'endif');
-		$me->addMacro('elseif', 'elseif (%%):');
+		$me->addMacro('if', 'if (%node.args):', 'endif');
+		$me->addMacro('elseif', 'elseif (%node.args):');
 		$me->addMacro('else', 'else:');
-		$me->addMacro('ifset', 'if (isset(%%)):', 'endif');
-		$me->addMacro('elseifset', 'elseif (isset(%%)):');
+		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
+		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
 
 		$me->addMacro('foreach', array($me, 'macroForeach'), 'endforeach; array_pop($_l->its); $iterator = end($_l->its)');
-		$me->addMacro('for', 'for (%%):', 'endfor');
-		$me->addMacro('while', 'while (%%):', 'endwhile');
-		$me->addMacro('continueIf', 'if (%%) continue');
-		$me->addMacro('breakIf', 'if (%%) break');
-		$me->addMacro('first', 'if ($iterator->isFirst(%%)):', 'endif');
-		$me->addMacro('last', 'if ($iterator->isLast(%%)):', 'endif');
-		$me->addMacro('sep', 'if (!$iterator->isLast(%%)):', 'endif');
+		$me->addMacro('for', 'for (%node.args):', 'endfor');
+		$me->addMacro('while', 'while (%node.args):', 'endwhile');
+		$me->addMacro('continueIf', 'if (%node.args) continue');
+		$me->addMacro('breakIf', 'if (%node.args) break');
+		$me->addMacro('first', 'if ($iterator->isFirst(%node.args)):', 'endif');
+		$me->addMacro('last', 'if ($iterator->isLast(%node.args)):', 'endif');
+		$me->addMacro('sep', 'if (!$iterator->isLast(%node.args)):', 'endif');
 
 		$me->addMacro('var', array($me, 'macroVar'));
 		$me->addMacro('assign', array($me, 'macroVar')); // deprecated
@@ -110,7 +110,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroTranslate(MacroNode $node, $writer)
 	{
-		return 'echo ' . $writer->formatModifiers('$template->translate(' . $writer->formatArgs() . ')');
+		return $writer->write('echo %modify', '$template->translate(' . $writer->formatArgs() . ')');
 	}
 
 
@@ -157,16 +157,14 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroInclude(MacroNode $node, $writer)
 	{
-		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
-		$params = $writer->formatArray();
-		$params .= $params ? ' + ' : '';
+		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParams(), $_l->templates[%var])',
+			$this->parser->templateId);
 
-		$cmd = 'Nette\Latte\Macros\CoreMacros::includeTemplate(' . $writer->formatWord($destination) . ', '
-			. $params . '$template->getParams(), $_l->templates[' . var_export($this->parser->templateId, TRUE) . '])';
-
-		return $node->modifiers
-			? 'echo ' . $writer->formatModifiers($cmd . '->__toString(TRUE)')
-			: $cmd . '->render()';
+		if ($node->modifiers) {
+			return $writer->write('echo %modify', $code . '->__toString(TRUE)');
+		} else {
+			return $code . '->render()';
+		}
 	}
 
 
@@ -176,12 +174,11 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCapture(MacroNode $node, $writer)
 	{
-		$name = $node->tokenizer->fetchWord(); // $variable
-
-		if (substr($name, 0, 1) !== '$') {
-			throw new ParseException("Invalid capture block parameter '$name'");
+		$variable = $node->tokenizer->fetchWord();
+		if (substr($variable, 0, 1) !== '$') {
+			throw new ParseException("Invalid capture block variable '$variable'");
 		}
-		$node->data->name = $name;
+		$node->data->variable = $variable;
 		return 'ob_start()';
 	}
 
@@ -192,7 +189,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, $writer)
 	{
-		return $node->data->name . '=' . $writer->formatModifiers('ob_get_clean()');
+		return $writer->write("{$node->data->variable} = %modify", 'ob_get_clean()');
 	}
 
 
@@ -213,9 +210,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroClass(MacroNode $node, $writer)
 	{
-		return 'if ($_l->tmp = trim(implode(" ", array_unique('
-			. $writer->formatArray() . ')))) echo \' class="\' . '
-			. $this->escape() . '($_l->tmp) . \'"\'';
+		return $writer->write('if ($_l->tmp = trim(implode(" ", array_unique(%node.array)))) echo \' class="\' . %escape($_l->tmp) . \'"\'');
 	}
 
 
@@ -225,8 +220,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroAttr(MacroNode $node, $writer)
 	{
-		return 'if (($_l->tmp = (string) (' . $writer->formatArgs()
-			. ')) !== \'\') echo \' @@="\' . ' . $this->escape() . '($_l->tmp) . \'"\'';
+		return $writer->write('if (($_l->tmp = (string) (%node.args)) !== \'\') echo \' @@="\' . %escape($_l->tmp) . \'"\'');
 	}
 
 
@@ -247,9 +241,9 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroDump(MacroNode $node, $writer)
 	{
-		return 'Nette\Diagnostics\Debugger::barDump('
-			. ($node->args ? 'array(' . var_export($writer->formatArgs(), TRUE) . " => $node->args)" : 'get_defined_vars()')
-			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
+		$args = $writer->formatArgs();
+		return $writer->write('Nette\Diagnostics\Debugger::barDump(' . ($node->args ? "array(%var => $args)" : 'get_defined_vars()')
+			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))', $args);
 	}
 
 
@@ -302,18 +296,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroExpr(MacroNode $node, $writer)
 	{
-		return ($node->name === '?' ? '' : 'echo ') . $writer->formatModifiers($writer->formatArgs());
-	}
-
-
-
-	/**
-	 * Escaping helper.
-	 */
-	public function escape()
-	{
-		$tmp = explode('|', $this->parser->escape);
-		return $tmp[0];
+		return $writer->write(($node->name === '?' ? '' : 'echo ') . '%modify', $writer->formatArgs());
 	}
 
 
