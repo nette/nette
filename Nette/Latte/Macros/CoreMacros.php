@@ -50,7 +50,7 @@ class CoreMacros extends MacroSet
 	{
 		$me = new static($parser);
 
-		$me->addMacro('if', 'if (%node.args):', 'endif');
+		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
 		$me->addMacro('elseif', 'elseif (%node.args):');
 		$me->addMacro('else', 'else:');
 		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
@@ -102,6 +102,35 @@ class CoreMacros extends MacroSet
 
 
 	/********************* macros ****************d*g**/
+
+
+
+	/**
+	 * {if ...}
+	 */
+	public function macroIf(MacroNode $node, $writer)
+	{
+		if ($node->data->capture = ($node->args === '')) {
+			return 'ob_start()';
+		}
+		return $writer->write('if (%node.args):');
+	}
+
+
+
+	/**
+	 * {/if ...}
+	 */
+	public function macroEndIf(MacroNode $node, $writer)
+	{
+		if ($node->data->capture) {
+			if ($node->args === '') {
+				throw new ParseException('Missing condition in {if} macro.');
+			}
+			return $writer->write('if (%node.args) ob_end_flush(); else ob_end_clean()');
+		}
+		return 'endif';
+	}
 
 
 
