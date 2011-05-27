@@ -51,4 +51,19 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 		$this->tokenize($input);
 	}
 
+
+
+	/**
+	 * Reads single token (optionally delimited by comma) from string.
+	 * @param  string
+	 * @return string
+	 */
+	public function fetchWord()
+	{
+		$word = $this->fetchUntil(self::T_WHITESPACE, ',');
+		$this->fetch(',');
+		$this->fetchAll(self::T_WHITESPACE, self::T_COMMENT);
+		return $word;
+	}
+
 }

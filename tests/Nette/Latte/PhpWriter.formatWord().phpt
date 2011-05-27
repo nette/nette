@@ -8,14 +8,15 @@
  * @subpackage UnitTests
  */
 
-use Nette\Latte\PhpWriter;
+use Nette\Latte\PhpWriter,
+	Nette\Latte\MacroTokenizer;
 
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$writer = new PhpWriter;
+$writer = new PhpWriter(new MacroTokenizer(''));
 
 
 Assert::same( '""',  $writer->formatWord('') );

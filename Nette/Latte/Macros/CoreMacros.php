@@ -110,7 +110,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroTranslate(MacroNode $node, $writer)
 	{
-		return 'echo ' . $writer->formatModifiers($writer->formatArgs($node->args), '|translate' . $node->modifiers, $this->parser->escape);
+		return 'echo ' . $writer->formatModifiers('$template->translate(' . $writer->formatArgs() . ')');
 	}
 
 
@@ -157,14 +157,15 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroInclude(MacroNode $node, $writer)
 	{
-		$destination = $writer->fetchWord($node->args); // destination [,] [params]
-		$params = $writer->formatArray($node->args) . ($node->args ? ' + ' : '');
+		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
+		$params = $writer->formatArray();
+		$params .= $params ? ' + ' : '';
 
 		$cmd = 'Nette\Latte\Macros\CoreMacros::includeTemplate(' . $writer->formatWord($destination) . ', '
 			. $params . '$template->getParams(), $_l->templates[' . var_export($this->parser->templateId, TRUE) . '])';
 
 		return $node->modifiers
-			? 'echo ' . $writer->formatModifiers($cmd . '->__toString(TRUE)', $node->modifiers, $this->parser->escape)
+			? 'echo ' . $writer->formatModifiers($cmd . '->__toString(TRUE)')
 			: $cmd . '->render()';
 	}
 
@@ -175,7 +176,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCapture(MacroNode $node, $writer)
 	{
-		$name = $writer->fetchWord($node->args); // $variable
+		$name = $node->tokenizer->fetchWord(); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
 			throw new ParseException("Invalid capture block parameter '$name'");
@@ -191,7 +192,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, $writer)
 	{
-		return $node->data->name . '=' . $writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape);
+		return $node->data->name . '=' . $writer->formatModifiers('ob_get_clean()');
 	}
 
 
@@ -202,7 +203,7 @@ class CoreMacros extends MacroSet
 	public function macroForeach(MacroNode $node, $writer)
 	{
 		return 'foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
-			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs($node->args), 1) . '):';
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs(), 1) . '):';
 	}
 
 
@@ -213,7 +214,7 @@ class CoreMacros extends MacroSet
 	public function macroClass(MacroNode $node, $writer)
 	{
 		return 'if ($_l->tmp = trim(implode(" ", array_unique('
-			. $writer->formatArray($node->args) . ')))) echo \' class="\' . '
+			. $writer->formatArray() . ')))) echo \' class="\' . '
 			. $this->escape() . '($_l->tmp) . \'"\'';
 	}
 
@@ -224,7 +225,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroAttr(MacroNode $node, $writer)
 	{
-		return 'if (($_l->tmp = (string) (' . $writer->formatArgs($node->args)
+		return 'if (($_l->tmp = (string) (' . $writer->formatArgs()
 			. ')) !== \'\') echo \' @@="\' . ' . $this->escape() . '($_l->tmp) . \'"\'';
 	}
 
@@ -247,7 +248,7 @@ class CoreMacros extends MacroSet
 	public function macroDump(MacroNode $node, $writer)
 	{
 		return 'Nette\Diagnostics\Debugger::barDump('
-			. ($node->args ? 'array(' . var_export($writer->formatArgs($node->args), TRUE) . " => $node->args)" : 'get_defined_vars()')
+			. ($node->args ? 'array(' . var_export($writer->formatArgs(), TRUE) . " => $node->args)" : 'get_defined_vars()')
 			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
@@ -271,7 +272,7 @@ class CoreMacros extends MacroSet
 	{
 		$out = '';
 		$var = TRUE;
-		$tokenizer = $writer->preprocess(new Latte\MacroTokenizer($node->args));
+		$tokenizer = $writer->preprocess();
 		while ($token = $tokenizer->fetchToken()) {
 			if ($var && ($token['type'] === Latte\MacroTokenizer::T_SYMBOL || $token['type'] === Latte\MacroTokenizer::T_VARIABLE)) {
 				if ($node->name === 'default') {
@@ -301,7 +302,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroExpr(MacroNode $node, $writer)
 	{
-		return ($node->name === '?' ? '' : 'echo ') . $writer->formatModifiers($writer->formatArgs($node->args), $node->modifiers, $this->parser->escape);
+		return ($node->name === '?' ? '' : 'echo ') . $writer->formatModifiers($writer->formatArgs());
 	}
 
 

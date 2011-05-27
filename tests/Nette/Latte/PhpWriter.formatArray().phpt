@@ -8,7 +8,8 @@
  * @subpackage UnitTests
  */
 
-use Nette\Latte\PhpWriter;
+use Nette\Latte\PhpWriter,
+	Nette\Latte\MacroTokenizer;
 
 
 
@@ -17,8 +18,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 function formatArray($args, $prefix = NULL) {
-	$writer = new PhpWriter;
-	return $writer->formatArray($args, $prefix);
+	$writer = new PhpWriter(new MacroTokenizer($args));
+	return $writer->formatArray($prefix);
 }
 
 

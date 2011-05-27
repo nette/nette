@@ -19,8 +19,6 @@ $parser = new Nette\Latte\Parser;
 UIMacros::install($parser);
 function item1($a) { return $a[1]; }
 
-$prefix = '<?php foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(';
-
 // {ifset ... }
 Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '#block')) );
 Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["#test"], #block')) );

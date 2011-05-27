@@ -22,6 +22,31 @@ use Nette;
  */
 class PhpWriter extends Nette\Object
 {
+	/** @var MacroTokenizer */
+	private $argsTokenizer;
+
+	/** @var string */
+	private $modifiers;
+
+	/** @var string */
+	private $escape;
+
+
+
+	public static function using(MacroNode $node, $escape = NULL)
+	{
+		return new static($node->tokenizer, $node->modifiers, $escape);
+	}
+
+
+
+	public function __construct(MacroTokenizer $argsTokenizer, $modifiers = NULL, $escape = NULL)
+	{
+		$this->argsTokenizer = $argsTokenizer;
+		$this->modifiers = $modifiers;
+		$this->escape = explode('|', $escape);
+	}
+
 
 
 	/**
@@ -29,15 +54,14 @@ class PhpWriter extends Nette\Object
 	 * @param  string
 	 * @return string
 	 */
-	public function formatModifiers($var, $modifiers, $escape = NULL)
+	public function formatModifiers($var)
 	{
-		$modifiers = ltrim($modifiers, '|');
+		$modifiers = ltrim($this->modifiers, '|');
 		if (!$modifiers) {
 			return $var;
 		}
 
 		$tokenizer = $this->preprocess(new MacroTokenizer($modifiers));
-		$escape = explode('|', $escape);
 		$inside = FALSE;
 		while ($token = $tokenizer->fetchToken()) {
 			if ($token['type'] === MacroTokenizer::T_WHITESPACE) {
@@ -45,8 +69,8 @@ class PhpWriter extends Nette\Object
 
 			} elseif (!$inside) {
 				if ($token['type'] === MacroTokenizer::T_SYMBOL) {
-					if ($escape && $token['value'] === 'escape') {
-						$var = $escape[0] . "($var" . (isset($escape[1]) ? ', ' . var_export($escape[1], TRUE) : '');
+					if ($this->escape && $token['value'] === 'escape') {
+						$var = $this->escape[0] . "($var" . (isset($this->escape[1]) ? ', ' . var_export($this->escape[1], TRUE) : '');
 					} else {
 						$var = "\$template->" . $token['value'] . "($var";
 					}
@@ -73,31 +97,13 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Reads single token (optionally delimited by comma) from string.
-	 * @param  string
-	 * @return string
-	 */
-	public function fetchWord(& $s)
-	{
-		if ($matches = Nette\Utils\Strings::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
-			$s = $matches[2];
-			return $matches[1];
-		}
-		return FALSE;
-	}
-
-
-
-	/**
 	 * Formats macro arguments to PHP code.
-	 * @param  string
-	 * @param  string
 	 * @return string
 	 */
-	public function formatArgs($input)
+	public function formatArgs()
 	{
 		$out = '';
-		$tokenizer = $this->preprocess(new MacroTokenizer($input));
+		$tokenizer = $this->preprocess();
 		while ($token = $tokenizer->fetchToken()) {
 			$out .= $this->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 		}
@@ -108,15 +114,13 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Formats macro arguments to PHP array.
-	 * @param  string
-	 * @param  string
 	 * @return string
 	 */
-	public function formatArray($input, $prefix = '')
+	public function formatArray($prefix = '')
 	{
 		$out = '';
 		$expand = NULL;
-		$tokenizer = $this->preprocess(new MacroTokenizer($input));
+		$tokenizer = $this->preprocess();
 		if (!$tokenizer->tokens) {
 			return '';
 		}

@@ -439,7 +439,7 @@ class Parser extends Nette\Object
 
 			array_pop($this->macroNodes);
 			if (!$node->args) {
-				$node->args = (string) $args;
+				$node->setArgs($args);
 			}
 			if ($isLeftmost && $isRightmost) {
 				$this->output = substr($this->output, 0, $leftOfs); // alone macro -> remove indentation

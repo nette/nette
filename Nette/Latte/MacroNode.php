@@ -40,6 +40,9 @@ class MacroNode extends Nette\Object
 	/** @var bool */
 	public $closing = FALSE;
 
+	/** @var MacroTokenizer */
+	public $tokenizer;
+
 	/** @var int @internal */
 	public $offset;
 
@@ -58,15 +61,24 @@ class MacroNode extends Nette\Object
 	{
 		$this->macro = $macro;
 		$this->name = (string) $name;
-		$this->args = (string) $args;
 		$this->modifiers = (string) $modifiers;
 		$this->parentNode = $parentNode;
+		$this->tokenizer = new MacroTokenizer($this->args);
 		$this->data = new \stdClass;
+		$this->setArgs($args);
 	}
 
 
 
-	function close($content)
+	public function setArgs($args)
+	{
+		$this->args = (string) $args;
+		$this->tokenizer->tokenize($this->args);
+	}
+
+
+
+	public function close($content)
 	{
 		$this->closing = TRUE;
 		$this->content = $content;

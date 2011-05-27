@@ -70,10 +70,9 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	{
 		$this->used = TRUE;
 		$node->isEmpty = FALSE;
-		$writer = new Latte\PhpWriter;
 		return '<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, '
 			. var_export(Nette\Utils\Strings::random(), TRUE)
-			. ', $_g->caches' . $writer->formatArray($node->args, ', ') . ')) { ?>';
+			. ', $_g->caches' . Latte\PhpWriter::using($node)->formatArray(', ') . ')) { ?>';
 	}
 
 

@@ -151,7 +151,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroInclude(MacroNode $node, $writer, $isDefinition = FALSE)
 	{
-		$destination = $writer->fetchWord($node->args); // destination [,] [params]
+		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
 		if (substr($destination, 0, 1) !== '#') {
 			return FALSE;
 		}
@@ -172,14 +172,15 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		}
 		$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
-		$params = $writer->formatArray($node->args) . ($node->args ? ' + ' : '');
+		$params = $writer->formatArray();
+		$params .= $params ? ' + ' : '';
 		$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 		$cmd = isset($this->namedBlocks[$destination]) && !$parent
 			? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
 			: 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
 
 		return $node->modifiers
-			? "ob_start(); $cmd; echo " . $writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape)
+			? "ob_start(); $cmd; echo " . $writer->formatModifiers('ob_get_clean()')
 			: $cmd;
 	}
 
@@ -200,7 +201,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			throw new ParseException("Multiple {extends} declarations are not allowed.");
 		}
 		$this->extends = $node->args !== 'none';
-		return $this->extends ? '$_l->extends = ' . ($node->args === 'auto' ? '$layout' : $writer->formatArgs($node->args)) : '';
+		return $this->extends ? '$_l->extends = ' . ($node->args === 'auto' ? '$layout' : $writer->formatArgs()) : '';
 	}
 
 
@@ -211,7 +212,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroBlock(MacroNode $node, $writer)
 	{
-		$name = $writer->fetchWord($node->args); // block [,] [params]
+		$name = $node->tokenizer->fetchWord(); // block [,] [params]
 
 		if ($node->name === 'block' && $name === FALSE) { // anonymous block
 			return $node->modifiers === '' ? '' : 'ob_start()';
@@ -229,25 +230,22 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			$this->namedBlocks[$name] = TRUE;
 			$node->data->name = $name;
 			if ($node->name === 'snippet') {
-				$tag = $writer->fetchWord($node->args);  // [name [,]] [tag]
+				$tag = $node->tokenizer->fetchWord();  // [name [,]] [tag]
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
 				$tag = $tag ? $tag : 'div';
-				$node->args = '#' . $name;
 				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
-					. $this->macroInclude($node, $writer)
+					. $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer)
 					. " ?></$tag><?php ";
 
 			} elseif (!$top) {
-				$node->args = '#' . $name;
-				return $this->macroInclude($node, $writer, TRUE);
+				return $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer, TRUE);
 
 			} elseif ($this->extends) {
 				return '';
 
 			} else {
-				$node->args = '#' . $name;
-				return 'if (!$_l->extends) { ' . $this->macroInclude($node, $writer, TRUE) . '; }';
+				return 'if (!$_l->extends) { ' . $this->macroInclude(new Latte\MacroNode($this, 'include', '#' . $name, $node->modifiers, $node->parentNode), $writer, TRUE) . '; }';
 			}
 		}
 	}
@@ -268,7 +266,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $node->content = '';
 
 		} else { // anonymous block
-			return $node->modifiers === '' ? '' : 'echo ' . $writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape);
+			return $node->modifiers === '' ? '' : 'echo ' . $writer->formatModifiers('ob_get_clean()');
 		}
 	}
 
@@ -283,7 +281,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return FALSE;
 		}
 		$list = array();
-		while (($name = $writer->fetchWord($node->args)) !== FALSE) {
+		while (($name = $node->tokenizer->fetchWord()) !== FALSE) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
 		}
 		return 'if (isset(' . implode(', ', $list) . ')):';
@@ -296,7 +294,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroControl(MacroNode $node, $writer)
 	{
-		$pair = $writer->fetchWord($node->args); // control[:method]
+		$pair = $node->tokenizer->fetchWord(); // control[:method]
 		if ($pair === FALSE) {
 			throw new ParseException("Missing control name in {control}");
 		}
@@ -304,7 +302,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$name = $writer->formatWord($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
-		$param = $writer->formatArray($node->args);
+		$param = $writer->formatArray();
 		if (strpos($node->args, '=>') === FALSE) {
 			$param = substr($param, 6, -1); // removes array()
 		}
@@ -323,7 +321,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroLink(MacroNode $node, $writer)
 	{
-		$link = $writer->formatWord($writer->fetchWord($node->args)) . $writer->formatArray($node->args, ', '); // destination [,] args
+		$link = $writer->formatWord($node->tokenizer->fetchWord()) . $writer->formatArray(', '); // destination [,] args
 		return 'echo ' . $this->escape() . '(' . $writer->formatModifiers(($node->name === 'plink' ? '$presenter' : '$control')
 			. '->link(' . $link .')', $node->modifiers, $this->parser->escape) . ')';
 	}
@@ -335,7 +333,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroIfCurrent(MacroNode $node, $writer)
 	{
-		$link = $writer->formatWord($writer->fetchWord($node->args)) . $writer->formatArray($node->args, ', '); // destination [,] args
+		$link = $writer->formatWord($node->tokenizer->fetchWord()) . $writer->formatArray(', '); // destination [,] args
 		return ($node->args ? 'try { $presenter->link(' . $link . '); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($presenter->getLastCreatedRequestFlag("current")):';
 	}
