@@ -46,6 +46,9 @@ class MacroNode extends Nette\Object
 	/** @var MacroNode */
 	public $parentNode;
 
+	/** @var string */
+	public $content;
+
 	/** @var stdClass  user data */
 	public $data;
 
@@ -63,9 +66,10 @@ class MacroNode extends Nette\Object
 
 
 
-	function close()
+	function close($content)
 	{
 		$this->closing = TRUE;
+		$this->content = $content;
 		return $this->macro->nodeClosed($this);
 	}
 

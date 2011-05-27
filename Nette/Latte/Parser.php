@@ -437,24 +437,34 @@ class Parser extends Nette\Object
 			if (!$node->args) {
 				$node->args = (string) $args;
 			}
-			$code = $node->close();
+			if ($isLeftmost && $isRightmost) {
+				$this->output = substr($this->output, 0, $leftOfs); // alone macro -> remove indentation
+			}
+
+			$code = $node->close(substr($this->output, $node->offset));
+
+			if (!$isLeftmost && $isRightmost && substr($code, -2) === '?>') {
+				$code .= "\n"; // double newline to avoid newline eating by PHP
+			}
+			$this->output = substr($this->output, 0, $node->offset) . $node->content. $code;
 
 		} else { // opening
 			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
 			if (!$node->isEmpty) {
 				$this->macroNodes[] = $node;
 			}
-		}
 
-		if ($isRightmost) {
-			if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
-				$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
-			} elseif (substr($code, -2) === '?>') {
-				$code .= "\n"; // double newline to avoid newline eating by PHP
+			if ($isRightmost) {
+				if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
+					$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
+				} elseif (substr($code, -2) === '?>') {
+					$code .= "\n"; // double newline to avoid newline eating by PHP
+				}
 			}
-		}
 
-		$this->output .= $code;
+			$this->output .= $code;
+			$node->offset = strlen($this->output);
+		}
 	}
 
 

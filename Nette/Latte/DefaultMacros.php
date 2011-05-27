@@ -182,59 +182,50 @@ class DefaultMacros extends Nette\Object implements IMacro
 		} catch (ParseException $e) {
 		}
 
+		// internal state holder
+		$epilog = '';
+		$prolog = "<?php\n"
+			. 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
+			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
+			. "\n?>";
+
+		// named blocks
+		if ($this->namedBlocks) {
+			$prolog .= "<?php\n\n";
+			foreach ($this->namedBlocks as $name => $code) {
+				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$prolog .= "//\n// block $name\n//\n"
+					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
+					. "function $func(\$_l, \$_args) { "
+					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
+					. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
+					. "\n?>$code<?php\n}}\n\n\n";
+			}
+			$prolog .= "//\n// end of blocks\n//\n?>";
+		}
+
 		// extends support
 		if ($this->namedBlocks || $this->extends) {
-			$prolog = '<?php
+			$prolog .= '<?php
 if ($_l->extends) {
 	ob_start();
 } elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . "\n";
-			$epilog = '<?php
+			$epilog .= '<?php
 if ($_l->extends) {
 	ob_end_clean();
 	Nette\Latte\DefaultMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
 }
 ';
 		} else {
-			$prolog = '<?php
+			$prolog .= '<?php
 if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
 	return Nette\Latte\DefaultMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 ?>' . "\n";
-			$epilog = '';
 		}
-
-		// named blocks
-		if ($this->namedBlocks) {
-			$uniq = $this->parser->templateId;
-			foreach (array_reverse($this->namedBlocks, TRUE) as $name => $foo) {
-				$code = & $this->namedBlocks[$name];
-				$namere = preg_quote($name, '#');
-				$s = Strings::replace($s,
-					"#{block $namere} \?>(.*)<\?php {/block $namere}#sU",
-					/*5.2* callback(*/function ($matches) use ($name, & $code, $uniq) {
-						list(, $content) = $matches;
-						$func = '_lb' . substr(md5($uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-						$code = "//\n// block $name\n//\n"
-							. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
-							. "function $func(\$_l, \$_args) { "
-							. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
-							. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
-							. "\n?>$content<?php\n}}";
-						return '';
-					}/*5.2* )*/
-				);
-			}
-			$prolog = "<?php\n\n" . implode("\n\n\n", $this->namedBlocks) . "\n\n//\n// end of blocks\n//\n?>" . $prolog;
-		}
-
-		// internal state holder
-		$prolog = "<?php\n"
-			. 'list($_l, $_g) = Nette\Latte\DefaultMacros::initRuntime($template, '
-			. var_export($this->extends, TRUE) . ', ' . var_export($this->parser->templateId, TRUE) . '); unset($_extends);'
-			. "\n?>" . $prolog;
 
 		$s = $prolog . $s . $epilog;
 	}
@@ -425,7 +416,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			}
 
 			$top = empty($node->parentNode);
-			$this->namedBlocks[$name] = $name;
+			$this->namedBlocks[$name] = TRUE;
 			$node->data->name = $name;
 			if ($node->name === 'snippet') {
 				$tag = $this->writer->fetchWord($node->args);  // [name [,]] [tag]
@@ -435,18 +426,18 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				$node->args = '#' . $name;
 				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
 					. $this->macroInclude($node)
-					. " ?></$tag><?php {block $name}";
+					. " ?></$tag><?php ";
 
 			} elseif (!$top) {
 				$node->args = '#' . $name;
-				return $this->macroInclude($node, TRUE) . "{block $name}";
+				return $this->macroInclude($node, TRUE);
 
 			} elseif ($this->extends) {
-				return "{block $name}";
+				return '';
 
 			} else {
 				$node->args = '#' . $name;
-				return 'if (!$_l->extends) { ' . $this->macroInclude($node, TRUE) . "; } {block $name}";
+				return 'if (!$_l->extends) { ' . $this->macroInclude($node, TRUE) . '; }';
 			}
 		}
 	}
@@ -462,7 +453,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $this->macroCaptureEnd($node);
 
 		} elseif (($node->name === 'block' && isset($node->data->name)) || $node->name === 'snippet') { // block
-			return "{/block {$node->data->name}}";
+			$this->namedBlocks[$node->data->name] = $node->content;
+			return $node->content = '';
 
 		} else { // anonymous block
 			return $node->modifiers === '' ? '' : 'echo ' . $this->writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape);
