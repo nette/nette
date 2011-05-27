@@ -33,6 +33,7 @@ class Engine extends Nette\Object
 		Macros\CoreMacros::install($this->parser);
 		$this->parser->addMacro('cache', new Macros\CacheMacro($this->parser));
 		Macros\UIMacros::install($this->parser);
+		Macros\FormMacros::install($this->parser);
 	}
 
 
