@@ -25,28 +25,30 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Applies modifiers.
-	 * @param  string
+	 * Formats modifiers calling.
 	 * @param  string
 	 * @return string
 	 */
 	public function formatModifiers($var, $modifiers, $escape = NULL)
 	{
+		$modifiers = ltrim($modifiers, '|');
 		if (!$modifiers) {
 			return $var;
 		}
+
+		$tokenizer = $this->preprocess(new MacroTokenizer($modifiers));
+		$escape = explode('|', $escape);
 		$inside = FALSE;
-		foreach ($this->parseMacroArgs(ltrim($modifiers, '|')) as $token) {
+		while ($token = $tokenizer->fetchToken()) {
 			if ($token['type'] === MacroTokenizer::T_WHITESPACE) {
 				$var = rtrim($var) . ' ';
 
 			} elseif (!$inside) {
 				if ($token['type'] === MacroTokenizer::T_SYMBOL) {
-					if ($escape && trim($token['value'], "'") === 'escape') {
-						$tmp = explode('|', $escape);
-						$var = $tmp[0] . "($var" . (isset($tmp[1]) ? ', ' . var_export($tmp[1], TRUE) : '');
+					if ($escape && $token['value'] === 'escape') {
+						$var = $escape[0] . "($var" . (isset($escape[1]) ? ', ' . var_export($escape[1], TRUE) : '');
 					} else {
-						$var = "\$template->" . trim($token['value'], "'") . "($var";
+						$var = "\$template->" . $token['value'] . "($var";
 					}
 					$inside = TRUE;
 				} else {
@@ -61,7 +63,7 @@ class PhpWriter extends Nette\Object
 					$inside = FALSE;
 
 				} else {
-					$var .= $token['value'];
+					$var .= $this->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 				}
 			}
 		}
@@ -75,7 +77,7 @@ class PhpWriter extends Nette\Object
 	 * @param  string
 	 * @return string
 	 */
-	public function fetchToken(& $s)
+	public function fetchWord(& $s)
 	{
 		if ($matches = Nette\Utils\Strings::match($s, '#^((?>'.Parser::RE_STRING.'|[^\'"\s,]+)+)\s*,?\s*(.*)$#s')) { // token [,] tail
 			$s = $matches[2];
@@ -87,16 +89,17 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Reformats Latte to PHP code.
+	 * Formats macro arguments to PHP code.
 	 * @param  string
 	 * @param  string
 	 * @return string
 	 */
-	public function formatMacroArgs($input)
+	public function formatArgs($input)
 	{
 		$out = '';
-		foreach ($this->parseMacroArgs($input) as $token) {
-			$out .= $token['value'];
+		$tokenizer = $this->preprocess(new MacroTokenizer($input));
+		while ($token = $tokenizer->fetchToken()) {
+			$out .= $this->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 		}
 		return $out;
 	}
@@ -104,33 +107,36 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Reformats Latte to PHP array.
+	 * Formats macro arguments to PHP array.
 	 * @param  string
 	 * @param  string
 	 * @return string
 	 */
 	public function formatArray($input, $prefix = '')
 	{
-		$tokens = $this->parseMacroArgs($input);
-		if (!$tokens) {
-			return '';
-		}
 		$out = '';
 		$expand = NULL;
-		$tokens[] = NULL; // sentinel
-		foreach ($tokens as $token) {
+		$tokenizer = $this->preprocess(new MacroTokenizer($input));
+		if (!$tokenizer->tokens) {
+			return '';
+		}
+		while ($token = $tokenizer->fetchToken()) {
 			if ($token['value'] === '(expand)' && $token['depth'] === 0) {
 				$expand = TRUE;
 				$out .= '),';
 
-			} elseif ($expand && ($token['value'] === ',' || $token['value'] === NULL) && !$token['depth']) {
+			} elseif ($expand && ($token['value'] === ',') && !$token['depth']) {
 				$expand = FALSE;
 				$out .= ', array(';
 			} else {
-				$out .= $token['value'];
+				$out .= $this->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 			}
 		}
-		return $prefix . ($expand === NULL ? "array($out)" : "array_merge(array($out))");
+		if ($expand === NULL) {
+			return $prefix . "array($out)";
+		} else {
+			return $prefix . "array_merge(array($out" . ($expand ? ', array(' : '') ."))";
+		}
 	}
 
 
@@ -140,28 +146,36 @@ class PhpWriter extends Nette\Object
 	 * @param  string
 	 * @return string
 	 */
-	public function formatString($s)
+	public function formatWord($s)
 	{
-		static $keywords = array('true'=>1, 'false'=>1, 'null'=>1);
-		return (is_numeric($s) || strspn($s, '\'"$') || isset($keywords[strtolower($s)])) ? $s : '"' . $s . '"';
+		return (is_numeric($s) || strspn($s, '\'"$') || in_array(strtolower($s), array('true', 'false', 'null')))
+			? $s : '"' . $s . '"';
 	}
 
 
 
 	/**
-	 * Tokenizer and preparser for macro arguments.
-	 * @param  string
-	 * @return array
+	 * @return bool
 	 */
-	public function parseMacroArgs($input)
+	public function canQuote($tokenizer)
 	{
-		$tokenizer = new MacroTokenizer($input);
+		return $tokenizer->isCurrent(MacroTokenizer::T_SYMBOL)
+			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=', '=>', ':', '?'))
+			&& (!$tokenizer->hasNext() || $tokenizer->isNext(',', ')', ']', '=', '=>', ':', '|'));
+	}
 
-		$inTernary = $lastSymbol = $prev = NULL;
+
+
+	/**
+	 * Preprocessor for tokens.
+	 * @return MacroTokenizer
+	 */
+	public function preprocess(MacroTokenizer $tokenizer = NULL)
+	{
+		$tokenizer = $tokenizer === NULL ? $this->argsTokenizer : $tokenizer;
+		$inTernary = $prev = NULL;
 		$tokens = $arrays = array();
-		$n = -1;
-		while (++$n < count($tokenizer->tokens)) {
-			$token = $tokenizer->tokens[$n];
+		while ($token = $tokenizer->fetchToken()) {
 			$token['depth'] = $depth = count($arrays);
 
 			if ($token['type'] === MacroTokenizer::T_COMMENT) {
@@ -170,16 +184,6 @@ class PhpWriter extends Nette\Object
 			} elseif ($token['type'] === MacroTokenizer::T_WHITESPACE) {
 				$tokens[] = $token;
 				continue;
-
-			} elseif ($token['type'] === MacroTokenizer::T_SYMBOL && ($prev === NULL || in_array($prev['value'], array(',', '(', '[', '=', '=>', ':', '?')))) {
-				$lastSymbol = count($tokens); // quoting pre-requirements
-
-			} elseif (is_int($lastSymbol) && in_array($token['value'], array(',', ')', ']', '=', '=>', ':', '|'))) {
-				$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
-				$lastSymbol = NULL;
-
-			} else {
-				$lastSymbol = NULL;
 			}
 
 			if ($token['value'] === '?') { // short ternary operators without :
@@ -213,15 +217,15 @@ class PhpWriter extends Nette\Object
 			$tokens[] = $prev = $token;
 		}
 
-		if (is_int($lastSymbol)) {
-			$tokens[$lastSymbol]['value'] = "'" . $tokens[$lastSymbol]['value'] . "'"; // quote symbols
-		}
 		if ($inTernary !== NULL) { // close ternary
 			$tokens[] = MacroTokenizer::createToken(':') + array('depth' => count($arrays));
 			$tokens[] = MacroTokenizer::createToken('null') + array('depth' => count($arrays));
 		}
 
-		return $tokens;
+		$tokenizer = clone $tokenizer;
+		$tokenizer->position = 0;
+		$tokenizer->tokens = $tokens;
+		return $tokenizer;
 	}
 
 }

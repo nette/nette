@@ -22,12 +22,15 @@ use Nette;
  */
 class MacroTokenizer extends Nette\Utils\Tokenizer
 {
-	/** @internal */
-	const T_WHITESPACE = T_WHITESPACE,
-		T_COMMENT = T_COMMENT,
-		T_SYMBOL = -1,
-		T_NUMBER = -2,
-		T_VARIABLE = -3;
+	const T_WHITESPACE = 1,
+		T_COMMENT = 2,
+		T_SYMBOL = 3,
+		T_NUMBER = 4,
+		T_VARIABLE = 5,
+		T_STRING = 6,
+		T_CAST = 7,
+		T_KEYWORD = 8,
+		T_CHAR = 9;
 
 
 
@@ -36,14 +39,15 @@ class MacroTokenizer extends Nette\Utils\Tokenizer
 		parent::__construct(array(
 			self::T_WHITESPACE => '\s+',
 			self::T_COMMENT => '(?s)/\*.*?\*/',
-			Parser::RE_STRING,
-			'(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\d\pL_])', // keyword or const
-			'\([a-z]+\)', // type casting
+			self::T_STRING => Parser::RE_STRING,
+			self::T_KEYWORD => '(?:true|false|null|and|or|xor|clone|new|instanceof|return|continue|break|[A-Z_][A-Z0-9_]{2,})(?![\d\pL_])', // keyword or const
+			self::T_CAST => '\([a-z]+\)', // type casting
 			self::T_VARIABLE => '\$[\d\pL_]+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
 			self::T_SYMBOL => '[\d\pL_]+(?:-[\d\pL_]+)*',
-			'::|=>|[^"\']', // =>, any char except quotes
+			self::T_CHAR => '::|=>|[^"\']', // =>, any char except quotes
 		), 'u');
+		$this->ignored = array(self::T_COMMENT, self::T_WHITESPACE);
 		$this->tokenize($input);
 	}
 
