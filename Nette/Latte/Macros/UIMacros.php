@@ -50,6 +50,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('extends', array($me, 'macroExtends'));
 		$me->addMacro('layout', array($me, 'macroExtends'));
 		$me->addMacro('block', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
+		$me->addMacro('define', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('ifset', array($me, 'macroIfset'), 'endif');
 
@@ -210,6 +211,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {block [[#]name]}
 	 * {snippet [name [,]] [tag]}
+	 * {define [#]name}
 	 */
 	public function macroBlock(MacroNode $node, $writer)
 	{
@@ -251,6 +253,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 					(string) substr($name, 1), $name, 'ob_get_clean()'
 				);
 
+			} elseif ($node->name === 'define') {
+				return '';
+
 			} elseif (!$top) {
 				return $writer->write($include, $name, 'ob_get_clean()');
 
@@ -268,13 +273,14 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {/block}
 	 * {/snippet}
+	 * {/define}
 	 */
 	public function macroBlockEnd(MacroNode $node, $writer)
 	{
 		if ($node->name === 'capture') { // capture - back compatibility
 			return $this->macroCaptureEnd($node, $writer);
 
-		} elseif (($node->name === 'block' && isset($node->data->name)) || $node->name === 'snippet') { // block
+		} elseif (isset($node->data->name)) { // block, snippet, define
 			if ($node->data->name[0] === '$') {
 				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$node->data->name}]), \$_l, get_defined_vars())");
 			}
