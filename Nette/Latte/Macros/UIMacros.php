@@ -219,17 +219,24 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $node->modifiers === '' ? '' : 'ob_start()';
 
 		} else { // #block
-			$name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
-			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				throw new ParseException("Block name must be alphanumeric string, '$name' given.");
-
-			} elseif (isset($this->namedBlocks[$name])) {
-				throw new ParseException("Cannot redeclare block '$name'");
+			$node->data->name = $name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
+			if ($name == NULL) {
+				throw new ParseException("Missing block name.");
 			}
 
+			if ($name[0] === '$') { // dynamic block
+				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				return "//\n// block $name\n//\n"
+					. "if (!function_exists(\$_l->blocks[$name][] = '$func')) { "
+					. "function $func(\$_l, \$_args) { "
+					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
+			}
+
+			if (isset($this->namedBlocks[$name])) {
+				throw new ParseException("Cannot redeclare static block '$name'");
+			}
 			$top = empty($node->parentNode);
 			$this->namedBlocks[$name] = TRUE;
-			$node->data->name = $name;
 
 			$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
 			if ($node->modifiers) {
@@ -268,6 +275,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $this->macroCaptureEnd($node, $writer);
 
 		} elseif (($node->name === 'block' && isset($node->data->name)) || $node->name === 'snippet') { // block
+			if ($node->data->name[0] === '$') {
+				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$node->data->name}]), \$_l, get_defined_vars())");
+			}
 			$this->namedBlocks[$node->data->name] = $node->content;
 			return $node->content = '';
 
