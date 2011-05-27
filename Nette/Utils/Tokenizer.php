@@ -43,12 +43,12 @@ class Tokenizer extends Nette\Object
 	private $types;
 
 	/** @var array|string */
-	private $current;
+	public $current;
 
 
 
 	/**
-	 * @param  array of [symbol type => pattern]
+	 * @param  array of [(int) symbol type => pattern]
 	 * @param  string  regular expression flag
 	 */
 	public function __construct(array $patterns, $flags = '')
@@ -135,7 +135,7 @@ class Tokenizer extends Nette\Object
 
 
 	/**
-	 * Returns next token.
+	 * Returns next token as string.
 	 * @param  desired token
 	 * @return string
 	 */
@@ -147,7 +147,19 @@ class Tokenizer extends Nette\Object
 
 
 	/**
-	 * Returns all next tokens.
+	 * Returns next token.
+	 * @param  desired token
+	 * @return array|string
+	 */
+	public function fetchToken()
+	{
+		return $this->scan(func_get_args(), TRUE) === FALSE ? FALSE : $this->current;
+	}
+
+
+
+	/**
+	 * Returns concatenation of all next tokens.
 	 * @param  desired token
 	 * @return string
 	 */
@@ -159,7 +171,7 @@ class Tokenizer extends Nette\Object
 
 
 	/**
-	 * Returns all next tokens until it sees a token with the given value.
+	 * Returns concatenation of all next tokens until it sees a token with the given value.
 	 * @param  tokens
 	 * @return string
 	 */
@@ -183,13 +195,52 @@ class Tokenizer extends Nette\Object
 
 
 	/**
+	 * Checks the previous token.
+	 * @param  token
+	 * @return string
+	 */
+	public function isPrev($arg)
+	{
+		return (bool) $this->scan(func_get_args(), TRUE, FALSE, FALSE, TRUE);
+	}
+
+
+
+	/**
+	 * Checks existence of next token.
+	 * @return bool
+	 */
+	public function hasNext()
+	{
+		return isset($this->tokens[$this->position]);
+	}
+
+
+
+	/**
+	 * Checks existence of previous token.
+	 * @return bool
+	 */
+	public function hasPrev()
+	{
+		return $this->position > 1;
+	}
+
+
+
+	/**
 	 * Checks the current token.
 	 * @param  token
 	 * @return string
 	 */
 	public function isCurrent($arg)
 	{
-		return in_array($this->current, func_get_args(), TRUE);
+		if (is_array($this->current)) {
+			return in_array($this->current['value'], func_get_args(), TRUE)
+				|| in_array($this->current['type'], func_get_args(), TRUE);
+		} else {
+			return in_array($this->current, func_get_args(), TRUE);
+		}
 	}
 
 
@@ -199,24 +250,26 @@ class Tokenizer extends Nette\Object
 	 * @param  int token number
 	 * @return array
 	 */
-	private function scan($wanted, $first, $advance = TRUE, $neg = FALSE)
+	private function scan($wanted, $first, $advance = TRUE, $neg = FALSE, $prev = FALSE)
 	{
 		$res = FALSE;
-		$pos = $this->position;
+		$pos = $this->position + ($prev ? -2 : 0);
 		while (isset($this->tokens[$pos])) {
-			$token = $this->tokens[$pos++];
-			$r = is_array($token) ? $token['type'] : $token;
-			if (!$wanted || in_array($r, $wanted, TRUE) ^ $neg) {
+			$token = $this->tokens[$pos];
+			$pos += $prev ? -1 : 1;
+			$value = is_array($token) ? $token['value'] : $token;
+			$type = is_array($token) ? $token['type'] : $token;
+			if (!$wanted || (in_array($value, $wanted, TRUE) || in_array($type, $wanted, TRUE)) ^ $neg) {
 				if ($advance) {
 					$this->position = $pos;
-					$this->current = $r;
+					$this->current = $token;
 				}
-				$res .= is_array($token) ? $token['value'] : $token;
+				$res .= $value;
 				if ($first) {
 					break;
 				}
 
-			} elseif (!in_array($r, $this->ignored, TRUE)) {
+			} elseif ($neg || !in_array($type, $this->ignored, TRUE)) {
 				break;
 			}
 		}

@@ -17,15 +17,15 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $tokenizer = new Tokenizer(array(
-	'number' => '\d+',
-	'whitespace' => '\s+',
-	'string' => '\w+',
+	T_DNUMBER => '\d+',
+	T_WHITESPACE => '\s+',
+	T_STRING => '\w+',
 ));
 $tokenizer->tokenize("say \n123");
 Assert::same( array(
-	array('value' => 'say', 'type' => 'string', 'line' => 1),
-	array('value' => " \n", 'type' => 'whitespace', 'line' => 1),
-	array('value' => '123', 'type' => 'number', 'line' => 2),
+	array('value' => 'say', 'type' => T_STRING, 'line' => 1),
+	array('value' => " \n", 'type' => T_WHITESPACE, 'line' => 1),
+	array('value' => '123', 'type' => T_DNUMBER, 'line' => 2),
 ), $tokenizer->tokens );
 
 try {

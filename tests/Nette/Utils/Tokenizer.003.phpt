@@ -29,11 +29,10 @@ Assert::same( ' ', $tokenizer->fetch() );
 
 
 $tokenizer = new Tokenizer(array(
-	'number' => '\d+',
-	'whitespace' => '\s+',
-	'string' => '\w+',
+	T_DNUMBER => '\d+',
+	T_WHITESPACE => '\s+',
+	T_STRING => '\w+',
 ));
 $tokenizer->tokenize("say 123");
-Assert::false( $tokenizer->fetch('say') );
-Assert::same( 'say', $tokenizer->fetch('string') );
+Assert::same( Tokenizer::createToken('say', T_STRING, 1), $tokenizer->fetchToken('say') );
 Assert::same( ' ', $tokenizer->fetch() );
