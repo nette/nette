@@ -46,6 +46,9 @@ class MacroNode extends Nette\Object
 	/** @var MacroNode */
 	public $parentNode;
 
+	/** @var stdClass  user data */
+	public $data;
+
 
 
 	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL)
@@ -55,6 +58,7 @@ class MacroNode extends Nette\Object
 		$this->args = (string) $args;
 		$this->modifiers = (string) $modifiers;
 		$this->parentNode = $parentNode;
+		$this->data = new \stdClass;
 	}
 
 

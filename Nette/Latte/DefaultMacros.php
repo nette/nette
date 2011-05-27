@@ -62,8 +62,8 @@ class DefaultMacros extends Nette\Object implements IMacro
 		'capture' => '<?php %:macroCapture% ?>',
 		'/capture' => '<?php %:macroCaptureEnd% ?>',
 
-		'snippet' => '<?php %:macroSnippet% ?>',
-		'/snippet' => '<?php %:macroSnippetEnd% ?>',
+		'snippet' => '<?php %:macroBlock% ?>',
+		'/snippet' => '<?php %:macroBlockEnd% ?>',
 
 		'cache' => '<?php %:macroCache% ?>',
 		'/cache' => '<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); } ?>',
@@ -94,7 +94,7 @@ class DefaultMacros extends Nette\Object implements IMacro
 		'extends' => '<?php %:macroExtends% ?>',
 		'layout' => '<?php %:macroExtends% ?>',
 
-		'plink' => '<?php echo %:escape%(%:macroPlink%) ?>',
+		'plink' => '<?php echo %:escape%(%:macroLink%) ?>',
 		'link' => '<?php echo %:escape%(%:macroLink%) ?>',
 		'ifCurrent' => '<?php %:macroIfCurrent% ?>', // deprecated; use n:class="$presenter->linkCurrent ? ..."
 		'/ifCurrent' => '<?php endif ?>',
@@ -110,7 +110,7 @@ class DefaultMacros extends Nette\Object implements IMacro
 		'status' => '<?php $netteHttpResponse->setCode(%%) ?>',
 		'var' => '<?php %:macroVar% ?>',
 		'assign' => '<?php %:macroVar% ?>', // deprecated
-		'default' => '<?php %:macroDefault% ?>',
+		'default' => '<?php %:macroVar% ?>',
 		'dump' => '<?php %:macroDump% ?>',
 		'debugbreak' => '<?php %:macroDebugbreak% ?>',
 		'l' => '{',
@@ -131,9 +131,6 @@ class DefaultMacros extends Nette\Object implements IMacro
 	public $writer;
 
 	/** @var array */
-	private $blocks = array();
-
-	/** @var array */
 	private $namedBlocks = array();
 
 	/** @var bool */
@@ -141,11 +138,6 @@ class DefaultMacros extends Nette\Object implements IMacro
 
 	/** @var int */
 	private $cacheCounter;
-
-	/** @internal block type */
-	const BLOCK_NAMED = 1,
-		BLOCK_CAPTURE = 2,
-		BLOCK_ANONYMOUS = 3;
 
 
 
@@ -170,7 +162,6 @@ class DefaultMacros extends Nette\Object implements IMacro
 	 */
 	public function initialize()
 	{
-		$this->blocks = array();
 		$this->namedBlocks = array();
 		$this->extends = NULL;
 		$this->cacheCounter = 0;
@@ -185,9 +176,10 @@ class DefaultMacros extends Nette\Object implements IMacro
 	 */
 	public function finalize(& $s)
 	{
-		// blocks closing check
-		if (count($this->blocks) === 1) { // auto-close last block
+		// try close last block
+		try {
 			$this->parser->writeMacro('/block');
+		} catch (ParseException $e) {
 		}
 
 		// extends support
@@ -278,17 +270,15 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	private function compile(MacroNode $node, $name)
 	{
 		$me = $this;
-		$args = $node->args;
-		$modifiers = $node->modifiers;
 		$code = Strings::replace(
 			self::$defaultMacros[$name],
 			'#%(.*?)%#',
-			/*5.2* callback(*/function ($m) use ($me, $args, $modifiers) {
+			/*5.2* callback(*/function ($m) use ($me, $node) {
 				if ($m[1]) {
 					return callback($m[1][0] === ':' ? array($me, substr($m[1], 1)) : $m[1])
-						->invoke($args, $modifiers);
+						->invoke($node);
 				} else {
-					return $me->writer->formatArgs($args);
+					return $me->writer->formatArgs($node->args);
 				}
 			}/*5.2* )*/
 		);
@@ -304,9 +294,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {_$var |modifiers}
 	 */
-	public function macroTranslate($var, $modifiers)
+	public function macroTranslate(MacroNode $node)
 	{
-		return $this->writer->formatModifiers($this->writer->formatArgs($var), '|translate' . $modifiers, $this->parser->escape);
+		return $this->writer->formatModifiers($this->writer->formatArgs($node->args), '|translate' . $node->modifiers, $this->parser->escape);
 	}
 
 
@@ -314,9 +304,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {syntax ...}
 	 */
-	public function macroSyntax($var)
+	public function macroSyntax(MacroNode $node)
 	{
-		switch ($var) {
+		if ($node->closing) {
+			$node->args = 'latte';
+		}
+		switch ($node->args) {
 		case '':
 		case 'latte':
 			$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
@@ -339,7 +332,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			break;
 
 		default:
-			throw new ParseException("Unknown syntax '$var'", 0, $this->parser->line);
+			throw new ParseException("Unknown syntax '$node->args'", 0, $this->parser->line);
 		}
 	}
 
@@ -348,10 +341,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {include ...}
 	 */
-	public function macroInclude($content, $modifiers, $isDefinition = FALSE)
+	public function macroInclude(MacroNode $node, $isDefinition = FALSE)
 	{
-		$destination = $this->writer->fetchWord($content); // destination [,] [params]
-		$params = $this->writer->formatArray($content) . ($content ? ' + ' : '');
+		$destination = $this->writer->fetchWord($node->args); // destination [,] [params]
+		$params = $this->writer->formatArray($node->args) . ($node->args ? ' + ' : '');
 
 		if ($destination === NULL) {
 			throw new ParseException("Missing destination in {include}", 0, $this->parser->line);
@@ -364,28 +357,28 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 			$parent = $destination === 'parent';
 			if ($destination === 'parent' || $destination === 'this') {
-				$item = end($this->blocks);
-				while ($item && $item[0] !== self::BLOCK_NAMED) $item = prev($this->blocks);
+				$item = $node->parentNode;
+				while ($item && $item->name !== 'block' && !isset($item->data->name)) $item = $item->parentNode;
 				if (!$item) {
 					throw new ParseException("Cannot include $destination block outside of any block.", 0, $this->parser->line);
 				}
-				$destination = $item[1];
+				$destination = $item->data->name;
 			}
 			$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
 			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
 				? "call_user_func(reset(\$_l->blocks[$name]), \$_l, $params)"
 				: 'Nette\Latte\DefaultMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, $params)";
-			return $modifiers
-				? "ob_start(); $cmd; echo " . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape)
+			return $node->modifiers
+				? "ob_start(); $cmd; echo " . $this->writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape)
 				: $cmd;
 
 		} else { // include "file"
 			$destination = $this->writer->formatWord($destination);
 			$cmd = 'Nette\Latte\DefaultMacros::includeTemplate(' . $destination . ', '
 				. $params . '$template->getParams(), $_l->templates[' . var_export($this->parser->templateId, TRUE) . '])';
-			return $modifiers
-				? 'echo ' . $this->writer->formatModifiers($cmd . '->__toString(TRUE)', $modifiers, $this->parser->escape)
+			return $node->modifiers
+				? 'echo ' . $this->writer->formatModifiers($cmd . '->__toString(TRUE)', $node->modifiers, $this->parser->escape)
 				: $cmd . '->render()';
 		}
 	}
@@ -395,36 +388,35 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {extends ...}
 	 */
-	public function macroExtends($content)
+	public function macroExtends(MacroNode $node)
 	{
-		if (!$content) {
+		if (!$node->args) {
 			throw new ParseException("Missing destination in {extends}", 0, $this->parser->line);
 		}
-		if (!empty($this->blocks)) {
-			throw new ParseException("{extends} must be placed outside any block.", 0, $this->parser->line);
+		if (!empty($node->parentNode)) {
+			throw new ParseException("{extends} must be placed outside any macro.", 0, $this->parser->line);
 		}
 		if ($this->extends !== NULL) {
 			throw new ParseException("Multiple {extends} declarations are not allowed.", 0, $this->parser->line);
 		}
-		$this->extends = $content !== 'none';
-		return $this->extends ? '$_l->extends = ' . ($content === 'auto' ? '$layout' : $this->writer->formatArgs($content)) : '';
+		$this->extends = $node->args !== 'none';
+		return $this->extends ? '$_l->extends = ' . ($node->args === 'auto' ? '$layout' : $this->writer->formatArgs($node->args)) : '';
 	}
 
 
 
 	/**
-	 * {block ...}
+	 * {block ...} {snippet ...}
 	 */
-	public function macroBlock($content, $modifiers)
+	public function macroBlock(MacroNode $node)
 	{
-		$name = $this->writer->fetchWord($content); // block [,] [params]
+		$name = $this->writer->fetchWord($node->args); // block [,] [params]
 
-		if ($name === NULL) { // anonymous block
-			$this->blocks[] = array(self::BLOCK_ANONYMOUS, NULL, $modifiers);
-			return $modifiers === '' ? '' : 'ob_start()';
+		if ($node->name === 'block' && $name === NULL) { // anonymous block
+			return $node->modifiers === '' ? '' : 'ob_start()';
 
 		} else { // #block
-			$name = ltrim($name, '#');
+			$name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
 			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
 				throw new ParseException("Block name must be alphanumeric string, '$name' given.", 0, $this->parser->line);
 
@@ -432,26 +424,29 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				throw new ParseException("Cannot redeclare block '$name'", 0, $this->parser->line);
 			}
 
-			$top = empty($this->blocks);
+			$top = empty($node->parentNode);
 			$this->namedBlocks[$name] = $name;
-			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
-			if ($name[0] === '_') { // snippet
-				$tag = $this->writer->fetchWord($content);  // [name [,]] [tag]
+			$node->data->name = $name;
+			if ($node->name === 'snippet') {
+				$tag = $this->writer->fetchWord($node->args);  // [name [,]] [tag]
 				$tag = trim($tag, '<>');
 				$namePhp = var_export(substr($name, 1), TRUE);
 				$tag = $tag ? $tag : 'div';
+				$node->args = '#' . $name;
 				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php "
-					. $this->macroInclude('#' . $name, $modifiers)
+					. $this->macroInclude($node)
 					. " ?></$tag><?php {block $name}";
 
 			} elseif (!$top) {
-				return $this->macroInclude('#' . $name, $modifiers, TRUE) . "{block $name}";
+				$node->args = '#' . $name;
+				return $this->macroInclude($node, TRUE) . "{block $name}";
 
 			} elseif ($this->extends) {
 				return "{block $name}";
 
 			} else {
-				return 'if (!$_l->extends) { ' . $this->macroInclude('#' . $name, $modifiers, TRUE) . "; } {block $name}";
+				$node->args = '#' . $name;
+				return 'if (!$_l->extends) { ' . $this->macroInclude($node, TRUE) . "; } {block $name}";
 			}
 		}
 	}
@@ -459,42 +454,19 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 
 	/**
-	 * {/block}
+	 * {/block} {/snippet}
 	 */
-	public function macroBlockEnd($content)
+	public function macroBlockEnd(MacroNode $node)
 	{
-		list($type, $name, $modifiers) = array_pop($this->blocks);
+		if ($node->name === 'capture') { // capture - back compatibility
+			return $this->macroCaptureEnd($node);
 
-		if ($type === self::BLOCK_CAPTURE) { // capture - back compatibility
-			$this->blocks[] = array($type, $name, $modifiers);
-			return $this->macroCaptureEnd($content);
-
-		} elseif ($type === self::BLOCK_NAMED) { // block
-			return "{/block $name}";
+		} elseif (($node->name === 'block' && isset($node->data->name)) || $node->name === 'snippet') { // block
+			return "{/block {$node->data->name}}";
 
 		} else { // anonymous block
-			return $modifiers === '' ? '' : 'echo ' . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape);
+			return $node->modifiers === '' ? '' : 'echo ' . $this->writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape);
 		}
-	}
-
-
-
-	/**
-	 * {snippet ...}
-	 */
-	public function macroSnippet($content)
-	{
-		return $this->macroBlock('_' . $content, '');
-	}
-
-
-
-	/**
-	 * {snippet ...}
-	 */
-	public function macroSnippetEnd($content)
-	{
-		return $this->macroBlockEnd('', '');
 	}
 
 
@@ -502,15 +474,14 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {capture ...}
 	 */
-	public function macroCapture($content, $modifiers)
+	public function macroCapture(MacroNode $node)
 	{
-		$name = $this->writer->fetchWord($content); // $variable
+		$name = $this->writer->fetchWord($node->args); // $variable
 
 		if (substr($name, 0, 1) !== '$') {
 			throw new ParseException("Invalid capture block parameter '$name'", 0, $this->parser->line);
 		}
-
-		$this->blocks[] = array(self::BLOCK_CAPTURE, $name, $modifiers);
+		$node->data->name = $name;
 		return 'ob_start()';
 	}
 
@@ -519,10 +490,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {/capture}
 	 */
-	public function macroCaptureEnd($content)
+	public function macroCaptureEnd(MacroNode $node)
 	{
-		list($type, $name, $modifiers) = array_pop($this->blocks);
-		return $name . '=' . $this->writer->formatModifiers('ob_get_clean()', $modifiers, $this->parser->escape);
+		return $node->data->name . '=' . $this->writer->formatModifiers('ob_get_clean()', $node->modifiers, $this->parser->escape);
 	}
 
 
@@ -530,11 +500,11 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {cache ...}
 	 */
-	public function macroCache($content)
+	public function macroCache(MacroNode $node)
 	{
 		return 'if (Nette\Latte\DefaultMacros::createCache($netteCacheStorage, '
 			. var_export($this->parser->templateId . ':' . $this->cacheCounter++, TRUE)
-			. ', $_g->caches' . $this->writer->formatArray($content, ', ') . ')) {';
+			. ', $_g->caches' . $this->writer->formatArray($node->args, ', ') . ')) {';
 	}
 
 
@@ -542,10 +512,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {foreach ...}
 	 */
-	public function macroForeach($content)
+	public function macroForeach(MacroNode $node)
 	{
 		return '$iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
-			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->writer->formatArgs($content), 1);
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $this->writer->formatArgs($node->args), 1);
 	}
 
 
@@ -553,13 +523,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {ifset ...}
 	 */
-	public function macroIfset($content)
+	public function macroIfset(MacroNode $node)
 	{
-		if (strpos($content, '#') === FALSE) {
-			return $content;
+		if (strpos($node->args, '#') === FALSE) {
+			return $node->args;
 		}
 		$list = array();
-		while (($name = $this->writer->fetchWord($content)) !== NULL) {
+		while (($name = $this->writer->fetchWord($node->args)) !== NULL) {
 			$list[] = $name[0] === '#' ? '$_l->blocks["' . substr($name, 1) . '"]' : $name;
 		}
 		return implode(', ', $list);
@@ -570,9 +540,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {attr ...}
 	 */
-	public function macroAttr($content)
+	public function macroAttr(MacroNode $node)
 	{
-		return Strings::replace($content . ' ', '#\)\s+#', ')->');
+		return Strings::replace($node->args . ' ', '#\)\s+#', ')->');
 	}
 
 
@@ -580,25 +550,25 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {contentType ...}
 	 */
-	public function macroContentType($content)
+	public function macroContentType(MacroNode $node)
 	{
-		if (strpos($content, 'html') !== FALSE) {
+		if (strpos($node->args, 'html') !== FALSE) {
 			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
 			$this->parser->context = Parser::CONTEXT_TEXT;
 
-		} elseif (strpos($content, 'xml') !== FALSE) {
+		} elseif (strpos($node->args, 'xml') !== FALSE) {
 			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
 			$this->parser->context = Parser::CONTEXT_NONE;
 
-		} elseif (strpos($content, 'javascript') !== FALSE) {
+		} elseif (strpos($node->args, 'javascript') !== FALSE) {
 			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
 			$this->parser->context = Parser::CONTEXT_NONE;
 
-		} elseif (strpos($content, 'css') !== FALSE) {
+		} elseif (strpos($node->args, 'css') !== FALSE) {
 			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
 			$this->parser->context = Parser::CONTEXT_NONE;
 
-		} elseif (strpos($content, 'plain') !== FALSE) {
+		} elseif (strpos($node->args, 'plain') !== FALSE) {
 			$this->parser->escape = '';
 			$this->parser->context = Parser::CONTEXT_NONE;
 
@@ -608,8 +578,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		}
 
 		// temporary solution
-		if (strpos($content, '/')) {
-			return '$netteHttpResponse->setHeader("Content-Type", "' . $content . '")';
+		if (strpos($node->args, '/')) {
+			return '$netteHttpResponse->setHeader("Content-Type", "' . $node->args . '")';
 		}
 	}
 
@@ -618,10 +588,10 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {dump ...}
 	 */
-	public function macroDump($content)
+	public function macroDump(MacroNode $node)
 	{
 		return 'Nette\Diagnostics\Debugger::barDump('
-			. ($content ? 'array(' . var_export($this->writer->formatArgs($content), TRUE) . " => $content)" : 'get_defined_vars()')
+			. ($node->args ? 'array(' . var_export($this->writer->formatArgs($node->args), TRUE) . " => $node->args)" : 'get_defined_vars()')
 			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
@@ -640,9 +610,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {control ...}
 	 */
-	public function macroControl($content)
+	public function macroControl(MacroNode $node)
 	{
-		$pair = $this->writer->fetchWord($content); // control[:method]
+		$pair = $this->writer->fetchWord($node->args); // control[:method]
 		if ($pair === NULL) {
 			throw new ParseException("Missing control name in {control}", 0, $this->parser->line);
 		}
@@ -650,8 +620,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		$name = $this->writer->formatWord($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
-		$param = $this->writer->formatArray($content);
-		if (strpos($content, '=>') === FALSE) {
+		$param = $this->writer->formatArray($node->args);
+		if (strpos($node->args, '=>') === FALSE) {
 			$param = substr($param, 6, -1); // removes array()
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
@@ -663,21 +633,11 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 
 	/**
-	 * {link ...}
+	 * {link ...} {plink ...}
 	 */
-	public function macroLink($content, $modifiers)
+	public function macroLink(MacroNode $node)
 	{
-		return $this->writer->formatModifiers('$control->link(' . $this->formatLink($content) .')', $modifiers, $this->parser->escape);
-	}
-
-
-
-	/**
-	 * {plink ...}
-	 */
-	public function macroPlink($content, $modifiers)
-	{
-		return $this->writer->formatModifiers('$presenter->link(' . $this->formatLink($content) .')', $modifiers, $this->parser->escape);
+		return $this->writer->formatModifiers(($node->name === 'plink' ? '$presenter' : '$control') . '->link(' . $this->formatLink($node) .')', $node->modifiers, $this->parser->escape);
 	}
 
 
@@ -685,9 +645,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * {ifCurrent ...}
 	 */
-	public function macroIfCurrent($content)
+	public function macroIfCurrent(MacroNode $node)
 	{
-		return ($content ? 'try { $presenter->link(' . $this->formatLink($content) . '); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
+		return ($node->args ? 'try { $presenter->link(' . $this->formatLink($node) . '); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($presenter->getLastCreatedRequestFlag("current")):';
 	}
 
@@ -696,50 +656,40 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * Formats {*link ...} parameters.
 	 */
-	private function formatLink($content)
+	private function formatLink(MacroNode $node)
 	{
-		return $this->writer->formatWord($this->writer->fetchWord($content)) . $this->writer->formatArray($content, ', '); // destination [,] args
+		return $this->writer->formatWord($this->writer->fetchWord($node->args)) . $this->writer->formatArray($node->args, ', '); // destination [,] args
 	}
 
 
 
 	/**
-	 * {var ...}
+	 * {var ...} {default ...}
 	 */
-	public function macroVar($content, $modifiers, $extract = FALSE)
+	public function macroVar(MacroNode $node)
 	{
 		$out = '';
 		$var = TRUE;
-		$tokenizer = $this->writer->preprocess(new MacroTokenizer($content));
+		$tokenizer = $this->writer->preprocess(new MacroTokenizer($node->args));
 		while ($token = $tokenizer->fetchToken()) {
 			if ($var && ($token['type'] === MacroTokenizer::T_SYMBOL || $token['type'] === MacroTokenizer::T_VARIABLE)) {
-				if ($extract) {
+				if ($node->name === 'default') {
 					$out .= "'" . trim($token['value'], "'$") . "'";
 				} else {
 					$out .= '$' . trim($token['value'], "'$");
 				}
 			} elseif (($token['value'] === '=' || $token['value'] === '=>') && $token['depth'] === 0) {
-				$out .= $extract ? '=>' : '=';
+				$out .= $node->name === 'default' ? '=>' : '=';
 				$var = FALSE;
 
 			} elseif ($token['value'] === ',' && $token['depth'] === 0) {
-				$out .= $extract ? ',' : ';';
+				$out .= $node->name === 'default' ? ',' : ';';
 				$var = TRUE;
 			} else {
 				$out .= $this->writer->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 			}
 		}
-		return $out;
-	}
-
-
-
-	/**
-	 * {default ...}
-	 */
-	public function macroDefault($content)
-	{
-		return 'extract(array(' . $this->macroVar($content, '', TRUE) . '), EXTR_SKIP)';
+		return $node->name === 'default' ? "extract(array($out), EXTR_SKIP)" : $out;
 	}
 
 
@@ -747,9 +697,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * Just modifiers helper.
 	 */
-	public function macroModifiers($content, $modifiers)
+	public function macroModifiers(MacroNode $node)
 	{
-		return $this->writer->formatModifiers($this->writer->formatArgs($content), $modifiers, $this->parser->escape);
+		return $this->writer->formatModifiers($this->writer->formatArgs($node->args), $node->modifiers, $this->parser->escape);
 	}
 
 
@@ -757,9 +707,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	/**
 	 * Argument formating helper.
 	 */
-	public function formatArray($content)
+	public function formatArray(MacroNode $node)
 	{
-		return $this->writer->formatArray($content);
+		return $this->writer->formatArray($node->args);
 	}
 
 
