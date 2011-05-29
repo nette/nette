@@ -235,12 +235,14 @@ class Tokenizer extends Nette\Object
 	 */
 	public function isCurrent($arg)
 	{
+		$args = func_get_args();
+		
 		if (is_array($this->current)) {
-			return in_array($this->current['value'], func_get_args(), TRUE)
-				|| in_array($this->current['type'], func_get_args(), TRUE);
-		} else {
-			return in_array($this->current, func_get_args(), TRUE);
+			return in_array($this->current['value'], $args, TRUE)
+				|| in_array($this->current['type'], $args, TRUE);
 		}
+		
+		return in_array($this->current, $args, TRUE);
 	}
 
 
