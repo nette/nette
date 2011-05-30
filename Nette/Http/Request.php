@@ -160,7 +160,7 @@ class Request extends Nette\Object implements IRequest
 	final public function getFile($key)
 	{
 		$args = func_get_args();
-		return Nette\Utils\Arrays::get($this->files, $args);
+		return Nette\Utils\Arrays::get($this->files, $args, NULL);
 	}
 
 
