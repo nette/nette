@@ -418,7 +418,7 @@ final class Debugger
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
 
-				} elseif ($htmlMode) { // dump to browser
+				} elseif ($htmlMode || (self::$ajaxDetected && !self::$fireLogger->isPresent())) { // dump to browser
 					self::$blueScreen->render($exception);
 					if (self::$bar) {
 						self::$bar->render();

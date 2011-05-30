@@ -31,6 +31,14 @@ class FireLogger extends Nette\Object
 
 	private static $payload = array('logs' => array());
 
+	/**
+	 * Is fire logger present?
+	 * @return bool
+	 */
+	public static function isPresent()
+	{
+		return isset($_SERVER['HTTP_X_FIRELOGGER']) && $_SERVER['HTTP_X_FIRELOGGER'];
+	}
 
 
 	/**
@@ -40,7 +48,7 @@ class FireLogger extends Nette\Object
 	 */
 	public static function log($message, $priority = self::DEBUG)
 	{
-		if (!isset($_SERVER['HTTP_X_FIRELOGGER']) || headers_sent()) {
+		if (!isset(static::isPresent()) || headers_sent()) {
 			return FALSE;
 		}
 
