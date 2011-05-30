@@ -25,17 +25,30 @@ use Nette,
  */
 final class DefaultHelpers
 {
+	private static $helpers = array(
+		'normalize' => 'Nette\Utils\Strings::normalize',
+		'toascii' => 'Nette\Utils\Strings::toAscii',
+		'webalize' => 'Nette\Utils\Strings::webalize',
+		'truncate' => 'Nette\Utils\Strings::truncate',
+		'lower' => 'Nette\Utils\Strings::lower',
+		'upper' => 'Nette\Utils\Strings::upper',
+		'firstupper' => 'Nette\Utils\Strings::firstUpper',
+		'capitalize' => 'Nette\Utils\Strings::capitalize',
+		'trim' => 'Nette\Utils\Strings::trim',
+		'padleft' => 'Nette\Utils\Strings::padLeft',
+		'padright' => 'Nette\Utils\Strings::padRight',
+		'replacere' => 'Nette\Utils\Strings::replaceRE',
+		'escapeurl' => 'rawurlencode',
+		'striptags' => 'strip_tags',
+		'nl2br' => 'nl2br',
+		'substr' => 'iconv_substr',
+		'repeat' => 'str_repeat',
+		'implode' => 'implode',
+		'number' => 'number_format',
+	);
 
 	/** @var string default date format */
 	public static $dateFormat = '%x';
-
-	/**
-	 * Static class - cannot be instantiated.
-	 */
-	final public function __construct()
-	{
-		throw new Nette\StaticClassException;
-	}
 
 
 
@@ -46,13 +59,10 @@ final class DefaultHelpers
 	 */
 	public static function loader($helper)
 	{
-		$callback = callback('Nette\Templating\DefaultHelpers', $helper);
-		if ($callback->isCallable()) {
-			return $callback;
-		}
-		$callback = callback('Nette\Utils\Strings', $helper);
-		if ($callback->isCallable()) {
-			return $callback;
+		if (method_exists(__CLASS__, $helper)) {
+			return callback(__CLASS__, $helper);
+		} elseif (isset(self::$helpers[$helper])) {
+			return self::$helpers[$helper];
 		}
 	}
 

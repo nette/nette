@@ -62,6 +62,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template = new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
+		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 		// default parameters
 		$template->control = $this;
@@ -83,18 +84,6 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		if (!isset($template->flashes) || !is_array($template->flashes)) {
 			$template->flashes = array();
 		}
-
-		// default helpers
-		$template->registerHelper('escape', 'Nette\Templating\DefaultHelpers::escapeHtml');
-		$template->registerHelper('escapeUrl', 'rawurlencode');
-		$template->registerHelper('stripTags', 'strip_tags');
-		$template->registerHelper('nl2br', 'nl2br');
-		$template->registerHelper('substr', 'iconv_substr');
-		$template->registerHelper('repeat', 'str_repeat');
-		$template->registerHelper('replaceRE', 'Nette\Utils\Strings::replace');
-		$template->registerHelper('implode', 'implode');
-		$template->registerHelper('number', 'number_format');
-		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 		return $template;
 	}
