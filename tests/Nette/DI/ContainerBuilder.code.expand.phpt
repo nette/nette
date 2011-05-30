@@ -95,5 +95,5 @@ try {
 	$container->getService('bad');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing parameter 'missing'.", $e );
+	Assert::exception('Nette\InvalidArgumentException', "Missing item 'missing'.", $e );
 }

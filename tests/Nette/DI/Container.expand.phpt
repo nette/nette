@@ -18,14 +18,16 @@ require __DIR__ . '/../bootstrap.php';
 
 $container = new Container;
 $container->params['appDir'] = '/myApp';
+$container->params['dirs']['cache'] = '/temp';
 
 Assert::same( '/myApp/test', $container->expand('%appDir%/test') );
+Assert::same( '/temp/test', $container->expand('%dirs.cache%/test') );
 
 try {
 	$container->expand('%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing parameter 'bar'.", $e );
+	Assert::exception('Nette\InvalidArgumentException', "Missing item 'bar'.", $e );
 }
 
 try {

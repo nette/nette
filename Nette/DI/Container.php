@@ -253,9 +253,7 @@ class Container extends Nette\FreezableObject implements IContainer
 				list(, $param) = $m;
 				if ($param === '') {
 					return '%';
-				} elseif (!isset($that->params[$param])) {
-					throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
-				} elseif (!is_scalar($val = $that->params[$param])) {
+				} elseif (!is_scalar($val = Nette\Utils\Arrays::get((array) $that->params, explode('.', $param)))) {
 					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
 				}
 				return $val;
