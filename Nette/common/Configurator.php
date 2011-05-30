@@ -45,6 +45,7 @@ class Configurator extends Object
 		}
 
 		$this->container->params = new ArrayHash;
+		defined('WWW_DIR') && $this->container->params['wwwDir'] = realpath(WWW_DIR);
 		defined('APP_DIR') && $this->container->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->container->params['libsDir'] = realpath(LIBS_DIR);
 		defined('TEMP_DIR') && $this->container->params['tempDir'] = realpath(TEMP_DIR);
@@ -87,7 +88,7 @@ class Configurator extends Object
 			}
 		}
 
-		$cache = new Cache($container->templateCacheStorage, __CLASS__);
+		$cache = new Cache($container->templateCacheStorage, 'Nette.Configurator');
 		$cacheKey = array((array) $container->params, $file, $section);
 		$cached = $cache->load($cacheKey);
 		if ($cached) {
@@ -118,8 +119,7 @@ class Configurator extends Object
 				} catch (Nette\InvalidArgumentException $e) {}
 			}
 			if ($old === $config['variables']) {
-				throw new InvalidStateException("Circular reference detected for variables: "
-						. implode(', ', array_keys($old)) . ".");
+				throw new InvalidStateException("Unable to expand variables: " . implode(', ', array_keys($old)) . ".");
 			}
 		}
 		unset($config['variables']);
