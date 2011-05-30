@@ -389,9 +389,14 @@ class Configurator extends Object
 	/**
 	 * @return Nette\Http\Session
 	 */
-	public static function createServiceSession(DI\Container $container)
+	public static function createServiceSession(DI\Container $container, array $options = NULL)
 	{
-		return new Nette\Http\Session($container->httpRequest, $container->httpResponse);
+		$session = new Nette\Http\Session($container->httpRequest, $container->httpResponse);
+		$session->setOptions((array) $options);
+		if (isset($options['expiration'])) {
+			$session->setExpiration($options['expiration']);
+		}
+		return $session;
 	}
 
 

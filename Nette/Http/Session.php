@@ -81,7 +81,7 @@ class Session extends Nette\Object
 			return;
 
 		} elseif (self::$started === NULL && defined('SID')) {
-			throw new Nette\InvalidStateException('A session had already been started by session.auto-start or session_start().');
+			throw new Nette\InvalidStateException('A session had already been started by session.auto_start or session_start().');
 		}
 
 		$this->configure($this->options);
@@ -377,6 +377,9 @@ class Session extends Nette\Object
 			$this->configure($options);
 		}
 		$this->options = $options + $this->options;
+		if (!empty($options['auto_start'])) {
+			$this->start();
+		}
 		return $this;
 	}
 
