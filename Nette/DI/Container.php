@@ -12,6 +12,7 @@
 namespace Nette\DI;
 
 use Nette;
+use Nette\Utils\Strings;
 
 
 
@@ -248,18 +249,39 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function expand($s)
 	{
 		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$that = $this;
-			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
-				list(, $param) = $m;
-				if ($param === '') {
-					return '%';
-				} elseif (!isset($that->params[$param])) {
-					throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
-				} elseif (!is_scalar($val = $that->params[$param])) {
-					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
+			foreach (Strings::matchAll($s, '#%([a-z0-9_-]*)(?:\.([a-z0-9_-]*))?%#i') as $m) {
+				if (isset($m[2])) {
+					list($match, $param, $key) = $m;
+					if (!isset($this->params[$param])) {
+						throw new Nette\InvalidArgumentException("Missing parameter array '$param'.");
+					} elseif (!isset($this->params[$param][$key])) {
+						throw new Nette\InvalidArgumentException("Missing parameter '$key' in array '$param'.");
+					} elseif (!is_scalar($val = $this->params[$param][$key])) {
+						if (strlen($s) !== strlen($match)) {
+							throw new Nette\InvalidStateException("Parameter '$key' in array '$param' is not scalar.");
+						} else {
+							$s = $val;
+						}
+					} else {
+						$s = str_replace($match, $val, $s);
+					}
+				} else {
+					list($match, $param) = $m;
+					if ($param === '') {
+						continue;
+					} elseif (!isset($this->params[$param])) {
+						throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
+					} elseif (!is_scalar($val = $this->params[$param])) {
+						if (strlen($s) !== strlen($match)) {
+							throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
+						} else {
+							$s = $val;
+						}
+					} else {
+						$s = str_replace($match, $val, $s);
+					}
 				}
-				return $val;
-			}, $s);
+			}
 		}
 		return $s;
 	}
