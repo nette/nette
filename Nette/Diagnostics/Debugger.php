@@ -77,6 +77,9 @@ final class Debugger
 	/** @var bool disables the @ (shut-up) operator so that notices and warnings are no longer hidden */
 	public static $scream = FALSE;
 
+	/** @var bool in logger mode saves is suppressed any debugging output */
+	public static $loggerMode = FALSE;
+
 	/** @var array of callbacks specifies the functions that are automatically called after fatal error */
 	public static $onFatalError = array();
 
@@ -415,6 +418,10 @@ final class Debugger
 				}
 
 			} else {
+				if (self::$loggerMode) {
+					self::log($exception);
+				}
+
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
 
@@ -424,7 +431,7 @@ final class Debugger
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
+				} elseif (!self::fireLog($exception, self::ERROR) && !self::$loggerMode) { // AJAX or non-HTML mode
 					self::log($exception);
 				}
 			}
