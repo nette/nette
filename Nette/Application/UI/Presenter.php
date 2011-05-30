@@ -1057,7 +1057,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public static function getPersistentComponents()
 	{
-		return (array) Reflection\ClassType::from(/*5.2*func_get_arg(0)*//**/get_called_class()/**/)
+		/*5.2*$arg = func_get_arg(0);*/
+		return (array) Reflection\ClassType::from(/*5.2*$arg*//**/get_called_class()/**/)
 			->getAnnotation('persistent');
 	}
 
