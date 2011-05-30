@@ -25,20 +25,3 @@ class MockCacheStorage extends PhpFileStorage
 	}
 
 }
-
-
-
-class MockTemplate extends Template
-{
-	public $compiled;
-
-	public function render($content = NULL)
-	{
-		$this->__set('template', $this);
-		$this->compiled = $this->compile($content);
-		ob_start();
-		LimitedScope::evaluate($this->compiled, $this->getParams());
-		return ob_get_clean();
-	}
-
-}

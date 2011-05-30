@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 require __DIR__ . '/Template.inc';
 
 
-$template = new MockTemplate;
+$template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 try {
 	$template->render('Block{/block}');

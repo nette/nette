@@ -18,7 +18,7 @@ require __DIR__ . '/Template.inc';
 
 
 
-$template = new MockTemplate;
+$template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 

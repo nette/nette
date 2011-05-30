@@ -18,7 +18,7 @@ require __DIR__ . '/Template.inc';
 
 
 
-$template = new MockTemplate;
+$template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 Assert::match(<<<EOD
@@ -26,7 +26,7 @@ Block
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {block}
 Block
 

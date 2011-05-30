@@ -56,7 +56,7 @@ class MockPresenter extends MockControl
 
 
 
-$template = new MockTemplate;
+$template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 $template->control = new MockControl;
@@ -86,7 +86,7 @@ PLINK(login, 123)
 LINK(default, 10, 20, 30)
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {plink Homepage:}
 
 {plink  Homepage: }

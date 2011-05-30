@@ -18,7 +18,7 @@ require __DIR__ . '/Template.inc';
 
 
 
-$template = new MockTemplate;
+$template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 Assert::match(<<<EOD
@@ -26,7 +26,7 @@ qwerty
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {* comment
 *}
 qwerty
@@ -41,7 +41,7 @@ qwerty
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {* comment
 *}
 
@@ -58,7 +58,7 @@ qwerty
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {* comment
 *}
 
@@ -75,7 +75,7 @@ qwerty
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {* comment
 *}
 
@@ -91,7 +91,7 @@ qwerty
 
 EOD
 
-, $template->render(<<<EOD
+, $template->__toString(<<<EOD
 {* comment
 *}
 {contentType text}
