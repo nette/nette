@@ -41,31 +41,24 @@ class SimplePresenter implements Application\IPresenter
 	{
 		$this->request = $request;
 		$params = $request->getParams();
-		if (isset($params['callback'])) {
-			$params['presenter'] = $this;
-			return callback($params['callback'])->invokeNamedArgs($params);
+		if (!isset($params['callback'])) {
+			return;
 		}
-	}
+		$params['presenter'] = $this;
+		$response = callback($params['callback'])->invokeNamedArgs($params);
 
-
-
-	/**
-	 * Redirect to another URL and ends presenter execution.
-	 * @param  string
-	 * @param  int HTTP error code
-	 * @return void
-	 * @throws Nette\Application\AbortException
-	 */
-	public function redirectUrl($url, $code = NULL)
-	{
-		if (!$code) {
-			$code = $this->context->httpRequest->isMethod('post')
-				? Http\IResponse::S303_POST_GET
-				: Http\IResponse::S302_FOUND;
+		if (is_string($response)) {
+			$template = new Nette\Templating\Template;
+			$template->setParams($params);
+			$template->onPrepareFilters[] = function($template) {
+				$template->registerFilter(new Nette\Latte\Engine);
+			};
+			$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+			$template->setCacheStorage($this->context->templateCacheStorage);
+			$response = new Responses\TextResponse($template->render($response));
 		}
-		return new Responses\RedirectResponse($url, $code);
+		return $response;
 	}
-
 
 
 
