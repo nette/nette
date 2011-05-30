@@ -84,7 +84,7 @@ class TestPresenter extends Application\UI\Presenter
 	public $ok = TRUE;
 
 
-	protected function createTemplate()
+	protected function createTemplate($class = NULL)
 	{
 	}
 
