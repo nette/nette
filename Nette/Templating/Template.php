@@ -11,7 +11,8 @@
 
 namespace Nette\Templating;
 
-use Nette;
+use Nette,
+	Nette\Caching;
 
 
 
@@ -39,6 +40,9 @@ abstract class Template extends Nette\Object implements ITemplate
 
 	/** @var array */
 	private $helperLoaders = array();
+
+	/** @var Nette\Caching\IStorage */
+	private $cacheStorage;
 
 
 
@@ -317,6 +321,35 @@ abstract class Template extends Nette\Object implements ITemplate
 	public function __unset($name)
 	{
 		unset($this->params[$name]);
+	}
+
+
+
+	/********************* caching ****************d*g**/
+
+
+
+	/**
+	 * Set cache storage.
+	 * @param  Nette\Caching\Cache
+	 * @return void
+	 */
+	public function setCacheStorage(Caching\IStorage $storage)
+	{
+		$this->cacheStorage = $storage;
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\IStorage
+	 */
+	public function getCacheStorage()
+	{
+		if ($this->cacheStorage === NULL) {
+			return new Caching\Storages\DevNullStorage;
+		}
+		return $this->cacheStorage;
 	}
 
 

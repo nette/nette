@@ -23,9 +23,6 @@ use Nette,
  */
 class FileTemplate extends Template implements IFileTemplate
 {
-	/** @var Nette\Caching\IStorage */
-	private $cacheStorage;
-
 	/** @var string */
 	private $file;
 
@@ -91,67 +88,31 @@ class FileTemplate extends Template implements IFileTemplate
 		if ($storage instanceof Caching\Storages\PhpFileStorage) {
 			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
 		}
-		$cached = $content = $cache->load($this->file);
+		$cached = $compiled = $cache->load($this->file);
 
-		if ($content === NULL) {
+		if ($compiled === NULL) {
 			try {
-				$content = $this->compile(file_get_contents($this->file));
-				$content = "<?php\n\n// source file: $this->file\n\n?>$content";
+				$compiled = $this->compile(file_get_contents($this->file));
+				$compiled = "<?php\n\n// source file: $this->file\n\n?>$compiled";
 
 			} catch (FilterException $e) {
 				$e->setSourceFile($this->file);
 				throw $e;
 			}
 
-			$cache->save(
-				$this->file,
-				$content,
-				array(
-					Caching\Cache::FILES => $this->file,
-					Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
-				)
-			);
+			$cache->save($this->file, $compiled, array(
+				Caching\Cache::FILES => $this->file,
+				Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
+			));
 			$cache->release();
 			$cached = $cache->load($this->file);
 		}
 
 		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
 			Nette\Utils\LimitedScope::load($cached['file'], $this->getParams());
-			flock($cached['handle'], LOCK_UN);
-			fclose($cached['handle']);
-
 		} else {
-			Nette\Utils\LimitedScope::evaluate($content, $this->getParams());
+			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParams());
 		}
-	}
-
-
-
-	/********************* caching ****************d*g**/
-
-
-
-	/**
-	 * Set cache storage.
-	 * @param  Nette\Caching\Cache
-	 * @return void
-	 */
-	public function setCacheStorage(Caching\IStorage $storage)
-	{
-		$this->cacheStorage = $storage;
-	}
-
-
-
-	/**
-	 * @return Nette\Caching\IStorage
-	 */
-	public function getCacheStorage()
-	{
-		if ($this->cacheStorage === NULL) {
-			return new Caching\Storages\DevNullStorage;
-		}
-		return $this->cacheStorage;
 	}
 
 }
