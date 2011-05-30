@@ -488,6 +488,16 @@ class Configurator extends Object
 
 
 
+	/**
+	 * @return Nette\Latte\Engine
+	 */
+	public static function createServiceLatteEngine(DI\Container $container)
+	{
+		return new Nette\Latte\Engine;
+	}
+
+
+
 	public static function preloadEnvironment(DI\Container $container)
 	{
 		$code = '';
