@@ -82,8 +82,6 @@ class FileTemplate extends Template implements IFileTemplate
 			throw new Nette\InvalidStateException("Template file name was not specified.");
 		}
 
-		$this->__set('template', $this);
-
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
 		if ($storage instanceof Caching\Storages\PhpFileStorage) {
 			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);

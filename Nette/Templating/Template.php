@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-abstract class Template extends Nette\Object implements ITemplate
+class Template extends Nette\Object implements ITemplate
 {
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
@@ -79,12 +79,26 @@ abstract class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Renders template to output.
+	 * @param  string  data
 	 * @return void
-	 * @abstract
 	 */
-	public function render()
+	public function render($source = NULL)
 	{
-		throw new Nette\NotImplementedException;
+		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
+		$cached = $compiled = $cache->load($source);
+
+		if ($compiled === NULL) {
+			$compiled = $this->compile($source);
+			$cache->save($source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
+			$cache->release();
+			$cached = $cache->load($source);
+		}
+
+		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
+			Nette\Utils\LimitedScope::load($cached['file'], $this->getParams());
+		} else {
+			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParams());
+		}
 	}
 
 
@@ -110,14 +124,15 @@ abstract class Template extends Nette\Object implements ITemplate
 	 */
 	public function __toString()
 	{
+		$args = func_get_args();
 		ob_start();
 		try {
-			$this->render();
+			call_user_func_array(array($this, 'render'), $args);
 			return ob_get_clean();
 
 		} catch (\Exception $e) {
 			ob_end_clean();
-			if (func_num_args() && func_get_arg(0)) {
+			if ($args && $args[0]) {
 				throw $e;
 			} else {
 				Nette\Diagnostics\Debugger::toStringException($e);
@@ -267,6 +282,7 @@ abstract class Template extends Nette\Object implements ITemplate
 	 */
 	public function getParams()
 	{
+		$this->params['template'] = $this;
 		return $this->params;
 	}
 
