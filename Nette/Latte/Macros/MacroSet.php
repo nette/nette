@@ -96,7 +96,7 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	 */
 	private function compile(MacroNode $node, $def)
 	{
-		$writer = Latte\PhpWriter::using($node, $this->parser->escape);
+		$writer = Latte\PhpWriter::using($node, $this->parser->context);
 		if (is_string($def)/*5.2* && substr($def, 0, 1) !== "\0"*/) {
 			$code = $writer->write($def);
 		} else {

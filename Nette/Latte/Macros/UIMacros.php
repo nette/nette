@@ -377,28 +377,22 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroContentType(MacroNode $node, $writer)
 	{
 		if (strpos($node->args, 'html') !== FALSE) {
-			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
-			$this->parser->context = Latte\Parser::CONTEXT_TEXT;
+			$this->parser->context = array(Latte\Parser::CONTEXT_TEXT);
 
 		} elseif (strpos($node->args, 'xml') !== FALSE) {
-			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeXml';
-			$this->parser->context = Latte\Parser::CONTEXT_NONE;
+			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'xml');
 
 		} elseif (strpos($node->args, 'javascript') !== FALSE) {
-			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeJs';
-			$this->parser->context = Latte\Parser::CONTEXT_NONE;
+			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'js');
 
 		} elseif (strpos($node->args, 'css') !== FALSE) {
-			$this->parser->escape = 'Nette\Templating\DefaultHelpers::escapeCss';
-			$this->parser->context = Latte\Parser::CONTEXT_NONE;
+			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'css');
 
 		} elseif (strpos($node->args, 'plain') !== FALSE) {
-			$this->parser->escape = '';
-			$this->parser->context = Latte\Parser::CONTEXT_NONE;
+			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'text');
 
 		} else {
-			$this->parser->escape = '$template->escape';
-			$this->parser->context = Latte\Parser::CONTEXT_NONE;
+			$this->parser->context = array(Latte\Parser::CONTEXT_NONE);
 		}
 
 		// temporary solution

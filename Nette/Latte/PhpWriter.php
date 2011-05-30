@@ -28,23 +28,23 @@ class PhpWriter extends Nette\Object
 	/** @var string */
 	private $modifiers;
 
-	/** @var string */
-	private $escape;
+	/** @var array */
+	private $context;
 
 
 
-	public static function using(MacroNode $node, $escape = NULL)
+	public static function using(MacroNode $node, $context = NULL)
 	{
-		return new static($node->tokenizer, $node->modifiers, $escape);
+		return new static($node->tokenizer, $node->modifiers, $context);
 	}
 
 
 
-	public function __construct(MacroTokenizer $argsTokenizer, $modifiers = NULL, $escape = NULL)
+	public function __construct(MacroTokenizer $argsTokenizer, $modifiers = NULL, $context = NULL)
 	{
 		$this->argsTokenizer = $argsTokenizer;
 		$this->modifiers = $modifiers;
-		$this->escape = explode('|', $escape);
+		$this->context = $context;
 	}
 
 
@@ -59,8 +59,11 @@ class PhpWriter extends Nette\Object
 		$args = func_get_args();
 		array_shift($args);
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
-		$mask = str_replace('%escape', $this->escape[0], $mask);
 		$me = $this;
+		$mask = Nette\Utils\Strings::replace($mask, '#%escape\(((?>[^()]+)|\((?1)\))*\)#', function($m) use ($me) {
+			return $me->escape(substr($m[0], 8, -1));
+		});
+
 		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|modify|var)(\?)?(\s*\+\s*)?()#',
 			/*5.2* callback(*/function($m) use ($me, $word, & $args) {
 			list(, $l, $macro, $cond, $r) = $m;
@@ -109,12 +112,13 @@ class PhpWriter extends Nette\Object
 
 			} elseif (!$inside) {
 				if ($token['type'] === MacroTokenizer::T_SYMBOL) {
-					if ($this->escape && $token['value'] === 'escape') {
-						$var = $this->escape[0] . "($var" . (isset($this->escape[1]) ? ', ' . var_export($this->escape[1], TRUE) : '');
+					if ($this->context && $token['value'] === 'escape') {
+						$var = $this->escape($var);
+						$tokenizer->fetch('|');
 					} else {
 						$var = "\$template->" . $token['value'] . "($var";
+						$inside = TRUE;
 					}
-					$inside = TRUE;
 				} else {
 					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.");
 				}
@@ -267,6 +271,43 @@ class PhpWriter extends Nette\Object
 		$tokenizer->position = 0;
 		$tokenizer->tokens = $tokens;
 		return $tokenizer;
+	}
+
+
+
+	public function escape($s)
+	{
+		switch ($this->context[0]) {
+		case Parser::CONTEXT_TEXT:
+			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, '')";
+		case Parser::CONTEXT_TAG:
+			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s)";
+		case Parser::CONTEXT_ATTRIBUTE:
+			list(, $name, $quote) = $this->context;
+			$quote = var_export($quote, TRUE);
+			if (strncasecmp($name, 'on', 2) === 0) {
+				return "Nette\\Templating\\DefaultHelpers::escapeHtmlJs($s, $quote)";
+			} elseif ($name === 'style') {
+				return "Nette\\Templating\\DefaultHelpers::escapeHtmlCss($s)";
+			} else {
+				return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, $quote)";
+			}
+		case Parser::CONTEXT_COMMENT:
+			return "Nette\\Templating\\DefaultHelpers::escapeHtmlComment($s)";
+		case Parser::CONTEXT_CDATA;
+			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)";
+		case Parser::CONTEXT_NONE:
+			switch (isset($this->context[1]) ? $this->context[1] : NULL) {
+			case 'xml':
+			case 'js':
+			case 'css':
+				return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)";
+			case 'text':
+				return $s;
+			default:
+				return "\$template->escape($s)";
+			}
+		}
 	}
 
 }

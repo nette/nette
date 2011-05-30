@@ -41,9 +41,6 @@ class Parser extends Nette\Object
 	/** @var int  position on source template */
 	private $offset;
 
-	/** @var strng (for CONTEXT_ATTRIBUTE) */
-	private $quote;
-
 	/** @var array of [name => array of IMacro] */
 	private $macros;
 
@@ -56,11 +53,8 @@ class Parser extends Nette\Object
 	/** @var array of MacroNode */
 	private $macroNodes = array();
 
-	/** @var string */
-	public $context = Parser::CONTEXT_NONE;
-
-	/** @var string  context-aware escaping function */
-	public $escape;
+	/** @var array */
+	public $context;
 
 	/** @var string */
 	public $templateId;
@@ -78,6 +72,8 @@ class Parser extends Nette\Object
 	public function __construct()
 	{
 		$this->macroHandlers = new \SplObjectStorage;
+		$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
+		$this->context = array(self::CONTEXT_NONE, 'text');
 	}
 
 
@@ -108,7 +104,6 @@ class Parser extends Nette\Object
 		}
 		$s = str_replace("\r\n", "\n", $s);
 
-		$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
 		$this->templateId = Strings::random();
 		$this->input = & $s;
 		$this->offset = 0;
@@ -123,7 +118,7 @@ class Parser extends Nette\Object
 
 		try {
 			while ($this->offset < $len) {
-				$matches = $this->{"context$this->context"}();
+				$matches = $this->{"context".$this->context[0]}();
 
 				if (!$matches) { // EOF
 					break;
@@ -186,14 +181,12 @@ class Parser extends Nette\Object
 		if (!$matches || !empty($matches['macro']) || !empty($matches['comment'])) { // EOF or {macro}
 
 		} elseif (!empty($matches['htmlcomment'])) { // <!--
-			$this->context = self::CONTEXT_COMMENT;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtmlComment';
+			$this->context = array(self::CONTEXT_COMMENT);
 
 		} elseif (empty($matches['closing'])) { // <tag
 			$this->htmlNodes[] = $node = new HtmlNode($matches['tag']);
 			$node->offset = strlen($this->output);
-			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->context = array(self::CONTEXT_TAG);
 
 		} else { // </tag
 			do {
@@ -205,8 +198,7 @@ class Parser extends Nette\Object
 			$this->htmlNodes[] = $node;
 			$node->closing = TRUE;
 			$node->offset = strlen($this->output);
-			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->context = array(self::CONTEXT_TAG);
 		}
 		return $matches;
 	}
@@ -227,8 +219,7 @@ class Parser extends Nette\Object
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // </tag
 			$node->closing = TRUE;
 			$node->offset = strlen($this->output);
-			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->context = array(self::CONTEXT_TAG);
 		}
 		return $matches;
 	}
@@ -272,11 +263,9 @@ class Parser extends Nette\Object
 			}
 
 			if (!$node->closing && (strcasecmp($node->name, 'script') === 0 || strcasecmp($node->name, 'style') === 0)) {
-				$this->context = self::CONTEXT_CDATA;
-				$this->escape = 'Nette\Templating\DefaultHelpers::escape' . (strcasecmp($node->name, 'style') ? 'Js' : 'Css');
+				$this->context = array(self::CONTEXT_CDATA, strcasecmp($node->name, 'style') ? 'js' : 'css');
 			} else {
-				$this->context = self::CONTEXT_TEXT;
-				$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
+				$this->context = array(self::CONTEXT_TEXT);
 				if ($node->closing) {
 					array_pop($this->htmlNodes);
 				}
@@ -298,11 +287,7 @@ class Parser extends Nette\Object
 				$matches[0] = ''; // remove from output
 
 			} elseif ($value === '"' || $value === "'") { // attribute = "'
-				$this->context = self::CONTEXT_ATTRIBUTE;
-				$this->quote = $value;
-				$this->escape = strncasecmp($name, 'on', 2)
-					? ('Nette\Templating\DefaultHelpers::escapeHtml' . (strcasecmp($name, 'style') ? "|$value" : 'Css'))
-					: "Nette\\Templating\\DefaultHelpers::escapeHtmlJs|$value";
+				$this->context = array(self::CONTEXT_ATTRIBUTE, $name, $value);
 			}
 		}
 		return $matches;
@@ -316,13 +301,12 @@ class Parser extends Nette\Object
 	private function contextAttribute()
 	{
 		$matches = $this->match('~
-			(' . $this->quote . ')|      ##  1) end of HTML attribute
-			'.$this->macroRe.'           ##  curly tag
+			(' . $this->context[2] . ')|      ##  1) end of HTML attribute
+			'.$this->macroRe.'                ##  curly tag
 		~xsi');
 
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // (attribute end) '"
-			$this->context = self::CONTEXT_TAG;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml';
+			$this->context = array(self::CONTEXT_TAG);
 		}
 		return $matches;
 	}
@@ -340,8 +324,7 @@ class Parser extends Nette\Object
 		~xsi');
 
 		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // --\s*>
-			$this->context = self::CONTEXT_TEXT;
-			$this->escape = 'Nette\Templating\DefaultHelpers::escapeHtml|';
+			$this->context = array(self::CONTEXT_TEXT);
 		}
 		return $matches;
 	}

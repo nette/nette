@@ -23,18 +23,8 @@ use Nette,
  */
 class CacheMacro extends Nette\Object implements Latte\IMacro
 {
-	/** @var Latte\Parser */
-	private $parser;
-
 	/** @var bool */
 	private $used;
-
-
-
-	public function __construct(Latte\Parser $parser)
-	{
-		$this->parser = $parser;
-	}
 
 
 
