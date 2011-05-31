@@ -44,7 +44,7 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, Reflection\DatabaseReflection $databaseReflection = NULL)
 	{
 		parent::__construct($dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -57,7 +57,10 @@ class Connection extends PDO
 
 		$this->preprocessor = new SqlPreprocessor($this);
 
-		$this->databaseReflection = new Reflection\DatabaseReflection; // TODO
+		if ($databaseReflection)
+			$this->databaseReflection = $databaseReflection;
+		else
+			$this->databaseReflection = new Reflection\DatabaseReflection;
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
