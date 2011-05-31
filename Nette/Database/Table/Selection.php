@@ -284,8 +284,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
-		$query = "SELECT $function FROM $this->delimitedName" . implode($join);
+		$query = "SELECT $function FROM $table AS $this->delimitedName" . implode($join);
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
@@ -372,7 +373,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$cols = $prefix . '*';
 		}
 
-		return "SELECT{$this->topString()} $cols FROM $this->delimitedName" . implode($join) . $this->whereString();
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
+		return "SELECT{$this->topString()} $cols FROM $table AS $this->delimitedName" . implode($join) . $this->whereString();
 	}
 
 
@@ -586,8 +588,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function delete()
 	{
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		return $this->query(
-			'DELETE' . $this->topString() . " FROM $this->delimitedName" . $this->whereString()
+			'DELETE' . $this->topString() . " FROM $table AS $this->delimitedName" . $this->whereString()
 		)->rowCount();
 	}
 

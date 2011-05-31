@@ -83,9 +83,10 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
 		$column = ($join ? "$this->delimitedName." : '') . $this->delimitedColumn;
-		$query = "SELECT $function, $column FROM $this->delimitedName" . implode($join);
+		$query = "SELECT $function, $column FROM $table AS $this->delimitedName" . implode($join);
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
