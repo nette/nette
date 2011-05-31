@@ -274,7 +274,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function group($columns, $having = '')
 	{
 		$this->__destruct();
-		$this->group = $this->tryDelimite($columns);
+		$this->group = $columns;
 		$this->having = $having;
 		return $this;
 	}
@@ -454,10 +454,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
 		}
 		if ($this->group) {
-			$return .= " GROUP BY $this->group";
+			$return .= ' GROUP BY '. $this->tryDelimite($this->group);
 		}
 		if ($this->having) {
-			$return .= " HAVING $this->having";
+			$return .= ' HAVING '. $this->tryDelimite($this->having);
 		}
 		if ($this->order) {
 			$return .= ' ORDER BY ' . implode(', ', $this->order);
