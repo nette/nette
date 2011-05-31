@@ -303,6 +303,8 @@ class CoreMacros extends MacroSet
 				} else {
 					$out .= '$' . ltrim($token['value'], "$");
 				}
+				$var = NULL;
+
 			} elseif (($token['value'] === '=' || $token['value'] === '=>') && $token['depth'] === 0) {
 				$out .= $node->name === 'default' ? '=>' : '=';
 				$var = FALSE;
@@ -310,6 +312,10 @@ class CoreMacros extends MacroSet
 			} elseif ($token['value'] === ',' && $token['depth'] === 0) {
 				$out .= $node->name === 'default' ? ',' : ';';
 				$var = TRUE;
+
+			} elseif ($var === NULL && $node->name === 'default' && $token['type'] !== Latte\MacroTokenizer::T_WHITESPACE) {
+				throw new ParseException("Unexpected '$token[value]' in {default $node->args}");
+
 			} else {
 				$out .= $writer->canQuote($tokenizer) ? "'$token[value]'" : $token['value'];
 			}
