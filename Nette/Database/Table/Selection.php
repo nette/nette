@@ -385,18 +385,20 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$supplementalDriver = $this->connection->getSupplementalDriver();
 		$joins = array();
-		preg_match_all('~\\b(\\w+)\\.(\\w+)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
+		preg_match_all('~\\b([a-z][\\w.]*)\\.([a-z]\\w*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-			$name = $match[1];
-			if ($name !== $this->name) { // case-sensitive
-				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
-				$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
-				$primary = $this->getPrimary($table);
-				$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-					. ' JOIN ' . $supplementalDriver->delimite($table)
-					. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
-					. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
-					. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+			if ($match[1] !== $this->name) { // case-sensitive
+				foreach (explode('.', $match[1]) as $name) {
+					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
+					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
+					$primary = $this->getPrimary($table);
+					$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
+						. ' JOIN ' . $supplementalDriver->delimite($table)
+						. ' AS '. $supplementalDriver->delimite($table)
+						. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
+						. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
+						. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+				}
 			}
 		}
 		return $joins;
