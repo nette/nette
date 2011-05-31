@@ -279,23 +279,23 @@ class PhpWriter extends Nette\Object
 	{
 		switch ($this->context[0]) {
 		case Parser::CONTEXT_TEXT:
-			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, '')";
+			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, ENT_NOQUOTES)";
 		case Parser::CONTEXT_TAG:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s)";
 		case Parser::CONTEXT_ATTRIBUTE:
 			list(, $name, $quote) = $this->context;
-			$quote = var_export($quote, TRUE);
+			$quote = $quote === '"' ? '' : ', ENT_QUOTES';
 			if (strncasecmp($name, 'on', 2) === 0) {
-				return "Nette\\Templating\\DefaultHelpers::escapeHtmlJs($s, $quote)";
+				return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeJs($s)$quote)";
 			} elseif ($name === 'style') {
-				return "Nette\\Templating\\DefaultHelpers::escapeHtmlCss($s)";
+				return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeCss($s)$quote)";
 			} else {
-				return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, $quote)";
+				return "htmlSpecialChars($s$quote)";
 			}
 		case Parser::CONTEXT_COMMENT:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtmlComment($s)";
 		case Parser::CONTEXT_CDATA;
-			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)";
+			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)"; // Js, Css
 		case Parser::CONTEXT_NONE:
 			switch (isset($this->context[1]) ? $this->context[1] : NULL) {
 			case 'xml':

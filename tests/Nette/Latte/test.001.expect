@@ -99,10 +99,10 @@ var prop2 = ["John","Mary","Paul","]]\x3E"];
 'alert(&quot;some&amp;&lt;&gt;\&quot;&#039;\/chars&quot;);alert("hello");'
  title='some&amp;&lt;&gt;&quot;&#039;/chars'
  style =
- "color:some\&amp;\&lt;\&gt;\&quot;\&#039;\/chars;"
+ "color:some\&amp;\&lt;\&gt;\&quot;\'\/chars;"
  rel="some&amp;&lt;&gt;&quot;'/chars"
  onblur="alert(&quot;some&amp;&lt;&gt;\&quot;'\/chars&quot;)"
- alt='<div title="1/2&quot;"></div>'
+ alt='&lt;div title=&quot;1/2&amp;quot;&quot;&gt;&lt;/div&gt;'
  onfocus="alert(&quot;&lt;div title=\&quot;1\/2&amp;quot;\&quot;&gt;&lt;\/div&gt;&quot;)"
 >click on me some&amp;&lt;&gt;"'/chars</p>
 

@@ -71,15 +71,15 @@ final class DefaultHelpers
 	/**
 	 * Escapes string for use inside HTML template.
 	 * @param  mixed  UTF-8 encoding or 8-bit
-	 * @param  string optional attribute quotes
+	 * @param  int    optional attribute quotes
 	 * @return string
 	 */
-	public static function escapeHtml($s, $quotes = NULL)
+	public static function escapeHtml($s, $quotes = ENT_QUOTES)
 	{
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			return $s->__toString(TRUE);
 		}
-		return htmlSpecialChars($s, $quotes === '' ? ENT_NOQUOTES : ($quotes === '"' ? ENT_COMPAT : ENT_QUOTES));
+		return htmlSpecialChars($s, $quotes);
 	}
 
 
@@ -126,18 +126,6 @@ final class DefaultHelpers
 
 
 	/**
-	 * Escapes string for use inside HTML style attribute.
-	 * @param  string UTF-8 encoding or 8-bit
-	 * @return string
-	 */
-	public static function escapeHtmlCss($s)
-	{
-		return htmlSpecialChars(self::escapeCss($s), ENT_QUOTES);
-	}
-
-
-
-	/**
 	 * Escapes string for use inside JavaScript template.
 	 * @param  mixed  UTF-8 encoding
 	 * @return string
@@ -148,19 +136,6 @@ final class DefaultHelpers
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(']]>', ']]\x3E', Nette\Utils\Json::encode($s));
-	}
-
-
-
-	/**
-	 * Escapes string for use inside HTML JavaScript attribute.
-	 * @param  mixed  UTF-8 encoding
-	 * @param  string attribute quotes
-	 * @return string
-	 */
-	public static function escapeHtmlJs($s, $quotes = NULL)
-	{
-		return htmlSpecialChars(self::escapeJs($s), $quotes === '"' ? ENT_COMPAT : ENT_QUOTES);
 	}
 
 
