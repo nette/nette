@@ -171,7 +171,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$this->__destruct();
 
-		$this->conditions[] = $condition = $this->tryDelimite($condition);
+		$this->conditions[] = $condition;
+		$condition = $this->tryDelimite($condition);
 
 		$args = func_num_args();
 		if ($args !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
