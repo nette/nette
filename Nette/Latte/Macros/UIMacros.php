@@ -234,20 +234,44 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $node->modifiers === '' ? '' : 'ob_start()';
 		}
 
-		$node->data->name = $name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
+		$node->data->name = $name = ltrim($name, '#');
+		$node->data->end = '';
 		if ($name == NULL) {
-			throw new ParseException("Missing block name.");
+			if ($node->name !== 'snippet') {
+				throw new ParseException("Missing block name.");
+			}
+
+		} elseif (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) { // dynamic blok/snippet
+			if ($node->name === 'snippet') {
+				$parent = $node->parentNode;
+				while ($parent && $parent->name !== 'snippet') $parent = $parent->parentNode;
+				if (!$parent) {
+					throw new ParseException("Dynamic snippets are allowed only inside static snippet.");
+				}
+				$parent->data->dynamic = TRUE;
+
+				$tag = trim($node->tokenizer->fetchWord(), '<>');
+				$tag = $tag ? $tag : 'div';
+				$node->data->leave = TRUE;
+				$node->data->end = "\$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag><?php";
+				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
+
+			} else {
+				$node->data->leave = TRUE;
+				$fname = $writer->formatWord($name);
+				$node->data->end = "}} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars())";
+				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				return "//\n// block $name\n//\n"
+					. "if (!function_exists(\$_l->blocks[$fname][] = '$func')) { "
+					. "function $func(\$_l, \$_args) { "
+					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
+			}
 		}
 
-		if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-			$node->data->dynamic = TRUE;
-			$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-			return "//\n// block $name\n//\n"
-				. "if (!function_exists(\$_l->blocks[{$writer->formatWord($name)}][] = '$func')) { "
-				. "function $func(\$_l, \$_args) { "
-				. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
+		// static blok/snippet
+		if ($node->name === 'snippet') {
+			$node->data->name = $name = '_' . $name;
 		}
-
 		if (isset($this->namedBlocks[$name])) {
 			throw new ParseException("Cannot redeclare static block '$name'");
 		}
@@ -290,12 +314,14 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	public function macroBlockEnd(MacroNode $node, $writer)
 	{
 		if (isset($node->data->name)) { // block, snippet, define
-			if (empty($node->data->dynamic)) {
+			if (empty($node->data->leave)) {
+				if (!empty($node->data->dynamic)) {
+					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
+				}
 				$this->namedBlocks[$node->data->name] = $node->content;
-				return $node->content = '';
-			} else {
-				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$writer->formatWord($node->data->name)}]), \$_l, get_defined_vars())");
+				$node->content = '';
 			}
+			return $node->data->end;
 
 		} elseif ($node->modifiers) { // anonymous block with modifier
 			return $writer->write('echo %modify', 'ob_get_clean()');
@@ -450,9 +476,13 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				}
 				ob_start();
 				$function = reset($function);
-				$function($local, $params);
-				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
+				$snippets = $function($local, $params);
+				$payload->snippets[$id = $control->getSnippetId(substr($name, 1))] = ob_get_clean();
+				if ($snippets) {
+					$payload->snippets += $snippets;
+					unset($payload->snippets[$id]);
 			}
+		}
 		}
 		if ($control instanceof Nette\Application\UI\Control) {
 			foreach ($control->getComponents(FALSE, 'Nette\Application\UI\Control') as $child) {
