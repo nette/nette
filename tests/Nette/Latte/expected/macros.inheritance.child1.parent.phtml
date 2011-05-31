@@ -1,0 +1,65 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;//
+// block title
+//
+if (!function_exists($_l->blocks['title'][] = 'xxx')) { function _lxxx_title($_l, $_args) { extract($_args)
+?>My website<?php
+}}
+
+//
+// block sidebar
+//
+if (!function_exists($_l->blocks['sidebar'][] = 'xxx')) { function _lxxx_sidebar($_l, $_args) { extract($_args)
+?>
+		<ul>
+			<li><a href="/">Homepage</a></li>
+			<li><a href="/contact">Contact</a></li>
+		</ul>
+<?php
+}}
+
+//
+// end of blocks
+//
+
+// template extending and snippets support
+
+$_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($_extends, $template->_extends);
+
+
+if ($_l->extends) {
+	ob_start();
+} elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+extract(array('class' => NULL, 'namespace' => NULL, 'top' => TRUE), EXTR_SKIP) ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<link rel="stylesheet" href="style.css" />
+	<title><?php if (!$_l->extends) { call_user_func(reset($_l->blocks['title']), $_l, get_defined_vars()); } ?></title>
+</head>
+
+<body>
+	<div id="sidebar">
+<?php if (!$_l->extends) { call_user_func(reset($_l->blocks['sidebar']), $_l, get_defined_vars()); } ?>
+	</div>
+
+	<div id="content">
+<?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'content', $template->getParams()) ?>
+	</div>
+</body>
+</html><?php
+// template extending support
+if ($_l->extends) {
+	ob_end_clean();
+	Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
+}

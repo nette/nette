@@ -1,0 +1,85 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// snippets support
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+<ul>
+	<li>lower: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->lower($hello), ENT_NOQUOTES) ?></li>
+	<li>upper: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($hello), ENT_NOQUOTES) ?></li>
+	<li>lower & capitalize: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->capitalize($template->lower($hello)), ENT_NOQUOTES) ?></li>
+	<li>nl2br: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->nl2br($hello), ENT_NOQUOTES) ?></li>
+	<li>truncate: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->lower($template->truncate($hello, "10 ")), ENT_NOQUOTES) ?></li>
+	<li>date: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->date($date, '%d.%m.%Y %H:%M:%S'), ENT_NOQUOTES) ?></li>
+	<li>translated: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->truncate($template->translate($hello), 3), ENT_NOQUOTES) ?></li>
+	<li>spaces: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello , '' , "" , "$hello" ), ENT_NOQUOTES) ?></li>
+</ul>
+
+<ul>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->h2($template->h1($hello)), ENT_NOQUOTES) ?></li>
+	<li><?php echo $template->h2($template->h1($hello)) ?></li>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->h1($template->h2($hello)), ENT_NOQUOTES) ?></li>
+	<li><?php echo $template->h1($template->h2($hello)) ?></li>
+</ul>
+
+<ul>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello*0, 0, 0.0, "0"), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello*1, 1, "1"), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello, true, null, false), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello, TRUE, NULL, FALSE), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->types($hello, '', "", "$hello"), ENT_NOQUOTES) ?></li>
+</ul>
+
+
+
+<?php ob_start() ?>  <a   href="#"
+> test</a
+
+>
+AŠA
+
+<script>
+// comment
+alert();
+</script>
+<?php echo $template->strip(ob_get_clean()) ?>
+
+
+
+<?php ob_start() ?>
+<ul>
+	<li>lower: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->lower($hello), ENT_NOQUOTES) ?></li>
+</ul>
+<?php $capture = ob_get_clean() ?>
+
+<p>
+Captured: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($capture, ENT_NOQUOTES) ?>
+
+</p>
+
+
+<?php ob_start() ?>
+Hello
+<?php $capture = $template->upper(ob_get_clean()) ?>
+
+<p>
+Captured with modifier: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($capture, ENT_NOQUOTES) ?>
+
+</p>
+
+
+
+<p>
+Nested blocks: <?php ob_start() ?> Outer   <?php ob_start() ?> Inner Block <?php echo $template->upper(ob_get_clean()) ?>
+  Block <?php echo $template->truncate(ob_get_clean(), 20) ?>
+
+</p>

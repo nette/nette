@@ -1,0 +1,22 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);
+
+// snippets support
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+<p>Included file (<?php echo Nette\Templating\DefaultHelpers::escapeHtml($localvar, ENT_NOQUOTES) ?>)</p>
+
+<?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches)) { ?>
+	<?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->lower($title), ENT_NOQUOTES) ?>
+
+<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); }

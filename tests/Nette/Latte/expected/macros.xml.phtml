@@ -1,0 +1,68 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// snippets support
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<?php $netteHttpResponse->setHeader("Content-Type", "application/xml") ?>
+
+<ul>
+	<li>Escaped: <?php echo Nette\Templating\DefaultHelpers::escapeXml($hello) ?></li>
+	<li>Non-escaped: <?php echo $hello ?></li>
+	<li>Escaped expression: <?php echo Nette\Templating\DefaultHelpers::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
+	<li>Non-escaped expression: <?php echo '<' . 'b' . '>hello' . '</b>' ?></li>
+	<li>Array access: <?php echo Nette\Templating\DefaultHelpers::escapeXml($people[1]) ?></li>
+	<li>Html: <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?></li>
+</ul>
+
+<style type="text/css">
+<!--
+#<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?> {
+	background: blue;
+}
+-->
+</style>
+
+
+
+<script>
+<!--
+var html = <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>;
+-->
+</script>
+
+
+<p onclick =
+'alert(<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>);alert("hello");'
+ title='<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>"'
+ style =
+ "color:<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>;'"
+ alt='<?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>'
+ onfocus="alert(<?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>)"
+>click on me</p>
+
+
+<!-- <?php echo Nette\Templating\DefaultHelpers::escapeXml($comment) ?> -->
+
+
+</ul>
+
+
+<ul>
+	<li n:foreach="$people as $person"><?php echo Nette\Templating\DefaultHelpers::escapeXml($person) ?></li>
+</ul>
+
+<p n:if="true">
+	<div><p>true</div>
+</p>

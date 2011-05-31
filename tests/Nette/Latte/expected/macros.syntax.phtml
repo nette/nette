@@ -1,0 +1,44 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// snippets support
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ul>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+</ul>
+
+<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+
+<ul>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+</ul>
+
+<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+
+<ul>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+</ul>
+
+<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+
+<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+
+<p>Default: {$person}</p>
