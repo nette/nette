@@ -238,7 +238,8 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 				throw new ParseException("Missing block name.");
 			}
 
-			if ($name[0] === '$') { // dynamic block
+			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
+				$node->data->dynamic = TRUE;
 				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				return "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[$name][] = '$func')) { "
@@ -293,11 +294,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 			return $this->macroCaptureEnd($node, $writer);
 
 		} elseif (isset($node->data->name)) { // block, snippet, define
-			if ($node->data->name[0] === '$') {
+			if (empty($node->data->dynamic)) {
+				$this->namedBlocks[$node->data->name] = $node->content;
+				return $node->content = '';
+			} else {
 				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$node->data->name}]), \$_l, get_defined_vars())");
 			}
-			$this->namedBlocks[$node->data->name] = $node->content;
-			return $node->content = '';
 
 		} elseif ($node->modifiers) { // anonymous block with modifier
 			return $writer->write('echo %modify', 'ob_get_clean()');
