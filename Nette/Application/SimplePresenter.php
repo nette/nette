@@ -23,7 +23,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class SimplePresenter implements Application\IPresenter
+class SimplePresenter extends Nette\Object implements Application\IPresenter
 {
 	/** @var Nette\DI\IContainer */
 	private $context;

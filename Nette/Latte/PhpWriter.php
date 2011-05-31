@@ -60,9 +60,9 @@ class PhpWriter extends Nette\Object
 		array_shift($args);
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
-		$mask = Nette\Utils\Strings::replace($mask, '#%escape\(((?>[^()]+)|\((?1)\))*\)#', function($m) use ($me) {
+		$mask = Nette\Utils\Strings::replace($mask, '#%escape\(((?>[^()]+)|\((?1)\))*\)#', /*5.2* callback(*/function($m) use ($me) {
 			return $me->escape(substr($m[0], 8, -1));
-		});
+		}/*5.2* )*/);
 
 		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|modify|var)(\?)?(\s*\+\s*)?()#',
 			/*5.2* callback(*/function($m) use ($me, $word, & $args) {
