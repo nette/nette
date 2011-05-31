@@ -284,14 +284,24 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Adds the service, shortcut for addService().
+	 * Adds the service object.
 	 * @param  string
 	 * @param  object
 	 * @return void
 	 */
-	public function __set($name, $value)
+	public function __set($name, $service)
 	{
-		$this->addService($name, $value);
+		$this->updating();
+		if (!is_string($name) || $name === '') {
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+
+		} elseif (isset($this->registry[$name]) || method_exists($this, "createService$name")) {
+			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
+
+		} elseif (!is_object($service)) {
+			throw new Nette\InvalidArgumentException("Service must be a object, " . gettype($service) . " given.");
+		}
+		$this->registry[$name] = $service;
 	}
 
 
