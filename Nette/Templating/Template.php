@@ -270,7 +270,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setParams(array $params)
 	{
-		$this->params = $params;
+		$this->params = $params + $this->params;
 		return $this;
 	}
 
