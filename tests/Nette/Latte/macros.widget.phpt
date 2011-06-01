@@ -54,7 +54,7 @@ $template->control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 
-$template->__toString('
+(string) $template->setSource('
 {widget \'name\'}
 
 {widget form}

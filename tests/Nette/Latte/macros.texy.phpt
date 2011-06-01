@@ -36,7 +36,7 @@ $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');
 
-$result = $template->__toString(<<<EOD
+$result = (string) $template->setSource(<<<EOD
 {block|lower|texy}
 {\$hello}
 ---------

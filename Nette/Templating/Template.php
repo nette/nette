@@ -29,6 +29,9 @@ class Template extends Nette\Object implements ITemplate
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
+	/** @var string */
+	private $source;
+
 	/** @var array */
 	private $params = array();
 
@@ -47,28 +50,25 @@ class Template extends Nette\Object implements ITemplate
 
 
 	/**
-	 * Registers callback as template compile-time filter.
-	 * @param  callback
-	 * @return void
+	 * Sets template source code.
+	 * @param  string
+	 * @return Template  provides a fluent interface
 	 */
-	public function registerFilter($callback)
+	public function setSource($source)
 	{
-		$callback = callback($callback);
-		if (in_array($callback, $this->filters)) {
-			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
-		}
-		$this->filters[] = $callback;
+		$this->source = $source;
+		return $this;
 	}
 
 
 
 	/**
-	 * Returns all registered compile-time filters.
-	 * @return array
+	 * Returns template source code.
+	 * @return source
 	 */
-	final public function getFilters()
+	public function getSource()
 	{
-		return $this->filters;
+		return $this->source;
 	}
 
 
@@ -79,19 +79,18 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Renders template to output.
-	 * @param  string  data
 	 * @return void
 	 */
-	public function render($source = NULL)
+	public function render()
 	{
 		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
-		$cached = $compiled = $cache->load($source);
+		$cached = $compiled = $cache->load($this->source);
 
 		if ($compiled === NULL) {
-			$compiled = $this->compile($source);
-			$cache->save($source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
+			$compiled = $this->compile();
+			$cache->save($this->source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
 			$cache->release();
-			$cached = $cache->load($source);
+			$cached = $cache->load($this->source);
 		}
 
 		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
@@ -127,7 +126,7 @@ class Template extends Nette\Object implements ITemplate
 		$args = func_get_args();
 		ob_start();
 		try {
-			call_user_func_array(array($this, 'render'), $args);
+			$this->render();
 			return ob_get_clean();
 
 		} catch (\Exception $e) {
@@ -144,27 +143,54 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Applies filters on template content.
-	 * @param  string
 	 * @return string
 	 */
-	public function compile($content)
+	public function compile()
 	{
 		if (!$this->filters) {
 			$this->onPrepareFilters($this);
 		}
 
+		$code = $this->getSource();
 		foreach ($this->filters as $filter) {
-			$content = self::extractPhp($content, $blocks);
-			$content = $filter/*5.2*->invoke*/($content);
-			$content = strtr($content, $blocks); // put PHP code back
+			$code = self::extractPhp($code, $blocks);
+			$code = $filter/*5.2*->invoke*/($code);
+			$code = strtr($code, $blocks); // put PHP code back
 		}
 
-		return self::optimizePhp($content);
+		return self::optimizePhp($code);
 	}
 
 
 
-	/********************* template helpers ****************d*g**/
+	/********************* template filters & helpers ****************d*g**/
+
+
+
+	/**
+	 * Registers callback as template compile-time filter.
+	 * @param  callback
+	 * @return void
+	 */
+	public function registerFilter($callback)
+	{
+		$callback = callback($callback);
+		if (in_array($callback, $this->filters)) {
+			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
+		}
+		$this->filters[] = $callback;
+	}
+
+
+
+	/**
+	 * Returns all registered compile-time filters.
+	 * @return array
+	 */
+	final public function getFilters()
+	{
+		return $this->filters;
+	}
 
 
 

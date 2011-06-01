@@ -26,7 +26,7 @@ Block
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {block}
 Block
 

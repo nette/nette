@@ -23,7 +23,7 @@ $template->registerFilter(new Latte\Engine);
 
 
 try {
-	$template->render("\xAA");
+	$template->setSource("\xAA")->compile();
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
 	Assert::exception('Nette\Latte\ParseException', '%a% UTF-8 %a%', $e );

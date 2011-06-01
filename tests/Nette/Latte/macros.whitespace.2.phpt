@@ -26,7 +26,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {* comment
 *}
 qwerty
@@ -41,7 +41,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {* comment
 *}
 
@@ -58,7 +58,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {* comment
 *}
 
@@ -75,7 +75,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {* comment
 *}
 
@@ -91,7 +91,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {* comment
 *}
 {contentType text}

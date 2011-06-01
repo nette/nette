@@ -86,7 +86,7 @@ PLINK(login, 123)
 LINK(default, 10, 20, 30)
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {plink Homepage:}
 
 {plink  Homepage: }

@@ -25,7 +25,6 @@ TestHelpers::purge(TEMP_DIR);
 
 
 $template = new FileTemplate;
-$template->setCacheStorage(new MockCacheStorage(TEMP_DIR));
 $template->setFile(__DIR__ . '/templates/inheritance.child3.latte');
 $template->registerFilter(new Latte\Engine);
 

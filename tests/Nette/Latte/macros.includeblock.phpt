@@ -25,12 +25,11 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$template = new FileTemplate;
+$template = new FileTemplate(__DIR__ . '/templates/includeblock.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
-$template->setFile(__DIR__ . '/templates/includeblock.latte');
 $template->registerFilter(new Latte\Engine);
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.phtml'), $cache->phtml['includeblock.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.inc.phtml'), $cache->phtml['includeblock.inc.latte']);
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::match(file_get_contents("$path.inc.phtml"), $cache->phtml['includeblock.inc.latte']);

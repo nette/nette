@@ -26,9 +26,7 @@ restore_error_handler();
 
 
 
-$template = new FileTemplate;
-$template->setCacheStorage($cache = new MockCacheStorage);
-$template->setFile(__DIR__ . '/templates/xml.latte');
+$template = new FileTemplate(__DIR__ . '/templates/xml.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
@@ -39,6 +37,6 @@ $template->comment = 'test -- comment';
 $template->netteHttpResponse = Nette\Environment::getHttpResponse();
 $template->el = Html::el('div')->title('1/2"');
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.phtml'), reset($cache->phtml));
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));

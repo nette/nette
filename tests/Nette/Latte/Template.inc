@@ -12,13 +12,6 @@ class MockCacheStorage extends PhpFileStorage
 {
 	public $phtml = array();
 
-	public static function fix($s)
-	{
-		$s = preg_replace("#[a-f0-9]{10,}|(?<=')\w{10,}#", 'xxx', $s);
-		$s = preg_replace('#source file:.*#', '', $s);
-		return $s;
-	}
-
 	public function __construct()
 	{
 		parent::__construct(TEMP_DIR);
@@ -31,7 +24,16 @@ class MockCacheStorage extends PhpFileStorage
 
 	public function write($key, $data, array $dp)
 	{
-		$this->phtml[basename($this->hint)] = self::fix($data);
+		$this->phtml[basename($this->hint)] = codefix($data);
 	}
 
+}
+
+
+
+function codefix($s)
+{
+	$s = preg_replace("#[a-f0-9]{10,}|(?<=')\w{10,}#", 'xxx', $s);
+	$s = preg_replace('#source file:.*#', '', $s);
+	return $s;
 }

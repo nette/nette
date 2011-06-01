@@ -33,11 +33,9 @@ class MyMacros extends Latte\Macros\MacroSet
 }
 
 
-$template = new FileTemplate;
-$template->setCacheStorage($cache = new MockCacheStorage(TEMP_DIR));
-$template->setFile(__DIR__ . '/templates/use.latte');
+$template = new FileTemplate(__DIR__ . '/templates/use.latte');
 $template->registerFilter(new Latte\Engine);
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.phtml'), $cache->phtml['use.latte']);
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));

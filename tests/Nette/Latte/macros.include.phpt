@@ -25,16 +25,15 @@ TestHelpers::purge(TEMP_DIR);
 
 
 Html::$xhtml = FALSE;
-$template = new FileTemplate;
+$template = new FileTemplate(__DIR__ . '/templates/include.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
-$template->setFile(__DIR__ . '/templates/include.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 $template->hello = '<i>Hello</i>';
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.phtml'), $cache->phtml['include.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.inc1.phtml'), $cache->phtml['include1.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.inc2.phtml'), $cache->phtml['include2.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.inc3.phtml'), $cache->phtml['include3.latte']);
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::match(file_get_contents("$path.inc1.phtml"), $cache->phtml['include1.latte']);
+Assert::match(file_get_contents("$path.inc2.phtml"), $cache->phtml['include2.latte']);
+Assert::match(file_get_contents("$path.inc3.phtml"), $cache->phtml['include3.latte']);

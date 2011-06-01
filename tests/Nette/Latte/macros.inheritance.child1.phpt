@@ -24,14 +24,13 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$template = new FileTemplate;
+$template = new FileTemplate(__DIR__ . '/templates/inheritance.child1.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
-$template->setFile(__DIR__ . '/templates/inheritance.child1.latte');
 $template->registerFilter(new Latte\Engine);
 
 $template->people = array('John', 'Mary', 'Paul');
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.child.phtml'), $cache->phtml['inheritance.child1.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.parent.phtml'), $cache->phtml['inheritance.parent.latte']);
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.child.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::match(file_get_contents("$path.parent.phtml"), $cache->phtml['inheritance.parent.latte']);

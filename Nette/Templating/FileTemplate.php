@@ -68,6 +68,17 @@ class FileTemplate extends Template implements IFileTemplate
 
 
 
+	/**
+	 * Returns template source code.
+	 * @return source
+	 */
+	public function getSource()
+	{
+		return file_get_contents($this->file);
+	}
+
+
+
 	/********************* rendering ****************d*g**/
 
 
@@ -90,8 +101,7 @@ class FileTemplate extends Template implements IFileTemplate
 
 		if ($compiled === NULL) {
 			try {
-				$compiled = $this->compile(file_get_contents($this->file));
-				$compiled = "<?php\n\n// source file: $this->file\n\n?>$compiled";
+				$compiled = "<?php\n\n// source file: $this->file\n\n?>" . $this->compile();
 
 			} catch (FilterException $e) {
 				$e->setSourceFile($this->file);

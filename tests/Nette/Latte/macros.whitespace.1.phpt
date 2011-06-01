@@ -26,7 +26,7 @@ qwerty
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 {contentType text}
 qwerty
 
@@ -40,7 +40,7 @@ Assert::match(<<<EOD
 asdfgh
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 
 {contentType text}
 asdfgh

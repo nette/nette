@@ -24,9 +24,8 @@ TestHelpers::purge(TEMP_DIR);
 
 
 
-$template = new FileTemplate;
-$template->setCacheStorage($cache = new MockCacheStorage(TEMP_DIR));
-$template->setFile(__DIR__ . '/templates/cache.latte');
+$template = new FileTemplate(__DIR__ . '/templates/cache.latte');
+$template->setCacheStorage($cache = new MockCacheStorage);
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
@@ -34,7 +33,7 @@ $template->netteCacheStorage = new Nette\Caching\Storages\DevNullStorage;
 $template->title = 'Hello';
 $template->id = 456;
 
-$result = $template->__toString(TRUE);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.html'), $result);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.phtml'), $cache->phtml['cache.latte']);
-Assert::match(file_get_contents(__DIR__ . '/expected/' . basename(__FILE__, '.phpt') . '.inc.phtml'), $cache->phtml['include.cache.latte']);
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
+Assert::match(file_get_contents("$path.inc.phtml"), $cache->phtml['include.cache.latte']);

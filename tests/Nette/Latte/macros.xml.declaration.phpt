@@ -29,7 +29,7 @@ Assert::match(<<<EOD
 
 EOD
 
-, $template->__toString(<<<EOD
+, (string) $template->setSource(<<<EOD
 <?xml version="1.0" ?>
 <?php xml(1) ?>
 <? xml(2) ?>
