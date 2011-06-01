@@ -325,10 +325,10 @@ class Configurator extends Object
 		$application = new $class($context);
 		$application->catchExceptions = $container->params['productionMode'];
 		if ($container->session->exists()) {
-			$application->onStartup[] = function() use ($container) {
+		$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
-		}
+			}
 		return $application;
 	}
 
@@ -340,7 +340,7 @@ class Configurator extends Object
 	public static function createServicePresenterFactory(DI\Container $container)
 	{
 		return new Nette\Application\PresenterFactory(
-			isset($container->params['appDir']) ? $container->params['appDir'] : NULL, 
+			isset($container->params['appDir']) ? $container->params['appDir'] : NULL,
 			$container
 		);
 	}
@@ -374,7 +374,11 @@ class Configurator extends Object
 	 */
 	public static function createServiceHttpResponse()
 	{
-		return new Nette\Http\Response;
+		$response = new Nette\Http\Response;
+		if (!$response->isSent()) {
+			$response->setContentType('text/html', 'utf-8');
+		}
+		return $response;
 	}
 
 
