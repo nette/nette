@@ -286,8 +286,9 @@ class Route extends Nette\Object implements Application\IRouter
 			}
 
 			if (isset($meta['fixity'])) {
-				if (is_scalar($params[$name]) && strcasecmp($params[$name], $meta[self::VALUE]) === 0) {
-					// remove default values; NULL values are retain
+				if (is_scalar($params[$name]) ? strcasecmp($params[$name], $meta[self::VALUE]) === 0
+					: $params[$name] === $meta[self::VALUE]
+				) { // remove default values; NULL values are retain
 					unset($params[$name]);
 					continue;
 
