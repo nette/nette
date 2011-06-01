@@ -154,18 +154,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Selects by primary key.
-	 * @param  mixed
-	 * @return Selection provides a fluent interface
-	 */
-	public function find($key)
-	{
-		return $this->where($this->delimitedPrimary, $key);
-	}
-
-
-
-	/**
 	 * Adds where condition, more calls appends with AND.
 	 * @param  string condition possibly containing ?
 	 * @param  mixed
@@ -256,6 +244,22 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->rows = NULL;
 		$this->limit = $limit;
 		$this->offset = $offset;
+		return $this;
+	}
+
+
+
+	/**
+	 * Sets offset using page number, more calls rewrite old values.
+	 * @param  int
+	 * @param  int
+	 * @return Selection provides a fluent interface
+	 */
+	public function page($page, $itemsPerPage)
+	{
+		$this->rows = NULL;
+		$this->limit = $itemsPerPage;
+		$this->offset = ($page - 1) * $itemsPerPage;
 		return $this;
 	}
 
