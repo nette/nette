@@ -72,7 +72,7 @@ class Parser extends Nette\Object
 	public function __construct()
 	{
 		$this->macroHandlers = new \SplObjectStorage;
-		$this->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
+		$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
 		$this->context = array(self::CONTEXT_NONE, 'text');
 	}
 
@@ -381,7 +381,7 @@ class Parser extends Nette\Object
 	public function setDelimiters($left, $right)
 	{
 		$this->macroRe = '
-			(?P<comment>\\{\\*.*?\\*\\}\n{0,2})|
+			(?P<comment>' . $left . '\\*.*?\\*' . $right . '\n{0,2})|
 			' . $left . '
 				(?P<macro>(?:' . self::RE_STRING . '|[^\'"]+?)*?)
 			' . $right . '

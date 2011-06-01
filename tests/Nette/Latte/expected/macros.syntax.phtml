@@ -19,6 +19,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
 	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+{* comment latte *}
 </ul>
 
 <p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>

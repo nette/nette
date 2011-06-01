@@ -46,7 +46,7 @@ class Engine extends Nette\Object
 	public function __invoke($s)
 	{
 		$this->parser->context = array(Parser::CONTEXT_TEXT);
-		$this->parser->setDelimiters('\\{(?![\\s\'"{}*])', '\\}');
+		$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
 		return $this->parser->parse($s);
 	}
 
