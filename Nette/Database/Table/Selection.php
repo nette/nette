@@ -171,7 +171,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$this->__destruct();
 
-		$this->conditions[] = $condition = $this->tryDelimite($condition);
+		$this->conditions[] = $condition;
+		$condition = $this->tryDelimite($condition);
 
 		$args = func_num_args();
 		if ($args !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
@@ -274,7 +275,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function group($columns, $having = '')
 	{
 		$this->__destruct();
-		$this->group = $this->tryDelimite($columns);
+		$this->group = $columns;
 		$this->having = $having;
 		return $this;
 	}
@@ -288,8 +289,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
-		$query = "SELECT $function FROM $this->delimitedName" . implode($join);
+		$query = "SELECT $function FROM $table AS $this->delimitedName" . implode($join);
 		if ($this->where) {
 			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
 		}
@@ -376,7 +378,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$cols = $prefix . '*';
 		}
 
-		return "SELECT{$this->topString()} $cols FROM $this->delimitedName" . implode($join) . $this->whereString();
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
+		return "SELECT{$this->topString()} $cols FROM $table AS $this->delimitedName" . implode($join) . $this->whereString();
 	}
 
 
@@ -385,18 +388,20 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$supplementalDriver = $this->connection->getSupplementalDriver();
 		$joins = array();
-		preg_match_all('~\\b(\\w+)\\.(\\w+)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
+		preg_match_all('~\\b([a-z][\\w.]*)\\.([a-z]\\w*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-			$name = $match[1];
-			if ($name !== $this->name) { // case-sensitive
-				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
-				$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
-				$primary = $this->getPrimary($table);
-				$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-					. ' JOIN ' . $supplementalDriver->delimite($table)
-					. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
-					. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
-					. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+			if ($match[1] !== $this->name) { // case-sensitive
+				foreach (explode('.', $match[1]) as $name) {
+					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
+					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
+					$primary = $this->getPrimary($table);
+					$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
+						. ' JOIN ' . $supplementalDriver->delimite($this->connection->databaseReflection->getPrefixedTable($table))
+						. ' AS '. $supplementalDriver->delimite($table)
+						. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
+						. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
+						. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+				}
 			}
 		}
 		return $joins;
@@ -454,10 +459,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
 		}
 		if ($this->group) {
-			$return .= " GROUP BY $this->group";
+			$return .= ' GROUP BY '. $this->tryDelimite($this->group);
 		}
 		if ($this->having) {
-			$return .= " HAVING $this->having";
+			$return .= ' HAVING '. $this->tryDelimite($this->having);
 		}
 		if ($this->order) {
 			$return .= ' ORDER BY ' . implode(', ', $this->order);
@@ -590,8 +595,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function delete()
 	{
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		return $this->query(
-			'DELETE' . $this->topString() . " FROM $this->delimitedName" . $this->whereString()
+			'DELETE' . $this->topString() . " FROM $table AS $this->delimitedName" . $this->whereString()
 		)->rowCount();
 	}
 

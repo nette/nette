@@ -38,6 +38,8 @@ class DatabaseReflection extends Nette\Object
 	/** @var string */
 	private $table;
 
+	/** @var string */
+	private $prefix;
 
 
 	/**
@@ -45,12 +47,14 @@ class DatabaseReflection extends Nette\Object
 	 * @param  string %s stands for table name
 	 * @param  string %1$s stands for key used after ->, %2$s for table name
 	 * @param  string %1$s stands for key used after ->, %2$s for table name
+	 * @param  string prefix for all tables
 	 */
-	public function __construct($primary = 'id', $foreign = '%s_id', $table = '%s')
+	public function __construct($primary = 'id', $foreign = '%s_id', $table = '%s', $prefix = '%s')
 	{
 		$this->primary = $primary;
 		$this->foreign = $foreign;
 		$this->table = $table;
+		$this->prefix = $prefix;
 	}
 
 
@@ -82,6 +86,13 @@ class DatabaseReflection extends Nette\Object
 	public function getReferencedTable($name, $table)
 	{
 		return sprintf($this->table, $name, $table);
+	}
+
+
+
+	public function getPrefixedTable($table)
+	{
+		return sprintf($this->prefix, $table);
 	}
 
 
