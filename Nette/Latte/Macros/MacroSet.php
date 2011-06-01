@@ -47,6 +47,13 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 
 
 
+	public static function install(Latte\Parser $parser)
+	{
+		return new static($parser);
+	}
+
+
+
 	/**
 	 * Initializes before template parsing.
 	 * @return void

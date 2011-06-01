@@ -48,7 +48,7 @@ class CoreMacros extends MacroSet
 
 	public static function install(Latte\Parser $parser)
 	{
-		$me = new static($parser);
+		$me = parent::install($parser);
 
 		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
 		$me->addMacro('elseif', 'elseif (%node.args):');
