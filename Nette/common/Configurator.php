@@ -339,7 +339,10 @@ class Configurator extends Object
 	 */
 	public static function createServicePresenterFactory(DI\Container $container)
 	{
-		return new Nette\Application\PresenterFactory($container->params['appDir'], $container);
+		return new Nette\Application\PresenterFactory(
+			isset($container->params['appDir']) ? $container->params['appDir'] : NULL, 
+			$container
+		);
 	}
 
 
@@ -425,6 +428,9 @@ class Configurator extends Object
 	 */
 	public static function createServiceCacheStorage(DI\Container $container)
 	{
+		if (!isset($container->params['tempDir'])) {
+			throw new Nette\InvalidStateException("Service cacheStorage requires that parameter 'tempDir' contains path to temporary directory.");
+		}
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
@@ -438,6 +444,9 @@ class Configurator extends Object
 	 */
 	public static function createServiceTemplateCacheStorage(DI\Container $container)
 	{
+		if (!isset($container->params['tempDir'])) {
+			throw new Nette\InvalidStateException("Service templateCacheStorage requires that parameter 'tempDir' contains path to temporary directory.");
+		}
 		$dir = $container->expand('%tempDir%/cache');
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
