@@ -216,7 +216,7 @@ class Form extends Container
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getNamespace('Nette.Forms.Form/CSRF');
+		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
 		$key = "key$timeout";
 		if (isset($session->$key)) {
 			$token = $session->$key;

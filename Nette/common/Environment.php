@@ -316,7 +316,7 @@ final class Environment
 	{
 		return $namespace === NULL
 			? self::getContext()->session
-			: self::getContext()->session->getNamespace($namespace);
+			: self::getContext()->session->getSection($namespace);
 	}
 
 

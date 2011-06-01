@@ -1236,14 +1236,14 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function hasFlashSession()
 	{
 		return !empty($this->params[self::FLASH_KEY])
-			&& $this->getSession()->hasNamespace('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
+			&& $this->getSession()->hasSection('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}
 
 
 
 	/**
 	 * Returns session namespace provided to pass temporary data between redirects.
-	 * @return Nette\Http\SessionNamespace
+	 * @return Nette\Http\SessionSection
 	 */
 	public function getFlashSession()
 	{
@@ -1340,7 +1340,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function getSession($namespace = NULL)
 	{
 		$handler = $this->context->session;
-		return $namespace === NULL ? $handler : $handler->getNamespace($namespace);
+		return $namespace === NULL ? $handler : $handler->getSection($namespace);
 	}
 
 

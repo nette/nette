@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Http\SessionNamespace undefined property.
+ * Test: Nette\Http\SessionSection undefined property.
  *
  * @author     David Grudl
  * @package    Nette\Http
@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $session = Nette\Environment::getSession();
-$namespace = $session->getNamespace('one');
+$namespace = $session->getSection('one');
 Assert::false( isset($namespace->undefined) );
 Assert::null( $namespace->undefined, 'Getting value of non-existent key' );
 Assert::same( '', http_build_query($namespace->getIterator()) );

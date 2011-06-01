@@ -52,7 +52,7 @@ class User extends Nette\Object implements IUser
 	/** @var string */
 	private $namespace = '';
 
-	/** @var SessionNamespace */
+	/** @var SessionSection */
 	private $session;
 
 	/** @var Nette\DI\IContainer */
@@ -114,7 +114,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function isLoggedIn()
 	{
-		$session = $this->getSessionNamespace(FALSE);
+		$session = $this->getSessionSection(FALSE);
 		return $session && $session->authenticated;
 	}
 
@@ -126,7 +126,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getIdentity()
 	{
-		$session = $this->getSessionNamespace(FALSE);
+		$session = $this->getSessionSection(FALSE);
 		return $session ? $session->identity : NULL;
 	}
 
@@ -205,7 +205,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$session = $this->getSessionNamespace(TRUE);
+		$session = $this->getSessionSection(TRUE);
 		if ($time) {
 			$time = Nette\DateTime::from($time)->format('U');
 			$session->expireTime = $time;
@@ -230,7 +230,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getLogoutReason()
 	{
-		$session = $this->getSessionNamespace(FALSE);
+		$session = $this->getSessionSection(FALSE);
 		return $session ? $session->reason : NULL;
 	}
 
@@ -238,9 +238,9 @@ class User extends Nette\Object implements IUser
 
 	/**
 	 * Returns and initializes $this->session.
-	 * @return SessionNamespace
+	 * @return SessionSection
 	 */
-	protected function getSessionNamespace($need)
+	protected function getSessionSection($need)
 	{
 		if ($this->session !== NULL) {
 			return $this->session;
@@ -250,7 +250,7 @@ class User extends Nette\Object implements IUser
 			return NULL;
 		}
 
-		$this->session = $session = $this->context->session->getNamespace('Nette.Web.User/' . $this->namespace);
+		$this->session = $session = $this->context->session->getSection('Nette.Web.User/' . $this->namespace);
 
 		if (!$session->identity instanceof IIdentity || !is_bool($session->authenticated)) {
 			$session->remove();
@@ -294,7 +294,7 @@ class User extends Nette\Object implements IUser
 	 */
 	protected function setAuthenticated($state)
 	{
-		$session = $this->getSessionNamespace(TRUE);
+		$session = $this->getSessionSection(TRUE);
 		$session->authenticated = (bool) $state;
 
 		// Session Fixation defence
@@ -320,7 +320,7 @@ class User extends Nette\Object implements IUser
 	 */
 	protected function setIdentity(IIdentity $identity = NULL)
 	{
-		$this->getSessionNamespace(TRUE)->identity = $identity;
+		$this->getSessionSection(TRUE)->identity = $identity;
 		return $this;
 	}
 

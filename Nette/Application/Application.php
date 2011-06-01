@@ -267,7 +267,7 @@ class Application extends Nette\Object
 	 */
 	public function storeRequest($expiration = '+ 10 minutes')
 	{
-		$session = $this->context->session->getNamespace('Nette.Application/requests');
+		$session = $this->context->session->getSection('Nette.Application/requests');
 		do {
 			$key = Nette\Utils\Strings::random(5);
 		} while (isset($session[$key]));
@@ -286,7 +286,7 @@ class Application extends Nette\Object
 	 */
 	public function restoreRequest($key)
 	{
-		$session = $this->context->session->getNamespace('Nette.Application/requests');
+		$session = $this->context->session->getSection('Nette.Application/requests');
 		if (isset($session[$key])) {
 			$request = clone $session[$key];
 			unset($session[$key]);

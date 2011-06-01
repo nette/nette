@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Http\SessionNamespace separated space.
+ * Test: Nette\Http\SessionSection separated space.
  *
  * @author     David Grudl
  * @package    Nette\Http
@@ -17,12 +17,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $session = Nette\Environment::getSession();
-$namespace1 = $session->getNamespace('namespace1');
-$namespace1b = $session->getNamespace('namespace1');
-$namespace2 = $session->getNamespace('namespace2');
-$namespace2b = $session->getNamespace('namespace2');
-$namespace3 = $session->getNamespace('default');
-$namespace3b = $session->getNamespace('default');
+$namespace1 = $session->getSection('namespace1');
+$namespace1b = $session->getSection('namespace1');
+$namespace2 = $session->getSection('namespace2');
+$namespace2b = $session->getSection('namespace2');
+$namespace3 = $session->getSection('default');
+$namespace3b = $session->getSection('default');
 $namespace1->a = 'apple';
 $namespace2->a = 'pear';
 $namespace3->a = 'orange';

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Http\SessionNamespace basic usage.
+ * Test: Nette\Http\SessionSection basic usage.
  *
  * @author     David Grudl
  * @package    Nette\Http
@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $session = Nette\Environment::getSession();
-$namespace = $session->getNamespace('one');
+$namespace = $session->getSection('one');
 $namespace->a = 'apple';
 $namespace->p = 'pear';
 $namespace['o'] = 'orange';

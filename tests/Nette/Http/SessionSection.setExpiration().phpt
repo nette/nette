@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Http\SessionNamespace::setExpiration()
+ * Test: Nette\Http\SessionSection::setExpiration()
  *
  * @author     David Grudl
  * @package    Nette\Http
@@ -20,7 +20,7 @@ $session = Nette\Environment::getSession();
 $session->setExpiration('+10 seconds');
 
 // try to expire whole namespace
-$namespace = $session->getNamespace('expire');
+$namespace = $session->getSection('expire');
 $namespace->a = 'apple';
 $namespace->p = 'pear';
 $namespace['o'] = 'orange';
@@ -30,12 +30,12 @@ $session->close();
 sleep(2);
 $session->start();
 
-$namespace = $session->getNamespace('expire');
+$namespace = $session->getSection('expire');
 Assert::same( '', http_build_query($namespace->getIterator()) );
 
 
 // try to expire only 1 of the keys
-$namespace = $session->getNamespace('expireSingle');
+$namespace = $session->getSection('expireSingle');
 $namespace->setExpiration(1, 'g');
 $namespace->g = 'guava';
 $namespace->p = 'plum';
@@ -44,7 +44,7 @@ $session->close();
 sleep(2);
 $session->start();
 
-$namespace = $session->getNamespace('expireSingle');
+$namespace = $session->getSection('expireSingle');
 Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );
 
 

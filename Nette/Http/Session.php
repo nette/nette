@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Provides access to session namespaces as well as session settings and management methods.
+ * Provides access to session sections as well as session settings and management methods.
  *
  * @author     David Grudl
  */
@@ -101,8 +101,8 @@ class Session extends Nette\Object
 
 		/* structure:
 			__NF: Counter, BrowserKey, Data, Meta
-				DATA: namespace->variable = data
-				META: namespace->variable = Timestamp, Browser, Version
+				DATA: section->variable = data
+				META: section->variable = Timestamp, Browser, Version
 		*/
 
 		unset($_SESSION['__NT'], $_SESSION['__NS'], $_SESSION['__NM']); // old unused structures
@@ -129,19 +129,19 @@ class Session extends Nette\Object
 		// process meta metadata
 		if (isset($nf['META'])) {
 			$now = time();
-			// expire namespace variables
-			foreach ($nf['META'] as $namespace => $metadata) {
+			// expire section variables
+			foreach ($nf['META'] as $section => $metadata) {
 				if (is_array($metadata)) {
 					foreach ($metadata as $variable => $value) {
 						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T']) // whenBrowserIsClosed || Time
-							|| ($variable !== '' && is_object($nf['DATA'][$namespace][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
-								!== Nette\Reflection\ClassType::from($nf['DATA'][$namespace][$variable])->getAnnotation('serializationVersion'))
+							|| ($variable !== '' && is_object($nf['DATA'][$section][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
+								!== Nette\Reflection\ClassType::from($nf['DATA'][$section][$variable])->getAnnotation('serializationVersion'))
 						) {
-							if ($variable === '') { // expire whole namespace
-								unset($nf['META'][$namespace], $nf['DATA'][$namespace]);
+							if ($variable === '') { // expire whole section
+								unset($nf['META'][$section], $nf['DATA'][$section]);
 								continue 2;
 							}
-							unset($nf['META'][$namespace][$variable], $nf['DATA'][$namespace][$variable]);
+							unset($nf['META'][$section][$variable], $nf['DATA'][$section][$variable]);
 						}
 					}
 				}
@@ -272,42 +272,51 @@ class Session extends Nette\Object
 
 
 
-	/********************* namespaces management ****************d*g**/
+	/********************* sections management ****************d*g**/
 
 
 
 	/**
-	 * Returns specified session namespace.
+	 * Returns specified session section.
 	 * @param  string
 	 * @param  string
-	 * @return SessionNamespace
+	 * @return SessionSection
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function getNamespace($name, $class = 'Nette\Http\SessionNamespace')
+	public function getSection($section, $class = 'Nette\Http\SessionSection')
 	{
-		return new $class($this, $name);
+		return new $class($this, $section);
+	}
+
+
+
+	/** @deprecated */
+	function getNamespace($section)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getSection() instead.', E_USER_WARNING);
+		return $this->getSection($section);
 	}
 
 
 
 	/**
-	 * Checks if a session namespace exist and is not empty.
+	 * Checks if a session section exist and is not empty.
 	 * @param  string
 	 * @return bool
 	 */
-	public function hasNamespace($name)
+	public function hasSection($section)
 	{
 		if ($this->exists() && !self::$started) {
 			$this->start();
 		}
 
-		return !empty($_SESSION['__NF']['DATA'][$name]);
+		return !empty($_SESSION['__NF']['DATA'][$section]);
 	}
 
 
 
 	/**
-	 * Iteration over all namespaces.
+	 * Iteration over all sections.
 	 * @return \ArrayIterator
 	 */
 	public function getIterator()

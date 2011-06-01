@@ -158,7 +158,7 @@ class NetteLoader extends AutoLoader
 		'nette\http\requestfactory' => '/Http/RequestFactory.php',
 		'nette\http\response' => '/Http/Response.php',
 		'nette\http\session' => '/Http/Session.php',
-		'nette\http\sessionnamespace' => '/Http/SessionNamespace.php',
+		'nette\http\sessionsection' => '/Http/SessionSection.php',
 		'nette\http\url' => '/Http/Url.php',
 		'nette\http\urlscript' => '/Http/UrlScript.php',
 		'nette\http\user' => '/Http/User.php',
