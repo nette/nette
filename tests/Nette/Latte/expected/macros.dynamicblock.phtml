@@ -52,9 +52,9 @@ if (!function_exists($_l->blocks[$name][] = 'xxx')) { function _lxxx__name($_l, 
 <?php Nette\Latte\Macros\UIMacros::callBlock($_l, $name, array('var' => 40) + $template->getParams()) ?>
 
 <?php //
-// block "word$name"
+// block word$name
 //
-if (!function_exists($_l->blocks["word$name"][] = 'xxx')) { function _lxxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+if (!function_exists($_l->blocks["word$name"][] = 'xxx')) { function _lxxx_word_name($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
 
 <?php //
 // block "word$name"

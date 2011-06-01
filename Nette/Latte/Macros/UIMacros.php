@@ -100,11 +100,12 @@ class UIMacros extends MacroSet
 		if ($this->namedBlocks) {
 			foreach ($this->namedBlocks as $name => $code) {
 				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$snippet = $name[0] === '_';
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
 					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
-					. ($name[0] === '_' ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '') // snippet
+					. ($snippet ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -231,53 +232,51 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 		if ($node->name === 'block' && $name === FALSE) { // anonymous block
 			return $node->modifiers === '' ? '' : 'ob_start()';
+		}
 
-		} else { // #block
-			$node->data->name = $name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
-			if ($name == NULL) {
-				throw new ParseException("Missing block name.");
-			}
+		$node->data->name = $name = ($node->name === 'snippet' ? '_' : '') . ltrim($name, '#');
+		if ($name == NULL) {
+			throw new ParseException("Missing block name.");
+		}
 
-			if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
-				$node->data->dynamic = TRUE;
-				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-				return "//\n// block $name\n//\n"
-					. "if (!function_exists(\$_l->blocks[$name][] = '$func')) { "
-					. "function $func(\$_l, \$_args) { "
-					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
-			}
+		if (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) {
+			$node->data->dynamic = TRUE;
+			$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+			return "//\n// block $name\n//\n"
+				. "if (!function_exists(\$_l->blocks[{$writer->formatWord($name)}][] = '$func')) { "
+				. "function $func(\$_l, \$_args) { "
+				. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
+		}
 
-			if (isset($this->namedBlocks[$name])) {
-				throw new ParseException("Cannot redeclare static block '$name'");
-			}
-			$top = empty($node->parentNode);
-			$this->namedBlocks[$name] = TRUE;
+		if (isset($this->namedBlocks[$name])) {
+			throw new ParseException("Cannot redeclare static block '$name'");
+		}
+		$top = empty($node->parentNode);
+		$this->namedBlocks[$name] = TRUE;
 
-			$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
-			if ($node->modifiers) {
-				$include = "ob_start(); $include; echo %modify";
-			}
+		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
+		if ($node->modifiers) {
+			$include = "ob_start(); $include; echo %modify";
+		}
 
-			if ($node->name === 'snippet') {
-				$tag = $node->tokenizer->fetchWord();
-				$tag = trim($tag, '<>');
-				$tag = $tag ? $tag : 'div';
-				return $writer->write("?><$tag id=\"<?php echo \$control->getSnippetId(%var) ?>\"><?php $include ?></$tag><?php ",
-					(string) substr($name, 1), $name, 'ob_get_clean()'
-				);
+		if ($node->name === 'snippet') {
+			$tag = trim($node->tokenizer->fetchWord(), '<>');
+			$tag = $tag ? $tag : 'div';
+			return $writer->write("?>\n<$tag id=\"<?php echo \$control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
+				(string) substr($name, 1), $name, 'ob_get_clean()'
+			);
 
-			} elseif ($node->name === 'define') {
-				return '';
+		} elseif ($node->name === 'define') {
+			return '';
 
-			} elseif (!$top) {
-				return $writer->write($include, $name, 'ob_get_clean()');
+		} elseif (!$top) {
+			return $writer->write($include, $name, 'ob_get_clean()');
 
-			} elseif ($this->extends) {
-				return '';
+		} elseif ($this->extends) {
+			return '';
 
-			} else {
-				return $writer->write("if (!\$_l->extends) { $include; }", $name, 'ob_get_clean()');
-			}
+		} else {
+			return $writer->write("if (!\$_l->extends) { $include; }", $name, 'ob_get_clean()');
 		}
 	}
 
@@ -290,15 +289,12 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 	 */
 	public function macroBlockEnd(MacroNode $node, $writer)
 	{
-		if ($node->name === 'capture') { // capture - back compatibility
-			return $this->macroCaptureEnd($node, $writer);
-
-		} elseif (isset($node->data->name)) { // block, snippet, define
+		if (isset($node->data->name)) { // block, snippet, define
 			if (empty($node->data->dynamic)) {
 				$this->namedBlocks[$node->data->name] = $node->content;
 				return $node->content = '';
 			} else {
-				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$node->data->name}]), \$_l, get_defined_vars())");
+				return $writer->write("}} call_user_func(reset(\$_l->blocks[{$writer->formatWord($node->data->name)}]), \$_l, get_defined_vars())");
 			}
 
 		} elseif ($node->modifiers) { // anonymous block with modifier
