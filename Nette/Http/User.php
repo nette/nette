@@ -151,6 +151,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setAuthenticationHandler(IAuthenticator $handler)
 	{
+		$this->context->removeService('authenticator');
 		$this->context->authenticator = $handler;
 		return $this;
 	}
@@ -385,6 +386,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setAuthorizationHandler(IAuthorizator $handler)
 	{
+		$this->context->removeService('authorizator');
 		$this->context->authorizator = $handler;
 		return $this;
 	}
