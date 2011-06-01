@@ -1,0 +1,18 @@
+<?php
+
+//
+
+?><?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// snippets support
+if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+
+
+<?php echo "ok" ?>

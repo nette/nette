@@ -80,6 +80,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('syntax', array($me, 'macroSyntax'), array($me, 'macroSyntax'));
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
+		$me->addMacro('use', array($me, 'macroUse'));
 
 		$me->addMacro('@href', NULL, NULL); // TODO: placeholder
 		$me->addMacro('@class', array($me, 'macroClass'));
@@ -194,6 +195,17 @@ class CoreMacros extends MacroSet
 		} else {
 			return $code . '->render()';
 		}
+	}
+
+
+
+	/**
+	 * {use class MacroSet}
+	 */
+	public function macroUse(MacroNode $node, $writer)
+	{
+		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->parser)
+			->initialize();
 	}
 
 
