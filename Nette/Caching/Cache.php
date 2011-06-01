@@ -88,7 +88,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function derive($namespace)
 	{
-		$derived = new static($this->storage, $this->namespace . $namespace);
+		$derived = new static($this->storage, $this->getNamespace() . $namespace);
 		return $derived;
 	}
 
