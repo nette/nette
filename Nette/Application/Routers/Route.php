@@ -124,7 +124,7 @@ class Route extends Nette\Object implements Application\IRouter
 			);
 		} elseif ($metadata instanceof \Closure || $metadata instanceof Nette\Callback) {
 			$metadata = array(
-				self::PRESENTER_KEY => 'Nette:Simple',
+				self::PRESENTER_KEY => 'Nette:Micro',
 				'callback' => $metadata,
 			);
 		}
