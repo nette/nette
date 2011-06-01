@@ -33,7 +33,7 @@ class FormMacros extends MacroSet
 
 	public static function install(Latte\Parser $parser)
 	{
-		$me = parent::install($parser);
+		$me = new static($parser);
 		$me->addMacro('form', '$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
 			'echo $form->getElementPrototype()->endTag()');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');

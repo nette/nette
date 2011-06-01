@@ -19,4 +19,4 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 <?php if (Nette\Latte\Macros\CacheMacro::createCache($netteCacheStorage, 'xxx', $_g->caches)) { ?>
 	<?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->lower($title), ENT_NOQUOTES) ?>
 
-<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof \stdClass) $_l->tmp->end(); }
+<?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }

@@ -30,6 +30,11 @@ class MyMacros extends Latte\Macros\MacroSet
 		parent::__construct($parser);
 		$this->addMacro('my', 'echo "ok"');
 	}
+
+	/*5.2*static function install(Nette\Latte\Parser $parser)
+	{
+		return new self($parser);
+	}*/
 }
 
 

@@ -45,7 +45,7 @@ class UIMacros extends MacroSet
 
 	public static function install(Latte\Parser $parser)
 	{
-		$me = parent::install($parser);
+		$me = new static($parser);
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('includeblock', array($me, 'macroIncludeBlock'));
 		$me->addMacro('extends', array($me, 'macroExtends'));
