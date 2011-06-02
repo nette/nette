@@ -544,7 +544,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$data = iterator_to_array($data);
 		}
 
-		$return = $this->connection->query("INSERT INTO $this->delimitedName", $data);
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
+		$return = $this->connection->query("INSERT INTO $table AS $this->delimitedName", $data);
 
 		$this->rows = NULL;
 		if (!is_array($data)) {
@@ -577,8 +578,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return 0;
 		}
 		// joins in UPDATE are supported only in MySQL
+		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
 		return $this->connection->queryArgs(
-			'UPDATE' . $this->topString() . " $this->delimitedName SET ?" . $this->whereString(),
+			'UPDATE' . $this->topString() . " $table AS $this->delimitedName SET ?" . $this->whereString(),
 			array_merge(array($data), $this->parameters)
 		)->rowCount();
 	}
