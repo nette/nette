@@ -123,7 +123,7 @@ class UIMacros extends MacroSet
 			$prolog[] = '
 if ($_l->extends) {
 	ob_start();
-} elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+} elseif (!empty($control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
 }';
 			$epilog[] = '
@@ -135,7 +135,7 @@ if ($_l->extends) {
 		} else {
 			$prolog[] = '
 // snippets support
-if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+if (!empty($control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
 }';
 		}
@@ -468,6 +468,7 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 
 	public static function renderSnippets($control, $local, $params)
 	{
+		$control->snippetMode = FALSE;
 		$payload = $control->getPresenter()->getPayload();
 		if (isset($local->blocks)) {
 			foreach ($local->blocks as $name => $function) {
@@ -487,7 +488,9 @@ if (isset($presenter, $control) && $presenter->isAjax() && $control->isControlIn
 		if ($control instanceof Nette\Application\UI\Control) {
 			foreach ($control->getComponents(FALSE, 'Nette\Application\UI\Control') as $child) {
 				if ($child->isControlInvalid()) {
+					$child->snippetMode = TRUE;
 					$child->render();
+					$child->snippetMode = FALSE;
 				}
 			}
 		}

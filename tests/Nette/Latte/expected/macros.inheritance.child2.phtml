@@ -39,9 +39,7 @@ $_l->extends = true; unset($_extends, $template->_extends);
 
 if ($_l->extends) {
 	ob_start();
-} elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
-}
+} elseif (%A%}
 
 //
 // main template

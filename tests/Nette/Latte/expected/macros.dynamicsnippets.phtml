@@ -22,7 +22,7 @@ $_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($
 
 if ($_l->extends) {
 	ob_start();
-} elseif (isset($presenter, $control) && $presenter->isAjax() && $control->isControlInvalid()) {
+} elseif (!empty($control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
 }
 

@@ -30,6 +30,9 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	/** @var array */
 	private $invalidSnippets = array();
 
+	/** @var bool */
+	public $snippetMode;
+
 
 
 	/********************* template factory ****************d*g**/
