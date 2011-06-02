@@ -98,9 +98,20 @@ class GroupedSelection extends Selection
 			}
 		}
 
-		foreach ($aggregation[$this->active] as $val) {
-			return $val;
+
+		if (isset($aggregation[$this->active])) {
+			foreach ($aggregation[$this->active] as $val) {
+				return $val;
+			}
 		}
+	}
+
+
+
+	public function count($column = '')
+	{
+		$return = parent::count($column);
+		return isset($return) ? $return : 0;
 	}
 
 
