@@ -468,7 +468,6 @@ if (!empty($control->snippetMode)) {
 
 	public static function renderSnippets($control, $local, $params)
 	{
-		$control->snippetMode = FALSE;
 		$payload = $control->getPresenter()->getPayload();
 		if (isset($local->blocks)) {
 			foreach ($local->blocks as $name => $function) {
