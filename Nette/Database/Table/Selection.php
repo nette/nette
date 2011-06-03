@@ -545,7 +545,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$table = $this->connection->getSupplementalDriver()->delimite($this->connection->databaseReflection->getPrefixedTable($this->name));
-		$return = $this->connection->query("INSERT INTO $table AS $this->delimitedName", $data);
+		$return = $this->connection->query("INSERT INTO $table", $data);
 
 		$this->rows = NULL;
 		if (!is_array($data)) {
