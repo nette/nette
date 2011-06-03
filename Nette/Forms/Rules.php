@@ -12,6 +12,7 @@
 namespace Nette\Forms;
 
 use Nette;
+use Nette\Utils\Html;
 
 
 
@@ -253,6 +254,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 	public static function formatMessage($rule, $withValue)
 	{
+		$isHtml = $message instanceof Html;
 		$message = $rule->message;
 		if (!isset($message)) { // report missing message by notice
 			$message = self::$defaultMessages[$rule->operation];
@@ -264,8 +266,13 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$message = str_replace('%name', $rule->control->getName(), $message);
 		$message = str_replace('%label', $rule->control->translate($rule->control->caption), $message);
 		if ($withValue && strpos($message, '%value') !== FALSE) {
-			$message = str_replace('%value', $rule->control->getValue(), $message);
+			$value = $rule->control->getValue();
+			$message = str_replace('%value',
+					$isHtml ? htmlspecialchars($value, ENT_QUOTES) : $value,
+					$message);
 		}
+		if ($isHtml)
+			$message = Html::el()->setHtml($message);
 		return $message;
 	}
 
