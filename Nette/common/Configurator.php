@@ -159,8 +159,8 @@ class Configurator extends Object
 		}
 
 		// expand variables
-		array_walk_recursive($config, function(&$val) {
-			$val = Environment::expand($val);
+		array_walk_recursive($config, function(&$val) use ($container) {
+			$val = $container->expand($val);
 		});
 
 		// PHP settings
