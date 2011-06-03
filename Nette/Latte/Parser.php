@@ -146,7 +146,7 @@ class Parser extends Nette\Object
 		foreach ($this->htmlNodes as $node) {
 			if (!empty($node->attrs)) {
 				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . self::N_PREFIX
-					. implode(' and ' . self::N_PREFIX, array_keys($node->attrs)) . ".", 0, $this->line);
+					. implode(' and ' . self::N_PREFIX, array_keys($node->attrs)) . ".", 0, $this->getLine());
 			}
 		}
 
@@ -159,7 +159,7 @@ class Parser extends Nette\Object
 		$this->output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $this->output . $epilogs;
 
 		if ($this->macroNodes) {
-			throw new ParseException("There are unclosed macros.", 0, $this->line);
+			throw new ParseException("There are unclosed macros.", 0, $this->getLine());
 		}
 
 		return $this->output;
@@ -367,7 +367,7 @@ class Parser extends Nette\Object
 	 */
 	public function getLine()
 	{
-		return $this->input && $this->offset ? substr_count($this->input, "\n", 0, $this->offset) + 1 : NULL;
+		return $this->input && $this->offset ? substr_count($this->input, "\n", 0, $this->offset - 1) + 1 : NULL;
 	}
 
 
@@ -417,7 +417,7 @@ class Parser extends Nette\Object
 				$name .= $args ? ' ' : '';
 				throw new ParseException("Unexpected macro {{$name}{$args}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''),
-					0, $this->line);
+					0, $this->getLine());
 			}
 
 			array_pop($this->macroNodes);
@@ -525,7 +525,7 @@ class Parser extends Nette\Object
 
 		if ($attrs) {
 			throw new ParseException("Unknown macro-attribute " . self::N_PREFIX
-				. implode(' and ' . self::N_PREFIX, array_keys($attrs)), 0, $this->line);
+				. implode(' and ' . self::N_PREFIX, array_keys($attrs)), 0, $this->getLine());
 		}
 
 		foreach ($left as $item) {
@@ -556,7 +556,7 @@ class Parser extends Nette\Object
 	public function expandMacro($name, $args, $modifiers = NULL)
 	{
 		if (empty($this->macros[$name])) {
-			throw new ParseException("Unknown macro {{$name}}", 0, $this->line);
+			throw new ParseException("Unknown macro {{$name}}", 0, $this->getLine());
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL);
@@ -565,7 +565,7 @@ class Parser extends Nette\Object
 				return array($node, $code);
 			}
 		}
-		throw new ParseException("Unhandled macro {{$name}}", 0, $this->line);
+		throw new ParseException("Unhandled macro {{$name}}", 0, $this->getLine());
 	}
 
 
