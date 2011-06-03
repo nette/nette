@@ -12,9 +12,9 @@
 namespace NetteModule;
 
 use Nette,
-	Nette\Application,
-	Nette\Application\Responses,
-	Nette\Http;
+ Nette\Application,
+ Nette\Application\Responses,
+ Nette\Http;
 
 
 
@@ -30,6 +30,9 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 	/** @var Nette\Application\Request */
 	private $request;
+	
+	/** @var Nette\Templating\ITemplate */
+	public $template;
 
 
 
@@ -54,19 +57,22 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		if (!isset($params['callback'])) {
 			return;
 		}
+		unset($params['callback']);
+		$params['params'] = $params;
 		$params['presenter'] = $this;
-		$response = callback($params['callback'])->invokeNamedArgs($params);
+		$params['context'] = $this->context;
+		$response = callback($request->params['callback'])->invokeNamedArgs($params);
 
 		if (is_string($response)) {
 			$response = array($response, array());
 		}
 		if (is_array($response)) {
-			if ($response instanceof \SplFileInfo) {
+			if ($response[0] instanceof \SplFileInfo) {
 				$response = $this->createTemplate('Nette\Templating\FileTemplate')
-					->setParams($response[1])->setFile($response[0]);
+						->setParams($response[1])->setFile($response[0]);
 			} else {
 				$response = $this->createTemplate('Nette\Templating\Template')
-					->setParams($response[1])->setSource($response[0]);
+						->setParams($response[1])->setSource($response[0]);
 			}
 		}
 		if ($response instanceof Nette\Templating\ITemplate) {
@@ -86,10 +92,13 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	 */
 	public function createTemplate($class = NULL, $latteFactory = NULL)
 	{
+		if ($this->template) { //template has been already created in route callback
+			return $this->template;
+		}
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 
 		$template->setParams($this->request->getParams());
-		$template->presenter = $this;
+ 		$template->presenter = $this;
 		$template->context = $context = $this->context;
 		$url = $context->httpRequest->getUrl();
 		$template->baseUrl = rtrim($url->getBaseUrl(), '/');
@@ -98,8 +107,9 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 		$template->setCacheStorage($context->templateCacheStorage);
 		$template->onPrepareFilters[] = function($template) use ($latteFactory, $context) {
-			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
-		};
+				$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
+			};
+		$this->template = $template;
 		return $template;
 	}
 
@@ -139,8 +149,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		return $this->request;
 	}
-
-
 
 	/********************* services ****************d*g**/
 
