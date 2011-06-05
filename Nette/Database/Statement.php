@@ -108,6 +108,8 @@ class Statement extends \PDOStatement
 					$type = $this->getColumnMeta(count($this->types));
 					if (isset($type['native_type'])) {
 						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
+					} else {
+						$this->types[$key] = NULL;
 					}
 				}
 			}
