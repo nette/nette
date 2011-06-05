@@ -120,6 +120,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->connection->cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
 		}
 		$this->rows = NULL;
+		$this->data = NULL;
 	}
 
 
