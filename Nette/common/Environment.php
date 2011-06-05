@@ -19,6 +19,7 @@ use Nette;
  * Nette environment and configuration.
  *
  * @author     David Grudl
+ * @deprecated
  */
 final class Environment
 {
