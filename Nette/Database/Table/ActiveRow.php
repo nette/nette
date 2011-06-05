@@ -257,7 +257,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function access($key, $delete = FALSE)
 	{
-		if ($this->table->connection->getCache() && $this->table->access($key, $delete)) {
+		if ($this->table->connection->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $delete)) {
 			$id = (isset($this->data[$this->table->primary]) ? $this->data[$this->table->primary] : $this->data);
 			$this->data = $this->table[$id]->data;
 		}
