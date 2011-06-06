@@ -1,0 +1,15 @@
+{form myForm}
+<table>
+{foreach $form->controls as $name => $field}
+<tr>
+	<th>{label $name /}<th>
+	<td>{input $name title => Hello, cols => 10}</td>
+</tr>
+{/foreach}
+</table>
+{/form myForm}
+
+
+{form myForm}
+	<input value=val type class="hello" n:input="username">
+{/form myForm}

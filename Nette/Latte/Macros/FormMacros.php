@@ -38,6 +38,7 @@ class FormMacros extends MacroSet
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control[%node.word], %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
+		$me->addMacro('@input', array($me, 'macroAttrInput'));
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
 	}
 
@@ -58,6 +59,20 @@ class FormMacros extends MacroSet
 		} else {
 			return $writer->write($cmd . '->startTag()');
 		}
+	}
+
+
+
+	/**
+	 * n:input
+	 */
+	public function macroAttrInput(MacroNode $node, $writer)
+	{
+		if ($node->htmlNode->attrs) {
+			$reset = array_fill_keys(array_keys($node->htmlNode->attrs), NULL);
+			return $writer->write('echo $form[%node.word]->getControl()->addAttributes(%var)->attributes()', $reset);
+		}
+		return $writer->write('echo $form[%node.word]->getControl()->attributes()');
 	}
 
 
