@@ -67,7 +67,7 @@ if ($_l->extends) {
 
 { test} {"test} {'test}
 
-<p<?php if (($_l->tmp = (string) ($hello)) !== '') echo ' title="' . Nette\Templating\DefaultHelpers::escapeHtml($_l->tmp) . '"' ;if (($_l->tmp = (string) (isset($lang) ? $lang:null)) !== '') echo ' lang="' . Nette\Templating\DefaultHelpers::escapeHtml($_l->tmp) . '"' ?>> </p>
+<p<?php echo Nette\Utils\Html::el(NULL, array('title' => $hello, 'lang' => isset($lang) ? $lang:null))->attributes() ?>> </p>
 
 <p val = <?php if (true): ?>"a"<?php else: ?>"b"<?php endif ?>> </p>
 

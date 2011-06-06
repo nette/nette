@@ -261,7 +261,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroAttr(MacroNode $node, $writer)
 	{
-		return $writer->write('if (($_l->tmp = (string) (%node.args)) !== \'\') echo \' @@="\' . %escape($_l->tmp) . \'"\'');
+		return $writer->write('echo Nette\Utils\Html::el(NULL, %node.array)->attributes()');
 	}
 
 

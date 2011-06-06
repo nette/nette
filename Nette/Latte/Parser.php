@@ -465,20 +465,6 @@ class Parser extends Nette\Object
 	 */
 	public function writeAttrsMacro($code, $attrs, $closing)
 	{
-		foreach ($attrs as $name => $args) {
-			if (substr($name, 0, 5) === 'attr-') {
-				if (!$closing) {
-					$pos = strrpos($code, '>');
-					if ($code[$pos-1] === '/') {
-						$pos--;
-					}
-					list(, $macroCode) = $this->expandMacro('@attr', $args);
-					$code = substr_replace($code, str_replace('@@', substr($name, 5), $macroCode), $pos, 0);
-				}
-				unset($attrs[$name]);
-			}
-		}
-
 		$left = $right = array();
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') {
