@@ -341,7 +341,7 @@ class User extends Nette\Object implements IUser
 		}
 
 		$identity = $this->getIdentity();
-		return $identity ? $identity->getRoles() : array($this->authenticatedRole);
+		return $identity->getRoles() ? $identity->getRoles() : array($this->authenticatedRole);
 	}
 
 
