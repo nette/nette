@@ -35,7 +35,12 @@ class FormMacros extends MacroSet
 	{
 		$me = new static($parser);
 		$me->addMacro('form', '$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
-			'echo $form->getElementPrototype()->endTag()');
+			'?>
+<div><?php
+foreach ($form->getComponents(TRUE, \'Nette\Forms\Controls\HiddenField\') as $_tmp)
+	echo $_tmp->getControl();
+?></div>
+<?php echo $form->getElementPrototype()->endTag()');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
 	}
