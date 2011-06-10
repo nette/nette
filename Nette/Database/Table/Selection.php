@@ -140,6 +140,18 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
+	  -   * Selects by primary key.
+	 * @param  mixed
+	 * @return Selection provides a fluent interface
+	 */
+	public function find($key)
+	{
+		return $this->where($this->delimitedPrimary, $key);
+	}
+
+
+
+	/**
 	 * Adds select clause, more calls appends to the end.
 	 * @param  string for example "column, MD5(column) AS column_md5"
 	 * @return Selection provides a fluent interface
