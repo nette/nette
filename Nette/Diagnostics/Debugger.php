@@ -416,7 +416,10 @@ final class Debugger
 
 			} else {
 				if (self::$consoleMode) { // dump to console
-					echo "$exception\n";
+					if (ob_get_level()) {
+						ob_end_clean();
+					}
+					echo "\n$exception\n";
 
 				} elseif ($htmlMode) { // dump to browser
 					self::$blueScreen->render($exception);
