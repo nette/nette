@@ -52,6 +52,8 @@ require_once __DIR__ . '/Loaders/NetteLoader.php';
 
 Nette\Loaders\NetteLoader::getInstance()->register();
 
+Nette\Diagnostics\Debugger::_init();
+
 Nette\Utils\SafeStream::register();
 
 
