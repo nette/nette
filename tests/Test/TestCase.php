@@ -166,7 +166,7 @@ class TestCase
 		} else {
 			$headers = '';
 		}
-		$line = @end(explode("\n", $this->output));
+		$line = @end(explode("\n", trim($this->output)));
 
 		$this->headers = array();
 		foreach (explode("\r\n", $headers) as $header) {

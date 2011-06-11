@@ -81,7 +81,7 @@ class TestHelpers
 	 */
 	public static function skip($message = '')
 	{
-		echo "\nSkipped $message";
+		echo "\nSkipped:\n$message\n";
 		die(TestCase::CODE_SKIP);
 	}
 
