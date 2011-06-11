@@ -234,7 +234,7 @@ class SelectBox extends BaseControl
 				$dest = $control;
 
 			} else {
-				$dest = $control->create('optgroup')->label($key);
+				$dest = $control->create('optgroup')->label($this->translate($key));
 			}
 
 			foreach ($value as $key2 => $value2) {
