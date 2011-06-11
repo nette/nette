@@ -272,7 +272,7 @@ class Configurator extends Object
 
 		if (function_exists('ini_set')) {
 			return $this->generateCode('ini_set', $name, $value);
-		} elseif (ini_get($name) != $value) { // intentionally ==
+		} elseif (ini_get($name) != $value && !Framework::$iAmUsingBadHost) { // intentionally ==
 			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 		}
 	}
