@@ -102,6 +102,7 @@ class Strings
 
 	/**
 	 * Removes special controls characters and normalizes line endings and spaces.
+	 * @see http://en.wikipedia.org/wiki/C0_and_C1_control_codes
 	 * @param  string  UTF-8 encoding or 8-bit
 	 * @return string
 	 */
@@ -113,6 +114,16 @@ class Strings
 
 		// remove control characters; leave \t + \n
 		$s = preg_replace('#[\x00-\x08\x0B-\x1F]+#', '', $s);
+
+		for ($i = 0x80; $i <= 0x83; $i++) {
+			$s = str_replace("\xC2" . chr($i), ' ', $s);
+		}
+
+		$s = str_replace("\xC2" . chr(0x84), "\n", $s);
+
+		for ($i = 0x86; $i <= 0xA0; $i++) {
+			$s = str_replace("\xC2" . chr($i), '', $s);
+		}
 
 		// right trim
 		$s = preg_replace("#[\t ]+$#m", '', $s);
