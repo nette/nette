@@ -290,11 +290,12 @@ class CoreMacros extends MacroSet
 
 
 	/**
-	 * {debugbreak}
+	 * {debugbreak ...}
 	 */
-	public function macroDebugbreak()
+	public function macroDebugbreak(MacroNode $node, $writer)
 	{
-		return 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()';
+		return $writer->write(($node->args == NULL ? '' : 'if (!(%node.args)); else')
+			. 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()');
 	}
 
 
