@@ -8,6 +8,6 @@ if (%A%}
 //
 ?>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate('xxx.inc.latte', get_defined_vars(), $_l->templates['xxx'])->render() ?>
+<?php Nette\Latte\Macros\CoreMacros::includeTemplate('includeblock.inc.latte', get_defined_vars(), $_l->templates['xxx'])->render() ?>
 
 <?php Nette\Latte\Macros\UIMacros::callBlock($_l, 'test', $template->getParams()) ;

@@ -2,14 +2,14 @@
 ;//
 // block title
 //
-if (!function_exists($_l->blocks['title'][] = 'xxx')) { function _lxxx_title($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_title($_l, $_args) { extract($_args)
 ?>Homepage | <?php Nette\Latte\Macros\UIMacros::callBlockParent($_l, 'title', $template->getParams()) ;
 }}
 
 //
 // block content
 //
-if (!function_exists($_l->blocks['content'][] = 'xxx')) { function _lxxx_content($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { extract($_args)
 ?>
 	<ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>

@@ -2,7 +2,7 @@
 ;//
 // block static
 //
-if (!function_exists($_l->blocks['static'][] = 'xxx')) { function _lxxx_static($_l, $_args) { extract($_args)
+if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
 ?>
 	Static block #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
@@ -34,7 +34,7 @@ $var = 10 ?>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array('dynamic', 'static')) as $name): //
 // block $name
 //
-if (!function_exists($_l->blocks[$name][] = 'xxx')) { function _lxxx__name($_l, $_args) { extract($_args) ?>
+if (!function_exists($_l->blocks[$name][] = '_xxx__name')) { function _xxx__name($_l, $_args) { extract($_args) ?>
 		Dynamic block #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
@@ -48,12 +48,12 @@ if (!function_exists($_l->blocks[$name][] = 'xxx')) { function _lxxx__name($_l, 
 <?php //
 // block word$name
 //
-if (!function_exists($_l->blocks["word$name"][] = 'xxx')) { function _lxxx_word_name($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+if (!function_exists($_l->blocks["word$name"][] = '_xxx_word_name')) { function _xxx_word_name($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
 
 <?php //
 // block "word$name"
 //
-if (!function_exists($_l->blocks["word$name"][] = 'xxx')) { function _lxxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
+if (!function_exists($_l->blocks["word$name"][] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
 
 <?php
 // template extending support

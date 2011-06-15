@@ -33,7 +33,7 @@ class MockCacheStorage extends PhpFileStorage
 
 function codefix($s)
 {
-	$s = preg_replace("#[a-f0-9]{10,}|(?<=')\w{10,}#", 'xxx', $s);
+	$s = preg_replace("#(?<=['_])[a-z0-9]{10,}(?=['_])#", 'xxx', $s);
 	$s = preg_replace('#source file:.*#', '', $s);
 	return $s;
 }
