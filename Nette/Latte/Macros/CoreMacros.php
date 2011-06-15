@@ -73,7 +73,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('l', '?>{<?php');
 		$me->addMacro('r', '?>}<?php');
 
-		$me->addMacro('_', array($me, 'macroTranslate'));
+		$me->addMacro('_', array($me, 'macroTranslate'), array($me, 'macroTranslate'));
 		$me->addMacro('=', array($me, 'macroExpr'));
 		$me->addMacro('?', array($me, 'macroExpr'));
 
@@ -140,7 +140,15 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroTranslate(MacroNode $node, $writer)
 	{
-		return $writer->write('echo %modify($template->translate(%node.args))');
+		if ($node->closing) {
+			return $writer->write('echo %modify($template->translate(ob_get_clean()))');
+
+		} elseif ($node->isEmpty = ($node->args !== '')) {
+			return $writer->write('echo %modify($template->translate(%node.args))');
+
+		} else {
+			return 'ob_start()';
+		}
 	}
 
 
