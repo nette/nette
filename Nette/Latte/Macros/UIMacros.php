@@ -66,7 +66,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('ifCurrent', array($me, 'macroIfCurrent'), 'endif'); // deprecated; use n:class="$presenter->linkCurrent ? ..."
 
 		$me->addMacro('contentType', array($me, 'macroContentType'));
-		$me->addMacro('status', '$netteHttpResponse->setCode(%node.args)');
+		$me->addMacro('status', array($me, 'macroStatus'));
 	}
 
 
@@ -423,6 +423,18 @@ if (!empty($control->snippetMode)) {
 		if (strpos($node->args, '/')) {
 			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %var)', $node->args);
 		}
+	}
+
+
+
+	/**
+	 * {status ...}
+	 */
+	public function macroStatus(MacroNode $node, $writer)
+	{
+		return $writer->write((substr($node->args, -1) === '?' ? 'if (!$netteHttpResponse->isSent()) ' : '') .
+			'$netteHttpResponse->setCode(%var)', (int) $node->args
+		);
 	}
 
 
