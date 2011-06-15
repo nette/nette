@@ -411,7 +411,7 @@ class Parser extends Nette\Object
 		if ($name[0] === '/') { // closing
 			$node = end($this->macroNodes);
 
-			if (!$node || "/$node->name" !== $name || $modifiers
+			if (!$node || ("/$node->name" !== $name && '/' !== $name) || $modifiers
 				|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
 			) {
 				$name .= $args ? ' ' : '';
