@@ -565,8 +565,8 @@ class Parser extends Nette\Object
 	{
 		$match = Strings::match($macro, '~^
 			(
-				(?P<name>\?|/?[a-z]++(?:[.:][a-z0-9]+)*+(?!::|\())|   ## ?, name, /name, but not function( or class::
-				(?P<noescape>!?)(?P<shortname>[=\~#%^&_]?)            ## [!] [=] expression to print
+				(?P<name>\?|/?[a-z]\w*+(?:[.:]\w+)*+(?!::|\())|   ## ?, name, /name, but not function( or class::
+				(?P<noescape>!?)(?P<shortname>/?[=\~#%^&_]?)      ## [!] [=] expression to print
 			)(?P<args>.*?)
 			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
 		()$~isx');
@@ -576,7 +576,7 @@ class Parser extends Nette\Object
 		}
 		if ($match['name'] === '') {
 			$match['name'] = $match['shortname'] ?: '=';
-			if (!$match['noescape']) {
+			if (!$match['noescape'] && substr($match['shortname'], 0, 1) !== '/') {
 				$match['modifiers'] .= '|escape';
 			}
 		}
