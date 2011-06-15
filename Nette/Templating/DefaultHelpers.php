@@ -141,6 +141,19 @@ final class DefaultHelpers
 
 
 	/**
+	 * Escapes string for use inside iCal template.
+	 * @param  mixed  UTF-8 encoding
+	 * @return string
+	 */
+	public static function escapeICal($s)
+	{
+		// http://www.ietf.org/rfc/rfc5545.txt
+		return addcslashes(preg_replace('#[\x00-\x08\x0B\x0C-\x1F]+#', '', $s), "\";\\,:\n");
+	}
+
+
+
+	/**
 	 * Replaces all repeated white spaces with a single space.
 	 * @param  string UTF-8 encoding or 8-bit
 	 * @return string
