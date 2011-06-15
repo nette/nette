@@ -413,7 +413,7 @@ class Template extends Nette\Object implements ITemplate
 		$tokens = token_get_all($source);
 		foreach ($tokens as $n => $token) {
 			if (is_array($token)) {
-				if ($token[0] === T_INLINE_HTML) {
+				if ($token[0] === T_INLINE_HTML || $token[0] === T_CLOSE_TAG) {
 					$res .= $token[1];
 					continue;
 
@@ -422,7 +422,7 @@ class Template extends Nette\Object implements ITemplate
 					$token[1] = '<<?php ?>?';
 
 				} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
-					$res .= $id = "\x01@php:p" . count($blocks) . "@\x02";
+					$res .= $id = "<?php \x01@php:p" . count($blocks) . "@\x02";
 					$php = & $blocks[$id];
 				}
 				$php .= $token[1];
