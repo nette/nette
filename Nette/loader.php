@@ -30,6 +30,7 @@ error_reporting(E_ALL | E_STRICT);
 iconv_set_encoding('internal_encoding', 'UTF-8');
 extension_loaded('mbstring') && mb_internal_encoding('UTF-8');
 @header('X-Powered-By: Nette Framework'); // @ - headers may be sent
+@header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
 
 
 

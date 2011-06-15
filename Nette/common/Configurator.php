@@ -374,11 +374,7 @@ class Configurator extends Object
 	 */
 	public static function createServiceHttpResponse()
 	{
-		$response = new Nette\Http\Response;
-		if (!$response->isSent()) {
-			$response->setContentType('text/html', 'utf-8');
-		}
-		return $response;
+		return new Nette\Http\Response;
 	}
 
 
