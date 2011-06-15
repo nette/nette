@@ -421,7 +421,7 @@ if (!empty($control->snippetMode)) {
 
 		// temporary solution
 		if (strpos($node->args, '/')) {
-			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %node.word)');
+			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %var)', $node->args);
 		}
 	}
 
