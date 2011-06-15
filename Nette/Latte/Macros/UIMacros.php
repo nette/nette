@@ -182,7 +182,7 @@ if (!empty($control->snippetMode)) {
 		}
 
 		if ($node->modifiers) {
-			return $writer->write("ob_start(); $cmd; echo %modify", 'ob_get_clean()');
+			return $writer->write("ob_start(); $cmd; echo %modify(ob_get_clean())");
 		} else {
 			return $writer->write($cmd);
 		}
@@ -280,27 +280,27 @@ if (!empty($control->snippetMode)) {
 
 		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
 		if ($node->modifiers) {
-			$include = "ob_start(); $include; echo %modify";
+			$include = "ob_start(); $include; echo %modify(ob_get_clean())";
 		}
 
 		if ($node->name === 'snippet') {
 			$tag = trim($node->tokenizer->fetchWord(), '<>');
 			$tag = $tag ? $tag : 'div';
 			return $writer->write("?>\n<$tag id=\"<?php echo \$control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
-				(string) substr($name, 1), $name, 'ob_get_clean()'
+				(string) substr($name, 1), $name
 			);
 
 		} elseif ($node->name === 'define') {
 			return '';
 
 		} elseif (!$top) {
-			return $writer->write($include, $name, 'ob_get_clean()');
+			return $writer->write($include, $name);
 
 		} elseif ($this->extends) {
 			return '';
 
 		} else {
-			return $writer->write("if (!\$_l->extends) { $include; }", $name, 'ob_get_clean()');
+			return $writer->write("if (!\$_l->extends) { $include; }", $name);
 		}
 	}
 
@@ -324,7 +324,7 @@ if (!empty($control->snippetMode)) {
 			return $node->data->end;
 
 		} elseif ($node->modifiers) { // anonymous block with modifier
-			return $writer->write('echo %modify', 'ob_get_clean()');
+			return $writer->write('echo %modify(ob_get_clean())');
 		}
 	}
 

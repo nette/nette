@@ -140,7 +140,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroTranslate(MacroNode $node, $writer)
 	{
-		return $writer->write('echo %modify', '$template->translate(' . $writer->formatArgs() . ')');
+		return $writer->write('echo %modify($template->translate(%node.args))');
 	}
 
 
@@ -191,7 +191,7 @@ class CoreMacros extends MacroSet
 			$this->parser->templateId);
 
 		if ($node->modifiers) {
-			return $writer->write('echo %modify', $code . '->__toString(TRUE)');
+			return $writer->write('echo %modify(%raw->__toString(TRUE))', $code);
 		} else {
 			return $code . '->render()';
 		}
@@ -230,7 +230,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, $writer)
 	{
-		return $writer->write("{$node->data->variable} = %modify", 'ob_get_clean()');
+		return $writer->write("{$node->data->variable} = %modify(ob_get_clean())");
 	}
 
 
@@ -343,7 +343,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroExpr(MacroNode $node, $writer)
 	{
-		return $writer->write(($node->name === '?' ? '' : 'echo ') . '%modify', $writer->formatArgs());
+		return $writer->write(($node->name === '?' ? '' : 'echo ') . '%modify(%node.args)');
 	}
 
 
