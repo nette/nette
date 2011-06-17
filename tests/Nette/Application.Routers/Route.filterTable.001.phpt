@@ -32,6 +32,4 @@ testRouteIn($route, '/kategorie/', 'Category', array(
 	'test' => 'testvalue',
 ), '/kategorie?test=testvalue');
 
-testRouteIn($route, '/other/', 'Other', array(
-	'test' => 'testvalue',
-), '/other?test=testvalue');
+testRouteIn($route, '/other/');
