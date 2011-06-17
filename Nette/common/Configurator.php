@@ -224,17 +224,22 @@ class Configurator extends Object
 	 */
 	public static function detectProductionMode()
 	{
-		if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
-			return TRUE;
-		}
 		$addrs = array();
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
-			$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+		if (PHP_SAPI === 'cli') {
+			$addrs[] = getHostByName(getHostName());
 		}
-		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$addrs[] = $_SERVER['REMOTE_ADDR'];
+		else {
+			if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
+				return TRUE;
+			}
+			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+				$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+			}
+			if (isset($_SERVER['REMOTE_ADDR'])) {
+				$addrs[] = $_SERVER['REMOTE_ADDR'];
+			}
+			$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 		}
-		$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 		foreach ($addrs as $addr) {
 			$oct = explode('.', $addr);
 			// 10.0.0.0/8   Private network
