@@ -311,7 +311,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string
 	 * @return bool
 	 */
