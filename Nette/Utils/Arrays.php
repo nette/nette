@@ -48,7 +48,6 @@ final class Arrays
 				$arr = $arr[$k];
 			} else {
 				if (func_num_args() < 3) {
-					dump($arr);
 					throw new Nette\InvalidArgumentException("Missing item '$k'.");
 				}
 				return $default;
