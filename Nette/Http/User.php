@@ -67,6 +67,16 @@ class User extends Nette\Object implements IUser
 
 
 
+	/**
+	 * @return Nette\DI\IContainer
+	 */
+	protected function getContext()
+	{
+		return $this->context;
+	}
+
+
+
 	/********************* Authentication ****************d*g**/
 
 
