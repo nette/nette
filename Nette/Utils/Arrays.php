@@ -44,10 +44,11 @@ final class Arrays
 	public static function get(array $arr, $key, $default = NULL)
 	{
 		foreach (is_array($key) ? $key : array($key) as $k) {
-			if (is_array($arr) && array_key_exists($k, $arr)) {
+			if (isset($arr[$k])) {
 				$arr = $arr[$k];
 			} else {
 				if (func_num_args() < 3) {
+					dump($arr);
 					throw new Nette\InvalidArgumentException("Missing item '$k'.");
 				}
 				return $default;
