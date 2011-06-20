@@ -242,22 +242,26 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Expands %placeholders% in string.
 	 * @param  string
-	 * @return string
+	 * @return string|Nette\ArrayHash
 	 * @throws Nette\InvalidStateException
 	 */
 	public function expand($s)
 	{
 		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$that = $this;
-			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
-				list(, $param) = $m;
-				if ($param === '') {
-					return '%';
-				} elseif (!is_scalar($val = Nette\Utils\Arrays::get((array) $that->params, explode('.', $param)))) {
-					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
+			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9.]*%)#i'));
+			foreach ($params as $name) {
+				$param = trim($name, '%');
+				$val = $param !== '' ? Nette\Utils\Arrays::get((array) $this->params, explode('.', $param)) : '%';
+				if (!is_scalar($val)) {
+					if ($s === $name) {
+						return $val;
+					} else {
+						throw new Nette\InvalidStateException("Unable to concatenate non-scalar parameter '$param' with a string or another parameter.");
+					}
 				}
-				return $val;
-			}, $s);
+				$values[] = $val;
+			}
+			$s = str_replace($params, $values, $s);
 		}
 		return $s;
 	}
