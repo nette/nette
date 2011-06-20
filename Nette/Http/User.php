@@ -124,7 +124,7 @@ class User extends Nette\Object implements IUser
 	 * Returns current user identity, if any.
 	 * @return Nette\Security\IIdentity
 	 */
-	final public function getIdentity()
+	public function getIdentity()
 	{
 		$session = $this->getSessionSection(FALSE);
 		return $session ? $session->identity : NULL;
