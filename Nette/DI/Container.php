@@ -248,10 +248,23 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function expand($s)
 	{
 		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9.]*%)#i'));
+			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9._]*%)#i'));
 			foreach ($params as $name) {
 				$param = trim($name, '%');
-				$val = $param !== '' ? Nette\Utils\Arrays::get((array) $this->params, explode('.', $param)) : '%';
+				if ($param === '') {
+					$val = '%';
+				} else {
+					$val = $this->params;
+					foreach (explode('.', $param) as $key) {
+						if (is_object($val) && property_exists($val, $key)) {
+							$val = $val->$key;
+						} elseif (is_array($val) && array_key_exists($val, $key)) {
+							$val = $val[$key];
+						} else {
+							throw new Nette\InvalidArgumentException("Missing parameter '$param'");
+						}
+					}
+				}
 				if (!is_scalar($val)) {
 					if ($s === $name) {
 						return $val;
