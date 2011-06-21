@@ -33,6 +33,7 @@ class Configurator extends Object
 	private $container;
 
 
+
 	public function __construct($containerClass = 'Nette\DI\Container')
 	{
 		self::$instance = $this;
@@ -68,7 +69,7 @@ class Configurator extends Object
 
 	/**
 	 * Loads configuration from file and process it.
-	 * @return void
+	 * @return DI\Container
 	 */
 	public function loadConfig($file, $section = NULL)
 	{
@@ -94,7 +95,7 @@ class Configurator extends Object
 		if ($cached) {
 			require $cached['file'];
 			fclose($cached['handle']);
-			return;
+			return $this->container;
 		}
 
 		$config = Nette\Config\Config::fromFile($file, $section);
@@ -210,6 +211,7 @@ class Configurator extends Object
 		));
 
 		Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
+		return $this->container;
 	}
 
 
@@ -328,7 +330,7 @@ class Configurator extends Object
 		$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
-			}
+		}
 		return $application;
 	}
 
