@@ -207,7 +207,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string service name
 	 * @return bool
 	 */
@@ -248,7 +248,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function expand($s)
 	{
 		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9._]*%)#i'));
+			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9._-]*%)#i'));
 			foreach ($params as $name) {
 				$param = trim($name, '%');
 				if ($param === '') {
