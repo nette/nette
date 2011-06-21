@@ -154,6 +154,18 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
+	 * Selects by primary key.
+	 * @param  mixed
+	 * @return Selection provides a fluent interface
+	 */
+	public function find($key)
+	{
+		return $this->where($this->delimitedPrimary, $key);
+	}
+
+
+
+	/**
 	 * Adds where condition, more calls appends with AND.
 	 * @param  string condition possibly containing ?
 	 * @param  mixed
