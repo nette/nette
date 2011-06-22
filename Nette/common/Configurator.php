@@ -226,7 +226,7 @@ class Configurator extends Object
 	{
 		$addrs = array();
 		if (PHP_SAPI === 'cli') {
-			$addrs[] = getHostByName(getHostName());
+			$addrs[] = getHostByName(php_uname('n')); 
 		}
 		else {
 			if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
