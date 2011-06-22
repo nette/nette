@@ -258,7 +258,7 @@ class Container extends Nette\FreezableObject implements IContainer
 					foreach (explode('.', $param) as $key) {
 						if (is_object($val) && property_exists($val, $key)) {
 							$val = $val->$key;
-						} elseif (is_array($val) && array_key_exists($val, $key)) {
+						} elseif (is_array($val) && array_key_exists($key, $val)) {
 							$val = $val[$key];
 						} else {
 							throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
