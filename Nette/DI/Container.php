@@ -261,7 +261,7 @@ class Container extends Nette\FreezableObject implements IContainer
 						} elseif (is_array($val) && array_key_exists($val, $key)) {
 							$val = $val[$key];
 						} else {
-							throw new Nette\InvalidArgumentException("Missing parameter '$param'");
+							throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
 						}
 					}
 				}
