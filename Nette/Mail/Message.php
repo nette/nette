@@ -460,6 +460,8 @@ class Message extends MimePart
 		if (!$this->getSubject() && $matches = Strings::match($this->html, '#<title>(.+?)</title>#is')) {
 			$this->setSubject(html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8'));
 		}
+
+		$this->html = wordwrap($this->html, 990, "\n", TRUE);
 	}
 
 
@@ -473,7 +475,7 @@ class Message extends MimePart
 		$text = $this->getBody();
 		if ($text instanceof Nette\Templating\ITemplate) {
 			$text->mail = $this;
-			$this->setBody($text->__toString(TRUE));
+			$body = $text->__toString(TRUE);
 
 		} elseif ($text == NULL && $this->html != NULL) { // intentionally ==
 			$text = Strings::replace($this->html, array(
@@ -483,8 +485,13 @@ class Message extends MimePart
 				'#<(/?p|/?h\d|li|br|/tr)[ >/]#i' => "\n$0",
 			));
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
-			$this->setBody(trim($text));
+			$body = trim($text);
+		} else {
+			$body = $text;
 		}
+
+		$body = wordwrap($body, 990, "\n", TRUE);
+		$this->setBody($body);
 	}
 
 
