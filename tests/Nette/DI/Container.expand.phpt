@@ -27,13 +27,15 @@ try {
 	$container->expand('%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing item 'bar'.", $e );
+	Assert::exception('Nette\InvalidArgumentException', "Missing parameter 'bar'.", $e );
 }
 
+$container->params['bar'] = array();
+Assert::same( array(), $container->expand('%bar%') );
+
 try {
-	$container->params['bar'] = array();
-	$container->expand('%bar%');
+	$container->expand('%appDir%%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Parameter 'bar' is not scalar.", $e );
+	Assert::exception('Nette\InvalidStateException', "Unable to concatenate non-scalar parameter 'bar' with a string or another parameter.", $e );
 }

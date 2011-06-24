@@ -207,7 +207,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string service name
 	 * @return bool
 	 */
@@ -242,22 +242,39 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Expands %placeholders% in string.
 	 * @param  string
-	 * @return string
+	 * @return string|Nette\ArrayHash
 	 * @throws Nette\InvalidStateException
 	 */
 	public function expand($s)
 	{
 		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$that = $this;
-			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
-				list(, $param) = $m;
+			$params = array_map(function ($arr) {return $arr[0];}, Nette\Utils\Strings::matchAll($s, '#(%[a-z0-9._-]*%)#i'));
+			foreach ($params as $name) {
+				$param = trim($name, '%');
 				if ($param === '') {
-					return '%';
-				} elseif (!is_scalar($val = Nette\Utils\Arrays::get((array) $that->params, explode('.', $param)))) {
-					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
+					$val = '%';
+				} else {
+					$val = $this->params;
+					foreach (explode('.', $param) as $key) {
+						if (is_object($val) && property_exists($val, $key)) {
+							$val = $val->$key;
+						} elseif (is_array($val) && array_key_exists($key, $val)) {
+							$val = $val[$key];
+						} else {
+							throw new Nette\InvalidArgumentException("Missing parameter '$param'.");
+						}
+					}
 				}
-				return $val;
-			}, $s);
+				if (!is_scalar($val)) {
+					if ($s === $name) {
+						return $val;
+					} else {
+						throw new Nette\InvalidStateException("Unable to concatenate non-scalar parameter '$param' with a string or another parameter.");
+					}
+				}
+				$values[] = $val;
+			}
+			$s = str_replace($params, $values, $s);
 		}
 		return $s;
 	}
@@ -307,7 +324,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string
 	 * @return bool
 	 */
