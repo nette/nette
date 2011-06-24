@@ -52,16 +52,26 @@ class ContainerBuilder extends Nette\Object
 				$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
 			};
 
-			if (isset($definition['class'])) {
-				$class = $definition['class'];
+			if (isset($definition['class']) || isset($definition['factory'])) {
+				if (isset($definition['class'])) {
+					$class = $definition['class'];
+				} else {
+					$class = NULL;
+					array_unshift($arguments, $definition['factory']);
+				}
 				$methods = isset($definition['methods']) ? $definition['methods'] : array();
 				$factory = function($container) use ($class, $arguments, $methods, $expander) {
-					$class = $container->expand($class);
-					if ($arguments) {
-						array_walk_recursive($arguments, $expander);
-						$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
+					array_walk_recursive($arguments, $expander);
+					if ($class) {
+						$class = $container->expand($class);
+						if ($arguments) {
+							$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
+						} else {
+							$service = new $class;
+						}
 					} else {
-						$service = new $class;
+						$factory = $arguments[0]; $arguments[0] = $container;
+						$service = call_user_func_array($factory, $arguments);
 					}
 
 					array_walk_recursive($methods, $expander);
@@ -72,13 +82,6 @@ class ContainerBuilder extends Nette\Object
 					return $service;
 				};
 
-			} elseif (isset($definition['factory'])) {
-				array_unshift($arguments, $definition['factory']);
-				$factory = function($container) use ($arguments, $expander) {
-					array_walk_recursive($arguments, $expander);
-					$factory = $arguments[0]; $arguments[0] = $container;
-					return call_user_func_array($factory, $arguments);
-				};
 			} elseif (isset($definition['alias'])) {
 				$factory = function($container) use ($definition) {
 					return $container->getService($definition['alias']);
@@ -114,22 +117,21 @@ class ContainerBuilder extends Nette\Object
 				}
 			}
 
-			$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
+			if (isset($definition['class']) || isset($definition['factory'])) {
+				$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
+				$factory = "function(\$container) {\n\t";
+				$factory .= isset($definition['class'])
+					? '$class = ' . $this->argsExport(array($definition['class'])) . '; $service = new $class(' . $arguments . ");\n"
+					: "\$service = call_user_func(\n\t\t" . $this->argsExport(array($definition['factory']))
+						. ",\n\t\t\$container" . ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n";
 
-			if (isset($definition['class'])) {
-				$class = $this->argsExport(array($definition['class']));
-				$methods = isset($definition['methods']) ? $definition['methods'] : array();
-				$factory = "function(\$container) {\n\t\$class = $class; \$service = new \$class($arguments);\n";
-				foreach ($methods as $method) {
-					$args = isset($method[1]) ? $this->argsExport($method[1]) : '';
-					$factory .= "\t\$service->$method[0]($args);\n";
+				if (isset($definition['methods'])) {
+					foreach ($definition['methods'] as $method) {
+						$args = isset($method[1]) ? $this->argsExport($method[1]) : '';
+						$factory .= "\t\$service->$method[0]($args);\n";
+					}
 				}
 				$factory .= "\treturn \$service;\n}";
-
-			} elseif (isset($definition['factory'])) {
-				$factory = $this->argsExport(array($definition['factory']));
-				$factory = "function(\$container) {\n\treturn call_user_func(\n\t\t$factory,\n\t\t\$container"
-					. ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n}";
 
 			} elseif (isset($definition['alias'])) {
 				$factory = $this->varExport($definition['alias']);
