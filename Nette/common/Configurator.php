@@ -134,23 +134,18 @@ class Configurator extends Object
 					$key = $m[1];
 				}
 
-				if (is_scalar($def)) {
-					$def = array('class' => $def);
-				}
-
-				if (method_exists(get_called_class(), "createService$key")) {
-					$container->removeService($key);
-					if (!isset($def['factory']) && !isset($def['class'])) {
+				if (is_array($def)) {
+					if (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
 						$def['factory'] = array(get_called_class(), "createService$key");
 					}
-				}
 
-				if (isset($def['option'])) {
-					$def['arguments'][] = $def['option'];
-				}
+					if (isset($def['option'])) {
+						$def['arguments'][] = $def['option'];
+					}
 
-				if (!empty($def['run'])) {
-					$def['tags'] = array('run');
+					if (!empty($def['run'])) {
+						$def['tags'] = array('run');
+					}
 				}
 			}
 			$builder = new DI\ContainerBuilder;
