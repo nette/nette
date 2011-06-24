@@ -112,12 +112,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function __destruct()
 	{
-		if ($this->connection->cache && !$this->select && $this->rows !== NULL) {
+		$cache = $this->connection->getCache();
+		if ($cache && !$this->select && $this->rows !== NULL) {
 			$accessed = $this->accessed;
 			if (is_array($accessed)) {
 				$accessed = array_filter($accessed);
 			}
-			$this->connection->cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
+			$cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
 		}
 		$this->rows = NULL;
 	}
@@ -374,8 +375,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$join = $this->createJoins(implode(',', $this->conditions), TRUE)
 			+ $this->createJoins(implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order));
 
-		if ($this->rows === NULL && $this->connection->cache && !is_string($this->prevAccessed)) {
-			$this->accessed = $this->prevAccessed = $this->connection->cache->load(array(__CLASS__, $this->name, $this->conditions));
+		$cache = $this->connection->getCache();
+		if ($this->rows === NULL && $cache && !is_string($this->prevAccessed)) {
+			$this->accessed = $this->prevAccessed = $cache->load(array(__CLASS__, $this->name, $this->conditions));
 		}
 
 		$prefix = $join ? "$this->delimitedName." : '';
