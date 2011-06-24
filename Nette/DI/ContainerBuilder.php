@@ -39,8 +39,12 @@ class ContainerBuilder extends Nette\Object
 	public function addDefinitions(IContainer $container, array $definitions)
 	{
 		foreach ($definitions as $name => $definition) {
-			if (!is_array($definition)) {
-				$definition = array('class' => $definition);
+			if (is_scalar($definition)) {
+				if ($definition[0] === '@') {
+					$definition = array('alias' => substr($definition, 1));
+				} else {
+					$definition = array('class' => $definition);
+				}
 			}
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
@@ -75,6 +79,10 @@ class ContainerBuilder extends Nette\Object
 					$factory = $arguments[0]; $arguments[0] = $container;
 					return call_user_func_array($factory, $arguments);
 				};
+			} elseif (isset($definition['alias'])) {
+				$factory = function($container) use ($definition) {
+					return $container->getService($definition['alias']);
+				};
 			} else {
 				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
 			}
@@ -97,9 +105,13 @@ class ContainerBuilder extends Nette\Object
 		foreach ($definitions as $name => $definition) {
 			$name = $this->varExport($name);
 			if (is_scalar($definition)) {
-				$factory = $this->varExport($definition);
-				$code .= "\$container->addService($name, $factory);\n\n";
-				continue;
+				if ($definition[0] === '@') {
+					$definition = array('alias' => substr($definition, 1));
+				} else {
+					$factory = $this->varExport($definition);
+					$code .= "\$container->addService($name, $factory);\n\n";
+					continue;
+				}
 			}
 
 			$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
@@ -118,6 +130,10 @@ class ContainerBuilder extends Nette\Object
 				$factory = $this->argsExport(array($definition['factory']));
 				$factory = "function(\$container) {\n\treturn call_user_func(\n\t\t$factory,\n\t\t\$container"
 					. ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n}";
+
+			} elseif (isset($definition['alias'])) {
+				$factory = $this->varExport($definition['alias']);
+				$factory = "function(\$container) {\n\treturn \$container->getService($factory);\n}";
 			} else {
 				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
 			}
