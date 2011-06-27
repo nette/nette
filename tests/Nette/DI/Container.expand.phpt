@@ -22,6 +22,7 @@ $container->params['dirs']['cache'] = '/temp';
 
 Assert::same( '/myApp/test', $container->expand('%appDir%/test') );
 Assert::same( '/temp/test', $container->expand('%dirs.cache%/test') );
+Assert::same( array('cache' => '/temp'), $container->expand('%dirs%') );
 
 try {
 	$container->expand('%bar%');
@@ -32,8 +33,8 @@ try {
 
 try {
 	$container->params['bar'] = array();
-	$container->expand('%bar%');
+	$container->expand('foo%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Parameter 'bar' is not scalar.", $e );
+	Assert::exception('Nette\InvalidStateException', "Parameter 'bar' used in 'foo%bar%' is not scalar.", $e );
 }
