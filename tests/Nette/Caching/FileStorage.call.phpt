@@ -17,10 +17,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 function mockFunction($x, $y)
 {
 	$GLOBALS['called'] = TRUE;

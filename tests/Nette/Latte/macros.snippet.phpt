@@ -21,9 +21,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 $template = new FileTemplate(__DIR__ . '/templates/snippet.latte');
 $template->registerFilter(new Latte\Engine);
 

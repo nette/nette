@@ -20,10 +20,6 @@ require __DIR__ . '/../bootstrap.php';
 $key = 'nette';
 $value = '<?php echo "Hello World" ?>';
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 $cache = new Cache(new PhpFileStorage(TEMP_DIR));
 
 

@@ -20,10 +20,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 $template = new FileTemplate(__DIR__ . '/templates/syntax.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');

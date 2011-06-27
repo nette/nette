@@ -20,10 +20,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 class MyHelper
 {
 	protected $count = 0;

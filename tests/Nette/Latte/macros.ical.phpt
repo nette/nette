@@ -20,9 +20,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 $template = new FileTemplate(__DIR__ . '/templates/ical.latte');
 $template->registerHelper('escape', 'Nette\Templating\DefaultHelpers::escapeICal');
 $template->registerFilter(new Latte\Engine);
