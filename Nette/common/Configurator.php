@@ -155,8 +155,8 @@ class Configurator extends Object
 		}
 
 		// expand variables
-		array_walk_recursive($config, function(&$val) {
-			$val = Environment::expand($val);
+		array_walk_recursive($config, function(&$val) use ($container) {
+			$val = $container->expand($val);
 		});
 
 		// PHP settings
@@ -223,7 +223,7 @@ class Configurator extends Object
 	{
 		$addrs = array();
 		if (PHP_SAPI === 'cli') {
-			$addrs[] = getHostByName(php_uname('n')); 
+			$addrs[] = getHostByName(php_uname('n'));
 		}
 		else {
 			if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
