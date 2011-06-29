@@ -241,7 +241,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 	/**
 	 * Expands %placeholders% in string.
-	 * @param  string
+	 * @param  mixed
 	 * @return mixed
 	 * @throws Nette\InvalidStateException
 	 */
@@ -249,22 +249,29 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		if (!is_string($s) || strpos($s, '%') === FALSE) {
 			return $s;
-
-		} elseif (preg_match('#^%([a-z0-9._-]*)%$#i', $s)) {
-			return Nette\Utils\Arrays::get((array) $this->params, explode('.', substr($s, 1, -1)));
-
-		} else {
-			$that = $this;
-			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that, $s) { // intentionally @ due PHP bug #39257
-				list(, $param) = $m;
-				if ($param === '') {
-					return '%';
-				} elseif (!is_scalar($val = Nette\Utils\Arrays::get((array) $that->params, explode('.', $param)))) {
-					throw new Nette\InvalidStateException("Parameter '$param' used in '$s' is not scalar.");
-				}
-				return $val;
-			}, $s);
 		}
+
+		$parts = preg_split('#%([a-z0-9._-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+		if (strlen($s) === strlen($parts[1]) + 2) {
+			return Nette\Utils\Arrays::get($this->params, explode('.', $parts[1]));
+		}
+		$res = '';
+		foreach ($parts as $n => $part) {
+			if ($n % 2 === 0) {
+				$res .= $part;
+
+			} elseif ($part === '') {
+				$res .= '%';
+
+			} else {
+				$val = Nette\Utils\Arrays::get($this->params, explode('.', $part));
+				if (!is_scalar($val)) {
+					throw new Nette\InvalidStateException("Parameter '$part' used in '$s' is not scalar.");
+				}
+				$res .= $val;
+			}
+		}
+		return $res;
 	}
 
 
