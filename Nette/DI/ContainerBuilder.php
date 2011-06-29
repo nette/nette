@@ -40,7 +40,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		foreach ($definitions as $name => $definition) {
 			if (is_scalar($definition)) {
-				if ($definition[0] === '@') {
+				if (substr($definition, 0, 1) === '@') {
 					$definition = array('alias' => substr($definition, 1));
 				} else {
 					$definition = array('class' => $definition);
@@ -49,7 +49,7 @@ class ContainerBuilder extends Nette\Object
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
 			$expander = function(&$val) use ($container) {
-				$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
+				$val = substr($val, 0, 1) === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
 			};
 
 			if (isset($definition['class']) || isset($definition['factory'])) {
@@ -108,7 +108,7 @@ class ContainerBuilder extends Nette\Object
 		foreach ($definitions as $name => $definition) {
 			$name = $this->varExport($name);
 			if (is_scalar($definition)) {
-				if ($definition[0] === '@') {
+				if (substr($definition, 0, 1) === '@') {
 					$definition = array('alias' => substr($definition, 1));
 				} else {
 					$factory = $this->varExport($definition);
