@@ -49,6 +49,7 @@ class ContainerBuilder extends Nette\Object
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
 			$expander = function(&$val) use ($container) {
+				if (!$val) return;
 				$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
 			};
 
