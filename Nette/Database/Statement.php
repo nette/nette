@@ -104,12 +104,11 @@ class Statement extends \PDOStatement
 		if ($this->types === NULL) {
 			$this->types = array();
 			if ($this->connection->getSupplementalDriver()->supports['meta']) { // workaround for PHP bugs #53782, #54695
+				$col = 0;
 				foreach ($row as $key => $foo) {
-					$type = $this->getColumnMeta(count($this->types));
+					$type = $this->getColumnMeta($col++);
 					if (isset($type['native_type'])) {
 						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
-					} else {
-						$this->types[$key] = NULL;
 					}
 				}
 			}
