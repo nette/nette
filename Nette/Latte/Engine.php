@@ -25,6 +25,9 @@ class Engine extends Nette\Object
 	/** @var Parser */
 	public $parser;
 
+	/** @var MacroSet */
+	public $customMacroSet;
+
 
 
 	public function __construct()
@@ -34,6 +37,7 @@ class Engine extends Nette\Object
 		$this->parser->addMacro('cache', new Macros\CacheMacro($this->parser));
 		Macros\UIMacros::install($this->parser);
 		Macros\FormMacros::install($this->parser);
+		$this->customMacroSet = Macros\MacroSet::install($this->parser);
 	}
 
 
@@ -48,6 +52,19 @@ class Engine extends Nette\Object
 		$this->parser->context = array(Parser::CONTEXT_TEXT);
 		$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
 		return $this->parser->parse($s);
+	}
+
+
+
+	/**
+	 *  Adds standard macro.
+	 * @param string Macro name
+	 * @param string Opening code
+	 * @param string Closing code. Empty means non-pair macro.
+	 */
+	public function addMacro($name, $begin, $end=NULL)
+	{
+		$this->customMacroSet->addMacro($name, $begin, $end);
 	}
 
 }

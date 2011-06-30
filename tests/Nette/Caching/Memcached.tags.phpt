@@ -22,6 +22,10 @@ if (!MemcachedStorage::isAvailable()) {
 }
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
+
 $storage = new MemcachedStorage('localhost', 11211, '', new FileJournal(TEMP_DIR));
 $cache = new Cache($storage);
 

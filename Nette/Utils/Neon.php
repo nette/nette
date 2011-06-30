@@ -182,18 +182,12 @@ class Neon extends Nette\Object
 
 			} elseif (isset(self::$brackets[$t])) { // Opening bracket [ ( {
 				if ($hasValue) {
-					if ($value[0] === '@' && $t === '(') { // Object
-						$n++;
-						$value = $this->parse(NULL, array('@' => substr($value, 1)));
-					} else {
-						$this->error();
-					}
-				} else {
-					$n++;
-					$value = $this->parse(NULL, array());
+					$this->error();
 				}
+				$endBracket = self::$brackets[$tokens[$n++]];
 				$hasValue = TRUE;
-				if (!isset($tokens[$n]) || $tokens[$n] !== self::$brackets[$t]) { // unexpected type of bracket or block-parser
+				$value = $this->parse(NULL, array());
+				if (!isset($tokens[$n]) || $tokens[$n] !== $endBracket) { // unexpected type of bracket or block-parser
 					$this->error();
 				}
 
@@ -202,6 +196,9 @@ class Neon extends Nette\Object
 					$this->error();
 				}
 				break;
+
+			} elseif ($t[0] === '@') { // Object
+				$object = $t; // TODO
 
 			} elseif ($t[0] === "\n") { // Indent
 				if ($inlineParser) {
@@ -229,7 +226,6 @@ class Neon extends Nette\Object
 							$this->indentTabs = $tokens[$n][1] === "\t";
 						}
 						if (strpos($tokens[$n], $this->indentTabs ? ' ' : "\t")) {
-							$n++;
 							$this->error('Either tabs or spaces may be used as indenting chars, but not both.');
 						}
 					}

@@ -77,9 +77,6 @@ $code = $builder->generateCode(array(
 		'arguments' => array(
 			'a', 'b',
 		),
-		'methods' => array(
-			array('methodA', array('a', 'b')),
-		),
 	),
 ));
 
@@ -110,6 +107,4 @@ Assert::same( NULL, $container->getService('five')->methods );
 
 Assert::true( $container->getService('six') instanceof Service );
 Assert::equal( array(array(1 => 'a', 'b')), $container->getService('six')->args );
-Assert::same( array(
-	array('methodA', array('a', 'b')),
-), $container->getService('six')->methods );
+Assert::same( NULL, $container->getService('six')->methods );

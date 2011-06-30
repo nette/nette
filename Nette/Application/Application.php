@@ -224,9 +224,10 @@ class Application extends Nette\Object
 
 
 	/**
-	 * @internal
+	 * Gets the context.
+	 * @return Nette\DI\IContainer
 	 */
-	protected function getContext()
+	final public function getContext()
 	{
 		return $this->context;
 	}

@@ -27,10 +27,10 @@ class RobotLoader extends AutoLoader
 	/** @var array */
 	public $scanDirs;
 
-	/** @var string|array  comma separated wildcards */
+	/** @var string  comma separated wildcards */
 	public $ignoreDirs = '.*, *.old, *.bak, *.tmp, temp';
 
-	/** @var string|array  comma separated wildcards */
+	/** @var string  comma separated wildcards */
 	public $acceptFiles = '*.php, *.php5';
 
 	/** @var bool */
@@ -228,19 +228,13 @@ class RobotLoader extends AutoLoader
 	private function scanDirectory($dir)
 	{
 		if (is_dir($dir)) {
-			$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : Strings::split($this->ignoreDirs, '#[,\s]+#');
 			$disallow = array();
-			foreach ($ignoreDirs as $item) {
-				if ($item = realpath($item)) {
-					$disallow[$item] = TRUE;
-				}
-			}
-			$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : Strings::split($this->acceptFiles, '#[,\s]+#'))
+			$iterator = Nette\Utils\Finder::findFiles(Strings::split($this->acceptFiles, '#[,\s]+#'))
 				->filter(function($file) use (&$disallow){
 					return !isset($disallow[$file->getPathname()]);
 				})
 				->from($dir)
-				->exclude($ignoreDirs)
+				->exclude(Strings::split($this->ignoreDirs, '#[,\s]+#'))
 				->filter($filter = function($dir) use (&$disallow){
 					$path = $dir->getPathname();
 					if (is_file("$path/netterobots.txt")) {
@@ -395,7 +389,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function getKey()
 	{
-		return array($this->ignoreDirs, $this->acceptFiles, $this->scanDirs);
+		return "v2|$this->ignoreDirs|$this->acceptFiles|" . implode('|', $this->scanDirs);
 	}
 
 }

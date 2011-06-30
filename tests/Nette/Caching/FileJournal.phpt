@@ -17,6 +17,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
+
 function test($result, $condition, $name)
 {
 	Assert::true($condition, $name . ($condition === TRUE ? '' : 'Count: ' . count($result)));

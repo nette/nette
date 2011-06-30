@@ -17,6 +17,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
+
 try {
 	new FileStorage(TEMP_DIR . '/missing');
 	Assert::fail('Expected exception');

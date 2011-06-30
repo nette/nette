@@ -20,6 +20,9 @@ require __DIR__ . '/Template.inc';
 
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
 class MyMacros extends Latte\Macros\MacroSet
 {
 	public function __construct($parser)

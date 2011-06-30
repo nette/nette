@@ -110,8 +110,8 @@ class Finder extends Nette\Object implements \IteratorAggregate
 		$pattern = self::buildPattern($masks);
 		if ($type || $pattern) {
 			$this->filter(function($file) use ($type, $pattern) {
-				return !$file->isDot()
-					&& (!$type || $file->$type())
+				return (!$type || $file->$type())
+					&& !$file->isDot()
 					&& (!$pattern || preg_match($pattern, '/' . strtr($file->getSubPathName(), '\\', '/')));
 			});
 		}

@@ -147,7 +147,7 @@ class RadioList extends BaseControl
 
 		foreach ($this->items as $k => $val) {
 			$counter++;
-			if ($key !== NULL && (string) $key !== (string) $k) {
+			if ($key !== NULL && $key != $k) { // intentionally ==
 				continue;
 			}
 
@@ -162,7 +162,7 @@ class RadioList extends BaseControl
 			}
 
 			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
+				return (string) $control . (string) $label;
 			}
 
 			$container->add((string) $control . (string) $label . $separator);

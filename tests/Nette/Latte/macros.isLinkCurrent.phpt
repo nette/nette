@@ -20,6 +20,10 @@ require __DIR__ . '/Template.inc';
 
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
+
 $template = new Template;
 $template->registerFilter(new Latte\Engine);
 

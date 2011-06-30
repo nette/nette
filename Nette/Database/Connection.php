@@ -24,9 +24,6 @@ use Nette,
  */
 class Connection extends PDO
 {
-	/** @var string */
-	private $dsn;
-
 	/** @var ISupplementalDriver */
 	private $driver;
 
@@ -37,7 +34,7 @@ class Connection extends PDO
 	public $databaseReflection;
 
 	/** @var Nette\Caching\Cache */
-	private $cache;
+	public $cache;
 
 	/** @var array */
 	public $substitutions = array();
@@ -47,9 +44,9 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, Reflection\DatabaseReflection $databaseReflection = NULL)
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
 	{
-		parent::__construct($this->dsn = $dsn, $username, $password, $options);
+		parent::__construct($dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
@@ -60,10 +57,7 @@ class Connection extends PDO
 
 		$this->preprocessor = new SqlPreprocessor($this);
 
-		if ($databaseReflection)
-			$this->databaseReflection = $databaseReflection;
-		else
-			$this->databaseReflection = new Reflection\DatabaseReflection;
+		$this->databaseReflection = new Reflection\DatabaseReflection; // TODO
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
@@ -74,20 +68,6 @@ class Connection extends PDO
 	public function getSupplementalDriver()
 	{
 		return $this->driver;
-	}
-
-
-
-	public function setCacheStorage(Nette\Caching\IStorage $storage)
-	{
-		$this->cache = new Nette\Caching\Cache($storage, "Nette.Database/$this->dsn");
-	}
-
-
-
-	public function getCache()
-	{
-		return $this->cache;
 	}
 
 

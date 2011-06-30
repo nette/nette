@@ -33,7 +33,6 @@ class Configurator extends Object
 	private $container;
 
 
-
 	public function __construct($containerClass = 'Nette\DI\Container')
 	{
 		self::$instance = $this;
@@ -69,7 +68,7 @@ class Configurator extends Object
 
 	/**
 	 * Loads configuration from file and process it.
-	 * @return DI\Container
+	 * @return void
 	 */
 	public function loadConfig($file, $section = NULL)
 	{
@@ -95,7 +94,7 @@ class Configurator extends Object
 		if ($cached) {
 			require $cached['file'];
 			fclose($cached['handle']);
-			return $this->container;
+			return;
 		}
 
 		$config = Nette\Config\Config::fromFile($file, $section);
@@ -134,18 +133,23 @@ class Configurator extends Object
 					$key = $m[1];
 				}
 
-				if (is_array($def)) {
-					if (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
+				if (is_scalar($def)) {
+					$def = array('class' => $def);
+				}
+
+				if (method_exists(get_called_class(), "createService$key")) {
+					$container->removeService($key);
+					if (!isset($def['factory']) && !isset($def['class'])) {
 						$def['factory'] = array(get_called_class(), "createService$key");
 					}
+				}
 
-					if (isset($def['option'])) {
-						$def['arguments'][] = $def['option'];
-					}
+				if (isset($def['option'])) {
+					$def['arguments'][] = $def['option'];
+				}
 
-					if (!empty($def['run'])) {
-						$def['tags'] = array('run');
-					}
+				if (!empty($def['run'])) {
+					$def['tags'] = array('run');
 				}
 			}
 			$builder = new DI\ContainerBuilder;
@@ -206,7 +210,6 @@ class Configurator extends Object
 		));
 
 		Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
-		return $this->container;
 	}
 
 
@@ -221,22 +224,17 @@ class Configurator extends Object
 	 */
 	public static function detectProductionMode()
 	{
+		if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
+			return TRUE;
+		}
 		$addrs = array();
-		if (PHP_SAPI === 'cli') {
-			$addrs[] = getHostByName(php_uname('n'));
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+			$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
 		}
-		else {
-			if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
-				return TRUE;
-			}
-			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
-				$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
-			}
-			if (isset($_SERVER['REMOTE_ADDR'])) {
-				$addrs[] = $_SERVER['REMOTE_ADDR'];
-			}
-			$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$addrs[] = $_SERVER['REMOTE_ADDR'];
 		}
+		$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 		foreach ($addrs as $addr) {
 			$oct = explode('.', $addr);
 			// 10.0.0.0/8   Private network
@@ -274,7 +272,7 @@ class Configurator extends Object
 
 		if (function_exists('ini_set')) {
 			return $this->generateCode('ini_set', $name, $value);
-		} elseif (ini_get($name) != $value && !Framework::$iAmUsingBadHost) { // intentionally ==
+		} elseif (ini_get($name) != $value) { // intentionally ==
 			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 		}
 	}
@@ -330,7 +328,7 @@ class Configurator extends Object
 		$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
-		}
+			}
 		return $application;
 	}
 
@@ -376,7 +374,11 @@ class Configurator extends Object
 	 */
 	public static function createServiceHttpResponse()
 	{
-		return new Nette\Http\Response;
+		$response = new Nette\Http\Response;
+		if (!$response->isSent()) {
+			$response->setContentType('text/html', 'utf-8');
+		}
+		return $response;
 	}
 
 

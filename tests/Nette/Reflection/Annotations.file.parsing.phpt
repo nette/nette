@@ -19,6 +19,9 @@ require __DIR__ . '/files/annotations.php';
 
 
 
+TestHelpers::purge(TEMP_DIR);
+
+
 AnnotationsParser::$useReflection = FALSE;
 
 

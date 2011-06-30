@@ -21,6 +21,10 @@ require __DIR__ . '/../bootstrap.php';
 $key = array(1, TRUE);
 $value = range("\x00", "\xFF");
 
+TestHelpers::purge(TEMP_DIR);
+
+
+
 $cache = new Cache(new FileStorage(TEMP_DIR));
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

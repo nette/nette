@@ -48,7 +48,7 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 		list($username, $password) = $credentials;
 		foreach ($this->userlist as $name => $pass) {
 			if (strcasecmp($name, $username) === 0) {
-				if ((string) $pass === (string) $password) {
+				if ($pass === $password) {
 					return new Identity($name);
 				} else {
 					throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);

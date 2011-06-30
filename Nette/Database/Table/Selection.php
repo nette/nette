@@ -112,16 +112,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function __destruct()
 	{
-		$cache = $this->connection->getCache();
-		if ($cache && !$this->select && $this->rows !== NULL) {
+		if ($this->connection->cache && !$this->select && $this->rows !== NULL) {
 			$accessed = $this->accessed;
 			if (is_array($accessed)) {
 				$accessed = array_filter($accessed);
 			}
-			$cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
+			$this->connection->cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
 		}
 		$this->rows = NULL;
-		$this->data = NULL;
 	}
 
 
@@ -142,6 +140,18 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
+	  -   * Selects by primary key.
+	 * @param  mixed
+	 * @return Selection provides a fluent interface
+	 */
+	public function find($key)
+	{
+		return $this->where($this->delimitedPrimary, $key);
+	}
+
+
+
+	/**
 	 * Adds select clause, more calls appends to the end.
 	 * @param  string for example "column, MD5(column) AS column_md5"
 	 * @return Selection provides a fluent interface
@@ -151,18 +161,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->__destruct();
 		$this->select[] = $this->tryDelimite($columns);
 		return $this;
-	}
-
-
-
-	/**
-	 * Selects by primary key.
-	 * @param  mixed
-	 * @return Selection provides a fluent interface
-	 */
-	public function find($key)
-	{
-		return $this->where($this->delimitedPrimary, $key);
 	}
 
 
@@ -376,9 +374,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$join = $this->createJoins(implode(',', $this->conditions), TRUE)
 			+ $this->createJoins(implode(',', $this->select) . ",$this->group,$this->having," . implode(',', $this->order));
 
-		$cache = $this->connection->getCache();
-		if ($this->rows === NULL && $cache && !is_string($this->prevAccessed)) {
-			$this->accessed = $this->prevAccessed = $cache->load(array(__CLASS__, $this->name, $this->conditions));
+		if ($this->rows === NULL && $this->connection->cache && !is_string($this->prevAccessed)) {
+			$this->accessed = $this->prevAccessed = $this->connection->cache->load(array(__CLASS__, $this->name, $this->conditions));
 		}
 
 		$prefix = $join ? "$this->delimitedName." : '';

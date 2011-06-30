@@ -32,5 +32,3 @@ Assert::same( "", Neon::decode('""') );
 Assert::same( 'x', Neon::decode('x') );
 Assert::same( "x", Neon::decode("\nx\n") );
 Assert::same( "x", Neon::decode("  x") );
-Assert::same( "@x", Neon::decode("@x") );
-Assert::same( "@true", Neon::decode("@true") );

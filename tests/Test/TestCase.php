@@ -166,6 +166,7 @@ class TestCase
 		} else {
 			$headers = '';
 		}
+		$line = @end(explode("\n", $this->output));
 
 		$this->headers = array();
 		foreach (explode("\r\n", $headers) as $header) {
@@ -179,10 +180,10 @@ class TestCase
 			throw new TestCaseException("Fatal error");
 
 		} elseif ($res === self::CODE_FAIL) {
-			throw new TestCaseException($this->output);
+			throw new TestCaseException($line);
 
 		} elseif ($res === self::CODE_SKIP) { // skip
-			throw new TestCaseException($this->output, TestCaseException::SKIPPED);
+			throw new TestCaseException($line, TestCaseException::SKIPPED);
 
 		} elseif ($res !== self::CODE_OK) {
 			throw new Exception("Unable to execute '$command'.");

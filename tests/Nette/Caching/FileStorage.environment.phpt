@@ -20,6 +20,9 @@ require __DIR__ . '/../bootstrap.php';
 $key = '../' . implode('', range("\x00", "\x1F"));
 $value = range("\x00", "\xFF");
 
+TestHelpers::purge(TEMP_DIR);
+
+
 $cache = Environment::getCache();
 
 

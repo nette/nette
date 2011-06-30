@@ -411,7 +411,7 @@ class Parser extends Nette\Object
 		if ($name[0] === '/') { // closing
 			$node = end($this->macroNodes);
 
-			if (!$node || ("/$node->name" !== $name && '/' !== $name) || $modifiers
+			if (!$node || "/$node->name" !== $name || $modifiers
 				|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
 			) {
 				$name .= $args ? ' ' : '';
@@ -465,6 +465,20 @@ class Parser extends Nette\Object
 	 */
 	public function writeAttrsMacro($code, $attrs, $closing)
 	{
+		foreach ($attrs as $name => $args) {
+			if (substr($name, 0, 5) === 'attr-') {
+				if (!$closing) {
+					$pos = strrpos($code, '>');
+					if ($code[$pos-1] === '/') {
+						$pos--;
+					}
+					list(, $macroCode) = $this->expandMacro('@attr', $args);
+					$code = substr_replace($code, str_replace('@@', substr($name, 5), $macroCode), $pos, 0);
+				}
+				unset($attrs[$name]);
+			}
+		}
+
 		$left = $right = array();
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') {
@@ -565,8 +579,8 @@ class Parser extends Nette\Object
 	{
 		$match = Strings::match($macro, '~^
 			(
-				(?P<name>\?|/?[a-z]\w*+(?:[.:]\w+)*+(?!::|\())|   ## ?, name, /name, but not function( or class::
-				(?P<noescape>!?)(?P<shortname>/?[=\~#%^&_]?)      ## [!] [=] expression to print
+				(?P<name>\?|/?[a-z]++(?:[.:][a-z0-9]+)*+(?!::|\())|   ## ?, name, /name, but not function( or class::
+				(?P<noescape>!?)(?P<shortname>[=\~#%^&_]?)            ## [!] [=] expression to print
 			)(?P<args>.*?)
 			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"]+)*)?
 		()$~isx');
@@ -576,7 +590,7 @@ class Parser extends Nette\Object
 		}
 		if ($match['name'] === '') {
 			$match['name'] = $match['shortname'] ?: '=';
-			if (!$match['noescape'] && substr($match['shortname'], 0, 1) !== '/') {
+			if (!$match['noescape']) {
 				$match['modifiers'] .= '|escape';
 			}
 		}
