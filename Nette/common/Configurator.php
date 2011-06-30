@@ -45,7 +45,6 @@ class Configurator extends Object
 			}
 		}
 
-		$this->container->params = new ArrayHash;
 		defined('WWW_DIR') && $this->container->params['wwwDir'] = realpath(WWW_DIR);
 		defined('APP_DIR') && $this->container->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->container->params['libsDir'] = realpath(LIBS_DIR);
@@ -192,7 +191,7 @@ class Configurator extends Object
 
 		// other
 		foreach ($config as $key => $value) {
-			$code .= $this->generateCode('$container->params[?] = ' . (is_array($value) ? 'Nette\ArrayHash::from(?)' : '?'), $key, $value);
+			$code .= $this->generateCode('$container->params[?] = ?', $key, $value);
 		}
 
 		// pre-loading
