@@ -76,6 +76,17 @@ class FileUpload extends Nette\Object
 
 
 	/**
+	 * Returns the sanitized file name.
+	 * @return string
+	 */
+	public function getSanitizedName()
+	{
+		return trim(Nette\Utils\Strings::webalize($this->name, '.', FALSE), '.-');
+	}
+
+
+
+	/**
 	 * Returns the MIME content type of an uploaded file.
 	 * @return string
 	 */
