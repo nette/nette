@@ -143,4 +143,15 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 		return $this->defaults;
 	}
 
+
+
+	/**
+	 * Returns flags.
+	 * @return int
+	 */
+	public function getFlags()
+	{
+		return $this->flags;
+	}
+
 }

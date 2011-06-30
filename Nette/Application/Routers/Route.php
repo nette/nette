@@ -614,6 +614,17 @@ class Route extends Nette\Object implements Application\IRouter
 
 
 
+	/**
+	 * Returns flags.
+	 * @return int
+	 */
+	public function getFlags()
+	{
+		return $this->flags;
+	}
+
+
+
 	/********************* Utilities ****************d*g**/
 
 
