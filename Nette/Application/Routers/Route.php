@@ -102,7 +102,7 @@ class Route extends Nette\Object implements Application\IRouter
 	private $type;
 
 	/** @var int */
-	private $flags;
+	protected $flags;
 
 
 
