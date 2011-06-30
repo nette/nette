@@ -410,7 +410,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 					$primary = $this->getPrimary($table);
 					$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
 						. ' JOIN ' . $supplementalDriver->delimite($table)
-						. ' AS '. $supplementalDriver->delimite($table)
 						. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
 						. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
 						. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
