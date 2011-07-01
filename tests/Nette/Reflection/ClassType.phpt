@@ -55,8 +55,9 @@ Assert::equal( new Reflection\Method('Foo', 'f'), $rc->getMethod('f') );
 
 try {
 	$rc->getMethod('doesntExist');
+	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::same( 'Method Bar::doesntExist() does not exist', $e->getMessage() );
+	Assert::exception('ReflectionException', 'Method Bar::doesntExist() does not exist', $e );
 
 }
 
@@ -72,8 +73,9 @@ Assert::equal( new Reflection\Property('Bar', 'var'), $rc->getProperty('var') );
 
 try {
 	$rc->getProperty('doesntExist');
-} catch (exception $e) {
-	Assert::same( 'Property Bar::$doesntExist does not exist', $e->getMessage() );
+	Assert::fail('Expected exception');
+} catch (Exception $e) {
+	Assert::exception('ReflectionException', 'Property Bar::$doesntExist does not exist', $e );
 
 }
 

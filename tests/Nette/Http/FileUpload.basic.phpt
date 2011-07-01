@@ -37,14 +37,14 @@ Assert::equal( file_get_contents(__DIR__ . '/files/file.txt'), $upload->getConte
 
 
 $upload = new FileUpload(array(
-	'name' => '../.image.gif',
+	'name' => '../.image.png',
 	'type' => 'text/plain',
-	'tmp_name' => __DIR__ . '/files/logo.gif',
+	'tmp_name' => __DIR__ . '/files/logo.png',
 	'error' => 0,
 	'size' => 209,
 ));
 
-Assert::equal( '../.image.gif', $upload->getName() );
-Assert::equal( 'image.gif', $upload->getSanitizedName() );
-Assert::equal( 'image/gif', $upload->getContentType() );
+Assert::equal( '../.image.png', $upload->getName() );
+Assert::equal( 'image.png', $upload->getSanitizedName() );
+Assert::equal( 'image/png', $upload->getContentType() );
 Assert::true( $upload->isImage() );

@@ -53,7 +53,6 @@ Assert::same( 3, $var->counter );
 
 try {
 	$obj->onPrivate(123);
-	$this->fail('called private event');
 
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
@@ -63,7 +62,6 @@ try {
 
 try {
 	$obj->onUndefined(123);
-	$this->fail('called undefined event');
 
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
