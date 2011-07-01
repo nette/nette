@@ -182,8 +182,8 @@ class Configurator extends Object
 
 		// set modes - back compatibility
 		if (isset($config['mode'])) {
-			trigger_error(basename($file) . ": Section 'mode' is deprecated; use 'params' instead.", E_USER_WARNING);
 			foreach ($config['mode'] as $mode => $state) {
+				trigger_error(basename($file) . ": Section 'mode' is deprecated; use '{$mode}Mode' in section 'variables' instead.", E_USER_WARNING);
 				$code .= $this->generateCode('$container->params[?] = ?', $mode . 'Mode', (bool) $state);
 			}
 			unset($config['mode']);
