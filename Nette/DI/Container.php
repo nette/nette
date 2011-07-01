@@ -207,7 +207,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string service name
 	 * @return bool
 	 */
@@ -266,7 +266,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			} else {
 				$val = Nette\Utils\Arrays::get($this->params, explode('.', $part));
 				if (!is_scalar($val)) {
-					throw new Nette\InvalidStateException("Parameter '$part' used in '$s' is not scalar.");
+					throw new Nette\InvalidStateException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
 				}
 				$res .= $val;
 			}
@@ -319,7 +319,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string
 	 * @return bool
 	 */

@@ -34,6 +34,7 @@ class ContainerBuilder extends Nette\Object
 	 *         ...
 	 *      )
 	 *      tags => array(...)
+	 *      alias => 'Service'
 	 *   )
 	 */
 	public function addDefinitions(IContainer $container, array $definitions)

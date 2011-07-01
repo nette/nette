@@ -46,7 +46,7 @@ interface IContainer
 	function removeService($name);
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @return bool
 	 */
 	function hasService($name);
