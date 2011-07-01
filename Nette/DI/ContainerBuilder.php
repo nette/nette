@@ -50,7 +50,7 @@ class ContainerBuilder extends Nette\Object
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
 			$expander = function(&$val) use ($container) {
-				$val = substr($val, 0, 1) === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
+				$val = substr($val, 0, 1) === '@' ? $container->getService(substr($val, 1)) : Nette\Utils\Strings::expand($val, $container->params);
 			};
 
 			if (isset($definition['class']) || isset($definition['factory'])) {
@@ -64,7 +64,7 @@ class ContainerBuilder extends Nette\Object
 				$factory = function($container) use ($class, $arguments, $methods, $expander) {
 					array_walk_recursive($arguments, $expander);
 					if ($class) {
-						$class = $container->expand($class);
+						$class = Nette\Utils\Strings::expand($class, $container->params);
 						if ($arguments) {
 							$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
 						} else {
@@ -153,7 +153,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		$args = implode(', ', array_map(array($this, 'varExport'), $args));
 		$args = preg_replace("#(?<!\\\)'@(\w+)'#", '\$container->getService(\'$1\')', $args);
-		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", '\$container->expand($0)', $args);
+		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", 'Nette\Utils\Strings::expand($0, \$container->params)', $args);
 		return $args;
 	}
 

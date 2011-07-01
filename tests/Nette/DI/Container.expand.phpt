@@ -36,5 +36,5 @@ try {
 	$container->expand('foo%bar%');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Unable to concatenate non-scalar parameter 'bar' into 'foo%bar%'.", $e );
+	Assert::exception('Nette\InvalidArgumentException', "Unable to concatenate non-scalar parameter 'bar' into 'foo%bar%'.", $e );
 }

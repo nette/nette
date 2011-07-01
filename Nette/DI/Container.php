@@ -235,7 +235,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
-	/********************* tools ****************d*g**/
+	/********************* shortcuts ****************d*g**/
 
 
 
@@ -243,40 +243,11 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Expands %placeholders% in string.
 	 * @param  mixed
 	 * @return mixed
-	 * @throws Nette\InvalidStateException
 	 */
 	public function expand($s)
 	{
-		if (!is_string($s) || strpos($s, '%') === FALSE) {
-			return $s;
-		}
-
-		$parts = preg_split('#%([a-z0-9._-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-		if (strlen($s) === strlen($parts[1]) + 2) {
-			return Nette\Utils\Arrays::get($this->params, explode('.', $parts[1]));
-		}
-		$res = '';
-		foreach ($parts as $n => $part) {
-			if ($n % 2 === 0) {
-				$res .= $part;
-
-			} elseif ($part === '') {
-				$res .= '%';
-
-			} else {
-				$val = Nette\Utils\Arrays::get($this->params, explode('.', $part));
-				if (!is_scalar($val)) {
-					throw new Nette\InvalidStateException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
-				}
-				$res .= $val;
-			}
-		}
-		return $res;
+		return Nette\Utils\Strings::expand($s, $this->params);
 	}
-
-
-
-	/********************* shortcuts ****************d*g**/
 
 
 
