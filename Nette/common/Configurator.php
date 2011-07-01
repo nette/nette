@@ -37,6 +37,7 @@ class Configurator extends Object
 	{
 		self::$instance = $this;
 		$this->container = new $containerClass;
+		$this->container->addService('container', $this->container);
 
 		foreach (get_class_methods($this) as $name) {
 			if (substr($name, 0, 13) === 'createService' ) {
@@ -44,7 +45,6 @@ class Configurator extends Object
 			}
 		}
 
-		$this->container->params = new ArrayHash;
 		defined('WWW_DIR') && $this->container->params['wwwDir'] = realpath(WWW_DIR);
 		defined('APP_DIR') && $this->container->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->container->params['libsDir'] = realpath(LIBS_DIR);
@@ -187,8 +187,8 @@ class Configurator extends Object
 
 		// set modes - back compatibility
 		if (isset($config['mode'])) {
-			trigger_error(basename($file) . ": Section 'mode' is deprecated; use 'params' instead.", E_USER_WARNING);
 			foreach ($config['mode'] as $mode => $state) {
+				trigger_error(basename($file) . ": Section 'mode' is deprecated; use '{$mode}Mode' in section 'variables' instead.", E_USER_WARNING);
 				$code .= $this->generateCode('$container->params[?] = ?', $mode . 'Mode', (bool) $state);
 			}
 			unset($config['mode']);
@@ -196,7 +196,7 @@ class Configurator extends Object
 
 		// other
 		foreach ($config as $key => $value) {
-			$code .= $this->generateCode('$container->params[?] = ' . (is_array($value) ? 'Nette\ArrayHash::from(?)' : '?'), $key, $value);
+			$code .= $this->generateCode('$container->params[?] = ?', $key, $value);
 		}
 
 		// pre-loading

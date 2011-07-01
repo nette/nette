@@ -251,8 +251,11 @@ class Container extends Nette\FreezableObject implements IContainer
 			return $s;
 		}
 
-		$res = '';
 		$parts = preg_split('#%([a-z0-9._-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+		if (strlen($s) === strlen($parts[1]) + 2) {
+			return Nette\Utils\Arrays::get($this->params, explode('.', $parts[1]));
+		}
+		$res = '';
 		foreach ($parts as $n => $part) {
 			if ($n % 2 === 0) {
 				$res .= $part;
@@ -261,21 +264,8 @@ class Container extends Nette\FreezableObject implements IContainer
 				$res .= '%';
 
 			} else {
-				$val = $this->params;
-				foreach (explode('.', $part) as $k) {
-					if (is_array($val) && array_key_exists($k, $val)) {
-						$val = $val[$k];
-					} elseif (is_object($val) && property_exists($val, $k)) {
-						$val = $val->$k;
-					} else {
-						throw new Nette\InvalidArgumentException("Missing item '$k'.");
-					}
-				}
-
+				$val = Nette\Utils\Arrays::get($this->params, explode('.', $part));
 				if (!is_scalar($val)) {
-					if (count($parts) === 3 && $parts[0] === '' && $parts[2] === '') {
-						return $val;
-					}
 					throw new Nette\InvalidStateException("Parameter '$part' used in '$s' is not scalar.");
 				}
 				$res .= $val;
