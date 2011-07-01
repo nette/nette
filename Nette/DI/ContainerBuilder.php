@@ -151,8 +151,8 @@ class ContainerBuilder extends Nette\Object
 	private function argsExport($args)
 	{
 		$args = implode(', ', array_map(array($this, 'varExport'), $args));
-		$args = preg_replace("#'@(\w+)'#", '\$container->getService(\'$1\')', $args);
-		$args = preg_replace("#('[^']*%[^']*')#", '\$container->expand($1)', $args);
+		$args = preg_replace("#(?<!\\\)'@(\w+)'#", '\$container->getService(\'$1\')', $args);
+		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", '\$container->expand($0)', $args);
 		return $args;
 	}
 
