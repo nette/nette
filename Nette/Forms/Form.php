@@ -411,12 +411,13 @@ class Form extends Container
 		} elseif ($this->submittedBy instanceof ISubmitterControl) {
 			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
 				$this->submittedBy->click();
+				$valid = TRUE;
 			} else {
 				$this->submittedBy->onInvalidClick($this->submittedBy);
 			}
 		}
 
-		if ($this->isValid()) {
+		if (isset($valid) || $this->isValid()) {
 			$this->onSuccess($this);
 		} else {
 			$this->onError($this);
@@ -430,7 +431,7 @@ class Form extends Container
 			$this->onSubmit($this);
 		} elseif ($this->onSubmit) {
 			trigger_error(__CLASS__ . '->onSubmit changed its behavior; use onSuccess instead.', E_USER_WARNING);
-			if ($this->isValid()) {
+			if (isset($valid) || $this->isValid()) {
 				$this->onSubmit($this);
 			}
 		}
