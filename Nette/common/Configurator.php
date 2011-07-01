@@ -38,6 +38,7 @@ class Configurator extends Object
 	{
 		self::$instance = $this;
 		$this->container = new $containerClass;
+		$this->container->addService('container', $this->container);
 
 		foreach (get_class_methods($this) as $name) {
 			if (substr($name, 0, 13) === 'createService' ) {
