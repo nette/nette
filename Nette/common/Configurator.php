@@ -70,7 +70,7 @@ class Configurator extends Object
 	 * Loads configuration from file and process it.
 	 * @return void
 	 */
-	public function loadConfig($file, $section = NULL)
+	public function loadConfig($file = NULL, $section = NULL)
 	{
 		if ($file === NULL) {
 			$file = $this->defaultConfigFile;
