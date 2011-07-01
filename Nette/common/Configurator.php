@@ -135,7 +135,7 @@ class Configurator extends Object
 			}
 			$builder = new DI\ContainerBuilder;
 			/**/$code .= $builder->generateCode($config['services']);/**/
-			/*5.2* $code .= $this->generateCode('$builder = new '.get_class($builder).'; $builder->addDefinitions($container, ?)', $config['services']);*/
+			/*5.2* $code .= '$builder = new '.get_class($builder).'; $builder->addDefinitions($container, '.var_export($config['services'], TRUE).');';*/
 			unset($config['services']);
 		}
 
@@ -149,10 +149,10 @@ class Configurator extends Object
 			}
 		}
 
-		// try expand variables at compile-time
+		// pre-expand variables at compile-time
 		$variables = $config['variables'];
 		array_walk_recursive($config, function(&$val) use ($variables) {
-			$val = Nette\Utils\Strings::expand($val, $variables, TRUE);
+			$val = Configurator::preExpand($val, $variables);
 		});
 
 		// add variables
@@ -280,6 +280,8 @@ class Configurator extends Object
 		unset($args[0]);
 		foreach ($args as &$arg) {
 			$arg = var_export($arg, TRUE);
+			$arg = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $arg);
+			$arg = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", '\$container->expand($0)', $arg);
 		}
 		if (strpos($statement, '?') === FALSE) {
 			return $statement .= '(' . implode(', ', $args) . ");\n\n";
@@ -292,6 +294,55 @@ class Configurator extends Object
 			$i++;
 		}
 		return $statement . ";\n\n";
+	}
+
+
+
+	/**
+	 * Pre-expands %placeholders% in string.
+	 * @internal
+	 */
+	public static function preExpand($s, array $params, $check = array())
+	{
+		if (!is_string($s)) {
+			return $s;
+		}
+
+		$parts = preg_split('#%([\w.-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$res = '';
+		foreach ($parts as $n => $part) {
+			if ($n % 2 === 0) {
+				$res .= str_replace('%', '%%', $part);
+
+			} elseif ($part === '') {
+				$res .= '%%';
+
+			} elseif (isset($check[$part])) {
+				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($check)) . '.');
+
+			} else {
+				try {
+					$val = Nette\Utils\Arrays::get($params, explode('.', $part));
+				} catch (Nette\InvalidArgumentException $e) {
+					$res .= "%$part%";
+					continue;
+				}
+				$val = self::preExpand($val, $params, $check + array($part => 1));
+				if (strlen($part) + 2 === strlen($s)) {
+					if (is_array($val)) {
+						array_walk_recursive($val, function(&$val) use ($params, $check, $part) {
+							$val = Configurator::preExpand($val, $params, $check + array($part => 1));
+						});
+					}
+					return $val;
+				}
+				if (!is_scalar($val)) {
+					throw new Nette\InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
+				}
+				$res .= $val;
+			}
+		}
+		return $res;
 	}
 
 

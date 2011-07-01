@@ -157,6 +157,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		$args = implode(', ', array_map(array($this, 'varExport'), $args));
 		$args = preg_replace("#(?<!\\\)'@(\w+)'#", '\$container->getService(\'$1\')', $args);
+		$args = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $args);
 		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", 'Nette\Utils\Strings::expand($0, \$container->params)', $args);
 		return $args;
 	}
