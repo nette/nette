@@ -25,24 +25,15 @@ function formatModifiers($arg, $modifiers) {
 // special
 Assert::same( '@',  formatModifiers('@', '') );
 Assert::same( '@',  formatModifiers('@', '|') );
-try {
+Assert::throws(function() {
 	formatModifiers('@', ':');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
-}
-try {
+}, 'Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%');
+Assert::throws(function() {
 	formatModifiers('@', 'mod::||:|');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%', $e );
-}
-try {
+}, 'Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%');
+Assert::throws(function() {
 	Assert::same( '$template->mod(@, \'\\\\\', "a", "b", "c", "arg2")',  formatModifiers('@', "mod:'\\\\':a:b:c':arg2") );
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 15.', $e );
-}
+}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 15.');
 
 
 // common

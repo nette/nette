@@ -116,6 +116,25 @@ class Assert
 
 
 	/**
+	 * Checks if the function throws exception.
+	 * @param  callback
+	 * @param  string class
+	 * @param  string message
+	 * @return void
+	 */
+	public static function throws($function, $class, $message)
+	{
+		try {
+			call_user_func($function);
+			self::doFail('Expected exception');
+		} catch (Exception $e) {
+			Assert::exception($class, $message, $e);
+		}
+	}
+
+
+
+	/**
 	 * Failed assertion
 	 * @return void
 	 */

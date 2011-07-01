@@ -49,9 +49,6 @@ Assert::same( 'p=plum', http_build_query($namespace->getIterator()) );
 
 
 // small expiration
-try {
+Assert::throws(function() use ($namespace) {
 	$namespace->setExpiration(100);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('TestErrorException', "The expiration time is greater than the session expiration 10 seconds in %a%:%d%", $e );
-}
+}, 'TestErrorException', "The expiration time is greater than the session expiration 10 seconds in %a%:%d%");

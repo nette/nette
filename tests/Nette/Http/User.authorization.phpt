@@ -93,12 +93,9 @@ Assert::false( $user->isInRole('guest'), 'is guest?' );
 
 
 // authorization
-try {
+Assert::throws(function() use ($user) {
 	$user->isAllowed('delete_file');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'authorizator' not found.", $e );
-}
+}, 'Nette\InvalidStateException', "Service 'authorizator' not found.");
 
 $handler = new Authorizator;
 $user->setAuthorizator($handler);

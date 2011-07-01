@@ -27,12 +27,9 @@ Assert::same( '<?php $var = 123 ?>',  item1($parser->expandMacro('var', '$var =>
 Assert::same( '<?php $var1 = 123; $var2 = "nette framework" ?>',  item1($parser->expandMacro('var', 'var1 = 123, $var2 => "nette framework"', '')) );
 Assert::same( '<?php $temp->var1 = 123 ?>',  item1($parser->expandMacro('var', '$temp->var1 = 123', '')) );
 
-try {
+Assert::throws(function() use ($parser) {
 	item1($parser->expandMacro('var', '$var => "123', ''));
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.', $e );
-}
+}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.');
 
 
 // {default ...}
@@ -42,9 +39,6 @@ Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($parser
 Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', '$var => 123', 'filter')) );
 Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP) ?>",  item1($parser->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')) );
 
-try {
+Assert::throws(function() use ($parser) {
 	item1($parser->expandMacro('default', '$temp->var1 = 123', ''));
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Latte\ParseException', "Unexpected '-' in {default \$temp->var1 = 123}", $e );
-}
+}, 'Nette\Latte\ParseException', "Unexpected '-' in {default \$temp->var1 = 123}");

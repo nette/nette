@@ -91,9 +91,6 @@ $builder->addDefinitions($container, array(
 		'class' => '%missing%',
 	)
 ));
-try {
+Assert::throws(function() use ($container) {
 	$container->getService('bad');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing item 'missing'.", $e );
-}
+}, 'Nette\InvalidArgumentException', "Missing item 'missing'.");

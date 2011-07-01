@@ -24,17 +24,11 @@ Assert::same( '/myApp/test', $container->expand('%appDir%/test') );
 Assert::same( '/temp/test', $container->expand('%dirs.cache%/test') );
 Assert::same( array('cache' => '/temp'), $container->expand('%dirs%') );
 
-try {
+Assert::throws(function() use ($container) {
 	$container->expand('%bar%');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing item 'bar'.", $e );
-}
+}, 'Nette\InvalidArgumentException', "Missing item 'bar'.");
 
-try {
+Assert::throws(function() use ($container) {
 	$container->params['bar'] = array();
 	$container->expand('foo%bar%');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Unable to concatenate non-scalar parameter 'bar' into 'foo%bar%'.", $e );
-}
+}, 'Nette\InvalidArgumentException', "Unable to concatenate non-scalar parameter 'bar' into 'foo%bar%'.");

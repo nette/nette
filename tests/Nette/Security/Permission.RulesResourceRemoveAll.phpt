@@ -21,12 +21,9 @@ $acl->addResource('area');
 $acl->allow(NULL, 'area');
 Assert::true( $acl->isAllowed(NULL, 'area') );
 $acl->removeAllResources();
-try {
+Assert::throws(function() use ($acl) {
 	$acl->isAllowed(NULL, 'area');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Resource 'area' does not exist.", $e );
-}
+}, 'Nette\InvalidStateException', "Resource 'area' does not exist.");
 
 $acl->addResource('area');
 Assert::false( $acl->isAllowed(NULL, 'area') );
