@@ -20,5 +20,5 @@ try {
 	Environment::loadConfig('config.circular.ini', 'production');
 	Assert::fail('Expected exception');
 } catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Unable to expand variables: bar, foo, foobar.', $e );
+	Assert::exception('Nette\InvalidArgumentException', 'Circular reference detected for variables: foo, foobar, bar.', $e );
 }

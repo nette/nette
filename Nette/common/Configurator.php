@@ -110,21 +110,6 @@ class Configurator extends Object
 			}
 		}
 
-		// add expanded variables
-		while (!empty($config['variables'])) {
-			$old = $config['variables'];
-			foreach ($config['variables'] as $key => $value) {
-				try {
-					$code .= $this->generateCode('$container->params[?] = ?', $key, $container->params[$key] = $container->expand($value));
-					unset($config['variables'][$key]);
-				} catch (Nette\InvalidArgumentException $e) {}
-			}
-			if ($old === $config['variables']) {
-				throw new InvalidStateException("Unable to expand variables: " . implode(', ', array_keys($old)) . ".");
-			}
-		}
-		unset($config['variables']);
-
 		// process services
 		if (isset($config['services'])) {
 			foreach ($config['services'] as $key => & $def) {
@@ -154,10 +139,26 @@ class Configurator extends Object
 			unset($config['services']);
 		}
 
-		// expand variables
-		array_walk_recursive($config, function(&$val) use ($container) {
-			$val = $container->expand($val);
+		// consolidate variables
+		if (!isset($config['variables'])) {
+			$config['variables'] = array();
+		}
+		foreach ($config as $key => $value) {
+			if (!in_array($key, array('variables', 'services', 'php', 'const', 'mode'))) {
+				$config['variables'][$key] = $value;
+			}
+		}
+
+		// try expand variables at compile-time
+		$variables = $config['variables'];
+		array_walk_recursive($config, function(&$val) use ($variables) {
+			$val = Nette\Utils\Strings::expand($val, $variables, TRUE);
 		});
+
+		// add variables
+		foreach ($config['variables'] as $key => $value) {
+			$code .= $this->generateCode('$container->params[?] = ?', $key, $value);
+		}
 
 		// PHP settings
 		if (isset($config['php'])) {
@@ -170,7 +171,6 @@ class Configurator extends Object
 					$code .= $this->configurePhp($key, $value);
 				}
 			}
-			unset($config['php']);
 		}
 
 		// define constants
@@ -178,7 +178,6 @@ class Configurator extends Object
 			foreach ($config['const'] as $key => $value) {
 				$code .= $this->generateCode('define', $key, $value);
 			}
-			unset($config['const']);
 		}
 
 		// set modes - back compatibility
@@ -187,12 +186,6 @@ class Configurator extends Object
 				trigger_error(basename($file) . ": Section 'mode' is deprecated; use '{$mode}Mode' in section 'variables' instead.", E_USER_WARNING);
 				$code .= $this->generateCode('$container->params[?] = ?', $mode . 'Mode', (bool) $state);
 			}
-			unset($config['mode']);
-		}
-
-		// other
-		foreach ($config as $key => $value) {
-			$code .= $this->generateCode('$container->params[?] = ?', $key, $value);
 		}
 
 		// pre-loading
