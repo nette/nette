@@ -246,7 +246,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function expand($s)
 	{
-		return Nette\Utils\Strings::expand($s, $this->params);
+		return is_string($s) ? Nette\Utils\Strings::expand($s, $this->params) : $s;
 	}
 
 

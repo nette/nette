@@ -50,7 +50,11 @@ class ContainerBuilder extends Nette\Object
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
 			$expander = function(&$val) use ($container) {
-				$val = substr($val, 0, 1) === '@' ? $container->getService(substr($val, 1)) : Nette\Utils\Strings::expand($val, $container->params);
+				if (substr($val, 0, 1) === '@') {
+					$val = $container->getService(substr($val, 1));
+				} elseif (is_string($val)) {
+					$val = Nette\Utils\Strings::expand($val, $container->params);
+				}
 			};
 
 			if (isset($definition['class']) || isset($definition['factory'])) {
