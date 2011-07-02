@@ -74,6 +74,7 @@ production:
 
 
 development:
+	webname: the example
 	database:
 		params:
 			host: dev.example.com
@@ -90,7 +91,6 @@ development:
 		- 10
 		- 20
 
-	webname: the example
 
 nothing:
 EOD
