@@ -54,4 +54,3 @@ function testRouteOut(Nette\Application\Route $route, $link, $params = array())
 	$request = new Nette\Application\PresenterRequest($link, 'GET', $params);
 	return $route->constructUrl($request, $httpRequest);
 }
-

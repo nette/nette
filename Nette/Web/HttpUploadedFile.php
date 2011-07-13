@@ -31,19 +31,19 @@ use Nette;
  */
 class HttpUploadedFile extends Nette\Object
 {
-	/* @var string */
+	/** @var string */
 	private $name;
 
-	/* @var string */
+	/** @var string */
 	private $type;
 
-	/* @var string */
+	/** @var string */
 	private $size;
 
-	/* @var string */
+	/** @var string */
 	private $tmpName;
 
-	/* @var int */
+	/** @var int */
 	private $error;
 
 

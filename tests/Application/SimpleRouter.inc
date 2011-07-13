@@ -21,7 +21,7 @@ class MockHttpRequest extends Nette\Web\HttpRequest
 	}
 
 
-	
+
 	public function setQuery(array $query)
 	{
 		$this->query = $query;
@@ -29,4 +29,3 @@ class MockHttpRequest extends Nette\Web\HttpRequest
 	}
 
 }
-

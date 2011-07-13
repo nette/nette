@@ -40,4 +40,3 @@ class MockTemplate extends BaseTemplate
 	}
 
 }
-
