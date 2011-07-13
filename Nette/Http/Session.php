@@ -79,18 +79,17 @@ class Session extends Nette\Object
 	{
 		if (self::$started) {
 			return;
-
-		} elseif (self::$started === NULL && defined('SID')) {
-			throw new Nette\InvalidStateException('A session had already been started by session.auto_start or session_start().');
 		}
 
 		$this->configure($this->options);
 
-		Nette\Diagnostics\Debugger::tryError();
-		session_start();
-		if (Nette\Diagnostics\Debugger::catchError($e)) {
-			@session_write_close(); // this is needed
-			throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
+		if (!defined('SID')) {
+			Nette\Diagnostics\Debugger::tryError();
+			session_start();
+			if (Nette\Diagnostics\Debugger::catchError($e)) {
+				@session_write_close(); // this is needed
+				throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
+			}
 		}
 
 		self::$started = TRUE;
@@ -419,15 +418,8 @@ class Session extends Nette\Object
 				$key = substr($key, 8);
 			}
 
-			if ($value === NULL) {
+			if ($value === NULL || ini_get("session.$key") == $value) { // intentionally ==
 				continue;
-
-			} elseif (isset($special[$key])) {
-				if (self::$started) {
-					throw new Nette\InvalidStateException("Unable to set '$key' when session has been started.");
-				}
-				$key = "session_$key";
-				$key($value);
 
 			} elseif (strncmp($key, 'cookie_', 7) === 0) {
 				if (!isset($cookie)) {
@@ -435,16 +427,20 @@ class Session extends Nette\Object
 				}
 				$cookie[substr($key, 7)] = $value;
 
-			} elseif (!function_exists('ini_set')) {
-				if (ini_get($key) != $value && !Nette\Framework::$iAmUsingBadHost) { // intentionally ==
+			} else {
+				if (defined('SID')) {
+					throw new Nette\InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been started by session.auto_start or session_start().");
+				}
+				if (isset($special[$key])) {
+					$key = "session_$key";
+					$key($value);
+
+				} elseif (function_exists('ini_set')) {
+					ini_set("session.$key", $value);
+
+				} elseif (!Nette\Framework::$iAmUsingBadHost) {
 					throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 				}
-
-			} else {
-				if (self::$started) {
-					throw new Nette\InvalidStateException("Unable to set '$key' when session has been started.");
-				}
-				ini_set("session.$key", $value);
 			}
 		}
 
