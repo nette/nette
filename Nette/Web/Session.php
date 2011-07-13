@@ -47,7 +47,7 @@ class Session extends Nette\Object
 		'cookie_path' => '/',     // cookie is available within the entire domain
 		'cookie_domain' => '',    // cookie is available on current subdomain only
 		'cookie_secure' => FALSE, // cookie is available on HTTP & HTTPS
-		'cookie_httponly' => TRUE,// must be enabled to prevent Session Fixation
+		'cookie_httponly' => TRUE,// must be enabled to prevent Session Hijacking
 
 		// other
 		'gc_maxlifetime' => self::DEFAULT_FILE_LIFETIME,// 3 hours
@@ -68,9 +68,6 @@ class Session extends Nette\Object
 	{
 		if (self::$started) {
 			return;
-
-		} elseif (self::$started === NULL && defined('SID')) {
-			throw new \InvalidStateException('A session had already been started by session.auto-start or session_start().');
 		}
 
 
@@ -81,11 +78,13 @@ class Session extends Nette\Object
 			// ignore?
 		}
 
-		Nette\Tools::tryError();
-		session_start();
-		if (Nette\Tools::catchError($msg)) {
-			@session_write_close(); // this is needed
-			throw new \InvalidStateException($msg);
+		if (!defined('SID')) {
+			Nette\Tools::tryError();
+			session_start();
+			if (Nette\Tools::catchError($msg)) {
+				@session_write_close(); // this is needed
+				throw new \InvalidStateException($msg);
+			}
 		}
 
 		self::$started = TRUE;
@@ -380,6 +379,9 @@ class Session extends Nette\Object
 			$this->configure($options);
 		}
 		$this->options = $options + $this->options;
+		if (!empty($options['auto_start'])) {
+			$this->start();
+		}
 		return $this;
 	}
 
@@ -410,15 +412,8 @@ class Session extends Nette\Object
 				$key = substr($key, 8);
 			}
 
-			if ($value === NULL) {
+			if ($value === NULL || ini_get("session.$key") == $value) { // intentionally ==
 				continue;
-
-			} elseif (isset($special[$key])) {
-				if (self::$started) {
-					throw new \InvalidStateException("Unable to set '$key' when session has been started.");
-				}
-				$key = "session_$key";
-				$key($value);
 
 			} elseif (strncmp($key, 'cookie_', 7) === 0) {
 				if (!isset($cookie)) {
@@ -426,16 +421,20 @@ class Session extends Nette\Object
 				}
 				$cookie[substr($key, 7)] = $value;
 
-			} elseif (!function_exists('ini_set')) {
-				if (ini_get($key) != $value) { // intentionally ==
-					throw new \NotSupportedException('Required function ini_set() is disabled.');
-				}
-
 			} else {
-				if (self::$started) {
-					throw new \InvalidStateException("Unable to set '$key' when session has been started.");
+				if (defined('SID')) {
+					throw new \InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been started by session.auto_start or session_start().");
 				}
-				ini_set("session.$key", $value);
+				if (isset($special[$key])) {
+					$key = "session_$key";
+					$key($value);
+
+				} elseif (function_exists('ini_set')) {
+					ini_set("session.$key", $value);
+
+				} else {
+					// ignore? this is bad host...
+				}
 			}
 		}
 
