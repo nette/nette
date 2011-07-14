@@ -24,6 +24,8 @@ use Nette;
 class Bar extends Nette\Object
 {
 	/** @var array */
+	public $onRender;
+	/** @var array */
 	private $panels = array();
 
 
@@ -53,6 +55,8 @@ class Bar extends Nette\Object
 	 */
 	public function render()
 	{
+		$this->onRender($this);
+		
 		$panels = array();
 		foreach ($this->panels as $id => $panel) {
 			try {

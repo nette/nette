@@ -24,6 +24,8 @@ use Nette;
 class BlueScreen extends Nette\Object
 {
 	/** @var array */
+	public $onRender = array();
+	/** @var array */
 	private $panels = array();
 
 
@@ -52,6 +54,8 @@ class BlueScreen extends Nette\Object
 	 */
 	public function render(\Exception $exception)
 	{
+		$this->onRender($this);
+		
 		$panels = $this->panels;
 		require __DIR__ . '/templates/bluescreen.phtml';
 	}
