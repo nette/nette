@@ -31,9 +31,6 @@ use Nette,
  * @property      string $layout
  * @property-read mixed $payload
  * @property      Nette\DI\IContainer $context
- * @property-read Nette\Http\Request $httpRequest
- * @property-read Nette\Http\Response $httpResponse
- * @property-read Nette\Http\Context $httpContext
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Http\User $user
