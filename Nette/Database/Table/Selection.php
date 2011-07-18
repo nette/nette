@@ -149,7 +149,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function select($columns)
 	{
 		$this->__destruct();
-		$this->select[] = $this->tryDelimite($columns);
+		$this->select[] = $columns;
 		return $this;
 	}
 
@@ -383,7 +383,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$prefix = $join ? "$this->delimitedName." : '';
 		if ($this->select) {
-			$cols = implode(', ', $this->select);
+			$cols = implode(', ', array_map(array($this, 'tryDelimite'), $this->select));
 
 		} elseif ($this->prevAccessed) {
 			$cols = $prefix . implode(', ' . $prefix, array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
