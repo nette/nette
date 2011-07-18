@@ -188,7 +188,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets user-specific option.
-	 * @param  string key
+	 * Options recognized by DefaultFormRenderer 
+	 * - 'description' - textual or Html object description 	 
+	 * 
+	 * @param  string key	     
 	 * @param  mixed  value
 	 * @return BaseControl  provides a fluent interface
 	 */
