@@ -31,3 +31,7 @@ Assert::throws(function() use ($mail) {
 Assert::throws(function() use ($mail) {
 	$mail->setHeader('n*ame', 'value');
 }, 'InvalidArgumentException', "Header name must be non-empty alphanumeric string, 'n*ame' given.");
+
+Assert::throws(function() use ($mail) {
+	$mail->setHeader('To', array('-foo@boo.com' => ''));
+}, 'InvalidArgumentException', "Email address '-foo@boo.com' is not valid.");
