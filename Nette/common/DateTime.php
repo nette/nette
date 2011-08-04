@@ -40,6 +40,12 @@ class DateTime extends \DateTime
 	/** average year in seconds */
 	const YEAR = 31557600;
 
+	/** date format */
+	const W3C_DATE_FORMAT = 'Y-m-d';
+
+	/** time format */
+	const W3C_TIME_FORMAT = 'H:i:s';
+
 
 
 	/**
@@ -62,6 +68,63 @@ class DateTime extends \DateTime
 			return new static($time);
 		}
 	}
+
+
+
+	/**
+	 * Formats time to W3C date format
+	 * @param string|int|\DateTime
+	 * @return string
+	 */
+	public static function toW3cDateFormat($time)
+	{
+		$dateTime = self::from($time);
+		return $dateTime->format(self::W3C_DATE_FORMAT);
+	}
+
+
+
+	/**
+	 * Formats time to W3C datetime format
+	 * @param string|int|\DateTime
+	 * @return string
+	 */
+	public static function toW3cDateTimeFormat($time)
+	{
+		$dateTime = self::from($time);
+
+		// Get timezone offset
+		$offset = 'Z';
+		if (($delta = $dateTime->getOffset()) !== false) {
+			$offset = '';
+
+			$offsetInHours = $delta / 3600;
+			$helper = explode('.', $offsetInHours);
+
+			// Hours
+			$hours = abs($helper[0]);
+			if ($hours < 10) {
+				$hours = '0' . $hours;
+			}
+			$offset .= ($helper[0] >= 0 ? '+' : '-') . $hours;
+
+			// Mins
+			if (isset($helper[1])) { // e.g. +04:30
+				$mins = $helper[1] * 6;
+				if ($mins < 10) {
+					$mins = '0' . $mins;
+				}
+			} else {
+				$mins = '00';
+			}
+
+			// Final offset string
+			$offset .= ':' . $mins;
+		}
+
+		return $dateTime->format(self::W3C_DATE_FORMAT) . 'T' . $dateTime->format(self::W3C_TIME_FORMAT) . $offset;
+	}
+
 
 
 	/*5.2*
