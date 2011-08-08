@@ -49,7 +49,7 @@ final class NeonAdapter implements IAdapter
 			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
 		}
 
-		$neon = Neon::decode(file_get_contents($file));
+		$neon = (array) Neon::decode(file_get_contents($file));
 
 		$separator = trim(self::$sectionSeparator);
 		$data = array();
