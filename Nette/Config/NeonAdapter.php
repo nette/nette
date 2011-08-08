@@ -53,28 +53,30 @@ final class NeonAdapter implements IAdapter
 
 		$separator = trim(self::$sectionSeparator);
 		$data = array();
-		foreach ($neon as $secName => $secData) {
-			if ($secData === NULL) { // empty section
-				$secData = array();
-			}
+		if (count($neon)){
+			foreach ($neon as $secName => $secData) {
+				if ($secData === NULL) { // empty section
+					$secData = array();
+				}
 
-			if (is_array($secData)) {
-				// process extends sections like [staging < production]
-				$parts = $separator ? explode($separator, $secName) : array($secName);
-				if (count($parts) > 1) {
-					$parent = trim($parts[1]);
-					if (!isset($data[$parent]) || !is_array($data[$parent])) {
-						throw new Nette\InvalidStateException("Missing parent section '$parent' in file '$file'.");
-					}
-					$secData = array_reverse(Nette\Utils\Arrays::mergeTree(array_reverse($secData, TRUE), array_reverse($data[$parent], TRUE)), TRUE);
-					$secName = trim($parts[0]);
-					if ($secName === '') {
-						throw new Nette\InvalidStateException("Invalid empty section name in file '$file'.");
+				if (is_array($secData)) {
+					// process extends sections like [staging < production]
+					$parts = $separator ? explode($separator, $secName) : array($secName);
+					if (count($parts) > 1) {
+						$parent = trim($parts[1]);
+						if (!isset($data[$parent]) || !is_array($data[$parent])) {
+							throw new Nette\InvalidStateException("Missing parent section '$parent' in file '$file'.");
+						}
+						$secData = array_reverse(Nette\Utils\Arrays::mergeTree(array_reverse($secData, TRUE), array_reverse($data[$parent], TRUE)), TRUE);
+						$secName = trim($parts[0]);
+						if ($secName === '') {
+							throw new Nette\InvalidStateException("Invalid empty section name in file '$file'.");
+						}
 					}
 				}
-			}
 
-			$data[$secName] = $secData;
+				$data[$secName] = $secData;
+			}
 		}
 
 		return $data;
