@@ -234,6 +234,27 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 	/**
+	 * Caches results of function/method calls.
+	 * @param  mixed
+	 * @return Closure
+	 */
+	public function wrap($function)
+	{
+		$cache = $this;
+		return function() use ($cache, $function) {
+			$key = array($function, func_get_args());
+			$data = $cache->load($key);
+			if ($data === NULL) {
+				return $cache->save($key, call_user_func_array($function, $key[1]));
+			} else {
+				return $data;
+			}
+		};
+	}
+
+
+
+	/**
 	 * Starts the output cache.
 	 * @param  mixed  key
 	 * @return OutputHelper|NULL
