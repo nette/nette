@@ -24,7 +24,7 @@ $mail->setFrom('John Doe <doe@example.com>');
 $mail->addTo('Lady Jane <jane@example.com>');
 $mail->setSubject('Hello Jane!');
 
-$mail->setHTMLBody('<b>Žluťoučký <br>kůň</b>');
+$mail->setHTMLBody('<b><span>Příliš </span> žluťoučký <br>kůň</b>');
 
 $mail->send();
 
@@ -43,13 +43,13 @@ Content-Type: multipart/alternative;
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Žluťoučký
+Příliš žluťoučký
 kůň
 ----------%S%
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-<b>Žluťoučký <br>kůň</b>
+<b><span>Příliš </span> žluťoučký <br>kůň</b>
 ----------%S%--
 EOD
 , TestMailer::$output );

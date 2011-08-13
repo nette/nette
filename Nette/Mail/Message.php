@@ -483,10 +483,11 @@ class Message extends MimePart
 			$text = Strings::replace($this->html, array(
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
-				'#[ \t\r\n]+#' => ' ',
+				'#[\r\n]+#' => ' ',
 				'#<(/?p|/?h\d|li|br|/tr)[ >/]#i' => "\n$0",
 			));
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
+			$text = Strings::replace($text, '#[ \t]+#', ' ');
 			$this->setBody(trim($text));
 		}
 	}
