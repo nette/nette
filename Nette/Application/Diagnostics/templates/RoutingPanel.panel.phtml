@@ -76,6 +76,7 @@ use Nette,
 		<th>Class</th>
 		<th>Mask</th>
 		<th>Defaults</th>
+		<th>Module</th>
 		<th>Request</th>
 	</tr>
 	</thead>
@@ -94,6 +95,8 @@ use Nette,
 			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Debugger::dump($value, TRUE)) ?><br />
 		<?php endforeach ?>
 		</code></td>
+
+		<td><code><?php echo $router['module'] ?></code></td>
 
 		<td><?php if ($router['request']): ?><code>
 		<?php $params = $router['request']->getParameters(); ?>

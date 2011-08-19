@@ -95,20 +95,24 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 * @param  Nette\Application\IRouter
 	 * @return void
 	 */
-	private function analyse($router)
+	private function analyse($router, $module = '')
 	{
 		if ($router instanceof Routers\RouteList) {
 			foreach ($router as $subRouter) {
-				$this->analyse($subRouter);
+				$this->analyse($subRouter, $module . $router->getModule());
 			}
 			return;
 		}
 
+		$matched = 'no';
 		$request = $router->match($this->httpRequest);
-		$matched = $request === NULL ? 'no' : 'may';
-		if ($request !== NULL && empty($this->request)) {
-			$this->request = $request;
-			$matched = 'yes';
+		if ($request) {
+			$request->setPresenterName($module . $request->getPresenterName());
+			$matched = 'may';
+			if (empty($this->request)) {
+				$this->request = $request;
+				$matched = 'yes';
+			}
 		}
 
 		$this->routers[] = array(
@@ -117,6 +121,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			'defaults' => $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array(),
 			'mask' => $router instanceof Routers\Route ? $router->getMask() : NULL,
 			'request' => $request,
+			'module' => rtrim($module, ':')
 		);
 	}
 
