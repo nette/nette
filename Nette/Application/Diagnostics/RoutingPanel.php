@@ -95,11 +95,11 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 * @param  Nette\Application\IRouter
 	 * @return void
 	 */
-	private function analyse($router)
+	private function analyse($router, $module='')
 	{
 		if ($router instanceof Routers\RouteList) {
 			foreach ($router as $subRouter) {
-				$this->analyse($subRouter);
+				$this->analyse($subRouter, $module.$router->getModule());
 			}
 			return;
 		}
@@ -117,6 +117,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			'defaults' => $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array(),
 			'mask' => $router instanceof Routers\Route ? $router->getMask() : NULL,
 			'request' => $request,
+			'module' => rtrim($module, ':')
 		);
 	}
 
