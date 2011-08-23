@@ -26,7 +26,6 @@ $two = new Service;
 
 
 $container = new Container;
-$container->addService('one', $one, 'Service');
 $container->addService('two', $one, array(
 	'debugPanel',
 ));
@@ -39,7 +38,6 @@ $container->addService('five', $one, array(
 
 
 Assert::same( array(
-	'one' => array('Service'),
 	'five' => array('Service'),
 ), $container->getServiceNamesByTag('typeHint') );
 

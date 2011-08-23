@@ -22,8 +22,6 @@ use Nette;
  */
 class Container extends Nette\FreezableObject implements IContainer
 {
-	const TAG_TYPEHINT = 'typeHint';
-
 	/** @var array  user parameters */
 	public $params = array();
 
@@ -59,9 +57,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
-		if (is_string($tags)) {
-			$tags = array(self::TAG_TYPEHINT => array($tags));
-		} elseif (is_array($tags)) {
+		if (is_array($tags)) {
 			foreach ($tags as $id => $attrs) {
 				if (is_int($id) && is_string($attrs)) {
 					$tags[$attrs] = array();
@@ -73,9 +69,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		if (is_string($service) && strpos($service, ':') === FALSE/*5.2* && $service[0] !== "\0"*/) { // class name
-			if (!isset($tags[self::TAG_TYPEHINT][0])) {
-				$tags[self::TAG_TYPEHINT][0] = $service;
-			}
 			$service = new ServiceBuilder($service);
 		}
 
@@ -154,36 +147,10 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		} elseif (!is_object($service)) {
 			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
-
-		} elseif (isset($this->tags[$name][self::TAG_TYPEHINT][0]) && !$service instanceof $this->tags[$name][self::TAG_TYPEHINT][0]) {
-			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not '{$this->tags[$name][self::TAG_TYPEHINT][0]}' type.");
 		}
 
 		unset($this->factories[$name]);
 		return $this->registry[$name] = $service;
-	}
-
-
-
-	/**
-	 * Gets the service object of the specified type.
-	 * @param  string
-	 * @return object
-	 */
-	public function getServiceByType($type)
-	{
-		foreach ($this->registry as $name => $service) {
-			if (isset($this->tags[$name][self::TAG_TYPEHINT][0]) ? !strcasecmp($this->tags[$name][self::TAG_TYPEHINT][0], $type) : $service instanceof $type) {
-				$found[] = $name;
-			}
-		}
-		if (!isset($found)) {
-			throw new MissingServiceException("Service matching '$type' type not found.");
-
-		} elseif (count($found) > 1) {
-			throw new AmbiguousServiceException("Found more than one service ('" . implode("', '", $found) . "') matching '$type' type.");
-		}
-		return $this->getService($found[0]);
 	}
 
 
@@ -216,21 +183,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		return isset($this->registry[$name])
 			|| isset($this->factories[$name])
 			|| method_exists($this, "createService$name");
-	}
-
-
-
-	/**
-	 * Checks the service type.
-	 * @param  string
-	 * @param  string
-	 * @return bool
-	 */
-	public function checkServiceType($name, $type)
-	{
-		return isset($this->tags[$name][self::TAG_TYPEHINT][0])
-			? !strcasecmp($this->tags[$name][self::TAG_TYPEHINT][0], $type)
-			: (isset($this->registry[$name]) && $this->registry[$name] instanceof $type);
 	}
 
 
