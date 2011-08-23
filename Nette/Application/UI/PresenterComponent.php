@@ -70,7 +70,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  Nette\Application\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	protected function attached($presenter)
