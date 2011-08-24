@@ -28,7 +28,10 @@ class TestClass extends Container
 
 
 $a = new TestClass;
-Assert::same( 'b', $a->getComponent('b')->name );
+$b = Assert::triggers(function () use ($a) {
+	return $a->getComponent('b');
+}, E_USER_WARNING, 'Attaching components to parent using Nette\ComponentModel\Component::__construct() is deprecated; use $parent->addComponent($component, $name) or component factory instead.');
+Assert::same( 'b', $b->name );
 
 
 

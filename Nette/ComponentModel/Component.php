@@ -40,12 +40,15 @@ abstract class Component extends Nette\Object implements IComponent
 
 	/**
 	 */
-	public function __construct(IContainer $parent = NULL, $name = NULL)
+	public function __construct()
 	{
-		if ($parent !== NULL) {
+		list($parent, $name) = func_get_args() + array(NULL, NULL);
+		if ($parent instanceof IContainer) {
+			trigger_error('Attaching components to parent using ' . __METHOD__ . '() is deprecated; use $parent->addComponent($component, $name) or component factory instead.', E_USER_WARNING);
 			$parent->addComponent($this, $name);
 
-		} elseif (is_string($name)) {
+		} elseif ($name !== NULL) {
+			trigger_error('Naming components without parent is deprecated.', E_USER_WARNING);
 			$this->name = $name;
 		}
 	}

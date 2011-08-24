@@ -92,7 +92,10 @@ class TestPresenter extends Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->mycontrol = new TestControl($this, 'mycontrol');
+		$presenter = $this;
+		$this->mycontrol = Assert::triggers(function () use ($presenter) {
+			return new TestControl($presenter, 'mycontrol');
+		}, E_USER_WARNING, 'Attaching components to parent using Nette\ComponentModel\Component::__construct() is deprecated; use $parent->addComponent($component, $name) or component factory instead.');
 
 		// Presenter & action link
 		Assert::same( '/index.php?action=product&presenter=Test', $this->link('product', array('var1' => $this->var1)) );

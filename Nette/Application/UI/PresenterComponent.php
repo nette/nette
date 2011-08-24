@@ -35,10 +35,11 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 	/**
 	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function __construct()
 	{
 		$this->monitor('Nette\Application\UI\Presenter');
-		parent::__construct($parent, $name);
+		/*5.2*$args = func_get_args();
+		call_user_func_array(array($this, 'parent::__construct'), $args)*//**/call_user_func_array('parent::__construct', func_get_args())/**/;
 	}
 
 

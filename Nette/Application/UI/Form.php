@@ -28,12 +28,13 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	/**
 	 * Application form constructor.
 	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function __construct()
 	{
 		parent::__construct();
 		$this->monitor('Nette\Application\UI\Presenter');
-		if ($parent !== NULL) {
-			$parent->addComponent($this, $name);
+		if (func_num_args() > 0) {
+			trigger_error('Attaching forms to parent using ' . __METHOD__ . '() is deprecated; use $parent->addComponent($form, $name) or component factory instead.', E_USER_WARNING);
+			func_get_arg(0)->addComponent($this, func_get_arg(1) ?: NULL);
 		}
 	}
 
