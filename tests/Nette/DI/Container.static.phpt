@@ -21,7 +21,7 @@ class MyContainer extends Container
 
 	protected function createServiceOne()
 	{
-		return (object) NULL;
+		return NULL;
 	}
 
 	protected function createServiceTwo()
@@ -34,9 +34,7 @@ class MyContainer extends Container
 
 $container = new MyContainer;
 
-Assert::throws(function() use ($container) {
-	$container->addService('one', (object) NULL);
-}, 'Nette\InvalidStateException', "Service 'one' has already been registered.");
+$container->addService('one', (object) NULL);
 
 Assert::true( $container->hasService('one') );
 Assert::false( $container->hasService('undefined') );

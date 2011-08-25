@@ -49,7 +49,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
-		if (isset($this->registry[$name]) || method_exists($this, "createService$name")) {
+		if (isset($this->registry[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
@@ -198,7 +198,7 @@ class Container extends Nette\FreezableObject implements IContainer
 		if (!is_string($name) || $name === '') {
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 
-		} elseif (isset($this->registry[$name]) || method_exists($this, "createService$name")) {
+		} elseif (isset($this->registry[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 
 		} elseif (!is_object($service)) {
