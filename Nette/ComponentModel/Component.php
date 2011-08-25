@@ -332,11 +332,21 @@ abstract class Component extends Nette\Object implements IComponent
 
 
 	/**
+	 * Prevents serialization.
+	 */
+	final public function __sleep()
+	{
+		throw new Nette\NotImplementedException('Object serialization is not supported by class ' . get_class($this));
+	}
+
+
+
+	/**
 	 * Prevents unserialization.
 	 */
 	final public function __wakeup()
 	{
-		throw new Nette\NotImplementedException;
+		throw new Nette\NotImplementedException('Object unserialization is not supported by class ' . get_class($this));
 	}
 
 }
