@@ -292,6 +292,23 @@ class Strings
 
 
 	/**
+	 * Returns a part of UTF-8 string.
+	 * @param string
+	 * @param int
+	 * @param int
+	 * @return string
+	 */
+	public static function substring($s, $offset, $length = null)
+	{
+		if($length === null){
+			$length = self::length($s);
+		}
+		return function_exists('mb_substr') ? mb_substr($s, $offset, $length, 'UTF-8') : iconv_substr($s, $offset, $length, 'UTF-8');
+	}
+
+
+
+	/**
 	 * Strips whitespace.
 	 * @param  string  UTF-8 encoding
 	 * @param  string
