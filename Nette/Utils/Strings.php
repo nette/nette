@@ -188,7 +188,7 @@ class Strings
 				return $matches[0] . $append;
 
 			} else {
-				return iconv_substr($s, 0, $maxLen, 'UTF-8') . $append;
+				return self::substring($s, 0, $maxLen) . $append;
 			}
 		}
 		return $s;
@@ -241,7 +241,7 @@ class Strings
 	 */
 	public static function firstUpper($s)
 	{
-		return self::upper(mb_substr($s, 0, 1, 'UTF-8')) . mb_substr($s, 1, self::length($s), 'UTF-8');
+		return self::upper(self::substring($s, 0, 1)) . self::substring($s, 1);
 	}
 
 
@@ -268,11 +268,11 @@ class Strings
 	public static function compare($left, $right, $len = NULL)
 	{
 		if ($len < 0) {
-			$left = iconv_substr($left, $len, -$len, 'UTF-8');
-			$right = iconv_substr($right, $len, -$len, 'UTF-8');
+			$left = self::substring($left, $len, -$len);
+			$right = self::substring($right, $len, -$len);
 		} elseif ($len !== NULL) {
-			$left = iconv_substr($left, 0, $len, 'UTF-8');
-			$right = iconv_substr($right, 0, $len, 'UTF-8');
+			$left = self::substring($left, 0, $len);
+			$right = self::substring($right, 0, $len);
 		}
 		return self::lower($left) === self::lower($right);
 	}
@@ -333,7 +333,7 @@ class Strings
 	{
 		$length = max(0, $length - self::length($s));
 		$padLen = self::length($pad);
-		return str_repeat($pad, $length / $padLen) . iconv_substr($pad, 0, $length % $padLen, 'UTF-8') . $s;
+		return str_repeat($pad, $length / $padLen) . self::substring($pad, 0, $length % $padLen) . $s;
 	}
 
 
@@ -349,7 +349,7 @@ class Strings
 	{
 		$length = max(0, $length - self::length($s));
 		$padLen = self::length($pad);
-		return $s . str_repeat($pad, $length / $padLen) . iconv_substr($pad, 0, $length % $padLen, 'UTF-8');
+		return $s . str_repeat($pad, $length / $padLen) . self::substring($pad, 0, $length % $padLen);
 	}
 
 
