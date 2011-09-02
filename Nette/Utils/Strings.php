@@ -303,7 +303,7 @@ class Strings
 		if($length === null){
 			$length = self::length($s);
 		}
-		return function_exists('mb_substr') ? mb_substr($s, $offset, $length, 'UTF-8') : iconv_substr($s, $offset, $length, 'UTF-8');
+		return iconv_substr($s, $offset, $length, 'UTF-8');
 	}
 
 
