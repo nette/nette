@@ -1172,7 +1172,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		foreach ($params as $key => $value) {
 			$a = strlen($key) > 2 ? strrpos($key, self::NAME_SEPARATOR, -2) : FALSE;
-			if ($a === FALSE) {
+			if (!$a) {
 				$selfParams[$key] = $value;
 			} else {
 				$this->globalParams[substr($key, 0, $a)][substr($key, $a + 1)] = $value;
