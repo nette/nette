@@ -37,6 +37,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('form',
 			'$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
 			'?><div><?php
+if(strcasecmp($form->method, Nette\Forms\Form::GET) === 0) echo "<input type=\"hidden\" name=\"do\" value=\"" . $form->lookupPath(\'Nette\Application\UI\Presenter\') . Nette\ComponentModel\Component::NAME_SEPARATOR . "submit\"" . (Nette\Utils\Html::$xhtml ? " /" : "") . ">";
 foreach ($form->getComponents(TRUE, \'Nette\Forms\Controls\HiddenField\') as $_tmp) echo $_tmp->getControl();
 if (iterator_count($form->getComponents(TRUE, \'Nette\Forms\Controls\TextInput\')) < 2) echo "<!--[if IE]><input type=IEbug disabled style=\"display:none\"><![endif]-->";
 ?></div>
