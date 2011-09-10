@@ -34,30 +34,49 @@ class ContainerBuilder extends Nette\Object
 	 *         ...
 	 *      )
 	 *      tags => array(...)
+	 *      alias => 'Service'
 	 *   )
 	 */
 	public function addDefinitions(IContainer $container, array $definitions)
 	{
 		foreach ($definitions as $name => $definition) {
-			if (!is_array($definition)) {
-				$definition = array('class' => $definition);
+			if (is_scalar($definition)) {
+				if (substr($definition, 0, 1) === '@') {
+					$definition = array('alias' => substr($definition, 1));
+				} else {
+					$definition = array('class' => $definition);
+				}
 			}
 
 			$arguments = isset($definition['arguments']) ? $definition['arguments'] : array();
 			$expander = function(&$val) use ($container) {
-				$val = $val[0] === '@' ? $container->getService(substr($val, 1)) : $container->expand($val);
+				if (substr($val, 0, 1) === '@') {
+					$val = $container->getService(substr($val, 1));
+				} elseif (is_string($val)) {
+					$val = Nette\Utils\Strings::expand($val, $container->params);
+				}
 			};
 
-			if (isset($definition['class'])) {
-				$class = $definition['class'];
+			if (isset($definition['class']) || isset($definition['factory'])) {
+				if (isset($definition['class'])) {
+					$class = $definition['class'];
+				} else {
+					$class = NULL;
+					array_unshift($arguments, $definition['factory']);
+				}
 				$methods = isset($definition['methods']) ? $definition['methods'] : array();
 				$factory = function($container) use ($class, $arguments, $methods, $expander) {
-					$class = $container->expand($class);
-					if ($arguments) {
-						array_walk_recursive($arguments, $expander);
-						$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
+					array_walk_recursive($arguments, $expander);
+					if ($class) {
+						$class = Nette\Utils\Strings::expand($class, $container->params);
+						if ($arguments) {
+							$service = Nette\Reflection\ClassType::from($class)->newInstanceArgs($arguments);
+						} else {
+							$service = new $class;
+						}
 					} else {
-						$service = new $class;
+						$factory = $arguments[0]; $arguments[0] = $container;
+						$service = call_user_func_array($factory, $arguments);
 					}
 
 					array_walk_recursive($methods, $expander);
@@ -68,12 +87,9 @@ class ContainerBuilder extends Nette\Object
 					return $service;
 				};
 
-			} elseif (isset($definition['factory'])) {
-				array_unshift($arguments, $definition['factory']);
-				$factory = function($container) use ($arguments, $expander) {
-					array_walk_recursive($arguments, $expander);
-					$factory = $arguments[0]; $arguments[0] = $container;
-					return call_user_func_array($factory, $arguments);
+			} elseif (isset($definition['alias'])) {
+				$factory = function($container) use ($definition) {
+					return $container->getService($definition['alias']);
 				};
 			} else {
 				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
@@ -97,27 +113,34 @@ class ContainerBuilder extends Nette\Object
 		foreach ($definitions as $name => $definition) {
 			$name = $this->varExport($name);
 			if (is_scalar($definition)) {
-				$factory = $this->varExport($definition);
-				$code .= "\$container->addService($name, $factory);\n\n";
-				continue;
+				if (substr($definition, 0, 1) === '@') {
+					$definition = array('alias' => substr($definition, 1));
+				} else {
+					$factory = $this->varExport($definition);
+					$code .= "\$container->addService($name, $factory);\n\n";
+					continue;
+				}
 			}
 
-			$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
+			if (isset($definition['class']) || isset($definition['factory'])) {
+				$arguments = $this->argsExport(isset($definition['arguments']) ? $definition['arguments'] : array());
+				$factory = "function(\$container) {\n\t";
+				$factory .= isset($definition['class'])
+					? '$class = ' . $this->argsExport(array($definition['class'])) . '; $service = new $class(' . $arguments . ");\n"
+					: "\$service = call_user_func(\n\t\t" . $this->argsExport(array($definition['factory']))
+						. ",\n\t\t\$container" . ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n";
 
-			if (isset($definition['class'])) {
-				$class = $this->argsExport(array($definition['class']));
-				$methods = isset($definition['methods']) ? $definition['methods'] : array();
-				$factory = "function(\$container) {\n\t\$class = $class; \$service = new \$class($arguments);\n";
-				foreach ($methods as $method) {
-					$args = isset($method[1]) ? $this->argsExport($method[1]) : '';
-					$factory .= "\t\$service->$method[0]($args);\n";
+				if (isset($definition['methods'])) {
+					foreach ($definition['methods'] as $method) {
+						$args = isset($method[1]) ? $this->argsExport($method[1]) : '';
+						$factory .= "\t\$service->$method[0]($args);\n";
+					}
 				}
 				$factory .= "\treturn \$service;\n}";
 
-			} elseif (isset($definition['factory'])) {
-				$factory = $this->argsExport(array($definition['factory']));
-				$factory = "function(\$container) {\n\treturn call_user_func(\n\t\t$factory,\n\t\t\$container"
-					. ($arguments ? ",\n\t\t$arguments" : '') . "\n\t);\n}";
+			} elseif (isset($definition['alias'])) {
+				$factory = $this->varExport($definition['alias']);
+				$factory = "function(\$container) {\n\treturn \$container->getService($factory);\n}";
 			} else {
 				throw new Nette\InvalidStateException("The definition of service '$name' is missing factory method.");
 			}
@@ -133,8 +156,9 @@ class ContainerBuilder extends Nette\Object
 	private function argsExport($args)
 	{
 		$args = implode(', ', array_map(array($this, 'varExport'), $args));
-		$args = preg_replace("#'@(\w+)'#", '\$container->getService(\'$1\')', $args);
-		$args = preg_replace("#('[^']*%[^']*')#", '\$container->expand($1)', $args);
+		$args = preg_replace("#(?<!\\\)'@(\w+)'#", '\$container->getService(\'$1\')', $args);
+		$args = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $args);
+		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", 'Nette\Utils\Strings::expand($0, \$container->params)', $args);
 		return $args;
 	}
 

@@ -275,7 +275,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 						continue;
 					}
 
-					if (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now) {
+					if ((!empty($meta[self::META_DELTA]) && filemtime($meta[self::FILE]) + $meta[self::META_DELTA] < $now)
+						|| (!empty($meta[self::META_EXPIRE]) && $meta[self::META_EXPIRE] < $now)
+					) {
 						$this->delete($path, $meta[self::HANDLE]);
 						continue;
 					}

@@ -21,9 +21,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 Html::$xhtml = FALSE;
 $template = new FileTemplate(__DIR__ . '/templates/include.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);

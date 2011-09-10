@@ -52,20 +52,14 @@ Assert::same( $one, $container->getServiceByType('Service') );
 
 
 // errors
-try {
+Assert::throws(function() use ($container) {
 	$container->getServiceByType('unknown');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\DI\MissingServiceException', "Service matching 'unknown' type not found.", $e );
-}
+}, 'Nette\DI\MissingServiceException', "Service matching 'unknown' type not found.");
 
-try {
+Assert::throws(function() use ($container) {
 	$container->addService('double', 'Service');
 	$container->getServiceByType('Service');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\DI\AmbiguousServiceException', "Found more than one service ('one', 'double') matching 'Service' type.", $e );
-}
+}, 'Nette\DI\AmbiguousServiceException', "Found more than one service ('one', 'double') matching 'Service' type.");
 
 try {
 	$container->addService('invalid', function($container){

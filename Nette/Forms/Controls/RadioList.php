@@ -147,7 +147,7 @@ class RadioList extends BaseControl
 
 		foreach ($this->items as $k => $val) {
 			$counter++;
-			if ($key !== NULL && $key != $k) { // intentionally ==
+			if ($key !== NULL && (string) $key !== (string) $k) {
 				continue;
 			}
 

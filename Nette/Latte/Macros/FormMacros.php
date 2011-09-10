@@ -34,8 +34,13 @@ class FormMacros extends MacroSet
 	public static function install(Latte\Parser $parser)
 	{
 		$me = new static($parser);
-		$me->addMacro('form', '$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
-			'echo $form->getElementPrototype()->endTag()');
+		$me->addMacro('form',
+			'$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
+			'?><div><?php
+foreach ($form->getComponents(TRUE, \'Nette\Forms\Controls\HiddenField\') as $_tmp) echo $_tmp->getControl();
+if (iterator_count($form->getComponents(TRUE, \'Nette\Forms\Controls\TextInput\')) < 2) echo "<!--[if IE]><input type=IEbug disabled style=\"display:none\"><![endif]-->";
+?></div>
+<?php echo $form->getElementPrototype()->endTag()');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
 	}

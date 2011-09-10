@@ -70,6 +70,7 @@ $code = $builder->generateCode(array(
 	'three' => array(
 		'factory' => array('%serviceClass%', 'create'),
 	),
+	'four' => '@three',
 ));
 
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
@@ -84,6 +85,7 @@ Assert::true( $container->getService('two') instanceof Service );
 Assert::equal( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
 
 Assert::true( $container->getService('three') instanceof Service );
+Assert::true( $container->getService('four') instanceof Service );
 
 
 $builder->addDefinitions($container, array(
@@ -91,9 +93,6 @@ $builder->addDefinitions($container, array(
 		'class' => '%missing%',
 	)
 ));
-try {
+Assert::throws(function() use ($container) {
 	$container->getService('bad');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', "Missing item 'missing'.", $e );
-}
+}, 'Nette\InvalidArgumentException', "Missing item 'missing'.");

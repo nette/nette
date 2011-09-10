@@ -22,9 +22,6 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 
-try {
+Assert::throws(function() use ($template) {
 	$template->setSource("\xAA")->compile();
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Latte\ParseException', '%a% UTF-8 %a%', $e );
-}
+}, 'Nette\Latte\ParseException', '%a% UTF-8 %a%');

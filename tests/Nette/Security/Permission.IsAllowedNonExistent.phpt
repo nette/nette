@@ -16,18 +16,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-try {
+Assert::throws(function() {
 	$acl = new Permission;
 	$acl->isAllowed('nonexistent');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Role 'nonexistent' does not exist.", $e );
-}
+}, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
 
-try {
+Assert::throws(function() {
 	$acl = new Permission;
 	$acl->isAllowed(NULL, 'nonexistent');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
-}
+}, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");

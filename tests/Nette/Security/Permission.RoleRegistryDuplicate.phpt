@@ -17,10 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-try {
+Assert::throws(function() use ($acl) {
 	$acl->addRole('guest');
 	$acl->addRole('guest');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Role 'guest' already exists in the list.", $e );
-}
+}, 'Nette\InvalidStateException', "Role 'guest' already exists in the list.");

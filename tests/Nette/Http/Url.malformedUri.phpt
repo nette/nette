@@ -16,10 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-try {
-	$url = new Url(':');
-
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('InvalidArgumentException', "Malformed or unsupported URI ':'.", $e );
-}
+Assert::throws(function() {
+	$url = new Url('http:///');
+}, 'InvalidArgumentException', "Malformed or unsupported URI 'http:///'.");

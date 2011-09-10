@@ -386,12 +386,15 @@ class Strings
 	 * Performs a regular expression match.
 	 * @param  string
 	 * @param  string
-	 * @param  int
-	 * @param  int
+	 * @param  int  can be PREG_OFFSET_CAPTURE (returned in bytes)
+	 * @param  int  offset in bytes
 	 * @return mixed
 	 */
 	public static function match($subject, $pattern, $flags = 0, $offset = 0)
 	{
+		if ($offset > strlen($subject)) {
+			return NULL;
+		}
 		Nette\Diagnostics\Debugger::tryError();
 		$res = preg_match($pattern, $subject, $m, $flags, $offset);
 		self::catchPregError($pattern);
@@ -406,12 +409,15 @@ class Strings
 	 * Performs a global regular expression match.
 	 * @param  string
 	 * @param  string
-	 * @param  int  (PREG_SET_ORDER is default)
-	 * @param  int
+	 * @param  int  can be PREG_OFFSET_CAPTURE (returned in bytes); PREG_SET_ORDER is default
+	 * @param  int  offset in bytes
 	 * @return array
 	 */
 	public static function matchAll($subject, $pattern, $flags = 0, $offset = 0)
 	{
+		if ($offset > strlen($subject)) {
+			return array();
+		}
 		Nette\Diagnostics\Debugger::tryError();
 		$res = preg_match_all(
 			$pattern, $subject, $m,
@@ -481,6 +487,47 @@ class Strings
 			$code = preg_last_error();
 			throw new RegexpException((isset($messages[$code]) ? $messages[$code] : 'Unknown error') . " (pattern: $pattern)", $code);
 		}
+	}
+
+
+
+	/**
+	 * Expands %placeholders% in string.
+	 * @param  string
+	 * @param  array
+	 * @param  bool
+	 * @return mixed
+	 * @throws Nette\InvalidArgumentException
+	 */
+	public static function expand($s, array $params, $recursive = FALSE)
+	{
+		$parts = preg_split('#%([\w.-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$res = '';
+		foreach ($parts as $n => $part) {
+			if ($n % 2 === 0) {
+				$res .= $part;
+
+			} elseif ($part === '') {
+				$res .= '%';
+
+			} elseif (isset($recursive[$part])) {
+				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($recursive)) . '.');
+
+			} else {
+				$val = Arrays::get($params, explode('.', $part));
+				if ($recursive && is_string($val)) {
+					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : array()) + array($part => 1));
+				}
+				if (strlen($part) + 2 === strlen($s)) {
+					return $val;
+				}
+				if (!is_scalar($val)) {
+					throw new Nette\InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
+				}
+				$res .= $val;
+			}
+		}
+		return $res;
 	}
 
 }

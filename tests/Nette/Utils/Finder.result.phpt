@@ -29,9 +29,6 @@ Assert::same(__FILE__, (string) $arr[__FILE__]);
 // missing in() & from()
 $finder = Finder::findFiles('*');
 
-try {
+Assert::throws(function() use ($finder) {
 	$finder->getIterator();
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Call in() or from() to specify directory to search.', $e );
-}
+}, 'Nette\InvalidStateException', 'Call in() or from() to specify directory to search.');

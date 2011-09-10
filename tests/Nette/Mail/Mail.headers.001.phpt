@@ -20,23 +20,14 @@ require __DIR__ . '/Mail.inc';
 
 $mail = new Message();
 
-try {
+Assert::throws(function() use ($mail) {
 	$mail->setHeader('', 'value');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('InvalidArgumentException', "Header name must be non-empty alphanumeric string, '' given.", $e );
-}
+}, 'InvalidArgumentException', "Header name must be non-empty alphanumeric string, '' given.");
 
-try {
+Assert::throws(function() use ($mail) {
 	$mail->setHeader(' name', 'value');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('InvalidArgumentException', "Header name must be non-empty alphanumeric string, ' name' given.", $e );
-}
+}, 'InvalidArgumentException', "Header name must be non-empty alphanumeric string, ' name' given.");
 
-try {
+Assert::throws(function() use ($mail) {
 	$mail->setHeader('n*ame', 'value');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('InvalidArgumentException', "Header name must be non-empty alphanumeric string, 'n*ame' given.", $e );
-}
+}, 'InvalidArgumentException', "Header name must be non-empty alphanumeric string, 'n*ame' given.");

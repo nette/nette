@@ -21,9 +21,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 Html::$xhtml = FALSE;
 $template = new FileTemplate(__DIR__ . '/templates/general.latte');
 $template->registerFilter(new Latte\Engine);

@@ -19,39 +19,24 @@ require __DIR__ . '/../bootstrap.php';
 $service = (object) NULL;
 $container = new Container;
 
-try {
+Assert::throws(function() use ($container, $service) {
 	$container->addService(NULL, $service);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', 'Service name must be a non-empty string, NULL given.', $e );
-}
+}, 'Nette\InvalidArgumentException', 'Service name must be a non-empty string, NULL given.');
 
-try {
+Assert::throws(function() use ($container) {
 	$container->addService('one', NULL);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidArgumentException', 'Invalid callback.', $e );
-}
+}, 'Nette\InvalidArgumentException', 'Invalid callback.');
 
-try {
+Assert::throws(function() use ($container) {
 	$container->getService('one');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\DI\MissingServiceException', "Service 'one' not found.", $e );
-}
+}, 'Nette\DI\MissingServiceException', "Service 'one' not found.");
 
-try {
+Assert::throws(function() use ($container, $service) {
 	$container->addService('one', $service);
 	$container->addService('one', $service);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'one' has already been registered.", $e );
-}
+}, 'Nette\InvalidStateException', "Service 'one' has already been registered.");
 
-try {
+Assert::throws(function() use ($container, $service) {
 	$container->freeze();
 	$container->addService('two', $service);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Cannot modify a frozen object Nette\DI\Container.', $e );
-}
+}, 'Nette\InvalidStateException', 'Cannot modify a frozen object Nette\DI\Container.');

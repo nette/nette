@@ -22,6 +22,10 @@ use Nette;
  */
 class SendmailMailer extends Nette\Object implements IMailer
 {
+	/** @var string */
+	public $commandArgs;
+
+
 
 	/**
 	 * Sends email.
@@ -37,12 +41,16 @@ class SendmailMailer extends Nette\Object implements IMailer
 		$parts = explode(Message::EOL . Message::EOL, $tmp->generateMessage(), 2);
 
 		Nette\Diagnostics\Debugger::tryError();
-		$res = mail(
+		$args = array(
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
 			str_replace(Message::EOL, PHP_EOL, $parts[1]),
-			str_replace(Message::EOL, PHP_EOL, $parts[0])
+			str_replace(Message::EOL, PHP_EOL, $parts[0]),
 		);
+		if ($this->commandArgs) {
+			$args[] = (string) $this->commandArgs;
+		}
+		$res = call_user_func_array('mail', $args);
 
 		if (Nette\Diagnostics\Debugger::catchError($e)) {
 			throw new Nette\InvalidStateException('mail(): ' . $e->getMessage(), 0, $e);

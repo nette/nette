@@ -20,10 +20,6 @@ require __DIR__ . '/Mail.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 $mail = new Message();
 $mail->addTo('Lady Jane <jane@example.com>');
 

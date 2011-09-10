@@ -16,8 +16,8 @@ Hello!
   
 One
 two
-   three four 
-  five six
+ three four 
+ five six
 ----------%S%
 Content-Type: multipart/related;
 	boundary="--------%S%"

@@ -18,16 +18,10 @@ require __DIR__ . '/../bootstrap.php';
 
 $acl = new Permission;
 $acl->addResource('area');
-try {
+Assert::throws(function() use ($acl) {
 	$acl->resourceInheritsFrom('nonexistent', 'area');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
-}
+}, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");
 
-try {
+Assert::throws(function() use ($acl) {
 	$acl->resourceInheritsFrom('area', 'nonexistent');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Resource 'nonexistent' does not exist.", $e );
-}
+}, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");

@@ -49,7 +49,7 @@ final class NeonAdapter implements IAdapter
 			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
 		}
 
-		$neon = Neon::decode(file_get_contents($file));
+		$neon = (array) Neon::decode(file_get_contents($file));
 
 		$separator = trim(self::$sectionSeparator);
 		$data = array();
@@ -66,7 +66,7 @@ final class NeonAdapter implements IAdapter
 					if (!isset($data[$parent]) || !is_array($data[$parent])) {
 						throw new Nette\InvalidStateException("Missing parent section '$parent' in file '$file'.");
 					}
-					$secData = Nette\Utils\Arrays::mergeTree($secData, $data[$parent]);
+					$secData = array_reverse(Nette\Utils\Arrays::mergeTree(array_reverse($secData, TRUE), array_reverse($data[$parent], TRUE)), TRUE);
 					$secName = trim($parts[0]);
 					if ($secName === '') {
 						throw new Nette\InvalidStateException("Invalid empty section name in file '$file'.");

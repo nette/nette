@@ -16,9 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-try {
+Assert::throws(function() {
 	$config = Config::fromFile('config.scalar1.neon');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception( 'Nette\InvalidStateException', "Missing parent section 'scalar' in file '%a%'.", $e );
-}
+}, 'Nette\InvalidStateException', "Missing parent section 'scalar' in file '%a%'.");

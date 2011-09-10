@@ -73,32 +73,23 @@ Assert::null( $user->getId(), 'getId' );
 
 
 // authenticate
-try {
+Assert::throws(function() use ($user) {
 	// login without handler
 	$user->login('jane', '');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'authenticator' not found.", $e );
-}
+}, 'Nette\InvalidStateException', "Service 'authenticator' not found.");
 
 $handler = new Authenticator;
 $user->setAuthenticator($handler);
 
-try {
+Assert::throws(function() use ($user) {
 	// login as jane
 	$user->login('jane', '');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Security\AuthenticationException', 'Unknown user', $e );
-}
+}, 'Nette\Security\AuthenticationException', 'Unknown user');
 
-try {
+Assert::throws(function() use ($user) {
 	// login as john
 	$user->login('john', '');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Security\AuthenticationException', 'Password not match', $e );
-}
+}, 'Nette\Security\AuthenticationException', 'Password not match');
 
 // login as john#2
 $user->login('john', 'xxx');

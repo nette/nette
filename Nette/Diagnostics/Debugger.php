@@ -209,10 +209,7 @@ final class Debugger
 		}
 
 		if (self::$productionMode === self::DETECT) {
-			if (class_exists('Nette\Environment')) {
-				self::$productionMode = Nette\Environment::isProduction();
-
-			} elseif (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) { // IP address based detection
+			if (isset($_SERVER['SERVER_ADDR']) || isset($_SERVER['LOCAL_ADDR'])) { // IP address based detection
 				$addrs = array();
 				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
 					$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
@@ -374,9 +371,7 @@ final class Debugger
 		}
 
 		// debug bar (require HTML & development mode)
-		if (self::$bar && !self::$productionMode && !self::$ajaxDetected && !self::$consoleMode
-			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()))
-		) {
+		if (self::$bar && !self::$productionMode && self::isHtmlMode()) {
 			self::$bar->render();
 		}
 	}
@@ -395,16 +390,18 @@ final class Debugger
 			header('HTTP/1.1 500 Internal Server Error');
 		}
 
-		$htmlMode = !self::$ajaxDetected && !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
-
 		try {
 			if (self::$productionMode) {
-				self::log($exception, self::ERROR);
+				try {
+					self::log($exception, self::ERROR);
+				} catch (\Exception $e) {
+					echo 'FATAL ERROR: unable to log error';
+				}
 
 				if (self::$consoleMode) {
 					echo "ERROR: the server encountered an internal error and was unable to complete your request.\n";
 
-				} elseif ($htmlMode) {
+				} elseif (self::isHtmlMode()) {
 					require __DIR__ . '/templates/error.phtml';
 				}
 
@@ -412,7 +409,7 @@ final class Debugger
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
 
-				} elseif ($htmlMode) { // dump to browser
+				} elseif (self::isHtmlMode()) { // dump to browser
 					self::$blueScreen->render($exception);
 					if (self::$bar) {
 						self::$bar->render();
@@ -426,10 +423,16 @@ final class Debugger
 			foreach (self::$onFatalError as $handler) {
 				call_user_func($handler, $exception);
 			}
+
 		} catch (\Exception $e) {
-			echo "\nNette\\Debug FATAL ERROR: thrown ", get_class($e), ': ', $e->getMessage(),
-				"\nwhile processing ", get_class($exception), ': ', $exception->getMessage(), "\n";
+			if (self::$productionMode) {
+				echo self::isHtmlMode() ? '<meta name=robots content=noindex>FATAL ERROR' : 'FATAL ERROR';
+			} else {
+				echo "FATAL ERROR: thrown ", get_class($e), ': ', $e->getMessage(),
+					"\nwhile processing ", get_class($exception), ': ', $exception->getMessage(), "\n";
+			}
 		}
+
 		self::$enabled = FALSE; // un-register shutdown function
 		exit(255);
 	}
@@ -491,7 +494,7 @@ final class Debugger
 
 		} else {
 			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line), self::WARNING);
-			return self::$consoleMode || (!self::$bar && !$ok) ? FALSE : NULL;
+			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
 
 		return FALSE; // call normal error handler
@@ -645,6 +648,14 @@ final class Debugger
 		if (!self::$productionMode) {
 			return self::$fireLogger->log($message);
 		}
+	}
+
+
+
+	private static function isHtmlMode()
+	{
+		return !self::$ajaxDetected && !self::$consoleMode
+			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
 	}
 
 

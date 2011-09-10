@@ -19,9 +19,6 @@ require __DIR__ . '/Template.inc';
 
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
-try {
+Assert::throws(function() use ($template) {
 	$template->setSource('Block{/block}')->compile();
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Latte\ParseException', 'Unexpected macro {/block}', $e );
-}
+}, 'Nette\Latte\ParseException', 'Unexpected macro {/block}');

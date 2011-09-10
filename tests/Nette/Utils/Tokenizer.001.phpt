@@ -24,9 +24,6 @@ $tokenizer = new Tokenizer(array(
 $tokenizer->tokenize('say 123');
 Assert::same( array('say', ' ', '123'), $tokenizer->tokens );
 
-try {
+Assert::throws(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Utils\TokenizerException', "Unexpected ';' on line 1, column 8.", $e );
-}
+}, 'Nette\Utils\TokenizerException', "Unexpected ';' on line 1, column 8.");

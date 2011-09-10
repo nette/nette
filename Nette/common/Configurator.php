@@ -33,10 +33,12 @@ class Configurator extends Object
 	private $container;
 
 
+
 	public function __construct($containerClass = 'Nette\DI\Container')
 	{
 		self::$instance = $this;
 		$this->container = new $containerClass;
+		$this->container->addService('container', $this->container);
 
 		foreach (get_class_methods($this) as $name) {
 			if (substr($name, 0, 13) === 'createService' ) {
@@ -44,7 +46,6 @@ class Configurator extends Object
 			}
 		}
 
-		$this->container->params = new ArrayHash;
 		defined('WWW_DIR') && $this->container->params['wwwDir'] = realpath(WWW_DIR);
 		defined('APP_DIR') && $this->container->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->container->params['libsDir'] = realpath(LIBS_DIR);
@@ -68,7 +69,7 @@ class Configurator extends Object
 
 	/**
 	 * Loads configuration from file and process it.
-	 * @return void
+	 * @return DI\Container
 	 */
 	public function loadConfig($file, $section = NULL)
 	{
@@ -94,7 +95,7 @@ class Configurator extends Object
 		if ($cached) {
 			require $cached['file'];
 			fclose($cached['handle']);
-			return;
+			return $this->container;
 		}
 
 		$config = Nette\Config\Config::fromFile($file, $section);
@@ -109,21 +110,6 @@ class Configurator extends Object
 			}
 		}
 
-		// add expanded variables
-		while (!empty($config['variables'])) {
-			$old = $config['variables'];
-			foreach ($config['variables'] as $key => $value) {
-				try {
-					$code .= $this->generateCode('$container->params[?] = ?', $key, $container->params[$key] = $container->expand($value));
-					unset($config['variables'][$key]);
-				} catch (Nette\InvalidArgumentException $e) {}
-			}
-			if ($old === $config['variables']) {
-				throw new InvalidStateException("Unable to expand variables: " . implode(', ', array_keys($old)) . ".");
-			}
-		}
-		unset($config['variables']);
-
 		// process services
 		if (isset($config['services'])) {
 			foreach ($config['services'] as $key => & $def) {
@@ -133,35 +119,46 @@ class Configurator extends Object
 					$key = $m[1];
 				}
 
-				if (is_scalar($def)) {
-					$def = array('class' => $def);
-				}
-
-				if (method_exists(get_called_class(), "createService$key")) {
-					$container->removeService($key);
-					if (!isset($def['factory']) && !isset($def['class'])) {
+				if (is_array($def)) {
+					if (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
 						$def['factory'] = array(get_called_class(), "createService$key");
 					}
-				}
 
-				if (isset($def['option'])) {
-					$def['arguments'][] = $def['option'];
-				}
+					if (isset($def['option'])) {
+						$def['arguments'][] = $def['option'];
+					}
 
-				if (!empty($def['run'])) {
-					$def['tags'] = array('run');
+					if (!empty($def['run'])) {
+						$def['tags'] = array('run');
+					}
 				}
 			}
 			$builder = new DI\ContainerBuilder;
 			/**/$code .= $builder->generateCode($config['services']);/**/
-			/*5.2* $code .= $this->generateCode('$builder = new '.get_class($builder).'; $builder->addDefinitions($container, ?)', $config['services']);*/
+			/*5.2* $code .= '$builder = new '.get_class($builder).'; $builder->addDefinitions($container, '.var_export($config['services'], TRUE).');';*/
 			unset($config['services']);
 		}
 
-		// expand variables
-		array_walk_recursive($config, function(&$val) {
-			$val = Environment::expand($val);
+		// consolidate variables
+		if (!isset($config['variables'])) {
+			$config['variables'] = array();
+		}
+		foreach ($config as $key => $value) {
+			if (!in_array($key, array('variables', 'services', 'php', 'const', 'mode'))) {
+				$config['variables'][$key] = $value;
+			}
+		}
+
+		// pre-expand variables at compile-time
+		$variables = $config['variables'];
+		array_walk_recursive($config, function(&$val) use ($variables) {
+			$val = Configurator::preExpand($val, $variables);
 		});
+
+		// add variables
+		foreach ($config['variables'] as $key => $value) {
+			$code .= $this->generateCode('$container->params[?] = ?', $key, $value);
+		}
 
 		// PHP settings
 		if (isset($config['php'])) {
@@ -174,7 +171,6 @@ class Configurator extends Object
 					$code .= $this->configurePhp($key, $value);
 				}
 			}
-			unset($config['php']);
 		}
 
 		// define constants
@@ -182,21 +178,14 @@ class Configurator extends Object
 			foreach ($config['const'] as $key => $value) {
 				$code .= $this->generateCode('define', $key, $value);
 			}
-			unset($config['const']);
 		}
 
 		// set modes - back compatibility
 		if (isset($config['mode'])) {
-			trigger_error(basename($file) . ": Section 'mode' is deprecated; use 'params' instead.", E_USER_WARNING);
 			foreach ($config['mode'] as $mode => $state) {
+				trigger_error(basename($file) . ": Section 'mode' is deprecated; use '{$mode}Mode' in section 'variables' instead.", E_USER_WARNING);
 				$code .= $this->generateCode('$container->params[?] = ?', $mode . 'Mode', (bool) $state);
 			}
-			unset($config['mode']);
-		}
-
-		// other
-		foreach ($config as $key => $value) {
-			$code .= $this->generateCode('$container->params[?] = ' . (is_array($value) ? 'Nette\ArrayHash::from(?)' : '?'), $key, $value);
 		}
 
 		// pre-loading
@@ -210,6 +199,7 @@ class Configurator extends Object
 		));
 
 		Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
+		return $this->container;
 	}
 
 
@@ -224,17 +214,22 @@ class Configurator extends Object
 	 */
 	public static function detectProductionMode()
 	{
-		if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
-			return TRUE;
-		}
 		$addrs = array();
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
-			$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+		if (PHP_SAPI === 'cli') {
+			$addrs[] = getHostByName(php_uname('n'));
 		}
-		if (isset($_SERVER['REMOTE_ADDR'])) {
-			$addrs[] = $_SERVER['REMOTE_ADDR'];
+		else {
+			if (!isset($_SERVER['SERVER_ADDR']) && !isset($_SERVER['LOCAL_ADDR'])) {
+				return TRUE;
+			}
+			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) { // proxy server detected
+				$addrs = preg_split('#,\s*#', $_SERVER['HTTP_X_FORWARDED_FOR']);
+			}
+			if (isset($_SERVER['REMOTE_ADDR'])) {
+				$addrs[] = $_SERVER['REMOTE_ADDR'];
+			}
+			$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 		}
-		$addrs[] = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 		foreach ($addrs as $addr) {
 			$oct = explode('.', $addr);
 			// 10.0.0.0/8   Private network
@@ -285,6 +280,8 @@ class Configurator extends Object
 		unset($args[0]);
 		foreach ($args as &$arg) {
 			$arg = var_export($arg, TRUE);
+			$arg = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $arg);
+			$arg = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", '\$container->expand($0)', $arg);
 		}
 		if (strpos($statement, '?') === FALSE) {
 			return $statement .= '(' . implode(', ', $args) . ");\n\n";
@@ -297,6 +294,55 @@ class Configurator extends Object
 			$i++;
 		}
 		return $statement . ";\n\n";
+	}
+
+
+
+	/**
+	 * Pre-expands %placeholders% in string.
+	 * @internal
+	 */
+	public static function preExpand($s, array $params, $check = array())
+	{
+		if (!is_string($s)) {
+			return $s;
+		}
+
+		$parts = preg_split('#%([\w.-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$res = '';
+		foreach ($parts as $n => $part) {
+			if ($n % 2 === 0) {
+				$res .= str_replace('%', '%%', $part);
+
+			} elseif ($part === '') {
+				$res .= '%%';
+
+			} elseif (isset($check[$part])) {
+				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($check)) . '.');
+
+			} else {
+				try {
+					$val = Nette\Utils\Arrays::get($params, explode('.', $part));
+				} catch (Nette\InvalidArgumentException $e) {
+					$res .= "%$part%";
+					continue;
+				}
+				$val = self::preExpand($val, $params, $check + array($part => 1));
+				if (strlen($part) + 2 === strlen($s)) {
+					if (is_array($val)) {
+						array_walk_recursive($val, function(&$val) use ($params, $check, $part) {
+							$val = Configurator::preExpand($val, $params, $check + array($part => 1));
+						});
+					}
+					return $val;
+				}
+				if (!is_scalar($val)) {
+					throw new Nette\InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
+				}
+				$res .= $val;
+			}
+		}
+		return $res;
 	}
 
 
@@ -328,7 +374,7 @@ class Configurator extends Object
 		$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
-			}
+		}
 		return $application;
 	}
 

@@ -17,23 +17,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
-try {
+Assert::throws(function() {
 	new FileStorage(TEMP_DIR . '/missing');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\DirectoryNotFoundException', "Directory '%a%' not found.", $e);
-}
+}, 'Nette\DirectoryNotFoundException', "Directory '%a%' not found.");
 
 
 
-try {
+Assert::throws(function() {
 	$storage = new FileStorage(TEMP_DIR);
 	$storage->write('a', 'b', array(Cache::TAGS => 'c'));
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'CacheJournal has not been provided.', $e);
-}
+}, 'Nette\InvalidStateException', 'CacheJournal has not been provided.');

@@ -207,7 +207,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string service name
 	 * @return bool
 	 */
@@ -235,36 +235,19 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
-	/********************* tools ****************d*g**/
+	/********************* shortcuts ****************d*g**/
 
 
 
 	/**
 	 * Expands %placeholders% in string.
-	 * @param  string
-	 * @return string
-	 * @throws Nette\InvalidStateException
+	 * @param  mixed
+	 * @return mixed
 	 */
 	public function expand($s)
 	{
-		if (is_string($s) && strpos($s, '%') !== FALSE) {
-			$that = $this;
-			return @preg_replace_callback('#%([a-z0-9._-]*)%#i', function ($m) use ($that) { // intentionally @ due PHP bug #39257
-				list(, $param) = $m;
-				if ($param === '') {
-					return '%';
-				} elseif (!is_scalar($val = Nette\Utils\Arrays::get((array) $that->params, explode('.', $param)))) {
-					throw new Nette\InvalidStateException("Parameter '$param' is not scalar.");
-				}
-				return $val;
-			}, $s);
-		}
-		return $s;
+		return is_string($s) ? Nette\Utils\Strings::expand($s, $this->params) : $s;
 	}
-
-
-
-	/********************* shortcuts ****************d*g**/
 
 
 
@@ -307,7 +290,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Exists the service?
+	 * Does the service exist?
 	 * @param  string
 	 * @return bool
 	 */

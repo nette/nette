@@ -23,9 +23,6 @@ function item1($a) { return $a[1]; }
 Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '#block')) );
 Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["#test"], #block')) );
 
-try {
+Assert::throws(function() use ($parser) {
 	Assert::same( '<?php if (isset($var)): ?>',  item1($parser->expandMacro('ifset', '$var')) );
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Latte\ParseException', 'Unhandled macro {ifset}', $e );
-}
+}, 'Nette\Latte\ParseException', 'Unhandled macro {ifset}');

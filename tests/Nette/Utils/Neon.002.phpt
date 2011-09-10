@@ -47,3 +47,10 @@ Assert::same( array(
 	),
 	'e' => 'f',
 ), Neon::decode('{a, b, {c: d}, e: f,}') );
+
+
+Assert::same( array(
+	'@' => 'item',
+	0 => 'a',
+	1 => 'b',
+), Neon::decode('@item(a, b)') );

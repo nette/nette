@@ -21,7 +21,7 @@ ini_set('log_errors', FALSE);
 
 // create temporary directory
 define('TEMP_DIR', __DIR__ . '/../tmp');
-@mkdir(TEMP_DIR);
+TestHelpers::purge(TEMP_DIR);
 
 
 // catch unexpected errors/warnings/notices

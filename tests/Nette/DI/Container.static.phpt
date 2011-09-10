@@ -34,12 +34,9 @@ class MyContainer extends Container
 
 $container = new MyContainer;
 
-try {
+Assert::throws(function() use ($container) {
 	$container->addService('one', (object) NULL);
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Service 'one' has already been registered.", $e );
-}
+}, 'Nette\InvalidStateException', "Service 'one' has already been registered.");
 
 Assert::true( $container->hasService('one') );
 Assert::false( $container->hasService('undefined') );
@@ -49,9 +46,6 @@ Assert::same( $container->getService('one'), $container->getService('one') ); //
 
 
 // bad method
-try {
+Assert::throws(function() use ($container) {
 	$container->getService('two');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\UnexpectedValueException', "Unable to create service 'two', value returned by factory 'createServiceTwo' is not object.", $e );
-}
+}, 'Nette\UnexpectedValueException', "Unable to create service 'two', value returned by factory 'createServiceTwo' is not object.");

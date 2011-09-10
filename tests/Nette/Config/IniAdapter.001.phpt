@@ -72,6 +72,7 @@ database.params.dbname = "dbname"
 database.adapter = "pdo_mysql"
 
 [development]
+webname = "the example"
 database.params.host = "dev.example.com"
 database.params.username = "devuser"
 database.params.password = "devsecret"
@@ -82,7 +83,6 @@ display_errors = 1
 html_errors = ""
 items.0 = 10
 items.1 = 20
-webname = "the example"
 set.date.timezone = "Europe/Prague"
 EOD
 , file_get_contents(TEMP_FILE) );

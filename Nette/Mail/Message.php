@@ -409,14 +409,18 @@ class Message extends MimePart
 				}
 			}
 			$alt->setContentType('text/html', 'UTF-8')
-				->setEncoding(preg_match('#[\x80-\xFF]#', $mail->html) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
+				->setEncoding(preg_match('#\S{990}#', $mail->html)
+					? self::ENCODING_QUOTED_PRINTABLE
+					: (preg_match('#[\x80-\xFF]#', $mail->html) ? self::ENCODING_8BIT : self::ENCODING_7BIT))
 				->setBody($mail->html);
 		}
 
 		$text = $mail->getBody();
 		$mail->setBody(NULL);
 		$cursor->setContentType('text/plain', 'UTF-8')
-			->setEncoding(preg_match('#[\x80-\xFF]#', $text) ? self::ENCODING_8BIT : self::ENCODING_7BIT)
+			->setEncoding(preg_match('#\S{990}#', $text)
+				? self::ENCODING_QUOTED_PRINTABLE
+				: (preg_match('#[\x80-\xFF]#', $text) ? self::ENCODING_8BIT : self::ENCODING_7BIT))
 			->setBody($text);
 
 		return $mail;
@@ -479,10 +483,11 @@ class Message extends MimePart
 			$text = Strings::replace($this->html, array(
 				'#<(style|script|head).*</\\1>#Uis' => '',
 				'#<t[dh][ >]#i' => " $0",
-				'#[ \t\r\n]+#' => ' ',
+				'#[\r\n]+#' => ' ',
 				'#<(/?p|/?h\d|li|br|/tr)[ >/]#i' => "\n$0",
 			));
 			$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
+			$text = Strings::replace($text, '#[ \t]+#', ' ');
 			$this->setBody(trim($text));
 		}
 	}

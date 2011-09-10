@@ -16,11 +16,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-try {
+Assert::throws(function() {
 	$acl = new Permission;
 	$acl->addResource('area');
 	$acl->addResource('area');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', "Resource 'area' already exists in the list.", $e );
-}
+}, 'Nette\InvalidStateException', "Resource 'area' already exists in the list.");

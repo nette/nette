@@ -20,10 +20,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
-
 $template = new FileTemplate;
 $template->setFile(__DIR__ . '/templates/inheritance.child4.latte');
 $template->registerFilter(new Latte\Engine);

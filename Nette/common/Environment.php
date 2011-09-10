@@ -335,7 +335,7 @@ final class Environment
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
 		self::getConfigurator()->loadConfig($file, $section);
-		return self::getContext()->params;
+		return self::getConfig();
 	}
 
 
@@ -348,7 +348,7 @@ final class Environment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
-		$params = self::getContext()->params;
+		$params = Nette\ArrayHash::from(self::getContext()->params);
 		if (func_num_args()) {
 			return isset($params[$key]) ? $params[$key] : $default;
 		} else {

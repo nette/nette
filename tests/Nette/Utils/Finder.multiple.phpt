@@ -40,12 +40,9 @@ Assert::same(array(
 	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
-try {
+Assert::throws(function() {
 	Finder::find('*')->from('files/subdir/subdir2')->from('files/images');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', '', $e );
-}
+}, 'Nette\InvalidStateException', '');
 
 
 
@@ -64,9 +61,6 @@ Assert::same(array(
 	'files/subdir/subdir2/file.txt',
 ), export($finder));
 
-try {
+Assert::throws(function() {
 	Finder::find('*')->in('files/subdir/subdir2')->in('files/images');
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', '', $e );
-}
+}, 'Nette\InvalidStateException', '');

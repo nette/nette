@@ -22,19 +22,13 @@ CriticalSection::enter();
 // leaving
 CriticalSection::leave();
 
-try {
+Assert::throws(function() {
 	// leaving not entered
 	CriticalSection::leave();
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Critical section has not been initialized.', $e );
-}
+}, 'Nette\InvalidStateException', 'Critical section has not been initialized.');
 
-try {
+Assert::throws(function() {
 	// doubled entering
 	CriticalSection::enter();
 	CriticalSection::enter();
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\InvalidStateException', 'Critical section has already been entered.', $e );
-}
+}, 'Nette\InvalidStateException', 'Critical section has already been entered.');

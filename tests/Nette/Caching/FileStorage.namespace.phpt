@@ -17,9 +17,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 $storage = new FileStorage(TEMP_DIR);
 $cacheA = new Cache($storage, 'a');
 $cacheB = new Cache($storage, 'b');

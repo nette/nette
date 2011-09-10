@@ -33,12 +33,9 @@ Assert::same( "1, 2, 'symbol1', 'symbol-2'",  formatArgs('1, 2, symbol1, symbol-
 // strings
 Assert::same( '"\"1, 2, symbol1, symbol2"',  formatArgs('"\"1, 2, symbol1, symbol2"') ); // unable to parse "${'"'}" yet
 Assert::same( "'\\'1, 2, symbol1, symbol2'",  formatArgs("'\\'1, 2, symbol1, symbol2'") );
-try {
+Assert::throws(function() {
 	formatArgs("'\\\\'1, 2, symbol1, symbol2'");
-	Assert::fail('Expected exception');
-} catch (Exception $e) {
-	Assert::exception('Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 27.', $e );
-}
+}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 27.');
 
 
 // key words
