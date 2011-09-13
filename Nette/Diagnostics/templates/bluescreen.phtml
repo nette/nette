@@ -519,6 +519,17 @@ $counter = 0;
 		</div></div>
 
 
+		<?php foreach ($bottomPanels as $panel): ?>
+		<?php $panel = call_user_func($panel, $ex); if (empty($panel['tab']) || empty($panel['panel'])) continue; ?>
+		<div class="panel">
+			<h2><a href="#" rel="netteBsPnl<?php echo ++$counter ?>"><?php echo htmlSpecialChars($panel['tab']) ?> <abbr>&#x25ba;</abbr></a></h2>
+
+			<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
+			<?php echo $panel['panel'] ?>
+		</div></div>
+		<?php endforeach ?>
+
+
 		<ul>
 			<li>Report generated at <?php echo @date('Y/m/d H:i:s', Debugger::$time) ?></li>
 			<?php if (preg_match('#^https?://#', Debugger::$source)): ?>

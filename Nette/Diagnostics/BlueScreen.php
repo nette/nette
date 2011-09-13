@@ -26,6 +26,9 @@ class BlueScreen extends Nette\Object
 	/** @var array */
 	private $panels = array();
 
+	/** @var array */
+	private $bottomPanels = array();
+
 
 
 	/**
@@ -44,6 +47,22 @@ class BlueScreen extends Nette\Object
 	}
 
 
+	/**
+	 * Add custom panel to bottom of page
+	 * @param  callback
+	 * @param  string
+	 * @return void
+	 */
+	public function addBottomPanel($panel, $id = NULL)
+	{
+		if ($id === NULL) {
+			$this->bottomPanels[] = $panel;
+		} else {
+			$this->bottomPanels[$id] = $panel;
+		}
+	}
+
+
 
 	/**
 	 * Renders blue screen.
@@ -58,6 +77,7 @@ class BlueScreen extends Nette\Object
 				: NULL;
 		}
 		$panels = $this->panels;
+		$bottomPanels = $this->bottomPanels;
 		require __DIR__ . '/templates/bluescreen.phtml';
 	}
 
