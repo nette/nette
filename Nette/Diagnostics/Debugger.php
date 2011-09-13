@@ -420,7 +420,8 @@ final class Debugger
 					}
 
 				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
-					self::log($exception);
+					$file = self::log($exception, self::ERROR);
+					if(!headers_sent()) header("X-Error-log: $file");
 				}
 			}
 
