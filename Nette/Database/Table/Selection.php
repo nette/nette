@@ -205,7 +205,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 				$clone->select = array($this->getPrimary($clone->name));
 			}
 			if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
-				$condition .= " IN ($clone)";
+				$condition .= ' IN (' . $clone->getSql() . ')';
 			} else {
 				$in = array();
 				foreach ($clone as $row) {
