@@ -149,7 +149,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function select($columns)
 	{
 		$this->__destruct();
-		$this->select[] = $this->tryDelimite($columns);
+		$this->select[] = $columns;
 		return $this;
 	}
 
@@ -186,6 +186,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->__destruct();
 
 		$this->conditions[] = $condition;
+		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
 		$args = func_num_args();
@@ -242,7 +243,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function order($columns)
 	{
 		$this->rows = NULL;
-		$this->order[] = $this->tryDelimite($columns);
+		$this->order[] = $columns;
 		return $this;
 	}
 
@@ -383,7 +384,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$prefix = $join ? "$this->delimitedName." : '';
 		if ($this->select) {
-			$cols = implode(', ', $this->select);
+			$cols = $this->removeExtraTables($this->tryDelimite(implode(', ', $this->select)));
 
 		} elseif ($this->prevAccessed) {
 			$cols = $prefix . implode(', ' . $prefix, array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
@@ -399,20 +400,24 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function createJoins($val, $inner = FALSE)
 	{
-		$supplementalDriver = $this->connection->getSupplementalDriver();
+		$driver = $this->connection->getSupplementalDriver();
 		$joins = array();
 		preg_match_all('~\\b([a-z][\\w.]*)\\.([a-z]\\w*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			if ($match[1] !== $this->name) { // case-sensitive
+				$parent = $this->name;
 				foreach (explode('.', $match[1]) as $name) {
 					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
 					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 					$primary = $this->getPrimary($table);
-					$joins[$name] = ' ' . (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-						. ' JOIN ' . $supplementalDriver->delimite($table)
-						. ($table !== $name ? ' AS ' . $supplementalDriver->delimite($name) : '')
-						. " ON $this->delimitedName." . $supplementalDriver->delimite($column)
-						. ' = ' . $supplementalDriver->delimite($name) . '.' . $supplementalDriver->delimite($primary);
+
+					$joins[$name] = ' '
+						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
+						. ' JOIN ' . $driver->delimite($table) . ($table !== $name ? ' AS ' . $driver->delimite($name) : '')
+						. ' ON ' . $driver->delimite($parent) . '.' . $driver->delimite($column)
+						. ' = ' . $driver->delimite($name) . '.' . $driver->delimite($primary);
+
+					$parent = $name;
 				}
 			}
 		}
@@ -471,13 +476,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
 		}
 		if ($this->group) {
-			$return .= ' GROUP BY '. $this->tryDelimite($this->group);
+			$return .= ' GROUP BY '. $this->tryDelimite($this->removeExtraTables($this->group));
 		}
 		if ($this->having) {
-			$return .= ' HAVING '. $this->tryDelimite($this->having);
+			$return .= ' HAVING '. $this->tryDelimite($this->removeExtraTables($this->having));
 		}
 		if ($this->order) {
-			$return .= ' ORDER BY ' . implode(', ', $this->order);
+			$return .= ' ORDER BY ' . $this->tryDelimite($this->removeExtraTables(implode(', ', $this->order)));
 		}
 		if ($this->limit !== NULL && $driver !== 'oci' && $driver !== 'dblib') {
 			$return .= " LIMIT $this->limit";
@@ -505,6 +510,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		return preg_match('#^[a-z_][a-z0-9_.]*$#i', $s) // is identifier?
 			? implode('.', array_map(array($this->connection->getSupplementalDriver(), 'delimite'), explode('.', $s)))
 			: $s;
+	}
+
+
+
+	protected function removeExtraTables($expression)
+	{
+		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*\.)?([a-z_][a-z0-9_]*)\.([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
 	}
 
 
