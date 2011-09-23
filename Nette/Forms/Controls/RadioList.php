@@ -155,14 +155,28 @@ class RadioList extends BaseControl
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
 
-			if ($val instanceof Html) {
-				$label->setHtml($val);
+			if (is_array($val)) {
+				foreach ($val as $attr => $attrVal) {
+					switch ($attr) {
+						case 'id':
+							$control->id = $label->for = $attrVal;
+							break;
+						case 'label':
+							if ($attrVal instanceof Html)
+								$label->setHtml($attrVal);
+							else
+								$label->setText($this->translate((string) $attrVal));
+							break;
+						default:
+							$control->{$attr} = $attrVal;
+							break;
+					}
+				}
 			} else {
-				$label->setText($this->translate((string) $val));
-			}
-
-			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
+				if ($val instanceof Html)
+					$label->setHtml($val);
+				else
+					$label->setText($this->translate((string) $val));
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
