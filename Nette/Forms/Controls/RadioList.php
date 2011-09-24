@@ -161,21 +161,23 @@ class RadioList extends BaseControl
 					case 'id':
 						$control->id = $label->for = $attrVal; break;
 					case 'label':
-						if ($attrVal instanceof Html)
+						if ($attrVal instanceof Html) {
 							$label->setHtml($attrVal);
-						else
+						} else {
 							$label->setText($this->translate((string) $attrVal));
-							
+						}
+						
 						break;
 					default:
 						$control->{$attr} = $attrVal; break;
 					}
 				}
 			} else {
-				if ($val instanceof Html)
-					$label->setHtml($val);
-				else
-					$label->setText($this->translate((string) $val));
+				if ($val instanceof Html) {
+					$label->setHtml($val);	
+				} else {
+					$label->setText($this->translate((string) $val));	
+				}
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
