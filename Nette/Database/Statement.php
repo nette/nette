@@ -108,7 +108,7 @@ class Statement extends \PDOStatement
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta($col++);
 					if (isset($type['native_type'])) {
-						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
+						$this->types[$key] = static::detectType($type['native_type']);
 					}
 				}
 			}
@@ -116,15 +116,15 @@ class Statement extends \PDOStatement
 
 		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
-			if ($value === NULL || $value === FALSE || $type === Reflection\DatabaseReflection::FIELD_TEXT) {
+			if ($value === NULL || $value === FALSE || $type === Reflection\IDatabaseReflection::FIELD_TEXT) {
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_INTEGER) {
+			} elseif ($type === Reflection\IDatabaseReflection::FIELD_INTEGER) {
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_FLOAT) {
+			} elseif ($type === Reflection\IDatabaseReflection::FIELD_FLOAT) {
 				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_BOOL) {
+			} elseif ($type === Reflection\IDatabaseReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 			}
 		}
@@ -172,6 +172,36 @@ class Statement extends \PDOStatement
 		} else {
 			echo "</tbody>\n</table>\n";
 		}
+	}
+
+
+
+	/**
+	 * Heuristic type detection.
+	 * @param  string
+	 * @return string
+	 * @internal
+	 */
+	public static function detectType($type)
+	{
+		static $types, $patterns = array(
+			'BYTEA|BLOB|BIN' => Reflection\IDatabaseReflection::FIELD_BINARY,
+			'TEXT|CHAR' => Reflection\IDatabaseReflection::FIELD_TEXT,
+			'YEAR|BYTE|COUNTER|SERIAL|INT|LONG' => Reflection\IDatabaseReflection::FIELD_INTEGER,
+			'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => Reflection\IDatabaseReflection::FIELD_FLOAT,
+			'TIME|DATE' => Reflection\IDatabaseReflection::FIELD_DATETIME,
+			'BOOL|BIT' => Reflection\IDatabaseReflection::FIELD_BOOL,
+		);
+
+		if (!isset($types[$type])) {
+			$types[$type] = 'string';
+			foreach ($patterns as $s => $val) {
+				if (preg_match("#$s#i", $type)) {
+					return $types[$type] = $val;
+				}
+			}
+		}
+		return $types[$type];
 	}
 
 
