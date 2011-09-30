@@ -60,8 +60,16 @@ class Connection extends PDO
 
 		$this->preprocessor = new SqlPreprocessor($this);
 		$this->databaseReflection = $databaseReflection ?: new Reflection\ConventionalReflection;
+		$this->databaseReflection->setConnection($this);
 
 		Diagnostics\ConnectionPanel::initialize($this);
+	}
+
+
+
+	public function getDsn()
+	{
+		return $this->dsn;
 	}
 
 

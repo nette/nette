@@ -77,4 +77,9 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 		return sprintf($this->table, $name, $table);
 	}
 
+
+
+	public function setConnection(Nette\Database\Connection $connection)
+	{}
+
 }

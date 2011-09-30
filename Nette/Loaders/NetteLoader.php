@@ -97,6 +97,7 @@ class NetteLoader extends AutoLoader
 		'nette\database\isupplementaldriver' => '/Database/ISupplementalDriver.php',
 		'nette\database\ireflection' => '/Database/IReflection.php',
 		'nette\database\reflection\conventionalreflection' => '/Database/Reflection/ConventionalReflection.php',
+		'nette\database\reflection\discoveredreflection' => '/Database/Reflection/DiscoveredReflection.php',
 		'nette\database\row' => '/Database/Row.php',
 		'nette\database\sqlliteral' => '/Database/SqlLiteral.php',
 		'nette\database\sqlpreprocessor' => '/Database/SqlPreprocessor.php',

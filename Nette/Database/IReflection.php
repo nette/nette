@@ -58,4 +58,10 @@ interface IReflection
 	 */
 	function getReferencedTable($name, $table);
 
+	/**
+	 * Inject database connection
+	 * @param Connection
+	 */
+	function setConnection(Connection $connection);
+
 }
