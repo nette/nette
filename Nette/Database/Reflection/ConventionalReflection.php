@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class DatabaseReflectionConvention extends Nette\Object implements IDatabaseReflection
+class ConventionalReflection extends Nette\Object implements Nette\Database\IReflection
 {
 	/** @var string */
 	private $primary;

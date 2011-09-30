@@ -33,8 +33,8 @@ class Connection extends PDO
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var Nette\Database\Reflection\IDatabaseReflection */
-	public $databaseReflection;
+	/** @var IReflection */
+	private $databaseReflection;
 
 	/** @var Nette\Caching\Cache */
 	private $cache;
@@ -47,7 +47,7 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, Reflection\IDatabaseReflection $databaseReflection = NULL)
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, IReflection $databaseReflection = NULL)
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -59,7 +59,7 @@ class Connection extends PDO
 		}
 
 		$this->preprocessor = new SqlPreprocessor($this);
-		$this->databaseReflection = $databaseReflection ?: new Reflection\DatabaseReflectionConvention;
+		$this->databaseReflection = $databaseReflection ?: new Reflection\ConventionalReflection;
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
@@ -70,6 +70,14 @@ class Connection extends PDO
 	public function getSupplementalDriver()
 	{
 		return $this->driver;
+	}
+
+
+
+	/** @return IReflection */
+	public function getDatabaseReflection()
+	{
+		return $this->databaseReflection;
 	}
 
 

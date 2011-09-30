@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Database\Reflection;
+namespace Nette\Database;
 
 use Nette;
 
@@ -18,7 +18,7 @@ use Nette;
 /**
  * Information about tables and columns structure
  */
-interface IDatabaseReflection
+interface IReflection
 {
 	const FIELD_TEXT = 'string',
 		FIELD_BINARY = 'bin',
