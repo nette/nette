@@ -23,7 +23,7 @@ use Nette;
 class Row extends Nette\ArrayHash
 {
 
-	public function __construct($statement)
+	public function __construct(Statement $statement)
 	{
 		$statement->normalizeRow($this);
 	}
