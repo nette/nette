@@ -360,7 +360,7 @@ class Form extends Container
 	 */
 	final public function isSubmitted()
 	{
-		if ($this->submittedBy === NULL) {
+		if ($this->submittedBy === NULL && count($this->getControls())) {
 			$this->getHttpData();
 			$this->submittedBy = !empty($this->httpData);
 		}
