@@ -35,12 +35,8 @@ class FormMacros extends MacroSet
 	{
 		$me = new static($parser);
 		$me->addMacro('form',
-			'$form = $control[%node.word]; echo $form->getElementPrototype()->addAttributes(%node.array)->startTag()',
-			'?><div><?php
-foreach ($form->getComponents(TRUE, \'Nette\Forms\Controls\HiddenField\') as $_tmp) echo $_tmp->getControl();
-if (iterator_count($form->getComponents(TRUE, \'Nette\Forms\Controls\TextInput\')) < 2) echo "<!--[if IE]><input type=IEbug disabled style=\"display:none\"><![endif]-->";
-?></div>
-<?php echo $form->getElementPrototype()->endTag()');
+			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $control[%node.word], %node.array)',
+			'Nette\Latte\Macros\FormMacros::renderFormEnd($form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
 	}
@@ -62,6 +58,62 @@ if (iterator_count($form->getComponents(TRUE, \'Nette\Forms\Controls\TextInput\'
 		} else {
 			return $writer->write($cmd . '->startTag()');
 		}
+	}
+
+
+
+	/********************* run-time writers ****************d*g**/
+
+
+
+	/**
+	 * Renders form begin.
+	 * @return void
+	 */
+	public static function renderFormBegin($form, $attrs)
+	{
+		$el = $form->getElementPrototype();
+		$el->action = (string) $el->action;
+		$el = clone $el;
+		if (strcasecmp($form->getMethod(), 'get') === 0) {
+			list($el->action) = explode('?', $el->action, 2);
+		}
+		echo $el->addAttributes($attrs)->startTag();
+	}
+
+
+
+	/**
+	 * Renders form end.
+	 * @return string
+	 */
+	public static function renderFormEnd($form)
+	{
+		$s = '';
+		if (strcasecmp($form->getMethod(), 'get') === 0) {
+			$url = explode('?', $form->getElementPrototype()->action, 2);
+			if (isset($url[1])) {
+				foreach (preg_split('#[;&]#', $url[1]) as $param) {
+					$parts = explode('=', $param, 2);
+					$name = urldecode($parts[0]);
+					if (!isset($form[$name])) {
+						$s .= Nette\Utils\Html::el('input', array('type' => 'hidden', 'name' => $name, 'value' => urldecode($parts[1])));
+					}
+				}
+			}
+		}
+
+		foreach ($form->getComponents(TRUE, 'Nette\Forms\Controls\HiddenField') as $control) {
+			if (!$control->getOption('rendered')) {
+				$s .= $control->getControl();
+			}
+		}
+
+		if (iterator_count($form->getComponents(TRUE, 'Nette\Forms\Controls\TextInput')) < 2) {
+			$s .= '<!--[if IE]><input type=IEbug disabled style="display:none"><![endif]-->';
+		}
+
+		echo ($s ? "<div>$s</div>\n" : '') . $form->getElementPrototype()->endTag() . "\n";
 	}
 
 }
