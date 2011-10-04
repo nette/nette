@@ -194,7 +194,7 @@ class Form extends Container
 	 */
 	public function setMethod($method)
 	{
-		if ($this->httpData !== NULL) {
+		if ($this->httpData) {
 			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
 		}
 		$this->element->method = strtolower($method);
