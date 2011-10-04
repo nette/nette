@@ -56,6 +56,7 @@ class Bar extends Nette\Object
 		$obLevel = ob_get_level();
 		$panels = array();
 		foreach ($this->panels as $id => $panel) {
+			$obLevel = ob_get_level();
 			try {
 				$panels[] = array(
 					'id' => preg_replace('#[^a-z0-9]+#i', '-', $id),
@@ -72,6 +73,9 @@ class Bar extends Nette\Object
 					ob_end_clean();
 				}
 			}
+
+			// restore ob-level if broken by bar (e.g. in exception)
+			while(ob_get_level() > $obLevel) ob_end_clean();
 		}
 		require __DIR__ . '/templates/bar.phtml';
 	}
