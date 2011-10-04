@@ -120,12 +120,12 @@ class Strings
 	 * @param int
 	 * @return string
 	 */
-	public static function substring($s, $offset, $length = null)
+	public static function substring($s, $start, $length = NULL)
 	{
-		if($length === null){
-			$length = self::length($s);
+		if ($length === NULL) {
+			$length = PHP_INT_MAX;
 		}
-		return function_exists('mb_substr') ? mb_substr($s, $offset, $length, 'UTF-8') : iconv_substr($s, $offset, $length, 'UTF-8');
+		return function_exists('mb_substr') ? mb_substr($s, $start, $length, 'UTF-8') : iconv_substr($s, $start, $length, 'UTF-8');
 	}
 
 
