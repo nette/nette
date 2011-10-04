@@ -203,10 +203,14 @@ class Route extends Nette\Object implements Application\IRouter
 			if (isset($params[$name])) {
 				if (!is_scalar($params[$name])) {
 
-				} elseif (isset($meta[self::FILTER_TABLE][$params[$name]])) { // applyies filterTable only to scalar parameters
-					$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
+				} elseif (isset($meta[self::FILTER_TABLE])) { // applies filterTable only to scalar parameters
+					if (isset($meta[self::FILTER_TABLE][$params[$name]])) {
+						$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
+					} else {
+						return NULL; // rejected by filterTable
+					}
 
-				} elseif (isset($meta[self::FILTER_IN])) { // applyies filterIn only to scalar parameters
+				} elseif (isset($meta[self::FILTER_IN])) { // applies filterIn only to scalar parameters
 					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name]);
 					if ($params[$name] === NULL && !isset($meta['fixity'])) {
 						return NULL; // rejected by filter
@@ -299,8 +303,12 @@ class Route extends Nette\Object implements Application\IRouter
 
 			if (!is_scalar($params[$name])) {
 
-			} elseif (isset($meta['filterTable2'][$params[$name]])) {
-				$params[$name] = $meta['filterTable2'][$params[$name]];
+			} elseif (isset($meta['filterTable2'])) {
+				if (isset($meta['filterTable2'][$params[$name]])) {
+					$params[$name] = $meta['filterTable2'][$params[$name]];
+				} else {
+					return NULL;
+				}
 
 			} elseif (isset($meta[self::FILTER_OUT])) {
 				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
