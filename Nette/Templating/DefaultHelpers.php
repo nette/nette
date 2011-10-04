@@ -41,7 +41,7 @@ final class DefaultHelpers
 		'url' => 'rawurlencode',
 		'striptags' => 'strip_tags',
 		'nl2br' => 'nl2br',
-		'substr' => 'iconv_substr',
+		'substr' => 'Nette\Utils\Strings::substring',
 		'repeat' => 'str_repeat',
 		'implode' => 'implode',
 		'number' => 'number_format',
