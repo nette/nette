@@ -77,7 +77,7 @@ class MimePart extends Nette\Object
 					throw new Nette\InvalidArgumentException("Name is not valid UTF-8 string.");
 				}
 
-				if (!preg_match('#^[^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
+				if (!preg_match('#^[^-@",\s][^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
 					throw new Nette\InvalidArgumentException("Email address '$email' is not valid.");
 				}
 
