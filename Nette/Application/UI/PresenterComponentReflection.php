@@ -74,9 +74,9 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 	/**
 	 * @return array of persistent components.
 	 */
-	public function getPersistentComponents()
+	public function getPersistentComponents($class = NULL)
 	{
-		$class = $this->getName();
+		$class = $class === NULL ? $this->getName() : $class;
 		$components = & self::$pcCache[$class];
 		if ($components !== NULL) {
 			return $components;
@@ -90,7 +90,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 				}
 				$components[$name] = array('since' => $class);
 			}
-			$components = self::getPersistentComponents(get_parent_class($class)) + $components;
+			$components = $this->getPersistentComponents(get_parent_class($class)) + $components;
 		}
 		return $components;
 	}
