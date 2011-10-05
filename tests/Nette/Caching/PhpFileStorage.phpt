@@ -30,8 +30,6 @@ Assert::null( $cache[$key], 'Cache content' );
 // Writing cache...
 $cache[$key] = $value;
 
-$cache->release();
-
 Assert::true( isset($cache[$key]), 'Is cached?' );
 
 Assert::true( (bool) preg_match('#[0-9a-f]+\.php$#', $cache[$key]['file']) );

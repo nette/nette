@@ -33,14 +33,12 @@ $cache->save($key, $value, array(
 		$dependentFile,
 	),
 ));
-$cache->release();
 
 Assert::true( isset($cache[$key]), 'Is cached?' );
 
 
 // Modifing dependent file
 file_put_contents($dependentFile, 'a');
-$cache->release();
 
 Assert::false( isset($cache[$key]), 'Is cached?' );
 
@@ -49,7 +47,6 @@ Assert::false( isset($cache[$key]), 'Is cached?' );
 $cache->save($key, $value, array(
 	Cache::FILES => $dependentFile,
 ));
-$cache->release();
 
 Assert::true( isset($cache[$key]), 'Is cached?' );
 
@@ -58,6 +55,5 @@ Assert::true( isset($cache[$key]), 'Is cached?' );
 sleep(2);
 file_put_contents($dependentFile, 'b');
 clearstatcache();
-$cache->release();
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

@@ -112,7 +112,6 @@ class FileTemplate extends Template implements IFileTemplate
 				Caching\Cache::FILES => $this->file,
 				Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
 			));
-			$cache->release();
 			$cached = $cache->load($this->file);
 		}
 

@@ -31,32 +31,28 @@ Assert::false( isset($cache[$key]), 'Is cached?' );
 $res = $cache->save($key, function() use ($value) {
 	return $value;
 });
-$cache->release();
 
 Assert::true( $res === $value, 'Is result ok?' );
 
-Assert::true( $cache[$key] === $value, 'Is cache ok?' );
+Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
 
 
 // Removing from cache using unset()...
 unset($cache[$key]);
-$cache->release();
 
 // Writing cache using Nette\Callback...
 $res = $cache->save($key, callback(function() use ($value) {
 	return $value;
 }));
-$cache->release();
 
 Assert::true( $res === $value, 'Is result ok?' );
 
-Assert::true( $cache[$key] === $value, 'Is cache ok?' );
+Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
 
 
 // Removing from cache using NULL callback...
 $cache->save($key, function() {
 	return NULL;
 });
-$cache->release();
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

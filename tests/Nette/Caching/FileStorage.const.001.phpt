@@ -30,6 +30,5 @@ define('ANY_CONST', 10);
 $cache->save($key, $value, array(
 	Cache::CONSTS => 'ANY_CONST',
 ));
-$cache->release();
 
 Assert::true( isset($cache[$key]), 'Is cached?' );

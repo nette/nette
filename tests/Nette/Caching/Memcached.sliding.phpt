@@ -39,13 +39,11 @@ $cache->save($key, $value, array(
 for($i = 0; $i < 3; $i++) {
 	// Sleeping 1 second
 	sleep(1);
-	$cache->release();
 	Assert::true( isset($cache[$key]), 'Is cached?' );
 
 }
 
 // Sleeping few seconds...
 sleep(3);
-$cache->release();
 
 Assert::false( isset($cache[$key]), 'Is cached?' );

@@ -24,5 +24,4 @@ $cache = new Cache(new FileStorage(TEMP_DIR), 'ns1');
 $cache = $cache->derive('ns2');
 
 $cache->save($key, $value);
-$cache->release();
-Assert::same( $cache[$key], $value );
+Assert::same( $cache->load($key), $value );

@@ -89,7 +89,6 @@ class Template extends Nette\Object implements ITemplate
 		if ($compiled === NULL) {
 			$compiled = $this->compile();
 			$cache->save($this->source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
-			$cache->release();
 			$cached = $cache->load($this->source);
 		}
 

@@ -43,10 +43,10 @@ class Cache extends Nette\Object implements \ArrayAccess
 	/** @var string */
 	private $namespace;
 
-	/** @var string  last query cache */
+	/** @var string  last query cache used by offsetGet() */
 	private $key;
 
-	/** @var mixed  last query cache */
+	/** @var mixed  last query cache used by offsetGet()  */
 	private $data;
 
 
@@ -95,30 +95,13 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 	/**
-	 * Discards the internal cache.
-	 * @return void
-	 */
-	public function release()
-	{
-		$this->key = $this->data = NULL;
-	}
-
-
-
-	/**
 	 * Retrieves the specified item from the cache or returns NULL if the key is not found.
 	 * @param  mixed key
 	 * @return mixed|NULL
 	 */
 	public function load($key)
 	{
-		$key = is_scalar($key) ? (string) $key : serialize($key);
-		if ($this->key === $key) {
-			return $this->data;
-		}
-		$this->key = $key;
-		$this->data = $this->storage->read($this->namespace . md5($key));
-		return $this->data;
+		return $this->storage->read($this->namespace . md5(is_scalar($key) ? $key : serialize($key)));
 	}
 
 
@@ -142,8 +125,22 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function save($key, $data, array $dp = NULL)
 	{
-		$this->key = is_scalar($key) ? (string) $key : serialize($key);
-		$key = $this->namespace . md5($this->key);
+		$this->release();
+		$key = $this->namespace . md5(is_scalar($key) ? $key : serialize($key));
+
+		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
+			Nette\Utils\CriticalSection::enter();
+			$data = $data->__invoke();
+			Nette\Utils\CriticalSection::leave();
+		}
+
+		if ($data === NULL) {
+			return $this->storage->remove($key);
+
+		} elseif (is_object($data)) {
+			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
+				Nette\Reflection\ClassType::from($data)->getAnnotation('serializationVersion'));
+		}
 
 		// convert expire into relative amount of seconds
 		if (isset($dp[Cache::EXPIRATION])) {
@@ -175,23 +172,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 			unset($dp[self::CONSTS]);
 		}
 
-		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
-			Nette\Utils\CriticalSection::enter();
-			$data = $data->__invoke();
-			Nette\Utils\CriticalSection::leave();
-		}
-
-		if (is_object($data)) {
-			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
-				Nette\Reflection\ClassType::from($data)->getAnnotation('serializationVersion'));
-		}
-
-		$this->data = $data;
-		if ($data === NULL) {
-			$this->storage->remove($key);
-		} else {
-			$this->storage->write($key, $data, (array) $dp);
-		}
+		$this->storage->write($key, $data, (array) $dp);
 		return $data;
 	}
 
@@ -206,8 +187,8 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		$this->save($key, NULL);
 	}
-	
-	
+
+
 
 	/**
 	 * Removes items from the cache by conditions.
@@ -235,12 +216,13 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function call($function)
 	{
 		$key = func_get_args();
-		if ($this->load($key) === NULL) {
-			array_shift($key);
-			return $this->save($this->key, call_user_func_array($function, $key));
-		} else {
-			return $this->data;
+		$data = $this->load($key);
+		if ($data === NULL) {
+			$args = $key;
+			array_shift($args);
+			$data = $this->save($key, call_user_func_array($function, $args));
 		}
+		return $data;
 	}
 
 
@@ -257,10 +239,9 @@ class Cache extends Nette\Object implements \ArrayAccess
 			$key = array($function, func_get_args());
 			$data = $cache->load($key);
 			if ($data === NULL) {
-				return $cache->save($key, call_user_func_array($function, $key[1]));
-			} else {
-				return $data;
+				$data = $cache->save($key, call_user_func_array($function, $key[1]));
 			}
+			return $data;
 		};
 	}
 
@@ -273,11 +254,11 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function start($key)
 	{
-		if ($this->offsetGet($key) === NULL) {
+		$data = $this->load($key);
+		if ($data === NULL) {
 			return new OutputHelper($this, $key);
-		} else {
-			echo $this->data;
 		}
+		echo $data;
 	}
 
 
@@ -308,7 +289,12 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function offsetGet($key)
 	{
-		return $this->load($key);
+		$key = is_scalar($key) ? (string) $key : serialize($key);
+		if ($this->key !== $key) {
+			$this->key = $key;
+			$this->data = $this->load($key);
+		}
+		return $this->data;
 	}
 
 
@@ -321,7 +307,8 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function offsetExists($key)
 	{
-		return $this->load($key) !== NULL;
+		$this->release();
+		return $this->offsetGet($key) !== NULL;
 	}
 
 
@@ -335,6 +322,17 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function offsetUnset($key)
 	{
 		$this->save($key, NULL);
+	}
+
+
+
+	/**
+	 * Discards the internal cache used by ArrayAccess.
+	 * @return void
+	 */
+	public function release()
+	{
+		$this->key = $this->data = NULL;
 	}
 
 

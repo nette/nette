@@ -28,7 +28,6 @@ $block->end();
 Assert::equal( 'Hello', ob_get_clean() );
 
 
-$cache->release();
 Assert::equal( 'Hello', $cache->load('key') );
 
 

@@ -34,8 +34,6 @@ Assert::true( $cacheB['key'] === 'world', 'Is cache ok #2?' );
 
 // Removing from cache #2 using unset()...
 unset($cacheB['key']);
-$cacheA->release();
-$cacheB->release();
 
 Assert::true( isset($cacheA['key']), 'Is cached #1?' );
 Assert::false( isset($cacheB['key']), 'Is cached #2?' );
