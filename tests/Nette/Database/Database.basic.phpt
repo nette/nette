@@ -13,9 +13,33 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
+$appTags = array();
 foreach ($connection->table('application') as $application) {
-	echo "$application->title (" . $application->author->name . ")\n";
+	$appTags[$application->title] = array(
+		'author' => $application->author->name,
+		'tags' => array(),
+	);
+
 	foreach ($application->related('application_tag') as $application_tag) {
-		echo "\t" . $application_tag->tag->name . "\n";
+		$appTags[$application->title]['tags'][] = $application_tag->tag->name;
 	}
 }
+
+Assert::equal(array(
+	'Adminer' => array(
+		'author' => 'Jakub Vrana',
+		'tags' => array('PHP', 'MySQL'),
+	),
+	'JUSH' => array(
+		'author' => 'Jakub Vrana',
+		'tags' => array('JavaScript'),
+	),
+	'Nette' => array(
+		'author' => 'David Grudl',
+		'tags' => array('PHP'),
+	),
+	'Dibi' => array(
+		'author' => 'David Grudl',
+		'tags' => array('PHP', 'MySQL'),
+	),
+), $appTags);

@@ -14,9 +14,17 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 $count = $connection->table('application')->count('*');
-echo "$count applications\n";
+Assert::equal(4, $count);
 
+$tags = array();
 foreach ($connection->table('application') as $application) {
 	$count = $application->related('application_tag')->count('*');
-	echo "$application->title: $count tag(s)\n";
+	$tags[$application->title] = $count;
 }
+
+Assert::equal(array(
+	'Adminer' => 2,
+	'JUSH' => 1,
+	'Nette' => 1,
+	'Dibi' => 2,
+), $tags);

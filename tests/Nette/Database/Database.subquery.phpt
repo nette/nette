@@ -13,7 +13,15 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
+$apps = array();
 $unknownBorn = $connection->table('author')->where('born', null); // authors with unknown date of born
 foreach ($connection->table('application')->where('author_id', $unknownBorn) as $application) { // their applications
-	echo "$application[title]\n";
+	$apps[] = $application->title;
 }
+
+Assert::equal(array(
+	'Adminer',
+	'JUSH',
+	'Nette',
+	'Dibi',
+), $apps);

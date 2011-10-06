@@ -13,6 +13,13 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
+$apps = array();
 foreach ($connection->table('application')->where('web LIKE ?', 'http://%')->order('title')->limit(3) as $application) {
-	echo "$application[title]\n";
+	$apps[] = $application->title;
 }
+
+Assert::equal(array(
+	'Adminer',
+	'Dibi',
+	'JUSH',
+), $apps);

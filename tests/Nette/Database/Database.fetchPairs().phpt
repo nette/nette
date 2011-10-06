@@ -13,16 +13,18 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
+$apps = $connection->table('application')->order('title')->fetchPairs('id', 'title');
 Assert::equal(array(
 	1 => 'Adminer',
 	4 => 'Dibi',
 	2 => 'JUSH',
 	3 => 'Nette',
-), $connection->table('application')->order('title')->fetchPairs('id', 'title'));
+), $apps);
 
+$ids = $connection->table('application')->order('id')->fetchPairs('id', 'id');
 Assert::equal(array(
 	1 => '1',
 	2 => '2',
 	3 => '3',
 	4 => '4',
-), $connection->table('application')->order('id')->fetchPairs('id', 'id'));
+), $ids);

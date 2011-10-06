@@ -14,6 +14,13 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 $application = $connection->table('application')->get(1);
-foreach ($application as $key => $val) {
-	echo "$key: $val\n";
-}
+$data = array(
+	'id' => 1,
+	'author_id' => 11,
+	'maintainer_id' => 11,
+	'title' => 'Adminer',
+	'web' => 'http://www.adminer.org/',
+	'slogan' => 'Database management in single PHP file',
+);
+
+Assert::equal($data, iterator_to_array($application));

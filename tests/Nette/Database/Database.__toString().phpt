@@ -13,6 +13,5 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
-foreach ($connection->table('application') as $application) {
-	echo "$application\n";
-}
+$primaryKeyValue = (string) $connection->table('application')->get(2);
+Assert::equal('2', $primaryKeyValue);
