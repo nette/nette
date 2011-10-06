@@ -106,7 +106,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 		$request = $router->match($this->httpRequest);
 		$matched = $request === NULL ? 'no' : 'may';
-		if ($request !== NULL && empty($this->request)) {
+		if ($request !== NULL && empty($this->request) && (!$router instanceof Routers\Route || $router->getTargetPresenter() !== FALSE)) {
 			$this->request = $request;
 			$matched = 'yes';
 		}
