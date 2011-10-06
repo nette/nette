@@ -58,6 +58,7 @@ class NetteLoader extends AutoLoader
 		'nette\application\ui\isignalreceiver' => '/Application/UI/ISignalReceiver.php',
 		'nette\application\ui\istatepersistent' => '/Application/UI/IStatePersistent.php',
 		'nette\application\ui\link' => '/Application/UI/Link.php',
+		'nette\application\ui\multiplier' => '/Application/UI/Multiplier.php',
 		'nette\application\ui\presenter' => '/Application/UI/Presenter.php',
 		'nette\application\ui\presentercomponent' => '/Application/UI/PresenterComponent.php',
 		'nette\application\ui\presentercomponentreflection' => '/Application/UI/PresenterComponentReflection.php',
