@@ -198,6 +198,18 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 	/**
+	 * Removes item from the cache.
+	 * @param  mixed  key
+	 * @return void
+	 */
+	public function remove($key)
+	{
+		$this->save($key, NULL);
+	}
+	
+	
+
+	/**
 	 * Removes items from the cache by conditions.
 	 * Conditions are:
 	 * - Cache::PRIORITY => (int) priority
