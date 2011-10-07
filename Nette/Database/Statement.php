@@ -108,7 +108,7 @@ class Statement extends \PDOStatement
 				foreach ($row as $key => $foo) {
 					$type = $this->getColumnMeta($col++);
 					if (isset($type['native_type'])) {
-						$this->types[$key] = Reflection\DatabaseReflection::detectType($type['native_type']);
+						$this->types[$key] = static::detectType($type['native_type']);
 					}
 				}
 			}
@@ -116,15 +116,15 @@ class Statement extends \PDOStatement
 
 		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
-			if ($value === NULL || $value === FALSE || $type === Reflection\DatabaseReflection::FIELD_TEXT) {
+			if ($value === NULL || $value === FALSE || $type === IReflection::FIELD_TEXT) {
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_INTEGER) {
+			} elseif ($type === IReflection::FIELD_INTEGER) {
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_FLOAT) {
+			} elseif ($type === IReflection::FIELD_FLOAT) {
 				$row[$key] = (string) ($tmp = (float) $value) === $value ? $tmp : $value;
 
-			} elseif ($type === Reflection\DatabaseReflection::FIELD_BOOL) {
+			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 			}
 		}
@@ -172,6 +172,36 @@ class Statement extends \PDOStatement
 		} else {
 			echo "</tbody>\n</table>\n";
 		}
+	}
+
+
+
+	/**
+	 * Heuristic type detection.
+	 * @param  string
+	 * @return string
+	 * @internal
+	 */
+	public static function detectType($type)
+	{
+		static $types, $patterns = array(
+			'BYTEA|BLOB|BIN' => IReflection::FIELD_BINARY,
+			'TEXT|CHAR' => IReflection::FIELD_TEXT,
+			'YEAR|BYTE|COUNTER|SERIAL|INT|LONG' => IReflection::FIELD_INTEGER,
+			'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => IReflection::FIELD_FLOAT,
+			'TIME|DATE' => IReflection::FIELD_DATETIME,
+			'BOOL|BIT' => IReflection::FIELD_BOOL,
+		);
+
+		if (!isset($types[$type])) {
+			$types[$type] = 'string';
+			foreach ($patterns as $s => $val) {
+				if (preg_match("#$s#i", $type)) {
+					return $types[$type] = $val;
+				}
+			}
+		}
+		return $types[$type];
 	}
 
 
