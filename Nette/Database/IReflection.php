@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Information about tables and columns structure
+ * Information about tables and columns structure.
  */
 interface IReflection
 {
@@ -29,38 +29,38 @@ interface IReflection
 
 	/**
 	 * Get primary key of a table in $db->table($table)
-	 * @param string
+	 * @param  string
 	 * @return string
 	 */
 	function getPrimary($table);
 
 	/**
 	 * Get column holding foreign key in $table[$id]->$name()
-	 * @param string
-	 * @param string
+	 * @param  string
+	 * @param  string
 	 * @return string
 	 */
 	function getReferencingColumn($name, $table);
 
 	/**
 	 * Get column holding foreign key in $table[$id]->$name
-	 * @param string
-	 * @param string
+	 * @param  string
+	 * @param  string
 	 * @return string
 	 */
 	function getReferencedColumn($name, $table);
 
 	/**
 	 * Get table holding foreign key in $table[$id]->$name
-	 * @param string
-	 * @param string
+	 * @param  string
+	 * @param  string
 	 * @return string
 	 */
 	function getReferencedTable($name, $table);
 
 	/**
-	 * Inject database connection
-	 * @param Connection
+	 * Inject database connection.
+	 * @param  Connection
 	 */
 	function setConnection(Connection $connection);
 

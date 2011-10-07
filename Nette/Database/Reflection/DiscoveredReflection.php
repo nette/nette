@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Reflection metadata class with discovery for a database
+ * Reflection metadata class with discovery for a database.
  *
  * @author     Jakuv Vrana
  */

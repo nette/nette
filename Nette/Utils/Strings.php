@@ -115,9 +115,9 @@ class Strings
 
 	/**
 	 * Returns a part of UTF-8 string.
-	 * @param string
-	 * @param int
-	 * @param int
+	 * @param  string
+	 * @param  int
+	 * @param  int
 	 * @return string
 	 */
 	public static function substring($s, $start, $length = NULL)

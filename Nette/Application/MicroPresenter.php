@@ -79,7 +79,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 	/**
-	 * Template factory
+	 * Template factory.
 	 * @param  string
 	 * @param  callback
 	 * @return Nette\Templating\ITemplate
