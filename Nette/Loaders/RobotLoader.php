@@ -25,7 +25,7 @@ use Nette,
 class RobotLoader extends AutoLoader
 {
 	/** @var array */
-	public $scanDirs;
+	public $scanDirs = array();
 
 	/** @var string|array  comma separated wildcards */
 	public $ignoreDirs = '.*, *.old, *.bak, *.tmp, temp';
