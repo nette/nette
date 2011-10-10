@@ -25,8 +25,8 @@ class MissingServiceException extends Nette\InvalidStateException
 
 
 /**
- * Ambiguous service resolution exception.
+ * Service creation exception.
  */
-class AmbiguousServiceException extends Nette\InvalidStateException
+class ServiceCreationException extends Nette\InvalidStateException
 {
 }

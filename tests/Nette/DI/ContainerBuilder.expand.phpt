@@ -48,28 +48,21 @@ $container->params['arg1'] = 'a';
 $container->params['tag'] = 'attrs';
 
 $builder = new DI\ContainerBuilder;
+$builder->addDefinition('one', '%serviceClass%')
+	->setArguments(array('%arg1%', 'b'))
+	->addMethodCall('methodA', array('%arg1%', 'b'));
 
-$builder->addDefinitions($container, array(
-	'one' => array(
-		'class' => '%serviceClass%',
-		'arguments' => array(
-			'%arg1%', 'b',
-		),
-		'methods' => array(
-			array('methodA', array('%arg1%', 'b')),
-		)
-	),
-	'two' => array(
-		'factory' => '%serviceClass%::create',
-		'arguments' => array(
-			'%arg1%', '@one',
-		),
-	),
-	'three' => array(
-		'factory' => array('%serviceClass%', 'create'),
-	),
-	'four' => '@three',
-));
+$builder->addDefinition('two', NULL)
+	->setFactory('%serviceClass%::create')
+	->setArguments(array('%arg1%', '@one'));
+
+$builder->addDefinition('three', NULL)
+	->setFactory(array('%serviceClass%', 'create'));
+
+
+$code = $builder->generateCode();
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
+require TEMP_DIR . '/code.php';
 
 Assert::true( $container->getService('one') instanceof Service );
 Assert::same( array('a', 'b'), $container->getService('one')->args );
@@ -79,14 +72,3 @@ Assert::true( $container->getService('two') instanceof Service );
 Assert::equal( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
 
 Assert::true( $container->getService('three') instanceof Service );
-Assert::true( $container->getService('four') instanceof Service );
-
-
-$builder->addDefinitions($container, array(
-	'bad' => array(
-		'class' => '%missing%',
-	)
-));
-Assert::throws(function() use ($container) {
-	$container->getService('bad');
-}, 'Nette\InvalidArgumentException', "Missing item 'missing'.");
