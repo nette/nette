@@ -170,15 +170,15 @@ class Configurator extends Object
 				}
 
 				if (is_array($def)) {
-					$definition = $builder->addDefinition($key, isset($def['class']) ? $def['class'] : NULL);
+					$definition = $builder->addDefinition($key, isset($def['class']) ? $def['class'] : NULL, !empty($def['prefer']));
 
 					if (isset($def['arguments'])) {
-						$definition->setArguments($def['arguments']);
+						$definition->setArguments(array_diff($def['arguments'], array('...')));
 					}
 
 					if (isset($def['methods'])) {
 						foreach ($def['methods'] as $item) {
-							$definition->addMethodCall($item[0], isset($item[1]) ? $item[1] : array());
+							$definition->addMethodCall($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
 						}
 					}
 
@@ -206,7 +206,7 @@ class Configurator extends Object
 						}
 					}
 
-					$def = array_diff(array_keys($def), array('class', 'arguments', 'methods', 'factory', 'option', 'run', 'tags'));
+					$def = array_diff(array_keys($def), array('class', 'prefer', 'arguments', 'methods', 'factory', 'option', 'run', 'tags'));
 					if ($def) {
 						throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $def) . "' in definition of service '$key'.");
 					}
