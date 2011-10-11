@@ -76,6 +76,13 @@ class Parameter extends \ReflectionParameter
 
 
 
+	public function __toString()
+	{
+		return 'Parameter $' . parent::getName() . ' in ' . $this->getDeclaringFunction();
+	}
+
+
+
 	/********************* Nette\Object behaviour ****************d*g**/
 
 
