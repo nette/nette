@@ -39,7 +39,6 @@ Assert::same( $two, $container->getService('two') );
 // class name
 $builder = $container->addService('three', 'Service');
 
-Assert::true( $builder instanceof Nette\DI\IServiceBuilder );
 Assert::true( $container->hasService('three') );
 Assert::true( $container->getService('three') instanceof Service );
 Assert::same( $container->getService('three'), $container->getService('three') ); // shared

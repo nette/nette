@@ -40,7 +40,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Adds the specified service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callback
-	 * @return Container|ServiceBuilder  provides a fluent interface
+	 * @return Container  provides a fluent interface
 	 */
 	public function addService($name, $service)
 	{
@@ -53,24 +53,17 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 		}
 
-		if (is_string($service) && strpos($service, ':') === FALSE/*5.2* && $service[0] !== "\0"*/) { // class name
-			$service = new ServiceBuilder($service);
-		}
-
-		if ($service instanceof IServiceBuilder) {
-			$factory = array($service, 'createService');
-
-		} elseif (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
+		if (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$name] = $service;
 			return $this;
 
-		} else {
-			$factory = $service;
+		} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callback
+			$service = callback($service);
 		}
 
-		$this->factories[$name] = array(callback($factory));
+		$this->factories[$name] = array($service);
 		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
-		return $service;
+		return $this;
 	}
 
 
@@ -104,14 +97,24 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		if (isset($this->factories[$name])) {
 			list($factory) = $this->factories[$name];
-			if (!$factory->isCallable()) {
-				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
-			}
+			if (is_string($factory)) {
+				if (!class_exists($factory)) {
+					throw new Nette\InvalidStateException("Cannot instantiate service, class '$factory' not found.");
+				}
+				try {
+					$this->creating[$name] = TRUE;
+					$service = new $factory;
+				} catch (\Exception $e) {}
 
-			$this->creating[$name] = TRUE;
-			try {
-				$service = $factory/*5.2*->invoke*/($this);
-			} catch (\Exception $e) {}
+			} elseif (!$factory->isCallable()) {
+				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
+
+			} else {
+				$this->creating[$name] = TRUE;
+				try {
+					$service = $factory/*5.2*->invoke*/($this);
+				} catch (\Exception $e) {}
+			}
 
 		} elseif (method_exists($this, $factory = 'createService' . ucfirst($name))) { // static method
 			$this->creating[$name] = TRUE;
