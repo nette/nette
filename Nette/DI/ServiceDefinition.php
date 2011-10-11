@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * This file is part of the Nette Framework (http://nette.org)
+ *
+ * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
+ *
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
+ */
+
+namespace Nette\DI;
+
+use Nette;
+
+
+
+/**
+ * Definition used by ContainerBuilder.
+ *
+ * @author     David Grudl
+ */
+class ServiceDefinition extends Nette\Object
+{
+	/** @var string  class or interface name */
+	public $class;
+
+	/** @var string|array  Factory::create */
+	public $factory;
+
+	/** @var array */
+	public $arguments;
+
+	/** @var array of array(methodName, arguments) */
+	public $methods = array();
+
+	/** @var array */
+	public $tags = array();
+
+
+
+	public function __construct($class)
+	{
+		$this->class = $class;
+	}
+
+
+
+	public function setArguments(array $args)
+	{
+		$this->arguments = $args;
+		return $this;
+	}
+
+
+
+	public function setFactory($factory)
+	{
+		$this->factory = $factory;
+		return $this;
+	}
+
+
+
+	public function addMethodCall($method, array $args = NULL)
+	{
+		$this->methods[] = array($method, $args);
+		return $this;
+	}
+
+
+
+	public function addTag($tag, $attrs = NULL)
+	{
+		$this->tags[$tag] = (array) $attrs;
+		return $this;
+	}
+
+}
