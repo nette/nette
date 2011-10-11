@@ -54,9 +54,6 @@ $code = $builder->generateCode(array(
 		'class' => 'Service',
 		'arguments' => array(
 			'a', 'b',
-		),
-		'tags' => array(
-			'panel' => 'attrs',
 		)
 	),
 	'four' => array(
@@ -95,7 +92,6 @@ Assert::same( NULL, $container->getService('two')->methods );
 Assert::true( $container->getService('three') instanceof Service );
 Assert::same( array('a', 'b'), $container->getService('three')->args );
 Assert::same( NULL, $container->getService('three')->methods );
-Assert::same( array('three' => array('attrs')), $container->getServiceNamesByTag('panel') );
 
 Assert::true( $container->getService('four') instanceof Service );
 Assert::same( array('a', 'b'), $container->getService('four')->args );

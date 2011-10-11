@@ -191,9 +191,6 @@ class Configurator extends Object
 		// pre-loading
 		$code .= self::preloadEnvironment($container);
 
-		// auto-start services
-		$code .= 'foreach ($container->getServiceNamesByTag("run") as $name => $foo) { $container->getService($name); }' . "\n";
-
 		$cache->save($cacheKey, $code, array(
 			Cache::FILES => $file,
 		));

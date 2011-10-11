@@ -31,9 +31,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	/** @var array  storage for service factories */
 	private $factories = array();
 
-	/** @var array  */
-	private $tags = array();
-
 	/** @var array circular reference detector */
 	private $creating;
 
@@ -43,10 +40,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * Adds the specified service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callback
-	 * @param  mixed   array of tags or string typeHint
 	 * @return Container|ServiceBuilder  provides a fluent interface
 	 */
-	public function addService($name, $service, $tags = NULL)
+	public function addService($name, $service)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -55,17 +51,6 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		if (isset($this->registry[$name]) || method_exists($this, "createService$name")) {
 			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
-		}
-
-		if (is_array($tags)) {
-			foreach ($tags as $id => $attrs) {
-				if (is_int($id) && is_string($attrs)) {
-					$tags[$attrs] = array();
-					unset($tags[$id]);
-				} elseif (!is_array($attrs)) {
-					$tags[$id] = (array) $attrs;
-				}
-			}
 		}
 
 		if (is_string($service) && strpos($service, ':') === FALSE/*5.2* && $service[0] !== "\0"*/) { // class name
@@ -77,7 +62,6 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		} elseif (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$name] = $service;
-			$this->tags[$name] = $tags;
 			return $this;
 
 		} else {
@@ -85,7 +69,6 @@ class Container extends Nette\FreezableObject implements IContainer
 		}
 
 		$this->factories[$name] = array(callback($factory));
-		$this->tags[$name] = $tags;
 		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
 		return $service;
 	}
@@ -151,24 +134,6 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		unset($this->factories[$name]);
 		return $this->registry[$name] = $service;
-	}
-
-
-
-	/**
-	 * Gets the service objects of the specified tag.
-	 * @param  string
-	 * @return array of [service name => tag attributes]
-	 */
-	public function getServiceNamesByTag($tag)
-	{
-		$found = array();
-		foreach ($this->registry as $name => $service) {
-			if (isset($this->tags[$name][$tag])) {
-				$found[$name] = $this->tags[$name][$tag];
-			}
-		}
-		return $found;
 	}
 
 

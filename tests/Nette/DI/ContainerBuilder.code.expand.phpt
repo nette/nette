@@ -56,9 +56,6 @@ $code = $builder->generateCode(array(
 		),
 		'methods' => array(
 			array('methodA', array('%arg1%', 'b')),
-		),
-		'tags' => array(
-			'panel' => '%tag%',
 		)
 	),
 	'two' => array(
@@ -79,7 +76,6 @@ require TEMP_DIR . '/code.php';
 Assert::true( $container->getService('one') instanceof Service );
 Assert::same( array('a', 'b'), $container->getService('one')->args );
 Assert::same( array(array('methodA', array('a', 'b'))), $container->getService('one')->methods );
-Assert::same( array('one' => array('attrs')), $container->getServiceNamesByTag('panel') );
 
 Assert::true( $container->getService('two') instanceof Service );
 Assert::equal( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
