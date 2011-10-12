@@ -370,6 +370,17 @@ class Form extends Container
 
 
 	/**
+	 * Tells if the form was submitted and successfully validated.
+	 * @return bool
+	 */
+	final public function isSuccess()
+	{
+		return $this->isSubmitted() && $this->isValid();
+	}
+
+
+
+	/**
 	 * Sets the submittor control.
 	 * @param  ISubmitterControl
 	 * @return Form  provides a fluent interface
