@@ -111,6 +111,18 @@ class ContainerBuilder extends Nette\Object
 			}
 			$code .= $this->argsExport($arguments) . ");\n";
 
+			if ($definition->class) {
+				$message = var_export("Unable to create service '$name', value returned by factory is not '%' type.", TRUE);
+				if (self::isExpanded($definition->class)) {
+					$code .= "if (!\$service instanceof $definition->class) {\n\t"
+						. 'throw new Nette\UnexpectedValueException(' . str_replace('%', $definition->class, $message) . ");\n}\n";
+				} else {
+					$code .= '$class = ' . $this->argsExport(array($definition->class)) . ";\n"
+						. 'if (!$service instanceof $class) {' . "\n\t"
+						. 'throw new Nette\UnexpectedValueException(' . str_replace('%', "'.\$class.'", $message) . ");\n}\n";
+				}
+			}
+
 		} else { // class
 			if (self::isExpanded($definition->class)) {
 				$arguments = $this->autowireArguments($definition->class, '__construct', $arguments);
