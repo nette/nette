@@ -123,7 +123,7 @@ class Strings
 	public static function substring($s, $start, $length = NULL)
 	{
 		if ($length === NULL) {
-			$length = PHP_INT_MAX;
+			$length = function_exists('mb_strlen') ? mb_strlen($s) : iconv_strlen($s);
 		}
 		return function_exists('mb_substr') ? mb_substr($s, $start, $length, 'UTF-8') : iconv_substr($s, $start, $length, 'UTF-8');
 	}
