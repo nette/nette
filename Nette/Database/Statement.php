@@ -101,18 +101,8 @@ class Statement extends \PDOStatement
 	 */
 	public function normalizeRow($row)
 	{
-		if ($this->types === NULL) {
-			$this->types = array();
-			if ($this->connection->getSupplementalDriver()->supports['meta']) { // workaround for PHP bugs #53782, #54695
-				$col = 0;
-				foreach ($row as $key => $foo) {
-					$type = $this->getColumnMeta($col++);
-					if (isset($type['native_type'])) {
-						$this->types[$key] = static::detectType($type['native_type']);
-					}
-				}
-			}
-		}
+		if ($this->types === NULL)
+			$this->types = $this->detectColumnTypes();
 
 		foreach ($this->types as $key => $type) {
 			$value = $row[$key];
@@ -132,6 +122,22 @@ class Statement extends \PDOStatement
 		return $this->connection->getSupplementalDriver()->normalizeRow($row, $this);
 	}
 
+
+	private function detectColumnTypes()
+	{
+		if (!$this->connection->getSupplementalDriver()->supports['meta']) // workaround for PHP bugs #53782, #54695
+			return array();
+		
+		$types = array();
+		$col = 0;
+		while ($meta = $this->getColumnMeta($col++)) {
+			if (isset($meta['native_type'])) {
+				$types[$meta['name']] = DatabaseReflection::detectType($meta['native_type']);
+			}
+		}
+		
+		return $types;
+	}
 
 
 	/********************* misc tools ****************d*g**/
