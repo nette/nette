@@ -370,6 +370,19 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 
 	/**
+	 * Adds button used to reset form.
+	 * @param  string  control name
+	 * @param  string  caption
+	 * @return Nette\Forms\Controls\ResetButton
+	 */
+	public function addReset($name, $caption = NULL)
+	{
+		return $this[$name] = new Controls\ResetButton($caption);
+	}
+
+
+
+	/**
 	 * Adds push buttons with no default behavior.
 	 * @param  string  control name
 	 * @param  string  caption

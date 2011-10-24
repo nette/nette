@@ -135,6 +135,7 @@ class NetteLoader extends AutoLoader
 		'nette\forms\controls\imagebutton' => '/Forms/Controls/ImageButton.php',
 		'nette\forms\controls\multiselectbox' => '/Forms/Controls/MultiSelectBox.php',
 		'nette\forms\controls\radiolist' => '/Forms/Controls/RadioList.php',
+		'nette\forms\controls\resetbutton' => '/Forms/Controls/ResetButton.php',
 		'nette\forms\controls\selectbox' => '/Forms/Controls/SelectBox.php',
 		'nette\forms\controls\submitbutton' => '/Forms/Controls/SubmitButton.php',
 		'nette\forms\controls\textarea' => '/Forms/Controls/TextArea.php',
