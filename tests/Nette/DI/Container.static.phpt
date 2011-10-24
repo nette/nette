@@ -21,7 +21,7 @@ class MyContainer extends Container
 
 	protected function createServiceOne()
 	{
-		return NULL;
+		return new stdClass;
 	}
 
 	protected function createServiceTwo()
@@ -33,8 +33,6 @@ class MyContainer extends Container
 
 
 $container = new MyContainer;
-
-$container->addService('one', (object) NULL);
 
 Assert::true( $container->hasService('one') );
 Assert::false( $container->hasService('undefined') );
