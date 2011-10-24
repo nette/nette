@@ -11,7 +11,9 @@
 
 namespace Nette\DI;
 
-use Nette;
+use Nette,
+	Nette\Utils\PhpGenerator\Helpers,
+	Nette\Utils\PhpGenerator\PhpLiteral;
 
 
 
@@ -69,9 +71,9 @@ class ContainerBuilder extends Nette\Object
 		$code = '';
 		foreach ($this->definitions as $name => $foo) {
 			try {
-				$code .= '$container->addService(' . $this->varExport($name) . ", function(\$container) {\n"
-					. Nette\Utils\Strings::indent($this->generateFactory($name), 1)
-					. "\n});\n\n";
+				$method = new Nette\Utils\PhpGenerator\Method;
+				$method->setBody($this->generateFactory($name))->addParameter('container');
+				$code .= Helpers::generate('$container->addService', $name, new PhpLiteral($method)) . "\n\n";
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Error creating service '$name': {$e->getMessage()}", 0, $e);
 			}
@@ -270,20 +272,20 @@ class ContainerBuilder extends Nette\Object
 
 	private static function argsExport($args)
 	{
-		$args = implode(', ', array_map(array(__CLASS__, 'varExport'), $args));
-		$args = preg_replace("#(?<!\\\)'@self'#", '\$container', $args);
-		$args = preg_replace("#(?<!\\\)'@([a-zA-Z_]\w*)'#", '\$container->$1', $args);
-		$args = preg_replace("#(?<!\\\)'@(\w+)'#", '\$container->{\'$1\'}', $args);
-		$args = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $args);
-		$args = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", 'Nette\Utils\Strings::expand($0, \$container->params)', $args);
-		return $args;
-	}
-
-
-
-	private static function varExport($arg)
-	{
-		return preg_replace('#\n *#', ' ', var_export($arg, TRUE));
+		array_walk_recursive($args, function(&$val) {
+			if (!is_string($val)) {
+				return;
+			} elseif ($val === '@self') {
+				$val = new PhpLiteral('$container');
+			} elseif (preg_match('#^@\w+$#', $val)) {
+				$val = new PhpLiteral('$container->' . Helpers::dumpMember(substr($val, 1)));
+			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
+				$val = new PhpLiteral('$container->params[' . Helpers::dump(substr($val, 1, -1)) . ']');
+			} elseif (strpos($val, '%') !== FALSE) {
+				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $container->params)');
+			}
+		});
+		return implode(', ', array_map(array('Nette\Utils\PhpGenerator\Helpers', 'dump'), $args));
 	}
 
 

@@ -309,23 +309,16 @@ class Configurator extends Object
 	private static function generateCode($statement)
 	{
 		$args = func_get_args();
-		unset($args[0]);
-		foreach ($args as &$arg) {
-			$arg = var_export($arg, TRUE);
-			$arg = preg_replace("#(?<!\\\)'%([\w-]+)%'#", '\$container->params[\'$1\']', $arg);
-			$arg = preg_replace("#(?<!\\\)'(?:[^'\\\]|\\\.)*%(?:[^'\\\]|\\\.)*'#", '\$container->expand($0)', $arg);
-		}
-		if (strpos($statement, '?') === FALSE) {
-			return $statement .= '(' . implode(', ', $args) . ");\n\n";
-		}
-		$a = strpos($statement, '?');
-		$i = 1;
-		while ($a !== FALSE) {
-			$statement = substr_replace($statement, $args[$i], $a, 1);
-			$a = strpos($statement, '?', $a + strlen($args[$i]));
-			$i++;
-		}
-		return $statement . ";\n\n";
+		array_walk_recursive($args, function(&$val) {
+			if (is_string($val) && strpos($val, '%') !== FALSE) {
+				if (preg_match('#^%([\w-]+)%$#', $val)) {
+					$val = new Nette\Utils\PhpGenerator\PhpLiteral('$container->params[' . strtr($val, '%', "'") . ']');
+				} else {
+					$val = new Nette\Utils\PhpGenerator\PhpLiteral('$container->expand(' . Nette\Utils\PhpGenerator\Helpers::dump($val) . ')');
+				}
+			}
+		});
+		return call_user_func_array('Nette\Utils\PhpGenerator\Helpers::generate', $args) . "\n\n";
 	}
 
 
