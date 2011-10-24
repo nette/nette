@@ -101,33 +101,41 @@ class Configurator extends Object
 		$config = Nette\Config\Config::fromFile($file, $section);
 		$code = "<?php\n// source file $file\n\n";
 
-		// back compatibility with singular names
-		foreach (array('service', 'variable') as $item) {
-			if (isset($config[$item])) {
-				trigger_error(basename($file) . ": Section '$item' is deprecated; use plural form '{$item}s' instead.", E_USER_WARNING);
-				$config[$item . 's'] = $config[$item];
-				unset($config[$item]);
+		// obsolete and deprecated structures
+		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
+			if (isset($config[$old])) {
+				throw new Nette\DeprecatedException(basename($file) . ": Section '$old' is deprecated; use '$new' instead.");
+			}
+		}
+		if (isset($config['services'])) {
+			foreach ($config['services'] as $key => $def) {
+				foreach (array('option' => 'arguments', 'methods' => 'calls') as $old => $new) {
+					if (isset($def[$old])) {
+						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
+					}
+				}
 			}
 		}
 
-		// consolidate variables
-		if (!isset($config['variables'])) {
-			$config['variables'] = array();
+
+		// consolidate parameters
+		if (!isset($config['parameters'])) {
+			$config['parameters'] = array();
 		}
 		foreach ($config as $key => $value) {
-			if (!in_array($key, array('variables', 'services', 'php', 'const', 'mode'))) {
-				$config['variables'][$key] = $value;
+			if (!in_array($key, array('parameters', 'services', 'php', 'constants'))) {
+				$config['parameters'][$key] = $value;
 			}
 		}
 
-		// pre-expand variables at compile-time
-		$variables = $config['variables'];
-		array_walk_recursive($config, function(&$val) use ($variables) {
-			$val = Configurator::preExpand($val, $variables);
+		// pre-expand parameters at compile-time
+		$parameters = $config['parameters'];
+		array_walk_recursive($config, function(&$val) use ($parameters) {
+			$val = Configurator::preExpand($val, $parameters);
 		});
 
-		// add variables
-		foreach ($config['variables'] as $key => $value) {
+		// add parameters
+		foreach ($config['parameters'] as $key => $value) {
 			$code .= $this->generateCode('$container->parameters[?] = ?', $key, $value);
 		}
 
@@ -145,17 +153,9 @@ class Configurator extends Object
 		}
 
 		// define constants
-		if (isset($config['const'])) {
-			foreach ($config['const'] as $key => $value) {
+		if (isset($config['constants'])) {
+			foreach ($config['constants'] as $key => $value) {
 				$code .= $this->generateCode('define', $key, $value);
-			}
-		}
-
-		// set modes - back compatibility
-		if (isset($config['mode'])) {
-			foreach ($config['mode'] as $mode => $state) {
-				trigger_error(basename($file) . ": Section 'mode' is deprecated; use '{$mode}Mode' in section 'variables' instead.", E_USER_WARNING);
-				$code .= $this->generateCode('$container->parameters[?] = ?', $mode . 'Mode', (bool) $state);
 			}
 		}
 
@@ -163,12 +163,6 @@ class Configurator extends Object
 		if (isset($config['services'])) {
 			$builder = new DI\ContainerBuilder;
 			foreach ($config['services'] as $key => $def) {
-				if (preg_match('#^Nette\\\\.*\\\\I?([a-zA-Z]+)$#', strtr($key, '-', '\\'), $m)) { // back compatibility
-					$m[1][0] = strtolower($m[1][0]);
-					trigger_error(basename($file) . ": service name '$key' has been renamed to '$m[1]'", E_USER_WARNING);
-					$key = $m[1];
-				}
-
 				if (is_array($def)) {
 					$definition = $builder->addDefinition($key, isset($def['class']) ? $def['class'] : NULL, !empty($def['prefer']));
 
@@ -176,8 +170,8 @@ class Configurator extends Object
 						$definition->setArguments(array_diff($def['arguments'], array('...')));
 					}
 
-					if (isset($def['methods'])) {
-						foreach ($def['methods'] as $item) {
+					if (isset($def['calls'])) {
+						foreach ($def['calls'] as $item) {
 							$definition->addCall($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
 						}
 					}
@@ -189,10 +183,6 @@ class Configurator extends Object
 						}
 					} elseif (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
 						$definition->setFactory(array(get_called_class(), "createService$key"));
-					}
-
-					if (isset($def['option'])) {
-						$definition->arguments[] = $def['option'];
 					}
 
 					if (!empty($def['run'])) {
@@ -209,7 +199,7 @@ class Configurator extends Object
 						}
 					}
 
-					$def = array_diff(array_keys($def), array('class', 'prefer', 'arguments', 'methods', 'factory', 'option', 'run', 'tags'));
+					$def = array_diff(array_keys($def), array('class', 'prefer', 'arguments', 'calls', 'factory', 'run', 'tags'));
 					if ($def) {
 						throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $def) . "' in definition of service '$key'.");
 					}
