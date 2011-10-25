@@ -30,7 +30,7 @@ class TestClass
 $obj = new TestClass;
 Assert::same( $obj, $obj->setName('hello') );
 Assert::same( 'hello', $obj->name );
-Assert::same( 'hello', $obj->getName('hello') );
+Assert::same( 'hello', $obj->getName() );
 
 Assert::same( $obj, $obj->addItem('world') );
 Assert::same( array('world'), $obj->items );
