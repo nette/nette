@@ -105,7 +105,10 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	{
 		$values = new Nette\ArrayHash;
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
+			if ($control instanceof IControl
+					&& !$control->isDisabled()
+					&& !$control instanceof ISubmitterControl
+					&& !$control instanceof Controls\ResetButton) {
 				$values->$name = $control->getValue();
 
 			} elseif ($control instanceof Container) {
