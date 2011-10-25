@@ -143,9 +143,9 @@ class ContainerBuilder extends Nette\Object
 				}
 				$code .= "\$service->$callback[0]";
 			} else {
-				$code .= '$method = ' . $this->argsExport(array($callback[0])) . '; $service->$method';
+				$code .= '$method = ' . $this->argsExport(array($callback[0]), $name) . '; $service->$method';
 			}
-			$code .= "({$this->argsExport($arguments)});\n";
+			$code .= "({$this->argsExport($arguments, $name)});\n";
 		}
 
 		return $code .= 'return $service;';
@@ -270,15 +270,15 @@ class ContainerBuilder extends Nette\Object
 
 
 
-	private static function argsExport($args)
+	private static function argsExport($args, $self = NULL)
 	{
-		array_walk_recursive($args, function(&$val) {
+		array_walk_recursive($args, function(&$val) use ($self) {
 			if (!is_string($val)) {
 				return;
 			} elseif ($val === '@container') {
 				$val = new PhpLiteral('$container');
 			} elseif (preg_match('#^@\w+$#', $val)) {
-				$val = new PhpLiteral('$container->' . Helpers::dumpMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$container->' . Helpers::dumpMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
 				$val = new PhpLiteral('$container->params[' . Helpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (strpos($val, '%') !== FALSE) {
