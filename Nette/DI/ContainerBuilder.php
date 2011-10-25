@@ -98,18 +98,18 @@ class ContainerBuilder extends Nette\Object
 			array_unshift($arguments, '@container');
 			$code .= '$service = ';
 
-			if (preg_match('#^@\w+$#', $callback[0]) && self::isExpanded($callback[1])) {
+			if (preg_match('#^@\w+$#', $callback[0]) && isset($callback[1]) && self::isExpanded($callback[1])) {
 				if (isset($this->definitions[substr($callback[0], 1)]->class)) {
 					$arguments = $this->autowireArguments($this->definitions[substr($callback[0], 1)]->class, $callback[1], $arguments);
 				}
 				$code .= $this->argsExport(array($callback[0])) . "->$callback[1](";
 
-			} elseif (self::isExpanded($callback[0]) && self::isExpanded($callback[1])) {
+			} elseif (self::isExpanded($callback[0]) && isset($callback[1]) && self::isExpanded($callback[1])) {
 				$arguments = $this->autowireArguments($callback[0], $callback[1], $arguments);
 				$code .= implode('::', $callback) . '(';
 
 			} else {
-				$code .= 'call_user_func(' . $this->argsExport(array($callback)) . ', ';
+				$code .= 'call_user_func(' . $this->argsExport(isset($callback[1]) ? array($callback) : $callback) . ($arguments ? ', ' : '');
 			}
 			$code .= $this->argsExport($arguments) . ");\n";
 
