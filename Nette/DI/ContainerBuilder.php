@@ -29,8 +29,8 @@ class ContainerBuilder extends Nette\Object
 
 	/** @var array */
 	private $classes = array(
-		'nette\di\container' => array(TRUE => array('self')),
-		'nette\di\icontainer' => array(TRUE => array('self')),
+		'nette\di\container' => array(TRUE => array('container')),
+		'nette\di\icontainer' => array(TRUE => array('container')),
 	);
 
 
@@ -95,7 +95,7 @@ class ContainerBuilder extends Nette\Object
 
 		if ($definition->factory) {
 			$factory = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
-			array_unshift($arguments, '@self');
+			array_unshift($arguments, '@container');
 			$code .= '$service = ';
 
 			if (preg_match('#^@\w+$#', $factory[0]) && self::isExpanded($factory[1])) {
@@ -275,7 +275,7 @@ class ContainerBuilder extends Nette\Object
 		array_walk_recursive($args, function(&$val) {
 			if (!is_string($val)) {
 				return;
-			} elseif ($val === '@self') {
+			} elseif ($val === '@container') {
 				$val = new PhpLiteral('$container');
 			} elseif (preg_match('#^@\w+$#', $val)) {
 				$val = new PhpLiteral('$container->' . Helpers::dumpMember(substr($val, 1)));
