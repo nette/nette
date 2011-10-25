@@ -94,22 +94,22 @@ class ContainerBuilder extends Nette\Object
 		$code = '';
 
 		if ($definition->factory) {
-			$factory = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
+			$callback = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
 			array_unshift($arguments, '@container');
 			$code .= '$service = ';
 
-			if (preg_match('#^@\w+$#', $factory[0]) && self::isExpanded($factory[1])) {
-				if (isset($this->definitions[substr($factory[0], 1)]->class)) {
-					$arguments = $this->autowireArguments($this->definitions[substr($factory[0], 1)]->class, $factory[1], $arguments);
+			if (preg_match('#^@\w+$#', $callback[0]) && self::isExpanded($callback[1])) {
+				if (isset($this->definitions[substr($callback[0], 1)]->class)) {
+					$arguments = $this->autowireArguments($this->definitions[substr($callback[0], 1)]->class, $callback[1], $arguments);
 				}
-				$code .= $this->argsExport(array($factory[0])) . "->$factory[1](";
+				$code .= $this->argsExport(array($callback[0])) . "->$callback[1](";
 
-			} elseif (self::isExpanded($factory[0]) && self::isExpanded($factory[1])) {
-				$arguments = $this->autowireArguments($factory[0], $factory[1], $arguments);
-				$code .= implode('::', $factory) . '(';
+			} elseif (self::isExpanded($callback[0]) && self::isExpanded($callback[1])) {
+				$arguments = $this->autowireArguments($callback[0], $callback[1], $arguments);
+				$code .= implode('::', $callback) . '(';
 
 			} else {
-				$code .= 'call_user_func(' . $this->argsExport(array($factory)) . ', ';
+				$code .= 'call_user_func(' . $this->argsExport(array($callback)) . ', ';
 			}
 			$code .= $this->argsExport($arguments) . ");\n";
 
@@ -135,15 +135,15 @@ class ContainerBuilder extends Nette\Object
 			$code .= $arguments ? "({$this->argsExport($arguments)});\n" : ";\n";
 		}
 
-		foreach ((array) $definition->methods as $method) {
-			$arguments = is_array($method[1]) ? $method[1] : array();
-			if (self::isExpanded($method[0])) {
+		foreach ((array) $definition->calls as $callback) {
+			$arguments = is_array($callback[1]) ? $callback[1] : array();
+			if (self::isExpanded($callback[0])) {
 				if ($definition->class && self::isExpanded($definition->class)) {
-					$arguments = $this->autowireArguments($definition->class, $method[0], $arguments);
+					$arguments = $this->autowireArguments($definition->class, $callback[0], $arguments);
 				}
-				$code .= "\$service->$method[0]";
+				$code .= "\$service->$callback[0]";
 			} else {
-				$code .= '$method = ' . $this->argsExport(array($method[0])) . '; $service->$method';
+				$code .= '$method = ' . $this->argsExport(array($callback[0])) . '; $service->$method';
 			}
 			$code .= "({$this->argsExport($arguments)});\n";
 		}

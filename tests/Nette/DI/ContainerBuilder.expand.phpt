@@ -50,7 +50,7 @@ $container->params['tag'] = 'attrs';
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one', '%serviceClass%')
 	->setArguments(array('%arg1%', 'b'))
-	->addMethodCall('methodA', array('%arg1%', 'b'));
+	->addCall('methodA', array('%arg1%', 'b'));
 
 $builder->addDefinition('two', NULL)
 	->setFactory('%serviceClass%::create')

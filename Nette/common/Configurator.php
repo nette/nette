@@ -178,7 +178,7 @@ class Configurator extends Object
 
 					if (isset($def['methods'])) {
 						foreach ($def['methods'] as $item) {
-							$definition->addMethodCall($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
+							$definition->addCall($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
 						}
 					}
 
