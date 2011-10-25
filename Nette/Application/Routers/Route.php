@@ -263,7 +263,7 @@ class Route extends Nette\Object implements Application\IRouter
 			return NULL;
 		}
 
-		$params = $appRequest->getParams();
+		$params = $appRequest->getParameters();
 		$metadata = $this->metadata;
 
 		$presenter = $appRequest->getPresenterName();

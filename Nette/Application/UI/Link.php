@@ -66,7 +66,7 @@ class Link extends Nette\Object
 	 * @param  mixed
 	 * @return Link  provides a fluent interface
 	 */
-	public function setParam($key, $value)
+	public function setParameter($key, $value)
 	{
 		$this->params[$key] = $value;
 		return $this;
@@ -79,7 +79,7 @@ class Link extends Nette\Object
 	 * @param  string
 	 * @return mixed
 	 */
-	public function getParam($key)
+	public function getParameter($key)
 	{
 		return isset($this->params[$key]) ? $this->params[$key] : NULL;
 	}
@@ -90,7 +90,7 @@ class Link extends Nette\Object
 	 * Returns link parameters.
 	 * @return array
 	 */
-	public function getParams()
+	public function getParameters()
 	{
 		return $this->params;
 	}

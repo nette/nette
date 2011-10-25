@@ -35,7 +35,7 @@ class Method extends Nette\Object
 	public $name;
 
 	/** @var array of name => Parameter */
-	public $params = array();
+	public $parameters = array();
 
 	/** @var array of name => bool */
 	public $uses = array();
@@ -69,7 +69,7 @@ class Method extends Nette\Object
 		if (func_num_args() > 1) {
 			$param->setOptional(TRUE)->setDefaultValue($defaultValue);
 		}
-		return $this->params[] = $param->setName($name);
+		return $this->parameters[] = $param->setName($name);
 	}
 
 
@@ -93,9 +93,9 @@ class Method extends Nette\Object
 	/** @return string  PHP code */
 	public function __toString()
 	{
-		$params = array();
-		foreach ($this->params as $param) {
-			$params[] = ($param->typeHint ? $param->typeHint . ' ' : '')
+		$parameters = array();
+		foreach ($this->parameters as $param) {
+			$parameters[] = ($param->typeHint ? $param->typeHint . ' ' : '')
 				. ($param->reference ? '&' : '')
 				. '$' . $param->name
 				. ($param->optional ? ' = ' . Helpers::dump($param->defaultValue) : '');
@@ -112,7 +112,7 @@ class Method extends Nette\Object
 			. 'function'
 			. ($this->returnReference ? ' &' : '')
 			. ($this->name ? ' ' . $this->name : '')
-			. '(' . implode(', ', $params) . ')'
+			. '(' . implode(', ', $parameters) . ')'
 			. ($this->uses ? ' use (' . implode(', ', $uses) . ')' : '')
 			. ($this->abstract || $this->body === FALSE ? ';'
 				: ($this->name ? "\n" : ' ') . "{\n" . Nette\Utils\Strings::indent($this->body, 1) . "\n}");

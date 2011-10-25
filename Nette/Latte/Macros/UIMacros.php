@@ -176,9 +176,9 @@ if (!empty($control->snippetMode)) {
 
 		$name = $destination[0] === '$' ? $destination : var_export($destination, TRUE);
 		if (isset($this->namedBlocks[$destination]) && !$parent) {
-			$cmd = "call_user_func(reset(\$_l->blocks[$name]), \$_l, %node.array? + \$template->getParams())";
+			$cmd = "call_user_func(reset(\$_l->blocks[$name]), \$_l, %node.array? + \$template->getParameters())";
 		} else {
-			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + \$template->getParams())";
+			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + \$template->getParameters())";
 		}
 
 		if ($node->modifiers) {
@@ -278,7 +278,7 @@ if (!empty($control->snippetMode)) {
 		$top = empty($node->parentNode);
 		$this->namedBlocks[$name] = TRUE;
 
-		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParams()' : 'get_defined_vars()') . ')';
+		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParameters()' : 'get_defined_vars()') . ')';
 		if ($node->modifiers) {
 			$include = "ob_start(); $include; echo %modify(ob_get_clean())";
 		}

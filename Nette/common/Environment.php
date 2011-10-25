@@ -82,7 +82,7 @@ final class Environment
 	 */
 	public static function isConsole()
 	{
-		return self::getContext()->params['consoleMode'];
+		return self::getContext()->parameters['consoleMode'];
 	}
 
 
@@ -93,7 +93,7 @@ final class Environment
 	 */
 	public static function isProduction()
 	{
-		return self::getContext()->params['productionMode'];
+		return self::getContext()->parameters['productionMode'];
 	}
 
 
@@ -105,7 +105,7 @@ final class Environment
 	 */
 	public static function setProductionMode($value = TRUE)
 	{
-		self::getContext()->params['productionMode'] = (bool) $value;
+		self::getContext()->parameters['productionMode'] = (bool) $value;
 	}
 
 
@@ -126,7 +126,7 @@ final class Environment
 		if ($expand && is_string($value)) {
 			$value = self::getContext()->expand($value);
 		}
-		self::getContext()->params[$name] = $value;
+		self::getContext()->parameters[$name] = $value;
 	}
 
 
@@ -140,8 +140,8 @@ final class Environment
 	 */
 	public static function getVariable($name, $default = NULL)
 	{
-		if (isset(self::getContext()->params[$name])) {
-			return self::getContext()->params[$name];
+		if (isset(self::getContext()->parameters[$name])) {
+			return self::getContext()->parameters[$name];
 		} elseif (func_num_args() > 1) {
 			return $default;
 		} else {
@@ -157,7 +157,7 @@ final class Environment
 	 */
 	public static function getVariables()
 	{
-		return self::getContext()->params;
+		return self::getContext()->parameters;
 	}
 
 
@@ -348,7 +348,7 @@ final class Environment
 	 */
 	public static function getConfig($key = NULL, $default = NULL)
 	{
-		$params = Nette\ArrayHash::from(self::getContext()->params);
+		$params = Nette\ArrayHash::from(self::getContext()->parameters);
 		if (func_num_args()) {
 			return isset($params[$key]) ? $params[$key] : $default;
 		} else {

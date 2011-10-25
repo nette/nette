@@ -47,7 +47,7 @@ Assert::same( array(
 	'verbose' => TRUE,
 	'pass' => 'se cret',
 	'wait' => TRUE,
-), $req->params );
+), $req->parameters );
 
 Assert::true( $req->isMethod('cli') );
 

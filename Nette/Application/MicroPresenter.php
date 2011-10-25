@@ -50,7 +50,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			}
 		}
 
-		$params = $request->getParams();
+		$params = $request->getParameters();
 		if (!isset($params['callback'])) {
 			return;
 		}
@@ -63,10 +63,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		if (is_array($response)) {
 			if ($response instanceof \SplFileInfo) {
 				$response = $this->createTemplate('Nette\Templating\FileTemplate')
-					->setParams($response[1])->setFile($response[0]);
+					->setParameters($response[1])->setFile($response[0]);
 			} else {
 				$response = $this->createTemplate('Nette\Templating\Template')
-					->setParams($response[1])->setSource($response[0]);
+					->setParameters($response[1])->setSource($response[0]);
 			}
 		}
 		if ($response instanceof Nette\Templating\ITemplate) {
@@ -88,7 +88,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 
-		$template->setParams($this->request->getParams());
+		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;
 		$template->context = $context = $this->context;
 		$url = $context->httpRequest->getUrl();

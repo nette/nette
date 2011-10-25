@@ -14,6 +14,6 @@ Noncached content
 
 <h1><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($title), ENT_NOQUOTES) ?></h1>
 
-<?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParams(), $_l->templates['xxx'])->render() ?>
+<?php Nette\Latte\Macros\CoreMacros::includeTemplate('include.cache.latte', array('localvar' => 11) + $template->getParameters(), $_l->templates['xxx'])->render() ?>
 
 <?php $_l->tmp = array_pop($_g->caches); if (!$_l->tmp instanceof stdClass) $_l->tmp->end(); }

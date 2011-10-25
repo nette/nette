@@ -30,7 +30,7 @@ if ($_l->extends) {
 <?php $var = 10 ?>
 
 
-<?php call_user_func(reset($_l->blocks['test']), $_l, array('var' => 20) + $template->getParams()) ;
+<?php call_user_func(reset($_l->blocks['test']), $_l, array('var' => 20) + $template->getParameters()) ;
 // template extending support
 if ($_l->extends) {
 	ob_end_clean();

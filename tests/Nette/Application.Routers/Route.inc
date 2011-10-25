@@ -21,13 +21,13 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 	$request = $route->match($httpRequest);
 
 	if ($request) { // matched
-		$params = $request->getParams();
+		$params = $request->getParameters();
 		//asort($params);
 		Assert::same( $expectedPresenter, $request->getPresenterName() );
 		Assert::same( $expectedParams, $params );
 
 		unset($params['extra']);
-		$request->setParams($params);
+		$request->setParameters($params);
 		$result = $route->constructUrl($request, $url);
 		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
 		Assert::same( $expectedUrl, $result );

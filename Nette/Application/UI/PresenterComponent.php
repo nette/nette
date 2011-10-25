@@ -76,7 +76,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-			$this->loadState($presenter->popGlobalParams($this->getUniqueId()));
+			$this->loadState($presenter->popGlobalParameters($this->getUniqueId()));
 		}
 	}
 
@@ -206,7 +206,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  mixed  default value
 	 * @return mixed
 	 */
-	final public function getParam($name = NULL, $default = NULL)
+	final public function getParameter($name = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
 			return $this->params;
@@ -225,10 +225,34 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * Returns a fully-qualified name that uniquely identifies the parameter.
 	 * @return string
 	 */
-	final public function getParamId($name)
+	final public function getParameterId($name)
 	{
 		$uid = $this->getUniqueId();
 		return $uid === '' ? $name : $uid . self::NAME_SEPARATOR . $name;
+	}
+
+
+
+	/** @deprecated */
+	function getParam($name = NULL, $default = NULL)
+	{
+		//trigger_error(__METHOD__ . '() is deprecated; use getParameter() instead.', E_USER_WARNING);
+		if (func_num_args() === 0) {
+			return $this->params;
+		} elseif (isset($this->params[$name])) {
+			return $this->params[$name];
+		} else {
+			return $default;
+		}
+	}
+
+
+
+	/** @deprecated */
+	function getParamId($name)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getParameterId() instead.', E_USER_WARNING);
+		return $this->getParameterId($name);
 	}
 
 

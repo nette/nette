@@ -43,9 +43,9 @@ class Service
 
 
 $container = new DI\Container;
-$container->params['serviceClass'] = 'Service';
-$container->params['arg1'] = 'a';
-$container->params['tag'] = 'attrs';
+$container->parameters['serviceClass'] = 'Service';
+$container->parameters['arg1'] = 'a';
+$container->parameters['tag'] = 'attrs';
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one', '%serviceClass%')

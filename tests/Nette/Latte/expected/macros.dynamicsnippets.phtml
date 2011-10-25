@@ -30,7 +30,7 @@ if ($_l->extends) {
 // main template
 //
 ?>
-<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParams()) ?>
+<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div><?php
 // template extending support
 if ($_l->extends) {

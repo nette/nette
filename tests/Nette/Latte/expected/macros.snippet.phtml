@@ -13,7 +13,7 @@ if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args
 if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__outer($_l, $_args) { extract($_args); $control->validateControl('outer')
 ?>
 	Outer
-		<div id="<?php echo $control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParams()) ?>
+		<div id="<?php echo $control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
 	/Outer
 <?php
@@ -45,20 +45,20 @@ if (!function_exists($_l->blocks['_title2'][] = '%a%__title2')) { function %a%__
 %A%
 	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
 %A%
-<div id="<?php echo $control->getSnippetId('') ?>"><?php call_user_func(reset($_l->blocks['_']), $_l, $template->getParams()) ?>
+<div id="<?php echo $control->getSnippetId('') ?>"><?php call_user_func(reset($_l->blocks['_']), $_l, $template->getParameters()) ?>
 </div>
 
 
-<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParams()) ?>
+<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div>
 
 
 	@<?php if (true): ?> Hello World @<?php endif ?>
 
 
-	<h2 id="<?php echo $control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParams()) ?>
+	<h2 id="<?php echo $control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
 </h2>
 
-	<h2 id="<?php echo $control->getSnippetId('title2') ?>"><?php call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParams()) ?>
+	<h2 id="<?php echo $control->getSnippetId('title2') ?>"><?php call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParameters()) ?>
 </h2>
 %A%

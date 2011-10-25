@@ -32,12 +32,12 @@ use Nette,
 <?php if (empty($this->request)): ?>
 	no route
 <?php else: ?>
-	<?php echo $this->request->getPresenterName() . ':' . (isset($this->request->params[Presenter::ACTION_KEY]) ? $this->request->params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($this->request->params[Presenter::SIGNAL_KEY]) ? " {$this->request->params[Presenter::SIGNAL_KEY]}!" : '') ?>
+	<?php echo $this->request->getPresenterName() . ':' . (isset($this->request->parameters[Presenter::ACTION_KEY]) ? $this->request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($this->request->parameters[Presenter::SIGNAL_KEY]) ? " {$this->request->parameters[Presenter::SIGNAL_KEY]}!" : '') ?>
 <?php endif ?>
 </h1>
 
 <?php if (!empty($this->request)): ?>
-	<?php $params = $this->request->getParams() ?>
+	<?php $params = $this->request->getParameters() ?>
 	<?php if (empty($params)): ?>
 		<p>No parameters.</p>
 
@@ -96,7 +96,7 @@ use Nette,
 		</code></td>
 
 		<td><?php if ($router['request']): ?><code>
-		<?php $params = $router['request']->getParams(); ?>
+		<?php $params = $router['request']->getParameters(); ?>
 		<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION)) ?></strong><br />
 		<?php unset($params[Presenter::ACTION_KEY]) ?>
 		<?php foreach ($params as $key => $value): ?>

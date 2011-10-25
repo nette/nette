@@ -294,9 +294,9 @@ class ContainerBuilder extends Nette\Object
 			} elseif (preg_match('#^@\w+$#', $val)) {
 				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$container->' . Helpers::dumpMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
-				$val = new PhpLiteral('$container->params[' . Helpers::dump(substr($val, 1, -1)) . ']');
+				$val = new PhpLiteral('$container->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (strpos($val, '%') !== FALSE) {
-				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $container->params)');
+				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $container->parameters)');
 			}
 		});
 		return implode(', ', array_map(array('Nette\Utils\PhpGenerator\Helpers', 'dump'), $args));

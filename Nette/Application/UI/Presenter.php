@@ -158,7 +158,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->payload = (object) NULL;
 			$this->setParent($this->getParent(), $request->getPresenterName());
 
-			$this->initGlobalParams();
+			$this->initGlobalParameters();
 			$this->checkRequirements($this->getReflection());
 			$this->startup();
 			if (!$this->startupCheck) {
@@ -713,7 +713,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->params, 'redirectX');
+			$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->getParameters(), 'redirectX');
 			if ($url !== NULL && !$this->getHttpRequest()->getUrl()->isEqual($url)) {
 				$this->sendResponse(new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY));
 			}
@@ -935,11 +935,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 		// ADD ACTION & SIGNAL & FLASH
 		$args[self::ACTION_KEY] = $action;
 		if (!empty($signal)) {
-			$args[self::SIGNAL_KEY] = $component->getParamId($signal);
-			$current = $current && $args[self::SIGNAL_KEY] === $this->getParam(self::SIGNAL_KEY);
+			$args[self::SIGNAL_KEY] = $component->getParameterId($signal);
+			$current = $current && $args[self::SIGNAL_KEY] === $this->getParameter(self::SIGNAL_KEY);
 		}
 		if (($mode === 'redirect' || $mode === 'forward') && $this->hasFlashSession()) {
-			$args[self::FLASH_KEY] = $this->getParam(self::FLASH_KEY);
+			$args[self::FLASH_KEY] = $this->getParameter(self::FLASH_KEY);
 		}
 
 		$this->lastCreatedRequest = new Application\Request(
@@ -1159,13 +1159,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @return void
 	 * @throws Nette\Application\BadRequestException if action name is not valid
 	 */
-	private function initGlobalParams()
+	private function initGlobalParameters()
 	{
 		// init $this->globalParams
 		$this->globalParams = array();
 		$selfParams = array();
 
-		$params = $this->request->getParams();
+		$params = $this->request->getParameters();
 		if ($this->isAjax()) {
 			$params += $this->request->getPost();
 		}
@@ -1209,7 +1209,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string  component id
 	 * @return array
 	 */
-	final public function popGlobalParams($id)
+	final public function popGlobalParameters($id)
 	{
 		if (isset($this->globalParams[$id])) {
 			$res = $this->globalParams[$id];

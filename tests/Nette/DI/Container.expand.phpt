@@ -17,8 +17,8 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $container = new Container;
-$container->params['appDir'] = '/myApp';
-$container->params['dirs']['cache'] = '/temp';
+$container->parameters['appDir'] = '/myApp';
+$container->parameters['dirs']['cache'] = '/temp';
 
 Assert::same( '/myApp/test', $container->expand('%appDir%/test') );
 Assert::same( '/temp/test', $container->expand('%dirs.cache%/test') );
@@ -29,6 +29,6 @@ Assert::throws(function() use ($container) {
 }, 'Nette\InvalidArgumentException', "Missing item 'bar'.");
 
 Assert::throws(function() use ($container) {
-	$container->params['bar'] = array();
+	$container->parameters['bar'] = array();
 	$container->expand('foo%bar%');
 }, 'Nette\InvalidArgumentException', "Unable to concatenate non-scalar parameter 'bar' into 'foo%bar%'.");

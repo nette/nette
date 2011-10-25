@@ -21,7 +21,7 @@ use Nette;
  * @author     David Grudl
  *
  * @property   string $presenterName
- * @property   array $params
+ * @property   array $parameters
  * @property   array $post
  * @property   array $files
  */
@@ -105,7 +105,7 @@ final class Request extends Nette\FreezableObject
 	 * @param  array
 	 * @return Request  provides a fluent interface
 	 */
-	public function setParams(array $params)
+	public function setParameters(array $params)
 	{
 		$this->updating();
 		$this->params = $params;
@@ -118,9 +118,27 @@ final class Request extends Nette\FreezableObject
 	 * Returns all variables provided to the presenter (usually via URL).
 	 * @return array
 	 */
-	public function getParams()
+	public function getParameters()
 	{
 		return $this->params;
+	}
+
+
+
+	/** @deprecated */
+	function setParams(array $params)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_WARNING);
+		return $this->setParameters($params);
+	}
+
+
+
+	/** @deprecated */
+	function getParams()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_WARNING);
+		return $this->getParameters();
 	}
 
 

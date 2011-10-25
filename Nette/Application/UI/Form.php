@@ -115,7 +115,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 		if ($isPost) {
 			return Nette\Utils\Arrays::mergeTree($request->getPost(), $request->getFiles());
 		} else {
-			return $request->getParams();
+			return $request->getParameters();
 		}
 	}
 

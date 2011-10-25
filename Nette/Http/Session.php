@@ -488,7 +488,7 @@ class Session extends Nette\Object
 	 * @param  bool    secure
 	 * @return Session  provides a fluent interface
 	 */
-	public function setCookieParams($path, $domain = NULL, $secure = NULL)
+	public function setCookieParameters($path, $domain = NULL, $secure = NULL)
 	{
 		return $this->setOptions(array(
 			'cookie_path' => $path,
@@ -503,9 +503,18 @@ class Session extends Nette\Object
 	 * Returns the session cookie parameters.
 	 * @return array  containing items: lifetime, path, domain, secure, httponly
 	 */
-	public function getCookieParams()
+	public function getCookieParameters()
 	{
 		return session_get_cookie_params();
+	}
+
+
+
+	/** @deprecated */
+	function setCookieParams($path, $domain = NULL, $secure = NULL)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setCookieParameters() instead.', E_USER_WARNING);
+		return $this->setCookieParameters($path, $domain, $secure);
 	}
 
 
@@ -546,7 +555,7 @@ class Session extends Nette\Object
 	 */
 	private function sendCookie()
 	{
-		$cookie = $this->getCookieParams();
+		$cookie = $this->getCookieParameters();
 		$this->response->setCookie(
 			session_name(), session_id(),
 			$cookie['lifetime'] ? $cookie['lifetime'] + time() : 0,

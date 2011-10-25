@@ -23,6 +23,9 @@ use Nette;
 class Container extends Nette\FreezableObject implements IContainer
 {
 	/** @var array  user parameters */
+	public $parameters = array();
+
+	/** @deprecated */
 	public $params = array();
 
 	/** @var array  storage for shared objects */
@@ -33,6 +36,13 @@ class Container extends Nette\FreezableObject implements IContainer
 
 	/** @var array circular reference detector */
 	private $creating;
+
+
+
+	public function __construct()
+	{
+		$this->params = &$this->parameters;
+	}
 
 
 
@@ -166,7 +176,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 */
 	public function expand($s)
 	{
-		return is_string($s) ? Nette\Utils\Strings::expand($s, $this->params) : $s;
+		return is_string($s) ? Nette\Utils\Strings::expand($s, $this->parameters) : $s;
 	}
 
 

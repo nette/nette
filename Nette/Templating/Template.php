@@ -93,9 +93,9 @@ class Template extends Nette\Object implements ITemplate
 		}
 
 		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParams());
+			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
 		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParams());
+			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
 		}
 	}
 
@@ -293,7 +293,7 @@ class Template extends Nette\Object implements ITemplate
 	 * @param  array
 	 * @return Template  provides a fluent interface
 	 */
-	public function setParams(array $params)
+	public function setParameters(array $params)
 	{
 		$this->params = $params + $this->params;
 		return $this;
@@ -305,10 +305,28 @@ class Template extends Nette\Object implements ITemplate
 	 * Returns array of all parameters.
 	 * @return array
 	 */
-	public function getParams()
+	public function getParameters()
 	{
 		$this->params['template'] = $this;
 		return $this->params;
+	}
+
+
+
+	/** @deprecated */
+	function setParams(array $params)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_WARNING);
+		return $this->setParameters($params);
+	}
+
+
+
+	/** @deprecated */
+	function getParams()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_WARNING);
+		return $this->getParameters();
 	}
 
 
