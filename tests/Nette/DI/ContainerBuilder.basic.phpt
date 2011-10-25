@@ -21,7 +21,7 @@ class Service
 	public $args;
 	public $methods;
 
-	static function create(DI\IContainer $container)
+	static function create(DI\IContainer $container = NULL)
 	{
 		$args = func_get_args();
 		unset($args[0]);
@@ -60,7 +60,7 @@ $builder->addDefinition('five', NULL)
 
 $builder->addDefinition('six', NULL)
 	->setFactory('Service::create')
-	->setArguments(array('a', 'b'))
+	->setArguments(array('@container', 'a', 'b'))
 	->addCall(array('@six', 'methodA'), array('a', 'b'));
 
 $code = $builder->generateCode();

@@ -95,7 +95,6 @@ class ContainerBuilder extends Nette\Object
 
 		if ($definition->factory) {
 			$callback = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
-			array_unshift($arguments, '@container');
 			$code .= '$service = ';
 
 			if (preg_match('#^@\w+$#', $callback[0]) && isset($callback[1]) && self::isExpanded($callback[1])) {

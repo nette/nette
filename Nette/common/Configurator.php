@@ -184,6 +184,9 @@ class Configurator extends Object
 
 					if (isset($def['factory'])) {
 						$definition->setFactory($def['factory']);
+						if (!$definition->arguments) {
+							$definition->arguments[] = '@container';
+						}
 					} elseif (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
 						$definition->setFactory(array(get_called_class(), "createService$key"));
 					}
