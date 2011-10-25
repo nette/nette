@@ -137,15 +137,30 @@ class ContainerBuilder extends Nette\Object
 
 		foreach ((array) $definition->calls as $callback) {
 			$arguments = is_array($callback[1]) ? $callback[1] : array();
-			if (self::isExpanded($callback[0])) {
-				if ($definition->class && self::isExpanded($definition->class)) {
-					$arguments = $this->autowireArguments($definition->class, $callback[0], $arguments);
-				}
-				$code .= "\$service->$callback[0]";
+
+			if (is_array($callback[0])) {
+				$callback = $callback[0];
 			} else {
-				$code .= '$method = ' . $this->argsExport(array($callback[0]), $name) . '; $service->$method';
+				$callback = explode('::', $callback[0]);
+				if (!isset($callback[1])) {
+					array_unshift($callback, '@self');
+				}
 			}
-			$code .= "({$this->argsExport($arguments, $name)});\n";
+
+			if (preg_match('#^@\w+$#', $callback[0]) && isset($callback[1]) && self::isExpanded($callback[1])) {
+				if (isset($this->definitions[substr($callback[0], 1)]->class)) {
+					$arguments = $this->autowireArguments($this->definitions[substr($callback[0], 1)]->class, $callback[1], $arguments);
+				}
+				$code .= $this->argsExport(array($callback[0]), $name) . "->$callback[1](";
+
+			} elseif (self::isExpanded($callback[0]) && isset($callback[1]) && self::isExpanded($callback[1])) {
+				$arguments = $this->autowireArguments($callback[0], $callback[1], $arguments);
+				$code .= implode('::', $callback) . '(';
+
+			} else {
+				$code .= 'call_user_func(' . $this->argsExport(isset($callback[1]) ? array($callback) : $callback, $name) . ($arguments ? ', ' : '');
+			}
+			$code .= $this->argsExport($arguments, $name) . ");\n";
 		}
 
 		return $code .= 'return $service;';
