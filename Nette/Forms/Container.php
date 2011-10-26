@@ -105,7 +105,10 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	{
 		$values = new Nette\ArrayHash;
 		foreach ($this->getComponents() as $name => $control) {
-			if ($control instanceof IControl && !$control->isDisabled() && !$control instanceof ISubmitterControl) {
+			if ($control instanceof IControl
+					&& !$control->isDisabled()
+					&& !$control instanceof ISubmitterControl
+					&& !$control instanceof Controls\ResetButton) {
 				$values->$name = $control->getValue();
 
 			} elseif ($control instanceof Container) {
@@ -365,6 +368,19 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	public function addSubmit($name, $caption = NULL)
 	{
 		return $this[$name] = new Controls\SubmitButton($caption);
+	}
+
+
+
+	/**
+	 * Adds button used to reset form.
+	 * @param  string  control name
+	 * @param  string  caption
+	 * @return Nette\Forms\Controls\ResetButton
+	 */
+	public function addReset($name, $caption = NULL)
+	{
+		return $this[$name] = new Controls\ResetButton($caption);
 	}
 
 
