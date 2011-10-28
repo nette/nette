@@ -72,6 +72,9 @@ class Neon extends Nette\Object
 			$isArray = array_keys($var) === range(0, count($var) - 1);
 			$s = '';
 			if ($options & self::BLOCK) {
+				if (count($var) === 0){
+					return "[]";
+				}
 				foreach ($var as $k => $v) {
 					$v = self::encode($v, self::BLOCK);
 					$s .= ($isArray ? '-' : self::encode($k) . ':')
