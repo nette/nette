@@ -36,7 +36,7 @@ Assert::same( array(
 	'' => 1,
 	-5 => 1,
 	'5.3' => 1,
-), Neon::decode('{true: 1, false: 1, null: 1, -5: 1, 5.3: 1}') );
+), Neon::decode('{true: 1, false: 1, -5: 1, 5.3: 1}') );
 
 
 Assert::same( array(

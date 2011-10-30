@@ -154,11 +154,7 @@ class Neon extends Nette\Object
 				if (!$hasValue || !$inlineParser) {
 					$this->error();
 				}
-				if ($hasKey) {
-					$result[$key] = $value;
-				} else {
-					$result[] = $value;
-				}
+				$this->addValue($result, $hasKey, $key, $value);
 				$hasKey = $hasValue = FALSE;
 
 			} elseif ($t === ':' || $t === '=') { // KeyValuePair separator
@@ -206,11 +202,7 @@ class Neon extends Nette\Object
 			} elseif ($t[0] === "\n") { // Indent
 				if ($inlineParser) {
 					if ($hasValue) {
-						if ($hasKey) {
-							$result[$key] = $value;
-						} else {
-							$result[] = $value;
-						}
+						$this->addValue($result, $hasKey, $key, $value);
 						$hasKey = $hasValue = FALSE;
 					}
 
@@ -238,10 +230,8 @@ class Neon extends Nette\Object
 						if ($hasValue || !$hasKey) {
 							$n++;
 							$this->error('Unexpected indentation.');
-						} elseif ($key === NULL) {
-							$result[] = $this->parse($newIndent);
 						} else {
-							$result[$key] = $this->parse($newIndent);
+							$this->addValue($result, $key !== NULL, $key, $this->parse($newIndent));
 						}
 						$newIndent = isset($tokens[$n]) ? strlen($tokens[$n]) - 1 : 0;
 						$hasKey = FALSE;
@@ -251,12 +241,7 @@ class Neon extends Nette\Object
 							break;
 
 						} elseif ($hasKey) {
-							$value = $hasValue ? $value : NULL;
-							if ($key === NULL) {
-								$result[] = $value;
-							} else {
-								$result[$key] = $value;
-							}
+							$this->addValue($result, $key !== NULL, $key, $hasValue ? $value : NULL);
 							$hasKey = $hasValue = FALSE;
 						}
 					}
@@ -295,11 +280,7 @@ class Neon extends Nette\Object
 
 		if ($inlineParser) {
 			if ($hasValue) {
-				if ($hasKey) {
-					$result[$key] = $value;
-				} else {
-					$result[] = $value;
-				}
+				$this->addValue($result, $hasKey, $key, $value);
 			} elseif ($hasKey) {
 				$this->error();
 			}
@@ -311,15 +292,24 @@ class Neon extends Nette\Object
 					$this->error();
 				}
 			} elseif ($hasKey) {
-				$value = $hasValue ? $value : NULL;
-				if ($key === NULL) {
-					$result[] = $value;
-				} else {
-					$result[$key] = $value;
-				}
+				$this->addValue($result, $key !== NULL, $key, $hasValue ? $value : NULL);
 			}
 		}
 		return $result;
+	}
+
+
+
+	private function addValue(&$result, $hasKey, $key, $value)
+	{
+		if ($hasKey) {
+			if ($result && array_key_exists($key, $result)) {
+				$this->error("Duplicated key '$key'");
+			}
+			$result[$key] = $value;
+		} else {
+			$result[] = $value;
+		}
 	}
 
 
