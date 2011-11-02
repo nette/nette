@@ -46,13 +46,13 @@ class SelectBox extends BaseControl
 	 * @param  array   items from which to choose
 	 * @param  int     number of rows that should be visible
 	 */
-	public function __construct($label = NULL, array $items = NULL, $size = NULL)
+	public function __construct($label = NULL, array $items = NULL, $size = NULL, $useKeys = TRUE)
 	{
 		parent::__construct($label);
 		$this->control->setName('select');
 		$this->control->size = $size > 1 ? (int) $size : NULL;
 		if ($items !== NULL) {
-			$this->setItems($items);
+			$this->setItems($items, $useKeys);
 		}
 	}
 

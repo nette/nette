@@ -334,9 +334,9 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  int     number of rows that should be visible
 	 * @return Nette\Forms\Controls\SelectBox
 	 */
-	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL)
+	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL, $useKeys = TRUE)
 	{
-		return $this[$name] = new Controls\SelectBox($label, $items, $size);
+		return $this[$name] = new Controls\SelectBox($label, $items, $size, $useKeys);
 	}
 
 
