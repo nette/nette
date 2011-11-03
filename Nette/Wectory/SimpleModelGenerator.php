@@ -13,10 +13,20 @@ class SimpleModelGenerator extends \Nette\Object
 		$this->models[$name] = $cols;
 	}
 	
-	public function __toString()
+	public function export()
 	{
+		$export = array();
+	
 		foreach ($this->models as $name => $cols) {
-			// implement me
+			$class = new Nette\Utils\PhpGenerator\ClassType($name);
+			
+			foreach ($cols as $col) {
+				$class->setProperty($col);
+			}
+			
+			$export[$name] = $class;
 		}
+		
+		return $export;
 	}
 }
