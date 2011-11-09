@@ -122,7 +122,7 @@ class Assert
 	 * @param  string message
 	 * @return void
 	 */
-	public static function throws($function, $class, $message)
+	public static function throws($function, $class, $message = NULL)
 	{
 		try {
 			call_user_func($function);
