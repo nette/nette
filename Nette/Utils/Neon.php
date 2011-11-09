@@ -69,12 +69,12 @@ class Neon extends Nette\Object
 			}
 		}
 		if (is_array($var)) {
-			$isArray = array_keys($var) === range(0, count($var) - 1);
+			$isList = Arrays::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
 				foreach ($var as $k => $v) {
 					$v = self::encode($v, self::BLOCK);
-					$s .= ($isArray ? '-' : self::encode($k) . ':')
+					$s .= ($isList ? '-' : self::encode($k) . ':')
 						. (strpos($v, "\n") === FALSE ? ' ' . $v : "\n\t" . str_replace("\n", "\n\t", $v))
 						. "\n";
 					continue;
@@ -83,9 +83,9 @@ class Neon extends Nette\Object
 
 			} else {
 				foreach ($var as $k => $v) {
-					$s .= ($isArray ? '' : self::encode($k) . ': ') . self::encode($v) . ', ';
+					$s .= ($isList ? '' : self::encode($k) . ': ') . self::encode($v) . ', ';
 				}
-				return ($isArray ? '[' : '{') . substr($s, 0, -2) . ($isArray ? ']' : '}');
+				return ($isList ? '[' : '{') . substr($s, 0, -2) . ($isList ? ']' : '}');
 			}
 
 		} elseif (is_string($var) && !is_numeric($var)
