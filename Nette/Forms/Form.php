@@ -69,6 +69,9 @@ class Form extends Container
 		FLOAT = ':float',
 		RANGE = ':range';
 
+	// multiselect
+	const COUNT = ':length';
+
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
 		MIME_TYPE = ':mimeType',
