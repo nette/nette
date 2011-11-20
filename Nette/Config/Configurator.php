@@ -410,18 +410,14 @@ class Configurator extends Nette\Object
 	 */
 	public static function createServiceApplication(DI\Container $container, array $options = NULL)
 	{
-		$context = new DI\Container;
-		$context->addService('httpRequest', $container->httpRequest);
-		$context->addService('httpResponse', $container->httpResponse);
-		$context->addService('session', $container->session);
-		$context->addService('presenterFactory', $container->presenterFactory);
-		$context->addService('router', $container->router);
-
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
-		$application = new $class($context);
+		$application = new $class($container->presenterFactory, $container->router, $container->httpRequest, $container->httpResponse, $container->session);
 		$application->catchExceptions = $container->parameters['productionMode'];
+
+		Nette\Application\Diagnostics\RoutingPanel::initialize($application, $container->httpRequest);
+
 		if ($container->session->exists()) {
-		$application->onStartup[] = function() use ($container) {
+			$application->onStartup[] = function() use ($container) {
 				$container->session->start(); // opens already started session
 			};
 		}
