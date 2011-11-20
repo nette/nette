@@ -25,6 +25,9 @@ use Nette,
 class ContainerBuilder extends Nette\Object
 {
 	/** @var array */
+	public $parameters = array();
+
+	/** @var array */
 	private $definitions = array();
 
 	/** @var array */
