@@ -29,6 +29,7 @@ $container->addService('one', $one);
 $container->addService('two', $two);
 
 Assert::true( $container->hasService('one') );
+Assert::true( $container->isCreated('one') );
 Assert::true( $container->hasService('two') );
 Assert::false( $container->hasService('undefined') );
 
@@ -51,7 +52,9 @@ $container->addService('four', function($container){
 });
 
 Assert::true( $container->hasService('four') );
+Assert::false( $container->isCreated('four') );
 Assert::true( $container->getService('four') instanceof Service );
+Assert::true( $container->isCreated('four') );
 Assert::same( $container->getService('four'), $container->getService('four') ); // shared
 
 

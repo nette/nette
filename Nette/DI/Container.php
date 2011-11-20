@@ -145,7 +145,6 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
 		}
 
-		unset($this->factories[$name]);
 		return $this->registry[$name] = $service;
 	}
 
@@ -161,6 +160,21 @@ class Container extends Nette\FreezableObject implements IContainer
 		return isset($this->registry[$name])
 			|| isset($this->factories[$name])
 			|| method_exists($this, "createService$name");
+	}
+
+
+
+	/**
+	 * Is the service created?
+	 * @param  string service name
+	 * @return bool
+	 */
+	public function isCreated($name)
+	{
+		if (!$this->hasService($name)) {
+			throw new MissingServiceException("Service '$name' not found.");
+		}
+		return isset($this->registry[$name]);
 	}
 
 
