@@ -417,12 +417,6 @@ class Configurator extends Nette\Object
 		$context->addService('presenterFactory', $container->presenterFactory);
 		$context->addService('router', $container->router);
 
-		if (Nette\Application\UI\Presenter::$invalidLinkMode === NULL) {
-			Nette\Application\UI\Presenter::$invalidLinkMode = $container->parameters['productionMode']
-				? Nette\Application\UI\Presenter::INVALID_LINK_SILENT
-				: Nette\Application\UI\Presenter::INVALID_LINK_WARNING;
-		}
-
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class($context);
 		$application->catchExceptions = $container->parameters['productionMode'];

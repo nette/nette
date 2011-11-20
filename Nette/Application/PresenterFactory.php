@@ -57,6 +57,8 @@ class PresenterFactory implements IPresenterFactory
 		$class = $this->getPresenterClass($name);
 		$presenter = new $class;
 		$presenter->setContext($this->context);
+		$presenter->invalidLinkMode = $this->context->parameters['productionMode']
+			? UI\Presenter::INVALID_LINK_SILENT : UI\Presenter::INVALID_LINK_WARNING;
 		return $presenter;
 	}
 

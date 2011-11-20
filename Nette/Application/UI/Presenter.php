@@ -49,7 +49,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		DEFAULT_ACTION = 'default';
 
 	/** @var int */
-	public static $invalidLinkMode;
+	public $invalidLinkMode;
 
 	/** @var array of function(Presenter $sender, IResponse $response = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
@@ -1037,10 +1037,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function handleInvalidLink($e)
 	{
-		if (self::$invalidLinkMode === self::INVALID_LINK_SILENT) {
+		if ($this->invalidLinkMode === self::INVALID_LINK_SILENT) {
 			return '#';
 
-		} elseif (self::$invalidLinkMode === self::INVALID_LINK_WARNING) {
+		} elseif ($this->invalidLinkMode === self::INVALID_LINK_WARNING) {
 			return 'error: ' . $e->getMessage();
 
 		} else { // self::INVALID_LINK_EXCEPTION
