@@ -164,7 +164,9 @@ class Configurator extends Object
 			$builder = new DI\ContainerBuilder;
 			foreach ($config['services'] as $key => $def) {
 				if (is_array($def)) {
-					$definition = $builder->addDefinition($key, isset($def['class']) ? $def['class'] : NULL, !empty($def['prefer']));
+					$definition = $builder->addDefinition($key);
+					$definition->setClass(isset($def['class']) ? $def['class'] : NULL);
+					$definition->setAutowired(!empty($def['autowired']));
 
 					if (isset($def['arguments'])) {
 						$definition->setArguments(array_diff($def['arguments'], array('...')));
@@ -199,13 +201,13 @@ class Configurator extends Object
 						}
 					}
 
-					$def = array_diff(array_keys($def), array('class', 'prefer', 'arguments', 'calls', 'factory', 'run', 'tags'));
+					$def = array_diff(array_keys($def), array('class', 'autowired', 'arguments', 'calls', 'factory', 'run', 'tags'));
 					if ($def) {
 						throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $def) . "' in definition of service '$key'.");
 					}
 
 				} elseif (is_scalar($def)) {
-					$builder->addDefinition($key, $def);
+					$builder->addDefinition($key)->setClass($def);
 				}
 			}
 

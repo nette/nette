@@ -45,12 +45,15 @@ class Service
 $container = new DI\Container;
 
 $builder = new DI\ContainerBuilder;
-$builder->addDefinition('one', 'Service');
-$builder->addDefinition('three', 'Service')
+$builder->addDefinition('one')
+	->setClass('Service');
+$builder->addDefinition('three')
+	->setClass('Service')
 	->setArguments(array('a', 'b'))
 	->addTag('panel', 'attrs');
 
-$builder->addDefinition('four', 'Service')
+$builder->addDefinition('four')
+	->setClass('Service')
 	->setArguments(array('a', 'b'))
 	->addCall('methodA', array('a', 'b'))
 	->addCall('@four::methodB', array(1, 2));
@@ -58,7 +61,7 @@ $builder->addDefinition('four', 'Service')
 $builder->addDefinition('five', NULL)
 	->setFactory('Service::create');
 
-$builder->addDefinition('six', NULL)
+$builder->addDefinition('six')
 	->setFactory('Service::create')
 	->setArguments(array('@container', 'a', 'b'))
 	->addCall(array('@six', 'methodA'), array('a', 'b'));

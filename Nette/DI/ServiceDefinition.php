@@ -37,11 +37,15 @@ class ServiceDefinition extends Nette\Object
 	/** @var array */
 	public $tags = array();
 
+	/** @var mixed */
+	public $autowired = TRUE;
 
 
-	public function __construct($class)
+
+	public function setClass($class)
 	{
 		$this->class = $class;
+		return $this;
 	}
 
 
@@ -73,6 +77,14 @@ class ServiceDefinition extends Nette\Object
 	public function addTag($tag, $attrs = NULL)
 	{
 		$this->tags[$tag] = (array) $attrs;
+		return $this;
+	}
+
+
+
+	public function setAutowired($on)
+	{
+		$this->autowired = $on;
 		return $this;
 	}
 

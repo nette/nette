@@ -40,28 +40,16 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Adds new services from list of definitions. Expands %param% and @service values.
-	 * @param  string  class or interface
 	 * @param  string
-	 * @param  bool
 	 * @return ServiceDefinition
 	 */
-	public function addDefinition($name, $class, $prefer = FALSE)
+	public function addDefinition($name)
 	{
 		if (isset($this->definitions[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
-
-		if ($class && self::isExpanded($class)) {
-			if (!class_exists($class) && !interface_exists($class)) {
-				throw new Nette\InvalidStateException("Class '$class' has not been found.");
+		return $this->definitions[$name] = new ServiceDefinition;
 			}
-			foreach (class_parents($class) + class_implements($class) + array($class) as $parent) {
-				$this->classes[strtolower($parent)][(bool) $prefer][] = $name;
-			}
-		}
-
-		return $this->definitions[$name] = new ServiceDefinition($class);
-	}
 
 
 
@@ -71,6 +59,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function generateCode()
 	{
+		$this->prepareClassList();
 		$code = '';
 		foreach ($this->definitions as $name => $foo) {
 			try {
@@ -82,6 +71,28 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 		return $code;
+	}
+
+
+
+	private function prepareClassList()
+	{
+		$this->classes = array(
+			'nette\di\container' => array(TRUE => array('container')),
+			'nette\di\icontainer' => array(TRUE => array('container')),
+		);
+
+		foreach ($this->definitions as $name => $definition) {
+			if ($definition->class && self::isExpanded($definition->class)) {
+				if (!class_exists($definition->class) && !interface_exists($definition->class)) {
+					throw new Nette\InvalidStateException("Class '$definition->class'" . (isset($callback) ? " returned by $callback" : '') . " has not been found.");
+				}
+				foreach (class_parents($definition->class) + class_implements($definition->class) + array($definition->class) as $parent) {
+					$this->classes[strtolower($parent)][(bool) $definition->autowired][] = $name;
+				}
+			}
+			$callback = NULL;
+		}
 	}
 
 

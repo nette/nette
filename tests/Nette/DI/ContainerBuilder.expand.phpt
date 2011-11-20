@@ -48,15 +48,16 @@ $container->parameters['arg1'] = 'a';
 $container->parameters['tag'] = 'attrs';
 
 $builder = new DI\ContainerBuilder;
-$builder->addDefinition('one', '%serviceClass%')
+$builder->addDefinition('one')
+	->setClass('%serviceClass%')
 	->setArguments(array('%arg1%', 'b'))
 	->addCall('methodA', array('%arg1%', 'b'));
 
-$builder->addDefinition('two', NULL)
+$builder->addDefinition('two')
 	->setFactory('%serviceClass%::create')
 	->setArguments(array('@container', '%arg1%', '@one'));
 
-$builder->addDefinition('three', NULL)
+$builder->addDefinition('three')
 	->setFactory(array('%serviceClass%', 'create'));
 
 
