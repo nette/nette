@@ -73,7 +73,7 @@ class ContainerBuilder extends Nette\Object
 			try {
 				$method = new Nette\Utils\PhpGenerator\Method;
 				$method->setBody($this->generateFactory($name))->addParameter('container');
-				$code .= Helpers::generate('$container->addService', $name, new PhpLiteral($method)) . "\n\n";
+				$code .= Helpers::format('$container->addService(?, ?);', $name, new PhpLiteral($method)) . "\n\n";
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Error creating service '$name': {$e->getMessage()}", 0, $e);
 			}
@@ -292,7 +292,7 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($val === '@container') {
 				$val = new PhpLiteral('$container');
 			} elseif (preg_match('#^@\w+$#', $val)) {
-				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$container->' . Helpers::dumpMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$container->' . Helpers::formatMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
 				$val = new PhpLiteral('$container->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (strpos($val, '%') !== FALSE) {

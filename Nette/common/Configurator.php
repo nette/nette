@@ -155,7 +155,7 @@ class Configurator extends Object
 		// define constants
 		if (isset($config['constants'])) {
 			foreach ($config['constants'] as $key => $value) {
-				$code .= $this->generateCode('define', $key, $value);
+				$code .= $this->generateCode('define(?, ?)', $key, $value);
 			}
 		}
 
@@ -281,17 +281,17 @@ class Configurator extends Object
 
 		switch ($name) {
 		case 'include_path':
-			return $this->generateCode('set_include_path', str_replace(';', PATH_SEPARATOR, $value));
+			return $this->generateCode('set_include_path(?)', str_replace(';', PATH_SEPARATOR, $value));
 		case 'ignore_user_abort':
-			return $this->generateCode('ignore_user_abort', $value);
+			return $this->generateCode('ignore_user_abort(?)', $value);
 		case 'max_execution_time':
-			return $this->generateCode('set_time_limit', $value);
+			return $this->generateCode('set_time_limit(?)', $value);
 		case 'date.timezone':
-			return $this->generateCode('date_default_timezone_set', $value);
+			return $this->generateCode('date_default_timezone_set(?)', $value);
 		}
 
 		if (function_exists('ini_set')) {
-			return $this->generateCode('ini_set', $name, $value);
+			return $this->generateCode('ini_set(?, ?)', $name, $value);
 		} elseif (ini_get($name) != $value && !Framework::$iAmUsingBadHost) { // intentionally ==
 			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 		}
@@ -302,6 +302,7 @@ class Configurator extends Object
 	private static function generateCode($statement)
 	{
 		$args = func_get_args();
+		array_shift($args);
 		array_walk_recursive($args, function(&$val) {
 			if (is_string($val) && strpos($val, '%') !== FALSE) {
 				if (preg_match('#^%([\w-]+)%$#', $val)) {
@@ -311,7 +312,7 @@ class Configurator extends Object
 				}
 			}
 		});
-		return call_user_func_array('Nette\Utils\PhpGenerator\Helpers::generate', $args) . "\n\n";
+		return Nette\Utils\PhpGenerator\Helpers::formatArgs($statement, $args) . ";\n\n";
 	}
 
 
