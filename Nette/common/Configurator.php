@@ -109,7 +109,7 @@ class Configurator extends Object
 		}
 		if (isset($config['services'])) {
 			foreach ($config['services'] as $key => $def) {
-				foreach (array('option' => 'arguments', 'methods' => 'calls') as $old => $new) {
+				foreach (array('option' => 'arguments', 'methods' => 'setup') as $old => $new) {
 					if (is_array($def) && isset($def[$old])) {
 						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
 					}
@@ -172,8 +172,8 @@ class Configurator extends Object
 						$definition->setArguments(array_diff($def['arguments'], array('...')));
 					}
 
-					if (isset($def['calls'])) {
-						foreach ($def['calls'] as $item) {
+					if (isset($def['setup'])) {
+						foreach ($def['setup'] as $item) {
 							$definition->addCall($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
 						}
 					}
@@ -201,7 +201,7 @@ class Configurator extends Object
 						}
 					}
 
-					$def = array_diff(array_keys($def), array('class', 'autowired', 'arguments', 'calls', 'factory', 'run', 'tags'));
+					$def = array_diff(array_keys($def), array('class', 'autowired', 'arguments', 'setup', 'factory', 'run', 'tags'));
 					if ($def) {
 						throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $def) . "' in definition of service '$key'.");
 					}

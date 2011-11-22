@@ -55,8 +55,8 @@ $builder->addDefinition('three')
 $builder->addDefinition('four')
 	->setClass('Service')
 	->setArguments(array('a', 'b'))
-	->addCall('methodA', array('a', 'b'))
-	->addCall('@four::methodB', array(1, 2));
+	->addSetup('methodA', array('a', 'b'))
+	->addSetup('@four::methodB', array(1, 2));
 
 $builder->addDefinition('five', NULL)
 	->setFactory('Service::create');
@@ -64,7 +64,7 @@ $builder->addDefinition('five', NULL)
 $builder->addDefinition('six')
 	->setFactory('Service::create')
 	->setArguments(array('@container', 'a', 'b'))
-	->addCall(array('@six', 'methodA'), array('a', 'b'));
+	->addSetup(array('@six', 'methodA'), array('a', 'b'));
 
 $code = $builder->generateCode();
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");

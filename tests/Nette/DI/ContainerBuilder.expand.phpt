@@ -51,7 +51,7 @@ $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('%serviceClass%')
 	->setArguments(array('%arg1%', 'b'))
-	->addCall('methodA', array('%arg1%', 'b'));
+	->addSetup('methodA', array('%arg1%', 'b'));
 
 $builder->addDefinition('two')
 	->setFactory('%serviceClass%::create')

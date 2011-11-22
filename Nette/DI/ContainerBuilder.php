@@ -148,7 +148,7 @@ class ContainerBuilder extends Nette\Object
 			$code .= $arguments ? "({$this->argsExport($arguments)});\n" : ";\n";
 		}
 
-		foreach ((array) $definition->calls as $callback) {
+		foreach ((array) $definition->setup as $callback) {
 			$arguments = is_array($callback[1]) ? $callback[1] : array();
 
 			if (is_array($callback[0])) {

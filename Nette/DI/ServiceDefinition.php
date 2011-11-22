@@ -31,8 +31,8 @@ class ServiceDefinition extends Nette\Object
 	/** @var array */
 	public $arguments;
 
-	/** @var array of array(callback|methodName, arguments) */
-	public $calls = array();
+	/** @var array of array(callback|method|property, arguments) */
+	public $setup = array();
 
 	/** @var array */
 	public $tags = array();
@@ -66,9 +66,9 @@ class ServiceDefinition extends Nette\Object
 
 
 
-	public function addCall($method, array $args = NULL)
+	public function addSetup($target, $args = NULL)
 	{
-		$this->calls[] = array($method, $args);
+		$this->setup[] = array($target, $args);
 		return $this;
 	}
 
