@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette;
+namespace Nette\Config;
 
 use Nette,
 	Nette\Caching\Cache,
@@ -22,7 +22,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class Configurator extends Object
+class Configurator extends Nette\Object
 {
 	public static $instance;
 
@@ -107,9 +107,9 @@ class Configurator extends Object
 		}
 		if ($section === NULL) {
 			if (PHP_SAPI === 'cli') {
-				$section = Environment::CONSOLE;
+				$section = Nette\Environment::CONSOLE;
 			} else {
-				$section = $container->parameters['productionMode'] ? Environment::PRODUCTION : Environment::DEVELOPMENT;
+				$section = $container->parameters['productionMode'] ? Nette\Environment::PRODUCTION : Nette\Environment::DEVELOPMENT;
 			}
 		}
 

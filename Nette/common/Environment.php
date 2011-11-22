@@ -28,7 +28,7 @@ final class Environment
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
 
-	/** @var Nette\Configurator */
+	/** @var Nette\Config\Configurator */
 	private static $configurator;
 
 	/** @var Nette\DI\IContainer */
@@ -48,10 +48,10 @@ final class Environment
 
 	/**
 	 * Sets "class behind Environment" configurator.
-	 * @param  Nette\Configurator
+	 * @param  Nette\Config\Configurator
 	 * @return void
 	 */
-	public static function setConfigurator(Configurator $configurator)
+	public static function setConfigurator(Nette\Config\Configurator $configurator)
 	{
 		self::$configurator = $configurator;
 	}
@@ -60,12 +60,12 @@ final class Environment
 
 	/**
 	 * Gets "class behind Environment" configurator.
-	 * @return Nette\Configurator
+	 * @return Nette\Config\Configurator
 	 */
 	public static function getConfigurator()
 	{
 		if (self::$configurator === NULL) {
-			self::$configurator = Configurator::$instance ?: new Configurator;
+			self::$configurator = Nette\Config\Configurator::$instance ?: new Nette\Config\Configurator;
 		}
 		return self::$configurator;
 	}
@@ -357,3 +357,11 @@ final class Environment
 	}
 
 }
+
+
+
+/**/
+/** @deprecated */
+class Configurator extends Nette\Config\Configurator
+{}
+/**/
