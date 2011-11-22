@@ -110,7 +110,7 @@ class Configurator extends Object
 		if (isset($config['services'])) {
 			foreach ($config['services'] as $key => $def) {
 				foreach (array('option' => 'arguments', 'methods' => 'calls') as $old => $new) {
-					if (isset($def[$old])) {
+					if (is_array($def) && isset($def[$old])) {
 						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
 					}
 				}

@@ -21,7 +21,7 @@ class Factory
 	static function createService($context, $options)
 	{
 		TestHelpers::note( 'Factory::createService', __METHOD__ );
-		Assert::same( array('anyValue' => 'hello world'), $options );
+		Assert::same( 'hello world', $options );
 		return (object) NULL;
 	}
 }
