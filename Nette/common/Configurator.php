@@ -119,11 +119,13 @@ class Configurator extends Object
 		if ($cached) {
 			require $cached['file'];
 			fclose($cached['handle']);
-			return $this->container;
+			$container->parameters += $this->container->parameters;
+			return $this->container = $container;
 		}
 
 		$config = Nette\Config\Config::fromFile($file, $section);
-		$code = "<?php\n// source file $file\n\n";
+		$code = "<?php\n// source file $file\n\n"
+			. '$container = new ' . $this->formatContainerClassName() . ";\n";
 
 		// obsolete and deprecated structures
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
@@ -184,6 +186,16 @@ class Configurator extends Object
 		}
 
 		// process services
+		foreach (get_class_methods($this) as $name) {
+			if (substr($name, 0, 13) === 'createService' ) {
+				$def = & $config['services'][strtolower($name[13]) . substr($name, 14)];
+				if (!isset($def['factory']) && !isset($def['class'])) {
+					$def['factory'] = array(get_called_class(), $name);
+				}
+			}
+		}
+		unset($def);
+
 		if (isset($config['services'])) {
 			$builder = new DI\ContainerBuilder;
 			foreach ($config['services'] as $key => $def) {
@@ -207,8 +219,6 @@ class Configurator extends Object
 						if (!$definition->arguments) {
 							$definition->arguments[] = '@container';
 						}
-					} elseif (method_exists(get_called_class(), "createService$key") && !isset($def['factory']) && !isset($def['class'])) {
-						$definition->setFactory(array(get_called_class(), "createService$key"));
 					}
 
 					if (!empty($def['run'])) {
@@ -235,7 +245,7 @@ class Configurator extends Object
 				}
 			}
 
-			$code .= $builder->generateCode();
+			$code .= (string) $builder->generateClass()->setName($this->formatContainerClassName());
 			// auto-start services
 			foreach ($builder->findByTag("run") as $name => $foo) {
 				$code .= $this->generateCode('$container->getService(?)', $name);
@@ -244,13 +254,22 @@ class Configurator extends Object
 
 		// pre-loading
 		$code .= self::preloadEnvironment($container);
+		$code .= 'return $container;';
 
 		$cache->save($cacheKey, $code, array(
 			Cache::FILES => $file,
 		));
 
-		Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
-		return $this->container;
+		$container = Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
+		$container->parameters += $this->container->parameters;
+		return $this->container = $container;
+	}
+
+
+
+	public function formatContainerClassName()
+	{
+		return 'SystemContainer';
 	}
 
 

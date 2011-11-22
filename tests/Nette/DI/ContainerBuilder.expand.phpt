@@ -42,11 +42,6 @@ class Service
 
 
 
-$container = new DI\Container;
-$container->parameters['serviceClass'] = 'Service';
-$container->parameters['arg1'] = 'a';
-$container->parameters['tag'] = 'attrs';
-
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('%serviceClass%')
@@ -61,9 +56,15 @@ $builder->addDefinition('three')
 	->setFactory(array('%serviceClass%', 'create'));
 
 
-$code = $builder->generateCode();
+$code = (string) $builder->generateClass();
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
 require TEMP_DIR . '/code.php';
+
+$container = new Container;
+$container->parameters['serviceClass'] = 'Service';
+$container->parameters['arg1'] = 'a';
+$container->parameters['tag'] = 'attrs';
+
 
 Assert::true( $container->getService('one') instanceof Service );
 Assert::same( array('a', 'b'), $container->getService('one')->args );

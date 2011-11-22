@@ -216,24 +216,31 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Generates PHP code.
-	 * @return string
+	 * Generates PHP class.
+	 * @return Nette\Utils\PhpGenerator\ClassType
 	 */
-	public function generateCode()
+	public function generateClass()
 	{
 		$this->prepareClassList();
-		$code = '';
+
+		$class = new Nette\Utils\PhpGenerator\ClassType('Container');
+		$class->addExtend('Nette\DI\Container');
+		$class->addProperty('parameters', $this->parameters);
+
 
 		foreach ($this->definitions as $name => $definition) {
 			try {
-				$method = new Nette\Utils\PhpGenerator\Method;
-				$method->setBody($this->generateService($name))->addParameter('container');
-				$code .= Helpers::format('$container->addService(?, ?);', $name, new PhpLiteral($method)) . "\n\n";
+				$type = $definition->class && self::isExpanded($definition->class) ? $definition->class : 'object';
+				$class->addDocument("@property $type \$$name");
+				$class->addMethod('createService' . ucfirst($name))
+					->addDocument("@return $type")
+					->setBody($this->generateService($name));
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Error creating service '$name': {$e->getMessage()}", 0, $e);
 			}
 		}
-		return $code;
+
+		return $class;
 	}
 
 
@@ -308,13 +315,13 @@ class ContainerBuilder extends Nette\Object
 			if (!is_string($val)) {
 				return;
 			} elseif ($val === '@container') {
-				$val = new PhpLiteral('$container');
+				$val = new PhpLiteral('$this');
 			} elseif (ContainerBuilder::isService($val)) {
-				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$container->' . Helpers::formatMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$this->' . Helpers::formatMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
-				$val = new PhpLiteral('$container->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
+				$val = new PhpLiteral('$this->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (!ContainerBuilder::isExpanded($val)) {
-				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $container->parameters)');
+				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $this->parameters)');
 			}
 		});
 		return Helpers::formatArgs($statement, $args) . "\n";

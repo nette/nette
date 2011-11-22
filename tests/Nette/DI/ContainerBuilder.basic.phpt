@@ -42,8 +42,6 @@ class Service
 
 
 
-$container = new DI\Container;
-
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('Service');
@@ -66,9 +64,12 @@ $builder->addDefinition('six')
 	->setArguments(array('@container', 'a', 'b'))
 	->addSetup(array('@six', 'methodA'), array('a', 'b'));
 
-$code = $builder->generateCode();
+$code = (string) $builder->generateClass();
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
 require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
 
 Assert::same( array('three' => array('attrs')), $builder->findByTag('panel') );
 
