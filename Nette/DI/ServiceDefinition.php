@@ -74,9 +74,9 @@ class ServiceDefinition extends Nette\Object
 
 
 
-	public function addTag($tag, $attrs = NULL)
+	public function addTag($tag, $attrs = TRUE)
 	{
-		$this->tags[$tag] = (array) $attrs;
+		$this->tags[$tag] = $attrs;
 		return $this;
 	}
 

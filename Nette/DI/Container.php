@@ -22,6 +22,8 @@ use Nette;
  */
 class Container extends Nette\FreezableObject implements IContainer
 {
+	const TAGS = 'tags';
+
 	/** @var array  user parameters */
 	public $parameters = array();
 
@@ -36,6 +38,9 @@ class Container extends Nette\FreezableObject implements IContainer
 
 	/** @var array  storage for service factories */
 	private $factories = array();
+
+	/** @var array */
+	public $meta = array();
 
 	/** @var array circular reference detector */
 	private $creating;
@@ -55,7 +60,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * @param  mixed   object, class name or callback
 	 * @return Container  provides a fluent interface
 	 */
-	public function addService($name, $service)
+	public function addService($name, $service, array $meta = NULL)
 	{
 		$this->updating();
 		if (!is_string($name) || $name === '') {
@@ -68,6 +73,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		if (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
 			$this->registry[$name] = $service;
+			$this->meta[$name] = $meta;
 			return $this;
 
 		} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callback
@@ -76,6 +82,7 @@ class Container extends Nette\FreezableObject implements IContainer
 
 		$this->factories[$name] = array($service);
 		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
+		$this->meta[$name] = $meta;
 		return $this;
 	}
 
@@ -88,7 +95,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function removeService($name)
 	{
 		$this->updating();
-		unset($this->registry[$name], $this->factories[$name]);
+		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
 	}
 
 
@@ -197,6 +204,24 @@ class Container extends Nette\FreezableObject implements IContainer
 			}
 			return $this->getService($this->classes[$lower]);
 		}
+	}
+
+
+
+	/**
+	 * Gets the service names of the specified tag.
+	 * @param  string
+	 * @return array of [service name => tag attributes]
+	 */
+	public function findByTag($tag)
+	{
+		$found = array();
+		foreach ($this->meta as $name => $meta) {
+			if (isset($meta[self::TAGS][$tag])) {
+				$found[$name] = $meta[self::TAGS][$tag];
+			}
+		}
+		return $found;
 	}
 
 

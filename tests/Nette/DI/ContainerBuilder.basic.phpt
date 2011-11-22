@@ -47,8 +47,7 @@ $builder->addDefinition('one')
 	->setClass('Service');
 $builder->addDefinition('three')
 	->setClass('Service')
-	->setArguments(array('a', 'b'))
-	->addTag('panel', 'attrs');
+	->setArguments(array('a', 'b'));
 
 $builder->addDefinition('four')
 	->setClass('Service')
@@ -70,8 +69,6 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-
-Assert::same( array('three' => array('attrs')), $builder->findByTag('panel') );
 
 Assert::true( $container->getService('one') instanceof Service );
 

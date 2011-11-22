@@ -236,6 +236,13 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
+		$meta = $class->addProperty('meta', array());
+		foreach ($this->definitions as $name => $def) {
+			foreach ($def->tags as $tag => $value) {
+				$meta->value[$name][Container::TAGS][$tag] = $value;
+			}
+		}
+
 		foreach ($this->definitions as $name => $definition) {
 			try {
 				$type = $definition->class && self::isExpanded($definition->class) ? $definition->class : 'object';
