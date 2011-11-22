@@ -42,9 +42,23 @@ class ServiceDefinition extends Nette\Object
 
 
 
-	public function setClass($class)
+	public function setClass($class, array $args = NULL)
 	{
 		$this->class = $class;
+		if ($args !== NULL) {
+			$this->arguments = $args;
+		}
+		return $this;
+	}
+
+
+
+	public function setFactory($factory, array $args = NULL)
+	{
+		$this->factory = $factory;
+		if ($args !== NULL) {
+			$this->arguments = $args;
+		}
 		return $this;
 	}
 
@@ -53,14 +67,6 @@ class ServiceDefinition extends Nette\Object
 	public function setArguments(array $args)
 	{
 		$this->arguments = $args;
-		return $this;
-	}
-
-
-
-	public function setFactory($factory)
-	{
-		$this->factory = $factory;
 		return $this;
 	}
 

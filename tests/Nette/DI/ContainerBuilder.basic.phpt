@@ -46,8 +46,7 @@ $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('Service');
 $builder->addDefinition('three')
-	->setClass('Service')
-	->setArguments(array('a', 'b'));
+	->setClass('Service', array('a', 'b'));
 
 $builder->addDefinition('four')
 	->setClass('Service')
@@ -59,8 +58,7 @@ $builder->addDefinition('five', NULL)
 	->setFactory('Service::create');
 
 $builder->addDefinition('six')
-	->setFactory('Service::create')
-	->setArguments(array('@container', 'a', 'b'))
+	->setFactory('Service::create', array('@container', 'a', 'b'))
 	->addSetup(array('@six', 'methodA'), array('a', 'b'));
 
 $code = (string) $builder->generateClass();
