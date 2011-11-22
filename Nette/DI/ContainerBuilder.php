@@ -180,14 +180,32 @@ class ContainerBuilder extends Nette\Object
 		);
 
 		foreach ($this->definitions as $name => $definition) {
+			if (!$definition->class && $definition->factory) {
+				$factory = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
+				if (self::isService($factory[0]) && isset($this->definitions[substr($factory[0], 1)]->class)) {
+					$factory[0] = $this->definitions[substr($factory[0], 1)]->class;
+				}
+				if (self::isExpanded(implode('', $factory))) {
+					$factory = callback($factory);
+					if (!$factory->isCallable()) {
+						throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
+					}
+					try {
+						$definition->class = $factory->toReflection()->getAnnotation('return');
+					} catch (\ReflectionException $e) {
+					}
+				}
+			}
+
 			if ($definition->class && self::isExpanded($definition->class)) {
 				if (!class_exists($definition->class) && !interface_exists($definition->class)) {
-					throw new Nette\InvalidStateException("Class $definition->class has not been found.");
+					throw new Nette\InvalidStateException("Class $definition->class" . (isset($factory) ? " returned by $factory" : '') . " has not been found.");
 				}
 				foreach (class_parents($definition->class) + class_implements($definition->class) + array($definition->class) as $parent) {
 					$this->classes[strtolower($parent)][(bool) $definition->autowired][] = $name;
 				}
 			}
+			$factory = NULL;
 		}
 	}
 
