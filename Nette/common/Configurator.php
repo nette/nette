@@ -123,6 +123,11 @@ class Configurator extends Object
 		}
 
 		$config = Nette\Config\Config::fromFile($file, $section);
+		$mainFile = dirname($file) . DIRECTORY_SEPARATOR . 'main.' . pathinfo($file, PATHINFO_EXTENSION);
+		if (file_exists($mainFile)) {
+			$mainConfig = Nette\Config\Config::fromFile($mainFile);
+			$config = Nette\Utils\Arrays::mergeTree($mainConfig, $config);
+		}
 		$code = "<?php\n// source file $file\n\n";
 
 		// obsolete and deprecated structures
@@ -246,7 +251,7 @@ class Configurator extends Object
 		$code .= self::preloadEnvironment($container);
 
 		$cache->save($cacheKey, $code, array(
-			Cache::FILES => $file,
+			Cache::FILES => array($file, $mainFile),
 		));
 
 		Nette\Utils\LimitedScope::evaluate($code, array('container' => $container));
