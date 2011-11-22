@@ -28,14 +28,13 @@ interface IAdapter
 	 * @param  string  file name
 	 * @return array
 	 */
-	static function load($file);
+	function load($file);
 
 	/**
-	 * Writes configuration to file.
-	 * @param  Config to save
-	 * @param  string  file
-	 * @return void
+	 * Generates configuration string.
+	 * @param  array
+	 * @return string
 	 */
-	static function save($config, $file);
+	function dump(array $data);
 
 }

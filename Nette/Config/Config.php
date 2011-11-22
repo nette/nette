@@ -16,26 +16,95 @@ use Nette;
 
 
 /**
- * Configuration storage.
+ * Configuration loader.
  *
  * @author     David Grudl
  */
-class Config
+class Config extends Nette\Object
 {
-	/** @var array */
-	private static $extensions = array(
-		'ini' => 'Nette\Config\IniAdapter',
-		'neon' => 'Nette\Config\NeonAdapter',
+	/** @internal */
+	const INCLUDES_KEY = 'includes';
+	const EXTENDS_KEY = '_extends';
+
+	private $adapters = array(
+		'php' => 'Nette\Config\Adapters\PhpAdapter',
+		'ini' => 'Nette\Config\Adapters\IniAdapter',
+		'neon' => 'Nette\Config\Adapters\NeonAdapter',
 	);
+
+	private $dependencies = array();
 
 
 
 	/**
-	 * Static class - cannot be instantiated.
+	 * @deprecated
+	 * @return array
 	 */
-	final public function __construct()
+	public static function fromFile($file, $section = NULL)
 	{
-		throw new Nette\StaticClassException;
+		$loader = new static;
+		return $loader->load($file, $section);
+	}
+
+
+
+	/**
+	 * Reads configuration from file.
+	 * @param  string  file name
+	 * @param  string  section to load
+	 * @return array
+	 */
+	public function load($file, $section = NULL)
+	{
+		if (!is_file($file) || !is_readable($file)) {
+			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
+		}
+		$this->dependencies[] = $file = realpath($file);
+		$data = $this->getAdapter($file)->load($file);
+
+		if ($section) {
+			$data = $this->getSection($data, $section);
+		}
+
+		// include child files
+		$merged = array();
+		if (isset($data[self::INCLUDES_KEY])) {
+			if (!is_array($data[self::INCLUDES_KEY])) {
+				throw new Nette\InvalidStateException("Invalid section 'includes' in file '$file'.");
+			}
+			foreach ($data[self::INCLUDES_KEY] as $include) {
+				$merged = self::merge($this->load(dirname($file) . '/' . $include), $merged);
+			}
+		}
+		unset($data[self::INCLUDES_KEY]);
+
+		return self::merge($data, $merged);
+	}
+
+
+
+	/**
+	 * Save configuration to file.
+	 * @param  array
+	 * @param  string  file
+	 * @return void
+	 */
+	public function save($data, $file)
+	{
+		if (file_put_contents($file, $this->getAdapter($file)->dump($data)) === FALSE) {
+			throw new Nette\IOException("Cannot write file '$file'.");
+		}
+	}
+
+
+
+	/**
+	 * Returns configuration files.
+	 * @return array
+	 */
+	public function getDependencies()
+	{
+		return array_unique($this->dependencies);
 	}
 
 
@@ -43,62 +112,72 @@ class Config
 	/**
 	 * Registers adapter for given file extension.
 	 * @param  string  file extension
-	 * @param  string  class name (IConfigAdapter)
+	 * @param  string|Nette\Config\IAdapter
 	 * @return void
 	 */
-	public static function registerExtension($extension, $class)
+	public function addAdapter($extension, $adapter)
 	{
-		if (!class_exists($class)) {
-			throw new Nette\InvalidArgumentException("Class '$class' was not found.");
-		}
+		$this->adapters[strtolower($extension)] = $adapter;
+	}
 
-		if (!Nette\Reflection\ClassType::from($class)->implementsInterface('Nette\Config\IAdapter')) {
-			throw new Nette\InvalidArgumentException("Configuration adapter '$class' is not Nette\\Config\\IAdapter implementor.");
-		}
 
-		self::$extensions[strtolower($extension)] = $class;
+
+	/** @return IAdapter */
+	private function getAdapter($file)
+	{
+		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+		if (!isset($this->adapters[$extension])) {
+			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
+		}
+		return is_object($this->adapters[$extension]) ? $this->adapters[$extension] : new $this->adapters[$extension];
 	}
 
 
 
 	/**
-	 * Creates new configuration object from file.
-	 * @param  string  file name
-	 * @param  string  section to load
+	 * Merges configurations. Left has higher priority than right one.
 	 * @return array
 	 */
-	public static function fromFile($file, $section = NULL)
+	public static function merge($left, $right)
 	{
-		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		if (!isset(self::$extensions[$extension])) {
-			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
-		}
-
-		$data = call_user_func(array(self::$extensions[$extension], 'load'), $file, $section);
-		if ($section) {
-			if (!isset($data[$section]) || !is_array($data[$section])) {
-				throw new Nette\InvalidStateException("There is not section [$section] in file '$file'.");
+		if (is_array($left) && is_array($right)) {
+			foreach ($left as $key => $val) {
+				if (is_int($key)) {
+					$right[] = $val;
+				} else {
+					if (is_array($val) && isset($val[self::EXTENDS_KEY])) {
+						if ($val[self::EXTENDS_KEY] === FALSE) {
+							unset($val[self::EXTENDS_KEY]);
+						}
+					} elseif (isset($right[$key])) {
+						$val = self::merge($val, $right[$key]);
+					}
+					$right[$key] = $val;
+				}
 			}
-			$data = $data[$section];
+			return $right;
+
+		} elseif ($left === NULL && is_array($right)) {
+			return $right;
+
+		} else {
+			return $left;
 		}
-		return $data;
 	}
 
 
 
-	/**
-	 * Save configuration to file.
-	 * @param  mixed
-	 * @param  string  file
-	 * @return void
-	 */
-	public static function save($config, $file)
+	private function getSection(array $data, $key)
 	{
-		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		if (!isset(self::$extensions[$extension])) {
-			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
+		if (!array_key_exists($key, $data) || !is_array($data[$key]) && $data[$key] !== NULL) {
+			throw new Nette\InvalidStateException("Section '$key' is missing or is not an array.");
 		}
-		return call_user_func(array(self::$extensions[$extension], 'save'), $config, $file);
+		$item = $data[$key];
+		if (!empty($item[self::EXTENDS_KEY])) {
+			$item = self::merge($item, $this->getSection($data, $item[self::EXTENDS_KEY]));
+		}
+		unset($item[self::EXTENDS_KEY]);
+		return $item;
 	}
 
 }
