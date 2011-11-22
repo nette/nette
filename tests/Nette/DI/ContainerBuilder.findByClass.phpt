@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\DI\ContainerBuilder::findByClass() for compile-time autowiring
+ * Test: Nette\DI\ContainerBuilder and Container: findByClass()
  *
  * @author     David Grudl
  * @package    Nette\DI
@@ -28,6 +28,8 @@ $builder->addDefinition('one')
 $builder->addDefinition('two')
 	->setClass('Nette\Object');
 
+
+// compile-time
 $builder->prepareClassList();
 
 Assert::same( 'one', $builder->findByClass('service') );
@@ -35,3 +37,17 @@ Assert::same( NULL, $builder->findByClass('unknown') );
 Assert::throws(function() use ($builder) {
 	$builder->findByClass('Nette\Object');
 }, 'Nette\DI\ServiceCreationException', 'Multiple preferred services of type Nette\Object found: one, two');
+
+
+// run-time
+$code = (string) $builder->generateClass();
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
+Assert::true( $container->findByClass('service') instanceof Service );
+Assert::same( NULL, $container->findByClass('unknown') );
+Assert::throws(function() use ($container) {
+	$container->findByClass('Nette\Object');
+}, 'Nette\DI\ServiceCreationException', 'Multiple services of type Nette\Object found.');

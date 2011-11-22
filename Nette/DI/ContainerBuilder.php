@@ -227,6 +227,14 @@ class ContainerBuilder extends Nette\Object
 		$class->addExtend('Nette\DI\Container');
 		$class->addProperty('parameters', $this->parameters);
 
+		$classes = $class->addProperty('classes', array());
+		foreach ($this->classes as $name => $foo) {
+			try {
+				$classes->value[$name] = $this->findByClass($name);
+			} catch (ServiceCreationException $e) {
+				$classes->value[$name] = FALSE;
+			}
+		}
 
 		foreach ($this->definitions as $name => $definition) {
 			try {

@@ -28,6 +28,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	/** @deprecated */
 	public $params = array();
 
+	/** @var array */
+	public $classes = array();
+
 	/** @var array  storage for shared objects */
 	private $registry = array();
 
@@ -175,6 +178,25 @@ class Container extends Nette\FreezableObject implements IContainer
 			throw new MissingServiceException("Service '$name' not found.");
 		}
 		return isset($this->registry[$name]);
+	}
+
+
+
+	/**
+	 * Resolves service by type.
+	 * @param  string  class or interface
+	 * @return object  service or NULL
+	 * @throws ServiceCreationException
+	 */
+	public function findByClass($class)
+	{
+		$lower = ltrim(strtolower($class), '\\');
+		if (isset($this->classes[$lower])) {
+			if ($this->classes[$lower] === FALSE) {
+				throw new ServiceCreationException("Multiple services of type $class found.");
+			}
+			return $this->getService($this->classes[$lower]);
+		}
 	}
 
 
