@@ -401,13 +401,69 @@ class Configurator extends Nette\Object
 
 	private function configureCore(ContainerBuilder $container, & $config)
 	{
-		foreach (get_class_methods($this) as $name) {
-			if (substr($name, 0, 13) === 'createService' ) {
-				$def = & $config['services'][strtolower($name[13]) . substr($name, 14)];
-				if (!isset($def['factory']) && !isset($def['class'])) {
-					$def['factory'] = array(get_called_class(), $name);
-				}
-			}
+		// cache
+		$container->addDefinition('cacheJournal')
+			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
+
+		$container->addDefinition('cacheStorage')
+			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
+
+		$container->addDefinition('templateCacheStorage')
+			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
+			->setAutowired(FALSE);
+
+		// http
+		$container->addDefinition('httpRequestFactory')
+			->setClass('Nette\Http\RequestFactory')
+			->addSetup('setEncoding', array('UTF-8'));
+
+		$container->addDefinition('httpRequest')
+			->setClass('Nette\Http\Request')
+			->setFactory('@httpRequestFactory::createHttpRequest');
+
+		$container->addDefinition('httpResponse')
+			->setClass('Nette\Http\Response');
+
+		$container->addDefinition('httpContext')
+			->setClass('Nette\Http\Context');
+
+		$session = $container->addDefinition('session')
+			->setClass('Nette\Http\Session');
+
+		if (isset($config['session'])) {
+			$session->addSetup('setOptions', $config['session']);
+		}
+		if (isset($config['session']['expiration'])) {
+			$session->addSetup('setExpiration', $config['session']['expiration']);
+		}
+
+		$container->addDefinition('user')
+			->setClass('Nette\Http\User');
+
+		// application
+		$application = $container->addDefinition('application')
+			->setClass('Nette\Application\Application')
+			->addSetup('$catchExceptions', '%productionMode%');
+
+		if (empty($config['productionMode'])) {
+			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize'); // enable routing debugger
+		}
+
+		$container->addDefinition('router')
+			->setClass('Nette\Application\Routers\RouteList');
+
+		$container->addDefinition('presenterFactory')
+			->setClass('Nette\Application\PresenterFactory', array(
+				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
+			));
+
+		// mailer
+		if (empty($config['mailer']['smtp'])) {
+			$container->addDefinition('mailer')
+				->setClass('Nette\Mail\SendmailMailer');
+		} else {
+			$container->addDefinition('mailer')
+				->setClass('Nette\Mail\SmtpMailer', $config['mailer']);
 		}
 	}
 
@@ -463,188 +519,6 @@ class Configurator extends Nette\Object
 
 
 	/********************* service factories ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Application\Application
-	 */
-	public static function createServiceApplication(DI\Container $container, array $options = NULL)
-	{
-		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
-		$application = new $class($container->presenterFactory, $container->router, $container->httpRequest, $container->httpResponse, $container->session);
-		$application->catchExceptions = $container->parameters['productionMode'];
-		Nette\Application\Diagnostics\RoutingPanel::initialize($application, $container->httpRequest);
-		return $application;
-	}
-
-
-
-	/**
-	 * @return Nette\Application\IPresenterFactory
-	 */
-	public static function createServicePresenterFactory(DI\Container $container)
-	{
-		return new Nette\Application\PresenterFactory(
-			isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL,
-			$container
-		);
-	}
-
-
-
-	/**
-	 * @return Nette\Application\IRouter
-	 */
-	public static function createServiceRouter(DI\Container $container)
-	{
-		return new Nette\Application\Routers\RouteList;
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Request
-	 */
-	public static function createServiceHttpRequest()
-	{
-		$factory = new Nette\Http\RequestFactory;
-		$factory->setEncoding('UTF-8');
-		return $factory->createHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Response
-	 */
-	public static function createServiceHttpResponse()
-	{
-		return new Nette\Http\Response;
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Context
-	 */
-	public static function createServiceHttpContext(DI\Container $container)
-	{
-		return new Nette\Http\Context($container->httpRequest, $container->httpResponse);
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Session
-	 */
-	public static function createServiceSession(DI\Container $container, array $options = NULL)
-	{
-		$session = new Nette\Http\Session($container->httpRequest, $container->httpResponse);
-		$session->setOptions((array) $options);
-		if (isset($options['expiration'])) {
-			$session->setExpiration($options['expiration']);
-		}
-		return $session;
-	}
-
-
-
-	/**
-	 * @return Nette\Http\User
-	 */
-	public static function createServiceUser(DI\Container $container)
-	{
-		$context = new DI\Container;
-		// copies services from $container and preserves lazy loading
-		$context->addService('authenticator', function() use ($container) {
-			return $container->authenticator;
-		});
-		$context->addService('authorizator', function() use ($container) {
-			return $container->authorizator;
-		});
-		$context->addService('session', $container->session);
-		return new Nette\Http\User($context);
-	}
-
-
-
-	/**
-	 * @return Nette\Caching\IStorage
-	 */
-	public static function createServiceCacheStorage(DI\Container $container)
-	{
-		if (!isset($container->parameters['tempDir'])) {
-			throw new Nette\InvalidStateException("Service cacheStorage requires that parameter 'tempDir' contains path to temporary directory.");
-		}
-		$dir = $container->expand('%tempDir%/cache');
-		umask(0000);
-		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\Storages\FileStorage($dir, $container->cacheJournal);
-	}
-
-
-
-	/**
-	 * @return Nette\Caching\IStorage
-	 */
-	public static function createServiceTemplateCacheStorage(DI\Container $container)
-	{
-		if (!isset($container->parameters['tempDir'])) {
-			throw new Nette\InvalidStateException("Service templateCacheStorage requires that parameter 'tempDir' contains path to temporary directory.");
-		}
-		$dir = $container->expand('%tempDir%/cache');
-		umask(0000);
-		@mkdir($dir, 0777); // @ - directory may exists
-		return new Nette\Caching\Storages\PhpFileStorage($dir);
-	}
-
-
-
-	/**
-	 * @return Nette\Caching\Storages\IJournal
-	 */
-	public static function createServiceCacheJournal(DI\Container $container)
-	{
-		return new Nette\Caching\Storages\FileJournal($container->parameters['tempDir']);
-	}
-
-
-
-	/**
-	 * @return Nette\Mail\IMailer
-	 */
-	public static function createServiceMailer(DI\Container $container, array $options = NULL)
-	{
-		if (empty($options['smtp'])) {
-			return new Nette\Mail\SendmailMailer;
-		} else {
-			return new Nette\Mail\SmtpMailer($options);
-		}
-	}
-
-
-
-	/**
-	 * @return Nette\Loaders\RobotLoader
-	 */
-	public static function createServiceRobotLoader(DI\Container $container, array $options = NULL)
-	{
-		$loader = new Nette\Loaders\RobotLoader;
-		$loader->autoRebuild = isset($options['autoRebuild']) ? $options['autoRebuild'] : !$container->parameters['productionMode'];
-		$loader->setCacheStorage($container->cacheStorage);
-		if (isset($options['directory'])) {
-			$loader->addDirectory($options['directory']);
-		} else {
-			foreach (array('appDir', 'libsDir') as $var) {
-				if (isset($container->parameters[$var])) {
-					$loader->addDirectory($container->parameters[$var]);
-				}
-			}
-		}
-		$loader->register();
-		return $loader;
-	}
 
 
 
