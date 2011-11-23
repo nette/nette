@@ -26,9 +26,6 @@ class Configurator extends Nette\Object
 {
 	public static $instance;
 
-	/** @var string */
-	public $defaultConfigFile = '%appDir%/config.neon';
-
 	/** @var DI\Container */
 	private $container;
 
@@ -97,14 +94,7 @@ class Configurator extends Nette\Object
 	 */
 	public function loadConfig($file, $section = NULL)
 	{
-		if ($file === NULL) {
-			$file = $this->defaultConfigFile;
-		}
 		$container = $this->container;
-		$file = $container->expand($file);
-		if (!is_file($file)) {
-			$file = preg_replace('#\.neon$#', '.ini', $file); // back compatibility
-		}
 		if ($section === NULL) {
 			if (PHP_SAPI === 'cli') {
 				$section = Nette\Environment::CONSOLE;
