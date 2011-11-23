@@ -85,7 +85,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 			}
 
 			if (is_array($secData) && is_array($cursor)) {
-				$secData = array_reverse(Nette\Utils\Arrays::mergeTree(array_reverse($secData, TRUE), array_reverse($cursor, TRUE)), TRUE);
+				$secData = Config::merge($secData, $cursor);
 			}
 
 			$cursor = $secData;

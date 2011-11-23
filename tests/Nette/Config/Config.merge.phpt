@@ -4,7 +4,7 @@
  * Test: Nette\Config\Config::merge()
  *
  * @author     David Grudl
- * @package    Nette\DI
+ * @package    Nette\Config
  * @subpackage UnitTests
  */
 

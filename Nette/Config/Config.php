@@ -37,7 +37,7 @@ class Config extends Nette\Object
 
 
 	/**
-	 * @deprecated
+	 * Static shortcut for load()
 	 * @return array
 	 */
 	public static function fromFile($file, $section = NULL)
@@ -51,7 +51,7 @@ class Config extends Nette\Object
 	/**
 	 * Reads configuration from file.
 	 * @param  string  file name
-	 * @param  string  section to load
+	 * @param  string  optional section to load
 	 * @return array
 	 */
 	public function load($file, $section = NULL)
