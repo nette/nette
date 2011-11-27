@@ -151,21 +151,7 @@ class Configurator extends Nette\Object
 
 	private function buildContainer(array $config)
 	{
-		// obsolete and deprecated structures
-		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
-			if (isset($config[$old])) {
-				throw new Nette\DeprecatedException(basename($file) . ": Section '$old' is deprecated; use '$new' instead.");
-			}
-		}
-		if (isset($config['services'])) {
-			foreach ($config['services'] as $key => $def) {
-				foreach (array('option' => 'arguments', 'methods' => 'setup') as $old => $new) {
-					if (is_array($def) && isset($def[$old])) {
-						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
-					}
-				}
-			}
-		}
+		$this->checkCompatibility($config);
 
 		// consolidate parameters
 		if (!isset($config['parameters'])) {
@@ -183,19 +169,11 @@ class Configurator extends Nette\Object
 			$val = Configurator::preExpand($val, $parameters);
 		});
 
-
 		// build DI container
 		$container = new ContainerBuilder;
 		$container->parameters = $this->params;
 
-		foreach (get_class_methods($this) as $name) {
-			if (substr($name, 0, 13) === 'createService' ) {
-				$def = & $config['services'][strtolower($name[13]) . substr($name, 14)];
-				if (!isset($def['factory']) && !isset($def['class'])) {
-					$def['factory'] = array(get_called_class(), $name);
-				}
-			}
-		}
+		$this->configureCore($container, $config);
 		$this->parseDI($container, $config);
 
 		$class = $container->generateClass();
@@ -205,27 +183,17 @@ class Configurator extends Nette\Object
 
 		// PHP settings
 		if (isset($config['php'])) {
-			foreach ($config['php'] as $key => $value) {
-				if (is_array($value)) { // back compatibility - flatten INI dots
-					foreach ($value as $k => $v) {
-						$initialize->body .= $this->configurePhp("$key.$k", $v);
-					}
-				} else {
-					$initialize->body .= $this->configurePhp($key, $value);
-				}
-			}
+			$this->configurePhp($container, $class, $config['php']);
 		}
 
 		// define constants
 		if (isset($config['constants'])) {
-			foreach ($config['constants'] as $key => $value) {
-				$initialize->body .= $this->generateCode('define(?, ?)', $key, $value);
-			}
+			$this->configureConstants($container, $class, $config['constants']);
 		}
 
 		// auto-start services
-		foreach ($container->findByTag("run") as $name => $foo) {
-			$initialize->body .= $this->generateCode('$this->getService(?)', $name);
+		foreach ($container->findByTag('run') as $name => $foo) {
+			$initialize->body .= $container->formatPhp('$this->getService(?);', array($name));
 		}
 
 		// pre-loading
@@ -268,8 +236,16 @@ class Configurator extends Nette\Object
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
 		}
 
-		$definition->setClass(isset($config['class']) ? $config['class'] : NULL);
-		$definition->setAutowired(!empty($config['autowired']));
+		if (isset($config['class'])) {
+			$definition->setClass($config['class']);
+		}
+
+		if (isset($config['factory'])) {
+			$definition->setFactory($config['factory']);
+			if (!isset($config['arguments'])) {
+				$config['arguments'][] = '@container';
+			}
+		}
 
 		if (isset($config['arguments'])) {
 			$definition->setArguments(array_diff($config['arguments'], array('...')));
@@ -281,11 +257,8 @@ class Configurator extends Nette\Object
 			}
 		}
 
-		if (isset($config['factory'])) {
-			$definition->setFactory($config['factory']);
-			if (!$definition->arguments) {
-				$definition->arguments[] = '@container';
-			}
+		if (isset($config['autowired'])) {
+			$definition->setAutowired($config['autowired']);
 		}
 
 		if (!empty($config['run'])) {
@@ -298,6 +271,26 @@ class Configurator extends Nette\Object
 					$definition->addTag($attrs);
 				} else {
 					$definition->addTag($tag, $attrs);
+				}
+			}
+		}
+	}
+
+
+
+	private function checkCompatibility(array $config)
+	{
+		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
+			if (isset($config[$old])) {
+				throw new Nette\DeprecatedException(basename($file) . ": Section '$old' is deprecated; use '$new' instead.");
+			}
+		}
+		if (isset($config['services'])) {
+			foreach ($config['services'] as $key => $def) {
+				foreach (array('option' => 'arguments', 'methods' => 'setup') as $old => $new) {
+					if (is_array($def) && isset($def[$old])) {
+						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
+					}
 				}
 			}
 		}
@@ -356,46 +349,66 @@ class Configurator extends Nette\Object
 
 
 
-	public function configurePhp($name, $value)
+	private function configurePhp(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
 	{
-		if (!is_scalar($value)) {
-			throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
+		$body = & $class->methods['initialize']->body;
+
+		foreach ($config as $name => $value) { // back compatibility - flatten INI dots
+			if (is_array($value)) {
+				unset($config[$name]);
+				foreach ($value as $k => $v) {
+					$config["$name.$k"] = $v;
+				}
+			}
 		}
 
-		switch ($name) {
-		case 'include_path':
-			return $this->generateCode('set_include_path(?)', str_replace(';', PATH_SEPARATOR, $value));
-		case 'ignore_user_abort':
-			return $this->generateCode('ignore_user_abort(?)', $value);
-		case 'max_execution_time':
-			return $this->generateCode('set_time_limit(?)', $value);
-		case 'date.timezone':
-			return $this->generateCode('date_default_timezone_set(?)', $value);
-		}
+		foreach ($config as $name => $value) {
+			if (!is_scalar($value)) {
+				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
 
-		if (function_exists('ini_set')) {
-			return $this->generateCode('ini_set(?, ?)', $name, $value);
-		} elseif (ini_get($name) != $value && !Framework::$iAmUsingBadHost) { // intentionally ==
-			throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
+			} elseif ($name === 'include_path') {
+				$body .= $container->formatCall('set_include_path', array(str_replace(';', PATH_SEPARATOR, $value)));
+
+			} elseif ($name === 'ignore_user_abort') {
+				$body .= $container->formatCall('ignore_user_abort', array($value));
+
+			} elseif ($name === 'max_execution_time') {
+				$body .= $container->formatCall('set_time_limit', array($value));
+
+			} elseif ($name === 'date.timezone') {
+				$body .= $container->formatCall('date_default_timezone_set', array($value));
+
+			} elseif (function_exists('ini_set')) {
+				$body .= $container->formatCall('ini_set', array($name, $value));
+
+			} elseif (ini_get($name) != $value && !Nette\Framework::$iAmUsingBadHost) { // intentionally ==
+				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
+			}
 		}
 	}
 
 
 
-	private static function generateCode($statement)
+	private function configureConstants(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
 	{
-		$args = func_get_args();
-		array_shift($args);
-		array_walk_recursive($args, function(&$val) {
-			if (is_string($val) && strpos($val, '%') !== FALSE) {
-				if (preg_match('#^%([\w-]+)%$#', $val)) {
-					$val = new Nette\Utils\PhpGenerator\PhpLiteral('$container->parameters[' . strtr($val, '%', "'") . ']');
-				} else {
-					$val = new Nette\Utils\PhpGenerator\PhpLiteral('$container->expand(' . Nette\Utils\PhpGenerator\Helpers::dump($val) . ')');
+		$body = & $class->methods['initialize']->body;
+		foreach ($config as $name => $value) {
+			$body .= $container->formatCall('define', array($name, $value));
+		}
+	}
+
+
+
+	private function configureCore(ContainerBuilder $container, & $config)
+	{
+		foreach (get_class_methods($this) as $name) {
+			if (substr($name, 0, 13) === 'createService' ) {
+				$def = & $config['services'][strtolower($name[13]) . substr($name, 14)];
+				if (!isset($def['factory']) && !isset($def['class'])) {
+					$def['factory'] = array(get_called_class(), $name);
 				}
 			}
-		});
-		return Nette\Utils\PhpGenerator\Helpers::formatArgs($statement, $args) . ";\n\n";
+		}
 	}
 
 
@@ -654,7 +667,7 @@ class Configurator extends Nette\Object
 		@unlink("$dir/$uniq/_");
 		@rmdir("$dir/$uniq"); // @ - directory may not already exist
 
-		return self::generateCode('Nette\Caching\Storages\FileStorage::$useDirectories = ?', $useDirs);
+		return 'Nette\Caching\Storages\FileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
 	}
 
 }
