@@ -37,7 +37,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Adds new services from list of definitions. Expands %param% and @service values.
+	 * Adds new service definition. Expands %param% and @service values.
 	 * @param  string
 	 * @return ServiceDefinition
 	 */
@@ -47,6 +47,44 @@ class ContainerBuilder extends Nette\Object
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
 		return $this->definitions[$name] = new ServiceDefinition;
+	}
+
+
+
+	/**
+	 * Removes the specified service definition.
+	 * @return void
+	 */
+	public function removeDefinition($name)
+	{
+		unset($this->definitions[$name]);
+	}
+
+
+
+	/**
+	 * Gets the service definition.
+	 * @param  string
+	 * @return ServiceDefinition
+	 */
+	public function getDefinition($name)
+	{
+		if (!isset($this->definitions[$name])) {
+			throw new MissingServiceException("Service '$name' not found.");
+		}
+		return $this->definitions[$name];
+	}
+
+
+
+	/**
+	 * Does the service definition exist?
+	 * @param  string
+	 * @return bool
+	 */
+	public function hasDefinition($name)
+	{
+		return isset($this->definitions[$name]);
 	}
 
 
