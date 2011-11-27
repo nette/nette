@@ -225,8 +225,24 @@ class Configurator extends Nette\Object
 		}
 
 		if (isset($config['services'])) {
+			uasort($config['services'], function($a, $b) {
+				return strcmp(Config::isInheriting($a), Config::isInheriting($b));
+			});
 			foreach ($config['services'] as $name => $def) {
-				self::parseService($container->addDefinition($name), $def);
+				if ($parent = Config::takeParent($def)) {
+					$container->removeDefinition($name);
+					$definition = $container->addDefinition($name);
+					if ($parent !== Config::OVERWRITE) {
+						foreach ($container->getDefinition($parent) as $k => $v) {
+							$definition->$k = $v;
+						}
+					}
+				} elseif ($container->hasDefinition($name)) {
+					$definition = $container->getDefinition($name);
+				} else {
+					$definition = $container->addDefinition($name);
+				}
+				self::parseService($definition, $def);
 			}
 		}
 	}
@@ -260,6 +276,9 @@ class Configurator extends Nette\Object
 		}
 
 		if (isset($config['setup'])) {
+			if (Config::takeParent($config['setup'])) {
+				$definition->setup = array();
+			}
 			foreach ($config['setup'] as $item) {
 				$definition->addSetup($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
 			}
@@ -274,6 +293,9 @@ class Configurator extends Nette\Object
 		}
 
 		if (isset($config['tags'])) {
+			if (Config::takeParent($config['tags'])) {
+				$definition->tags = array();
+			}
 			foreach ($config['tags'] as $tag => $attrs) {
 				if (is_int($tag) && is_string($attrs)) {
 					$definition->addTag($attrs);
