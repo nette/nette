@@ -62,6 +62,14 @@ class Configurator extends Nette\Object
 
 
 
+	public function addParameters(array $params)
+	{
+		$this->params = $params + $this->params;
+		return $this;
+	}
+
+
+
 	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
