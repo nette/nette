@@ -413,14 +413,7 @@ class Configurator extends Nette\Object
 		$class = isset($options['class']) ? $options['class'] : 'Nette\Application\Application';
 		$application = new $class($container->presenterFactory, $container->router, $container->httpRequest, $container->httpResponse, $container->session);
 		$application->catchExceptions = $container->parameters['productionMode'];
-
 		Nette\Application\Diagnostics\RoutingPanel::initialize($application, $container->httpRequest);
-
-		if ($container->session->exists()) {
-			$application->onStartup[] = function() use ($container) {
-				$container->session->start(); // opens already started session
-			};
-		}
 		return $application;
 	}
 
