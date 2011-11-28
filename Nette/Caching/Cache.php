@@ -150,7 +150,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		// convert FILES into CALLBACKS
 		if (isset($dp[self::FILES])) {
 			//clearstatcache();
-			foreach ((array) $dp[self::FILES] as $item) {
+			foreach (array_unique((array) $dp[self::FILES]) as $item) {
 				$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkFile'), $item, @filemtime($item)); // @ - stat may fail
 			}
 			unset($dp[self::FILES]);
@@ -158,7 +158,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		// add namespaces to items
 		if (isset($dp[self::ITEMS])) {
-			$dp[self::ITEMS] = (array) $dp[self::ITEMS];
+			$dp[self::ITEMS] = array_unique((array) $dp[self::ITEMS]);
 			foreach ($dp[self::ITEMS] as $k => $item) {
 				$dp[self::ITEMS][$k] = $this->namespace . md5(is_scalar($item) ? $item : serialize($item));
 			}
@@ -166,7 +166,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		// convert CONSTS into CALLBACKS
 		if (isset($dp[self::CONSTS])) {
-			foreach ((array) $dp[self::CONSTS] as $item) {
+			foreach (array_unique((array) $dp[self::CONSTS]) as $item) {
 				$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkConst'), $item, constant($item));
 			}
 			unset($dp[self::CONSTS]);
