@@ -48,7 +48,7 @@ class Configurator extends Nette\Object
 		defined('APP_DIR') && $this->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->params['libsDir'] = realpath(LIBS_DIR);
 		defined('TEMP_DIR') && $this->params['tempDir'] = realpath(TEMP_DIR);
-		$this->params['productionMode'] = self::detectProductionMode();
+		$this->params['productionMode'] = static::detectProductionMode();
 		$this->params['consoleMode'] = PHP_SAPI === 'cli';
 	}
 
@@ -242,7 +242,7 @@ class Configurator extends Nette\Object
 				} else {
 					$definition = $container->addDefinition($name);
 				}
-				self::parseService($definition, $def);
+				static::parseService($definition, $def);
 			}
 		}
 	}

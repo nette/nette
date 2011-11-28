@@ -73,10 +73,10 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
 		}
 
-		$this->useDirs = (bool) self::$useDirectories;
+		$this->useDirs = (bool) static::$useDirectories;
 		$this->journal = $journal;
 
-		if (mt_rand() / mt_getrandmax() < self::$gcProbability) {
+		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
 			$this->clean(array());
 		}
 	}

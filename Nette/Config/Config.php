@@ -74,12 +74,12 @@ class Config extends Nette\Object
 				throw new Nette\InvalidStateException("Invalid section 'includes' in file '$file'.");
 			}
 			foreach ($data[self::INCLUDES_KEY] as $include) {
-				$merged = self::merge($this->load(dirname($file) . '/' . $include), $merged);
+				$merged = static::merge($this->load(dirname($file) . '/' . $include), $merged);
 			}
 		}
 		unset($data[self::INCLUDES_KEY]);
 
-		return self::merge($data, $merged);
+		return static::merge($data, $merged);
 	}
 
 
@@ -155,7 +155,7 @@ class Config extends Nette\Object
 							unset($val[self::EXTENDS_KEY]);
 						}
 					} elseif (isset($right[$key])) {
-						$val = self::merge($val, $right[$key]);
+						$val = static::merge($val, $right[$key]);
 					}
 					$right[$key] = $val;
 				}
@@ -213,8 +213,8 @@ class Config extends Nette\Object
 			throw new Nette\InvalidStateException("Section '$key' is missing or is not an array.");
 		}
 		$item = $data[$key];
-		if ($parent = self::takeParent($item)) {
-			$item = self::merge($item, $this->getSection($data, $parent));
+		if ($parent = static::takeParent($item)) {
+			$item = static::merge($item, $this->getSection($data, $parent));
 		}
 		return $item;
 	}

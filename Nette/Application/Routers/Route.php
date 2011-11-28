@@ -129,7 +129,7 @@ class Route extends Nette\Object implements Application\IRouter
 			);
 		}
 
-		$this->flags = $flags | self::$defaultFlags;
+		$this->flags = $flags | static::$defaultFlags;
 		$this->setMask($mask, $metadata);
 	}
 
@@ -440,16 +440,16 @@ class Route extends Nette\Object implements Application\IRouter
 				list(, $param, $name, $pattern, $class) = $match;  // $pattern is not used
 
 				if ($class !== '') {
-					if (!isset(self::$styles[$class])) {
+					if (!isset(static::$styles[$class])) {
 						throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 					}
-					$meta = self::$styles[$class];
+					$meta = static::$styles[$class];
 
-				} elseif (isset(self::$styles['?' . $name])) {
-					$meta = self::$styles['?' . $name];
+				} elseif (isset(static::$styles['?' . $name])) {
+					$meta = static::$styles['?' . $name];
 
 				} else {
-					$meta = self::$styles['?#'];
+					$meta = static::$styles['?#'];
 				}
 
 				if (isset($metadata[$name])) {
@@ -515,16 +515,16 @@ class Route extends Nette\Object implements Application\IRouter
 
 			// pattern, condition & metadata
 			if ($class !== '') {
-				if (!isset(self::$styles[$class])) {
+				if (!isset(static::$styles[$class])) {
 					throw new Nette\InvalidStateException("Parameter '$name' has '$class' flag, but Route::\$styles['$class'] is not set.");
 				}
-				$meta = self::$styles[$class];
+				$meta = static::$styles[$class];
 
-			} elseif (isset(self::$styles[$name])) {
-				$meta = self::$styles[$name];
+			} elseif (isset(static::$styles[$name])) {
+				$meta = static::$styles[$name];
 
 			} else {
-				$meta = self::$styles['#'];
+				$meta = static::$styles['#'];
 			}
 
 			if (isset($metadata[$name])) {
@@ -766,18 +766,18 @@ class Route extends Nette\Object implements Application\IRouter
 	 */
 	public static function addStyle($style, $parent = '#')
 	{
-		if (isset(self::$styles[$style])) {
+		if (isset(static::$styles[$style])) {
 			throw new Nette\InvalidArgumentException("Style '$style' already exists.");
 		}
 
 		if ($parent !== NULL) {
-			if (!isset(self::$styles[$parent])) {
+			if (!isset(static::$styles[$parent])) {
 				throw new Nette\InvalidArgumentException("Parent style '$parent' doesn't exist.");
 			}
-			self::$styles[$style] = self::$styles[$parent];
+			static::$styles[$style] = static::$styles[$parent];
 
 		} else {
-			self::$styles[$style] = array();
+			static::$styles[$style] = array();
 		}
 	}
 
@@ -792,10 +792,10 @@ class Route extends Nette\Object implements Application\IRouter
 	 */
 	public static function setStyleProperty($style, $key, $value)
 	{
-		if (!isset(self::$styles[$style])) {
+		if (!isset(static::$styles[$style])) {
 			throw new Nette\InvalidArgumentException("Style '$style' doesn't exist.");
 		}
-		self::$styles[$style][$key] = $value;
+		static::$styles[$style][$key] = $value;
 	}
 
 }

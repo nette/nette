@@ -78,8 +78,8 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		$this->adjustOperation($rule);
 		$rule->arg = $arg;
 		$rule->type = Rule::VALIDATOR;
-		if ($message === NULL && is_string($rule->operation) && isset(self::$defaultMessages[$rule->operation])) {
-			$rule->message = self::$defaultMessages[$rule->operation];
+		if ($message === NULL && is_string($rule->operation) && isset(static::$defaultMessages[$rule->operation])) {
+			$rule->message = static::$defaultMessages[$rule->operation];
 		} else {
 			$rule->message = $message;
 		}
@@ -188,7 +188,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 			} elseif ($rule->type === Rule::VALIDATOR && !$success) {
 				if (!$onlyCheck) {
-					$rule->control->addError(self::formatMessage($rule, TRUE));
+					$rule->control->addError(static::formatMessage($rule, TRUE));
 				}
 				return FALSE;
 			}
@@ -255,7 +255,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	{
 		$message = $rule->message;
 		if (!isset($message)) { // report missing message by notice
-			$message = self::$defaultMessages[$rule->operation];
+			$message = static::$defaultMessages[$rule->operation];
 		}
 		if ($translator = $rule->control->getForm()->getTranslator()) {
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
