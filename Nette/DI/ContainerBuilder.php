@@ -12,7 +12,7 @@
 namespace Nette\DI;
 
 use Nette,
-	Nette\Utils\Arrays,
+	Nette\Utils\Validators,
 	Nette\Utils\PhpGenerator\Helpers,
 	Nette\Utils\PhpGenerator\PhpLiteral;
 
@@ -368,7 +368,7 @@ class ContainerBuilder extends Nette\Object
 				}
 			}
 
-			if (Arrays::isList($target) && count($target) === 2 && substr($target[1], 0, 1) === '$') { // property setter
+			if (Validators::isList($target) && count($target) === 2 && substr($target[1], 0, 1) === '$') { // property setter
 				if (self::isService($target[0])) {
 					$code .= $this->formatPhp('?->? = ?;', array($target[0], substr($target[1], 1), $arguments), $name);
 				} else {
@@ -426,7 +426,7 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
-		if (!Arrays::isList($function) || count($function) !== 2 || !self::isExpanded($function[0] . $function[1])) {
+		if (!Validators::isList($function) || count($function) !== 2 || !self::isExpanded($function[0] . $function[1])) {
 			array_unshift($arguments, $function);
 			return $this->formatPhp('call_user_func(?*);', array($arguments), $self);
 

@@ -69,7 +69,7 @@ class Neon extends Nette\Object
 			}
 		}
 		if (is_array($var)) {
-			$isList = Arrays::isList($var);
+			$isList = Validators::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
 				foreach ($var as $k => $v) {

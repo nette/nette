@@ -13,7 +13,8 @@ namespace Nette\Forms\Controls;
 
 use Nette,
 	Nette\Forms\Form,
-	Nette\Utils\Strings;
+	Nette\Utils\Strings,
+	Nette\Utils\Validators;
 
 
 
@@ -164,8 +165,7 @@ abstract class TextBase extends BaseControl
 		if (!is_array($range)) {
 			$range = array($range, $range);
 		}
-		$len = Strings::length($control->getValue());
-		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
+		return Validators::isInRange(Strings::length($control->getValue()), $range);
 	}
 
 
@@ -177,11 +177,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateEmail(TextBase $control)
 	{
-		$atom = "[-a-z0-9!#$%&'*+/=?^_`{|}~]"; // RFC 5322 unquoted characters in local-part
-		$localPart = "(?:\"(?:[ !\\x23-\\x5B\\x5D-\\x7E]*|\\\\[ -~])+\"|$atom+(?:\\.$atom+)*)"; // quoted or unquoted
-		$chars = "a-z0-9\x80-\xFF"; // superset of IDN
-		$domain = "[$chars](?:[-$chars]{0,61}[$chars])"; // RFC 1034 one domain component
-		return (bool) Strings::match($control->getValue(), "(^$localPart@(?:$domain?\\.)+[-$chars]{2,19}\\z)i");
+		return Validators::isEmail($control->getValue());
 	}
 
 
@@ -193,11 +189,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateUrl(TextBase $control)
 	{
-		$chars = "a-z0-9\x80-\xFF";
-		return (bool) Strings::match(
-			$control->getValue(),
-			"#^(?:https?://|)(?:[$chars](?:[-$chars]{0,61}[$chars])?\\.)+[-$chars]{2,19}(/\S*)?$#i"
-		);
+		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
 	}
 
 
@@ -230,7 +222,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateInteger(TextBase $control)
 	{
-		return (bool) Strings::match($control->getValue(), '/^-?[0-9]+$/');
+		return Validators::isNumericInt($control->getValue());
 	}
 
 
@@ -242,7 +234,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateFloat(TextBase $control)
 	{
-		return (bool) Strings::match($control->getValue(), '/^-?[0-9]*[.,]?[0-9]+$/');
+		return Validators::isNumeric(static::filterFloat($control->getValue()));
 	}
 
 
@@ -255,8 +247,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public static function validateRange(TextBase $control, $range)
 	{
-		return ($range[0] === NULL || $control->getValue() >= $range[0])
-			&& ($range[1] === NULL || $control->getValue() <= $range[1]);
+		return Validators::isInRange($control->getValue(), $range);
 	}
 
 
