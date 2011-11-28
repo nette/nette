@@ -19,6 +19,8 @@ use Nette;
  * Configuration loader.
  *
  * @author     David Grudl
+ *
+ * @property-read array $dependencies
  */
 class Config extends Nette\Object
 {

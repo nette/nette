@@ -19,6 +19,16 @@ use Nette;
  * Provides access to session sections as well as session settings and management methods.
  *
  * @author     David Grudl
+ *
+ * @property-read bool $started
+ * @property-read string $id
+ * @property   string $name
+ * @property-read \ArrayIterator $iterator
+ * @property   array $options
+ * @property-write $expiration
+ * @property-read array $cookieParameters
+ * @property-write $savePath
+ * @property-write ISessionStorage $storage
  */
 class Session extends Nette\Object
 {

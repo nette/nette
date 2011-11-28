@@ -21,6 +21,8 @@ use Nette,
  * Represents a prepared statement / result set.
  *
  * @author     David Grudl
+ *
+ * @property-read Connection $connection
  */
 class Statement extends \PDOStatement
 {

@@ -22,6 +22,8 @@ use Nette,
  * Initial system DI container generator.
  *
  * @author     David Grudl
+ *
+ * @property-read \SytemContainer $container
  */
 class Configurator extends Nette\Object
 {

@@ -20,6 +20,9 @@ use Nette,
  * Redirects to new URI.
  *
  * @author     David Grudl
+ *
+ * @property-read string $url
+ * @property-read int $code
  */
 class RedirectResponse extends Nette\Object implements Nette\Application\IResponse
 {

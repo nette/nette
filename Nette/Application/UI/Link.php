@@ -21,6 +21,9 @@ use Nette;
  *
  * @author     David Grudl
  * @internal
+ *
+ * @property-read string $destination
+ * @property-read array $parameters
  */
 class Link extends Nette\Object
 {

@@ -19,6 +19,8 @@ use Nette;
  * String output response.
  *
  * @author     David Grudl
+ *
+ * @property-read mixed $source
  */
 class TextResponse extends Nette\Object implements Nette\Application\IResponse
 {

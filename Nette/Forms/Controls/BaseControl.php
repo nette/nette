@@ -32,6 +32,7 @@ use Nette,
  * @property-read array $options
  * @property   Nette\Localization\ITranslator $translator
  * @property   mixed $value
+ * @property-read bool $filled
  * @property-read Nette\Utils\Html $controlPrototype
  * @property-read Nette\Utils\Html $labelPrototype
  * @property-read Nette\Forms\Rules $rules

@@ -23,12 +23,14 @@ use Nette,
  *
  * @author     David Grudl
  *
+ * @property-read bool $loggedIn
  * @property-read Nette\Security\IIdentity $identity
+ * @property-read mixed $id
  * @property   Nette\Security\IAuthenticator $authenticator
- * @property   Nette\Security\IAuthorizator $authorizator
+ * @property   string $namespace
  * @property-read int $logoutReason
  * @property-read array $roles
- * @property-read bool $authenticated
+ * @property   Nette\Security\IAuthorizator $authorizator
  */
 class User extends Nette\Object implements IUser
 {

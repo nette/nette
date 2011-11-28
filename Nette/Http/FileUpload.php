@@ -21,13 +21,15 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read string $name
+ * @property-read string $sanitizedName
  * @property-read string $contentType
  * @property-read int $size
  * @property-read string $temporaryFile
- * @property-read Nette\Image $image
  * @property-read int $error
- * @property-read array $imageSize
  * @property-read bool $ok
+ * @property-read bool $image
+ * @property-read array $imageSize
+ * @property-read string $contents
  */
 class FileUpload extends Nette\Object
 {

@@ -20,6 +20,9 @@ use Nette,
  * The bidirectional route for trivial routing via query parameters.
  *
  * @author     David Grudl
+ *
+ * @property-read array $defaults
+ * @property-read int $flags
  */
 class SimpleRouter extends Nette\Object implements Application\IRouter
 {

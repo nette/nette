@@ -22,6 +22,9 @@ use Nette,
  * Micro presenter.
  *
  * @author     David Grudl
+ *
+ * @property-read Nette\Application\IRequest $request
+ * @property   Nette\DI\IContainer $context
  */
 class MicroPresenter extends Nette\Object implements Application\IPresenter
 {

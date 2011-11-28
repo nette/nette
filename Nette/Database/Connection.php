@@ -21,6 +21,9 @@ use Nette,
  * Represents a connection between PHP and a database server.
  *
  * @author     David Grudl
+ *
+ * @property-read ISupplementalDriver $supplementalDriver
+ * @property-read IReflection $databaseReflection
  */
 class Connection extends PDO
 {

@@ -31,12 +31,16 @@ use Nette;
  * @property   string $action
  * @property   string $method
  * @property-read array $groups
- * @property-read array $httpData
  * @property   Nette\Localization\ITranslator $translator
+ * @property-read bool $anchored
+ * @property-read ISubmitterControl $submitted
+ * @property-read bool $success
+ * @property-write ISubmitterControl $submittedBy
+ * @property-read array $httpData
+ * @property-read array $values
  * @property-read array $errors
  * @property-read Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer
- * @property-read bool $submitted
  */
 class Form extends Container
 {

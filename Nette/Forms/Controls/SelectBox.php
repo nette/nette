@@ -23,7 +23,7 @@ use Nette;
  * @property-read mixed $rawValue
  * @property   array $items
  * @property-read mixed $selectedItem
- * @property-read bool $firstSkipped
+ * @property   bool $prompt
  */
 class SelectBox extends BaseControl
 {

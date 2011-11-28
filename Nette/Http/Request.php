@@ -20,17 +20,18 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property   UrlScript $url
- * @property-read array $query
- * @property-read array $post
+ * @property-read UrlScript $url
  * @property-read array $files
  * @property-read array $cookies
  * @property-read string $method
+ * @property-read array $query
+ * @property-read array $post
  * @property-read array $headers
  * @property-read Url $referer
+ * @property-read bool $secured
+ * @property-read bool $ajax
  * @property-read string $remoteAddress
  * @property-read string $remoteHost
- * @property-read bool $secured
  */
 class Request extends Nette\Object implements IRequest
 {

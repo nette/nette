@@ -19,6 +19,9 @@ use Nette;
  * HTTP-specific tasks.
  *
  * @author     David Grudl
+ *
+ * @property-read IRequest $request
+ * @property-read IResponse $response
  */
 class Context extends Nette\Object
 {

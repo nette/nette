@@ -21,6 +21,8 @@ use Nette,
  * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
+ *
+ * @property-read string $sql
  */
 class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
 {

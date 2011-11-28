@@ -22,6 +22,9 @@ use Nette;
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  * @author     David Grudl
+ *
+ * @property-read mixed $queriedRole
+ * @property-read mixed $queriedResource
  */
 class Permission extends Nette\Object implements IAuthorizator
 {
