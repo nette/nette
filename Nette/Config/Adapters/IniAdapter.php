@@ -110,9 +110,8 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 				self::build($data, $output, '');
 				break;
 			}
-			if (isset($secData[Config::EXTENDS_KEY])) {
-				$output[] = "[$name " . self::INHERITING_SEPARATOR . " {$secData[Config::EXTENDS_KEY]}]";
-				unset($secData[Config::EXTENDS_KEY]);
+			if ($parent = Config::takeParent($secData)) {
+				$output[] = "[$name " . self::INHERITING_SEPARATOR . " $parent]";
 			} else {
 				$output[] = "[$name]";
 			}

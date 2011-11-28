@@ -50,7 +50,7 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
  					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
 				}
 				$key = substr($key, 0, -1);
-				$val[Config::EXTENDS_KEY] = FALSE;
+				$val[Config::EXTENDS_KEY] = Config::OVERWRITE;
 
 			} elseif (preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)$#', $key, $matches)) {
 				if (!is_array($val) && $val !== NULL) {
@@ -77,9 +77,8 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 	{
 		$tmp = array();
 		foreach ($data as $name => $secData) {
-			if (is_array($secData) && isset($secData[Config::EXTENDS_KEY])) {
-				$name .= ' ' . self::INHERITING_SEPARATOR . ' ' . $secData[Config::EXTENDS_KEY];
-				unset($secData[Config::EXTENDS_KEY]);
+			if ($parent = Config::takeParent($secData)) {
+				$name .= ' ' . self::INHERITING_SEPARATOR . ' ' . $parent;
 			}
 			$tmp[$name] = $secData;
 		}

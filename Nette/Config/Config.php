@@ -23,8 +23,9 @@ use Nette;
 class Config extends Nette\Object
 {
 	/** @internal */
-	const INCLUDES_KEY = 'includes';
-	const EXTENDS_KEY = '_extends';
+	const INCLUDES_KEY = 'includes',
+		EXTENDS_KEY = '_extends',
+		OVERWRITE = TRUE;
 
 	private $adapters = array(
 		'php' => 'Nette\Config\Adapters\PhpAdapter',
@@ -134,6 +135,10 @@ class Config extends Nette\Object
 
 
 
+	/********************* tools ****************d*g**/
+
+
+
 	/**
 	 * Merges configurations. Left has higher priority than right one.
 	 * @return array
@@ -146,7 +151,7 @@ class Config extends Nette\Object
 					$right[] = $val;
 				} else {
 					if (is_array($val) && isset($val[self::EXTENDS_KEY])) {
-						if ($val[self::EXTENDS_KEY] === FALSE) {
+						if ($val[self::EXTENDS_KEY] === self::OVERWRITE) {
 							unset($val[self::EXTENDS_KEY]);
 						}
 					} elseif (isset($right[$key])) {
@@ -167,16 +172,50 @@ class Config extends Nette\Object
 
 
 
+	/**
+	 * Finds out and removes information about the parent.
+	 * @return mixed
+	 */
+	public static function takeParent(& $data)
+	{
+		if (is_array($data) && isset($data[self::EXTENDS_KEY])) {
+			$parent = $data[self::EXTENDS_KEY];
+			unset($data[self::EXTENDS_KEY]);
+			return $parent;
+		}
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	public static function isOverwriting(& $data)
+	{
+		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] === self::OVERWRITE;
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	public static function isInheriting(& $data)
+	{
+		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] !== self::OVERWRITE;
+	}
+
+
+
 	private function getSection(array $data, $key)
 	{
 		if (!array_key_exists($key, $data) || !is_array($data[$key]) && $data[$key] !== NULL) {
 			throw new Nette\InvalidStateException("Section '$key' is missing or is not an array.");
 		}
 		$item = $data[$key];
-		if (!empty($item[self::EXTENDS_KEY])) {
-			$item = self::merge($item, $this->getSection($data, $item[self::EXTENDS_KEY]));
+		if ($parent = self::takeParent($item)) {
+			$item = self::merge($item, $this->getSection($data, $parent));
 		}
-		unset($item[self::EXTENDS_KEY]);
 		return $item;
 	}
 
