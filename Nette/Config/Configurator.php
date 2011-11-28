@@ -43,10 +43,7 @@ class Configurator extends Nette\Object
 
 	public function __construct()
 	{
-		defined('WWW_DIR') && $this->params['wwwDir'] = realpath(WWW_DIR);
-		defined('APP_DIR') && $this->params['appDir'] = realpath(APP_DIR);
-		defined('LIBS_DIR') && $this->params['libsDir'] = realpath(LIBS_DIR);
-		defined('TEMP_DIR') && $this->params['tempDir'] = realpath(TEMP_DIR);
+		$this->params['wwwDir'] = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL;
 		$this->params['productionMode'] = static::detectProductionMode();
 		$this->params['consoleMode'] = PHP_SAPI === 'cli';
 		Nette\Environment::setConfigurator($this); // back compatibility
@@ -125,6 +122,8 @@ class Configurator extends Nette\Object
 		if ($this->container) {
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
 		}
+
+		$this->params['environment'] = $section;
 
 		if (!empty($this->params['tempDir'])) {
 			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir']), 'Nette.Configurator');
