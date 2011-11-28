@@ -239,7 +239,7 @@ class ContainerBuilder extends Nette\Object
 						throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
 					}
 					try {
-						$definition->class = $factory->toReflection()->getAnnotation('return');
+						$definition->class = preg_replace('#[|\s].*#', '', $factory->toReflection()->getAnnotation('return'));
 					} catch (\ReflectionException $e) {
 					}
 				}
@@ -315,7 +315,7 @@ class ContainerBuilder extends Nette\Object
 					->addDocument("@return $type")
 					->setBody($this->generateService($name));
 			} catch (\Exception $e) {
-				throw new ServiceCreationException("Error creating service '$name': {$e->getMessage()}", 0, $e);
+				throw new ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
 			}
 		}
 
@@ -432,6 +432,9 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (self::isService($function[0])) {
 			$service = substr($function[0], 1);
+			if ($service === self::CREATED_SERVICE) {
+				$service = $self;
+			}
 			if (isset($this->definitions[$service]->class) && self::isExpanded($this->definitions[$service]->class)) {
 				$arguments = $this->autowireArguments($this->definitions[$service]->class, $function[1], $arguments);
 			}
