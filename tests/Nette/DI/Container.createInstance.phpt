@@ -18,8 +18,11 @@ require __DIR__ . '/../bootstrap.php';
 
 class Test
 {
+	public $container;
+	
 	function __construct(stdClass $obj, DI\Container $container)
 	{
+		$this->container = $container;
 	}
 }
 
@@ -37,4 +40,6 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->createInstance('Test') instanceof Test );
+$test = $container->createInstance('Test'); 
+Assert::true( $test instanceof Test );
+Assert::same( $container, $test->container );
