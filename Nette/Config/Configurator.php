@@ -14,7 +14,8 @@ namespace Nette\Config;
 use Nette,
 	Nette\Caching\Cache,
 	Nette\DI,
-	Nette\DI\ContainerBuilder;
+	Nette\DI\ContainerBuilder,
+	Nette\Utils\Validators;
 
 
 
@@ -243,7 +244,11 @@ class Configurator extends Nette\Object
 				} else {
 					$definition = $container->addDefinition($name);
 				}
-				static::parseService($definition, $def);
+				try {
+					static::parseService($definition, $def);
+				} catch (\Exception $e) {
+					throw new DI\ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
+				}
 			}
 		}
 	}
@@ -262,10 +267,12 @@ class Configurator extends Nette\Object
 		}
 
 		if (isset($config['class'])) {
+			Validators::assertField($config, 'class', 'string');
 			$definition->setClass($config['class']);
 		}
 
 		if (isset($config['factory'])) {
+			Validators::assertField($config, 'factory', 'callable');
 			$definition->setFactory($config['factory']);
 			if (!isset($config['arguments'])) {
 				$config['arguments'][] = '@container';
@@ -273,27 +280,40 @@ class Configurator extends Nette\Object
 		}
 
 		if (isset($config['arguments'])) {
+			Validators::assertField($config, 'arguments', 'array');
 			$definition->setArguments(array_diff($config['arguments'], array('...')));
 		}
 
 		if (isset($config['setup'])) {
+			Validators::assertField($config, 'setup', 'array');
 			if (Config::takeParent($config['setup'])) {
 				$definition->setup = array();
 			}
-			foreach ($config['setup'] as $item) {
-				$definition->addSetup($item[0], isset($item[1]) ? array_diff($item[1], array('...')) : array());
+			foreach ($config['setup'] as $member => $args) {
+				if (is_int($member)) {
+					Validators::assert($args, 'list:1..2', "setup item #$member");
+					$member = $args[0];
+					$args = isset($args[1]) ? $args[1] : NULL;
+				}
+				if (strpos($member, '$') === FALSE && $args !== NULL) {
+					Validators::assert($args, 'array', "setup arguments for '$member'");
+					$args = array_diff($args, array('...'));
+				}
+				$definition->addSetup($member, $args);
 			}
 		}
 
 		if (isset($config['autowired'])) {
+			Validators::assertField($config, 'autowired', 'bool|string');
 			$definition->setAutowired($config['autowired']);
 		}
 
-		if (!empty($config['run'])) {
-			$definition->addTag('run');
+		if (isset($config['run'])) {
+			$config['tags']['run'] = (bool) $config['run'];
 		}
 
 		if (isset($config['tags'])) {
+			Validators::assertField($config, 'tags', 'array');
 			if (Config::takeParent($config['tags'])) {
 				$definition->tags = array();
 			}
