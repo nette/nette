@@ -1264,6 +1264,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function setContext(Nette\DI\IContainer $context)
 	{
 		$this->context = $context;
+		if ($this->invalidLinkMode === NULL) {
+			$this->invalidLinkMode = $context->parameters['productionMode'] ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
+		}
 		return $this;
 	}
 
