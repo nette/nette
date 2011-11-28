@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Configuration loader.
+ * Configuration manipulator.
  *
  * @author     David Grudl
  *

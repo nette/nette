@@ -24,7 +24,7 @@ interface IContainer
 {
 
 	/**
-	 * Adds the specified service or service factory to the container.
+	 * Adds the service to the container.
 	 * @param  string
 	 * @param  mixed  object, class name or callback
 	 * @return void
@@ -32,14 +32,14 @@ interface IContainer
 	function addService($name, $service);
 
 	/**
-	 * Gets the service object of the specified type.
+	 * Gets the service object.
 	 * @param  string
 	 * @return mixed
 	 */
 	function getService($name);
 
 	/**
-	 * Removes the specified service type from the container.
+	 * Removes the service from the container.
 	 * @param  string
 	 * @return void
 	 */

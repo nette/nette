@@ -23,7 +23,7 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read \SytemContainer $container
+ * @property-read \SystemContainer $container
  */
 class Configurator extends Nette\Object
 {
@@ -90,7 +90,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Returns system DI container.
-	 * @return \SytemContainer
+	 * @return \SystemContainer
 	 */
 	public function getContainer()
 	{
@@ -160,7 +160,7 @@ class Configurator extends Nette\Object
 
 
 
-	private function buildContainer(array $config, & $dependencies = NULL)
+	private function buildContainer(array $config, array & $dependencies = array())
 	{
 		$this->checkCompatibility($config);
 
@@ -208,7 +208,7 @@ class Configurator extends Nette\Object
 		}
 
 		// pre-loading
-		if ($this->params['tempDir']) {
+		if (isset($this->params['tempDir'])) {
 			$initialize->body .= $this->checkTempDir();
 		}
 

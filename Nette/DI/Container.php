@@ -55,9 +55,10 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Adds the specified service or service factory to the container.
+	 * Adds the service or service factory to the container.
 	 * @param  string
 	 * @param  mixed   object, class name or callback
+	 * @param  array   service meta information
 	 * @return Container  provides a fluent interface
 	 */
 	public function addService($name, $service, array $meta = NULL)
@@ -89,7 +90,8 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Removes the specified service type from the container.
+	 * Removes the service from the container.
+	 * @param  string
 	 * @return void
 	 */
 	public function removeService($name)

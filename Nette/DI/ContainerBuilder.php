@@ -59,6 +59,7 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Removes the specified service definition.
+	 * @param  string
 	 * @return void
 	 */
 	public function removeDefinition($name)
