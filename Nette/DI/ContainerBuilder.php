@@ -25,6 +25,9 @@ use Nette,
  */
 class ContainerBuilder extends Nette\Object
 {
+	const CREATED_SERVICE = 'self',
+		THIS_CONTAINER = 'container';
+		
 	/** @var array */
 	public $parameters = array();
 
@@ -212,10 +215,12 @@ class ContainerBuilder extends Nette\Object
 
 	public function prepareClassList()
 	{
-		$this->classes = array(
-			'nette\di\container' => array(TRUE => array('container')),
-			'nette\di\icontainer' => array(TRUE => array('container')),
-		);
+		$this->classes = array();
+
+		$self = 'Nette\DI\Container';
+		foreach (class_parents($self) + class_implements($self) + array($self) as $parent) {
+			$this->classes[strtolower($parent)][TRUE][] = self::THIS_CONTAINER;
+		}
 
 		foreach ($this->definitions as $name => $definition) {
 			if (!$definition->class && $definition->factory) {
@@ -338,7 +343,7 @@ class ContainerBuilder extends Nette\Object
 			if (is_string($target) && substr($target, 0, 1) !== '\\') { // auto-prepend @self
 				$target = explode('::', $target);
 				if (count($target) === 1) {
-					array_unshift($target, '@self');
+					array_unshift($target, '@' . self::CREATED_SERVICE);
 				}
 			}
 
@@ -367,10 +372,10 @@ class ContainerBuilder extends Nette\Object
 		array_walk_recursive($args, function(&$val) use ($self) {
 			if (!is_string($val)) {
 				return;
-			} elseif ($val === '@container') {
+			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
 				$val = new PhpLiteral('$this');
 			} elseif (ContainerBuilder::isService($val)) {
-				$val = new PhpLiteral($val === "@$self" || $val === '@self' ? '$service' : '$this->' . Helpers::formatMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE ? '$service' : '$this->' . Helpers::formatMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
 				$val = new PhpLiteral('$this->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (!ContainerBuilder::isExpanded($val)) {
