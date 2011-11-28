@@ -31,6 +31,9 @@ final class Environment
 	/** @var Nette\Config\Configurator */
 	private static $configurator;
 
+	/** @var string */
+	private static $createdAt;
+
 	/** @var Nette\DI\IContainer */
 	private static $context;
 
@@ -53,6 +56,9 @@ final class Environment
 	 */
 	public static function setConfigurator(Nette\Config\Configurator $configurator)
 	{
+		if (self::$createdAt) {
+			throw new Nette\InvalidStateException('Nette\Config\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
+		}
 		self::$configurator = $configurator;
 	}
 
@@ -65,7 +71,17 @@ final class Environment
 	public static function getConfigurator()
 	{
 		if (self::$configurator === NULL) {
-			self::$configurator = Nette\Config\Configurator::$instance ?: new Nette\Config\Configurator;
+			self::$configurator = new Nette\Config\Configurator;
+			if (defined('TEMP_DIR')) {
+				self::$configurator->setCacheDirectory(TEMP_DIR);
+			}
+			self::$createdAt = '?';
+			foreach (debug_backtrace(FALSE) as $row) {
+				if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+					self::$createdAt = "$row[file]:$row[line]";
+					break;
+				}
+			}
 		}
 		return self::$configurator;
 	}

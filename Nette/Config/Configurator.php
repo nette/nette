@@ -32,9 +32,6 @@ class Configurator extends Nette\Object
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
 
-	/** back compatibility with Nette\Environment */
-	public static $instance;
-
 	/** @var Nette\DI\Container */
 	private $container;
 
@@ -45,13 +42,13 @@ class Configurator extends Nette\Object
 
 	public function __construct()
 	{
-		self::$instance = $this;
 		defined('WWW_DIR') && $this->params['wwwDir'] = realpath(WWW_DIR);
 		defined('APP_DIR') && $this->params['appDir'] = realpath(APP_DIR);
 		defined('LIBS_DIR') && $this->params['libsDir'] = realpath(LIBS_DIR);
 		defined('TEMP_DIR') && $this->params['tempDir'] = realpath(TEMP_DIR);
 		$this->params['productionMode'] = static::detectProductionMode();
 		$this->params['consoleMode'] = PHP_SAPI === 'cli';
+		Nette\Environment::setConfigurator($this); // back compatibility
 	}
 
 
