@@ -27,7 +27,7 @@ class ContainerBuilder extends Nette\Object
 {
 	const CREATED_SERVICE = 'self',
 		THIS_CONTAINER = 'container';
-		
+
 	/** @var array */
 	public $parameters = array();
 
@@ -36,6 +36,9 @@ class ContainerBuilder extends Nette\Object
 
 	/** @var array */
 	private $classes;
+
+	/** @var array */
+	private $dependencies = array();
 
 
 
@@ -153,6 +156,7 @@ class ContainerBuilder extends Nette\Object
 			if ($rm->isAbstract() || !$rm->isPublic()) {
 				throw new ServiceCreationException("$rm is not callable.");
 			}
+			$this->dependencies[$rm->getFileName()] = TRUE;
 
 			foreach ($rm->getParameters() as $num => $parameter) {
 				if (array_key_exists($num, $arguments)) {
@@ -215,7 +219,7 @@ class ContainerBuilder extends Nette\Object
 
 	public function prepareClassList()
 	{
-		$this->classes = array();
+		$this->classes = $this->dependencies = array();
 
 		$self = 'Nette\DI\Container';
 		foreach (class_parents($self) + class_implements($self) + array($self) as $parent) {
@@ -250,6 +254,22 @@ class ContainerBuilder extends Nette\Object
 			}
 			$factory = NULL;
 		}
+
+		foreach ($this->classes as $class => $foo) {
+			$this->dependencies[Nette\Reflection\ClassType::from($class)->getFileName()] = TRUE;
+		}
+	}
+
+
+
+	/**
+	 * Returns class files.
+	 * @return array
+	 */
+	public function getDependencies()
+	{
+		unset($this->dependencies[FALSE]);
+		return array_keys($this->dependencies);
 	}
 
 

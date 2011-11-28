@@ -128,18 +128,19 @@ class Configurator extends Nette\Object
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
 		}
 
-		if ($this->params['tempDir']) {
+		if (!empty($this->params['tempDir'])) {
 			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir']), 'Nette.Configurator');
 			$cacheKey = array($this->params, $file, $section);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
 				$loader = new Config;
 				$config = $file ? $loader->load($file, $section) : array();
+				$dependencies = $loader->getDependencies();
 				$code = "<?php\n// source file $file $section\n\n"
-					. $this->buildContainer($config);
+					. $this->buildContainer($config, $dependencies);
 
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->params['productionMode'] ? NULL : $loader->getDependencies(),
+					Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -149,7 +150,7 @@ class Configurator extends Nette\Object
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 
 		} else {
-			Nette\Utils\LimitedScope::evaluate($this->buildContainer(array()));
+			Nette\Utils\LimitedScope::evaluate('<?php ' . $this->buildContainer(array()));
 		}
 
 		$class = $this->formatContainerClassName();
@@ -159,7 +160,7 @@ class Configurator extends Nette\Object
 
 
 
-	private function buildContainer(array $config)
+	private function buildContainer(array $config, & $dependencies = NULL)
 	{
 		$this->checkCompatibility($config);
 
@@ -211,6 +212,7 @@ class Configurator extends Nette\Object
 			$initialize->body .= $this->checkTempDir();
 		}
 
+		$dependencies = array_merge($dependencies, $container->getDependencies());
 		return (string) $class;
 	}
 
