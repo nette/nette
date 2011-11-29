@@ -188,10 +188,6 @@ class ContainerBuilder extends Nette\Object
 					$res[$num] = $parameter->getDefaultValue();
 					$optCount++;
 
-				} elseif ($parameter->allowsNull()) {
-					$res[$num] = NULL;
-					$optCount = 0;
-
 				} else {
 					throw new ServiceCreationException("$parameter is missing.");
 				}
@@ -210,7 +206,7 @@ class ContainerBuilder extends Nette\Object
 			$optCount = 0;
 		}
 		if ($arguments) {
-			throw new ServiceCreationException("Unexcepted parameters: " . implode(', ', array_keys($arguments)));
+			throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
 		}
 
 		return $optCount ? array_slice($res, 0, -$optCount) : $res;
