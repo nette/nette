@@ -43,11 +43,7 @@ class Configurator extends Nette\Object
 
 	public function __construct()
 	{
-		$trace = debug_backtrace(FALSE);
-		$this->params['appDir'] = isset($trace[0]['file']) ? dirname($trace[0]['file']) : NULL;
-		$this->params['wwwDir'] = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL;
-		$this->params['productionMode'] = static::detectProductionMode();
-		$this->params['consoleMode'] = PHP_SAPI === 'cli';
+		$this->params = $this->getDefaultParameters();
 		Nette\Environment::setConfigurator($this); // back compatibility
 	}
 
@@ -65,6 +61,19 @@ class Configurator extends Nette\Object
 	{
 		$this->params = $params + $this->params;
 		return $this;
+	}
+
+
+
+	protected function getDefaultParameters()
+	{
+		$trace = debug_backtrace(FALSE);
+		return array(
+			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
+			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
+			'productionMode' => static::detectProductionMode(),
+			'consoleMode' => PHP_SAPI === 'cli',
+		);
 	}
 
 
