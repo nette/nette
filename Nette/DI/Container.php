@@ -239,6 +239,30 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
+	/**
+	 * Creates new instance using autowiring.
+	 * @param  string  class
+	 * @param  array   arguments
+	 * @return object
+	 * @throws Nette\InvalidArgumentException
+	 */
+	public function createInstance($class, array $args = array())
+	{
+		$rc = Nette\Reflection\ClassType::from($class);
+		if (!$rc->isInstantiable()) {
+			throw new Nette\InvalidArgumentException("Class $class is not instantiable.");
+
+		} elseif ($constructor = $rc->getConstructor()) {
+			return $rc->newInstanceArgs(Helpers::autowireArguments($constructor, $args, $this));
+
+		} elseif ($args) {
+			throw new Nette\InvalidArgumentException("Unable to pass arguments, class $class has not constructor.");
+		}
+		return new $class;
+	}
+
+
+
 	/********************* shortcuts ****************d*g**/
 
 
