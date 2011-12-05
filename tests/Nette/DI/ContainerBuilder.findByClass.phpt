@@ -36,7 +36,7 @@ Assert::same( 'one', $builder->findByClass('service') );
 Assert::same( NULL, $builder->findByClass('unknown') );
 Assert::throws(function() use ($builder) {
 	$builder->findByClass('Nette\Object');
-}, 'Nette\DI\ServiceCreationException', 'Multiple preferred services of type Nette\Object found: container, one, two');
+}, 'Nette\DI\ServiceCreationException', 'Multiple preferred services of type Nette\Object found: one, two, container');
 
 
 // run-time

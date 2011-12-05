@@ -182,9 +182,8 @@ class ContainerBuilder extends Nette\Object
 	{
 		$this->classes = $this->dependencies = array();
 
-		$self = 'Nette\DI\Container';
-		foreach (class_parents($self) + class_implements($self) + array($self) as $parent) {
-			$this->classes[strtolower($parent)][TRUE][] = self::THIS_CONTAINER;
+		if (!$this->hasDefinition(self::THIS_CONTAINER)) {
+			$this->addDefinition(self::THIS_CONTAINER)->setClass('Nette\DI\Container');
 		}
 
 		foreach ($this->definitions as $name => $definition) {
@@ -272,7 +271,7 @@ class ContainerBuilder extends Nette\Object
 				$class->addDocument("@property $type \$$name");
 				$class->addMethod('createService' . ucfirst($name))
 					->addDocument("@return $type")
-					->setBody($this->generateService($name));
+					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
 			}
