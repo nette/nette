@@ -2,6 +2,7 @@ common:
 	parameters:
 		zone: "Europe/Prague"
 		foo: %bar% world
+		foo3: overwritten
 		bar: hello
 
 	constants:

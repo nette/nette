@@ -172,28 +172,24 @@ class Configurator extends Nette\Object
 	{
 		$this->checkCompatibility($config);
 
-		// consolidate parameters
-		if (!isset($config['parameters'])) {
-			$config['parameters'] = array();
+		$container = new ContainerBuilder;
+
+		// merge and expand parameters
+		if (isset($config['parameters'])) {
+			$container->parameters = $config['parameters'];
 		}
+		$container->parameters += $this->params;
+
+		$configExp = $container->expand($config);
+		$this->configureCore($container,  $configExp);
+		$this->parseDI($container, $config);
+
+		// consolidate parameters
 		foreach ($config as $key => $value) {
 			if (!in_array($key, array('parameters', 'services', 'php', 'constants'))) {
-				$config['parameters'][$key] = $value;
+				$container->parameters[$key] = $value;
 			}
 		}
-
-		// pre-expand parameters at compile-time
-		$parameters = $config['parameters'];
-		array_walk_recursive($config, function(&$val) use ($parameters) {
-			$val = Configurator::preExpand($val, $parameters);
-		});
-
-		// build DI container
-		$container = new ContainerBuilder;
-		$container->parameters = $this->params;
-
-		$this->configureCore($container, $config);
-		$this->parseDI($container, $config);
 
 		$class = $container->generateClass();
 		$class->setName($this->formatContainerClassName());
@@ -202,12 +198,12 @@ class Configurator extends Nette\Object
 
 		// PHP settings
 		if (isset($config['php'])) {
-			$this->configurePhp($container, $class, $config['php']);
+			$this->configurePhp($container, $class, $configExp['php']);
 		}
 
 		// define constants
 		if (isset($config['constants'])) {
-			$this->configureConstants($container, $class, $config['constants']);
+			$this->configureConstants($container, $class, $configExp['constants']);
 		}
 
 		// auto-start services
@@ -216,8 +212,8 @@ class Configurator extends Nette\Object
 		}
 
 		// pre-loading
-		if (isset($this->params['tempDir'])) {
-			$initialize->addBody($this->checkTempDir());
+		if (isset($container->parameters['tempDir'])) {
+			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
 		}
 
 		$dependencies = array_merge($dependencies, $container->getDependencies());
@@ -530,63 +526,12 @@ class Configurator extends Nette\Object
 
 
 
-	/**
-	 * Pre-expands %placeholders% in string.
-	 * @internal
-	 */
-	public static function preExpand($s, array $params, $check = array())
-	{
-		if (!is_string($s)) {
-			return $s;
-		}
-
-		$parts = preg_split('#%([\w.-]*)%#i', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$res = '';
-		foreach ($parts as $n => $part) {
-			if ($n % 2 === 0) {
-				$res .= str_replace('%', '%%', $part);
-
-			} elseif ($part === '') {
-				$res .= '%%';
-
-			} elseif (isset($check[$part])) {
-				throw new Nette\InvalidArgumentException('Circular reference detected for variables: ' . implode(', ', array_keys($check)) . '.');
-
-			} else {
-				try {
-					$val = Nette\Utils\Arrays::get($params, explode('.', $part));
-				} catch (Nette\InvalidArgumentException $e) {
-					$res .= "%$part%";
-					continue;
-				}
-				$val = self::preExpand($val, $params, $check + array($part => 1));
-				if (strlen($part) + 2 === strlen($s)) {
-					if (is_array($val)) {
-						array_walk_recursive($val, function(&$val) use ($params, $check, $part) {
-							$val = Configurator::preExpand($val, $params, $check + array($part => 1));
-						});
-					}
-					return $val;
-				}
-				if (!is_scalar($val)) {
-					throw new Nette\InvalidArgumentException("Unable to concatenate non-scalar parameter '$part' into '$s'.");
-				}
-				$res .= $val;
-			}
-		}
-		return $res;
-	}
-
-
-
 	/********************* service factories ****************d*g**/
 
 
 
-	private function checkTempDir()
+	public function checkTempDir($dir)
 	{
-		$code = '';
-		$dir = $this->params['tempDir'] . '/cache';
 		umask(0000);
 		@mkdir($dir, 0777); // @ - directory may exists
 
