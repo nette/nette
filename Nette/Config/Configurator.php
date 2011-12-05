@@ -43,6 +43,8 @@ class Configurator extends Nette\Object
 
 	public function __construct()
 	{
+		$trace = debug_backtrace(FALSE);
+		$this->params['appDir'] = isset($trace[0]['file']) ? dirname($trace[0]['file']) : NULL;
 		$this->params['wwwDir'] = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL;
 		$this->params['productionMode'] = static::detectProductionMode();
 		$this->params['consoleMode'] = PHP_SAPI === 'cli';
