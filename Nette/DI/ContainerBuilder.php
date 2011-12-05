@@ -160,67 +160,20 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function autowireArguments($class, $method, array $arguments)
 	{
-		$optCount = 0;
-		$num = -1;
-		$res = array();
-		try {
-			$rm = Nette\Reflection\Method::from($class, $method);
-			if ($rm->isAbstract() || !$rm->isPublic()) {
-				throw new ServiceCreationException("$rm is not callable.");
+		$rc = Nette\Reflection\ClassType::from($class);
+		if (!$rc->hasMethod($method)) {
+			if (!Nette\Utils\Validators::isList($arguments)) {
+				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
 			}
-			$this->dependencies[$rm->getFileName()] = TRUE;
-
-			foreach ($rm->getParameters() as $num => $parameter) {
-				if (array_key_exists($num, $arguments)) {
-					$res[$num] = $arguments[$num];
-					unset($arguments[$num]);
-					$optCount = 0;
-
-				} elseif (array_key_exists($parameter->getName(), $arguments)) {
-					$res[$num] = $arguments[$parameter->getName()];
-					unset($arguments[$parameter->getName()]);
-					$optCount = 0;
-
-				} elseif ($parameter->getClass()) {
-					$service = $this->findByClass($parameter->getClass()->getName());
-					if ($service === NULL) {
-						if ($parameter->allowsNull()) {
-							$res[$num] = NULL;
-							$optCount++;
-						} else {
-							throw new ServiceCreationException("No service of type {$parameter->getClass()->getName()} found");
-						}
-					} else {
-						$res[$num] = '@' . $service;
-						$optCount = 0;
-					}
-
-				} elseif ($parameter->isOptional()) {
-					$res[$num] = $parameter->getDefaultValue();
-					$optCount++;
-
-				} else {
-					throw new ServiceCreationException("$parameter is missing.");
-				}
-			}
-
-		} catch (\ReflectionException $e) {
-			if ($arguments && $method === '__construct') {
-				throw new ServiceCreationException("Unable to pass arguments, class $class has not constructor.");
-			}
+			return $arguments;
 		}
 
-		// extra parameters
-		while (array_key_exists(++$num, $arguments)) {
-			$res[$num] = $arguments[$num];
-			unset($arguments[$num]);
-			$optCount = 0;
+		$rm = $rc->getMethod($method);
+		if ($rm->isAbstract() || !$rm->isPublic()) {
+			throw new ServiceCreationException("$rm is not callable.");
 		}
-		if ($arguments) {
-			throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
-		}
-
-		return $optCount ? array_slice($res, 0, -$optCount) : $res;
+		$this->dependencies[$rm->getFileName()] = TRUE;
+		return Helpers::autowireArguments($rm, $arguments, $this);
 	}
 
 
@@ -237,7 +190,7 @@ class ContainerBuilder extends Nette\Object
 		foreach ($this->definitions as $name => $definition) {
 			if (!$definition->class && $definition->factory) {
 				$factory = is_array($definition->factory) ? $definition->factory : explode('::', $definition->factory);
-				if (self::isService($factory[0]) && isset($this->definitions[substr($factory[0], 1)]->class)) {
+				if (self::isService($factory[0]) && !empty($this->definitions[substr($factory[0], 1)]->class)) {
 					$factory[0] = $this->definitions[substr($factory[0], 1)]->class;
 				}
 				$factory = callback($this->expand($factory));
@@ -338,9 +291,10 @@ class ContainerBuilder extends Nette\Object
 	{
 		$definition = $this->definitions[$name];
 		$class = $this->expand($definition->class);
+	    $arguments = $this->expand((array) $definition->arguments);
 
 		if ($definition->factory) {
-			$code = '$service = ' . $this->formatCall($this->expand($definition->factory), $this->expand($definition->arguments));
+			$code = '$service = ' . $this->formatCall($this->expand($definition->factory), $arguments);
 			if ($definition->class) {
 				$message = var_export("Unable to create service '$name', value returned by factory is not % type.", TRUE);
 				$code .= "if (!\$service instanceof $class) {\n\t"
@@ -348,7 +302,12 @@ class ContainerBuilder extends Nette\Object
 				}
 
 		} elseif ($definition->class) { // class
-			$arguments = $this->autowireArguments($class, '__construct', $this->expand((array) $definition->arguments));
+		    if ($constructor = Nette\Reflection\ClassType::from($class)->getConstructor()) {
+				$this->dependencies[$constructor->getFileName()] = TRUE;
+				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
+			} elseif ($arguments) {
+				throw new ServiceCreationException("Unable to pass arguments, class $class has not constructor.");
+			}
 			$code = $this->formatPhp("\$service = new $class" . ($arguments ? '(?*);' : ';'), array($arguments));
 
 		} else {
@@ -428,7 +387,7 @@ class ContainerBuilder extends Nette\Object
 			if ($service === self::CREATED_SERVICE) {
 				$service = $self;
 			}
-			if (isset($this->definitions[$service]->class)) {
+			if (!empty($this->definitions[$service]->class)) {
 				$arguments = $this->autowireArguments($this->expand($this->definitions[$service]->class), $function[1], $arguments);
 			}
 			return $this->formatPhp('?->?(?*);', array($function[0], $function[1], $arguments), $self);

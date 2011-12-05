@@ -73,4 +73,64 @@ final class Helpers
 		return $res;
 	}
 
+
+
+	/**
+	 * Generates list of arguments using autowiring.
+	 * @return array
+	 */
+	public static function autowireArguments(\ReflectionFunctionAbstract $method, array $arguments, $container)
+	{
+		$optCount = 0;
+		$num = -1;
+		$res = array();
+
+		foreach ($method->getParameters() as $num => $parameter) {
+			if (array_key_exists($num, $arguments)) {
+				$res[$num] = $arguments[$num];
+				unset($arguments[$num]);
+				$optCount = 0;
+
+			} elseif (array_key_exists($parameter->getName(), $arguments)) {
+				$res[$num] = $arguments[$parameter->getName()];
+				unset($arguments[$parameter->getName()]);
+				$optCount = 0;
+
+			} elseif ($parameter->getClass()) {
+				$res[$num] = $container->findByClass($parameter->getClass()->getName());
+				if ($res[$num] === NULL) {
+					if ($parameter->allowsNull()) {
+						$optCount++;
+					} else {
+						throw new Nette\InvalidArgumentException("No service of type {$parameter->getClass()->getName()} found");
+					}
+				} else {
+					if ($container instanceof ContainerBuilder) {
+						$res[$num] = '@' . $res[$num];
+					}
+					$optCount = 0;
+				}
+
+			} elseif ($parameter->isOptional()) {
+				$res[$num] = $parameter->getDefaultValue();
+				$optCount++;
+
+			} else {
+				throw new Nette\InvalidArgumentException("$parameter is missing.");
+			}
+		}
+
+		// extra parameters
+		while (array_key_exists(++$num, $arguments)) {
+			$res[$num] = $arguments[$num];
+			unset($arguments[$num]);
+			$optCount = 0;
+		}
+		if ($arguments) {
+			throw new Nette\InvalidArgumentException("Unable to pass specified arguments to $method.");
+		}
+
+		return $optCount ? array_slice($res, 0, -$optCount) : $res;
+	}
+
 }
