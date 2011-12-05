@@ -28,7 +28,7 @@ class ContainerBuilder extends Nette\Object
 	const CREATED_SERVICE = 'self',
 		THIS_CONTAINER = 'container';
 
-	/** @var array */
+	/** @var array  %param% will be expanded */
 	public $parameters = array();
 
 	/** @var array */
@@ -43,7 +43,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Adds new service definition. Expands %param% and @service values.
+	 * Adds new service definition. The expressions %param% and @service will be expanded.
 	 * @param  string
 	 * @return ServiceDefinition
 	 */
@@ -240,23 +240,22 @@ class ContainerBuilder extends Nette\Object
 				if (self::isService($factory[0]) && isset($this->definitions[substr($factory[0], 1)]->class)) {
 					$factory[0] = $this->definitions[substr($factory[0], 1)]->class;
 				}
-				if (self::isExpanded(implode('', $factory))) {
-					$factory = callback($factory);
-					if (!$factory->isCallable()) {
-						throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
-					}
-					try {
-						$definition->class = preg_replace('#[|\s].*#', '', $factory->toReflection()->getAnnotation('return'));
-					} catch (\ReflectionException $e) {
-					}
+				$factory = callback($this->expand($factory));
+				if (!$factory->isCallable()) {
+					throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
+				}
+				try {
+					$definition->class = preg_replace('#[|\s].*#', '', $factory->toReflection()->getAnnotation('return'));
+				} catch (\ReflectionException $e) {
 				}
 			}
 
-			if ($definition->class && self::isExpanded($definition->class)) {
-				if (!class_exists($definition->class) && !interface_exists($definition->class)) {
-					throw new Nette\InvalidStateException("Class $definition->class" . (isset($factory) ? " returned by $factory" : '') . " has not been found.");
+			if ($definition->class) {
+				$class = $this->expand($definition->class);
+				if (!class_exists($class) && !interface_exists($class)) {
+					throw new Nette\InvalidStateException("Class $class" . (isset($factory) ? " returned by $factory" : '') . " has not been found.");
 				}
-				foreach (class_parents($definition->class) + class_implements($definition->class) + array($definition->class) as $parent) {
+				foreach (class_parents($class) + class_implements($class) + array($class) as $parent) {
 					$this->classes[strtolower($parent)][(bool) $definition->autowired][] = $name;
 				}
 			}
@@ -296,7 +295,7 @@ class ContainerBuilder extends Nette\Object
 
 		$class = new Nette\Utils\PhpGenerator\ClassType('Container');
 		$class->addExtend('Nette\DI\Container');
-		$class->addProperty('parameters', $this->parameters);
+		$class->addProperty('parameters', $this->expand($this->parameters));
 
 		$classes = $class->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
@@ -309,14 +308,14 @@ class ContainerBuilder extends Nette\Object
 
 		$meta = $class->addProperty('meta', array());
 		foreach ($this->definitions as $name => $def) {
-			foreach ($def->tags as $tag => $value) {
+			foreach ($this->expand($def->tags) as $tag => $value) {
 				$meta->value[$name][Container::TAGS][$tag] = $value;
 			}
 		}
 
 		foreach ($this->definitions as $name => $definition) {
 			try {
-				$type = $definition->class && self::isExpanded($definition->class) ? $definition->class : 'object';
+				$type = $definition->class ? $this->expand($definition->class) : 'object';
 				$class->addDocument("@property $type \$$name");
 				$class->addMethod('createService' . ucfirst($name))
 					->addDocument("@return $type")
@@ -338,35 +337,26 @@ class ContainerBuilder extends Nette\Object
 	private function generateService($name)
 	{
 		$definition = $this->definitions[$name];
+		$class = $this->expand($definition->class);
 
 		if ($definition->factory) {
-			$code = '$service = ' . $this->formatCall($definition->factory, $definition->arguments);
+			$code = '$service = ' . $this->formatCall($this->expand($definition->factory), $this->expand($definition->arguments));
 			if ($definition->class) {
 				$message = var_export("Unable to create service '$name', value returned by factory is not % type.", TRUE);
-				if (self::isExpanded($definition->class)) {
-					$code .= "if (!\$service instanceof $definition->class) {\n\t"
-						. 'throw new Nette\UnexpectedValueException(' . str_replace('%', $definition->class, $message) . ");\n}\n";
-				} else {
-					$code .= $this->formatPhp('$class = ?;', array($definition->class))
-						. 'if (!$service instanceof $class) {' . "\n\t"
-						. 'throw new Nette\UnexpectedValueException(' . str_replace('%', "'.\$class.'", $message) . ");\n}\n";
+				$code .= "if (!\$service instanceof $class) {\n\t"
+					. 'throw new Nette\UnexpectedValueException(' . str_replace('%', $class, $message) . ");\n}\n";
 				}
-			}
 
 		} elseif ($definition->class) { // class
-			if (self::isExpanded($definition->class)) {
-				$arguments = $this->autowireArguments($definition->class, '__construct', (array) $definition->arguments);
-				$code = $this->formatPhp("\$service = new $definition->class" . ($arguments ? '(?*);' : ';'), array($arguments));
-			} else {
-				$code = $this->formatPhp('$class = ?; $service = new $class' . ($definition->arguments ? '(?*);' : ';'), array($definition->class, $definition->arguments));
-			}
+			$arguments = $this->autowireArguments($class, '__construct', $this->expand((array) $definition->arguments));
+			$code = $this->formatPhp("\$service = new $class" . ($arguments ? '(?*);' : ';'), array($arguments));
 
 		} else {
 			throw new ServiceCreationException("Class and factory method are missing.");
 		}
 
 		foreach ((array) $definition->setup as $setup) {
-			list($target, $arguments) = $setup;
+			list($target, $arguments) = $this->expand($setup);
 
 			if (is_string($target) && substr($target, 0, 1) !== '\\') { // auto-prepend @self
 				$target = explode('::', $target);
@@ -404,10 +394,6 @@ class ContainerBuilder extends Nette\Object
 				$val = new PhpLiteral('$this');
 			} elseif (ContainerBuilder::isService($val)) {
 				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE ? '$service' : '$this->' . PhpHelpers::formatMember(substr($val, 1)));
-			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
-				$val = new PhpLiteral('$this->parameters[' . PhpHelpers::dump(substr($val, 1, -1)) . ']');
-			} elseif (!ContainerBuilder::isExpanded($val)) {
-				$val = new PhpLiteral('Nette\DI\Helpers::expand(' . PhpHelpers::dump($val) . ', $this->parameters)');
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args) . "\n";
@@ -428,12 +414,12 @@ class ContainerBuilder extends Nette\Object
 
 		if (is_string($function)) {
 			$function = explode('::', $function);
-			if (count($function) === 1 && self::isExpanded($function[0])) { // globalFunc
+			if (count($function) === 1) { // globalFunc
 				return $this->formatPhp("$function[0](?*);", array($arguments), $self);
 			}
 		}
 
-		if (!Validators::isList($function) || count($function) !== 2 || !self::isExpanded($function[0] . $function[1])) {
+		if (!Validators::isList($function) || count($function) !== 2) {
 			array_unshift($arguments, $function);
 			return $this->formatPhp('call_user_func(?*);', array($arguments), $self);
 
@@ -442,8 +428,8 @@ class ContainerBuilder extends Nette\Object
 			if ($service === self::CREATED_SERVICE) {
 				$service = $self;
 			}
-			if (isset($this->definitions[$service]->class) && self::isExpanded($this->definitions[$service]->class)) {
-				$arguments = $this->autowireArguments($this->definitions[$service]->class, $function[1], $arguments);
+			if (isset($this->definitions[$service]->class)) {
+				$arguments = $this->autowireArguments($this->expand($this->definitions[$service]->class), $function[1], $arguments);
 			}
 			return $this->formatPhp('?->?(?*);', array($function[0], $function[1], $arguments), $self);
 
@@ -455,9 +441,21 @@ class ContainerBuilder extends Nette\Object
 
 
 
-	public static function isExpanded($arg)
+	/**
+	 * Expands %placeholders% in string.
+	 * @param  mixed
+	 * @return mixed
+	 */
+	public function expand($s)
 	{
-		return strpos($arg, '%') === FALSE;
+		return Helpers::expand($s, $this->parameters, TRUE);
+	}
+
+
+
+	public static function escape($s)
+	{
+		return str_replace('%', '%%', $s);
 	}
 
 
