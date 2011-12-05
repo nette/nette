@@ -271,6 +271,7 @@ class ContainerBuilder extends Nette\Object
 				$class->addDocument("@property $type \$$name");
 				$class->addMethod('createService' . ucfirst($name))
 					->addDocument("@return $type")
+					->setVisibility('protected')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
