@@ -13,7 +13,7 @@ namespace Nette\DI;
 
 use Nette,
 	Nette\Utils\Validators,
-	Nette\Utils\PhpGenerator\Helpers,
+	Nette\Utils\PhpGenerator\Helpers as PhpHelpers,
 	Nette\Utils\PhpGenerator\PhpLiteral;
 
 
@@ -403,14 +403,14 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
 				$val = new PhpLiteral('$this');
 			} elseif (ContainerBuilder::isService($val)) {
-				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE ? '$service' : '$this->' . Helpers::formatMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE ? '$service' : '$this->' . PhpHelpers::formatMember(substr($val, 1)));
 			} elseif (preg_match('#^%[\w-]+%$#', $val)) {
-				$val = new PhpLiteral('$this->parameters[' . Helpers::dump(substr($val, 1, -1)) . ']');
+				$val = new PhpLiteral('$this->parameters[' . PhpHelpers::dump(substr($val, 1, -1)) . ']');
 			} elseif (!ContainerBuilder::isExpanded($val)) {
-				$val = new PhpLiteral('Nette\Utils\Strings::expand(' . Helpers::dump($val) . ', $this->parameters)');
+				$val = new PhpLiteral('Nette\DI\Helpers::expand(' . PhpHelpers::dump($val) . ', $this->parameters)');
 			}
 		});
-		return Helpers::formatArgs($statement, $args) . "\n";
+		return PhpHelpers::formatArgs($statement, $args) . "\n";
 	}
 
 
