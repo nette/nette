@@ -85,6 +85,17 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
+	 * Gets all service definitions.
+	 * @return array
+	 */
+	public function getDefinitions()
+	{
+		return $this->definitions;
+	}
+
+
+
+	/**
 	 * Does the service definition exist?
 	 * @param  string
 	 * @return bool
