@@ -16,9 +16,10 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$container = new Container;
-$container->parameters['appDir'] = '/myApp';
-$container->parameters['dirs']['cache'] = '/temp';
+$container = new Container(array(
+	'appDir' => '/myApp',
+	'dirs' => array('cache' => '/temp'),
+));
 
 Assert::same( '/myApp/test', $container->expand('%appDir%/test') );
 Assert::same( '/temp/test', $container->expand('%dirs.cache%/test') );

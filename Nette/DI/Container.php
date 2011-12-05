@@ -25,7 +25,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	const TAGS = 'tags';
 
 	/** @var array  user parameters */
-	public $parameters = array();
+	/*private*/public $parameters = array();
 
 	/** @deprecated */
 	public $params = array();
@@ -47,9 +47,20 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
-	public function __construct()
+	public function __construct(array $params = array())
 	{
+		$this->parameters = $params + $this->parameters;
 		$this->params = &$this->parameters;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->parameters;
 	}
 
 
