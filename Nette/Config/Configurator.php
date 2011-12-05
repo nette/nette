@@ -13,7 +13,6 @@ namespace Nette\Config;
 
 use Nette,
 	Nette\Caching\Cache,
-	Nette\DI,
 	Nette\DI\ContainerBuilder,
 	Nette\Utils\Validators;
 
@@ -49,6 +48,10 @@ class Configurator extends Nette\Object
 
 
 
+	/**
+	 * Sets path to temporary directory.
+	 * @return ServiceDefinition
+	 */
 	public function setCacheDirectory($path)
 	{
 		$this->params['tempDir'] = $path;
@@ -57,6 +60,10 @@ class Configurator extends Nette\Object
 
 
 
+	/**
+	 * Adds new parameters. The %params% will be expanded.
+	 * @return ServiceDefinition
+	 */
 	public function addParameters(array $params)
 	{
 		$this->params = $params + $this->params;
@@ -65,6 +72,9 @@ class Configurator extends Nette\Object
 
 
 
+	/**
+	 * @return array
+	 */
 	protected function getDefaultParameters()
 	{
 		$trace = debug_backtrace(FALSE);
@@ -253,7 +263,7 @@ class Configurator extends Nette\Object
 				try {
 					static::parseService($definition, $def);
 				} catch (\Exception $e) {
-					throw new DI\ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
+					throw new Nette\DI\ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
 				}
 			}
 		}
@@ -488,10 +498,11 @@ class Configurator extends Nette\Object
 			->setClass('Nette\Http\Session');
 
 		if (isset($config['session'])) {
-			$session->addSetup('setOptions', $config['session']);
+			Validators::assertField($config, 'session', 'array');
+			$session->addSetup('setOptions', array($config['session']));
 		}
 		if (isset($config['session']['expiration'])) {
-			$session->addSetup('setExpiration', $config['session']['expiration']);
+			$session->addSetup('setExpiration', array($config['session']['expiration']));
 		}
 
 		$container->addDefinition('user')
@@ -519,8 +530,9 @@ class Configurator extends Nette\Object
 			$container->addDefinition('mailer')
 				->setClass('Nette\Mail\SendmailMailer');
 		} else {
+			Validators::assertField($config, 'mailer', 'array');
 			$container->addDefinition('mailer')
-				->setClass('Nette\Mail\SmtpMailer', $config['mailer']);
+				->setClass('Nette\Mail\SmtpMailer', array($config['mailer']));
 		}
 	}
 
