@@ -24,8 +24,8 @@ final class Helpers
 {
 
 	/**
-	 * Expands %placeholders% in string.
-	 * @param  string
+	 * Expands %placeholders%.
+	 * @param  mixed
 	 * @param  array
 	 * @param  bool
 	 * @return mixed
@@ -33,6 +33,17 @@ final class Helpers
 	 */
 	public static function expand($var, array $params, $recursive = FALSE)
 	{
+		if (is_array($var)) {
+			$res = array();
+			foreach ($var as $key => $val) {
+				$res[$key] = self::expand($val, $params, $recursive);
+			}
+			return $res;
+
+		} elseif (!is_string($var)) {
+			return $var;
+		}
+
 		$parts = preg_split('#%([\w.-]*)%#i', $var, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$res = '';
 		foreach ($parts as $n => $part) {

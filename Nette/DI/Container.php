@@ -233,13 +233,13 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 	/**
-	 * Expands %placeholders% in string.
+	 * Expands %placeholders%.
 	 * @param  mixed
 	 * @return mixed
 	 */
 	public function expand($s)
 	{
-		return is_string($s) ? Helpers::expand($s, $this->parameters) : $s;
+		return Helpers::expand($s, $this->parameters);
 	}
 
 

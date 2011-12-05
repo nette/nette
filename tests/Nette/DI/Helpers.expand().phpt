@@ -17,13 +17,14 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::same( 'item', Helpers::expand('item', array()) );
-Assert::same( "123", Helpers::expand(123, array()) );
+Assert::same( 123, Helpers::expand(123, array()) );
 Assert::same( '%', Helpers::expand('%%', array()) );
 Assert::same( 'item', Helpers::expand('%key%', array('key' => 'item')) );
 Assert::same( 123, Helpers::expand('%key%', array('key' => 123)) );
 Assert::same( 'a123b123c', Helpers::expand('a%key%b%key%c', array('key' => 123)) );
 Assert::same( 123, Helpers::expand('%key1.key2%', array('key1' => array('key2' => 123))) );
 Assert::same( 123, Helpers::expand('%key1%', array('key1' => '%key2%', 'key2' => 123), TRUE) );
+Assert::same( array(123), Helpers::expand(array('%key1%'), array('key1' => '%key2%', 'key2' => 123), TRUE) );
 
 Assert::throws(function() {
 	Helpers::expand('%missing%', array());
