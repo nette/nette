@@ -344,7 +344,7 @@ class ContainerBuilder extends Nette\Object
 	 * Formats PHP statement.
 	 * @return string
 	 */
-	public static function formatPhp($statement, $args, $self = NULL)
+	private static function formatPhp($statement, $args, $self = NULL)
 	{
 		array_walk_recursive($args, function(&$val) use ($self) {
 			if (!is_string($val)) {
@@ -352,7 +352,9 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
 				$val = new PhpLiteral('$this');
 			} elseif (ContainerBuilder::isService($val)) {
-				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE ? '$service' : '$this->' . PhpHelpers::formatMember(substr($val, 1)));
+				$val = new PhpLiteral($val === "@$self" || $val === '@' . ContainerBuilder::CREATED_SERVICE
+					? '$service'
+					: '$this->' . PhpHelpers::formatMember(substr($val, 1)));
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args) . "\n";
@@ -364,7 +366,7 @@ class ContainerBuilder extends Nette\Object
 	 * Formats function calling in PHP.
 	 * @return string
 	 */
-	public function formatCall($function, $arguments, $self = NULL)
+	private function formatCall($function, $arguments, $self = NULL)
 	{
 		if (!is_array($arguments) && $arguments !== NULL) {
 			throw new Nette\InvalidStateException("Expected array of arguments for ".implode('::', (array) $function)."().");

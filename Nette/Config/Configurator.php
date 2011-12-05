@@ -212,12 +212,12 @@ class Configurator extends Nette\Object
 
 		// auto-start services
 		foreach ($container->findByTag('run') as $name => $foo) {
-			$initialize->body .= $container->formatPhp('$this->getService(?);', array($name));
+			$initialize->addBody('$this->getService(?);', array($name));
 		}
 
 		// pre-loading
 		if (isset($this->params['tempDir'])) {
-			$initialize->body .= $this->checkTempDir();
+			$initialize->addBody($this->checkTempDir());
 		}
 
 		$dependencies = array_merge($dependencies, $container->getDependencies());
@@ -412,7 +412,7 @@ class Configurator extends Nette\Object
 
 	private function configurePhp(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
 	{
-		$body = & $class->methods['initialize']->body;
+		$initialize = $class->methods['initialize'];
 
 		foreach ($config as $name => $value) { // back compatibility - flatten INI dots
 			if (is_array($value)) {
@@ -428,19 +428,19 @@ class Configurator extends Nette\Object
 				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
 
 			} elseif ($name === 'include_path') {
-				$body .= $container->formatCall('set_include_path', array(str_replace(';', PATH_SEPARATOR, $value)));
+				$initialize->addBody('set_include_path(?);', array(str_replace(';', PATH_SEPARATOR, $value)));
 
 			} elseif ($name === 'ignore_user_abort') {
-				$body .= $container->formatCall('ignore_user_abort', array($value));
+				$initialize->addBody('ignore_user_abort(?);', array($value));
 
 			} elseif ($name === 'max_execution_time') {
-				$body .= $container->formatCall('set_time_limit', array($value));
+				$initialize->addBody('set_time_limit(?);', array($value));
 
 			} elseif ($name === 'date.timezone') {
-				$body .= $container->formatCall('date_default_timezone_set', array($value));
+				$initialize->addBody('date_default_timezone_set(?);', array($value));
 
 			} elseif (function_exists('ini_set')) {
-				$body .= $container->formatCall('ini_set', array($name, $value));
+				$initialize->addBody('ini_set(?, ?);', array($name, $value));
 
 			} elseif (ini_get($name) != $value && !Nette\Framework::$iAmUsingBadHost) { // intentionally ==
 				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
@@ -452,9 +452,9 @@ class Configurator extends Nette\Object
 
 	private function configureConstants(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
 	{
-		$body = & $class->methods['initialize']->body;
+		$initialize = $class->methods['initialize'];
 		foreach ($config as $name => $value) {
-			$body .= $container->formatCall('define', array($name, $value));
+			$initialize->addBody('define(?, ?);', array($name, $value));
 		}
 	}
 
