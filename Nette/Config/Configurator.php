@@ -12,9 +12,7 @@
 namespace Nette\Config;
 
 use Nette,
-	Nette\Caching\Cache,
-	Nette\DI\ContainerBuilder,
-	Nette\Utils\Validators;
+	Nette\Caching\Cache;
 
 
 
@@ -31,6 +29,9 @@ class Configurator extends Nette\Object
 	const DEVELOPMENT = 'development',
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
+
+	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
+	public $onCompile;
 
 	/** @var Nette\DI\Container */
 	private $container;
@@ -138,7 +139,7 @@ class Configurator extends Nette\Object
 
 
 
-	private function createContainer($file = NULL, $section = NULL)
+	protected function createContainer($file = NULL, $section = NULL)
 	{
 		if ($this->container) {
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
@@ -178,167 +179,26 @@ class Configurator extends Nette\Object
 
 
 
-	private function buildContainer(array $config, array & $dependencies = array())
+	protected function buildContainer(array $config, array & $dependencies = array())
 	{
 		$this->checkCompatibility($config);
 
-		$extensions = array(
-			'php' => new Extensions\PhpExtension,
-			'constants' => new Extensions\ConstantsExtension,
-			'nette' => new Extensions\NetteExtension,
-		);
-
-		$container = new ContainerBuilder;
-
-		// merge and expand parameters
-		if (isset($config['parameters'])) {
-			$container->parameters = $config['parameters'];
+		if (!isset($config['parameters'])) {
+			$config['parameters'] = array();
 		}
-		$container->parameters += $this->params;
+		$config['parameters'] += $this->params;
 
-		// process extensions
-		$configExp = $container->expand($config);
-		foreach ($extensions as $name => $extension) {
-			$extension->loadConfiguration($container, isset($configExp[$name]) ? $configExp[$name] : array());
-			unset($configExp[$name]);
-		}
+		$compiler = $this->createCompiler();
+		$this->onCompile($this, $compiler);
 
-		// missing extensions simply put to parameters
-		unset($configExp['services'], $configExp['parameters']);
-		$container->parameters += array_intersect_key($config, $configExp);
-
-        // process services
-        $this->parseDI($container, $config);
-
-		foreach ($extensions as $extension) {
-			$extension->beforeCompile($container);
-		}
-
-		$class = $container->generateClass();
-		$class->setName($this->formatContainerClassName());
-
-		$initialize = $class->addMethod('initialize');
-
-		foreach ($extensions as $extension) {
-			$extension->afterCompile($container, $class);
-		}
-
-		$dependencies = array_merge($dependencies, $container->getDependencies());
-		return (string) $class;
+		$code = $compiler->compile($config, $this->formatContainerClassName());
+		$dependencies = array_merge($dependencies, $compiler->getContainer()->getDependencies());
+		return $code;
 	}
 
 
 
-	/**
-	 * Parses 'services' and 'parameters' parts of config
-	 * @return void
-	 */
-	public static function parseDI(ContainerBuilder $container, array $config)
-	{
-		if (isset($config['services'])) {
-			uasort($config['services'], function($a, $b) {
-				return strcmp(Config::isInheriting($a), Config::isInheriting($b));
-			});
-			foreach ($config['services'] as $name => $def) {
-				if ($parent = Config::takeParent($def)) {
-					$container->removeDefinition($name);
-					$definition = $container->addDefinition($name);
-					if ($parent !== Config::OVERWRITE) {
-						foreach ($container->getDefinition($parent) as $k => $v) {
-							$definition->$k = $v;
-						}
-					}
-				} elseif ($container->hasDefinition($name)) {
-					$definition = $container->getDefinition($name);
-				} else {
-					$definition = $container->addDefinition($name);
-				}
-				try {
-					static::parseService($definition, $def);
-				} catch (\Exception $e) {
-					throw new Nette\DI\ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
-				}
-			}
-		}
-	}
-
-
-
-	public static function parseService(Nette\DI\ServiceDefinition $definition, $config)
-	{
-		if (!is_array($config)) {
-			$config = array('class' => $config);
-		}
-
-		$known = array('class', 'factory', 'arguments', 'autowired', 'setup', 'run', 'tags');
-		if ($error = array_diff(array_keys($config), $known)) {
-			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
-		}
-
-		if (isset($config['class'])) {
-			Validators::assertField($config, 'class', 'string');
-			$definition->setClass($config['class']);
-		}
-
-		if (isset($config['factory'])) {
-			Validators::assertField($config, 'factory', 'callable');
-			$definition->setFactory($config['factory']);
-			if (!isset($config['arguments'])) {
-				$config['arguments'][] = '@container';
-			}
-		}
-
-		if (isset($config['arguments'])) {
-			Validators::assertField($config, 'arguments', 'array');
-			$definition->setArguments(array_diff($config['arguments'], array('...')));
-		}
-
-		if (isset($config['setup'])) {
-			Validators::assertField($config, 'setup', 'array');
-			if (Config::takeParent($config['setup'])) {
-				$definition->setup = array();
-			}
-			foreach ($config['setup'] as $member => $args) {
-				if (is_int($member)) {
-					Validators::assert($args, 'list:1..2', "setup item #$member");
-					$member = $args[0];
-					$args = isset($args[1]) ? $args[1] : NULL;
-				}
-				if (strpos($member, '$') === FALSE && $args !== NULL) {
-					Validators::assert($args, 'array', "setup arguments for '$member'");
-					$args = array_diff($args, array('...'));
-				}
-				$definition->addSetup($member, $args);
-			}
-		}
-
-		if (isset($config['autowired'])) {
-			Validators::assertField($config, 'autowired', 'bool|string');
-			$definition->setAutowired($config['autowired']);
-		}
-
-		if (isset($config['run'])) {
-			$config['tags']['run'] = (bool) $config['run'];
-		}
-
-		if (isset($config['tags'])) {
-			Validators::assertField($config, 'tags', 'array');
-			if (Config::takeParent($config['tags'])) {
-				$definition->tags = array();
-			}
-			foreach ($config['tags'] as $tag => $attrs) {
-				if (is_int($tag) && is_string($attrs)) {
-					$definition->addTag($attrs);
-				} else {
-					$definition->addTag($tag, $attrs);
-				}
-			}
-		}
-	}
-
-
-
-	private function checkCompatibility(array $config)
+	protected function checkCompatibility(array $config)
 	{
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
 			if (isset($config[$old])) {
@@ -354,6 +214,20 @@ class Configurator extends Nette\Object
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 * @return Compiler
+	 */
+	protected function createCompiler()
+	{
+		$compiler = new Compiler;
+		$compiler->addExtension('php', new Extensions\PhpExtension)
+			->addExtension('constants', new Extensions\ConstantsExtension)
+			->addExtension('nette', new Extensions\NetteExtension);
+		return $compiler;
 	}
 
 

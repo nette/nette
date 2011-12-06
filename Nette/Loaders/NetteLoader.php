@@ -84,6 +84,7 @@ class NetteLoader extends AutoLoader
 		'nette\config\adapters\iniadapter' => '/Config/Adapters/IniAdapter.php',
 		'nette\config\adapters\neonadapter' => '/Config/Adapters/NeonAdapter.php',
 		'nette\config\adapters\phpadapter' => '/Config/Adapters/PhpAdapter.php',
+		'nette\config\compiler' => '/Config/Compiler.php',
 		'nette\config\compilerextension' => '/Config/CompilerExtension.php',
 		'nette\config\config' => '/Config/Config.php',
 		'nette\config\configurator' => '/Config/Configurator.php',
