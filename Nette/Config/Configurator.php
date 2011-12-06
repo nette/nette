@@ -182,6 +182,12 @@ class Configurator extends Nette\Object
 	{
 		$this->checkCompatibility($config);
 
+		$extensions = array(
+			'php' => new Extensions\PhpExtension,
+			'constants' => new Extensions\ConstantsExtension,
+			'nette' => new Extensions\NetteExtension,
+		);
+
 		$container = new ContainerBuilder;
 
 		// merge and expand parameters
@@ -190,15 +196,22 @@ class Configurator extends Nette\Object
 		}
 		$container->parameters += $this->params;
 
+		// process extensions
 		$configExp = $container->expand($config);
-		$this->configureCore($container,  $configExp);
-		$this->parseDI($container, $config);
+		foreach ($extensions as $name => $extension) {
+			$extension->loadConfiguration($container, isset($configExp[$name]) ? $configExp[$name] : array());
+			unset($configExp[$name]);
+		}
 
-		// consolidate parameters
-		foreach ($config as $key => $value) {
-			if (!in_array($key, array('parameters', 'services', 'php', 'constants'))) {
-				$container->parameters[$key] = $value;
-			}
+		// missing extensions simply put to parameters
+		unset($configExp['services'], $configExp['parameters']);
+		$container->parameters += array_intersect_key($config, $configExp);
+
+        // process services
+        $this->parseDI($container, $config);
+
+		foreach ($extensions as $extension) {
+			$extension->beforeCompile($container);
 		}
 
 		$class = $container->generateClass();
@@ -206,24 +219,8 @@ class Configurator extends Nette\Object
 
 		$initialize = $class->addMethod('initialize');
 
-		// PHP settings
-		if (isset($config['php'])) {
-			$this->configurePhp($container, $class, $configExp['php']);
-		}
-
-		// define constants
-		if (isset($config['constants'])) {
-			$this->configureConstants($container, $class, $configExp['constants']);
-		}
-
-		// auto-start services
-		foreach ($container->findByTag('run') as $name => $foo) {
-			$initialize->addBody('$this->getService(?);', array($name));
-		}
-
-		// pre-loading
-		if (isset($container->parameters['tempDir'])) {
-			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
+		foreach ($extensions as $extension) {
+			$extension->afterCompile($container, $class);
 		}
 
 		$dependencies = array_merge($dependencies, $container->getDependencies());
@@ -238,10 +235,6 @@ class Configurator extends Nette\Object
 	 */
 	public static function parseDI(ContainerBuilder $container, array $config)
 	{
-		if (isset($config['parameters'])) {
-			$container->parameters = $config['parameters'] + $container->parameters;
-		}
-
 		if (isset($config['services'])) {
 			uasort($config['services'], function($a, $b) {
 				return strcmp(Config::isInheriting($a), Config::isInheriting($b));
@@ -412,154 +405,6 @@ class Configurator extends Nette\Object
 			}
 		}
 		return FALSE;
-	}
-
-
-
-	private function configurePhp(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
-	{
-		$initialize = $class->methods['initialize'];
-
-		foreach ($config as $name => $value) { // back compatibility - flatten INI dots
-			if (is_array($value)) {
-				unset($config[$name]);
-				foreach ($value as $k => $v) {
-					$config["$name.$k"] = $v;
-				}
-			}
-		}
-
-		foreach ($config as $name => $value) {
-			if (!is_scalar($value)) {
-				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
-
-			} elseif ($name === 'include_path') {
-				$initialize->addBody('set_include_path(?);', array(str_replace(';', PATH_SEPARATOR, $value)));
-
-			} elseif ($name === 'ignore_user_abort') {
-				$initialize->addBody('ignore_user_abort(?);', array($value));
-
-			} elseif ($name === 'max_execution_time') {
-				$initialize->addBody('set_time_limit(?);', array($value));
-
-			} elseif ($name === 'date.timezone') {
-				$initialize->addBody('date_default_timezone_set(?);', array($value));
-
-			} elseif (function_exists('ini_set')) {
-				$initialize->addBody('ini_set(?, ?);', array($name, $value));
-
-			} elseif (ini_get($name) != $value && !Nette\Framework::$iAmUsingBadHost) { // intentionally ==
-				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
-			}
-		}
-	}
-
-
-
-	private function configureConstants(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class, $config)
-	{
-		$initialize = $class->methods['initialize'];
-		foreach ($config as $name => $value) {
-			$initialize->addBody('define(?, ?);', array($name, $value));
-		}
-	}
-
-
-
-	private function configureCore(ContainerBuilder $container, & $config)
-	{
-		// cache
-		$container->addDefinition('cacheJournal')
-			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
-
-		$container->addDefinition('cacheStorage')
-			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
-
-		$container->addDefinition('templateCacheStorage')
-			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
-			->setAutowired(FALSE);
-
-		// http
-		$container->addDefinition('httpRequestFactory')
-			->setClass('Nette\Http\RequestFactory')
-			->addSetup('setEncoding', array('UTF-8'));
-
-		$container->addDefinition('httpRequest')
-			->setClass('Nette\Http\Request')
-			->setFactory('@httpRequestFactory::createHttpRequest');
-
-		$container->addDefinition('httpResponse')
-			->setClass('Nette\Http\Response');
-
-		$container->addDefinition('httpContext')
-			->setClass('Nette\Http\Context');
-
-		$session = $container->addDefinition('session')
-			->setClass('Nette\Http\Session');
-
-		if (isset($config['session'])) {
-			Validators::assertField($config, 'session', 'array');
-			$session->addSetup('setOptions', array($config['session']));
-		}
-		if (isset($config['session']['expiration'])) {
-			$session->addSetup('setExpiration', array($config['session']['expiration']));
-		}
-
-		$container->addDefinition('user')
-			->setClass('Nette\Http\User');
-
-		// application
-		$application = $container->addDefinition('application')
-			->setClass('Nette\Application\Application')
-			->addSetup('$catchExceptions', '%productionMode%');
-
-		if (empty($config['productionMode'])) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize'); // enable routing debugger
-		}
-
-		$container->addDefinition('router')
-			->setClass('Nette\Application\Routers\RouteList');
-
-		$container->addDefinition('presenterFactory')
-			->setClass('Nette\Application\PresenterFactory', array(
-				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
-			));
-
-		// mailer
-		if (empty($config['mailer']['smtp'])) {
-			$container->addDefinition('mailer')
-				->setClass('Nette\Mail\SendmailMailer');
-		} else {
-			Validators::assertField($config, 'mailer', 'array');
-			$container->addDefinition('mailer')
-				->setClass('Nette\Mail\SmtpMailer', array($config['mailer']));
-		}
-	}
-
-
-
-	/********************* service factories ****************d*g**/
-
-
-
-	public function checkTempDir($dir)
-	{
-		umask(0000);
-		@mkdir($dir, 0777); // @ - directory may exists
-
-		// checks whether directory is writable
-		$uniq = uniqid('_', TRUE);
-		umask(0000);
-		if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
-			throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
-		}
-
-		// tests subdirectory mode
-		$useDirs = @file_put_contents("$dir/$uniq/_", '') !== FALSE; // @ - error is expected
-		@unlink("$dir/$uniq/_");
-		@rmdir("$dir/$uniq"); // @ - directory may not already exist
-
-		return 'Nette\Caching\Storages\FileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
 	}
 
 }
