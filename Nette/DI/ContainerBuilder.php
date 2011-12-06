@@ -172,7 +172,7 @@ class ContainerBuilder extends Nette\Object
 		if ($rm->isAbstract() || !$rm->isPublic()) {
 			throw new ServiceCreationException("$rm is not callable.");
 		}
-		$this->dependencies[$rm->getFileName()] = TRUE;
+		$this->addDependency($rm->getFileName());
 		return Helpers::autowireArguments($rm, $arguments, $this);
 	}
 
@@ -215,14 +215,25 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		foreach ($this->classes as $class => $foo) {
-			$this->dependencies[Nette\Reflection\ClassType::from($class)->getFileName()] = TRUE;
+			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
 		}
 	}
 
 
 
 	/**
-	 * Returns class files.
+	 * Adds a file to the list of dependencies.
+	 * @return void
+	 */
+	public function addDependency($file)
+	{
+		$this->dependencies[$file] = TRUE;
+	}
+
+
+
+	/**
+	 * Returns the list of dependent files.
 	 * @return array
 	 */
 	public function getDependencies()
@@ -274,7 +285,7 @@ class ContainerBuilder extends Nette\Object
 					->setVisibility('protected')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 			} catch (\Exception $e) {
-				throw new ServiceCreationException("Service $name: " . $e->getMessage()/**/, NULL, $e/**/);
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
 		}
 
@@ -303,7 +314,7 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif ($definition->class) { // class
 		    if ($constructor = Nette\Reflection\ClassType::from($class)->getConstructor()) {
-				$this->dependencies[$constructor->getFileName()] = TRUE;
+				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {
 				throw new ServiceCreationException("Unable to pass arguments, class $class has not constructor.");
