@@ -280,7 +280,7 @@ class ContainerBuilder extends Nette\Object
 			try {
 				$type = $definition->class ? $this->expand($definition->class) : 'object';
 				$class->addDocument("@property $type \$$name");
-				$class->addMethod('createService' . ucfirst($name))
+				$class->addMethod('createService' . preg_replace('#[^\w\x7f-\xff]#', '_', ucfirst($name)))
 					->addDocument("@return $type")
 					->setVisibility('protected')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
@@ -317,7 +317,7 @@ class ContainerBuilder extends Nette\Object
 				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {
-				throw new ServiceCreationException("Unable to pass arguments, class $class has not constructor.");
+				throw new ServiceCreationException("Unable to pass arguments, class $class has no constructor.");
 			}
 			$code = $this->formatPhp("\$service = new $class" . ($arguments ? '(?*);' : ';'), array($arguments));
 

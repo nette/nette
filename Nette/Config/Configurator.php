@@ -172,7 +172,7 @@ class Configurator extends Nette\Object
 			Nette\Utils\LimitedScope::evaluate('<?php ' . $this->buildContainer(array()));
 		}
 
-		$class = $this->formatContainerClassName();
+		$class = $this->formatContainerClass();
 		$this->container = new $class;
 		$this->container->initialize();
 	}
@@ -191,7 +191,7 @@ class Configurator extends Nette\Object
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
 
-		$code = $compiler->compile($config, $this->formatContainerClassName());
+		$code = $compiler->compile($config, $this->formatContainerClass());
 		$dependencies = array_merge($dependencies, $compiler->getContainer()->getDependencies());
 		return $code;
 	}
@@ -232,7 +232,7 @@ class Configurator extends Nette\Object
 
 
 
-	public function formatContainerClassName()
+	public function formatContainerClass()
 	{
 		return 'SystemContainer';
 	}

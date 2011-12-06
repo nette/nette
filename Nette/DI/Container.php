@@ -256,7 +256,7 @@ class Container extends Nette\FreezableObject implements IContainer
 			return $rc->newInstanceArgs(Helpers::autowireArguments($constructor, $args, $this));
 
 		} elseif ($args) {
-			throw new Nette\InvalidArgumentException("Unable to pass arguments, class $class has not constructor.");
+			throw new Nette\InvalidArgumentException("Unable to pass arguments, class $class has no constructor.");
 		}
 		return new $class;
 	}
