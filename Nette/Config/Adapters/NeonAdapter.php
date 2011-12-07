@@ -61,7 +61,13 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 					throw new Nette\InvalidStateException("Duplicated key '$key'.");
 				}
 			}
-			$res[$key] = is_array($val) ? $this->process($val) : $val;
+
+			if (is_array($val)) {
+				$val = $this->process($val);
+			} elseif ($val instanceof Nette\Utils\NeonEntity) {
+				$val = (object) array('value' => $val->value, 'attributes' => $this->process($val->attributes));
+			}
+			$res[$key] = $val;
 		}
 		return $res;
 	}

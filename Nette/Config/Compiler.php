@@ -205,17 +205,25 @@ class Compiler extends Nette\Object
 		$arguments = array();
 		if (isset($config['arguments'])) {
 			Validators::assertField($config, 'arguments', 'array');
-			$arguments = array_diff($config['arguments'], array('...'));
+			$arguments = self::filterArguments($config['arguments']);
 		}
 
 		if (isset($config['class'])) {
-			Validators::assertField($config, 'class', 'string');
-			$definition->setClass($config['class'], $arguments);
+			Validators::assertField($config, 'class', 'string|stdClass');
+			if ($config['class'] instanceof \stdClass) {
+				$definition->setClass($config['class']->value, self::filterArguments($config['class']->attributes));
+			} else {
+				$definition->setClass($config['class'], $arguments);
+			}
 		}
 
 		if (isset($config['factory'])) {
-			Validators::assertField($config, 'factory', 'callable');
-			$definition->setFactory($config['factory'], $arguments);
+			Validators::assertField($config, 'factory', 'callable|stdClass');
+			if ($config['factory'] instanceof \stdClass) {
+				$definition->setFactory($config['factory']->value, self::filterArguments($config['factory']->attributes));
+			} else {
+				$definition->setFactory($config['factory'], $arguments);
+			}
 		}
 
 		if (isset($config['setup'])) {
@@ -259,6 +267,20 @@ class Compiler extends Nette\Object
 				}
 			}
 		}
+	}
+
+
+
+	private static function filterArguments(array $args)
+	{
+		foreach ($args as $k => $v) {
+			if ($v === '...') {
+				unset($args[$k]);
+			} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
+				$args[$k] = new Nette\DI\Statement($v->value, self::filterArguments($v->attributes));
+			}
+		}
+		return $args;
 	}
 
 }
