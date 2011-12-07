@@ -6,4 +6,4 @@ services:
 	application!: # overwrites original application
 		class: MyApp
 		setup:
-			- [$errorPresenter, Error]
+			- $errorPresenter(Error)

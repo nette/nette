@@ -227,21 +227,23 @@ class Compiler extends Nette\Object
 		}
 
 		if (isset($config['setup'])) {
-			Validators::assertField($config, 'setup', 'array');
 			if (Config::takeParent($config['setup'])) {
 				$definition->setup = array();
 			}
-			foreach ($config['setup'] as $member => $args) {
-				if (is_int($member)) {
-					Validators::assert($args, 'list:1..2', "setup item #$member");
-					$member = $args[0];
-					$args = isset($args[1]) ? $args[1] : NULL;
+			Validators::assertField($config, 'setup', 'list');
+			foreach ($config['setup'] as $id => $setup) {
+				Validators::assert($setup, 'callable|stdClass', "setup item #$id");
+				if ($setup instanceof \stdClass) {
+					Validators::assert($setup->value, 'callable', "setup item #$id");
+					if (strpos(is_array($setup->value) ? implode('', $setup->value) : $setup->value, '$') === FALSE) {
+						$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
+					} else {
+						Validators::assert($setup->attributes, 'list:1', "setup arguments for '$setup->value'");
+						$definition->addSetup($setup->value, $setup->attributes[0]);
+					}
+				} else {
+					$definition->addSetup($setup);
 				}
-				if (strpos($member, '$') === FALSE && $args !== NULL) {
-					Validators::assert($args, 'array', "setup arguments for '$member'");
-					$args = array_diff($args, array('...'));
-				}
-				$definition->addSetup($member, $args);
 			}
 		}
 

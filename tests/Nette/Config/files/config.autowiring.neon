@@ -7,15 +7,15 @@ services:
 		factory: %factory%::createModel
 		setup:
 			# local methods
-			test: [...]
-			'@model::test': []
-			'@self::test': []
+			- test(...)
+			- @model::test()
+			- @self::test()
 
 			# static class method
-			'Lorem::test':
+			- Lorem::test
 
 			# other service method
-			'@lorem::test':
+			- @lorem::test
 
 	lorem:
 		class: %class%

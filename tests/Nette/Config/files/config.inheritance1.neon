@@ -5,4 +5,4 @@ services:
 	application: # extends original application
 		class: MyApp
 		setup: # extends original setup
-			- [$errorPresenter, Error]
+			- $errorPresenter(Error)
