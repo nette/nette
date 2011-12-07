@@ -18,6 +18,8 @@ require __DIR__ . '/../bootstrap.php';
 
 Assert::null( Neon::decode('') );
 Assert::null( Neon::decode('   ') );
+Assert::same( 0, Neon::decode('0') );
+Assert::same( 0.0, Neon::decode('0.0') );
 Assert::same( 1, Neon::decode('1') );
 Assert::same( -1.2, Neon::decode('-1.2') );
 Assert::same( -120.0, Neon::decode('-1.2e2') );
