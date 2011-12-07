@@ -27,11 +27,10 @@ class Neon extends Nette\Object
 	/** @var array */
 	private static $patterns = array(
 		'\'[^\'\n]*\'|"(?:\\\\.|[^"\\\\\n])*"', // string
-		'@[a-zA-Z_0-9\\\\]+', // object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n[\t ]*', // new line + indent
-		'[^#"\',:=@[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',:=[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?:[\t ]+', // whitespace
 	);
 
@@ -90,7 +89,7 @@ class Neon extends Nette\Object
 
 		} elseif (is_string($var) && !is_numeric($var)
 			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var)
-			&& preg_match('~^' . self::$patterns[5] . '$~', $var)
+			&& preg_match('~^' . self::$patterns[4] . '$~', $var)
 		) {
 			return $var;
 
@@ -161,11 +160,10 @@ class Neon extends Nette\Object
 				if ($hasKey || !$hasValue) {
 					$this->error();
 				}
-				if (is_array($value) || (is_object($value) && !method_exists($value, '__toString'))) {
+				if (is_array($value) || is_object($value)) {
 					$this->error('Unacceptable key');
-				} else {
-					$key = (string) $value;
 				}
+				$key = (string) $value;
 				$hasKey = TRUE;
 				$hasValue = FALSE;
 
@@ -178,12 +176,11 @@ class Neon extends Nette\Object
 
 			} elseif (isset(self::$brackets[$t])) { // Opening bracket [ ( {
 				if ($hasValue) {
-					if ($value[0] === '@' && $t === '(') { // Object
-						$n++;
-						$value = $this->parse(NULL, array('@' => substr($value, 1)));
-					} else {
+					if ($t !== '(') {
 						$this->error();
 					}
+					$n++;
+					$value = $this->parse(NULL, array('@' => substr($value, 1)));
 				} else {
 					$n++;
 					$value = $this->parse(NULL, array());
