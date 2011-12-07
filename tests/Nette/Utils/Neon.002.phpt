@@ -49,8 +49,22 @@ Assert::same( array(
 ), Neon::decode('{a, b, {c: d}, e: f,}') );
 
 
+Assert::true( Neon::decode('@item(a, b)') instanceof Nette\Utils\NeonEntity );
+
+
 Assert::same( array(
-	'@' => 'item',
-	0 => 'a',
-	1 => 'b',
-), Neon::decode('@item(a, b)') );
+	'value' => '@item',
+	'attributes' => array('a', 'b'),
+), (array) Neon::decode('@item(a, b)') );
+
+
+Assert::same( array(
+	'value' => 'item',
+	'attributes' => array('a', 'b'),
+), (array) Neon::decode('item (a, b)') );
+
+
+Assert::same( array(
+	'value' => array(),
+	'attributes' => array(),
+), (array) Neon::decode('[]()') );

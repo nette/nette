@@ -30,7 +30,7 @@ class Neon extends Nette\Object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n[\t ]*', // new line + indent
-		'[^#"\',:=[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',:=[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>(\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?:[\t ]+', // whitespace
 	);
 
@@ -60,13 +60,18 @@ class Neon extends Nette\Object
 	{
 		if ($var instanceof \DateTime) {
 			return $var->format('Y-m-d H:i:s O');
+
+		} elseif ($var instanceof NeonEntity) {
+			return self::encode($var->value) . '(' . substr(self::encode($var->attributes), 1, -1) . ')';
 		}
+
 		if (is_object($var)) {
 			$obj = $var; $var = array();
 			foreach ($obj as $k => $v) {
 				$var[$k] = $v;
 			}
 		}
+
 		if (is_array($var)) {
 			$isList = Validators::isList($var);
 			$s = '';
@@ -180,7 +185,10 @@ class Neon extends Nette\Object
 						$this->error();
 					}
 					$n++;
-					$value = $this->parse(NULL, array('@' => substr($value, 1)));
+					$entity = new NeonEntity;
+					$entity->value = $value;
+					$entity->attributes = $this->parse(NULL, array());
+					$value = $entity;
 				} else {
 					$n++;
 					$value = $this->parse(NULL, array());
@@ -337,6 +345,17 @@ class Neon extends Nette\Object
 		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
 	}
 
+}
+
+
+
+/**
+ * The exception that indicates error of NEON decoding.
+ */
+class NeonEntity extends \stdClass
+{
+	public $value;
+	public $attributes;
 }
 
 
