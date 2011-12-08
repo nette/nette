@@ -43,6 +43,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var bool */
 	public $shared = TRUE;
 
+	/** @var bool */
+	public $internal = FALSE;
+
 
 
 	public function setClass($class, array $args = array())
@@ -100,6 +103,14 @@ class ServiceDefinition extends Nette\Object
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;
+		return $this;
+	}
+
+
+
+	public function setInternal($on)
+	{
+		$this->internal = (bool) $on;
 		return $this;
 	}
 

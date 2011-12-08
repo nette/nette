@@ -284,7 +284,7 @@ class ContainerBuilder extends Nette\Object
 				}
 				$method = $class->addMethod(($definition->shared ? 'createService' : 'create') . ucfirst($name))
 					->addDocument("@return $type")
-					->setVisibility($definition->shared ? 'protected' : 'public')
+					->setVisibility($definition->shared || $definition->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 
 				foreach ($definition->parameters as $k => $v) {

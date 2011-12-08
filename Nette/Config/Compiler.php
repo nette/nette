@@ -198,7 +198,7 @@ class Compiler extends Nette\Object
 
 		$known = $shared
 			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'parameters');
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'internal', 'parameters');
 
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
@@ -258,6 +258,11 @@ class Compiler extends Nette\Object
 		if (isset($config['autowired'])) {
 			Validators::assertField($config, 'autowired', 'bool|string');
 			$definition->setAutowired($config['autowired']);
+		}
+
+		if (isset($config['internal'])) {
+			Validators::assertField($config, 'internal', 'bool');
+			$definition->setInternal($config['internal']);
 		}
 
 		if (isset($config['run'])) {
