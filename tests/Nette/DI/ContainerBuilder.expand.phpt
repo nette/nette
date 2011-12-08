@@ -49,13 +49,11 @@ $builder->parameters = array(
 	'tag' => 'attrs',
 );
 $builder->addDefinition('one')
-	->setClass('%serviceClass%')
-	->setArguments(array('%arg1%', 'b'))
+	->setClass('%serviceClass%', array('%arg1%', 'b'))
 	->addSetup('methodA', array('%arg1%', 'b'));
 
 $builder->addDefinition('two')
-	->setFactory('%serviceClass%::create')
-	->setArguments(array('@container', '%arg1%', '@one'));
+	->setFactory('%serviceClass%::create', array('@container', '%arg1%', '@one'));
 
 $builder->addDefinition('three')
 	->setFactory(array('%serviceClass%', 'create'));

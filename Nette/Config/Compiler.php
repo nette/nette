@@ -202,22 +202,20 @@ class Compiler extends Nette\Object
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
 		}
 
+		$arguments = array();
+		if (isset($config['arguments'])) {
+			Validators::assertField($config, 'arguments', 'array');
+			$arguments = array_diff($config['arguments'], array('...'));
+		}
+
 		if (isset($config['class'])) {
 			Validators::assertField($config, 'class', 'string');
-			$definition->setClass($config['class']);
+			$definition->setClass($config['class'], $arguments);
 		}
 
 		if (isset($config['factory'])) {
 			Validators::assertField($config, 'factory', 'callable');
-			$definition->setFactory($config['factory']);
-			if (!isset($config['arguments'])) {
-				$config['arguments'][] = '@container';
-			}
-		}
-
-		if (isset($config['arguments'])) {
-			Validators::assertField($config, 'arguments', 'array');
-			$definition->setArguments(array_diff($config['arguments'], array('...')));
+			$definition->setFactory($config['factory'], $arguments);
 		}
 
 		if (isset($config['setup'])) {

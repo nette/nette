@@ -49,8 +49,7 @@ $builder->addDefinition('three')
 	->setClass('Service', array('a', 'b'));
 
 $builder->addDefinition('four')
-	->setClass('Service')
-	->setArguments(array('a', 'b'))
+	->setClass('Service', array('a', 'b'))
 	->addSetup('methodA', array('a', 'b'))
 	->addSetup('@four::methodB', array(1, 2));
 

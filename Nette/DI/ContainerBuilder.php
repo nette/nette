@@ -301,21 +301,17 @@ class ContainerBuilder extends Nette\Object
 	private function generateService($name)
 	{
 		$definition = $this->definitions[$name];
-		$class = $this->expand($definition->class);
+		if (!$definition->factory) {
+			throw new ServiceCreationException("Class and factory are missing.");
+		}
 
-		if ($definition->factory) {
 			$code = '$service = ' . $this->formatStatement($this->expand($definition->factory), $this->expand($definition->arguments)) . ";\n";
-			if ($definition->class) {
-				$message = var_export("Unable to create service '$name', value returned by factory is not % type.", TRUE);
-				$code .= "if (!\$service instanceof $class) {\n\t"
-					. 'throw new Nette\UnexpectedValueException(' . str_replace('%', $class, $message) . ");\n}\n";
-				}
 
-		} elseif ($definition->class) {
-			$code = '$service = ' . $this->formatStatement($class, $this->expand($definition->arguments)) . ";\n";
-
-		} else {
-			throw new ServiceCreationException("Class and factory method are missing.");
+		if ($definition->class && $definition->factory !== $definition->class) {
+			$class = $this->expand($definition->class);
+			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $class) {\n\tthrow new Nette\\UnexpectedValueException(?);\n}\n", array(
+				"Unable to create service '$name', value returned by factory is not $class type."
+			));
 		}
 
 		foreach ((array) $definition->setup as $setup) {
