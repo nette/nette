@@ -25,13 +25,10 @@ class ServiceDefinition extends Nette\Object
 	/** @var string  class or interface name */
 	public $class;
 
-	/** @var string|array  Factory::create */
+	/** @var Statement */
 	public $factory;
 
-	/** @var array */
-	public $arguments;
-
-	/** @var array of array(callback|method|property, arguments) */
+	/** @var array of Statement */
 	public $setup = array();
 
 	/** @var array */
@@ -44,7 +41,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setClass($class, array $args = NULL)
 	{
-		if (!$this->factory || $this->factory === $this->class) {
+		if (!$this->factory || $this->factory->entity === $this->class) {
 			$this->setFactory($class, $args);
 		}
 		$this->class = $class;
@@ -55,8 +52,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setFactory($factory, array $args = NULL)
 	{
-		$this->factory = $factory;
-		$this->arguments = $args;
+		$this->factory = new Statement($factory, $args);
 		return $this;
 	}
 
@@ -64,7 +60,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function addSetup($target, $args = NULL)
 	{
-		$this->setup[] = array($target, $args);
+		$this->setup[] = new Statement($target, $args);
 		return $this;
 	}
 

@@ -40,6 +40,9 @@ final class Helpers
 			}
 			return $res;
 
+		} elseif ($var instanceof Statement) {
+			return new Statement(self::expand($var->entity, $params, $recursive), self::expand($var->arguments, $params, $recursive));
+
 		} elseif (!is_string($var)) {
 			return $var;
 		}
