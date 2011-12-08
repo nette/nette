@@ -39,7 +39,7 @@ class ServiceDefinition extends Nette\Object
 
 
 
-	public function setClass($class, array $args = NULL)
+	public function setClass($class, array $args = array())
 	{
 		if (!$this->factory || $this->factory->entity === $this->class) {
 			$this->setFactory($class, $args);
@@ -50,7 +50,7 @@ class ServiceDefinition extends Nette\Object
 
 
 
-	public function setFactory($factory, array $args = NULL)
+	public function setFactory($factory, array $args = array())
 	{
 		$this->factory = new Statement($factory, $args);
 		return $this;
