@@ -302,24 +302,17 @@ class ContainerBuilder extends Nette\Object
 	{
 		$definition = $this->definitions[$name];
 		$class = $this->expand($definition->class);
-	    $arguments = $this->expand((array) $definition->arguments);
 
 		if ($definition->factory) {
-			$code = '$service = ' . $this->formatCall($this->expand($definition->factory), $arguments);
+			$code = '$service = ' . $this->formatStatement($this->expand($definition->factory), $this->expand($definition->arguments)) . ";\n";
 			if ($definition->class) {
 				$message = var_export("Unable to create service '$name', value returned by factory is not % type.", TRUE);
 				$code .= "if (!\$service instanceof $class) {\n\t"
 					. 'throw new Nette\UnexpectedValueException(' . str_replace('%', $class, $message) . ");\n}\n";
 				}
 
-		} elseif ($definition->class) { // class
-		    if ($constructor = Nette\Reflection\ClassType::from($class)->getConstructor()) {
-				$this->addDependency($constructor->getFileName());
-				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
-			} elseif ($arguments) {
-				throw new ServiceCreationException("Unable to pass arguments, class $class has no constructor.");
-			}
-			$code = $this->formatPhp("\$service = new $class" . ($arguments ? '(?*);' : ';'), array($arguments));
+		} elseif ($definition->class) {
+			$code = '$service = ' . $this->formatStatement($class, $this->expand($definition->arguments)) . ";\n";
 
 		} else {
 			throw new ServiceCreationException("Class and factory method are missing.");
@@ -328,25 +321,64 @@ class ContainerBuilder extends Nette\Object
 		foreach ((array) $definition->setup as $setup) {
 			list($target, $arguments) = $this->expand($setup);
 
-			if (is_string($target)) { // auto-prepend @self
-				$target = explode('::', $target);
-				if (count($target) === 1) {
-					array_unshift($target, '@' . self::CREATED_SERVICE);
-				}
+			if (is_string($target) && strpos($target, '::') === FALSE) { // auto-prepend @self
+				$target = '@' . self::CREATED_SERVICE . '::' . $target;
 			}
-
-			if (Validators::isList($target) && count($target) === 2 && substr($target[1], 0, 1) === '$') { // property setter
-				if (self::isService($target[0])) {
-					$code .= $this->formatPhp('?->? = ?;', array($target[0], substr($target[1], 1), $arguments), $name);
-				} else {
-					$code .= $this->formatPhp($target[0] . '::$? = ?;', array(substr($target[1], 1), $arguments), $name);
-				}
-			} else {
-				$code .= $this->formatCall($target, $arguments, $name);
-			}
+			$code .= $this->formatStatement($target, $arguments, $name) . ";\n";
 		}
 
 		return $code .= 'return $service;';
+	}
+
+
+
+	/**
+	 * Formats class instantiating, function calling or property setting in PHP.
+	 * @return string
+	 */
+	private function formatStatement($entity, $arguments, $self = NULL)
+	{
+		$arguments = (array) $arguments;
+
+		if (is_string($entity) && strpos($entity, '::') === FALSE) { // class name
+		    if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
+				$this->addDependency($constructor->getFileName());
+				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
+			} elseif ($arguments) {
+				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
+			}
+			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments));
+		}
+
+		$entity = is_array($entity) ? $entity : explode('::', $entity);
+
+		if (!Validators::isList($entity) || count($entity) !== 2) {
+			throw new Nette\InvalidStateException('Expected class, method or property, ' . implode('::', $entity) . ' given');
+
+		} elseif ($entity[0] === '') { // globalFunc
+			return $this->formatPhp("$entity[1](?*)", array($arguments), $self);
+
+		} elseif (substr($entity[1], 0, 1) === '$') { // property setter
+			if (self::isService($entity[0])) {
+				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), reset($arguments)), $self);
+			} else {
+				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), reset($arguments)), $self);
+			}
+
+		} elseif (self::isService($entity[0])) { // service method
+			$service = substr($entity[0], 1);
+			if ($service === self::CREATED_SERVICE) {
+				$service = $self;
+			}
+			if (!empty($this->definitions[$service]->class)) {
+				$arguments = $this->autowireArguments($this->expand($this->definitions[$service]->class), $entity[1], $arguments);
+			}
+			return $this->formatPhp('?->?(?*)', array($entity[0], $entity[1], $arguments), $self);
+
+		} else { // static method
+			$arguments = $this->autowireArguments($entity[0], $entity[1], $arguments);
+			return $this->formatPhp("$entity[0]::$entity[1](?*)", array($arguments), $self);
+		}
 	}
 
 
@@ -368,44 +400,7 @@ class ContainerBuilder extends Nette\Object
 					: '$this->' . PhpHelpers::formatMember(substr($val, 1)));
 			}
 		});
-		return PhpHelpers::formatArgs($statement, $args) . "\n";
-	}
-
-
-
-	/**
-	 * Formats function calling in PHP.
-	 * @return string
-	 */
-	private function formatCall($function, $arguments, $self = NULL)
-	{
-		if (!is_array($arguments) && $arguments !== NULL) {
-			throw new Nette\InvalidStateException("Expected array of arguments for ".implode('::', (array) $function)."().");
-		}
-		$arguments = (array) $arguments;
-		$function = is_array($function) ? $function : explode('::', $function);
-
-		if (!Validators::isList($function) || count($function) !== 2) {
-			array_unshift($arguments, $function);
-			return $this->formatPhp('call_user_func(?*);', array($arguments), $self);
-
-		} elseif ($function[0] === '') { // globalFunc
-			return $this->formatPhp("$function[1](?*);", array($arguments), $self);
-			
-		} elseif (self::isService($function[0])) {
-			$service = substr($function[0], 1);
-			if ($service === self::CREATED_SERVICE) {
-				$service = $self;
-			}
-			if (!empty($this->definitions[$service]->class)) {
-				$arguments = $this->autowireArguments($this->expand($this->definitions[$service]->class), $function[1], $arguments);
-			}
-			return $this->formatPhp('?->?(?*);', array($function[0], $function[1], $arguments), $self);
-
-		} else {
-			$arguments = $this->autowireArguments($function[0], $function[1], $arguments);
-			return $this->formatPhp("$function[0]::$function[1](?*);", array($arguments), $self);
-		}
+		return PhpHelpers::formatArgs($statement, $args);
 	}
 
 
