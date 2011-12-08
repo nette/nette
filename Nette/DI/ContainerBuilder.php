@@ -328,7 +328,7 @@ class ContainerBuilder extends Nette\Object
 		foreach ((array) $definition->setup as $setup) {
 			list($target, $arguments) = $this->expand($setup);
 
-			if (is_string($target) && substr($target, 0, 1) !== '\\') { // auto-prepend @self
+			if (is_string($target)) { // auto-prepend @self
 				$target = explode('::', $target);
 				if (count($target) === 1) {
 					array_unshift($target, '@' . self::CREATED_SERVICE);
@@ -383,18 +383,15 @@ class ContainerBuilder extends Nette\Object
 			throw new Nette\InvalidStateException("Expected array of arguments for ".implode('::', (array) $function)."().");
 		}
 		$arguments = (array) $arguments;
-
-		if (is_string($function)) {
-			$function = explode('::', $function);
-			if (count($function) === 1) { // globalFunc
-				return $this->formatPhp("$function[0](?*);", array($arguments), $self);
-			}
-		}
+		$function = is_array($function) ? $function : explode('::', $function);
 
 		if (!Validators::isList($function) || count($function) !== 2) {
 			array_unshift($arguments, $function);
 			return $this->formatPhp('call_user_func(?*);', array($arguments), $self);
 
+		} elseif ($function[0] === '') { // globalFunc
+			return $this->formatPhp("$function[1](?*);", array($arguments), $self);
+			
 		} elseif (self::isService($function[0])) {
 			$service = substr($function[0], 1);
 			if ($service === self::CREATED_SERVICE) {
