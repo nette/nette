@@ -114,7 +114,7 @@ class Compiler extends Nette\Object
 		}
 
 		// missing extensions simply put to parameters
-		unset($configExp['services']);
+		unset($configExp['services'], $configExp['factories']);
 		$this->container->parameters += array_intersect_key($this->config, $configExp);
 	}
 
@@ -155,15 +155,14 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config)
 	{
-		if (!isset($config['services'])) {
-			return;
-		}
+		$all = isset($config['services']) ? $config['services'] : array();
+		$all += isset($config['factories']) ? $config['factories'] : array();
 
-		uasort($config['services'], function($a, $b) {
+		uasort($all, function($a, $b) {
 			return strcmp(Config::isInheriting($a), Config::isInheriting($b));
 		});
 
-		foreach ($config['services'] as $name => $def) {
+		foreach ($all as $name => $def) {
 			if ($parent = Config::takeParent($def)) {
 				$container->removeDefinition($name);
 				$definition = $container->addDefinition($name);
@@ -178,7 +177,7 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService($definition, $def);
+				static::parseService($definition, $def, isset($config['services'][$name]));
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
@@ -191,13 +190,16 @@ class Compiler extends Nette\Object
 	 * Parses single service from configuration file.
 	 * @return void
 	 */
-	public static function parseService(Nette\DI\ServiceDefinition $definition, $config)
+	public static function parseService(Nette\DI\ServiceDefinition $definition, $config, $shared = TRUE)
 	{
 		if (!is_array($config)) {
 			$config = array('class' => $config);
 		}
 
-		$known = array('class', 'factory', 'arguments', 'autowired', 'setup', 'run', 'tags');
+		$known = $shared
+			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'run', 'tags')
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'parameters');
+
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
 		}
@@ -245,6 +247,12 @@ class Compiler extends Nette\Object
 					$definition->addSetup($setup);
 				}
 			}
+		}
+
+		$definition->setShared($shared);
+		if (isset($config['parameters'])) {
+			Validators::assertField($config, 'parameters', 'array');
+			$definition->setParameters($config['parameters']);
 		}
 
 		if (isset($config['autowired'])) {

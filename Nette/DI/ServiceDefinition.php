@@ -32,10 +32,16 @@ class ServiceDefinition extends Nette\Object
 	public $setup = array();
 
 	/** @var array */
+	public $parameters = array();
+
+	/** @var array */
 	public $tags = array();
 
 	/** @var mixed */
 	public $autowired = TRUE;
+
+	/** @var bool */
+	public $shared = TRUE;
 
 
 
@@ -66,6 +72,15 @@ class ServiceDefinition extends Nette\Object
 
 
 
+	public function setParameters(array $params)
+	{
+		$this->shared = FALSE;
+		$this->parameters = $params;
+		return $this;
+	}
+
+
+
 	public function addTag($tag, $attrs = TRUE)
 	{
 		$this->tags[$tag] = $attrs;
@@ -77,6 +92,14 @@ class ServiceDefinition extends Nette\Object
 	public function setAutowired($on)
 	{
 		$this->autowired = $on;
+		return $this;
+	}
+
+
+
+	public function setShared($on)
+	{
+		$this->shared = (bool) $on;
 		return $this;
 	}
 

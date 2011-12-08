@@ -279,11 +279,21 @@ class ContainerBuilder extends Nette\Object
 		foreach ($this->definitions as $name => $definition) {
 			try {
 				$type = $definition->class ? $this->expand($definition->class) : 'object';
-				$class->addDocument("@property $type \$$name");
-				$class->addMethod('createService' . preg_replace('#[^\w\x7f-\xff]#', '_', ucfirst($name)))
+				if ($definition->shared) {
+					$class->addDocument("@property $type \$$name");
+				}
+				$method = $class->addMethod(($definition->shared ? 'createService' : 'create') . ucfirst($name))
 					->addDocument("@return $type")
-					->setVisibility('protected')
+					->setVisibility($definition->shared ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
+
+				foreach ($definition->parameters as $k => $v) {
+					$tmp = explode(' ', is_int($k) ? $v : $k);
+					$param = is_int($k) ? $method->addParameter(end($tmp)) : $method->addParameter(end($tmp), $v);
+					if (isset($tmp[1])) {
+						$param->setTypeHint($tmp[0]);
+					}
+				}
 			} catch (\Exception $e) {
 				throw new ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
@@ -305,7 +315,13 @@ class ContainerBuilder extends Nette\Object
 			throw new ServiceCreationException("Class and factory are missing.");
 		}
 
-		$code = '$service = ' . $this->formatStatement($this->expand($definition->factory)) . ";\n";
+		$parameters = $this->parameters;
+		foreach ($definition->parameters as $k => $v) {
+			$v = explode(' ', is_int($k) ? $v : $k);
+			$parameters[end($v)] = new PhpLiteral('$' . end($v));
+		}
+
+		$code = '$service = ' . $this->formatStatement(Helpers::expand($definition->factory, $parameters, TRUE)) . ";\n";
 
 		if ($definition->class && $definition->class !== $definition->factory->entity) {
 			$class = $this->expand($definition->class);
@@ -315,8 +331,8 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		foreach ((array) $definition->setup as $setup) {
-			$setup = $this->expand($setup);
-			if (strpbrk($setup->entity, ':@') === FALSE) { // auto-prepend @self
+			$setup = Helpers::expand($setup, $parameters, TRUE);
+			if (is_string($setup->entity) && strpbrk($setup->entity, ':@') === FALSE) { // auto-prepend @self
 				$setup->entity = "@$name::$setup->entity";
 			}
 			$code .= $this->formatStatement($setup, $name) . ";\n";
@@ -335,9 +351,26 @@ class ContainerBuilder extends Nette\Object
 	public function formatStatement(Statement $statement, $self = NULL)
 	{
 		$arguments = (array) $statement->arguments;
+
+		if ($statement->entity instanceof PhpLiteral) {
+			return $this->formatPhp('call_user_func_array(?, ?)', array($statement->entity, $arguments));
+		}
+
 		$entity = explode('::', $statement->entity);
 
-		if (strpos($statement->entity, '::') === FALSE) { // class name
+		if (strpos($statement->entity, '::') === FALSE && ($service = $this->getServiceName($statement->entity))) { // non-shared service calling
+			if ($this->definitions[$service]->shared) {
+				throw new ServiceCreationException("Unable to call service '$statement->entity'.");
+			}
+			$params = array();
+			foreach ($this->definitions[$service]->parameters as $k => $v) {
+				$params[] = preg_replace('#\w+$#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
+			}
+			$rm = new \ReflectionFunction(create_function(implode(', ', $params), ''));
+			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
+			return $this->formatPhp('$this->?(?*)', array('create' . ucfirst($service), $arguments), $self);
+
+		} elseif (strpos($statement->entity, '::') === FALSE) { // class name
 		    if ($constructor = Nette\Reflection\ClassType::from($statement->entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
@@ -388,7 +421,13 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($val === '@' . ContainerBuilder::THIS_CONTAINER) {
 				$val = new PhpLiteral('$this');
 			} elseif ($service = $that->getServiceName($val, $self)) {
-				$val = new PhpLiteral($service === $self ? '$service' : '$this->' . PhpHelpers::formatMember($service));
+				if ($service === $self) {
+					$val = new PhpLiteral('$service');
+				} elseif ($that->definitions[$service]->shared) {
+					$val = new PhpLiteral('$this->' . PhpHelpers::formatMember($service));
+				} else {
+					$val = new PhpLiteral('$this->' . PhpHelpers::formatMember('create' . ucfirst($service)) . '()');
+				}
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
