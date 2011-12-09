@@ -387,9 +387,9 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (strpos($statement->entity, '$') !== FALSE) { // property setter
 			if ($this->getServiceName($entity[0], $self)) {
-				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), reset($arguments)), $self);
+				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $statement->arguments), $self);
 			} else {
-				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), reset($arguments)), $self);
+				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), $statement->arguments), $self);
 			}
 
 		} elseif ($service = $this->getServiceName($entity[0], $self)) { // service method
