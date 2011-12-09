@@ -40,6 +40,7 @@ class NetteLoader extends AutoLoader
 		'nette\application\irouter' => '/Application/IRouter.php',
 		'nette\application\presenterfactory' => '/Application/PresenterFactory.php',
 		'nette\application\request' => '/Application/Request.php',
+		'nette\application\responses\emptyresponse' => '/Application/Responses/EmptyResponse.php',
 		'nette\application\responses\fileresponse' => '/Application/Responses/FileResponse.php',
 		'nette\application\responses\forwardresponse' => '/Application/Responses/ForwardResponse.php',
 		'nette\application\responses\jsonresponse' => '/Application/Responses/JsonResponse.php',
