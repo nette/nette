@@ -146,16 +146,19 @@ class Application extends Nette\Object
 
 				// Execute presenter
 				$response = $this->presenter->run($request);
+				if (!$response instanceof IResponse) {
+					throw new Nette\UnexpectedValueException("Unable to send response, value returned by presenter is not instanceof Nette\\Application\\IResponse.");
+				}
+
 				$this->onResponse($this, $response);
 
 				// Send response
 				if ($response instanceof Responses\ForwardResponse) {
 					$request = $response->getRequest();
 					continue;
-
-				} elseif ($response instanceof IResponse) {
-					$response->send($this->httpRequest, $this->httpResponse);
 				}
+
+				$response->send($this->httpRequest, $this->httpResponse);
 				break;
 
 			} catch (\Exception $e) {
