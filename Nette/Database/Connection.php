@@ -62,8 +62,7 @@ class Connection extends PDO
 		}
 
 		$this->preprocessor = new SqlPreprocessor($this);
-		$this->databaseReflection = $databaseReflection ?: new Reflection\ConventionalReflection;
-		$this->databaseReflection->setConnection($this);
+		$this->setDatabaseReflection($databaseReflection ?: new Reflection\ConventionalReflection);
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
@@ -81,6 +80,19 @@ class Connection extends PDO
 	public function getSupplementalDriver()
 	{
 		return $this->driver;
+	}
+
+
+
+	/**
+	 * Sets database reflection
+	 * @param  IReflection  database reflection object
+	 * @return IReflection
+	 */
+	public function setDatabaseReflection(IReflection $databaseReflection)
+	{
+		$databaseReflection->setConnection($this);
+		return $this->databaseReflection = $databaseReflection;
 	}
 
 
