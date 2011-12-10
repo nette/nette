@@ -42,13 +42,13 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 
 
-	/**
-	 * Returns primary key value.
-	 * @return string
-	 */
 	public function __toString()
 	{
-		return (string) $this[$this->table->primary]; // (string) - PostgreSQL returns int
+		try {
+			return (string) $this->getPrimary();
+		} catch (\Exception $e) {
+			Nette\Diagnostics\Debugger::toStringException($e);
+		}
 	}
 
 
@@ -60,6 +60,20 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	{
 		$this->access(NULL);
 		return $this->data;
+	}
+
+
+
+	/**
+	 * Returns primary key value.
+	 * @return mixed
+	 */
+	public function getPrimary()
+	{
+		if (!isset($this->data[$this->table->primary])) {
+			throw new Nette\NotSupportedException("Table {$this->table->name} does not have any primary key.");
+		}
+		return $this[$this->table->primary];
 	}
 
 
