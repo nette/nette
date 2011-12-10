@@ -152,7 +152,7 @@ class SqlPreprocessor extends Nette\Object
 				foreach ($value as $k => $v) {
 					$vx[] = $this->formatValue($v);
 				}
-				return ', (' . implode(', ', $vx) . ')';
+				return '(' . implode(', ', $vx) . ')';
 			}
 
 		} elseif ($value instanceof \DateTime) {
