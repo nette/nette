@@ -220,8 +220,12 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		$column = $this->table->connection->databaseReflection->getReferencedColumn($key, $this->table->name);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
-			$referenced = $this->table->getReferencedTable($key);
+			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
+			$referenced = $this->table->getReferencedTable($key, $nullTmp, !empty($this->modified[$column]));
 			$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
+			if (!empty($this->modified[$column])) {
+				$this->modified[$column] = 0; // 0 fails on empty, pass on isset
+			}
 			return $ret;
 		}
 

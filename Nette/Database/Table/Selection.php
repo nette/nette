@@ -68,6 +68,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var string grouping condition */
 	protected $having = '';
 
+	/** @var bool recheck referencing keys */
+	protected $checkReferenceNewKeys = FALSE;
+
 	/** @var array of referenced TableSelection */
 	protected $referenced = array();
 
@@ -575,15 +578,20 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$return = $this->connection->query("INSERT INTO $this->delimitedName", $data);
 
-		$this->rows = NULL;
 		if (!is_array($data)) {
 			return $return->rowCount();
 		}
 
+		$this->checkReferenceNewKeys = TRUE;
+
 		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId())) {
 			$data[$this->primary] = $id;
+			return $this->rows[$id] = new ActiveRow($data, $this);
+
+		} else {
+			return new ActiveRow($data, $this);
+
 		}
-		return new ActiveRow($data, $this);
 	}
 
 
@@ -634,19 +642,28 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/**
 	 * Returns referenced row.
 	 * @param  string
+	 * @param  string
+	 * @param  bool  checks if rows contains the same primary value relations
 	 * @return ActiveRow or NULL if the row does not exist
 	 */
-	public function getReferencedTable($name, & $column = NULL)
+	public function getReferencedTable($name, & $column = NULL, $checkReferenceNewKeys = FALSE)
 	{
 		$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
 		$referenced = & $this->referenced[$name];
-		if ($referenced === NULL) {
+		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
 			foreach ($this->rows as $row) {
 				if ($row[$column] !== NULL) {
-					$keys[$row[$column]] = NULL;
+					$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
+					$keys[$key] = NULL;
 				}
 			}
+
+			if ($referenced !== NULL && $keys === array_keys($this->rows)) {
+				$this->checkReferenceNewKeys = FALSE;
+				return $referenced;
+			}
+
 			if ($keys) {
 				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
 				$referenced = new Selection($table, $this->connection);
