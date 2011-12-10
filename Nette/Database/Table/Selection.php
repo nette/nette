@@ -564,7 +564,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/**
 	 * Inserts row in a table.
-	 * @param  mixed array($column => $value)|Traversable for single row insert or TableSelection|string for INSERT ... SELECT
+	 * @param  mixed array($column => $value)|Traversable for single row insert or Selection|string for INSERT ... SELECT
 	 * @return ActiveRow or FALSE in case of an error or number of affected rows for INSERT ... SELECT
 	 */
 	public function insert($data)
@@ -598,7 +598,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/**
 	 * Updates all rows in result set.
-	 * @param  array ($column => $value)
+	 * @param  array|\Traversable ($column => $value)
 	 * @return int number of affected rows or FALSE in case of an error
 	 */
 	public function update($data)
