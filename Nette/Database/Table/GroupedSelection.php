@@ -131,10 +131,13 @@ class GroupedSelection extends Selection
 
 	public function update($data)
 	{
-		$where = $this->where;
-		$this->where[0] = "$this->delimitedColumn = " . $this->connection->quote($this->active);
+		$condition = array($this->where, $this->parameters);
+
+		$this->where[0] = "$this->delimitedColumn = ?";
+		$this->parameters[0] = $this->active;
 		$return = parent::update($data);
-		$this->where = $where;
+
+		list($this->where, $this->parameters) = $condition;
 		return $return;
 	}
 
@@ -142,10 +145,13 @@ class GroupedSelection extends Selection
 
 	public function delete()
 	{
-		$where = $this->where;
-		$this->where[0] = "$this->delimitedColumn = " . $this->connection->quote($this->active);
+		$condition = array($this->where, $this->parameters);
+
+		$this->where[0] = "$this->delimitedColumn = ?";
+		$this->parameters[0] = $this->active;
 		$return = parent::delete();
-		$this->where = $where;
+
+		list($this->where, $this->parameters) = $condition;
 		return $return;
 	}
 
