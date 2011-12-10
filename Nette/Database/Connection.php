@@ -105,6 +105,10 @@ class Connection extends PDO
 
 
 
+	/**
+	 * Sets cache storage engine
+	 * @param Nette\Caching\IStorage $storage
+	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
 	{
 		$this->cache = $storage ? new Nette\Caching\Cache($storage, "Nette.Database/$this->dsn") : NULL;
