@@ -121,9 +121,15 @@ class GroupedSelection extends Selection
 		if ($data instanceof \Traversable && !$data instanceof Selection) {
 			$data = iterator_to_array($data);
 		}
-		if (is_array($data)) {
+
+		if (Nette\Utils\Validators::isList($data)) {
+			foreach (array_keys($data) as $key) {
+				$data[$key][$this->column] = $this->active;
+			}
+		} else {
 			$data[$this->column] = $this->active;
 		}
+
 		return parent::insert($data);
 	}
 
