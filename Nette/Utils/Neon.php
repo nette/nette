@@ -76,6 +76,9 @@ class Neon extends Nette\Object
 			$isList = Validators::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
+				if (count($var) === 0){
+					return "[]";
+				}
 				foreach ($var as $k => $v) {
 					$v = self::encode($v, self::BLOCK);
 					$s .= ($isList ? '-' : self::encode($k) . ':')
