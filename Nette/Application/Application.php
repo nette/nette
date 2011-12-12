@@ -146,7 +146,9 @@ class Application extends Nette\Object
 
 				// Execute presenter
 				$response = $this->presenter->run($request);
-				$this->onResponse($this, $response);
+				if ($response) {
+					$this->onResponse($this, $response);
+				}
 
 				// Send response
 				if ($response instanceof Responses\ForwardResponse) {
