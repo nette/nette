@@ -67,6 +67,9 @@ class Config extends Nette\Object
 		$data = $this->getAdapter($file)->load($file);
 
 		if ($section) {
+			if (isset($data[self::INCLUDES_KEY])) {
+				throw new Nette\InvalidStateException("Section 'includes' must be placed under some top section in file '$file'.");
+			}
 			$data = $this->getSection($data, $section, $file);
 		}
 
