@@ -29,4 +29,4 @@ Assert::throws(function() {
 Assert::throws(function() {
 	$config = new Config;
 	$config->load('files/config.sample.neon', 'unknown');
-}, 'Nette\InvalidStateException', "Section 'unknown' is missing or is not an array.");
+}, 'Nette\Utils\AssertionException', "Missing section 'unknown' in file '%a%'.");

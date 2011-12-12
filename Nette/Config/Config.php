@@ -11,7 +11,8 @@
 
 namespace Nette\Config;
 
-use Nette;
+use Nette,
+	Nette\Utils\Validators;
 
 
 
@@ -66,15 +67,13 @@ class Config extends Nette\Object
 		$data = $this->getAdapter($file)->load($file);
 
 		if ($section) {
-			$data = $this->getSection($data, $section);
+			$data = $this->getSection($data, $section, $file);
 		}
 
 		// include child files
 		$merged = array();
 		if (isset($data[self::INCLUDES_KEY])) {
-			if (!is_array($data[self::INCLUDES_KEY])) {
-				throw new Nette\InvalidStateException("Invalid section 'includes' in file '$file'.");
-			}
+			Validators::assert($data[self::INCLUDES_KEY], 'list', "section 'includes' in file '$file'");
 			foreach ($data[self::INCLUDES_KEY] as $include) {
 				$merged = static::merge($this->load(dirname($file) . '/' . $include), $merged);
 			}
@@ -209,14 +208,12 @@ class Config extends Nette\Object
 
 
 
-	private function getSection(array $data, $key)
+	private function getSection(array $data, $key, $file)
 	{
-		if (!array_key_exists($key, $data) || !is_array($data[$key]) && $data[$key] !== NULL) {
-			throw new Nette\InvalidStateException("Section '$key' is missing or is not an array.");
-		}
+		Validators::assertField($data, $key, 'array|null', "section '%' in file '$file'");
 		$item = $data[$key];
 		if ($parent = static::takeParent($item)) {
-			$item = static::merge($item, $this->getSection($data, $parent));
+			$item = static::merge($item, $this->getSection($data, $parent, $file));
 		}
 		return $item;
 	}
