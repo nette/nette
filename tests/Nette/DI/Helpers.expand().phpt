@@ -25,6 +25,14 @@ Assert::same( 'a123b123c', Helpers::expand('a%key%b%key%c', array('key' => 123))
 Assert::same( 123, Helpers::expand('%key1.key2%', array('key1' => array('key2' => 123))) );
 Assert::same( 123, Helpers::expand('%key1%', array('key1' => '%key2%', 'key2' => 123), TRUE) );
 Assert::same( array(123), Helpers::expand(array('%key1%'), array('key1' => '%key2%', 'key2' => 123), TRUE) );
+Assert::same(
+	array('key1' => 123, 'key2' => 'abc'),
+    Helpers::expand('%keyA%', array(
+		'keyA' => array('key1' => 123, 'key2' => '%keyB%'),
+		'keyB' => 'abc'
+	), TRUE)
+);
+
 
 Assert::throws(function() {
 	Helpers::expand('%missing%', array());

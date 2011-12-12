@@ -61,7 +61,7 @@ final class Helpers
 
 			} else {
 				$val = Nette\Utils\Arrays::get($params, explode('.', $part));
-				if ($recursive && is_string($val)) {
+				if ($recursive) {
 					$val = self::expand($val, $params, (is_array($recursive) ? $recursive : array()) + array($part => 1));
 				}
 				if (strlen($part) + 2 === strlen($var)) {
