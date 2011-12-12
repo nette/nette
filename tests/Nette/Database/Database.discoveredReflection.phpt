@@ -19,19 +19,19 @@ $connection->setDatabaseReflection(new Database\Reflection\DiscoveredReflection)
 
 
 $appTags = array();
-foreach ($connection->table('application') as $application) {
-	$appTags[$application->title] = array(
-		'author' => $application->author->name,
+foreach ($connection->table('book') as $book) {
+	$appTags[$book->title] = array(
+		'author' => $book->author->name,
 		'tags' => array(),
 	);
 
-	foreach ($application->related('application_tag') as $application_tag) {
-		$appTags[$application->title]['tags'][] = $application_tag->tag->name;
+	foreach ($book->related('book_tag') as $book_tag) {
+		$appTags[$book->title]['tags'][] = $book_tag->tag->name;
 	}
 }
 
 Assert::equal(array(
-	'Adminer' => array(
+	'1001 tipu a triku pro PHP' => array(
 		'author' => 'Jakub Vrana',
 		'tags' => array('PHP', 'MySQL'),
 	),
@@ -52,5 +52,5 @@ Assert::equal(array(
 
 
 
-$application = $connection->table('application')->get(1);
-Assert::equal('Jakub Vrana', $application->maintainer->name);
+$book = $connection->table('book')->get(1);
+Assert::equal('Jakub Vrana', $book->translator->name);

@@ -13,14 +13,12 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
-$application = $connection->table('application')->get(1);
+$book = $connection->table('book')->get(1);
 $data = array(
 	'id' => 1,
 	'author_id' => 11,
-	'maintainer_id' => 11,
-	'title' => 'Adminer',
-	'web' => 'http://www.adminer.org/',
-	'slogan' => 'Database management in single PHP file',
+	'translator_id' => 11,
+	'title' => '1001 tipu a triku pro PHP',
 );
 
-Assert::equal($data, iterator_to_array($application));
+Assert::equal($data, iterator_to_array($book));

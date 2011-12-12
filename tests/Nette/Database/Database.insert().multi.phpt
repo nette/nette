@@ -28,8 +28,8 @@ $connection->table('author')->insert(array(
 
 
 
-$connection->table('application_tag')->where('application_id', 1)->delete();
-$connection->table('application')->get(1)->related('application_tag')->insert(array(
+$connection->table('book_tag')->where('book_id', 1)->delete();
+$connection->table('book')->get(1)->related('book_tag')->insert(array(
 	array('tag_id' => 21),
 	array('tag_id' => 22),
 	array('tag_id' => 23),

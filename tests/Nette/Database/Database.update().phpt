@@ -17,27 +17,27 @@ $author = $connection->table('author')->get(12);
 $author->name = 'Tyrion Lannister';
 $author->update();
 
-$application = $connection->table('application');
+$book = $connection->table('book');
 
-$application1 = $application->get(1);
-Assert::equal('Jakub Vrana', $application1->author->name);
+$book1 = $book->get(1);
+Assert::equal('Jakub Vrana', $book1->author->name);
 
 
 
-$application2 = $application->insert(array(
+$book2 = $book->insert(array(
 	'author_id' => $author->getPrimary(),
 	'title' => 'Game of Thrones',
 ));
 
-Assert::equal('Tyrion Lannister', $application2->author->name);
+Assert::equal('Tyrion Lannister', $book2->author->name);
 
 
 
 
-$application2->author_id = $connection->table('author')->get(11);
-$application2->update();
+$book2->author_id = $connection->table('author')->get(11);
+$book2->update();
 
-Assert::equal('Jakub Vrana', $application2->author->name);
+Assert::equal('Jakub Vrana', $book2->author->name);
 
 
 
@@ -50,11 +50,11 @@ $tag->name = 'Xbox Game';
 $tag->update();
 
 
-$applicationTag = $application2->related('application_tag')->insert(array(
+$bookTag = $book2->related('book_tag')->insert(array(
 	'tag_id' => $tag,
 ));
 
 
-$app = $connection->table('application')->get(5);
-$tags = iterator_to_array($app->related('application_tag'));
+$app = $connection->table('book')->get(5);
+$tags = iterator_to_array($app->related('book_tag'));
 Assert::equal('Xbox Game', reset($tags)->tag->name);

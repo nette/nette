@@ -13,33 +13,33 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
-$applicationExpected = array(
+$bookExpected = array(
 	'id' => 1,
-	'title' => 'Adminer',
+	'title' => '1001 tipu a triku pro PHP',
 );
 
-$application = iterator_to_array($connection->table('application')->where('id = ?', 1)->select('id, title')->fetch());
-Assert::equal($applicationExpected, $application);
+$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());
+Assert::equal($bookExpected, $book);
 
-$application = iterator_to_array($connection->table('application')->select('id, title')->where('id = ?', 1)->fetch());
-Assert::equal($applicationExpected, $application);
+$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());
+Assert::equal($bookExpected, $book);
 
 
 
 $appTags = array();
-foreach ($connection->table('application') as $application) {
-	$appTags[$application->title] = array(
-		'author' => $application->author->name,
+foreach ($connection->table('book') as $book) {
+	$appTags[$book->title] = array(
+		'author' => $book->author->name,
 		'tags' => array(),
 	);
 
-	foreach ($application->related('application_tag') as $application_tag) {
-		$appTags[$application->title]['tags'][] = $application_tag->tag->name;
+	foreach ($book->related('book_tag') as $book_tag) {
+		$appTags[$book->title]['tags'][] = $book_tag->tag->name;
 	}
 }
 
 Assert::equal(array(
-	'Adminer' => array(
+	'1001 tipu a triku pro PHP' => array(
 		'author' => 'Jakub Vrana',
 		'tags' => array('PHP', 'MySQL'),
 	),

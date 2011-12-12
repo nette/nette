@@ -15,12 +15,12 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 $apps = array();
 $unknownBorn = $connection->table('author')->where('born', null); // authors with unknown date of born
-foreach ($connection->table('application')->where('author_id', $unknownBorn) as $application) { // their applications
-	$apps[] = $application->title;
+foreach ($connection->table('book')->where('author_id', $unknownBorn) as $book) { // their books
+	$apps[] = $book->title;
 }
 
 Assert::equal(array(
-	'Adminer',
+	'1001 tipu a triku pro PHP',
 	'JUSH',
 	'Nette',
 	'Dibi',

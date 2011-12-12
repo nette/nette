@@ -15,13 +15,13 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 $apps = array();
 foreach ($connection->table('author') as $author) {
-	foreach ($author->related('application')->through('maintainer_id') as $application) {
-		$apps[$application->title] = $author->name;
+	foreach ($author->related('book')->through('translator_id') as $book) {
+		$apps[$book->title] = $author->name;
 	}
 }
 
 Assert::equal(array(
-	'Adminer' => 'Jakub Vrana',
+	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
 	'Nette' => 'David Grudl',
 	'Dibi' => 'David Grudl',
 ), $apps);

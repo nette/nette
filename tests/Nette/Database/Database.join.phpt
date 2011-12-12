@@ -14,22 +14,22 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 $apps = array();
-foreach ($connection->table('application')->order('author.name, title') as $application) {
-	$apps[$application->title] = $application->author->name;
+foreach ($connection->table('book')->order('author.name, title') as $book) {
+	$apps[$book->title] = $book->author->name;
 }
 
 Assert::equal(array(
 	'Dibi' => 'David Grudl',
 	'Nette' => 'David Grudl',
-	'Adminer' => 'Jakub Vrana',
+	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
 	'JUSH' => 'Jakub Vrana',
 ), $apps);
 
 
 
 $tags = array();
-foreach ($connection->table('application_tag')->where('application.author.name', 'Jakub Vrana')->group('application_tag.tag_id') as $application_tag) {
-	$tags[] = $application_tag->tag->name;
+foreach ($connection->table('book_tag')->where('book.author.name', 'Jakub Vrana')->group('book_tag.tag_id') as $book_tag) {
+	$tags[] = $book_tag->tag->name;
 }
 
 Assert::equal(array(

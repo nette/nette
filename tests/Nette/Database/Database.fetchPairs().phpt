@@ -13,9 +13,9 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
-$apps = $connection->table('application')->order('title')->fetchPairs('id', 'title');
+$apps = $connection->table('book')->order('title')->fetchPairs('id', 'title');
 Assert::equal(array(
-	1 => 'Adminer',
+	1 => '1001 tipu a triku pro PHP',
 	4 => 'Dibi',
 	2 => 'JUSH',
 	3 => 'Nette',
@@ -24,7 +24,7 @@ Assert::equal(array(
 
 
 
-$ids = $connection->table('application')->order('id')->fetchPairs('id', 'id');
+$ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');
 Assert::equal(array(
 	1 => '1',
 	2 => '2',

@@ -14,12 +14,11 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 $apps = array();
-foreach ($connection->table('application')->where('web LIKE ?', 'http://%')->order('title')->limit(3) as $application) {
-	$apps[] = $application->title;
+foreach ($connection->table('book')->where('title LIKE ?', '%t%')->order('title')->limit(3) as $book) {
+	$apps[] = $book->title;
 }
 
 Assert::equal(array(
-	'Adminer',
-	'Dibi',
-	'JUSH',
+	'1001 tipu a triku pro PHP',
+	'Nette',
 ), $apps);

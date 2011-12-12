@@ -13,20 +13,20 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
-$connection->table('application_tag')->where('application_id', 4)->delete();
+$connection->table('book_tag')->where('book_id', 4)->delete();
 
-$count = $connection->table('application_tag')->where('application_id', 4)->count();
+$count = $connection->table('book_tag')->where('book_id', 4)->count();
 Assert::equal(0, $count);
 
 
 
-$application = $connection->table('application')->get(3);
-$application->related('application_tag')->delete();
+$book = $connection->table('book')->get(3);
+$book->related('book_tag')->delete();
 
-$count = $connection->table('application_tag')->where('application_id', 3)->count();
+$count = $connection->table('book_tag')->where('book_id', 3)->count();
 Assert::equal(0, $count);
 
 
 
-$application->delete();
-Assert::equal(0, count($connection->table('application')->find(3)));
+$book->delete();
+Assert::equal(0, count($connection->table('book')->find(3)));

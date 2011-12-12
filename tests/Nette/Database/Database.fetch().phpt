@@ -14,9 +14,9 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 $tags = array();
-$application = $connection->table('application')->where('title', 'Adminer')->fetch();
-foreach ($application->related('application_tag')->where('tag_id', 21) as $application_tag) {
-	$tags[] = $application_tag->tag->name;
+$book = $connection->table('book')->where('title', '1001 tipu a triku pro PHP')->fetch();
+foreach ($book->related('book_tag')->where('tag_id', 21) as $book_tag) {
+	$tags[] = $book_tag->tag->name;
 }
 
 Assert::equal(array('PHP'), $tags);

@@ -42,24 +42,23 @@ Assert::equal($catelynStarkExpected, iterator_to_array($catelynStark));
 
 
 
-$application = $connection->table('application');
+$book = $connection->table('book');
 
-$application1 = $application->get(1);
-Assert::equal('Jakub Vrana', $application1->author->name);
+$book1 = $book->get(1);
+Assert::equal('Jakub Vrana', $book1->author->name);
 
-$application2 = $application->insert(array(
+$book2 = $book->insert(array(
 	'title' => 'Winterfell',
 	'author_id' => 11,
-	'web' => '',
 ));
 
-$application3 = $application->insert(array(
+$book3 = $book->insert(array(
 	'title' => 'Dragonstone',
 	'author_id' => $connection->table('author')->get(13),
 ));
 
-Assert::equal('Jakub Vrana', $application2->author->name);
-Assert::equal('Edard Stark', $application3->author->name);
+Assert::equal('Jakub Vrana', $book2->author->name);
+Assert::equal('Edard Stark', $book3->author->name);
 
 
 
