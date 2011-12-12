@@ -254,6 +254,9 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 	public static function formatMessage($rule, $withValue)
 	{
 		$message = $rule->message;
+		if ($message instanceof Nette\Utils\Html) {
+			return $message;
+		}
 		if (!isset($message)) { // report missing message by notice
 			$message = static::$defaultMessages[$rule->operation];
 		}
