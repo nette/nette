@@ -613,6 +613,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 			trigger_error(__METHOD__ . ' is not intended to send a Application\Response; use sendResponse() instead.', E_USER_WARNING);
 			$this->sendResponse(func_get_arg(0));
 		}
+
+		if ($this->response === NULL) {
+			$this->response = new Responses\EmptyResponse();
+		}
+
 		throw new Application\AbortException();
 	}
 
