@@ -99,7 +99,7 @@ final class Helpers
 				unset($arguments[$parameter->getName()]);
 				$optCount = 0;
 
-			} elseif ($parameter->getClass()) {
+			} elseif ($parameter->getClass()) { // has object typehint
 				$res[$num] = $container->findByClass($parameter->getClass()->getName());
 				if ($res[$num] === NULL) {
 					if ($parameter->allowsNull()) {
@@ -115,7 +115,8 @@ final class Helpers
 				}
 
 			} elseif ($parameter->isOptional()) {
-				$res[$num] = $parameter->getDefaultValue();
+				// PDO::__construct has optional parameter without default value (and isArray() and allowsNull() returns FALSE)
+				$res[$num] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : NULL;
 				$optCount++;
 
 			} else {
