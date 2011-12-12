@@ -42,13 +42,13 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 
 
-	/**
-	 * Returns primary key value.
-	 * @return string
-	 */
 	public function __toString()
 	{
-		return (string) $this[$this->table->primary]; // (string) - PostgreSQL returns int
+		try {
+			return $this->getPrimary();
+		} catch (\BadMethodCallException $e) {
+			return null;
+		}
 	}
 
 
@@ -60,6 +60,20 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	{
 		$this->access(NULL);
 		return $this->data;
+	}
+
+
+
+	/**
+	 * Returns primary key value.
+	 * @return string
+	 */
+	public function getPrimary()
+	{
+		if (!isset($this->data[$this->table->primary]))
+			throw new \BadMethodCallException("Table {$this->table->name} does not have any primary key.");
+
+		return (string) $this[$this->table->primary]; // (string) - PostgreSQL returns int
 	}
 
 
@@ -206,8 +220,10 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		$column = $this->table->connection->databaseReflection->getReferencedColumn($key, $this->table->name);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
-			$referenced = $this->table->getReferencedTable($key);
+			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
+			$referenced = $this->table->getReferencedTable($key, $nullTmp, !empty($this->modified[$column]));
 			$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
+			empty($this->modified[$column]) ?: $this->modified[$column] = 0; // 0 fails on empty, pass on isset
 			return $ret;
 		}
 

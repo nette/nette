@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database Basic operations.
+ * Test: Nette\Database Basic operations with DiscoveredReflection.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
@@ -13,9 +13,9 @@ use Nette\Database;
 
 
 
-require_once dirname(__FILE__) . '/connect.inc.php';
-$reflection = new Database\Reflection\DiscoveredReflection;
-$connection = new Database\Connection("sqlite:$dbFile", null, null, array(), $reflection);
+require_once __DIR__ . '/connect.inc.php';
+$connection->setDatabaseReflection(new Database\Reflection\DiscoveredReflection);
+
 
 
 $appTags = array();
@@ -48,6 +48,8 @@ Assert::equal(array(
 		'tags' => array('PHP', 'MySQL'),
 	),
 ), $appTags);
+
+
 
 
 $application = $connection->table('application')->get(1);

@@ -13,6 +13,19 @@ require_once dirname(__FILE__) . '/connect.inc.php';
 
 
 
+$applicationExpected = array(
+	'id' => 1,
+	'title' => 'Adminer',
+);
+
+$application = iterator_to_array($connection->table('application')->where('id = ?', 1)->select('id, title')->fetch());
+Assert::equal($applicationExpected, $application);
+
+$application = iterator_to_array($connection->table('application')->select('id, title')->where('id = ?', 1)->fetch());
+Assert::equal($applicationExpected, $application);
+
+
+
 $appTags = array();
 foreach ($connection->table('application') as $application) {
 	$appTags[$application->title] = array(

@@ -122,6 +122,9 @@ class SqlPreprocessor extends Nette\Object
 		} elseif ($value === NULL) {
 			return 'NULL';
 
+		} elseif ($value instanceof Table\ActiveRow) {
+			return $value->getPrimary();
+
 		} elseif (is_array($value) || $value instanceof \Traversable) {
 			$vx = $kx = array();
 
@@ -149,7 +152,7 @@ class SqlPreprocessor extends Nette\Object
 				foreach ($value as $k => $v) {
 					$vx[] = $this->formatValue($v);
 				}
-				return ', (' . implode(', ', $vx) . ')';
+				return '(' . implode(', ', $vx) . ')';
 			}
 
 		} elseif ($value instanceof \DateTime) {

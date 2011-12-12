@@ -62,8 +62,7 @@ class Connection extends PDO
 		}
 
 		$this->preprocessor = new SqlPreprocessor($this);
-		$this->databaseReflection = $databaseReflection ?: new Reflection\ConventionalReflection;
-		$this->databaseReflection->setConnection($this);
+		$this->setDatabaseReflection($databaseReflection ?: new Reflection\ConventionalReflection);
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
@@ -85,6 +84,19 @@ class Connection extends PDO
 
 
 
+	/**
+	 * Sets database reflection
+	 * @param  IReflection  database reflection object
+	 * @return IReflection
+	 */
+	public function setDatabaseReflection(IReflection $databaseReflection)
+	{
+		$databaseReflection->setConnection($this);
+		return $this->databaseReflection = $databaseReflection;
+	}
+
+
+
 	/** @return IReflection */
 	public function getDatabaseReflection()
 	{
@@ -93,6 +105,10 @@ class Connection extends PDO
 
 
 
+	/**
+	 * Sets cache storage engine
+	 * @param Nette\Caching\IStorage $storage
+	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
 	{
 		$this->cache = $storage ? new Nette\Caching\Cache($storage, "Nette.Database/$this->dsn") : NULL;
