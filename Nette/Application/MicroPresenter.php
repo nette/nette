@@ -64,7 +64,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			$response = array($response, array());
 		}
 		if (is_array($response)) {
-			if ($response instanceof \SplFileInfo) {
+			if ($response[0] instanceof \SplFileInfo) {
 				$response = $this->createTemplate('Nette\Templating\FileTemplate')
 					->setParameters($response[1])->setFile($response[0]);
 			} else {
