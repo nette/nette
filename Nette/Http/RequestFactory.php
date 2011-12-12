@@ -135,7 +135,7 @@ class RequestFactory extends Nette\Object
 		$post = $useFilter ? filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW) : (empty($_POST) ? array() : $_POST);
 		$cookies = $useFilter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : (empty($_COOKIE) ? array() : $_COOKIE);
 
-		$gpc = (bool) @get_magic_quotes_gpc(); // @ - deprecated since PHP 5.4.0
+		$gpc = (bool) get_magic_quotes_gpc();
 		$old = error_reporting(error_reporting() ^ E_NOTICE);
 
 		// remove fucking quotes and check (and optionally convert) encoding
