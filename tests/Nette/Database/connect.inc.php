@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database Basic operations.
+ * Test: Nette\Database test boostap.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

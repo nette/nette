@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database Basic operations with DiscoveredReflection.
+ * Test: Nette\Database\Table: Basic operations with DiscoveredReflection.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

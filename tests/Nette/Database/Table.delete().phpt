@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database Delete operations
+ * Test: Nette\Database\Table: Delete operations
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require_once dirname(__FILE__) . '/connect.inc.php';
+require_once __DIR__ . '/connect.inc.php';
 
 
 

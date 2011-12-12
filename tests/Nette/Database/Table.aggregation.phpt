@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database Aggregation functions.
+ * Test: Nette\Database\Table: Aggregation functions.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
@@ -9,7 +9,7 @@
  * @subpackage UnitTests
  */
 
-require_once dirname(__FILE__) . '/connect.inc.php';
+require_once __DIR__ . '/connect.inc.php';
 
 
 
