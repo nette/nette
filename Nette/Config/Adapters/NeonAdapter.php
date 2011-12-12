@@ -12,7 +12,7 @@
 namespace Nette\Config\Adapters;
 
 use Nette,
-	Nette\Config\Config,
+	Nette\Config\Helpers,
 	Nette\Utils\Neon;
 
 
@@ -50,13 +50,13 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
  					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
 				}
 				$key = substr($key, 0, -1);
-				$val[Config::EXTENDS_KEY] = Config::OVERWRITE;
+				$val[Helpers::EXTENDS_KEY] = Helpers::OVERWRITE;
 
 			} elseif (preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)$#', $key, $matches)) {
 				if (!is_array($val) && $val !== NULL) {
 					throw new Nette\InvalidStateException("Inheritance operator is available only for arrays, item '$key' is not array.");
 				}
-				list(, $key, $val[Config::EXTENDS_KEY]) = $matches;
+				list(, $key, $val[Helpers::EXTENDS_KEY]) = $matches;
 				if (isset($res[$key])) {
 					throw new Nette\InvalidStateException("Duplicated key '$key'.");
 				}
@@ -83,7 +83,7 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 	{
 		$tmp = array();
 		foreach ($data as $name => $secData) {
-			if ($parent = Config::takeParent($secData)) {
+			if ($parent = Helpers::takeParent($secData)) {
 				$name .= ' ' . self::INHERITING_SEPARATOR . ' ' . $parent;
 			}
 			$tmp[$name] = $secData;

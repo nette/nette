@@ -12,7 +12,7 @@
 namespace Nette\Config\Adapters;
 
 use Nette,
-	Nette\Config\Config;
+	Nette\Config\Helpers;
 
 
 
@@ -71,7 +71,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 				$parts = explode(self::INHERITING_SEPARATOR, $secName);
 				if (count($parts) > 1) {
 					$secName = trim($parts[0]);
-					$secData[Config::EXTENDS_KEY] = trim($parts[1]);
+					$secData[Helpers::EXTENDS_KEY] = trim($parts[1]);
 				}
 			}
 
@@ -85,7 +85,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 			}
 
 			if (is_array($secData) && is_array($cursor)) {
-				$secData = Config::merge($secData, $cursor);
+				$secData = Helpers::merge($secData, $cursor);
 			}
 
 			$cursor = $secData;
@@ -110,7 +110,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 				self::build($data, $output, '');
 				break;
 			}
-			if ($parent = Config::takeParent($secData)) {
+			if ($parent = Helpers::takeParent($secData)) {
 				$output[] = "[$name " . self::INHERITING_SEPARATOR . " $parent]";
 			} else {
 				$output[] = "[$name]";

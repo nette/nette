@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Config\Config;
+use Nette\Config;
 
 
 
@@ -17,6 +17,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 Assert::throws(function() {
-	$config = new Config;
+	$config = new Config\Loader;
 	$config->load('files/config.scalar1.neon');
 }, 'Nette\InvalidStateException', "Duplicated key 'scalar'.");

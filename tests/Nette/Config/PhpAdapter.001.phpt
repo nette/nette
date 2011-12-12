@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Config\Config;
+use Nette\Config;
 
 
 
@@ -18,7 +18,7 @@ define('TEMP_FILE', TEMP_DIR . '/cfg.php');
 
 
 // Load INI
-$config = new Config;
+$config = new Config\Loader;
 $data = $config->load('files/config.sample.php');
 Assert::same( array(
 	'webname' => 'the example',

@@ -17,18 +17,16 @@ use Nette,
 
 
 /**
- * Configuration manipulator.
+ * Configuration file loader.
  *
  * @author     David Grudl
  *
  * @property-read array $dependencies
  */
-class Config extends Nette\Object
+class Loader extends Nette\Object
 {
 	/** @internal */
-	const INCLUDES_KEY = 'includes',
-		EXTENDS_KEY = '_extends',
-		OVERWRITE = TRUE;
+	const INCLUDES_KEY = 'includes';
 
 	private $adapters = array(
 		'php' => 'Nette\Config\Adapters\PhpAdapter',
@@ -37,18 +35,6 @@ class Config extends Nette\Object
 	);
 
 	private $dependencies = array();
-
-
-
-	/**
-	 * Static shortcut for load()
-	 * @return array
-	 */
-	public static function fromFile($file, $section = NULL)
-	{
-		$loader = new static;
-		return $loader->load($file, $section);
-	}
 
 
 
@@ -78,12 +64,12 @@ class Config extends Nette\Object
 		if (isset($data[self::INCLUDES_KEY])) {
 			Validators::assert($data[self::INCLUDES_KEY], 'list', "section 'includes' in file '$file'");
 			foreach ($data[self::INCLUDES_KEY] as $include) {
-				$merged = static::merge($this->load(dirname($file) . '/' . $include), $merged);
+				$merged = Helpers::merge($this->load(dirname($file) . '/' . $include), $merged);
 			}
 		}
 		unset($data[self::INCLUDES_KEY]);
 
-		return static::merge($data, $merged);
+		return Helpers::merge($data, $merged);
 	}
 
 
@@ -139,84 +125,12 @@ class Config extends Nette\Object
 
 
 
-	/********************* tools ****************d*g**/
-
-
-
-	/**
-	 * Merges configurations. Left has higher priority than right one.
-	 * @return array
-	 */
-	public static function merge($left, $right)
-	{
-		if (is_array($left) && is_array($right)) {
-			foreach ($left as $key => $val) {
-				if (is_int($key)) {
-					$right[] = $val;
-				} else {
-					if (is_array($val) && isset($val[self::EXTENDS_KEY])) {
-						if ($val[self::EXTENDS_KEY] === self::OVERWRITE) {
-							unset($val[self::EXTENDS_KEY]);
-						}
-					} elseif (isset($right[$key])) {
-						$val = static::merge($val, $right[$key]);
-					}
-					$right[$key] = $val;
-				}
-			}
-			return $right;
-
-		} elseif ($left === NULL && is_array($right)) {
-			return $right;
-
-		} else {
-			return $left;
-		}
-	}
-
-
-
-	/**
-	 * Finds out and removes information about the parent.
-	 * @return mixed
-	 */
-	public static function takeParent(& $data)
-	{
-		if (is_array($data) && isset($data[self::EXTENDS_KEY])) {
-			$parent = $data[self::EXTENDS_KEY];
-			unset($data[self::EXTENDS_KEY]);
-			return $parent;
-		}
-	}
-
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isOverwriting(& $data)
-	{
-		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] === self::OVERWRITE;
-	}
-
-
-
-	/**
-	 * @return bool
-	 */
-	public static function isInheriting(& $data)
-	{
-		return is_array($data) && isset($data[self::EXTENDS_KEY]) && $data[self::EXTENDS_KEY] !== self::OVERWRITE;
-	}
-
-
-
 	private function getSection(array $data, $key, $file)
 	{
 		Validators::assertField($data, $key, 'array|null', "section '%' in file '$file'");
 		$item = $data[$key];
-		if ($parent = static::takeParent($item)) {
-			$item = static::merge($item, $this->getSection($data, $parent, $file));
+		if ($parent = Helpers::takeParent($item)) {
+			$item = Helpers::merge($item, $this->getSection($data, $parent, $file));
 		}
 		return $item;
 	}

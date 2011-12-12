@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Config\Config::merge() with NeonAdapter
+ * Test: Nette\Config\Helpers::merge() with NeonAdapter
  *
  * @author     David Grudl
  * @package    Nette\Config
  * @subpackage UnitTests
  */
 
-use Nette\Config\Config;
+use Nette\Config;
 
 
 
@@ -26,8 +26,8 @@ function merge($left, $right)
 	file_put_contents(TEMP_DIR . '/left.neon', $left);
 	file_put_contents(TEMP_DIR . '/right.neon', $right);
 
-	$config = new Config;
-	return $config->merge($config->load(TEMP_DIR . '/left.neon'), $config->load(TEMP_DIR . '/right.neon'));
+	$config = new Config\Loader;
+	return Config\Helpers::merge($config->load(TEMP_DIR . '/left.neon'), $config->load(TEMP_DIR . '/right.neon'));
 }
 
 
@@ -50,5 +50,5 @@ Assert::throws(function() {
 // inherit
 Assert::same( array(
 	'parent' => 1,
-	'child' => array(Config::EXTENDS_KEY => 'parent')
+	'child' => array(Config\Helpers::EXTENDS_KEY => 'parent')
 ), merge('child < parent:', 'parent: 1') );

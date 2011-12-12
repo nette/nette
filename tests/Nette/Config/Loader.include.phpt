@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Test: Nette\Config\Config: including files
+ * Test: Nette\Config\Loader: including files
  *
  * @author     David Grudl
  * @package    Nette\Config
  * @subpackage UnitTests
  */
 
-use Nette\Config\Config;
+use Nette\Config;
 
 
 
@@ -16,7 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$config = new Config;
+$config = new Config\Loader;
 $data = $config->load('files/config.includes.neon', 'production');
 
 Assert::same( array(

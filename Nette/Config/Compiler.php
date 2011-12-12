@@ -159,14 +159,14 @@ class Compiler extends Nette\Object
 		$all += isset($config['factories']) ? $config['factories'] : array();
 
 		uasort($all, function($a, $b) {
-			return strcmp(Config::isInheriting($a), Config::isInheriting($b));
+			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
 		});
 
 		foreach ($all as $name => $def) {
-			if ($parent = Config::takeParent($def)) {
+			if ($parent = Helpers::takeParent($def)) {
 				$container->removeDefinition($name);
 				$definition = $container->addDefinition($name);
-				if ($parent !== Config::OVERWRITE) {
+				if ($parent !== Helpers::OVERWRITE) {
 					foreach ($container->getDefinition($parent) as $k => $v) {
 						$definition->$k = $v;
 					}
@@ -229,7 +229,7 @@ class Compiler extends Nette\Object
 		}
 
 		if (isset($config['setup'])) {
-			if (Config::takeParent($config['setup'])) {
+			if (Helpers::takeParent($config['setup'])) {
 				$definition->setup = array();
 			}
 			Validators::assertField($config, 'setup', 'list');
@@ -271,7 +271,7 @@ class Compiler extends Nette\Object
 
 		if (isset($config['tags'])) {
 			Validators::assertField($config, 'tags', 'array');
-			if (Config::takeParent($config['tags'])) {
+			if (Helpers::takeParent($config['tags'])) {
 				$definition->tags = array();
 			}
 			foreach ($config['tags'] as $tag => $attrs) {

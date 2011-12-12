@@ -8,7 +8,7 @@
  * @subpackage UnitTests
  */
 
-use Nette\Config\Config;
+use Nette\Config;
 
 
 
@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 define('TEMP_FILE', TEMP_DIR . '/cfg.ini');
 
 
-$config = new Config;
+$config = new Config\Loader;
 $data = $config->load('files/config.sample.ini', 'production');
 Assert::same( array(
 	'webname' => 'the example',

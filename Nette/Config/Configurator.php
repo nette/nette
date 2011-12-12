@@ -152,7 +152,7 @@ class Configurator extends Nette\Object
 			$cacheKey = array($this->params, $file, $section);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
-				$loader = new Config;
+				$loader = new Loader;
 				$config = $file ? $loader->load($file, $section) : array();
 				$dependencies = $loader->getDependencies();
 				$code = "<?php\n// source file $file $section\n\n"
