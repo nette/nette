@@ -21,6 +21,9 @@ Assert::equal(array(
 	3 => 'Nette',
 ), $apps);
 
+
+
+
 $ids = $connection->table('application')->order('id')->fetchPairs('id', 'id');
 Assert::equal(array(
 	1 => '1',
