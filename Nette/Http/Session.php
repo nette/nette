@@ -93,13 +93,11 @@ class Session extends Nette\Object
 
 		$this->configure($this->options);
 
-		if (!defined('SID')) {
-			Nette\Diagnostics\Debugger::tryError();
-			session_start();
-			if (Nette\Diagnostics\Debugger::catchError($e)) {
-				@session_write_close(); // this is needed
-				throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
-			}
+		Nette\Diagnostics\Debugger::tryError();
+		session_start();
+		if (Nette\Diagnostics\Debugger::catchError($e)) {
+			@session_write_close(); // this is needed
+			throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
 		}
 
 		self::$started = TRUE;
