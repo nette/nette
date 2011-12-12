@@ -53,7 +53,7 @@ class Route extends Nette\Object implements Application\IRouter
 		PATH_OPTIONAL = 1,
 		CONSTANT = 2;
 
-	/** @var bool */
+	/** @var int */
 	public static $defaultFlags = 0;
 
 	/** @var array */
