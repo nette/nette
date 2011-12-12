@@ -13,7 +13,7 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 
-$book = $connection->table('book')->get(1);
+$book = $connection->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
 $data = array(
 	'id' => 1,
 	'author_id' => 11,

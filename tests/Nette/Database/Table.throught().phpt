@@ -14,8 +14,8 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 $apps = array();
-foreach ($connection->table('author') as $author) {
-	foreach ($author->related('book')->through('translator_id') as $book) {
+foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
+	foreach ($author->related('book')->through('translator_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12))
 		$apps[$book->title] = $author->name;
 	}
 }

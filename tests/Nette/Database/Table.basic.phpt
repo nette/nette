@@ -18,23 +18,23 @@ $bookExpected = array(
 	'title' => '1001 tipu a triku pro PHP',
 );
 
-$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());
+$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());  // SELECT id, title FROM `book` WHERE (id = ?)
 Assert::equal($bookExpected, $book);
 
-$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());
+$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());  // SELECT id, title FROM `book` WHERE (id = ?)
 Assert::equal($bookExpected, $book);
 
 
 
 $appTags = array();
-foreach ($connection->table('book') as $book) {
+foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
 	$appTags[$book->title] = array(
-		'author' => $book->author->name,
+		'author' => $book->author->name,  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 12))
 		'tags' => array(),
 	);
 
-	foreach ($book->related('book_tag') as $book_tag) {
-		$appTags[$book->title]['tags'][] = $book_tag->tag->name;
+	foreach ($book->related('book_tag') as $book_tag) {  // SELECT * FROM `book_tag` WHERE (`book_tag`.`book_id` IN (1, 2, 3, 4))
+		$appTags[$book->title]['tags'][] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
 	}
 }
 

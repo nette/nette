@@ -13,7 +13,7 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 
-$apps = $connection->table('book')->order('title')->fetchPairs('id', 'title');
+$apps = $connection->table('book')->order('title')->fetchPairs('id', 'title');  // SELECT * FROM `book` ORDER BY `title`
 Assert::equal(array(
 	1 => '1001 tipu a triku pro PHP',
 	4 => 'Dibi',
@@ -24,7 +24,7 @@ Assert::equal(array(
 
 
 
-$ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');
+$ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
 Assert::equal(array(
 	1 => '1',
 	2 => '2',

@@ -13,12 +13,12 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 
-$count = $connection->table('book')->count('*');
+$count = $connection->table('book')->count('*');  // SELECT COUNT(*) FROM `book`
 Assert::equal(4, $count);
 
 $tags = array();
-foreach ($connection->table('book') as $book) {
-	$count = $book->related('book_tag')->count('*');
+foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
+	$count = $book->related('book_tag')->count('*');  // SELECT COUNT(*), `book_id` FROM `book_tag` WHERE (`book_tag`.`book_id` IN (1, 2, 3, 4)) GROUP BY `book_id`
 	$tags[$book->title] = $count;
 }
 
