@@ -24,6 +24,12 @@ class Test
 	{
 		$this->container = $container;
 	}
+
+	function method(stdClass $obj, DI\Container $container)
+	{
+		return isset($obj->prop);
+	}
+
 }
 
 
@@ -43,3 +49,5 @@ $container = new Container;
 $test = $container->createInstance('Test');
 Assert::true( $test instanceof Test );
 Assert::same( $container, $test->container );
+Assert::same( FALSE, $container->callMethod(array($test, 'method')) );
+Assert::same( TRUE, $container->callMethod(array($test, 'method'), array((object) array('prop' => TRUE))) );

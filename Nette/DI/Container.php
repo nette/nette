@@ -263,6 +263,20 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
+	/**
+	 * Calls method using autowiring.
+	 * @param  mixed   class, object, function, callback
+	 * @param  array   arguments
+	 * @return mixed
+	 */
+	public function callMethod($function, array $args = array())
+	{
+		$callback = callback($function);
+		return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
+	}
+
+
+
 	/********************* shortcuts ****************d*g**/
 
 
