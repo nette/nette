@@ -255,9 +255,9 @@ normal<?php if (false): ?>
 
 { }
 
-<p<?php if ($_l->tmp = trim(implode(" ", array_unique(array('foo', (false ? 'first':null), ($hello ? 'foo' : 'bar')))))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml($_l->tmp) . '"' ?>>n:class</p>
+<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first':null), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
 
-<p<?php if ($_l->tmp = trim(implode(" ", array_unique(array(false ? 'first':null))))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml($_l->tmp) . '"' ?>>n:class empty</p>
+<p<?php if ($_l->tmp = array_filter(array(false ? 'first':null))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
 
 <meta>
 <?php if (true): ?>
