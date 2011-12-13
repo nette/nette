@@ -108,4 +108,47 @@ class MultiSelectBox extends SelectBox
 		return $control;
 	}
 
+
+
+	/**
+	 * Min-length validator: has control's value minimal length?
+	 * @param  MultiSelectBox
+	 * @param  int  length
+	 * @return bool
+	 */
+	public static function validateMinLength(MultiSelectBox $control, $length)
+	{
+		return count($control->getSelectedItem()) >= $length;
+	}
+
+
+
+	/**
+	 * Max-length validator: is control's value length in limit?
+	 * @param  MultiSelectBox
+	 * @param  int  length
+	 * @return bool
+	 */
+	public static function validateMaxLength(MultiSelectBox $control, $length)
+	{
+		return count($control->getSelectedItem()) <= $length;
+	}
+
+
+
+	/**
+	 * Length validator: is control's value length in range?
+	 * @param  MultiSelectBox
+	 * @param  array  min and max length pair
+	 * @return bool
+	 */
+	public static function validateLength(MultiSelectBox $control, $range)
+	{
+		if (!is_array($range)) {
+			$range = array($range, $range);
+		}
+		$len = count($control->getSelectedItem());
+		return ($range[0] === NULL || $len >= $range[0]) && ($range[1] === NULL || $len <= $range[1]);
+	}
+
 }
