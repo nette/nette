@@ -45,14 +45,13 @@ use Nette,
 class CoreMacros extends MacroSet
 {
 
-
 	public static function install(Latte\Parser $parser)
 	{
 		$me = new static($parser);
 
 		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
 		$me->addMacro('elseif', 'elseif (%node.args):');
-		$me->addMacro('else', 'else:');
+		$me->addMacro('else', array($me, 'macroElse'));
 		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
 		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
 
@@ -128,9 +127,31 @@ class CoreMacros extends MacroSet
 			if ($node->args === '') {
 				throw new ParseException('Missing condition in {if} macro.');
 			}
-			return $writer->write('if (%node.args) ob_end_flush(); else ob_end_clean()');
+			return $writer->write('if (%node.args) { '
+				. (isset($node->data->else) ? 'ob_end_clean(); ' : '')
+				. 'ob_end_flush(); } else { '
+				. (isset($node->data->else) ? '$_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else;' : 'ob_end_clean();')
+				. ' }');
 		}
 		return 'endif';
+	}
+
+
+
+	/**
+	 * {else}
+	 */
+	public function macroElse(MacroNode $node, $writer)
+	{
+		$ifNode = $node->parentNode;
+		if ($ifNode->data->capture) {
+			if (isset($ifNode->data->else)) {
+				throw new ParseException("Macro {if} supports only one {else}.");
+			}
+			$ifNode->data->else = TRUE;
+			return 'ob_start()';
+		}
+		return 'else:';
 	}
 
 
