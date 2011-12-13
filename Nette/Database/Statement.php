@@ -128,10 +128,6 @@ class Statement extends \PDOStatement
 
 			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
-
-			} elseif ($type === IReflection::FIELD_DATETIME) {
-				$row[$key] = new \DateTime($value);
-
 			}
 		}
 
