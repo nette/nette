@@ -40,7 +40,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 
 	/**
-	 * Create autodisovery structure.
+	 * Create autodiscovery structure.
 	 * @param  Nette\Caching\IStorage
 	 * @param  string use "%s_id" to access $name . "_id" column in $row->$name
 	 */
