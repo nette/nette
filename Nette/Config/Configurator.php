@@ -156,7 +156,7 @@ class Configurator extends Nette\Object
 				$config = $file ? $loader->load($file, $section) : array();
 				$dependencies = $loader->getDependencies();
 				$code = "<?php\n// source file $file $section\n\n"
-					. $this->buildContainer($config, $dependencies);
+					. $this->buildContainer($file, $config, $dependencies);
 
 				$cache->save($cacheKey, $code, array(
 					Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
@@ -169,7 +169,7 @@ class Configurator extends Nette\Object
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 
 		} else {
-			Nette\Utils\LimitedScope::evaluate('<?php ' . $this->buildContainer(array()));
+			Nette\Utils\LimitedScope::evaluate('<?php ' . $this->buildContainer($file, array()));
 		}
 
 		$class = $this->formatContainerClass();
@@ -179,9 +179,9 @@ class Configurator extends Nette\Object
 
 
 
-	protected function buildContainer(array $config, array & $dependencies = array())
+	protected function buildContainer($file, array $config, array & $dependencies = array())
 	{
-		$this->checkCompatibility($config);
+		$this->checkCompatibility($file, $config);
 
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
@@ -198,7 +198,7 @@ class Configurator extends Nette\Object
 
 
 
-	protected function checkCompatibility(array $config)
+	protected function checkCompatibility($file, array $config)
 	{
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
 			if (isset($config[$old])) {
