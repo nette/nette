@@ -139,7 +139,7 @@ class Form extends Container
 			$tracker->unmonitor(__CLASS__);
 			$this[self::TRACKER_ID] = $tracker;
 		}
-		parent::__construct(NULL, $name);
+		$this->setParent(NULL, $name);
 	}
 
 

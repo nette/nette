@@ -135,6 +135,34 @@ class Assert
 
 
 	/**
+	 * Checks if the function triggers error.
+	 * @param  callback
+	 * @param  string class
+	 * @param  string message
+	 * @return mixed result of function
+	 */
+	public static function triggers($function, $severity, $message)
+	{
+		$error = FALSE;
+		$testHandler = set_error_handler(function($severity, $message, $file, $line) use (& $error) {
+			if (($severity & error_reporting()) === $severity) {
+				$error = new \ErrorException($message, NULL, $severity, $file, $line);
+			}
+		});
+		$result = call_user_func($function);
+		set_error_handler($testHandler);
+		if (!$error) {
+			self::doFail('Expected error');
+		}
+		Assert::exception('ErrorException', $message, $error);
+		Assert::equal($severity, $error->getSeverity());
+
+		return $result;
+	}
+
+
+
+	/**
 	 * Failed assertion
 	 * @return void
 	 */

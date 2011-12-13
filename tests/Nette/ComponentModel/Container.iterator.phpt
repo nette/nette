@@ -22,7 +22,9 @@ class ComponentX extends Component
 {
 }
 
-$c = new Container(NULL, 'top');
+$c = Assert::triggers(function () {
+	return new Container(NULL, 'top');
+}, E_USER_WARNING, 'Naming components without parent is deprecated.');
 
 $c->addComponent(new Container, 'one');
 $c->addComponent(new ComponentX, 'two');
