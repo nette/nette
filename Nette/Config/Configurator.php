@@ -202,14 +202,14 @@ class Configurator extends Nette\Object
 	{
 		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
 			if (isset($config[$old])) {
-				throw new Nette\DeprecatedException(basename($file) . ": Section '$old' is deprecated; use '$new' instead.");
+				throw new Nette\DeprecatedException("Section '$old' in configuration file is deprecated; use '$new' instead.");
 			}
 		}
 		if (isset($config['services'])) {
 			foreach ($config['services'] as $key => $def) {
 				foreach (array('option' => 'arguments', 'methods' => 'setup') as $old => $new) {
 					if (is_array($def) && isset($def[$old])) {
-						throw new Nette\DeprecatedException(basename($file) . ": Section '$old' in service definition is deprecated; refactor it into '$new'.");
+						throw new Nette\DeprecatedException("Section '$old' in service definition is deprecated; refactor it into '$new'.");
 					}
 				}
 			}
