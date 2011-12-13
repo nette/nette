@@ -44,6 +44,9 @@ final class Debugger
 	/** @var string URL pattern mask to open editor */
 	public static $editor = 'editor://open/?file=%file&line=%line';
 
+	/** @var callback function to generate exception filename */
+	public static $exceptionFilenameGenerator = array(__CLASS__, 'exceptionFilenameGenerator');
+
 	/********************* Debugger::dump() ****************d*g**/
 
 	/** @var int  how many nested levels of array/object properties display {@link Debugger::dump()} */
@@ -292,13 +295,7 @@ final class Debugger
 					: "Uncaught exception " . get_class($exception) . " with message '" . $exception->getMessage() . "'")
 				. " in " . $exception->getFile() . ":" . $exception->getLine();
 
-			$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
-			$exceptionFilename = "exception " . @date('Y-m-d H-i-s') . " $hash.html";
-			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
-				if (strpos($entry, $hash)) {
-					$exceptionFilename = NULL; break;
-				}
-			}
+			$exceptionFilename = call_user_func(self::$exceptionFilenameGenerator, $exception);
 		}
 
 		self::$logger->log(array(
@@ -316,6 +313,27 @@ final class Debugger
 			ob_end_clean();
 			fclose($logHandle);
 		}
+	}
+
+
+
+	/**
+	 * Exception filename generator
+	 * @param Exception
+	 * @return string
+	 */
+	protected static function exceptionFilenameGenerator($exception)
+	{
+		$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
+		$exceptionFilename = "exception " . @date('Y-m-d H-i-s') . " $hash.html";
+
+		foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
+			if (strpos($entry, $hash)) {
+				$exceptionFilename = NULL; break;
+			}
+		}
+
+		return $exceptionFilename;
 	}
 
 
