@@ -50,6 +50,7 @@ Assert::same( "'symbol1' => array ('symbol2' => 'value')",  formatArgs('symbol1 
 
 // simplified arrays
 Assert::same( 'array(\'item\', 123, array(), $item[1])',  formatArgs('[item, 123, [], $item[1]]') );
+Assert::same( "ITEM['id']",  formatArgs('ITEM[id]') );
 
 
 // short ternary operators
