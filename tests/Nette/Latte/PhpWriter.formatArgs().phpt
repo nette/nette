@@ -33,6 +33,7 @@ Assert::same( "1, 2, 'symbol1', 'symbol-2'",  formatArgs('1, 2, symbol1, symbol-
 // strings
 Assert::same( '"\"1, 2, symbol1, symbol2"',  formatArgs('"\"1, 2, symbol1, symbol2"') ); // unable to parse "${'"'}" yet
 Assert::same( "'\\'1, 2, symbol1, symbol2'",  formatArgs("'\\'1, 2, symbol1, symbol2'") );
+Assert::same( "('hello')",  formatArgs('(hello)') );
 Assert::throws(function() {
 	formatArgs("'\\\\'1, 2, symbol1, symbol2'");
 }, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 27.');
@@ -71,6 +72,7 @@ Assert::same( "'symbol' => \$this->var, ",  formatArgs('symbol => $this->var, ')
 Assert::same( "'symbol' => \$this -> var, ",  formatArgs('symbol => $this -> var, ') );
 Assert::same( "'symbol' => \$this -> var",  formatArgs('symbol => $this -> var') );
 Assert::same( "'symbol1' => 'value'",  formatArgs('symbol1 => /*value,* /symbol2=>*/value/**/') );
+Assert::same( "(array)",  formatArgs('(array)') );
 
 
 // special UTF-8
