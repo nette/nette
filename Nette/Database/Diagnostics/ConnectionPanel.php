@@ -121,7 +121,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Connection::highlightSql(Nette\Utils\Strings::truncate($sql, self::$maxLength));
+			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Connection::highlightSql(self::$maxLength ? Nette\Utils\Strings::truncate($sql, self::$maxLength) : $sql);
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {
