@@ -72,19 +72,15 @@ class MimePart extends Nette\Object
 				$tmp = array();
 			}
 
-			foreach ($value as $email => $name) {
-				if ($name !== NULL && !Strings::checkEncoding($name)) {
-					throw new Nette\InvalidArgumentException("Name is not valid UTF-8 string.");
+			foreach ($value as $email => $recipient) {
+				if ($recipient !== NULL && !Strings::checkEncoding($recipient)) {
+					Nette\Utils\Validators::assert($recipient, 'unicode', "header '$name'");
 				}
-
-				if (!preg_match('#^[^-@",\s][^@",\s]+@[^@",\s]+\.[a-z]{2,10}$#i', $email)) {
-					throw new Nette\InvalidArgumentException("Email address '$email' is not valid.");
-				}
-
-				if (preg_match('#[\r\n]#', $name)) {
+				if (preg_match('#[\r\n]#', $recipient)) {
 					throw new Nette\InvalidArgumentException("Name must not contain line separator.");
 				}
-				$tmp[$email] = $name;
+				Nette\Utils\Validators::assert($email, 'email', "header '$name'");
+				$tmp[$email] = $recipient;
 			}
 
 		} else {

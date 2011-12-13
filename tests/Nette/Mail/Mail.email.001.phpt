@@ -21,53 +21,48 @@ $mail = new Message();
 Assert::throws(function() use ($mail) {
 	// From
 	$mail->setFrom('John Doe <doe@example. com>');
-}, 'InvalidArgumentException', "Email address 'doe@example. com' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'From' expects to be email, string 'doe@example. com' given.");
 
 
 Assert::throws(function() use ($mail) {
 	$mail->setFrom('John Doe <>');
-}, 'InvalidArgumentException', "Email address '' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'From' expects to be email, string '' given.");
 
 
 Assert::throws(function() use ($mail) {
 	$mail->setFrom('John Doe <doe@examplecom>');
-}, 'InvalidArgumentException', "Email address 'doe@examplecom' is not valid.");
-
-
-Assert::throws(function() use ($mail) {
-	$mail->setFrom('John Doe <doe@examplecom>');
-}, 'InvalidArgumentException', "Email address 'doe@examplecom' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'From' expects to be email, string 'doe@examplecom' given.");
 
 
 Assert::throws(function() use ($mail) {
 	$mail->setFrom('John Doe');
-}, 'InvalidArgumentException', "Email address 'John Doe' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'From' expects to be email, string 'John Doe' given.");
 
 
 Assert::throws(function() use ($mail) {
 	$mail->setFrom('doe;@examplecom');
-}, 'InvalidArgumentException', "Email address 'doe;@examplecom' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'From' expects to be email, string 'doe;@examplecom' given.");
 
 
 Assert::throws(function() use ($mail) {
 	// addReplyTo
 	$mail->addReplyTo('@');
-}, 'InvalidArgumentException', "Email address '@' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'Reply-To' expects to be email, string '@' given.");
 
 
 Assert::throws(function() use ($mail) {
 	// addTo
 	$mail->addTo('@');
-}, 'InvalidArgumentException', "Email address '@' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'To' expects to be email, string '@' given.");
 
 
 Assert::throws(function() use ($mail) {
 	// addCc
 	$mail->addCc('@');
-}, 'InvalidArgumentException', "Email address '@' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'Cc' expects to be email, string '@' given.");
 
 
 Assert::throws(function() use ($mail) {
 	// addBcc
 	$mail->addBcc('@');
-}, 'InvalidArgumentException', "Email address '@' is not valid.");
+}, 'Nette\Utils\AssertionException', "The header 'Bcc' expects to be email, string '@' given.");
