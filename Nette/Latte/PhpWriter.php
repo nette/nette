@@ -271,7 +271,7 @@ class PhpWriter extends Nette\Object
 		}
 
 		$tokenizer = clone $tokenizer;
-		$tokenizer->position = 0;
+		$tokenizer->reset();
 		$tokenizer->tokens = $tokens;
 		return $tokenizer;
 	}

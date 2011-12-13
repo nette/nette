@@ -251,6 +251,14 @@ class Tokenizer extends Nette\Object
 
 
 
+	public function reset()
+	{
+		$this->position = 0;
+		$this->current = NULL;
+	}
+
+
+
 	/**
 	 * Looks for (first) (not) wanted tokens.
 	 * @param  int token number
