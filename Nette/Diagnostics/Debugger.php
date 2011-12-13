@@ -273,12 +273,12 @@ final class Debugger
 	 * Logs message or exception to file (if not disabled) and sends email notification (if enabled).
 	 * @param  string|Exception
 	 * @param  int  one of constant Debugger::INFO, WARNING, ERROR (sends email), CRITICAL (sends email)
-	 * @return void
+	 * @return string File with logged error
 	 */
 	public static function log($message, $priority = self::INFO)
 	{
 		if (self::$logDirectory === FALSE) {
-			return;
+			return null;
 
 		} elseif (!self::$logDirectory) {
 			throw new Nette\InvalidStateException('Logging directory is not specified in Nette\Diagnostics\Debugger::$logDirectory.');
@@ -293,9 +293,10 @@ final class Debugger
 				. " in " . $exception->getFile() . ":" . $exception->getLine();
 
 			$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
-			$exceptionFilename = "exception " . @date('Y-m-d H-i-s') . " $hash.html";
+			$storedExceptionFileName = $exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
 			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
 				if (strpos($entry, $hash)) {
+					$storedExceptionFileName = $entry; // It's stored in this file, not in new one
 					$exceptionFilename = NULL; break;
 				}
 			}
@@ -305,7 +306,7 @@ final class Debugger
 			@date('[Y-m-d H-i-s]'),
 			$message,
 			self::$source ? ' @  ' . self::$source : NULL,
-			!empty($exceptionFilename) ? ' @@  ' . $exceptionFilename : NULL
+			!empty($storedExceptionFileName) ? ' @@  ' . $storedExceptionFileName : NULL
 		), $priority);
 
 		if (!empty($exceptionFilename) && $logHandle = @fopen(self::$logDirectory . '/'. $exceptionFilename, 'w')) {
@@ -316,6 +317,8 @@ final class Debugger
 			ob_end_clean();
 			fclose($logHandle);
 		}
+
+		return !empty($storedExceptionFileName) ? self::$logDirectory . '/' . $storedExceptionFileName : null;
 	}
 
 
@@ -381,6 +384,7 @@ final class Debugger
 			} else {
 				if (self::$consoleMode) { // dump to console
 					echo "$exception\n";
+					if($storedLog = self::log($exception, self::ERROR)) echo "(stored in $storedLog)\n";
 
 				} elseif (self::isHtmlMode()) { // dump to browser
 					self::$blueScreen->render($exception);
@@ -389,7 +393,8 @@ final class Debugger
 					}
 
 				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
-					self::log($exception);
+					$file = self::log($exception, self::ERROR);
+					if(!headers_sent()) header("X-Error-log: $file");
 				}
 			}
 
