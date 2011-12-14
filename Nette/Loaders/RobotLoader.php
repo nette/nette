@@ -118,7 +118,7 @@ class RobotLoader extends AutoLoader
 		}
 
 		if (isset($this->list[$type][0])) {
-			Nette\Utils\LimitedScope::load($this->list[$type][0]);
+			Nette\Utils\LimitedScope::load($this->list[$type][0], TRUE);
 			self::$count++;
 		}
 	}
