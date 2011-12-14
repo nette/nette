@@ -46,8 +46,20 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function delimite($name)
 	{
-		// @see http://www.postgresql.org/docs/8.2/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
-		return '"' . str_replace('"', '""', $name) . '"';
+            if ( $name instanceof \Nette\Database\SqlLiteral ) {
+                return $name->value;
+            }
+            elseif( preg_match("#\.#", $name)) {
+                $parts = array();
+                foreach(explode('.', $name) as $part) {
+                    $parts[]= $this->delimite($part);
+                }
+                return implode('.', $parts);
+            }
+            // @see http://www.postgresql.org/docs/8.2/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
+            else {
+                return '"' . str_replace('"', '""', $name) . '"';
+            }
 	}
 
 
