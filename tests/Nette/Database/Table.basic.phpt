@@ -18,10 +18,10 @@ $bookExpected = array(
 	'title' => '1001 tipu a triku pro PHP',
 );
 
-$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());  // SELECT id, title FROM `book` WHERE (id = ?)
+$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 Assert::equal($bookExpected, $book);
 
-$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());  // SELECT id, title FROM `book` WHERE (id = ?)
+$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
 Assert::equal($bookExpected, $book);
 
 

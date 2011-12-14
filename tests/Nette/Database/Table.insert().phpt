@@ -34,7 +34,7 @@ $catelynStarkExpected = array(
 	'id' => 14,
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
-	'born' => new DateTime('2011-11-11'),
+	'born' => '2011-11-11',
 );
 
 $catelynStark = $connection->table('author')->get(14);  // SELECT * FROM `author` WHERE (`id` = ?)
