@@ -83,7 +83,8 @@ class BlueScreen extends Nette\Object
 		}
 		$source = explode("\n", highlight_string($source, TRUE));
 		$spans = 1;
-		$out = $source[0]; // <code><span color=highlight.html>
+		$out = '<div style="float: left">';
+		$out .= $source[0]; // <code><span color=highlight.html>
 		$source = explode('<br />', $source[1]);
 		array_unshift($source, NULL);
 
@@ -116,7 +117,7 @@ class BlueScreen extends Nette\Object
 				$out .= sprintf("<span class='line'>%{$numWidth}s:</span>    %s\n", $n, $s);
 			}
 		}
-		$out .= str_repeat('</span>', $spans) . '</code>';
+		$out .= str_repeat('</span>', $spans) . '</code></div>';
 
 		$out = preg_replace_callback('#">\$(\w+)(&nbsp;)?</span>#', function($m) use ($vars) {
 			return isset($vars[$m[1]])
