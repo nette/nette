@@ -20,6 +20,7 @@ $acl = new Permission;
 $acl->addRole('guest');
 $acl->addRole('member', 'guest');
 $acl->addRole('editor', 'member');
+Assert::same( array('guest', 'member', 'editor'), $acl->getRoles() );
 Assert::same( array(), $acl->getRoleParents('guest') );
 Assert::same( array('guest'), $acl->getRoleParents('member') );
 Assert::same( array('member'), $acl->getRoleParents('editor') );

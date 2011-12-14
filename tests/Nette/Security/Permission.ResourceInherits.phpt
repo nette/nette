@@ -21,6 +21,7 @@ $acl->addResource('city');
 $acl->addResource('building', 'city');
 $acl->addResource('room', 'building');
 
+Assert::same( array('city', 'building', 'room'), $acl->getResources() );
 Assert::true( $acl->resourceInheritsFrom('building', 'city', TRUE) );
 Assert::true( $acl->resourceInheritsFrom('room', 'building', TRUE) );
 Assert::true( $acl->resourceInheritsFrom('room', 'city') );

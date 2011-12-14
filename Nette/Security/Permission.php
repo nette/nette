@@ -131,6 +131,17 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
+	 * Returns all Roles.
+	 * @return array
+	 */
+	public function getRoles()
+	{
+		return array_keys($this->roles);
+	}
+
+
+
+	/**
 	 * Returns existing Role's parents ordered by ascending priority.
 	 * @param  string
 	 * @return array
@@ -304,6 +315,17 @@ class Permission extends Nette\Object implements IAuthorizator
 		} elseif ($need && !isset($this->resources[$resource])) {
 			throw new Nette\InvalidStateException("Resource '$resource' does not exist.");
 		}
+	}
+
+
+
+	/**
+	 * Returns all Resources.
+	 * @return array
+	 */
+	public function getResources()
+	{
+		return array_keys($this->resources);
 	}
 
 
