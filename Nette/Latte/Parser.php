@@ -93,6 +93,16 @@ class Parser extends Nette\Object
 
 
 	/**
+	 * @return array  of registered macros
+	 */
+	public function getMacros()
+	{
+		return $this->macros;
+	}
+
+
+
+	/**
 	 * Process all {macros} and <tags/>.
 	 * @param  string
 	 * @return string
