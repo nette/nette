@@ -95,30 +95,27 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
+		$info = & $this->list[$type];
 
-		if (isset($this->list[$type][0]) && !is_file($this->list[$type][0])) {
-			unset($this->list[$type]);
-		}
-
-		if (!isset($this->list[$type])) {
+		if ($this->autoRebuild && (!isset($info) || (isset($info[0]) && !is_file($info[0])))) {
 			$trace = debug_backtrace();
 			$initiator = & $trace[2]['function'];
 			if ($initiator === 'class_exists' || $initiator === 'interface_exists') {
-				$this->list[$type] = FALSE;
-				if ($this->autoRebuild && $this->rebuilt) {
+				$info = FALSE;
+				if ($this->rebuilt) {
 					$this->getCache()->save($this->getKey(), $this->list, array(
 						Cache::CONSTS => 'Nette\Framework::REVISION',
 					));
 				}
 			}
 
-			if ($this->autoRebuild && !$this->rebuilt) {
+			if (!$this->rebuilt) {
 				$this->rebuild();
 			}
 		}
 
-		if (isset($this->list[$type][0])) {
-			Nette\Utils\LimitedScope::load($this->list[$type][0], TRUE);
+		if (isset($info[0])) {
+			Nette\Utils\LimitedScope::load($info[0], TRUE);
 			self::$count++;
 		}
 	}
