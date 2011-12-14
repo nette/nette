@@ -14,13 +14,15 @@ common:
 
 # Production site configuration data
 production < common:
-	database:
-		dsn: "sqlite2::memory:"
-		user: dbuser
-		password: secret
+	parameters:
+		database:
+			dsn: "sqlite2::memory:"
+			user: dbuser
+			password: secret
 
 # Staging site configuration data
 development < common:
-	database:
-		user: dev_user
-		password: dev_secret
+	parameters:
+		database:
+			user: dev_user
+			password: dev_secret
