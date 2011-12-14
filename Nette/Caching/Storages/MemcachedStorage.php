@@ -77,7 +77,7 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function setCompress($compress)
 	{
-		$this->compress = $compress;
+		$this->compress = (bool) $compress;
 	}
 
 
