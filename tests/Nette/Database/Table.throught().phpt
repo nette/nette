@@ -20,7 +20,7 @@ foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
 	}
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
 	'Nette' => 'David Grudl',
 	'Dibi' => 'David Grudl',

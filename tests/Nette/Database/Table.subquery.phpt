@@ -19,7 +19,7 @@ foreach ($connection->table('book')->where('author_id', $unknownBorn) as $book) 
 	$apps[] = $book->title;
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'1001 tipu a triku pro PHP',
 	'JUSH',
 	'Nette',

@@ -18,7 +18,7 @@ foreach ($connection->table('book')->where('title LIKE ?', '%t%')->order('title'
 	$apps[] = $book->title;
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'1001 tipu a triku pro PHP',
 	'Nette',
 ), $apps);

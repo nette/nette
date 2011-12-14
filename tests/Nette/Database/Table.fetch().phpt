@@ -19,4 +19,4 @@ foreach ($book->related('book_tag')->where('tag_id', 21) as $book_tag) {  // SEL
 	$tags[] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21))
 }
 
-Assert::equal(array('PHP'), $tags);
+Assert::same(array('PHP'), $tags);

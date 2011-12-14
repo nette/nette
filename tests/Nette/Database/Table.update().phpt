@@ -20,7 +20,7 @@ $author->update();  // UPDATE `author` SET `name`='Tyrion Lannister' WHERE (`id`
 $book = $connection->table('book');
 
 $book1 = $book->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
-Assert::equal('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
+Assert::same('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
 
 
@@ -29,7 +29,7 @@ $book2 = $book->insert(array(
 	'title' => 'Game of Thrones',
 ));  // INSERT INTO `book` (`author_id`, `title`) VALUES (12, 'Game of Thrones')
 
-Assert::equal('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (12))
+Assert::same('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (12))
 
 
 
@@ -37,7 +37,7 @@ Assert::equal('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `auth
 $book2->author_id = $connection->table('author')->get(11);  // SELECT * FROM `author` WHERE (`id` = ?)
 $book2->update();  // UPDATE `book` SET `author_id`=11 WHERE (`id` = '5')
 
-Assert::equal('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
+Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
 
 
@@ -57,4 +57,4 @@ $bookTag = $book2->related('book_tag')->insert(array(
 
 $app = $connection->table('book')->get(5);  // SELECT * FROM `book` WHERE (`id` = ?)
 $tags = iterator_to_array($app->related('book_tag'));  // SELECT * FROM `book_tag` WHERE (`book_tag`.`book_id` IN (5))
-Assert::equal('Xbox Game', reset($tags)->tag->name);  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (24))
+Assert::same('Xbox Game', reset($tags)->tag->name);  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (24))

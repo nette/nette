@@ -30,22 +30,20 @@ $connection->table('author')->insert($insert);  // INSERT INTO `author` (`name`,
 
 
 
-$catelynStarkExpected = array(
+$catelynStark = $connection->table('author')->get(14);  // SELECT * FROM `author` WHERE (`id` = ?)
+Assert::same(array(
 	'id' => 14,
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
 	'born' => '2011-11-11',
-);
-
-$catelynStark = $connection->table('author')->get(14);  // SELECT * FROM `author` WHERE (`id` = ?)
-Assert::equal($catelynStarkExpected, iterator_to_array($catelynStark));
+), $catelynStark->toArray());
 
 
 
 $book = $connection->table('book');
 
 $book1 = $book->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
-Assert::equal('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
+Assert::same('Jakub Vrana', $book1->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11))
 
 $book2 = $book->insert(array(
 	'title' => 'Winterfell',
@@ -57,8 +55,8 @@ $book3 = $book->insert(array(
 	'author_id' => $connection->table('author')->get(13),  // SELECT * FROM `author` WHERE (`id` = ?)
 ));  // INSERT INTO `book` (`title`, `author_id`) VALUES ('Dragonstone', 13)
 
-Assert::equal('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
-Assert::equal('Edard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
+Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
+Assert::same('Edard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
 
 
 

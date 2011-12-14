@@ -18,7 +18,7 @@ foreach ($connection->table('book')->order('author.name, title') as $book) {  //
 	$apps[$book->title] = $book->author->name;  // SELECT * FROM `author` WHERE (`author`.`id` IN (12, 11))
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'Dibi' => 'David Grudl',
 	'Nette' => 'David Grudl',
 	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
@@ -32,7 +32,7 @@ foreach ($connection->table('book_tag')->where('book.author.name', 'Jakub Vrana'
 	$tags[] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'PHP',
 	'MySQL',
 	'JavaScript',

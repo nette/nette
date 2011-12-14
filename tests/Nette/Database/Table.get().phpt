@@ -14,11 +14,10 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 $book = $connection->table('book')->get(1);  // SELECT * FROM `book` WHERE (`id` = ?)
-$data = array(
+
+Assert::same(array(
 	'id' => 1,
 	'author_id' => 11,
 	'translator_id' => 11,
 	'title' => '1001 tipu a triku pro PHP',
-);
-
-Assert::equal($data, iterator_to_array($book));
+), $book->toArray());

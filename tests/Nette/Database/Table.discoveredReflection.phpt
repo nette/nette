@@ -30,7 +30,7 @@ foreach ($connection->table('book') as $book) {
 	}
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'1001 tipu a triku pro PHP' => array(
 		'author' => 'Jakub Vrana',
 		'tags' => array('PHP', 'MySQL'),
@@ -53,4 +53,4 @@ Assert::equal(array(
 
 
 $book = $connection->table('book')->get(1);
-Assert::equal('Jakub Vrana', $book->translator->name);
+Assert::same('Jakub Vrana', $book->translator->name);

@@ -13,16 +13,17 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 
-$bookExpected = array(
+$book = $connection->table('book')->where('id = ?', 1)->select('id, title')->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
+Assert::same(array(
 	'id' => 1,
 	'title' => '1001 tipu a triku pro PHP',
-);
+), $book);
 
-$book = iterator_to_array($connection->table('book')->where('id = ?', 1)->select('id, title')->fetch());  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
-Assert::equal($bookExpected, $book);
-
-$book = iterator_to_array($connection->table('book')->select('id, title')->where('id = ?', 1)->fetch());  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
-Assert::equal($bookExpected, $book);
+$book = $connection->table('book')->select('id, title')->where('id = ?', 1)->fetch()->toArray();  // SELECT `id`, `title` FROM `book` WHERE (`id` = ?)
+Assert::same(array(
+	'id' => 1,
+	'title' => '1001 tipu a triku pro PHP',
+), $book);
 
 
 
@@ -38,7 +39,7 @@ foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
 	}
 }
 
-Assert::equal(array(
+Assert::same(array(
 	'1001 tipu a triku pro PHP' => array(
 		'author' => 'Jakub Vrana',
 		'tags' => array('PHP', 'MySQL'),
