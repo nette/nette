@@ -50,6 +50,19 @@ class Configurator extends Nette\Object
 
 
 	/**
+	 * Set parameter %productionMode%.
+	 * @param  bool
+	 * @return ServiceDefinition
+	 */
+	public function setProductionMode($on = TRUE)
+	{
+		$this->params['productionMode'] = (bool) $on;
+		return $this;
+	}
+
+
+
+	/**
 	 * Sets path to temporary directory.
 	 * @return ServiceDefinition
 	 */
