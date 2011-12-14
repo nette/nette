@@ -182,7 +182,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		if (is_array($condition)) { // where(array('column1' => 1, 'column2 > ?' => 2))
 			foreach ($condition as $key => $val) {
-				$this->where($key, $val);
+				if (is_int($key)) {
+					$this->where($val);	// where('full condition')
+				} else {
+					$this->where($key, $val);	// where('column', 1)
+				}
 			}
 			return $this;
 		}
