@@ -36,6 +36,9 @@ class Compiler extends Nette\Object
 	/** @var array */
 	private $config;
 
+	/** @var array reserved section names */
+	private static $reserved = array('services' => 1, 'factories' => 1, 'parameters' => 1);
+
 
 
 	/**
@@ -44,6 +47,9 @@ class Compiler extends Nette\Object
 	 */
 	public function addExtension($name, CompilerExtension $extension)
 	{
+		if (isset(self::$reserved[$name])) {
+			throw new Nette\InvalidArgumentException("Name '$name' is reserved.");
+		}
 		$this->extensions[$name] = $extension;
 		return $this;
 	}
@@ -99,7 +105,6 @@ class Compiler extends Nette\Object
 	{
 		if (isset($this->config['parameters'])) {
 			$this->container->parameters = $this->config['parameters'];
-			unset($this->config['parameters']);
 		}
 	}
 
@@ -109,13 +114,12 @@ class Compiler extends Nette\Object
 	{
 		$configExp = $this->container->expand($this->config);
 		foreach ($this->extensions as $name => $extension) {
-			$extension->loadConfiguration($this->container, isset($configExp[$name]) ? $configExp[$name] : array());
-			unset($configExp[$name]);
+			$config = isset($configExp[$name]) ? $configExp[$name] : array();
+			$extension->loadConfiguration($this->container, $config);
 		}
 
 		// missing extensions simply put to parameters
-		unset($configExp['services'], $configExp['factories']);
-		$this->container->parameters += array_intersect_key($this->config, $configExp);
+		$this->container->parameters += array_diff_key($this->config, self::$reserved, $this->extensions);
 	}
 
 
