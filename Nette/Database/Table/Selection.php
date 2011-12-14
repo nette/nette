@@ -106,7 +106,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->name = $table;
 		$this->connection = $connection;
 		$this->primary = $this->getPrimary($table);
-		$this->delimitedName = $connection->getSupplementalDriver()->delimite($this->name);
+		$this->delimitedName = $this->tryDelimite($this->name);
 		$this->delimitedPrimary = $connection->getSupplementalDriver()->delimite($this->primary);
 	}
 
