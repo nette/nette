@@ -75,11 +75,12 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getPrimary($table)
 	{
-		if (isset($this->structure['primary'][$table]))
-			return $this->structure['primary'][$table];
+		$primary = & $this->structure['primary'][$table];
+		if (isset($primary)) {
+			return $primary;
+		}
 
-		$primary = NULL;
-		if ($this->connection->getSupplementalDriver() instanceof Nette\Database\Drivers\SqliteDriver) {
+		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
 			$query = $this->connection->query("PRAGMA table_info($table)");
 			$primaryKey = 'pk';
 			$primaryVal = '1';
@@ -94,14 +95,14 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		foreach ($query as $column) {
 			if ($column[$primaryKey] === $primaryVal) { // 3 - "Key" is not compatible with PDO::CASE_LOWER
 				if ($primary !== NULL) {
-					$primary = NULL; // multi-column primary key is not supported
+					$primary = FALSE; // multi-column primary key is not supported
 					break;
 				}
 				$primary = $column[$primaryKeyColumn];
 			}
 		}
 
-		return $this->structure['primary'][$table] = $primary;
+		return $primary;
 	}
 
 
@@ -109,11 +110,12 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	public function getReferencingColumn($name, $table)
 	{
 		$name = strtolower($name);
-		if (isset($this->structure['referencing'][$table][$name]))
-			return $this->structure['referencing'][$table][$name];
-
 		$columns = & $this->structure['referencing'][$table];
-		if ($this->connection->getSupplementalDriver() instanceof Nette\Database\Drivers\SqliteDriver) {
+		if (isset($columns[$name])) {
+			return $columns[$name];
+		}
+
+		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
 			foreach ($this->connection->query("PRAGMA foreign_key_list($name)") as $row) {
 				if ($row[2] === $table && $row[4] === $this->getPrimary($table)) {
 					$columns[$name] = $row[3];
@@ -147,12 +149,12 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	public function getReferencedTable($name, $table)
 	{
 		$column = strtolower($this->getReferencedColumn($name, $table));
-		if (isset($this->structure['referenced'][$table][$name]))
-			return $this->structure['referenced'][$table][$name];
-
 		$tables = & $this->structure['referenced'][$table];
+		if (isset($tables[$column])) {
+			return $tables[$column];
+		}
 
-		if ($this->connection->getSupplementalDriver() instanceof Nette\Database\Drivers\SqliteDriver) {
+		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
 			foreach ($this->connection->query("PRAGMA foreign_key_list($table)") as $row) {
 				$tables[strtolower($row[3])] = $row[2];
 			}
