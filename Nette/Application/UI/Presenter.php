@@ -885,7 +885,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				$action = self::DEFAULT_ACTION;
 			}
 
-			$current = ($action === '*' || $action === $this->action) && $presenterClass === get_class($this); // TODO
+			$current = ($action === '*' || strcasecmp($action, $this->action) === 0) && $presenterClass === get_class($this); // TODO
 
 			$reflection = new PresenterComponentReflection($presenterClass);
 			if ($args || $destination === 'this') {
