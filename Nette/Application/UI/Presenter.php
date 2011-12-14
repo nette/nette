@@ -201,6 +201,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				if ($this->response instanceof Responses\TextResponse && $this->isControlInvalid()) { // snippets - TODO
 					$this->snippetMode = TRUE;
 					$this->response->send($this->getHttpRequest(), $this->getHttpResponse());
+					$this->snippetMode = FALSE;
 					$this->sendPayload();
 
 				} elseif (!$this->response && $hasPayload) { // back compatibility for use terminate() instead of sendPayload()
