@@ -120,7 +120,7 @@ class Compiler extends Nette\Object
 
 		$configExp = $this->container->expand($this->config);
 		foreach ($this->extensions as $name => $extension) {
-			$config = isset($configExp[$name]) ? $configExp[$name] : array();
+			$config = isset($configExp[$name]) ? array_diff_key($configExp[$name], self::$reserved) : array();
 			$extension->loadConfiguration($this->container, $config);
 		}
 	}
@@ -130,6 +130,15 @@ class Compiler extends Nette\Object
 	public function processServices()
 	{
 		$this->parseServices($this->container, $this->config);
+
+		foreach ($this->extensions as $name => $extension) {
+			$this->container->addDefinition($name)
+				->setClass('Nette\DI\NestedAccessor', array('@container', $name));
+
+			if (isset($this->config[$name])) {
+				$this->parseServices($this->container, $this->config[$name], $name);
+	}
+		}
 	}
 
 
@@ -160,7 +169,7 @@ class Compiler extends Nette\Object
 	 * Parses section 'services' from configuration file.
 	 * @return void
 	 */
-	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config)
+	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config, $namespace = NULL)
 	{
 		$all = isset($config['services']) ? $config['services'] : array();
 		$all += isset($config['factories']) ? $config['factories'] : array();
@@ -170,6 +179,9 @@ class Compiler extends Nette\Object
 		});
 
 		foreach ($all as $name => $def) {
+			$isService = array_key_exists($name, $config['services']);
+			$name = ($namespace ? $namespace . '_' : '') . $name;
+
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
 				$definition = $container->addDefinition($name);
@@ -184,7 +196,7 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService($definition, $def, array_key_exists($name, $config['services']));
+				static::parseService($definition, $def, $isService);
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}

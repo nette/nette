@@ -120,6 +120,7 @@ class NetteLoader extends AutoLoader
 		'nette\di\helpers' => '/DI/Helpers.php',
 		'nette\di\icontainer' => '/DI/IContainer.php',
 		'nette\di\missingserviceexception' => '/DI/exceptions.php',
+		'nette\di\nestedaccessor' => '/DI/NestedAccessor.php',
 		'nette\di\servicecreationexception' => '/DI/exceptions.php',
 		'nette\di\servicedefinition' => '/DI/ServiceDefinition.php',
 		'nette\di\statement' => '/DI/Statement.php',

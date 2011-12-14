@@ -4,3 +4,6 @@ parameters:
 
 database:
 	foo: %bar%
+
+	services:
+		foo: stdClass

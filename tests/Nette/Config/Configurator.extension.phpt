@@ -45,7 +45,7 @@ $configurator->setTempDirectory(TEMP_DIR);
 $configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
 	$compiler->addExtension('database', new DatabaseExtension);
 };
-$configurator->addConfig('files/config.extension.neon', Configurator::NONE)
+$container = $configurator->addConfig('files/config.extension.neon', Configurator::NONE)
 	->createContainer();
 
 Assert::same(array(
@@ -53,3 +53,5 @@ Assert::same(array(
 	'DatabaseExtension::beforeCompile',
 	'DatabaseExtension::afterCompile',
 ), TestHelpers::fetchNotes());
+
+Assert::true( $container->database->foo instanceof stdClass );
