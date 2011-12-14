@@ -383,6 +383,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	private static function checkFile($file, $time)
 	{
+		clearstatcache(TRUE, $file);
 		return @filemtime($file) == $time; // @ - stat may fail
 	}
 
