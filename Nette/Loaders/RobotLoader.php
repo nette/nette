@@ -116,6 +116,11 @@ class RobotLoader extends AutoLoader
 
 		if (isset($info[0])) {
 			Nette\Utils\LimitedScope::load($info[0], TRUE);
+
+			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE)) {
+				$info = NULL;
+				$this->tryLoad($type);
+			}
 			self::$count++;
 		}
 	}
