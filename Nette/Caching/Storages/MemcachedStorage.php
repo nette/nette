@@ -38,7 +38,7 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	private $journal;
 
 	/** @var bool */
-	private $compress;
+	private $compress = FALSE;
 
 
 
