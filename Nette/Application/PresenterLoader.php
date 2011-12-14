@@ -65,7 +65,7 @@ class PresenterLoader implements IPresenterLoader
 			// internal autoloading
 			$file = $this->formatPresenterFile($name);
 			if (is_file($file) && is_readable($file)) {
-				Nette\Loaders\LimitedScope::load($file);
+				Nette\Loaders\LimitedScope::load($file, TRUE);
 			}
 
 			if (!class_exists($class)) {

@@ -115,7 +115,7 @@ class RobotLoader extends AutoLoader
 			}
 
 			if ($this->list[$type] !== FALSE) {
-				LimitedScope::load($this->list[$type][0]);
+				LimitedScope::load($this->list[$type][0], TRUE);
 				self::$count++;
 			}
 		}
