@@ -82,3 +82,12 @@ function dump($var)
 	foreach (func_get_args() as $arg) Nette\Diagnostics\Debugger::dump($arg);
 	return $var;
 }
+
+/**
+ * Nette\Diagnostics\Debugger::fireLog shortcut.
+ */
+function fireLog($var)
+{
+    foreach (func_get_args() as $arg) Nette\Diagnostics\Debugger::fireLog($arg);
+    return $var;
+}
