@@ -47,6 +47,16 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 
 
 
+	/**
+	 * @return array  of registered macros
+	 */
+	public function getMacros()
+	{
+		return $this->macros;
+	}
+
+
+
 	public static function install(Latte\Parser $parser)
 	{
 		return new static($parser);
