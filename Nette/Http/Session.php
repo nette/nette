@@ -35,6 +35,9 @@ class Session extends Nette\Object
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;
 
+	/** Regenerate session ID every 30 minutes */
+	const REGENERATE_INTERVAL = 1800;
+
 	/** @var bool  is required session ID regeneration? */
 	private $regenerationNeeded;
 
@@ -101,13 +104,9 @@ class Session extends Nette\Object
 		}
 
 		self::$started = TRUE;
-		if ($this->regenerationNeeded) {
-			session_regenerate_id(TRUE);
-			$this->regenerationNeeded = FALSE;
-		}
 
 		/* structure:
-			__NF: Counter, BrowserKey, Data, Meta
+			__NF: Counter, BrowserKey, Data, Meta, Time
 				DATA: section->variable = data
 				META: section->variable = Timestamp, Browser, Version
 		*/
@@ -120,6 +119,14 @@ class Session extends Nette\Object
 			$nf = array('C' => 0);
 		} else {
 			$nf['C']++;
+		}
+
+		// session regenerate every 30 minutes
+		$nfTime = & $nf['Time'];
+		$time = time();
+		if ($time - $nfTime > self::REGENERATE_INTERVAL) {
+			$nfTime = $time;
+			$this->regenerationNeeded = TRUE;
 		}
 
 		// browser closing detection
@@ -153,6 +160,11 @@ class Session extends Nette\Object
 					}
 				}
 			}
+		}
+
+		if ($this->regenerationNeeded) {
+			session_regenerate_id(TRUE);
+			$this->regenerationNeeded = FALSE;
 		}
 
 		register_shutdown_function(array($this, 'clean'));
