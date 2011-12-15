@@ -12,7 +12,8 @@
 namespace Nette\Templating;
 
 use Nette,
-	Nette\Application\UI\Control;
+	Nette\Application\UI\Control,
+	Nette\Application\UI\Presenter;
 
 
 
@@ -21,7 +22,7 @@ use Nette,
  *
  * @author     Patrik Votoček
  */
-class TemplateFactory extends Nette\Object implements ITemplateFactory
+class TemplateFactory extends Nette\Object implements ITemplateFactoryFilesFormatter
 {
 	/** @var Nette\Caching\IStorage */
 	private $templateCacheStorage;
@@ -105,7 +106,7 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 			$template->user = $this->user;
 		}
 		// flash message
-		if ($presenter instanceof Nette\Application\UI\Presenter && $presenter->hasFlashSession()) {
+		if ($presenter instanceof Presenter && $presenter->hasFlashSession()) {
 			$id = $control->getParameterId('flash');
 			$template->flashes = $presenter->getFlashSession()->$id;
 		}
@@ -125,5 +126,52 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	public function templatePrepareFilters($template)
 	{
 		$template->registerFilter(new Nette\Latte\Engine);
+	}
+
+	/**
+	 * Formats layout template file names.
+	 * @param Nette\Application\UI\Control
+	 * @param string   layout name
+	 * @return array
+	 */
+	public function formatLayoutTemplateFiles(Control $control, $layout = 'layout')
+	{
+		$name = $control->getName();
+		$controlName = substr($name, strrpos(':' . $name, ':'));
+		$layout = $layout ? $layout : 'layout';
+		$dir = dirname(dirname($control->getReflection()->getFileName()));
+		$list = array(
+			"$dir/templates/$controlName/@$layout.latte",
+			"$dir/templates/$controlName.@$layout.latte",
+			"$dir/templates/$controlName/@$layout.phtml",
+			"$dir/templates/$controlName.@$layout.phtml",
+		);
+		do {
+			$list[] = "$dir/templates/@$layout.latte";
+			$list[] = "$dir/templates/@$layout.phtml";
+			$dir = dirname($dir);
+		} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+		return $list;
+	}
+
+
+
+	/**
+	 * Formats view template file names.
+	 * @param Nette\Application\UI\Control
+	 * @param string   layout name
+	 * @return array
+	 */
+	public function formatTemplateFiles(Control $control, $view)
+	{
+		$name = $control->getName();
+		$controlName = substr($name, strrpos(':' . $name, ':'));
+		$dir = dirname(dirname($control->getReflection()->getFileName()));
+		return array(
+			"$dir/templates/$controlName/$view.latte",
+			"$dir/templates/$controlName.$view.latte",
+			"$dir/templates/$controlName/$view.phtml",
+			"$dir/templates/$controlName.$view.phtml",
+		);
 	}
 }
