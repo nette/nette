@@ -32,7 +32,7 @@ class Statement extends Nette\Object
 
 	public function __construct($entity, $arguments)
 	{
-		$this->entity = is_array($entity) ? implode('::', $entity) : $entity;
+		$this->entity = $entity;
 		$this->arguments = $arguments;
 	}
 
