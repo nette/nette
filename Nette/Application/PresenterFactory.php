@@ -54,9 +54,10 @@ class PresenterFactory implements IPresenterFactory
 	 */
 	public function createPresenter($name)
 	{
-		$class = $this->getPresenterClass($name);
-		$presenter = new $class;
-		$presenter->setContext($this->context);
+		$presenter = $this->context->createInstance($this->getPresenterClass($name));
+		if (method_exists($presenter, 'setContext')) {
+			$this->context->callMethod(array($presenter, 'setContext'));
+		}
 		return $presenter;
 	}
 

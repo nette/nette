@@ -172,8 +172,7 @@ $application->router[] = new Application\Routers\SimpleRouter();
 
 $request = new Application\Request('Test', Http\Request::GET, array());
 
-$presenter = new TestPresenter;
+$presenter = new TestPresenter(Environment::getContext());
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
-$presenter->setContext(Environment::getContext());
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);

@@ -110,6 +110,16 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
+	public function __construct(Nette\DI\IContainer $context)
+	{
+		$this->context = $context;
+		if ($this->invalidLinkMode === NULL) {
+			$this->invalidLinkMode = $context->parameters['productionMode'] ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
+		}
+	}
+
+
+
 	/**
 	 * @return Nette\Application\Request
 	 */
@@ -1258,23 +1268,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Gets the context.
-	 * @return Presenter  provides a fluent interface
-	 */
-	public function setContext(Nette\DI\IContainer $context)
-	{
-		$this->context = $context;
-		if ($this->invalidLinkMode === NULL) {
-			$this->invalidLinkMode = $context->parameters['productionMode'] ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Gets the context.
-	 * @return Nette\DI\IContainer
+	 * @deprecated
 	 */
 	final public function getContext()
 	{

@@ -36,6 +36,13 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 
+	public function __construct(Nette\DI\IContainer $context)
+	{
+		$this->context = $context;
+	}
+
+
+
 	/**
 	 * @param  Nette\Application\Request
 	 * @return Nette\Application\IResponse
@@ -141,33 +148,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	public function getRequest()
 	{
 		return $this->request;
-	}
-
-
-
-	/********************* services ****************d*g**/
-
-
-
-	/**
-	 * Gets the context.
-	 * @return Presenter  provides a fluent interface
-	 */
-	public function setContext(Nette\DI\IContainer $context)
-	{
-		$this->context = $context;
-		return $this;
-	}
-
-
-
-	/**
-	 * Gets the context.
-	 * @return Nette\DI\IContainer
-	 */
-	final public function getContext()
-	{
-		return $this->context;
 	}
 
 }
