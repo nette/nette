@@ -56,9 +56,13 @@ $builder->addDefinition('four')
 $builder->addDefinition('five', NULL)
 	->setFactory('Service::create');
 
-$builder->addDefinition('six')
+$six = $builder->addDefinition('six')
 	->setFactory('Service::create', array('@container', 'a', 'b'))
 	->addSetup(array('@six', 'methodA'), array('a', 'b'));
+
+$builder->addDefinition('seven')
+	->setFactory(array($six, 'create'), array($builder, $six))
+	->addSetup(array($six, 'methodA'));
 
 $code = (string) $builder->generateClass();
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
@@ -84,11 +88,18 @@ Assert::same( array(
 ), $container->getService('four')->methods );
 
 Assert::true( $container->getService('five') instanceof Service );
-Assert::equal( array(array()), $container->getService('five')->args );
+Assert::same( array(array()), $container->getService('five')->args );
 Assert::same( NULL, $container->getService('five')->methods );
 
 Assert::true( $container->getService('six') instanceof Service );
-Assert::equal( array(array(1 => 'a', 'b')), $container->getService('six')->args );
+Assert::same( array(array(1 => 'a', 'b')), $container->getService('six')->args );
 Assert::same( array(
 	array('methodA', array('a', 'b')),
+), $container->getService('six')->methods );
+
+Assert::true( $container->getService('seven') instanceof Service );
+Assert::same( array(array(1 => $container->getService('six'))), $container->getService('seven')->args );
+Assert::same( array(
+	array('methodA', array('a', 'b')),
+	array('methodA', array()),
 ), $container->getService('six')->methods );

@@ -196,7 +196,10 @@ class ContainerBuilder extends Nette\Object
 				if (!is_array($factory)) {
 					continue;
 				}
-				if (($service = $this->getServiceName($factory[0])) && $this->definitions[$service]->class) {
+				if ($service = $this->getServiceName($factory[0])) {
+					if (!$this->definitions[$service]->class) {
+						continue;
+					}
 					$factory[0] = $this->definitions[$service]->class;
 				}
 				$factory = callback($factory);
@@ -420,6 +423,8 @@ class ContainerBuilder extends Nette\Object
 	{
 		$that = $this;
 		array_walk_recursive($args, function(&$val) use ($self, $that) {
+			list($val) = $that->normalizeEntity(array($val));
+
 			if ($val instanceof Statement) {
 				$val = new PhpLiteral($that->formatStatement($val, $self));
 
@@ -458,9 +463,18 @@ class ContainerBuilder extends Nette\Object
 	/** @internal */
 	public function normalizeEntity($entity)
 	{
-		return is_string($entity) && strpos($entity, '::') !== FALSE
+		$entity = is_string($entity) && strpos($entity, '::') !== FALSE
 			? explode('::', $entity)
 			: $entity;
+
+		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) {
+			$tmp = array_keys($this->definitions, $entity[0], TRUE);
+			$entity[0] = "@$tmp[0]";
+
+		} elseif (is_array($entity) && $entity[0] === $this) {
+			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;
+	}
+		return $entity;
 	}
 
 
