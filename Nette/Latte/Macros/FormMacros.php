@@ -35,7 +35,7 @@ class FormMacros extends MacroSet
 	{
 		$me = new static($parser);
 		$me->addMacro('form',
-			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $control[%node.word], %node.array)',
+			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control[%node.word], %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');

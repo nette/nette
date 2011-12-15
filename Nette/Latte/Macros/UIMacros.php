@@ -105,7 +105,7 @@ class UIMacros extends MacroSet
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
 					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v') // PHP bug #46873
-					. ($snippet ? '; $control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
+					. ($snippet ? '; $_control->validateControl(' . var_export(substr($name, 1), TRUE) . ')' : '')
 					. "\n?>$code<?php\n}}";
 			}
 			$prolog[] = "//\n// end of blocks\n//";
@@ -123,8 +123,8 @@ class UIMacros extends MacroSet
 			$prolog[] = '
 if ($_l->extends) {
 	ob_start();
-} elseif (!empty($control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+} elseif (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 }';
 			$epilog[] = '
 // template extending support
@@ -135,8 +135,8 @@ if ($_l->extends) {
 		} else {
 			$prolog[] = '
 // snippets support
-if (!empty($control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+if (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 }';
 		}
 
@@ -254,7 +254,7 @@ if (!empty($control->snippetMode)) {
 				$tag = $tag ? $tag : 'div';
 				$node->data->leave = TRUE;
 				$node->data->end = "\$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag><?php";
-				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
+				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
 
 			} else {
 				$node->data->leave = TRUE;
@@ -286,7 +286,7 @@ if (!empty($control->snippetMode)) {
 		if ($node->name === 'snippet') {
 			$tag = trim($node->tokenizer->fetchWord(), '<>');
 			$tag = $tag ? $tag : 'div';
-			return $writer->write("?>\n<$tag id=\"<?php echo \$control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
+			return $writer->write("?>\n<$tag id=\"<?php echo \$_control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
 				(string) substr($name, 1), $name
 			);
 
@@ -365,7 +365,7 @@ if (!empty($control->snippetMode)) {
 			$param = substr($param, 6, -1); // removes array()
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
-			. '$_ctrl = $control->getWidget(' . $name . '); '
+			. '$_ctrl = $_control->getWidget(' . $name . '); '
 			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->validateControl(); '
 			. "\$_ctrl->$method($param)";
 	}
@@ -379,7 +379,7 @@ if (!empty($control->snippetMode)) {
 	 */
 	public function macroLink(MacroNode $node, $writer)
 	{
-		return $writer->write('echo %escape(' . ($node->name === 'plink' ? '$presenter' : '$control') . '->link(%node.word, %node.array?))');
+		return $writer->write('echo %escape(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?))');
 	}
 
 
@@ -389,8 +389,8 @@ if (!empty($control->snippetMode)) {
 	 */
 	public function macroIfCurrent(MacroNode $node, $writer)
 	{
-		return $writer->write(($node->args ? 'try { $presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
-			. '; if ($presenter->getLastCreatedRequestFlag("current")):');
+		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
+			. '; if ($_presenter->getLastCreatedRequestFlag("current")):');
 	}
 
 

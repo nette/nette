@@ -37,8 +37,8 @@ $_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($
 
 if ($_l->extends) {
 	ob_start();
-} elseif (!empty($control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+} elseif (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 }
 
 //

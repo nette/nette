@@ -50,7 +50,7 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
-$template->control = new MockControl;
+$template->_control = new MockControl;
 $template->form = new MockWidget;
 $template->name = 'form';
 

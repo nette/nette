@@ -1,7 +1,7 @@
 %A%
 // block _
 //
-if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args) { extract($_args); $control->validateControl(false)
+if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args) { extract($_args); $_control->validateControl(false)
 ?>
 
 <?php
@@ -10,10 +10,10 @@ if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args
 //
 // block _outer
 //
-if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__outer($_l, $_args) { extract($_args); $control->validateControl('outer')
+if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
 ?>
 	Outer
-		<div id="<?php echo $control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
+		<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
 	/Outer
 <?php
@@ -22,43 +22,43 @@ if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__ou
 //
 // block _inner
 //
-if (!function_exists($_l->blocks['_inner'][] = '%a%__inner')) { function %a%__inner($_l, $_args) { extract($_args); $control->validateControl('inner')
+if (!function_exists($_l->blocks['_inner'][] = '%a%__inner')) { function %a%__inner($_l, $_args) { extract($_args); $_control->validateControl('inner')
 ?>Inner<?php
 }}
 
 //
 // block _title
 //
-if (!function_exists($_l->blocks['_title'][] = '%a%__title')) { function %a%__title($_l, $_args) { extract($_args); $control->validateControl('title')
+if (!function_exists($_l->blocks['_title'][] = '%a%__title')) { function %a%__title($_l, $_args) { extract($_args); $_control->validateControl('title')
 ?>Title 1<?php
 }}
 
 //
 // block _title2
 //
-if (!function_exists($_l->blocks['_title2'][] = '%a%__title2')) { function %a%__title2($_l, $_args) { extract($_args); $control->validateControl('title2')
+if (!function_exists($_l->blocks['_title2'][] = '%a%__title2')) { function %a%__title2($_l, $_args) { extract($_args); $_control->validateControl('title2')
 ?>Title 2<?php
 }}
 
 //
 // end of blocks
 %A%
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 %A%
-<div id="<?php echo $control->getSnippetId('') ?>"><?php call_user_func(reset($_l->blocks['_']), $_l, $template->getParameters()) ?>
+<div id="<?php echo $_control->getSnippetId('') ?>"><?php call_user_func(reset($_l->blocks['_']), $_l, $template->getParameters()) ?>
 </div>
 
 
-<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
+<div id="<?php echo $_control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div>
 
 
 	@<?php if (true): ?> Hello World @<?php endif ?>
 
 
-	<h2 id="<?php echo $control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
+	<h2 id="<?php echo $_control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
 </h2>
 
-	<h2 id="<?php echo $control->getSnippetId('title2') ?>"><?php call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParameters()) ?>
+	<h2 id="<?php echo $_control->getSnippetId('title2') ?>"><?php call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParameters()) ?>
 </h2>
 %A%

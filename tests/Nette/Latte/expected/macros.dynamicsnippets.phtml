@@ -2,9 +2,9 @@
 ;//
 // block _outer
 //
-if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $control->validateControl('outer')
+if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
 ;$iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $id): ?>
-<div id="<?php echo $_dynSnippetId = $control->getSnippetId("inner-$id") ?>"><?php ob_start() ?>
+<div id="<?php echo $_dynSnippetId = $_control->getSnippetId("inner-$id") ?>"><?php ob_start() ?>
                 #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($id, ENT_NOQUOTES) ?>
 
 <?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>
@@ -22,15 +22,15 @@ $_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($
 
 if ($_l->extends) {
 	ob_start();
-} elseif (!empty($control->snippetMode)) {
-	return Nette\Latte\Macros\UIMacros::renderSnippets($control, $_l, get_defined_vars());
+} elseif (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 }
 
 //
 // main template
 //
 ?>
-<div id="<?php echo $control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
+<div id="<?php echo $_control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div><?php
 // template extending support
 if ($_l->extends) {

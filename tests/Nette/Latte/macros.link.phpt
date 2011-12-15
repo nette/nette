@@ -59,8 +59,8 @@ class MockPresenter extends MockControl
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
-$template->control = new MockControl;
-$template->presenter = new MockPresenter;
+$template->_control = new MockControl;
+$template->_presenter = new MockPresenter;
 $template->action = 'login';
 $template->arr = array('link' => 'login', 'param' => 123);
 

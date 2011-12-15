@@ -68,8 +68,8 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 		// default parameters
-		$template->control = $this;
-		$template->presenter = $presenter;
+		$template->control = $template->_control = $this;
+		$template->presenter = $template->_presenter = $presenter;
 		if ($presenter instanceof Presenter) {
 			$template->setCacheStorage($presenter->getContext()->templateCacheStorage);
 			$template->user = $presenter->getUser();
