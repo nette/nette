@@ -19,7 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 
 Assert::throws(function() use ($configurator) {
-	$configurator->createRobotLoader();
+	$configurator->setCacheDirectory(NULL)->createRobotLoader();
 }, 'Nette\InvalidStateException', "Set path to temporary directory using setCacheDirectory().");
 
 

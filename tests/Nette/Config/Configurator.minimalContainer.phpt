@@ -29,9 +29,9 @@ Assert::same( array(
 	'hello' => 'world',
 	'appDir' => __DIR__,
 	'wwwDir' => NULL,
+	'tempDir' => TEMP_DIR,
 	'productionMode' => TRUE,
 	'consoleMode' => PHP_SAPI === 'cli',
-	'tempDir' => TEMP_DIR,
 	'environment' => NULL,
 ), $container->parameters );
 

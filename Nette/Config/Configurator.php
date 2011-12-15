@@ -95,6 +95,7 @@ class Configurator extends Nette\Object
 		return array(
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
+			'tempDir' => rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/'),
 			'productionMode' => static::detectProductionMode(),
 			'consoleMode' => PHP_SAPI === 'cli',
 		);
@@ -156,34 +157,29 @@ class Configurator extends Nette\Object
 	{
 		if ($this->container) {
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
+
+		} elseif (empty($this->params['tempDir'])) {
+			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 		}
 
 		$this->params['environment'] = $section;
 
-		if (!empty($this->params['tempDir'])) {
-			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir']), 'Nette.Configurator');
-			$cacheKey = array($this->params, $file, $section);
+		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir']), 'Nette.Configurator');
+		$cacheKey = array($this->params, $file, $section);
+		$cached = $cache->load($cacheKey);
+		if (!$cached) {
+			$loader = new Loader;
+			$config = $file ? $loader->load($file, $section) : array();
+			$dependencies = $loader->getDependencies();
+			$code = "<?php\n// source file $file $section\n\n"
+				. $this->buildContainer($config, $dependencies);
+
+			$cache->save($cacheKey, $code, array(
+				Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
+			));
 			$cached = $cache->load($cacheKey);
-			if (!$cached) {
-				$loader = new Loader;
-				$config = $file ? $loader->load($file, $section) : array();
-				$dependencies = $loader->getDependencies();
-				$code = "<?php\n// source file $file $section\n\n"
-					. $this->buildContainer($config, $dependencies);
-
-				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
-				));
-				$cached = $cache->load($cacheKey);
-			}
-			Nette\Utils\LimitedScope::load($cached['file']);
-
-		} elseif ($file) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
-
-		} else {
-			Nette\Utils\LimitedScope::evaluate('<?php ' . $this->buildContainer(array()));
 		}
+		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
 
 		$class = $this->formatContainerClass();
 		$this->container = new $class;

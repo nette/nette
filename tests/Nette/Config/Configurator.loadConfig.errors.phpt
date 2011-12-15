@@ -19,7 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 
 Assert::throws(function() use ($configurator) {
-	$configurator->loadConfig('files/config1.neon');
+	$configurator->setCacheDirectory(NULL)->loadConfig('files/config1.neon');
 }, 'Nette\InvalidStateException', "Set path to temporary directory using setCacheDirectory().");
 
 $configurator->setCacheDirectory(TEMP_DIR);
