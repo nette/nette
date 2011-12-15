@@ -92,18 +92,6 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
-	 * Descendant can override this method to customize template compile-time filters.
-	 * @param  Nette\Templating\Template
-	 * @return void
-	 */
-	public function templatePrepareFilters($template)
-	{
-		$template->registerFilter(new Nette\Latte\Engine);
-	}
-
-
-
-	/**
 	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
 	 * @param  string      component name
 	 * @return Nette\ComponentModel\IComponent  the created component (optionally)

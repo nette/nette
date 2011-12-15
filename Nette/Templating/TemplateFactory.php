@@ -82,7 +82,7 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 	protected function configureTemplate(ITemplate $template, Control $control)
 	{
 		$presenter = $control->getPresenter(FALSE);
-		$template->onPrepareFilters[] = callback($control, 'templatePrepareFilters');
+		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
 		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 		// default parameters
@@ -115,5 +115,15 @@ class TemplateFactory extends Nette\Object implements ITemplateFactory
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Descendant can override this method to customize template compile-time filters.
+	 * @param  Nette\Templating\Template
+	 * @return void
+	 */
+	public function templatePrepareFilters($template)
+	{
+		$template->registerFilter(new Nette\Latte\Engine);
 	}
 }
