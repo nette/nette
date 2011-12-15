@@ -1268,6 +1268,18 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
+	 * @internal
+	 * @return Nette\Templating\ITemplateFactory
+	 */
+	public function getTemplateFactory()
+	{
+		return parent::getTemplateFactory() ?: $this->context->templateFactory;
+	}
+
+
+
+	
+	/**
 	 * @deprecated
 	 */
 	final public function getContext()

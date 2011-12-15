@@ -27,6 +27,9 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	/** @var Nette\Templating\ITemplate */
 	private $template;
 
+	/** @var Nette\Templating\ITemplateFactory */
+	protected $templateFactory;
+
 	/** @var array */
 	private $invalidSnippets = array();
 
@@ -36,6 +39,24 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/********************* template factory ****************d*g**/
+
+
+	/**
+	 * @internal
+	 * @return Nette\Templating\ITemplateFactory
+	 */
+	public function getTemplateFactory()
+	{
+		return $this->templateFactory;
+	}
+
+
+
+	public function setTemplateFactory(Nette\Templating\ITemplateFactory $templateFactory)
+	{
+		$this->templateFactory = $templateFactory;
+		return $this;
+	}
 
 
 
@@ -62,33 +83,10 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
-		$presenter = $this->getPresenter(FALSE);
-		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
-		$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
-
-		// default parameters
-		$template->control = $template->_control = $this;
-		$template->presenter = $template->_presenter = $presenter;
-		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->templateCacheStorage);
-			$template->user = $presenter->getUser();
-			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->cacheStorage;
-			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
-			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
-
-			// flash message
-			if ($presenter->hasFlashSession()) {
-				$id = $this->getParameterId('flash');
-				$template->flashes = $presenter->getFlashSession()->$id;
-			}
+		if (!$this->getTemplateFactory()) {
+			$this->setTemplateFactory($this->getPresenter(TRUE)->getTemplateFactory()); // TODO
 		}
-		if (!isset($template->flashes) || !is_array($template->flashes)) {
-			$template->flashes = array();
-		}
-
-		return $template;
+		return $this->getTemplateFactory()->createTemplate($this, $class);
 	}
 
 

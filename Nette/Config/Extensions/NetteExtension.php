@@ -85,6 +85,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Application\PresenterFactory', array(
 				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
+		
+		$container->addDefinition('templateFactory')
+			->setClass('Nette\Templating\TemplateFactory', array('@templateCacheStorage'))
+			->addSetup('setHttpRequest', '@httpRequest')
+			->addSetup('setHttpResponse', '@httpResponse')
+			->addSetup('setUser', '@user')
+			->addSetup('setCacheStorage', '@cacheStorage');
 
 		// mailer
 		if (empty($config['mailer']['smtp'])) {

@@ -239,6 +239,8 @@ class NetteLoader extends AutoLoader
 		'nette\templating\ifiletemplate' => '/Templating/IFileTemplate.php',
 		'nette\templating\itemplate' => '/Templating/ITemplate.php',
 		'nette\templating\template' => '/Templating/Template.php',
+		'nette\templating\itemplatefactory' => '/Templating/ITemplateFactory.php',
+		'nette\templating\templatefactory' => '/Templating/TemplateFactory.php',
 		'nette\unexpectedvalueexception' => '/common/exceptions.php',
 		'nette\unknownimagefileexception' => '/common/Image.php',
 		'nette\utils\arrays' => '/Utils/Arrays.php',
