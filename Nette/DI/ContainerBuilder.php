@@ -448,13 +448,6 @@ class ContainerBuilder extends Nette\Object
 
 
 
-	public static function escape($s)
-	{
-		return str_replace('%', '%%', $s);
-	}
-
-
-
 	/** @internal */
 	public function getServiceName($arg, $self = NULL)
 	{
