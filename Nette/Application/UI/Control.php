@@ -104,6 +104,24 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 
 
 	/**
+	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * @param  string      component name
+	 * @return Nette\ComponentModel\IComponent  the created component (optionally)
+	 */
+	protected function createComponent($name)
+	{
+		$component = parent::createComponent($name);
+
+		if ($component instanceof Control && !$component->getTemplateFactory()) {
+			$component->setTemplateFactory($this->getTemplateFactory());
+		}
+
+		return $component;
+	}
+
+
+
+	/**
 	 * Returns widget component specified by name.
 	 * @param  string
 	 * @return Nette\ComponentModel\IComponent
