@@ -48,7 +48,7 @@ final class CriticalSection
 		}
 		// locking on Windows causes that a file seems to be empty
 		$handle = substr(PHP_OS, 0, 3) === 'WIN'
-			? @fopen(NETTE_DIR . '/lockfile', 'w')
+			? @fopen(rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/') . '/nette-lockfile', 'w')
 			: @fopen(__FILE__, 'r'); // @ - file may not already exist
 
 		if (!$handle) {
