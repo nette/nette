@@ -176,15 +176,87 @@ class RadioList extends BaseControl
 
 
 	/**
+	 * Generates control's HTML element for given key.
+	 * @param  mixed
+	 * @return Nette\Utils\Html
+	 */
+	public function getItemControl($key)
+	{
+		if (!isset($this->items[$key])) {
+			return NULL;
+		}
+
+		$control = parent::getControl();
+		$id = $control->id;
+		$counter = -1;
+		$value = $this->value === NULL ? NULL : (string) $this->getValue();
+		$label = Html::el('label');
+
+		foreach ($this->items as $k => $val) {
+			$counter++;
+			if ((string) $key !== (string) $k) {
+				continue;
+			}
+
+			$control->id = $id . '-' . $counter;
+			$control->checked = (string) $k === $value;
+			$control->value = $k;
+
+			return $control;
+		}
+	}
+
+
+
+	/**
 	 * Generates label's HTML element.
 	 * @param  string
-	 * @return void
+	 * @return Nette\Utils\Html
 	 */
 	public function getLabel($caption = NULL)
 	{
 		$label = parent::getLabel($caption);
 		$label->for = NULL;
 		return $label;
+	}
+
+
+
+	/**
+	 * Generates label's HTML element for given key.
+	 * @param  string
+	 * @return Nette\Utils\Html
+	 */
+	public function getItemLabel($key, $caption = NULL)
+	{
+		if (!isset($this->items[$key])) {
+			return NULL;
+		}
+
+		$id = parent::getControl()->id;
+		$counter = -1;
+		$label = Html::el('label');
+
+		foreach ($this->items as $k => $val) {
+			$counter++;
+			if ((string) $key !== (string) $k) {
+				continue;
+			}
+
+			$label->for = $id . '-' . $counter;
+
+			if ($caption) {
+				$val = $caption;
+			}
+
+			if ($val instanceof Html) {
+				$label->setHtml($val);
+			} else {
+				$label->setText($this->translate((string) $val));
+			}
+
+			return $label;
+		}
 	}
 
 }
