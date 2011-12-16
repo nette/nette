@@ -129,15 +129,10 @@ class RadioList extends BaseControl
 	 * @param  mixed
 	 * @return Nette\Utils\Html
 	 */
-	public function getControl($key = NULL)
+	public function getControl()
 	{
-		if ($key === NULL) {
-			$container = clone $this->container;
-			$separator = (string) $this->separator;
-
-		} elseif (!isset($this->items[$key])) {
-			return NULL;
-		}
+		$container = clone $this->container;
+		$separator = (string) $this->separator;
 
 		$control = parent::getControl();
 		$id = $control->id;
@@ -147,9 +142,6 @@ class RadioList extends BaseControl
 
 		foreach ($this->items as $k => $val) {
 			$counter++;
-			if ($key !== NULL && (string) $key !== (string) $k) {
-				continue;
-			}
 
 			$control->id = $label->for = $id . '-' . $counter;
 			$control->checked = (string) $k === $value;
@@ -159,10 +151,6 @@ class RadioList extends BaseControl
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate((string) $val));
-			}
-
-			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
