@@ -25,6 +25,7 @@ use Nette,
  * - {form name} ... {/form}
  * - {input name}
  * - {label name /} or {label name}... {/label}
+ * - {inputlist name} ... {/inputlist}
  *
  * @author     David Grudl
  */
@@ -38,7 +39,10 @@ class FormMacros extends MacroSet
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control[%node.word], %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
-		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
+		$me->addMacro('input', array($me, 'macroInput'));
+		$me->addMacro('inputlist',
+			'$_inputlist = $form[%node.word]; $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($_inputlist->getItems()) as $_inputlistKey => $_inputlistItem):',
+			'$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its); unset($_inputlist)');
 	}
 
 
@@ -47,11 +51,35 @@ class FormMacros extends MacroSet
 
 
 	/**
+	 * {input}
+	 */
+	public function macroInput(MacroNode $node, $writer)
+	{
+		while ($node->parentNode) {
+			if ($node->parentNode->name == 'inputlist') {
+				return $writer->write('echo $_inputlist->getItemControl($_inputlistKey)->addAttributes(%node.array)');
+			}
+			$node = $node->parentNode;
+		}
+		return $writer->write('echo $form[%node.word]->getControl()->addAttributes(%node.array)');
+	}
+
+
+
+	/**
 	 * {label ...} and optionally {/label}
 	 */
 	public function macroLabel(MacroNode $node, $writer)
 	{
 		$cmd = 'if ($_label = $form[%node.word]->getLabel()) echo $_label->addAttributes(%node.array)';
+		$parentNode = $node->parentNode;
+		while ($parentNode) {
+			if ($parentNode->name == 'inputlist') {
+				$cmd = 'if ($_label = $_inputlist->getItemLabel($_inputlistKey)) echo $_label->addAttributes(%node.array)';
+				break;
+			}
+			$parentNode = $parentNode->parentNode;
+		}
 		if ($node->isEmpty = (substr($node->args, -1) === '/')) {
 			$node->setArgs(substr($node->args, 0, -1));
 			return $writer->write($cmd);
