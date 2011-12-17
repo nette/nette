@@ -417,9 +417,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 				preg_match_all('~\\b([a-z][\\w]*)([.:])~', $names, $matches, PREG_SET_ORDER);
 				foreach ($matches as $match) {
 					list(, $name, $delimiter) = $match;
-					$table = $this->connection->databaseReflection->getReferencedTable($name, $parent);
-					$column = $delimiter === ':' ? $this->getPrimary($parent) : $this->connection->databaseReflection->getReferencedColumn($name, $parent);
-					$primary = $delimiter === ':' ? $this->connection->databaseReflection->getReferencedColumn($parent, $table): $this->getPrimary($table);
+
+					if ($delimiter === ':') {
+						list($table, $primary) = $this->connection->databaseReflection->getHasManyReference($parent, $name);
+						$column = $this->getPrimary($parent);
+					} else {
+						list($table, $column) = $this->connection->databaseReflection->getBelongsToReference($parent, $name);
+						$primary = $this->getPrimary($table);
+					}
 
 					$joins[$name] = ' '
 						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
@@ -655,17 +660,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 * @param  bool  checks if rows contains the same primary value relations
 	 * @return ActiveRow or NULL if the row does not exist
 	 */
-	public function getReferencedTable($name, & $column = NULL, $checkReferenceNewKeys = FALSE)
+	public function getReferencedTable($table, $column, $checkReferenceNewKeys = FALSE)
 	{
-		$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
-		$referenced = & $this->referenced[$name];
+		$referenced = & $this->referenced[$table];
 		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
 			foreach ($this->rows as $row) {
-				if ($row[$column] !== NULL) {
-					$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
-					$keys[$key] = NULL;
-				}
+				if ($row[$column] === NULL)
+					continue;
+
+				$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
+				$keys[$key] = TRUE;
 			}
 
 			if ($referenced !== NULL && $keys === array_keys($this->rows)) {
@@ -674,13 +679,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			}
 
 			if ($keys) {
-				$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
 				$referenced = new Selection($table, $this->connection);
 				$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
 			} else {
 				$referenced = array();
 			}
 		}
+
 		return $referenced;
 	}
 
@@ -691,9 +696,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 * @param  string table name
 	 * @return GroupedSelection
 	 */
-	public function getReferencingTable($table)
+	public function getReferencingTable($key)
 	{
-		$column = $this->connection->databaseReflection->getReferencingColumn($table, $this->name);
+		list($table, $column) = $this->connection->databaseReflection->getHasManyReference($this->name, $key);
 		$referencing = new GroupedSelection($table, $this, $column);
 		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
 		return $referencing;

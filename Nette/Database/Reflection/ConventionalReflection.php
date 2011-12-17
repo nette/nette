@@ -19,18 +19,19 @@ use Nette;
  * Reflection metadata class for a database.
  *
  * @author     Jakub Vrana
+ * @author     Jan Skrasek
  * @property-write Nette\Database\Connection $connection
  */
 class ConventionalReflection extends Nette\Object implements Nette\Database\IReflection
 {
 	/** @var string */
-	private $primary;
+	protected $primary;
 
 	/** @var string */
-	private $foreign;
+	protected $foreign;
 
 	/** @var string */
-	private $table;
+	protected $table;
 
 
 
@@ -51,36 +52,46 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 
 	public function getPrimary($table)
 	{
-		return sprintf($this->primary, $table);
+		return sprintf($this->primary, $this->getColumnFromTable($table));
 	}
 
 
 
-	public function getReferencingColumn($name, $table)
+	public function getHasManyReference($table, $key)
 	{
-		return $this->getReferencedColumn($table, $name);
+		$table = $this->getColumnFromTable($table);
+		return array(
+			sprintf($this->table, $key, $table),
+			sprintf($this->foreign, $table, $key),
+		);
 	}
 
 
 
-	public function getReferencedColumn($name, $table)
+	public function getBelongsToReference($table, $key)
 	{
-		if ($this->table !== '%s' && preg_match('(^' . str_replace('%s', '(.*)', preg_quote($this->table)) . '$)', $name, $match)) {
-			$name = $match[1];
-		}
-		return sprintf($this->foreign, $name, $table);
+		$table = $this->getColumnFromTable($table);
+		return array(
+			sprintf($this->table, $key, $table),
+			sprintf($this->foreign, $key, $table),
+		);
 	}
 
-
-
-	public function getReferencedTable($name, $table)
-	{
-		return sprintf($this->table, $name, $table);
-	}
 
 
 
 	public function setConnection(Nette\Database\Connection $connection)
 	{}
+
+
+
+	protected function getColumnFromTable($name)
+	{
+		if ($this->table !== '%s' && preg_match('(^' . str_replace('%s', '(.*)', preg_quote($this->table)) . '$)', $name, $match)) {
+			return $match[1];
+		}
+
+		return $name;
+	}
 
 }

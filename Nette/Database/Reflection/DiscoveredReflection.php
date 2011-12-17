@@ -32,23 +32,22 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	/** @var Nette\Database\Connection */
 	protected $connection;
 
-	/** @var string */
-	protected $foreign;
-
 	/** @var array */
-	protected $structure = array();
+	protected $structure = array(
+		'primary' => array(),
+		'hasMany' => array(),
+		'belongsTo' => array(),
+	);
 
 
 
 	/**
 	 * Create autodiscovery structure.
 	 * @param  Nette\Caching\IStorage
-	 * @param  string use "%s_id" to access $name . "_id" column in $row->$name
 	 */
-	public function __construct(Nette\Caching\IStorage $storage = NULL, $foreign = '%s_id')
+	public function __construct(Nette\Caching\IStorage $storage = NULL)
 	{
 		$this->cacheStorage = $storage;
-		$this->foreign = (string) $foreign;
 	}
 
 
@@ -56,10 +55,13 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	public function setConnection(Nette\Database\Connection $connection)
 	{
 		$this->connection = $connection;
+		if (!in_array($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME), array('mysql'))) {
+			throw new Nette\NotSupportedException("Nette\\Database\\DiscoveredReflections supports only mysql driver");
+		}
 
 		if ($this->cacheStorage) {
 			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.Discovery/' . $connection->getDsn());
-			$this->structure = $this->cache->load('structure');
+			$this->structure = $this->cache->load('structure') ?: $this->structure;
 		}
 	}
 
@@ -108,70 +110,88 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 
 
-	public function getReferencingColumn($name, $table)
+	public function getHasManyReference($table, $key, $refresh = TRUE)
 	{
-		$name = strtolower($name);
-		$columns = & $this->structure['referencing'][$table];
-		if (isset($columns[$name])) {
-			return $columns[$name];
-		}
-
-		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
-			foreach ($this->connection->query("PRAGMA foreign_key_list($name)") as $row) {
-				if ($row[2] === $table && $row[4] === $this->getPrimary($table)) {
-					$columns[$name] = $row[3];
+		$reference = $this->structure['hasMany'];
+		if (!empty($reference[$table])) {
+			foreach ($reference[$table] as $targetTable => $targetColumn) {
+				if (strpos($targetTable, strtolower($key)) !== FALSE) {
+					return array(
+						$targetTable,
+						$targetColumn,
+					);
 				}
 			}
-		} else {
-			foreach ($this->connection->query('
-				SELECT TABLE_NAME, COLUMN_NAME
-				FROM information_schema.KEY_COLUMN_USAGE
-				WHERE TABLE_SCHEMA = DATABASE()
-				AND REFERENCED_TABLE_SCHEMA = DATABASE()
-				AND REFERENCED_TABLE_NAME = ' . $this->connection->quote($table) . '
-				AND REFERENCED_COLUMN_NAME = ' . $this->connection->quote($this->getPrimary($table)) //! may not reference primary key
-			) as $row) {
-				$columns[strtolower($row[0])] = $row[1];
-			}
 		}
 
-		return $columns[$name];
+		if (!$refresh) {
+			throw new \PDOException("No reference found for \${$table}->related({$key}).");
+		}
+
+		$this->reloadTableReferenceFor($table);
+		return $this->getHasManyReference($table, $key, FALSE);
 	}
 
 
 
-	public function getReferencedColumn($name, $table)
+	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
-		return sprintf($this->foreign, $name);
+		$reference = $this->structure['belongsTo'];
+		if (!empty($reference[$table])) {
+			foreach ($reference[$table] as $column => $targetTable) {
+				if (strpos($column, strtolower($key)) !== FALSE) {
+					return array(
+						$targetTable,
+						$column,
+					);
+				}
+			}
+		}
+
+		if (!$refresh) {
+			throw new \PDOException("No reference found for \${$table}->{$key}.");
+		}
+
+		$this->reloadTableReference($table);
+		return $this->getBelongsToReference($table, $key, FALSE);
 	}
 
 
 
-	public function getReferencedTable($name, $table)
+	protected function reloadTableReferenceFor($table)
 	{
-		$column = strtolower($this->getReferencedColumn($name, $table));
-		$tables = & $this->structure['referenced'][$table];
-		if (isset($tables[$column])) {
-			return $tables[$column];
+		$tables = array();
+		$query = 'SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
+			WHERE TABLE_SCHEMA = DATABASE()	AND REFERENCED_TABLE_NAME = ' . $this->connection->quote($table);
+
+		foreach ($this->connection->query($query) as $row) {
+			$tables[strtolower($row[0])] = $row[1];
 		}
 
-		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
-			foreach ($this->connection->query("PRAGMA foreign_key_list($table)") as $row) {
-				$tables[strtolower($row[3])] = $row[2];
-			}
-		} else {
-			foreach ($this->connection->query('
-				SELECT COLUMN_NAME, REFERENCED_TABLE_NAME
-				FROM information_schema.KEY_COLUMN_USAGE
-				WHERE TABLE_SCHEMA = DATABASE()
-				AND REFERENCED_TABLE_SCHEMA = DATABASE()
-				AND TABLE_NAME = ' . $this->connection->quote($table)
-			) as $row) {
-				$tables[strtolower($row[0])] = $row[1];
-			}
+		uksort($tables, function($a, $b) {
+			return strlen($a) - strlen($b);
+		});
+
+		$this->structure['hasMany'][$table] = $tables;
+	}
+
+
+
+	protected function reloadTableReference($table)
+	{
+		$tables = array();
+		$query = 'SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE
+			WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ' . $this->connection->quote($table);
+
+		foreach ($this->connection->query($query) as $row) {
+			$tables[strtolower($row[0])] = $row[1];
 		}
 
-		return $tables[$column];
+		uksort($tables, function($a, $b) {
+			return strlen($a) - strlen($b);
+		});
+
+		$this->structure['belongsTo'][$table] = $tables;
 	}
 
 }

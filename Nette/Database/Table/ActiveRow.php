@@ -81,15 +81,14 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Returns referenced row.
 	 * @param  string
+	 * @param  string
 	 * @return ActiveRow or NULL if the row does not exist
 	 */
-	public function ref($name)
+	public function ref($key, $throughColumn = NULL)
 	{
-		$referenced = $this->table->getReferencedTable($name, $column);
-		if (isset($referenced[$this[$column]])) { // referenced row may not exist
-			$res = $referenced[$this[$column]];
-			return $res;
-		}
+		list($table, $column) = $this->table->connection->databaseReflection->getBelongsToReference($this->table->name, $key);
+		$column = $throughColumn ?: $column;
+		return $this->getReference($table, $column);
 	}
 
 
@@ -212,43 +211,19 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function &__get($key)
 	{
-		if (array_key_exists($key, $this->data)) {
-			$this->access($key);
-			return $this->data[$key];
-		}
-
-		$column = $this->table->connection->databaseReflection->getReferencedColumn($key, $this->table->name);
-		if (array_key_exists($column, $this->data)) {
-			$value = $this->data[$column];
-			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
-			$referenced = $this->table->getReferencedTable($key, $nullTmp, !empty($this->modified[$column]));
-			$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
-			if (!empty($this->modified[$column])) {
-				$this->modified[$column] = 0; // 0 fails on empty, pass on isset
-			}
-			return $ret;
-		}
-
 		$this->access($key);
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
-
-		} else {
-			$this->access($key, TRUE);
-
-			$this->access($column);
-			if (array_key_exists($column, $this->data)) {
-				$value = $this->data[$column];
-				$referenced = $this->table->getReferencedTable($key);
-				$ret = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
-
-			} else {
-				$this->access($column, TRUE);
-				trigger_error("Unknown column $key", E_USER_WARNING);
-				$ret = NULL;
-			}
-			return $ret;
 		}
+
+		list($table, $column) = $this->table->connection->databaseReflection->getBelongsToReference($this->table->name, $key);
+		$referenced = $this->getReference($table, $column);
+
+		if (!$referenced) {
+			$this->access($key, TRUE);
+		}
+
+		return $referenced;
 	}
 
 
@@ -278,6 +253,27 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if ($this->table->connection->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $delete)) {
 			$id = (isset($this->data[$this->table->primary]) ? $this->data[$this->table->primary] : $this->data);
 			$this->data = $this->table[$id]->data;
+		}
+	}
+
+
+
+	protected function getReference($table, $column)
+	{
+		if (array_key_exists($column, $this->data)) {
+			$this->access($column);
+
+			$value = $this->data[$column];
+			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
+
+			$referenced = $this->table->getReferencedTable($table, $column, !empty($this->modified[$column]));
+			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
+
+			if (!empty($this->modified[$column])) { // cause saving changed column and prevent regenerating referenced table for $column
+				$this->modified[$column] = 0; // 0 fails on empty, pass on isset
+			}
+
+			return $referenced;
 		}
 	}
 
