@@ -217,6 +217,7 @@ class ContainerBuilder extends Nette\Object
 					throw new Nette\InvalidStateException("Class $def->class"
 						. (isset($factory) ? " returned by $factory" : '') . " has not been found.");
 				}
+				$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][(bool) $def->autowired][] = $name;
 				}
