@@ -42,9 +42,6 @@ class Connection extends PDO
 	/** @var Nette\Caching\Cache */
 	private $cache;
 
-	/** @var array */
-	public $substitutions = array();
-
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
@@ -166,7 +163,7 @@ class Connection extends PDO
 				$need = TRUE; break;
 			}
 		}
-		if (isset($need) || strpos($statement, ':') !== FALSE && $this->preprocessor !== NULL) {
+		if (isset($need) && $this->preprocessor !== NULL) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
 
