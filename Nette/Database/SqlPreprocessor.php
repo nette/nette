@@ -66,10 +66,9 @@ class SqlPreprocessor extends Nette\Object
 
 		/*~
 			\'.*?\'|".*?"|   ## string
-			:[a-zA-Z0-9_]+:| ## :substitution:
 			\?               ## placeholder
 		~xs*/
-		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|:[a-zA-Z0-9_]+:|\?~s', array($this, 'callback'));
+		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?~s', array($this, 'callback'));
 
 		while ($this->counter < count($params)) {
 			$sql .= ' ' . $this->formatValue($params[$this->counter++]);
@@ -90,9 +89,6 @@ class SqlPreprocessor extends Nette\Object
 		} elseif ($m[0] === '?') { // placeholder
 			return $this->formatValue($this->params[$this->counter++]);
 
-		} elseif ($m[0] === ':') { // substitution
-			$s = substr($m, 1, -1);
-			return isset($this->connection->substitutions[$s]) ? $this->connection->substitutions[$s] : $m;
 		}
 	}
 
