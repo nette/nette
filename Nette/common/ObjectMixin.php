@@ -105,21 +105,6 @@ final class ObjectMixin
 
 
 	/**
-	 * Call to undefined static method.
-	 * @param  string
-	 * @param  string  method name
-	 * @param  array   arguments
-	 * @return mixed
-	 * @throws MemberAccessException
-	 */
-	public static function callStatic($class, $name, $args)
-	{
-		throw new MemberAccessException("Call to undefined static method $class::$name().");
-	}
-
-
-
-	/**
 	 * Returns property value.
 	 * @param  object
 	 * @param  string  property name

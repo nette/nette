@@ -84,20 +84,6 @@ abstract class Object
 
 
 	/**
-	 * Call to undefined static method.
-	 * @param  string  method name (in lower case!)
-	 * @param  array   arguments
-	 * @return mixed
-	 * @throws MemberAccessException
-	 */
-	public static function __callStatic($name, $args)
-	{
-		return ObjectMixin::callStatic(get_called_class(), $name, $args);
-	}
-
-
-
-	/**
 	 * Adding method to class.
 	 * @param  string  method name
 	 * @param  mixed   callback or closure
