@@ -312,12 +312,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
-		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
-		$query = "SELECT $function FROM $this->delimitedName" . implode($join);
-		if ($this->where) {
-			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
-		}
-		foreach ($this->query($query)->fetch() as $val) {
+		$selection = clone $this;
+		$selection->select($function);
+		$selection->limit = null;
+		$selection->order = array();
+
+		foreach ($selection->fetch() as $val) {
 			return $val;
 		}
 	}
@@ -335,7 +335,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->execute();
 			return count($this->data);
 		}
-		return $this->aggregation("COUNT({$this->tryDelimite($column)})");
+		return $this->aggregation("COUNT($column)");
 	}
 
 
@@ -347,7 +347,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function min($column)
 	{
-		return $this->aggregation("MIN({$this->tryDelimite($column)})");
+		return $this->aggregation("MIN($column)");
 	}
 
 
@@ -359,7 +359,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function max($column)
 	{
-		return $this->aggregation("MAX({$this->tryDelimite($column)})");
+		return $this->aggregation("MAX($column)");
 	}
 
 
@@ -371,7 +371,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function sum($column)
 	{
-		return $this->aggregation("SUM({$this->tryDelimite($column)})");
+		return $this->aggregation("SUM($column)");
 	}
 
 

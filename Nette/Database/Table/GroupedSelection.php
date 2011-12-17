@@ -83,21 +83,23 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
-		$join = $this->createJoins(implode(',', $this->conditions), TRUE) + $this->createJoins($function);
-		$column = ($join ? "$this->delimitedName." : '') . $this->delimitedColumn;
-		$query = "SELECT $function, $column FROM $this->delimitedName" . implode($join);
-		if ($this->where) {
-			$query .= ' WHERE (' . implode(') AND (', $this->where) . ')';
-		}
-		$query .= " GROUP BY $column";
-		$aggregation = & $this->refTable->aggregation[$query];
+		$aggregation = & $this->refTable->aggregation[$function . implode('', $this->where) . implode('', $this->conditions)];
 		if ($aggregation === NULL) {
 			$aggregation = array();
-			foreach ($this->query($query, $this->parameters) as $row) {
+
+			$selection = new Selection($this->name, $this->connection);
+			$selection->where = $this->where;
+			$selection->parameters = $this->parameters;
+			$selection->conditions = $this->conditions;
+
+			$selection->select($function);
+			$selection->select("{$this->name}.{$this->column}");
+			$selection->group("{$this->name}.{$this->column}");
+
+			foreach ($selection as $row) {
 				$aggregation[$row[$this->column]] = $row;
 			}
 		}
-
 
 		if (isset($aggregation[$this->active])) {
 			foreach ($aggregation[$this->active] as $val) {

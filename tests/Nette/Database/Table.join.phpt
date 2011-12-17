@@ -37,3 +37,7 @@ Assert::same(array(
 	'MySQL',
 	'JavaScript',
 ), $tags);
+
+
+
+Assert::same(2, $connection->table('author')->where('author_id', 11)->count('book:id')); // SELECT COUNT(book.id) FROM `author` LEFT JOIN `book` ON `author`.`id` = `book`.`author_id` WHERE (`author_id` = 11)
