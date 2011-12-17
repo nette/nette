@@ -277,7 +277,7 @@ class ContainerBuilder extends Nette\Object
 			try {
 				$classes->value[$name] = $this->findByClass($name);
 			} catch (ServiceCreationException $e) {
-				$classes->value[$name] = FALSE;
+				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
 		}
 
@@ -299,7 +299,7 @@ class ContainerBuilder extends Nette\Object
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 
-				foreach ($def->parameters as $k => $v) {
+				foreach ($this->expand($def->parameters) as $k => $v) {
 					$tmp = explode(' ', is_int($k) ? $v : $k);
 					$param = is_int($k) ? $method->addParameter(end($tmp)) : $method->addParameter(end($tmp), $v);
 					if (isset($tmp[1])) {
@@ -328,7 +328,7 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		$parameters = $this->parameters;
-		foreach ($def->parameters as $k => $v) {
+		foreach ($this->expand($def->parameters) as $k => $v) {
 			$v = explode(' ', is_int($k) ? $v : $k);
 			$parameters[end($v)] = new PhpLiteral('$' . end($v));
 		}

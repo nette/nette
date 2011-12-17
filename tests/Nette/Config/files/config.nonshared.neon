@@ -1,3 +1,6 @@
+parameters:
+	'false': false
+
 services:
 	ipsum:
 		class: Ipsum
@@ -5,6 +8,6 @@ services:
 factories:
 	lorem:
 		class: Lorem
-		parameters: [Ipsum foo, bar: false]
+		parameters: [Ipsum foo, bar: %false%]
 		setup:
 			- %foo%(%bar%)

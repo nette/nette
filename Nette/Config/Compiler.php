@@ -169,7 +169,7 @@ class Compiler extends Nette\Object
 		});
 
 		foreach ($all as $name => $def) {
-			if ($parent = Helpers::takeParent($def)) {
+			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
 				$definition = $container->addDefinition($name);
 				if ($parent !== Helpers::OVERWRITE) {
@@ -183,7 +183,7 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService($definition, $def, isset($config['services'][$name]));
+				static::parseService($definition, $def, array_key_exists($name, $config['services']));
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}

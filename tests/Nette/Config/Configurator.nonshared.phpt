@@ -31,3 +31,12 @@ $container = $configurator->loadConfig('files/config.nonshared.neon', FALSE);
 
 Assert::false( $container->hasService('lorem') );
 Assert::true( method_exists($container, 'createLorem') );
+
+$params = new ReflectionParameter(array('SystemContainer', 'createLorem'), 0);
+Assert::same( 'foo', $params->getName() );
+Assert::same( 'Ipsum', $params->getClass()->getName() );
+Assert::false( $params->isDefaultValueAvailable() );
+
+$params = new ReflectionParameter(array('SystemContainer', 'createLorem'), 1);
+Assert::same( 'bar', $params->getName() );
+Assert::false( $params->getDefaultValue() );
