@@ -22,7 +22,7 @@ use Nette;
  *
  * @property-read Nette\Templating\ITemplate $template
  */
-abstract class Control extends PresenterComponent implements IPartiallyRenderable
+abstract class Control extends PresenterComponent implements IRenderable
 {
 	/** @var Nette\Templating\ITemplate */
 	private $template;
