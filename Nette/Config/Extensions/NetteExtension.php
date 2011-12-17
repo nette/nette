@@ -32,10 +32,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
 
 		$container->addDefinition('cacheStorage')
-			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%'));
+			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
 
 		$container->addDefinition('templateCacheStorage')
-			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%'))
+			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
 			->setAutowired(FALSE);
 
 		// http
@@ -104,7 +104,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$initialize = $class->methods['initialize'];
 
 		if (isset($container->parameters['tempDir'])) {
-			$initialize->addBody($this->checkTempDir($container->expand($container->parameters['tempDir'])));
+			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
 		}
 		foreach ($container->findByTag('run') as $name => $foo) {
 			$initialize->addBody('$this->getService(?);', array($name));
@@ -115,12 +115,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	private function checkTempDir($dir)
 	{
-		umask(0000);
-		@mkdir($dir, 0777); // @ - directory may exists
-
 		// checks whether directory is writable
 		$uniq = uniqid('_', TRUE);
-		umask(0000);
 		if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
 			throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 		}
