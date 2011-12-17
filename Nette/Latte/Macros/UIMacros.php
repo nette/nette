@@ -366,7 +366,7 @@ if (!empty($_control->snippetMode)) {
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
 			. '$_ctrl = $_control->getComponent(' . $name . '); '
-			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->validateControl(); '
+			. 'if ($_ctrl instanceof Nette\Application\UI\IRenderable) $_ctrl->validateControl(); '
 			. "\$_ctrl->$method($param)";
 	}
 
