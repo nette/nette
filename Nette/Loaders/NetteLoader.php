@@ -53,7 +53,6 @@ class NetteLoader extends AutoLoader
 		'nette\application\ui\control' => '/Application/UI/Control.php',
 		'nette\application\ui\form' => '/Application/UI/Form.php',
 		'nette\application\ui\invalidlinkexception' => '/Application/UI/InvalidLinkException.php',
-		'nette\application\ui\ipartiallyrenderable' => '/Application/UI/IPartiallyRenderable.php',
 		'nette\application\ui\irenderable' => '/Application/UI/IRenderable.php',
 		'nette\application\ui\isignalreceiver' => '/Application/UI/ISignalReceiver.php',
 		'nette\application\ui\istatepersistent' => '/Application/UI/IStatePersistent.php',
