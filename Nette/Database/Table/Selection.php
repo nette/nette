@@ -410,14 +410,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$driver = $this->connection->getSupplementalDriver();
 		$joins = array();
-		preg_match_all('~\\b([a-z][\\w.]*)\\.([a-z]\\w*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
-			if ($match[1] !== $this->name) { // case-sensitive
-				$parent = $this->name;
-				foreach (explode('.', $match[1]) as $name) {
-					$table = $this->connection->databaseReflection->getReferencedTable($name, $this->name);
-					$column = $this->connection->databaseReflection->getReferencedColumn($name, $this->name);
-					$primary = $this->getPrimary($table);
+		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
+		foreach ($matches[1] as $names) {
+			$parent = $this->name;
+			if ($names !== "$parent.") { // case-sensitive
+				preg_match_all('~\\b([a-z][\\w]*)([.:])~', $names, $matches, PREG_SET_ORDER);
+				foreach ($matches as $match) {
+					list(, $name, $delimiter) = $match;
+					$table = $this->connection->databaseReflection->getReferencedTable($name, $parent);
+					$column = $delimiter === ':' ? $this->getPrimary($parent) : $this->connection->databaseReflection->getReferencedColumn($name, $parent);
+					$primary = $delimiter === ':' ? $this->connection->databaseReflection->getReferencedColumn($parent, $table): $this->getPrimary($table);
 
 					$joins[$name] = ' '
 						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
@@ -527,7 +529,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function removeExtraTables($expression)
 	{
-		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*\.)?([a-z_][a-z0-9_]*)\.([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
+		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*[.:])?([a-z_][a-z0-9_]*)[.:]([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
 	}
 
 
