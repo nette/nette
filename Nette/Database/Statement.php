@@ -117,7 +117,7 @@ class Statement extends \PDOStatement
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
 
 			} elseif ($type === IReflection::FIELD_DATETIME) {
-				$row[$key] = new \DateTime($value);
+				$row[$key] = new Nette\DateTime($value);
 
 			}
 		}
