@@ -95,7 +95,6 @@ class Configurator extends Nette\Object
 		return array(
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
-			'tempDir' => rtrim(ini_get('upload_tmp_dir') ?: sys_get_temp_dir(), '\\/'),
 			'productionMode' => static::detectProductionMode(),
 			'consoleMode' => PHP_SAPI === 'cli',
 		);
