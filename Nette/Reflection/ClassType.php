@@ -127,6 +127,17 @@ class ClassType extends \ReflectionClass
 
 
 
+	/**
+	 * @param  string
+	 * @return bool
+	 */
+	public function is($type)
+	{
+		return $this->isSubclassOf($type) || strcasecmp($this->getName(), ltrim($type, '\\')) === 0;
+	}
+
+
+
 	/********************* Reflection layer ****************d*g**/
 
 
