@@ -20,7 +20,8 @@ use Nette;
  */
 interface IReflection
 {
-	const FIELD_TEXT = 'string',
+	const
+		FIELD_TEXT = 'string',
 		FIELD_BINARY = 'bin',
 		FIELD_BOOL = 'bool',
 		FIELD_INTEGER = 'int',

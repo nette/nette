@@ -60,7 +60,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		}
 
 		if ($this->cacheStorage) {
-			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.Discovery/' . $connection->getDsn());
+			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.' . md5($connection->getDsn()));
 			$this->structure = $this->cache->load('structure') ?: $this->structure;
 		}
 	}
