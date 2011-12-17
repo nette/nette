@@ -23,6 +23,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read Connection $connection
+ * @property-write $fetchMode
  */
 class Statement extends \PDOStatement
 {

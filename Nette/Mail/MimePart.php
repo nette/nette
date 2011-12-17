@@ -21,9 +21,10 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property   string $encoding
- * @property   string $body
  * @property-read array $headers
+ * @property-write $contentType
+ * @property   string $encoding
+ * @property   mixed $body
  */
 class MimePart extends Nette\Object
 {

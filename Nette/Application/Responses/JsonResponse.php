@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read array $payload
+ * @property-read array|stdClass $payload
  * @property-read string $contentType
  */
 class JsonResponse extends Nette\Object implements Nette\Application\IResponse

@@ -25,8 +25,6 @@ use Nette;
  * @property   string $name
  * @property-read \ArrayIterator $iterator
  * @property   array $options
- * @property-write $expiration
- * @property-read array $cookieParameters
  * @property-write $savePath
  * @property-write ISessionStorage $storage
  */

@@ -20,6 +20,34 @@ use Nette,
  * Reports information about a class.
  *
  * @author     David Grudl
+ * @property-read Method $constructor
+ * @property-read Extension $extension
+ * @property-read array $interfaces
+ * @property-read array $methods
+ * @property-read ClassType $parentClass
+ * @property-read array $properties
+ * @property-read array $annotations
+ * @property-read string $description
+ * @property-read string $name
+ * @property-read bool $internal
+ * @property-read bool $userDefined
+ * @property-read bool $instantiable
+ * @property-read string $fileName
+ * @property-read int $startLine
+ * @property-read int $endLine
+ * @property-read string $docComment
+ * @property-read array $constants
+ * @property-read array $interfaceNames
+ * @property-read bool $interface
+ * @property-read bool $abstract
+ * @property-read bool $final
+ * @property-read int $modifiers
+ * @property-read array $staticProperties
+ * @property-read array $defaultProperties
+ * @property-read bool $iterateable
+ * @property-read string $extensionName
+ * @property-read string $namespaceName
+ * @property-read string $shortName
  */
 class ClassType extends \ReflectionClass
 {

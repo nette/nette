@@ -23,6 +23,8 @@ use Nette;
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  * @author     David Grudl
  *
+ * @property-read array $roles
+ * @property-read array $resources
  * @property-read mixed $queriedRole
  * @property-read mixed $queriedResource
  */

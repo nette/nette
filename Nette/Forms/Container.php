@@ -20,10 +20,12 @@ use Nette;
  *
  * @author     David Grudl
  *
+ * @property-write $defaults
+ * @property   Nette\ArrayHash $values
+ * @property-read bool $valid
+ * @property-read ControlGroup $currentGroup
  * @property-read \ArrayIterator $controls
  * @property-read Form $form
- * @property-read bool $valid
- * @property   array $values
  */
 class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 {

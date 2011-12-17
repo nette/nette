@@ -20,6 +20,25 @@ use Nette,
  * Reports information about a function.
  *
  * @author     David Grudl
+ * @property-read array $defaultParameters
+ * @property-read bool $closure
+ * @property-read Extension $extension
+ * @property-read array $parameters
+ * @property-read bool $disabled
+ * @property-read bool $deprecated
+ * @property-read bool $internal
+ * @property-read bool $userDefined
+ * @property-read string $docComment
+ * @property-read int $endLine
+ * @property-read string $extensionName
+ * @property-read string $fileName
+ * @property-read string $name
+ * @property-read string $namespaceName
+ * @property-read int $numberOfParameters
+ * @property-read int $numberOfRequiredParameters
+ * @property-read string $shortName
+ * @property-read intr $startLine
+ * @property-read array $staticVariables
  */
 class GlobalFunction extends \ReflectionFunction
 {

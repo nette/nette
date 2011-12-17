@@ -19,6 +19,7 @@ use Nette;
  * Single line text input control.
  *
  * @author     David Grudl
+ * @property-write $type
  */
 class TextInput extends TextBase
 {

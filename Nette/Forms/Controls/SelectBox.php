@@ -21,9 +21,9 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read mixed $rawValue
- * @property   array $items
- * @property-read mixed $selectedItem
  * @property   bool $prompt
+ * @property   array $items
+ * @property-read string $selectedItem
  */
 class SelectBox extends BaseControl
 {

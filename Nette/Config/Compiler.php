@@ -22,8 +22,8 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read array $extensions
- * @property-read array $config
  * @property-read Nette\DI\ContainerBuilder $container
+ * @property-read array $config
  */
 class Compiler extends Nette\Object
 {

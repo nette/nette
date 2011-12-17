@@ -21,13 +21,13 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read UrlScript $url
+ * @property-read mixed $query
+ * @property-read bool $post
  * @property-read array $files
  * @property-read array $cookies
  * @property-read string $method
- * @property-read array $query
- * @property-read array $post
  * @property-read array $headers
- * @property-read Url $referer
+ * @property-read Url|NULL $referer
  * @property-read bool $secured
  * @property-read bool $ajax
  * @property-read string $remoteAddress

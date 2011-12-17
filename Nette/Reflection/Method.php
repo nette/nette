@@ -20,6 +20,38 @@ use Nette,
  * Reports information about a method.
  *
  * @author     David Grudl
+ * @property-read array $defaultParameters
+ * @property-read ClassType $declaringClass
+ * @property-read Method $prototype
+ * @property-read Extension $extension
+ * @property-read array $parameters
+ * @property-read array $annotations
+ * @property-read string $description
+ * @property-read bool $public
+ * @property-read bool $private
+ * @property-read bool $protected
+ * @property-read bool $abstract
+ * @property-read bool $final
+ * @property-read bool $static
+ * @property-read bool $constructor
+ * @property-read bool $destructor
+ * @property-read int $modifiers
+ * @property-write bool $accessible
+ * @property-read bool $closure
+ * @property-read bool $deprecated
+ * @property-read bool $internal
+ * @property-read bool $userDefined
+ * @property-read string $docComment
+ * @property-read int $endLine
+ * @property-read string $extensionName
+ * @property-read string $fileName
+ * @property-read string $name
+ * @property-read string $namespaceName
+ * @property-read int $numberOfParameters
+ * @property-read int $numberOfRequiredParameters
+ * @property-read string $shortName
+ * @property-read int $startLine
+ * @property-read array $staticVariables
  */
 class Method extends \ReflectionMethod
 {

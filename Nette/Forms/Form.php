@@ -20,24 +20,14 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @example    forms/basic-example.php  Form definition using fluent interfaces
- * @example    forms/manual-rendering.php  Manual form rendering and separated form and rules definition
- * @example    forms/localization.php  Localization (with Zend_Translate)
- * @example    forms/custom-rendering.php  Custom form rendering
- * @example    forms/custom-validator.php  How to use custom validator
- * @example    forms/naming-containers.php  How to use naming containers
- * @example    forms/CSRF-protection.php  How to use Cross-Site Request Forgery (CSRF) form protection
- *
- * @property   string $action
+ * @property   mixed $action
  * @property   string $method
  * @property-read array $groups
- * @property   Nette\Localization\ITranslator $translator
+ * @property-read Nette\Localization\ITranslator|NULL $translator
  * @property-read bool $anchored
- * @property-read ISubmitterControl $submitted
+ * @property-read ISubmitterControl|FALSE $submitted
  * @property-read bool $success
- * @property-write ISubmitterControl $submittedBy
  * @property-read array $httpData
- * @property-read array $values
  * @property-read array $errors
  * @property-read Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer

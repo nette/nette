@@ -20,6 +20,17 @@ use Nette,
  * Reports information about a method's parameter.
  *
  * @author     David Grudl
+ * @property-read ClassType $class
+ * @property-read string $className
+ * @property-read ClassType $declaringClass
+ * @property-read Method $declaringFunction
+ * @property-read string $name
+ * @property-read bool $passedByReference
+ * @property-read bool $array
+ * @property-read int $position
+ * @property-read bool $optional
+ * @property-read bool $defaultValueAvailable
+ * @property-read mixed $defaultValue
  */
 class Parameter extends \ReflectionParameter
 {

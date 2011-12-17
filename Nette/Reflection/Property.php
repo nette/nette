@@ -20,6 +20,19 @@ use Nette,
  * Reports information about a classes variable.
  *
  * @author     David Grudl
+ * @property-read ClassType $declaringClass
+ * @property-read array $annotations
+ * @property-read string $description
+ * @property-read string $name
+ * @property  mixed $value
+ * @property-read bool $public
+ * @property-read bool $private
+ * @property-read bool $protected
+ * @property-read bool $static
+ * @property-read bool $default
+ * @property-read int $modifiers
+ * @property-read string $docComment
+ * @property-write bool $accessible
  */
 class Property extends \ReflectionProperty
 {

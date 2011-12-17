@@ -20,10 +20,11 @@ use Nette;
  *
  * @author     David Grudl
  *
+ * @serializationVersion 1.0
+ *
  * @property   mixed $id
  * @property   array $roles
- *
- * @serializationVersion 1.0
+ * @property-read array $data
  */
 class Identity extends Nette\FreezableObject implements IIdentity
 {

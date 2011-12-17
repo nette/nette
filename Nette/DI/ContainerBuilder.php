@@ -22,6 +22,8 @@ use Nette,
  * Basic container builder.
  *
  * @author     David Grudl
+ * @property-read array $definitions
+ * @property-read array $dependencies
  */
 class ContainerBuilder extends Nette\Object
 {

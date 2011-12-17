@@ -21,6 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  *
+ * @property-write $cacheDirectory
  * @property-read \SystemContainer $container
  */
 class Configurator extends Nette\Object

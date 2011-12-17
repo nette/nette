@@ -19,6 +19,7 @@ use Nette;
  * Reflection metadata class with discovery for a database.
  *
  * @author     Jakuv Vrana
+ * @property-write Nette\Database\Connection $connection
  */
 class DiscoveredReflection extends Nette\Object implements Nette\Database\IReflection
 {

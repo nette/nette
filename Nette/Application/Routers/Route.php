@@ -26,7 +26,7 @@ use Nette,
  * @property-read string $mask
  * @property-read array $defaults
  * @property-read int $flags
- * @property-read string $targetPresenter
+ * @property-read string|FALSE $targetPresenter
  */
 class Route extends Nette\Object implements Application\IRouter
 {

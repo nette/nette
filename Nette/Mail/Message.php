@@ -21,11 +21,12 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property   string $from
+ * @property   array $from
  * @property   string $subject
  * @property   string $returnPath
  * @property   int $priority
- * @property   string $htmlBody
+ * @property   mixed $htmlBody
+ * @property   IMailer $mailer
  */
 class Message extends MimePart
 {
