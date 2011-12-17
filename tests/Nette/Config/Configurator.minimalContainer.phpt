@@ -48,4 +48,3 @@ Assert::true( $container->router instanceof Nette\Application\Routers\RouteList 
 Assert::true( $container->presenterFactory instanceof Nette\Application\PresenterFactory );
 Assert::true( $container->mailer instanceof Nette\Mail\SendmailMailer );
 
-			
