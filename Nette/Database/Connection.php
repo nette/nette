@@ -42,9 +42,6 @@ class Connection extends PDO
 	/** @var Nette\Caching\Cache */
 	private $cache;
 
-	/** @var array */
-	public $substitutions = array();
-
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
