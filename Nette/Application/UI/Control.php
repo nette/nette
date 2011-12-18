@@ -112,6 +112,7 @@ abstract class Control extends PresenterComponent implements IPartiallyRenderabl
 	 */
 	public function getWidget($name)
 	{
+		trigger_error(__METHOD__ . '() is deprecated, use getComponent() instead.', E_USER_WARNING);
 		return $this->getComponent($name);
 	}
 
