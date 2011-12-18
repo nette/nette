@@ -95,12 +95,15 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * Returns referencing rows.
-	 * @param  string table name
+	 * @param  string
+	 * @param  string
 	 * @return GroupedSelection
 	 */
-	public function related($table)
+	public function related($key, $throughColumn = NULL)
 	{
-		$referencing = $this->table->getReferencingTable($table);
+		list($table, $column) = $this->table->connection->databaseReflection->getHasManyReference($this->table->name, $key);
+		$column = $throughColumn ?: $column;
+		$referencing = $this->table->getReferencingTable($table, $column);
 		$referencing->active = $this[$this->table->primary];
 		return $referencing;
 	}

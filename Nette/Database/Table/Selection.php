@@ -693,12 +693,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/**
 	 * Returns referencing rows.
-	 * @param  string table name
+	 * @param  string
+	 * @param  string
 	 * @return GroupedSelection
 	 */
-	public function getReferencingTable($key)
+	public function getReferencingTable($table, $column)
 	{
-		list($table, $column) = $this->connection->databaseReflection->getHasManyReference($this->name, $key);
 		$referencing = new GroupedSelection($table, $this, $column);
 		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
 		return $referencing;

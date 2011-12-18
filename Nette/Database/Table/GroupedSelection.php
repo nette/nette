@@ -41,21 +41,8 @@ class GroupedSelection extends Selection
 	{
 		parent::__construct($name, $refTable->connection);
 		$this->refTable = $refTable;
-		$this->through($column);
-	}
-
-
-
-	/**
-	 * Specify referencing column.
-	 * @param  string
-	 * @return GroupedSelection provides a fluent interface
-	 */
-	public function through($column)
-	{
 		$this->column = $column;
-		$this->delimitedColumn = $this->refTable->connection->getSupplementalDriver()->delimite($this->column);
-		return $this;
+		$this->delimitedColumn = $this->connection->getSupplementalDriver()->delimite($this->column);
 	}
 
 
