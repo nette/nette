@@ -29,13 +29,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		// cache
 		$container->addDefinition('cacheJournal')
-			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
+			->setClass('Nette\Caching\Storages\FileJournal', array('%cacheDir%'));
 
 		$container->addDefinition('cacheStorage')
-			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
+			->setClass('Nette\Caching\Storages\FileStorage', array('%cacheDir%'));
 
 		$container->addDefinition('templateCacheStorage')
-			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
+			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%cacheDir%'))
 			->setAutowired(FALSE);
 
 		// http
@@ -103,8 +103,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		$initialize = $class->methods['initialize'];
 
-		if (isset($container->parameters['tempDir'])) {
-			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
+		if (isset($container->parameters['cacheDir'])) {
+			$initialize->addBody($this->checkTempDir($container->expand('%cacheDir%')));
 		}
 		foreach ($container->findByTag('run') as $name => $foo) {
 			$initialize->addBody('$this->getService(?);', array($name));

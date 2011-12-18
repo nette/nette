@@ -69,9 +69,10 @@ class Configurator extends Nette\Object
 	 */
 	public function setCacheDirectory($path)
 	{
-		$this->params['tempDir'] = $path;
-		if (!is_dir($path . '/cache')) {
-			mkdir($path . '/cache', 0777);
+		$this->params['cacheDir'] = $path;
+		if (!is_dir($path)) {
+			umask(0000);
+			mkdir($path, 0777);
 		}
 		return $this;
 	}
@@ -111,11 +112,11 @@ class Configurator extends Nette\Object
 	 */
 	public function createRobotLoader()
 	{
-		if (empty($this->params['tempDir'])) {
+		if (empty($this->params['cacheDir'])) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 		}
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($this->params['tempDir'] . '/cache'));
+		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($this->params['cacheDir']));
 		$loader->autoRebuild = !$this->params['productionMode'];
 		return $loader;
 	}
@@ -161,13 +162,13 @@ class Configurator extends Nette\Object
 		if ($this->container) {
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
 
-		} elseif (empty($this->params['tempDir'])) {
+		} elseif (empty($this->params['cacheDir'])) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 		}
 
 		$this->params['environment'] = $section;
 
-		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
+		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['cacheDir']), 'Nette.Configurator');
 		$cacheKey = array($this->params, $file, $section);
 		$cached = $cache->load($cacheKey);
 		if (!$cached) {
