@@ -55,7 +55,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('ifset', array($me, 'macroIfset'), 'endif');
 
-		$me->addMacro('widget', array($me, 'macroControl'));
+		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
 		$me->addMacro('@href', function(MacroNode $node, $writer) use ($me) {
@@ -365,7 +365,7 @@ if (!empty($_control->snippetMode)) {
 			$param = substr($param, 6, -1); // removes array()
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
-			. '$_ctrl = $_control->getWidget(' . $name . '); '
+			. '$_ctrl = $_control->getComponent(' . $name . '); '
 			. 'if ($_ctrl instanceof Nette\Application\UI\IPartiallyRenderable) $_ctrl->validateControl(); '
 			. "\$_ctrl->$method($param)";
 	}
