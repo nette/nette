@@ -176,7 +176,7 @@ class TestCase
 		}
 
 		if ($res === self::CODE_ERROR) {
-			throw new TestCaseException("Fatal error");
+			throw new TestCaseException($this->output ?: 'Fatal error');
 
 		} elseif ($res === self::CODE_FAIL) {
 			throw new TestCaseException($this->output);

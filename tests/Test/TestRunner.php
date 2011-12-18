@@ -57,6 +57,7 @@ class TestRunner
 		} else {
 			$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path));
 		}
+		echo "PHP: $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
 
 		foreach ($files as $entry) {
 			$entry = (string) $entry;
@@ -102,9 +103,9 @@ class TestRunner
 
 		} elseif ($failedCount) {
 			$this->out("\n\nFailures:\n");
-			foreach ($failed as $i => $item) {
+			foreach ($failed as $item) {
 				list($name, $file, $message) = $item;
-				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $file\n");
+				$this->out("\n-> $name\n   file: $file\n   $message\n");
 			}
 			$this->out("\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n");
 			return FALSE;
@@ -144,7 +145,8 @@ class TestRunner
 					break;
 				case 'log':
 					$args->next();
-					$this->logFile = fopen($args->current(), 'w');
+					$this->logFile = fopen($file = $args->current(), 'w');
+					$this->out("Log: $file\n");
 					break;
 				case 'c':
 				case 'd':
