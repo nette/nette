@@ -28,8 +28,7 @@ class Configurator extends Nette\Object
 {
 	/** config file sections */
 	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		CONSOLE = 'console';
+		PRODUCTION = 'production';
 
 	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
@@ -143,13 +142,8 @@ class Configurator extends Nette\Object
 	public function loadConfig($file, $section = NULL)
 	{
 		if ($section === NULL) {
-			if (PHP_SAPI === 'cli') {
-				$section = self::CONSOLE;
-			} else {
-				$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
-			}
+			$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
 		}
-
 		$this->createContainer($file, $section);
 		return $this->container;
 	}
@@ -164,8 +158,6 @@ class Configurator extends Nette\Object
 		} elseif (empty($this->params['tempDir'])) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 		}
-
-		$this->params['environment'] = $section;
 
 		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
 		$cacheKey = array($this->params, $file, $section);

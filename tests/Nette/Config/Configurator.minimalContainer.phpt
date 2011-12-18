@@ -32,7 +32,6 @@ Assert::same( array(
 	'productionMode' => TRUE,
 	'consoleMode' => PHP_SAPI === 'cli',
 	'tempDir' => TEMP_DIR,
-	'environment' => NULL,
 ), $container->parameters );
 
 Assert::true( $container->cacheJournal instanceof Nette\Caching\Storages\FileJournal );
