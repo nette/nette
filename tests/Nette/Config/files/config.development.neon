@@ -1,0 +1,6 @@
+icludes:
+	- config.common.neon
+parameters:
+	database:
+		user: dev_user
+		password: dev_secret
