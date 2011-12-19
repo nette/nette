@@ -98,13 +98,18 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 	/**
-	 * Retrieves the specified item from the cache or returns NULL if the key is not found.
+	 * Reads the specified item from the cache or generate it.
 	 * @param  mixed key
+	 * @param  callable
 	 * @return mixed|NULL
 	 */
-	public function load($key)
+	public function load($key, $fallback = NULL)
 	{
-		return $this->storage->read($this->namespace . md5(is_scalar($key) ? $key : serialize($key)));
+		$data = $this->storage->read($this->namespace . md5(is_scalar($key) ? $key : serialize($key)));
+		if ($data === NULL && $fallback) {
+			return $this->save($key, callback($fallback));
+		}
+		return $data;
 	}
 
 
@@ -133,7 +138,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = $data->__invoke();
+			$data = callback($data)->invokeArgs(array(&$dp));
 		}
 
 		if ($data === NULL) {
@@ -229,13 +234,10 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function call($function)
 	{
 		$key = func_get_args();
-		$data = $this->load($key);
-		if ($data === NULL) {
-			$args = $key;
-			array_shift($args);
-			$data = $this->save($key, call_user_func_array($function, $args));
-		}
-		return $data;
+		return $this->load($key, function() use ($function, $key) {
+			array_shift($key);
+			return call_user_func_array($function, $key);
+		});
 	}
 
 
