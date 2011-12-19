@@ -19,3 +19,5 @@ services:
 
 	five:
 		factory: [Factory, createLorem](1)
+
+	six: Factory::createLorem(1)

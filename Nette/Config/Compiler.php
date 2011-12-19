@@ -199,7 +199,8 @@ class Compiler extends Nette\Object
 	public static function parseService(Nette\DI\ServiceDefinition $definition, $config, $shared = TRUE)
 	{
 		if (!is_array($config)) {
-			$config = array('class' => $config);
+			$isFactory = strpos($config instanceof \stdClass ? $config->value : $config, '::') === FALSE;
+			$config = array($isFactory ? 'class' : 'factory' => $config);
 		}
 
 		$known = $shared

@@ -67,3 +67,8 @@ Assert::true( $container->five instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
 ), TestHelpers::fetchNotes());
+
+Assert::true( $container->six instanceof Lorem );
+Assert::same(array(
+	'Factory::createLorem 1',
+), TestHelpers::fetchNotes());
