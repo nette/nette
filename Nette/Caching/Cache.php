@@ -137,9 +137,18 @@ class Cache extends Nette\Object implements \ArrayAccess
 		}
 
 		if ($data === NULL) {
-			return $this->storage->remove($key);
+			$this->storage->remove($key);
+		} else {
+			$this->storage->write($key, $data, $this->completeDependencies($dp, $data));
+			return $data;
+		}
+	}
 
-		} elseif (is_object($data)) {
+
+
+	private function completeDependencies($dp, $data)
+	{
+		if (is_object($data)) {
 			$dp[self::CALLBACKS][] = array(array(__CLASS__, 'checkSerializationVersion'), get_class($data),
 				Nette\Reflection\ClassType::from($data)->getAnnotation('serializationVersion'));
 		}
@@ -174,8 +183,10 @@ class Cache extends Nette\Object implements \ArrayAccess
 			unset($dp[self::CONSTS]);
 		}
 
-		$this->storage->write($key, $data, (array) $dp);
-		return $data;
+		if (!is_array($dp)) {
+			$dp = array();
+		}
+		return $dp;
 	}
 
 
