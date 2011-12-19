@@ -132,6 +132,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$key = $this->namespace . md5(is_scalar($key) ? $key : serialize($key));
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
+			$this->storage->lock($key);
 			$data = $data->__invoke();
 		}
 

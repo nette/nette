@@ -143,6 +143,17 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 
 	/**
+	 * Prevents item reading and writing. Lock is released by write() or remove().
+	 * @param  string key
+	 * @return void
+	 */
+	public function lock($key)
+	{
+	}
+
+
+
+	/**
 	 * Writes item into the cache.
 	 * @param  string key
 	 * @param  mixed  data
