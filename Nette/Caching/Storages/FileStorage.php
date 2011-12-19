@@ -64,6 +64,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	/** @var IJournal */
 	private $journal;
 
+	/** @var array */
+	private $locks;
+
 
 
 	public function __construct($dir, IJournal $journal = NULL)
@@ -149,6 +152,23 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function lock($key)
 	{
+		$cacheFile = $this->getCacheFile($key);
+		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
+			umask(0000);
+			if (!mkdir($dir, 0777)) {
+				return;
+			}
+		}
+		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
+		if (!$handle) {
+			$handle = fopen($cacheFile, 'wb');
+			if (!$handle) {
+				return;
+			}
+		}
+
+		$this->locks[$key] = $handle;
+		flock($handle, LOCK_EX);
 	}
 
 
@@ -187,20 +207,16 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			$meta[self::META_CALLBACKS] = $dp[Cache::CALLBACKS];
 		}
 
+		if (!isset($this->locks[$key])) {
+			$this->lock($key);
+			if (!isset($this->locks[$key])) {
+				return;
+			}
+		}
+		$handle = $this->locks[$key];
+		unset($this->locks[$key]);
+
 		$cacheFile = $this->getCacheFile($key);
-		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
-			umask(0000);
-			if (!mkdir($dir, 0777)) {
-				return;
-			}
-		}
-		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
-		if (!$handle) {
-			$handle = fopen($cacheFile, 'wb');
-			if (!$handle) {
-				return;
-			}
-		}
 
 		if (isset($dp[Cache::TAGS]) || isset($dp[Cache::PRIORITY])) {
 			if (!$this->journal) {
@@ -209,7 +225,6 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			$this->journal->write($cacheFile, $dp);
 		}
 
-		flock($handle, LOCK_EX);
 		ftruncate($handle, 0);
 
 		if (!is_string($data)) {
@@ -238,7 +253,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 			flock($handle, LOCK_UN);
 			fclose($handle);
-			return TRUE;
+			return;
 		} while (FALSE);
 
 		$this->delete($cacheFile, $handle);
@@ -253,6 +268,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function remove($key)
 	{
+		unset($this->locks[$key]);
 		$this->delete($this->getCacheFile($key));
 	}
 
