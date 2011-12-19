@@ -21,6 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  *
+ * @property   bool $productionMode
  * @property-write $cacheDirectory
  * @property-read \SystemContainer $container
  */
@@ -63,6 +64,16 @@ class Configurator extends Nette\Object
 
 
 	/**
+	 * @return bool
+	 */
+	public function isProductionMode()
+	{
+		return $this->params['productionMode'];
+	}
+
+
+
+	/**
 	 * Sets path to temporary directory.
 	 * @return ServiceDefinition
 	 */
@@ -70,6 +81,7 @@ class Configurator extends Nette\Object
 	{
 		$this->params['tempDir'] = $path;
 		if (!is_dir($path . '/cache')) {
+			umask(0000);
 			mkdir($path . '/cache', 0777);
 		}
 		return $this;
