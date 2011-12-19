@@ -70,7 +70,6 @@ class Configurator extends Nette\Object
 	{
 		$this->params['tempDir'] = $path;
 		if (!is_dir($path . '/cache')) {
-			umask(0000);
 			mkdir($path . '/cache', 0777);
 		}
 		return $this;

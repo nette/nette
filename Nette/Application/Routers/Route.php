@@ -47,6 +47,7 @@ class Route extends Nette\Object implements Application\IRouter
 	const FILTER_IN = 'filterIn';
 	const FILTER_OUT = 'filterOut';
 	const FILTER_TABLE = 'filterTable';
+	const FILTER_STRICT = 'filterStrict';
 
 	/** @internal fixity types - how to handle default value? {@link Route::$metadata} */
 	const OPTIONAL = 0,
@@ -208,12 +209,11 @@ class Route extends Nette\Object implements Application\IRouter
 			if (isset($params[$name])) {
 				if (!is_scalar($params[$name])) {
 
-				} elseif (isset($meta[self::FILTER_TABLE])) { // applies filterTable only to scalar parameters
-					if (isset($meta[self::FILTER_TABLE][$params[$name]])) {
-						$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
-					} else {
-						return NULL; // rejected by filterTable
-					}
+				} elseif (isset($meta[self::FILTER_TABLE][$params[$name]])) { // applies filterTable only to scalar parameters
+					$params[$name] = $meta[self::FILTER_TABLE][$params[$name]];
+
+				} elseif (isset($meta[self::FILTER_TABLE]) && !empty($meta[self::FILTER_STRICT])) {
+					return NULL; // rejected by filterTable
 
 				} elseif (isset($meta[self::FILTER_IN])) { // applies filterIn only to scalar parameters
 					$params[$name] = call_user_func($meta[self::FILTER_IN], (string) $params[$name]);
@@ -308,12 +308,11 @@ class Route extends Nette\Object implements Application\IRouter
 
 			if (!is_scalar($params[$name])) {
 
-			} elseif (isset($meta['filterTable2'])) {
-				if (isset($meta['filterTable2'][$params[$name]])) {
-					$params[$name] = $meta['filterTable2'][$params[$name]];
-				} else {
-					return NULL;
-				}
+			} elseif (isset($meta['filterTable2'][$params[$name]])) {
+				$params[$name] = $meta['filterTable2'][$params[$name]];
+
+			} elseif (isset($meta['filterTable2']) && !empty($meta[self::FILTER_STRICT])) {
+				return NULL;
 
 			} elseif (isset($meta[self::FILTER_OUT])) {
 				$params[$name] = call_user_func($meta[self::FILTER_OUT], $params[$name]);
