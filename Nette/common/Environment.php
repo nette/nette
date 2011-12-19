@@ -72,7 +72,10 @@ final class Environment
 	{
 		if (self::$configurator === NULL) {
 			self::$configurator = new Nette\Config\Configurator;
-			self::$configurator->setCacheDirectory(defined('TEMP_DIR') ? TEMP_DIR : ini_get('upload_tmp_dir'));
+			if (!defined('TEMP_DIR')) {
+				throw new Nette\InvalidStateException('Class ' . __CLASS__ . ' requires constant TEMP_DIR to be set.');
+			}
+			self::$configurator->setCacheDirectory(TEMP_DIR);
 			self::$createdAt = '?';
 			foreach (debug_backtrace(FALSE) as $row) {
 				if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
