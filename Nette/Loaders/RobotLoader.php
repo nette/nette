@@ -70,13 +70,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register()
 	{
-		$cache = $this->getCache();
-		$key = $this->getKey();
-		if (isset($cache[$key])) {
-			$this->list = $cache[$key];
-		} else {
-			$this->rebuild();
-		}
+		$this->list = $this->getCache()->load($this->getKey(), callback($this, '_rebuildCallback'));
 
 		if (isset($this->list[strtolower(__CLASS__)]) && class_exists('Nette\Loaders\NetteLoader', FALSE)) {
 			NetteLoader::getInstance()->unregister();
@@ -133,9 +127,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
-		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'), array(
-			Cache::CONSTS => 'Nette\Framework::REVISION',
-		));
+		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'));
 		$this->rebuilt = TRUE;
 	}
 
@@ -144,7 +136,7 @@ class RobotLoader extends AutoLoader
 	/**
 	 * @internal
 	 */
-	public function _rebuildCallback()
+	public function _rebuildCallback(& $dp)
 	{
 		foreach ($this->list as $pair) {
 			if ($pair) {
@@ -155,6 +147,9 @@ class RobotLoader extends AutoLoader
 			$this->scanDirectory($dir);
 		}
 		$this->files = NULL;
+		$dp = array(
+			Cache::CONSTS => 'Nette\Framework::REVISION'
+		);
 		return $this->list;
 	}
 
