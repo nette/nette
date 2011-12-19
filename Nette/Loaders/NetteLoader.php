@@ -242,7 +242,6 @@ class NetteLoader extends AutoLoader
 		'nette\unknownimagefileexception' => '/common/Image.php',
 		'nette\utils\arrays' => '/Utils/Arrays.php',
 		'nette\utils\assertionexception' => '/Utils/Validators.php',
-		'nette\utils\criticalsection' => '/Utils/CriticalSection.php',
 		'nette\utils\finder' => '/Utils/Finder.php',
 		'nette\utils\html' => '/Utils/Html.php',
 		'nette\utils\json' => '/Utils/Json.php',
