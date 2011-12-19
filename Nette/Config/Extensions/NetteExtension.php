@@ -58,12 +58,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$session = $container->addDefinition('session')
 			->setClass('Nette\Http\Session');
 
-		if (isset($config['session'])) {
-			Validators::assertField($config, 'session', 'array');
-			$session->addSetup('setOptions', array($config['session']));
-		}
 		if (isset($config['session']['expiration'])) {
 			$session->addSetup('setExpiration', array($config['session']['expiration']));
+			unset($config['session']['expiration']);
+		}
+		if (!empty($config['session'])) {
+			Validators::assertField($config, 'session', 'array');
+			$session->addSetup('setOptions', array($config['session']));
 		}
 
 		$container->addDefinition('user')
