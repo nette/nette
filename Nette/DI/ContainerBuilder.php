@@ -272,7 +272,7 @@ class ContainerBuilder extends Nette\Object
 		$class = new Nette\Utils\PhpGenerator\ClassType('Container');
 		$class->addExtend('Nette\DI\Container');
 		$class->addMethod('__construct')
-			->addBody('$this->parameters = ?;', array($this->expand($this->parameters)));
+			->addBody('parent::__construct(?);', array($this->expand($this->parameters)));
 
 		$classes = $class->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
