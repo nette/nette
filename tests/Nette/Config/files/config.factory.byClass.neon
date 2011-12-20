@@ -1,0 +1,8 @@
+services:
+	one:
+		class: Lorem(@\Ipsum)
+
+	two:
+		class: Ipsum
+		setup:
+			- @\Ipsum::foo()

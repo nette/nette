@@ -222,6 +222,11 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
+		// complete classes dependent on auto-wiring
+		foreach ($this->definitions as $name => $def) {
+			$this->resolveClass($name);
+		}
+
 		$this->dependencies = array();
 		foreach ($this->classes as $class => $foo) {
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
@@ -260,6 +265,9 @@ class ContainerBuilder extends Nette\Object
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // factory
+			if ($service === TRUE) {
+				return; // @\Class -> will be solved in next round
+			}
 			return $def->class = $this->resolveClass($service, $recursive);
 
 		} else {
@@ -517,18 +525,28 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Converts @service -> service name and checks its existence.
+	 * Converts @service or @\Class -> service name and checks its existence.
 	 * @param  mixed
 	 * @return string  of FALSE, if argument is not service name
 	 */
 	public function getServiceName($arg, $self = NULL)
 	{
-		if (!is_string($arg) || !preg_match('#^@\w+$#', $arg)) {
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\]+$#', $arg)) {
 			return FALSE;
 		}
 		$service = substr($arg, 1);
 		if ($service === self::CREATED_SERVICE) {
 			$service = $self;
+		}
+		if (strpos($service, '\\') !== FALSE) {
+			if ($this->classes === FALSE) { // may be disabled by prepareClassList
+				return TRUE;
+			}
+			$res = $this->getByClass($service);
+			if (!$res) {
+				throw new ServiceCreationException("Reference to missing service of type $service.");
+			}
+			return $res;
 		}
 		if (!isset($this->definitions[$service])) {
 			throw new ServiceCreationException("Reference to missing service '$service'.");
