@@ -54,16 +54,20 @@ class User extends Nette\Object implements IUser
 	/** @var string */
 	private $namespace = '';
 
-	/** @var SessionSection */
+	/** @var Session */
 	private $session;
+
+	/** @var Session */
+	private $section;
 
 	/** @var Nette\DI\IContainer */
 	private $context;
 
 
 
-	public function __construct(Nette\DI\IContainer $context)
+	public function __construct(Session $session, Nette\DI\IContainer $context)
 	{
+		$this->session = $session;
 		$this->context = $context;
 	}
 
@@ -116,8 +120,8 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function isLoggedIn()
 	{
-		$session = $this->getSessionSection(FALSE);
-		return $session && $session->authenticated;
+		$section = $this->getSessionSection(FALSE);
+		return $section && $section->authenticated;
 	}
 
 
@@ -128,8 +132,8 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getIdentity()
 	{
-		$session = $this->getSessionSection(FALSE);
-		return $session ? $session->identity : NULL;
+		$section = $this->getSessionSection(FALSE);
+		return $section ? $section->identity : NULL;
 	}
 
 
@@ -180,7 +184,7 @@ class User extends Nette\Object implements IUser
 	{
 		if ($this->namespace !== $namespace) {
 			$this->namespace = (string) $namespace;
-			$this->session = NULL;
+			$this->section = NULL;
 		}
 		return $this;
 	}
@@ -207,20 +211,20 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$session = $this->getSessionSection(TRUE);
+		$section = $this->getSessionSection(TRUE);
 		if ($time) {
 			$time = Nette\DateTime::from($time)->format('U');
-			$session->expireTime = $time;
-			$session->expireDelta = $time - time();
+			$section->expireTime = $time;
+			$section->expireDelta = $time - time();
 
 		} else {
-			unset($session->expireTime, $session->expireDelta);
+			unset($section->expireTime, $section->expireDelta);
 		}
 
-		$session->expireIdentity = (bool) $clearIdentity;
-		$session->expireBrowser = (bool) $whenBrowserIsClosed;
-		$session->browserCheck = TRUE;
-		$session->setExpiration(0, 'browserCheck');
+		$section->expireIdentity = (bool) $clearIdentity;
+		$section->expireBrowser = (bool) $whenBrowserIsClosed;
+		$section->browserCheck = TRUE;
+		$section->setExpiration(0, 'browserCheck');
 		return $this;
 	}
 
@@ -232,59 +236,59 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getLogoutReason()
 	{
-		$session = $this->getSessionSection(FALSE);
-		return $session ? $session->reason : NULL;
+		$section = $this->getSessionSection(FALSE);
+		return $section ? $section->reason : NULL;
 	}
 
 
 
 	/**
-	 * Returns and initializes $this->session.
+	 * Returns and initializes $this->section.
 	 * @return SessionSection
 	 */
 	protected function getSessionSection($need)
 	{
-		if ($this->session !== NULL) {
-			return $this->session;
+		if ($this->section !== NULL) {
+			return $this->section;
 		}
 
-		if (!$need && !$this->context->session->exists()) {
+		if (!$need && !$this->session->exists()) {
 			return NULL;
 		}
 
-		$this->session = $session = $this->context->session->getSection('Nette.Web.User/' . $this->namespace);
+		$this->section = $section = $this->session->getSection('Nette.Web.User/' . $this->namespace);
 
-		if (!$session->identity instanceof IIdentity || !is_bool($session->authenticated)) {
-			$session->remove();
+		if (!$section->identity instanceof IIdentity || !is_bool($section->authenticated)) {
+			$section->remove();
 		}
 
-		if ($session->authenticated && $session->expireBrowser && !$session->browserCheck) { // check if browser was closed?
-			$session->reason = self::BROWSER_CLOSED;
-			$session->authenticated = FALSE;
+		if ($section->authenticated && $section->expireBrowser && !$section->browserCheck) { // check if browser was closed?
+			$section->reason = self::BROWSER_CLOSED;
+			$section->authenticated = FALSE;
 			$this->onLoggedOut($this);
-			if ($session->expireIdentity) {
-				unset($session->identity);
+			if ($section->expireIdentity) {
+				unset($section->identity);
 			}
 		}
 
-		if ($session->authenticated && $session->expireDelta > 0) { // check time expiration
-			if ($session->expireTime < time()) {
-				$session->reason = self::INACTIVITY;
-				$session->authenticated = FALSE;
+		if ($section->authenticated && $section->expireDelta > 0) { // check time expiration
+			if ($section->expireTime < time()) {
+				$section->reason = self::INACTIVITY;
+				$section->authenticated = FALSE;
 				$this->onLoggedOut($this);
-				if ($session->expireIdentity) {
-					unset($session->identity);
+				if ($section->expireIdentity) {
+					unset($section->identity);
 				}
 			}
-			$session->expireTime = time() + $session->expireDelta; // sliding expiration
+			$section->expireTime = time() + $section->expireDelta; // sliding expiration
 		}
 
-		if (!$session->authenticated) {
-			unset($session->expireTime, $session->expireDelta, $session->expireIdentity,
-				$session->expireBrowser, $session->browserCheck, $session->authTime);
+		if (!$section->authenticated) {
+			unset($section->expireTime, $section->expireDelta, $section->expireIdentity,
+				$section->expireBrowser, $section->browserCheck, $section->authTime);
 		}
 
-		return $this->session;
+		return $this->section;
 	}
 
 
@@ -296,19 +300,19 @@ class User extends Nette\Object implements IUser
 	 */
 	protected function setAuthenticated($state)
 	{
-		$session = $this->getSessionSection(TRUE);
-		$session->authenticated = (bool) $state;
+		$section = $this->getSessionSection(TRUE);
+		$section->authenticated = (bool) $state;
 
 		// Session Fixation defence
-		$this->context->session->regenerateId();
+		$this->session->regenerateId();
 
 		if ($state) {
-			$session->reason = NULL;
-			$session->authTime = time(); // informative value
+			$section->reason = NULL;
+			$section->authTime = time(); // informative value
 
 		} else {
-			$session->reason = self::MANUAL;
-			$session->authTime = NULL;
+			$section->reason = self::MANUAL;
+			$section->authTime = NULL;
 		}
 		return $this;
 	}
