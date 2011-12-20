@@ -1,0 +1,7 @@
+icludes:
+	- config.common.neon
+parameters:
+	database:
+		dsn: "sqlite2::memory:"
+		user: dbuser
+		password: secret

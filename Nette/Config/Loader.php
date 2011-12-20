@@ -41,23 +41,15 @@ class Loader extends Nette\Object
 	/**
 	 * Reads configuration from file.
 	 * @param  string  file name
-	 * @param  string  optional section to load
 	 * @return array
 	 */
-	public function load($file, $section = NULL)
+	public function load($file)
 	{
 		if (!is_file($file) || !is_readable($file)) {
 			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
 		}
 		$this->dependencies[] = $file = realpath($file);
 		$data = $this->getAdapter($file)->load($file);
-
-		if ($section) {
-			if (isset($data[self::INCLUDES_KEY])) {
-				throw new Nette\InvalidStateException("Section 'includes' must be placed under some top section in file '$file'.");
-			}
-			$data = $this->getSection($data, $section, $file);
-		}
 
 		// include child files
 		$merged = array();
@@ -121,18 +113,6 @@ class Loader extends Nette\Object
 			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
 		}
 		return is_object($this->adapters[$extension]) ? $this->adapters[$extension] : new $this->adapters[$extension];
-	}
-
-
-
-	private function getSection(array $data, $key, $file)
-	{
-		Validators::assertField($data, $key, 'array|null', "section '%' in file '$file'");
-		$item = $data[$key];
-		if ($parent = Helpers::takeParent($item)) {
-			$item = Helpers::merge($item, $this->getSection($data, $parent, $file));
-		}
-		return $item;
 	}
 
 }

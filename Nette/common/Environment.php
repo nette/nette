@@ -345,13 +345,13 @@ final class Environment
 
 	/**
 	 * Loads global configuration from file and process it.
-	 * @param  string
-	 * @param  string
+	 * @param string
+	 * @param string|NULL
 	 * @return Nette\ArrayHash
 	 */
-	public static function loadConfig($file = NULL, $section = NULL)
+	public static function loadConfig($dir, $file = NULL)
 	{
-		self::getConfigurator()->loadConfig($file, $section);
+		self::getConfigurator()->loadConfig($dir, $file);
 		return self::getConfig();
 	}
 

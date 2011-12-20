@@ -27,7 +27,7 @@ use Nette,
  */
 class Configurator extends Nette\Object
 {
-	/** config file sections */
+	/** config file environments */
 	const DEVELOPMENT = 'development',
 		PRODUCTION = 'production';
 
@@ -149,20 +149,22 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Loads configuration from file and process it.
+	 * @param string
+	 * @param string|NULL
 	 * @return \SystemContainer
 	 */
-	public function loadConfig($file, $section = NULL)
+	public function loadConfig($dir, $file = NULL)
 	{
-		if ($section === NULL) {
-			$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
+		if ($file === NULL) {
+			$file = ($this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT)  . ".neon";
 		}
-		$this->createContainer($file, $section);
+		$this->createContainer($dir . DIRECTORY_SEPARATOR . $file);
 		return $this->container;
 	}
 
 
 
-	protected function createContainer($file = NULL, $section = NULL)
+	protected function createContainer($file = NULL)
 	{
 		if ($this->container) {
 			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
@@ -172,13 +174,13 @@ class Configurator extends Nette\Object
 		}
 
 		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
-		$cacheKey = array($this->params, $file, $section);
+		$cacheKey = array($this->params, $file);
 		$cached = $cache->load($cacheKey);
 		if (!$cached) {
 			$loader = new Loader;
-			$config = $file ? $loader->load($file, $section) : array();
+			$config = $file ? $loader->load($file) : array();
 			$dependencies = $loader->getDependencies();
-			$code = "<?php\n// source file $file $section\n\n"
+			$code = "<?php\n// source file $file\n\n"
 				. $this->buildContainer($config, $dependencies);
 
 			$cache->save($cacheKey, $code, array(
