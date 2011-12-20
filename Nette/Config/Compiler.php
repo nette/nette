@@ -50,7 +50,7 @@ class Compiler extends Nette\Object
 		if (isset(self::$reserved[$name])) {
 			throw new Nette\InvalidArgumentException("Name '$name' is reserved.");
 		}
-		$this->extensions[$name] = $extension;
+		$this->extensions[$name] = $extension->setCompiler($this, $name);
 		return $this;
 	}
 
@@ -77,6 +77,7 @@ class Compiler extends Nette\Object
 
 
 	/**
+	 * Returns configuration without expanded parameters.
 	 * @return array
 	 */
 	public function getConfig()
