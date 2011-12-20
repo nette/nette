@@ -21,7 +21,7 @@ $configurator->setCacheDirectory(TEMP_DIR);
 $configurator->addParameters(array(
 	'hello' => 'world',
 ));
-$container = $configurator->getContainer();
+$container = $configurator->createContainer();
 
 Assert::true( $container instanceof SystemContainer );
 

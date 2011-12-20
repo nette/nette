@@ -27,7 +27,8 @@ class Lorem
 
 $configurator = new Configurator;
 $configurator->setCacheDirectory(TEMP_DIR);
-$container = $configurator->loadConfig('files/config.nonshared.neon', FALSE);
+$container = $configurator->addConfig('files/config.nonshared.neon', Configurator::NONE)
+	->createContainer();
 
 Assert::false( $container->hasService('lorem') );
 Assert::true( method_exists($container, 'createLorem') );

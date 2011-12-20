@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and loadConfig.
+ * Test: Nette\Config\Configurator and createContainer.
  *
  * @author     David Grudl
  * @package    Nette\Config
@@ -25,7 +25,8 @@ $configurator->addParameters(array(
 	'foo2' => '%foo%',         // uses parameter from config file
 	'foo3' => '%foo%',         // will be overwritten by config file
 ));
-$container = $configurator->loadConfig('files/config.basic.neon', 'production');
+$container = $configurator->addConfig('files/config.basic.neon', 'production')
+	->createContainer();
 
 Assert::same( 'overwritten', $container->parameters['wwwDir'] );
 Assert::same( 'hello world', $container->parameters['foo'] );

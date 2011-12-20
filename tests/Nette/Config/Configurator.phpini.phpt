@@ -22,7 +22,8 @@ $configurator->setCacheDirectory(TEMP_DIR);
 date_default_timezone_set('America/Los_Angeles');
 set_include_path('');
 
-$configurator->loadConfig('files/config.php.ini');
+$configurator->addConfig('files/config.php.ini')
+	->createContainer();
 
 Assert::same( 'Europe/Prague', date_default_timezone_get() );
 Assert::same( 'libs', get_include_path() );

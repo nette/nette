@@ -41,7 +41,8 @@ class Ipsum
 
 $configurator = new Configurator;
 $configurator->setCacheDirectory(TEMP_DIR);
-$container = $configurator->loadConfig('files/config.factory.neon', FALSE);
+$container = $configurator->addConfig('files/config.factory.neon', Configurator::NONE)
+	->createContainer();
 
 Assert::true( $container->one instanceof Ipsum );
 Assert::same(array(

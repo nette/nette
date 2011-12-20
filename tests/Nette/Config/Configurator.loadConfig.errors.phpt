@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Config\Configurator and loadConfig errors.
+ * Test: Nette\Config\Configurator and createContainer errors.
  *
  * @author     David Grudl
  * @package    Nette\Config
@@ -19,13 +19,6 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 
 Assert::throws(function() use ($configurator) {
-	$configurator->loadConfig('files/config1.neon');
+	$configurator->addConfig('files/config1.neon')
+		->createContainer();
 }, 'Nette\InvalidStateException', "Set path to temporary directory using setCacheDirectory().");
-
-$configurator->setCacheDirectory(TEMP_DIR);
-
-$configurator->getContainer();
-
-Assert::throws(function() use ($configurator) {
-	$configurator->loadConfig('files/config1.neon');
-}, 'Nette\InvalidStateException', "Container has already been created. Make sure you did not call getContainer() before loadConfig().");

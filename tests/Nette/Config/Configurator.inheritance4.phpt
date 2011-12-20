@@ -19,7 +19,8 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 $configurator->setProductionMode(TRUE);
 $configurator->setCacheDirectory(TEMP_DIR);
-$container = $configurator->loadConfig('files/config.inheritance4.neon', FALSE);
+$container = $configurator->addConfig('files/config.inheritance4.neon', Configurator::NONE)
+	->createContainer();
 
 
 Assert::true( $container->application instanceof Nette\Application\Application );

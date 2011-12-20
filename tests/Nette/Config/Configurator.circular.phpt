@@ -20,5 +20,6 @@ $configurator = new Configurator;
 $configurator->setCacheDirectory(TEMP_DIR);
 
 Assert::throws(function() use ($configurator) {
-	$configurator->loadConfig('files/config.circular.ini', 'production');
+	$configurator->addConfig('files/config.circular.ini', 'production')
+		->createContainer();
 }, 'Nette\InvalidArgumentException', 'Circular reference detected for variables: foo, foobar, bar.');

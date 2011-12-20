@@ -29,16 +29,18 @@ class Configurator extends Nette\Object
 {
 	/** config file sections */
 	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production';
+		PRODUCTION = 'production',
+		AUTO = NULL,
+		NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
 
-	/** @var Nette\DI\Container */
-	private $container;
-
 	/** @var array */
 	private $params;
+
+	/** @var array */
+	private $files = array();
 
 
 
@@ -134,52 +136,53 @@ class Configurator extends Nette\Object
 
 
 	/**
-	 * Returns system DI container.
-	 * @return \SystemContainer
+	 * Adds configuration file.
+	 * @return Configurator  provides a fluent interface
 	 */
-	public function getContainer()
+	public function addConfig($file, $section = self::AUTO)
 	{
-		if (!$this->container) {
-			$this->createContainer();
+		if ($section === self::AUTO) {
+			$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
 		}
-		return $this->container;
+		$this->files[] = array($file, $section);
+		return $this;
+	}
+
+
+
+	/** @deprecated */
+	public function loadConfig($file, $section = NULL)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_WARNING);
+		return $this->addConfig($file, $section)->createContainer();
 	}
 
 
 
 	/**
-	 * Loads configuration from file and process it.
+	 * Returns system DI container.
 	 * @return \SystemContainer
 	 */
-	public function loadConfig($file, $section = NULL)
+	public function createContainer()
 	{
-		if ($section === NULL) {
-			$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
-		}
-		$this->createContainer($file, $section);
-		return $this->container;
-	}
-
-
-
-	protected function createContainer($file = NULL, $section = NULL)
-	{
-		if ($this->container) {
-			throw new Nette\InvalidStateException('Container has already been created. Make sure you did not call getContainer() before loadConfig().');
-
-		} elseif (empty($this->params['tempDir'])) {
+		if (empty($this->params['tempDir'])) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
 		}
 
 		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
-		$cacheKey = array($this->params, $file, $section);
+		$cacheKey = array($this->params, $this->files);
 		$cached = $cache->load($cacheKey);
 		if (!$cached) {
 			$loader = new Loader;
-			$config = $file ? $loader->load($file, $section) : array();
+			$config = array();
+			$code = "<?php\n";
+			foreach ($this->files as $tmp) {
+				list($file, $section) = $tmp;
+				$config = Nette\Config\Helpers::merge($loader->load($file, $section), $config);
+				$code .= "// source: $file $section\n";
+			}
 			$dependencies = $loader->getDependencies();
-			$code = "<?php\n// source file $file $section\n\n"
-				. $this->buildContainer($config, $dependencies);
+			$code .= "\n" . $this->buildContainer($config, $dependencies);
 
 			$cache->save($cacheKey, $code, array(
 				Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
@@ -189,8 +192,9 @@ class Configurator extends Nette\Object
 		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
 
 		$class = $this->formatContainerClass();
-		$this->container = new $class;
-		$this->container->initialize();
+		$container = new $class;
+		$container->initialize();
+		return $container;
 	}
 
 

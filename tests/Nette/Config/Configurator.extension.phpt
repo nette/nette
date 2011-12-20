@@ -45,7 +45,8 @@ $configurator->setCacheDirectory(TEMP_DIR);
 $configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
 	$compiler->addExtension('database', new DatabaseExtension);
 };
-$configurator->loadConfig('files/config.extension.neon', FALSE);
+$configurator->addConfig('files/config.extension.neon', Configurator::NONE)
+	->createContainer();
 
 Assert::same(array(
 	'DatabaseExtension::loadConfiguration',

@@ -56,7 +56,8 @@ function test($arg)
 
 $configurator = new Configurator;
 $configurator->setCacheDirectory(TEMP_DIR);
-$container = $configurator->loadConfig('files/config.setup.neon', FALSE);
+$container = $configurator->addConfig('files/config.setup.neon', Configurator::NONE)
+	->createContainer();
 
 Assert::same(array(
 ), TestHelpers::fetchNotes());
