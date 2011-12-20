@@ -96,7 +96,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addParameters(array $params)
 	{
-		$this->params = $params + $this->params;
+		$this->params = Helpers::merge($params, $this->params);
 		return $this;
 	}
 
@@ -113,6 +113,10 @@ class Configurator extends Nette\Object
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
 			'productionMode' => static::detectProductionMode(),
 			'consoleMode' => PHP_SAPI === 'cli',
+			'container' => array(
+				'class' => 'SystemContainer',
+				'parent' => 'Nette\DI\Container',
+			)
 		);
 	}
 
@@ -184,8 +188,7 @@ class Configurator extends Nette\Object
 			Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
 		}
 
-		$class = $this->formatContainerClass();
-		$container = new $class;
+		$container = new $this->params['container']['class'];
 		$container->initialize();
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
@@ -204,7 +207,7 @@ class Configurator extends Nette\Object
 		$code = "<?php\n";
 		foreach ($this->files as $tmp) {
 			list($file, $section) = $tmp;
-			$config = Nette\Config\Helpers::merge($loader->load($file, $section), $config);
+			$config = Helpers::merge($loader->load($file, $section), $config);
 			$code .= "// source: $file $section\n";
 		}
 		$code .= "\n";
@@ -214,12 +217,16 @@ class Configurator extends Nette\Object
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
 		}
-		$config['parameters'] += $this->params;
+		$config['parameters'] = Helpers::merge($config['parameters'], $this->params);
 
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
 
-		$code .= $compiler->compile($config, $this->formatContainerClass());
+		$code .= $compiler->compile(
+			$config,
+			$this->params['container']['class'],
+			$config['parameters']['container']['parent']
+		);
 		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainer()->getDependencies());
 		return $code;
 	}
@@ -263,13 +270,6 @@ class Configurator extends Nette\Object
 	protected function getCacheDirectory()
 	{
 		return isset($this->params['tempDir']) ? $this->params['tempDir'] . '/cache' : NULL;
-	}
-
-
-
-	public function formatContainerClass()
-	{
-		return 'SystemContainer';
 	}
 
 

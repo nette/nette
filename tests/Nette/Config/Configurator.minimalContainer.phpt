@@ -26,12 +26,16 @@ $container = $configurator->createContainer();
 Assert::true( $container instanceof SystemContainer );
 
 Assert::same( array(
-	'hello' => 'world',
 	'appDir' => __DIR__,
 	'wwwDir' => NULL,
 	'productionMode' => TRUE,
 	'consoleMode' => PHP_SAPI === 'cli',
+	'container' => array(
+		'class' => 'SystemContainer',
+		'parent' => 'Nette\\DI\\Container',
+	),
 	'tempDir' => TEMP_DIR,
+	'hello' => 'world',
 ), $container->parameters );
 
 Assert::true( $container->cacheJournal instanceof Nette\Caching\Storages\FileJournal );

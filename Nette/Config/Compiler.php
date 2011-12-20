@@ -89,14 +89,14 @@ class Compiler extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public function compile(array $config, $className)
+	public function compile(array $config, $className, $parentName)
 	{
 		$this->config = $config;
 		$this->container = new Nette\DI\ContainerBuilder;
 		$this->processParameters();
 		$this->processExtensions();
 		$this->processServices();
-		return $this->generateCode($className);
+		return $this->generateCode($className, $parentName);
 	}
 
 
@@ -133,13 +133,13 @@ class Compiler extends Nette\Object
 
 
 
-	public function generateCode($className)
+	public function generateCode($className, $parentName)
 	{
 		foreach ($this->extensions as $extension) {
 			$extension->beforeCompile($this->container);
 		}
 
-		$class = $this->container->generateClass();
+		$class = $this->container->generateClass($parentName);
 		$class->setName($className)
 			->addMethod('initialize');
 
