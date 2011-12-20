@@ -47,7 +47,12 @@ require TEMP_DIR . '/code.php';
 $container = new Container;
 
 Assert::true( $container->findByClass('service') instanceof Service );
-Assert::same( NULL, $container->findByClass('unknown') );
+Assert::same( NULL, $container->findByClass('unknown', FALSE) );
+
+Assert::throws(function() use ($container) {
+	$container->findByClass('unknown');
+}, 'Nette\DI\MissingServiceException', 'Service of type unknown not found.');
+
 Assert::throws(function() use ($container) {
 	$container->findByClass('Nette\Object');
-}, 'Nette\DI\ServiceCreationException', 'Multiple services of type Nette\Object found.');
+}, 'Nette\DI\MissingServiceException', 'Multiple services of type Nette\Object found.');
