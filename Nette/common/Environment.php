@@ -28,8 +28,8 @@ final class Environment
 		PRODUCTION = 'production',
 		CONSOLE = 'console';
 
-	/** @var Nette\Config\Configurator */
-	private static $configurator;
+	/** @var bool */
+	private static $productionMode;
 
 	/** @var string */
 	private static $createdAt;
@@ -49,46 +49,6 @@ final class Environment
 
 
 
-	/**
-	 * Sets "class behind Environment" configurator.
-	 * @param  Nette\Config\Configurator
-	 * @return void
-	 */
-	public static function setConfigurator(Nette\Config\Configurator $configurator)
-	{
-		if (self::$createdAt) {
-			throw new Nette\InvalidStateException('Nette\Config\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
-		}
-		self::$configurator = $configurator;
-	}
-
-
-
-	/**
-	 * Gets "class behind Environment" configurator.
-	 * @return Nette\Config\Configurator
-	 */
-	public static function getConfigurator()
-	{
-		if (self::$configurator === NULL) {
-			self::$configurator = new Nette\Config\Configurator;
-			if (!defined('TEMP_DIR')) {
-				throw new Nette\InvalidStateException('Class ' . __CLASS__ . ' requires constant TEMP_DIR to be set.');
-			}
-			self::$configurator->setCacheDirectory(TEMP_DIR);
-			self::$createdAt = '?';
-			foreach (debug_backtrace(FALSE) as $row) {
-				if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
-					self::$createdAt = "$row[file]:$row[line]";
-					break;
-				}
-			}
-		}
-		return self::$configurator;
-	}
-
-
-
 	/********************* environment modes ****************d*g**/
 
 
@@ -99,7 +59,7 @@ final class Environment
 	 */
 	public static function isConsole()
 	{
-		return self::getContext()->parameters['consoleMode'];
+		return PHP_SAPI === 'cli';
 	}
 
 
@@ -110,7 +70,10 @@ final class Environment
 	 */
 	public static function isProduction()
 	{
-		return self::getContext()->parameters['productionMode'];
+		if (self::$productionMode === NULL) {
+			self::$productionMode = Nette\Config\Configurator::detectProductionMode();
+		}
+		return self::$productionMode;
 	}
 
 
@@ -122,7 +85,7 @@ final class Environment
 	 */
 	public static function setProductionMode($value = TRUE)
 	{
-		self::getContext()->parameters['productionMode'] = (bool) $value;
+		self::$productionMode = (bool) $value;
 	}
 
 
@@ -202,6 +165,9 @@ final class Environment
 	 */
 	public static function setContext(DI\IContainer $context)
 	{
+		if (self::$createdAt) {
+			throw new Nette\InvalidStateException('Configurator & SystemContainer has already been created automatically by Nette\Environment at ' . self::$createdAt);
+		}
 		self::$context = $context;
 	}
 
@@ -214,7 +180,7 @@ final class Environment
 	public static function getContext()
 	{
 		if (self::$context === NULL) {
-			self::$context = self::getConfigurator()->getContainer();
+			self::loadConfig();
 		}
 		return self::$context;
 	}
@@ -351,7 +317,25 @@ final class Environment
 	 */
 	public static function loadConfig($file = NULL, $section = NULL)
 	{
-		self::getConfigurator()->loadConfig($file, $section);
+		if (self::$createdAt) {
+			throw new Nette\InvalidStateException('Nette\Config\Configurator has already been created automatically by Nette\Environment at ' . self::$createdAt);
+		}
+		$configurator = new Nette\Config\Configurator;
+		$configurator
+			->setProductionMode(self::isProduction())
+			->setCacheDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
+		if ($file) {
+			$configurator->addConfig($file, $section);
+		}
+		self::$context = $configurator->createContainer();
+
+		self::$createdAt = '?';
+		foreach (debug_backtrace(FALSE) as $row) {
+			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+				self::$createdAt = "$row[file]:$row[line]";
+				break;
+			}
+		}
 		return self::getConfig();
 	}
 

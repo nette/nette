@@ -47,7 +47,6 @@ class Configurator extends Nette\Object
 	public function __construct()
 	{
 		$this->params = $this->getDefaultParameters();
-		Nette\Environment::setConfigurator($this); // back compatibility
 	}
 
 
@@ -188,6 +187,7 @@ class Configurator extends Nette\Object
 		$class = $this->formatContainerClass();
 		$container = new $class;
 		$container->initialize();
+		Nette\Environment::setContext($container); // back compatibility
 		return $container;
 	}
 
