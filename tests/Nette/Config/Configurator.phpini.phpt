@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $configurator = new Configurator;
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 
 date_default_timezone_set('America/Los_Angeles');
 set_include_path('');

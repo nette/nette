@@ -20,10 +20,10 @@ $configurator = new Configurator;
 
 Assert::throws(function() use ($configurator) {
 	$configurator->createRobotLoader();
-}, 'Nette\InvalidStateException', "Set path to temporary directory using setCacheDirectory().");
+}, 'Nette\InvalidStateException', "Set path to temporary directory using setTempDirectory().");
 
 
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 $loader = $configurator->createRobotLoader();
 
 Assert::true( $loader instanceof Nette\Loaders\RobotLoader );

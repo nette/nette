@@ -41,7 +41,7 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 
 
 $configurator = new Configurator;
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 $configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
 	$compiler->addExtension('database', new DatabaseExtension);
 };

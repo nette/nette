@@ -35,7 +35,7 @@ class Ipsum
 
 Assert::throws(function() {
 	$configurator = new Configurator;
-	$configurator->setCacheDirectory(TEMP_DIR);
+	$configurator->setTempDirectory(TEMP_DIR);
 	$configurator->addConfig('files/config.services.circular.neon', Configurator::NONE)
 		->createContainer();
 }, 'Nette\InvalidStateException', 'Circular reference detected for services: ipsum, lorem.');

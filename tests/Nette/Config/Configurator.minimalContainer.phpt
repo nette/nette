@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $configurator = new Configurator;
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 $configurator->addParameters(array(
 	'hello' => 'world',
 ));
@@ -46,5 +46,3 @@ Assert::true( $container->application instanceof Nette\Application\Application )
 Assert::true( $container->router instanceof Nette\Application\Routers\RouteList );
 Assert::true( $container->presenterFactory instanceof Nette\Application\PresenterFactory );
 Assert::true( $container->mailer instanceof Nette\Mail\SendmailMailer );
-
-			

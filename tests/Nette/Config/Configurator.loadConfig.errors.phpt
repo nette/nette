@@ -21,4 +21,4 @@ $configurator = new Configurator;
 Assert::throws(function() use ($configurator) {
 	$configurator->addConfig('files/config1.neon')
 		->createContainer();
-}, 'Nette\InvalidStateException', "Set path to temporary directory using setCacheDirectory().");
+}, 'Nette\InvalidStateException', "Set path to temporary directory using setTempDirectory().");

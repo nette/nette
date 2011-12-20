@@ -47,7 +47,7 @@ class Lorem
 
 
 $configurator = new Configurator;
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.autowiring.neon', Configurator::NONE)
 	->createContainer();
 

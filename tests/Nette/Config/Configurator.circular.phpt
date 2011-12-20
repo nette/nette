@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $configurator = new Configurator;
-$configurator->setCacheDirectory(TEMP_DIR);
+$configurator->setTempDirectory(TEMP_DIR);
 
 Assert::throws(function() use ($configurator) {
 	$configurator->addConfig('files/config.circular.ini', 'production')

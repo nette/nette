@@ -323,7 +323,7 @@ final class Environment
 		$configurator = new Nette\Config\Configurator;
 		$configurator
 			->setProductionMode(self::isProduction())
-			->setCacheDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
+			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
 		if ($file) {
 			$configurator->addConfig($file, $section);
 		}

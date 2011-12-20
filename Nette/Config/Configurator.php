@@ -22,7 +22,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property   bool $productionMode
- * @property-write $cacheDirectory
+ * @property   string $tempDirectory
  * @property-read \SystemContainer $container
  */
 class Configurator extends Nette\Object
@@ -78,12 +78,12 @@ class Configurator extends Nette\Object
 	 * Sets path to temporary directory.
 	 * @return Configurator  provides a fluent interface
 	 */
-	public function setCacheDirectory($path)
+	public function setTempDirectory($path)
 	{
 		$this->params['tempDir'] = $path;
-		if (!is_dir($path . '/cache')) {
+		if (!is_dir($cacheDir = $this->getCacheDirectory())) {
 			umask(0000);
-			mkdir($path . '/cache', 0777);
+			mkdir($cacheDir, 0777);
 		}
 		return $this;
 	}
@@ -123,11 +123,11 @@ class Configurator extends Nette\Object
 	 */
 	public function createRobotLoader()
 	{
-		if (empty($this->params['tempDir'])) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
+		if (!($cacheDir = $this->getCacheDirectory())) {
+			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
 		}
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($this->params['tempDir'] . '/cache'));
+		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
 		$loader->autoRebuild = !$this->params['productionMode'];
 		return $loader;
 	}
@@ -164,8 +164,8 @@ class Configurator extends Nette\Object
 	 */
 	public function createContainer()
 	{
-		if ($this->params['tempDir']) {
-			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
+		if ($cacheDir = $this->getCacheDirectory()) {
+			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
 			$cacheKey = array($this->params, $this->files);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
@@ -178,7 +178,7 @@ class Configurator extends Nette\Object
 			Nette\Utils\LimitedScope::load($cached['file'], TRUE);
 
 		} elseif ($this->files) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
+			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
 
 		} else {
 			Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
@@ -256,6 +256,13 @@ class Configurator extends Nette\Object
 			->addExtension('constants', new Extensions\ConstantsExtension)
 			->addExtension('nette', new Extensions\NetteExtension);
 		return $compiler;
+	}
+
+
+
+	protected function getCacheDirectory()
+	{
+		return isset($this->params['tempDir']) ? $this->params['tempDir'] . '/cache' : NULL;
 	}
 
 
