@@ -116,6 +116,22 @@ class Validators extends Nette\Object
 
 
 	/**
+	 * Throws exception if a array fields are not expected type.
+	 * @param  array
+	 * @param  string  expected types separated by pipe
+	 * @return void
+	 */
+	public static function assertFields($arr, $expected, $label = "item '%' in array")
+	{
+		self::assert($arr, 'array', 'first argument');
+		foreach ($arr as $field => $value) {
+			static::assert($value, $expected, str_replace('%', $field, $label));
+		}
+	}
+
+
+
+	/**
 	 * Finds whether a variable is of expected type.
 	 * @param  mixed
 	 * @param  string  expected types separated by pipe with optional ranges
