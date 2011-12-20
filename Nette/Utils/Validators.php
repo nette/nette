@@ -178,6 +178,23 @@ class Validators extends Nette\Object
 
 
 	/**
+	 * Registers validator
+	 * @param string    name
+	 * @param callable  callable validator
+	 * @return void
+	 */
+	public static function addValidator($name, $callback)
+	{
+		if (isset(self::$validators[$name])) {
+			throw new Nette\InvalidStateException("Validator $name has been already registered.");
+		}
+
+		static::$validators[$name] = callback($callback);
+	}
+
+
+
+	/**
 	 * Finds whether a value is an integer.
 	 * @param  mixed
 	 * @return bool
