@@ -255,7 +255,7 @@ final class Environment
 	 */
 	public static function getHttpRequest()
 	{
-		return self::getContext()->httpRequest;
+		return self::getContext()->findByClass('Nette\Http\IRequest');
 	}
 
 
@@ -265,7 +265,7 @@ final class Environment
 	 */
 	public static function getHttpContext()
 	{
-		return self::getContext()->httpContext;
+		return self::getContext()->findByClass('Nette\Http\Context');
 	}
 
 
@@ -275,7 +275,7 @@ final class Environment
 	 */
 	public static function getHttpResponse()
 	{
-		return self::getContext()->httpResponse;
+		return self::getContext()->findByClass('Nette\Http\IResponse');
 	}
 
 
@@ -285,7 +285,7 @@ final class Environment
 	 */
 	public static function getApplication()
 	{
-		return self::getContext()->application;
+		return self::getContext()->findByClass('Nette\Application\Application');
 	}
 
 
@@ -295,7 +295,7 @@ final class Environment
 	 */
 	public static function getUser()
 	{
-		return self::getContext()->user;
+		return self::getContext()->findByClass('Nette\Http\IUser');
 	}
 
 
@@ -305,7 +305,7 @@ final class Environment
 	 */
 	public static function getRobotLoader()
 	{
-		return self::getContext()->robotLoader;
+		return self::getContext()->findByClass('Nette\Loaders\RobotLoader');
 	}
 
 
