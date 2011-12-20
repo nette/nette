@@ -119,7 +119,7 @@ class ContainerBuilder extends Nette\Object
 	 * @return string  service name or NULL
 	 * @throws ServiceCreationException
 	 */
-	public function findByClass($class)
+	public function getByClass($class)
 	{
 		$classes = & $this->classes[ltrim(strtolower($class), '\\')];
 		if (isset($classes[TRUE]) && count($classes[TRUE]) === 1) {
@@ -277,7 +277,7 @@ class ContainerBuilder extends Nette\Object
 		$classes = $class->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
 			try {
-				$classes->value[$name] = $this->findByClass($name);
+				$classes->value[$name] = $this->getByClass($name);
 			} catch (ServiceCreationException $e) {
 				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}

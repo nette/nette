@@ -205,16 +205,20 @@ class Container extends Nette\FreezableObject implements IContainer
 	/**
 	 * Resolves service by type.
 	 * @param  string  class or interface
+	 * @param  bool    throw exception if service doesn't exist?
 	 * @return object  service or NULL
-	 * @throws ServiceCreationException
+	 * @throws MissingServiceException
 	 */
-	public function findByClass($class)
+	public function getByClass($class, $need = TRUE)
 	{
 		$lower = ltrim(strtolower($class), '\\');
-		if (isset($this->classes[$lower])) {
-			if ($this->classes[$lower] === FALSE) {
-				throw new ServiceCreationException("Multiple services of type $class found.");
+		if (!isset($this->classes[$lower])) {
+			if ($need) {
+				throw new MissingServiceException("Service of type $class not found.");
 			}
+		} elseif ($this->classes[$lower] === FALSE) {
+			throw new MissingServiceException("Multiple services of type $class found.");
+		} else {
 			return $this->getService($this->classes[$lower]);
 		}
 	}
