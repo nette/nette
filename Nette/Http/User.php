@@ -57,7 +57,7 @@ class User extends Nette\Object implements IUser
 	/** @var Session */
 	private $session;
 
-	/** @var Session */
+	/** @var SessionSection */
 	private $section;
 
 	/** @var Nette\Security\IAuthenticator */

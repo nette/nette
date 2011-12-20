@@ -33,13 +33,13 @@ class ContainerBuilder extends Nette\Object
 	/** @var array  %param% will be expanded */
 	public $parameters = array();
 
-	/** @var array */
+	/** @var array of ServiceDefinition */
 	private $definitions = array();
 
-	/** @var array */
+	/** @var array for auto-wiring */
 	private $classes;
 
-	/** @var array */
+	/** @var array of file names */
 	private $dependencies = array();
 
 
@@ -157,7 +157,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Generates list of arguments using autowiring.
+	 * Creates a list of arguments using autowiring.
 	 * @return array
 	 */
 	public function autowireArguments($class, $method, array $arguments)
@@ -180,6 +180,10 @@ class ContainerBuilder extends Nette\Object
 
 
 
+	/**
+	 * Generates $dependencies, $classes and expands class names.
+	 * @return array
+	 */
 	public function prepareClassList()
 	{
 		$this->classes = $this->dependencies = array();
@@ -319,7 +323,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Generates factory method code for service.
+	 * Generates body of service method.
 	 * @return string
 	 */
 	private function generateService($name)
@@ -358,7 +362,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Formats class instantiating, function calling or property setting in PHP.
+	 * Formats PHP code for class instantiating, function calling or property setting in PHP.
 	 * @return string
 	 * @internal
 	 */
@@ -452,7 +456,7 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Expands %placeholders% in string.
+	 * Expands %placeholders% in strings (recursive).
 	 * @param  mixed
 	 * @return mixed
 	 */
@@ -466,23 +470,27 @@ class ContainerBuilder extends Nette\Object
 	/** @internal */
 	public function normalizeEntity($entity)
 	{
-		$entity = is_string($entity) && strpos($entity, '::') !== FALSE
+		$entity = is_string($entity) && strpos($entity, '::') !== FALSE // Class::method -> [Class, method]
 			? explode('::', $entity)
 			: $entity;
 
-		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) {
+		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // ServiceDefinition -> @serviceName
 			$tmp = array_keys($this->definitions, $entity[0], TRUE);
 			$entity[0] = "@$tmp[0]";
 
-		} elseif (is_array($entity) && $entity[0] === $this) {
+		} elseif (is_array($entity) && $entity[0] === $this) { // $this -> @container
 			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;
-	}
+		}
 		return $entity;
 	}
 
 
 
-	/** @internal */
+	/**
+	 * Converts "@service" -> "service" and checks its existence.
+	 * @param  mixed
+	 * @return string  of FALSE, if argument is not service name
+	 */
 	public function getServiceName($arg, $self = NULL)
 	{
 		if (!is_string($arg) || !preg_match('#^@\w+$#', $arg)) {
