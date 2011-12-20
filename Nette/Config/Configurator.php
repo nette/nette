@@ -55,7 +55,7 @@ class Configurator extends Nette\Object
 	/**
 	 * Set parameter %productionMode%.
 	 * @param  bool
-	 * @return ServiceDefinition
+	 * @return Configurator  provides a fluent interface
 	 */
 	public function setProductionMode($on = TRUE)
 	{
@@ -77,7 +77,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Sets path to temporary directory.
-	 * @return ServiceDefinition
+	 * @return Configurator  provides a fluent interface
 	 */
 	public function setCacheDirectory($path)
 	{
@@ -93,7 +93,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Adds new parameters. The %params% will be expanded.
-	 * @return ServiceDefinition
+	 * @return Configurator  provides a fluent interface
 	 */
 	public function addParameters(array $params)
 	{
@@ -165,31 +165,25 @@ class Configurator extends Nette\Object
 	 */
 	public function createContainer()
 	{
-		if (empty($this->params['tempDir'])) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
-		}
-
-		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
-		$cacheKey = array($this->params, $this->files);
-		$cached = $cache->load($cacheKey);
-		if (!$cached) {
-			$loader = new Loader;
-			$config = array();
-			$code = "<?php\n";
-			foreach ($this->files as $tmp) {
-				list($file, $section) = $tmp;
-				$config = Nette\Config\Helpers::merge($loader->load($file, $section), $config);
-				$code .= "// source: $file $section\n";
-			}
-			$dependencies = $loader->getDependencies();
-			$code .= "\n" . $this->buildContainer($config, $dependencies);
-
-			$cache->save($cacheKey, $code, array(
-				Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
-			));
+		if ($this->params['tempDir']) {
+			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($this->params['tempDir'] . '/cache'), 'Nette.Configurator');
+			$cacheKey = array($this->params, $this->files);
 			$cached = $cache->load($cacheKey);
+			if (!$cached) {
+				$code = $this->buildContainer($dependencies);
+				$cache->save($cacheKey, $code, array(
+					Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
+				));
+				$cached = $cache->load($cacheKey);
+			}
+			Nette\Utils\LimitedScope::load($cached['file'], TRUE);
+
+		} elseif ($this->files) {
+			throw new Nette\InvalidStateException("Set path to temporary directory using setCacheDirectory().");
+
+		} else {
+			Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
 		}
-		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
 
 		$class = $this->formatContainerClass();
 		$container = new $class;
@@ -199,8 +193,22 @@ class Configurator extends Nette\Object
 
 
 
-	protected function buildContainer(array $config, array & $dependencies = array())
+	/**
+	 * Build system container class.
+	 * @return string
+	 */
+	protected function buildContainer(& $dependencies)
 	{
+		$loader = new Loader;
+		$config = array();
+		$code = "<?php\n";
+		foreach ($this->files as $tmp) {
+			list($file, $section) = $tmp;
+			$config = Nette\Config\Helpers::merge($loader->load($file, $section), $config);
+			$code .= "// source: $file $section\n";
+		}
+		$code .= "\n";
+
 		$this->checkCompatibility($config);
 
 		if (!isset($config['parameters'])) {
@@ -211,8 +219,8 @@ class Configurator extends Nette\Object
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
 
-		$code = $compiler->compile($config, $this->formatContainerClass());
-		$dependencies = array_merge($dependencies, $compiler->getContainer()->getDependencies());
+		$code .= $compiler->compile($config, $this->formatContainerClass());
+		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainer()->getDependencies());
 		return $code;
 	}
 
