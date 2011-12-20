@@ -183,7 +183,11 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService($definition, $def, array_key_exists($name, $config['services']));
+				static::parseService(
+					$definition,
+					$def === 'self' ? $name : $def,
+					array_key_exists($name, $config['services'])
+				);
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
@@ -198,9 +202,10 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseService(Nette\DI\ServiceDefinition $definition, $config, $shared = TRUE)
 	{
-		if (!is_array($config)) {
-			$isFactory = strpos($config instanceof \stdClass ? $config->value : $config, '::') === FALSE;
-			$config = array($isFactory ? 'class' : 'factory' => $config);
+		if ($config === NULL) {
+			return;
+		} elseif (!is_array($config)) {
+			$config = array('class' => NULL, 'factory' => $config);
 		}
 
 		$known = $shared
@@ -217,8 +222,8 @@ class Compiler extends Nette\Object
 			$arguments = self::filterArguments($config['arguments']);
 		}
 
-		if (isset($config['class'])) {
-			Validators::assertField($config, 'class', 'string|stdClass');
+		if (array_key_exists('class', $config)) {
+			Validators::assertField($config, 'class', 'string|stdClass|null');
 			if ($config['class'] instanceof \stdClass) {
 				$definition->setClass($config['class']->value, self::filterArguments($config['class']->attributes));
 			} else {
@@ -226,8 +231,8 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		if (isset($config['factory'])) {
-			Validators::assertField($config, 'factory', 'callable|stdClass');
+		if (array_key_exists('factory', $config)) {
+			Validators::assertField($config, 'factory', 'callable|stdClass|null');
 			if ($config['factory'] instanceof \stdClass) {
 				$definition->setFactory($config['factory']->value, self::filterArguments($config['factory']->attributes));
 			} else {

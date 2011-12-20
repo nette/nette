@@ -21,3 +21,13 @@ services:
 		factory: [Factory, createLorem](1)
 
 	six: Factory::createLorem(1)
+
+	seven: @factory
+
+	eight: @factory()
+
+	Lorem: self
+
+
+factories:
+	factory: Lorem
