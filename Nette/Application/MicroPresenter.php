@@ -50,7 +50,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		$this->request = $request;
 
-		$httpRequest = $this->context->httpRequest;
+		$httpRequest = $this->context->getByClass('Nette\Http\IRequest');
 		if (!$httpRequest->isAjax() && ($request->isMethod('get') || $request->isMethod('head'))) {
 			$refUrl = clone $httpRequest->getUrl();
 			$url = $this->context->router->constructUrl($request, $refUrl->setPath($refUrl->getScriptPath()));
@@ -100,7 +100,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;
 		$template->context = $context = $this->context;
-		$url = $context->httpRequest->getUrl();
+		$url = $context->getByClass('Nette\Http\IRequest')->getUrl();
 		$template->baseUrl = rtrim($url->getBaseUrl(), '/');
 		$template->basePath = rtrim($url->getBasePath(), '/');
 

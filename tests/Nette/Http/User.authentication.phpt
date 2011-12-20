@@ -76,7 +76,7 @@ Assert::null( $user->getId(), 'getId' );
 Assert::throws(function() use ($user) {
 	// login without handler
 	$user->login('jane', '');
-}, 'Nette\InvalidStateException', "Service 'authenticator' not found.");
+}, 'Nette\InvalidStateException', 'Service of type Nette\Security\IAuthenticator not found.');
 
 $handler = new Authenticator;
 $user->setAuthenticator($handler);

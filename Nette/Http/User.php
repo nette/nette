@@ -60,6 +60,12 @@ class User extends Nette\Object implements IUser
 	/** @var Session */
 	private $section;
 
+	/** @var Nette\Security\IAuthenticator */
+	private $authenticator;
+
+	/** @var Nette\Security\IAuthorizator */
+	private $authorizator;
+
 	/** @var Nette\DI\IContainer */
 	private $context;
 
@@ -68,7 +74,7 @@ class User extends Nette\Object implements IUser
 	public function __construct(Session $session, Nette\DI\IContainer $context)
 	{
 		$this->session = $session;
-		$this->context = $context;
+		$this->context = $context; // with Nette\Security\IAuthenticator, Nette\Security\IAuthorizator
 	}
 
 
@@ -88,7 +94,7 @@ class User extends Nette\Object implements IUser
 	{
 		$this->logout(TRUE);
 		$credentials = func_get_args();
-		$this->setIdentity($this->context->authenticator->authenticate($credentials));
+		$this->setIdentity($this->getAuthenticator()->authenticate($credentials));
 		$this->setAuthenticated(TRUE);
 		$this->onLoggedIn($this);
 	}
@@ -157,8 +163,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
 	{
-		$this->context->removeService('authenticator');
-		$this->context->authenticator = $handler;
+		$this->authenticator = $handler;
 		return $this;
 	}
 
@@ -170,7 +175,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getAuthenticator()
 	{
-		return $this->context->authenticator;
+		return $this->authenticator ?: $this->context->getByClass('Nette\Security\IAuthenticator');
 	}
 
 
@@ -373,7 +378,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
-		$authorizator = $this->context->authorizator;
+		$authorizator = $this->getAuthorizator();
 		foreach ($this->getRoles() as $role) {
 			if ($authorizator->isAllowed($role, $resource, $privilege)) {
 				return TRUE;
@@ -392,8 +397,7 @@ class User extends Nette\Object implements IUser
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
 	{
-		$this->context->removeService('authorizator');
-		$this->context->authorizator = $handler;
+		$this->authorizator = $handler;
 		return $this;
 	}
 
@@ -405,7 +409,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getAuthorizator()
 	{
-		return $this->context->authorizator;
+		return $this->authorizator ?: $this->context->getByClass('Nette\Security\IAuthorizator');
 	}
 
 
