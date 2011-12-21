@@ -31,11 +31,11 @@ $connection->table('author')->insert($insert);  // INSERT INTO `author` (`name`,
 
 
 $catelynStark = $connection->table('author')->get(14);  // SELECT * FROM `author` WHERE (`id` = ?)
-Assert::same(array(
+Assert::equal(array(
 	'id' => 14,
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
-	'born' => '2011-11-11',
+	'born' => new \DateTime('2011-11-11'),
 ), $catelynStark->toArray());
 
 
