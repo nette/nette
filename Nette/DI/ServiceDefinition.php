@@ -50,10 +50,10 @@ class ServiceDefinition extends Nette\Object
 
 	public function setClass($class, array $args = array())
 	{
-		if (!$this->factory || $this->factory->entity === $this->class) {
+		$this->class = $class;
+		if ($args) {
 			$this->setFactory($class, $args);
 		}
-		$this->class = $class;
 		return $this;
 	}
 

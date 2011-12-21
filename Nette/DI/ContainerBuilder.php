@@ -189,7 +189,12 @@ class ContainerBuilder extends Nette\Object
 		$this->classes = $this->dependencies = array();
 
 		foreach ($this->definitions as $name => $def) {
-			$def->class = $this->expand($def->class);
+			if ($def->class) {
+				$def->class = $this->expand($def->class);
+				if (!$def->factory) {
+					$def->factory = new Statement($def->class);
+				}
+			}
 		}
 
 		foreach ($this->definitions as $name => $def) {
