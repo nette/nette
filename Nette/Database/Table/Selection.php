@@ -18,14 +18,18 @@ use Nette,
 
 /**
  * Filtered table representation.
- * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
  *
- * @property-read string $sql
+ * @property-read  string  $sql
+ * @property-write string  $rowClass
  */
 class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
 {
+	/** @var string default row class name */
+	public static $defaultRowClass = 'Nette\Database\Table\ActiveRow';
+
 	/** @var Nette\Database\Connection */
 	public $connection;
 
@@ -67,6 +71,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/** @var string grouping condition */
 	protected $having = '';
+
+	/** @var string row class name */
+	protected $rowClass;
 
 	/** @var bool recheck referencing keys */
 	protected $checkReferenceNewKeys = FALSE;
@@ -468,7 +475,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
 			$row = $result->normalizeRow($row);
-			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = new ActiveRow($row, $this);
+			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = $this->createRowClass($row);
 		}
 		$this->data = $this->rows;
 
@@ -600,10 +607,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId())) {
 			$data[$this->primary] = $id;
-			return $this->rows[$id] = new ActiveRow($data, $this);
+			return $this->rows[$id] = $this->createRowClass($data);
 
 		} else {
-			return new ActiveRow($data, $this);
+			return $this->createRowClass($data);
 
 		}
 	}
@@ -680,6 +687,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 			if ($keys) {
 				$referenced = new Selection($table, $this->connection);
+				$referenced->setRowClass($this->rowClass);
 				$referenced->where($table . '.' . $this->getPrimary($table), array_keys($keys));
 			} else {
 				$referenced = array();
@@ -701,7 +709,36 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$referencing = new GroupedSelection($table, $this, $column);
 		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
+		$referencing->setRowClass($this->rowClass);
 		return $referencing;
+	}
+
+
+
+	/**
+	 * Sets row class
+	 * @param  string $className
+	 * @return Selection  provides a fluent interface
+	 */
+	public function setRowClass($className)
+	{
+		$this->rowClass = $className;
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns row class
+	 * @return string
+	 */
+	public function getRowClass()
+	{
+		if ($this->rowClass === NULL) {
+			$this->rowClass = static::$defaultRowClass;
+		}
+
+		return $this->rowClass;
 	}
 
 
@@ -709,6 +746,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	private function getPrimary($table)
 	{
 		return $this->connection->databaseReflection->getPrimary($table);
+	}
+
+
+
+	private function createRowClass($data)
+	{
+		$class = $this->getRowClass();
+		return new $class($data, $this);
 	}
 
 
