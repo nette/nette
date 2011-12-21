@@ -1,4 +1,6 @@
 services:
+	three: @\Lorem
+
 	one:
 		class: Lorem(@\Ipsum)
 
@@ -6,3 +8,5 @@ services:
 		class: Ipsum
 		setup:
 			- @\Ipsum::foo()
+
+	four: @\Lorem

@@ -2,6 +2,8 @@ parameters:
 	class: Ipsum
 
 services:
+	alias: @one
+
 	one:
 		class: %class%
 		arguments: [1]

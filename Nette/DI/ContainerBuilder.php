@@ -264,9 +264,12 @@ class ContainerBuilder extends Nette\Object
 			} catch (\ReflectionException $e) {
 			}
 
-		} elseif ($service = $this->getServiceName($factory)) { // factory
+		} elseif ($service = $this->getServiceName($factory)) { // alias of factory
 			if ($service === TRUE) {
 				return; // @\Class -> will be solved in next round
+			}
+			if ($this->definitions[$service]->shared) {
+				$def->autowired = FALSE;
 			}
 			return $def->class = $this->resolveClass($service, $recursive);
 
@@ -412,9 +415,12 @@ class ContainerBuilder extends Nette\Object
 		if ($entity instanceof PhpLiteral) {
 			return $this->formatPhp('call_user_func_array(?, ?)', array($entity, $arguments));
 
-		} elseif ($service = $this->getServiceName($entity)) { // non-shared service calling
+		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
 			if ($this->definitions[$service]->shared) {
+				if ($arguments) {
 				throw new ServiceCreationException("Unable to call service '$entity'.");
+			}
+				return $this->formatPhp('$this->?', array($service));
 			}
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
@@ -477,16 +483,9 @@ class ContainerBuilder extends Nette\Object
 				$val = new PhpLiteral('$this');
 
 			} elseif ($service = $that->getServiceName($val, $self)) {
-				if ($service === $self) {
-					$val = new PhpLiteral('$service');
-
-				} elseif ($that->definitions[$service]->shared) {
-					$val = new PhpLiteral('$this->' . PhpHelpers::formatMember($service));
-
-				} else {
-					$val = new PhpLiteral('$this->' . PhpHelpers::formatMember('create' . ucfirst($service)) . '()');
+				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
+				$val = new PhpLiteral($val, $self);
 				}
-			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
 	}

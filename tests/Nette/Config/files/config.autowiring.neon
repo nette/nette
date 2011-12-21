@@ -20,6 +20,8 @@ services:
 	lorem:
 		class: %class%
 
+	alias: @lorem
+
 	database:
 		class: Nette\Database\Connection
 		arguments: ['sqlite2::memory:']

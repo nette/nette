@@ -78,4 +78,7 @@ Assert::true( $container->seven instanceof Lorem );
 
 Assert::true( $container->eight instanceof Lorem );
 
+Assert::true( $container->alias instanceof Ipsum );
+Assert::same( $container->one, $container->alias );
+
 Assert::true( $container->Lorem instanceof Lorem );

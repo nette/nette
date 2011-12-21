@@ -38,3 +38,7 @@ $container = $configurator->addConfig('files/config.factory.byClass.neon', Confi
 
 Assert::true( $container->one instanceof Lorem );
 Assert::true( $container->two instanceof Ipsum );
+Assert::true( $container->three instanceof Lorem );
+Assert::same( $container->one, $container->three );
+Assert::true( $container->four instanceof Lorem );
+Assert::same( $container->one, $container->four );
