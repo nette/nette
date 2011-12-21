@@ -121,7 +121,11 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getByClass($class)
 	{
-		$classes = & $this->classes[ltrim(strtolower($class), '\\')];
+		$lower = ltrim(strtolower($class), '\\');
+		if (!isset($this->classes[$lower])) {
+			return;
+		}
+		$classes = $this->classes[$lower];
 		if (isset($classes[TRUE]) && count($classes[TRUE]) === 1) {
 			return $classes[TRUE][0];
 
@@ -181,59 +185,85 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Generates $dependencies, $classes and expands class names.
+	 * Generates $dependencies, $classes and expands and normalize class names.
 	 * @return array
 	 */
 	public function prepareClassList()
 	{
-		$this->classes = $this->dependencies = array();
-
+        // complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
 			if ($def->class) {
 				$def->class = $this->expand($def->class);
 				if (!$def->factory) {
 					$def->factory = new Statement($def->class);
 				}
+			} elseif (!$def->factory) {
+				throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
 			}
 		}
 
+		// complete classes
+		$this->classes = FALSE;
 		foreach ($this->definitions as $name => $def) {
-			if (!$def->class && $def->factory) {
-				$factory = $this->normalizeEntity($this->expand($def->factory->entity));
-				if (!is_array($factory)) {
-					continue;
-				}
-				if ($service = $this->getServiceName($factory[0])) {
-					if (!$this->definitions[$service]->class) {
-						continue;
-					}
-					$factory[0] = $this->definitions[$service]->class;
-				}
-				$factory = callback($factory);
-				if (!$factory->isCallable()) {
-					throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
-				}
-				try {
-					$def->class = preg_replace('#[|\s].*#', '', $factory->toReflection()->getAnnotation('return'));
-				} catch (\ReflectionException $e) {
-				}
-			}
+			$this->resolveClass($name);
+		}
 
+		//  build auto-wiring list
+		$this->classes = array();
+		foreach ($this->definitions as $name => $def) {
 			if ($def->class) {
 				if (!class_exists($def->class) && !interface_exists($def->class)) {
-					throw new Nette\InvalidStateException("Class $def->class"
-						. (isset($factory) ? " returned by $factory" : '') . " has not been found.");
+					throw new Nette\InvalidStateException("Class $def->class has not been found.");
 				}
 				$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][(bool) $def->autowired][] = $name;
 				}
 			}
-			$factory = NULL;
 		}
 
+		$this->dependencies = array();
 		foreach ($this->classes as $class => $foo) {
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
+		}
+	}
+
+
+
+	private function resolveClass($name, $recursive = array())
+	{
+		if (isset($recursive[$name])) {
+			throw new Nette\InvalidArgumentException('Circular reference detected for services: ' . implode(', ', array_keys($recursive)) . '.');
+		}
+		$recursive[$name] = TRUE;
+
+		$def = $this->definitions[$name];
+		$factory = $this->normalizeEntity($this->expand($def->factory->entity));
+
+		if ($def->class) {
+			return $def->class;
+
+		} elseif (is_array($factory)) { // method calling
+			if ($service = $this->getServiceName($factory[0])) {
+				$factory[0] = $this->resolveClass($service, $recursive);
+				if (!$factory[0]) {
+					return;
+				}
+			}
+			$factory = callback($factory);
+			if (!$factory->isCallable()) {
+				throw new Nette\InvalidStateException("Factory '$factory' is not callable.");
+			}
+			try {
+				return $def->class = preg_replace('#[|\s].*#', '', $factory->toReflection()->getAnnotation('return'));
+			} catch (\ReflectionException $e) {
+			}
+
+		} elseif ($service = $this->getServiceName($factory)) { // factory
+			return $def->class = $this->resolveClass($service, $recursive);
+
+		} else {
+			return $def->class = $factory; // class name
 		}
 	}
 
@@ -333,10 +363,6 @@ class ContainerBuilder extends Nette\Object
 	private function generateService($name)
 	{
 		$def = $this->definitions[$name];
-		if (!$def->factory) {
-			throw new ServiceCreationException("Class and factory are missing.");
-		}
-
 		$parameters = $this->parameters;
 		foreach ($this->expand($def->parameters) as $k => $v) {
 			$v = explode(' ', is_int($k) ? $v : $k);
@@ -485,13 +511,13 @@ class ContainerBuilder extends Nette\Object
 		} elseif (is_array($entity) && $entity[0] === $this) { // $this -> @container
 			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;
 		}
-		return $entity;
+		return $entity; // Class, @service, [Class, member], [@service, member], [, globalFunc]
 	}
 
 
 
 	/**
-	 * Converts "@service" -> "service" and checks its existence.
+	 * Converts @service -> service name and checks its existence.
 	 * @param  mixed
 	 * @return string  of FALSE, if argument is not service name
 	 */

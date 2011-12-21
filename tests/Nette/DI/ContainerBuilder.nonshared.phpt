@@ -32,7 +32,6 @@ $builder->addDefinition('one')
 $builder->addDefinition('two')
 	->setParameters(array('foo', 'bar' => FALSE, 'array foobar' => NULL))
 	->setClass('Directory')
-	->setFactory('%foo%', array('%bar%'))
 	->addSetup('%foo%', array('%bar%'));
 
 
