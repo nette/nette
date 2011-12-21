@@ -184,12 +184,21 @@ abstract class Control extends PresenterComponent implements IRenderable
 				return TRUE;
 
 			} else {
-				foreach ($this->getComponents() as $component) {
-					if ($component instanceof IRenderable && $component->isControlInvalid()) {
-						// $this->invalidSnippets['__child'] = TRUE; // as cache
-						return TRUE;
+				$queue = array($this);
+				do {
+					foreach (array_shift($queue)->getComponents() as $component) {
+						if ($component instanceof IRenderable) {
+							if ($component->isControlInvalid()) {
+								// $this->invalidSnippets['__child'] = TRUE; // as cache
+								return TRUE;
+							}
+
+						} elseif ($component instanceof Nette\ComponentModel\IContainer) {
+							$queue[] = $component;
+						}
 					}
-				}
+				} while ($queue);
+
 				return FALSE;
 			}
 
