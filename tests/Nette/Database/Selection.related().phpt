@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Related().
+ * Test: Nette\Database\Table\Selection: Related().
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

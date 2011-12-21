@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Reference ref().
+ * Test: Nette\Database\Table\Selection: Reference ref().
  *
  * @author     Jan Skrasek
  * @package    Nette\Database

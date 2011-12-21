@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Find one item by URL.
+ * Test: Nette\Database\Table\Selection: Find one item by URL.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

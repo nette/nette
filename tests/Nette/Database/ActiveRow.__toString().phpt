@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Calling __toString().
+ * Test: Nette\Database\Table\ActiveRow: Calling __toString().
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

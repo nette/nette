@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Search and order items.
+ * Test: Nette\Database\Table\Selection: Search and order items.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

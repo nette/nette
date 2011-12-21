@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Update operations
+ * Test: Nette\Database\Table\Selection: Update operations
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

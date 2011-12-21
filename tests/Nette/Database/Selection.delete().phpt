@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Delete operations
+ * Test: Nette\Database\Table\Selection: Delete operations
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
