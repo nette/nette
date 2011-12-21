@@ -23,20 +23,11 @@ use Nette,
  */
 class PhpExtension extends Nette\Config\CompilerExtension
 {
-	private $options = array();
-
-
-	public function loadConfiguration(ContainerBuilder $container, array $config)
-	{
-		$this->options = $config;
-	}
-
-
 
 	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
-		foreach ($this->options as $name => $value) {
+		foreach ($this->getConfig() as $name => $value) {
 			if (!is_scalar($value)) {
 				throw new Nette\InvalidStateException("Configuration value for directive '$name' is not scalar.");
 

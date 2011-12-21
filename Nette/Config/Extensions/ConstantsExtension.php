@@ -23,19 +23,10 @@ use Nette,
  */
 class ConstantsExtension extends Nette\Config\CompilerExtension
 {
-	private $constants = array();
-
-
-	public function loadConfiguration(ContainerBuilder $container, array $config)
-	{
-		$this->constants = $config;
-	}
-
-
 
 	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
 	{
-		foreach ($this->constants as $name => $value) {
+		foreach ($this->getConfig() as $name => $value) {
 			$class->methods['initialize']->addBody('define(?, ?);', array($name, $value));
 		}
 	}
