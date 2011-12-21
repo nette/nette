@@ -250,6 +250,9 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (is_array($factory)) { // method calling
 			if ($service = $this->getServiceName($factory[0])) {
+				if ($service === TRUE) {
+					return; // @\Class -> will be solved in next round
+				}
 				$factory[0] = $this->resolveClass($service, $recursive);
 				if (!$factory[0]) {
 					return;

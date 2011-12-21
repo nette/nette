@@ -47,7 +47,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		$container->addDefinition('httpRequest')
 			->setClass('Nette\Http\Request')
-			->setFactory('@httpRequestFactory::createHttpRequest');
+			->setFactory('@Nette\Http\RequestFactory::createHttpRequest');
 
 		$container->addDefinition('httpResponse')
 			->setClass('Nette\Http\Response');
