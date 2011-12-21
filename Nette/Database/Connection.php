@@ -22,8 +22,9 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read ISupplementalDriver $supplementalDriver
- * @property-read IReflection $databaseReflection
+ * @property       IReflection          $databaseReflection
+ * @property-read  ISupplementalDriver  $supplementalDriver
+ * @property-read  string               $dsn
  */
 class Connection extends PDO
 {
@@ -110,7 +111,7 @@ class Connection extends PDO
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
 	{
-		$this->cache = $storage ? new Nette\Caching\Cache($storage, "Nette.Database/$this->dsn") : NULL;
+		$this->cache = $storage ? new Nette\Caching\Cache($storage, 'Nette.Database.' . md5($this->dsn)) : NULL;
 		return $this;
 	}
 

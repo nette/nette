@@ -20,7 +20,8 @@ use Nette;
  */
 interface IReflection
 {
-	const FIELD_TEXT = 'string',
+	const
+		FIELD_TEXT = 'string',
 		FIELD_BINARY = 'bin',
 		FIELD_BOOL = 'bool',
 		FIELD_INTEGER = 'int',
@@ -28,38 +29,37 @@ interface IReflection
 		FIELD_DATETIME = 'datetime';
 
 	/**
-	 * Get primary key of a table in $db->table($table)
+	 * Gets primary key of $table
 	 * @param  string
 	 * @return string
 	 */
 	function getPrimary($table);
 
 	/**
-	 * Get column holding foreign key in $table[$id]->$name()
-	 * @param  string
-	 * @param  string
-	 * @return string
+	 * Gets referenced table & referenced column
+	 * Example:
+	 * 	  author, book returns array(book, author_id)
+	 *
+	 * @param  string  source table
+	 * @param  string  referencing key
+	 * @return array   array(referenced table, referenced column)
 	 */
-	function getReferencingColumn($name, $table);
+	function getHasManyReference($table, $key);
 
 	/**
-	 * Get column holding foreign key in $table[$id]->$name
-	 * @param  string
-	 * @param  string
-	 * @return string
+	 * Gets referenced table & referencing column
+	 * Example
+	 *     book, author      returns array(author, author_id)
+	 *     book, translator  returns array(author, translator_id)
+	 *
+	 * @param  string  source table
+	 * @param  string  referencing key
+	 * @return string  array(referenced table, referencing column)
 	 */
-	function getReferencedColumn($name, $table);
+	function getBelongsToReference($table, $key);
 
 	/**
-	 * Get table holding foreign key in $table[$id]->$name
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	function getReferencedTable($name, $table);
-
-	/**
-	 * Inject database connection.
+	 * Injects database connection.
 	 * @param  Connection
 	 */
 	function setConnection(Connection $connection);
