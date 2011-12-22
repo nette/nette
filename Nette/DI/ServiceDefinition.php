@@ -67,6 +67,18 @@ class ServiceDefinition extends Nette\Object
 
 
 
+	public function setArguments(array $args = array())
+	{
+		if ($this->factory) {
+			$this->factory->arguments = $args;
+		} else {
+			$this->setClass($this->class, $args);
+		}
+		return $this;
+	}
+
+
+
 	public function addSetup($target, $args = NULL)
 	{
 		$this->setup[] = new Statement($target, $args);

@@ -218,9 +218,15 @@ class Compiler extends Nette\Object
 		}
 
 		$arguments = array();
-		if (isset($config['arguments'])) {
+		if (array_key_exists('arguments', $config)) {
 			Validators::assertField($config, 'arguments', 'array');
 			$arguments = self::filterArguments($config['arguments']);
+			$definition->setArguments($arguments);
+		}
+
+		if (array_key_exists('class', $config) || array_key_exists('factory', $config)) {
+			$definition->class = NULL;
+			$definition->factory = NULL;
 		}
 
 		if (array_key_exists('class', $config)) {
