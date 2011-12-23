@@ -662,7 +662,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencedTable($table, $column, $checkReferenceNewKeys = FALSE)
 	{
-		$referenced = & $this->referenced[$table];
+		$referenced = & $this->referenced[$table][$column];
 		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
 			foreach ($this->rows as $row) {
