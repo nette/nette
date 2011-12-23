@@ -5,7 +5,7 @@ parameters:
 services:
 	lorem:
 		factory: Factory::createLorem
-		arguments: [1]
+		arguments: [not(false)]
 		setup:
 			# local methods
 			- test(2)

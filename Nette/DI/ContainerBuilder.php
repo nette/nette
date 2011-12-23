@@ -430,6 +430,9 @@ class ContainerBuilder extends Nette\Object
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
 			return $this->formatPhp('$this->?(?*)', array('create' . ucfirst($service), $arguments), $self);
 
+		} elseif ($entity === 'not') { // operator
+			return $this->formatPhp('!?', array($arguments[0]));
+
 		} elseif (is_string($entity)) { // class name
 		    if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
