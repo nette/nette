@@ -42,8 +42,9 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
-	$compiler->addExtension('database', new DatabaseExtension);
+$extension = new DatabaseExtension;
+$configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler) use ($extension) {
+	$compiler->addExtension('database', $extension);
 };
 $container = $configurator->addConfig('files/config.extension.neon', Configurator::NONE)
 	->createContainer();
@@ -55,3 +56,13 @@ Assert::same(array(
 ), TestHelpers::fetchNotes());
 
 Assert::true( $container->database->foo instanceof stdClass );
+
+
+Assert::same( 'database_', $extension->prefix('') );
+Assert::same( 'database_member', $extension->prefix('member') );
+Assert::same( '@database_member', $extension->prefix('@member') );
+
+
+Assert::same( array('foo' => 'hello'), $extension->getConfig() );
+Assert::same( array('foo' => 'hello'), $extension->getConfig(array('foo' => 'bar')) );
+Assert::same( array('foo' => '%bar%'), $extension->getConfig(NULL, FALSE) );
