@@ -34,7 +34,9 @@ $builder->addDefinition('one')
 	->setClass('Service');
 
 $builder->addDefinition('two')
-	->setFactory('@\Service::create', array('@\Service'))
+	->setClass('Service')
+	->setAutowired(FALSE)
+	->setFactory('@one::create', array('@\Service'))
 	->addSetup(array('@\Service', 'create'), array('@\Service'));
 
 $code = (string) $builder->generateClass();

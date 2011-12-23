@@ -222,11 +222,6 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
-		// complete classes dependent on auto-wiring
-		foreach ($this->definitions as $name => $def) {
-			$this->resolveClass($name);
-		}
-
 		$this->dependencies = array();
 		foreach ($this->classes as $class => $foo) {
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
@@ -250,8 +245,8 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (is_array($factory)) { // method calling
 			if ($service = $this->getServiceName($factory[0])) {
-				if ($service === TRUE) {
-					return; // @\Class -> will be solved in next round
+				if (strpos($service, '\\') !== FALSE) { // @\Class
+					throw new ServiceCreationException("Unable resolve class name for service '$name'.");
 				}
 				$factory[0] = $this->resolveClass($service, $recursive);
 				if (!$factory[0]) {
@@ -267,9 +262,11 @@ class ContainerBuilder extends Nette\Object
 			} catch (\ReflectionException $e) {
 			}
 
-		} elseif ($service = $this->getServiceName($factory)) { // alias of factory
-			if ($service === TRUE) {
-				return; // @\Class -> will be solved in next round
+		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
+			if (strpos($service, '\\') !== FALSE) { // @\Class
+				/*5.2* $service = ltrim($service, '\\');*/
+				$def->autowired = FALSE;
+				return $def->class = $service;
 			}
 			if ($this->definitions[$service]->shared) {
 				$def->autowired = FALSE;
@@ -542,7 +539,7 @@ class ContainerBuilder extends Nette\Object
 		}
 		if (strpos($service, '\\') !== FALSE) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList
-				return TRUE;
+				return $service;
 			}
 			$res = $this->getByClass($service);
 			if (!$res) {
