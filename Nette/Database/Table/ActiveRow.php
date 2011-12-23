@@ -101,6 +101,10 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function related($key, $throughColumn = NULL)
 	{
+		if (strpos($key, '.') !== FALSE) {
+			list($key, $throughColumn) = explode('.', $key);
+		}
+
 		list($table, $column) = $this->table->connection->databaseReflection->getHasManyReference($this->table->name, $key);
 		$column = $throughColumn ?: $column;
 		$referencing = $this->table->getReferencingTable($table, $column);
