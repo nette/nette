@@ -23,11 +23,17 @@ use Nette,
  */
 class Template extends Nette\Object implements ITemplate
 {
+	const PHASE_INITIALIZING = 1;
+	const PHASE_USER_SPACE = 2;
+
 	/** @var bool */
 	public $warnOnUndefined = TRUE;
 
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
+
+	/** @var array list of properties which are reserved for framework and shouldn't be overridden */
+	public $reservedProperties = array('control', 'presenter', 'user', 'baseUri', 'basePath', 'flashes', 'nette.*');
 
 	/** @var string */
 	private $source;
@@ -47,6 +53,8 @@ class Template extends Nette\Object implements ITemplate
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
 
+	/** @var int */
+	private $phase = self::PHASE_INITIALIZING;
 
 
 	/**
@@ -71,6 +79,27 @@ class Template extends Nette\Object implements ITemplate
 		return $this->source;
 	}
 
+
+	/**
+	 * @return int
+	 */
+	public function getPhase()
+	{
+		return $this->phase;
+	}
+
+
+	/**
+	 * Move template to next phase
+	 * @param int $phase
+	 * @return Template  provides a fluent interface
+	 */
+	public function setPhase($phase)
+	{
+		if (!is_numeric($phase) || $phase < $this->phase) throw new \Nette\InvalidArgumentException("Cannot revert to earlier phase");
+		$this->phase = $phase;
+		return $this;
+	}
 
 
 	/********************* rendering ****************d*g**/
@@ -339,6 +368,9 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __set($name, $value)
 	{
+		if ($this->phase >= self::PHASE_USER_SPACE && $this->isReservedParameter($name)) {
+			trigger_error("Overriding reserved parameter '$name' in a template", E_USER_NOTICE);
+		}
 		$this->params[$name] = $value;
 	}
 
@@ -383,6 +415,19 @@ class Template extends Nette\Object implements ITemplate
 	}
 
 
+	/**
+	 * Check whether given property name matches one of reserved property names
+	 * @param string $name
+	 * @return bool
+	 */
+	protected function isReservedParameter($name)
+	{
+		if (in_array($name, $this->reservedProperties)) return TRUE;
+		foreach ($this->reservedProperties as $reservedName) {
+			if(\Nette\Utils\Strings::match($name, "\x01^" . $reservedName . "$\x01")) return TRUE;
+		}
+		return FALSE;
+	}
 
 	/********************* caching ****************d*g**/
 
