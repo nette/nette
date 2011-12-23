@@ -186,12 +186,15 @@ class ContainerBuilder extends Nette\Object
         // complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
 			if ($def->class) {
-				$def->class = $this->expand($def->class);
+				$def->class = $def->class === self::CREATED_SERVICE ? $name : $this->expand($def->class);
 				if (!$def->factory) {
 					$def->factory = new Statement($def->class);
 				}
 			} elseif (!$def->factory) {
 				throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
+			}
+			if ($def->factory && $def->factory->entity === self::CREATED_SERVICE) {
+				$def->factory->entity = $name;
 			}
 		}
 
@@ -326,7 +329,7 @@ class ContainerBuilder extends Nette\Object
 		$classes = $class->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
 			try {
-				$classes->value[$name] = $this->getByClass($name);
+				$classes->value[$name] = $this->sanitizeName($this->getByClass($name));
 			} catch (ServiceCreationException $e) {
 				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
@@ -342,10 +345,14 @@ class ContainerBuilder extends Nette\Object
 		foreach ($this->definitions as $name => $def) {
 			try {
 				$type = $def->class ?: 'object';
-				if ($def->shared) {
+				$sanitized = $this->sanitizeName($name);
+				if (!PhpHelpers::isIdentifier($sanitized)) {
+					throw new ServiceCreationException('Name contains invalid characters.');
+				}
+				if ($def->shared && $name === $sanitized) {
 					$class->addDocument("@property $type \$$name");
 				}
-				$method = $class->addMethod(($def->shared ? 'createService' : 'create') . ucfirst($name))
+				$method = $class->addMethod(($def->shared ? 'createService' : 'create') . ucfirst($sanitized))
 					->addDocument("@return $type")
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
@@ -420,7 +427,7 @@ class ContainerBuilder extends Nette\Object
 				if ($arguments) {
 				throw new ServiceCreationException("Unable to call service '$entity'.");
 			}
-				return $this->formatPhp('$this->?', array($service));
+				return $this->formatPhp('$this->?', array($this->sanitizeName($service)));
 			}
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
@@ -503,6 +510,13 @@ class ContainerBuilder extends Nette\Object
 	public function expand($value)
 	{
 		return Helpers::expand($value, $this->parameters, TRUE);
+	}
+
+
+
+	private static function sanitizeName($name)
+	{
+		return strtr($name, '\\', '__');
 	}
 
 

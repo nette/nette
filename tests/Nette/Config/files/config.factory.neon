@@ -30,6 +30,8 @@ services:
 
 	Lorem: self
 
+	Ipsum: self(1)
+
 
 factories:
 	factory: Lorem

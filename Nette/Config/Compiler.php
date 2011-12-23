@@ -184,11 +184,7 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService(
-					$definition,
-					$def === 'self' ? $name : $def,
-					array_key_exists($name, $config['services'])
-				);
+				static::parseService($definition, $def, array_key_exists($name, $config['services']));
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
