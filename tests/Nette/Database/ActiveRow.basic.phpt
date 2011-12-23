@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Basic operations.
+ * Test: Nette\Database\Table\ActiveRow: Basic operations.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

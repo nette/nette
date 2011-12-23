@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Join.
+ * Test: Nette\Database\Table\Selection: Join.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Backward join.
+ * Test: Nette\Database\Table\Selection: Backward join.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

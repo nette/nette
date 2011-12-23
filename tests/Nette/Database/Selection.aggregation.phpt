@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Aggregation functions.
+ * Test: Nette\Database\Table\Selection: Aggregation functions.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

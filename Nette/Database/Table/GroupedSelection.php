@@ -47,6 +47,17 @@ class GroupedSelection extends Selection
 
 
 
+	/** @deprecated */
+	public function through($column)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::related("' . $this->name . '", "' . $column . '") instead.', E_USER_WARNING);
+		$this->column = $column;
+		$this->delimitedColumn = $this->refTable->connection->getSupplementalDriver()->delimite($this->column);
+		return $this;
+	}
+
+
+
 	public function select($columns)
 	{
 		if (!$this->select) {

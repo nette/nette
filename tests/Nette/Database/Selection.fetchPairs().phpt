@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Fetch pairs.
+ * Test: Nette\Database\Table\Selection: Fetch pairs.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek

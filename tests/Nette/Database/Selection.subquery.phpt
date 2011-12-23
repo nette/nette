@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Subqueries.
+ * Test: Nette\Database\Table\Selection: Subqueries.
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
