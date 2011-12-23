@@ -124,19 +124,12 @@ class ContainerBuilder extends Nette\Object
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
 			return;
-		}
-		$classes = $this->classes[$lower];
-		if (isset($classes[TRUE]) && count($classes[TRUE]) === 1) {
-			return $classes[TRUE][0];
 
-		} elseif (!isset($classes[TRUE]) && isset($classes[FALSE]) && count($classes[FALSE]) === 1) {
-			return $classes[FALSE][0];
+		} elseif (count($this->classes[$lower]) === 1) {
+			return $this->classes[$lower][0];
 
-		} elseif (isset($classes[TRUE])) {
-			throw new ServiceCreationException("Multiple preferred services of type $class found: " . implode(', ', $classes[TRUE]));
-
-		} elseif (isset($classes[FALSE])) {
-			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $classes[FALSE]));
+		} else {
+			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $this->classes[$lower]));
 		}
 	}
 
@@ -211,13 +204,16 @@ class ContainerBuilder extends Nette\Object
 		//  build auto-wiring list
 		$this->classes = array();
 		foreach ($this->definitions as $name => $def) {
-			if ($def->class) {
-				if (!class_exists($def->class) && !interface_exists($def->class)) {
-					throw new Nette\InvalidStateException("Class $def->class has not been found.");
-				}
-				$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
+			if (!$def->class) {
+				continue;
+			}
+			if (!class_exists($def->class) && !interface_exists($def->class)) {
+				throw new Nette\InvalidStateException("Class $def->class has not been found.");
+			}
+			$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
+			if ($def->autowired) {
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
-					$this->classes[strtolower($parent)][(bool) $def->autowired][] = $name;
+					$this->classes[strtolower($parent)][] = $name;
 				}
 			}
 		}
