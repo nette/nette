@@ -271,13 +271,14 @@ class Assert
 			return $var ? 'TRUE' : 'FALSE';
 
 		} elseif ($var === NULL) {
-			return "NULL";
+			return 'NULL';
 
 		} elseif (is_int($var)) {
 			return "$var";
 
 		} elseif (is_float($var)) {
-			return "$var";
+			$var = var_export($var, TRUE);
+			return strpos($var, '.') === FALSE ? $var . '.0' : $var;
 
 		} elseif (is_string($var)) {
 			if ($cut = @iconv_strlen($var, 'UTF-8') > 100) {
@@ -308,6 +309,99 @@ class Assert
 
 
 	/**
+	 * Dumps variable in PHP format.
+	 * @param  mixed  variable to dump
+	 * @return void
+	 */
+	private static function dumpPhp(&$var, $level = 0)
+	{
+		if (is_float($var)) {
+			$var = var_export($var, TRUE);
+			return strpos($var, '.') === FALSE ? $var . '.0' : $var;
+
+		} elseif (is_bool($var)) {
+			return $var ? 'TRUE' : 'FALSE';
+
+		} elseif (is_string($var) && (preg_match('#[^\x09\x20-\x7E\xA0-\x{10FFFF}]#u', $var) || preg_last_error())) {
+			static $table;
+			if ($table === NULL) {
+				foreach (range("\x00", "\xFF") as $ch) {
+					$table[$ch] = ord($ch) < 32 || ord($ch) >= 127
+						? '\\x' . str_pad(dechex(ord($ch)), 2, '0', STR_PAD_LEFT)
+						: $ch;
+				}
+				$table["\r"] = '\r';
+				$table["\n"] = '\n';
+				$table["\t"] = '\t';
+				$table['$'] = '\\$';
+				$table['\\'] = '\\\\';
+				$table['"'] = '\\"';
+			}
+			return '"' . strtr($var, $table) . '"';
+
+		} elseif (is_array($var)) {
+			$s = '';
+			$space = str_repeat("\t", $level);
+
+			static $marker;
+			if ($marker === NULL) {
+				$marker = uniqid("\x00", TRUE);
+			}
+			if (empty($var)) {
+
+			} elseif ($level > 50 || isset($var[$marker])) {
+				throw new \Exception('Nesting level too deep or recursive dependency.');
+
+			} else {
+				$s .= "\n";
+				$var[$marker] = TRUE;
+				$counter = 0;
+				foreach ($var as $k => &$v) {
+					if ($k !== $marker) {
+						$s .= "$space\t" . ($k === $counter ? '' : self::dumpPhp($k) . " => ") . self::dumpPhp($v, $level + 1) . ",\n";
+						$counter = is_int($k) ? $k + 1 : $counter;
+					}
+				}
+				unset($var[$marker]);
+				$s .= $space;
+			}
+			return "array($s)";
+
+		} elseif (is_object($var)) {
+			$arr = (array) $var;
+			$s = '';
+			$space = str_repeat("\t", $level);
+
+			static $list = array();
+			if (empty($arr)) {
+
+			} elseif ($level > 50 || in_array($var, $list, TRUE)) {
+				throw new \Exception('Nesting level too deep or recursive dependency.');
+
+			} else {
+				$s .= "\n";
+				$list[] = $var;
+				foreach ($arr as $k => &$v) {
+					if ($k[0] === "\x00") {
+						$k = substr($k, strrpos($k, "\x00") + 1);
+					}
+					$s .= "$space\t" . self::dumpPhp($k) . " => " . self::dumpPhp($v, $level + 1) . ",\n";
+				}
+				array_pop($list);
+				$s .= $space;
+			}
+			return get_class($var) === 'stdClass'
+				? "(object) array($s)"
+				: get_class($var) . "::__set_state(array($s))";
+
+		} else {
+			return var_export($var, TRUE);
+		}
+	}
+
+
+
+	/**
 	 * Logs big variables to file.
 	 * @param  mixed
 	 * @param  mixed
@@ -328,14 +422,14 @@ class Assert
 		}
 		$file = dirname($item['file']) . '/output/' . basename($item['file'], '.phpt');
 
-		if (is_object($expected) || is_array($expected) || (is_string($expected) && strlen($expected) > 100)) {
+		if (is_object($expected) || is_array($expected) || (is_string($expected) && strlen($expected) > 80)) {
 			@mkdir(dirname($file)); // @ - directory may already exist
-			file_put_contents($file . '.expected', is_string($expected) ? $expected : var_export($expected, TRUE));
+			file_put_contents($file . '.expected', is_string($expected) ? $expected : self::dumpPhp($expected));
 		}
 
-		if (is_object($actual) || is_array($actual) || (is_string($actual) && strlen($actual) > 100)) {
+		if (is_object($actual) || is_array($actual) || (is_string($actual) && strlen($actual) > 80)) {
 			@mkdir(dirname($file)); // @ - directory may already exist
-			file_put_contents($file . '.actual', is_string($actual) ? $actual : var_export($actual, TRUE));
+			file_put_contents($file . '.actual', is_string($actual) ? $actual : self::dumpPhp($actual));
 		}
 	}
 
