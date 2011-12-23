@@ -48,7 +48,7 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, IReflection $databaseReflection = NULL)
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -60,7 +60,10 @@ class Connection extends PDO
 		}
 
 		$this->preprocessor = new SqlPreprocessor($this);
-		$this->setDatabaseReflection($databaseReflection ?: new Reflection\ConventionalReflection);
+		if (func_num_args() > 4) {
+			trigger_error('Set database reflection via setDatabaseReflection().', E_USER_WARNING);
+			$this->setDatabaseReflection(func_get_arg(5));
+		}
 
 		Diagnostics\ConnectionPanel::initialize($this);
 	}
@@ -99,6 +102,9 @@ class Connection extends PDO
 	/** @return IReflection */
 	public function getDatabaseReflection()
 	{
+		if (!$this->databaseReflection) {
+			$this->setDatabaseReflection(new Reflection\ConventionalReflection);
+		}
 		return $this->databaseReflection;
 	}
 
