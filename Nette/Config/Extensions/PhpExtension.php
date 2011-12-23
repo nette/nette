@@ -28,15 +28,7 @@ class PhpExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration(ContainerBuilder $container, array $config)
 	{
-		foreach ($config as $name => $value) {
-			if (is_array($value)) { // back compatibility - flatten INI dots
-				foreach ($value as $k => $v) {
-					$this->options["$name.$k"] = $v;
-				}
-			} else {
-				$this->options[$name] = $value;
-			}
-		}
+		$this->options = $config;
 	}
 
 
