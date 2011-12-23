@@ -27,6 +27,8 @@ use Nette,
  */
 class RobotLoader extends AutoLoader
 {
+	const RETRY_LIMIT = 3;
+
 	/** @var array */
 	public $scanDirs = array();
 
@@ -47,6 +49,9 @@ class RobotLoader extends AutoLoader
 
 	/** @var bool */
 	private $rebuilt = FALSE;
+
+	/** @var array of checked classes in this request */
+	private $checked = array();
 
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
@@ -91,19 +96,14 @@ class RobotLoader extends AutoLoader
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
 		$info = & $this->list[$type];
 
-		if ($this->autoRebuild && (!isset($info) || (isset($info[0]) && !is_file($info[0])))) {
-			$trace = debug_backtrace();
-			$initiator = & $trace[2]['function'];
-			if ($initiator === 'class_exists' || $initiator === 'interface_exists') {
-				$info = FALSE;
-				if ($this->rebuilt) {
-					$this->getCache()->save($this->getKey(), $this->list, array(
-						Cache::CONSTS => 'Nette\Framework::REVISION',
-					));
-				}
-			}
-
-			if (!$this->rebuilt) {
+		if ($this->autoRebuild && empty($this->checked[$type]) && (is_array($info) ? !is_file($info[0]) : $info < self::RETRY_LIMIT)) {
+			$info = is_int($info) ? $info + 1 : 0;
+			$this->checked[$type] = TRUE;
+			if ($this->rebuilt) {
+				$this->getCache()->save($this->getKey(), $this->list, array(
+					Cache::CONSTS => 'Nette\Framework::REVISION',
+				));
+			} else {
 				$this->rebuild();
 			}
 		}
@@ -112,8 +112,15 @@ class RobotLoader extends AutoLoader
 			Nette\Utils\LimitedScope::load($info[0], TRUE);
 
 			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE)) {
-				$info = NULL;
-				$this->tryLoad($type);
+				$info = 0;
+				$this->checked[$type] = TRUE;
+				if ($this->rebuilt) {
+					$this->getCache()->save($this->getKey(), $this->list, array(
+						Cache::CONSTS => 'Nette\Framework::REVISION',
+					));
+				} else {
+					$this->rebuild();
+				}
 			}
 			self::$count++;
 		}
@@ -139,7 +146,7 @@ class RobotLoader extends AutoLoader
 	public function _rebuildCallback(& $dp)
 	{
 		foreach ($this->list as $pair) {
-			if ($pair) {
+			if (is_array($pair)) {
 				$this->files[$pair[0]] = $pair[1];
 			}
 		}
@@ -162,7 +169,7 @@ class RobotLoader extends AutoLoader
 	{
 		$res = array();
 		foreach ($this->list as $class => $pair) {
-			if ($pair) {
+			if (is_array($pair)) {
 				$res[$pair[2]] = $pair[0];
 			}
 		}
@@ -284,7 +291,7 @@ class RobotLoader extends AutoLoader
 		$s = file_get_contents($file);
 
 		foreach ($this->list as $class => $pair) {
-			if ($pair && $pair[0] === $file) {
+			if (is_array($pair) && $pair[0] === $file) {
 				unset($this->list[$class]);
 			}
 		}
