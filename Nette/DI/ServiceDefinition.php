@@ -89,7 +89,7 @@ class ServiceDefinition extends Nette\Object
 
 	public function setParameters(array $params)
 	{
-		$this->shared = FALSE;
+		$this->shared = $this->autowired = FALSE;
 		$this->parameters = $params;
 		return $this;
 	}
