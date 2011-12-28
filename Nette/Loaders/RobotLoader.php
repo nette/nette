@@ -87,7 +87,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * Handles autoloading of classes or interfaces.
+	 * Handles autoloading of classes, interfaces or traits.
 	 * @param  string
 	 * @return void
 	 */
@@ -111,7 +111,7 @@ class RobotLoader extends AutoLoader
 		if (isset($info[0])) {
 			Nette\Utils\LimitedScope::load($info[0], TRUE);
 
-			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE)) {
+			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE) && (PHP_VERSION_ID < 50400 || !trait_exists($type, FALSE))) {
 				$info = 0;
 				$this->checked[$type] = TRUE;
 				if ($this->rebuilt) {
@@ -283,6 +283,7 @@ class RobotLoader extends AutoLoader
 	{
 		$T_NAMESPACE = PHP_VERSION_ID < 50300 ? -1 : T_NAMESPACE;
 		$T_NS_SEPARATOR = PHP_VERSION_ID < 50300 ? -1 : T_NS_SEPARATOR;
+		$T_TRAIT = PHP_VERSION_ID < 50400 ? -1 : T_TRAIT;
 
 		$expected = FALSE;
 		$namespace = '';
@@ -321,6 +322,7 @@ class RobotLoader extends AutoLoader
 				case $T_NAMESPACE:
 				case T_CLASS:
 				case T_INTERFACE:
+				case $T_TRAIT:
 					$expected = $token[0];
 					$name = '';
 					continue 2;
@@ -334,6 +336,7 @@ class RobotLoader extends AutoLoader
 				switch ($expected) {
 				case T_CLASS:
 				case T_INTERFACE:
+				case $T_TRAIT:
 					if ($level === $minLevel) {
 						$this->addClass($namespace . $name, $file, $time);
 					}
