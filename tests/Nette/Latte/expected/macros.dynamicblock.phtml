@@ -1,5 +1,9 @@
-<?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
-;//
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
 // block static
 //
 if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
@@ -56,6 +60,8 @@ if (!function_exists($_l->blocks["word$name"][] = '_xxx_word_name')) { function 
 if (!function_exists($_l->blocks["word$name"][] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
 
 <?php
+// epilog Nette\Latte\Macros\UIMacros
+
 // template extending support
 if ($_l->extends) {
 	ob_end_clean();

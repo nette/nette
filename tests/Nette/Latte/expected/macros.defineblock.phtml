@@ -1,5 +1,9 @@
-<?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
-;//
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
 // block test
 //
 if (!function_exists($_l->blocks['test'][] = '_xxx_test')) { function _xxx_test($_l, $_args) { extract($_args)
@@ -31,6 +35,8 @@ if ($_l->extends) {
 
 
 <?php call_user_func(reset($_l->blocks['test']), $_l, array('var' => 20) + $template->getParameters()) ;
+// epilog Nette\Latte\Macros\UIMacros
+
 // template extending support
 if ($_l->extends) {
 	ob_end_clean();

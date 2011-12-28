@@ -1,5 +1,9 @@
-<?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
-;//
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
 // block _outer
 //
 if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
@@ -32,6 +36,8 @@ if ($_l->extends) {
 ?>
 <div id="<?php echo $_control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div><?php
+// epilog Nette\Latte\Macros\UIMacros
+
 // template extending support
 if ($_l->extends) {
 	ob_end_clean();

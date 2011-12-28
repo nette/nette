@@ -1,5 +1,9 @@
-<?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
-;//
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
 // block menu
 //
 if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { extract($_args)
@@ -276,6 +280,8 @@ normal<?php if (false): ?>
 <?php ob_start() ?>TRUE<?php ob_start() ?>FALSE<?php if (TRUE) { ob_end_clean(); ob_end_flush(); } else { $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; } ?>
 
 <?php
+// epilog Nette\Latte\Macros\UIMacros
+
 // template extending support
 if ($_l->extends) {
 	ob_end_clean();

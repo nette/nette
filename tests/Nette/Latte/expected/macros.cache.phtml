@@ -1,5 +1,11 @@
-<?php list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
-;Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\CacheMacro
+Nette\Latte\Macros\CacheMacro::initRuntime($template, $_g);
+
+// prolog Nette\Latte\Macros\UIMacros
 
 // snippets support
 if (%A%}

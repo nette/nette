@@ -153,8 +153,9 @@ class Parser extends Nette\Object
 		$prologs = $epilogs = '';
 		foreach ($this->macroHandlers as $handler) {
 			$res = $handler->finalize();
-			$prologs .= isset($res[0]) ? "<?php $res[0]\n?>" : '';
-			$epilogs .= isset($res[1]) ? "<?php $res[1]\n?>" : '';
+			$handlerName = get_class($handler);
+			$prologs .= empty($res[0]) ? '' : "<?php\n// prolog $handlerName\n$res[0]\n?>";
+			$epilogs = (empty($res[1]) ? '' : "<?php\n// epilog $handlerName\n$res[1]\n?>") . $epilogs;
 		}
 		$this->output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $this->output . $epilogs;
 
