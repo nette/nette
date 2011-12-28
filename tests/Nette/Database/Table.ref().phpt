@@ -19,7 +19,12 @@ Assert::same('Jakub Vrana', $connection->table('book')->get(1)->ref('author')->n
 $book = $connection->table('book')->get(1);
 $book->translator_id = 12;
 $book->update();
-Assert::same('David Grudl', $connection->table('book')->get(1)->ref('author', 'translator_id')->name);
+
+
+
+$book = $connection->table('book')->get(1);
+Assert::same('David Grudl', $book->ref('author', 'translator_id')->name);
+Assert::same('Jakub Vrana', $book->ref('author', 'author_id')->name);
 
 
 
