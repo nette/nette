@@ -22,11 +22,14 @@ $loader->setCacheStorage(new DevNullStorage);
 $loader->addDirectory(__DIR__ . '/files');
 $loader->addDirectory(__DIR__ . '/files/'); // purposely doubled
 $loader->addDirectory(__DIR__ . '/file/interface.php'); // as file
+if (PHP_VERSION_ID >= 50400) $loader->addDirectory(__DIR__ . '/file/trait.php');
 $loader->addDirectory(__DIR__ . '/files.robots');
 $loader->register();
 
 Assert::false( class_exists('ConditionalClass') );   // files/conditional.class.php
 Assert::true( interface_exists('TestInterface') );   // file/interface.php
+if (PHP_VERSION_ID >= 50400) Assert::true( trait_exists('TestTrait') ); // file/trait.php
+
 /**/
 Assert::true( class_exists('TestClass') );           // files/namespaces1.php
 Assert::true( class_exists('MySpace1\TestClass1') ); // files/namespaces1.php
