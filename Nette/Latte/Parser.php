@@ -58,6 +58,9 @@ class Parser extends Nette\Object
 
 	/** @var string */
 	public $templateId;
+	
+	/** @var bool false if you want to keep quiet on undefined macros */
+	public $ignoreUndefinedMacros;
 
 	/** @internal Context-aware escaping states */
 	const CONTEXT_TEXT = 'text',
@@ -74,6 +77,7 @@ class Parser extends Nette\Object
 		$this->macroHandlers = new \SplObjectStorage;
 		$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
 		$this->context = array(self::CONTEXT_NONE, 'text');
+		$this->ignoreUndefinedMacros = false;
 	}
 
 
@@ -127,6 +131,14 @@ class Parser extends Nette\Object
 
 				} elseif (!empty($matches['macro'])) { // {macro}
 					list($macroName, $macroArgs, $macroModifiers) = $this->parseMacro($matches['macro']);
+
+					// If the macro is undefined & we shouldn't want, do 'common behaviour'
+					if($this->ignoreUndefinedMacros && empty($this->macros[($macroName[0] == '/' ? substr($macroName, 1) : $macroName)])) {
+						$this->output .= $matches[0];
+						continue;
+					}
+					
+					// proceed with parse
 					$isRightmost = $this->offset >= $len || $this->input[$this->offset] === "\n";
 					$this->writeMacro($macroName, $macroArgs, $macroModifiers, $isRightmost);
 
