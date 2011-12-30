@@ -491,22 +491,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function formatLayoutTemplateFiles()
 	{
-		$name = $this->getName();
-		$presenter = substr($name, strrpos(':' . $name, ':'));
-		$layout = $this->layout ? $this->layout : 'layout';
-		$dir = dirname(dirname($this->getReflection()->getFileName()));
-		$list = array(
-			"$dir/templates/$presenter/@$layout.latte",
-			"$dir/templates/$presenter.@$layout.latte",
-			"$dir/templates/$presenter/@$layout.phtml",
-			"$dir/templates/$presenter.@$layout.phtml",
-		);
-		do {
-			$list[] = "$dir/templates/@$layout.latte";
-			$list[] = "$dir/templates/@$layout.phtml";
-			$dir = dirname($dir);
-		} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
-		return $list;
+		return $this->getTemplateFactory()->formatLayoutTemplateFiles($this, $this->layout);
 	}
 
 
@@ -517,15 +502,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function formatTemplateFiles()
 	{
-		$name = $this->getName();
-		$presenter = substr($name, strrpos(':' . $name, ':'));
-		$dir = dirname(dirname($this->getReflection()->getFileName()));
-		return array(
-			"$dir/templates/$presenter/$this->view.latte",
-			"$dir/templates/$presenter.$this->view.latte",
-			"$dir/templates/$presenter/$this->view.phtml",
-			"$dir/templates/$presenter.$this->view.phtml",
-		);
+		return $this->getTemplateFactory()->formatTemplateFiles($this, $this->view);
 	}
 
 
@@ -1267,6 +1244,18 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
+	/**
+	 * @internal
+	 * @return Nette\Templating\ITemplateFactoryFilesFormatter
+	 */
+	public function getTemplateFactory()
+	{
+		return parent::getTemplateFactory() ?: $this->context->templateFactory;
+	}
+
+
+
+	
 	/**
 	 * @deprecated
 	 */
