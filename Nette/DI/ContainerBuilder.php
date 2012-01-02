@@ -528,11 +528,15 @@ class ContainerBuilder extends Nette\Object
 			? explode('::', $entity)
 			: $entity;
 
-		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // ServiceDefinition -> @serviceName
+		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // [ServiceDefinition, ...] -> [@serviceName, ...]
 			$tmp = array_keys($this->definitions, $entity[0], TRUE);
 			$entity[0] = "@$tmp[0]";
 
-		} elseif (is_array($entity) && $entity[0] === $this) { // $this -> @container
+		} elseif ($entity instanceof ServiceDefinition) { // ServiceDefinition -> @serviceName
+			$tmp = array_keys($this->definitions, $entity, TRUE);
+			$entity = "@$tmp[0]";
+
+		} elseif (is_array($entity) && $entity[0] === $this) { // [$this, ...] -> [@container, ...]
 			$entity[0] = '@' . ContainerBuilder::THIS_CONTAINER;
 		}
 		return $entity; // Class, @service, [Class, member], [@service, member], [, globalFunc]
