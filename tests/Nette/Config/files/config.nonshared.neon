@@ -10,4 +10,4 @@ factories:
 		class: Lorem
 		parameters: [Ipsum foo, bar: %false%]
 		setup:
-			- %foo%(%bar%)
+			- test(%foo%, %bar%)

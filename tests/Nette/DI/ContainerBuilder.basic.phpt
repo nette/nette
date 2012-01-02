@@ -62,7 +62,8 @@ $six = $builder->addDefinition('six')
 
 $builder->addDefinition('seven')
 	->setFactory(array($six, 'create'), array($builder, $six))
-	->addSetup(array($six, 'methodA'));
+	->addSetup(array($six, 'methodA'))
+	->addSetup('$service->methodA(?)', array('a'));
 
 $code = (string) $builder->generateClass();
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
@@ -103,3 +104,7 @@ Assert::same( array(
 	array('methodA', array('a', 'b')),
 	array('methodA', array()),
 ), $container->getService('six')->methods );
+
+Assert::same( array(
+	array('methodA', array('a')),
+), $container->getService('seven')->methods );

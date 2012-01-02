@@ -29,7 +29,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		$container = $this->getContainer();
 		$config = $this->getConfig();
-		
+
 		// cache
 		$container->addDefinition('cacheJournal')
 			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));

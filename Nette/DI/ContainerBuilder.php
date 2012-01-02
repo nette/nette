@@ -397,7 +397,7 @@ class ContainerBuilder extends Nette\Object
 
 		foreach ((array) $def->setup as $setup) {
 			$setup = Helpers::expand($setup, $parameters, TRUE);
-			if (is_string($setup->entity) && strpbrk($setup->entity, ':@') === FALSE) { // auto-prepend @self
+			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
 				$setup->entity = array("@$name", $setup->entity);
 			}
 			$code .= $this->formatStatement($setup, $name) . ";\n";
@@ -418,8 +418,8 @@ class ContainerBuilder extends Nette\Object
 		$entity = $this->normalizeEntity($statement->entity);
 		$arguments = (array) $statement->arguments;
 
-		if ($entity instanceof PhpLiteral) {
-			return $this->formatPhp('call_user_func_array(?, ?)', array($entity, $arguments));
+		if (is_string($entity) && strpos($entity, '?') !== FALSE) { // PHP literal
+			return $this->formatPhp($entity, $arguments, $self);
 
 		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
 			if ($this->definitions[$service]->shared) {
@@ -449,7 +449,7 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments));
 
 		} elseif (!Validators::isList($entity) || count($entity) !== 2) {
-			throw new Nette\InvalidStateException("Expected class, method or property, " . implode('::', $entity) . " given.");
+			throw new Nette\InvalidStateException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
 
 		} elseif ($entity[0] === '') { // globalFunc
 			return $this->formatPhp("$entity[1](?*)", array($arguments), $self);
@@ -523,9 +523,9 @@ class ContainerBuilder extends Nette\Object
 	/** @internal */
 	public function normalizeEntity($entity)
 	{
-		$entity = is_string($entity) && strpos($entity, '::') !== FALSE // Class::method -> [Class, method]
-			? explode('::', $entity)
-			: $entity;
+		if (is_string($entity) && strpos($entity, '::') !== FALSE && strpos($entity, '?') === FALSE) { // Class::method -> [Class, method]
+			$entity = explode('::', $entity);
+		}
 
 		if (is_array($entity) && $entity[0] instanceof ServiceDefinition) { // [ServiceDefinition, ...] -> [@serviceName, ...]
 			$tmp = array_keys($this->definitions, $entity[0], TRUE);
