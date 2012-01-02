@@ -56,8 +56,9 @@ class Ipsum
 class FooExtension extends Nette\Config\CompilerExtension
 {
 
-	public function loadConfiguration(ContainerBuilder $container, array $config)
+	public function loadConfiguration()
 	{
+		$container = $this->getContainer();
 		$container->parameters['class'] = 'Lorem';
 
 		$container->addDefinition('one1')

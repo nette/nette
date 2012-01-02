@@ -25,8 +25,11 @@ use Nette,
 class NetteExtension extends Nette\Config\CompilerExtension
 {
 
-	public function loadConfiguration(ContainerBuilder $container, array $config)
+	public function loadConfiguration()
 	{
+		$container = $this->getContainer();
+		$config = $this->getConfig();
+		
 		// cache
 		$container->addDefinition('cacheJournal')
 			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
@@ -100,9 +103,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 
 
-	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
+		$container = $this->getContainer();
 
 		if (isset($container->parameters['tempDir'])) {
 			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));

@@ -58,6 +58,16 @@ abstract class CompilerExtension extends Nette\Object
 
 
 	/**
+	 * @return Nette\DI\ContainerBuilder
+	 */
+	public function getContainer()
+	{
+		return $this->compiler->getContainer();
+	}
+
+
+
+	/**
 	 * Prepend extension name to identifier or service name.
 	 * @param  string
 	 * @return string
@@ -71,11 +81,9 @@ abstract class CompilerExtension extends Nette\Object
 
 	/**
 	 * Processes configuration data. Intended to be overridden by descendant.
-	 * @param  ContainerBuilder builded DI container
-	 * @param  array  configuration with expanded parameters
 	 * @return void
 	 */
-	public function loadConfiguration(ContainerBuilder $container, array $config)
+	public function loadConfiguration()
 	{
 	}
 
@@ -85,7 +93,7 @@ abstract class CompilerExtension extends Nette\Object
 	 * Adjusts DI container before is compiled to PHP class. Intended to be overridden by descendant.
 	 * @return void
 	 */
-	public function beforeCompile(ContainerBuilder $container)
+	public function beforeCompile()
 	{
 	}
 
@@ -95,7 +103,7 @@ abstract class CompilerExtension extends Nette\Object
 	 * Adjusts DI container compiled to PHP class. Intended to be overridden by descendant.
 	 * @return void
 	 */
-	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 	}
 

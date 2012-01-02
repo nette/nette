@@ -21,18 +21,18 @@ require __DIR__ . '/../bootstrap.php';
 class DatabaseExtension extends Nette\Config\CompilerExtension
 {
 
-	public function loadConfiguration(ContainerBuilder $container, array $config)
+	public function loadConfiguration()
 	{
-		Assert::equal( array('foo' => 'hello'), $config );
+		Assert::equal( array('foo' => 'hello'), $this->config );
 		TestHelpers::note(__METHOD__);
 	}
 
-	public function beforeCompile(ContainerBuilder $container)
+	public function beforeCompile()
 	{
 		TestHelpers::note(__METHOD__);
 	}
 
-	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		TestHelpers::note(__METHOD__);
 	}

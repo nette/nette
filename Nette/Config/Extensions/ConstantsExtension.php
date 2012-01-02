@@ -24,7 +24,7 @@ use Nette,
 class ConstantsExtension extends Nette\Config\CompilerExtension
 {
 
-	public function afterCompile(ContainerBuilder $container, Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		foreach ($this->getConfig() as $name => $value) {
 			$class->methods['initialize']->addBody('define(?, ?);', array($name, $value));

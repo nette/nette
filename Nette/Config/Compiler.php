@@ -118,10 +118,8 @@ class Compiler extends Nette\Object
 			throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
 		}
 
-		$configExp = $this->container->expand($this->config);
 		foreach ($this->extensions as $name => $extension) {
-			$config = isset($configExp[$name]) ? array_diff_key($configExp[$name], self::$reserved) : array();
-			$extension->loadConfiguration($this->container, $config);
+			$extension->loadConfiguration();
 		}
 	}
 
@@ -137,7 +135,7 @@ class Compiler extends Nette\Object
 
 			if (isset($this->config[$name])) {
 				$this->parseServices($this->container, $this->config[$name], $name);
-	}
+			}
 		}
 	}
 
@@ -146,7 +144,7 @@ class Compiler extends Nette\Object
 	public function generateCode($className, $parentName)
 	{
 		foreach ($this->extensions as $extension) {
-			$extension->beforeCompile($this->container);
+			$extension->beforeCompile();
 		}
 
 		$class = $this->container->generateClass($parentName);
@@ -154,7 +152,7 @@ class Compiler extends Nette\Object
 			->addMethod('initialize');
 
 		foreach ($this->extensions as $extension) {
-			$extension->afterCompile($this->container, $class);
+			$extension->afterCompile($class);
 		}
 		return (string) $class;
 	}
