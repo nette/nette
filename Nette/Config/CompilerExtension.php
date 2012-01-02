@@ -68,6 +68,24 @@ abstract class CompilerExtension extends Nette\Object
 
 
 	/**
+	 * Reads configuration from file.
+	 * @param  string  file name
+	 * @return array
+	 */
+	public function loadFromFile($file)
+	{
+		$loader = new Loader;
+		$res = $loader->load($file);
+		$container = $this->compiler->getContainer();
+		foreach ($loader->getDependencies() as $file) {
+			$container->addDependency($file);
+		}
+		return $res;
+	}
+
+
+
+	/**
 	 * Prepend extension name to identifier or service name.
 	 * @param  string
 	 * @return string

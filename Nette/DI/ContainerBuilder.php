@@ -221,7 +221,6 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
-		$this->dependencies = array();
 		foreach ($this->classes as $class => $foo) {
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
 		}
