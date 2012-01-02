@@ -119,7 +119,7 @@ class ContainerBuilder extends Nette\Object
 	 * @return string  service name or NULL
 	 * @throws ServiceCreationException
 	 */
-	public function getByClass($class)
+	public function getByType($class)
 	{
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
@@ -329,7 +329,7 @@ class ContainerBuilder extends Nette\Object
 		$classes = $class->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
 			try {
-				$classes->value[$name] = $this->sanitizeName($this->getByClass($name));
+				$classes->value[$name] = $this->sanitizeName($this->getByType($name));
 			} catch (ServiceCreationException $e) {
 				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
@@ -562,7 +562,7 @@ class ContainerBuilder extends Nette\Object
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList
 				return $service;
 			}
-			$res = $this->getByClass($service);
+			$res = $this->getByType($service);
 			if (!$res) {
 				throw new ServiceCreationException("Reference to missing service of type $service.");
 			}

@@ -209,7 +209,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	 * @return object  service or NULL
 	 * @throws MissingServiceException
 	 */
-	public function getByClass($class, $need = TRUE)
+	public function getByType($class, $need = TRUE)
 	{
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {

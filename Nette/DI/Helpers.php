@@ -119,7 +119,7 @@ final class Helpers
 				$optCount = 0;
 
 			} elseif ($parameter->getClass()) { // has object typehint
-				$res[$num] = $container->getByClass($parameter->getClass()->getName());
+				$res[$num] = $container->getByType($parameter->getClass()->getName());
 				if ($res[$num] === NULL) {
 					if ($parameter->allowsNull()) {
 						$optCount++;

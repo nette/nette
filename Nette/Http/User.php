@@ -175,7 +175,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getAuthenticator()
 	{
-		return $this->authenticator ?: $this->context->getByClass('Nette\Security\IAuthenticator');
+		return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
 	}
 
 
@@ -409,7 +409,7 @@ class User extends Nette\Object implements IUser
 	 */
 	final public function getAuthorizator()
 	{
-		return $this->authorizator ?: $this->context->getByClass('Nette\Security\IAuthorizator');
+		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
 	}
 
 
