@@ -242,7 +242,7 @@ class Parser extends Nette\Object
 
 		} elseif (!empty($matches['end'])) { // end of HTML tag />
 			$node = end($this->htmlNodes);
-			$isEmpty = !$node->closing && (strpos($matches['end'], '/') !== FALSE || $node->isEmpty);
+			$isEmpty = !$node->closing && (Strings::contains($matches['end'], '/') || $node->isEmpty);
 
 			if ($isEmpty) {
 				$matches[0] = (Nette\Utils\Html::$xhtml ? ' />' : '>')

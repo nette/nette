@@ -335,7 +335,7 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroIfset(MacroNode $node, $writer)
 	{
-		if (strpos($node->args, '#') === FALSE) {
+		if (!Strings::contains($node->args, '#')) {
 			return FALSE;
 		}
 		$list = array();
@@ -361,7 +361,7 @@ if (!empty($_control->snippetMode)) {
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
 		$method = Strings::match($method, '#^(' . self::RE_IDENTIFIER . '|)$#') ? "render$method" : "{\"render$method\"}";
 		$param = $writer->formatArray();
-		if (strpos($node->args, '=>') === FALSE) {
+		if (!Strings::contains($node->args, '=>')) {
 			$param = substr($param, 6, -1); // removes array()
 		}
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
@@ -400,19 +400,19 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroContentType(MacroNode $node, $writer)
 	{
-		if (strpos($node->args, 'html') !== FALSE) {
+		if (Strings::contains($node->args, 'html')) {
 			$this->parser->context = array(Latte\Parser::CONTEXT_TEXT);
 
-		} elseif (strpos($node->args, 'xml') !== FALSE) {
+		} elseif (Strings::contains($node->args, 'xml')) {
 			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'xml');
 
-		} elseif (strpos($node->args, 'javascript') !== FALSE) {
+		} elseif (Strings::contains($node->args, 'javascript')) {
 			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'js');
 
-		} elseif (strpos($node->args, 'css') !== FALSE) {
+		} elseif (Strings::contains($node->args, 'css')) {
 			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'css');
 
-		} elseif (strpos($node->args, 'plain') !== FALSE) {
+		} elseif (Strings::contains($node->args, 'plain')) {
 			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'text');
 
 		} else {
@@ -420,7 +420,7 @@ if (!empty($_control->snippetMode)) {
 		}
 
 		// temporary solution
-		if (strpos($node->args, '/')) {
+		if (Strings::contains($node->args, '/')) {
 			return $writer->write('$netteHttpResponse->setHeader("Content-Type", %var)', $node->args);
 		}
 	}

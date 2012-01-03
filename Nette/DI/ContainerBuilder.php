@@ -13,6 +13,7 @@ namespace Nette\DI;
 
 use Nette,
 	Nette\Utils\Validators,
+	Nette\Utils\Strings,
 	Nette\Utils\PhpGenerator\Helpers as PhpHelpers,
 	Nette\Utils\PhpGenerator\PhpLiteral;
 
@@ -243,7 +244,7 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (is_array($factory)) { // method calling
 			if ($service = $this->getServiceName($factory[0])) {
-				if (strpos($service, '\\') !== FALSE) { // @\Class
+				if (Strings::contains($service, '\\')) { // @\Class
 					throw new ServiceCreationException("Unable resolve class name for service '$name'.");
 				}
 				$factory[0] = $this->resolveClass($service, $recursive);
@@ -265,7 +266,7 @@ class ContainerBuilder extends Nette\Object
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory
-			if (strpos($service, '\\') !== FALSE) { // @\Class
+			if (Strings::contains($service, '\\')) { // @\Class
 				/*5.2* $service = ltrim($service, '\\');*/
 				$def->autowired = FALSE;
 				return $def->class = $service;
@@ -418,7 +419,7 @@ class ContainerBuilder extends Nette\Object
 		$entity = $this->normalizeEntity($statement->entity);
 		$arguments = (array) $statement->arguments;
 
-		if (is_string($entity) && strpos($entity, '?') !== FALSE) { // PHP literal
+		if (is_string($entity) && Strings::contains($entity, '?')) { // PHP literal
 			return $this->formatPhp($entity, $arguments, $self);
 
 		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
@@ -454,7 +455,7 @@ class ContainerBuilder extends Nette\Object
 		} elseif ($entity[0] === '') { // globalFunc
 			return $this->formatPhp("$entity[1](?*)", array($arguments), $self);
 
-		} elseif (strpos($entity[1], '$') !== FALSE) { // property setter
+		} elseif (Strings::contains($entity[1], '$')) { // property setter
 			if ($this->getServiceName($entity[0], $self)) {
 				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $statement->arguments), $self);
 			} else {
@@ -523,7 +524,7 @@ class ContainerBuilder extends Nette\Object
 	/** @internal */
 	public function normalizeEntity($entity)
 	{
-		if (is_string($entity) && strpos($entity, '::') !== FALSE && strpos($entity, '?') === FALSE) { // Class::method -> [Class, method]
+		if (is_string($entity) && Strings::contains($entity, '::') && !Strings::contains($entity, '?')) { // Class::method -> [Class, method]
 			$entity = explode('::', $entity);
 		}
 
@@ -557,7 +558,7 @@ class ContainerBuilder extends Nette\Object
 		if ($service === self::CREATED_SERVICE) {
 			$service = $self;
 		}
-		if (strpos($service, '\\') !== FALSE) {
+		if (Strings::contains($service, '\\')) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList
 				return $service;
 			}

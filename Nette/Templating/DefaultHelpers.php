@@ -208,9 +208,9 @@ final class DefaultHelpers
 		}
 
 		$time = Nette\DateTime::from($time);
-		return strpos($format, '%') === FALSE
-			? $time->format($format) // formats using date()
-			: strftime($format, $time->format('U')); // formats according to locales
+		return Strings::contains($format, '%')
+			? strftime($format, $time->format('U')) // formats according to locales
+			: $time->format($format); // formats using date()
 	}
 
 
