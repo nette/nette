@@ -174,6 +174,17 @@ final class Debugger
 				);
 			}
 		});
+		self::$blueScreen->addPanel(function($e) {
+			if ($e instanceof Nette\Utils\NeonException) {
+				return array(
+					'tab' => 'Neon',
+					'panel' => '<p><b>File:</b> ' . Helpers::editorLink($e->sourceFile, $e->sourceLine)
+					. '&nbsp; <b>Line:</b> ' . ($e->sourceLine ? $e->sourceLine : 'n/a')
+					. '&nbsp; <b>Column:</b> '. ($e->sourceColumn ? $e->sourceColumn : 'n/a') . '</p>'
+					. ($e->sourceLine ? '<pre>' . BlueScreen::highlightFile($e->sourceFile, $e->sourceLine) . '</pre>' : '')
+				);
+			}
+		});
 
 		self::$bar = new Bar;
 		self::$bar->addPanel(new DefaultBarPanel('time'));
