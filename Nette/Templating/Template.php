@@ -169,7 +169,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Registers callback as template compile-time filter.
 	 * @param  callback
-	 * @return void
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerFilter($callback)
 	{
@@ -178,6 +178,7 @@ class Template extends Nette\Object implements ITemplate
 			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
+		return $this;
 	}
 
 
@@ -197,11 +198,12 @@ class Template extends Nette\Object implements ITemplate
 	 * Registers callback as template run-time helper.
 	 * @param  string
 	 * @param  callback
-	 * @return void
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelper($name, $callback)
 	{
 		$this->helpers[strtolower($name)] = callback($callback);
+		return $this;
 	}
 
 
@@ -209,11 +211,12 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Registers callback as template run-time helpers loader.
 	 * @param  callback
-	 * @return void
+	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelperLoader($callback)
 	{
 		$this->helperLoaders[] = callback($callback);
+		return $this;
 	}
 
 
@@ -275,7 +278,7 @@ class Template extends Nette\Object implements ITemplate
 	 * Adds new template parameter.
 	 * @param  string  name
 	 * @param  mixed   value
-	 * @return void
+	 * @return Template  provides a fluent interface
 	 */
 	public function add($name, $value)
 	{
@@ -284,6 +287,7 @@ class Template extends Nette\Object implements ITemplate
 		}
 
 		$this->params[$name] = $value;
+		return $this;
 	}
 
 
@@ -391,11 +395,12 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Set cache storage.
 	 * @param  Nette\Caching\Cache
-	 * @return void
+	 * @return Template  provides a fluent interface
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)
 	{
 		$this->cacheStorage = $storage;
+		return $this;
 	}
 
 

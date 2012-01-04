@@ -43,7 +43,7 @@ class Compiler extends Nette\Object
 
 	/**
 	 * Add custom configurator extension.
-	 * @return ServiceDefinition
+	 * @return Compiler  provides a fluent interface
 	 */
 	public function addExtension($name, CompilerExtension $extension)
 	{

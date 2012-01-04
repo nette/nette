@@ -186,7 +186,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 * @param  IComponent
 	 * @param  string
 	 * @param  string
-	 * @return void
+	 * @return Container  provides a fluent interface
 	 * @throws Nette\InvalidStateException
 	 */
 	public function addComponent(Nette\ComponentModel\IComponent $component, $name, $insertBefore = NULL)
@@ -195,6 +195,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		if ($this->currentGroup !== NULL && $component instanceof IControl) {
 			$this->currentGroup->add($component);
 		}
+		return $this;
 	}
 
 

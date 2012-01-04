@@ -118,7 +118,7 @@ final class Response extends Nette\Object implements IResponse
 	 * Adds HTTP header.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return void
+	 * @return Response  provides a fluent interface
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function addHeader($name, $value)
@@ -128,6 +128,7 @@ final class Response extends Nette\Object implements IResponse
 		}
 
 		header($name . ': ' . $value, FALSE, $this->code);
+		return $this;
 	}
 
 

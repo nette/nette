@@ -43,6 +43,7 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	{
 		$this->macros[$name] = array($begin, $end);
 		$this->parser->addMacro($name, $this);
+		return $this;
 	}
 
 

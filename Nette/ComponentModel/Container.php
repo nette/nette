@@ -41,7 +41,7 @@ class Container extends Component implements IContainer
 	 * @param  IComponent
 	 * @param  string
 	 * @param  string
-	 * @return void
+	 * @return Container  provides a fluent interface
 	 * @throws Nette\InvalidStateException
 	 */
 	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
@@ -95,6 +95,7 @@ class Container extends Component implements IContainer
 			unset($this->components[$name]); // undo
 			throw $e;
 		}
+		return $this;
 	}
 
 
