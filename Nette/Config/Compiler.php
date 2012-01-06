@@ -69,7 +69,7 @@ class Compiler extends Nette\Object
 	/**
 	 * @return Nette\DI\ContainerBuilder
 	 */
-	public function getContainer()
+	public function getContainerBuilder()
 	{
 		return $this->container;
 	}

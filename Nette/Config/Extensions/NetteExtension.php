@@ -27,7 +27,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$container = $this->getContainer();
+		$container = $this->getContainerBuilder();
 		$config = $this->getConfig();
 
 		// cache
@@ -106,7 +106,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
-		$container = $this->getContainer();
+		$container = $this->getContainerBuilder();
 
 		if (isset($container->parameters['tempDir'])) {
 			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));

@@ -58,7 +58,7 @@ class FooExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$container = $this->getContainer();
+		$container = $this->getContainerBuilder();
 		$container->parameters['class'] = 'Lorem';
 
 		$container->addDefinition('one1')

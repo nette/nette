@@ -52,7 +52,7 @@ abstract class CompilerExtension extends Nette\Object
 		$config = isset($config[$this->name]) ? $config[$this->name] : array();
 		unset($config['services'], $config['factories']);
 		$config = Helpers::merge($config, $defaults);
-		return $expand ? $this->compiler->getContainer()->expand($config) : $config;
+		return $expand ? $this->compiler->getContainerBuilder()->expand($config) : $config;
 	}
 
 
@@ -60,9 +60,9 @@ abstract class CompilerExtension extends Nette\Object
 	/**
 	 * @return Nette\DI\ContainerBuilder
 	 */
-	public function getContainer()
+	public function getContainerBuilder()
 	{
-		return $this->compiler->getContainer();
+		return $this->compiler->getContainerBuilder();
 	}
 
 
@@ -76,7 +76,7 @@ abstract class CompilerExtension extends Nette\Object
 	{
 		$loader = new Loader;
 		$res = $loader->load($file);
-		$container = $this->compiler->getContainer();
+		$container = $this->compiler->getContainerBuilder();
 		foreach ($loader->getDependencies() as $file) {
 			$container->addDependency($file);
 		}

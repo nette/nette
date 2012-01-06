@@ -227,7 +227,7 @@ class Configurator extends Nette\Object
 			$this->params['container']['class'],
 			$config['parameters']['container']['parent']
 		);
-		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainer()->getDependencies());
+		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainerBuilder()->getDependencies());
 		return $code;
 	}
 
