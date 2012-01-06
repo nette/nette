@@ -30,7 +30,7 @@ use Nette,
  * @property      string $view
  * @property      string $layout
  * @property-read mixed $payload
- * @property      Nette\DI\IContainer $context
+ * @property-read \SystemContainer|Nette\DI\IContainer $context
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Http\User $user
@@ -1269,7 +1269,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return Nette\DI\IContainer
+	 * @return \SystemContainer|Nette\DI\IContainer
 	 */
 	final public function getContext()
 	{
