@@ -37,6 +37,9 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	/** @var IJournal */
 	private $journal;
 
+	/** @var bool */
+	private $compress = FALSE;
+
 
 
 	/**
@@ -69,6 +72,17 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 
 
 	/**
+	 * Sets whether the data in cache is compressed or not (uses zlib compression).
+	 * @param bool $compress
+	 */
+	public function setCompress($compress)
+	{
+		$this->compress = (bool) $compress;
+	}
+
+
+
+	/**
 	 * Read from cache.
 	 * @param  string key
 	 * @return mixed|NULL
@@ -95,7 +109,7 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 		}
 
 		if (!empty($meta[self::META_DELTA])) {
-			$this->memcache->replace($key, $meta, 0, $meta[self::META_DELTA] + time());
+			$this->memcache->replace($key, $meta, $this->compress ? MEMCACHE_COMPRESSED : 0, $meta[self::META_DELTA] + time());
 		}
 
 		return $meta[self::META_DATA];
@@ -151,7 +165,7 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 			$this->journal->write($key, $dp);
 		}
 
-		$this->memcache->set($key, $meta, 0, $expire);
+		$this->memcache->set($key, $meta, $this->compress ? MEMCACHE_COMPRESSED : 0, $expire);
 	}
 
 
