@@ -51,8 +51,8 @@ class Application extends Nette\Object
 	/** @var array of function(Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
 	public $onError;
 
-	/** @var array of string */
-	public $allowedMethods = array('GET', 'POST', 'HEAD', 'PUT', 'DELETE');
+	/** @deprecated */
+	public $allowedMethods;
 
 	/** @var array of Request */
 	private $requests = array();
@@ -95,18 +95,6 @@ class Application extends Nette\Object
 	 */
 	public function run()
 	{
-		// check HTTP method
-		if ($this->allowedMethods) {
-			$method = $this->httpRequest->getMethod();
-			if (!in_array($method, $this->allowedMethods, TRUE)) {
-				$this->httpResponse->setCode(Nette\Http\IResponse::S501_NOT_IMPLEMENTED);
-				$this->httpResponse->setHeader('Allow', implode(',', $this->allowedMethods));
-				echo '<h1>Method ' . htmlSpecialChars($method) . ' is not implemented</h1>';
-				return;
-			}
-		}
-
-		// dispatching
 		$request = NULL;
 		$repeatedError = FALSE;
 		do {
