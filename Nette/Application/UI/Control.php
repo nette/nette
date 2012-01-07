@@ -88,6 +88,9 @@ abstract class Control extends PresenterComponent implements IRenderable
 			$template->flashes = array();
 		}
 
+		// move to user-space phase and thus enable some checks
+		$template->setPhase(\Nette\Templating\Template::PHASE_USER_SPACE);
+
 		return $template;
 	}
 
