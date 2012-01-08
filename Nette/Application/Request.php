@@ -24,6 +24,7 @@ use Nette;
  * @property   array $parameters
  * @property   array $post
  * @property   array $files
+ * @property   string $method
  */
 final class Request extends Nette\FreezableObject
 {

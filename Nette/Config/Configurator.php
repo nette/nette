@@ -22,8 +22,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property   bool $productionMode
- * @property   string $tempDirectory
- * @property-read \SystemContainer $container
+ * @property-write $tempDirectory
  */
 class Configurator extends Nette\Object
 {

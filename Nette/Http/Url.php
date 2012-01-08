@@ -90,7 +90,7 @@ class Url extends Nette\FreezableObject
 
 	/**
 	 * @param  string  URL
-	 * @throws Nette\WebNette\InvalidArgumentException
+	 * @throws Nette\InvalidArgumentException
 	 */
 	public function __construct($url = NULL)
 	{

@@ -22,7 +22,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read array $extensions
- * @property-read Nette\DI\ContainerBuilder $container
+ * @property-read Nette\DI\ContainerBuilder $containerBuilder
  * @property-read array $config
  */
 class Compiler extends Nette\Object

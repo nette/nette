@@ -23,7 +23,7 @@ use Nette;
  * @property   mixed $action
  * @property   string $method
  * @property-read array $groups
- * @property-read Nette\Localization\ITranslator|NULL $translator
+ * @property   Nette\Localization\ITranslator|NULL $translator
  * @property-read bool $anchored
  * @property-read ISubmitterControl|FALSE $submitted
  * @property-read bool $success

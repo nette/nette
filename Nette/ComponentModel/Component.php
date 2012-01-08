@@ -23,7 +23,7 @@ use Nette;
  * @author     David Grudl
  *
  * @property-read string $name
- * @property IContainer $parent
+ * @property-read IContainer|NULL $parent
  */
 abstract class Component extends Nette\Object implements IComponent
 {

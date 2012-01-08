@@ -25,11 +25,14 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read Nette\Application\Request $request
- * @property-read array $signal
+ * @property-read array|NULL $signal
  * @property-read string $action
  * @property      string $view
  * @property      string $layout
- * @property-read mixed $payload
+ * @property-read stdClass $payload
+ * @property-read bool $ajax
+ * @property-read Nette\Application\Request $lastCreatedRequest
+ * @property-read Nette\Http\SessionSection $flashSession
  * @property-read \SystemContainer|Nette\DI\IContainer $context
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session

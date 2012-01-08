@@ -21,8 +21,8 @@ use Nette;
  * @author     David Grudl
  *
  * @property   int $code
+ * @property-read bool $sent
  * @property-read array $headers
- * @property-read mixed $sent
  */
 final class Response extends Nette\Object implements IResponse
 {

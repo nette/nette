@@ -25,21 +25,22 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read Nette\Forms\Form $form
- * @property-read mixed $control
- * @property-read mixed $label
  * @property-read string $htmlName
  * @property   string $htmlId
  * @property-read array $options
- * @property   Nette\Localization\ITranslator $translator
+ * @property   Nette\Localization\ITranslator|NULL $translator
  * @property   mixed $value
  * @property-read bool $filled
+ * @property-write $defaultValue
+ * @property   bool $disabled
+ * @property-read Nette\Utils\Html $control
+ * @property-read Nette\Utils\Html $label
  * @property-read Nette\Utils\Html $controlPrototype
  * @property-read Nette\Utils\Html $labelPrototype
  * @property-read Nette\Forms\Rules $rules
- * @property-read array $errors
- * @property   bool $disabled
  * @property   bool $required
-*/
+ * @property-read array $errors
+ */
 abstract class BaseControl extends Nette\ComponentModel\Component implements IControl
 {
 	/** @var string */

@@ -20,6 +20,8 @@ use Nette,
  * Configurator compiling extension.
  *
  * @author     David Grudl
+ * @property-read array $config
+ * @property-read Nette\DI\ContainerBuilder $containerBuilder
  */
 abstract class CompilerExtension extends Nette\Object
 {

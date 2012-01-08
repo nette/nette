@@ -23,7 +23,7 @@ use Nette;
  * @property-write $defaults
  * @property   Nette\ArrayHash $values
  * @property-read bool $valid
- * @property-read ControlGroup $currentGroup
+ * @property   ControlGroup $currentGroup
  * @property-read \ArrayIterator $controls
  * @property-read Form $form
  */
