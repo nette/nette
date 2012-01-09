@@ -26,9 +26,6 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	const ERROR_DUPLICATE_ENTRY = 1062;
 	const ERROR_DATA_TRUNCATED = 1265;
 
-	/** @var array */
-	public $supports = array('meta' => TRUE);
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -199,6 +196,16 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	public function getForeignKeys($table)
 	{
 		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	public function isSupported($item)
+	{
+		return $item === self::META;
 	}
 
 }

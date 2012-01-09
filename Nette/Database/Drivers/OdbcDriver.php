@@ -22,9 +22,6 @@ use Nette;
  */
 class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	/** @var array */
-	public $supports = array('meta' => TRUE);
-
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -139,6 +136,16 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	public function getForeignKeys($table)
 	{
 		throw new NotImplementedException;
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	public function isSupported($item)
+	{
+		return $item === self::META;
 	}
 
 }

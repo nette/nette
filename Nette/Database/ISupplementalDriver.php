@@ -22,6 +22,7 @@ use Nette;
  */
 interface ISupplementalDriver
 {
+	const META = 'meta';
 
 	/**
 	 * Delimites identifier for use in a SQL statement.
