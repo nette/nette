@@ -54,10 +54,10 @@ class Parser extends Nette\Object
 	private $macroNodes = array();
 
 	/** @var array */
-	public $context;
+	private $context;
 
 	/** @var string */
-	public $templateId;
+	private $templateId;
 
 	/** @internal Context-aware escaping states */
 	const CONTEXT_TEXT = 'text',
@@ -73,7 +73,7 @@ class Parser extends Nette\Object
 	{
 		$this->macroHandlers = new \SplObjectStorage;
 		$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
-		$this->context = array(self::CONTEXT_NONE, 'text');
+		$this->setContext(self::CONTEXT_NONE, 'text');
 	}
 
 
@@ -358,6 +358,37 @@ class Parser extends Nette\Object
 			foreach ($matches as $k => $v) $matches[$k] = $v[0];
 		}
 		return $matches;
+	}
+
+
+
+	/**
+	 * @return Parser  provides a fluent interface
+	 */
+	public function setContext($context, $mime = NULL)
+	{
+		$this->context = array($context, $mime);
+		return $this;
+	}
+
+
+
+	/**
+	 * @return array [context, mime]
+	 */
+	public function getContext()
+	{
+		return $this->context;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getTemplateId()
+	{
+		return $this->templateId;
 	}
 
 

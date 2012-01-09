@@ -23,7 +23,7 @@ use Nette;
 class Engine extends Nette\Object
 {
 	/** @var Parser */
-	public $parser;
+	private $parser;
 
 
 
@@ -45,9 +45,19 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		$this->parser->context = array(Parser::CONTEXT_TEXT);
+		$this->parser->setContext(Parser::CONTEXT_TEXT);
 		$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
 		return $this->parser->parse($s);
+	}
+
+
+
+	/**
+	 * @return Parser
+	 */
+	public function getParser()
+	{
+		return $this->parser;
 	}
 
 }

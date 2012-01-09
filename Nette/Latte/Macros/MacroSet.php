@@ -25,7 +25,7 @@ use Nette,
 class MacroSet extends Nette\Object implements Latte\IMacro
 {
 	/** @var Latte\Parser */
-	public $parser;
+	private $parser;
 
 	/** @var array */
 	private $macros;
@@ -105,7 +105,7 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	private function compile(MacroNode $node, $def)
 	{
 		$node->tokenizer->reset();
-		$writer = Latte\PhpWriter::using($node, $this->parser->context);
+		$writer = Latte\PhpWriter::using($node, $this->parser->getContext());
 		if (is_string($def)/*5.2* && substr($def, 0, 1) !== "\0"*/) {
 			$code = $writer->write($def);
 		} else {
@@ -115,6 +115,16 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 			}
 		}
 		return "<?php $code ?>";
+	}
+
+
+
+	/**
+	 * @return Latte\Parser
+	 */
+	public function getParser()
+	{
+		return $this->parser;
 	}
 
 }

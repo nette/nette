@@ -91,7 +91,7 @@ class UIMacros extends MacroSet
 	{
 		// try close last block
 		try {
-			$this->parser->writeMacro('/block');
+			$this->getParser()->writeMacro('/block');
 		} catch (ParseException $e) {
 		}
 
@@ -99,7 +99,7 @@ class UIMacros extends MacroSet
 
 		if ($this->namedBlocks) {
 			foreach ($this->namedBlocks as $name => $code) {
-				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$func = '_lb' . substr(md5($this->getParser()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				$snippet = $name[0] === '_';
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
@@ -196,7 +196,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroIncludeBlock(MacroNode $node, $writer)
 	{
 		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
-			$this->parser->templateId);
+			$this->getParser()->getTemplateId());
 	}
 
 
@@ -260,7 +260,7 @@ if (!empty($_control->snippetMode)) {
 				$node->data->leave = TRUE;
 				$fname = $writer->formatWord($name);
 				$node->data->end = "}} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars())";
-				$func = '_lb' . substr(md5($this->parser->templateId . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$func = '_lb' . substr(md5($this->getParser()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				return "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[$fname][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
@@ -401,22 +401,22 @@ if (!empty($_control->snippetMode)) {
 	public function macroContentType(MacroNode $node, $writer)
 	{
 		if (Strings::contains($node->args, 'html')) {
-			$this->parser->context = array(Latte\Parser::CONTEXT_TEXT);
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_TEXT);
 
 		} elseif (Strings::contains($node->args, 'xml')) {
-			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'xml');
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'xml');
 
 		} elseif (Strings::contains($node->args, 'javascript')) {
-			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'js');
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'js');
 
 		} elseif (Strings::contains($node->args, 'css')) {
-			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'css');
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'css');
 
 		} elseif (Strings::contains($node->args, 'plain')) {
-			$this->parser->context = array(Latte\Parser::CONTEXT_NONE, 'text');
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'text');
 
 		} else {
-			$this->parser->context = array(Latte\Parser::CONTEXT_NONE);
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE);
 		}
 
 		// temporary solution

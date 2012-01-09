@@ -97,7 +97,7 @@ class CoreMacros extends MacroSet
 	public function finalize()
 	{
 		return array('list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '
-			. var_export($this->parser->templateId, TRUE) . ')');
+			. var_export($this->getParser()->getTemplateId(), TRUE) . ')');
 	}
 
 
@@ -186,23 +186,23 @@ class CoreMacros extends MacroSet
 		switch ($node->args) {
 		case '':
 		case 'latte':
-			$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
+			$this->getParser()->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
 			break;
 
 		case 'double':
-			$this->parser->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
+			$this->getParser()->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
 			break;
 
 		case 'asp':
-			$this->parser->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
+			$this->getParser()->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
 			break;
 
 		case 'python':
-			$this->parser->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
+			$this->getParser()->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
 			break;
 
 		case 'off':
-			$this->parser->setDelimiters('[^\x00-\xFF]', '');
+			$this->getParser()->setDelimiters('[^\x00-\xFF]', '');
 			break;
 
 		default:
@@ -218,7 +218,7 @@ class CoreMacros extends MacroSet
 	public function macroInclude(MacroNode $node, $writer)
 	{
 		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters(), $_l->templates[%var])',
-			$this->parser->templateId);
+			$this->getParser()->getTemplateId());
 
 		if ($node->modifiers) {
 			return $writer->write('echo %modify(%raw->__toString(TRUE))', $code);
@@ -234,7 +234,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroUse(MacroNode $node, $writer)
 	{
-		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->parser)
+		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->getParser())
 			->initialize();
 	}
 
