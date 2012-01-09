@@ -81,7 +81,7 @@ class Configurator extends Nette\Object
 	public function setTempDirectory($path)
 	{
 		$this->params['tempDir'] = $path;
-		if (!is_dir($cacheDir = $this->getCacheDirectory())) {
+		if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
 			umask(0000);
 			mkdir($cacheDir, 0777);
 		}
@@ -200,7 +200,7 @@ class Configurator extends Nette\Object
 	 * Build system container class.
 	 * @return string
 	 */
-	protected function buildContainer(& $dependencies)
+	protected function buildContainer(& $dependencies = NULL)
 	{
 		$loader = new Loader;
 		$config = array();
@@ -269,7 +269,7 @@ class Configurator extends Nette\Object
 
 	protected function getCacheDirectory()
 	{
-		return isset($this->params['tempDir']) ? $this->params['tempDir'] . '/cache' : NULL;
+		return empty($this->params['tempDir']) ? NULL : $this->params['tempDir'] . '/cache';
 	}
 
 

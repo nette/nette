@@ -108,7 +108,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$initialize = $class->methods['initialize'];
 		$container = $this->getContainerBuilder();
 
-		if (isset($container->parameters['tempDir'])) {
+		if (!empty($container->parameters['tempDir'])) {
 			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
 		}
 		foreach ($container->findByTag('run') as $name => $foo) {
