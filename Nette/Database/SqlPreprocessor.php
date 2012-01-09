@@ -154,7 +154,7 @@ class SqlPreprocessor extends Nette\Object
 			return $this->driver->formatDateTime($value);
 
 		} elseif ($value instanceof SqlLiteral) {
-			return $value->value;
+			return $value->getValue();
 
 		} else {
 			$this->remaining[] = $value;

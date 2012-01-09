@@ -20,15 +20,25 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class SqlLiteral
+class SqlLiteral extends Nette\Object
 {
 	/** @var string */
-	public $value = '';
+	private $value = '';
 
 
 	public function __construct($value)
 	{
 		$this->value = (string) $value;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getValue()
+	{
+		return $this->value;
 	}
 
 }
