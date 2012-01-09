@@ -23,9 +23,6 @@ use Nette,
  */
 class Template extends Nette\Object implements ITemplate
 {
-	/** @var bool */
-	public $warnOnUndefined = TRUE;
-
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
@@ -355,7 +352,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function &__get($name)
 	{
-		if ($this->warnOnUndefined && !array_key_exists($name, $this->params)) {
+		if (!array_key_exists($name, $this->params)) {
 			trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
 		}
 
