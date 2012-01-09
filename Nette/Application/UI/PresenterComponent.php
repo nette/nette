@@ -145,8 +145,10 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 						settype($params[$nm], gettype($meta['def']));
 					}
 				}
+				$this->$nm = & $params[$nm];
+			} else {
+				$params[$nm] = & $this->$nm;
 			}
-			$this->$nm = & $params[$nm];
 		}
 		$this->params = $params;
 	}
