@@ -169,15 +169,20 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config, $namespace = NULL)
 	{
-		$all = isset($config['services']) ? $config['services'] : array();
-		$all += isset($config['factories']) ? $config['factories'] : array();
+		$services = isset($config['services']) ? $config['services'] : array();
+		$factories = isset($config['factories']) ? $config['factories'] : array();
+		if ($tmp = array_intersect_key($services, $factories)) {
+			$tmp = implode("', '", array_keys($tmp));
+			throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same names: '$tmp'.");
+		}
 
+		$all = $services + $factories;
 		uasort($all, function($a, $b) {
 			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
 		});
 
 		foreach ($all as $name => $def) {
-			$isService = array_key_exists($name, $config['services']);
+			$shared = array_key_exists($name, $config['services']);
 			$name = ($namespace ? $namespace . '_' : '') . $name;
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
@@ -190,11 +195,14 @@ class Compiler extends Nette\Object
 				}
 			} elseif ($container->hasDefinition($name)) {
 				$definition = $container->getDefinition($name);
+				if ($definition->shared !== $shared) {
+					throw new Nette\DI\ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
+				}
 			} else {
 				$definition = $container->addDefinition($name);
 			}
 			try {
-				static::parseService($definition, $def, $isService);
+				static::parseService($definition, $def, $shared);
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
 			}
