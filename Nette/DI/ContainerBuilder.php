@@ -338,8 +338,10 @@ class ContainerBuilder extends Nette\Object
 
 		$meta = $class->addProperty('meta', array());
 		foreach ($this->definitions as $name => $def) {
-			foreach ($this->expand($def->tags) as $tag => $value) {
-				$meta->value[$name][Container::TAGS][$tag] = $value;
+			if ($def->shared) {
+				foreach ($this->expand($def->tags) as $tag => $value) {
+					$meta->value[$name][Container::TAGS][$tag] = $value;
+				}
 			}
 		}
 
