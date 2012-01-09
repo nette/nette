@@ -304,6 +304,7 @@ class PhpWriter extends Nette\Object
 			case 'xml':
 			case 'js':
 			case 'css':
+			case 'ical':
 				return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)";
 			case 'text':
 				return $s;

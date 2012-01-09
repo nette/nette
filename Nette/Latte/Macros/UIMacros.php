@@ -415,6 +415,9 @@ if (!empty($_control->snippetMode)) {
 		} elseif (Strings::contains($node->args, 'plain')) {
 			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'text');
 
+		} elseif (Strings::contains($node->args, 'calendar')) {
+			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'ical');
+
 		} else {
 			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE);
 		}
