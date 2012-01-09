@@ -41,3 +41,7 @@ Assert::false( $params->isDefaultValueAvailable() );
 $params = new ReflectionParameter(array('SystemContainer', 'createLorem'), 1);
 Assert::same( 'bar', $params->getName() );
 Assert::false( $params->getDefaultValue() );
+
+Assert::true( $container->hasService('loremFactory') );
+Assert::true( $container->loremFactory instanceof Nette\Callback );
+Assert::same( array($container, 'createLorem'), $container->loremFactory->native );
