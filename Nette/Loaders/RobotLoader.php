@@ -71,7 +71,7 @@ class RobotLoader extends AutoLoader
 
 	/**
 	 * Register autoloader.
-	 * @return void
+	 * @return RobotLoader  provides a fluent interface
 	 */
 	public function register()
 	{
@@ -82,6 +82,7 @@ class RobotLoader extends AutoLoader
 		}
 
 		parent::register();
+		return $this;
 	}
 
 
