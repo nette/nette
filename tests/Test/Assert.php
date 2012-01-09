@@ -135,6 +135,50 @@ class Assert
 
 
 	/**
+	 * Checks if the function throws exception.
+	 * @param  callback
+	 * @param  int
+	 * @param  string message
+	 * @return void
+	 */
+	public static function error($function, $level, $message = NULL)
+	{
+		$catched = NULL;
+		set_error_handler(function($severity, $message, $file, $line) use (& $catched) {
+			if (($severity & error_reporting()) === $severity) {
+				if ($catched) {
+					echo "\nUnexpected error $message in $file:$line";
+					exit(TestCase::CODE_FAIL);
+				}
+				$catched = array($severity, $message);
+			}
+		});
+		call_user_func($function);
+		restore_error_handler();
+
+		if (!$catched) {
+			self::doFail('Expected error');
+		}
+		if ($catched[0] !== $level) {
+			$consts = get_defined_constants(TRUE);
+			foreach ($consts['Core'] as $name => $val) {
+				if ($catched[0] === $val && substr($name, 0, 2) === 'E_') {
+					$catched[0] = $name;
+				}
+				if ($level === $val && substr($name, 0, 2) === 'E_') {
+					$level = $name;
+				}
+			}
+			self::doFail('Failed asserting that ' . $catched[0] . ' is ' . $level);
+		}
+		if ($message) {
+			self::match($message, $catched[1]);
+		}
+	}
+
+
+
+	/**
 	 * Failed assertion
 	 * @return void
 	 */
