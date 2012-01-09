@@ -31,7 +31,7 @@ class Statement extends \PDOStatement
 	private $connection;
 
 	/** @var float */
-	public $time;
+	private $time;
 
 	/** @var array */
 	private $types;
@@ -142,6 +142,16 @@ class Statement extends \PDOStatement
 			}
 		}
 		return $this->types;
+	}
+
+
+
+	/**
+	 * @return float
+	 */
+	public function getTime()
+	{
+		return $this->time;
 	}
 
 

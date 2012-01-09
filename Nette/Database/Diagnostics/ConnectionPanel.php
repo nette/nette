@@ -28,10 +28,10 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	static public $maxLength = 1000;
 
 	/** @var int logged time */
-	public $totalTime = 0;
+	private $totalTime = 0;
 
 	/** @var array */
-	public $queries = array();
+	private $queries = array();
 
 	/** @var string */
 	public $name;
@@ -70,8 +70,8 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				break;
 			}
 		}
-		$this->totalTime += $result->time;
-		$this->queries[] = array($result->queryString, $params, $result->time, $result->rowCount(), $result->getConnection(), $source);
+		$this->totalTime += $result->getTime();
+		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->rowCount(), $result->getConnection(), $source);
 	}
 
 

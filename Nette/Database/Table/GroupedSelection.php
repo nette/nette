@@ -32,17 +32,18 @@ class GroupedSelection extends Selection
 	/** @var string */
 	private $delimitedColumn;
 
-	/** @var */
-	public $active;
+	/** @var mixed */
+	private $active;
 
 
 
-	public function __construct($name, Selection $refTable, $column)
+	public function __construct($name, Selection $refTable, $column, $active = NULL)
 	{
 		parent::__construct($name, $refTable->connection);
 		$this->refTable = $refTable;
 		$this->column = $column;
 		$this->delimitedColumn = $this->connection->getSupplementalDriver()->delimite($this->column);
+		$this->active = $active;
 	}
 
 
