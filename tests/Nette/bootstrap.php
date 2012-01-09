@@ -25,12 +25,10 @@ TestHelpers::purge(TEMP_DIR);
 
 
 // catch unexpected errors/warnings/notices
-class TestErrorException extends Exception
-{}
-
 set_error_handler(function($severity, $message, $file, $line) {
 	if (($severity & error_reporting()) === $severity) {
-		throw new TestErrorException("$message in $file:$line");
+		echo ("Error: $message in $file:$line");
+		exit(TestCase::CODE_ERROR);
 	}
 	return FALSE;
 });
