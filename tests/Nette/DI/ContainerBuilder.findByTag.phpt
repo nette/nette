@@ -22,7 +22,13 @@ $builder->addDefinition('one')
 $builder->addDefinition('two')
 	->setClass('stdClass')
 	->addTag('debugPanel', TRUE);
-
+$builder->addDefinition('three')
+	->setClass('stdClass')
+	->addTag('component');
+$builder->addDefinition('four')
+	->setClass('stdClass')
+	->addTag('component')
+	->setParameters(array()); // shared = FALSE
 $builder->addDefinition('five')
 	->setClass('stdClass')
 	->addTag('debugPanel', array(1, 2, 3))
@@ -38,6 +44,10 @@ Assert::same( array(
 	'two' => TRUE,
 	'five' => array(1, 2, 3),
 ), $builder->findByTag('debugPanel') );
+
+Assert::same( array(
+	'three' => TRUE,
+), $builder->findByTag('component') );
 
 Assert::same( array(), $builder->findByTag('unknown') );
 
