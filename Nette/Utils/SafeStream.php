@@ -77,7 +77,7 @@ final class SafeStream
 	{
 		$path = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
 
-		$flag = trim($mode, 'rwax+');  // text | binary mode
+		$flag = trim($mode, 'crwax+');  // text | binary mode
 		$mode = trim($mode, 'tb');     // mode
 		$use_path = (bool) (STREAM_USE_PATH & $options); // use include_path?
 
@@ -96,7 +96,7 @@ final class SafeStream
 			}
 			$this->deleteFile = TRUE;
 
-		} elseif ($mode[0] === 'w' || $mode[0] === 'a') {
+		} elseif ($mode[0] === 'w' || $mode[0] === 'a' || $mode[0] === 'c') {
 			if ($this->checkAndLock($this->handle = @fopen($path, 'x'.$flag, $use_path), LOCK_EX)) { // intentionally @
 				$this->deleteFile = TRUE;
 
@@ -119,7 +119,7 @@ final class SafeStream
 		$this->file = substr($this->tempFile, 0, -strlen($tmp));
 
 		// copy to temporary file
-		if ($mode === 'r+' || $mode[0] === 'a') {
+		if ($mode === 'r+' || $mode[0] === 'a' || $mode[0] === 'c') {
 			$stat = fstat($this->handle);
 			fseek($this->handle, 0);
 			if (stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
