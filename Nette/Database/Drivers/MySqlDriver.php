@@ -159,6 +159,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				'nullable' => $row['Null'] === 'YES',
 				'default' => $row['Default'],
 				'autoincrement' => $row['Extra'] === 'auto_increment',
+				'primary' => $row['Key'] === 'PRI',
 				'vendor' => (array) $row,
 			);
 		}
