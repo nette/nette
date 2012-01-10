@@ -235,11 +235,19 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	public function __isset($key)
 	{
 		$this->access($key);
-		$return = array_key_exists($key, $this->data);
-		if (!$return) {
-			$this->access($key, TRUE);
+		if (array_key_exists($key, $this->data)) {
+			return isset($this->data[$key]);
 		}
-		return $return;
+
+		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
+		$referenced = $this->getReference($table, $column);
+
+		if (!isset($referenced)) {
+			$this->access($key, TRUE);
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 
 
