@@ -145,7 +145,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		$found = array();
 		foreach ($this->definitions as $name => $def) {
-			if (isset($def->tags[$tag])) {
+			if (isset($def->tags[$tag]) && $def->shared) {
 				$found[$name] = $def->tags[$tag];
 			}
 		}
