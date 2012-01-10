@@ -41,6 +41,7 @@ Assert::same( array(
 		'nullable' => FALSE,
 		'default' => NULL,
 		'autoincrement' => TRUE,
+		'primary' => TRUE,
 	),
 	array(
 		'name' => 'name',
@@ -51,6 +52,7 @@ Assert::same( array(
 		'nullable' => FALSE,
 		'default' => NULL,
 		'autoincrement' => FALSE,
+		'primary' => FALSE,
 	),
 	array(
 		'name' => 'web',
@@ -61,6 +63,7 @@ Assert::same( array(
 		'nullable' => FALSE,
 		'default' => NULL,
 		'autoincrement' => FALSE,
+		'primary' => FALSE,
 	),
 	array(
 		'name' => 'born',
@@ -71,6 +74,7 @@ Assert::same( array(
 		'nullable' => TRUE,
 		'default' => NULL,
 		'autoincrement' => FALSE,
+		'primary' => FALSE,
 	),
 ), $columns );
 
