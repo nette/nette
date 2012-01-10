@@ -254,7 +254,7 @@ if (!empty($_control->snippetMode)) {
 				$tag = $tag ? $tag : 'div';
 				$node->data->leave = TRUE;
 				$node->data->end = "\$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag><?php";
-				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
+				return $writer->write("?>\n<?php echo Nette\Utils\Html::el('$tag id=\"'.(\$_dynSnippetId = \$control->getSnippetId({$writer->formatWord($name)}).'\"')->addAttributes(%node.array)->startTag(); ob_start()");
 
 			} else {
 				$node->data->leave = TRUE;
@@ -286,7 +286,7 @@ if (!empty($_control->snippetMode)) {
 		if ($node->name === 'snippet') {
 			$tag = trim($node->tokenizer->fetchWord(), '<>');
 			$tag = $tag ? $tag : 'div';
-			return $writer->write("?>\n<$tag id=\"<?php echo \$_control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
+			return $writer->write("?>\n<?php echo Nette\Utils\Html::el('$tag id=\"'.\$control->getSnippetId(%var).'\"')->addAttributes(%node.array)->startTag(); $include ?>\n</$tag><?php ",
 				(string) substr($name, 1), $name
 			);
 

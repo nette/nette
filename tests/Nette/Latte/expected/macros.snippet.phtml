@@ -13,7 +13,7 @@ if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args
 if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
 ?>
 	Outer
-		<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
+		<?php echo Nette\Utils\Html::el('div id="'.$_control->getSnippetId('inner').'"')->addAttributes(array())->startTag(); call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
 	/Outer
 <?php
@@ -41,24 +41,34 @@ if (!function_exists($_l->blocks['_title2'][] = '%a%__title2')) { function %a%__
 }}
 
 //
+// block _title3
+//
+if (!function_exists($_l->blocks['_title3'][] = '%a%__title3')) { function %a%__title3($_l, $_args) { extract($_args); $_control->validateControl('title3')
+?>Title 3<?php
+}}
+
+//
 // end of blocks
 %A%
 	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
 %A%
-<div id="<?php echo $_control->getSnippetId('') ?>"><?php call_user_func(reset($_l->blocks['_']), $_l, $template->getParameters()) ?>
+echo Nette\Utils\Html::el('div id="'.$_control->getSnippetId('').'"')->addAttributes(array())->startTag(); call_user_func(reset($_l->blocks['_']), $_l, $template->getParameters()) ?>
 </div>
 
 
-<div id="<?php echo $_control->getSnippetId('outer') ?>"><?php call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
+<?php echo Nette\Utils\Html::el('div id="'.$_control->getSnippetId('outer').'"')->addAttributes(array())->startTag(); call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 </div>
 
 
 	@<?php if (true): ?> Hello World @<?php endif ?>
 
 
-	<h2 id="<?php echo $_control->getSnippetId('title') ?>"><?php call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
+	<?php echo Nette\Utils\Html::el('h2 id="'.$_control->getSnippetId('title').'"')->addAttributes(array())->startTag(); call_user_func(reset($_l->blocks['_title']), $_l, $template->getParameters()) ?>
 </h2>
 
-	<h2 id="<?php echo $_control->getSnippetId('title2') ?>"><?php call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParameters()) ?>
+	<?php echo Nette\Utils\Html::el('h2 id="'.$_control->getSnippetId('title2').'"')->addAttributes(array())->startTag(); call_user_func(reset($_l->blocks['_title2']), $_l, $template->getParameters()) ?>
+</h2>
+
+	<?php echo Nette\Utils\Html::el('h2 id="'.$_control->getSnippetId('title3').'"')->addAttributes(array('class' => 'foo'))->startTag(); call_user_func(reset($_l->blocks['_title3']), $_l, $template->getParameters()) ?>
 </h2>
 %A%
