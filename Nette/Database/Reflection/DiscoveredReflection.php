@@ -163,6 +163,10 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	protected function reloadForeignKeys($table)
 	{
+		static $reloaded = array();
+		if (isset($reloaded[$table]))
+			return;
+
 		foreach ($this->connection->getSupplementalDriver()->getForeignKeys($table) as $row) {
 			$this->structure['belongsTo'][$table][strtolower($row['local'])] = $row['table'];
 			$this->structure['hasMany'][strtolower($row['table'])][$table] = $row['local'];
@@ -173,6 +177,8 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 				return strlen($a) - strlen($b);
 			});
 		}
+
+		$reloaded[$table] = TRUE;
 	}
 
 }
