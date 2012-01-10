@@ -54,3 +54,18 @@ Assert::same(array(
 
 $book = $connection->table('book')->get(1);
 Assert::same('Jakub Vrana', $book->translator->name);
+
+
+
+$book = $connection->table('book')->get(2);
+Assert::true(isset($book->author_id));
+Assert::false(empty($book->author_id));
+
+Assert::false(isset($book->translator_id));
+Assert::true(empty($book->translator_id));
+
+Assert::true(isset($book->author));
+Assert::false(empty($book->author));
+
+Assert::false(isset($book->translator));
+Assert::true(empty($book->translator));
