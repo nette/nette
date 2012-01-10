@@ -55,10 +55,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	public function setConnection(Nette\Database\Connection $connection)
 	{
 		$this->connection = $connection;
-		if (!in_array($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME), array('mysql'))) {
-			throw new Nette\NotSupportedException("Nette\\Database\\DiscoveredReflections supports only mysql driver");
-		}
-
 		if ($this->cacheStorage) {
 			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.' . md5($connection->getDsn()));
 			$this->structure = $this->cache->load('structure') ?: $this->structure;
@@ -83,27 +79,17 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			return $primary;
 		}
 
-		if ($this->connection->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
-			$query = $this->connection->query("PRAGMA table_info($table)");
-			$primaryKey = 'pk';
-			$primaryVal = '1';
-			$primaryKeyColumn = 'name';
-		} else {
-			$query = $this->connection->query("EXPLAIN $table");
-			$primaryKey = 3;
-			$primaryVal = 'PRI';
-			$primaryKeyColumn = 0;
-		}
-
-		foreach ($query as $column) {
-			if ($column[$primaryKey] === $primaryVal) { // 3 - "Key" is not compatible with PDO::CASE_LOWER
-				if ($primary !== NULL) {
-					$primary = FALSE; // multi-column primary key is not supported
-					break;
-				}
-				$primary = $column[$primaryKeyColumn];
+		$columns = $this->connection->getSupplementalDriver()->getColumns($table);
+		$primaryCount = 0;
+		foreach ($columns as $column) {
+			if ($column['primary']) {
+				$primary = $column['name'];
+				$primaryCount++;
 			}
 		}
+
+		if ($primaryCount !== 1)
+			return NULL;
 
 		return $primary;
 	}
@@ -128,7 +114,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			throw new \PDOException("No reference found for \${$table}->related({$key}).");
 		}
 
-		$this->reloadTableReferenceFor($table);
+		$this->reloadAllForeignKeys();
 		return $this->getHasManyReference($table, $key, FALSE);
 	}
 
@@ -152,46 +138,41 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			throw new \PDOException("No reference found for \${$table}->{$key}.");
 		}
 
-		$this->reloadTableReference($table);
+		$this->reloadForeignKeys($table);
 		return $this->getBelongsToReference($table, $key, FALSE);
 	}
 
 
 
-	protected function reloadTableReferenceFor($table)
+	protected function reloadAllForeignKeys()
 	{
-		$tables = array();
-		$query = 'SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
-			WHERE TABLE_SCHEMA = DATABASE()	AND REFERENCED_TABLE_NAME = ' . $this->connection->quote($table);
-
-		foreach ($this->connection->query($query) as $row) {
-			$tables[strtolower($row[0])] = $row[1];
+		foreach ($this->connection->getSupplementalDriver()->getTables() as $table) {
+			if ($table['view'] == FALSE) {
+				$this->reloadForeignKeys($table['name']);
+			}
 		}
 
-		uksort($tables, function($a, $b) {
-			return strlen($a) - strlen($b);
-		});
-
-		$this->structure['hasMany'][$table] = $tables;
+		foreach (array_keys($this->structure['hasMany']) as $table) {
+			uksort($this->structure['hasMany'][$table], function($a, $b) {
+				return strlen($a) - strlen($b);
+			});
+		}
 	}
 
 
 
-	protected function reloadTableReference($table)
+	protected function reloadForeignKeys($table)
 	{
-		$tables = array();
-		$query = 'SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE
-			WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ' . $this->connection->quote($table);
-
-		foreach ($this->connection->query($query) as $row) {
-			$tables[strtolower($row[0])] = $row[1];
+		foreach ($this->connection->getSupplementalDriver()->getForeignKeys($table) as $row) {
+			$this->structure['belongsTo'][$table][strtolower($row['local'])] = $row['table'];
+			$this->structure['hasMany'][strtolower($row['table'])][$table] = $row['local'];
 		}
 
-		uksort($tables, function($a, $b) {
-			return strlen($a) - strlen($b);
-		});
-
-		$this->structure['belongsTo'][$table] = $tables;
+		if (isset($this->structure['belongsTo'][$table])) {
+			uksort($this->structure['belongsTo'][$table], function($a, $b) {
+				return strlen($a) - strlen($b);
+			});
+		}
 	}
 
 }
