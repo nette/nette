@@ -69,12 +69,12 @@ class Authorizator implements IAuthorizator
 $user = Nette\Environment::getUser();
 
 // guest
-Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::false( $user->isLoggedIn() );
 
 
-Assert::same( array('guest'), $user->getRoles(), 'getRoles()' );
-Assert::false( $user->isInRole('admin'), 'is admin?' );
-Assert::true( $user->isInRole('guest'), 'is guest?' );
+Assert::same( array('guest'), $user->getRoles() );
+Assert::false( $user->isInRole('admin') );
+Assert::true( $user->isInRole('guest') );
 
 
 
@@ -85,10 +85,10 @@ $user->setAuthenticator($handler);
 // login as john
 $user->login('john', 'xxx');
 
-Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::same( array('admin'), $user->getRoles(), 'getRoles()' );
-Assert::true( $user->isInRole('admin'), 'is admin?' );
-Assert::false( $user->isInRole('guest'), 'is guest?' );
+Assert::true( $user->isLoggedIn() );
+Assert::same( array('admin'), $user->getRoles() );
+Assert::true( $user->isInRole('admin') );
+Assert::false( $user->isInRole('guest') );
 
 
 // authorization
@@ -99,8 +99,8 @@ Assert::throws(function() use ($user) {
 $handler = new Authorizator;
 $user->setAuthorizator($handler);
 
-Assert::true( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
-Assert::false( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany')?" );
+Assert::true( $user->isAllowed('delete_file') );
+Assert::false( $user->isAllowed('sleep_with_jany') );
 
 
 
@@ -108,4 +108,4 @@ Assert::false( $user->isAllowed('sleep_with_jany'), "isAllowed('sleep_with_jany'
 // logging out...
 $user->logout(FALSE);
 
-Assert::false( $user->isAllowed('delete_file'), "isAllowed('delete_file')?" );
+Assert::false( $user->isAllowed('delete_file') );

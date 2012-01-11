@@ -65,9 +65,9 @@ $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 
 
-Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::null( $user->getIdentity(), 'getIdentity' );
-Assert::null( $user->getId(), 'getId' );
+Assert::false( $user->isLoggedIn() );
+Assert::null( $user->getIdentity() );
+Assert::null( $user->getId() );
 
 
 
@@ -92,9 +92,9 @@ Assert::throws(function() use ($user) {
 
 // login as john#2
 $user->login('john', 'xxx');
-Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity(), 'getIdentity' );
-Assert::same( 'John Doe', $user->getId(), 'getId' );
+Assert::true( $user->isLoggedIn() );
+Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
+Assert::same( 'John Doe', $user->getId() );
 
 // login as john#3
 $user->logout(TRUE);
@@ -109,15 +109,15 @@ Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 // logging out...
 $user->logout(FALSE);
 
-Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity(), 'getIdentity' );
+Assert::false( $user->isLoggedIn() );
+Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
 
 
 // logging out and clearing identity...
 $user->logout(TRUE);
 
-Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::null( $user->getIdentity(), 'getIdentity' );
+Assert::false( $user->isLoggedIn() );
+Assert::null( $user->getIdentity() );
 
 
 
@@ -125,11 +125,11 @@ Assert::null( $user->getIdentity(), 'getIdentity' );
 // namespace
 // login as john#2?
 $user->login('john', 'xxx');
-Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
+Assert::true( $user->isLoggedIn() );
 
 
 // setNamespace(...)
 $user->getStorage()->setNamespace('other');
 
-Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
-Assert::null( $user->getIdentity(), 'getIdentity' );
+Assert::false( $user->isLoggedIn() );
+Assert::null( $user->getIdentity() );
