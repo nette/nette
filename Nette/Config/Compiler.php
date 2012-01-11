@@ -283,7 +283,7 @@ class Compiler extends Nette\Object
 					if (strpos(is_array($setup->value) ? implode('', $setup->value) : $setup->value, '$') === FALSE) {
 						$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
 					} else {
-						Validators::assert($setup->attributes, 'list:1', "setup arguments for '$setup->value'");
+						Validators::assert($setup->attributes, 'list:1', "setup arguments for '" . callback($setup->value) . "'");
 						$definition->addSetup($setup->value, $setup->attributes[0]);
 					}
 				} else {

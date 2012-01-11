@@ -22,17 +22,10 @@ Assert::equal( new Reflection\GlobalFunction('sleep'), $funcs['sleep'] );
 
 
 
-$ext = new Reflection\Extension('reflection');
+$ext = new Reflection\Extension('pdo');
 Assert::equal( array(
-	'ReflectionException' => new Reflection\ClassType('ReflectionException'),
-	'Reflection' => new Reflection\ClassType('Reflection'),
-	'Reflector' => new Reflection\ClassType('Reflector'),
-	'ReflectionFunctionAbstract' => new Reflection\ClassType('ReflectionFunctionAbstract'),
-	'ReflectionFunction' => new Reflection\ClassType('ReflectionFunction'),
-	'ReflectionParameter' => new Reflection\ClassType('ReflectionParameter'),
-	'ReflectionMethod' => new Reflection\ClassType('ReflectionMethod'),
-	'ReflectionClass' => new Reflection\ClassType('ReflectionClass'),
-	'ReflectionObject' => new Reflection\ClassType('ReflectionObject'),
-	'ReflectionProperty' => new Reflection\ClassType('ReflectionProperty'),
-	'ReflectionExtension' => new Reflection\ClassType('ReflectionExtension'),
+	'PDOException' => new Reflection\ClassType('PDOException'),
+	'PDO' => new Reflection\ClassType('PDO'),
+	'PDOStatement' => new Reflection\ClassType('PDOStatement'),
+	'PDORow' => new Reflection\ClassType('PDORow'),
 ), $ext->getClasses() );

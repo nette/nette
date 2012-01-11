@@ -57,7 +57,9 @@ class TestRunner
 		} else {
 			$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path));
 		}
-		echo "PHP: $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
+
+		exec($this->phpEnvironment . escapeshellarg($this->phpBinary) . ' -v', $output);
+		echo "$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
 
 		foreach ($files as $entry) {
 			$entry = (string) $entry;

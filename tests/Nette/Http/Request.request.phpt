@@ -71,4 +71,6 @@ Assert::same( '',  $request->getUrl()->fragment );
 Assert::same( 'val.',  $request->getQuery('x_param') );
 Assert::same( 'val2',  $request->getQuery('pa%ram') );
 Assert::same( 'v a&l=u+e)',  $request->getQuery('param3') );
-Assert::same( 'nette.org:8080',  $request->headers['host'] );
+if (!function_exists('apache_request_headers')) {
+	Assert::same( 'nette.org:8080',  $request->headers['host'] );
+}

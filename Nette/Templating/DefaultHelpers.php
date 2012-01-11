@@ -70,7 +70,7 @@ final class DefaultHelpers
 
 	/**
 	 * Escapes string for use inside HTML template.
-	 * @param  mixed  UTF-8 encoding or 8-bit
+	 * @param  mixed  UTF-8 encoding
 	 * @param  int    optional attribute quotes
 	 * @return string
 	 */
@@ -86,7 +86,7 @@ final class DefaultHelpers
 
 	/**
 	 * Escapes string for use inside HTML comments.
-	 * @param  mixed  UTF-8 encoding or 8-bit
+	 * @param  string  UTF-8 encoding
 	 * @return string
 	 */
 	public static function escapeHtmlComment($s)
@@ -99,7 +99,7 @@ final class DefaultHelpers
 
 	/**
 	 * Escapes string for use inside XML 1.0 template.
-	 * @param  string UTF-8 encoding or 8-bit
+	 * @param  string UTF-8 encoding
 	 * @return string
 	 */
 	public static function escapeXML($s)
@@ -114,7 +114,7 @@ final class DefaultHelpers
 
 	/**
 	 * Escapes string for use inside CSS template.
-	 * @param  string UTF-8 encoding or 8-bit
+	 * @param  string UTF-8 encoding
 	 * @return string
 	 */
 	public static function escapeCss($s)
