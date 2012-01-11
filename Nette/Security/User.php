@@ -171,30 +171,6 @@ class User extends Nette\Object
 
 
 	/**
-	 * Changes namespace; allows more users to share a session.
-	 * @param  string
-	 * @return User  provides a fluent interface
-	 */
-	public function setNamespace($namespace)
-	{
-		$this->storage->setNamespace($namespace);
-		return $this;
-	}
-
-
-
-	/**
-	 * Returns current namespace.
-	 * @return string
-	 */
-	final public function getNamespace()
-	{
-		return $this->storage->getNamespace();
-	}
-
-
-
-	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|DateTime number of seconds or timestamp
 	 * @param  bool  log out when the browser is closed?
@@ -298,6 +274,21 @@ class User extends Nette\Object
 
 
 	/********************* deprecated ****************d*g**/
+
+	/** @deprecated */
+	function setNamespace($namespace)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getStorage()->setNamespace() instead.', E_USER_WARNING);
+		$this->storage->setNamespace($namespace);
+		return $this;
+	}
+
+	/** @deprecated */
+	function getNamespace()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getStorage()->getNamespace() instead.', E_USER_WARNING);
+		return $this->storage->getNamespace();
+	}
 
 	/** @deprecated */
 	function setAuthenticationHandler($v)

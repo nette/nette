@@ -123,7 +123,7 @@ Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
 
 
 // setNamespace(...)
-$user->setNamespace('other');
+$user->getStorage()->setNamespace('other');
 
 Assert::false( $user->isLoggedIn(), 'isLoggedIn?' );
 Assert::null( $user->getIdentity(), 'getIdentity' );
