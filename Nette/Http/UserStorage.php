@@ -21,7 +21,7 @@ use Nette,
  *
  * @author David Grudl, Jan Tichý
  */
-class UserStorage extends Nette\Object implements IUserStorage
+class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 {
 	/** @var string */
 	private $namespace = '';

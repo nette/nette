@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Http\User authorization.
+ * Test: Nette\Security\User authorization.
  *
  * @author     David Grudl
  * @package    Nette\Http
@@ -10,8 +10,7 @@
 
 use Nette\Security\IAuthenticator,
 	Nette\Security\Identity,
-	Nette\Security\IAuthorizator,
-	Nette\Http\User;
+	Nette\Security\IAuthorizator;
 
 
 

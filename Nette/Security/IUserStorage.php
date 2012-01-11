@@ -9,10 +9,9 @@
  * the file license.txt that was distributed with this source code.
  */
 
-namespace Nette\Http;
+namespace Nette\Security;
 
-use Nette,
-	Nette\Security\IIdentity;
+use Nette;
 
 
 

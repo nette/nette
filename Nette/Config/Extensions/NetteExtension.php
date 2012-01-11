@@ -74,7 +74,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Http\UserStorage');
 
 		$container->addDefinition('user')
-			->setClass('Nette\Http\User');
+			->setClass('Nette\Security\User');
 
 		// application
 		$application = $container->addDefinition('application')

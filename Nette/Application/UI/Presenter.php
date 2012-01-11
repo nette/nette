@@ -36,7 +36,7 @@ use Nette,
  * @property-read \SystemContainer|Nette\DI\IContainer $context
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
- * @property-read Nette\Http\User $user
+ * @property-read Nette\Security\User $user
  */
 abstract class Presenter extends Control implements Application\IPresenter
 {
@@ -1345,11 +1345,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\User
+	 * @return Nette\Security\User
 	 */
 	public function getUser()
 	{
-		return $this->context->getByType('Nette\Http\IUser');
+		return $this->context->getByType('Nette\Security\User');
 	}
 
 }
