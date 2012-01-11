@@ -129,12 +129,12 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 	/**
 	 * Throws HTTP error.
-	 * @param  int HTTP error code
 	 * @param  string
+	 * @param  int HTTP error code
 	 * @return void
 	 * @throws Nette\Application\BadRequestException
 	 */
-	public function error($code, $message = NULL)
+	public function error($message = NULL, $code = Http\IResponse::S404_NOT_FOUND)
 	{
 		throw new Application\BadRequestException($message, $code);
 	}

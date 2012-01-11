@@ -384,7 +384,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->view = $action;
 
 		} else {
-			throw new Application\BadRequestException("Action name '$action' is not alphanumeric string.");
+			$this->error("Action name '$action' is not alphanumeric string.");
 		}
 	}
 
@@ -462,7 +462,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			if (!$template->getFile()) {
 				$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
 				$file = strtr($file, '/', DIRECTORY_SEPARATOR);
-				throw new Application\BadRequestException("Page not found. Missing template '$file'.");
+				$this->error("Page not found. Missing template '$file'.");
 			}
 		}
 
@@ -680,6 +680,20 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::redirectUrl() instead.', E_USER_WARNING);
 		$this->redirectUrl($url, $code);
+	}
+
+
+
+	/**
+	 * Throws HTTP error.
+	 * @param  string
+	 * @param  int HTTP error code
+	 * @return void
+	 * @throws Nette\Application\BadRequestException
+	 */
+	public function error($message = NULL, $code = Http\IResponse::S404_NOT_FOUND)
+	{
+		throw new Application\BadRequestException($message, $code);
 	}
 
 
