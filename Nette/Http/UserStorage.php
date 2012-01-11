@@ -42,30 +42,27 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 
 	/**
-	 * Logs in the user to the current session.
-	 * @param IIdentity
+	 * Sets the authenticated status of this user.
+	 * @param  bool
 	 * @return UserStorage Provides a fluent interface
 	 */
-	public function login(IIdentity $identity)
+	public function setAuthenticated($state)
 	{
-		$this->setIdentity($identity);
-		$this->setAuthenticated(TRUE);
-		return $this;
-	}
+		$section = $this->getSessionSection(TRUE);
+		$section->authenticated = (bool) $state;
 
+		// Session Fixation defence
+		$this->sessionHandler->regenerateId();
 
+		if ($state) {
+			$section->reason = NULL;
+			$section->authTime = time(); // informative value
 
-	/**
-	 * Logs out the user from the current session.
-	 * @param bool Clear the identity from persistent storage?
-	 * @return UserStorage Provides a fluent interface
-	 */
-	public function logout($clearIdentity = FALSE)
-	{
-		$this->setAuthenticated(FALSE);
-		if ($clearIdentity) {
-			$this->setIdentity(NULL);
+		} else {
+			$section->reason = self::MANUAL;
+			$section->authTime = NULL;
 		}
+		return $this;
 	}
 
 
@@ -74,7 +71,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 	 * Is this user authenticated?
 	 * @return bool
 	 */
-	public function isLoggedIn()
+	public function isAuthenticated()
 	{
 		$session = $this->getSessionSection(FALSE);
 		return $session && $session->authenticated;
@@ -83,8 +80,21 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 
 	/**
+	 * Sets the user identity.
+	 * @param  IIdentity
+	 * @return UserStorage Provides a fluent interface
+	 */
+	public function setIdentity(IIdentity $identity = NULL)
+	{
+		$this->getSessionSection(TRUE)->identity = $identity;
+		return $this;
+	}
+
+
+
+	/**
 	 * Returns current user identity, if any.
-	 * @return Nette\Security\IIdentity
+	 * @return Nette\Security\IIdentity|NULL
 	 */
 	public function getIdentity()
 	{
@@ -96,7 +106,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 	/**
 	 * Changes namespace; allows more users to share a session.
-	 * @param string
+	 * @param  string
 	 * @return UserStorage Provides a fluent interface
 	 */
 	public function setNamespace($namespace)
@@ -123,12 +133,11 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 	/**
 	 * Enables log out after inactivity.
-	 * @param string|int|DateTime Number of seconds or timestamp
-	 * @param bool Log out when the browser is closed?
-	 * @param bool Clear the identity from persistent storage?
+	 * @param  string|int|DateTime Number of seconds or timestamp
+	 * @param  int Log out when the browser is closed | Clear the identity from persistent storage?
 	 * @return UserStorage Provides a fluent interface
 	 */
-	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
+	public function setExpiration($time, $flags = 0)
 	{
 		$section = $this->getSessionSection(TRUE);
 		if ($time) {
@@ -140,8 +149,8 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 			unset($section->expireTime, $section->expireDelta);
 		}
 
-		$section->expireIdentity = (bool) $clearIdentity;
-		$section->expireBrowser = (bool) $whenBrowserIsClosed;
+		$section->expireIdentity = (bool) ($flags & self::CLEAR_IDENTITY);
+		$section->expireBrowser = (bool) ($flags & self::BROWSER_CLOSED);
 		$section->browserCheck = TRUE;
 		$section->setExpiration(0, 'browserCheck');
 		return $this;
@@ -208,45 +217,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		}
 
 		return $this->sessionSection;
-	}
-
-
-
-	/**
-	 * Sets the authenticated status of this user.
-	 * @param bool Flag indicating the authenticated status of user
-	 * @return UserStorage Provides a fluent interface
-	 */
-	protected function setAuthenticated($state)
-	{
-		$section = $this->getSessionSection(TRUE);
-		$section->authenticated = (bool) $state;
-
-		// Session Fixation defence
-		$this->sessionHandler->regenerateId();
-
-		if ($state) {
-			$section->reason = NULL;
-			$section->authTime = time(); // informative value
-
-		} else {
-			$section->reason = self::MANUAL;
-			$section->authTime = NULL;
-		}
-		return $this;
-	}
-
-
-
-	/**
-	 * Sets the user identity.
-	 * @param IIdentity
-	 * @return UserStorage Provides a fluent interface
-	 */
-	protected function setIdentity(IIdentity $identity = NULL)
-	{
-		$this->getSessionSection(TRUE)->identity = $identity;
-		return $this;
 	}
 
 }

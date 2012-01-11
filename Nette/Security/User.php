@@ -24,7 +24,6 @@ use Nette;
  * @property-read IIdentity $identity
  * @property-read mixed $id
  * @property   IAuthenticator $authenticator
- * @property   string $namespace
  * @property-read int $logoutReason
  * @property-read array $roles
  * @property   IAuthorizator $authorizator
@@ -90,7 +89,8 @@ class User extends Nette\Object
 	{
 		$this->logout(TRUE);
 		$credentials = func_get_args();
-		$this->storage->login($this->getAuthenticator()->authenticate($credentials));
+		$this->storage->setIdentity($this->getAuthenticator()->authenticate($credentials));
+		$this->storage->setAuthenticated(TRUE);
 		$this->onLoggedIn($this);
 	}
 
@@ -103,9 +103,11 @@ class User extends Nette\Object
 	 */
 	final public function logout($clearIdentity = FALSE)
 	{
-		$loggedIn = $this->isLoggedIn();
-		$this->storage->logout($clearIdentity);
-		if ($loggedIn) {
+		if ($clearIdentity) {
+			$this->storage->setIdentity(NULL);
+		}
+		if ($this->isLoggedIn()) {
+			$this->storage->setAuthenticated(FALSE);
 			$this->onLoggedOut($this);
 		}
 	}
@@ -118,14 +120,14 @@ class User extends Nette\Object
 	 */
 	final public function isLoggedIn()
 	{
-		return $this->storage->isLoggedIn();
+		return $this->storage->isAuthenticated();
 	}
 
 
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return IIdentity
+	 * @return IIdentity|NULL
 	 */
 	final public function getIdentity()
 	{
@@ -179,7 +181,8 @@ class User extends Nette\Object
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$this->storage->setExpiration($time, $whenBrowserIsClosed, $clearIdentity);
+		$flags = ($whenBrowserIsClosed ? IUserStorage::BROWSER_CLOSED : 0) | ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+		$this->storage->setExpiration($time, $flags);
 		return $this;
 	}
 

@@ -25,42 +25,43 @@ interface IUserStorage
 	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
 	const MANUAL = 1,
 		INACTIVITY = 2,
-		BROWSER_CLOSED = 3;
+		BROWSER_CLOSED = 4;
+
+	/** Log-out behavior */
+	const CLEAR_IDENTITY = 8;
 
 	/**
-	 * Logs in the user to the persistent storage.
-	 * @param IIdentity
-	 * @return IUserStorage Provides a fluent interface
+	 * Sets the authenticated status of this user.
+	 * @param  bool
+	 * @return void
 	 */
-	function login(IIdentity $identity);
-
-	/**
-	 * Logs out the user from the persistent storage.
-	 * @param bool Clear the identity from persistent storage?
-	 * @return IUserStorage Provides a fluent interface
-	 */
-	function logout($clearIdentity = FALSE);
+	function setAuthenticated($state);
 
 	/**
 	 * Is this user authenticated?
 	 * @return bool
 	 */
-	function isLoggedIn();
+	function isAuthenticated();
+
+	/**
+	 * Sets the user identity.
+	 * @return void
+	 */
+	function setIdentity(IIdentity $identity = NULL);
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return Nette\Security\IIdentity
+	 * @return Nette\Security\IIdentity|NULL
 	 */
 	function getIdentity();
 
 	/**
 	 * Enables log out from the persistent storage after inactivity.
 	 * @param string|int|DateTime number of seconds or timestamp
-	 * @param bool Log out when the browser is closed?
-	 * @param bool Clear the identity from persistent storage?
-	 * @return IUserStorage Provides a fluent interface
+	 * @param int Log out when the browser is closed | Clear the identity from persistent storage?
+	 * @return void
 	 */
-	function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE);
+	function setExpiration($time, $flags = 0);
 
 	/**
 	 * Why was user logged out?
