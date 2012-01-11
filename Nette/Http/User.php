@@ -11,7 +11,8 @@
 
 namespace Nette\Http;
 
-use Nette;
+use Nette,
+	Nette\Security\IUserStorage;
 
 
 
