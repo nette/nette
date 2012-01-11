@@ -12,7 +12,7 @@
 namespace Nette\Database\Diagnostics;
 
 use Nette,
-	Nette\Database\Connection,
+	Nette\Database\Helpers,
 	Nette\Diagnostics\Debugger;
 
 
@@ -44,7 +44,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public static function initialize(Connection $connection)
+	public static function initialize(Nette\Database\Connection $connection)
 	{
 		$panel = new static;
 		Debugger::$blueScreen->addPanel(array($panel, 'renderException'), __CLASS__);
@@ -81,7 +81,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		if ($e instanceof \PDOException && isset($e->queryString)) {
 			return array(
 				'tab' => 'SQL',
-				'panel' => Connection::highlightSql($e->queryString),
+				'panel' => Helpers::dumpSql($e->queryString),
 			);
 		}
 	}
@@ -121,7 +121,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 			}
 
-			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Connection::highlightSql(self::$maxLength ? Nette\Utils\Strings::truncate($sql, self::$maxLength) : $sql);
+			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Helpers::dumpSql(self::$maxLength ? Nette\Utils\Strings::truncate($sql, self::$maxLength) : $sql);
 			if ($explain) {
 				$s .= "<table id='nette-DbConnectionPanel-row-$counter' class='nette-collapsed'><tr>";
 				foreach ($explain[0] as $col => $foo) {

@@ -102,6 +102,7 @@ class NetteLoader extends AutoLoader
 		'nette\database\drivers\pgsqldriver' => '/Database/Drivers/PgSqlDriver.php',
 		'nette\database\drivers\sqlite2driver' => '/Database/Drivers/Sqlite2Driver.php',
 		'nette\database\drivers\sqlitedriver' => '/Database/Drivers/SqliteDriver.php',
+		'nette\database\helpers' => '/Database/Helpers.php',
 		'nette\database\ireflection' => '/Database/IReflection.php',
 		'nette\database\isupplementaldriver' => '/Database/ISupplementalDriver.php',
 		'nette\database\reflection\conventionalreflection' => '/Database/Reflection/ConventionalReflection.php',

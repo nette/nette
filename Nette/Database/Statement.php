@@ -136,7 +136,7 @@ class Statement extends \PDOStatement
 				$col = 0;
 				while ($meta = $this->getColumnMeta($col++)) {
 					if (isset($meta['native_type'])) {
-						$this->types[$meta['name']] = static::detectType($meta['native_type']);
+						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
 				}
 			}
@@ -165,64 +165,7 @@ class Statement extends \PDOStatement
 	 */
 	public function dump()
 	{
-		echo "\n<table class=\"dump\">\n<caption>" . htmlSpecialChars($this->queryString) . "</caption>\n";
-		if (!$this->columnCount()) {
-			echo "\t<tr>\n\t\t<th>Affected rows:</th>\n\t\t<td>", $this->rowCount(), "</td>\n\t</tr>\n</table>\n";
-			return;
-		}
-		$i = 0;
-		foreach ($this as $row) {
-			if ($i === 0) {
-				echo "<thead>\n\t<tr>\n\t\t<th>#row</th>\n";
-				foreach ($row as $col => $foo) {
-					echo "\t\t<th>" . htmlSpecialChars($col) . "</th>\n";
-				}
-				echo "\t</tr>\n</thead>\n<tbody>\n";
-			}
-			echo "\t<tr>\n\t\t<th>", $i, "</th>\n";
-			foreach ($row as $col) {
-				//if (is_object($col)) $col = $col->__toString();
-				echo "\t\t<td>", htmlSpecialChars($col), "</td>\n";
-			}
-			echo "\t</tr>\n";
-			$i++;
-		}
-
-		if ($i === 0) {
-			echo "\t<tr>\n\t\t<td><em>empty result set</em></td>\n\t</tr>\n</table>\n";
-		} else {
-			echo "</tbody>\n</table>\n";
-		}
-	}
-
-
-
-	/**
-	 * Heuristic type detection.
-	 * @param  string
-	 * @return string
-	 * @internal
-	 */
-	public static function detectType($type)
-	{
-		static $types, $patterns = array(
-			'BYTEA|BLOB|BIN' => IReflection::FIELD_BINARY,
-			'TEXT|CHAR' => IReflection::FIELD_TEXT,
-			'YEAR|BYTE|COUNTER|SERIAL|INT|LONG' => IReflection::FIELD_INTEGER,
-			'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => IReflection::FIELD_FLOAT,
-			'TIME|DATE' => IReflection::FIELD_DATETIME,
-			'BOOL|BIT' => IReflection::FIELD_BOOL,
-		);
-
-		if (!isset($types[$type])) {
-			$types[$type] = 'string';
-			foreach ($patterns as $s => $val) {
-				if (preg_match("#$s#i", $type)) {
-					return $types[$type] = $val;
-				}
-			}
-		}
-		return $types[$type];
+		Helpers::dumpResult($this);
 	}
 
 

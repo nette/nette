@@ -17,13 +17,11 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$dbStructure = __DIR__ . '/nette_test.sql';
-
 try {
-	$connection = new Database\Connection("mysql:host=localhost", "root");
-	$connection->loadFile($dbStructure);
+	$connection = new Database\Connection('mysql:host=localhost', 'root');
+	Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test.sql');
 
-} catch (\PDOException $e) {
+} catch (PDOException $e) {
 	TestHelpers::skip('Requires corretly configured mysql connection and "nette_test" database.');
 
 }
