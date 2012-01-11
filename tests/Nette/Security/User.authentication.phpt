@@ -96,6 +96,12 @@ Assert::true( $user->isLoggedIn(), 'isLoggedIn?' );
 Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity(), 'getIdentity' );
 Assert::same( 'John Doe', $user->getId(), 'getId' );
 
+// login as john#3
+$user->logout(TRUE);
+$user->login( new Identity('John Doe', 'admin') );
+Assert::true( $user->isLoggedIn() );
+Assert::equal( new Identity('John Doe', 'admin'), $user->getIdentity() );
+
 
 
 

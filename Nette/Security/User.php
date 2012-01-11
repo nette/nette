@@ -80,16 +80,19 @@ class User extends Nette\Object
 
 	/**
 	 * Conducts the authentication process. Parameters are optional.
-	 * @param  mixed optional parameter (e.g. username)
+	 * @param  mixed optional parameter (e.g. username or IIdentity)
 	 * @param  mixed optional parameter (e.g. password)
 	 * @return void
 	 * @throws AuthenticationException if authentication was not successful
 	 */
-	public function login($username = NULL, $password = NULL)
+	public function login($id = NULL, $password = NULL)
 	{
 		$this->logout(TRUE);
-		$credentials = func_get_args();
-		$this->storage->setIdentity($this->getAuthenticator()->authenticate($credentials));
+		if (!$id instanceof IIdentity) {
+			$credentials = func_get_args();
+			$id = $this->getAuthenticator()->authenticate($credentials);
+		}
+		$this->storage->setIdentity($id);
 		$this->storage->setAuthenticated(TRUE);
 		$this->onLoggedIn($this);
 	}
