@@ -122,9 +122,7 @@ class Compiler extends Nette\Object
 				}
 			}
 		} catch (ParseException $e) {
-			if (!$e->sourceLine) {
-				$e->sourceLine = $token->line;
-			}
+			$e->sourceLine = $token->line;
 			throw $e;
 		}
 
@@ -304,8 +302,7 @@ class Compiler extends Nette\Object
 			) {
 				$name .= $args ? ' ' : '';
 				throw new ParseException("Unexpected macro {{$name}{$args}{$modifiers}}"
-					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''),
-					0, $this->getLine());
+					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''));
 			}
 
 			array_pop($this->macroNodes);
@@ -399,7 +396,7 @@ class Compiler extends Nette\Object
 
 		if ($attrs) {
 			throw new ParseException("Unknown macro-attribute " . Parser::N_PREFIX
-				. implode(' and ' . Parser::N_PREFIX, array_keys($attrs)), 0, $this->getLine());
+				. implode(' and ' . Parser::N_PREFIX, array_keys($attrs)));
 		}
 
 		foreach ($left as $item) {
@@ -430,7 +427,7 @@ class Compiler extends Nette\Object
 	public function expandMacro($name, $args, $modifiers = NULL)
 	{
 		if (empty($this->macros[$name])) {
-			throw new ParseException("Unknown macro {{$name}}", 0, $this->getLine());
+			throw new ParseException("Unknown macro {{$name}}");
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL);
@@ -439,7 +436,7 @@ class Compiler extends Nette\Object
 				return array($node, $code);
 			}
 		}
-		throw new ParseException("Unhandled macro {{$name}}", 0, $this->getLine());
+		throw new ParseException("Unhandled macro {{$name}}");
 	}
 
 }
