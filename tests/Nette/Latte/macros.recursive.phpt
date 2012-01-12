@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * Test: Nette\Latte\Engine: general HTML test.
+ *
+ * @author     David Grudl
+ * @package    Nette\Latte
+ * @subpackage UnitTests
+ * @keepTrailingSpaces
+ */
+
+use Nette\Latte,
+	Nette\Templating\FileTemplate,
+	Nette\Utils\Html;
+
+
+
+require __DIR__ . '/../bootstrap.php';
+
+require __DIR__ . '/Template.inc';
+
+
+
+Html::$xhtml = FALSE;
+$template = new FileTemplate(__DIR__ . '/templates/recursive.latte');
+$template->registerFilter(new Latte\Engine);
+$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+
+$path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
+echo codefix($template->compile());
+//Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
