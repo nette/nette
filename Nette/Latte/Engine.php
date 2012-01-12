@@ -76,7 +76,7 @@ class Engine extends Nette\Object
 	 */
 	public function getCompiler()
 	{
-		return $this->compile;
+		return $this->compiler;
 	}
 
 }

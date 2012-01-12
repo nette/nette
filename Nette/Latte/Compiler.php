@@ -75,7 +75,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * Adds new macro
+	 * Adds new macro.
 	 * @param
 	 * @return Compiler  provides a fluent interface
 	 */

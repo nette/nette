@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Latte parser.
+ * Latte parser token.
  *
  * @author     David Grudl
  */
