@@ -375,7 +375,7 @@ class Compiler extends Nette\Object
 						$pos--;
 					}
 					$this->setContext(self::CONTEXT_HTML, '"');
-					list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name]);
+					list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name], NULL, $node);
 					$this->setContext(self::CONTEXT_HTML);
 					$code = substr_replace($code, $macroCode, $pos, 0);
 				}
@@ -439,13 +439,13 @@ class Compiler extends Nette\Object
 	 * @param  string
 	 * @return array(MacroNode, string)
 	 */
-	public function expandMacro($name, $args, $modifiers = NULL)
+	public function expandMacro($name, $args, $modifiers = NULL, HtmlNode $htmlNode = NULL)
 	{
 		if (empty($this->macros[$name])) {
 			throw new ParseException("Unknown macro {{$name}}");
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
-			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL);
+			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL, $htmlNode);
 			$code = $macro->nodeOpened($node);
 			if ($code !== FALSE) {
 				return array($node, $code);

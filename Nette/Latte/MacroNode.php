@@ -55,14 +55,18 @@ class MacroNode extends Nette\Object
 	/** @var stdClass  user data */
 	public $data;
 
+	/** @var HtmlNode  for n:attr macros */
+	public $htmlNode;
 
 
-	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL)
+
+	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL, HtmlNode $htmlNode = NULL)
 	{
 		$this->macro = $macro;
 		$this->name = (string) $name;
 		$this->modifiers = (string) $modifiers;
 		$this->parentNode = $parentNode;
+		$this->htmlNode = $htmlNode;
 		$this->tokenizer = new MacroTokenizer($this->args);
 		$this->data = new \stdClass;
 		$this->setArgs($args);
