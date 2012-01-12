@@ -380,13 +380,16 @@ class Parser extends Nette\Object
 		$token = end($this->output);
 		if ($token->type === Token::MACRO && $token->name === '/syntax') {
 			$this->setSyntax('latte');
+			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::MACRO && $token->name === 'syntax') {
 			$this->setSyntax($token->value);
+			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::ATTRIBUTE && $token->name === 'n:syntax') {
 			$this->setSyntax($token->value);
 			$this->endTag = '/' . $this->lastTag;
+			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::TAG_END && $this->lastTag === $this->endTag) {
 			$this->setSyntax('latte');

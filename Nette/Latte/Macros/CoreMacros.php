@@ -77,7 +77,6 @@ class CoreMacros extends MacroSet
 		$me->addMacro('=', array($me, 'macroExpr'));
 		$me->addMacro('?', array($me, 'macroExpr'));
 
-		$me->addMacro('syntax', '', '');
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('use', array($me, 'macroUse'));
