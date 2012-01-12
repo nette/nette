@@ -131,9 +131,9 @@ class Compiler extends Nette\Object
 
 
 		foreach ($this->htmlNodes as $node) {
-			if (!empty($node->attrs)) {
+			if (!empty($node->macroAttrs)) {
 				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . Parser::N_PREFIX
-					. implode(' and ' . Parser::N_PREFIX, array_keys($node->attrs)) . ".", 0, $token->line);
+					. implode(' and ' . Parser::N_PREFIX, array_keys($node->macroAttrs)) . ".", 0, $token->line);
 			}
 		}
 
@@ -239,14 +239,15 @@ class Compiler extends Nette\Object
 			$token->text = preg_replace('#^.*>#', Nette\Utils\Html::$xhtml ? ' />' : '>', $token->text);
 		}
 
-		if (empty($node->attrs)) {
+		if (empty($node->macroAttrs)) {
 			$this->output .= $token->text;
 		} else {
 			$code = substr($this->output, $node->offset) . $token->text;
 			$this->output = substr($this->output, 0, $node->offset);
-			$this->writeAttrsMacro($code, $node->attrs, $node->closing);
+			$this->writeAttrsMacro($code, $node);
 			if ($isEmpty) {
-				$this->writeAttrsMacro('', $node->attrs, TRUE);
+				$node->closing = TRUE;
+				$this->writeAttrsMacro('', $node);
 			}
 		}
 
@@ -268,10 +269,11 @@ class Compiler extends Nette\Object
 
 	private function processAttribute($token)
 	{
+		$node = end($this->htmlNodes);
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
-			$node = end($this->htmlNodes);
-			$node->attrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
+			$node->macroAttrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
 		} else {
+			$node->attrs[$token->name] = TRUE; // TODO: nebo hodnotu?
 			$this->output .= $token->text;
 			if ($token->value) { // quoted
 				$context = self::CONTEXT_HTML;
@@ -357,30 +359,32 @@ class Compiler extends Nette\Object
 	 * @param  bool
 	 * @return void
 	 */
-	public function writeAttrsMacro($code, $attrs, $closing)
+	public function writeAttrsMacro($code, HtmlNode $node)
 	{
+		$attrs = $node->macroAttrs;
 		$left = $right = array();
 		foreach ($this->macros as $name => $foo) {
-			if ($name[0] === '@') {
+			if ($name[0] === '@') { // attribute macro
 				$name = substr($name, 1);
-				if (isset($attrs[$name])) {
-					if (!$closing) {
-						$pos = strrpos($code, '>');
-						if ($code[$pos-1] === '/') {
-							$pos--;
-						}
-						$this->setContext(self::CONTEXT_HTML, '"');
-						list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name]);
-						$this->setContext(self::CONTEXT_HTML);
-						$code = substr_replace($code, $macroCode, $pos, 0);
-					}
-					unset($attrs[$name]);
+				if (!isset($attrs[$name])) {
+					continue;
 				}
+				if (!$node->closing) {
+					$pos = strrpos($code, '>');
+					if ($code[$pos-1] === '/') {
+						$pos--;
+					}
+					$this->setContext(self::CONTEXT_HTML, '"');
+					list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name]);
+					$this->setContext(self::CONTEXT_HTML);
+					$code = substr_replace($code, $macroCode, $pos, 0);
+				}
+				unset($attrs[$name]);
 			}
 
-			$macro = $closing ? "/$name" : $name;
+			$macro = $node->closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
-				if ($closing) {
+				if ($node->closing) {
 					$right[] = array($macro, '');
 				} else {
 					array_unshift($left, array($macro, $attrs[$name]));
@@ -389,7 +393,7 @@ class Compiler extends Nette\Object
 
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
-				if ($closing) {
+				if ($node->closing) {
 					$left[] = array($macro, '');
 				} else {
 					array_unshift($right, array($macro, $attrs[$innerName]));

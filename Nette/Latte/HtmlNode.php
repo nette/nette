@@ -32,6 +32,9 @@ class HtmlNode extends Nette\Object
 	/** @var array */
 	public $attrs = array();
 
+	/** @var array */
+	public $macroAttrs = array();
+
 	/** @var bool */
 	public $closing = FALSE;
 
