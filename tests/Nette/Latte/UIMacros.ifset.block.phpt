@@ -15,14 +15,14 @@ use Nette\Latte\Macros\UIMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$parser = new Nette\Latte\Parser;
-UIMacros::install($parser);
+$compiler = new Nette\Latte\Compiler;
+UIMacros::install($compiler);
 function item1($a) { return $a[1]; }
 
 // {ifset ... }
-Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '#block')) );
-Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["#test"], #block')) );
+Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($compiler->expandMacro('ifset', '#block')) );
+Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($compiler->expandMacro('ifset', '$item->var["#test"], #block')) );
 
-Assert::throws(function() use ($parser) {
-	Assert::same( '<?php if (isset($var)): ?>',  item1($parser->expandMacro('ifset', '$var')) );
+Assert::throws(function() use ($compiler) {
+	Assert::same( '<?php if (isset($var)): ?>',  item1($compiler->expandMacro('ifset', '$var')) );
 }, 'Nette\Latte\ParseException', 'Unhandled macro {ifset}');

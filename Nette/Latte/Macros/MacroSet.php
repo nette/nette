@@ -24,17 +24,17 @@ use Nette,
  */
 class MacroSet extends Nette\Object implements Latte\IMacro
 {
-	/** @var Latte\Parser */
-	private $parser;
+	/** @var Latte\Compiler */
+	private $compiler;
 
 	/** @var array */
 	private $macros;
 
 
 
-	public function __construct(Latte\Parser $parser)
+	public function __construct(Latte\Compiler $compiler)
 	{
-		$this->parser = $parser;
+		$this->compiler = $compiler;
 	}
 
 
@@ -42,15 +42,15 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	public function addMacro($name, $begin, $end = NULL)
 	{
 		$this->macros[$name] = array($begin, $end);
-		$this->parser->addMacro($name, $this);
+		$this->compiler->addMacro($name, $this);
 		return $this;
 	}
 
 
 
-	public static function install(Latte\Parser $parser)
+	public static function install(Latte\Compiler $compiler)
 	{
-		return new static($parser);
+		return new static($compiler);
 	}
 
 
@@ -105,7 +105,7 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	private function compile(MacroNode $node, $def)
 	{
 		$node->tokenizer->reset();
-		$writer = Latte\PhpWriter::using($node, $this->parser->getContext());
+		$writer = Latte\PhpWriter::using($node, $this->compiler->getContext());
 		if (is_string($def)/*5.2* && substr($def, 0, 1) !== "\0"*/) {
 			$code = $writer->write($def);
 		} else {
@@ -120,11 +120,11 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 
 
 	/**
-	 * @return Latte\Parser
+	 * @return Latte\Compiler
 	 */
-	public function getParser()
+	public function getCompiler()
 	{
-		return $this->parser;
+		return $this->compiler;
 	}
 
 }

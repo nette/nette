@@ -43,9 +43,9 @@ class UIMacros extends MacroSet
 
 
 
-	public static function install(Latte\Parser $parser)
+	public static function install(Latte\Compiler $compiler)
 	{
-		$me = new static($parser);
+		$me = new static($compiler);
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('includeblock', array($me, 'macroIncludeBlock'));
 		$me->addMacro('extends', array($me, 'macroExtends'));
@@ -91,7 +91,7 @@ class UIMacros extends MacroSet
 	{
 		// try close last block
 		try {
-			$this->getParser()->writeMacro('/block');
+			$this->getCompiler()->writeMacro('/block');
 		} catch (ParseException $e) {
 		}
 
@@ -99,7 +99,7 @@ class UIMacros extends MacroSet
 
 		if ($this->namedBlocks) {
 			foreach ($this->namedBlocks as $name => $code) {
-				$func = '_lb' . substr(md5($this->getParser()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$func = '_lb' . substr(md5($this->getCompiler()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				$snippet = $name[0] === '_';
 				$prolog[] = "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[" . var_export($name, TRUE) . "][] = '$func')) { "
@@ -196,7 +196,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroIncludeBlock(MacroNode $node, $writer)
 	{
 		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
-			$this->getParser()->getTemplateId());
+			$this->getCompiler()->getTemplateId());
 	}
 
 
@@ -260,7 +260,7 @@ if (!empty($_control->snippetMode)) {
 				$node->data->leave = TRUE;
 				$fname = $writer->formatWord($name);
 				$node->data->end = "}} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars())";
-				$func = '_lb' . substr(md5($this->getParser()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
+				$func = '_lb' . substr(md5($this->getCompiler()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				return "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[$fname][] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
@@ -401,25 +401,25 @@ if (!empty($_control->snippetMode)) {
 	public function macroContentType(MacroNode $node, $writer)
 	{
 		if (Strings::contains($node->args, 'html')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_TEXT);
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_TEXT);
 
 		} elseif (Strings::contains($node->args, 'xml')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'xml');
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE, 'xml');
 
 		} elseif (Strings::contains($node->args, 'javascript')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'js');
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE, 'js');
 
 		} elseif (Strings::contains($node->args, 'css')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'css');
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE, 'css');
 
 		} elseif (Strings::contains($node->args, 'plain')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'text');
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE, 'text');
 
 		} elseif (Strings::contains($node->args, 'calendar')) {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE, 'ical');
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE, 'ical');
 
 		} else {
-			$this->getParser()->setContext(Latte\Parser::CONTEXT_NONE);
+			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE);
 		}
 
 		// temporary solution

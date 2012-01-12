@@ -46,9 +46,9 @@ class CoreMacros extends MacroSet
 {
 
 
-	public static function install(Latte\Parser $parser)
+	public static function install(Latte\Compiler $compiler)
 	{
-		$me = new static($parser);
+		$me = new static($compiler);
 
 		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
 		$me->addMacro('elseif', 'elseif (%node.args):');
@@ -97,7 +97,7 @@ class CoreMacros extends MacroSet
 	public function finalize()
 	{
 		return array('list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, '
-			. var_export($this->getParser()->getTemplateId(), TRUE) . ')');
+			. var_export($this->getCompiler()->getTemplateId(), TRUE) . ')');
 	}
 
 
@@ -186,23 +186,23 @@ class CoreMacros extends MacroSet
 		switch ($node->args) {
 		case '':
 		case 'latte':
-			$this->getParser()->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
+			$this->getCompiler()->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
 			break;
 
 		case 'double':
-			$this->getParser()->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
+			$this->getCompiler()->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
 			break;
 
 		case 'asp':
-			$this->getParser()->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
+			$this->getCompiler()->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
 			break;
 
 		case 'python':
-			$this->getParser()->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
+			$this->getCompiler()->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
 			break;
 
 		case 'off':
-			$this->getParser()->setDelimiters('[^\x00-\xFF]', '');
+			$this->getCompiler()->setDelimiters('[^\x00-\xFF]', '');
 			break;
 
 		default:
@@ -218,7 +218,7 @@ class CoreMacros extends MacroSet
 	public function macroInclude(MacroNode $node, $writer)
 	{
 		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters(), $_l->templates[%var])',
-			$this->getParser()->getTemplateId());
+			$this->getCompiler()->getTemplateId());
 
 		if ($node->modifiers) {
 			return $writer->write('echo %modify(%raw->__toString(TRUE))', $code);
@@ -234,7 +234,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroUse(MacroNode $node, $writer)
 	{
-		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->getParser())
+		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->getCompiler())
 			->initialize();
 	}
 

@@ -17,7 +17,7 @@ use Nette,
 
 
 /**
- * Compile-time filter Latte.
+ * Latte parser.
  *
  * @author     David Grudl
  */

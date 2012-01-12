@@ -25,15 +25,19 @@ class Engine extends Nette\Object
 	/** @var Parser */
 	private $parser;
 
+	/** @var Compiler */
+	private $compiler;
+
 
 
 	public function __construct()
 	{
 		$this->parser = new Parser;
-		Macros\CoreMacros::install($this->parser);
-		$this->parser->addMacro('cache', new Macros\CacheMacro($this->parser));
-		Macros\UIMacros::install($this->parser);
-		Macros\FormMacros::install($this->parser);
+		$this->compiler = new Compiler;
+		Macros\CoreMacros::install($this->compiler);
+		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
+		Macros\UIMacros::install($this->compiler);
+		Macros\FormMacros::install($this->compiler);
 	}
 
 
@@ -45,9 +49,9 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		$this->parser->setContext(Parser::CONTEXT_TEXT);
-		$this->parser->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
-		return $this->parser->parse($s);
+		$this->compiler->setContext(Parser::CONTEXT_TEXT);
+		$this->compiler->setDelimiters('\\{(?![\\s\'"{}])', '\\}');
+		return $this->compiler->parse($s);
 	}
 
 
@@ -58,6 +62,16 @@ class Engine extends Nette\Object
 	public function getParser()
 	{
 		return $this->parser;
+	}
+
+
+
+	/**
+	 * @return Compiler
+	 */
+	public function getCompiler()
+	{
+		return $this->compile;
 	}
 
 }

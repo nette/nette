@@ -281,11 +281,11 @@ class PhpWriter extends Nette\Object
 	public function escape($s)
 	{
 		switch ($this->context[0]) {
-		case Parser::CONTEXT_TEXT:
+		case Compiler::CONTEXT_TEXT:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, ENT_NOQUOTES)";
-		case Parser::CONTEXT_TAG:
+		case Compiler::CONTEXT_TAG:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s)";
-		case Parser::CONTEXT_ATTRIBUTE:
+		case Compiler::CONTEXT_ATTRIBUTE:
 			list(, $name, $quote) = $this->context;
 			$quote = $quote === '"' ? '' : ', ENT_QUOTES';
 			if (strncasecmp($name, 'on', 2) === 0) {
@@ -295,11 +295,11 @@ class PhpWriter extends Nette\Object
 			} else {
 				return "htmlSpecialChars($s$quote)";
 			}
-		case Parser::CONTEXT_COMMENT:
+		case Compiler::CONTEXT_COMMENT:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtmlComment($s)";
-		case Parser::CONTEXT_CDATA;
+		case Compiler::CONTEXT_CDATA;
 			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)"; // Js, Css
-		case Parser::CONTEXT_NONE:
+		case Compiler::CONTEXT_NONE:
 			switch (isset($this->context[1]) ? $this->context[1] : NULL) {
 			case 'xml':
 			case 'js':

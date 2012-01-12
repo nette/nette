@@ -31,9 +31,9 @@ use Nette,
 class FormMacros extends MacroSet
 {
 
-	public static function install(Latte\Parser $parser)
+	public static function install(Latte\Compiler $compiler)
 	{
-		$me = new static($parser);
+		$me = new static($compiler);
 		$me->addMacro('form',
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control[%node.word], %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($form)');

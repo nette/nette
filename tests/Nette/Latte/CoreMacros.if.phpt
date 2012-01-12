@@ -15,9 +15,9 @@ use Nette\Latte\Macros\CoreMacros;
 require __DIR__ . '/../bootstrap.php';
 
 
-$parser = new Nette\Latte\Parser;
-CoreMacros::install($parser);
+$compiler = new Nette\Latte\Compiler;
+CoreMacros::install($compiler);
 function item1($a) { return $a[1]; }
 
-Assert::same( '<?php if (isset($var)): ?>',  item1($parser->expandMacro('ifset', '$var')) );
-Assert::same( '<?php if (isset($item->var["test"])): ?>',  item1($parser->expandMacro('ifset', '$item->var["test"]')) );
+Assert::same( '<?php if (isset($var)): ?>',  item1($compiler->expandMacro('ifset', '$var')) );
+Assert::same( '<?php if (isset($item->var["test"])): ?>',  item1($compiler->expandMacro('ifset', '$item->var["test"]')) );

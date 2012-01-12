@@ -186,6 +186,7 @@ class NetteLoader extends AutoLoader
 		'nette\iterators\mapper' => '/Iterators/Mapper.php',
 		'nette\iterators\recursivefilter' => '/Iterators/RecursiveFilter.php',
 		'nette\iterators\recursor' => '/Iterators/Recursor.php',
+		'nette\latte\compiler' => '/Latte/Compiler.php',
 		'nette\latte\engine' => '/Latte/Engine.php',
 		'nette\latte\htmlnode' => '/Latte/HtmlNode.php',
 		'nette\latte\imacro' => '/Latte/IMacro.php',
