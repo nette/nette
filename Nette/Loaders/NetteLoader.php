@@ -200,6 +200,7 @@ class NetteLoader extends AutoLoader
 		'nette\latte\parseexception' => '/Latte/ParseException.php',
 		'nette\latte\parser' => '/Latte/Parser.php',
 		'nette\latte\phpwriter' => '/Latte/PhpWriter.php',
+		'nette\latte\token' => '/Latte/Token.php',
 		'nette\loaders\autoloader' => '/Loaders/AutoLoader.php',
 		'nette\loaders\netteloader' => '/Loaders/NetteLoader.php',
 		'nette\loaders\robotloader' => '/Loaders/RobotLoader.php',

@@ -77,7 +77,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('=', array($me, 'macroExpr'));
 		$me->addMacro('?', array($me, 'macroExpr'));
 
-		$me->addMacro('syntax', array($me, 'macroSyntax'), array($me, 'macroSyntax'));
+		$me->addMacro('syntax', '', '');
 		$me->addMacro('capture', array($me, 'macroCapture'), array($me, 'macroCaptureEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('use', array($me, 'macroUse'));
@@ -170,43 +170,6 @@ class CoreMacros extends MacroSet
 
 		} else {
 			return 'ob_start()';
-		}
-	}
-
-
-
-	/**
-	 * {syntax name}
-	 */
-	public function macroSyntax(MacroNode $node)
-	{
-		if ($node->closing) {
-			$node->args = 'latte';
-		}
-		switch ($node->args) {
-		case '':
-		case 'latte':
-			$this->getCompiler()->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
-			break;
-
-		case 'double':
-			$this->getCompiler()->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
-			break;
-
-		case 'asp':
-			$this->getCompiler()->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
-			break;
-
-		case 'python':
-			$this->getCompiler()->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
-			break;
-
-		case 'off':
-			$this->getCompiler()->setDelimiters('[^\x00-\xFF]', '');
-			break;
-
-		default:
-			throw new ParseException("Unknown syntax '$node->args'");
 		}
 	}
 
