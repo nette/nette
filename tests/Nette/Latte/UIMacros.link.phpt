@@ -16,6 +16,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $compiler = new Nette\Latte\Compiler;
+$compiler->setContext(Nette\Latte\Compiler::CONTEXT_NONE);
 UIMacros::install($compiler);
 function item1($a) { return $a[1]; }
 

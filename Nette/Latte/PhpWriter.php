@@ -280,37 +280,29 @@ class PhpWriter extends Nette\Object
 
 	public function escape($s)
 	{
+		$quote = $this->context[1] === '"' ? '' : ', ENT_QUOTES';
 		switch ($this->context[0]) {
-		case Compiler::CONTEXT_TEXT:
-			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, ENT_NOQUOTES)";
-		case Compiler::CONTEXT_TAG:
-			return "Nette\\Templating\\DefaultHelpers::escapeHtml($s)";
-		case Compiler::CONTEXT_ATTRIBUTE:
-			list(, $name, $quote) = $this->context;
-			$quote = $quote === '"' ? '' : ', ENT_QUOTES';
-			if (strncasecmp($name, 'on', 2) === 0) {
-				return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeJs($s)$quote)";
-			} elseif ($name === 'style') {
-				return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeCss($s)$quote)";
+		case Compiler::CONTEXT_HTML:
+			if (empty($this->context[1])) {
+				return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, ENT_NOQUOTES)";
 			} else {
 				return "htmlSpecialChars($s$quote)";
 			}
-		case Compiler::CONTEXT_COMMENT:
+		case Compiler::CONTEXT_HTML_JS:
+			return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeJs($s)$quote)";
+		case Compiler::CONTEXT_HTML_CSS:
+			return "htmlSpecialChars(Nette\\Templating\\DefaultHelpers::escapeCss($s)$quote)";
+		case Compiler::CONTEXT_HTML_COMMENT:
 			return "Nette\\Templating\\DefaultHelpers::escapeHtmlComment($s)";
-		case Compiler::CONTEXT_CDATA;
-			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)"; // Js, Css
+		case Compiler::CONTEXT_XML:
+		case Compiler::CONTEXT_JS:
+		case Compiler::CONTEXT_CSS:
+		case Compiler::CONTEXT_ICAL:
+			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[0]) . "($s)";
 		case Compiler::CONTEXT_NONE:
-			switch (isset($this->context[1]) ? $this->context[1] : NULL) {
-			case 'xml':
-			case 'js':
-			case 'css':
-			case 'ical':
-				return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->context[1]) . "($s)";
-			case 'text':
-				return $s;
-			default:
-				return "\$template->escape($s)";
-			}
+			return $s;
+		default:
+			return "\$template->escape($s)";
 		}
 	}
 

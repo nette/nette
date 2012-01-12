@@ -77,7 +77,7 @@ if ($_l->extends) {
 
 <p val0 val1 = tmp val2=tmp val3="x" /> </p>
 
-<p val = <?php echo Nette\Templating\DefaultHelpers::escapeHtml($xss) ?>> </p>
+<p val = <?php echo Nette\Templating\DefaultHelpers::escapeHtml($xss, ENT_NOQUOTES) ?>> </p>
 
 <p val = /><?php echo Nette\Templating\DefaultHelpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
 
@@ -257,9 +257,9 @@ normal<?php if (false): ?>
 
 { }
 
-<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first':null), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
+<p<?php if ($_l->tmp = array_filter(array('foo', (false ? 'first':null), 'odd', ($hello ? 'foo' : 'bar')))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class</p>
 
-<p<?php if ($_l->tmp = array_filter(array(false ? 'first':null))) echo ' class="' . Nette\Templating\DefaultHelpers::escapeHtml(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
+<p<?php if ($_l->tmp = array_filter(array(false ? 'first':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
 
 <meta />
 <?php if (true): ?>

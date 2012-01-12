@@ -54,19 +54,22 @@ class Compiler extends Nette\Object
 	private $templateId;
 
 	/** @internal Context-aware escaping states */
-	const CONTEXT_TEXT = 'text',
-		CONTEXT_CDATA = 'cdata',
-		CONTEXT_TAG = 'tag',
-		CONTEXT_ATTRIBUTE = 'attribute',
-		CONTEXT_NONE = 'none',
-		CONTEXT_COMMENT = 'comment';
+	const CONTEXT_NONE = 'none',
+		CONTEXT_HTML = 'html',
+		CONTEXT_HTML_JS = 'html_js',
+		CONTEXT_HTML_CSS = 'html_css',
+		CONTEXT_HTML_COMMENT = 'html_comment',
+		CONTEXT_XML = 'xml',
+		CONTEXT_JS = 'js',
+		CONTEXT_CSS = 'css',
+		CONTEXT_ICAL = 'ical';
 
 
 
 	public function __construct()
 	{
 		$this->macroHandlers = new \SplObjectStorage;
-		$this->setContext(self::CONTEXT_NONE, 'text');
+		$this->setContext(self::CONTEXT_HTML);
 	}
 
 
@@ -155,16 +158,16 @@ class Compiler extends Nette\Object
 	/**
 	 * @return Compiler  provides a fluent interface
 	 */
-	public function setContext($context, $mime = NULL)
+	public function setContext($context, $spec = NULL)
 	{
-		$this->context = array($context, $mime);
+		$this->context = array($context, $spec);
 		return $this;
 	}
 
 
 
 	/**
-	 * @return array [context, mime]
+	 * @return array [context, spec]
 	 */
 	public function getContext()
 	{
@@ -206,15 +209,15 @@ class Compiler extends Nette\Object
 			$this->htmlNodes[] = $node;
 			$node->closing = TRUE;
 			$node->offset = strlen($this->output);
-			$this->setContext(self::CONTEXT_TAG);
+			$this->setContext(self::CONTEXT_HTML);
 
 		} elseif ($token->text === '<!--') {
-			$this->setContext(self::CONTEXT_COMMENT);
+			$this->setContext(self::CONTEXT_HTML_COMMENT);
 
 		} else {
 			$this->htmlNodes[] = $node = new HtmlNode($token->name);
 			$node->offset = strlen($this->output);
-			$this->setContext(self::CONTEXT_TAG);
+			$this->setContext(self::CONTEXT_HTML);
 		}
 		$this->output .= $token->text;
 	}
@@ -225,7 +228,7 @@ class Compiler extends Nette\Object
 	{
 		if ($token->text === '-->') {
 			$this->output .= $token->text;
-			$this->setContext(self::CONTEXT_COMMENT);
+			$this->setContext(self::CONTEXT_HTML);
 			return;
 		}
 
@@ -252,9 +255,9 @@ class Compiler extends Nette\Object
 		}
 
 		if (!$node->closing && (strcasecmp($node->name, 'script') === 0 || strcasecmp($node->name, 'style') === 0)) {
-			$this->setContext(self::CONTEXT_CDATA, strcasecmp($node->name, 'style') ? 'js' : 'css');
+			$this->setContext(strcasecmp($node->name, 'style') ? self::CONTEXT_JS : self::CONTEXT_CSS);
 		} else {
-			$this->setContext(self::CONTEXT_TEXT);
+			$this->setContext(self::CONTEXT_HTML);
 			if ($node->closing) {
 				array_pop($this->htmlNodes);
 			}
@@ -270,8 +273,14 @@ class Compiler extends Nette\Object
 			$node->attrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
 		} else {
 			$this->output .= $token->text;
-			if ($token->value) { // quote
-				$this->context = array(self::CONTEXT_ATTRIBUTE, $token->name, $token->value);
+			if ($token->value) { // quoted
+				$context = self::CONTEXT_HTML;
+				if (strncasecmp($token->name, 'on', 2) === 0) {
+					$context = self::CONTEXT_HTML_JS;
+				} elseif ($token->name === 'style') {
+					$context = self::CONTEXT_HTML_CSS;
+				}
+				$this->setContext($context, $token->value);
 			}
 		}
 	}
@@ -360,7 +369,9 @@ class Compiler extends Nette\Object
 						if ($code[$pos-1] === '/') {
 							$pos--;
 						}
+						$this->setContext(self::CONTEXT_HTML, '"');
 						list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name]);
+						$this->setContext(self::CONTEXT_HTML);
 						$code = substr_replace($code, $macroCode, $pos, 0);
 					}
 					unset($attrs[$name]);

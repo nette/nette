@@ -55,7 +55,7 @@ class Engine extends Nette\Object
 			->parse($s);
 
 		return $this->compiler
-			->setContext(Compiler::CONTEXT_TEXT, 'html')
+			->setContext(Compiler::CONTEXT_HTML)
 			->compile($tokens);
 	}
 
