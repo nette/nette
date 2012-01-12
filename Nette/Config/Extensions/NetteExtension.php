@@ -82,7 +82,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->addSetup('$catchExceptions', '%productionMode%');
 
 		if (empty($config['productionMode'])) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize'); // enable routing debugger
+			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize');
+			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
+			));
 		}
 
 		$container->addDefinition('router')

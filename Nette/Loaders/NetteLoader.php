@@ -227,6 +227,7 @@ class NetteLoader extends AutoLoader
 		'nette\reflection\parameter' => '/Reflection/Parameter.php',
 		'nette\reflection\property' => '/Reflection/Property.php',
 		'nette\security\authenticationexception' => '/Security/AuthenticationException.php',
+		'nette\security\diagnostics\userpanel' => '/Security/Diagnostics/UserPanel.php',
 		'nette\security\iauthenticator' => '/Security/IAuthenticator.php',
 		'nette\security\iauthorizator' => '/Security/IAuthorizator.php',
 		'nette\security\identity' => '/Security/Identity.php',
