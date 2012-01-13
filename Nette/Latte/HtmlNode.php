@@ -46,7 +46,6 @@ class HtmlNode extends Nette\Object
 	public function __construct($name)
 	{
 		$this->name = $name;
-		$this->isEmpty = isset(Nette\Utils\Html::$emptyElements[strtolower($this->name)]);
 	}
 
 }

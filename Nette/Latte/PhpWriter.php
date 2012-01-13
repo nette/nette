@@ -281,6 +281,7 @@ class PhpWriter extends Nette\Object
 	public function escape($s)
 	{
 		switch ($this->compiler->getContentType()) {
+		case Compiler::CONTENT_XHTML:
 		case Compiler::CONTENT_HTML:
 			$context = $this->compiler->getContext();
 			switch ($context[0]) {

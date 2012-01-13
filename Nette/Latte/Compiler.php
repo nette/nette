@@ -58,6 +58,7 @@ class Compiler extends Nette\Object
 
 	/** @internal Context-aware escaping states */
 	const CONTENT_HTML = 'html',
+		CONTENT_XHTML = 'xhtml',
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
@@ -241,6 +242,8 @@ class Compiler extends Nette\Object
 
 		} else {
 			$this->htmlNodes[] = $node = new HtmlNode($token->name);
+			$node->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
+				&& isset(Nette\Utils\Html::$emptyElements[strtolower($token->name)]);
 			$node->offset = strlen($this->output);
 			$this->setContext(NULL);
 		}
@@ -260,8 +263,8 @@ class Compiler extends Nette\Object
 		$node = end($this->htmlNodes);
 		$isEmpty = !$node->closing && (Strings::contains($token->text, '/') || $node->isEmpty);
 
-		if ($isEmpty) {
-			$token->text = preg_replace('#^.*>#', Nette\Utils\Html::$xhtml ? ' />' : '>', $token->text);
+		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
+			$token->text = preg_replace('#^.*>#', $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
 		}
 
 		if (empty($node->macroAttrs)) {

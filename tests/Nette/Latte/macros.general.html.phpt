@@ -21,9 +21,10 @@ require __DIR__ . '/Template.inc';
 
 
 
-Html::$xhtml = FALSE;
+$latte = new Latte\Engine;
+$latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/general.latte');
-$template->registerFilter(new Latte\Engine);
+$template->registerFilter($latte);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');

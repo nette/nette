@@ -21,10 +21,11 @@ require __DIR__ . '/Template.inc';
 
 
 
-Html::$xhtml = FALSE;
+$latte = new Latte\Engine;
+$latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/include.latte');
 $template->setCacheStorage($cache = new MockCacheStorage);
-$template->registerFilter(new Latte\Engine);
+$template->registerFilter($latte);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 $template->hello = '<i>Hello</i>';
 
