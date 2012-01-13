@@ -28,5 +28,4 @@ $template->registerFilter($latte);
 $template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
-echo codefix($template->compile());
-//Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
+Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));
