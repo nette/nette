@@ -26,8 +26,20 @@ class Parser extends Nette\Object
 	/** @internal regular expression for single & double quoted PHP string */
 	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
 
-	/** @internal special HTML tag or attribute prefix */
+	/** @internal special HTML attribute prefix */
 	const N_PREFIX = 'n:';
+
+	/** @var string default macro syntax */
+	public $defaultSyntax = 'latte';
+	
+	/** @var array */
+	public $syntaxes = array(
+		'latte' => array('\\{(?![\\s\'"{}])', '\\}'), // {...}
+		'double' => array('\\{\\{(?![\\s\'"{}])', '\\}\\}'), // {{...}}
+		'asp' => array('<%\s*', '\s*%>'), /* <%...%> */
+		'python' => array('\\{[{%]\s*', '\s*[%}]\\}'), // {% ... %} | {{ ... }}
+		'off' => array('[^\x00-\xFF]', ''),
+	);
 
 	/** @var string */
 	private $macroRe;
@@ -48,7 +60,7 @@ class Parser extends Nette\Object
 	private $lastTag;
 
 	/** @var string used by filter() */
-	public $endTag;
+	private $endTag;
 
 	/** @internal states */
 	const CONTEXT_TEXT = 'text',
@@ -57,13 +69,6 @@ class Parser extends Nette\Object
 		CONTEXT_ATTRIBUTE = 'attribute',
 		CONTEXT_NONE = 'none',
 		CONTEXT_COMMENT = 'comment';
-
-
-	public function __construct()
-	{
-		$this->setSyntax('latte');
-		$this->setContext(self::CONTEXT_TEXT);
-	}
 
 
 
@@ -78,10 +83,13 @@ class Parser extends Nette\Object
 			throw new ParseException('Template is not valid UTF-8 stream.');
 		}
 		$input = str_replace("\r\n", "\n", $input);
-
 		$this->input = $input;
 		$this->output = array();
 		$this->offset = 0;
+
+		$this->setSyntax($this->defaultSyntax);
+		$this->setContext(self::CONTEXT_TEXT);
+		$this->lastTag = $this->endTag = NULL;
 
 		while ($this->offset < strlen($input)) {
 			$matches = $this->{"context".$this->context[0]}();
@@ -115,17 +123,15 @@ class Parser extends Nette\Object
 	{
 		$matches = $this->match('~
 			(?:(?<=\n|^)[ \t]*)?<(?P<closing>/?)(?P<tag>[a-z0-9:]+)|  ##  begin of HTML tag <tag </tag - ignores <!DOCTYPE
-			<(?P<htmlcomment>!--)|       ##  begin of HTML comment <!--
-			'.$this->macroRe.'           ##  curly tag
+			<(?P<htmlcomment>!--)|     ##  begin of HTML comment <!--
+			'.$this->macroRe.'         ##  macro
 		~xsi');
 
-		if (!$matches || !empty($matches['macro']) || !empty($matches['comment'])) { // EOF or {macro}
-
-		} elseif (!empty($matches['htmlcomment'])) { // <!--
+		if (!empty($matches['htmlcomment'])) { // <!--
 			$this->addToken(Token::TAG_BEGIN, $matches[0]);
 			$this->setContext(self::CONTEXT_COMMENT);
 
-		} else { // <tag or </tag
+		} elseif (!empty($matches['tag'])) { // <tag or </tag
 			$token = $this->addToken(Token::TAG_BEGIN, $matches[0]);
 			$token->name = $matches['tag'];
 			$token->closing = (bool) $matches['closing'];
@@ -143,11 +149,11 @@ class Parser extends Nette\Object
 	private function contextCData()
 	{
 		$matches = $this->match('~
-			</'.$this->lastTag.'(?![a-z0-9:])| ##  end HTML tag </tag
-			'.$this->macroRe.'              ##  curly tag
+			</(?P<tag>'.$this->lastTag.')(?![a-z0-9:])| ##  end HTML tag </tag
+			'.$this->macroRe.'              ##  macro
 		~xsi');
 
-		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // </tag
+		if (!empty($matches['tag'])) { // </tag
 			$token = $this->addToken(Token::TAG_BEGIN, $matches[0]);
 			$token->name = $this->lastTag;
 			$token->closing = TRUE;
@@ -166,17 +172,15 @@ class Parser extends Nette\Object
 	{
 		$matches = $this->match('~
 			(?P<end>\ ?/?>)([ \t]*\n)?|  ##  end of HTML tag
-			'.$this->macroRe.'|          ##  curly tag
+			'.$this->macroRe.'|          ##  macro
 			\s*(?P<attr>[^\s/>={]+)(?:\s*=\s*(?P<value>["\']|[^\s/>{]+))? ## begin of HTML attribute
 		~xsi');
 
-		if (!$matches || !empty($matches['macro']) || !empty($matches['comment'])) { // EOF or {macro}
-
-		} elseif (!empty($matches['end'])) { // end of HTML tag />
+		if (!empty($matches['end'])) { // end of HTML tag />
 			$this->addToken(Token::TAG_END, $matches[0]);
 			$this->setContext($this->lastTag === 'script' || $this->lastTag === 'style' ? self::CONTEXT_CDATA : self::CONTEXT_TEXT);
 
-		} else { // HTML attribute
+		} elseif (!empty($matches['attr'])) { // HTML attribute
 			$token = $this->addToken(Token::ATTRIBUTE, $matches[0]);
 			$token->name = $matches['attr'];
 			$token->value = isset($matches['value']) ? $matches['value'] : '';
@@ -204,11 +208,11 @@ class Parser extends Nette\Object
 	private function contextAttribute()
 	{
 		$matches = $this->match('~
-			('.$this->context[1].')|      ##  1) end of HTML attribute
-			'.$this->macroRe.'            ##  curly tag
+			(?P<quote>'.$this->context[1].')|  ##  end of HTML attribute
+			'.$this->macroRe.'                 ##  macro
 		~xsi');
 
-		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // (attribute end) '"
+		if (!empty($matches['quote'])) { // (attribute end) '"
 			$this->addToken(Token::TEXT, $matches[0]);
 			$this->setContext(self::CONTEXT_TAG);
 		}
@@ -223,11 +227,11 @@ class Parser extends Nette\Object
 	private function contextComment()
 	{
 		$matches = $this->match('~
-			(--\s*>)|                    ##  1) end of HTML comment
-			'.$this->macroRe.'           ##  curly tag
+			(?<htmlcomment>--\s*>)|    ##  end of HTML comment
+			'.$this->macroRe.'         ##  macro
 		~xsi');
 
-		if ($matches && empty($matches['macro']) && empty($matches['comment'])) { // --\s*>
+		if (!empty($matches['htmlcomment'])) { // --\s*>
 			$this->addToken(Token::TAG_END, $matches[0]);
 			$this->setContext(self::CONTEXT_TEXT);
 		}
@@ -242,7 +246,7 @@ class Parser extends Nette\Object
 	private function contextNone()
 	{
 		$matches = $this->match('~
-			'.$this->macroRe.'           ##  curly tag
+			'.$this->macroRe.'     ##  macro
 		~xsi');
 		return $matches;
 	}
@@ -287,21 +291,9 @@ class Parser extends Nette\Object
 	 */
 	public function setSyntax($type)
 	{
-		if ($type === '' || $type === 'latte') {
-			$this->setDelimiters('\\{(?![\\s\'"{}])', '\\}'); // {...}
-
-		} elseif ($type === 'double') {
-			$this->setDelimiters('\\{\\{(?![\\s\'"{}])', '\\}\\}'); // {{...}}
-
-		} elseif ($type === 'asp') {
-			$this->setDelimiters('<%\s*', '\s*%>'); /* <%...%> */
-
-		} elseif ($type === 'python') {
-			$this->setDelimiters('\\{[{%]\s*', '\s*[%}]\\}'); // {% ... %} | {{ ... }}
-
-		} elseif ($type === 'off') {
-			$this->setDelimiters('[^\x00-\xFF]', '');
-
+		$type = $type ?: $this->defaultSyntax;
+		if (isset($this->syntaxes[$type])) {
+			$this->setDelimiters($this->syntaxes[$type][0], $this->syntaxes[$type][1]);
 		} else {
 			throw new ParseException("Unknown syntax '$type'");
 		}
@@ -379,7 +371,7 @@ class Parser extends Nette\Object
 	{
 		$token = end($this->output);
 		if ($token->type === Token::MACRO && $token->name === '/syntax') {
-			$this->setSyntax('latte');
+			$this->setSyntax($this->defaultSyntax);
 			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::MACRO && $token->name === 'syntax') {
@@ -392,7 +384,7 @@ class Parser extends Nette\Object
 			$token->type = Token::COMMENT;
 
 		} elseif ($token->type === Token::TAG_END && $this->lastTag === $this->endTag) {
-			$this->setSyntax('latte');
+			$this->setSyntax($this->defaultSyntax);
 
 		} elseif ($token->type === Token::MACRO && $token->name === 'contentType') {
 			$this->setContext(Strings::contains($token->value, 'html') ? self::CONTEXT_TEXT : self::CONTEXT_NONE);

@@ -49,14 +49,9 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		$tokens = $this->parser
-			->setContext(Parser::CONTEXT_TEXT)
-			->setSyntax('latte')
-			->parse($s);
-
 		return $this->compiler
 			->setContext(Compiler::CONTEXT_HTML)
-			->compile($tokens);
+			->compile($this->parser->parse($s));
 	}
 
 
