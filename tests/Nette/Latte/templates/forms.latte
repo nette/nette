@@ -13,3 +13,33 @@
 {form myForm}
 	<input value=val type class="hello" n:input="username">
 {/form myForm}
+
+
+{form myForm2}
+<table>
+	<tr>
+		<th>{label text1 /}</th>
+		<td>{input text1}</td>
+	</tr>
+	{container cont1}
+	<tr>
+		<th>{label text2 /}</th>
+		<td>{input text2}</td>
+	</tr>
+	<tr n:container="cont2">
+		<th>&nbsp;</th>
+		<td>
+			{label text3 /} {input text3}<br>
+			{label text4 /} {input text4}
+		</td>
+	</tr>
+	<tr>
+		<th>{label text5 /}</th>
+		<td><input value=val type class="hello" n:input="text5"></td>
+	</tr>
+	{/container}
+	<tr>
+		<th>{label text6 /}</th>
+		<td>{input text6}</td>
+	</tr></table>
+{/form}
