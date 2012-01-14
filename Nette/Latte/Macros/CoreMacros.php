@@ -56,7 +56,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
 		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
 
-		$me->addMacro('foreach', array($me, 'macroForeach'), '$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its)');
+		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
 		$me->addMacro('for', 'for (%node.args):', 'endfor');
 		$me->addMacro('while', 'while (%node.args):', 'endwhile');
 		$me->addMacro('continueIf', 'if (%node.args) continue');
@@ -229,10 +229,16 @@ class CoreMacros extends MacroSet
 	/**
 	 * {foreach ...}
 	 */
-	public function macroForeach(MacroNode $node, $writer)
+	public function macroEndForeach(MacroNode $node, $writer)
 	{
-		return '$iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
-			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs(), 1) . '):';
+		if (preg_match('#\W(\$iterator|include|require|get_defined_vars)\W#', $node->content)) {
+			$node->openingCode = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs(), 1) . '): ?>';
+			$node->closingCode = '<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>';
+		} else {
+			$node->openingCode = '<?php $iterations = 0; foreach (' . $writer->formatArgs() . '): ?>';
+			$node->closingCode = '<?php $iterations++; endforeach ?>';
+		}
 	}
 
 

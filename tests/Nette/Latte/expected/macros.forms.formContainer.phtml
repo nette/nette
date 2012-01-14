@@ -22,9 +22,9 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
 		<th>Checkboxes<th>
 		<td>
 <?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>			<ol>
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($formContainer->controls) as $name => $field): ?>
+<?php $iterations = 0; foreach ($formContainer->controls AS $name => $field): ?>
 				<li><?php echo $_form[$name]->getControl()->addAttributes(array()) ?> - <?php if ($_label = $_form[$name]->getLabel()) echo $_label->addAttributes(array()) ?></li>
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>			</ol>
+<?php $iterations++; endforeach ?>			</ol>
 <?php $_form = array_pop($_formStack) ?>
 		</td>
 	</tr>

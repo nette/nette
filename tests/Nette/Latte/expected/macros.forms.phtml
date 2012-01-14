@@ -2,12 +2,12 @@
 %A%
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
 <table>
-<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($form->controls) as $name => $field): ?>
+<?php $iterations = 0; foreach ($form->controls as $name => $field): ?>
 <tr>
 	<th><?php if ($_label = $_form[$name]->getLabel()) echo $_label->addAttributes(array()) ?><th>
 	<td><?php echo $_form[$name]->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?></td>
 </tr>
-<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+<?php $iterations++; endforeach ?>
 </table>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
 
