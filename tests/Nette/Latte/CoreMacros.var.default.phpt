@@ -17,28 +17,27 @@ require __DIR__ . '/../bootstrap.php';
 
 $compiler = new Nette\Latte\Compiler;
 CoreMacros::install($compiler);
-function item1($a) { return $a[1]; }
 
 // {var ... }
-Assert::same( '<?php $var = \'hello\' ?>',  item1($compiler->expandMacro('var', 'var => hello', '')) );
-Assert::same( '<?php $var = 123 ?>',  item1($compiler->expandMacro('var', '$var => 123', '')) );
-Assert::same( '<?php $var = 123 ?>',  item1($compiler->expandMacro('var', '$var = 123', '')) );
-Assert::same( '<?php $var = 123 ?>',  item1($compiler->expandMacro('var', '$var => 123', 'filter')) );
-Assert::same( '<?php $var1 = 123; $var2 = "nette framework" ?>',  item1($compiler->expandMacro('var', 'var1 = 123, $var2 => "nette framework"', '')) );
-Assert::same( '<?php $temp->var1 = 123 ?>',  item1($compiler->expandMacro('var', '$temp->var1 = 123', '')) );
+Assert::same( '<?php $var = \'hello\' ?>',  $compiler->expandMacro('var', 'var => hello', '')->openingCode );
+Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var => 123', '')->openingCode );
+Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var = 123', '')->openingCode );
+Assert::same( '<?php $var = 123 ?>',  $compiler->expandMacro('var', '$var => 123', 'filter')->openingCode );
+Assert::same( '<?php $var1 = 123; $var2 = "nette framework" ?>',  $compiler->expandMacro('var', 'var1 = 123, $var2 => "nette framework"', '')->openingCode );
+Assert::same( '<?php $temp->var1 = 123 ?>',  $compiler->expandMacro('var', '$temp->var1 = 123', '')->openingCode );
 
 Assert::throws(function() use ($compiler) {
-	item1($compiler->expandMacro('var', '$var => "123', ''));
+	$compiler->expandMacro('var', '$var => "123', '');
 }, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 9.');
 
 
 // {default ...}
-Assert::same( "<?php extract(array('var' => 'hello'), EXTR_SKIP) ?>",  item1($compiler->expandMacro('default', 'var => hello', '')) );
-Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($compiler->expandMacro('default', '$var => 123', '')) );
-Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($compiler->expandMacro('default', '$var = 123', '')) );
-Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  item1($compiler->expandMacro('default', '$var => 123', 'filter')) );
-Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP) ?>",  item1($compiler->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')) );
+Assert::same( "<?php extract(array('var' => 'hello'), EXTR_SKIP) ?>",  $compiler->expandMacro('default', 'var => hello', '')->openingCode );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var => 123', '')->openingCode );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var = 123', '')->openingCode );
+Assert::same( "<?php extract(array('var' => 123), EXTR_SKIP) ?>",  $compiler->expandMacro('default', '$var => 123', 'filter')->openingCode );
+Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\"), EXTR_SKIP) ?>",  $compiler->expandMacro('default', 'var1 = 123, $var2 => "nette framework"', '')->openingCode );
 
 Assert::throws(function() use ($compiler) {
-	item1($compiler->expandMacro('default', '$temp->var1 = 123', ''));
+	$compiler->expandMacro('default', '$temp->var1 = 123', '');
 }, 'Nette\Latte\ParseException', "Unexpected '-' in {default \$temp->var1 = 123}");

@@ -17,12 +17,11 @@ require __DIR__ . '/../bootstrap.php';
 
 $compiler = new Nette\Latte\Compiler;
 UIMacros::install($compiler);
-function item1($a) { return $a[1]; }
 
 // {ifset ... }
-Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  item1($compiler->expandMacro('ifset', '#block')) );
-Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  item1($compiler->expandMacro('ifset', '$item->var["#test"], #block')) );
+Assert::same( '<?php if (isset($_l->blocks["block"])): ?>',  $compiler->expandMacro('ifset', '#block')->openingCode );
+Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',  $compiler->expandMacro('ifset', '$item->var["#test"], #block')->openingCode );
 
 Assert::throws(function() use ($compiler) {
-	Assert::same( '<?php if (isset($var)): ?>',  item1($compiler->expandMacro('ifset', '$var')) );
+	Assert::same( '<?php if (isset($var)): ?>',  $compiler->expandMacro('ifset', '$var')->openingCode );
 }, 'Nette\Latte\ParseException', 'Unhandled macro {ifset}');

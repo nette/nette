@@ -184,7 +184,7 @@ class Compiler extends Nette\Object
 	/**
 	 * @return Compiler  provides a fluent interface
 	 */
-	private function setContext($context, $sub = NULL)
+	public function setContext($context, $sub = NULL)
 	{
 		$this->context = array($context, $sub);
 		return $this;
@@ -354,28 +354,28 @@ class Compiler extends Nette\Object
 
 			$node->closing = TRUE;
 			$node->content = substr($this->output, $node->offset);
-			$code = $node->macro->nodeClosed($node);
+			$node->macro->nodeClosed($node);
 
-			if (!$isLeftmost && $isRightmost && substr($code, -2) === '?>') {
-				$code .= "\n"; // double newline to avoid newline eating by PHP
+			if (!$isLeftmost && $isRightmost && substr($node->closingCode, -2) === '?>') {
+				$node->closingCode .= "\n"; // double newline to avoid newline eating by PHP
 			}
-			$this->output = substr($this->output, 0, $node->offset) . $node->content. $code;
+			$this->output = substr($this->output, 0, $node->offset) . $node->content. $node->closingCode;
 
 		} else { // opening
-			list($node, $code) = $this->expandMacro($name, $args, $modifiers);
+			$node = $this->expandMacro($name, $args, $modifiers);
 			if (!$node->isEmpty) {
 				$this->macroNodes[] = $node;
 			}
 
 			if ($isRightmost) {
-				if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
+				if ($isLeftmost && substr($node->openingCode, 0, 11) !== '<?php echo ') {
 					$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
-				} elseif (substr($code, -2) === '?>') {
-					$code .= "\n"; // double newline to avoid newline eating by PHP
+				} elseif (substr($node->openingCode, -2) === '?>') {
+					$node->openingCode .= "\n"; // double newline to avoid newline eating by PHP
 				}
 			}
 
-			$this->output .= $code;
+			$this->output .= $node->openingCode;
 			$node->offset = strlen($this->output);
 		}
 	}
@@ -404,10 +404,8 @@ class Compiler extends Nette\Object
 					if ($code[$pos-1] === '/') {
 						$pos--;
 					}
-					$this->setContext(self::CONTEXT_DOUBLE_QUOTED);
-					list(, $macroCode) = $this->expandMacro("@$name", $attrs[$name], NULL, $node);
-					$this->setContext(NULL);
-					$code = substr_replace($code, $macroCode, $pos, 0);
+					$macroNode = $this->expandMacro("@$name", $attrs[$name], NULL, $node);
+					$code = substr_replace($code, $macroNode->attrCode, $pos, 0);
 				}
 				unset($attrs[$name]);
 			}
@@ -467,7 +465,7 @@ class Compiler extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @param  string
-	 * @return array(MacroNode, string)
+	 * @return MacroNode
 	 */
 	public function expandMacro($name, $args, $modifiers = NULL, HtmlNode $htmlNode = NULL)
 	{
@@ -476,9 +474,8 @@ class Compiler extends Nette\Object
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL, $htmlNode);
-			$code = $macro->nodeOpened($node);
-			if ($code !== FALSE) {
-				return array($node, $code);
+			if ($macro->nodeOpened($node) !== FALSE) {
+				return $node;
 			}
 		}
 		throw new ParseException("Unhandled macro {{$name}}");

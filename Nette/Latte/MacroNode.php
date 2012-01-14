@@ -50,6 +50,15 @@ class MacroNode extends Nette\Object
 	public $parentNode;
 
 	/** @var string */
+	public $openingCode;
+
+	/** @var string */
+	public $closingCode;
+
+	/** @var string */
+	public $attrCode;
+
+	/** @var string */
 	public $content;
 
 	/** @var stdClass  user data */

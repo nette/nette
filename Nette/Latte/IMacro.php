@@ -36,14 +36,14 @@ interface IMacro
 	function finalize();
 
 	/**
-	 * New node is found. Returns FALSE to reject or code.
-	 * @return bool|string
+	 * New node is found. Returns FALSE to reject.
+	 * @return bool
 	 */
 	function nodeOpened(MacroNode $node);
 
 	/**
-	 * Node is closed. Returns code.
-	 * @return string
+	 * Node is closed.
+	 * @return void
 	 */
 	function nodeClosed(MacroNode $node);
 
