@@ -58,9 +58,13 @@ var html = <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>;
 
 
 <ul>
-	<li n:foreach="$people as $person"><?php echo Nette\Templating\DefaultHelpers::escapeXml($person) ?></li>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
+	<li><?php echo Nette\Templating\DefaultHelpers::escapeXml($person) ?></li>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 
-<p n:if="true">
+<?php if (true): ?>
+<p>
 	<div><p>true</div>
 </p>
+<?php endif ;

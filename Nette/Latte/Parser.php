@@ -31,7 +31,7 @@ class Parser extends Nette\Object
 
 	/** @var string default macro syntax */
 	public $defaultSyntax = 'latte';
-	
+
 	/** @var array */
 	public $syntaxes = array(
 		'latte' => array('\\{(?![\\s\'"{}])', '\\}'), // {...}
@@ -62,6 +62,9 @@ class Parser extends Nette\Object
 	/** @var string used by filter() */
 	private $endTag;
 
+	/** @var bool */
+	private $xmlMode;
+
 	/** @internal states */
 	const CONTEXT_TEXT = 'text',
 		CONTEXT_CDATA = 'cdata',
@@ -90,6 +93,7 @@ class Parser extends Nette\Object
 		$this->setSyntax($this->defaultSyntax);
 		$this->setContext(self::CONTEXT_TEXT);
 		$this->lastTag = $this->endTag = NULL;
+		$this->xmlMode = strpos($input, '<?xml') !== FALSE;
 
 		while ($this->offset < strlen($input)) {
 			$matches = $this->{"context".$this->context[0]}();
@@ -178,7 +182,7 @@ class Parser extends Nette\Object
 
 		if (!empty($matches['end'])) { // end of HTML tag />
 			$this->addToken(Token::TAG_END, $matches[0]);
-			$this->setContext($this->lastTag === 'script' || $this->lastTag === 'style' ? self::CONTEXT_CDATA : self::CONTEXT_TEXT);
+			$this->setContext(!$this->xmlMode && in_array($this->lastTag, array('script', 'style')) ? self::CONTEXT_CDATA : self::CONTEXT_TEXT);
 
 		} elseif (!empty($matches['attr'])) { // HTML attribute
 			$token = $this->addToken(Token::ATTRIBUTE, $matches[0]);
@@ -387,7 +391,12 @@ class Parser extends Nette\Object
 			$this->setSyntax($this->defaultSyntax);
 
 		} elseif ($token->type === Token::MACRO && $token->name === 'contentType') {
-			$this->setContext(Strings::contains($token->value, 'html') ? self::CONTEXT_TEXT : self::CONTEXT_NONE);
+			if (preg_match('#html|xml#', $token->value, $m)) {
+				$this->xmlMode = $m[0] === 'xml';
+				$this->setContext(self::CONTEXT_TEXT);
+			} else {
+				$this->setContext(self::CONTEXT_NONE);
+			}
 		}
 	}
 
