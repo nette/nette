@@ -12,7 +12,8 @@ if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__
 				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
 
 <?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>
-</div><?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;if (isset($_dynSnippets)) return $_dynSnippets;
+</div><?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+	<?php if (isset($_dynSnippets)) return $_dynSnippets;
 }}
 
 //

@@ -1,18 +1,15 @@
 %A%
 // block _
 //
-if (!function_exists($_l->blocks['_'][] = '%a%__')) { function %a%__($_l, $_args) { extract($_args); $_control->validateControl(false)
-?>
-
-<?php
+if (!function_exists($_l->blocks['_'][] = '_xxx__')) { function _xxx__($_l, $_args) { extract($_args); $_control->validateControl(false)
+;
 }}
 
 //
 // block _outer
 //
-if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
-?>
-	Outer
+if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
+?>	Outer
 		<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
 	/Outer
@@ -22,21 +19,21 @@ if (!function_exists($_l->blocks['_outer'][] = '%a%__outer')) { function %a%__ou
 //
 // block _inner
 //
-if (!function_exists($_l->blocks['_inner'][] = '%a%__inner')) { function %a%__inner($_l, $_args) { extract($_args); $_control->validateControl('inner')
+if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { extract($_args); $_control->validateControl('inner')
 ?>Inner<?php
 }}
 
 //
 // block _title
 //
-if (!function_exists($_l->blocks['_title'][] = '%a%__title')) { function %a%__title($_l, $_args) { extract($_args); $_control->validateControl('title')
+if (!function_exists($_l->blocks['_title'][] = '_xxx__title')) { function _xxx__title($_l, $_args) { extract($_args); $_control->validateControl('title')
 ?>Title 1<?php
 }}
 
 //
 // block _title2
 //
-if (!function_exists($_l->blocks['_title2'][] = '%a%__title2')) { function %a%__title2($_l, $_args) { extract($_args); $_control->validateControl('title2')
+if (!function_exists($_l->blocks['_title2'][] = '_xxx__title2')) { function _xxx__title2($_l, $_args) { extract($_args); $_control->validateControl('title2')
 ?>Title 2<?php
 }}
 

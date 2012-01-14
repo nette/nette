@@ -29,7 +29,7 @@ class Compiler extends Nette\Object
 	/** @var array of Token */
 	private $tokens;
 
-	/** @var string output code */
+	/** @var string pointer to current node content */
 	private $output;
 
 	/** @var int  position on source template */
@@ -100,7 +100,8 @@ class Compiler extends Nette\Object
 	{
 		$this->templateId = Strings::random();
 		$this->tokens = $tokens;
-		$this->output = '';
+		$output = '';
+		$this->output = & $output;
 		$this->htmlNodes = $this->macroNodes = array();
 		$this->setContentType($this->defaultContentType);
 
@@ -148,13 +149,13 @@ class Compiler extends Nette\Object
 			$prologs .= empty($res[0]) ? '' : "<?php\n// prolog $handlerName\n$res[0]\n?>";
 			$epilogs = (empty($res[1]) ? '' : "<?php\n// epilog $handlerName\n$res[1]\n?>") . $epilogs;
 		}
-		$this->output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $this->output . $epilogs;
+		$output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $output . $epilogs;
 
 		if ($this->macroNodes) {
 			throw new ParseException("There are unclosed macros.", 0, $token->line);
 		}
 
-		return $this->output;
+		return $output;
 	}
 
 
@@ -331,8 +332,6 @@ class Compiler extends Nette\Object
 	 */
 	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, HtmlNode $htmlNode = NULL)
 	{
-		$isLeftmost = trim(substr($this->output, $leftOfs = strrpos("\n$this->output", "\n"))) === '';
-
 		if ($name[0] === '/') { // closing
 			$node = end($this->macroNodes);
 
@@ -348,37 +347,45 @@ class Compiler extends Nette\Object
 			if (!$node->args) {
 				$node->setArgs($args);
 			}
-			if ($isLeftmost && $isRightmost) {
-				$this->output = substr($this->output, 0, $leftOfs); // alone macro -> remove indentation
-			}
+
+			$isLeftmost = $node->content ? trim(substr($this->output, strrpos("\n$this->output", "\n"))) === '' : FALSE;
 
 			$node->closing = TRUE;
-			$node->content = substr($this->output, $node->offset);
 			$node->macro->nodeClosed($node);
 
-			if (!$isLeftmost && $isRightmost && substr($node->closingCode, -2) === '?>') {
-				$node->closingCode .= "\n"; // double newline to avoid newline eating by PHP
-			}
-			$this->output = substr($this->output, 0, $node->offset) . $node->content. $node->closingCode;
+			$this->output = & $node->saved[0];
+			$this->writeCode($node->openingCode, $this->output, $node->saved[1]);
+			$this->writeCode($node->closingCode, $node->content, $isRightmost, $isLeftmost);
+			$this->output .= $node->content;
 
 		} else { // opening
 			$node = $this->expandMacro($name, $args, $modifiers, $htmlNode);
-			if (!$node->isEmpty) {
+			if ($node->isEmpty) {
+				$this->writeCode($node->openingCode, $this->output, $isRightmost);
+
+			} else {
 				$this->macroNodes[] = $node;
+				$node->saved = array(& $this->output, $isRightmost);
+				$this->output = & $node->content;
 			}
-
-			if ($isRightmost) {
-				if ($isLeftmost && substr($node->openingCode, 0, 11) !== '<?php echo ') {
-					$this->output = substr($this->output, 0, $leftOfs); // alone macro without output -> remove indentation
-				} elseif (substr($node->openingCode, -2) === '?>') {
-					$node->openingCode .= "\n"; // double newline to avoid newline eating by PHP
-				}
-			}
-
-			$this->output .= $node->openingCode;
-			$node->offset = strlen($this->output);
 		}
 		return $node;
+	}
+
+
+
+	private function writeCode($code, & $output, $isRightmost, $isLeftmost = NULL)
+	{
+		if ($isRightmost) {
+			$leftOfs = strrpos("\n$output", "\n");
+			$isLeftmost = $isLeftmost === NULL ? trim(substr($output, $leftOfs)) === '' : $isLeftmost;
+			if ($isLeftmost && substr($code, 0, 11) !== '<?php echo ') {
+				$output = substr($output, 0, $leftOfs); // alone macro without output -> remove indentation
+			} elseif (substr($code, -2) === '?>') {
+				$code .= "\n"; // double newline to avoid newline eating by PHP
+			}
+		}
+		$output .= $code;
 	}
 
 
@@ -437,25 +444,24 @@ class Compiler extends Nette\Object
 			if ($node->isEmpty) {
 				unset($htmlNode->macroAttrs[$node->name]);
 			}
-			if (substr($this->output, -2) === '?>') {
-				$this->output .= "\n";
-			}
 		}
 
-		$pos = strlen($this->output) + (strrpos($code, '/>') ?: strrpos($code, '>'));
-		$this->output .= $code;
+		$output = & $this->output;
+		$pos = strlen($output) + (strrpos($code, '/>') ?: strrpos($code, '>'));
+		$output .= $code;
 
 		foreach ($right as $item) {
 			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
 			if (!$node->closing && !$htmlNode->closing) {
 				$attrCode .= $node->attrCode;
 			}
-			if (substr($this->output, -2) === '?>') {
-				$this->output .= "\n";
-			}
 		}
 
-		$this->output = substr_replace($this->output, $attrCode, $pos, 0);
+		if ($right && substr($this->output, -2) === '?>') {
+			$this->output .= "\n";
+		}
+
+		$output = substr_replace($output, $attrCode, $pos, 0);
 	}
 
 

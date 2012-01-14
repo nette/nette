@@ -37,6 +37,5 @@ if (%A%}
 	<span>(</span><?php endif ?>
  <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;if (!$iterator->isLast()): ?>
 <span>, </span><?php endif ?>
- <?php if ($iterator->isLast()): ?>
-<span>)</span>
+ <?php if ($iterator->isLast()): ?><span>)</span>
 <?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;

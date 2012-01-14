@@ -14,8 +14,7 @@ if (!function_exists($_l->blocks['title'][] = '_xxx_title')) { function _xxx_tit
 // block content
 //
 if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx_content($_l, $_args) { extract($_args)
-?>
-	<ul>
+?>	<ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
 		<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>

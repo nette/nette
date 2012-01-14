@@ -43,9 +43,6 @@ class MacroNode extends Nette\Object
 	/** @var MacroTokenizer */
 	public $tokenizer;
 
-	/** @var int @internal */
-	public $offset;
-
 	/** @var MacroNode */
 	public $parentNode;
 
@@ -66,6 +63,8 @@ class MacroNode extends Nette\Object
 
 	/** @var HtmlNode  for n:attr macros */
 	public $htmlNode;
+
+	public $saved;
 
 
 

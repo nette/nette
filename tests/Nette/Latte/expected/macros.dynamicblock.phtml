@@ -7,8 +7,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 // block static
 //
 if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
-?>
-	Static block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
+?>	Static block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php
 }}

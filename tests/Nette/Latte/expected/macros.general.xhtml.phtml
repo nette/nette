@@ -7,8 +7,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 // block menu
 //
 if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu($_l, $_args) { extract($_args)
-?>
-<ul>
+?><ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
  <?php if (is_array($item)): ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
@@ -22,8 +21,7 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 // block bl
 //
 if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $_args) { extract($_args)
-?>
-<ul title="block + if + foreach">
+?><ul title="block + if + foreach">
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): if (strlen($person)===4): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
 <?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
@@ -183,43 +181,36 @@ call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 </ul>
 
 <ul title="for">
-<?php for ($i=0;$i<3;$i++): ?>
-	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
+<?php for ($i=0;$i<3;$i++): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
 <?php endfor ?>
 </ul>
 
 <ul title="white">
-<?php while (--$i>0): ?>
-	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
+<?php while (--$i>0): ?>	<li><?php echo Nette\Templating\Helpers::escapeHtml($i, ENT_NOQUOTES) ?></li>
 <?php endwhile ?>
 </ul>
 
-<?php if (true): ?>
-<p>
+<?php if (true): ?><p>
 	<div><p>true</div>
 </p>
 <?php endif ?>
 
-<?php if (true): ?>
-<p>
+<?php if (true): ?><p>
 	<div><p>true</p></div>
 </p>
 <?php endif ?>
 
-<?php if (false): ?>
-<p>
+<?php if (false): ?><p>
 	<div><p>false</div>
 </p>
 <?php endif ?>
 
-<?php if (false): ?>
-<p>
+<?php if (false): ?><p>
 	<div><p>false</p></div>
 </p>
 <?php endif ?>
 
-<?php if (strlen('{$xss}') > 5): ?>
-<p>noLatte</p>
+<?php if (strlen('{$xss}') > 5): ?><p>noLatte</p>
 <?php endif ?>
 
 <ul title="if + foreach">
@@ -229,28 +220,21 @@ call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 </ul>
 
 <ul title="if + inner-if + inner-foreach">
-<?php if (empty($iterator)): ?>
-	<li><?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): if (strlen($person)===4): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
-</li>
+<?php if (empty($iterator)): ?>	<li><?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): if (strlen($person)===4): echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ;endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?></li>
 <?php endif ?>
 </ul>
 
 <ul title="inner-if + inner-foreach">
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): if (strlen($person)===4): ?>
 	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->lower($person), ENT_NOQUOTES) ?></li>
-<?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
-</ul>
+<?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?></ul>
 
 <?php call_user_func(reset($_l->blocks['bl']), $_l, get_defined_vars())  ?>
 
-<?php if (true): ?>
-<b><?php endif ?>
-bold<?php if (true): ?>
-</b><?php endif ?>
- <?php if (false): ?>
-<b><?php endif ?>
-normal<?php if (false): ?>
-</b>
+<?php if (true): ?><b><?php endif ?>
+bold<?php if (true): ?></b><?php endif ?>
+ <?php if (false): ?><b><?php endif ?>
+normal<?php if (false): ?></b>
 <?php endif ?>
 
 <?php echo 'test' ?>
@@ -263,14 +247,11 @@ normal<?php if (false): ?>
 <p<?php if ($_l->tmp = array_filter(array(false ? 'first':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>n:class empty</p>
 
 <meta />
-<?php if (true): ?>
-<meta />
-<?php endif ;if (true): ?>
-<meta />
+<?php if (true): ?><meta />
+<?php endif ;if (true): ?><meta />
 <?php endif ;if (true): endif ?>
 <meta />
-<?php if (true): endif ?>
-<meta />
+<?php if (true): endif ?><meta />
 
 <?php ob_start() ?>TRUE<?php if (TRUE) ob_end_flush(); else ob_end_clean() ?>
 

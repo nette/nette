@@ -11,8 +11,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 // block test
 //
 if (!function_exists($_l->blocks['test'][] = '_xxx_test')) { function _xxx_test($_l, $_args) { extract($_args)
-?>
-	Test block
+?>	Test block
 <?php
 }}
 
