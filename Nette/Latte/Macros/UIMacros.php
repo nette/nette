@@ -401,22 +401,22 @@ if (!empty($_control->snippetMode)) {
 	public function macroContentType(MacroNode $node, $writer)
 	{
 		if (Strings::contains($node->args, 'html')) {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_HTML);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_HTML);
 
 		} elseif (Strings::contains($node->args, 'xml')) {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_XML);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XML);
 
 		} elseif (Strings::contains($node->args, 'javascript')) {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_JS);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_JS);
 
 		} elseif (Strings::contains($node->args, 'css')) {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_CSS);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_CSS);
 
 		} elseif (Strings::contains($node->args, 'calendar')) {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_ICAL);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_ICAL);
 
 		} else {
-			$this->getCompiler()->setContext(Latte\Compiler::CONTEXT_NONE);
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_TEXT);
 		}
 
 		// temporary solution
