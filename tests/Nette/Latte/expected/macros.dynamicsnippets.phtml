@@ -9,7 +9,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
 ;$iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $id): ?>
 <div id="<?php echo $_dynSnippetId = $_control->getSnippetId("inner-$id") ?>"><?php ob_start() ?>
-                #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($id, ENT_NOQUOTES) ?>
+                #<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
 
 <?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>
 </div><?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;if (isset($_dynSnippets)) return $_dynSnippets;

@@ -16,17 +16,17 @@ if (%A%}
 <?php $netteHttpResponse->setHeader("Content-Type", 'application/xml; charset=utf-8') ?>
 
 <ul>
-	<li>Escaped: <?php echo Nette\Templating\DefaultHelpers::escapeXml($hello) ?></li>
+	<li>Escaped: <?php echo Nette\Templating\Helpers::escapeXml($hello) ?></li>
 	<li>Non-escaped: <?php echo $hello ?></li>
-	<li>Escaped expression: <?php echo Nette\Templating\DefaultHelpers::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
+	<li>Escaped expression: <?php echo Nette\Templating\Helpers::escapeXml('<' . 'b' . '>hello' . '</b>') ?></li>
 	<li>Non-escaped expression: <?php echo '<' . 'b' . '>hello' . '</b>' ?></li>
-	<li>Array access: <?php echo Nette\Templating\DefaultHelpers::escapeXml($people[1]) ?></li>
-	<li>Html: <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?></li>
+	<li>Array access: <?php echo Nette\Templating\Helpers::escapeXml($people[1]) ?></li>
+	<li>Html: <?php echo Nette\Templating\Helpers::escapeXml($el) ?></li>
 </ul>
 
 <style type="text/css">
 <!--
-#<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?> {
+#<?php echo Nette\Templating\Helpers::escapeXml($id) ?> {
 	background: blue;
 }
 -->
@@ -36,22 +36,22 @@ if (%A%}
 
 <script>
 <!--
-var html = <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>;
+var html = <?php echo Nette\Templating\Helpers::escapeXml($el) ?>;
 -->
 </script>
 
 
 <p onclick =
-'alert(<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>);alert("hello");'
- title='<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>"'
+'alert(<?php echo Nette\Templating\Helpers::escapeXml($id) ?>);alert("hello");'
+ title='<?php echo Nette\Templating\Helpers::escapeXml($id) ?>"'
  style =
- "color:<?php echo Nette\Templating\DefaultHelpers::escapeXml($id) ?>;'"
- alt='<?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>'
- onfocus="alert(<?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>)"
+ "color:<?php echo Nette\Templating\Helpers::escapeXml($id) ?>;'"
+ alt='<?php echo Nette\Templating\Helpers::escapeXml($el) ?>'
+ onfocus="alert(<?php echo Nette\Templating\Helpers::escapeXml($el) ?>)"
 >click on me</p>
 
 
-<!-- <?php echo Nette\Templating\DefaultHelpers::escapeXml($comment) ?> -->
+<!-- <?php echo Nette\Templating\Helpers::escapeXml($comment) ?> -->
 
 
 </ul>
@@ -59,7 +59,7 @@ var html = <?php echo Nette\Templating\DefaultHelpers::escapeXml($el) ?>;
 
 <ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<li><?php echo Nette\Templating\DefaultHelpers::escapeXml($person) ?></li>
+	<li><?php echo Nette\Templating\Helpers::escapeXml($person) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 

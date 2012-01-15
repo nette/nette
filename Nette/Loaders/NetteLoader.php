@@ -28,6 +28,7 @@ class NetteLoader extends AutoLoader
 	/** @var array */
 	public $renamed = array(
 		'Nette\Configurator' => 'Nette\Config\Configurator',
+		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
 	);
 
 	/** @var array */

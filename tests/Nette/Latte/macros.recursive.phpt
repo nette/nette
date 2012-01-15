@@ -25,7 +25,7 @@ $latte = new Latte\Engine;
 $latte->compiler->defaultContentType = Latte\Compiler::CONTENT_HTML;
 $template = new FileTemplate(__DIR__ . '/templates/recursive.latte');
 $template->registerFilter($latte);
-$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');
 Assert::match(file_get_contents("$path.phtml"), codefix($template->compile()));

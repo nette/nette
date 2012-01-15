@@ -31,7 +31,7 @@ class MockTexy
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 $template->registerHelper('texy', array(new MockTexy, 'process'));
-$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->people = array('John', 'Mary', 'Paul');

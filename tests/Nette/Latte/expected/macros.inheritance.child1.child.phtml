@@ -17,7 +17,7 @@ if (!function_exists($_l->blocks['content'][] = '_xxx_content')) { function _xxx
 ?>
 	<ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-		<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
+		<li><?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 	</ul>
 <?php

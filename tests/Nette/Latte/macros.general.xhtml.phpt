@@ -25,7 +25,7 @@ $template = new FileTemplate(__DIR__ . '/templates/general.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelper('translate', 'strrev');
 $template->registerHelper('join', 'implode');
-$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 $template->hello = '<i>Hello</i>';
 $template->xss = 'some&<>"\'/chars';

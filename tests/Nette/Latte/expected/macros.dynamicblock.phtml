@@ -8,7 +8,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 //
 if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_static($_l, $_args) { extract($_args)
 ?>
-	Static block #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($var, ENT_NOQUOTES) ?>
+	Static block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php
 }}
@@ -39,7 +39,7 @@ $var = 10 ?>
 // block $name
 //
 if (!function_exists($_l->blocks[$name][] = '_xxx__name')) { function _xxx__name($_l, $_args) { extract($_args) ?>
-		Dynamic block #<?php echo Nette\Templating\DefaultHelpers::escapeHtml($var, ENT_NOQUOTES) ?>
+		Dynamic block #<?php echo Nette\Templating\Helpers::escapeHtml($var, ENT_NOQUOTES) ?>
 
 <?php }} call_user_func(reset($_l->blocks[$name]), $_l, get_defined_vars()) ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 

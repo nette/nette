@@ -15,29 +15,29 @@ if (%A%}
 
 <ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 {* comment latte *}
 </ul>
 
-<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 
-<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($people) as $person): ?>
-	<li><?php echo Nette\Templating\DefaultHelpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
+	<li><?php echo Nette\Templating\Helpers::escapeHtml($template->upper($person), ENT_NOQUOTES) ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 
-<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
-<p>Default: <?php echo Nette\Templating\DefaultHelpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
+<p>Default: <?php echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?></p>
 
 <p>Default: {$person}</p>

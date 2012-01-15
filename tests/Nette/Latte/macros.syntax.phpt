@@ -22,7 +22,7 @@ require __DIR__ . '/Template.inc';
 
 $template = new FileTemplate(__DIR__ . '/templates/syntax.latte');
 $template->registerFilter(new Latte\Engine);
-$template->registerHelperLoader('Nette\Templating\DefaultHelpers::loader');
+$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 $template->people = array('John', 'Mary', 'Paul');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

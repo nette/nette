@@ -288,25 +288,25 @@ class PhpWriter extends Nette\Object
 			case Compiler::CONTEXT_SINGLE_QUOTED:
 			case Compiler::CONTEXT_DOUBLE_QUOTED:
 				if ($context[1] === Compiler::CONTENT_JS) {
-					$s = "Nette\\Templating\\DefaultHelpers::escapeJs($s)";
+					$s = "Nette\\Templating\\Helpers::escapeJs($s)";
 				} elseif ($context[1] === Compiler::CONTENT_CSS) {
-					$s = "Nette\\Templating\\DefaultHelpers::escapeCss($s)";
+					$s = "Nette\\Templating\\Helpers::escapeCss($s)";
 				}
 				$quote = $context[0] === Compiler::CONTEXT_DOUBLE_QUOTED ? '' : ', ENT_QUOTES';
 				return "htmlSpecialChars($s$quote)";
 			case Compiler::CONTEXT_COMMENT:
-				return "Nette\\Templating\\DefaultHelpers::escapeHtmlComment($s)";
+				return "Nette\\Templating\\Helpers::escapeHtmlComment($s)";
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
-				return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($context[0]) . "($s)";
+				return 'Nette\Templating\Helpers::escape' . ucfirst($context[0]) . "($s)";
 			default:
-				return "Nette\\Templating\\DefaultHelpers::escapeHtml($s, ENT_NOQUOTES)";
+				return "Nette\\Templating\\Helpers::escapeHtml($s, ENT_NOQUOTES)";
 			}
 		case Compiler::CONTENT_XML:
 		case Compiler::CONTENT_JS:
 		case Compiler::CONTENT_CSS:
 		case Compiler::CONTENT_ICAL:
-			return 'Nette\Templating\DefaultHelpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
+			return 'Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . "($s)";
 		case Compiler::CONTENT_TEXT:
 			return $s;
 		default:
