@@ -26,6 +26,11 @@ class NetteLoader extends AutoLoader
 	private static $instance;
 
 	/** @var array */
+	public $renamed = array(
+		'Nette\Configurator' => 'Nette\Config\Configurator',
+	);
+
+	/** @var array */
 	public $list = array(
 		'NetteModule\MicroPresenter' => '/Application/MicroPresenter',
 		'Nette\Application\AbortException' => '/Application/exceptions',
@@ -94,7 +99,11 @@ class NetteLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim($type, '\\');
-		if (isset($this->list[$type])) {
+		/**/if (isset($this->renamed[$type])) {
+			class_alias($this->renamed[$type], $type);
+			trigger_error("Class $type has been renamed to {$this->renamed[$type]}.", E_USER_WARNING);
+
+		} else/**/if (isset($this->list[$type])) {
 			Nette\Utils\LimitedScope::load(NETTE_DIR . $this->list[$type] . '.php', TRUE);
 			self::$count++;
 

@@ -358,11 +358,3 @@ final class Environment
 	}
 
 }
-
-
-
-/**/
-/** @deprecated */
-class Configurator extends Nette\Config\Configurator
-{}
-/**/
