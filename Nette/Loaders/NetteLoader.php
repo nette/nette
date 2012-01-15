@@ -109,7 +109,7 @@ class NetteLoader extends AutoLoader
 			self::$count++;
 
 		}/**/ elseif (substr($type, 0, 6) === 'Nette\\') {
-			Nette\Utils\LimitedScope::load(NETTE_DIR . substr($type, 5) . '.php', TRUE);
+			Nette\Utils\LimitedScope::load(NETTE_DIR . str_replace('\\', '/', substr($type, 5)) . '.php', TRUE);
 			self::$count++;
 		}/**/
 	}
