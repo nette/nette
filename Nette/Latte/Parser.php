@@ -93,7 +93,7 @@ class Parser extends Nette\Object
 		$this->setSyntax($this->defaultSyntax);
 		$this->setContext(self::CONTEXT_TEXT);
 		$this->lastTag = $this->endTag = NULL;
-		$this->xmlMode = strpos($input, '<?xml') !== FALSE;
+		$this->xmlMode = (bool) preg_match('#^<\?xml\s#m', $input);
 
 		while ($this->offset < strlen($input)) {
 			$matches = $this->{"context".$this->context[0]}();
