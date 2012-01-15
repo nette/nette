@@ -25,6 +25,7 @@ use Nette,
  * - {form name} ... {/form}
  * - {input name}
  * - {label name /} or {label name}... {/label}
+ * - {container name} ... {/container}
  *
  * @author     David Grudl
  */
