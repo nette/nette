@@ -32,6 +32,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			'expiration' => NULL,
 		),
 		'application' => array(
+			'debugger' => TRUE,
 			'errorPresenter' => NULL,
 			'catchExceptions' => '%productionMode%',
 		),
@@ -140,8 +141,14 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->addSetup('$catchExceptions', $config['application']['catchExceptions'])
 			->addSetup('$errorPresenter', $config['application']['errorPresenter']);
 
+		if ($config['application']['debugger']) {
+			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
+		}
+
 		if (empty($config['productionMode']) && $config['routing']['debugger']) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize');
+			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
+			));
 		}
 
 

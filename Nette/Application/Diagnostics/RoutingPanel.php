@@ -39,17 +39,14 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 
 
-	public static function initialize(Nette\Application\Application $application, Nette\Http\IRequest $httpRequest)
+	public static function initializePanel(Nette\Application\Application $application)
 	{
-		Debugger::$bar->addPanel(new self($application->getRouter(), $httpRequest));
 		Debugger::$blueScreen->addPanel(function($e) use ($application) {
-			if ($e === NULL) {
-				return array(
-					'tab' => 'Nette Application',
-					'panel' => '<h3>Requests</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getRequests())
-						. '<h3>Presenter</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getPresenter())
-				);
-			}
+			return $e ? NULL : array(
+				'tab' => 'Nette Application',
+				'panel' => '<h3>Requests</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getRequests())
+					. '<h3>Presenter</h3>' . Nette\Diagnostics\Helpers::clickableDump($application->getPresenter())
+			);
 		});
 	}
 
