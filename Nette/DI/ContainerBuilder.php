@@ -336,8 +336,11 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
+		$definitions = $this->definitions;
+		ksort($definitions);
+
 		$meta = $class->addProperty('meta', array());
-		foreach ($this->definitions as $name => $def) {
+		foreach ($definitions as $name => $def) {
 			if ($def->shared) {
 				foreach ($this->expand($def->tags) as $tag => $value) {
 					$meta->value[$name][Container::TAGS][$tag] = $value;
@@ -345,7 +348,7 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
-		foreach ($this->definitions as $name => $def) {
+		foreach ($definitions as $name => $def) {
 			try {
 				$type = $def->class ?: 'object';
 				$sanitized = $this->sanitizeName($name);

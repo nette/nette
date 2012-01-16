@@ -65,8 +65,8 @@ Assert::same( array(
 ), $container->findByTag('typeHint') );
 
 Assert::same( array(
-	'two' => TRUE,
 	'five' => array(1, 2, 3),
+	'two' => TRUE,
 ), $container->findByTag('debugPanel') );
 
 Assert::same( array(), $container->findByTag('unknown') );
