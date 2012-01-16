@@ -54,7 +54,8 @@ class Connection extends PDO
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$class = 'Nette\Database\Drivers\\' . $this->getAttribute(PDO::ATTR_DRIVER_NAME) . 'Driver';
+		$class = ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME)));
+		$class = 'Nette\Database\Drivers\\' . $class . 'Driver';
 		if (class_exists($class)) {
 			$this->driver = new $class($this, (array) $options);
 		}
