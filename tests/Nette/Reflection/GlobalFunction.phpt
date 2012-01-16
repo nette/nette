@@ -28,7 +28,4 @@ $function = new Reflection\GlobalFunction('foo');
 Assert::null( $function->getExtension() );
 
 
-Assert::same( 20, $function->invokeNamedArgs(array('b' => 20)) );
-
-
 Assert::same( 23, $function->toCallback()->invoke(20, 3) );

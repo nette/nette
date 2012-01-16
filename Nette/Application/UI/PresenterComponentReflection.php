@@ -116,4 +116,29 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 		return $cache;
 	}
 
+
+
+	/**
+	 * @return array
+	 */
+	public static function combineArgs(\ReflectionFunctionAbstract $method, $args)
+	{
+		$res = array();
+		$i = 0;
+		foreach ($method->getParameters() as $param) {
+			$name = $param->getName();
+			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
+			if (isset($args[$name])) { // NULL treats as none value
+				$val = $args[$name];
+				if ($def !== NULL) {
+					settype($val, gettype($def));
+				}
+				$res[$i++] = $val;
+			} else {
+				$res[$i++] = $def;
+			}
+		}
+		return $res;
+	}
+
 }

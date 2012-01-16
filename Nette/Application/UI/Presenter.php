@@ -1014,13 +1014,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	private static function argsToParams($class, $method, & $args, $supplemental = array())
 	{
-		static $cache;
-		$params = & $cache[strtolower($class . ':' . $method)];
-		if ($params === NULL) {
-			$params = Reflection\Method::from($class, $method)->getDefaultParameters();
-		}
 		$i = 0;
-		foreach ($params as $name => $def) {
+		$rm = new \ReflectionMethod($class, $method);
+		foreach ($rm->getParameters() as $param) {
+			$name = $param->getName();
 			if (array_key_exists($i, $args)) {
 				$args[$name] = $args[$i];
 				unset($args[$i]);
@@ -1036,6 +1033,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 				continue;
 			}
 
+			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
 			if ($def === NULL) {
 				if ((string) $args[$name] === '') {
 					$args[$name] = NULL; // value transmit is unnecessary
@@ -1049,7 +1047,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		if (array_key_exists($i, $args)) {
-			$method = Reflection\Method::from($class, $method)->getName();
+			$method = $rm->getName();
 			throw new InvalidLinkException("Passed more parameters than method $class::$method() expects.");
 		}
 	}

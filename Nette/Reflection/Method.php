@@ -69,29 +69,6 @@ class Method extends \ReflectionMethod
 
 
 	/**
-	 * @return array
-	 */
-	public function getDefaultParameters()
-	{
-		return self::buildDefaultParameters(parent::getParameters());
-	}
-
-
-
-	/**
-	 * Invokes method using named parameters.
-	 * @param  object
-	 * @param  array
-	 * @return mixed
-	 */
-	public function invokeNamedArgs($object, $args)
-	{
-		return $this->invokeArgs($object, self::combineArgs($this->getDefaultParameters(), $args));
-	}
-
-
-
-	/**
 	 * @return Nette\Callback
 	 */
 	public function toCallback()
@@ -251,49 +228,6 @@ class Method extends \ReflectionMethod
 	public function __unset($name)
 	{
 		ObjectMixin::remove($this, $name);
-	}
-
-
-
-	/********************* helpers ****************d*g**/
-
-
-
-	/** @internal */
-	public static function buildDefaultParameters($params)
-	{
-		$res = array();
-		foreach ($params as $param) {
-			$res[$param->getName()] = $param->isDefaultValueAvailable()
-				? $param->getDefaultValue()
-				: NULL;
-
-			if ($param->isArray()) {
-				settype($res[$param->getName()], 'array');
-			}
-		}
-		return $res;
-	}
-
-
-
-	/** @internal */
-	public static function combineArgs($params, $args)
-	{
-		$res = array();
-		$i = 0;
-		foreach ($params as $name => $def) {
-			if (isset($args[$name])) { // NULL treats as none value
-				$val = $args[$name];
-				if ($def !== NULL) {
-					settype($val, gettype($def));
-				}
-				$res[$i++] = $val;
-			} else {
-				$res[$i++] = $def;
-			}
-		}
-		return $res;
 	}
 
 }

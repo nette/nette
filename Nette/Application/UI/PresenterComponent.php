@@ -96,7 +96,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 			$rm = $rc->getMethod($method);
 			if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
 				$this->checkRequirements($rm);
-				$rm->invokeNamedArgs($this, $params);
+				$rm->invokeArgs($this, $rc->combineArgs($rm, $params));
 				return TRUE;
 			}
 		}
