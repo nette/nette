@@ -46,6 +46,22 @@ class NestedAccessor extends Nette\Object
 	/**
 	 * @return object
 	 */
+	public function __call($name, $args)
+	{
+		if (substr($name, 0, 6) === 'create') {
+			return call_user_func_array(array(
+				$this->container,
+				substr_replace($name, $this->namespace, 6, 0)
+			), $args);
+		}
+		throw new Nette\NotSupportedException;
+	}
+
+
+
+	/**
+	 * @return object
+	 */
 	public function &__get($name)
 	{
 		$service = $this->container->getService($this->namespace . $name);
