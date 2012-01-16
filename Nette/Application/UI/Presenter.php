@@ -1012,7 +1012,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @return void
 	 * @throws InvalidLinkException
 	 */
-	private static function argsToParams($class, $method, & $args, $supplemental = array())
+	protected static function argsToParams($class, $method, & $args, $supplemental = array())
 	{
 		static $cache;
 		$params = & $cache[strtolower($class . ':' . $method)];
