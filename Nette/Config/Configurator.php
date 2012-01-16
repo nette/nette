@@ -201,7 +201,7 @@ class Configurator extends Nette\Object
 	 */
 	protected function buildContainer(& $dependencies = NULL)
 	{
-		$loader = new Loader;
+		$loader = $this->createLoader();
 		$config = array();
 		$code = "<?php\n";
 		foreach ($this->files as $tmp) {
@@ -262,6 +262,16 @@ class Configurator extends Nette\Object
 			->addExtension('constants', new Extensions\ConstantsExtension)
 			->addExtension('nette', new Extensions\NetteExtension);
 		return $compiler;
+	}
+
+
+
+	/**
+	 * @return Loader
+	 */
+	protected function createLoader()
+	{
+		return new Loader;
 	}
 
 
