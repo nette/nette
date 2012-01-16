@@ -24,11 +24,42 @@ use Nette,
  */
 class NetteExtension extends Nette\Config\CompilerExtension
 {
+	public $defaults = array(
+		'xhtml' => TRUE,
+		'iAmUsingBadHost' => FALSE,
+		'session' => array(
+			'autoStart' => NULL,  // true|false|smart
+			'expiration' => NULL,
+		),
+		'application' => array(
+			'errorPresenter' => NULL,
+			'catchExceptions' => '%productionMode%',
+		),
+		'routing' => array(
+			'debugger' => TRUE,
+			'routes' => array(), // of [mask => action]
+		),
+		'security' => array(
+			'debugger' => TRUE,
+			'users' => array(), // of [user => password]
+			'roles' => array(), // of [role => parents]
+			'resources' => array(), // of [resource => parents]
+		),
+		'mail' => array(
+			'smtp' => FALSE,
+		),
+		'forms' => array(
+			'messages' => array(),
+		),
+	);
+
+
 
 	public function loadConfiguration()
 	{
 		$container = $this->getContainerBuilder();
-		$config = $this->getConfig();
+		$config = $this->getConfig($this->defaults);
+
 
 		// cache
 		$container->addDefinition('cacheJournal')
@@ -40,6 +71,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition('templateCacheStorage')
 			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
 			->setAutowired(FALSE);
+
 
 		// http
 		$container->addDefinition('httpRequestFactory')
@@ -65,6 +97,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$session->addSetup('setExpiration', array($config['session']['expiration']));
 			unset($config['session']['expiration']);
 		}
+		unset($config['session']['autoStart']);
 		if (!empty($config['session'])) {
 			Validators::assertField($config, 'session', 'array');
 			$session->addSetup('setOptions', array($config['session']));
@@ -73,28 +106,58 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition('userStorage')
 			->setClass('Nette\Http\UserStorage');
 
-		$container->addDefinition('user')
+
+		// security
+		$user = $container->addDefinition('user')
 			->setClass('Nette\Security\User');
 
-		// application
-		$application = $container->addDefinition('application')
-			->setClass('Nette\Application\Application')
-			->addSetup('$catchExceptions', '%productionMode%');
-
-		if (empty($config['productionMode'])) {
-			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize');
-			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+		if (empty($config['productionMode']) && $config['security']['debugger']) {
+			$user->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
 			));
 		}
 
-		$container->addDefinition('router')
+		if ($config['security']['users']) {
+			$container->addDefinition($this->prefix('authenticator'))
+				->setClass('Nette\Security\SimpleAuthenticator', array($config['security']['users']));
+		}
+
+		if ($config['security']['roles'] || $config['security']['resources']) {
+			$authorizator = $container->addDefinition($this->prefix('authorizator'))
+				->setClass('Nette\Security\Permission');
+			foreach ($config['security']['roles'] as $role => $parents) {
+				$authorizator->addSetup('addRole', array($role, $parents));
+			}
+			foreach ($config['security']['resources'] as $resource => $parents) {
+				$authorizator->addSetup('addResource', array($resource, $parents));
+			}
+		}
+
+
+		// application
+		$application = $container->addDefinition('application')
+			->setClass('Nette\Application\Application')
+			->addSetup('$catchExceptions', $config['application']['catchExceptions'])
+			->addSetup('$errorPresenter', $config['application']['errorPresenter']);
+
+		if (empty($config['productionMode']) && $config['routing']['debugger']) {
+			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initialize');
+		}
+
+
+		// routing
+		$router = $container->addDefinition('router')
 			->setClass('Nette\Application\Routers\RouteList');
+
+		foreach ($config['routing']['routes'] as $mask => $action) {
+			$router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?);', array($mask, $action));
+		}
 
 		$container->addDefinition('presenterFactory')
 			->setClass('Nette\Application\PresenterFactory', array(
 				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
+
 
 		// mailer
 		if (empty($config['mailer']['smtp'])) {
@@ -105,6 +168,28 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$container->addDefinition('mailer')
 				->setClass('Nette\Mail\SmtpMailer', array($config['mailer']));
 		}
+
+
+		// forms
+		$container->addDefinition($this->prefix('form'))
+			->setClass('Nette\Forms\Form')
+			->setShared(FALSE);
+
+
+		// templating
+		$latte = $container->addDefinition($this->prefix('latte'))
+			->setClass('Nette\Latte\Engine')
+			->setShared(FALSE);
+
+		if (empty($config['xhtml'])) {
+			$latte->addSetup('$service->getCompiler()->defaultContentType = ?', Nette\Latte\Compiler::CONTENT_HTML);
+		}
+
+		$container->addDefinition($this->prefix('template'))
+			->setClass('Nette\Templating\FileTemplate')
+			->addSetup('registerFilter', array($latte))
+			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
+			->setShared(FALSE);
 	}
 
 
@@ -113,10 +198,30 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		$initialize = $class->methods['initialize'];
 		$container = $this->getContainerBuilder();
+		$config = $this->getConfig($this->defaults);
 
 		if (!empty($container->parameters['tempDir'])) {
 			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
 		}
+
+		foreach ((array) $config['forms']['messages'] as $name => $text) {
+			$initialize->addBody('Nette\Forms\Rules::$defaultMessages[Nette\Forms\Form::?] = ?;', array($name, $text));
+		}
+
+		if ($config['session']['autoStart'] === 'smart') {
+			$initialize->addBody('$this->session->exists() && $this->session->start();');
+		} elseif ($config['session']['autoStart']) {
+			$initialize->addBody('$this->session->start();');
+		}
+
+		if (isset($config['iAmUsingBadHost'])) {
+			$initialize->addBody('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['iAmUsingBadHost']));
+		}
+
+		if (empty($config['xhtml'])) {
+			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
+		}
+
 		foreach ($container->findByTag('run') as $name => $foo) {
 			$initialize->addBody('$this->getService(?);', array($name));
 		}
