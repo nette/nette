@@ -435,6 +435,7 @@ class Session extends Nette\Object
 			if (!strncmp($key, 'session.', 8)) { // back compatibility
 				$key = substr($key, 8);
 			}
+			$key = strtolower(preg_replace('#(.)(?=[A-Z])#', '$1_', $key));
 
 			if ($value === NULL || ini_get("session.$key") == $value) { // intentionally ==
 				continue;
