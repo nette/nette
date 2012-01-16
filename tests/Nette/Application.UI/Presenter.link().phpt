@@ -28,6 +28,16 @@ class TestControl extends Application\UI\Control
 	}
 
 
+
+	/**
+	 * @secured
+	 */
+	public function handlePay($amount = 0)
+	{
+	}
+
+
+
 	/**
 	 * Loads params
 	 * @param  array
@@ -75,6 +85,14 @@ class TestPresenter extends Application\UI\Presenter
 	}
 
 
+	protected function getCsrfToken($control, $method, $params)
+	{
+		$params = Nette\Utils\Arrays::flatten($params);
+		$params = implode('|', array_keys($params)) . '|' . implode('|', array_values($params));
+		return substr(md5($control . $method . $params . 'abcd'), 0, 8);
+	}
+
+
 	protected function startup()
 	{
 		parent::startup();
@@ -112,6 +130,10 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this!', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?sort%5By%5D%5Basc%5D=1&action=default&presenter=Test', $this->link('this', array('sort' => array('y' => array('asc' => TRUE)))) );
+		Assert::same( '/index.php?_sec=6e8ac795&action=default&do=pay&presenter=Test', $this->link('pay!') );
+		Assert::same( '/index.php?amount=200&_sec=a0d9cd16&action=default&do=pay&presenter=Test', $this->link('pay!', 200) );
+		Assert::same( '/index.php?sections[0]=a&sections[1]=b&_sec=9d49cae9&action=default&do=list&presenter=Test', urldecode($this->link('list!', array(array('a', 'b')))) );
+		Assert::same( '/index.php?sections[0]=a&sections[1]=c&_sec=20e15718&action=default&do=list&presenter=Test', urldecode($this->link('list!', array(array('a', 'c')))) );
 
 		// Presenter & signal link type checking
 		Assert::same( "error: Invalid value for parameter 'x' in method TestPresenter::handlebuy(), expected integer.", $this->link('buy!', array(array())) );
@@ -130,6 +152,8 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this['mycontrol']->link('this', array('x' => 1, 'round' => 1)) );
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this['mycontrol']->link('this?x=1&round=1') );
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this['mycontrol']->link('this?x=1&round=1#frag') );
+		Assert::same( '/index.php?mycontrol-_sec=97dc7d4e&action=default&do=mycontrol-pay&presenter=Test', $this['mycontrol']->link('pay') );
+		Assert::same( '/index.php?mycontrol-amount=200&mycontrol-_sec=32d45373&action=default&do=mycontrol-pay&presenter=Test', $this['mycontrol']->link('pay', 200) );
 		Assert::same( 'http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this['mycontrol']->link('//this?x=1&round=1#frag') );
 
 		// Component link type checking
@@ -145,6 +169,24 @@ class TestPresenter extends Application\UI\Presenter
 	 * @view: default
 	 */
 	public function handleBuy($x = 1, $y = 1, $bool = FALSE, $str = '')
+	{
+	}
+
+
+
+	/**
+	 * @secured
+	 */
+	public function handlePay($amount = 0)
+	{
+	}
+
+
+
+	/**
+	 * @secured
+	 */
+	public function handleList(array $sections)
 	{
 	}
 
