@@ -44,18 +44,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public static function initialize(Nette\Database\Connection $connection)
-	{
-		$panel = new static;
-		Debugger::$blueScreen->addPanel(array($panel, 'renderException'), __CLASS__);
-		if (!Debugger::$productionMode) {
-			$connection->onQuery[] = callback($panel, 'logQuery');
-			Debugger::$bar->addPanel($panel);
-		}
-	}
-
-
-
 	public function logQuery(Nette\Database\Statement $result, array $params = NULL)
 	{
 		if ($this->disabled) {
@@ -76,7 +64,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 
 
 
-	public function renderException($e)
+	public static function renderException($e)
 	{
 		if ($e instanceof \PDOException && isset($e->queryString)) {
 			return array(

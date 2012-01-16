@@ -49,9 +49,19 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'mail' => array(
 			'smtp' => FALSE,
 		),
+		'database' => array(), // of [name => dsn, user, password, debugger, explain, autowired]
 		'forms' => array(
 			'messages' => array(),
 		),
+	);
+
+	public $databaseDefaults = array(
+		'dsn' => NULL,
+		'user' => NULL,
+		'password' => NULL,
+		'options' => NULL,
+		'debugger' => TRUE,
+		'explain' => TRUE,
 	);
 
 
@@ -197,6 +207,43 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->addSetup('registerFilter', array($latte))
 			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
 			->setShared(FALSE);
+
+
+		// database
+		$container->addDefinition($this->prefix('database'))
+				->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix('database')));
+
+		$autowired = TRUE;
+		foreach ((array) $config['database'] as $name => $info) {
+			if (!is_array($info)) {
+				continue;
+			}
+			$info += $this->databaseDefaults + array('autowired' => $autowired);
+			$autowired = FALSE;
+
+			foreach ((array) $info['options'] as $key => $value) {
+				unset($info['options'][$key]);
+				$info['options'][constant($key)] = $value;
+			}
+
+		    $connection = $container->addDefinition($this->prefix("database_$name"))
+				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
+				->setAutowired($info['autowired'])
+				->addSetup('setCacheStorage')
+				->addSetup('setDatabaseReflection', array(new Nette\DI\Statement('Nette\Database\Reflection\DiscoveredReflection')))
+				->addSetup('Nette\Diagnostics\Debugger::$blueScreen->addPanel(?)', array(
+					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
+				));
+
+			if (empty($config['productionMode']) && $info['debugger']) {
+				$panel = $container->addDefinition($this->prefix("database_{$name}RoutingPanel"))
+					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
+					->addSetup('$explain', !empty($info['explain']))
+					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
+
+				$connection->addSetup('$service->onQuery[] = ?', array(array($panel, 'logQuery')));
+			}
+		}
 	}
 
 

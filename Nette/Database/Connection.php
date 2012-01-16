@@ -64,8 +64,6 @@ class Connection extends PDO
 			trigger_error('Set database reflection via setDatabaseReflection().', E_USER_WARNING);
 			$this->setDatabaseReflection(func_get_arg(5));
 		}
-
-		Diagnostics\ConnectionPanel::initialize($this);
 	}
 
 
