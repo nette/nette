@@ -30,6 +30,11 @@ use Nette;
  */
 class User extends Nette\Object
 {
+	/**/ /** @deprecated */
+	const MANUAL = IUserStorage::MANUAL,
+		INACTIVITY = IUserStorage::INACTIVITY,
+		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;/**/
+
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
 

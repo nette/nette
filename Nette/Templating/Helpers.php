@@ -358,5 +358,5 @@ final class Helpers
 		}
 		return $res . $php;
 	}
-	
+
 }
