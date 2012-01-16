@@ -450,7 +450,7 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($arguments) {
 				throw new ServiceCreationException("Unable to pass arguments, class $entity has no constructor.");
 			}
-			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments));
+			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments), $self);
 
 		} elseif (!Validators::isList($entity) || count($entity) !== 2) {
 			throw new Nette\InvalidStateException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
