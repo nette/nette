@@ -76,11 +76,6 @@ class RobotLoader extends AutoLoader
 	public function register()
 	{
 		$this->list = $this->getCache()->load($this->getKey(), callback($this, '_rebuildCallback'));
-
-		if (isset($this->list[strtolower(__CLASS__)]) && class_exists('Nette\Loaders\NetteLoader', FALSE)) {
-			NetteLoader::getInstance()->unregister();
-		}
-
 		parent::register();
 		return $this;
 	}
