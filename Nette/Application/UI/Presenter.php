@@ -740,8 +740,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function canonicalize()
 	{
 		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
-			$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->getParameters(), 'redirectX');
-			if ($url !== NULL && !$this->getHttpRequest()->getUrl()->isEqual($url)) {
+			try {
+				$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->getParameters(), 'redirectX');
+			} catch (InvalidLinkException $e) {}
+			if (isset($url) && !$this->getHttpRequest()->getUrl()->isEqual($url)) {
 				$this->sendResponse(new Responses\RedirectResponse($url, Http\IResponse::S301_MOVED_PERMANENTLY));
 			}
 		}
