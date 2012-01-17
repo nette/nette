@@ -184,7 +184,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function prepareClassList()
 	{
-        // complete class-factory pairs; expand classes
+		// complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
 			if ($def->class) {
 				$def->class = $def->class === self::CREATED_SERVICE ? $name : $this->expand($def->class);
@@ -447,7 +447,7 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp('!?', array($arguments[0]));
 
 		} elseif (is_string($entity)) { // class name
-		    if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
+			if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {

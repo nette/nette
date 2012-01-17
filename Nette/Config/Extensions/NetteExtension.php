@@ -230,7 +230,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				$info['options'][constant($key)] = $value;
 			}
 
-		    $connection = $container->addDefinition($this->prefix("database_$name"))
+			$connection = $container->addDefinition($this->prefix("database_$name"))
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('setCacheStorage')

@@ -86,11 +86,10 @@ $result = $journal->clean(array(Cache::PRIORITY => 10));
 test($result, (count($result) === 1 and $result[0] === 'ok_test5'), 'Priority and tag (clean by priority)');
 
 for ($i=1;$i<=10;$i++) {
-	$journal->write('ok_test6_'.$i,
-	 array(
-			Cache::TAGS => array('test:homepage', 'test:homepage/'.$i),
-			Cache::PRIORITY => $i,
-		));
+	$journal->write('ok_test6_'.$i, array(
+		Cache::TAGS => array('test:homepage', 'test:homepage/'.$i),
+		Cache::PRIORITY => $i,
+	));
 }
 
 $result = $journal->clean(array(Cache::PRIORITY => 5));

@@ -20,5 +20,5 @@ Assert::same( 123, Helpers::escape(123) );
 Assert::same( '%%', Helpers::escape('%') );
 Assert::same(
 	array('key1' => 123, 'key2' => '%%'),
-    Helpers::escape(array('key1' => 123, 'key2' => '%'))
+	Helpers::escape(array('key1' => 123, 'key2' => '%'))
 );

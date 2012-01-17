@@ -47,7 +47,7 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 		foreach ($arr as $key => $val) {
 			if (substr($key, -1) === self::PREVENT_MERGING) {
 				if (!is_array($val) && $val !== NULL) {
- 					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
+					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
 				}
 				$key = substr($key, 0, -1);
 				$val[Helpers::EXTENDS_KEY] = Helpers::OVERWRITE;

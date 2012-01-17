@@ -7,11 +7,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS author;
 CREATE TABLE author (
-  id int NOT NULL AUTO_INCREMENT,
-  name varchar(30) NOT NULL,
-  web varchar(100) NOT NULL,
-  born date DEFAULT NULL,
-  PRIMARY KEY(id)
+	id int NOT NULL AUTO_INCREMENT,
+	name varchar(30) NOT NULL,
+	web varchar(100) NOT NULL,
+	born date DEFAULT NULL,
+	PRIMARY KEY(id)
 ) AUTO_INCREMENT=13;
 
 INSERT INTO author (id, name, web, born) VALUES (11, 'Jakub Vrana', 'http://www.vrana.cz/', NULL);
@@ -19,9 +19,9 @@ INSERT INTO author (id, name, web, born) VALUES (12, 'David Grudl', 'http://davi
 
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
-  id int NOT NULL AUTO_INCREMENT,
-  name varchar(20) NOT NULL,
-  PRIMARY KEY (id)
+	id int NOT NULL AUTO_INCREMENT,
+	name varchar(20) NOT NULL,
+	PRIMARY KEY (id)
 ) AUTO_INCREMENT=24;
 
 INSERT INTO tag (id, name) VALUES (21, 'PHP');
@@ -30,13 +30,13 @@ INSERT INTO tag (id, name) VALUES (23, 'JavaScript');
 
 DROP TABLE IF EXISTS book;
 CREATE TABLE book (
-  id int NOT NULL AUTO_INCREMENT,
-  author_id int NOT NULL,
-  translator_id int,
-  title varchar(50) NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT book_author FOREIGN KEY (author_id) REFERENCES author (id),
-  CONSTRAINT book_translator FOREIGN KEY (translator_id) REFERENCES author (id)
+	id int NOT NULL AUTO_INCREMENT,
+	author_id int NOT NULL,
+	translator_id int,
+	title varchar(50) NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT book_author FOREIGN KEY (author_id) REFERENCES author (id),
+	CONSTRAINT book_translator FOREIGN KEY (translator_id) REFERENCES author (id)
 ) AUTO_INCREMENT=5;
 
 CREATE INDEX book_title ON book (title);
@@ -48,11 +48,11 @@ INSERT INTO book (id, author_id, translator_id, title) VALUES (4, 12, 12, 'Dibi'
 
 DROP TABLE IF EXISTS book_tag;
 CREATE TABLE book_tag (
-  book_id int NOT NULL,
-  tag_id int NOT NULL,
-  PRIMARY KEY (book_id, tag_id),
-  CONSTRAINT book_tag_tag FOREIGN KEY (tag_id) REFERENCES tag (id),
-  CONSTRAINT book_tag_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
+	book_id int NOT NULL,
+	tag_id int NOT NULL,
+	PRIMARY KEY (book_id, tag_id),
+	CONSTRAINT book_tag_tag FOREIGN KEY (tag_id) REFERENCES tag (id),
+	CONSTRAINT book_tag_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
 );
 
 INSERT INTO book_tag (book_id, tag_id) VALUES (1, 21);
