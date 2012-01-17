@@ -130,6 +130,9 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
 			if (isset($args[$name])) { // NULL treats as none value
 				$val = $args[$name];
+				if (is_array($def) xor is_array($val)) {
+					throw new Nette\Application\BadRequestException("Invalid value for parameter '$name'.");
+				}
 				if ($def !== NULL) {
 					settype($val, gettype($def));
 				}
