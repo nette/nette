@@ -1033,16 +1033,34 @@ abstract class Presenter extends Control implements Application\IPresenter
 				continue;
 			}
 
-			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
-			if ($def === NULL) {
-				if ((string) $args[$name] === '') {
+
+			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : NULL;
+			$val = $args[$name];
+			if ($val === NULL) {
+				continue;
+			} elseif ($param->isArray() || is_array($def)) {
+				if (!is_array($val)) {
+					throw new InvalidLinkException("Invalid value for parameter '$name', expected array.");
+				}
+			} elseif ($param->getClass() || is_object($val)) {
+				// ignore
+			} elseif (!is_scalar($val)) {
+				throw new InvalidLinkException("Invalid value for parameter '$name', expected scalar.");
+
+			} elseif ($def === NULL) {
+				if ((string) $val === '') {
 					$args[$name] = NULL; // value transmit is unnecessary
 				}
+				continue;
 			} else {
 				settype($args[$name], gettype($def));
-				if ($args[$name] === $def) {
-					$args[$name] = NULL;
+				if ((string) $args[$name] !== (string) $val) {
+					throw new InvalidLinkException("Invalid value for parameter '$name', expected ".gettype($def).".");
 				}
+			}
+
+			if ($args[$name] === $def) {
+				$args[$name] = NULL; // value transmit is unnecessary
 			}
 		}
 

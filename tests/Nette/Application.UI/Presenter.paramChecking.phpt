@@ -19,7 +19,7 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestPresenter extends Application\UI\Presenter
 {
-	function actionDefault($a, $b = NULL, array $c, array $d = NULL)
+	function actionDefault($a, $b = NULL, array $c, array $d = NULL, $e = 1, $f = 1.0, $g = FALSE)
 	{
 	}
 
@@ -45,22 +45,46 @@ Assert::throws(function() use ($presenter) {
 Assert::throws(function() use ($presenter) {
 	$request = new Application\Request('Test', Http\Request::GET, array('a' => array()));
 	$presenter->run($request);
-}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'a'.");
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'a', expected scalar.");
 
 
 Assert::throws(function() use ($presenter) {
 	$request = new Application\Request('Test', Http\Request::GET, array('b' => array()));
 	$presenter->run($request);
-}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'b'.");
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'b', expected scalar.");
 
 
 Assert::throws(function() use ($presenter) {
 	$request = new Application\Request('Test', Http\Request::GET, array('c' => 1));
 	$presenter->run($request);
-}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'c'.");
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'c', expected array.");
 
 
 Assert::throws(function() use ($presenter) {
 	$request = new Application\Request('Test', Http\Request::GET, array('d' => 1));
 	$presenter->run($request);
-}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'd'.");
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'd', expected array.");
+
+
+Assert::throws(function() use ($presenter) {
+	$request = new Application\Request('Test', Http\Request::GET, array('e' => 1.1));
+	$presenter->run($request);
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'e', expected integer.");
+
+
+Assert::throws(function() use ($presenter) {
+	$request = new Application\Request('Test', Http\Request::GET, array('e' => '1 '));
+	$presenter->run($request);
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'e', expected integer.");
+
+
+Assert::throws(function() use ($presenter) {
+	$request = new Application\Request('Test', Http\Request::GET, array('f' => '1 '));
+	$presenter->run($request);
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'f', expected double.");
+
+
+Assert::throws(function() use ($presenter) {
+	$request = new Application\Request('Test', Http\Request::GET, array('g' => '0'));
+	$presenter->run($request);
+}, 'Nette\Application\BadRequestException', "Invalid value for parameter 'g', expected boolean.");

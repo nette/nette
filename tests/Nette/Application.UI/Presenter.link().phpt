@@ -116,8 +116,6 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?var1=20&action=default&do=buy&presenter=Test', $this->link('buy!', array('var1' => $this->var1 * 2)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', 1, 2) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', '1', '2') );
-		Assert::same( '/index.php?y=0&action=default&do=buy&presenter=Test', $this->link('buy!', '1a', NULL) );
-		Assert::same( '/index.php?y=0&action=default&do=buy&presenter=Test', $this->link('buy!', TRUE, FALSE) );
 		Assert::same( '/index.php?action=default&do=buy&presenter=Test', $this->link('buy!', array(1), (object) array(1)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', array(1, 'y' => 2)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', array('x' => 1, 'y' => 2, 'var1' => $this->var1)) );
