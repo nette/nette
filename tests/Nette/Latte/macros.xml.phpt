@@ -25,6 +25,8 @@ restore_error_handler();
 
 
 
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
 $template = new FileTemplate(__DIR__ . '/templates/xml.latte');
 $template->registerFilter(new Latte\Engine);
 $template->registerHelperLoader('Nette\Templating\Helpers::loader');
@@ -33,7 +35,7 @@ $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->comment = 'test -- comment';
-$template->netteHttpResponse = Nette\Environment::getHttpResponse();
+$template->netteHttpResponse = $container->httpResponse;
 $template->el = Html::el('div')->title('1/2"');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

@@ -16,7 +16,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = Nette\Environment::getSession();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$session = $container->session;
 $session->setExpiration('+10 seconds');
 
 // try to expire whole namespace

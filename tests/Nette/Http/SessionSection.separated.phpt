@@ -16,7 +16,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = Nette\Environment::getSession();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$session = $container->session;
 $namespace1 = $session->getSection('namespace1');
 $namespace1b = $session->getSection('namespace1');
 $namespace2 = $session->getSection('namespace2');

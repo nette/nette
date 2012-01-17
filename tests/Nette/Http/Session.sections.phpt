@@ -19,7 +19,9 @@ require __DIR__ . '/../bootstrap.php';
 
 ob_start();
 
-$session = Nette\Environment::getSession();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$session = $container->session;
 Assert::false( $session->hasSection('trees'), 'hasSection() should have returned FALSE for a section with no keys set' );
 
 $section = $session->getSection('trees');

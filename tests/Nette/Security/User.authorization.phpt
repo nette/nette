@@ -66,7 +66,9 @@ class Authorizator implements IAuthorizator
 
 
 
-$user = Nette\Environment::getUser();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$user = $container->user;
 
 // guest
 Assert::false( $user->isLoggedIn() );

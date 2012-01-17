@@ -60,7 +60,9 @@ function onLoggedOut($user) {
 
 
 
-$user = Nette\Environment::getUser();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$user = $container->user;
 $user->onLoggedIn[] = 'onLoggedIn';
 $user->onLoggedOut[] = 'onLoggedOut';
 

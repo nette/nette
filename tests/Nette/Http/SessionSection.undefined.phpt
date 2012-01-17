@@ -16,7 +16,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$session = Nette\Environment::getSession();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$session = $container->session;
 $namespace = $session->getSection('one');
 Assert::false( isset($namespace->undefined) );
 Assert::null( $namespace->undefined, 'Getting value of non-existent key' );

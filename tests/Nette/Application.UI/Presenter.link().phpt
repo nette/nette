@@ -9,8 +9,7 @@
  */
 
 use Nette\Http,
-	Nette\Application,
-	Nette\Environment;
+	Nette\Application;
 
 
 
@@ -161,18 +160,18 @@ class OtherPresenter extends TestPresenter
 }
 
 
-Environment::setVariable('appDir', __DIR__);
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');
-Environment::getContext()->httpRequest = new Http\Request($url);
+$container->httpRequest = new Http\Request($url);
 
-$application = Environment::getApplication();
+$application = $container->application;
 $application->router[] = new Application\Routers\SimpleRouter();
 
 $request = new Application\Request('Test', Http\Request::GET, array());
 
-$presenter = new TestPresenter(Environment::getContext());
+$presenter = new TestPresenter($container);
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);

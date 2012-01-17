@@ -58,6 +58,8 @@ class MySessionStorage extends Object implements ISessionStorage
 }
 
 
-$session = Nette\Environment::getSession();
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
+
+$session = $container->session;
 $session->setStorage(new MySessionStorage);
 $session->start();

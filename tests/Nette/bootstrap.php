@@ -47,3 +47,8 @@ if (extension_loaded('xdebug')) {
 	xdebug_disable();
 	TestHelpers::startCodeCoverage(__DIR__ . '/coverage.dat');
 }
+
+
+function id($val) {
+	return $val;
+}
