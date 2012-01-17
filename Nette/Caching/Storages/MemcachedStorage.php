@@ -50,7 +50,7 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 
 
 
-	public function __construct($host = 'localhost', $port = 11211, $prefix = '', IJournal $journal = NULL, $timeout = 1)
+	public function __construct($host = 'localhost', $port = 11211, $prefix = '', IJournal $journal = NULL)
 	{
 		if (!static::isAvailable()) {
 			throw new Nette\NotSupportedException("PHP extension 'memcache' is not loaded.");
@@ -59,11 +59,30 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 		$this->prefix = $prefix;
 		$this->journal = $journal;
 		$this->memcache = new \Memcache;
-		Nette\Diagnostics\Debugger::tryError();
-		$this->memcache->connect($host, $port, $timeout);
-		if (Nette\Diagnostics\Debugger::catchError($e)) {
-			throw new Nette\InvalidStateException('Memcache::connect(): ' . $e->getMessage(), 0, $e);
+		if ($host) {
+			$this->addServer($host, $port);
 		}
+	}
+
+
+
+	public function addServer($host = 'localhost', $port = 11211, $timeout = 1)
+	{
+		Nette\Diagnostics\Debugger::tryError();
+		$this->memcache->addServer($host, $port, TRUE, 1, $timeout);
+		if (Nette\Diagnostics\Debugger::catchError($e)) {
+			throw new Nette\InvalidStateException('Memcache::addServer(): ' . $e->getMessage(), 0, $e);
+		}
+	}
+
+
+
+	/**
+	 * @return \Memcache
+	 */
+	public function getConnection()
+	{
+		return $this->memcache;
 	}
 
 
