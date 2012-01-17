@@ -46,7 +46,14 @@ Assert::true( $container->httpResponse instanceof Nette\Http\Response );
 Assert::true( $container->httpContext instanceof Nette\Http\Context );
 Assert::true( $container->session instanceof Nette\Http\Session );
 Assert::true( $container->user instanceof Nette\Security\User );
+Assert::true( $container->userStorage instanceof Nette\Http\UserStorage );
 Assert::true( $container->application instanceof Nette\Application\Application );
 Assert::true( $container->router instanceof Nette\Application\Routers\RouteList );
 Assert::true( $container->presenterFactory instanceof Nette\Application\PresenterFactory );
 Assert::true( $container->mailer instanceof Nette\Mail\SendmailMailer );
+
+Assert::true( $container->nette->createCache() instanceof Nette\Caching\Cache );
+Assert::same( 'nm', $container->nette->createCache('nm')->getNamespace() );
+Assert::true( $container->nette->createForm() instanceof Nette\Forms\Form );
+Assert::true( $container->nette->createLatte() instanceof Nette\Latte\Engine );
+Assert::true( $container->nette->createTemplate() instanceof Nette\Templating\FileTemplate );

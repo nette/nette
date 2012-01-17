@@ -83,6 +83,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
 			->setAutowired(FALSE);
 
+		$container->addDefinition($this->prefix('cache'))
+			->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))
+			->setParameters(array('namespace' => NULL));
+
 
 		// http
 		$container->addDefinition('httpRequestFactory')
