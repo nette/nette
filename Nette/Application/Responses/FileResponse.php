@@ -41,7 +41,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 
 	/**
 	 * @param  string  file path
-	 * @param  string  user name name
+	 * @param  string  imposed file name
 	 * @param  string  MIME content type
 	 */
 	public function __construct($file, $name = NULL, $contentType = NULL)
