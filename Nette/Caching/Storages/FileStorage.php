@@ -182,6 +182,8 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
+		umask(0000);
+
 		$meta = array(
 			self::META_TIME => microtime(),
 		);
