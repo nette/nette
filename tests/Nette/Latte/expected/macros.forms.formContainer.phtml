@@ -1,0 +1,43 @@
+<?php
+%A%
+//
+// main template
+//
+Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
+<table>
+	<tr>
+		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<td><?php echo $_form["input1"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+<?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont1"] ?>
+	<tr>
+		<th><?php if ($_label = $_form["input2"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<td><?php echo $_form["input2"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+	<tr>
+		<th><?php if ($_label = $_form["input3"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<td><?php echo $_form["input3"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+	<tr>
+		<th>Checkboxes<th>
+		<td>
+<?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>
+			<ol>
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($formContainer->controls) as $name => $field): ?>
+				<li><?php echo $_form[$name]->getControl()->addAttributes(array()) ?> - <?php if ($_label = $_form[$name]->getLabel()) echo $_label->addAttributes(array()) ?></li>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+			</ol>
+<?php $_form = array_pop($_formStack) ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php if ($_label = $_form["input7"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<td><?php echo $_form["input7"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+<?php $_form = array_pop($_formStack) ?>
+	<tr>
+		<th><?php if ($_label = $_form["input8"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<td><?php echo $_form["input8"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+</table>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;

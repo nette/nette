@@ -1,0 +1,34 @@
+{form myForm}
+<table>
+	<tr>
+		<th>{label input1 /}<th>
+		<td>{input input1}</td>
+	</tr>
+	{formContainer cont1}
+	<tr>
+		<th>{label input2 /}<th>
+		<td>{input input2}</td>
+	</tr>
+	<tr>
+		<th>{label input3 /}<th>
+		<td>{input input3}</td>
+	</tr>
+	<tr>
+		<th>Checkboxes<th>
+		<td>
+			<ol n:formContainer="cont2" n:inner-foreach="$formContainer->controls AS $name => $field">
+				<li>{input $name} - {label $name /}</li>
+			</ol>
+		</td>
+	</tr>
+	<tr>
+		<th>{label input7 /}<th>
+		<td>{input input7}</td>
+	</tr>
+	{/formContainer}
+	<tr>
+		<th>{label input8 /}<th>
+		<td>{input input8}</td>
+	</tr>
+</table>
+{/form}
