@@ -18,4 +18,43 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control["myForm"], arra
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($form) ?>
+
+
+<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_control["myForm2"], array()) ?>
+<table>
+	<tr>
+		<th><?php if ($_label = $form["text1"]->getLabel()) echo $_label->addAttributes(array()) ?></th>
+		<td><?php echo $form["text1"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+<?php $_form[] = $form; $form = $form["cont1"] ?>
+	<tr>
+		<th><?php if ($_label = $form["text2"]->getLabel()) echo $_label->addAttributes(array()) ?></th>
+		<td><?php echo $form["text2"]->getControl()->addAttributes(array()) ?></td>
+	</tr>
+<?php $_form[] = $form; $form = $form["cont2"] ?>
+	<tr>
+		<th>&nbsp;</th>
+		<td>
+			<?php if ($_label = $form["text3"]->getLabel()) echo $_label->addAttributes(array()) ?>
+ <?php echo $form["text3"]->getControl()->addAttributes(array()) ?><br />
+			<?php if ($_label = $form["text4"]->getLabel()) echo $_label->addAttributes(array()) ?>
+ <?php echo $form["text4"]->getControl()->addAttributes(array()) ?>
+
+		</td>
+	</tr>
+<?php $form = array_pop($_form) ?>
+	<tr>
+		<th><?php if ($_label = $form["text5"]->getLabel()) echo $_label->addAttributes(array()) ?></th>
+		<td><input value=val type class="hello" <?php echo $form["text5"]->getControl()->addAttributes(array (
+  'value' => NULL,
+  'type' => NULL,
+  'class' => NULL,
+))->attributes() ?>/></td>
+	</tr>
+<?php $form = array_pop($_form) ?>
+	<tr>
+		<th><?php if ($_label = $form["text6"]->getLabel()) echo $_label->addAttributes(array()) ?></th>
+		<td><?php echo $form["text6"]->getControl()->addAttributes(array()) ?></td>
+	</tr></table>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($form) ;

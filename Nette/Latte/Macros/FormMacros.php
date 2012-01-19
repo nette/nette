@@ -25,6 +25,7 @@ use Nette,
  * - {form name} ... {/form}
  * - {input name}
  * - {label name /} or {label name}... {/label}
+ * - {container name} ... {/container}
  *
  * @author     David Grudl
  */
@@ -40,6 +41,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('@input', array($me, 'macroAttrInput'));
 		$me->addMacro('input', 'echo $form[%node.word]->getControl()->addAttributes(%node.array)');
+		$me->addMacro('container', '$_form[] = $form; $form = $form[%node.word]', '$form = array_pop($_form)');
 	}
 
 

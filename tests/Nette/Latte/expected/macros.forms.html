@@ -17,3 +17,30 @@
 
 <form action="" method="post" id="frm-">	<input value=val type class="hello"  name="username" id="frm-username"/>
 </form>
+
+
+<form action="" method="post" id="frm-"><table>
+	<tr>
+		<th><label for="frm-text1">Text 1</label></th>
+		<td><input type="text" name="text1" id="frm-text1" value="" /></td>
+	</tr>
+	<tr>
+		<th><label for="frm-cont1-text2">Text 2</label></th>
+		<td><input type="text" name="cont1[text2]" id="frm-cont1-text2" value="" /></td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<td>
+			<label for="frm-cont1-cont2-text3">Text 3</label> <input type="text" name="cont1[cont2][text3]" id="frm-cont1-cont2-text3" value="" /><br />
+			<label for="frm-cont1-cont2-text4">Text 4</label> <input type="text" name="cont1[cont2][text4]" id="frm-cont1-cont2-text4" value="" />
+		</td>
+	</tr>
+	<tr>
+		<th><label for="frm-cont1-text5">Text 5</label></th>
+		<td><input value=val type class="hello"  name="cont1[text5]" id="frm-cont1-text5"/></td>
+	</tr>
+	<tr>
+		<th><label for="frm-text6">Text 6</label></th>
+		<td><input type="text" name="text6" id="frm-text6" value="" /></td>
+	</tr></table>
+</form>
