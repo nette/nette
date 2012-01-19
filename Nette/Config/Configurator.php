@@ -36,16 +36,16 @@ class Configurator extends Nette\Object
 	public $onCompile;
 
 	/** @var array */
-	private $params;
+	protected $parameters;
 
 	/** @var array */
-	private $files = array();
+	protected $files = array();
 
 
 
 	public function __construct()
 	{
-		$this->params = $this->getDefaultParameters();
+		$this->parameters = $this->getDefaultParameters();
 	}
 
 
@@ -57,7 +57,7 @@ class Configurator extends Nette\Object
 	 */
 	public function setProductionMode($on = TRUE)
 	{
-		$this->params['productionMode'] = (bool) $on;
+		$this->parameters['productionMode'] = (bool) $on;
 		return $this;
 	}
 
@@ -68,7 +68,7 @@ class Configurator extends Nette\Object
 	 */
 	public function isProductionMode()
 	{
-		return $this->params['productionMode'];
+		return $this->parameters['productionMode'];
 	}
 
 
@@ -79,7 +79,7 @@ class Configurator extends Nette\Object
 	 */
 	public function setTempDirectory($path)
 	{
-		$this->params['tempDir'] = $path;
+		$this->parameters['tempDir'] = $path;
 		if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
 			umask(0000);
 			mkdir($cacheDir, 0777);
@@ -95,7 +95,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addParameters(array $params)
 	{
-		$this->params = Helpers::merge($params, $this->params);
+		$this->parameters = Helpers::merge($params, $this->parameters);
 		return $this;
 	}
 
@@ -131,7 +131,7 @@ class Configurator extends Nette\Object
 		}
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
-		$loader->autoRebuild = !$this->params['productionMode'];
+		$loader->autoRebuild = !$this->parameters['productionMode'];
 		return $loader;
 	}
 
@@ -144,7 +144,7 @@ class Configurator extends Nette\Object
 	public function addConfig($file, $section = self::AUTO)
 	{
 		if ($section === self::AUTO) {
-			$section = $this->params['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
+			$section = $this->parameters['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
 		}
 		$this->files[] = array($file, $section);
 		return $this;
@@ -169,12 +169,12 @@ class Configurator extends Nette\Object
 	{
 		if ($cacheDir = $this->getCacheDirectory()) {
 			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
-			$cacheKey = array($this->params, $this->files);
+			$cacheKey = array($this->parameters, $this->files);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
 				$code = $this->buildContainer($dependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->params['productionMode'] ? NULL : $dependencies,
+					Cache::FILES => $this->parameters['productionMode'] ? NULL : $dependencies,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -187,7 +187,7 @@ class Configurator extends Nette\Object
 			Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
 		}
 
-		$container = new $this->params['container']['class'];
+		$container = new $this->parameters['container']['class'];
 		$container->initialize();
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
@@ -216,14 +216,14 @@ class Configurator extends Nette\Object
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
 		}
-		$config['parameters'] = Helpers::merge($config['parameters'], $this->params);
+		$config['parameters'] = Helpers::merge($config['parameters'], $this->parameters);
 
 		$compiler = $this->createCompiler();
 		$this->onCompile($this, $compiler);
 
 		$code .= $compiler->compile(
 			$config,
-			$this->params['container']['class'],
+			$this->parameters['container']['class'],
 			$config['parameters']['container']['parent']
 		);
 		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainerBuilder()->getDependencies());
@@ -278,7 +278,7 @@ class Configurator extends Nette\Object
 
 	protected function getCacheDirectory()
 	{
-		return empty($this->params['tempDir']) ? NULL : $this->params['tempDir'] . '/cache';
+		return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
 	}
 
 
