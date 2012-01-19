@@ -131,7 +131,8 @@ class Compiler extends Nette\Object
 
 		foreach ($this->extensions as $name => $extension) {
 			$this->container->addDefinition($name)
-				->setClass('Nette\DI\NestedAccessor', array('@container', $name));
+				->setClass('Nette\DI\NestedAccessor', array('@container', $name))
+				->setAutowired(FALSE);
 
 			if (isset($this->config[$name])) {
 				$this->parseServices($this->container, $this->config[$name], $name);
@@ -157,14 +158,31 @@ class Compiler extends Nette\Object
 			$extension->beforeCompile();
 		}
 
-		$class = $this->container->generateClass($parentName);
+		$classes[] = $class = $this->container->generateClass($parentName);
 		$class->setName($className)
 			->addMethod('initialize');
 
 		foreach ($this->extensions as $extension) {
 			$extension->afterCompile($class);
 		}
-		return (string) $class;
+
+		$defs = $this->container->getDefinitions();
+		ksort($defs);
+		foreach (array_reverse($defs, TRUE) as $name => $def) {
+			if ($def->class === 'Nette\DI\NestedAccessor' && ($list = preg_grep('#^'.$name.'_#i', array_keys($defs)))) {
+				$def->class = $className . '_' . $name;
+				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
+				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
+				foreach ($list as $item) {
+					$short = substr($item, strlen($name)  + 1);
+					$accessor->addDocument($defs[$item]->shared
+						? "@property {$defs[$item]->class} \$$short"
+						: "@method {$defs[$item]->class} create" . ucfirst("$short()"));
+				}
+			}
+		}
+
+		return implode("\n\n\n", $classes);
 	}
 
 
