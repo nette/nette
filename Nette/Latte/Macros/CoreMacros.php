@@ -179,7 +179,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroInclude(MacroNode $node, $writer)
 	{
-		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters(), $_l->templates[%var])',
+		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters() + get_defined_vars(), $_l->templates[%var])',
 			$this->getCompiler()->getTemplateId());
 
 		if ($node->modifiers) {
