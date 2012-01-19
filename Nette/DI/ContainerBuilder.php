@@ -522,7 +522,7 @@ class ContainerBuilder extends Nette\Object
 
 	private static function sanitizeName($name)
 	{
-		return strtr($name, '\\', '__');
+		return str_replace('\\', '__', $name);
 	}
 
 
