@@ -15,7 +15,7 @@ use Nette\Object,
  * Routing debugger for Nette Framework.
  *
  * This file is part of the Nette Framework.
- * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  *
  * @author     David Grudl
  */
