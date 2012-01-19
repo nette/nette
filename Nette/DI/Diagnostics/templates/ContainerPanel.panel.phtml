@@ -1,0 +1,135 @@
+<?php
+
+namespace Nette\DI\Diagnostics;
+
+use Nette,
+	Nette\Diagnostics\Helpers;
+
+?>
+<style>
+
+	#nette-debug .nette-ContainerPanel .nette-inner {
+		max-width: 1000px;
+	}
+
+	#nette-debug .nette-ContainerPanel-parameters pre {
+		background: #FDF5CE;
+		padding: .4em .7em;
+		border: 1px dotted silver;
+		overflow: auto;
+	}
+
+	#nette-debug .nette-ContainerPanel table {
+		width: 100%;
+	}
+
+	#nette-debug .nette-ContainerPanel .yes {
+		color: green;
+	}
+
+	#nette-debug .nette-ContainerPanel b {
+		font-weight: bold;
+	}
+
+</style>
+
+<div class="nette-ContainerPanel">
+<h1><?php echo get_class($this->container) ?></h1>
+
+<div class="nette-inner">
+<h2>Parameters</h2>
+
+<div class="nette-ContainerPanel-parameters">
+	<?php echo Helpers::clickableDump($this->container->parameters); ?>
+</div>
+
+<h2>Services</h2>
+
+	<table>
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Created</th>
+		<th>Autowire classes</th>
+		<th>Class &amp; Data / Meta</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	<?php foreach ($services as $service): ?>
+	<tr>
+		<td><b><?php echo $service['name'] ?></b></td>
+
+		<td class="<?php if ($service['created']) echo "yes" ?>"><b><?php echo $service['created'] ? 'Yes' : 'No' ?></b></td>
+
+		<td>
+			<?php foreach ($service['classes'] as $class): ?>
+			<code><?php echo htmlspecialchars(Nette\Reflection\ClassType::from($class)->getName()) ?></code><br>
+			<?php endforeach ?>
+		</td>
+
+		<td>
+			<?php if ($service['data'] && is_object($service['data'])
+				&& !$service['data'] instanceof Nette\DI\Container
+				&& !$service['data'] instanceof Nette\DI\NestedAccessor): ?>
+			<a href="#" rel="#nette-ContainerPanel-service-<?php echo $service['name'] ?>-data">
+				<?php echo is_object($service['data']) ? get_class($service['data']) : 'Data' ?>&nbsp;&#x25ba;
+			</a>
+
+			<div id="nette-ContainerPanel-service-<?php echo $service['name'] ?>-data" class="nette-collapsed">
+				<?php echo Helpers::clickableDump($service['data']); ?>
+			</div>
+			<br>
+			<?php elseif (is_string($service['data'])): ?>
+			<code><?php echo htmlspecialchars($service['data']) ?></code>
+			<?php elseif ($service['data'] instanceof Nette\DI\Container || $service['data'] instanceof Nette\DI\NestedAccessor): ?>
+			<code><?php echo htmlspecialchars(get_class($service['data'])) ?></code>
+			<?php endif; if ($service['meta']): ?>
+			<a href="#" rel="#nette-ContainerPanel-service-<?php echo $service['name'] ?>-meta">Metadata&nbsp;&#x25ba;</a>
+
+			<div id="nette-ContainerPanel-service-<?php echo $service['name'] ?>-meta" class="nette-collapsed">
+				<?php echo Helpers::clickableDump($service['meta']); ?>
+			</div>
+			<?php endif ?>
+		</td>
+	</tr>
+	<?php endforeach ?>
+	</tbody>
+	</table>
+
+
+<h2>Factories</h2>
+
+	<table>
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Class</th>
+		<th>Meta</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	<?php foreach ($factories as $factory): ?>
+	<tr>
+		<td><b><?php echo $factory['name'] ?></b></td>
+
+		<td>
+			<code><?php echo htmlspecialchars($factory['class']) ?></code>
+		</td>
+
+		<td>
+			<?php if ($factory['meta']): ?>
+			<a href="#" rel="#nette-ContainerPanel-factory-<?php echo $factory['name'] ?>-meta">Metadata&nbsp;&#x25ba;</a>
+
+			<div id="nette-ContainerPanel-factory-<?php echo $factory['name'] ?>-meta" class="nette-collapsed">
+				<?php echo Helpers::clickableDump($factory['meta']); ?>
+			</div>
+			<?php endif ?>
+		</td>
+	</tr>
+	<?php endforeach ?>
+	</tbody>
+	</table>
+</div>
+</div>
