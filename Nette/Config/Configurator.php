@@ -81,7 +81,6 @@ class Configurator extends Nette\Object
 	{
 		$this->params['tempDir'] = $path;
 		if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
-			umask(0000);
 			mkdir($cacheDir, 0777);
 		}
 		return $this;
