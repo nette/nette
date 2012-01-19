@@ -51,10 +51,6 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		$this->parameters = $params + $this->parameters;
 		$this->params = &$this->parameters;
-
-		if (Nette\Diagnostics\Debugger::$bar) {
-			Nette\Diagnostics\Debugger::$bar->addPanel(new Diagnostics\ContainerPanel($this));
-		}
 	}
 
 

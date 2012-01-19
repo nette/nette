@@ -280,6 +280,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
 		}
 
+		if (empty($config['productionMode'])) {
+			$initialize->addBody('Nette\Diagnostics\Debugger::$bar->addPanel(new Nette\DI\Diagnostics\ContainerPanel($this));');
+		}
+
 		foreach ($container->findByTag('run') as $name => $foo) {
 			$initialize->addBody('$this->getService(?);', array($name));
 		}

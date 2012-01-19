@@ -55,92 +55,35 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getPanel()
 	{
+		$services = $this->getContainerProperty('factories');
+		$factories = array();
+		foreach (Nette\Reflection\ClassType::from($this->container)->getMethods() as $method) {
+			if (preg_match('#^create(Service)?(.+)$#', $method->getName(), $m)) {
+				$name = strtolower(substr($m[2], 0, 1)) . substr($m[2], 1);
+				if ($m[1]) {
+					$services[$name] = $method->getAnnotation('return');
+				} elseif ($method->isPublic()) {
+					$factories[substr_replace($name, 'create', strrpos("_$name", '_'), 0)] = $method->getAnnotation('return');
+				}
+			}
+		}
+		ksort($services);
+		ksort($factories);
+		$container = $this->container;
+		$registry = $this->getContainerProperty('registry');
+
 		ob_start();
-		list($services, $factories) = $this->getContainerData();
 		require __DIR__ . '/templates/ContainerPanel.panel.phtml';
 		return ob_get_clean();
 	}
 
 
 
-	/**
-	 * @return Nette\Reflection\ClassType
-	 */
-	protected function getContainerReflection()
+	private function getContainerProperty($name)
 	{
-		return Nette\Reflection\ClassType::from('Nette\DI\Container');
-	}
-
-
-
-	protected function getContainerData()
-	{
-		$services = array();
-		$factories = array();
-		$registry = $this->getContainerRegistry();
-		$meta = $this->getContainerMeta();
-		$classes = $this->getContainerClasses();
-
-		foreach ($this->container->getReflection()->getMethods() as $method) {
-			if (substr($method->getName(), 0, 13) == 'createService') {
-				$name = lcfirst(substr($method->getName(), 13));
-				$data = isset($registry[$name]) ? $registry[$name] : $method->getAnnotation('return');
-
-				$services[] = array(
-					'name' => $name,
-					'classes' => isset($classes[$name]) ? $classes[$name] : array(),
-					'created' => isset($registry[$name]) ? TRUE : FALSE,
-					'data' => $data,
-					'meta' => isset($meta[$name]) ? $meta[$name] : NULL,
-				);
-			} elseif (substr($method->getName(), 0, 6) == 'create') {
-				$name = lcfirst(substr($method->getName(), 6));
-
-				$factories[] = array(
-					'name' => $name,
-					'class' => $method->getAnnotation('return'),
-					'meta' => isset($meta[$name]) ? $meta[$name] : NULL,
-				);
-			}
-		}
-
-		return array($services, $factories);
-	}
-
-
-
-	protected function getContainerRegistry()
-	{
-		$ref = $this->getContainerReflection()->getProperty('registry');
-		$ref->setAccessible(TRUE);
-		$registry = $ref->getValue($this->container);
-		$ref->setAccessible(FALSE);
-		return $registry;
-	}
-
-
-
-	protected function getContainerMeta()
-	{
-		$ref = $this->getContainerReflection()->getProperty('meta');
-		$ref->setAccessible(TRUE);
-		$meta = $ref->getValue($this->container);
-		$ref->setAccessible(FALSE);
-		return $meta;
-	}
-
-
-
-	protected function getContainerClasses()
-	{
-		$classes = array();
-
-		foreach ($this->container->classes as $class => $name) {
-			if (!isset($classes[$name])) $classes[$name] = array();
-			$classes[$name][] = $class;
-		}
-
-		return $classes;
+		$prop = Nette\Reflection\ClassType::from('Nette\DI\Container')->getProperty($name);
+		$prop->setAccessible(TRUE);
+		return $prop->getValue($this->container);
 	}
 
 }
