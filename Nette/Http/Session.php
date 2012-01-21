@@ -146,7 +146,7 @@ class Session extends Nette\Object
 				if (is_array($metadata)) {
 					foreach ($metadata as $variable => $value) {
 						if ((!empty($value['B']) && $browserClosed) || (!empty($value['T']) && $now > $value['T']) // whenBrowserIsClosed || Time
-							|| ($variable !== '' && is_object($nf['DATA'][$section][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
+							|| (isset($nf['DATA'][$section][$variable]) && is_object($nf['DATA'][$section][$variable]) && (isset($value['V']) ? $value['V'] : NULL) // Version
 								!== Nette\Reflection\ClassType::from($nf['DATA'][$section][$variable])->getAnnotation('serializationVersion'))
 						) {
 							if ($variable === '') { // expire whole section
