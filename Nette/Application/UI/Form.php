@@ -133,7 +133,9 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	public function signalReceived($signal)
 	{
 		if ($signal === 'submit') {
-			$this->fireEvents();
+			if (!$this->getPresenter()->getRequest()->hasFlag(Nette\Application\Request::RESTORED)) {
+				$this->fireEvents();
+			}
 		} else {
 			$class = get_class($this);
 			throw new BadSignalException("Missing handler for signal '$signal' in $class.");
