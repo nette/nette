@@ -10,7 +10,8 @@ if (!function_exists($_l->blocks['menu'][] = '_xxx_menu')) { function _xxx_menu(
 ?>
 <ul>
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator($menu) as $item): ?>
-	<li><?php if (is_array($item)): ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + $template->getParameters()) ?>
+	<li><?php echo Nette\Templating\Helpers::escapeHtml($counter++, ENT_NOQUOTES) ?>
+ <?php if (is_array($item)): ?> <?php call_user_func(reset($_l->blocks['menu']), $_l, array('menu' => $item) + get_defined_vars()) ?>
  <?php else: echo Nette\Templating\Helpers::escapeHtml($item, ENT_NOQUOTES) ;endif ?></li>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
@@ -154,7 +155,7 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 
 
 
-<?php if (!$_l->extends) { call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars()); } ?>
+<?php $counter = 0 ;if (!$_l->extends) { call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars()); } ?>
 
 
 <?php extract(array('varx' => 2), EXTR_SKIP) ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
