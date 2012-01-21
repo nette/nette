@@ -327,7 +327,9 @@ class Compiler extends Nette\Object
 		}
 
 		if (isset($config['run'])) {
-			$config['tags']['run'] = (bool) $config['run'];
+			if ($run = (bool) $config['run']) {
+				$config['tags']['run'] = $run;
+			}
 		}
 
 		if (isset($config['tags'])) {
