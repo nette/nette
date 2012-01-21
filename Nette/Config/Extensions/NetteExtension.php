@@ -53,6 +53,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'forms' => array(
 			'messages' => array(),
 		),
+		'productionMode' => '%productionMode%',
 	);
 
 	public $databaseDefaults = array(
