@@ -280,7 +280,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
 		}
 
-		if (!$container->parameters['productionMode']) {
+		if (!$container->parameters['productionMode'] && !empty($container->parameters['container']['debugger'])) {
 			$initialize->addBody('Nette\Diagnostics\Debugger::$bar->addPanel(new Nette\DI\Diagnostics\ContainerPanel($this));');
 		}
 

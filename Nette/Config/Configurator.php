@@ -114,6 +114,7 @@ class Configurator extends Nette\Object
 			'container' => array(
 				'class' => 'SystemContainer',
 				'parent' => 'Nette\DI\Container',
+				'debugger' => TRUE,
 			)
 		);
 	}
