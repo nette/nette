@@ -252,39 +252,16 @@ class Application extends Nette\Object
 
 
 
-	/**
-	 * Stores current request to session.
-	 * @param  mixed  optional expiration time
-	 * @return string key
-	 */
-	public function storeRequest($expiration = '+ 10 minutes')
+	/** @deprecated */
+	function storeRequest($expiration = '+ 10 minutes')
 	{
-		$session = $this->session->getSection('Nette.Application/requests');
-		do {
-			$key = Nette\Utils\Strings::random(5);
-		} while (isset($session[$key]));
-
-		$session[$key] = end($this->requests);
-		$session->setExpiration($expiration, $key);
-		return $key;
+		return $this->presenter->storeRequest($expiration);
 	}
 
-
-
-	/**
-	 * Restores current request to session.
-	 * @param  string key
-	 * @return void
-	 */
-	public function restoreRequest($key)
+	/** @deprecated */
+	function restoreRequest($key)
 	{
-		$session = $this->session->getSection('Nette.Application/requests');
-		if (isset($session[$key])) {
-			$request = clone $session[$key];
-			unset($session[$key]);
-			$request->setFlag(Request::RESTORED, TRUE);
-			$this->presenter->sendResponse(new Responses\ForwardResponse($request));
-		}
+		return $this->presenter->restoreRequest($key);
 	}
 
 }

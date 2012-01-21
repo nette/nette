@@ -1095,6 +1095,47 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
+	/********************* request serialization ****************d*g**/
+
+
+
+	/**
+	 * Stores current request to session.
+	 * @param  mixed  optional expiration time
+	 * @return string key
+	 */
+	public function storeRequest($expiration = '+ 10 minutes')
+	{
+		$session = $this->getSession('Nette.Application/requests');
+		do {
+			$key = Nette\Utils\Strings::random(5);
+		} while (isset($session[$key]));
+
+		$session[$key] = $this->request;
+		$session->setExpiration($expiration, $key);
+		return $key;
+	}
+
+
+
+	/**
+	 * Restores current request to session.
+	 * @param  string key
+	 * @return void
+	 */
+	public function restoreRequest($key)
+	{
+		$session = $this->getSession('Nette.Application/requests');
+		if (isset($session[$key])) {
+			$request = clone $session[$key];
+			unset($session[$key]);
+			$request->setFlag(Application\Request::RESTORED, TRUE);
+			$this->sendResponse(new Responses\ForwardResponse($request));
+		}
+	}
+
+
+
 	/********************* interface IStatePersistent ****************d*g**/
 
 
