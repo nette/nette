@@ -126,7 +126,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$user = $container->addDefinition('user')
 			->setClass('Nette\Security\User');
 
-		if (empty($config['productionMode']) && $config['security']['debugger']) {
+		if (!$container->parameters['productionMode'] && $config['security']['debugger']) {
 			$user->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
 			));
@@ -159,7 +159,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
 		}
 
-		if (empty($config['productionMode']) && $config['routing']['debugger']) {
+		if (!$container->parameters['productionMode'] && $config['routing']['debugger']) {
 			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
@@ -239,7 +239,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 					'Nette\Database\Diagnostics\ConnectionPanel::renderException'
 				));
 
-			if (empty($config['productionMode']) && $info['debugger']) {
+			if (!$container->parameters['productionMode'] && $info['debugger']) {
 				$panel = $container->addDefinition($this->prefix("database_{$name}RoutingPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->addSetup('$explain', !empty($info['explain']))
@@ -280,7 +280,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
 		}
 
-		if (empty($config['productionMode'])) {
+		if (!$container->parameters['productionMode']) {
 			$initialize->addBody('Nette\Diagnostics\Debugger::$bar->addPanel(new Nette\DI\Diagnostics\ContainerPanel($this));');
 		}
 
