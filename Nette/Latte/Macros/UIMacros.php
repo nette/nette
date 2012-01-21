@@ -114,23 +114,16 @@ class UIMacros extends MacroSet
 		if ($this->namedBlocks || $this->extends) {
 			$prolog[] = "// template extending and snippets support";
 
-			if (is_bool($this->extends)) {
-				$prolog[] = '$_l->extends = ' . var_export($this->extends, TRUE) . '; unset($_extends, $template->_extends);';
-			} else {
-				$prolog[] = '$_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($_extends, $template->_extends);';
-			}
+			$prolog[] = '$_l->extends = '
+				. ($this->extends ? $this->extends : 'empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL')
+				. '; $template->_extended = $_extended = TRUE;';
 
 			$prolog[] = '
 if ($_l->extends) {
-	ob_start();
+	return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
+
 } elseif (!empty($_control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
-}';
-			$epilog[] = '
-// template extending support
-if ($_l->extends) {
-	ob_end_clean();
-	Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
 }';
 		} else {
 			$prolog[] = '
@@ -215,8 +208,14 @@ if (!empty($_control->snippetMode)) {
 		if ($this->extends !== NULL) {
 			throw new ParseException("Multiple {extends} declarations are not allowed.");
 		}
-		$this->extends = $node->args !== 'none';
-		return $this->extends ? '$_l->extends = ' . ($node->args === 'auto' ? '$layout' : $writer->formatArgs()) : '';
+		if ($node->args === 'none') {
+			$this->extends = 'FALSE';
+		} elseif ($node->args === 'auto') {
+			$this->extends = '$_presenter->findLayoutTemplateFile()';
+		} else {
+			$this->extends = $writer->write('%node.word');
+		}
+		return;
 	}
 
 
@@ -293,14 +292,8 @@ if (!empty($_control->snippetMode)) {
 		} elseif ($node->name === 'define') {
 			return '';
 
-		} elseif (!$top) {
-			return $writer->write($include, $name);
-
-		} elseif ($this->extends) {
-			return '';
-
 		} else {
-			return $writer->write("if (!\$_l->extends) { $include; }", $name);
+			return $writer->write($include, $name);
 		}
 	}
 

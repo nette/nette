@@ -37,12 +37,11 @@ if (!function_exists($_l->blocks['bl'][] = '_xxx_bl')) { function _xxx_bl($_l, $
 
 // template extending and snippets support
 
-$_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($_extends, $template->_extends);
+$_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
 
 
 if ($_l->extends) {
-	ob_start();
-} elseif (%A%}
+	%A%}
 
 //
 // main template
@@ -153,7 +152,7 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 
 
 
-<?php $counter = 0 ;if (!$_l->extends) { call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars()); } ?>
+<?php $counter = 0 ;call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 
 <?php extract(array('varx' => 2), EXTR_SKIP) ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>
@@ -241,7 +240,7 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 <?php endif ;$iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
 </ul>
 
-<?php if (!$_l->extends) { call_user_func(reset($_l->blocks['bl']), $_l, get_defined_vars()); } ?>
+<?php call_user_func(reset($_l->blocks['bl']), $_l, get_defined_vars())  ?>
 
 <?php if (true): ?>
 <b><?php endif ?>
@@ -277,12 +276,3 @@ normal<?php if (false): ?>
 <?php ob_start() ?>FALSE<?php if (FALSE) ob_end_flush(); else ob_end_clean() ?>
 
 <?php ob_start() ?>TRUE<?php ob_start() ?>FALSE<?php if (TRUE) { ob_end_clean(); ob_end_flush(); } else { $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; } ?>
-
-<?php
-// epilog Nette\Latte\Macros\UIMacros
-
-// template extending support
-if ($_l->extends) {
-	ob_end_clean();
-	Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
-}

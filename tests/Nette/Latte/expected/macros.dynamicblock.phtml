@@ -19,19 +19,18 @@ if (!function_exists($_l->blocks['static'][] = '_xxx_static')) { function _xxx_s
 
 // template extending and snippets support
 
-$_l->extends = empty($template->_extends) ? FALSE : $template->_extends; unset($_extends, $template->_extends);
+$_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
 
 
 if ($_l->extends) {
-	ob_start();
-} elseif (%A%}
+	%A%}
 
 //
 // main template
 //
 $var = 10 ?>
 
-<?php if (!$_l->extends) { call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars()); } ?>
+<?php call_user_func(reset($_l->blocks['static']), $_l, get_defined_vars())  ?>
 
 
 
@@ -58,12 +57,3 @@ if (!function_exists($_l->blocks["word$name"][] = '_xxx_word_name')) { function 
 // block "word$name"
 //
 if (!function_exists($_l->blocks["word$name"][] = '_xxx__word_name_')) { function _xxx__word_name_($_l, $_args) { extract($_args) ;}} call_user_func(reset($_l->blocks["word$name"]), $_l, get_defined_vars()) ?>
-
-<?php
-// epilog Nette\Latte\Macros\UIMacros
-
-// template extending support
-if ($_l->extends) {
-	ob_end_clean();
-	Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
-}

@@ -466,24 +466,32 @@ abstract class Presenter extends Control implements Application\IPresenter
 			}
 		}
 
-		if ($this->layout !== FALSE) { // layout template
-			$files = $this->formatLayoutTemplateFiles();
-			foreach ($files as $file) {
-				if (is_file($file)) {
-					$template->layout = $file;
-					$template->_extends = $file;
-					break;
-				}
-			}
+		$this->sendResponse(new Responses\TextResponse($template));
+	}
 
-			if (empty($template->layout) && $this->layout !== NULL) {
-				$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
-				$file = strtr($file, '/', DIRECTORY_SEPARATOR);
-				throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
+
+
+	/**
+	 * Finds layout template file name.
+	 * @return string
+	 */
+	public function findLayoutTemplateFile()
+	{
+		if ($this->layout === FALSE) {
+			return;
+		}
+		$files = $this->formatLayoutTemplateFiles();
+		foreach ($files as $file) {
+			if (is_file($file)) {
+				return $file;
 			}
 		}
 
-		$this->sendResponse(new Responses\TextResponse($template));
+		if ($this->layout) {
+			$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
+			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
+			throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
+		}
 	}
 
 
