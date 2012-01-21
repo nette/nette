@@ -1111,7 +1111,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$key = Nette\Utils\Strings::random(5);
 		} while (isset($session[$key]));
 
-		$session[$key] = $this->request;
+		$session[$key] = array($this->getUser()->getId(), $this->request);
 		$session->setExpiration($expiration, $key);
 		return $key;
 	}
@@ -1126,8 +1126,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function restoreRequest($key)
 	{
 		$session = $this->getSession('Nette.Application/requests');
-		if (isset($session[$key])) {
-			$request = clone $session[$key];
+		if (isset($session[$key]) && $this->getUser()->getId() === $session[$key][0]) {
+			$request = clone $session[$key][1];
 			unset($session[$key]);
 			$request->setFlag(Application\Request::RESTORED, TRUE);
 			$params = $request->getParameters();
