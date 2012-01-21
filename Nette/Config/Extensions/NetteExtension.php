@@ -53,6 +53,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'forms' => array(
 			'messages' => array(),
 		),
+		'container' => array(
+			'debugger' => FALSE,
+		),
 	);
 
 	public $databaseDefaults = array(
@@ -280,7 +283,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
 		}
 
-		if (!$container->parameters['productionMode']) {
+		if (!$container->parameters['productionMode'] && $config['container']['debugger']) {
 			$initialize->addBody('Nette\Diagnostics\Debugger::$bar->addPanel(new Nette\DI\Diagnostics\ContainerPanel($this));');
 		}
 
