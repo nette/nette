@@ -153,6 +153,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		$section->expireBrowser = (bool) ($flags & self::BROWSER_CLOSED);
 		$section->browserCheck = TRUE;
 		$section->setExpiration(0, 'browserCheck');
+		$section->setExpiration($time, 'foo'); // time check
 		return $this;
 	}
 
