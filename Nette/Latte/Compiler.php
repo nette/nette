@@ -134,10 +134,10 @@ class Compiler extends Nette\Object
 		}
 
 
-		foreach ($this->htmlNodes as $node) {
-			if (!empty($node->macroAttrs)) {
-				throw new ParseException("Missing end tag </$node->name> for macro-attribute " . Parser::N_PREFIX
-					. implode(' and ' . Parser::N_PREFIX, array_keys($node->macroAttrs)) . ".", 0, $token->line);
+		foreach ($this->htmlNodes as $htmlNode) {
+			if (!empty($htmlNode->macroAttrs)) {
+				throw new ParseException("Missing end tag </$htmlNode->name> for macro-attribute " . Parser::N_PREFIX
+					. implode(' and ' . Parser::N_PREFIX, array_keys($htmlNode->macroAttrs)) . ".", 0, $token->line);
 			}
 		}
 
@@ -227,24 +227,24 @@ class Compiler extends Nette\Object
 	{
 		if ($token->closing) {
 			do {
-				$node = array_pop($this->htmlNodes);
-				if (!$node) {
-					$node = new HtmlNode($token->name);
+				$htmlNode = array_pop($this->htmlNodes);
+				if (!$htmlNode) {
+					$htmlNode = new HtmlNode($token->name);
 				}
-			} while (strcasecmp($node->name, $token->name));
-			$this->htmlNodes[] = $node;
-			$node->closing = TRUE;
-			$node->offset = strlen($this->output);
+			} while (strcasecmp($htmlNode->name, $token->name));
+			$this->htmlNodes[] = $htmlNode;
+			$htmlNode->closing = TRUE;
+			$htmlNode->offset = strlen($this->output);
 			$this->setContext(NULL);
 
 		} elseif ($token->text === '<!--') {
 			$this->setContext(self::CONTEXT_COMMENT);
 
 		} else {
-			$this->htmlNodes[] = $node = new HtmlNode($token->name);
-			$node->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
+			$this->htmlNodes[] = $htmlNode = new HtmlNode($token->name);
+			$htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
 				&& isset(Nette\Utils\Html::$emptyElements[strtolower($token->name)]);
-			$node->offset = strlen($this->output);
+			$htmlNode->offset = strlen($this->output);
 			$this->setContext(NULL);
 		}
 		$this->output .= $token->text;
@@ -260,34 +260,34 @@ class Compiler extends Nette\Object
 			return;
 		}
 
-		$node = end($this->htmlNodes);
-		$isEmpty = !$node->closing && (Strings::contains($token->text, '/') || $node->isEmpty);
+		$htmlNode = end($this->htmlNodes);
+		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
 
 		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
 			$token->text = preg_replace('#^.*>#', $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
 		}
 
-		if (empty($node->macroAttrs)) {
+		if (empty($htmlNode->macroAttrs)) {
 			$this->output .= $token->text;
 		} else {
-			$code = substr($this->output, $node->offset) . $token->text;
-			$this->output = substr($this->output, 0, $node->offset);
-			$this->writeAttrsMacro($code, $node);
+			$code = substr($this->output, $htmlNode->offset) . $token->text;
+			$this->output = substr($this->output, 0, $htmlNode->offset);
+			$this->writeAttrsMacro($code, $htmlNode);
 			if ($isEmpty) {
-				$node->closing = TRUE;
-				$this->writeAttrsMacro('', $node);
+				$htmlNode->closing = TRUE;
+				$this->writeAttrsMacro('', $htmlNode);
 			}
 		}
 
 		if ($isEmpty) {
-			$node->closing = TRUE;
+			$htmlNode->closing = TRUE;
 		}
 
-		if (!$node->closing && (strcasecmp($node->name, 'script') === 0 || strcasecmp($node->name, 'style') === 0)) {
-			$this->setContext(strcasecmp($node->name, 'style') ? self::CONTENT_JS : self::CONTENT_CSS);
+		if (!$htmlNode->closing && (strcasecmp($htmlNode->name, 'script') === 0 || strcasecmp($htmlNode->name, 'style') === 0)) {
+			$this->setContext(strcasecmp($htmlNode->name, 'style') ? self::CONTENT_JS : self::CONTENT_CSS);
 		} else {
 			$this->setContext(NULL);
-			if ($node->closing) {
+			if ($htmlNode->closing) {
 				array_pop($this->htmlNodes);
 			}
 		}
@@ -297,11 +297,11 @@ class Compiler extends Nette\Object
 
 	private function processAttribute($token)
 	{
-		$node = end($this->htmlNodes);
+		$htmlNode = end($this->htmlNodes);
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
-			$node->macroAttrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
+			$htmlNode->macroAttrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
 		} else {
-			$node->attrs[$token->name] = TRUE;
+			$htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
 			if ($token->value) { // quoted
 				$context = NULL;
@@ -389,9 +389,9 @@ class Compiler extends Nette\Object
 	 * @param  bool
 	 * @return void
 	 */
-	public function writeAttrsMacro($code, HtmlNode $node)
+	public function writeAttrsMacro($code, HtmlNode $htmlNode)
 	{
-		$attrs = $node->macroAttrs;
+		$attrs = $htmlNode->macroAttrs;
 		$left = $right = array();
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') { // attribute macro
@@ -399,20 +399,20 @@ class Compiler extends Nette\Object
 				if (!isset($attrs[$name])) {
 					continue;
 				}
-				if (!$node->closing) {
+				if (!$htmlNode->closing) {
 					$pos = strrpos($code, '>');
 					if ($code[$pos-1] === '/') {
 						$pos--;
 					}
-					$macroNode = $this->expandMacro("@$name", $attrs[$name], NULL, $node);
+					$macroNode = $this->expandMacro("@$name", $attrs[$name], NULL, $htmlNode);
 					$code = substr_replace($code, $macroNode->attrCode, $pos, 0);
 				}
 				unset($attrs[$name]);
 			}
 
-			$macro = $node->closing ? "/$name" : $name;
+			$macro = $htmlNode->closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
-				if ($node->closing) {
+				if ($htmlNode->closing) {
 					$right[] = array($macro, '');
 				} else {
 					array_unshift($left, array($macro, $attrs[$name]));
@@ -421,7 +421,7 @@ class Compiler extends Nette\Object
 
 			$innerName = "inner-$name";
 			if (isset($attrs[$innerName])) {
-				if ($node->closing) {
+				if ($htmlNode->closing) {
 					$left[] = array($macro, '');
 				} else {
 					array_unshift($right, array($macro, $attrs[$innerName]));
