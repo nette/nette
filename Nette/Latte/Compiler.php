@@ -327,7 +327,7 @@ class Compiler extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @return void
+	 * @return MacroNode
 	 */
 	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, HtmlNode $htmlNode = NULL)
 	{
@@ -378,6 +378,7 @@ class Compiler extends Nette\Object
 			$this->output .= $node->openingCode;
 			$node->offset = strlen($this->output);
 		}
+		return $node;
 	}
 
 
@@ -393,6 +394,8 @@ class Compiler extends Nette\Object
 	{
 		$attrs = $htmlNode->macroAttrs;
 		$left = $right = array();
+		$attrCode = '';
+
 		foreach ($this->macros as $name => $foo) {
 			if ($name[0] === '@') { // attribute macro
 				$name = substr($name, 1);
@@ -443,19 +446,29 @@ class Compiler extends Nette\Object
 		}
 
 		foreach ($left as $item) {
-			$this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
+			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
+			if (!$node->closing && !$htmlNode->closing) {
+				$attrCode .= $node->attrCode;
+			}
 			if (substr($this->output, -2) === '?>') {
 				$this->output .= "\n";
 			}
 		}
+
+		$pos = strlen($this->output) + (strrpos($code, '/>') ?: strrpos($code, '>'));
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
+			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
+			if (!$node->closing && !$htmlNode->closing) {
+				$attrCode .= $node->attrCode;
+			}
 			if (substr($this->output, -2) === '?>') {
 				$this->output .= "\n";
 			}
 		}
+
+		$this->output = substr_replace($this->output, $attrCode, $pos, 0);
 	}
 
 
