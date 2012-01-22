@@ -329,7 +329,7 @@ class Compiler extends Nette\Object
 	 * @param  bool
 	 * @return void
 	 */
-	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE)
+	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, HtmlNode $htmlNode = NULL)
 	{
 		$isLeftmost = trim(substr($this->output, $leftOfs = strrpos("\n$this->output", "\n"))) === '';
 
@@ -362,7 +362,7 @@ class Compiler extends Nette\Object
 			$this->output = substr($this->output, 0, $node->offset) . $node->content. $node->closingCode;
 
 		} else { // opening
-			$node = $this->expandMacro($name, $args, $modifiers);
+			$node = $this->expandMacro($name, $args, $modifiers, $htmlNode);
 			if (!$node->isEmpty) {
 				$this->macroNodes[] = $node;
 			}
@@ -443,7 +443,7 @@ class Compiler extends Nette\Object
 		}
 
 		foreach ($left as $item) {
-			$this->writeMacro($item[0], $item[1]);
+			$this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
 			if (substr($this->output, -2) === '?>') {
 				$this->output .= "\n";
 			}
@@ -451,7 +451,7 @@ class Compiler extends Nette\Object
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$this->writeMacro($item[0], $item[1]);
+			$this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
 			if (substr($this->output, -2) === '?>') {
 				$this->output .= "\n";
 			}
