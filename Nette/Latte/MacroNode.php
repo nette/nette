@@ -80,13 +80,4 @@ class MacroNode extends Nette\Object
 		$this->tokenizer->tokenize($this->args);
 	}
 
-
-
-	public function close($content)
-	{
-		$this->closing = TRUE;
-		$this->content = $content;
-		return $this->macro->nodeClosed($this);
-	}
-
 }

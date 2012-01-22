@@ -352,7 +352,9 @@ class Compiler extends Nette\Object
 				$this->output = substr($this->output, 0, $leftOfs); // alone macro -> remove indentation
 			}
 
-			$code = $node->close(substr($this->output, $node->offset));
+			$node->closing = TRUE;
+			$node->content = substr($this->output, $node->offset);
+			$code = $node->macro->nodeClosed($node);
 
 			if (!$isLeftmost && $isRightmost && substr($code, -2) === '?>') {
 				$code .= "\n"; // double newline to avoid newline eating by PHP
