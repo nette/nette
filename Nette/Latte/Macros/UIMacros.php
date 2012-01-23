@@ -58,7 +58,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
-		$me->addMacro('@href', function(MacroNode $node, $writer) use ($me) {
+		$me->addMacro('href', NULL, NULL, function(MacroNode $node, $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
 		});
 		$me->addMacro('plink', array($me, 'macroLink'));

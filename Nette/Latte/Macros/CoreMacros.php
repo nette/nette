@@ -81,10 +81,9 @@ class CoreMacros extends MacroSet
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('use', array($me, 'macroUse'));
 
-		$me->addMacro('@href', NULL, NULL); // TODO: placeholder
-		$me->addMacro('@class', array($me, 'macroClass'));
-		$me->addMacro('@attr', array($me, 'macroAttr'));
-		$me->addMacro('attr', array($me, 'macroOldAttr'));
+		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
+		$me->addMacro('attr', array($me, 'macroOldAttr'), '', array($me, 'macroAttr'));
+		$me->addMacro('href', NULL); // TODO: placeholder
 	}
 
 

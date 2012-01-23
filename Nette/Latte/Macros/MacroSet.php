@@ -39,9 +39,9 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 
 
 
-	public function addMacro($name, $begin, $end = NULL)
+	public function addMacro($name, $begin, $end = NULL, $attr = NULL)
 	{
-		$this->macros[$name] = array($begin, $end);
+		$this->macros[$name] = array($begin, $end, $attr);
 		$this->compiler->addMacro($name, $this);
 		return $this;
 	}
@@ -81,15 +81,16 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 	 */
 	public function nodeOpened(MacroNode $node)
 	{
-		$node->isEmpty = !isset($this->macros[$node->name][1]);
-		if ($node->name[0] === '@') {
+		if ($this->macros[$node->name][2] && $node->htmlNode) {
+			$node->isEmpty = TRUE;
 			$this->compiler->setContext(Latte\Compiler::CONTEXT_DOUBLE_QUOTED);
-			$res = $this->compile($node, $this->macros[$node->name][0]);
+			$res = $this->compile($node, $this->macros[$node->name][2]);
 			$this->compiler->setContext(NULL);
 			if (!$node->attrCode) {
 				$node->attrCode = "<?php $res ?>";
 			}
 		} else {
+			$node->isEmpty = !isset($this->macros[$node->name][1]);
 			$res = $this->compile($node, $this->macros[$node->name][0]);
 			if (!$node->openingCode) {
 				$node->openingCode = "<?php $res ?>";

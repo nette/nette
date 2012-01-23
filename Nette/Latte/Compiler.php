@@ -397,22 +397,6 @@ class Compiler extends Nette\Object
 		$attrCode = '';
 
 		foreach ($this->macros as $name => $foo) {
-			if ($name[0] === '@') { // attribute macro
-				$name = substr($name, 1);
-				if (!isset($attrs[$name])) {
-					continue;
-				}
-				if (!$htmlNode->closing) {
-					$pos = strrpos($code, '>');
-					if ($code[$pos-1] === '/') {
-						$pos--;
-					}
-					$macroNode = $this->expandMacro("@$name", $attrs[$name], NULL, $htmlNode);
-					$code = substr_replace($code, $macroNode->attrCode, $pos, 0);
-				}
-				unset($attrs[$name]);
-			}
-
 			$macro = $htmlNode->closing ? "/$name" : $name;
 			if (isset($attrs[$name])) {
 				if ($htmlNode->closing) {
@@ -449,6 +433,9 @@ class Compiler extends Nette\Object
 			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
 			if (!$node->closing && !$htmlNode->closing) {
 				$attrCode .= $node->attrCode;
+			}
+			if ($node->isEmpty) {
+				unset($htmlNode->macroAttrs[$node->name]);
 			}
 			if (substr($this->output, -2) === '?>') {
 				$this->output .= "\n";
