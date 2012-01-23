@@ -36,7 +36,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	/** @var string */
 	public $name;
 
-	/** @var bool explain queries? */
+	/** @var bool|string explain queries? */
 	public $explain = TRUE;
 
 	/** @var bool */
@@ -96,9 +96,10 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			list($sql, $params, $time, $rows, $connection, $source) = $query;
 
 			$explain = NULL; // EXPLAIN is called here to work SELECT FOUND_ROWS()
-			if ($this->explain && preg_match('#\s*SELECT\s#iA', $sql)) {
+			if ($this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
 				try {
-					$explain = $connection->queryArgs('EXPLAIN ' . $sql, $params)->fetchAll();
+					$cmd = is_string($this->explain) ? $this->explain : 'EXPLAIN';
+					$explain = $connection->queryArgs("$cmd $sql", $params)->fetchAll();
 				} catch (\PDOException $e) {}
 			}
 
