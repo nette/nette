@@ -152,7 +152,8 @@ var prop2 = <?php echo Nette\Templating\Helpers::escapeJs($people) ?>;
 
 
 
-<?php $counter = 0 ;call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
+<?php $counter = 0 ;if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); }
+call_user_func(reset($_l->blocks['menu']), $_l, get_defined_vars())  ?>
 
 
 <?php extract(array('varx' => 2), EXTR_SKIP) ;echo Nette\Templating\Helpers::escapeHtml($varx, ENT_NOQUOTES) ?>

@@ -120,7 +120,7 @@ class UIMacros extends MacroSet
 
 			$prolog[] = '
 if ($_l->extends) {
-	return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();
+	' . ($this->namedBlocks ? 'ob_start();' : 'return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render();') . '
 
 } elseif (!empty($_control->snippetMode)) {
 	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
@@ -274,6 +274,7 @@ if (!empty($_control->snippetMode)) {
 		if (isset($this->namedBlocks[$name])) {
 			throw new ParseException("Cannot redeclare static block '$name'");
 		}
+		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
 		$top = empty($node->parentNode);
 		$this->namedBlocks[$name] = TRUE;
 
@@ -285,15 +286,15 @@ if (!empty($_control->snippetMode)) {
 		if ($node->name === 'snippet') {
 			$tag = trim($node->tokenizer->fetchWord(), '<>');
 			$tag = $tag ? $tag : 'div';
-			return $writer->write("?>\n<$tag id=\"<?php echo \$_control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
+			return $writer->write("$prolog ?>\n<$tag id=\"<?php echo \$_control->getSnippetId(%var) ?>\"><?php $include ?>\n</$tag><?php ",
 				(string) substr($name, 1), $name
 			);
 
 		} elseif ($node->name === 'define') {
-			return '';
+			return $prolog;
 
 		} else {
-			return $writer->write($include, $name);
+			return $writer->write($prolog . $include, $name);
 		}
 	}
 
