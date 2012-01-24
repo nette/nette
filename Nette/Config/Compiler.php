@@ -210,7 +210,7 @@ class Compiler extends Nette\Object
 		});
 
 		foreach ($all as $name => $def) {
-			$shared = array_key_exists($name, $config['services']);
+			$shared = array_key_exists($name, $services);
 			$name = ($namespace ? $namespace . '_' : '') . $name;
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
