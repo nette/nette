@@ -64,10 +64,11 @@ class Bar extends Nette\Object
 					'panel' => $tab ? (string) $panel->getPanel() : NULL,
 				);
 			} catch (\Exception $e) {
+				$html = nl2br(htmlSpecialChars((string) $e));
 				$panels[] = array(
 					'id' => "error-" . preg_replace('#[^a-z0-9]+#i', '-', $id),
 					'tab' => "Error: ". preg_replace('#.+\\\\#A', '', $id),
-					'panel' => "<h1>Error: $id</h1><div class=\"nette-inner\">" . nl2br(htmlSpecialChars((string) $e)) . '</div>',
+					'panel' => '<h1>Error: ' . $id . '</h1><div class="nette-inner">' . $html . '</div>',
 				);
 				while (ob_get_level() > $obLevel) { // restore ob-level if broken
 					ob_end_clean();
