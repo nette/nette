@@ -115,6 +115,7 @@ class ServiceDefinition extends Nette\Object
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;
+		$this->autowired = $this->shared ? $this->autowired : FALSE;
 		return $this;
 	}
 
