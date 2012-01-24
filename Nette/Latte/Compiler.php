@@ -447,13 +447,17 @@ class Compiler extends Nette\Object
 		}
 
 		$output = & $this->output;
-		$pos = strlen($output) + (strrpos($code, '/>') ?: strrpos($code, '>'));
+		if (!$htmlNode->closing) {
+			$code = substr_replace($code, $uniq = "\x00$this->templateId", strrpos($code, '/>') ?: strrpos($code, '>'), 0);
+		}
 		$output .= $code;
 
 		foreach ($right as $item) {
 			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
 			if (!$node->closing && !$htmlNode->closing) {
 				$attrCode .= $node->attrCode;
+			} elseif ($node->closing) {
+				$output = & $this->output;
 			}
 		}
 
@@ -461,7 +465,9 @@ class Compiler extends Nette\Object
 			$this->output .= "\n";
 		}
 
-		$output = substr_replace($output, $attrCode, $pos, 0);
+		if (!$htmlNode->closing) {
+			$output = str_replace($uniq, $attrCode, $output);
+		}
 	}
 
 
