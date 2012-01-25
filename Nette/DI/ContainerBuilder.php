@@ -557,10 +557,10 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getServiceName($arg, $self = NULL)
 	{
-		if (!is_string($arg) || !preg_match('#^@[\w\\\\]+$#', $arg)) {
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\].+$#', $arg)) {
 			return FALSE;
 		}
-		$service = substr($arg, 1);
+		$service = strtr(substr($arg, 1), '.', '_');
 		if ($service === self::CREATED_SERVICE) {
 			$service = $self;
 		}

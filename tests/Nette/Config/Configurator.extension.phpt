@@ -56,6 +56,7 @@ Assert::same(array(
 ), TestHelpers::fetchNotes());
 
 Assert::true( $container->database->foo instanceof stdClass );
+Assert::same( $container->database->foo, $container->alias );
 
 
 Assert::same( 'database_', $extension->prefix('') );
