@@ -168,12 +168,15 @@ class Compiler extends Nette\Object
 
 		$defs = $this->container->getDefinitions();
 		ksort($defs);
+		$list = array_keys($defs);
 		foreach (array_reverse($defs, TRUE) as $name => $def) {
-			if ($def->class === 'Nette\DI\NestedAccessor' && ($list = preg_grep('#^'.$name.'_#i', array_keys($defs)))) {
+			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'_#i', $list))) {
+				$list = array_diff($list, $found);
 				$def->class = $className . '_' . $name;
 				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
+				$class->documents = preg_grep("#.* \\$$name\_.*#", $class->documents, PREG_GREP_INVERT);
 				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
-				foreach ($list as $item) {
+				foreach ($found as $item) {
 					$short = substr($item, strlen($name)  + 1);
 					$accessor->addDocument($defs[$item]->shared
 						? "@property {$defs[$item]->class} \$$short"
