@@ -241,7 +241,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				));
 
 			if (!$container->parameters['productionMode'] && $info['debugger']) {
-				$panel = $container->addDefinition($this->prefix("database_{$name}RoutingPanel"))
+				$panel = $container->addDefinition($this->prefix("database_{$name}ConnectionPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->addSetup('$explain', !empty($info['explain']))
 					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
