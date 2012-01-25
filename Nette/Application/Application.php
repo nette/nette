@@ -66,9 +66,6 @@ class Application extends Nette\Object
 	/** @var Nette\Http\IResponse */
 	private $httpResponse;
 
-	/** @var Nette\Http\Session */
-	private $session;
-
 	/** @var IPresenterFactory */
 	private $presenterFactory;
 
@@ -77,12 +74,10 @@ class Application extends Nette\Object
 
 
 
-	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest,
-		Nette\Http\IResponse $httpResponse, Nette\Http\Session $session)
+	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
-		$this->session = $session;
 		$this->presenterFactory = $presenterFactory;
 		$this->router = $router;
 	}
