@@ -1134,15 +1134,16 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function restoreRequest($key)
 	{
 		$session = $this->getSession('Nette.Application/requests');
-		if (isset($session[$key]) && $this->getUser()->getId() === $session[$key][0]) {
-			$request = clone $session[$key][1];
-			unset($session[$key]);
-			$request->setFlag(Application\Request::RESTORED, TRUE);
-			$params = $request->getParameters();
-			$params[self::FLASH_KEY] = $this->getParameter(self::FLASH_KEY);
-			$request->setParameters($params);
-			$this->sendResponse(new Responses\ForwardResponse($request));
+		if (!isset($session[$key]) || ($session[$key][0] !== NULL && $session[$key][0] !== $this->getUser()->getId())) {
+			return;
 		}
+		$request = clone $session[$key][1];
+		unset($session[$key]);
+		$request->setFlag(Application\Request::RESTORED, TRUE);
+		$params = $request->getParameters();
+		$params[self::FLASH_KEY] = $this->getParameter(self::FLASH_KEY);
+		$request->setParameters($params);
+		$this->sendResponse(new Responses\ForwardResponse($request));
 	}
 
 
