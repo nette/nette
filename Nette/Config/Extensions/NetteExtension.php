@@ -112,9 +112,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		if (isset($config['session']['expiration'])) {
 			$session->addSetup('setExpiration', array($config['session']['expiration']));
-			unset($config['session']['expiration']);
 		}
-		unset($config['session']['autoStart']);
+		unset($config['session']['expiration'], $config['session']['autoStart']);
 		if (!empty($config['session'])) {
 			Validators::assertField($config, 'session', 'array');
 			$session->addSetup('setOptions', array($config['session']));
