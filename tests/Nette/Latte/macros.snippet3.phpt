@@ -40,3 +40,13 @@ Assert::match(<<<EOD
 <p id="">hello</p>
 EOD
 , (string) $template);
+
+$template->setSource(<<<EOD
+<p n:snippet="abc">hello</p>
+EOD
+);
+
+Assert::match(<<<EOD
+<p id="">hello</p>
+EOD
+, (string) $template);

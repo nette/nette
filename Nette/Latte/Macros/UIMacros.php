@@ -315,8 +315,8 @@ if (!empty($_control->snippetMode)) {
 				if (!empty($node->data->dynamic)) {
 					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
 				}
-				$this->namedBlocks[$node->data->name] = rtrim($node->content, " \t");
-				preg_match("#^(\n)?(.*?)([ \t]*)?$()#sD", $node->content, $m);
+				preg_match($node->htmlNode && $node->name === 'snippet'
+					? "#^((?:.*?>)?\n?)(.*?)([ \t]*(?:<[^<]+)?)$#sD" : "#^(\n)?(.*?)([ \t]*)$#sD", $node->content, $m);
 				$this->namedBlocks[$node->data->name] = $m[2];
 				$node->content = $m[1] . $node->openingCode . "\n" . $m[3];
 				$node->openingCode = "<?php ?>";
