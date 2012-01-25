@@ -171,7 +171,7 @@ if (!empty($_control->snippetMode)) {
 		if (isset($this->namedBlocks[$destination]) && !$parent) {
 			$cmd = "call_user_func(reset(\$_l->blocks[$name]), \$_l, %node.array? + get_defined_vars())";
 		} else {
-			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + \$template->getParameters())";
+			$cmd = 'Nette\Latte\Macros\UIMacros::callBlock' . ($parent ? 'Parent' : '') . "(\$_l, $name, %node.array? + " . ($parent ? 'get_defined_vars' : '$template->getParameters') . '())';
 		}
 
 		if ($node->modifiers) {
