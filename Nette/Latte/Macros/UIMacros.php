@@ -284,8 +284,8 @@ if (!empty($_control->snippetMode)) {
 
 		if ($node->name === 'snippet') {
 			if ($node->htmlNode) {
-				$node->attrCode = $writer->write('<?php echo \' id="\' . $_control->getSnippetId(%var) . \'"\' ?>');
-				return $writer->write($include, $name);
+				$node->attrCode = $writer->write('<?php echo \' id="\' . $_control->getSnippetId(%var) . \'"\' ?>', (string) substr($name, 1));
+				return $writer->write($prolog . $include, $name);
 			}
 			$tag = trim($node->tokenizer->fetchWord(), '<>');
 			$tag = $tag ? $tag : 'div';
