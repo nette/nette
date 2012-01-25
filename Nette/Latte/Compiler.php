@@ -47,6 +47,9 @@ class Compiler extends Nette\Object
 	/** @var array of MacroNode */
 	private $macroNodes = array();
 
+	/** @var array of string */
+	private $attrCodes = array();
+
 	/** @var string */
 	private $contentType;
 
@@ -155,6 +158,7 @@ class Compiler extends Nette\Object
 			throw new ParseException("There are unclosed macros.", 0, $token->line);
 		}
 
+		$output = strtr($output, $this->attrCodes);
 		return $output;
 	}
 
@@ -436,37 +440,32 @@ class Compiler extends Nette\Object
 				. implode(' and ' . Parser::N_PREFIX, array_keys($attrs)));
 		}
 
+		if (!$htmlNode->closing) {
+			$htmlNode->attrCode = & $this->attrCodes[$uniq = Nette\Utils\Strings::random()];
+			$code = substr_replace($code, $uniq, strrpos($code, '/>') ?: strrpos($code, '>'), 0);
+		}
+
 		foreach ($left as $item) {
 			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
-			if (!$node->closing && !$htmlNode->closing) {
-				$attrCode .= $node->attrCode;
-			}
-			if ($node->isEmpty) {
-				unset($htmlNode->macroAttrs[$node->name]);
+			if ($node->closing || $node->isEmpty) {
+				$htmlNode->attrCode .= $node->attrCode;
+				if ($node->isEmpty) {
+					unset($htmlNode->macroAttrs[$node->name]);
+				}
 			}
 		}
 
-		$output = & $this->output;
-		if (!$htmlNode->closing) {
-			$code = substr_replace($code, $uniq = "\x00$this->templateId", strrpos($code, '/>') ?: strrpos($code, '>'), 0);
-		}
-		$output .= $code;
+		$this->output .= $code;
 
 		foreach ($right as $item) {
 			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
-			if (!$node->closing && !$htmlNode->closing) {
-				$attrCode .= $node->attrCode;
-			} elseif ($node->closing) {
-				$output = & $this->output;
+			if ($node->closing) {
+				$htmlNode->attrCode .= $node->attrCode;
 			}
 		}
 
 		if ($right && substr($this->output, -2) === '?>') {
 			$this->output .= "\n";
-		}
-
-		if (!$htmlNode->closing) {
-			$output = str_replace($uniq, $attrCode, $output);
 		}
 	}
 

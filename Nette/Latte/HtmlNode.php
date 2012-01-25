@@ -38,6 +38,9 @@ class HtmlNode extends Nette\Object
 	/** @var bool */
 	public $closing = FALSE;
 
+	/** @var string */
+	public $attrCode;
+
 	/** @var int */
 	public $offset;
 
