@@ -160,7 +160,7 @@ if (!empty($_control->snippetMode)) {
 		$parent = $destination === 'parent';
 		if ($destination === 'parent' || $destination === 'this') {
 			$item = $node->parentNode;
-			while ($item && $item->name !== 'block' && !isset($item->data->name)) $item = $item->parentNode;
+			for ($item = $node->parentNode; $item && $item->name !== 'block' && !isset($item->data->name); $item = $item->parentNode);
 			if (!$item) {
 				throw new ParseException("Cannot include $destination block outside of any block.");
 			}
@@ -242,8 +242,7 @@ if (!empty($_control->snippetMode)) {
 
 		} elseif (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) { // dynamic blok/snippet
 			if ($node->name === 'snippet') {
-				$parent = $node->parentNode;
-				while ($parent && $parent->name !== 'snippet') $parent = $parent->parentNode;
+				for ($parent = $node->parentNode; $parent && $parent->name !== 'snippet'; $parent = $parent->parentNode);
 				if (!$parent) {
 					throw new ParseException("Dynamic snippets are allowed only inside static snippet.");
 				}
