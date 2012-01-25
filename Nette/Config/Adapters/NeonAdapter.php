@@ -36,7 +36,12 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 	 */
 	public function load($file)
 	{
-		return $this->process((array) Neon::decode(file_get_contents($file)));
+		try {
+			return $this->process((array) Neon::decode(file_get_contents($file)));
+		} catch (Nette\Utils\NeonException $e) {
+			$e->setSourceFile($file);
+			throw $e;
+		}
 	}
 
 

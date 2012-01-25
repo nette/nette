@@ -349,7 +349,7 @@ class Neon extends Nette\Object
 		$token = isset(self::$tokenizer->tokens[$this->n])
 			? str_replace("\n", '<new line>', Strings::truncate(self::$tokenizer->tokens[$this->n], 40))
 			: 'end';
-		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.");
+		throw new NeonException(str_replace('%s', $token, $message) . " on line $line, column $col.", NULL, $line, $col);
 	}
 
 }
@@ -372,4 +372,31 @@ class NeonEntity extends \stdClass
  */
 class NeonException extends \Exception
 {
+	/** @var string */
+	public $sourceFile;
+
+	/** @var int */
+	public $sourceLine;
+
+	/** @var int */
+	public $sourceColumn;
+
+
+
+	public function __construct($message, $code = 0, $sourceLine = 0, $sourceColumn = 0)
+	{
+		$this->sourceLine = (int) $sourceLine;
+		$this->sourceColumn = (int) $sourceColumn;
+		parent::__construct($message, $code);
+	}
+
+
+
+	public function setSourceFile($file)
+	{
+		$this->sourceFile = (string) $file;
+		$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file)
+			. ($this->sourceLine ? ":$this->sourceLine" : '');
+	}
+
 }
