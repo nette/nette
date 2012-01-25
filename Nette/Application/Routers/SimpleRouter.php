@@ -75,7 +75,7 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
-		if ($httpRequest->getUrl()->getPathInfo() !== '') {
+		if (($this->flags & self::ONE_WAY) || $httpRequest->getUrl()->getPathInfo() !== '') {
 			return NULL;
 		}
 		// combine with precedence: get, (post,) defaults
