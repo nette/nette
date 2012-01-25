@@ -85,6 +85,6 @@ Assert::throws(function() use ($presenter) {
 
 
 Assert::throws(function() use ($presenter) {
-	$request = new Application\Request('Test', Http\Request::GET, array('g' => '0'));
+	$request = new Application\Request('Test', Http\Request::GET, array('g' => ''));
 	$presenter->run($request);
 }, 'Nette\Application\BadRequestException', "Invalid value for parameter 'g', expected boolean.");

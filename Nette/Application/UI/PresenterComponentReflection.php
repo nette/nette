@@ -150,7 +150,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 					}
 					if ($def !== NULL) {
 						settype($val, gettype($def));
-						if ((string) $val !== (string) $val = $args[$name]) {
+						if (($val === FALSE ? '0' : (string) $val) !== (string) $args[$name]) {
 							throw new BadRequestException("Invalid value for parameter '$name', expected ".gettype($def).".");
 						}
 					}
