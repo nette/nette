@@ -7,3 +7,7 @@ database:
 
 	services:
 		foo: stdClass
+
+
+services:
+	alias: @database.foo
