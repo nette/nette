@@ -92,11 +92,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 
 		// http
-		$container->addDefinition('httpRequestFactory')
+		$container->addDefinition($this->prefix('httpRequestFactory'))
 			->setClass('Nette\Http\RequestFactory')
 			->addSetup('setEncoding', array('UTF-8'))
-			->setInternal(TRUE)
-			->setShared(FALSE);
+			->setInternal(TRUE);
 
 		$container->addDefinition('httpRequest')
 			->setClass('Nette\Http\Request')
@@ -121,7 +120,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$session->addSetup('setOptions', array($config['session']));
 		}
 
-		$container->addDefinition('userStorage')
+		$container->addDefinition($this->prefix('userStorage'))
 			->setClass('Nette\Http\UserStorage');
 
 
