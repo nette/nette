@@ -149,7 +149,7 @@ class Container extends Nette\FreezableObject implements IContainer
 				} catch (\Exception $e) {}
 			}
 
-		} elseif (method_exists($this, $factory = 'createService' . ucfirst($name))) { // static method
+		} elseif (method_exists($this, $factory = Container::getMethodName($name))) {
 			$this->creating[$name] = TRUE;
 			try {
 				$service = $this->$factory();
@@ -182,7 +182,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	{
 		return isset($this->registry[$name])
 			|| isset($this->factories[$name])
-			|| method_exists($this, "createService$name");
+			|| method_exists($this, Container::getMethodName($name));
 	}
 
 
@@ -354,6 +354,12 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function __unset($name)
 	{
 		$this->removeService($name);
+	}
+
+
+	public static function getMethodName($name, $service = TRUE)
+	{
+		return ($service ? 'createService' : 'create') . ucfirst(strtr($name, '.', '_'));
 	}
 
 }

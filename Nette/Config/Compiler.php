@@ -143,7 +143,7 @@ class Compiler extends Nette\Object
 			$factory = $name . 'Factory';
 			if (!$def->shared && !$def->internal && !$this->container->hasDefinition($factory)) {
 				$this->container->addDefinition($factory)
-					->setClass('Nette\Callback', array('@container', 'create' . ucfirst($name)))
+					->setClass('Nette\Callback', array('@container', Nette\DI\Container::getMethodName($name, FALSE)))
 					->setAutowired(FALSE)
 					->tags = $def->tags;
 			}
@@ -172,7 +172,7 @@ class Compiler extends Nette\Object
 		foreach (array_reverse($defs, TRUE) as $name => $def) {
 			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'_#i', $list))) {
 				$list = array_diff($list, $found);
-				$def->class = $className . '_' . $name;
+				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
 				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
 				$class->documents = preg_grep("#.* \\$$name\_.*#", $class->documents, PREG_GREP_INVERT);
 				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
