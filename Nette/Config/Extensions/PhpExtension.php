@@ -46,7 +46,7 @@ class PhpExtension extends Nette\Config\CompilerExtension
 			} elseif (function_exists('ini_set')) {
 				$initialize->addBody('ini_set(?, ?);', array($name, $value));
 
-			} elseif (ini_get($name) != $value && !Nette\Framework::$iAmUsingBadHost) { // intentionally ==
+			} elseif (ini_get($name) != $value) { // intentionally ==
 				throw new Nette\NotSupportedException('Required function ini_set() is disabled.');
 			}
 		}

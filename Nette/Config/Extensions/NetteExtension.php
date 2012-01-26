@@ -26,8 +26,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 {
 	public $defaults = array(
 		'xhtml' => TRUE,
-		'iAmUsingBadHost' => FALSE,
 		'session' => array(
+			'iAmUsingBadHost' => NULL,
 			'autoStart' => NULL,  // true|false|smart
 			'expiration' => NULL,
 		),
@@ -107,23 +107,28 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition('httpContext')
 			->setClass('Nette\Http\Context');
 
+
+		// session
 		$session = $container->addDefinition('session')
 			->setClass('Nette\Http\Session');
 
 		if (isset($config['session']['expiration'])) {
 			$session->addSetup('setExpiration', array($config['session']['expiration']));
 		}
-		unset($config['session']['expiration'], $config['session']['autoStart']);
+		if (isset($config['session']['iAmUsingBadHost'])) {
+			$session->addSetup('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['session']['iAmUsingBadHost']));
+		}
+		unset($config['session']['expiration'], $config['session']['autoStart'], $config['session']['iAmUsingBadHost']);
 		if (!empty($config['session'])) {
 			Validators::assertField($config, 'session', 'array');
 			$session->addSetup('setOptions', array($config['session']));
 		}
 
+
+		// security
 		$container->addDefinition($this->prefix('userStorage'))
 			->setClass('Nette\Http\UserStorage');
 
-
-		// security
 		$user = $container->addDefinition('user')
 			->setClass('Nette\Security\User');
 
@@ -160,11 +165,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
 		}
 
-		if (!$container->parameters['productionMode'] && $config['routing']['debugger']) {
-			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
-				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
+		$container->addDefinition('presenterFactory')
+			->setClass('Nette\Application\PresenterFactory', array(
+				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
-		}
 
 
 		// routing
@@ -175,10 +179,11 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?);', array($mask, $action));
 		}
 
-		$container->addDefinition('presenterFactory')
-			->setClass('Nette\Application\PresenterFactory', array(
-				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
+		if (!$container->parameters['productionMode'] && $config['routing']['debugger']) {
+			$application->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
+		}
 
 
 		// mailer
@@ -198,7 +203,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 
 		// forms
-		$container->addDefinition($this->prefix('form'))
+		$container->addDefinition($this->prefix('basicForm'))
 			->setClass('Nette\Forms\Form')
 			->setShared(FALSE);
 
@@ -277,10 +282,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('$this->session->exists() && $this->session->start();');
 		} elseif ($config['session']['autoStart']) {
 			$initialize->addBody('$this->session->start();');
-		}
-
-		if (isset($config['iAmUsingBadHost'])) {
-			$initialize->addBody('Nette\Framework::$iAmUsingBadHost = ?;', array((bool) $config['iAmUsingBadHost']));
 		}
 
 		if (empty($config['xhtml'])) {
