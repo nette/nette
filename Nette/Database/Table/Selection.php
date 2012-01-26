@@ -18,7 +18,7 @@ use Nette,
 
 /**
  * Filtered table representation.
- * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
  *
@@ -74,10 +74,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of referenced TableSelection */
 	protected $referenced = array();
 
-	/** @var array of [sql => [column => [key => TableRow]]] used by GroupedTableSelection */
+	/** @var array of [sql+parameters => [column => [key => TableRow]]] used by GroupedTableSelection */
 	protected $referencing = array();
 
-	/** @var array of [sql => [key => TableRow]] used by GroupedTableSelection */
+	/** @var array of [conditions => [key => TableRow]] used by GroupedTableSelection */
 	protected $aggregation = array();
 
 	/** @var array of touched columns */

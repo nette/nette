@@ -17,7 +17,7 @@ use Nette;
 
 /**
  * Representation of filtered table grouped by some column.
- * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * GroupedSelection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
  */
