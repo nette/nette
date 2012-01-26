@@ -221,9 +221,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return $this;
 		}
 
+		$hash = md5(json_encode(func_get_args()));
+		if (isset($this->conditions[$hash])) {
+			return $this;
+		}
+
 		$this->__destruct();
 
-		$this->conditions[] = $condition;
+		$this->conditions[$hash] = $condition;
 		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
