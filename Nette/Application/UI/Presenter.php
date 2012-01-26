@@ -1370,9 +1370,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Gets the service object by name.
-	 * @param  string
-	 * @return mixed.
+	 * @deprecated
 	 */
 	final public function getService($name)
 	{
