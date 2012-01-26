@@ -42,6 +42,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		),
 		'security' => array(
 			'debugger' => TRUE,
+			'frames' => 'DENY', // X-Frame-Options
 			'users' => array(), // of [user => password]
 			'roles' => array(), // of [role => parents]
 			'resources' => array(), // of [resource => parents]
@@ -286,6 +287,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		if (empty($config['xhtml'])) {
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
+		}
+
+		if (isset($config['security']['frames'])) {
+			$initialize->addBody('header(?);', array('X-Frame-Options: ' . $config['security']['frames']));
 		}
 
 		if (!$container->parameters['productionMode'] && $config['container']['debugger']) {
