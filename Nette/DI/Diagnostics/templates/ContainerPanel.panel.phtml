@@ -60,7 +60,7 @@ use Nette,
 		<?php foreach ($services as $name => $class): ?>
 		<?php $autowired = array_keys($container->classes, $name); ?>
 		<tr>
-			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo preg_replace('#_#', '->', $name) ?></td>
+			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo str_replace('.', '->', $name) ?></td>
 			<td title="<?php echo implode(" \n", $autowired) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
 			<td>
 				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container && !$registry[$name] instanceof Nette\DI\NestedAccessor): ?>
@@ -82,14 +82,14 @@ use Nette,
 	<table>
 		<thead>
 		<tr>
-			<th>Name</th>
+			<th>Method</th>
 			<th>Returns</th>
 		</tr>
 		</thead>
 		<tbody>
 		<?php foreach ($factories as $name => $class): ?>
 		<tr>
-			<td><?php echo preg_replace('#_#', '->', $name) ?>()</td>
+			<td><?php echo str_replace('.', '->', $name) ?>()</td>
 			<td><code><?php echo $class ?><code></td>
 		</tr>
 		<?php endforeach ?>
