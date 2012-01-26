@@ -57,3 +57,12 @@ Assert::same(array(
 		'tags' => array('PHP', 'MySQL'),
 	),
 ), $appTags);
+
+
+
+$sql = $connection->table('book')
+	->where(new Nette\Database\SqlLiteral('id = 1'))
+	->where(new Nette\Database\SqlLiteral('id = 1'))
+	->getSql();
+
+Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);

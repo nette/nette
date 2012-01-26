@@ -56,7 +56,7 @@ interface IReflection
 	 *
 	 * @param  string  source table
 	 * @param  string  referencing key
-	 * @return string  array(referenced table, referencing column)
+	 * @return array   array(referenced table, referencing column)
 	 */
 	function getBelongsToReference($table, $key);
 

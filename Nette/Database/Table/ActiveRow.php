@@ -17,7 +17,7 @@ use Nette;
 
 /**
  * Single row representation.
- * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
  */

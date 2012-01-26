@@ -13,10 +13,11 @@ require_once __DIR__ . '/connect.inc.php';
 
 
 
-$apps = array();
+$apps1 = $apps2 = array();
+
 foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
 	foreach ($author->related('book', 'translator_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`translator_id` IN (11, 12))
-		$apps[$book->title] = $author->name;
+		$apps1[$book->title] = $author->name;
 	}
 
 	foreach ($author->related('book.author_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12))
@@ -28,7 +29,7 @@ Assert::same(array(
 	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
 	'Nette' => 'David Grudl',
 	'Dibi' => 'David Grudl',
-), $apps);
+), $apps1);
 
 Assert::same(array(
 	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
@@ -36,3 +37,14 @@ Assert::same(array(
 	'Nette' => 'David Grudl',
 	'Dibi' => 'David Grudl',
 ), $apps2);
+
+
+
+$author = $connection->table('author')->get(11);
+$books  = $author->related('book')->where('translator_id', 11);
+Assert::same('1001 tipu a triku pro PHP', $books->fetch()->title);
+Assert::false($books->fetch());
+
+Assert::same('1001 tipu a triku pro PHP', $author->related('book')->where('translator_id', 11)->fetch()->title);
+
+Assert::same('JUSH', $author->related('book')->where('translator_id', NULL)->fetch()->title);
