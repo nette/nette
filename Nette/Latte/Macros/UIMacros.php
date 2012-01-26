@@ -400,7 +400,10 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroContentType(MacroNode $node, $writer)
 	{
-		if (Strings::contains($node->args, 'html')) {
+		if (Strings::contains($node->args, 'xhtml')) {
+			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XHTML);
+
+		} elseif (Strings::contains($node->args, 'html')) {
 			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_HTML);
 
 		} elseif (Strings::contains($node->args, 'xml')) {
