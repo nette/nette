@@ -395,7 +395,8 @@ class ContainerBuilder extends Nette\Object
 
 		$code = '$service = ' . $this->formatStatement(Helpers::expand($def->factory, $parameters, TRUE)) . ";\n";
 
-		if ($def->class && $def->class !== $def->factory->entity) {
+		$entity = $this->normalizeEntity($def->factory->entity);
+		if ($def->class && $def->class !== $entity && !$this->getServiceName($entity)) {
 			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
 				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
 				array("Unable to create service '$name', value returned by factory is not $def->class type.")
