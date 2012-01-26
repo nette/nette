@@ -57,3 +57,4 @@ Assert::same( 'nm', $container->nette->createCache('nm')->getNamespace() );
 Assert::true( $container->nette->createForm() instanceof Nette\Forms\Form );
 Assert::true( $container->nette->createLatte() instanceof Nette\Latte\Engine );
 Assert::true( $container->nette->createTemplate() instanceof Nette\Templating\FileTemplate );
+Assert::true( $container->nette->createMail() instanceof Nette\Mail\Message );

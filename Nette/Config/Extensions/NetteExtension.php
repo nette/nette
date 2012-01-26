@@ -46,7 +46,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			'roles' => array(), // of [role => parents]
 			'resources' => array(), // of [resource => parents]
 		),
-		'mail' => array(
+		'mailer' => array(
 			'smtp' => FALSE,
 		),
 		'database' => array(), // of [name => dsn, user, password, debugger, explain, autowired]
@@ -191,6 +191,11 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				->setClass('Nette\Mail\SmtpMailer', array($config['mailer']));
 		}
 
+		$container->addDefinition($this->prefix('mail'))
+			->setClass('Nette\Mail\Message')
+			->addSetup('setMailer')
+			->setShared(FALSE);
+
 
 		// forms
 		$container->addDefinition($this->prefix('form'))
@@ -243,6 +248,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			if (!$container->parameters['productionMode'] && $info['debugger']) {
 				$panel = $container->addDefinition($this->prefix("database_{$name}ConnectionPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
+					->setAutowired(FALSE)
 					->addSetup('$explain', !empty($info['explain']))
 					->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array('@self'));
 
