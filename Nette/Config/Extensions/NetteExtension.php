@@ -242,7 +242,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				$info['options'][constant($key)] = $value;
 			}
 
-			$connection = $container->addDefinition($this->prefix("database_$name"))
+			$connection = $container->addDefinition($this->prefix("database.$name"))
 				->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
 				->setAutowired($info['autowired'])
 				->addSetup('setCacheStorage')
@@ -252,7 +252,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				));
 
 			if (!$container->parameters['productionMode'] && $info['debugger']) {
-				$panel = $container->addDefinition($this->prefix("database_{$name}ConnectionPanel"))
+				$panel = $container->addDefinition($this->prefix("database.{$name}ConnectionPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
 					->addSetup('$explain', !empty($info['explain']))

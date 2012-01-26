@@ -34,7 +34,7 @@ $container->nested = new NestedAccessor($container, 'nested');
 
 Assert::false( isset($container->nested->one) );
 
-$container->addService('nested_one', $one);
+$container->addService('nested.one', $one);
 
 Assert::true( isset($container->nested->one) );
 Assert::same( $one, $container->nested->one );

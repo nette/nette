@@ -37,7 +37,7 @@ class NestedAccessor extends Nette\Object
 	public function __construct(Container $container, $namespace)
 	{
 		$this->container = $container;
-		$this->namespace = $namespace . '_';
+		$this->namespace = $namespace . '.';
 		$this->parameters = & $container->parameters[$namespace];
 	}
 

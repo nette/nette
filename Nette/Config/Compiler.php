@@ -170,11 +170,10 @@ class Compiler extends Nette\Object
 		ksort($defs);
 		$list = array_keys($defs);
 		foreach (array_reverse($defs, TRUE) as $name => $def) {
-			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'_#i', $list))) {
+			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'\.#i', $list))) {
 				$list = array_diff($list, $found);
 				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
 				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
-				$class->documents = preg_grep("#.* \\$$name\_.*#", $class->documents, PREG_GREP_INVERT);
 				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
 				foreach ($found as $item) {
 					$short = substr($item, strlen($name)  + 1);
@@ -214,7 +213,7 @@ class Compiler extends Nette\Object
 
 		foreach ($all as $name => $def) {
 			$shared = array_key_exists($name, $services);
-			$name = ($namespace ? $namespace . '_' : '') . $name;
+			$name = ($namespace ? $namespace . '.' : '') . $name;
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);

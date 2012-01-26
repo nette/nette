@@ -59,9 +59,9 @@ Assert::true( $container->database->foo instanceof stdClass );
 Assert::same( $container->database->foo, $container->alias );
 
 
-Assert::same( 'database_', $extension->prefix('') );
-Assert::same( 'database_member', $extension->prefix('member') );
-Assert::same( '@database_member', $extension->prefix('@member') );
+Assert::same( 'database.', $extension->prefix('') );
+Assert::same( 'database.member', $extension->prefix('member') );
+Assert::same( '@database.member', $extension->prefix('@member') );
 
 
 Assert::same( array('foo' => 'hello'), $extension->getConfig() );

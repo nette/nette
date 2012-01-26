@@ -94,7 +94,7 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function prefix($id)
 	{
-		return substr_replace($id, $this->name . '_', substr($id, 0, 1) === '@' ? 1 : 0, 0);
+		return substr_replace($id, $this->name . '.', substr($id, 0, 1) === '@' ? 1 : 0, 0);
 	}
 
 
