@@ -347,10 +347,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
-		$selection = clone $this;
+		$selection = new Selection($this->name, $this->connection);
+		$selection->where = $this->where;
+		$selection->parameters = $this->parameters;
+		$selection->conditions = $this->conditions;
+
 		$selection->select($function);
-		$selection->limit = null;
-		$selection->order = array();
 
 		foreach ($selection->fetch() as $val) {
 			return $val;
