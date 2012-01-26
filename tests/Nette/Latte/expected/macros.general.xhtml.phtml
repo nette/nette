@@ -262,3 +262,8 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 <?php ob_start() ?>FALSE<?php if (FALSE) ob_end_flush(); else ob_end_clean() ?>
 
 <?php ob_start() ?>TRUE<?php ob_start() ?>FALSE<?php if (TRUE) { ob_end_clean(); ob_end_flush(); } else { $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; } ?>
+
+
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo): ?>
+	<b<?php if ($_l->tmp = array_filter(array($iterator->isEven() ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;

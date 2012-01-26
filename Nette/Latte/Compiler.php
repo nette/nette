@@ -283,6 +283,9 @@ class Compiler extends Nette\Object
 				$this->writeAttrsMacro('', $htmlNode);
 			}
 		}
+		if ($htmlNode->closing) {
+			$this->output = strtr($this->output, $this->attrCodes);
+		}
 
 		if ($isEmpty) {
 			$htmlNode->closing = TRUE;
