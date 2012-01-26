@@ -48,23 +48,15 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL)
+	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$class = ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME)));
-		$class = 'Nette\Database\Drivers\\' . $class . 'Driver';
-		if (class_exists($class)) {
-			$this->driver = new $class($this, (array) $options);
-		}
-
+		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+		$this->driver = new $driverClass($this, (array) $options);
 		$this->preprocessor = new SqlPreprocessor($this);
-		if (func_num_args() > 4) {
-			trigger_error('Set database reflection via setDatabaseReflection().', E_USER_WARNING);
-			$this->setDatabaseReflection(func_get_arg(5));
-		}
 	}
 
 
