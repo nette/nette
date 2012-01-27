@@ -349,7 +349,11 @@ class Compiler extends Nette\Object
 
 
 
-	private static function filterArguments(array $args)
+	/**
+	 * Removes ... and replaces entities with Nette\DI\Statement.
+	 * @return array
+	 */
+	public static function filterArguments(array $args)
 	{
 		foreach ($args as $k => $v) {
 			if ($v === '...') {

@@ -487,7 +487,7 @@ class ContainerBuilder extends Nette\Object
 	 * Formats PHP statement.
 	 * @return string
 	 */
-	private function formatPhp($statement, $args, $self = NULL)
+	public function formatPhp($statement, $args, $self = NULL)
 	{
 		$that = $this;
 		array_walk_recursive($args, function(&$val) use ($self, $that) {
