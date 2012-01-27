@@ -122,6 +122,19 @@ class Configurator extends Nette\Object
 
 
 	/**
+	 * @param  string        error log directory
+	 * @param  string        administrator email
+	 * @return Configurator  provides a fluent interface
+	 */
+	public function enableDebugger($logDirectory = NULL, $email = NULL)
+	{
+		Nette\Diagnostics\Debugger::$strictMode = TRUE;
+		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
+	}
+
+
+
+	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
 	public function createRobotLoader()
