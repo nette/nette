@@ -36,7 +36,7 @@ class SqlLiteral extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public function getValue()
+	public function __toString()
 	{
 		return $this->value;
 	}

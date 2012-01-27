@@ -18,7 +18,7 @@ use Nette,
 
 /**
  * Filtered table representation.
- * Selector is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
+ * Selection is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
  *
@@ -74,10 +74,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of referenced TableSelection */
 	protected $referenced = array();
 
-	/** @var array of [sql => [column => [key => TableRow]]] used by GroupedTableSelection */
+	/** @var array of [sql+parameters => [column => [key => TableRow]]] used by GroupedTableSelection */
 	protected $referencing = array();
 
-	/** @var array of [sql => [key => TableRow]] used by GroupedTableSelection */
+	/** @var array of [conditions => [key => TableRow]] used by GroupedTableSelection */
 	protected $aggregation = array();
 
 	/** @var array of touched columns */
@@ -221,9 +221,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return $this;
 		}
 
+		$hash = md5(json_encode(func_get_args()));
+		if (isset($this->conditions[$hash])) {
+			return $this;
+		}
+
 		$this->__destruct();
 
-		$this->conditions[] = $condition;
+		$this->conditions[$hash] = $condition;
 		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
@@ -342,10 +347,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
-		$selection = clone $this;
+		$selection = new Selection($this->name, $this->connection);
+		$selection->where = $this->where;
+		$selection->parameters = $this->parameters;
+		$selection->conditions = $this->conditions;
+
 		$selection->select($function);
-		$selection->limit = null;
-		$selection->order = array();
 
 		foreach ($selection->fetch() as $val) {
 			return $val;
