@@ -31,6 +31,9 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 	public function __construct(Container $container)
 	{
+		if (PHP_VERSION_ID < 50300) {
+			throw new Nette\NotSupportedException(__CLASS__ . ' requires PHP 5.3 or newer.');
+		}
 		$this->container = $container;
 	}
 
