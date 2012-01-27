@@ -52,12 +52,12 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Set parameter %productionMode%.
-	 * @param  bool
+	 * @param  bool|string|array
 	 * @return Configurator  provides a fluent interface
 	 */
-	public function setProductionMode($on = TRUE)
+	public function setProductionMode($value = TRUE)
 	{
-		$this->parameters['productionMode'] = (bool) $on;
+		$this->parameters['productionMode'] = is_bool($value) ? $value : self::detectProductionMode($value);
 		return $this;
 	}
 
@@ -288,11 +288,15 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Detects production mode by IP address.
+	 * @param  string|array  IP addresses or computer names whitelist detection
 	 * @return bool
 	 */
-	public static function detectProductionMode()
+	public static function detectProductionMode($list = NULL)
 	{
-		return !isset($_SERVER['REMOTE_ADDR']) || !in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'), TRUE);
+		$list = is_string($list) ? preg_split('#[,\s]+#', $list) : $list;
+		$list[] = '127.0.0.1';
+		$list[] = '::1';
+		return !in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
 	}
 
 }
