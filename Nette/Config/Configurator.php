@@ -110,6 +110,7 @@ class Configurator extends Nette\Object
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
 			'productionMode' => static::detectProductionMode(),
+			'environment' => static::detectProductionMode() ? self::PRODUCTION : self::DEVELOPMENT,
 			'consoleMode' => PHP_SAPI === 'cli',
 			'container' => array(
 				'class' => 'SystemContainer',
@@ -142,10 +143,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addConfig($file, $section = self::AUTO)
 	{
-		if ($section === self::AUTO) {
-			$section = $this->parameters['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
-		}
-		$this->files[] = array($file, $section);
+		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
 		return $this;
 	}
 
