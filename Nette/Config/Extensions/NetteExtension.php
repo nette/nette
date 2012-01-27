@@ -57,6 +57,14 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'container' => array(
 			'debugger' => FALSE,
 		),
+		'debugger' => array(
+			'email' => NULL,
+			'editor' => NULL,
+			'browser' => NULL,
+			'strictMode' => NULL,
+			'bar' => array(), // of class name
+			'blueScreen' => array(), // of callback
+		),
 	);
 
 	public $databaseDefaults = array(
@@ -271,6 +279,33 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
+		// debugger
+		foreach (array('email', 'editor', 'browser', 'strictMode') as $key) {
+			if (isset($config['debugger'][$key])) {
+				$initialize->addBody('Nette\Diagnostics\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
+			}
+		}
+
+		if (!$container->parameters['productionMode']) {
+			if ($config['container']['debugger']) {
+				$config['debugger']['bar'][] = 'Nette\DI\Diagnostics\ContainerPanel';
+			}
+
+			foreach ((array) $config['debugger']['bar'] as $item) {
+				$initialize->addBody($container->formatPhp(
+					'Nette\Diagnostics\Debugger::$bar->addPanel(?);',
+					Nette\Config\Compiler::filterArguments(array(is_string($item) ? new Nette\DI\Statement($item) : $item))
+				));
+			}
+
+			foreach ((array) $config['debugger']['blueScreen'] as $item) {
+				$initialize->addBody($container->formatPhp(
+					'Nette\Diagnostics\Debugger::$blueScreen->addPanel(?);',
+					Nette\Config\Compiler::filterArguments(array($item))
+				));
+			}
+		}
+
 		if (!empty($container->parameters['tempDir'])) {
 			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
 		}
@@ -291,10 +326,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 		if (isset($config['security']['frames'])) {
 			$initialize->addBody('header(?);', array('X-Frame-Options: ' . $config['security']['frames']));
-		}
-
-		if (!$container->parameters['productionMode'] && $config['container']['debugger']) {
-			$initialize->addBody('Nette\Diagnostics\Debugger::$bar->addPanel(new Nette\DI\Diagnostics\ContainerPanel($this));');
 		}
 
 		foreach ($container->findByTag('run') as $name => $on) {
