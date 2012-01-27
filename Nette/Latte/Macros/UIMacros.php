@@ -213,7 +213,7 @@ if (!empty($_control->snippetMode)) {
 		} elseif ($node->args === 'auto') {
 			$this->extends = '$_presenter->findLayoutTemplateFile()';
 		} else {
-			$this->extends = $writer->write('%node.word');
+			$this->extends = $writer->write('%node.word%node.args');
 		}
 		return;
 	}
