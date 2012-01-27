@@ -43,6 +43,17 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 	/**
+	 * Gets the context.
+	 * @return \SystemContainer|Nette\DI\IContainer
+	 */
+	final public function getContext()
+	{
+		return $this->context;
+	}
+
+
+
+	/**
 	 * @param  Nette\Application\Request
 	 * @return Nette\Application\IResponse
 	 */
