@@ -234,7 +234,7 @@ class Parser extends Nette\Object
 	private function contextComment()
 	{
 		$matches = $this->match('~
-			(?<htmlcomment>--\s*>)|    ##  end of HTML comment
+			(?P<htmlcomment>--\s*>)|   ##  end of HTML comment
 			'.$this->macroRe.'         ##  macro
 		~xsi');
 
