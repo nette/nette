@@ -63,9 +63,9 @@ Assert::false(empty($book->author_id));
 
 Assert::false(isset($book->translator_id));
 Assert::true(empty($book->translator_id));
+Assert::false(isset($book->test));
 
-Assert::true(isset($book->author));
-Assert::false(empty($book->author));
-
+Assert::false(isset($book->author));
 Assert::false(isset($book->translator));
+Assert::true(empty($book->author));
 Assert::true(empty($book->translator));

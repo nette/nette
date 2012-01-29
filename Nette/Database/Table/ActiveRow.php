@@ -223,7 +223,11 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
 		$referenced = $this->getReference($table, $column);
-		return $referenced;
+		if ($referenced !== FALSE) {
+			return $referenced;
+		}
+
+		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
 	}
 
 
@@ -235,10 +239,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 			return isset($this->data[$key]);
 		}
 		$this->access($key, TRUE);
-
-		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
-		$referenced = $this->getReference($table, $column);
-		return isset($referenced);
+		return FALSE;
 	}
 
 
@@ -278,6 +279,8 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 			return $referenced;
 		}
+
+		return FALSE;
 	}
 
 }
