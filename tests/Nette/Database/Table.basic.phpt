@@ -25,6 +25,11 @@ Assert::same(array(
 	'title' => '1001 tipu a triku pro PHP',
 ), $book);
 
+$book = $connection->table('book')->get(1);
+Assert::throws(function() use ($book) {
+	$book->unknown_column;
+}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "unknown_column".');
+
 
 
 $appTags = array();
