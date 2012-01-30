@@ -58,6 +58,7 @@ class Configurator extends Nette\Object
 	public function setProductionMode($value = TRUE)
 	{
 		$this->parameters['productionMode'] = is_bool($value) ? $value : self::detectProductionMode($value);
+		$this->parameters['environment'] = $this->parameters['productionMode'] ? self::PRODUCTION : self::DEVELOPMENT;
 		return $this;
 	}
 
