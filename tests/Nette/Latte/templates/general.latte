@@ -203,5 +203,7 @@ var prop2 = {$people};
 {if}TRUE{else}FALSE{/if TRUE}
 
 {foreach [1,2,3] as $foo}
-	<b n:class="$iterator->isEven() ? even">item</b>
+	<b n:class="$iterator->even ? even">item</b>
 {/foreach}
+
+<p n:foreach="[1, 2, 3] as $foo" n:class="$iterator->even ? even">{$foo}</p>

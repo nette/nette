@@ -269,5 +269,10 @@ bold<?php if (array_pop($_l->ifs)): ?></b>
 
 
 <?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1,2,3)) as $foo): ?>
-	<b<?php if ($_l->tmp = array_filter(array($iterator->isEven() ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
+	<b<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>>item</b>
+<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>
+
+<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator(array(1, 2, 3)) as $foo): ?>
+<p<?php if ($_l->tmp = array_filter(array($iterator->even ? 'even':null))) echo ' class="' . htmlSpecialChars(implode(" ", array_unique($_l->tmp))) . '"' ?>
+><?php echo Nette\Templating\Helpers::escapeHtml($foo, ENT_NOQUOTES) ?></p>
 <?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ;

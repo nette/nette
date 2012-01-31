@@ -158,7 +158,7 @@ class Compiler extends Nette\Object
 			throw new ParseException("There are unclosed macros.", 0, $token->line);
 		}
 
-		$output = strtr($output, $this->attrCodes);
+		$output = $this->expandTokens($output);
 		return $output;
 	}
 
@@ -228,6 +228,13 @@ class Compiler extends Nette\Object
 
 
 
+	public function expandTokens($s)
+	{
+		return strtr($s, $this->attrCodes);
+	}
+
+
+
 	private function processTagBegin($token)
 	{
 		if ($token->closing) {
@@ -282,9 +289,6 @@ class Compiler extends Nette\Object
 				$htmlNode->closing = TRUE;
 				$this->writeAttrsMacro('', $htmlNode);
 			}
-		}
-		if ($htmlNode->closing) {
-			$this->output = strtr($this->output, $this->attrCodes);
 		}
 
 		if ($isEmpty) {
