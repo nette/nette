@@ -96,7 +96,7 @@ class Session extends Nette\Object
 
 		Nette\Diagnostics\Debugger::tryError();
 		session_start();
-		if (Nette\Diagnostics\Debugger::catchError($e)) {
+		if (Nette\Diagnostics\Debugger::catchError($e) && !session_id()) {
 			@session_write_close(); // this is needed
 			throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
 		}
