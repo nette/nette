@@ -40,7 +40,6 @@ static $errorTypes = array(
 
 $title = ($exception instanceof Nette\FatalErrorException && isset($errorTypes[$exception->getSeverity()])) ? $errorTypes[$exception->getSeverity()] : get_class($exception);
 
-$expandPath = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
 $counter = 0;
 
 ?><!DOCTYPE html><!-- "' --></script></style></pre></xmp></table>
@@ -323,9 +322,9 @@ $counter = 0;
 
 
 			<?php $stack = $ex->getTrace(); $expanded = NULL ?>
-			<?php if (strpos($ex->getFile(), $expandPath) === 0) {
+			<?php if (Helpers::isCollapsed($this, $ex->getFile()) ) {
 				foreach ($stack as $key => $row) {
-					if (isset($row['file']) && strpos($row['file'], $expandPath) !== 0) { $expanded = $key; break; }
+					if (isset($row['file']) && !Helpers::isCollapsed($this, $row['file'])) { $expanded = $key; break; }
 				}
 			} ?>
 

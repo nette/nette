@@ -219,4 +219,19 @@ final class Helpers
 		}
 	}
 
+
+	/**
+	 * Should a file be collapsed in stack trace?
+	 * @param BlueScreen
+	 * @param string
+	 * @return bool
+	 */
+	public static function isCollapsed(BlueScreen $bluescreen, $file)
+	{
+		foreach($bluescreen->collapsePaths as $collapsePath) {
+			if(strpos($file, $collapsePath) === 0) return true;
+		}
+
+		return false;
+	}
 }
