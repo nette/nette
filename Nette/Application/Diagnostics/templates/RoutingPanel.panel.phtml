@@ -32,7 +32,7 @@ use Nette,
 <?php if (empty($this->request)): ?>
 	no route
 <?php else: ?>
-	<?php echo $this->request->getPresenterName() . ':' . (isset($this->request->parameters[Presenter::ACTION_KEY]) ? $this->request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($this->request->parameters[Presenter::SIGNAL_KEY]) ? " {$this->request->parameters[Presenter::SIGNAL_KEY]}!" : '') ?>
+	<?php echo htmlSpecialChars($this->request->getPresenterName() . ':' . (isset($this->request->parameters[Presenter::ACTION_KEY]) ? $this->request->parameters[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION) . (isset($this->request->parameters[Presenter::SIGNAL_KEY]) ? " {$this->request->parameters[Presenter::SIGNAL_KEY]}!" : '')) ?>
 <?php endif ?>
 </h1>
 
@@ -96,7 +96,7 @@ use Nette,
 		<?php endforeach ?>
 		</code></td>
 
-		<td><code><?php echo $router['module'] ?></code></td>
+		<td><code><?php echo htmlSpecialChars($router['module']) ?></code></td>
 
 		<td><?php if ($router['request']): ?><code>
 		<?php $params = $router['request']->getParameters(); ?>
