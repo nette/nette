@@ -573,10 +573,10 @@ class Route extends Nette\Object implements Application\IRouter
 				}
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
+			} elseif (!$autoOptional) {
+				unset($meta['fixity']);
+
 			} elseif (isset($meta['fixity'])) { // auto-optional
-				if (!$autoOptional) {
-					throw new Nette\InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
-				}
 				$re = '(?:' . $re . ')?';
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
