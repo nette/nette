@@ -329,7 +329,7 @@ class Route extends Nette\Object implements Application\IRouter
 		// compositing path
 		$sequence = $this->sequence;
 		$brackets = array();
-		$required = 0;
+		$required = NULL; // NULL for auto-optional
 		$url = '';
 		$i = count($sequence) - 1;
 		do {
@@ -363,7 +363,11 @@ class Route extends Nette\Object implements Application\IRouter
 				unset($params[$name]);
 
 			} elseif (isset($metadata[$name]['fixity'])) { // has default value?
-				$url = $metadata[$name]['defOut'] . $url;
+				if ($required === NULL && !$brackets) { // auto-optional
+					$url = '';
+				} else {
+					$url = $metadata[$name]['defOut'] . $url;
+				}
 
 			} else {
 				return NULL; // missing parameter '$name'
@@ -482,7 +486,7 @@ class Route extends Nette\Object implements Application\IRouter
 		$brackets = 0; // optional level
 		$re = '';
 		$sequence = array();
-		$autoOptional = array(0, 0); // strlen($re), count($sequence)
+		$autoOptional = TRUE;
 		do {
 			array_unshift($sequence, $parts[$i]);
 			$re = preg_quote($parts[$i], '#') . $re;
@@ -570,13 +574,14 @@ class Route extends Nette\Object implements Application\IRouter
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} elseif (isset($meta['fixity'])) { // auto-optional
-				$re = '(?:' . substr_replace($re, ')?', strlen($re) - $autoOptional[0], 0);
-				array_splice($sequence, count($sequence) - $autoOptional[1], 0, array(']', ''));
-				array_unshift($sequence, '[', '');
+				if (!$autoOptional) {
+					throw new Nette\InvalidArgumentException("Parameter '$name' must not be optional because parameters standing on the right side are not optional.");
+				}
+				$re = '(?:' . $re . ')?';
 				$meta['fixity'] = self::PATH_OPTIONAL;
 
 			} else {
-				$autoOptional = array(strlen($re), count($sequence));
+				$autoOptional = FALSE;
 			}
 
 			$metadata[$name] = $meta;
