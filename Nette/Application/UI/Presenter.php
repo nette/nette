@@ -959,6 +959,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 				$this->saveState($args, $reflection);
 			}
 
+			if ($mode === 'redirect') {
+				$this->saveGlobalState();
+			}
+
 			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
 			if ($current && $args) {
 				$tmp = $globalState + $this->params;
