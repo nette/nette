@@ -357,9 +357,9 @@ class Container extends Nette\FreezableObject implements IContainer
 	}
 
 
-	public static function getMethodName($name, $service = TRUE)
+	public static function getMethodName($name, $isService = TRUE)
 	{
-		return ($service ? 'createService' : 'create') . ucfirst(strtr($name, '.', '_'));
+		return ($isService ? 'createService' : 'create') . ucfirst(strtr($name, '.', '_'));
 	}
 
 }

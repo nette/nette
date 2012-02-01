@@ -448,7 +448,7 @@ class Compiler extends Nette\Object
 		}
 
 		if (!$htmlNode->closing) {
-			$htmlNode->attrCode = & $this->attrCodes[$uniq = Nette\Utils\Strings::random()];
+			$htmlNode->attrCode = & $this->attrCodes[$uniq = ' n:' . Nette\Utils\Strings::random()];
 			$code = substr_replace($code, $uniq, strrpos($code, '/>') ?: strrpos($code, '>'), 0);
 		}
 
