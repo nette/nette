@@ -7,7 +7,7 @@ list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
 // block _outer
 //
 if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
-?>	Outer
+?>	<p>Outer</p>
 <?php
 }}
 
@@ -15,7 +15,7 @@ if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__
 // block _inner
 //
 if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__inner($_l, $_args) { extract($_args); $_control->validateControl('inner')
-?>	Inner
+?>	<p>Inner</p>
 <?php
 }}
 

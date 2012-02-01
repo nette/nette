@@ -1,0 +1,56 @@
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+//
+// block _outer1
+//
+if (!function_exists($_l->blocks['_outer1'][] = '_xxx__outer1')) { function _xxx__outer1($_l, $_args) { extract($_args); $_control->validateControl('outer1')
+;$iterations = 0; foreach (array(1,2,3) as $id): ?>
+		<div<?php echo ' id="' . ($_dynSnippetId = $_control->getSnippetId("inner-$id")) . '"' ?>>
+<?php ob_start() ?>				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
+
+<?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>		</div>
+<?php $iterations++; endforeach ?>
+	<?php if (isset($_dynSnippets)) return $_dynSnippets;
+}}
+
+//
+// block _outer2
+//
+if (!function_exists($_l->blocks['_outer2'][] = '_xxx__outer2')) { function _xxx__outer2($_l, $_args) { extract($_args); $_control->validateControl('outer2')
+;$iterations = 0; foreach (array(1,2,3) as $id): ?>
+		<div<?php echo ' id="' . ($_dynSnippetId = $_control->getSnippetId("inner-$id")) . '"' ?>>
+<?php ob_start() ?>				#<?php echo Nette\Templating\Helpers::escapeHtml($id, ENT_NOQUOTES) ?>
+
+<?php $_dynSnippets[$_dynSnippetId] = ob_get_flush() ?>		</div>
+<?php $iterations++; endforeach ?>
+	<?php if (isset($_dynSnippets)) return $_dynSnippets;
+}}
+
+//
+// end of blocks
+//
+
+// template extending and snippets support
+
+$_l->extends = empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL; $template->_extended = $_extended = TRUE;
+
+
+if ($_l->extends) {
+	ob_start();
+
+} elseif (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+if ($_l->extends) { ob_end_clean(); return Nette\Latte\Macros\CoreMacros::includeTemplate($_l->extends, get_defined_vars(), $template)->render(); } ?>
+<div id="<?php echo $_control->getSnippetId('outer1') ?>"><?php call_user_func(reset($_l->blocks['_outer1']), $_l, $template->getParameters()) ?>
+</div>
+
+<div id="<?php echo $_control->getSnippetId('outer2') ?>"><?php call_user_func(reset($_l->blocks['_outer2']), $_l, $template->getParameters()) ?>
+</div>

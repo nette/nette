@@ -246,11 +246,16 @@ if (!empty($_control->snippetMode)) {
 					throw new ParseException("Dynamic snippets are allowed only inside static snippet.");
 				}
 				$parent->data->dynamic = TRUE;
+				$node->data->leave = TRUE;
+				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>";
 
+				if ($node->htmlNode) {
+					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
+					return $writer->write('ob_start()');
+				}
 				$tag = trim($node->tokenizer->fetchWord(), '<>');
 				$tag = $tag ? $tag : 'div';
-				$node->data->leave = TRUE;
-				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag>";
+				$node->closingCode .= "\n</$tag>";
 				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
 
 			} else {
@@ -310,12 +315,18 @@ if (!empty($_control->snippetMode)) {
 	public function macroBlockEnd(MacroNode $node, $writer)
 	{
 		if (isset($node->data->name)) { // block, snippet, define
+			if ($node->name === 'snippet' && isset($node->htmlNode->macroAttrs['snippet'])) { // n:snippet -> n:inner-snippet
+				preg_match("#^((?:.*?>)?\n?)(.*?)([ \t]*(?:<[^<]+)?)$#sD", $node->content, $m);
+				$node->openingCode = $m[1] . $node->openingCode;
+				$node->content = $m[2];
+				$node->closingCode .= $m[3];
+			}
+
 			if (empty($node->data->leave)) {
 				if (!empty($node->data->dynamic)) {
 					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
 				}
-				preg_match($node->htmlNode && $node->name === 'snippet'
-					? "#^((?:.*?>)?\n?)(.*?)([ \t]*(?:<[^<]+)?)$#sD" : "#^(\n)?(.*?)([ \t]*)$#sD", $node->content, $m);
+				preg_match("#^(\n)?(.*?)([ \t]*)$#sD", $node->content, $m);
 				$this->namedBlocks[$node->data->name] = $m[2];
 				$node->content = $m[1] . $node->openingCode . "\n" . $m[3];
 				$node->openingCode = "<?php ?>";
