@@ -67,21 +67,21 @@ $form->addGroup();
 $form->addSubmit('submit', 'Send');
 $form->fireEvents();
 
-Assert::equal( ArrayHash::from(array(
-   'first' => ArrayHash::from(array(
+Assert::equal( array(
+   'first' => array(
       'name' => 'James Bond',
       'email' => 'bond@007.com',
       'street' => 'Unknown',
       'city' => 'London',
       'country' => 'GB',
-   )),
-   'second' => ArrayHash::from(array(
+   ),
+   'second' => array(
       'name' => 'Jim Beam',
       'email' => 'jim@beam.com',
       'street' => '',
       'city' => '',
       'country' => 'US',
-   )),
-)), $form->getValues() );
+   ),
+), $form->getValues(TRUE) );
 
 Assert::match( file_get_contents(__DIR__ . '/Forms.example.006.expect'), $form->__toString(TRUE) );
