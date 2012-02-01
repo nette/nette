@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Test: Nette\DI\ContainerBuilder and anonymous services.
+ *
+ * @author     David Grudl
+ * @package    Nette\DI
+ * @subpackage UnitTests
+ */
+
+use Nette\DI;
+
+
+
+require __DIR__ . '/../bootstrap.php';
+
+
+
+class Service
+{
+}
+
+
+
+$builder = new DI\ContainerBuilder;
+$builder->addDefinition('\Service')
+	->setClass('self');
+
+$builder->addDefinition('stdClass')
+	->setClass('self')
+	->addSetup('$value', '@\Service');
+
+
+$code = (string) $builder->generateClass();
+file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
+require TEMP_DIR . '/code.php';
+
+$container = new Container;
+
+
+Assert::true( $container->getByType('Service') instanceof Service );
+Assert::true( $container->getByType('stdClass') instanceof stdClass );

@@ -187,7 +187,13 @@ class ContainerBuilder extends Nette\Object
 		// complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
 			if ($def->class) {
-				$def->class = $def->class === self::CREATED_SERVICE ? $name : $this->expand($def->class);
+				if ($def->class === self::CREATED_SERVICE) {
+					$def->class = $name;
+					$def->internal = TRUE;
+					unset($this->definitions[$name]);
+					$this->definitions['_anonymous_' . str_replace('\\', '_', strtolower(trim($name, '\\')))] = $def;
+				}
+				$def->class = $this->expand($def->class);
 				if (!$def->factory) {
 					$def->factory = new Statement($def->class);
 				}
@@ -355,7 +361,7 @@ class ContainerBuilder extends Nette\Object
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
-				if ($def->shared && PhpHelpers::isIdentifier($name)) {
+				if ($def->shared && !$def->internal && PhpHelpers::isIdentifier($name)) {
 					$class->addDocument("@property $type \$$name");
 				}
 				$method = $class->addMethod($methodName)
