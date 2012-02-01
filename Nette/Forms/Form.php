@@ -359,7 +359,7 @@ class Form extends Container
 	{
 		if ($this->submittedBy === NULL && count($this->getControls())) {
 			$this->getHttpData();
-			$this->submittedBy = !empty($this->httpData);
+			$this->submittedBy = $this->httpData !== NULL;
 		}
 		return $this->submittedBy;
 	}
@@ -400,7 +400,7 @@ class Form extends Container
 			if (!$this->isAnchored()) {
 				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 			}
-			$this->httpData = (array) $this->receiveHttpData();
+			$this->httpData = $this->receiveHttpData();
 		}
 		return $this->httpData;
 	}
