@@ -234,7 +234,6 @@ if (!empty($_control->snippetMode)) {
 		}
 
 		$node->data->name = $name = ltrim($name, '#');
-		$node->data->end = '';
 		if ($name == NULL) {
 			if ($node->name !== 'snippet') {
 				throw new ParseException("Missing block name.");
@@ -251,13 +250,13 @@ if (!empty($_control->snippetMode)) {
 				$tag = trim($node->tokenizer->fetchWord(), '<>');
 				$tag = $tag ? $tag : 'div';
 				$node->data->leave = TRUE;
-				$node->data->end = "\$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag><?php";
+				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>\n</$tag>";
 				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
 
 			} else {
 				$node->data->leave = TRUE;
 				$fname = $writer->formatWord($name);
-				$node->data->end = "}} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars())";
+				$node->closingCode = "<?php }} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars()) ?>";
 				$func = '_lb' . substr(md5($this->getCompiler()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 				return "//\n// block $name\n//\n"
 					. "if (!function_exists(\$_l->blocks[$fname][] = '$func')) { "
@@ -321,7 +320,6 @@ if (!empty($_control->snippetMode)) {
 				$node->content = $m[1] . $node->openingCode . "\n" . $m[3];
 				$node->openingCode = "<?php ?>";
 			}
-			return $node->data->end;
 
 		} elseif ($node->modifiers) { // anonymous block with modifier
 			return $writer->write('echo %modify(ob_get_clean())');
