@@ -247,16 +247,17 @@ if (!empty($_control->snippetMode)) {
 				}
 				$parent->data->dynamic = TRUE;
 				$node->data->leave = TRUE;
-				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>";
+				$node->closingCode = "<?php \$_dynSnippets[{$writer->formatWord($name)}] = ob_get_flush() ?>";
 
 				if ($node->htmlNode) {
-					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
+					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
 					return $writer->write('ob_start()');
 				}
 				$tag = trim($node->tokenizer->fetchWord(), '<>');
 				$tag = $tag ? $tag : 'div';
+
 				$node->closingCode .= "\n</$tag>";
-				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
+				return $writer->write("?>\n<$tag id=\"<?php echo \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
 
 			} else {
 				$node->data->leave = TRUE;
@@ -504,10 +505,14 @@ if (!empty($_control->snippetMode)) {
 				$snippets = $function($local, $params);
 				$payload->snippets[$id = $control->getSnippetId(substr($name, 1))] = ob_get_clean();
 				if ($snippets) {
-					$payload->snippets += $snippets;
-					unset($payload->snippets[$id]);
+					foreach ($snippets as $snippetName => $snippetBody) {
+						if ($control->isControlInvalid($snippetName)) {
+							$payload->snippets[$control->getSnippetId($snippetName)] = $snippetBody;
+							unset($payload->snippets[$id]);
+						}
+					}
+				}
 			}
-		}
 		}
 		if ($control instanceof Nette\Application\UI\Control) {
 			foreach ($control->getComponents(FALSE, 'Nette\Application\UI\Control') as $child) {
