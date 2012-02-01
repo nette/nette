@@ -40,4 +40,4 @@ Assert::same( "<?php extract(array('var1' => 123, 'var2' => \"nette framework\")
 
 Assert::throws(function() use ($compiler) {
 	$compiler->expandMacro('default', '$temp->var1 = 123', '');
-}, 'Nette\Latte\ParseException', "Unexpected '-' in {default \$temp->var1 = 123}");
+}, 'Nette\Latte\CompileException', "Unexpected '-' in {default \$temp->var1 = 123}");

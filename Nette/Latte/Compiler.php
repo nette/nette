@@ -132,7 +132,7 @@ class Compiler extends Nette\Object
 					$this->processAttribute($token);
 				}
 			}
-		} catch (ParseException $e) {
+		} catch (CompileException $e) {
 			$e->sourceLine = $token->line;
 			throw $e;
 		}
@@ -140,7 +140,7 @@ class Compiler extends Nette\Object
 
 		foreach ($this->htmlNodes as $htmlNode) {
 			if (!empty($htmlNode->macroAttrs)) {
-				throw new ParseException("Missing end tag </$htmlNode->name> for macro-attribute " . Parser::N_PREFIX
+				throw new CompileException("Missing end tag </$htmlNode->name> for macro-attribute " . Parser::N_PREFIX
 					. implode(' and ' . Parser::N_PREFIX, array_keys($htmlNode->macroAttrs)) . ".", 0, $token->line);
 			}
 		}
@@ -155,7 +155,7 @@ class Compiler extends Nette\Object
 		$output = ($prologs ? $prologs . "<?php\n//\n// main template\n//\n?>\n" : '') . $output . $epilogs;
 
 		if ($this->macroNodes) {
-			throw new ParseException("There are unclosed macros.", 0, $token->line);
+			throw new CompileException("There are unclosed macros.", 0, $token->line);
 		}
 
 		$output = $this->expandTokens($output);
@@ -350,7 +350,7 @@ class Compiler extends Nette\Object
 				|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
 			) {
 				$name .= $args ? ' ' : '';
-				throw new ParseException("Unexpected macro {{$name}{$args}{$modifiers}}"
+				throw new CompileException("Unexpected macro {{$name}{$args}{$modifiers}}"
 					. ($node ? ", expecting {/$node->name}" . ($args && $node->args ? " or eventually {/$node->name $node->args}" : '') : ''));
 			}
 
@@ -443,7 +443,7 @@ class Compiler extends Nette\Object
 		}
 
 		if ($attrs) {
-			throw new ParseException("Unknown macro-attribute " . Parser::N_PREFIX
+			throw new CompileException("Unknown macro-attribute " . Parser::N_PREFIX
 				. implode(' and ' . Parser::N_PREFIX, array_keys($attrs)));
 		}
 
@@ -489,7 +489,7 @@ class Compiler extends Nette\Object
 	{
 		if (empty($this->macros[$name])) {
 			$js = $this->htmlNodes && strtolower(end($this->htmlNodes)->name) === 'script';
-			throw new ParseException("Unknown macro {{$name}}" . ($js ? " (in JavaScript, try to put a space after bracket.)" : ''));
+			throw new CompileException("Unknown macro {{$name}}" . ($js ? " (in JavaScript, try to put a space after bracket.)" : ''));
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL, $htmlNode);
@@ -497,7 +497,7 @@ class Compiler extends Nette\Object
 				return $node;
 			}
 		}
-		throw new ParseException("Unhandled macro {{$name}}");
+		throw new CompileException("Unhandled macro {{$name}}");
 	}
 
 }

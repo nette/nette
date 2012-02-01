@@ -24,4 +24,4 @@ $template->registerFilter(new Latte\Engine);
 
 Assert::throws(function() use ($template) {
 	$template->setSource("\xAA")->compile();
-}, 'Nette\Latte\ParseException', '%a% UTF-8 %a%');
+}, 'Nette\InvalidArgumentException', '%a% UTF-8 %a%');

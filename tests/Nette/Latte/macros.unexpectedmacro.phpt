@@ -21,4 +21,4 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 Assert::throws(function() use ($template) {
 	$template->setSource('Block{/block}')->compile();
-}, 'Nette\Latte\ParseException', 'Unexpected macro {/block}');
+}, 'Nette\Latte\CompileException', 'Unexpected macro {/block}');

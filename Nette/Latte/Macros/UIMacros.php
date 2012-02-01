@@ -14,7 +14,7 @@ namespace Nette\Latte\Macros;
 use Nette,
 	Nette\Latte,
 	Nette\Latte\MacroNode,
-	Nette\Latte\ParseException,
+	Nette\Latte\CompileException,
 	Nette\Utils\Strings;
 
 
@@ -92,7 +92,7 @@ class UIMacros extends MacroSet
 		// try close last block
 		try {
 			$this->getCompiler()->writeMacro('/block');
-		} catch (ParseException $e) {
+		} catch (CompileException $e) {
 		}
 
 		$epilog = $prolog = array();
@@ -154,7 +154,7 @@ if (!empty($_control->snippetMode)) {
 
 		$destination = ltrim($destination, '#');
 		if (!Strings::match($destination, '#^\$?' . self::RE_IDENTIFIER . '$#')) {
-			throw new ParseException("Included block name must be alphanumeric string, '$destination' given.");
+			throw new CompileException("Included block name must be alphanumeric string, '$destination' given.");
 		}
 
 		$parent = $destination === 'parent';
@@ -162,7 +162,7 @@ if (!empty($_control->snippetMode)) {
 			$item = $node->parentNode;
 			for ($item = $node->parentNode; $item && $item->name !== 'block' && !isset($item->data->name); $item = $item->parentNode);
 			if (!$item) {
-				throw new ParseException("Cannot include $destination block outside of any block.");
+				throw new CompileException("Cannot include $destination block outside of any block.");
 			}
 			$destination = $item->data->name;
 		}
@@ -200,13 +200,13 @@ if (!empty($_control->snippetMode)) {
 	public function macroExtends(MacroNode $node, $writer)
 	{
 		if (!$node->args) {
-			throw new ParseException("Missing destination in {extends}");
+			throw new CompileException("Missing destination in {extends}");
 		}
 		if (!empty($node->parentNode)) {
-			throw new ParseException("{extends} must be placed outside any macro.");
+			throw new CompileException("{extends} must be placed outside any macro.");
 		}
 		if ($this->extends !== NULL) {
-			throw new ParseException("Multiple {extends} declarations are not allowed.");
+			throw new CompileException("Multiple {extends} declarations are not allowed.");
 		}
 		if ($node->args === 'none') {
 			$this->extends = 'FALSE';
@@ -236,14 +236,14 @@ if (!empty($_control->snippetMode)) {
 		$node->data->name = $name = ltrim($name, '#');
 		if ($name == NULL) {
 			if ($node->name !== 'snippet') {
-				throw new ParseException("Missing block name.");
+				throw new CompileException("Missing block name.");
 			}
 
 		} elseif (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) { // dynamic blok/snippet
 			if ($node->name === 'snippet') {
 				for ($parent = $node->parentNode; $parent && $parent->name !== 'snippet'; $parent = $parent->parentNode);
 				if (!$parent) {
-					throw new ParseException("Dynamic snippets are allowed only inside static snippet.");
+					throw new CompileException("Dynamic snippets are allowed only inside static snippet.");
 				}
 				$parent->data->dynamic = TRUE;
 				$node->data->leave = TRUE;
@@ -275,7 +275,7 @@ if (!empty($_control->snippetMode)) {
 			$node->data->name = $name = '_' . $name;
 		}
 		if (isset($this->namedBlocks[$name])) {
-			throw new ParseException("Cannot redeclare static block '$name'");
+			throw new CompileException("Cannot redeclare static block '$name'");
 		}
 		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
 		$top = empty($node->parentNode);
@@ -363,7 +363,7 @@ if (!empty($_control->snippetMode)) {
 	{
 		$pair = $node->tokenizer->fetchWord();
 		if ($pair === FALSE) {
-			throw new ParseException("Missing control name in {control}");
+			throw new CompileException("Missing control name in {control}");
 		}
 		$pair = explode(':', $pair, 2);
 		$name = $writer->formatWord($pair[0]);

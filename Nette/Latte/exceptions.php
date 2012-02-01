@@ -20,6 +20,9 @@ use Nette;
  *
  * @author     David Grudl
  */
-class ParseException extends Nette\Templating\FilterException
+class CompileException extends Nette\Templating\FilterException
 {
 }
+
+
+/**/class_alias('Nette\Latte\CompileException', 'Nette\Latte\ParseException');/**/

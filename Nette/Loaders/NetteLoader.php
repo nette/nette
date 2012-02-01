@@ -30,6 +30,7 @@ class NetteLoader extends AutoLoader
 		'Nette\Configurator' => 'Nette\Config\Configurator',
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
+		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
 	);
 
 	/** @var array */
@@ -59,6 +60,7 @@ class NetteLoader extends AutoLoader
 		'Nette\Image' => '/common/Image',
 		'Nette\InvalidArgumentException' => '/common/exceptions',
 		'Nette\InvalidStateException' => '/common/exceptions',
+		'Nette\Latte\CompileException' => '/Latte/exceptions',
 		'Nette\Mail\SmtpException' => '/Mail/SmtpMailer',
 		'Nette\MemberAccessException' => '/common/exceptions',
 		'Nette\NotImplementedException' => '/common/exceptions',

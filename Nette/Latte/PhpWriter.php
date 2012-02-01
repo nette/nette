@@ -123,7 +123,7 @@ class PhpWriter extends Nette\Object
 						$inside = TRUE;
 					}
 				} else {
-					throw new ParseException("Modifier name must be alphanumeric string, '$token[value]' given.");
+					throw new CompileException("Modifier name must be alphanumeric string, '$token[value]' given.");
 				}
 			} else {
 				if ($token['value'] === ':' || $token['value'] === ',') {

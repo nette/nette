@@ -24,4 +24,4 @@ Assert::same( '<?php if (isset($item->var["#test"], $_l->blocks["block"])): ?>',
 
 Assert::throws(function() use ($compiler) {
 	Assert::same( '<?php if (isset($var)): ?>',  $compiler->expandMacro('ifset', '$var')->openingCode );
-}, 'Nette\Latte\ParseException', 'Unhandled macro {ifset}');
+}, 'Nette\Latte\CompileException', 'Unhandled macro {ifset}');

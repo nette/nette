@@ -14,7 +14,7 @@ namespace Nette\Latte\Macros;
 use Nette,
 	Nette\Latte,
 	Nette\Latte\MacroNode,
-	Nette\Latte\ParseException,
+	Nette\Latte\CompileException,
 	Nette\Utils\Strings;
 
 
