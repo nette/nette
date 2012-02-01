@@ -488,7 +488,8 @@ class Compiler extends Nette\Object
 	public function expandMacro($name, $args, $modifiers = NULL, HtmlNode $htmlNode = NULL)
 	{
 		if (empty($this->macros[$name])) {
-			throw new ParseException("Unknown macro {{$name}}");
+			$js = $this->htmlNodes && strtolower(end($this->htmlNodes)->name) === 'script';
+			throw new ParseException("Unknown macro {{$name}}" . ($js ? " (in JavaScript, try to put a space after bracket.)" : ''));
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
 			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNodes ? end($this->macroNodes) : NULL, $htmlNode);
