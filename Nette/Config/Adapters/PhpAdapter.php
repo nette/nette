@@ -19,7 +19,6 @@ use Nette;
  * Reading and generating PHP files.
  *
  * @author     David Grudl
- * @internal
  */
 class PhpAdapter extends Nette\Object implements Nette\Config\IAdapter
 {

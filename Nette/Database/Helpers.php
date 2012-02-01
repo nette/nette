@@ -19,7 +19,6 @@ use Nette;
  * Database helpers.
  *
  * @author     David Grudl
- * @internal
  */
 class Helpers
 {

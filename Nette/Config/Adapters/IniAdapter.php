@@ -20,7 +20,6 @@ use Nette,
  * Reading and generating INI files.
  *
  * @author     David Grudl
- * @internal
  */
 class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 {

@@ -21,7 +21,6 @@ use Nette,
  * Reading and generating NEON files.
  *
  * @author     David Grudl
- * @internal
  */
 class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 {

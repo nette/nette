@@ -19,7 +19,6 @@ use Nette;
  * HTML element node.
  *
  * @author     David Grudl
- * @internal
  */
 class HtmlNode extends Nette\Object
 {

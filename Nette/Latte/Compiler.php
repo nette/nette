@@ -59,16 +59,17 @@ class Compiler extends Nette\Object
 	/** @var string */
 	private $templateId;
 
-	/** @internal Context-aware escaping states */
+	/** Context-aware escaping states */
 	const CONTENT_HTML = 'html',
 		CONTENT_XHTML = 'xhtml',
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
 		CONTENT_ICAL = 'ical',
-		CONTENT_TEXT = 'text',
+		CONTENT_TEXT = 'text';
 
-		CONTEXT_COMMENT = 'comment',
+	/** @internal Context-aware escaping states */
+	const CONTEXT_COMMENT = 'comment',
 		CONTEXT_SINGLE_QUOTED = "'",
 		CONTEXT_DOUBLE_QUOTED = '"';
 
