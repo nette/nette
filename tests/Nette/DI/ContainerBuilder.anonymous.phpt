@@ -26,8 +26,8 @@ $builder = new DI\ContainerBuilder;
 $builder->addDefinition('\Service')
 	->setClass('self');
 
-$builder->addDefinition('stdClass')
-	->setClass('self')
+$builder->addDefinition('\stdClass')
+	->setFactory('self')
 	->addSetup('$value', '@\Service');
 
 

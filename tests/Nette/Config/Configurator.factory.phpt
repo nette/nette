@@ -81,6 +81,4 @@ Assert::true( $container->eight instanceof Lorem );
 Assert::true( $container->alias instanceof Ipsum );
 Assert::same( $container->one, $container->alias );
 
-Assert::true( $container->Lorem instanceof Lorem );
-
-Assert::true( $container->Ipsum instanceof Ipsum );
+Assert::true( $container->getByType('stdClass') instanceof stdClass );

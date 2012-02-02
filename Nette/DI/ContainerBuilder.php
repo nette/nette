@@ -186,22 +186,23 @@ class ContainerBuilder extends Nette\Object
 	{
 		// complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
-			if ($def->class) {
-				if ($def->class === self::CREATED_SERVICE) {
-					$def->class = $name;
-					$def->internal = TRUE;
-					unset($this->definitions[$name]);
-					$this->definitions['_anonymous_' . str_replace('\\', '_', strtolower(trim($name, '\\')))] = $def;
+			if ($def->class === self::CREATED_SERVICE || ($def->factory && $def->factory->entity === self::CREATED_SERVICE)) {
+				$def->class = $name;
+				$def->internal = TRUE;
+				if ($def->factory && $def->factory->entity === self::CREATED_SERVICE) {
+					$def->factory->entity = $def->class;
 				}
+				unset($this->definitions[$name]);
+				$this->definitions['_anonymous_' . str_replace('\\', '_', strtolower(trim($name, '\\')))] = $def;
+			}
+
+			if ($def->class) {
 				$def->class = $this->expand($def->class);
 				if (!$def->factory) {
 					$def->factory = new Statement($def->class);
 				}
 			} elseif (!$def->factory) {
 				throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
-			}
-			if ($def->factory && $def->factory->entity === self::CREATED_SERVICE) {
-				$def->factory->entity = $name;
 			}
 		}
 

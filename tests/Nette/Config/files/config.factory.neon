@@ -28,9 +28,7 @@ services:
 
 	eight: @factory()
 
-	Lorem: self
-
-	Ipsum: self(1)
+	stdClass: self
 
 
 factories:
