@@ -109,6 +109,9 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 */
 	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
+		if ($this->flags & self::ONE_WAY) {
+			return NULL;
+		}
 		$params = $appRequest->getParameters();
 
 		// presenter name
