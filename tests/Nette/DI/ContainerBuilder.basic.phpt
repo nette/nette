@@ -73,6 +73,8 @@ $container = new Container;
 
 
 Assert::true( $container->getService('one') instanceof Service );
+Assert::false( $container->hasService('One') );
+Assert::false( $container->hasService('oNe') );
 
 Assert::same( array(), $container->getService('one')->args );
 Assert::same( NULL, $container->getService('one')->methods );
