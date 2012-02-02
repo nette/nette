@@ -18,7 +18,7 @@ use Nette,
 
 
 /**
- * Base IMacro implementation. Allowes add multiple macros.
+ * Base IMacro implementation. Allows add multiple macros.
  *
  * @author     David Grudl
  */
