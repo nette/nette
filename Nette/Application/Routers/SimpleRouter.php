@@ -75,7 +75,7 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
-		if (($this->flags & self::ONE_WAY) || $httpRequest->getUrl()->getPathInfo() !== '') {
+		if ($httpRequest->getUrl()->getPathInfo() !== '') {
 			return NULL;
 		}
 		// combine with precedence: get, (post,) defaults
@@ -109,6 +109,9 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 	 */
 	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
+		if ($this->flags & self::ONE_WAY) {
+			return NULL;
+		}
 		$params = $appRequest->getParameters();
 
 		// presenter name
