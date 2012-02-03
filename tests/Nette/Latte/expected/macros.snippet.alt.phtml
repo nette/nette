@@ -20,6 +20,13 @@ if (!function_exists($_l->blocks['_inner'][] = '_xxx__inner')) { function _xxx__
 }}
 
 //
+// block _gallery
+//
+if (!function_exists($_l->blocks['_gallery'][] = '_xxx__gallery')) { function _xxx__gallery($_l, $_args) { extract($_args); $_control->validateControl('gallery')
+;
+}}
+
+//
 // end of blocks
 //
 
@@ -45,3 +52,7 @@ call_user_func(reset($_l->blocks['_outer']), $_l, $template->getParameters()) ?>
 
 	<div class="test"<?php echo ' id="' . $_control->getSnippetId('inner') . '"' ?>>
 <?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters())  ?>	</div>
+
+	<div class="<?php echo htmlSpecialChars('class') ?>"<?php echo ' id="' . $_control->getSnippetId('gallery') . '"' ?>
+><?php call_user_func(reset($_l->blocks['_gallery']), $_l, $template->getParameters()) ?>
+</div>
