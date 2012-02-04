@@ -429,7 +429,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$prefix = $join ? "$this->delimitedName." : '';
 		if ($this->select) {
-			$cols = $this->removeExtraTables($this->tryDelimite(implode(', ', $this->select)));
+			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
 
 		} elseif ($this->prevAccessed) {
 			$cols = $prefix . implode(', ' . $prefix, array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
