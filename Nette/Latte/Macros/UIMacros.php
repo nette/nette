@@ -159,7 +159,6 @@ if (!empty($_control->snippetMode)) {
 
 		$parent = $destination === 'parent';
 		if ($destination === 'parent' || $destination === 'this') {
-			$item = $node->parentNode;
 			for ($item = $node->parentNode; $item && $item->name !== 'block' && !isset($item->data->name); $item = $item->parentNode);
 			if (!$item) {
 				throw new CompileException("Cannot include $destination block outside of any block.");
