@@ -86,9 +86,11 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function ref($key, $throughColumn = NULL)
 	{
-		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
-		$column = $throughColumn ?: $column;
-		return $this->getReference($table, $column);
+		if (!$throughColumn) {
+			list($key, $throughColumn) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
+		}
+
+		return $this->getReference($key, $throughColumn);
 	}
 
 
@@ -103,10 +105,11 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	{
 		if (strpos($key, '.') !== FALSE) {
 			list($key, $throughColumn) = explode('.', $key);
+		} elseif (!$throughColumn) {
+			list($key, $throughColumn) = $this->table->getConnection()->getDatabaseReflection()->getHasManyReference($this->table->getName(), $key);
 		}
 
-		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getHasManyReference($this->table->getName(), $key);
-		return $this->table->getReferencingTable($table, $throughColumn ?: $column, $this[$this->table->getPrimary()]);
+		return $this->table->getReferencingTable($key, $throughColumn, $this[$this->table->getPrimary()]);
 	}
 
 
