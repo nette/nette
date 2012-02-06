@@ -1033,7 +1033,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$i = 0;
 		$rm = new \ReflectionMethod($class, $method);
-		foreach ($rm->getParameters() as $param) {
+		$params = $rm->getParameters();
+		if (empty($params)) {
+			return;
+		}
+
+		foreach ($params as $param) {
 			$name = $param->getName();
 			if (array_key_exists($i, $args)) {
 				$args[$name] = $args[$i];
