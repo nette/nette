@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Nette Framework (version 2.0-dev released on $WCDATE$, http://nette.org)
+ * Nette Framework (version 2.0 released on $WCDATE$, http://nette.org)
  *
  * Copyright (c) 2004, 2012 David Grudl (http://davidgrudl.com)
  *
