@@ -122,7 +122,7 @@ final class SafeStream
 		if ($mode === 'r+' || $mode[0] === 'a' || $mode[0] === 'c') {
 			$stat = fstat($this->handle);
 			fseek($this->handle, 0);
-			if (stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
+			if ($stat['size'] !== 0 && stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
 				$this->clean();
 				return FALSE;
 			}
