@@ -37,6 +37,7 @@ final class Helpers
 		'trim' => 'Nette\Utils\Strings::trim',
 		'padleft' => 'Nette\Utils\Strings::padLeft',
 		'padright' => 'Nette\Utils\Strings::padRight',
+		'reverse' =>  'Nette\Utils\Strings::reverse',
 		'replacere' => 'Nette\Utils\Strings::replace',
 		'url' => 'rawurlencode',
 		'striptags' => 'strip_tags',
