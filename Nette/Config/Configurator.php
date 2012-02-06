@@ -105,7 +105,7 @@ class Configurator extends Nette\Object
 	 */
 	protected function getDefaultParameters()
 	{
-		$trace = debug_backtrace(FALSE);
+		$trace = /*5.2*PHP_VERSION_ID < 50205 ? debug_backtrace() : */debug_backtrace(FALSE);
 		return array(
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
