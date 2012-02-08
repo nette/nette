@@ -423,7 +423,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	final public function getLayout()
 	{
-		return $this->layout;
+		return $this->layout ? "@$this->layout" : "@layout";
 	}
 
 
@@ -443,8 +443,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * @return void
-	 * @throws Nette\Application\BadRequestException if no template found
-	 * @throws Nette\Application\AbortException
 	 */
 	public function sendTemplate()
 	{
@@ -453,93 +451,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 			return;
 		}
 
-		if ($template instanceof Nette\Templating\IFileTemplate && !$template->getFile()) { // content template
-			$files = $this->formatTemplateFiles();
-			foreach ($files as $file) {
-				if (is_file($file)) {
-					$template->setFile($file);
-					break;
-				}
-			}
-
-			if (!$template->getFile()) {
-				$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
-				$file = strtr($file, '/', DIRECTORY_SEPARATOR);
-				$this->error("Page not found. Missing template '$file'.");
-			}
-		}
+		// set template place
+		$template->setPlace($this->name, $this->view);
 
 		$this->sendResponse(new Responses\TextResponse($template));
-	}
-
-
-
-	/**
-	 * Finds layout template file name.
-	 * @return string
-	 */
-	public function findLayoutTemplateFile()
-	{
-		if ($this->layout === FALSE) {
-			return;
-		}
-		$files = $this->formatLayoutTemplateFiles();
-		foreach ($files as $file) {
-			if (is_file($file)) {
-				return $file;
-			}
-		}
-
-		if ($this->layout) {
-			$file = preg_replace('#^.*([/\\\\].{1,70})$#U', "\xE2\x80\xA6\$1", reset($files));
-			$file = strtr($file, '/', DIRECTORY_SEPARATOR);
-			throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
-		}
-	}
-
-
-
-	/**
-	 * Formats layout template file names.
-	 * @return array
-	 */
-	public function formatLayoutTemplateFiles()
-	{
-		$name = $this->getName();
-		$presenter = substr($name, strrpos(':' . $name, ':'));
-		$layout = $this->layout ? $this->layout : 'layout';
-		$dir = dirname(dirname($this->getReflection()->getFileName()));
-		$list = array(
-			"$dir/templates/$presenter/@$layout.latte",
-			"$dir/templates/$presenter.@$layout.latte",
-			"$dir/templates/$presenter/@$layout.phtml",
-			"$dir/templates/$presenter.@$layout.phtml",
-		);
-		do {
-			$list[] = "$dir/templates/@$layout.latte";
-			$list[] = "$dir/templates/@$layout.phtml";
-			$dir = dirname($dir);
-		} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
-		return $list;
-	}
-
-
-
-	/**
-	 * Formats view template file names.
-	 * @return array
-	 */
-	public function formatTemplateFiles()
-	{
-		$name = $this->getName();
-		$presenter = substr($name, strrpos(':' . $name, ':'));
-		$dir = dirname(dirname($this->getReflection()->getFileName()));
-		return array(
-			"$dir/templates/$presenter/$this->view.latte",
-			"$dir/templates/$presenter.$this->view.latte",
-			"$dir/templates/$presenter/$this->view.phtml",
-			"$dir/templates/$presenter.$this->view.phtml",
-		);
 	}
 
 

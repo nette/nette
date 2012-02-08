@@ -26,6 +26,9 @@ class Template extends Nette\Object implements ITemplate
 	/** @var array of function(Template $sender); Occurs before a template is compiled - implement to customize the filters */
 	public $onPrepareFilters = array();
 
+	/** @var array */
+	protected $place;
+
 	/** @var string */
 	private $source;
 
@@ -66,6 +69,24 @@ class Template extends Nette\Object implements ITemplate
 	public function getSource()
 	{
 		return $this->source;
+	}
+
+
+
+	/**
+	 * Set, what we want to render, check if file exists.
+	 * @param  string  $where  from presenter->name
+	 * @param  string  $view
+	 */
+	public function setPlace($where, $view)
+	{
+		$ex = array_reverse(explode(':', $where));
+		$presenter = array_shift($ex);
+		$this->place = array(
+			'module'	=> array_reverse($ex),
+			'presenter'	=> $presenter,
+			'view'		=> $view
+		);
 	}
 
 

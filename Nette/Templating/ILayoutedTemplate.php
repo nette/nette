@@ -16,24 +16,11 @@ use Nette;
 
 
 /**
- * Defines template methods.
+ * Defines templates with layout support.
  *
- * @author     David Grudl
+ * @author     Lukas Povoda
  */
-interface ITemplate
+interface ILayoutedTemplate extends ITemplate
 {
-
-	/**
-	 * Set, what we want to render.
-	 * @param  string  $where  from presenter->name
-	 * @param  string  $view
-	 */
-	function setPlace($where, $view);
-
-	/**
-	 * Renders template to output.
-	 * @return void
-	 */
-	function render();
 
 }
