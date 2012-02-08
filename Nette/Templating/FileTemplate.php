@@ -59,15 +59,6 @@ class FileTemplate extends Template implements IFileTemplate, ILayoutedTemplate
 			$dir = APP_DIR;
 		}
 
-		while ($module) {
-			$module_path = implode('Module/', $module);
-			$files[] = "$dir/{$module_path}Module/templates/$presenter/$view.latte";
-			$files[] = "$dir/{$module_path}Module/templates/$presenter.$view.latte";
-			$files[] = "$dir/{$module_path}Module/templates/$presenter/$view.phtml";
-			$files[] = "$dir/{$module_path}Module/templates/$presenter.$view.phtml";
-			array_pop($module);
-		}
-
 		$files[] = "$dir/templates/$presenter/$view.latte";
 		$files[] = "$dir/templates/$presenter.$view.latte";
 		$files[] = "$dir/templates/$presenter/$view.phtml";
@@ -76,6 +67,14 @@ class FileTemplate extends Template implements IFileTemplate, ILayoutedTemplate
 		// layouts and includes
 		$files[] = "$dir/templates/$view.latte";
 		$files[] = "$dir/templates/$view.phtml";
+
+		// inheritance of layouts
+		if (substr($view, 0, 1) === '@') while ($module) {
+			$dir = dirname($dir);
+			$files[] = "$dir/templates/$view.latte";
+			$files[] = "$dir/templates/$view.phtml";
+			array_pop($module);
+		}
 
 		return $files;
 	}
