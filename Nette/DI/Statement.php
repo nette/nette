@@ -25,12 +25,12 @@ class Statement extends Nette\Object
 	/** @var string  class|method|$property */
 	public $entity;
 
-	/** @var mixed */
+	/** @var array */
 	public $arguments;
 
 
 
-	public function __construct($entity, $arguments = NULL)
+	public function __construct($entity, array $arguments = array())
 	{
 		$this->entity = $entity;
 		$this->arguments = $arguments;
