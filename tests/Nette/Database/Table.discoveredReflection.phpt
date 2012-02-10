@@ -69,13 +69,3 @@ Assert::false(isset($book->author));
 Assert::false(isset($book->translator));
 Assert::true(empty($book->author));
 Assert::true(empty($book->translator));
-
-
-
-$connection->query('ALTER TABLE `book` ADD COLUMN `next_volume` int NULL AFTER `title`;');
-$connection->query('ALTER TABLE `book` ADD CONSTRAINT `book_volume` FOREIGN KEY (`next_volume`) REFERENCES `book` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;');
-$connection->query('UPDATE `book` SET `next_volume` = 3 WHERE `id` = 4');
-
-$book = $connection->table('book')->get(4);
-Assert::same('Nette', $book->volume->title);
-Assert::same('Nette', $book->ref('book', 'next_volume')->title);
