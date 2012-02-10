@@ -22,7 +22,7 @@ services:
 			- ::test(7)
 
 			# local properties
-			- @lorem::$test(...)
+			- @lorem::$test(null)
 			- [@self, $test](true)
 			- $test(false)
 			- $%property%(8)
@@ -31,7 +31,7 @@ services:
 			- Ipsum::$staticTest(9)
 
 			# other service property
-			- @ipsum::$%property%(10)
+			- @ipsum::$%property%(Lorem())
 
 	ipsum:
 		class: %class%

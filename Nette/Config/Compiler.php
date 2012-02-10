@@ -300,12 +300,7 @@ class Compiler extends Nette\Object
 				Validators::assert($setup, 'callable|stdClass', "setup item #$id");
 				if ($setup instanceof \stdClass) {
 					Validators::assert($setup->value, 'callable', "setup item #$id");
-					if (strpos(is_array($setup->value) ? implode('', $setup->value) : $setup->value, '$') === FALSE) {
-						$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
-					} else {
-						Validators::assert($setup->attributes, 'list:1', "setup arguments for '" . callback($setup->value) . "'");
-						$definition->addSetup($setup->value, $setup->attributes[0]);
-					}
+					$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
 				} else {
 					$definition->addSetup($setup);
 				}

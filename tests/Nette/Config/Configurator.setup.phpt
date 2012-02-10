@@ -76,4 +76,4 @@ Assert::same(array(
 
 Assert::same( 8, $container->lorem->test );
 Assert::same( 9, Ipsum::$staticTest );
-Assert::same( 10, $container->ipsum->test );
+Assert::equal( new Lorem, $container->ipsum->test );
