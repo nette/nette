@@ -214,7 +214,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 		$this->sessionSection = $section = $this->sessionHandler->getSection($this->namespacePrefix . '/' . $this->namespace);
 
-		if (!$section->identity instanceof IIdentity || !is_bool($section->authenticated)) {
+		if (!is_bool($section->authenticated)) {
 			$section->remove();
 		}
 
