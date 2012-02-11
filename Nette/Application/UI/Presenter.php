@@ -575,7 +575,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * @return \stdClass
 	 */
-	final public function getPayload()
+	public function getPayload()
 	{
 		return $this->payload;
 	}
