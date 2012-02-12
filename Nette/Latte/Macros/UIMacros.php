@@ -506,17 +506,24 @@ if (!empty($_control->snippetMode)) {
 				if ($snippets) {
 					$payload->snippets += $snippets;
 					unset($payload->snippets[$id]);
-			}
-		}
-		}
-		if ($control instanceof Nette\Application\UI\Control) {
-			foreach ($control->getComponents(FALSE, 'Nette\Application\UI\Control') as $child) {
-				if ($child->isControlInvalid()) {
-					$child->snippetMode = TRUE;
-					$child->render();
-					$child->snippetMode = FALSE;
 				}
 			}
+		}
+		if ($control instanceof Nette\Application\UI\IRenderable) {
+			$queue = array($control);
+			do {
+				foreach (array_shift($queue)->getComponents() as $child) {
+					if ($child instanceof Nette\Application\UI\IRenderable) {
+						if ($child->isControlInvalid()) {
+							$child->snippetMode = TRUE;
+							$child->render();
+							$child->snippetMode = FALSE;
+						}
+					} elseif ($child instanceof Nette\ComponentModel\IContainer) {
+						$queue[] = $child;
+					}
+				}
+			} while ($queue);
 		}
 	}
 
