@@ -224,7 +224,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroCaptureEnd(MacroNode $node, $writer)
 	{
-		return $writer->write("{$node->data->variable} = %modify(ob_get_clean())");
+		return $node->data->variable . $writer->write(" = %modify(ob_get_clean())");
 	}
 
 
@@ -283,8 +283,8 @@ class CoreMacros extends MacroSet
 	public function macroDump(MacroNode $node, $writer)
 	{
 		$args = $writer->formatArgs();
-		return $writer->write('Nette\Diagnostics\Debugger::barDump(' . ($node->args ? "array(%var => $args)" : 'get_defined_vars()')
-			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))', $args);
+		return 'Nette\Diagnostics\Debugger::barDump(' . ($node->args ? "array(" . $writer->write('%var', $args) . " => $args)" : 'get_defined_vars()')
+			. ', "Template " . str_replace(dirname(dirname($template->getFile())), "\xE2\x80\xA6", $template->getFile()))';
 	}
 
 
