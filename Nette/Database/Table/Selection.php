@@ -163,7 +163,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/**
 	 * Returns row specified by primary key.
 	 * @param  mixed
-	 * @return ActiveRow or NULL if there is no such row
+	 * @return ActiveRow or FALSE if there is no such row
 	 */
 	public function get($key)
 	{
