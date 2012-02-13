@@ -130,7 +130,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 		unset($config['session']['expiration'], $config['session']['autoStart'], $config['session']['iAmUsingBadHost']);
 		if (!empty($config['session'])) {
-			Validators::assertField($config, 'session', 'array');
 			$session->addSetup('setOptions', array($config['session']));
 		}
 
