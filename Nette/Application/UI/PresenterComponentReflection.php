@@ -36,6 +36,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 
 
 	/**
+	 * @param  string|NULL
 	 * @return array of persistent parameters.
 	 */
 	public function getPersistentParams($class = NULL)
@@ -73,6 +74,7 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 
 
 	/**
+	 * @param  string|NULL
 	 * @return array of persistent components.
 	 */
 	public function getPersistentComponents($class = NULL)
@@ -120,6 +122,8 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 
 
 	/**
+	 * @param  ReflectionFunctionAbstract
+	 * @param  array
 	 * @return array
 	 */
 	public static function combineArgs(\ReflectionFunctionAbstract $method, $args)

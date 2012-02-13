@@ -83,7 +83,8 @@ class Compiler extends Nette\Object
 
 	/**
 	 * Adds new macro.
-	 * @param
+	 * @param  string
+	 * @param  IMacro
 	 * @return Compiler  provides a fluent interface
 	 */
 	public function addMacro($name, IMacro $macro)
@@ -340,6 +341,7 @@ class Compiler extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @param  bool
+	 * @param  HtmlNode
 	 * @return MacroNode
 	 */
 	public function writeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, HtmlNode $htmlNode = NULL)
@@ -405,8 +407,7 @@ class Compiler extends Nette\Object
 	/**
 	 * Generates code for macro <tag n:attr> to the output.
 	 * @param  string
-	 * @param  array
-	 * @param  bool
+	 * @param  HtmlNode
 	 * @return void
 	 */
 	public function writeAttrsMacro($code, HtmlNode $htmlNode)
@@ -484,6 +485,7 @@ class Compiler extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @param  string
+	 * @param  HtmlNode
 	 * @return MacroNode
 	 */
 	public function expandMacro($name, $args, $modifiers = NULL, HtmlNode $htmlNode = NULL)

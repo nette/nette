@@ -35,6 +35,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 
 	/**
+	 * @param  Nette\ComponentModel\IContainer|NULL
+	 * @param  string|NULL
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
@@ -226,6 +228,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 	/**
 	 * Returns a fully-qualified name that uniquely identifies the parameter.
+	 * @param  string
 	 * @return string
 	 */
 	final public function getParameterId($name)

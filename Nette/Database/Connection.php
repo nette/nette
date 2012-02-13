@@ -103,7 +103,7 @@ class Connection extends PDO
 
 	/**
 	 * Sets cache storage engine
-	 * @param Nette\Caching\IStorage $storage
+	 * @param  Nette\Caching\IStorage $storage
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)

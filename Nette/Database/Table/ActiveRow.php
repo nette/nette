@@ -174,7 +174,8 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Stores value in column.
 	 * @param  string column name
-	 * @return NULL
+	 * @param  string value
+	 * @return void
 	 */
 	public function offsetSet($key, $value)
 	{
@@ -210,7 +211,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/**
 	 * Removes column from data.
 	 * @param  string column name
-	 * @return NULL
+	 * @return void
 	 */
 	public function offsetUnset($key)
 	{

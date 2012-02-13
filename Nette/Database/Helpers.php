@@ -39,6 +39,7 @@ class Helpers
 
 	/**
 	 * Displays complete result set as HTML table for debug purposes.
+	 * @param  Statement
 	 * @return void
 	 */
 	public static function dumpResult(Statement $statement)
@@ -140,6 +141,7 @@ class Helpers
 
 	/**
 	 * Import SQL dump from file - extreme fast.
+	 * @param  Connection  connection
 	 * @param  string  filename
 	 * @return int  count of commands
 	 */

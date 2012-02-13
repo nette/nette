@@ -51,6 +51,8 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 
 	/**
 	 * Sends response to output.
+	 * @param  Nette\Http\IRequest
+	 * @param  Nette\Http\IResponse
 	 * @return void
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)

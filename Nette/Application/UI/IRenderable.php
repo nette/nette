@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- *
+ * Component with ability to repaint.
  *
  * @author     David Grudl
  */
@@ -25,7 +25,6 @@ interface IRenderable
 
 	/**
 	 * Forces control to repaint.
-	 * @param  string
 	 * @return void
 	 */
 	function invalidateControl();

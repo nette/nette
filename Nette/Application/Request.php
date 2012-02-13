@@ -63,6 +63,7 @@ final class Request extends Nette\FreezableObject
 	 * @param  array   variables provided to the presenter usually via URL
 	 * @param  array   variables provided to the presenter via POST
 	 * @param  array   all uploaded files
+	 * @param  array   flags
 	 */
 	public function __construct($name, $method, array $params, array $post = array(), array $files = array(), array $flags = array())
 	{
