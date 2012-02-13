@@ -42,6 +42,17 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 
 
+	/**
+	 * @internal
+	 * @ignore
+	 */
+	public function getTable()
+	{
+		return $this->table;
+	}
+
+
+
 	public function __toString()
 	{
 		try {

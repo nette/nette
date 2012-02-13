@@ -506,13 +506,20 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
 			$row = $result->normalizeRow($row);
-			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = new ActiveRow($row, $this);
+			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = $this->createRow($row);
 		}
 		$this->data = $this->rows;
 
 		if (isset($row[$this->primary]) && !is_string($this->accessed)) {
 			$this->accessed[$this->primary] = TRUE;
 		}
+	}
+
+
+
+	protected function createRow(array $row)
+	{
+		return new ActiveRow($row, $this);
 	}
 
 

@@ -199,6 +199,11 @@ class GroupedSelection extends Selection
 		if ($this->data === NULL) {
 			$this->data = array();
 		} else {
+			foreach ($this->data as $row) {
+				// update active id in the selection reference in case of requerying for another column
+				// must be updated only the active key, not the Selection reference, because of caching accessed columns
+				$row->getTable()->active = $this->active;
+			}
 			reset($this->data);
 		}
 	}
