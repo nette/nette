@@ -58,10 +58,7 @@ class PhpWriter extends Nette\Object
 	{
 		$args = func_get_args();
 		array_shift($args);
-		$word = NULL;
-		if (strpos($mask, '%node.word') !== FALSE) {
-			$word = $this->argsTokenizer->fetchWord();
-		}
+		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
 		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', /*5.2* callback(*/function($m) use ($me) {
 			return $me->escape(substr($m[1], 1, -1));
