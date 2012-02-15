@@ -568,10 +568,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	protected function tryDelimite($s)
 	{
 		$driver = $this->connection->getSupplementalDriver();
-		return preg_replace_callback('#(?<=[\s,<>=]|^)[a-z_][a-z0-9_.]*(?=[\s,<>=]|$)#i', function($m) use ($driver) {
-			return strtoupper($m[0]) === $m[0]
-				? $m[0]
-				: implode('.', array_map(array($driver, 'delimite'), explode('.', $m[0])));
+		return preg_replace_callback('#(?<=[^\w`"[]|^)[a-z_][a-z0-9_]*(?=[^\w`"\]]|$)#i', function($m) use ($driver) {
+			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
 	}
 
