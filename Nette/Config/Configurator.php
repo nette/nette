@@ -41,6 +41,10 @@ class Configurator extends Nette\Object
 	/** @var array */
 	protected $files = array();
 
+	/** @var Nette\Caching\IStorage */
+	private $cacheStorage;
+
+
 
 
 	public function __construct()
@@ -139,11 +143,11 @@ class Configurator extends Nette\Object
 	 */
 	public function createRobotLoader()
 	{
-		if (!($cacheDir = $this->getCacheDirectory())) {
+		if (null === $this->cacheStorage && !($cacheDir = $this->getCacheDirectory())) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
 		}
 		$loader = new Nette\Loaders\RobotLoader;
-		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
+		$loader->setCacheStorage($this->cacheStorage ?: new Nette\Caching\Storages\FileStorage($cacheDir));
 		$loader->autoRebuild = !$this->parameters['productionMode'];
 		return $loader;
 	}
@@ -177,8 +181,8 @@ class Configurator extends Nette\Object
 	 */
 	public function createContainer()
 	{
-		if ($cacheDir = $this->getCacheDirectory()) {
-			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
+		if (null !== $this->cacheStorage || ($cacheDir = $this->getCacheDirectory())) {
+			$cache = new Cache($this->cacheStorage ?: new Nette\Caching\Storages\FileStorage($cacheDir), 'Nette.Configurator');
 			$cacheKey = array($this->parameters, $this->files);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
@@ -188,7 +192,7 @@ class Configurator extends Nette\Object
 				));
 				$cached = $cache->load($cacheKey);
 			}
-			Nette\Utils\LimitedScope::load($cached['file'], TRUE);
+			Nette\Utils\LimitedScope::evaluate($cached);
 
 		} elseif ($this->files) {
 			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
@@ -289,6 +293,28 @@ class Configurator extends Nette\Object
 	protected function getCacheDirectory()
 	{
 		return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
+	}
+
+
+
+	/**
+	 * @param  Nette\Caching\IStorage
+	 * @return Configurator  provides a fluent interface
+	 */
+	public function setCacheStorage(Nette\Caching\IStorage $storage)
+	{
+		$this->cacheStorage = $storage;
+		return $this;
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\IStorage
+	 */
+	public function getCacheStorage()
+	{
+		return $this->cacheStorage;
 	}
 
 
