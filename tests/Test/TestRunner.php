@@ -86,7 +86,8 @@ class TestRunner
 				$testCase = new TestCase($entry);
 				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
 				try {
-					$running[$entry] = $testCase->run();
+					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
+					$running[$entry] = $testCase->run(!$parallel);
 				} catch (TestCaseException $e) {
 					$this->out('s');
 					$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
@@ -96,7 +97,7 @@ class TestRunner
 				usleep(self::RUN_USLEEP); // stream_select() doesn't work with proc_open()
 			}
 			foreach ($running as $entry => $testCase) {
-				if ($this->jobs == 1 || count($running) + count($tests) <= 1 || $testCase->isReady()) {
+				if ($testCase->isReady()) {
 					try {
 						$testCase->collect();
 						$this->out('.');
