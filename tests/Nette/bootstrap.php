@@ -20,8 +20,8 @@ ini_set('log_errors', FALSE);
 
 
 // create temporary directory
-define('TEMP_DIR', __DIR__ . '/../tmp');
-TestHelpers::purge(TEMP_DIR);
+define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
+@mkdir(TEMP_DIR, 0777, TRUE);
 
 
 // catch unexpected errors/warnings/notices
