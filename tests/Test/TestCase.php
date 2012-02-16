@@ -22,6 +22,7 @@
 class TestCase
 {
 	const
+		CODE_NONE = -1,
 		CODE_OK = 0,
 		CODE_SKIP = 253,
 		CODE_ERROR = 255,
@@ -54,6 +55,9 @@ class TestCase
 	/** @var resource */
 	private $stdout;
 
+	/** @var int */
+	private $exitCode = self::CODE_NONE;
+
 	/** @var array */
 	private static $cachedPhp;
 
@@ -74,9 +78,10 @@ class TestCase
 
 	/**
 	 * Runs single test.
+	 * @param  bool
 	 * @return TestCase  provides a fluent interface
 	 */
-	public function run()
+	public function run($blocking = true)
 	{
 		// pre-skip?
 		if (isset($this->options['skip'])) {
@@ -94,7 +99,7 @@ class TestCase
 			}
 		}
 
-		$this->execute();
+		$this->execute($blocking);
 		return $this;
 	}
 
@@ -135,9 +140,10 @@ class TestCase
 
 	/**
 	 * Execute test.
+	 * @param  bool
 	 * @return void
 	 */
-	private function execute()
+	private function execute($blocking)
 	{
 		$this->headers = $this->output = NULL;
 
@@ -157,7 +163,7 @@ class TestCase
 		$this->proc = proc_open($this->cmdLine, $descriptors, $pipes, dirname($this->file), null, array('bypass_shell' => true));
 		list($stdin, $this->stdout, $stderr) = $pipes;
 		fclose($stdin);
-		stream_set_blocking($this->stdout, false);
+		stream_set_blocking($this->stdout, $blocking ? 1 : 0);
 		fclose($stderr);
 	}
 
@@ -171,6 +177,9 @@ class TestCase
 	{
 		$this->output .= stream_get_contents($this->stdout);
 		$status = proc_get_status($this->proc);
+		if ($status['exitcode'] !== self::CODE_NONE) {
+			$this->exitCode = $status['exitcode'];
+		}
 		return !$status['running'];
 	}
 
@@ -185,6 +194,9 @@ class TestCase
 		$this->output .= stream_get_contents($this->stdout);
 		fclose($this->stdout);
 		$res = proc_close($this->proc);
+		if ($res === self::CODE_NONE) {
+			$res = $this->exitCode;
+		}
 
 		if ($this->phpType === 'CGI') {
 			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2);
