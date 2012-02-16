@@ -30,16 +30,16 @@ class TestRunner
 	private $logFile;
 
 	/** @var string  php-cgi binary */
-	public $phpBinary;
+	private $phpBinary;
 
 	/** @var string  php-cgi command-line arguments */
-	public $phpArgs;
+	private $phpArgs;
 
 	/** @var string  php-cgi environment variables */
-	public $phpEnvironment;
+	private $phpEnvironment;
 
 	/** @var bool  display skipped tests information? */
-	public $displaySkipped = FALSE;
+	private $displaySkipped = FALSE;
 
 
 
