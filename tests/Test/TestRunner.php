@@ -26,8 +26,8 @@ class TestRunner
 	/** waiting time between runs in microseconds */
 	const RUN_USLEEP = 10000;
 
-	/** @var string  path to test file/directory */
-	public $path;
+	/** @var array  paths to test files/directories */
+	public $paths = array();
 
 	/** @var resource */
 	private $logFile;
@@ -58,16 +58,16 @@ class TestRunner
 		$count = 0;
 		$failed = $passed = $skipped = array();
 
-		if (is_file($this->path)) {
-			$files = array($this->path);
-		} else {
-			$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path));
-		}
-
 		exec($this->phpEnvironment . escapeshellarg($this->phpBinary) . ' -v', $output);
 		echo "$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
 
 		$tests = array();
+		foreach ($this->paths as $path) {
+			if (is_file($path)) {
+				$files = array($path);
+			} else {
+				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+			}
 		foreach ($files as $entry) {
 			$entry = (string) $entry;
 			$info = pathinfo($entry);
@@ -75,6 +75,7 @@ class TestRunner
 				continue;
 			}
 			$tests[] = $entry;
+		}
 		}
 
 		$running = array();
@@ -156,13 +157,13 @@ class TestRunner
 		$this->phpBinary = 'php-cgi';
 		$this->phpArgs = '';
 		$this->phpEnvironment = '';
-		$this->path = getcwd(); // current directory
+		$this->paths = array();
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
 		foreach ($args as $arg) {
 			if (!preg_match('#^[-/][a-z]+$#', $arg)) {
 				if ($path = realpath($arg)) {
-					$this->path = $path;
+					$this->paths[] = $path;
 				} else {
 					throw new Exception("Invalid path '$arg'.");
 				}
@@ -197,6 +198,10 @@ class TestRunner
 					throw new Exception("Unknown option $arg.");
 					exit;
 			}
+		}
+
+		if (!$this->paths) {
+			$this->paths[] = getcwd(); // current directory
 		}
 	}
 
