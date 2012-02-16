@@ -58,7 +58,7 @@ class MultiControl extends Nette\Application\UI\Presenter
 }
 
 
-$control = new MultiControl(new Nette\Di\Container(array(
+$control = new MultiControl(new Nette\DI\Container(array(
 	'productionMode' => true,
 )));
 $control['multi-1'];
