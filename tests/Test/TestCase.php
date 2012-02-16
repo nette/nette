@@ -48,6 +48,12 @@ class TestCase
 	/** @var string PHP type (CGI or CLI) */
 	private $phpType;
 
+	/** @var resource */
+	private $proc;
+
+	/** @var array */
+	private $pipes = array();
+
 	/** @var array */
 	private static $cachedPhp;
 
@@ -68,7 +74,7 @@ class TestCase
 
 	/**
 	 * Runs single test.
-	 * @return void
+	 * @return TestCase  provides a fluent interface
 	 */
 	public function run()
 	{
@@ -89,14 +95,7 @@ class TestCase
 		}
 
 		$this->execute();
-
-		// HTTP code check
-		if (isset($this->options['assertcode'])) {
-			$code = isset($this->headers['Status']) ? (int) $this->headers['Status'] : 200;
-			if ($code !== (int) $this->options['assertcode']) {
-				throw new TestCaseException('Expected HTTP code ' . $this->options['assertcode'] . ' is not same as actual code ' . $code);
-			}
-		}
+		return $this;
 	}
 
 
@@ -136,30 +135,54 @@ class TestCase
 
 	/**
 	 * Execute test.
-	 * @return array
+	 * @return void
 	 */
 	private function execute()
 	{
 		$this->headers = $this->output = NULL;
 
-		$tempFile = tempnam(sys_get_temp_dir(), 'tmp');
-		if (!$tempFile) {
-			throw new Exception("Unable to create temporary file.");
-		}
-
-		$command = $this->cmdLine;
 		if (isset($this->options['phpini'])) {
 			foreach (explode(';', $this->options['phpini']) as $item) {
-				$command .= " -d " . escapeshellarg(trim($item));
+				$this->cmdLine .= " -d " . escapeshellarg(trim($item));
 			}
 		}
-		$command .= ' ' . escapeshellarg($this->file) . ' > ' . escapeshellarg($tempFile);
+		$this->cmdLine .= ' ' . escapeshellarg($this->file);
 
-		chdir(dirname($this->file));
-		exec($command, $foo, $res);
+		$descriptors = array(
+			array('pipe', 'r'),
+			array('pipe', 'w'),
+			array('pipe', 'w'),
+		);
 
-		$this->output = file_get_contents($tempFile);
-		unlink($tempFile);
+		$this->proc = proc_open($this->cmdLine, $descriptors, $this->pipes, dirname($this->file), null, array('bypass_shell' => true));
+	}
+
+
+
+	/**
+	 * Checks if the test results are ready.
+	 * @return bool
+	 */
+	public function isReady()
+	{
+		$status = proc_get_status($this->proc);
+		return !$status['running'];
+	}
+
+
+
+	/**
+	 * Collect results.
+	 * @return void
+	 */
+	public function collect()
+	{
+		list($stdin, $stdout, $stderr) = $this->pipes;
+		$this->output = stream_get_contents($stdout);
+		fclose($stdin);
+		fclose($stdout);
+		fclose($stderr);
+		$res = proc_close($this->proc);
 
 		if ($this->phpType === 'CGI') {
 			list($headers, $this->output) = explode("\r\n\r\n", $this->output, 2);
@@ -185,8 +208,16 @@ class TestCase
 			throw new TestCaseException($this->output, TestCaseException::SKIPPED);
 
 		} elseif ($res !== self::CODE_OK) {
-			throw new Exception("Unable to execute '$command'.");
+			throw new Exception("Unable to execute '$this->cmdLine'.");
 
+		}
+
+		// HTTP code check
+		if (isset($this->options['assertcode'])) {
+			$code = isset($this->headers['Status']) ? (int) $this->headers['Status'] : 200;
+			if ($code !== (int) $this->options['assertcode']) {
+				throw new TestCaseException('Expected HTTP code ' . $this->options['assertcode'] . ' is not same as actual code ' . $code);
+			}
 		}
 	}
 

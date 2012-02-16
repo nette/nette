@@ -11,7 +11,7 @@
  * @package    Nette\Test
  */
 
-require __DIR__ . '/TestCase.php';
+require __DIR__ . '/TestHelpers.php';
 
 
 
@@ -23,6 +23,9 @@ require __DIR__ . '/TestCase.php';
  */
 class TestRunner
 {
+	/** waiting time between runs in microseconds */
+	const RUN_USLEEP = 10000;
+
 	/** @var string  path to test file/directory */
 	public $path;
 
@@ -40,6 +43,9 @@ class TestRunner
 
 	/** @var bool  display skipped tests information? */
 	private $displaySkipped = FALSE;
+
+	/** @var int  run jobs in parallel */
+	private $jobs = 1;
 
 
 
@@ -61,30 +67,51 @@ class TestRunner
 		exec($this->phpEnvironment . escapeshellarg($this->phpBinary) . ' -v', $output);
 		echo "$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
 
+		$tests = array();
 		foreach ($files as $entry) {
 			$entry = (string) $entry;
 			$info = pathinfo($entry);
 			if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
 				continue;
 			}
+			$tests[] = $entry;
+		}
 
-			$count++;
-			$testCase = new TestCase($entry);
-			$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
-
-			try {
-				$testCase->run();
-				$this->out('.');
-				$passed[] = array($testCase->getName(), $entry);
-
-			} catch (TestCaseException $e) {
-				if ($e->getCode() === TestCaseException::SKIPPED) {
+		$running = array();
+		while ($tests || $running) {
+			for ($i = count($running); $tests && $i < $this->jobs; $i++) {
+				$entry = array_shift($tests);
+				$count++;
+				$testCase = new TestCase($entry);
+				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
+				try {
+					$running[$entry] = $testCase->run();
+				} catch (TestCaseException $e) {
 					$this->out('s');
 					$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
+				}
+			}
+			if (count($running) > 1) {
+				usleep(self::RUN_USLEEP); // stream_select() doesn't work with proc_open()
+			}
+			foreach ($running as $entry => $testCase) {
+				if ($this->jobs == 1 || count($running) + count($tests) <= 1 || $testCase->isReady()) {
+					try {
+						$testCase->collect();
+						$this->out('.');
+						$passed[] = array($testCase->getName(), $entry);
 
-				} else {
-					$this->out('F');
-					$failed[] = array($testCase->getName(), $entry, $e->getMessage());
+					} catch (TestCaseException $e) {
+						if ($e->getCode() === TestCaseException::SKIPPED) {
+							$this->out('s');
+							$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
+
+						} else {
+							$this->out('F');
+							$failed[] = array($testCase->getName(), $entry, $e->getMessage());
+						}
+					}
+					unset($running[$entry]);
 				}
 			}
 		}
@@ -161,6 +188,10 @@ class TestRunner
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;
+					break;
+				case 'j':
+					$args->next();
+					$this->jobs = max(1, (int) $args->current());
 					break;
 				default:
 					throw new Exception("Unknown option $arg.");
