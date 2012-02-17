@@ -105,7 +105,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 */
 	public function load($key, $fallback = NULL)
 	{
-		$data = $this->storage->read($this->namespace . md5(is_scalar($key) ? $key : serialize($key)));
+		$data = $this->storage->read($this->generateKey($key));
 		if ($data === NULL && $fallback) {
 			return $this->save($key, callback($fallback));
 		}
@@ -134,7 +134,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	public function save($key, $data, array $dp = NULL)
 	{
 		$this->release();
-		$key = $this->namespace . md5(is_scalar($key) ? $key : serialize($key));
+		$key = $this->generateKey($key);
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
@@ -176,7 +176,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		if (isset($dp[self::ITEMS])) {
 			$dp[self::ITEMS] = array_unique((array) $dp[self::ITEMS]);
 			foreach ($dp[self::ITEMS] as $k => $item) {
-				$dp[self::ITEMS][$k] = $this->namespace . md5(is_scalar($item) ? $item : serialize($item));
+				$dp[self::ITEMS][$k] = $this->generateKey($item);
 			}
 		}
 
@@ -275,6 +275,20 @@ class Cache extends Nette\Object implements \ArrayAccess
 		}
 		echo $data;
 	}
+
+
+
+	/**
+	 * Generates internal cache key.
+	 *
+	 * @param  string
+	 * @return string
+	 */
+	protected function generateKey($key)
+	{
+		return $this->namespace . md5(is_scalar($key) ? $key : serialize($key));
+	}
+	
 
 
 
