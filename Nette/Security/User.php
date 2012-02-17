@@ -234,7 +234,9 @@ class User extends Nette\Object
 	 */
 	final public function isInRole($role)
 	{
-		return in_array($role, $this->getRoles(), TRUE);
+		return (bool) count(array_filter($this->getRoles(), function($value) use ($role) {
+				return ($value instanceof IRole) ? $value->getRoleId() == $role : $value == $role;
+		}));
 	}
 
 
