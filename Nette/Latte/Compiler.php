@@ -71,7 +71,8 @@ class Compiler extends Nette\Object
 	/** @internal Context-aware escaping states */
 	const CONTEXT_COMMENT = 'comment',
 		CONTEXT_SINGLE_QUOTED = "'",
-		CONTEXT_DOUBLE_QUOTED = '"';
+		CONTEXT_DOUBLE_QUOTED = '"',
+		CONTEXT_UNQUOTED = '=';
 
 
 	public function __construct()
@@ -116,6 +117,11 @@ class Compiler extends Nette\Object
 		try {
 			foreach ($tokens as $this->position => $token) {
 				if ($token->type === Token::TEXT) {
+					if (($this->context[0] === self::CONTEXT_SINGLE_QUOTED || $this->context[0] === self::CONTEXT_DOUBLE_QUOTED)
+						&& $token->text === $this->context[0])
+					{
+						$this->setContext(self::CONTEXT_UNQUOTED);
+					}
 					$this->output .= $token->text;
 
 				} elseif ($token->type === Token::MACRO) {
@@ -258,7 +264,7 @@ class Compiler extends Nette\Object
 			$htmlNode->isEmpty = in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))
 				&& isset(Nette\Utils\Html::$emptyElements[strtolower($token->name)]);
 			$htmlNode->offset = strlen($this->output);
-			$this->setContext(NULL);
+			$this->setContext(self::CONTEXT_UNQUOTED);
 		}
 		$this->output .= $token->text;
 	}

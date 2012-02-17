@@ -79,7 +79,7 @@ if ($_l->extends) {
 
 <p val0 val1 = tmp val2=tmp val3="x"> </p>
 
-<p val = <?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?>> </p>
+<p val = <?php echo '"' . htmlSpecialChars($xss) . '"' ?>> </p>
 
 <p val =><?php echo Nette\Templating\Helpers::escapeHtml($xss, ENT_NOQUOTES) ?></p>
 

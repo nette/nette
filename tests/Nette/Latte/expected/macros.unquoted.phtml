@@ -1,0 +1,18 @@
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+
+// snippets support
+if (!empty($_control->snippetMode)) {
+	return Nette\Latte\Macros\UIMacros::renderSnippets($_control, $_l, get_defined_vars());
+}
+
+//
+// main template
+//
+?>
+<span title=<?php echo '"' . htmlSpecialChars($x) . '"' ?>></span>
+
+<span title=<?php echo '"' . htmlSpecialChars($x) . '"' ?> <?php echo '"' . htmlSpecialChars($x) . '"' ?>></span>
