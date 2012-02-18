@@ -422,31 +422,35 @@ class Compiler extends Nette\Object
 		$attrCode = '';
 
 		foreach ($this->macros as $name => $foo) {
-			$macro = $htmlNode->closing ? "/$name" : $name;
+			$attrName = "inner-$name";
+			if (isset($attrs[$attrName])) {
+				if ($htmlNode->closing) {
+					$left[] = array("/$name", '');
+				} else {
+					array_unshift($right, array($name, $attrs[$attrName]));
+				}
+				unset($attrs[$attrName]);
+			}
+		}
+
+		foreach (array_reverse($this->macros) as $name => $foo) {
+			$attrName = "tag-$name";
+			if (isset($attrs[$attrName])) {
+				$left[] = array($name, $attrs[$attrName]);
+				array_unshift($right, array("/$name", ''));
+				unset($attrs[$attrName]);
+			}
+		}
+
+		foreach ($this->macros as $name => $foo) {
 			if (isset($attrs[$name])) {
 				if ($htmlNode->closing) {
-					$right[] = array($macro, '');
+					$right[] = array("/$name", '');
 				} else {
-					array_unshift($left, array($macro, $attrs[$name]));
+					array_unshift($left, array($name, $attrs[$name]));
 				}
+				unset($attrs[$name]);
 			}
-
-			$innerName = "inner-$name";
-			if (isset($attrs[$innerName])) {
-				if ($htmlNode->closing) {
-					$left[] = array($macro, '');
-				} else {
-					array_unshift($right, array($macro, $attrs[$innerName]));
-				}
-			}
-
-			$tagName = "tag-$name";
-			if (isset($attrs[$tagName])) {
-				array_unshift($left, array($name, $attrs[$tagName]));
-				$right[] = array("/$name", '');
-			}
-
-			unset($attrs[$name], $attrs[$innerName], $attrs[$tagName]);
 		}
 
 		if ($attrs) {
