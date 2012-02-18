@@ -22,6 +22,9 @@ use Nette;
  */
 class MacroNode extends Nette\Object
 {
+	const PREFIX_INNER = 'inner',
+		PREFIX_TAG = 'tag';
+
 	/** @var IMacro */
 	public $macro;
 
@@ -64,17 +67,21 @@ class MacroNode extends Nette\Object
 	/** @var HtmlNode  for n:attr macros */
 	public $htmlNode;
 
+	/** @var string  for n:attr macros (NULL, PREFIX_INNER, PREFIX_TAG) */
+	public $prefix;
+
 	public $saved;
 
 
 
-	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL, HtmlNode $htmlNode = NULL)
+	public function __construct(IMacro $macro, $name, $args = NULL, $modifiers = NULL, MacroNode $parentNode = NULL, HtmlNode $htmlNode = NULL, $prefix = NULL)
 	{
 		$this->macro = $macro;
 		$this->name = (string) $name;
 		$this->modifiers = (string) $modifiers;
 		$this->parentNode = $parentNode;
 		$this->htmlNode = $htmlNode;
+		$this->prefix = $prefix;
 		$this->tokenizer = new MacroTokenizer($this->args);
 		$this->data = new \stdClass;
 		$this->setArgs($args);
