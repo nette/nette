@@ -1276,7 +1276,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		}
 
 		foreach ($params as $key => $value) {
-			if (!preg_match('#^([a-z0-9_]+-)*+((?!\d+$)[a-z0-9_]+)$#i', $key, $matches)) {
+			if (!preg_match('#^((?:[a-z0-9_]+-)*)((?!\d+$)[a-z0-9_]+)$#i', $key, $matches)) {
 				$this->error("'Invalid parameter name '$key'");
 			}
 			if (!$matches[1]) {
