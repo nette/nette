@@ -124,19 +124,19 @@ class Compiler extends Nette\Object
 					}
 					$this->output .= $token->text;
 
-				} elseif ($token->type === Token::MACRO) {
+				} elseif ($token->type === Token::MACRO_TAG) {
 					$isRightmost = !isset($tokens[$this->position + 1])
 						|| substr($tokens[$this->position + 1]->text, 0, 1) === "\n";
 					$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost);
 
-				} elseif ($token->type === Token::TAG_BEGIN) {
-					$this->processTagBegin($token);
+				} elseif ($token->type === Token::HTML_TAG_BEGIN) {
+					$this->processHtmlTagBegin($token);
 
-				} elseif ($token->type === Token::TAG_END) {
-					$this->processTagEnd($token);
+				} elseif ($token->type === Token::HTML_TAG_END) {
+					$this->processHtmlTagEnd($token);
 
-				} elseif ($token->type === Token::ATTRIBUTE) {
-					$this->processAttribute($token);
+				} elseif ($token->type === Token::HTML_ATTRIBUTE) {
+					$this->processHtmlAttribute($token);
 				}
 			}
 		} catch (CompileException $e) {
@@ -242,7 +242,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processTagBegin($token)
+	private function processHtmlTagBegin($token)
 	{
 		if ($token->closing) {
 			do {
@@ -271,7 +271,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processTagEnd($token)
+	private function processHtmlTagEnd($token)
 	{
 		if ($token->text === '-->') {
 			$this->output .= $token->text;
@@ -314,7 +314,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processAttribute($token)
+	private function processHtmlAttribute($token)
 	{
 		$htmlNode = end($this->htmlNodes);
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {

@@ -16,7 +16,7 @@ use Nette;
 
 
 /**
- * Macro tokenizer.
+ * Macro tag tokenizer.
  *
  * @author     David Grudl
  */
