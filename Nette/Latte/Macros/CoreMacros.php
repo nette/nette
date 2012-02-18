@@ -112,7 +112,7 @@ class CoreMacros extends MacroSet
 		if ($node->data->capture = ($node->args === '')) {
 			return 'ob_start()';
 		}
-		if ($node->htmlNode && isset($node->htmlNode->macroAttrs['tag-if'])) {
+		if ($node->prefix === $node::PREFIX_TAG) {
 			return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->ifs)):' : 'if ($_l->ifs[] = (%node.args)):');
 		}
 		return $writer->write('if (%node.args):');
