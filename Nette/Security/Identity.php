@@ -169,7 +169,7 @@ class Identity extends Nette\FreezableObject implements IIdentity
 	 */
 	public function __unset($name)
 	{
-		ObjectMixin::remove($this, $name);
+		Nette\ObjectMixin::remove($this, $name);
 	}
 
 }
