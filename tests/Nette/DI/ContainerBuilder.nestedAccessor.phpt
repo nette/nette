@@ -34,4 +34,3 @@ $container = new Container;
 Assert::true( $container->nested->one instanceof stdClass );
 
 Assert::false( isset($container->nested_one) );
-

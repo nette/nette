@@ -288,7 +288,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	{
 		return $this->namespace . md5(is_scalar($key) ? $key : serialize($key));
 	}
-	
+
 
 
 
