@@ -965,13 +965,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 			$globalState = $this->getGlobalState($destination === 'this' ? NULL : $presenterClass);
 			if ($current && $args) {
-				$tmp = $globalState + $this->params;
-				foreach ($args as $key => $val) {
-					if ((string) $val !== (isset($tmp[$key]) ? (string) $tmp[$key] : '')) {
-						$current = FALSE;
-						break;
-					}
-				}
+				$current = http_build_query($globalState + $this->params) === http_build_query($args);
 			}
 			$args += $globalState;
 		}
