@@ -452,7 +452,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		foreach ($matches[1] as $names) {
 			$parent = $this->name;
 			if ($names !== "$parent.") { // case-sensitive
-				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~', $names, $matches, PREG_SET_ORDER);
+				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~i', $names, $matches, PREG_SET_ORDER);
 				foreach ($matches as $match) {
 					list(, $name, $delimiter) = $match;
 
