@@ -608,6 +608,9 @@ class ContainerBuilder extends Nette\Object
 			} elseif ($service = $that->getServiceName($val, $self)) {
 				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
 				$val = new PhpLiteral($val);
+
+			} elseif (is_string($val) && preg_match('#^[\w\\\\]*::[A-Z][A-Z0-9_]*\z#', $val, $m)) {
+				$val = new PhpLiteral(ltrim($val, ':'));
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
