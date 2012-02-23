@@ -230,6 +230,17 @@ class Template extends Nette\Object implements ITemplate
 
 
 	/**
+	 * Returns all registered template run-time helper loaders.
+	 * @return array
+	 */
+	final public function getHelperLoaders()
+	{
+		return $this->helperLoaders;
+	}
+
+
+
+	/**
 	 * Call a template run-time helper. Do not call directly.
 	 * @param  string  helper name
 	 * @param  array   arguments
