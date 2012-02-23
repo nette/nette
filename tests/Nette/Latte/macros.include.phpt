@@ -11,7 +11,8 @@
 
 use Nette\Latte,
 	Nette\Utils\Html,
-	Nette\Templating\FileTemplate;
+	Nette\Templating\FileTemplate,
+	Nette\Templating\Template;
 
 
 
@@ -35,3 +36,12 @@ Assert::match(file_get_contents("$path.html"), $template->__toString(TRUE));
 Assert::match(file_get_contents("$path.inc1.phtml"), $cache->phtml['include1.latte']);
 Assert::match(file_get_contents("$path.inc2.phtml"), $cache->phtml['include2.latte']);
 Assert::match(file_get_contents("$path.inc3.phtml"), $cache->phtml['include3.latte']);
+
+
+
+$template = new Template;
+$template->registerFilter($latte);
+$template->setSource('{include somefile.latte}');
+Assert::throws(function() use ($template) {
+	$template->render();
+}, 'Nette\NotSupportedException', 'Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');

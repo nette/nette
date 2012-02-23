@@ -369,14 +369,15 @@ class CoreMacros extends MacroSet
 		} elseif ($destination == NULL) { // intentionally ==
 			throw new Nette\InvalidArgumentException("Template file name was not specified.");
 
-		} else {
-			$tpl = clone $template;
-			if ($template instanceof Nette\Templating\IFileTemplate) {
-				if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
-					$destination = dirname($template->getFile()) . '/' . $destination;
-				}
-				$tpl->setFile($destination);
+		} elseif ($template instanceof Nette\Templating\IFileTemplate) {
+			if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
+				$destination = dirname($template->getFile()) . '/' . $destination;
 			}
+			$tpl = clone $template;
+			$tpl->setFile($destination);
+
+		} else {
+			throw new Nette\NotSupportedException('Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');
 		}
 
 		$tpl->setParameters($params); // interface?
