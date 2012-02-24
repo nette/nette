@@ -122,6 +122,7 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( 'error: Signal must be non-empty string.', $this->link('!') );
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this!', array('var1' => $this->var1)) );
+		Assert::same( '/index.php?sort%5By%5D%5Basc%5D=1&action=default&presenter=Test', $this->link('this', array('sort' => array('y' => array('asc' => TRUE)))) );
 
 		// Component link
 		Assert::same( 'error: Signal must be non-empty string.', $this->mycontrol->link('', 0, 1) );
