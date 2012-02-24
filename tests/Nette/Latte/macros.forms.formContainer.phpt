@@ -21,9 +21,6 @@ require __DIR__ . '/Template.inc';
 
 
 
-TestHelpers::purge(TEMP_DIR);
-
-
 $form = new Form;
 $form->addText('input1', 'Input 1');
 
