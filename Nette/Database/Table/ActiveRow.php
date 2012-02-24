@@ -233,14 +233,15 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
 		}
-		$this->access($key, TRUE);
 
 		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
 		$referenced = $this->getReference($table, $column);
 		if ($referenced !== FALSE) {
+			$this->access($key, FALSE);
 			return $referenced;
 		}
 
+		$this->access($key, NULL);
 		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
 	}
 
@@ -252,7 +253,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if (array_key_exists($key, $this->data)) {
 			return isset($this->data[$key]);
 		}
-		$this->access($key, TRUE);
+		$this->access($key, NULL);
 		return FALSE;
 	}
 
@@ -266,9 +267,12 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 
 
-	public function access($key, $delete = FALSE)
+	/**
+	 * @internal
+	 */
+	public function access($key, $cache = TRUE)
 	{
-		if ($this->table->getConnection()->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $delete)) {
+		if ($this->table->getConnection()->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $cache)) {
 			$id = (isset($this->data[$this->table->getPrimary()]) ? $this->data[$this->table->getPrimary()] : $this->data);
 			$this->data = $this->table[$id]->data;
 		}
