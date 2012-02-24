@@ -119,11 +119,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$cache = $this->connection->getCache();
 		if ($cache && !$this->select && $this->rows !== NULL) {
-			$accessed = $this->accessed;
-			if (is_array($accessed)) {
-				$accessed = array_filter($accessed);
-			}
-			$cache->save(array(__CLASS__, $this->name, $this->conditions), $accessed);
+			$cache->save(array(__CLASS__, $this->name, $this->conditions), $this->accessed);
 		}
 		$this->rows = NULL;
 	}
@@ -432,7 +428,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
 
 		} elseif ($this->prevAccessed) {
-			$cols = $prefix . implode(', ' . $prefix, array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys($this->prevAccessed)));
+			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($this->prevAccessed)));
+			$cols = $prefix . implode(', ' . $prefix, $cols);
 
 		} else {
 			$cols = $prefix . '*';
@@ -589,9 +586,15 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	public function access($key, $delete = FALSE)
+	/**
+	 * @internal
+	 * @param  string        column name
+	 * @param  bool|NULL     TRUE - cache, FALSE - don't cache, NULL - remove
+	 * @return bool
+	 */
+	public function access($key, $cache = TRUE)
 	{
-		if ($delete) {
+		if ($cache === NULL) {
 			if (is_array($this->accessed)) {
 				$this->accessed[$key] = FALSE;
 			}
@@ -602,10 +605,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->accessed = '';
 
 		} elseif (!is_string($this->accessed)) {
-			$this->accessed[$key] = TRUE;
+			$this->accessed[$key] = $cache;
 		}
 
-		if (!$this->select && $this->prevAccessed && ($key === NULL || !isset($this->prevAccessed[$key]))) {
+		if ($cache && !$this->select && $this->prevAccessed && ($key === NULL || !isset($this->prevAccessed[$key]))) {
 			$this->prevAccessed = '';
 			$this->rows = NULL;
 			return TRUE;
