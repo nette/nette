@@ -531,7 +531,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * @return array
 	 */
-	private static function exportRules($rules)
+	protected static function exportRules($rules)
 	{
 		$payload = array();
 		foreach ($rules as $rule) {
