@@ -21,6 +21,7 @@ if (%A%}
 	<li>translated: <?php echo Nette\Templating\Helpers::escapeHtml($template->truncate($template->translate($hello), 3), ENT_NOQUOTES) ?></li>
 	<li>Translated HTML: <?php ob_start() ?>ahoj<?php echo Nette\Templating\Helpers::escapeHtml($template->translate(ob_get_clean()), ENT_NOQUOTES) ?></li>
 	<li>Translated HTML: <?php ob_start() ?>ahoj<?php echo Nette\Templating\Helpers::escapeHtml($template->translate(ob_get_clean()), ENT_NOQUOTES) ?></li>
+	<li>Translated HTML: <?php echo Nette\Templating\Helpers::escapeHtml($template->translate('ahoj|ahojahojahojahoj'), ENT_NOQUOTES) ?></li>
 	<li>spaces: <?php echo Nette\Templating\Helpers::escapeHtml($template->types($hello , '' , "" , "$hello" ), ENT_NOQUOTES) ?></li>
 </ul>
 
