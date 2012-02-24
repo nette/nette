@@ -57,8 +57,8 @@ interface IUserStorage
 
 	/**
 	 * Enables log out from the persistent storage after inactivity.
-	 * @param string|int|DateTime number of seconds or timestamp
-	 * @param int Log out when the browser is closed | Clear the identity from persistent storage?
+	 * @param  string|int|DateTime number of seconds or timestamp
+	 * @param  int Log out when the browser is closed | Clear the identity from persistent storage?
 	 * @return void
 	 */
 	function setExpiration($time, $flags = 0);

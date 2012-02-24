@@ -291,7 +291,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 
 
-
 	/********************* interface ArrayAccess ****************d*g**/
 
 
