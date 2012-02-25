@@ -191,7 +191,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 						$val = NULL;
 					}
 				} else {
-					if ((string) $val === '') {
+					if ((is_scalar($val) && (string) $val === '') || $val === array()) {
 						$val = NULL;
 					}
 				}
