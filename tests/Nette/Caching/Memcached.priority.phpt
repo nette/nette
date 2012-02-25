@@ -27,19 +27,19 @@ $cache = new Cache($storage);
 
 
 // Writing cache...
-$cache->save('key1', 'value1', array(
+$cache->save('nette-priority-key1', 'value1', array(
 	Cache::PRIORITY => 100,
 ));
 
-$cache->save('key2', 'value2', array(
+$cache->save('nette-priority-key2', 'value2', array(
 	Cache::PRIORITY => 200,
 ));
 
-$cache->save('key3', 'value3', array(
+$cache->save('nette-priority-key3', 'value3', array(
 	Cache::PRIORITY => 300,
 ));
 
-$cache['key4'] = 'value4';
+$cache['nette-priority-key4'] = 'value4';
 
 
 // Cleaning by priority...
@@ -47,7 +47,7 @@ $cache->clean(array(
 	Cache::PRIORITY => '200',
 ));
 
-Assert::false( isset($cache['key1']), 'Is cached key1?' );
-Assert::false( isset($cache['key2']), 'Is cached key2?' );
-Assert::true( isset($cache['key3']), 'Is cached key3?' );
-Assert::true( isset($cache['key4']), 'Is cached key4?' );
+Assert::false( isset($cache['nette-priority-key1']), 'Is cached nette-priority-key1?' );
+Assert::false( isset($cache['nette-priority-key2']), 'Is cached nette-priority-key2?' );
+Assert::true( isset($cache['nette-priority-key3']), 'Is cached nette-priority-key3?' );
+Assert::true( isset($cache['nette-priority-key4']), 'Is cached nette-priority-key4?' );
