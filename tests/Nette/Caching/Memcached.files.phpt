@@ -23,7 +23,7 @@ if (!MemcachedStorage::isAvailable()) {
 
 
 
-$key = 'nette';
+$key = 'nette-files-key';
 $value = 'rulez';
 
 $cache = new Cache(new MemcachedStorage('localhost'));
