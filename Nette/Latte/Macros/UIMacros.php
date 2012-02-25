@@ -509,6 +509,7 @@ if (!empty($_control->snippetMode)) {
 				}
 			}
 		}
+		$control->snippetMode = TRUE;
 		if ($control instanceof Nette\Application\UI\IRenderable) {
 			$queue = array($control);
 			do {
