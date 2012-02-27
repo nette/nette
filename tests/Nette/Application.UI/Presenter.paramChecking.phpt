@@ -27,7 +27,8 @@ class TestPresenter extends Application\UI\Presenter
 
 
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-$presenter = new TestPresenter($container);
+$presenter = new TestPresenter;
+$presenter->setContext($container);
 
 
 Assert::throws(function() use ($presenter) {
