@@ -187,7 +187,7 @@ class Parser extends Nette\Object
 			$this->addToken(Token::HTML_TAG_END, $matches[0]);
 			$this->setContext(!$this->xmlMode && in_array($this->lastHtmlTag, array('script', 'style')) ? self::CONTEXT_CDATA : self::CONTEXT_TEXT);
 
-		} elseif (!empty($matches['attr'])) { // HTML attribute
+		} elseif (isset($matches['attr']) && $matches['attr'] !== '') { // HTML attribute
 			$token = $this->addToken(Token::HTML_ATTRIBUTE, $matches[0]);
 			$token->name = $matches['attr'];
 			$token->value = isset($matches['value']) ? $matches['value'] : '';
