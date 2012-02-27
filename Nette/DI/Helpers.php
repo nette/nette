@@ -99,6 +99,7 @@ final class Helpers
 
 	/**
 	 * Generates list of arguments using autowiring.
+	 * @param  Nette\Reflection\GlobalFunction|Nette\Reflection\Method
 	 * @return array
 	 */
 	public static function autowireArguments(\ReflectionFunctionAbstract $method, array $arguments, $container)
@@ -118,13 +119,13 @@ final class Helpers
 				unset($arguments[$parameter->getName()]);
 				$optCount = 0;
 
-			} elseif ($parameter->getClass()) { // has object typehint
-				$res[$num] = $container->getByType($parameter->getClass()->getName());
+			} elseif ($class = $parameter->getClassName()) { // has object typehint
+				$res[$num] = $container->getByType($class, FALSE);
 				if ($res[$num] === NULL) {
 					if ($parameter->allowsNull()) {
 						$optCount++;
 					} else {
-						throw new Nette\InvalidArgumentException("No service of type {$parameter->getClass()->getName()} found");
+						throw new Nette\InvalidArgumentException("No service of type {$class} found");
 					}
 				} else {
 					if ($container instanceof ContainerBuilder) {
