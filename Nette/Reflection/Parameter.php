@@ -60,7 +60,14 @@ class Parameter extends \ReflectionParameter
 	 */
 	public function getClassName()
 	{
-		return ($tmp = Nette\Utils\Strings::match($this, '#>\s+([a-z0-9_\\\\]+)#i')) ? $tmp[1] : NULL;
+		try {
+			return ($ref = parent::getClass()) ? $ref->getName() : NULL;
+		} catch (\ReflectionException $e) {
+			if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
+				return $m[1];
+			}
+			throw $e;
+		}
 	}
 
 
