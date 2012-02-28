@@ -315,20 +315,19 @@ if (!empty($_control->snippetMode)) {
 	{
 		if (isset($node->data->name)) { // block, snippet, define
 			if ($node->name === 'snippet' && $node->htmlNode && !$node->prefix // n:snippet -> n:inner-snippet
-				&& preg_match("#^(.*? n:\w+>\n?)(.*?)([ \t]*<[^<]+)$#sD", $node->content, $m))
+				&& preg_match("#^.*? n:\w+>\n?#s", $node->content, $m1) && preg_match("#[ \t]*<[^<]+$#sD", $node->content, $m2))
 			{
-				$node->openingCode = $m[1] . $node->openingCode;
-				$node->content = $m[2];
-				$node->closingCode .= $m[3];
+				$node->openingCode = $m1[0] . $node->openingCode;
+				$node->content = substr($node->content, strlen($m1[0]), -strlen($m2[0]));
+				$node->closingCode .= $m2[0];
 			}
 
 			if (empty($node->data->leave)) {
 				if (!empty($node->data->dynamic)) {
 					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
 				}
-				preg_match("#^(\n)?(.*?)([ \t]*)$#sD", $node->content, $m);
-				$this->namedBlocks[$node->data->name] = $m[2];
-				$node->content = $m[1] . $node->openingCode . "\n" . $m[3];
+				$this->namedBlocks[$node->data->name] = $tmp = rtrim(ltrim($node->content, "\n"), " \t");
+				$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($tmp));
 				$node->openingCode = "<?php ?>";
 			}
 
