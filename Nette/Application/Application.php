@@ -60,26 +60,30 @@ class Application extends Nette\Object
 	/** @var IPresenter */
 	private $presenter;
 
-	/** @var Nette\Http\IRequest */
-	private $httpRequest;
-
-	/** @var Nette\Http\IResponse */
-	private $httpResponse;
+	/** @var Nette\Http\Context */
+	private $httpContext;
 
 	/** @var IPresenterFactory */
 	private $presenterFactory;
+
+	/** @var Nette\Security\User */
+	private $user;
+
+	/** @var Nette\Http\Session */
+	private $session;
 
 	/** @var IRouter */
 	private $router;
 
 
 
-	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
+	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\Context $httpContext, Nette\Security\User $user, Nette\Http\Session $session)
 	{
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
+		$this->httpContext = $httpContext;
 		$this->presenterFactory = $presenterFactory;
 		$this->router = $router;
+		$this->user = $user;
+		$this->session = $session;
 	}
 
 
@@ -101,7 +105,7 @@ class Application extends Nette\Object
 				if (!$request) {
 					$this->onStartup($this);
 
-					$request = $this->router->match($this->httpRequest);
+					$request = $this->router->match($this->httpContext->request);
 					if (!$request instanceof Request) {
 						$request = NULL;
 						throw new BadRequestException('No route for HTTP request.');
@@ -128,7 +132,7 @@ class Application extends Nette\Object
 				$request->freeze();
 
 				// Execute presenter
-				$response = $this->presenter->run($request);
+				$response = $this->presenter->run($request, $this);
 				if ($response) {
 					$this->onResponse($this, $response);
 				}
@@ -139,7 +143,7 @@ class Application extends Nette\Object
 					continue;
 
 				} elseif ($response instanceof IResponse) {
-					$response->send($this->httpRequest, $this->httpResponse);
+					$response->send($this->httpContext->request, $this->httpContext->response);
 				}
 				break;
 
@@ -156,8 +160,8 @@ class Application extends Nette\Object
 					$e = new ApplicationException('An error occurred while executing error-presenter', 0, $e);
 				}
 
-				if (!$this->httpResponse->isSent()) {
-					$this->httpResponse->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
+				if (!$this->httpContext->response->isSent()) {
+					$this->httpContext->response->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
 				}
 
 				if (!$repeatedError && $this->errorPresenter) {
@@ -233,12 +237,67 @@ class Application extends Nette\Object
 
 
 	/**
+	 * Returns http context.
+	 * @return Nette\Http\Context
+	 */
+	public function getHttpContext()
+	{
+		return $this->httpContext;
+	}
+
+
+
+	/**
+	 * Returns http request.
+	 * @return Nette\Http\IRequest
+	 */
+	public function getHttpRequest()
+	{
+		return $this->httpContext->request;
+	}
+
+
+
+	/**
+	 * Returns http response.
+	 * @return Nette\Http\IResponse
+	 */
+	public function getHttpResponse()
+	{
+		return $this->httpContext->response;
+	}
+
+
+
+	/**
+	 * Returns http session.
+	 * @return Nette\Http\Session
+	 */
+	public function getSession()
+	{
+		return $this->session;
+	}
+
+
+
+	/**
 	 * Returns presenter factory.
 	 * @return IPresenterFactory
 	 */
 	public function getPresenterFactory()
 	{
 		return $this->presenterFactory;
+	}
+
+
+
+	/**
+	 * Returns user.
+	 * @return Nette\Security\User
+	 */
+	public function getUser()
+	{
+		return $this->user;
 	}
 
 
