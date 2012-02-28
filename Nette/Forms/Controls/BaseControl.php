@@ -44,7 +44,7 @@ use Nette,
 abstract class BaseControl extends Nette\ComponentModel\Component implements IControl
 {
 	/** @var string */
-	public static $idMask = 'frm%s-%s';
+	public static $idMask = 'frm-%s';
 
 	/** @var string textual caption or label */
 	public $caption;
@@ -167,7 +167,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			return NULL;
 
 		} elseif ($this->htmlId === NULL) {
-			$this->htmlId = sprintf(self::$idMask, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'));
+			$this->htmlId = sprintf(self::$idMask, $this->lookup('Nette\Application\IPresenter', FALSE)
+				? $this->lookupPath('Nette\Application\IPresenter')
+				: $this->lookupPath('Nette\Forms\Form'));
 		}
 		return $this->htmlId;
 	}
