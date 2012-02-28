@@ -111,6 +111,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var Nette\DI\IContainer */
 	private $context;
 
+	/** @var Nette\Application\Application */
+	private $application;
+
 
 
 	public function __construct()
@@ -157,12 +160,14 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * @param  Nette\Application\Request
+	 * @param  Nette\Application\Application
 	 * @return Nette\Application\IResponse
 	 */
-	public function run(Application\Request $request)
+	public function run(Application\Request $request, Nette\Application\Application $application)
 	{
 		try {
 			// STARTUP
+			$this->application = $application;
 			$this->request = $request;
 			$this->payload = (object) NULL;
 			$this->setParent($this->getParent(), $request->getPresenterName());
@@ -1393,7 +1398,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->context->getByType('Nette\Http\IRequest');
+		return $this->application->getHttpRequest();
 	}
 
 
@@ -1403,7 +1408,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->context->getByType('Nette\Http\IResponse');
+		return $this->application->getHttpResponse();
 	}
 
 
@@ -1413,7 +1418,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpContext()
 	{
-		return $this->context->getByType('Nette\Http\Context');
+		return $this->application->getHttpContext();
 	}
 
 
@@ -1423,7 +1428,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getApplication()
 	{
-		return $this->context->getByType('Nette\Application\Application');
+		return $this->application;
 	}
 
 
@@ -1433,7 +1438,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getByType('Nette\Http\Session');
+		$handler = $this->application->getSession();
 		return $namespace === NULL ? $handler : $handler->getSection($namespace);
 	}
 
@@ -1444,7 +1449,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getUser()
 	{
-		return $this->context->getByType('Nette\Security\User');
+		return $this->application->getUser();
 	}
 
 }
