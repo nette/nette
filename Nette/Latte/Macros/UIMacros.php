@@ -387,7 +387,7 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroLink(MacroNode $node, $writer)
 	{
-		return $writer->write('echo %escape(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?))');
+		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
 	}
 
 
