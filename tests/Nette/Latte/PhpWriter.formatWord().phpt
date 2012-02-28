@@ -30,3 +30,4 @@ Assert::same( "'var'",  $writer->formatWord("'var'") );
 Assert::same( '"var"',  $writer->formatWord('"var"') );
 Assert::same( '"v\\"ar"',  $writer->formatWord('"v\\"ar"') );
 Assert::same( "'var\"",  $writer->formatWord("'var\"") );
+Assert::same( "var.'var'",  $writer->formatWord("var.'var'") );
