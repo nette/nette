@@ -38,6 +38,7 @@ class PresenterFactory implements IPresenterFactory
 
 	/**
 	 * @param  string
+	 * @param  Nette\DI\IContainer
 	 */
 	public function __construct($baseDir, Nette\DI\IContainer $context)
 	{

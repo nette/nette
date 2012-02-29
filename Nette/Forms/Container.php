@@ -101,6 +101,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Returns the values submitted by the form.
+	 * @param  bool  return values as an array?
 	 * @return Nette\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)

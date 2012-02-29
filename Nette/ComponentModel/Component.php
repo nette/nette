@@ -39,6 +39,8 @@ abstract class Component extends Nette\Object implements IComponent
 
 
 	/**
+	 * @param  Nette\ComponentModel\IContainer|NULL
+	 * @param  string|NULL
 	 */
 	public function __construct(IContainer $parent = NULL, $name = NULL)
 	{

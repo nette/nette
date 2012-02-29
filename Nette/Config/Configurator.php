@@ -75,6 +75,7 @@ class Configurator extends Nette\Object
 
 	/**
 	 * Sets path to temporary directory.
+	 * @param  string
 	 * @return Configurator  provides a fluent interface
 	 */
 	public function setTempDirectory($path)

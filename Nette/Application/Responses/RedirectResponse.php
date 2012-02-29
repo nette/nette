@@ -68,6 +68,8 @@ class RedirectResponse extends Nette\Object implements Nette\Application\IRespon
 
 	/**
 	 * Sends response to output.
+	 * @param  Nette\Http\IRequest
+	 * @param  Nette\Http\IResponse
 	 * @return void
 	 */
 	public function send(Http\IRequest $httpRequest, Http\IResponse $httpResponse)
