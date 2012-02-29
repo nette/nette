@@ -14,7 +14,8 @@ namespace Nette\Latte\Macros;
 use Nette,
 	Nette\Latte,
 	Nette\Latte\CompileException,
-	Nette\Latte\MacroNode;
+	Nette\Latte\MacroNode,
+	Nette\Latte\PhpWriter;
 
 
 
@@ -107,7 +108,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {if ...}
 	 */
-	public function macroIf(MacroNode $node, $writer)
+	public function macroIf(MacroNode $node, PhpWriter $writer)
 	{
 		if ($node->data->capture = ($node->args === '')) {
 			return 'ob_start()';
@@ -123,7 +124,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {/if ...}
 	 */
-	public function macroEndIf(MacroNode $node, $writer)
+	public function macroEndIf(MacroNode $node, PhpWriter $writer)
 	{
 		if ($node->data->capture) {
 			if ($node->args === '') {
@@ -143,7 +144,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {else}
 	 */
-	public function macroElse(MacroNode $node, $writer)
+	public function macroElse(MacroNode $node, PhpWriter $writer)
 	{
 		$ifNode = $node->parentNode;
 		if ($ifNode && $ifNode->name === 'if' && $ifNode->data->capture) {
@@ -161,7 +162,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {_$var |modifiers}
 	 */
-	public function macroTranslate(MacroNode $node, $writer)
+	public function macroTranslate(MacroNode $node, PhpWriter $writer)
 	{
 		if ($node->closing) {
 			return $writer->write('echo %modify($template->translate(ob_get_clean()))');
@@ -179,7 +180,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {include "file" [,] [params]}
 	 */
-	public function macroInclude(MacroNode $node, $writer)
+	public function macroInclude(MacroNode $node, PhpWriter $writer)
 	{
 		$code = $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + $template->getParameters(), $_l->templates[%var])',
 			$this->getCompiler()->getTemplateId());
@@ -196,7 +197,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {use class MacroSet}
 	 */
-	public function macroUse(MacroNode $node, $writer)
+	public function macroUse(MacroNode $node, PhpWriter $writer)
 	{
 		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->getCompiler())
 			->initialize();
@@ -207,7 +208,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {capture $variable}
 	 */
-	public function macroCapture(MacroNode $node, $writer)
+	public function macroCapture(MacroNode $node, PhpWriter $writer)
 	{
 		$variable = $node->tokenizer->fetchWord();
 		if (substr($variable, 0, 1) !== '$') {
@@ -222,7 +223,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {/capture}
 	 */
-	public function macroCaptureEnd(MacroNode $node, $writer)
+	public function macroCaptureEnd(MacroNode $node, PhpWriter $writer)
 	{
 		return $node->data->variable . $writer->write(" = %modify(ob_get_clean())");
 	}
@@ -232,7 +233,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {foreach ...}
 	 */
-	public function macroEndForeach(MacroNode $node, $writer)
+	public function macroEndForeach(MacroNode $node, PhpWriter $writer)
 	{
 		if (preg_match('#\W(\$iterator|include|require|get_defined_vars)\W#', $this->getCompiler()->expandTokens($node->content))) {
 			$node->openingCode = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
@@ -249,7 +250,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * n:class="..."
 	 */
-	public function macroClass(MacroNode $node, $writer)
+	public function macroClass(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write('if ($_l->tmp = array_filter(%node.array)) echo \' class="\' . %escape(implode(" ", array_unique($_l->tmp))) . \'"\'');
 	}
@@ -259,7 +260,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * n:attr="..."
 	 */
-	public function macroAttr(MacroNode $node, $writer)
+	public function macroAttr(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write('echo Nette\Utils\Html::el(NULL, %node.array)->attributes()');
 	}
@@ -280,7 +281,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {dump ...}
 	 */
-	public function macroDump(MacroNode $node, $writer)
+	public function macroDump(MacroNode $node, PhpWriter $writer)
 	{
 		$args = $writer->formatArgs();
 		return 'Nette\Diagnostics\Debugger::barDump(' . ($node->args ? "array(" . $writer->write('%var', $args) . " => $args)" : 'get_defined_vars()')
@@ -292,7 +293,7 @@ class CoreMacros extends MacroSet
 	/**
 	 * {debugbreak ...}
 	 */
-	public function macroDebugbreak(MacroNode $node, $writer)
+	public function macroDebugbreak(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write(($node->args == NULL ? '' : 'if (!(%node.args)); else')
 			. 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()');
@@ -304,7 +305,7 @@ class CoreMacros extends MacroSet
 	 * {var ...}
 	 * {default ...}
 	 */
-	public function macroVar(MacroNode $node, $writer)
+	public function macroVar(MacroNode $node, PhpWriter $writer)
 	{
 		$out = '';
 		$var = TRUE;
@@ -342,7 +343,7 @@ class CoreMacros extends MacroSet
 	 * {= ...}
 	 * {? ...}
 	 */
-	public function macroExpr(MacroNode $node, $writer)
+	public function macroExpr(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write(($node->name === '?' ? '' : 'echo ') . '%modify(%node.args)');
 	}
@@ -360,7 +361,7 @@ class CoreMacros extends MacroSet
 	 * @param  Nette\Templating\ITemplate  current template
 	 * @return Nette\Templating\Template
 	 */
-	public static function includeTemplate($destination, $params, $template)
+	public static function includeTemplate($destination, array $params, Nette\Templating\ITemplate $template)
 	{
 		if ($destination instanceof Nette\Templating\ITemplate) {
 			$tpl = $destination;
@@ -386,11 +387,11 @@ class CoreMacros extends MacroSet
 
 	/**
 	 * Initializes local & global storage in template.
-	 * @param  Nette\Templating\ITemplate
+	 * @param
 	 * @param  string
-	 * @return stdClass
+	 * @return \stdClass
 	 */
-	public static function initRuntime($template, $templateId)
+	public static function initRuntime(Nette\Templating\ITemplate $template, $templateId)
 	{
 		// local storage
 		if (isset($template->_l)) {

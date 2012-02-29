@@ -29,7 +29,7 @@ use Nette,
  * @property-read string $action
  * @property      string $view
  * @property      string $layout
- * @property-read stdClass $payload
+ * @property-read \stdClass $payload
  * @property-read bool $ajax
  * @property-read Nette\Application\Request $lastCreatedRequest
  * @property-read Nette\Http\SessionSection $flashSession
@@ -87,7 +87,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var string */
 	private $layout;
 
-	/** @var stdClass */
+	/** @var \stdClass */
 	private $payload;
 
 	/** @var string */
@@ -569,7 +569,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return stdClass
+	 * @return \stdClass
 	 */
 	public function getPayload()
 	{

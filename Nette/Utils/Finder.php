@@ -204,7 +204,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Returns iterator.
-	 * @return Nette\Iterator
+	 * @return \Iterator
 	 */
 	public function getIterator()
 	{
@@ -228,7 +228,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 	/**
 	 * Returns per-path iterator.
 	 * @param  string
-	 * @return Nette\Iterator
+	 * @return \Iterator
 	 */
 	private function buildIterator($path)
 	{

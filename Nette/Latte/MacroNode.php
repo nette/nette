@@ -61,7 +61,7 @@ class MacroNode extends Nette\Object
 	/** @var string */
 	public $content;
 
-	/** @var stdClass  user data */
+	/** @var \stdClass  user data */
 	public $data;
 
 	/** @var HtmlNode  for n:attr macros */

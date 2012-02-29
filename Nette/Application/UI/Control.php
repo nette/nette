@@ -123,7 +123,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 * Saves the message to template, that can be displayed after redirect.
 	 * @param  string
 	 * @param  string
-	 * @return stdClass
+	 * @return \stdClass
 	 */
 	public function flashMessage($message, $type = 'info')
 	{

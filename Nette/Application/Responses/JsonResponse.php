@@ -20,12 +20,12 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read array|stdClass $payload
+ * @property-read array|\stdClass $payload
  * @property-read string $contentType
  */
 class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	/** @var array|stdClass */
+	/** @var array|\stdClass */
 	private $payload;
 
 	/** @var string */
@@ -34,7 +34,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 
 
 	/**
-	 * @param  array|stdClass  payload
+	 * @param  array|\stdClass  payload
 	 * @param  string    MIME content type
 	 */
 	public function __construct($payload, $contentType = NULL)
@@ -49,7 +49,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 
 
 	/**
-	 * @return array|stdClass
+	 * @return array|\stdClass
 	 */
 	final public function getPayload()
 	{

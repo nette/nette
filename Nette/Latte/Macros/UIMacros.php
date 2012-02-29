@@ -14,6 +14,7 @@ namespace Nette\Latte\Macros;
 use Nette,
 	Nette\Latte,
 	Nette\Latte\MacroNode,
+	Nette\Latte\PhpWriter,
 	Nette\Latte\CompileException,
 	Nette\Utils\Strings;
 
@@ -58,7 +59,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
 		$me->addMacro('control', array($me, 'macroControl'));
 
-		$me->addMacro('href', NULL, NULL, function(MacroNode $node, $writer) use ($me) {
+		$me->addMacro('href', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> href="<?php ' . $me->macroLink($node, $writer) . ' ?>"<?php ';
 		});
 		$me->addMacro('plink', array($me, 'macroLink'));
@@ -145,7 +146,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {include #block}
 	 */
-	public function macroInclude(MacroNode $node, $writer)
+	public function macroInclude(MacroNode $node, PhpWriter $writer)
 	{
 		$destination = $node->tokenizer->fetchWord(); // destination [,] [params]
 		if (substr($destination, 0, 1) !== '#') {
@@ -185,7 +186,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {includeblock "file"}
 	 */
-	public function macroIncludeBlock(MacroNode $node, $writer)
+	public function macroIncludeBlock(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write('Nette\Latte\Macros\CoreMacros::includeTemplate(%node.word, %node.array? + get_defined_vars(), $_l->templates[%var])->render()',
 			$this->getCompiler()->getTemplateId());
@@ -196,7 +197,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {extends auto | none | $var | "file"}
 	 */
-	public function macroExtends(MacroNode $node, $writer)
+	public function macroExtends(MacroNode $node, PhpWriter $writer)
 	{
 		if (!$node->args) {
 			throw new CompileException("Missing destination in {extends}");
@@ -224,7 +225,7 @@ if (!empty($_control->snippetMode)) {
 	 * {snippet [name [,]] [tag]}
 	 * {define [#]name}
 	 */
-	public function macroBlock(MacroNode $node, $writer)
+	public function macroBlock(MacroNode $node, PhpWriter $writer)
 	{
 		$name = $node->tokenizer->fetchWord();
 
@@ -311,7 +312,7 @@ if (!empty($_control->snippetMode)) {
 	 * {/snippet}
 	 * {/define}
 	 */
-	public function macroBlockEnd(MacroNode $node, $writer)
+	public function macroBlockEnd(MacroNode $node, PhpWriter $writer)
 	{
 		if (isset($node->data->name)) { // block, snippet, define
 			if ($node->name === 'snippet' && $node->htmlNode && !$node->prefix // n:snippet -> n:inner-snippet
@@ -341,7 +342,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {ifset #block}
 	 */
-	public function macroIfset(MacroNode $node, $writer)
+	public function macroIfset(MacroNode $node, PhpWriter $writer)
 	{
 		if (!Strings::contains($node->args, '#')) {
 			return FALSE;
@@ -358,7 +359,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {control name[:method] [params]}
 	 */
-	public function macroControl(MacroNode $node, $writer)
+	public function macroControl(MacroNode $node, PhpWriter $writer)
 	{
 		$pair = $node->tokenizer->fetchWord();
 		if ($pair === FALSE) {
@@ -385,7 +386,7 @@ if (!empty($_control->snippetMode)) {
 	 * {plink destination [,] [params]}
 	 * n:href="destination [,] [params]"
 	 */
-	public function macroLink(MacroNode $node, $writer)
+	public function macroLink(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
 	}
@@ -395,7 +396,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {ifCurrent destination [,] [params]}
 	 */
-	public function macroIfCurrent(MacroNode $node, $writer)
+	public function macroIfCurrent(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write(($node->args ? 'try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}' : '')
 			. '; if ($_presenter->getLastCreatedRequestFlag("current")):');
@@ -406,7 +407,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {contentType ...}
 	 */
-	public function macroContentType(MacroNode $node, $writer)
+	public function macroContentType(MacroNode $node, PhpWriter $writer)
 	{
 		if (Strings::contains($node->args, 'xhtml')) {
 			$this->getCompiler()->setContentType(Latte\Compiler::CONTENT_XHTML);
@@ -441,7 +442,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {status ...}
 	 */
-	public function macroStatus(MacroNode $node, $writer)
+	public function macroStatus(MacroNode $node, PhpWriter $writer)
 	{
 		return $writer->write((substr($node->args, -1) === '?' ? 'if (!$netteHttpResponse->isSent()) ' : '') .
 			'$netteHttpResponse->setCode(%var)', (int) $node->args
@@ -456,12 +457,9 @@ if (!empty($_control->snippetMode)) {
 
 	/**
 	 * Calls block.
-	 * @param  stdClass
-	 * @param  string
-	 * @param  array
 	 * @return void
 	 */
-	public static function callBlock($context, $name, $params)
+	public static function callBlock(\stdClass $context, $name, array $params)
 	{
 		if (empty($context->blocks[$name])) {
 			throw new Nette\InvalidStateException("Cannot include undefined block '$name'.");
@@ -474,12 +472,9 @@ if (!empty($_control->snippetMode)) {
 
 	/**
 	 * Calls parent block.
-	 * @param  stdClass
-	 * @param  string
-	 * @param  array
 	 * @return void
 	 */
-	public static function callBlockParent($context, $name, $params)
+	public static function callBlockParent(\stdClass $context, $name, array $params)
 	{
 		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
 			throw new Nette\InvalidStateException("Cannot include undefined parent block '$name'.");
@@ -489,7 +484,7 @@ if (!empty($_control->snippetMode)) {
 
 
 
-	public static function renderSnippets($control, $local, $params)
+	public static function renderSnippets(Nette\Application\UI\Control $control, \stdClass $local, array $params)
 	{
 		$control->snippetMode = FALSE;
 		$payload = $control->getPresenter()->getPayload();
