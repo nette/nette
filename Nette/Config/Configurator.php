@@ -130,6 +130,7 @@ class Configurator extends Nette\Object
 	{
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
 		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
+		return $this;
 	}
 
 
