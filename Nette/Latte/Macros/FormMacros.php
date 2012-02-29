@@ -60,7 +60,7 @@ class FormMacros extends MacroSet
 			$node->setArgs(substr($node->args, 0, -1));
 			return $writer->write($cmd);
 		} else {
-			return $writer->write($cmd . '->startTag()');
+			return $writer->write($cmd . '->startTag(); $label = $_label->getText()');
 		}
 	}
 
