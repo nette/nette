@@ -35,7 +35,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var string primary key field name */
 	protected $primary;
 
-	/** @var array of [primary key => TableRow] readed from database */
+	/** @var array of [primary key => TableRow] read from database */
 	protected $rows;
 
 	/** @var array of [primary key => TableRow] modifiable */
@@ -159,7 +159,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/**
 	 * Returns row specified by primary key.
 	 * @param  mixed
-	 * @return ActiveRow or NULL if there is no such row
+	 * @return ActiveRow or FALSE if there is no such row
 	 */
 	public function get($key)
 	{

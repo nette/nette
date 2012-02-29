@@ -33,7 +33,7 @@ class PhpWriter extends Nette\Object
 
 
 
-	public static function using(MacroNode $node, $compiler = NULL)
+	public static function using(MacroNode $node, Compiler $compiler = NULL)
 	{
 		return new static($node->tokenizer, $node->modifiers, $compiler);
 	}
@@ -205,7 +205,7 @@ class PhpWriter extends Nette\Object
 	/**
 	 * @return bool
 	 */
-	public function canQuote($tokenizer)
+	public function canQuote(MacroTokenizer $tokenizer)
 	{
 		return $tokenizer->isCurrent(MacroTokenizer::T_SYMBOL)
 			&& (!$tokenizer->hasPrev() || $tokenizer->isPrev(',', '(', '[', '=', '=>', ':', '?'))

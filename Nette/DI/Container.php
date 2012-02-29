@@ -243,6 +243,10 @@ class Container extends Nette\FreezableObject implements IContainer
 
 
 
+	/********************* autowiring ****************d*g**/
+
+
+
 	/**
 	 * Creates new instance using autowiring.
 	 * @param  string  class

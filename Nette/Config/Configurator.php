@@ -124,7 +124,7 @@ class Configurator extends Nette\Object
 	/**
 	 * @param  string        error log directory
 	 * @param  string        administrator email
-	 * @return Configurator  provides a fluent interface
+	 * @return void
 	 */
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{

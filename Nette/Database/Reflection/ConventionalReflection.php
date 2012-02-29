@@ -79,7 +79,6 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 
 
 
-
 	public function setConnection(Nette\Database\Connection $connection)
 	{}
 

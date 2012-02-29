@@ -107,7 +107,6 @@ class FileJournal extends Nette\Object implements IJournal
 
 	/**
 	 * @param  string  Directory location with journal file
-	 * @return void
 	 */
 	public function __construct($dir)
 	{
@@ -321,7 +320,6 @@ class FileJournal extends Nette\Object implements IJournal
 
 	/**
 	 * Cleans entries from journal by tags.
-	 * @param  array
 	 * @return array of removed items
 	 */
 	private function cleanTags(array $tags, array &$toDelete)

@@ -226,6 +226,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 	/**
 	 * Returns a fully-qualified name that uniquely identifies the parameter.
+	 * @param  string
 	 * @return string
 	 */
 	final public function getParameterId($name)

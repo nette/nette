@@ -70,7 +70,7 @@ class FileTemplate extends Template implements IFileTemplate
 
 	/**
 	 * Returns template source code.
-	 * @return source
+	 * @return string
 	 */
 	public function getSource()
 	{

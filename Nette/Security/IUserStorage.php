@@ -3,7 +3,7 @@
 /**
  * This file is part of the Nette Framework (http://nette.org)
  *
- * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
@@ -57,8 +57,8 @@ interface IUserStorage
 
 	/**
 	 * Enables log out from the persistent storage after inactivity.
-	 * @param string|int|DateTime number of seconds or timestamp
-	 * @param int Log out when the browser is closed | Clear the identity from persistent storage?
+	 * @param  string|int|DateTime number of seconds or timestamp
+	 * @param  int Log out when the browser is closed | Clear the identity from persistent storage?
 	 * @return void
 	 */
 	function setExpiration($time, $flags = 0);
