@@ -116,7 +116,7 @@ class UIMacros extends MacroSet
 			$prolog[] = "// template extending and snippets support";
 
 			$prolog[] = '$_l->extends = '
-				. ($this->extends ? $this->extends : 'empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->findLayoutTemplateFile() : NULL')
+				. ($this->extends ? $this->extends : 'empty($template->_extended) && isset($_control) && $_control instanceof Nette\Application\UI\Presenter ? $_control->getLayout() : FALSE')
 				. '; $template->_extended = $_extended = TRUE;';
 
 			$prolog[] = '

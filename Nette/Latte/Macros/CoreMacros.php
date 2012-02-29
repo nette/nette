@@ -371,11 +371,16 @@ class CoreMacros extends MacroSet
 
 		} else {
 			$tpl = clone $template;
-			if ($template instanceof Nette\Templating\IFileTemplate) {
-				if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
-					$destination = dirname($template->getFile()) . '/' . $destination;
+			if ($template instanceof Nette\Templating\ILayoutedTemplate) {
+				if (@$params['presenter'] instanceof Nette\Application\UI\Presenter) {
+					$tpl->setPlace($params['presenter']->name, $destination);
 				}
-				$tpl->setFile($destination);
+				elseif ($template instanceof Nette\Templating\IFileTemplate) {
+					if (substr($destination, 0, 1) !== '/' && substr($destination, 1, 1) !== ':') {
+						$destination = dirname($template->getFile()) . '/' . $destination;
+					}
+					$tpl->setFile($destination);
+				}
 			}
 		}
 

@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  */
-class FileTemplate extends Template implements IFileTemplate
+class FileTemplate extends Template implements IFileTemplate, ILayoutedTemplate
 {
 	/** @var string */
 	private $file;
@@ -36,6 +36,75 @@ class FileTemplate extends Template implements IFileTemplate
 	{
 		if ($file !== NULL) {
 			$this->setFile($file);
+		}
+	}
+
+
+
+	/**
+	 * Returns array of all possible filenames.
+	 * @return array
+	 */
+	protected function formatTemplateFiles()
+	{
+		extract($this->place);
+
+		if (isset($this->control)) {
+			$dir = dirname(dirname($this->control->getReflection()->getFileName()));
+
+		} elseif (isset($this->presenter)) {
+			$dir = dirname(dirname($this->presenter->getReflection()->getFileName()));
+
+		} else {
+			$dir = APP_DIR;
+		}
+
+		$files[] = "$dir/templates/$presenter/$view.latte";
+		$files[] = "$dir/templates/$presenter.$view.latte";
+		$files[] = "$dir/templates/$presenter/$view.phtml";
+		$files[] = "$dir/templates/$presenter.$view.phtml";
+
+		// layouts and includes
+		$files[] = "$dir/templates/$view.latte";
+		$files[] = "$dir/templates/$view.phtml";
+
+		// inheritance of layouts
+		if (substr($view, 0, 1) === '@') while ($module) {
+			$dir = dirname($dir);
+			$files[] = "$dir/templates/$view.latte";
+			$files[] = "$dir/templates/$view.phtml";
+			array_pop($module);
+		}
+
+		return $files;
+	}
+
+
+
+	/**
+	 * Set, what we want to render, check if file exists.
+	 * @param  string  $where  from presenter->name
+	 * @param  string  $view
+	 * @throws Nette\FileNotFoundException if no template found
+	 */
+	public function setPlace($where, $view)
+	{
+		parent::setPlace($where, $view);
+		if ($view !== '@layout') {
+			// file @layout.latte is optional
+			$this->file = NULL;
+		}
+
+		$files = $this->formatTemplateFiles();
+		foreach ($files as $file) {
+			if (is_file($file)) {
+				$this->setFile($file);
+				break;
+			}
+		}
+
+		if (!$this->getFile() && $view !== '@layout') {
+			throw new Nette\FileNotFoundException("Missing template file '$files[0]'.");
 		}
 	}
 
