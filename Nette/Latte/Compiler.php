@@ -239,7 +239,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processHtmlTagBegin($token)
+	private function processHtmlTagBegin(Token $token)
 	{
 		if ($token->closing) {
 			do {
@@ -274,7 +274,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processHtmlTagEnd($token)
+	private function processHtmlTagEnd(Token $token)
 	{
 		if ($token->text === '-->') {
 			$this->output .= $token->text;
@@ -317,7 +317,7 @@ class Compiler extends Nette\Object
 
 
 
-	private function processHtmlAttribute($token)
+	private function processHtmlAttribute(Token $token)
 	{
 		$htmlNode = end($this->htmlNodes);
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
