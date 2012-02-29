@@ -24,4 +24,5 @@ Assert::same('`HellO`', $tryDelimite->invoke($table, 'HellO'));
 Assert::same('`hello`.`world`', $tryDelimite->invoke($table, 'hello.world'));
 Assert::same('`hello` `world`', $tryDelimite->invoke($table, 'hello world'));
 Assert::same('HELLO(`world`)', $tryDelimite->invoke($table, 'HELLO(world)'));
+Assert::same('hello(`world`)', $tryDelimite->invoke($table, 'hello(world)'));
 Assert::same('`hello`', $tryDelimite->invoke($table, '`hello`'));
