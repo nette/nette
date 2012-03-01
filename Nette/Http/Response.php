@@ -284,6 +284,10 @@ final class Response extends Nette\Object implements IResponse
 	 */
 	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL)
 	{
+		if (!headers_sent() && ob_get_level() && ob_get_length()) {
+			trigger_error("Possible problem: you are sending a cookie while already having some data in output buffer.  This may not work if the outputted data grows. Try starting the session earlier.", E_USER_NOTICE);
+		}
+
 		if (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 		}
