@@ -76,7 +76,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	{
 		$primary = & $this->structure['primary'][$table];
 		if (isset($primary)) {
-			return $primary;
+			return empty($primary) ? NULL : $primary;
 		}
 
 		$columns = $this->connection->getSupplementalDriver()->getColumns($table);
@@ -88,8 +88,10 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			}
 		}
 
-		if ($primaryCount !== 1)
+		if ($primaryCount !== 1) {
+			$primary = '';
 			return NULL;
+		}
 
 		return $primary;
 	}
