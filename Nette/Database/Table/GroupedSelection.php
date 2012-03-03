@@ -24,16 +24,16 @@ use Nette;
 class GroupedSelection extends Selection
 {
 	/** @var Selection referenced table */
-	private $refTable;
+	protected $refTable;
 
 	/** @var string grouping column name */
-	private $column;
+	protected $column;
 
 	/** @var string */
-	private $delimitedColumn;
+	protected $delimitedColumn;
 
 	/** @var mixed */
-	private $active;
+	protected $active;
 
 
 
