@@ -62,7 +62,7 @@ class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		$factories = array();
 		foreach (Nette\Reflection\ClassType::from($this->container)->getMethods() as $method) {
 			if (preg_match('#^create(Service)?(.+)$#', $method->getName(), $m)) {
-				$name = strtr(strtolower(substr($m[2], 0, 1)) . substr($m[2], 1), '_', '.');
+				$name = str_replace('__', '.', strtolower(substr($m[2], 0, 1)) . substr($m[2], 1));
 				if ($m[1]) {
 					$services[$name] = $method->getAnnotation('return');
 				} elseif ($method->isPublic()) {
