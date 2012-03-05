@@ -77,6 +77,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of [sql+parameters => [column => [key => TableRow]]] used by GroupedTableSelection */
 	protected $referencing = array();
 
+	/** @var array of [table or table.column => where condition] used by getReferencingTable instead of list of primary keys */
+	protected $referencingHints = array();
+
 	/** @var array of [conditions => [key => TableRow]] used by GroupedTableSelection */
 	protected $aggregation = array();
 
@@ -736,6 +739,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
+	/**
+	 * Add hint for getReferencingTable() or ActiveRow::related()
+	 * @param  string  Referencing table, possibly with column name
+	 * @param  string
+	 * @return Selection provides a fluent interface
+	 */
+	public function referencingHint($table, $condition, $parameter = null) {
+		$this->referencingHints[$table] = $parameter !== NULL ? array($condition => $parameter) : $condition;
+		return $this;
+	}
+
 
 	/**
 	 * Returns referencing rows.
@@ -746,7 +760,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function getReferencingTable($table, $column, $active = NULL)
 	{
 		$referencing = new GroupedSelection($table, $this, $column, $active);
-		$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
+
+		// try hints
+		if (isset($this->referencingHints["$table.$column"])) $hint = $this->referencingHints["$table.$column"];
+		elseif (isset($this->referencingHints[$table])) $hint = $this->referencingHints[$table];
+		if (isset($hint)) {
+			$referencing->where($hint);
+		} else {
+			$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
+		}
+
 		return $referencing;
 	}
 
