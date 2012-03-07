@@ -56,12 +56,12 @@ class User extends Nette\Object
 	/** @var IAuthorizator */
 	private $authorizator;
 
-	/** @var Nette\DI\IContainer */
+	/** @var Nette\DI\Container */
 	private $context;
 
 
 
-	public function __construct(IUserStorage $storage, Nette\DI\IContainer $context)
+	public function __construct(IUserStorage $storage, Nette\DI\Container $context)
 	{
 		$this->storage = $storage;
 		$this->context = $context; // with IAuthenticator, IAuthorizator

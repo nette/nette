@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Container extends Nette\FreezableObject implements IContainer
+class Container extends Nette\FreezableObject
 {
 	const TAGS = 'tags';
 

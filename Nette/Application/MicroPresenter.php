@@ -27,7 +27,7 @@ use Nette,
  */
 class MicroPresenter extends Nette\Object implements Application\IPresenter
 {
-	/** @var Nette\DI\IContainer */
+	/** @var Nette\DI\Container */
 	private $context;
 
 	/** @var Nette\Application\Request */
@@ -35,7 +35,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 
-	public function __construct(Nette\DI\IContainer $context)
+	public function __construct(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 	}
@@ -44,7 +44,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return \SystemContainer|Nette\DI\IContainer
+	 * @return \SystemContainer|Nette\DI\Container
 	 */
 	final public function getContext()
 	{
