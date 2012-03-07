@@ -16,9 +16,7 @@ use Nette;
 
 
 /**
- * The dependency injection container.
- *
- * @author     David Grudl
+ * @deprecated
  */
 interface IContainer
 {

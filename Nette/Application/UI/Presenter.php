@@ -33,7 +33,7 @@ use Nette,
  * @property-read bool $ajax
  * @property-read Nette\Application\Request $lastCreatedRequest
  * @property-read Nette\Http\SessionSection $flashSession
- * @property-read \SystemContainer|Nette\DI\IContainer $context
+ * @property-read \SystemContainer|Nette\DI\Container $context
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Security\User $user
@@ -108,12 +108,12 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
-	/** @var Nette\DI\IContainer */
+	/** @var Nette\DI\Container */
 	private $context;
 
 
 
-	public function __construct(Nette\DI\IContainer $context)
+	public function __construct(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 		if ($this->invalidLinkMode === NULL) {
@@ -1369,7 +1369,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return \SystemContainer|Nette\DI\IContainer
+	 * @return \SystemContainer|Nette\DI\Container
 	 */
 	final public function getContext()
 	{
