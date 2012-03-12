@@ -127,8 +127,8 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 			return $writer->write($def);
 		} else {
 			return callback($def)->invoke($node, $writer);
-			}
 		}
+	}
 
 
 
