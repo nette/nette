@@ -165,7 +165,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Registers callback as template compile-time filter.
-	 * @param  callback
+	 * @param  callable
 	 * @return Template  provides a fluent interface
 	 */
 	public function registerFilter($callback)
@@ -194,7 +194,7 @@ class Template extends Nette\Object implements ITemplate
 	/**
 	 * Registers callback as template run-time helper.
 	 * @param  string
-	 * @param  callback
+	 * @param  callable
 	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelper($name, $callback)
@@ -207,7 +207,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Registers callback as template run-time helpers loader.
-	 * @param  callback
+	 * @param  callable
 	 * @return Template  provides a fluent interface
 	 */
 	public function registerHelperLoader($callback)

@@ -305,7 +305,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 
 	/**
 	 * Restricts the search using callback.
-	 * @param  callback
+	 * @param  callable
 	 * @return Finder  provides a fluent interface
 	 */
 	public function filter($callback)

@@ -117,7 +117,7 @@ class Assert
 
 	/**
 	 * Checks if the function throws exception.
-	 * @param  callback
+	 * @param  callable
 	 * @param  string class
 	 * @param  string message
 	 * @return void
@@ -136,7 +136,7 @@ class Assert
 
 	/**
 	 * Checks if the function throws exception.
-	 * @param  callback
+	 * @param  callable
 	 * @param  int
 	 * @param  string message
 	 * @return void
