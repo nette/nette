@@ -68,7 +68,7 @@ class Container extends Nette\FreezableObject
 	/**
 	 * Adds the service or service factory to the container.
 	 * @param  string
-	 * @param  mixed   object, class name or callback
+	 * @param  mixed   object, class name or callable
 	 * @param  array   service meta information
 	 * @return Container  provides a fluent interface
 	 */
@@ -88,7 +88,7 @@ class Container extends Nette\FreezableObject
 			$this->meta[$name] = $meta;
 			return $this;
 
-		} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callback
+		} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callable
 			$service = callback($service);
 		}
 
@@ -273,7 +273,7 @@ class Container extends Nette\FreezableObject
 
 	/**
 	 * Calls method using autowiring.
-	 * @param  mixed   class, object, function, callback
+	 * @param  mixed   class, object, function, callable
 	 * @param  array   arguments
 	 * @return mixed
 	 */

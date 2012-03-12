@@ -102,7 +102,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	/**
 	 * Template factory.
 	 * @param  string
-	 * @param  callback
+	 * @param  callable
 	 * @return Nette\Templating\ITemplate
 	 */
 	public function createTemplate($class = NULL, $latteFactory = NULL)

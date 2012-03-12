@@ -89,7 +89,7 @@ abstract class TextBase extends BaseControl
 
 	/**
 	 * Appends input string filter callback.
-	 * @param  callback
+	 * @param  callable
 	 * @return TextBase  provides a fluent interface
 	 */
 	public function addFilter($filter)

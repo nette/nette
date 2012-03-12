@@ -52,7 +52,7 @@ use Nette,
 class ClassType extends \ReflectionClass
 {
 
-	/** @var array (method => array(type => callback)) */
+	/** @var array (method => array(type => callable)) */
 	private static $extMethods;
 
 
@@ -92,7 +92,7 @@ class ClassType extends \ReflectionClass
 	/**
 	 * Adds a method to class.
 	 * @param  string  method name
-	 * @param  mixed   callback or closure
+	 * @param  mixed   callable
 	 * @return ClassType  provides a fluent interface
 	 */
 	public function setExtensionMethod($name, $callback)
