@@ -258,7 +258,7 @@ if (!empty($_control->snippetMode)) {
 				$node->closingCode .= "\n</$tag>";
 				return $writer->write("?>\n<$tag id=\"<?php echo \$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)}) ?>\"><?php ob_start()");
 
-			} else {
+			} elseif ($node->name !== 'define') {
 				$node->data->leave = TRUE;
 				$fname = $writer->formatWord($name);
 				$node->closingCode = "<?php }} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars()) ?>";
