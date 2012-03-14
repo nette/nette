@@ -481,7 +481,7 @@ class Form extends Container
 
 	/**
 	 * Returns the values submitted by the form.
-	 * @return array
+	 * @return Nette\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{
