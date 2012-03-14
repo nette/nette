@@ -56,6 +56,10 @@ class FormMacros extends MacroSet
 		if ($node->prefix) {
 			$node->attrCode = $writer->write("<?php $cmd ?>", TRUE);
 		} else {
+			if ($node->isEmpty = (substr($node->args, -1) === '/')) {
+				$node->setArgs(substr($node->args, 0, -1));
+				return $writer->write('$_form = $_control[%node.word]; $_form->getElementPrototype()->addAttributes(%node.array); $_form->render();');
+			}
 			return $writer->write($cmd, FALSE);
 		}
 	}
