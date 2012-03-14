@@ -13,3 +13,14 @@
 {form myForm}
 	<input value=val type class="hello" n:input="username">
 {/form myForm}
+
+
+
+{form myForm, id => "myForm" class="ajax"}
+	<input value=val type class="hello" n:input="username">
+{/form}
+
+
+<FORM n:form="myForm" id="myForm" class="ajax" data-something="xxx">
+	<strong>Username:</strong><input value=val type class="hello" n:input="username">
+</FORM>

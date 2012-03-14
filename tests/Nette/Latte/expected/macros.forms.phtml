@@ -1,6 +1,6 @@
 <?php
 %A%
-Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array()) ?>
+Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array(), false) ?>
 <table>
 <?php $iterations = 0; foreach ($form->controls as $name => $field): ?>
 <tr>
@@ -9,13 +9,22 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 </tr>
 <?php $iterations++; endforeach ?>
 </table>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, false) ?>
 
 
-<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array()) ?>
+<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array(), false) ?>
 	<input value=val type class="hello" <?php $_input = (is_object("username") ? "username" : $_form["username"]); echo $_input->getControl()->addAttributes(array (
   'value' => NULL,
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, false) ?>
+
+
+<FORM<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array(), true) ?>>
+	<input value=val type class="hello" <?php echo $_form["username"]->getControl()->addAttributes(array (
+  'value' => NULL,
+  'type' => NULL,
+  'class' => NULL,
+))->attributes() ?>/>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, true) ?></FORM>
