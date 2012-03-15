@@ -12,7 +12,9 @@ use Nette\Database;
 
 
 
-require_once __DIR__ . '/connect.inc.php';
+require __DIR__ . '/connect.inc.php'; // create $connection
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 $connection->setDatabaseReflection(new Database\Reflection\DiscoveredReflection);
 
 
