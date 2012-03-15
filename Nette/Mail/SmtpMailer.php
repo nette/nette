@@ -129,6 +129,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 			if (!stream_socket_enable_crypto($this->connection, TRUE, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
 				throw new SmtpException('Unable to connect via TLS.');
 			}
+			$this->write("EHLO $self", 250);
 		}
 
 		if ($this->username != NULL && $this->password != NULL) {
