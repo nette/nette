@@ -1,0 +1,25 @@
+{
+	"name": "nette/nette",
+	"description": "Nette Framework is a powerful, component-based and event-driven framework for creating web applications and services in PHP 5.2, 5.3 & 5.4. Nette Framework is designed with simplicity, speed and flexibility in mind. It allows developers to easy built better websites. Nette Framework focuses on security and performance and is definitely one of the safest and fastest PHP frameworks. Nette Framework support the latest technologies and approaches like AJAX, HTML5, SEO, DRY, KISS, MVC, etc.",
+	"keywords": ["framework", "mvc", "debugging", "templating", "database", "dbal", "forms", "latte", "neon", "mailing", "images", "micro"],
+	"license": ["NewBSD", "GPLv2", "GPLv3"],
+	"authors": [
+		{
+			"name": "David Grudl",
+			"homepage": "http://davidgrudl.com"
+		},
+		{
+			"name": "Nette Foundation",
+			"homepage": "http://nettefoundation.com/"
+		},
+		{
+			"name": "Nette Community",
+			"homepage": "https://github.com/nette/nette/contributors"
+		}
+	],
+	"extra": {
+		"branch-alias": {
+			"dev-master": "2.1-dev"
+		}
+	}
+}
