@@ -168,7 +168,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$this->setParent($this->getParent(), $request->getPresenterName());
 
 			$this->initGlobalParameters();
-			$this->checkRequirements($this->getReflection());
+			$this->ensureRequirements($this->getReflection());
 			$this->startup();
 			if (!$this->startupCheck) {
 				$class = $this->getReflection()->getMethod('startup')->getDeclaringClass()->getName();
@@ -273,16 +273,18 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Checks authorization.
-	 * @return void
+	 * @param Nette\Reflection\ClassType|Nette\Reflection\Method $element
+	 * @return bool
 	 */
 	public function checkRequirements($element)
 	{
 		$user = (array) $element->getAnnotation('User');
 		if (in_array('loggedIn', $user) && !$this->getUser()->isLoggedIn()) {
-			throw new Application\ForbiddenRequestException;
+			return FALSE;
 		}
-	}
 
+		return TRUE;
+	}
 
 
 	/********************* signal handling ****************d*g**/
