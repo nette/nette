@@ -47,6 +47,7 @@ class UIMacros extends MacroSet
 	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
+		$me->addMacro('ifAuthorized', array($me, 'macroIfAuthorized'), array($me, 'macroIfAuthorizedEnd'));
 		$me->addMacro('include', array($me, 'macroInclude'));
 		$me->addMacro('includeblock', array($me, 'macroIncludeBlock'));
 		$me->addMacro('extends', array($me, 'macroExtends'));
@@ -388,9 +389,45 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroLink(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)))');
+		return $writer->write('echo %escape(%modify(' . ($node->name === 'plink' ? '$_presenter' : '$_control') . '->link(%node.word, %node.array?)));')
+			. 'if (isset($_l->notAuthorizedLinks)) Nette\Latte\Macros\UIMacros::checkLinkPermissions($_presenter, $_l)';
 	}
 
+
+	/**
+	 * {ifAuthorized destination [,] [params]}
+	 * {ifAuthorized}
+	 */
+	public function macroIfAuthorized(MacroNode $node, PhpWriter $writer)
+	{
+		// Validate if it's not nested
+		$parent = $node->parentNode;
+		while ($parent) {
+			if ($parent->name === 'ifAuthorized') throw new CompileException("{ifAuthorized} already opened and cannot be nested");
+			$parent = $parent->parentNode;
+		}
+
+		if ($node->data->capture = ($node->args === '')) {
+			return '$_l->notAuthorizedLinks = 0; ob_start();';
+		} else {
+			return $writer->write('try { $_presenter->link(%node.word, %node.array?); } catch (Nette\Application\UI\InvalidLinkException $e) {}')
+				. 'if ($_presenter->checkRequestRequirements($_presenter->lastCreatedRequest)):';
+		}
+	}
+
+
+	/**
+	 * {/ifAuthorized}
+	 */
+	public function macroIfAuthorizedEnd(MacroNode $node, PhpWriter $writer)
+	{
+		if ($node->data->capture) {
+			return 'if($_l->notAuthorizedLinks) ob_end_clean(); else ob_end_flush();'
+				. '$_l->notAuthorizedLinks = NULL;';
+		} else {
+			return 'endif';
+		}
+	}
 
 
 	/**
@@ -522,4 +559,15 @@ if (!empty($_control->snippetMode)) {
 		}
 	}
 
+
+	/**
+	 * Check if last generated link goes to authorized action
+	 * @param Nette\Application\UI\Presenter
+	 * @param stdClass
+	 */
+	public static function checkLinkPermissions($presenter, $local) {
+		if ($presenter->checkRequestRequirements($presenter->lastCreatedRequest) !== TRUE) {
+			$local->notAuthorizedLinks++;
+		}
+	}
 }
