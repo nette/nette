@@ -287,6 +287,50 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 
+
+	/**
+	 * Validate if given request would pass or throw ForbiddenRequestException
+	 * @return bool
+	 */
+	public function checkRequestRequirements(Nette\Application\Request $request) {
+		// Find target presenter
+		if ($request->getPresenterName() === $this->getName()) {
+			$presenter = $this;
+		} else {
+			$presenter = $this->context->nette->presenterFactory->createPresenter($request->getPresenterName());
+		}
+
+		// access to the whole target presenter?
+		$rc = $presenter->getReflection();
+		if ($presenter->checkRequirements($rc) !== TRUE) {
+			return FALSE;
+		}
+
+		// access to actionX, handleY, renderX
+		$params = $request->getParameters();
+		$action = isset($params[self::ACTION_KEY]) ? $params[self::ACTION_KEY] : self::DEFAULT_ACTION;
+		$methods = array(
+			$presenter->formatActionMethod($action), // actionX
+			$presenter->formatRenderMethod($action), // renderX
+		);
+		if (isset($params[self::SIGNAL_KEY])) $methods[] = $presenter->formatSignalMethod($params[self::SIGNAL_KEY]);
+
+		// validate these methods
+		foreach ($methods as $method) {
+			if ($rc->hasMethod($method)) {
+				$rm = $rc->getMethod($method);
+				if ($rm->isPublic() && !$rm->isAbstract() && !$rm->isStatic()) {
+					if ($presenter->checkRequirements($rm) !== TRUE) { // method not allowed
+						return FALSE;
+					}
+				}
+			}
+		}
+
+		return TRUE; // all tests passed
+	}
+
+
 	/********************* signal handling ****************d*g**/
 
 
