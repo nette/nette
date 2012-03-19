@@ -25,6 +25,7 @@ $_POST = array(
 	'note' => "invalid\xAA\xAA\xAAutf",
 	'userid' => "invalid\xAA\xAA\xAAutf",
 	'secondperson' => array(NULL),
+	'password' => array(),
 );
 
 $tmp = array(
