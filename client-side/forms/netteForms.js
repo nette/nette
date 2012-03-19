@@ -52,7 +52,7 @@ Nette.getValue = function(elem) {
 		return elem.checked;
 
 	} else if (elem.type === 'radio') {
-		return Nette.getValue(elem.form.elements[elem.name]);
+		return Nette.getValue(elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name]);
 
 	} else {
 		return elem.value.replace(/^\s+|\s+$/g, '');
