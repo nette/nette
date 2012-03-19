@@ -111,12 +111,12 @@ class User extends Nette\Object
 	 */
 	final public function logout($clearIdentity = FALSE)
 	{
+		if ($this->isLoggedIn()) {
+			$this->onLoggedOut($this);
+			$this->storage->setAuthenticated(FALSE);
+		}
 		if ($clearIdentity) {
 			$this->storage->setIdentity(NULL);
-		}
-		if ($this->isLoggedIn()) {
-			$this->storage->setAuthenticated(FALSE);
-			$this->onLoggedOut($this);
 		}
 	}
 
