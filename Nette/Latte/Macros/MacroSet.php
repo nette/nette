@@ -13,7 +13,8 @@ namespace Nette\Latte\Macros;
 
 use Nette,
 	Nette\Latte,
-	Nette\Latte\MacroNode;
+	Nette\Latte\MacroNode,
+	Nette\Latte\CompileException;
 
 
 
@@ -90,6 +91,9 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 				$node->attrCode = "<?php $res ?>";
 			}
 		} else {
+			if ($this->macros[$node->name][2] === FALSE && $node->htmlNode) {
+				throw new CompileException("Used macro n:$node->name, which is not defined as attr-macro");
+			}
 			$node->isEmpty = !isset($this->macros[$node->name][1]);
 			$res = $this->compile($node, $this->macros[$node->name][0]);
 			if (!$node->openingCode) {
