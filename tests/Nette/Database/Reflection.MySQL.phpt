@@ -16,6 +16,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 
 $driver = $connection->getSupplementalDriver();
 $tables = $driver->getTables();
+$tables = array_filter($tables, function($t) { return in_array($t['name'], array('author', 'book', 'book_tag', 'tag')); });
 usort($tables, function($a, $b) { return strcmp($a['name'], $b['name']); });
 
 Assert::same( array(
