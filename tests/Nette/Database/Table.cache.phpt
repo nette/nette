@@ -15,11 +15,13 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 
 
 
-$connection->setCacheStorage(new Nette\Caching\Storages\FileStorage(TEMP_DIR));
-$connection->getCache()->clean();
+$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
+$connection->setCacheStorage($cacheStorage);
+$connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($cacheStorage));
 
 
 
+// Testing Selection caching
 $bookSelection = $connection->table('book')->find(2);
 Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
 
@@ -40,6 +42,7 @@ Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHE
 
 
 
+// Testing GroupedSelection reinvalidation caching
 $stack = array();
 foreach ($connection->table('author') as $author) {
 	$stack[] = $selection = $author->related('book');
@@ -50,7 +53,6 @@ foreach ($connection->table('author') as $author) {
 }
 
 reset($stack)->__destruct(); // save cache of the first selection, which stores affected columns for all runs
-
 
 $books = array();
 foreach ($connection->table('author') as $author) {
