@@ -103,7 +103,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		$reference = $this->structure['hasMany'];
 		if (!empty($reference[$table])) {
 			foreach ($reference[$table] as $targetTable => $targetColumn) {
-				if (strpos($targetTable, strtolower($key)) !== FALSE) {
+				if (stripos($targetTable, $key) !== FALSE) {
 					return array(
 						$targetTable,
 						$targetColumn,
@@ -127,7 +127,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		$reference = $this->structure['belongsTo'];
 		if (!empty($reference[$table])) {
 			foreach ($reference[$table] as $column => $targetTable) {
-				if (strpos($column, strtolower($key)) !== FALSE) {
+				if (stripos($column, $key) !== FALSE) {
 					return array(
 						$targetTable,
 						$column,
@@ -166,8 +166,8 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	protected function reloadForeignKeys($table)
 	{
 		foreach ($this->connection->getSupplementalDriver()->getForeignKeys($table) as $row) {
-			$this->structure['belongsTo'][$table][strtolower($row['local'])] = $row['table'];
-			$this->structure['hasMany'][strtolower($row['table'])][$table] = $row['local'];
+			$this->structure['belongsTo'][$table][$row['local']] = $row['table'];
+			$this->structure['hasMany'][$row['table']][$table] = $row['local'];
 		}
 
 		if (isset($this->structure['belongsTo'][$table])) {
