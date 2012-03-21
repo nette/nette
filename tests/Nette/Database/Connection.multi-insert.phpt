@@ -6,11 +6,12 @@
  * @author     David Grudl
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @databases  mysql
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
+require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/nette_test_{$driverName}1.sql");
 
 
 
