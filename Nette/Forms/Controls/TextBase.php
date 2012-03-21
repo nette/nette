@@ -240,19 +240,6 @@ abstract class TextBase extends BaseControl
 
 
 	/**
-	 * Rangle validator: is a control's value number in specified range?
-	 * @param  TextBase
-	 * @param  array  min and max value pair
-	 * @return bool
-	 */
-	public static function validateRange(TextBase $control, $range)
-	{
-		return Validators::isInRange($control->getValue(), $range);
-	}
-
-
-
-	/**
 	 * Float string cleanup.
 	 * @param  string
 	 * @return string
