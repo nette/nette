@@ -149,4 +149,15 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		return $item === self::META;
 	}
 
+
+
+	/**
+	 * Does driver use sequences?
+	 * @return bool
+	 */
+	public function areSequencesUsed()
+	{
+		return FALSE;
+	}
+
 }
