@@ -72,14 +72,14 @@ class TestRunner
 				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 			}
 
-			foreach ($files as $entry) {
-				$entry = (string) $entry;
-				$info = pathinfo($entry);
+			foreach ($files as $testFile) {
+				$testFile = (string) $testFile;
+				$info = pathinfo($testFile);
 				if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
 					continue;
 				}
 
-				$options = TestCase::parseOptions($entry);
+				$options = TestCase::parseOptions($testFile);
 				if (isset($options['databases'])) {
 					$databaseDrivers = preg_split('/, */', $options['databases']);
 					if ($this->databaseDrivers !== NULL) {
@@ -87,11 +87,11 @@ class TestRunner
 					}
 
 					foreach ($databaseDrivers as $databaseDriver) {
-						$tests[] = array($entry, array('NETTE_DATABASE_DRIVER' => $databaseDriver));
+						$tests[] = array($testFile, "$testFile ($databaseDriver)", array('NETTE_DATABASE_DRIVER' => $databaseDriver));
 					}
 
 				} else {
-					$tests[] = array($entry, array());
+					$tests[] = array($testFile, $testFile, array());
 				}
 			}
 		}
@@ -99,9 +99,9 @@ class TestRunner
 		$running = array();
 		while ($tests || $running) {
 			for ($i = count($running); $tests && $i < $this->jobs; $i++) {
-				list($entry, $localEnvironment) = array_shift($tests);
+				list($testFile, $entry, $localEnvironment) = array_shift($tests);
 				$count++;
-				$testCase = new TestCase($entry);
+				$testCase = new TestCase($testFile);
 				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment + $localEnvironment);
 				try {
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
@@ -142,8 +142,8 @@ class TestRunner
 		if ($this->displaySkipped && $skippedCount) {
 			$this->out("\n\nSkipped:\n");
 			foreach ($skipped as $i => $item) {
-				list($name, $file, $message) = $item;
-				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $file\n");
+				list($name, $entry, $message) = $item;
+				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $entry\n");
 			}
 		}
 
@@ -153,8 +153,8 @@ class TestRunner
 		} elseif ($failedCount) {
 			$this->out("\n\nFailures:\n");
 			foreach ($failed as $item) {
-				list($name, $file, $message) = $item;
-				$this->out("\n-> $name\n   file: $file\n   $message\n");
+				list($name, $entry, $message) = $item;
+				$this->out("\n-> $name\n   file: $entry\n   $message\n");
 			}
 			$this->out("\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n");
 			return FALSE;
