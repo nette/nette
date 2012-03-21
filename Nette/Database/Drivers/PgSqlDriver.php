@@ -64,7 +64,8 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new Nette\NotImplementedException;
+		$value = strtr($value, array("'" => "''", '\\' => '\\\\', '%' => '\\\\%', '_' => '\\\\_'));
+		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
 
@@ -102,11 +103,20 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getTables()
 	{
-		return $this->connection->query("
-			SELECT table_name as name, CAST(table_type = 'VIEW' AS INTEGER) as view
-			FROM information_schema.tables
-			WHERE table_schema = current_schema()
-		")->fetchAll();
+		$tables = array();
+		foreach ($this->connection->query("
+			SELECT
+				table_name AS name,
+				table_type = 'VIEW' AS view
+			FROM
+				information_schema.tables
+			WHERE
+				table_schema = current_schema()
+		") as $row) {
+			$tables[] = (array) $row;
+		}
+
+		return $tables;
 	}
 
 
@@ -116,33 +126,35 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getColumns($table)
 	{
-		$primary = (int) $this->connection->query("
-			SELECT indkey
-			FROM pg_class
-			LEFT JOIN pg_index on pg_class.oid = pg_index.indrelid AND pg_index.indisprimary
-			WHERE pg_class.relname = {$this->connection->quote($table)}
-		")->fetchColumn(0);
-
 		$columns = array();
 		foreach ($this->connection->query("
-			SELECT *
-			FROM information_schema.columns
-			WHERE table_name = {$this->connection->quote($table)} AND table_schema = current_schema()
-			ORDER BY ordinal_position
+			SELECT
+				c.column_name AS name,
+				c.table_name AS table,
+				upper(c.udt_name) AS nativetype,
+				greatest(c.character_maximum_length, c.numeric_precision) AS size,
+				FALSE AS unsigned,
+				c.is_nullable = 'YES' AS nullable,
+				c.column_default AS default,
+				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AND strpos(c.column_default, 'nextval') = 1 AS autoincrement,
+				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary
+			FROM
+				information_schema.columns AS c
+				LEFT JOIN information_schema.constraint_column_usage AS ccu USING(table_catalog, table_schema, table_name, column_name)
+				LEFT JOIN information_schema.table_constraints AS tc USING(constraint_catalog, constraint_schema, constraint_name)
+			WHERE
+				c.table_name = {$this->connection->quote($table)}
+				AND
+				c.table_schema = current_schema()
+				AND
+				(tc.constraint_type IS NULL OR tc.constraint_type = 'PRIMARY KEY')
+			ORDER BY
+				c.ordinal_position
 		") as $row) {
-			$size = (int) max($row['character_maximum_length'], $row['numeric_precision']);
-			$columns[] = array(
-				'name' => $row['column_name'],
-				'table' => $table,
-				'nativetype' => strtoupper($row['udt_name']),
-				'size' => $size ? $size : NULL,
-				'nullable' => $row['is_nullable'] === 'YES',
-				'default' => $row['column_default'],
-				'autoincrement' => (int) $row['ordinal_position'] === $primary && substr($row['column_default'], 0, 7) === 'nextval',
-				'primary' => (int) $row['ordinal_position'] === $primary,
-				'vendor' => (array) $row,
-			);
+			$row['vendor'] = array();
+			$columns[] = (array) $row;
 		}
+
 		return $columns;
 	}
 
@@ -153,31 +165,33 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getIndexes($table)
 	{
-		$columns = array();
-		foreach ($this->connection->query("
-			SELECT ordinal_position, column_name
-			FROM information_schema.columns
-			WHERE table_name = {$this->connection->quote($table)} AND table_schema = current_schema()
-			ORDER BY ordinal_position
-		") as $row) {
-			$columns[$row['ordinal_position']] = $row['column_name'];
-		}
-
+		/* There is no information about all indexes in information_schema, so pg catalog must be used */
 		$indexes = array();
 		foreach ($this->connection->query("
-			SELECT pg_class2.relname, indisunique, indisprimary, indkey
-			FROM pg_class
-			LEFT JOIN pg_index on pg_class.oid = pg_index.indrelid
-			INNER JOIN pg_class as pg_class2 on pg_class2.oid = pg_index.indexrelid
-			WHERE pg_class.relname = {$this->connection->quote($table)}
+			SELECT
+				c2.relname AS name,
+				indisunique AS unique,
+				indisprimary AS primary,
+				attname AS column
+			FROM
+				pg_class AS c1
+				JOIN pg_namespace ON c1.relnamespace = pg_namespace.oid
+				JOIN pg_index ON c1.oid = indrelid
+				JOIN pg_class AS c2 ON indexrelid = c2.oid
+				LEFT JOIN pg_attribute ON c1.oid = attrelid AND attnum = ANY(indkey)
+			WHERE
+				nspname = current_schema()
+				AND
+				c1.relkind = 'r'
+				AND
+				c1.relname = {$this->connection->quote($table)}
 		") as $row) {
-			$indexes[$row['relname']]['name'] = $row['relname'];
-			$indexes[$row['relname']]['unique'] = $row['indisunique'] === 't';
-			$indexes[$row['relname']]['primary'] = $row['indisprimary'] === 't';
-			foreach (explode(' ', $row['indkey']) as $index) {
-				$indexes[$row['relname']]['columns'][] = $columns[$index];
-			}
+			$indexes[$row['name']]['name'] = $row['name'];
+			$indexes[$row['name']]['unique'] = $row['unique'];
+			$indexes[$row['name']]['primary'] = $row['primary'];
+			$indexes[$row['name']]['columns'][] = $row['column'];
 		}
+
 		return array_values($indexes);
 	}
 
