@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * Test: Nette\Database\Connection: reflection for PostgreSQL
+ *
+ * @author     David Grudl
+ * @package    Nette\Database
+ * @subpackage UnitTests
+ * @databases  pgsql
+ */
+
+require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/nette_test_{$driverName}1.sql");
+
+
+
+$driver = $connection->getSupplementalDriver();
+$tables = $driver->getTables();
+$tables = array_filter($tables, function($t) { return in_array($t['name'], array('author', 'book', 'book_tag', 'tag')); });
+usort($tables, function($a, $b) { return strcmp($a['name'], $b['name']); });
+
+Assert::same( array(
+	array('name' => 'author', 'view' => FALSE),
+	array('name' => 'book', 'view' => FALSE),
+	array('name' => 'book_tag', 'view' => FALSE),
+	array('name' => 'tag', 'view' => FALSE),
+), $tables );
+
+
+
+$columns = $driver->getColumns('author');
+array_walk($columns, function(& $item) {
+	Assert::true( is_array($item['vendor']) );
+	if ($item['name'] === 'id') {
+		Assert::same( $item['vendor']['sequence'], 'author_id_seq' );
+	}
+
+	unset($item['vendor']);
+});
+
+Assert::same( array(
+	array(
+		'name' => 'id',
+		'table' => 'author',
+		'nativetype' => 'INT4',
+		'size' => 32,
+		'unsigned' => FALSE,
+		'nullable' => FALSE,
+		'default' => 'nextval(\'author_id_seq\'::regclass)',
+		'autoincrement' => TRUE,
+		'primary' => TRUE,
+	),
+	array(
+		'name' => 'name',
+		'table' => 'author',
+		'nativetype' => 'VARCHAR',
+		'size' => 30,
+		'unsigned' => FALSE,
+		'nullable' => FALSE,
+		'default' => NULL,
+		'autoincrement' => FALSE,
+		'primary' => FALSE,
+	),
+	array(
+		'name' => 'web',
+		'table' => 'author',
+		'nativetype' => 'VARCHAR',
+		'size' => 100,
+		'unsigned' => FALSE,
+		'nullable' => FALSE,
+		'default' => NULL,
+		'autoincrement' => FALSE,
+		'primary' => FALSE,
+	),
+	array(
+		'name' => 'born',
+		'table' => 'author',
+		'nativetype' => 'DATE',
+		'size' => NULL,
+		'unsigned' => FALSE,
+		'nullable' => TRUE,
+		'default' => NULL,
+		'autoincrement' => FALSE,
+		'primary' => FALSE,
+	),
+), $columns );
+
+
+
+Assert::same( array(
+	array(
+		'name' => 'book_tag_pkey',
+		'unique' => TRUE,
+		'primary' => TRUE,
+		'columns' => array(
+			'book_id',
+			'tag_id',
+		),
+	),
+), $driver->getIndexes('book_tag') );
+
+
+
+$reflection = new Nette\Database\Reflection\DiscoveredReflection;
+$reflection->setConnection($connection);
+
+// test caching primary key in table with multiple primary keys
+Assert::same(NULL, $reflection->getPrimary('book_tag'));
+Assert::same(NULL, $reflection->getPrimary('book_tag'));

@@ -37,6 +37,10 @@ try {
 			$connection = new Database\Connection('mysql:host=localhost', 'root');
 			break;
 
+		case 'pgsql':
+			$connection = new Database\Connection('pgsql:host=localhost;dbname=nette_test', 'nette_test', 'nette_test');
+			break;
+
 		default:
 			TestHelpers::skip("Database driver '$driverName' is not supported.");
 			break;

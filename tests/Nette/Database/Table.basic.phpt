@@ -7,7 +7,7 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
- * @databases  mysql
+ * @databases  mysql, pgsql
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
@@ -73,4 +73,12 @@ $sql = $connection->table('book')
 	->where(new Nette\Database\SqlLiteral('id = 1'))
 	->getSql();
 
-Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
+		break;
+
+	default:
+		Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
+		break;
+}

@@ -7,7 +7,7 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
- * @databases  mysql 
+ * @databases  mysql, pgsql 
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
