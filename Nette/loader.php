@@ -65,11 +65,14 @@ Nette\Utils\SafeStream::register();
 
 /**
  * Nette\Callback factory.
- * @param  mixed   class, object, function, callback
+ * @param  mixed   class, object, callable
  * @param  string  method
  * @return Nette\Callback
  */
 function callback($callback, $m = NULL)
 {
-	return ($m === NULL && $callback instanceof Nette\Callback) ? $callback : new Nette\Callback($callback, $m);
+	if ($m === NULL) {
+		return $callback instanceof Nette\Callback ? $callback : new Nette\Callback($callback);
+	}
+	return new Nette\Callback(array($callback, $m));
 }
