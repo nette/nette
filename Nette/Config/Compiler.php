@@ -234,7 +234,7 @@ class Compiler extends Nette\Object
 			try {
 				static::parseService($definition, $def, $shared);
 			} catch (\Exception $e) {
-				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
+				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 		}
 	}

@@ -378,7 +378,7 @@ class ContainerBuilder extends Nette\Object
 					}
 				}
 			} catch (\Exception $e) {
-				throw new ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 		}
 
