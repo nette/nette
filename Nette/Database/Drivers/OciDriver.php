@@ -162,4 +162,15 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 		return $item === self::META;
 	}
 
+
+
+	/**
+	 * Does driver use sequences?
+	 * @return bool
+	 */
+	public function areSequencesUsed()
+	{
+		return TRUE;
+	}
+
 }
