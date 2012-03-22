@@ -7,11 +7,12 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @databases  mysql, pgsql
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
+require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/nette_test_{$driverName}1.sql");
 
 
 
@@ -72,4 +73,12 @@ $sql = $connection->table('book')
 	->where(new Nette\Database\SqlLiteral('id = 1'))
 	->getSql();
 
-Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
+		break;
+
+	default:
+		Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
+		break;
+}

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Test: Nette\Database\Connection: reflection for MySQL
+ * Test: Nette\Database\Connection: reflection for PostgreSQL
  *
  * @author     David Grudl
  * @package    Nette\Database
  * @subpackage UnitTests
- * @databases  mysql
+ * @databases  pgsql
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
@@ -32,6 +32,10 @@ Assert::same( array(
 $columns = $driver->getColumns('author');
 array_walk($columns, function(& $item) {
 	Assert::true( is_array($item['vendor']) );
+	if ($item['name'] === 'id') {
+		Assert::same( $item['vendor']['sequence'], 'author_id_seq' );
+	}
+
 	unset($item['vendor']);
 });
 
@@ -39,11 +43,11 @@ Assert::same( array(
 	array(
 		'name' => 'id',
 		'table' => 'author',
-		'nativetype' => 'INT',
-		'size' => 11,
+		'nativetype' => 'INT4',
+		'size' => 32,
 		'unsigned' => FALSE,
 		'nullable' => FALSE,
-		'default' => NULL,
+		'default' => 'nextval(\'author_id_seq\'::regclass)',
 		'autoincrement' => TRUE,
 		'primary' => TRUE,
 	),
@@ -86,19 +90,11 @@ Assert::same( array(
 
 Assert::same( array(
 	array(
-		'name' => 'PRIMARY',
+		'name' => 'book_tag_pkey',
 		'unique' => TRUE,
 		'primary' => TRUE,
 		'columns' => array(
 			'book_id',
-			'tag_id',
-		),
-	),
-	array(
-		'name' => 'book_tag_tag',
-		'unique' => FALSE,
-		'primary' => FALSE,
-		'columns' => array(
 			'tag_id',
 		),
 	),

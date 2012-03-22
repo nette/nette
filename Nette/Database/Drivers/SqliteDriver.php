@@ -229,4 +229,15 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		return FALSE;
 	}
 
+
+
+	/**
+	 * Does driver use sequences?
+	 * @return bool
+	 */
+	public function areSequencesUsed()
+	{
+		return FALSE;
+	}
+
 }

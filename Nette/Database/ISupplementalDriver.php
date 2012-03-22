@@ -94,4 +94,10 @@ interface ISupplementalDriver
 	 */
 	function getForeignKeys($table);
 
+	/**
+	 * Does driver use sequences?
+	 * @return bool TRUE when driver use sequences, FALSE otherwise.
+	 */
+	function areSequencesUsed();
+
 }

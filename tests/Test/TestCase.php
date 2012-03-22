@@ -43,6 +43,9 @@ class TestCase
 	/** @var string  PHP-CGI command line */
 	private $cmdLine;
 
+	/** @var array  environment variables */
+	private $environment = array();
+
 	/** @var string  PHP version */
 	private $phpVersion;
 
@@ -112,15 +115,15 @@ class TestCase
 	 * @param  string
 	 * @return TestCase  provides a fluent interface
 	 */
-	public function setPhp($binary, $args, $environment)
+	public function setPhp($binary, $args, array $environment)
 	{
 		if (isset(self::$cachedPhp[$binary])) {
 			list($this->phpVersion, $this->phpType) = self::$cachedPhp[$binary];
 
 		} else {
-			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
+			exec(escapeshellarg($binary) . $args . ' -v', $output, $res);
 			if ($res !== self::CODE_OK && $res !== self::CODE_ERROR) {
-				throw new Exception("Unable to execute '$binary -v'.");
+				throw new Exception("Unable to execute '{$binary}{$args} -v'.");
 			}
 
 			if (!preg_match('#^PHP (\S+).*c(g|l)i#i', $output[0], $matches)) {
@@ -132,7 +135,8 @@ class TestCase
 			self::$cachedPhp[$binary] = array($this->phpVersion, $this->phpType);
 		}
 
-		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
+		$this->cmdLine =  escapeshellarg($binary) . $args;
+		$this->environment = $environment;
 		return $this;
 	}
 
@@ -160,7 +164,7 @@ class TestCase
 			array('pipe', 'w'),
 		);
 
-		$this->proc = proc_open($this->cmdLine, $descriptors, $pipes, dirname($this->file), null, array('bypass_shell' => true));
+		$this->proc = proc_open($this->cmdLine, $descriptors, $pipes, dirname($this->file), $this->environment, array('bypass_shell' => true));
 		list($stdin, $this->stdout, $stderr) = $pipes;
 		fclose($stdin);
 		stream_set_blocking($this->stdout, $blocking ? 1 : 0);

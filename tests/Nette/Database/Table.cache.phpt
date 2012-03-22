@@ -7,11 +7,12 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @databases  mysql, pgsql
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
+require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/nette_test_{$driverName}1.sql");
 
 
 
@@ -23,22 +24,54 @@ $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredRefle
 
 // Testing Selection caching
 $bookSelection = $connection->table('book')->find(2);
-Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+		break;
+
+	default:
+		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+		break;
+}
 
 $book = $bookSelection->fetch();
 $book->title;
 $book->translator;
 $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->find(2);
-Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT "id", "title", "translator_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+		break;
+
+	default:
+		Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+		break;
+}
 
 $book = $bookSelection->fetch();
 $book->author_id;
-Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+		break;
+
+	default:
+		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+		break;
+}
 
 $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->find(2);
-Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+switch ($driverName) {
+	case 'pgsql':
+		Assert::same('SELECT "id", "title", "translator_id", "author_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+		break;
+
+	default:
+		Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+		break;
+}
 
 
 

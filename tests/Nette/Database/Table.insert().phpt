@@ -7,11 +7,12 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @databases  mysql, pgsql
  */
 
-require __DIR__ . '/connect.inc.php'; // create $connection
+require __DIR__ . '/connect.inc.php'; // create $connection, provide $driverName
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/nette_test_{$driverName}1.sql");
 
 
 
@@ -21,6 +22,11 @@ $connection->table('author')->insert(array(
 	'web' => 'http://example.com',
 ));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (13, 'Edard Stark', 'http://example.com')
 
+switch ($driverName) {
+	case 'pgsql':
+		$connection->exec("SELECT setval('author_id_seq'::regclass, 13, TRUE)");
+		break;
+}
 
 
 $insert = array(
