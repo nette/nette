@@ -161,8 +161,7 @@ class Session extends Nette\Object
 		}
 
 		if ($this->regenerationNeeded) {
-			session_regenerate_id(TRUE);
-			$this->regenerationNeeded = FALSE;
+			$this->regenerateId();
 		}
 
 		register_shutdown_function(array($this, 'clean'));
@@ -240,6 +239,11 @@ class Session extends Nette\Object
 				throw new Nette\InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
 			session_regenerate_id(TRUE);
+			session_write_close();
+			$backup = $_SESSION;
+			session_start();
+			$_SESSION = $backup;
+			$this->regenerationNeeded = FALSE;
 
 		} else {
 			$this->regenerationNeeded = TRUE;
