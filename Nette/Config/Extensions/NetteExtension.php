@@ -28,7 +28,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'xhtml' => TRUE,
 		'session' => array(
 			'iAmUsingBadHost' => NULL,
-			'autoStart' => NULL,  // true|false|smart
+			'autoStart' => 'smart',  // true|false|smart
 			'expiration' => NULL,
 		),
 		'application' => array(
