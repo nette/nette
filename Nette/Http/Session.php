@@ -36,8 +36,8 @@ class Session extends Nette\Object
 	/** Regenerate session ID every 30 minutes */
 	const REGENERATE_INTERVAL = 1800;
 
-	/** @var bool  is required session ID regeneration? */
-	private $regenerationNeeded;
+	/** @var bool  has been session ID regenerated? */
+	private $regenerated;
 
 	/** @var bool  has been session started? */
 	private static $started;
@@ -123,8 +123,8 @@ class Session extends Nette\Object
 		$nfTime = & $nf['Time'];
 		$time = time();
 		if ($time - $nfTime > self::REGENERATE_INTERVAL) {
+			$this->regenerated = $this->regenerated || isset($nfTime);
 			$nfTime = $time;
-			$this->regenerationNeeded = TRUE;
 		}
 
 		// browser closing detection
@@ -160,7 +160,8 @@ class Session extends Nette\Object
 			}
 		}
 
-		if ($this->regenerationNeeded) {
+		if ($this->regenerated) {
+			$this->regenerated = FALSE;
 			$this->regenerateId();
 		}
 
@@ -234,7 +235,7 @@ class Session extends Nette\Object
 	 */
 	public function regenerateId()
 	{
-		if (self::$started) {
+		if (self::$started && !$this->regenerated) {
 			if (headers_sent($file, $line)) {
 				throw new Nette\InvalidStateException("Cannot regenerate session ID after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
 			}
@@ -243,11 +244,8 @@ class Session extends Nette\Object
 			$backup = $_SESSION;
 			session_start();
 			$_SESSION = $backup;
-			$this->regenerationNeeded = FALSE;
-
-		} else {
-			$this->regenerationNeeded = TRUE;
 		}
+		$this->regenerated = TRUE;
 	}
 
 
