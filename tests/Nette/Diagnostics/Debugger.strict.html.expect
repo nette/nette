@@ -129,6 +129,8 @@
    <span class="php-key">2</span> => <span class="php-int">3</span>
 ]</code>
 </pre></td></tr>
+<tr><th>$x</th><td><pre class="nette-dump"><span class="php-null">NULL</span>
+</pre></td></tr>
 			</table>
 			</div>
 			</div></div>
@@ -178,6 +180,7 @@
 		<h2><a href="#" rel="netteBsPnl10">HTTP request <abbr>&#x25ba;</abbr></a></h2>
 
 		<div id="netteBsPnl10" class="nette-collapsed inner">
+%A?%
 
 
 						<h3>$_GET</h3>
