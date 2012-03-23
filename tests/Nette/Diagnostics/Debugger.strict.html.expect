@@ -128,7 +128,7 @@
    <span class="php-key">1</span> => <span class="php-int">2</span>
    <span class="php-key">2</span> => <span class="php-int">3</span>
 ]</code>
-</pre></td></tr>
+</pre></td></tr>%A?%
 			</table>
 			</div>
 			</div></div>
@@ -172,7 +172,7 @@
 		<h2><a href="#" rel="netteBsPnl9">HTTP request <abbr>&#x25ba;</abbr></a></h2>
 
 		<div id="netteBsPnl9" class="nette-collapsed inner">
-
+%A?%
 
 						<h3>$_GET</h3>
 						<p><i>empty</i></p>

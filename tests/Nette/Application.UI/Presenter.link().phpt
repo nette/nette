@@ -162,6 +162,7 @@ $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->crea
 
 $url = new Http\UrlScript('http://localhost/index.php');
 $url->setScriptPath('/index.php');
+unset($container->httpRequest);
 $container->httpRequest = new Http\Request($url);
 
 $application = $container->application;
