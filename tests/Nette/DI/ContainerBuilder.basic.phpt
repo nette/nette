@@ -21,7 +21,7 @@ class Service
 	public $args;
 	public $methods;
 
-	static function create(DI\IContainer $container = NULL)
+	static function create(DI\Container $container = NULL)
 	{
 		$args = func_get_args();
 		unset($args[0]);

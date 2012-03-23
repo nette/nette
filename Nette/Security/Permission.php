@@ -438,7 +438,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  callback    assertion
+	 * @param  callable    assertion
 	 * @return Permission  provides a fluent interface
 	 */
 	public function allow($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
@@ -456,7 +456,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  callback    assertion
+	 * @param  callable    assertion
 	 * @return Permission  provides a fluent interface
 	 */
 	public function deny($roles = self::ALL, $resources = self::ALL, $privileges = self::ALL, $assertion = NULL)
@@ -506,7 +506,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  roles
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
-	 * @param  callback    assertion
+	 * @param  callable    assertion
 	 * @throws Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */

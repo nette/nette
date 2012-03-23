@@ -54,7 +54,7 @@ class SubmitButton extends Button implements Nette\Forms\ISubmitterControl
 	 */
 	public function setValue($value)
 	{
-		if ($this->value = is_scalar($value) && (bool) $value) {
+		if ($this->value = $value !== NULL) {
 			$this->getForm()->setSubmittedBy($this);
 		}
 		return $this;

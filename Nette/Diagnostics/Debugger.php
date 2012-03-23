@@ -88,7 +88,7 @@ final class Debugger
 	/** @var bool disables the @ (shut-up) operator so that notices and warnings are no longer hidden */
 	public static $scream = FALSE;
 
-	/** @var array of callbacks specifies the functions that are automatically called after fatal error */
+	/** @var array of callables specifies the functions that are automatically called after fatal error */
 	public static $onFatalError = array();
 
 	/** @var bool {@link Debugger::enable()} */
@@ -334,7 +334,7 @@ final class Debugger
 
 		self::$logger->log(array(
 			@date('[Y-m-d H-i-s]'),
-			$message,
+			trim($message),
 			self::$source ? ' @  ' . self::$source : NULL,
 			!empty($exceptionFilename) ? ' @@  ' . $exceptionFilename : NULL
 		), $priority);

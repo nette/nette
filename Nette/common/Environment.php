@@ -34,7 +34,7 @@ final class Environment
 	/** @var string */
 	private static $createdAt;
 
-	/** @var Nette\DI\IContainer */
+	/** @var Nette\DI\Container */
 	private static $context;
 
 
@@ -163,7 +163,7 @@ final class Environment
 	 * Sets initial instance of context.
 	 * @return void
 	 */
-	public static function setContext(DI\IContainer $context)
+	public static function setContext(DI\Container $context)
 	{
 		if (self::$createdAt) {
 			throw new Nette\InvalidStateException('Configurator & SystemContainer has already been created automatically by Nette\Environment at ' . self::$createdAt);
@@ -175,7 +175,7 @@ final class Environment
 
 	/**
 	 * Get initial instance of context.
-	 * @return Nette\DI\IContainer
+	 * @return Nette\DI\Container
 	 */
 	public static function getContext()
 	{

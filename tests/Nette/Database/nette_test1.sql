@@ -1,5 +1,6 @@
 /*!40102 SET storage_engine = InnoDB */;
 
+DROP DATABASE IF EXISTS nette_test;
 CREATE DATABASE IF NOT EXISTS nette_test;
 USE nette_test;
 

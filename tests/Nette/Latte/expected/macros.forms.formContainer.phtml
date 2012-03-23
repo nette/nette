@@ -3,7 +3,7 @@
 //
 // main template
 //
-Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ?>
+Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array()) ?>
 <table>
 	<tr>
 		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label->addAttributes(array()) ?><th>

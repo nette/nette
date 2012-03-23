@@ -22,26 +22,26 @@ use Nette;
  */
 class Filter extends \FilterIterator
 {
-	/** @var callback */
+	/** @var callable */
 	private $callback;
 
 
 	/**
 	 * Constructs a filter around another iterator.
 	 * @param
-	 * @param  callback
+	 * @param  callable
 	 */
 	public function __construct(\Iterator $iterator, $callback)
 	{
 		parent::__construct($iterator);
-		$this->callback = $callback;
+		$this->callback = callback($callback);
 	}
 
 
 
 	public function accept()
 	{
-		return call_user_func($this->callback, $this);
+		return $this->callback->invoke($this);
 	}
 
 }

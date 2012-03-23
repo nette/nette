@@ -74,10 +74,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of referenced TableSelection */
 	protected $referenced = array();
 
-	/** @var array of [sql+parameters => [column => [key => TableRow]]] used by GroupedTableSelection */
+	/** @var array of [sql+parameters => [column => [key => TableRow]]] used by GroupedSelection */
 	protected $referencing = array();
 
-	/** @var array of [conditions => [key => TableRow]] used by GroupedTableSelection */
+	/** @var array of [conditions => [key => TableRow]] used by GroupedSelection */
 	protected $aggregation = array();
 
 	/** @var array of touched columns */
@@ -97,10 +97,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	/**
-	 * @param  string
-	 * @param
-	 */
 	public function __construct($table, Nette\Database\Connection $connection)
 	{
 		$this->name = $table;
@@ -879,7 +875,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$return = array();
 		// no $clone->select = array($key, $value) to allow efficient caching with repetitive calls with different parameters
 		foreach ($this as $row) {
-			$return[$row[$key]] = ($value !== '' ? $row[$value] : $row);
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value !== '' ? $row[$value] : $row);
 		}
 		return $return;
 	}

@@ -199,7 +199,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroUse(MacroNode $node, PhpWriter $writer)
 	{
-		call_user_func(array($node->tokenizer->fetchWord(), 'install'), $this->getCompiler())
+		callback($node->tokenizer->fetchWord(), 'install')->invoke($this->getCompiler())
 			->initialize();
 	}
 

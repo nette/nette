@@ -22,26 +22,26 @@ use Nette;
  */
 class Mapper extends \IteratorIterator
 {
-	/** @var callback */
+	/** @var callable */
 	private $callback;
 
 
 	/**
 	 * Constructs a filter around another iterator.
 	 * @param
-	 * @param  callback
+	 * @param  callable
 	 */
 	public function __construct(\Traversable $iterator, $callback)
 	{
 		parent::__construct($iterator);
-		$this->callback = $callback;
+		$this->callback = callback($callback);
 	}
 
 
 
 	public function current()
 	{
-		return call_user_func($this->callback, parent::current(), parent::key());
+		return $this->callback->invoke(parent::current(), parent::key());
 	}
 
 }

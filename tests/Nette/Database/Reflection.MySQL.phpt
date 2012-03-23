@@ -8,12 +8,15 @@
  * @subpackage UnitTests
  */
 
-require_once __DIR__ . '/connect.inc.php';
+require __DIR__ . '/connect.inc.php'; // create $connection
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 
 
 
 $driver = $connection->getSupplementalDriver();
 $tables = $driver->getTables();
+$tables = array_filter($tables, function($t) { return in_array($t['name'], array('author', 'book', 'book_tag', 'tag')); });
 usort($tables, function($a, $b) { return strcmp($a['name'], $b['name']); });
 
 Assert::same( array(
@@ -99,3 +102,12 @@ Assert::same( array(
 		),
 	),
 ), $driver->getIndexes('book_tag') );
+
+
+
+$reflection = new Nette\Database\Reflection\DiscoveredReflection;
+$reflection->setConnection($connection);
+
+// test caching primary key in table with multiple primary keys
+Assert::same(NULL, $reflection->getPrimary('book_tag'));
+Assert::same(NULL, $reflection->getPrimary('book_tag'));

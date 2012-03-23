@@ -1,4 +1,4 @@
-<form action="" method="post" id="frm-">
+<form action="" method="post">
 
 <ul class="error">
 	<li>First number must be 8 multiple</li>

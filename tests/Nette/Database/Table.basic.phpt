@@ -9,7 +9,9 @@
  * @subpackage UnitTests
  */
 
-require_once __DIR__ . '/connect.inc.php';
+require __DIR__ . '/connect.inc.php'; // create $connection
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 
 
 
@@ -32,15 +34,15 @@ Assert::throws(function() use ($book) {
 
 
 
-$appTags = array();
+$bookTags = array();
 foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
-	$appTags[$book->title] = array(
+	$bookTags[$book->title] = array(
 		'author' => $book->author->name,  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 12))
 		'tags' => array(),
 	);
 
 	foreach ($book->related('book_tag') as $book_tag) {  // SELECT * FROM `book_tag` WHERE (`book_tag`.`book_id` IN (1, 2, 3, 4))
-		$appTags[$book->title]['tags'][] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
+		$bookTags[$book->title]['tags'][] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
 	}
 }
 
@@ -61,7 +63,7 @@ Assert::same(array(
 		'author' => 'David Grudl',
 		'tags' => array('PHP', 'MySQL'),
 	),
-), $appTags);
+), $bookTags);
 
 
 

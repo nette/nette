@@ -378,7 +378,7 @@ class ContainerBuilder extends Nette\Object
 					}
 				}
 			} catch (\Exception $e) {
-				throw new ServiceCreationException("Service '$name': " . $e->getMessage()/**/, NULL, $e/**/);
+				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
 			}
 		}
 
@@ -441,7 +441,7 @@ class ContainerBuilder extends Nette\Object
 				if ($arguments) {
 					throw new ServiceCreationException("Unable to call service '$entity'.");
 				}
-				return $this->formatPhp('$this->?', array($service));
+				return $this->formatPhp('$this->getService(?)', array($service));
 			}
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
