@@ -47,6 +47,6 @@ $books  = $author->related('book')->where('translator_id', 11);
 Assert::same('1001 tipu a triku pro PHP', $books->fetch()->title);
 Assert::false($books->fetch());
 
-Assert::same('1001 tipu a triku pro PHP', $author->related('book')->where('translator_id', 11)->fetch()->title);
+Assert::same('1001 tipu a triku pro PHP', $author->related('book')->fetch()->title);
 
-Assert::same('JUSH', $author->related('book')->where('translator_id', NULL)->fetch()->title);
+Assert::same('JUSH', $author->related('book', NULL, TRUE)->where('translator_id', NULL)->fetch()->title);
