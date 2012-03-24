@@ -43,26 +43,26 @@ Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHE
 
 
 // Testing GroupedSelection reinvalidation caching
-$stack = array();
 foreach ($connection->table('author') as $author) {
-	$stack[] = $selection = $author->related('book');
-	$book = $selection->where('translator_id', 12)->fetch();
-	if ($book) {
-		$book->title; // will affect only the second loop run
+	$selection = $author->related('book.author_id')->order('title');
+	foreach ($selection as $book) {
+		$book->title;
 	}
 }
 
-reset($stack)->__destruct(); // save cache of the first selection, which stores affected columns for all runs
+$selection->__destruct();
+
 
 $books = array();
 foreach ($connection->table('author') as $author) {
-	$selection = $author->related('book');
-	$book = $selection->where('translator_id', 12)->fetch();
-	if ($book) {
-		$books[$book->title] = $book->translator_id; // translator_id is the new used column in the second loop run
+	foreach ($author->related('book.author_id')->order('title') as $book) {
+		if ($book->author_id == 12) { // the first new used column in every loop
+			$books[$book->title] = $book->translator_id; // translator_id is the second new used column in the second loop
+		}
 	}
 }
 
 Assert::same(array(
+	'Dibi' => 12,
 	'Nette' => 12,
 ), $books);
