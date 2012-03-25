@@ -23,7 +23,7 @@ use Nette,
  * Basic container builder.
  *
  * @author     David Grudl
- * @property-read array $definitions
+ * @property-read ServiceDefinition[] $definitions
  * @property-read array $dependencies
  */
 class ContainerBuilder extends Nette\Object
@@ -34,7 +34,7 @@ class ContainerBuilder extends Nette\Object
 	/** @var array  %param% will be expanded */
 	public $parameters = array();
 
-	/** @var array of ServiceDefinition */
+	/** @var ServiceDefinition[] */
 	private $definitions = array();
 
 	/** @var array for auto-wiring */

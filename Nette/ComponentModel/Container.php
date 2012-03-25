@@ -24,7 +24,7 @@ use Nette;
  */
 class Container extends Component implements IContainer
 {
-	/** @var array of IComponent */
+	/** @var IComponent[] */
 	private $components = array();
 
 	/** @var IComponent|NULL */

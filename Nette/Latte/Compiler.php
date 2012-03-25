@@ -26,7 +26,7 @@ class Compiler extends Nette\Object
 	/** @var string default content type */
 	public $defaultContentType = self::CONTENT_XHTML;
 
-	/** @var array of Token */
+	/** @var Token[] */
 	private $tokens;
 
 	/** @var string pointer to current node content */
@@ -35,16 +35,16 @@ class Compiler extends Nette\Object
 	/** @var int  position on source template */
 	private $position;
 
-	/** @var array of [name => array of IMacro] */
+	/** @var array of [name => IMacro[]] */
 	private $macros;
 
 	/** @var \SplObjectStorage */
 	private $macroHandlers;
 
-	/** @var array of HtmlNode */
+	/** @var HtmlNode[] */
 	private $htmlNodes = array();
 
-	/** @var array of MacroNode */
+	/** @var MacroNode[] */
 	private $macroNodes = array();
 
 	/** @var array of string */
