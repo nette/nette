@@ -220,6 +220,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$this->conditions[$hash] = $condition;
 		$condition = $this->removeExtraTables($condition);
+		if (!preg_match('~[.:]~', $condition)) {
+			$condition = "$this->name.$condition";
+		}
 		$condition = $this->tryDelimite($condition);
 
 		$args = func_num_args();
