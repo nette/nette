@@ -28,7 +28,7 @@ class ServiceDefinition extends Nette\Object
 	/** @var Statement */
 	public $factory;
 
-	/** @var array of Statement */
+	/** @var Statement[] */
 	public $setup = array();
 
 	/** @var array */

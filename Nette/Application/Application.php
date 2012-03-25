@@ -54,7 +54,7 @@ class Application extends Nette\Object
 	/** @deprecated */
 	public $allowedMethods;
 
-	/** @var array of Request */
+	/** @var Request[] */
 	private $requests = array();
 
 	/** @var IPresenter */
@@ -197,7 +197,7 @@ class Application extends Nette\Object
 
 	/**
 	 * Returns all processed requests.
-	 * @return array of Request
+	 * @return Request[]
 	 */
 	final public function getRequests()
 	{
