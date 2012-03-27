@@ -42,7 +42,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		),
 		'security' => array(
 			'debugger' => TRUE,
-			'frames' => 'DENY', // X-Frame-Options
+			'frames' => 'SAMEORIGIN', // X-Frame-Options
 			'users' => array(), // of [user => password]
 			'roles' => array(), // of [role => parents]
 			'resources' => array(), // of [resource => parents]
