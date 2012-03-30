@@ -1361,7 +1361,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$this->context = $context;
 		if ($this->invalidLinkMode === NULL) {
-			$this->invalidLinkMode = empty($context->parameters['productionMode']) ? self::INVALID_LINK_WARNING : self::INVALID_LINK_SILENT;
+			$this->invalidLinkMode = empty($context->parameters['debugMode']) ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
 		}
 	}
 

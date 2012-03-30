@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property   bool $productionMode
+ * @property   bool $debugMode
  * @property-write $tempDirectory
  */
 class Configurator extends Nette\Object
@@ -51,13 +51,14 @@ class Configurator extends Nette\Object
 
 
 	/**
-	 * Set parameter %productionMode%.
+	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
 	 * @return Configurator  provides a fluent interface
 	 */
-	public function setProductionMode($value = TRUE)
+	public function setDebugMode($value = TRUE)
 	{
-		$this->parameters['productionMode'] = is_bool($value) ? $value : self::detectProductionMode($value);
+		$this->parameters['debugMode'] = is_bool($value) ? $value : self::detectDebugMode($value);
+		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
 		return $this;
 	}
 
@@ -66,9 +67,25 @@ class Configurator extends Nette\Object
 	/**
 	 * @return bool
 	 */
+	public function isDebugMode()
+	{
+		return $this->parameters['debugMode'];
+	}
+
+
+
+	/** @deprecated */
+	function setProductionMode($value = TRUE)
+	{
+		return $this->setDebugMode(is_bool($value) ? !$value : $value);
+	}
+
+
+
+	/** @deprecated */
 	public function isProductionMode()
 	{
-		return $this->parameters['productionMode'];
+		return !$this->isDebugMode();
 	}
 
 
@@ -106,11 +123,13 @@ class Configurator extends Nette\Object
 	protected function getDefaultParameters()
 	{
 		$trace = /*5.2*PHP_VERSION_ID < 50205 ? debug_backtrace() : */debug_backtrace(FALSE);
+		$debugMode = static::detectDebugMode();
 		return array(
 			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
-			'productionMode' => static::detectProductionMode(),
-			'environment' => static::detectProductionMode() ? self::PRODUCTION : self::DEVELOPMENT,
+			'debugMode' => $debugMode,
+			'productionMode' => !$debugMode,
+			'environment' => $debugMode ? self::DEVELOPMENT : self::PRODUCTION,
 			'consoleMode' => PHP_SAPI === 'cli',
 			'container' => array(
 				'class' => 'SystemContainer',
@@ -129,7 +148,7 @@ class Configurator extends Nette\Object
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
-		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
+		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
 	}
 
 
@@ -144,7 +163,7 @@ class Configurator extends Nette\Object
 		}
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
-		$loader->autoRebuild = !$this->parameters['productionMode'];
+		$loader->autoRebuild = $this->parameters['debugMode'];
 		return $loader;
 	}
 
@@ -184,7 +203,7 @@ class Configurator extends Nette\Object
 			if (!$cached) {
 				$code = $this->buildContainer($dependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->parameters['productionMode'] ? NULL : $dependencies,
+					Cache::FILES => $this->parameters['debugMode'] ? $dependencies : NULL,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -298,16 +317,16 @@ class Configurator extends Nette\Object
 
 
 	/**
-	 * Detects production mode by IP address.
+	 * Detects debug mode by IP address.
 	 * @param  string|array  IP addresses or computer names whitelist detection
 	 * @return bool
 	 */
-	public static function detectProductionMode($list = NULL)
+	public static function detectDebugMode($list = NULL)
 	{
 		$list = is_string($list) ? preg_split('#[,\s]+#', $list) : $list;
 		$list[] = '127.0.0.1';
 		$list[] = '::1';
-		return !in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
+		return in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
 	}
 
 }

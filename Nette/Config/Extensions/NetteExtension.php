@@ -164,7 +164,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$user = $container->addDefinition('user') // no namespace for back compatibility
 			->setClass('Nette\Security\User');
 
-		if (!$container->parameters['productionMode'] && $config['debugger']) {
+		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$user->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Security\Diagnostics\UserPanel')
 			));
@@ -217,7 +217,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?);', array($mask, $action));
 		}
 
-		if (!$container->parameters['productionMode'] && $config['debugger']) {
+		if ($container->parameters['debugMode'] && $config['debugger']) {
 			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
@@ -306,7 +306,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				);
 			}
 
-			if (!$container->parameters['productionMode'] && $info['debugger']) {
+			if ($container->parameters['debugMode'] && $info['debugger']) {
 				$panel = $container->addDefinition($this->prefix("database.{$name}ConnectionPanel"))
 					->setClass('Nette\Database\Diagnostics\ConnectionPanel')
 					->setAutowired(FALSE)
@@ -333,7 +333,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			}
 		}
 
-		if (!$container->parameters['productionMode']) {
+		if ($container->parameters['debugMode']) {
 			if ($config['container']['debugger']) {
 				$config['debugger']['bar'][] = 'Nette\DI\Diagnostics\ContainerPanel';
 			}
