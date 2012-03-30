@@ -21,13 +21,13 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read array $extensions
+ * @property-read CompilerExtension[] $extensions
  * @property-read Nette\DI\ContainerBuilder $containerBuilder
  * @property-read array $config
  */
 class Compiler extends Nette\Object
 {
-	/** @var array of CompilerExtension */
+	/** @var CompilerExtension[] */
 	private $extensions = array();
 
 	/** @var Nette\DI\ContainerBuilder */
