@@ -69,7 +69,7 @@ class Configurator extends Nette\Object
 	 */
 	public function isDebugMode()
 	{
-		return !$this->parameters['productionMode'];
+		return $this->parameters['debugMode'];
 	}
 
 
@@ -132,7 +132,7 @@ class Configurator extends Nette\Object
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
-		Nette\Diagnostics\Debugger::enable($this->parameters['productionMode'], $logDirectory, $email);
+		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
 	}
 
 
@@ -147,7 +147,7 @@ class Configurator extends Nette\Object
 		}
 		$loader = new Nette\Loaders\RobotLoader;
 		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
-		$loader->autoRebuild = !$this->parameters['productionMode'];
+		$loader->autoRebuild = $this->parameters['debugMode'];
 		return $loader;
 	}
 
@@ -187,7 +187,7 @@ class Configurator extends Nette\Object
 			if (!$cached) {
 				$code = $this->buildContainer($dependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->parameters['productionMode'] ? NULL : $dependencies,
+					Cache::FILES => $this->parameters['debugMode'] ? $dependencies : NULL,
 				));
 				$cached = $cache->load($cacheKey);
 			}
