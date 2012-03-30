@@ -139,7 +139,10 @@ class Template extends Nette\Object implements ITemplate
 		foreach ($this->filters as $filter) {
 			$code = self::extractPhp($code, $blocks);
 			$code = call_user_func($filter, $code);
-			$code = strtr($code, $blocks); // put PHP code back
+			// put PHP code back
+			$code = preg_replace_callback('#<\?php \x01@php:p(\d+)@\x02\s*#', function($match) use (&$blocks) {
+				return $blocks[$match[1]];
+			}, $code);
 		}
 
 		return Helpers::optimizePhp($code);
@@ -374,7 +377,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	private static function extractPhp($source, & $blocks)
 	{
-		$res = '';
+		$res = $php = '';
 		$blocks = array();
 		$tokens = token_get_all($source);
 		foreach ($tokens as $n => $token) {
@@ -395,7 +398,7 @@ class Template extends Nette\Object implements ITemplate
 					$token[1] = '<<?php ?>?';
 
 				} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
-					$res .= $id = "<?php \x01@php:p" . count($blocks) . "@\x02";
+					$res .= "<?php \x01@php:p" . ($id = count($blocks)) . "@\x02";
 					$php = & $blocks[$id];
 				}
 				$php .= $token[1];
