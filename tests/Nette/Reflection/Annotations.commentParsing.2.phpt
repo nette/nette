@@ -46,7 +46,7 @@ Assert::equal( array(
 	'three' => array(TRUE),
 	'five' => array(TRUE),
 	'brackets' => array(
-		new ArrayObject(array(
+		new ArrayObject(array(     // won't get really compared until PHP 5.4.1
 			'single' => "()@'\"",
 			'double' => "()@'\"",
 		)),
@@ -56,7 +56,8 @@ Assert::equal( array(
 	'line3' => array('value'),
 	'line4' => array(TRUE),
 ), $rc->getAnnotations() );
-
+Assert::same("()@'\"", $rc->getAnnotation('brackets')->single);
+Assert::same("()@'\"", $rc->getAnnotation('brackets')->double);
 
 $rc = new Reflection\ClassType('TestClass2');
 Assert::same( array(
