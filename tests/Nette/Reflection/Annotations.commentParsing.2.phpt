@@ -46,9 +46,9 @@ Assert::equal( array(
 	'three' => array(TRUE),
 	'five' => array(TRUE),
 	'brackets' => array(
-		new ArrayObject(array(
-			'single' => "()@'\"",
-			'double' => "()@'\"",
+		Nette\ArrayHash::from(array(
+			'single' => "()@\\'\"",
+			'double' => "()@'\\\"",
 		)),
 	),
 	'line1' => array(TRUE),
