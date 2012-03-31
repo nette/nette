@@ -254,11 +254,11 @@ class Assert
 			'>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#',
 		));
 
-		$old = ini_set('pcre.backtrack_limit', '1000000');
+		$old = ini_set('pcre.backtrack_limit', '5000000');
 		$res = preg_match("#^$re$#s", $actual);
 		ini_set('pcre.backtrack_limit', $old);
 		if ($res === FALSE || preg_last_error()) {
-			throw new Exception("Error while executing regular expression.");
+			throw new Exception("Error while executing regular expression. (PREG Error Code " . preg_last_error() . ")");
 		}
 		if (!$res) {
 			self::log($expected, $actual);
