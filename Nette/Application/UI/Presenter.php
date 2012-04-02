@@ -516,7 +516,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 			$list[] = "$dir/templates/@$layout.phtml";
 			$dir = dirname($dir);
 		} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
-		return $list;
+
+		$list[] = APP_DIR."/templates/@$layout.latte";
+		$list[] = APP_DIR."/templates/@$layout.phtml";
+
+		return array_unique($list);
 	}
 
 
