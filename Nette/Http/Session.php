@@ -450,7 +450,7 @@ class Session extends Nette\Object
 
 			} else {
 				if (defined('SID')) {
-					throw new Nette\InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been started by session.auto_start or session_start().");
+					throw new Nette\InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been started" . ($this->started ? "." : " by session.auto_start or session_start()."));
 				}
 				if (isset($special[$key])) {
 					$key = "session_$key";
