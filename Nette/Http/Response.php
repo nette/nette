@@ -297,6 +297,14 @@ final class Response extends Nette\Object implements IResponse
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
 			$httpOnly === NULL ? $this->cookieHttpOnly : (bool) $httpOnly
 		);
+
+		$sent = array();
+		foreach (array_reverse(headers_list()) as $header) {
+			if (preg_match('#^Set-Cookie: .+?=#', $header, $m) && !isset($sent[$m[0]])) {
+				header($header, empty($sent));
+				$sent[$m[0]] = TRUE;
+			}
+		}
 		return $this;
 	}
 
@@ -313,19 +321,7 @@ final class Response extends Nette\Object implements IResponse
 	 */
 	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
 	{
-		if (headers_sent($file, $line)) {
-			throw new Nette\InvalidStateException("Cannot delete cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
-		}
-
-		setcookie(
-			$name,
-			FALSE,
-			254400000,
-			$path === NULL ? $this->cookiePath : (string) $path,
-			$domain === NULL ? $this->cookieDomain : (string) $domain,
-			$secure === NULL ? $this->cookieSecure : (bool) $secure,
-			TRUE // doesn't matter with delete
-		);
+		$this->sendCookie($name, FALSE, 254400000, $path, $domain, $secure);
 	}
 
 }
