@@ -14,6 +14,7 @@ namespace NetteModule;
 use Nette,
 	Nette\Application,
 	Nette\Application\Responses,
+	Nette\Application\UI\PresenterComponentReflection,
 	Nette\Http;
 
 
@@ -75,8 +76,8 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			return;
 		}
 		$params['presenter'] = $this;
-		$method = callback($params['callback'])->toReflection();
-		$response = $method->invokeArgs(Application\UI\PresenterComponentReflection::combineArgs($method, $params));
+		$callback = callback($params['callback']);
+		$response = $callback->invokeArgs(PresenterComponentReflection::combineArgs($callback->toReflection(), $params));
 
 		if (is_string($response)) {
 			$response = array($response, array());
