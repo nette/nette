@@ -42,6 +42,17 @@ Assert::same(array(
 
 
 
+$counts1 = $counts2 = array();
+foreach($connection->table('author')->order('id') as $author) {
+	$counts1[] = $author->related('book.author_id')->count('id');
+	$counts2[] = $author->related('book.author_id')->where('translator_id', NULL)->count('id');
+}
+
+Assert::same(array(2, 2), $counts1);
+Assert::same(array(1, 0), $counts2);
+
+
+
 $author = $connection->table('author')->get(11);
 $books  = $author->related('book')->where('translator_id', 11);
 Assert::same('1001 tipu a triku pro PHP', $books->fetch()->title);
