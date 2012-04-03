@@ -121,7 +121,7 @@ class Form extends Container
 		$this->element = Nette\Utils\Html::el('form');
 		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
 		$this->element->method = self::POST;
-		$this->element->id = 'frm-' . $name;
+		$this->element->id = $name === NULL ? NULL : 'frm-' . $name;
 
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
