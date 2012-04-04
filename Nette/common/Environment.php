@@ -71,7 +71,7 @@ final class Environment
 	public static function isProduction()
 	{
 		if (self::$productionMode === NULL) {
-			self::$productionMode = Nette\Config\Configurator::detectProductionMode();
+			self::$productionMode = !Nette\Config\Configurator::detectDebugMode();
 		}
 		return self::$productionMode;
 	}
@@ -322,7 +322,7 @@ final class Environment
 		}
 		$configurator = new Nette\Config\Configurator;
 		$configurator
-			->setProductionMode(self::isProduction())
+			->setDebugMode(!self::isProduction())
 			->setTempDirectory(defined('TEMP_DIR') ? TEMP_DIR : '');
 		if ($file) {
 			$configurator->addConfig($file, $section);
