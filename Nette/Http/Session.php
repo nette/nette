@@ -312,7 +312,7 @@ class Session extends Nette\Object
 	/** @deprecated */
 	function getNamespace($section)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use getSection() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use getSection() instead.', E_USER_DEPRECATED);
 		return $this->getSection($section);
 	}
 
@@ -534,7 +534,7 @@ class Session extends Nette\Object
 	/** @deprecated */
 	function setCookieParams($path, $domain = NULL, $secure = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setCookieParameters() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use setCookieParameters() instead.', E_USER_DEPRECATED);
 		return $this->setCookieParameters($path, $domain, $secure);
 	}
 

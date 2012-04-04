@@ -486,7 +486,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	/** @deprecated */
 	function addFile($name, $label = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use addUpload() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use addUpload() instead.', E_USER_DEPRECATED);
 		return $this->addUpload($name, $label);
 	}
 
