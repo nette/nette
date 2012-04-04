@@ -319,6 +319,7 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use setDebugMode(!$value) instead.', E_USER_DEPRECATED);
 		return $this->setDebugMode(is_bool($value) ? !$value : $value);
 	}
 
@@ -327,6 +328,7 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public function isProductionMode()
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use !isDebugMode() instead.', E_USER_DEPRECATED);
 		return !$this->isDebugMode();
 	}
 
@@ -335,6 +337,7 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public static function detectProductionMode($list = NULL)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use !detectDebugMode() instead.', E_USER_DEPRECATED);
 		return !static::detectDebugMode($list);
 	}
 
