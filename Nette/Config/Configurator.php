@@ -168,7 +168,7 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public function loadConfig($file, $section = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_DEPRECATED);
 		return $this->addConfig($file, $section)->createContainer();
 	}
 
