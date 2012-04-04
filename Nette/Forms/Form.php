@@ -430,7 +430,7 @@ class Form extends Container
 		} else {
 			$this->onError($this);
 			if ($this->onInvalidSubmit) {
-				trigger_error(__CLASS__ . '->onInvalidSubmit is deprecated; use onError instead.', E_USER_WARNING);
+				trigger_error(__CLASS__ . '->onInvalidSubmit is deprecated; use onError instead.', E_USER_DEPRECATED);
 				$this->onInvalidSubmit($this);
 			}
 		}
@@ -438,7 +438,7 @@ class Form extends Container
 		if ($this->onSuccess) { // back compatibility
 			$this->onSubmit($this);
 		} elseif ($this->onSubmit) {
-			trigger_error(__CLASS__ . '->onSubmit changed its behavior; use onSuccess instead.', E_USER_WARNING);
+			trigger_error(__CLASS__ . '->onSubmit changed its behavior; use onSuccess instead.', E_USER_DEPRECATED);
 			if (isset($valid) || $this->isValid()) {
 				$this->onSubmit($this);
 			}

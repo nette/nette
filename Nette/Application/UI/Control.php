@@ -114,7 +114,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function getWidget($name)
 	{
-		trigger_error(__METHOD__ . '() is deprecated, use getComponent() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated, use getComponent() instead.', E_USER_DEPRECATED);
 		return $this->getComponent($name);
 	}
 

@@ -240,7 +240,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/** @deprecated */
 	function getParam($name = NULL, $default = NULL)
 	{
-		//trigger_error(__METHOD__ . '() is deprecated; use getParameter() instead.', E_USER_WARNING);
+		//trigger_error(__METHOD__ . '() is deprecated; use getParameter() instead.', E_USER_DEPRECATED);
 		if (func_num_args() === 0) {
 			return $this->params;
 		} elseif (isset($this->params[$name])) {
@@ -255,7 +255,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/** @deprecated */
 	function getParamId($name)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameterId() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use getParameterId() instead.', E_USER_DEPRECATED);
 		return $this->getParameterId($name);
 	}
 

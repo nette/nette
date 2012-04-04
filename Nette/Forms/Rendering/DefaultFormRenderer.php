@@ -158,7 +158,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	/** @deprecated */
 	public function setClientScript()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use unobstructive JavaScript instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use unobstructive JavaScript instead.', E_USER_DEPRECATED);
 		return $this;
 	}
 

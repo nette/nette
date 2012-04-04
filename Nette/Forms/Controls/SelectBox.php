@@ -121,7 +121,7 @@ class SelectBox extends BaseControl
 	/** @deprecated */
 	function skipFirst($v = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setPrompt() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use setPrompt() instead.', E_USER_DEPRECATED);
 		return $this->setPrompt($v);
 	}
 

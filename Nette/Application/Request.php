@@ -130,7 +130,7 @@ final class Request extends Nette\FreezableObject
 	/** @deprecated */
 	function setParams(array $params)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_DEPRECATED);
 		return $this->setParameters($params);
 	}
 
@@ -139,7 +139,7 @@ final class Request extends Nette\FreezableObject
 	/** @deprecated */
 	function getParams()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_WARNING);
+		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_DEPRECATED);
 		return $this->getParameters();
 	}
 
