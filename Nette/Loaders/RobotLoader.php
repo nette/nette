@@ -71,12 +71,13 @@ class RobotLoader extends AutoLoader
 
 	/**
 	 * Register autoloader.
+	 * @param  bool  prepend autoloader?
 	 * @return RobotLoader  provides a fluent interface
 	 */
-	public function register()
+	public function register(/**/$prepend = FALSE/**/)
 	{
 		$this->list = $this->getCache()->load($this->getKey(), callback($this, '_rebuildCallback'));
-		parent::register();
+		parent::register(/**/$prepend/**/);
 		return $this;
 	}
 
