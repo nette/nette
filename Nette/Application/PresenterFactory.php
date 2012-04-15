@@ -25,6 +25,12 @@ class PresenterFactory implements IPresenterFactory
 	/** @var bool */
 	public $caseSensitive = FALSE;
 
+	/** @var string[] of module => mask */
+	public $mapping = array(
+		NULL => '\*Module\*Presenter',
+		'Nette' => 'NetteModule\*\*Presenter',
+	);
+
 	/** @var string */
 	private $baseDir;
 
@@ -130,7 +136,15 @@ class PresenterFactory implements IPresenterFactory
 	public function formatPresenterClass($presenter)
 	{
 		/*5.2*return strtr($presenter, ':', '_') . 'Presenter';*/
-		return str_replace(':', 'Module\\', $presenter) . 'Presenter';
+		$parts = explode(':', $presenter);
+		$mapping = explode('\\*', isset($parts[1], $this->mapping[$parts[0]])
+			? $this->mapping[array_shift($parts)]
+			: $this->mapping[NULL]);
+		$class = $mapping[0];
+		while ($part = array_shift($parts)) {
+			$class .= ($class ? '\\' : '') . $part . $mapping[$parts ? 1 : 2];
+		}
+		return $class;
 	}
 
 
@@ -143,7 +157,14 @@ class PresenterFactory implements IPresenterFactory
 	public function unformatPresenterClass($class)
 	{
 		/*5.2*return strtr(substr($class, 0, -9), '_', ':');*/
-		return str_replace('Module\\', ':', substr($class, 0, -9));
+		foreach ($this->mapping as $module => $mapping) {
+			$mapping = explode('\\\\\*', preg_quote($mapping, '#'));
+			$mapping[0] .= $mapping[0] ? '\\\\' : '';
+			if (preg_match("#^\\\\?$mapping[0]((?:\w+$mapping[1]\\\\)*)(\w+)$mapping[2]$#i", $class, $matches)) {
+				return ($module ? $module . ':' : '')
+					. str_replace($mapping[1] . '\\', ':', $matches[1]) . $matches[2];
+			}
+		}
 	}
 
 
