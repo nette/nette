@@ -40,9 +40,9 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 
 
 
-function testRouteOut(Nette\Application\Routers\Route $route, $link, $params = array())
+function testRouteOut(Nette\Application\Routers\Route $route, $presenter, $params = array())
 {
 	$url = new Nette\Http\Url('http://example.com');
-	$request = new Nette\Application\Request($link, 'GET', $params);
+	$request = new Nette\Application\Request($presenter, 'GET', $params);
 	return $route->constructUrl($request, $url);
 }

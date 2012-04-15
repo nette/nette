@@ -18,19 +18,21 @@ require __DIR__ . '/../bootstrap.php';
 
 $configurator = new Configurator;
 
-Assert::true( $configurator->isProductionMode() );
+Assert::false( $configurator->isDebugMode() );
 
-$configurator->setProductionMode(FALSE);
-Assert::false( $configurator->isProductionMode() );
+$configurator->setDebugMode(TRUE);
+Assert::true( $configurator->isDebugMode() );
+Assert::false( @$configurator->isProductionMode() );
 
-$configurator->setProductionMode();
-Assert::true( $configurator->isProductionMode() );
+$configurator->setDebugMode(FALSE);
+Assert::false( $configurator->isDebugMode() );
+Assert::true( @$configurator->isProductionMode() );
 
-$configurator->setProductionMode(php_uname('n'));
-Assert::false( $configurator->isProductionMode() );
+$configurator->setDebugMode(php_uname('n'));
+Assert::true( $configurator->isDebugMode() );
 
-$configurator->setProductionMode(array(php_uname('n')));
-Assert::false( $configurator->isProductionMode() );
+$configurator->setDebugMode(array(php_uname('n')));
+Assert::true( $configurator->isDebugMode() );
 
 $_SERVER['HTTP_X_FORWARDED_FOR'] = '127.0.0.1';
 Assert::false( $configurator::detectDebugMode() );
