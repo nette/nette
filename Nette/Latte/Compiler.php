@@ -244,7 +244,13 @@ class Compiler extends Nette\Object
 				if (!$htmlNode) {
 					$htmlNode = new HtmlNode($token->name);
 				}
-			} while (strcasecmp($htmlNode->name, $token->name));
+				if (strcasecmp($htmlNode->name, $token->name) === 0) {
+					break;
+				}
+				if ($htmlNode->macroAttrs) {
+					throw new CompileException("Unexpected </$token->name>.", 0, $token->line);
+				}
+			} while (TRUE);
 			$this->htmlNodes[] = $htmlNode;
 			$htmlNode->closing = TRUE;
 			$htmlNode->offset = strlen($this->output);
