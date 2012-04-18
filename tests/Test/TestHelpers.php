@@ -120,7 +120,10 @@ class TestHelpers
 	 */
 	public static function saveCoverage()
 	{
-		$coverage = @unserialize(file_get_contents(self::$coverageFile));
+		$f = fopen(self::$coverageFile, 'a+');
+		flock($f, LOCK_EX);
+		fseek($f, 0);
+		$coverage = @unserialize(stream_get_contents($f));
 		$root = realpath(__DIR__ . '/../../Nette') . DIRECTORY_SEPARATOR;
 
 		foreach (xdebug_get_code_coverage() as $filename => $lines) {
@@ -135,7 +138,9 @@ class TestHelpers
 			}
 		}
 
-		file_put_contents(self::$coverageFile, serialize($coverage));
+		ftruncate($f, 0);
+		fwrite($f, serialize($coverage));
+		fclose($f);
 	}
 
 }
