@@ -181,7 +181,7 @@ class RequestFactory extends Nette\Object
 		}
 
 
-		// FILES and create HttpUploadedFile objects
+		// FILES and create FileUpload objects
 		$files = array();
 		$list = array();
 		if (!empty($_FILES)) {
