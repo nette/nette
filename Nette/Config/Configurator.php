@@ -138,7 +138,7 @@ class Configurator extends Nette\Object
 
 
 	/**
-	 * @return Nette\Loaders\RobotLoader
+	 * @return \Nette\Loaders\RobotLoader
 	 */
 	public function createRobotLoader()
 	{

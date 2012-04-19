@@ -27,7 +27,7 @@ use Nette,
  */
 class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
 {
-	/** @var Nette\Database\Connection */
+	/** @var \Nette\Database\Connection */
 	protected $connection;
 
 	/** @var string table name */
@@ -121,7 +121,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * @return Nette\Database\Connection
+	 * @return \Nette\Database\Connection
 	 */
 	public function getConnection()
 	{

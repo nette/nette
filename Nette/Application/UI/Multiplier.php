@@ -22,7 +22,7 @@ use Nette;
  */
 class Multiplier extends PresenterComponent
 {
-	/** @var Nette\Callback */
+	/** @var \Nette\Callback */
 	private $factory;
 
 

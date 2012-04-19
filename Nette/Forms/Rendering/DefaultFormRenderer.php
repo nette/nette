@@ -116,7 +116,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		),
 	);
 
-	/** @var Nette\Forms\Form */
+	/** @var \Nette\Forms\Form */
 	protected $form;
 
 	/** @var int */
@@ -126,7 +126,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Provides complete form rendering.
-	 * @param  Nette\Forms\Form
+	 * @param  \Nette\Forms\Form
 	 * @param  string 'begin', 'errors', 'body', 'end' or empty to render all
 	 * @return string
 	 */
@@ -249,7 +249,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders validation errors (per form or per control).
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderErrors(Nette\Forms\IControl $control = NULL)
@@ -337,7 +337,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders group of controls.
-	 * @param  Nette\Forms\Container|FormGroup
+	 * @param  \Nette\Forms\Container|FormGroup
 	 * @return string
 	 */
 	public function renderControls($parent)
@@ -381,7 +381,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders single visual row.
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderPair(Nette\Forms\IControl $control)
@@ -424,7 +424,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders 'label' part of visual row of controls.
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderLabel(Nette\Forms\IControl $control)
@@ -449,7 +449,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders 'control' part of visual row of controls.
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderControl(Nette\Forms\IControl $control)
@@ -490,7 +490,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * @param  string
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	protected function getWrapper($name)
 	{

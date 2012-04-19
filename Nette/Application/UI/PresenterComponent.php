@@ -71,7 +71,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  Nette\ComponentModel\IComponent
+	 * @param  \Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	protected function attached($presenter)
@@ -386,7 +386,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string   destination in format "[[module:]presenter:]view" or "signal!"
 	 * @param  array|mixed
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function redirect($code, $destination = NULL, $args = array())
 	{
@@ -416,7 +416,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/**
 	 * Adds the component to the container.
 	 * @param  string  component name
-	 * @param  Nette\ComponentModel\IComponent
+	 * @param  \Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	final public function offsetSet($name, $component)
@@ -429,8 +429,8 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	/**
 	 * Returns component specified by name. Throws exception if component doesn't exist.
 	 * @param  string  component name
-	 * @return Nette\ComponentModel\IComponent
-	 * @throws Nette\InvalidArgumentException
+	 * @return \Nette\ComponentModel\IComponent
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	final public function offsetGet($name)
 	{

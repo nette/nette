@@ -34,7 +34,7 @@ class IniAdapter extends Nette\Object implements Nette\Config\IAdapter
 	 * Reads configuration from INI file.
 	 * @param  string  file name
 	 * @return array
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function load($file)
 	{

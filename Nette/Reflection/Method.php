@@ -69,7 +69,7 @@ class Method extends \ReflectionMethod
 
 
 	/**
-	 * @return Nette\Callback
+	 * @return \Nette\Callback
 	 */
 	public function toCallback()
 	{

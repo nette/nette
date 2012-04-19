@@ -20,17 +20,17 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read Nette\Application\Request $request
+ * @property-read \Nette\Application\Request $request
  */
 class ForwardResponse extends Nette\Object implements Nette\Application\IResponse
 {
-	/** @var Nette\Application\Request */
+	/** @var \Nette\Application\Request */
 	private $request;
 
 
 
 	/**
-	 * @param  Nette\Application\Request  new request
+	 * @param \Nette\Application\Request  new request
 	 */
 	public function __construct(Nette\Application\Request $request)
 	{
@@ -40,7 +40,7 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 
 
 	/**
-	 * @return Nette\Application\Request
+	 * @return \Nette\Application\Request
 	 */
 	final public function getRequest()
 	{

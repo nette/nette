@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @property-write Nette\Database\Connection $connection
+ * @property-write \Nette\Database\Connection $connection
  */
 class ConventionalReflection extends Nette\Object implements Nette\Database\IReflection
 {

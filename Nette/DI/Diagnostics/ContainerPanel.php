@@ -24,7 +24,7 @@ use Nette,
  */
 class ContainerPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private $container;
 
 

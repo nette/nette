@@ -38,7 +38,7 @@ class UploadControl extends BaseControl
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  Nette\Forms\IComponent
+	 * @param  \Nette\Forms\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
@@ -56,8 +56,8 @@ class UploadControl extends BaseControl
 
 	/**
 	 * Sets control's value.
-	 * @param  array|Nette\Http\FileUpload
-	 * @return Nette\Http\FileUpload  provides a fluent interface
+	 * @param  array|\Nette\Http\FileUpload
+	 * @return \Nette\Http\FileUpload  provides a fluent interface
 	 */
 	public function setValue($value)
 	{

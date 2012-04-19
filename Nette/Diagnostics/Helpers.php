@@ -25,7 +25,7 @@ final class Helpers
 
 	/**
 	 * Returns link to editor.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public static function editorLink($file, $line)
 	{

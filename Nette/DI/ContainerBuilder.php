@@ -320,7 +320,7 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Generates PHP class.
-	 * @return Nette\Utils\PhpGenerator\ClassType
+	 * @return \Nette\Utils\PhpGenerator\ClassType
 	 */
 	public function generateClass($parentClass = 'Nette\DI\Container')
 	{

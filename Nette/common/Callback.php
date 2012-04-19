@@ -123,7 +123,7 @@ final class Callback extends Object
 
 	/**
 	 * Returns callback reflection.
-	 * @return Nette\Reflection\GlobalFunction|Nette\Reflection\Method
+	 * @return \Nette\Reflection\GlobalFunction|\Nette\Reflection\Method
 	 */
 	public function toReflection()
 	{

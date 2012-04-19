@@ -20,12 +20,12 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read Nette\Templating\ITemplate $template
+ * @property-read \Nette\Templating\ITemplate $template
  * @property-read string $snippetId
  */
 abstract class Control extends PresenterComponent implements IRenderable
 {
-	/** @var Nette\Templating\ITemplate */
+	/** @var \Nette\Templating\ITemplate */
 	private $template;
 
 	/** @var array */
@@ -41,7 +41,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 
 	/**
-	 * @return Nette\Templating\ITemplate
+	 * @return \Nette\Templating\ITemplate
 	 */
 	final public function getTemplate()
 	{
@@ -60,7 +60,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 	/**
 	 * @param  string|NULL
-	 * @return Nette\Templating\ITemplate
+	 * @return \Nette\Templating\ITemplate
 	 */
 	protected function createTemplate($class = NULL)
 	{
@@ -97,7 +97,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
-	 * @param  Nette\Templating\Template
+	 * @param  \Nette\Templating\Template
 	 * @return void
 	 */
 	public function templatePrepareFilters($template)
@@ -110,7 +110,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	/**
 	 * Returns widget component specified by name.
 	 * @param  string
-	 * @return Nette\ComponentModel\IComponent
+	 * @return \Nette\ComponentModel\IComponent
 	 */
 	public function getWidget($name)
 	{

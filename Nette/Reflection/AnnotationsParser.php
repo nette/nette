@@ -42,7 +42,7 @@ final class AnnotationsParser
 	/** @var array */
 	private static $timestamps;
 
-	/** @var Nette\Caching\IStorage */
+	/** @var \Nette\Caching\IStorage */
 	private static $cacheStorage;
 
 
@@ -336,7 +336,7 @@ final class AnnotationsParser
 
 
 	/**
-	 * @param  Nette\Caching\IStorage
+	 * @param  \Nette\Caching\IStorage
 	 * @return void
 	 */
 	public static function setCacheStorage(Nette\Caching\IStorage $storage)
@@ -347,7 +347,7 @@ final class AnnotationsParser
 
 
 	/**
-	 * @return Nette\Caching\IStorage
+	 * @return \Nette\Caching\IStorage
 	 */
 	public static function getCacheStorage()
 	{

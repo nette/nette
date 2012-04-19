@@ -54,7 +54,7 @@ class GlobalFunction extends \ReflectionFunction
 
 
 	/**
-	 * @return Nette\Callback
+	 * @return \Nette\Callback
 	 */
 	public function toCallback()
 	{

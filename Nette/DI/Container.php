@@ -252,7 +252,7 @@ class Container extends Nette\FreezableObject
 	 * @param  string  class
 	 * @param  array   arguments
 	 * @return object
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function createInstance($class, array $args = array())
 	{

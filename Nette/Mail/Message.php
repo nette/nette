@@ -243,7 +243,7 @@ class Message extends MimePart
 
 	/**
 	 * Sets HTML body.
-	 * @param  string|Nette\Templating\ITemplate
+	 * @param  string|\Nette\Templating\ITemplate
 	 * @param  mixed base-path or FALSE to disable parsing
 	 * @return Message  provides a fluent interface
 	 */

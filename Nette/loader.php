@@ -67,7 +67,7 @@ Nette\Utils\SafeStream::register();
  * Nette\Callback factory.
  * @param  mixed   class, object, callable
  * @param  string  method
- * @return Nette\Callback
+ * @return \Nette\Callback
  */
 function callback($callback, $m = NULL)
 {

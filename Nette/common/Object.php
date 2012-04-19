@@ -53,14 +53,14 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read Nette\Reflection\ClassType $reflection
+ * @property-read \Nette\Reflection\ClassType $reflection
  */
 abstract class Object
 {
 
 	/**
 	 * Access to reflection.
-	 * @return Nette\Reflection\ClassType
+	 * @return \Nette\Reflection\ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{

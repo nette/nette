@@ -176,7 +176,7 @@ class Statement extends \PDOStatement
 
 
 	/**
-	 * @return Nette\Reflection\ClassType
+	 * @return \Nette\Reflection\ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{

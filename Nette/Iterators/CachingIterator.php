@@ -203,7 +203,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * @param  string  method name
 	 * @param  array   arguments
 	 * @return mixed
-	 * @throws Nette\MemberAccessException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public function __call($name, $args)
 	{
@@ -216,7 +216,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Returns property value. Do not call directly.
 	 * @param  string  property name
 	 * @return mixed   property value
-	 * @throws Nette\MemberAccessException if the property is not defined.
+	 * @throws \Nette\MemberAccessException if the property is not defined.
 	 */
 	public function &__get($name)
 	{
@@ -230,7 +230,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * @param  string  property name
 	 * @param  mixed   property value
 	 * @return void
-	 * @throws Nette\MemberAccessException if the property is not defined or is read-only
+	 * @throws \Nette\MemberAccessException if the property is not defined or is read-only
 	 */
 	public function __set($name, $value)
 	{
@@ -255,7 +255,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Access to undeclared property.
 	 * @param  string  property name
 	 * @return void
-	 * @throws Nette\MemberAccessException
+	 * @throws \Nette\MemberAccessException
 	 */
 	public function __unset($name)
 	{

@@ -23,7 +23,7 @@ use Nette,
  */
 class UserPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
-	/** @var Nette\Security\User */
+	/** @var \Nette\Security\User */
 	private $user;
 
 

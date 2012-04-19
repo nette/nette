@@ -19,17 +19,17 @@ use Nette;
  * Reflection metadata class with discovery for a database.
  *
  * @author     Jan Skrasek
- * @property-write Nette\Database\Connection $connection
+ * @property-write \Nette\Database\Connection $connection
  */
 class DiscoveredReflection extends Nette\Object implements Nette\Database\IReflection
 {
-	/** @var Nette\Caching\Cache */
+	/** @var \Nette\Caching\Cache */
 	protected $cache;
 
-	/** @var Nette\Caching\IStorage */
+	/** @var \Nette\Caching\IStorage */
 	protected $cacheStorage;
 
-	/** @var Nette\Database\Connection */
+	/** @var \Nette\Database\Connection */
 	protected $connection;
 
 	/** @var array */
@@ -43,7 +43,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	/**
 	 * Create autodiscovery structure.
-	 * @param  Nette\Caching\IStorage
+	 * @param  \Nette\Caching\IStorage
 	 */
 	public function __construct(Nette\Caching\IStorage $storage = NULL)
 	{
