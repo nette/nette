@@ -188,7 +188,16 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NotImplementedException;
+		return $this->connection->query("
+			SELECT tc.table_name AS name, kcu.column_name AS local, ccu.table_name AS table, ccu.column_name AS foreign
+			FROM information_schema.table_constraints AS tc
+			JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.constraint_schema = kcu.constraint_schema
+			JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name AND ccu.constraint_schema = tc.constraint_schema
+			WHERE
+				constraint_type = 'FOREIGN KEY' AND
+				tc.table_name = {$this->connection->quote($table)} AND
+				tc.constraint_schema = current_schema()
+		")->fetchAll();
 	}
 
 
