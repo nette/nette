@@ -744,10 +744,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$referencing = & $this->referencing["$table:$column"];
 		if (!$referencing || $forceNewInstance) {
 			$referencing = new GroupedSelection($table, $this, $column);
-			$referencing->where("$table.$column", array_keys((array) $this->rows)); // (array) - is NULL after insert
 		}
 
-		return $referencing->setActive($active);
+		return $referencing->setActive($active)->where("$table.$column", array_keys((array) $this->rows));
 	}
 
 
