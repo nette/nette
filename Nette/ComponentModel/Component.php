@@ -192,7 +192,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * @param  IContainer  New parent or null if this component is being removed from a parent
 	 * @param  string
 	 * @return Component  provides a fluent interface
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @internal
 	 */
 	public function setParent(IContainer $parent = NULL, $name = NULL)
@@ -235,7 +235,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * override this method to disallow a parent change by throwing an Nette\InvalidStateException
 	 * @param  IContainer
 	 * @return void
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	protected function validateParent(IContainer $parent)
 	{

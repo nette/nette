@@ -22,7 +22,7 @@ use Nette;
  */
 class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
 {
-	/** @var Nette\Database\Connection */
+	/** @var \Nette\Database\Connection */
 	private $connection;
 
 

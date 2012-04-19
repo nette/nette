@@ -26,7 +26,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	const ERROR_DUPLICATE_ENTRY = 1062;
 	const ERROR_DATA_TRUNCATED = 1265;
 
-	/** @var Nette\Database\Connection */
+	/** @var \Nette\Database\Connection */
 	private $connection;
 
 

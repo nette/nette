@@ -41,7 +41,7 @@ class Template extends Nette\Object implements ITemplate
 	/** @var array */
 	private $helperLoaders = array();
 
-	/** @var Nette\Caching\IStorage */
+	/** @var \Nette\Caching\IStorage */
 	private $cacheStorage;
 
 
@@ -267,7 +267,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
+	 * @param  \Nette\Localization\ITranslator
 	 * @return Template  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -402,7 +402,7 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @param  Nette\Caching\Cache
+	 * @param  \Nette\Caching\Cache
 	 * @return Template  provides a fluent interface
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)
@@ -414,7 +414,7 @@ class Template extends Nette\Object implements ITemplate
 
 
 	/**
-	 * @return Nette\Caching\IStorage
+	 * @return \Nette\Caching\IStorage
 	 */
 	public function getCacheStorage()
 	{

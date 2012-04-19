@@ -65,8 +65,8 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * takes precedence over parents that were previously added.
 	 * @param  string
 	 * @param  string|array
-	 * @throws Nette\InvalidArgumentException
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addRole($role, $parents = NULL)
@@ -117,7 +117,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Checks whether Role is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkRole($role, $need = TRUE)
@@ -162,7 +162,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function roleInheritsFrom($role, $inherit, $onlyParents = FALSE)
@@ -191,7 +191,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Removes the Role from the list.
 	 *
 	 * @param  string
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeRole($role)
@@ -262,8 +262,8 @@ class Permission extends Nette\Object implements IAuthorizator
 	 *
 	 * @param  string
 	 * @param  string
-	 * @throws Nette\InvalidArgumentException
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function addResource($resource, $parent = NULL)
@@ -306,7 +306,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Checks whether Resource is valid and exists in the list.
 	 * @param  string
 	 * @param  bool
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return void
 	 */
 	private function checkResource($resource, $need = TRUE)
@@ -339,7 +339,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string
 	 * @param  string
 	 * @param  bool
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function resourceInheritsFrom($resource, $inherit, $onlyParent = FALSE)
@@ -375,7 +375,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * Removes a Resource and all of its children.
 	 *
 	 * @param  string
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	public function removeResource($resource)
@@ -507,7 +507,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|array|Permission::ALL  resources
 	 * @param  string|array|Permission::ALL  privileges
 	 * @param  callable    assertion
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return Permission  provides a fluent interface
 	 */
 	protected function setRule($toAdd, $type, $roles, $resources, $privileges, $assertion = NULL)
@@ -623,7 +623,7 @@ class Permission extends Nette\Object implements IAuthorizator
 	 * @param  string|Permission::ALL|IRole  role
 	 * @param  string|Permission::ALL|IResource  resource
 	 * @param  string|Permission::ALL  privilege
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return bool
 	 */
 	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)

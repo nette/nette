@@ -56,7 +56,7 @@ class User extends Nette\Object
 	/** @var IAuthorizator */
 	private $authorizator;
 
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private $context;
 
 

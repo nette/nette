@@ -34,7 +34,7 @@ final class Environment
 	/** @var string */
 	private static $createdAt;
 
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private static $context;
 
 
@@ -175,7 +175,7 @@ final class Environment
 
 	/**
 	 * Get initial instance of context.
-	 * @return Nette\DI\Container
+	 * @return \Nette\DI\Container
 	 */
 	public static function getContext()
 	{
@@ -217,7 +217,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Http\Request
+	 * @return \Nette\Http\Request
 	 */
 	public static function getHttpRequest()
 	{
@@ -227,7 +227,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Http\Context
+	 * @return \Nette\Http\Context
 	 */
 	public static function getHttpContext()
 	{
@@ -237,7 +237,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Http\Response
+	 * @return \Nette\Http\Response
 	 */
 	public static function getHttpResponse()
 	{
@@ -247,7 +247,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Application\Application
+	 * @return \Nette\Application\Application
 	 */
 	public static function getApplication()
 	{
@@ -257,7 +257,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Security\User
+	 * @return \Nette\Security\User
 	 */
 	public static function getUser()
 	{
@@ -267,7 +267,7 @@ final class Environment
 
 
 	/**
-	 * @return Nette\Loaders\RobotLoader
+	 * @return \Nette\Loaders\RobotLoader
 	 */
 	public static function getRobotLoader()
 	{
@@ -282,7 +282,7 @@ final class Environment
 
 	/**
 	 * @param  string
-	 * @return Nette\Caching\Cache
+	 * @return \Nette\Caching\Cache
 	 */
 	public static function getCache($namespace = '')
 	{
@@ -294,7 +294,7 @@ final class Environment
 	/**
 	 * Returns instance of session or session namespace.
 	 * @param  string
-	 * @return Nette\Http\Session
+	 * @return \Nette\Http\Session
 	 */
 	public static function getSession($namespace = NULL)
 	{
@@ -313,7 +313,7 @@ final class Environment
 	 * Loads global configuration from file and process it.
 	 * @param  string
 	 * @param  string
-	 * @return Nette\ArrayHash
+	 * @return \Nette\ArrayHash
 	 */
 	public static function loadConfig($file = NULL, $section = NULL)
 	{

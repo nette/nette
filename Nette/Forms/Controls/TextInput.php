@@ -80,7 +80,7 @@ class TextInput extends TextBase
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getControl()
 	{

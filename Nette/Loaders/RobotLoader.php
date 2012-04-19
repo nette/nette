@@ -23,7 +23,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read array $indexedClasses
- * @property   Nette\Caching\IStorage $cacheStorage
+ * @property   \Nette\Caching\IStorage $cacheStorage
  */
 class RobotLoader extends AutoLoader
 {
@@ -53,7 +53,7 @@ class RobotLoader extends AutoLoader
 	/** @var array of checked classes in this request */
 	private $checked = array();
 
-	/** @var Nette\Caching\IStorage */
+	/** @var \Nette\Caching\IStorage */
 	private $cacheStorage;
 
 
@@ -179,7 +179,7 @@ class RobotLoader extends AutoLoader
 	 * Add directory (or directories) to list.
 	 * @param  string|array
 	 * @return RobotLoader  provides a fluent interface
-	 * @throws Nette\DirectoryNotFoundException if path is not found
+	 * @throws \Nette\DirectoryNotFoundException if path is not found
 	 */
 	public function addDirectory($path)
 	{
@@ -362,7 +362,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * @param  Nette\Caching\IStorage
+	 * @param  \Nette\Caching\IStorage
 	 * @return RobotLoader
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage)
@@ -374,7 +374,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * @return Nette\Caching\IStorage
+	 * @return \Nette\Caching\IStorage
 	 */
 	public function getCacheStorage()
 	{
@@ -384,7 +384,7 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * @return Nette\Caching\Cache
+	 * @return \Nette\Caching\Cache
 	 */
 	protected function getCache()
 	{

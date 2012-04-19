@@ -42,7 +42,7 @@ class Container extends Component implements IContainer
 	 * @param  string
 	 * @param  string
 	 * @return Container  provides a fluent interface
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function addComponent(IComponent $component, $name, $insertBefore = NULL)
 	{
@@ -215,7 +215,7 @@ class Container extends Component implements IContainer
 	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
 	 * @param  IComponent
 	 * @return void
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 */
 	protected function validateChildComponent(IComponent $child)
 	{

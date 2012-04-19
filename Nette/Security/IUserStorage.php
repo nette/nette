@@ -51,7 +51,7 @@ interface IUserStorage
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return Nette\Security\IIdentity|NULL
+	 * @return \Nette\Security\IIdentity|NULL
 	 */
 	function getIdentity();
 

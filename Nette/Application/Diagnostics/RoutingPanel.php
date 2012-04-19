@@ -25,16 +25,16 @@ use Nette,
  */
 class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 {
-	/** @var Nette\Application\IRouter */
+	/** @var \Nette\Application\IRouter */
 	private $router;
 
-	/** @var Nette\Http\IRequest */
+	/** @var \Nette\Http\IRequest */
 	private $httpRequest;
 
 	/** @var array */
 	private $routers = array();
 
-	/** @var Nette\Application\Request */
+	/** @var \Nette\Application\Request */
 	private $request;
 
 
@@ -89,7 +89,7 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 
 	/**
 	 * Analyses simple route.
-	 * @param  Nette\Application\IRouter
+	 * @param  \Nette\Application\IRouter
 	 * @return void
 	 */
 	private function analyse($router, $module = '')

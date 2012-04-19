@@ -129,7 +129,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  mixed  value
 	 * @param  array  dependencies
 	 * @return mixed  value itself
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function save($key, $data, array $dp = NULL)
 	{
@@ -301,7 +301,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  mixed key
 	 * @param  mixed
 	 * @return void
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function offsetSet($key, $data)
 	{
@@ -314,7 +314,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * Retrieves the specified item from the cache or NULL if the key is not found (\ArrayAccess implementation).
 	 * @param  mixed key
 	 * @return mixed|NULL
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function offsetGet($key)
 	{
@@ -332,7 +332,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * Exists item in cache? (\ArrayAccess implementation).
 	 * @param  mixed key
 	 * @return bool
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function offsetExists($key)
 	{
@@ -346,7 +346,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * Removes the specified item from the cache.
 	 * @param  mixed key
 	 * @return void
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function offsetUnset($key)
 	{

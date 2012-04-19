@@ -60,10 +60,10 @@ class Application extends Nette\Object
 	/** @var IPresenter */
 	private $presenter;
 
-	/** @var Nette\Http\IRequest */
+	/** @var \Nette\Http\IRequest */
 	private $httpRequest;
 
-	/** @var Nette\Http\IResponse */
+	/** @var \Nette\Http\IResponse */
 	private $httpResponse;
 
 	/** @var IPresenterFactory */

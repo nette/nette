@@ -40,7 +40,7 @@ class Connection extends PDO
 	/** @var IReflection */
 	private $databaseReflection;
 
-	/** @var Nette\Caching\Cache */
+	/** @var \Nette\Caching\Cache */
 	private $cache;
 
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
@@ -103,7 +103,7 @@ class Connection extends PDO
 
 	/**
 	 * Sets cache storage engine
-	 * @param  Nette\Caching\IStorage $storage
+	 * @param  \Nette\Caching\IStorage $storage
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
@@ -237,7 +237,7 @@ class Connection extends PDO
 	/**
 	 * Creates selector for table.
 	 * @param  string
-	 * @return Nette\Database\Table\Selection
+	 * @return \Nette\Database\Table\Selection
 	 */
 	public function table($table)
 	{
@@ -251,7 +251,7 @@ class Connection extends PDO
 
 
 	/**
-	 * @return Nette\Reflection\ClassType
+	 * @return \Nette\Reflection\ClassType
 	 */
 	public /**/static/**/ function getReflection()
 	{

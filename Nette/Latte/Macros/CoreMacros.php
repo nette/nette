@@ -358,8 +358,8 @@ class CoreMacros extends MacroSet
 	 * Includes subtemplate.
 	 * @param  mixed      included file name or template
 	 * @param  array      parameters
-	 * @param  Nette\Templating\ITemplate  current template
-	 * @return Nette\Templating\Template
+	 * @param  \Nette\Templating\ITemplate  current template
+	 * @return \Nette\Templating\Template
 	 */
 	public static function includeTemplate($destination, array $params, Nette\Templating\ITemplate $template)
 	{

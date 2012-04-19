@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  * @property-read array $config
- * @property-read Nette\DI\ContainerBuilder $containerBuilder
+ * @property-read \Nette\DI\ContainerBuilder $containerBuilder
  */
 abstract class CompilerExtension extends Nette\Object
 {
@@ -60,7 +60,7 @@ abstract class CompilerExtension extends Nette\Object
 
 
 	/**
-	 * @return Nette\DI\ContainerBuilder
+	 * @return \Nette\DI\ContainerBuilder
 	 */
 	public function getContainerBuilder()
 	{

@@ -103,7 +103,7 @@ class Loader extends Nette\Object
 	/**
 	 * Registers adapter for given file extension.
 	 * @param  string  file extension
-	 * @param  string|Nette\Config\IAdapter
+	 * @param  string|\Nette\Config\IAdapter
 	 * @return Loader  provides a fluent interface
 	 */
 	public function addAdapter($extension, $adapter)

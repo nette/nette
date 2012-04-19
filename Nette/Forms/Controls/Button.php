@@ -48,7 +48,7 @@ class Button extends BaseControl
 	/**
 	 * Generates control's HTML element.
 	 * @param  string
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getControl($caption = NULL)
 	{

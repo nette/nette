@@ -23,13 +23,13 @@ use Nette;
  * @property   mixed $action
  * @property   string $method
  * @property-read array $groups
- * @property   Nette\Localization\ITranslator|NULL $translator
+ * @property   \Nette\Localization\ITranslator|NULL $translator
  * @property-read bool $anchored
  * @property-read ISubmitterControl|FALSE $submitted
  * @property-read bool $success
  * @property-read array $httpData
  * @property-read array $errors
- * @property-read Nette\Utils\Html $elementPrototype
+ * @property-read \Nette\Utils\Html $elementPrototype
  * @property   IFormRenderer $renderer
  */
 class Form extends Container
@@ -101,7 +101,7 @@ class Form extends Container
 	/** @var IFormRenderer */
 	private $renderer;
 
-	/** @var Nette\Localization\ITranslator */
+	/** @var \Nette\Localization\ITranslator */
 	private $translator;
 
 	/** @var ControlGroup[] */
@@ -314,7 +314,7 @@ class Form extends Container
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
+	 * @param  \Nette\Localization\ITranslator
 	 * @return Form  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -327,7 +327,7 @@ class Form extends Container
 
 	/**
 	 * Returns translate adapter.
-	 * @return Nette\Localization\ITranslator|NULL
+	 * @return \Nette\Localization\ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
@@ -481,7 +481,7 @@ class Form extends Container
 
 	/**
 	 * Returns the values submitted by the form.
-	 * @return Nette\ArrayHash|array
+	 * @return \Nette\ArrayHash|array
 	 */
 	public function getValues($asArray = FALSE)
 	{
@@ -549,7 +549,7 @@ class Form extends Container
 
 	/**
 	 * Returns form's HTML element template.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getElementPrototype()
 	{
@@ -624,7 +624,7 @@ class Form extends Container
 
 
 	/**
-	 * @return Nette\Http\IRequest
+	 * @return \Nette\Http\IRequest
 	 */
 	protected function getHttpRequest()
 	{
@@ -634,7 +634,7 @@ class Form extends Container
 
 
 	/**
-	 * @return Nette\Http\Session
+	 * @return \Nette\Http\Session
 	 */
 	protected function getSession()
 	{

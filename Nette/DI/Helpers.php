@@ -29,7 +29,7 @@ final class Helpers
 	 * @param  array
 	 * @param  bool
 	 * @return mixed
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public static function expand($var, array $params, $recursive = FALSE)
 	{
@@ -99,7 +99,7 @@ final class Helpers
 
 	/**
 	 * Generates list of arguments using autowiring.
-	 * @param  Nette\Reflection\GlobalFunction|Nette\Reflection\Method
+	 * @param  \Nette\Reflection\GlobalFunction|\Nette\Reflection\Method
 	 * @return array
 	 */
 	public static function autowireArguments(\ReflectionFunctionAbstract $method, array $arguments, $container)

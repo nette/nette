@@ -23,14 +23,14 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read Nette\Application\IRequest $request
+ * @property-read \Nette\Application\IRequest $request
  */
 class MicroPresenter extends Nette\Object implements Application\IPresenter
 {
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private $context;
 
-	/** @var Nette\Application\Request */
+	/** @var \Nette\Application\Request */
 	private $request;
 
 
@@ -44,7 +44,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return \SystemContainer|Nette\DI\Container
+	 * @return \SystemContainer|\Nette\DI\Container
 	 */
 	final public function getContext()
 	{
@@ -54,8 +54,8 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\Request
-	 * @return Nette\Application\IResponse
+	 * @param  \Nette\Application\Request
+	 * @return \Nette\Application\IResponse
 	 */
 	public function run(Application\Request $request)
 	{
@@ -103,7 +103,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	 * Template factory.
 	 * @param  string
 	 * @param  callable
-	 * @return Nette\Templating\ITemplate
+	 * @return \Nette\Templating\ITemplate
 	 */
 	public function createTemplate($class = NULL, $latteFactory = NULL)
 	{
@@ -144,7 +144,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
-	 * @throws Nette\Application\BadRequestException
+	 * @throws \Nette\Application\BadRequestException
 	 */
 	public function error($message = NULL, $code = Http\IResponse::S404_NOT_FOUND)
 	{
@@ -154,7 +154,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Application\IRequest
+	 * @return \Nette\Application\IRequest
 	 */
 	public function getRequest()
 	{

@@ -22,7 +22,7 @@ use Nette,
  * @author     David Grudl
  *
  * @property-read CompilerExtension[] $extensions
- * @property-read Nette\DI\ContainerBuilder $containerBuilder
+ * @property-read \Nette\DI\ContainerBuilder $containerBuilder
  * @property-read array $config
  */
 class Compiler extends Nette\Object
@@ -30,7 +30,7 @@ class Compiler extends Nette\Object
 	/** @var CompilerExtension[] */
 	private $extensions = array();
 
-	/** @var Nette\DI\ContainerBuilder */
+	/** @var \Nette\DI\ContainerBuilder */
 	private $container;
 
 	/** @var array */
@@ -67,7 +67,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * @return Nette\DI\ContainerBuilder
+	 * @return \Nette\DI\ContainerBuilder
 	 */
 	public function getContainerBuilder()
 	{

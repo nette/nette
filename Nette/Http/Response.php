@@ -50,8 +50,8 @@ final class Response extends Nette\Object implements IResponse
 	 * Sets HTTP response code.
 	 * @param  int
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidArgumentException  if code is invalid
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidArgumentException  if code is invalid
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCode($code)
 	{
@@ -96,7 +96,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string  header name
 	 * @param  string  header value
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setHeader($name, $value)
 	{
@@ -119,7 +119,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string  header name
 	 * @param  string  header value
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function addHeader($name, $value)
 	{
@@ -138,7 +138,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string  mime-type
 	 * @param  string  charset
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setContentType($type, $charset = NULL)
 	{
@@ -153,7 +153,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string  URL
 	 * @param  int     HTTP code
 	 * @return void
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
@@ -175,7 +175,7 @@ final class Response extends Nette\Object implements IResponse
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setExpiration($time)
 	{
@@ -280,7 +280,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  bool
 	 * @param  bool
 	 * @return Response  provides a fluent interface
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL)
 	{
@@ -325,7 +325,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string
 	 * @param  bool
 	 * @return void
-	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 * @throws \Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function deleteCookie($name, $path = NULL, $domain = NULL, $secure = NULL)
 	{

@@ -37,7 +37,7 @@ class PresenterFactory implements IPresenterFactory
 	/** @var array */
 	private $cache = array();
 
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private $container;
 
 

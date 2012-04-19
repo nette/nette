@@ -22,15 +22,15 @@ use Nette,
  * @author     David Grudl
  *
  * @property   array $items
- * @property-read Nette\Utils\Html $separatorPrototype
- * @property-read Nette\Utils\Html $containerPrototype
+ * @property-read \Nette\Utils\Html $separatorPrototype
+ * @property-read \Nette\Utils\Html $containerPrototype
  */
 class RadioList extends BaseControl
 {
-	/** @var Nette\Utils\Html  separator element template */
+	/** @var \Nette\Utils\Html  separator element template */
 	protected $separator;
 
-	/** @var Nette\Utils\Html  container element template */
+	/** @var \Nette\Utils\Html  container element template */
 	protected $container;
 
 	/** @var array */
@@ -104,7 +104,7 @@ class RadioList extends BaseControl
 
 	/**
 	 * Returns separator HTML element template.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	final public function getSeparatorPrototype()
 	{
@@ -115,7 +115,7 @@ class RadioList extends BaseControl
 
 	/**
 	 * Returns container HTML element template.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	final public function getContainerPrototype()
 	{
@@ -127,7 +127,7 @@ class RadioList extends BaseControl
 	/**
 	 * Generates control's HTML element.
 	 * @param  mixed
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getControl($key = NULL)
 	{

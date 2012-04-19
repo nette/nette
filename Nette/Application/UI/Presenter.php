@@ -24,19 +24,19 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read Nette\Application\Request $request
+ * @property-read \Nette\Application\Request $request
  * @property-read array|NULL $signal
  * @property-read string $action
  * @property      string $view
  * @property      string $layout
  * @property-read \stdClass $payload
  * @property-read bool $ajax
- * @property-read Nette\Application\Request $lastCreatedRequest
- * @property-read Nette\Http\SessionSection $flashSession
- * @property-read \SystemContainer|Nette\DI\Container $context
- * @property-read Nette\Application\Application $application
- * @property-read Nette\Http\Session $session
- * @property-read Nette\Security\User $user
+ * @property-read \Nette\Application\Request $lastCreatedRequest
+ * @property-read \Nette\Http\SessionSection $flashSession
+ * @property-read \SystemContainer|\Nette\DI\Container $context
+ * @property-read \Nette\Application\Application $application
+ * @property-read \Nette\Http\Session $session
+ * @property-read \Nette\Security\User $user
  */
 abstract class Presenter extends Control implements Application\IPresenter
 {
@@ -57,10 +57,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var array of function(Presenter $sender, IResponse $response = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
 
-	/** @var Nette\Application\Request */
+	/** @var \Nette\Application\Request */
 	private $request;
 
-	/** @var Nette\Application\IResponse */
+	/** @var \Nette\Application\IResponse */
 	private $response;
 
 	/** @var bool  automatically call canonicalize() */
@@ -102,13 +102,13 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var bool */
 	private $startupCheck;
 
-	/** @var Nette\Application\Request */
+	/** @var \Nette\Application\Request */
 	private $lastCreatedRequest;
 
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
-	/** @var Nette\DI\Container */
+	/** @var \Nette\DI\Container */
 	private $context;
 
 
@@ -120,7 +120,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Application\Request
+	 * @return \Nette\Application\Request
 	 */
 	final public function getRequest()
 	{
@@ -156,8 +156,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\Request
-	 * @return Nette\Application\IResponse
+	 * @param  \Nette\Application\Request
+	 * @return \Nette\Application\IResponse
 	 */
 	public function run(Application\Request $request)
 	{
@@ -262,7 +262,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\IResponse  optional catched exception
+	 * @param  \Nette\Application\IResponse  optional catched exception
 	 * @return void
 	 */
 	protected function shutdown($response)
@@ -439,8 +439,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * @return void
-	 * @throws Nette\Application\BadRequestException if no template found
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\BadRequestException if no template found
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function sendTemplate()
 	{
@@ -595,7 +595,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Sends AJAX payload to the output.
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function sendPayload()
 	{
@@ -610,9 +610,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Sends response and terminates presenter.
-	 * @param  Nette\Application\IResponse
+	 * @param  \Nette\Application\IResponse
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function sendResponse(Application\IResponse $response)
 	{
@@ -625,7 +625,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Correctly terminates presenter.
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function terminate()
 	{
@@ -643,7 +643,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string|Request
 	 * @param  array|mixed
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function forward($destination, $args = array())
 	{
@@ -666,7 +666,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function redirectUrl($url, $code = NULL)
 	{
@@ -696,7 +696,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string
 	 * @param  int HTTP error code
 	 * @return void
-	 * @throws Nette\Application\BadRequestException
+	 * @throws \Nette\Application\BadRequestException
 	 */
 	public function error($message = NULL, $code = Http\IResponse::S404_NOT_FOUND)
 	{
@@ -718,7 +718,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Returns the last created Request.
-	 * @return Nette\Application\Request
+	 * @return \Nette\Application\Request
 	 */
 	public function getLastCreatedRequest()
 	{
@@ -742,7 +742,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Conditional redirect to canonicalized URI.
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 */
 	public function canonicalize()
 	{
@@ -764,7 +764,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param  string strong entity tag validator
 	 * @param  mixed  optional expiration time
 	 * @return void
-	 * @throws Nette\Application\AbortException
+	 * @throws \Nette\Application\AbortException
 	 * @deprecated
 	 */
 	public function lastModified($lastModified, $etag = NULL, $expire = NULL)
@@ -1252,7 +1252,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Initializes $this->globalParams, $this->signal & $this->signalReceiver, $this->action, $this->view. Called by run().
 	 * @return void
-	 * @throws Nette\Application\BadRequestException if action name is not valid
+	 * @throws \Nette\Application\BadRequestException if action name is not valid
 	 */
 	private function initGlobalParameters()
 	{
@@ -1341,7 +1341,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Returns session namespace provided to pass temporary data between redirects.
-	 * @return Nette\Http\SessionSection
+	 * @return \Nette\Http\SessionSection
 	 */
 	public function getFlashSession()
 	{
@@ -1369,7 +1369,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return \SystemContainer|Nette\DI\Container
+	 * @return \SystemContainer|\Nette\DI\Container
 	 */
 	final public function getContext()
 	{
@@ -1389,7 +1389,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Request
+	 * @return \Nette\Http\Request
 	 */
 	protected function getHttpRequest()
 	{
@@ -1399,7 +1399,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Response
+	 * @return \Nette\Http\Response
 	 */
 	protected function getHttpResponse()
 	{
@@ -1409,7 +1409,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Context
+	 * @return \Nette\Http\Context
 	 */
 	protected function getHttpContext()
 	{
@@ -1419,7 +1419,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Application\Application
+	 * @return \Nette\Application\Application
 	 */
 	public function getApplication()
 	{
@@ -1429,7 +1429,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Session
+	 * @return \Nette\Http\Session
 	 */
 	public function getSession($namespace = NULL)
 	{
@@ -1440,7 +1440,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Security\User
+	 * @return \Nette\Security\User
 	 */
 	public function getUser()
 	{

@@ -189,7 +189,7 @@ class FileUpload extends Nette\Object
 
 	/**
 	 * Returns the image.
-	 * @return Nette\Image
+	 * @return \Nette\Image
 	 */
 	public function toImage()
 	{

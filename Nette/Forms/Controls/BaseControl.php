@@ -24,20 +24,20 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property-read Nette\Forms\Form $form
+ * @property-read \Nette\Forms\Form $form
  * @property-read string $htmlName
  * @property   string $htmlId
  * @property-read array $options
- * @property   Nette\Localization\ITranslator|NULL $translator
+ * @property   \Nette\Localization\ITranslator|NULL $translator
  * @property   mixed $value
  * @property-read bool $filled
  * @property-write $defaultValue
  * @property   bool $disabled
- * @property-read Nette\Utils\Html $control
- * @property-read Nette\Utils\Html $label
- * @property-read Nette\Utils\Html $controlPrototype
- * @property-read Nette\Utils\Html $labelPrototype
- * @property-read Nette\Forms\Rules $rules
+ * @property-read \Nette\Utils\Html $control
+ * @property-read \Nette\Utils\Html $label
+ * @property-read \Nette\Utils\Html $controlPrototype
+ * @property-read \Nette\Utils\Html $labelPrototype
+ * @property-read \Nette\Forms\Rules $rules
  * @property   bool $required
  * @property-read array $errors
  */
@@ -52,10 +52,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var mixed unfiltered control value */
 	protected $value;
 
-	/** @var Nette\Utils\Html  control element template */
+	/** @var \Nette\Utils\Html  control element template */
 	protected $control;
 
-	/** @var Nette\Utils\Html  label element template */
+	/** @var \Nette\Utils\Html  label element template */
 	protected $label;
 
 	/** @var array */
@@ -70,10 +70,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/** @var string */
 	private $htmlName;
 
-	/** @var Nette\Forms\Rules */
+	/** @var \Nette\Forms\Rules */
 	private $rules;
 
-	/** @var Nette\Localization\ITranslator */
+	/** @var \Nette\Localization\ITranslator */
 	private $translator = TRUE; // means autodetect
 
 	/** @var array user options */
@@ -98,7 +98,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * This method will be called when the component becomes attached to Form.
-	 * @param  Nette\Forms\IComponent
+	 * @param  \Nette\Forms\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
@@ -114,7 +114,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Returns form.
 	 * @param  bool   throw exception if form doesn't exist?
-	 * @return Nette\Forms\Form
+	 * @return \Nette\Forms\Form
 	 */
 	public function getForm($need = TRUE)
 	{
@@ -242,7 +242,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
+	 * @param  \Nette\Localization\ITranslator
 	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -255,7 +255,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns translate adapter.
-	 * @return Nette\Localization\ITranslator|NULL
+	 * @return \Nette\Localization\ITranslator|NULL
 	 */
 	final public function getTranslator()
 	{
@@ -378,7 +378,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Generates control's HTML element.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getControl()
 	{
@@ -404,7 +404,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	public function getLabel($caption = NULL)
 	{
@@ -426,7 +426,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns control's HTML element template.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	final public function getControlPrototype()
 	{
@@ -437,7 +437,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns label's HTML element template.
-	 * @return Nette\Utils\Html
+	 * @return \Nette\Utils\Html
 	 */
 	final public function getLabelPrototype()
 	{
@@ -469,7 +469,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed     condition type
 	 * @param  mixed      optional condition arguments
-	 * @return Nette\Forms\Rules      new branch
+	 * @return \Nette\Forms\Rules      new branch
 	 */
 	public function addCondition($operation, $value = NULL)
 	{
@@ -480,10 +480,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Adds a validation condition based on another control a returns new branch.
-	 * @param  Nette\Forms\IControl form control
+	 * @param  \Nette\Forms\IControl form control
 	 * @param  mixed      condition type
 	 * @param  mixed      optional condition arguments
-	 * @return Nette\Forms\Rules      new branch
+	 * @return \Nette\Forms\Rules      new branch
 	 */
 	public function addConditionOn(IControl $control, $operation, $value = NULL)
 	{
@@ -493,7 +493,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 
 	/**
-	 * @return Nette\Forms\Rules
+	 * @return \Nette\Forms\Rules
 	 */
 	final public function getRules()
 	{
@@ -578,7 +578,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Equal validator: are control's value and second parameter equal?
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @param  mixed
 	 * @return bool
 	 */
@@ -599,7 +599,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Filled validator: is control filled?
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)
@@ -611,7 +611,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Valid validator: is control valid?
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)
@@ -623,7 +623,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Rangle validator: is a control's value number in specified range?
-	 * @param  Nette\Forms\IControl
+	 * @param  \Nette\Forms\IControl
 	 * @param  array  min and max value pair
 	 * @return bool
 	 */

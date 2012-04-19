@@ -83,7 +83,7 @@ class Session extends Nette\Object
 
 	/**
 	 * Starts and initializes session data.
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return void
 	 */
 	public function start()
@@ -230,7 +230,7 @@ class Session extends Nette\Object
 
 	/**
 	 * Regenerates the session ID.
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\InvalidStateException
 	 * @return void
 	 */
 	public function regenerateId()
@@ -300,7 +300,7 @@ class Session extends Nette\Object
 	 * @param  string
 	 * @param  string
 	 * @return SessionSection
-	 * @throws Nette\InvalidArgumentException
+	 * @throws \Nette\InvalidArgumentException
 	 */
 	public function getSection($section, $class = 'Nette\Http\SessionSection')
 	{
@@ -396,8 +396,8 @@ class Session extends Nette\Object
 	 * Sets session options.
 	 * @param  array
 	 * @return Session  provides a fluent interface
-	 * @throws Nette\NotSupportedException
-	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\NotSupportedException
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function setOptions(array $options)
 	{
