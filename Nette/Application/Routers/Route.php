@@ -62,7 +62,7 @@ class Route extends Nette\Object implements Application\IRouter
 		'#' => array( // default style for path parameters
 			self::PATTERN => '[^/]+',
 			self::FILTER_IN => 'rawurldecode',
-			self::FILTER_OUT => 'rawurlencode',
+			self::FILTER_OUT => array(__CLASS__, 'param2path'),
 		),
 		'?#' => array( // default style for query parameters
 		),
@@ -762,6 +762,18 @@ class Route extends Nette\Object implements Application\IRouter
 		$s = str_replace('. ', ':', $s);
 		$s = str_replace('- ', '', $s);
 		return $s;
+	}
+
+
+
+	/**
+	 * Url encode.
+	 * @param  string
+	 * @return string
+	 */
+	private static function param2path($s)
+	{
+		return str_replace('%2F', '/', rawurlencode($s));
 	}
 
 
