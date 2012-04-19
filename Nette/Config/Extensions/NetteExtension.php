@@ -35,6 +35,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			'debugger' => TRUE,
 			'errorPresenter' => NULL,
 			'catchExceptions' => '%productionMode%',
+			'mapping' => NULL
 		),
 		'routing' => array(
 			'debugger' => TRUE,
@@ -200,10 +201,13 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
 		}
 
-		$container->addDefinition($this->prefix('presenterFactory'))
+		$presenterFactory = $container->addDefinition($this->prefix('presenterFactory'))
 			->setClass('Nette\Application\PresenterFactory', array(
 				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL
 			));
+		if ($config['mapping']) {
+			$presenterFactory->addSetup('$service->mapping = ? + $service->mapping;', array($config['mapping']));
+		}
 	}
 
 
