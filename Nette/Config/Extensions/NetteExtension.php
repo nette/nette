@@ -236,7 +236,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$container->addDefinition($this->prefix('mailer'))
 				->setClass('Nette\Mail\SendmailMailer');
 		} else {
-			Validators::assertField($config, 'mailer', 'array');
 			$container->addDefinition($this->prefix('mailer'))
 				->setClass('Nette\Mail\SmtpMailer', array($config));
 		}
