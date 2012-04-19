@@ -509,7 +509,7 @@ class ContainerBuilder extends Nette\Object
 
 			} elseif ($service = $that->getServiceName($val, $self)) {
 				$val = $service === $self ? '$service' : $that->formatStatement(new Statement($val));
-				$val = new PhpLiteral($val, $self);
+				$val = new PhpLiteral($val);
 			}
 		});
 		return PhpHelpers::formatArgs($statement, $args);
