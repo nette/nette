@@ -156,8 +156,8 @@ class SelectBox extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
-		$this->allowed = array();
+		$this->items = $this->prompt === TRUE ? array('' => $this->items['']) + $items : $items;
+		$this->allowed = $this->prompt === TRUE ? array('' => '') : array();
 		$this->useKeys = (bool) $useKeys;
 
 		foreach ($items as $key => $value) {
