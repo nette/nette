@@ -91,9 +91,9 @@ class UIMacros extends MacroSet
 	public function finalize()
 	{
 		// try close last block
-		try {
-			$this->getCompiler()->writeMacro('/block');
-		} catch (CompileException $e) {
+		$last = $this->getCompiler()->getMacroNode();
+		if ($last && $last->name === 'block') {
+			$this->getCompiler()->writeMacro('/' . $last->name);
 		}
 
 		$epilog = $prolog = array();

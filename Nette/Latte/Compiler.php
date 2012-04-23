@@ -226,6 +226,16 @@ class Compiler extends Nette\Object
 
 
 	/**
+	 * @return MacroNode|NULL
+	 */
+	public function getMacroNode()
+	{
+		return $this->macroNode;
+	}
+
+
+
+	/**
 	 * Returns current line number.
 	 * @return int
 	 */
