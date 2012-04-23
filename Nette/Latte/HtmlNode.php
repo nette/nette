@@ -37,6 +37,9 @@ class HtmlNode extends Nette\Object
 	/** @var bool */
 	public $closing = FALSE;
 
+	/** @var HtmlNode */
+	public $parentNode;
+
 	/** @var string */
 	public $attrCode;
 
@@ -45,9 +48,10 @@ class HtmlNode extends Nette\Object
 
 
 
-	public function __construct($name)
+	public function __construct($name, self $parentNode = NULL)
 	{
 		$this->name = $name;
+		$this->parentNode = $parentNode;
 	}
 
 }
