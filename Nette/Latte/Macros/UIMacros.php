@@ -315,7 +315,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroBlockEnd(MacroNode $node, PhpWriter $writer)
 	{
 		if (isset($node->data->name)) { // block, snippet, define
-			if ($node->name === 'snippet' && $node->htmlNode && !$node->prefix // n:snippet -> n:inner-snippet
+			if ($node->name === 'snippet' && $node->htmlNode && $node->prefix === MacroNode::PREFIX_NONE // n:snippet -> n:inner-snippet
 				&& preg_match("#^.*? n:\w+>\n?#s", $node->content, $m1) && preg_match("#[ \t]*<[^<]+$#sD", $node->content, $m2))
 			{
 				$node->openingCode = $m1[0] . $node->openingCode;

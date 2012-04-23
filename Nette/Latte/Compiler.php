@@ -449,9 +449,9 @@ class Compiler extends Nette\Object
 		foreach ($this->macros as $name => $foo) {
 			if (isset($attrs[$name])) {
 				if ($htmlNode->closing) {
-					$right[] = array("/$name", '', NULL);
+					$right[] = array("/$name", '', MacroNode::PREFIX_NONE);
 				} else {
-					array_unshift($left, array($name, $attrs[$name], NULL));
+					array_unshift($left, array($name, $attrs[$name], MacroNode::PREFIX_NONE));
 				}
 				unset($attrs[$name]);
 			}
@@ -480,7 +480,7 @@ class Compiler extends Nette\Object
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode);
+			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $htmlNode, MacroNode::PREFIX_NONE);
 			if ($node->closing) {
 				$htmlNode->attrCode .= $node->attrCode;
 			}
