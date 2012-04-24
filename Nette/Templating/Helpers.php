@@ -217,6 +217,22 @@ final class Helpers
 
 
 	/**
+	 * Date/time modification.
+	 * @param  string|int|DateTime
+	 * @param  string|int
+	 * @param  string
+	 * @return Nette\DateTime
+	 */
+	public static function modifyDate($time, $delta, $unit = NULL)
+	{
+		return $time == NULL // intentionally ==
+			? NULL
+			: Nette\DateTime::from($time)->modify($delta . $unit);
+	}
+
+
+
+	/**
 	 * Converts to human readable file size.
 	 * @param  int
 	 * @param  int
