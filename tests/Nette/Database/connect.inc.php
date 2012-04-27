@@ -20,7 +20,7 @@ require __DIR__ . '/../bootstrap.php';
 try {
 	$connection = new Database\Connection('mysql:host=localhost', 'root');
 } catch (PDOException $e) {
-	TestHelpers::skip('Requires corretly configured mysql connection database.');
+	TestHelpers::skip('Requires correctly configured mysql connection database.');
 }
 
 flock($lock = fopen(TEMP_DIR . '/../lock', 'w'), LOCK_EX);
