@@ -17,8 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 setlocale(LC_TIME, 'C');
-
-
+date_default_timezone_set('Europe/Prague');
 
 Assert::null( Helpers::modifyDate(NULL, NULL) );
 
