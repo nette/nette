@@ -22,12 +22,12 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 $template->setSource(<<<EOD
-{#block}Content{/#}
+{#block}<div>Content</div>{/#}
 EOD
 );
 
 Assert::match(<<<EOD
-Content
+<div>Content</div>
 EOD
 , (string) $template);
 
