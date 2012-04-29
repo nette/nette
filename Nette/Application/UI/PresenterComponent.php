@@ -249,6 +249,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  string
 	 * @return void
 	 * @throws BadSignalException if there is not handler method or security token does not match
+	 * @throws \RuntimeException if there is no redirect in a secured signal
 	 */
 	public function signalReceived($signal)
 	{
@@ -271,6 +272,10 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		if (!$this->tryCall($method, $this->params)) {
 			$class = get_class($this);
 			throw new BadSignalException("There is no handler for signal '$signal' in class $class.");
+		}
+
+		if (isset($this->params[Presenter::CSRF_TOKEN_KEY])) {
+			throw new \RuntimeException("Secured signal '$signal' did not redirect. Possible csrf-token reveal by http referer header.");
 		}
 	}
 
