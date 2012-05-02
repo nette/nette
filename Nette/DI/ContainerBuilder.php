@@ -185,7 +185,7 @@ class ContainerBuilder extends Nette\Object
 	public function prepareClassList()
 	{
 		// complete class-factory pairs; expand classes
-		foreach ($this->definitions as $name => $def) {
+		foreach ($this->definitions as $name => /** @var ServiceDefinition $def */ $def) {
 			if ($def->class === self::CREATED_SERVICE || ($def->factory && $def->factory->entity === self::CREATED_SERVICE)) {
 				$def->class = $name;
 				$def->internal = TRUE;
@@ -416,6 +416,51 @@ class ContainerBuilder extends Nette\Object
 				$setup->entity = array("@$name", $setup->entity);
 			}
 			$code .= $this->formatStatement($setup, $name) . ";\n";
+		}
+
+		// Injected methods and properties
+		if ($def->class && !$this->getServiceName($entity)) {
+			foreach (array_reverse(array_merge(array($def->class), class_parents($def->class))) as $className) {
+				$rc = new \Nette\Reflection\ClassType($className);
+				foreach ($rc->getMethods() as $rm) {
+					if ($rm->hasAnnotation('inject')) {
+						if (!$rm->isPublic()) throw new ServiceCreationException("Injection method $rc->name::$rm->name is not public");
+
+						$annot = $rm->getAnnotation('inject');
+						if ($annot === TRUE) $args = array();
+						elseif (is_string($annot)) $args = array($annot);
+						elseif ($annot instanceof \ArrayObject) $args = iterator_to_array($annot);
+						else throw new ServiceCreationException("Unknown parameters of annotation");
+
+						$setup = new Statement(array("@$name", $rm->name), $args);
+						$setup = Helpers::expand($setup, $parameters, TRUE);
+						$code .= $this->formatStatement($setup, $name) . ";\n";
+					}
+				}
+
+				foreach ($rc->getProperties() as $rp) {
+					if ($rp->hasAnnotation('inject')) {
+						if (!$rp->isPublic()) throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
+
+						// what is supposed to be injected
+						$annot = $rp->getAnnotation('inject');
+						if ($annot === TRUE) {
+							if ($annot = $rp->getAnnotation('var')) {
+								$value = "@$annot";
+							} else {
+								throw new ServiceCreationException("Type of parameter $rc->name::\$$rp->name is not known");
+							}
+						}
+						elseif (is_string($annot)) $value = $annot;
+						elseif ($annot instanceof \ArrayObject) throw new ServiceCreationException("Can have only one value!");
+						else throw new ServiceCreationException("Unknown parameters of annotation");
+
+						$setup = new Statement(array("@$name", '$' . $rp->name), array($value));
+						$setup = Helpers::expand($setup, $parameters, TRUE);
+						$code .= $this->formatStatement($setup, $name) . ";\n";
+					}
+				}
+			}
 		}
 
 		return $code .= 'return $service;';
