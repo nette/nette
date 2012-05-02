@@ -25,6 +25,9 @@ class Container extends Nette\FreezableObject
 {
 	const TAGS = 'tags';
 
+	/** @var bool Whether to inject into private/protected properties annotated by @inject */
+	public static $allowNonPublicInjection = FALSE;
+
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
 
@@ -312,7 +315,9 @@ class Container extends Nette\FreezableObject
 
 			foreach ($rc->getProperties() as $rp) {
 				if ($rp->hasAnnotation('inject')) {
-					if (!$rp->isPublic()) throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
+					if (!self::$allowNonPublicInjection && !$rp->isPublic()) {
+						throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
+					}
 
 					// what is supposed to be injected
 					$annot = $rp->getAnnotation('inject');
@@ -329,7 +334,13 @@ class Container extends Nette\FreezableObject
 
 					$value = Helpers::expand($value, $this->parameters, TRUE);
 					if ($service = $this->getServiceByBuilder($value)) $value = $service;
-					$object->{$rp->name} = $value;
+
+					if ($rp->isPublic()) {
+						$object->{$rp->name} = $value;
+
+					} else {
+						$this->injectProperty($object, $rc->name, $rp->name, $value);
+					}
 				}
 			}
 		}
@@ -450,4 +461,18 @@ class Container extends Nette\FreezableObject
 		return ($isService ? 'createService' : 'create') . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
+
+	/**
+	 * Inject property which is not publicly accessible
+	 * @param object Target service
+	 * @param string
+	 * @param string
+	 * @param mixed Value to be injected
+	 */
+	public function injectProperty($object, $className, $propertyName, $value)
+	{
+		$rp = new \Nette\Reflection\Property($className, $propertyName);
+		$rp->setAccessible(TRUE);
+		$rp->setValue($object, $value);
+	}
 }
