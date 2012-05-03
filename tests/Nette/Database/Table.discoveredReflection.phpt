@@ -49,6 +49,21 @@ Assert::same(array(
 
 
 
+$books = array();
+foreach ($connection->table('author') as $author) {
+	foreach ($author->related('book') as $book) {
+		$books[$book->title] = $author->name;
+	}
+}
+
+Assert::same(array(
+	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
+	'JUSH' => 'Jakub Vrana',
+	'Nette' => 'David Grudl',
+	'Dibi' => 'David Grudl',
+), $books);
+
+
 
 $book = $connection->table('book')->get(1);
 Assert::same('Jakub Vrana', $book->translator->name);
