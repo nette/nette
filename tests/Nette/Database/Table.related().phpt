@@ -42,6 +42,32 @@ Assert::same(array(
 
 
 
+$tagsAuthors = array();
+foreach ($connection->table('tag') as $tag) {
+
+	$book_tags = $tag->related('book_tag')->group('tag.id, book.author.id')->select('book.author_id')->order('book.author.name');
+	foreach ($book_tags as $book_tag) {
+		$tagsAuthors[$tag->name][] = $book_tag->ref('author', 'author_id')->name;
+	}
+
+}
+
+Assert::same(array(
+	'PHP' => array(
+		'David Grudl',
+		'Jakub Vrana',
+	),
+	'MySQL' => array(
+		'David Grudl',
+		'Jakub Vrana',
+	),
+	'JavaScript' => array(
+		'Jakub Vrana',
+	),
+), $tagsAuthors);
+
+
+
 $counts1 = $counts2 = array();
 foreach($connection->table('author')->order('id') as $author) {
 	$counts1[] = $author->related('book.author_id')->count('id');
