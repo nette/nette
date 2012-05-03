@@ -23,11 +23,12 @@ CREATE TABLE tag (
 	id int NOT NULL AUTO_INCREMENT,
 	name varchar(20) NOT NULL,
 	PRIMARY KEY (id)
-) AUTO_INCREMENT=24;
+) AUTO_INCREMENT=25;
 
 INSERT INTO tag (id, name) VALUES (21, 'PHP');
 INSERT INTO tag (id, name) VALUES (22, 'MySQL');
 INSERT INTO tag (id, name) VALUES (23, 'JavaScript');
+INSERT INTO tag (id, name) VALUES (24, 'Neon');
 
 DROP TABLE IF EXISTS book;
 CREATE TABLE book (
@@ -62,5 +63,19 @@ INSERT INTO book_tag (book_id, tag_id) VALUES (4, 21);
 INSERT INTO book_tag (book_id, tag_id) VALUES (1, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (4, 22);
 INSERT INTO book_tag (book_id, tag_id) VALUES (2, 23);
+
+DROP TABLE IF EXISTS book_tag_alt;
+CREATE TABLE book_tag_alt (
+	book_id int NOT NULL,
+	tag_id int NOT NULL,
+	PRIMARY KEY (book_id, tag_id),
+	CONSTRAINT book_tag_alt_tag FOREIGN KEY (tag_id) REFERENCES tag (id),
+	CONSTRAINT book_tag_alt_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
+);
+
+INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 21);
+INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 22);
+INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 23);
+INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 24);
 
 SET FOREIGN_KEY_CHECKS = 1;
