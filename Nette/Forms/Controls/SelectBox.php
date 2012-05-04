@@ -245,7 +245,7 @@ class SelectBox extends BaseControl
 					$key2 = $this->useKeys ? $key2 : $value2;
 					$value2 = $this->translate((string) $value2);
 					$dest->add((string) $option->value($key2)
-						->selected(isset($selected[$key2]))
+						->selected(isset($selected[$key2]) ? 'selected' : NULL)
 						->setText($value2));
 				}
 			}
