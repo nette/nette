@@ -166,6 +166,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	protected function reloadForeignKeys($table)
 	{
 		foreach ($this->connection->getSupplementalDriver()->getForeignKeys($table) as $row) {
+			if(isset($row['local']['0'])) $row['local'] = $row['local']['0'];
 			$this->structure['belongsTo'][$table][$row['local']] = $row['table'];
 			$this->structure['hasMany'][$row['table']][$table] = $row['local'];
 		}
