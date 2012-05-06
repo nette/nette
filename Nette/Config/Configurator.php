@@ -307,6 +307,10 @@ class Configurator extends Nette\Object
 	 */
 	public static function detectDebugMode($list = NULL)
 	{
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			return FALSE;
+		}
+
 		$list = is_string($list) ? preg_split('#[,\s]+#', $list) : $list;
 		$list[] = '127.0.0.1';
 		$list[] = '::1';
