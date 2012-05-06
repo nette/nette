@@ -171,7 +171,7 @@ $application->router[] = new Application\Routers\SimpleRouter();
 
 $request = new Application\Request('Test', Http\Request::GET, array());
 
-$presenter = new TestPresenter;
+$presenter = new TestPresenter($container->getByType('Nette\Application\UI\PresenterDependencies'));
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $presenter->setContext($container);
 $presenter->autoCanonicalize = FALSE;
