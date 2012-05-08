@@ -18,4 +18,10 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
+	
+<?php if ($_label = $_form["remember"]->getLabel()) echo $_label->addAttributes(array())->startTag() ?>
+    	<?php echo $_form["remember"]->getControl()->addAttributes(array()) ?>
+
+	<?php echo Nette\Templating\Helpers::escapeHtml($_form["remember"]->getLabel()->getText(), ENT_NOQUOTES)?>
+</label>
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;

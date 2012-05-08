@@ -40,7 +40,7 @@ class FormMacros extends MacroSet
 		$me->addMacro('form',
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
-		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
+		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
 		$me->addMacro('input', 'echo $_form[%node.word]->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = $_form[%node.word]', '$_form = array_pop($_formStack)');
 	}
@@ -64,6 +64,15 @@ class FormMacros extends MacroSet
 		}
 	}
 
+
+	public function macroLabelEnd(MacroNode $node, PhpWriter $writer)
+	{
+		$cmd = '';
+		if (substr($node->args, -1) !== '/') {
+			$cmd .= 'echo %escape($_form[%node.word]->getLabel()->getText())';
+		}
+		return $writer->write($cmd . '?></label><?php');
+	}
 
 
 	/**

@@ -24,6 +24,7 @@ require __DIR__ . '/Template.inc';
 $form = new Form;
 $form->addText('username', 'Username:');
 $form->addPassword('password', 'Password:');
+$form->addCheckbox('remember', 'Remember me on this computer');
 $form->addSubmit('send', 'Sign in');
 
 $template = new FileTemplate(__DIR__ . '/templates/forms.latte');
