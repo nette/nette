@@ -156,6 +156,15 @@ class FileUpload extends Nette\Object
 	}
 
 
+	/**
+	 * Returns the file extension.
+	 * @return string
+	 */
+	public function getExtension()
+	{
+		return substr(strrchr($this->name, '.'), 1) ?: '';
+	}
+
 
 	/**
 	 * Move uploaded file to new location.
