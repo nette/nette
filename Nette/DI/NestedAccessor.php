@@ -44,6 +44,28 @@ class NestedAccessor extends Nette\Object
 
 
 	/**
+	 * @param string service name
+	 * @return object
+	 */
+	public function getService($name)
+	{
+		return $this->container->getService($this->namespace . $name);
+	}
+
+
+
+	/**
+	 * @param string service name
+	 * @return bool
+	 */
+	public function hasService($name)
+	{
+		return $this->container->hasService($this->namespace . $name);
+	}
+
+
+
+	/**
 	 * @return object
 	 */
 	public function __call($name, $args)
@@ -64,7 +86,7 @@ class NestedAccessor extends Nette\Object
 	 */
 	public function &__get($name)
 	{
-		$service = $this->container->getService($this->namespace . $name);
+		$service = $this->getService($name);
 		return $service;
 	}
 
@@ -85,7 +107,7 @@ class NestedAccessor extends Nette\Object
 	 */
 	public function __isset($name)
 	{
-		return $this->container->hasService($this->namespace . $name);
+		return $this->hasService($name);
 	}
 
 
