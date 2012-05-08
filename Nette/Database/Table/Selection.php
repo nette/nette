@@ -228,7 +228,35 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 				$parameters = func_get_args();
 				array_shift($parameters);
 			}
-			$this->parameters = array_merge($this->parameters, $parameters);
+			foreach ($parameters as $key => &$parameter) {
+				if (is_array($parameter)) {
+					if (!empty($parameter)) {
+						$this->parameters[] = $parameter;
+					} else {
+						$this->parameters[] = NULL;
+					}
+			    
+				} elseif ($parameter instanceof NTableSelection) {
+					$clone = clone $parameter;
+					if (!$clone->select) {
+						$clone->select = array($this->getPrimary($clone->name));
+					}
+					if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+						$this->parameters[] = $clone;  // I'm not sure what this does in the matching code below
+					} else {
+						if (count($clone)) {
+    							foreach ($clone as $row) {
+    								$this->parameters[] = array_values(iterator_to_array($row));
+    							}
+						} else {
+  							$this->parameters[] = NULL;
+						}
+					}
+			    
+				} else {
+    					$this->parameters[] = $parameter;
+				}
+			}
 
 		} elseif ($parameters === NULL) { // where('column', NULL)
 			$condition .= ' IS NULL';
