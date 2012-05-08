@@ -259,12 +259,13 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$ul = $this->getWrapper('error container');
 			$li = $this->getWrapper('error item');
 
+			$translator = $this->form->getTranslator();
 			foreach ($errors as $error) {
 				$item = clone $li;
 				if ($error instanceof Html) {
 					$item->add($error);
 				} else {
-					$item->setText($error);
+					$item->setText($translator !== NULL ? $translator->translate($error) : $error);
 				}
 				$ul->add($item);
 			}
