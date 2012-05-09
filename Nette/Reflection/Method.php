@@ -80,7 +80,7 @@ class Method extends \ReflectionMethod
 
 	public function __toString()
 	{
-		return 'Method ' . parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
+		return parent::getDeclaringClass()->getName() . '::' . $this->getName() . '()';
 	}
 
 

@@ -65,7 +65,7 @@ class GlobalFunction extends \ReflectionFunction
 
 	public function __toString()
 	{
-		return 'Function ' . $this->getName() . '()';
+		return $this->getName() . '()';
 	}
 
 
