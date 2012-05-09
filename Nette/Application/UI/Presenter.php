@@ -1359,7 +1359,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
-	final public function setContext(Nette\DI\Container $context)
+	final public function injectPrimary(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 		if ($this->invalidLinkMode === NULL) {
