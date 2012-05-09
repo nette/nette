@@ -27,7 +27,7 @@ class PresenterFactory implements IPresenterFactory
 
 	/** @var string[] of module => mask */
 	public $mapping = array(
-		NULL => '\*Module\*Presenter',
+		'*' => '\*Module\*Presenter',
 		'Nette' => 'NetteModule\*\*Presenter',
 	);
 
@@ -139,7 +139,7 @@ class PresenterFactory implements IPresenterFactory
 		$parts = explode(':', $presenter);
 		$mapping = explode('\\*', isset($parts[1], $this->mapping[$parts[0]])
 			? $this->mapping[array_shift($parts)]
-			: $this->mapping[NULL]);
+			: $this->mapping['*']);
 		$class = $mapping[0];
 		while ($part = array_shift($parts)) {
 			$class .= ($class ? '\\' : '') . $part . $mapping[$parts ? 1 : 2];
@@ -161,7 +161,7 @@ class PresenterFactory implements IPresenterFactory
 			$mapping = explode('\\\\\*', preg_quote($mapping, '#'));
 			$mapping[0] .= $mapping[0] ? '\\\\' : '';
 			if (preg_match("#^\\\\?$mapping[0]((?:\w+$mapping[1]\\\\)*)(\w+)$mapping[2]$#i", $class, $matches)) {
-				return ($module ? $module . ':' : '')
+				return ($module === '*' ? '' : $module . ':')
 					. str_replace($mapping[1] . '\\', ':', $matches[1]) . $matches[2];
 			}
 		}
