@@ -78,7 +78,7 @@ abstract class Object
 	 */
 	public function __call($name, $args)
 	{
-		return ObjectMixin::call($this, $name, $args);
+		return ObjectMixin::callProperty($this, $name, $args);
 	}
 
 

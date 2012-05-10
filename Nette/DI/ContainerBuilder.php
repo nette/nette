@@ -440,8 +440,6 @@ class ContainerBuilder extends Nette\Object
 
 				foreach ($rc->getProperties() as $rp) {
 					if ($rp->hasAnnotation('inject')) {
-						if (!$rp->isPublic()) throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
-
 						// what is supposed to be injected
 						$annot = $rp->getAnnotation('inject');
 						if ($annot === TRUE) {
@@ -455,7 +453,16 @@ class ContainerBuilder extends Nette\Object
 						elseif ($annot instanceof \ArrayObject) throw new ServiceCreationException("Can have only one value!");
 						else throw new ServiceCreationException("Unknown parameters of annotation");
 
-						$setup = new Statement(array("@$name", '$' . $rp->name), array($value));
+						if ($rp->isPublic()) {
+							$setup = new Statement(array("@$name", '$' . $rp->name), array($value));
+
+						} elseif($rp->isProtected() && $rc->isSubclassOf('Nette\Object')) {
+							$setup = new Statement(array("@$name", 'inject' . ucfirst($rp->name)), array($value));
+
+						} else { // $rp->isPrivate()
+							throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
+						}
+
 						$setup = Helpers::expand($setup, $parameters, TRUE);
 						$code .= $this->formatStatement($setup, $name) . ";\n";
 					}
