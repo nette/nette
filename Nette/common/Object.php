@@ -70,6 +70,18 @@ abstract class Object
 
 
 	/**
+	 * Protect method from repeated invocation.
+	 * @param  string  method name
+	 * @throws MemberAccessException
+	 */
+	protected function freezeMethod()
+	{
+		ObjectMixin::freezeMethod($this);
+	}
+
+
+
+	/**
 	 * Call to undefined method.
 	 * @param  string  method name
 	 * @param  array   arguments

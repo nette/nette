@@ -25,6 +25,9 @@ final class ObjectMixin
 	/** @var array */
 	private static $methods;
 
+	/** @var array */
+	private static $frozenMethods = array();
+
 
 
 	/**
@@ -239,6 +242,28 @@ final class ObjectMixin
 
 		$name[0] = $name[0] & "\xDF";
 		return isset(self::$methods[$class]['get' . $name]) || isset(self::$methods[$class]['is' . $name]);
+	}
+
+
+
+	/**
+	 * Ensures, that the desired method will be called only once.
+	 * @param object  instance that should be protected
+	 */
+	public static function freezeMethod($object)
+	{
+		$frozen =& self::$frozenMethods[spl_object_hash($object)];
+		foreach (debug_backtrace() as $call) {
+			if (isset($call['object']) && $call['object'] === $object && $call['class'] !== 'Nette\Object') {
+				if (!empty($frozen[$call['function']])) {
+					$method = $call['class'] . '->' . $call['function'] . '()';
+					throw new MemberAccessException("Method $method can be called only once.");
+				}
+
+				$frozen[$call['function']] = TRUE;
+				return;
+			}
+		}
 	}
 
 }
