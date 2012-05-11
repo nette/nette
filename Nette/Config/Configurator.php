@@ -185,9 +185,9 @@ class Configurator extends Nette\Object
 			$cacheKey = array($this->parameters, $this->files);
 			$cached = $cache->load($cacheKey);
 			if (!$cached) {
-				$code = $this->buildContainer($dependencies);
+				$code = $this->buildContainer($dependencies, $sourceDependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->parameters['debugMode'] ? $dependencies : NULL,
+					Cache::FILES => $this->parameters['debugMode'] ? $dependencies : $sourceDependencies,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -212,7 +212,7 @@ class Configurator extends Nette\Object
 	 * Build system container class.
 	 * @return string
 	 */
-	protected function buildContainer(& $dependencies = NULL)
+	protected function buildContainer(& $dependencies = NULL, & $sourceDependencies = NULL)
 	{
 		$loader = $this->createLoader();
 		$config = array();
@@ -239,7 +239,7 @@ class Configurator extends Nette\Object
 			$this->parameters['container']['class'],
 			$config['parameters']['container']['parent']
 		);
-		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainerBuilder()->getDependencies());
+		$dependencies = array_merge($sourceDependencies = $loader->getDependencies(), $compiler->getContainerBuilder()->getDependencies());
 		return $code;
 	}
 
