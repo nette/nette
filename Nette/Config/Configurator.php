@@ -187,7 +187,7 @@ class Configurator extends Nette\Object
 			if (!$cached) {
 				$code = $this->buildContainer($dependencies);
 				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $this->parameters['productionMode'] ? NULL : $dependencies,
+					Cache::FILES => $dependencies,
 				));
 				$cached = $cache->load($cacheKey);
 			}
@@ -239,7 +239,7 @@ class Configurator extends Nette\Object
 			$this->parameters['container']['class'],
 			$config['parameters']['container']['parent']
 		);
-		$dependencies = array_merge($loader->getDependencies(), $compiler->getContainerBuilder()->getDependencies());
+		$dependencies = array_merge($loader->getDependencies(), $this->isDebugMode() ? $compiler->getContainerBuilder()->getDependencies() : array());
 		return $code;
 	}
 
