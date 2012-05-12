@@ -1,0 +1,34 @@
+# full reflection of DB
+database:
+	author:
+		primary: id
+		hasMany:
+			book: [ book, author_id ]
+
+	book:
+		primary: id
+		hasMany:
+			book_tag: [ book, book_id ]
+
+		belongsTo:
+			author: [ author, author_id ]
+			translator: [ author, translator_id ]
+
+	tag:
+		primary: id
+		hasMany:
+			book_tag: [ book_tag, tag_id ]
+
+	book_tag:
+		primary: NULL
+		belongsTo:
+			tag: [ tag, tag_id ]
+			book: [ book, book_id ]
+
+
+# just small part, to be chained
+simple:
+	book:
+		belongsTo:
+			author2: [ author, author_id ]
+			translator: [ author, translator_id ]
