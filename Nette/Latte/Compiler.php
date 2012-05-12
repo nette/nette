@@ -131,6 +131,9 @@ class Compiler extends Nette\Object
 
 				} elseif ($token->type === Token::HTML_ATTRIBUTE) {
 					$this->processHtmlAttribute($token);
+
+				} elseif ($token->type === Token::COMMENT) {
+					$this->processComment($token);
 				}
 			}
 		} catch (CompileException $e) {
@@ -331,6 +334,16 @@ class Compiler extends Nette\Object
 				}
 				$this->setContext($token->value, $context);
 			}
+		}
+	}
+
+
+
+	private function processComment(Token $token)
+	{
+		$isLeftmost = trim(substr($this->output, strrpos("\n$this->output", "\n"))) === '';
+		if (!$isLeftmost) {
+			$this->output .= substr($token->text, strlen(rtrim($token->text, "\n")));
 		}
 	}
 
