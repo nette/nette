@@ -63,7 +63,8 @@ class PresenterFactory implements IPresenterFactory
 		$presenter = $this->container->createInstance($this->getPresenterClass($name));
 		foreach (array_reverse(get_class_methods($presenter)) as $method) {
 			if (substr($method, 0, 6) === 'inject') {
-				$this->container->callMethod(array($presenter, $method));
+				$args = ($method === 'injectPrimary') ? array(7 => $this->container->parameters['debugMode']) : array();
+				$this->container->callMethod(array($presenter, $method), $args);
 			}
 		}
 		return $presenter;

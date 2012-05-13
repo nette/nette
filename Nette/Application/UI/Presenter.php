@@ -15,7 +15,8 @@ use Nette,
 	Nette\Application,
 	Nette\Application\Responses,
 	Nette\Http,
-	Nette\Reflection;
+	Nette\Reflection,
+	Nette\Security;
 
 
 
@@ -110,6 +111,24 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/** @var Nette\DI\Container */
 	private $context;
+
+	/** @var Nette\Application\Application */
+	private $application;
+
+	/** @var Nette\Http\Context */
+	private $httpContext;
+
+	/** @var Nette\Http\IRequest */
+	private $httpRequest;
+
+	/** @var Nette\Http\IResponse */
+	private $httpResponse;
+
+	/** @var Nette\Http\Session */
+	private $session;
+
+	/** @var Nette\Security\User */
+	private $user;
 
 
 
@@ -1359,11 +1378,33 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
-	final public function injectPrimary(Nette\DI\Container $context)
+	/**
+	 *
+	 * @param Nette\DI\Container $context
+	 * @param Nette\Application\Application $application
+	 * @param Nette\Http\Context $httpContext
+	 * @param Nette\Http\IRequest $httpRequest
+	 * @param Nette\Http\IResponse $httpResponse
+	 * @param Nette\Http\Session $session
+	 * @param Nette\Security\User $user
+	 * @param bool $debugMode
+	 */
+	final public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Security\User $user, $debugMode)
 	{
+		if ($this->application !== NULL) {
+			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
+		}
+
 		$this->context = $context;
+		$this->application = $application;
+		$this->httpContext = $httpContext;
+		$this->httpRequest = $httpRequest;
+		$this->httpResponse = $httpResponse;
+		$this->session = $session;
+		$this->user = $user;
+
 		if ($this->invalidLinkMode === NULL) {
-			$this->invalidLinkMode = empty($context->parameters['debugMode']) ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
+			$this->invalidLinkMode = $debugMode ? self::INVALID_LINK_WARNING : self::INVALID_LINK_SILENT;
 		}
 	}
 
@@ -1391,21 +1432,21 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Request
+	 * @return Nette\Http\IRequest
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->context->getByType('Nette\Http\IRequest');
+		return $this->httpRequest;
 	}
 
 
 
 	/**
-	 * @return Nette\Http\Response
+	 * @return Nette\Http\IResponse
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->context->getByType('Nette\Http\IResponse');
+		return $this->httpResponse;
 	}
 
 
@@ -1415,7 +1456,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpContext()
 	{
-		return $this->context->getByType('Nette\Http\Context');
+		return $this->httpContext;
 	}
 
 
@@ -1425,7 +1466,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getApplication()
 	{
-		return $this->context->getByType('Nette\Application\Application');
+		return $this->application;
 	}
 
 
@@ -1435,7 +1476,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getByType('Nette\Http\Session');
+		$handler = $this->session;
 		return $namespace === NULL ? $handler : $handler->getSection($namespace);
 	}
 
@@ -1446,7 +1487,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getUser()
 	{
-		return $this->context->getByType('Nette\Security\User');
+		return $this->user;
 	}
 
 }
