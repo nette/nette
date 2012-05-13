@@ -173,6 +173,6 @@ $request = new Application\Request('Test', Http\Request::GET, array());
 
 $presenter = new TestPresenter;
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
-$presenter->setContext($container);
+$presenter->injectPrimary($container);
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);
