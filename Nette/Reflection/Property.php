@@ -21,7 +21,7 @@ use Nette,
  *
  * @author     David Grudl
  * @property-read ClassType $declaringClass
- * @property-read array $annotations
+ * @property-read IAnnotation[][] $annotations
  * @property-read string $description
  * @property-read string $name
  * @property  mixed $value
@@ -39,7 +39,7 @@ class Property extends \ReflectionProperty
 
 	public function __toString()
 	{
-		return 'Property ' . parent::getDeclaringClass()->getName() . '::$' . $this->getName();
+		return parent::getDeclaringClass()->getName() . '::$' . $this->getName();
 	}
 
 
@@ -90,7 +90,7 @@ class Property extends \ReflectionProperty
 
 	/**
 	 * Returns all annotations.
-	 * @return array
+	 * @return IAnnotation[][]
 	 */
 	public function getAnnotations()
 	{

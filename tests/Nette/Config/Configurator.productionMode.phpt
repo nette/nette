@@ -33,3 +33,7 @@ Assert::true( $configurator->isDebugMode() );
 
 $configurator->setDebugMode(array(php_uname('n')));
 Assert::true( $configurator->isDebugMode() );
+
+$_SERVER['HTTP_X_FORWARDED_FOR'] = '127.0.0.1';
+Assert::false( $configurator::detectDebugMode() );
+Assert::true( $configurator::detectDebugMode(php_uname('n')) );
