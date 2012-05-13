@@ -70,7 +70,7 @@ class ClassType extends \ReflectionClass
 
 	public function __toString()
 	{
-		return 'Class ' . $this->getName();
+		return $this->getName();
 	}
 
 

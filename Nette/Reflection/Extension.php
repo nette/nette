@@ -26,7 +26,7 @@ class Extension extends \ReflectionExtension
 
 	public function __toString()
 	{
-		return 'Extension ' . $this->getName();
+		return $this->getName();
 	}
 
 
