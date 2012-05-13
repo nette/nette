@@ -506,21 +506,33 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$layout = $this->layout ? $this->layout : 'layout';
 		$dir = dirname($this->getReflection()->getFileName());
 		$dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-		$list = array(
-			"$dir/templates/$presenter/@$layout.latte",
-			"$dir/templates/$presenter.@$layout.latte",
-			"$dir/templates/$presenter/@$layout.phtml",
-			"$dir/templates/$presenter.@$layout.phtml",
-		);
-		do {
-			$list[] = "$dir/templates/@$layout.latte";
-			$list[] = "$dir/templates/@$layout.phtml";
-			$dir = dirname($dir);
-		} while ($dir && ($name = substr($name, 0, strrpos($name, ':'))));
+		$list = $this->createLayoutTemplateFileNames($name, $dir, $presenter, $layout);
 		return $list;
 	}
 
-
+	/**
+	 * Create posibilities for layout file names
+	 * @param string
+	 * @param string base tempalate directory
+	 * @param string presenter name
+	 * @param string layout file name
+	 * @return array
+	 */
+	protected function createLayoutTemplateFileNames($componentName, $directory, $presenterName, $layoutName)
+	{
+		$list = array(
+			"$directory/templates/$presenterName/@$layoutName.latte",
+			"$directory/templates/$presenterName.@$layoutName.latte",
+			"$directory/templates/$presenterName/@$layoutName.phtml",
+			"$directory/templates/$presenterName.@$layoutName.phtml",
+		);
+		do {
+			$list[] = "$directory/templates/@$layoutName.latte";
+			$list[] = "$directory/templates/@$layoutName.phtml";
+			$directory = dirname($directory);
+		} while ($directory && ($componentName = substr($componentName, 0, strrpos($componentName, ':'))));
+		return $list;
+	}
 
 	/**
 	 * Formats view template file names.
@@ -532,15 +544,26 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$presenter = substr($name, strrpos(':' . $name, ':'));
 		$dir = dirname($this->getReflection()->getFileName());
 		$dir = is_dir("$dir/templates") ? $dir : dirname($dir);
-		return array(
-			"$dir/templates/$presenter/$this->view.latte",
-			"$dir/templates/$presenter.$this->view.latte",
-			"$dir/templates/$presenter/$this->view.phtml",
-			"$dir/templates/$presenter.$this->view.phtml",
-		);
+		return $this->createTemplateFilesNames($dir, $presenter, $this->view);
 	}
 
-
+	/**
+	 * Create posibilities for template file names
+	 * @param string base tempalate directory
+	 * @param string presenter name
+	 * @param string view name
+	 * @return array
+	 */
+	protected function createTemplateFilesNames($directory, $presenterName, $viewName)
+	{
+		$list = array(
+			"$directory/templates/$presenterName/$viewName.latte",
+			"$directory/templates/$presenterName.$viewName.latte",
+			"$directory/templates/$presenterName/$viewName.phtml",
+			"$directory/templates/$presenterName.$viewName.phtml",
+		);
+		return $list;
+	}
 
 	/**
 	 * Formats action method name.
