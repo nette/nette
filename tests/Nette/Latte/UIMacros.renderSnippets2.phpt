@@ -72,10 +72,9 @@ class TestPresenter extends Nette\Application\UI\Presenter
 	}
 }
 
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
-$control = new TestPresenter(new Nette\DI\Container(array(
-	'productionMode' => true,
-)));
+$control = new TestPresenter($container->getByType('Nette\Application\UI\PresenterDependencies'));
 $control->snippetMode = true;
 
 

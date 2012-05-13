@@ -27,7 +27,7 @@ class TestPresenter extends Application\UI\Presenter
 
 
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
-$presenter = new TestPresenter;
+$presenter = new TestPresenter($container->getByType('Nette\Application\UI\PresenterDependencies'));
 $presenter->setContext($container);
 
 

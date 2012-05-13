@@ -111,10 +111,14 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var Nette\DI\Container */
 	private $context;
 
+	/** @var Nette\Application\UI\PresenterDependencies */
+	private $presenterDependencies;
 
 
-	public function __construct()
+
+	public function __construct(PresenterDependencies $presenterDependencies)
 	{
+		$this->presenterDependencies = $presenterDependencies;
 	}
 
 
@@ -1391,21 +1395,21 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @return Nette\Http\Request
+	 * @return Nette\Http\IRequest
 	 */
 	protected function getHttpRequest()
 	{
-		return $this->context->getByType('Nette\Http\IRequest');
+		return $this->presenterDependencies->getHttpRequest();
 	}
 
 
 
 	/**
-	 * @return Nette\Http\Response
+	 * @return Nette\Http\IResponse
 	 */
 	protected function getHttpResponse()
 	{
-		return $this->context->getByType('Nette\Http\IResponse');
+		return $this->presenterDependencies->getHttpResponse();
 	}
 
 
@@ -1415,7 +1419,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	protected function getHttpContext()
 	{
-		return $this->context->getByType('Nette\Http\Context');
+		return $this->presenterDependencies->getHttpContext();
 	}
 
 
@@ -1425,7 +1429,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getApplication()
 	{
-		return $this->context->getByType('Nette\Application\Application');
+		return $this->presenterDependencies->getApplication();
 	}
 
 
@@ -1435,7 +1439,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getSession($namespace = NULL)
 	{
-		$handler = $this->context->getByType('Nette\Http\Session');
+		$handler = $this->presenterDependencies->getSession();
 		return $namespace === NULL ? $handler : $handler->getSection($namespace);
 	}
 
@@ -1446,7 +1450,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function getUser()
 	{
-		return $this->context->getByType('Nette\Security\User');
+		return $this->presenterDependencies->getUser();
 	}
 
 }

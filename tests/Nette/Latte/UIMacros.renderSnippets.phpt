@@ -57,10 +57,9 @@ class MultiControl extends Nette\Application\UI\Presenter
 	}
 }
 
+$container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
-$control = new MultiControl(new Nette\DI\Container(array(
-	'productionMode' => true,
-)));
+$control = new MultiControl($container->getByType('Nette\Application\UI\PresenterDependencies'));
 $control['multi-1'];
 $control->snippetMode = true;
 $control->render();
