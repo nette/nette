@@ -43,6 +43,9 @@ class Connection extends PDO
 	/** @var Nette\Caching\Cache */
 	private $cache;
 
+	/** @var IRowFactory */
+	private $rowFactory;
+
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
@@ -115,6 +118,23 @@ class Connection extends PDO
 	public function getCache()
 	{
 		return $this->cache;
+	}
+
+
+
+	public function setRowFactory(IRowFactory $rowFactory)
+	{
+		$this->rowFactory = $rowFactory;
+	}
+
+
+
+	/**
+	 * @return IRowFactory
+	 */
+	public function getRowFactory()
+	{
+		return $this->rowFactory;
 	}
 
 
