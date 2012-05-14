@@ -1387,9 +1387,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 * @param Nette\Http\IResponse $httpResponse
 	 * @param Nette\Http\Session $session
 	 * @param Nette\Security\User $user
-	 * @param bool $debugMode
 	 */
-	final public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Security\User $user, $debugMode)
+	final public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Security\User $user)
 	{
 		if ($this->application !== NULL) {
 			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
@@ -1402,10 +1401,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->httpResponse = $httpResponse;
 		$this->session = $session;
 		$this->user = $user;
-
-		if ($this->invalidLinkMode === NULL) {
-			$this->invalidLinkMode = $debugMode ? self::INVALID_LINK_WARNING : self::INVALID_LINK_SILENT;
-		}
 	}
 
 
