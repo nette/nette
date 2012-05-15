@@ -23,6 +23,9 @@ use Nette,
  * @author     Jakub Vrana
  * @author     Jan Skrasek
  *
+ * @property-read Nette\Database\Connection $connection
+ * @property-read string $name
+ * @property-read string $primary
  * @property-read string $sql
  */
 class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
