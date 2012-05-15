@@ -72,6 +72,12 @@
 
 	<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}" data-nette-empty-value=""><option value="" selected="selected">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
 </tr>
+
+<tr>
+	<th><label for="frm-countrySetItems">Country:</label></th>
+
+	<td><select name="countrySetItems" id="frm-countrySetItems" data-nette-empty-value=""><option value="" selected="selected">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
+</tr>
 </table>
 </div>
 </fieldset>
