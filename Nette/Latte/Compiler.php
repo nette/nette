@@ -116,37 +116,12 @@ class Compiler extends Nette\Object
 
 		try {
 			foreach ($tokens as $this->position => $token) {
-				if ($token->type === Token::TEXT) {
-					if (($this->context[0] === self::CONTEXT_SINGLE_QUOTED || $this->context[0] === self::CONTEXT_DOUBLE_QUOTED)
-						&& $token->text === $this->context[0])
-					{
-						$this->setContext(self::CONTEXT_UNQUOTED);
-					}
-					$this->output .= $token->text;
-
-				} elseif ($token->type === Token::MACRO_TAG) {
-					$isRightmost = !isset($tokens[$this->position + 1])
-						|| substr($tokens[$this->position + 1]->text, 0, 1) === "\n";
-					$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost);
-
-				} elseif ($token->type === Token::HTML_TAG_BEGIN) {
-					$this->processHtmlTagBegin($token);
-
-				} elseif ($token->type === Token::HTML_TAG_END) {
-					$this->processHtmlTagEnd($token);
-
-				} elseif ($token->type === Token::HTML_ATTRIBUTE) {
-					$this->processHtmlAttribute($token);
-
-				} elseif ($token->type === Token::COMMENT) {
-					$this->processComment($token);
-				}
+				$this->{"process$token->type"}($token);
 			}
 		} catch (CompileException $e) {
 			$e->sourceLine = $token->line;
 			throw $e;
 		}
-
 
 		while ($this->htmlNode) {
 			if (!empty($this->htmlNode->macroAttrs)) {
@@ -252,6 +227,27 @@ class Compiler extends Nette\Object
 	public function expandTokens($s)
 	{
 		return strtr($s, $this->attrCodes);
+	}
+
+
+
+	private function processText(Token $token)
+	{
+		if (($this->context[0] === self::CONTEXT_SINGLE_QUOTED || $this->context[0] === self::CONTEXT_DOUBLE_QUOTED)
+			&& $token->text === $this->context[0])
+		{
+			$this->setContext(self::CONTEXT_UNQUOTED);
+		}
+		$this->output .= $token->text;
+	}
+
+
+
+	private function processMacroTag(Token $token)
+	{
+		$isRightmost = !isset($this->tokens[$this->position + 1])
+			|| substr($this->tokens[$this->position + 1]->text, 0, 1) === "\n";
+		$this->writeMacro($token->name, $token->value, $token->modifiers, $isRightmost);
 	}
 
 
