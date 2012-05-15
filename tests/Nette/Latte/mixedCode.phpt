@@ -6,7 +6,6 @@
  * @author     Jan Dolecek, David Grudl
  * @package    Nette\Latte
  * @subpackage UnitTests
- * @keepTrailingSpaces
  */
 
 use Nette\Latte,
@@ -26,6 +25,18 @@ try {
 	'<?php
 	 // php block
 	?>
+	{notDefined line 4}
+	')->compile();
+} catch(\Nette\Latte\CompileException $e) {
+	Assert::same(4, $e->sourceLine);
+	Assert::same("Unknown macro {notDefined}", $e->getMessage());
+}
+
+try {
+	$template->setSource(
+	'{*
+	*}
+	<?xml ?>
 	{notDefined line 4}
 	')->compile();
 } catch(\Nette\Latte\CompileException $e) {
