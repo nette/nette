@@ -12,6 +12,7 @@
 namespace Nette\DI;
 
 use Nette;
+use Nette\Utils\Strings;
 
 
 
@@ -23,6 +24,9 @@ use Nette;
 class Container extends Nette\FreezableObject
 {
 	const TAGS = 'tags';
+
+	/** @var bool Whether to inject into private/protected properties annotated by @inject */
+	public static $allowNonPublicInjection = FALSE;
 
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
@@ -285,6 +289,95 @@ class Container extends Nette\FreezableObject
 
 
 
+	/**
+	 * Perform injections to an object created elsewhere
+	 * @param object
+	 * @return void
+	 */
+	public function inject($object) {
+		$className = get_class($object);
+		foreach (array_reverse(array_merge(array($className), class_parents($className))) as $className) {
+			$rc = new \Nette\Reflection\ClassType($className);
+			foreach ($rc->getMethods() as $rm) {
+				if ($rm->hasAnnotation('inject')) {
+					if (!$rm->isPublic()) throw new ServiceCreationException("Injection method $rc->name::$rm->name is not public");
+
+					$annot = $rm->getAnnotation('inject');
+					if ($annot === TRUE) $args = array();
+					elseif (is_string($annot)) $args = array($annot);
+					elseif ($annot instanceof \ArrayObject) $args = iterator_to_array($annot);
+					else throw new ServiceCreationException("Unknown parameters of annotation");
+
+					$callback = callback($object, $rm->name);
+					$callback->invokeArgs(Helpers::autowireArguments($rm, $args, $this));
+				}
+			}
+
+			foreach ($rc->getProperties() as $rp) {
+				if ($rp->hasAnnotation('inject')) {
+					if (!self::$allowNonPublicInjection && !$rp->isPublic()) {
+						throw new ServiceCreationException("Injection property $rc->name::$rp->name is not public");
+					}
+
+					// what is supposed to be injected
+					$annot = $rp->getAnnotation('inject');
+					if ($annot === TRUE) {
+						if ($annot = $rp->getAnnotation('var')) {
+							$value = "@$annot";
+						} else {
+							throw new ServiceCreationException("Type of parameter $rc->name::\$$rp->name is not known");
+						}
+					}
+					elseif (is_string($annot)) $value = $annot;
+					elseif ($annot instanceof \ArrayObject) throw new ServiceCreationException("Cam have only one value!");
+					else throw new ServiceCreationException("Unknown parameters of annotation");
+
+					$value = Helpers::expand($value, $this->parameters, TRUE);
+					if ($service = $this->getServiceByBuilder($value)) $value = $service;
+
+					if ($rp->isPublic()) {
+						$object->{$rp->name} = $value;
+
+					} else {
+						$this->injectProperty($object, $rc->name, $rp->name, $value);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Converts @service or @\Class -> service name and checks its existence.
+	 * @param  mixed
+	 * @return string  of FALSE, if argument is not service name
+	 */
+	public function getServiceByBuilder($arg, $self = NULL)
+	{
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].+$#', $arg)) {
+			return FALSE;
+		}
+		$service = substr($arg, 1);
+		if ($service === 'self') {
+			$service = $self;
+		}
+		if (Strings::contains($service, '\\')) {
+			if ($this->classes === FALSE) { // may be disabled by prepareClassList
+				return $service;
+			}
+			$res = $this->getByType($service);
+			if (!$res) {
+				throw new ServiceCreationException("Reference to missing service of type $service.");
+			}
+			return $res;
+		}
+		if (!$this->hasService($service)) {
+			throw new ServiceCreationException("Reference to missing service '$service'.");
+		}
+		return $this->getService($service);
+	}
+
+
+
 	/********************* shortcuts ****************d*g**/
 
 
@@ -368,4 +461,18 @@ class Container extends Nette\FreezableObject
 		return ($isService ? 'createService' : 'create') . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
+
+	/**
+	 * Inject property which is not publicly accessible
+	 * @param object Target service
+	 * @param string
+	 * @param string
+	 * @param mixed Value to be injected
+	 */
+	public function injectProperty($object, $className, $propertyName, $value)
+	{
+		$rp = new \Nette\Reflection\Property($className, $propertyName);
+		$rp->setAccessible(TRUE);
+		$rp->setValue($object, $value);
+	}
 }

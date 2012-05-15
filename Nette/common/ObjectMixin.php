@@ -97,6 +97,10 @@ final class ObjectMixin
 				$_this->$prop = $args[0];
 				return $_this;
 
+			} elseif ($op === 'inj' && property_exists($_this, $prop)) {
+				self::injectProperty($_this, $prop, $args[0]);
+				return $_this;
+
 			} elseif ($op === 'get' && property_exists($_this, $prop)) {
 				return $_this->$prop;
 			}
@@ -239,6 +243,27 @@ final class ObjectMixin
 
 		$name[0] = $name[0] & "\xDF";
 		return isset(self::$methods[$class]['get' . $name]) || isset(self::$methods[$class]['is' . $name]);
+	}
+
+
+
+	/**
+	 * Inject property which is not publicly accessible
+	 * @param $_this Target service
+	 * @param string
+	 * @param mixed Value to be injected
+	 */
+	public static function injectProperty($_this, $propertyName, $value)
+	{
+		$rp = new \Nette\Reflection\Property(get_class($_this), $propertyName);
+		$rp->setAccessible(TRUE);
+
+		$old = $rp->getValue($_this);
+		if ($old !== NULL) {
+			throw new MemberAccessException("Already injected, not meant to be injected twice");
+		}
+
+		$rp->setValue($_this, $value);
 	}
 
 }
