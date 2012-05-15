@@ -38,6 +38,7 @@ Assert::equal(array(
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
 	'born' => new \DateTime('2011-11-11'),
+	'company_id' => NULL,
 ), $catelynStark->toArray());
 
 

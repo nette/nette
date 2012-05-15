@@ -79,6 +79,17 @@ Assert::same( array(
 		'autoincrement' => FALSE,
 		'primary' => FALSE,
 	),
+	array(
+		'name' => 'company_id',
+		'table' => 'author',
+		'nativetype' => 'INT',
+		'size' => 11,
+		'unsigned' => FALSE,
+		'nullable' => TRUE,
+		'default' => NULL,
+		'autoincrement' => FALSE,
+		'primary' => FALSE,
+	),
 ), $columns );
 
 
