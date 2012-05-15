@@ -33,7 +33,7 @@ class SelectBox extends BaseControl
 	/** @var array */
 	protected $allowed = array();
 
-	/** @var bool */
+	/** @var mixed */
 	private $prompt = FALSE;
 
 	/** @var bool */
@@ -104,14 +104,10 @@ class SelectBox extends BaseControl
 	 */
 	public function setPrompt($prompt)
 	{
-		if (is_bool($prompt)) {
-			$this->prompt = $prompt;
-		} else {
-			$this->prompt = TRUE;
-			if ($prompt !== NULL) {
-				$this->items = array('' => $prompt) + $this->items;
-				$this->allowed = array('' => '') + $this->allowed;
-			}
+		$this->prompt = $prompt;
+		if ($prompt !== NULL && !is_bool($prompt)) {
+			$this->items = array('' => $prompt) + $this->items;
+			$this->allowed = array('' => '') + $this->allowed;
 		}
 		return $this;
 	}
@@ -156,8 +152,11 @@ class SelectBox extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $this->prompt === TRUE ? array('' => $this->items['']) + $items : $items;
-		$this->allowed = $this->prompt === TRUE ? array('' => '') : array();
+		$this->items = $items;
+		if ($this->prompt) {
+			$this->items = array('' => is_bool($this->prompt) ? $this->items[''] : $this->prompt) + $this->items;
+		}
+		$this->allowed = $this->prompt ? array('' => '') : array();
 		$this->useKeys = (bool) $useKeys;
 
 		foreach ($items as $key => $value) {
