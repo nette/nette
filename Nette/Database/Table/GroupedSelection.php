@@ -239,4 +239,17 @@ class GroupedSelection extends Selection
 		return array_unique(call_user_func_array('array_merge', array_map('array_keys', array_filter($referencing, 'is_array'))));
 	}
 
+
+
+	protected function getAllFetchedRows() {
+		$hash = md5($this->getSql() . json_encode($this->parameters));
+		$referencing = & $this->referencing[$hash];
+		if ($referencing === NULL) {
+			// i believe this should never happen
+		}
+
+		// remove non-arrays, merge, unique
+		return array_unique(call_user_func_array('array_merge', array_filter($referencing, 'is_array')));
+	}
+
 }

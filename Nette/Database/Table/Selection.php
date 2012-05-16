@@ -708,7 +708,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$referenced = & $this->referenced["$table.$column"];
 		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
-			foreach ($this->rows as $row) {
+			foreach ($this->getAllFetchedRows() as $row) {
 				if ($row[$column] === NULL)
 					continue;
 
@@ -757,6 +757,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @internal */
 	protected function getAllFetchedKeys() {
 		return array_keys((array) $this->rows);
+	}
+
+
+
+	/** @internal */
+	protected function getAllFetchedRows() {
+		return $this->rows;
 	}
 
 
