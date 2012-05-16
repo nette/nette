@@ -12,10 +12,11 @@ CREATE TABLE company (
   name varchar(30) NOT NULL,
   web varchar(100) NOT NULL,
   PRIMARY KEY(id)
-) AUTO_INCREMENT=43;
+) AUTO_INCREMENT=44;
 
 INSERT INTO company (id, name, web) VALUES (41, 'Nette Foundation', 'http://nette.org');
 INSERT INTO company (id, name, web) VALUES (42, 'Facebook', 'http://facebook.com');
+INSERT INTO company (id, name, web) VALUES (43, 'juznasoft', 'http://juzna.cz');
 
 DROP TABLE IF EXISTS author;
 CREATE TABLE author (
@@ -26,10 +27,11 @@ CREATE TABLE author (
 	company_id int DEFAULT NULL,
 	PRIMARY KEY(id),
 	CONSTRAINT author_company FOREIGN KEY (company_id) REFERENCES company (id)
-) AUTO_INCREMENT=13;
+) AUTO_INCREMENT=14;
 
 INSERT INTO author (id, name, web, born, company_id) VALUES (11, 'Jakub Vrana', 'http://www.vrana.cz/', NULL, 41);
 INSERT INTO author (id, name, web, born, company_id) VALUES (12, 'David Grudl', 'http://davidgrudl.com/', NULL, 42);
+INSERT INTO author (id, name, web, born, company_id) VALUES (13, 'Jan Dolecek', 'http://juzna.cz/', NULL, 43);
 
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
