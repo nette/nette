@@ -48,8 +48,8 @@ foreach($connection->table('author')->order('id') as $author) {
 	$counts2[] = $author->related('book.author_id')->where('translator_id', NULL)->count('id');
 }
 
-Assert::same(array(2, 2), $counts1);
-Assert::same(array(1, 0), $counts2);
+Assert::same(array(2, 2, 0), $counts1);
+Assert::same(array(1, 0, 0), $counts2);
 
 
 
@@ -61,3 +61,42 @@ Assert::false($books->fetch());
 Assert::same('1001 tipu a triku pro PHP', $author->related('book')->fetch()->title);
 
 Assert::same('JUSH', $author->related('book', NULL, TRUE)->where('translator_id', NULL)->fetch()->title);
+
+
+
+// related() applied twice
+$log = array();
+foreach ($connection->table('company') as $company) {
+	$log[] = "Company $company->id";
+	foreach($company->related('author') as $author) {
+		$log[] = "Author $author->id";
+		foreach($author->related('book') as $book) {
+			$log[] = "Book $book->id";
+		}
+	}
+}
+
+Assert::same( array(
+	"Company 41",
+	"Author 11",
+	"Book 1",
+	"Book 2",
+	"Company 42",
+	"Author 12",
+	"Book 3",
+	"Book 4",
+	"Company 43",
+	"Author 13",
+), $log );
+
+
+
+// related() on selection where first row has no related items
+$log = array();
+foreach ($connection->table('author')->order('id DESC') as $author) {
+	foreach($author->related('book') as $book) {
+		$log[] = $book->author->id;
+	}
+}
+Assert::same( array(12, 12, 11, 11), $log );
+

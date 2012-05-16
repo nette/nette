@@ -23,6 +23,9 @@ use Nette,
  * @author     Jakub Vrana
  * @author     Jan Skrasek
  *
+ * @property-read Nette\Database\Connection $connection
+ * @property-read string $name
+ * @property-read string $primary
  * @property-read string $sql
  */
 class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
@@ -705,7 +708,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$referenced = & $this->referenced["$table.$column"];
 		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
-			foreach ($this->rows as $row) {
+			foreach ($this->getAllFetchedRows() as $row) {
 				if ($row[$column] === NULL)
 					continue;
 
@@ -746,9 +749,22 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$referencing = new GroupedSelection($table, $this, $column);
 		}
 
-		return $referencing->setActive($active)->where("$table.$column", array_keys((array) $this->rows));
+		return $referencing->setActive($active)->where("$table.$column", $this->getAllFetchedKeys());
 	}
 
+
+
+	/** @internal */
+	protected function getAllFetchedKeys() {
+		return array_keys((array) $this->rows);
+	}
+
+
+
+	/** @internal */
+	protected function getAllFetchedRows() {
+		return $this->rows;
+	}
 
 
 	/********************* interface Iterator ****************d*g**/
