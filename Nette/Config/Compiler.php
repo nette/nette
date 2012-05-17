@@ -138,16 +138,6 @@ class Compiler extends Nette\Object
 				$this->parseServices($this->container, $this->config[$name], $name);
 			}
 		}
-
-		foreach ($this->container->getDefinitions() as $name => $def) {
-			$factory = $name . 'Factory';
-			if (!$def->shared && !$def->internal && !$this->container->hasDefinition($factory)) {
-				$this->container->addDefinition($factory)
-					->setClass('Nette\Callback', array('@container', Nette\DI\Container::getMethodName($name, FALSE)))
-					->setAutowired(FALSE)
-					->tags = $def->tags;
-			}
-		}
 	}
 
 
@@ -259,7 +249,7 @@ class Compiler extends Nette\Object
 
 		$known = $shared
 			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'tags', 'internal', 'parameters');
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'internal', 'parameters');
 
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
