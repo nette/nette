@@ -221,7 +221,7 @@ class Compiler extends Nette\Object
 				$definition = $container->addDefinition($name);
 				if ($parent !== Helpers::OVERWRITE) {
 					foreach ($container->getDefinition($parent) as $k => $v) {
-						$definition->$k = $v;
+						$definition->$k = unserialize(serialize($v)); // deep clone
 					}
 				}
 			} elseif ($container->hasDefinition($name)) {
