@@ -83,25 +83,6 @@ final class Helpers
 
 
 	/**
-	 * Expand counterpart.
-	 * @param  mixed
-	 * @return mixed
-	 */
-	public static function escape($value)
-	{
-		if (is_array($value)) {
-			array_walk_recursive($value, function(&$val) {
-				$val = is_string($val) ? str_replace('%', '%%', $val) : $val;
-			});
-		} elseif (is_string($value)) {
-			$value = str_replace('%', '%%', $value);
-		}
-		return $value;
-	}
-
-
-
-	/**
 	 * Generates list of arguments using autowiring.
 	 * @param  Nette\Reflection\GlobalFunction|Nette\Reflection\Method
 	 * @return array
