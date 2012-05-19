@@ -86,6 +86,10 @@ $form->addSelect('country', 'Country:', $countries)
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
 		->addRule(Form::FILLED, 'Select your country');
 
+$form->addSelect('countrySetItems', 'Country:')
+	->setPrompt('Select your country')
+	->setItems($countries);
+
 
 // group Your account
 $form->addGroup('Your account');
