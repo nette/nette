@@ -109,7 +109,7 @@ class GroupedSelection extends Selection
 		if ($aggregation === NULL) {
 			$aggregation = array();
 
-			$selection = new Selection($this->name, $this->connection);
+			$selection = $this->connection->table($this->name);
 			$selection->where = $this->where;
 			$selection->parameters = $this->parameters;
 			$selection->conditions = $this->conditions;
