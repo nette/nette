@@ -640,10 +640,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId())) {
 			$data[$this->primary] = $id;
-			return $this->rows[$id] = new ActiveRow($data, $this);
+			return $this->rows[$id] = $this->createRow($data);
 
 		} else {
-			return new ActiveRow($data, $this);
+			return $this->createRow($data);
 
 		}
 	}
