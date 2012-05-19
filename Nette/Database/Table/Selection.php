@@ -337,7 +337,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
-		$selection = new Selection($this->name, $this->connection);
+		$selection = $this->connection->table($this->name);
 		$selection->where = $this->where;
 		$selection->parameters = $this->parameters;
 		$selection->conditions = $this->conditions;
@@ -719,7 +719,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			}
 
 			if ($keys) {
-				$referenced = new Selection($table, $this->connection);
+				$referenced = $this->connection->table($table);
 				$referenced->where($table . '.' . $referenced->primary, array_keys($keys));
 			} else {
 				$referenced = array();
