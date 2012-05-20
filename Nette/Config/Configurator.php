@@ -307,6 +307,10 @@ class Configurator extends Nette\Object
 	 */
 	public static function detectDebugMode($list = NULL)
 	{
+		if (PHP_SAPI === 'cli' && in_array('no-debug', $_SERVER['argv'])) {
+			return FALSE;
+		}
+
 		$list = is_string($list) ? preg_split('#[,\s]+#', $list) : (array) $list;
 		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$list[] = '127.0.0.1';
