@@ -307,7 +307,7 @@ class Configurator extends Nette\Object
 	 */
 	public static function detectDebugMode($list = NULL)
 	{
-		if (PHP_SAPI === 'cli' && in_array('no-debug', $_SERVER['argv'])) {
+		if (PHP_SAPI === 'cli' && in_array('--no-debug', $_SERVER['argv'])) {
 			return FALSE;
 		}
 

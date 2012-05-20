@@ -230,7 +230,7 @@ final class Debugger
 		if (is_bool($mode)) {
 			self::$productionMode = $mode;
 
-		} elseif (self::$consoleMode && in_array('no-debug', $_SERVER['argv'])) {
+		} elseif (self::$consoleMode && in_array('--no-debug', $_SERVER['argv'])) {
 			self::$productionMode = TRUE;
 
 		} elseif ($mode !== self::DETECT || self::$productionMode === NULL) { // IP addresses or computer names whitelist detection
