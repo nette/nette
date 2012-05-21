@@ -705,6 +705,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$referenced = & $this->referenced["$table.$column"];
 		if ($referenced === NULL || $checkReferenceNewKeys || $this->checkReferenceNewKeys) {
 			$keys = array();
+			$this->execute();
 			foreach ($this->rows as $row) {
 				if ($row[$column] === NULL)
 					continue;
