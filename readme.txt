@@ -4,10 +4,10 @@ Welcome to Nette Framework
 Nette Framework is a powerful, component-based and event-driven framework
 for creating web applications and services in PHP 5.2 & 5.3. Nette Framework
 is designed with simplicity, speed and flexibility in mind. It allows developers
-to easy built better websites.
+to easily build better websites.
 
 Nette Framework focuses on security and performance and is definitely one of
-the safest and fastest PHP frameworks. Nette Framework support the latest
+the safest and fastest PHP frameworks. Nette Framework supports the latest
 technologies and approaches like AJAX, HTML5, SEO, DRY, KISS, MVC, etc.
 
 
@@ -28,7 +28,7 @@ extract it to a directory accessible by web server. The installation is done!
 The source tree includes the following directories:
 
 - Nette: this directory contains the source code of Nette Framework. This is
-	the only directory that you will need in order to deploy with your application.
+	the only directory that you will need in order to deploy your application.
 
 - Nette-minified: contains Nette Framework source code compressed into single file.
 
