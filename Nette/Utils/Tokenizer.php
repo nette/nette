@@ -295,7 +295,6 @@ class Tokenizer extends Nette\Object
 
 /**
  * The exception that indicates tokenizer error.
- * @internal
  */
 class TokenizerException extends \Exception
 {
