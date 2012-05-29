@@ -11,7 +11,8 @@
 
 namespace Nette\DI;
 
-use Nette;
+use Nette,
+	Nette\Utils\Neon;
 
 
 
@@ -34,6 +35,31 @@ class Statement extends Nette\Object
 	{
 		$this->entity = $entity;
 		$this->arguments = $arguments;
+	}
+
+
+
+	/**
+	 * @internal
+	 * @return string
+	 */
+	public function serialize()
+	{
+		$entity = new Nette\Utils\NeonEntity();
+		$entity->value = $this->entity;
+		$entity->attributes = $this->arguments;
+		return Neon::encode($entity);
+	}
+
+
+
+	/**
+	 * @internal
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->serialize();
 	}
 
 }

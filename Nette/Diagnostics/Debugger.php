@@ -199,6 +199,11 @@ final class Debugger
 						'panel' => BlueScreen::highlightPhp($item['args'][0], $m[1])
 					);
 				}
+			} elseif ($e instanceof Nette\DI\ServiceCreationException && isset($e->serviceDefinition)) {
+				return array(
+					'tab' => 'Service Definition',
+					'panel' => BlueScreen::highlightPhp($e->serviceDefinition->serialize($e->serviceName), 0, 50),
+				);
 			}
 		});
 

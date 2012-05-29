@@ -11,7 +11,9 @@
 
 namespace Nette\DI;
 
-use Nette;
+use Nette,
+	Nette\Utils\Neon,
+	Nette\Utils\Strings;
 
 
 
@@ -129,6 +131,65 @@ class ServiceDefinition extends Nette\Object
 	{
 		$this->internal = (bool) $on;
 		return $this;
+	}
+
+
+
+	/**
+	 * @internal
+	 * @return string
+	 */
+	public function serialize($name)
+	{
+		$lines = array($name . ':');
+		if ($this->factory) {
+			if ($this->factory->entity !== $this->class) {
+				$lines[] = "\tclass: " . $this->class;
+				$lines[] = "\tfactory: " . $this->factory;
+
+			} else {
+				$lines[] = "\tclass: " . $this->factory;
+			}
+
+		} elseif ($this->class) {
+			$lines[] = "\tclass: " . $this->class;
+		}
+		if ($this->parameters) {
+			$lines[] = "\tparameters:";
+			$lines[] = Strings::indent(Neon::encode($this->parameters, Neon::BLOCK), 2);
+		}
+		if ($this->setup) {
+			$lines[] = "\tsetup:";
+			foreach ($this->setup as $call) {
+				$lines[] = "\t\t - " . $call;
+			}
+		}
+		if ($this->tags) {
+			$lines[] = "\ttags:";
+			$lines[] = Strings::indent(Neon::encode($this->tags, Neon::BLOCK), 2);
+		}
+		if ($this->autowired === FALSE) {
+			$lines[] = "\tautowired: false";
+		}
+		if ($this->shared === FALSE) {
+			$lines[] = "\tshared: false";
+		}
+		if ($this->internal === TRUE) {
+			$lines[] = "\tinternal: true";
+		}
+
+		return implode("\n", $lines);
+	}
+
+
+
+	/**
+	 * @internal
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->serialize('service');
 	}
 
 }
