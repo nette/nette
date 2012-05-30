@@ -38,6 +38,25 @@ class ImageButton extends SubmitButton
 
 
 	/**
+	 * Sets coordinates as a value if available
+	 * @param  bool|array
+	 * @return ImageButton  provides a fluent interface
+	 */
+	public function setValue($value)
+	{
+		if (is_array($value) && count($value)) {
+			$this->value = $value;
+			$this->getForm()->setSubmittedBy($this);
+			return $this;
+
+		} else {
+			return parent::setValue($value);
+		}
+	}
+
+
+
+	/**
 	 * Returns HTML name of control.
 	 * @return string
 	 */
