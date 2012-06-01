@@ -236,6 +236,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition($this->prefix('database'))
 				->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix('database')));
 
+		if (isset($config['database']['dsn'])) {
+			$config['database'] = array('default' => $config['database']);
+		}
+
 		$autowired = TRUE;
 		foreach ((array) $config['database'] as $name => $info) {
 			if (!is_array($info)) {
