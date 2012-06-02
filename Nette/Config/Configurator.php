@@ -12,6 +12,7 @@
 namespace Nette\Config;
 
 use Nette,
+	Nette\Addons\Addon,
 	Nette\Caching\Cache;
 
 
@@ -133,6 +134,36 @@ class Configurator extends Nette\Object
 	{
 		Nette\Diagnostics\Debugger::$strictMode = TRUE;
 		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
+	}
+
+
+
+	/**
+	 * @param  Addon[]
+	 */
+	public function registerAddons($addons)
+	{
+		if (!isset($this->parameters['addons'])) {
+			$this->parameters['addons'] = array();
+		}
+
+		foreach ($addons as $name => $addon) {
+			if (!($addon instanceof Addon)) {
+				throw new Nette\InvalidArgumentException("Class '" . get_class($addon) . "' is not a subclass of Nette\Addons\Addon.");
+			}
+
+			if (is_string($name)) {
+				$addon->setName($name);
+			}
+
+			$name = $addon->getName();
+			if (isset($this->parameters['addons'][$name])) {
+				throw new Nette\InvalidStateException("Addon '$name' already registered.");
+			}
+
+			$this->parameters['addons'][$name] = get_class($addon);
+			$this->onCompile[] = callback($addon, 'compile');
+		}
 	}
 
 
