@@ -14,6 +14,7 @@ namespace Nette\Addons;
 use Nette;
 
 
+
 /**
  * Addon manager.
  * 

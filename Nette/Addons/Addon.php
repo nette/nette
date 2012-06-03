@@ -12,11 +12,6 @@
 namespace Nette\Addons;
 
 use Nette;
-use Nette\Application\IResponse;
-use Nette\Application\Request;
-use Nette\Config\Configurator;
-use Nette\Config\Compiler;
-use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 
@@ -32,7 +27,7 @@ abstract class Addon extends Nette\Object
 	/** @var string */
 	protected $name;
 
-	/** @var Container */
+	/** @var \SystemContainer|Nette\DI\Container */
 	protected $container;
 
 
@@ -40,7 +35,7 @@ abstract class Addon extends Nette\Object
 	/**
 	 * @param  Container
 	 */
-	public function setContainer(Container $container)
+	public function setContainer(Nette\DI\Container $container)
 	{
 		$this->container = $container;
 	}
@@ -50,7 +45,7 @@ abstract class Addon extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public function getName()
+	final public function getName()
 	{
 		if ($this->name !== NULL) {
 			return $this->name;
@@ -80,6 +75,17 @@ abstract class Addon extends Nette\Object
 
 
 
+
+	/**
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		return $this->getReflection()->getNamespaceName();
+	}
+
+
+
 	/**
 	 * @return string
 	 */
@@ -91,16 +97,17 @@ abstract class Addon extends Nette\Object
 
 
 	/**
+	 * Builds addon. It is only ever called once when the cache is empty.
 	 * @param  Compiler
 	 */
-	public function compile(Configurator $configurator, Compiler $compiler)
+	public function compile(Nette\Config\Configurator $configurator, Nette\Config\Compiler $compiler, AddonContainer $addonContainer)
 	{
 	}
 
 
 
 	/**
-	 * 
+	 * Occurs before the application loads presenter.
 	 */
 	public function startup()
 	{
@@ -109,24 +116,27 @@ abstract class Addon extends Nette\Object
 
 
 	/**
+	 * Occurs when a new request is ready for dispatch.
 	 * @param  Request
 	 */
-	public function request(Request $request)
+	public function request(Nette\Application\Request $request)
 	{
 	}
 
 
 
 	/**
+	 * Occurs when a new response is received.
 	 * @param  IResponse
 	 */
-	public function response(IResponse $response)
+	public function response(Nette\Application\IResponse $response)
 	{
 	}
 
 
 
 	/**
+	 * Occurs when an unhandled exception occurs in the application.
 	 * @param  \Exception
 	 */
 	public function error(\Exception $e)
@@ -136,6 +146,7 @@ abstract class Addon extends Nette\Object
 
 
 	/**
+	 * Occurs before the application shuts down.
 	 * @param  \Exception|NULL
 	 */
 	public function shutdown(\Exception $e = NULL)

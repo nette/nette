@@ -147,16 +147,14 @@ class Configurator extends Nette\Object
 	 */
 	public function registerAddons($addons)
 	{
-		if ($this->addons === NULL) {
-			$this->addons = new AddonContainer($addons);
-		}
+		$this->addons = new AddonContainer($addons);
 
 		if (!isset($this->parameters['addons'])) {
 			$this->parameters['addons'] = array();
 		}
 
 		foreach ($this->addons->getAddons() as $name => $addon) {
-			$this->parameters['addons'][$addon->getName()] = get_class($addon);
+			$this->parameters['addons'][get_class($addon)] = $addon->getName();
 		}
 		$this->onCompile[] = callback($this->addons, 'compile');
 	}
@@ -231,7 +229,7 @@ class Configurator extends Nette\Object
 		Nette\Environment::setContext($container); // back compatibility
 
 		$this->addons->setContainer($container);
-		$container->addonManager->setAddons($this->addons);
+		$container->nette->addonManager->setAddons($this->addons);
 
 		return $container;
 	}
@@ -303,8 +301,7 @@ class Configurator extends Nette\Object
 		$compiler = new Compiler;
 		$compiler->addExtension('php', new Extensions\PhpExtension)
 			->addExtension('constants', new Extensions\ConstantsExtension)
-			->addExtension('nette', new Extensions\NetteExtension)
-			->addExtension('addons', new Extensions\AddonsExtension);
+			->addExtension('nette', new Extensions\NetteExtension);
 		return $compiler;
 	}
 

@@ -89,6 +89,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$this->setupHttp($container);
 		$this->setupSession($container, $config['session']);
 		$this->setupSecurity($container, $config['security']);
+		$this->setupAddons($container);
 		$this->setupApplication($container, $config['application']);
 		$this->setupRouting($container, $config['routing']);
 		$this->setupMailer($container, $config['mailer']);
@@ -186,6 +187,14 @@ class NetteExtension extends Nette\Config\CompilerExtension
 				$authorizator->addSetup('addResource', array($resource, $parents));
 			}
 		}
+	}
+
+
+
+	public function setupAddons(ContainerBuilder $container)
+	{
+		$container->addDefinition($this->prefix('addonManager'))
+			->setClass('Nette\Addons\AddonManager');
 	}
 
 

@@ -12,12 +12,6 @@
 namespace Nette\Addons;
 
 use Nette;
-use Nette\Application\Application;
-use Nette\Application\Request;
-use Nette\Application\IResponse;
-use Nette\Config\Compiler;
-use Nette\Config\Configurator;
-use Nette\DI\Container;
 
 
 
@@ -109,9 +103,9 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Container
+	 * @param  Nette\DI\Container
 	 */
-	public function setContainer(Container $container)
+	public function setContainer(Nette\DI\Container $container)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->setContainer($container);
@@ -121,22 +115,24 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Configurator
-	 * @param  Compiler
+	 * Builds addons. It is only ever called once when the cache is empty.
+	 * @param  Nette\Config\Configurator
+	 * @param  Nette\Config\Compiler
 	 */
-	public function compile(Configurator $config, Compiler $compiler)
+	public function compile(Nette\Config\Configurator $configurator, Nette\Config\Compiler $compiler)
 	{
 		foreach ($this->addons as $addon) {
-			$addon->compile($config, $compiler);
+			$addon->compile($configurator, $compiler, $this);
 		}
 	}
 
 
 
 	/**
-	 * @param  Application
+	 * Attaches Nette\Application\Application events to addons.
+	 * @param  Nette\Application\Application
 	 */
-	public function attachApplicationEvents(Application $application)
+	public function attachApplicationEvents(Nette\Application\Application $application)
 	{
 		$application->onStartup[] = array($this, 'startup');
 		$application->onRequest[] = array($this, 'request');
@@ -148,9 +144,10 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Application
+	 * Occurs before the application loads presenter.
+	 * @param  Nette\Application\Application
 	 */
-	public function startup(Application $application)
+	public function startup(Nette\Application\Application $application)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->startup();
@@ -160,10 +157,11 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Application
-	 * @param  Request
+	 * Occurs when a new request is ready for dispatch.
+	 * @param  Nette\Application\Application
+	 * @param  Nette\Application\Request
 	 */
-	public function request(Application $application, Request $request)
+	public function request(Nette\Application\Application $application, Nette\Application\Request $request)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->request($request);
@@ -173,10 +171,11 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Application
-	 * @param  IResponse
+	 * Occurs when a new response is received.
+	 * @param  Nette\Application\Application
+	 * @param  Nette\Application\IResponse
 	 */
-	public function response(Application $application, IResponse $response)
+	public function response(Nette\Application\Application $application, Nette\Application\IResponse $response)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->response($response);
@@ -186,10 +185,11 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Application
+	 * Occurs when an unhandled exception occurs in the application.
+	 * @param  Nette\Application\Application
 	 * @param  \Exception
 	 */
-	public function error(Application $application, \Exception $e)
+	public function error(Nette\Application\Application $application, \Exception $e)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->error($e);
@@ -199,10 +199,11 @@ class AddonContainer extends Nette\Object
 
 
 	/**
-	 * @param  Application
+	 * Occurs before the application shuts down.
+	 * @param  Nette\Application\Application
 	 * @param  \Exception|NULL
 	 */
-	public function shutdown(Application $application, \Exception $e = NULL)
+	public function shutdown(Nette\Application\Application $application, \Exception $e = NULL)
 	{
 		foreach ($this->addons as $addon) {
 			$addon->shutdown($e);
