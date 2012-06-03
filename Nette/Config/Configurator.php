@@ -228,6 +228,7 @@ class Configurator extends Nette\Object
 		$container->initialize();
 		Nette\Environment::setContext($container); // back compatibility
 
+		$this->addons = $this->addons ?: new AddonContainer(array());
 		$this->addons->setContainer($container);
 		$container->nette->addonManager->setAddons($this->addons);
 
