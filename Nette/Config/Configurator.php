@@ -230,7 +230,7 @@ class Configurator extends Nette\Object
 
 		$this->addons = $this->addons ?: new AddonContainer(array());
 		$this->addons->setContainer($container);
-		$container->nette->addonManager->setAddons($this->addons);
+		$container->getService('nette.addonManager')->setAddons($this->addons);
 
 		return $container;
 	}
