@@ -33,9 +33,14 @@ class AddonManager
 	/**
 	 * @param  Addon
 	 */
-	public function registerAddon(Addon $addon)
+	public function registerAddon(Addon $addon, $name = NULL)
 	{
-		$name = $addon->getName();
+		if (is_string($name)) {
+			$addon->setName($name);
+		} else {
+			$name = $addon->getName();
+		}
+
 		if (isset($this->addons[$name])) {
 			throw new Nette\InvalidStateException("Addon '$name' already defined.");
 		}
@@ -45,6 +50,7 @@ class AddonManager
 			throw new Nette\InvalidStateException("Addon of type '$class' already defined.");
 		}
 
+		$addon->setAddonManager($this);
 		$this->addons[$name] = $this->classMap[$class] = $addon;
 	}
 

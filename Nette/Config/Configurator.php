@@ -156,16 +156,7 @@ class Configurator extends Nette\Object
 		}
 
 		foreach ($addons as $name => $addon) {
-			if (!($addon instanceof Addon)) {
-				throw new Nette\InvalidArgumentException("Class '" . get_class($addon) . "' is not a subclass of Nette\Addons\Addon.");
-			}
-
-			if (is_string($name)) {
-				$addon->setName($name);
-			}
-			$addon->setAddonManager($this->addonManager);
-
-			$this->addonManager->registerAddon($addon);
+			$this->addonManager->registerAddon($addon, $name);
 			$this->parameters['addons'][$addon->getName()] = get_class($addon);
 			$this->onCompile[] = callback($addon, 'compile');
 		}
