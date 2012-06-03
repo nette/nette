@@ -113,13 +113,13 @@ class Compiler extends Nette\Object
 
 	public function processExtensions()
 	{
+		foreach ($this->extensions as $name => $extension) {
+			$extension->loadConfiguration();
+		}
+
 		if ($extra = array_diff_key($this->config, self::$reserved, $this->extensions)) {
 			$extra = implode("', '", array_keys($extra));
 			throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
-		}
-
-		foreach ($this->extensions as $name => $extension) {
-			$extension->loadConfiguration();
 		}
 	}
 
