@@ -22,36 +22,17 @@ use Nette;
 class AddonManager
 {
 
-	/** @var Addon[] */
-	private $addons = array();
-
-	/** @var Addon[] */
-	private $classMap = array();
+	/** @var AddonContainer */
+	private $addons;
 
 
 
 	/**
-	 * @param  Addon
+	 * @param  AddonContainer
 	 */
-	public function registerAddon(Addon $addon, $name = NULL)
+	public function setAddons(AddonContainer $addons)
 	{
-		if (is_string($name)) {
-			$addon->setName($name);
-		} else {
-			$name = $addon->getName();
-		}
-
-		if (isset($this->addons[$name])) {
-			throw new Nette\InvalidStateException("Addon '$name' already defined.");
-		}
-
-		$class = get_class($addon);
-		if (isset($this->classMap[$class])) {
-			throw new Nette\InvalidStateException("Addon of type '$class' already defined.");
-		}
-
-		$addon->setAddonManager($this);
-		$this->addons[$name] = $this->classMap[$class] = $addon;
+		$this->addons = $addons;
 	}
 
 
@@ -62,11 +43,7 @@ class AddonManager
 	 */
 	public function getAddon($name)
 	{
-		if (!isset($this->addons[$name])) {
-			throw new Nette\InvalidStateException("Addon '$name' not found.");
-		}
-
-		return $this->addons[$name];
+		return $this->addons->getAddon($name);
 	}
 
 
@@ -76,7 +53,7 @@ class AddonManager
 	 */
 	public function getAddons()
 	{
-		$this->addons;
+		return $this->addons->getAddons();
 	}
 
 
@@ -86,11 +63,7 @@ class AddonManager
 	 */
 	public function getAddonByType($class)
 	{
-		if (!isset($this->classMap[$class])) {
-			throw new Nette\InvalidStateException("Addon of type '$class' not found.");
-		}
-
-		return $this->classMap[$class];
+		return $this->addons->getAddonByType($class);
 	}
 
 }

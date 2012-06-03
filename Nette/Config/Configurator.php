@@ -13,7 +13,7 @@ namespace Nette\Config;
 
 use Nette,
 	Nette\Addons\Addon,
-	Nette\Addons\AddonManager,
+	Nette\Addons\AddonContainer,
 	Nette\Caching\Cache;
 
 
@@ -43,8 +43,8 @@ class Configurator extends Nette\Object
 	/** @var array */
 	protected $files = array();
 
-	/** @var AddonManager */
-	protected $addonManager;
+	/** @var AddonContainer */
+	protected $addons;
 
 
 
@@ -147,19 +147,18 @@ class Configurator extends Nette\Object
 	 */
 	public function registerAddons($addons)
 	{
-		if ($this->addonManager === NULL) {
-			$this->addonManager = new AddonManager;
+		if ($this->addons === NULL) {
+			$this->addons = new AddonContainer($addons);
 		}
 
 		if (!isset($this->parameters['addons'])) {
 			$this->parameters['addons'] = array();
 		}
 
-		foreach ($addons as $name => $addon) {
-			$this->addonManager->registerAddon($addon, $name);
+		foreach ($this->addons->getAddons() as $name => $addon) {
 			$this->parameters['addons'][$addon->getName()] = get_class($addon);
-			$this->onCompile[] = callback($addon, 'compile');
 		}
+		$this->onCompile[] = callback($this->addons, 'compile');
 	}
 
 
@@ -228,8 +227,8 @@ class Configurator extends Nette\Object
 		}
 
 		$container = new $this->parameters['container']['class'];
-		$container->addonManager = $this->addonManager;
 		$container->initialize();
+		$container->addonManager->setAddons($this->addons);
 		Nette\Environment::setContext($container); // back compatibility
 		return $container;
 	}
