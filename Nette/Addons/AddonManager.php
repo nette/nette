@@ -66,4 +66,14 @@ class AddonManager
 		return $this->addons->getAddonByType($class);
 	}
 
+
+
+	/**
+	 * @return AddonContainer
+	 */
+	public function getContainer()
+	{
+		return $this->addons;
+	}
+
 }

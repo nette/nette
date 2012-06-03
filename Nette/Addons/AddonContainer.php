@@ -95,6 +95,7 @@ class AddonContainer extends Nette\Object
 
 	/**
 	 * @param  string
+	 * @return Addon
 	 */
 	public function getAddonByType($class)
 	{
@@ -108,13 +109,103 @@ class AddonContainer extends Nette\Object
 
 
 	/**
+	 * @param  Container
+	 */
+	public function setContainer(Container $container)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->setContainer($container);
+		}
+	}
+
+
+
+	/**
 	 * @param  Configurator
 	 * @param  Compiler
 	 */
 	public function compile(Configurator $config, Compiler $compiler)
 	{
 		foreach ($this->addons as $addon) {
-			$addon->compile($config, $compiler/*, $this*/);
+			$addon->compile($config, $compiler);
+		}
+	}
+
+
+
+	/**
+	 * @param  Application
+	 */
+	public function attachApplicationEvents(Application $application)
+	{
+		$application->onStartup[] = array($this, 'startup');
+		$application->onRequest[] = array($this, 'request');
+		$application->onResponse[] = array($this, 'response');
+		$application->onError[] = array($this, 'error');
+		$application->onShutdown[] = array($this, 'shutdown');
+	}
+
+
+
+	/**
+	 * @param  Application
+	 */
+	public function startup(Application $application)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->startup();
+		}
+	}
+
+
+
+	/**
+	 * @param  Application
+	 * @param  Request
+	 */
+	public function request(Application $application, Request $request)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->request($request);
+		}
+	}
+
+
+
+	/**
+	 * @param  Application
+	 * @param  IResponse
+	 */
+	public function response(Application $application, IResponse $response)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->response($response);
+		}
+	}
+
+
+
+	/**
+	 * @param  Application
+	 * @param  \Exception
+	 */
+	public function error(Application $application, \Exception $e)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->error($e);
+		}
+	}
+
+
+
+	/**
+	 * @param  Application
+	 * @param  \Exception|NULL
+	 */
+	public function shutdown(Application $application, \Exception $e = NULL)
+	{
+		foreach ($this->addons as $addon) {
+			$addon->shutdown($e);
 		}
 	}
 

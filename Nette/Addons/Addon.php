@@ -12,9 +12,11 @@
 namespace Nette\Addons;
 
 use Nette;
-use Nette\Addons\AddonManager;
+use Nette\Application\IResponse;
+use Nette\Application\Request;
 use Nette\Config\Configurator;
 use Nette\Config\Compiler;
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 
@@ -30,17 +32,17 @@ abstract class Addon extends Nette\Object
 	/** @var string */
 	protected $name;
 
-	/** @var AddonManager */
-	protected $addonManager;
+	/** @var Container */
+	protected $container;
 
 
 
 	/**
-	 * @param  AddonManager
+	 * @param  Container
 	 */
-	public function setAddonManager(AddonManager $addonManager)
+	public function setContainer(Container $container)
 	{
-		$this->addonManager = $addonManager;
+		$this->container = $container;
 	}
 
 
@@ -89,10 +91,54 @@ abstract class Addon extends Nette\Object
 
 
 	/**
-	 * @param  Configurator
 	 * @param  Compiler
 	 */
 	public function compile(Configurator $configurator, Compiler $compiler)
+	{
+	}
+
+
+
+	/**
+	 * 
+	 */
+	public function startup()
+	{
+	}
+
+
+
+	/**
+	 * @param  Request
+	 */
+	public function request(Request $request)
+	{
+	}
+
+
+
+	/**
+	 * @param  IResponse
+	 */
+	public function response(IResponse $response)
+	{
+	}
+
+
+
+	/**
+	 * @param  \Exception
+	 */
+	public function error(\Exception $e)
+	{
+	}
+
+
+
+	/**
+	 * @param  \Exception|NULL
+	 */
+	public function shutdown(\Exception $e = NULL)
 	{
 	}
 

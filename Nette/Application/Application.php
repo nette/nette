@@ -74,12 +74,14 @@ class Application extends Nette\Object
 
 
 
-	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
+	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse, Nette\Addons\AddonManager $addonManager)
 	{
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->presenterFactory = $presenterFactory;
 		$this->router = $router;
+
+		$addonManager->getContainer()->attachApplicationEvents($this);
 	}
 
 
