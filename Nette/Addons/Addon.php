@@ -12,9 +12,9 @@
 namespace Nette\Addons;
 
 use Nette;
+use Nette\Addons\AddonManager;
 use Nette\Config\Configurator;
 use Nette\Config\Compiler;
-use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 
 
@@ -29,6 +29,19 @@ abstract class Addon extends Nette\Object
 
 	/** @var string */
 	protected $name;
+
+	/** @var AddonManager */
+	protected $addonManager;
+
+
+
+	/**
+	 * @param  AddonManager
+	 */
+	public function setAddonManager(AddonManager $addonManager)
+	{
+		$this->addonManager = $addonManager;
+	}
 
 
 
@@ -68,7 +81,7 @@ abstract class Addon extends Nette\Object
 	/**
 	 * @return string
 	 */
-	final public function getPath()
+	public function getPath()
 	{
 		return dirname($this->getReflection()->getFileName());
 	}

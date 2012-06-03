@@ -31,25 +31,6 @@ class AddonsExtension extends Nette\Config\CompilerExtension
 
 		$container->addDefinition('addonManager')
 			->setClass('Nette\Addons\AddonManager');
-
-		foreach ($container->parameters['addons'] as $name => $class) {
-			$container->addDefinition("addons.$name")
-				->setClass($class)
-				->addSetup('setName', $name)
-				->addTag('addon');
-		}
-	}
-
-
-
-	public function beforeCompile()
-	{
-		$container = $this->getContainerBuilder();
-
-		foreach ($container->findByTag('addon') as $name => $attributes) {
-			$container->getDefinition('addonManager')
-				->addSetup('registerAddon', "@$name");
-		}
 	}
 
 }
