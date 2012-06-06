@@ -194,6 +194,16 @@ class SelectBox extends BaseControl
 	}
 
 
+	/**
+	 * Returns selected item.
+	 * @return string
+	 */
+	public function getSelectedEntry()
+	{
+		$selected = $this->getValue();
+		return is_array($selected) ? array_flip($selected) : array($selected => TRUE);
+	}
+
 
 	/**
 	 * Returns selected value.
@@ -223,8 +233,7 @@ class SelectBox extends BaseControl
 			reset($this->items);
 			$control->data('nette-empty-value', $this->useKeys ? key($this->items) : current($this->items));
 		}
-		$selected = $this->getValue();
-		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
+		$selected = $this->getSelectedEntry();
 		$option = Nette\Utils\Html::el('option');
 
 		foreach ($this->items as $key => $value) {
