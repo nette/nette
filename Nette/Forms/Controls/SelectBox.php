@@ -148,6 +148,7 @@ class SelectBox extends BaseControl
 	/**
 	 * Sets items from which to choose.
 	 * @param  array
+	 * @param  bool
 	 * @return SelectBox  provides a fluent interface
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
