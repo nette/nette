@@ -47,31 +47,34 @@ final class ObjectMixin
 	 */
 	public static function call($_this, $name, $args)
 	{
-		$class = new Reflection\ClassType($_this);
+		$class = get_class($_this);
 
 		if ($name === '') {
-			throw new MemberAccessException("Call to class '$class->name' method without name.");
+			throw new MemberAccessException("Call to class '$class' method without name.");
 		}
 
 		// event functionality
-		if ($class->hasEventProperty($name)) {
-			if (is_array($list = $_this->$name) || $list instanceof \Traversable) {
-				foreach ($list as $handler) {
-					callback($handler)->invokeArgs($args);
+		if (preg_match('#^on[A-Z]#', $name) && property_exists($class, $name)) {
+			$rp = new \ReflectionProperty($class, $name);
+			if ($rp->isPublic() && !$rp->isStatic()) {
+				if (is_array($list = $_this->$name) || $list instanceof \Traversable) {
+					foreach ($list as $handler) {
+						callback($handler)->invokeArgs($args);
+					}
+				} elseif ($list !== NULL) {
+					throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($list) ." given.");
 				}
-			} elseif ($list !== NULL) {
-				throw new UnexpectedValueException("Property $class->name::$$name must be array or NULL, " . gettype($list) ." given.");
+				return NULL;
 			}
-			return NULL;
 		}
 
 		// extension methods
-		if ($cb = $class->getExtensionMethod($name)) {
+		if ($cb = Reflection\ClassType::from($_this)->getExtensionMethod($name)) {
 			array_unshift($args, $_this);
 			return $cb->invokeArgs($args);
 		}
 
-		throw new MemberAccessException("Call to undefined method $class->name::$name().");
+		throw new MemberAccessException("Call to undefined method $class::$name().");
 	}
 
 
@@ -137,10 +140,9 @@ final class ObjectMixin
 		}
 
 		if (!isset(self::$methods[$class])) {
-			// get_class_methods returns ONLY PUBLIC methods of objects
-			// but returns static methods too (nothing doing...)
+			// get_class_methods returns only public methods of objects
+			// but returns static methods too
 			// and is much faster than reflection
-			// (works good since 5.0.4)
 			self::$methods[$class] = array_flip(get_class_methods($class));
 		}
 
