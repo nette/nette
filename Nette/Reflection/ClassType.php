@@ -76,20 +76,6 @@ class ClassType extends \ReflectionClass
 
 
 	/**
-	 * @return bool
-	 */
-	public function hasEventProperty($name)
-	{
-		if (preg_match('#^on[A-Z]#', $name) && $this->hasProperty($name)) {
-			$rp = $this->getProperty($name);
-			return $rp->isPublic() && !$rp->isStatic();
-		}
-		return FALSE;
-	}
-
-
-
-	/**
 	 * Adds a method to class.
 	 * @param  string  method name
 	 * @param  mixed   callable
