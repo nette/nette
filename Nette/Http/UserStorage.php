@@ -24,7 +24,10 @@ use Nette,
 class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 {
 	/** @var string */
-	private $namespace = '';
+	private $namespace = 'default';
+
+	/** @var string */
+	private $namespacePrefix = 'Nette.Http.UserStorage';
 
 	/** @var Session */
 	private $sessionHandler;
@@ -132,6 +135,30 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 
 	/**
+	 * Changes namespace; allows more users to share a session.
+	 * @param  string
+	 * @return UserStorage Provides a fluent interface
+	 */
+	public function setNamespacePrefix($namespacePrefix)
+	{
+		$this->namespacePrefix = $namespacePrefix;
+		return $this;
+	}
+
+
+
+	/**
+	 * Returns current namespace prefix.
+	 * @return string
+	 */
+	public function getNamespacePrefix()
+	{
+		return $this->namespacePrefix;
+	}
+
+
+
+	/**
 	 * Enables log out after inactivity.
 	 * @param  string|int|DateTime Number of seconds or timestamp
 	 * @param  int Log out when the browser is closed | Clear the identity from persistent storage?
@@ -185,9 +212,9 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 			return NULL;
 		}
 
-		$this->sessionSection = $section = $this->sessionHandler->getSection('Nette.Http.UserStorage/' . $this->namespace);
+		$this->sessionSection = $section = $this->sessionHandler->getSection($this->namespacePrefix . '/' . $this->namespace);
 
-		if (!$section->identity instanceof IIdentity || !is_bool($section->authenticated)) {
+		if (!is_bool($section->authenticated)) {
 			$section->remove();
 		}
 
