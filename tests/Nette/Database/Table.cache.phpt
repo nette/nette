@@ -56,8 +56,8 @@ $selection->__destruct();
 $books = array();
 foreach ($connection->table('author') as $author) {
 	foreach ($author->related('book.author_id')->order('title') as $book) {
-		if ($book->author_id == 12) { // the first new used column in every loop
-			$books[$book->title] = $book->translator_id; // translator_id is the second new used column in the second loop
+		if ($book->author_id == 12) {
+			$books[$book->title] = $book->translator_id; // translator_id is new used column in the second loop
 		}
 	}
 }
