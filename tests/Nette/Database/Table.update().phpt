@@ -35,6 +35,10 @@ Assert::same('Tyrion Lannister', $book2->author->name);  // SELECT * FROM `autho
 
 
 
+$book2->author_id = $connection->table('author')->get(12);  // SELECT * FROM `author` WHERE (`id` = ?)
+$book2->update();  // UPDATE `book` SET `author_id`=11 WHERE (`id` = '5')
+
+Assert::same('Tyrion Lannister', $book2->author->name);  // NO SQL, SHOULD BE CACHED
 
 $book2->author_id = $connection->table('author')->get(11);  // SELECT * FROM `author` WHERE (`id` = ?)
 $book2->update();  // UPDATE `book` SET `author_id`=11 WHERE (`id` = '5')

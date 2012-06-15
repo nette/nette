@@ -601,9 +601,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$referenced = & $this->referenced["$table.$column"];
 		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
+			$this->execute();
 			$this->checkReferenced = FALSE;
 			$keys = array();
-			$this->execute();
 			foreach ($this->rows as $row) {
 				if ($row[$column] === NULL)
 					continue;
@@ -612,8 +612,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 				$keys[$key] = TRUE;
 			}
 
-			if ($referenced !== NULL && $keys === array_keys($this->rows)) {
-				$this->checkReferenceNewKeys = FALSE;
+			if ($referenced !== NULL && array_keys($keys) === array_keys($referenced->rows)) {
 				return $referenced;
 			}
 
