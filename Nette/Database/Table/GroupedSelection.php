@@ -185,6 +185,9 @@ class GroupedSelection extends Selection
 		if ($this->data === NULL) {
 			$this->data = array();
 		} else {
+			foreach ($this->data as $row) {
+				$row->setTable($this); // injects correct parent GroupedSelection
+			}
 			reset($this->data);
 		}
 	}
