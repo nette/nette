@@ -17,7 +17,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
 
 $connection->table('author')->insert(array(
 	'id' => 13,
-	'name' => 'Edard Stark',
+	'name' => 'Eddard Stark',
 	'web' => 'http://example.com',
 ));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (13, 'Edard Stark', 'http://example.com')
 
@@ -37,7 +37,7 @@ Assert::equal(array(
 	'id' => 14,
 	'name' => 'Catelyn Stark',
 	'web' => 'http://example.com',
-	'born' => new \DateTime('2011-11-11'),
+	'born' => new DateTime('2011-11-11'),
 ), $catelynStark->toArray());
 
 
@@ -52,13 +52,14 @@ $book2 = $book->insert(array(
 	'author_id' => 11,
 ));  // INSERT INTO `book` (`title`, `author_id`) VALUES ('Winterfell', 11)
 
+Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 14))
+
 $book3 = $book->insert(array(
 	'title' => 'Dragonstone',
 	'author_id' => $connection->table('author')->get(13),  // SELECT * FROM `author` WHERE (`id` = ?)
 ));  // INSERT INTO `book` (`title`, `author_id`) VALUES ('Dragonstone', 13)
 
-Assert::same('Jakub Vrana', $book2->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
-Assert::same('Edard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 13))
+Assert::same('Eddard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 14))
 
 
 
