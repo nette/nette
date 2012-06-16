@@ -44,13 +44,13 @@ Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHE
 
 // Testing GroupedSelection reinvalidation caching
 foreach ($connection->table('author') as $author) {
-	$selection = $author->related('book.author_id')->order('title');
+	$stack[] = $selection = $author->related('book.author_id')->order('title');
 	foreach ($selection as $book) {
 		$book->title;
 	}
 }
 
-$selection->__destruct();
+reset($stack)->__destruct();
 
 
 $books = array();

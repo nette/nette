@@ -241,7 +241,7 @@ class Connection extends PDO
 	 */
 	public function table($table)
 	{
-		return new Table\Selection($table, $this);
+		return new Table\Selection($this, $table);
 	}
 
 

@@ -48,8 +48,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var Selection[] */
 	protected $referenced = array();
 
-	/** @var GroupedSelection[] */
+	/** @var array of [sqlQuery-hash => grouped data]; used by GroupedSelection */
 	protected $referencing = array();
+
+	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
+	protected $aggregation = array();
 
 	/** @var array of touched columns */
 	protected $accessed;
@@ -65,8 +68,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-
-	public function __construct($table, Nette\Database\Connection $connection)
+	/**
+	 * Creates filtered table representation.
+	 * @param  Nette\Database\Connection
+	 * @param  string  database table name
+	 */
+	public function __construct(Nette\Database\Connection $connection, $table)
 	{
 		$this->name = $table;
 		$this->connection = $connection;
@@ -437,7 +444,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function createSelectionInstance($table = NULL)
 	{
-		return new Selection($table ?: $this->name, $this->connection);
+		return new Selection($this->connection, $table ?: $this->name);
+	}
+
+
+
+	protected function createGroupedSelectionInstance($table, $column, $active)
+	{
+		return new GroupedSelection($this, $table, $column, $active);
 	}
 
 
@@ -620,18 +634,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 * Returns referencing rows.
 	 * @param  string
 	 * @param  string
-	 * @param  int  primary key
-	 * @param  bool force new instance
+	 * @param  int primary key
 	 * @return GroupedSelection
 	 */
-	public function getReferencingTable($table, $column, $active = NULL, $forceNewInstance = FALSE)
+	public function getReferencingTable($table, $column, $active = NULL)
 	{
-		$referencing = & $this->referencing["$table:$column"];
-		if (!$referencing || $forceNewInstance) {
-			$referencing = new GroupedSelection($table, $this, $column);
-		}
-
-		return $referencing->setActive($active)->where("$table.$column", array_keys((array) $this->rows));
+		$referencing = $this->createGroupedSelectionInstance($table, $column, $active);
+		$referencing->where("$table.$column", array_keys((array) $this->rows));
+		return $referencing;
 	}
 
 

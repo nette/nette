@@ -30,40 +30,24 @@ class GroupedSelection extends Selection
 	/** @var string grouping column name */
 	protected $column;
 
-	/** @var string */
-	protected $delimitedColumn;
-
 	/** @var int primary key */
 	protected $active;
-
-	/** @var array of referencing cached results */
-	protected $referencing;
-
-	/** @var array of [conditions => [key => ActiveRow]] */
-	protected $aggregation = array();
-
-
-
-	public function __construct($name, Selection $refTable, $column)
-	{
-		parent::__construct($name, $refTable->connection);
-		$this->refTable = $refTable;
-		$this->column = $column;
-		$this->delimitedColumn = $this->connection->getSupplementalDriver()->delimite($this->column);
-	}
 
 
 
 	/**
-	 * @internal
-	 * @param  int  $active
-	 * @return GroupedSelection
+	 * Creates filtered and grouped table representation.
+	 * @param  Selection  $refTable
+	 * @param  string  database table name
+	 * @param  string  joining column
+	 * @param  int  primary key of grouped rows
 	 */
-	public function setActive($active)
+	public function __construct(Selection $refTable, $table, $column, $active)
 	{
-		$this->sqlBuilder = new SqlBuilder($this);
+		parent::__construct($refTable->connection, $table);
+		$this->refTable = $refTable;
+		$this->column = $column;
 		$this->active = $active;
-		return $this;
 	}
 
 
@@ -108,7 +92,7 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
-		$aggregation = & $this->aggregation[$function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
+		$aggregation = & $this->refTable->aggregation[$function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
 
 		if ($aggregation === NULL) {
 			$aggregation = array();
