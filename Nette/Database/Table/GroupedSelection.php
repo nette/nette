@@ -40,14 +40,26 @@ class GroupedSelection extends Selection
 	 * @param  Selection  $refTable
 	 * @param  string  database table name
 	 * @param  string  joining column
-	 * @param  int  primary key of grouped rows
 	 */
-	public function __construct(Selection $refTable, $table, $column, $active)
+	public function __construct(Selection $refTable, $table, $column)
 	{
 		parent::__construct($refTable->connection, $table);
 		$this->refTable = $refTable;
 		$this->column = $column;
+	}
+
+
+
+	/**
+	 * Sets active group
+	 * @internal
+	 * @param  int  primary key of grouped rows
+	 * @return GroupedSelection
+	 */
+	public function setActive($active)
+	{
 		$this->active = $active;
+		return $this;
 	}
 
 
