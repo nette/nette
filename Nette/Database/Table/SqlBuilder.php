@@ -72,6 +72,13 @@ class SqlBuilder extends Nette\Object
 
 
 
+	public function injectSelection(Selection $selection)
+	{
+		$this->selection = $selection;
+	}
+
+
+
 	public function getInsertQUery()
 	{
 		return "INSERT INTO {$this->delimitedTable}";

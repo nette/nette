@@ -51,6 +51,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of [sqlQuery-hash => grouped data]; used by GroupedSelection */
 	protected $referencing = array();
 
+	/** @var GroupedSelection[] cached array of GroupedSelection prototypes */
+	protected $referencingPrototype = array();
+
 	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
 	protected $aggregation = array();
 
@@ -86,6 +89,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function __destruct()
 	{
 		$this->saveCacheState();
+	}
+
+
+
+	public function __clone()
+	{
+		$this->sqlBuilder = clone $this->sqlBuilder;
+		$this->sqlBuilder->injectSelection($this);
 	}
 
 
@@ -449,9 +460,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	protected function createGroupedSelectionInstance($table, $column, $active)
+	protected function createGroupedSelectionInstance($table, $column)
 	{
-		return new GroupedSelection($this, $table, $column, $active);
+		return new GroupedSelection($this, $table, $column);
 	}
 
 
@@ -656,9 +667,15 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencingTable($table, $column, $active = NULL)
 	{
-		$referencing = $this->createGroupedSelectionInstance($table, $column, $active);
-		$referencing->where("$table.$column", array_keys((array) $this->rows));
-		return $referencing;
+		$prototype = & $this->getRefTable()->referencingPrototype["$table.$column"];
+		if (!$prototype) {
+			$prototype = $this->createGroupedSelectionInstance($table, $column);
+			$prototype->where("$table.$column", array_keys((array) $this->rows));
+		}
+
+		$clone = clone $prototype;
+		$clone->setActive($active);
+		return $clone;
 	}
 
 
