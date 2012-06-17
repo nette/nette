@@ -92,7 +92,7 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
-		$aggregation = & $this->refTable->aggregation[$function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
+		$aggregation = & $this->getRefTable()->aggregation[$function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
 
 		if ($aggregation === NULL) {
 			$aggregation = array();
@@ -136,8 +136,8 @@ class GroupedSelection extends Selection
 		}
 
 		$hash = md5($this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters()));
-		$referencing = & $this->refTable->referencing[$hash];
 
+		$referencing = & $this->getRefTable()->referencing[$hash];
 		$this->rows = & $referencing['rows'];
 		$this->referenced = & $referencing['refs'];
 		$refData = & $referencing['data'];
@@ -174,6 +174,18 @@ class GroupedSelection extends Selection
 			}
 			reset($this->data);
 		}
+	}
+
+
+
+	protected function getRefTable()
+	{
+		$refObj = $this->refTable;
+		while ($refObj instanceof GroupedSelection) {
+			$refObj = $refObj->refTable;
+		}
+
+		return $refObj;
 	}
 
 
