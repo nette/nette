@@ -479,6 +479,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
+	 * Returns Selection parent for caching
+	 * @return Selection
+	 */
+	protected function getRefTable()
+	{
+		return $this;
+	}
+
+
+
+	/**
 	 * @internal
 	 * @param  string column name
 	 * @param  bool|NULL TRUE - cache, FALSE - don't cache, NULL - remove
@@ -599,7 +610,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
 	{
-		$referenced = & $this->referenced["$table.$column"];
+		$referenced = & $this->getRefTable()->referenced["$table.$column"];
 		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
