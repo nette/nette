@@ -85,7 +85,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	public function __destruct()
 	{
-		$this->emptyResultSet();
+		$this->saveCacheState();
 	}
 
 
@@ -469,11 +469,18 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return;
 		}
 
+		$this->rows = NULL;
+		$this->saveCacheState();
+	}
+
+
+
+	protected function saveCacheState()
+	{
 		$cache = $this->connection->getCache();
 		if ($cache && !$this->sqlBuilder->getSelect()) {
 			$cache->save(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()), $this->accessed);
 		}
-		$this->rows = NULL;
 	}
 
 
