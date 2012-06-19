@@ -104,6 +104,12 @@ class Form extends Container
 	/** @var Nette\Localization\ITranslator */
 	private $translator;
 
+	/** @var Nette\Http\IRequest */
+	private $httpRequest;
+
+	/** @var Nette\Http\Session */
+	private $session;
+
 	/** @var ControlGroup[] */
 	private $groups = array();
 
@@ -628,7 +634,13 @@ class Form extends Container
 	 */
 	protected function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+		if (!isset($this->httpRequest)) {
+			$factory = new Nette\Http\RequestFactory;
+			$factory->setEncoding('UTF-8');
+			$this->httpRequest = $factory->createHttpRequest();
+		}
+
+		return $this->httpRequest;
 	}
 
 
@@ -638,7 +650,12 @@ class Form extends Container
 	 */
 	protected function getSession()
 	{
-		return Nette\Environment::getSession();
+		if (!isset($this->session)) {
+			$request = $this->getHttpRequest();
+			$response = new Nette\Http\Response;
+			$this->session = new Nette\Http\Session($request, $response);
+		}
+		return $this->session;
 	}
 
 }
