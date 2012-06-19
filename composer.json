@@ -14,6 +14,9 @@
 			"homepage": "https://github.com/nette/nette/contributors"
 		}
 	],
+	"autoload": {
+		"files": ["Nette/loader.php"]
+	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.1-dev"
