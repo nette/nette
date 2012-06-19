@@ -64,7 +64,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
+		$template = $this->createTemplateObject($class);
 		$presenter = $this->getPresenter(FALSE);
 		$template->onPrepareFilters[] = callback($this, 'templatePrepareFilters');
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
@@ -93,7 +93,10 @@ abstract class Control extends PresenterComponent implements IRenderable
 		return $template;
 	}
 
-
+	protected function createTemplateObject($class = NULL)
+	{
+		return $class ? new $class : new Nette\Templating\FileTemplate;
+	}
 
 	/**
 	 * Descendant can override this method to customize template compile-time filters.
