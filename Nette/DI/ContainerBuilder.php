@@ -162,7 +162,7 @@ class ContainerBuilder extends Nette\Object
 	{
 		$rc = Nette\Reflection\ClassType::from($class);
 		if (!$rc->hasMethod($method)) {
-			if (!Nette\Utils\Validators::isList($arguments)) {
+			if (!Nette\Utils\Arrays::isList($arguments)) {
 				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
 			}
 			return $arguments;
@@ -467,7 +467,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments), $self);
 
-		} elseif (!Validators::isList($entity) || count($entity) !== 2) {
+		} elseif (!Nette\Utils\Arrays::isList($entity) || count($entity) !== 2) {
 			throw new Nette\InvalidStateException("Expected class, method or property, " . PhpHelpers::dump($entity) . " given.");
 
 		} elseif ($entity[0] === '') { // globalFunc

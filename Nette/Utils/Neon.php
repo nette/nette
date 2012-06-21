@@ -73,7 +73,7 @@ class Neon extends Nette\Object
 		}
 
 		if (is_array($var)) {
-			$isList = Validators::isList($var);
+			$isList = Arrays::isList($var);
 			$s = '';
 			if ($options & self::BLOCK) {
 				if (count($var) === 0){

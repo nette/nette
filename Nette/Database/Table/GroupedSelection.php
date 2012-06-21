@@ -215,7 +215,7 @@ class GroupedSelection extends Selection
 			$data = iterator_to_array($data);
 		}
 
-		if (Nette\Utils\Validators::isList($data)) {
+		if (Nette\Utils\Arrays::isList($data)) {
 			foreach (array_keys($data) as $key) {
 				$data[$key][$this->column] = $this->active;
 			}
