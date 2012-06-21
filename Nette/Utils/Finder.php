@@ -240,7 +240,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 
 		if ($this->exclude) {
 			$filters = $this->exclude;
-			$iterator = new Nette\Iterators\RecursiveFilter($iterator, function($file) use ($filters) {
+			$iterator = new Nette\Iterators\RecursiveFilter($iterator, function($foo, $foo, $file) use ($filters) {
 				if (!$file->isDot() && !$file->isFile()) {
 					foreach ($filters as $filter) {
 						if (!call_user_func($filter, $file)) {
@@ -259,7 +259,7 @@ class Finder extends Nette\Object implements \IteratorAggregate
 
 		if ($this->groups) {
 			$groups = $this->groups;
-			$iterator = new Nette\Iterators\Filter($iterator, function($file) use ($groups) {
+			$iterator = new Nette\Iterators\Filter($iterator, function($foo, $foo, $file) use ($groups) {
 				foreach ($groups as $filters) {
 					foreach ($filters as $filter) {
 						if (!call_user_func($filter, $file)) {
