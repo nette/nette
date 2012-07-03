@@ -1,0 +1,10 @@
+services:
+	usersDao:
+		class: Generic_IDao<User>
+		factory: Dao_Impl(User)
+
+	articlesDao:
+		class: Generic_IDao<Article>
+		factory: Dao_Impl(Article)
+
+	model: FooModel

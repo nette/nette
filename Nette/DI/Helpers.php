@@ -119,7 +119,7 @@ final class Helpers
 				unset($arguments[$parameter->getName()]);
 				$optCount = 0;
 
-			} elseif ($class = $parameter->getClassName()) { // has object type hint
+			} elseif ($class = $parameter->getClassName(TRUE)) { // has object type hint
 				$res[$num] = $container->getByType($class, FALSE);
 				if ($res[$num] === NULL) {
 					if ($parameter->allowsNull()) {

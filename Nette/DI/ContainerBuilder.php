@@ -218,6 +218,12 @@ class ContainerBuilder extends Nette\Object
 			if (!$def->class) {
 				continue;
 			}
+			if ($generic = Strings::match($def->class, '~^([^<>]+)\<([^<>]+)\>$~')) {
+				$def->class = $generic[1];
+				if ($def->factory->entity === $generic[0]) {
+					$def->factory->entity = $generic[1];
+				}
+			}
 			if (!class_exists($def->class) && !interface_exists($def->class)) {
 				throw new Nette\InvalidStateException("Class $def->class has not been found.");
 			}
@@ -226,10 +232,18 @@ class ContainerBuilder extends Nette\Object
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][] = $name;
 				}
+				if ($generic) {
+					foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
+						$this->classes[strtolower($parent . '<' . $generic[2] . '>')][] = $name;
+					}
+				}
 			}
 		}
 
 		foreach ($this->classes as $class => $foo) {
+			if (strpos($class, '<') !== FALSE) {
+				continue;
+			}
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
 		}
 	}
