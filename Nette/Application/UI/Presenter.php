@@ -625,6 +625,19 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
+	/**
+	 * Sends JSON data to the output.
+	 * @param mixed $data
+	 * @return void
+	 * @throws Nette\Application\AbortException
+	 */
+	public function sendJson($data)
+	{
+		$this->sendResponse(new Responses\JsonResponse($data));
+	}
+
+
+
 	/********************* navigation & flow ****************d*g**/
 
 
