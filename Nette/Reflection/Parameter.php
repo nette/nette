@@ -25,6 +25,7 @@ use Nette,
  * @property-read ClassType $declaringClass
  * @property-read Method $declaringFunction
  * @property-read string $name
+ * @property-read string $annotation
  * @property-read bool $passedByReference
  * @property-read bool $array
  * @property-read int $position
@@ -56,15 +57,22 @@ class Parameter extends \ReflectionParameter
 
 
 	/**
+	 * @param  bool should be generic included to class name?
+	 *
 	 * @return string
 	 */
-	public function getClassName()
+	public function getClassName($withGeneric = FALSE)
 	{
+		$generic = NULL;
+		if ($withGeneric === TRUE && $this->hasAnnotation() && $this->getAnnotation()->generic) {
+			$generic = '<' . $this->getAnnotation()->generic . '>';
+		}
+
 		try {
-			return ($ref = parent::getClass()) ? $ref->getName() : NULL;
+			return ($ref = parent::getClass()) ? $ref->getName() . $generic : NULL;
 		} catch (\ReflectionException $e) {
 			if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
-				return $m[1];
+				return $m[1] . $generic;
 			}
 			throw $e;
 		}
@@ -115,6 +123,40 @@ class Parameter extends \ReflectionParameter
 	public function __toString()
 	{
 		return '$' . parent::getName() . ' in ' . $this->getDeclaringFunction();
+	}
+
+
+
+	/********************* Nette\Annotations support ****************d*g**/
+
+
+
+	/**
+	 * Is method annotated?
+	 *
+	 * @return bool
+	 */
+	public function hasAnnotation()
+	{
+		return $this->getAnnotation() !== NULL;
+	}
+
+
+
+	/**
+	 * Returns an annotation value.
+	 *
+	 * @return ParamAnnotation|NULL
+	 */
+	public function getAnnotation()
+	{
+		$res = AnnotationsParser::getAll($this->getDeclaringFunction());
+		if (isset($res['param'][$this->getPosition()])) {
+			$param = $res['param'][$this->getPosition()];
+			return  $param->complete($this);
+		}
+
+		return NULL;
 	}
 
 

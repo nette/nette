@@ -20,9 +20,12 @@ use Nette;
  *
  * @author     David Grudl
  */
-class Annotation extends Nette\Object implements IAnnotation
+class Annotation extends Nette\ArrayHash implements IAnnotation
 {
 
+	/**
+	 * @param array
+	 */
 	public function __construct(array $values)
 	{
 		foreach ($values as $k => $v) {

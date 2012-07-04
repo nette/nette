@@ -226,6 +226,9 @@ final class AnnotationsParser
 			if (class_exists($class)) {
 				$res[$name][] = new $class(is_array($value) ? $value : array('value' => $value));
 
+			} elseif (strtolower($name) === 'param') {
+				$res[$name][] = new ParamAnnotation(array('value' => $value));
+
 			} else {
 				$res[$name][] = is_array($value) ? Nette\ArrayHash::from($value) : $value;
 			}
