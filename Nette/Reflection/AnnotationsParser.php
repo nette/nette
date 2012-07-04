@@ -82,7 +82,10 @@ final class AnnotationsParser
 		}
 
 		if (!self::$useReflection) { // auto-expire cache
-			$file = $r instanceof \ReflectionClass ? $r->getFileName() : $r->getDeclaringClass()->getFileName(); // will be used later
+			$file = ($r instanceof \ReflectionClass || $r instanceof \ReflectionFunction)
+				? $r->getFileName()
+				: $r->getDeclaringClass()->getFileName(); // will be used later
+
 			if ($file && isset(self::$timestamps[$file]) && self::$timestamps[$file] !== filemtime($file)) {
 				unset(self::$cache[$type]);
 			}
@@ -301,6 +304,9 @@ final class AnnotationsParser
 					$name = '';
 					// break intentionally omitted
 				case T_FUNCTION:
+					if ($class === NULL && $name !== NULL && $docComment) {
+						self::$cache[$class][$namespace . $name] = self::parseComment($docComment);
+					}
 					if ($token === '&') {
 						continue 2; // ignore
 					}
