@@ -72,6 +72,10 @@ final class AnnotationsParser
 			$type = $r->getDeclaringClass()->getName();
 			$member = $r->getName();
 
+		} elseif ($r instanceof \ReflectionFunction) {
+			$type = NULL;
+			$member = $r->getName();
+
 		} else {
 			$type = $r->getDeclaringClass()->getName();
 			$member = '$' . $r->getName();
