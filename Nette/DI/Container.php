@@ -104,7 +104,10 @@ class Container extends Nette\FreezableObject
 	public function removeService($name)
 	{
 		$this->updating();
-		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
+		unset($this->registry[$name], $this->factories[$name]);
+		if (!$this->isCompiled($name)) {
+			unset($this->meta[$name]);
+		}
 	}
 
 
@@ -145,7 +148,7 @@ class Container extends Nette\FreezableObject
 				} catch (\Exception $e) {}
 			}
 
-		} elseif (method_exists($this, $factory = Container::getMethodName($name)) && $this->getReflection()->getMethod($factory)->getName() === $factory) {
+		} elseif ($this->isCompiled($name)) {
 			$this->creating[$name] = TRUE;
 			try {
 				$service = $this->$factory();
@@ -194,6 +197,18 @@ class Container extends Nette\FreezableObject
 			throw new MissingServiceException("Service '$name' not found.");
 		}
 		return isset($this->registry[$name]);
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return bool
+	 */
+	protected function isCompiled($name)
+	{
+		return method_exists($this, $factory = Container::getMethodName($name))
+			&& $this->getReflection()->getMethod($factory)->getName() === $factory;
 	}
 
 
