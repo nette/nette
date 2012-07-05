@@ -89,7 +89,7 @@ class Container extends Nette\FreezableObject
 		}
 
 		$this->factories[$name] = array($service);
-		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
+		$this->registry[$name] =& $this->factories[$name][1]; // forces cloning using reference
 		$this->meta[$name] = $meta;
 		return $this;
 	}
