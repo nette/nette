@@ -11,7 +11,8 @@
 
 namespace Nette\DI;
 
-use Nette;
+use Nette,
+	Nette\Utils\Strings;
 
 
 
@@ -45,6 +46,10 @@ final class Helpers
 
 		} elseif (!is_string($var)) {
 			return $var;
+		}
+
+		if (isset($params['genericType']) && preg_match('~^\<(\w)\>$~', $var, $matches)) {
+			return $params[$matches[1]];
 		}
 
 		$parts = preg_split('#%([\w.-]*)%#i', $var, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -155,6 +160,20 @@ final class Helpers
 		}
 
 		return $optCount ? array_slice($res, 0, -$optCount) : $res;
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return bool|string
+	 */
+	public static function isGeneric($type)
+	{
+		if (preg_match('~^(\S+)\<(\S+)\>$~', $type, $matches)) {
+			return array($matches[1], $matches[2]);
+		}
+		return FALSE;
 	}
 
 }

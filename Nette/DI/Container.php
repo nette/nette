@@ -11,7 +11,8 @@
 
 namespace Nette\DI;
 
-use Nette;
+use Nette,
+	Nette\Reflection\ClassType;
 
 
 
@@ -23,6 +24,7 @@ use Nette;
 class Container extends Nette\FreezableObject
 {
 	const TAGS = 'tags';
+	const GENERIC = 'generic';
 
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
@@ -115,10 +117,23 @@ class Container extends Nette\FreezableObject
 	/**
 	 * Gets the service object by name.
 	 * @param  string
+	 * @param  string
 	 * @return object
 	 */
-	public function getService($name)
+	public function getService($serviceName, $genericType = NULL)
 	{
+		if ($genericType !== NULL) {
+			$name = $serviceName . '<' . $genericType . '>';
+
+		} elseif ($generic = Helpers::isGeneric($serviceName)) {
+			$name = $serviceName;
+			$serviceName = $generic[0];
+			$genericType = $generic[1];
+
+		} else {
+			$name = $serviceName;
+		}
+
 		if (isset($this->registry[$name])) {
 			return $this->registry[$name];
 
@@ -127,8 +142,12 @@ class Container extends Nette\FreezableObject
 				. implode(', ', array_keys($this->creating)) . ".");
 		}
 
-		if (isset($this->factories[$name])) {
-			list($factory) = $this->factories[$name];
+		if (isset($this->factories[$serviceName])) {
+			if ($genericType !== NULL) {
+				throw new Nette\InvalidStateException("Unable to create service '$serviceName<$genericType>', only compiled services can be generic.");
+			}
+
+			list($factory) = $this->factories[$serviceName];
 			if (is_string($factory)) {
 				if (!class_exists($factory)) {
 					throw new Nette\InvalidStateException("Cannot instantiate service, class '$factory' not found.");
@@ -139,7 +158,7 @@ class Container extends Nette\FreezableObject
 				} catch (\Exception $e) {}
 
 			} elseif (!$factory->isCallable()) {
-				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
+				throw new Nette\InvalidStateException("Unable to create service '$serviceName', factory '$factory' is not callable.");
 
 			} else {
 				$this->creating[$name] = TRUE;
@@ -148,14 +167,29 @@ class Container extends Nette\FreezableObject
 				} catch (\Exception $e) {}
 			}
 
-		} elseif ($this->isCompiled($name)) {
+		} elseif ($this->isCompiled($serviceName)) {
+			if ($genericType !== NULL) {
+				if (!$this->isGeneric($serviceName)) {
+					throw new Nette\InvalidStateException("Unable to create service '$serviceName<$genericType>', service is not generic.");
+
+				} elseif (!class_exists($genericType)) {
+					throw new Nette\InvalidStateException("Unable to create service '$serviceName<$genericType>', class $genericType not found.");
+				}
+			}
+
 			$this->creating[$name] = TRUE;
+			$factory = Container::getMethodName($serviceName);
+
 			try {
-				$service = $this->$factory();
-			} catch (\Exception $e) {}
+				if ($genericType !== NULL) {
+					$service = $this->$factory(ClassType::from($genericType)->getName());
+				} else {
+					$service = $this->$factory();
+				}
+			} catch (\Exception $e) { }
 
 		} else {
-			throw new MissingServiceException("Service '$name' not found.");
+			throw new MissingServiceException("Service '$serviceName' not found.");
 		}
 
 		unset($this->creating[$name]);
@@ -164,7 +198,7 @@ class Container extends Nette\FreezableObject
 			throw $e;
 
 		} elseif (!is_object($service)) {
-			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
+			throw new Nette\UnexpectedValueException("Unable to create service '$serviceName', value returned by factory '$factory' is not object.");
 		}
 
 		return $this->registry[$name] = $service;
@@ -214,6 +248,19 @@ class Container extends Nette\FreezableObject
 
 
 	/**
+	 * Is the service generic?
+	 * @param  string
+	 * @return bool
+	 */
+	protected function isGeneric($name)
+	{
+		return isset($this->meta[$name][self::GENERIC])
+			&& $this->meta[$name][self::GENERIC];
+	}
+
+
+
+	/**
 	 * Resolves service by type.
 	 * @param  string  class or interface
 	 * @param  bool    throw exception if service doesn't exist?
@@ -224,11 +271,19 @@ class Container extends Nette\FreezableObject
 	{
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
+			if (($generic = Nette\DI\Helpers::isGeneric($lower)) && isset($this->classes[$generic[0]])) {
+				$service = $this->getService($this->classes[$generic[0]], $generic[1]);
+				$this->classes[$lower] = $this->classes[$generic[0]]; // caching
+				return $service;
+			}
+
 			if ($need) {
 				throw new MissingServiceException("Service of type $class not found.");
 			}
+
 		} elseif ($this->classes[$lower] === FALSE) {
 			throw new MissingServiceException("Multiple services of type $class found.");
+
 		} else {
 			return $this->getService($this->classes[$lower]);
 		}
@@ -267,7 +322,7 @@ class Container extends Nette\FreezableObject
 	 */
 	public function createInstance($class, array $args = array())
 	{
-		$rc = Nette\Reflection\ClassType::from($class);
+		$rc = ClassType::from($class);
 		if (!$rc->isInstantiable()) {
 			throw new ServiceCreationException("Class $class is not instantiable.");
 
@@ -395,6 +450,9 @@ class Container extends Nette\FreezableObject
 
 	public static function getMethodName($name, $isService = TRUE)
 	{
+		if ($isService && ($generic = Helpers::isGeneric($name))) {
+			$name = $generic[0];
+		}
 		$uname = ucfirst($name);
 		return ($isService ? 'createService' : 'create') . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}

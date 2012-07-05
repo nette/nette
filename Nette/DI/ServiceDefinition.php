@@ -40,6 +40,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var mixed */
 	public $autowired = TRUE;
 
+	/** @var mixed */
+	public $generic = FALSE;
+
 	/** @var bool */
 	public $shared = TRUE;
 
@@ -114,6 +117,14 @@ class ServiceDefinition extends Nette\Object
 	public function setAutowired($on)
 	{
 		$this->autowired = $on;
+		return $this;
+	}
+
+
+
+	public function setGeneric($on)
+	{
+		$this->generic = $on;
 		return $this;
 	}
 

@@ -124,10 +124,17 @@ class ContainerBuilder extends Nette\Object
 	{
 		$lower = ltrim(strtolower($class), '\\');
 		if (!isset($this->classes[$lower])) {
+			if ($generic = Nette\DI\Helpers::isGeneric($class)) {
+				return $this->getByType($generic[0] . '<T>') . '<' . $generic[1] . '>';
+			}
+
 			return;
 
 		} elseif (count($this->classes[$lower]) === 1) {
 			return $this->classes[$lower][0];
+
+		} elseif ($generic = Nette\DI\Helpers::isGeneric($class)) {
+			return $this->getByType($generic[0] . '<T>') . '<' . $generic[1] . '>';
 
 		} else {
 			throw new ServiceCreationException("Multiple services of type $class found: " . implode(', ', $this->classes[$lower]));
@@ -218,12 +225,6 @@ class ContainerBuilder extends Nette\Object
 			if (!$def->class) {
 				continue;
 			}
-			if ($generic = Strings::match($def->class, '~^([^<>]+)\<([^<>]+)\>$~')) {
-				$def->class = $generic[1];
-				if ($def->factory->entity === $generic[0]) {
-					$def->factory->entity = $generic[1];
-				}
-			}
 			if (!class_exists($def->class) && !interface_exists($def->class)) {
 				throw new Nette\InvalidStateException("Class $def->class has not been found.");
 			}
@@ -232,17 +233,18 @@ class ContainerBuilder extends Nette\Object
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][] = $name;
 				}
-				if ($generic) {
+
+				if ($def->generic) {
 					foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
-						$this->classes[strtolower($parent . '<' . $generic[2] . '>')][] = $name;
+						$this->classes[strtolower($parent . '<T>')][] = $name;
 					}
 				}
 			}
 		}
 
 		foreach ($this->classes as $class => $foo) {
-			if (strpos($class, '<') !== FALSE) {
-				continue;
+			if ($generic = Nette\DI\Helpers::isGeneric($class)) {
+				$class = $generic[0];
 			}
 			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
 		}
@@ -366,6 +368,9 @@ class ContainerBuilder extends Nette\Object
 				foreach ($this->expand($def->tags) as $tag => $value) {
 					$meta->value[$name][Container::TAGS][$tag] = $value;
 				}
+				if ($def->generic) {
+					$meta->value[$name][Container::GENERIC] = TRUE;
+				}
 			}
 		}
 
@@ -376,9 +381,13 @@ class ContainerBuilder extends Nette\Object
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
-				if ($def->shared && !$def->internal && PhpHelpers::isIdentifier($name)) {
+				if ($def->shared && !$def->internal && !$def->generic && PhpHelpers::isIdentifier($name)) {
 					$class->addDocument("@property $type \$$name");
 				}
+				if ($def->shared && $def->generic) {
+					$def->parameters[] = 'genericType';
+				}
+
 				$method = $class->addMethod($methodName)
 					->addDocument("@return $type")
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
@@ -412,6 +421,10 @@ class ContainerBuilder extends Nette\Object
 		foreach ($this->expand($def->parameters) as $k => $v) {
 			$v = explode(' ', is_int($k) ? $v : $k);
 			$parameters[end($v)] = new PhpLiteral('$' . end($v));
+		}
+
+		if ($def->generic) {
+			$parameters[$def->generic] = $parameters['genericType'];
 		}
 
 		$code = '$service = ' . $this->formatStatement(Helpers::expand($def->factory, $parameters, TRUE)) . ";\n";
@@ -455,9 +468,15 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp($entity, $arguments, $self);
 
 		} elseif ($service = $this->getServiceName($entity)) { // factory calling or service retrieving
+			if ($generic = Helpers::isGeneric($service)) {
+				$service = $generic[0];
+			}
 			if ($this->definitions[$service]->shared) {
 				if ($arguments) {
 					throw new ServiceCreationException("Unable to call service '$entity'.");
+				}
+				if ($generic) {
+					return $this->formatPhp('$this->getService(?, ?)', array($service, $generic[1]));
 				}
 				return $this->formatPhp('$this->getService(?)', array($service));
 			}
@@ -583,6 +602,9 @@ class ContainerBuilder extends Nette\Object
 		$service = substr($arg, 1);
 		if ($service === self::CREATED_SERVICE) {
 			$service = $self;
+		}
+		if (($generic = Helpers::isGeneric($service)) && isset($this->definitions[$generic[0]])) {
+			return $service;
 		}
 		if (Strings::contains($service, '\\')) {
 			if ($this->classes === FALSE) { // may be disabled by prepareClassList

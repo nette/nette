@@ -12,7 +12,8 @@
 namespace Nette\Config;
 
 use Nette,
-	Nette\Utils\Validators;
+	Nette\Utils\Validators,
+	Nette\DI\Container;
 
 
 
@@ -258,8 +259,8 @@ class Compiler extends Nette\Object
 		}
 
 		$known = $shared
-			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'tags', 'internal', 'parameters');
+			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', Container::TAGS, Container::GENERIC)
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', Container::TAGS, 'internal', 'parameters');
 
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
@@ -325,6 +326,10 @@ class Compiler extends Nette\Object
 		if (isset($config['inject'])) {
 			Validators::assertField($config, 'inject', 'bool');
 			$definition->setInject($config['inject']);
+		}
+		if (isset($config[Container::GENERIC])) {
+			Validators::assertField($config, Container::GENERIC, 'string:1');
+			$definition->setGeneric($config[Container::GENERIC]);
 		}
 
 		if (isset($config['internal'])) {

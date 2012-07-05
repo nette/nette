@@ -93,6 +93,13 @@ Assert::same( array(
 	'FooModel::__construct(Article)',
 ), TestHelpers::fetchNotes() );
 
+Assert::true( $container->getService('dao', 'User') instanceof Generic_IDao );
+Assert::true( $container->getService('dao', 'Article') instanceof Generic_IDao );
+
+Assert::true($container->getService('dao<User>') instanceof Generic_IDao);
+Assert::true($container->getService('dao<Article>') instanceof Generic_IDao);
 
 Assert::same( 'User', $container->getByType('Generic_IDao<User>')->type );
 Assert::same( 'Article', $container->getByType('Generic_IDao<Article>')->type );
+
+Assert::same( $container->getService('dao', 'User'), $container->getService('dao', 'User') );

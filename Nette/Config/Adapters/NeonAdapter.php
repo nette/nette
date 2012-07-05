@@ -44,6 +44,11 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 	{
 		$res = array();
 		foreach ($arr as $key => $val) {
+			if (preg_match('~^(\S+)\<(\S+)\>$~', $key, $matches) && is_array($val)) {
+				$key = $matches[1];
+				$val[Nette\DI\Container::GENERIC] = $matches[2];
+			}
+
 			if (substr($key, -1) === self::PREVENT_MERGING) {
 				if (!is_array($val) && $val !== NULL) {
 					throw new Nette\InvalidStateException("Replacing operator is available only for arrays, item '$key' is not array.");
