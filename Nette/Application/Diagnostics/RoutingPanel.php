@@ -112,10 +112,20 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			}
 		}
 
+		$defaults = $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array();
+		if (isset($defaults['callback'])) {
+			if (!$defaults['callback'] instanceof \Closure && !$defaults['callback'] instanceof Nette\Callback
+				&& is_object($defaults['callback'])) {
+				$defaults['callback'] = get_class($defaults['callback']);
+			} else {
+				$defaults['callback'] = (string)callback($defaults['callback']);
+			}
+		}
+
 		$this->routers[] = array(
 			'matched' => $matched,
 			'class' => get_class($router),
-			'defaults' => $router instanceof Routers\Route || $router instanceof Routers\SimpleRouter ? $router->getDefaults() : array(),
+			'defaults' => $defaults,
 			'mask' => $router instanceof Routers\Route ? $router->getMask() : NULL,
 			'request' => $request,
 			'module' => rtrim($module, ':')
