@@ -24,7 +24,6 @@ class TextArea extends TextBase
 {
 
 	/**
-	 * @param  string  control name
 	 * @param  string  label
 	 * @param  int  width of the control
 	 * @param  int  height of the control in text lines
