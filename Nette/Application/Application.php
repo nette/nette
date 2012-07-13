@@ -42,10 +42,10 @@ class Application extends Nette\Object
 	/** @var array of function(Application $sender, \Exception $e = NULL); Occurs before the application shuts down */
 	public $onShutdown;
 
-	/** @var array of function(Application $sender, Request $request); Occurs when a new request is ready for dispatch */
+	/** @var array of function(Application $sender, Request $request); Occurs when a new request is received */
 	public $onRequest;
 
-	/** @var array of function(Application $sender, IResponse $response); Occurs when a new response is received */
+	/** @var array of function(Application $sender, IResponse $response); Occurs when a new response is ready for dispatch */
 	public $onResponse;
 
 	/** @var array of function(Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
