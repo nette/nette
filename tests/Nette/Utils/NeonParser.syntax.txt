@@ -15,7 +15,7 @@ Value   ::= Boolean | Null | integer | float | String | Literal | InlineArray | 
 Boolean ::= 'true' | 'TRUE' | 'false' | 'FALSE' | 'yes' | 'YES' | 'no' | 'NO'
 Null    ::= 'null' | 'NULL' | ''
 String  ::= "word\u231" | 'word'
-Literal ::= trimmed stream of characters [^#"',:=@[\]{}()<>\s] ( [^#,:=\]})>\n] | ':' \S | \S '#' )*
+Literal ::= trimmed stream of characters [^#"',:=@[\]{}()\s] ( [^#,:=\]})\n] | ':' \S | \S '#' )*
 
 
 InlineArray
