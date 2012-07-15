@@ -29,6 +29,7 @@ Assert::same( 'the"string#literal', Neon::decode('the"string#literal') );
 Assert::same( 'the"string', Neon::decode('the"string #literal') );
 Assert::same( "the'string #literal", Neon::decode('"the\'string #literal"') );
 Assert::same( 'the"string #literal', Neon::decode("'the\"string #literal'") );
+Assert::same( 'the"string <literal>', Neon::decode("'the\"string <literal>'") );
 Assert::same( "", Neon::decode("''") );
 Assert::same( "", Neon::decode('""') );
 Assert::same( ':a', Neon::decode(':a') );

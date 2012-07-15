@@ -27,11 +27,9 @@ KeyValuePair ::= Key '=' Value | Key ': ' Value
 Key          ::= integer | String | Literal
 
 
-Object
+Entity
 ------
-Object       ::= '@' ClassName '(' ( ArrayEntry ',' )* ')'
-
-ClassName    ::= [a-zA-Z_0-9\]+
+Entity       ::= Literal '(' ( ArrayEntry ',' )* ')'
 
 
 BlockArray

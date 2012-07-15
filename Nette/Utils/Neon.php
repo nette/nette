@@ -30,7 +30,7 @@ class Neon extends Nette\Object
 		'[:-](?=\s|$)|[,=[\]{}()]', // symbol
 		'?:#.*', // comment
 		'\n[\t ]*', // new line + indent
-		'[^#"\',=[\]{}()<>\x00-\x20!`](?:[^#,:=\]})>(\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
+		'[^#"\',=[\]{}()<>\x00-\x20!`](?:[^#,:=\]})(\x00-\x1F]+|:(?!\s|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
 		'?:[\t ]+', // whitespace
 	);
 

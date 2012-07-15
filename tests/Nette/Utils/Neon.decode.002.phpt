@@ -49,6 +49,12 @@ Assert::same( array(
 
 
 Assert::same( array(
+	'value' => '@item<item>',
+	'attributes' => array('a', 'b'),
+), (array) Neon::decode('@item<item>(a, b)') );
+
+
+Assert::same( array(
 	'value' => 'item',
 	'attributes' => array('a', 'b'),
 ), (array) Neon::decode('item (a, b)') );
