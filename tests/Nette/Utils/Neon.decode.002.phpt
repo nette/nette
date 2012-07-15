@@ -36,7 +36,8 @@ Assert::same( array(
 		'c' => 'd',
 	),
 	'e' => 'f',
-), Neon::decode('{a, b, {c: d}, e: f,}') );
+	'g' => NULL,
+), Neon::decode('{a, b, {c: d}, e: f, g: ,}') );
 
 
 Assert::same( array(
@@ -45,7 +46,8 @@ Assert::same( array(
 	'c' => 1,
 	'd' => 1,
 	'e' => 1,
-), Neon::decode("{a,\nb\nc: 1,\nd: 1,\n\ne: 1\n}") );
+	'f' => NULL,
+), Neon::decode("{a,\nb\nc: 1,\nd: 1,\n\ne: 1\nf:\n}") );
 
 
 Assert::true( Neon::decode('@item(a, b)') instanceof Nette\Utils\NeonEntity );
