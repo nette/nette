@@ -1,7 +1,7 @@
 Preprocessing
 -------------
 - tabs are converted to single space
-- \r is deleted
+- \r is removed
 
 
 Comment
@@ -9,37 +9,24 @@ Comment
 Comment ::= '#' .*
 
 
-Values <value>
---------------
-Value   ::= Boolean | Null | integer | float | String | Literal | InlineArray | Object
+Values
+------
+Value   ::= Boolean | Null | integer | float | String | DateTime | Literal | InlineArray | Entity
 Boolean ::= 'true' | 'TRUE' | 'false' | 'FALSE' | 'yes' | 'YES' | 'no' | 'NO'
 Null    ::= 'null' | 'NULL' | ''
 String  ::= "word\u231" | 'word'
-Literal ::= trimmed stream of characters [^#"',:=@[\]{}()\s] ( [^#,:=\]})\n] | ':' \S | \S '#' )*
+Literal ::= trimmed stream of characters [^#"',:=@[\]{}()\s!`] ( [^#,:=\]})(] | ':' [^\s,\]})] | \S '#' )*
+Entity  ::= Value '(' ( ArrayEntry ',' )* ')'
 
 
 InlineArray
 -----------
-InlineArray  ::= '{' ( ArrayEntry ',' )* '}' | '[' ( ArrayEntry ',' )* ']'
+InlineArray  ::= '{' ( ArrayEntry ',' )* '}' | '[' ( ArrayEntry ',' )* ']' | '(' ( ArrayEntry ',' )* ')'
 
 ArrayEntry   ::= Value | KeyValuePair
-KeyValuePair ::= Key '=' Value | Key ': ' Value
-Key          ::= integer | String | Literal
-
-
-Entity
-------
-Entity       ::= Literal '(' ( ArrayEntry ',' )* ')'
+KeyValuePair ::= Value '=' Value | Value ': ' Value
 
 
 BlockArray
 ----------
-BlockArray   ::= Indent '- ' Value EOL
-
-
-BlockHash
----------
-BlockHash    ::= Indent Key ': ' KeyValuePair EOL
-
-NestedBlockHash ::= Indent Key ':' EOL
-	Indent Value
+BlockArray   ::= Indent ( '- ' Value | KeyValuePair ) EOL
