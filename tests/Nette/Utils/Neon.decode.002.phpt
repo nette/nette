@@ -37,7 +37,8 @@ Assert::same( array(
 	),
 	'e' => 'f',
 	'g' => NULL,
-), Neon::decode('{a, b, {c: d}, e: f, g: ,}') );
+	'h' => NULL,
+), Neon::decode('{a, b, {c: d}, e: f, g:,h:}') );
 
 
 Assert::same( array(
