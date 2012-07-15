@@ -56,6 +56,11 @@ Assert::equal(
 );
 
 Assert::equal(
+	'item<item>(a, b)',
+	Neon::encode(Neon::decode('item<item>(a, b)'))
+);
+
+Assert::equal(
 	'item(foo: a, bar: b)',
 	Neon::encode(Neon::decode('item(foo: a, bar: b)'))
 );
