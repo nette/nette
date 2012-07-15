@@ -284,7 +284,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (isset($config['dsn'])) {
 			$config = array('default' => $config);
 		}
-		
+
 		$autowired = TRUE;
 		foreach ((array) $config as $name => $info) {
 			if (!is_array($info)) {
