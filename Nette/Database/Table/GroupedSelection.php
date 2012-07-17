@@ -152,6 +152,7 @@ class GroupedSelection extends Selection
 		$referencing = & $this->getRefTable()->referencing[$hash];
 		$this->rows = & $referencing['rows'];
 		$this->referenced = & $referencing['refs'];
+		$this->accessed = & $referencing['accessed'];
 		$refData = & $referencing['data'];
 
 		if ($refData === NULL) {
