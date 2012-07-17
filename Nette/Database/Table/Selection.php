@@ -488,7 +488,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 * Returns Selection parent for caching
 	 * @return Selection
 	 */
-	protected function getRefTable()
+	protected function getRefTable(& $refPath)
 	{
 		return $this;
 	}
@@ -616,7 +616,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
 	{
-		$referenced = & $this->getRefTable()->referenced["$table.$column"];
+		$referenced = & $this->getRefTable($refPath)->referenced[$refPath . "$table.$column"];
 		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
@@ -655,7 +655,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencingTable($table, $column, $active = NULL)
 	{
-		$prototype = & $this->getRefTable()->referencingPrototype["$table.$column"];
+		$prototype = & $this->getRefTable($refPath)->referencingPrototype[$refPath . "$table.$column"];
 		if (!$prototype) {
 			$prototype = $this->createGroupedSelectionInstance($table, $column);
 			$prototype->where("$table.$column", array_keys((array) $this->rows));
