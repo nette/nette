@@ -66,3 +66,26 @@ Assert::same(array(
 	'Dibi' => 12,
 	'Nette' => 12,
 ), $books);
+
+
+
+
+$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
+$connection->setCacheStorage($cacheStorage);
+
+
+
+$relatedStack = array();
+foreach ($connection->table('author') as $author) {
+	$relatedStack[] = $related = $author->related('book.author_id');
+	foreach ($related as $book)	{
+		$book->id;
+	}
+}
+
+foreach ($relatedStack as $related) {
+	$property = $related->reflection->getProperty('accessed');
+	$property->setAccessible(true);
+	// checks if instances have shared data of accessed columns
+	Assert::same(array('id', 'author_id'), array_keys($property->getValue($related)));
+}
