@@ -14,7 +14,18 @@ use Nette\Reflection;
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Object.inc';
+
+
+interface IFirst
+{}
+
+interface ISecond extends IFirst
+{}
+
+class TestClass extends Nette\Object implements ISecond
+{
+	public $foo = 'Hello', $bar = 'World';
+}
 
 
 
@@ -35,5 +46,5 @@ function ISecond_join(ISecond $that, $separator)
 Reflection\ClassType::from('IFirst')->setExtensionMethod('join', 'IFirst_join');
 Reflection\ClassType::from('ISecond')->setExtensionMethod('join', 'ISecond_join');
 
-$obj = new TestClass('Hello', 'World');
+$obj = new TestClass;
 Assert::same( 'ISecond_join says Hello*World', $obj->join('*') );
