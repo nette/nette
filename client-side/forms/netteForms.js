@@ -263,7 +263,7 @@ Nette.toggle = function(id, visible) {
 
 
 Nette.initForm = function(form) {
-	form.noValidate = true;
+	form.noValidate = 'novalidate';
 
 	Nette.addEvent(form, 'submit', function() {
 		return Nette.validateForm(form);
