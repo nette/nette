@@ -390,6 +390,10 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$control->id = $this->getHtmlId();
 		$control->required = $this->isRequired();
 
+		if (isset($control->placeholder)) {
+			$control->placeholder = $this->translate($control->placeholder);
+		}
+
 		$rules = self::exportRules($this->rules);
 		$rules = substr(json_encode($rules), 1, -1);
 		$rules = preg_replace('#"([a-z0-9_]+)":#i', '$1:', $rules);
