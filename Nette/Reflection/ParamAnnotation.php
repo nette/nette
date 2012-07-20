@@ -50,7 +50,7 @@ class ParamAnnotation extends Annotation
 	{
 		$this->value = $value = $values['value'];
 
-		$re = '(' . AnnotationsParser::RE_IDENTIFIER . ')([^<>]*)(\<' . AnnotationsParser::RE_IDENTIFIER . '\>)?(.*)';
+		$re = '(\\\\?' . AnnotationsParser::RE_IDENTIFIER . ')([^<>]*)(\<\\\\?' . AnnotationsParser::RE_IDENTIFIER . '\>)?(.*)';
 		if ($generic = Strings::match($value, '~^' . $re . '$~i')) {
 			list(, $this->type, $a, $this->generic, $b) = $generic;
 			$value = trim($a . $b);
@@ -62,6 +62,9 @@ class ParamAnnotation extends Annotation
 			$this->name = ltrim($this->name, '$');
 			$this->description = trim($this->description);
 		}
+
+		$this->type = ltrim($this->type, '\\');
+		$this->generic = ltrim($this->generic, '\\');
 	}
 
 

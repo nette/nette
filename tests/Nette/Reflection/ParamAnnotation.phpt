@@ -53,11 +53,32 @@ Assert::equal( array(
 ), (array) new ParamAnnotation(array('value' => 'Foo<Bar> $abc blabla')) );
 
 // generics
-Assert::equal( array(
+Assert::equal(array(
 	'value' => 'Foo $abc <Bar> blabla',
 	'type' => 'Foo',
 	'name' => 'abc',
 	'description' => 'blabla',
 	'generic' => 'Bar'
-), (array) new ParamAnnotation(array('value' => 'Foo $abc <Bar> blabla')) );
+), (array)new ParamAnnotation(array('value' => 'Foo $abc <Bar> blabla')));
+
+// namespaces
+$paramAnnot = new ParamAnnotation(array('value' => 'Foo\Bar $abc <Bar\Foo> blabla'));
+Assert::equal('Bar\Foo', $paramAnnot->generic);
+
+// namespaces
+$paramAnnot = new ParamAnnotation(array('value' => '\Foo\Bar $abc <\Bar\Foo> blabla'));
+Assert::equal('Bar\Foo', $paramAnnot->generic);
+Assert::equal('Foo\Bar', $paramAnnot->type);
+
+// variant
+$paramAnnot = new ParamAnnotation(array('value' => 'Foo\Bar <Bar\Foo> $abc blabla'));
+Assert::equal('Bar\Foo', $paramAnnot->generic);
+
+// variant
+$paramAnnot = new ParamAnnotation(array('value' => 'Foo\Bar<Bar\Foo> $abc blabla'));
+Assert::equal('Bar\Foo', $paramAnnot->generic);
+
+// variant
+$paramAnnot = new ParamAnnotation(array('value' => 'Foo\Bar $abc <Bar\Foo> blabla'));
+Assert::equal('Bar\Foo', $paramAnnot->generic);
 
