@@ -144,4 +144,28 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 		}
 	}
 
+
+
+	/********************* backend ****************d*g**/
+
+
+
+	/**
+	 * @return Nette\Http\IRequest
+	 */
+	protected function getHttpRequest()
+	{
+		return Nette\Environment::getHttpRequest();
+	}
+
+
+
+	/**
+	 * @return Nette\Http\Session
+	 */
+	protected function getSession()
+	{
+		return Nette\Environment::getSession();
+	}
+
 }
