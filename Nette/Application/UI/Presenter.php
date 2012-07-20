@@ -1223,8 +1223,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 			if ($sinces === NULL) {
 				$sinces = array();
-				foreach ($this->getReflection()->getPersistentParams() as $nm => $meta) {
-					$sinces[$nm] = $meta['since'];
+				foreach ($this->getReflection()->getPersistentParams() as $name => $meta) {
+					$sinces[$name] = $meta['since'];
 				}
 			}
 
