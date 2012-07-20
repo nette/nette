@@ -137,18 +137,18 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function loadState(array $params)
 	{
-		foreach ($this->getReflection()->getPersistentParams() as $nm => $meta) {
-			if (isset($params[$nm])) { // ignore NULL values
+		foreach ($this->getReflection()->getPersistentParams() as $name => $meta) {
+			if (isset($params[$name])) { // ignore NULL values
 				if (isset($meta['def'])) {
-					if (is_array($params[$nm]) && !is_array($meta['def'])) {
-						$params[$nm] = $meta['def']; // prevents array to scalar conversion
+					if (is_array($params[$name]) && !is_array($meta['def'])) {
+						$params[$name] = $meta['def']; // prevents array to scalar conversion
 					} else {
-						settype($params[$nm], gettype($meta['def']));
+						settype($params[$name], gettype($meta['def']));
 					}
 				}
-				$this->$nm = & $params[$nm];
+				$this->$name = & $params[$name];
 			} else {
-				$params[$nm] = & $this->$nm;
+				$params[$name] = & $this->$name;
 			}
 		}
 		$this->params = $params;
@@ -165,16 +165,16 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	public function saveState(array & $params, $reflection = NULL)
 	{
 		$reflection = $reflection === NULL ? $this->getReflection() : $reflection;
-		foreach ($reflection->getPersistentParams() as $nm => $meta) {
+		foreach ($reflection->getPersistentParams() as $name => $meta) {
 
-			if (isset($params[$nm])) {
-				$val = $params[$nm]; // injected value
+			if (isset($params[$name])) {
+				$val = $params[$name]; // injected value
 
-			} elseif (array_key_exists($nm, $params)) { // $params[$nm] === NULL
+			} elseif (array_key_exists($name, $params)) { // $params[$name] === NULL
 				continue; // means skip
 
 			} elseif (!isset($meta['since']) || $this instanceof $meta['since']) {
-				$val = $this->$nm; // object property value
+				$val = $this->$name; // object property value
 
 			} else {
 				continue; // ignored parameter
@@ -182,7 +182,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 			if (is_object($val)) {
 				$class = get_class($this);
-				throw new Nette\InvalidStateException("Persistent parameter must be scalar or array, $class::\$$nm is " . gettype($val));
+				throw new Nette\InvalidStateException("Persistent parameter must be scalar or array, $class::\$$name is " . gettype($val));
 
 			} else {
 				if (isset($meta['def'])) {
@@ -195,7 +195,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 						$val = NULL;
 					}
 				}
-				$params[$nm] = $val;
+				$params[$name] = $val;
 			}
 		}
 	}
