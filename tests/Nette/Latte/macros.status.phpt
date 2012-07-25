@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Latte\Engine: {contentType}
+ * Test: Nette\Latte\Engine: {status}
  *
  * @author     David Grudl
  * @package    Nette\Latte
