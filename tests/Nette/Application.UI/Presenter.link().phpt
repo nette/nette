@@ -20,7 +20,7 @@ require __DIR__ . '/../bootstrap.php';
 class TestControl extends Application\UI\Control
 {
 	/** @persistent array */
-	public $order;
+	public $order = array();
 
 	/** @persistent int */
 	public $round = 0;
@@ -40,15 +40,7 @@ class TestControl extends Application\UI\Control
 	{
 		if (isset($params['order'])) {
 			$params['order'] = explode('.', $params['order']);
-
-			// validate
-			$copy = $params['order'];
-			sort($copy);
-			if ($copy != range(0, self::MAX)) {
-				unset($params['order']);
-			}
 		}
-
 		parent::loadState($params);
 	}
 
@@ -97,8 +89,8 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?action=product&presenter=Test', $this->link('product', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?var1=20&action=product&presenter=Test', $this->link('product', array('var1' => $this->var1 * 2, 'ok' => TRUE)) );
 		Assert::same( '/index.php?var1=1&ok=0&action=product&presenter=Test', $this->link('product', array('var1' => TRUE, 'ok' => '0')) );
-		Assert::same( '/index.php?action=product&presenter=Test', $this->link('product', array('var1' => NULL, 'ok' => 'a')) );
-		Assert::same( '/index.php?var1=1&ok=0&action=product&presenter=Test', $this->link('product', array('var1' => array(1), 'ok' => FALSE)) );
+		Assert::same( "error: Invalid value for persistent parameter 'ok' in 'Test', expected boolean.", $this->link('product', array('var1' => NULL, 'ok' => 'a')) );
+		Assert::same( "error: Invalid value for persistent parameter 'var1' in 'Test', expected integer.", $this->link('product', array('var1' => array(1), 'ok' => FALSE)) );
 		Assert::same( "error: Unable to pass parameters to action 'Test:product', missing corresponding method.", $this->link('product', 1, 2) );
 		Assert::same( '/index.php?x=1&y=2&action=product&presenter=Test', $this->link('product', array('x' => 1, 'y' => 2)) );
 		Assert::same( '/index.php?action=product&presenter=Test', $this->link('product') );
@@ -140,8 +132,14 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this->mycontrol->link('this', array('x' => 1, 'round' => 1)) );
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this->mycontrol->link('this?x=1&round=1') );
 		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this->mycontrol->link('this?x=1&round=1#frag') );
-
 		Assert::same( 'http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this->mycontrol->link('//this?x=1&round=1#frag') );
+
+		// Component link type checking
+		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this->mycontrol->link('click', array('order' => 1)) );
+		Assert::same( "error: Invalid value for persistent parameter 'round' in 'mycontrol', expected integer.", $this->mycontrol->link('click', array('round' => array())) );
+		$this->mycontrol->order = 1;
+		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this->mycontrol->link('click') );
+		$this->mycontrol->order = NULL;
 	}
 
 

@@ -19,6 +19,9 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestPresenter extends Application\UI\Presenter
 {
+	/** @persistent */
+	public $bool = TRUE;
+
 	function actionDefault($a, $b = NULL, array $c, array $d = NULL, $e = 1, $f = 1.0, $g = FALSE)
 	{
 	}
@@ -88,3 +91,8 @@ Assert::throws(function() use ($presenter) {
 	$request = new Application\Request('Test', Http\Request::GET, array('g' => ''));
 	$presenter->run($request);
 }, 'Nette\Application\BadRequestException', "Invalid value for parameter 'g' in method TestPresenter::actionDefault(), expected boolean.");
+
+Assert::throws(function() use ($presenter) {
+	$request = new Application\Request('Test', Http\Request::GET, array('bool' => array()));
+	$presenter->run($request);
+}, 'Nette\Application\BadRequestException', "Invalid value for persistent parameter 'bool' in 'Test', expected boolean.");
