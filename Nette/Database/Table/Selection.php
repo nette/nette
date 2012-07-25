@@ -26,7 +26,7 @@ use Nette,
  *
  * @property-read string $sql
  */
-class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection extends Nette\Object implements Nette\Database\IActiveRowContainer, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	protected $connection;
@@ -230,10 +230,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	/**
-	 * Returns next row of result.
-	 * @return ActiveRow or FALSE if there is no row
-	 */
 	public function fetch()
 	{
 		$this->execute();
@@ -244,12 +240,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	/**
-	 * Returns all rows as associative array.
-	 * @param  string
-	 * @param  string column name used for an array value or NULL for the whole row
-	 * @return array
-	 */
 	public function fetchPairs($key, $value = NULL)
 	{
 		$return = array();
@@ -477,8 +467,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$this->rows = array();
-		$result->setFetchMode(PDO::FETCH_ASSOC);
-		foreach ($result as $key => $row) {
+		foreach ($result->getStatement() as $key => $row) {
 			$row = $result->normalizeRow($row);
 			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = $this->createRow($row);
 		}
@@ -491,9 +480,15 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 
-	protected function createRow(array $row)
+	protected function createRow(array $data)
 	{
-		return new ActiveRow($row, $this);
+		$row = new ActiveRow($this);
+		foreach ($data as $key => $value) {
+			$row->$key = $value;
+		}
+
+		$row->setAsInitialState();
+		return $row;
 	}
 
 

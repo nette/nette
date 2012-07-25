@@ -106,7 +106,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($this->explain && preg_match('#\s*\(?\s*SELECT\s#iA', $sql)) {
 				try {
 					$cmd = is_string($this->explain) ? $this->explain : 'EXPLAIN';
-					$explain = $connection->queryArgs("$cmd $sql", $params)->fetchAll();
+					$explain = iterator_to_array($connection->queryArgs("$cmd $sql", $params));
 				} catch (\PDOException $e) {}
 			}
 
@@ -146,7 +146,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
 			<table>
-				<tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Rows</th></tr>' . $s . '
+				<tr><th>Time&nbsp;ms</th><th>SQL Query</th><th>Rows</th></tr>' . $s . '
 			</table>
 			</div>';
 	}

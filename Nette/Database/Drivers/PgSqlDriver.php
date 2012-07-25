@@ -123,7 +123,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			WHERE
 				table_schema = current_schema()
 		") as $row) {
-			$tables[] = (array) $row;
+			$tables[] = iterator_to_array($row);
 		}
 
 		return $tables;
@@ -162,7 +162,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			ORDER BY
 				c.ordinal_position
 		") as $row) {
-			$column = (array) $row;
+			$column = iterator_to_array($row);
 			$column['vendor'] = $column;
 			unset($column['sequence']);
 
@@ -235,7 +235,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			ORDER BY
 				kcu.ordinal_position
 		") as $row) {
-			$keys[] = (array) $row;
+			$keys[] = iterator_to_array($row);
 		}
 
 		return $keys;
