@@ -73,6 +73,7 @@ Assert::same( "'symbol' => \$this -> var, ",  formatArgs('symbol => $this -> var
 Assert::same( "'symbol' => \$this -> var",  formatArgs('symbol => $this -> var') );
 Assert::same( "'symbol1' => 'value'",  formatArgs('symbol1 => /*value,* /symbol2=>*/value/**/') );
 Assert::same( "(array)",  formatArgs('(array)') );
+Assert::same( 'func()[1]',  formatArgs('func()[1]') );
 
 
 // special UTF-8
