@@ -11,7 +11,8 @@
 
 namespace Nette\Forms;
 
-use Nette;
+use Nette,
+	Nette\Http\Session;
 
 
 
@@ -109,6 +110,12 @@ class Form extends Container
 
 	/** @var array */
 	private $errors = array();
+
+	/** @var Nette\Http\IRequest */
+	private $httpRequest;
+
+	/** @var Nette\Http\Session */
+	private $session;
 
 
 
@@ -628,7 +635,25 @@ class Form extends Container
 	 */
 	protected function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+		if (!isset($this->httpRequest)) {
+			$factory = new Nette\Http\RequestFactory;
+			$factory->setEncoding('UTF-8');
+			$this->httpRequest = $factory->createHttpRequest();
+		}
+		return $this->httpRequest;
+	}
+
+
+
+	/**
+	 * @param Nette\Http\IRequest
+	 */
+	public function injectHttpRequest(Nette\Http\IRequest $httpRequest)
+	{
+		if (isset($this->httpRequest)) {
+			throw new Nette\InvalidStateException('Http request allready set');
+		}
+		$this->httpRequest = $httpRequest;
 	}
 
 
@@ -638,7 +663,25 @@ class Form extends Container
 	 */
 	protected function getSession()
 	{
-		return Nette\Environment::getSession();
+		if (!isset($this->session)) {
+			$request = $this->getHttpRequest();
+			$response = new Nette\Http\Response;
+			$this->session = new Session($request, $response);
+		}
+		return $this->session;
+	}
+
+
+
+	/**
+	 * @param Nette\Http\Session
+	 */
+	public function injectSession(Session $session)
+	{
+		if (isset($this->session)) {
+			throw new Nette\InvalidStateException('Session allready set');
+		}
+		$this->session = $session;
 	}
 
 }
