@@ -133,7 +133,8 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 				if (!$param->getClass() && !is_object($args[$name])) {
 					$type = $param->isArray() ? 'array' : ($param->isDefaultValueAvailable() ? gettype($param->getDefaultValue()) : 'NULL');
 					if (!self::convertType($res[$i-1], $type)) {
-						throw new BadRequestException("Invalid value for parameter '$name', expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
+					    $mName = $method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
+						throw new BadRequestException("Invalid value for parameter '$name' in method $mName(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 					}
 				}
 			} else {
