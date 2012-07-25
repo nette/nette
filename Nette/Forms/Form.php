@@ -107,6 +107,12 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
+	/** @var Nette\Http\IRequest  used only by standalone form */
+	public $httpRequest;
+
+	/** @var Nette\Http\Session  used by CSRF protector */
+	public $session;
+
 
 
 	/**
@@ -216,7 +222,10 @@ class Form extends Container
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
+		if (!$this->session) {
+			$this->session = new Nette\Http\Session($this->getHttpRequest(), new Nette\Http\Response);
+		}
+		$session = $this->session->getSection('Nette.Forms.Form/CSRF');
 		$key = "key$timeout";
 		if (isset($session->$key)) {
 			$token = $session->$key;
@@ -602,19 +611,14 @@ class Form extends Container
 	/**
 	 * @return Nette\Http\IRequest
 	 */
-	protected function getHttpRequest()
+	private function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Session
-	 */
-	protected function getSession()
-	{
-		return Nette\Environment::getSession();
+		if (!$this->httpRequest) {
+			$factory = new Nette\Http\RequestFactory;
+			$factory->setEncoding('UTF-8');
+			$this->httpRequest = $factory->createHttpRequest();
+		}
+		return $this->httpRequest;
 	}
 
 }
