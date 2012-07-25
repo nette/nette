@@ -279,9 +279,14 @@ class Assert
 	private static function doFail($message)
 	{
 		$trace = debug_backtrace();
-		$trace = end($trace);
-		if (isset($trace['line'])) {
-			$message .= " on line $trace[line]";
+		while (isset($trace[0]['file']) && $trace[0]['file'] === __FILE__) {
+			array_shift($trace);
+		}
+		if (isset($trace[0]['file'])) {
+			$message .= ' in file ' . $trace[0]['file'];
+		}
+		if (isset($trace[0]['line'])) {
+			$message .= ' on line ' . $trace[0]['line'];
 		}
 		echo "\n$message";
 		exit(TestCase::CODE_FAIL);
