@@ -123,6 +123,10 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?action=default&presenter=Test', $this->link('this!', array('var1' => $this->var1)) );
 
+		// Presenter & signal link type checking
+		Assert::same( "error: Invalid value for parameter 'x' in method TestPresenter::handlebuy(), expected integer.", $this->link('buy!', array(array())) );
+		Assert::same( "error: Invalid value for parameter 'x' in method TestPresenter::handlebuy(), expected integer.", $this->link('buy!', array(new stdClass)) );
+
 		// Component link
 		Assert::same( 'error: Signal must be non-empty string.', $this->mycontrol->link('', 0, 1) );
 		Assert::same( '/index.php?mycontrol-x=0&mycontrol-y=1&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', 0, 1) );
