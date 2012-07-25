@@ -1052,33 +1052,17 @@ abstract class Presenter extends Control implements Application\IPresenter
 				continue;
 			}
 
-
-			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : NULL;
-			$val = $args[$name];
-			if ($val === NULL) {
+			if ($args[$name] === NULL) {
 				continue;
-			} elseif ($param->isArray() || is_array($def)) {
-				if (!is_array($val)) {
-					throw new InvalidLinkException("Invalid value for parameter '$name', expected array.");
-				}
-			} elseif ($param->getClass() || is_object($val)) {
-				// ignore
-			} elseif (!is_scalar($val)) {
-				throw new InvalidLinkException("Invalid value for parameter '$name', expected scalar.");
-
-			} elseif ($def === NULL) {
-				if ((string) $val === '') {
-					$args[$name] = NULL; // value transmit is unnecessary
-				}
-				continue;
-			} else {
-				settype($args[$name], gettype($def));
-				if ((string) $args[$name] !== (string) $val) {
-					throw new InvalidLinkException("Invalid value for parameter '$name', expected ".gettype($def).".");
-				}
 			}
 
-			if ($args[$name] === $def) {
+			$def = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : NULL;
+			$type = $param->isArray() ? 'array' : gettype($def);
+			if (!PresenterComponentReflection::convertType($args[$name], $type)) {
+				throw new InvalidLinkException("Invalid value for parameter '$name' in method $class::$method(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
+			}
+
+			if ($args[$name] === $def || ($def === NULL && is_scalar($args[$name]) && (string) $args[$name] === '')) {
 				$args[$name] = NULL; // value transmit is unnecessary
 			}
 		}
