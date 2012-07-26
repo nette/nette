@@ -111,7 +111,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	public function getTables()
 	{
 		$tables = array();
-		foreach ($this->connection->query('SELECT * FROM cat', \PDO::FETCH_NUM) as $row) {
+		foreach ($this->connection->query('SELECT * FROM cat') as $row) {
 			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
 				$tables[] = array(
 					'name' => $row[0],
