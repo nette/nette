@@ -140,7 +140,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		$reflection = $this->getReflection();
 		foreach ($reflection->getPersistentParams() as $name => $meta) {
 			if (isset($params[$name])) { // NULLs are ignored
-				$type = gettype($meta['def']); // BC break
+				$type = gettype($meta['def']);
 				if (!$reflection->convertType($params[$name], $type)) {
 					throw new Nette\Application\BadRequestException("Invalid value for persistent parameter '$name' in '{$this->getName()}', expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
