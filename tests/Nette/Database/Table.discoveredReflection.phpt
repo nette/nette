@@ -50,7 +50,7 @@ Assert::same(array(
 
 
 $books = array();
-foreach ($connection->table('author') as $author) {
+foreach ($connection->table('Author') as $author) { // tests also case-insensitive reflection
 	foreach ($author->related('book') as $book) {
 		$books[$book->title] = $author->name;
 	}
