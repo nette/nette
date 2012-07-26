@@ -126,7 +126,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			WHERE TABLE_SCHEMA = DATABASE()
 		");*/
 		$tables = array();
-		foreach ($this->connection->query('SHOW FULL TABLES', \PDO::FETCH_NUM) as $row) {
+		foreach ($this->connection->query('SHOW FULL TABLES') as $row) {
 			$tables[] = array(
 				'name' => $row[0],
 				'view' => isset($row[1]) && $row[1] === 'VIEW',
