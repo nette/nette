@@ -108,7 +108,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
-	/** @var Nette\DI\Container */
+	/** @var \SystemContainer|Nette\DI\Container */
 	private $context;
 
 
