@@ -186,7 +186,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 		$this->sessionSection = $section = $this->sessionHandler->getSection('Nette.Http.UserStorage/' . $this->namespace);
 
-		if (!$section->identity instanceof IIdentity || !is_bool($section->authenticated)) {
+		if (!$this->isSessionValid($section)) {
 			$section->remove();
 		}
 
@@ -194,7 +194,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 			$section->reason = self::BROWSER_CLOSED;
 			$section->authenticated = FALSE;
 			if ($section->expireIdentity) {
-				unset($section->identity);
+				$this->clearSession($section);
 			}
 		}
 
@@ -203,7 +203,7 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 				$section->reason = self::INACTIVITY;
 				$section->authenticated = FALSE;
 				if ($section->expireIdentity) {
-					unset($section->identity);
+					$this->clearSession($section);
 				}
 			}
 			$section->expireTime = time() + $section->expireDelta; // sliding expiration
@@ -215,6 +215,29 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 		}
 
 		return $this->sessionSection;
+	}
+
+
+
+	/**
+	 * Checks whether a session section stores valid user info
+	 * (override to extend UserStorage easily)
+	 * @return bool
+	 */
+	protected function isSessionValid(SessionSection $section)
+	{
+		return $section->identity instanceof IIdentity && is_bool($section->authenticated);
+	}
+
+
+
+	/**
+	 * Clears user info
+	 * (override to extend UserStorage easily)
+	 */
+	protected function clearSession(SessionSection $section)
+	{
+		unset($section->identity);
 	}
 
 }
