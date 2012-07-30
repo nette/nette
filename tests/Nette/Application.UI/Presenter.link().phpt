@@ -74,6 +74,9 @@ class TestPresenter extends Application\UI\Presenter
 	/** @persistent @var bool */
 	public $ok = TRUE;
 
+	/** @persistent @var bool */
+	public $var2 = FALSE;
+
 
 	protected function createTemplate($class = NULL)
 	{
@@ -107,7 +110,8 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( '/index.php?action=default&do=buy&presenter=Test', $this->link('buy!', array('var1' => $this->var1)) );
 		Assert::same( '/index.php?var1=20&action=default&do=buy&presenter=Test', $this->link('buy!', array('var1' => $this->var1 * 2)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', 1, 2) );
-		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', '1', '2') );
+		Assert::same( '/index.php?y=2&bool=1&str=1&action=default&do=buy&presenter=Test', $this->link('buy!', '1', '2', TRUE, TRUE) );
+		Assert::same( '/index.php?y=2&str=0&action=default&do=buy&presenter=Test', $this->link('buy!', '1', '2', FALSE, FALSE) );
 		Assert::same( '/index.php?action=default&do=buy&presenter=Test', $this->link('buy!', array(1), (object) array(1)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', array(1, 'y' => 2)) );
 		Assert::same( '/index.php?y=2&action=default&do=buy&presenter=Test', $this->link('buy!', array('x' => 1, 'y' => 2, 'var1' => $this->var1)) );
@@ -147,7 +151,7 @@ class TestPresenter extends Application\UI\Presenter
 	/**
 	 * @view: default
 	 */
-	public function handleBuy($x = 1, $y = 1)
+	public function handleBuy($x = 1, $y = 1, $bool = FALSE, $str = '')
 	{
 	}
 
