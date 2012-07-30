@@ -53,6 +53,7 @@ $counter = 0;
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="robots" content="noindex,noarchive">
 	<meta name="generator" content="Nette Framework">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
 	<title><?php echo htmlspecialchars($title) ?></title><!-- <?php
 		$ex = $exception; echo htmlspecialchars($ex->getMessage() . ($ex->getCode() ? ' #' . $ex->getCode() : ''));
@@ -298,7 +299,11 @@ $counter = 0;
 		<div id="netteBluescreenError" class="panel">
 			<h1><?php echo htmlspecialchars($title), ($exception->getCode() ? ' #' . $exception->getCode() : '') ?></h1>
 
-			<p><?php echo htmlspecialchars($exception->getMessage()) ?> <a href="http://www.google.cz/search?sourceid=nette&amp;q=<?php echo urlencode($title . ' ' . preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>" id="netteBsSearch">search&#x25ba;</a></p>
+			<p>
+				<?php echo htmlspecialchars($exception->getMessage()) ?>
+				<a href="http://www.google.cz/search?sourceid=nette&amp;q=<?php echo urlencode($title . ' ' . preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>" id="netteBsSearch">search&#x25ba;</a>
+				<a href="#" onclick="storeToCloud(); return false;" id="netteBsSearch">cloud&#x25ba;</a>
+			</p>
 		</div>
 
 
@@ -643,6 +648,22 @@ $counter = 0;
 		}
 		return false;
 	};
+
+	function storeToCloud() {
+		$.post('http://ladenka.juzna.cz/record/add?message=' + $('#netteBluescreenError p')[0].firstChild.nodeValue.trim(),
+			{
+				content: document.getElementById('netteBluescreen').innerHTML
+			},
+			function(res) {
+				if (res && res.link) {
+					window.open(res.link)
+				} else {
+					alert("Uploaded to cloud");
+				}
+				console.log(res);
+			}
+		);
+	}
 </script>
 </body>
 </html>
