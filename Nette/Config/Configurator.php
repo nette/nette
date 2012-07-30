@@ -12,6 +12,8 @@
 namespace Nette\Config;
 
 use Nette,
+	Nette\Addons\Addon,
+	Nette\Addons\AddonContainer,
 	Nette\Caching\Cache;
 
 
@@ -40,6 +42,9 @@ class Configurator extends Nette\Object
 
 	/** @var array */
 	protected $files = array();
+
+	/** @var AddonContainer */
+	protected $addons;
 
 
 
@@ -138,6 +143,25 @@ class Configurator extends Nette\Object
 
 
 	/**
+	 * @param  Addon[]
+	 */
+	public function registerAddons($addons)
+	{
+		$this->addons = new AddonContainer($addons);
+
+		if (!isset($this->parameters['addons'])) {
+			$this->parameters['addons'] = array();
+		}
+
+		foreach ($this->addons->getAddons() as $name => $addon) {
+			$this->parameters['addons'][get_class($addon)] = $addon->getName();
+		}
+		$this->onCompile[] = callback($this->addons, 'compile');
+	}
+
+
+
+	/**
 	 * @return Nette\Loaders\RobotLoader
 	 */
 	public function createRobotLoader()
@@ -203,6 +227,11 @@ class Configurator extends Nette\Object
 		$container = new $this->parameters['container']['class'];
 		$container->initialize();
 		Nette\Environment::setContext($container); // back compatibility
+
+		$this->addons = $this->addons ?: new AddonContainer(array());
+		$this->addons->setContainer($container);
+		$container->getService('nette.addonManager')->setAddons($this->addons);
+
 		return $container;
 	}
 

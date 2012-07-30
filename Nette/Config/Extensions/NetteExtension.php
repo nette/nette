@@ -89,6 +89,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$this->setupHttp($container);
 		$this->setupSession($container, $config['session']);
 		$this->setupSecurity($container, $config['security']);
+		$this->setupAddons($container);
 		$this->setupApplication($container, $config['application']);
 		$this->setupRouting($container, $config['routing']);
 		$this->setupMailer($container, $config['mailer']);
@@ -190,12 +191,21 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 
 
+	public function setupAddons(ContainerBuilder $container)
+	{
+		$container->addDefinition($this->prefix('addonManager'))
+			->setClass('Nette\Addons\AddonManager');
+	}
+
+
+
 	private function setupApplication(ContainerBuilder $container, array $config)
 	{
 		$application = $container->addDefinition('application') // no namespace for back compatibility
 			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', $config['catchExceptions'])
-			->addSetup('$errorPresenter', $config['errorPresenter']);
+			->addSetup('$errorPresenter', $config['errorPresenter'])
+			->addSetup('?->getContainer()->attachApplicationEvents($service)', $this->prefix('@addonManager'));
 
 		if ($config['debugger']) {
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
