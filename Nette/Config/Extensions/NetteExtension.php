@@ -334,7 +334,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 
 		// debugger
-		foreach (array('email', 'editor', 'browser', 'strictMode', 'maxLen', 'maxDepth') as $key) {
+		foreach (array('email', 'editor', 'browser', 'strictMode', 'maxLen', 'maxDepth', 'showLocation', 'scream') as $key) {
 			if (isset($config['debugger'][$key])) {
 				$initialize->addBody('Nette\Diagnostics\Debugger::$? = ?;', array($key, $config['debugger'][$key]));
 			}
