@@ -63,6 +63,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var array of earlier touched columns */
 	protected $prevAccessed;
 
+	/** @var bool should instance observe accessed columns caching */
+	protected $observeCache = FALSE;
+
 	/** @var bool recheck referencing keys */
 	protected $checkReferenced = FALSE;
 
@@ -418,6 +421,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return;
 		}
 
+		$this->observeCache = TRUE;
+
 		try {
 			$result = $this->query($this->sqlBuilder->getSql());
 
@@ -488,8 +493,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function saveCacheState()
 	{
-		$cache = $this->connection->getCache();
-		if ($cache && !$this->sqlBuilder->getSelect()) {
+		if ($this->observeCache && ($cache = $this->connection->getCache()) && !$this->sqlBuilder->getSelect() && $this->accessed != $this->prevAccessed) {
 			$cache->save(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()), $this->accessed);
 		}
 	}
