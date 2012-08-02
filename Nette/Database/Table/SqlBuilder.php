@@ -188,7 +188,7 @@ class SqlBuilder extends Nette\Object
 
 	public function getConditions()
 	{
-		return $this->conditions;
+		return array_values($this->conditions);
 	}
 
 
