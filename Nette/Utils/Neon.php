@@ -206,7 +206,10 @@ class Neon extends Nette\Object
 				}
 
 			} elseif ($t === ']' || $t === '}' || $t === ')') { // Closing bracket ] ) }
-				if (!$inlineParser) {
+			    if (is_string($value) && substr($value, -1) == '[') { // array_push - adding items to array
+				    $value .= "]";
+				    continue;
+			    } elseif (!$inlineParser) {
 					$this->error();
 				}
 				break;
@@ -355,7 +358,7 @@ class Neon extends Nette\Object
 
 
 /**
- * The exception that indicates error of NEON decoding.
+ * Method call representation
  */
 class NeonEntity extends \stdClass
 {

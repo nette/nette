@@ -39,3 +39,11 @@ Assert::same( array(
 - x
 a: x
 ') );
+
+$e = Neon::decode('$prop("val")');
+Assert::same('$prop', $e->value);
+Assert::same(array('val'), $e->attributes);
+
+$e = Neon::decode('$prop[](["@service", "method"])');
+Assert::same('$prop[]', $e->value);
+Assert::same(array(array('@service', 'method')), $e->attributes);
