@@ -41,6 +41,8 @@ class Ipsum
 
 	public $test;
 
+	public $event = array();
+
 	static function test($arg)
 	{
 		TestHelpers::note(__METHOD__ . ' ' . $arg);
@@ -76,4 +78,6 @@ Assert::same(array(
 
 Assert::same( 8, $container->lorem->test );
 Assert::same( 9, Ipsum::$staticTest );
+Assert::same( 'testHandler', $container->lorem->event[0]);
+Assert::same( array($container->lorem, 'testHandler'), $container->lorem->event[1]);
 Assert::equal( new Lorem, $container->ipsum->test );

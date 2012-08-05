@@ -422,7 +422,7 @@ class ContainerBuilder extends Nette\Object
 			$code .= $this->formatStatement($setup, $name) . ";\n";
 		}
 
-		return $code .= 'return $service;';
+		return $code . 'return $service;';
 	}
 
 
@@ -475,7 +475,9 @@ class ContainerBuilder extends Nette\Object
 
 		} elseif (Strings::contains($entity[1], '$')) { // property setter
 			Validators::assert($arguments, 'list:1', "setup arguments for '" . Nette\Callback::create($entity) . "'");
-			if ($this->getServiceName($entity[0], $self)) {
+			if (Strings::contains($entity[1], '[]')) {  // array_push
+				return $this->formatPhp('?->?[] = ?', array($entity[0], substr($entity[1], 1, -2), $arguments[0]), $self);
+			} elseif ($this->getServiceName($entity[0], $self)) {
 				return $this->formatPhp('?->? = ?', array($entity[0], substr($entity[1], 1), $arguments[0]), $self);
 			} else {
 				return $this->formatPhp($entity[0] . '::$? = ?', array(substr($entity[1], 1), $arguments[0]), $self);
