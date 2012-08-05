@@ -85,6 +85,12 @@ class ServiceDefinition extends Nette\Object
 			$args = func_get_args();
 			array_shift($args);
 		}
+		foreach ($this->setup as $index => $setupItem) {
+			if ($setupItem->entity === $target) {
+				$this->setup[$index] = new Statement($target, $args);
+				return $this;
+			}
+		}
 		$this->setup[] = new Statement($target, $args);
 		return $this;
 	}
