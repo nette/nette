@@ -113,7 +113,8 @@ class Compiler extends Nette\Object
 
 	public function processExtensions()
 	{
-		foreach ($this->extensions as $name => $extension) {
+		reset($this->extensions);
+		while (list(, $extension) = each($this->extensions)) {
 			$extension->loadConfiguration();
 		}
 
