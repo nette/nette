@@ -373,7 +373,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if (isset($config['security']['frames'])) {
-			$initialize->addBody('header(?);', array('X-Frame-Options: ' . $config['security']['frames']));
+			$initialize->addBody('headers_sent() || header(?);', array('X-Frame-Options: ' . $config['security']['frames']));
 		}
 
 		foreach ($container->findByTag('run') as $name => $on) {
