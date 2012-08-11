@@ -56,7 +56,7 @@ final class ObjectMixin
 			throw new MemberAccessException("Call to class '$class' method without name.");
 
 		} elseif ($isProp === 'event') { // calling event handlers
-			if (is_array($_this->$name)) {
+			if (is_array($_this->$name) || $_this->$name instanceof \Traversable) {
 				foreach ($_this->$name as $handler) {
 					callback($handler)->invokeArgs($args);
 				}
