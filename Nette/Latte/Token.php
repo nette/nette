@@ -23,31 +23,31 @@ use Nette;
 class Token extends Nette\Object
 {
 	const TEXT = 'text',
-		MACRO_TAG = 'macroTag',
-		HTML_TAG_BEGIN = 'htmlTagBegin',
-		HTML_TAG_END = 'htmlTagEnd',
+		MACRO_TAG = 'macroTag', // latte macro tag
+		HTML_TAG_BEGIN = 'htmlTagBegin', // begin of HTML tag or comment
+		HTML_TAG_END = 'htmlTagEnd', // end of HTML tag or comment
 		HTML_ATTRIBUTE = 'htmlAttribute',
-		COMMENT = 'comment';
+		COMMENT = 'comment'; // latte comment
 
-	/** @var int */
+	/** @var string  token type [TEXT | MACRO_TAG | HTML_TAG_BEGIN | HTML_TAG_END | HTML_ATTRIBUTE | COMMENT] */
 	public $type;
 
-	/** @var string */
+	/** @var string  content of the token */
 	public $text;
 
-	/** @var int */
+	/** @var int  line number */
 	public $line;
 
-	/** @var string  MACRO_TAG, HTML_TAG_BEGIN, HTML_ATTRIBUTE */
+	/** @var string  name of macro tag, HTML tag or attribute; used for types MACRO_TAG, HTML_TAG_BEGIN, HTML_ATTRIBUTE */
 	public $name;
 
-	/** @var string  MACRO_TAG, HTML_ATTRIBUTE */
+	/** @var string  value of macro tag or HTML attribute; used for types MACRO_TAG, HTML_ATTRIBUTE */
 	public $value;
 
-	/** @var string  MACRO_TAG */
+	/** @var string  macro modifiers; used for type MACRO_TAG */
 	public $modifiers;
 
-	/** @var bool  HTML_TAG_BEGIN */
+	/** @var bool  is closing HTML tag? used for type HTML_TAG_BEGIN */
 	public $closing;
 
 }

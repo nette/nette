@@ -15,8 +15,6 @@ use Nette\Latte;
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 function xml($v) { echo $v; }
 

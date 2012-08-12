@@ -14,8 +14,6 @@ use Nette\Latte;
 
 require __DIR__ . '/../bootstrap.php';
 
-require __DIR__ . '/Template.inc';
-
 
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);

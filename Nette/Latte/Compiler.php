@@ -47,19 +47,19 @@ class Compiler extends Nette\Object
 	/** @var MacroNode[] */
 	private $macroNodes = array();
 
-	/** @var array of string */
+	/** @var string[] */
 	private $attrCodes = array();
 
 	/** @var string */
 	private $contentType;
 
-	/** @var array */
+	/** @var array [context, subcontext] */
 	private $context;
 
 	/** @var string */
 	private $templateId;
 
-	/** Context-aware escaping states */
+	/** Context-aware escaping content types */
 	const CONTENT_HTML = 'html',
 		CONTENT_XHTML = 'xhtml',
 		CONTENT_XML = 'xml',
@@ -68,7 +68,7 @@ class Compiler extends Nette\Object
 		CONTENT_ICAL = 'ical',
 		CONTENT_TEXT = 'text';
 
-	/** @internal Context-aware escaping states */
+	/** @internal Context-aware escaping HTML contexts */
 	const CONTEXT_COMMENT = 'comment',
 		CONTEXT_SINGLE_QUOTED = "'",
 		CONTEXT_DOUBLE_QUOTED = '"';
@@ -97,7 +97,7 @@ class Compiler extends Nette\Object
 
 	/**
 	 * Compiles tokens to PHP code.
-	 * @param  array
+	 * @param  Token[]
 	 * @return string
 	 */
 	public function compile(array $tokens)
@@ -202,7 +202,7 @@ class Compiler extends Nette\Object
 
 
 	/**
-	 * @return array [context, spec]
+	 * @return array [context, subcontext]
 	 */
 	public function getContext()
 	{
