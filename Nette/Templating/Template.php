@@ -35,6 +35,9 @@ class Template extends Nette\Object implements ITemplate
 	/** @var array compile-time filters */
 	private $filters = array();
 
+	/** @var array native filters for double registration check */
+	private $nativeFilters = array();
+
 	/** @var array run-time helpers */
 	private $helpers = array();
 
@@ -168,13 +171,14 @@ class Template extends Nette\Object implements ITemplate
 	 * @param  callable
 	 * @return Template  provides a fluent interface
 	 */
-	public function registerFilter($callback)
+	public function registerFilter($nativeCallback)
 	{
-		$callback = callback($callback);
-		if (in_array($callback, $this->filters)) {
+		$callback = callback($nativeCallback);
+		if (in_array($nativeCallback, $this->nativeFilters, TRUE)) {
 			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
 		$this->filters[] = $callback;
+		$this->nativeFilters[] = $nativeCallback;
 		return $this;
 	}
 
