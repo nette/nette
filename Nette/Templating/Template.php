@@ -319,7 +319,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getParameters()
 	{
-		$this->params['template'] = $this;
+		$this->params['_template'] = $this->params['template'] = $this;
 		return $this->params;
 	}
 
