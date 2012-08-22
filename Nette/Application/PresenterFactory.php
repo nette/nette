@@ -63,6 +63,10 @@ class PresenterFactory implements IPresenterFactory
 				$this->container->callMethod(array($presenter, $method));
 			}
 		}
+
+		if ($presenter instanceof UI\Presenter && $presenter->invalidLinkMode === NULL) {
+			$presenter->invalidLinkMode = $this->container->parameters['debugMode'] ? UI\Presenter::INVALID_LINK_WARNING : UI\Presenter::INVALID_LINK_SILENT;
+		}
 		return $presenter;
 	}
 
