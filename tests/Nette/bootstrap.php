@@ -27,7 +27,8 @@ define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
 // catch unexpected errors/warnings/notices
 set_error_handler(function($severity, $message, $file, $line) {
 	if (($severity & error_reporting()) === $severity) {
-		echo ("Error: $message in $file:$line");
+		$e = new ErrorException($message, 0, $severity, $file, $line);
+		echo "Error: $message in $file:$line\nStack trace:\n" . $e->getTraceAsString();
 		exit(TestCase::CODE_ERROR);
 	}
 	return FALSE;
