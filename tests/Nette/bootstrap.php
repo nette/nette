@@ -25,13 +25,25 @@ define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
 
 
 // catch unexpected errors/warnings/notices
-set_error_handler(function($severity, $message, $file, $line) {
-	if (($severity & error_reporting()) === $severity) {
-		echo ("Error: $message in $file:$line");
-		exit(TestCase::CODE_ERROR);
+set_error_handler(create_function('$severity, $message, $file, $line, $context', '
+	if (($severity & error_reporting()) !== $severity) {
+		return FALSE;
 	}
-	return FALSE;
-});
+
+	print "Error: $message".PHP_EOL;
+
+	$ex = new FatalErrorException($message, 0, $severity, $file, $line, $context);
+
+	$expandPath = NETTE_DIR . DIRECTORY_SEPARATOR;
+	$stack = $ex->getTrace();
+	foreach ($stack as $key => $row) {
+		if (isset($row[\'file\']) && strpos($row[\'file\'], $expandPath) !== 0) {
+			print "  $row[file]:$row[line]".PHP_EOL;
+		}
+	}
+
+	exit(TestCase::CODE_ERROR);
+'));
 
 
 $_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS')));
