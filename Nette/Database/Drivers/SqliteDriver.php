@@ -206,9 +206,9 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 		$keys = array();
 		foreach ($this->connection->query("PRAGMA foreign_key_list({$this->delimite($table)})") as $row) {
 			$keys[$row['id']]['name'] = $row['id']; // foreign key name
-			$keys[$row['id']]['local'][$row['seq']] = $row['from']; // local columns
+			$keys[$row['id']]['local'] = $row['from']; // local columns
 			$keys[$row['id']]['table'] = $row['table']; // referenced table
-			$keys[$row['id']]['foreign'][$row['seq']] = $row['to']; // referenced columns
+			$keys[$row['id']]['foreign'] = $row['to']; // referenced columns
 			$keys[$row['id']]['onDelete'] = $row['on_delete'];
 			$keys[$row['id']]['onUpdate'] = $row['on_update'];
 
@@ -216,6 +216,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 				$keys[$row['id']]['foreign'] = NULL;
 			}
 		}
+
 		return array_values($keys);
 	}
 
