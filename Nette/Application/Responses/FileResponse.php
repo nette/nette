@@ -131,6 +131,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 		}
 
 		$httpResponse->setHeader('Content-Length', $length);
+		ob_clean();
 		while (!feof($handle)) {
 			echo fread($handle, 4e6);
 		}
