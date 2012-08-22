@@ -113,9 +113,8 @@ class Compiler extends Nette\Object
 
 	public function processExtensions()
 	{
-		reset($this->extensions);
-		while (list(, $extension) = each($this->extensions)) {
-			$extension->loadConfiguration();
+		for ($i = 0; $slice = array_slice($this->extensions, $i, 1); $i++) {
+			reset($slice)->loadConfiguration();
 		}
 
 		if ($extra = array_diff_key($this->config, self::$reserved, $this->extensions)) {
