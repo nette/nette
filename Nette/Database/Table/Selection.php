@@ -747,7 +747,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$referencing = new GroupedSelection($table, $this, $column);
 		}
 
-		return $referencing->setActive($active)->where("$table.$column", array_keys((array) $this->rows));
+		return $referencing->setActive($active);
 	}
 
 

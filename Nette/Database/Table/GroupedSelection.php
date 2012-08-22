@@ -61,11 +61,14 @@ class GroupedSelection extends Selection
 	 */
 	public function setActive($active)
 	{
-		$this->rows = NULL;
+		$rows = $this->rows;
+		$this->data = NULL;
 		$this->active = $active;
 		$this->select = $this->where = $this->conditions = $this->parameters = $this->order = array();
 		$this->limit = $this->offset = NULL;
 		$this->group = $this->having = '';
+		$this->where("{$this->name}.{$this->column}", array_keys((array) $this->refTable->rows));
+		$this->rows = $rows;
 		return $this;
 	}
 
@@ -189,7 +192,7 @@ class GroupedSelection extends Selection
 
 	protected function execute()
 	{
-		if ($this->rows !== NULL) {
+		if ($this->data !== NULL) {
 			return;
 		}
 
