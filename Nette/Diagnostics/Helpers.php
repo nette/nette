@@ -174,7 +174,22 @@ final class Helpers
 			return $s . "\n";
 
 		} elseif (is_resource($var)) {
-			return '<span class="php-resource">' . htmlSpecialChars(get_resource_type($var)) . " resource</span>\n";
+			$type = get_resource_type($var);
+			$s = '<span class="php-resource">' . htmlSpecialChars($type) . " resource</span>\n";
+
+			if ($type === 'stream') {
+				$meta = stream_get_meta_data($var);
+
+				$space = str_repeat($space1 = '   ', $level);
+				$keys = array('wrapper_type' => 'Wrapper', 'stream_type' => 'Type', 'mode' => 'Mode', 'uri' => 'Uri');
+				foreach ($keys as $k => $t) {
+					if (isset($meta[$k])) {
+						$t = htmlSpecialChars($t);
+						$s .= "$space$space1<span class=\"php-key\">$t</span>: " . self::htmlDump($meta[$k], $level + 1);
+					}
+				}
+			}
+			return $s;
 
 		} else {
 			return "<span>unknown type</span>\n";
