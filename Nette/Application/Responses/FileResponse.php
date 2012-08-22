@@ -102,6 +102,9 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 		$filesize = $length = filesize($this->file);
 		$handle = fopen($this->file, 'r');
 
+		$start = 0;
+		$end = $filesize - 1;
+
 		if ($this->resuming) {
 			$httpResponse->setHeader('Accept-Ranges', 'bytes');
 			$range = $httpRequest->getHeader('Range');
@@ -131,8 +134,11 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 		}
 
 		$httpResponse->setHeader('Content-Length', $length);
-		while (!feof($handle)) {
-			echo fread($handle, 4e6);
+		$position = $start;
+		while (!feof($handle) && $position <= $end && connection_status() === CONNECTION_NORMAL) {
+			$step = min(16384, $end - $position + 1);
+			echo fread($handle, $step);
+			$position += $step;
 		}
 		fclose($handle);
 	}
