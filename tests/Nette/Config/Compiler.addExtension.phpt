@@ -8,7 +8,6 @@
  * @subpackage UnitTests
  */
 
-use Nette\Config\Compiler;
 use Nette\Config\CompilerExtension;
 
 
@@ -17,67 +16,83 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-class BaseExtension extends CompilerExtension
+abstract class BaseExtension extends CompilerExtension
 {
-
 	public $loaded = false;
-
 
 	public function loadConfiguration()
 	{
+		TestHelpers::note(get_class($this));
 		$this->loaded = true;
 	}
 }
 
-
 class FooExtension extends BaseExtension
 {
-
 	public function loadConfiguration()
 	{
 		parent::loadConfiguration();
 
 		$this->compiler->addExtension('bar', new BarExtension);
+
+		foreach ($this->compiler->getExtensions() as $extension) {
+			// iterating over array breaks the cursor
+		}
 	}
 }
-
 
 class BarExtension extends BaseExtension
 {
 
 }
 
+class BazExtension extends BaseExtension
+{
 
-$compiler = new Compiler;
+}
 
-// hack for private config
-$ref = new ReflectionClass(get_class($compiler));
-$property = $ref->getProperty('config');
-$property->setAccessible(TRUE);
-$property->setValue($compiler, array());
+class ProcessingCompiler extends Nette\Config\Compiler
+{
+	public function generateCode($className, $parentName)
+	{
+		return NULL;
+	}
+}
+
+
+$compiler = new ProcessingCompiler;
 
 $compiler->addExtension('foo', new FooExtension());
-$extensions = $compiler->getExtensions();
-
-Assert::same(1, count($extensions));
-Assert::false($extensions['foo']->loaded);
-
-
-// first running
-$compiler->processExtensions();
+$compiler->addExtension('baz', new BazExtension());
 $extensions = $compiler->getExtensions();
 
 Assert::same(2, count($extensions));
+Assert::false($extensions['foo']->loaded);
+Assert::false($extensions['baz']->loaded);
+
+
+// first running
+$compiler->compile(array(), 'SystemContainer', 'Nette\DI\Container');
+$extensions = $compiler->getExtensions();
+
+Assert::same(3, count($extensions));
 Assert::true($extensions['foo']->loaded);
 Assert::true($extensions['bar']->loaded);
+Assert::true($extensions['baz']->loaded);
+
+Assert::same( array('FooExtension', 'BazExtension', 'BarExtension'), TestHelpers::fetchNotes() );
 
 
 // second running
 $extensions['foo']->loaded = false;
 $extensions['bar']->loaded = false;
-$compiler->processExtensions();
+$extensions['baz']->loaded = false;
+$compiler->compile(array(), 'SystemContainer', 'Nette\DI\Container');
 $extensions = $compiler->getExtensions();
 
-Assert::same(2, count($extensions));
+Assert::same(3, count($extensions));
 Assert::true($extensions['foo']->loaded);
 Assert::true($extensions['bar']->loaded);
+Assert::true($extensions['baz']->loaded);
+
+Assert::same(array('FooExtension', 'BazExtension', 'BarExtension'), TestHelpers::fetchNotes());
