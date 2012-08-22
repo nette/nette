@@ -25,7 +25,6 @@ use Nette,
 class NetteExtension extends Nette\Config\CompilerExtension
 {
 	public $defaults = array(
-		'xhtml' => TRUE,
 		'session' => array(
 			'iAmUsingBadHost' => NULL,
 			'autoStart' => 'smart',  // true|false|smart
@@ -54,6 +53,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		'database' => array(), // of [name => dsn, user, password, debugger, explain, autowired, reflection]
 		'forms' => array(
 			'messages' => array(),
+		),
+		'latte' => array(
+			'xhtml' => TRUE,
+			'macros' => array(),
 		),
 		'container' => array(
 			'debugger' => FALSE,
@@ -85,6 +88,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
+		if (isset($config['xhtml'])) {
+			$config['latte']['xhtml'] = $config['xhtml'];
+		}
+
 		$this->setupCache($container);
 		$this->setupHttp($container);
 		$this->setupSession($container, $config['session']);
@@ -93,7 +100,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$this->setupRouting($container, $config['routing']);
 		$this->setupMailer($container, $config['mailer']);
 		$this->setupForms($container);
-		$this->setupTemplating($container, $config);
+		$this->setupTemplating($container, $config['latte']);
 		$this->setupDatabase($container, $config['database']);
 	}
 
@@ -272,6 +279,17 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->addSetup('registerFilter', array($latte))
 			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
 			->setShared(FALSE);
+
+		foreach ($config['macros'] as $macro) {
+			if (strpos($macro, '::') === FALSE && class_exists($macro)) {
+				$macro .= '::install';
+
+			} else {
+				Validators::assert($macro, 'callable');
+			}
+
+			$latte->addSetup($macro . '(?->compiler)', array('@self'));
+		}
 	}
 
 
@@ -374,8 +392,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$initialize->addBody('$this->session->start();');
 		}
 
-		if (empty($config['xhtml'])) {
-			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['xhtml']));
+		if (empty($config['latte']['xhtml'])) {
+			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool)$config['latte']['xhtml']));
 		}
 
 		if (isset($config['security']['frames']) && $config['security']['frames'] !== TRUE) {
