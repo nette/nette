@@ -110,12 +110,6 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
-	/** @var Nette\Http\IRequest */
-	private $httpRequest;
-
-	/** @var Nette\Http\Session */
-	private $session;
-
 
 
 	/**
@@ -630,44 +624,11 @@ class Form extends Container
 
 
 	/**
-	 * @return Form  provides a fluent interface
-	 */
-	public function injectHttpRequest(Nette\Http\IRequest $httpRequest)
-	{
-		if ($this->httpRequest) {
-			throw new Nette\InvalidStateException('Service Nette\Http\IRequest has already been set.');
-		}
-		$this->httpRequest = $httpRequest;
-		return $this;
-	}
-
-
-
-	/**
 	 * @return Nette\Http\IRequest
 	 */
 	protected function getHttpRequest()
 	{
-		if (!$this->httpRequest) {
-			$factory = new Nette\Http\RequestFactory;
-			$factory->setEncoding('UTF-8');
-			$this->httpRequest = $factory->createHttpRequest();
-		}
-		return $this->httpRequest;
-	}
-
-
-
-	/**
-	 * @return Form  provides a fluent interface
-	 */
-	public function injectSession(Nette\Http\Session $session)
-	{
-		if ($this->session) {
-			throw new Nette\InvalidStateException('Service Nette\Http\Session has already been set.');
-		}
-		$this->session = $session;
-		return $this;
+		return Nette\Environment::getHttpRequest();
 	}
 
 
@@ -677,10 +638,7 @@ class Form extends Container
 	 */
 	protected function getSession()
 	{
-		if (!$this->session) {
-			$this->session = new Nette\Http\Session($this->getHttpRequest(), new Nette\Http\Response);
-		}
-		return $this->session;
+		return Nette\Environment::getSession();
 	}
 
 }
