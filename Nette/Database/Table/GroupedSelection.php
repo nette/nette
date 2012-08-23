@@ -30,63 +30,50 @@ class GroupedSelection extends Selection
 	/** @var string grouping column name */
 	protected $column;
 
-	/** @var string */
-	protected $delimitedColumn;
-
 	/** @var int primary key */
 	protected $active;
 
-	/** @var array of referencing cached results */
-	protected $referencing;
-
-	/** @var array of [conditions => [key => ActiveRow]] */
-	protected $aggregation = array();
 
 
-
-	public function __construct($name, Selection $refTable, $column)
+	/**
+	 * Creates filtered and grouped table representation.
+	 * @param  Selection  $refTable
+	 * @param  string  database table name
+	 * @param  string  joining column
+	 */
+	public function __construct(Selection $refTable, $table, $column)
 	{
-		parent::__construct($name, $refTable->connection);
+		parent::__construct($refTable->connection, $table);
 		$this->refTable = $refTable;
 		$this->column = $column;
-		$this->delimitedColumn = $this->connection->getSupplementalDriver()->delimite($this->column);
 	}
 
 
 
 	/**
+	 * Sets active group
 	 * @internal
-	 * @param  int  $active
+	 * @param  int  primary key of grouped rows
 	 * @return GroupedSelection
 	 */
 	public function setActive($active)
 	{
-		$this->rows = NULL;
 		$this->active = $active;
-		$this->select = $this->where = $this->conditions = $this->parameters = $this->order = array();
-		$this->limit = $this->offset = NULL;
-		$this->group = $this->having = '';
 		return $this;
 	}
 
 
 
-	/** @deprecated */
-	public function through($column)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::related("' . $this->name . '", "' . $column . '") instead.', E_USER_DEPRECATED);
-		$this->column = $column;
-		$this->delimitedColumn = $this->refTable->connection->getSupplementalDriver()->delimite($this->column);
-		return $this;
-	}
+	/********************* sql selectors ****************d*g**/
 
 
 
 	public function select($columns)
 	{
-		if (!$this->select) {
-			$this->select[] = "$this->delimitedName.$this->delimitedColumn";
+		if (!$this->sqlBuilder->getSelect()) {
+			$this->sqlBuilder->select("$this->name.$this->column");
 		}
+
 		return parent::select($columns);
 	}
 
@@ -94,29 +81,32 @@ class GroupedSelection extends Selection
 
 	public function order($columns)
 	{
-		if (!$this->order) { // improve index utilization
-			$this->order[] = "$this->delimitedName.$this->delimitedColumn"
-				. (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : '');
+		if (!$this->sqlBuilder->getOrder()) {
+			// improve index utilization
+			$this->sqlBuilder->order("$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : ''));
 		}
+
 		return parent::order($columns);
 	}
 
 
 
+	/********************* aggregations ****************d*g**/
+
+
+
 	public function aggregation($function)
 	{
-		$aggregation = & $this->aggregation[$function . implode('', $this->where) . implode('', $this->conditions)];
+		$aggregation = & $this->getRefTable($refPath)->aggregation[$refPath . $function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
+
 		if ($aggregation === NULL) {
 			$aggregation = array();
 
-			$selection = new Selection($this->name, $this->connection);
-			$selection->where = $this->where;
-			$selection->parameters = $this->parameters;
-			$selection->conditions = $this->conditions;
-
+			$selection = $this->createSelectionInstance();
+			$selection->getSqlBuilder()->importConditions($this->getSqlBuilder());
 			$selection->select($function);
-			$selection->select("{$this->name}.{$this->column}");
-			$selection->group("{$this->name}.{$this->column}");
+			$selection->select("$this->name.$this->column");
+			$selection->group("$this->name.$this->column");
 
 			foreach ($selection as $row) {
 				$aggregation[$row[$this->column]] = $row;
@@ -132,11 +122,83 @@ class GroupedSelection extends Selection
 
 
 
-	public function count($column = '')
+	public function count($column = NULL)
 	{
 		$return = parent::count($column);
 		return isset($return) ? $return : 0;
 	}
+
+
+
+	/********************* internal ****************d*g**/
+
+
+
+	protected function execute()
+	{
+		if ($this->rows !== NULL) {
+			return;
+		}
+
+		$hash = md5($this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters()));
+
+		$referencing = & $this->getRefTable($refPath)->referencing[$refPath . $hash];
+		$this->rows = & $referencing['rows'];
+		$this->referenced = & $referencing['refs'];
+		$this->accessed = & $referencing['accessed'];
+		$refData = & $referencing['data'];
+
+		if ($refData === NULL) {
+			$limit = $this->sqlBuilder->getLimit();
+			$rows = count($this->refTable->rows);
+			if ($limit && $rows > 1) {
+				$this->sqlBuilder->limit(NULL, NULL);
+			}
+			parent::execute();
+			$this->sqlBuilder->limit($limit, NULL);
+			$refData = array();
+			$offset = array();
+			foreach ($this->rows as $key => $row) {
+				$ref = & $refData[$row[$this->column]];
+				$skip = & $offset[$row[$this->column]];
+				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->sqlBuilder->getOffset())) {
+					$ref[$key] = $row;
+				} else {
+					unset($this->rows[$key]);
+				}
+				$skip++;
+				unset($ref, $skip);
+			}
+		}
+
+		$this->data = & $refData[$this->active];
+		if ($this->data === NULL) {
+			$this->data = array();
+		} else {
+			foreach ($this->data as $row) {
+				$row->setTable($this); // injects correct parent GroupedSelection
+			}
+			reset($this->data);
+		}
+	}
+
+
+
+	protected function getRefTable(& $refPath)
+	{
+		$refObj = $this->refTable;
+		$refPath = $this->name . '.';
+		while ($refObj instanceof GroupedSelection) {
+			$refPath .= $refObj->name . '.';
+			$refObj = $refObj->refTable;
+		}
+
+		return $refObj;
+	}
+
+
+
+	/********************* manipulation ****************d*g**/
 
 
 
@@ -161,13 +223,13 @@ class GroupedSelection extends Selection
 
 	public function update($data)
 	{
-		$condition = array($this->where, $this->parameters);
+		$builder = $this->sqlBuilder;
 
-		$this->where[0] = "$this->delimitedColumn = ?";
-		$this->parameters[0] = $this->active;
+		$this->sqlBuilder = new SqlBuilder($this);
+		$this->where($this->column, $this->active);
 		$return = parent::update($data);
 
-		list($this->where, $this->parameters) = $condition;
+		$this->sqlBuilder = $builder;
 		return $return;
 	}
 
@@ -175,55 +237,14 @@ class GroupedSelection extends Selection
 
 	public function delete()
 	{
-		$condition = array($this->where, $this->parameters);
+		$builder = $this->sqlBuilder;
 
-		$this->where[0] = "$this->delimitedColumn = ?";
-		$this->parameters[0] = $this->active;
+		$this->sqlBuilder = new SqlBuilder($this);
+		$this->where($this->column, $this->active);
 		$return = parent::delete();
 
-		list($this->where, $this->parameters) = $condition;
+		$this->sqlBuilder = $builder;
 		return $return;
-	}
-
-
-
-	protected function execute()
-	{
-		if ($this->rows !== NULL) {
-			return;
-		}
-
-		$hash = md5($this->getSql() . json_encode($this->parameters));
-		$referencing = & $this->referencing[$hash];
-		if ($referencing === NULL) {
-			$limit = $this->limit;
-			$rows = count($this->refTable->rows);
-			if ($this->limit && $rows > 1) {
-				$this->limit = NULL;
-			}
-			parent::execute();
-			$this->limit = $limit;
-			$referencing = array();
-			$offset = array();
-			foreach ($this->rows as $key => $row) {
-				$ref = & $referencing[$row[$this->column]];
-				$skip = & $offset[$row[$this->column]];
-				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->offset)) {
-					$ref[$key] = $row;
-				} else {
-					unset($this->rows[$key]);
-				}
-				$skip++;
-				unset($ref, $skip);
-			}
-		}
-
-		$this->data = & $referencing[$this->active];
-		if ($this->data === NULL) {
-			$this->data = array();
-		} else {
-			reset($this->data);
-		}
 	}
 
 }
