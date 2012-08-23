@@ -64,12 +64,7 @@ class SelectBox extends BaseControl
 	 */
 	public function getValue()
 	{
-		$allowed = $this->allowed;
-		if ($this->prompt) {
-			$allowed = array_slice($allowed, 1, count($allowed), TRUE);
-		}
-
-		return is_scalar($this->value) && isset($allowed[$this->value]) ? $this->value : NULL;
+		return is_scalar($this->value) && isset($this->allowed[$this->value]) ? $this->value : NULL;
 	}
 
 
@@ -98,17 +93,17 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Ignores the first item in select box.
+	 * Sets first prompt item in select box.
 	 * @param  string
 	 * @return SelectBox  provides a fluent interface
 	 */
 	public function setPrompt($prompt)
 	{
-		$this->prompt = $prompt;
-		if ($prompt !== NULL && !is_bool($prompt)) {
-			$this->items = array('' => $prompt) + $this->items;
-			$this->allowed = array('' => '') + $this->allowed;
+		if ($prompt === TRUE) { // back compatibility
+			$prompt = reset($this->items);
+			unset($this->allowed[key($this->items)], $this->items[key($this->items)]);
 		}
+		$this->prompt = $prompt;
 		return $this;
 	}
 
@@ -124,8 +119,8 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Is first item in select box ignored?
-	 * @return bool
+	 * Returns first prompt item?
+	 * @return mixed
 	 */
 	final public function getPrompt()
 	{
@@ -153,33 +148,27 @@ class SelectBox extends BaseControl
 	 */
 	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
-		if ($this->prompt) {
-			$this->items = array('' => is_bool($this->prompt) ? $this->items[''] : $this->prompt) + $this->items;
-		}
-		$this->allowed = $this->prompt ? array('' => '') : array();
-		$this->useKeys = (bool) $useKeys;
-
-		foreach ($items as $key => $value) {
-			if (!is_array($value)) {
-				$value = array($key => $value);
-			}
-
-			foreach ($value as $key2 => $value2) {
-				if (!$this->useKeys) {
-					if (!is_scalar($value2)) {
+		$allowed = array();
+		foreach ($items as $k => $v) {
+			foreach ((is_array($v) ? $v : array($k => $v)) as $key => $value) {
+				if (!$useKeys) {
+					if (!is_scalar($value)) {
 						throw new Nette\InvalidArgumentException("All items must be scalar.");
 					}
-					$key2 = $value2;
+					$key = $value;
 				}
 
-				if (isset($this->allowed[$key2])) {
-					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key2'.");
+				if (isset($allowed[$key])) {
+					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key'.");
 				}
 
-				$this->allowed[$key2] = $value2;
+				$allowed[$key] = $value;
 			}
 		}
+
+		$this->items = $items;
+		$this->allowed = $allowed;
+		$this->useKeys = (bool) $useKeys;
 		return $this;
 	}
 
@@ -202,13 +191,8 @@ class SelectBox extends BaseControl
 	 */
 	public function getSelectedItem()
 	{
-		if (!$this->useKeys) {
-			return $this->getValue();
-
-		} else {
-			$value = $this->getValue();
-			return $value === NULL ? NULL : $this->allowed[$value];
-		}
+		$value = $this->getValue();
+		return ($this->useKeys && $value !== NULL) ? $this->allowed[$value] : $value;
 	}
 
 
@@ -219,20 +203,22 @@ class SelectBox extends BaseControl
 	 */
 	public function getControl()
 	{
-		$control = parent::getControl();
-		if ($this->prompt) {
-			reset($this->items);
-			$control->data('nette-empty-value', $this->useKeys ? key($this->items) : current($this->items));
-		}
 		$selected = $this->getValue();
 		$selected = is_array($selected) ? array_flip($selected) : array($selected => TRUE);
+		$control = parent::getControl();
 		$option = Nette\Utils\Html::el('option');
+
+		if ($this->prompt !== FALSE) {
+			$control->add($this->prompt instanceof Nette\Utils\Html
+				? $this->prompt->value('')
+				: (string) $option->value('')->setText($this->translate((string) $this->prompt))
+			);
+		}
 
 		foreach ($this->items as $key => $value) {
 			if (!is_array($value)) {
 				$value = array($key => $value);
 				$dest = $control;
-
 			} else {
 				$dest = $control->create('optgroup')->label($this->translate($key));
 			}
