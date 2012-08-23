@@ -114,7 +114,7 @@ class Form extends Container
 	private $httpRequest;
 
 	/** @var Nette\Http\Session */
-	private $session;
+	protected $session;
 
 
 
