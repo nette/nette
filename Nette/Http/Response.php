@@ -298,6 +298,10 @@ final class Response extends Nette\Object implements IResponse
 			$httpOnly === NULL ? $this->cookieHttpOnly : (bool) $httpOnly
 		);
 
+		if (ini_get('suhosin.cookie.encrypt')) {
+			return $this;
+		}
+
 		$flatten = array();
 		foreach (headers_list() as $header) {
 			if (preg_match('#^Set-Cookie: .+?=#', $header, $m)) {
