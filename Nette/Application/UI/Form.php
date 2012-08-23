@@ -82,7 +82,9 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 			}
 
 			$this->injectHttpRequest($presenter->getContext()->getByType('Nette\Http\IRequest'));
-			$this->injectSession($presenter->getContext()->getByType('Nette\Http\Session'));
+			if (!$this->session) {
+				$this->injectSession($presenter->getContext()->getByType('Nette\Http\Session'));
+			}
 		}
 		parent::attached($presenter);
 	}
@@ -145,6 +147,19 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 			$class = get_class($this);
 			throw new BadSignalException("Missing handler for signal '$signal' in $class.");
 		}
+	}
+
+
+
+	/**
+	 * @return Nette\Http\Session
+	 */
+	protected function getSession()
+	{
+		if (!$this->session) {
+			throw new Nette\InvalidStateException("Session does not set");
+		}
+		return $this->session;
 	}
 
 }
