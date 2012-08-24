@@ -202,7 +202,8 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$application = $container->addDefinition('application') // no namespace for back compatibility
 			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', $config['catchExceptions'])
-			->addSetup('$errorPresenter', $config['errorPresenter']);
+			->addSetup('$errorPresenter', $config['errorPresenter'])
+			->addSetup('$service->onShutdown[] = array(?, "close")', array('@session'));
 
 		if ($config['debugger']) {
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
