@@ -29,7 +29,7 @@ class Multiplier extends PresenterComponent
 	public function __construct($factory)
 	{
 		parent::__construct();
-		$this->factory = callback($factory);
+		$this->factory = new Nette\Callback($factory);
 	}
 
 

@@ -73,7 +73,7 @@ class Method extends \ReflectionMethod
 	 */
 	public function toCallback()
 	{
-		return new Nette\Callback(array(parent::getDeclaringClass()->getName(), $this->getName()));
+		return new Nette\Callback(parent::getDeclaringClass()->getName(), $this->getName());
 	}
 
 
