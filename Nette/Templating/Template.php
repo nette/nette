@@ -170,7 +170,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$callback = callback($callback);
+		$callback = new Nette\Callback($callback);
 		if (in_array($callback, $this->filters)) {
 			throw new Nette\InvalidStateException("Filter '$callback' was registered twice.");
 		}
@@ -199,7 +199,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = callback($callback);
+		$this->helpers[strtolower($name)] = new Nette\Callback($callback);
 		return $this;
 	}
 
@@ -212,7 +212,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		$this->helperLoaders[] = callback($callback);
+		$this->helperLoaders[] = new Nette\Callback($callback);
 		return $this;
 	}
 

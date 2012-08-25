@@ -98,7 +98,7 @@ class ClassType extends \ReflectionClass
 	public function setExtensionMethod($name, $callback)
 	{
 		$l = & self::$extMethods[strtolower($name)];
-		$l[strtolower($this->getName())] = callback($callback);
+		$l[strtolower($this->getName())] = new Nette\Callback($callback);
 		$l[''] = NULL;
 		return $this;
 	}
@@ -117,7 +117,7 @@ class ClassType extends \ReflectionClass
 			foreach ($list['user'] as $fce) {
 				$pair = explode('_prototype_', $fce);
 				if (count($pair) === 2) {
-					self::$extMethods[$pair[1]][$pair[0]] = callback($fce);
+					self::$extMethods[$pair[1]][$pair[0]] = new Nette\Callback($fce);
 					self::$extMethods[$pair[1]][''] = NULL;
 				}
 			}

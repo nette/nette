@@ -27,7 +27,7 @@ $two = new Service;
 $container = new Container;
 $container->one = $one;
 $container->addService('two', 'Service');
-$container->three = /*5.2*callback(*/function(){
+$container->three = /*5.2*new Nette\Callback(*/function(){
 	return new Service;
 }/*5.2*)*/;
 

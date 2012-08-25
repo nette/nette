@@ -41,7 +41,7 @@ Assert::true( $cache->load($key) === $value, 'Is cache ok?' );
 unset($cache[$key]);
 
 // Writing cache using Nette\Callback...
-$res = $cache->save($key, callback(function() use ($value) {
+$res = $cache->save($key, new Nette\Callback(function() use ($value) {
 	return $value;
 }));
 

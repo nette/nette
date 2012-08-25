@@ -75,7 +75,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register()
 	{
-		$this->list = $this->getCache()->load($this->getKey(), callback($this, '_rebuildCallback'));
+		$this->list = $this->getCache()->load($this->getKey(), $this->_rebuildCallback);
 		parent::register();
 		return $this;
 	}
@@ -130,7 +130,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
-		$this->getCache()->save($this->getKey(), callback($this, '_rebuildCallback'));
+		$this->getCache()->save($this->getKey(), $this->_rebuildCallback);
 		$this->rebuilt = TRUE;
 	}
 
