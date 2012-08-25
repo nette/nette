@@ -7,8 +7,16 @@ dir=` dirname $0 `
 if echo $dir | grep -v ^/ > /dev/null; then
 	dir=` pwd `/$dir
 fi
+runner="$dir/Test/RunTests.php";
 
-while getopts "p:" opt;
+case $1 in
+	"-h"|"--help")
+		php $runner --help
+		exit 0
+	;;
+esac
+
+while getopts "p:c:log:d:l:s:j:" opt;
 do
     case $opt in
         p) php_exec=$OPTARG ;;
@@ -18,9 +26,9 @@ done
 
 # runs RunTests.php with script's arguments
 if [ ! -x "$php_exec" ]; then
-    php "$dir/Test/RunTests.php" -p `which php` $*
+    php $runner -p `which php` $*
 else
-    php "$dir/Test/RunTests.php" $*
+    php $runner $*
 fi
 
 # returns what script returned
