@@ -138,8 +138,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$callback = new Nette\Callback($data);
-			$data = $callback->invokeArgs(array(&$dp));
+			$data = Nette\Callback::create($data)->invokeArgs(array(&$dp));
 		}
 
 		if ($data === NULL) {
@@ -237,8 +236,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 		$key = func_get_args();
 		return $this->load($key, function() use ($function, $key) {
 			array_shift($key);
-			$callback = new Nette\Callback($function);
-			return $callback->invokeArgs($key);
+			return Nette\Callback::create($function)->invokeArgs($key);
 		});
 	}
 
@@ -257,8 +255,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 			$key = array($function, func_get_args());
 			$data = $cache->load($key);
 			if ($data === NULL) {
-				$callback = new Nette\Callback($function);
-				$data = $cache->save($key, $callback->invokeArgs($key[1]), $dp);
+				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dp);
 			}
 			return $data;
 		};

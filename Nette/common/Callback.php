@@ -171,4 +171,23 @@ final class Callback extends Object
 		}
 	}
 
+
+
+	/**
+	 * @param  callable
+	 * @param  string|NULL
+	 * @return Callback
+	 */
+	public static function create($callback, $m = NULL)
+	{
+		if ($m !== NULL) {
+			$callback = array($callback, $m);
+
+		} elseif ($callback instanceof self) {
+			return $callback;
+		}
+
+		return new self($callback);
+	}
+
 }

@@ -65,8 +65,7 @@ final class ObjectMixin
 		} elseif ($isProp === 'event') { // calling event handlers
 			if (is_array($_this->$name) || $_this->$name instanceof \Traversable) {
 				foreach ($_this->$name as $handler) {
-					$callback = new Nette\Callback($handler);
-					$callback->invokeArgs($args);
+					Nette\Callback::create($handler)->invokeArgs($args);
 				}
 			} elseif ($_this->$name !== NULL) {
 				throw new UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");

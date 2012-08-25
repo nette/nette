@@ -71,8 +71,5 @@ Nette\Utils\SafeStream::register();
  */
 function callback($callback, $m = NULL)
 {
-	if ($m === NULL) {
-		return $callback instanceof Nette\Callback ? $callback : new Nette\Callback($callback);
-	}
-	return new Nette\Callback(array($callback, $m));
+	return Nette\Callback::create($callback, $m);
 }
