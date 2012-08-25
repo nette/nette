@@ -8,7 +8,7 @@ require_once __DIR__ . '/TestRunner.php';
 /**
  * Help
  */
-if (!isset($_SERVER['argv'][1])) { ?>
+if (!isset($_SERVER['argv'][1]) || $_SERVER['argv'][1] === '-h' || $_SERVER['argv'][1] === '--help') { ?>
 Usage:
 	php RunTests.php [options] [file or directory]
 
@@ -22,6 +22,9 @@ Options:
 	-j <num>    Run <num> jobs in parallel.
 
 <?php
+	if (isset($_SERVER['argv'][1])) {
+		exit(0);
+	}
 }
 
 
