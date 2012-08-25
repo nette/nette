@@ -36,7 +36,7 @@ class TextInput extends TextBase
 		$this->control->type = 'text';
 		$this->control->size = $cols;
 		$this->control->maxlength = $maxLength;
-		$this->filters[] = callback($this, 'sanitize');
+		$this->filters[] = new Nette\Callback(array($this, 'sanitize'));
 		$this->value = '';
 	}
 

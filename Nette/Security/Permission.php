@@ -548,7 +548,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			$privileges = array($privileges);
 		}
 
-		$assertion = $assertion ? callback($assertion) : NULL;
+		$assertion = $assertion ? new Nette\Callback($assertion) : NULL;
 
 		if ($toAdd) { // add to the rules
 			foreach ($resources as $resource) {

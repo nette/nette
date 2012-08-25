@@ -126,7 +126,8 @@ class MacroSet extends Nette\Object implements Latte\IMacro
 		if (is_string($def)/*5.2* && substr($def, 0, 1) !== "\0"*/) {
 			return $writer->write($def);
 		} else {
-			return callback($def)->invoke($node, $writer);
+			$callback = new Nette\Callback($def);
+			return $callback->invoke($node, $writer);
 		}
 	}
 
