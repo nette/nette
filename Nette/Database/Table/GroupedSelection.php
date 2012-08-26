@@ -43,7 +43,7 @@ class GroupedSelection extends Selection
 	 */
 	public function __construct(Selection $refTable, $table, $column)
 	{
-		parent::__construct($refTable->connection, $table);
+		parent::__construct($table, $refTable->connection);
 		$this->refTable = $refTable;
 		$this->column = $column;
 	}
