@@ -27,6 +27,9 @@ class MySessionStorage extends Object implements ISessionStorage
 
 	function open($savePath, $sessionName)
 	{
+		Assert::false( empty($savePath) );
+		Assert::false( empty($sessionName) );
+		Assert::true( is_writable($savePath) );
 		$this->path = $savePath;
 	}
 
