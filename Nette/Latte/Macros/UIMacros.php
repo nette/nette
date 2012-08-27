@@ -242,7 +242,7 @@ if (!empty($_control->snippetMode)) {
 				throw new CompileException("Missing block name.");
 			}
 
-		} elseif (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) { // dynamic blok/snippet
+		} elseif (!Strings::match($name, '#^' . self::RE_IDENTIFIER . '$#')) { // dynamic block/snippet
 			if ($node->name === 'snippet') {
 				for ($parent = $node->parentNode; $parent && $parent->name !== 'snippet'; $parent = $parent->parentNode);
 				if (!$parent) {
@@ -264,16 +264,16 @@ if (!empty($_control->snippetMode)) {
 			} else {
 				$node->data->leave = TRUE;
 				$fname = $writer->formatWord($name);
-				$node->closingCode = "<?php }} call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars()) ?>";
+				$node->closingCode = "<?php }} " . ($node->name === 'define' ? '' : "call_user_func(reset(\$_l->blocks[$fname]), \$_l, get_defined_vars())") . " ?>";
 				$func = '_lb' . substr(md5($this->getCompiler()->getTemplateId() . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
-				return "//\n// block $name\n//\n"
-					. "if (!function_exists(\$_l->blocks[$fname][] = '$func')) { "
+				return "\n\n//\n// block $name\n//\n"
+					. "if (!function_exists(\$_l->blocks[$fname]['{$this->getCompiler()->getTemplateId()}'] = '$func')) { "
 					. "function $func(\$_l, \$_args) { "
 					. (PHP_VERSION_ID > 50208 ? 'extract($_args)' : 'foreach ($_args as $__k => $__v) $$__k = $__v'); // PHP bug #46873
 			}
 		}
 
-		// static blok/snippet
+		// static block/snippet
 		if ($node->name === 'snippet') {
 			$node->data->name = $name = '_' . $name;
 		}
