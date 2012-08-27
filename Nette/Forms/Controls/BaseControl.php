@@ -542,7 +542,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		$payload = array();
 		foreach ($rules as $rule) {
 			if (!is_string($op = $rule->operation)) {
-				$op = callback($op);
+				$op = new Nette\Callback($op);
 				if (!$op->isStatic()) {
 					continue;
 				}
