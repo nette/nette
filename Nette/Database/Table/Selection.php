@@ -76,10 +76,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	/**
 	 * Creates filtered table representation.
-	 * @param  Nette\Database\Connection
 	 * @param  string  database table name
 	 */
-	public function __construct(Nette\Database\Connection $connection, $table)
+	public function __construct($table, Nette\Database\Connection $connection)
 	{
 		$this->name = $table;
 		$this->connection = $connection;
@@ -460,7 +459,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function createSelectionInstance($table = NULL)
 	{
-		return new Selection($this->connection, $table ?: $this->name);
+		return new Selection($table ?: $this->name, $this->connection);
 	}
 
 
