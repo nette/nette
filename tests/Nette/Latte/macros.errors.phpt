@@ -19,5 +19,10 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 Assert::throws(function() use ($template) {
+	$template->setSource('<a {if}n:href>')->compile();
+}, 'Nette\Latte\CompileException', 'Macro-attributes must not appear inside macro; found n:href inside {if}.');
+
+
+Assert::throws(function() use ($template) {
 	$template->setSource('<a n:href n:href>')->compile();
 }, 'Nette\Latte\CompileException', 'Found multiple macro-attributes n:href.');

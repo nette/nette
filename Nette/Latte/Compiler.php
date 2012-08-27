@@ -335,6 +335,9 @@ class Compiler extends Nette\Object
 			$name = substr($token->name, strlen(Parser::N_PREFIX));
 			if (isset($this->htmlNode->macroAttrs[$name])) {
 				throw new CompileException("Found multiple macro-attributes $token->name.", 0, $token->line);
+
+			} elseif ($this->macroNode && $this->macroNode->htmlNode === $this->htmlNode) {
+				throw new CompileException("Macro-attributes must not appear inside macro; found $token->name inside {{$this->macroNode->name}}.", 0, $token->line);
 			}
 			$this->htmlNode->macroAttrs[$name] = $token->value;
 
