@@ -252,7 +252,7 @@ if (!empty($_control->snippetMode)) {
 				$node->data->leave = TRUE;
 				$node->closingCode = "<?php \$_dynSnippets[\$_dynSnippetId] = ob_get_flush() ?>";
 
-				if ($node->htmlNode) {
+				if ($node->prefix) {
 					$node->attrCode = $writer->write("<?php echo ' id=\"' . (\$_dynSnippetId = \$_control->getSnippetId({$writer->formatWord($name)})) . '\"' ?>");
 					return $writer->write('ob_start()');
 				}
@@ -290,7 +290,7 @@ if (!empty($_control->snippetMode)) {
 		}
 
 		if ($node->name === 'snippet') {
-			if ($node->htmlNode) {
+			if ($node->prefix) {
 				$node->attrCode = $writer->write('<?php echo \' id="\' . $_control->getSnippetId(%var) . \'"\' ?>', (string) substr($name, 1));
 				return $writer->write($prolog . $include, $name);
 			}
@@ -318,7 +318,7 @@ if (!empty($_control->snippetMode)) {
 	public function macroBlockEnd(MacroNode $node, PhpWriter $writer)
 	{
 		if (isset($node->data->name)) { // block, snippet, define
-			if ($node->name === 'snippet' && $node->htmlNode && $node->prefix === MacroNode::PREFIX_NONE // n:snippet -> n:inner-snippet
+			if ($node->name === 'snippet' && $node->prefix === MacroNode::PREFIX_NONE // n:snippet -> n:inner-snippet
 				&& preg_match("#^.*? n:\w+>\n?#s", $node->content, $m1) && preg_match("#[ \t]*<[^<]+$#sD", $node->content, $m2))
 			{
 				$node->openingCode = $m1[0] . $node->openingCode;

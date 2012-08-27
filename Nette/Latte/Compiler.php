@@ -337,7 +337,7 @@ class Compiler extends Nette\Object
 				throw new CompileException("Found multiple macro-attributes $token->name.", 0, $token->line);
 			}
 			$this->htmlNode->macroAttrs[$name] = $token->value;
-			
+
 		} else {
 			$this->htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
@@ -530,7 +530,7 @@ class Compiler extends Nette\Object
 			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
 		foreach (array_reverse($this->macros[$name]) as $macro) {
-			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNode, $nPrefix === NULL ? NULL : $this->htmlNode, $nPrefix);
+			$node = new MacroNode($macro, $name, $args, $modifiers, $this->macroNode, $this->htmlNode, $nPrefix);
 			if ($macro->nodeOpened($node) !== FALSE) {
 				return $node;
 			}
