@@ -99,7 +99,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function __clone()
 	{
 		$this->sqlBuilder = clone $this->sqlBuilder;
-		$this->sqlBuilder->injectSelection($this);
+		$this->sqlBuilder->setSelection($this);
 	}
 
 
@@ -139,7 +139,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getSql()
 	{
-		return $this->sqlBuilder->getSql();
+		return $this->sqlBuilder->buildSelectQuery();
 	}
 
 
@@ -233,7 +233,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function select($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->select($columns);
+		$this->sqlBuilder->addSelect($columns);
 		return $this;
 	}
 
@@ -272,7 +272,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$args = func_get_args();
-		if (call_user_func_array(array($this->sqlBuilder, 'where'), $args)) {
+		if (call_user_func_array(array($this->sqlBuilder, 'addWhere'), $args)) {
 			$this->emptyResultSet();
 		}
 
@@ -289,7 +289,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function order($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->order($columns);
+		$this->sqlBuilder->addOrder($columns);
 		return $this;
 	}
 
@@ -304,7 +304,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function limit($limit, $offset = NULL)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->limit($limit, $offset);
+		$this->sqlBuilder->setLimit($limit, $offset);
 		return $this;
 	}
 
@@ -332,7 +332,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function group($columns, $having = NULL)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->group($columns, $having);
+		$this->sqlBuilder->setGroup($columns, $having);
 		return $this;
 	}
 
@@ -424,13 +424,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->observeCache = TRUE;
 
 		try {
-			$result = $this->query($this->sqlBuilder->getSql());
+			$result = $this->query($this->sqlBuilder->buildSelectQuery());
 
 		} catch (\PDOException $exception) {
 			if (!$this->sqlBuilder->getSelect() && $this->prevAccessed) {
 				$this->prevAccessed = '';
 				$this->accessed = array();
-				$result = $this->query($this->sqlBuilder->getSql());
+				$result = $this->query($this->sqlBuilder->buildSelectQuery());
 			} else {
 				throw $exception;
 			}
@@ -562,7 +562,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$data = iterator_to_array($data);
 		}
 
-		$return = $this->connection->query($this->sqlBuilder->getInsertQuery(), $data);
+		$return = $this->connection->query($this->sqlBuilder->buildInsertQuery(), $data);
 		$this->checkReferenced = TRUE;
 
 		if (!is_array($data)) {
@@ -601,7 +601,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		return $this->connection->queryArgs(
-			$this->sqlBuilder->getUpdateQuery(),
+			$this->sqlBuilder->buildUpdateQuery(),
 			array_merge(array($data), $this->sqlBuilder->getParameters())
 		)->rowCount();
 	}
@@ -614,7 +614,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function delete()
 	{
-		return $this->query($this->sqlBuilder->getDeleteQuery())->rowCount();
+		return $this->query($this->sqlBuilder->buildDeleteQuery())->rowCount();
 	}
 
 

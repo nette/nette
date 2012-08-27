@@ -78,7 +78,7 @@ class GroupedSelection extends Selection
 	public function select($columns)
 	{
 		if (!$this->sqlBuilder->getSelect()) {
-			$this->sqlBuilder->select("$this->name.$this->column");
+			$this->sqlBuilder->addSelect("$this->name.$this->column");
 		}
 
 		return parent::select($columns);
@@ -90,7 +90,7 @@ class GroupedSelection extends Selection
 	{
 		if (!$this->sqlBuilder->getOrder()) {
 			// improve index utilization
-			$this->sqlBuilder->order("$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : ''));
+			$this->sqlBuilder->addOrder("$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : ''));
 		}
 
 		return parent::order($columns);
@@ -104,7 +104,7 @@ class GroupedSelection extends Selection
 
 	public function aggregation($function)
 	{
-		$aggregation = & $this->getRefTable($refPath)->aggregation[$refPath . $function . $this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters())];
+		$aggregation = & $this->getRefTable($refPath)->aggregation[$refPath . $function . $this->sqlBuilder->buildSelectQuery() . json_encode($this->sqlBuilder->getParameters())];
 
 		if ($aggregation === NULL) {
 			$aggregation = array();
@@ -147,7 +147,7 @@ class GroupedSelection extends Selection
 			return;
 		}
 
-		$hash = md5($this->sqlBuilder->getSql() . json_encode($this->sqlBuilder->getParameters()));
+		$hash = md5($this->sqlBuilder->buildSelectQuery() . json_encode($this->sqlBuilder->getParameters()));
 
 		$referencing = & $this->getRefTable($refPath)->referencing[$refPath . $hash];
 		$this->rows = & $referencing['rows'];
@@ -159,10 +159,10 @@ class GroupedSelection extends Selection
 			$limit = $this->sqlBuilder->getLimit();
 			$rows = count($this->refTable->rows);
 			if ($limit && $rows > 1) {
-				$this->sqlBuilder->limit(NULL, NULL);
+				$this->sqlBuilder->setLimit(NULL, NULL);
 			}
 			parent::execute();
-			$this->sqlBuilder->limit($limit, NULL);
+			$this->sqlBuilder->setLimit($limit, NULL);
 			$refData = array();
 			$offset = array();
 			foreach ($this->rows as $key => $row) {

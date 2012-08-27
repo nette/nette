@@ -17,7 +17,7 @@ use Nette,
 
 
 /**
- * Builds sql query.
+ * Builds SQL query.
  * SqlBuilder is based on great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
@@ -72,30 +72,30 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function injectSelection(Selection $selection)
+	public function setSelection(Selection $selection)
 	{
 		$this->selection = $selection;
 	}
 
 
 
-	public function getInsertQUery()
+	public function buildInsertQuery()
 	{
 		return "INSERT INTO {$this->delimitedTable}";
 	}
 
 
 
-	public function getUpdateQuery()
+	public function buildUpdateQuery()
 	{
-		return "UPDATE{$this->topString()} {$this->delimitedTable} SET ?" . $this->whereString();
+		return "UPDATE{$this->buildTopClause()} {$this->delimitedTable} SET ?" . $this->buildConditions();
 	}
 
 
 
-	public function getDeleteQuery()
+	public function buildDeleteQuery()
 	{
-		return "DELETE{$this->topString()} FROM {$this->delimitedTable}" . $this->whereString();
+		return "DELETE{$this->buildTopClause()} FROM {$this->delimitedTable}" . $this->buildConditions();
 	}
 
 
@@ -109,11 +109,11 @@ class SqlBuilder extends Nette\Object
 
 
 
-	/********************* sql selectors ****************d*g**/
+	/********************* SQL selectors ****************d*g**/
 
 
 
-	public function select($columns)
+	public function addSelect($columns)
 	{
 		$this->select[] = $columns;
 	}
@@ -127,7 +127,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function where($condition, $parameters = array())
+	public function addWhere($condition, $parameters = array())
 	{
 		$hash = md5(json_encode(func_get_args()));
 		if (isset($this->conditions[$hash])) {
@@ -193,7 +193,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function order($columns)
+	public function addOrder($columns)
 	{
 		$this->order[] = $columns;
 	}
@@ -207,7 +207,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function limit($limit, $offset)
+	public function setLimit($limit, $offset)
 	{
 		$this->limit = $limit;
 		$this->offset = $offset;
@@ -229,7 +229,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function group($columns, $having)
+	public function setGroup($columns, $having)
 	{
 		$this->group = $columns;
 		$this->having = $having;
@@ -251,7 +251,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	/********************* sql building ****************d*g**/
+	/********************* SQL building ****************d*g**/
 
 
 
@@ -259,10 +259,10 @@ class SqlBuilder extends Nette\Object
 	 * Returns SQL query.
 	 * @return string
 	 */
-	public function getSql()
+	public function buildSelectQuery()
 	{
-		$join = $this->createJoins(implode(',', $this->conditions), TRUE);
-		$join += $this->createJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
+		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
+		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
 
 		$prefix = $join ? "{$this->delimitedTable}." : '';
 		if ($this->select) {
@@ -276,7 +276,7 @@ class SqlBuilder extends Nette\Object
 			$cols = $prefix . '*';
 		}
 
-		return "SELECT{$this->topString()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->whereString();
+		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();
 	}
 
 
@@ -288,7 +288,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function createJoins($val, $inner = FALSE)
+	protected function buildJoins($val, $inner = FALSE)
 	{
 		$driver = $this->selection->getConnection()->getSupplementalDriver();
 		$reflection = $this->selection->getConnection()->getDatabaseReflection();
@@ -324,7 +324,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function whereString()
+	protected function buildConditions()
 	{
 		$return = '';
 		$driver = $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -355,7 +355,7 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function topString()
+	protected function buildTopClause()
 	{
 		if ($this->limit !== NULL && $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'dblib') {
 			return " TOP ($this->limit)"; //! offset is not supported
