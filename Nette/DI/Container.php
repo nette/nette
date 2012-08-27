@@ -272,6 +272,25 @@ class Container extends Nette\FreezableObject
 
 
 	/**
+	 * Calls all inject prefixed method using autowiring.
+	 * @param  object  service instance
+	 */
+	public function callInjects($service)
+	{
+		if (!is_object($service)) {
+			$type = gettype($service);
+			throw new Nette\InvalidArgumentException("Service \$service must be object '$type' given.");
+		}
+
+		foreach (array_reverse(get_class_methods($service)) as $method) {
+			if (substr($method, 0, 6) === 'inject') {
+				$this->callMethod(array($service, $method));
+			}
+		}
+	}
+
+
+	/**
 	 * Calls method using autowiring.
 	 * @param  mixed   class, object, function, callable
 	 * @param  array   arguments
