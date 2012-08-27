@@ -246,7 +246,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function find($key)
 	{
-		return $this->where($this->delimitedPrimary, $key);
+		return $this->where($this->primary, $key);
 	}
 
 
