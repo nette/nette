@@ -129,7 +129,8 @@ class SqlBuilder extends Nette\Object
 
 	public function addWhere($condition, $parameters = array())
 	{
-		$hash = md5(json_encode(func_get_args()));
+		$args = func_get_args();
+		$hash = md5(json_encode($args));
 		if (isset($this->conditions[$hash])) {
 			return FALSE;
 		}
@@ -138,10 +139,9 @@ class SqlBuilder extends Nette\Object
 		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
-		$args = func_num_args();
-		if ($args !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
-			if ($args !== 2 || !is_array($parameters)) { // where('column < ? OR column > ?', 1, 2)
-				$parameters = func_get_args();
+		if (count($args) !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
+			if (count($args) !== 2 || !is_array($parameters)) { // where('column < ? OR column > ?', 1, 2)
+				$parameters = $args;
 				array_shift($parameters);
 			}
 

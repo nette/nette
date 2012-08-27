@@ -76,7 +76,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register(/**/$prepend = FALSE/**/)
 	{
-		$this->list = $this->getCache()->load($this->getKey(), $this->_rebuildCallback);
+		$this->list = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 		parent::register(/**/$prepend/**/);
 		return $this;
 	}
@@ -131,7 +131,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
-		$this->getCache()->save($this->getKey(), $this->_rebuildCallback);
+		$this->getCache()->save($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 		$this->rebuilt = TRUE;
 	}
 
