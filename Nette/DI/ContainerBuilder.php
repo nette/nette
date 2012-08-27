@@ -418,6 +418,10 @@ class ContainerBuilder extends Nette\Object
 			$code .= $this->formatStatement($setup, $name) . ";\n";
 		}
 
+		if ($def->inject) {
+			$code .= "\$this->callInjects(\$service);\n";
+		}
+
 		return $code .= 'return $service;';
 	}
 
