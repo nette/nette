@@ -332,7 +332,12 @@ class Compiler extends Nette\Object
 	private function processHtmlAttribute(Token $token)
 	{
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
-			$this->htmlNode->macroAttrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
+			$name = substr($token->name, strlen(Parser::N_PREFIX));
+			if (isset($this->htmlNode->macroAttrs[$name])) {
+				throw new CompileException("Found multiple macro-attributes $token->name.", 0, $token->line);
+			}
+			$this->htmlNode->macroAttrs[$name] = $token->value;
+			
 		} else {
 			$this->htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
