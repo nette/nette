@@ -20,9 +20,9 @@ $config = new Config\Loader;
 $data = $config->load('files/config.includes.neon', 'production');
 
 Assert::same( array(
-	dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.includes.neon',
-	dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.child.ini',
-	dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.child.php',
+	realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.includes.neon'),
+	realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.child.ini'),
+	realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.child.php'),
 ), $config->getDependencies() );
 
 Assert::same( array(
