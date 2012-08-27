@@ -68,14 +68,14 @@ class TestRunner
 			} else {
 				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 			}
-		foreach ($files as $entry) {
-			$entry = (string) $entry;
-			$info = pathinfo($entry);
-			if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
-				continue;
+			foreach ($files as $entry) {
+				$entry = (string) $entry;
+				$info = pathinfo($entry);
+				if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
+					continue;
+				}
+				$tests[] = $entry;
 			}
-			$tests[] = $entry;
-		}
 		}
 
 		$running = array();
