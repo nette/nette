@@ -321,7 +321,12 @@ class Compiler extends Nette\Object
 	{
 		$htmlNode = end($this->htmlNodes);
 		if (Strings::startsWith($token->name, Parser::N_PREFIX)) {
-			$htmlNode->macroAttrs[substr($token->name, strlen(Parser::N_PREFIX))] = $token->value;
+			$name = substr($token->name, strlen(Parser::N_PREFIX));
+			if (isset($htmlNode->macroAttrs[$name])) {
+				throw new CompileException("Found multiple macro-attributes $token->name.", 0, $token->line);
+			}
+			$htmlNode->macroAttrs[$name] = $token->value;
+			
 		} else {
 			$htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;
