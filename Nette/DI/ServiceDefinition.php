@@ -44,6 +44,9 @@ class ServiceDefinition extends Nette\Object
 	public $shared = TRUE;
 
 	/** @var bool */
+	public $inject = FALSE;
+
+	/** @var bool */
 	public $internal = FALSE;
 
 
@@ -120,6 +123,14 @@ class ServiceDefinition extends Nette\Object
 	{
 		$this->shared = (bool) $on;
 		$this->autowired = $this->shared ? $this->autowired : FALSE;
+		return $this;
+	}
+
+
+
+	public function setInject($on)
+	{
+		$this->inject = (bool) $on;
 		return $this;
 	}
 

@@ -410,6 +410,10 @@ class ContainerBuilder extends Nette\Object
 			);
 		}
 
+		if ($def->inject) {
+			$code .= "\$this->callInjects(\$service);\n";
+		}
+
 		foreach ((array) $def->setup as $setup) {
 			$setup = Helpers::expand($setup, $parameters, TRUE);
 			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
