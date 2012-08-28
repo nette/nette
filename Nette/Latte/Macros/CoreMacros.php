@@ -274,6 +274,7 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroOldAttr(MacroNode $node)
 	{
+		trigger_error('Macro {attr} is deprecated; use n:attr="..." instead.', E_USER_DEPRECATED);
 		return Nette\Utils\Strings::replace($node->args . ' ', '#\)\s+#', ')->');
 	}
 
@@ -308,6 +309,9 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroVar(MacroNode $node, PhpWriter $writer)
 	{
+		if ($node->name === 'assign') {
+			trigger_error('Macro {assign} is deprecated; use {var} instead.', E_USER_DEPRECATED);
+		}
 		$out = '';
 		$var = TRUE;
 		$tokenizer = $writer->preprocess();

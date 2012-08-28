@@ -359,6 +359,9 @@ if (!empty($_control->snippetMode)) {
 	 */
 	public function macroControl(MacroNode $node, PhpWriter $writer)
 	{
+		if ($node->name === 'widget') {
+			trigger_error('Macro {widget} is deprecated; use {control} instead.', E_USER_DEPRECATED);
+		}
 		$pair = $node->tokenizer->fetchWord();
 		if ($pair === FALSE) {
 			throw new CompileException("Missing control name in {control}");

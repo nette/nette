@@ -247,12 +247,14 @@ class Application extends Nette\Object
 	/** @deprecated */
 	function storeRequest($expiration = '+ 10 minutes')
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use $presenter->storeRequest() instead.', E_USER_DEPRECATED);
 		return $this->presenter->storeRequest($expiration);
 	}
 
 	/** @deprecated */
 	function restoreRequest($key)
 	{
+		trigger_error(__METHOD__ . '() is deprecated; use $presenter->restoreRequest() instead.', E_USER_DEPRECATED);
 		return $this->presenter->restoreRequest($key);
 	}
 
