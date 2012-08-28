@@ -59,6 +59,9 @@ class TestRunner
 		$failed = $passed = $skipped = array();
 
 		exec($this->phpEnvironment . escapeshellarg($this->phpBinary) . ' -v', $output);
+		if (!isset($output[0])) {
+			return FALSE;
+		}
 		echo "$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
 
 		$tests = array();
