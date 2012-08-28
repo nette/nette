@@ -139,15 +139,15 @@ final class ObjectMixin
 		if ($name === '') {
 			throw new MemberAccessException("Cannot read a class '$class' property without name.");
 
+		} elseif (isset(self::$methods[$class][$m = 'get' . $uname]) || isset(self::$methods[$class][$m = 'is' . $uname])) { // property getter
+			$val = $_this->$m();
+			return $val;
+
 		} elseif (isset(self::$methods[$class][$name])) { // public method as closure getter
 			$val = function() use ($_this, $name) {
 				$args = func_get_args();
 				return call_user_func_array(array($_this, $name), $args);
 			};
-			return $val;
-
-		} elseif (isset(self::$methods[$class][$m = 'get' . $uname]) || isset(self::$methods[$class][$m = 'is' . $uname])) { // property getter
-			$val = $_this->$m();
 			return $val;
 
 		} else { // strict class
