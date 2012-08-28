@@ -50,7 +50,7 @@ Assert::same(array(
 
 
 $books = array();
-foreach ($connection->table('Author') as $author) { // tests also case-insensitive reflection
+foreach ($connection->table('author') as $author) {
 	foreach ($author->related('book') as $book) {
 		$books[$book->title] = $author->name;
 	}
@@ -82,3 +82,26 @@ Assert::false(isset($book->author));
 Assert::false(isset($book->translator));
 Assert::true(empty($book->author));
 Assert::true(empty($book->translator));
+
+
+
+if (
+	$connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' &&
+	($lowerCase = $connection->query('SHOW VARIABLES LIKE "lower_case_table_names"')->fetch()) &&
+	$lowerCase->Value != 0
+) {
+	// tests case-insensitive reflection
+	$books = array();
+	foreach ($connection->table('Author') as $author) {
+		foreach ($author->related('book') as $book) {
+			$books[$book->title] = $author->name;
+		}
+	}
+
+	Assert::same(array(
+		'1001 tipu a triku pro PHP' => 'Jakub Vrana',
+		'JUSH' => 'Jakub Vrana',
+		'Nette' => 'David Grudl',
+		'Dibi' => 'David Grudl',
+	), $books);
+}

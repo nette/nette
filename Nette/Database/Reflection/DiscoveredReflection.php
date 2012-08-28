@@ -70,8 +70,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getPrimary($table)
 	{
-		$table = strtolower($table);
-		$primary = & $this->structure['primary'][$table];
+		$primary = & $this->structure['primary'][strtolower($table)];
 		if (isset($primary)) {
 			return empty($primary) ? NULL : $primary;
 		}
