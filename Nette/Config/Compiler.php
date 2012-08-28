@@ -177,6 +177,9 @@ class Compiler extends Nette\Object
 				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
 				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
 				foreach ($found as $item) {
+					if ($defs[$item]->internal) {
+						continue;
+					}
 					$short = substr($item, strlen($name)  + 1);
 					$accessor->addDocument($defs[$item]->shared
 						? "@property {$defs[$item]->class} \$$short"
