@@ -25,3 +25,8 @@ Assert::match('', (string) $template);
 
 $template->setSource('{define foo-bar}Hello{/define}');
 Assert::match('', (string) $template);
+
+
+$template->foo = 'bar';
+$template->setSource('{define $foo}Hello{/define}');
+Assert::match('', (string) $template);
