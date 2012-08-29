@@ -25,12 +25,12 @@ $block = $cache->start('key');
 Assert::true( $block instanceof Nette\Caching\OutputHelper );
 echo 'Hello';
 $block->end();
-Assert::equal( 'Hello', ob_get_clean() );
+Assert::same( 'Hello', ob_get_clean() );
 
 
-Assert::equal( 'Hello', $cache->load('key') );
+Assert::same( 'Hello', $cache->load('key') );
 
 
 ob_start();
 Assert::null( $cache->start('key') );
-Assert::equal( 'Hello', ob_get_clean() );
+Assert::same( 'Hello', ob_get_clean() );

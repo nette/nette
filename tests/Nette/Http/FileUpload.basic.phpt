@@ -24,15 +24,15 @@ $upload = new FileUpload(array(
 	'size' => 209,
 ));
 
-Assert::equal( 'readme.txt', $upload->getName() );
-Assert::equal( 'readme.txt', $upload->getSanitizedName() );
-Assert::equal( 209, $upload->getSize() );
-Assert::equal( __DIR__ . '/files/file.txt', $upload->getTemporaryFile() );
-Assert::equal( __DIR__ . '/files/file.txt', (string) $upload );
-Assert::equal( 0, $upload->getError() );
+Assert::same( 'readme.txt', $upload->getName() );
+Assert::same( 'readme.txt', $upload->getSanitizedName() );
+Assert::same( 209, $upload->getSize() );
+Assert::same( __DIR__ . '/files/file.txt', $upload->getTemporaryFile() );
+Assert::same( __DIR__ . '/files/file.txt', (string) $upload );
+Assert::same( 0, $upload->getError() );
 Assert::true( $upload->isOk() );
 Assert::false( $upload->isImage() );
-Assert::equal( file_get_contents(__DIR__ . '/files/file.txt'), $upload->getContents() );
+Assert::same( file_get_contents(__DIR__ . '/files/file.txt'), $upload->getContents() );
 
 
 
@@ -44,7 +44,7 @@ $upload = new FileUpload(array(
 	'size' => 209,
 ));
 
-Assert::equal( '../.image.png', $upload->getName() );
-Assert::equal( 'image.png', $upload->getSanitizedName() );
-Assert::equal( 'image/png', $upload->getContentType() );
+Assert::same( '../.image.png', $upload->getName() );
+Assert::same( 'image.png', $upload->getSanitizedName() );
+Assert::same( 'image/png', $upload->getContentType() );
 Assert::true( $upload->isImage() );
