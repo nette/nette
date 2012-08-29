@@ -68,7 +68,7 @@ class SqlPreprocessor extends Nette\Object
 			\'.*?\'|".*?"|   ## string
 			\?               ## placeholder
 		~xs*/
-		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?~s', array($this, 'callback'));
+		$sql = Nette\Utils\Strings::replace($sql, '~(([A-Z]+)\s+)?(\'.*?\'|".*?"|\?)~s', array($this, 'callback'));
 
 		while ($this->counter < count($params)) {
 			$sql .= ' ' . $this->formatValue($params[$this->counter++]);
@@ -82,12 +82,15 @@ class SqlPreprocessor extends Nette\Object
 	/** @internal */
 	public function callback($m)
 	{
-		$m = $m[0];
-		if ($m[0] === "'" || $m[0] === '"') { // string
-			return $m;
+		if ($m[3][0] === "'" || $m[3][0] === '"') { // string
+			return $m[0];
 
 		} else { // placeholder
-			return $this->formatValue($this->params[$this->counter++]);
+			if ($this->arrayMode === 'multi' && strtoupper($m[2]) === 'UPDATE') {
+				$this->arrayMode = 'assoc'; // on duplicate key update
+			}
+
+			return $m[1] . $this->formatValue($this->params[$this->counter++]);
 		}
 	}
 
