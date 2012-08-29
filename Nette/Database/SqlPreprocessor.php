@@ -60,15 +60,9 @@ class SqlPreprocessor extends Nette\Object
 		$this->params = $params;
 		$this->counter = 0;
 		$this->remaining = array();
+		$this->arrayMode = 'assoc';
 
-		$cmd = strtoupper(substr(ltrim($sql), 0, 6)); // detect array mode
-		$this->arrayMode = $cmd === 'INSERT' || $cmd === 'REPLAC' ? 'values' : 'assoc';
-
-		/*~
-			\'.*?\'|".*?"|   ## string
-			\?               ## placeholder
-		~xs*/
-		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?~s', array($this, 'callback'));
+		$sql = Nette\Utils\Strings::replace($sql, '~\'.*?\'|".*?"|\?|\b(?:INSERT|REPLACE)\b~si', array($this, 'callback'));
 
 		while ($this->counter < count($params)) {
 			$sql .= ' ' . $this->formatValue($params[$this->counter++]);
@@ -86,8 +80,12 @@ class SqlPreprocessor extends Nette\Object
 		if ($m[0] === "'" || $m[0] === '"') { // string
 			return $m;
 
-		} else { // placeholder
+		} elseif ($m === '?') { // placeholder
 			return $this->formatValue($this->params[$this->counter++]);
+
+		} else { // INSERT, REPLACE
+			$this->arrayMode = 'values';
+			return $m;
 		}
 	}
 
