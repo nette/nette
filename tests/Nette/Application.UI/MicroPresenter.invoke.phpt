@@ -37,7 +37,7 @@ $presenter->run(new Request('Nette:Micro', 'GET', array(
 	'id' => 1,
 	'page' => 2,
 )));
-Assert::equal(array(
+Assert::same(array(
 	'Callback id 1 page 2'
 ), TestHelpers::fetchNotes());
 
@@ -47,6 +47,6 @@ $presenter->run(new Request('Nette:Micro', 'GET', array(
 	'id' => 1,
 	'page' => 2,
 )));
-Assert::equal(array(
+Assert::same(array(
 	'Callback id 1 page 2'
 ), TestHelpers::fetchNotes());

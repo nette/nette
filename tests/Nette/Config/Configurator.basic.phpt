@@ -36,7 +36,7 @@ Assert::same( 'hello', $container->parameters['bar'] );
 Assert::same( 'hello world', constant('BAR') );
 Assert::same( 'Europe/Prague', date_default_timezone_get() );
 
-Assert::equal( array(
+Assert::same( array(
 	'dsn' => 'sqlite2::memory:',
 	'user' => 'dbuser',
 	'password' => 'secret',

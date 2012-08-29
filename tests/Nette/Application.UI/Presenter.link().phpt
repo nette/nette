@@ -180,6 +180,6 @@ $request = new Application\Request('Test', Http\Request::GET, array());
 $presenter = new TestPresenter;
 $presenter->invalidLinkMode = TestPresenter::INVALID_LINK_WARNING;
 $container->callMethod(array($presenter, 'injectPrimary'), array(7 => $container->parameters['debugMode']));
-Assert::equal(TestPresenter::INVALID_LINK_WARNING, $presenter->invalidLinkMode);
+Assert::same(TestPresenter::INVALID_LINK_WARNING, $presenter->invalidLinkMode);
 $presenter->autoCanonicalize = FALSE;
 $presenter->run($request);

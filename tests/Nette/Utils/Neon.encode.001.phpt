@@ -50,22 +50,22 @@ Assert::same(
 	Neon::encode(array('foo' => 1, 'bar' => array(2, 3)))
 );
 
-Assert::equal(
+Assert::same(
 	'item(a, b)',
 	Neon::encode(Neon::decode('item(a, b)'))
 );
 
-Assert::equal(
+Assert::same(
 	'item<item>(a, b)',
 	Neon::encode(Neon::decode('item<item>(a, b)'))
 );
 
-Assert::equal(
+Assert::same(
 	'item(foo: a, bar: b)',
 	Neon::encode(Neon::decode('item(foo: a, bar: b)'))
 );
 
-Assert::equal(
+Assert::same(
 	'[]()',
 	Neon::encode(Neon::decode('[]()'))
 );

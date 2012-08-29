@@ -71,6 +71,6 @@ Assert::same( array('a', 'b'), $container->getService('one')->args );
 Assert::same( array(array('methodA', array('a', 'b'))), $container->getService('one')->methods );
 
 Assert::true( $container->getService('two') instanceof Service );
-Assert::equal( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
+Assert::same( array(array(1 => 'a', $container->getService('one'))), $container->getService('two')->args );
 
 Assert::true( $container->getService('three') instanceof Service );

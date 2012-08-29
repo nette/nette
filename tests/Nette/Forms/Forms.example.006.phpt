@@ -67,7 +67,7 @@ $form->addGroup();
 $form->addSubmit('submit', 'Send');
 $form->fireEvents();
 
-Assert::equal( array(
+Assert::same( array(
    'first' => array(
       'name' => 'James Bond',
       'email' => 'bond@007.com',

@@ -270,11 +270,11 @@ if (!empty($_control->snippetMode)) {
 		if ($node->name === 'snippet') {
 			$node->data->name = $name = '_' . $name;
 		}
-		
+
 		if (isset($this->namedBlocks[$name])) {
 			throw new CompileException("Cannot redeclare static block '$name'");
 		}
-		
+
 		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
 		$top = empty($node->parentNode);
 		$this->namedBlocks[$name] = TRUE;

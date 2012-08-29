@@ -119,8 +119,8 @@ $presenter->run($applicationRequest);
 $expiration = '+1 year';
 $key = $presenter->storeRequest($expiration);
 
-Assert::equal($expiration, $section->testExpiration);
-Assert::equal($key, $section->testExpirationVariables);
-Assert::equal($key, $section->testedKeyExistence);
-Assert::equal($key, $section->storedKey);
+Assert::same($expiration, $section->testExpiration);
+Assert::same($key, $section->testExpirationVariables);
+Assert::same($key, $section->testedKeyExistence);
+Assert::same($key, $section->storedKey);
 Assert::same(array($user->getId(), $applicationRequest), $section->storedValue);

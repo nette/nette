@@ -23,7 +23,7 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		Assert::equal( array('foo' => 'hello'), $this->config );
+		Assert::same( array('foo' => 'hello'), $this->config );
 		TestHelpers::note(__METHOD__);
 	}
 
