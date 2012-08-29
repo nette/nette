@@ -15,8 +15,7 @@ use Nette,
 	Nette\Application,
 	Nette\Application\Responses,
 	Nette\Http,
-	Nette\Reflection,
-	Nette\Security;
+	Nette\Reflection;
 
 
 
@@ -1374,17 +1373,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 
-	/**
-	 *
-	 * @param Nette\DI\Container $context
-	 * @param Nette\Application\Application $application
-	 * @param Nette\Http\Context $httpContext
-	 * @param Nette\Http\IRequest $httpRequest
-	 * @param Nette\Http\IResponse $httpResponse
-	 * @param Nette\Http\Session $session
-	 * @param Nette\Security\User $user
-	 */
-	final public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Security\User $user)
+	final public function injectPrimary(Nette\DI\Container $context, Application\Application $application, Http\Context $httpContext, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Http\Session $session, Nette\Security\User $user)
 	{
 		if ($this->application !== NULL) {
 			throw new Nette\InvalidStateException("Method " . __METHOD__ . " is intended for initialization and should not be called more than once.");
