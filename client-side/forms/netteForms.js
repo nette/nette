@@ -128,7 +128,8 @@ Nette.validateRule = function(elem, op, arg) {
 		op = op.substr(1);
 	}
 	op = op.replace('::', '_');
-	op = op.replace('\\', '');
+	op = op.replace(/\\/g,'');
+
 	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
 };
 
