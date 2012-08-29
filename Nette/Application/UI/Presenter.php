@@ -716,13 +716,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 		$this->sendResponse(new Responses\RedirectResponse($url, $code));
 	}
 
-	/** @deprecated */
-	function redirectUri($url, $code = NULL)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::redirectUrl() instead.', E_USER_DEPRECATED);
-		$this->redirectUrl($url, $code);
-	}
-
 
 
 	/**

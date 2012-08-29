@@ -96,15 +96,6 @@ class Request extends Nette\Object implements IRequest
 
 
 
-	/** @deprecated */
-	function getUri()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getUrl() instead.', E_USER_DEPRECATED);
-		return $this->getUrl();
-	}
-
-
-
 	/********************* query, post, files & cookies ****************d*g**/
 
 

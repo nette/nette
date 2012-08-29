@@ -235,15 +235,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 
 
-	/** @deprecated */
-	function getParamId($name)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameterId() instead.', E_USER_DEPRECATED);
-		return $this->getParameterId($name);
-	}
-
-
-
 	/**
 	 * Returns array of classes persistent parameters. They have public visibility and are non-static.
 	 * This default implementation detects persistent parameters by annotation @persistent.

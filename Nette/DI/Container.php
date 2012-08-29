@@ -27,9 +27,6 @@ class Container extends Nette\FreezableObject
 	/** @var array  user parameters */
 	/*private*/public $parameters = array();
 
-	/** @deprecated */
-	public $params = array();
-
 	/** @var array */
 	public $classes = array();
 
@@ -50,7 +47,6 @@ class Container extends Nette\FreezableObject
 	public function __construct(array $params = array())
 	{
 		$this->parameters = $params + $this->parameters;
-		$this->params = &$this->parameters;
 	}
 
 

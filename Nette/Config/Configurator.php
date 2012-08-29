@@ -165,15 +165,6 @@ class Configurator extends Nette\Object
 
 
 
-	/** @deprecated */
-	public function loadConfig($file, $section = NULL)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use addConfig(file, [section])->createContainer() instead.', E_USER_DEPRECATED);
-		return $this->addConfig($file, $section)->createContainer();
-	}
-
-
-
 	/**
 	 * Returns system DI container.
 	 * @return \SystemContainer
@@ -224,8 +215,6 @@ class Configurator extends Nette\Object
 		}
 		$code .= "\n";
 
-		$this->checkCompatibility($config);
-
 		if (!isset($config['parameters'])) {
 			$config['parameters'] = array();
 		}
@@ -241,26 +230,6 @@ class Configurator extends Nette\Object
 		);
 		$dependencies = array_merge($loader->getDependencies(), $this->parameters['debugMode'] ? $compiler->getContainerBuilder()->getDependencies() : array());
 		return $code;
-	}
-
-
-
-	protected function checkCompatibility(array $config)
-	{
-		foreach (array('service' => 'services', 'variable' => 'parameters', 'variables' => 'parameters', 'mode' => 'parameters', 'const' => 'constants') as $old => $new) {
-			if (isset($config[$old])) {
-				throw new Nette\DeprecatedException("Section '$old' in configuration file is deprecated; use '$new' instead.");
-			}
-		}
-		if (isset($config['services'])) {
-			foreach ($config['services'] as $key => $def) {
-				foreach (array('option' => 'arguments', 'methods' => 'setup') as $old => $new) {
-					if (is_array($def) && isset($def[$old])) {
-						throw new Nette\DeprecatedException("Section '$old' in service definition is deprecated; refactor it into '$new'.");
-					}
-				}
-			}
-		}
 	}
 
 

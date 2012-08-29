@@ -127,24 +127,6 @@ final class Request extends Nette\FreezableObject
 
 
 
-	/** @deprecated */
-	function setParams(array $params)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_DEPRECATED);
-		return $this->setParameters($params);
-	}
-
-
-
-	/** @deprecated */
-	function getParams()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_DEPRECATED);
-		return $this->getParameters();
-	}
-
-
-
 	/**
 	 * Sets variables provided to the presenter via POST.
 	 * @param  array

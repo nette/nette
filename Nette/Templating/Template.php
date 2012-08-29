@@ -321,24 +321,6 @@ class Template extends Nette\Object implements ITemplate
 
 
 
-	/** @deprecated */
-	function setParams(array $params)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setParameters() instead.', E_USER_DEPRECATED);
-		return $this->setParameters($params);
-	}
-
-
-
-	/** @deprecated */
-	function getParams()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getParameters() instead.', E_USER_DEPRECATED);
-		return $this->getParameters();
-	}
-
-
-
 	/**
 	 * Sets a template parameter. Do not call directly.
 	 * @param  string  name

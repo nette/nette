@@ -108,19 +108,6 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 
 	/**
-	 * Returns widget component specified by name.
-	 * @param  string
-	 * @return Nette\ComponentModel\IComponent
-	 */
-	public function getWidget($name)
-	{
-		trigger_error(__METHOD__ . '() is deprecated, use getComponent() instead.', E_USER_DEPRECATED);
-		return $this->getComponent($name);
-	}
-
-
-
-	/**
 	 * Saves the message to template, that can be displayed after redirect.
 	 * @param  string
 	 * @param  string

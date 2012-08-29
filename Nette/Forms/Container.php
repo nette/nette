@@ -479,15 +479,4 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 		throw new Nette\NotImplementedException('Form cloning is not supported yet.');
 	}
 
-
-
-	/********************* deprecated ****************d*g**/
-
-	/** @deprecated */
-	function addFile($name, $label = NULL)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use addUpload() instead.', E_USER_DEPRECATED);
-		return $this->addUpload($name, $label);
-	}
-
 }

@@ -493,34 +493,4 @@ class Url extends Nette\FreezableObject
 		return $s;
 	}
 
-
-
-	/** @deprecated */
-	function getRelativeUri()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getRelativeUrl() instead.', E_USER_DEPRECATED);
-		return $this->getRelativeUrl();
-	}
-
-	/** @deprecated */
-	function getAbsoluteUri()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getAbsoluteUrl() instead.', E_USER_DEPRECATED);
-		return $this->getAbsoluteUrl();
-	}
-
-	/** @deprecated */
-	function getHostUri()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getHostUrl() instead.', E_USER_DEPRECATED);
-		return $this->getHostUrl();
-	}
-
-	/** @deprecated */
-	function getBaseUri()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use ' . __CLASS__ . '::getBaseUrl() instead.', E_USER_DEPRECATED);
-		return $this->getBaseUrl();
-	}
-
 }

@@ -51,9 +51,6 @@ class Application extends Nette\Object
 	/** @var array of function(Application $sender, \Exception $e); Occurs when an unhandled exception occurs in the application */
 	public $onError;
 
-	/** @deprecated */
-	public $allowedMethods;
-
 	/** @var Request[] */
 	private $requests = array();
 
