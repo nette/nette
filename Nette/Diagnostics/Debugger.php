@@ -47,6 +47,9 @@ final class Debugger
 	/** @var string command to open browser (use 'start ""' in Windows) */
 	public static $browser;
 
+	/** @var string can overwrite default error template */
+	public static $errorTemplate;
+
 	/********************* Debugger::dump() ****************d*g**/
 
 	/** @var int  how many nested levels of array/object properties display {@link Debugger::dump()} */
@@ -405,7 +408,7 @@ final class Debugger
 					echo "ERROR: the server encountered an internal error and was unable to complete your request.\n";
 
 				} elseif (self::isHtmlMode()) {
-					require __DIR__ . '/templates/error.phtml';
+					require self::$errorTemplate ?: __DIR__ . '/templates/error.phtml';
 				}
 
 			} else {
