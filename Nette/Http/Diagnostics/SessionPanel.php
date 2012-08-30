@@ -43,7 +43,9 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function getPanel()
 	{
 		ob_start();
+		Nette\Diagnostics\Debugger::$maxDepth += 5;
 		require __DIR__ . '/templates/SessionPanel.panel.phtml';
+		Nette\Diagnostics\Debugger::$maxDepth -= 5;
 		return ob_get_clean();
 	}
 
