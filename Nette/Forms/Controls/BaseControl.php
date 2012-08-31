@@ -394,7 +394,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			$control->placeholder = $this->translate($control->placeholder);
 		}
 
-		$rules = self::exportRules($this->rules);
+		$rules = static::exportRules($this->rules);
 		$rules = substr(PHP_VERSION_ID >= 50400 ? json_encode($rules, JSON_UNESCAPED_UNICODE) : json_encode($rules), 1, -1);
 		$rules = preg_replace('#"([a-z0-9_]+)":#i', '$1:', $rules);
 		$rules = preg_replace('#(?<!\\\\)"(?!:[^a-z])([^\\\\\',]*)"#i', "'$1'", $rules);
@@ -553,7 +553,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 			} elseif ($rule->type === Rule::CONDITION) {
 				$item = array(
 					'op' => ($rule->isNegative ? '~' : '') . $op,
-					'rules' => self::exportRules($rule->subRules),
+					'rules' => static::exportRules($rule->subRules),
 					'control' => $rule->control->getHtmlName()
 				);
 				if ($rule->subRules->getToggles()) {
