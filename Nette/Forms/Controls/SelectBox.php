@@ -27,6 +27,9 @@ use Nette;
  */
 class SelectBox extends BaseControl
 {
+	/** validation rule */
+	const VALID = ':selectBoxValid';
+
 	/** @var array */
 	private $items = array();
 
@@ -54,6 +57,7 @@ class SelectBox extends BaseControl
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
+		$this->addRule(self::VALID);
 	}
 
 
@@ -76,6 +80,36 @@ class SelectBox extends BaseControl
 	public function getRawValue()
 	{
 		return is_scalar($this->value) ? $this->value : NULL;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	protected static function exportRules($rules)
+	{
+		$payload = parent::exportRules($rules);
+
+		foreach ($payload as $id => $rule) {
+			if ($rule['op'] === self::VALID) {
+				unset($payload[$id]);
+			}
+		}
+
+		return array_values($payload);
+	}
+
+
+
+	/**
+	 * Checks if a valid option was selected.
+	 * @param  Nette\Forms\IControl
+	 * @return bool
+	 */
+	public static function validateSelectBoxValid(Nette\Forms\IControl $control)
+	{
+		return is_scalar($control->value) && (array_key_exists($control->value, $control->allowed) || ($control->prompt && empty($control->value)));
 	}
 
 
