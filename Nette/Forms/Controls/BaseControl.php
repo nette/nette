@@ -395,7 +395,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 		}
 
 		$rules = self::exportRules($this->rules);
-		$rules = substr(PHP_VERSION_ID >= 50400 ? json_encode($rules, JSON_UNESCAPED_UNICODE) : json_encode($rules), 1, -1);
+		$rules = substr(Nette\Utils\Json::encode($rules), 1, -1);
 		$rules = preg_replace('#"([a-z0-9_]+)":#i', '$1:', $rules);
 		$rules = preg_replace('#(?<!\\\\)"(?!:[^a-z])([^\\\\\',]*)"#i', "'$1'", $rules);
 		$control->data('nette-rules', $rules ? $rules : NULL);
