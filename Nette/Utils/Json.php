@@ -47,9 +47,10 @@ final class Json
 	/**
 	 * Returns the JSON representation of a value.
 	 * @param  mixed
+	 * @param  int
 	 * @return string
 	 */
-	public static function encode($value)
+	public static function encode($value, $options = 0)
 	{
 		Nette\Diagnostics\Debugger::tryError();
 		if (function_exists('ini_set')) {
@@ -57,7 +58,7 @@ final class Json
 			$json = json_encode($value);
 			ini_set('display_errors', $old);
 		} else {
-			$json = json_encode($value);
+			$json = json_encode($value, $options);
 		}
 		if (Nette\Diagnostics\Debugger::catchError($e)) { // needed to receive 'recursion detected' error
 			throw new JsonException($e->getMessage());
