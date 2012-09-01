@@ -215,6 +215,14 @@ class TestRunner
 			}
 		}
 
+		if (!in_array('-c', iterator_to_array($args))) {
+			$path = realpath(__DIR__ . '/../php.ini');
+			if ($path === FALSE) {
+				throw new Exception("default php.ini not found");
+			}
+			$this->phpArgs .= " -c " . escapeshellarg($path);
+		}
+
 		if (!$this->paths) {
 			$this->paths[] = getcwd(); // current directory
 		}
