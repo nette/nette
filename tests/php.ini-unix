@@ -1,0 +1,5 @@
+[PHP]
+date.timezone = Europe/Prague
+error_reporting = E_ALL | E_STRICT
+
+extension=memcache.so

@@ -216,7 +216,7 @@ class TestRunner
 		}
 
 		if (!in_array('-c', iterator_to_array($args))) {
-			$path = realpath(__DIR__ . '/../php.ini');
+			$path = realpath(__DIR__ . '/../php.ini-' . (substr(PHP_OS, 0, 3) == 'WIN' ? 'win' : 'unix'));
 			if ($path === FALSE) {
 				throw new Exception("default php.ini not found");
 			}
