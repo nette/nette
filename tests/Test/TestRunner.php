@@ -187,9 +187,16 @@ class TestRunner
 					$this->out("Log: $file\n");
 					break;
 				case 'c':
+					$args->next();
+					$path = realpath($args->current());
+					if ($path === FALSE) {
+						throw new Exception("PHP configuration file '{$args->current()}' not found.");
+					}
+					$this->phpArgs .= " -c " . escapeshellarg($path);
+					break;
 				case 'd':
 					$args->next();
-					$this->phpArgs .= " -$arg[1] " . escapeshellarg($args->current());
+					$this->phpArgs .= " -d " . escapeshellarg($args->current());
 					break;
 				case 'l':
 					$args->next();
