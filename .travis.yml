@@ -3,4 +3,4 @@ php:
     - 5.3
     - 5.4
 
-script: "./tests/run-tests.sh -s tests/ -d date.timezone=Europe/Prague"
+script: "./tests/run-tests.sh -s tests/"
