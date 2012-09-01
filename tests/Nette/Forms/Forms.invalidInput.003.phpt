@@ -6,6 +6,7 @@
  * @author     David Grudl
  * @package    Nette\Forms
  * @subpackage UnitTests
+ *
  */
 
 use Nette\Http,
@@ -15,6 +16,12 @@ use Nette\Http,
 
 
 require __DIR__ . '/../bootstrap.php';
+
+
+
+if (PHP_VERSION_ID >= 50400 && ICONV_IMPL === 'glibc') {
+	TestHelpers::skip('Buggy iconv in PHP');
+}
 
 
 
