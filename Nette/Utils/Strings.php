@@ -142,6 +142,9 @@ class Strings
 		$s = str_replace("\r\n", "\n", $s); // DOS
 		$s = strtr($s, "\r", "\n"); // Mac
 
+		// remove non breaking spaces
+		$s = preg_replace("#\xc2\xa0#", ' ', $s);
+
 		// remove control characters; leave \t + \n
 		$s = preg_replace('#[\x00-\x08\x0B-\x1F\x7F]+#', '', $s);
 
