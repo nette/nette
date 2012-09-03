@@ -1,0 +1,19 @@
+language: php
+php:
+    - 5.3
+    - 5.4
+
+script: "./tests/run-tests.sh -s tests/"
+
+#services:
+#  - memcached
+
+before_script:
+# Install Memcached server (because the built in one is buggy)
+  - sudo apt-get -qq install libevent-dev
+  - wget http://memcached.googlecode.com/files/memcached-1.4.14.tar.gz
+  - tar xzf memcached-1.4.14.tar.gz
+  - sh -c "cd memcached-1.4.14 && ./configure && make && ./memcached -d" > /dev/null
+
+# PHP Memcache extension
+  - echo n | pecl install memcache > /dev/null

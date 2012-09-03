@@ -187,9 +187,16 @@ class TestRunner
 					$this->out("Log: $file\n");
 					break;
 				case 'c':
+					$args->next();
+					$path = realpath($args->current());
+					if ($path === FALSE) {
+						throw new Exception("given php.ini not found");
+					}
+					$this->phpArgs .= " -c " . escapeshellarg($path);
+					break;
 				case 'd':
 					$args->next();
-					$this->phpArgs .= " -$arg[1] " . escapeshellarg($args->current());
+					$this->phpArgs .= " -d " . escapeshellarg($args->current());
 					break;
 				case 'l':
 					$args->next();
@@ -206,6 +213,14 @@ class TestRunner
 					throw new Exception("Unknown option $arg.");
 					exit;
 			}
+		}
+
+		if (!in_array('-c', iterator_to_array($args))) {
+			$path = realpath(__DIR__ . '/../php.ini-' . (substr(PHP_OS, 0, 3) == 'WIN' ? 'win' : 'unix'));
+			if ($path === FALSE) {
+				throw new Exception("default php.ini not found");
+			}
+			$this->phpArgs .= " -c " . escapeshellarg($path);
 		}
 
 		if (!$this->paths) {

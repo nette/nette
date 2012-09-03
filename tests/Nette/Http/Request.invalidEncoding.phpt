@@ -16,6 +16,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+if (PHP_VERSION_ID >= 50400 && ICONV_IMPL === 'glibc') {
+	TestHelpers::skip('Buggy iconv in PHP');
+}
+
+
+
 // Setup environment
 define('INVALID', "\x76\xC4\xC5\xBE");
 define('CONTROL_CHARACTERS', "A\x00B\x80C");

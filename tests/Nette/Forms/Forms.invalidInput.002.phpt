@@ -21,9 +21,9 @@ require __DIR__ . '/../bootstrap.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
 
 $_POST = array(
-	'name' => "invalid\xAA\xAA\xAAutf",
-	'note' => "invalid\xAA\xAA\xAAutf",
-	'userid' => "invalid\xAA\xAA\xAAutf",
+	'name' => "joe",
+	'note' => "foo",
+	'userid' => "bar",
 	'secondperson' => array(NULL),
 	'password' => array(),
 );
@@ -88,15 +88,15 @@ $form->addSubmit('submit1', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
 Assert::equal( ArrayHash::from(array(
-	'name' => 'invalidutf',
-	'note' => 'invalidutf',
+	'name' => 'joe',
+	'note' => 'foo',
 	'gender' => NULL,
 	'send' => FALSE,
 	'country' => NULL,
 	'countrym' => array(),
 	'password' => '',
 	'avatar' => new Http\FileUpload(array()),
-	'userid' => 'invalidutf',
+	'userid' => 'bar',
 	'firstperson' => ArrayHash::from(array(
 		'age' => '',
 	)),
