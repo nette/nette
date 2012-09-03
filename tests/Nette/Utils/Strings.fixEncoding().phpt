@@ -30,7 +30,7 @@ function utfChar($ord)
 }
 
 
-// valid
+// invalid
 Assert::same( "\xC5\xBEa\x01b", Strings::fixEncoding("\xC5\xBE" . "a\x01b") );
 
 // BOM

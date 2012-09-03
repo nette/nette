@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 // Setup environment
-define('INVALID', "\x76\xC4\xC5\xBE");
+define('INVALID', "\xC4\x76\xC5\xBE");
 define('CONTROL_CHARACTERS', "A\x00B\x80C");
 
 $_GET = array(
