@@ -166,6 +166,7 @@ class TestRunner
 		$this->phpArgs = '';
 		$this->phpEnvironment = '';
 		$this->paths = array();
+		$iniSet = FALSE;
 
 		$args = new ArrayIterator(array_slice(isset($_SERVER['argv']) ? $_SERVER['argv'] : array(), 1));
 		foreach ($args as $arg) {
@@ -193,6 +194,7 @@ class TestRunner
 						throw new Exception("PHP configuration file '{$args->current()}' not found.");
 					}
 					$this->phpArgs .= " -c " . escapeshellarg($path);
+					$iniSet = TRUE;
 					break;
 				case 'd':
 					$args->next();
@@ -217,6 +219,9 @@ class TestRunner
 
 		if (!$this->paths) {
 			$this->paths[] = getcwd(); // current directory
+		}
+		if (!$iniSet) {
+			$this->phpArgs .= " -n";
 		}
 	}
 
