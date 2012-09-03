@@ -113,7 +113,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 				} elseif ($end === '' || $end > $filesize - 1) {
 					$end = $filesize - 1;
 				}
-				if ($end <= $start) {
+				if ($end < $start) {
 					$httpResponse->setCode(416); // requested range not satisfiable
 					return;
 				}
