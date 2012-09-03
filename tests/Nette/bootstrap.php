@@ -17,6 +17,7 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', TRUE);
 ini_set('html_errors', FALSE);
 ini_set('log_errors', FALSE);
+date_default_timezone_set('Europe/Prague');
 
 
 // create temporary directory

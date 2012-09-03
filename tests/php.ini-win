@@ -1,0 +1,9 @@
+[PHP]
+; extension_dir = "./ext"
+extension=php_mbstring.dll
+extension=php_gd2.dll
+extension=php_pdo_mysql.dll
+extension=php_pdo_sqlite.dll
+
+[Zend]
+;zend_extension="./ext/php_xdebug-2.0.5-5.3-vc6.dll"
