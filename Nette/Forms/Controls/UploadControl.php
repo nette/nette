@@ -126,7 +126,6 @@ class UploadControl extends BaseControl
 
 	/**
 	 * Image validator: is file image?
-	 * @param  UploadControl
 	 * @return bool
 	 */
 	public static function validateImage(UploadControl $control)

@@ -81,7 +81,6 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 	/**
 	 * Sets the user identity.
-	 * @param  IIdentity
 	 * @return UserStorage Provides a fluent interface
 	 */
 	public function setIdentity(IIdentity $identity = NULL)

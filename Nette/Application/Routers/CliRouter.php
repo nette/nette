@@ -44,7 +44,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 
 	/**
 	 * Maps command line arguments to a Request object.
-	 * @param  Nette\Http\IRequest
 	 * @return Nette\Application\Request|NULL
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
@@ -106,8 +105,6 @@ class CliRouter extends Nette\Object implements Application\IRouter
 
 	/**
 	 * This router is only unidirectional.
-	 * @param  Nette\Application\Request
-	 * @param  Nette\Http\Url
 	 * @return NULL
 	 */
 	public function constructUrl(Application\Request $appRequest, Nette\Http\Url $refUrl)

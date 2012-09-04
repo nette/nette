@@ -240,7 +240,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders validation errors (per form or per control).
-	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderErrors(Nette\Forms\IControl $control = NULL)
@@ -372,7 +371,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders single visual row.
-	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderPair(Nette\Forms\IControl $control)
@@ -415,7 +413,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders 'label' part of visual row of controls.
-	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderLabel(Nette\Forms\IControl $control)
@@ -440,7 +437,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 
 	/**
 	 * Renders 'control' part of visual row of controls.
-	 * @param  Nette\Forms\IControl
 	 * @return string
 	 */
 	public function renderControl(Nette\Forms\IControl $control)

@@ -39,9 +39,6 @@ class Link extends Nette\Object
 
 	/**
 	 * Link specification.
-	 * @param  PresenterComponent
-	 * @param  string
-	 * @param  array
 	 */
 	public function __construct(PresenterComponent $component, $destination, array $params)
 	{

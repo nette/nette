@@ -77,8 +77,7 @@ class Connection extends PDO
 
 
 	/**
-	 * Sets database reflection
-	 * @param  IReflection  database reflection object
+	 * Sets database reflection.
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setDatabaseReflection(IReflection $databaseReflection)
@@ -102,8 +101,7 @@ class Connection extends PDO
 
 
 	/**
-	 * Sets cache storage engine
-	 * @param  Nette\Caching\IStorage $storage
+	 * Sets cache storage engine.
 	 * @return Connection   provides a fluent interface
 	 */
 	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)

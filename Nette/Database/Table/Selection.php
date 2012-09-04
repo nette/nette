@@ -145,7 +145,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Loads cache of previous accessed columns and returns it
+	 * Loads cache of previous accessed columns and returns it.
 	 * @internal
 	 * @return array|false
 	 */
@@ -501,7 +501,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns Selection parent for caching
+	 * Returns Selection parent for caching.
 	 * @return Selection
 	 */
 	protected function getRefTable(& $refPath)

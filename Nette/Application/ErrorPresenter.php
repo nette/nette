@@ -26,8 +26,7 @@ class ErrorPresenter extends Nette\Object implements Application\IPresenter
 {
 
 	/**
-	 * @param  PresenterRequest
-	 * @return IPresenterResponse
+	 * @return Application\IResponse
 	 */
 	public function run(Application\Request $request)
 	{

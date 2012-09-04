@@ -242,7 +242,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
 	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -615,7 +614,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Valid validator: is control valid?
-	 * @param  Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)

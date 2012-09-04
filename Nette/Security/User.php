@@ -158,7 +158,6 @@ class User extends Nette\Object
 
 	/**
 	 * Sets authentication handler.
-	 * @param  IAuthenticator
 	 * @return User  provides a fluent interface
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
@@ -262,7 +261,6 @@ class User extends Nette\Object
 
 	/**
 	 * Sets authorization handler.
-	 * @param  IAuthorizator
 	 * @return User  provides a fluent interface
 	 */
 	public function setAuthorizator(IAuthorizator $handler)

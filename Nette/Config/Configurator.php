@@ -286,7 +286,6 @@ class Configurator extends Nette\Object
 
 
 
-
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{

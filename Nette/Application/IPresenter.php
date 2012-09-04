@@ -24,7 +24,6 @@ interface IPresenter
 {
 
 	/**
-	 * @param  Request
 	 * @return IResponse
 	 */
 	function run(Request $request);
