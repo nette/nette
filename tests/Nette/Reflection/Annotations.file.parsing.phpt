@@ -91,3 +91,11 @@ Assert::same( array(
 
 $rc = new ReflectionClass('Test\AnnotatedClass3');
 Assert::same( array(), AnnotationsParser::getAll($rc) );
+
+
+// function abcdefg
+
+$rf = new ReflectionFunction('Test\a');
+Assert::same( array(
+	'out' => array('of class'),
+), AnnotationsParser::getAll($rf) );

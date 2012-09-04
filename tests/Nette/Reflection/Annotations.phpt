@@ -34,6 +34,15 @@ class TestClass
 
 
 
+/**
+ * @internal
+ * @param TestClass $bla
+ */
+function bar(TestClass $bla)
+{}
+
+
+
 // Class annotations
 
 $rc = new Reflection\ClassType('TestClass');
@@ -65,3 +74,14 @@ $tmp = $rp->getAnnotations();
 Assert::true( $tmp['secured'][0] );
 Assert::true( $rp->hasAnnotation('secured'), "has('secured')" );
 Assert::true( $rp->getAnnotation('secured') );
+
+
+
+// Function annotations
+
+$rf = new Reflection\GlobalFunction('bar');
+$tmp = $rf->getAnnotations();
+
+Assert::true($tmp['internal'][0]);
+Assert::true($rf->hasAnnotation('internal'), "has('internal')");
+Assert::true($rf->getAnnotation('internal'));

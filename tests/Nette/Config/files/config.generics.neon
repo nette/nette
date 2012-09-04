@@ -1,0 +1,6 @@
+services:
+	dao<T>:
+		class: Generic_IDao
+		factory: Dao_Impl(<T>)
+
+	model: FooModel

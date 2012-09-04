@@ -104,6 +104,62 @@ class GlobalFunction extends \ReflectionFunction
 
 
 
+	/********************* Nette\Annotations support ****************d*g**/
+
+
+
+	/**
+	 * Has method specified annotation?
+	 *
+	 * @param  string
+	 *
+	 * @return bool
+	 */
+	public function hasAnnotation($name)
+	{
+		$res = AnnotationsParser::getAll($this);
+		return !empty($res[$name]);
+	}
+
+
+
+	/**
+	 * Returns an annotation value.
+	 *
+	 * @param  string
+	 *
+	 * @return IAnnotation
+	 */
+	public function getAnnotation($name)
+	{
+		$res = AnnotationsParser::getAll($this);
+		return isset($res[$name]) ? end($res[$name]) : NULL;
+	}
+
+
+
+	/**
+	 * Returns all annotations.
+	 * @return IAnnotation[][]
+	 */
+	public function getAnnotations()
+	{
+		return AnnotationsParser::getAll($this);
+	}
+
+
+
+	/**
+	 * Returns value of annotation 'description'.
+	 * @return string
+	 */
+	public function getDescription()
+	{
+		return $this->getAnnotation('description');
+	}
+
+
+
 	/********************* Nette\Object behaviour ****************d*g**/
 
 

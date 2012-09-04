@@ -72,13 +72,20 @@ final class AnnotationsParser
 			$type = $r->getDeclaringClass()->getName();
 			$member = $r->getName();
 
+		} elseif ($r instanceof \ReflectionFunction) {
+			$type = NULL;
+			$member = $r->getName();
+
 		} else {
 			$type = $r->getDeclaringClass()->getName();
 			$member = '$' . $r->getName();
 		}
 
 		if (!self::$useReflection) { // auto-expire cache
-			$file = $r instanceof \ReflectionClass ? $r->getFileName() : $r->getDeclaringClass()->getFileName(); // will be used later
+			$file = ($r instanceof \ReflectionClass || $r instanceof \ReflectionFunction)
+				? $r->getFileName()
+				: $r->getDeclaringClass()->getFileName(); // will be used later
+
 			if ($file && isset(self::$timestamps[$file]) && self::$timestamps[$file] !== filemtime($file)) {
 				unset(self::$cache[$type]);
 			}
@@ -219,6 +226,9 @@ final class AnnotationsParser
 			if (class_exists($class)) {
 				$res[$name][] = new $class(is_array($value) ? $value : array('value' => $value));
 
+			} elseif (strtolower($name) === 'param') {
+				$res[$name][] = new ParamAnnotation(array('value' => $value));
+
 			} else {
 				$res[$name][] = is_array($value) ? Nette\ArrayHash::from($value) : $value;
 			}
@@ -297,6 +307,9 @@ final class AnnotationsParser
 					$name = '';
 					// break intentionally omitted
 				case T_FUNCTION:
+					if ($class === NULL && $name !== NULL && $docComment) {
+						self::$cache[$class][$namespace . $name] = self::parseComment($docComment);
+					}
 					if ($token === '&') {
 						continue 2; // ignore
 					}
