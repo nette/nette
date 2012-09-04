@@ -39,7 +39,6 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	/**
 	 * Create autodiscovery structure.
-	 * @param  Nette\Caching\IStorage
 	 */
 	public function __construct(Nette\Caching\IStorage $storage = NULL)
 	{

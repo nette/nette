@@ -314,7 +314,6 @@ class Form extends Container
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
 	 * @return Form  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -379,7 +378,6 @@ class Form extends Container
 
 	/**
 	 * Sets the submittor control.
-	 * @param  ISubmitterControl
 	 * @return Form  provides a fluent interface
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)
@@ -560,7 +558,6 @@ class Form extends Container
 
 	/**
 	 * Sets form renderer.
-	 * @param  IFormRenderer
 	 * @return Form  provides a fluent interface
 	 */
 	public function setRenderer(IFormRenderer $renderer)

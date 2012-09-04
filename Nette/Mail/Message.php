@@ -337,7 +337,6 @@ class Message extends MimePart
 
 	/**
 	 * Sets the mailer.
-	 * @param  IMailer
 	 * @return Message  provides a fluent interface
 	 */
 	public function setMailer(IMailer $mailer)

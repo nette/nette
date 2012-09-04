@@ -267,7 +267,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets translate adapter.
-	 * @param  Nette\Localization\ITranslator
 	 * @return Template  provides a fluent interface
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
@@ -402,7 +401,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Set cache storage.
-	 * @param  Nette\Caching\Cache
 	 * @return Template  provides a fluent interface
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)

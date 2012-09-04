@@ -31,14 +31,14 @@ interface IReflection
 		FIELD_DATETIME = 'datetime';
 
 	/**
-	 * Gets primary key of $table
+	 * Gets primary key of $table.
 	 * @param  string
 	 * @return string
 	 */
 	function getPrimary($table);
 
 	/**
-	 * Gets referenced table & referenced column
+	 * Gets referenced table & referenced column.
 	 * Example:
 	 * 	  author, book returns array(book, author_id)
 	 *
@@ -49,7 +49,7 @@ interface IReflection
 	function getHasManyReference($table, $key);
 
 	/**
-	 * Gets referenced table & referencing column
+	 * Gets referenced table & referencing column.
 	 * Example
 	 *     book, author      returns array(author, author_id)
 	 *     book, translator  returns array(author, translator_id)
@@ -62,7 +62,6 @@ interface IReflection
 
 	/**
 	 * Injects database connection.
-	 * @param  Connection
 	 */
 	function setConnection(Connection $connection);
 

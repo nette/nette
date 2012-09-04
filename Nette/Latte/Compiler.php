@@ -326,7 +326,7 @@ class Compiler extends Nette\Object
 				throw new CompileException("Found multiple macro-attributes $token->name.", 0, $token->line);
 			}
 			$htmlNode->macroAttrs[$name] = $token->value;
-			
+
 		} else {
 			$htmlNode->attrs[$token->name] = TRUE;
 			$this->output .= $token->text;

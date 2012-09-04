@@ -389,8 +389,6 @@ class CoreMacros extends MacroSet
 
 	/**
 	 * Initializes local & global storage in template.
-	 * @param
-	 * @param  string
 	 * @return \stdClass
 	 */
 	public static function initRuntime(Nette\Templating\ITemplate $template, $templateId)

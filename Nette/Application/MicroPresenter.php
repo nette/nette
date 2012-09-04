@@ -54,7 +54,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\Request
 	 * @return Nette\Application\IResponse
 	 */
 	public function run(Application\Request $request)

@@ -30,15 +30,12 @@ interface IRouter
 
 	/**
 	 * Maps HTTP request to a Request object.
-	 * @param  Nette\Http\IRequest
 	 * @return Request|NULL
 	 */
 	function match(Nette\Http\IRequest $httpRequest);
 
 	/**
 	 * Constructs absolute URL from Request object.
-	 * @param  Request
-	 * @param  Nette\Http\Url referential URI
 	 * @return string|NULL
 	 */
 	function constructUrl(Request $appRequest, Nette\Http\Url $refUrl);

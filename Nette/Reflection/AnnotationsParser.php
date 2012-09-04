@@ -336,7 +336,6 @@ final class AnnotationsParser
 
 
 	/**
-	 * @param  Nette\Caching\IStorage
 	 * @return void
 	 */
 	public static function setCacheStorage(Nette\Caching\IStorage $storage)

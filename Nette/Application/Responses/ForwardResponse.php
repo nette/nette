@@ -29,9 +29,6 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 
 
 
-	/**
-	 * @param  Nette\Application\Request  new request
-	 */
 	public function __construct(Nette\Application\Request $request)
 	{
 		$this->request = $request;

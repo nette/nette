@@ -160,7 +160,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\Request
 	 * @return Nette\Application\IResponse
 	 */
 	public function run(Application\Request $request)
@@ -266,7 +265,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @param  Nette\Application\IResponse  optional catched exception
+	 * @param  Nette\Application\IResponse
 	 * @return void
 	 */
 	protected function shutdown($response)
@@ -616,7 +615,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Sends response and terminates presenter.
-	 * @param  Nette\Application\IResponse
 	 * @return void
 	 * @throws Nette\Application\AbortException
 	 */
@@ -1077,11 +1075,10 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 	/**
 	 * Invalid link handler. Descendant can override this method to change default behaviour.
-	 * @param  InvalidLinkException
 	 * @return string
 	 * @throws InvalidLinkException
 	 */
-	protected function handleInvalidLink($e)
+	protected function handleInvalidLink(InvalidLinkException $e)
 	{
 		if ($this->invalidLinkMode === self::INVALID_LINK_SILENT) {
 			return '#';

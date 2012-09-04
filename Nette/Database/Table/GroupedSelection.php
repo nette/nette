@@ -51,7 +51,7 @@ class GroupedSelection extends Selection
 
 
 	/**
-	 * Sets active group
+	 * Sets active group.
 	 * @internal
 	 * @param  int  primary key of grouped rows
 	 * @return GroupedSelection

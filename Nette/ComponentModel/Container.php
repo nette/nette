@@ -102,7 +102,6 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Removes a component from the IContainer.
-	 * @param  IComponent
 	 * @return void
 	 */
 	public function removeComponent(IComponent $component)
@@ -213,7 +212,6 @@ class Container extends Component implements IContainer
 
 	/**
 	 * Descendant can override this method to disallow insert a child by throwing an Nette\InvalidStateException.
-	 * @param  IComponent
 	 * @return void
 	 * @throws Nette\InvalidStateException
 	 */

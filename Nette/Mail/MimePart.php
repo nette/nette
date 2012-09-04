@@ -216,7 +216,6 @@ class MimePart extends Nette\Object
 
 	/**
 	 * Adds or creates new multipart.
-	 * @param  MimePart
 	 * @return MimePart
 	 */
 	public function addPart(MimePart $part = NULL)
