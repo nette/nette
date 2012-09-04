@@ -94,11 +94,17 @@ class Session extends Nette\Object
 
 		$this->configure($this->options);
 
-		Nette\Diagnostics\Debugger::tryError();
+		set_error_handler(function($severity, $message) use (& $error) {
+			if (($severity & error_reporting()) === $severity) {
+				$error = $message;
+				restore_error_handler();
+			}
+		});
 		session_start();
-		if (Nette\Diagnostics\Debugger::catchError($e)) {
+		restore_error_handler();
+		if ($error) {
 			@session_write_close(); // this is needed
-			throw new Nette\InvalidStateException('session_start(): ' . $e->getMessage(), 0, $e);
+			throw new Nette\InvalidStateException("session_start(): $error");
 		}
 
 		self::$started = TRUE;

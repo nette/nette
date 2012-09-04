@@ -40,7 +40,6 @@ class SendmailMailer extends Nette\Object implements IMailer
 
 		$parts = explode(Message::EOL . Message::EOL, $tmp->generateMessage(), 2);
 
-		Nette\Diagnostics\Debugger::tryError();
 		$args = array(
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('To')),
 			str_replace(Message::EOL, PHP_EOL, $mail->getEncodedHeader('Subject')),
@@ -50,12 +49,13 @@ class SendmailMailer extends Nette\Object implements IMailer
 		if ($this->commandArgs) {
 			$args[] = (string) $this->commandArgs;
 		}
+		set_error_handler(function($severity, $message) {
+			restore_error_handler();
+			throw new Nette\InvalidStateException("mail(): $message");
+		});
 		$res = call_user_func_array('mail', $args);
-
-		if (Nette\Diagnostics\Debugger::catchError($e)) {
-			throw new Nette\InvalidStateException('mail(): ' . $e->getMessage(), 0, $e);
-
-		} elseif (!$res) {
+		restore_error_handler();
+		if (!$res) {
 			throw new Nette\InvalidStateException('Unable to send email.');
 		}
 	}
