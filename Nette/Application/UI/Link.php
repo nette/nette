@@ -110,7 +110,7 @@ class Link extends Nette\Object
 			return $this->component->link($this->destination, $this->params);
 
 		} catch (\Exception $e) {
-			Nette\Diagnostics\Debugger::toStringException($e);
+			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
 
