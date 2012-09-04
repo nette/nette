@@ -73,12 +73,7 @@ Content-Type: application/zip
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: attachment; filename="example.zip"
 
-PK=03=04=14=00=00=00=08=00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00versi=
-on.txt=F3K-)IUp+J=CCM-=CF/=CAV0=D0=B3=D43T=D0(J-=CB,=CE=CC=CFSHI630O3P(J=CD=
-IM,NMQ=00=8A=19=19=18X=EA=02=91=A1=85&/=17=00PK=01=02=14=00=14=00=00=00=08=
-=00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00=00=00=00=00=00=00 =00=00=00=
-=00=00=00=00version.txtPK=05=06=00=00=00=00=01=00=01=009=00=00=00i=00=00=00=
-=00=00
+PK=03=04=14=00=00=00=08=00'=882;&=91*g@=00=00=00A=00=00=00=0B=00=00=00versi=%A%00
 ----------%S%--
 EOD
 , TestMailer::$output );
