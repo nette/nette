@@ -130,13 +130,13 @@ class PresenterComponentReflection extends Nette\Reflection\ClassType
 			$name = $param->getName();
 			if (isset($args[$name])) { // NULLs are ignored
 				$res[$i++] = $args[$name];
-				$type = $param->isArray() ? 'array' : ($param->isDefaultValueAvailable() ? gettype($param->getDefaultValue()) : 'NULL');
+				$type = $param->isArray() ? 'array' : ($param->isDefaultValueAvailable() && $param->isOptional() ? gettype($param->getDefaultValue()) : 'NULL');
 				if (!self::convertType($res[$i-1], $type)) {
 				    $mName = $method instanceof \ReflectionMethod ? $method->getDeclaringClass()->getName() . '::' . $method->getName() : $method->getName();
 					throw new BadRequestException("Invalid value for parameter '$name' in method $mName(), expected " . ($type === 'NULL' ? 'scalar' : $type) . ".");
 				}
 			} else {
-				$res[$i++] = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
+				$res[$i++] = $param->isDefaultValueAvailable() && $param->isOptional() ? $param->getDefaultValue() : ($param->isArray() ? array() : NULL);
 			}
 		}
 		return $res;
