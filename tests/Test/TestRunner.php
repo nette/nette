@@ -66,7 +66,7 @@ class TestRunner
 			echo "Nette Framework Tests suite requires php-cgi, " . $this->phpBinary . " given.\n\n";
 			return FALSE;
 		}
-		echo "$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n\n";
+		echo $this->log("$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n");
 
 		$tests = array();
 		foreach ($this->paths as $path) {
@@ -96,8 +96,8 @@ class TestRunner
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
 					$running[$entry] = $testCase->run(!$parallel);
 				} catch (TestCaseException $e) {
-					$this->out('s');
-					$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
+					echo 's';
+					$skipped[] = $this->log("\n::: Skipped ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
 				}
 			}
 			if (count($running) > 1) {
@@ -107,17 +107,17 @@ class TestRunner
 				if ($testCase->isReady()) {
 					try {
 						$testCase->collect();
-						$this->out('.');
+						echo '.';
 						$passed[] = array($testCase->getName(), $entry);
 
 					} catch (TestCaseException $e) {
 						if ($e->getCode() === TestCaseException::SKIPPED) {
-							$this->out('s');
-							$skipped[] = array($testCase->getName(), $entry, $e->getMessage());
+							echo 's';
+							$skipped[] = $this->log("\n::: Skipped ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
 
 						} else {
-							$this->out('F');
-							$failed[] = array($testCase->getName(), $entry, $e->getMessage());
+							echo 'F';
+							$failed[] = $this->log("\n::: FAILED ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
 						}
 					}
 					unset($running[$entry]);
@@ -128,28 +128,20 @@ class TestRunner
 		$failedCount = count($failed);
 		$skippedCount = count($skipped);
 
-		if ($this->displaySkipped && $skippedCount) {
-			$this->out("\n\nSkipped:\n");
-			foreach ($skipped as $i => $item) {
-				list($name, $file, $message) = $item;
-				$this->out("\n" . ($i + 1) . ") $name\n   $message\n   $file\n");
-			}
+		if ($this->displaySkipped) {
+			echo "\n", implode($skipped);
 		}
 
 		if (!$count) {
-			$this->out("No tests found\n");
+			echo $this->log("No tests found\n");
 
 		} elseif ($failedCount) {
-			$this->out("\n\nFailures:\n");
-			foreach ($failed as $item) {
-				list($name, $file, $message) = $item;
-				$this->out("\n-> $name\n   file: $file\n   $message\n");
-			}
-			$this->out("\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)\n");
+			echo "\n", implode($failed);
+			echo $this->log("\nFAILURES! ($count tests, $failedCount failures, $skippedCount skipped)");
 			return FALSE;
 
 		} else {
-			$this->out("\n\nOK ($count tests, $skippedCount skipped)\n");
+			echo $this->log("\n\nOK ($count tests, $skippedCount skipped)");
 		}
 		return TRUE;
 	}
@@ -185,7 +177,7 @@ class TestRunner
 				case 'log':
 					$args->next();
 					$this->logFile = fopen($file = $args->current(), 'w');
-					$this->out("Log: $file\n");
+					echo "Log: $file\n";
 					break;
 				case 'c':
 					$args->next();
@@ -229,14 +221,14 @@ class TestRunner
 
 	/**
 	 * Writes to display and log
-	 * @return void
+	 * @return string
 	 */
-	private function out($s)
+	private function log($s)
 	{
-		echo $s;
 		if ($this->logFile) {
-			fputs($this->logFile, $s);
+			fputs($this->logFile, "$s\n");
 		}
+		return "$s\n";
 	}
 
 }
