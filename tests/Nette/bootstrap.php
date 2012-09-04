@@ -20,9 +20,19 @@ ini_set('log_errors', FALSE);
 date_default_timezone_set('Europe/Prague');
 
 
+// temporary directory garbage collection
+if (mt_rand() / mt_getrandmax() < 0.01) {
+	foreach (glob(__DIR__ . '/../tmp/*', GLOB_ONLYDIR) as $dir) {
+		if (time() - @filemtime($dir) > 300) {
+			try { TestHelpers::purge($dir); } catch (Exception $e) {}
+			@rmdir($dir);
+		}
+	}
+}
+
 // create temporary directory
 define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
-@mkdir(TEMP_DIR, 0777, TRUE);
+TestHelpers::purge(TEMP_DIR);
 
 
 // catch unexpected errors/warnings/notices
