@@ -597,7 +597,7 @@ class Form extends Container
 			if (func_get_args() && func_get_arg(0)) {
 				throw $e;
 			} else {
-				Nette\Diagnostics\Debugger::toStringException($e);
+				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 			}
 		}
 	}

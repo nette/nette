@@ -69,7 +69,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		try {
 			return (string) $this->getPrimary();
 		} catch (\Exception $e) {
-			Nette\Diagnostics\Debugger::toStringException($e);
+			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
 	}
 
