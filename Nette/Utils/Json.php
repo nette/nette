@@ -51,16 +51,17 @@ final class Json
 	 */
 	public static function encode($value)
 	{
-		Nette\Diagnostics\Debugger::tryError();
-		if (function_exists('ini_set')) {
+		if (function_exists('ini_set')) { // workaround for PHP bugs #52397, #54109, #63004
 			$old = ini_set('display_errors', 0); // needed to receive 'Invalid UTF-8 sequence' error
-			$json = json_encode($value);
-			ini_set('display_errors', $old);
-		} else {
-			$json = json_encode($value);
 		}
-		if (Nette\Diagnostics\Debugger::catchError($e)) { // needed to receive 'recursion detected' error
-			throw new JsonException($e->getMessage());
+		set_error_handler(function($severity, $message) { // needed to receive 'recursion detected' error
+			restore_error_handler();
+			throw new JsonException($message);
+		});
+		$json = json_encode($value);
+		restore_error_handler();
+		if (isset($old)) {
+			ini_set('display_errors', $old);
 		}
 		return $json;
 	}
