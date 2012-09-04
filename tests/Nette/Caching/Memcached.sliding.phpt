@@ -44,6 +44,6 @@ for($i = 0; $i < 3; $i++) {
 }
 
 // Sleeping few seconds...
-sleep(3);
+sleep(4);
 
 Assert::false( isset($cache[$key]), 'Is cached?' );
