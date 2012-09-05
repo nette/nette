@@ -238,6 +238,17 @@ class TestCase
 
 
 	/**
+	 * Returns test file path.
+	 * @return string
+	 */
+	public function getFile()
+	{
+		return $this->file;
+	}
+
+
+
+	/**
 	 * Returns test name.
 	 * @return string
 	 */

@@ -94,33 +94,33 @@ class TestRunner
 				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
 				try {
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
-					$running[$file] = $testCase->run(!$parallel);
+					$running[] = $testCase->run(!$parallel);
 				} catch (TestCaseException $e) {
 					echo 's';
-					$skipped[] = $this->log($this->format('Skipped', $file, $testCase, $e));
+					$skipped[] = $this->log($this->format('Skipped', $testCase, $e));
 				}
 			}
 			if (count($running) > 1) {
 				usleep(self::RUN_USLEEP); // stream_select() doesn't work with proc_open()
 			}
-			foreach ($running as $file => $testCase) {
+			foreach ($running as $key => $testCase) {
 				if ($testCase->isReady()) {
 					try {
 						$testCase->collect();
 						echo '.';
-						$passed[] = array($testCase->getName(), $file);
+						$passed[] = array($testCase->getName(), $testCase->getFile());
 
 					} catch (TestCaseException $e) {
 						if ($e->getCode() === TestCaseException::SKIPPED) {
 							echo 's';
-							$skipped[] = $this->log($this->format('Skipped', $file, $testCase, $e));
+							$skipped[] = $this->log($this->format('Skipped', $testCase, $e));
 
 						} else {
 							echo 'F';
-							$failed[] = $this->log($this->format('FAILED', $file, $testCase, $e));
+							$failed[] = $this->log($this->format('FAILED', $testCase, $e));
 						}
 					}
-					unset($running[$file]);
+					unset($running[$key]);
 				}
 			}
 		}
@@ -236,10 +236,10 @@ class TestRunner
 	/**
 	 * @return string
 	 */
-	private function format($s, $file, $testCase, $e)
+	private function format($s, $testCase, $e)
 	{
 		return "\n-- $s: " . trim($testCase->getName()) . ' | '
-			. implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $file), -3))
+			. implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $testCase->getFile()), -3))
 			. str_replace("\n", "\n   ", "\n" . trim($e->getMessage())) . "\n";
 	}
 
