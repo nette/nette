@@ -6,6 +6,7 @@
  * @author     Jan Skrasek
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @multiple   databases.ini
  */
 
 use Nette\Database;
