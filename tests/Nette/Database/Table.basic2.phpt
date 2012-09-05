@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\Database\Table: Basic operations.
+ * Test: Nette\Database\Table: Basic operations with camelCase name conventions.
  *
  * @author     David Grudl
  * @author     Jan Skrasek
@@ -16,13 +16,15 @@ $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredRefle
 
 
 
-$names = array();
-foreach ($connection->table('topics')->order('id') as $topic) {
-	$names[] = $topic->user->name;
+$titles = array();
+foreach ($connection->table('nUsers')->order('nUserId') as $user) {
+	foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {
+		$titles[$userTopic->nTopic->title] = $user->name;
+	}
 }
 
 Assert::same(array(
-	'Doe',
-	'Doe',
-	'John',
-), $names);
+	'Topic #1' => 'John',
+	'Topic #3' => 'John',
+	'Topic #2' => 'Doe',
+), $titles);
