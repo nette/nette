@@ -283,7 +283,7 @@ class Assert
 			array_shift($trace);
 		}
 		if (isset($trace[0]['file'])) {
-			$message .= ' in file ' . $trace[0]['file'];
+			$message .= ' in file ' . implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $trace[0]['file']), -3));
 		}
 		if (isset($trace[0]['line'])) {
 			$message .= ' on line ' . $trace[0]['line'];

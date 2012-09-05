@@ -75,52 +75,52 @@ class TestRunner
 			} else {
 				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 			}
-			foreach ($files as $entry) {
-				$entry = (string) $entry;
-				$info = pathinfo($entry);
+			foreach ($files as $file) {
+				$file = (string) $file;
+				$info = pathinfo($file);
 				if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
 					continue;
 				}
-				$tests[] = $entry;
+				$tests[] = $file;
 			}
 		}
 
 		$running = array();
 		while ($tests || $running) {
 			for ($i = count($running); $tests && $i < $this->jobs; $i++) {
-				$entry = array_shift($tests);
+				$file = array_shift($tests);
 				$count++;
-				$testCase = new TestCase($entry);
+				$testCase = new TestCase($file);
 				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
 				try {
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
-					$running[$entry] = $testCase->run(!$parallel);
+					$running[$file] = $testCase->run(!$parallel);
 				} catch (TestCaseException $e) {
 					echo 's';
-					$skipped[] = $this->log("\n::: Skipped ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
+					$skipped[] = $this->log($this->format('Skipped', $file, $testCase, $e));
 				}
 			}
 			if (count($running) > 1) {
 				usleep(self::RUN_USLEEP); // stream_select() doesn't work with proc_open()
 			}
-			foreach ($running as $entry => $testCase) {
+			foreach ($running as $file => $testCase) {
 				if ($testCase->isReady()) {
 					try {
 						$testCase->collect();
 						echo '.';
-						$passed[] = array($testCase->getName(), $entry);
+						$passed[] = array($testCase->getName(), $file);
 
 					} catch (TestCaseException $e) {
 						if ($e->getCode() === TestCaseException::SKIPPED) {
 							echo 's';
-							$skipped[] = $this->log("\n::: Skipped ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
+							$skipped[] = $this->log($this->format('Skipped', $file, $testCase, $e));
 
 						} else {
 							echo 'F';
-							$failed[] = $this->log("\n::: FAILED ::: {$testCase->getName()}\n{$e->getMessage()}\nfile: $entry\n");
+							$failed[] = $this->log($this->format('FAILED', $file, $testCase, $e));
 						}
 					}
-					unset($running[$entry]);
+					unset($running[$file]);
 				}
 			}
 		}
@@ -220,7 +220,7 @@ class TestRunner
 
 
 	/**
-	 * Writes to display and log
+	 * Writes to log
 	 * @return string
 	 */
 	private function log($s)
@@ -229,6 +229,18 @@ class TestRunner
 			fputs($this->logFile, "$s\n");
 		}
 		return "$s\n";
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	private function format($s, $file, $testCase, $e)
+	{
+		return "\n-- $s: " . trim($testCase->getName()) . ' | '
+			. implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $file), -3))
+			. str_replace("\n", "\n   ", "\n" . trim($e->getMessage())) . "\n";
 	}
 
 }
