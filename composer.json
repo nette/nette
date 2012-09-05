@@ -1,9 +1,10 @@
 {
 	"name": "nette/nette",
+	"type": "library",
 	"description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
 	"keywords": ["framework", "mvc", "debugging", "templating", "database", "dbal", "forms", "latte", "neon", "mailing", "images", "micro"],
 	"homepage": "http://nette.org",
-	"license": ["BSD-3", "GPLv2", "GPLv3"],
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
 			"name": "David Grudl",
@@ -11,9 +12,12 @@
 		},
 		{
 			"name": "Nette Community",
-			"homepage": "https://github.com/nette/nette/contributors"
+			"homepage": "http://nette.org/contributors"
 		}
 	],
+	"require": {
+		"php": ">=5.3.0"
+	},
 	"autoload": {
 		"files": ["Nette/loader.php"]
 	},
