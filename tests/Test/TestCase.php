@@ -31,6 +31,9 @@ class TestCase
 	/** @var string  test file */
 	private $file;
 
+	/** @var string  test title */
+	private $title;
+
 	/** @var array  */
 	private $options;
 
@@ -42,6 +45,9 @@ class TestCase
 
 	/** @var string  PHP-CGI command line */
 	private $cmdLine;
+
+	/** @var array  running script environment variables */
+	private $environment = array();
 
 	/** @var string  PHP version */
 	private $phpVersion;
@@ -68,9 +74,10 @@ class TestCase
 	 * @param  string  PHP-CGI command line
 	 * @return void
 	 */
-	public function __construct($testFile)
+	public function __construct($testFile, $title = NULL)
 	{
 		$this->file = (string) $testFile;
+		$this->title = $title;
 		$this->options = self::parseOptions($this->file);
 	}
 
@@ -81,7 +88,7 @@ class TestCase
 	 * @param  bool
 	 * @return TestCase  provides a fluent interface
 	 */
-	public function run($blocking = true)
+	public function run($blocking = TRUE)
 	{
 		// pre-skip?
 		if (isset($this->options['skip'])) {
@@ -112,13 +119,18 @@ class TestCase
 	 * @param  string
 	 * @return TestCase  provides a fluent interface
 	 */
-	public function setPhp($binary, $args, $environment)
+	public function setPhp($binary, $args, array $environment)
 	{
 		if (isset(self::$cachedPhp[$binary])) {
 			list($this->phpVersion, $this->phpType) = self::$cachedPhp[$binary];
 
 		} else {
-			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
+			$environmentStr = '';
+			foreach ($environment as $var => $value) {
+				$environmentStr .= $var . '=' . escapeshellarg($value) . ' ';
+			}
+
+			exec($environmentStr . escapeshellarg($binary) . ' -v', $output, $res);
 			if ($res !== self::CODE_OK && $res !== self::CODE_ERROR) {
 				throw new Exception("Unable to execute '$binary -v'.");
 			}
@@ -132,7 +144,8 @@ class TestCase
 			self::$cachedPhp[$binary] = array($this->phpVersion, $this->phpType);
 		}
 
-		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
+		$this->environment = $environment;
+		$this->cmdLine = escapeshellarg($binary) . $args;
 		return $this;
 	}
 
@@ -160,7 +173,10 @@ class TestCase
 			array('pipe', 'w'),
 		);
 
-		$this->proc = proc_open($this->cmdLine, $descriptors, $pipes, dirname($this->file), null, array('bypass_shell' => true));
+		$env = count($_ENV) ? $_ENV : $_SERVER;
+		unset($env['argv'], $env['argc']); // proc_open() screams "array to string conversion"
+
+		$this->proc = proc_open($this->cmdLine, $descriptors, $pipes, dirname($this->file), $env + $this->environment, array('bypass_shell' => TRUE));
 		list($stdin, $this->stdout, $stderr) = $pipes;
 		fclose($stdin);
 		stream_set_blocking($this->stdout, $blocking ? 1 : 0);
@@ -238,12 +254,34 @@ class TestCase
 
 
 	/**
+	 * Returns test file path.
+	 * @return string
+	 */
+	public function getFile()
+	{
+		return $this->file;
+	}
+
+
+
+	/**
 	 * Returns test name.
 	 * @return string
 	 */
 	public function getName()
 	{
 		return $this->options['name'];
+	}
+
+
+
+	/**
+	 * Returns test title.
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->getName() . ($this->title === NULL ? '' : " ($this->title)");
 	}
 
 

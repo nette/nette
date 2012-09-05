@@ -6,6 +6,7 @@
  * @author     David Grudl
  * @package    Nette\Database
  * @subpackage UnitTests
+ * @database
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection
