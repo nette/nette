@@ -31,6 +31,4 @@ testRouteIn($route, '/index.xml', 'DefaultPresenter', array(
 
 testRouteIn($route, '/index.php');
 
-testRouteIn($route, '/index', 'DefaultPresenter', array(
-	'test' => 'testvalue',
-), '/index.xml/?test=testvalue');
+testRouteIn($route, '/index');

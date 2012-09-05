@@ -511,8 +511,9 @@ class Route extends Nette\Object implements Application\IRouter
 			array_unshift($sequence, $name);
 
 			if ($name[0] === '?') { // "foo" parameter
-				$re = '(?:' . preg_quote(substr($name, 1), '#') . '|' . $pattern . ')' . $re;
-				$sequence[1] = substr($name, 1) . $sequence[1];
+				$name = substr($name, 1);
+				$re = $pattern ? '(?:' . preg_quote($name, '#') . "|$pattern)$re" : preg_quote($name, '#') . $re;
+				$sequence[1] = $name . $sequence[1];
 				continue;
 			}
 
