@@ -151,9 +151,16 @@ class Route extends Nette\Object implements Application\IRouter
 
 		// 1) URL MASK
 		$url = $httpRequest->getUrl();
+		$re = $this->re;
 
 		if ($this->type === self::HOST) {
 			$path = '//' . $url->getHost() . $url->getPath();
+			$host = array_reverse(explode('.', $url->getHost()));
+			$re = strtr($re, array(
+				'/%basePath%/' => preg_quote($url->getBasePath(), '#'),
+				'%tld%' => $host[0],
+				'%domain%' => isset($host[1]) ? "$host[1]\\.$host[0]" : $host[0],
+			));
 
 		} elseif ($this->type === self::RELATIVE) {
 			$basePath = $url->getBasePath();
@@ -170,7 +177,7 @@ class Route extends Nette\Object implements Application\IRouter
 			$path = rtrim($path, '/') . '/';
 		}
 
-		if (!$matches = Strings::match($path, $this->re)) {
+		if (!$matches = Strings::match($path, $re)) {
 			// stop, not matched
 			return NULL;
 		}
@@ -372,6 +379,28 @@ class Route extends Nette\Object implements Application\IRouter
 		} while (TRUE);
 
 
+		// absolutize path
+		if ($this->type === self::RELATIVE) {
+			$url = '//' . $refUrl->getAuthority() . $refUrl->getBasePath() . $url;
+
+		} elseif ($this->type === self::PATH) {
+			$url = '//' . $refUrl->getAuthority() . $url;
+
+		} else {
+			$host = array_reverse(explode('.', $refUrl->getHost()));
+			$url = strtr($url, array(
+				'/%basePath%/' => $refUrl->getBasePath(),
+				'%tld%' => $host[0],
+				'%domain%' => isset($host[1]) ? "$host[1].$host[0]" : $host[0],
+			));
+		}
+
+		if (strpos($url, '//', 2) !== FALSE) {
+			return NULL; // TODO: implement counterpart in match() ?
+		}
+
+		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
+
 		// build query string
 		if ($this->xlat) {
 			$params = self::renameKeys($params, $this->xlat);
@@ -382,20 +411,6 @@ class Route extends Nette\Object implements Application\IRouter
 		if ($query != '') { // intentionally ==
 			$url .= '?' . $query;
 		}
-
-		// absolutize path
-		if ($this->type === self::RELATIVE) {
-			$url = '//' . $refUrl->getAuthority() . $refUrl->getBasePath() . $url;
-
-		} elseif ($this->type === self::PATH) {
-			$url = '//' . $refUrl->getAuthority() . $url;
-		}
-
-		if (strpos($url, '//', 2) !== FALSE) {
-			return NULL; // TODO: implement counterpart in match() ?
-		}
-
-		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
 
 		return $url;
 	}
