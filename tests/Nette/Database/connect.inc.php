@@ -5,22 +5,25 @@
  *
  * @author     Jakub Vrana
  * @author     Jan Skrasek
- * @package    Nette\Caching
+ * @package    Nette\Database
  * @subpackage UnitTests
  */
-
-use Nette\Database;
-
-
 
 require __DIR__ . '/../bootstrap.php';
 
 
+$config = parse_ini_file(__DIR__ . '/databases.ini', TRUE);
+$current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
+
 
 try {
-	$connection = new Database\Connection('mysql:host=localhost', 'root');
+	$rc = new ReflectionClass('Nette\Database\Connection');
+	$connection = $rc->newInstanceArgs($current);
+
 } catch (PDOException $e) {
-	TestHelpers::skip('Requires correctly configured mysql connection database.');
+	TestHelpers::skip("Connection to '$current[dsn]' failed. Reason: " . $e->getMessage());
 }
 
-flock($lock = fopen(TEMP_DIR . '/../lock', 'w'), LOCK_EX);
+flock($lock = fopen(TEMP_DIR . '/../lock-db-' . md5($current['dsn']), 'w'), LOCK_EX);
+
+unset($config, $current, $rc);
