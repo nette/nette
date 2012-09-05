@@ -123,7 +123,7 @@ abstract class CompilerExtension extends Nette\Object
 	 * Adjusts DI container compiled to PHP class. Intended to be overridden by descendant.
 	 * @return void
 	 */
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 	}
 

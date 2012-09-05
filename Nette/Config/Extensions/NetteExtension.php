@@ -353,7 +353,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 
 
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
 		$container = $this->getContainerBuilder();

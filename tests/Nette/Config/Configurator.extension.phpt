@@ -31,7 +31,7 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 		TestHelpers::note(__METHOD__);
 	}
 
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		TestHelpers::note(__METHOD__);
 	}

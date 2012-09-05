@@ -24,7 +24,7 @@ use Nette,
 class PhpExtension extends Nette\Config\CompilerExtension
 {
 
-	public function afterCompile(Nette\Utils\PhpGenerator\ClassType $class)
+	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
 		$initialize = $class->methods['initialize'];
 		foreach ($this->getConfig() as $name => $value) {

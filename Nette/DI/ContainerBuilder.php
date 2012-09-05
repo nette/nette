@@ -14,8 +14,8 @@ namespace Nette\DI;
 use Nette,
 	Nette\Utils\Validators,
 	Nette\Utils\Strings,
-	Nette\Utils\PhpGenerator\Helpers as PhpHelpers,
-	Nette\Utils\PhpGenerator\PhpLiteral;
+	Nette\PhpGenerator\Helpers as PhpHelpers,
+	Nette\PhpGenerator\PhpLiteral;
 
 
 
@@ -320,7 +320,7 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Generates PHP class.
-	 * @return Nette\Utils\PhpGenerator\ClassType
+	 * @return Nette\PhpGenerator\ClassType
 	 */
 	public function generateClass($parentClass = 'Nette\DI\Container')
 	{
@@ -329,7 +329,7 @@ class ContainerBuilder extends Nette\Object
 
 		$this->prepareClassList();
 
-		$class = new Nette\Utils\PhpGenerator\ClassType('Container');
+		$class = new Nette\PhpGenerator\ClassType('Container');
 		$class->addExtend($parentClass);
 		$class->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->expand($this->parameters)));

@@ -31,6 +31,12 @@ class NetteLoader extends AutoLoader
 		'Nette\Http\User' => 'Nette\Security\User',
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
 		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
+		'Nette\Utils\PhpGenerator\ClassType' => 'Nette\PhpGenerator\ClassType',
+		'Nette\Utils\PhpGenerator\Helpers' => 'Nette\PhpGenerator\Helpers',
+		'Nette\Utils\PhpGenerator\Method' => 'Nette\PhpGenerator\Method',
+		'Nette\Utils\PhpGenerator\Parameter' => 'Nette\PhpGenerator\Parameter',
+		'Nette\Utils\PhpGenerator\PhpLiteral' => 'Nette\PhpGenerator\PhpLiteral',
+		'Nette\Utils\PhpGenerator\Property' => 'Nette\PhpGenerator\Property',
 	);
 
 	/** @var array */

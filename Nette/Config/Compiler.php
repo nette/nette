@@ -175,7 +175,7 @@ class Compiler extends Nette\Object
 				$list = array_diff($list, $found);
 				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
 				$class->documents = preg_replace("#\S+(?= \\$$name$)#", $def->class, $class->documents);
-				$classes[] = $accessor = new Nette\Utils\PhpGenerator\ClassType($def->class);
+				$classes[] = $accessor = new Nette\PhpGenerator\ClassType($def->class);
 				foreach ($found as $item) {
 					if ($defs[$item]->internal) {
 						continue;
