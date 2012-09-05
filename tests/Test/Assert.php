@@ -282,11 +282,11 @@ class Assert
 		while (isset($trace[0]['file']) && $trace[0]['file'] === __FILE__) {
 			array_shift($trace);
 		}
-		if (isset($trace[0]['file'])) {
-			$message .= ' in file ' . implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $trace[0]['file']), -3));
-		}
-		if (isset($trace[0]['line'])) {
-			$message .= ' on line ' . $trace[0]['line'];
+		while ($trace) {
+			if (isset($trace[0]['file'], $trace[0]['line'])) {
+				$message .= "\nin " . implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $trace[0]['file']), -3)) . ':' . $trace[0]['line'];
+			}
+			array_shift($trace);
 		}
 		echo "\n$message";
 		exit(TestCase::CODE_FAIL);
