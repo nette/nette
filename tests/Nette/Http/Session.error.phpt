@@ -16,6 +16,7 @@ use Nette\Http\Session,
 require __DIR__ . '/../bootstrap.php';
 
 
+setlocale(LC_MESSAGES, 'C');
 ini_set('session.save_path', ';;;');
 
 
