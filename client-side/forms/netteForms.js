@@ -7,9 +7,12 @@
 
 var Nette = Nette || {};
 
-Nette.addEvent = function (element, on, callback) {
+/**
+ * Attaches a handler to an event for the element.
+ */
+Nette.addEvent = function(element, on, callback) {
 	var original = element['on' + on];
-	element['on' + on] = function () {
+	element['on' + on] = function() {
 		if (typeof original === 'function' && original.apply(element, arguments) === false) {
 			return false;
 		}
@@ -18,6 +21,9 @@ Nette.addEvent = function (element, on, callback) {
 };
 
 
+/**
+ * Returns the value of form element.
+ */
 Nette.getValue = function(elem) {
 	var i, len;
 	if (!elem) {
@@ -60,6 +66,9 @@ Nette.getValue = function(elem) {
 };
 
 
+/**
+ * Validates form element against given rules.
+ */
 Nette.validateControl = function(elem, rules, onlyCheck) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	for (var id = 0, len = rules.length; id < len; id++) {
@@ -89,6 +98,9 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 };
 
 
+/**
+ * Validates whole form.
+ */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender;
 	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
@@ -96,7 +108,10 @@ Nette.validateForm = function(sender) {
 	}
 	for (var i = 0; i < form.elements.length; i++) {
 		var elem = form.elements[i];
-		if (!(elem.nodeName.toLowerCase() in {input:1, select:1, textarea:1}) || (elem.type in {hidden:1, submit:1, image:1, reset: 1}) || elem.disabled || elem.readonly) {
+		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
+			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
+			elem.disabled || elem.readonly
+		) {
 			continue;
 		}
 		if (!Nette.validateControl(elem)) {
@@ -107,6 +122,9 @@ Nette.validateForm = function(sender) {
 };
 
 
+/**
+ * Display error message.
+ */
 Nette.addError = function(elem, message) {
 	if (elem.focus) {
 		elem.focus();
@@ -117,6 +135,9 @@ Nette.addError = function(elem, message) {
 };
 
 
+/**
+ * Validates single rule.
+ */
 Nette.validateRule = function(elem, op, arg) {
 	var val = Nette.getValue(elem);
 
@@ -128,7 +149,7 @@ Nette.validateRule = function(elem, op, arg) {
 		op = op.substr(1);
 	}
 	op = op.replace('::', '_');
-	op = op.replace(/\\/g,'');
+	op = op.replace(/\\/g, '');
 
 	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
 };
@@ -194,12 +215,13 @@ Nette.validators = {
 		return (/^-?[0-9]+$/).test(val);
 	},
 
-	float: function(elem, arg, val) {
+	'float': function(elem, arg, val) {
 		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
 	},
 
 	range: function(elem, arg, val) {
-		return Nette.isArray(arg) ? ((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+		return Nette.isArray(arg) ?
+			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
 	},
 
 	submitted: function(elem, arg, val) {
@@ -208,15 +230,21 @@ Nette.validators = {
 };
 
 
+/**
+ * Process all toggles in form.
+ */
 Nette.toggleForm = function(form) {
 	for (var i = 0; i < form.elements.length; i++) {
-		if (form.elements[i].nodeName.toLowerCase() in {input:1, select:1, textarea:1, button:1}) {
+		if (form.elements[i].nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1, button: 1}) {
 			Nette.toggleControl(form.elements[i]);
 		}
 	}
 };
 
 
+/**
+ * Process toggles on form element.
+ */
 Nette.toggleControl = function(elem, rules, firsttime) {
 	rules = rules || eval('[' + (elem.getAttribute('data-nette-rules') || '') + ']');
 	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function() { Nette.toggleForm(elem.form); };
@@ -255,14 +283,20 @@ Nette.toggleControl = function(elem, rules, firsttime) {
 };
 
 
+/**
+ * Displays or hides HTML element.
+ */
 Nette.toggle = function(id, visible) {
 	var elem = document.getElementById(id);
 	if (elem) {
-		elem.style.display = visible ? "" : "none";
+		elem.style.display = visible ? '' : 'none';
 	}
 };
 
 
+/**
+ * Setup handlers.
+ */
 Nette.initForm = function(form) {
 	form.noValidate = 'novalidate';
 
@@ -273,7 +307,7 @@ Nette.initForm = function(form) {
 	Nette.addEvent(form, 'click', function(e) {
 		e = e || event;
 		var target = e.target || e.srcElement;
-		form['nette-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
+		form['nette-submittedBy'] = (target.type in {submit: 1, image: 1}) ? target : null;
 	});
 
 	for (var i = 0; i < form.elements.length; i++) {
@@ -299,12 +333,15 @@ Nette.initForm = function(form) {
 };
 
 
+/**
+ * Determines whether the argument is an array.
+ */
 Nette.isArray = function(arg) {
 	return Object.prototype.toString.call(arg) === '[object Array]';
 };
 
 
-Nette.addEvent(window, 'load', function () {
+Nette.addEvent(window, 'load', function() {
 	for (var i = 0; i < document.forms.length; i++) {
 		Nette.initForm(document.forms[i]);
 	}
