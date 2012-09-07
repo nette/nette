@@ -38,9 +38,6 @@ class TestRunner
 	/** @var string  php-cgi command-line arguments */
 	private $phpArgs;
 
-	/** @var string  php-cgi environment variables */
-	private $phpEnvironment;
-
 	/** @var bool  display skipped tests information? */
 	private $displaySkipped = FALSE;
 
@@ -58,7 +55,7 @@ class TestRunner
 		$count = 0;
 		$failed = $passed = $skipped = array();
 
-		exec($this->phpEnvironment . escapeshellarg($this->phpBinary) . ' -v', $output);
+		exec(escapeshellarg($this->phpBinary) . ' -v', $output);
 		if (!isset($output[0])) {
 			return FALSE;
 
@@ -66,7 +63,7 @@ class TestRunner
 			echo "Nette Framework Tests suite requires php-cgi, " . $this->phpBinary . " given.\n\n";
 			return FALSE;
 		}
-		echo $this->log("$output[0] | $this->phpBinary $this->phpArgs $this->phpEnvironment\n");
+		echo $this->log("$output[0] | $this->phpBinary $this->phpArgs\n");
 
 		$tests = array();
 		foreach ($this->paths as $path) {
@@ -91,7 +88,7 @@ class TestRunner
 				$file = array_shift($tests);
 				$count++;
 				$testCase = new TestCase($file);
-				$testCase->setPhp($this->phpBinary, $this->phpArgs, $this->phpEnvironment);
+				$testCase->setPhp($this->phpBinary, $this->phpArgs);
 				try {
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
 					$running[] = $testCase->run(!$parallel);
@@ -156,7 +153,6 @@ class TestRunner
 	{
 		$this->phpBinary = 'php-cgi';
 		$this->phpArgs = '';
-		$this->phpEnvironment = '';
 		$this->paths = array();
 		$iniSet = FALSE;
 
@@ -191,10 +187,6 @@ class TestRunner
 				case 'd':
 					$args->next();
 					$this->phpArgs .= " -d " . escapeshellarg($args->current());
-					break;
-				case 'l':
-					$args->next();
-					$this->phpEnvironment .= 'LD_LIBRARY_PATH='. escapeshellarg($args->current()) . ' ';
 					break;
 				case 's':
 					$this->displaySkipped = TRUE;

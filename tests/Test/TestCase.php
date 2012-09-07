@@ -109,16 +109,15 @@ class TestCase
 	 * Sets PHP command line.
 	 * @param  string
 	 * @param  string
-	 * @param  string
 	 * @return TestCase  provides a fluent interface
 	 */
-	public function setPhp($binary, $args, $environment)
+	public function setPhp($binary, $args)
 	{
 		if (isset(self::$cachedPhp[$binary])) {
 			list($this->phpVersion, $this->phpType) = self::$cachedPhp[$binary];
 
 		} else {
-			exec($environment . escapeshellarg($binary) . ' -v', $output, $res);
+			exec(escapeshellarg($binary) . ' -v', $output, $res);
 			if ($res !== self::CODE_OK && $res !== self::CODE_ERROR) {
 				throw new Exception("Unable to execute '$binary -v'.");
 			}
@@ -132,7 +131,7 @@ class TestCase
 			self::$cachedPhp[$binary] = array($this->phpVersion, $this->phpType);
 		}
 
-		$this->cmdLine = $environment . escapeshellarg($binary) . $args;
+		$this->cmdLine = escapeshellarg($binary) . $args;
 		return $this;
 	}
 
