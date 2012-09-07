@@ -24,4 +24,4 @@ $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->crea
 
 Assert::throws(function() use ($container) {
 	$session = $container->session->start();
-}, 'Nette\InvalidStateException', "session_start(): session_start(): open(%A%) failed: No such file or directory%A%");
+}, 'Nette\InvalidStateException', "session_start(): session_start(): open(%A%) failed: %a%");
