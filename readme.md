@@ -19,19 +19,19 @@ Checker](http://doc.nette.org/requirements) to obtain more detailed information.
 Installation
 ------------
 
-The best way to install Nette Framework is to download latest package from
-http://nette.org/download or use [Composer](http://doc.nette.org/composer).
+The best way to install Nette Framework is to download the latest package
+from http://nette.org/download or use [Composer](http://doc.nette.org/composer).
 The downloaded package includes the following directories:
 
 - `Nette`: this directory contains the source code of Nette Framework. This is
 	the only directory that you will need in order to deploy your application.
 
-- `Nette-minified`: contains Nette Framework source code compressed into single file.
+- `Nette-minified`: contains Nette Framework source code compressed into a single file.
 
 - `client-side`: this directory contains the JavaScript source codes.
 
-- `API-reference`: generated API documentation for the framework in HTML format. These
-	files are build using Apidoc from the contents of the Nette directory.
+- `API-reference`: generated API documentation of the framework in HTML format. This is
+    generated using [ApiGen](http://apigen.org) from the contents of the Nette directory.
 
 - `examples`: contains some Nette Framework demo applications.
 
@@ -40,8 +40,8 @@ The downloaded package includes the following directories:
 
 - `tests`: contains Nette Framework unit tests and testing tool.
 
-- `tools`: contains supporting tools as a Requirements Checker, script that can check
-	if your system meets the requirements for running Nette Framework.
+- `tools`: contains supporting tools such as the Requirements Checker, script that
+    can check if your system meets the requirements for running Nette Framework.
 
 
 Getting started
