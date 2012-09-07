@@ -31,6 +31,9 @@ class TestCase
 	/** @var string  test file */
 	private $file;
 
+	/** @var string  test arguments */
+	private $args;
+
 	/** @var array  */
 	private $options;
 
@@ -68,9 +71,10 @@ class TestCase
 	 * @param  string  PHP-CGI command line
 	 * @return void
 	 */
-	public function __construct($testFile)
+	public function __construct($testFile, $args = NULL)
 	{
 		$this->file = (string) $testFile;
+		$this->args = $args;
 		$this->options = self::parseOptions($this->file);
 	}
 
@@ -151,7 +155,7 @@ class TestCase
 				$this->cmdLine .= " -d " . escapeshellarg(trim($item));
 			}
 		}
-		$this->cmdLine .= ' ' . escapeshellarg($this->file);
+		$this->cmdLine .= ' ' . escapeshellarg($this->file) . ' ' . $this->args;
 
 		$descriptors = array(
 			array('pipe', 'r'),
@@ -254,6 +258,17 @@ class TestCase
 	public function getName()
 	{
 		return $this->options['name'];
+	}
+
+
+
+	/**
+	 * Returns test args.
+	 * @return string
+	 */
+	public function getArguments()
+	{
+		return $this->args;
 	}
 
 

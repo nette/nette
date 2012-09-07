@@ -78,16 +78,32 @@ class TestRunner
 				if (!isset($info['extension']) || $info['extension'] !== 'phpt') {
 					continue;
 				}
-				$tests[] = $file;
+
+				$options = TestCase::parseOptions($file);
+				if (!empty($options['multiple'])) {
+					$multiFile = dirname($file) . '/' . $options['multiple'];
+					if (!is_file($multiFile)) {
+						throw new Exception("Missing @multiple configuration file '$multiFile'.");
+
+					} elseif (($multiple = parse_ini_file($multiFile, TRUE)) === FALSE) {
+						throw new Exception("Cannot parse @multiple configuration file '$multiFile'.");
+					}
+					foreach ($multiple as $section => $foo) {
+						$tests[] = array($file, $section);
+					}
+
+				} else {
+					$tests[] = array($file, NULL);
+				}
 			}
 		}
 
 		$running = array();
 		while ($tests || $running) {
 			for ($i = count($running); $tests && $i < $this->jobs; $i++) {
-				$file = array_shift($tests);
+				list($file, $args) = array_shift($tests);
 				$count++;
-				$testCase = new TestCase($file);
+				$testCase = new TestCase($file, $args);
 				$testCase->setPhp($this->phpBinary, $this->phpArgs);
 				try {
 					$parallel = ($this->jobs > 1) && (count($running) + count($tests) > 1);
@@ -230,7 +246,8 @@ class TestRunner
 	 */
 	private function format($s, $testCase, $e)
 	{
-		return "\n-- $s: " . trim($testCase->getName()) . ' | '
+		return "\n-- $s: {$testCase->getName()}"
+			. ($testCase->getArguments() ? " [{$testCase->getArguments()}]" : '') . ' | '
 			. implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, $testCase->getFile()), -3))
 			. str_replace("\n", "\n   ", "\n" . trim($e->getMessage())) . "\n";
 	}
