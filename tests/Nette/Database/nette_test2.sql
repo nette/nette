@@ -43,4 +43,16 @@ INSERT INTO `nUsers_nTopics` (`nUserId`, `nTopicId`) VALUES
 (1, 12),
 (2, 11);
 
+DROP TABLE IF EXISTS `nUsers_nTopics_alt`;
+CREATE TABLE `nUsers_nTopics_alt` (
+	`nUserId` int(11) NOT NULL,
+	`nTopicId` int(11) NOT NULL,
+	PRIMARY KEY (`nUserId`, `nTopicId`),
+	CONSTRAINT user_id_alt FOREIGN KEY (nUserId) REFERENCES nUsers (nUserId),
+	CONSTRAINT topic_id_lat FOREIGN KEY (nTopicId) REFERENCES nTopics (nTopicId)
+) ENGINE=InnoDB DEFAULT  CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+INSERT INTO `nUsers_nTopics_alt` (`nUserId`, `nTopicId`) VALUES
+(2, 10);
+
 SET FOREIGN_KEY_CHECKS = 1;
