@@ -20,6 +20,7 @@ Options:
 	-l <path>   Specify path to shared library files (LD_LIBRARY_PATH).
 	-s          Show information about skipped tests.
 	-j <num>    Run <num> jobs in parallel.
+	-db <path>  Specify path to databases.ini.
 
 <?php
 	if (isset($_SERVER['argv'][1])) {
