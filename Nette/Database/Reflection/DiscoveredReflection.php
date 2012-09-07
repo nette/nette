@@ -95,31 +95,35 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getHasManyReference($table, $key, $refresh = TRUE)
 	{
-		$table = strtolower($table);
-		$reference = & $this->structure['hasMany'];
-		if (!empty($reference[$table])) {
-			$candidates = array();
-			$subStringCandidatesCount = 0;
-			foreach ($reference[$table] as $targetPair) {
+		$reference = & $this->structure['hasMany'][strtolower($table)];
+		if (!empty($reference)) {
+			$candidates = $columnCandidates = array();
+			foreach ($reference as $targetPair) {
 				list($targetColumn, $targetTable) = $targetPair;
-				if (stripos($targetTable, $key) !== FALSE) {
-					$candidates[] = array($targetTable, $targetColumn);
-					if (stripos($targetColumn, $table) !== FALSE) {
-						$subStringCandidatesCount++;
-						$candidate = array($targetTable, $targetColumn);
-						if ($targetTable === $key) {
-							$candidates = array($candidate);
-							break;
-						}
-					}
+				if (stripos($targetTable, $key) === FALSE)
+					continue;
+
+				$candidates[] = array($targetTable, $targetColumn);
+				if (stripos($targetColumn, $table) !== FALSE) {
+					$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
+					if (strtolower($targetTable) === strtolower($key))
+						return $candidate;
 				}
 			}
 
-			if (count($candidates) === 1) {
-				return $candidates[0];
-			} elseif ($subStringCandidatesCount === 1) {
-				return $candidate;
-			} elseif (!empty($candidates)) {
+			if (count($columnCandidates) === 1) {
+				return reset($columnCandidates);
+			} elseif (count($candidates) === 1) {
+				return reset($candidates);
+			}
+
+			foreach ($candidates as $candidate) {
+				list($targetTable, $targetColumn) = $candidate;
+				if (strtolower($targetTable) === strtolower($key))
+					return $candidate;
+			}
+
+			if (!empty($candidates)) {
 				throw new \PDOException('Ambiguous joining column in related call.');
 			}
 		}
@@ -136,9 +140,9 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
-		$reference = & $this->structure['belongsTo'];
-		if (!empty($reference[strtolower($table)])) {
-			foreach ($reference[strtolower($table)] as $column => $targetTable) {
+		$reference = & $this->structure['belongsTo'][strtolower($table)];
+		if (!empty($reference)) {
+			foreach ($reference as $column => $targetTable) {
 				if (stripos($column, $key) !== FALSE) {
 					return array(
 						$targetTable,
