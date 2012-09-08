@@ -35,7 +35,7 @@ array_walk($columns, function(& $item) {
 	unset($item['vendor']);
 });
 
-Assert::same( array(
+$expectedColumns = array(
 	array(
 		'name' => 'id',
 		'table' => 'author',
@@ -80,29 +80,60 @@ Assert::same( array(
 		'autoincrement' => FALSE,
 		'primary' => FALSE,
 	),
-), $columns );
+);
+
+switch ($driverName) {
+	case 'pgsql':
+		$expectedColumns[0]['nativetype'] = 'INT4';
+		$expectedColumns[0]['size'] = 32;
+		$expectedColumns[0]['default'] = "nextval('author_id_seq'::regclass)";
+		break;
+}
+
+Assert::same($expectedColumns , $columns);
 
 
 
-Assert::same( array(
-	array(
-		'name' => 'PRIMARY',
-		'unique' => TRUE,
-		'primary' => TRUE,
-		'columns' => array(
-			'book_id',
-			'tag_id',
-		),
-	),
-	array(
-		'name' => 'book_tag_tag',
-		'unique' => FALSE,
-		'primary' => FALSE,
-		'columns' => array(
-			'tag_id',
-		),
-	),
-), $driver->getIndexes('book_tag') );
+$indexes = $driver->getIndexes('book_tag');
+switch ($driverName) {
+	case 'pgsql':
+		$expectedIndexes = array(
+			array(
+				'name' => 'book_tag_pkey',
+				'unique' => TRUE,
+				'primary' => TRUE,
+				'columns' => array(
+					'book_id',
+					'tag_id',
+				),
+			),
+		);
+		break;
+	case 'mysql':
+	default:
+		$expectedIndexes = array(
+			array(
+				'name' => 'PRIMARY',
+				'unique' => TRUE,
+				'primary' => TRUE,
+				'columns' => array(
+					'book_id',
+					'tag_id',
+				),
+			),
+			array(
+				'name' => 'book_tag_tag',
+				'unique' => FALSE,
+				'primary' => FALSE,
+				'columns' => array(
+					'tag_id',
+				),
+			),
+		);
+		break;
+}
+
+Assert::same($expectedIndexes, $indexes);
 
 
 
