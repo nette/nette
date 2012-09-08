@@ -137,7 +137,8 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				c.is_nullable = 'YES' AS nullable,
 				c.column_default AS default,
 				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AND strpos(c.column_default, 'nextval') = 1 AS autoincrement,
-				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary
+				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary,
+				substring(c.column_default from 'nextval[(]''\"?([^''\"]+)') AS sequence
 			FROM
 				information_schema.columns AS c
 				LEFT JOIN information_schema.constraint_column_usage AS ccu USING(table_catalog, table_schema, table_name, column_name)
@@ -151,8 +152,11 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			ORDER BY
 				c.ordinal_position
 		") as $row) {
-			$row['vendor'] = array();
-			$columns[] = (array) $row;
+			$column = (array) $row;
+			$column['vendor'] = $column;
+			unset($column['sequence']);
+
+			$columns[] = $column;
 		}
 
 		return $columns;
@@ -202,16 +206,29 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getForeignKeys($table)
 	{
-		return $this->connection->query("
-			SELECT tc.table_name AS name, kcu.column_name AS local, ccu.table_name AS table, ccu.column_name AS foreign
-			FROM information_schema.table_constraints AS tc
-			JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.constraint_schema = kcu.constraint_schema
-			JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name AND ccu.constraint_schema = tc.constraint_schema
+		/* Not for multi-column foreign keys */
+		$keys = array();
+		foreach ($this->connection->query("
+			SELECT
+				tc.constraint_name AS name,
+				kcu.column_name AS local,
+				ccu.table_name AS table,
+				ccu.column_name AS foreign
+			FROM
+				information_schema.table_constraints AS tc
+				JOIN information_schema.key_column_usage AS kcu USING(constraint_catalog, constraint_schema, constraint_name)
+				JOIN information_schema.constraint_column_usage AS ccu USING(constraint_catalog, constraint_schema, constraint_name)
 			WHERE
-				constraint_type = 'FOREIGN KEY' AND
-				tc.table_name = {$this->connection->quote($table)} AND
-				tc.constraint_schema = current_schema()
-		")->fetchAll();
+				constraint_type = 'FOREIGN KEY'
+				AND
+				tc.table_name = {$this->connection->quote($table)}
+			ORDER BY
+				kcu.ordinal_position
+		") as $row) {
+			$keys[] = (array) $row;
+		}
+
+		return $keys;
 	}
 
 
@@ -221,7 +238,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::META;
+		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
 	}
 
 }
