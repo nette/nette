@@ -137,7 +137,8 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				c.is_nullable = 'YES' AS nullable,
 				c.column_default AS default,
 				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AND strpos(c.column_default, 'nextval') = 1 AS autoincrement,
-				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary
+				coalesce(tc.constraint_type = 'PRIMARY KEY', FALSE) AS primary,
+				substring(c.column_default from 'nextval[(]''\"?([^''\"]+)') AS sequence
 			FROM
 				information_schema.columns AS c
 				LEFT JOIN information_schema.constraint_column_usage AS ccu USING(table_catalog, table_schema, table_name, column_name)
@@ -151,8 +152,11 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			ORDER BY
 				c.ordinal_position
 		") as $row) {
-			$row['vendor'] = array();
-			$columns[] = (array) $row;
+			$column = (array) $row;
+			$column['vendor'] = $column;
+			unset($column['sequence']);
+
+			$columns[] = $column;
 		}
 
 		return $columns;
@@ -234,7 +238,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::META;
+		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
 	}
 
 }
