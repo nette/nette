@@ -17,3 +17,6 @@ before_script:
 
 # PHP Memcache extension
   - echo n | pecl install memcache > /dev/null
+
+# Create Postgre database
+  - psql -c 'create database nette_test;' -U postgres
