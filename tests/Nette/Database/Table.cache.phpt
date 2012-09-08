@@ -12,7 +12,7 @@
 
 require __DIR__ . '/connect.inc.php'; // create $connection
 
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . '/nette_test1.sql');
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
 
 
 
