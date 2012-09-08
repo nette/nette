@@ -49,7 +49,7 @@ CREATE TABLE `nUsers_nTopics_alt` (
 	`nTopicId` int(11) NOT NULL,
 	PRIMARY KEY (`nUserId`, `nTopicId`),
 	CONSTRAINT user_id_alt FOREIGN KEY (nUserId) REFERENCES nUsers (nUserId),
-	CONSTRAINT topic_id_lat FOREIGN KEY (nTopicId) REFERENCES nTopics (nTopicId)
+	CONSTRAINT topic_id_alt FOREIGN KEY (nTopicId) REFERENCES nTopics (nTopicId)
 ) ENGINE=InnoDB DEFAULT  CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 INSERT INTO `nUsers_nTopics_alt` (`nUserId`, `nTopicId`) VALUES
