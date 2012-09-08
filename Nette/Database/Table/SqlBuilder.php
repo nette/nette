@@ -272,8 +272,12 @@ class SqlBuilder extends Nette\Object
 			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($prevAccessed)));
 			$cols = $prefix . implode(', ' . $prefix, $cols);
 
+		} elseif ($this->group) {
+			$cols = $this->tryDelimite($this->removeExtraTables($this->group));
+
 		} else {
 			$cols = $prefix . '*';
+
 		}
 
 		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();
