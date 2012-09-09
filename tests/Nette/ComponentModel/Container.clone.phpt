@@ -20,32 +20,32 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container implements ArrayAccess
 {
-	protected function attached($obj)
+	function attached($obj)
 	{
 		TestHelpers::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
-	protected function detached($obj)
+	function detached($obj)
 	{
 		TestHelpers::note(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
-	final public function offsetSet($name, $component)
+	function offsetSet($name, $component)
 	{
 		$this->addComponent($component, $name);
 	}
 
-	final public function offsetGet($name)
+	function offsetGet($name)
 	{
 		return $this->getComponent($name, TRUE);
 	}
 
-	final public function offsetExists($name)
+	function offsetExists($name)
 	{
 		return $this->getComponent($name) !== NULL;
 	}
 
-	final public function offsetUnset($name)
+	function offsetUnset($name)
 	{
 		$this->removeComponent($this->getComponent($name, TRUE));
 	}
