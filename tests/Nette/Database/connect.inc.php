@@ -18,6 +18,7 @@ $current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($co
 
 try {
 	$rc = new ReflectionClass('Nette\Database\Connection');
+	/** @var Nette\Database\Connection */
 	$connection = $rc->newInstanceArgs($current);
 
 } catch (PDOException $e) {
@@ -27,3 +28,4 @@ try {
 flock($lock = fopen(TEMP_DIR . '/../lock-db-' . md5($current['dsn']), 'w'), LOCK_EX);
 
 unset($config, $current, $rc);
+$driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
