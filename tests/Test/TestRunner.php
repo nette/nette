@@ -81,15 +81,20 @@ class TestRunner
 
 				$options = TestCase::parseOptions($file);
 				if (!empty($options['multiple'])) {
-					$multiFile = dirname($file) . '/' . $options['multiple'];
-					if (!is_file($multiFile)) {
+					if (is_numeric($options['multiple'])) {
+						$range = range(0, $options['multiple'] - 1);
+
+					} elseif (!is_file($multiFile = dirname($file) . '/' . $options['multiple'])) {
 						throw new Exception("Missing @multiple configuration file '$multiFile'.");
 
 					} elseif (($multiple = parse_ini_file($multiFile, TRUE)) === FALSE) {
 						throw new Exception("Cannot parse @multiple configuration file '$multiFile'.");
+
+					} else {
+						$range = array_keys($multiple);
 					}
-					foreach ($multiple as $section => $foo) {
-						$tests[] = array($file, $section);
+					foreach ($range as $item) {
+						$tests[] = array($file, escapeshellarg($item));
 					}
 
 				} else {
