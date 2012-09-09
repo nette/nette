@@ -226,7 +226,15 @@ Nette.validators = {
 
 	submitted: function(elem, arg, val) {
 		return elem.form['nette-submittedBy'] === elem;
-	}
+	},
+	
+	fileSize: function(elem, arg, val) {
+		if (typeof FileReader !== "undefined") {
+			return elem.files[0].size <= arg;
+		} else {
+			return true;
+		}
+	}	
 };
 
 
