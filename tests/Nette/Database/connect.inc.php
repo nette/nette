@@ -25,7 +25,7 @@ try {
 	TestHelpers::skip("Connection to '$current[dsn]' failed. Reason: " . $e->getMessage());
 }
 
-flock($lock = fopen(TEMP_DIR . '/../lock-db-' . md5($current['dsn']), 'w'), LOCK_EX);
+TestHelpers::lock($current['dsn'], dirname(TEMP_DIR));
 
 unset($config, $current, $rc);
 $driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
