@@ -88,6 +88,18 @@ class TestHelpers
 
 
 	/**
+	 * locks the parallel tests.
+	 * @return void
+	 */
+	public static function lock($name = '', $path = '')
+	{
+		static $lock;
+		flock($lock = fopen($path . '/lock-' . md5($name), 'w'), LOCK_EX);
+	}
+
+
+
+	/**
 	 * Starts gathering the information for code coverage.
 	 * @param  string
 	 * @return void
