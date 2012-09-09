@@ -27,13 +27,18 @@ Options:
 }
 
 
+// throw unexpected errors/warnings/notices
+set_error_handler(function($severity, $message, $file, $line) {
+	if (($severity & error_reporting()) === $severity) {
+		throw new \ErrorException($message, 0, $severity, $file, $line);
+	}
+	return FALSE;
+});
 
-/**
- * Execute tests
- */
+
+// Execute tests
 try {
 	@unlink(__DIR__ . '/coverage.dat'); // @ - file may not exist
-
 
 	$manager = new TestRunner;
 	$manager->parseArguments();
