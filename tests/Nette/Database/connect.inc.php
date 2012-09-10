@@ -12,7 +12,7 @@
 require __DIR__ . '/../bootstrap.php';
 
 
-$config = parse_ini_file(__DIR__ . '/databases.ini', TRUE);
+$config = parse_ini_file(isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : __DIR__ . '/databases.ini', TRUE);
 $current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
 
 
