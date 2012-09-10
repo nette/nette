@@ -12,8 +12,7 @@
 require __DIR__ . '/../bootstrap.php';
 
 
-$config = parse_ini_file(isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : __DIR__ . '/databases.ini', TRUE);
-$current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
+$current = TestHelpers::getCurrentMultipleSection(__DIR__ . '/databases.ini');
 
 
 try {
@@ -27,5 +26,5 @@ try {
 
 TestHelpers::lock($current['dsn'], dirname(TEMP_DIR));
 
-unset($config, $current, $rc);
+unset($current, $rc);
 $driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
