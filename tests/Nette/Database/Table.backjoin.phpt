@@ -16,7 +16,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 
 $authorTagsCount = array();
-foreach ($connection->table('author')->select('author.*, COUNT(DISTINCT book:book_tag:tag_id) AS tagsCount')->group('author.id')->order('tagsCount DESC') as $author) {
+foreach ($connection->table('author')->select('author.*, COUNT(DISTINCT :book:book_tag.tag_id) AS tagsCount')->group('author.id')->order('tagsCount DESC') as $author) {
 	$authorTagsCount[$author->name] = $author->tagsCount;
 }
 
@@ -24,3 +24,8 @@ Assert::same(array(
 	'Jakub Vrana' => 3,
 	'David Grudl' => 2,
 ), $authorTagsCount);
+
+
+
+$count = $connection->table('author')->where(':(book.translator_id).title LIKE ?', '%PHP%')->count('*');
+Assert::same(1, $count);

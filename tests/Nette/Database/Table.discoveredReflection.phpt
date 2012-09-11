@@ -105,3 +105,19 @@ if (
 		'Dibi' => 'David Grudl',
 	), $books);
 }
+
+
+
+// tests also classic approach
+$count = $connection->table('book')->where('(author, translator_id).name LIKE ?', '%David%')->count();
+Assert::same(2, $count);
+$count = $connection->table('book')->where('(author, author_id).name LIKE ?', '%David%')->count();
+Assert::same(2, $count);
+
+
+
+
+$count = $connection->table('book')->where('translator.name LIKE ?', '%David%')->count();
+Assert::same(2, $count);
+$count = $connection->table('book')->where('author.name LIKE ?', '%David%')->count();
+Assert::same(2, $count);
