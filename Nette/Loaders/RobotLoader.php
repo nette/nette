@@ -41,17 +41,17 @@ class RobotLoader extends AutoLoader
 	/** @var bool */
 	public $autoRebuild = TRUE;
 
-	/** @var array of lowered-class => [file, mtime, class] or FALSE */
-	private $list = array();
+	/** @var array of lowered-class => [file, mtime, class] or num-of-retry */
+	private $classes = array();
 
-	/** @var array of file => mtime */
-	private $files;
+	/** @var array of file => [mtime, classes] */
+	private $knownFiles;
 
 	/** @var bool */
 	private $rebuilt = FALSE;
 
-	/** @var array of checked classes in this request */
-	private $checked = array();
+	/** @var array of missing classes in this request */
+	private $missing = array();
 
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
@@ -76,7 +76,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register(/**/$prepend = FALSE/**/)
 	{
-		$this->list = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
+		$this->classes = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 		parent::register(/**/$prepend/**/);
 		return $this;
 	}
@@ -91,26 +91,31 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
-		$info = & $this->list[$type];
+		$info = & $this->classes[$type];
 
-		if ($this->autoRebuild && empty($this->checked[$type]) && (is_array($info) ? !is_file($info[0]) : $info < self::RETRY_LIMIT)) {
+		if ($this->autoRebuild && empty($this->missing[$type])
+			&& (is_array($info) ? !is_file($info['file']) : $info < self::RETRY_LIMIT)
+		) {
 			$info = is_int($info) ? $info + 1 : 0;
-			$this->checked[$type] = TRUE;
+			$this->missing[$type] = TRUE;
 			if ($this->rebuilt) {
-				$this->getCache()->save($this->getKey(), $this->list);
+				$this->getCache()->save($this->getKey(), $this->classes);
 			} else {
 				$this->rebuild();
 			}
+			$info = & $this->classes[$type];
 		}
 
-		if (isset($info[0])) {
-			Nette\Utils\LimitedScope::load($info[0], TRUE);
+		if (isset($info['file'])) {
+			Nette\Utils\LimitedScope::load($info['file'], TRUE);
 
-			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE) && (PHP_VERSION_ID < 50400 || !trait_exists($type, FALSE))) {
+			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE)
+				&& (PHP_VERSION_ID < 50400 || !trait_exists($type, FALSE))
+			) {
 				$info = 0;
-				$this->checked[$type] = TRUE;
+				$this->missing[$type] = TRUE;
 				if ($this->rebuilt) {
-					$this->getCache()->save($this->getKey(), $this->list);
+					$this->getCache()->save($this->getKey(), $this->classes);
 				} else {
 					$this->rebuild();
 				}
@@ -138,16 +143,23 @@ class RobotLoader extends AutoLoader
 	 */
 	public function _rebuildCallback(& $dp)
 	{
-		foreach ($this->list as $pair) {
-			if (is_array($pair)) {
-				$this->files[$pair[0]] = $pair[1];
+		$this->knownFiles = $missing = array();
+		foreach ($this->classes as $class => $info) {
+			if (is_array($info)) {
+				$this->knownFiles[$info['file']]['time'] = $info['time'];
+				$this->knownFiles[$info['file']]['classes'][] = $info['orig'];
+			} else {
+				$missing[$class] = $info;
 			}
 		}
+
+		$this->classes = array();
 		foreach (array_unique($this->scanDirs) as $dir) {
 			$this->scanDirectory($dir);
 		}
-		$this->files = NULL;
-		return $this->list;
+		$this->classes += $missing;
+		$this->knownFiles = NULL;
+		return $this->classes;
 	}
 
 
@@ -158,9 +170,9 @@ class RobotLoader extends AutoLoader
 	public function getIndexedClasses()
 	{
 		$res = array();
-		foreach ($this->list as $class => $pair) {
-			if (is_array($pair)) {
-				$res[$pair[2]] = $pair[0];
+		foreach ($this->classes as $class => $info) {
+			if (is_array($info)) {
+				$res[$info['orig']] = $info['file'];
 			}
 		}
 		return $res;
@@ -184,35 +196,6 @@ class RobotLoader extends AutoLoader
 			$this->scanDirs[] = $real;
 		}
 		return $this;
-	}
-
-
-
-	/**
-	 * Add class and file name to the list.
-	 * @param  string
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	private function addClass($class, $file, $time)
-	{
-		$lClass = strtolower($class);
-		if (isset($this->list[$lClass][0]) && ($file2 = $this->list[$lClass][0]) !== $file && is_file($file2)) {
-			if ($this->files[$file2] !== filemtime($file2)) {
-				$this->scanScript($file2);
-				return $this->addClass($class, $file, $time);
-			}
-			$e = new Nette\InvalidStateException("Ambiguous class '$class' resolution; defined in $file and in " . $this->list[$lClass][0] . ".");
-			/*5.2*if (PHP_VERSION_ID < 50300) {
-				Nette\Diagnostics\Debugger::_exceptionHandler($e);
-				exit;
-			} else*/ {
-				throw $e;
-			}
-		}
-		$this->list[$lClass] = array($file, $time, $class);
-		$this->files[$file] = $time;
 	}
 
 
@@ -256,8 +239,24 @@ class RobotLoader extends AutoLoader
 
 		foreach ($iterator as $entry) {
 			$path = $entry->getPathname();
-			if (!isset($this->files[$path]) || $this->files[$path] !== $entry->getMTime()) {
-				$this->scanScript($path);
+			if (isset($this->knownFiles[$path]) && $this->knownFiles[$path]['time'] === $entry->getMTime()) {
+				$classes = $this->knownFiles[$path]['classes'];
+			} else {
+				$classes = $this->scanPhp(file_get_contents($path));
+			}
+
+			foreach ($classes as $class) {
+				$lClass = strtolower($class);
+				if (isset($this->classes[$lClass])) {
+					$e = new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$this->classes[$lClass]['file']} and in $path.");
+					/*5.2*if (PHP_VERSION_ID < 50300) {
+						Nette\Diagnostics\Debugger::_exceptionHandler($e);
+						exit;
+					} else*/ {
+						throw $e;
+					}
+				}
+				$this->classes[$lClass] = array('file' => $path, 'time' => $entry->getMTime(), 'orig' => $class);
 			}
 		}
 	}
@@ -265,11 +264,11 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * Analyse PHP file.
+	 * Searches classes, interfaces and traits in PHP file.
 	 * @param  string
-	 * @return void
+	 * @return array
 	 */
-	private function scanScript($file)
+	private function scanPhp($code)
 	{
 		$T_NAMESPACE = PHP_VERSION_ID < 50300 ? -1 : T_NAMESPACE;
 		$T_NS_SEPARATOR = PHP_VERSION_ID < 50300 ? -1 : T_NS_SEPARATOR;
@@ -278,23 +277,16 @@ class RobotLoader extends AutoLoader
 		$expected = FALSE;
 		$namespace = '';
 		$level = $minLevel = 0;
-		$time = filemtime($file);
-		$s = file_get_contents($file);
+		$classes = array();
 
-		foreach ($this->list as $class => $pair) {
-			if (is_array($pair) && $pair[0] === $file) {
-				unset($this->list[$class]);
-			}
-		}
-
-		if ($matches = Strings::match($s, '#//nette'.'loader=(\S*)#')) {
+		if ($matches = Strings::match($code, '#//nette'.'loader=(\S*)#')) {
 			foreach (explode(',', $matches[1]) as $name) {
-				$this->addClass($name, $file, $time);
+				$classes[] = $name;
 			}
-			return;
+			return $classes;
 		}
 
-		foreach (@token_get_all($s) as $token) { // intentionally @
+		foreach (@token_get_all($code) as $token) { // intentionally @
 			if (is_array($token)) {
 				switch ($token[0]) {
 				case T_COMMENT:
@@ -328,7 +320,7 @@ class RobotLoader extends AutoLoader
 				case T_INTERFACE:
 				case $T_TRAIT:
 					if ($level === $minLevel) {
-						$this->addClass($namespace . $name, $file, $time);
+						$classes[] = $namespace . $name;
 					}
 					break;
 
@@ -346,6 +338,7 @@ class RobotLoader extends AutoLoader
 				$level--;
 			}
 		}
+		return $classes;
 	}
 
 
