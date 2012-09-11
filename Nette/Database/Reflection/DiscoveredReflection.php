@@ -35,6 +35,9 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 	/** @var array */
 	protected $structure = array();
 
+	/** @var array */
+	protected $loadedStructure;
+
 
 
 	/**
@@ -52,7 +55,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		$this->connection = $connection;
 		if ($this->cacheStorage) {
 			$this->cache = new Nette\Caching\Cache($this->cacheStorage, 'Nette.Database.' . md5($connection->getDsn()));
-			$this->structure = $this->cache->load('structure') ?: $this->structure;
+			$this->structure = $this->loadedStructure = $this->cache->load('structure') ?: $this->structure;
 		}
 	}
 
@@ -60,7 +63,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function __destruct()
 	{
-		if ($this->cache) {
+		if ($this->cache && $this->structure !== $this->loadedStructure) {
 			$this->cache->save('structure', $this->structure);
 		}
 	}
