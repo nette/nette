@@ -97,9 +97,7 @@ class RobotLoader extends AutoLoader
 			$info = is_int($info) ? $info + 1 : 0;
 			$this->checked[$type] = TRUE;
 			if ($this->rebuilt) {
-				$this->getCache()->save($this->getKey(), $this->list, array(
-					Cache::CONSTS => 'Nette\Framework::REVISION',
-				));
+				$this->getCache()->save($this->getKey(), $this->list);
 			} else {
 				$this->rebuild();
 			}
@@ -112,9 +110,7 @@ class RobotLoader extends AutoLoader
 				$info = 0;
 				$this->checked[$type] = TRUE;
 				if ($this->rebuilt) {
-					$this->getCache()->save($this->getKey(), $this->list, array(
-						Cache::CONSTS => 'Nette\Framework::REVISION',
-					));
+					$this->getCache()->save($this->getKey(), $this->list);
 				} else {
 					$this->rebuild();
 				}
@@ -151,9 +147,6 @@ class RobotLoader extends AutoLoader
 			$this->scanDirectory($dir);
 		}
 		$this->files = NULL;
-		$dp = array(
-			Cache::CONSTS => 'Nette\Framework::REVISION'
-		);
 		return $this->list;
 	}
 
