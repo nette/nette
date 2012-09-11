@@ -44,6 +44,9 @@ class TestRunner
 	/** @var int  run jobs in parallel */
 	private $jobs = 1;
 
+	/** @var array  overriden @multiple files */
+	private $multiFiles = array();
+
 
 
 	/**
@@ -82,19 +85,29 @@ class TestRunner
 				$options = TestCase::parseOptions($file);
 				if (!empty($options['multiple'])) {
 					if (is_numeric($options['multiple'])) {
-						$range = range(0, $options['multiple'] - 1);
-
-					} elseif (!is_file($multiFile = dirname($file) . '/' . $options['multiple'])) {
-						throw new Exception("Missing @multiple configuration file '$multiFile'.");
-
-					} elseif (($multiple = parse_ini_file($multiFile, TRUE)) === FALSE) {
-						throw new Exception("Cannot parse @multiple configuration file '$multiFile'.");
+						for ($item = 0; $item < $options['multiple']; $item++) {
+							$tests[] = array($file, escapeshellarg($item));
+						}
 
 					} else {
-						$range = array_keys($multiple);
-					}
-					foreach ($range as $item) {
-						$tests[] = array($file, escapeshellarg($item));
+						$args = '';
+						$multiFile = realpath(dirname($file) . DIRECTORY_SEPARATOR . $options['multiple']);
+						if (isset($this->multiFiles[$multiFile])) {
+							$multiFile = $this->multiFiles[$multiFile];
+							$args = ' ' . escapeshellarg($multiFile);
+						}
+
+						if (!is_file($multiFile)) {
+							throw new Exception("Missing @multiple configuration file '$multiFile'.");
+
+						} elseif (($multiple = parse_ini_file($multiFile, TRUE)) === FALSE) {
+							throw new Exception("Cannot parse @multiple configuration file '$multiFile'.");
+
+						} else {
+							foreach (array_keys($multiple) as $item) {
+								$tests[] = array($file, escapeshellarg($item) . $args);
+							}
+						}
 					}
 
 				} else {
@@ -215,6 +228,19 @@ class TestRunner
 				case 'j':
 					$args->next();
 					$this->jobs = max(1, (int) $args->current());
+					break;
+				case 'o':
+					$args->next();
+					$old = realpath($args->current());
+					if ($old === FALSE) {
+						throw new Exception("File '{$args->current()}' not found.");
+					}
+					$args->next();
+					$new = realpath($args->current());
+					if ($new === FALSE) {
+						throw new Exception("File '{$args->current()}' not found.");
+					}
+					$this->multiFiles[$old] = $new;
 					break;
 				default:
 					throw new Exception("Unknown option $arg.");

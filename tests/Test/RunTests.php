@@ -10,15 +10,16 @@ require_once __DIR__ . '/TestRunner.php';
  */
 if (($showHelp = in_array('-h', $_SERVER['argv']) || in_array('--help', $_SERVER['argv'])) || $_SERVER['argc'] === 1) { ?>
 Usage:
-	php RunTests.php [options] [file or directory]
+  php RunTests.php [options] [file or directory]
 
 Options:
-	-p <php>    Specify PHP-CGI executable to run.
-	-c <path>   Look for php.ini in directory <path> or use <path> as php.ini.
-	-log <path> Write log to file <path>.
-	-d key=val  Define INI entry 'key' with value 'val'.
-	-s          Show information about skipped tests.
-	-j <num>    Run <num> jobs in parallel.
+  -p <php>       Specify PHP-CGI executable to run.
+  -c <path>      Look for php.ini in directory <path> or use <path> as php.ini.
+  -log <path>    Write log to file <path>.
+  -d key=val     Define INI entry 'key' with value 'val'.
+  -s             Show information about skipped tests.
+  -j <num>       Run <num> jobs in parallel.
+  -o <old> <new> Override <old> file path by <new> file path for multiple tests.
 
 <?php
 	if ($showHelp) {

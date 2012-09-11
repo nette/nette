@@ -88,13 +88,26 @@ class TestHelpers
 
 
 	/**
-	 * locks the parallel tests.
+	 * Locks the parallel tests.
 	 * @return void
 	 */
 	public static function lock($name = '', $path = '')
 	{
 		static $lock;
 		flock($lock = fopen($path . '/lock-' . md5($name), 'w'), LOCK_EX);
+	}
+
+
+
+	/**
+	 * Returns current section for multiple tests.
+	 * @param  string  path to default ini file.
+	 * @return array
+	 */
+	public static function getCurrentMultipleSection($file)
+	{
+		$config = parse_ini_file(isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : $file, TRUE);
+		return isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
 	}
 
 
