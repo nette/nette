@@ -34,9 +34,6 @@ class RobotLoader extends AutoLoader
 	/** @var string|array  comma separated wildcards */
 	public $ignoreDirs = '.*, *.old, *.bak, *.tmp, temp';
 
-	/** @var string|array  comma separated wildcards */
-	public $acceptFiles = '*.php, *.php5';
-
 	/** @var array of file extension => callback */
 	public $filters = array(
 		'php' => NULL,
@@ -235,7 +232,7 @@ class RobotLoader extends AutoLoader
 			}
 		}
 
-		$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : preg_split('#[,\s]+#', $this->acceptFiles))
+		$iterator = Nette\Utils\Finder::findFiles(array_map(function($ext) { return "*.$ext"; }, array_keys($this->filters)))
 			->filter(function($file) use (&$disallow){
 				return !isset($disallow[$file->getPathname()]);
 			})
@@ -446,7 +443,7 @@ class RobotLoader extends AutoLoader
 	 */
 	protected function getKey()
 	{
-		return array($this->ignoreDirs, $this->acceptFiles, $this->scanDirs);
+		return array($this->ignoreDirs, array_keys($this->filters), $this->scanDirs);
 	}
 
 }
