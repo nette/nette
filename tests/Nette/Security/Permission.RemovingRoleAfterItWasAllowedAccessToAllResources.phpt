@@ -6,7 +6,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Security
- * @subpackage UnitTests
  */
 
 use Nette\Security\Permission;

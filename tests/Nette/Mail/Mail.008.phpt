@@ -5,7 +5,6 @@
  *
  * @author     Stork Dork
  * @package    Nette\Mail
- * @subpackage UnitTests
  */
 
 use Nette\Mail\Message;

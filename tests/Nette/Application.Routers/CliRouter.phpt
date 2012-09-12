@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Application\Routers
- * @subpackage UnitTests
  */
 
 use Nette\Http,

@@ -5,7 +5,6 @@
  *
  * @author     Petr Procházka
  * @package    Nette\Caching
- * @subpackage UnitTests
  */
 
 use Nette\Caching\Storages\FileStorage,

@@ -5,7 +5,6 @@
  *
  * @author     Josef Kříž
  * @package    Nette\Config
- * @subpackage UnitTests
  */
 
 use Nette\Config\CompilerExtension;

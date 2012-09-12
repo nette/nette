@@ -5,7 +5,6 @@
  *
  * @author     Matej Kravjar
  * @package    Nette\Latte
- * @subpackage UnitTests
  */
 
 use Nette\Latte\Macros\CoreMacros;

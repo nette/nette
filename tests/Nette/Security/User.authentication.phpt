@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Http
- * @subpackage UnitTests
  */
 
 use Nette\Security\IAuthenticator,

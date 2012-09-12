@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Loaders
- * @subpackage UnitTests
  */
 
 use Nette\Loaders\RobotLoader,

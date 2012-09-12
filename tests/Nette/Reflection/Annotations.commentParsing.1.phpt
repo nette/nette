@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Reflection
- * @subpackage UnitTests
  */
 
 use Nette\Reflection;

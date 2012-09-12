@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Forms
- * @subpackage UnitTests
  */
 
 use Nette\Forms\Controls\TextInput,

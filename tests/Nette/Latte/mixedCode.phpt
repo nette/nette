@@ -5,7 +5,6 @@
  *
  * @author     Jan Dolecek, David Grudl
  * @package    Nette\Latte
- * @subpackage UnitTests
  */
 
 use Nette\Latte,

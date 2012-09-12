@@ -5,7 +5,6 @@
  *
  * @author     Jan Tvrdík
  * @package    Nette\Application\UI
- * @subpackage UnitTests
  */
 
 use Nette\Application\UI;

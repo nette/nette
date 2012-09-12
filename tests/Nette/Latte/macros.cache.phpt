@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Latte
- * @subpackage UnitTests
  * @keepTrailingSpaces
  */
 

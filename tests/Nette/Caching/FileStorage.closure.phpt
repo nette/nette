@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Caching
- * @subpackage UnitTests
  * @phpversion 5.3
  */
 

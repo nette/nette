@@ -5,7 +5,6 @@
  *
  * @author     Filip Procházka
  * @package    Nette\Application\UI
- * @subpackage UnitTests
  */
 
 use Nette\Application\Request;
