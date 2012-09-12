@@ -26,5 +26,10 @@ if [ -n "$PhpIni" ]; then
 else
 	php -c "$dir/php.ini-unix" "$dir/Test/RunTests.php" -c "$dir/php.ini-unix" "$@"
 fi
+error=$?
 
-# returns what script returned
+# print *.actual on the output
+if [ $error -ne 0 ]; then
+	for i in $(find . -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+	exit $error
+fi
