@@ -12,7 +12,6 @@
 namespace Nette\Loaders;
 
 use Nette,
-	Nette\Utils\Strings,
 	Nette\Caching\Cache;
 
 
@@ -76,6 +75,7 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register(/**/$prepend = FALSE/**/)
 	{
+		class_exists('Nette\Utils\LimitedScope');
 		$this->classes = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 		parent::register(/**/$prepend/**/);
 		return $this;
@@ -212,7 +212,7 @@ class RobotLoader extends AutoLoader
 			return new \ArrayIterator(array(new \SplFileInfo($dir)));
 		}
 
-		$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : Strings::split($this->ignoreDirs, '#[,\s]+#');
+		$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : preg_split('#[,\s]+#', $this->ignoreDirs);
 		$disallow = array();
 		foreach ($ignoreDirs as $item) {
 			if ($item = realpath($item)) {
@@ -220,7 +220,7 @@ class RobotLoader extends AutoLoader
 			}
 		}
 
-		$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : Strings::split($this->acceptFiles, '#[,\s]+#'))
+		$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : preg_split('#[,\s]+#', $this->acceptFiles))
 			->filter(function($file) use (&$disallow){
 				return !isset($disallow[$file->getPathname()]);
 			})
@@ -230,7 +230,7 @@ class RobotLoader extends AutoLoader
 				$path = $dir->getPathname();
 				if (is_file("$path/netterobots.txt")) {
 					foreach (file("$path/netterobots.txt") as $s) {
-						if ($matches = Strings::match($s, '#^(?:disallow\\s*:)?\\s*(\\S+)#i')) {
+						if (preg_match('#^(?:disallow\\s*:)?\\s*(\\S+)#i', $s, $matches)) {
 							$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
 						}
 					}
@@ -286,7 +286,7 @@ class RobotLoader extends AutoLoader
 		$level = $minLevel = 0;
 		$classes = array();
 
-		if ($matches = Strings::match($code, '#//nette'.'loader=(\S*)#')) {
+		if (preg_match('#//nette'.'loader=(\S*)#', $code, $matches)) {
 			foreach (explode(',', $matches[1]) as $name) {
 				$classes[] = $name;
 			}
