@@ -18,6 +18,9 @@
 	"require": {
 		"php": ">=5.3.0"
 	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	},
 	"autoload": {
 		"files": ["Nette/loader.php"]
 	},

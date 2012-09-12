@@ -22,9 +22,9 @@ done
 
 # runs RunTests.php with script's arguments, add default php.ini if not specified
 if [ -n "$PhpIni" ]; then
-	php -c "$PhpIni" "$dir/Test/RunTests.php" "$@"
+	php -c "$PhpIni" "$dir/../vendor/nette/tester/Tester/RunTests.phpc" "$@"
 else
-	php -c "$dir/php.ini-unix" "$dir/Test/RunTests.php" -c "$dir/php.ini-unix" "$@"
+	php -c "$dir/php.ini-unix" "$dir/../vendor/nette/tester/Tester/RunTests.phpc" -c "$dir/php.ini-unix" "$@"
 fi
 error=$?
 
