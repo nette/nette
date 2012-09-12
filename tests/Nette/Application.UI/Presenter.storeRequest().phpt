@@ -5,7 +5,6 @@
  *
  * @author     Matěj Koubík
  * @package    Nette\Application\UI
- * @subpackage UnitTests
  */
 
 use Nette\Http,

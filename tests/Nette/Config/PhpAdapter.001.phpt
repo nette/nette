@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Config
- * @subpackage UnitTests
  */
 
 use Nette\Config;

@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\DI
- * @subpackage UnitTests
  */
 
 use Nette\DI\Helpers;

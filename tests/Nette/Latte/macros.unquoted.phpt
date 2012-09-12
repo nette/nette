@@ -5,7 +5,6 @@
  *
  * @author     Jakub Vrana
  * @package    Nette\Latte
- * @subpackage UnitTests
  */
 
 use Nette\Latte,

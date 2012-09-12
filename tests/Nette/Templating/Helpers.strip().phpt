@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Templating
- * @subpackage UnitTests
  */
 
 use Nette\Templating\Helpers;

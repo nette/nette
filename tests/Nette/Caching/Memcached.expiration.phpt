@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Caching
- * @subpackage UnitTests
  */
 
 use Nette\Caching\Storages\MemcachedStorage,

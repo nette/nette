@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Latte
- * @subpackage UnitTests
  */
 
 use Nette\Latte\MacroTokenizer;

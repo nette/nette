@@ -5,7 +5,6 @@
  *
  * @author     Josef Kriz
  * @package    Nette\Config
- * @subpackage UnitTests
  */
 
 use Nette\Application\Responses\FileResponse,

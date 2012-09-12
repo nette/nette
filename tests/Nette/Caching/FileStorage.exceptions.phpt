@@ -5,7 +5,6 @@
  *
  * @author     Matej Kravjar
  * @package    Nette\Caching
- * @subpackage UnitTests
  */
 
 use Nette\Caching\Cache,

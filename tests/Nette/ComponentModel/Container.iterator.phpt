@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\ComponentModel
- * @subpackage UnitTests
  */
 
 use Nette\ComponentModel\Component,

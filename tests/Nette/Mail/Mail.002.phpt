@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Mail
- * @subpackage UnitTests
  */
 
 use Nette\Mail\Message;

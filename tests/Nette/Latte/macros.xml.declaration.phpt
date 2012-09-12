@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Latte
- * @subpackage UnitTests
  * @phpini     short_open_tag=on
  */
 

@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Application\UI
- * @subpackage UnitTests
  */
 
 use Nette\Http,

@@ -5,7 +5,6 @@
  *
  * @author     David Grudl
  * @package    Nette\Application
- * @subpackage UnitTests
  * @phpversion 5.3
  */
 

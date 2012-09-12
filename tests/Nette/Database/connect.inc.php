@@ -6,7 +6,6 @@
  * @author     Jakub Vrana
  * @author     Jan Skrasek
  * @package    Nette\Database
- * @subpackage UnitTests
  */
 
 require __DIR__ . '/../bootstrap.php';
