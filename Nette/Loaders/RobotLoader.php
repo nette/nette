@@ -141,7 +141,7 @@ class RobotLoader extends AutoLoader
 	/**
 	 * @internal
 	 */
-	public function _rebuildCallback(& $dp)
+	public function _rebuildCallback()
 	{
 		$this->knownFiles = $missing = array();
 		foreach ($this->classes as $class => $info) {
@@ -155,7 +155,9 @@ class RobotLoader extends AutoLoader
 
 		$this->classes = array();
 		foreach (array_unique($this->scanDirs) as $dir) {
-			$this->scanDirectory($dir);
+			foreach ($this->createFileIterator($dir) as $file) {
+				$this->updateFile($file->getPathname());
+			}
 		}
 		$this->classes += $missing;
 		$this->knownFiles = NULL;
@@ -201,63 +203,68 @@ class RobotLoader extends AutoLoader
 
 
 	/**
-	 * Scan a directory for PHP files, subdirectories and 'netterobots.txt' file.
-	 * @param  string
-	 * @return void
+	 * Creates an iterator scaning directory for PHP files, subdirectories and 'netterobots.txt' files.
+	 * @return \Iterator
 	 */
-	private function scanDirectory($dir)
+	private function createFileIterator($dir)
 	{
-		if (is_dir($dir)) {
-			$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : Strings::split($this->ignoreDirs, '#[,\s]+#');
-			$disallow = array();
-			foreach ($ignoreDirs as $item) {
-				if ($item = realpath($item)) {
-					$disallow[$item] = TRUE;
-				}
-			}
-			$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : Strings::split($this->acceptFiles, '#[,\s]+#'))
-				->filter(function($file) use (&$disallow){
-					return !isset($disallow[$file->getPathname()]);
-				})
-				->from($dir)
-				->exclude($ignoreDirs)
-				->filter($filter = function($dir) use (&$disallow){
-					$path = $dir->getPathname();
-					if (is_file("$path/netterobots.txt")) {
-						foreach (file("$path/netterobots.txt") as $s) {
-							if ($matches = Strings::match($s, '#^(?:disallow\\s*:)?\\s*(\\S+)#i')) {
-								$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
-							}
-						}
-					}
-					return !isset($disallow[$path]);
-				});
-			$filter(new \SplFileInfo($dir));
-		} else {
-			$iterator = new \ArrayIterator(array(new \SplFileInfo($dir)));
+		if (!is_dir($dir)) {
+			return new \ArrayIterator(array(new \SplFileInfo($dir)));
 		}
 
-		foreach ($iterator as $entry) {
-			$path = $entry->getPathname();
-			if (isset($this->knownFiles[$path]) && $this->knownFiles[$path]['time'] === $entry->getMTime()) {
-				$classes = $this->knownFiles[$path]['classes'];
-			} else {
-				$classes = $this->scanPhp(file_get_contents($path));
+		$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : Strings::split($this->ignoreDirs, '#[,\s]+#');
+		$disallow = array();
+		foreach ($ignoreDirs as $item) {
+			if ($item = realpath($item)) {
+				$disallow[$item] = TRUE;
 			}
+		}
 
-			foreach ($classes as $class) {
-				$lClass = strtolower($class);
-				if (isset($this->classes[$lClass])) {
-					$e = new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$this->classes[$lClass]['file']} and in $path.");
-					/*5.2*if (PHP_VERSION_ID < 50300) {
-						Nette\Diagnostics\Debugger::_exceptionHandler($e);
-						exit;
-					} else*/ {
-						throw $e;
+		$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : Strings::split($this->acceptFiles, '#[,\s]+#'))
+			->filter(function($file) use (&$disallow){
+				return !isset($disallow[$file->getPathname()]);
+			})
+			->from($dir)
+			->exclude($ignoreDirs)
+			->filter($filter = function($dir) use (&$disallow){
+				$path = $dir->getPathname();
+				if (is_file("$path/netterobots.txt")) {
+					foreach (file("$path/netterobots.txt") as $s) {
+						if ($matches = Strings::match($s, '#^(?:disallow\\s*:)?\\s*(\\S+)#i')) {
+							$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
+						}
 					}
 				}
-				$this->classes[$lClass] = array('file' => $path, 'time' => $entry->getMTime(), 'orig' => $class);
+				return !isset($disallow[$path]);
+			});
+
+		$filter(new \SplFileInfo($dir));
+		return $iterator;
+	}
+
+
+
+	/**
+	 * @return void
+	 */
+	private function updateFile($file)
+	{
+		if (isset($this->knownFiles[$file]) && $this->knownFiles[$file]['time'] === filemtime($file)) {
+			$classes = $this->knownFiles[$file]['classes'];
+		} else {
+			$classes = $this->scanPhp(file_get_contents($file));
+		}
+
+		foreach ($classes as $class) {
+			$lower = strtolower($class);
+			if (isset($this->classes[$lower])) {
+				/*5.2*if (PHP_VERSION_ID < 50300) {
+					trigger_error("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.", E_USER_ERROR);
+					exit;
+				}*/
+				throw new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.");
 			}
+			$this->classes[$lower] = array('file' => $file, 'time' => filemtime($file), 'orig' => $class);
 		}
 	}
 
