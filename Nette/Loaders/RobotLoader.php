@@ -37,13 +37,19 @@ class RobotLoader extends AutoLoader
 	/** @var string|array  comma separated wildcards */
 	public $acceptFiles = '*.php, *.php5';
 
+	/** @var array of file extension => callback */
+	public $filters = array(
+		'php' => NULL,
+		'php5' => NULL,
+	);
+
 	/** @var bool */
 	public $autoRebuild = TRUE;
 
-	/** @var array of lowered-class => [file, mtime, class] or num-of-retry */
+	/** @var array of lowered-class => [file, time, orig, filter] or num-of-retry */
 	private $classes = array();
 
-	/** @var array of file => [mtime, classes] */
+	/** @var array of file => [time, classes, filter] */
 	private $knownFiles;
 
 	/** @var bool */
@@ -54,6 +60,9 @@ class RobotLoader extends AutoLoader
 
 	/** @var Nette\Caching\IStorage */
 	private $cacheStorage;
+
+	/** @var Nette\Caching\Storages\PhpFileStorage */
+	private $phpCacheStorage;
 
 
 
@@ -105,7 +114,9 @@ class RobotLoader extends AutoLoader
 				} else {
 					$this->rebuild();
 				}
-			} elseif (filemtime($info['file']) !== $info['time']) {
+			} elseif (filemtime($info['file']) !== $info['time']
+				|| (!empty($info['filter']) && !$this->getPhpCache()->load($info['file']))
+			) {
 				$this->updateFile($info['file']);
 				if (!isset($this->classes[$type])) {
 					$this->classes[$type] = 0;
@@ -115,7 +126,12 @@ class RobotLoader extends AutoLoader
 		}
 
 		if (isset($this->classes[$type]['file'])) {
-			Nette\Utils\LimitedScope::load($this->classes[$type]['file'], TRUE);
+			if (empty($this->classes[$type]['filter'])) {
+				Nette\Utils\LimitedScope::load($this->classes[$type]['file'], TRUE);
+			} else {
+				$item = $this->getPhpCache()->load($this->classes[$type]['file']);
+				Nette\Utils\LimitedScope::load($item['file'], TRUE);
+			}
 			self::$count++;
 		} else {
 			$this->missing[$type] = TRUE;
@@ -145,6 +161,7 @@ class RobotLoader extends AutoLoader
 		foreach ($this->classes as $class => $info) {
 			if (is_array($info)) {
 				$this->knownFiles[$info['file']]['time'] = $info['time'];
+				$this->knownFiles[$info['file']]['filter'] = !empty($info['filter']);
 				$this->knownFiles[$info['file']]['classes'][] = $info['orig'];
 			} else {
 				$missing[$class] = $info;
@@ -259,8 +276,18 @@ class RobotLoader extends AutoLoader
 
 		if (isset($this->knownFiles[$file]) && $this->knownFiles[$file]['time'] === filemtime($file)) {
 			$classes = $this->knownFiles[$file]['classes'];
+			$filter = $this->knownFiles[$file]['filter'];
 		} else {
-			$classes = $this->scanPhp(file_get_contents($file));
+			$filter = FALSE;
+			$code = file_get_contents($file);
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			if (!empty($this->filters[$ext])) {
+				$filtered = call_user_func($this->filters[$ext], $code);
+				if ($filter = ($code !== $filtered)) {
+					$this->getPhpCache()->save($file, $code = $filtered);
+				}
+			}
+			$classes = $this->scanPhp($code);
 		}
 
 		foreach ($classes as $class) {
@@ -276,6 +303,9 @@ class RobotLoader extends AutoLoader
 				throw new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.");
 			}
 			$this->classes[$lower] = array('file' => $file, 'time' => filemtime($file), 'orig' => $class);
+			if ($filter) {
+				$this->classes[$lower]['filter'] = TRUE;
+			}
 		}
 	}
 
@@ -368,9 +398,10 @@ class RobotLoader extends AutoLoader
 	/**
 	 * @return RobotLoader
 	 */
-	public function setCacheStorage(Nette\Caching\IStorage $storage)
+	public function setCacheStorage(Nette\Caching\IStorage $storage, Nette\Caching\Storages\PhpFileStorage $phpCacheStorage = NULL)
 	{
 		$this->cacheStorage = $storage;
+		$this->phpCacheStorage = $phpCacheStorage;
 		return $this;
 	}
 
@@ -396,6 +427,16 @@ class RobotLoader extends AutoLoader
 			$this->cacheStorage = new Nette\Caching\Storages\DevNullStorage;
 		}
 		return new Cache($this->cacheStorage, 'Nette.RobotLoader');
+	}
+
+
+
+	/**
+	 * @return Nette\Caching\Cache
+	 */
+	protected function getPhpCache()
+	{
+		return new Cache($this->phpCacheStorage, 'Nette.RobotLoader.filters');
 	}
 
 
