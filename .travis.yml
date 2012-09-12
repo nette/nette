@@ -15,6 +15,10 @@ before_script:
   - tar xzf memcached-1.4.14.tar.gz
   - sh -c "cd memcached-1.4.14 && ./configure && make && ./memcached -d" > /dev/null
 
+# Install Nette Tester
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev
+
 # PHP Memcache extension
   - echo n | pecl install memcache > /dev/null
 

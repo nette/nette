@@ -7,16 +7,12 @@
  * @package    Nette\Test
  */
 
-require __DIR__ . '/../Test/TestHelpers.php';
-require __DIR__ . '/../Test/Assert.php';
+
+require __DIR__ . '/../../vendor/nette/tester/Tester/bootstrap.php';
 require __DIR__ . '/../../Nette/loader.php';
 
 
 // configure environment
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', TRUE);
-ini_set('html_errors', FALSE);
-ini_set('log_errors', FALSE);
 date_default_timezone_set('Europe/Prague');
 
 
@@ -33,17 +29,6 @@ if (mt_rand() / mt_getrandmax() < 0.01) {
 // create temporary directory
 define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
 TestHelpers::purge(TEMP_DIR);
-
-
-// catch unexpected errors/warnings/notices
-set_error_handler(function($severity, $message, $file, $line) {
-	if (($severity & error_reporting()) === $severity) {
-		$e = new ErrorException($message, 0, $severity, $file, $line);
-		echo "Error: $message in $file:$line\nStack trace:\n" . $e->getTraceAsString();
-		exit(TestCase::CODE_ERROR);
-	}
-	return FALSE;
-});
 
 
 $_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS', 'argc', 'argv')));
