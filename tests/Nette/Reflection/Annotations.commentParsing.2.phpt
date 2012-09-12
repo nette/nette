@@ -47,8 +47,8 @@ Assert::equal( array(
 	'five' => array(TRUE),
 	'brackets' => array(
 		new ArrayObject(array(
-			'single' => "()@'\"",
-			'double' => "()@'\"",
+			'single' => "()@\\'\"",
+			'double' => "()@'\\\"",
 		)),
 	),
 	'line1' => array(TRUE),
