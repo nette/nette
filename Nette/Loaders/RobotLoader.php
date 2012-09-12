@@ -91,36 +91,34 @@ class RobotLoader extends AutoLoader
 	public function tryLoad($type)
 	{
 		$type = ltrim(strtolower($type), '\\'); // PHP namespace bug #49143
-		$info = & $this->classes[$type];
 
-		if ($this->autoRebuild && empty($this->missing[$type])
-			&& (is_array($info) ? !is_file($info['file']) : $info < self::RETRY_LIMIT)
-		) {
-			$info = is_int($info) ? $info + 1 : 0;
-			$this->missing[$type] = TRUE;
-			if ($this->rebuilt) {
-				$this->getCache()->save($this->getKey(), $this->classes);
-			} else {
-				$this->rebuild();
-			}
-			$info = & $this->classes[$type];
+		$info = & $this->classes[$type];
+		if (isset($this->missing[$type]) || (is_int($info) && $info >= self::RETRY_LIMIT)) {
+			return;
 		}
 
-		if (isset($info['file'])) {
-			Nette\Utils\LimitedScope::load($info['file'], TRUE);
-
-			if ($this->autoRebuild && !class_exists($type, FALSE) && !interface_exists($type, FALSE)
-				&& (PHP_VERSION_ID < 50400 || !trait_exists($type, FALSE))
-			) {
-				$info = 0;
-				$this->missing[$type] = TRUE;
+		if ($this->autoRebuild) {
+			if (!is_array($info) || !is_file($info['file'])) {
+				$info = is_int($info) ? $info + 1 : 0;
 				if ($this->rebuilt) {
 					$this->getCache()->save($this->getKey(), $this->classes);
 				} else {
 					$this->rebuild();
 				}
+			} elseif (filemtime($info['file']) !== $info['time']) {
+				$this->updateFile($info['file']);
+				if (!isset($this->classes[$type])) {
+					$this->classes[$type] = 0;
+				}
+				$this->getCache()->save($this->getKey(), $this->classes);
 			}
+		}
+
+		if (isset($this->classes[$type]['file'])) {
+			Nette\Utils\LimitedScope::load($this->classes[$type]['file'], TRUE);
 			self::$count++;
+		} else {
+			$this->missing[$type] = TRUE;
 		}
 	}
 
@@ -249,6 +247,16 @@ class RobotLoader extends AutoLoader
 	 */
 	private function updateFile($file)
 	{
+		foreach ($this->classes as $class => $info) {
+			if (isset($info['file']) && $info['file'] === $file) {
+				unset($this->classes[$class]);
+			}
+		}
+
+		if (!is_file($file)) {
+			return;
+		}
+
 		if (isset($this->knownFiles[$file]) && $this->knownFiles[$file]['time'] === filemtime($file)) {
 			$classes = $this->knownFiles[$file]['classes'];
 		} else {
@@ -257,7 +265,10 @@ class RobotLoader extends AutoLoader
 
 		foreach ($classes as $class) {
 			$lower = strtolower($class);
-			if (isset($this->classes[$lower])) {
+			if (isset($this->classes[$lower]['file']) && @filemtime($this->classes[$lower]['file']) !== $this->classes[$lower]['time']) { // intentionally ==, file may not exists
+				$this->updateFile($this->classes[$lower]['file']);
+			}
+			if (isset($this->classes[$lower]['file'])) {
 				/*5.2*if (PHP_VERSION_ID < 50300) {
 					trigger_error("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.", E_USER_ERROR);
 					exit;
