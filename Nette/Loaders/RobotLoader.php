@@ -12,7 +12,6 @@
 namespace Nette\Loaders;
 
 use Nette,
-	Nette\Utils\Strings,
 	Nette\Caching\Cache;
 
 
@@ -231,14 +230,14 @@ class RobotLoader extends AutoLoader
 	private function scanDirectory($dir)
 	{
 		if (is_dir($dir)) {
-			$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : Strings::split($this->ignoreDirs, '#[,\s]+#');
+		$ignoreDirs = is_array($this->ignoreDirs) ? $this->ignoreDirs : preg_split('#[,\s]+#', $this->ignoreDirs);
 			$disallow = array();
 			foreach ($ignoreDirs as $item) {
 				if ($item = realpath($item)) {
 					$disallow[$item] = TRUE;
 				}
 			}
-			$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : Strings::split($this->acceptFiles, '#[,\s]+#'))
+		$iterator = Nette\Utils\Finder::findFiles(is_array($this->acceptFiles) ? $this->acceptFiles : preg_split('#[,\s]+#', $this->acceptFiles))
 				->filter(function($file) use (&$disallow){
 					return !isset($disallow[$file->getPathname()]);
 				})
@@ -248,7 +247,7 @@ class RobotLoader extends AutoLoader
 					$path = $dir->getPathname();
 					if (is_file("$path/netterobots.txt")) {
 						foreach (file("$path/netterobots.txt") as $s) {
-							if ($matches = Strings::match($s, '#^(?:disallow\\s*:)?\\s*(\\S+)#i')) {
+						if (preg_match('#^(?:disallow\\s*:)?\\s*(\\S+)#i', $s, $matches)) {
 								$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
 							}
 						}
@@ -293,7 +292,7 @@ class RobotLoader extends AutoLoader
 			}
 		}
 
-		if ($matches = Strings::match($s, '#//nette'.'loader=(\S*)#')) {
+		if (preg_match('#//nette'.'loader=(\S*)#', $s, $matches)) {
 			foreach (explode(',', $matches[1]) as $name) {
 				$this->addClass($name, $file, $time);
 			}
