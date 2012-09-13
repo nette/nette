@@ -46,9 +46,6 @@ class RobotLoader extends AutoLoader
 	/** @var array of lowered-class => [file, time, orig, filter] or num-of-retry */
 	private $classes = array();
 
-	/** @var array of file => [time, classes, filter] */
-	private $knownFiles;
-
 	/** @var bool */
 	private $rebuilt = FALSE;
 
@@ -81,7 +78,6 @@ class RobotLoader extends AutoLoader
 	 */
 	public function register(/**/$prepend = FALSE/**/)
 	{
-		class_exists('Nette\Utils\LimitedScope');
 		$this->classes = $this->getCache()->load($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
 		parent::register(/**/$prepend/**/);
 		return $this;
@@ -111,9 +107,9 @@ class RobotLoader extends AutoLoader
 				} else {
 					$this->rebuild();
 				}
-			} elseif (filemtime($info['file']) !== $info['time']
+			} elseif (!$this->rebuilt && (filemtime($info['file']) !== $info['time']
 				|| (!empty($info['filter']) && !$this->getPhpCache()->load($info['file']))
-			) {
+			)) {
 				$this->updateFile($info['file']);
 				if (!isset($this->classes[$type])) {
 					$this->classes[$type] = 0;
@@ -179,8 +175,8 @@ class RobotLoader extends AutoLoader
 	 */
 	public function rebuild()
 	{
+		$this->rebuilt = TRUE; // prevents calling rebuild() or updateFile() in tryLoad()
 		$this->getCache()->save($this->getKey(), new Nette\Callback($this, '_rebuildCallback'));
-		$this->rebuilt = TRUE;
 	}
 
 
@@ -190,12 +186,12 @@ class RobotLoader extends AutoLoader
 	 */
 	public function _rebuildCallback()
 	{
-		$this->knownFiles = $missing = array();
+		$files = $missing = array();
 		foreach ($this->classes as $class => $info) {
 			if (is_array($info)) {
-				$this->knownFiles[$info['file']]['time'] = $info['time'];
-				$this->knownFiles[$info['file']]['filter'] = !empty($info['filter']);
-				$this->knownFiles[$info['file']]['classes'][] = $info['orig'];
+				$files[$info['file']]['time'] = $info['time'];
+				$files[$info['file']]['filter'] = !empty($info['filter']);
+				$files[$info['file']]['classes'][] = $info['orig'];
 			} else {
 				$missing[$class] = $info;
 			}
@@ -204,11 +200,27 @@ class RobotLoader extends AutoLoader
 		$this->classes = array();
 		foreach (array_unique($this->scanDirs) as $dir) {
 			foreach ($this->createFileIterator($dir) as $file) {
-				$this->updateFile($file->getPathname());
+				$file = $file->getPathname();
+				if (isset($files[$file]) && $files[$file]['time'] == filemtime($file)) {
+					$classes = $files[$file]['classes'];
+					$filtered = $files[$file]['filter'];
+				} else {
+					list($classes, $filtered) = $this->processFile($file);
+				}
+
+				foreach ($classes as $class) {
+					$info = & $this->classes[strtolower($class)];
+					if (isset($info['file'])) {
+						throw new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$info['file']} and in $file.");
+					}
+					$info = array('file' => $file, 'time' => filemtime($file), 'orig' => $class);
+					if ($filtered) {
+						$info['filter'] = TRUE;
+					}
+				}
 			}
 		}
 		$this->classes += $missing;
-		$this->knownFiles = NULL;
 		return $this->classes;
 	}
 
@@ -267,43 +279,45 @@ class RobotLoader extends AutoLoader
 			}
 		}
 
-		if (!is_file($file)) {
-			return;
-		}
-
-		if (isset($this->knownFiles[$file]) && $this->knownFiles[$file]['time'] === filemtime($file)) {
-			$classes = $this->knownFiles[$file]['classes'];
-			$filter = $this->knownFiles[$file]['filter'];
-		} else {
-			$filter = FALSE;
-			$code = file_get_contents($file);
-			$ext = pathinfo($file, PATHINFO_EXTENSION);
-			if (!empty($this->filters[$ext])) {
-				$filtered = call_user_func($this->filters[$ext], $code);
-				if ($filter = ($code !== $filtered)) {
-					$this->getPhpCache()->save($file, $code = $filtered);
+		if (is_file($file)) {
+			list($classes, $filtered) = $this->processFile($file);
+			foreach ($classes as $class) {
+				$info = & $this->classes[strtolower($class)];
+				if (isset($info['file']) && @filemtime($info['file']) !== $info['time']) { // intentionally ==, file may not exists
+					$this->updateFile($info['file']);
+					$info = & $this->classes[strtolower($class)];
+				}
+				if ($this->rebuilt) { // caused by processFile() or previous updateFile()
+					return;
+				}
+				if (isset($info['file'])) {
+					throw new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$info['file']} and in $file.");
+				}
+				$info = array('file' => $file, 'time' => filemtime($file), 'orig' => $class);
+				if ($filtered) {
+					$info['filter'] = TRUE;
 				}
 			}
-			$classes = $this->scanPhp($code);
 		}
+	}
 
-		foreach ($classes as $class) {
-			$lower = strtolower($class);
-			if (isset($this->classes[$lower]['file']) && @filemtime($this->classes[$lower]['file']) !== $this->classes[$lower]['time']) { // intentionally ==, file may not exists
-				$this->updateFile($this->classes[$lower]['file']);
-			}
-			if (isset($this->classes[$lower]['file'])) {
-				/*5.2*if (PHP_VERSION_ID < 50300) {
-					trigger_error("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.", E_USER_ERROR);
-					exit;
-				}*/
-				throw new Nette\InvalidStateException("Ambiguous class $class resolution; defined in {$this->classes[$lower]['file']} and in $file.");
-			}
-			$this->classes[$lower] = array('file' => $file, 'time' => filemtime($file), 'orig' => $class);
-			if ($filter) {
-				$this->classes[$lower]['filter'] = TRUE;
+
+
+	/**
+	 * @return array [classes, filtered?]
+	 */
+	private function processFile($file)
+	{
+		$filtered = FALSE;
+		$code = file_get_contents($file);
+		$ext = pathinfo($file, PATHINFO_EXTENSION);
+		if (!empty($this->filters[$ext])) {
+			$res = call_user_func($this->filters[$ext], $code);
+			if ($filtered = ($code !== $res)) {
+				$this->getPhpCache()->save($file, $code = $res);
 			}
 		}
+		return array($this->scanPhp($code), $filtered);
 	}
 
 
