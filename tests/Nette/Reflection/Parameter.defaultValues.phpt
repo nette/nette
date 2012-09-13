@@ -50,7 +50,7 @@ test( 'Test::func1', array(
 ));
 test( 'Test::func2', array(
 	/* $a */ array(FALSE, FALSE),
-	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407),
+	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
 test( 'Test::func3', array(
@@ -60,7 +60,7 @@ test( 'Test::func3', array(
 ));
 test( 'Test::func4', array(
 	/* $a */ array(FALSE, FALSE),
-	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407),
+	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
 test( 'Test::func5', array(
@@ -70,7 +70,7 @@ test( 'Test::func5', array(
 ));
 test( 'Test::func6', array(
 	/* $a */ array(FALSE, FALSE),
-	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407),
+	/* $b */ array(FALSE, PHP_VERSION_ID >= 50407 || (PHP_VERSION_ID >= 50317 && PHP_VERSION_ID < 50400)),
 	/* $c */ array(FALSE, FALSE)
 ));
 test( 'Test::func7', array(
