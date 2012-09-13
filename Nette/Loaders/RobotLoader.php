@@ -125,6 +125,42 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 * Add directory (or directories) to list.
+	 * @param  string|array
+	 * @return RobotLoader  provides a fluent interface
+	 * @throws Nette\DirectoryNotFoundException if path is not found
+	 */
+	public function addDirectory($path)
+	{
+		foreach ((array) $path as $val) {
+			$real = realpath($val);
+			if ($real === FALSE) {
+				throw new Nette\DirectoryNotFoundException("Directory '$val' not found.");
+			}
+			$this->scanDirs[] = $real;
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * @return array of class => filename
+	 */
+	public function getIndexedClasses()
+	{
+		$res = array();
+		foreach ($this->list as $class => $pair) {
+			if (is_array($pair)) {
+				$res[$pair[2]] = $pair[0];
+			}
+		}
+		return $res;
+	}
+
+
+
+	/**
 	 * Rebuilds class list cache.
 	 * @return void
 	 */
@@ -154,42 +190,6 @@ class RobotLoader extends AutoLoader
 			Cache::CONSTS => 'Nette\Framework::REVISION'
 		);
 		return $this->list;
-	}
-
-
-
-	/**
-	 * @return array of class => filename
-	 */
-	public function getIndexedClasses()
-	{
-		$res = array();
-		foreach ($this->list as $class => $pair) {
-			if (is_array($pair)) {
-				$res[$pair[2]] = $pair[0];
-			}
-		}
-		return $res;
-	}
-
-
-
-	/**
-	 * Add directory (or directories) to list.
-	 * @param  string|array
-	 * @return RobotLoader  provides a fluent interface
-	 * @throws Nette\DirectoryNotFoundException if path is not found
-	 */
-	public function addDirectory($path)
-	{
-		foreach ((array) $path as $val) {
-			$real = realpath($val);
-			if ($real === FALSE) {
-				throw new Nette\DirectoryNotFoundException("Directory '$val' not found.");
-			}
-			$this->scanDirs[] = $real;
-		}
-		return $this;
 	}
 
 
