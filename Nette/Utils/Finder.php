@@ -215,10 +215,12 @@ class Finder extends Nette\Object implements \IteratorAggregate
 			return $this->buildIterator($this->paths[0]);
 
 		} else {
-			$iterator = new \AppendIterator(); // buggy!
+			$iterator = new \AppendIterator();
+			$iterator->append($workaround = new \ArrayIterator(array('workaround PHP bugs #49104, #63077')));
 			foreach ($this->paths as $path) {
 				$iterator->append($this->buildIterator($path));
 			}
+			unset($workaround[0]);
 			return $iterator;
 		}
 	}
