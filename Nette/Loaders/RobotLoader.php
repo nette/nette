@@ -28,9 +28,6 @@ class RobotLoader extends AutoLoader
 {
 	const RETRY_LIMIT = 3;
 
-	/** @var array */
-	public $scanDirs = array();
-
 	/** @var string|array  comma separated wildcards */
 	public $ignoreDirs = '.*, *.old, *.bak, *.tmp, temp';
 
@@ -42,6 +39,9 @@ class RobotLoader extends AutoLoader
 
 	/** @var bool */
 	public $autoRebuild = TRUE;
+
+	/** @var array */
+	private $scanDirs = array();
 
 	/** @var array of lowered-class => [file, time, orig, filter] or num-of-retry */
 	private $classes = array();
@@ -138,6 +138,42 @@ class RobotLoader extends AutoLoader
 
 
 	/**
+	 * Add directory (or directories) to list.
+	 * @param  string|array
+	 * @return RobotLoader  provides a fluent interface
+	 * @throws Nette\DirectoryNotFoundException if path is not found
+	 */
+	public function addDirectory($path)
+	{
+		foreach ((array) $path as $val) {
+			$real = realpath($val);
+			if ($real === FALSE) {
+				throw new Nette\DirectoryNotFoundException("Directory '$val' not found.");
+			}
+			$this->scanDirs[] = $real;
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * @return array of class => filename
+	 */
+	public function getIndexedClasses()
+	{
+		$res = array();
+		foreach ($this->classes as $class => $info) {
+			if (is_array($info)) {
+				$res[$info['orig']] = $info['file'];
+			}
+		}
+		return $res;
+	}
+
+
+
+	/**
 	 * Rebuilds class list cache.
 	 * @return void
 	 */
@@ -174,42 +210,6 @@ class RobotLoader extends AutoLoader
 		$this->classes += $missing;
 		$this->knownFiles = NULL;
 		return $this->classes;
-	}
-
-
-
-	/**
-	 * @return array of class => filename
-	 */
-	public function getIndexedClasses()
-	{
-		$res = array();
-		foreach ($this->classes as $class => $info) {
-			if (is_array($info)) {
-				$res[$info['orig']] = $info['file'];
-			}
-		}
-		return $res;
-	}
-
-
-
-	/**
-	 * Add directory (or directories) to list.
-	 * @param  string|array
-	 * @return RobotLoader  provides a fluent interface
-	 * @throws Nette\DirectoryNotFoundException if path is not found
-	 */
-	public function addDirectory($path)
-	{
-		foreach ((array) $path as $val) {
-			$real = realpath($val);
-			if ($real === FALSE) {
-				throw new Nette\DirectoryNotFoundException("Directory '$val' not found.");
-			}
-			$this->scanDirs[] = $real;
-		}
-		return $this;
 	}
 
 
