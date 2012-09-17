@@ -22,6 +22,9 @@ use Nette;
  */
 class Helpers
 {
+	/** @var int maximum SQL length */
+	static public $maxLength = 100;
+
 	/** @var array */
 	public static $typePatterns = array(
 		'^_' => IReflection::FIELD_TEXT, // PostgreSQL arrays
@@ -80,7 +83,7 @@ class Helpers
 	 * @param  string
 	 * @return string
 	 */
-	public static function dumpSql($sql)
+	public static function dumpSql($sql, array $params = NULL)
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
 		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|RLIKE|REGEXP|TRUE|FALSE';
@@ -109,6 +112,31 @@ class Helpers
 
 			if (!empty($matches[4])) // other keywords
 				return '<strong style="color:green">' . $matches[4] . '</strong>';
+		}, $sql);
+
+		// parameters
+		$i = 0;
+		$sql = preg_replace_callback('#\?#', function() use ($params, & $i) {
+			if (!isset($params[$i])) {
+				return '?';
+			}
+			$param = $params[$i++];
+			if (is_string($param) && (preg_match('#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u', $param) || preg_last_error())) {
+				return '<i title="Length ' . strlen($param) . ' bytes">&lt;binary&gt;</i>';
+
+			} elseif (is_string($param)) {
+				return '<span title="Length ' . Nette\Utils\Strings::length($param) . ' characters">\'' . htmlspecialchars(Nette\Utils\Strings::truncate($param, Helpers::$maxLength)) . "'</span>";
+
+			} elseif (is_resource($param)) {
+				$type = get_resource_type($param);
+				if ($type === 'stream') {
+					$info = stream_get_meta_data($param);
+				}
+				return '<i' . (isset($info['uri']) ? ' title="' . htmlspecialchars($info['uri']) . '"' : NULL) . '>&lt;' . htmlSpecialChars($type) . " resource&gt;</i> ";
+
+			} else {
+				return htmlspecialchars($param);
+			}
 		}, $sql);
 
 		return '<pre class="dump">' . trim($sql) . "</pre>\n";
