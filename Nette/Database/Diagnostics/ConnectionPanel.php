@@ -69,19 +69,15 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		if (!$e instanceof \PDOException) {
 			return;
 		}
-		$sql = $params = NULL;
-	 	if ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'Nette\Database\Connection::queryArgs')) {
-	 		list($sql, $params) = $item['args'];
-
-	 	} elseif (isset($e->queryString)) {
+		if (isset($e->queryString)) {
 	 		$sql = $e->queryString;
 
 	 	} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
 	 		$sql = $item['args'][0];
 	 	}
-		return $sql ? array(
+		return isset($sql) ? array(
 			'tab' => 'SQL',
-			'panel' => Helpers::dumpSql($sql, $params),
+			'panel' => Helpers::dumpSql($sql),
 		) : NULL;
 	}
 
