@@ -27,6 +27,10 @@ services:
 			- $test(false)
 			- $%property%(8)
 
+			# arrays / event handlers
+			- $event[]("testHandler")
+			- $event[]([@self, "testHandler"])
+
 			# static class property
 			- Ipsum::$staticTest(9)
 
