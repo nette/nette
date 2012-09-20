@@ -94,7 +94,7 @@ class Session extends Nette\Object
 
 		$this->configure($this->options);
 
-		set_error_handler(function($severity, $message) use (& $error) {
+		set_error_handler(function($severity, $message) use (& $error) { // session_start returns FALSE on failure since PHP 5.3.0.
 			if (($severity & error_reporting()) === $severity) {
 				$error = $message;
 				restore_error_handler();
