@@ -18,7 +18,7 @@ date_default_timezone_set('Europe/Prague');
 
 // temporary directory garbage collection
 if (mt_rand() / mt_getrandmax() < 0.01) {
-	foreach (glob(__DIR__ . '/../tmp/*', GLOB_ONLYDIR) as $dir) {
+	foreach (glob(__DIR__ . '/../tmp/*[0-9]', GLOB_ONLYDIR) as $dir) {
 		if (time() - @filemtime($dir) > 300 && @rename($dir, $dir . '-delete')) {
 			TestHelpers::purge($dir . '-delete');
 			rmdir($dir . '-delete');
