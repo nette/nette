@@ -119,7 +119,7 @@ class Session extends Nette\Object
 
 		// initialize structures
 		$nf = & $_SESSION['__NF'];
-		if (empty($nf)) { // new session
+		if (!isset($nf['C'])) { // new session
 			$nf = array('C' => 0);
 		} else {
 			$nf['C']++;
