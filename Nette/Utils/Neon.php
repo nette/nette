@@ -355,7 +355,7 @@ class Neon extends Nette\Object
 
 
 /**
- * The exception that indicates error of NEON decoding.
+ * Representation of 'foo(bar=1)' literal
  */
 class NeonEntity extends \stdClass
 {
