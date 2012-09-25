@@ -110,20 +110,11 @@ class Session extends Nette\Object
 		self::$started = TRUE;
 
 		/* structure:
-			__NF: Counter, BrowserKey, Data, Meta, Time
+			__NF: BrowserKey, Data, Meta, Time
 				DATA: section->variable = data
 				META: section->variable = Timestamp, Browser, Version
 		*/
-
-		unset($_SESSION['__NT'], $_SESSION['__NS'], $_SESSION['__NM']); // old unused structures
-
-		// initialize structures
 		$nf = & $_SESSION['__NF'];
-		if (empty($nf)) { // new session
-			$nf = array('C' => 0);
-		} else {
-			$nf['C']++;
-		}
 
 		// session regenerate every 30 minutes
 		$nfTime = & $nf['Time'];
