@@ -126,7 +126,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 					return $candidate;
 			}
 
-			if (!empty($candidates)) {
+			if (!$refresh && !empty($candidates)) {
 				throw new \PDOException('Ambiguous joining column in related call.');
 			}
 		}
