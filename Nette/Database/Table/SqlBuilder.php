@@ -67,7 +67,7 @@ class SqlBuilder extends Nette\Object
 	{
 		$this->selection = $selection;
 		$this->connection = $selection->getConnection();
-		$this->delimitedTable = $this->connection->getSupplementalDriver()->delimite($selection->getName());
+		$this->delimitedTable = $this->tryDelimite($selection->getName());
 	}
 
 
