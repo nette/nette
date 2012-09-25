@@ -1,34 +1,39 @@
 #!/bin/sh
 
-# saves the path to this script's directory
-dir=`dirname $0`
+# Path to this script's directory
+dir=$(cd `dirname $0` && pwd)
 
-# absolutizes the path if necessary
-if echo "$dir" | grep -v ^/ > /dev/null; then
-	dir="`pwd`/$dir"
+# Path to test runner script
+runnerScript="$dir/../vendor/nette/tester/Tester/RunTests.phpc"
+if [ ! -f "$runnerScript" ]; then
+	echo "Nette Tester is missing. You can install it using Composer:" >&2
+	echo "php composer.phar update --dev." >&2
+	exit 2
 fi
 
-PhpIni=
+# Path to php.ini if passed as argument option
+phpIni=
 while getopts ":c:" opt; do
 	case $opt in
-	c)	PhpIni="$OPTARG"
+	c)	phpIni="$OPTARG"
 		;;
 
-	:)	echo "Missing argument for -$OPTARG option"
+	:)	echo "Missing argument for -$OPTARG option" >&2
 		exit 2
 		;;
 	esac
 done
 
-# runs RunTests.php with script's arguments, add default php.ini if not specified
-if [ -n "$PhpIni" ]; then
-	php -c "$PhpIni" "$dir/../vendor/nette/tester/Tester/RunTests.phpc" "$@"
+# Runs tests with script's arguments, add default php.ini if not specified
+# Doubled -c option intentionally
+if [ -n "$phpIni" ]; then
+	php -c "$phpIni" "$runnerScript" "$@"
 else
-	php -c "$dir/php.ini-unix" "$dir/../vendor/nette/tester/Tester/RunTests.phpc" -c "$dir/php.ini-unix" "$@"
+	php -c "$dir/php.ini-unix" "$runnerScript" -c "$dir/php.ini-unix" "$@"
 fi
 error=$?
 
-# print *.actual on the output
+# Print *.actual content if tests failed
 if [ $error -ne 0 ]; then
 	for i in $(find . -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 	exit $error
