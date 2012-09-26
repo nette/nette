@@ -27,9 +27,9 @@ done
 # Runs tests with script's arguments, add default php.ini if not specified
 # Doubled -c option intentionally
 if [ -n "$phpIni" ]; then
-	php -c "$phpIni" "$runnerScript" "$@"
+	php -c "$phpIni" "$runnerScript" -j 20 "$@"
 else
-	php -c "$dir/php.ini-unix" "$runnerScript" -c "$dir/php.ini-unix" "$@"
+	php -c "$dir/php.ini-unix" "$runnerScript" -j 20 -c "$dir/php.ini-unix" "$@"
 fi
 error=$?
 
