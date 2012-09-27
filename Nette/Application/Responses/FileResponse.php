@@ -128,7 +128,7 @@ class FileResponse extends Nette\Object implements Nette\Application\IResponse
 			}
 		}
 
-		$httpResponse->setHeader('Content-Length', $length);
+		$httpResponse->setContentLength($length);
 		while (!feof($handle) && $length > 0) {
 			echo $s = fread($handle, min(4e6, $length));
 			$length -= strlen($s);
