@@ -106,6 +106,8 @@ final class Response extends Nette\Object implements IResponse
 
 		if ($value === NULL && function_exists('header_remove')) {
 			header_remove($name);
+		} elseif (strcasecmp($name, 'Content-Length') === 0 && ini_get('zlib.output_compression')) {
+			// ignore, PHP bug #44164
 		} else {
 			header($name . ': ' . $value, TRUE, $this->code);
 		}
