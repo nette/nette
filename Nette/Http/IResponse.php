@@ -87,6 +87,13 @@ interface IResponse
 	function setContentType($type, $charset = NULL);
 
 	/**
+	 * Sends a Content-length HTTP header.
+	 * @param  int     length
+	 * @return void
+	 */
+	function setContentLength($length);
+
+	/**
 	 * Redirects to a new URL.
 	 * @param  string  URL
 	 * @param  int     HTTP code

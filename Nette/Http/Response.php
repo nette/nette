@@ -151,6 +151,22 @@ final class Response extends Nette\Object implements IResponse
 
 
 	/**
+	 * Sends a Content-length HTTP header.
+	 * @param  int     length
+	 * @return Response  provides a fluent interface
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 */
+	public function setContentLength($length)
+	{
+		if (!ini_get('zlib.output_compression')) { // PHP bug #44164
+			$this->setHeader('Content-Length', $length);
+		}
+		return $this;
+	}
+
+
+
+	/**
 	 * Redirects to a new URL. Note: call exit() after it.
 	 * @param  string  URL
 	 * @param  int     HTTP code
