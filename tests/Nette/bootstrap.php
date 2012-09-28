@@ -8,7 +8,7 @@
  */
 
 
-require __DIR__ . '/../../vendor/nette/tester/Tester/bootstrap.php';
+require __DIR__ . '/../../tools/nette/tester/Tester/bootstrap.php';
 require __DIR__ . '/../../Nette/loader.php';
 
 
