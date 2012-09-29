@@ -18,30 +18,110 @@ use Nette;
 /**
  * Represents a single table row.
  *
- * @author     David Grudl
+ * @author     Jan Skrasek
  */
-class Row extends Nette\ArrayHash
+class Row extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
+	/** @var array of row data */
+	protected $data = array();
 
-	public function __construct(Statement $statement)
+
+
+	public function __construct()
 	{
-		$statement->normalizeRow($this);
+	}
+
+
+
+	public function __set($key, $value)
+	{
+		$this->data[$key] = $value;
+	}
+
+
+
+	public function &__get($key)
+	{
+		if (array_key_exists($key, $this->data)) {
+			return $this->data[$key];
+		}
+
+		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
+	}
+
+
+
+	public function __isset($key)
+	{
+		return isset($this->data[$key]);
+	}
+
+
+
+	public function __unset($key)
+	{
+		unset($this->data[$key]);
+	}
+
+
+
+	public function getIterator()
+	{
+		return new \ArrayIterator($this->data);
 	}
 
 
 
 	/**
-	 * Returns a item.
-	 * @param  mixed  key or index
-	 * @return mixed
+	 * Stores value in column.
+	 * @param  string column name
+	 * @param  string value
+	 * @return void
+	 */
+	public function offsetSet($key, $value)
+	{
+		$this->__set($key, $value);
+	}
+
+
+
+	/**
+	 * Returns value of column.
+	 * @param  string column name
+	 * @return string
 	 */
 	public function offsetGet($key)
 	{
 		if (is_int($key)) {
-			$arr = array_values((array) $this);
+			$arr = array_values($this->data);
 			return $arr[$key];
 		}
-		return $this->$key;
+
+		return $this->__get($key);
+	}
+
+
+
+	/**
+	 * Tests if column exists.
+	 * @param  string column name
+	 * @return bool
+	 */
+	public function offsetExists($key)
+	{
+		return $this->__isset($key);
+	}
+
+
+
+	/**
+	 * Removes column from data.
+	 * @param  string column name
+	 * @return void
+	 */
+	public function offsetUnset($key)
+	{
+		$this->__unset($key);
 	}
 
 }

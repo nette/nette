@@ -52,7 +52,6 @@ class Connection extends PDO
 	{
 		parent::__construct($this->dsn = $dsn, $username, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
 		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
 		$this->driver = new $driverClass($this, (array) $options);
@@ -157,7 +156,8 @@ class Connection extends PDO
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
-		return $this->prepare($statement)->execute($params);
+
+		return new Statement($this, $statement, $params);
 	}
 
 

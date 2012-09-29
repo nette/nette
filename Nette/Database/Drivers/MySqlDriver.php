@@ -170,7 +170,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				'default' => $row['Default'],
 				'autoincrement' => $row['Extra'] === 'auto_increment',
 				'primary' => $row['Key'] === 'PRI',
-				'vendor' => (array) $row,
+				'vendor' => iterator_to_array($row),
 			);
 		}
 		return $columns;

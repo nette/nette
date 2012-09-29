@@ -15,6 +15,8 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 
 
+
+
 $apps = array();
 foreach ($connection->table('book')->order('author.name, title') as $book) {  // SELECT `book`.* FROM `book` LEFT JOIN `author` ON `book`.`author_id` = `author`.`id` ORDER BY `author`.`name`, `title`
 	$apps[$book->title] = $book->author->name;  // SELECT * FROM `author` WHERE (`author`.`id` IN (12, 11))
@@ -68,4 +70,11 @@ Assert::same(array(
 
 
 
-Assert::same(2, $connection->table('author')->where('author_id', 11)->count('book:id')); // SELECT COUNT(book.id) FROM `author` LEFT JOIN `book` ON `author`.`id` = `book`.`author_id` WHERE (`author_id` = 11)
+Assert::same(2, $connection->table('author')->where('author_id', 11)->count(':book.id')); // SELECT COUNT(book.id) FROM `author` LEFT JOIN `book` ON `author`.`id` = `book`.`author_id` WHERE (`author_id` = 11)
+
+
+
+$count = $connection->table('book')->where('(author, translator_id).name LIKE ?', '%David%')->count();
+Assert::same(2, $count);
+$count = $connection->table('book')->where('(author, author_id).name LIKE ?', '%David%')->count();
+Assert::same(2, $count);

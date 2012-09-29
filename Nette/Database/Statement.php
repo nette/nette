@@ -25,10 +25,16 @@ use Nette,
  * @property-read Connection $connection
  * @property-write $fetchMode
  */
-class Statement extends \PDOStatement
+class Statement extends Nette\Object implements IRowContainer
 {
 	/** @var Connection */
 	private $connection;
+
+	/** @var \PDOStatement */
+	private $statement;
+
+	/** @var array */
+	private $result = array();
 
 	/** @var float */
 	private $time;
@@ -38,10 +44,12 @@ class Statement extends \PDOStatement
 
 
 
-	protected function __construct(Connection $connection)
+	public function __construct(Connection $connection, $sqlQuery, array $params)
 	{
 		$this->connection = $connection;
-		$this->setFetchMode(PDO::FETCH_CLASS, 'Nette\Database\Row', array($this));
+		$this->statement = $connection->prepare($sqlQuery);
+		$this->statement->setFetchMode(PDO::FETCH_ASSOC);
+		$this->execute($params);
 	}
 
 
@@ -57,42 +65,51 @@ class Statement extends \PDOStatement
 
 
 	/**
-	 * Executes statement.
-	 * @param  array
-	 * @return Statement  provides a fluent interface
+	 * @return \PDOStatement
 	 */
-	public function execute($params = array())
+	public function getStatement()
 	{
-		static $types = array('boolean' => PDO::PARAM_BOOL, 'integer' => PDO::PARAM_INT,
-			'resource' => PDO::PARAM_LOB, 'NULL' => PDO::PARAM_NULL);
-
-		foreach ($params as $key => $value) {
-			$type = gettype($value);
-			$this->bindValue(is_int($key) ? $key + 1 : $key, $value, isset($types[$type]) ? $types[$type] : PDO::PARAM_STR);
-		}
-
-		$time = microtime(TRUE);
-		try {
-			parent::execute();
-		} catch (\PDOException $e) {
-			$e->queryString = $this->queryString;
-			throw $e;
-		}
-		$this->time = microtime(TRUE) - $time;
-		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
-
-		return $this;
+		return $this->statement;
 	}
 
 
 
 	/**
-	 * Fetches into an array where the 1st column is a key and all subsequent columns are values.
-	 * @return array
+	 * @return string
 	 */
-	public function fetchPairs()
+	public function getQueryString()
 	{
-		return $this->fetchAll(PDO::FETCH_KEY_PAIR); // since PHP 5.2.3
+		return $this->statement->queryString;
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	public function columnCount()
+	{
+		return $this->statement->columnCount();
+	}
+
+
+
+	/**
+	 * @return int
+	 */
+	public function rowCount()
+	{
+		return $this->statement->rowCount();
+	}
+
+
+
+	/**
+	 * @return float
+	 */
+	public function getTime()
+	{
+		return $this->time;
 	}
 
 
@@ -134,7 +151,7 @@ class Statement extends \PDOStatement
 			$this->types = array();
 			if ($this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_COLUMNS_META)) { // workaround for PHP bugs #53782, #54695
 				$col = 0;
-				while ($meta = $this->getColumnMeta($col++)) {
+				while ($meta = $this->statement->getColumnMeta($col++)) {
 					if (isset($meta['native_type'])) {
 						$this->types[$meta['name']] = Helpers::detectType($meta['native_type']);
 					}
@@ -147,11 +164,19 @@ class Statement extends \PDOStatement
 
 
 	/**
-	 * @return float
+	 * Executes statement.
 	 */
-	public function getTime()
+	private function execute(array $params)
 	{
-		return $this->time;
+		$time = microtime(TRUE);
+		try {
+			$this->statement->execute($params);
+		} catch (\PDOException $e) {
+			$e->queryString = $this->queryString;
+			throw $e;
+		}
+		$this->time = microtime(TRUE) - $time;
+		$this->connection->__call('onQuery', array($this, $params)); // $this->connection->onQuery() in PHP 5.3
 	}
 
 
@@ -171,51 +196,76 @@ class Statement extends \PDOStatement
 
 
 
-	/********************* Nette\Object behaviour ****************d*g**/
+	/********************* interface Iterator ****************d*g**/
 
 
 
-	/**
-	 * @return Nette\Reflection\ClassType
-	 */
-	public /**/static/**/ function getReflection()
+	public function rewind()
 	{
-		return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
+		reset($this->result);
 	}
 
 
 
-	public function __call($name, $args)
+	public function current()
 	{
-		return ObjectMixin::call($this, $name, $args);
+		return current($this->result);
 	}
 
 
 
-	public function &__get($name)
+	public function key()
 	{
-		return ObjectMixin::get($this, $name);
+		return key($this->result);
 	}
 
 
 
-	public function __set($name, $value)
+	public function next()
 	{
-		return ObjectMixin::set($this, $name, $value);
+		next($this->result);
 	}
 
 
 
-	public function __isset($name)
+	public function valid()
 	{
-		return ObjectMixin::has($this, $name);
+		if (current($this->result) !== FALSE)
+			return TRUE;
+
+		return $this->fetch() !== FALSE;
 	}
 
 
 
-	public function __unset($name)
+	/********************* interface IRowContainer ****************d*g**/
+
+
+
+	public function fetch()
 	{
-		ObjectMixin::remove($this, $name);
+		$data = $this->statement->fetch();
+		if (!$data) {
+			return FALSE;
+		}
+
+		$row = new Row;
+		foreach ($this->normalizeRow($data) as $key => $value) {
+			$row[$key] = $value;
+		}
+
+		return $this->result[] = $row;
+	}
+
+
+
+	public function fetchPairs($key, $value = NULL)
+	{
+		$return = array();
+		foreach ($this as $row) {
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value ? $row[$value] : $row);
+		}
+		return $return;
 	}
 
 }

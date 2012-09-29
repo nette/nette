@@ -12,6 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
+	Nette\Utils\Strings,
 	PDO;
 
 
@@ -88,14 +89,14 @@ class SqlBuilder extends Nette\Object
 
 	public function buildUpdateQuery()
 	{
-		return "UPDATE{$this->buildTopClause()} {$this->delimitedTable} SET ?" . $this->buildConditions();
+		return "UPDATE{$this->buildTopClause()} {$this->delimitedTable} SET ?" . $this->buildQueryConditions();
 	}
 
 
 
 	public function buildDeleteQuery()
 	{
-		return "DELETE{$this->buildTopClause()} FROM {$this->delimitedTable}" . $this->buildConditions();
+		return "DELETE{$this->buildTopClause()} FROM {$this->delimitedTable}" . $this->buildQueryConditions();
 	}
 
 
@@ -136,9 +137,6 @@ class SqlBuilder extends Nette\Object
 		}
 
 		$this->conditions[$hash] = $condition;
-		$condition = $this->removeExtraTables($condition);
-		$condition = $this->tryDelimite($condition);
-
 		if (count($args) !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
 			if (count($args) !== 2 || !is_array($parameters)) { // where('column < ? OR column > ?', 1, 2)
 				$parameters = $args;
@@ -256,31 +254,44 @@ class SqlBuilder extends Nette\Object
 
 
 	/**
-	 * Returns SQL query.
+	 * Returns SQL select query.
 	 * @return string
 	 */
 	public function buildSelectQuery()
 	{
-		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
-		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
+		$queryCondition = $this->buildQueryConditions();
+		$queryEnd       = $this->buildQueryEnd();
 
-		$prefix = $join ? "{$this->delimitedTable}." : '';
+		$joins = array();
+		$this->parseJoins($joins, $queryCondition, TRUE);
+		$this->parseJoins($joins, $queryEnd);
+
 		if ($this->select) {
-			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
+			$querySelect = $this->buildQuerySelect($this->select);
+			$this->parseJoins($joins, $querySelect);
 
 		} elseif ($prevAccessed = $this->selection->getPreviousAccessed()) {
-			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($prevAccessed)));
-			$cols = $prefix . implode(', ' . $prefix, $cols);
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$cols = array();
+			foreach (array_keys(array_filter($prevAccessed)) as $col) {
+				$cols[] = $prefix . $col;
+			}
+			$querySelect = $this->buildQuerySelect($cols);
 
 		} elseif ($this->group) {
-			$cols = $this->tryDelimite($this->removeExtraTables($this->group));
+			$querySelect = $this->buildQuerySelect(array($this->group));
+			$this->parseJoins($joins, $querySelect);
 
 		} else {
-			$cols = $prefix . '*';
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$querySelect = $this->buildQueryselect(array($prefix . '*'));
 
 		}
 
-		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();
+		$queryJoins = $this->buildQueryJoins($joins);
+		$query = "{$querySelect} FROM {$this->delimitedTable}{$queryJoins}{$queryCondition}{$queryEnd}";
+
+		return $this->tryDelimite($query);
 	}
 
 
@@ -292,46 +303,108 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function buildJoins($val, $inner = FALSE)
+	protected function parseJoins(& $joins, & $query, $inner = FALSE)
 	{
-		$driver = $this->selection->getConnection()->getSupplementalDriver();
-		$reflection = $this->selection->getConnection()->getDatabaseReflection();
-		$joins = array();
-		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
-		foreach ($matches[1] as $names) {
-			$parent = $this->selection->getName();
-			if ($names !== "$parent.") { // case-sensitive
-				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~i', $names, $matches, PREG_SET_ORDER);
-				foreach ($matches as $match) {
-					list(, $name, $delimiter) = $match;
+		$builder = $this;
+		$query = Strings::replace($query, '~
+			(?(DEFINE)
+				(?<word> [a-z][\w_]* )
+				(?<del> [.:] )
+				(?<pair> \( (?&word) (?:\.|\s*,\s*) (?&word) \) )
+				(?<node> (?&del)? (?: (?&word) | (?&pair) ) )
+			)
 
-					if ($delimiter === ':') {
-						list($table, $primary) = $reflection->getHasManyReference($parent, $name);
-						$column = $reflection->getPrimary($parent);
-					} else {
-						list($table, $column) = $reflection->getBelongsToReference($parent, $name);
-						$primary = $reflection->getPrimary($table);
-					}
+			(?<chain> (?&node)*)  \. (?<column> (?&word) | \*  )
 
-					$joins[$name] = ' '
-						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-						. ' JOIN ' . $driver->delimite($table) . ($table !== $name ? ' AS ' . $driver->delimite($name) : '')
-						. ' ON ' . $driver->delimite($parent) . '.' . $driver->delimite($column)
-						. ' = ' . $driver->delimite($name) . '.' . $driver->delimite($primary);
-
-					$parent = $name;
-				}
-			}
-		}
-		return $joins;
+		~xi', function($match) use (& $joins, $inner, $builder) {
+			return $builder->parseJoinsCb($joins, $match, $inner);
+		});
 	}
 
 
 
-	protected function buildConditions()
+	public function parseJoinsCb(& $joins, $match, $inner)
+	{
+		$reflection = $this->selection->getConnection()->getDatabaseReflection();
+
+		$chain = $match['chain'];
+		if ($chain[0] !== '.' || $chain[0] !== ':') {
+			$chain = '.' . $chain;  // unified chain format
+		}
+
+		$parent = $this->selection->getName();
+		if ($chain == ".{$parent}") { // case-sensitive
+			return "{$parent}.{$match['column']}";
+		}
+
+		$keyMatches = Strings::matchAll($chain, '~
+			(?(DEFINE)
+				(?<word> [a-z][\w_]* )
+			)
+			(?<del> [.:])?
+			(?:
+				(?<key> (?&word)) |
+				\(
+					(?<table> (?&word))
+					(?:\.|\s*,\s*)
+					(?<column> (?&word))
+				\)
+			)
+		~xi');
+
+		foreach ($keyMatches as $keyMatch) {
+			$name = $keyMatch['key'];
+
+			if ($keyMatch['del'] === ':') {
+				if (!empty($name)) {
+					list($table, $primary) = $reflection->getHasManyReference($parent, $name);
+				} else {
+					$table = $keyMatch['table'];
+					$primary = $keyMatch['column'];
+				}
+
+				$column = $reflection->getPrimary($parent);
+			} else {
+				if (!empty($name)) {
+					list($table, $column) = $reflection->getBelongsToReference($parent, $name);
+				} else {
+					$table = $keyMatch['table'];
+					$column = $keyMatch['column'];
+				}
+
+				$primary = $reflection->getPrimary($table);
+			}
+
+			$joins[$table] = array($table, $name ?: $table, $parent, $column, $primary, !isset($joins[$table]) && $inner);
+			$parent = $table;
+		}
+
+		return ($name ?: $table) . ".{$match['column']}";
+	}
+
+
+
+	protected function buildQueryJoins($joins)
+	{
+		$return = '';
+		foreach ($joins as $join) {
+			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn, $inner) = $join;
+
+			$return .= ' ' . ($inner ? 'INNER' : 'LEFT')
+				. " JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " AS {$joinAlias}" : '')
+				. " ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}";
+		}
+
+		return $return;
+	}
+
+
+
+	protected function buildQueryConditions()
 	{
 		$return = '';
 		$driver = $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME);
+
 		$where = $this->where;
 		if ($this->limit !== NULL && $driver === 'oci') {
 			$where[] = ($this->offset ? "rownum > $this->offset AND " : '') . 'rownum <= ' . ($this->limit + $this->offset);
@@ -339,14 +412,25 @@ class SqlBuilder extends Nette\Object
 		if ($where) {
 			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
 		}
+
+		return $return;
+	}
+
+
+
+	protected function buildQueryEnd()
+	{
+		$return = '';
+		$driver = $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME);
+
 		if ($this->group) {
-			$return .= ' GROUP BY '. $this->tryDelimite($this->removeExtraTables($this->group));
+			$return .= ' GROUP BY '. $this->group;
 		}
 		if ($this->having) {
-			$return .= ' HAVING '. $this->tryDelimite($this->removeExtraTables($this->having));
+			$return .= ' HAVING '. $this->having;
 		}
 		if ($this->order) {
-			$return .= ' ORDER BY ' . $this->tryDelimite($this->removeExtraTables(implode(', ', $this->order)));
+			$return .= ' ORDER BY ' . implode(', ', $this->order);
 		}
 		if ($this->limit !== NULL && $driver !== 'oci' && $driver !== 'dblib') {
 			$return .= " LIMIT $this->limit";
@@ -354,6 +438,7 @@ class SqlBuilder extends Nette\Object
 				$return .= " OFFSET $this->offset";
 			}
 		}
+
 		return $return;
 	}
 
@@ -362,9 +447,15 @@ class SqlBuilder extends Nette\Object
 	protected function buildTopClause()
 	{
 		if ($this->limit !== NULL && $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'dblib') {
-			return " TOP ($this->limit)"; //! offset is not supported
+			return "TOP ({$this->limit} "; //! offset is not supported
 		}
-		return '';
+	}
+
+
+
+	protected function buildQuerySelect($columns)
+	{
+		return 'SELECT ' . $this->buildTopClause() . implode(', ', $columns);
 	}
 
 
@@ -375,13 +466,6 @@ class SqlBuilder extends Nette\Object
 		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|$)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
-	}
-
-
-
-	protected function removeExtraTables($expression)
-	{
-		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*[.:])?([a-z_][a-z0-9_]*)[.:]([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
 	}
 
 }

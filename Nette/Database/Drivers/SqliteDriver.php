@@ -151,7 +151,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 				'default' => $row['dflt_value'],
 				'autoincrement' => (bool) preg_match($pattern, $meta['sql']),
 				'primary' => $row['pk'] == '1',
-				'vendor' => (array) $row,
+				'vendor' => iterator_to_array($row),
 			);
 		}
 		return $columns;

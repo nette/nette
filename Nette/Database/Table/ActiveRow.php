@@ -20,23 +20,20 @@ use Nette;
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
+ * @author     Jan Skrasek
  */
-class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class ActiveRow extends Nette\Database\Row
 {
 	/** @var Selection */
 	private $table;
-
-	/** @var array of row data */
-	private $data;
 
 	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
 
 
-	public function __construct(array $data, Selection $table)
+	public function __construct(Selection $table)
 	{
-		$this->data = $data;
 		$this->table = $table;
 	}
 
@@ -55,11 +52,20 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * @internal
-	 * @ignore
 	 */
 	public function getTable()
 	{
 		return $this->table;
+	}
+
+
+
+	/**
+	 * @internal
+	 */
+	public function setAsInitialState()
+	{
+		$this->modified = array();
 	}
 
 
@@ -173,61 +179,12 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	public function getIterator()
 	{
 		$this->access(NULL);
-		return new \ArrayIterator($this->data);
+		return parent::getIterator();
 	}
 
 
 
 	/********************* interface ArrayAccess & magic accessors ****************d*g**/
-
-
-
-	/**
-	 * Stores value in column.
-	 * @param  string column name
-	 * @param  string value
-	 * @return void
-	 */
-	public function offsetSet($key, $value)
-	{
-		$this->__set($key, $value);
-	}
-
-
-
-	/**
-	 * Returns value of column.
-	 * @param  string column name
-	 * @return string
-	 */
-	public function offsetGet($key)
-	{
-		return $this->__get($key);
-	}
-
-
-
-	/**
-	 * Tests if column exists.
-	 * @param  string column name
-	 * @return bool
-	 */
-	public function offsetExists($key)
-	{
-		return $this->__isset($key);
-	}
-
-
-
-	/**
-	 * Removes column from data.
-	 * @param  string column name
-	 * @return void
-	 */
-	public function offsetUnset($key)
-	{
-		$this->__unset($key);
-	}
 
 
 
