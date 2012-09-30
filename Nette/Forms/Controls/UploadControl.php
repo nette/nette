@@ -95,7 +95,7 @@ class UploadControl extends BaseControl
 	public static function validateFileSize(UploadControl $control, $limit)
 	{
 		$file = $control->getValue();
-		return $file instanceof Http\FileUpload && $file->getSize() <= $limit;
+		return $file instanceof Http\FileUpload && $file->getSize() <= $limit && $file->getError() !== UPLOAD_ERR_INI_SIZE;
 	}
 
 
