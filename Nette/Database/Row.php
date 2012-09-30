@@ -44,4 +44,15 @@ class Row extends Nette\ArrayHash
 		return $this->$key;
 	}
 
+
+
+	public function offsetExists($key)
+	{
+		if (is_int($key)) {
+			$arr = array_values((array) $this);
+			return isset($arr[$key]);
+		}
+		return parent::offsetExists($key);
+	}
+
 }
