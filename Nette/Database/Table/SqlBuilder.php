@@ -12,6 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
+	Nette\Database\ISupplementalDriver,
 	PDO;
 
 
@@ -272,7 +273,7 @@ class SqlBuilder extends Nette\Object
 			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($prevAccessed)));
 			$cols = $prefix . implode(', ' . $prefix, $cols);
 
-		} elseif ($this->group) {
+		} elseif ($this->group && !$this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
 			$cols = $this->tryDelimite($this->removeExtraTables($this->group));
 
 		} else {
