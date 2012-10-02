@@ -13,8 +13,8 @@
 		color: white;
 		position: absolute;
 		cursor: move;
-		width: 50px;
-		height: 50px;
+		min-width: 50px;
+		min-height: 50px;
 	}
 
 	.active {
@@ -32,17 +32,17 @@
 
 <body>
 <div id="blocks">
-	<div class="block">
+	<div class="block" id="a">
 		<span>First</span>
 	</div>
 
 
-	<div class="block">
+	<div class="block" id="b">
 		<span>Second</span>
 	</div>
 
 
-	<div class="block">
+	<div class="block" id="c">
 		<span>Third</span>
 	</div>
 </div>
@@ -56,10 +56,31 @@
 
 	var $ = Nette.Q.factory;
 
-	$('.block').draggable({
+	$('#a').draggable({
 		draggedClass: 'dragged'
+	}).position({
+		left: Math.round(Math.random() * 500),
+		top: Math.round(Math.random() * 300)
+	});
 
-	}).bind('click', function(e) {
+	$('#b').draggable({
+		draggedClass: 'dragged',
+		rightEdge: true
+	}).position({
+		right: Math.round(Math.random() * 500),
+		top: Math.round(Math.random() * 300)
+	});
+
+	$('#c').draggable({
+		draggedClass: 'dragged',
+		rightEdge: true,
+		bottomEdge: true
+	}).position({
+		right: Math.round(Math.random() * 500),
+		bottom: Math.round(Math.random() * 300)
+	});
+
+	$('.block').bind('click', function(e) {
 		alert(this.innerHTML.replace(/<.*?>/g, ''));
 
 	}).bind('mouseenter', function(e) {
@@ -67,9 +88,6 @@
 
 	}).bind('mouseleave', function(e) {
 		$(this).removeClass('active');
-
-	}).each(function() {
-		$(this).position({left: Math.round(Math.random() * 500), top: Math.round(Math.random() * 300)});
 	});
 
 })();
