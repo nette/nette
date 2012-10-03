@@ -62,12 +62,13 @@ INSERT INTO book_tag (book_id, tag_id) VALUES (2, 23);
 CREATE TABLE book_tag_alt (
 	book_id int NOT NULL,
 	tag_id int NOT NULL,
+	state varchar(30),
 	PRIMARY KEY (book_id, tag_id),
 	CONSTRAINT book_tag_alt_tag FOREIGN KEY (tag_id) REFERENCES tag (id),
 	CONSTRAINT book_tag_alt_book FOREIGN KEY (book_id) REFERENCES book (id) ON DELETE CASCADE
 );
 
-INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 21);
-INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 22);
-INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 23);
-INSERT INTO book_tag_alt (book_id, tag_id) VALUES (3, 24);
+INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 21, 'public');
+INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 22, 'private');
+INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 23, 'private');
+INSERT INTO book_tag_alt (book_id, tag_id, state) VALUES (3, 24, 'public');
