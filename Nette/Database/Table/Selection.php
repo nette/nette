@@ -129,7 +129,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * @return string
+	 * @return string|array
 	 */
 	public function getPrimary()
 	{
@@ -224,8 +224,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function get($key)
 	{
 		$clone = clone $this;
-		$clone->where($this->primary, $key);
-		return $clone->fetch();
+		return $clone->find($key)->fetch();
 	}
 
 
@@ -286,7 +285,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function find($key)
 	{
-		return $this->where($this->primary, $key);
+		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
+			foreach ($this->primary as $i => $primary) {
+				$this->where($primray, $key[$i]);
+			}
+		} elseif (is_array($key)) { // key contains column names
+			$this->where($key);
+		} else {
+			$this->where($this->primary, $key);
+		}
+
+		return $this;
 	}
 
 
@@ -477,15 +486,20 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$this->rows = array();
+		$usedPrimary = TRUE;
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
-			$row = $result->normalizeRow($row);
-			$this->rows[isset($row[$this->primary]) ? $row[$this->primary] : $key] = $this->createRow($row);
+			$row = $this->createRow($result->normalizeRow($row));
+			$primary = $row->getSignature();
+			$usedPrimary = $usedPrimary && $primary;
+			$this->rows[$primary ?: $key] = $row;
 		}
 		$this->data = $this->rows;
 
-		if (isset($row[$this->primary]) && !is_string($this->accessed)) {
-			$this->accessed[$this->primary] = TRUE;
+		if ($usedPrimary && !is_string($this->accessed)) {
+			foreach ((array) $this->primary as $primary) {
+				$this->accessed[$primary] = TRUE;
+			}
 		}
 	}
 

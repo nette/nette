@@ -139,6 +139,5 @@ Assert::same($expectedIndexes, $indexes);
 $reflection = new Nette\Database\Reflection\DiscoveredReflection;
 $reflection->setConnection($connection);
 
-// test caching primary key in table with multiple primary keys
-Assert::same(NULL, $reflection->getPrimary('book_tag'));
-Assert::same(NULL, $reflection->getPrimary('book_tag'));
+$primary = $reflection->getPrimary('book_tag');
+Assert::same(array('book_id', 'tag_id'), $primary);
