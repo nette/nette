@@ -25,7 +25,6 @@ Assert::same(array(
 
 
 
-
 $ids = $connection->table('book')->order('id')->fetchPairs('id', 'id');  // SELECT * FROM `book` ORDER BY `id`
 Assert::same(array(
 	1 => 1,

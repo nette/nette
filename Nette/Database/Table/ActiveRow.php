@@ -92,10 +92,32 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function getPrimary()
 	{
-		if (!isset($this->data[$this->table->getPrimary()])) {
-			throw new Nette\NotSupportedException("Table {$this->table->getName()} does not have any primary key.");
+		$primary = $this->table->getPrimary();
+		if (!is_array($primary)) {
+			return isset($this->data[$primary]) ? $this->data[$primary] : NULL;
 		}
-		return $this[$this->table->getPrimary()];
+
+		$primaryVal = array();
+		foreach ($primary as $key) {
+			if (!isset($this->data[$key])) {
+				return NULL;
+			}
+
+			$primaryVal[$key] = $this->data[$key];
+		}
+
+		return $primaryVal;
+	}
+
+
+
+	/**
+	 * Returns row signature (composition of primary keys)
+	 * @return string
+	 */
+	public function getSignature()
+	{
+		return implode('|', (array) $this->getPrimary());
 	}
 
 
@@ -146,8 +168,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
-		return $this->table->getConnection()->table($this->table->getName())
-			->where($this->table->getPrimary(), $this[$this->table->getPrimary()])
+		return $this->table->getConnection()
+			->table($this->table->getName())
+			->find($this->getPrimary())
 			->update($data);
 	}
 
@@ -159,8 +182,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function delete()
 	{
-		return $this->table->getConnection()->table($this->table->getName())
-			->where($this->table->getPrimary(), $this[$this->table->getPrimary()])
+		return $this->table->getConnection()
+			->table($this->table->getName())
+			->find($this->getPrimary())
 			->delete();
 	}
 
@@ -285,8 +309,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	public function access($key, $cache = TRUE)
 	{
 		if ($this->table->getConnection()->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $cache)) {
-			$id = (isset($this->data[$this->table->getPrimary()]) ? $this->data[$this->table->getPrimary()] : $this->data);
-			$this->data = $this->table[$id]->data;
+			$this->data = $this->table[$this->getSignature()]->data;
 		}
 	}
 

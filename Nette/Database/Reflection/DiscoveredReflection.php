@@ -78,17 +78,17 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		}
 
 		$columns = $this->connection->getSupplementalDriver()->getColumns($table);
-		$primaryCount = 0;
+		$primary = array();
 		foreach ($columns as $column) {
 			if ($column['primary']) {
-				$primary = $column['name'];
-				$primaryCount++;
+				$primary[] = $column['name'];
 			}
 		}
 
-		if ($primaryCount !== 1) {
-			$primary = '';
+		if (count($primary) === 0) {
 			return NULL;
+		} elseif (count($primary) === 1) {
+			$primary = reset($primary);
 		}
 
 		return $primary;
