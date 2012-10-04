@@ -114,7 +114,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			if ($explain) {
 				static $counter;
 				$counter++;
-				$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-DbConnectionPanel-row-$counter'>explain&nbsp;&#x25ba;</a>";
+				$s .= "<br /><a class='nette-toggle-collapsed' href='#nette-DbConnectionPanel-row-$counter'>explain</a>";
 			}
 
 			$s .= '</td><td class="nette-DbConnectionPanel-sql">' . Helpers::dumpSql($sql, $params);
