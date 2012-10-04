@@ -141,7 +141,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		}
 
 		return empty($this->queries) ? '' :
-			'<style> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
+			'<style class="nette-debug"> #nette-debug td.nette-DbConnectionPanel-sql { background: white !important }
 			#nette-debug .nette-DbConnectionPanel-source { color: #BBB !important } </style>
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
