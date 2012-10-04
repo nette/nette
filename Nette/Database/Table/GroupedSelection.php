@@ -233,7 +233,7 @@ class GroupedSelection extends Selection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new SqlBuilder($this);
+		$this->sqlBuilder = clone $this->sqlBuilder;
 		$this->where($this->column, $this->active);
 		$return = parent::update($data);
 
@@ -247,7 +247,7 @@ class GroupedSelection extends Selection
 	{
 		$builder = $this->sqlBuilder;
 
-		$this->sqlBuilder = new SqlBuilder($this);
+		$this->sqlBuilder = clone $this->sqlBuilder;
 		$this->where($this->column, $this->active);
 		$return = parent::delete();
 
