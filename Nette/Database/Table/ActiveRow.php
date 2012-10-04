@@ -88,36 +88,46 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * Returns primary key value.
+	 * @param  bool
 	 * @return mixed
 	 */
-	public function getPrimary()
+	public function getPrimary($need = TRUE)
 	{
 		$primary = $this->table->getPrimary();
 		if (!is_array($primary)) {
-			return isset($this->data[$primary]) ? $this->data[$primary] : NULL;
-		}
-
-		$primaryVal = array();
-		foreach ($primary as $key) {
-			if (!isset($this->data[$key])) {
+			if (isset($this->data[$primary])) {
+				return $this->data[$primary];
+			} elseif ($need) {
+				throw new Nette\InvalidStateException("Row does not contain primary $primary column data.");
+			} else {
 				return NULL;
 			}
-
-			$primaryVal[$key] = $this->data[$key];
+		} else {
+			$primaryVal = array();
+			foreach ($primary as $key) {
+				if (!isset($this->data[$key])) {
+					if ($need) {
+						throw new Nette\InvalidStateException("Row does not contain primary $key column data.");
+					} else {
+						return NULL;
+					}
+				}
+				$primaryVal[$key] = $this->data[$key];
+			}
+			return $primaryVal;
 		}
-
-		return $primaryVal;
 	}
 
 
 
 	/**
 	 * Returns row signature (composition of primary keys)
+	 * @param  bool
 	 * @return string
 	 */
-	public function getSignature()
+	public function getSignature($need = TRUE)
 	{
-		return implode('|', (array) $this->getPrimary());
+		return implode('|', (array) $this->getPrimary($need));
 	}
 
 
