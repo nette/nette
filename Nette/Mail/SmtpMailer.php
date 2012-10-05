@@ -71,7 +71,7 @@ class SmtpMailer extends Nette\Object implements IMailer
 	 */
 	public function send(Message $mail)
 	{
-		$data = $mail->generateMessage();
+		$mail = clone $mail;
 
 		$this->connect();
 
@@ -89,6 +89,8 @@ class SmtpMailer extends Nette\Object implements IMailer
 			$this->write("RCPT TO:<$email>", array(250, 251));
 		}
 
+		$mail->setHeader('Bcc', NULL);
+		$data = $mail->generateMessage();
 		$this->write('DATA', 354);
 		$data = preg_replace('#^\.#m', '..', $data);
 		$this->write($data);
