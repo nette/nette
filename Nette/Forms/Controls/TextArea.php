@@ -46,7 +46,8 @@ class TextArea extends TextBase
 	public function getControl()
 	{
 		$control = parent::getControl();
-		$control->setText($this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value);
+		$value = $this->getValue();
+		$control->setText($value === '' ? $this->translate($this->emptyValue) : $value);
 		return $control;
 	}
 
