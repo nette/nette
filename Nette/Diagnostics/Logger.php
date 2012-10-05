@@ -37,7 +37,7 @@ class Logger extends Nette\Object
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
 	public $directory;
 
-	/** @var string email to sent error notifications */
+	/** @var string|array email or emails to which send error notifications */
 	public $email;
 
 
@@ -63,7 +63,7 @@ class Logger extends Nette\Object
 			&& @filemtime($this->directory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
 			&& @file_put_contents($this->directory . '/email-sent', 'sent') // @ - file may not be writable
 		) {
-			Nette\Callback::create($this->mailer)->invoke($message, $this->email);
+			Nette\Callback::create($this->mailer)->invoke($message, implode(', ', (array) $this->email));
 		}
 		return $res;
 	}
