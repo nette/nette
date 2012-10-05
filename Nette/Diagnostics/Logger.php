@@ -37,7 +37,7 @@ class Logger extends Nette\Object
 	/** @var string name of the directory where errors should be logged; FALSE means that logging is disabled */
 	public $directory;
 
-	/** @var string email to sent error notifications */
+	/** @var string|array email or emails to which send error notifications */
 	public $email;
 
 
@@ -59,11 +59,19 @@ class Logger extends Nette\Object
 		}
 		$res = error_log(trim($message) . PHP_EOL, 3, $this->directory . '/' . strtolower($priority) . '.log');
 
-		if (($priority === self::ERROR || $priority === self::CRITICAL) && $this->email && $this->mailer
+		if (($priority === self::ERROR || $priority === self::CRITICAL)
+			&& (is_array($this->email) || is_string($this->email)) && $this->mailer
 			&& @filemtime($this->directory . '/email-sent') + self::$emailSnooze < time() // @ - file may not exist
 			&& @file_put_contents($this->directory . '/email-sent', 'sent') // @ - file may not be writable
 		) {
-			Nette\Callback::create($this->mailer)->invoke($message, $this->email);
+			$emails = is_string($this->email) ? preg_split('~,\s*~', $this->email) : $this->email;
+			foreach ($emails as $email) {
+				if (!is_string($email)) { // silently ignore invalid emails in array
+					continue;
+				}
+
+				Nette\Callback::create($this->mailer)->invoke($message, $email);
+			}
 		}
 		return $res;
 	}
