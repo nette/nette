@@ -3,7 +3,7 @@
 namespace Nette\DI\Diagnostics;
 
 use Nette,
-	Nette\Diagnostics\Helpers;
+	Nette\Diagnostics\Dump;
 
 ?>
 <style class="nette-debug">
@@ -42,7 +42,7 @@ use Nette,
 	<h2>Parameters</h2>
 
 	<div class="nette-ContainerPanel-parameters">
-		<?php echo Helpers::clickableDump($this->container->parameters); ?>
+		<?php echo Dump::toHtml($this->container->parameters); ?>
 	</div>
 
 	<h2>Services</h2>
@@ -64,14 +64,14 @@ use Nette,
 			<td title="<?php echo htmlSpecialChars(implode(" \n", $autowired)) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
 			<td>
 				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container && !$registry[$name] instanceof Nette\DI\NestedAccessor): ?>
-					<?php echo Helpers::clickableDump($registry[$name], TRUE); ?>
+					<?php echo Dump::toHtml($registry[$name], array(Dump::COLLAPSE => 1)); ?>
 				<?php elseif (isset($registry[$name])): ?>
 					<code><?php echo get_class($registry[$name]) ?></code>
 				<?php elseif (is_string($class)): ?>
 					<code><?php echo htmlSpecialChars($class) ?></code>
 				<?php endif ?>
 			</td>
-			<td><?php if (isset($container->meta[$name])) { echo Helpers::clickableDump($container->meta[$name], TRUE); } ?></td>
+			<td><?php if (isset($container->meta[$name])) { echo Dump::toHtml($container->meta[$name], array(Dump::COLLAPSE => 1)); } ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>

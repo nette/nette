@@ -33,7 +33,7 @@ use Nette;
 			if ($k === '__NF') {
 				$k = 'Nette Session'; $v = isset($v['DATA']) ? $v['DATA'] : NULL;
 			}
-			echo '<tr><th>', htmlspecialchars($k), '</th><td>', Nette\Diagnostics\Helpers::clickableDump($v), "</td></tr>\n";
+			echo '<tr><th>', htmlspecialchars($k), '</th><td>', Nette\Diagnostics\Dump::toHtml($v), "</td></tr>\n";
 		}?>
 		</table>
 		<?php endif ?>

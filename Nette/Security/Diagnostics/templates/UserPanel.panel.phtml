@@ -2,8 +2,7 @@
 
 namespace Nette\Security\Diagnostics;
 
-use Nette,
-	Nette\Diagnostics\Helpers;
+use Nette;
 
 ?>
 <style class="nette-debug">
@@ -20,5 +19,5 @@ use Nette,
 <div class="nette-UserPanel">
 	<h1><?php if ($this->user->isLoggedIn()): ?>Logged in<?php else: ?>Unlogged<?php endif ?></h1>
 
-	<?php if ($this->user->getIdentity()): echo Helpers::clickableDump($this->user->getIdentity()); else: ?><p>no identity</p><?php endif ?>
+	<?php if ($this->user->getIdentity()): echo Nette\Diagnostics\Dump::toHtml($this->user->getIdentity()); else: ?><p>no identity</p><?php endif ?>
 </div>

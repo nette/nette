@@ -11,8 +11,7 @@
 
 namespace Nette\Security\Diagnostics;
 
-use Nette,
-	Nette\Diagnostics\Helpers;
+use Nette;
 
 
 
