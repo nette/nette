@@ -17,14 +17,14 @@ require __DIR__ . '/../bootstrap.php';
 
 Debugger::$consoleMode = TRUE;
 Debugger::$productionMode = FALSE;
+header('Content-Type: text/plain; charset=utf-8');
 
 Debugger::enable();
 
-function shutdown() {
+register_shutdown_function(function(){
 	Assert::same('', ob_get_clean());
-}
+});
 ob_start();
-Debugger::$onFatalError[] = 'shutdown';
 
 
 @mktime(); // E_STRICT

@@ -7,8 +7,7 @@
  * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Debugger,
-	Nette\StringUtils;
+use Nette\Diagnostics\Debugger;
 
 
 
@@ -22,33 +21,32 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-function shutdown() {
-	$m = StringUtils::match($output = ob_get_clean(), '#debug.innerHTML = (".*");#');
+register_shutdown_function(function(){
+	preg_match('#debug.innerHTML = (".*");#', $output = ob_get_clean(), $m);
 	Assert::match('
 Warning: Unsupported declare \'foo\' in %a% on line %d%%A%', $output);
 
 	Assert::match('%A%<table>
 <tr class="">
 	<td class="nette-right">1%a%</td>
-	<td><pre>PHP Strict standards: mktime(): You should be using the time() function instead in %a%:%d%</a></pre></td>
+	<td><pre>PHP Strict standards: mktime(): You should be using the time() function instead in %a%</a>:%d%</pre></td>
 </tr>
 <tr class="nette-alt">
 	<td class="nette-right">1%a%</td>
-	<td><pre>PHP Deprecated: mktime(): The is_dst parameter is deprecated in %a%:%d%</a></pre></td>
+	<td><pre>PHP Deprecated: mktime(): The is_dst parameter is deprecated in %a%</a>:%d%</pre></td>
 </tr>
 <tr class="">
 	<td class="nette-right">1%a%</td>
-	<td><pre>PHP Notice: Undefined variable: x in %a%:%d%</a></pre></td>
+	<td><pre>PHP Notice: Undefined variable: x in %a%</a>:%d%</pre></td>
 </tr>
 <tr class="nette-alt">
 	<td class="nette-right">1%a%</td>
-	<td><pre>PHP Warning: rename(..,..): %A% in %a%:%d%</a></pre></td>
+	<td><pre>PHP Warning: rename(..,..): %A% in %a%</a>:%d%</pre></td>
 </tr>
 </table>
 </div>%A%', json_decode($m[1]));
-}
+});
 ob_start();
-Debugger::$onFatalError[] = 'shutdown';
 
 
 function first($arg1, $arg2)
