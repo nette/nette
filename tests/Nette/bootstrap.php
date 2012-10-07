@@ -35,10 +35,6 @@ $_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NA
 $_SERVER['REQUEST_TIME'] = 1234567890;
 $_ENV = $_GET = $_POST = array();
 
-if (PHP_SAPI !== 'cli') {
-	header('Content-Type: text/plain; charset=utf-8');
-}
-
 
 if (extension_loaded('xdebug')) {
 	xdebug_disable();
