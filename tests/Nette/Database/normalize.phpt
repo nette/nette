@@ -17,8 +17,8 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 $res = $connection->query("SELECT * FROM bittest");
 $row = $res->fetch();
 Assert::same(0, $row->id);
-Assert::same(false, $row->flag);
+Assert::same("0", $row->flag);
 
 $row = $res->fetch();
 Assert::same(1, $row->id);
-Assert::same(true, $row->flag);
+Assert::same("1", $row->flag);
