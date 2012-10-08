@@ -36,7 +36,15 @@ final class Helpers
 		if (is_array($var)) {
 			$res = array();
 			foreach ($var as $key => $val) {
-				$res[$key] = self::expand($val, $params, $recursive);
+				$expandedKey = self::expand($key, $params, $recursive);
+				if (!is_scalar($expandedKey)) {
+					$type = gettype($expandedKey);
+					throw new Nette\InvalidArgumentException("Keys must be scalar: '$key' expanded to '$type'.");
+				}
+				$res[$expandedKey] = self::expand($val, $params, $recursive);
+				if ($key !== $expandedKey) {
+					$params = array_merge($params, $res);
+				}
 			}
 			return $res;
 

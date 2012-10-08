@@ -31,6 +31,9 @@ Assert::same(
 		'keyB' => 'abc'
 	), TRUE)
 );
+Assert::same( array('key2' => 123), Helpers::expand(array('%key1%' => 123), array('key1' => 'key2')) );
+Assert::same( array('key3' => 123), Helpers::expand(array('%key1%' => 123), array('key1' => '%key2%', 'key2' => 'key3'), TRUE) );
+Assert::same( array('key2' => 123, 'key3' => 123), Helpers::expand(array('%key1%' => 123, 'key3' => '%key2%'), array('key1' => 'key2'), TRUE) );
 
 
 Assert::throws(function() {
@@ -44,3 +47,7 @@ Assert::throws(function() {
 Assert::throws(function() {
 	Helpers::expand('%key1%', array('key1' => '%key2%', 'key2' => '%key1%'), TRUE);
 }, 'Nette\InvalidArgumentException', "Circular reference detected for variables: key1, key2.");
+
+Assert::throws(function() {
+	Helpers::expand(array('%key1%' => 123), array('key1' => array('key2' => 123)));
+}, 'Nette\InvalidArgumentException', "Keys must be scalar: '%key1%' expanded to 'array'.");
