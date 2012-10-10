@@ -24,6 +24,12 @@ foreach ($book->related('book_tag') as $bookTag) {
 	}
 }
 
+$count = $book->related('book_tag')->count();
+Assert::same(1, $count);
+
+$count = $book->related('book_tag')->count('*');
+Assert::same(1, $count);
+
 $count = $connection->table('book_tag')->count('*');
 Assert::same(5, $count);
 
