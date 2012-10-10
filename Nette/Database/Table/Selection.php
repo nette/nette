@@ -287,7 +287,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
 			foreach ($this->primary as $i => $primary) {
-				$this->where($primray, $key[$i]);
+				$this->where($primary, $key[$i]);
 			}
 		} elseif (is_array($key)) { // key contains column names
 			$this->where($key);
@@ -623,14 +623,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return $return->rowCount();
 		}
 
-		if (!isset($data[$this->primary]) && ($id = $this->connection->lastInsertId($this->getPrimarySequence()))) {
+		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->lastInsertId($this->getPrimarySequence()))) {
 			$data[$this->primary] = $id;
-			return $this->rows[$id] = $this->createRow($data);
-
-		} else {
-			return $this->createRow($data);
-
 		}
+
+		$row = $this->createRow($data);
+		if ($signature = $row->getSignature(FALSE)) {
+			$this->rows[$signature] = $row;
+		}
+
+		return $row;
 	}
 
 

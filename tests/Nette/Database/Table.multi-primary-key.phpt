@@ -46,3 +46,12 @@ Assert::same(array(
 	'private',
 	'public',
 ), $states);
+
+
+
+$connection->table('book_tag')->insert(array(
+	'book_id' => 1,
+	'tag_id' => 21, // PHP tag
+));
+$count = $connection->table('book_tag')->where('book_id', 1)->count('*');
+Assert::same(2, $count);
