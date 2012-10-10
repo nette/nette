@@ -192,10 +192,16 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function delete()
 	{
-		return $this->table->getConnection()
+		$res = $this->table->getConnection()
 			->table($this->table->getName())
 			->find($this->getPrimary())
 			->delete();
+
+		if ($res > 0 && ($signature = $this->getSignature(FALSE))) {
+			unset($this->table[$signature]);
+		}
+
+		return $res;
 	}
 
 
