@@ -9,7 +9,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 		<th><?php if ($_label = $_form["input1"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
 		<td><?php echo $_form["input1"]->getControl()->addAttributes(array()) ?></td>
 	</tr>
-<?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont1"] ?>
+<?php $_formStack[] = $_form; $formContainer = $_form = (is_object("cont1") ? "cont1" : $_form["cont1"]) ?>
 	<tr>
 		<th><?php if ($_label = $_form["input2"]->getLabel()) echo $_label->addAttributes(array()) ?><th>
 		<td><?php echo $_form["input2"]->getControl()->addAttributes(array()) ?></td>
@@ -21,7 +21,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 	<tr>
 		<th>Checkboxes<th>
 		<td>
-<?php $_formStack[] = $_form; $formContainer = $_form = $_form["cont2"] ?>			<ol>
+<?php $_formStack[] = $_form; $formContainer = $_form = (is_object("cont2") ? "cont2" : $_form["cont2"]) ?>			<ol>
 <?php $iterations = 0; foreach ($formContainer->controls AS $name => $field): ?>
 				<li><?php echo $_form[$name]->getControl()->addAttributes(array()) ?> - <?php if ($_label = $_form[$name]->getLabel()) echo $_label->addAttributes(array()) ?></li>
 <?php $iterations++; endforeach ?>			</ol>
