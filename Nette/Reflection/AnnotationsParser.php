@@ -183,6 +183,7 @@ final class AnnotationsParser
 				) {
 					$value = substr($value, strlen($m[0]));
 					list(, $key, $val) = $m;
+					$val = rtrim($val);
 					if ($val[0] === "'" || $val[0] === '"') {
 						$val = substr($val, 1, -1);
 

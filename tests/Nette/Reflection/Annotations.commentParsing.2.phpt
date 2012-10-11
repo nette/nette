@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 /**
  * This is my favorite class.
- * @one( value), out
+ * @one( value ), out
  * @two (value)
  * @three(
  * @4th
