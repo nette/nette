@@ -16,18 +16,8 @@ require __DIR__ . '/../../Nette/loader.php';
 date_default_timezone_set('Europe/Prague');
 
 
-// temporary directory garbage collection
-if (mt_rand() / mt_getrandmax() < 0.01) {
-	foreach (glob(__DIR__ . '/../tmp/*[0-9]', GLOB_ONLYDIR) as $dir) {
-		if (time() - @filemtime($dir) > 300 && @rename($dir, $dir . '-delete')) {
-			TestHelpers::purge($dir . '-delete');
-			rmdir($dir . '-delete');
-		}
-	}
-}
-
 // create temporary directory
-define('TEMP_DIR', __DIR__ . '/../tmp/' . getmypid());
+define('TEMP_DIR', __DIR__ . '/../tmp/' . md5(serialize($_SERVER['argv'])));
 TestHelpers::purge(TEMP_DIR);
 
 
