@@ -16,7 +16,16 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.0"
+		"php": ">=5.3.0",
+		"ext-iconv": "*",
+		"ext-tokenizer": "*"
+	},
+	"suggest": {
+		"ext-mbstring": "*",
+		"ext-pdo": "*",
+		"ext-memcache": "*",
+		"ext-gd": "*",
+		"ext-fileinfo": "*"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
