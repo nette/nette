@@ -114,6 +114,9 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 		$url = $context->getByType('Nette\Http\IRequest')->getUrl();
 		$template->baseUrl = rtrim($url->getBaseUrl(), '/');
 		$template->basePath = rtrim($url->getBasePath(), '/');
+		$template->user = $context->user;
+		$template->netteHttpResponse = $context->httpResponse;
+		$template->netteCacheStorage = $context->getByType('Nette\Caching\IStorage');
 
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 		$template->setCacheStorage($context->nette->templateCacheStorage);
