@@ -88,14 +88,46 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * Returns primary key value.
+	 * @param  bool
 	 * @return mixed
 	 */
-	public function getPrimary()
+	public function getPrimary($need = TRUE)
 	{
-		if (!isset($this->data[$this->table->getPrimary()])) {
-			throw new Nette\NotSupportedException("Table {$this->table->getName()} does not have any primary key.");
+		$primary = $this->table->getPrimary();
+		if (!is_array($primary)) {
+			if (isset($this->data[$primary])) {
+				return $this->data[$primary];
+			} elseif ($need) {
+				throw new Nette\InvalidStateException("Row does not contain primary $primary column data.");
+			} else {
+				return NULL;
+			}
+		} else {
+			$primaryVal = array();
+			foreach ($primary as $key) {
+				if (!isset($this->data[$key])) {
+					if ($need) {
+						throw new Nette\InvalidStateException("Row does not contain primary $key column data.");
+					} else {
+						return NULL;
+					}
+				}
+				$primaryVal[$key] = $this->data[$key];
+			}
+			return $primaryVal;
 		}
-		return $this[$this->table->getPrimary()];
+	}
+
+
+
+	/**
+	 * Returns row signature (composition of primary keys)
+	 * @param  bool
+	 * @return string
+	 */
+	public function getSignature($need = TRUE)
+	{
+		return implode('|', (array) $this->getPrimary($need));
 	}
 
 
@@ -146,8 +178,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		if ($data === NULL) {
 			$data = $this->modified;
 		}
-		return $this->table->getConnection()->table($this->table->getName())
-			->where($this->table->getPrimary(), $this[$this->table->getPrimary()])
+		return $this->table->getConnection()
+			->table($this->table->getName())
+			->find($this->getPrimary())
 			->update($data);
 	}
 
@@ -159,9 +192,16 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function delete()
 	{
-		return $this->table->getConnection()->table($this->table->getName())
-			->where($this->table->getPrimary(), $this[$this->table->getPrimary()])
+		$res = $this->table->getConnection()
+			->table($this->table->getName())
+			->find($this->getPrimary())
 			->delete();
+
+		if ($res > 0 && ($signature = $this->getSignature(FALSE))) {
+			unset($this->table[$signature]);
+		}
+
+		return $res;
 	}
 
 
@@ -285,8 +325,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	public function access($key, $cache = TRUE)
 	{
 		if ($this->table->getConnection()->getCache() && !isset($this->modified[$key]) && $this->table->access($key, $cache)) {
-			$id = (isset($this->data[$this->table->getPrimary()]) ? $this->data[$this->table->getPrimary()] : $this->data);
-			$this->data = $this->table[$id]->data;
+			$this->data = $this->table[$this->getSignature()]->data;
 		}
 	}
 
