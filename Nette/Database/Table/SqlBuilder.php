@@ -13,6 +13,7 @@ namespace Nette\Database\Table;
 
 use Nette,
 	Nette\Database\ISupplementalDriver,
+	Nette\Database\SqlLiteral,
 	PDO;
 
 
@@ -262,12 +263,12 @@ class SqlBuilder extends Nette\Object
 	 */
 	public function buildSelectQuery()
 	{
-		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
-		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
+		$join = $this->buildJoins($this->buildJoinHelper($this->conditions), TRUE);
+		$join += $this->buildJoins($this->buildJoinHelper($this->select, $this->group, $this->having, $this->order));
 
 		$prefix = $join ? "{$this->delimitedTable}." : '';
 		if ($this->select) {
-			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
+			$cols = implode(', ', $this->tryDelimite($this->removeExtraTables($this->select)));
 
 		} elseif ($prevAccessed = $this->selection->getPreviousAccessed()) {
 			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($prevAccessed)));
@@ -289,6 +290,40 @@ class SqlBuilder extends Nette\Object
 	public function getParameters()
 	{
 		return $this->parameters;
+	}
+
+
+
+	/**
+	 * Leaves only elements that can be evaulated for possible table joins.
+	 * @param array $elems
+	 * @return array
+	 */
+	protected function filterJoinable(array $elems)
+	{
+		return array_filter($elems, function ($elem) {
+			return !$elem instanceof SqlLiteral || $elem->examinable == true;
+		});
+	}
+
+
+
+	/**
+	 * Creates string for table join evaluation
+	 * @param array|string $arg
+	 * @return string
+	 */
+	private function buildJoinHelper()
+	{
+		$str = '';
+		$args = func_get_args();
+		foreach ($args as $arg) {
+			if ($arg instanceof SqlLiteral) {
+				$arg = array($arg);
+			}
+			$str .= implode(',', $this->filterJoinable((array)$arg)) . ',';
+		}
+		return $str;
 	}
 
 
@@ -347,7 +382,7 @@ class SqlBuilder extends Nette\Object
 			$return .= ' HAVING '. $this->tryDelimite($this->removeExtraTables($this->having));
 		}
 		if ($this->order) {
-			$return .= ' ORDER BY ' . $this->tryDelimite($this->removeExtraTables(implode(', ', $this->order)));
+			$return .= ' ORDER BY ' . implode(', ', $this->tryDelimite($this->removeExtraTables($this->order)));
 		}
 		if ($this->limit !== NULL && $driver !== 'oci' && $driver !== 'dblib') {
 			$return .= " LIMIT $this->limit";
@@ -370,19 +405,46 @@ class SqlBuilder extends Nette\Object
 
 
 
-	protected function tryDelimite($s)
+	/**
+	 * Recursively tries to delimit $expression
+	 * @param mixed $expression to be delimited. If SqlLiteral given no delimitation will be performed unless it has delimitable set to true
+	 * @return mixed recursively delimited $epression
+	 */
+	protected function tryDelimite($expression)
 	{
-		$driver = $this->connection->getSupplementalDriver();
-		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|$)#i', function($m) use ($driver) {
-			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
-		}, $s);
+		if (is_array($expression)) {
+			$delimitedExpressions = array();
+			foreach ($expression as $elem) {
+				$delimitedExpressions[] = $this->tryDelimite($elem);
+			}
+			$expression = $delimitedExpressions;
+		} elseif (!$expression instanceof SqlLiteral || $expression->delimitable == true) {
+			$driver = $this->connection->getSupplementalDriver();
+			$expression = preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|$)#i', function($m) use ($driver) {
+				return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
+			}, $expression);
+		}
+		return $expression;
 	}
 
 
 
+	/**
+	 * @param mixed $expression If SqlLiteral given nothing is performed
+	 * @return mixed processed $epression
+	 */
 	protected function removeExtraTables($expression)
 	{
-		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*[.:])?([a-z_][a-z0-9_]*)[.:]([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
+		if (is_array($expression)) {
+			$processedExpressions = array();
+			foreach ($expression as $elem) {
+				$processedExpressions[] = $this->removeExtraTables($elem);
+			}
+			$expression = $processedExpressions;
+		} elseif (!$expression instanceof SqlLiteral) {
+			$expression = preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*[.:])?([a-z_][a-z0-9_]*)[.:]([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
+		}
+		return $expression;
 	}
 
 }

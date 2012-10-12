@@ -9,6 +9,8 @@
  * @multiple   databases.ini
  */
 
+use Nette\Database\SqlLiteral;
+
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
@@ -44,3 +46,14 @@ switch ($driverName) {
 		Assert::same('`hello`', $tryDelimite->invoke($sqlBuilder, '`hello`'));
 		break;
 }
+
+//sqlLiterals
+Assert::same('hello', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('hello')));
+Assert::same(' hello ', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral(' hello ')));
+Assert::same('HELLO', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('HELLO')));
+Assert::same('HellO', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('HellO')));
+Assert::same('hello.world', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('hello.world')));
+Assert::same('hello world', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('hello world')));
+Assert::same('HELLO(world)', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('HELLO(world)')));
+Assert::same('hello(world)', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('hello(world)')));
+Assert::same('hello', (string) $tryDelimite->invoke($sqlBuilder, new SqlLiteral('hello')));

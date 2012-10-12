@@ -75,6 +75,23 @@ $sql = $connection->table('book')
 
 switch ($driverName) {
 	case 'mysql':
+		Assert::same('SELECT * FROM `book` WHERE (id = 1)', $sql);
+		break;
+
+	case 'pgsql':
+		Assert::same('SELECT * FROM "book" WHERE (id = 1)', $sql);
+		break;
+}
+
+
+
+$sql = $connection->table('book')
+	->where('id = 1')
+	->getSql();
+
+
+switch ($driverName) {
+	case 'mysql':
 		Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
 		break;
 
