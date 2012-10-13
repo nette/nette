@@ -29,5 +29,5 @@ $form = new Form();
 $form->addImage('image');
 $form->addContainer('container')->addImage('image');
 
-Assert::equal( array(1, 2), $form['image']->getValue() );
-Assert::equal( array(3, 4), $form['container']['image']->getValue() );
+Assert::same( array('1', '2'), $form['image']->getValue() );
+Assert::same( array('3', '4'), $form['container']['image']->getValue() );
