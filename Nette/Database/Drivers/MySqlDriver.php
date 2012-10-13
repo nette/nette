@@ -116,6 +116,11 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function normalizeRow($row, $statement)
 	{
+		foreach ($row as $key => $value) {
+			if ($value === "\0" || $value === "\1") {
+				$row[$key] = $value === "\0" ? '0' : '1';
+			}
+		}
 		return $row;
 	}
 

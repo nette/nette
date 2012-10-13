@@ -28,7 +28,7 @@ class Helpers
 	/** @var array */
 	public static $typePatterns = array(
 		'^_' => IReflection::FIELD_TEXT, // PostgreSQL arrays
-		'BYTEA|BLOB|BIN' => IReflection::FIELD_BINARY,
+		'BYTEA|BLOB' => IReflection::FIELD_BINARY,
 		'TEXT|CHAR' => IReflection::FIELD_TEXT,
 		'YEAR|BYTE|COUNTER|SERIAL|INT|LONG' => IReflection::FIELD_INTEGER,
 		'CURRENCY|REAL|MONEY|FLOAT|DOUBLE|DECIMAL|NUMERIC|NUMBER' => IReflection::FIELD_FLOAT,
