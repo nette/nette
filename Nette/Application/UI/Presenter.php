@@ -1015,7 +1015,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		);
 		$this->lastCreatedRequestFlag = array('current' => $current);
 
-		if ($mode === 'forward') {
+		if ($mode === 'forward' || $mode === 'test') {
 			return;
 		}
 

@@ -347,7 +347,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 				$args = func_get_args();
 				array_shift($args);
 			}
-			$this->link($destination, $args);
+			$this->getPresenter()->createRequest($this, $destination, $args, 'test');
 		}
 		return $this->getPresenter()->getLastCreatedRequestFlag('current');
 	}
