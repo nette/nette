@@ -740,7 +740,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @return ActiveRow */
 	public function current()
 	{
-		return $this->data[current($this->keys)];
+		if (($key = current($this->keys)) !== FALSE) {
+			return $this->data[$key];
+		} else {
+			return FALSE;
+		}
 	}
 
 
