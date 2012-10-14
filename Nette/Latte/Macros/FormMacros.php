@@ -41,7 +41,7 @@ class FormMacros extends MacroSet
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
-		$me->addMacro('input', 'echo $_form[%node.word]->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
+		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrInput'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = (is_object(%node.word) ? %node.word : $_form[%node.word])', '$_form = array_pop($_formStack)');
 	}
 
@@ -51,11 +51,25 @@ class FormMacros extends MacroSet
 
 
 	/**
+	 * {input ...}
+	 */
+	public function macroInput(MacroNode $node, PhpWriter $writer)
+	{
+		$cmd = '$_fcontrol = %node.word;';
+		$cmd .= 'if (!$_fcontrol instanceof \Nette\Forms\IControl) { $_fcontrol = $_form[%node.word]; }' . "\n";
+		$cmd .= 'echo $_fcontrol->getControl()->addAttributes(%node.array)';
+		return $writer->write($cmd);
+	}
+
+
+	/**
 	 * {label ...} and optionally {/label}
 	 */
 	public function macroLabel(MacroNode $node, PhpWriter $writer)
 	{
-		$cmd = 'if ($_label = $_form[%node.word]->getLabel()) echo $_label->addAttributes(%node.array)';
+		$cmd = '$_fcontrol = %node.word;';
+		$cmd .= 'if (!$_fcontrol instanceof \Nette\Forms\IControl) { $_fcontrol = $_form[%node.word]; }' . "\n";
+		$cmd .= 'if ($_label = $_fcontrol->getLabel()) echo $_label->addAttributes(%node.array)';
 		if ($node->isEmpty = (substr($node->args, -1) === '/')) {
 			$node->setArgs(substr($node->args, 0, -1));
 			return $writer->write($cmd);
@@ -71,11 +85,14 @@ class FormMacros extends MacroSet
 	 */
 	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
+		$cmd = '$_fcontrol = %node.word;';
+		$cmd .= 'if (!$_fcontrol instanceof \Nette\Forms\IControl) { $_fcontrol = $_form[%node.word]; }' . "\n";
+		$cmd .= 'echo $_fcontrol->getControl()';
 		if ($node->htmlNode->attrs) {
 			$reset = array_fill_keys(array_keys($node->htmlNode->attrs), NULL);
-			return $writer->write('echo $_form[%node.word]->getControl()->addAttributes(%var)->attributes()', $reset);
+			return $writer->write($cmd . '->addAttributes(%var)->attributes()', $reset);
 		}
-		return $writer->write('echo $_form[%node.word]->getControl()->attributes()');
+		return $writer->write($cmd . '$cmd->attributes()');
 	}
 
 
