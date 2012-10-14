@@ -27,8 +27,8 @@ Assert::equal( array(
 	'float2' => 1.1,
 	'float3' => 1.0,
 	'float4' => 1.0,
-	'date1' => new Nette\DateTime('2012-10-13 00:00:00'),
-	'date2' => new Nette\DateTime('2012-10-13 10:10:10'),
+	'date1' => new Nette\DateTime('2012-10-13'),
+	'date2' => new Nette\DateTime('10:10:10'),
 	'date3' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'date4' => new Nette\DateTime('2012-10-13 10:10:10'),
 	'date5' => '2012', // PHP bug #48724
