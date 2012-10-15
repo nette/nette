@@ -350,7 +350,7 @@ class Parser extends Nette\Object
 		}
 		if ($match['name'] === '') {
 			$match['name'] = $match['shortname'] ?: '=';
-			if (!$match['noescape'] && substr($match['shortname'], 0, 1) !== '/') {
+			if (!$match['noescape'] && substr($match['shortname'], 0, 1) !== '/' && $match['shortname'] !== '#') { // workaround for #block
 				$match['modifiers'] .= '|escape';
 			}
 		}

@@ -225,8 +225,6 @@ if (!empty($_control->snippetMode)) {
 
 		if ($node->name === 'block' && $name === FALSE) { // anonymous block
 			return $node->modifiers === '' ? '' : 'ob_start()';
-		} elseif ($node->name === '#') {
-			$node->modifiers = substr($node->modifiers, 0, -7); // remove |escape, dirty fix
 		}
 
 		$node->data->name = $name = ltrim($name, '#');
