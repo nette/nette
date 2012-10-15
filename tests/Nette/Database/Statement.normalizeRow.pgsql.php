@@ -1,18 +1,6 @@
 <?php
 
-/**
- * Test: Nette\Database\Statement::normalizeRow()
- *
- * @author     David Grudl
- * @package    Nette\Database
- */
-
-$_SERVER['argv'][1] = 'postgresql';
-require __DIR__ . '/connect.inc.php'; // create $connection
-
-Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/pgsql-nette_test3.sql");
-
-
+// PostgreSQL part of Statement.normalizeRow.phpt test
 
 $res = $connection->query("SELECT * FROM types");
 
