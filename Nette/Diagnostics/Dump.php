@@ -47,6 +47,16 @@ class Dump
 
 
 	/**
+	 * Static class - cannot be instantiated.
+	 */
+	final public function __construct()
+	{
+		throw new Nette\StaticClassException;
+	}
+
+
+
+	/**
 	 * Dumps variable to the output.
 	 * @return mixed  variable
 	 */
