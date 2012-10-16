@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Test: Nette\Diagnostics\Dumper::toText() special chars
+ * Test: Nette\Diagnostics\Dump::toText() special chars
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
  */
 
-use Nette\Diagnostics\Dumper;
+use Nette\Diagnostics\Dump;
 
 
 
@@ -25,7 +25,7 @@ line" (10)
    5 => "Iñtërnâtiônàlizætiøn" (27)
    6 => "\x00"
    7 => "\xff"
-', Dumper::toText(array(
+', Dump::toText(array(
 	'',
 	' ',
 	"\t",

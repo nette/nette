@@ -151,7 +151,7 @@ final class Debugger
 			self::$source = empty($_SERVER['argv']) ? 'CLI' : 'CLI: ' . implode(' ', $_SERVER['argv']);
 		}
 
-		self::$consoleColors = & Dumper::$terminalColors;
+		self::$consoleColors = & Dump::$terminalColors;
 		self::$logger = new Logger;
 		self::$logDirectory = & self::$logger->directory;
 		self::$email = & self::$logger->email;
@@ -307,7 +307,7 @@ final class Debugger
 				}
 			}
 		} elseif (!is_string($message)) {
-			$message = Dumper::toText($message);
+			$message = Dump::toText($message);
 		}
 
 		self::$logger->log(array(
@@ -553,17 +553,17 @@ final class Debugger
 	{
 		if ($return) {
 			ob_start();
-			Dumper::dump($var, array(
-				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLen,
+			Dump::dump($var, array(
+				Dump::DEPTH => self::$maxDepth,
+				Dump::TRUNCATE => self::$maxLen,
 			));
 			return ob_get_clean();
 
 		} elseif (!self::$productionMode) {
-			Dumper::dump($var, array(
-				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLen,
-				Dumper::LOCATION => self::$showLocation,
+			Dump::dump($var, array(
+				Dump::DEPTH => self::$maxDepth,
+				Dump::TRUNCATE => self::$maxLen,
+				Dump::LOCATION => self::$showLocation,
 			));
 		}
 
@@ -599,7 +599,7 @@ final class Debugger
 		if (!self::$productionMode) {
 			$dump = array();
 			foreach ((is_array($var) ? $var : array('' => $var)) as $key => $val) {
-				$dump[$key] = Dumper::toHtml($val);
+				$dump[$key] = Dump::toHtml($val);
 			}
 			self::$dumpPanel->data[] = array('title' => $title, 'dump' => $dump);
 		}
