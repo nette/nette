@@ -13,7 +13,7 @@ namespace Nette\DI\Diagnostics;
 
 use Nette,
 	Nette\DI\Container,
-	Nette\Diagnostics\Dump;
+	Nette\Diagnostics\Dumper;
 
 
 

@@ -4,7 +4,7 @@ namespace Nette\Application\Diagnostics;
 
 use Nette,
 	Nette\Application\UI\Presenter,
-	Nette\Diagnostics\Dump;
+	Nette\Diagnostics\Dumper;
 
 ?>
 <style class="nette-debug">
@@ -58,7 +58,7 @@ use Nette,
 		<?php foreach ($params as $key => $value): ?>
 		<tr>
 			<td><code><?php echo htmlSpecialChars($key) ?></code></td>
-			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo Dump::toHtml($value); endif ?></td>
+			<td><?php if (is_string($value)):?><code><?php echo htmlSpecialChars($value) ?></code><?php else: echo Dumper::toHtml($value); endif ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>
@@ -96,7 +96,7 @@ use Nette,
 
 		<td><code>
 		<?php foreach ($router['defaults'] as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Dump::toHtml($value, array(Dump::COLLAPSE => 1))) ?><br />
+			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Dumper::toHtml($value, array(Dumper::COLLAPSE => 1))) ?><br />
 		<?php endforeach ?>
 		</code></td>
 
@@ -107,7 +107,7 @@ use Nette,
 		<strong><?php echo htmlSpecialChars($router['request']->getPresenterName() . ':' . (isset($params[Presenter::ACTION_KEY]) ? $params[Presenter::ACTION_KEY] : Presenter::DEFAULT_ACTION)) ?></strong><br />
 		<?php unset($params[Presenter::ACTION_KEY]) ?>
 		<?php foreach ($params as $key => $value): ?>
-			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Dump::toHtml($value, array(Dump::COLLAPSE => 1))) ?><br />
+			<?php echo htmlSpecialChars($key), "&nbsp;=&nbsp;", is_string($value) ? htmlSpecialChars($value) : str_replace("\n</pre", '</pre', Dumper::toHtml($value, array(Dumper::COLLAPSE => 1))) ?><br />
 		<?php endforeach ?>
 		</code><?php endif ?></td>
 	</tr>

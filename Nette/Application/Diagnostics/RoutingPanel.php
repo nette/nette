@@ -14,7 +14,7 @@ namespace Nette\Application\Diagnostics;
 use Nette,
 	Nette\Application\Routers,
 	Nette\Application\UI\Presenter, // templates
-	Nette\Diagnostics\Dump;
+	Nette\Diagnostics\Dumper;
 
 
 
@@ -44,8 +44,8 @@ class RoutingPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		Nette\Diagnostics\Debugger::$blueScreen->addPanel(function($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . Dump::toHtml($application->getRequests())
-					. '<h3>Presenter</h3>' . Dump::toHtml($application->getPresenter())
+				'panel' => '<h3>Requests</h3>' . Dumper::toHtml($application->getRequests())
+					. '<h3>Presenter</h3>' . Dumper::toHtml($application->getPresenter())
 			);
 		});
 	}

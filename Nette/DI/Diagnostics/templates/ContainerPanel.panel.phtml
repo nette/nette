@@ -3,7 +3,7 @@
 namespace Nette\DI\Diagnostics;
 
 use Nette,
-	Nette\Diagnostics\Dump;
+	Nette\Diagnostics\Dumper;
 
 ?>
 <style class="nette-debug">
@@ -35,7 +35,7 @@ use Nette,
 	<h2>Parameters</h2>
 
 	<div class="nette-ContainerPanel-parameters">
-		<?php echo Dump::toHtml($this->container->parameters); ?>
+		<?php echo Dumper::toHtml($this->container->parameters); ?>
 	</div>
 
 	<h2>Services</h2>
