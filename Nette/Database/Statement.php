@@ -112,7 +112,9 @@ class Statement extends \PDOStatement
 				$row[$key] = is_float($tmp = $value * 1) ? $value : $tmp;
 
 			} elseif ($type === IReflection::FIELD_FLOAT) {
-				$row[$key] = (string) ($tmp = (float) $value) === rtrim(rtrim($value, '0'), '.') ? $tmp : $value;
+				$value = strpos($value, '.') === FALSE ? $value : rtrim(rtrim($value, '0'), '.');
+				$float = (float) $value;
+				$row[$key] = (string) $float === $value ? $float : $value;
 
 			} elseif ($type === IReflection::FIELD_BOOL) {
 				$row[$key] = ((bool) $value) && $value !== 'f' && $value !== 'F';
