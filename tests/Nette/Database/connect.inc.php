@@ -11,7 +11,7 @@
 require __DIR__ . '/../bootstrap.php';
 
 
-$config = parse_ini_file(__DIR__ . '/databases.ini', TRUE);
+$config = parse_ini_file(TestRunner::localizeMultipleFile(__DIR__ . '/databases.ini'), TRUE);
 $current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
 
 
