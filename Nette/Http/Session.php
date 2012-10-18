@@ -265,7 +265,7 @@ class Session extends Nette\Object
 	 */
 	public function setName($name)
 	{
-		if (!is_string($name) || !preg_match('#[^0-9.][^.]*$#A', $name)) {
+		if (!is_string($name) || !preg_match('#[^0-9.][^.]*\z#A', $name)) {
 			throw new Nette\InvalidArgumentException('Session name must be a string and cannot contain dot.');
 		}
 

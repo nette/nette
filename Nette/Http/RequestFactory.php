@@ -29,7 +29,7 @@ class RequestFactory extends Nette\Object
 	/** @var array */
 	public $urlFilters = array(
 		'path' => array('#/{2,}#' => '/'), // '%20' => ''
-		'url' => array(), // '#[.,)]$#' => ''
+		'url' => array(), // '#[.,)]\z#' => ''
 	);
 
 	/** @var string */
@@ -72,7 +72,7 @@ class RequestFactory extends Nette\Object
 			$pair = array('');
 		}
 
-		$url->host = preg_match('#^[-._a-z0-9]+$#', $pair[0]) ? $pair[0] : '';
+		$url->host = preg_match('#^[-._a-z0-9]+\z#', $pair[0]) ? $pair[0] : '';
 
 		if (isset($pair[1])) {
 			$url->port = (int) $pair[1];

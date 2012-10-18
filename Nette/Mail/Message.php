@@ -184,7 +184,7 @@ class Message extends MimePart
 	 */
 	private function formatEmail($email, $name)
 	{
-		if (!$name && preg_match('#^(.+) +<(.*)>$#', $email, $matches)) {
+		if (!$name && preg_match('#^(.+) +<(.*)>\z#', $email, $matches)) {
 			return array($matches[2] => $matches[1]);
 		} else {
 			return array($email => $name);

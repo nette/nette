@@ -51,7 +51,7 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 				$key = substr($key, 0, -1);
 				$val[Helpers::EXTENDS_KEY] = Helpers::OVERWRITE;
 
-			} elseif (preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)$#', $key, $matches)) {
+			} elseif (preg_match('#^(\S+)\s+' . self::INHERITING_SEPARATOR . '\s+(\S+)\z#', $key, $matches)) {
 				if (!is_array($val) && $val !== NULL) {
 					throw new Nette\InvalidStateException("Inheritance operator is available only for arrays, item '$key' is not array.");
 				}

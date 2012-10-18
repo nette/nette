@@ -163,7 +163,7 @@ final class Helpers
 	{
 		return Strings::replace(
 			$s,
-			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|$)#si',
+			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|\z)#si',
 			/*5.2* new Nette\Callback(*/function($m) {
 				return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));
 			}/*5.2* )*/);
@@ -329,7 +329,7 @@ final class Helpers
 
 				} elseif ($token[0] === T_CLOSE_TAG) {
 					$next = isset($tokens[$key + 1]) ? $tokens[$key + 1] : NULL;
-					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*$#', $php)) {
+					if (substr($res, -1) !== '<' && preg_match('#^<\?php\s*\z#', $php)) {
 						$php = ''; // removes empty (?php ?), but retains ((?php ?)?php
 
 					} elseif (is_array($next) && $next[0] === T_OPEN_TAG) { // remove ?)(?php
@@ -342,7 +342,7 @@ final class Helpers
 						$tokens->next();
 
 					} elseif ($next) {
-						$res .= preg_replace('#;?(\s)*$#', '$1', $php) . $token[1]; // remove last semicolon before ?)
+						$res .= preg_replace('#;?(\s)*\z#', '$1', $php) . $token[1]; // remove last semicolon before ?)
 						if (strlen($res) - strrpos($res, "\n") > $lineLength
 							&& (!is_array($next) || strpos($next[1], "\n") === FALSE)
 						) {

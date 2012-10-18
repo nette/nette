@@ -29,7 +29,7 @@ $_SERVER = array(
 
 $factory = new Http\RequestFactory;
 $factory->urlFilters['path'] = array('#%20#' => '');
-$factory->urlFilters['url'] = array('#[.,)]$#' => '');
+$factory->urlFilters['url'] = array('#[.,)]\z#' => '');
 $request = $factory->createHttpRequest();
 
 Assert::same( 'GET',  $request->getMethod() );

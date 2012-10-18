@@ -312,7 +312,7 @@ if (!empty($_control->snippetMode)) {
 	{
 		if (isset($node->data->name)) { // block, snippet, define
 			if ($node->name === 'snippet' && $node->prefix === MacroNode::PREFIX_NONE // n:snippet -> n:inner-snippet
-				&& preg_match("#^.*? n:\w+>\n?#s", $node->content, $m1) && preg_match("#[ \t]*<[^<]+$#sD", $node->content, $m2))
+				&& preg_match('#^.*? n:\w+>\n?#s', $node->content, $m1) && preg_match('#[ \t]*<[^<]+\z#s', $node->content, $m2))
 			{
 				$node->openingCode = $m1[0] . $node->openingCode;
 				$node->content = substr($node->content, strlen($m1[0]), -strlen($m2[0]));
@@ -367,7 +367,7 @@ if (!empty($_control->snippetMode)) {
 		$pair = explode(':', $pair, 2);
 		$name = $writer->formatWord($pair[0]);
 		$method = isset($pair[1]) ? ucfirst($pair[1]) : '';
-		$method = Strings::match($method, '#^\w*$#') ? "render$method" : "{\"render$method\"}";
+		$method = Strings::match($method, '#^\w*\z#') ? "render$method" : "{\"render$method\"}";
 		$param = $writer->formatArray();
 		if (!Strings::contains($node->args, '=>')) {
 			$param = substr($param, 6, -1); // removes array()

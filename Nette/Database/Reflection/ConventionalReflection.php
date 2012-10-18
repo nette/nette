@@ -86,7 +86,7 @@ class ConventionalReflection extends Nette\Object implements Nette\Database\IRef
 
 	protected function getColumnFromTable($name)
 	{
-		if ($this->table !== '%s' && preg_match('(^' . str_replace('%s', '(.*)', preg_quote($this->table)) . '$)', $name, $match)) {
+		if ($this->table !== '%s' && preg_match('(^' . str_replace('%s', '(.*)', preg_quote($this->table)) . '\z)', $name, $match)) {
 			return $match[1];
 		}
 
