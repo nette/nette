@@ -83,7 +83,7 @@ class PresenterFactory implements IPresenterFactory
 			return $class;
 		}
 
-		if (!is_string($name) || !Nette\Utils\Strings::match($name, "#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*\\z#")) {
+		if (!is_string($name) || !Nette\Utils\Strings::match($name, '#^[a-zA-Z\x7f-\xff][a-zA-Z0-9\x7f-\xff:]*\z#')) {
 			throw new InvalidPresenterException("Presenter name must be alphanumeric string, '$name' is invalid.");
 		}
 
@@ -162,7 +162,7 @@ class PresenterFactory implements IPresenterFactory
 		foreach ($this->mapping as $module => $mapping) {
 			$mapping = explode('\\\\\*', preg_quote($mapping, '#'));
 			$mapping[0] .= $mapping[0] ? '\\\\' : '';
-			if (preg_match("#^\\\\?$mapping[0]((?:\w+$mapping[1]\\\\)*)(\w+)$mapping[2]\\z#i", $class, $matches)) {
+			if (preg_match("#^\\\\?$mapping[0]((?:\\w+$mapping[1]\\\\)*)(\\w+)$mapping[2]\\z#i", $class, $matches)) {
 				return ($module === '*' ? '' : $module . ':')
 					. str_replace($mapping[1] . '\\', ':', $matches[1]) . $matches[2];
 			}

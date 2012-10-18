@@ -96,7 +96,7 @@ class Helpers
 		$sql = preg_replace('#[ \t]{2,}#', " ", $sql);
 
 		$sql = wordwrap($sql, 100);
-		$sql = preg_replace("#([ \t]*\r?\n){2,}#", "\n", $sql);
+		$sql = preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
 
 		// syntax highlight
 		$sql = htmlSpecialChars($sql);

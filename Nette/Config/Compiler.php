@@ -174,7 +174,7 @@ class Compiler extends Nette\Object
 			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'\.#i', $list))) {
 				$list = array_diff($list, $found);
 				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
-				$class->documents = preg_replace("#\S+(?= \\$$name\\z)#", $def->class, $class->documents);
+				$class->documents = preg_replace("#\\S+(?= \\$$name\\z)#", $def->class, $class->documents);
 				$classes[] = $accessor = new Nette\PhpGenerator\ClassType($def->class);
 				foreach ($found as $item) {
 					if ($defs[$item]->internal) {
