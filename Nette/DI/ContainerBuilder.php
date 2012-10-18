@@ -445,7 +445,7 @@ class ContainerBuilder extends Nette\Object
 			}
 			$params = array();
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
-				$params[] = preg_replace('#\w+$#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
+				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
 			}
 			$rm = new Nette\Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
@@ -559,7 +559,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getServiceName($arg, $self = NULL)
 	{
-		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].+$#', $arg)) {
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].+\z#', $arg)) {
 			return FALSE;
 		}
 		$service = substr($arg, 1);

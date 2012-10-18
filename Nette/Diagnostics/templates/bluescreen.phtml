@@ -510,7 +510,7 @@ $counter = 0;
 
 			<h3><a href="#" rel="netteBsPnl<?php echo ++$counter ?>">Configuration options <abbr>&#x25ba;</abbr></a></h3>
 			<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
-			<?php ob_start(); @phpinfo(INFO_CONFIGURATION | INFO_MODULES); echo preg_replace('#^.+<body>|</body>.+$#s', '', ob_get_clean()) ?>
+			<?php ob_start(); @phpinfo(INFO_CONFIGURATION | INFO_MODULES); echo preg_replace('#^.+<body>|</body>.+\z#s', '', ob_get_clean()) ?>
 			</div>
 		</div></div>
 

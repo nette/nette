@@ -196,7 +196,7 @@ class PhpWriter extends Nette\Object
 	 */
 	public function formatWord($s)
 	{
-		return (is_numeric($s) || preg_match('#^\\$|[\'"]|^true$|^false$|^null$#i', $s))
+		return (is_numeric($s) || preg_match('#^\$|[\'"]|^true\z|^false\z|^null\z#i', $s))
 			? $s : '"' . $s . '"';
 	}
 

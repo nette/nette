@@ -31,7 +31,7 @@ $cache[$key] = $value;
 
 Assert::true( isset($cache[$key]), 'Is cached?' );
 
-Assert::true( (bool) preg_match('#[0-9a-f]+\.php$#', $cache[$key]['file']) );
+Assert::true( (bool) preg_match('#[0-9a-f]+\.php\z#', $cache[$key]['file']) );
 Assert::true( is_resource($cache[$key]['handle']) );
 
 $var = $cache[$key];

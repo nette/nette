@@ -90,7 +90,7 @@ class GroupedSelection extends Selection
 	{
 		if (!$this->sqlBuilder->getOrder()) {
 			// improve index utilization
-			$this->sqlBuilder->addOrder("$this->name.$this->column" . (preg_match('~\\bDESC$~i', $columns) ? ' DESC' : ''));
+			$this->sqlBuilder->addOrder("$this->name.$this->column" . (preg_match('~\bDESC\z~i', $columns) ? ' DESC' : ''));
 		}
 
 		return parent::order($columns);

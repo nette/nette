@@ -96,8 +96,8 @@ class Neon extends Nette\Object
 			}
 
 		} elseif (is_string($var) && !is_numeric($var)
-			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)$~i', $var)
-			&& preg_match('~^' . self::$patterns[4] . '$~', $var)
+			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)\z~i', $var)
+			&& preg_match('~^' . self::$patterns[4] . '\z~', $var)
 		) {
 			return $var;
 
@@ -281,7 +281,7 @@ class Neon extends Nette\Object
 					$value = NULL;
 				} elseif (is_numeric($t)) {
 					$value = $t * 1;
-				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?$#A', $t)) {
+				} elseif (preg_match('#\d\d\d\d-\d\d?-\d\d?(?:(?:[Tt]| +)\d\d?:\d\d:\d\d(?:\.\d*)? *(?:Z|[-+]\d\d?(?::\d\d)?)?)?\z#A', $t)) {
 					$value = new Nette\DateTime($t);
 				} else { // literal
 					$value = $t;

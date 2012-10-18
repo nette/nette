@@ -343,7 +343,7 @@ class Parser extends Nette\Object
 				(?P<noescape>!?)(?P<shortname>/?[=\~#%^&_]?)      ## !expression, !=expression, ...
 			)(?P<args>.*?)
 			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"])*)?
-		()$~isx');
+		()\z~isx');
 
 		if (!$match) {
 			return FALSE;

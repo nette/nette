@@ -263,7 +263,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 			if ($info['reflection']) {
 				$connection->addSetup('setDatabaseReflection', is_string($info['reflection'])
-					? array(new Nette\DI\Statement(preg_match('#^[a-z]+$#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
+					? array(new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection']) ? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection' : $info['reflection']))
 					: Nette\Config\Compiler::filterArguments(array($info['reflection']))
 				);
 			}
