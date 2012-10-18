@@ -165,7 +165,7 @@ final class Helpers
 			$s,
 			'#(</textarea|</pre|</script|^).*?(?=<textarea|<pre|<script|\z)#si',
 			/*5.2* new Nette\Callback(*/function($m) {
-				return trim(preg_replace("#[ \t\r\n]+#", " ", $m[0]));
+				return trim(preg_replace('#[ \t\r\n]+#', " ", $m[0]));
 			}/*5.2* )*/);
 	}
 
