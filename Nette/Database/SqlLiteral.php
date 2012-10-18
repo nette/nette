@@ -22,8 +22,15 @@ use Nette;
  */
 class SqlLiteral extends Nette\Object
 {
+	/** @var bool Whether literal can be delimited */
+	public $delimitable = false;
+
+	/** @var bool Whether sql builder can examine literal for possible table joins */
+	public $examinable = false;
+
 	/** @var string */
 	private $value = '';
+
 
 
 	public function __construct($value)
