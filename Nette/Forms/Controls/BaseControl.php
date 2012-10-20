@@ -341,8 +341,11 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function loadHttpData()
 	{
-		$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
-		$this->setValue(Nette\Utils\Arrays::get($this->getForm()->getHttpData(), $path, NULL));
+		$httpData = $this->getForm()->getHttpData();
+		if ($httpData !== NULL){
+			$path = explode('[', strtr(str_replace(array('[]', ']'), '', $this->getHtmlName()), '.', '_'));
+			$this->setValue(Nette\Utils\Arrays::get($httpData, $path, NULL));
+		}
 	}
 
 
