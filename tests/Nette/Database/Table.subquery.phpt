@@ -27,3 +27,17 @@ Assert::same(array(
 	'Nette',
 	'Dibi',
 ), $apps);
+
+
+Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test4.sql");
+
+$users = array();
+$subquery = $connection->table('nUsers')->select('users_id, MAX(version), third')->group('users_id');
+foreach ($connection->table('nUsers')->where('users_id,version,third',$subquery)->where('status = "u"') as $user) {
+	$users[] = $user->name;
+}
+
+Assert::same(array(
+	'Johnny',
+	'Smith',
+), $users);

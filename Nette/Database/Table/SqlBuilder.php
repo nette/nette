@@ -163,7 +163,16 @@ class SqlBuilder extends Nette\Object
 				$in = array();
 				foreach ($clone as $row) {
 					$this->parameters[] = array_values(iterator_to_array($row));
-					$in[] = (count($row) === 1 ? '?' : '(?)');
+					if (substr_count($condition , ',') > 0) {
+						$in[] = '(?)';
+					} else {
+						$in[] = (count($row) === 1 ? '?' : '(?)');
+					}
+				}
+				if (substr_count($condition , ',')>0) {
+					$condition .= ')';
+					$in[0] = '(?)';
+					$in[count($in)-1] = '(?';
 				}
 				$condition .= ' IN (' . ($in ? implode(', ', $in) : 'NULL') . ')';
 			}
