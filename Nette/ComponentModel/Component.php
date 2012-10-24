@@ -36,6 +36,9 @@ abstract class Component extends Nette\Object implements IComponent
 	/** @var array of [type => [obj, depth, path, is_monitored?]] */
 	private $monitors = array();
 
+	/** @var bool */
+	protected $constructorCheck = FALSE;
+
 
 
 	/**
@@ -48,6 +51,8 @@ abstract class Component extends Nette\Object implements IComponent
 		} elseif (is_string($name)) {
 			$this->name = $name;
 		}
+
+		$this->constructorCheck = TRUE;
 	}
 
 

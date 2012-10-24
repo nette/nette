@@ -219,6 +219,10 @@ class Container extends Component implements IContainer
 	 */
 	protected function validateChildComponent(IComponent $child)
 	{
+		if ($child instanceof Component && $child->constructorCheck !== TRUE) {
+			$method = Nette\Reflection\Method::from($child, '__construct');
+			throw new Nette\InvalidStateException("Method $method or its descendant doesn't call parent::__construct().");
+		}
 	}
 
 
