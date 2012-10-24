@@ -35,16 +35,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 
 	/**
-	 */
-	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
-	{
-		$this->monitor('Nette\Application\UI\Presenter');
-		parent::__construct($parent, $name);
-	}
-
-
-
-	/**
 	 * Returns the presenter where this component belongs to.
 	 * @param  bool   throw exception if presenter doesn't exist?
 	 * @return Presenter|NULL
@@ -79,6 +69,17 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		if ($presenter instanceof Presenter) {
 			$this->loadState($presenter->popGlobalParameters($this->getUniqueId()));
 		}
+	}
+
+
+
+	/**
+	 * @return void
+	 */
+	protected function validateParent(Nette\ComponentModel\IContainer $parent)
+	{
+		parent::validateParent($parent);
+		$this->monitor('Nette\Application\UI\Presenter');
 	}
 
 
