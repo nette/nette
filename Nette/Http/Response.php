@@ -303,7 +303,24 @@ final class Response extends Nette\Object implements IResponse
 		if (ini_get('suhosin.cookie.encrypt')) {
 			return $this;
 		}
+		
+		$this->removeDuplicateCookies();
 
+		return $this;
+	}
+
+
+
+	/**
+	 * Remove duplicate cookies from response
+	 * @return void
+	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
+	 */	
+	public function removeDuplicateCookies() {
+		if (headers_sent($file, $line)) {
+			throw new Nette\InvalidStateException("Cannot set cookie after HTTP headers have been sent" . ($file ? " (output started at $file:$line)." : "."));
+		}
+		
 		$flatten = array();
 		foreach (headers_list() as $header) {
 			if (preg_match('#^Set-Cookie: .+?=#', $header, $m)) {
@@ -318,8 +335,6 @@ final class Response extends Nette\Object implements IResponse
 		foreach (array_values($flatten) as $key => $header) {
 			header($header, $key === 0);
 		}
-
-		return $this;
 	}
 
 
