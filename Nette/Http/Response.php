@@ -300,8 +300,20 @@ final class Response extends Nette\Object implements IResponse
 			$httpOnly === NULL ? $this->cookieHttpOnly : (bool) $httpOnly
 		);
 
-		if (ini_get('suhosin.cookie.encrypt')) {
-			return $this;
+		$this->removeDuplicateCookies();
+		return $this;
+	}
+
+
+
+	/**
+	 * Removes duplicate cookies from response.
+	 * @return void
+	 */
+	public function removeDuplicateCookies()
+	{
+		if (headers_sent($file, $line) || ini_get('suhosin.cookie.encrypt')) {
+			return;
 		}
 
 		$flatten = array();
@@ -318,8 +330,6 @@ final class Response extends Nette\Object implements IResponse
 		foreach (array_values($flatten) as $key => $header) {
 			header($header, $key === 0);
 		}
-
-		return $this;
 	}
 
 
