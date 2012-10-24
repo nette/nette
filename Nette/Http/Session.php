@@ -106,6 +106,7 @@ class Session extends Nette\Object
 			@session_write_close(); // this is needed
 			throw new Nette\InvalidStateException("session_start(): $error");
 		}
+		$this->response->removeDuplicateCookies();
 
 		self::$started = TRUE;
 
@@ -241,6 +242,7 @@ class Session extends Nette\Object
 			$backup = $_SESSION;
 			session_start();
 			$_SESSION = $backup;
+			$this->response->removeDuplicateCookies();
 		}
 		$this->regenerated = TRUE;
 	}
