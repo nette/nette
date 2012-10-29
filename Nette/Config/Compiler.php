@@ -134,6 +134,49 @@ class Compiler extends Nette\Object
 				$this->parseServices($this->container, $this->config[$name], $name);
 			}
 		}
+
+		foreach ($this->container->getDefinitions() as $name => $def) {
+			if ($def->shared || !$def->factory || !is_string($def->factory->entity) || !interface_exists($def->factory->entity)) {
+				continue;
+			}
+
+			$factoryType = Nette\Reflection\ClassType::from($def->factory->entity);
+			if (!$factoryType->hasMethod('create')) {
+				throw new Nette\InvalidStateException("Method $factoryType::create() in factory of '$name' must be defined.");
+			}
+
+			$factoryMethod = $factoryType->getMethod('create');
+			if ($factoryMethod->isStatic()) {
+				throw new Nette\InvalidStateException("Method $factoryMethod in factory of '$name' must not be static.");
+			}
+
+			$returnType = $factoryMethod->getAnnotation('return');
+			if ($returnType && !class_exists($returnType)) {
+				if ($returnType[0] !== '\\') {
+					$returnType = $factoryType->getNamespaceName() . '\\' . $returnType;
+				}
+				if (!class_exists($returnType)) {
+					throw new Nette\InvalidStateException("Please use a fully qualified name of class in @return annotation at $factoryMethod method. Class '$returnType' cannot be found.");
+				}
+			}
+
+			if (!$def->class) {
+				if (!$returnType) {
+					throw new Nette\InvalidStateException("Method $factoryMethod has no @return annotation.");
+
+				} else {
+					$def->class = $returnType;
+				}
+
+			} elseif ($returnType !== $def->class) {
+				throw new Nette\InvalidStateException("Method $factoryMethod claims in @return annotation, that it returns instance of '$returnType', but factory definition demands '$def->class'.");
+			}
+
+			$def->setCreates($def->class, $def->factory->arguments);
+			$def->class = $def->factory->entity;
+			$def->factory = NULL;
+			$def->setShared(TRUE);
+		}
 	}
 
 
@@ -152,7 +195,10 @@ class Compiler extends Nette\Object
 		foreach ($this->extensions as $extension) {
 			$extension->afterCompile($class);
 		}
-		return (string) $class;
+
+		$classes = $this->container->fetchGeneratedFactories();
+		array_unshift($classes, $class);
+		return implode("\n\n\n", $classes);
 	}
 
 

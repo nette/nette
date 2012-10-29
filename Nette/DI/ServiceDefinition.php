@@ -28,6 +28,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var Statement */
 	public $factory;
 
+	/** @var Statement */
+	public $creates;
+
 	/** @var Statement[] */
 	public $setup = array();
 
@@ -65,6 +68,14 @@ class ServiceDefinition extends Nette\Object
 	public function setFactory($factory, array $args = array())
 	{
 		$this->factory = new Statement($factory, $args);
+		return $this;
+	}
+
+
+
+	public function setCreates($class, array $args = array())
+	{
+		$this->creates = new Statement($class, $args);
 		return $this;
 	}
 
@@ -122,7 +133,6 @@ class ServiceDefinition extends Nette\Object
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;
-		$this->autowired = $this->shared ? $this->autowired : FALSE;
 		return $this;
 	}
 
