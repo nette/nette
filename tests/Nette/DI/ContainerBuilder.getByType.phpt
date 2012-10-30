@@ -19,13 +19,16 @@ class Service extends Nette\Object
 {
 }
 
+class Service2 extends Nette\Object
+{
+}
 
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('Service');
 $builder->addDefinition('two')
-	->setClass('Nette\Object');
+	->setClass('Service2');
 
 
 // compile-time
