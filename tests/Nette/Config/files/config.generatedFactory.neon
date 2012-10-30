@@ -1,0 +1,19 @@
+services:
+	ipsum: Ipsum
+	bar: Bar
+	baz: Baz
+
+factories:
+	lorem:
+		class: Lorem
+		implement: ILoremFactory
+
+	article:
+		factory: Article(%title%)
+		implement: IArticleFactory
+		parameters: [title]
+
+	foo:
+		factory: Foo(..., %baz%)
+		implement: IFooFactory
+		parameters: [Baz baz]

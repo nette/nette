@@ -46,6 +46,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var bool */
 	public $inject = TRUE;
 
+	/** @var string  interface name */
+	public $implement;
+
 
 
 	public function setClass($class, array $args = array())
@@ -128,6 +131,14 @@ class ServiceDefinition extends Nette\Object
 	public function setInject($on)
 	{
 		$this->inject = (bool) $on;
+		return $this;
+	}
+
+
+
+	public function setImplement($implement)
+	{
+		$this->implement = $implement;
 		return $this;
 	}
 

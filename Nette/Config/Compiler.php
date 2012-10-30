@@ -226,12 +226,13 @@ class Compiler extends Nette\Object
 		if ($config === NULL) {
 			return;
 		} elseif (!is_array($config)) {
-			$config = array('class' => NULL, 'factory' => $config);
+			$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'factory';
+			$config = array('class' => NULL, $key => $config);
 		}
 
 		$known = $shared
 			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'parameters');
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
 
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
@@ -297,6 +298,12 @@ class Compiler extends Nette\Object
 		if (isset($config['inject'])) {
 			Validators::assertField($config, 'inject', 'bool');
 			$definition->setInject($config['inject']);
+		}
+
+		if (isset($config['implement'])) {
+			Validators::assertField($config, 'implement', 'string');
+			$definition->setImplement($config['implement']);
+			$definition->setShared(TRUE);
 		}
 
 		if (isset($config['run'])) {
