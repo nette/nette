@@ -200,6 +200,16 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
+		// check if services are instantiable
+		foreach ($this->definitions as $name => $def) {
+			$factory = $this->normalizeEntity($this->expand($def->factory->entity));
+			if (is_string($factory) && preg_match('#^[\w\\\\]+\z#', $factory) && $factory !== self::THIS_SERVICE) {
+				if (!class_exists($factory) || !Reflection\ClassType::from($factory)->isInstantiable()) {
+					throw new Nette\InvalidStateException("Class $factory used in service '$name' has not been found or is not instantiable.");
+				}
+			}
+		}
+
 		// complete classes
 		$this->classes = FALSE;
 		foreach ($this->definitions as $name => $def) {
