@@ -160,6 +160,10 @@ class Compiler extends Nette\Object
 				}
 			}
 
+			if ($def->class === $def->factory->entity) {
+				$def->class = NULL;
+			}
+
 			if (!$def->class) {
 				if (!$returnType) {
 					throw new Nette\InvalidStateException("Method $factoryMethod has no @return annotation.");
@@ -170,6 +174,23 @@ class Compiler extends Nette\Object
 
 			} elseif ($returnType !== $def->class) {
 				throw new Nette\InvalidStateException("Method $factoryMethod claims in @return annotation, that it returns instance of '$returnType', but factory definition demands '$def->class'.");
+			}
+
+			if (!$def->parameters && !$def->factory->arguments) {
+				$createdClassConstructor = Nette\Reflection\ClassType::from($def->class)->getConstructor();
+				foreach ($factoryMethod->getParameters() as $parameter) {
+					$paramDef = ($parameter->getClassName() ? $parameter->getClassName() . ' ' : '') . $parameter->getName();
+					foreach ($createdClassConstructor->getParameters() as $argument) {
+						if ($parameter->getName() !== $argument->getName()) {
+							continue;
+						} elseif (($parameter->getClassName() || $argument->getClassName()) && $parameter->getClassName() !== $argument->getClassName()) {
+							throw new \Nette\InvalidStateException("Argument $argument type hint doesn't match $parameter type hint.");
+						} else {
+							$def->parameters[] = $paramDef;
+							$def->factory->arguments[$argument->position] = '%' . $argument->getName() . '%';
+						}
+					}
+				}
 			}
 
 			$def->setCreates($def->class, $def->factory->arguments);

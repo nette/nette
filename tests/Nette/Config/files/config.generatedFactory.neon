@@ -14,8 +14,4 @@ factories:
 		arguments: [%title%]
 		parameters: [title]
 
-	foo:
-		class: Foo
-		factory: IFooFactory
-		arguments: [..., %baz%]
-		parameters: [..., baz]
+	foo: IFooFactory
