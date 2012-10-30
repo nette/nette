@@ -28,10 +28,16 @@ class Lorem
 {
 
 	public $ipsum;
+	public $me;
 
 	function __construct(Ipsum $ipsum)
 	{
 		$this->ipsum = $ipsum;
+	}
+
+	function me($me)
+	{
+		$this->me = $me;
 	}
 
 }
@@ -101,8 +107,10 @@ $container = $configurator->addConfig('files/config.generatedFactory.neon', Conf
 Assert::true( $container->lorem instanceof ILoremFactory );
 $lorem = $container->lorem->create();
 Assert::true( $lorem instanceof Lorem );
+Assert::same( 'yep', $lorem->me );
 Assert::true( $lorem->ipsum instanceof Ipsum );
 Assert::same( $container->ipsum, $lorem->ipsum );
+
 
 
 Assert::true( $container->article instanceof IArticleFactory );

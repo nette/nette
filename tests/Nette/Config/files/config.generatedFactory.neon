@@ -7,6 +7,8 @@ factories:
 	lorem:
 		class: Lorem
 		factory: ILoremFactory
+		setup:
+			- me(yep)
 
 	article:
 		class: Article
