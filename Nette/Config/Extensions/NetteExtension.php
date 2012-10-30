@@ -211,7 +211,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', $config['catchExceptions'])
 			->addSetup('$errorPresenter', $config['errorPresenter'])
-			->addSetup('::header', 'X-Powered-By: Nette Framework');
+			->addSetup('!headers_sent() && header(?);', 'X-Powered-By: Nette Framework');
 
 		if ($config['debugger']) {
 			$application->addSetup('Nette\Application\Diagnostics\RoutingPanel::initializePanel');
