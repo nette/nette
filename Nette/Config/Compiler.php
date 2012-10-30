@@ -150,6 +150,11 @@ class Compiler extends Nette\Object
 				throw new Nette\InvalidStateException("Method $factoryMethod in factory of '$name' must not be static.");
 			}
 
+			if (count($factoryType->getMethods()) > 1) {
+				$extra = array_diff(get_class_methods($factoryType->getName()), array('create'));
+				throw new Nette\InvalidStateException("The interface $factoryType can contain only create() method. Methods " . implode(', ', $extra) . " are extra.");
+			}
+
 			$returnType = $factoryMethod->getAnnotation('return');
 			if ($returnType && !class_exists($returnType)) {
 				if ($returnType[0] !== '\\') {

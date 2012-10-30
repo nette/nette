@@ -425,8 +425,9 @@ class ContainerBuilder extends Nette\Object
 		$createdClassRefl = Reflection\ClassType::from($def->creates->entity);
 		$def->setFactory(str_replace('\\', '_', $def->class) . 'Impl_' . Strings::random(5), array('@container'));
 		$this->generatedFactories[$def->factory->entity] = $factoryClass = new PhpGenerator\ClassType($def->factory->entity);
-		$factoryClass->addImplement($def->class);
-		$factoryClass->setFinal(TRUE);
+		$factoryClass->addImplement($def->class)
+			->addExtend('Nette\Object')
+			->setFinal(TRUE);
 
 		if ($createdClassRefl->hasMethod('__construct')) {
 			$constructor = $factoryClass->addMethod('__construct');
