@@ -20,7 +20,7 @@ use Nette;
  *
  * @author     David Grudl
  */
-final class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {
 	/** @var Session */
 	private $session;
