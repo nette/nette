@@ -122,7 +122,7 @@ $configurator->setTempDirectory(TEMP_DIR);
 $configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler){
 	$compiler->addExtension('database', new FooExtension);
 };
-$container = $configurator->addConfig(__DIR__ . '/files/config.extensionOverride.neon', Configurator::NONE)
+$container = $configurator->addConfig(__DIR__ . '/files/config.extensionOverride.neon', Configurator::NO_SECTION)
 	->createContainer();
 
 Assert::true( $container->one1 instanceof Ipsum );

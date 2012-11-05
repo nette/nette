@@ -55,7 +55,7 @@ function test($arg)
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.setup.neon', Configurator::NONE)
+$container = $configurator->addConfig('files/config.setup.neon', Configurator::NO_SECTION)
 	->createContainer();
 
 Assert::same(array(

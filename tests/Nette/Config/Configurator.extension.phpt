@@ -45,7 +45,7 @@ $extension = new DatabaseExtension;
 $configurator->onCompile[] = function(Configurator $configurator, Compiler $compiler) use ($extension) {
 	$compiler->addExtension('database', $extension);
 };
-$container = $configurator->addConfig('files/config.extension.neon', Configurator::NONE)
+$container = $configurator->addConfig('files/config.extension.neon', Configurator::NO_SECTION)
 	->createContainer();
 
 Assert::same(array(

@@ -44,7 +44,7 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.nette.neon', Configurator::NONE)
+$container = $configurator->addConfig('files/config.nette.neon', Configurator::NO_SECTION)
 	->createContainer();
 
 Assert::true( $container->nette->createLatte() instanceof Nette\Latte\Engine );

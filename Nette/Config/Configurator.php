@@ -27,6 +27,9 @@ use Nette,
 class Configurator extends Nette\Object
 {
 	/** config file sections */
+	const NO_SECTION = FALSE;
+
+	/** @deprecated */
 	const DEVELOPMENT = 'development',
 		PRODUCTION = 'production',
 		AUTO = NULL,
@@ -113,7 +116,7 @@ class Configurator extends Nette\Object
 			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
 			'debugMode' => $debugMode,
 			'productionMode' => !$debugMode,
-			'environment' => $debugMode ? self::DEVELOPMENT : self::PRODUCTION,
+			'environment' => $debugMode ? 'development' : 'production',
 			'consoleMode' => PHP_SAPI === 'cli',
 			'container' => array(
 				'class' => 'SystemContainer',
@@ -157,9 +160,9 @@ class Configurator extends Nette\Object
 	 * Adds configuration file.
 	 * @return Configurator  provides a fluent interface
 	 */
-	public function addConfig($file, $section = self::AUTO)
+	public function addConfig($file, $section = NULL)
 	{
-		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
+		$this->files[] = array($file, $section === NULL ? $this->parameters['environment'] : $section);
 		return $this;
 	}
 
