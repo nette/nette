@@ -20,7 +20,7 @@ class TestClass extends Container
 
 	public function createComponentB($name)
 	{
-		new self($this, $name);
+		$this->addComponent(new self, $name);
 	}
 
 }

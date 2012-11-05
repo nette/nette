@@ -64,9 +64,6 @@ class TestControl extends Application\UI\Control
 
 class TestPresenter extends Application\UI\Presenter
 {
-	/** @var TestControl */
-	public $mycontrol;
-
 	/** @persistent */
 	public $var1 = 10;
 
@@ -85,7 +82,7 @@ class TestPresenter extends Application\UI\Presenter
 	protected function startup()
 	{
 		parent::startup();
-		$this->mycontrol = new TestControl($this, 'mycontrol');
+		$this['mycontrol'] = new TestControl;
 
 		// Presenter & action link
 		Assert::same( '/index.php?action=product&presenter=Test', $this->link('product', array('var1' => $this->var1)) );
@@ -124,26 +121,26 @@ class TestPresenter extends Application\UI\Presenter
 		Assert::same( "/index.php?action=default&do=buy&presenter=Test", $this->link('buy!', array(new stdClass)) );
 
 		// Component link
-		Assert::same( 'error: Signal must be non-empty string.', $this->mycontrol->link('', 0, 1) );
-		Assert::same( '/index.php?mycontrol-x=0&mycontrol-y=1&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', 0, 1) );
-		Assert::same( '/index.php?mycontrol-x=0a&mycontrol-y=1a&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', '0a', '1a') );
-		Assert::same( '/index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', array(1), (object) array(1)) );
-		Assert::same( '/index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', TRUE, FALSE) );
-		Assert::same( '/index.php?action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', NULL, '') );
-		Assert::same( "error: Passed more parameters than method TestControl::handleClick() expects.", $this->mycontrol->link('click', 1, 2, 3) );
-		Assert::same( '/index.php?mycontrol-x=1&mycontrol-y=2&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click!', array('x' => 1, 'y' => 2, 'round' => 0)) );
-		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&do=mycontrol-click&presenter=Test', $this->mycontrol->link('click', array('x' => 1, 'round' => 1)) );
-		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this->mycontrol->link('this', array('x' => 1, 'round' => 1)) );
-		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this->mycontrol->link('this?x=1&round=1') );
-		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this->mycontrol->link('this?x=1&round=1#frag') );
-		Assert::same( 'http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this->mycontrol->link('//this?x=1&round=1#frag') );
+		Assert::same( 'error: Signal must be non-empty string.', $this['mycontrol']->link('', 0, 1) );
+		Assert::same( '/index.php?mycontrol-x=0&mycontrol-y=1&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', 0, 1) );
+		Assert::same( '/index.php?mycontrol-x=0a&mycontrol-y=1a&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', '0a', '1a') );
+		Assert::same( '/index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', array(1), (object) array(1)) );
+		Assert::same( '/index.php?mycontrol-x=1&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', TRUE, FALSE) );
+		Assert::same( '/index.php?action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', NULL, '') );
+		Assert::same( "error: Passed more parameters than method TestControl::handleClick() expects.", $this['mycontrol']->link('click', 1, 2, 3) );
+		Assert::same( '/index.php?mycontrol-x=1&mycontrol-y=2&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click!', array('x' => 1, 'y' => 2, 'round' => 0)) );
+		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&do=mycontrol-click&presenter=Test', $this['mycontrol']->link('click', array('x' => 1, 'round' => 1)) );
+		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this['mycontrol']->link('this', array('x' => 1, 'round' => 1)) );
+		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test', $this['mycontrol']->link('this?x=1&round=1') );
+		Assert::same( '/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this['mycontrol']->link('this?x=1&round=1#frag') );
+		Assert::same( 'http://localhost/index.php?mycontrol-x=1&mycontrol-round=1&action=default&presenter=Test#frag', $this['mycontrol']->link('//this?x=1&round=1#frag') );
 
 		// Component link type checking
-		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this->mycontrol->link('click', array('order' => 1)) );
-		Assert::same( "error: Invalid value for persistent parameter 'round' in 'mycontrol', expected integer.", $this->mycontrol->link('click', array('round' => array())) );
-		$this->mycontrol->order = 1;
-		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this->mycontrol->link('click') );
-		$this->mycontrol->order = NULL;
+		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this['mycontrol']->link('click', array('order' => 1)) );
+		Assert::same( "error: Invalid value for persistent parameter 'round' in 'mycontrol', expected integer.", $this['mycontrol']->link('click', array('round' => array())) );
+		$this['mycontrol']->order = 1;
+		Assert::same( "error: Invalid value for persistent parameter 'order' in 'mycontrol', expected array.", $this['mycontrol']->link('click') );
+		$this['mycontrol']->order = NULL;
 	}
 
 

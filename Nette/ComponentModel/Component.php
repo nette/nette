@@ -38,8 +38,6 @@ abstract class Component extends Nette\Object implements IComponent
 
 
 
-	/**
-	 */
 	public function __construct(IContainer $parent = NULL, $name = NULL)
 	{
 		if ($parent !== NULL) {
