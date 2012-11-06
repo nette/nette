@@ -23,7 +23,7 @@ Assert::same(2, $connection->table('book')->get(2)->getPrimary());
 
 
 
-Assert::throws(function() use ($connection) {
+Assert::exception(function() use ($connection) {
 	$appTag = $connection->table('book_tag')->where('book_id', 1)->where('tag_id', 21)->fetch();
 	$appTag->getPrimary();
 }, 'Nette\\NotSupportedException', 'Table book_tag does not have any primary key.');

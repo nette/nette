@@ -23,6 +23,6 @@ $tokenizer = new Tokenizer(array(
 $tokenizer->tokenize('say 123');
 Assert::same( array('say', ' ', '123'), $tokenizer->tokens );
 
-Assert::throws(function() use ($tokenizer) {
+Assert::exception(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');
 }, 'Nette\Utils\TokenizerException', "Unexpected ';' on line 1, column 8.");

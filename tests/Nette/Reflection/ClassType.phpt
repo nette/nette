@@ -52,7 +52,7 @@ Assert::null( $rc->getConstructor() );
 Assert::equal( new Reflection\Method('Foo', 'f'), $rc->getMethod('f') );
 
 
-Assert::throws(function() use ($rc) {
+Assert::exception(function() use ($rc) {
 	$rc->getMethod('doesntExist');
 }, 'ReflectionException', 'Method Bar::doesntExist() does not exist');
 
@@ -66,7 +66,7 @@ Assert::equal( array(
 Assert::equal( new Reflection\Property('Bar', 'var'), $rc->getProperty('var') );
 
 
-Assert::throws(function() use ($rc) {
+Assert::exception(function() use ($rc) {
 	$rc->getProperty('doesntExist');
 }, 'ReflectionException', 'Property Bar::$doesntExist does not exist');
 

@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
 
-Assert::throws(function() use ($configurator) {
+Assert::exception(function() use ($configurator) {
 	$configurator->addConfig('files/config.circular.ini', 'production')
 		->createContainer();
 }, 'Nette\InvalidArgumentException', 'Circular reference detected for variables: foo, foobar, bar.');

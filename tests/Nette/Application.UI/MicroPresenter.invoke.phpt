@@ -19,7 +19,7 @@ class Invokable extends Nette\Object
 {
 	public function __invoke($page, $id)
 	{
-		TestHelpers::note('Callback id ' . $id . ' page ' . $page);
+		Tester\Helpers::note('Callback id ' . $id . ' page ' . $page);
 	}
 }
 
@@ -31,14 +31,14 @@ $presenter = new NetteModule\MicroPresenter($container);
 
 $presenter->run(new Request('Nette:Micro', 'GET', array(
 	'callback' => function($id, $page) {
-		TestHelpers::note('Callback id ' . $id . ' page ' . $page);
+		Tester\Helpers::note('Callback id ' . $id . ' page ' . $page);
 	},
 	'id' => 1,
 	'page' => 2,
 )));
 Assert::same(array(
 	'Callback id 1 page 2'
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 
 $presenter->run(new Request('Nette:Micro', 'GET', array(
@@ -48,4 +48,4 @@ $presenter->run(new Request('Nette:Micro', 'GET', array(
 )));
 Assert::same(array(
 	'Callback id 1 page 2'
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());

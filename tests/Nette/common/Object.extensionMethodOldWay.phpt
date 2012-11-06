@@ -13,7 +13,7 @@
 require __DIR__ . '/../bootstrap.php';
 
 if (NETTE_PACKAGE === '5.3') {
-	TestHelpers::skip('Requires Nette Framework package < PHP 5.3');
+	Tester\Helpers::skip('Requires Nette Framework package < PHP 5.3');
 }
 
 

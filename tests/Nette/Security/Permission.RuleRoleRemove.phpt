@@ -20,7 +20,7 @@ $acl->addRole('guest');
 $acl->allow('guest');
 Assert::true( $acl->isAllowed('guest') );
 $acl->removeRole('guest');
-Assert::throws(function() use ($acl) {
+Assert::exception(function() use ($acl) {
 	$acl->isAllowed('guest');
 }, 'Nette\InvalidStateException', "Role 'guest' does not exist.");
 

@@ -21,7 +21,7 @@ abstract class BaseExtension extends CompilerExtension
 
 	public function loadConfiguration()
 	{
-		TestHelpers::note(get_class($this));
+		Tester\Helpers::note(get_class($this));
 		$this->loaded = true;
 	}
 }
@@ -79,7 +79,7 @@ Assert::true($extensions['foo']->loaded);
 Assert::true($extensions['bar']->loaded);
 Assert::true($extensions['baz']->loaded);
 
-Assert::same( array('FooExtension', 'BazExtension', 'BarExtension'), TestHelpers::fetchNotes() );
+Assert::same( array('FooExtension', 'BazExtension', 'BarExtension'), Tester\Helpers::fetchNotes() );
 
 
 // second running
@@ -94,4 +94,4 @@ Assert::true($extensions['foo']->loaded);
 Assert::true($extensions['bar']->loaded);
 Assert::true($extensions['baz']->loaded);
 
-Assert::same(array('FooExtension', 'BazExtension', 'BarExtension'), TestHelpers::fetchNotes());
+Assert::same(array('FooExtension', 'BazExtension', 'BarExtension'), Tester\Helpers::fetchNotes());

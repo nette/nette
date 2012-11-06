@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
-Assert::throws(function() use ($template) {
+Assert::exception(function() use ($template) {
 	$template->setSource('Block{/block}')->compile();
 }, 'Nette\Latte\CompileException', 'Unexpected macro {/block}');

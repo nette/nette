@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-Assert::throws(function() use ($acl) {
+Assert::exception(function() use ($acl) {
 	$acl->removeRole('nonexistent');
 }, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");

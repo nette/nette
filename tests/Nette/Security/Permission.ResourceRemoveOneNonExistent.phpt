@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-Assert::throws(function() use ($acl) {
+Assert::exception(function() use ($acl) {
 	$acl->removeResource('nonexistent');
 }, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");

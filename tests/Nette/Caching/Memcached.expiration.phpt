@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 if (!MemcachedStorage::isAvailable()) {
-	TestHelpers::skip('Requires PHP extension Memcache.');
+	Tester\Helpers::skip('Requires PHP extension Memcache.');
 }
 
 

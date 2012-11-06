@@ -41,6 +41,6 @@ Assert::match(file_get_contents("$path.inc3.phtml"), $cache->phtml['include3.lat
 $template = new Template;
 $template->registerFilter($latte);
 $template->setSource('{include somefile.latte}');
-Assert::throws(function() use ($template) {
+Assert::exception(function() use ($template) {
 	$template->render();
 }, 'Nette\NotSupportedException', 'Macro {include "filename"} is supported only with Nette\Templating\IFileTemplate.');

@@ -27,6 +27,6 @@ Assert::same( array(
 	array('value' => '123', 'type' => T_DNUMBER, 'line' => 2),
 ), $tokenizer->tokens );
 
-Assert::throws(function() use ($tokenizer) {
+Assert::exception(function() use ($tokenizer) {
 	$tokenizer->tokenize('say 123;');
 }, 'Nette\Utils\TokenizerException', "Unexpected ';' on line 1, column 8.");

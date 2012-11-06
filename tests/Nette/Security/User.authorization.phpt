@@ -93,7 +93,7 @@ Assert::false( $user->isInRole('guest') );
 
 
 // authorization
-Assert::throws(function() use ($user) {
+Assert::exception(function() use ($user) {
 	$user->isAllowed('delete_file');
 }, 'Nette\InvalidStateException', 'Service of type Nette\Security\IAuthorizator not found.');
 

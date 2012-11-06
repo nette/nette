@@ -33,14 +33,14 @@ Assert::same(
 );
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	Helpers::expand('%missing%', array());
 }, 'Nette\InvalidArgumentException', "Missing item 'missing'.");
 
-Assert::throws(function() {
+Assert::exception(function() {
 	Helpers::expand('%key1%a', array('key1' => array('key2' => 123)));
 }, 'Nette\InvalidArgumentException', "Unable to concatenate non-scalar parameter 'key1' into '%key1%a'.");
 
-Assert::throws(function() {
+Assert::exception(function() {
 	Helpers::expand('%key1%', array('key1' => '%key2%', 'key2' => '%key1%'), TRUE);
 }, 'Nette\InvalidArgumentException', "Circular reference detected for variables: key1, key2.");

@@ -15,12 +15,12 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$acl = new Permission;
 	$acl->isAllowed('nonexistent');
 }, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$acl = new Permission;
 	$acl->isAllowed(NULL, 'nonexistent');
 }, 'Nette\InvalidStateException', "Resource 'nonexistent' does not exist.");

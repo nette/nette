@@ -30,7 +30,7 @@ class Model
 	/** autowiring using parameters */
 	function test(Lorem $arg)
 	{
-		TestHelpers::note(__METHOD__);
+		Tester\Helpers::note(__METHOD__);
 	}
 }
 
@@ -40,7 +40,7 @@ class Lorem
 	/** autowiring using parameters */
 	static function test(Nette\Database\Connection $arg)
 	{
-		TestHelpers::note(__METHOD__);
+		Tester\Helpers::note(__METHOD__);
 	}
 }
 
@@ -58,4 +58,4 @@ Assert::same(array(
 	'Model::test',
 	'Lorem::test',
 	'Lorem::test',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
