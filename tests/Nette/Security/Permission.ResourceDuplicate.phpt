@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$acl = new Permission;
 	$acl->addResource('area');
 	$acl->addResource('area');

@@ -73,7 +73,7 @@ Assert::null( $user->getId() );
 
 
 // authenticate
-Assert::throws(function() use ($user) {
+Assert::exception(function() use ($user) {
 	// login without handler
 	$user->login('jane', '');
 }, 'Nette\InvalidStateException', 'Service of type Nette\Security\IAuthenticator not found.');
@@ -81,12 +81,12 @@ Assert::throws(function() use ($user) {
 $handler = new Authenticator;
 $user->setAuthenticator($handler);
 
-Assert::throws(function() use ($user) {
+Assert::exception(function() use ($user) {
 	// login as jane
 	$user->login('jane', '');
 }, 'Nette\Security\AuthenticationException', 'Unknown user');
 
-Assert::throws(function() use ($user) {
+Assert::exception(function() use ($user) {
 	// login as john
 	$user->login('john', '');
 }, 'Nette\Security\AuthenticationException', 'Password not match');

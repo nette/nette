@@ -32,7 +32,7 @@ class Ipsum
 
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$configurator = new Configurator;
 	$configurator->setTempDirectory(TEMP_DIR);
 	$configurator->addConfig('files/config.services.circular.neon', Configurator::NO_SECTION)

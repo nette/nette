@@ -21,12 +21,12 @@ class TestClass extends Container implements ArrayAccess
 {
 	function attached($obj)
 	{
-		TestHelpers::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		Tester\Helpers::note(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	function detached($obj)
 	{
-		TestHelpers::note(get_class($this) . '::detached(' . get_class($obj) . ')');
+		Tester\Helpers::note(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	function offsetSet($name, $component)
@@ -83,7 +83,7 @@ $a['b']['c']->monitor('a');
 Assert::same( array(
 	'B::ATTACHED(A)',
 	'C::ATTACHED(A)',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::same( 'b-c-d-e', $a['b']['c']['d']['e']->lookupPath('A', FALSE) );
 
@@ -94,7 +94,7 @@ $dolly = clone $a['b']['c'];
 
 Assert::same( array(
 	'C::detached(A)',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::null( $dolly['d']['e']->lookupPath('A', FALSE) );
 
@@ -108,7 +108,7 @@ $dolly = clone $a['b'];
 Assert::same( array(
 	'C::detached(A)',
 	'B::detached(A)',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 
 
@@ -118,7 +118,7 @@ $a['dolly'] = $dolly;
 Assert::same( array(
 	'C::ATTACHED(A)',
 	'B::ATTACHED(A)',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::same( array(
 	'(A)' => NULL,

@@ -20,7 +20,7 @@ class Service
 
 	static function create($arg)
 	{
-		TestHelpers::note(__METHOD__ . ' ' . get_class($arg));
+		Tester\Helpers::note(__METHOD__ . ' ' . get_class($arg));
 		return new self();
 	}
 
@@ -52,4 +52,4 @@ Assert::true( $container->getService('two') instanceof Service );
 Assert::same(array(
 	'Service::create Service',
 	'Service::create Service',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());

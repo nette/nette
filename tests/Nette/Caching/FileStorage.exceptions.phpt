@@ -16,13 +16,13 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	new FileStorage(TEMP_DIR . '/missing');
 }, 'Nette\DirectoryNotFoundException', "Directory '%a%' not found.");
 
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	$storage = new FileStorage(TEMP_DIR);
 	$storage->write('a', 'b', array(Cache::TAGS => 'c'));
 }, 'Nette\InvalidStateException', 'CacheJournal has not been provided.');

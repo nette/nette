@@ -69,7 +69,7 @@ Assert::same('Eddard Stark', $book3->author->name);  // SELECT * FROM `author` W
 
 
 
-Assert::throws(function() use ($connection) {
+Assert::exception(function() use ($connection) {
 	$connection->table('author')->insert(array(
 		'id' => 14,
 		'name' => 'Jon Snow',

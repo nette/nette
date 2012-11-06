@@ -34,6 +34,6 @@ class MyContainer extends Container
 
 $container = new MyContainer;
 
-Assert::throws(function() use ($container) {
+Assert::exception(function() use ($container) {
 	$container->getService('one');
 }, 'Nette\InvalidStateException', "Circular reference detected for services: one, two.");

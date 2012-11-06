@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 Assert::null( Environment::getVariable('foo', NULL), "Getting variable 'foo':" );
 
 
-Assert::throws(function() {
+Assert::exception(function() {
 	Environment::getVariable('foo');
 }, 'Nette\InvalidStateException', "Unknown environment variable 'foo'.");
 

@@ -21,10 +21,10 @@ try {
 	$connection = $rc->newInstanceArgs($current);
 
 } catch (PDOException $e) {
-	TestHelpers::skip("Connection to '$current[dsn]' failed. Reason: " . $e->getMessage());
+	Tester\Helpers::skip("Connection to '$current[dsn]' failed. Reason: " . $e->getMessage());
 }
 
-TestHelpers::lock($current['dsn'], dirname(TEMP_DIR));
+Tester\Helpers::lock($current['dsn'], dirname(TEMP_DIR));
 
 unset($config, $current, $rc);
 $driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);

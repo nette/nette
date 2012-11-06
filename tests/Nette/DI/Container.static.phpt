@@ -41,6 +41,6 @@ Assert::same( $container->getService('one'), $container->getService('one') ); //
 
 
 // bad method
-Assert::throws(function() use ($container) {
+Assert::exception(function() use ($container) {
 	$container->getService('two');
 }, 'Nette\UnexpectedValueException', "Unable to create service 'two', value returned by factory 'createServiceTwo' is not object.");

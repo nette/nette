@@ -19,7 +19,7 @@ class Factory
 {
 	static function createLorem($arg)
 	{
-		TestHelpers::note(__METHOD__ . ' ' . $arg);
+		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
 		return new Lorem;
 	}
 }
@@ -33,7 +33,7 @@ class Ipsum
 {
 	function __construct($arg)
 	{
-		TestHelpers::note(__METHOD__ . ' ' . $arg);
+		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -46,32 +46,32 @@ $container = $configurator->addConfig('files/config.factory.neon', Configurator:
 Assert::true( $container->one instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->four instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->five instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->six instanceof Lorem );
 Assert::same(array(
 	'Factory::createLorem 1',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->seven instanceof Lorem );
 

@@ -39,7 +39,7 @@ class Lorem
 {
 	function __construct($arg = NULL)
 	{
-		TestHelpers::note(__METHOD__ . ' ' . $arg);
+		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -47,7 +47,7 @@ class Ipsum
 {
 	function __construct($arg = NULL)
 	{
-		TestHelpers::note(__METHOD__ . ' ' . $arg);
+		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -128,106 +128,106 @@ $container = $configurator->addConfig(__DIR__ . '/files/config.extensionOverride
 Assert::true( $container->one1 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one2 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one3 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one4 instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one5 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one6 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->one7 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 
 Assert::true( $container->two1 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two2 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two3 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two4 instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two5 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two6 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->two7 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 
 Assert::true( $container->three1 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three2 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three3 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three4 instanceof Lorem );
 Assert::same(array(
 	'Lorem::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three5 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct ',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three6 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());
 
 Assert::true( $container->three7 instanceof Ipsum );
 Assert::same(array(
 	'Ipsum::__construct 2',
-), TestHelpers::fetchNotes());
+), Tester\Helpers::fetchNotes());

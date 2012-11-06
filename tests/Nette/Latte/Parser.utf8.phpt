@@ -19,6 +19,6 @@ $template = new Nette\Templating\Template;
 $template->registerFilter(new Latte\Engine);
 
 
-Assert::throws(function() use ($template) {
+Assert::exception(function() use ($template) {
 	$template->setSource("\xAA")->compile();
 }, 'Nette\InvalidArgumentException', '%a% UTF-8 %a%');
