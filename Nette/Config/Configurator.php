@@ -26,9 +26,6 @@ use Nette,
  */
 class Configurator extends Nette\Object
 {
-	/** config file sections */
-	const NO_SECTION = FALSE;
-
 	/** @deprecated */
 	const DEVELOPMENT = 'development',
 		PRODUCTION = 'production',
