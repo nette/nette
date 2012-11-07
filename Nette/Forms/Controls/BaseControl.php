@@ -643,10 +643,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function addError($message)
 	{
-		if (!in_array($message, $this->errors, TRUE)) {
-			$this->errors[] = $message;
-		}
-		$this->getForm()->addError($message);
+		$this->errors[] = $message;
 	}
 
 
@@ -657,7 +654,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function getErrors()
 	{
-		return $this->errors;
+		return array_unique($this->errors);
 	}
 
 

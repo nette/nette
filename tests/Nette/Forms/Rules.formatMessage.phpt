@@ -24,6 +24,12 @@ Assert::match("%A%data-nette-rules=\"{op:':email',msg:'Email %value is invalid [
 
 $form->validate();
 
+Assert::same( array(), $form->getErrors() );
+
 Assert::same( array(
 	"Email xyz is invalid [field email]",
-), $form->getErrors() );
+), $form->getAllErrors() );
+
+Assert::same( array(
+	"Email xyz is invalid [field email]",
+), $form['email']->getErrors() );

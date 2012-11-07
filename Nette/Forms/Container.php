@@ -36,7 +36,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	protected $currentGroup;
 
 	/** @var bool */
-	protected $valid;
+	private $validated;
 
 
 
@@ -130,10 +130,10 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function isValid()
 	{
-		if ($this->valid === NULL) {
+		if (!$this->validated) {
 			$this->validate();
 		}
-		return $this->valid;
+		return !$this->getAllErrors();
 	}
 
 
@@ -144,13 +144,26 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function validate()
 	{
-		$this->valid = TRUE;
 		$this->onValidate($this);
 		foreach ($this->getControls() as $control) {
-			if (!$control->getRules()->validate()) {
-				$this->valid = FALSE;
-			}
+			$control->getRules()->validate();
 		}
+		$this->validated = TRUE;
+	}
+
+
+
+	/**
+	 * Returns all validation errors.
+	 * @return array
+	 */
+	public function getAllErrors()
+	{
+		$errors = array();
+		foreach ($this->getControls() as $control) {
+			$errors = array_merge($errors, $control->getErrors());
+		}
+		return array_unique($errors);
 	}
 
 

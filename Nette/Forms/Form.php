@@ -480,27 +480,24 @@ class Form extends Container
 
 
 	/**
-	 * Adds error message to the list.
+	 * Adds global error message.
 	 * @param  string  error message
 	 * @return void
 	 */
 	public function addError($message)
 	{
-		$this->valid = FALSE;
-		if ($message !== NULL && !in_array($message, $this->errors, TRUE)) {
-			$this->errors[] = $message;
-		}
+		$this->errors[] = $message;
 	}
 
 
 
 	/**
-	 * Returns validation errors.
+	 * Returns global validation errors.
 	 * @return array
 	 */
 	public function getErrors()
 	{
-		return $this->errors;
+		return array_unique($this->errors);
 	}
 
 
@@ -521,7 +518,17 @@ class Form extends Container
 	public function cleanErrors()
 	{
 		$this->errors = array();
-		$this->valid = NULL;
+	}
+
+
+
+	/**
+	 * Returns all validation errors.
+	 * @return array
+	 */
+	public function getAllErrors()
+	{
+		return array_unique(array_merge($this->errors, parent::getAllErrors()));
 	}
 
 
