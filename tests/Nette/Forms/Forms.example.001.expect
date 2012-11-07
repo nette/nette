@@ -1,16 +1,5 @@
 <form action="" method="post" enctype="multipart/form-data">
 
-<ul class="error">
-	<li>Enter your age</li>
-
-	<li>Enter your shipping address</li>
-
-	<li>Select your country</li>
-
-	<li>Reenter your password</li>
-</ul>
-
-
 <fieldset>
 <legend>Personal data</legend>
 <p>We value your privacy and we ensure that the information you give to us will not be shared to other entities.</p>
@@ -25,7 +14,12 @@
 <tr class="required">
 	<th><label class="required" for="frm-age">Your age:</label></th>
 
-	<td><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" /></td>
+	<td><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="" />
+
+	<span class="error">
+		Enter your age
+	</span>
+</td>
 </tr>
 
 <tr>
@@ -64,13 +58,23 @@
 <tr>
 	<th><label for="frm-city">City:</label></th>
 
-	<td><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" /></td>
+	<td><input type="text" class="text" name="city" id="frm-city" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Enter your shipping address'}],control:'send',arg:true}" value="" />
+
+	<span class="error">
+		Enter your shipping address
+	</span>
+</td>
 </tr>
 
 <tr>
 	<th><label for="frm-country">Country:</label></th>
 
-	<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}"><option value="">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select></td>
+	<td><select name="country" id="frm-country" data-nette-rules="{op:':equal',rules:[{op:':filled',msg:'Select your country'}],control:'send',arg:true}"><option value="">Select your country</option><optgroup label="Europe"><option value="CZ">Czech Republic</option><option value="SK">Slovakia</option><option value="GB">United Kingdom</option></optgroup><option value="CA">Canada</option><option value="US">United States</option><option value="?">other</option></select>
+
+	<span class="error">
+		Select your country
+	</span>
+</td>
 </tr>
 
 <tr>
@@ -95,7 +99,12 @@
 <tr>
 	<th><label for="frm-password2">Reenter password:</label></th>
 
-	<td><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" /></td>
+	<td><input type="password" class="text" name="password2" id="frm-password2" data-nette-rules="{op:':valid',rules:[{op:':filled',msg:'Reenter your password'},{op:':equal',msg:'Passwords do not match',arg:{control:'password'}}],control:'password'}" />
+
+	<span class="error">
+		Reenter your password
+	</span>
+</td>
 </tr>
 
 <tr>

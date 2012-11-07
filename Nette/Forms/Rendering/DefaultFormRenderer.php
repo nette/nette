@@ -26,7 +26,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	/**
 	 *  /--- form.container
 	 *
-	 *    /--- if (form.errors) error.container
+	 *    /--- error.container
 	 *      .... error.item [.class]
 	 *    \---
 	 *
@@ -52,7 +52,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 *            .... CONTROL [.required .text .password .file .submit .button]
 	 *            .... control.requiredsuffix
 	 *            .... control.description
-	 *            .... if (control.errors) error.container
+	 *            .... control.errorcontainer + control.erroritem
 	 *          \---
 	 *        \---
 	 *      \---
@@ -63,7 +63,6 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	public $wrappers = array(
 		'form' => array(
 			'container' => NULL,
-			'errors' => TRUE,
 		),
 
 		'error' => array(
@@ -92,9 +91,10 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			'container' => 'td',
 			'.odd' => NULL,
 
-			'errors' => FALSE,
 			'description' => 'small',
 			'requiredsuffix' => '',
+			'errorcontainer' => 'span class=error',
+			'erroritem' => '',
 
 			'.required' => 'required',
 			'.text' => 'text',
@@ -141,7 +141,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 		if (!$mode || $mode === 'begin') {
 			$s .= $this->renderBegin();
 		}
-		if ((!$mode && $this->getValue('form errors')) || $mode === 'errors') {
+		if (!$mode || $mode === 'errors') {
 			$s .= $this->renderErrors();
 		}
 		if (!$mode || $mode === 'body') {
@@ -244,22 +244,23 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 	 */
 	public function renderErrors(Nette\Forms\IControl $control = NULL)
 	{
-		$errors = $control === NULL ? $this->form->getErrors() : $control->getErrors();
-		if (count($errors)) {
-			$ul = $this->getWrapper('error container');
-			$li = $this->getWrapper('error item');
-
-			foreach ($errors as $error) {
-				$item = clone $li;
-				if ($error instanceof Html) {
-					$item->add($error);
-				} else {
-					$item->setText($error);
-				}
-				$ul->add($item);
-			}
-			return "\n" . $ul->render(0);
+		$errors = $control ? $control->getErrors() : $this->form->getErrors();
+		if (!$errors) {
+			return;
 		}
+		$container = $this->getWrapper($control ? 'control errorcontainer' : 'error container');
+		$item = $this->getWrapper($control ? 'control erroritem' : 'error item');
+
+		foreach ($errors as $error) {
+			$item = clone $item;
+			if ($error instanceof Html) {
+				$item->add($error);
+			} else {
+				$item->setText($error);
+			}
+			$container->add($item);
+		}
+		return "\n" . $container->render($control ? 1 : 0);
 	}
 
 
@@ -461,9 +462,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$description = $this->getValue('control requiredsuffix') . $description;
 		}
 
-		if ($this->getValue('control errors')) {
-			$description .= $this->renderErrors($control);
-		}
+		$description .= $this->renderErrors($control);
 
 		if ($control instanceof Nette\Forms\Controls\Checkbox || $control instanceof Nette\Forms\Controls\Button) {
 			return $body->setHtml((string) $control->getControl() . (string) $control->getLabel() . $description);

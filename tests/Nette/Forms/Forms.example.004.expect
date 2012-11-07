@@ -15,9 +15,9 @@
 
 	<dd class="odd"><input type="text" class="text" name="age" id="frm-age" required="required" data-nette-rules="{op:':filled',msg:'Enter your age'},{op:':integer',msg:'Age must be numeric value'},{op:':range',msg:'Age must be in range from 10 to 100',arg:[10,100]}" value="9.9" /> •
 
-<ul class="error">
-	<li>Age must be numeric value</li>
-</ul>
+	<span class="error">
+		Age must be numeric value
+	</span>
 </dd>
 
 
@@ -78,9 +78,9 @@
 
 	<dd><input type="password" class="text" name="password" id="frm-password" required="required" data-nette-rules="{op:':filled',msg:'Choose your password'},{op:':minLength',msg:'The password is too short: it must be at least 3 characters',arg:3}" /> • <small>(at least 3 characters)</small>
 
-<ul class="error">
-	<li>The password is too short: it must be at least 3 characters</li>
-</ul>
+	<span class="error">
+		The password is too short: it must be at least 3 characters
+	</span>
 </dd>
 
 

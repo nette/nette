@@ -1,10 +1,5 @@
 <form action="" method="post">
 
-<ul class="error">
-	<li>Security token did not match. Possible CSRF attack.</li>
-</ul>
-
-
 <table>
 <tr>
 	<th>&nbsp;</th>
