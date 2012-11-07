@@ -32,7 +32,7 @@ class Ipsum
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.factory.byClass.neon', Configurator::NO_SECTION)
+$container = $configurator->addConfig('files/config.factory.byClass.neon')
 	->createContainer();
 
 Assert::true( $container->one instanceof Lorem );

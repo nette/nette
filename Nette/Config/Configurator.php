@@ -32,7 +32,7 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	const DEVELOPMENT = 'development',
 		PRODUCTION = 'production',
-		AUTO = NULL,
+		AUTO = TRUE,
 		NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
@@ -162,7 +162,7 @@ class Configurator extends Nette\Object
 	 */
 	public function addConfig($file, $section = NULL)
 	{
-		$this->files[] = array($file, $section === NULL ? $this->parameters['environment'] : $section);
+		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
 		return $this;
 	}
 
@@ -209,6 +209,15 @@ class Configurator extends Nette\Object
 	protected function buildContainer(& $dependencies = NULL)
 	{
 		$loader = $this->createLoader();
+
+		// back compatibility
+		if (count($this->files) === 1 && $this->files[0][1] === NULL) {
+			try {
+				$loader->load($this->files[0][0], $this->parameters['environment']);
+				$this->files[0][1] = $this->parameters['environment'];
+			} catch (Nette\Utils\AssertionException $e) {}
+		}
+
 		$config = array();
 		$code = "<?php\n";
 		foreach ($this->files as $tmp) {

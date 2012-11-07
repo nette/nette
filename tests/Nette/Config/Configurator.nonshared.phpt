@@ -26,7 +26,7 @@ class Lorem
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.nonshared.neon', Configurator::NO_SECTION)
+$container = $configurator->addConfig('files/config.nonshared.neon')
 	->createContainer();
 
 Assert::false( $container->hasService('lorem') );

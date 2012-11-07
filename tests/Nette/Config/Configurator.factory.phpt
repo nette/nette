@@ -40,7 +40,7 @@ class Ipsum
 
 $configurator = new Configurator;
 $configurator->setTempDirectory(TEMP_DIR);
-$container = $configurator->addConfig('files/config.factory.neon', Configurator::NO_SECTION)
+$container = $configurator->addConfig('files/config.factory.neon')
 	->createContainer();
 
 Assert::true( $container->one instanceof Ipsum );
