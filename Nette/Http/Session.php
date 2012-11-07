@@ -114,11 +114,7 @@ class Session extends Nette\Object
 
 		// initialize structures
 		$nf = & $_SESSION['__NF'];
-		if (empty($nf)) { // new session
-			$nf = array('C' => 0);
-		} else {
-			$nf['C']++;
-		}
+		@$nf['C']++;
 
 		// session regenerate every 30 minutes
 		$nfTime = & $nf['Time'];
