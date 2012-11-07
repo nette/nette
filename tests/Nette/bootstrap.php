@@ -29,7 +29,7 @@ $_ENV = $_GET = $_POST = array();
 
 if (extension_loaded('xdebug')) {
 	xdebug_disable();
-	Tester\Helpers::startCodeCoverage(__DIR__ . '/coverage.dat');
+	Tester\CodeCoverage\Collector::start(__DIR__ . '/coverage.dat');
 }
 
 
