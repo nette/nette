@@ -130,10 +130,6 @@ class Compiler extends Nette\Object
 		$this->parseServices($this->container, $this->config);
 
 		foreach ($this->extensions as $name => $extension) {
-			$this->container->addDefinition($name)
-				->setClass('Nette\DI\NestedAccessor', array('@container', $name))
-				->setAutowired(FALSE);
-
 			if (isset($this->config[$name])) {
 				$this->parseServices($this->container, $this->config[$name], $name);
 			}
@@ -149,36 +145,14 @@ class Compiler extends Nette\Object
 			$this->container->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
 		}
 
-		$classes[] = $class = $this->container->generateClass($parentName);
+		$class = $this->container->generateClass($parentName);
 		$class->setName($className)
 			->addMethod('initialize');
 
 		foreach ($this->extensions as $extension) {
 			$extension->afterCompile($class);
 		}
-
-		$defs = $this->container->getDefinitions();
-		ksort($defs);
-		$list = array_keys($defs);
-		foreach (array_reverse($defs, TRUE) as $name => $def) {
-			if ($def->class === 'Nette\DI\NestedAccessor' && ($found = preg_grep('#^'.$name.'\.#i', $list))) {
-				$list = array_diff($list, $found);
-				$def->class = $className . '_' . preg_replace('#\W+#', '_', $name);
-				$class->documents = preg_replace("#\\S+(?= \\$$name\\z)#", $def->class, $class->documents);
-				$classes[] = $accessor = new Nette\PhpGenerator\ClassType($def->class);
-				foreach ($found as $item) {
-					if ($defs[$item]->internal) {
-						continue;
-					}
-					$short = substr($item, strlen($name)  + 1);
-					$accessor->addDocument($defs[$item]->shared
-						? "@property {$defs[$item]->class} \$$short"
-						: "@method {$defs[$item]->class} create" . ucfirst("$short()"));
-				}
-			}
-		}
-
-		return implode("\n\n\n", $classes);
+		return (string) $class;
 	}
 
 

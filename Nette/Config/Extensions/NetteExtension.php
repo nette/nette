@@ -92,6 +92,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
+		$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
 
 		$this->setupCache($container);
 		$this->setupHttp($container);
@@ -305,9 +306,6 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	private function setupDatabase(ContainerBuilder $container, array $config)
 	{
-		$container->addDefinition($this->prefix('database'))
-				->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix('database')));
-
 		if (isset($config['dsn'])) {
 			$config = array('default' => $config);
 		}

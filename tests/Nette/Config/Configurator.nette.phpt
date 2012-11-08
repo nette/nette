@@ -47,7 +47,7 @@ $configurator->setTempDirectory(TEMP_DIR);
 $container = $configurator->addConfig('files/config.nette.neon')
 	->createContainer();
 
-Assert::true( $container->nette->createLatte() instanceof Nette\Latte\Engine );
+Assert::true( $container->createNette__latte() instanceof Nette\Latte\Engine );
 
 Assert::same(array(
 	'LoremIpsumMacros',

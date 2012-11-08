@@ -53,10 +53,10 @@ use Nette,
 		<?php foreach ($services as $name => $class): ?>
 		<?php $autowired = array_keys($container->classes, $name); ?>
 		<tr>
-			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo htmlSpecialChars(str_replace('.', '->', $name)) ?></td>
+			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo htmlSpecialChars($name) ?></td>
 			<td title="<?php echo htmlSpecialChars(implode(" \n", $autowired)) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
 			<td>
-				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container && !$registry[$name] instanceof Nette\DI\NestedAccessor): ?>
+				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container): ?>
 					<?php echo Dumper::toHtml($registry[$name], array(Dumper::COLLAPSE => 1)); ?>
 				<?php elseif (isset($registry[$name])): ?>
 					<code><?php echo get_class($registry[$name]) ?></code>
@@ -82,7 +82,7 @@ use Nette,
 		<tbody>
 		<?php foreach ($factories as $name => $class): ?>
 		<tr>
-			<td><?php echo htmlSpecialChars(str_replace('.', '->', $name)) ?>()</td>
+			<td><?php echo htmlSpecialChars($name) ?>()</td>
 			<td><code><?php echo htmlSpecialChars($class) ?><code></td>
 		</tr>
 		<?php endforeach ?>
