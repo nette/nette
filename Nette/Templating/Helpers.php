@@ -48,6 +48,9 @@ final class Helpers
 		'number' => 'number_format',
 	);
 
+	/** @var IHelperLoader external loader of helpers */
+	private static $helperLoader;
+
 	/** @var string default date format */
 	public static $dateFormat = '%x';
 
@@ -64,7 +67,20 @@ final class Helpers
 			return new Nette\Callback(__CLASS__, $helper);
 		} elseif (isset(self::$helpers[$helper])) {
 			return self::$helpers[$helper];
+		} elseif (self::$helperLoader instanceof IHelperLoader) {
+			return self::$helperLoader->loadHelper($helper);
 		}
+	}
+
+
+
+	/**
+	 * Sets external helper loader
+	 * @param IHelperLoader
+	 */
+	public static function setHelperLoader(IHelperLoader $helperLoader)
+	{
+		self::$helperLoader = $helperLoader;
 	}
 
 
