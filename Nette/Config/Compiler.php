@@ -181,6 +181,10 @@ class Compiler extends Nette\Object
 				throw new Nette\InvalidStateException("Method $factoryMethod claims in @return annotation, that it returns instance of '$returnType', but factory definition demands '$def->class'.");
 			}
 
+			if (!Nette\Reflection\ClassType::from($def->class)->isInstantiable()) {
+				throw new Nette\InvalidStateException("Class {$def->class} is not instantiable and cannot be created by factory $name.");
+			}
+
 			if (!$def->parameters && !$def->factory->arguments) {
 				$createdClassConstructor = Nette\Reflection\ClassType::from($def->class)->getConstructor();
 				foreach ($factoryMethod->getParameters() as $parameter) {
