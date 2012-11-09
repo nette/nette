@@ -46,17 +46,39 @@ class Connection extends PDO
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
+	/** @var array */
+	private $args;
 
 
-	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
+
+	public function __construct($dsn, $user = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
 	{
-		parent::__construct($this->dsn = $dsn, $username, $password, $options);
-		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+		$this->args = array($dsn, $user, $password, $options, $driverClass);
+	}
 
-		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
-		$this->driver = new $driverClass($this, (array) $options);
-		$this->preprocessor = new SqlPreprocessor($this);
+
+
+	public function init()
+	{
+		if (!$this->isInitialized()) {
+			$driverClass = $this->args[4];
+			parent::__construct($this->dsn = $this->args[0], $this->args[1], $this->args[2], $options = $this->args[3]);
+			$this->args = NULL;
+			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+
+			$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+			$this->driver = new $driverClass($this, (array) $options);
+			$this->preprocessor = new SqlPreprocessor($this);
+		}
+	}
+
+
+
+	/** @return bool */
+	public function isInitialized()
+	{
+		return $this->args === NULL;
 	}
 
 
@@ -133,6 +155,22 @@ class Connection extends PDO
 
 
 
+	public function beginTransaction()
+	{
+		$this->init();
+		return parent::beginTransaction();
+	}
+
+
+
+	public function getAttribute($attribute)
+	{
+		$this->init();
+		return parent::getAttribute($attribute);
+	}
+
+
+
 	/**
 	 * Generates and executes SQL query.
 	 * @param  string  statement
@@ -141,6 +179,7 @@ class Connection extends PDO
 	 */
 	public function exec($statement)
 	{
+		$this->init();
 		$args = func_get_args();
 		return $this->queryArgs(array_shift($args), $args)->rowCount();
 	}
@@ -233,6 +272,7 @@ class Connection extends PDO
 	 */
 	public function table($table)
 	{
+		$this->init();
 		return new Table\Selection($this, $table);
 	}
 
