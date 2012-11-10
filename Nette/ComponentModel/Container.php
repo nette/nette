@@ -169,8 +169,9 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * @param  string component name
-	 * @return string
+	 * Generates component factory method name.
+	 * @param  string  component name
+	 * @return string  component factory method
 	 */
 	public static function formatComponentFactoryMethod($name)
 	{
@@ -181,7 +182,7 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * Delegates the creation of components to a component factory method.
 	 * @param  string      component name
 	 * @return IComponent  the created component (optionally)
 	 */
