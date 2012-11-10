@@ -70,11 +70,11 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			return;
 		}
 		if (isset($e->queryString)) {
-	 		$sql = $e->queryString;
+			$sql = $e->queryString;
 
-	 	} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
-	 		$sql = $item['args'][0];
-	 	}
+		} elseif ($item = Nette\Diagnostics\Helpers::findTrace($e->getTrace(), 'PDO::prepare')) {
+			$sql = $item['args'][0];
+		}
 		return isset($sql) ? array(
 			'tab' => 'SQL',
 			'panel' => Helpers::dumpSql($sql),
