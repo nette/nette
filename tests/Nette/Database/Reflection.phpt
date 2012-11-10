@@ -89,7 +89,7 @@ switch ($driverName) {
 		break;
 }
 
-Assert::same($expectedColumns , $columns);
+Assert::same($expectedColumns, $columns);
 
 
 
