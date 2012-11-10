@@ -147,7 +147,7 @@ class FileJournal extends Nette\Object implements IJournal
 
 		if ($fileMagic !== self::FILE_MAGIC) {
 			fclose($this->handle);
-			$this->handle = false;
+			$this->handle = FALSE;
 			throw new Nette\InvalidStateException("Malformed journal file '$this->file'.");
 		}
 	}
@@ -163,7 +163,7 @@ class FileJournal extends Nette\Object implements IJournal
 			$this->headerCommit();
 			flock($this->handle, LOCK_UN); // Since PHP 5.3.3 is manual unlock necesary
 			fclose($this->handle);
-			$this->handle = false;
+			$this->handle = FALSE;
 		}
 	}
 
