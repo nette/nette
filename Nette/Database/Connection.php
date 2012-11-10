@@ -32,6 +32,18 @@ class Connection extends Nette\Object
 	/** @var string */
 	private $dsn;
 
+	/** @var string */
+	private $username;
+
+	/** @var string */
+	private $password;
+
+	/** @var array */
+	private $options;
+
+	/** @var string */
+	private $driverClass;
+
 	/** @var ISupplementalDriver */
 	private $driver;
 
@@ -50,17 +62,42 @@ class Connection extends Nette\Object
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
+	/** @var array of function(Connection $connection); Occurs after PDO creation */
+	public $onInitialize;
+
 
 
 	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
 	{
-		$this->pdo = $pdo = new PDO($this->dsn = $dsn, $username, $password, $options);
-		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$pdo->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+		$this->dsn = $dsn;
+		$this->username = $username;
+		$this->password = $password;
+		$this->options = $options;
+		$this->driverClass = $driverClass;
+	}
 
-		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
-		$this->driver = new $driverClass($this, (array) $options);
-		$this->preprocessor = new SqlPreprocessor($this);
+
+
+	public function isInitialized()
+	{
+		return $this->pdo !== NULL;
+	}
+
+
+
+	public function initialize()
+	{
+		if ($this->pdo === NULL) {
+			$this->pdo = $pdo = new PDO($this->dsn, $this->username, $this->password, $this->options);
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$pdo->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+
+			$driverClass = $this->driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+			$this->driver = new $driverClass($this, (array) $this->options);
+			$this->preprocessor = new SqlPreprocessor($this);
+
+			$this->onInitialize();
+		}
 	}
 
 
@@ -76,6 +113,7 @@ class Connection extends Nette\Object
 	/** @return PDO */
 	public function getPdo()
 	{
+		$this->initialize();
 		return $this->pdo;
 	}
 
@@ -84,6 +122,7 @@ class Connection extends Nette\Object
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
+		$this->initialize();
 		return $this->driver;
 	}
 
@@ -167,6 +206,7 @@ class Connection extends Nette\Object
 	 */
 	public function queryArgs($statement, array $params)
 	{
+		$this->initialize();
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
