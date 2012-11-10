@@ -159,6 +159,16 @@ class UserStorage extends Nette\Object implements Nette\Security\IUserStorage
 
 
 	/**
+	 * Returns expiration timestamp.
+	 * @return int
+	 */
+	public function getExpiration() {
+		return $this->getSessionSection(TRUE)->expireTime;
+	}
+
+
+
+	/**
 	 * Why was user logged out?
 	 * @return int
 	 */
