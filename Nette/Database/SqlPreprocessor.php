@@ -22,8 +22,8 @@ use Nette;
  */
 class SqlPreprocessor extends Nette\Object
 {
-	/** @var Connection */
-	private $connection;
+	/** @var \PDO */
+	private $pdo;
 
 	/** @var ISupplementalDriver */
 	private $driver;
@@ -44,7 +44,7 @@ class SqlPreprocessor extends Nette\Object
 
 	public function __construct(Connection $connection)
 	{
-		$this->connection = $connection;
+		$this->pdo = $connection->getPdo();
 		$this->driver = $connection->getSupplementalDriver();
 	}
 
@@ -99,7 +99,7 @@ class SqlPreprocessor extends Nette\Object
 				return '?';
 
 			} else {
-				return $this->connection->quote($value);
+				return $this->pdo->quote($value);
 			}
 
 		} elseif (is_int($value)) {

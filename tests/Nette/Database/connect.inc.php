@@ -27,4 +27,4 @@ try {
 Tester\Helpers::lock($current['dsn'], dirname(TEMP_DIR));
 
 unset($config, $current, $rc);
-$driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
+$driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);

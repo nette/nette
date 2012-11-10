@@ -78,7 +78,7 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	 */
 	public function formatLike($value, $pos)
 	{
-		$value = addcslashes(substr($this->connection->quote($value), 1, -1), '%_\\');
+		$value = addcslashes(substr($this->connection->getPdo()->quote($value), 1, -1), '%_\\');
 		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'") . " ESCAPE '\\'";
 	}
 
@@ -131,9 +131,9 @@ class SqliteDriver extends Nette\Object implements Nette\Database\ISupplementalD
 	public function getColumns($table)
 	{
 		$meta = $this->connection->query("
-			SELECT sql FROM sqlite_master WHERE type = 'table' AND name = {$this->connection->quote($table)}
+			SELECT sql FROM sqlite_master WHERE type = 'table' AND name = {$this->connection->getPdo()->quote($table)}
 			UNION ALL
-			SELECT sql FROM sqlite_temp_master WHERE type = 'table' AND name = {$this->connection->quote($table)}
+			SELECT sql FROM sqlite_temp_master WHERE type = 'table' AND name = {$this->connection->getPdo()->quote($table)}
 		")->fetch();
 
 		$columns = array();

@@ -25,8 +25,9 @@ use Nette,
  * @property       IReflection          $databaseReflection
  * @property-read  ISupplementalDriver  $supplementalDriver
  * @property-read  string               $dsn
+ * @property-read  PDO                  $pdo
  */
-class Connection extends PDO
+class Connection extends Nette\Object
 {
 	/** @var string */
 	private $dsn;
@@ -43,6 +44,9 @@ class Connection extends PDO
 	/** @var Nette\Caching\Cache */
 	private $cache;
 
+	/** @var PDO */
+	private $pdo;
+
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
 
@@ -50,20 +54,29 @@ class Connection extends PDO
 
 	public function __construct($dsn, $username = NULL, $password  = NULL, array $options = NULL, $driverClass = NULL)
 	{
-		parent::__construct($this->dsn = $dsn, $username, $password, $options);
-		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+		$this->pdo = $pdo = new PDO($this->dsn = $dsn, $username, $password, $options);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$pdo->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
 		$this->driver = new $driverClass($this, (array) $options);
 		$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
 
+	/** @return string */
 	public function getDsn()
 	{
 		return $this->dsn;
+	}
+
+
+
+	/** @return PDO */
+	public function getPdo()
+	{
+		return $this->pdo;
 	}
 
 
@@ -157,7 +170,7 @@ class Connection extends PDO
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
-		return $this->prepare($statement)->execute($params);
+		return $this->pdo->prepare($statement)->execute($params);
 	}
 
 
@@ -234,55 +247,6 @@ class Connection extends PDO
 	public function table($table)
 	{
 		return new Table\Selection($this, $table);
-	}
-
-
-
-	/********************* Nette\Object behaviour ****************d*g**/
-
-
-
-	/**
-	 * @return Nette\Reflection\ClassType
-	 */
-	public /**/static/**/ function getReflection()
-	{
-		return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
-	}
-
-
-
-	public function __call($name, $args)
-	{
-		return ObjectMixin::call($this, $name, $args);
-	}
-
-
-
-	public function &__get($name)
-	{
-		return ObjectMixin::get($this, $name);
-	}
-
-
-
-	public function __set($name, $value)
-	{
-		return ObjectMixin::set($this, $name, $value);
-	}
-
-
-
-	public function __isset($name)
-	{
-		return ObjectMixin::has($this, $name);
-	}
-
-
-
-	public function __unset($name)
-	{
-		ObjectMixin::remove($this, $name);
 	}
 
 }
