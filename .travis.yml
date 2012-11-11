@@ -17,7 +17,7 @@ before_script:
 
 # Install Nette Tester
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - php composer.phar install --no-interaction --dev
 
 # PHP Memcache extension
   - echo n | pecl install memcache > /dev/null
