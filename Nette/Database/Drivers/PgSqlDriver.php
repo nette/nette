@@ -154,7 +154,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				LEFT JOIN information_schema.constraint_column_usage AS ccu USING(table_catalog, table_schema, table_name, column_name)
 				LEFT JOIN information_schema.table_constraints AS tc USING(constraint_catalog, constraint_schema, constraint_name)
 			WHERE
-				c.table_name = {$this->connection->quote($table)}
+				c.table_name = {$this->connection->getPdo()->quote($table)}
 				AND
 				c.table_schema = current_schema()
 				AND
@@ -198,7 +198,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 				AND
 				c1.relkind = 'r'
 				AND
-				c1.relname = {$this->connection->quote($table)}
+				c1.relname = {$this->connection->getPdo()->quote($table)}
 		") as $row) {
 			$indexes[$row['name']]['name'] = $row['name'];
 			$indexes[$row['name']]['unique'] = $row['unique'];
@@ -231,7 +231,7 @@ class PgSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 			WHERE
 				constraint_type = 'FOREIGN KEY'
 				AND
-				tc.table_name = {$this->connection->quote($table)}
+				tc.table_name = {$this->connection->getPdo()->quote($table)}
 			ORDER BY
 				kcu.ordinal_position
 		") as $row) {

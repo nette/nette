@@ -208,7 +208,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	{
 		$keys = array();
 		$query = 'SELECT CONSTRAINT_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE '
-			. 'WHERE TABLE_SCHEMA = DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL AND TABLE_NAME = ' . $this->connection->quote($table);
+			. 'WHERE TABLE_SCHEMA = DATABASE() AND REFERENCED_TABLE_NAME IS NOT NULL AND TABLE_NAME = ' . $this->connection->getPdo()->quote($table);
 
 		foreach ($this->connection->query($query) as $id => $row) {
 			$keys[$id]['name'] = $row['CONSTRAINT_NAME']; // foreign key name
