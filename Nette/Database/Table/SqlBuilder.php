@@ -296,7 +296,7 @@ class SqlBuilder extends Nette\Object
 	protected function buildJoins($val, $inner = FALSE)
 	{
 		$driver = $this->selection->getConnection()->getSupplementalDriver();
-		$reflection = $this->selection->getConnection()->getDatabaseReflection();
+		$reflection = $this->selection->getDatabaseReflection();
 		$joins = array();
 		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
 		foreach ($matches[1] as $names) {

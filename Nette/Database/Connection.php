@@ -233,7 +233,7 @@ class Connection extends PDO
 	 */
 	public function table($table)
 	{
-		return new Table\Selection($this, $table);
+		return new Table\Selection($this, $table, $this->getDatabaseReflection(), $this->cache ? $this->cache->getStorage() : NULL);
 	}
 
 
