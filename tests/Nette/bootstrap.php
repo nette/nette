@@ -8,13 +8,16 @@
  */
 
 
-require __DIR__ . '/../../tools/nette/tester/Tester/bootstrap.php';
-require __DIR__ . '/../../Nette/loader.php';
+if (@!include __DIR__ . '/../../tools/autoload.php') {
+	echo 'Install Nette Tester using `composer update --dev`';
+	exit(1);
+}
 
 
 // configure environment
-date_default_timezone_set('Europe/Prague');
+Tester\Helpers::setup();
 class_alias('Tester\Assert', 'Assert');
+date_default_timezone_set('Europe/Prague');
 
 
 // create temporary directory
@@ -35,4 +38,23 @@ if (extension_loaded('xdebug')) {
 
 function id($val) {
 	return $val;
+}
+
+
+class Notes
+{
+	static public $notes = array();
+
+	public static function add($message)
+	{
+		self::$notes[] = $message;
+	}
+
+	public static function fetch()
+	{
+		$res = self::$notes;
+		self::$notes = array();
+		return $res;
+	}
+
 }
