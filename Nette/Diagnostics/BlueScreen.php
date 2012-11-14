@@ -22,9 +22,17 @@ use Nette;
  */
 class BlueScreen extends Nette\Object
 {
+	/** @var array Path to be collapsed in stack trace (e.g. core libraries) */
+	public $collapsePaths = array();
+
 	/** @var array */
 	private $panels = array();
 
+
+	public function __construct()
+	{
+		$this->collapsePaths[] = NETTE_DIR . DIRECTORY_SEPARATOR; // . 'Utils' . DIRECTORY_SEPARATOR . 'Object';
+	}
 
 
 	/**
