@@ -19,7 +19,7 @@ class Factory
 {
 	static function createLorem($arg)
 	{
-		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
+		Notes::add(__METHOD__ . ' ' . $arg);
 		return new Lorem;
 	}
 }
@@ -29,7 +29,7 @@ class Lorem
 {
 	function test($arg)
 	{
-		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
+		Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -42,14 +42,14 @@ class Ipsum
 
 	static function test($arg)
 	{
-		Tester\Helpers::note(__METHOD__ . ' ' . $arg);
+		Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 
 
 function test($arg)
 {
-	Tester\Helpers::note(__METHOD__ . ' ' . $arg);
+	Notes::add(__METHOD__ . ' ' . $arg);
 }
 
 
@@ -59,7 +59,7 @@ $container = $configurator->addConfig('files/config.setup.neon')
 	->createContainer();
 
 Assert::same(array(
-), Tester\Helpers::fetchNotes());
+), Notes::fetch());
 
 Assert::true( $container->lorem instanceof Lorem );
 
@@ -71,7 +71,7 @@ Assert::same(array(
 	'Ipsum::test 5',
 	'Ipsum::test 6',
 	'test 7',
-), Tester\Helpers::fetchNotes());
+), Notes::fetch());
 
 Assert::same( 8, $container->lorem->test );
 Assert::same( 9, Ipsum::$staticTest );

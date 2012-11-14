@@ -23,17 +23,17 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 	public function loadConfiguration()
 	{
 		Assert::same( array('foo' => 'hello'), $this->config );
-		Tester\Helpers::note(__METHOD__);
+		Notes::add(__METHOD__);
 	}
 
 	public function beforeCompile()
 	{
-		Tester\Helpers::note(__METHOD__);
+		Notes::add(__METHOD__);
 	}
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
-		Tester\Helpers::note(__METHOD__);
+		Notes::add(__METHOD__);
 	}
 }
 
@@ -52,7 +52,7 @@ Assert::same(array(
 	'DatabaseExtension::loadConfiguration',
 	'DatabaseExtension::beforeCompile',
 	'DatabaseExtension::afterCompile',
-), Tester\Helpers::fetchNotes());
+), Notes::fetch());
 
 Assert::true( $container->{'database.foo'} instanceof stdClass );
 Assert::same( $container->{'database.foo'}, $container->alias );

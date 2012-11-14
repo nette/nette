@@ -22,7 +22,7 @@ class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
 	{
 		$me = new static($compiler);
 		$me->addMacro('lorem', 'lorem');
-		Tester\Helpers::note(get_class($me));
+		Notes::add(get_class($me));
 	}
 
 }
@@ -36,7 +36,7 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 	{
 		$me = new static($compiler);
 		$me->addMacro('ipsum', 'ipsum');
-		Tester\Helpers::note(get_class($me));
+		Notes::add(get_class($me));
 	}
 
 }
@@ -52,4 +52,4 @@ Assert::true( $container->createNette__latte() instanceof Nette\Latte\Engine );
 Assert::same(array(
 	'LoremIpsumMacros',
 	'IpsumLoremMacros',
-), Tester\Helpers::fetchNotes());
+), Notes::fetch());

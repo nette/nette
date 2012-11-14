@@ -23,8 +23,8 @@ class MockComponent extends Object
 {
 	function getComponent($name)
 	{
-		Tester\Helpers::note( __METHOD__ );
-		Tester\Helpers::note( func_get_args() );
+		Notes::add( __METHOD__ );
+		Notes::add( func_get_args() );
 		return new MockControl;
 	}
 
@@ -37,8 +37,8 @@ class MockControl extends Object
 
 	function __call($name, $args)
 	{
-		Tester\Helpers::note( __METHOD__ );
-		Tester\Helpers::note( func_get_args() );
+		Notes::add( __METHOD__ );
+		Notes::add( func_get_args() );
 	}
 
 }
@@ -91,4 +91,4 @@ Assert::same( array(
 	"MockControl::__call", array("render", array("var1", 1, 2)),
 	"MockComponent::getComponent", array("form"),
 	"MockControl::__call", array("render", array(array("var1" => 5, 0 => 1, 1 => 2))),
-), Tester\Helpers::fetchNotes() );
+), Notes::fetch() );
