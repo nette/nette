@@ -60,9 +60,4 @@ interface IReflection
 	 */
 	function getBelongsToReference($table, $key);
 
-	/**
-	 * Injects database connection.
-	 */
-	function setConnection(Connection $connection);
-
 }

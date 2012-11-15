@@ -17,7 +17,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
 $connection->setCacheStorage($cacheStorage);
-$connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($cacheStorage));
+$connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage));
 
 
 

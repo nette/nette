@@ -82,7 +82,6 @@ class Connection extends PDO
 	 */
 	public function setDatabaseReflection(IReflection $databaseReflection)
 	{
-		$databaseReflection->setConnection($this);
 		$this->databaseReflection = $databaseReflection;
 		return $this;
 	}

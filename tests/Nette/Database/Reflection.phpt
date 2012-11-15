@@ -136,8 +136,7 @@ Assert::same($expectedIndexes, $indexes);
 
 
 
-$reflection = new Nette\Database\Reflection\DiscoveredReflection;
-$reflection->setConnection($connection);
+$reflection = new Nette\Database\Reflection\DiscoveredReflection($connection);
 
 $primary = $reflection->getPrimary('book_tag');
 Assert::same(array('book_id', 'tag_id'), $primary);
