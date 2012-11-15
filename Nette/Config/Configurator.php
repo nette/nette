@@ -51,6 +51,21 @@ class Configurator extends Nette\Object
 
 
 	/**
+	 * Adds the given compiler extension to the configurator.
+	 * @param CompilerExtension $extension The extension to be added.
+	 * @return Configurator  provides a fluent interface
+	 */
+	public function addExtension(CompilerExtension $extension) 
+	{
+		$this->onCompile[] = function(Configurator $configurator, Compiler $compiler) use ($extension) {
+			$compiler->addExtension($extension);
+		}
+		return $this;
+	}
+
+
+
+	/**
 	 * Set parameter %debugMode%.
 	 * @param  bool|string|array
 	 * @return Configurator  provides a fluent interface
