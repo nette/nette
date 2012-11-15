@@ -12,8 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
-	Nette\Database\ISupplementalDriver,
-	PDO;
+	Nette\Database\ISupplementalDriver;
 
 
 
@@ -29,8 +28,11 @@ class SqlBuilder extends Nette\Object
 	/** @var Selection */
 	protected $selection;
 
-	/** @var Nette\Database\Connection */
-	protected $connection;
+	/** @var Nette\Database\ISupplementalDriver */
+	private $driver;
+
+	/** @var string */
+	private $driverName;
 
 	/** @var string delimited table name */
 	protected $delimitedTable;
@@ -67,7 +69,9 @@ class SqlBuilder extends Nette\Object
 	public function __construct(Selection $selection)
 	{
 		$this->selection = $selection;
-		$this->connection = $selection->getConnection();
+		$connection = $selection->getConnection();
+		$this->driver = $connection->getSupplementalDriver();
+		$this->driverName = $connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
 		$this->delimitedTable = $this->tryDelimite($selection->getName());
 	}
 
@@ -157,7 +161,7 @@ class SqlBuilder extends Nette\Object
 				$clone->select($clone->primary);
 			}
 
-			if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+			if ($this->driverName !== 'mysql') {
 				$condition .= ' IN (' . $clone->getSql() . ')';
 			} else {
 				$in = array();
@@ -270,10 +274,10 @@ class SqlBuilder extends Nette\Object
 			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
 
 		} elseif ($prevAccessed = $this->selection->getPreviousAccessed()) {
-			$cols = array_map(array($this->connection->getSupplementalDriver(), 'delimite'), array_keys(array_filter($prevAccessed)));
+			$cols = array_map(array($this->driver, 'delimite'), array_keys(array_filter($prevAccessed)));
 			$cols = $prefix . implode(', ' . $prefix, $cols);
 
-		} elseif ($this->group && !$this->connection->getSupplementalDriver()->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
+		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
 			$cols = $this->tryDelimite($this->removeExtraTables($this->group));
 
 		} else {
@@ -295,7 +299,6 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildJoins($val, $inner = FALSE)
 	{
-		$driver = $this->selection->getConnection()->getSupplementalDriver();
 		$reflection = $this->selection->getDatabaseReflection();
 		$joins = array();
 		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
@@ -316,9 +319,9 @@ class SqlBuilder extends Nette\Object
 
 					$joins[$name] = ' '
 						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-						. ' JOIN ' . $driver->delimite($table) . ($table !== $name ? ' AS ' . $driver->delimite($name) : '')
-						. ' ON ' . $driver->delimite($parent) . '.' . $driver->delimite($column)
-						. ' = ' . $driver->delimite($name) . '.' . $driver->delimite($primary);
+						. ' JOIN ' . $this->driver->delimite($table) . ($table !== $name ? ' AS ' . $this->driver->delimite($name) : '')
+						. ' ON ' . $this->driver->delimite($parent) . '.' . $this->driver->delimite($column)
+						. ' = ' . $this->driver->delimite($name) . '.' . $this->driver->delimite($primary);
 
 					$parent = $name;
 				}
@@ -332,9 +335,8 @@ class SqlBuilder extends Nette\Object
 	protected function buildConditions()
 	{
 		$return = '';
-		$driver = $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME);
 		$where = $this->where;
-		if ($this->limit !== NULL && $driver === 'oci') {
+		if ($this->limit !== NULL && $this->driverName === 'oci') {
 			$where[] = ($this->offset ? "rownum > $this->offset AND " : '') . 'rownum <= ' . ($this->limit + $this->offset);
 		}
 		if ($where) {
@@ -349,7 +351,7 @@ class SqlBuilder extends Nette\Object
 		if ($this->order) {
 			$return .= ' ORDER BY ' . $this->tryDelimite($this->removeExtraTables(implode(', ', $this->order)));
 		}
-		if ($this->limit !== NULL && $driver !== 'oci' && $driver !== 'dblib') {
+		if ($this->limit !== NULL && $this->driverName !== 'oci' && $this->driverName !== 'dblib') {
 			$return .= " LIMIT $this->limit";
 			if ($this->offset !== NULL) {
 				$return .= " OFFSET $this->offset";
@@ -362,7 +364,7 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildTopClause()
 	{
-		if ($this->limit !== NULL && $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'dblib') {
+		if ($this->limit !== NULL && $this->driverName === 'dblib') {
 			return " TOP ($this->limit)"; //! offset is not supported
 		}
 		return '';
@@ -372,7 +374,7 @@ class SqlBuilder extends Nette\Object
 
 	protected function tryDelimite($s)
 	{
-		$driver = $this->connection->getSupplementalDriver();
+		$driver = $this->driver;
 		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
