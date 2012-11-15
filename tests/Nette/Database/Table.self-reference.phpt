@@ -15,7 +15,10 @@ use Nette\Database;
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
-$connection->setDatabaseReflection(new Database\Reflection\DiscoveredReflection($connection));
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection)
+));
 
 
 

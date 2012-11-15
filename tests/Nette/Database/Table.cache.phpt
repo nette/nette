@@ -16,8 +16,11 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 
 $cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$connection->setCacheStorage($cacheStorage);
-$connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage));
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection, $cacheStorage),
+	$cacheStorage
+));
 
 
 
@@ -100,8 +103,7 @@ Assert::same(array(
 
 
 
-$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
-$connection->setCacheStorage($cacheStorage);
+$cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
 
 
 

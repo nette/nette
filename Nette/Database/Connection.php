@@ -22,7 +22,6 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property       IReflection          $databaseReflection
  * @property-read  ISupplementalDriver  $supplementalDriver
  * @property-read  string               $dsn
  */
@@ -37,11 +36,8 @@ class Connection extends PDO
 	/** @var SqlPreprocessor */
 	private $preprocessor;
 
-	/** @var IReflection */
-	private $databaseReflection;
-
-	/** @var Nette\Caching\Cache */
-	private $cache;
+	/** @var Table\SelectionFactory */
+	private $selectionFactory;
 
 	/** @var array of function(Statement $result, $params); Occurs after query is executed */
 	public $onQuery;
@@ -72,48 +68,6 @@ class Connection extends PDO
 	public function getSupplementalDriver()
 	{
 		return $this->driver;
-	}
-
-
-
-	/**
-	 * Sets database reflection.
-	 * @return Connection   provides a fluent interface
-	 */
-	public function setDatabaseReflection(IReflection $databaseReflection)
-	{
-		$this->databaseReflection = $databaseReflection;
-		return $this;
-	}
-
-
-
-	/** @return IReflection */
-	public function getDatabaseReflection()
-	{
-		if (!$this->databaseReflection) {
-			$this->setDatabaseReflection(new Reflection\ConventionalReflection);
-		}
-		return $this->databaseReflection;
-	}
-
-
-
-	/**
-	 * Sets cache storage engine.
-	 * @return Connection   provides a fluent interface
-	 */
-	public function setCacheStorage(Nette\Caching\IStorage $storage = NULL)
-	{
-		$this->cache = $storage ? new Nette\Caching\Cache($storage, 'Nette.Database.' . md5($this->dsn)) : NULL;
-		return $this;
-	}
-
-
-
-	public function getCache()
-	{
-		return $this->cache;
 	}
 
 
@@ -221,7 +175,7 @@ class Connection extends PDO
 
 
 
-	/********************* selector ****************d*g**/
+	/********************* Selection ****************d*g**/
 
 
 
@@ -232,7 +186,38 @@ class Connection extends PDO
 	 */
 	public function table($table)
 	{
-		return new Table\Selection($this, $table, $this->getDatabaseReflection(), $this->cache ? $this->cache->getStorage() : NULL);
+		if (!$this->selectionFactory) {
+			$this->selectionFactory = new Table\SelectionFactory($this);
+		}
+		return $this->selectionFactory->create($table);
+	}
+
+
+
+	/**
+	 * @return Connection   provides a fluent interface
+	 */
+	public function setSelectionFactory(Table\SelectionFactory $selectionFactory)
+	{
+		$this->selectionFactory = $selectionFactory;
+		return $this;
+	}
+
+
+
+	/** @deprecated */
+	function setDatabaseReflection()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+		return $this;
+	}
+
+
+
+	/** @deprecated */
+	function setCacheStorage()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
 	}
 
 
