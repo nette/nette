@@ -84,8 +84,10 @@ $expectedColumns = array(
 switch ($driverName) {
 	case 'pgsql':
 		$expectedColumns[0]['nativetype'] = 'INT4';
-		$expectedColumns[0]['size'] = 32;
 		$expectedColumns[0]['default'] = "nextval('author_id_seq'::regclass)";
+		$expectedColumns[0]['size'] = NULL;
+		$expectedColumns[1]['size'] = NULL;
+		$expectedColumns[2]['size'] = NULL;
 		break;
 }
 
