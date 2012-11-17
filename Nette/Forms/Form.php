@@ -40,8 +40,8 @@ class Form extends Container
 		FILLED = ':filled',
 		VALID = ':valid';
 
-	// CSRF protection
-	const PROTECTION = 'Nette\Forms\Controls\HiddenField::validateEqual';
+	/** @deprecated CSRF protection */
+	const PROTECTION = Controls\CsrfProtection::PROTECTION;
 
 	// button
 	const SUBMITTED = ':submitted';
@@ -109,10 +109,6 @@ class Form extends Container
 
 	/** @var Nette\Http\IRequest */
 	private $httpRequest;
-
-	/** @var Nette\Http\Session */
-	private $session;
-
 
 
 	/**
@@ -218,20 +214,11 @@ class Form extends Container
 	 * Cross-Site Request Forgery (CSRF) form protection.
 	 * @param  string
 	 * @param  int
-	 * @return void
+	 * @return Controls\CsrfProtection
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
-		$key = "key$timeout";
-		if (isset($session->$key)) {
-			$token = $session->$key;
-		} else {
-			$session->$key = $token = Nette\Utils\Strings::random();
-		}
-		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
+		return $this[self::PROTECTOR_ID] = new Controls\CsrfProtection($message, $timeout);
 	}
 
 
@@ -640,35 +627,12 @@ class Form extends Container
 			$factory = new Nette\Http\RequestFactory;
 			$factory->setEncoding('UTF-8');
 			$this->httpRequest = $factory->createHttpRequest();
+
+			if ($token = $this->getComponent(self::PROTECTOR_ID, FALSE)) {
+				$token->injectHttpRequest($this->httpRequest);
+			}
 		}
 		return $this->httpRequest;
-	}
-
-
-
-	/**
-	 * @return Form  provides a fluent interface
-	 */
-	public function injectSession(Nette\Http\Session $session)
-	{
-		if ($this->session) {
-			throw new Nette\InvalidStateException('Service Nette\Http\Session has already been set.');
-		}
-		$this->session = $session;
-		return $this;
-	}
-
-
-
-	/**
-	 * @return Nette\Http\Session
-	 */
-	protected function getSession()
-	{
-		if (!$this->session) {
-			$this->session = new Nette\Http\Session($this->getHttpRequest(), new Nette\Http\Response);
-		}
-		return $this->session;
 	}
 
 }
