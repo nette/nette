@@ -274,7 +274,7 @@ class Form extends Container
 		}
 
 		foreach ($group->getControls() as $control) {
-			$this->removeComponent($control);
+			$control->getParent()->removeComponent($control);
 		}
 
 		unset($this->groups[$name]);
