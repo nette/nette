@@ -21,8 +21,20 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 <?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, false) ?>
 
 
-<FORM<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array(), true) ?>>
-	<input value=val type class="hello" <?php echo $_form["username"]->getControl()->addAttributes(array (
+<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array('id' => "myForm", 'class' => "ajax"), false) ?>
+	<input value=val type class="hello" <?php $_input = (is_object("username") ? "username" : $_form["username"]); echo $_input->getControl()->addAttributes(array (
+  'value' => NULL,
+  'type' => NULL,
+  'class' => NULL,
+))->attributes() ?>/>
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form, false) ?>
+
+
+<?php $_form = $_control["myForm"]; $_form->getElementPrototype()->addAttributes(array('id' => "myForm", 'class' => "ajax" )); $_form->render() ?>
+
+
+<FORM id="myForm" class="ajax" data-something="xxx"<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array(), true) ?>>
+	<strong>Username:</strong><input value=val type class="hello" <?php $_input = (is_object("username") ? "username" : $_form["username"]); echo $_input->getControl()->addAttributes(array (
   'value' => NULL,
   'type' => NULL,
   'class' => NULL,
