@@ -39,7 +39,7 @@ $builder->addDefinition('one')
 
 
 // run-time
-$code = (string) $builder->generateClass();
+$code = implode('', $builder->generateClasses());
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
 require TEMP_DIR . '/code.php';
 

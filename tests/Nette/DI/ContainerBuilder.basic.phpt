@@ -64,7 +64,7 @@ $builder->addDefinition('seven')
 	->addSetup(array($six, 'methodA'))
 	->addSetup('$service->methodA(?)', array('a'));
 
-$code = (string) $builder->generateClass();
+$code = implode('', $builder->generateClasses());
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
 require TEMP_DIR . '/code.php';
 

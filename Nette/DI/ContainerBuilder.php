@@ -319,34 +319,35 @@ class ContainerBuilder extends Nette\Object
 
 
 	/**
-	 * Generates PHP class.
-	 * @return Nette\PhpGenerator\ClassType
+	 * Generates PHP classes. First class is the container.
+	 * @return Nette\PhpGenerator\ClassType[]
 	 */
-	public function generateClass($parentClass = 'Nette\DI\Container')
+	public function generateClasses()
 	{
 		unset($this->definitions[self::THIS_CONTAINER]);
-		$this->addDefinition(self::THIS_CONTAINER)->setClass($parentClass);
+		$this->addDefinition(self::THIS_CONTAINER)->setClass('Nette\DI\Container');
 
+		$classes = array();
 		$this->prepareClassList();
 
-		$class = new Nette\PhpGenerator\ClassType('Container');
-		$class->addExtend($parentClass);
-		$class->addMethod('__construct')
+		$containerClass = $classes[] = new Nette\PhpGenerator\ClassType('Container');
+		$containerClass->addExtend('Nette\DI\Container');
+		$containerClass->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->expand($this->parameters)));
 
-		$classes = $class->addProperty('classes', array());
+		$prop = $containerClass->addProperty('classes', array());
 		foreach ($this->classes as $name => $foo) {
 			try {
-				$classes->value[$name] = $this->getByType($name);
+				$prop->value[$name] = $this->getByType($name);
 			} catch (ServiceCreationException $e) {
-				$classes->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
+				$prop->value[$name] = new PhpLiteral('FALSE, //' . strstr($e->getMessage(), ':'));
 			}
 		}
 
 		$definitions = $this->definitions;
 		ksort($definitions);
 
-		$meta = $class->addProperty('meta', array());
+		$meta = $containerClass->addProperty('meta', array());
 		foreach ($definitions as $name => $def) {
 			if ($def->shared) {
 				foreach ($this->expand($def->tags) as $tag => $value) {
@@ -363,9 +364,9 @@ class ContainerBuilder extends Nette\Object
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
 				if ($def->shared && !$def->internal && PhpHelpers::isIdentifier($name)) {
-					$class->addDocument("@property $type \$$name");
+					$containerClass->addDocument("@property $type \$$name");
 				}
-				$method = $class->addMethod($methodName)
+				$method = $containerClass->addMethod($methodName)
 					->addDocument("@return $type")
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
@@ -382,7 +383,7 @@ class ContainerBuilder extends Nette\Object
 			}
 		}
 
-		return $class;
+		return $classes;
 	}
 
 
@@ -584,6 +585,14 @@ class ContainerBuilder extends Nette\Object
 			throw new ServiceCreationException("Reference to missing service '$service'.");
 		}
 		return $service;
+	}
+
+
+
+	/** @deprecated */
+	function generateClass()
+	{
+		throw new Nette\DeprecatedException(__METHOD__ . '() is deprecated; use generateClasses()[0] instead.');
 	}
 
 }

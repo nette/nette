@@ -38,7 +38,7 @@ $builder->addDefinition('two')
 	->setFactory('@one::create', array('@\Service'))
 	->addSetup(array('@\Service', 'create'), array('@\Service'));
 
-$code = (string) $builder->generateClass();
+$code = implode('', $builder->generateClasses());
 file_put_contents(TEMP_DIR . '/code.php', "<?php\n$code");
 require TEMP_DIR . '/code.php';
 
