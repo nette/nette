@@ -363,9 +363,6 @@ class ContainerBuilder extends Nette\Object
 				if (!PhpHelpers::isIdentifier($methodName)) {
 					throw new ServiceCreationException('Name contains invalid characters.');
 				}
-				if ($def->shared && !$def->internal && PhpHelpers::isIdentifier($name)) {
-					$containerClass->addDocument("@property $type \$$name");
-				}
 				$method = $containerClass->addMethod($methodName)
 					->addDocument("@return $type")
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
