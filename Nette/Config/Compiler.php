@@ -224,10 +224,10 @@ class Compiler extends Nette\Object
 
 		$known = $shared
 			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'internal', 'parameters');
+			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'parameters');
 
 		if ($error = array_diff(array_keys($config), $known)) {
-			throw new Nette\InvalidStateException("Unknown key '" . implode("', '", $error) . "' in definition of service.");
+			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
 		}
 
 		$arguments = array();
@@ -290,11 +290,6 @@ class Compiler extends Nette\Object
 		if (isset($config['inject'])) {
 			Validators::assertField($config, 'inject', 'bool');
 			$definition->setInject($config['inject']);
-		}
-
-		if (isset($config['internal'])) {
-			Validators::assertField($config, 'internal', 'bool');
-			$definition->setInternal($config['internal']);
 		}
 
 		if (isset($config['run'])) {

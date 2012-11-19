@@ -188,7 +188,6 @@ class ContainerBuilder extends Nette\Object
 		foreach ($this->definitions as $name => $def) {
 			if ($def->class === self::CREATED_SERVICE || ($def->factory && $def->factory->entity === self::CREATED_SERVICE)) {
 				$def->class = $name;
-				$def->internal = TRUE;
 				if ($def->factory && $def->factory->entity === self::CREATED_SERVICE) {
 					$def->factory->entity = $def->class;
 				}
@@ -365,7 +364,7 @@ class ContainerBuilder extends Nette\Object
 				}
 				$method = $containerClass->addMethod($methodName)
 					->addDocument("@return $type")
-					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
+					->setVisibility($def->shared ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 
 				foreach ($this->expand($def->parameters) as $k => $v) {
