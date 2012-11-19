@@ -14,6 +14,8 @@ namespace Nette\DI;
 use Nette,
 	Nette\Utils\Validators,
 	Nette\Utils\Strings,
+	Nette\Reflection,
+	Nette\PhpGenerator,
 	Nette\PhpGenerator\Helpers as PhpHelpers,
 	Nette\PhpGenerator\PhpLiteral;
 
@@ -42,6 +44,9 @@ class ContainerBuilder extends Nette\Object
 
 	/** @var array of file names */
 	private $dependencies = array();
+
+	/** @var Nette\PhpGenerator\ClassType[] */
+	private $generatedFactories = array();
 
 
 
@@ -160,7 +165,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function autowireArguments($class, $method, array $arguments)
 	{
-		$rc = Nette\Reflection\ClassType::from($class);
+		$rc = Reflection\ClassType::from($class);
 		if (!$rc->hasMethod($method)) {
 			if (!Nette\Utils\Arrays::isList($arguments)) {
 				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
@@ -221,7 +226,7 @@ class ContainerBuilder extends Nette\Object
 			if (!class_exists($def->class) && !interface_exists($def->class)) {
 				throw new Nette\InvalidStateException("Class $def->class has not been found.");
 			}
-			$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
+			$def->class = Reflection\ClassType::from($def->class)->getName();
 			if ($def->autowired) {
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][] = $name;
@@ -230,7 +235,7 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		foreach ($this->classes as $class => $foo) {
-			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
+			$this->addDependency(Reflection\ClassType::from($class)->getFileName());
 		}
 	}
 
@@ -327,9 +332,10 @@ class ContainerBuilder extends Nette\Object
 		unset($this->definitions[self::THIS_CONTAINER]);
 		$this->addDefinition(self::THIS_CONTAINER)->setClass($parentClass);
 
+		$this->generatedFactories = array();
 		$this->prepareClassList();
 
-		$class = new Nette\PhpGenerator\ClassType('Container');
+		$class = new PhpGenerator\ClassType('Container');
 		$class->addExtend($parentClass);
 		$class->addMethod('__construct')
 			->addBody('parent::__construct(?);', array($this->expand($this->parameters)));
@@ -370,11 +376,13 @@ class ContainerBuilder extends Nette\Object
 					->setVisibility($def->shared || $def->internal ? 'protected' : 'public')
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name));
 
-				foreach ($this->expand($def->parameters) as $k => $v) {
-					$tmp = explode(' ', is_int($k) ? $v : $k);
-					$param = is_int($k) ? $method->addParameter(end($tmp)) : $method->addParameter(end($tmp), $v);
-					if (isset($tmp[1])) {
-						$param->setTypeHint($tmp[0]);
+				if (!$def->creates) {
+					foreach ($this->expand($def->parameters) as $k => $v) {
+						$tmp = explode(' ', is_int($k) ? $v : $k);
+						$param = is_int($k) ? $method->addParameter(end($tmp)) : $method->addParameter(end($tmp), $v);
+						if (isset($tmp[1])) {
+							$param->setTypeHint($tmp[0]);
+						}
 					}
 				}
 			} catch (\Exception $e) {
@@ -383,6 +391,16 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		return $class;
+	}
+
+
+
+	/**
+	 * Returns the list of factories, that were generated during generateClass().
+	 */
+	public function fetchGeneratedFactories()
+	{
+		return $this->generatedFactories;
 	}
 
 
@@ -400,21 +418,59 @@ class ContainerBuilder extends Nette\Object
 			$parameters[end($v)] = new PhpLiteral('$' . end($v));
 		}
 
-		$code = '$service = ' . $this->formatStatement(Helpers::expand($def->factory, $parameters, TRUE)) . ";\n";
+		if (!$def->creates) {
+			return $this->generateServiceMethod($name, $def->factory, $parameters, $def->class, $def->inject, $def->setup);
+		}
 
-		$entity = $this->normalizeEntity($def->factory->entity);
-		if ($def->class && $def->class !== $entity && !$this->getServiceName($entity)) {
-			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $def->class) {\n"
-				. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
-				array("Unable to create service '$name', value returned by factory is not $def->class type.")
+		$createdClassRefl = Reflection\ClassType::from($def->creates->entity);
+		$def->setFactory(str_replace('\\', '_', $def->class) . 'Impl_' . Strings::random(5), array('@container'));
+		$this->generatedFactories[$def->factory->entity] = $factoryClass = new PhpGenerator\ClassType($def->factory->entity);
+		$factoryClass->addImplement($def->class)
+			->addExtend('Nette\Object')
+			->setFinal(TRUE);
+
+		if ($createdClassRefl->hasMethod('__construct')) {
+			$constructor = $factoryClass->addMethod('__construct');
+			$constructor->addParameter('container')->setTypeHint('Nette\DI\Container');
+			$constructor->addBody('$this->container = $container;');
+			$factoryClass->addProperty('container')->setVisibility('private');
+		}
+
+		$create = $factoryClass->addMethod('create');
+		$code = $this->generateServiceMethod($name, $def->creates, $parameters, $def->creates->entity, $def->inject, $def->setup);
+		$create->setBody(str_replace('$this', '$this->container', $code));
+
+		$createInterface = Reflection\ClassType::from($def->class);
+		$create->parameters = PhpGenerator\ClassType::from($createInterface)->methods['create']->parameters;
+
+		$factoryClass->addMethod('__invoke')
+			->setBody('return Nette\Callback::create($this, ?)->invokeArgs(func_get_args());', array('create'));
+
+		return $this->generateServiceMethod($name, $def->factory, $parameters, $def->class);
+	}
+
+
+
+	/**
+	 * Generate code for factory method.
+	 */
+	private function generateServiceMethod($name, Statement $factory, $parameters, $class, $inject = FALSE, $setup = array())
+	{
+		$code = '$service = ' . $this->formatStatement(Helpers::expand($factory, $parameters, TRUE)) . ";\n";
+
+		$entity = $this->normalizeEntity($factory->entity);
+		if ($class && $class !== $entity && !$this->getServiceName($entity)) {
+			$code .= PhpHelpers::formatArgs("if (!\$service instanceof $class) {\n"
+					. "\tthrow new Nette\\UnexpectedValueException(?);\n}\n",
+				array("Unable to create service '$name', value returned by factory is not $class type.")
 			);
 		}
 
-		if ($def->inject) {
+		if ($inject) {
 			$code .= "\$this->callInjects(\$service);\n";
 		}
 
-		foreach ((array) $def->setup as $setup) {
+		foreach ((array) $setup as $setup) {
 			$setup = Helpers::expand($setup, $parameters, TRUE);
 			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
 				$setup->entity = array("@$name", $setup->entity);
@@ -422,7 +478,7 @@ class ContainerBuilder extends Nette\Object
 			$code .= $this->formatStatement($setup, $name) . ";\n";
 		}
 
-		return $code .= 'return $service;';
+		return $code . 'return $service;';
 	}
 
 
@@ -451,7 +507,7 @@ class ContainerBuilder extends Nette\Object
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
 				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
 			}
-			$rm = new Nette\Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
+			$rm = new Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
 			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service, FALSE), $arguments), $self);
 
@@ -459,7 +515,10 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp('!?', array($arguments[0]));
 
 		} elseif (is_string($entity)) { // class name
-			if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
+			if (isset($this->generatedFactories[$entity])) {
+				return $this->formatPhp("new $entity" . ($arguments ? '(?*)' : ''), array($arguments), $self);
+			}
+			if ($constructor = Reflection\ClassType::from($entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {

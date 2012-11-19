@@ -1,0 +1,4 @@
+factories:
+	lorem:
+		class: Lorem
+		factory: ILoremFactory

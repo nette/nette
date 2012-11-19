@@ -1,0 +1,3 @@
+factories:
+	lorem:
+		factory: ILoremFactory
