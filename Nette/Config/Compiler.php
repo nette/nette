@@ -180,9 +180,9 @@ class Compiler extends Nette\Object
 			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
 		});
 
-		foreach ($all as $name => $def) {
-			$shared = array_key_exists($name, $services);
-			$name = ($namespace ? $namespace . '.' : '') . $name;
+		foreach ($all as $origName => $def) {
+			$shared = array_key_exists($origName, $services);
+			$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
@@ -204,6 +204,13 @@ class Compiler extends Nette\Object
 				static::parseService($definition, $def, $shared);
 			} catch (\Exception $e) {
 				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+			}
+
+			if ($definition->class === 'self') {
+				$definition->class = $origName;
+			}
+			if ($definition->factory && $definition->factory->entity === 'self') {
+				$definition->factory->entity = $origName;
 			}
 		}
 	}

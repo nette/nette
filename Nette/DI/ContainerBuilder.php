@@ -28,7 +28,7 @@ use Nette,
  */
 class ContainerBuilder extends Nette\Object
 {
-	const CREATED_SERVICE = 'self',
+	const THIS_SERVICE = 'self',
 		THIS_CONTAINER = 'container';
 
 	/** @var array  %param% will be expanded */
@@ -186,15 +186,6 @@ class ContainerBuilder extends Nette\Object
 	{
 		// complete class-factory pairs; expand classes
 		foreach ($this->definitions as $name => $def) {
-			if ($def->class === self::CREATED_SERVICE || ($def->factory && $def->factory->entity === self::CREATED_SERVICE)) {
-				$def->class = $name;
-				if ($def->factory && $def->factory->entity === self::CREATED_SERVICE) {
-					$def->factory->entity = $def->class;
-				}
-				unset($this->definitions[$name]);
-				$this->definitions['_anonymous_' . str_replace('\\', '_', strtolower(trim($name, '\\')))] = $def;
-			}
-
 			if ($def->class) {
 				$def->class = $this->expand($def->class);
 				if (!$def->factory) {
@@ -564,7 +555,7 @@ class ContainerBuilder extends Nette\Object
 			return FALSE;
 		}
 		$service = substr($arg, 1);
-		if ($service === self::CREATED_SERVICE) {
+		if ($service === self::THIS_SERVICE) {
 			$service = $self;
 		}
 		if (Strings::contains($service, '\\')) {
