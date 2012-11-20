@@ -52,7 +52,10 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function addDefinition($name)
 	{
-		if (isset($this->definitions[$name])) {
+		if (!is_string($name) || !$name) { // builder is not ready for falsy names such as '0'
+			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+
+		} elseif (isset($this->definitions[$name])) {
 			throw new Nette\InvalidStateException("Service '$name' has already been added.");
 		}
 		return $this->definitions[$name] = new ServiceDefinition;
@@ -214,7 +217,7 @@ class ContainerBuilder extends Nette\Object
 			$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
 			if ($def->autowired) {
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
-					$this->classes[strtolower($parent)][] = $name;
+					$this->classes[strtolower($parent)][] = (string) $name;
 				}
 			}
 		}
@@ -348,6 +351,7 @@ class ContainerBuilder extends Nette\Object
 
 		foreach ($definitions as $name => $def) {
 			try {
+				$name = (string) $name;
 				$type = $def->class ?: 'object';
 				$methodName = Container::getMethodName($name, $def->shared);
 				if (!PhpHelpers::isIdentifier($methodName)) {
@@ -551,7 +555,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function getServiceName($arg, $self = NULL)
 	{
-		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].+\z#', $arg)) {
+		if (!is_string($arg) || !preg_match('#^@[\w\\\\.].*\z#', $arg)) {
 			return FALSE;
 		}
 		$service = substr($arg, 1);
