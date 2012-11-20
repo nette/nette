@@ -75,7 +75,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	public function addService($name, $service, array $meta = NULL)
 	{
 		$this->updating();
-		if (!is_string($name) || $name === '') {
+		if (!is_string($name) || !$name) {
 			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 		}
 
@@ -365,7 +365,7 @@ class Container extends Nette\FreezableObject implements IContainer
 	public static function getMethodName($name, $isService = TRUE)
 	{
 		$uname = ucfirst($name);
-		return ($isService ? 'createService' : 'create') . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+		return ($isService ? 'createService' : 'create') . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
 }
