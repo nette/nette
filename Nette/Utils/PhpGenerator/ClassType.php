@@ -65,7 +65,7 @@ class ClassType extends Nette\Object
 	public $methods = array();
 
 
-	public function __construct($name)
+	public function __construct($name = NULL)
 	{
 		$this->name = $name;
 	}
