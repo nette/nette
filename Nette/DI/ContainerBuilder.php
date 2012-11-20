@@ -14,6 +14,7 @@ namespace Nette\DI;
 use Nette,
 	Nette\Utils\Validators,
 	Nette\Utils\Strings,
+	Nette\Reflection,
 	Nette\PhpGenerator\Helpers as PhpHelpers,
 	Nette\PhpGenerator\PhpLiteral;
 
@@ -163,7 +164,7 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function autowireArguments($class, $method, array $arguments)
 	{
-		$rc = Nette\Reflection\ClassType::from($class);
+		$rc = Reflection\ClassType::from($class);
 		if (!$rc->hasMethod($method)) {
 			if (!Nette\Utils\Arrays::isList($arguments)) {
 				throw new ServiceCreationException("Unable to pass specified arguments to $class::$method().");
@@ -214,7 +215,7 @@ class ContainerBuilder extends Nette\Object
 			if (!class_exists($def->class) && !interface_exists($def->class)) {
 				throw new Nette\InvalidStateException("Class $def->class has not been found.");
 			}
-			$def->class = Nette\Reflection\ClassType::from($def->class)->getName();
+			$def->class = Reflection\ClassType::from($def->class)->getName();
 			if ($def->autowired) {
 				foreach (class_parents($def->class) + class_implements($def->class) + array($def->class) as $parent) {
 					$this->classes[strtolower($parent)][] = (string) $name;
@@ -223,7 +224,7 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		foreach ($this->classes as $class => $foo) {
-			$this->addDependency(Nette\Reflection\ClassType::from($class)->getFileName());
+			$this->addDependency(Reflection\ClassType::from($class)->getFileName());
 		}
 	}
 
@@ -443,7 +444,7 @@ class ContainerBuilder extends Nette\Object
 			foreach ($this->definitions[$service]->parameters as $k => $v) {
 				$params[] = preg_replace('#\w+\z#', '\$$0', (is_int($k) ? $v : $k)) . (is_int($k) ? '' : ' = ' . PhpHelpers::dump($v));
 			}
-			$rm = new Nette\Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
+			$rm = new Reflection\GlobalFunction(create_function(implode(', ', $params), ''));
 			$arguments = Helpers::autowireArguments($rm, $arguments, $this);
 			return $this->formatPhp('$this->?(?*)', array(Container::getMethodName($service, FALSE), $arguments), $self);
 
@@ -451,7 +452,7 @@ class ContainerBuilder extends Nette\Object
 			return $this->formatPhp('!?', array($arguments[0]));
 
 		} elseif (is_string($entity)) { // class name
-			if ($constructor = Nette\Reflection\ClassType::from($entity)->getConstructor()) {
+			if ($constructor = Reflection\ClassType::from($entity)->getConstructor()) {
 				$this->addDependency($constructor->getFileName());
 				$arguments = Helpers::autowireArguments($constructor, $arguments, $this);
 			} elseif ($arguments) {
