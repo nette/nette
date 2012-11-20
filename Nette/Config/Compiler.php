@@ -182,7 +182,7 @@ class Compiler extends Nette\Object
 
 		foreach ($all as $origName => $def) {
 			$shared = array_key_exists($origName, $services);
-			$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
+			$name = ($namespace || preg_match('#^-?\d+\z#', $origName) ? $namespace . '.' : '') . strtr($origName, '\\', '_');
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
