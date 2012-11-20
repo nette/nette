@@ -144,6 +144,8 @@ class SqlBuilder extends Nette\Object
 		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
+		$isNegate = (bool) preg_match('#^NOT\s#', $condition);
+
 		if (count($args) !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
 			if (count($args) !== 2 || !is_array($parameters)) { // where('column < ? OR column > ?', 1, 2)
 				$parameters = $args;
@@ -169,7 +171,12 @@ class SqlBuilder extends Nette\Object
 					$this->parameters[] = array_values(iterator_to_array($row));
 					$in[] = (count($row) === 1 ? '?' : '(?)');
 				}
-				$condition .= ' IN (' . ($in ? implode(', ', $in) : 'NULL') . ')';
+				if ($in) {
+					$condition .= ' IN (' . implode(', ', $in) . ')';
+				} else {
+					$condition = $this->driver->formatBool($isNegate); // col IN () => FALSE, NOT col IN () => TRUE
+				}
+
 			}
 
 		} elseif (!is_array($parameters)) { // where('column', 'x')
@@ -178,10 +185,10 @@ class SqlBuilder extends Nette\Object
 
 		} else { // where('column', array(1, 2))
 			if ($parameters) {
-				$condition .= " IN (?)";
+				$condition .= ' IN (?)';
 				$this->parameters[] = $parameters;
 			} else {
-				$condition .= " IN (NULL)";
+				$condition = $this->driver->formatBool($isNegate); // col IN () => FALSE, NOT col IN () => TRUE
 			}
 		}
 
