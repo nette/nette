@@ -118,3 +118,5 @@ Assert::true($foo->bar instanceof Bar);
 Assert::same($container->bar, $foo->bar);
 Assert::true($foo->baz instanceof Baz);
 Assert::same($container->baz, $foo->baz);
+
+Assert::true($container->getByType('ILoremFactory') instanceof ILoremFactory);

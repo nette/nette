@@ -196,7 +196,6 @@ class ContainerBuilder extends Nette\Object
 			if (!$def->implement) {
 				continue;
 			}
-			$def->setShared(TRUE);
 
 			if (!interface_exists($def->implement)) {
 				throw new Nette\InvalidStateException("Interface $def->implement has not been found.");
