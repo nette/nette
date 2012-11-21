@@ -228,13 +228,18 @@ class Compiler extends Nette\Object
 		if ($config === NULL) {
 			return;
 		} elseif (!is_array($config)) {
-			$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'factory';
+			$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'create';
 			$config = array('class' => NULL, $key => $config);
 		}
 
+		if (array_key_exists('factory', $config)) {
+			$config['create'] = $config['factory'];
+			unset($config['factory']);
+		};
+
 		$known = $shared
-			? array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'factory', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
+			? array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
+			: array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
 
 		if ($error = array_diff(array_keys($config), $known)) {
 			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
@@ -247,7 +252,7 @@ class Compiler extends Nette\Object
 			$definition->setArguments($arguments);
 		}
 
-		if (array_key_exists('class', $config) || array_key_exists('factory', $config)) {
+		if (array_key_exists('class', $config) || array_key_exists('create', $config)) {
 			$definition->class = NULL;
 			$definition->factory = NULL;
 		}
@@ -261,12 +266,12 @@ class Compiler extends Nette\Object
 			}
 		}
 
-		if (array_key_exists('factory', $config)) {
-			Validators::assertField($config, 'factory', 'callable|stdClass|null');
-			if ($config['factory'] instanceof \stdClass) {
-				$definition->setFactory($config['factory']->value, self::filterArguments($config['factory']->attributes));
+		if (array_key_exists('create', $config)) {
+			Validators::assertField($config, 'create', 'callable|stdClass|null');
+			if ($config['create'] instanceof \stdClass) {
+				$definition->setFactory($config['create']->value, self::filterArguments($config['create']->attributes));
 			} else {
-				$definition->setFactory($config['factory'], $arguments);
+				$definition->setFactory($config['create'], $arguments);
 			}
 		}
 

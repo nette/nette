@@ -4,7 +4,7 @@ parameters:
 
 services:
 	model:
-		factory: %factory%::createModel
+		create: %factory%::createModel
 		setup:
 			# local methods
 			- test(...)

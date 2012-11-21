@@ -9,11 +9,11 @@ factories:
 		implement: ILoremFactory
 
 	article:
-		factory: Article(%title%)
+		create: Article(%title%)
 		implement: IArticleFactory
 		parameters: [title]
 
 	foo:
-		factory: Foo(..., %baz%)
+		create: Foo(..., %baz%)
 		implement: IFooFactory
 		parameters: [Baz baz]

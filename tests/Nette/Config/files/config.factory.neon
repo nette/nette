@@ -13,14 +13,14 @@ services:
 
 	three:
 		class: Lorem
-		factory: Factory::createLorem
+		create: Factory::createLorem
 		arguments: [1]
 
 	four:
-		factory: Factory::createLorem(1)
+		create: Factory::createLorem(1)
 
 	five:
-		factory: [Factory, createLorem](1)
+		create: [Factory, createLorem](1)
 
 	six: Factory::createLorem(1)
 
