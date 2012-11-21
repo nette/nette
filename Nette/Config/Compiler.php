@@ -170,19 +170,21 @@ class Compiler extends Nette\Object
 	{
 		$services = isset($config['services']) ? $config['services'] : array();
 		$factories = isset($config['factories']) ? $config['factories'] : array();
-		if ($tmp = array_intersect_key($services, $factories)) {
-			$tmp = implode("', '", array_keys($tmp));
-			throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same names: '$tmp'.");
-		}
+		$all = array_merge($services, $factories);
 
-		$all = $services + $factories;
 		uasort($all, function($a, $b) {
 			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
 		});
 
 		foreach ($all as $origName => $def) {
 			$shared = array_key_exists($origName, $services);
-			$name = ($namespace || preg_match('#^-?\d+\z#', $origName) ? $namespace . '.' : '') . strtr($origName, '\\', '_');
+			if ((string) (int) $origName === (string) $origName) {
+				$name = (string) (count($container->getDefinitions()) + 1);
+			} elseif ($shared && array_key_exists($origName, $factories)) {
+				throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
+			} else {
+				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
+			}
 
 			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
 				$container->removeDefinition($name);
