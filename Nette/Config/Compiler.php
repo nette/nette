@@ -297,6 +297,12 @@ class Compiler extends Nette\Object
 			$definition->setParameters($config['parameters']);
 		}
 
+		if (isset($config['implement'])) {
+			Validators::assertField($config, 'implement', 'string');
+			$definition->setImplement($config['implement']);
+			$definition->setAutowired(TRUE);
+		}
+
 		if (isset($config['autowired'])) {
 			Validators::assertField($config, 'autowired', 'bool');
 			$definition->setAutowired($config['autowired']);
@@ -305,12 +311,6 @@ class Compiler extends Nette\Object
 		if (isset($config['inject'])) {
 			Validators::assertField($config, 'inject', 'bool');
 			$definition->setInject($config['inject']);
-		}
-
-		if (isset($config['implement'])) {
-			Validators::assertField($config, 'implement', 'string');
-			$definition->setImplement($config['implement']);
-			$definition->setShared(TRUE);
 		}
 
 		if (isset($config['run'])) {

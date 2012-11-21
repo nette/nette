@@ -139,6 +139,7 @@ class ServiceDefinition extends Nette\Object
 	public function setImplement($implement)
 	{
 		$this->implement = $implement;
+		$this->shared = TRUE;
 		return $this;
 	}
 
