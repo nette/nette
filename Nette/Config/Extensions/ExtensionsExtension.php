@@ -23,9 +23,14 @@ use Nette;
 class ExtensionsExtension extends Nette\Config\CompilerExtension
 {
 
+	public $defaults = array();
+
+
+
 	public function loadConfiguration()
 	{
-		foreach ($this->getConfig() as $name => $class) {
+		$config = $this->getConfig($this->defaults);
+		foreach ($config as $name => $class) {
 			$this->compiler->addExtension($name, new $class);
 		}
 	}
