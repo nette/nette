@@ -33,9 +33,6 @@ class Session extends Nette\Object
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;
 
-	/** Regenerate session ID every 30 minutes */
-	const REGENERATE_INTERVAL = 1800;
-
 	/** @var bool  has been session ID regenerated? */
 	private $regenerated;
 
@@ -117,12 +114,10 @@ class Session extends Nette\Object
 		*/
 		$nf = & $_SESSION['__NF'];
 
-		// session regenerate every 30 minutes
-		$nfTime = & $nf['Time'];
-		$time = time();
-		if ($time - $nfTime > self::REGENERATE_INTERVAL) {
-			$this->regenerated = $this->regenerated || isset($nfTime);
-			$nfTime = $time;
+		// regenerate empty session
+		if (empty($nf['Time'])) {
+			$nf['Time'] = time();
+			$this->regenerated = TRUE;
 		}
 
 		// browser closing detection
