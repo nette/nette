@@ -3,10 +3,10 @@
 /**
  * Test: Nette\Database\Table: Basic operations with camelCase name conventions.
  *
- * @author     David Grudl
- * @author     Jan Skrasek
- * @package    Nette\Database
- * @multiple   databases.ini
+ * @author         David Grudl
+ * @author         Jan Skrasek
+ * @package        Nette\Database
+ * @dataProvider?  databases.ini
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection

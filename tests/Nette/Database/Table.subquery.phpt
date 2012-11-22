@@ -3,10 +3,10 @@
 /**
  * Test: Nette\Database\Table: Subqueries.
  *
- * @author     Jakub Vrana
- * @author     Jan Skrasek
- * @package    Nette\Database
- * @multiple   databases.ini
+ * @author         Jakub Vrana
+ * @author         Jan Skrasek
+ * @package        Nette\Database
+ * @dataProvider?  databases.ini
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection
