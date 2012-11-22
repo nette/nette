@@ -21,5 +21,8 @@ before_script:
 # PHP Memcache extension
   - echo n | pecl install memcache > /dev/null
 
+# Create databases.ini
+  - echo -e '[mysql] dsn="mysql:host=localhost" user=root password=  [postgresql] dsn="pgsql:host=localhost;dbname=nette_test" user=postgres password=' | tr ' ' "\n" > ./tests/Nette/Database/databases.ini
+
 # Create Postgre database
-  - psql -c 'create database nette_test;' -U postgres
+  - psql -c 'CREATE DATABASE nette_test' -U postgres

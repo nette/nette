@@ -3,9 +3,9 @@
 /**
  * Test: Nette\Database\Connection: reflection for MySQL
  *
- * @author     David Grudl
- * @package    Nette\Database
- * @multiple   databases.ini
+ * @author         David Grudl
+ * @package        Nette\Database
+ * @dataProvider?  databases.ini
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection

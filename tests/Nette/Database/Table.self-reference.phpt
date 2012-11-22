@@ -3,9 +3,9 @@
 /**
  * Test: Nette\Database\Table: DiscoveredReflection with self-reference.
  *
- * @author     Jan Skrasek
- * @package    Nette\Database
- * @multiple   databases.ini
+ * @author         Jan Skrasek
+ * @package        Nette\Database
+ * @dataProvider?  databases.ini
  */
 
 use Nette\Database;
