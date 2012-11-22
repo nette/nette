@@ -5,9 +5,10 @@
  *
  * @author     David Grudl
  * @package    Nette\Database
+ * @dataProvider? databases.ini  postgresql
  */
 
-$_SERVER['argv'][1] = 'postgresql';
+$query = 'postgresql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/pgsql-nette_test3.sql");
