@@ -54,7 +54,7 @@ class TestPresenter extends Nette\Application\UI\Presenter
 	}
 	function emptyPayload()
 	{
-		$this->payload = (object) NULL;
+		$this->payload = new stdClass;
 	}
 	function createComponentMulti()
 	{

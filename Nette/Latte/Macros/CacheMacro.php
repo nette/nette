@@ -107,7 +107,7 @@ class CacheMacro extends Nette\Object implements Latte\IMacro
 	{
 		if ($args) {
 			if (array_key_exists('if', $args) && !$args['if']) {
-				return $parents[] = (object) NULL;
+				return $parents[] = new \stdClass;
 			}
 			$key = array_merge(array($key), array_intersect_key($args, range(0, count($args))));
 		}

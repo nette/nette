@@ -40,7 +40,7 @@ class MultiControl extends Nette\Application\UI\Presenter
 	}
 	function createComponentMulti()
 	{
-		$this->payload = (object) NULL;
+		$this->payload = new stdClass;
 		return new Nette\Application\UI\Multiplier(function($name) {
 			$control = new InnerControl();
 			$control->invalidateControl();
