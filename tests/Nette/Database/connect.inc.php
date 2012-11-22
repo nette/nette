@@ -11,6 +11,9 @@
 require __DIR__ . '/../bootstrap.php';
 
 
+if (!is_file(__DIR__ . '/databases.ini')) {
+	Tester\Helpers::skip();
+}
 $config = parse_ini_file(__DIR__ . '/databases.ini', TRUE);
 $current = isset($_SERVER['argv'][1]) ? $config[$_SERVER['argv'][1]] : reset($config);
 

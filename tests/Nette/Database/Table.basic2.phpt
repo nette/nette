@@ -6,7 +6,7 @@
  * @author     David Grudl
  * @author     Jan Skrasek
  * @package    Nette\Database
- * @multiple   databases.ini
+ * @dataProvider? databases.ini
  */
 
 require __DIR__ . '/connect.inc.php'; // create $connection
