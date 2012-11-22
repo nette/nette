@@ -5,8 +5,10 @@
  *
  * @author     David Grudl
  * @package    Nette\Database
+ * @dataProvider? databases.ini  mysql
  */
 
+$query = 'mysql';
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/mysql-nette_test3.sql");
