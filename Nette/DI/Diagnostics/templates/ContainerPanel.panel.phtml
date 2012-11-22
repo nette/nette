@@ -57,14 +57,14 @@ use Nette,
 			<td title="<?php echo htmlSpecialChars(implode(" \n", $autowired)) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
 			<td>
 				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container): ?>
-					<?php echo Dumper::toHtml($registry[$name], array(Dumper::COLLAPSE => 1)); ?>
+					<?php echo Dumper::toHtml($registry[$name], array(Dumper::COLLAPSE => TRUE)); ?>
 				<?php elseif (isset($registry[$name])): ?>
 					<code><?php echo get_class($registry[$name]) ?></code>
 				<?php elseif (is_string($class)): ?>
 					<code><?php echo htmlSpecialChars($class) ?></code>
 				<?php endif ?>
 			</td>
-			<td><?php if (isset($container->meta[$name])) { echo Dumper::toHtml($container->meta[$name], array(Dumper::COLLAPSE => 1)); } ?></td>
+			<td><?php if (isset($container->meta[$name])) { echo Dumper::toHtml($container->meta[$name], array(Dumper::COLLAPSE => TRUE)); } ?></td>
 		</tr>
 		<?php endforeach ?>
 		</tbody>
