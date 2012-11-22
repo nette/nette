@@ -167,7 +167,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		try {
 			// STARTUP
 			$this->request = $request;
-			$this->payload = (object) NULL;
+			$this->payload = new \stdClass;
 			$this->setParent($this->getParent(), $request->getPresenterName());
 
 			$this->initGlobalParameters();

@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$service = (object) NULL;
+$service = new stdClass;
 $container = new Container;
 
 Assert::exception(function() use ($container, $service) {

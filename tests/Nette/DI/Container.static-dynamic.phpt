@@ -31,7 +31,7 @@ $container = new MyContainer;
 
 Assert::true( $container->hasService('one') );
 
-$container->addService('one', (object) NULL);
+$container->addService('one', new stdClass);
 
 Assert::true( $container->hasService('one') );
 

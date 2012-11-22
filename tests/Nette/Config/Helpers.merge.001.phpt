@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
-$obj = (object) NULL;
+$obj = new stdClass;
 $arr1 = array('a' => 'b', 'x');
 $arr2 = array('c' => 'd', 'y');
 
