@@ -206,21 +206,19 @@ class Configurator extends Nette\Object
 	protected function buildContainer(& $dependencies = NULL)
 	{
 		$loader = $this->createLoader();
-
-		// back compatibility
-		if (count($this->files) === 1 && $this->files[0][1] === NULL) {
-			try {
-				$loader->load($this->files[0][0], $this->parameters['environment']);
-				$this->files[0][1] = $this->parameters['environment'];
-			} catch (Nette\Utils\AssertionException $e) {}
-		}
-
 		$config = array();
 		$code = "<?php\n";
 		foreach ($this->files as $tmp) {
 			list($file, $section) = $tmp;
-			$config = Helpers::merge($loader->load($file, $section), $config);
 			$code .= "// source: $file $section\n";
+			try {
+				if ($section === NULL) { // back compatibility
+					$config = Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
+					continue;
+				}
+			} catch (Nette\Utils\AssertionException $e) {}
+
+			$config = Helpers::merge($loader->load($file, $section), $config);
 		}
 		$code .= "\n";
 
