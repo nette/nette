@@ -6,7 +6,7 @@ services:
 factories:
 	lorem:
 		class: Lorem
-		implement: ILoremFactory
+		implement: \ILoremFactory
 
 	article:
 		create: Article(%title%)
