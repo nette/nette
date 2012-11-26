@@ -475,7 +475,7 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		$factoryClass = $this->generatedClasses[] = new Nette\PhpGenerator\ClassType;
-		$factoryClass->setName(str_replace('\\', '_', $def->implement) . 'Impl_' . $name)
+		$factoryClass->setName(str_replace(array('\\', '.'), '_', "{$def->implement}Impl_{$name}"))
 			->addImplement($def->implement)
 			->setFinal(TRUE);
 
