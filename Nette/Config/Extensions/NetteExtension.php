@@ -284,10 +284,21 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		$container->addDefinition($this->prefix('template'))
-			->setClass('Nette\Templating\FileTemplate')
+			->setClass('Nette\Templating\ITemplate')
+			->setFactory('? ? new ? : new Nette\Templating\FileTemplate', array('%class%', new Nette\PhpGenerator\PhpLiteral('?'), '%class%'))
+			->setParameters(array('class' => NULL))
+			->setImplement('Nette\Templating\ITemplateFactory')
 			->addSetup('registerFilter', array($latte))
 			->addSetup('registerHelperLoader', array('Nette\Templating\Helpers::loader'))
-			->setShared(FALSE);
+			->addSetup('setCacheStorage', array($this->prefix('@templateCacheStorage')))
+			->addSetup('$service->presenter = $service->_presenter = ?', array(new Nette\DI\Statement('@application::getPresenter')))
+			->addSetup('$service->control = $service->_control = ?', array(new Nette\DI\Statement('@application::getPresenter')))
+			->addSetup('$user', array('@user'))
+			->addSetup('$netteHttpResponse', array('@httpResponse'))
+			->addSetup('$netteCacheStorage', array('@cacheStorage'))
+			->addSetup('$service->baseUri = $service->baseUrl = rtrim(?->getBaseUrl(), "/")', array(new Nette\DI\Statement('@httpRequest::getUrl')))
+			->addSetup('$service->basePath = preg_replace(?, "", $service->baseUrl)', array('#https?://[^/]+#A'))
+			->setAutowired(TRUE);
 
 		foreach ($config['macros'] as $macro) {
 			if (strpos($macro, '::') === FALSE && class_exists($macro)) {
@@ -401,6 +412,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (empty($config['latte']['xhtml'])) {
 			$initialize->addBody('Nette\Utils\Html::$xhtml = ?;', array((bool) $config['latte']['xhtml']));
 		}
+
+		$class->addMethod(Nette\DI\Container::getMethodName($this->prefix('template'), FALSE))
+				->setBody('return $this->getService(?)->create();', array($this->prefix('template')));
 
 		if (isset($config['security']['frames']) && $config['security']['frames'] !== TRUE) {
 			$frames = $config['security']['frames'];
