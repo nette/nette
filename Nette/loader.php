@@ -25,7 +25,7 @@ if (PHP_VERSION_ID < 50200) {
 }
 */
 @header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
-
+umask(0);
 
 
 /**
