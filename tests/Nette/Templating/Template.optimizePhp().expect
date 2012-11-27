@@ -24,4 +24,7 @@ if (TRUE):
 
 ;else:
 
-endif;
+endif
+?>
+
+<?php
