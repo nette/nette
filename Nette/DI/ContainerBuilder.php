@@ -204,6 +204,7 @@ class ContainerBuilder extends Nette\Object
 			if (count($rc->getMethods()) !== 1 || !$rc->hasMethod('create') || $rc->getMethod('create')->isStatic()) {
 				throw new Nette\InvalidStateException("Interface $def->implement must have just one non-static method create().");
 			}
+			$def->implement = $rc->getName();
 
 			if (!$def->class && empty($def->factory->entity)) {
 				$method = $rc->getMethod('create');
