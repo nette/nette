@@ -289,7 +289,9 @@ class Configurator extends Nette\Object
 			$list[] = '127.0.0.1';
 			$list[] = '::1';
 		}
-		return in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
+		$ip = isset($_SERVER['HTTP_X_REAL_IP']) ? $_SERVER['HTTP_X_REAL_IP'] :
+			(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'));
+		return in_array($ip, $list, TRUE);
 	}
 
 
