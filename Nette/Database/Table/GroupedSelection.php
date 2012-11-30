@@ -186,6 +186,7 @@ class GroupedSelection extends Selection
 				$row->setTable($this); // injects correct parent GroupedSelection
 			}
 			reset($this->data);
+			$this->checkReferenced = TRUE;
 		}
 	}
 
