@@ -107,6 +107,31 @@ $cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
 
 
 
+$selection = $connection->table('book');
+foreach ($selection as $book) {
+	$book->id;
+}
+$selection->__destruct();
+
+$authors = array();
+foreach ($connection->table('book') as $book) {
+	$authors[$book->author->name] = 1;
+}
+
+$authors = array_keys($authors);
+sort($authors);
+
+Assert::same(array(
+	'David Grudl',
+	'Jakub Vrana',
+), $authors);
+
+
+
+$cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
+
+
+
 $relatedStack = array();
 foreach ($connection->table('author') as $author) {
 	$relatedStack[] = $related = $author->related('book.author_id');
