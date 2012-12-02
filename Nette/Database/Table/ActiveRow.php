@@ -333,9 +333,8 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	protected function getReference($table, $column)
 	{
+		$this->access($column);
 		if (array_key_exists($column, $this->data)) {
-			$this->access($column);
-
 			$value = $this->data[$column];
 			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
 
