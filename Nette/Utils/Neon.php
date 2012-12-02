@@ -40,11 +40,10 @@ class Neon extends Nette\Object
 		'
 			[^#"\',=[\]{}()\x00-\x20!`]
 			(?:
-				[^#,:=\]})(\x00-\x1F]+ |
+				[^,:=\]})(\x00-\x20]+ |
 				:(?! [\s,\]})] | $ ) |
-				(?<! \s ) \#
+				[\ \t]+ [^#,:=\]})(\x00-\x20]
 			)*
-			(?<! \s )
 		', // literal / boolean / integer / float
 		'?:[\t\ ]+', // whitespace
 	);
