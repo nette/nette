@@ -38,3 +38,4 @@ Assert::same( "x", Neon::decode("  x") );
 Assert::same( "@x", Neon::decode("@x") );
 Assert::same( "@true", Neon::decode("@true") );
 Assert::same( 'a', Neon::decode('a                                     ') );
+Assert::same( 'a', Neon::decode("\xEF\xBB\xBFa") );

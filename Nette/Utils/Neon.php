@@ -140,6 +140,9 @@ class Neon extends Nette\Object
 			self::$tokenizer = new Tokenizer(self::$patterns, 'mix');
 		}
 
+		if (substr($input, 0, 3) === "\xEF\xBB\xBF") { // BOM
+			$input = substr($input, 3);
+		}
 		$input = str_replace("\r", '', $input);
 		self::$tokenizer->tokenize($input);
 
