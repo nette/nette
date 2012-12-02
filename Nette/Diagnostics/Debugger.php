@@ -435,8 +435,8 @@ final class Debugger
 						self::$bar->render();
 					}
 
-				} elseif (!self::fireLog($exception, self::ERROR)) { // AJAX or non-HTML mode
-					$file = self::log($exception);
+				} elseif (!self::fireLog($exception)) { // AJAX or non-HTML mode
+					$file = self::log($exception, self::ERROR);
 					if (!headers_sent()) {
 						header("X-Nette-Error-Log: $file");
 					}
@@ -520,7 +520,7 @@ final class Debugger
 			return NULL;
 
 		} else {
-			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line), self::WARNING);
+			$ok = self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
 			return !self::isHtmlMode() || (!self::$bar && !$ok) ? FALSE : NULL;
 		}
 
