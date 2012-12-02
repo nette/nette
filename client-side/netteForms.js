@@ -304,8 +304,15 @@ Nette.toggle = function(id, visible) {
 Nette.initForm = function(form) {
 	form.noValidate = 'novalidate';
 
-	Nette.addEvent(form, 'submit', function() {
-		return Nette.validateForm(form);
+	Nette.addEvent(form, 'submit', function(e) {
+		if (!Nette.validateForm(form)) {
+			e = e || event;
+			e.cancelBubble = true;
+			if (e.stopPropagation) {
+				e.stopPropagation();
+			}
+			return false;
+		}
 	});
 
 	Nette.addEvent(form, 'click', function(e) {
