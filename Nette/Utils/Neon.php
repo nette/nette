@@ -26,12 +26,27 @@ class Neon extends Nette\Object
 
 	/** @var array */
 	private static $patterns = array(
-		'\'[^\'\n]*\'|"(?:\\\\.|[^"\\\\\n])*"', // string
-		'-(?=\s|$)|:(?=[\s,\]})]|$)|[,=[\]{}()]', // symbol
-		'?:#.*', // comment
-		'\n[\t ]*', // new line + indent
-		'[^#"\',=[\]{}()\x00-\x20!`](?:[^#,:=\]})(\x00-\x1F]+|:(?![\s,\]})]|$)|(?<!\s)#)*(?<!\s)', // literal / boolean / integer / float
-		'?:[\t ]+', // whitespace
+		'
+			\'[^\'\n]*\' |
+			"(?: \\\\. | [^"\\\\\n] )*"
+		', // string
+		'
+			-(?= \s | $ ) |
+			:(?= [\s,\]})] | $ ) |
+			[,=[\]{}()]
+		', // symbol
+		'?:\#.*', // comment
+		'\n[\t\ ]*', // new line + indent
+		'
+			[^#"\',=[\]{}()\x00-\x20!`]
+			(?:
+				[^#,:=\]})(\x00-\x1F]+ |
+				:(?! [\s,\]})] | $ ) |
+				(?<! \s ) \#
+			)*
+			(?<! \s )
+		', // literal / boolean / integer / float
+		'?:[\t\ ]+', // whitespace
 	);
 
 	/** @var Tokenizer */
@@ -97,7 +112,7 @@ class Neon extends Nette\Object
 
 		} elseif (is_string($var) && !is_numeric($var)
 			&& !preg_match('~[\x00-\x1F]|^\d{4}|^(true|false|yes|no|on|off|null)\z~i', $var)
-			&& preg_match('~^' . self::$patterns[4] . '\z~', $var)
+			&& preg_match('~^' . self::$patterns[4] . '\z~x', $var)
 		) {
 			return $var;
 
@@ -123,7 +138,7 @@ class Neon extends Nette\Object
 			throw new Nette\InvalidArgumentException("Argument must be a string, " . gettype($input) . " given.");
 		}
 		if (!self::$tokenizer) {
-			self::$tokenizer = new Tokenizer(self::$patterns, 'mi');
+			self::$tokenizer = new Tokenizer(self::$patterns, 'mix');
 		}
 
 		$input = str_replace("\r", '', $input);
