@@ -324,23 +324,6 @@ Nette.initForm = function(form) {
 	for (var i = 0; i < form.elements.length; i++) {
 		Nette.toggleControl(form.elements[i], null, true);
 	}
-
-	if (/MSIE/.exec(navigator.userAgent)) {
-		var labels = {},
-			wheelHandler = function() { return false; },
-			clickHandler = function() { document.getElementById(this.htmlFor).focus(); return false; };
-
-		for (i = 0, elms = form.getElementsByTagName('label'); i < elms.length; i++) {
-			labels[elms[i].htmlFor] = elms[i];
-		}
-
-		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
-			Nette.addEvent(elms[i], 'mousewheel', wheelHandler); // prevents accidental change in IE
-			if (labels[elms[i].htmlId]) {
-				Nette.addEvent(labels[elms[i].htmlId], 'click', clickHandler); // prevents deselect in IE 5 - 6
-			}
-		}
-	}
 };
 
 
