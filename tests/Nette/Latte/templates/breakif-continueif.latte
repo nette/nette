@@ -1,0 +1,19 @@
+
+{foreach $people as $person}
+	{breakIf $person == 'Mary' /}{$person}
+{/foreach}
+
+
+{foreach $people as $person}
+	{continueIf $person == 'Mary' /}{$person}
+{/foreach}
+
+
+{foreach $people as $person}
+	{breakIf $person == 'Mary'} foo{/breakIf}{$person}
+{/foreach}
+
+
+{foreach $people as $person}
+	{continueIf $person == 'Mary'} foo{/continueIf}{$person}
+{/foreach}

@@ -1,0 +1,36 @@
+<?php
+// prolog Nette\Latte\Macros\CoreMacros
+list($_l, $_g) = Nette\Latte\Macros\CoreMacros::initRuntime($template, 'xxx')
+;
+// prolog Nette\Latte\Macros\UIMacros
+
+// snippets support
+if (%A%}
+
+//
+// main template
+//
+?>
+
+<?php $iterations = 0; foreach ($people as $person): ?>
+	<?php if ($person == 'Mary' ): break; endif ;echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?>
+
+<?php $iterations++; endforeach ?>
+
+
+<?php $iterations = 0; foreach ($people as $person): ?>
+	<?php if ($person == 'Mary' ): continue; endif ;echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?>
+
+<?php $iterations++; endforeach ?>
+
+
+<?php $iterations = 0; foreach ($people as $person): ?>
+	<?php if ($person == 'Mary'): ?> foo<?php break; endif ;echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?>
+
+<?php $iterations++; endforeach ?>
+
+
+<?php $iterations = 0; foreach ($people as $person): ?>
+	<?php if ($person == 'Mary'): ?> foo<?php continue; endif ;echo Nette\Templating\Helpers::escapeHtml($person, ENT_NOQUOTES) ?>
+
+<?php $iterations++; endforeach ;
