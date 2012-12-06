@@ -25,8 +25,10 @@ Debugger::$onFatalError[] = function() {
 Fatal error: Call to undefined function missing_funcion() in %a%
 exception 'Nette\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
 Stack trace:
-#0 [internal function]: %ns%Debugger::_shutdownHandler()
-#1 {main}
+#0 %a%/Debugger.E_ERROR.console.phpt(47): third()
+#1 %a%/Debugger.E_ERROR.console.phpt(41): second()
+#2 %a%/Debugger.E_ERROR.console.phpt(57): first()
+#3 {main}
 (stored in %a%)
 ", ob_get_clean());
 	die(0);
