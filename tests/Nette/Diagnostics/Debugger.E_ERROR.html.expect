@@ -58,6 +58,94 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 
 
+									<div class="panel">
+				<h2><a href="#netteBsPnl2" class="nette-toggle">Call stack</a></h2>
+
+				<div id="netteBsPnl2" class="inner">
+				<ol>
+										<li><p>
+
+											<a href="%a%" title="%a%">.../Diagnostics/<b>Debugger.E_ERROR.html.phpt</b>:38</a>
+					<a href="#netteBsSrc1-0" class="nette-toggle-collapsed">source</a>&nbsp;
+										third
+					()
+					</p>
+
+
+
+											<div class="nette-collapsed" id="netteBsSrc1-0"><pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>28:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">first</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='line'>%d%:</span>    &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">TRUE</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">FALSE</span><span style="color: #D24; font-weight: bold">);
+<span class='line'>%d%:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='highlight'>%d%:    &nbsp;&nbsp;&nbsp;&nbsp;third(array(1,&nbsp;2,&nbsp;3));
+</span></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"><span class='line'>39:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">)
+</span></span></code></div></pre></div>
+
+					</li>
+										<li><p>
+
+											<a href="%a%" title="%a%">.../Diagnostics/<b>Debugger.E_ERROR.html.phpt</b>:32</a>
+					<a href="#netteBsSrc1-1" class="nette-toggle-collapsed">source</a>&nbsp;
+										second
+					()
+					</p>
+
+
+
+											<div class="nette-collapsed" id="netteBsSrc1-1"><pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>22:</span>
+<span class='line'>%d%:</span>    </span><span style="color: #000">Debugger</span><span style="color: #D24; font-weight: bold">::</span><span style="color: #000">$onFatalError</span><span style="color: #D24; font-weight: bold">[]&nbsp;=&nbsp;function()&nbsp;{
+<span class='line'>%d%:</span>    &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #000">Assert</span><span style="color: #D24; font-weight: bold">::</span><span style="color: #000">match</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">file_get_contents</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">__DIR__&nbsp;</span><span style="color: #D24; font-weight: bold">.&nbsp;</span><span style="color: #080">'/Debugger.E_ERROR.html.expect'</span><span style="color: #D24; font-weight: bold">),&nbsp;</span><span style="color: #000">ob_get_clean</span><span style="color: #D24; font-weight: bold">());
+<span class='line'>%d%:</span>    &nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #000">0</span><span style="color: #D24; font-weight: bold">);
+<span class='line'>%d%:</span>    };
+<span class='line'>%d%:</span>    </span><span style="color: #000">ob_start</span><span style="color: #D24; font-weight: bold">();
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">first</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='highlight'>32:    &nbsp;&nbsp;&nbsp;&nbsp;second(TRUE,&nbsp;FALSE);
+</span></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"><span class='line'>33:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
+</span></span></code></div></pre></div>
+
+					</li>
+										<li><p>
+
+											<a href="%a%" title="%a%">.../Diagnostics/<b>Debugger.E_ERROR.html.phpt</b>:48</a>
+					<a href="#netteBsSrc1-2" class="nette-toggle-collapsed">source</a>&nbsp;
+										first
+					()
+					</p>
+
+
+
+											<div class="nette-collapsed" id="netteBsSrc1-2"><pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>38:</span>    &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(array(</span><span style="color: #000">1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">2</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">3</span><span style="color: #D24; font-weight: bold">));
+<span class='line'>%d%:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">third</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">)
+<span class='line'>%d%:</span>    {
+<span class='line'>%d%:</span>    &nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #000">missing_funcion</span><span style="color: #D24; font-weight: bold">();
+<span class='line'>%d%:</span>    }
+<span class='line'>%d%:</span>
+<span class='line'>%d%:</span>
+<span class='highlight'>%d%:    first(10,&nbsp;'any&nbsp;string');
+</span></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #000"></span><span style="color: #D24; font-weight: bold"></span><span style="color: #080"></span><span style="color: #D24; font-weight: bold"><span class='line'>49:</span>    </span>
+</span></code></div></pre></div>
+
+					</li>
+									</ol>
+			</div></div>
 
 
 
@@ -69,44 +157,44 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 
 		<div class="panel">
-		<h2><a href="#netteBsPnl2" class="nette-toggle-collapsed">Environment</a></h2>
+		<h2><a href="#netteBsPnl3" class="nette-toggle-collapsed">Environment</a></h2>
 
-		<div id="netteBsPnl2" class="nette-collapsed inner">
-			<h3><a href="#netteBsPnl3" class="nette-toggle">$_SERVER</a></h3>
-			<div id="netteBsPnl3" class="outer">
+		<div id="netteBsPnl3" class="nette-collapsed inner">
+			<h3><a href="#netteBsPnl4" class="nette-toggle">$_SERVER</a></h3>
+			<div id="netteBsPnl4" class="outer">
 			<table>%A%</table>
 			</div>
 
 
-			<h3><a href="#netteBsPnl4" class="nette-toggle">$_SESSION</a></h3>
-			<div id="netteBsPnl4" class="outer">%A%</div>
+			<h3><a href="#netteBsPnl5" class="nette-toggle">$_SESSION</a></h3>
+			<div id="netteBsPnl5" class="outer">%A%</div>
 
 
 
 
-						<h3><a href="#netteBsPnl5" class="nette-toggle-collapsed">Constants</a></h3>
-			<div id="netteBsPnl5" class="outer nette-collapsed">
-			<table>%A%</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl6" class="nette-toggle-collapsed">Included files</a> (%d%)</h3>
+						<h3><a href="#netteBsPnl6" class="nette-toggle-collapsed">Constants</a></h3>
 			<div id="netteBsPnl6" class="outer nette-collapsed">
 			<table>%A%</table>
 			</div>
 
 
-			<h3><a href="#netteBsPnl7" class="nette-toggle-collapsed">Configuration options</a></h3>
+			<h3><a href="#netteBsPnl7" class="nette-toggle-collapsed">Included files</a> (%d%)</h3>
 			<div id="netteBsPnl7" class="outer nette-collapsed">
+			<table>%A%</table>
+			</div>
+
+
+			<h3><a href="#netteBsPnl8" class="nette-toggle-collapsed">Configuration options</a></h3>
+			<div id="netteBsPnl8" class="outer nette-collapsed">
 			%A%</div>
 		</div></div>
 
 
 
 		<div class="panel">
-		<h2><a href="#netteBsPnl8" class="nette-toggle-collapsed">HTTP request</a></h2>
+		<h2><a href="#netteBsPnl9" class="nette-toggle-collapsed">HTTP request</a></h2>
 
-		<div id="netteBsPnl8" class="nette-collapsed inner">
+		<div id="netteBsPnl9" class="nette-collapsed inner">
 %A%
 						<h3>$_GET</h3>
 						<p><i>empty</i></p>
@@ -119,9 +207,9 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 
 		<div class="panel">
-		<h2><a href="#netteBsPnl9" class="nette-toggle-collapsed">HTTP response</a></h2>
+		<h2><a href="#netteBsPnl10" class="nette-toggle-collapsed">HTTP response</a></h2>
 
-		<div id="netteBsPnl9" class="nette-collapsed inner">
+		<div id="netteBsPnl10" class="nette-collapsed inner">
 			<h3>Headers</h3>
 						<pre>%A%</pre>
 					</div></div>

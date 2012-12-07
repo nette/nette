@@ -25,8 +25,10 @@ Debugger::$onFatalError[] = function() {
 Fatal error: Cannot re-assign \$this in %a%
 exception 'Nette\FatalErrorException' with message 'Cannot re-assign \$this' in %a%
 Stack trace:
-#0 [internal function]: %ns%Debugger::_shutdownHandler()
-#1 {main}
+#0 %a%/Debugger.E_COMPILE_ERROR.console.phpt(47): third()
+#1 %a%/Debugger.E_COMPILE_ERROR.console.phpt(41): second()
+#2 %a%/Debugger.E_COMPILE_ERROR.console.phpt(57): first()
+#3 {main}
 (stored in %a%)
 ", ob_get_clean());
 	die(0);
