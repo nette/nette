@@ -177,6 +177,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	{
 		if ($data === NULL) {
 			$data = $this->modified;
+			$this->modified = array();
 		}
 		return $this->table->getConnection()
 			->table($this->table->getName())
