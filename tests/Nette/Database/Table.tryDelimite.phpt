@@ -15,7 +15,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 
 
-$sqlBuilder = new Nette\Database\Table\SqlBuilder($connection->table('book'));
+$sqlBuilder = new Nette\Database\Table\SqlBuilder('book', $connection, new Nette\Database\Reflection\ConventionalReflection);
 $tryDelimite = $sqlBuilder->reflection->getMethod('tryDelimite');
 $tryDelimite->setAccessible(TRUE);
 
