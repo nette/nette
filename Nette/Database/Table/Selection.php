@@ -55,6 +55,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var ActiveRow[] modifiable data in [primary key => ActiveRow] format */
 	protected $data;
 
+	/** @var bool */
+	protected $dataRefreshed = FALSE;
+
 	/** @var Selection[] */
 	protected $referenced = array();
 
@@ -610,10 +613,22 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		if ($cache && !$this->sqlBuilder->getSelect() && $this->prevAccessed && ($key === NULL || !isset($this->prevAccessed[$key]))) {
 			$this->prevAccessed = '';
 			$this->emptyResultSet();
+			$this->dataRefreshed = TRUE;
 			return TRUE;
 		}
 
 		return FALSE;
+	}
+
+
+
+	/**
+	 * Returns if selection requeried for more columns.
+	 * @return bool
+	 */
+	public function getDataRefreshed()
+	{
+		return $this->dataRefreshed;
 	}
 
 
