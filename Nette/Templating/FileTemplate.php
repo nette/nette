@@ -117,7 +117,7 @@ class FileTemplate extends Template implements IFileTemplate
 
 		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
 			return $cached;
-        }
+		}
 		return $compiled;
 	}
 
