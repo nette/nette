@@ -29,6 +29,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/** @var array of row data */
 	private $data;
 
+	/** @var bool */
+	private $dataRefreshed = FALSE;
+
 	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
@@ -324,8 +327,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function access($key, $cache = TRUE)
 	{
-		if (!isset($this->modified[$key]) && $this->table->access($key, $cache)) {
+		if (!isset($this->modified[$key]) && $this->table->access($key, $cache) || ($this->table->getDataRefreshed() && !$this->dataRefreshed)) {
 			$this->data = $this->table[$this->getSignature()]->data;
+			$this->dataRefreshed = TRUE;
 		}
 	}
 
