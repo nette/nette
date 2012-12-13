@@ -3,7 +3,7 @@
 /**
  * Test: Nette\Diagnostics\Debugger E_ERROR in HTML.
  *
- * @author     David Grudl
+ * @author     Filip Procházka
  * @package    Nette\Diagnostics
  */
 
