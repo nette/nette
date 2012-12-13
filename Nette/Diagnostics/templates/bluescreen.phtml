@@ -417,9 +417,11 @@ $counter = 0;
 					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#netteBsSrc<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">source</a>&nbsp; <?php endif ?>
 
 					<?php if (isset($row['class'])) echo htmlspecialchars($row['class'] . $row['type']) ?>
-					<?php echo htmlspecialchars($row['function']) ?>
+					<?php if (!empty($row['function'])): ?>
+						<?php echo htmlspecialchars($row['function']) ?>
 
-					(<?php if (!empty($row['args'])): ?><a href="#netteBsArgs<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">arguments</a><?php endif ?>)
+						(<?php if (!empty($row['args'])): ?><a href="#netteBsArgs<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">arguments</a><?php endif ?>)
+					<?php endif ?>
 					</p>
 
 					<?php if (!empty($row['args'])): ?>

@@ -366,10 +366,11 @@ final class Debugger
 					if (isset($row['class'])) {
 						$row['type'] = isset($row['type']) && $row['type'] === 'dynamic' ? '->' : '::';
 					}
-					if (isset($row['params'])) {
-						$row['args'] = $row['params'];
-					}
-					$stack[] = $row;
+					$stack[] = $row + array(
+						'function' => NULL,
+						'type' => NULL,
+						'args' => isset($row['params']) ? $row['params'] : array()
+					);
 				}
 				$ref = new \ReflectionProperty('Exception', 'trace');
 				$ref->setAccessible(TRUE);
