@@ -91,10 +91,13 @@ class FormMacros extends MacroSet
 	public static function renderFormBegin(Form $form, array $attrs)
 	{
 		$el = $form->getElementPrototype();
-		$el->action = (string) $el->action;
+		$el->action = $action = (string) $el->action;
 		$el = clone $el;
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
-			list($el->action) = explode('?', $el->action, 2);
+			list($el->action) = explode('?', $action, 2);
+			if (($i = strpos($action, '#')) !== FALSE) {
+				$el->action .= substr($action, $i);
+			}
 		}
 		echo $el->addAttributes($attrs)->startTag();
 	}
@@ -111,6 +114,7 @@ class FormMacros extends MacroSet
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
 			$url = explode('?', $form->getElementPrototype()->action, 2);
 			if (isset($url[1])) {
+				list($url[1]) = explode('#', $url[1], 2);
 				foreach (preg_split('#[;&]#', $url[1]) as $param) {
 					$parts = explode('=', $param, 2);
 					$name = urldecode($parts[0]);
