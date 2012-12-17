@@ -50,9 +50,9 @@
 
 											<a href="editor:%a%" title="%a%Debugger.exception.html.phpt:%d%">%a%<b>Debugger.exception.html.phpt</b>:%d%</a>
 					<a href="#netteBsSrc1-0" class="nette-toggle-collapsed">source</a>&nbsp;
-										third
-					(<a href="#netteBsArgs1-0" class="nette-toggle-collapsed">arguments</a>)
-					</p>
+																third
+						(<a href="#netteBsArgs1-0" class="nette-toggle-collapsed">arguments</a>)
+										</p>
 
 											<div class="nette-collapsed outer" id="netteBsArgs1-0">
 						<table>
@@ -73,9 +73,9 @@
 
 											<a href="editor:%a%" title="%a%Debugger.exception.html.phpt:%d%">%a%<b>Debugger.exception.html.phpt</b>:%d%</a>
 					<a href="#netteBsSrc1-1" class="nette-toggle-collapsed">source</a>&nbsp;
-										second
-					(<a href="#netteBsArgs1-1" class="nette-toggle-collapsed">arguments</a>)
-					</p>
+																second
+						(<a href="#netteBsArgs1-1" class="nette-toggle-collapsed">arguments</a>)
+										</p>
 
 											<div class="nette-collapsed outer" id="netteBsArgs1-1">
 						<table>
@@ -96,9 +96,9 @@
 
 											<a href="editor:%a%" title="%a%Debugger.exception.html.phpt:%d%">%a%<b>Debugger.exception.html.phpt</b>:%d%</a>
 					<a href="#netteBsSrc1-2" class="nette-toggle-collapsed">source</a>&nbsp;
-										first
-					(<a href="#netteBsArgs1-2" class="nette-toggle-collapsed">arguments</a>)
-					</p>
+																first
+						(<a href="#netteBsArgs1-2" class="nette-toggle-collapsed">arguments</a>)
+										</p>
 
 											<div class="nette-collapsed outer" id="netteBsArgs1-2">
 						<table>

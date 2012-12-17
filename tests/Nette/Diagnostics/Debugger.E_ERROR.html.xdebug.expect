@@ -67,9 +67,9 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 											%a%
 					<a href="#netteBsSrc1-0" class="nette-toggle-collapsed">source</a>&nbsp;
-										third
-					()
-					</p>
+																third
+						()
+										</p>
 
 
 
@@ -95,9 +95,9 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 											%a%
 					<a href="#netteBsSrc1-1" class="nette-toggle-collapsed">source</a>&nbsp;
-										second
-					()
-					</p>
+																second
+						()
+										</p>
 
 
 
@@ -123,9 +123,9 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 											%a%
 					<a href="#netteBsSrc1-2" class="nette-toggle-collapsed">source</a>&nbsp;
-										first
-					()
-					</p>
+																first
+						()
+										</p>
 
 
 
