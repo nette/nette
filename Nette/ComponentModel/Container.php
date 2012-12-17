@@ -169,15 +169,27 @@ class Container extends Component implements IContainer
 
 
 	/**
-	 * Component factory. Delegates the creation of components to a createComponent<Name> method.
+	 * Generates component factory method name.
+	 * @param  string  component name
+	 * @return string  component factory method
+	 */
+	public static function formatComponentFactoryMethod($name)
+	{
+		$ucname = ucfirst($name);
+		return $ucname !== $name ? 'createComponent' . $ucname : NULL;
+	}
+
+
+
+	/**
+	 * Delegates the creation of components to a component factory method.
 	 * @param  string      component name
 	 * @return IComponent  the created component (optionally)
 	 */
 	protected function createComponent($name)
 	{
-		$ucname = ucfirst($name);
-		$method = 'createComponent' . $ucname;
-		if ($ucname !== $name && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
+		$method = $this->formatComponentFactoryMethod($name);
+		if ($method !== NULL && method_exists($this, $method) && $this->getReflection()->getMethod($method)->getName() === $method) {
 			$component = $this->$method($name);
 			if (!$component instanceof IComponent && !isset($this->components[$name])) {
 				$class = get_class($this);
