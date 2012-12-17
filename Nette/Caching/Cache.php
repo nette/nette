@@ -174,10 +174,7 @@ class Cache extends Nette\Object implements \ArrayAccess
 
 		// add namespaces to items
 		if (isset($dp[self::ITEMS])) {
-			$dp[self::ITEMS] = array_unique((array) $dp[self::ITEMS]);
-			foreach ($dp[self::ITEMS] as $k => $item) {
-				$dp[self::ITEMS][$k] = $this->generateKey($item);
-			}
+			$dp[self::ITEMS] = array_unique(array_map(array($this, 'generateKey'), (array) $dp[self::ITEMS]));
 		}
 
 		// convert CONSTS into CALLBACKS
