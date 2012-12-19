@@ -255,7 +255,7 @@ class RobotLoader extends AutoLoader
 				if (is_file("$path/netterobots.txt")) {
 					foreach (file("$path/netterobots.txt") as $s) {
 						if (preg_match('#^(?:disallow\\s*:)?\\s*(\\S+)#i', $s, $matches)) {
-							$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, rtrim('/' . ltrim($matches[1], '/'), '/'))] = TRUE;
+							$disallow[$path . str_replace('/', DIRECTORY_SEPARATOR, '/' . trim($matches[1], '/'))] = TRUE;
 						}
 					}
 				}
