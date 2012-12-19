@@ -44,3 +44,6 @@ Assert::false( class_exists('Disallowed4') );   // files.robots\subdir\disallowe
 Assert::false( class_exists('Disallowed5') );   // files.robots\subdir\subdir2\disallowed5\class.php
 Assert::false( class_exists('Disallowed6') );   // files.robots\subdir\subdir2\class.php
 Assert::true( class_exists('Allowed2') );       // files.robots\subdir\subdir2\allowed.php
+
+Assert::true( class_exists('ClassWithHashInPath') );
+Assert::true( class_exists('ClassWithHashInName') );

@@ -1,0 +1,2 @@
+# Just a comment nothing to disallow here especially not # directory.
+#class.php is just mentioned here and should be available via loader.
