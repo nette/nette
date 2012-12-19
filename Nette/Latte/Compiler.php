@@ -506,7 +506,7 @@ class Compiler extends Nette\Object
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, MacroNode::PREFIX_NONE);
+			$node = $this->writeMacro($item[0], $item[1], NULL, NULL, $item[2]);
 			if ($node->closing) {
 				$this->htmlNode->attrCode .= $node->attrCode;
 			}
