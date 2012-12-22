@@ -303,7 +303,7 @@ class SqlBuilder extends Nette\Object
 		$joins = array();
 		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
 		foreach ($matches[1] as $names) {
-			$parent = $this->selection->getName();
+			$parent = $parentAlias = $this->selection->getName();
 			if ($names !== "$parent.") { // case-sensitive
 				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~i', $names, $matches, PREG_SET_ORDER);
 				foreach ($matches as $match) {
@@ -320,10 +320,11 @@ class SqlBuilder extends Nette\Object
 					$joins[$name] = ' '
 						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
 						. ' JOIN ' . $this->driver->delimite($table) . ($table !== $name ? ' AS ' . $this->driver->delimite($name) : '')
-						. ' ON ' . $this->driver->delimite($parent) . '.' . $this->driver->delimite($column)
+						. ' ON ' . $this->driver->delimite($parentAlias) . '.' . $this->driver->delimite($column)
 						. ' = ' . $this->driver->delimite($name) . '.' . $this->driver->delimite($primary);
 
-					$parent = $name;
+					$parent = $table;
+					$parentAlias = $name;
 				}
 			}
 		}
