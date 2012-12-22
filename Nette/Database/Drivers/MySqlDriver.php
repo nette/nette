@@ -227,7 +227,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META || $item == self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
+		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SELECT_UNGROUPED_COLUMNS;
 	}
 
 }
