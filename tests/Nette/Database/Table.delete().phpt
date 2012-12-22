@@ -23,10 +23,10 @@ Assert::same(0, $count);
 
 
 $book = $connection->table('book')->get(3);  // SELECT * FROM `book` WHERE (`id` = ?)
-$book->related('book_tag')->delete();  // DELETE FROM `book_tag` WHERE (`book_id` = ?)
+$book->related('book_tag_alt')->where('tag_id', 21)->delete();  // DELETE FROM `book_tag_alt` WHERE (`book_id` = ?) AND (`tag_id` = ?)
 
-$count = $connection->table('book_tag')->where('book_id', 3)->count();  // SELECT * FROM `book_tag` WHERE (`book_id` = ?)
-Assert::same(0, $count);
+$count = $connection->table('book_tag_alt')->where('book_id', 3)->count();  // SELECT * FROM `book_tag_alt` WHERE (`book_id` = ?)
+Assert::same(3, $count);
 
 
 
