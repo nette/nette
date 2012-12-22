@@ -407,7 +407,7 @@ class Route extends Nette\Object implements Application\IRouter
 		}
 
 		$sep = ini_get('arg_separator.input');
-		$query = http_build_query($params, '', $sep ? $sep[0] : '&');
+		$query = urldecode(http_build_query($params, '', $sep ? $sep[0] : '&'));
 		if ($query != '') { // intentionally ==
 			$url .= '?' . $query;
 		}
