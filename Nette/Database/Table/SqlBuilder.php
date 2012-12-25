@@ -12,6 +12,8 @@
 namespace Nette\Database\Table;
 
 use Nette,
+	Nette\Database\Connection,
+	Nette\Database\IReflection,
 	Nette\Database\ISupplementalDriver;
 
 
@@ -25,14 +27,17 @@ use Nette,
  */
 class SqlBuilder extends Nette\Object
 {
-	/** @var Selection */
-	protected $selection;
-
 	/** @var Nette\Database\ISupplementalDriver */
 	private $driver;
 
 	/** @var string */
 	private $driverName;
+
+	/** @var string */
+	protected $tableName;
+
+	/** @var IReflection */
+	protected $databaseReflection;
 
 	/** @var string delimited table name */
 	protected $delimitedTable;
@@ -66,20 +71,13 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function __construct(Selection $selection)
+	public function __construct($tableName, Connection $connection, IReflection $reflection)
 	{
-		$this->selection = $selection;
-		$connection = $selection->getConnection();
+		$this->tableName = $tableName;
+		$this->databaseReflection = $reflection;
 		$this->driver = $connection->getSupplementalDriver();
 		$this->driverName = $connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
-		$this->delimitedTable = $this->tryDelimite($selection->getName());
-	}
-
-
-
-	public function setSelection(Selection $selection)
-	{
-		$this->selection = $selection;
+		$this->delimitedTable = $this->tryDelimite($tableName);
 	}
 
 
@@ -262,9 +260,10 @@ class SqlBuilder extends Nette\Object
 
 	/**
 	 * Returns SQL query.
+	 * @param  list of columns
 	 * @return string
 	 */
-	public function buildSelectQuery()
+	public function buildSelectQuery($columns = NULL)
 	{
 		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
 		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
@@ -273,8 +272,8 @@ class SqlBuilder extends Nette\Object
 		if ($this->select) {
 			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
 
-		} elseif ($prevAccessed = $this->selection->getPreviousAccessed()) {
-			$cols = array_map(array($this->driver, 'delimite'), array_keys(array_filter($prevAccessed)));
+		} elseif ($columns) {
+			$cols = array_map(array($this->driver, 'delimite'), $columns);
 			$cols = $prefix . implode(', ' . $prefix, $cols);
 
 		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
@@ -299,22 +298,21 @@ class SqlBuilder extends Nette\Object
 
 	protected function buildJoins($val, $inner = FALSE)
 	{
-		$reflection = $this->selection->getDatabaseReflection();
 		$joins = array();
 		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
 		foreach ($matches[1] as $names) {
-			$parent = $parentAlias = $this->selection->getName();
+			$parent = $parentAlias = $this->tableName;
 			if ($names !== "$parent.") { // case-sensitive
 				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~i', $names, $matches, PREG_SET_ORDER);
 				foreach ($matches as $match) {
 					list(, $name, $delimiter) = $match;
 
 					if ($delimiter === ':') {
-						list($table, $primary) = $reflection->getHasManyReference($parent, $name);
-						$column = $reflection->getPrimary($parent);
+						list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $name);
+						$column = $this->databaseReflection->getPrimary($parent);
 					} else {
-						list($table, $column) = $reflection->getBelongsToReference($parent, $name);
-						$primary = $reflection->getPrimary($table);
+						list($table, $column) = $this->databaseReflection->getBelongsToReference($parent, $name);
+						$primary = $this->databaseReflection->getPrimary($table);
 					}
 
 					$joins[$name] = ' '

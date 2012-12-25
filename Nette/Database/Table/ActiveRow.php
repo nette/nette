@@ -29,6 +29,9 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	/** @var array of row data */
 	private $data;
 
+	/** @var bool */
+	private $dataRefreshed = FALSE;
+
 	/** @var array of new values {@see ActiveRow::update()} */
 	private $modified = array();
 
@@ -80,7 +83,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	 */
 	public function toArray()
 	{
-		$this->access(NULL);
+		$this->accessColumn(NULL);
 		return $this->data;
 	}
 
@@ -212,7 +215,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function getIterator()
 	{
-		$this->access(NULL);
+		$this->accessColumn(NULL);
 		return new \ArrayIterator($this->data);
 	}
 
@@ -281,7 +284,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function &__get($key)
 	{
-		$this->access($key);
+		$this->accessColumn($key);
 		if (array_key_exists($key, $this->data)) {
 			return $this->data[$key];
 		}
@@ -289,11 +292,11 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		list($table, $column) = $this->table->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
 		$referenced = $this->getReference($table, $column);
 		if ($referenced !== FALSE) {
-			$this->access($key, FALSE);
+			$this->accessColumn($key, FALSE);
 			return $referenced;
 		}
 
-		$this->access($key, NULL);
+		$this->removeAccessColumn($key);
 		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
 	}
 
@@ -301,11 +304,11 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	public function __isset($key)
 	{
-		$this->access($key);
+		$this->accessColumn($key);
 		if (array_key_exists($key, $this->data)) {
 			return isset($this->data[$key]);
 		}
-		$this->access($key, NULL);
+		$this->removeAccessColumn($key);
 		return FALSE;
 	}
 
@@ -319,21 +322,31 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 
 
-	/**
-	 * @internal
-	 */
-	public function access($key, $cache = TRUE)
+	protected function accessColumn($key, $selectColumn = TRUE)
 	{
-		if (!isset($this->modified[$key]) && $this->table->access($key, $cache)) {
-			$this->data = $this->table[$this->getSignature()]->data;
+		if (isset($this->modified[$key])) {
+			return;
 		}
+
+		$this->table->accessColumn($key, $selectColumn);
+		if ($this->table->getDataRefreshed() && !$this->dataRefreshed) {
+			$this->data = $this->table[$this->getSignature()]->data;
+			$this->dataRefreshed = TRUE;
+		}
+	}
+
+
+
+	protected function removeAccessColumn($key)
+	{
+		$this->table->removeAccessColumn($key);
 	}
 
 
 
 	protected function getReference($table, $column)
 	{
-		$this->access($column);
+		$this->accessColumn($column);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
 			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;

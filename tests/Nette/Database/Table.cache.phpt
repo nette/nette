@@ -141,8 +141,8 @@ foreach ($connection->table('author') as $author) {
 }
 
 foreach ($relatedStack as $related) {
-	$property = $related->reflection->getProperty('accessed');
+	$property = $related->reflection->getProperty('accessedColumns');
 	$property->setAccessible(true);
 	// checks if instances have shared data of accessed columns
-	Assert::same(array('id', 'author_id'), array_keys($property->getValue($related)));
+	Assert::same(array('id', 'author_id'), array_keys((array) $property->getValue($related)));
 }
