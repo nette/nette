@@ -111,7 +111,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function __clone()
 	{
 		$this->sqlBuilder = clone $this->sqlBuilder;
-		$this->sqlBuilder->setSelection($this);
 	}
 
 
@@ -197,7 +196,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getSql()
 	{
-		return $this->sqlBuilder->buildSelectQuery();
+		return $this->sqlBuilder->buildSelectQuery($this);
 	}
 
 
@@ -490,13 +489,13 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->observeCache = TRUE;
 
 		try {
-			$result = $this->query($this->sqlBuilder->buildSelectQuery());
+			$result = $this->query($this->sqlBuilder->buildSelectQuery($this));
 
 		} catch (\PDOException $exception) {
 			if (!$this->sqlBuilder->getSelect() && $this->prevAccessed) {
 				$this->prevAccessed = '';
 				$this->accessed = array();
-				$result = $this->query($this->sqlBuilder->buildSelectQuery());
+				$result = $this->query($this->sqlBuilder->buildSelectQuery($this));
 			} else {
 				throw $exception;
 			}
