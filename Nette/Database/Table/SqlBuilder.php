@@ -68,7 +68,6 @@ class SqlBuilder extends Nette\Object
 
 	public function __construct(Selection $selection)
 	{
-		$this->selection = $selection;
 		$connection = $selection->getConnection();
 		$this->driver = $connection->getSupplementalDriver();
 		$this->driverName = $connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
@@ -264,8 +263,10 @@ class SqlBuilder extends Nette\Object
 	 * Returns SQL query.
 	 * @return string
 	 */
-	public function buildSelectQuery()
+	public function buildSelectQuery(Selection $selection)
 	{
+		$this->selection = $selection;
+
 		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
 		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
 
@@ -282,9 +283,9 @@ class SqlBuilder extends Nette\Object
 
 		} else {
 			$cols = $prefix . '*';
-
 		}
 
+		$this->selection = NULL;
 		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();
 	}
 
