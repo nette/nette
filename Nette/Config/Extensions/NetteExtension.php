@@ -327,7 +327,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			} elseif (is_string($info['reflection'])) {
 				$reflection = new Nette\DI\Statement(preg_match('#^[a-z]+\z#', $info['reflection'])
 					? 'Nette\Database\Reflection\\' . ucfirst($info['reflection']) . 'Reflection'
-					: $info['reflection'], array('@self'));
+					: $info['reflection'], strtolower($info['reflection']) === 'discovered' ? array('@self') : array());
 			} else {
 				$tmp = Nette\Config\Compiler::filterArguments(array($info['reflection']));
 				$reflection = reset($tmp);
