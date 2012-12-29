@@ -1,6 +1,6 @@
 language: php
 php:
-    - 5.3
+    - 5.3.3
     - 5.4
 
 script: "VERBOSE=true ./tests/run-tests.sh -s tests/"
