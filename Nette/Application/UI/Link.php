@@ -104,7 +104,7 @@ class Link extends Nette\Object
 	public function __toString()
 	{
 		try {
-			return $this->component->link($this->destination, $this->params);
+			return (string) $this->component->link($this->destination, $this->params);
 
 		} catch (\Exception $e) {
 			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
