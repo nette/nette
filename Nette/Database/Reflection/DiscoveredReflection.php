@@ -87,7 +87,10 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getHasManyReference($table, $key, $refresh = TRUE)
 	{
-		$reference = & $this->structure['hasMany'][strtolower($table)];
+		if (!isset($this->structure['hasMany'][strtolower($table)])) {
+			$this->structure['hasMany'][strtolower($table)] = array();
+		}
+		$reference = $this->structure['hasMany'][strtolower($table)];
 		if (!empty($reference)) {
 			$candidates = $columnCandidates = array();
 			foreach ($reference as $targetPair) {
@@ -132,7 +135,10 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
-		$reference = & $this->structure['belongsTo'][strtolower($table)];
+		if (!isset($this->structure['belongsTo'][strtolower($table)])) {
+			$this->structure['belongsTo'][strtolower($table)] = array();
+		}
+		$reference = $this->structure['belongsTo'][strtolower($table)];
 		if (!empty($reference)) {
 			foreach ($reference as $column => $targetTable) {
 				if (stripos($column, $key) !== FALSE) {
