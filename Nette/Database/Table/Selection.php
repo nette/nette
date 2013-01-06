@@ -91,6 +91,8 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 * Creates filtered table representation.
 	 * @param  Nette\Database\Connection
 	 * @param  string  database table name
+	 * @param  Nette\Database\IReflection database reflection
+	 * @param  Nette\Caching\IStorage cache storage
 	 */
 	public function __construct(Nette\Database\Connection $connection, $table, Nette\Database\IReflection $reflection, Nette\Caching\IStorage $cacheStorage = NULL)
 	{
