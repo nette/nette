@@ -19,7 +19,7 @@ ini_set('session.save_path', TEMP_DIR);
 
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
-$session = $container->session;
+$session = $container->{'nette.session'};
 $namespace = $session->getSection('one');
 $namespace->a = 'apple';
 $namespace->p = 'pear';

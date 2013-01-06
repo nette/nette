@@ -34,7 +34,7 @@ $template->hello = '<i>Hello</i>';
 $template->id = ':/item';
 $template->people = array('John', 'Mary', 'Paul', ']]>');
 $template->comment = 'test -- comment';
-$template->netteHttpResponse = $container->httpResponse;
+$template->netteHttpResponse = $container->{'nette.httpResponse'};
 $template->el = Html::el('div')->title('1/2"');
 
 $path = __DIR__ . '/expected/' . basename(__FILE__, '.phpt');

@@ -28,9 +28,9 @@ $container = $configurator->addConfig('files/config.inheritance2.neon')
 	->createContainer();
 
 
-Assert::true( $container->application instanceof MyApp );
-Assert::null( $container->application->catchExceptions );
-Assert::same( 'Error', $container->application->errorPresenter );
+Assert::true( $container->{'nette.application'} instanceof MyApp );
+Assert::null( $container->{'nette.application'}->catchExceptions );
+Assert::same( 'Error', $container->{'nette.application'}->errorPresenter );
 
 Assert::true( $container->app2 instanceof MyApp );
 Assert::null( $container->app2->catchExceptions );
