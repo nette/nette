@@ -60,6 +60,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			'macros' => array(),
 		),
 		'container' => array(
+			'compatibility' => TRUE,
 			'debugger' => FALSE,
 		),
 		'debugger' => array(
@@ -92,12 +93,15 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
-		$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
-		$deprecated = array('cacheStorage', 'httpRequest', 'httpResponse', 'session', 'user', 'application', 'router');
-		foreach ($deprecated as $name) {
-			$container->addDefinition($name)
-				->setFactory($this->prefix('@' . $name))
-				->setAutowired(FALSE);
+
+		if ($config['container']['compatibility']) {
+			$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
+			$deprecated = array('cacheStorage', 'httpRequest', 'httpResponse', 'session', 'user', 'application', 'router');
+			foreach ($deprecated as $name) {
+				$container->addDefinition($name)
+					->setFactory($this->prefix('@' . $name))
+					->setAutowired(FALSE);
+			}
 		}
 
 		$this->setupCache($container);
