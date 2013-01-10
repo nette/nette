@@ -23,4 +23,5 @@ foreach ($connection->table('author')->select('author.name, COUNT(DISTINCT book:
 Assert::same(array(
 	'Jakub Vrana' => 3,
 	'David Grudl' => 2,
+	'Geek' => 0,
 ), $authorTagsCount);
