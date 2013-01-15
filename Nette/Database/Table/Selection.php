@@ -584,6 +584,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		if ($key === NULL) {
 			$this->accessedColumns = FALSE;
+			$currentKey = key($this->data);
 		} elseif ($this->accessedColumns !== FALSE) {
 			$this->accessedColumns[$key] = $selectColumn;
 		}
@@ -595,7 +596,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 			if ($key === NULL) {
 				// we need to move iterator in resultset
-				$this->fetch();
+				$this->execute();
+				while (key($this->data) !== $currentKey) {
+					next($this->data);
+				}
 			}
 		}
 	}
