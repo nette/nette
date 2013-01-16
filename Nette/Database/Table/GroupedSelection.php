@@ -165,6 +165,7 @@ class GroupedSelection extends Selection
 			$this->sqlBuilder->setLimit($limit, NULL);
 			$refData = array();
 			$offset = array();
+			$this->accessColumn($this->column);
 			foreach ((array) $this->rows as $key => $row) {
 				$ref = & $refData[$row[$this->column]];
 				$skip = & $offset[$row[$this->column]];
