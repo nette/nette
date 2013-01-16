@@ -144,3 +144,19 @@ foreach ($relatedStack as $related) {
 	// checks if instances have shared data of accessed columns
 	Assert::same(array('id', 'author_id'), array_keys((array) $property->getValue($related)));
 }
+
+
+
+$cacheStorage->clean(array(Nette\Caching\Cache::ALL => TRUE));
+
+
+
+$author = $connection->table('author')->get(11);
+$books = $author->related('book')->where('translator_id', 99); // 0 rows
+foreach ($books as $book) {}
+$books->__destruct();
+unset($author);
+
+$author = $connection->table('author')->get(11);
+$books = $author->related('book')->where('translator_id', 11);
+Assert::same(array('id', 'author_id'), $books->getPreviousAccessedColumns());
