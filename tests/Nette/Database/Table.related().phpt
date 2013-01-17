@@ -18,15 +18,15 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 $books1 = $books2 = $books3 = array();
 
 foreach ($connection->table('author') as $author) {  // SELECT * FROM `author`
-	foreach ($author->related('book', 'translator_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`translator_id` IN (11, 12))
+	foreach ($author->related('book', 'translator_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`translator_id` IN (11, 12, 13))
 		$books1[$book->title] = $author->name;
 	}
 
-	foreach ($author->related('book.author_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12))
+	foreach ($author->related('book.author_id') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12, 13))
 		$books2[$book->title] = $author->name;
 	}
 
-	foreach ($author->related('book') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12))
+	foreach ($author->related('book') as $book) {  // SELECT * FROM `book` WHERE (`book`.`author_id` IN (11, 12, 13))
 		$books3[$book->title] = $author->name;
 	}
 }
@@ -81,8 +81,8 @@ foreach($connection->table('author')->order('id') as $author) {
 	$counts2[] = $author->related('book.author_id')->where('translator_id', NULL)->count('id');
 }
 
-Assert::same(array(2, 2), $counts1);
-Assert::same(array(1, 0), $counts2);
+Assert::same(array(2, 2, 0), $counts1);
+Assert::same(array(1, 0, 0), $counts2);
 
 
 
