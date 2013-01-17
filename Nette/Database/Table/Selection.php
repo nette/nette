@@ -834,7 +834,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function offsetSet($key, $value)
 	{
 		$this->execute();
-		$this->data[$key] = $value;
+		$this->rows[$key] = $value;
 	}
 
 
@@ -847,7 +847,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function offsetGet($key)
 	{
 		$this->execute();
-		return $this->data[$key];
+		return $this->rows[$key];
 	}
 
 
@@ -860,7 +860,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function offsetExists($key)
 	{
 		$this->execute();
-		return isset($this->data[$key]);
+		return isset($this->rows[$key]);
 	}
 
 
@@ -873,7 +873,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function offsetUnset($key)
 	{
 		$this->execute();
-		unset($this->data[$key]);
+		unset($this->rows[$key], $this->data[$key]);
 	}
 
 }
