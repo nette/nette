@@ -44,9 +44,9 @@ class Connection extends PDO
 
 
 
-	public function __construct($dsn, $username = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
+	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
 	{
-		parent::__construct($this->dsn = $dsn, $username, $password, $options);
+		parent::__construct($this->dsn = $dsn, $user, $password, $options);
 		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
