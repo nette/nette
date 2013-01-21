@@ -37,7 +37,7 @@ Assert::same(array(
 
 $connection->table('author')->get(11)->update(array('born' => new DateTime('2002-02-20')));
 $connection->table('author')->get(12)->update(array('born' => new DateTime('2002-02-02')));
-$list = $connection->table('author')->order('born')->fetchPairs('born', 'name');
+$list = $connection->table('author')->where('born IS NOT NULL')->order('born')->fetchPairs('born', 'name');
 Assert::same(array(
 	'2002-02-02 00:00:00' => 'David Grudl',
 	'2002-02-20 00:00:00' => 'Jakub Vrana',

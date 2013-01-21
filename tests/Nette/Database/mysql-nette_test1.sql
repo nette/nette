@@ -17,6 +17,7 @@ CREATE TABLE author (
 
 INSERT INTO author (id, name, web, born) VALUES (11, 'Jakub Vrana', 'http://www.vrana.cz/', NULL);
 INSERT INTO author (id, name, web, born) VALUES (12, 'David Grudl', 'http://davidgrudl.com/', NULL);
+INSERT INTO author (id, name, web, born) VALUES (13, 'Geek', 'http://example.com', NULL);
 
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (

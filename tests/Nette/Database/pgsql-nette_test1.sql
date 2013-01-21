@@ -12,7 +12,8 @@ CREATE TABLE author (
 
 INSERT INTO author (id, name, web, born) VALUES (11, 'Jakub Vrana', 'http://www.vrana.cz/', NULL);
 INSERT INTO author (id, name, web, born) VALUES (12, 'David Grudl', 'http://davidgrudl.com/', NULL);
-SELECT setval('author_id_seq', 12, TRUE);
+INSERT INTO author (id, name, web, born) VALUES (13, 'Geek', 'http://example.com', NULL);
+SELECT setval('author_id_seq', 13, TRUE);
 
 CREATE TABLE tag (
 	id serial NOT NULL,
