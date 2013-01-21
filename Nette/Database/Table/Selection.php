@@ -737,8 +737,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->checkReferenced = FALSE;
 			$keys = array();
 			foreach ($this->rows as $row) {
-				if ($row[$column] === NULL)
+				if ($row[$column] === NULL) {
 					continue;
+				}
 
 				$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
 				$keys[$key] = TRUE;

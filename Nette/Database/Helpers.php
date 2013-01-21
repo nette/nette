@@ -98,17 +98,18 @@ class Helpers
 		// syntax highlight
 		$sql = htmlSpecialChars($sql);
 		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#is", function($matches) {
-			if (!empty($matches[1])) // comment
+			if (!empty($matches[1])) { // comment
 				return '<em style="color:gray">' . $matches[1] . '</em>';
 
-			if (!empty($matches[2])) // error
+			} elseif (!empty($matches[2])) { // error
 				return '<strong style="color:red">' . $matches[2] . '</strong>';
 
-			if (!empty($matches[3])) // most important keywords
+			} elseif (!empty($matches[3])) { // most important keywords
 				return '<strong style="color:blue">' . $matches[3] . '</strong>';
 
-			if (!empty($matches[4])) // other keywords
+			} elseif (!empty($matches[4])) { // other keywords
 				return '<strong style="color:green">' . $matches[4] . '</strong>';
+			}
 		}, $sql);
 
 		return '<pre class="dump">' . trim($sql) . "</pre>\n";
