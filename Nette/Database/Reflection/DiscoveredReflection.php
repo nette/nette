@@ -85,74 +85,67 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 
 
-	public function getHasManyReference($table, $key, $refresh = TRUE)
+	public function getHasManyReference($table, $key)
 	{
 		$reference = & $this->structure['hasMany'][strtolower($table)];
-		if (!empty($reference)) {
-			$candidates = $columnCandidates = array();
-			foreach ($reference as $targetPair) {
-				list($targetColumn, $targetTable) = $targetPair;
-				if (stripos($targetTable, $key) === FALSE) {
-					continue;
-				}
+		if ($reference === NULL) {
+			$reference = array();
+			$this->reloadAllForeignKeys();
+		}
 
-				$candidates[] = array($targetTable, $targetColumn);
-				if (stripos($targetColumn, $table) !== FALSE) {
-					$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
-					if (strtolower($targetTable) === strtolower($key)) {
-						return $candidate;
-					}
-				}
+		$candidates = $columnCandidates = array();
+		foreach ($reference as $targetPair) {
+			list($targetColumn, $targetTable) = $targetPair;
+			if (stripos($targetTable, $key) === FALSE) {
+				continue;
 			}
 
-			if (count($columnCandidates) === 1) {
-				return reset($columnCandidates);
-			} elseif (count($candidates) === 1) {
-				return reset($candidates);
-			}
-
-			foreach ($candidates as $candidate) {
-				list($targetTable, $targetColumn) = $candidate;
+			$candidates[] = array($targetTable, $targetColumn);
+			if (stripos($targetColumn, $table) !== FALSE) {
+				$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
 				if (strtolower($targetTable) === strtolower($key)) {
 					return $candidate;
 				}
 			}
+		}
 
-			if (!$refresh && !empty($candidates)) {
-				throw new \PDOException('Ambiguous joining column in related call.');
+		if (count($columnCandidates) === 1) {
+			return reset($columnCandidates);
+		} elseif (count($candidates) === 1) {
+			return reset($candidates);
+		}
+
+		foreach ($candidates as $candidate) {
+			list($targetTable, $targetColumn) = $candidate;
+			if (strtolower($targetTable) === strtolower($key)) {
+				return $candidate;
 			}
 		}
 
-		if (!$refresh) {
+		if (empty($candidates)) {
 			throw new \PDOException("No reference found for \${$table}->related({$key}).");
+		} else {
+			throw new \PDOException('Ambiguous joining column in related call.');
 		}
-
-		$this->reloadAllForeignKeys();
-		return $this->getHasManyReference($table, $key, FALSE);
 	}
 
 
 
-	public function getBelongsToReference($table, $key, $refresh = TRUE)
+	public function getBelongsToReference($table, $key)
 	{
 		$reference = & $this->structure['belongsTo'][strtolower($table)];
-		if (!empty($reference)) {
-			foreach ($reference as $column => $targetTable) {
-				if (stripos($column, $key) !== FALSE) {
-					return array(
-						$targetTable,
-						$column,
-					);
-				}
+		if ($reference === NULL) {
+			$reference = array();
+			$this->reloadForeignKeys($table);
+		}
+
+		foreach ($reference as $column => $targetTable) {
+			if (stripos($column, $key) !== FALSE) {
+				return array($targetTable, $column);
 			}
 		}
 
-		if (!$refresh) {
-			throw new \PDOException("No reference found for \${$table}->{$key}.");
-		}
-
-		$this->reloadForeignKeys($table);
-		return $this->getBelongsToReference($table, $key, FALSE);
+		throw new \PDOException("No reference found for \${$table}->{$key}.");
 	}
 
 
