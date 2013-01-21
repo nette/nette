@@ -92,14 +92,16 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			$candidates = $columnCandidates = array();
 			foreach ($reference as $targetPair) {
 				list($targetColumn, $targetTable) = $targetPair;
-				if (stripos($targetTable, $key) === FALSE)
+				if (stripos($targetTable, $key) === FALSE) {
 					continue;
+				}
 
 				$candidates[] = array($targetTable, $targetColumn);
 				if (stripos($targetColumn, $table) !== FALSE) {
 					$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
-					if (strtolower($targetTable) === strtolower($key))
+					if (strtolower($targetTable) === strtolower($key)) {
 						return $candidate;
+					}
 				}
 			}
 
@@ -111,8 +113,9 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 			foreach ($candidates as $candidate) {
 				list($targetTable, $targetColumn) = $candidate;
-				if (strtolower($targetTable) === strtolower($key))
+				if (strtolower($targetTable) === strtolower($key)) {
 					return $candidate;
+				}
 			}
 
 			if (!$refresh && !empty($candidates)) {
