@@ -85,41 +85,42 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 
 
-	public function getHasManyReference($table, $key)
+	public function getHasManyReference($table, $key, $refresh = TRUE)
 	{
-		$reference = & $this->structure['hasMany'][strtolower($table)];
-		if ($reference === NULL) {
-			$reference = array();
-			$this->reloadAllForeignKeys();
-		}
+		if (isset($this->structure['hasMany'][strtolower($table)])) {
+			$candidates = $columnCandidates = array();
+			foreach ($this->structure['hasMany'][strtolower($table)] as $targetPair) {
+				list($targetColumn, $targetTable) = $targetPair;
+				if (stripos($targetTable, $key) === FALSE) {
+					continue;
+				}
 
-		$candidates = $columnCandidates = array();
-		foreach ($reference as $targetPair) {
-			list($targetColumn, $targetTable) = $targetPair;
-			if (stripos($targetTable, $key) === FALSE) {
-				continue;
+				$candidates[] = array($targetTable, $targetColumn);
+				if (stripos($targetColumn, $table) !== FALSE) {
+					$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
+					if (strtolower($targetTable) === strtolower($key)) {
+						return $candidate;
+					}
+				}
 			}
 
-			$candidates[] = array($targetTable, $targetColumn);
-			if (stripos($targetColumn, $table) !== FALSE) {
-				$columnCandidates[] = $candidate = array($targetTable, $targetColumn);
+			if (count($columnCandidates) === 1) {
+				return reset($columnCandidates);
+			} elseif (count($candidates) === 1) {
+				return reset($candidates);
+			}
+
+			foreach ($candidates as $candidate) {
+				list($targetTable, $targetColumn) = $candidate;
 				if (strtolower($targetTable) === strtolower($key)) {
 					return $candidate;
 				}
 			}
 		}
 
-		if (count($columnCandidates) === 1) {
-			return reset($columnCandidates);
-		} elseif (count($candidates) === 1) {
-			return reset($candidates);
-		}
-
-		foreach ($candidates as $candidate) {
-			list($targetTable, $targetColumn) = $candidate;
-			if (strtolower($targetTable) === strtolower($key)) {
-				return $candidate;
-			}
+		if ($refresh) {
+			$this->reloadAllForeignKeys();
+			return $this->getHasManyReference($table, $key, FALSE);
 		}
 
 		if (empty($candidates)) {
@@ -131,18 +132,19 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 
 
 
-	public function getBelongsToReference($table, $key)
+	public function getBelongsToReference($table, $key, $refresh = TRUE)
 	{
-		$reference = & $this->structure['belongsTo'][strtolower($table)];
-		if ($reference === NULL) {
-			$reference = array();
-			$this->reloadForeignKeys($table);
+		if (isset($this->structure['belongsTo'][strtolower($table)])) {
+			foreach ($this->structure['belongsTo'][strtolower($table)] as $column => $targetTable) {
+				if (stripos($column, $key) !== FALSE) {
+					return array($targetTable, $column);
+				}
+			}
 		}
 
-		foreach ($reference as $column => $targetTable) {
-			if (stripos($column, $key) !== FALSE) {
-				return array($targetTable, $column);
-			}
+		if ($refresh) {
+			$this->reloadForeignKeys($table);
+			return $this->getBelongsToReference($table, $key, FALSE);
 		}
 
 		throw new \PDOException("No reference found for \${$table}->{$key}.");
@@ -158,8 +160,8 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			}
 		}
 
-		foreach (array_keys($this->structure['hasMany']) as $table) {
-			uksort($this->structure['hasMany'][$table], function($a, $b) {
+		foreach ($this->structure['hasMany'] as & $table) {
+			uksort($table, function($a, $b) {
 				return strlen($a) - strlen($b);
 			});
 		}
