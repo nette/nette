@@ -214,3 +214,7 @@ Assert::true( Validators::is('123aA', 'xdigit') );
 Assert::true( Validators::is(1.0, 'int|float') );
 Assert::true( Validators::is(1, 'int|float') );
 Assert::false( Validators::is('1', 'int|float') );
+
+
+Assert::true( Validators::is('Item', 'identifier') );
+Assert::false( Validators::is('0Item', 'identifier') );
