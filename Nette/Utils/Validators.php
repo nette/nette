@@ -43,6 +43,7 @@ class Validators extends Nette\Object
 		'email' => array(__CLASS__, 'isEmail'),
 		'url' => array(__CLASS__, 'isUrl'),
 		'none' => array(__CLASS__, 'isNone'),
+		'identifier' => array('Nette\PhpGenerator\Helpers', 'isIdentifier'),
 		'pattern' => NULL,
 		'alnum' => 'ctype_alnum',
 		'alpha' => 'ctype_alpha',
