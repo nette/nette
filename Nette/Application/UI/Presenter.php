@@ -307,7 +307,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 		} catch (Nette\InvalidArgumentException $e) {}
 
 		if (isset($e) || $component === NULL) {
-			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not found.");
+			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not found.", NULL, isset($e) ? $e : NULL);
 
 		} elseif (!$component instanceof ISignalReceiver) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not ISignalReceiver implementor.");
