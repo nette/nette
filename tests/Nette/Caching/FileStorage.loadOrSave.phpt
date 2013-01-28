@@ -29,7 +29,7 @@ Assert::false( isset($cache[$key]), 'Is cached?' );
 // Writing cache using Closure...
 $res = $cache->load($key, function(& $dp) use ($value) {
 	$dp = array(
-		Cache::EXPIRATION => time() + 2,
+	Cache::EXPIRATION => time() + 2,
 	);
 	return $value;
 });

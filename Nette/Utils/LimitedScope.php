@@ -29,7 +29,7 @@ final class LimitedScope
 	 */
 	final public function __construct()
 	{
-		throw new Nette\StaticClassException;
+	throw new Nette\StaticClassException;
 	}
 
 
@@ -42,15 +42,15 @@ final class LimitedScope
 	 */
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			extract(self::$vars);
-		}
-		$res = eval('?>' . func_get_arg(0));
-		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
-			throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
-		}
-		return $res;
+	if (func_num_args() > 1) {
+		self::$vars = func_get_arg(1);
+		extract(self::$vars);
+	}
+	$res = eval('?>' . func_get_arg(0));
+	if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
+		throw new Nette\FatalErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'], NULL);
+	}
+	return $res;
 	}
 
 
@@ -63,14 +63,14 @@ final class LimitedScope
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			if (self::$vars === TRUE) {
-				return include_once func_get_arg(0);
-			}
-			extract(self::$vars);
+	if (func_num_args() > 1) {
+		self::$vars = func_get_arg(1);
+		if (self::$vars === TRUE) {
+		return include_once func_get_arg(0);
 		}
-		return include func_get_arg(0);
+		extract(self::$vars);
+	}
+	return include func_get_arg(0);
 	}
 
 }

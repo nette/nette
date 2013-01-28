@@ -22,31 +22,31 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 $appTags = array();
 foreach ($connection->table('book') as $book) {
 	$appTags[$book->title] = array(
-		'author' => $book->author->name,
-		'tags' => array(),
+	'author' => $book->author->name,
+	'tags' => array(),
 	);
 
 	foreach ($book->related('book_tag') as $book_tag) {
-		$appTags[$book->title]['tags'][] = $book_tag->tag->name;
+	$appTags[$book->title]['tags'][] = $book_tag->tag->name;
 	}
 }
 
 Assert::same(array(
 	'1001 tipu a triku pro PHP' => array(
-		'author' => 'Jakub Vrana',
-		'tags' => array('PHP', 'MySQL'),
+	'author' => 'Jakub Vrana',
+	'tags' => array('PHP', 'MySQL'),
 	),
 	'JUSH' => array(
-		'author' => 'Jakub Vrana',
-		'tags' => array('JavaScript'),
+	'author' => 'Jakub Vrana',
+	'tags' => array('JavaScript'),
 	),
 	'Nette' => array(
-		'author' => 'David Grudl',
-		'tags' => array('PHP'),
+	'author' => 'David Grudl',
+	'tags' => array('PHP'),
 	),
 	'Dibi' => array(
-		'author' => 'David Grudl',
-		'tags' => array('PHP', 'MySQL'),
+	'author' => 'David Grudl',
+	'tags' => array('PHP', 'MySQL'),
 	),
 ), $appTags);
 
@@ -55,7 +55,7 @@ Assert::same(array(
 $books = array();
 foreach ($connection->table('author') as $author) {
 	foreach ($author->related('book') as $book) {
-		$books[$book->title] = $author->name;
+	$books[$book->title] = $author->name;
 	}
 }
 
@@ -96,15 +96,15 @@ if (
 	// tests case-insensitive reflection
 	$books = array();
 	foreach ($connection->table('Author') as $author) {
-		foreach ($author->related('book') as $book) {
-			$books[$book->title] = $author->name;
-		}
+	foreach ($author->related('book') as $book) {
+		$books[$book->title] = $author->name;
+	}
 	}
 
 	Assert::same(array(
-		'1001 tipu a triku pro PHP' => 'Jakub Vrana',
-		'JUSH' => 'Jakub Vrana',
-		'Nette' => 'David Grudl',
-		'Dibi' => 'David Grudl',
+	'1001 tipu a triku pro PHP' => 'Jakub Vrana',
+	'JUSH' => 'Jakub Vrana',
+	'Nette' => 'David Grudl',
+	'Dibi' => 'David Grudl',
 	), $books);
 }

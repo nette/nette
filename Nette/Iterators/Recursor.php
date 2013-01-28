@@ -29,9 +29,9 @@ class Recursor extends \IteratorIterator implements \RecursiveIterator, \Countab
 	 */
 	public function hasChildren()
 	{
-		$obj = $this->current();
-		return ($obj instanceof \IteratorAggregate && $obj->getIterator() instanceof \RecursiveIterator)
-			|| $obj instanceof \RecursiveIterator;
+	$obj = $this->current();
+	return ($obj instanceof \IteratorAggregate && $obj->getIterator() instanceof \RecursiveIterator)
+		|| $obj instanceof \RecursiveIterator;
 	}
 
 
@@ -42,8 +42,8 @@ class Recursor extends \IteratorIterator implements \RecursiveIterator, \Countab
 	 */
 	public function getChildren()
 	{
-		$obj = $this->current();
-		return $obj instanceof \IteratorAggregate ? $obj->getIterator() : $obj;
+	$obj = $this->current();
+	return $obj instanceof \IteratorAggregate ? $obj->getIterator() : $obj;
 	}
 
 
@@ -54,7 +54,7 @@ class Recursor extends \IteratorIterator implements \RecursiveIterator, \Countab
 	 */
 	public function count()
 	{
-		return iterator_count($this);
+	return iterator_count($this);
 	}
 
 }

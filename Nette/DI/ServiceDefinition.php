@@ -53,94 +53,94 @@ class ServiceDefinition extends Nette\Object
 
 	public function setClass($class, array $args = array())
 	{
-		$this->class = $class;
-		if ($args) {
-			$this->setFactory($class, $args);
-		}
-		return $this;
+	$this->class = $class;
+	if ($args) {
+		$this->setFactory($class, $args);
+	}
+	return $this;
 	}
 
 
 
 	public function setFactory($factory, array $args = array())
 	{
-		$this->factory = new Statement($factory, $args);
-		return $this;
+	$this->factory = new Statement($factory, $args);
+	return $this;
 	}
 
 
 
 	public function setArguments(array $args = array())
 	{
-		if ($this->factory) {
-			$this->factory->arguments = $args;
-		} else {
-			$this->setClass($this->class, $args);
-		}
-		return $this;
+	if ($this->factory) {
+		$this->factory->arguments = $args;
+	} else {
+		$this->setClass($this->class, $args);
+	}
+	return $this;
 	}
 
 
 
 	public function addSetup($target, $args = NULL)
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-		$this->setup[] = new Statement($target, $args);
-		return $this;
+	if (!is_array($args)) {
+		$args = func_get_args();
+		array_shift($args);
+	}
+	$this->setup[] = new Statement($target, $args);
+	return $this;
 	}
 
 
 
 	public function setParameters(array $params)
 	{
-		$this->shared = $this->autowired = FALSE;
-		$this->parameters = $params;
-		return $this;
+	$this->shared = $this->autowired = FALSE;
+	$this->parameters = $params;
+	return $this;
 	}
 
 
 
 	public function addTag($tag, $attrs = TRUE)
 	{
-		$this->tags[$tag] = $attrs;
-		return $this;
+	$this->tags[$tag] = $attrs;
+	return $this;
 	}
 
 
 
 	public function setAutowired($on)
 	{
-		$this->autowired = $on;
-		return $this;
+	$this->autowired = $on;
+	return $this;
 	}
 
 
 
 	public function setShared($on)
 	{
-		$this->shared = (bool) $on;
-		$this->autowired = $this->shared ? $this->autowired : FALSE;
-		return $this;
+	$this->shared = (bool) $on;
+	$this->autowired = $this->shared ? $this->autowired : FALSE;
+	return $this;
 	}
 
 
 
 	public function setInject($on)
 	{
-		$this->inject = (bool) $on;
-		return $this;
+	$this->inject = (bool) $on;
+	return $this;
 	}
 
 
 
 	public function setImplement($implement)
 	{
-		$this->implement = $implement;
-		$this->shared = TRUE;
-		return $this;
+	$this->implement = $implement;
+	$this->shared = TRUE;
+	return $this;
 	}
 
 }

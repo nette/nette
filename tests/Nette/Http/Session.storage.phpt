@@ -26,7 +26,7 @@ class MySessionStorage extends Object implements ISessionStorage
 
 	function open($savePath, $sessionName)
 	{
-		$this->path = $savePath;
+	$this->path = $savePath;
 	}
 
 	function close()
@@ -35,27 +35,27 @@ class MySessionStorage extends Object implements ISessionStorage
 
 	function read($id)
 	{
-		return @file_get_contents("$this->path/sess_$id");
+	return @file_get_contents("$this->path/sess_$id");
 	}
 
 	function write($id, $data)
 	{
-		return file_put_contents("$this->path/sess_$id", $data);
+	return file_put_contents("$this->path/sess_$id", $data);
 	}
 
 	function remove($id)
 	{
-		return @unlink("$this->path/sess_$id");
+	return @unlink("$this->path/sess_$id");
 	}
 
 	function clean($maxlifetime)
 	{
-		foreach (glob("$this->path/sess_*") as $filename) {
-			if (filemtime($filename) + $maxlifetime < time()) {
-				unlink($filename);
-			}
+	foreach (glob("$this->path/sess_*") as $filename) {
+		if (filemtime($filename) + $maxlifetime < time()) {
+		unlink($filename);
 		}
-		return TRUE;
+	}
+	return TRUE;
 	}
 }
 

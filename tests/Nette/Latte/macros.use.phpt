@@ -23,13 +23,13 @@ class MyMacros extends Latte\Macros\MacroSet
 {
 	public function __construct($compiler)
 	{
-		parent::__construct($compiler);
-		$this->addMacro('my', 'echo "ok"');
+	parent::__construct($compiler);
+	$this->addMacro('my', 'echo "ok"');
 	}
 
 	/*5.2*static function install(Nette\Latte\Compiler $compiler)
 	{
-		return new self($compiler);
+	return new self($compiler);
 	}*/
 }
 

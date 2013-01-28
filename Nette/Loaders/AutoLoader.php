@@ -37,11 +37,11 @@ abstract class AutoLoader extends Nette\Object
 	 */
 	final public static function load($type)
 	{
-		foreach (func_get_args() as $type) {
-			if (!class_exists($type)) {
-				throw new Nette\InvalidStateException("Unable to load class or interface '$type'.");
-			}
+	foreach (func_get_args() as $type) {
+		if (!class_exists($type)) {
+		throw new Nette\InvalidStateException("Unable to load class or interface '$type'.");
 		}
+	}
 	}
 
 
@@ -52,7 +52,7 @@ abstract class AutoLoader extends Nette\Object
 	 */
 	final public static function getLoaders()
 	{
-		return array_values(self::$loaders);
+	return array_values(self::$loaders);
 	}
 
 
@@ -64,12 +64,12 @@ abstract class AutoLoader extends Nette\Object
 	 */
 	public function register(/**/$prepend = FALSE/**/)
 	{
-		if (!function_exists('spl_autoload_register')) {
-			throw new Nette\NotSupportedException('spl_autoload does not exist in this PHP installation.');
-		}
+	if (!function_exists('spl_autoload_register')) {
+		throw new Nette\NotSupportedException('spl_autoload does not exist in this PHP installation.');
+	}
 
-		spl_autoload_register(array($this, 'tryLoad')/**/, TRUE, (bool) $prepend/**/);
-		self::$loaders[spl_object_hash($this)] = $this;
+	spl_autoload_register(array($this, 'tryLoad')/**/, TRUE, (bool) $prepend/**/);
+	self::$loaders[spl_object_hash($this)] = $this;
 	}
 
 
@@ -80,8 +80,8 @@ abstract class AutoLoader extends Nette\Object
 	 */
 	public function unregister()
 	{
-		unset(self::$loaders[spl_object_hash($this)]);
-		return spl_autoload_unregister(array($this, 'tryLoad'));
+	unset(self::$loaders[spl_object_hash($this)]);
+	return spl_autoload_unregister(array($this, 'tryLoad'));
 	}
 
 

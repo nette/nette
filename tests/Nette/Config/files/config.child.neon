@@ -1,4 +1,4 @@
 common:
 	parameters:
-		me: [config.child.neon]
-		scalar: 2
+	me: [config.child.neon]
+	scalar: 2

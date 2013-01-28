@@ -23,9 +23,9 @@ $_POST = array('first'=>array('name'=>'James Bond','email'=>'bond@007.com','stre
 $countries = array(
 	'Select your country',
 	'Europe' => array(
-		'CZ' => 'Czech Republic',
-		'SK' => 'Slovakia',
-		'GB' => 'United Kingdom',
+	'CZ' => 'Czech Republic',
+	'SK' => 'Slovakia',
+	'GB' => 'United Kingdom',
 	),
 	'CA' => 'Canada',
 	'US' => 'United States',

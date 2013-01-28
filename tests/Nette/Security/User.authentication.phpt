@@ -31,16 +31,16 @@ class Authenticator implements IAuthenticator
 	 */
 	function authenticate(array $credentials)
 	{
-		list($username, $password) = $credentials;
-		if ($username !== 'john') {
-			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
+	list($username, $password) = $credentials;
+	if ($username !== 'john') {
+		throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
-		} elseif ($password !== 'xxx') {
-			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
+	} elseif ($password !== 'xxx') {
+		throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
-		} else {
-			return new Identity('John Doe', 'admin');
-		}
+	} else {
+		return new Identity('John Doe', 'admin');
+	}
 	}
 
 }

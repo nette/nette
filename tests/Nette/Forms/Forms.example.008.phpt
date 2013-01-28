@@ -41,7 +41,7 @@ $form->addText('email', 'Send to email:')
 	->setAttribute('autocomplete', 'off')
 	->setAttribute('placeholder', 'Optional, but Recommended')
 	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
-		->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
+	->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
 
 $form->addSubmit('submit', 'Send');
 

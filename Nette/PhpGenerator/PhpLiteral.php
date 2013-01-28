@@ -28,7 +28,7 @@ class PhpLiteral
 
 	public function __construct($value)
 	{
-		$this->value = (string) $value;
+	$this->value = (string) $value;
 	}
 
 }

@@ -30,15 +30,15 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public static function from($arr, $recursive = TRUE)
 	{
-		$obj = new static;
-		foreach ($arr as $key => $value) {
-			if ($recursive && is_array($value)) {
-				$obj->$key = static::from($value, TRUE);
-			} else {
-				$obj->$key = $value;
-			}
+	$obj = new static;
+	foreach ($arr as $key => $value) {
+		if ($recursive && is_array($value)) {
+		$obj->$key = static::from($value, TRUE);
+		} else {
+		$obj->$key = $value;
 		}
-		return $obj;
+	}
+	return $obj;
 	}
 
 
@@ -49,7 +49,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function getIterator()
 	{
-		return new \RecursiveArrayIterator($this);
+	return new \RecursiveArrayIterator($this);
 	}
 
 
@@ -60,7 +60,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function count()
 	{
-		return count((array) $this);
+	return count((array) $this);
 	}
 
 
@@ -73,10 +73,10 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function offsetSet($key, $value)
 	{
-		if (!is_scalar($key)) { // prevents NULL
-			throw new InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
-		}
-		$this->$key = $value;
+	if (!is_scalar($key)) { // prevents NULL
+		throw new InvalidArgumentException("Key must be either a string or an integer, " . gettype($key) ." given.");
+	}
+	$this->$key = $value;
 	}
 
 
@@ -88,7 +88,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function offsetGet($key)
 	{
-		return $this->$key;
+	return $this->$key;
 	}
 
 
@@ -100,7 +100,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function offsetExists($key)
 	{
-		return isset($this->$key);
+	return isset($this->$key);
 	}
 
 
@@ -112,7 +112,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public function offsetUnset($key)
 	{
-		unset($this->$key);
+	unset($this->$key);
 	}
 
 }

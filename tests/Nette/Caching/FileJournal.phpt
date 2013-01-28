@@ -86,8 +86,8 @@ test($result, (count($result) === 1 and $result[0] === 'ok_test5'), 'Priority an
 
 for ($i=1;$i<=10;$i++) {
 	$journal->write('ok_test6_'.$i, array(
-		Cache::TAGS => array('test:homepage', 'test:homepage/'.$i),
-		Cache::PRIORITY => $i,
+	Cache::TAGS => array('test:homepage', 'test:homepage/'.$i),
+	Cache::PRIORITY => $i,
 	));
 }
 

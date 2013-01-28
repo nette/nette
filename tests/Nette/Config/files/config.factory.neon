@@ -5,22 +5,22 @@ services:
 	alias: @one
 
 	one:
-		class: %class%
-		arguments: [1]
+	class: %class%
+	arguments: [1]
 
 	two:
-		class: %class%(1)
+	class: %class%(1)
 
 	three:
-		class: Lorem
-		create: Factory::createLorem
-		arguments: [1]
+	class: Lorem
+	create: Factory::createLorem
+	arguments: [1]
 
 	four:
-		create: Factory::createLorem(1)
+	create: Factory::createLorem(1)
 
 	five:
-		create: [Factory, createLorem](1)
+	create: [Factory, createLorem](1)
 
 	six: Factory::createLorem(1)
 

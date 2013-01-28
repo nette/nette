@@ -22,13 +22,13 @@ $data = $config->load('files/config.sample.php');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'db.example.com',
-			'username' => 'dbuser',
-			'password' => 'secret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'db.example.com',
+		'username' => 'dbuser',
+		'password' => 'secret',
+		'dbname' => 'dbname',
+	),
 	),
 ), $data );
 
@@ -39,13 +39,13 @@ Assert::match( <<<EOD
 return array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'db.example.com',
-			'username' => 'dbuser',
-			'password' => 'secret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'db.example.com',
+		'username' => 'dbuser',
+		'password' => 'secret',
+		'dbname' => 'dbname',
+	),
 	),
 );
 EOD

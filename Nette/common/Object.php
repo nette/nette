@@ -64,7 +64,7 @@ abstract class Object
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
+	return new Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
@@ -78,7 +78,7 @@ abstract class Object
 	 */
 	public function __call($name, $args)
 	{
-		return ObjectMixin::call($this, $name, $args);
+	return ObjectMixin::call($this, $name, $args);
 	}
 
 
@@ -92,7 +92,7 @@ abstract class Object
 	 */
 	public static function __callStatic($name, $args)
 	{
-		return ObjectMixin::callStatic(get_called_class(), $name, $args);
+	return ObjectMixin::callStatic(get_called_class(), $name, $args);
 	}
 
 
@@ -105,16 +105,16 @@ abstract class Object
 	 */
 	public static function extensionMethod($name, $callback = NULL)
 	{
-		if (strpos($name, '::') === FALSE) {
-			$class = get_called_class();
-		} else {
-			list($class, $name) = explode('::', $name);
-		}
-		if ($callback === NULL) {
-			return ObjectMixin::getExtensionMethod($class, $name);
-		} else {
-			ObjectMixin::setExtensionMethod($class, $name, $callback);
-		}
+	if (strpos($name, '::') === FALSE) {
+		$class = get_called_class();
+	} else {
+		list($class, $name) = explode('::', $name);
+	}
+	if ($callback === NULL) {
+		return ObjectMixin::getExtensionMethod($class, $name);
+	} else {
+		ObjectMixin::setExtensionMethod($class, $name, $callback);
+	}
 	}
 
 
@@ -127,7 +127,7 @@ abstract class Object
 	 */
 	public function &__get($name)
 	{
-		return ObjectMixin::get($this, $name);
+	return ObjectMixin::get($this, $name);
 	}
 
 
@@ -141,7 +141,7 @@ abstract class Object
 	 */
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+	return ObjectMixin::set($this, $name, $value);
 	}
 
 
@@ -153,7 +153,7 @@ abstract class Object
 	 */
 	public function __isset($name)
 	{
-		return ObjectMixin::has($this, $name);
+	return ObjectMixin::has($this, $name);
 	}
 
 
@@ -166,7 +166,7 @@ abstract class Object
 	 */
 	public function __unset($name)
 	{
-		ObjectMixin::remove($this, $name);
+	ObjectMixin::remove($this, $name);
 	}
 
 }

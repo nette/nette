@@ -22,7 +22,7 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 $titles = array();
 foreach ($connection->table('nUsers')->order('nUserId') as $user) {
 	foreach ($user->related('nUsers_nTopics')->order('nTopicId') as $userTopic) {
-		$titles[$userTopic->nTopic->title] = $user->name;
+	$titles[$userTopic->nTopic->title] = $user->name;
 	}
 }
 

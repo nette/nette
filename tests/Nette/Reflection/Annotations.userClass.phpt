@@ -40,21 +40,21 @@ class TestClass {
 $rc = new Reflection\ClassType('TestClass');
 Assert::equal( array(
 	'secured' => array(
-		new SecuredAnnotation(array(
-			'role' => NULL,
-			'level' => NULL,
-			'value' => 'disabled',
-		)),
+	new SecuredAnnotation(array(
+		'role' => NULL,
+		'level' => NULL,
+		'value' => 'disabled',
+	)),
 	),
 ), $rc->getAnnotations() );
 
 
 Assert::equal( array(
 	'secured' => array(
-		new SecuredAnnotation(array(
-			'role' => 'admin',
-			'level' => 2,
-			'value' => NULL,
-		)),
+	new SecuredAnnotation(array(
+		'role' => 'admin',
+		'level' => 2,
+		'value' => NULL,
+	)),
 	),
 ), $rc->getProperty('foo')->getAnnotations() );

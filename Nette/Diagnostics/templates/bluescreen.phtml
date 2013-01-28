@@ -37,8 +37,8 @@ static $errorTypes = array(
 );
 if (PHP_VERSION_ID >= 50300) {
 	$errorTypes += array(
-		E_DEPRECATED => 'Deprecated',
-		E_USER_DEPRECATED => 'User Deprecated',
+	E_DEPRECATED => 'Deprecated',
+	E_USER_DEPRECATED => 'User Deprecated',
 	);
 }
 
@@ -54,280 +54,280 @@ $counter = 0;
 	<meta name="generator" content="Nette Framework">
 
 	<title><?php echo htmlspecialchars($title) ?></title><!-- <?php
-		$ex = $exception; echo htmlspecialchars($ex->getMessage() . ($ex->getCode() ? ' #' . $ex->getCode() : ''));
-		while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)) echo htmlspecialchars('; caused by ' . get_class($ex) . ' ' . $ex->getMessage() . ($ex->getCode() ? ' #' . $ex->getCode() : ''));
+	$ex = $exception; echo htmlspecialchars($ex->getMessage() . ($ex->getCode() ? ' #' . $ex->getCode() : ''));
+	while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)) echo htmlspecialchars('; caused by ' . get_class($ex) . ' ' . $ex->getMessage() . ($ex->getCode() ? ' #' . $ex->getCode() : ''));
 	?> -->
 
 	<style type="text/css" class="nette-debug">
 
-		html {
-			overflow-y: scroll;
-		}
+	html {
+		overflow-y: scroll;
+	}
 
-		body {
-			margin: 0 0 2em;
-			padding: 0;
-		}
+	body {
+		margin: 0 0 2em;
+		padding: 0;
+	}
 
-		#netteBluescreen {
-			font: 9pt/1.5 Verdana, sans-serif;
-			background: white;
-			color: #333;
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 100%;
-			text-align: left;
-		}
+	#netteBluescreen {
+		font: 9pt/1.5 Verdana, sans-serif;
+		background: white;
+		color: #333;
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		text-align: left;
+	}
 
-		#netteBluescreen * {
-			font: inherit;
-			color: inherit;
-			background: transparent;
-			border: none;
-			margin: 0;
-			padding: 0;
-			text-align: inherit;
-			text-indent: 0;
-		}
+	#netteBluescreen * {
+		font: inherit;
+		color: inherit;
+		background: transparent;
+		border: none;
+		margin: 0;
+		padding: 0;
+		text-align: inherit;
+		text-indent: 0;
+	}
 
-		#netteBluescreen b {
-			font-weight: bold;
-		}
+	#netteBluescreen b {
+		font-weight: bold;
+	}
 
-		#netteBluescreen i {
-			font-style: italic;
-		}
+	#netteBluescreen i {
+		font-style: italic;
+	}
 
-		#netteBluescreen a {
-			text-decoration: none;
-			color: #328ADC;
-			padding: 2px 4px;
-			margin: -2px -4px;
-		}
+	#netteBluescreen a {
+		text-decoration: none;
+		color: #328ADC;
+		padding: 2px 4px;
+		margin: -2px -4px;
+	}
 
-		#netteBluescreen a:hover, #netteBluescreen a:active, #netteBluescreen a:focus {
-			color: #085AA3;
-		}
+	#netteBluescreen a:hover, #netteBluescreen a:active, #netteBluescreen a:focus {
+		color: #085AA3;
+	}
 
-		#netteBluescreenIcon {
-			position: absolute;
-			right: .5em;
-			top: .5em;
-			z-index: 20000;
-			text-decoration: none;
-			background: #CD1818;
-			color: white !important;
-			padding: 3px;
-		}
+	#netteBluescreenIcon {
+		position: absolute;
+		right: .5em;
+		top: .5em;
+		z-index: 20000;
+		text-decoration: none;
+		background: #CD1818;
+		color: white !important;
+		padding: 3px;
+	}
 
-		#netteBluescreenError {
-			background: #CD1818;
-			color: white;
-			font: 13pt/1.5 Verdana, sans-serif !important;
-			display: block;
-		}
+	#netteBluescreenError {
+		background: #CD1818;
+		color: white;
+		font: 13pt/1.5 Verdana, sans-serif !important;
+		display: block;
+	}
 
-		#netteBluescreenError #netteBsSearch {
-			color: #CD1818;
-			font-size: .7em;
-		}
+	#netteBluescreenError #netteBsSearch {
+		color: #CD1818;
+		font-size: .7em;
+	}
 
-		#netteBluescreenError:hover #netteBsSearch {
-			color: #ED8383;
-		}
+	#netteBluescreenError:hover #netteBsSearch {
+		color: #ED8383;
+	}
 
-		#netteBluescreen h1 {
-			font-size: 18pt;
-			font-weight: normal;
-			text-shadow: 1px 1px 0 rgba(0, 0, 0, .4);
-			margin: .7em 0;
-		}
+	#netteBluescreen h1 {
+		font-size: 18pt;
+		font-weight: normal;
+		text-shadow: 1px 1px 0 rgba(0, 0, 0, .4);
+		margin: .7em 0;
+	}
 
-		#netteBluescreen h2 {
-			font: 14pt/1.5 sans-serif !important;
-			color: #888;
-			margin: .6em 0;
-		}
+	#netteBluescreen h2 {
+		font: 14pt/1.5 sans-serif !important;
+		color: #888;
+		margin: .6em 0;
+	}
 
-		#netteBluescreen h3 {
-			font: bold 10pt/1.5 Verdana, sans-serif !important;
-			margin: 1em 0;
-			padding: 0;
-		}
+	#netteBluescreen h3 {
+		font: bold 10pt/1.5 Verdana, sans-serif !important;
+		margin: 1em 0;
+		padding: 0;
+	}
 
-		#netteBluescreen p, #netteBluescreen pre {
-			margin: .8em 0
-		}
+	#netteBluescreen p, #netteBluescreen pre {
+		margin: .8em 0
+	}
 
-		#netteBluescreen pre, #netteBluescreen code, #netteBluescreen table {
-			font: 9pt/1.5 Consolas, monospace !important;
-		}
+	#netteBluescreen pre, #netteBluescreen code, #netteBluescreen table {
+		font: 9pt/1.5 Consolas, monospace !important;
+	}
 
-		#netteBluescreen pre, #netteBluescreen table {
-			background: #FDF5CE;
-			padding: .4em .7em;
-			border: 1px dotted silver;
-			overflow: auto;
-		}
+	#netteBluescreen pre, #netteBluescreen table {
+		background: #FDF5CE;
+		padding: .4em .7em;
+		border: 1px dotted silver;
+		overflow: auto;
+	}
 
-		#netteBluescreen table pre {
-			padding: 0;
-			margin: 0;
-			border: none;
-		}
+	#netteBluescreen table pre {
+		padding: 0;
+		margin: 0;
+		border: none;
+	}
 
-		#netteBluescreen table {
-			border-collapse: collapse;
-			width: 100%;
-		}
+	#netteBluescreen table {
+		border-collapse: collapse;
+		width: 100%;
+	}
 
-		#netteBluescreen td, #netteBluescreen th {
-			vertical-align: top;
-			text-align: left;
-			padding: 2px 6px;
-			border: 1px solid #e6dfbf;
-		}
+	#netteBluescreen td, #netteBluescreen th {
+		vertical-align: top;
+		text-align: left;
+		padding: 2px 6px;
+		border: 1px solid #e6dfbf;
+	}
 
-		#netteBluescreen th {
-			font-weight: bold;
-		}
+	#netteBluescreen th {
+		font-weight: bold;
+	}
 
-		#netteBluescreen tr > :first-child {
-			width: 20%;
-		}
+	#netteBluescreen tr > :first-child {
+		width: 20%;
+	}
 
-		#netteBluescreen tr:nth-child(2n), #netteBluescreen tr:nth-child(2n) pre {
-			background-color: #F7F0CB;
-		}
+	#netteBluescreen tr:nth-child(2n), #netteBluescreen tr:nth-child(2n) pre {
+		background-color: #F7F0CB;
+	}
 
-		#netteBluescreen ol {
-			margin: 1em 0;
-			padding-left: 2.5em;
-		}
+	#netteBluescreen ol {
+		margin: 1em 0;
+		padding-left: 2.5em;
+	}
 
-		#netteBluescreen ul {
-			font: 7pt/1.5 Verdana, sans-serif !important;
-			padding: 2em 4em;
-			margin: 1em 0 0;
-			color: #777;
-			background: #F6F5F3 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAAjCAMAAADbuxbOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF/fz24d7Y7Onj5uLd9vPu3drUzMvG09LN39zW8e7o2NbQ3NnT29jS0M7J1tXQAAAApvmsFgAAABB0Uk5T////////////////////AOAjXRkAAAKlSURBVHja7FbbsqQgDAwENEgc//9vN+SCWDtbtXPmZR/Wc6o02mlC58LA9ckFAOszvMV8xNgyUjyXhojfMVKvRL0ZHavxXYy5JrmchMdzou8YlTClxajtK8ZGGpWRoBr1+gFjKfHkJPbizabLgzE3pH7Iu4K980xgFvlrVzMZoVBWhtvouCDdcTDmTgMCJdVxJ9MKO6XxnliM7hxi5lbj2ZVM4l8DqYyKoNLYcfqBB1/LpHYxEcfVG6ZpMDgyFUVWY/Q1sSYPpIdSAKWqLWL0XqWiMWc4hpH0OQOMOAgdycY4N9Sb7wWANQs3rsDSdLAYiuxi5siVfOhBWIrtH0G3kNaF/8Q4kCPE1kMucG/ZMUBUCOgiKJkPuWWTLGVgLGpwns1DraUayCtoBqERyaYtVsm85NActRooezvSLO/sKZP/nq8n4+xcyjNsRu8zW6KWpdb7wjiQd4WrtFZYFiKHENSmWp6xshh96c2RQ+c7Lt+qbijyEjHWUJ/pZsy8MGIUuzNiPySK2Gqoh6ZTRF6ko6q3nVTkaA//itIrDpW6l3SLo8juOmqMXkYknu5FdQxWbhCfKHEGDhxxyTVaXJF3ZjSl3jMksjSOOKmne9pI+mcG5QvaUJhI9HpkmRo2NpCrDJvsktRhRE2MM6F2n7dt4OaMUq8bCctk0+PoMRzL+1l5PZ2eyM/Owr86gf8z/tOM53lom5+nVcFuB+eJVzlXwAYy9TZ9s537tfqcsJWbEU4nBngZo6FfO9T9CdhfBtmk2dLiAy8uS4zwOpMx2HqYbTC+amNeAYTpsP4SIgvWfUBWXxn3CMHW3ffd7k3+YIkx7w0t/CVGvcPejoeOlzOWzeGbawOHqXQGUTMZRcfj4XPCgW9y/fuvVn8zD9P1QHzv80uAAQA0i3Jer7Jr7gAAAABJRU5ErkJggg==') 99% 10px no-repeat;
-			border-top: 1px solid #DDD;
-		}
+	#netteBluescreen ul {
+		font: 7pt/1.5 Verdana, sans-serif !important;
+		padding: 2em 4em;
+		margin: 1em 0 0;
+		color: #777;
+		background: #F6F5F3 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAAAjCAMAAADbuxbOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADBQTFRF/fz24d7Y7Onj5uLd9vPu3drUzMvG09LN39zW8e7o2NbQ3NnT29jS0M7J1tXQAAAApvmsFgAAABB0Uk5T////////////////////AOAjXRkAAAKlSURBVHja7FbbsqQgDAwENEgc//9vN+SCWDtbtXPmZR/Wc6o02mlC58LA9ckFAOszvMV8xNgyUjyXhojfMVKvRL0ZHavxXYy5JrmchMdzou8YlTClxajtK8ZGGpWRoBr1+gFjKfHkJPbizabLgzE3pH7Iu4K980xgFvlrVzMZoVBWhtvouCDdcTDmTgMCJdVxJ9MKO6XxnliM7hxi5lbj2ZVM4l8DqYyKoNLYcfqBB1/LpHYxEcfVG6ZpMDgyFUVWY/Q1sSYPpIdSAKWqLWL0XqWiMWc4hpH0OQOMOAgdycY4N9Sb7wWANQs3rsDSdLAYiuxi5siVfOhBWIrtH0G3kNaF/8Q4kCPE1kMucG/ZMUBUCOgiKJkPuWWTLGVgLGpwns1DraUayCtoBqERyaYtVsm85NActRooezvSLO/sKZP/nq8n4+xcyjNsRu8zW6KWpdb7wjiQd4WrtFZYFiKHENSmWp6xshh96c2RQ+c7Lt+qbijyEjHWUJ/pZsy8MGIUuzNiPySK2Gqoh6ZTRF6ko6q3nVTkaA//itIrDpW6l3SLo8juOmqMXkYknu5FdQxWbhCfKHEGDhxxyTVaXJF3ZjSl3jMksjSOOKmne9pI+mcG5QvaUJhI9HpkmRo2NpCrDJvsktRhRE2MM6F2n7dt4OaMUq8bCctk0+PoMRzL+1l5PZ2eyM/Owr86gf8z/tOM53lom5+nVcFuB+eJVzlXwAYy9TZ9s537tfqcsJWbEU4nBngZo6FfO9T9CdhfBtmk2dLiAy8uS4zwOpMx2HqYbTC+amNeAYTpsP4SIgvWfUBWXxn3CMHW3ffd7k3+YIkx7w0t/CVGvcPejoeOlzOWzeGbawOHqXQGUTMZRcfj4XPCgW9y/fuvVn8zD9P1QHzv80uAAQA0i3Jer7Jr7gAAAABJRU5ErkJggg==') 99% 10px no-repeat;
+		border-top: 1px solid #DDD;
+	}
 
-		#netteBluescreen div.panel {
-			padding: 1px 25px;
-		}
+	#netteBluescreen div.panel {
+		padding: 1px 25px;
+	}
 
-		#netteBluescreen div.inner {
-			background: #F4F3F1;
-			padding: .1em 1em 1em;
-			border-radius: 8px;
-			-moz-border-radius: 8px;
-			-webkit-border-radius: 8px;
-		}
+	#netteBluescreen div.inner {
+		background: #F4F3F1;
+		padding: .1em 1em 1em;
+		border-radius: 8px;
+		-moz-border-radius: 8px;
+		-webkit-border-radius: 8px;
+	}
 
-		#netteBluescreen .outer {
-			overflow: auto;
-		}
-
-
-		/* source code */
-		#netteBluescreen pre.php div {
-			min-width: 100%;
-			float: left;
-			_float: none;
-			white-space: pre;
-		}
-
-		#netteBluescreen .highlight {
-			background: #CD1818;
-			color: white;
-			font-weight: bold;
-			font-style: normal;
-			display: block;
-			padding: 0 .4em;
-			margin: 0 -.4em;
-		}
-
-		#netteBluescreen .line {
-			color: #9F9C7F;
-			font-weight: normal;
-			font-style: normal;
-		}
-
-		#netteBluescreen a[href^=editor\:] {
-			color: inherit;
-			border-bottom: 1px dotted #C1D2E1;
-		}
+	#netteBluescreen .outer {
+		overflow: auto;
+	}
 
 
-		/* toggle */
-		html.js #netteBluescreen .nette-collapsed {
-			display: none;
-		}
+	/* source code */
+	#netteBluescreen pre.php div {
+		min-width: 100%;
+		float: left;
+		_float: none;
+		white-space: pre;
+	}
 
-		#netteBluescreen .nette-toggle, #netteBluescreen .nette-toggle-collapsed {
-			cursor: pointer;
-		}
+	#netteBluescreen .highlight {
+		background: #CD1818;
+		color: white;
+		font-weight: bold;
+		font-style: normal;
+		display: block;
+		padding: 0 .4em;
+		margin: 0 -.4em;
+	}
 
-		#netteBluescreen .nette-toggle:after {
-			content: " ▼";
-			opacity: .4;
-		}
+	#netteBluescreen .line {
+		color: #9F9C7F;
+		font-weight: normal;
+		font-style: normal;
+	}
 
-		#netteBluescreen .nette-toggle-collapsed:after {
-			content: " ►";
-			opacity: .4;
-		}
+	#netteBluescreen a[href^=editor\:] {
+		color: inherit;
+		border-bottom: 1px dotted #C1D2E1;
+	}
 
 
-		/* dump */
-		#netteBluescreen .nette-dump-array, #netteBluescreen .nette-dump-object {
-			color: #C22;
-		}
+	/* toggle */
+	html.js #netteBluescreen .nette-collapsed {
+		display: none;
+	}
 
-		#netteBluescreen .nette-dump-string {
-			color: #35D;
-		}
+	#netteBluescreen .nette-toggle, #netteBluescreen .nette-toggle-collapsed {
+		cursor: pointer;
+	}
 
-		#netteBluescreen .nette-dump-number {
-			color: #090;
-		}
+	#netteBluescreen .nette-toggle:after {
+		content: " ▼";
+		opacity: .4;
+	}
 
-		#netteBluescreen .nette-dump-null, #netteBluescreen .nette-dump-bool {
-			color: #850;
-		}
+	#netteBluescreen .nette-toggle-collapsed:after {
+		content: " ►";
+		opacity: .4;
+	}
 
-		#netteBluescreen .nette-dump-visibility {
-			font-size: 85%;
-			color: #998;
-		}
 
-		#netteBluescreen .nette-dump-indent {
-			display: none;
-		}
+	/* dump */
+	#netteBluescreen .nette-dump-array, #netteBluescreen .nette-dump-object {
+		color: #C22;
+	}
 
-		#netteBluescreen pre.nette-dump div {
-			padding-left: 3ex;
-		}
+	#netteBluescreen .nette-dump-string {
+		color: #35D;
+	}
 
-		#netteBluescreen pre.nette-dump div div {
-			border-left: 1px solid rgba(0, 0, 0, .1);
-			margin-left: .5ex;
-		}
+	#netteBluescreen .nette-dump-number {
+		color: #090;
+	}
 
-		#netteBluescreen .caused {
-			float: right;
-			padding: .3em .6em;
-			background: #df8075;
-			border-radius: 0 0 0 8px;
-			white-space: nowrap;
-		}
+	#netteBluescreen .nette-dump-null, #netteBluescreen .nette-dump-bool {
+		color: #850;
+	}
 
-		#netteBluescreen .caused a {
-			color: white;
-		}
+	#netteBluescreen .nette-dump-visibility {
+		font-size: 85%;
+		color: #998;
+	}
+
+	#netteBluescreen .nette-dump-indent {
+		display: none;
+	}
+
+	#netteBluescreen pre.nette-dump div {
+		padding-left: 3ex;
+	}
+
+	#netteBluescreen pre.nette-dump div div {
+		border-left: 1px solid rgba(0, 0, 0, .1);
+		margin-left: .5ex;
+	}
+
+	#netteBluescreen .caused {
+		float: right;
+		padding: .3em .6em;
+		background: #df8075;
+		border-radius: 0 0 0 8px;
+		white-space: nowrap;
+	}
+
+	#netteBluescreen .caused a {
+		color: white;
+	}
 
 	</style>
 	<script>document.body.className+=' js'</script>
@@ -339,308 +339,308 @@ $counter = 0;
 <div id="netteBluescreen">
 	<a id="netteBluescreenIcon" href="#" class="nette-toggle"></a>
 	<div>
-		<div id="netteBluescreenError" class="panel">
-			<h1><?php echo htmlspecialchars($title), ($exception->getCode() ? ' #' . $exception->getCode() : '') ?></h1>
+	<div id="netteBluescreenError" class="panel">
+		<h1><?php echo htmlspecialchars($title), ($exception->getCode() ? ' #' . $exception->getCode() : '') ?></h1>
 
-			<p><?php echo htmlspecialchars($exception->getMessage()) ?> <a href="http://www.google.cz/search?sourceid=nette&amp;q=<?php echo urlencode($title . ' ' . preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>" id="netteBsSearch">search&#x25ba;</a></p>
-		</div>
+		<p><?php echo htmlspecialchars($exception->getMessage()) ?> <a href="http://www.google.cz/search?sourceid=nette&amp;q=<?php echo urlencode($title . ' ' . preg_replace('#\'.*\'|".*"#Us', '', $exception->getMessage())) ?>" id="netteBsSearch">search&#x25ba;</a></p>
+	</div>
 
-		<?php if ((method_exists($exception, 'getPrevious') && $prev = $exception->getPrevious()) || (isset($exception->previous) && $prev = $exception->previous)): ?>
-		<div class="caused">
-			<a href="#netteCaused">Caused by <?php echo get_class($prev) ?></a>
+	<?php if ((method_exists($exception, 'getPrevious') && $prev = $exception->getPrevious()) || (isset($exception->previous) && $prev = $exception->previous)): ?>
+	<div class="caused">
+		<a href="#netteCaused">Caused by <?php echo get_class($prev) ?></a>
+	</div>
+	<?php endif ?>
+
+
+	<?php $ex = $exception; $level = 0; ?>
+	<?php do { ?>
+
+		<?php if ($level++): ?>
+		<div class="panel"<?php if ($level === 2) echo ' id="netteCaused"' ?>>
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle<?php echo ($collapsed = $level > 2) ? '-collapsed' : '' ?>">Caused by</a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
+		<div class="panel">
+			<h1><?php echo htmlspecialchars(get_class($ex) . ($ex->getCode() ? ' #' . $ex->getCode() : '')) ?></h1>
+
+			<p><b><?php echo htmlspecialchars($ex->getMessage()) ?></b></p>
 		</div>
 		<?php endif ?>
 
 
-		<?php $ex = $exception; $level = 0; ?>
-		<?php do { ?>
 
-			<?php if ($level++): ?>
-			<div class="panel"<?php if ($level === 2) echo ' id="netteCaused"' ?>>
-			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle<?php echo ($collapsed = $level > 2) ? '-collapsed' : '' ?>">Caused by</a></h2>
-
-			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
-				<div class="panel">
-					<h1><?php echo htmlspecialchars(get_class($ex) . ($ex->getCode() ? ' #' . $ex->getCode() : '')) ?></h1>
-
-					<p><b><?php echo htmlspecialchars($ex->getMessage()) ?></b></p>
-				</div>
-			<?php endif ?>
-
-
-
-			<?php foreach ($panels as $panel): ?>
-			<?php $panel = call_user_func($panel, $ex); if (empty($panel['tab']) || empty($panel['panel'])) continue; ?>
-			<?php if (!empty($panel['bottom'])) { continue; } ?>
-			<div class="panel">
-				<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
-
-				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
-				<?php echo $panel['panel'] ?>
-			</div></div>
-			<?php endforeach ?>
-
-
-
-			<?php $stack = $ex->getTrace(); $expanded = NULL ?>
-			<?php if ($this->isCollapsed($ex->getFile())) {
-				foreach ($stack as $key => $row) {
-					if (isset($row['file']) && !$this->isCollapsed($row['file'])) { $expanded = $key; break; }
-				}
-			} ?>
-
-			<div class="panel">
-			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle<?php echo ($collapsed = $expanded !== NULL) ? '-collapsed' : '' ?>">Source file</a></h2>
-
-			<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
-				<p><b>File:</b> <?php echo Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
-				<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
-			</div></div>
-
-
-
-			<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Diagnostics\Debugger' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
-			<?php if ($stack): ?>
-			<div class="panel">
-				<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">Call stack</a></h2>
-
-				<div id="netteBsPnl<?php echo $counter ?>" class="inner">
-				<ol>
-					<?php foreach ($stack as $key => $row): ?>
-					<li><p>
-
-					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<?php echo Helpers::editorLink($row['file'], $row['line']) ?>
-					<?php else: ?>
-						<i>inner-code</i><?php if (isset($row['line'])) echo ':', $row['line'] ?>
-					<?php endif ?>
-
-					<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#netteBsSrc<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">source</a>&nbsp; <?php endif ?>
-
-					<?php if (isset($row['class'])) echo htmlspecialchars($row['class'] . $row['type']) ?>
-					<?php echo htmlspecialchars($row['function']) ?>
-
-					(<?php if (!empty($row['args'])): ?><a href="#netteBsArgs<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">arguments</a><?php endif ?>)
-					</p>
-
-					<?php if (!empty($row['args'])): ?>
-						<div class="nette-collapsed outer" id="netteBsArgs<?php echo "$level-$key" ?>">
-						<table>
-						<?php
-						try {
-							$r = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) : new \ReflectionFunction($row['function']);
-							$params = $r->getParameters();
-						} catch (\Exception $e) {
-							$params = array();
-						}
-						foreach ($row['args'] as $k => $v) {
-							echo '<tr><th>', htmlspecialchars(isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
-							echo Dumper::toHtml($v);
-							echo "</td></tr>\n";
-						}
-						?>
-						</table>
-						</div>
-					<?php endif ?>
-
-
-					<?php if (isset($row['file']) && is_file($row['file'])): ?>
-						<div <?php if ($expanded !== $key) echo 'class="nette-collapsed"'; ?> id="netteBsSrc<?php echo "$level-$key" ?>"><?php echo self::highlightFile($row['file'], $row['line']) ?></div>
-					<?php endif ?>
-
-					</li>
-					<?php endforeach ?>
-				</ol>
-			</div></div>
-			<?php endif ?>
-
-
-
-			<?php if (isset($ex->context) && is_array($ex->context)):?>
-			<div class="panel">
-			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Variables</a></h2>
-
-			<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
-			<div class="outer">
-			<table>
-			<?php
-			foreach ($ex->context as $k => $v) {
-					echo '<tr><th>$', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
-			}
-			?>
-			</table>
-			</div>
-			</div></div>
-			<?php endif ?>
-
-		<?php } while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)); ?>
-		<?php while (--$level) echo '</div></div>' ?>
-
-
-
-		<?php $bottomPanels = array() ?>
 		<?php foreach ($panels as $panel): ?>
-		<?php $panel = call_user_func($panel, NULL); if (empty($panel['tab']) || empty($panel['panel'])) continue; ?>
-		<?php if (!empty($panel['bottom'])) { $bottomPanels[] = $panel; continue; } ?>
+		<?php $panel = call_user_func($panel, $ex); if (empty($panel['tab']) || empty($panel['panel'])) continue; ?>
+		<?php if (!empty($panel['bottom'])) { continue; } ?>
 		<div class="panel">
-			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
 
-			<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
-			<?php echo $panel['panel'] ?>
+		<div id="netteBsPnl<?php echo $counter ?>" class="inner">
+		<?php echo $panel['panel'] ?>
 		</div></div>
 		<?php endforeach ?>
 
 
 
+		<?php $stack = $ex->getTrace(); $expanded = NULL ?>
+		<?php if ($this->isCollapsed($ex->getFile())) {
+		foreach ($stack as $key => $row) {
+			if (isset($row['file']) && !$this->isCollapsed($row['file'])) { $expanded = $key; break; }
+		}
+		} ?>
+
 		<div class="panel">
-		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Environment</a></h2>
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle<?php echo ($collapsed = $expanded !== NULL) ? '-collapsed' : '' ?>">Source file</a></h2>
 
-		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">$_SERVER</a></h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer">
-			<table>
-			<?php
-			foreach ($_SERVER as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
-			?>
-			</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">$_SESSION</a></h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer">
-			<?php if (empty($_SESSION)):?>
-			<p><i>empty</i></p>
-			<?php else: ?>
-			<table>
-			<?php
-			foreach ($_SESSION as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', $k === '__NF' ? '<i>Nette Session</i>' : Dumper::toHtml($v), "</td></tr>\n";
-			?>
-			</table>
-			<?php endif ?>
-			</div>
-
-
-			<?php if (!empty($_SESSION['__NF']['DATA'])):?>
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">Nette Session</a></h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer">
-			<table>
-			<?php
-			foreach ($_SESSION['__NF']['DATA'] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
-			?>
-			</table>
-			</div>
-			<?php endif ?>
-
-
-			<?php
-			$list = get_defined_constants(TRUE);
-			if (!empty($list['user'])):?>
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Constants</a></h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
-			<table>
-			<?php
-			foreach ($list['user'] as $k => $v) {
-				echo '<tr><th>', htmlspecialchars($k), '</th>';
-				echo '<td>', Dumper::toHtml($v), "</td></tr>\n";
-			}
-			?>
-			</table>
-			</div>
-			<?php endif ?>
-
-
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Included files</a> (<?php echo count(get_included_files()) ?>)</h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
-			<table>
-			<?php
-			foreach (get_included_files() as $v) {
-				echo '<tr><td>', htmlspecialchars($v), "</td></tr>\n";
-			}
-			?>
-			</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Configuration options</a></h3>
-			<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
-			<?php ob_start(); @phpinfo(INFO_CONFIGURATION | INFO_MODULES); echo preg_replace('#^.+<body>|</body>.+\z#s', '', ob_get_clean()) ?>
-			</div>
+		<div id="netteBsPnl<?php echo $counter ?>" class="<?php echo $collapsed ? 'nette-collapsed ' : '' ?>inner">
+		<p><b>File:</b> <?php echo Helpers::editorLink($ex->getFile(), $ex->getLine()) ?></p>
+		<?php if (is_file($ex->getFile())): ?><?php echo self::highlightFile($ex->getFile(), $ex->getLine(), 15, isset($ex->context) ? $ex->context : NULL) ?><?php endif ?>
 		</div></div>
 
 
 
+		<?php if (isset($stack[0]['class']) && $stack[0]['class'] === 'Nette\Diagnostics\Debugger' && ($stack[0]['function'] === '_shutdownHandler' || $stack[0]['function'] === '_errorHandler')) unset($stack[0]) ?>
+		<?php if ($stack): ?>
 		<div class="panel">
-		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">HTTP request</a></h2>
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">Call stack</a></h2>
 
-		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
-			<?php if (function_exists('apache_request_headers')): ?>
-			<h3>Headers</h3>
-			<div class="outer">
-			<table>
-			<?php
-			foreach (apache_request_headers() as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', htmlspecialchars($v), "</td></tr>\n";
-			?>
-			</table>
-			</div>
-			<?php endif ?>
+		<div id="netteBsPnl<?php echo $counter ?>" class="inner">
+		<ol>
+			<?php foreach ($stack as $key => $row): ?>
+			<li><p>
 
-
-			<?php foreach (array('_GET', '_POST', '_COOKIE') as $name): ?>
-			<h3>$<?php echo htmlspecialchars($name) ?></h3>
-			<?php if (empty($GLOBALS[$name])):?>
-			<p><i>empty</i></p>
+			<?php if (isset($row['file']) && is_file($row['file'])): ?>
+			<?php echo Helpers::editorLink($row['file'], $row['line']) ?>
 			<?php else: ?>
-			<div class="outer">
+			<i>inner-code</i><?php if (isset($row['line'])) echo ':', $row['line'] ?>
+			<?php endif ?>
+
+			<?php if (isset($row['file']) && is_file($row['file'])): ?><a href="#netteBsSrc<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">source</a>&nbsp; <?php endif ?>
+
+			<?php if (isset($row['class'])) echo htmlspecialchars($row['class'] . $row['type']) ?>
+			<?php echo htmlspecialchars($row['function']) ?>
+
+			(<?php if (!empty($row['args'])): ?><a href="#netteBsArgs<?php echo "$level-$key" ?>" class="nette-toggle-collapsed">arguments</a><?php endif ?>)
+			</p>
+
+			<?php if (!empty($row['args'])): ?>
+			<div class="nette-collapsed outer" id="netteBsArgs<?php echo "$level-$key" ?>">
 			<table>
 			<?php
-			foreach ($GLOBALS[$name] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
+			try {
+				$r = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) : new \ReflectionFunction($row['function']);
+				$params = $r->getParameters();
+			} catch (\Exception $e) {
+				$params = array();
+			}
+			foreach ($row['args'] as $k => $v) {
+				echo '<tr><th>', htmlspecialchars(isset($params[$k]) ? '$' . $params[$k]->name : "#$k"), '</th><td>';
+				echo Dumper::toHtml($v);
+				echo "</td></tr>\n";
+			}
 			?>
 			</table>
 			</div>
 			<?php endif ?>
+
+
+			<?php if (isset($row['file']) && is_file($row['file'])): ?>
+			<div <?php if ($expanded !== $key) echo 'class="nette-collapsed"'; ?> id="netteBsSrc<?php echo "$level-$key" ?>"><?php echo self::highlightFile($row['file'], $row['line']) ?></div>
+			<?php endif ?>
+
+			</li>
 			<?php endforeach ?>
+		</ol>
 		</div></div>
+		<?php endif ?>
 
 
 
+		<?php if (isset($ex->context) && is_array($ex->context)):?>
 		<div class="panel">
-		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">HTTP response</a></h2>
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Variables</a></h2>
 
 		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
-			<h3>Headers</h3>
-			<?php if (headers_list()): ?>
-			<pre><?php
-			foreach (headers_list() as $s) echo htmlspecialchars($s), '<br>';
-			?></pre>
-			<?php else: ?>
-			<p><i>no headers</i></p>
-			<?php endif ?>
+		<div class="outer">
+		<table>
+		<?php
+		foreach ($ex->context as $k => $v) {
+			echo '<tr><th>$', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
+		}
+		?>
+		</table>
+		</div>
 		</div></div>
+		<?php endif ?>
+
+	<?php } while ((method_exists($ex, 'getPrevious') && $ex = $ex->getPrevious()) || (isset($ex->previous) && $ex = $ex->previous)); ?>
+	<?php while (--$level) echo '</div></div>' ?>
 
 
 
-		<?php foreach ($bottomPanels as $panel): ?>
-		<div class="panel">
-			<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
+	<?php $bottomPanels = array() ?>
+	<?php foreach ($panels as $panel): ?>
+	<?php $panel = call_user_func($panel, NULL); if (empty($panel['tab']) || empty($panel['panel'])) continue; ?>
+	<?php if (!empty($panel['bottom'])) { $bottomPanels[] = $panel; continue; } ?>
+	<div class="panel">
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
 
-			<div id="netteBsPnl<?php echo $counter ?>" class="inner">
-			<?php echo $panel['panel'] ?>
-		</div></div>
+		<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
+		<?php echo $panel['panel'] ?>
+	</div></div>
+	<?php endforeach ?>
+
+
+
+	<div class="panel">
+	<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Environment</a></h2>
+
+	<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">$_SERVER</a></h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer">
+		<table>
+		<?php
+		foreach ($_SERVER as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
+		?>
+		</table>
+		</div>
+
+
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">$_SESSION</a></h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer">
+		<?php if (empty($_SESSION)):?>
+		<p><i>empty</i></p>
+		<?php else: ?>
+		<table>
+		<?php
+		foreach ($_SESSION as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', $k === '__NF' ? '<i>Nette Session</i>' : Dumper::toHtml($v), "</td></tr>\n";
+		?>
+		</table>
+		<?php endif ?>
+		</div>
+
+
+		<?php if (!empty($_SESSION['__NF']['DATA'])):?>
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle">Nette Session</a></h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer">
+		<table>
+		<?php
+		foreach ($_SESSION['__NF']['DATA'] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
+		?>
+		</table>
+		</div>
+		<?php endif ?>
+
+
+		<?php
+		$list = get_defined_constants(TRUE);
+		if (!empty($list['user'])):?>
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Constants</a></h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
+		<table>
+		<?php
+		foreach ($list['user'] as $k => $v) {
+		echo '<tr><th>', htmlspecialchars($k), '</th>';
+		echo '<td>', Dumper::toHtml($v), "</td></tr>\n";
+		}
+		?>
+		</table>
+		</div>
+		<?php endif ?>
+
+
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Included files</a> (<?php echo count(get_included_files()) ?>)</h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
+		<table>
+		<?php
+		foreach (get_included_files() as $v) {
+		echo '<tr><td>', htmlspecialchars($v), "</td></tr>\n";
+		}
+		?>
+		</table>
+		</div>
+
+
+		<h3><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">Configuration options</a></h3>
+		<div id="netteBsPnl<?php echo $counter ?>" class="outer nette-collapsed">
+		<?php ob_start(); @phpinfo(INFO_CONFIGURATION | INFO_MODULES); echo preg_replace('#^.+<body>|</body>.+\z#s', '', ob_get_clean()) ?>
+		</div>
+	</div></div>
+
+
+
+	<div class="panel">
+	<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">HTTP request</a></h2>
+
+	<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
+		<?php if (function_exists('apache_request_headers')): ?>
+		<h3>Headers</h3>
+		<div class="outer">
+		<table>
+		<?php
+		foreach (apache_request_headers() as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', htmlspecialchars($v), "</td></tr>\n";
+		?>
+		</table>
+		</div>
+		<?php endif ?>
+
+
+		<?php foreach (array('_GET', '_POST', '_COOKIE') as $name): ?>
+		<h3>$<?php echo htmlspecialchars($name) ?></h3>
+		<?php if (empty($GLOBALS[$name])):?>
+		<p><i>empty</i></p>
+		<?php else: ?>
+		<div class="outer">
+		<table>
+		<?php
+		foreach ($GLOBALS[$name] as $k => $v) echo '<tr><th>', htmlspecialchars($k), '</th><td>', Dumper::toHtml($v), "</td></tr>\n";
+		?>
+		</table>
+		</div>
+		<?php endif ?>
 		<?php endforeach ?>
+	</div></div>
 
 
 
-		<ul>
-			<li>Report generated at <?php echo @date('Y/m/d H:i:s', Debugger::$time) ?></li>
-			<?php if (preg_match('#^https?://#', Debugger::$source)): ?>
-				<li><a href="<?php echo htmlSpecialChars(Debugger::$source) ?>"><?php echo htmlSpecialChars(Debugger::$source) ?></a></li>
-			<?php elseif (Debugger::$source): ?>
-				<li><?php echo htmlSpecialChars(Debugger::$source) ?></li>
-			<?php endif ?>
-			<li>PHP <?php echo htmlSpecialChars(PHP_VERSION) ?></li>
-			<?php if (isset($_SERVER['SERVER_SOFTWARE'])): ?><li><?php echo htmlSpecialChars($_SERVER['SERVER_SOFTWARE']) ?></li><?php endif ?>
-			<?php if (class_exists('Nette\Framework')): ?><li><?php echo htmlSpecialChars('Nette Framework ' . Nette\Framework::VERSION) ?> <i>(revision <?php echo htmlSpecialChars(Nette\Framework::REVISION) ?>)</i></li><?php endif ?>
-		</ul>
+	<div class="panel">
+	<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle-collapsed">HTTP response</a></h2>
+
+	<div id="netteBsPnl<?php echo $counter ?>" class="nette-collapsed inner">
+		<h3>Headers</h3>
+		<?php if (headers_list()): ?>
+		<pre><?php
+		foreach (headers_list() as $s) echo htmlspecialchars($s), '<br>';
+		?></pre>
+		<?php else: ?>
+		<p><i>no headers</i></p>
+		<?php endif ?>
+	</div></div>
+
+
+
+	<?php foreach ($bottomPanels as $panel): ?>
+	<div class="panel">
+		<h2><a href="#netteBsPnl<?php echo ++$counter ?>" class="nette-toggle"><?php echo htmlSpecialChars($panel['tab']) ?></a></h2>
+
+		<div id="netteBsPnl<?php echo $counter ?>" class="inner">
+		<?php echo $panel['panel'] ?>
+	</div></div>
+	<?php endforeach ?>
+
+
+
+	<ul>
+		<li>Report generated at <?php echo @date('Y/m/d H:i:s', Debugger::$time) ?></li>
+		<?php if (preg_match('#^https?://#', Debugger::$source)): ?>
+		<li><a href="<?php echo htmlSpecialChars(Debugger::$source) ?>"><?php echo htmlSpecialChars(Debugger::$source) ?></a></li>
+		<?php elseif (Debugger::$source): ?>
+		<li><?php echo htmlSpecialChars(Debugger::$source) ?></li>
+		<?php endif ?>
+		<li>PHP <?php echo htmlSpecialChars(PHP_VERSION) ?></li>
+		<?php if (isset($_SERVER['SERVER_SOFTWARE'])): ?><li><?php echo htmlSpecialChars($_SERVER['SERVER_SOFTWARE']) ?></li><?php endif ?>
+		<?php if (class_exists('Nette\Framework')): ?><li><?php echo htmlSpecialChars('Nette Framework ' . Nette\Framework::VERSION) ?> <i>(revision <?php echo htmlSpecialChars(Nette\Framework::REVISION) ?>)</i></li><?php endif ?>
+	</ul>
 	</div>
 </div>
 
@@ -648,52 +648,52 @@ $counter = 0;
 	var bs = document.getElementById('netteBluescreen');
 	document.body.appendChild(bs);
 	document.onkeyup = function(e) {
-		e = e || window.event;
-		if (e.keyCode == 27 && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
-			document.getElementById('netteBluescreenIcon').click();
-		}
+	e = e || window.event;
+	if (e.keyCode == 27 && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
+		document.getElementById('netteBluescreenIcon').click();
+	}
 	};
 
 	for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
-		if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette-debug') {
-			styles[i].oldDisabled = styles[i].disabled;
-			styles[i].disabled = true;
+	if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette-debug') {
+		styles[i].oldDisabled = styles[i].disabled;
+		styles[i].disabled = true;
 
-		} else if (styles[i].addRule) {
-			styles[i].addRule('.nette-collapsed', 'display: none');
-		} else {
-			styles[i].insertRule('.nette-collapsed { display: none }', 0);
-		}
+	} else if (styles[i].addRule) {
+		styles[i].addRule('.nette-collapsed', 'display: none');
+	} else {
+		styles[i].insertRule('.nette-collapsed { display: none }', 0);
+	}
 	}
 
 	bs.onclick = function(e) {
-		e = e || window.event;
-		for (var link = e.target || e.srcElement; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
-		if (!link) {
-			return true;
+	e = e || window.event;
+	for (var link = e.target || e.srcElement; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
+	if (!link) {
+		return true;
+	}
+
+	var collapsed = link.className.indexOf('nette-toggle-collapsed') > -1,
+		ref = link.getAttribute('data-ref') || link.getAttribute('href', 2);
+
+	if (ref && ref !== '#') {
+		dest = document.getElementById(ref.substring(1));
+	} else {
+		for (dest = link.nextSibling; dest && dest.nodeType !== 1; dest = dest.nextSibling) {}
+	}
+
+	link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
+	dest.style.display = collapsed ? (dest.tagName.toLowerCase() === 'div' ? 'block' : 'inline') : 'none';
+
+	if (link.id === 'netteBluescreenIcon') {
+		for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
+		if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette-debug') {
+			styles[i].disabled = collapsed ? true : styles[i].oldDisabled;
 		}
-
-		var collapsed = link.className.indexOf('nette-toggle-collapsed') > -1,
-			ref = link.getAttribute('data-ref') || link.getAttribute('href', 2);
-
-		if (ref && ref !== '#') {
-			dest = document.getElementById(ref.substring(1));
-		} else {
-			for (dest = link.nextSibling; dest && dest.nodeType !== 1; dest = dest.nextSibling) {}
 		}
-
-		link.className = 'nette-toggle' + (collapsed ? '' : '-collapsed');
-		dest.style.display = collapsed ? (dest.tagName.toLowerCase() === 'div' ? 'block' : 'inline') : 'none';
-
-		if (link.id === 'netteBluescreenIcon') {
-			for (var i = 0, styles = document.styleSheets; i < styles.length; i++) {
-				if ((styles[i].owningElement || styles[i].ownerNode).className !== 'nette-debug') {
-					styles[i].disabled = collapsed ? true : styles[i].oldDisabled;
-				}
-			}
-		}
-		e.preventDefault ? e.preventDefault() : e.returnValue = false;
-		e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+	}
+	e.preventDefault ? e.preventDefault() : e.returnValue = false;
+	e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
 	};
 </script>
 </body>

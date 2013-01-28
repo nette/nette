@@ -25,8 +25,8 @@ class MyHelper
 
 	public function invoke($s)
 	{
-		$this->count++;
-		return strtolower($s) . " ($this->count times)";
+	$this->count++;
+	return strtolower($s) . " ($this->count times)";
 	}
 
 }

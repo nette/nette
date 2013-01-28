@@ -28,15 +28,15 @@ class Mapper extends \IteratorIterator
 
 	public function __construct(\Traversable $iterator, $callback)
 	{
-		parent::__construct($iterator);
-		$this->callback = new Nette\Callback($callback);
+	parent::__construct($iterator);
+	$this->callback = new Nette\Callback($callback);
 	}
 
 
 
 	public function current()
 	{
-		return $this->callback->invoke(parent::current(), parent::key());
+	return $this->callback->invoke(parent::current(), parent::key());
 	}
 
 }

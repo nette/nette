@@ -19,28 +19,28 @@ class InnerControl extends Nette\Application\UI\Control
 {
 	public function render()
 	{
-		$this->renderA();
-		$this->renderB();
+	$this->renderA();
+	$this->renderB();
 	}
 	public function renderA()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->say = 'Hello';
-		$template->setSource('{snippet testA}{$say}{/snippet}');
-		$template->render();
+	$template = new Nette\Templating\Template;
+	$template->registerFilter(new Latte\Engine);
+	$template->_presenter = $this->getPresenter();
+	$template->_control = $this;
+	$template->say = 'Hello';
+	$template->setSource('{snippet testA}{$say}{/snippet}');
+	$template->render();
 	}
 	public function renderB()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->say = 'world';
-		$template->setSource('{snippet testB}{$say}{/snippet}');
-		$template->render();
+	$template = new Nette\Templating\Template;
+	$template->registerFilter(new Latte\Engine);
+	$template->_presenter = $this->getPresenter();
+	$template->_control = $this;
+	$template->say = 'world';
+	$template->setSource('{snippet testB}{$say}{/snippet}');
+	$template->render();
 	}
 
 }
@@ -50,24 +50,24 @@ class TestPresenter extends Nette\Application\UI\Presenter
 	private $payload;
 	function getPayload()
 	{
-		return $this->payload;
+	return $this->payload;
 	}
 	function emptyPayload()
 	{
-		$this->payload = new stdClass;
+	$this->payload = new stdClass;
 	}
 	function createComponentMulti()
 	{
-		return new Nette\Application\UI\Multiplier(function() {
-			return new InnerControl();
-		});
+	return new Nette\Application\UI\Multiplier(function() {
+		return new InnerControl();
+	});
 	}
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_control = $this;
-		$template->render();
+	$template = new Nette\Templating\Template;
+	$template->registerFilter(new Latte\Engine);
+	$template->_control = $this;
+	$template->render();
 	}
 }
 
@@ -84,7 +84,7 @@ $control['multi-1']->invalidateControl();
 $control->render();
 Assert::equal((object) array(
 	'snippets' => array(
-		'snippet-multi-1-testA' => 'Hello',
-		'snippet-multi-1-testB' => 'world',
+	'snippet-multi-1-testA' => 'Hello',
+	'snippet-multi-1-testB' => 'world',
    ),
 ), $control->payload);

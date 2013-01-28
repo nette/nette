@@ -32,17 +32,17 @@ class FilterException extends Nette\InvalidStateException
 
 	public function __construct($message, $code = 0, $sourceLine = 0)
 	{
-		$this->sourceLine = (int) $sourceLine;
-		parent::__construct($message, $code);
+	$this->sourceLine = (int) $sourceLine;
+	parent::__construct($message, $code);
 	}
 
 
 
 	public function setSourceFile($file)
 	{
-		$this->sourceFile = (string) $file;
-		$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file)
-			. ($this->sourceLine ? ":$this->sourceLine" : '');
+	$this->sourceFile = (string) $file;
+	$this->message = rtrim($this->message, '.') . " in " . str_replace(dirname(dirname($file)), '...', $file)
+		. ($this->sourceLine ? ":$this->sourceLine" : '');
 	}
 
 }

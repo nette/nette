@@ -19,8 +19,8 @@ class Factory
 {
 	static function createLorem($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
-		return new Lorem;
+	Notes::add(__METHOD__ . ' ' . $arg);
+	return new Lorem;
 	}
 }
 
@@ -29,7 +29,7 @@ class Lorem
 {
 	function test($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
+	Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -42,7 +42,7 @@ class Ipsum
 
 	static function test($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
+	Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 

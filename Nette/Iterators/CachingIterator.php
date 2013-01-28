@@ -41,22 +41,22 @@ class CachingIterator extends \CachingIterator implements \Countable
 
 	public function __construct($iterator)
 	{
-		if (is_array($iterator) || $iterator instanceof \stdClass) {
-			$iterator = new \ArrayIterator($iterator);
+	if (is_array($iterator) || $iterator instanceof \stdClass) {
+		$iterator = new \ArrayIterator($iterator);
 
-		} elseif ($iterator instanceof \Traversable) {
-			if ($iterator instanceof \IteratorAggregate) {
-				$iterator = $iterator->getIterator();
+	} elseif ($iterator instanceof \Traversable) {
+		if ($iterator instanceof \IteratorAggregate) {
+		$iterator = $iterator->getIterator();
 
-			} elseif (!$iterator instanceof \Iterator) {
-				$iterator = new \IteratorIterator($iterator);
-			}
-
-		} else {
-			throw new Nette\InvalidArgumentException("Invalid argument passed to foreach resp. " . __CLASS__ . "; array or Traversable expected, " . (is_object($iterator) ? get_class($iterator) : gettype($iterator)) ." given.");
+		} elseif (!$iterator instanceof \Iterator) {
+		$iterator = new \IteratorIterator($iterator);
 		}
 
-		parent::__construct($iterator, 0);
+	} else {
+		throw new Nette\InvalidArgumentException("Invalid argument passed to foreach resp. " . __CLASS__ . "; array or Traversable expected, " . (is_object($iterator) ? get_class($iterator) : gettype($iterator)) ." given.");
+	}
+
+	parent::__construct($iterator, 0);
 	}
 
 
@@ -68,7 +68,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function isFirst($width = NULL)
 	{
-		return $this->counter === 1 || ($width && $this->counter !== 0 && (($this->counter - 1) % $width) === 0);
+	return $this->counter === 1 || ($width && $this->counter !== 0 && (($this->counter - 1) % $width) === 0);
 	}
 
 
@@ -80,7 +80,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function isLast($width = NULL)
 	{
-		return !$this->hasNext() || ($width && ($this->counter % $width) === 0);
+	return !$this->hasNext() || ($width && ($this->counter % $width) === 0);
 	}
 
 
@@ -91,7 +91,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function isEmpty()
 	{
-		return $this->counter === 0;
+	return $this->counter === 0;
 	}
 
 
@@ -102,7 +102,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function isOdd()
 	{
-		return $this->counter % 2 === 1;
+	return $this->counter % 2 === 1;
 	}
 
 
@@ -113,7 +113,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function isEven()
 	{
-		return $this->counter % 2 === 0;
+	return $this->counter % 2 === 0;
 	}
 
 
@@ -124,7 +124,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function getCounter()
 	{
-		return $this->counter;
+	return $this->counter;
 	}
 
 
@@ -135,13 +135,13 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function count()
 	{
-		$inner = $this->getInnerIterator();
-		if ($inner instanceof \Countable) {
-			return $inner->count();
+	$inner = $this->getInnerIterator();
+	if ($inner instanceof \Countable) {
+		return $inner->count();
 
-		} else {
-			throw new Nette\NotSupportedException('Iterator is not countable.');
-		}
+	} else {
+		throw new Nette\NotSupportedException('Iterator is not countable.');
+	}
 	}
 
 
@@ -152,10 +152,10 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function next()
 	{
-		parent::next();
-		if (parent::valid()) {
-			$this->counter++;
-		}
+	parent::next();
+	if (parent::valid()) {
+		$this->counter++;
+	}
 	}
 
 
@@ -166,8 +166,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function rewind()
 	{
-		parent::rewind();
-		$this->counter = parent::valid() ? 1 : 0;
+	parent::rewind();
+	$this->counter = parent::valid() ? 1 : 0;
 	}
 
 
@@ -178,7 +178,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function getNextKey()
 	{
-		return $this->getInnerIterator()->key();
+	return $this->getInnerIterator()->key();
 	}
 
 
@@ -189,7 +189,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function getNextValue()
 	{
-		return $this->getInnerIterator()->current();
+	return $this->getInnerIterator()->current();
 	}
 
 
@@ -207,7 +207,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function __call($name, $args)
 	{
-		return Nette\ObjectMixin::call($this, $name, $args);
+	return Nette\ObjectMixin::call($this, $name, $args);
 	}
 
 
@@ -220,7 +220,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function &__get($name)
 	{
-		return Nette\ObjectMixin::get($this, $name);
+	return Nette\ObjectMixin::get($this, $name);
 	}
 
 
@@ -234,7 +234,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function __set($name, $value)
 	{
-		return Nette\ObjectMixin::set($this, $name, $value);
+	return Nette\ObjectMixin::set($this, $name, $value);
 	}
 
 
@@ -246,7 +246,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function __isset($name)
 	{
-		return Nette\ObjectMixin::has($this, $name);
+	return Nette\ObjectMixin::has($this, $name);
 	}
 
 
@@ -259,7 +259,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 */
 	public function __unset($name)
 	{
-		Nette\ObjectMixin::remove($this, $name);
+	Nette\ObjectMixin::remove($this, $name);
 	}
 
 

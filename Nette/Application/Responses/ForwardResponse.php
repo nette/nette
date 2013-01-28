@@ -31,7 +31,7 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 
 	public function __construct(Nette\Application\Request $request)
 	{
-		$this->request = $request;
+	$this->request = $request;
 	}
 
 
@@ -41,7 +41,7 @@ class ForwardResponse extends Nette\Object implements Nette\Application\IRespons
 	 */
 	final public function getRequest()
 	{
-		return $this->request;
+	return $this->request;
 	}
 
 

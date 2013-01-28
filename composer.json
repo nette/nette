@@ -6,39 +6,39 @@
 	"homepage": "http://nette.org",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
-		{
-			"name": "David Grudl",
-			"homepage": "http://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "http://nette.org/contributors"
-		}
+	{
+		"name": "David Grudl",
+		"homepage": "http://davidgrudl.com"
+	},
+	{
+		"name": "Nette Community",
+		"homepage": "http://nette.org/contributors"
+	}
 	],
 	"require": {
-		"php": ">=5.3.0",
-		"ext-iconv": "*",
-		"ext-tokenizer": "*"
+	"php": ">=5.3.0",
+	"ext-iconv": "*",
+	"ext-tokenizer": "*"
 	},
 	"suggest": {
-		"ext-mbstring": "*",
-		"ext-pdo": "*",
-		"ext-memcache": "*",
-		"ext-gd": "*",
-		"ext-fileinfo": "*"
+	"ext-mbstring": "*",
+	"ext-pdo": "*",
+	"ext-memcache": "*",
+	"ext-gd": "*",
+	"ext-fileinfo": "*"
 	},
 	"require-dev": {
-		"nette/tester": "@dev"
+	"nette/tester": "@dev"
 	},
 	"config": {
-		"vendor-dir": "tools"
+	"vendor-dir": "tools"
 	},
 	"autoload": {
-		"files": ["Nette/loader.php"]
+	"files": ["Nette/loader.php"]
 	},
 	"extra": {
-		"branch-alias": {
-			"dev-master": "2.1-dev"
-		}
+	"branch-alias": {
+		"dev-master": "2.1-dev"
+	}
 	}
 }

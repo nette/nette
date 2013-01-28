@@ -29,9 +29,9 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getTab()
 	{
-		ob_start();
-		require __DIR__ . '/templates/SessionPanel.tab.phtml';
-		return ob_get_clean();
+	ob_start();
+	require __DIR__ . '/templates/SessionPanel.tab.phtml';
+	return ob_get_clean();
 	}
 
 
@@ -42,9 +42,9 @@ class SessionPanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	 */
 	public function getPanel()
 	{
-		ob_start();
-		require __DIR__ . '/templates/SessionPanel.panel.phtml';
-		return ob_get_clean();
+	ob_start();
+	require __DIR__ . '/templates/SessionPanel.panel.phtml';
+	return ob_get_clean();
 	}
 
 }

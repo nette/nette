@@ -28,9 +28,9 @@ class Checkbox extends BaseControl
 	 */
 	public function __construct($label = NULL)
 	{
-		parent::__construct($label);
-		$this->control->type = 'checkbox';
-		$this->value = FALSE;
+	parent::__construct($label);
+	$this->control->type = 'checkbox';
+	$this->value = FALSE;
 	}
 
 
@@ -42,8 +42,8 @@ class Checkbox extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_scalar($value) ? (bool) $value : FALSE;
-		return $this;
+	$this->value = is_scalar($value) ? (bool) $value : FALSE;
+	return $this;
 	}
 
 
@@ -54,7 +54,7 @@ class Checkbox extends BaseControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()->checked($this->value);
+	return parent::getControl()->checked($this->value);
 	}
 
 }

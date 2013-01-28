@@ -61,7 +61,7 @@ $method = $class->addMethod('show')
 $method->addParameter('item');
 
 $method->addParameter('res', NULL)
-		->setReference(TRUE)
-		->setTypeHint('array');
+	->setReference(TRUE)
+	->setTypeHint('array');
 
 Assert::match(file_get_contents(__DIR__ . '/class.expect'), (string) $class);

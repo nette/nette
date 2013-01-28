@@ -71,8 +71,8 @@ Assert::same('Eddard Stark', $book3->author->name);  // SELECT * FROM `author` W
 
 Assert::exception(function() use ($connection) {
 	$connection->table('author')->insert(array(
-		'id' => 15,
-		'name' => 'Jon Snow',
-		'web' => 'http://example.com',
+	'id' => 15,
+	'name' => 'Jon Snow',
+	'web' => 'http://example.com',
 	));
 }, '\PDOException');

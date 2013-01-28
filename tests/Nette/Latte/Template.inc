@@ -14,17 +14,17 @@ class MockCacheStorage extends PhpFileStorage
 
 	public function __construct()
 	{
-		parent::__construct(TEMP_DIR);
+	parent::__construct(TEMP_DIR);
 	}
 
 	public function read($key)
 	{
-		return NULL;
+	return NULL;
 	}
 
 	public function write($key, $data, array $dp)
 	{
-		$this->phtml[basename($this->hint)] = codefix($data);
+	$this->phtml[basename($this->hint)] = codefix($data);
 	}
 
 }

@@ -49,33 +49,33 @@ class DateTime extends \DateTime
 	 */
 	public static function from($time)
 	{
-		if ($time instanceof \DateTime) {
-			return new self($time->format('Y-m-d H:i:s'), $time->getTimezone());
+	if ($time instanceof \DateTime) {
+		return new self($time->format('Y-m-d H:i:s'), $time->getTimezone());
 
-		} elseif (is_numeric($time)) {
-			if ($time <= self::YEAR) {
-				$time += time();
-			}
-			return new static(date('Y-m-d H:i:s', $time));
-
-		} else { // textual or NULL
-			return new static($time);
+	} elseif (is_numeric($time)) {
+		if ($time <= self::YEAR) {
+		$time += time();
 		}
+		return new static(date('Y-m-d H:i:s', $time));
+
+	} else { // textual or NULL
+		return new static($time);
+	}
 	}
 
 
 
 	public function __toString()
 	{
-		return $this->format('Y-m-d H:i:s');
+	return $this->format('Y-m-d H:i:s');
 	}
 
 
 
 	public function modifyClone($modify = '')
 	{
-		$dolly = clone $this;
-		return $modify ? $dolly->modify($modify) : $dolly;
+	$dolly = clone $this;
+	return $modify ? $dolly->modify($modify) : $dolly;
 	}
 
 
@@ -83,48 +83,48 @@ class DateTime extends \DateTime
 	/*5.2*
 	public function modify($modify)
 	{
-		parent::modify($modify);
-		return $this;
+	parent::modify($modify);
+	return $this;
 	}
 
 
 
 	public static function __set_state($state)
 	{
-		return new self($state['date'], new \DateTimeZone($state['timezone']));
+	return new self($state['date'], new \DateTimeZone($state['timezone']));
 	}
 
 
 
 	public function __sleep()
 	{
-		$this->fix = array($this->format('Y-m-d H:i:s'), $this->getTimezone()->getName());
-		return array('fix');
+	$this->fix = array($this->format('Y-m-d H:i:s'), $this->getTimezone()->getName());
+	return array('fix');
 	}
 
 
 
 	public function __wakeup()
 	{
-		$this->__construct($this->fix[0], new \DateTimeZone($this->fix[1]));
-		unset($this->fix);
+	$this->__construct($this->fix[0], new \DateTimeZone($this->fix[1]));
+	unset($this->fix);
 	}
 
 
 
 	public function getTimestamp()
 	{
-		return (int) $this->format('U');
+	return (int) $this->format('U');
 	}
 
 
 
 	public function setTimestamp($timestamp)
 	{
-		return $this->__construct(
-			gmdate('Y-m-d H:i:s', $timestamp + $this->getOffset()),
-			new \DateTimeZone($this->getTimezone()->getName()) // simply getTimezone() crashes in PHP 5.2.6
-		);
+	return $this->__construct(
+		gmdate('Y-m-d H:i:s', $timestamp + $this->getOffset()),
+		new \DateTimeZone($this->getTimezone()->getName()) // simply getTimezone() crashes in PHP 5.2.6
+	);
 	}
 	*/
 

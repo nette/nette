@@ -3,11 +3,11 @@ parameters:
 
 services:
 	ipsum:
-		class: Ipsum
+	class: Ipsum
 
 factories:
 	lorem:
-		class: Lorem
-		parameters: [Ipsum foo, bar: %false%]
-		setup:
-			- test(%foo%, %bar%)
+	class: Lorem
+	parameters: [Ipsum foo, bar: %false%]
+	setup:
+		- test(%foo%, %bar%)

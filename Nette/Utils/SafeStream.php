@@ -60,7 +60,7 @@ final class SafeStream
 	 */
 	public static function register()
 	{
-		return stream_wrapper_register(self::PROTOCOL, __CLASS__);
+	return stream_wrapper_register(self::PROTOCOL, __CLASS__);
 	}
 
 
@@ -75,64 +75,64 @@ final class SafeStream
 	 */
 	public function stream_open($path, $mode, $options, &$opened_path)
 	{
-		$path = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
+	$path = substr($path, strlen(self::PROTOCOL)+3);  // trim protocol safe://
 
-		$flag = trim($mode, 'crwax+');  // text | binary mode
-		$mode = trim($mode, 'tb');     // mode
-		$use_path = (bool) (STREAM_USE_PATH & $options); // use include_path?
+	$flag = trim($mode, 'crwax+');  // text | binary mode
+	$mode = trim($mode, 'tb');     // mode
+	$use_path = (bool) (STREAM_USE_PATH & $options); // use include_path?
 
-		// open file
-		if ($mode === 'r') { // provides only isolation
-			return $this->checkAndLock($this->tempHandle = fopen($path, 'r'.$flag, $use_path), LOCK_SH);
+	// open file
+	if ($mode === 'r') { // provides only isolation
+		return $this->checkAndLock($this->tempHandle = fopen($path, 'r'.$flag, $use_path), LOCK_SH);
 
-		} elseif ($mode === 'r+') {
-			if (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
-				return FALSE;
-			}
-
-		} elseif ($mode[0] === 'x') {
-			if (!$this->checkAndLock($this->handle = fopen($path, 'x'.$flag, $use_path), LOCK_EX)) {
-				return FALSE;
-			}
-			$this->deleteFile = TRUE;
-
-		} elseif ($mode[0] === 'w' || $mode[0] === 'a' || $mode[0] === 'c') {
-			if ($this->checkAndLock($this->handle = @fopen($path, 'x'.$flag, $use_path), LOCK_EX)) { // intentionally @
-				$this->deleteFile = TRUE;
-
-			} elseif (!$this->checkAndLock($this->handle = fopen($path, 'a+'.$flag, $use_path), LOCK_EX)) {
-				return FALSE;
-			}
-
-		} else {
-			trigger_error("Unknown mode $mode", E_USER_WARNING);
-			return FALSE;
+	} elseif ($mode === 'r+') {
+		if (!$this->checkAndLock($this->handle = fopen($path, 'r'.$flag, $use_path), LOCK_EX)) {
+		return FALSE;
 		}
 
-		// create temporary file in the same directory to provide atomicity
-		$tmp = '~~' . lcg_value() . '.tmp';
-		if (!$this->tempHandle = fopen($path . $tmp, (strpos($mode, '+') ? 'x+' : 'x').$flag, $use_path)) {
-			$this->clean();
-			return FALSE;
+	} elseif ($mode[0] === 'x') {
+		if (!$this->checkAndLock($this->handle = fopen($path, 'x'.$flag, $use_path), LOCK_EX)) {
+		return FALSE;
 		}
-		$this->tempFile = realpath($path . $tmp);
-		$this->file = substr($this->tempFile, 0, -strlen($tmp));
+		$this->deleteFile = TRUE;
 
-		// copy to temporary file
-		if ($mode === 'r+' || $mode[0] === 'a' || $mode[0] === 'c') {
-			$stat = fstat($this->handle);
-			fseek($this->handle, 0);
-			if ($stat['size'] !== 0 && stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
-				$this->clean();
-				return FALSE;
-			}
+	} elseif ($mode[0] === 'w' || $mode[0] === 'a' || $mode[0] === 'c') {
+		if ($this->checkAndLock($this->handle = @fopen($path, 'x'.$flag, $use_path), LOCK_EX)) { // intentionally @
+		$this->deleteFile = TRUE;
 
-			if ($mode[0] === 'a') { // emulate append mode
-				fseek($this->tempHandle, 0, SEEK_END);
-			}
+		} elseif (!$this->checkAndLock($this->handle = fopen($path, 'a+'.$flag, $use_path), LOCK_EX)) {
+		return FALSE;
 		}
 
-		return TRUE;
+	} else {
+		trigger_error("Unknown mode $mode", E_USER_WARNING);
+		return FALSE;
+	}
+
+	// create temporary file in the same directory to provide atomicity
+	$tmp = '~~' . lcg_value() . '.tmp';
+	if (!$this->tempHandle = fopen($path . $tmp, (strpos($mode, '+') ? 'x+' : 'x').$flag, $use_path)) {
+		$this->clean();
+		return FALSE;
+	}
+	$this->tempFile = realpath($path . $tmp);
+	$this->file = substr($this->tempFile, 0, -strlen($tmp));
+
+	// copy to temporary file
+	if ($mode === 'r+' || $mode[0] === 'a' || $mode[0] === 'c') {
+		$stat = fstat($this->handle);
+		fseek($this->handle, 0);
+		if ($stat['size'] !== 0 && stream_copy_to_stream($this->handle, $this->tempHandle) !== $stat['size']) {
+		$this->clean();
+		return FALSE;
+		}
+
+		if ($mode[0] === 'a') { // emulate append mode
+		fseek($this->tempHandle, 0, SEEK_END);
+		}
+	}
+
+	return TRUE;
 	}
 
 
@@ -143,15 +143,15 @@ final class SafeStream
 	 */
 	private function checkAndLock($handle, $lock)
 	{
-		if (!$handle) {
-			return FALSE;
+	if (!$handle) {
+		return FALSE;
 
-		} elseif (!flock($handle, $lock)) {
-			fclose($handle);
-			return FALSE;
-		}
+	} elseif (!flock($handle, $lock)) {
+		fclose($handle);
+		return FALSE;
+	}
 
-		return TRUE;
+	return TRUE;
 	}
 
 
@@ -161,15 +161,15 @@ final class SafeStream
 	 */
 	private function clean()
 	{
-		flock($this->handle, LOCK_UN);
-		fclose($this->handle);
-		if ($this->deleteFile) {
-			unlink($this->file);
-		}
-		if ($this->tempHandle) {
-			fclose($this->tempHandle);
-			unlink($this->tempFile);
-		}
+	flock($this->handle, LOCK_UN);
+	fclose($this->handle);
+	if ($this->deleteFile) {
+		unlink($this->file);
+	}
+	if ($this->tempHandle) {
+		fclose($this->tempHandle);
+		unlink($this->tempFile);
+	}
 	}
 
 
@@ -180,24 +180,24 @@ final class SafeStream
 	 */
 	public function stream_close()
 	{
-		if (!$this->tempFile) { // 'r' mode
-			flock($this->tempHandle, LOCK_UN);
-			fclose($this->tempHandle);
-			return;
-		}
-
-		flock($this->handle, LOCK_UN);
-		fclose($this->handle);
+	if (!$this->tempFile) { // 'r' mode
+		flock($this->tempHandle, LOCK_UN);
 		fclose($this->tempHandle);
+		return;
+	}
 
-		if ($this->writeError /*5.2*|| !(substr(PHP_OS, 0, 3) === 'WIN' ? unlink($this->file) : TRUE)*/
-			|| !rename($this->tempFile, $this->file) // try to rename temp file
-		) {
-			unlink($this->tempFile); // otherwise delete temp file
-			if ($this->deleteFile) {
-				unlink($this->file);
-			}
+	flock($this->handle, LOCK_UN);
+	fclose($this->handle);
+	fclose($this->tempHandle);
+
+	if ($this->writeError /*5.2*|| !(substr(PHP_OS, 0, 3) === 'WIN' ? unlink($this->file) : TRUE)*/
+		|| !rename($this->tempFile, $this->file) // try to rename temp file
+	) {
+		unlink($this->tempFile); // otherwise delete temp file
+		if ($this->deleteFile) {
+		unlink($this->file);
 		}
+	}
 	}
 
 
@@ -209,7 +209,7 @@ final class SafeStream
 	 */
 	public function stream_read($length)
 	{
-		return fread($this->tempHandle, $length);
+	return fread($this->tempHandle, $length);
 	}
 
 
@@ -221,14 +221,14 @@ final class SafeStream
 	 */
 	public function stream_write($data)
 	{
-		$len = strlen($data);
-		$res = fwrite($this->tempHandle, $data, $len);
+	$len = strlen($data);
+	$res = fwrite($this->tempHandle, $data, $len);
 
-		if ($res !== $len) { // disk full?
-			$this->writeError = TRUE;
-		}
+	if ($res !== $len) { // disk full?
+		$this->writeError = TRUE;
+	}
 
-		return $res;
+	return $res;
 	}
 
 
@@ -239,7 +239,7 @@ final class SafeStream
 	 */
 	public function stream_tell()
 	{
-		return ftell($this->tempHandle);
+	return ftell($this->tempHandle);
 	}
 
 
@@ -250,7 +250,7 @@ final class SafeStream
 	 */
 	public function stream_eof()
 	{
-		return feof($this->tempHandle);
+	return feof($this->tempHandle);
 	}
 
 
@@ -263,7 +263,7 @@ final class SafeStream
 	 */
 	public function stream_seek($offset, $whence)
 	{
-		return fseek($this->tempHandle, $offset, $whence) === 0; // ???
+	return fseek($this->tempHandle, $offset, $whence) === 0; // ???
 	}
 
 
@@ -274,7 +274,7 @@ final class SafeStream
 	 */
 	public function stream_stat()
 	{
-		return fstat($this->tempHandle);
+	return fstat($this->tempHandle);
 	}
 
 
@@ -287,9 +287,9 @@ final class SafeStream
 	 */
 	public function url_stat($path, $flags)
 	{
-		// This is not thread safe
-		$path = substr($path, strlen(self::PROTOCOL)+3);
-		return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
+	// This is not thread safe
+	$path = substr($path, strlen(self::PROTOCOL)+3);
+	return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
 	}
 
 
@@ -302,8 +302,8 @@ final class SafeStream
 	 */
 	public function unlink($path)
 	{
-		$path = substr($path, strlen(self::PROTOCOL)+3);
-		return unlink($path);
+	$path = substr($path, strlen(self::PROTOCOL)+3);
+	return unlink($path);
 	}
 
 }

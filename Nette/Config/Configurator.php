@@ -28,9 +28,9 @@ class Configurator extends Nette\Object
 {
 	/** @deprecated */
 	const DEVELOPMENT = 'development',
-		PRODUCTION = 'production',
-		AUTO = TRUE,
-		NONE = FALSE;
+	PRODUCTION = 'production',
+	AUTO = TRUE,
+	NONE = FALSE;
 
 	/** @var array of function(Configurator $sender, Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
@@ -45,7 +45,7 @@ class Configurator extends Nette\Object
 
 	public function __construct()
 	{
-		$this->parameters = $this->getDefaultParameters();
+	$this->parameters = $this->getDefaultParameters();
 	}
 
 
@@ -57,9 +57,9 @@ class Configurator extends Nette\Object
 	 */
 	public function setDebugMode($value = TRUE)
 	{
-		$this->parameters['debugMode'] = is_bool($value) ? $value : static::detectDebugMode($value);
-		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
-		return $this;
+	$this->parameters['debugMode'] = is_bool($value) ? $value : static::detectDebugMode($value);
+	$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
+	return $this;
 	}
 
 
@@ -69,7 +69,7 @@ class Configurator extends Nette\Object
 	 */
 	public function isDebugMode()
 	{
-		return $this->parameters['debugMode'];
+	return $this->parameters['debugMode'];
 	}
 
 
@@ -80,11 +80,11 @@ class Configurator extends Nette\Object
 	 */
 	public function setTempDirectory($path)
 	{
-		$this->parameters['tempDir'] = $path;
-		if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
-			mkdir($cacheDir, 0777);
-		}
-		return $this;
+	$this->parameters['tempDir'] = $path;
+	if (($cacheDir = $this->getCacheDirectory()) && !is_dir($cacheDir)) {
+		mkdir($cacheDir, 0777);
+	}
+	return $this;
 	}
 
 
@@ -95,8 +95,8 @@ class Configurator extends Nette\Object
 	 */
 	public function addParameters(array $params)
 	{
-		$this->parameters = Helpers::merge($params, $this->parameters);
-		return $this;
+	$this->parameters = Helpers::merge($params, $this->parameters);
+	return $this;
 	}
 
 
@@ -106,20 +106,20 @@ class Configurator extends Nette\Object
 	 */
 	protected function getDefaultParameters()
 	{
-		$trace = /*5.2*PHP_VERSION_ID < 50205 ? debug_backtrace() : */debug_backtrace(FALSE);
-		$debugMode = static::detectDebugMode();
-		return array(
-			'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
-			'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
-			'debugMode' => $debugMode,
-			'productionMode' => !$debugMode,
-			'environment' => $debugMode ? 'development' : 'production',
-			'consoleMode' => PHP_SAPI === 'cli',
-			'container' => array(
-				'class' => 'SystemContainer',
-				'parent' => 'Nette\DI\Container',
-			)
-		);
+	$trace = /*5.2*PHP_VERSION_ID < 50205 ? debug_backtrace() : */debug_backtrace(FALSE);
+	$debugMode = static::detectDebugMode();
+	return array(
+		'appDir' => isset($trace[1]['file']) ? dirname($trace[1]['file']) : NULL,
+		'wwwDir' => isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : NULL,
+		'debugMode' => $debugMode,
+		'productionMode' => !$debugMode,
+		'environment' => $debugMode ? 'development' : 'production',
+		'consoleMode' => PHP_SAPI === 'cli',
+		'container' => array(
+		'class' => 'SystemContainer',
+		'parent' => 'Nette\DI\Container',
+		)
+	);
 	}
 
 
@@ -131,8 +131,8 @@ class Configurator extends Nette\Object
 	 */
 	public function enableDebugger($logDirectory = NULL, $email = NULL)
 	{
-		Nette\Diagnostics\Debugger::$strictMode = TRUE;
-		Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
+	Nette\Diagnostics\Debugger::$strictMode = TRUE;
+	Nette\Diagnostics\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
 	}
 
 
@@ -142,13 +142,13 @@ class Configurator extends Nette\Object
 	 */
 	public function createRobotLoader()
 	{
-		if (!($cacheDir = $this->getCacheDirectory())) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
-		}
-		$loader = new Nette\Loaders\RobotLoader;
-		$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
-		$loader->autoRebuild = $this->parameters['debugMode'];
-		return $loader;
+	if (!($cacheDir = $this->getCacheDirectory())) {
+		throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
+	}
+	$loader = new Nette\Loaders\RobotLoader;
+	$loader->setCacheStorage(new Nette\Caching\Storages\FileStorage($cacheDir));
+	$loader->autoRebuild = $this->parameters['debugMode'];
+	return $loader;
 	}
 
 
@@ -159,8 +159,8 @@ class Configurator extends Nette\Object
 	 */
 	public function addConfig($file, $section = NULL)
 	{
-		$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
-		return $this;
+	$this->files[] = array($file, $section === self::AUTO ? $this->parameters['environment'] : $section);
+	return $this;
 	}
 
 
@@ -171,30 +171,30 @@ class Configurator extends Nette\Object
 	 */
 	public function createContainer()
 	{
-		if ($cacheDir = $this->getCacheDirectory()) {
-			$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
-			$cacheKey = array($this->parameters, $this->files);
-			$cached = $cache->load($cacheKey);
-			if (!$cached) {
-				$code = $this->buildContainer($dependencies);
-				$cache->save($cacheKey, $code, array(
-					Cache::FILES => $dependencies,
-				));
-				$cached = $cache->load($cacheKey);
-			}
-			Nette\Utils\LimitedScope::load($cached['file'], TRUE);
-
-		} elseif ($this->files) {
-			throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
-
-		} else {
-			Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
+	if ($cacheDir = $this->getCacheDirectory()) {
+		$cache = new Cache(new Nette\Caching\Storages\PhpFileStorage($cacheDir), 'Nette.Configurator');
+		$cacheKey = array($this->parameters, $this->files);
+		$cached = $cache->load($cacheKey);
+		if (!$cached) {
+		$code = $this->buildContainer($dependencies);
+		$cache->save($cacheKey, $code, array(
+			Cache::FILES => $dependencies,
+		));
+		$cached = $cache->load($cacheKey);
 		}
+		Nette\Utils\LimitedScope::load($cached['file'], TRUE);
 
-		$container = new $this->parameters['container']['class'];
-		$container->initialize();
-		Nette\Environment::setContext($container); // back compatibility
-		return $container;
+	} elseif ($this->files) {
+		throw new Nette\InvalidStateException("Set path to temporary directory using setTempDirectory().");
+
+	} else {
+		Nette\Utils\LimitedScope::evaluate($this->buildContainer()); // back compatibility with Environment
+	}
+
+	$container = new $this->parameters['container']['class'];
+	$container->initialize();
+	Nette\Environment::setContext($container); // back compatibility
+	return $container;
 	}
 
 
@@ -205,38 +205,38 @@ class Configurator extends Nette\Object
 	 */
 	protected function buildContainer(& $dependencies = NULL)
 	{
-		$loader = $this->createLoader();
-		$config = array();
-		$code = "<?php\n";
-		foreach ($this->files as $tmp) {
-			list($file, $section) = $tmp;
-			$code .= "// source: $file $section\n";
-			try {
-				if ($section === NULL) { // back compatibility
-					$config = Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
-					continue;
-				}
-			} catch (Nette\Utils\AssertionException $e) {}
-
-			$config = Helpers::merge($loader->load($file, $section), $config);
+	$loader = $this->createLoader();
+	$config = array();
+	$code = "<?php\n";
+	foreach ($this->files as $tmp) {
+		list($file, $section) = $tmp;
+		$code .= "// source: $file $section\n";
+		try {
+		if ($section === NULL) { // back compatibility
+			$config = Helpers::merge($loader->load($file, $this->parameters['environment']), $config);
+			continue;
 		}
-		$code .= "\n";
+		} catch (Nette\Utils\AssertionException $e) {}
 
-		if (!isset($config['parameters'])) {
-			$config['parameters'] = array();
-		}
-		$config['parameters'] = Helpers::merge($config['parameters'], $this->parameters);
+		$config = Helpers::merge($loader->load($file, $section), $config);
+	}
+	$code .= "\n";
 
-		$compiler = $this->createCompiler();
-		$this->onCompile($this, $compiler);
+	if (!isset($config['parameters'])) {
+		$config['parameters'] = array();
+	}
+	$config['parameters'] = Helpers::merge($config['parameters'], $this->parameters);
 
-		$code .= $compiler->compile(
-			$config,
-			$this->parameters['container']['class'],
-			$config['parameters']['container']['parent']
-		);
-		$dependencies = array_merge($loader->getDependencies(), $this->parameters['debugMode'] ? $compiler->getContainerBuilder()->getDependencies() : array());
-		return $code;
+	$compiler = $this->createCompiler();
+	$this->onCompile($this, $compiler);
+
+	$code .= $compiler->compile(
+		$config,
+		$this->parameters['container']['class'],
+		$config['parameters']['container']['parent']
+	);
+	$dependencies = array_merge($loader->getDependencies(), $this->parameters['debugMode'] ? $compiler->getContainerBuilder()->getDependencies() : array());
+	return $code;
 	}
 
 
@@ -246,12 +246,12 @@ class Configurator extends Nette\Object
 	 */
 	protected function createCompiler()
 	{
-		$compiler = new Compiler;
-		$compiler->addExtension('php', new Extensions\PhpExtension)
-			->addExtension('constants', new Extensions\ConstantsExtension)
-			->addExtension('nette', new Extensions\NetteExtension)
-			->addExtension('extensions', new Extensions\ExtensionsExtension);
-		return $compiler;
+	$compiler = new Compiler;
+	$compiler->addExtension('php', new Extensions\PhpExtension)
+		->addExtension('constants', new Extensions\ConstantsExtension)
+		->addExtension('nette', new Extensions\NetteExtension)
+		->addExtension('extensions', new Extensions\ExtensionsExtension);
+	return $compiler;
 	}
 
 
@@ -261,14 +261,14 @@ class Configurator extends Nette\Object
 	 */
 	protected function createLoader()
 	{
-		return new Loader;
+	return new Loader;
 	}
 
 
 
 	protected function getCacheDirectory()
 	{
-		return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
+	return empty($this->parameters['tempDir']) ? NULL : $this->parameters['tempDir'] . '/cache';
 	}
 
 
@@ -284,12 +284,12 @@ class Configurator extends Nette\Object
 	 */
 	public static function detectDebugMode($list = NULL)
 	{
-		$list = is_string($list) ? preg_split('#[,\s]+#', $list) : (array) $list;
-		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$list[] = '127.0.0.1';
-			$list[] = '::1';
-		}
-		return in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
+	$list = is_string($list) ? preg_split('#[,\s]+#', $list) : (array) $list;
+	if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		$list[] = '127.0.0.1';
+		$list[] = '::1';
+	}
+	return in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
 	}
 
 
@@ -297,8 +297,8 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public function setProductionMode($value = TRUE)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setDebugMode(!$value) instead.', E_USER_DEPRECATED);
-		return $this->setDebugMode(is_bool($value) ? !$value : $value);
+	trigger_error(__METHOD__ . '() is deprecated; use setDebugMode(!$value) instead.', E_USER_DEPRECATED);
+	return $this->setDebugMode(is_bool($value) ? !$value : $value);
 	}
 
 
@@ -306,8 +306,8 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public function isProductionMode()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use !isDebugMode() instead.', E_USER_DEPRECATED);
-		return !$this->isDebugMode();
+	trigger_error(__METHOD__ . '() is deprecated; use !isDebugMode() instead.', E_USER_DEPRECATED);
+	return !$this->isDebugMode();
 	}
 
 
@@ -315,8 +315,8 @@ class Configurator extends Nette\Object
 	/** @deprecated */
 	public static function detectProductionMode($list = NULL)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use !detectDebugMode() instead.', E_USER_DEPRECATED);
-		return !static::detectDebugMode($list);
+	trigger_error(__METHOD__ . '() is deprecated; use !detectDebugMode() instead.', E_USER_DEPRECATED);
+	return !static::detectDebugMode($list);
 	}
 
 }

@@ -24,8 +24,8 @@ interface IUserStorage
 {
 	/** Log-out reason {@link IUserStorage::getLogoutReason()} */
 	const MANUAL = 1,
-		INACTIVITY = 2,
-		BROWSER_CLOSED = 4;
+	INACTIVITY = 2,
+	BROWSER_CLOSED = 4;
 
 	/** Log-out behavior */
 	const CLEAR_IDENTITY = 8;

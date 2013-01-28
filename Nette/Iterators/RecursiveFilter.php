@@ -25,21 +25,21 @@ class RecursiveFilter extends Filter implements \RecursiveIterator
 
 	public function __construct(\RecursiveIterator $iterator, $callback)
 	{
-		parent::__construct($iterator, $callback);
+	parent::__construct($iterator, $callback);
 	}
 
 
 
 	public function hasChildren()
 	{
-		return $this->getInnerIterator()->hasChildren();
+	return $this->getInnerIterator()->hasChildren();
 	}
 
 
 
 	public function getChildren()
 	{
-		return new static($this->getInnerIterator()->getChildren(), $this->callback);
+	return new static($this->getInnerIterator()->getChildren(), $this->callback);
 	}
 
 }

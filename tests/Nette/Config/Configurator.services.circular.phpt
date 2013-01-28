@@ -36,5 +36,5 @@ Assert::exception(function() {
 	$configurator = new Configurator;
 	$configurator->setTempDirectory(TEMP_DIR);
 	$configurator->addConfig('files/config.services.circular.neon')
-		->createContainer();
+	->createContainer();
 }, 'Nette\InvalidStateException', 'Circular reference detected for services: ipsum, lorem.');

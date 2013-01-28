@@ -55,11 +55,11 @@ class Url extends Nette\FreezableObject
 {
 	/** @var array */
 	public static $defaultPorts = array(
-		'http' => 80,
-		'https' => 443,
-		'ftp' => 21,
-		'news' => 119,
-		'nntp' => 119,
+	'http' => 80,
+	'https' => 443,
+	'ftp' => 21,
+	'news' => 119,
+	'nntp' => 119,
 	);
 
 	/** @var string */
@@ -94,29 +94,29 @@ class Url extends Nette\FreezableObject
 	 */
 	public function __construct($url = NULL)
 	{
-		if (is_string($url)) {
-			$parts = @parse_url($url); // @ - is escalated to exception
-			if ($parts === FALSE) {
-				throw new Nette\InvalidArgumentException("Malformed or unsupported URI '$url'.");
-			}
-
-			foreach ($parts as $key => $val) {
-				$this->$key = $val;
-			}
-
-			if (!$this->port && isset(self::$defaultPorts[$this->scheme])) {
-				$this->port = self::$defaultPorts[$this->scheme];
-			}
-
-			if ($this->path === '' && ($this->scheme === 'http' || $this->scheme === 'https')) {
-				$this->path = '/';
-			}
-
-		} elseif ($url instanceof self) {
-			foreach ($this as $key => $val) {
-				$this->$key = $url->$key;
-			}
+	if (is_string($url)) {
+		$parts = @parse_url($url); // @ - is escalated to exception
+		if ($parts === FALSE) {
+		throw new Nette\InvalidArgumentException("Malformed or unsupported URI '$url'.");
 		}
+
+		foreach ($parts as $key => $val) {
+		$this->$key = $val;
+		}
+
+		if (!$this->port && isset(self::$defaultPorts[$this->scheme])) {
+		$this->port = self::$defaultPorts[$this->scheme];
+		}
+
+		if ($this->path === '' && ($this->scheme === 'http' || $this->scheme === 'https')) {
+		$this->path = '/';
+		}
+
+	} elseif ($url instanceof self) {
+		foreach ($this as $key => $val) {
+		$this->$key = $url->$key;
+		}
+	}
 	}
 
 
@@ -128,9 +128,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setScheme($value)
 	{
-		$this->updating();
-		$this->scheme = (string) $value;
-		return $this;
+	$this->updating();
+	$this->scheme = (string) $value;
+	return $this;
 	}
 
 
@@ -141,7 +141,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getScheme()
 	{
-		return $this->scheme;
+	return $this->scheme;
 	}
 
 
@@ -153,9 +153,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setUser($value)
 	{
-		$this->updating();
-		$this->user = (string) $value;
-		return $this;
+	$this->updating();
+	$this->user = (string) $value;
+	return $this;
 	}
 
 
@@ -166,7 +166,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getUser()
 	{
-		return $this->user;
+	return $this->user;
 	}
 
 
@@ -178,9 +178,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPassword($value)
 	{
-		$this->updating();
-		$this->pass = (string) $value;
-		return $this;
+	$this->updating();
+	$this->pass = (string) $value;
+	return $this;
 	}
 
 
@@ -191,7 +191,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getPassword()
 	{
-		return $this->pass;
+	return $this->pass;
 	}
 
 
@@ -203,9 +203,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setHost($value)
 	{
-		$this->updating();
-		$this->host = (string) $value;
-		return $this;
+	$this->updating();
+	$this->host = (string) $value;
+	return $this;
 	}
 
 
@@ -216,7 +216,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getHost()
 	{
-		return $this->host;
+	return $this->host;
 	}
 
 
@@ -228,9 +228,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPort($value)
 	{
-		$this->updating();
-		$this->port = (int) $value;
-		return $this;
+	$this->updating();
+	$this->port = (int) $value;
+	return $this;
 	}
 
 
@@ -241,7 +241,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getPort()
 	{
-		return $this->port;
+	return $this->port;
 	}
 
 
@@ -253,9 +253,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setPath($value)
 	{
-		$this->updating();
-		$this->path = (string) $value;
-		return $this;
+	$this->updating();
+	$this->path = (string) $value;
+	return $this;
 	}
 
 
@@ -266,7 +266,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getPath()
 	{
-		return $this->path;
+	return $this->path;
 	}
 
 
@@ -278,9 +278,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setQuery($value)
 	{
-		$this->updating();
-		$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
-		return $this;
+	$this->updating();
+	$this->query = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
+	return $this;
 	}
 
 
@@ -292,9 +292,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function appendQuery($value)
 	{
-		$this->updating();
-		$value = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
-		$this->query .= ($this->query === '' || $value === '') ? $value : '&' . $value;
+	$this->updating();
+	$value = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
+	$this->query .= ($this->query === '' || $value === '') ? $value : '&' . $value;
 	}
 
 
@@ -305,7 +305,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getQuery()
 	{
-		return $this->query;
+	return $this->query;
 	}
 
 
@@ -317,9 +317,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function setFragment($value)
 	{
-		$this->updating();
-		$this->fragment = (string) $value;
-		return $this;
+	$this->updating();
+	$this->fragment = (string) $value;
+	return $this;
 	}
 
 
@@ -330,7 +330,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getFragment()
 	{
-		return $this->fragment;
+	return $this->fragment;
 	}
 
 
@@ -341,9 +341,9 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getAbsoluteUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->path
-			. ($this->query === '' ? '' : '?' . $this->query)
-			. ($this->fragment === '' ? '' : '#' . $this->fragment);
+	return $this->scheme . '://' . $this->getAuthority() . $this->path
+		. ($this->query === '' ? '' : '?' . $this->query)
+		. ($this->fragment === '' ? '' : '#' . $this->fragment);
 	}
 
 
@@ -354,16 +354,16 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getAuthority()
 	{
-		$authority = $this->host;
-		if ($this->port && isset(self::$defaultPorts[$this->scheme]) && $this->port !== self::$defaultPorts[$this->scheme]) {
-			$authority .= ':' . $this->port;
-		}
+	$authority = $this->host;
+	if ($this->port && isset(self::$defaultPorts[$this->scheme]) && $this->port !== self::$defaultPorts[$this->scheme]) {
+		$authority .= ':' . $this->port;
+	}
 
-		if ($this->user !== '' && $this->scheme !== 'http' && $this->scheme !== 'https') {
-			$authority = $this->user . ($this->pass === '' ? '' : ':' . $this->pass) . '@' . $authority;
-		}
+	if ($this->user !== '' && $this->scheme !== 'http' && $this->scheme !== 'https') {
+		$authority = $this->user . ($this->pass === '' ? '' : ':' . $this->pass) . '@' . $authority;
+	}
 
-		return $authority;
+	return $authority;
 	}
 
 
@@ -374,7 +374,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getHostUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority();
+	return $this->scheme . '://' . $this->getAuthority();
 	}
 
 
@@ -385,8 +385,8 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getBasePath()
 	{
-		$pos = strrpos($this->path, '/');
-		return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
+	$pos = strrpos($this->path, '/');
+	return $pos === FALSE ? '' : substr($this->path, 0, $pos + 1);
 	}
 
 
@@ -397,7 +397,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getBaseUrl()
 	{
-		return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
+	return $this->scheme . '://' . $this->getAuthority() . $this->getBasePath();
 	}
 
 
@@ -408,7 +408,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function getRelativeUrl()
 	{
-		return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
+	return (string) substr($this->getAbsoluteUrl(), strlen($this->getBaseUrl()));
 	}
 
 
@@ -420,30 +420,30 @@ class Url extends Nette\FreezableObject
 	 */
 	public function isEqual($url)
 	{
-		// compare host + path
-		$part = self::unescape(strtok($url, '?#'), '%/');
-		if (strncmp($part, '//', 2) === 0) { // absolute URI without scheme
-			if ($part !== '//' . $this->getAuthority() . $this->path) {
-				return FALSE;
-			}
-
-		} elseif (strncmp($part, '/', 1) === 0) { // absolute path
-			if ($part !== $this->path) {
-				return FALSE;
-			}
-
-		} else {
-			if ($part !== $this->scheme . '://' . $this->getAuthority() . $this->path) {
-				return FALSE;
-			}
+	// compare host + path
+	$part = self::unescape(strtok($url, '?#'), '%/');
+	if (strncmp($part, '//', 2) === 0) { // absolute URI without scheme
+		if ($part !== '//' . $this->getAuthority() . $this->path) {
+		return FALSE;
 		}
 
-		// compare query strings
-		$part = preg_split('#[&;]#', self::unescape(strtr((string) strtok('?#'), '+', ' '), '%&;=+'));
-		sort($part);
-		$query = preg_split('#[&;]#', $this->query);
-		sort($query);
-		return $part === $query;
+	} elseif (strncmp($part, '/', 1) === 0) { // absolute path
+		if ($part !== $this->path) {
+		return FALSE;
+		}
+
+	} else {
+		if ($part !== $this->scheme . '://' . $this->getAuthority() . $this->path) {
+		return FALSE;
+		}
+	}
+
+	// compare query strings
+	$part = preg_split('#[&;]#', self::unescape(strtr((string) strtok('?#'), '+', ' '), '%&;=+'));
+	sort($part);
+	$query = preg_split('#[&;]#', $this->query);
+	sort($query);
+	return $part === $query;
 	}
 
 
@@ -454,10 +454,10 @@ class Url extends Nette\FreezableObject
 	 */
 	public function canonicalize()
 	{
-		$this->updating();
-		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
-		$this->host = strtolower(rawurldecode($this->host));
-		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
+	$this->updating();
+	$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
+	$this->host = strtolower(rawurldecode($this->host));
+	$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
 	}
 
 
@@ -467,7 +467,7 @@ class Url extends Nette\FreezableObject
 	 */
 	public function __toString()
 	{
-		return $this->getAbsoluteUrl();
+	return $this->getAbsoluteUrl();
 	}
 
 
@@ -480,17 +480,17 @@ class Url extends Nette\FreezableObject
 	 */
 	public static function unescape($s, $reserved = '%;/?:@&=+$,')
 	{
-		// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
-		// within a path segment, the characters "/", ";", "=", "?" are reserved
-		// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-		preg_match_all('#(?<=%)[a-f0-9][a-f0-9]#i', $s, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-		foreach (array_reverse($matches) as $match) {
-			$ch = chr(hexdec($match[0][0]));
-			if (strpos($reserved, $ch) === FALSE) {
-				$s = substr_replace($s, $ch, $match[0][1] - 1, 3);
-			}
+	// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
+	// within a path segment, the characters "/", ";", "=", "?" are reserved
+	// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
+	preg_match_all('#(?<=%)[a-f0-9][a-f0-9]#i', $s, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+	foreach (array_reverse($matches) as $match) {
+		$ch = chr(hexdec($match[0][0]));
+		if (strpos($reserved, $ch) === FALSE) {
+		$s = substr_replace($s, $ch, $match[0][1] - 1, 3);
 		}
-		return $s;
+	}
+	return $s;
 	}
 
 }

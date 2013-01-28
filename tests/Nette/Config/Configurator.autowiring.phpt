@@ -20,7 +20,7 @@ class Factory
 	/** @return Model  auto-wiring using annotation */
 	static function createModel()
 	{
-		return new Model;
+	return new Model;
 	}
 }
 
@@ -30,7 +30,7 @@ class Model
 	/** autowiring using parameters */
 	function test(Lorem $arg)
 	{
-		Notes::add(__METHOD__);
+	Notes::add(__METHOD__);
 	}
 }
 
@@ -40,7 +40,7 @@ class Lorem
 	/** autowiring using parameters */
 	static function test(Nette\Database\Connection $arg)
 	{
-		Notes::add(__METHOD__);
+	Notes::add(__METHOD__);
 	}
 }
 

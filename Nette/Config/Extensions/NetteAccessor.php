@@ -25,28 +25,28 @@ class NetteAccessor extends Nette\Object
 
 	public function __construct(Nette\DI\Container $container)
 	{
-		$this->container = $container;
+	$this->container = $container;
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		if (substr($name, 0, 6) === 'create') {
-			$method = $this->container->getMethodName('nette.' . substr($name, 6), FALSE);
-			trigger_error("Factory accessing via nette->$name() is deprecated, use $method().", E_USER_DEPRECATED);
-			return call_user_func_array(array($this->container, $method), $args);
-		}
-		throw new Nette\NotSupportedException;
+	if (substr($name, 0, 6) === 'create') {
+		$method = $this->container->getMethodName('nette.' . substr($name, 6), FALSE);
+		trigger_error("Factory accessing via nette->$name() is deprecated, use $method().", E_USER_DEPRECATED);
+		return call_user_func_array(array($this->container, $method), $args);
+	}
+	throw new Nette\NotSupportedException;
 	}
 
 
 
 	public function &__get($name)
 	{
-		trigger_error("Service accessing via nette->$name is deprecated, use 'nette.$name'.", E_USER_DEPRECATED);
-		$service = $this->container->getService("nette.$name");
-		return $service;
+	trigger_error("Service accessing via nette->$name is deprecated, use 'nette.$name'.", E_USER_DEPRECATED);
+	$service = $this->container->getService("nette.$name");
+	return $service;
 	}
 
 }

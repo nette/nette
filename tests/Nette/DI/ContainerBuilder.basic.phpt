@@ -22,19 +22,19 @@ class Service
 
 	static function create(DI\Container $container = NULL)
 	{
-		$args = func_get_args();
-		unset($args[0]);
-		return new self($args);
+	$args = func_get_args();
+	unset($args[0]);
+	return new self($args);
 	}
 
 	function __construct()
 	{
-		$this->args = func_get_args();
+	$this->args = func_get_args();
 	}
 
 	function __call($nm, $args)
 	{
-		$this->methods[] = array($nm, $args);
+	$this->methods[] = array($nm, $args);
 	}
 
 }

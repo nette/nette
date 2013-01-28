@@ -20,9 +20,9 @@ class LoremIpsumMacros extends Nette\Latte\Macros\MacroSet
 
 	public static function install(Nette\Latte\Compiler $compiler)
 	{
-		$me = new static($compiler);
-		$me->addMacro('lorem', 'lorem');
-		Notes::add(get_class($me));
+	$me = new static($compiler);
+	$me->addMacro('lorem', 'lorem');
+	Notes::add(get_class($me));
 	}
 
 }
@@ -34,9 +34,9 @@ class IpsumLoremMacros extends Nette\Latte\Macros\MacroSet
 
 	public static function install(Nette\Latte\Compiler $compiler)
 	{
-		$me = new static($compiler);
-		$me->addMacro('ipsum', 'ipsum');
-		Notes::add(get_class($me));
+	$me = new static($compiler);
+	$me->addMacro('ipsum', 'ipsum');
+	Notes::add(get_class($me));
 	}
 
 }

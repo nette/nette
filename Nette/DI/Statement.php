@@ -32,8 +32,8 @@ class Statement extends Nette\Object
 
 	public function __construct($entity, array $arguments = array())
 	{
-		$this->entity = $entity;
-		$this->arguments = $arguments;
+	$this->entity = $entity;
+	$this->arguments = $arguments;
 	}
 
 }

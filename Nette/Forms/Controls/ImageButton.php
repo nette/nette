@@ -29,10 +29,10 @@ class ImageButton extends SubmitButton
 	 */
 	public function __construct($src = NULL, $alt = NULL)
 	{
-		parent::__construct();
-		$this->control->type = 'image';
-		$this->control->src = $src;
-		$this->control->alt = $alt;
+	parent::__construct();
+	$this->control->type = 'image';
+	$this->control->src = $src;
+	$this->control->alt = $alt;
 	}
 
 
@@ -44,11 +44,11 @@ class ImageButton extends SubmitButton
 	 */
 	public function setValue($value)
 	{
-		parent::setValue($value);
-		if (is_array($value) && isset($value[0], $value[1])) {
-			$this->value = $value;
-		}
-		return $this;
+	parent::setValue($value);
+	if (is_array($value) && isset($value[0], $value[1])) {
+		$this->value = $value;
+	}
+	return $this;
 	}
 
 
@@ -59,7 +59,7 @@ class ImageButton extends SubmitButton
 	 */
 	public function getHtmlName()
 	{
-		return parent::getHtmlName() . '[]';
+	return parent::getHtmlName() . '[]';
 	}
 
 }

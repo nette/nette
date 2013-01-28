@@ -73,10 +73,10 @@ class Application extends Nette\Object
 
 	public function __construct(IPresenterFactory $presenterFactory, IRouter $router, Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
-		$this->presenterFactory = $presenterFactory;
-		$this->router = $router;
+	$this->httpRequest = $httpRequest;
+	$this->httpResponse = $httpResponse;
+	$this->presenterFactory = $presenterFactory;
+	$this->router = $router;
 	}
 
 
@@ -87,91 +87,91 @@ class Application extends Nette\Object
 	 */
 	public function run()
 	{
-		$request = NULL;
-		$repeatedError = FALSE;
-		do {
-			try {
-				if (count($this->requests) > self::$maxLoop) {
-					throw new ApplicationException('Too many loops detected in application life cycle.');
-				}
+	$request = NULL;
+	$repeatedError = FALSE;
+	do {
+		try {
+		if (count($this->requests) > self::$maxLoop) {
+			throw new ApplicationException('Too many loops detected in application life cycle.');
+		}
 
-				if (!$request) {
-					$this->onStartup($this);
+		if (!$request) {
+			$this->onStartup($this);
 
-					$request = $this->router->match($this->httpRequest);
-					if (!$request instanceof Request) {
-						$request = NULL;
-						throw new BadRequestException('No route for HTTP request.');
-					}
-
-					if (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
-						throw new BadRequestException('Invalid request. Presenter is not achievable.');
-					}
-				}
-
-				$this->requests[] = $request;
-				$this->onRequest($this, $request);
-
-				// Instantiate presenter
-				$presenterName = $request->getPresenterName();
-				try {
-					$this->presenter = $this->presenterFactory->createPresenter($presenterName);
-				} catch (InvalidPresenterException $e) {
-					throw new BadRequestException($e->getMessage(), 404, $e);
-				}
-
-				$this->presenterFactory->getPresenterClass($presenterName);
-				$request->setPresenterName($presenterName);
-				$request->freeze();
-
-				// Execute presenter
-				$response = $this->presenter->run($request);
-				if ($response) {
-					$this->onResponse($this, $response);
-				}
-
-				// Send response
-				if ($response instanceof Responses\ForwardResponse) {
-					$request = $response->getRequest();
-					continue;
-
-				} elseif ($response instanceof IResponse) {
-					$response->send($this->httpRequest, $this->httpResponse);
-				}
-				break;
-
-			} catch (\Exception $e) {
-				$this->onError($this, $e);
-
-				if ($repeatedError) {
-					$e = new ApplicationException("An error occurred while executing error-presenter '$this->errorPresenter'.", 0, $e);
-				}
-				if ($repeatedError || !$this->catchExceptions) {
-					$this->onShutdown($this, $e);
-					throw $e;
-				}
-
-				$repeatedError = TRUE;
-				$this->errorPresenter = $this->errorPresenter ?: 'Nette:Error';
-
-				if (!$this->httpResponse->isSent()) {
-					$this->httpResponse->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
-				}
-
-				if ($this->presenter instanceof UI\Presenter) {
-					try {
-						$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
-					} catch (AbortException $foo) {
-						$request = $this->presenter->getLastCreatedRequest();
-					}
-				} else {
-					$request = new Request($this->errorPresenter, Request::FORWARD, array('exception' => $e));
-				}
-				// continue
+			$request = $this->router->match($this->httpRequest);
+			if (!$request instanceof Request) {
+			$request = NULL;
+			throw new BadRequestException('No route for HTTP request.');
 			}
-		} while (1);
 
-		$this->onShutdown($this, isset($e) ? $e : NULL);
+			if (strcasecmp($request->getPresenterName(), $this->errorPresenter) === 0) {
+			throw new BadRequestException('Invalid request. Presenter is not achievable.');
+			}
+		}
+
+		$this->requests[] = $request;
+		$this->onRequest($this, $request);
+
+		// Instantiate presenter
+		$presenterName = $request->getPresenterName();
+		try {
+			$this->presenter = $this->presenterFactory->createPresenter($presenterName);
+		} catch (InvalidPresenterException $e) {
+			throw new BadRequestException($e->getMessage(), 404, $e);
+		}
+
+		$this->presenterFactory->getPresenterClass($presenterName);
+		$request->setPresenterName($presenterName);
+		$request->freeze();
+
+		// Execute presenter
+		$response = $this->presenter->run($request);
+		if ($response) {
+			$this->onResponse($this, $response);
+		}
+
+		// Send response
+		if ($response instanceof Responses\ForwardResponse) {
+			$request = $response->getRequest();
+			continue;
+
+		} elseif ($response instanceof IResponse) {
+			$response->send($this->httpRequest, $this->httpResponse);
+		}
+		break;
+
+		} catch (\Exception $e) {
+		$this->onError($this, $e);
+
+		if ($repeatedError) {
+			$e = new ApplicationException("An error occurred while executing error-presenter '$this->errorPresenter'.", 0, $e);
+		}
+		if ($repeatedError || !$this->catchExceptions) {
+			$this->onShutdown($this, $e);
+			throw $e;
+		}
+
+		$repeatedError = TRUE;
+		$this->errorPresenter = $this->errorPresenter ?: 'Nette:Error';
+
+		if (!$this->httpResponse->isSent()) {
+			$this->httpResponse->setCode($e instanceof BadRequestException ? $e->getCode() : 500);
+		}
+
+		if ($this->presenter instanceof UI\Presenter) {
+			try {
+			$this->presenter->forward(":$this->errorPresenter:", array('exception' => $e));
+			} catch (AbortException $foo) {
+			$request = $this->presenter->getLastCreatedRequest();
+			}
+		} else {
+			$request = new Request($this->errorPresenter, Request::FORWARD, array('exception' => $e));
+		}
+		// continue
+		}
+	} while (1);
+
+	$this->onShutdown($this, isset($e) ? $e : NULL);
 	}
 
 
@@ -182,7 +182,7 @@ class Application extends Nette\Object
 	 */
 	final public function getRequests()
 	{
-		return $this->requests;
+	return $this->requests;
 	}
 
 
@@ -193,7 +193,7 @@ class Application extends Nette\Object
 	 */
 	final public function getPresenter()
 	{
-		return $this->presenter;
+	return $this->presenter;
 	}
 
 
@@ -208,7 +208,7 @@ class Application extends Nette\Object
 	 */
 	public function getRouter()
 	{
-		return $this->router;
+	return $this->router;
 	}
 
 
@@ -219,7 +219,7 @@ class Application extends Nette\Object
 	 */
 	public function getPresenterFactory()
 	{
-		return $this->presenterFactory;
+	return $this->presenterFactory;
 	}
 
 
@@ -231,15 +231,15 @@ class Application extends Nette\Object
 	/** @deprecated */
 	function storeRequest($expiration = '+ 10 minutes')
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $presenter->storeRequest() instead.', E_USER_DEPRECATED);
-		return $this->presenter->storeRequest($expiration);
+	trigger_error(__METHOD__ . '() is deprecated; use $presenter->storeRequest() instead.', E_USER_DEPRECATED);
+	return $this->presenter->storeRequest($expiration);
 	}
 
 	/** @deprecated */
 	function restoreRequest($key)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use $presenter->restoreRequest() instead.', E_USER_DEPRECATED);
-		return $this->presenter->restoreRequest($key);
+	trigger_error(__METHOD__ . '() is deprecated; use $presenter->restoreRequest() instead.', E_USER_DEPRECATED);
+	return $this->presenter->restoreRequest($key);
 	}
 
 }

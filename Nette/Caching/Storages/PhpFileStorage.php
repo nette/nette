@@ -33,10 +33,10 @@ class PhpFileStorage extends FileStorage
 	 */
 	protected function readData($meta)
 	{
-		return array(
-			'file' => $meta[self::FILE],
-			'handle' => $meta[self::HANDLE],
-		);
+	return array(
+		'file' => $meta[self::FILE],
+		'handle' => $meta[self::HANDLE],
+	);
 	}
 
 
@@ -48,12 +48,12 @@ class PhpFileStorage extends FileStorage
 	 */
 	protected function getCacheFile($key)
 	{
-		return parent::getCacheFile(substr_replace(
-			$key,
-			trim(strtr($this->hint, '\\/@', '.._'), '.') . '-',
-			strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1,
-			0
-		)) . '.php';
+	return parent::getCacheFile(substr_replace(
+		$key,
+		trim(strtr($this->hint, '\\/@', '.._'), '.') . '-',
+		strpos($key, Nette\Caching\Cache::NAMESPACE_SEPARATOR) + 1,
+		0
+	)) . '.php';
 	}
 
 }

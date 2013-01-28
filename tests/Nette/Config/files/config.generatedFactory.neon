@@ -5,15 +5,15 @@ services:
 
 factories:
 	lorem:
-		class: Lorem
-		implement: \ILoremFactory
+	class: Lorem
+	implement: \ILoremFactory
 
 	article:
-		create: Article(%title%)
-		implement: IArticleFactory
-		parameters: [title]
+	create: Article(%title%)
+	implement: IArticleFactory
+	parameters: [title]
 
 	foo:
-		create: Foo(..., %baz%)
-		implement: IFooFactory
-		parameters: [Baz baz]
+	create: Foo(..., %baz%)
+	implement: IFooFactory
+	parameters: [Baz baz]

@@ -23,9 +23,9 @@ class MockComponent extends Object
 {
 	function getComponent($name)
 	{
-		Notes::add( __METHOD__ );
-		Notes::add( func_get_args() );
-		return new MockControl;
+	Notes::add( __METHOD__ );
+	Notes::add( func_get_args() );
+	return new MockControl;
 	}
 
 }
@@ -37,8 +37,8 @@ class MockControl extends Object
 
 	function __call($name, $args)
 	{
-		Notes::add( __METHOD__ );
-		Notes::add( func_get_args() );
+	Notes::add( __METHOD__ );
+	Notes::add( func_get_args() );
 	}
 
 }

@@ -21,12 +21,12 @@ class Test
 
 	function __construct(stdClass $obj, DI\Container $container)
 	{
-		$this->container = $container;
+	$this->container = $container;
 	}
 
 	function method(stdClass $obj, DI\Container $container)
 	{
-		return isset($obj->prop);
+	return isset($obj->prop);
 	}
 
 }

@@ -47,11 +47,11 @@ class Compiler extends Nette\Object
 	 */
 	public function addExtension($name, CompilerExtension $extension)
 	{
-		if (isset(self::$reserved[$name])) {
-			throw new Nette\InvalidArgumentException("Name '$name' is reserved.");
-		}
-		$this->extensions[$name] = $extension->setCompiler($this, $name);
-		return $this;
+	if (isset(self::$reserved[$name])) {
+		throw new Nette\InvalidArgumentException("Name '$name' is reserved.");
+	}
+	$this->extensions[$name] = $extension->setCompiler($this, $name);
+	return $this;
 	}
 
 
@@ -61,7 +61,7 @@ class Compiler extends Nette\Object
 	 */
 	public function getExtensions()
 	{
-		return $this->extensions;
+	return $this->extensions;
 	}
 
 
@@ -71,7 +71,7 @@ class Compiler extends Nette\Object
 	 */
 	public function getContainerBuilder()
 	{
-		return $this->container;
+	return $this->container;
 	}
 
 
@@ -82,7 +82,7 @@ class Compiler extends Nette\Object
 	 */
 	public function getConfig()
 	{
-		return $this->config;
+	return $this->config;
 	}
 
 
@@ -92,68 +92,68 @@ class Compiler extends Nette\Object
 	 */
 	public function compile(array $config, $className, $parentName)
 	{
-		$this->config = $config;
-		$this->container = new Nette\DI\ContainerBuilder;
-		$this->processParameters();
-		$this->processExtensions();
-		$this->processServices();
-		return $this->generateCode($className, $parentName);
+	$this->config = $config;
+	$this->container = new Nette\DI\ContainerBuilder;
+	$this->processParameters();
+	$this->processExtensions();
+	$this->processServices();
+	return $this->generateCode($className, $parentName);
 	}
 
 
 
 	public function processParameters()
 	{
-		if (isset($this->config['parameters'])) {
-			$this->container->parameters = $this->config['parameters'];
-		}
+	if (isset($this->config['parameters'])) {
+		$this->container->parameters = $this->config['parameters'];
+	}
 	}
 
 
 
 	public function processExtensions()
 	{
-		for ($i = 0; $slice = array_slice($this->extensions, $i, 1); $i++) {
-			reset($slice)->loadConfiguration();
-		}
+	for ($i = 0; $slice = array_slice($this->extensions, $i, 1); $i++) {
+		reset($slice)->loadConfiguration();
+	}
 
-		if ($extra = array_diff_key($this->config, self::$reserved, $this->extensions)) {
-			$extra = implode("', '", array_keys($extra));
-			throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
-		}
+	if ($extra = array_diff_key($this->config, self::$reserved, $this->extensions)) {
+		$extra = implode("', '", array_keys($extra));
+		throw new Nette\InvalidStateException("Found sections '$extra' in configuration, but corresponding extensions are missing.");
+	}
 	}
 
 
 
 	public function processServices()
 	{
-		$this->parseServices($this->container, $this->config);
+	$this->parseServices($this->container, $this->config);
 
-		foreach ($this->extensions as $name => $extension) {
-			if (isset($this->config[$name])) {
-				$this->parseServices($this->container, $this->config[$name], $name);
-			}
+	foreach ($this->extensions as $name => $extension) {
+		if (isset($this->config[$name])) {
+		$this->parseServices($this->container, $this->config[$name], $name);
 		}
+	}
 	}
 
 
 
 	public function generateCode($className, $parentName)
 	{
-		foreach ($this->extensions as $extension) {
-			$extension->beforeCompile();
-			$this->container->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
-		}
+	foreach ($this->extensions as $extension) {
+		$extension->beforeCompile();
+		$this->container->addDependency(Nette\Reflection\ClassType::from($extension)->getFileName());
+	}
 
-		$classes = $this->container->generateClasses();
-		$classes[0]->setName($className)
-			->setExtends($parentName)
-			->addMethod('initialize');
+	$classes = $this->container->generateClasses();
+	$classes[0]->setName($className)
+		->setExtends($parentName)
+		->addMethod('initialize');
 
-		foreach ($this->extensions as $extension) {
-			$extension->afterCompile($classes[0]);
-		}
-		return implode("\n\n\n", $classes);
+	foreach ($this->extensions as $extension) {
+		$extension->afterCompile($classes[0]);
+	}
+	return implode("\n\n\n", $classes);
 	}
 
 
@@ -168,53 +168,53 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseServices(Nette\DI\ContainerBuilder $container, array $config, $namespace = NULL)
 	{
-		$services = isset($config['services']) ? $config['services'] : array();
-		$factories = isset($config['factories']) ? $config['factories'] : array();
-		$all = array_merge($services, $factories);
+	$services = isset($config['services']) ? $config['services'] : array();
+	$factories = isset($config['factories']) ? $config['factories'] : array();
+	$all = array_merge($services, $factories);
 
-		uasort($all, function($a, $b) {
-			return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
-		});
+	uasort($all, function($a, $b) {
+		return strcmp(Helpers::isInheriting($a), Helpers::isInheriting($b));
+	});
 
-		foreach ($all as $origName => $def) {
-			$shared = array_key_exists($origName, $services);
-			if ((string) (int) $origName === (string) $origName) {
-				$name = (string) (count($container->getDefinitions()) + 1);
-			} elseif ($shared && array_key_exists($origName, $factories)) {
-				throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
-			} else {
-				$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
-			}
+	foreach ($all as $origName => $def) {
+		$shared = array_key_exists($origName, $services);
+		if ((string) (int) $origName === (string) $origName) {
+		$name = (string) (count($container->getDefinitions()) + 1);
+		} elseif ($shared && array_key_exists($origName, $factories)) {
+		throw new Nette\DI\ServiceCreationException("It is not allowed to use services and factories with the same name: '$origName'.");
+		} else {
+		$name = ($namespace ? $namespace . '.' : '') . strtr($origName, '\\', '_');
+		}
 
-			if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
-				$container->removeDefinition($name);
-				$definition = $container->addDefinition($name);
-				if ($parent !== Helpers::OVERWRITE) {
-					foreach ($container->getDefinition($parent) as $k => $v) {
-						$definition->$k = unserialize(serialize($v)); // deep clone
-					}
-				}
-			} elseif ($container->hasDefinition($name)) {
-				$definition = $container->getDefinition($name);
-				if ($definition->shared !== $shared) {
-					throw new Nette\DI\ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
-				}
-			} else {
-				$definition = $container->addDefinition($name);
-			}
-			try {
-				static::parseService($definition, $def, $shared);
-			} catch (\Exception $e) {
-				throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
-			}
-
-			if ($definition->class === 'self') {
-				$definition->class = $origName;
-			}
-			if ($definition->factory && $definition->factory->entity === 'self') {
-				$definition->factory->entity = $origName;
+		if (($parent = Helpers::takeParent($def)) && $parent !== $name) {
+		$container->removeDefinition($name);
+		$definition = $container->addDefinition($name);
+		if ($parent !== Helpers::OVERWRITE) {
+			foreach ($container->getDefinition($parent) as $k => $v) {
+			$definition->$k = unserialize(serialize($v)); // deep clone
 			}
 		}
+		} elseif ($container->hasDefinition($name)) {
+		$definition = $container->getDefinition($name);
+		if ($definition->shared !== $shared) {
+			throw new Nette\DI\ServiceCreationException("It is not allowed to use service and factory with the same name '$name'.");
+		}
+		} else {
+		$definition = $container->addDefinition($name);
+		}
+		try {
+		static::parseService($definition, $def, $shared);
+		} catch (\Exception $e) {
+		throw new Nette\DI\ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+		}
+
+		if ($definition->class === 'self') {
+		$definition->class = $origName;
+		}
+		if ($definition->factory && $definition->factory->entity === 'self') {
+		$definition->factory->entity = $origName;
+		}
+	}
 	}
 
 
@@ -225,111 +225,111 @@ class Compiler extends Nette\Object
 	 */
 	public static function parseService(Nette\DI\ServiceDefinition $definition, $config, $shared = TRUE)
 	{
-		if ($config === NULL) {
-			return;
-		} elseif (!is_array($config)) {
-			$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'create';
-			$config = array('class' => NULL, $key => $config);
+	if ($config === NULL) {
+		return;
+	} elseif (!is_array($config)) {
+		$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'create';
+		$config = array('class' => NULL, $key => $config);
+	}
+
+	if (array_key_exists('factory', $config)) {
+		$config['create'] = $config['factory'];
+		unset($config['factory']);
+	};
+
+	$known = $shared
+		? array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
+		: array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
+
+	if ($error = array_diff(array_keys($config), $known)) {
+		throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
+	}
+
+	$arguments = array();
+	if (array_key_exists('arguments', $config)) {
+		Validators::assertField($config, 'arguments', 'array');
+		$arguments = self::filterArguments($config['arguments']);
+		$definition->setArguments($arguments);
+	}
+
+	if (array_key_exists('class', $config) || array_key_exists('create', $config)) {
+		$definition->class = NULL;
+		$definition->factory = NULL;
+	}
+
+	if (array_key_exists('class', $config)) {
+		Validators::assertField($config, 'class', 'string|stdClass|null');
+		if ($config['class'] instanceof \stdClass) {
+		$definition->setClass($config['class']->value, self::filterArguments($config['class']->attributes));
+		} else {
+		$definition->setClass($config['class'], $arguments);
 		}
+	}
 
-		if (array_key_exists('factory', $config)) {
-			$config['create'] = $config['factory'];
-			unset($config['factory']);
-		};
-
-		$known = $shared
-			? array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'run', 'tags')
-			: array('class', 'create', 'arguments', 'setup', 'autowired', 'inject', 'parameters', 'implement');
-
-		if ($error = array_diff(array_keys($config), $known)) {
-			throw new Nette\InvalidStateException("Unknown or deprecated key '" . implode("', '", $error) . "' in definition of service.");
+	if (array_key_exists('create', $config)) {
+		Validators::assertField($config, 'create', 'callable|stdClass|null');
+		if ($config['create'] instanceof \stdClass) {
+		$definition->setFactory($config['create']->value, self::filterArguments($config['create']->attributes));
+		} else {
+		$definition->setFactory($config['create'], $arguments);
 		}
+	}
 
-		$arguments = array();
-		if (array_key_exists('arguments', $config)) {
-			Validators::assertField($config, 'arguments', 'array');
-			$arguments = self::filterArguments($config['arguments']);
-			$definition->setArguments($arguments);
+	if (isset($config['setup'])) {
+		if (Helpers::takeParent($config['setup'])) {
+		$definition->setup = array();
 		}
+		Validators::assertField($config, 'setup', 'list');
+		foreach ($config['setup'] as $id => $setup) {
+		Validators::assert($setup, 'callable|stdClass', "setup item #$id");
+		if ($setup instanceof \stdClass) {
+			Validators::assert($setup->value, 'callable', "setup item #$id");
+			$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
+		} else {
+			$definition->addSetup($setup);
+		}
+		}
+	}
 
-		if (array_key_exists('class', $config) || array_key_exists('create', $config)) {
-			$definition->class = NULL;
-			$definition->factory = NULL;
-		}
+	$definition->setShared($shared);
+	if (isset($config['parameters'])) {
+		Validators::assertField($config, 'parameters', 'array');
+		$definition->setParameters($config['parameters']);
+	}
 
-		if (array_key_exists('class', $config)) {
-			Validators::assertField($config, 'class', 'string|stdClass|null');
-			if ($config['class'] instanceof \stdClass) {
-				$definition->setClass($config['class']->value, self::filterArguments($config['class']->attributes));
-			} else {
-				$definition->setClass($config['class'], $arguments);
-			}
-		}
+	if (isset($config['implement'])) {
+		Validators::assertField($config, 'implement', 'string');
+		$definition->setImplement($config['implement']);
+		$definition->setAutowired(TRUE);
+	}
 
-		if (array_key_exists('create', $config)) {
-			Validators::assertField($config, 'create', 'callable|stdClass|null');
-			if ($config['create'] instanceof \stdClass) {
-				$definition->setFactory($config['create']->value, self::filterArguments($config['create']->attributes));
-			} else {
-				$definition->setFactory($config['create'], $arguments);
-			}
-		}
+	if (isset($config['autowired'])) {
+		Validators::assertField($config, 'autowired', 'bool');
+		$definition->setAutowired($config['autowired']);
+	}
 
-		if (isset($config['setup'])) {
-			if (Helpers::takeParent($config['setup'])) {
-				$definition->setup = array();
-			}
-			Validators::assertField($config, 'setup', 'list');
-			foreach ($config['setup'] as $id => $setup) {
-				Validators::assert($setup, 'callable|stdClass', "setup item #$id");
-				if ($setup instanceof \stdClass) {
-					Validators::assert($setup->value, 'callable', "setup item #$id");
-					$definition->addSetup($setup->value, self::filterArguments($setup->attributes));
-				} else {
-					$definition->addSetup($setup);
-				}
-			}
-		}
+	if (isset($config['inject'])) {
+		Validators::assertField($config, 'inject', 'bool');
+		$definition->setInject($config['inject']);
+	}
 
-		$definition->setShared($shared);
-		if (isset($config['parameters'])) {
-			Validators::assertField($config, 'parameters', 'array');
-			$definition->setParameters($config['parameters']);
-		}
+	if (isset($config['run'])) {
+		$config['tags']['run'] = (bool) $config['run'];
+	}
 
-		if (isset($config['implement'])) {
-			Validators::assertField($config, 'implement', 'string');
-			$definition->setImplement($config['implement']);
-			$definition->setAutowired(TRUE);
+	if (isset($config['tags'])) {
+		Validators::assertField($config, 'tags', 'array');
+		if (Helpers::takeParent($config['tags'])) {
+		$definition->tags = array();
 		}
-
-		if (isset($config['autowired'])) {
-			Validators::assertField($config, 'autowired', 'bool');
-			$definition->setAutowired($config['autowired']);
+		foreach ($config['tags'] as $tag => $attrs) {
+		if (is_int($tag) && is_string($attrs)) {
+			$definition->addTag($attrs);
+		} else {
+			$definition->addTag($tag, $attrs);
 		}
-
-		if (isset($config['inject'])) {
-			Validators::assertField($config, 'inject', 'bool');
-			$definition->setInject($config['inject']);
 		}
-
-		if (isset($config['run'])) {
-			$config['tags']['run'] = (bool) $config['run'];
-		}
-
-		if (isset($config['tags'])) {
-			Validators::assertField($config, 'tags', 'array');
-			if (Helpers::takeParent($config['tags'])) {
-				$definition->tags = array();
-			}
-			foreach ($config['tags'] as $tag => $attrs) {
-				if (is_int($tag) && is_string($attrs)) {
-					$definition->addTag($attrs);
-				} else {
-					$definition->addTag($tag, $attrs);
-				}
-			}
-		}
+	}
 	}
 
 
@@ -340,14 +340,14 @@ class Compiler extends Nette\Object
 	 */
 	public static function filterArguments(array $args)
 	{
-		foreach ($args as $k => $v) {
-			if ($v === '...') {
-				unset($args[$k]);
-			} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
-				$args[$k] = new Nette\DI\Statement($v->value, self::filterArguments($v->attributes));
-			}
+	foreach ($args as $k => $v) {
+		if ($v === '...') {
+		unset($args[$k]);
+		} elseif ($v instanceof \stdClass && isset($v->value, $v->attributes)) {
+		$args[$k] = new Nette\DI\Statement($v->value, self::filterArguments($v->attributes));
 		}
-		return $args;
+	}
+	return $args;
 	}
 
 }

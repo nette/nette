@@ -29,7 +29,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
-		$this->connection = $connection;
+	$this->connection = $connection;
 	}
 
 
@@ -43,7 +43,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function delimite($name)
 	{
-		return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
+	return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
 	}
 
 
@@ -53,7 +53,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function formatBool($value)
 	{
-		return $value ? '1' : '0';
+	return $value ? '1' : '0';
 	}
 
 
@@ -63,7 +63,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function formatDateTime(\DateTime $value)
 	{
-		return $value->format("#m/d/Y H:i:s#");
+	return $value->format("#m/d/Y H:i:s#");
 	}
 
 
@@ -73,8 +73,8 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function formatLike($value, $pos)
 	{
-		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
-		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
+	$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
+	return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
 
@@ -84,13 +84,13 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function applyLimit(&$sql, $limit, $offset)
 	{
-		if ($limit >= 0) {
-			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ')';
-		}
+	if ($limit >= 0) {
+		$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ')';
+	}
 
-		if ($offset) {
-			throw new Nette\InvalidArgumentException('Offset is not implemented in driver odbc.');
-		}
+	if ($offset) {
+		throw new Nette\InvalidArgumentException('Offset is not implemented in driver odbc.');
+	}
 	}
 
 
@@ -100,7 +100,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		return $row;
+	return $row;
 	}
 
 
@@ -114,7 +114,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function getTables()
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -124,7 +124,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function getColumns($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -134,7 +134,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function getIndexes($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -144,7 +144,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -154,7 +154,7 @@ class OdbcDriver extends Nette\Object implements Nette\Database\ISupplementalDri
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META;
+	return $item === self::SUPPORT_COLUMNS_META;
 	}
 
 }

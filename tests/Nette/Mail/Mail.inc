@@ -19,7 +19,7 @@ class TestMailer implements IMailer
 
 	function send(Message $mail)
 	{
-		self::$output = $mail->generateMessage();
+	self::$output = $mail->generateMessage();
 	}
 
 }

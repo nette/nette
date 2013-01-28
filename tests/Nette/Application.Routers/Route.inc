@@ -12,8 +12,8 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 
 	$url = new Nette\Http\UrlScript("http://example.com$url");
 	$url->appendQuery(array(
-		'test' => 'testvalue',
-		'presenter' => 'querypresenter',
+	'test' => 'testvalue',
+	'presenter' => 'querypresenter',
 	));
 
 	$httpRequest = new Nette\Http\Request($url);
@@ -21,20 +21,20 @@ function testRouteIn(Nette\Application\Routers\Route $route, $url, $expectedPres
 	$request = $route->match($httpRequest);
 
 	if ($request) { // matched
-		$params = $request->getParameters();
-		//asort($params);
-		Assert::same( $expectedPresenter, $request->getPresenterName() );
-		Assert::same( $expectedParams, $params );
+	$params = $request->getParameters();
+	//asort($params);
+	Assert::same( $expectedPresenter, $request->getPresenterName() );
+	Assert::same( $expectedParams, $params );
 
-		unset($params['extra']);
-		$request->setParameters($params);
-		$result = $route->constructUrl($request, $url);
-		$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
-		Assert::same( $expectedUrl, $result );
+	unset($params['extra']);
+	$request->setParameters($params);
+	$result = $route->constructUrl($request, $url);
+	$result = strncmp($result, 'http://example.com', 18) ? $result : substr($result, 18);
+	Assert::same( $expectedUrl, $result );
 
 	} else { // not matched
-		// not matched
-		Assert::null( $expectedPresenter );
+	// not matched
+	Assert::null( $expectedPresenter );
 	}
 }
 

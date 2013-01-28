@@ -32,8 +32,8 @@ class User extends Nette\Object
 {
 	/**/ /** @deprecated */
 	const MANUAL = IUserStorage::MANUAL,
-		INACTIVITY = IUserStorage::INACTIVITY,
-		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;/**/
+	INACTIVITY = IUserStorage::INACTIVITY,
+	BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;/**/
 
 	/** @var string  default role for unauthenticated user */
 	public $guestRole = 'guest';
@@ -63,8 +63,8 @@ class User extends Nette\Object
 
 	public function __construct(IUserStorage $storage, Nette\DI\Container $context)
 	{
-		$this->storage = $storage;
-		$this->context = $context; // with IAuthenticator, IAuthorizator
+	$this->storage = $storage;
+	$this->context = $context; // with IAuthenticator, IAuthorizator
 	}
 
 
@@ -74,7 +74,7 @@ class User extends Nette\Object
 	 */
 	final public function getStorage()
 	{
-		return $this->storage;
+	return $this->storage;
 	}
 
 
@@ -92,14 +92,14 @@ class User extends Nette\Object
 	 */
 	public function login($id = NULL, $password = NULL)
 	{
-		$this->logout(TRUE);
-		if (!$id instanceof IIdentity) {
-			$credentials = func_get_args();
-			$id = $this->getAuthenticator()->authenticate($credentials);
-		}
-		$this->storage->setIdentity($id);
-		$this->storage->setAuthenticated(TRUE);
-		$this->onLoggedIn($this);
+	$this->logout(TRUE);
+	if (!$id instanceof IIdentity) {
+		$credentials = func_get_args();
+		$id = $this->getAuthenticator()->authenticate($credentials);
+	}
+	$this->storage->setIdentity($id);
+	$this->storage->setAuthenticated(TRUE);
+	$this->onLoggedIn($this);
 	}
 
 
@@ -111,13 +111,13 @@ class User extends Nette\Object
 	 */
 	final public function logout($clearIdentity = FALSE)
 	{
-		if ($this->isLoggedIn()) {
-			$this->onLoggedOut($this);
-			$this->storage->setAuthenticated(FALSE);
-		}
-		if ($clearIdentity) {
-			$this->storage->setIdentity(NULL);
-		}
+	if ($this->isLoggedIn()) {
+		$this->onLoggedOut($this);
+		$this->storage->setAuthenticated(FALSE);
+	}
+	if ($clearIdentity) {
+		$this->storage->setIdentity(NULL);
+	}
 	}
 
 
@@ -128,7 +128,7 @@ class User extends Nette\Object
 	 */
 	final public function isLoggedIn()
 	{
-		return $this->storage->isAuthenticated();
+	return $this->storage->isAuthenticated();
 	}
 
 
@@ -139,7 +139,7 @@ class User extends Nette\Object
 	 */
 	final public function getIdentity()
 	{
-		return $this->storage->getIdentity();
+	return $this->storage->getIdentity();
 	}
 
 
@@ -150,8 +150,8 @@ class User extends Nette\Object
 	 */
 	public function getId()
 	{
-		$identity = $this->getIdentity();
-		return $identity ? $identity->getId() : NULL;
+	$identity = $this->getIdentity();
+	return $identity ? $identity->getId() : NULL;
 	}
 
 
@@ -162,8 +162,8 @@ class User extends Nette\Object
 	 */
 	public function setAuthenticator(IAuthenticator $handler)
 	{
-		$this->authenticator = $handler;
-		return $this;
+	$this->authenticator = $handler;
+	return $this;
 	}
 
 
@@ -174,7 +174,7 @@ class User extends Nette\Object
 	 */
 	final public function getAuthenticator()
 	{
-		return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
+	return $this->authenticator ?: $this->context->getByType('Nette\Security\IAuthenticator');
 	}
 
 
@@ -188,9 +188,9 @@ class User extends Nette\Object
 	 */
 	public function setExpiration($time, $whenBrowserIsClosed = TRUE, $clearIdentity = FALSE)
 	{
-		$flags = ($whenBrowserIsClosed ? IUserStorage::BROWSER_CLOSED : 0) | ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
-		$this->storage->setExpiration($time, $flags);
-		return $this;
+	$flags = ($whenBrowserIsClosed ? IUserStorage::BROWSER_CLOSED : 0) | ($clearIdentity ? IUserStorage::CLEAR_IDENTITY : 0);
+	$this->storage->setExpiration($time, $flags);
+	return $this;
 	}
 
 
@@ -201,7 +201,7 @@ class User extends Nette\Object
 	 */
 	final public function getLogoutReason()
 	{
-		return $this->storage->getLogoutReason();
+	return $this->storage->getLogoutReason();
 	}
 
 
@@ -216,12 +216,12 @@ class User extends Nette\Object
 	 */
 	public function getRoles()
 	{
-		if (!$this->isLoggedIn()) {
-			return array($this->guestRole);
-		}
+	if (!$this->isLoggedIn()) {
+		return array($this->guestRole);
+	}
 
-		$identity = $this->getIdentity();
-		return $identity && $identity->getRoles() ? $identity->getRoles() : array($this->authenticatedRole);
+	$identity = $this->getIdentity();
+	return $identity && $identity->getRoles() ? $identity->getRoles() : array($this->authenticatedRole);
 	}
 
 
@@ -233,7 +233,7 @@ class User extends Nette\Object
 	 */
 	final public function isInRole($role)
 	{
-		return in_array($role, $this->getRoles(), TRUE);
+	return in_array($role, $this->getRoles(), TRUE);
 	}
 
 
@@ -247,14 +247,14 @@ class User extends Nette\Object
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
-		$authorizator = $this->getAuthorizator();
-		foreach ($this->getRoles() as $role) {
-			if ($authorizator->isAllowed($role, $resource, $privilege)) {
-				return TRUE;
-			}
+	$authorizator = $this->getAuthorizator();
+	foreach ($this->getRoles() as $role) {
+		if ($authorizator->isAllowed($role, $resource, $privilege)) {
+		return TRUE;
 		}
+	}
 
-		return FALSE;
+	return FALSE;
 	}
 
 
@@ -265,8 +265,8 @@ class User extends Nette\Object
 	 */
 	public function setAuthorizator(IAuthorizator $handler)
 	{
-		$this->authorizator = $handler;
-		return $this;
+	$this->authorizator = $handler;
+	return $this;
 	}
 
 
@@ -277,7 +277,7 @@ class User extends Nette\Object
 	 */
 	final public function getAuthorizator()
 	{
-		return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
+	return $this->authorizator ?: $this->context->getByType('Nette\Security\IAuthorizator');
 	}
 
 }

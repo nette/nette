@@ -20,8 +20,8 @@ class TestClass extends Nette\Object
 
 	function __construct($foo = NULL, $bar = NULL)
 	{
-		$this->foo = $foo;
-		$this->bar = $bar;
+	$this->foo = $foo;
+	$this->bar = $bar;
 	}
 
 	public function foo()
@@ -30,28 +30,28 @@ class TestClass extends Nette\Object
 
 	public function getFoo()
 	{
-		return $this->foo;
+	return $this->foo;
 	}
 
 	public function setFoo($foo)
 	{
-		$this->foo = $foo;
+	$this->foo = $foo;
 	}
 
 	public function getBar()
 	{
-		return $this->bar;
+	return $this->bar;
 	}
 
 	public function setBazz($value)
 	{
-		$this->bar = $value;
+	$this->bar = $value;
 	}
 
 	public function gets() // or setupXyz, settle...
 	{
-		echo __METHOD__;
-		return 'ERROR';
+	echo __METHOD__;
+	return 'ERROR';
 	}
 
 }

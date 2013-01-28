@@ -21,13 +21,13 @@ $data = $config->load('files/config.sample.neon', 'production');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'db.example.com',
-			'username' => 'dbuser',
-			'password' => 'secret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'db.example.com',
+		'username' => 'dbuser',
+		'password' => 'secret',
+		'dbname' => 'dbname',
+	),
 	),
 ), $data );
 
@@ -36,21 +36,21 @@ $data = $config->load('files/config.sample.neon', 'development');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'dev.example.com',
-			'username' => 'devuser',
-			'password' => 'devsecret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'dev.example.com',
+		'username' => 'devuser',
+		'password' => 'devsecret',
+		'dbname' => 'dbname',
+	),
 	),
 	'timeout' => 10,
 	'display_errors' => TRUE,
 	'html_errors' => FALSE,
 	'items' => array(10, 20),
 	'php' => array(
-		'zlib.output_compression' => TRUE,
-		'date.timezone' => 'Europe/Prague',
+	'zlib.output_compression' => TRUE,
+	'date.timezone' => 'Europe/Prague',
 	),
 ), $data );
 
@@ -63,10 +63,10 @@ webname: the example
 database:
 	adapter: pdo_mysql
 	params:
-		host: dev.example.com
-		username: devuser
-		password: devsecret
-		dbname: dbname
+	host: dev.example.com
+	username: devuser
+	password: devsecret
+	dbname: dbname
 
 
 timeout: 10
@@ -91,33 +91,33 @@ Assert::match( <<<EOD
 production:
 	webname: the example
 	database:
-		adapter: pdo_mysql
-		params:
-			host: db.example.com
-			username: dbuser
-			password: secret
-			dbname: dbname
+	adapter: pdo_mysql
+	params:
+		host: db.example.com
+		username: dbuser
+		password: secret
+		dbname: dbname
 
 
 
 development < production:
 	database:
-		params:
-			host: dev.example.com
-			username: devuser
-			password: devsecret
+	params:
+		host: dev.example.com
+		username: devuser
+		password: devsecret
 
 
 	timeout: 10
 	display_errors: true
 	html_errors: false
 	items:
-		- 10
-		- 20
+	- 10
+	- 20
 
 	php:
-		zlib.output_compression: true
-		date.timezone: Europe/Prague
+	zlib.output_compression: true
+	date.timezone: Europe/Prague
 
 
 nothing: null

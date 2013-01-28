@@ -19,7 +19,7 @@ class Invokable extends Nette\Object
 {
 	public function __invoke($page, $id)
 	{
-		Notes::add('Callback id ' . $id . ' page ' . $page);
+	Notes::add('Callback id ' . $id . ' page ' . $page);
 	}
 }
 
@@ -31,7 +31,7 @@ $presenter = new NetteModule\MicroPresenter($container);
 
 $presenter->run(new Request('Nette:Micro', 'GET', array(
 	'callback' => function($id, $page) {
-		Notes::add('Callback id ' . $id . ' page ' . $page);
+	Notes::add('Callback id ' . $id . ' page ' . $page);
 	},
 	'id' => 1,
 	'page' => 2,

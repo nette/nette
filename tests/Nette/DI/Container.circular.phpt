@@ -20,12 +20,12 @@ class MyContainer extends Container
 
 	protected function createServiceOne()
 	{
-		return $this->two;
+	return $this->two;
 	}
 
 	protected function createServiceTwo()
 	{
-		return $this->one;
+	return $this->one;
 	}
 
 }

@@ -27,8 +27,8 @@ Assert::same( array(123), Helpers::expand(array('%key1%'), array('key1' => '%key
 Assert::same(
 	array('key1' => 123, 'key2' => 'abc'),
 	Helpers::expand('%keyA%', array(
-		'keyA' => array('key1' => 123, 'key2' => '%keyB%'),
-		'keyB' => 'abc'
+	'keyA' => array('key1' => 123, 'key2' => '%keyB%'),
+	'keyB' => 'abc'
 	), TRUE)
 );
 

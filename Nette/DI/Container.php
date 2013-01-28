@@ -46,7 +46,7 @@ class Container extends Nette\FreezableObject
 
 	public function __construct(array $params = array())
 	{
-		$this->parameters = $params + $this->parameters;
+	$this->parameters = $params + $this->parameters;
 	}
 
 
@@ -56,7 +56,7 @@ class Container extends Nette\FreezableObject
 	 */
 	public function getParameters()
 	{
-		return $this->parameters;
+	return $this->parameters;
 	}
 
 
@@ -70,28 +70,28 @@ class Container extends Nette\FreezableObject
 	 */
 	public function addService($name, $service, array $meta = NULL)
 	{
-		$this->updating();
-		if (!is_string($name) || !$name) {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
-		}
+	$this->updating();
+	if (!is_string($name) || !$name) {
+		throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+	}
 
-		if (isset($this->registry[$name])) {
-			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
-		}
+	if (isset($this->registry[$name])) {
+		throw new Nette\InvalidStateException("Service '$name' has already been registered.");
+	}
 
-		if (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
-			$this->registry[$name] = $service;
-			$this->meta[$name] = $meta;
-			return $this;
-
-		} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callable
-			$service = new Nette\Callback($service);
-		}
-
-		$this->factories[$name] = array($service);
-		$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
+	if (is_object($service) && !$service instanceof \Closure && !$service instanceof Nette\Callback) {
+		$this->registry[$name] = $service;
 		$this->meta[$name] = $meta;
 		return $this;
+
+	} elseif (!is_string($service) || strpos($service, ':') !== FALSE/*5.2* || $service[0] === "\0"*/) { // callable
+		$service = new Nette\Callback($service);
+	}
+
+	$this->factories[$name] = array($service);
+	$this->registry[$name] = & $this->factories[$name][1]; // forces cloning using reference
+	$this->meta[$name] = $meta;
+	return $this;
 	}
 
 
@@ -103,8 +103,8 @@ class Container extends Nette\FreezableObject
 	 */
 	public function removeService($name)
 	{
-		$this->updating();
-		unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
+	$this->updating();
+	unset($this->registry[$name], $this->factories[$name], $this->meta[$name]);
 	}
 
 
@@ -116,55 +116,55 @@ class Container extends Nette\FreezableObject
 	 */
 	public function getService($name)
 	{
-		if (isset($this->registry[$name])) {
-			return $this->registry[$name];
+	if (isset($this->registry[$name])) {
+		return $this->registry[$name];
 
-		} elseif (isset($this->creating[$name])) {
-			throw new Nette\InvalidStateException("Circular reference detected for services: "
-				. implode(', ', array_keys($this->creating)) . ".");
+	} elseif (isset($this->creating[$name])) {
+		throw new Nette\InvalidStateException("Circular reference detected for services: "
+		. implode(', ', array_keys($this->creating)) . ".");
+	}
+
+	if (isset($this->factories[$name])) {
+		list($factory) = $this->factories[$name];
+		if (is_string($factory)) {
+		if (!class_exists($factory)) {
+			throw new Nette\InvalidStateException("Cannot instantiate service, class '$factory' not found.");
 		}
-
-		if (isset($this->factories[$name])) {
-			list($factory) = $this->factories[$name];
-			if (is_string($factory)) {
-				if (!class_exists($factory)) {
-					throw new Nette\InvalidStateException("Cannot instantiate service, class '$factory' not found.");
-				}
-				try {
-					$this->creating[$name] = TRUE;
-					$service = new $factory;
-				} catch (\Exception $e) {}
-
-			} elseif (!$factory->isCallable()) {
-				throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
-
-			} else {
-				$this->creating[$name] = TRUE;
-				try {
-					$service = $factory/*5.2*->invoke*/($this);
-				} catch (\Exception $e) {}
-			}
-
-		} elseif (method_exists($this, $factory = Container::getMethodName($name)) && $this->getReflection()->getMethod($factory)->getName() === $factory) {
+		try {
 			$this->creating[$name] = TRUE;
-			try {
-				$service = $this->$factory();
-			} catch (\Exception $e) {}
+			$service = new $factory;
+		} catch (\Exception $e) {}
+
+		} elseif (!$factory->isCallable()) {
+		throw new Nette\InvalidStateException("Unable to create service '$name', factory '$factory' is not callable.");
 
 		} else {
-			throw new MissingServiceException("Service '$name' not found.");
+		$this->creating[$name] = TRUE;
+		try {
+			$service = $factory/*5.2*->invoke*/($this);
+		} catch (\Exception $e) {}
 		}
 
-		unset($this->creating[$name]);
+	} elseif (method_exists($this, $factory = Container::getMethodName($name)) && $this->getReflection()->getMethod($factory)->getName() === $factory) {
+		$this->creating[$name] = TRUE;
+		try {
+		$service = $this->$factory();
+		} catch (\Exception $e) {}
 
-		if (isset($e)) {
-			throw $e;
+	} else {
+		throw new MissingServiceException("Service '$name' not found.");
+	}
 
-		} elseif (!is_object($service)) {
-			throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
-		}
+	unset($this->creating[$name]);
 
-		return $this->registry[$name] = $service;
+	if (isset($e)) {
+		throw $e;
+
+	} elseif (!is_object($service)) {
+		throw new Nette\UnexpectedValueException("Unable to create service '$name', value returned by factory '$factory' is not object.");
+	}
+
+	return $this->registry[$name] = $service;
 	}
 
 
@@ -176,9 +176,9 @@ class Container extends Nette\FreezableObject
 	 */
 	public function hasService($name)
 	{
-		return isset($this->registry[$name])
-			|| isset($this->factories[$name])
-			|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
+	return isset($this->registry[$name])
+		|| isset($this->factories[$name])
+		|| method_exists($this, $method = Container::getMethodName($name)) && $this->getReflection()->getMethod($method)->getName() === $method;
 	}
 
 
@@ -190,10 +190,10 @@ class Container extends Nette\FreezableObject
 	 */
 	public function isCreated($name)
 	{
-		if (!$this->hasService($name)) {
-			throw new MissingServiceException("Service '$name' not found.");
-		}
-		return isset($this->registry[$name]);
+	if (!$this->hasService($name)) {
+		throw new MissingServiceException("Service '$name' not found.");
+	}
+	return isset($this->registry[$name]);
 	}
 
 
@@ -207,16 +207,16 @@ class Container extends Nette\FreezableObject
 	 */
 	public function getByType($class, $need = TRUE)
 	{
-		$lower = ltrim(strtolower($class), '\\');
-		if (!isset($this->classes[$lower])) {
-			if ($need) {
-				throw new MissingServiceException("Service of type $class not found.");
-			}
-		} elseif ($this->classes[$lower] === FALSE) {
-			throw new MissingServiceException("Multiple services of type $class found.");
-		} else {
-			return $this->getService($this->classes[$lower]);
+	$lower = ltrim(strtolower($class), '\\');
+	if (!isset($this->classes[$lower])) {
+		if ($need) {
+		throw new MissingServiceException("Service of type $class not found.");
 		}
+	} elseif ($this->classes[$lower] === FALSE) {
+		throw new MissingServiceException("Multiple services of type $class found.");
+	} else {
+		return $this->getService($this->classes[$lower]);
+	}
 	}
 
 
@@ -228,13 +228,13 @@ class Container extends Nette\FreezableObject
 	 */
 	public function findByTag($tag)
 	{
-		$found = array();
-		foreach ($this->meta as $name => $meta) {
-			if (isset($meta[self::TAGS][$tag])) {
-				$found[$name] = $meta[self::TAGS][$tag];
-			}
+	$found = array();
+	foreach ($this->meta as $name => $meta) {
+		if (isset($meta[self::TAGS][$tag])) {
+		$found[$name] = $meta[self::TAGS][$tag];
 		}
-		return $found;
+	}
+	return $found;
 	}
 
 
@@ -252,17 +252,17 @@ class Container extends Nette\FreezableObject
 	 */
 	public function createInstance($class, array $args = array())
 	{
-		$rc = Nette\Reflection\ClassType::from($class);
-		if (!$rc->isInstantiable()) {
-			throw new ServiceCreationException("Class $class is not instantiable.");
+	$rc = Nette\Reflection\ClassType::from($class);
+	if (!$rc->isInstantiable()) {
+		throw new ServiceCreationException("Class $class is not instantiable.");
 
-		} elseif ($constructor = $rc->getConstructor()) {
-			return $rc->newInstanceArgs(Helpers::autowireArguments($constructor, $args, $this));
+	} elseif ($constructor = $rc->getConstructor()) {
+		return $rc->newInstanceArgs(Helpers::autowireArguments($constructor, $args, $this));
 
-		} elseif ($args) {
-			throw new ServiceCreationException("Unable to pass arguments, class $class has no constructor.");
-		}
-		return new $class;
+	} elseif ($args) {
+		throw new ServiceCreationException("Unable to pass arguments, class $class has no constructor.");
+	}
+	return new $class;
 	}
 
 
@@ -274,15 +274,15 @@ class Container extends Nette\FreezableObject
 	 */
 	public function callInjects($service)
 	{
-		if (!is_object($service)) {
-			throw new Nette\InvalidArgumentException("Service must be object, " . gettype($service) . " given.");
-		}
+	if (!is_object($service)) {
+		throw new Nette\InvalidArgumentException("Service must be object, " . gettype($service) . " given.");
+	}
 
-		foreach (array_reverse(get_class_methods($service)) as $method) {
-			if (substr($method, 0, 6) === 'inject') {
-				$this->callMethod(array($service, $method));
-			}
+	foreach (array_reverse(get_class_methods($service)) as $method) {
+		if (substr($method, 0, 6) === 'inject') {
+		$this->callMethod(array($service, $method));
 		}
+	}
 	}
 
 
@@ -295,8 +295,8 @@ class Container extends Nette\FreezableObject
 	 */
 	public function callMethod($function, array $args = array())
 	{
-		$callback = new Nette\Callback($function);
-		return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
+	$callback = new Nette\Callback($function);
+	return $callback->invokeArgs(Helpers::autowireArguments($callback->toReflection(), $args, $this));
 	}
 
 
@@ -312,7 +312,7 @@ class Container extends Nette\FreezableObject
 	 */
 	public function expand($s)
 	{
-		return Helpers::expand($s, $this->parameters);
+	return Helpers::expand($s, $this->parameters);
 	}
 
 
@@ -324,10 +324,10 @@ class Container extends Nette\FreezableObject
 	 */
 	public function &__get($name)
 	{
-		if (!isset($this->registry[$name])) {
-			$this->getService($name);
-		}
-		return $this->registry[$name];
+	if (!isset($this->registry[$name])) {
+		$this->getService($name);
+	}
+	return $this->registry[$name];
 	}
 
 
@@ -340,17 +340,17 @@ class Container extends Nette\FreezableObject
 	 */
 	public function __set($name, $service)
 	{
-		$this->updating();
-		if (!is_string($name) || $name === '') {
-			throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
+	$this->updating();
+	if (!is_string($name) || $name === '') {
+		throw new Nette\InvalidArgumentException("Service name must be a non-empty string, " . gettype($name) . " given.");
 
-		} elseif (isset($this->registry[$name])) {
-			throw new Nette\InvalidStateException("Service '$name' has already been registered.");
+	} elseif (isset($this->registry[$name])) {
+		throw new Nette\InvalidStateException("Service '$name' has already been registered.");
 
-		} elseif (!is_object($service)) {
-			throw new Nette\InvalidArgumentException("Service must be a object, " . gettype($service) . " given.");
-		}
-		$this->registry[$name] = $service;
+	} elseif (!is_object($service)) {
+		throw new Nette\InvalidArgumentException("Service must be a object, " . gettype($service) . " given.");
+	}
+	$this->registry[$name] = $service;
 	}
 
 
@@ -362,7 +362,7 @@ class Container extends Nette\FreezableObject
 	 */
 	public function __isset($name)
 	{
-		return $this->hasService($name);
+	return $this->hasService($name);
 	}
 
 
@@ -373,15 +373,15 @@ class Container extends Nette\FreezableObject
 	 */
 	public function __unset($name)
 	{
-		$this->removeService($name);
+	$this->removeService($name);
 	}
 
 
 
 	public static function getMethodName($name, $isService = TRUE)
 	{
-		$uname = ucfirst($name);
-		return ($isService ? 'createService' : 'create') . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+	$uname = ucfirst($name);
+	return ($isService ? 'createService' : 'create') . ((string) $name === $uname ? '__' : '') . str_replace('.', '__', $uname);
 	}
 
 }

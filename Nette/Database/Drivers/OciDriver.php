@@ -32,8 +32,8 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
-		$this->connection = $connection;
-		$this->fmtDateTime = isset($options['formatDateTime']) ? $options['formatDateTime'] : 'U';
+	$this->connection = $connection;
+	$this->fmtDateTime = isset($options['formatDateTime']) ? $options['formatDateTime'] : 'U';
 	}
 
 
@@ -47,8 +47,8 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function delimite($name)
 	{
-		// @see http://download.oracle.com/docs/cd/B10500_01/server.920/a96540/sql_elements9a.htm
-		return '"' . str_replace('"', '""', $name) . '"';
+	// @see http://download.oracle.com/docs/cd/B10500_01/server.920/a96540/sql_elements9a.htm
+	return '"' . str_replace('"', '""', $name) . '"';
 	}
 
 
@@ -58,7 +58,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function formatBool($value)
 	{
-		return $value ? '1' : '0';
+	return $value ? '1' : '0';
 	}
 
 
@@ -68,7 +68,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function formatDateTime(\DateTime $value)
 	{
-		return $value->format($this->fmtDateTime);
+	return $value->format($this->fmtDateTime);
 	}
 
 
@@ -78,7 +78,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -88,15 +88,15 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function applyLimit(&$sql, $limit, $offset)
 	{
-		if ($offset > 0) {
-			// see http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
-			$sql = 'SELECT * FROM (SELECT t.*, ROWNUM AS "__rnum" FROM (' . $sql . ') t '
-				. ($limit >= 0 ? 'WHERE ROWNUM <= ' . ((int) $offset + (int) $limit) : '')
-				. ') WHERE "__rnum" > '. (int) $offset;
+	if ($offset > 0) {
+		// see http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
+		$sql = 'SELECT * FROM (SELECT t.*, ROWNUM AS "__rnum" FROM (' . $sql . ') t '
+		. ($limit >= 0 ? 'WHERE ROWNUM <= ' . ((int) $offset + (int) $limit) : '')
+		. ') WHERE "__rnum" > '. (int) $offset;
 
-		} elseif ($limit >= 0) {
-			$sql = 'SELECT * FROM (' . $sql . ') WHERE ROWNUM <= ' . (int) $limit;
-		}
+	} elseif ($limit >= 0) {
+		$sql = 'SELECT * FROM (' . $sql . ') WHERE ROWNUM <= ' . (int) $limit;
+	}
 	}
 
 
@@ -106,7 +106,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		return $row;
+	return $row;
 	}
 
 
@@ -120,16 +120,16 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getTables()
 	{
-		$tables = array();
-		foreach ($this->connection->query('SELECT * FROM cat') as $row) {
-			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
-				$tables[] = array(
-					'name' => $row[0],
-					'view' => $row[1] === 'VIEW',
-				);
-			}
+	$tables = array();
+	foreach ($this->connection->query('SELECT * FROM cat') as $row) {
+		if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
+		$tables[] = array(
+			'name' => $row[0],
+			'view' => $row[1] === 'VIEW',
+		);
 		}
-		return $tables;
+	}
+	return $tables;
 	}
 
 
@@ -139,7 +139,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getColumns($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -149,7 +149,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getIndexes($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -159,7 +159,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -169,7 +169,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
+	return $item === self::SUPPORT_COLUMNS_META || $item === self::SUPPORT_SEQUENCE;
 	}
 
 }

@@ -35,7 +35,7 @@ class ControlGroup extends Nette\Object
 
 	public function __construct()
 	{
-		$this->controls = new \SplObjectStorage;
+	$this->controls = new \SplObjectStorage;
 	}
 
 
@@ -45,20 +45,20 @@ class ControlGroup extends Nette\Object
 	 */
 	public function add()
 	{
-		foreach (func_get_args() as $num => $item) {
-			if ($item instanceof IControl) {
-				$this->controls->attach($item);
+	foreach (func_get_args() as $num => $item) {
+		if ($item instanceof IControl) {
+		$this->controls->attach($item);
 
-			} elseif ($item instanceof \Traversable || is_array($item)) {
-				foreach ($item as $control) {
-					$this->controls->attach($control);
-				}
-
-			} else {
-				throw new Nette\InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
-			}
+		} elseif ($item instanceof \Traversable || is_array($item)) {
+		foreach ($item as $control) {
+			$this->controls->attach($control);
 		}
-		return $this;
+
+		} else {
+		throw new Nette\InvalidArgumentException("Only IFormControl items are allowed, the #$num parameter is invalid.");
+		}
+	}
+	return $this;
 	}
 
 
@@ -68,7 +68,7 @@ class ControlGroup extends Nette\Object
 	 */
 	public function getControls()
 	{
-		return iterator_to_array($this->controls);
+	return iterator_to_array($this->controls);
 	}
 
 
@@ -88,13 +88,13 @@ class ControlGroup extends Nette\Object
 	 */
 	public function setOption($key, $value)
 	{
-		if ($value === NULL) {
-			unset($this->options[$key]);
+	if ($value === NULL) {
+		unset($this->options[$key]);
 
-		} else {
-			$this->options[$key] = $value;
-		}
-		return $this;
+	} else {
+		$this->options[$key] = $value;
+	}
+	return $this;
 	}
 
 
@@ -107,7 +107,7 @@ class ControlGroup extends Nette\Object
 	 */
 	final public function getOption($key, $default = NULL)
 	{
-		return isset($this->options[$key]) ? $this->options[$key] : $default;
+	return isset($this->options[$key]) ? $this->options[$key] : $default;
 	}
 
 
@@ -118,7 +118,7 @@ class ControlGroup extends Nette\Object
 	 */
 	final public function getOptions()
 	{
-		return $this->options;
+	return $this->options;
 	}
 
 }

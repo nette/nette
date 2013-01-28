@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 
 class A {
 	static function foo($a, $b) {
-		return $a + $b;
+	return $a + $b;
 	}
 }
 

@@ -21,7 +21,7 @@ class TestClass
 
 	public function __call($name, $args)
 	{
-		return Nette\ObjectMixin::callProperty($this, $name, $args);
+	return Nette\ObjectMixin::callProperty($this, $name, $args);
 	}
 
 }

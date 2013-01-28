@@ -32,16 +32,16 @@ class Authenticator implements IAuthenticator
 	 */
 	function authenticate(array $credentials)
 	{
-		list($username, $password) = $credentials;
-		if ($username !== 'john') {
-			throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
+	list($username, $password) = $credentials;
+	if ($username !== 'john') {
+		throw new Nette\Security\AuthenticationException('Unknown user', self::IDENTITY_NOT_FOUND);
 
-		} elseif ($password !== 'xxx') {
-			throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
+	} elseif ($password !== 'xxx') {
+		throw new Nette\Security\AuthenticationException('Password not match', self::INVALID_CREDENTIAL);
 
-		} else {
-			return new Identity('John Doe', array('admin'));
-		}
+	} else {
+		return new Identity('John Doe', array('admin'));
+	}
 	}
 
 }
@@ -58,7 +58,7 @@ class Authorizator implements IAuthorizator
 	 */
 	function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
 	{
-		return $role === 'admin' && strpos($resource, 'jany') === FALSE;
+	return $role === 'admin' && strpos($resource, 'jany') === FALSE;
 	}
 
 }

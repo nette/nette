@@ -25,9 +25,9 @@ class ExtensionsExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		foreach ($this->getConfig() as $name => $class) {
-			$this->compiler->addExtension($name, new $class);
-		}
+	foreach ($this->getConfig() as $name => $class) {
+		$this->compiler->addExtension($name, new $class);
+	}
 	}
 
 }

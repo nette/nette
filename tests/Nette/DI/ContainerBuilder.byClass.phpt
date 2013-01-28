@@ -20,8 +20,8 @@ class Service
 
 	static function create($arg)
 	{
-		Notes::add(__METHOD__ . ' ' . get_class($arg));
-		return new self();
+	Notes::add(__METHOD__ . ' ' . get_class($arg));
+	return new self();
 	}
 
 }

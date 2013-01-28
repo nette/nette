@@ -2,11 +2,11 @@ services:
 	three: @\Lorem
 
 	one:
-		class: Lorem(@\Ipsum)
+	class: Lorem(@\Ipsum)
 
 	two:
-		class: Ipsum
-		setup:
-			- @\Ipsum::foo()
+	class: Ipsum
+	setup:
+		- @\Ipsum::foo()
 
 	four: @\Lorem

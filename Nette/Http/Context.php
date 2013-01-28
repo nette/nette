@@ -36,8 +36,8 @@ class Context extends Nette\Object
 
 	public function __construct(IRequest $request, IResponse $response)
 	{
-		$this->request = $request;
-		$this->response = $response;
+	$this->request = $request;
+	$this->response = $response;
 	}
 
 
@@ -50,45 +50,45 @@ class Context extends Nette\Object
 	 */
 	public function isModified($lastModified = NULL, $etag = NULL)
 	{
-		if ($lastModified) {
-			$this->response->setHeader('Last-Modified', $this->response->date($lastModified));
+	if ($lastModified) {
+		$this->response->setHeader('Last-Modified', $this->response->date($lastModified));
+	}
+	if ($etag) {
+		$this->response->setHeader('ETag', '"' . addslashes($etag) . '"');
+	}
+
+	$ifNoneMatch = $this->request->getHeader('If-None-Match');
+	if ($ifNoneMatch === '*') {
+		$match = TRUE; // match, check if-modified-since
+
+	} elseif ($ifNoneMatch !== NULL) {
+		$etag = $this->response->getHeader('ETag');
+
+		if ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
+		return TRUE;
+
+		} else {
+		$match = TRUE; // match, check if-modified-since
 		}
-		if ($etag) {
-			$this->response->setHeader('ETag', '"' . addslashes($etag) . '"');
+	}
+
+	$ifModifiedSince = $this->request->getHeader('If-Modified-Since');
+	if ($ifModifiedSince !== NULL) {
+		$lastModified = $this->response->getHeader('Last-Modified');
+		if ($lastModified != NULL && strtotime($lastModified) <= strtotime($ifModifiedSince)) {
+		$match = TRUE;
+
+		} else {
+		return TRUE;
 		}
+	}
 
-		$ifNoneMatch = $this->request->getHeader('If-None-Match');
-		if ($ifNoneMatch === '*') {
-			$match = TRUE; // match, check if-modified-since
+	if (empty($match)) {
+		return TRUE;
+	}
 
-		} elseif ($ifNoneMatch !== NULL) {
-			$etag = $this->response->getHeader('ETag');
-
-			if ($etag == NULL || strpos(' ' . strtr($ifNoneMatch, ",\t", '  '), ' ' . $etag) === FALSE) {
-				return TRUE;
-
-			} else {
-				$match = TRUE; // match, check if-modified-since
-			}
-		}
-
-		$ifModifiedSince = $this->request->getHeader('If-Modified-Since');
-		if ($ifModifiedSince !== NULL) {
-			$lastModified = $this->response->getHeader('Last-Modified');
-			if ($lastModified != NULL && strtotime($lastModified) <= strtotime($ifModifiedSince)) {
-				$match = TRUE;
-
-			} else {
-				return TRUE;
-			}
-		}
-
-		if (empty($match)) {
-			return TRUE;
-		}
-
-		$this->response->setCode(IResponse::S304_NOT_MODIFIED);
-		return FALSE;
+	$this->response->setCode(IResponse::S304_NOT_MODIFIED);
+	return FALSE;
 	}
 
 
@@ -98,7 +98,7 @@ class Context extends Nette\Object
 	 */
 	public function getRequest()
 	{
-		return $this->request;
+	return $this->request;
 	}
 
 
@@ -108,7 +108,7 @@ class Context extends Nette\Object
 	 */
 	public function getResponse()
 	{
-		return $this->response;
+	return $this->response;
 	}
 
 }

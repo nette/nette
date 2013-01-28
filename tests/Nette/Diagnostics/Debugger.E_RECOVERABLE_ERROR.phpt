@@ -36,7 +36,7 @@ class TestClass
 
 	function __toString()
 	{
-		return FALSE;
+	return FALSE;
 	}
 
 

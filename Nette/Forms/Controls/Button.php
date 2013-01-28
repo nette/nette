@@ -28,8 +28,8 @@ class Button extends BaseControl
 	 */
 	public function __construct($caption = NULL)
 	{
-		parent::__construct($caption);
-		$this->control->type = 'button';
+	parent::__construct($caption);
+	$this->control->type = 'button';
 	}
 
 
@@ -40,7 +40,7 @@ class Button extends BaseControl
 	 */
 	public function getLabel($caption = NULL)
 	{
-		return NULL;
+	return NULL;
 	}
 
 
@@ -52,9 +52,9 @@ class Button extends BaseControl
 	 */
 	public function getControl($caption = NULL)
 	{
-		$control = parent::getControl();
-		$control->value = $this->translate($caption === NULL ? $this->caption : $caption);
-		return $control;
+	$control = parent::getControl();
+	$control->value = $this->translate($caption === NULL ? $this->caption : $caption);
+	return $control;
 	}
 
 }

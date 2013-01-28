@@ -29,10 +29,10 @@ Assert::same( array(
 
 Assert::same( array(
 	array(
-		array('hell', 0),
+	array('hell', 0),
 	),
 	array(
-		array('l', 9),
+	array('l', 9),
 	),
 ), Strings::matchAll('hello world!', '#[e-l]+#', PREG_OFFSET_CAPTURE) );
 

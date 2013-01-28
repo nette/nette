@@ -22,18 +22,18 @@ class DatabaseExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		Assert::same( array('foo' => 'hello'), $this->config );
-		Notes::add(__METHOD__);
+	Assert::same( array('foo' => 'hello'), $this->config );
+	Notes::add(__METHOD__);
 	}
 
 	public function beforeCompile()
 	{
-		Notes::add(__METHOD__);
+	Notes::add(__METHOD__);
 	}
 
 	public function afterCompile(Nette\PhpGenerator\ClassType $class)
 	{
-		Notes::add(__METHOD__);
+	Notes::add(__METHOD__);
 	}
 }
 

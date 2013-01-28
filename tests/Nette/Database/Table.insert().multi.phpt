@@ -17,14 +17,14 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 $connection->table('author')->insert(array(
 	array(
-		'name' => 'Catelyn Stark',
-		'web' => 'http://example.com',
-		'born' => new DateTime('2011-11-11'),
+	'name' => 'Catelyn Stark',
+	'web' => 'http://example.com',
+	'born' => new DateTime('2011-11-11'),
 	),
 	array(
-		'name' => 'Sansa Stark',
-		'web' => 'http://example.com',
-		'born' => new DateTime('2021-11-11'),
+	'name' => 'Sansa Stark',
+	'web' => 'http://example.com',
+	'born' => new DateTime('2021-11-11'),
 	),
 ));  // INSERT INTO `author` (`name`, `web`, `born`) VALUES ('Catelyn Stark', 'http://example.com', '2011-11-11 00:00:00'), ('Sansa Stark', 'http://example.com', '2021-11-11 00:00:00')
 

@@ -39,11 +39,11 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function __construct($payload, $contentType = NULL)
 	{
-		if (!is_array($payload) && !is_object($payload)) {
-			throw new Nette\InvalidArgumentException("Payload must be array or object class, " . gettype($payload) . " given.");
-		}
-		$this->payload = $payload;
-		$this->contentType = $contentType ? $contentType : 'application/json';
+	if (!is_array($payload) && !is_object($payload)) {
+		throw new Nette\InvalidArgumentException("Payload must be array or object class, " . gettype($payload) . " given.");
+	}
+	$this->payload = $payload;
+	$this->contentType = $contentType ? $contentType : 'application/json';
 	}
 
 
@@ -53,7 +53,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	final public function getPayload()
 	{
-		return $this->payload;
+	return $this->payload;
 	}
 
 
@@ -64,7 +64,7 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	final public function getContentType()
 	{
-		return $this->contentType;
+	return $this->contentType;
 	}
 
 
@@ -75,9 +75,9 @@ class JsonResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		$httpResponse->setContentType($this->contentType);
-		$httpResponse->setExpiration(FALSE);
-		echo Nette\Utils\Json::encode($this->payload);
+	$httpResponse->setContentType($this->contentType);
+	$httpResponse->setExpiration(FALSE);
+	echo Nette\Utils\Json::encode($this->payload);
 	}
 
 }

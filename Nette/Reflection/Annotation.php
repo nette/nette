@@ -25,9 +25,9 @@ class Annotation extends Nette\Object implements IAnnotation
 
 	public function __construct(array $values)
 	{
-		foreach ($values as $k => $v) {
-			$this->$k = $v;
-		}
+	foreach ($values as $k => $v) {
+		$this->$k = $v;
+	}
 	}
 
 
@@ -38,7 +38,7 @@ class Annotation extends Nette\Object implements IAnnotation
 	 */
 	public function __toString()
 	{
-		return $this->value;
+	return $this->value;
 	}
 
 }

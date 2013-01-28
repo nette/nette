@@ -4,24 +4,24 @@ parameters:
 
 services:
 	model:
-		create: %factory%::createModel
-		setup:
-			# local methods
-			- test(...)
-			- @model::test()
-			- @self::test()
+	create: %factory%::createModel
+	setup:
+		# local methods
+		- test(...)
+		- @model::test()
+		- @self::test()
 
-			# static class method
-			- Lorem::test
+		# static class method
+		- Lorem::test
 
-			# other service method
-			- @lorem::test
+		# other service method
+		- @lorem::test
 
 	lorem:
-		class: %class%
+	class: %class%
 
 	alias: @lorem
 
 	database:
-		class: Nette\Database\Connection
-		arguments: ['sqlite::memory:']
+	class: Nette\Database\Connection
+	arguments: ['sqlite::memory:']

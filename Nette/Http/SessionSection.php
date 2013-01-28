@@ -44,12 +44,12 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function __construct(Session $session, $name)
 	{
-		if (!is_string($name)) {
-			throw new Nette\InvalidArgumentException("Session namespace must be a string, " . gettype($name) ." given.");
-		}
+	if (!is_string($name)) {
+		throw new Nette\InvalidArgumentException("Session namespace must be a string, " . gettype($name) ." given.");
+	}
 
-		$this->session = $session;
-		$this->name = $name;
+	$this->session = $session;
+	$this->name = $name;
 	}
 
 
@@ -59,11 +59,11 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	private function start()
 	{
-		if ($this->meta === FALSE) {
-			$this->session->start();
-			$this->data = & $_SESSION['__NF']['DATA'][$this->name];
-			$this->meta = & $_SESSION['__NF']['META'][$this->name];
-		}
+	if ($this->meta === FALSE) {
+		$this->session->start();
+		$this->data = & $_SESSION['__NF']['DATA'][$this->name];
+		$this->meta = & $_SESSION['__NF']['META'][$this->name];
+	}
 	}
 
 
@@ -74,12 +74,12 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function getIterator()
 	{
-		$this->start();
-		if (isset($this->data)) {
-			return new \ArrayIterator($this->data);
-		} else {
-			return new \ArrayIterator;
-		}
+	$this->start();
+	if (isset($this->data)) {
+		return new \ArrayIterator($this->data);
+	} else {
+		return new \ArrayIterator;
+	}
 	}
 
 
@@ -92,11 +92,11 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function __set($name, $value)
 	{
-		$this->start();
-		$this->data[$name] = $value;
-		if (is_object($value)) {
-			$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
-		}
+	$this->start();
+	$this->data[$name] = $value;
+	if (is_object($value)) {
+		$this->meta[$name]['V'] = Nette\Reflection\ClassType::from($value)->getAnnotation('serializationVersion');
+	}
 	}
 
 
@@ -108,12 +108,12 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function &__get($name)
 	{
-		$this->start();
-		if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
-			trigger_error("The variable '$name' does not exist in session section", E_USER_NOTICE);
-		}
+	$this->start();
+	if ($this->warnOnUndefined && !array_key_exists($name, $this->data)) {
+		trigger_error("The variable '$name' does not exist in session section", E_USER_NOTICE);
+	}
 
-		return $this->data[$name];
+	return $this->data[$name];
 	}
 
 
@@ -125,10 +125,10 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function __isset($name)
 	{
-		if ($this->session->exists()) {
-			$this->start();
-		}
-		return isset($this->data[$name]);
+	if ($this->session->exists()) {
+		$this->start();
+	}
+	return isset($this->data[$name]);
 	}
 
 
@@ -140,8 +140,8 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function __unset($name)
 	{
-		$this->start();
-		unset($this->data[$name], $this->meta[$name]);
+	$this->start();
+	unset($this->data[$name], $this->meta[$name]);
 	}
 
 
@@ -154,7 +154,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function offsetSet($name, $value)
 	{
-		$this->__set($name, $value);
+	$this->__set($name, $value);
 	}
 
 
@@ -166,7 +166,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function offsetGet($name)
 	{
-		return $this->__get($name);
+	return $this->__get($name);
 	}
 
 
@@ -178,7 +178,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function offsetExists($name)
 	{
-		return $this->__isset($name);
+	return $this->__isset($name);
 	}
 
 
@@ -190,7 +190,7 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function offsetUnset($name)
 	{
-		$this->__unset($name);
+	$this->__unset($name);
 	}
 
 
@@ -203,34 +203,34 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function setExpiration($time, $variables = NULL)
 	{
-		$this->start();
-		if (empty($time)) {
-			$time = NULL;
-			$whenBrowserIsClosed = TRUE;
-		} else {
-			$time = Nette\DateTime::from($time)->format('U');
-			$max = ini_get('session.gc_maxlifetime');
-			if ($time - time() > $max + 3) { // bulgarian constant
-				trigger_error("The expiration time is greater than the session expiration $max seconds", E_USER_NOTICE);
-			}
-			$whenBrowserIsClosed = FALSE;
+	$this->start();
+	if (empty($time)) {
+		$time = NULL;
+		$whenBrowserIsClosed = TRUE;
+	} else {
+		$time = Nette\DateTime::from($time)->format('U');
+		$max = ini_get('session.gc_maxlifetime');
+		if ($time - time() > $max + 3) { // bulgarian constant
+		trigger_error("The expiration time is greater than the session expiration $max seconds", E_USER_NOTICE);
+		}
+		$whenBrowserIsClosed = FALSE;
+	}
+
+	if ($variables === NULL) { // to entire section
+		$this->meta['']['T'] = $time;
+		$this->meta['']['B'] = $whenBrowserIsClosed;
+
+	} elseif (is_array($variables)) { // to variables
+		foreach ($variables as $variable) {
+		$this->meta[$variable]['T'] = $time;
+		$this->meta[$variable]['B'] = $whenBrowserIsClosed;
 		}
 
-		if ($variables === NULL) { // to entire section
-			$this->meta['']['T'] = $time;
-			$this->meta['']['B'] = $whenBrowserIsClosed;
-
-		} elseif (is_array($variables)) { // to variables
-			foreach ($variables as $variable) {
-				$this->meta[$variable]['T'] = $time;
-				$this->meta[$variable]['B'] = $whenBrowserIsClosed;
-			}
-
-		} else { // to variable
-			$this->meta[$variables]['T'] = $time;
-			$this->meta[$variables]['B'] = $whenBrowserIsClosed;
-		}
-		return $this;
+	} else { // to variable
+		$this->meta[$variables]['T'] = $time;
+		$this->meta[$variables]['B'] = $whenBrowserIsClosed;
+	}
+	return $this;
 	}
 
 
@@ -242,19 +242,19 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function removeExpiration($variables = NULL)
 	{
-		$this->start();
-		if ($variables === NULL) {
-			// from entire section
-			unset($this->meta['']['T'], $this->meta['']['B']);
+	$this->start();
+	if ($variables === NULL) {
+		// from entire section
+		unset($this->meta['']['T'], $this->meta['']['B']);
 
-		} elseif (is_array($variables)) {
-			// from variables
-			foreach ($variables as $variable) {
-				unset($this->meta[$variable]['T'], $this->meta[$variable]['B']);
-			}
-		} else {
-			unset($this->meta[$variables]['T'], $this->meta[$variable]['B']);
+	} elseif (is_array($variables)) {
+		// from variables
+		foreach ($variables as $variable) {
+		unset($this->meta[$variable]['T'], $this->meta[$variable]['B']);
 		}
+	} else {
+		unset($this->meta[$variables]['T'], $this->meta[$variable]['B']);
+	}
 	}
 
 
@@ -265,9 +265,9 @@ class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayA
 	 */
 	public function remove()
 	{
-		$this->start();
-		$this->data = NULL;
-		$this->meta = NULL;
+	$this->start();
+	$this->data = NULL;
+	$this->meta = NULL;
 	}
 
 }

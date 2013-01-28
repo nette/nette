@@ -29,10 +29,10 @@ class HiddenField extends BaseControl
 
 	public function __construct($forcedValue = NULL)
 	{
-		parent::__construct();
-		$this->control->type = 'hidden';
-		$this->value = (string) $forcedValue;
-		$this->forcedValue = $forcedValue;
+	parent::__construct();
+	$this->control->type = 'hidden';
+	$this->value = (string) $forcedValue;
+	$this->forcedValue = $forcedValue;
 	}
 
 
@@ -43,7 +43,7 @@ class HiddenField extends BaseControl
 	 */
 	public function getLabel($caption = NULL)
 	{
-		return NULL;
+	return NULL;
 	}
 
 
@@ -55,8 +55,8 @@ class HiddenField extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_scalar($value) ? (string) $value : '';
-		return $this;
+	$this->value = is_scalar($value) ? (string) $value : '';
+	return $this;
 	}
 
 
@@ -67,9 +67,9 @@ class HiddenField extends BaseControl
 	 */
 	public function getControl()
 	{
-		return parent::getControl()
-			->value($this->forcedValue === NULL ? $this->value : $this->forcedValue)
-			->data('nette-rules', NULL);
+	return parent::getControl()
+		->value($this->forcedValue === NULL ? $this->value : $this->forcedValue)
+		->data('nette-rules', NULL);
 	}
 
 }

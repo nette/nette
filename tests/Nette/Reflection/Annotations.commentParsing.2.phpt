@@ -45,10 +45,10 @@ Assert::equal( array(
 	'three' => array(TRUE),
 	'five' => array(TRUE),
 	'brackets' => array(
-		Nette\ArrayHash::from(array(
-			'single' => "()@\\'\"",
-			'double' => "()@'\\\"",
-		)),
+	Nette\ArrayHash::from(array(
+		'single' => "()@\\'\"",
+		'double' => "()@'\\\"",
+	)),
 	),
 	'line1' => array(TRUE),
 	'line2' => array(TRUE),

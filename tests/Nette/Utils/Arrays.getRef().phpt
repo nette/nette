@@ -19,7 +19,7 @@ $arr  = array(
 	NULL => 'first',
 	1 => 'second',
 	7 => array(
-		'item' => 'third',
+	'item' => 'third',
 	),
 );
 
@@ -32,7 +32,7 @@ Assert::same( array(
 	'' => 'changed',
 	1 => 'second',
 	7 => array(
-		'item' => 'third',
+	'item' => 'third',
 	),
 ), $dolly );
 
@@ -44,7 +44,7 @@ Assert::same( array(
 	'' => 'first',
 	1 => 'second',
 	7 => array(
-		'item' => 'third',
+	'item' => 'third',
 	),
 	'undefined' => 'changed',
 ), $dolly );
@@ -66,7 +66,7 @@ Assert::same( array(
 	'' => 'first',
 	1 => 'second',
 	7 => array(
-		'item' => 'changed',
+	'item' => 'changed',
 	),
 ), $dolly );
 

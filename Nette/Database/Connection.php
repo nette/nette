@@ -46,20 +46,20 @@ class Connection extends PDO
 
 	public function __construct($dsn, $user = NULL, $password = NULL, array $options = NULL, $driverClass = NULL)
 	{
-		parent::__construct($this->dsn = $dsn, $user, $password, $options);
-		$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
+	parent::__construct($this->dsn = $dsn, $user, $password, $options);
+	$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
-		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
-		$this->driver = new $driverClass($this, (array) $options);
-		$this->preprocessor = new SqlPreprocessor($this);
+	$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $this->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
+	$this->driver = new $driverClass($this, (array) $options);
+	$this->preprocessor = new SqlPreprocessor($this);
 	}
 
 
 
 	public function getDsn()
 	{
-		return $this->dsn;
+	return $this->dsn;
 	}
 
 
@@ -67,7 +67,7 @@ class Connection extends PDO
 	/** @return ISupplementalDriver */
 	public function getSupplementalDriver()
 	{
-		return $this->driver;
+	return $this->driver;
 	}
 
 
@@ -80,8 +80,8 @@ class Connection extends PDO
 	 */
 	public function query($statement)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args);
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args);
 	}
 
 
@@ -94,8 +94,8 @@ class Connection extends PDO
 	 */
 	public function exec($statement)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->rowCount();
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args)->rowCount();
 	}
 
 
@@ -107,10 +107,10 @@ class Connection extends PDO
 	 */
 	public function queryArgs($statement, array $params)
 	{
-		if ($params) {
-			list($statement, $params) = $this->preprocessor->process($statement, $params);
-		}
-		return $this->prepare($statement)->execute($params);
+	if ($params) {
+		list($statement, $params) = $this->preprocessor->process($statement, $params);
+	}
+	return $this->prepare($statement)->execute($params);
 	}
 
 
@@ -127,8 +127,8 @@ class Connection extends PDO
 	 */
 	public function fetch($args)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetch();
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args)->fetch();
 	}
 
 
@@ -141,8 +141,8 @@ class Connection extends PDO
 	 */
 	public function fetchColumn($args)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchColumn();
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args)->fetchColumn();
 	}
 
 
@@ -155,8 +155,8 @@ class Connection extends PDO
 	 */
 	public function fetchPairs($args)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchPairs();
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args)->fetchPairs();
 	}
 
 
@@ -169,8 +169,8 @@ class Connection extends PDO
 	 */
 	public function fetchAll($args)
 	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->fetchAll();
+	$args = func_get_args();
+	return $this->queryArgs(array_shift($args), $args)->fetchAll();
 	}
 
 
@@ -186,10 +186,10 @@ class Connection extends PDO
 	 */
 	public function table($table)
 	{
-		if (!$this->selectionFactory) {
-			$this->selectionFactory = new Table\SelectionFactory($this);
-		}
-		return $this->selectionFactory->create($table);
+	if (!$this->selectionFactory) {
+		$this->selectionFactory = new Table\SelectionFactory($this);
+	}
+	return $this->selectionFactory->create($table);
 	}
 
 
@@ -199,8 +199,8 @@ class Connection extends PDO
 	 */
 	public function setSelectionFactory(Table\SelectionFactory $selectionFactory)
 	{
-		$this->selectionFactory = $selectionFactory;
-		return $this;
+	$this->selectionFactory = $selectionFactory;
+	return $this;
 	}
 
 
@@ -208,8 +208,8 @@ class Connection extends PDO
 	/** @deprecated */
 	function setDatabaseReflection()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
-		return $this;
+	trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+	return $this;
 	}
 
 
@@ -217,7 +217,7 @@ class Connection extends PDO
 	/** @deprecated */
 	function setCacheStorage()
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+	trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
 	}
 
 
@@ -231,42 +231,42 @@ class Connection extends PDO
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
+	return new Nette\Reflection\ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return ObjectMixin::call($this, $name, $args);
+	return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return ObjectMixin::get($this, $name);
+	return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+	return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return ObjectMixin::has($this, $name);
+	return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		ObjectMixin::remove($this, $name);
+	ObjectMixin::remove($this, $name);
 	}
 
 }
