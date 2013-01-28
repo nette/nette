@@ -34,7 +34,7 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function __construct($source)
 	{
-		$this->source = $source;
+	$this->source = $source;
 	}
 
 
@@ -44,7 +44,7 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	final public function getSource()
 	{
-		return $this->source;
+	return $this->source;
 	}
 
 
@@ -55,12 +55,12 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		if ($this->source instanceof Nette\Templating\ITemplate) {
-			$this->source->render();
+	if ($this->source instanceof Nette\Templating\ITemplate) {
+		$this->source->render();
 
-		} else {
-			echo $this->source;
-		}
+	} else {
+		echo $this->source;
+	}
 	}
 
 }

@@ -23,7 +23,7 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 $book = $connection->table('book')->get(1);
 foreach ($book->related('book_tag') as $bookTag) {
 	if ($bookTag->tag->name === 'PHP') {
-		$bookTag->delete();
+	$bookTag->delete();
 	}
 }
 

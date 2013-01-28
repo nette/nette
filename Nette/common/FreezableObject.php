@@ -35,7 +35,7 @@ abstract class FreezableObject extends Object implements IFreezable
 	 */
 	public function freeze()
 	{
-		$this->frozen = TRUE;
+	$this->frozen = TRUE;
 	}
 
 
@@ -46,7 +46,7 @@ abstract class FreezableObject extends Object implements IFreezable
 	 */
 	final public function isFrozen()
 	{
-		return $this->frozen;
+	return $this->frozen;
 	}
 
 
@@ -57,7 +57,7 @@ abstract class FreezableObject extends Object implements IFreezable
 	 */
 	public function __clone()
 	{
-		$this->frozen = FALSE;
+	$this->frozen = FALSE;
 	}
 
 
@@ -67,10 +67,10 @@ abstract class FreezableObject extends Object implements IFreezable
 	 */
 	protected function updating()
 	{
-		if ($this->frozen) {
-			$class = get_class($this);
-			throw new InvalidStateException("Cannot modify a frozen object $class.");
-		}
+	if ($this->frozen) {
+		$class = get_class($this);
+		throw new InvalidStateException("Cannot modify a frozen object $class.");
+	}
 	}
 
 }

@@ -21,7 +21,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = array(
 	'image' => array(1, 2),
 	'container' => array(
-		'image' => array(3, 4),
+	'image' => array(3, 4),
 	),
 );
 

@@ -28,7 +28,7 @@ final class Arrays
 	 */
 	final public function __construct()
 	{
-		throw new Nette\StaticClassException;
+	throw new Nette\StaticClassException;
 	}
 
 
@@ -43,17 +43,17 @@ final class Arrays
 	 */
 	public static function get(array $arr, $key, $default = NULL)
 	{
-		foreach (is_array($key) ? $key : array($key) as $k) {
-			if (is_array($arr) && array_key_exists($k, $arr)) {
-				$arr = $arr[$k];
-			} else {
-				if (func_num_args() < 3) {
-					throw new Nette\InvalidArgumentException("Missing item '$k'.");
-				}
-				return $default;
-			}
+	foreach (is_array($key) ? $key : array($key) as $k) {
+		if (is_array($arr) && array_key_exists($k, $arr)) {
+		$arr = $arr[$k];
+		} else {
+		if (func_num_args() < 3) {
+			throw new Nette\InvalidArgumentException("Missing item '$k'.");
 		}
-		return $arr;
+		return $default;
+		}
+	}
+	return $arr;
 	}
 
 
@@ -66,14 +66,14 @@ final class Arrays
 	 */
 	public static function & getRef(& $arr, $key)
 	{
-		foreach (is_array($key) ? $key : array($key) as $k) {
-			if (is_array($arr) || $arr === NULL) {
-				$arr = & $arr[$k];
-			} else {
-				throw new Nette\InvalidArgumentException('Traversed item is not an array.');
-			}
+	foreach (is_array($key) ? $key : array($key) as $k) {
+		if (is_array($arr) || $arr === NULL) {
+		$arr = & $arr[$k];
+		} else {
+		throw new Nette\InvalidArgumentException('Traversed item is not an array.');
 		}
-		return $arr;
+	}
+	return $arr;
 	}
 
 
@@ -86,13 +86,13 @@ final class Arrays
 	 */
 	public static function mergeTree($arr1, $arr2)
 	{
-		$res = $arr1 + $arr2;
-		foreach (array_intersect_key($arr1, $arr2) as $k => $v) {
-			if (is_array($v) && is_array($arr2[$k])) {
-				$res[$k] = self::mergeTree($v, $arr2[$k]);
-			}
+	$res = $arr1 + $arr2;
+	foreach (array_intersect_key($arr1, $arr2) as $k => $v) {
+		if (is_array($v) && is_array($arr2[$k])) {
+		$res[$k] = self::mergeTree($v, $arr2[$k]);
 		}
-		return $res;
+	}
+	return $res;
 	}
 
 
@@ -105,8 +105,8 @@ final class Arrays
 	 */
 	public static function searchKey($arr, $key)
 	{
-		$foo = array($key => NULL);
-		return array_search(key($foo), array_keys($arr), TRUE);
+	$foo = array($key => NULL);
+	return array_search(key($foo), array_keys($arr), TRUE);
 	}
 
 
@@ -120,8 +120,8 @@ final class Arrays
 	 */
 	public static function insertBefore(array &$arr, $key, array $inserted)
 	{
-		$offset = self::searchKey($arr, $key);
-		$arr = array_slice($arr, 0, $offset, TRUE) + $inserted + array_slice($arr, $offset, count($arr), TRUE);
+	$offset = self::searchKey($arr, $key);
+	$arr = array_slice($arr, 0, $offset, TRUE) + $inserted + array_slice($arr, $offset, count($arr), TRUE);
 	}
 
 
@@ -135,9 +135,9 @@ final class Arrays
 	 */
 	public static function insertAfter(array &$arr, $key, array $inserted)
 	{
-		$offset = self::searchKey($arr, $key);
-		$offset = $offset === FALSE ? count($arr) : $offset + 1;
-		$arr = array_slice($arr, 0, $offset, TRUE) + $inserted + array_slice($arr, $offset, count($arr), TRUE);
+	$offset = self::searchKey($arr, $key);
+	$offset = $offset === FALSE ? count($arr) : $offset + 1;
+	$arr = array_slice($arr, 0, $offset, TRUE) + $inserted + array_slice($arr, $offset, count($arr), TRUE);
 	}
 
 
@@ -151,12 +151,12 @@ final class Arrays
 	 */
 	public static function renameKey(array &$arr, $oldKey, $newKey)
 	{
-		$offset = self::searchKey($arr, $oldKey);
-		if ($offset !== FALSE) {
-			$keys = array_keys($arr);
-			$keys[$offset] = $newKey;
-			$arr = array_combine($keys, $arr);
-		}
+	$offset = self::searchKey($arr, $oldKey);
+	if ($offset !== FALSE) {
+		$keys = array_keys($arr);
+		$keys[$offset] = $newKey;
+		$arr = array_combine($keys, $arr);
+	}
 	}
 
 
@@ -170,16 +170,16 @@ final class Arrays
 	 */
 	public static function grep(array $arr, $pattern, $flags = 0)
 	{
-		set_error_handler(function($severity, $message) use ($pattern) { // preg_last_error does not return compile errors
-			restore_error_handler();
-			throw new RegexpException("$message in pattern: $pattern");
-		});
-		$res = preg_grep($pattern, $arr, $flags);
+	set_error_handler(function($severity, $message) use ($pattern) { // preg_last_error does not return compile errors
 		restore_error_handler();
-		if (preg_last_error()) { // run-time error
-			throw new RegexpException(NULL, preg_last_error(), $pattern);
-		}
-		return $res;
+		throw new RegexpException("$message in pattern: $pattern");
+	});
+	$res = preg_grep($pattern, $arr, $flags);
+	restore_error_handler();
+	if (preg_last_error()) { // run-time error
+		throw new RegexpException(NULL, preg_last_error(), $pattern);
+	}
+	return $res;
 	}
 
 
@@ -191,9 +191,9 @@ final class Arrays
 	 */
 	public static function flatten(array $arr)
 	{
-		$res = array();
-		array_walk_recursive($arr, function($a) use (& $res) { $res[] = $a; });
-		return $res;
+	$res = array();
+	array_walk_recursive($arr, function($a) use (& $res) { $res[] = $a; });
+	return $res;
 	}
 
 
@@ -205,7 +205,7 @@ final class Arrays
 	 */
 	public static function isList($value)
 	{
-		return is_array($value) && (!$value || array_keys($value) === range(0, count($value) - 1));
+	return is_array($value) && (!$value || array_keys($value) === range(0, count($value) - 1));
 	}
 
 }

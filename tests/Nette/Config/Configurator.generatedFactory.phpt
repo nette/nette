@@ -31,7 +31,7 @@ class Lorem
 
 	function __construct(Ipsum $ipsum)
 	{
-		$this->ipsum = $ipsum;
+	$this->ipsum = $ipsum;
 	}
 
 }
@@ -52,7 +52,7 @@ class Article
 
 	function __construct($title)
 	{
-		$this->title = $title;
+	$this->title = $title;
 	}
 }
 
@@ -68,8 +68,8 @@ class Foo
 
 	public function __construct(Bar $bar, Baz $baz)
 	{
-		$this->bar = $bar;
-		$this->baz = $baz;
+	$this->bar = $bar;
+	$this->baz = $baz;
 	}
 }
 

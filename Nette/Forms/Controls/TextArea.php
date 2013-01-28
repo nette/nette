@@ -30,11 +30,11 @@ class TextArea extends TextBase
 	 */
 	public function __construct($label = NULL, $cols = NULL, $rows = NULL)
 	{
-		parent::__construct($label);
-		$this->control->setName('textarea');
-		$this->control->cols = $cols;
-		$this->control->rows = $rows;
-		$this->value = '';
+	parent::__construct($label);
+	$this->control->setName('textarea');
+	$this->control->cols = $cols;
+	$this->control->rows = $rows;
+	$this->value = '';
 	}
 
 
@@ -45,9 +45,9 @@ class TextArea extends TextBase
 	 */
 	public function getControl()
 	{
-		$control = parent::getControl();
-		$control->setText($this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value);
-		return $control;
+	$control = parent::getControl();
+	$control->setText($this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value);
+	return $control;
 	}
 
 }

@@ -19,32 +19,32 @@ class TestClass extends Container implements ArrayAccess
 {
 	function attached($obj)
 	{
-		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+	Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	function detached($obj)
 	{
-		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
+	Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	function offsetSet($name, $component)
 	{
-		$this->addComponent($component, $name);
+	$this->addComponent($component, $name);
 	}
 
 	function offsetGet($name)
 	{
-		return $this->getComponent($name, TRUE);
+	return $this->getComponent($name, TRUE);
 	}
 
 	function offsetExists($name)
 	{
-		return $this->getComponent($name) !== NULL;
+	return $this->getComponent($name) !== NULL;
 	}
 
 	function offsetUnset($name)
 	{
-		$this->removeComponent($this->getComponent($name, TRUE));
+	$this->removeComponent($this->getComponent($name, TRUE));
 	}
 }
 

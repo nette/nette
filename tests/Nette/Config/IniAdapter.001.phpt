@@ -21,13 +21,13 @@ $data = $config->load('files/config.sample.ini', 'production');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'db.example.com',
-			'username' => 'dbuser',
-			'password' => 'secret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'db.example.com',
+		'username' => 'dbuser',
+		'password' => 'secret',
+		'dbname' => 'dbname',
+	),
 	),
 ), $data );
 
@@ -36,21 +36,21 @@ $data = $config->load('files/config.sample.ini', 'development');
 Assert::same( array(
 	'webname' => 'the example',
 	'database' => array(
-		'adapter' => 'pdo_mysql',
-		'params' => array(
-			'host' => 'dev.example.com',
-			'username' => 'devuser',
-			'password' => 'devsecret',
-			'dbname' => 'dbname',
-		),
+	'adapter' => 'pdo_mysql',
+	'params' => array(
+		'host' => 'dev.example.com',
+		'username' => 'devuser',
+		'password' => 'devsecret',
+		'dbname' => 'dbname',
+	),
 	),
 	'timeout' => '10',
 	'display_errors' => '1',
 	'html_errors' => '',
 	'items' => array('10', '20'),
 	'php' => array(
-		'zlib.output_compression' => '1',
-		'date.timezone' => 'Europe/Prague',
+	'zlib.output_compression' => '1',
+	'date.timezone' => 'Europe/Prague',
 	),
 ), $data );
 

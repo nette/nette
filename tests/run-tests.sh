@@ -16,11 +16,11 @@ phpIni=
 while getopts ":c:" opt; do
 	case $opt in
 	c)	phpIni="$OPTARG"
-		;;
+	;;
 
 	:)	echo "Missing argument for -$OPTARG option" >&2
-		exit 2
-		;;
+	exit 2
+	;;
 	esac
 done
 

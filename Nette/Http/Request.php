@@ -65,22 +65,22 @@ class Request extends Nette\Object implements IRequest
 
 
 	public function __construct(UrlScript $url, $query = NULL, $post = NULL, $files = NULL, $cookies = NULL,
-		$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
+	$headers = NULL, $method = NULL, $remoteAddress = NULL, $remoteHost = NULL)
 	{
-		$this->url = $url;
-		$this->url->freeze();
-		if ($query === NULL) {
-			parse_str($url->query, $this->query);
-		} else {
-			$this->query = (array) $query;
-		}
-		$this->post = (array) $post;
-		$this->files = (array) $files;
-		$this->cookies = (array) $cookies;
-		$this->headers = (array) $headers;
-		$this->method = $method;
-		$this->remoteAddress = $remoteAddress;
-		$this->remoteHost = $remoteHost;
+	$this->url = $url;
+	$this->url->freeze();
+	if ($query === NULL) {
+		parse_str($url->query, $this->query);
+	} else {
+		$this->query = (array) $query;
+	}
+	$this->post = (array) $post;
+	$this->files = (array) $files;
+	$this->cookies = (array) $cookies;
+	$this->headers = (array) $headers;
+	$this->method = $method;
+	$this->remoteAddress = $remoteAddress;
+	$this->remoteHost = $remoteHost;
 	}
 
 
@@ -91,7 +91,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getUrl()
 	{
-		return $this->url;
+	return $this->url;
 	}
 
 
@@ -109,15 +109,15 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getQuery($key = NULL, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			return $this->query;
+	if (func_num_args() === 0) {
+		return $this->query;
 
-		} elseif (isset($this->query[$key])) {
-			return $this->query[$key];
+	} elseif (isset($this->query[$key])) {
+		return $this->query[$key];
 
-		} else {
-			return $default;
-		}
+	} else {
+		return $default;
+	}
 	}
 
 
@@ -131,15 +131,15 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getPost($key = NULL, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			return $this->post;
+	if (func_num_args() === 0) {
+		return $this->post;
 
-		} elseif (isset($this->post[$key])) {
-			return $this->post[$key];
+	} elseif (isset($this->post[$key])) {
+		return $this->post[$key];
 
-		} else {
-			return $default;
-		}
+	} else {
+		return $default;
+	}
 	}
 
 
@@ -151,8 +151,8 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getFile($key)
 	{
-		$args = func_get_args();
-		return Nette\Utils\Arrays::get($this->files, $args, NULL);
+	$args = func_get_args();
+	return Nette\Utils\Arrays::get($this->files, $args, NULL);
 	}
 
 
@@ -163,7 +163,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getFiles()
 	{
-		return $this->files;
+	return $this->files;
 	}
 
 
@@ -176,15 +176,15 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getCookie($key, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			return $this->cookies;
+	if (func_num_args() === 0) {
+		return $this->cookies;
 
-		} elseif (isset($this->cookies[$key])) {
-			return $this->cookies[$key];
+	} elseif (isset($this->cookies[$key])) {
+		return $this->cookies[$key];
 
-		} else {
-			return $default;
-		}
+	} else {
+		return $default;
+	}
 	}
 
 
@@ -195,7 +195,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getCookies()
 	{
-		return $this->cookies;
+	return $this->cookies;
 	}
 
 
@@ -210,7 +210,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function getMethod()
 	{
-		return $this->method;
+	return $this->method;
 	}
 
 
@@ -222,7 +222,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isMethod($method)
 	{
-		return strcasecmp($this->method, $method) === 0;
+	return strcasecmp($this->method, $method) === 0;
 	}
 
 
@@ -233,7 +233,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isPost()
 	{
-		return $this->isMethod('POST');
+	return $this->isMethod('POST');
 	}
 
 
@@ -247,12 +247,12 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getHeader($header, $default = NULL)
 	{
-		$header = strtolower($header);
-		if (isset($this->headers[$header])) {
-			return $this->headers[$header];
-		} else {
-			return $default;
-		}
+	$header = strtolower($header);
+	if (isset($this->headers[$header])) {
+		return $this->headers[$header];
+	} else {
+		return $default;
+	}
 	}
 
 
@@ -263,7 +263,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function getHeaders()
 	{
-		return $this->headers;
+	return $this->headers;
 	}
 
 
@@ -274,7 +274,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	final public function getReferer()
 	{
-		return isset($this->headers['referer']) ? new Url($this->headers['referer']) : NULL;
+	return isset($this->headers['referer']) ? new Url($this->headers['referer']) : NULL;
 	}
 
 
@@ -285,7 +285,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isSecured()
 	{
-		return $this->url->scheme === 'https';
+	return $this->url->scheme === 'https';
 	}
 
 
@@ -296,7 +296,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function isAjax()
 	{
-		return $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
+	return $this->getHeader('X-Requested-With') === 'XMLHttpRequest';
 	}
 
 
@@ -307,7 +307,7 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function getRemoteAddress()
 	{
-		return $this->remoteAddress;
+	return $this->remoteAddress;
 	}
 
 
@@ -318,10 +318,10 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function getRemoteHost()
 	{
-		if (!$this->remoteHost) {
-			$this->remoteHost = $this->remoteAddress ? getHostByAddr($this->remoteAddress) : NULL;
-		}
-		return $this->remoteHost;
+	if (!$this->remoteHost) {
+		$this->remoteHost = $this->remoteAddress ? getHostByAddr($this->remoteAddress) : NULL;
+	}
+	return $this->remoteHost;
 	}
 
 
@@ -333,30 +333,30 @@ class Request extends Nette\Object implements IRequest
 	 */
 	public function detectLanguage(array $langs)
 	{
-		$header = $this->getHeader('Accept-Language');
-		if (!$header) {
-			return NULL;
+	$header = $this->getHeader('Accept-Language');
+	if (!$header) {
+		return NULL;
+	}
+
+	$s = strtolower($header);  // case insensitive
+	$s = strtr($s, '_', '-');  // cs_CZ means cs-CZ
+	rsort($langs);             // first more specific
+	preg_match_all('#(' . implode('|', $langs) . ')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
+
+	if (!$matches[0]) {
+		return NULL;
+	}
+
+	$max = 0;
+	$lang = NULL;
+	foreach ($matches[1] as $key => $value) {
+		$q = $matches[2][$key] === '' ? 1.0 : (float) $matches[2][$key];
+		if ($q > $max) {
+		$max = $q; $lang = $value;
 		}
+	}
 
-		$s = strtolower($header);  // case insensitive
-		$s = strtr($s, '_', '-');  // cs_CZ means cs-CZ
-		rsort($langs);             // first more specific
-		preg_match_all('#(' . implode('|', $langs) . ')(?:-[^\s,;=]+)?\s*(?:;\s*q=([0-9.]+))?#', $s, $matches);
-
-		if (!$matches[0]) {
-			return NULL;
-		}
-
-		$max = 0;
-		$lang = NULL;
-		foreach ($matches[1] as $key => $value) {
-			$q = $matches[2][$key] === '' ? 1.0 : (float) $matches[2][$key];
-			if ($q > $max) {
-				$max = $q; $lang = $value;
-			}
-		}
-
-		return $lang;
+	return $lang;
 	}
 
 }

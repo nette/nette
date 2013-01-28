@@ -19,7 +19,7 @@ class MockTexy
 {
 	function process($text, $singleLine = FALSE)
 	{
-		return '<pre>' . $text . '</pre>';
+	return '<pre>' . $text . '</pre>';
 	}
 }
 

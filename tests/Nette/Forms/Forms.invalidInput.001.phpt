@@ -29,7 +29,7 @@ $_POST = array(
 	'password' => array(NULL),
 	'firstperson' => TRUE,
 	'secondperson' => array(
-		'age' => array(NULL),
+	'age' => array(NULL),
 	),
 	'submit1' => array(NULL),
 	'userid' => array(NULL),
@@ -38,22 +38,22 @@ $_POST = array(
 
 $_FILES = array(
 	'avatar' => array(
-		'name' => 'readme.txt',
-		'type' => 'text/plain',
+	'name' => 'readme.txt',
+	'type' => 'text/plain',
 	),
 	'secondperson' => array(
-		'name' => array(NULL),
-		'type' => array(NULL),
-		'tmp_name' => array(NULL),
-		'error' => array(NULL),
-		'size' => array(NULL),
+	'name' => array(NULL),
+	'type' => array(NULL),
+	'tmp_name' => array(NULL),
+	'error' => array(NULL),
+	'size' => array(NULL),
 	),
 );
 
 $countries = array(
 	'Europe' => array(
-		1 => 'Czech Republic',
-		2 => 'Slovakia',
+	1 => 'Czech Republic',
+	2 => 'Slovakia',
 	),
 	3 => 'USA',
 	4 => 'other',
@@ -96,10 +96,10 @@ Assert::equal( ArrayHash::from(array(
 	'avatar' => new Http\FileUpload(array()),
 	'userid' => '',
 	'firstperson' => ArrayHash::from(array(
-		'age' => '',
+	'age' => '',
 	)),
 	'secondperson' => ArrayHash::from(array(
-		'age' => '',
-		'avatar' => new Http\FileUpload(array()),
+	'age' => '',
+	'avatar' => new Http\FileUpload(array()),
 	)),
 ), FALSE), $form->getValues() );

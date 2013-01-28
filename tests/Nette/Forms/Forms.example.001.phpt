@@ -22,9 +22,9 @@ $_POST = array('name'=>'John Doe ','age'=>'','email'=>'  @ ','send'=>'on','stree
 
 $countries = array(
 	'Europe' => array(
-		'CZ' => 'Czech Republic',
-		'SK' => 'Slovakia',
-		'GB' => 'United Kingdom',
+	'CZ' => 'Czech Republic',
+	'SK' => 'Slovakia',
+	'GB' => 'United Kingdom',
 	),
 	'CA' => 'Canada',
 	'US' => 'United States',
@@ -58,7 +58,7 @@ $form->addRadioList('gender', 'Your gender:', $sex);
 $form->addText('email', 'Email:')
 	->setEmptyValue('@')
 	->addCondition(Form::FILLED) // conditional rule: if is email filled, ...
-		->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
+	->addRule(Form::EMAIL, 'Incorrect email address'); // ... then check email
 
 
 // group Shipping address
@@ -67,7 +67,7 @@ $form->addGroup('Shipping address')
 
 $form->addCheckbox('send', 'Ship to address')
 	->addCondition(Form::EQUAL, TRUE) // conditional rule: if is checkbox checked...
-		->toggle('sendBox'); // toggle div #sendBox
+	->toggle('sendBox'); // toggle div #sendBox
 
 
 // subgroup
@@ -78,12 +78,12 @@ $form->addText('street', 'Street:');
 
 $form->addText('city', 'City:')
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
-		->addRule(Form::FILLED, 'Enter your shipping address');
+	->addRule(Form::FILLED, 'Enter your shipping address');
 
 $form->addSelect('country', 'Country:', $countries)
 	->setPrompt('Select your country')
 	->addConditionOn($form['send'], Form::EQUAL, TRUE)
-		->addRule(Form::FILLED, 'Select your country');
+	->addRule(Form::FILLED, 'Select your country');
 
 $form->addSelect('countrySetItems', 'Country:')
 	->setPrompt('Select your country')
@@ -99,12 +99,12 @@ $form->addPassword('password', 'Choose password:')
 
 $form->addPassword('password2', 'Reenter password:')
 	->addConditionOn($form['password'], Form::VALID)
-		->addRule(Form::FILLED, 'Reenter your password')
-		->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
+	->addRule(Form::FILLED, 'Reenter your password')
+	->addRule(Form::EQUAL, 'Passwords do not match', $form['password']);
 
 $form->addUpload('avatar', 'Picture:')
 	->addCondition(Form::FILLED)
-		->addRule(Form::IMAGE, 'Uploaded file is not image');
+	->addRule(Form::IMAGE, 'Uploaded file is not image');
 
 $form->addHidden('userid');
 

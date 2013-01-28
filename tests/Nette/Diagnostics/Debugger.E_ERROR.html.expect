@@ -1,4 +1,3 @@
-
 Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 <!DOCTYPE html><!-- "' --></script></style></pre></xmp></table>
 <html>
@@ -18,13 +17,11 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 <div id="netteBluescreen">
 	<a id="netteBluescreenIcon" href="#" class="nette-toggle"></a>
 	<div>
-		<div id="netteBluescreenError" class="panel">
-			<h1>Fatal Error</h1>
+	<div id="netteBluescreenError" class="panel">
+		<h1>Fatal Error</h1>
 
-			<p>Call to undefined function missing_funcion() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
-		</div>
-
-
+		<p>Call to undefined function missing_funcion() <a href="%a%" id="netteBsSearch">search&#x25ba;</a></p>
+	</div>
 
 
 
@@ -34,12 +31,14 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 
 
-			<div class="panel">
-			<h2><a href="#netteBsPnl1" class="nette-toggle">Source file</a></h2>
 
-			<div id="netteBsPnl1" class="inner">
-				<p><b>File:</b> %a%</p>
-				<pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>
+
+		<div class="panel">
+		<h2><a href="#netteBsPnl1" class="nette-toggle">Source file</a></h2>
+
+		<div id="netteBsPnl1" class="inner">
+		<p><b>File:</b> %a%</p>
+		<pre class='php'><div><code><span style="color: #06B"><span style="color: #D24; font-weight: bold"><span class='line'>%d%:</span>
 <span class='line'>%d%:</span>
 <span class='line'>%d%:</span>    function&nbsp;</span><span style="color: #000">second</span><span style="color: #D24; font-weight: bold">(</span><span style="color: #000">$arg1</span><span style="color: #D24; font-weight: bold">,&nbsp;</span><span style="color: #000">$arg2</span><span style="color: #D24; font-weight: bold">)
 <span class='line'>%d%:</span>    {
@@ -68,74 +67,74 @@ Fatal error: Call to undefined function missing_funcion() in %a% on line %d%
 
 
 
-		<div class="panel">
-		<h2><a href="#netteBsPnl2" class="nette-toggle-collapsed">Environment</a></h2>
+	<div class="panel">
+	<h2><a href="#netteBsPnl2" class="nette-toggle-collapsed">Environment</a></h2>
 
-		<div id="netteBsPnl2" class="nette-collapsed inner">
-			<h3><a href="#netteBsPnl3" class="nette-toggle">$_SERVER</a></h3>
-			<div id="netteBsPnl3" class="outer">
-			<table>%A%</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl4" class="nette-toggle">$_SESSION</a></h3>
-			<div id="netteBsPnl4" class="outer">%A%</div>
+	<div id="netteBsPnl2" class="nette-collapsed inner">
+		<h3><a href="#netteBsPnl3" class="nette-toggle">$_SERVER</a></h3>
+		<div id="netteBsPnl3" class="outer">
+		<table>%A%</table>
+		</div>
 
 
-
-
-						<h3><a href="#netteBsPnl5" class="nette-toggle-collapsed">Constants</a></h3>
-			<div id="netteBsPnl5" class="outer nette-collapsed">
-			<table>%A%</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl6" class="nette-toggle-collapsed">Included files</a> (%d%)</h3>
-			<div id="netteBsPnl6" class="outer nette-collapsed">
-			<table>%A%</table>
-			</div>
-
-
-			<h3><a href="#netteBsPnl7" class="nette-toggle-collapsed">Configuration options</a></h3>
-			<div id="netteBsPnl7" class="outer nette-collapsed">
-			%A%</div>
-		</div></div>
+		<h3><a href="#netteBsPnl4" class="nette-toggle">$_SESSION</a></h3>
+		<div id="netteBsPnl4" class="outer">%A%</div>
 
 
 
-		<div class="panel">
-		<h2><a href="#netteBsPnl8" class="nette-toggle-collapsed">HTTP request</a></h2>
 
-		<div id="netteBsPnl8" class="nette-collapsed inner">
+			<h3><a href="#netteBsPnl5" class="nette-toggle-collapsed">Constants</a></h3>
+		<div id="netteBsPnl5" class="outer nette-collapsed">
+		<table>%A%</table>
+		</div>
+
+
+		<h3><a href="#netteBsPnl6" class="nette-toggle-collapsed">Included files</a> (%d%)</h3>
+		<div id="netteBsPnl6" class="outer nette-collapsed">
+		<table>%A%</table>
+		</div>
+
+
+		<h3><a href="#netteBsPnl7" class="nette-toggle-collapsed">Configuration options</a></h3>
+		<div id="netteBsPnl7" class="outer nette-collapsed">
+		%A%</div>
+	</div></div>
+
+
+
+	<div class="panel">
+	<h2><a href="#netteBsPnl8" class="nette-toggle-collapsed">HTTP request</a></h2>
+
+	<div id="netteBsPnl8" class="nette-collapsed inner">
 %A%
-						<h3>$_GET</h3>
-						<p><i>empty</i></p>
-									<h3>$_POST</h3>
-						<p><i>empty</i></p>
-									<h3>$_COOKIE</h3>
-						<p><i>empty</i></p>
-								</div></div>
+			<h3>$_GET</h3>
+			<p><i>empty</i></p>
+					<h3>$_POST</h3>
+			<p><i>empty</i></p>
+					<h3>$_COOKIE</h3>
+			<p><i>empty</i></p>
+				</div></div>
 
 
 
-		<div class="panel">
-		<h2><a href="#netteBsPnl9" class="nette-toggle-collapsed">HTTP response</a></h2>
+	<div class="panel">
+	<h2><a href="#netteBsPnl9" class="nette-toggle-collapsed">HTTP response</a></h2>
 
-		<div id="netteBsPnl9" class="nette-collapsed inner">
-			<h3>Headers</h3>
-						<pre>%A%</pre>
-					</div></div>
-
-
+	<div id="netteBsPnl9" class="nette-collapsed inner">
+		<h3>Headers</h3>
+			<pre>%A%</pre>
+			</div></div>
 
 
 
 
-		<ul>
-			<li>Report generated at %a%</li>
-							<li>CLI%a?%</li>
-						<li>PHP %a%</li>
-						<li>Nette Framework %a%</li>		</ul>
+
+
+	<ul>
+		<li>Report generated at %a%</li>
+				<li>CLI%a?%</li>
+			<li>PHP %a%</li>
+			<li>Nette Framework %a%</li>	</ul>
 	</div>
 </div>
 

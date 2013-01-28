@@ -6,7 +6,7 @@ database:
 	foo: %bar%
 
 	services:
-		foo: stdClass
+	foo: stdClass
 
 
 services:

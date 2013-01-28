@@ -42,9 +42,9 @@ class Link extends Nette\Object
 	 */
 	public function __construct(PresenterComponent $component, $destination, array $params)
 	{
-		$this->component = $component;
-		$this->destination = $destination;
-		$this->params = $params;
+	$this->component = $component;
+	$this->destination = $destination;
+	$this->params = $params;
 	}
 
 
@@ -55,7 +55,7 @@ class Link extends Nette\Object
 	 */
 	public function getDestination()
 	{
-		return $this->destination;
+	return $this->destination;
 	}
 
 
@@ -68,8 +68,8 @@ class Link extends Nette\Object
 	 */
 	public function setParameter($key, $value)
 	{
-		$this->params[$key] = $value;
-		return $this;
+	$this->params[$key] = $value;
+	return $this;
 	}
 
 
@@ -81,7 +81,7 @@ class Link extends Nette\Object
 	 */
 	public function getParameter($key)
 	{
-		return isset($this->params[$key]) ? $this->params[$key] : NULL;
+	return isset($this->params[$key]) ? $this->params[$key] : NULL;
 	}
 
 
@@ -92,7 +92,7 @@ class Link extends Nette\Object
 	 */
 	public function getParameters()
 	{
-		return $this->params;
+	return $this->params;
 	}
 
 
@@ -103,12 +103,12 @@ class Link extends Nette\Object
 	 */
 	public function __toString()
 	{
-		try {
-			return (string) $this->component->link($this->destination, $this->params);
+	try {
+		return (string) $this->component->link($this->destination, $this->params);
 
-		} catch (\Exception $e) {
-			trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
-		}
+	} catch (\Exception $e) {
+		trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
+	}
 	}
 
 }

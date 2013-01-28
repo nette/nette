@@ -53,8 +53,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setSource($source)
 	{
-		$this->source = $source;
-		return $this;
+	$this->source = $source;
+	return $this;
 	}
 
 
@@ -65,7 +65,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getSource()
 	{
-		return $this->source;
+	return $this->source;
 	}
 
 
@@ -80,20 +80,20 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function render()
 	{
-		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
-		$cached = $compiled = $cache->load($this->source);
+	$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.Template');
+	$cached = $compiled = $cache->load($this->source);
 
-		if ($compiled === NULL) {
-			$compiled = $this->compile();
-			$cache->save($this->source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
-			$cached = $cache->load($this->source);
-		}
+	if ($compiled === NULL) {
+		$compiled = $this->compile();
+		$cache->save($this->source, $compiled, array(Caching\Cache::CONSTS => 'Nette\Framework::REVISION'));
+		$cached = $cache->load($this->source);
+	}
 
-		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
-		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
-		}
+	if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
+		Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
+	} else {
+		Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
+	}
 	}
 
 
@@ -105,9 +105,9 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function save($file)
 	{
-		if (file_put_contents($file, $this->__toString(TRUE)) === FALSE) {
-			throw new Nette\IOException("Unable to save file '$file'.");
-		}
+	if (file_put_contents($file, $this->__toString(TRUE)) === FALSE) {
+		throw new Nette\IOException("Unable to save file '$file'.");
+	}
 	}
 
 
@@ -119,20 +119,20 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __toString()
 	{
-		$args = func_get_args();
-		ob_start();
-		try {
-			$this->render();
-			return ob_get_clean();
+	$args = func_get_args();
+	ob_start();
+	try {
+		$this->render();
+		return ob_get_clean();
 
-		} catch (\Exception $e) {
-			ob_end_clean();
-			if ($args && $args[0]) {
-				throw $e;
-			} else {
-				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
-			}
+	} catch (\Exception $e) {
+		ob_end_clean();
+		if ($args && $args[0]) {
+		throw $e;
+		} else {
+		trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
+	}
 	}
 
 
@@ -143,18 +143,18 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function compile()
 	{
-		if (!$this->filters) {
-			$this->onPrepareFilters($this);
-		}
+	if (!$this->filters) {
+		$this->onPrepareFilters($this);
+	}
 
-		$code = $this->getSource();
-		foreach ($this->filters as $filter) {
-			$code = self::extractPhp($code, $blocks);
-			$code = $filter/*5.2*->invoke*/($code);
-			$code = strtr($code, $blocks); // put PHP code back
-		}
+	$code = $this->getSource();
+	foreach ($this->filters as $filter) {
+		$code = self::extractPhp($code, $blocks);
+		$code = $filter/*5.2*->invoke*/($code);
+		$code = strtr($code, $blocks); // put PHP code back
+	}
 
-		return Helpers::optimizePhp($code);
+	return Helpers::optimizePhp($code);
 	}
 
 
@@ -170,8 +170,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerFilter($callback)
 	{
-		$this->filters[] = new Nette\Callback($callback);
-		return $this;
+	$this->filters[] = new Nette\Callback($callback);
+	return $this;
 	}
 
 
@@ -182,7 +182,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	final public function getFilters()
 	{
-		return $this->filters;
+	return $this->filters;
 	}
 
 
@@ -195,8 +195,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelper($name, $callback)
 	{
-		$this->helpers[strtolower($name)] = new Nette\Callback($callback);
-		return $this;
+	$this->helpers[strtolower($name)] = new Nette\Callback($callback);
+	return $this;
 	}
 
 
@@ -208,8 +208,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		$this->helperLoaders[] = new Nette\Callback($callback);
-		return $this;
+	$this->helperLoaders[] = new Nette\Callback($callback);
+	return $this;
 	}
 
 
@@ -220,7 +220,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	final public function getHelpers()
 	{
-		return $this->helpers;
+	return $this->helpers;
 	}
 
 
@@ -231,7 +231,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	final public function getHelperLoaders()
 	{
-		return $this->helperLoaders;
+	return $this->helperLoaders;
 	}
 
 
@@ -244,19 +244,19 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __call($name, $args)
 	{
-		$lname = strtolower($name);
-		if (!isset($this->helpers[$lname])) {
-			foreach ($this->helperLoaders as $loader) {
-				$helper = $loader/*5.2*->invoke*/($lname);
-				if ($helper) {
-					$this->registerHelper($lname, $helper);
-					return $this->helpers[$lname]->invokeArgs($args);
-				}
-			}
-			return parent::__call($name, $args);
+	$lname = strtolower($name);
+	if (!isset($this->helpers[$lname])) {
+		foreach ($this->helperLoaders as $loader) {
+		$helper = $loader/*5.2*->invoke*/($lname);
+		if ($helper) {
+			$this->registerHelper($lname, $helper);
+			return $this->helpers[$lname]->invokeArgs($args);
 		}
+		}
+		return parent::__call($name, $args);
+	}
 
-		return $this->helpers[$lname]->invokeArgs($args);
+	return $this->helpers[$lname]->invokeArgs($args);
 	}
 
 
@@ -267,8 +267,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
-		return $this;
+	$this->registerHelper('translate', $translator === NULL ? NULL : array($translator, 'translate'));
+	return $this;
 	}
 
 
@@ -285,12 +285,12 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function add($name, $value)
 	{
-		if (array_key_exists($name, $this->params)) {
-			throw new Nette\InvalidStateException("The variable '$name' already exists.");
-		}
+	if (array_key_exists($name, $this->params)) {
+		throw new Nette\InvalidStateException("The variable '$name' already exists.");
+	}
 
-		$this->params[$name] = $value;
-		return $this;
+	$this->params[$name] = $value;
+	return $this;
 	}
 
 
@@ -302,8 +302,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setParameters(array $params)
 	{
-		$this->params = $params + $this->params;
-		return $this;
+	$this->params = $params + $this->params;
+	return $this;
 	}
 
 
@@ -314,8 +314,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getParameters()
 	{
-		$this->params['template'] = $this;
-		return $this->params;
+	$this->params['template'] = $this;
+	return $this->params;
 	}
 
 
@@ -328,7 +328,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __set($name, $value)
 	{
-		$this->params[$name] = $value;
+	$this->params[$name] = $value;
 	}
 
 
@@ -340,11 +340,11 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function &__get($name)
 	{
-		if (!array_key_exists($name, $this->params)) {
-			trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
-		}
+	if (!array_key_exists($name, $this->params)) {
+		trigger_error("The variable '$name' does not exist in template.", E_USER_NOTICE);
+	}
 
-		return $this->params[$name];
+	return $this->params[$name];
 	}
 
 
@@ -356,7 +356,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __isset($name)
 	{
-		return isset($this->params[$name]);
+	return isset($this->params[$name]);
 	}
 
 
@@ -368,7 +368,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function __unset($name)
 	{
-		unset($this->params[$name]);
+	unset($this->params[$name]);
 	}
 
 
@@ -383,8 +383,8 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function setCacheStorage(Caching\IStorage $storage)
 	{
-		$this->cacheStorage = $storage;
-		return $this;
+	$this->cacheStorage = $storage;
+	return $this;
 	}
 
 
@@ -394,10 +394,10 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function getCacheStorage()
 	{
-		if ($this->cacheStorage === NULL) {
-			return new Caching\Storages\DevNullStorage;
-		}
-		return $this->cacheStorage;
+	if ($this->cacheStorage === NULL) {
+		return new Caching\Storages\DevNullStorage;
+	}
+	return $this->cacheStorage;
 	}
 
 
@@ -414,37 +414,37 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	private static function extractPhp($source, & $blocks)
 	{
-		$res = '';
-		$blocks = array();
-		$tokens = token_get_all($source);
-		foreach ($tokens as $n => $token) {
-			if (is_array($token)) {
-				if ($token[0] === T_INLINE_HTML) {
-					$res .= $token[1];
-					continue;
+	$res = '';
+	$blocks = array();
+	$tokens = token_get_all($source);
+	foreach ($tokens as $n => $token) {
+		if (is_array($token)) {
+		if ($token[0] === T_INLINE_HTML) {
+			$res .= $token[1];
+			continue;
 
-				} elseif ($token[0] === T_CLOSE_TAG) {
-					if ($php !== $res) { // not <?xml
-						$res .= str_repeat("\n", substr_count($php, "\n"));
-					}
-					$res .= $token[1];
-					continue;
-
-				} elseif ($token[0] === T_OPEN_TAG && $token[1] === '<?' && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
-					$php = & $res;
-					$token[1] = '<<?php ?>?';
-
-				} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
-					$res .= $id = "<?php \x01@php:p" . count($blocks) . "@\x02";
-					$php = & $blocks[$id];
-				}
-				$php .= $token[1];
-
-			} else {
-				$php .= $token;
+		} elseif ($token[0] === T_CLOSE_TAG) {
+			if ($php !== $res) { // not <?xml
+			$res .= str_repeat("\n", substr_count($php, "\n"));
 			}
+			$res .= $token[1];
+			continue;
+
+		} elseif ($token[0] === T_OPEN_TAG && $token[1] === '<?' && isset($tokens[$n+1][1]) && $tokens[$n+1][1] === 'xml') {
+			$php = & $res;
+			$token[1] = '<<?php ?>?';
+
+		} elseif ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO) {
+			$res .= $id = "<?php \x01@php:p" . count($blocks) . "@\x02";
+			$php = & $blocks[$id];
 		}
-		return $res;
+		$php .= $token[1];
+
+		} else {
+		$php .= $token;
+		}
+	}
+	return $res;
 	}
 
 }

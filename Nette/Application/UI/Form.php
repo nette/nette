@@ -30,11 +30,11 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	public function __construct(Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
-		parent::__construct();
-		$this->monitor('Nette\Application\UI\Presenter');
-		if ($parent !== NULL) {
-			$parent->addComponent($this, $name);
-		}
+	parent::__construct();
+	$this->monitor('Nette\Application\UI\Presenter');
+	if ($parent !== NULL) {
+		$parent->addComponent($this, $name);
+	}
 	}
 
 
@@ -46,7 +46,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	public function getPresenter($need = TRUE)
 	{
-		return $this->lookup('Nette\Application\UI\Presenter', $need);
+	return $this->lookup('Nette\Application\UI\Presenter', $need);
 	}
 
 
@@ -59,29 +59,29 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	protected function attached($presenter)
 	{
-		if ($presenter instanceof Presenter) {
-			$name = $this->lookupPath('Nette\Application\UI\Presenter');
+	if ($presenter instanceof Presenter) {
+		$name = $this->lookupPath('Nette\Application\UI\Presenter');
 
-			if (!isset($this->getElementPrototype()->id)) {
-				$this->getElementPrototype()->id = 'frm-' . $name;
-			}
+		if (!isset($this->getElementPrototype()->id)) {
+		$this->getElementPrototype()->id = 'frm-' . $name;
+		}
 
-			$this->setAction(new Link(
-				$presenter,
-				$name . self::NAME_SEPARATOR . 'submit!',
-				array()
-			));
+		$this->setAction(new Link(
+		$presenter,
+		$name . self::NAME_SEPARATOR . 'submit!',
+		array()
+		));
 
-			// fill-in the form with HTTP data
-			if ($this->isSubmitted()) {
-				foreach ($this->getControls() as $control) {
-					if (!$control->isDisabled()) {
-						$control->loadHttpData();
-					}
-				}
+		// fill-in the form with HTTP data
+		if ($this->isSubmitted()) {
+		foreach ($this->getControls() as $control) {
+			if (!$control->isDisabled()) {
+			$control->loadHttpData();
 			}
 		}
-		parent::attached($presenter);
+		}
+	}
+	parent::attached($presenter);
 	}
 
 
@@ -92,7 +92,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	public function isAnchored()
 	{
-		return (bool) $this->getPresenter(FALSE);
+	return (bool) $this->getPresenter(FALSE);
 	}
 
 
@@ -103,22 +103,22 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	protected function receiveHttpData()
 	{
-		$presenter = $this->getPresenter();
-		if (!$presenter->isSignalReceiver($this, 'submit')) {
-			return;
-		}
+	$presenter = $this->getPresenter();
+	if (!$presenter->isSignalReceiver($this, 'submit')) {
+		return;
+	}
 
-		$isPost = $this->getMethod() === self::POST;
-		$request = $presenter->getRequest();
-		if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) {
-			return;
-		}
+	$isPost = $this->getMethod() === self::POST;
+	$request = $presenter->getRequest();
+	if ($request->isMethod('forward') || $request->isMethod('post') !== $isPost) {
+		return;
+	}
 
-		if ($isPost) {
-			return Nette\Utils\Arrays::mergeTree($request->getPost(), $request->getFiles());
-		} else {
-			return $request->getParameters();
-		}
+	if ($isPost) {
+		return Nette\Utils\Arrays::mergeTree($request->getPost(), $request->getFiles());
+	} else {
+		return $request->getParameters();
+	}
 	}
 
 
@@ -134,14 +134,14 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 */
 	public function signalReceived($signal)
 	{
-		if ($signal === 'submit') {
-			if (!$this->getPresenter()->getRequest()->hasFlag(Nette\Application\Request::RESTORED)) {
-				$this->fireEvents();
-			}
-		} else {
-			$class = get_class($this);
-			throw new BadSignalException("Missing handler for signal '$signal' in $class.");
+	if ($signal === 'submit') {
+		if (!$this->getPresenter()->getRequest()->hasFlag(Nette\Application\Request::RESTORED)) {
+		$this->fireEvents();
 		}
+	} else {
+		$class = get_class($this);
+		throw new BadSignalException("Missing handler for signal '$signal' in $class.");
+	}
 	}
 
 }

@@ -10,7 +10,7 @@ if (!function_exists($_l->blocks['_'][] = '_xxx__')) { function _xxx__($_l, $_ar
 //
 if (!function_exists($_l->blocks['_outer'][] = '_xxx__outer')) { function _xxx__outer($_l, $_args) { extract($_args); $_control->validateControl('outer')
 ?>	Outer
-		<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
+	<div id="<?php echo $_control->getSnippetId('inner') ?>"><?php call_user_func(reset($_l->blocks['_inner']), $_l, $template->getParameters()) ?>
 </div>
 	/Outer
 <?php

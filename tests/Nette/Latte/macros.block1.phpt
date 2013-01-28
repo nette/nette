@@ -21,7 +21,7 @@ $template->registerFilter(new Latte\Engine);
 $template->setSource(<<<EOD
 	{block main}
 	<div id="main">
-		{block sidebar}side{/block}
+	{block sidebar}side{/block}
 	</div> <!-- /main -->
 	{/block}
 
@@ -33,12 +33,12 @@ EOD
 
 Assert::match(<<<EOD
 	<div id="main">
-		side
+	side
 	</div> <!-- /main -->
 
 side
 	<div id="main">
-		side
+	side
 	</div> <!-- /main -->
 EOD
 , (string) $template);

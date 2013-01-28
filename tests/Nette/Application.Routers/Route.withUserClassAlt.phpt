@@ -19,7 +19,7 @@ require __DIR__ . '/Route.inc';
 
 $route = new Route('<presenter>/<id>', array(
 	'id' => array(
-		Route::PATTERN => '\d{1,3}',
+	Route::PATTERN => '\d{1,3}',
 	),
 ));
 

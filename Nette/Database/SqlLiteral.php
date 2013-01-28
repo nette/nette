@@ -28,7 +28,7 @@ class SqlLiteral extends Nette\Object
 
 	public function __construct($value)
 	{
-		$this->value = (string) $value;
+	$this->value = (string) $value;
 	}
 
 
@@ -38,7 +38,7 @@ class SqlLiteral extends Nette\Object
 	 */
 	public function __toString()
 	{
-		return $this->value;
+	return $this->value;
 	}
 
 }

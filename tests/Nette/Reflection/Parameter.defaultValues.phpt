@@ -19,14 +19,14 @@ function test($method, $args)
 {
 	$method = new Reflection\Method($method);
 	foreach ($method->getParameters() as $param) {
-		echo "{$method->getName()}(\${$param->getName()})\n";
-		@list($isOptional, $isDefaultValueAvailable, $defaultValue) = array_shift($args);
-		Assert::same( $isOptional, $param->isOptional() );
-		Assert::same( $isDefaultValueAvailable, $param->isDefaultValueAvailable() );
+	echo "{$method->getName()}(\${$param->getName()})\n";
+	@list($isOptional, $isDefaultValueAvailable, $defaultValue) = array_shift($args);
+	Assert::same( $isOptional, $param->isOptional() );
+	Assert::same( $isDefaultValueAvailable, $param->isDefaultValueAvailable() );
 
-		if ($isDefaultValueAvailable) {
-			Assert::same( $defaultValue, $param->getDefaultValue() );
-		}
+	if ($isDefaultValueAvailable) {
+		Assert::same( $defaultValue, $param->getDefaultValue() );
+	}
 	}
 }
 

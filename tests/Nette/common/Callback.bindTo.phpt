@@ -21,7 +21,7 @@ class Test
 
 	function set($val)
 	{
-		$this->var = $val;
+	$this->var = $val;
 	}
 }
 

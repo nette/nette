@@ -44,13 +44,13 @@ class RadioList extends BaseControl
 	 */
 	public function __construct($label = NULL, array $items = NULL)
 	{
-		parent::__construct($label);
-		$this->control->type = 'radio';
-		$this->container = Html::el();
-		$this->separator = Html::el('br');
-		if ($items !== NULL) {
-			$this->setItems($items);
-		}
+	parent::__construct($label);
+	$this->control->type = 'radio';
+	$this->container = Html::el();
+	$this->separator = Html::el('br');
+	if ($items !== NULL) {
+		$this->setItems($items);
+	}
 	}
 
 
@@ -62,7 +62,7 @@ class RadioList extends BaseControl
 	 */
 	public function getValue($raw = FALSE)
 	{
-		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+	return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
 	}
 
 
@@ -73,7 +73,7 @@ class RadioList extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return $this->getValue() !== NULL;
+	return $this->getValue() !== NULL;
 	}
 
 
@@ -85,8 +85,8 @@ class RadioList extends BaseControl
 	 */
 	public function setItems(array $items)
 	{
-		$this->items = $items;
-		return $this;
+	$this->items = $items;
+	return $this;
 	}
 
 
@@ -97,7 +97,7 @@ class RadioList extends BaseControl
 	 */
 	final public function getItems()
 	{
-		return $this->items;
+	return $this->items;
 	}
 
 
@@ -108,7 +108,7 @@ class RadioList extends BaseControl
 	 */
 	final public function getSeparatorPrototype()
 	{
-		return $this->separator;
+	return $this->separator;
 	}
 
 
@@ -119,7 +119,7 @@ class RadioList extends BaseControl
 	 */
 	final public function getContainerPrototype()
 	{
-		return $this->container;
+	return $this->container;
 	}
 
 
@@ -131,46 +131,46 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		if ($key === NULL) {
-			$container = clone $this->container;
-			$separator = (string) $this->separator;
+	if ($key === NULL) {
+		$container = clone $this->container;
+		$separator = (string) $this->separator;
 
-		} elseif (!isset($this->items[$key])) {
-			return NULL;
+	} elseif (!isset($this->items[$key])) {
+		return NULL;
+	}
+
+	$control = parent::getControl();
+	$id = $control->id;
+	$counter = -1;
+	$value = $this->value === NULL ? NULL : (string) $this->getValue();
+	$label = Html::el('label');
+
+	foreach ($this->items as $k => $val) {
+		$counter++;
+		if ($key !== NULL && (string) $key !== (string) $k) {
+		continue;
 		}
 
-		$control = parent::getControl();
-		$id = $control->id;
-		$counter = -1;
-		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = Html::el('label');
+		$control->id = $label->for = $id . '-' . $counter;
+		$control->checked = (string) $k === $value;
+		$control->value = $k;
 
-		foreach ($this->items as $k => $val) {
-			$counter++;
-			if ($key !== NULL && (string) $key !== (string) $k) {
-				continue;
-			}
-
-			$control->id = $label->for = $id . '-' . $counter;
-			$control->checked = (string) $k === $value;
-			$control->value = $k;
-
-			if ($val instanceof Html) {
-				$label->setHtml($val);
-			} else {
-				$label->setText($this->translate((string) $val));
-			}
-
-			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
-			}
-
-			$container->add((string) $control . (string) $label . $separator);
-			$control->data('nette-rules', NULL);
-			// TODO: separator after last item?
+		if ($val instanceof Html) {
+		$label->setHtml($val);
+		} else {
+		$label->setText($this->translate((string) $val));
 		}
 
-		return $container;
+		if ($key !== NULL) {
+		return Html::el()->add($control)->add($label);
+		}
+
+		$container->add((string) $control . (string) $label . $separator);
+		$control->data('nette-rules', NULL);
+		// TODO: separator after last item?
+	}
+
+	return $container;
 	}
 
 
@@ -182,9 +182,9 @@ class RadioList extends BaseControl
 	 */
 	public function getLabel($caption = NULL)
 	{
-		$label = parent::getLabel($caption);
-		$label->for = NULL;
-		return $label;
+	$label = parent::getLabel($caption);
+	$label->for = NULL;
+	return $label;
 	}
 
 }

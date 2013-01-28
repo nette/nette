@@ -1,7 +1,7 @@
 services:
 	lorem:
-		class: Lorem
+	class: Lorem
 
 	ipsum:
-		class: Ipsum
-		run: yes
+	class: Ipsum
+	run: yes

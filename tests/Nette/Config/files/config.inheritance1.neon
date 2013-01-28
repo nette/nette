@@ -1,8 +1,8 @@
 services:
 	app2 < application: # inherites from extended application
-		autowired: no
+	autowired: no
 
 	application: # extends original application
-		class: MyApp
-		setup: # extends original setup
-			- $errorPresenter(Error)
+	class: MyApp
+	setup: # extends original setup
+		- $errorPresenter(Error)

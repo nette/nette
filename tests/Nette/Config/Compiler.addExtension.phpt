@@ -21,8 +21,8 @@ abstract class BaseExtension extends CompilerExtension
 
 	public function loadConfiguration()
 	{
-		Notes::add(get_class($this));
-		$this->loaded = true;
+	Notes::add(get_class($this));
+	$this->loaded = true;
 	}
 }
 
@@ -30,13 +30,13 @@ class FooExtension extends BaseExtension
 {
 	public function loadConfiguration()
 	{
-		parent::loadConfiguration();
+	parent::loadConfiguration();
 
-		$this->compiler->addExtension('bar', new BarExtension);
+	$this->compiler->addExtension('bar', new BarExtension);
 
-		foreach ($this->compiler->getExtensions() as $extension) {
-			// iterating over array breaks the cursor
-		}
+	foreach ($this->compiler->getExtensions() as $extension) {
+		// iterating over array breaks the cursor
+	}
 	}
 }
 
@@ -54,7 +54,7 @@ class ProcessingCompiler extends Nette\Config\Compiler
 {
 	public function generateCode($className, $parentName)
 	{
-		return NULL;
+	return NULL;
 	}
 }
 

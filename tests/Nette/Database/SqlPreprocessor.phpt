@@ -23,12 +23,12 @@ list($sql) = $preprocessor->process('INSERT INTO author', array(array(
 
 switch ($driverName) {
 	case 'pgsql':
-		Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-		break;
+	Assert::same( "INSERT INTO author (\"name\", \"born\") VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
+	break;
 	case 'mysql':
 	default:
-		Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
-		break;
+	Assert::same( "INSERT INTO author (`name`, `born`) VALUES ('Catelyn Stark', '2011-11-11 00:00:00'), ('Sansa Stark', '2021-11-11 00:00:00')", $sql );
+	break;
 }
 
 
@@ -41,10 +41,10 @@ list($sql) = $preprocessor->process('INSERT INTO author ? ON DUPLICATE KEY UPDAT
 
 switch ($driverName) {
 	case 'pgsql':
-		Assert::same( "INSERT INTO author (\"id\", \"name\") VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE \"web\"='http://nette.org', \"name\"='Dave Lister'", $sql );
-		break;
+	Assert::same( "INSERT INTO author (\"id\", \"name\") VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE \"web\"='http://nette.org', \"name\"='Dave Lister'", $sql );
+	break;
 	case 'mysql':
 	default:
-		Assert::same( "INSERT INTO author (`id`, `name`) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE `web`='http://nette.org', `name`='Dave Lister'", $sql );
-		break;
+	Assert::same( "INSERT INTO author (`id`, `name`) VALUES (12, 'John Doe') ON DUPLICATE KEY UPDATE `web`='http://nette.org', `name`='Dave Lister'", $sql );
+	break;
 }

@@ -34,12 +34,12 @@ class InvalidStateException extends \RuntimeException
 	/*5.2*
 	public function __construct($message = '', $code = 0, \Exception $previous = NULL)
 	{
-		if (PHP_VERSION_ID < 50300) {
-			$this->previous = $previous;
-			parent::__construct($message, $code);
-		} else {
-			parent::__construct($message, $code, $previous);
-		}
+	if (PHP_VERSION_ID < 50300) {
+		$this->previous = $previous;
+		parent::__construct($message, $code);
+	} else {
+		parent::__construct($message, $code, $previous);
+	}
 	}
 	*/
 }
@@ -156,8 +156,8 @@ class FatalErrorException extends \ErrorException
 
 	public function __construct($message, $code, $severity, $file, $line, $context, \Exception $previous = NULL)
 	{
-		parent::__construct($message, $code, $severity, $file, $line, $previous);
-		$this->context = $context;
+	parent::__construct($message, $code, $severity, $file, $line, $previous);
+	$this->context = $context;
 	}
 
 }
@@ -170,21 +170,21 @@ class FatalErrorException extends \Exception // ErrorException is corrupted in P
 
 	public function __construct($message, $code, $severity, $file, $line, $context, Exception $previous = NULL)
 	{
-		if (PHP_VERSION_ID < 50300) {
-			$this->previous = $previous;
-			parent::__construct($message, $code);
-		} else {
-			parent::__construct($message, $code, $previous);
-		}
-		$this->severity = $severity;
-		$this->file = $file;
-		$this->line = $line;
-		$this->context = $context;
+	if (PHP_VERSION_ID < 50300) {
+		$this->previous = $previous;
+		parent::__construct($message, $code);
+	} else {
+		parent::__construct($message, $code, $previous);
+	}
+	$this->severity = $severity;
+	$this->file = $file;
+	$this->line = $line;
+	$this->context = $context;
 	}
 
 	public function getSeverity()
 	{
-		return $this->severity;
+	return $this->severity;
 	}
 
 }

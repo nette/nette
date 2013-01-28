@@ -20,12 +20,12 @@ class MockControl
 
 	public function link($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-		array_unshift($args, $destination);
-		return 'LINK(' . implode(', ', $args) . ')';
+	if (!is_array($args)) {
+		$args = func_get_args();
+		array_shift($args);
+	}
+	array_unshift($args, $destination);
+	return 'LINK(' . implode(', ', $args) . ')';
 	}
 
 }
@@ -37,16 +37,16 @@ class MockPresenter extends MockControl
 
 	public function link($destination, $args = array())
 	{
-		if (!is_array($args)) {
-			$args = func_get_args();
-			array_shift($args);
-		}
-		array_unshift($args, $destination);
-		return 'PLINK(' . implode(', ', $args) . ')';
+	if (!is_array($args)) {
+		$args = func_get_args();
+		array_shift($args);
+	}
+	array_unshift($args, $destination);
+	return 'PLINK(' . implode(', ', $args) . ')';
 	}
 
 	public function isAjax() {
-		return FALSE;
+	return FALSE;
 	}
 
 }

@@ -28,15 +28,15 @@ class Filter extends \FilterIterator
 
 	public function __construct(\Iterator $iterator, $callback)
 	{
-		parent::__construct($iterator);
-		$this->callback = new Nette\Callback($callback);
+	parent::__construct($iterator);
+	$this->callback = new Nette\Callback($callback);
 	}
 
 
 
 	public function accept()
 	{
-		return $this->callback->invoke($this->current(), $this->key(), $this);
+	return $this->callback->invoke($this->current(), $this->key(), $this);
 	}
 
 }

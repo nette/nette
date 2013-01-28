@@ -21,32 +21,32 @@ class TestClass extends Container implements ArrayAccess
 {
 	function attached($obj)
 	{
-		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+	Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
 	}
 
 	function detached($obj)
 	{
-		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
+	Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
 	}
 
 	function offsetSet($name, $component)
 	{
-		$this->addComponent($component, $name);
+	$this->addComponent($component, $name);
 	}
 
 	function offsetGet($name)
 	{
-		return $this->getComponent($name, TRUE);
+	return $this->getComponent($name, TRUE);
 	}
 
 	function offsetExists($name)
 	{
-		return $this->getComponent($name) !== NULL;
+	return $this->getComponent($name) !== NULL;
 	}
 
 	function offsetUnset($name)
 	{
-		$this->removeComponent($this->getComponent($name, TRUE));
+	$this->removeComponent($this->getComponent($name, TRUE));
 	}
 }
 
@@ -56,9 +56,9 @@ class TestClass extends Container implements ArrayAccess
 {
 	$res = array("({$thisObj->reflection->name})" => $thisObj->name);
 	if ($thisObj instanceof IContainer) {
-		foreach ($thisObj->getComponents() as $name => $obj) {
-			$res['children'][$name] = $obj->export();
-		}
+	foreach ($thisObj->getComponents() as $name => $obj) {
+		$res['children'][$name] = $obj->export();
+	}
 	}
 	return $res;
 }/**/);/**/
@@ -123,41 +123,41 @@ Assert::same( array(
 Assert::same( array(
 	'(A)' => NULL,
 	'children' => array(
-		'b' => array(
-			'(B)' => 'b',
+	'b' => array(
+		'(B)' => 'b',
+		'children' => array(
+		'c' => array(
+			'(C)' => 'c',
 			'children' => array(
-				'c' => array(
-					'(C)' => 'c',
-					'children' => array(
-						'd' => array(
-							'(D)' => 'd',
-							'children' => array(
-								'e' => array(
-									'(E)' => 'e',
-								),
-							),
-						),
-					),
+			'd' => array(
+				'(D)' => 'd',
+				'children' => array(
+				'e' => array(
+					'(E)' => 'e',
+				),
 				),
 			),
-		),
-		'dolly' => array(
-			'(B)' => 'dolly',
-			'children' => array(
-				'c' => array(
-					'(C)' => 'c',
-					'children' => array(
-						'd' => array(
-							'(D)' => 'd',
-							'children' => array(
-								'e' => array(
-									'(E)' => 'e',
-								),
-							),
-						),
-					),
-				),
 			),
 		),
+		),
+	),
+	'dolly' => array(
+		'(B)' => 'dolly',
+		'children' => array(
+		'c' => array(
+			'(C)' => 'c',
+			'children' => array(
+			'd' => array(
+				'(D)' => 'd',
+				'children' => array(
+				'e' => array(
+					'(E)' => 'e',
+				),
+				),
+			),
+			),
+		),
+		),
+	),
 	),
 ), $a->export() );

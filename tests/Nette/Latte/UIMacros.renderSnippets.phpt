@@ -19,15 +19,15 @@ class InnerControl extends Nette\Application\UI\Control
 {
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_presenter = $this->getPresenter();
-		$template->_control = $this;
-		$template->setSource(<<<EOD
-			Hello {snippet test}world{/snippet}!
+	$template = new Nette\Templating\Template;
+	$template->registerFilter(new Latte\Engine);
+	$template->_presenter = $this->getPresenter();
+	$template->_control = $this;
+	$template->setSource(<<<EOD
+		Hello {snippet test}world{/snippet}!
 EOD
-		);
-		$template->render();
+	);
+	$template->render();
 	}
 }
 
@@ -36,23 +36,23 @@ class MultiControl extends Nette\Application\UI\Presenter
 	private $payload;
 	function getPayload()
 	{
-		return $this->payload;
+	return $this->payload;
 	}
 	function createComponentMulti()
 	{
-		$this->payload = new stdClass;
-		return new Nette\Application\UI\Multiplier(function($name) {
-			$control = new InnerControl();
-			$control->invalidateControl();
-			return $control;
-		});
+	$this->payload = new stdClass;
+	return new Nette\Application\UI\Multiplier(function($name) {
+		$control = new InnerControl();
+		$control->invalidateControl();
+		return $control;
+	});
 	}
 	public function render()
 	{
-		$template = new Nette\Templating\Template;
-		$template->registerFilter(new Latte\Engine);
-		$template->_control = $this;
-		$template->render();
+	$template = new Nette\Templating\Template;
+	$template->registerFilter(new Latte\Engine);
+	$template->_control = $this;
+	$template->render();
 	}
 }
 

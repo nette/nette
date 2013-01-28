@@ -59,14 +59,14 @@ class ClassType extends \ReflectionClass
 	 */
 	public static function from($class)
 	{
-		return new static($class);
+	return new static($class);
 	}
 
 
 
 	public function __toString()
 	{
-		return $this->getName();
+	return $this->getName();
 	}
 
 
@@ -77,7 +77,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function is($type)
 	{
-		return $this->isSubclassOf($type) || strcasecmp($this->getName(), ltrim($type, '\\')) === 0;
+	return $this->isSubclassOf($type) || strcasecmp($this->getName(), ltrim($type, '\\')) === 0;
 	}
 
 
@@ -91,7 +91,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getConstructor()
 	{
-		return ($ref = parent::getConstructor()) ? Method::from($this->getName(), $ref->getName()) : NULL;
+	return ($ref = parent::getConstructor()) ? Method::from($this->getName(), $ref->getName()) : NULL;
 	}
 
 
@@ -101,7 +101,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
+	return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
@@ -111,11 +111,11 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getInterfaces()
 	{
-		$res = array();
-		foreach (parent::getInterfaceNames() as $val) {
-			$res[$val] = new static($val);
-		}
-		return $res;
+	$res = array();
+	foreach (parent::getInterfaceNames() as $val) {
+		$res[$val] = new static($val);
+	}
+	return $res;
 	}
 
 
@@ -125,7 +125,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getMethod($name)
 	{
-		return new Method($this->getName(), $name);
+	return new Method($this->getName(), $name);
 	}
 
 
@@ -135,10 +135,10 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getMethods($filter = -1)
 	{
-		foreach ($res = parent::getMethods($filter) as $key => $val) {
-			$res[$key] = new Method($this->getName(), $val->getName());
-		}
-		return $res;
+	foreach ($res = parent::getMethods($filter) as $key => $val) {
+		$res[$key] = new Method($this->getName(), $val->getName());
+	}
+	return $res;
 	}
 
 
@@ -148,7 +148,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getParentClass()
 	{
-		return ($ref = parent::getParentClass()) ? new static($ref->getName()) : NULL;
+	return ($ref = parent::getParentClass()) ? new static($ref->getName()) : NULL;
 	}
 
 
@@ -158,10 +158,10 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getProperties($filter = -1)
 	{
-		foreach ($res = parent::getProperties($filter) as $key => $val) {
-			$res[$key] = new Property($this->getName(), $val->getName());
-		}
-		return $res;
+	foreach ($res = parent::getProperties($filter) as $key => $val) {
+		$res[$key] = new Property($this->getName(), $val->getName());
+	}
+	return $res;
 	}
 
 
@@ -171,7 +171,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getProperty($name)
 	{
-		return new Property($this->getName(), $name);
+	return new Property($this->getName(), $name);
 	}
 
 
@@ -187,8 +187,8 @@ class ClassType extends \ReflectionClass
 	 */
 	public function hasAnnotation($name)
 	{
-		$res = AnnotationsParser::getAll($this);
-		return !empty($res[$name]);
+	$res = AnnotationsParser::getAll($this);
+	return !empty($res[$name]);
 	}
 
 
@@ -200,8 +200,8 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getAnnotation($name)
 	{
-		$res = AnnotationsParser::getAll($this);
-		return isset($res[$name]) ? end($res[$name]) : NULL;
+	$res = AnnotationsParser::getAll($this);
+	return isset($res[$name]) ? end($res[$name]) : NULL;
 	}
 
 
@@ -212,7 +212,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getAnnotations()
 	{
-		return AnnotationsParser::getAll($this);
+	return AnnotationsParser::getAll($this);
 	}
 
 
@@ -223,7 +223,7 @@ class ClassType extends \ReflectionClass
 	 */
 	public function getDescription()
 	{
-		return $this->getAnnotation('description');
+	return $this->getAnnotation('description');
 	}
 
 
@@ -237,42 +237,42 @@ class ClassType extends \ReflectionClass
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
+	return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return ObjectMixin::call($this, $name, $args);
+	return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return ObjectMixin::get($this, $name);
+	return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+	return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return ObjectMixin::has($this, $name);
+	return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		ObjectMixin::remove($this, $name);
+	ObjectMixin::remove($this, $name);
 	}
 
 }

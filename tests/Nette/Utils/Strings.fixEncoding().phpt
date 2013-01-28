@@ -18,13 +18,13 @@ require __DIR__ . '/../bootstrap.php';
 function utfChar($ord)
 {
 	if ($ord < 0x80) {
-		return chr($ord);
+	return chr($ord);
 	} elseif ($ord < 0x800) {
-		return chr(($ord >> 6) + 0xC0) . chr(($ord & 63) + 0x80);
+	return chr(($ord >> 6) + 0xC0) . chr(($ord & 63) + 0x80);
 	} elseif ($ord < 0x10000) {
-		return chr(($ord >> 12) + 0xE0) . chr((($ord >> 6) & 63) + 0x80) . chr(($ord & 63) + 0x80);
+	return chr(($ord >> 12) + 0xE0) . chr((($ord >> 6) & 63) + 0x80) . chr(($ord & 63) + 0x80);
 	} elseif ($ord < 0x200000) {
-		return chr(($ord >> 18) + 0xF0) . chr((($ord >> 12) & 63) + 0x80) . chr((($ord >> 6) & 63) + 0x80) . chr(($ord & 63) + 0x80);
+	return chr(($ord >> 18) + 0xF0) . chr((($ord >> 12) & 63) + 0x80) . chr((($ord >> 6) & 63) + 0x80) . chr(($ord & 63) + 0x80);
 	}
 }
 

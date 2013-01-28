@@ -33,7 +33,7 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 
 	public function __construct($module = NULL)
 	{
-		$this->module = $module ? $module . ':' : '';
+	$this->module = $module ? $module . ':' : '';
 	}
 
 
@@ -44,14 +44,14 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
-		foreach ($this as $route) {
-			$appRequest = $route->match($httpRequest);
-			if ($appRequest !== NULL) {
-				$appRequest->setPresenterName($this->module . $appRequest->getPresenterName());
-				return $appRequest;
-			}
+	foreach ($this as $route) {
+		$appRequest = $route->match($httpRequest);
+		if ($appRequest !== NULL) {
+		$appRequest->setPresenterName($this->module . $appRequest->getPresenterName());
+		return $appRequest;
 		}
-		return NULL;
+	}
+	return NULL;
 	}
 
 
@@ -62,56 +62,56 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	 */
 	public function constructUrl(Nette\Application\Request $appRequest, Nette\Http\Url $refUrl)
 	{
-		if ($this->cachedRoutes === NULL) {
-			$routes = array();
-			$routes['*'] = array();
+	if ($this->cachedRoutes === NULL) {
+		$routes = array();
+		$routes['*'] = array();
 
-			foreach ($this as $route) {
-				$presenter = $route instanceof Route ? $route->getTargetPresenter() : NULL;
+		foreach ($this as $route) {
+		$presenter = $route instanceof Route ? $route->getTargetPresenter() : NULL;
 
-				if ($presenter === FALSE) {
-					continue;
-				}
-
-				if (is_string($presenter)) {
-					$presenter = strtolower($presenter);
-					if (!isset($routes[$presenter])) {
-						$routes[$presenter] = $routes['*'];
-					}
-					$routes[$presenter][] = $route;
-
-				} else {
-					foreach ($routes as $id => $foo) {
-						$routes[$id][] = $route;
-					}
-				}
-			}
-
-			$this->cachedRoutes = $routes;
+		if ($presenter === FALSE) {
+			continue;
 		}
 
-		if ($this->module) {
-			if (strncasecmp($tmp = $appRequest->getPresenterName(), $this->module, strlen($this->module)) === 0) {
-				$appRequest = clone $appRequest;
-				$appRequest->setPresenterName(substr($tmp, strlen($this->module)));
-			} else {
-				return NULL;
+		if (is_string($presenter)) {
+			$presenter = strtolower($presenter);
+			if (!isset($routes[$presenter])) {
+			$routes[$presenter] = $routes['*'];
+			}
+			$routes[$presenter][] = $route;
+
+		} else {
+			foreach ($routes as $id => $foo) {
+			$routes[$id][] = $route;
 			}
 		}
-
-		$presenter = strtolower($appRequest->getPresenterName());
-		if (!isset($this->cachedRoutes[$presenter])) {
-			$presenter = '*';
 		}
 
-		foreach ($this->cachedRoutes[$presenter] as $route) {
-			$url = $route->constructUrl($appRequest, $refUrl);
-			if ($url !== NULL) {
-				return $url;
-			}
-		}
+		$this->cachedRoutes = $routes;
+	}
 
+	if ($this->module) {
+		if (strncasecmp($tmp = $appRequest->getPresenterName(), $this->module, strlen($this->module)) === 0) {
+		$appRequest = clone $appRequest;
+		$appRequest->setPresenterName(substr($tmp, strlen($this->module)));
+		} else {
 		return NULL;
+		}
+	}
+
+	$presenter = strtolower($appRequest->getPresenterName());
+	if (!isset($this->cachedRoutes[$presenter])) {
+		$presenter = '*';
+	}
+
+	foreach ($this->cachedRoutes[$presenter] as $route) {
+		$url = $route->constructUrl($appRequest, $refUrl);
+		if ($url !== NULL) {
+		return $url;
+		}
+	}
+
+	return NULL;
 	}
 
 
@@ -124,10 +124,10 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	 */
 	public function offsetSet($index, $route)
 	{
-		if (!$route instanceof Nette\Application\IRouter) {
-			throw new Nette\InvalidArgumentException("Argument must be IRouter descendant.");
-		}
-		parent::offsetSet($index, $route);
+	if (!$route instanceof Nette\Application\IRouter) {
+		throw new Nette\InvalidArgumentException("Argument must be IRouter descendant.");
+	}
+	parent::offsetSet($index, $route);
 	}
 
 
@@ -137,7 +137,7 @@ class RouteList extends Nette\ArrayList implements Nette\Application\IRouter
 	 */
 	public function getModule()
 	{
-		return $this->module;
+	return $this->module;
 	}
 
 }

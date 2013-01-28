@@ -32,7 +32,7 @@ Assert::same( array(
 	0 => 'a',
 	1 => 'b',
 	2 => array(
-		'c' => 'd',
+	'c' => 'd',
 	),
 	'e' => 'f',
 	'g' => NULL,

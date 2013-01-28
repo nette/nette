@@ -20,12 +20,12 @@ class TestClass extends Nette\Object
 
 	public function getFoo()
 	{
-		return $this->foo;
+	return $this->foo;
 	}
 
 	public function setFoo($foo)
 	{
-		$this->foo = $foo;
+	$this->foo = $foo;
 	}
 
 }

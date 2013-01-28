@@ -20,7 +20,7 @@ class TestClass extends Container
 
 	public function createComponentB($name)
 	{
-		return new self;
+	return new self;
 	}
 
 }

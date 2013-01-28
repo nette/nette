@@ -18,8 +18,8 @@ require __DIR__ . '/../bootstrap.php';
 
 Assert::error(function() {
 	Assert::same('HELLO', Strings::replace('hello', '#.+#', new Nette\Callback(function($m) {
-		$a++; // E_NOTICE
-		return strtoupper($m[0]);
+	$a++; // E_NOTICE
+	return strtoupper($m[0]);
 	})));
 }, E_NOTICE, "Undefined variable: a");
 

@@ -28,7 +28,7 @@ class Sqlite2Driver extends SqliteDriver
 	 */
 	public function formatLike($value, $pos)
 	{
-		throw new Nette\NotSupportedException;
+	throw new Nette\NotSupportedException;
 	}
 
 
@@ -38,21 +38,21 @@ class Sqlite2Driver extends SqliteDriver
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		if (!is_object($row)) {
-			$iterator = $row;
-		} elseif ($row instanceof \Traversable) {
-			$iterator = iterator_to_array($row);
-		} else {
-			$iterator = (array) $row;
+	if (!is_object($row)) {
+		$iterator = $row;
+	} elseif ($row instanceof \Traversable) {
+		$iterator = iterator_to_array($row);
+	} else {
+		$iterator = (array) $row;
+	}
+	foreach ($iterator as $key => $value) {
+		unset($row[$key]);
+		if ($key[0] === '[' || $key[0] === '"') {
+		$key = substr($key, 1, -1);
 		}
-		foreach ($iterator as $key => $value) {
-			unset($row[$key]);
-			if ($key[0] === '[' || $key[0] === '"') {
-				$key = substr($key, 1, -1);
-			}
-			$row[$key] = $value;
-		}
-		return $row;
+		$row[$key] = $value;
+	}
+	return $row;
 	}
 
 
@@ -62,7 +62,7 @@ class Sqlite2Driver extends SqliteDriver
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
+	throw new NotSupportedException; // @see http://www.sqlite.org/foreignkeys.html
 	}
 
 }

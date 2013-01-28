@@ -31,7 +31,7 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 	 */
 	public function __construct(array $userlist)
 	{
-		$this->userlist = $userlist;
+	$this->userlist = $userlist;
 	}
 
 
@@ -45,17 +45,17 @@ class SimpleAuthenticator extends Nette\Object implements IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		list($username, $password) = $credentials;
-		foreach ($this->userlist as $name => $pass) {
-			if (strcasecmp($name, $username) === 0) {
-				if ((string) $pass === (string) $password) {
-					return new Identity($name);
-				} else {
-					throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
-				}
-			}
+	list($username, $password) = $credentials;
+	foreach ($this->userlist as $name => $pass) {
+		if (strcasecmp($name, $username) === 0) {
+		if ((string) $pass === (string) $password) {
+			return new Identity($name);
+		} else {
+			throw new AuthenticationException("Invalid password.", self::INVALID_CREDENTIAL);
 		}
-		throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
+		}
+	}
+	throw new AuthenticationException("User '$username' not found.", self::IDENTITY_NOT_FOUND);
 	}
 
 }

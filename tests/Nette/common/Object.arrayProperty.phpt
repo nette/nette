@@ -20,12 +20,12 @@ class TestClass extends Nette\Object
 
 	public function & getItems()
 	{
-		return $this->items;
+	return $this->items;
 	}
 
 	public function setItems(array $value)
 	{
-		$this->items = $value;
+	$this->items = $value;
 	}
 
 }

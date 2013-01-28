@@ -28,11 +28,11 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 $bookSelection = $connection->table('book')->find(2);
 switch ($driverName) {
 	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+	break;
 	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+	break;
 }
 
 
@@ -43,11 +43,11 @@ $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->find(2);
 switch ($driverName) {
 	case 'mysql':
-		Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+	break;
 	case 'pgsql':
-		Assert::same('SELECT "id", "title", "translator_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT "id", "title", "translator_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+	break;
 }
 
 
@@ -55,22 +55,22 @@ $book = $bookSelection->fetch();
 $book->author_id;
 switch ($driverName) {
 	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+	break;
 	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT * FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+	break;
 }
 
 $bookSelection->__destruct();
 $bookSelection = $connection->table('book')->find(2);
 switch ($driverName) {
 	case 'mysql':
-		Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
+	break;
 	case 'pgsql':
-		Assert::same('SELECT "id", "title", "translator_id", "author_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
-		break;
+	Assert::same('SELECT "id", "title", "translator_id", "author_id" FROM "book" WHERE ("id" = ?)', $bookSelection->getSql());
+	break;
 }
 
 
@@ -79,7 +79,7 @@ switch ($driverName) {
 foreach ($connection->table('author') as $author) {
 	$stack[] = $selection = $author->related('book.author_id')->order('title');
 	foreach ($selection as $book) {
-		$book->title;
+	$book->title;
 	}
 }
 
@@ -89,9 +89,9 @@ reset($stack)->__destruct();
 $books = array();
 foreach ($connection->table('author') as $author) {
 	foreach ($author->related('book.author_id')->order('title') as $book) {
-		if ($book->author_id == 12) {
-			$books[$book->title] = $book->translator_id; // translator_id is new used column in the second loop
-		}
+	if ($book->author_id == 12) {
+		$books[$book->title] = $book->translator_id; // translator_id is new used column in the second loop
+	}
 	}
 }
 
@@ -136,7 +136,7 @@ $relatedStack = array();
 foreach ($connection->table('author') as $author) {
 	$relatedStack[] = $related = $author->related('book.author_id');
 	foreach ($related as $book)	{
-		$book->id;
+	$book->id;
 	}
 }
 

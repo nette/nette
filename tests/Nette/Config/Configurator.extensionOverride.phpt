@@ -21,7 +21,7 @@ class Factory
 {
 	static function createLorem($arg = NULL)
 	{
-		return new Lorem($arg);
+	return new Lorem($arg);
 	}
 }
 
@@ -30,7 +30,7 @@ class IpsumFactory
 {
 	static function create($arg = NULL)
 	{
-		return new Ipsum($arg);
+	return new Ipsum($arg);
 	}
 }
 
@@ -39,7 +39,7 @@ class Lorem
 {
 	function __construct($arg = NULL)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
+	Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -47,7 +47,7 @@ class Ipsum
 {
 	function __construct($arg = NULL)
 	{
-		Notes::add(__METHOD__ . ' ' . $arg);
+	Notes::add(__METHOD__ . ' ' . $arg);
 	}
 }
 
@@ -57,60 +57,60 @@ class FooExtension extends Nette\Config\CompilerExtension
 
 	public function loadConfiguration()
 	{
-		$container = $this->getContainerBuilder();
-		$container->parameters['class'] = 'Lorem';
+	$container = $this->getContainerBuilder();
+	$container->parameters['class'] = 'Lorem';
 
-		$container->addDefinition('one1')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one2')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one3')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one4')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one5')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one6')
-			->setClass('%class%', array(1));
-		$container->addDefinition('one7')
-			->setClass('%class%', array(1));
+	$container->addDefinition('one1')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one2')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one3')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one4')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one5')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one6')
+		->setClass('%class%', array(1));
+	$container->addDefinition('one7')
+		->setClass('%class%', array(1));
 
-		$container->addDefinition('two1')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two2')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two3')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two4')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two5')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two6')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('two7')
-			->setClass('Lorem')
-			->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two1')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two2')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two3')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two4')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two5')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two6')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('two7')
+		->setClass('Lorem')
+		->setFactory('Factory::createLorem', array(1));
 
-		$container->addDefinition('three1')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three2')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three3')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three4')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three5')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three6')
-			->setFactory('Factory::createLorem', array(1));
-		$container->addDefinition('three7')
-			->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three1')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three2')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three3')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three4')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three5')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three6')
+		->setFactory('Factory::createLorem', array(1));
+	$container->addDefinition('three7')
+		->setFactory('Factory::createLorem', array(1));
 	}
 
 }

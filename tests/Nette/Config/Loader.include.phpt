@@ -26,12 +26,12 @@ Assert::same( array(
 
 Assert::same( array(
 	'parameters' => array(
-		'me' => array(
-			'config.child.ini',
-			'config.child.php',
-		),
-		'scalar' => 1,
-		'list' => array(5, 6, 1, 2),
-		'force' => array(1, 2),
+	'me' => array(
+		'config.child.ini',
+		'config.child.php',
+	),
+	'scalar' => 1,
+	'list' => array(5, 6, 1, 2),
+	'force' => array(1, 2),
 	),
 ), $data );

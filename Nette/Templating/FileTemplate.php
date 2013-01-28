@@ -34,9 +34,9 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function __construct($file = NULL)
 	{
-		if ($file !== NULL) {
-			$this->setFile($file);
-		}
+	if ($file !== NULL) {
+		$this->setFile($file);
+	}
 	}
 
 
@@ -48,11 +48,11 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function setFile($file)
 	{
-		$this->file = realpath($file);
-		if (!$this->file) {
-			throw new Nette\FileNotFoundException("Missing template file '$file'.");
-		}
-		return $this;
+	$this->file = realpath($file);
+	if (!$this->file) {
+		throw new Nette\FileNotFoundException("Missing template file '$file'.");
+	}
+	return $this;
 	}
 
 
@@ -63,7 +63,7 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function getFile()
 	{
-		return $this->file;
+	return $this->file;
 	}
 
 
@@ -74,7 +74,7 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function getSource()
 	{
-		return file_get_contents($this->file);
+	return file_get_contents($this->file);
 	}
 
 
@@ -89,37 +89,37 @@ class FileTemplate extends Template implements IFileTemplate
 	 */
 	public function render()
 	{
-		if ($this->file == NULL) { // intentionally ==
-			throw new Nette\InvalidStateException("Template file name was not specified.");
+	if ($this->file == NULL) { // intentionally ==
+		throw new Nette\InvalidStateException("Template file name was not specified.");
+	}
+
+	$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
+	if ($storage instanceof Caching\Storages\PhpFileStorage) {
+		$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
+	}
+	$cached = $compiled = $cache->load($this->file);
+
+	if ($compiled === NULL) {
+		try {
+		$compiled = "<?php\n\n// source file: $this->file\n\n?>" . $this->compile();
+
+		} catch (FilterException $e) {
+		$e->setSourceFile($this->file);
+		throw $e;
 		}
 
-		$cache = new Caching\Cache($storage = $this->getCacheStorage(), 'Nette.FileTemplate');
-		if ($storage instanceof Caching\Storages\PhpFileStorage) {
-			$storage->hint = str_replace(dirname(dirname($this->file)), '', $this->file);
-		}
-		$cached = $compiled = $cache->load($this->file);
+		$cache->save($this->file, $compiled, array(
+		Caching\Cache::FILES => $this->file,
+		Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
+		));
+		$cached = $cache->load($this->file);
+	}
 
-		if ($compiled === NULL) {
-			try {
-				$compiled = "<?php\n\n// source file: $this->file\n\n?>" . $this->compile();
-
-			} catch (FilterException $e) {
-				$e->setSourceFile($this->file);
-				throw $e;
-			}
-
-			$cache->save($this->file, $compiled, array(
-				Caching\Cache::FILES => $this->file,
-				Caching\Cache::CONSTS => 'Nette\Framework::REVISION',
-			));
-			$cached = $cache->load($this->file);
-		}
-
-		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
-		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
-		}
+	if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
+		Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
+	} else {
+		Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
+	}
 	}
 
 }

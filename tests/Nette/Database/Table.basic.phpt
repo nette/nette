@@ -37,31 +37,31 @@ Assert::exception(function() use ($book) {
 $bookTags = array();
 foreach ($connection->table('book') as $book) {  // SELECT * FROM `book`
 	$bookTags[$book->title] = array(
-		'author' => $book->author->name,  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 12))
-		'tags' => array(),
+	'author' => $book->author->name,  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 12))
+	'tags' => array(),
 	);
 
 	foreach ($book->related('book_tag') as $book_tag) {  // SELECT * FROM `book_tag` WHERE (`book_tag`.`book_id` IN (1, 2, 3, 4))
-		$bookTags[$book->title]['tags'][] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
+	$bookTags[$book->title]['tags'][] = $book_tag->tag->name;  // SELECT * FROM `tag` WHERE (`tag`.`id` IN (21, 22, 23))
 	}
 }
 
 Assert::same(array(
 	'1001 tipu a triku pro PHP' => array(
-		'author' => 'Jakub Vrana',
-		'tags' => array('PHP', 'MySQL'),
+	'author' => 'Jakub Vrana',
+	'tags' => array('PHP', 'MySQL'),
 	),
 	'JUSH' => array(
-		'author' => 'Jakub Vrana',
-		'tags' => array('JavaScript'),
+	'author' => 'Jakub Vrana',
+	'tags' => array('JavaScript'),
 	),
 	'Nette' => array(
-		'author' => 'David Grudl',
-		'tags' => array('PHP'),
+	'author' => 'David Grudl',
+	'tags' => array('PHP'),
 	),
 	'Dibi' => array(
-		'author' => 'David Grudl',
-		'tags' => array('PHP', 'MySQL'),
+	'author' => 'David Grudl',
+	'tags' => array('PHP', 'MySQL'),
 	),
 ), $bookTags);
 
@@ -75,10 +75,10 @@ $sql = $connection->table('book')
 
 switch ($driverName) {
 	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
-		break;
+	Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
+	break;
 
 	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
-		break;
+	Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
+	break;
 }

@@ -34,7 +34,7 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function read($key)
 	{
-		return isset($this->data[$key]) ? $this->data[$key] : NULL;
+	return isset($this->data[$key]) ? $this->data[$key] : NULL;
 	}
 
 
@@ -59,7 +59,7 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		$this->data[$key] = $data;
+	$this->data[$key] = $data;
 	}
 
 
@@ -71,7 +71,7 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function remove($key)
 	{
-		unset($this->data[$key]);
+	unset($this->data[$key]);
 	}
 
 
@@ -83,9 +83,9 @@ class MemoryStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function clean(array $conds)
 	{
-		if (!empty($conds[Nette\Caching\Cache::ALL])) {
-			$this->data = array();
-		}
+	if (!empty($conds[Nette\Caching\Cache::ALL])) {
+		$this->data = array();
+	}
 	}
 
 }

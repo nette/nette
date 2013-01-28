@@ -47,7 +47,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 
 	/** @var array  empty elements */
 	public static $emptyElements = array('img'=>1,'hr'=>1,'br'=>1,'input'=>1,'meta'=>1,'area'=>1,'embed'=>1,'keygen'=>1,
-		'source'=>1,'base'=>1,'col'=>1,'link'=>1,'param'=>1,'basefont'=>1,'frame'=>1,'isindex'=>1,'wbr'=>1,'command'=>1);
+	'source'=>1,'base'=>1,'col'=>1,'link'=>1,'param'=>1,'basefont'=>1,'frame'=>1,'isindex'=>1,'wbr'=>1,'command'=>1);
 
 
 
@@ -59,24 +59,24 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public static function el($name = NULL, $attrs = NULL)
 	{
-		$el = new static;
-		$parts = explode(' ', $name, 2);
-		$el->setName($parts[0]);
+	$el = new static;
+	$parts = explode(' ', $name, 2);
+	$el->setName($parts[0]);
 
-		if (is_array($attrs)) {
-			$el->attrs = $attrs;
+	if (is_array($attrs)) {
+		$el->attrs = $attrs;
 
-		} elseif ($attrs !== NULL) {
-			$el->setText($attrs);
+	} elseif ($attrs !== NULL) {
+		$el->setText($attrs);
+	}
+
+	if (isset($parts[1])) {
+		foreach (Strings::matchAll($parts[1] . ' ', '#([a-z0-9:-]+)(?:=(["\'])?(.*?)(?(2)\\2|\s))?#i') as $m) {
+		$el->attrs[$m[1]] = isset($m[3]) ? $m[3] : TRUE;
 		}
+	}
 
-		if (isset($parts[1])) {
-			foreach (Strings::matchAll($parts[1] . ' ', '#([a-z0-9:-]+)(?:=(["\'])?(.*?)(?(2)\\2|\s))?#i') as $m) {
-				$el->attrs[$m[1]] = isset($m[3]) ? $m[3] : TRUE;
-			}
-		}
-
-		return $el;
+	return $el;
 	}
 
 
@@ -90,13 +90,13 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function setName($name, $isEmpty = NULL)
 	{
-		if ($name !== NULL && !is_string($name)) {
-			throw new Nette\InvalidArgumentException("Name must be string or NULL, " . gettype($name) ." given.");
-		}
+	if ($name !== NULL && !is_string($name)) {
+		throw new Nette\InvalidArgumentException("Name must be string or NULL, " . gettype($name) ." given.");
+	}
 
-		$this->name = $name;
-		$this->isEmpty = $isEmpty === NULL ? isset(static::$emptyElements[$name]) : (bool) $isEmpty;
-		return $this;
+	$this->name = $name;
+	$this->isEmpty = $isEmpty === NULL ? isset(static::$emptyElements[$name]) : (bool) $isEmpty;
+	return $this;
 	}
 
 
@@ -107,7 +107,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function getName()
 	{
-		return $this->name;
+	return $this->name;
 	}
 
 
@@ -118,7 +118,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function isEmpty()
 	{
-		return $this->isEmpty;
+	return $this->isEmpty;
 	}
 
 
@@ -130,8 +130,8 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public function addAttributes(array $attrs)
 	{
-		$this->attrs = $attrs + $this->attrs;
-		return $this;
+	$this->attrs = $attrs + $this->attrs;
+	return $this;
 	}
 
 
@@ -144,7 +144,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function __set($name, $value)
 	{
-		$this->attrs[$name] = $value;
+	$this->attrs[$name] = $value;
 	}
 
 
@@ -156,7 +156,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function &__get($name)
 	{
-		return $this->attrs[$name];
+	return $this->attrs[$name];
 	}
 
 
@@ -168,7 +168,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function __isset($name)
 	{
-		return isset($this->attrs[$name]);
+	return isset($this->attrs[$name]);
 	}
 
 
@@ -180,7 +180,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function __unset($name)
 	{
-		unset($this->attrs[$name]);
+	unset($this->attrs[$name]);
 	}
 
 
@@ -193,34 +193,34 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function __call($m, $args)
 	{
-		$p = substr($m, 0, 3);
-		if ($p === 'get' || $p === 'set' || $p === 'add') {
-			$m = substr($m, 3);
-			$m[0] = $m[0] | "\x20";
-			if ($p === 'get') {
-				return isset($this->attrs[$m]) ? $this->attrs[$m] : NULL;
+	$p = substr($m, 0, 3);
+	if ($p === 'get' || $p === 'set' || $p === 'add') {
+		$m = substr($m, 3);
+		$m[0] = $m[0] | "\x20";
+		if ($p === 'get') {
+		return isset($this->attrs[$m]) ? $this->attrs[$m] : NULL;
 
-			} elseif ($p === 'add') {
-				$args[] = TRUE;
-			}
+		} elseif ($p === 'add') {
+		$args[] = TRUE;
 		}
+	}
 
-		if (count($args) === 0) { // invalid
+	if (count($args) === 0) { // invalid
 
-		} elseif (count($args) === 1) { // set
-			$this->attrs[$m] = $args[0];
+	} elseif (count($args) === 1) { // set
+		$this->attrs[$m] = $args[0];
 
-		} elseif ((string) $args[0] === '') {
-			$tmp = & $this->attrs[$m]; // appending empty value? -> ignore, but ensure it exists
+	} elseif ((string) $args[0] === '') {
+		$tmp = & $this->attrs[$m]; // appending empty value? -> ignore, but ensure it exists
 
-		} elseif (!isset($this->attrs[$m]) || is_array($this->attrs[$m])) { // needs array
-			$this->attrs[$m][$args[0]] = $args[1];
+	} elseif (!isset($this->attrs[$m]) || is_array($this->attrs[$m])) { // needs array
+		$this->attrs[$m][$args[0]] = $args[1];
 
-		} else {
-			$this->attrs[$m] = array($this->attrs[$m], $args[0] => $args[1]);
-		}
+	} else {
+		$this->attrs[$m] = array($this->attrs[$m], $args[0] => $args[1]);
+	}
 
-		return $this;
+	return $this;
 	}
 
 
@@ -233,14 +233,14 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function href($path, $query = NULL)
 	{
-		if ($query) {
-			$query = http_build_query($query, NULL, '&');
-			if ($query !== '') {
-				$path .= '?' . $query;
-			}
+	if ($query) {
+		$query = http_build_query($query, NULL, '&');
+		if ($query !== '') {
+		$path .= '?' . $query;
 		}
-		$this->attrs['href'] = $path;
-		return $this;
+	}
+	$this->attrs['href'] = $path;
+	return $this;
 	}
 
 
@@ -253,19 +253,19 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function setHtml($html)
 	{
-		if ($html === NULL) {
-			$html = '';
+	if ($html === NULL) {
+		$html = '';
 
-		} elseif (is_array($html)) {
-			throw new Nette\InvalidArgumentException("Textual content must be a scalar, " . gettype($html) ." given.");
+	} elseif (is_array($html)) {
+		throw new Nette\InvalidArgumentException("Textual content must be a scalar, " . gettype($html) ." given.");
 
-		} else {
-			$html = (string) $html;
-		}
+	} else {
+		$html = (string) $html;
+	}
 
-		$this->removeChildren();
-		$this->children[] = $html;
-		return $this;
+	$this->removeChildren();
+	$this->children[] = $html;
+	return $this;
 	}
 
 
@@ -276,15 +276,15 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function getHtml()
 	{
-		$s = '';
-		foreach ($this->children as $child) {
-			if (is_object($child)) {
-				$s .= $child->render();
-			} else {
-				$s .= $child;
-			}
+	$s = '';
+	foreach ($this->children as $child) {
+		if (is_object($child)) {
+		$s .= $child->render();
+		} else {
+		$s .= $child;
 		}
-		return $s;
+	}
+	return $s;
 	}
 
 
@@ -297,10 +297,10 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function setText($text)
 	{
-		if (!is_array($text)) {
-			$text = htmlspecialchars((string) $text, ENT_NOQUOTES);
-		}
-		return $this->setHtml($text);
+	if (!is_array($text)) {
+		$text = htmlspecialchars((string) $text, ENT_NOQUOTES);
+	}
+	return $this->setHtml($text);
 	}
 
 
@@ -311,7 +311,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function getText()
 	{
-		return html_entity_decode(strip_tags($this->getHtml()), ENT_QUOTES, 'UTF-8');
+	return html_entity_decode(strip_tags($this->getHtml()), ENT_QUOTES, 'UTF-8');
 	}
 
 
@@ -323,7 +323,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function add($child)
 	{
-		return $this->insert(NULL, $child);
+	return $this->insert(NULL, $child);
 	}
 
 
@@ -336,8 +336,8 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function create($name, $attrs = NULL)
 	{
-		$this->insert(NULL, $child = static::el($name, $attrs));
-		return $child;
+	$this->insert(NULL, $child = static::el($name, $attrs));
+	return $child;
 	}
 
 
@@ -352,19 +352,19 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public function insert($index, $child, $replace = FALSE)
 	{
-		if ($child instanceof Html || is_scalar($child)) {
-			if ($index === NULL) { // append
-				$this->children[] = $child;
+	if ($child instanceof Html || is_scalar($child)) {
+		if ($index === NULL) { // append
+		$this->children[] = $child;
 
-			} else { // insert or replace
-				array_splice($this->children, (int) $index, $replace ? 1 : 0, array($child));
-			}
-
-		} else {
-			throw new Nette\InvalidArgumentException("Child node must be scalar or Html object, " . (is_object($child) ? get_class($child) : gettype($child)) ." given.");
+		} else { // insert or replace
+		array_splice($this->children, (int) $index, $replace ? 1 : 0, array($child));
 		}
 
-		return $this;
+	} else {
+		throw new Nette\InvalidArgumentException("Child node must be scalar or Html object, " . (is_object($child) ? get_class($child) : gettype($child)) ." given.");
+	}
+
+	return $this;
 	}
 
 
@@ -377,7 +377,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function offsetSet($index, $child)
 	{
-		$this->insert($index, $child, TRUE);
+	$this->insert($index, $child, TRUE);
 	}
 
 
@@ -389,7 +389,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function offsetGet($index)
 	{
-		return $this->children[$index];
+	return $this->children[$index];
 	}
 
 
@@ -401,7 +401,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function offsetExists($index)
 	{
-		return isset($this->children[$index]);
+	return isset($this->children[$index]);
 	}
 
 
@@ -413,9 +413,9 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public function offsetUnset($index)
 	{
-		if (isset($this->children[$index])) {
-			array_splice($this->children, (int) $index, 1);
-		}
+	if (isset($this->children[$index])) {
+		array_splice($this->children, (int) $index, 1);
+	}
 	}
 
 
@@ -426,7 +426,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function count()
 	{
-		return count($this->children);
+	return count($this->children);
 	}
 
 
@@ -437,7 +437,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public function removeChildren()
 	{
-		$this->children = array();
+	$this->children = array();
 	}
 
 
@@ -450,13 +450,13 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function getIterator($deep = FALSE)
 	{
-		if ($deep) {
-			$deep = $deep > 0 ? \RecursiveIteratorIterator::SELF_FIRST : \RecursiveIteratorIterator::CHILD_FIRST;
-			return new \RecursiveIteratorIterator(new Nette\Iterators\Recursor(new \ArrayIterator($this->children)), $deep);
+	if ($deep) {
+		$deep = $deep > 0 ? \RecursiveIteratorIterator::SELF_FIRST : \RecursiveIteratorIterator::CHILD_FIRST;
+		return new \RecursiveIteratorIterator(new Nette\Iterators\Recursor(new \ArrayIterator($this->children)), $deep);
 
-		} else {
-			return new Nette\Iterators\Recursor(new \ArrayIterator($this->children));
-		}
+	} else {
+		return new Nette\Iterators\Recursor(new \ArrayIterator($this->children));
+	}
 	}
 
 
@@ -467,7 +467,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function getChildren()
 	{
-		return $this->children;
+	return $this->children;
 	}
 
 
@@ -479,36 +479,36 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function render($indent = NULL)
 	{
-		$s = $this->startTag();
+	$s = $this->startTag();
 
-		if (!$this->isEmpty) {
-			// add content
-			if ($indent !== NULL) {
-				$indent++;
-			}
-			foreach ($this->children as $child) {
-				if (is_object($child)) {
-					$s .= $child->render($indent);
-				} else {
-					$s .= $child;
-				}
-			}
-
-			// add end tag
-			$s .= $this->endTag();
-		}
-
+	if (!$this->isEmpty) {
+		// add content
 		if ($indent !== NULL) {
-			return "\n" . str_repeat("\t", $indent - 1) . $s . "\n" . str_repeat("\t", max(0, $indent - 2));
+		$indent++;
 		}
-		return $s;
+		foreach ($this->children as $child) {
+		if (is_object($child)) {
+			$s .= $child->render($indent);
+		} else {
+			$s .= $child;
+		}
+		}
+
+		// add end tag
+		$s .= $this->endTag();
+	}
+
+	if ($indent !== NULL) {
+		return "\n" . str_repeat("\t", $indent - 1) . $s . "\n" . str_repeat("\t", max(0, $indent - 2));
+	}
+	return $s;
 	}
 
 
 
 	final public function __toString()
 	{
-		return $this->render();
+	return $this->render();
 	}
 
 
@@ -519,12 +519,12 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function startTag()
 	{
-		if ($this->name) {
-			return '<' . $this->name . $this->attributes() . (static::$xhtml && $this->isEmpty ? ' />' : '>');
+	if ($this->name) {
+		return '<' . $this->name . $this->attributes() . (static::$xhtml && $this->isEmpty ? ' />' : '>');
 
-		} else {
-			return '';
-		}
+	} else {
+		return '';
+	}
 	}
 
 
@@ -535,7 +535,7 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function endTag()
 	{
-		return $this->name && !$this->isEmpty ? '</' . $this->name . '>' : '';
+	return $this->name && !$this->isEmpty ? '</' . $this->name . '>' : '';
 	}
 
 
@@ -546,55 +546,55 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	final public function attributes()
 	{
-		if (!is_array($this->attrs)) {
-			return '';
+	if (!is_array($this->attrs)) {
+		return '';
+	}
+
+	$s = '';
+	foreach ($this->attrs as $key => $value) {
+		if ($value === NULL || $value === FALSE) {
+		continue;
+
+		} elseif ($value === TRUE) {
+		if (static::$xhtml) {
+			$s .= ' ' . $key . '="' . $key . '"';
+		} else {
+			$s .= ' ' . $key;
 		}
+		continue;
 
-		$s = '';
-		foreach ($this->attrs as $key => $value) {
-			if ($value === NULL || $value === FALSE) {
-				continue;
-
-			} elseif ($value === TRUE) {
-				if (static::$xhtml) {
-					$s .= ' ' . $key . '="' . $key . '"';
-				} else {
-					$s .= ' ' . $key;
-				}
-				continue;
-
-			} elseif (is_array($value)) {
-				if ($key === 'data') {
-					foreach ($value as $k => $v) {
-						if ($v !== NULL && $v !== FALSE) {
-							$s .= ' data-' . $k . '="' . htmlspecialchars((string) $v) . '"';
-						}
-					}
-					continue;
-				}
-
-				$tmp = NULL;
-				foreach ($value as $k => $v) {
-					if ($v != NULL) { // intentionally ==, skip NULLs & empty string
-						//  composite 'style' vs. 'others'
-						$tmp[] = $v === TRUE ? $k : (is_string($k) ? $k . ':' . $v : $v);
-					}
-				}
-				if ($tmp === NULL) {
-					continue;
-				}
-
-				$value = implode($key === 'style' || !strncmp($key, 'on', 2) ? ';' : ' ', $tmp);
-
-			} else {
-				$value = (string) $value;
+		} elseif (is_array($value)) {
+		if ($key === 'data') {
+			foreach ($value as $k => $v) {
+			if ($v !== NULL && $v !== FALSE) {
+				$s .= ' data-' . $k . '="' . htmlspecialchars((string) $v) . '"';
 			}
-
-			$s .= ' ' . $key . '="' . htmlspecialchars($value) . '"';
+			}
+			continue;
 		}
 
-		$s = str_replace('@', '&#64;', $s);
-		return $s;
+		$tmp = NULL;
+		foreach ($value as $k => $v) {
+			if ($v != NULL) { // intentionally ==, skip NULLs & empty string
+			//  composite 'style' vs. 'others'
+			$tmp[] = $v === TRUE ? $k : (is_string($k) ? $k . ':' . $v : $v);
+			}
+		}
+		if ($tmp === NULL) {
+			continue;
+		}
+
+		$value = implode($key === 'style' || !strncmp($key, 'on', 2) ? ';' : ' ', $tmp);
+
+		} else {
+		$value = (string) $value;
+		}
+
+		$s .= ' ' . $key . '="' . htmlspecialchars($value) . '"';
+	}
+
+	$s = str_replace('@', '&#64;', $s);
+	return $s;
 	}
 
 
@@ -604,11 +604,11 @@ class Html extends Nette\Object implements \ArrayAccess, \Countable, \IteratorAg
 	 */
 	public function __clone()
 	{
-		foreach ($this->children as $key => $value) {
-			if (is_object($value)) {
-				$this->children[$key] = clone $value;
-			}
+	foreach ($this->children as $key => $value) {
+		if (is_object($value)) {
+		$this->children[$key] = clone $value;
 		}
+	}
 	}
 
 }

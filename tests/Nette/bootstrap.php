@@ -47,14 +47,14 @@ class Notes
 
 	public static function add($message)
 	{
-		self::$notes[] = $message;
+	self::$notes[] = $message;
 	}
 
 	public static function fetch()
 	{
-		$res = self::$notes;
-		self::$notes = array();
-		return $res;
+	$res = self::$notes;
+	self::$notes = array();
+	return $res;
 	}
 
 }

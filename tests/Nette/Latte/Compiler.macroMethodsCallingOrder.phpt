@@ -24,22 +24,22 @@ class MockMacro implements IMacro
 
 	public function initialize()
 	{
-		$this->calls[] = __FUNCTION__;
+	$this->calls[] = __FUNCTION__;
 	}
 
 	public function finalize()
 	{
-		$this->calls[] = __FUNCTION__;
+	$this->calls[] = __FUNCTION__;
 	}
 
 	public function nodeOpened(MacroNode $node)
 	{
-		$this->calls[] = array(__FUNCTION__, isset($node->htmlNode) ? $node->htmlNode->name : NULL, $node->closing, $node->prefix);
+	$this->calls[] = array(__FUNCTION__, isset($node->htmlNode) ? $node->htmlNode->name : NULL, $node->closing, $node->prefix);
 	}
 
 	public function nodeClosed(MacroNode $node)
 	{
-		$this->calls[] = array(__FUNCTION__, isset($node->htmlNode) ? $node->htmlNode->name : NULL, $node->closing, $node->prefix);
+	$this->calls[] = array(__FUNCTION__, isset($node->htmlNode) ? $node->htmlNode->name : NULL, $node->closing, $node->prefix);
 	}
 }
 

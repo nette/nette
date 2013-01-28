@@ -24,7 +24,7 @@ class TestClass extends Nette\Object
 
 	function __construct($func)
 	{
-		$this->public = $this->onPublic = $this->protected = $this->private = $func;
+	$this->public = $this->onPublic = $this->protected = $this->private = $func;
 	}
 
 }

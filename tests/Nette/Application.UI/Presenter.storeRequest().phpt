@@ -31,7 +31,7 @@ class MockSession extends Http\Session
 
 	public function getSection($section, $class = 'Nette\Http\SessionSection')
 	{
-		return $this->testSection;
+	return $this->testSection;
 	}
 }
 
@@ -45,30 +45,30 @@ class MockSessionSection extends Nette\Object implements \ArrayAccess
 
 	public function __isset($name)
 	{
-		$this->testedKeyExistence = $name;
-		return false;
+	$this->testedKeyExistence = $name;
+	return false;
 	}
 
 	public function __set($name, $value)
 	{
-		$this->storedKey = $name;
-		$this->storedValue = $value;
+	$this->storedKey = $name;
+	$this->storedValue = $value;
 	}
 
 	public function setExpiration($expiraton, $variables = NULL)
 	{
-		$this->testExpiration = $expiraton;
-		$this->testExpirationVariables = $variables;
+	$this->testExpiration = $expiraton;
+	$this->testExpirationVariables = $variables;
 	}
 
 	public function offsetExists($name)
 	{
-		return $this->__isset($name);
+	return $this->__isset($name);
 	}
 
 	public function offsetSet($name, $value)
 	{
-		$this->__set($name, $value);
+	$this->__set($name, $value);
 	}
 
 	public function offsetGet($name) {}
@@ -81,7 +81,7 @@ class MockUser extends Security\User
 
 	public function getId()
 	{
-		return 'test_id';
+	return 'test_id';
 	}
 }
 

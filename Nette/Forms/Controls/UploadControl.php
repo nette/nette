@@ -29,8 +29,8 @@ class UploadControl extends BaseControl
 	 */
 	public function __construct($label = NULL)
 	{
-		parent::__construct($label);
-		$this->control->type = 'file';
+	parent::__construct($label);
+	$this->control->type = 'file';
 	}
 
 
@@ -43,13 +43,13 @@ class UploadControl extends BaseControl
 	 */
 	protected function attached($form)
 	{
-		if ($form instanceof Nette\Forms\Form) {
-			if ($form->getMethod() !== Nette\Forms\Form::POST) {
-				throw new Nette\InvalidStateException('File upload requires method POST.');
-			}
-			$form->getElementPrototype()->enctype = 'multipart/form-data';
+	if ($form instanceof Nette\Forms\Form) {
+		if ($form->getMethod() !== Nette\Forms\Form::POST) {
+		throw new Nette\InvalidStateException('File upload requires method POST.');
 		}
-		parent::attached($form);
+		$form->getElementPrototype()->enctype = 'multipart/form-data';
+	}
+	parent::attached($form);
 	}
 
 
@@ -61,16 +61,16 @@ class UploadControl extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (is_array($value)) {
-			$this->value = new Http\FileUpload($value);
+	if (is_array($value)) {
+		$this->value = new Http\FileUpload($value);
 
-		} elseif ($value instanceof Http\FileUpload) {
-			$this->value = $value;
+	} elseif ($value instanceof Http\FileUpload) {
+		$this->value = $value;
 
-		} else {
-			$this->value = new Http\FileUpload(NULL);
-		}
-		return $this;
+	} else {
+		$this->value = new Http\FileUpload(NULL);
+	}
+	return $this;
 	}
 
 
@@ -81,7 +81,7 @@ class UploadControl extends BaseControl
 	 */
 	public function isFilled()
 	{
-		return $this->value instanceof Http\FileUpload && $this->value->isOK();
+	return $this->value instanceof Http\FileUpload && $this->value->isOK();
 	}
 
 
@@ -94,8 +94,8 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateFileSize(UploadControl $control, $limit)
 	{
-		$file = $control->getValue();
-		return $file instanceof Http\FileUpload && $file->getSize() <= $limit;
+	$file = $control->getValue();
+	return $file instanceof Http\FileUpload && $file->getSize() <= $limit;
 	}
 
 
@@ -108,18 +108,18 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateMimeType(UploadControl $control, $mimeType)
 	{
-		$file = $control->getValue();
-		if ($file instanceof Http\FileUpload) {
-			$type = strtolower($file->getContentType());
-			$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
-			if (in_array($type, $mimeTypes, TRUE)) {
-				return TRUE;
-			}
-			if (in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
-				return TRUE;
-			}
+	$file = $control->getValue();
+	if ($file instanceof Http\FileUpload) {
+		$type = strtolower($file->getContentType());
+		$mimeTypes = is_array($mimeType) ? $mimeType : explode(',', $mimeType);
+		if (in_array($type, $mimeTypes, TRUE)) {
+		return TRUE;
 		}
-		return FALSE;
+		if (in_array(preg_replace('#/.*#', '/*', $type), $mimeTypes, TRUE)) {
+		return TRUE;
+		}
+	}
+	return FALSE;
 	}
 
 
@@ -130,8 +130,8 @@ class UploadControl extends BaseControl
 	 */
 	public static function validateImage(UploadControl $control)
 	{
-		$file = $control->getValue();
-		return $file instanceof Http\FileUpload && $file->isImage();
+	$file = $control->getValue();
+	return $file instanceof Http\FileUpload && $file->isImage();
 	}
 
 }

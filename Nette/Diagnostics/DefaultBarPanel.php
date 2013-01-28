@@ -30,7 +30,7 @@ final class DefaultBarPanel extends Nette\Object implements IBarPanel
 
 	public function __construct($id)
 	{
-		$this->id = $id;
+	$this->id = $id;
 	}
 
 
@@ -41,18 +41,18 @@ final class DefaultBarPanel extends Nette\Object implements IBarPanel
 	 */
 	public function getTab()
 	{
-		ob_start();
-		$data = $this->data;
-		if ($this->id === 'time') {
-			require __DIR__ . '/templates/bar.time.tab.phtml';
-		} elseif ($this->id === 'memory') {
-			require __DIR__ . '/templates/bar.memory.tab.phtml';
-		} elseif ($this->id === 'dumps' && $this->data) {
-			require __DIR__ . '/templates/bar.dumps.tab.phtml';
-		} elseif ($this->id === 'errors' && $this->data) {
-			require __DIR__ . '/templates/bar.errors.tab.phtml';
-		}
-		return ob_get_clean();
+	ob_start();
+	$data = $this->data;
+	if ($this->id === 'time') {
+		require __DIR__ . '/templates/bar.time.tab.phtml';
+	} elseif ($this->id === 'memory') {
+		require __DIR__ . '/templates/bar.memory.tab.phtml';
+	} elseif ($this->id === 'dumps' && $this->data) {
+		require __DIR__ . '/templates/bar.dumps.tab.phtml';
+	} elseif ($this->id === 'errors' && $this->data) {
+		require __DIR__ . '/templates/bar.errors.tab.phtml';
+	}
+	return ob_get_clean();
 	}
 
 
@@ -63,14 +63,14 @@ final class DefaultBarPanel extends Nette\Object implements IBarPanel
 	 */
 	public function getPanel()
 	{
-		ob_start();
-		$data = $this->data;
-		if ($this->id === 'dumps') {
-			require __DIR__ . '/templates/bar.dumps.panel.phtml';
-		} elseif ($this->id === 'errors') {
-			require __DIR__ . '/templates/bar.errors.panel.phtml';
-		}
-		return ob_get_clean();
+	ob_start();
+	$data = $this->data;
+	if ($this->id === 'dumps') {
+		require __DIR__ . '/templates/bar.dumps.panel.phtml';
+	} elseif ($this->id === 'errors') {
+		require __DIR__ . '/templates/bar.errors.panel.phtml';
+	}
+	return ob_get_clean();
 	}
 
 }

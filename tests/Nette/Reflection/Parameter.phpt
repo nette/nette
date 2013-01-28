@@ -35,7 +35,7 @@ class Foo
 {
 	function myMethod($test, $test2 = null)
 	{
-		echo $test;
+	echo $test;
 	}
 }
 

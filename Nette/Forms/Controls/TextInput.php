@@ -32,12 +32,12 @@ class TextInput extends TextBase
 	 */
 	public function __construct($label = NULL, $cols = NULL, $maxLength = NULL)
 	{
-		parent::__construct($label);
-		$this->control->type = 'text';
-		$this->control->size = $cols;
-		$this->control->maxlength = $maxLength;
-		$this->addFilter($this->sanitize);
-		$this->value = '';
+	parent::__construct($label);
+	$this->control->type = 'text';
+	$this->control->size = $cols;
+	$this->control->maxlength = $maxLength;
+	$this->addFilter($this->sanitize);
+	$this->value = '';
 	}
 
 
@@ -48,10 +48,10 @@ class TextInput extends TextBase
 	 */
 	public function sanitize($value)
 	{
-		if ($this->control->maxlength && Nette\Utils\Strings::length($value) > $this->control->maxlength) {
-			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
-		}
-		return Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
+	if ($this->control->maxlength && Nette\Utils\Strings::length($value) > $this->control->maxlength) {
+		$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
+	}
+	return Nette\Utils\Strings::trim(strtr($value, "\r\n", '  '));
 	}
 
 
@@ -63,8 +63,8 @@ class TextInput extends TextBase
 	 */
 	public function setType($type)
 	{
-		$this->control->type = $type;
-		return $this;
+	$this->control->type = $type;
+	return $this;
 	}
 
 
@@ -72,8 +72,8 @@ class TextInput extends TextBase
 	/** @deprecated */
 	public function setPasswordMode($mode = TRUE)
 	{
-		$this->control->type = $mode ? 'password' : 'text';
-		return $this;
+	$this->control->type = $mode ? 'password' : 'text';
+	return $this;
 	}
 
 
@@ -84,21 +84,21 @@ class TextInput extends TextBase
 	 */
 	public function getControl()
 	{
-		$control = parent::getControl();
-		foreach ($this->getRules() as $rule) {
-			if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
+	$control = parent::getControl();
+	foreach ($this->getRules() as $rule) {
+		if ($rule->isNegative || $rule->type !== Nette\Forms\Rule::VALIDATOR) {
 
-			} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
-				list($control->min, $control->max) = $rule->arg;
+		} elseif ($rule->operation === Nette\Forms\Form::RANGE && $control->type !== 'text') {
+		list($control->min, $control->max) = $rule->arg;
 
-			} elseif ($rule->operation === Nette\Forms\Form::PATTERN) {
-				$control->pattern = $rule->arg;
-			}
+		} elseif ($rule->operation === Nette\Forms\Form::PATTERN) {
+		$control->pattern = $rule->arg;
 		}
-		if ($control->type !== 'password') {
-			$control->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
-		}
-		return $control;
+	}
+	if ($control->type !== 'password') {
+		$control->value = $this->getValue() === '' ? $this->translate($this->emptyValue) : $this->value;
+	}
+	return $control;
 	}
 
 }

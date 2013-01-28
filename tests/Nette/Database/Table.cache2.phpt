@@ -26,17 +26,17 @@ $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 for ($i = 1; $i <= 2; ++$i) {
 
 	foreach ($connection->table('author') as $author) {
-		$author->name;
-		foreach ($author->related('book', 'author_id') as $book) {
-			$book->title;
-		}
+	$author->name;
+	foreach ($author->related('book', 'author_id') as $book) {
+		$book->title;
+	}
 	}
 
 	foreach ($connection->table('author')->where('id', 13) as $author) {
-		$author->name;
-		foreach ($author->related('book', 'author_id') as $book) {
-			$book->title;
-		}
+	$author->name;
+	foreach ($author->related('book', 'author_id') as $book) {
+		$book->title;
+	}
 	}
 
 }

@@ -50,8 +50,8 @@ class HtmlNode extends Nette\Object
 
 	public function __construct($name, self $parentNode = NULL)
 	{
-		$this->name = $name;
-		$this->parentNode = $parentNode;
+	$this->name = $name;
+	$this->parentNode = $parentNode;
 	}
 
 }

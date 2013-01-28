@@ -34,7 +34,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function getIterator()
 	{
-		return new \ArrayIterator($this->list);
+	return new \ArrayIterator($this->list);
 	}
 
 
@@ -45,7 +45,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function count()
 	{
-		return count($this->list);
+	return count($this->list);
 	}
 
 
@@ -59,15 +59,15 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function offsetSet($index, $value)
 	{
-		if ($index === NULL) {
-			$this->list[] = $value;
+	if ($index === NULL) {
+		$this->list[] = $value;
 
-		} elseif ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
+	} elseif ($index < 0 || $index >= count($this->list)) {
+		throw new OutOfRangeException("Offset invalid or out of range");
 
-		} else {
-			$this->list[(int) $index] = $value;
-		}
+	} else {
+		$this->list[(int) $index] = $value;
+	}
 	}
 
 
@@ -80,10 +80,10 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function offsetGet($index)
 	{
-		if ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
-		}
-		return $this->list[(int) $index];
+	if ($index < 0 || $index >= count($this->list)) {
+		throw new OutOfRangeException("Offset invalid or out of range");
+	}
+	return $this->list[(int) $index];
 	}
 
 
@@ -95,7 +95,7 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function offsetExists($index)
 	{
-		return $index >= 0 && $index < count($this->list);
+	return $index >= 0 && $index < count($this->list);
 	}
 
 
@@ -108,10 +108,10 @@ class ArrayList extends Object implements \ArrayAccess, \Countable, \IteratorAgg
 	 */
 	public function offsetUnset($index)
 	{
-		if ($index < 0 || $index >= count($this->list)) {
-			throw new OutOfRangeException("Offset invalid or out of range");
-		}
-		array_splice($this->list, (int) $index, 1);
+	if ($index < 0 || $index >= count($this->list)) {
+		throw new OutOfRangeException("Offset invalid or out of range");
+	}
+	array_splice($this->list, (int) $index, 1);
 	}
 
 }

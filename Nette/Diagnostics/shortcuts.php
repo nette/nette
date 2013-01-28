@@ -30,7 +30,7 @@ function debug()
 function dump($var)
 {
 	foreach (func_get_args() as $arg) {
-		Debugger::dump($arg);
+	Debugger::dump($arg);
 	}
 	return $var;
 }
@@ -43,10 +43,10 @@ function dump($var)
 function dlog($var = NULL)
 {
 	if (func_num_args() === 0) {
-		Debugger::log(new Exception, 'dlog');
+	Debugger::log(new Exception, 'dlog');
 	}
 	foreach (func_get_args() as $arg) {
-		Debugger::log($arg, 'dlog');
+	Debugger::log($arg, 'dlog');
 	}
 	return $var;
 }

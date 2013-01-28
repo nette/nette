@@ -67,12 +67,12 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function __construct($name, $method, array $params, array $post = array(), array $files = array(), array $flags = array())
 	{
-		$this->name = $name;
-		$this->method = $method;
-		$this->params = $params;
-		$this->post = $post;
-		$this->files = $files;
-		$this->flags = $flags;
+	$this->name = $name;
+	$this->method = $method;
+	$this->params = $params;
+	$this->post = $post;
+	$this->files = $files;
+	$this->flags = $flags;
 	}
 
 
@@ -84,9 +84,9 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setPresenterName($name)
 	{
-		$this->updating();
-		$this->name = $name;
-		return $this;
+	$this->updating();
+	$this->name = $name;
+	return $this;
 	}
 
 
@@ -97,7 +97,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function getPresenterName()
 	{
-		return $this->name;
+	return $this->name;
 	}
 
 
@@ -109,9 +109,9 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setParameters(array $params)
 	{
-		$this->updating();
-		$this->params = $params;
-		return $this;
+	$this->updating();
+	$this->params = $params;
+	return $this;
 	}
 
 
@@ -122,7 +122,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function getParameters()
 	{
-		return $this->params;
+	return $this->params;
 	}
 
 
@@ -134,9 +134,9 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setPost(array $params)
 	{
-		$this->updating();
-		$this->post = $params;
-		return $this;
+	$this->updating();
+	$this->post = $params;
+	return $this;
 	}
 
 
@@ -147,7 +147,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function getPost()
 	{
-		return $this->post;
+	return $this->post;
 	}
 
 
@@ -159,9 +159,9 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setFiles(array $files)
 	{
-		$this->updating();
-		$this->files = $files;
-		return $this;
+	$this->updating();
+	$this->files = $files;
+	return $this;
 	}
 
 
@@ -172,7 +172,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function getFiles()
 	{
-		return $this->files;
+	return $this->files;
 	}
 
 
@@ -184,8 +184,8 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setMethod($method)
 	{
-		$this->method = $method;
-		return $this;
+	$this->method = $method;
+	return $this;
 	}
 
 
@@ -196,7 +196,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function getMethod()
 	{
-		return $this->method;
+	return $this->method;
 	}
 
 
@@ -208,7 +208,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function isMethod($method)
 	{
-		return strcasecmp($this->method, $method) === 0;
+	return strcasecmp($this->method, $method) === 0;
 	}
 
 
@@ -219,7 +219,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function isPost()
 	{
-		return strcasecmp($this->method, 'post') === 0;
+	return strcasecmp($this->method, 'post') === 0;
 	}
 
 
@@ -232,9 +232,9 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function setFlag($flag, $value = TRUE)
 	{
-		$this->updating();
-		$this->flags[$flag] = (bool) $value;
-		return $this;
+	$this->updating();
+	$this->flags[$flag] = (bool) $value;
+	return $this;
 	}
 
 
@@ -246,7 +246,7 @@ final class Request extends Nette\FreezableObject
 	 */
 	public function hasFlag($flag)
 	{
-		return !empty($this->flags[$flag]);
+	return !empty($this->flags[$flag]);
 	}
 
 }

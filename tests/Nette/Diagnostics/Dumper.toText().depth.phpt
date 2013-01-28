@@ -19,17 +19,17 @@ $arr = array(
 	'long' => str_repeat('Nette Framework', 1000),
 
 	array(
-		array(
-			array('hello' => 'world'),
-		),
+	array(
+		array('hello' => 'world'),
+	),
 	),
 
 	'long2' => str_repeat('Nette Framework', 1000),
 
 	(object) array(
-		(object) array(
-			(object) array('hello' => 'world'),
-		),
+	(object) array(
+		(object) array('hello' => 'world'),
+	),
 	),
 );
 $arr[] = &$arr;

@@ -36,9 +36,9 @@ class Form extends Container
 {
 	/** validator */
 	const EQUAL = ':equal',
-		IS_IN = ':equal',
-		FILLED = ':filled',
-		VALID = ':valid';
+	IS_IN = ':equal',
+	FILLED = ':filled',
+	VALID = ':valid';
 
 	// CSRF protection
 	const PROTECTION = 'Nette\Forms\Controls\HiddenField::validateEqual';
@@ -48,28 +48,28 @@ class Form extends Container
 
 	// text
 	const MIN_LENGTH = ':minLength',
-		MAX_LENGTH = ':maxLength',
-		LENGTH = ':length',
-		EMAIL = ':email',
-		URL = ':url',
-		REGEXP = ':regexp',
-		PATTERN = ':pattern',
-		INTEGER = ':integer',
-		NUMERIC = ':integer',
-		FLOAT = ':float',
-		RANGE = ':range';
+	MAX_LENGTH = ':maxLength',
+	LENGTH = ':length',
+	EMAIL = ':email',
+	URL = ':url',
+	REGEXP = ':regexp',
+	PATTERN = ':pattern',
+	INTEGER = ':integer',
+	NUMERIC = ':integer',
+	FLOAT = ':float',
+	RANGE = ':range';
 
 	// multiselect
 	const COUNT = ':length';
 
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
-		MIME_TYPE = ':mimeType',
-		IMAGE = ':image';
+	MIME_TYPE = ':mimeType',
+	IMAGE = ':image';
 
 	/** method */
 	const GET = 'get',
-		POST = 'post';
+	POST = 'post';
 
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
@@ -115,18 +115,18 @@ class Form extends Container
 	 */
 	public function __construct($name = NULL)
 	{
-		$this->element = Nette\Utils\Html::el('form');
-		$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
-		$this->element->method = self::POST;
-		$this->element->id = $name === NULL ? NULL : 'frm-' . $name;
+	$this->element = Nette\Utils\Html::el('form');
+	$this->element->action = ''; // RFC 1808 -> empty uri means 'this'
+	$this->element->method = self::POST;
+	$this->element->id = $name === NULL ? NULL : 'frm-' . $name;
 
-		$this->monitor(__CLASS__);
-		if ($name !== NULL) {
-			$tracker = new Controls\HiddenField($name);
-			$tracker->unmonitor(__CLASS__);
-			$this[self::TRACKER_ID] = $tracker;
-		}
-		parent::__construct(NULL, $name);
+	$this->monitor(__CLASS__);
+	if ($name !== NULL) {
+		$tracker = new Controls\HiddenField($name);
+		$tracker->unmonitor(__CLASS__);
+		$this[self::TRACKER_ID] = $tracker;
+	}
+	parent::__construct(NULL, $name);
 	}
 
 
@@ -139,9 +139,9 @@ class Form extends Container
 	 */
 	protected function attached($obj)
 	{
-		if ($obj instanceof self) {
-			throw new Nette\InvalidStateException('Nested forms are forbidden.');
-		}
+	if ($obj instanceof self) {
+		throw new Nette\InvalidStateException('Nested forms are forbidden.');
+	}
 	}
 
 
@@ -152,7 +152,7 @@ class Form extends Container
 	 */
 	final public function getForm($need = TRUE)
 	{
-		return $this;
+	return $this;
 	}
 
 
@@ -164,8 +164,8 @@ class Form extends Container
 	 */
 	public function setAction($url)
 	{
-		$this->element->action = $url;
-		return $this;
+	$this->element->action = $url;
+	return $this;
 	}
 
 
@@ -176,7 +176,7 @@ class Form extends Container
 	 */
 	public function getAction()
 	{
-		return $this->element->action;
+	return $this->element->action;
 	}
 
 
@@ -188,11 +188,11 @@ class Form extends Container
 	 */
 	public function setMethod($method)
 	{
-		if ($this->httpData !== NULL) {
-			throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
-		}
-		$this->element->method = strtolower($method);
-		return $this;
+	if ($this->httpData !== NULL) {
+		throw new Nette\InvalidStateException(__METHOD__ . '() must be called until the form is empty.');
+	}
+	$this->element->method = strtolower($method);
+	return $this;
 	}
 
 
@@ -203,7 +203,7 @@ class Form extends Container
 	 */
 	public function getMethod()
 	{
-		return $this->element->method;
+	return $this->element->method;
 	}
 
 
@@ -216,16 +216,16 @@ class Form extends Container
 	 */
 	public function addProtection($message = NULL, $timeout = NULL)
 	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
-		$key = "key$timeout";
-		if (isset($session->$key)) {
-			$token = $session->$key;
-		} else {
-			$session->$key = $token = Nette\Utils\Strings::random();
-		}
-		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
+	$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
+	$key = "key$timeout";
+	if (isset($session->$key)) {
+		$token = $session->$key;
+	} else {
+		$session->$key = $token = Nette\Utils\Strings::random();
+	}
+	$session->setExpiration($timeout, $key);
+	$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
+	$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
 	}
 
 
@@ -238,19 +238,19 @@ class Form extends Container
 	 */
 	public function addGroup($caption = NULL, $setAsCurrent = TRUE)
 	{
-		$group = new ControlGroup;
-		$group->setOption('label', $caption);
-		$group->setOption('visual', TRUE);
+	$group = new ControlGroup;
+	$group->setOption('label', $caption);
+	$group->setOption('visual', TRUE);
 
-		if ($setAsCurrent) {
-			$this->setCurrentGroup($group);
-		}
+	if ($setAsCurrent) {
+		$this->setCurrentGroup($group);
+	}
 
-		if (isset($this->groups[$caption])) {
-			return $this->groups[] = $group;
-		} else {
-			return $this->groups[$caption] = $group;
-		}
+	if (isset($this->groups[$caption])) {
+		return $this->groups[] = $group;
+	} else {
+		return $this->groups[$caption] = $group;
+	}
 	}
 
 
@@ -262,22 +262,22 @@ class Form extends Container
 	 */
 	public function removeGroup($name)
 	{
-		if (is_string($name) && isset($this->groups[$name])) {
-			$group = $this->groups[$name];
+	if (is_string($name) && isset($this->groups[$name])) {
+		$group = $this->groups[$name];
 
-		} elseif ($name instanceof ControlGroup && in_array($name, $this->groups, TRUE)) {
-			$group = $name;
-			$name = array_search($group, $this->groups, TRUE);
+	} elseif ($name instanceof ControlGroup && in_array($name, $this->groups, TRUE)) {
+		$group = $name;
+		$name = array_search($group, $this->groups, TRUE);
 
-		} else {
-			throw new Nette\InvalidArgumentException("Group not found in form '$this->name'");
-		}
+	} else {
+		throw new Nette\InvalidArgumentException("Group not found in form '$this->name'");
+	}
 
-		foreach ($group->getControls() as $control) {
-			$this->removeComponent($control);
-		}
+	foreach ($group->getControls() as $control) {
+		$this->removeComponent($control);
+	}
 
-		unset($this->groups[$name]);
+	unset($this->groups[$name]);
 	}
 
 
@@ -288,7 +288,7 @@ class Form extends Container
 	 */
 	public function getGroups()
 	{
-		return $this->groups;
+	return $this->groups;
 	}
 
 
@@ -300,7 +300,7 @@ class Form extends Container
 	 */
 	public function getGroup($name)
 	{
-		return isset($this->groups[$name]) ? $this->groups[$name] : NULL;
+	return isset($this->groups[$name]) ? $this->groups[$name] : NULL;
 	}
 
 
@@ -315,8 +315,8 @@ class Form extends Container
 	 */
 	public function setTranslator(Nette\Localization\ITranslator $translator = NULL)
 	{
-		$this->translator = $translator;
-		return $this;
+	$this->translator = $translator;
+	return $this;
 	}
 
 
@@ -327,7 +327,7 @@ class Form extends Container
 	 */
 	final public function getTranslator()
 	{
-		return $this->translator;
+	return $this->translator;
 	}
 
 
@@ -342,7 +342,7 @@ class Form extends Container
 	 */
 	public function isAnchored()
 	{
-		return TRUE;
+	return TRUE;
 	}
 
 
@@ -353,10 +353,10 @@ class Form extends Container
 	 */
 	final public function isSubmitted()
 	{
-		if ($this->submittedBy === NULL && count($this->getControls())) {
-			$this->submittedBy = (bool) $this->getHttpData();
-		}
-		return $this->submittedBy;
+	if ($this->submittedBy === NULL && count($this->getControls())) {
+		$this->submittedBy = (bool) $this->getHttpData();
+	}
+	return $this->submittedBy;
 	}
 
 
@@ -367,7 +367,7 @@ class Form extends Container
 	 */
 	final public function isSuccess()
 	{
-		return $this->isSubmitted() && $this->isValid();
+	return $this->isSubmitted() && $this->isValid();
 	}
 
 
@@ -378,8 +378,8 @@ class Form extends Container
 	 */
 	public function setSubmittedBy(ISubmitterControl $by = NULL)
 	{
-		$this->submittedBy = $by === NULL ? FALSE : $by;
-		return $this;
+	$this->submittedBy = $by === NULL ? FALSE : $by;
+	return $this;
 	}
 
 
@@ -390,13 +390,13 @@ class Form extends Container
 	 */
 	final public function getHttpData()
 	{
-		if ($this->httpData === NULL) {
-			if (!$this->isAnchored()) {
-				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
-			}
-			$this->httpData = $this->receiveHttpData();
+	if ($this->httpData === NULL) {
+		if (!$this->isAnchored()) {
+		throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
 		}
-		return $this->httpData;
+		$this->httpData = $this->receiveHttpData();
+	}
+	return $this->httpData;
 	}
 
 
@@ -407,24 +407,24 @@ class Form extends Container
 	 */
 	public function fireEvents()
 	{
-		if (!$this->isSubmitted()) {
-			return;
+	if (!$this->isSubmitted()) {
+		return;
 
-		} elseif ($this->submittedBy instanceof ISubmitterControl) {
-			if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
-				$this->submittedBy->click();
-				$valid = TRUE;
-			} else {
-				$this->submittedBy->onInvalidClick($this->submittedBy);
-			}
-		}
-
-		if (isset($valid) || $this->isValid()) {
-			$this->onSuccess($this);
+	} elseif ($this->submittedBy instanceof ISubmitterControl) {
+		if (!$this->submittedBy->getValidationScope() || $this->isValid()) {
+		$this->submittedBy->click();
+		$valid = TRUE;
 		} else {
-			$this->onError($this);
+		$this->submittedBy->onInvalidClick($this->submittedBy);
 		}
-		$this->onSubmit($this);
+	}
+
+	if (isset($valid) || $this->isValid()) {
+		$this->onSuccess($this);
+	} else {
+		$this->onError($this);
+	}
+	$this->onSubmit($this);
 	}
 
 
@@ -435,24 +435,24 @@ class Form extends Container
 	 */
 	protected function receiveHttpData()
 	{
-		$httpRequest = $this->getHttpRequest();
-		if (strcasecmp($this->getMethod(), $httpRequest->getMethod())) {
-			return array();
-		}
+	$httpRequest = $this->getHttpRequest();
+	if (strcasecmp($this->getMethod(), $httpRequest->getMethod())) {
+		return array();
+	}
 
-		if ($httpRequest->isMethod('post')) {
-			$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
-		} else {
-			$data = $httpRequest->getQuery();
-		}
+	if ($httpRequest->isMethod('post')) {
+		$data = Nette\Utils\Arrays::mergeTree($httpRequest->getPost(), $httpRequest->getFiles());
+	} else {
+		$data = $httpRequest->getQuery();
+	}
 
-		if ($tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
-			if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
-				return array();
-			}
+	if ($tracker = $this->getComponent(self::TRACKER_ID, FALSE)) {
+		if (!isset($data[self::TRACKER_ID]) || $data[self::TRACKER_ID] !== $tracker->getValue()) {
+		return array();
 		}
+	}
 
-		return $data;
+	return $data;
 	}
 
 
@@ -467,9 +467,9 @@ class Form extends Container
 	 */
 	public function getValues($asArray = FALSE)
 	{
-		$values = parent::getValues($asArray);
-		unset($values[self::TRACKER_ID], $values[self::PROTECTOR_ID]);
-		return $values;
+	$values = parent::getValues($asArray);
+	unset($values[self::TRACKER_ID], $values[self::PROTECTOR_ID]);
+	return $values;
 	}
 
 
@@ -485,7 +485,7 @@ class Form extends Container
 	 */
 	public function addError($message)
 	{
-		$this->errors[] = $message;
+	$this->errors[] = $message;
 	}
 
 
@@ -496,7 +496,7 @@ class Form extends Container
 	 */
 	public function getErrors()
 	{
-		return array_unique($this->errors);
+	return array_unique($this->errors);
 	}
 
 
@@ -506,7 +506,7 @@ class Form extends Container
 	 */
 	public function hasErrors()
 	{
-		return (bool) $this->getErrors();
+	return (bool) $this->getErrors();
 	}
 
 
@@ -516,7 +516,7 @@ class Form extends Container
 	 */
 	public function cleanErrors()
 	{
-		$this->errors = array();
+	$this->errors = array();
 	}
 
 
@@ -527,7 +527,7 @@ class Form extends Container
 	 */
 	public function getAllErrors()
 	{
-		return array_unique(array_merge($this->errors, parent::getAllErrors()));
+	return array_unique(array_merge($this->errors, parent::getAllErrors()));
 	}
 
 
@@ -542,7 +542,7 @@ class Form extends Container
 	 */
 	public function getElementPrototype()
 	{
-		return $this->element;
+	return $this->element;
 	}
 
 
@@ -553,8 +553,8 @@ class Form extends Container
 	 */
 	public function setRenderer(IFormRenderer $renderer)
 	{
-		$this->renderer = $renderer;
-		return $this;
+	$this->renderer = $renderer;
+	return $this;
 	}
 
 
@@ -565,10 +565,10 @@ class Form extends Container
 	 */
 	final public function getRenderer()
 	{
-		if ($this->renderer === NULL) {
-			$this->renderer = new Rendering\DefaultFormRenderer;
-		}
-		return $this->renderer;
+	if ($this->renderer === NULL) {
+		$this->renderer = new Rendering\DefaultFormRenderer;
+	}
+	return $this->renderer;
 	}
 
 
@@ -579,9 +579,9 @@ class Form extends Container
 	 */
 	public function render()
 	{
-		$args = func_get_args();
-		array_unshift($args, $this);
-		echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
+	$args = func_get_args();
+	array_unshift($args, $this);
+	echo call_user_func_array(array($this->getRenderer(), 'render'), $args);
 	}
 
 
@@ -593,16 +593,16 @@ class Form extends Container
 	 */
 	public function __toString()
 	{
-		try {
-			return $this->getRenderer()->render($this);
+	try {
+		return $this->getRenderer()->render($this);
 
-		} catch (\Exception $e) {
-			if (func_get_args() && func_get_arg(0)) {
-				throw $e;
-			} else {
-				trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
-			}
+	} catch (\Exception $e) {
+		if (func_get_args() && func_get_arg(0)) {
+		throw $e;
+		} else {
+		trigger_error("Exception in " . __METHOD__ . "(): {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", E_USER_ERROR);
 		}
+	}
 	}
 
 
@@ -616,7 +616,7 @@ class Form extends Container
 	 */
 	protected function getHttpRequest()
 	{
-		return Nette\Environment::getHttpRequest();
+	return Nette\Environment::getHttpRequest();
 	}
 
 
@@ -626,7 +626,7 @@ class Form extends Container
 	 */
 	protected function getSession()
 	{
-		return Nette\Environment::getSession();
+	return Nette\Environment::getSession();
 	}
 
 }

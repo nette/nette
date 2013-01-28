@@ -35,9 +35,9 @@ class OutputHelper extends Nette\Object
 
 	public function __construct(Cache $cache, $key)
 	{
-		$this->cache = $cache;
-		$this->key = $key;
-		ob_start();
+	$this->cache = $cache;
+	$this->key = $key;
+	ob_start();
 	}
 
 
@@ -49,11 +49,11 @@ class OutputHelper extends Nette\Object
 	 */
 	public function end(array $dp = NULL)
 	{
-		if ($this->cache === NULL) {
-			throw new Nette\InvalidStateException('Output cache has already been saved.');
-		}
-		$this->cache->save($this->key, ob_get_flush(), (array) $dp + (array) $this->dependencies);
-		$this->cache = NULL;
+	if ($this->cache === NULL) {
+		throw new Nette\InvalidStateException('Output cache has already been saved.');
+	}
+	$this->cache->save($this->key, ob_get_flush(), (array) $dp + (array) $this->dependencies);
+	$this->cache = NULL;
 	}
 
 }

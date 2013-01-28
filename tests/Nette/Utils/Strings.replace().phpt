@@ -18,7 +18,7 @@ require __DIR__ . '/../bootstrap.php';
 class Test
 {
 	static function cb() {
-		return '@';
+	return '@';
 	}
 }
 

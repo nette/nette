@@ -32,8 +32,8 @@ $container->addService('three', $one);
 $container->addService('four', $one, array());
 $container->addService('five', $one, array(
 	Container::TAGS => array(
-		'debugPanel' => array(1, 2, 3),
-		'typeHint' => 'Service',
+	'debugPanel' => array(1, 2, 3),
+	'typeHint' => 'Service',
 	)
 ));
 

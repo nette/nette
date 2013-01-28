@@ -20,12 +20,12 @@ class TestClass extends Nette\Object
 
 	function __construct($id = NULL)
 	{
-		$this->id = $id;
+	$this->id = $id;
 	}
 
 	public function publicMethod($a, $b)
 	{
-		return "$this->id $a $b";
+	return "$this->id $a $b";
 	}
 
 	protected function protectedMethod()

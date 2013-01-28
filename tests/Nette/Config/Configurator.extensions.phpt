@@ -19,7 +19,7 @@ class FooExtension extends Nette\Config\CompilerExtension
 {
 	function loadConfiguration()
 	{
-		$this->getContainerBuilder()->parameters['foo'] = 'hello';
+	$this->getContainerBuilder()->parameters['foo'] = 'hello';
 	}
 }
 

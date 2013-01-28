@@ -25,7 +25,7 @@ class Row extends Nette\ArrayHash
 
 	public function __construct(Statement $statement)
 	{
-		$statement->normalizeRow($this);
+	$statement->normalizeRow($this);
 	}
 
 
@@ -37,22 +37,22 @@ class Row extends Nette\ArrayHash
 	 */
 	public function offsetGet($key)
 	{
-		if (is_int($key)) {
-			$arr = array_values((array) $this);
-			return $arr[$key];
-		}
-		return $this->$key;
+	if (is_int($key)) {
+		$arr = array_values((array) $this);
+		return $arr[$key];
+	}
+	return $this->$key;
 	}
 
 
 
 	public function offsetExists($key)
 	{
-		if (is_int($key)) {
-			$arr = array_values((array) $this);
-			return isset($arr[$key]);
-		}
-		return parent::offsetExists($key);
+	if (is_int($key)) {
+		$arr = array_values((array) $this);
+		return isset($arr[$key]);
+	}
+	return parent::offsetExists($key);
 	}
 
 }

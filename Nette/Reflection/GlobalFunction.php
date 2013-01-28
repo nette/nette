@@ -48,7 +48,7 @@ class GlobalFunction extends \ReflectionFunction
 
 	public function __construct($name)
 	{
-		parent::__construct($this->value = $name);
+	parent::__construct($this->value = $name);
 	}
 
 
@@ -58,21 +58,21 @@ class GlobalFunction extends \ReflectionFunction
 	 */
 	public function toCallback()
 	{
-		return new Nette\Callback($this->value);
+	return new Nette\Callback($this->value);
 	}
 
 
 
 	public function __toString()
 	{
-		return $this->getName() . '()';
+	return $this->getName() . '()';
 	}
 
 
 
 	public function getClosure()
 	{
-		return $this->isClosure() ? $this->value : NULL;
+	return $this->isClosure() ? $this->value : NULL;
 	}
 
 
@@ -86,7 +86,7 @@ class GlobalFunction extends \ReflectionFunction
 	 */
 	public function getExtension()
 	{
-		return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
+	return ($name = $this->getExtensionName()) ? new Extension($name) : NULL;
 	}
 
 
@@ -96,10 +96,10 @@ class GlobalFunction extends \ReflectionFunction
 	 */
 	public function getParameters()
 	{
-		foreach ($res = parent::getParameters() as $key => $val) {
-			$res[$key] = new Parameter($this->value, $val->getName());
-		}
-		return $res;
+	foreach ($res = parent::getParameters() as $key => $val) {
+		$res[$key] = new Parameter($this->value, $val->getName());
+	}
+	return $res;
 	}
 
 
@@ -113,42 +113,42 @@ class GlobalFunction extends \ReflectionFunction
 	 */
 	public /**/static/**/ function getReflection()
 	{
-		return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
+	return new ClassType(/*5.2*$this*//**/get_called_class()/**/);
 	}
 
 
 
 	public function __call($name, $args)
 	{
-		return ObjectMixin::call($this, $name, $args);
+	return ObjectMixin::call($this, $name, $args);
 	}
 
 
 
 	public function &__get($name)
 	{
-		return ObjectMixin::get($this, $name);
+	return ObjectMixin::get($this, $name);
 	}
 
 
 
 	public function __set($name, $value)
 	{
-		return ObjectMixin::set($this, $name, $value);
+	return ObjectMixin::set($this, $name, $value);
 	}
 
 
 
 	public function __isset($name)
 	{
-		return ObjectMixin::has($this, $name);
+	return ObjectMixin::has($this, $name);
 	}
 
 
 
 	public function __unset($name)
 	{
-		ObjectMixin::remove($this, $name);
+	ObjectMixin::remove($this, $name);
 	}
 
 }

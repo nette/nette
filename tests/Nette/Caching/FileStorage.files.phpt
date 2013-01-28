@@ -28,8 +28,8 @@ $dependentFile = TEMP_DIR . '/spec.file';
 // Writing cache...
 $cache->save($key, $value, array(
 	Cache::FILES => array(
-		__FILE__,
-		$dependentFile,
+	__FILE__,
+	$dependentFile,
 	),
 ));
 

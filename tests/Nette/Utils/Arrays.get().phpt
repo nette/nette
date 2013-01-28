@@ -19,7 +19,7 @@ $arr  = array(
 	NULL => 'first',
 	1 => 'second',
 	7 => array(
-		'item' => 'third',
+	'item' => 'third',
 	),
 );
 
@@ -41,7 +41,7 @@ Assert::same( array(
 	'' => 'first',
 	1 => 'second',
 	7 => array(
-		'item' => 'third',
+	'item' => 'third',
 	),
 ), Arrays::get($arr, array()) );
 

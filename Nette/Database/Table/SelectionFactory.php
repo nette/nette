@@ -34,9 +34,9 @@ class SelectionFactory extends Nette\Object
 
 	public function __construct(Nette\Database\Connection $connection, Nette\Database\IReflection $reflection = NULL, Nette\Caching\IStorage $cacheStorage = NULL)
 	{
-		$this->connection = $connection;
-		$this->reflection = $reflection ?: new Nette\Database\Reflection\ConventionalReflection;
-		$this->cacheStorage = $cacheStorage;
+	$this->connection = $connection;
+	$this->reflection = $reflection ?: new Nette\Database\Reflection\ConventionalReflection;
+	$this->cacheStorage = $cacheStorage;
 	}
 
 
@@ -44,7 +44,7 @@ class SelectionFactory extends Nette\Object
 	/** @return Selection */
 	public function create($table)
 	{
-		return new Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
+	return new Selection($this->connection, $table, $this->reflection, $this->cacheStorage);
 	}
 
 }

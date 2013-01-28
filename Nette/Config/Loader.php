@@ -29,9 +29,9 @@ class Loader extends Nette\Object
 	const INCLUDES_KEY = 'includes';
 
 	private $adapters = array(
-		'php' => 'Nette\Config\Adapters\PhpAdapter',
-		'ini' => 'Nette\Config\Adapters\IniAdapter',
-		'neon' => 'Nette\Config\Adapters\NeonAdapter',
+	'php' => 'Nette\Config\Adapters\PhpAdapter',
+	'ini' => 'Nette\Config\Adapters\IniAdapter',
+	'neon' => 'Nette\Config\Adapters\NeonAdapter',
 	);
 
 	private $dependencies = array();
@@ -46,30 +46,30 @@ class Loader extends Nette\Object
 	 */
 	public function load($file, $section = NULL)
 	{
-		if (!is_file($file) || !is_readable($file)) {
-			throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
-		}
-		$this->dependencies[] = $file = realpath($file);
-		$data = $this->getAdapter($file)->load($file);
+	if (!is_file($file) || !is_readable($file)) {
+		throw new Nette\FileNotFoundException("File '$file' is missing or is not readable.");
+	}
+	$this->dependencies[] = $file = realpath($file);
+	$data = $this->getAdapter($file)->load($file);
 
-		if ($section) {
-			if (isset($data[self::INCLUDES_KEY])) {
-				throw new Nette\InvalidStateException("Section 'includes' must be placed under some top section in file '$file'.");
-			}
-			$data = $this->getSection($data, $section, $file);
-		}
-
-		// include child files
-		$merged = array();
+	if ($section) {
 		if (isset($data[self::INCLUDES_KEY])) {
-			Validators::assert($data[self::INCLUDES_KEY], 'list', "section 'includes' in file '$file'");
-			foreach ($data[self::INCLUDES_KEY] as $include) {
-				$merged = Helpers::merge($this->load(dirname($file) . '/' . $include), $merged);
-			}
+		throw new Nette\InvalidStateException("Section 'includes' must be placed under some top section in file '$file'.");
 		}
-		unset($data[self::INCLUDES_KEY]);
+		$data = $this->getSection($data, $section, $file);
+	}
 
-		return Helpers::merge($data, $merged);
+	// include child files
+	$merged = array();
+	if (isset($data[self::INCLUDES_KEY])) {
+		Validators::assert($data[self::INCLUDES_KEY], 'list', "section 'includes' in file '$file'");
+		foreach ($data[self::INCLUDES_KEY] as $include) {
+		$merged = Helpers::merge($this->load(dirname($file) . '/' . $include), $merged);
+		}
+	}
+	unset($data[self::INCLUDES_KEY]);
+
+	return Helpers::merge($data, $merged);
 	}
 
 
@@ -82,9 +82,9 @@ class Loader extends Nette\Object
 	 */
 	public function save($data, $file)
 	{
-		if (file_put_contents($file, $this->getAdapter($file)->dump($data)) === FALSE) {
-			throw new Nette\IOException("Cannot write file '$file'.");
-		}
+	if (file_put_contents($file, $this->getAdapter($file)->dump($data)) === FALSE) {
+		throw new Nette\IOException("Cannot write file '$file'.");
+	}
 	}
 
 
@@ -95,7 +95,7 @@ class Loader extends Nette\Object
 	 */
 	public function getDependencies()
 	{
-		return array_unique($this->dependencies);
+	return array_unique($this->dependencies);
 	}
 
 
@@ -108,8 +108,8 @@ class Loader extends Nette\Object
 	 */
 	public function addAdapter($extension, $adapter)
 	{
-		$this->adapters[strtolower($extension)] = $adapter;
-		return $this;
+	$this->adapters[strtolower($extension)] = $adapter;
+	return $this;
 	}
 
 
@@ -117,23 +117,23 @@ class Loader extends Nette\Object
 	/** @return IAdapter */
 	private function getAdapter($file)
 	{
-		$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-		if (!isset($this->adapters[$extension])) {
-			throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
-		}
-		return is_object($this->adapters[$extension]) ? $this->adapters[$extension] : new $this->adapters[$extension];
+	$extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+	if (!isset($this->adapters[$extension])) {
+		throw new Nette\InvalidArgumentException("Unknown file extension '$file'.");
+	}
+	return is_object($this->adapters[$extension]) ? $this->adapters[$extension] : new $this->adapters[$extension];
 	}
 
 
 
 	private function getSection(array $data, $key, $file)
 	{
-		Validators::assertField($data, $key, 'array|null', "section '%' in file '$file'");
-		$item = $data[$key];
-		if ($parent = Helpers::takeParent($item)) {
-			$item = Helpers::merge($item, $this->getSection($data, $parent, $file));
-		}
-		return $item;
+	Validators::assertField($data, $key, 'array|null', "section '%' in file '$file'");
+	$item = $data[$key];
+	if ($parent = Helpers::takeParent($item)) {
+		$item = Helpers::merge($item, $this->getSection($data, $parent, $file));
+	}
+	return $item;
 	}
 
 }

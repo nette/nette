@@ -48,7 +48,7 @@ for ($counter = 0; $counter < 300; $counter++) {
 	// write
 	$ok = @file_put_contents('safe://' . TEMP_DIR . '/testfile' . rand(0, COUNT_FILES), randomStr());
 	if ($ok === FALSE) {
-		$hits['cantwrite']++;
+	$hits['cantwrite']++;
 	}
 
 	// delete
@@ -62,11 +62,11 @@ for ($counter = 0; $counter < 300; $counter++) {
 
 	// compare
 	if ($res === FALSE) {
-		$hits['notfound']++;
+	$hits['notfound']++;
 	} elseif (checkStr($res)) {
-		$hits['ok']++;
+	$hits['ok']++;
 	} else {
-		$hits['error']++;
+	$hits['error']++;
 	}
 }
 

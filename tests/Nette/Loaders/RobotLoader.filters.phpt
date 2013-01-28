@@ -24,11 +24,11 @@ $loader->addDirectory(__DIR__ . '/files');
 $loader->filters['php'] = function($input) {
 	$code = '';
 	foreach (@token_get_all($input) as $token) {
-		if (!is_array($token)) {
-			$code .= $token;
-		} elseif ($token[0] !== T_FINAL) {
-			$code .= $token[1];
-		}
+	if (!is_array($token)) {
+		$code .= $token;
+	} elseif ($token[0] !== T_FINAL) {
+		$code .= $token[1];
+	}
 	}
 	return $code;
 };

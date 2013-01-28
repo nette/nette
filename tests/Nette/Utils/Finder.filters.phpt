@@ -68,7 +68,7 @@ Assert::same(array(), export($finder));
 // custom filters
 Finder::extensionMethod('length', function($finder, $length) {
 	return $finder->filter(function($file) use ($length) {
-		return strlen($file->getFilename()) == $length;
+	return strlen($file->getFilename()) == $length;
 	});
 });
 

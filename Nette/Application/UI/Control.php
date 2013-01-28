@@ -45,15 +45,15 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	final public function getTemplate()
 	{
-		if ($this->template === NULL) {
-			$value = $this->createTemplate();
-			if (!$value instanceof Nette\Templating\ITemplate && $value !== NULL) {
-				$class2 = get_class($value); $class = get_class($this);
-				throw new Nette\UnexpectedValueException("Object returned by $class::createTemplate() must be instance of Nette\\Templating\\ITemplate, '$class2' given.");
-			}
-			$this->template = $value;
+	if ($this->template === NULL) {
+		$value = $this->createTemplate();
+		if (!$value instanceof Nette\Templating\ITemplate && $value !== NULL) {
+		$class2 = get_class($value); $class = get_class($this);
+		throw new Nette\UnexpectedValueException("Object returned by $class::createTemplate() must be instance of Nette\\Templating\\ITemplate, '$class2' given.");
 		}
-		return $this->template;
+		$this->template = $value;
+	}
+	return $this->template;
 	}
 
 
@@ -64,33 +64,33 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
-		$presenter = $this->getPresenter(FALSE);
-		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
+	$template = $class ? new $class : new Nette\Templating\FileTemplate;
+	$presenter = $this->getPresenter(FALSE);
+	$template->onPrepareFilters[] = $this->templatePrepareFilters;
+	$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
-		// default parameters
-		$template->control = $template->_control = $this;
-		$template->presenter = $template->_presenter = $presenter;
-		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->{'nette.templateCacheStorage'});
-			$template->user = $presenter->getUser();
-			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
-			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
-			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
+	// default parameters
+	$template->control = $template->_control = $this;
+	$template->presenter = $template->_presenter = $presenter;
+	if ($presenter instanceof Presenter) {
+		$template->setCacheStorage($presenter->getContext()->{'nette.templateCacheStorage'});
+		$template->user = $presenter->getUser();
+		$template->netteHttpResponse = $presenter->getHttpResponse();
+		$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
+		$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
+		$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
 
-			// flash message
-			if ($presenter->hasFlashSession()) {
-				$id = $this->getParameterId('flash');
-				$template->flashes = $presenter->getFlashSession()->$id;
-			}
+		// flash message
+		if ($presenter->hasFlashSession()) {
+		$id = $this->getParameterId('flash');
+		$template->flashes = $presenter->getFlashSession()->$id;
 		}
-		if (!isset($template->flashes) || !is_array($template->flashes)) {
-			$template->flashes = array();
-		}
+	}
+	if (!isset($template->flashes) || !is_array($template->flashes)) {
+		$template->flashes = array();
+	}
 
-		return $template;
+	return $template;
 	}
 
 
@@ -102,7 +102,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter($this->getPresenter()->getContext()->createNette__Latte());
+	$template->registerFilter($this->getPresenter()->getContext()->createNette__Latte());
 	}
 
 
@@ -115,15 +115,15 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function flashMessage($message, $type = 'info')
 	{
-		$id = $this->getParameterId('flash');
-		$messages = $this->getPresenter()->getFlashSession()->$id;
-		$messages[] = $flash = (object) array(
-			'message' => $message,
-			'type' => $type,
-		);
-		$this->getTemplate()->flashes = $messages;
-		$this->getPresenter()->getFlashSession()->$id = $messages;
-		return $flash;
+	$id = $this->getParameterId('flash');
+	$messages = $this->getPresenter()->getFlashSession()->$id;
+	$messages[] = $flash = (object) array(
+		'message' => $message,
+		'type' => $type,
+	);
+	$this->getTemplate()->flashes = $messages;
+	$this->getPresenter()->getFlashSession()->$id = $messages;
+	return $flash;
 	}
 
 
@@ -139,7 +139,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function invalidateControl($snippet = NULL)
 	{
-		$this->invalidSnippets[$snippet] = TRUE;
+	$this->invalidSnippets[$snippet] = TRUE;
 	}
 
 
@@ -151,12 +151,12 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function validateControl($snippet = NULL)
 	{
-		if ($snippet === NULL) {
-			$this->invalidSnippets = array();
+	if ($snippet === NULL) {
+		$this->invalidSnippets = array();
 
-		} else {
-			unset($this->invalidSnippets[$snippet]);
-		}
+	} else {
+		unset($this->invalidSnippets[$snippet]);
+	}
 	}
 
 
@@ -168,32 +168,32 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function isControlInvalid($snippet = NULL)
 	{
-		if ($snippet === NULL) {
-			if (count($this->invalidSnippets) > 0) {
-				return TRUE;
-
-			} else {
-				$queue = array($this);
-				do {
-					foreach (array_shift($queue)->getComponents() as $component) {
-						if ($component instanceof IRenderable) {
-							if ($component->isControlInvalid()) {
-								// $this->invalidSnippets['__child'] = TRUE; // as cache
-								return TRUE;
-							}
-
-						} elseif ($component instanceof Nette\ComponentModel\IContainer) {
-							$queue[] = $component;
-						}
-					}
-				} while ($queue);
-
-				return FALSE;
-			}
+	if ($snippet === NULL) {
+		if (count($this->invalidSnippets) > 0) {
+		return TRUE;
 
 		} else {
-			return isset($this->invalidSnippets[NULL]) || isset($this->invalidSnippets[$snippet]);
+		$queue = array($this);
+		do {
+			foreach (array_shift($queue)->getComponents() as $component) {
+			if ($component instanceof IRenderable) {
+				if ($component->isControlInvalid()) {
+				// $this->invalidSnippets['__child'] = TRUE; // as cache
+				return TRUE;
+				}
+
+			} elseif ($component instanceof Nette\ComponentModel\IContainer) {
+				$queue[] = $component;
+			}
+			}
+		} while ($queue);
+
+		return FALSE;
 		}
+
+	} else {
+		return isset($this->invalidSnippets[NULL]) || isset($this->invalidSnippets[$snippet]);
+	}
 	}
 
 
@@ -205,8 +205,8 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function getSnippetId($name = NULL)
 	{
-		// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
-		return 'snippet-' . $this->getUniqueId() . '-' . $name;
+	// HTML 4 ID & NAME: [A-Za-z][A-Za-z0-9:_.-]*
+	return 'snippet-' . $this->getUniqueId() . '-' . $name;
 	}
 
 }

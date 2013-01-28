@@ -36,13 +36,13 @@ $form->setDefaults(array(
 	'name' => 'jim',
 	'firstperson' =>
 	array(
-		'name' => 'david',
-		'age' => '30',
+	'name' => 'david',
+	'age' => '30',
 	),
 	'secondperson' =>
 	array(
-		'name' => 'jim',
-		'age' => '40',
+	'name' => 'jim',
+	'age' => '40',
 	),
 	'age' => '50',
 ));
@@ -50,13 +50,13 @@ $form->setDefaults(array(
 Assert::equal( ArrayHash::from(array(
 	"name" => "jim",
 	"firstperson" => ArrayHash::from(array(
-		"name" => "david",
-		"age" => "30",
+	"name" => "david",
+	"age" => "30",
 	)),
 	"secondperson" => ArrayHash::from(array(
-		"name" => "jim",
-		"age" => "40",
-		"avatar" => NULL,
+	"name" => "jim",
+	"age" => "40",
+	"avatar" => NULL,
 	)),
 	"age" => "50",
 )), $form->getValues() );

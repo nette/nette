@@ -30,16 +30,16 @@ class ErrorPresenter extends Nette\Object implements Application\IPresenter
 	 */
 	public function run(Application\Request $request)
 	{
-		$e = $request->parameters['exception'];
-		if ($e instanceof Application\BadRequestException) {
-			$code = $e->getCode();
-		} else {
-			$code = 500;
-			Debugger::log($e, Debugger::ERROR);
-		}
-		ob_start();
-		require __DIR__ . '/templates/error.phtml';
-		return new Application\Responses\TextResponse(ob_get_clean());
+	$e = $request->parameters['exception'];
+	if ($e instanceof Application\BadRequestException) {
+		$code = $e->getCode();
+	} else {
+		$code = 500;
+		Debugger::log($e, Debugger::ERROR);
+	}
+	ob_start();
+	require __DIR__ . '/templates/error.phtml';
+	return new Application\Responses\TextResponse(ob_get_clean());
 	}
 
 }

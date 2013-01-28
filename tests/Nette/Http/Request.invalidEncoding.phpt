@@ -45,25 +45,25 @@ $_COOKIE = array(
 
 $_FILES = array(
 	INVALID => array(
-		'name' => 'readme.txt',
-		'type' => 'text/plain',
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
-		'error' => 0,
-		'size' => 209,
+	'name' => 'readme.txt',
+	'type' => 'text/plain',
+	'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+	'error' => 0,
+	'size' => 209,
 	),
 	CONTROL_CHARACTERS => array(
-		'name' => 'readme.txt',
-		'type' => 'text/plain',
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
-		'error' => 0,
-		'size' => 209,
+	'name' => 'readme.txt',
+	'type' => 'text/plain',
+	'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+	'error' => 0,
+	'size' => 209,
 	),
 	'file1' => array(
-		'name' => INVALID,
-		'type' => 'text/plain',
-		'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
-		'error' => 0,
-		'size' => 209,
+	'name' => INVALID,
+	'type' => 'text/plain',
+	'tmp_name' => 'C:\\PHP\\temp\\php1D5B.tmp',
+	'error' => 0,
+	'size' => 209,
 	),
 );
 

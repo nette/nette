@@ -21,9 +21,9 @@ $_POST = array('name'=>'John Doe ','age'=>'  12 ','email'=>'@','street'=>'','cit
 
 $countries = array(
 	'Europe' => array(
-		'CZ' => 'Czech Republic',
-		'SK' => 'Slovakia',
-		'GB' => 'United Kingdom',
+	'CZ' => 'Czech Republic',
+	'SK' => 'Slovakia',
+	'GB' => 'United Kingdom',
 	),
 	'CA' => 'Canada',
 	'US' => 'United States',
@@ -129,76 +129,76 @@ ob_start();
 	<?php endif ?>
 
 	<fieldset>
-		<legend>Personal data</legend>
-		<table>
-		<tr class="required">
-			<th><?php echo $form['name']->getLabel('Your name:') ?></th>
-			<td><?php echo $form['name']->control->cols(35) ?></td>
-		</tr>
-		<tr class="required">
-			<th><?php echo $form['age']->getLabel('Your age:') ?></th>
-			<td><?php echo $form['age']->control->cols(5) ?></td>
-		</tr>
-		<tr>
-			<th><?php echo $form['gender']->getLabel('Your gender:') ?></th>
-			<td><?php echo $form['gender']->control ?></td>
-		</tr>
-		<tr>
-			<th><?php echo $form['email']->getLabel('Email:') ?></th>
-			<td><?php echo $form['email']->control->cols(35) ?></td>
-		</tr>
-		</table>
+	<legend>Personal data</legend>
+	<table>
+	<tr class="required">
+		<th><?php echo $form['name']->getLabel('Your name:') ?></th>
+		<td><?php echo $form['name']->control->cols(35) ?></td>
+	</tr>
+	<tr class="required">
+		<th><?php echo $form['age']->getLabel('Your age:') ?></th>
+		<td><?php echo $form['age']->control->cols(5) ?></td>
+	</tr>
+	<tr>
+		<th><?php echo $form['gender']->getLabel('Your gender:') ?></th>
+		<td><?php echo $form['gender']->control ?></td>
+	</tr>
+	<tr>
+		<th><?php echo $form['email']->getLabel('Email:') ?></th>
+		<td><?php echo $form['email']->control->cols(35) ?></td>
+	</tr>
+	</table>
 	</fieldset>
 
 
 	<fieldset>
-		<legend>Shipping address</legend>
+	<legend>Shipping address</legend>
 
-		<p><?php echo $form['send']->control?><?php echo $form['send']->getLabel('Ship to address') ?></p>
+	<p><?php echo $form['send']->control?><?php echo $form['send']->getLabel('Ship to address') ?></p>
 
-		<table id="sendBox">
-		<tr>
-			<th><?php echo $form['street']->getLabel('Street:') ?></th>
-			<td><?php echo $form['street']->control->cols(35) ?></td>
-		</tr>
-		<tr class="required">
-			<th><?php echo $form['city']->getLabel('City:') ?></th>
-			<td><?php echo $form['city']->control->cols(35) ?></td>
-		</tr>
-		<tr class="required">
-			<th><?php echo $form['country']->getLabel('Country:') ?></th>
-			<td><?php echo $form['country']->setPrompt('Select your country')->control ?></td>
-		</tr>
-		</table>
+	<table id="sendBox">
+	<tr>
+		<th><?php echo $form['street']->getLabel('Street:') ?></th>
+		<td><?php echo $form['street']->control->cols(35) ?></td>
+	</tr>
+	<tr class="required">
+		<th><?php echo $form['city']->getLabel('City:') ?></th>
+		<td><?php echo $form['city']->control->cols(35) ?></td>
+	</tr>
+	<tr class="required">
+		<th><?php echo $form['country']->getLabel('Country:') ?></th>
+		<td><?php echo $form['country']->setPrompt('Select your country')->control ?></td>
+	</tr>
+	</table>
 	</fieldset>
 
 
 
 	<fieldset>
-		<legend>Your account</legend>
-		<table>
-		<tr class="required">
-			<th><?php echo $form['password']->getLabel('Choose password:') ?></th>
-			<td><?php echo $form['password']->control->cols(20) ?></td>
-		</tr>
-		<tr class="required">
-			<th><?php echo $form['password2']->getLabel('Reenter password:') ?></th>
-			<td><?php echo $form['password2']->control->cols(20) ?></td>
-		</tr>
-		<tr>
-			<th><?php echo $form['avatar']->getLabel('Picture:') ?></th>
-			<td><?php echo $form['avatar']->control ?></td>
-		</tr>
-		<tr>
-			<th><?php echo $form['note']->getLabel('Comment:') ?></th>
-			<td><?php echo $form['note']->control->cols(30)->rows(5) ?></td>
-		</tr>
-		</table>
+	<legend>Your account</legend>
+	<table>
+	<tr class="required">
+		<th><?php echo $form['password']->getLabel('Choose password:') ?></th>
+		<td><?php echo $form['password']->control->cols(20) ?></td>
+	</tr>
+	<tr class="required">
+		<th><?php echo $form['password2']->getLabel('Reenter password:') ?></th>
+		<td><?php echo $form['password2']->control->cols(20) ?></td>
+	</tr>
+	<tr>
+		<th><?php echo $form['avatar']->getLabel('Picture:') ?></th>
+		<td><?php echo $form['avatar']->control ?></td>
+	</tr>
+	<tr>
+		<th><?php echo $form['note']->getLabel('Comment:') ?></th>
+		<td><?php echo $form['note']->control->cols(30)->rows(5) ?></td>
+	</tr>
+	</table>
 	</fieldset>
 
 	<div>
-		<?php echo $form['userid']->control ?>
-		<?php echo $form['submit']->getControl('Send') ?>
+	<?php echo $form['userid']->control ?>
+	<?php echo $form['submit']->getControl('Send') ?>
 	</div>
 
 	<?php $form->render('end'); ?>

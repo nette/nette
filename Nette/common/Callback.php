@@ -38,7 +38,7 @@ final class Callback extends Object
 	 */
 	public static function create($callback, $m = NULL)
 	{
-		return new self($callback, $m);
+	return new self($callback, $m);
 	}
 
 
@@ -49,25 +49,25 @@ final class Callback extends Object
 	 */
 	public function __construct($cb, $m = NULL)
 	{
-		if ($m !== NULL) {
-			$cb = array($cb, $m);
+	if ($m !== NULL) {
+		$cb = array($cb, $m);
 
-		} elseif ($cb instanceof self) { // prevents wrapping itself
-			$this->cb = $cb->cb;
-			return;
-		}
+	} elseif ($cb instanceof self) { // prevents wrapping itself
+		$this->cb = $cb->cb;
+		return;
+	}
 
-		/*5.2*
-		if (PHP_VERSION_ID < 50202 && is_string($cb) && strpos($cb, '::')) {
-			$cb = explode('::', $cb, 2);
-		} elseif (is_object($cb) && !$cb instanceof Closure) {
-			$cb = array($cb, '__invoke');
-		}
+	/*5.2*
+	if (PHP_VERSION_ID < 50202 && is_string($cb) && strpos($cb, '::')) {
+		$cb = explode('::', $cb, 2);
+	} elseif (is_object($cb) && !$cb instanceof Closure) {
+		$cb = array($cb, '__invoke');
+	}
   		*/
-		if (!is_callable($cb, TRUE)) {
-			throw new InvalidArgumentException("Invalid callback.");
-		}
-		$this->cb = $cb;
+	if (!is_callable($cb, TRUE)) {
+		throw new InvalidArgumentException("Invalid callback.");
+	}
+	$this->cb = $cb;
 	}
 
 
@@ -78,11 +78,11 @@ final class Callback extends Object
 	 */
 	public function __invoke()
 	{
-		if (!is_callable($this->cb)) {
-			throw new InvalidStateException("Callback '$this' is not callable.");
-		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+	if (!is_callable($this->cb)) {
+		throw new InvalidStateException("Callback '$this' is not callable.");
+	}
+	$args = func_get_args();
+	return call_user_func_array($this->cb, $args);
 	}
 
 
@@ -93,11 +93,11 @@ final class Callback extends Object
 	 */
 	public function invoke()
 	{
-		if (!is_callable($this->cb)) {
-			throw new InvalidStateException("Callback '$this' is not callable.");
-		}
-		$args = func_get_args();
-		return call_user_func_array($this->cb, $args);
+	if (!is_callable($this->cb)) {
+		throw new InvalidStateException("Callback '$this' is not callable.");
+	}
+	$args = func_get_args();
+	return call_user_func_array($this->cb, $args);
 	}
 
 
@@ -109,10 +109,10 @@ final class Callback extends Object
 	 */
 	public function invokeArgs(array $args)
 	{
-		if (!is_callable($this->cb)) {
-			throw new InvalidStateException("Callback '$this' is not callable.");
-		}
-		return call_user_func_array($this->cb, $args);
+	if (!is_callable($this->cb)) {
+		throw new InvalidStateException("Callback '$this' is not callable.");
+	}
+	return call_user_func_array($this->cb, $args);
 	}
 
 
@@ -123,7 +123,7 @@ final class Callback extends Object
 	 */
 	public function isCallable()
 	{
-		return is_callable($this->cb);
+	return is_callable($this->cb);
 	}
 
 
@@ -134,7 +134,7 @@ final class Callback extends Object
 	 */
 	public function getNative()
 	{
-		return $this->cb;
+	return $this->cb;
 	}
 
 
@@ -145,15 +145,15 @@ final class Callback extends Object
 	 */
 	public function toReflection()
 	{
-		if (is_string($this->cb) && strpos($this->cb, '::')) {
-			return new Nette\Reflection\Method($this->cb);
-		} elseif (is_array($this->cb)) {
-			return new Nette\Reflection\Method($this->cb[0], $this->cb[1]);
-		} elseif (is_object($this->cb) && !$this->cb instanceof \Closure) {
-			return new Nette\Reflection\Method($this->cb, '__invoke');
-		} else {
-			return new Nette\Reflection\GlobalFunction($this->cb);
-		}
+	if (is_string($this->cb) && strpos($this->cb, '::')) {
+		return new Nette\Reflection\Method($this->cb);
+	} elseif (is_array($this->cb)) {
+		return new Nette\Reflection\Method($this->cb[0], $this->cb[1]);
+	} elseif (is_object($this->cb) && !$this->cb instanceof \Closure) {
+		return new Nette\Reflection\Method($this->cb, '__invoke');
+	} else {
+		return new Nette\Reflection\GlobalFunction($this->cb);
+	}
 	}
 
 
@@ -163,7 +163,7 @@ final class Callback extends Object
 	 */
 	public function isStatic()
 	{
-		return is_array($this->cb) ? is_string($this->cb[0]) : is_string($this->cb);
+	return is_array($this->cb) ? is_string($this->cb[0]) : is_string($this->cb);
 	}
 
 
@@ -174,12 +174,12 @@ final class Callback extends Object
 	 */
 	public function bindTo($newthis)
 	{
-		if (is_string($this->cb) && strpos($this->cb, '::')) {
-			$this->cb = explode('::', $this->cb);
-		} elseif (!is_array($this->cb)) {
-			throw new InvalidStateException("Callback '$this' have not any bound object.");
-		}
-		return new static($newthis, $this->cb[1]);
+	if (is_string($this->cb) && strpos($this->cb, '::')) {
+		$this->cb = explode('::', $this->cb);
+	} elseif (!is_array($this->cb)) {
+		throw new InvalidStateException("Callback '$this' have not any bound object.");
+	}
+	return new static($newthis, $this->cb[1]);
 	}
 
 
@@ -189,14 +189,14 @@ final class Callback extends Object
 	 */
 	public function __toString()
 	{
-		if ($this->cb instanceof \Closure) {
-			return '{closure}';
-		} elseif (is_string($this->cb) && $this->cb[0] === "\0") {
-			return '{lambda}';
-		} else {
-			is_callable($this->cb, TRUE, $textual);
-			return $textual;
-		}
+	if ($this->cb instanceof \Closure) {
+		return '{closure}';
+	} elseif (is_string($this->cb) && $this->cb[0] === "\0") {
+		return '{lambda}';
+	} else {
+		is_callable($this->cb, TRUE, $textual);
+		return $textual;
+	}
 	}
 
 }

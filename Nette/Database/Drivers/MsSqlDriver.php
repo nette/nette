@@ -29,7 +29,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 
 	public function __construct(Nette\Database\Connection $connection, array $options)
 	{
-		$this->connection = $connection;
+	$this->connection = $connection;
 	}
 
 
@@ -43,8 +43,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function delimite($name)
 	{
-		// @see http://msdn.microsoft.com/en-us/library/ms176027.aspx
-		return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
+	// @see http://msdn.microsoft.com/en-us/library/ms176027.aspx
+	return '[' . str_replace(array('[', ']'), array('[[', ']]'), $name) . ']';
 	}
 
 
@@ -54,7 +54,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function formatBool($value)
 	{
-		return $value ? '1' : '0';
+	return $value ? '1' : '0';
 	}
 
 
@@ -64,7 +64,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function formatDateTime(\DateTime $value)
 	{
-		return $value->format("'Y-m-d H:i:s'");
+	return $value->format("'Y-m-d H:i:s'");
 	}
 
 
@@ -74,8 +74,8 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function formatLike($value, $pos)
 	{
-		$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
-		return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
+	$value = strtr($value, array("'" => "''", '%' => '[%]', '_' => '[_]', '[' => '[[]'));
+	return ($pos <= 0 ? "'%" : "'") . $value . ($pos >= 0 ? "%'" : "'");
 	}
 
 
@@ -85,13 +85,13 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function applyLimit(&$sql, $limit, $offset)
 	{
-		if ($limit >= 0) {
-			$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ') t';
-		}
+	if ($limit >= 0) {
+		$sql = 'SELECT TOP ' . (int) $limit . ' * FROM (' . $sql . ') t';
+	}
 
-		if ($offset) {
-			throw new Nette\NotImplementedException('Offset is not implemented.');
-		}
+	if ($offset) {
+		throw new Nette\NotImplementedException('Offset is not implemented.');
+	}
 	}
 
 
@@ -101,7 +101,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function normalizeRow($row, $statement)
 	{
-		return $row;
+	return $row;
 	}
 
 
@@ -115,7 +115,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getTables()
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -125,7 +125,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getColumns($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -135,7 +135,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getIndexes($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -145,7 +145,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getForeignKeys($table)
 	{
-		throw new Nette\NotImplementedException;
+	throw new Nette\NotImplementedException;
 	}
 
 
@@ -155,7 +155,7 @@ class MsSqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function isSupported($item)
 	{
-		return $item === self::SUPPORT_COLUMNS_META;
+	return $item === self::SUPPORT_COLUMNS_META;
 	}
 
 }

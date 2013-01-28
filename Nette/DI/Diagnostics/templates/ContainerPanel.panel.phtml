@@ -9,21 +9,21 @@ use Nette,
 <style class="nette-debug">
 
 	#nette-debug .nette-ContainerPanel .nette-inner {
-		width: 700px;
+	width: 700px;
 	}
 
 	#nette-debug .nette-ContainerPanel table {
-		width: 100%;
-		white-space: nowrap;
+	width: 100%;
+	white-space: nowrap;
 	}
 
 	#nette-debug .nette-ContainerPanel .created {
-		font-weight: bold;
+	font-weight: bold;
 	}
 
 	#nette-debug .nette-ContainerPanel .yes {
-		color: green;
-		font-weight: bold;
+	color: green;
+	font-weight: bold;
 	}
 
 </style>
@@ -35,58 +35,58 @@ use Nette,
 	<h2>Parameters</h2>
 
 	<div class="nette-ContainerPanel-parameters">
-		<?php echo Dumper::toHtml($this->container->parameters); ?>
+	<?php echo Dumper::toHtml($this->container->parameters); ?>
 	</div>
 
 	<h2>Services</h2>
 
 	<table>
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Autowired</th>
-			<th>Service</th>
-			<th>Meta</th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php foreach ($services as $name => $class): ?>
-		<?php $autowired = array_keys($container->classes, $name); ?>
-		<tr>
-			<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo htmlSpecialChars($name) ?></td>
-			<td title="<?php echo htmlSpecialChars(implode(" \n", $autowired)) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
-			<td>
-				<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container): ?>
-					<?php echo Dumper::toHtml($registry[$name], array(Dumper::COLLAPSE => TRUE)); ?>
-				<?php elseif (isset($registry[$name])): ?>
-					<code><?php echo get_class($registry[$name]) ?></code>
-				<?php elseif (is_string($class)): ?>
-					<code><?php echo htmlSpecialChars($class) ?></code>
-				<?php endif ?>
-			</td>
-			<td><?php if (isset($container->meta[$name])) { echo Dumper::toHtml($container->meta[$name], array(Dumper::COLLAPSE => TRUE)); } ?></td>
-		</tr>
-		<?php endforeach ?>
-		</tbody>
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Autowired</th>
+		<th>Service</th>
+		<th>Meta</th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php foreach ($services as $name => $class): ?>
+	<?php $autowired = array_keys($container->classes, $name); ?>
+	<tr>
+		<td class="<?php echo isset($registry[$name]) ? 'created' : '' ?>"><?php echo htmlSpecialChars($name) ?></td>
+		<td title="<?php echo htmlSpecialChars(implode(" \n", $autowired)) ?>" class="<?php echo $autowired ? 'yes' : '' ?>"><?php echo $autowired ? 'yes' : 'no' ?></td>
+		<td>
+		<?php if (isset($registry[$name]) && !$registry[$name] instanceof Nette\DI\Container): ?>
+			<?php echo Dumper::toHtml($registry[$name], array(Dumper::COLLAPSE => TRUE)); ?>
+		<?php elseif (isset($registry[$name])): ?>
+			<code><?php echo get_class($registry[$name]) ?></code>
+		<?php elseif (is_string($class)): ?>
+			<code><?php echo htmlSpecialChars($class) ?></code>
+		<?php endif ?>
+		</td>
+		<td><?php if (isset($container->meta[$name])) { echo Dumper::toHtml($container->meta[$name], array(Dumper::COLLAPSE => TRUE)); } ?></td>
+	</tr>
+	<?php endforeach ?>
+	</tbody>
 	</table>
 
 	<h2>Factories</h2>
 
 	<table>
-		<thead>
-		<tr>
-			<th>Method</th>
-			<th>Returns</th>
-		</tr>
-		</thead>
-		<tbody>
-		<?php foreach ($factories as $name => $class): ?>
-		<tr>
-			<td><?php echo htmlSpecialChars($name) ?>()</td>
-			<td><code><?php echo htmlSpecialChars($class) ?><code></td>
-		</tr>
-		<?php endforeach ?>
-		</tbody>
+	<thead>
+	<tr>
+		<th>Method</th>
+		<th>Returns</th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php foreach ($factories as $name => $class): ?>
+	<tr>
+		<td><?php echo htmlSpecialChars($name) ?>()</td>
+		<td><code><?php echo htmlSpecialChars($class) ?><code></td>
+	</tr>
+	<?php endforeach ?>
+	</tbody>
 	</table>
 </div>
 </div>

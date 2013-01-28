@@ -17,14 +17,14 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 $books = $connection->table('book');
 foreach ($books as $book) {
 	foreach ($book->related('book_tag') as $bookTag) {
-		$bookTag->tag;
+	$bookTag->tag;
 	}
 }
 
 $tags = array();
 foreach ($books as $book) {
 	foreach ($book->related('book_tag_alt') as $bookTag) {
-		$tags[] = $bookTag->tag->name;
+	$tags[] = $bookTag->tag->name;
 	}
 }
 

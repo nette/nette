@@ -3,67 +3,67 @@
 <div class="nette-inner nette-DumpPanel">
 
 	<table>
-			<tr class="">
-		<th>0</th>
-		<td><pre class="nette-dump"><span class="nette-dump-number">10</span>
-</pre>
-</td>
-	</tr>
-		<tr class="nette-alt">
-		<th>1</th>
-		<td><pre class="nette-dump"><span class="nette-dump-number">20.2</span>
-</pre>
-</td>
-	</tr>
 		<tr class="">
-		<th>2</th>
-		<td><pre class="nette-dump"><span class="nette-dump-bool">TRUE</span>
+	<th>0</th>
+	<td><pre class="nette-dump"><span class="nette-dump-number">10</span>
 </pre>
 </td>
 	</tr>
-		<tr class="nette-alt">
-		<th>3</th>
-		<td><pre class="nette-dump"><span class="nette-dump-bool">FALSE</span>
+	<tr class="nette-alt">
+	<th>1</th>
+	<td><pre class="nette-dump"><span class="nette-dump-number">20.2</span>
 </pre>
 </td>
 	</tr>
-		<tr class="">
-		<th>4</th>
-		<td><pre class="nette-dump"><span class="nette-dump-null">NULL</span>
+	<tr class="">
+	<th>2</th>
+	<td><pre class="nette-dump"><span class="nette-dump-bool">TRUE</span>
 </pre>
 </td>
 	</tr>
-		<tr class="nette-alt">
-		<th>5</th>
-		<td><pre class="nette-dump"><span class="nette-dump-string">"hello"</span> (5)
+	<tr class="nette-alt">
+	<th>3</th>
+	<td><pre class="nette-dump"><span class="nette-dump-bool">FALSE</span>
 </pre>
 </td>
 	</tr>
-		<tr class="">
-		<th>6</th>
-		<td><pre class="nette-dump"><span class="nette-toggle"><span class="nette-dump-array">array</span> (2)</span>
+	<tr class="">
+	<th>4</th>
+	<td><pre class="nette-dump"><span class="nette-dump-null">NULL</span>
+</pre>
+</td>
+	</tr>
+	<tr class="nette-alt">
+	<th>5</th>
+	<td><pre class="nette-dump"><span class="nette-dump-string">"hello"</span> (5)
+</pre>
+</td>
+	</tr>
+	<tr class="">
+	<th>6</th>
+	<td><pre class="nette-dump"><span class="nette-toggle"><span class="nette-dump-array">array</span> (2)</span>
 <div><span class="nette-dump-indent">   </span><span class="nette-dump-key">key1</span> => <span class="nette-dump-string">"val1"</span> (4)
 <span class="nette-dump-indent">   </span><span class="nette-dump-key">key2</span> => <span class="nette-dump-bool">TRUE</span>
 </div></pre>
 </td>
 	</tr>
-		<tr class="nette-alt">
-		<th>7</th>
-		<td><pre class="nette-dump"><span class="nette-toggle"><span class="nette-dump-object">stdClass</span> (2)</span>
+	<tr class="nette-alt">
+	<th>7</th>
+	<td><pre class="nette-dump"><span class="nette-toggle"><span class="nette-dump-object">stdClass</span> (2)</span>
 <div><span class="nette-dump-indent">   </span><span class="nette-dump-key">key1</span> => <span class="nette-dump-string">"val1"</span> (4)
 <span class="nette-dump-indent">   </span><span class="nette-dump-key">key2</span> => <span class="nette-dump-bool">TRUE</span>
 </div></pre>
 </td>
 	</tr>
-		</table>
-		<h2>String</h2>
+	</table>
+	<h2>String</h2>
 
 	<table>
-			<tr class="">
-		<th></th>
-		<td><pre class="nette-dump"><span class="nette-dump-string">"&lt;a href="#"&gt;test&lt;/a&gt;"</span> (20)
+		<tr class="">
+	<th></th>
+	<td><pre class="nette-dump"><span class="nette-dump-string">"&lt;a href="#"&gt;test&lt;/a&gt;"</span> (20)
 </pre>
 </td>
 	</tr>
-		</table>
+	</table>
 </div>%A%

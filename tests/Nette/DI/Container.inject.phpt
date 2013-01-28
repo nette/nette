@@ -21,17 +21,17 @@ class Test1
 
 	function inject(stdClass $obj)
 	{
-		$this->injects[] = __METHOD__;
+	$this->injects[] = __METHOD__;
 	}
 
 	function injectA(stdClass $obj)
 	{
-		$this->injects[] = __METHOD__;
+	$this->injects[] = __METHOD__;
 	}
 
 	protected function injectB(stdClass $obj)
 	{
-		$this->injects[] = __METHOD__;
+	$this->injects[] = __METHOD__;
 	}
 
 }
@@ -41,7 +41,7 @@ class Test2 extends Test1
 
 	function injectC(stdClass $obj)
 	{
-		$this->injects[] = __METHOD__;
+	$this->injects[] = __METHOD__;
 	}
 
 }

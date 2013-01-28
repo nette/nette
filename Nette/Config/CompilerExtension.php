@@ -35,9 +35,9 @@ abstract class CompilerExtension extends Nette\Object
 
 	public function setCompiler(Compiler $compiler, $name)
 	{
-		$this->compiler = $compiler;
-		$this->name = $name;
-		return $this;
+	$this->compiler = $compiler;
+	$this->name = $name;
+	return $this;
 	}
 
 
@@ -50,11 +50,11 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function getConfig(array $defaults = NULL, $expand = TRUE)
 	{
-		$config = $this->compiler->getConfig();
-		$config = isset($config[$this->name]) ? $config[$this->name] : array();
-		unset($config['services'], $config['factories']);
-		$config = Helpers::merge($config, $defaults);
-		return $expand ? $this->compiler->getContainerBuilder()->expand($config) : $config;
+	$config = $this->compiler->getConfig();
+	$config = isset($config[$this->name]) ? $config[$this->name] : array();
+	unset($config['services'], $config['factories']);
+	$config = Helpers::merge($config, $defaults);
+	return $expand ? $this->compiler->getContainerBuilder()->expand($config) : $config;
 	}
 
 
@@ -64,7 +64,7 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function getContainerBuilder()
 	{
-		return $this->compiler->getContainerBuilder();
+	return $this->compiler->getContainerBuilder();
 	}
 
 
@@ -76,13 +76,13 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function loadFromFile($file)
 	{
-		$loader = new Loader;
-		$res = $loader->load($file);
-		$container = $this->compiler->getContainerBuilder();
-		foreach ($loader->getDependencies() as $file) {
-			$container->addDependency($file);
-		}
-		return $res;
+	$loader = new Loader;
+	$res = $loader->load($file);
+	$container = $this->compiler->getContainerBuilder();
+	foreach ($loader->getDependencies() as $file) {
+		$container->addDependency($file);
+	}
+	return $res;
 	}
 
 
@@ -94,7 +94,7 @@ abstract class CompilerExtension extends Nette\Object
 	 */
 	public function prefix($id)
 	{
-		return substr_replace($id, $this->name . '.', substr($id, 0, 1) === '@' ? 1 : 0, 0);
+	return substr_replace($id, $this->name . '.', substr($id, 0, 1) === '@' ? 1 : 0, 0);
 	}
 
 

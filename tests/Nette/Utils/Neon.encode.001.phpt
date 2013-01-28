@@ -18,10 +18,10 @@ require __DIR__ . '/../bootstrap.php';
 Assert::same(
 	'[true, "TRUE", "tRuE", "true", false, "FALSE", "fAlSe", "false", null, "NULL", "nUlL", "null", "yes", "no", "on", "off"]',
 	Neon::encode(array(
-		TRUE, 'TRUE', 'tRuE', 'true',
-		FALSE, 'FALSE', 'fAlSe', 'false',
-		NULL, 'NULL', 'nUlL', 'null',
-		'yes', 'no', 'on', 'off',
+	TRUE, 'TRUE', 'tRuE', 'true',
+	FALSE, 'FALSE', 'fAlSe', 'false',
+	NULL, 'NULL', 'nUlL', 'null',
+	'yes', 'no', 'on', 'off',
 )) );
 
 Assert::same(

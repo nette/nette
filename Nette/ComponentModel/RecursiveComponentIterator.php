@@ -30,7 +30,7 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	 */
 	public function hasChildren()
 	{
-		return $this->current() instanceof IContainer;
+	return $this->current() instanceof IContainer;
 	}
 
 
@@ -41,7 +41,7 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	 */
 	public function getChildren()
 	{
-		return $this->current()->getComponents();
+	return $this->current()->getComponents();
 	}
 
 
@@ -52,7 +52,7 @@ class RecursiveComponentIterator extends \RecursiveArrayIterator implements \Cou
 	 */
 	public function count()
 	{
-		return iterator_count($this);
+	return iterator_count($this);
 	}
 
 }

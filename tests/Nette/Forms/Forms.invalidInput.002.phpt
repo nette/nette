@@ -45,7 +45,7 @@ $_FILES = array(
 	'password' => $tmp,
 	'firstperson' => $tmp,
 	'secondperson' => array(
-		'age' => $tmp,
+	'age' => $tmp,
 	),
 	'submit1' => $tmp,
 	'userid' => $tmp,
@@ -53,8 +53,8 @@ $_FILES = array(
 
 $countries = array(
 	'Europe' => array(
-		1 => 'Czech Republic',
-		2 => 'Slovakia',
+	1 => 'Czech Republic',
+	2 => 'Slovakia',
 	),
 	3 => 'USA',
 	4 => 'other',
@@ -97,10 +97,10 @@ Assert::equal( ArrayHash::from(array(
 	'avatar' => new Http\FileUpload(array()),
 	'userid' => 'invalidutf',
 	'firstperson' => ArrayHash::from(array(
-		'age' => '',
+	'age' => '',
 	)),
 	'secondperson' => ArrayHash::from(array(
-		'age' => '',
-		'avatar' => new Http\FileUpload(array()),
+	'age' => '',
+	'avatar' => new Http\FileUpload(array()),
 	)),
 ), FALSE), $form->getValues() );
