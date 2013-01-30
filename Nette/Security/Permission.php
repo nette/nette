@@ -22,12 +22,19 @@ use Nette;
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
  * @author     David Grudl
+ * @author     Jachym Tousek
  *
  * @property-read array $roles
  * @property-read array $resources
  */
 class Permission extends Nette\Object implements IAuthorizator
 {
+	/** @var string  default role for unauthenticated user */
+	public $guestRole = 'guest';
+
+	/** @var string  default role for authenticated user without own identity */
+	public $authenticatedRole = 'authenticated';
+
 	/** @var array  Role storage */
 	private $roles = array();
 
@@ -130,7 +137,12 @@ class Permission extends Nette\Object implements IAuthorizator
 			throw new Nette\InvalidArgumentException("Role must be a non-empty string.");
 
 		} elseif ($need && !isset($this->roles[$role])) {
-			throw new Nette\InvalidStateException("Role '$role' does not exist.");
+			// lazy addition of guest role and authenticated role
+			if ($role === $this->guestRole || $role === $this->authenticatedRole) {
+				$this->addRole($role);
+			} else {
+				throw new Nette\InvalidStateException("Role '$role' does not exist.");
+			}
 		}
 	}
 
@@ -642,7 +654,16 @@ class Permission extends Nette\Object implements IAuthorizator
 			$this->checkResource($resource);
 		}
 
-		foreach ($identity->getRoles() as $role) {
+		if (!$identity) { // guest
+			$roles = array($this->guestRole);
+		} else {
+			$roles = $identity->getRoles();
+			if (empty($roles)) { // authenticated user without a role
+				$roles = array($this->authenticatedRole);
+			}
+		}
+
+		foreach ($roles as $role) {
 			$this->queriedRole = $role;
 			if ($role instanceof IRole) {
 				$role = $role->getRoleId();

@@ -19,6 +19,7 @@ use Nette;
  * User authentication and authorization.
  *
  * @author     David Grudl
+ * @author     Jachym Tousek
  *
  * @property-read bool $loggedIn
  * @property-read IIdentity $identity
@@ -34,12 +35,6 @@ class User extends Nette\Object
 	const MANUAL = IUserStorage::MANUAL,
 		INACTIVITY = IUserStorage::INACTIVITY,
 		BROWSER_CLOSED = IUserStorage::BROWSER_CLOSED;/**/
-
-	/** @var string  default role for unauthenticated user */
-	public $guestRole = 'guest';
-
-	/** @var string  default role for authenticated user without own identity */
-	public $authenticatedRole = 'authenticated';
 
 	/** @var array of function(User $sender); Occurs when the user is successfully logged in */
 	public $onLoggedIn;
@@ -216,12 +211,8 @@ class User extends Nette\Object
 	 */
 	public function getRoles()
 	{
-		if (!$this->isLoggedIn()) {
-			return array($this->guestRole);
-		}
-
 		$identity = $this->getIdentity();
-		return $identity && $identity->getRoles() ? $identity->getRoles() : array($this->authenticatedRole);
+		return $identity ? $identity->getRoles() : array();
 	}
 
 
