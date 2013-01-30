@@ -35,11 +35,11 @@ interface IAuthorizator
 
 	/**
 	 * Performs a role-based authorization.
-	 * @param  string  role
-	 * @param  string  resource
+	 * @param  IIdentity|NULL  identity or NULL for guest
+	 * @param  string|IResource  resource
 	 * @param  string  privilege
 	 * @return bool
 	 */
-	function isAllowed($role/*5.2* = self::ALL*/, $resource/*5.2* = self::ALL*/, $privilege/*5.2* = self::ALL*/);
+	function isAllowed(IIdentity $identity = NULL, $resource/*5.2* = self::ALL*/, $privilege/*5.2* = self::ALL*/);
 
 }

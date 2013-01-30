@@ -241,20 +241,13 @@ class User extends Nette\Object
 	/**
 	 * Has a user effective access to the Resource?
 	 * If $resource is NULL, then the query applies to all resources.
-	 * @param  string  resource
+	 * @param  string|IResource  resource
 	 * @param  string  privilege
 	 * @return bool
 	 */
 	public function isAllowed($resource = IAuthorizator::ALL, $privilege = IAuthorizator::ALL)
 	{
-		$authorizator = $this->getAuthorizator();
-		foreach ($this->getRoles() as $role) {
-			if ($authorizator->isAllowed($role, $resource, $privilege)) {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
+		return $this->getAuthorizator()->isAllowed($this->isLoggedIn() ? $this->getIdentity() : NULL, $resource, $privilege);
 	}
 
 

@@ -25,8 +25,6 @@ use Nette;
  *
  * @property-read array $roles
  * @property-read array $resources
- * @property-read mixed $queriedRole
- * @property-read mixed $queriedResource
  */
 class Permission extends Nette\Object implements IAuthorizator
 {
@@ -51,8 +49,14 @@ class Permission extends Nette\Object implements IAuthorizator
 		'byResource' => array(),
 	);
 
-	/** @var mixed */
-	private $queriedRole, $queriedResource;
+	/** @var IIdentity|NULL */
+	private $queriedIdentity;
+
+	/** @var string|IRole */
+	private $queriedRole;
+
+	/** @var string|IResource */
+	private $queriedResource;
 
 
 
@@ -613,28 +617,22 @@ class Permission extends Nette\Object implements IAuthorizator
 
 
 	/**
-	 * Returns TRUE if and only if the Role has access to [certain $privileges upon] the Resource.
+	 * Returns TRUE if and only if the user has access to [certain $privileges upon] the Resource.
 	 *
 	 * This method checks Role inheritance using a depth-first traversal of the Role list.
 	 * The highest priority parent (i.e., the parent most recently added) is checked first,
 	 * and its respective parents are checked similarly before the lower-priority parents of
 	 * the Role are checked.
 	 *
-	 * @param  string|Permission::ALL|IRole  role
+	 * @param  IIdentity|NULL  identity or NULL for guest
 	 * @param  string|Permission::ALL|IResource  resource
 	 * @param  string|Permission::ALL  privilege
 	 * @throws Nette\InvalidStateException
 	 * @return bool
 	 */
-	public function isAllowed($role = self::ALL, $resource = self::ALL, $privilege = self::ALL)
+	public function isAllowed(IIdentity $identity = NULL, $resource = self::ALL, $privilege = self::ALL)
 	{
-		$this->queriedRole = $role;
-		if ($role !== self::ALL) {
-			if ($role instanceof IRole) {
-				$role = $role->getRoleId();
-			}
-			$this->checkRole($role);
-		}
+		$this->queriedIdentity = $identity;
 
 		$this->queriedResource = $resource;
 		if ($resource !== self::ALL) {
@@ -644,12 +642,44 @@ class Permission extends Nette\Object implements IAuthorizator
 			$this->checkResource($resource);
 		}
 
+		foreach ($identity->getRoles() as $role) {
+			$this->queriedRole = $role;
+			if ($role instanceof IRole) {
+				$role = $role->getRoleId();
+			}
+			$this->checkRole($role);
+			$result = $this->isRoleAllowed($role, $resource, $privilege);
+			if ($result !== NULL) {
+				return $result;
+			}
+		}
+
+		// no rule matched
+		return FALSE;
+	}
+
+
+
+	/********************* internals ****************d*g**/
+
+
+
+	/**
+	 * Returns TRUE if and only if the role has access to [certain $privileges upon] the Resource.
+	 *
+	 * @param  string  role
+	 * @param  string|Permission::ALL  resource
+	 * @param  string|Permission::ALL  privilege
+	 * @return bool
+	 */
+	private function isRoleAllowed($role, $resource, $privilege)
+	{
 		do {
 			// depth-first search on $role if it is not 'allRoles' pseudo-parent
 			if ($role !== NULL) {
 				$result = $this->searchRolePrivileges($privilege === self::ALL, $role, $resource, $privilege);
 				if ($result !== NULL) {
-					break;
+					return $result;
 				}
 			}
 
@@ -657,61 +687,31 @@ class Permission extends Nette\Object implements IAuthorizator
 				$rules = $this->getRules($resource, self::ALL); // look for rule on 'allRoles' psuedo-parent
 				if ($rules) {
 					foreach ($rules['byPrivilege'] as $privilege => $rule) {
-						$result = $this->getRuleType($resource, NULL, $privilege);
-						if ($result === self::DENY) {
-							break 2;
+						if ($this->getRuleType($resource, NULL, $privilege) === self::DENY) {
+							return self::DENY;
 						}
 					}
 					$result = $this->getRuleType($resource, NULL, NULL);
 					if ($result !== NULL) {
-						break;
+						return $result;
 					}
 				}
 			} else {
 				$result = $this->getRuleType($resource, NULL, $privilege);
 				if ($result !== NULL) { // look for rule on 'allRoles' pseudo-parent
-					break;
+					return $result;
 
 				} else {
 					$result = $this->getRuleType($resource, NULL, NULL);
 					if ($result !== NULL) {
-						break;
+						return $result;
 					}
 				}
 			}
 
 			$resource = $this->resources[$resource]['parent']; // try next Resource
 		} while (TRUE);
-
-		$this->queriedRole = $this->queriedResource = NULL;
-		return $result;
 	}
-
-
-
-	/**
-	 * Returns real currently queried Role. Use by assertion.
-	 * @return mixed
-	 */
-	public function getQueriedRole()
-	{
-		return $this->queriedRole;
-	}
-
-
-
-	/**
-	 * Returns real currently queried Resource. Use by assertion.
-	 * @return mixed
-	 */
-	public function getQueriedResource()
-	{
-		return $this->queriedResource;
-	}
-
-
-
-	/********************* internals ****************d*g**/
 
 
 
@@ -796,7 +796,7 @@ class Permission extends Nette\Object implements IAuthorizator
 			$rule = $rules['byPrivilege'][$privilege];
 		}
 
-		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this, $role, $resource, $privilege)) {
+		if ($rule['assert'] === NULL || $rule['assert']->__invoke($this->queriedIdentity, $this->queriedResource, $this->queriedRole)) {
 			return $rule['type'];
 
 		} elseif ($resource !== self::ALL || $role !== self::ALL || $privilege !== self::ALL) {
