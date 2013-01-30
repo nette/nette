@@ -14,7 +14,8 @@ namespace Nette\Database\Table;
 use Nette,
 	Nette\Database\Connection,
 	Nette\Database\IReflection,
-	Nette\Database\ISupplementalDriver;
+	Nette\Database\ISupplementalDriver,
+	Nette\Database\SqlLiteral;
 
 
 
@@ -142,44 +143,83 @@ class SqlBuilder extends Nette\Object
 		$condition = $this->removeExtraTables($condition);
 		$condition = $this->tryDelimite($condition);
 
-		if (count($args) !== 2 || strpbrk($condition, '?:')) { // where('column < ? OR column > ?', array(1, 2))
-			if (count($args) !== 2 || !is_array($parameters)) { // where('column < ? OR column > ?', 1, 2)
-				$parameters = $args;
-				array_shift($parameters);
-			}
+		$placeholderCount = substr_count($condition, '?');
+		if ($placeholderCount > 1 && count($args) === 2 && is_array($parameters)) {
+			$args = $parameters;
+		} else {
+			array_shift($args);
+		}
 
-			$this->parameters = array_merge($this->parameters, $parameters);
+		if ($placeholderCount === 0 && count($args) === 1) {
+			$condition .= ' ?';
+		} elseif ($placeholderCount !== count($args)) {
+			throw new Nette\InvalidArgumentException('Argument count does not match placeholder count.');
+		}
 
-		} elseif ($parameters === NULL) { // where('column', NULL)
-			$condition .= ' IS NULL';
+		$replace = NULL;
+		$placeholderNum = 0;
+		foreach ($args as $arg) {
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}((?:(=|LIKE|IN)\s*)?(%)?\?(%)?)#', $condition, $match, PREG_OFFSET_CAPTURE);
 
-		} elseif ($parameters instanceof Selection) { // where('column', $db->$table())
-			$clone = clone $parameters;
-			if (!$clone->getSqlBuilder()->select) {
-				$clone->select($clone->primary);
-			}
-
-			if ($this->driverName !== 'mysql') {
-				$condition .= ' IN (' . $clone->getSql() . ')';
-			} else {
-				$in = array();
-				foreach ($clone as $row) {
-					$this->parameters[] = array_values(iterator_to_array($row));
-					$in[] = (count($row) === 1 ? '?' : '(?)');
+			if ($arg === NULL) {
+				if (!empty($match[2][0])) {
+					throw new Nette\InvalidArgumentException('Column operator does not accept NULL argument.');
 				}
-				$condition .= ' IN (' . ($in ? implode(', ', $in) : 'NULL') . ')';
+				$replace = 'IS NULL';
+			} elseif ($arg instanceof Selection) {
+				$clone = clone $arg;
+				if (!$clone->getSqlBuilder()->select) {
+					$clone->select($clone->getPrimary());
+				}
+
+				if ($this->driverName !== 'mysql') {
+					$replace = 'IN (?)';
+					$this->parameters[] = new SqlLiteral($clone->getSql());
+				} else {
+					$parameter = array();
+					foreach ($clone as $row) {
+						$parameter[] = array_values(iterator_to_array($row));
+					}
+					if (!$parameter) {
+						$replace = 'IN (NULL)';
+					}  else {
+						$replace = 'IN (?)';
+						$this->parameters[] = $parameter;
+					}
+				}
+			} elseif ($arg instanceof SqlLiteral) {
+				$this->parameters[] = $arg;
+			} elseif (is_array($arg)) {
+				if (!empty($match[2][0])) {
+					if ($match[2][0] !== 'IN') {
+						throw new Nette\InvalidArgumentException('Column operator does not accept array argument.');
+					}
+				} else {
+					$match[2][0] = 'IN';
+				}
+
+				if (!$arg) {
+					$replace = $match[2][0] . ' (NULL)';
+				} else {
+					$replace = $match[2][0] . ' (?)';
+					$this->parameters[] = $arg;
+				}
+			} else {
+				if (!empty($match[2][0])) {
+					$replace = $match[2][0] . ' ?';
+				} else {
+					$replace = '= ?';
+				}
+				$this->parameters[] = $arg;
 			}
 
-		} elseif (!is_array($parameters)) { // where('column', 'x')
-			$condition .= ' = ?';
-			$this->parameters[] = $parameters;
+			if ($replace) {
+				$condition = substr_replace($condition, $replace, $match[1][1], strlen($match[1][0]));
+				$replace = NULL;
+			}
 
-		} else { // where('column', array(1, 2))
-			if ($parameters) {
-				$condition .= " IN (?)";
-				$this->parameters[] = $parameters;
-			} else {
-				$condition .= " IN (NULL)";
+			if ($arg !== NULL) {
+				$placeholderNum++;
 			}
 		}
 
