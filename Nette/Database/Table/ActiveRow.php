@@ -21,7 +21,7 @@ use Nette;
  *
  * @author     Jakub Vrana
  */
-class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class ActiveRow extends Nette\Object implements IActiveRowAccessor, \IteratorAggregate, \ArrayAccess
 {
 	/** @var Selection */
 	private $table;
@@ -330,7 +330,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 		$this->table->accessColumn($key, $selectColumn);
 		if ($this->table->getDataRefreshed() && !$this->dataRefreshed) {
-			$this->data = $this->table[$this->getSignature()]->data;
+			$this->data = $this->table[$this->getSignature()]->getActiveRow()->data;
 			$this->dataRefreshed = TRUE;
 		}
 	}
@@ -349,9 +349,10 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		$this->accessColumn($column);
 		if (array_key_exists($column, $this->data)) {
 			$value = $this->data[$column];
-			$value = $value instanceof ActiveRow ? $value->getPrimary() : $value;
+			$value = $value instanceof IActiveRowAccessor ? $value->getActiveRow()->getPrimary() : $value;
 
 			$referenced = $this->table->getReferencedTable($table, $column, !empty($this->modified[$column]));
+			$referenced = $referenced instanceof ISelectionAccessor ? $referenced->getSelection() : $referenced;
 			$referenced = isset($referenced[$value]) ? $referenced[$value] : NULL; // referenced row may not exist
 
 			if (!empty($this->modified[$column])) { // cause saving changed column and prevent regenerating referenced table for $column
@@ -362,6 +363,17 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		}
 
 		return FALSE;
+	}
+
+	
+	
+	/**
+	 * Returns ActiveRow
+	 * @return ActiveRow
+	 */
+	public function getActiveRow()
+	{
+		return $this;
 	}
 
 }

@@ -167,8 +167,9 @@ class GroupedSelection extends Selection
 			$offset = array();
 			$this->accessColumn($this->column);
 			foreach ((array) $this->rows as $key => $row) {
-				$ref = & $refData[$row[$this->column]];
-				$skip = & $offset[$row[$this->column]];
+				$rowActive = $row->getActiveRow();
+				$ref = & $refData[$rowActive[$this->column]];
+				$skip = & $offset[$rowActive[$this->column]];
 				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->sqlBuilder->getOffset())) {
 					$ref[$key] = $row;
 				} else {
@@ -184,7 +185,7 @@ class GroupedSelection extends Selection
 			$this->data = array();
 		} else {
 			foreach ($this->data as $row) {
-				$row->setTable($this); // injects correct parent GroupedSelection
+				$row->getActiveRow()->setTable($this); // injects correct parent GroupedSelection
 			}
 			reset($this->data);
 			$this->checkReferenced = TRUE;
