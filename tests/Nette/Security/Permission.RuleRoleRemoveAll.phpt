@@ -4,10 +4,12 @@
  * Test: Nette\Security\Permission Ensures that removal of all Roles results in Role-specific rules being removed.
  *
  * @author     David Grudl
+ * @author     Jachym Tousek
  * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Nette\Security\Identity;
 
 
 
@@ -15,14 +17,15 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+$identity = new Identity(1, array('user'));
 $acl = new Permission;
-$acl->addRole('guest');
-$acl->allow('guest');
-Assert::true( $acl->isAllowed('guest') );
+$acl->addRole('user');
+$acl->allow('user');
+Assert::true( $acl->isAllowed($identity) );
 $acl->removeAllRoles();
-Assert::exception(function() use ($acl) {
-	$acl->isAllowed('guest');
-}, 'Nette\InvalidStateException', "Role 'guest' does not exist.");
+Assert::exception(function() use ($acl, $identity) {
+	$acl->isAllowed($identity);
+}, 'Nette\InvalidStateException', "Role 'user' does not exist.");
 
-$acl->addRole('guest');
-Assert::false( $acl->isAllowed('guest') );
+$acl->addRole('user');
+Assert::false( $acl->isAllowed($identity) );

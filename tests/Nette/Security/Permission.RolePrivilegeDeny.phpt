@@ -4,10 +4,12 @@
  * Test: Nette\Security\Permission Ensures that a privilege denied for a particular Role upon all Resources works properly.
  *
  * @author     David Grudl
+ * @author     Jachym Tousek
  * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Nette\Security\Identity;
 
 
 
@@ -15,8 +17,9 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+$identity = new Identity(1, array('user'));
 $acl = new Permission;
-$acl->addRole('guest');
-$acl->allow('guest');
-$acl->deny('guest', NULL, 'somePrivilege');
-Assert::false( $acl->isAllowed('guest', NULL, 'somePrivilege') );
+$acl->addRole('user');
+$acl->allow('user');
+$acl->deny('user', NULL, 'somePrivilege');
+Assert::false( $acl->isAllowed($identity, NULL, 'somePrivilege') );

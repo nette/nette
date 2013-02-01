@@ -16,11 +16,11 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-$acl->addRole('guest');
+$acl->addRole('user');
 Assert::exception(function() use ($acl) {
-	$acl->roleInheritsFrom('nonexistent', 'guest');
+	$acl->roleInheritsFrom('nonexistent', 'user');
 }, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");
 
 Assert::exception(function() use ($acl) {
-	$acl->roleInheritsFrom('guest', 'nonexistent');
+	$acl->roleInheritsFrom('user', 'nonexistent');
 }, 'Nette\InvalidStateException', "Role 'nonexistent' does not exist.");

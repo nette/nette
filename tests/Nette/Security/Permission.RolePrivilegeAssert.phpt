@@ -4,10 +4,12 @@
  * Test: Nette\Security\Permission Ensures that assertions on privileges work properly for a particular Role.
  *
  * @author     David Grudl
+ * @author     Jachym Tousek
  * @package    Nette\Security
  */
 
-use Nette\Security\Permission;
+use Nette\Security\Permission,
+	Nette\Security\Identity;
 
 
 
@@ -25,9 +27,10 @@ function trueAssertion()
 }
 
 
+$identity = new Identity(1, array('user'));
 $acl = new Permission;
-$acl->addRole('guest');
-$acl->allow('guest', NULL, 'somePrivilege', 'trueAssertion');
-Assert::true( $acl->isAllowed('guest', NULL, 'somePrivilege') );
-$acl->allow('guest', NULL, 'somePrivilege', 'falseAssertion');
-Assert::false( $acl->isAllowed('guest', NULL, 'somePrivilege') );
+$acl->addRole('user');
+$acl->allow('user', NULL, 'somePrivilege', 'trueAssertion');
+Assert::true( $acl->isAllowed($identity, NULL, 'somePrivilege') );
+$acl->allow('user', NULL, 'somePrivilege', 'falseAssertion');
+Assert::false( $acl->isAllowed($identity, NULL, 'somePrivilege') );

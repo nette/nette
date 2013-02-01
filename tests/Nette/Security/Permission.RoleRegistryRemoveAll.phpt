@@ -16,6 +16,6 @@ require __DIR__ . '/../bootstrap.php';
 
 
 $acl = new Permission;
-$acl->addRole('guest');
+$acl->addRole('user');
 $acl->removeAllRoles();
-Assert::false( $acl->hasRole('guest') );
+Assert::false( $acl->hasRole('user') );
