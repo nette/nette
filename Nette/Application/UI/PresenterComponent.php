@@ -64,10 +64,10 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($presenter)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if ($presenter instanceof Presenter) {
-			$this->loadState($presenter->popGlobalParameters($this->getUniqueId()));
+		if ($component instanceof Presenter) {
+			$this->loadState($component->popGlobalParameters($this->getUniqueId()));
 		}
 	}
 

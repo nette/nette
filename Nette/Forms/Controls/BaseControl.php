@@ -98,12 +98,12 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * This method will be called when the component becomes attached to Form.
-	 * @param  Nette\Forms\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($form)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if (!$this->disabled && $form instanceof Form && $form->isAnchored() && $form->isSubmitted()) {
+		if (!$this->disabled && $component instanceof Form && $component->isAnchored() && $component->isSubmitted()) {
 			$this->htmlName = NULL;
 			$this->loadHttpData();
 		}

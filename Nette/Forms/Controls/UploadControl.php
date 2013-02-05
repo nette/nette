@@ -38,18 +38,18 @@ class UploadControl extends BaseControl
 	/**
 	 * This method will be called when the component (or component's parent)
 	 * becomes attached to a monitored object. Do not call this method yourself.
-	 * @param  Nette\Forms\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($form)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if ($form instanceof Nette\Forms\Form) {
-			if ($form->getMethod() !== Nette\Forms\Form::POST) {
+		if ($component instanceof Nette\Forms\Form) {
+			if ($component->getMethod() !== Nette\Forms\Form::POST) {
 				throw new Nette\InvalidStateException('File upload requires method POST.');
 			}
-			$form->getElementPrototype()->enctype = 'multipart/form-data';
+			$component->getElementPrototype()->enctype = 'multipart/form-data';
 		}
-		parent::attached($form);
+		parent::attached($component);
 	}
 
 

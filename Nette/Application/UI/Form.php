@@ -57,9 +57,9 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($presenter)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if ($presenter instanceof Presenter) {
+		if ($component instanceof Presenter) {
 			$name = $this->lookupPath('Nette\Application\UI\Presenter');
 
 			if (!isset($this->getElementPrototype()->id)) {
@@ -67,7 +67,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 			}
 
 			$this->setAction(new Link(
-				$presenter,
+				$component,
 				$name . self::NAME_SEPARATOR . 'submit!',
 				array()
 			));
@@ -81,7 +81,7 @@ class Form extends Nette\Forms\Form implements ISignalReceiver
 				}
 			}
 		}
-		parent::attached($presenter);
+		parent::attached($component);
 	}
 
 

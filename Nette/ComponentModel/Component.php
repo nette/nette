@@ -141,7 +141,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * @param  IComponent
 	 * @return void
 	 */
-	protected function attached($obj)
+	protected function attached(IComponent $component)
 	{
 	}
 
@@ -153,7 +153,7 @@ abstract class Component extends Nette\Object implements IComponent
 	 * @param  IComponent
 	 * @return void
 	 */
-	protected function detached($obj)
+	protected function detached(IComponent $component)
 	{
 	}
 
