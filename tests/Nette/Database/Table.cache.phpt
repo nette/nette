@@ -22,7 +22,7 @@ $connection->setDatabaseReflection(new Nette\Database\Reflection\DiscoveredRefle
 
 
 // Testing Selection caching
-$bookSelection = $connection->table('book')->find(2);
+$bookSelection = $connection->table('book')->wherePrimary(2);
 switch ($driverName) {
 	case 'mysql':
 		Assert::same('SELECT * FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -37,7 +37,7 @@ $book = $bookSelection->fetch();
 $book->title;
 $book->translator;
 $bookSelection->__destruct();
-$bookSelection = $connection->table('book')->find(2);
+$bookSelection = $connection->table('book')->wherePrimary(2);
 switch ($driverName) {
 	case 'mysql':
 		Assert::same('SELECT `id`, `title`, `translator_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -60,7 +60,7 @@ switch ($driverName) {
 }
 
 $bookSelection->__destruct();
-$bookSelection = $connection->table('book')->find(2);
+$bookSelection = $connection->table('book')->wherePrimary(2);
 switch ($driverName) {
 	case 'mysql':
 		Assert::same('SELECT `id`, `title`, `translator_id`, `author_id` FROM `book` WHERE (`id` = ?)', $bookSelection->getSql());
@@ -140,7 +140,7 @@ foreach ($connection->table('author') as $author) {
 
 foreach ($relatedStack as $related) {
 	$property = $related->reflection->getProperty('accessedColumns');
-	$property->setAccessible(true);
+	$property->setAccessible(TRUE);
 	// checks if instances have shared data of accessed columns
 	Assert::same(array('id', 'author_id'), array_keys((array) $property->getValue($related)));
 }
