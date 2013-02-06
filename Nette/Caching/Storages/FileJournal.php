@@ -320,8 +320,8 @@ class FileJournal extends Nette\Object implements IJournal
 
 	/**
 	 * Cleans entries from journal by tags.
-     * @param array
-     * @param array
+	 * @param  array
+	 * @param  array
 	 * @return array of removed items
 	 */
 	private function cleanTags(array $tags, array &$toDelete)
