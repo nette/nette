@@ -238,7 +238,7 @@ class FileJournal extends Nette\Object implements IJournal
 				);
 			}
 
-			$dataNodeKey = ++$data[self::INFO][self::LAST_INDEX];
+			$dataNodeKey = $this->findNextFreeKey($freeDataNode, $data);
 			$data[$dataNodeKey] = array(
 				self::KEY => $key,
 				self::TAGS => $tags ? $tags : array(),
@@ -1166,6 +1166,32 @@ class FileJournal extends Nette\Object implements IJournal
 
 
 	/**
+	 * @param  int $nodeId
+	 * @param  array $nodeData
+	 * @return int
+	 * @throws \Nette\InvalidStateException
+	 */
+	private function findNextFreeKey($nodeId, array &$nodeData)
+	{
+	  $newKey = $nodeData[self::INFO][self::LAST_INDEX] + 1;
+		$maxKey = ($nodeId + 1) << self::BITROT;
+
+		if ($newKey >= $maxKey) {
+			$start = $nodeId << self::BITROT;
+			for ($i = $start; $i < $maxKey; $i++) {
+				if (!isset($nodeData[$i])) {
+					return $i;
+				}
+			}
+			throw new Nette\InvalidStateException("Node $nodeId is full.");
+		} else {
+			return ++$nodeData[self::INFO][self::LAST_INDEX];
+		}
+	}
+
+
+
+	/**
 	 * Append $append to $array.
 	 * This function is much faster then $array = array_merge($array, $append)
 	 * @param  array
@@ -1194,5 +1220,4 @@ class FileJournal extends Nette\Object implements IJournal
 			$array[$key] = $value;
 		}
 	}
-
 }
