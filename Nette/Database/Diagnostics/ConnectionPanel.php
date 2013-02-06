@@ -42,6 +42,9 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	/** @var bool */
 	public $disabled = FALSE;
 
+	/** @var array */
+	public $skipPaths = array();
+
 
 
 	public function __construct(Nette\Database\Connection $connection)
@@ -58,7 +61,12 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		}
 		$source = NULL;
 		foreach (/*5.2*PHP_VERSION_ID < 50205 ? debug_backtrace() : */debug_backtrace(FALSE) as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
+			if (isset($row['file']) && is_file($row['file'])) {
+				foreach ($this->skipPaths as $dir) {
+					if (strpos($row['file'], $dir . DIRECTORY_SEPARATOR) === 0) {
+						continue 2;
+					}
+				}
 				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
 				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
 				$source = array($row['file'], (int) $row['line']);
