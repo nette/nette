@@ -262,7 +262,7 @@ class FileJournal extends Nette\Object implements IJournal
 			}
 
 			// ...and priority tree.
-			if ($priority) {
+			if ($priority !== FALSE) {
 				list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
 				$node[$priority][$dataNodeKey] = 1;
 				$this->saveNode($nodeId, $node);
