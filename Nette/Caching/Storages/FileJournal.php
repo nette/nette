@@ -80,7 +80,7 @@ class FileJournal extends Nette\Object implements IJournal
 	/** @var int Last modification time of journal file */
 	private $lastModTime = NULL;
 
-	/** @var array Cache and uncommited but changed nodes */
+	/** @var array Cache and uncommitted but changed nodes */
 	private $nodeCache = array();
 
 	/** @var array */
@@ -112,18 +112,18 @@ class FileJournal extends Nette\Object implements IJournal
 	{
 		$this->file = $dir . '/' . self::FILE;
 
-		// Create jorunal file when not exists
+		// Create journal file when not exists
 		if (!file_exists($this->file)) {
 			$init = @fopen($this->file, 'xb'); // intentionally @
 			if (!$init) {
 				clearstatcache();
 				if (!file_exists($this->file)) {
-					throw new Nette\InvalidStateException("Cannot create journal file $this->file.");
+					throw new Nette\InvalidStateException("Cannot create journal file '$this->file'.");
 				}
 			} else {
-				$writen = fwrite($init, pack('N2', self::FILE_MAGIC, $this->lastNode));
+				$written = fwrite($init, pack('N2', self::FILE_MAGIC, $this->lastNode));
 				fclose($init);
-				if ($writen !== self::INT32_SIZE * 2) {
+				if ($written !== self::INT32_SIZE * 2) {
 					throw new Nette\InvalidStateException("Cannot write journal header.");
 				}
 			}
@@ -161,7 +161,7 @@ class FileJournal extends Nette\Object implements IJournal
 	{
 		if ($this->handle) {
 			$this->headerCommit();
-			flock($this->handle, LOCK_UN); // Since PHP 5.3.3 is manual unlock necesary
+			flock($this->handle, LOCK_UN); // Since PHP 5.3.3 is manual unlock necessary
 			fclose($this->handle);
 			$this->handle = FALSE;
 		}
@@ -197,7 +197,7 @@ class FileJournal extends Nette\Object implements IJournal
 							$this->saveNode($link >> self::BITROT, $dataNode);
 						}
 						$exists = TRUE;
-					} else { // Alredy exists, but with other tags or priority
+					} else { // Already exists, but with other tags or priority
 						$toDelete = array();
 						foreach ($dataNode[$link][self::TAGS] as $tag) {
 							$toDelete[self::TAGS][$tag][$link] = TRUE;
@@ -207,9 +207,12 @@ class FileJournal extends Nette\Object implements IJournal
 						}
 						$toDelete[self::ENTRIES][$keyHash][$link] = TRUE;
 						$this->cleanFromIndex($toDelete);
-						$entriesNode = $this->getNode($entriesNodeId); // Node was changed, get again
+
 						unset($dataNode[$link]);
 						$this->saveNode($link >> self::BITROT, $dataNode);
+
+						// Node was changed but may be empty, find it again
+						list($entriesNodeId, $entriesNode) = $this->findIndexNode(self::ENTRIES, $keyHash);
 					}
 					break;
 				}
@@ -238,7 +241,7 @@ class FileJournal extends Nette\Object implements IJournal
 				);
 			}
 
-			$dataNodeKey = ++$data[self::INFO][self::LAST_INDEX];
+			$dataNodeKey = $this->findNextFreeKey($freeDataNode, $data);
 			$data[$dataNodeKey] = array(
 				self::KEY => $key,
 				self::TAGS => $tags ? $tags : array(),
@@ -262,7 +265,7 @@ class FileJournal extends Nette\Object implements IJournal
 			}
 
 			// ...and priority tree.
-			if ($priority) {
+			if ($priority !== FALSE) {
 				list($nodeId, $node) = $this->findIndexNode(self::PRIORITY, $priority);
 				$node[$priority][$dataNodeKey] = 1;
 				$this->saveNode($nodeId, $node);
@@ -288,7 +291,7 @@ class FileJournal extends Nette\Object implements IJournal
 			$this->nodeCache = $this->nodeChanged = $this->dataNodeFreeSpace = array();
 			$this->deleteAll();
 			$this->unlock();
-			return;
+			return NULL;
 		}
 
 		$toDelete = array(
@@ -320,6 +323,8 @@ class FileJournal extends Nette\Object implements IJournal
 
 	/**
 	 * Cleans entries from journal by tags.
+	 * @param array
+	 * @param array
 	 * @return array of removed items
 	 */
 	private function cleanTags(array $tags, array &$toDelete)
@@ -627,7 +632,7 @@ class FileJournal extends Nette\Object implements IJournal
 			return FALSE;
 		}
 
-		list(, $magic, $lenght) = unpack('N2', $binary);
+		list(, $magic, $length) = unpack('N2', $binary);
 		if ($magic !== self::INDEX_MAGIC && $magic !== self::DATA_MAGIC) {
 			if (!empty($magic)) {
 				if (self::$debug) {
@@ -638,13 +643,13 @@ class FileJournal extends Nette\Object implements IJournal
 			return FALSE;
 		}
 
-		$data = substr($binary, 2 * self::INT32_SIZE, $lenght - 2 * self::INT32_SIZE);
+		$data = substr($binary, 2 * self::INT32_SIZE, $length - 2 * self::INT32_SIZE);
 
 		$node = @unserialize($data); // intentionally @
 		if ($node === FALSE) {
 			$this->deleteNode($id);
 			if (self::$debug) {
-				throw new Nette\InvalidStateException("Cannot deserialize node number $id.");
+				throw new Nette\InvalidStateException("Cannot unserialize node number $id.");
 			}
 			return FALSE;
 		}
@@ -761,7 +766,7 @@ class FileJournal extends Nette\Object implements IJournal
 	 * Prepare node to journal file structure.
 	 * @param  integer
 	 * @param  array|bool
-	 * @return bool Sucessfully commited
+	 * @return bool Successfully committed
 	 */
 	private function prepareNode($id, $node)
 	{
@@ -1074,7 +1079,7 @@ class FileJournal extends Nette\Object implements IJournal
 	private function headerCommit()
 	{
 		fseek($this->handle, self::INT32_SIZE);
-		@fwrite($this->handle, pack('N', $this->lastNode));  // intentionally @, save is not necceseary
+		@fwrite($this->handle, pack('N', $this->lastNode));  // intentionally @, save is not necessary
 	}
 
 
@@ -1101,8 +1106,8 @@ class FileJournal extends Nette\Object implements IJournal
 			}
 		} else {
 			fseek($this->handle, self::HEADER_SIZE + self::NODE_SIZE * $id);
-			$writen = fwrite($this->handle, pack('N', 0));
-			if ($writen !== self::INT32_SIZE) {
+			$written = fwrite($this->handle, pack('N', 0));
+			if ($written !== self::INT32_SIZE) {
 				throw new Nette\InvalidStateException("Cannot delete node number $id from journal.");
 			}
 		}
@@ -1164,6 +1169,32 @@ class FileJournal extends Nette\Object implements IJournal
 
 
 	/**
+	 * @param int $nodeId
+	 * @param array $nodeData
+	 * @return int
+	 * @throws \Nette\InvalidStateException
+	 */
+	private function findNextFreeKey($nodeId, array &$nodeData)
+	{
+	  $newKey = $nodeData[self::INFO][self::LAST_INDEX] + 1;
+		$maxKey = ($nodeId + 1) << self::BITROT;
+
+		if ($newKey >= $maxKey) {
+			$start = $nodeId << self::BITROT;
+			for ($i = $start; $i < $maxKey; $i++) {
+				if (!isset($nodeData[$i])) {
+					return $i;
+				}
+			}
+			throw new Nette\InvalidStateException("Node $nodeId is full.");
+		} else {
+			return ++$nodeData[self::INFO][self::LAST_INDEX];
+		}
+	}
+
+
+
+	/**
 	 * Append $append to $array.
 	 * This function is much faster then $array = array_merge($array, $append)
 	 * @param  array
@@ -1192,5 +1223,4 @@ class FileJournal extends Nette\Object implements IJournal
 			$array[$key] = $value;
 		}
 	}
-
 }
