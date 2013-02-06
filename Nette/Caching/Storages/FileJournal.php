@@ -207,9 +207,12 @@ class FileJournal extends Nette\Object implements IJournal
 						}
 						$toDelete[self::ENTRIES][$keyHash][$link] = TRUE;
 						$this->cleanFromIndex($toDelete);
-						$entriesNode = $this->getNode($entriesNodeId); // Node was changed, get again
+
 						unset($dataNode[$link]);
 						$this->saveNode($link >> self::BITROT, $dataNode);
+
+						// Node was changed but may be empty, find it again
+						list($entriesNodeId, $entriesNode) = $this->findIndexNode(self::ENTRIES, $keyHash);
 					}
 					break;
 				}
