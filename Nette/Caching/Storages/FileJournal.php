@@ -118,7 +118,7 @@ class FileJournal extends Nette\Object implements IJournal
 			if (!$init) {
 				clearstatcache();
 				if (!file_exists($this->file)) {
-					throw new Nette\InvalidStateException("Cannot create journal file $this->file.");
+					throw new Nette\InvalidStateException("Cannot create journal file '$this->file'.");
 				}
 			} else {
 				$writen = fwrite($init, pack('N2', self::FILE_MAGIC, $this->lastNode));
@@ -136,7 +136,7 @@ class FileJournal extends Nette\Object implements IJournal
 		}
 
 		if (!flock($this->handle, LOCK_SH)) {
-			throw new Nette\InvalidStateException('Cannot acquire shared lock on journal.');
+			throw new Nette\InvalidStateException("Cannot acquire shared lock on journal file '$this->file'.");
 		}
 
 		$header = stream_get_contents($this->handle, 2 * self::INT32_SIZE, 0);
@@ -418,7 +418,7 @@ class FileJournal extends Nette\Object implements IJournal
 
 			if ($node === FALSE) {
 				if (self::$debug) {
-					throw new Nette\InvalidStateException('Cannot load node number ' . ($nodeId) . '.');
+					throw new Nette\InvalidStateException("Cannot load node number $nodeId.");
 				}
 				++$i;
 				continue;
@@ -429,7 +429,7 @@ class FileJournal extends Nette\Object implements IJournal
 
 				if (!isset($node[$link])) {
 					if (self::$debug) {
-						throw new Nette\InvalidStateException("Link with ID $searchLink is not in node ". ($nodeId) . '.');
+						throw new Nette\InvalidStateException("Link with ID $searchLink is not in node $nodeId.");
 					}
 					continue;
 				} elseif (isset($this->deletedLinks[$link])) {
@@ -710,7 +710,7 @@ class FileJournal extends Nette\Object implements IJournal
 							$prevNode = $this->getNode($nodeInfo[self::PREV_NODE]);
 							if ($prevNode === FALSE) {
 								if (self::$debug) {
-									throw new Nette\InvalidStateException('Cannot load node number ' . $nodeInfo[self::PREV_NODE] . '.');
+									throw new Nette\InvalidStateException("Cannot load node number {$nodeInfo[self::PREV_NODE]}.");
 								}
 							} else {
 								$prevNode[self::INFO][self::MAX] = -1;
@@ -1130,11 +1130,11 @@ class FileJournal extends Nette\Object implements IJournal
 	private function lock()
 	{
 		if (!$this->handle) {
-			throw new Nette\InvalidStateException('File journal file is not opened');
+			throw new Nette\InvalidStateException('File journal file is not opened.');
 		}
 
 		if (!flock($this->handle, LOCK_EX)) {
-			throw new Nette\InvalidStateException('Cannot acquire exclusive lock on journal.');
+			throw new Nette\InvalidStateException("Cannot acquire exclusive lock on journal file '$this->file'.");
 		}
 
 		if ($this->lastModTime !== NULL) {
