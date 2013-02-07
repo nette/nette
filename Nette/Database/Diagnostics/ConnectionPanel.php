@@ -12,8 +12,7 @@
 namespace Nette\Database\Diagnostics;
 
 use Nette,
-	Nette\Database\Helpers,
-	Nette\Diagnostics\Debugger;
+	Nette\Database\Helpers;
 
 
 
