@@ -221,7 +221,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			} catch (Application\AbortException $e) { }
 
 			if ($this->hasFlashSession()) {
-				$this->getFlashSession()->setExpiration($this->response instanceof Responses\RedirectResponse ? '+ 30 seconds': '+ 3 seconds');
+				$this->getFlashSession()->setExpiration($this->response instanceof Responses\RedirectResponse ? '+ 30 seconds' : '+ 3 seconds');
 			}
 
 			// SHUTDOWN
