@@ -23,8 +23,8 @@ before_script:
 # Install Nette Tester
   - composer install --no-interaction --dev
 
-# PHP Memcache extension
-  - echo n | pecl install memcache > /dev/null
+# PHP Memcache extension (PECL 5.5 is not ready on travis server)
+  - if [ "$TRAVIS_PHP_VERSION" != "5.5" ]; then echo n | pecl install memcache > /dev/null; fi
 
 # Create databases.ini
   - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
