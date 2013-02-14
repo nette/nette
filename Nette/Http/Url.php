@@ -288,13 +288,14 @@ class Url extends Nette\FreezableObject
 	/**
 	 * Appends the query part of URI.
 	 * @param  string|array
-	 * @return void
+	 * @return Url
 	 */
 	public function appendQuery($value)
 	{
 		$this->updating();
 		$value = (string) (is_array($value) ? http_build_query($value, '', '&') : $value);
 		$this->query .= ($this->query === '' || $value === '') ? $value : '&' . $value;
+		return $this;
 	}
 
 
@@ -450,7 +451,7 @@ class Url extends Nette\FreezableObject
 
 	/**
 	 * Transform to canonical form.
-	 * @return void
+	 * @return Url
 	 */
 	public function canonicalize()
 	{
@@ -458,6 +459,7 @@ class Url extends Nette\FreezableObject
 		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
 		$this->host = strtolower(rawurldecode($this->host));
 		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
+		return $this;
 	}
 
 
