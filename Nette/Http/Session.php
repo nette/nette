@@ -91,9 +91,9 @@ class Session extends Nette\Object
 
 		$this->configure($this->options);
 
-		$id = & $_COOKIE['PHPSESSID'];
+		$id = & $_COOKIE[session_name()];
 		if (!is_string($id) || !preg_match('#^[0-9a-zA-Z,-]{22,128}\z#i', $id)) {
-			unset($_COOKIE['PHPSESSID']);
+			unset($_COOKIE[session_name()]);
 		}
 
 		set_error_handler(function($severity, $message) use (& $error) { // session_start returns FALSE on failure since PHP 5.3.0.

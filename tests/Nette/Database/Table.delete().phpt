@@ -31,4 +31,4 @@ Assert::same(3, $count);
 
 
 $book->delete();  // DELETE FROM `book` WHERE (`id` = ?)
-Assert::same(0, count($connection->table('book')->find(3)));  // SELECT * FROM `book` WHERE (`id` = ?)
+Assert::same(0, count($connection->table('book')->wherePrimary(3)));  // SELECT * FROM `book` WHERE (`id` = ?)
