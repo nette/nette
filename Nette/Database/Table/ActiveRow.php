@@ -183,7 +183,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 		}
 		return $this->table->getConnection()
 			->table($this->table->getName())
-			->find($this->getPrimary())
+			->wherePrimary($this->getPrimary())
 			->update($data);
 	}
 
@@ -197,7 +197,7 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 	{
 		$res = $this->table->getConnection()
 			->table($this->table->getName())
-			->find($this->getPrimary())
+			->wherePrimary($this->getPrimary())
 			->delete();
 
 		if ($res > 0 && ($signature = $this->getSignature(FALSE))) {
