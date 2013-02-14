@@ -243,7 +243,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function get($key)
 	{
 		$clone = clone $this;
-		return $clone->find($key)->fetch();
+		return $clone->wherePrimary($key)->fetch();
 	}
 
 
@@ -298,11 +298,22 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Selects by primary key.
+	 * @deprecated
+	 */
+	public function find($key)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use $selection->wherePrimary() instead.', E_USER_DEPRECATED);
+		$this->wherePrimary($key);
+	}
+
+
+
+	/**
+	 * Adds condition for primary key.
 	 * @param  mixed
 	 * @return Selection provides a fluent interface
 	 */
-	public function find($key)
+	public function wherePrimary($key)
 	{
 		if (is_array($this->primary) && Nette\Utils\Validators::isList($key)) {
 			foreach ($this->primary as $i => $primary) {
