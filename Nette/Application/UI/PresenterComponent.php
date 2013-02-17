@@ -363,7 +363,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 * @return void
 	 * @throws Nette\Application\AbortException
 	 */
-	public function redirect($code, $destination = NULL, $args = array())
+	public function redirect($code = NULL, $destination = NULL, $args = array())
 	{
 		if (!is_numeric($code)) { // first parameter is optional
 			$args = $destination;
