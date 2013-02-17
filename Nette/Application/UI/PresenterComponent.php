@@ -377,6 +377,11 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 				array_shift($args);
 			}
 		}
+		
+		if($destination === NULL)
+		{
+			$destination = 'this';
+		}
 
 		$presenter = $this->getPresenter();
 		$presenter->redirectUrl($presenter->createRequest($this, $destination, $args, 'redirect'), $code);
