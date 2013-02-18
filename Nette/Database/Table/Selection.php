@@ -303,7 +303,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function find($key)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use $selection->wherePrimary() instead.', E_USER_DEPRECATED);
-		$this->wherePrimary($key);
+		return $this->wherePrimary($key);
 	}
 
 
