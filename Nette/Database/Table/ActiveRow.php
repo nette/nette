@@ -11,7 +11,8 @@
 
 namespace Nette\Database\Table;
 
-use Nette;
+use Nette,
+	Nette\Database\Reflection\MissingReferenceException;
 
 
 
@@ -289,12 +290,14 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 			return $this->data[$key];
 		}
 
-		list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
-		$referenced = $this->getReference($table, $column);
-		if ($referenced !== FALSE) {
-			$this->accessColumn($key, FALSE);
-			return $referenced;
-		}
+		try {
+			list($table, $column) = $this->table->getConnection()->getDatabaseReflection()->getBelongsToReference($this->table->getName(), $key);
+			$referenced = $this->getReference($table, $column);
+			if ($referenced !== FALSE) {
+				$this->accessColumn($key, FALSE);
+				return $referenced;
+			}
+		} catch(MissingReferenceException $e) {}
 
 		$this->removeAccessColumn($key);
 		throw new Nette\MemberAccessException("Cannot read an undeclared column \"$key\".");
