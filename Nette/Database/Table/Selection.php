@@ -303,7 +303,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function find($key)
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use $selection->wherePrimary() instead.', E_USER_DEPRECATED);
-		$this->wherePrimary($key);
+		return $this->wherePrimary($key);
 	}
 
 
@@ -608,7 +608,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		if ($key === NULL) {
 			$this->accessedColumns = FALSE;
-			$currentKey = key($this->data);
+			$currentKey = key((array) $this->data);
 		} elseif ($this->accessedColumns !== FALSE) {
 			$this->accessedColumns[$key] = $selectColumn;
 		}
