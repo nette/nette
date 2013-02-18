@@ -33,6 +33,7 @@ interface IControl
 	 * Sets control's value.
 	 * @param  mixed
 	 * @return void
+	 * @throws InvalidArgumentException
 	 */
 	function setValue($value);
 
