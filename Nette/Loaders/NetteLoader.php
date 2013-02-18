@@ -45,6 +45,8 @@ class NetteLoader extends AutoLoader
 		'Nette\ArrayHash' => '/common/ArrayHash',
 		'Nette\ArrayList' => '/common/ArrayList',
 		'Nette\Callback' => '/common/Callback',
+		'Nette\Database\Reflection\AmbiguousReferenceKeyException' => '/Database/Reflection/exceptions',
+		'Nette\Database\Reflection\MissingReferenceException' => '/Database/Reflection/exceptions',
 		'Nette\DI\MissingServiceException' => '/DI/exceptions',
 		'Nette\DI\ServiceCreationException' => '/DI/exceptions',
 		'Nette\DateTime' => '/common/DateTime',

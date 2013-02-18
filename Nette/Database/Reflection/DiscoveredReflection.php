@@ -132,9 +132,9 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 		}
 
 		if (empty($candidates)) {
-			throw new \PDOException("No reference found for \${$table}->related({$key}).");
+			throw new MissingReferenceException("No reference found for \${$table}->related({$key}).");
 		} else {
-			throw new \PDOException('Ambiguous joining column in related call.');
+			throw new AmbiguousReferenceKeyException('Ambiguous joining column in related call.');
 		}
 	}
 
@@ -155,7 +155,7 @@ class DiscoveredReflection extends Nette\Object implements Nette\Database\IRefle
 			return $this->getBelongsToReference($table, $key, FALSE);
 		}
 
-		throw new \PDOException("No reference found for \${$table}->{$key}.");
+		throw new MissingReferenceException("No reference found for \${$table}->{$key}.");
 	}
 
 
