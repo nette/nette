@@ -55,3 +55,16 @@ $books[] = $bookSelection->fetch()->toArray();
 Assert::same(1, $books[0]['id']);
 Assert::same(2, $books[1]['id']);
 Assert::same(3, $books[2]['id']);
+
+
+
+$row = $connection->table('author')->insert(array(
+	'id' => 14,
+	'name' => 'Eddard Stark',
+	'web' => 'http://example.com',
+));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Edard Stark', 'http://example.com')
+Assert::true(is_array($row->toArray()));
+
+
+$row = $connection->table('author')->where('id', 14)->fetch();
+Assert::true(is_array($row->toArray()));
