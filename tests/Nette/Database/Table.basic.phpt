@@ -82,3 +82,23 @@ switch ($driverName) {
 		Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
 		break;
 }
+
+
+
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
+	$connection,
+	new Nette\Database\Reflection\DiscoveredReflection($connection)
+));
+
+$book = $connection->table('book')->get(1);
+Assert::throws(function() use ($book) {
+	$book->test;
+}, 'Nette\MemberAccessException', 'Cannot read an undeclared column "test".');
+
+Assert::throws(function() use ($book) {
+	$book->ref('test');
+}, 'Nette\Database\Reflection\MissingReferenceException', 'No reference found for $book->test.');
+
+Assert::throws(function() use ($book) {
+	$book->related('test');
+}, 'Nette\Database\Reflection\MissingReferenceException', 'No reference found for $book->related(test).');
