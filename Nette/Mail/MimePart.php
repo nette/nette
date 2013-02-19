@@ -227,7 +227,6 @@ class MimePart extends Nette\Object
 
 	/**
 	 * Sets textual body.
-	 * @param  mixed
 	 * @return MimePart  provides a fluent interface
 	 */
 	public function setBody($body)

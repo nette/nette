@@ -98,7 +98,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * This method will be called when the component becomes attached to Form.
-	 * @param  Nette\Forms\IComponent
+	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
 	protected function attached($form)
@@ -284,7 +284,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets control's value.
-	 * @param  mixed
 	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setValue($value)
@@ -319,7 +318,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Sets control's default value.
-	 * @param  mixed
 	 * @return BaseControl  provides a fluent interface
 	 */
 	public function setDefaultValue($value)
@@ -465,7 +463,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	/**
 	 * Adds a validation condition a returns new branch.
 	 * @param  mixed     condition type
-	 * @param  mixed      optional condition arguments
+	 * @param  mixed     optional condition arguments
 	 * @return Nette\Forms\Rules      new branch
 	 */
 	public function addCondition($operation, $value = NULL)
@@ -575,8 +573,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Equal validator: are control's value and second parameter equal?
-	 * @param  Nette\Forms\IControl
-	 * @param  mixed
 	 * @return bool
 	 */
 	public static function validateEqual(IControl $control, $arg)
@@ -596,7 +592,6 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Filled validator: is control filled?
-	 * @param  Nette\Forms\IControl
 	 * @return bool
 	 */
 	public static function validateFilled(IControl $control)

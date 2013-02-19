@@ -283,8 +283,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Adds new template parameter.
-	 * @param  string  name
-	 * @param  mixed   value
 	 * @return Template  provides a fluent interface
 	 */
 	public function add($name, $value)
@@ -344,8 +342,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Sets a template parameter. Do not call directly.
-	 * @param  string  name
-	 * @param  mixed   value
 	 * @return void
 	 */
 	public function __set($name, $value)
@@ -357,7 +353,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Returns a template parameter. Do not call directly.
-	 * @param  string  name
 	 * @return mixed  value
 	 */
 	public function &__get($name)
@@ -373,7 +368,6 @@ class Template extends Nette\Object implements ITemplate
 
 	/**
 	 * Determines whether parameter is defined. Do not call directly.
-	 * @param  string    name
 	 * @return bool
 	 */
 	public function __isset($name)
