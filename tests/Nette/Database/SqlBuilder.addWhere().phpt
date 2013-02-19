@@ -70,15 +70,22 @@ switch ($driverName) {
 
 	case 'pgsql':
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" IS NULL)', $sqlBuilder[0]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[1]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[2]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" IS NULL OR "id" IN (?))', $sqlBuilder[3]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[1]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (SELECT "id" FROM "book"))', $sqlBuilder[2]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE ("id" IS NULL OR "id" IN (SELECT "id" FROM "book"))', $sqlBuilder[3]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[4]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
 		break;
 }
+
+
+
+$books = $connection->table('book')->where('id',
+	$connection->table('book_tag')->select('book_id')->where('tag_id', 21)
+);
+Assert::equal(3, $books->count());
 
 
 
