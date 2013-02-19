@@ -131,20 +131,20 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @return mixed  value itself
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function save($key, $data, array $dp = NULL)
+	public function save($key, $data, array $dependencies = NULL)
 	{
 		$this->release();
 		$key = $this->generateKey($key);
 
 		if ($data instanceof Nette\Callback || $data instanceof \Closure) {
 			$this->storage->lock($key);
-			$data = Nette\Callback::create($data)->invokeArgs(array(&$dp));
+			$data = Nette\Callback::create($data)->invokeArgs(array(&$dependencies));
 		}
 
 		if ($data === NULL) {
 			$this->storage->remove($key);
 		} else {
-			$this->storage->write($key, $data, $this->completeDependencies($dp, $data));
+			$this->storage->write($key, $data, $this->completeDependencies($dependencies, $data));
 			return $data;
 		}
 	}
@@ -215,10 +215,10 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  array
 	 * @return void
 	 */
-	public function clean(array $conds = NULL)
+	public function clean(array $conditions = NULL)
 	{
 		$this->release();
-		$this->storage->clean((array) $conds);
+		$this->storage->clean((array) $conditions);
 	}
 
 
@@ -245,14 +245,14 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * @param  array  dependencies
 	 * @return Closure
 	 */
-	public function wrap($function, array $dp = NULL)
+	public function wrap($function, array $dependencies = NULL)
 	{
 		$cache = $this;
-		return function() use ($cache, $function, $dp) {
+		return function() use ($cache, $function, $dependencies) {
 			$key = array($function, func_get_args());
 			$data = $cache->load($key);
 			if ($data === NULL) {
-				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dp);
+				$data = $cache->save($key, Nette\Callback::create($function)->invokeArgs($key[1]), $dependencies);
 			}
 			return $data;
 		};
