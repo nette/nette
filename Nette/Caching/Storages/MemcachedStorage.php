@@ -191,13 +191,13 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 	 * @param  array  conditions
 	 * @return void
 	 */
-	public function clean(array $conds)
+	public function clean(array $conditions)
 	{
-		if (!empty($conds[Cache::ALL])) {
+		if (!empty($conditions[Cache::ALL])) {
 			$this->memcache->flush();
 
 		} elseif ($this->journal) {
-			foreach ($this->journal->clean($conds) as $entry) {
+			foreach ($this->journal->clean($conditions) as $entry) {
 				$this->memcache->delete($entry, 0);
 			}
 		}
