@@ -32,7 +32,6 @@ interface IAdapter
 
 	/**
 	 * Generates configuration string.
-	 * @param  array
 	 * @return string
 	 */
 	function dump(array $data);

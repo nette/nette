@@ -27,5 +27,3 @@ Assert::same(array(
 	'Please enter a numeric value.',
 	'just fail',
 ), $form['name']->getErrors());
-
-

@@ -617,7 +617,6 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Expands %placeholders% in strings (recursive).
-	 * @param  mixed
 	 * @return mixed
 	 */
 	public function expand($value)
@@ -652,7 +651,6 @@ class ContainerBuilder extends Nette\Object
 
 	/**
 	 * Converts @service or @\Class -> service name and checks its existence.
-	 * @param  mixed
 	 * @return string  of FALSE, if argument is not service name
 	 */
 	public function getServiceName($arg, $self = NULL)

@@ -211,8 +211,6 @@ class Cache extends Nette\Object implements \ArrayAccess
 	 * - Cache::PRIORITY => (int) priority
 	 * - Cache::TAGS => (array) tags
 	 * - Cache::ALL => TRUE
-	 *
-	 * @param  array
 	 * @return void
 	 */
 	public function clean(array $conditions = NULL)

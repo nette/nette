@@ -75,7 +75,6 @@ class NeonAdapter extends Nette\Object implements Nette\Config\IAdapter
 
 	/**
 	 * Generates configuration in NEON format.
-	 * @param  array
 	 * @return string
 	 */
 	public function dump(array $data)
