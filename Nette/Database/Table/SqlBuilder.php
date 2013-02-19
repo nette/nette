@@ -173,8 +173,8 @@ class SqlBuilder extends Nette\Object
 				}
 
 				if ($this->driverName !== 'mysql') {
-					$replace = 'IN (?)';
-					$this->parameters[] = new SqlLiteral($clone->getSql());
+					$replace = 'IN (' . $clone->getSql() . ')';
+					$this->parameters = array_merge($this->parameters, $clone->getSqlBuilder()->getParameters());
 				} else {
 					$parameter = array();
 					foreach ($clone as $row) {
