@@ -14,12 +14,15 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 use Tester\Assert;
 use Nette\Database\SqlLiteral;
-use Nette\Database\Reflection\ConventionalReflection;
+use Nette\Database\Reflection\DiscoveredReflection;
 use Nette\Database\Table\SqlBuilder;
 
 
 
-$reflection = new ConventionalReflection;
+//$cacheStorage = new Nette\Caching\Storages\MemoryStorage;
+//$connection->setCacheStorage($cacheStorage);
+$reflection = new DiscoveredReflection;
+$connection->setDatabaseReflection($reflection);
 $sqlBuilder = array();
 
 // test paramateres with NULL
@@ -87,7 +90,15 @@ $books = $connection->table('book')->where('id',
 );
 Assert::equal(3, $books->count());
 
+Assert::throws(function() use ($connection) {
+	$connection->table('book')->where('id',
+		$connection->table('book_tag')->where('tag_id', 21)
+	);
+}, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
+
+$reflection = new DiscoveredReflection;
+$connection->setDatabaseReflection($reflection);
 
 Assert::throws(function() use ($connection, $reflection) {
 	$sqlBuilder = new SqlBuilder('book', $connection, $reflection);
