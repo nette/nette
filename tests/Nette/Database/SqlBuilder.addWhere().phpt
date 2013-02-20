@@ -94,6 +94,26 @@ Assert::throws(function() use ($connection) {
 	);
 }, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
 
+switch ($driverName) {
+	case 'mysql':
+		$connection->query('CREATE INDEX book_tag_unique ON book_tag (book_id, tag_id)');
+		$connection->query('ALTER TABLE book_tag DROP PRIMARY KEY');
+		break;
+	case 'pgsql':
+		$connection->query('ALTER TABLE book_tag DROP CONSTRAINT "book_tag_pkey"');
+		break;
+}
+
+$reflection = new DiscoveredReflection($connection);
+$connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory($connection, $reflection));
+
+Assert::throws(function() use ($connection) {
+	$books = $connection->table('book')->where('id',
+		$connection->table('book_tag')->where('tag_id', 21)
+	);
+	$books->fetch();
+}, 'Nette\InvalidArgumentException', 'Selection argument must have defined a select column.');
+
 
 
 Assert::throws(function() use ($connection, $reflection) {
