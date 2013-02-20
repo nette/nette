@@ -119,6 +119,9 @@ class SqlBuilder extends Nette\Object
 
 	public function addSelect($columns)
 	{
+		if (is_array($columns)) {
+			throw new Nette\InvalidArgumentException('Select column must be a string.');
+		}
 		$this->select[] = $columns;
 	}
 
@@ -169,7 +172,11 @@ class SqlBuilder extends Nette\Object
 			} elseif ($arg instanceof Selection) {
 				$clone = clone $arg;
 				if (!$clone->getSqlBuilder()->select) {
-					$clone->select($clone->getPrimary());
+					if (!is_array($clone->getPrimary())) {
+						$clone->select($clone->getPrimary());
+					} else {
+						throw new Nette\InvalidArgumentException('Selection argument must have defined a select column.');
+					}
 				}
 
 				if ($this->driverName !== 'mysql') {
@@ -180,6 +187,7 @@ class SqlBuilder extends Nette\Object
 					foreach ($clone as $row) {
 						$parameter[] = array_values(iterator_to_array($row));
 					}
+
 					if (!$parameter) {
 						$replace = 'IN (NULL)';
 					}  else {
