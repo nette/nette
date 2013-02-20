@@ -172,10 +172,10 @@ class SqlBuilder extends Nette\Object
 			} elseif ($arg instanceof Selection) {
 				$clone = clone $arg;
 				if (!$clone->getSqlBuilder()->select) {
-					if (!is_array($clone->getPrimary())) {
+					try {
 						$clone->select($clone->getPrimary());
-					} else {
-						throw new Nette\InvalidArgumentException('Selection argument must have defined a select column.');
+					} catch (\LogicException $e) {
+						throw new Nette\InvalidArgumentException('Selection argument must have defined a select column.', 0, $e);
 					}
 				}
 
