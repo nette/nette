@@ -58,6 +58,6 @@ interface IStorage
 	 * @param  array  conditions
 	 * @return void
 	 */
-	function clean(array $conds);
+	function clean(array $conditions);
 
 }

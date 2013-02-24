@@ -73,4 +73,3 @@ Assert::true(is_array($row->toArray()));
 
 $row = $connection->table('author')->where('id', 14)->fetch();
 Assert::true(is_array($row->toArray()));
-

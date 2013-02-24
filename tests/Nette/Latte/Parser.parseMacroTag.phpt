@@ -37,6 +37,7 @@ Assert::same( array('=', 'md5()', '|escape'), $parser->parseMacroTag('md5()') );
 Assert::same( array('foo:bar', '', ''), $parser->parseMacroTag('foo:bar') );
 Assert::same( array('=', ':bar', '|escape'), $parser->parseMacroTag(':bar') );
 Assert::same( array('=', 'class::member', '|escape'), $parser->parseMacroTag('class::member') );
+Assert::same( array('=', 'Namespace\Class::member()', '|escape'), $parser->parseMacroTag('Namespace\Class::member()') );
 Assert::same( array('Link', '$var', ''), $parser->parseMacroTag('Link $var') );
 Assert::same( array('link', '$var', ''), $parser->parseMacroTag('link $var') );
 Assert::same( array('link', '$var', ''), $parser->parseMacroTag('link$var') );

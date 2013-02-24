@@ -37,7 +37,6 @@ class PhpAdapter extends Nette\Object implements Nette\Config\IAdapter
 
 	/**
 	 * Generates configuration in PHP format.
-	 * @param  array
 	 * @return string
 	 */
 	public function dump(array $data)

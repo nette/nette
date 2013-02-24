@@ -52,7 +52,7 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	 * @param  array  dependencies
 	 * @return void
 	 */
-	public function write($key, $data, array $dp)
+	public function write($key, $data, array $dependencies)
 	{
 	}
 
@@ -74,7 +74,7 @@ class DevNullStorage extends Nette\Object implements Nette\Caching\IStorage
 	 * @param  array  conditions
 	 * @return void
 	 */
-	public function clean(array $conds)
+	public function clean(array $conditions)
 	{
 	}
 
