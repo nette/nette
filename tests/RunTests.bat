@@ -11,3 +11,5 @@ IF NOT EXIST %testRunner% (
 SET phpIni="%~dp0php.ini-win"
 
 php.exe -c %phpIni% %testRunner% -p php-cgi.exe -c %phpIni% -j 20 -log "%~dp0test.log" %*
+
+rmdir "%~dp0/tmp" /S /Q
