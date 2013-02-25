@@ -19,7 +19,7 @@ $connection->table('author')->insert(array(
 	'id' => 14,
 	'name' => 'Eddard Stark',
 	'web' => 'http://example.com',
-));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Edard Stark', 'http://example.com')
+));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Eddard Stark', 'http://example.com')
 
 switch ($driverName) {
 	case 'pgsql':
