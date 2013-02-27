@@ -457,8 +457,12 @@ class ContainerBuilder extends Nette\Object
 			);
 		}
 
-		if ($def->inject) {
-			$code .= "\$this->callInjects(\$service);\n";
+		if ($def->inject && $def->class) {
+			foreach (array_reverse(get_class_methods($def->class)) as $method) {
+				if (substr($method, 0, 6) === 'inject') {
+					$code .= $this->formatStatement(new Statement(array('@self', $method)), $name) . ";\n";
+				}
+			}
 		}
 
 		foreach ((array) $def->setup as $setup) {
