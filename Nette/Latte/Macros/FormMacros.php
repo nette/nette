@@ -41,7 +41,7 @@ class FormMacros extends MacroSet
 			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
 			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
-		$me->addMacro('input', '$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
+		$me->addMacro('input', array($me, 'macroInput'), array($me, 'macroInputEnd'), array($me, 'macroAttrInput'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = (is_object(%node.word) ? %node.word : $_form[%node.word])', '$_form = array_pop($_formStack)');
 	}
 
@@ -67,15 +67,76 @@ class FormMacros extends MacroSet
 
 
 	/**
+	 * {input ...}
+	 */
+	public function macroInput(MacroNode $node, PhpWriter $writer)
+	{
+		$node->isEmpty = TRUE;
+		return $writer->write('$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%node.array)');
+	}
+
+
+
+	/**
+	 * complete <select n:input> and <textarea n:input>
+	 */
+	public function macroInputEnd(MacroNode $node, PhpWriter $writer)
+	{
+		$lName = strtolower($node->htmlNode->name);
+		if ($lName === 'select') {
+			$code = $writer->write('<?php echo $_input->getControl()->getHtml() ?>');
+
+		} elseif ($lName === 'textarea') {
+			$code = $writer->write('<?php echo %escape($_input->getValue()) ?>');
+
+		} else {
+			return;
+		}
+
+		$tree = array();
+		$content = NULL;
+		$parser = new Latte\Parser();
+		foreach ($parser->parse($node->content) as $token) {
+			if ($token->type === $token::HTML_TAG_BEGIN || $token->type === $token::HTML_TAG_END) {
+				if ($token->closing === FALSE) {
+					$tree[] = strtolower($token->name);
+
+				} elseif ($token->closing === TRUE || $token->text === '/>') {
+					if (end($tree) === $lName) {
+						if ($token->text === '/>') { // expand tag
+							$content .= '>';
+							$token->text = '</' . end($tree) . '>';
+						}
+
+						$content .= $code;
+						$code = NULL;
+					}
+
+					array_pop($tree);
+				}
+			}
+
+			$content .= $token->text;
+		}
+
+		$node->content = $content;
+	}
+
+
+
+	/**
 	 * n:input
 	 */
 	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
+		$node->isEmpty = !$node->htmlNode || (($lName = strtolower($node->htmlNode->name)) !== 'select' && $lName !== 'textarea');
+
+		$begin = '$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]);';
 		if ($node->htmlNode->attrs) {
 			$reset = array_fill_keys(array_keys($node->htmlNode->attrs), NULL);
-			return $writer->write('$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%var)->attributes()', $reset);
+			return $writer->write($begin . ' echo $_input->getControl()->addAttributes(%var)->attributes()', $reset);
 		}
-		return $writer->write('$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->attributes()');
+		return $writer->write($begin . ' echo $_input->getControl()->attributes()');
 	}
 
 
