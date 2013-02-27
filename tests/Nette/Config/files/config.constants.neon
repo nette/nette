@@ -1,0 +1,12 @@
+services:
+	ipsum:
+		class: Lorem(::MY_CONSTANT_TEST)
+
+	sit:
+		class: Lorem(Lorem::DOLOR_SIT)
+
+	amet:
+		class: Lorem(::MY_FAILING_CONSTANT_TEST)
+
+	consectetur:
+		class: Lorem(MY_FAILING_CONSTANT_TEST)

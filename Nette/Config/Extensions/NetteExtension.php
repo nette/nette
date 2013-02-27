@@ -385,7 +385,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if (!empty($container->parameters['tempDir'])) {
-			$initialize->addBody($this->checkTempDir($container->expand('%tempDir%/cache')));
+			$initialize->addBody('Nette\Caching\Storages\FileStorage::$useDirectories = ?;', array($this->checkTempDir($container->expand('%tempDir%/cache'))));
 		}
 
 		foreach ((array) $config['forms']['messages'] as $name => $text) {
@@ -425,16 +425,17 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	{
 		// checks whether directory is writable
 		$uniq = uniqid('_', TRUE);
-		if (!@mkdir("$dir/$uniq", 0777)) { // @ - is escalated to exception
+		if (!@mkdir("$dir/$uniq")) { // @ - is escalated to exception
 			throw new Nette\InvalidStateException("Unable to write to directory '$dir'. Make this directory writable.");
 		}
 
-		// tests subdirectory mode
-		$useDirs = @file_put_contents("$dir/$uniq/_", '') !== FALSE; // @ - error is expected
-		@unlink("$dir/$uniq/_");
-		@rmdir("$dir/$uniq"); // @ - directory may not already exist
-
-		return 'Nette\Caching\Storages\FileStorage::$useDirectories = ' . ($useDirs ? 'TRUE' : 'FALSE') . ";\n";
+		// checks whether subdirectory is writable
+		$isWritable = @file_put_contents("$dir/$uniq/_", '') !== FALSE; // @ - error is expected
+		if ($isWritable) {
+			unlink("$dir/$uniq/_");
+		}
+		rmdir("$dir/$uniq");
+		return $isWritable;
 	}
 
 }

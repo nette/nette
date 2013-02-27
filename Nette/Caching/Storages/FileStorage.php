@@ -154,7 +154,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	{
 		$cacheFile = $this->getCacheFile($key);
 		if ($this->useDirs && !is_dir($dir = dirname($cacheFile))) {
-			@mkdir($dir, 0777); // @ - directory may already exist
+			@mkdir($dir); // @ - directory may already exist
 		}
 		$handle = @fopen($cacheFile, 'r+b'); // @ - file may not exist
 		if (!$handle) {
