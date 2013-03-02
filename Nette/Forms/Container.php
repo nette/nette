@@ -52,10 +52,40 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function setDefaults($values, $erase = FALSE)
 	{
+		if ($values instanceof \Traversable) {
+			$values = iterator_to_array($values);
+
+		} elseif (!is_array($values)) {
+			throw new Nette\InvalidArgumentException("First parameter must be an array, " . gettype($values) ." given.");
+		}
+
+		$setAllValues = FALSE;
 		$form = $this->getForm(FALSE);
 		if (!$form || !$form->isAnchored() || !$form->isSubmitted()) {
-			$this->setValues($values, $erase);
+			$setAllValues = TRUE;
 		}
+
+		foreach ($this->getComponents() as $name => $control) {
+			if ($control instanceof IControl) {
+				if ($setAllValues || $control->isDisabled()) {
+					if (array_key_exists($name, $values)) {
+						$control->setValue($values[$name]);
+
+					} elseif ($erase) {
+						$control->setValue(NULL);
+					}
+				}
+
+			} elseif ($control instanceof Container) {
+				if (array_key_exists($name, $values)) {
+					$control->setDefaults($values[$name], $erase);
+
+				} elseif ($erase) {
+					$control->setDefaults(array(), $erase);
+				}
+			}
+		}
+
 		return $this;
 	}
 
