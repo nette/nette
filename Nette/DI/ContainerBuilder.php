@@ -579,7 +579,10 @@ class ContainerBuilder extends Nette\Object
 			}
 
 		} elseif ($service = $this->getServiceName($entity[0], $self)) { // service method
-			$class = $this->definitions[$service]->implement ?: $this->definitions[$service]->class;
+			$class = $this->definitions[$service]->implement;
+			if (!$class || !method_exists($class, $entity[1])) {
+				$class = $this->definitions[$service]->class;
+			}
 			if ($class) {
 				$arguments = $this->autowireArguments($class, $entity[1], $arguments);
 			}
