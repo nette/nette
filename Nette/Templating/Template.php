@@ -208,7 +208,7 @@ class Template extends Nette\Object implements ITemplate
 	 */
 	public function registerHelperLoader($callback)
 	{
-		$this->helperLoaders[] = new Nette\Callback($callback);
+		array_unshift($this->helperLoaders, new Nette\Callback($callback));
 		return $this;
 	}
 
