@@ -73,3 +73,16 @@ Assert::match( 'Test (3)
    y private => "hello" (5)
    z protected => 30.0
 ', Dumper::toText(new Test) );
+
+$fileInfo = new \SplFileInfo('/lll.lil');
+Assert::match('SplFileInfo (9)
+   "getPath()" => "" 
+   "getFilename()" => "/lll.lil" (8) 
+   "isWritable()" => FALSE 
+   "isReadable()" => FALSE 
+   "isExecutable()" => FALSE 
+   "isFile()" => FALSE 
+   "isDir()" => FALSE 
+   "isLink()" => FALSE
+   "getRealPath()" => FALSE'
+,Dumper::toText($fileInfo));

@@ -211,7 +211,17 @@ class Dumper
 				$fields[] = '$' . $param->getName();
 			}
 			$fields = array('file' => $rc->getFileName(), 'line' => $rc->getStartLine(), 'parameters' => implode(', ', $fields));
-		} else {
+		} elseif($var instanceof \SplFileInfo) {
+                    $ref = new \ReflectionClass($var);
+                    $methods = $ref->getMethods(\ReflectionMethod::IS_PUBLIC & ~\ReflectionMethod::IS_ABSTRACT);
+                    $fields = array();
+                    foreach($methods as $method) {
+                        if(in_array($method->getName(), array('getPath','getFilename','getRealPath','isReadable','isWritable','isExecutable','isDir','isFile','isLink'))) {
+                            $name = $method->getName();
+                            $fields[$name.'()'] = $var->$name();
+                        }
+                    }
+                } else {
 			$fields = (array) $var;
 		}
 
