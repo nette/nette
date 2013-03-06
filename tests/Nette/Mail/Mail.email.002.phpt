@@ -35,7 +35,8 @@ $mail->addBcc('doe5@example.com');
 
 $mail->setReturnPath('doe@example.com');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

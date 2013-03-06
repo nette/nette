@@ -17,9 +17,11 @@ require __DIR__ . '/Mail.inc';
 
 
 
+$mailer = new TestMailer();
+
 $mail = new Message();
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0
@@ -52,7 +54,7 @@ EOD
 $mail = new Message();
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip')
 	->setEncoding(Message::ENCODING_QUOTED_PRINTABLE);
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0
@@ -82,7 +84,7 @@ EOD
 $mail = new Message();
 $name = iconv('UTF-8', 'WINDOWS-1250', 'žluťoučký.zip');
 $mail->addAttachment($name, file_get_contents(__DIR__ . '/files/example.zip'), 'application/zip');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

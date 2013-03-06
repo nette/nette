@@ -26,6 +26,7 @@ $mail->htmlBody = new FileTemplate;
 $mail->htmlBody->setFile('files/template.phtml');
 $mail->htmlBody->registerFilter(new Latte\Engine);
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match(file_get_contents(__DIR__ . '/Mail.template.expect'), TestMailer::$output);

@@ -29,6 +29,7 @@ $mail->setHTMLBody('<b>Sample text</b>');
 
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match(file_get_contents(__DIR__ . '/Mail.005.expect'), TestMailer::$output);

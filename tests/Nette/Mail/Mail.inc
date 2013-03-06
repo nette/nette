@@ -9,10 +9,6 @@ use Nette\Mail\Message,
 
 
 
-// Setup environment
-Message::$defaultMailer = 'TestMailer';
-
-
 class TestMailer implements IMailer
 {
 	public static $output;

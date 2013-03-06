@@ -30,6 +30,7 @@ $mail->setHTMLBody('<b>Sample text</b> <img src="background.png">', __DIR__ . '/
 
 $mail->addAttachment('files/example.zip');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match(file_get_contents(__DIR__ . '/Mail.007.expect'), TestMailer::$output);
