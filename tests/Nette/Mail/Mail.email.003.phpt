@@ -25,7 +25,8 @@ $mail->addCc('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryve
 
 $mail->addBcc('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylong name <veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail@example.com>');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

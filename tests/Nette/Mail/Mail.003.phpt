@@ -27,7 +27,8 @@ $mail->setBody('Sample text');
 
 $mail->setHTMLBody('<b>Žluťoučký kůň</b>');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

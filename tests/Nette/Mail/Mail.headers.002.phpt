@@ -32,7 +32,8 @@ $mail->setPriority(Message::HIGH);
 
 $mail->setHeader('X-Gmail-Label', 'love');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

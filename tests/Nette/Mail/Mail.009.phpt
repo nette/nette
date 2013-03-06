@@ -28,7 +28,8 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Žluťoučký kůň' . str_repeat('x', 990));
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0
