@@ -367,11 +367,7 @@ class Message extends MimePart
 	 */
 	public function generateMessage()
 	{
-		if ($this->getHeader('Message-ID')) {
-			return parent::generateMessage();
-		} else {
-			return $this->build()->generateMessage();
-		}
+		return $this->build()->getEncodedMessage();
 	}
 
 

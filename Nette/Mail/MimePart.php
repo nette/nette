@@ -256,7 +256,7 @@ class MimePart extends Nette\Object
 	 * Returns encoded message.
 	 * @return string
 	 */
-	public function generateMessage()
+	public function getEncodedMessage()
 	{
 		$output = '';
 		$boundary = '--------' . Strings::random();
@@ -301,7 +301,7 @@ class MimePart extends Nette\Object
 				$output .= self::EOL;
 			}
 			foreach ($this->parts as $part) {
-				$output .= '--' . $boundary . self::EOL . $part->generateMessage() . self::EOL;
+				$output .= '--' . $boundary . self::EOL . $part->getEncodedMessage() . self::EOL;
 			}
 			$output .= '--' . $boundary.'--';
 		}
