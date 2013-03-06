@@ -25,7 +25,8 @@ $mail->setSubject('Hello Jane!');
 
 $mail->setBody('Žluťoučký kůň');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0

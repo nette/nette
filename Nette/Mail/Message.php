@@ -35,7 +35,7 @@ class Message extends MimePart
 		NORMAL = 3,
 		LOW = 5;
 
-	/** @var IMailer */
+	/** @deprecated */
 	public static $defaultMailer = 'Nette\Mail\SendmailMailer';
 
 	/** @var array */
@@ -325,19 +325,18 @@ class Message extends MimePart
 
 
 	/**
-	 * Sends email.
-	 * @return void
+	 * @deprecated
 	 */
 	public function send()
 	{
-		$this->getMailer()->send($this->build());
+		trigger_error(__METHOD__ . '() is deprecated; use IMailer::send() instead.', E_USER_DEPRECATED);
+		$this->getMailer()->send($this);
 	}
 
 
 
 	/**
-	 * Sets the mailer.
-	 * @return Message  provides a fluent interface
+	 * @deprecated
 	 */
 	public function setMailer(IMailer $mailer)
 	{
@@ -348,8 +347,7 @@ class Message extends MimePart
 
 
 	/**
-	 * Returns mailer.
-	 * @return IMailer
+	 * @deprecated
 	 */
 	public function getMailer()
 	{

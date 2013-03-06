@@ -27,7 +27,8 @@ $mail->setBody('Sample text');
 
 $mail->addAttachment(__DIR__ . '/files/example.zip', NULL, 'application/zip');
 
-$mail->send();
+$mailer = new TestMailer();
+$mailer->send($mail);
 
 Assert::match( <<<EOD
 MIME-Version: 1.0
