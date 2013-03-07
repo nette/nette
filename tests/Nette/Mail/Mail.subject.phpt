@@ -17,9 +17,11 @@ require __DIR__ . '/Mail.inc';
 
 
 
+$mailer = new TestMailer();
+
 $mail = new Message();
 $mail->setSubject('Testovací ! <email> od žluťoučkého koně ...');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( 'MIME-Version: 1.0
 X-Mailer: Nette Framework
@@ -33,7 +35,7 @@ Content-Transfer-Encoding: 7bit
 
 $mail = new Message();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemail');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( 'MIME-Version: 1.0
 X-Mailer: Nette Framework
@@ -48,7 +50,7 @@ Content-Transfer-Encoding: 7bit
 
 $mail = new Message();
 $mail->setSubject('veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongemailšššššššššššššššš');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( 'MIME-Version: 1.0
 X-Mailer: Nette Framework
@@ -64,7 +66,7 @@ Content-Transfer-Encoding: 7bit
 
 $mail = new Message();
 $mail->setSubject('==========================================================================================ššššššššššššššššš');
-$mail->send();
+$mailer->send($mail);
 
 Assert::match( 'MIME-Version: 1.0
 X-Mailer: Nette Framework
