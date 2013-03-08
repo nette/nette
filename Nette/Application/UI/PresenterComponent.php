@@ -194,7 +194,6 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 
 	/**
 	 * Returns component param.
-	 * If no key is passed, returns the entire array.
 	 * @param  string key
 	 * @param  mixed  default value
 	 * @return mixed
@@ -202,6 +201,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	final public function getParameter($name = NULL, $default = NULL)
 	{
 		if (func_num_args() === 0) {
+			trigger_error('Calling ' . __METHOD__ . ' with no arguments to get all parameters is deprecated, use getParameters() instead.', E_USER_DEPRECATED);
 			return $this->params;
 
 		} elseif (isset($this->params[$name])) {
@@ -210,6 +210,17 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 		} else {
 			return $default;
 		}
+	}
+
+
+
+	/**
+	 * Returns component parameters.
+	 * @return array
+	 */
+	final public function getParameters()
+	{
+		return $this->params;
 	}
 
 
