@@ -402,7 +402,18 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			if (!$control instanceof Nette\Forms\IControl) {
 				throw new Nette\InvalidArgumentException("Argument must be array of IFormControl instances.");
 			}
-			$s[] = (string) $control->getControl();
+			$description = $control->getOption('description');
+			if ($description instanceof Html) {
+				$description = ' ' . $control->getOption('description');
+				
+			} elseif (is_string($description)) {
+				$description = ' ' . $this->getWrapper('control description')->setText($control->translate($description));
+
+			} else {
+				$description = '';
+			}
+
+			$s[] = (string) $control->getControl() . $description;
 		}
 		$pair = $this->getWrapper('pair container');
 		$pair->add($this->renderLabel($control));
