@@ -457,18 +457,23 @@ class ContainerBuilder extends Nette\Object
 			);
 		}
 
+		$setups = (array) $def->setup;
 		if ($def->inject && $def->class) {
-			foreach (array_reverse(get_class_methods($def->class)) as $method) {
+			foreach (Helpers::getInjectProperties(Reflection\ClassType::from($def->class)) as $property => $type) {
+				array_unshift($setups, new Statement('$' . $property, array('@\\' . ltrim($type, '\\'))));
+			}
+
+			foreach (get_class_methods($def->class) as $method) {
 				if (substr($method, 0, 6) === 'inject') {
-					$code .= $this->formatStatement(new Statement(array('@self', $method)), $name) . ";\n";
+					array_unshift($setups, new Statement($method));
 				}
 			}
 		}
 
-		foreach ((array) $def->setup as $setup) {
+		foreach ($setups as $setup) {
 			$setup = Helpers::expand($setup, $parameters, TRUE);
 			if (is_string($setup->entity) && strpbrk($setup->entity, ':@?') === FALSE) { // auto-prepend @self
-				$setup->entity = array("@$name", $setup->entity);
+				$setup->entity = array('@self', $setup->entity);
 			}
 			$code .= $this->formatStatement($setup, $name) . ";\n";
 		}
