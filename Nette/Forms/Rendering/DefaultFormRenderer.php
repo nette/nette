@@ -405,7 +405,7 @@ class DefaultFormRenderer extends Nette\Object implements Nette\Forms\IFormRende
 			$description = $control->getOption('description');
 			if ($description instanceof Html) {
 				$description = ' ' . $control->getOption('description');
-				
+
 			} elseif (is_string($description)) {
 				$description = ' ' . $this->getWrapper('control description')->setText($control->translate($description));
 

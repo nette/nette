@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\DI\ContainerBuilder and Container: createInstance()
+ * Test: Nette\DI\Container and inject methods.
  *
  * @author     David Grudl
  * @package    Nette\DI
