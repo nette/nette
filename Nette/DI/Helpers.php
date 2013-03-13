@@ -163,7 +163,7 @@ final class Helpers
 	 * Generates list of properties with annotation @inject.
 	 * @return array
 	 */
-	public static function getInjectProperties(\ReflectionClass $class)
+	public static function getInjectProperties(Nette\Reflection\ClassType $class)
 	{
 		$res = array();
 		foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
