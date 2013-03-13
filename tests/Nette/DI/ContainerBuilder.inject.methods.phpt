@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Test: Nette\DI\ContainerBuilder and generated factories with inject methods.
+ * Test: Nette\DI\ContainerBuilder and inject methods.
  *
- * @author     Filip Procházka
+ * @author     David Grudl
  * @package    Nette\DI
  */
 
@@ -14,14 +14,13 @@ use Nette\DI;
 require __DIR__ . '/../bootstrap.php';
 
 
+
 class Ipsum
 {
 }
 
-
 class Lorem
 {
-
 	public $ipsum;
 
 	public function injectIpsum(Ipsum $ipsum)
@@ -29,19 +28,18 @@ class Lorem
 		$this->ipsum = $ipsum;
 	}
 
+	public function inject($val)
+	{
+	}
+
 }
 
-
-interface LoremFactory
-{
-	/** @return Lorem */
-	function create();
-}
 
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('lorem')
-	->setImplement('LoremFactory');
+	->setClass('Lorem')
+	->addSetup('inject', array(123));
 
 $builder->addDefinition('ipsum')
 	->setClass('Ipsum');
@@ -53,9 +51,5 @@ require TEMP_DIR . '/code.php';
 
 $container = new Container;
 
-Assert::true( $container->getService('lorem') instanceof LoremFactory );
-
-$lorem = $container->getService('lorem')->create();
-
-Assert::true( $lorem instanceof Lorem );
-Assert::true( $lorem->ipsum instanceof Ipsum );
+Assert::true( $container->getService('lorem') instanceof Lorem );
+Assert::true( $container->getService('lorem')->ipsum instanceof Ipsum );

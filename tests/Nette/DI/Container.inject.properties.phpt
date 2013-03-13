@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Nette\DI\ContainerBuilder and Container: createInstance()
+ * Test: Nette\DI\ContainerBuilder and injection into properties.
  *
  * @author     David Grudl
  * @package    Nette\DI
@@ -17,32 +17,18 @@ require __DIR__ . '/../bootstrap.php';
 
 class Test1
 {
-	public $injects;
+	/** @inject @var stdClass */
+	public $varA;
 
-	function inject(stdClass $obj)
-	{
-		$this->injects[] = __METHOD__;
-	}
-
-	function injectA(stdClass $obj)
-	{
-		$this->injects[] = __METHOD__;
-	}
-
-	protected function injectB(stdClass $obj)
-	{
-		$this->injects[] = __METHOD__;
-	}
+	/** @var stdClass @inject */
+	public $varB;
 
 }
 
 class Test2 extends Test1
 {
-
-	function injectC(stdClass $obj)
-	{
-		$this->injects[] = __METHOD__;
-	}
+	/** @var stdClass @inject */
+	public $varC;
 
 }
 
@@ -62,4 +48,6 @@ $container = new Container;
 
 $test = new Test2;
 $container->callInjects($test);
-Assert::same( array('Test1::injectA', 'Test1::inject', 'Test2::injectC'), $test->injects );
+Assert::true( $test->varA instanceof stdClass );
+Assert::true( $test->varB instanceof stdClass );
+Assert::true( $test->varC instanceof stdClass );

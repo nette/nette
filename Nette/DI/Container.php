@@ -283,6 +283,10 @@ class Container extends Nette\FreezableObject
 				$this->callMethod(array($service, $method));
 			}
 		}
+
+		foreach (Helpers::getInjectProperties(Nette\Reflection\ClassType::from($service)) as $property => $type) {
+			$service->$property = $this->getByType($type);
+		}
 	}
 
 
