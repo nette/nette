@@ -191,6 +191,8 @@ class ContainerBuilder extends Nette\Object
 	 */
 	public function prepareClassList()
 	{
+		$this->classes = FALSE;
+
 		// prepare generated factories
 		foreach ($this->definitions as $name => $def) {
 			if (!$def->implement) {
@@ -201,13 +203,13 @@ class ContainerBuilder extends Nette\Object
 				throw new Nette\InvalidStateException("Interface $def->implement has not been found.");
 			}
 			$rc = Reflection\ClassType::from($def->implement);
-			if (count($rc->getMethods()) !== 1 || !$rc->hasMethod('create') || $rc->getMethod('create')->isStatic()) {
-				throw new Nette\InvalidStateException("Interface $def->implement must have just one non-static method create().");
+			$method = $rc->hasMethod('create') ? $rc->getMethod('create') : ($rc->hasMethod('get') ? $rc->getMethod('get') : NULL);
+			if (count($rc->getMethods()) !== 1 || !$method || $method->isStatic()) {
+				throw new Nette\InvalidStateException("Interface $def->implement must have just one non-static method create() or get().");
 			}
 			$def->implement = $rc->getName();
 
 			if (!$def->class && empty($def->factory->entity)) {
-				$method = $rc->getMethod('create');
 				$returnType = $method->getAnnotation('return');
 				if (!$returnType) {
 					throw new Nette\InvalidStateException("Method $method has not @return annotation.");
@@ -223,8 +225,19 @@ class ContainerBuilder extends Nette\Object
 				$def->setClass($returnType);
 			}
 
+			if ($method->getName() === 'get') {
+				if ($method->getParameters()) {
+					throw new Nette\InvalidStateException("Method $method must have no arguments.");
+				}
+				if (empty($def->factory->entity)) {
+					$def->setFactory('@\\' . ltrim($def->class, '\\'));
+				} elseif (!$this->getServiceName($def->factory->entity)) {
+					throw new Nette\InvalidStateException("Invalid factory in service '$name' definition.");
+				}
+			}
+
 			if (!$def->parameters) {
-				foreach ($rc->getMethod('create')->getParameters() as $param) {
+				foreach ($method->getParameters() as $param) {
 					$paramDef = ($param->isArray() ? 'array' : $param->getClassName()) . ' ' . $param->getName();
 					if ($param->isOptional()) {
 						$def->parameters[$paramDef] = $param->getDefaultValue();
@@ -258,7 +271,6 @@ class ContainerBuilder extends Nette\Object
 		}
 
 		// complete classes
-		$this->classes = FALSE;
 		foreach ($this->definitions as $name => $def) {
 			$this->resolveClass($name);
 
@@ -510,7 +522,7 @@ class ContainerBuilder extends Nette\Object
 			->addParameter('container')
 				->setTypeHint('Nette\DI\Container');
 
-		$factoryClass->addMethod('create')
+		$factoryClass->addMethod(Reflection\ClassType::from($def->implement)->hasMethod('get') ? 'get' : 'create')
 			->setParameters($this->convertParameters($def->parameters))
 			->setBody(str_replace('$this', '$this->container', $code));
 
