@@ -19,6 +19,10 @@ class Test1
 {
 	/** @inject @var stdClass */
 	public $varA;
+
+	/** @var ReflectionClass @inject */
+	public $varX;
+
 }
 
 class Test2 extends Test1
@@ -31,7 +35,8 @@ class Test2 extends Test1
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('test')
-	->setClass('Test2');
+	->setClass('Test2')
+	->addSetup('$varX', 123);
 
 $builder->addDefinition('stdClass')
 	->setClass('stdClass');
@@ -46,3 +51,4 @@ $test = $container->getService('test');
 Assert::true( $test instanceof Test1 );
 Assert::true( $test->varA instanceof stdClass );
 Assert::true( $test->varB instanceof stdClass );
+Assert::true( $test->varX === 123 );

@@ -28,13 +28,18 @@ class Lorem
 		$this->ipsum = $ipsum;
 	}
 
+	public function inject($val)
+	{
+	}
+
 }
 
 
 
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('lorem')
-	->setClass('Lorem');
+	->setClass('Lorem')
+	->addSetup('inject', array(123));
 
 $builder->addDefinition('ipsum')
 	->setClass('Ipsum');
