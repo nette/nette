@@ -4,9 +4,7 @@ services:
 	baz: Baz
 
 factories:
-	lorem:
-		class: Lorem
-		implement: \ILoremFactory
+	lorem: \ILoremFactory(Lorem)
 
 	article:
 		create: Article(%title%)
