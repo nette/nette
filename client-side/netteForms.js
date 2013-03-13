@@ -237,7 +237,7 @@ Nette.validators = {
 	},
 
 	fileSize: function(elem, arg, val) {
-		return window.FileList ? elem.files[0].size <= arg : true;
+		return window.FileList && elem.files[0] ? elem.files[0].size <= arg : true;
 	}
 };
 
