@@ -144,18 +144,25 @@ class GroupedSelection extends Selection
 	protected function execute()
 	{
 		if ($this->rows !== NULL) {
+			$this->observeCache = $this;
 			return;
 		}
 
 		$hash = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
+		$accessedColumns = $this->accessedColumns;
 
-		$referencing = & $this->getRefTable($refPath)->referencing[$refPath . $hash];
+		$referencingBase = & $this->getRefTable($refPath)->referencing[$this->getCacheKey()];
+		$referencing = & $referencingBase[$refPath . $hash];
 		$this->rows = & $referencing['rows'];
 		$this->referenced = & $referencing['refs'];
 		$this->accessedColumns = & $referencing['accessed'];
+		$this->observeCache = & $referencingBase['observeCache'];
 		$refData = & $referencing['data'];
 
 		if ($refData === NULL) {
+			// we have not fetched any data => init accessedColumns by cached accessedColumns
+			$this->accessedColumns = $accessedColumns;
+
 			$limit = $this->sqlBuilder->getLimit();
 			$rows = count($this->refTable->rows);
 			if ($limit && $rows > 1) {
@@ -179,6 +186,7 @@ class GroupedSelection extends Selection
 			}
 		}
 
+		$this->observeCache = $this;
 		$this->data = & $refData[$this->active];
 		if ($this->data === NULL) {
 			$this->data = array();
