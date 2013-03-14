@@ -212,7 +212,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function getPreviousAccessedColumns()
 	{
 		if ($this->cache && $this->previousAccessedColumns === NULL) {
-			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()));
+			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getCacheKey());
 		}
 
 		return array_keys(array_filter((array) $this->previousAccessedColumns));
@@ -500,7 +500,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			return;
 		}
 
-		$this->observeCache = TRUE;
+		$this->observeCache = $this;
 
 		try {
 			$result = $this->query($this->getSql());
@@ -570,15 +570,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$this->rows = NULL;
-		$this->saveCacheState();
 	}
 
 
 
 	protected function saveCacheState()
 	{
-		if ($this->observeCache && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns != $this->previousAccessedColumns) {
-			$this->cache->save(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions()), $this->accessedColumns);
+		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns != $this->previousAccessedColumns) {
+			$this->cache->save($this->getCacheKey(), $this->accessedColumns);
 		}
 	}
 
@@ -591,6 +590,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	protected function getRefTable(& $refPath)
 	{
 		return $this;
+	}
+
+
+
+	/**
+	 * Returns cache key for selected columns caching
+	 * @return string
+	 */
+	protected function getCacheKey()
+	{
+		return md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
 	}
 
 
