@@ -14,17 +14,8 @@ script: "VERBOSE=true ./tests/run-tests.sh -s tests/"
 #  - memcached
 
 before_script:
-# Install Memcached server (because the built in one is buggy)
-  - sudo apt-get -qq install libevent-dev
-  - wget http://memcached.googlecode.com/files/memcached-1.4.14.tar.gz
-  - tar xzf memcached-1.4.14.tar.gz
-  - sh -c "cd memcached-1.4.14 && ./configure && make && ./memcached -d" > /dev/null
-
 # Install Nette Tester
   - composer install --no-interaction --dev
-
-# PHP Memcache extension
-  - echo n | pecl install memcache > /dev/null
 
 # Create databases.ini
   - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
