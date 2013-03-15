@@ -30,9 +30,6 @@
 	"require-dev": {
 		"nette/tester": "@dev"
 	},
-	"config": {
-		"vendor-dir": "tools"
-	},
 	"autoload": {
 		"files": ["Nette/loader.php"]
 	},
