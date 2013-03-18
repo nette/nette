@@ -768,8 +768,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 				$keys[$key] = TRUE;
 			}
 
-			if ($referenced !== NULL && array_keys($keys) === array_keys($referenced->rows)) {
-				return $referenced;
+			if ($referenced !== NULL) {
+				$a = array_keys($keys);
+				$b = array_keys($referenced->rows);
+				if (!array_diff($a, $b) && !array_diff($b, $a)) {
+					return $referenced;
+				}
 			}
 
 			if ($keys) {
