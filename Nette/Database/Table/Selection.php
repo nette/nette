@@ -129,7 +129,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * @return IReflection
+	 * @return Nette\Database\IReflection
 	 */
 	public function getDatabaseReflection()
 	{
