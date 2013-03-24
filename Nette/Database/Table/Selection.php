@@ -58,14 +58,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var bool */
 	protected $dataRefreshed = FALSE;
 
-	/** @var Selection[] */
-	protected $referenced = array();
+	/** @var mixed cache array of Selection and GroupedSelection prototypes */
+	protected $globalRefCache;
 
-	/** @var array of [sqlQuery-hash => grouped data]; used by GroupedSelection */
-	protected $referencing = array();
-
-	/** @var GroupedSelection[] cached array of GroupedSelection prototypes */
-	protected $referencingPrototype = array();
+	/** @var mixed */
+	protected $refCache;
 
 	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
 	protected $aggregation = array();
@@ -100,6 +97,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->cache = $cacheStorage ? new Nette\Caching\Cache($cacheStorage, 'Nette.Database.' . md5($connection->getDsn())) : NULL;
 		$this->primary = $reflection->getPrimary($table);
 		$this->sqlBuilder = new SqlBuilder($table, $connection, $reflection);
+		$this->refCache = & $this->getRefTable($refPath)->globalRefCache[$refPath];
 	}
 
 
@@ -754,7 +752,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
 	{
-		$referenced = & $this->getRefTable($refPath)->referenced[$refPath . "$table.$column"];
+		$referenced = & $this->refCache['referenced']["$table.$column"];
 		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
@@ -800,7 +798,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencingTable($table, $column, $active = NULL)
 	{
-		$prototype = & $this->getRefTable($refPath)->referencingPrototype[$refPath . "$table.$column"];
+		$prototype = & $this->refCache['referencingPrototype']["$table.$column"];
 		if (!$prototype) {
 			$prototype = $this->createGroupedSelectionInstance($table, $column);
 			$prototype->where("$table.$column", array_keys((array) $this->rows));
