@@ -26,7 +26,7 @@ use Nette,
  *
  * @property-read string $sql
  */
-class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection extends Nette\Object implements ISelectionAccessor, \Iterator, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	protected $connection;
@@ -428,10 +428,10 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function aggregation($function)
 	{
-		$selection = $this->createSelectionInstance();
+		$selection = $this->createSelectionInstance()->getSelection();
 		$selection->getSqlBuilder()->importConditions($this->getSqlBuilder());
 		$selection->select($function);
-		foreach ($selection->fetch() as $val) {
+		foreach ($selection->fetch()->getActiveRow() as $val) {
 			return $val;
 		}
 	}
@@ -520,7 +520,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		foreach ($result as $key => $row) {
 			$row = $this->createRow($result->normalizeRow($row));
-			$primary = $row->getSignature(FALSE);
+			$primary = $row->getActiveRow()->getSignature(FALSE);
 			$usedPrimary = $usedPrimary && $primary;
 			$this->rows[$primary ?: $key] = $row;
 		}
@@ -694,7 +694,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$row = $this->createRow($data);
-		if ($signature = $row->getSignature(FALSE)) {
+		if ($signature = $row->getActiveRow()->getSignature(FALSE)) {
 			$this->rows[$signature] = $row;
 		}
 
@@ -760,11 +760,12 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$this->checkReferenced = FALSE;
 			$keys = array();
 			foreach ($this->rows as $row) {
-				if ($row[$column] === NULL) {
+				$rowActive = $row->getActiveRow();
+				if ($rowActive[$column] === NULL) {
 					continue;
 				}
 
-				$key = $row[$column] instanceof ActiveRow ? $row[$column]->getPrimary() : $row[$column];
+				$key = $rowActive[$column] instanceof IActiveRowAccessor ? $rowActive[$column]->getActiveRow()->getPrimary() : $rowActive[$column];
 				$keys[$key] = TRUE;
 			}
 
@@ -778,7 +779,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 			if ($keys) {
 				$referenced = $this->createSelectionInstance($table);
-				$referenced->where($referenced->primary, array_keys($keys));
+				$referenced->getSelection()->where($referenced->getSelection()->primary, array_keys($keys));
 			} else {
 				$referenced = array();
 			}
@@ -801,11 +802,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$prototype = & $this->getRefTable($refPath)->referencingPrototype[$refPath . "$table.$column"];
 		if (!$prototype) {
 			$prototype = $this->createGroupedSelectionInstance($table, $column);
-			$prototype->where("$table.$column", array_keys((array) $this->rows));
+			$prototype->getSelection()->where("$table.$column", array_keys((array) $this->rows));
 		}
 
 		$clone = clone $prototype;
-		$clone->setActive($active);
+		$clone->getSelection()->setActive($active);
 		return $clone;
 	}
 
@@ -913,6 +914,17 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	{
 		$this->execute();
 		unset($this->rows[$key], $this->data[$key]);
+	}
+
+
+
+	/**
+	 * Returns Selection
+	 * @return Selection
+	 */
+	public function getSelection()
+	{
+		return $this;
 	}
 
 }
