@@ -556,10 +556,6 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function emptyResultSet()
 	{
-		if ($this->rows === NULL) {
-			return;
-		}
-
 		$this->rows = NULL;
 	}
 
