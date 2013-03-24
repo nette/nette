@@ -762,7 +762,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			if ($referenced !== NULL) {
 				$a = array_keys($keys);
 				$b = array_keys($referenced->rows);
-				if (!array_diff($a, $b) && !array_diff($b, $a)) {
+				sort($a);
+				sort($b);
+				if ($a === $b) {
 					return $referenced;
 				}
 			}
