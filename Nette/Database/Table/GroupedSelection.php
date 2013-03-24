@@ -148,14 +148,15 @@ class GroupedSelection extends Selection
 			return;
 		}
 
-		$hash = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
+		$hash = $this->getSpecificCacheKey();
 		$accessedColumns = $this->accessedColumns;
 
-		$referencing = & $this->refCache['referencing'][$this->getCacheKey()];
-		$this->observeCache    = & $referencing['observeCache'];
-		$this->accessedColumns = & $referencing[$hash]['accessed'];
-		$this->rows            = & $referencing[$hash]['rows'];
-		$data                  = & $referencing[$hash]['data'];
+		$referencing = & $this->refCache['referencing'][$this->getGeneralCacheKey()];
+		$this->observeCache      = & $referencing['observeCache'];
+		$this->accessedColumns   = & $referencing[$hash]['accessed'];
+		$this->specificCacheKey  = & $referencing[$hash]['specificCacheKey'];
+		$this->rows              = & $referencing[$hash]['rows'];
+		$data                    = & $referencing[$hash]['data'];
 
 		if ($data === NULL) {
 			// we have not fetched any data yet => init accessedColumns by cached accessedColumns
@@ -193,7 +194,6 @@ class GroupedSelection extends Selection
 				$row->setTable($this); // injects correct parent GroupedSelection
 			}
 			reset($this->data);
-			$this->checkReferenced = TRUE;
 		}
 	}
 

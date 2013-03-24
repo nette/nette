@@ -64,6 +64,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	/** @var mixed */
 	protected $refCache;
 
+	/** @var string */
+	protected $specificCacheKey;
+
 	/** @var array of [conditions => [key => ActiveRow]]; used by GroupedSelection */
 	protected $aggregation = array();
 
@@ -210,7 +213,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function getPreviousAccessedColumns()
 	{
 		if ($this->cache && $this->previousAccessedColumns === NULL) {
-			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getCacheKey());
+			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getGeneralCacheKey());
 		}
 
 		return array_keys(array_filter((array) $this->previousAccessedColumns));
@@ -568,6 +571,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		}
 
 		$this->rows = NULL;
+		$this->specificCacheKey = NULL;
 	}
 
 
@@ -575,7 +579,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	protected function saveCacheState()
 	{
 		if ($this->observeCache === $this && $this->cache && !$this->sqlBuilder->getSelect() && $this->accessedColumns != $this->previousAccessedColumns) {
-			$this->cache->save($this->getCacheKey(), $this->accessedColumns);
+			$this->cache->save($this->getGeneralCacheKey(), $this->accessedColumns);
 		}
 	}
 
@@ -593,12 +597,29 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns cache key for selected columns caching
+	 * Returns general cache key indenpendent on query parameters or sql limit
+	 * Used e.g. for previously accessed columns caching
 	 * @return string
 	 */
-	protected function getCacheKey()
+	protected function getGeneralCacheKey()
 	{
 		return md5(serialize(array(__CLASS__, $this->name, $this->sqlBuilder->getConditions())));
+	}
+
+
+
+	/**
+	 * Returns object specific cache key dependent on query parameters
+	 * Used e.g. for reference memory caching
+	 * @return string
+	 */
+	protected function getSpecificCacheKey()
+	{
+		if ($this->specificCacheKey) {
+			return $this->specificCacheKey;
+		}
+
+		return $this->specificCacheKey = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
 	}
 
 
@@ -752,7 +773,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getReferencedTable($table, $column, $checkReferenced = FALSE)
 	{
-		$referenced = & $this->refCache['referenced']["$table.$column"];
+		$referenced = & $this->refCache['referenced'][$this->getSpecificCacheKey()]["$table.$column"];
 		if ($referenced === NULL || $checkReferenced || $this->checkReferenced) {
 			$this->execute();
 			$this->checkReferenced = FALSE;
