@@ -81,13 +81,13 @@ class FileTemplate extends Template implements IFileTemplate
 
 	/********************* rendering ****************d*g**/
 
-
-
 	/**
-	 * Renders template to output.
-	 * @return void
+	 * compile template and save to temp
+	 * @return string
+	 * @throws Nette\InvalidStateException
+	 * @throws \Nette\Templating\FilterException
 	 */
-	public function render()
+	public function compileTemplate() 
 	{
 		if ($this->file == NULL) { // intentionally ==
 			throw new Nette\InvalidStateException("Template file name was not specified.");
@@ -116,9 +116,22 @@ class FileTemplate extends Template implements IFileTemplate
 		}
 
 		if ($cached !== NULL && $storage instanceof Caching\Storages\PhpFileStorage) {
-			Nette\Utils\LimitedScope::load($cached['file'], $this->getParameters());
+			return $cached;
+		}
+		return $compiled;
+	}
+
+	/**
+	 * Renders template to output.
+	 * @return void
+	 */
+	public function render()
+	{
+		$source = $this->compileTemplate();
+		if (is_array($source)) {
+			Nette\Utils\LimitedScope::load($source['file'], $this->getParameters());
 		} else {
-			Nette\Utils\LimitedScope::evaluate($compiled, $this->getParameters());
+			Nette\Utils\LimitedScope::evaluate($source, $this->getParameters());
 		}
 	}
 
