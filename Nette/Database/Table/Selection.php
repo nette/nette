@@ -213,7 +213,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function getPreviousAccessedColumns()
 	{
 		if ($this->cache && $this->previousAccessedColumns === NULL) {
-			$this->accessedColumns = $this->previousAccessedColumns = $this->cache->load($this->getGeneralCacheKey());
+			$this->accessedColumns = $this->previousAccessedColumns = (array) $this->cache->load($this->getGeneralCacheKey());
 		}
 
 		return array_keys(array_filter((array) $this->previousAccessedColumns));
