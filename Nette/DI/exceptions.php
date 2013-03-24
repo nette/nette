@@ -29,4 +29,6 @@ class MissingServiceException extends Nette\InvalidStateException
  */
 class ServiceCreationException extends Nette\InvalidStateException
 {
+	public $serviceDefinition;
+	public $serviceName;
 }

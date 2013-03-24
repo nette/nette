@@ -439,7 +439,10 @@ class ContainerBuilder extends Nette\Object
 					->setBody($name === self::THIS_CONTAINER ? 'return $this;' : $this->generateService($name))
 					->setParameters($def->implement ? array() : $this->convertParameters($def->parameters));
 			} catch (\Exception $e) {
-				throw new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+				$e = new ServiceCreationException("Service '$name': " . $e->getMessage(), NULL, $e);
+				$e->serviceDefinition = $def;
+				$e->serviceName = $name;
+				throw $e;
 			}
 		}
 
