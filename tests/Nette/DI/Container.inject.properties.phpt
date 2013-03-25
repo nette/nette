@@ -15,6 +15,14 @@ require __DIR__ . '/../bootstrap.php';
 
 
 
+interface IFoo
+{
+}
+
+class Foo implements IFoo
+{
+}
+
 class Test1
 {
 	/** @inject @var stdClass */
@@ -30,6 +38,9 @@ class Test2 extends Test1
 	/** @var stdClass @inject */
 	public $varC;
 
+	/** @var IFoo @inject */
+	public $varD;
+
 }
 
 
@@ -37,6 +48,8 @@ class Test2 extends Test1
 $builder = new DI\ContainerBuilder;
 $builder->addDefinition('one')
 	->setClass('stdClass');
+$builder->addDefinition('two')
+	->setClass('Foo');
 
 
 // run-time
@@ -51,3 +64,4 @@ $container->callInjects($test);
 Assert::true( $test->varA instanceof stdClass );
 Assert::true( $test->varB instanceof stdClass );
 Assert::true( $test->varC instanceof stdClass );
+Assert::true( $test->varD instanceof Foo );
