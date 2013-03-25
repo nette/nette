@@ -25,4 +25,4 @@ try {
 }
 
 Tester\Helpers::lock($options['dsn'], dirname(TEMP_DIR));
-$driverName = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
+$driverName = $connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME);

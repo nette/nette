@@ -89,7 +89,7 @@ Assert::true(empty($book->translator));
 
 
 if (
-	$connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' &&
+	$connection->getPdo()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' &&
 	($lowerCase = $connection->query('SHOW VARIABLES LIKE "lower_case_table_names"')->fetch()) &&
 	$lowerCase->Value != 0
 ) {

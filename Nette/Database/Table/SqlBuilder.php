@@ -77,7 +77,7 @@ class SqlBuilder extends Nette\Object
 		$this->tableName = $tableName;
 		$this->databaseReflection = $reflection;
 		$this->driver = $connection->getSupplementalDriver();
-		$this->driverName = $connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
+		$this->driverName = $connection->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
 		$this->delimitedTable = $this->tryDelimite($tableName);
 	}
 
