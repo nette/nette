@@ -125,9 +125,9 @@ class Connection extends Nette\Object
 	 * @param  int     data type hint
 	 * @return string
 	 */
-	public function quote($string, $parameter_type = PDO::PARAM_STR)
+	public function quote($string, $type = PDO::PARAM_STR)
 	{
-		return $this->pdo->quote($string, $parameter_type);
+		return $this->pdo->quote($string, $type);
 	}
 
 
