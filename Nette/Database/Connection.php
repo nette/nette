@@ -113,7 +113,7 @@ class Connection extends Nette\Object
 	 * @param  string  sequence object
 	 * @return string
 	 */
-	public function lastInsertId($name = NULL)
+	public function getInsertId($name = NULL)
 	{
 		return $this->pdo->lastInsertId($name);
 	}
@@ -278,6 +278,15 @@ class Connection extends Nette\Object
 	function setCacheStorage()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use setSelectionFactory() instead.', E_USER_DEPRECATED);
+	}
+
+
+
+	/** @deprecated */
+	function lastInsertId($name = NULL)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getInsertId() instead.', E_USER_DEPRECATED);
+		return $this->getInsertId($name);
 	}
 
 }
