@@ -23,7 +23,7 @@ $connection->table('author')->insert(array(
 
 switch ($driverName) {
 	case 'pgsql':
-	$connection->exec("SELECT setval('author_id_seq'::regclass, 14, TRUE)");
+	$connection->query("SELECT setval('author_id_seq'::regclass, 14, TRUE)");
 	break;
 }
 
