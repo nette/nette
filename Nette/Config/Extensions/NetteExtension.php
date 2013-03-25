@@ -249,8 +249,10 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			$autowired = FALSE;
 
 			foreach ((array) $info['options'] as $key => $value) {
-				unset($info['options'][$key]);
-				$info['options'][constant($key)] = $value;
+				if (preg_match('#^PDO::\w+\z#', $key)) {
+					unset($info['options'][$key]);
+					$info['options'][constant($key)] = $value;
+				}
 			}
 
 			$connection = $container->addDefinition($this->prefix("database.$name"))
