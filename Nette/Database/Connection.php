@@ -147,20 +147,6 @@ class Connection extends Nette\Object
 
 
 	/**
-	 * Generates and executes SQL query.
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return int     number of affected rows
-	 */
-	public function exec($statement)
-	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->rowCount();
-	}
-
-
-
-	/**
 	 * @param  string  statement
 	 * @param  array
 	 * @return Statement
@@ -287,6 +273,15 @@ class Connection extends Nette\Object
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getInsertId() instead.', E_USER_DEPRECATED);
 		return $this->getInsertId($name);
+	}
+
+
+	/** @deprecated */
+	function exec($statement)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use query()->rowCount() instead.', E_USER_DEPRECATED);
+		$args = func_get_args();
+		return $this->queryArgs(array_shift($args), $args)->rowCount();
 	}
 
 }

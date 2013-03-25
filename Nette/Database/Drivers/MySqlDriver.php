@@ -41,12 +41,12 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		$this->connection = $connection;
 		$charset = isset($options['charset']) ? $options['charset'] : 'utf8';
 		if ($charset) {
-			$connection->exec("SET NAMES '$charset'");
+			$connection->query("SET NAMES '$charset'");
 		}
 		if (isset($options['sqlmode'])) {
-			$connection->exec("SET sql_mode='$options[sqlmode]'");
+			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->exec("SET time_zone='" . date('P') . "'");
+		$connection->query("SET time_zone='" . date('P') . "'");
 	}
 
 

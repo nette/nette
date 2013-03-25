@@ -186,13 +186,13 @@ class Helpers
 			$s = fgets($handle);
 			$sql .= $s;
 			if (substr(rtrim($s), -1) === ';') {
-				$connection->exec($sql); // native query without logging
+				$connection->query($sql); // native query without logging
 				$sql = '';
 				$count++;
 			}
 		}
 		if (trim($sql) !== '') {
-			$connection->exec($sql);
+			$connection->query($sql);
 			$count++;
 		}
 		fclose($handle);
