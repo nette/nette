@@ -153,6 +153,9 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function getPrimary()
 	{
+		if ($this->primary === NULL) {
+			throw new \LogicException("Table \"{$this->name}\" does not have a primary key.");
+		}
 		return $this->primary;
 	}
 
@@ -166,10 +169,11 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		if ($this->primarySequence === FALSE) {
 			$this->primarySequence = NULL;
 
+			$primary = $this->getPrimary();
 			$driver = $this->connection->getSupplementalDriver();
 			if ($driver->isSupported(ISupplementalDriver::SUPPORT_SEQUENCE)) {
 				foreach ($driver->getColumns($this->name) as $column) {
-					if ($column['name'] === $this->primary) {
+					if ($column['name'] === $primary) {
 						$this->primarySequence = $column['vendor']['sequence'];
 						break;
 					}
@@ -322,7 +326,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		} elseif (is_array($key)) { // key contains column names
 			$this->where($key);
 		} else {
-			$this->where($this->primary, $key);
+			$this->where($this->getPrimary(), $key);
 		}
 
 		return $this;
@@ -778,7 +782,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 			if ($keys) {
 				$referenced = $this->createSelectionInstance($table);
-				$referenced->where($referenced->primary, array_keys($keys));
+				$referenced->where($referenced->getPrimary(), array_keys($keys));
 			} else {
 				$referenced = array();
 			}
