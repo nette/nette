@@ -43,9 +43,9 @@ class GroupedSelection extends Selection
 	 */
 	public function __construct(Selection $refTable, $table, $column)
 	{
-		parent::__construct($refTable->connection, $table, $refTable->reflection, $refTable->cache ? $refTable->cache->getStorage() : NULL);
 		$this->refTable = $refTable;
 		$this->column = $column;
+		parent::__construct($refTable->connection, $table, $refTable->reflection, $refTable->cache ? $refTable->cache->getStorage() : NULL);
 	}
 
 
@@ -148,19 +148,18 @@ class GroupedSelection extends Selection
 			return;
 		}
 
-		$hash = md5($this->getSql() . json_encode($this->sqlBuilder->getParameters()));
+		$hash = $this->getSpecificCacheKey();
 		$accessedColumns = $this->accessedColumns;
 
-		$referencingBase = & $this->getRefTable($refPath)->referencing[$this->getCacheKey()];
-		$referencing = & $referencingBase[$refPath . $hash];
-		$this->rows = & $referencing['rows'];
-		$this->referenced = & $referencing['refs'];
-		$this->accessedColumns = & $referencing['accessed'];
-		$this->observeCache = & $referencingBase['observeCache'];
-		$refData = & $referencing['data'];
+		$referencing = & $this->refCache['referencing'][$this->getGeneralCacheKey()];
+		$this->observeCache      = & $referencing['observeCache'];
+		$this->accessedColumns   = & $referencing[$hash]['accessed'];
+		$this->specificCacheKey  = & $referencing[$hash]['specificCacheKey'];
+		$this->rows              = & $referencing[$hash]['rows'];
+		$data                    = & $referencing[$hash]['data'];
 
-		if ($refData === NULL) {
-			// we have not fetched any data => init accessedColumns by cached accessedColumns
+		if ($data === NULL) {
+			// we have not fetched any data yet => init accessedColumns by cached accessedColumns
 			$this->accessedColumns = $accessedColumns;
 
 			$limit = $this->sqlBuilder->getLimit();
@@ -170,11 +169,11 @@ class GroupedSelection extends Selection
 			}
 			parent::execute();
 			$this->sqlBuilder->setLimit($limit, NULL);
-			$refData = array();
+			$data = array();
 			$offset = array();
 			$this->accessColumn($this->column);
 			foreach ((array) $this->rows as $key => $row) {
-				$ref = & $refData[$row[$this->column]];
+				$ref = & $data[$row[$this->column]];
 				$skip = & $offset[$row[$this->column]];
 				if ($limit === NULL || $rows <= 1 || (count($ref) < $limit && $skip >= $this->sqlBuilder->getOffset())) {
 					$ref[$key] = $row;
@@ -187,7 +186,7 @@ class GroupedSelection extends Selection
 		}
 
 		$this->observeCache = $this;
-		$this->data = & $refData[$this->active];
+		$this->data = & $data[$this->active];
 		if ($this->data === NULL) {
 			$this->data = array();
 		} else {
@@ -195,7 +194,6 @@ class GroupedSelection extends Selection
 				$row->setTable($this); // injects correct parent GroupedSelection
 			}
 			reset($this->data);
-			$this->checkReferenced = TRUE;
 		}
 	}
 
