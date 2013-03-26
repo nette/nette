@@ -162,7 +162,7 @@ class SqlBuilder extends Nette\Object
 		$replace = NULL;
 		$placeholderNum = 0;
 		foreach ($args as $arg) {
-			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}((?:(=|LIKE|IN)\s*)?(%)?\?(%)?)#', $condition, $match, PREG_OFFSET_CAPTURE);
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}((?:(<|>|=|LIKE|IN)\s*)?(%)?\?(%)?)#', $condition, $match, PREG_OFFSET_CAPTURE);
 
 			if ($arg === NULL) {
 				if (!empty($match[2][0])) {

@@ -54,7 +54,7 @@ $sqlBuilder[6]->addWhere('id', array());
 
 // backward compatibility
 $sqlBuilder[7] = new SqlBuilder('book', $connection, $reflection);
-$sqlBuilder[7]->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ?', 1, 2, array(1, 2), "%test");
+$sqlBuilder[7]->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
 $sqlBuilder[7]->addWhere('name', "var");
 
 switch ($driverName) {
@@ -66,7 +66,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (?))', $sqlBuilder[4]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
 		break;
 
 	case 'pgsql':
@@ -77,7 +77,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (?))', $sqlBuilder[4]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
-		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
 		break;
 }
 
