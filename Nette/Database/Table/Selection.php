@@ -426,7 +426,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		if(is_numeric($key)) {
 			throw new Nette\InvalidArgumentException("Numeric parameters are not allowed");
 		}
-		$this->sqlBuilder->addNamedParameter($key, $value);
+		$this->sqlBuilder->addParameter($key, $value);
 		return $this;
 	}
 
@@ -571,7 +571,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function query($query)
 	{
-		return $this->connection->queryArgs($query, array_merge($this->sqlBuilder->getParameters(), $this->sqlBuilder->getNamedParameters()));
+		return $this->connection->queryArgs($query, $this->sqlBuilder->getParameters());
 	}
 
 

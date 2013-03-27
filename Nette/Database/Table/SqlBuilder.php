@@ -345,19 +345,13 @@ class SqlBuilder extends Nette\Object
 		return $this->parameters;
 	}
 
-	public function addNamedParameter($key, $value)
+	public function addParameter($key, $value)
 	{
-		if($key[0]!=':') {
+		if(!is_numeric($key) && $key[0]!=':') {
 			$key = ':' . $key;
 		}
-		$this->namedParameters[$key] = $value;
+		$this->parameters[$key] = $value;
 	}
-	
-	public function getNamedParameters()
-	{
-		return $this->namedParameters;
-	}
-
 
 	protected function buildJoins($val, $inner = FALSE)
 	{
