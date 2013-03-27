@@ -54,6 +54,9 @@ class SqlBuilder extends Nette\Object
 
 	/** @var array of parameters passed to where conditions */
 	protected $parameters = array();
+	
+	/** @var array of custom named parameters */
+	protected $namedParameters = array();
 
 	/** @var array or columns to order by */
 	protected $order = array();
@@ -342,6 +345,18 @@ class SqlBuilder extends Nette\Object
 		return $this->parameters;
 	}
 
+	public function addNamedParameter($key, $value)
+	{
+		if($key[0]!=':') {
+			$key = ':' . $key;
+		}
+		$this->namedParameters[$key] = $value;
+	}
+	
+	public function getNamedParameters()
+	{
+		return $this->namedParameters;
+	}
 
 
 	protected function buildJoins($val, $inner = FALSE)
@@ -422,7 +437,7 @@ class SqlBuilder extends Nette\Object
 	protected function tryDelimite($s)
 	{
 		$driver = $this->driver;
-		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
+		return preg_replace_callback('#(?<=[^\w`":\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
 	}

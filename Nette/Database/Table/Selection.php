@@ -421,6 +421,14 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	}
 
 
+	public function parameter($key, $value)
+	{
+		if(is_numeric($key)) {
+			throw new Nette\InvalidArgumentException("Numeric parameters are not allowed");
+		}
+		$this->sqlBuilder->addNamedParameter($key, $value);
+		return $this;
+	}
 
 	/********************* aggregations ****************d*g**/
 
@@ -563,7 +571,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 	protected function query($query)
 	{
-		return $this->connection->queryArgs($query, $this->sqlBuilder->getParameters());
+		return $this->connection->queryArgs($query, array_merge($this->sqlBuilder->getParameters(), $this->sqlBuilder->getNamedParameters()));
 	}
 
 
