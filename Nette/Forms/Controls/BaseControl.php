@@ -33,6 +33,7 @@ use Nette,
  * @property-read bool $filled
  * @property-write $defaultValue
  * @property   bool $disabled
+ * @property   bool $omitted
  * @property-read Nette\Utils\Html $control
  * @property-read Nette\Utils\Html $label
  * @property-read Nette\Utils\Html $controlPrototype
@@ -63,6 +64,9 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/** @var bool */
 	private $disabled = FALSE;
+
+	/** @var bool */
+	private $omitted = FALSE;
 
 	/** @var string */
 	private $htmlId;
@@ -365,6 +369,30 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	public function isDisabled()
 	{
 		return $this->disabled;
+	}
+
+
+
+	/**
+	 * Set control value omitted or not.
+	 * @param  bool
+	 * @return BaseControl  provides a fluent interface
+	 */
+	public function setOmitted($value = TRUE)
+	{
+		$this->omitted = (bool) $value;
+		return $this;
+	}
+
+
+
+	/**
+	 * Is control value omitted from output?
+	 * @return bool
+	 */
+	public function isOmitted()
+	{
+		return $this->omitted;
 	}
 
 

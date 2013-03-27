@@ -60,6 +60,12 @@ interface IControl
 	function isDisabled();
 
 	/**
+	 * Is control value omitted from output?
+	 * @return bool
+	 */
+	function isOmitted();
+
+	/**
 	 * Returns translated string.
 	 * @param  string
 	 * @param  int      plural count

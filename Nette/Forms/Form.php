@@ -123,7 +123,7 @@ class Form extends Container
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
 			$tracker = new Controls\HiddenField($name);
-			$tracker->unmonitor(__CLASS__);
+			$tracker->setOmitted()->unmonitor(__CLASS__);
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
@@ -225,7 +225,7 @@ class Form extends Container
 		}
 		$session->setExpiration($timeout, $key);
 		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
+		$this[self::PROTECTOR_ID]->setOmitted()->addRule(self::PROTECTION, $message, $token);
 	}
 
 
@@ -458,23 +458,6 @@ class Form extends Container
 		}
 
 		return $data;
-	}
-
-
-
-	/********************* data exchange ****************d*g**/
-
-
-
-	/**
-	 * Returns the values submitted by the form.
-	 * @return Nette\ArrayHash|array
-	 */
-	public function getValues($asArray = FALSE)
-	{
-		$values = parent::getValues($asArray);
-		unset($values[self::TRACKER_ID], $values[self::PROTECTOR_ID]);
-		return $values;
 	}
 
 
