@@ -54,9 +54,6 @@ class SqlBuilder extends Nette\Object
 
 	/** @var array of parameters passed to where conditions */
 	protected $parameters = array();
-	
-	/** @var array of custom named parameters */
-	protected $namedParameters = array();
 
 	/** @var array or columns to order by */
 	protected $order = array();
