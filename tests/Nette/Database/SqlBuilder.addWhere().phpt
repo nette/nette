@@ -88,7 +88,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
-		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
+		Assert::equal('SELECT * FROM "book" WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		break;
 }
 
