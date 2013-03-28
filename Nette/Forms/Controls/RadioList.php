@@ -36,6 +36,8 @@ class RadioList extends BaseControl
 	/** @var array */
 	protected $items = array();
 
+	/** @var bool */
+	private $useKeys = TRUE;
 
 
 	/**
@@ -62,7 +64,7 @@ class RadioList extends BaseControl
 	 */
 	public function getValue($raw = FALSE)
 	{
-		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		return is_scalar($this->value) && ($raw || ($this->useKeys && isset($this->items[$this->value])) || ((!$this->useKeys) && in_array($this->value, $this->items))) ? $this->value : NULL;
 	}
 
 
@@ -81,14 +83,33 @@ class RadioList extends BaseControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
+	 * @param  bool
 	 * @return RadioList  provides a fluent interface
 	 */
-	public function setItems(array $items)
+	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
+		$alreadySet = array();
+		foreach ($items as $k => $v) {
+			foreach ((is_array($v) ? $v : array($k => $v)) as $key => $value) {
+				if (!$useKeys) {
+					if (!is_scalar($value)) {
+						throw new Nette\InvalidArgumentException("All items must be scalar.");
+					}
+					$key = $value;
+				}
+
+				if (isset($alreadySet[$key])) {
+					throw new Nette\InvalidArgumentException("Items contain duplication for key '$key'.");
+				}
+
+				$alreadySet[$key] = $value;
+			}
+		}
+
+		$this->items = $alreadySet;
+		$this->useKeys = (bool) $useKeys;
 		return $this;
 	}
-
 
 
 	/**
@@ -146,6 +167,7 @@ class RadioList extends BaseControl
 		$label = Html::el('label');
 
 		foreach ($this->items as $k => $val) {
+			$k = $this->useKeys ? $k : $val;
 			$counter++;
 			if ($key !== NULL && (string) $key !== (string) $k) {
 				continue;
