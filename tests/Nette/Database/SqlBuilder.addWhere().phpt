@@ -57,6 +57,15 @@ $sqlBuilder[7] = new SqlBuilder('book', $connection, $reflection);
 $sqlBuilder[7]->addWhere('id = ? OR id ? OR id IN ? OR id LIKE ? OR id > ?', 1, 2, array(1, 2), "%test", 3);
 $sqlBuilder[7]->addWhere('name', "var");
 
+// auto operator tests
+$sqlBuilder[8] = new SqlBuilder('book', $connection, $reflection);
+$sqlBuilder[8]->addWhere('FOO(?)', 1);
+$sqlBuilder[8]->addWhere('FOO(id, ?)', 1);
+$sqlBuilder[8]->addWhere('id & ? = ?', 1, 1);
+$sqlBuilder[8]->addWhere('?', 1);
+$sqlBuilder[8]->addWhere('NOT ? OR ?', 1, 1);
+$sqlBuilder[8]->addWhere('? + ? - ? / ? * ? % ?', 1, 1, 1, 1, 1, 1);
+
 switch ($driverName) {
 	case 'mysql':
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` IS NULL)', $sqlBuilder[0]->buildSelectQuery());
@@ -67,6 +76,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
 		Assert::equal('SELECT * FROM `book` WHERE (`id` = ? OR `id` = ? OR `id` IN (?) OR `id` LIKE ? OR `id` > ?) AND (`name` = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO(`id`, ?)) AND (`id` & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		break;
 
 	case 'pgsql':
@@ -78,6 +88,7 @@ switch ($driverName) {
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?))', $sqlBuilder[5]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" IN (NULL))', $sqlBuilder[6]->buildSelectQuery());
 		Assert::equal('SELECT * FROM "book" WHERE ("id" = ? OR "id" = ? OR "id" IN (?) OR "id" LIKE ? OR "id" > ?) AND ("name" = ?)', $sqlBuilder[7]->buildSelectQuery());
+		Assert::equal('SELECT * FROM `book` WHERE (FOO(?)) AND (FOO("id", ?)) AND ("id" & ? = ?) AND (?) AND (NOT ? OR ?) AND (? + ? - ? / ? * ? % ?)', $sqlBuilder[8]->buildSelectQuery());
 		break;
 }
 

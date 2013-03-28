@@ -162,10 +162,11 @@ class SqlBuilder extends Nette\Object
 		$replace = NULL;
 		$placeholderNum = 0;
 		foreach ($args as $arg) {
-			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}((?:(<|>|=|LIKE|IN)\s*)?(%)?\?(%)?)#', $condition, $match, PREG_OFFSET_CAPTURE);
+			preg_match('#(?:.*?\?.*?){' . $placeholderNum . '}(((?:&|\||^|~|\+|-|\*|/|%|\(|,|<|>|=|ALL|AND|ANY|BETWEEN|EXISTS|IN|LIKE|OR|NOT|SOME)\s*)?\?)#', $condition, $match, PREG_OFFSET_CAPTURE);
+			$hasOperator = ($match[1][0] === '?' && $match[1][1] === 0) ? TRUE : !empty($match[2][0]);
 
 			if ($arg === NULL) {
-				if (!empty($match[2][0])) {
+				if ($hasOperator) {
 					throw new Nette\InvalidArgumentException('Column operator does not accept NULL argument.');
 				}
 				$replace = 'IS NULL';
@@ -198,23 +199,23 @@ class SqlBuilder extends Nette\Object
 			} elseif ($arg instanceof SqlLiteral) {
 				$this->parameters[] = $arg;
 			} elseif (is_array($arg)) {
-				if (!empty($match[2][0])) {
-					if ($match[2][0] !== 'IN') {
+				if ($hasOperator) {
+					if (trim($match[2][0]) !== 'IN') {
 						throw new Nette\InvalidArgumentException('Column operator does not accept array argument.');
 					}
 				} else {
-					$match[2][0] = 'IN';
+					$match[2][0] = 'IN ';
 				}
 
 				if (!$arg) {
-					$replace = $match[2][0] . ' (NULL)';
+					$replace = $match[2][0] . '(NULL)';
 				} else {
-					$replace = $match[2][0] . ' (?)';
+					$replace = $match[2][0] . '(?)';
 					$this->parameters[] = $arg;
 				}
 			} else {
-				if (!empty($match[2][0])) {
-					$replace = $match[2][0] . ' ?';
+				if ($hasOperator) {
+					$replace = $match[2][0] . '?';
 				} else {
 					$replace = '= ?';
 				}
