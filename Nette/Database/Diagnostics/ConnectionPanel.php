@@ -153,7 +153,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			<h1>Queries: ' . count($this->queries) . ($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') . '</h1>
 			<div class="nette-inner nette-DbConnectionPanel">
 			<table>
-				<tr><th>Time&nbsp;ms</th><th>SQL Statement</th><th>Rows</th></tr>' . $s . '
+				<tr><th>Time&nbsp;ms</th><th>SQL Query</th><th>Rows</th></tr>' . $s . '
 			</table>
 			</div>';
 	}

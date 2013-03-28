@@ -19,16 +19,10 @@ use Nette;
  * Represents a single table row.
  *
  * @author     David Grudl
+ * @author     Jan Skrasek
  */
-class Row extends Nette\ArrayHash
+class Row extends Nette\ArrayHash implements IRow
 {
-
-	public function __construct(Statement $statement)
-	{
-		$statement->normalizeRow($this);
-	}
-
-
 
 	/**
 	 * Returns a item.
@@ -46,6 +40,11 @@ class Row extends Nette\ArrayHash
 
 
 
+	/**
+	 * Checks if $key exists.
+	 * @param  mixed  key or index
+	 * @return bool
+	 */
 	public function offsetExists($key)
 	{
 		if (is_int($key)) {
