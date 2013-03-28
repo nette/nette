@@ -67,24 +67,6 @@ Assert::same(array(
 
 
 
-$sql = $connection->table('book')
-	->where(new Nette\Database\SqlLiteral('id = 1'))
-	->where(new Nette\Database\SqlLiteral('id = 1'))
-	->getSql();
-
-
-switch ($driverName) {
-	case 'mysql':
-		Assert::same('SELECT * FROM `book` WHERE (`id` = 1)', $sql);
-		break;
-
-	case 'pgsql':
-		Assert::same('SELECT * FROM "book" WHERE ("id" = 1)', $sql);
-		break;
-}
-
-
-
 $connection->setSelectionFactory(new Nette\Database\Table\SelectionFactory(
 	$connection,
 	new Nette\Database\Reflection\DiscoveredReflection($connection)

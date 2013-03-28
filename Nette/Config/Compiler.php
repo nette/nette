@@ -227,9 +227,15 @@ class Compiler extends Nette\Object
 	{
 		if ($config === NULL) {
 			return;
+
+		} elseif (!$shared && is_string($config) && interface_exists($config)) {
+			$config = array('class' => NULL, 'implement' => $config);
+
+		} elseif (!$shared && $config instanceof \stdClass && interface_exists($config->value)) {
+			$config = array('class' => NULL, 'implement' => $config->value, 'factory' => array_shift($config->attributes));
+
 		} elseif (!is_array($config)) {
-			$key = !$shared && is_string($config) && interface_exists($config) ? 'implement' : 'create';
-			$config = array('class' => NULL, $key => $config);
+			$config = array('class' => NULL, 'create' => $config);
 		}
 
 		if (array_key_exists('factory', $config)) {

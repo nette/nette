@@ -163,7 +163,7 @@ final class Helpers
 	 * Generates list of properties with annotation @inject.
 	 * @return array
 	 */
-	public static function getInjectProperties(\ReflectionClass $class)
+	public static function getInjectProperties(Nette\Reflection\ClassType $class)
 	{
 		$res = array();
 		foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
@@ -174,12 +174,12 @@ final class Helpers
 			} elseif (!$type) {
 				throw new Nette\InvalidStateException("Property $property has not @var annotation.");
 
-			} elseif (!class_exists($type)) {
+			} elseif (!class_exists($type) && !interface_exists($type)) {
 				if ($type[0] !== '\\') {
 					$type = $class->getNamespaceName() . '\\' . $type;
 				}
-				if (!class_exists($type)) {
-					throw new Nette\InvalidStateException("Please use a fully qualified name of class in @var annotation at $property property. Class '$type' cannot be found.");
+				if (!class_exists($type) && !interface_exists($type)) {
+					throw new Nette\InvalidStateException("Please use a fully qualified name of class/interface in @var annotation at $property property. Class '$type' cannot be found.");
 				}
 			}
 			$res[$property->getName()] = $type;

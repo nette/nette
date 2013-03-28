@@ -27,6 +27,9 @@ use Nette;
  */
 class SelectBox extends BaseControl
 {
+	/** validation rule */
+	const VALID = ':selectBoxValid';
+
 	/** @var array */
 	private $items = array();
 
@@ -54,6 +57,7 @@ class SelectBox extends BaseControl
 		if ($items !== NULL) {
 			$this->setItems($items);
 		}
+		$this->addRule($this->validateSelectBoxValid, Nette\Forms\Rules::$defaultMessages[self::VALID]);
 	}
 
 
@@ -229,6 +233,17 @@ class SelectBox extends BaseControl
 			}
 		}
 		return $control;
+	}
+
+
+
+	/**
+	 * Checks if a valid option was selected.
+	 * @return bool
+	 */
+	public static function validateSelectBoxValid(Nette\Forms\IControl $control)
+	{
+		return $control->prompt !== FALSE || $control->getValue() !== NULL;
 	}
 
 }

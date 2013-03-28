@@ -1,0 +1,13 @@
+services:
+	lorem: Lorem
+
+	lorem2:
+		class: Lorem
+		autowired: no
+
+factories:
+	one: ILoremAccessor
+	two: ILoremAccessor()
+	three: ILoremAccessor(@lorem2)
+	four: ILoremAccessor(@\Lorem)
+	

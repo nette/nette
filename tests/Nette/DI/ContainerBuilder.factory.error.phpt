@@ -24,7 +24,7 @@ Assert::throws(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad1')->setFactory('stdClass');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Interface Bad1 must have just one non-static method create().");
+}, 'Nette\InvalidStateException', "Interface Bad1 must have just one non-static method create() or get().");
 
 
 
@@ -37,7 +37,7 @@ Assert::throws(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad2')->setFactory('stdClass');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Interface Bad2 must have just one non-static method create().");
+}, 'Nette\InvalidStateException', "Interface Bad2 must have just one non-static method create() or get().");
 
 
 
@@ -51,7 +51,7 @@ Assert::throws(function() {
 	$builder = new DI\ContainerBuilder;
 	$builder->addDefinition('one')->setImplement('Bad3')->setFactory('stdClass');
 	$builder->generateClasses();
-}, 'Nette\InvalidStateException', "Interface Bad3 must have just one non-static method create().");
+}, 'Nette\InvalidStateException', "Interface Bad3 must have just one non-static method create() or get().");
 
 
 
@@ -65,3 +65,16 @@ Assert::throws(function() {
 	$builder->addDefinition('one')->setImplement('Bad4');
 	$builder->generateClasses();
 }, 'Nette\InvalidStateException', "Method Bad4::create() has not @return annotation.");
+
+
+
+interface Bad5
+{
+	function get($arg);
+}
+
+Assert::throws(function() {
+	$builder = new DI\ContainerBuilder;
+	$builder->addDefinition('one')->setImplement('Bad5')->setFactory('stdClass');
+	$builder->generateClasses();
+}, 'Nette\InvalidStateException', "Method Bad5::get() must have no arguments.");

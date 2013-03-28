@@ -1,6 +1,6 @@
 @ECHO OFF
 
-SET testRunner="%~dp0..\tools\nette\tester\Tester\tester.php"
+SET testRunner="%~dp0..\vendor\nette\tester\Tester\tester.php"
 
 IF NOT EXIST %testRunner% (
 	ECHO Nette Tester is missing. You can install it using Composer:
