@@ -257,8 +257,8 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 		if ($message instanceof Nette\Utils\Html) {
 			return $message;
 		}
-		if (!isset($message)) { // report missing message by notice
-			$message = static::$defaultMessages[$rule->operation];
+		if ($message == NULL) { // intentionally ==
+			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
 		}
 		if ($translator = $rule->control->getForm()->getTranslator()) {
 			$message = $translator->translate($message, is_int($rule->arg) ? $rule->arg : NULL);
