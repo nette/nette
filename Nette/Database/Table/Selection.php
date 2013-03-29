@@ -12,8 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
-	Nette\Database\ISupplementalDriver,
-	PDO;
+	Nette\Database\ISupplementalDriver;
 
 
 
@@ -26,7 +25,7 @@ use Nette,
  *
  * @property-read string $sql
  */
-class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection extends Nette\Object implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	protected $connection;
@@ -254,8 +253,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns next row of result.
-	 * @return ActiveRow or FALSE if there is no row
+	 * @inheritDoc
 	 */
 	public function fetch()
 	{
@@ -268,10 +266,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns all rows as associative array.
-	 * @param  string
-	 * @param  string column name used for an array value or NULL for the whole row
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function fetchPairs($key, $value = NULL)
 	{
@@ -280,6 +275,16 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value ? $row[$value] : $row);
 		}
 		return $return;
+	}
+
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function fetchAll()
+	{
+		return iterator_to_array($this);
 	}
 
 
@@ -522,8 +527,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$this->rows = array();
 		$usedPrimary = TRUE;
-		$result->setFetchMode(PDO::FETCH_ASSOC);
-		foreach ($result as $key => $row) {
+		foreach ($result->getPdoStatement() as $key => $row) {
 			$row = $this->createRow($result->normalizeRow($row));
 			$primary = $row->getSignature(FALSE);
 			$usedPrimary = $usedPrimary && $primary;
