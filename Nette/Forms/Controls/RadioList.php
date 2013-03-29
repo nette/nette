@@ -81,11 +81,12 @@ class RadioList extends BaseControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
+	 * @param  bool
 	 * @return RadioList  provides a fluent interface
 	 */
-	public function setItems(array $items)
+	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
+		$this->items = $useKeys ? $items : array_combine($items, $items);
 		return $this;
 	}
 
