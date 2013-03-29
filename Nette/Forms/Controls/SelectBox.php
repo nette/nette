@@ -39,9 +39,6 @@ class SelectBox extends BaseControl
 	/** @var mixed */
 	private $prompt = FALSE;
 
-	/** @var bool */
-	private $useKeys = TRUE;
-
 
 
 	/**
@@ -126,17 +123,6 @@ class SelectBox extends BaseControl
 
 
 	/**
-	 * Are the keys used?
-	 * @return bool
-	 */
-	final public function areKeysUsed()
-	{
-		return $this->useKeys;
-	}
-
-
-
-	/**
 	 * Sets items from which to choose.
 	 * @param  array
 	 * @param  bool
@@ -148,8 +134,9 @@ class SelectBox extends BaseControl
 		foreach ($items as $k => $v) {
 			foreach ((is_array($v) ? $v : array($k => $v)) as $key => $value) {
 				if (!$useKeys) {
-					if (!is_scalar($value)) {
-						throw new Nette\InvalidArgumentException("All items must be scalar.");
+					if (is_array($v)) {
+						unset($v[$key]);
+						$v[$value] = $value;
 					}
 					$key = $value;
 				}
@@ -160,11 +147,14 @@ class SelectBox extends BaseControl
 
 				$allowed[$key] = $value;
 			}
+			if (!$useKeys) {
+				unset($items[$k]);
+				$items[is_array($v) ? $k : $v] = $v;
+			}
 		}
 
 		$this->items = $items;
 		$this->allowed = $allowed;
-		$this->useKeys = (bool) $useKeys;
 		return $this;
 	}
 
@@ -188,7 +178,7 @@ class SelectBox extends BaseControl
 	public function getSelectedItem()
 	{
 		$value = $this->getValue();
-		return ($this->useKeys && $value !== NULL) ? $this->allowed[$value] : $value;
+		return $value === NULL ? NULL : $this->allowed[$value];
 	}
 
 
@@ -224,7 +214,6 @@ class SelectBox extends BaseControl
 					$dest->add((string) $value2->selected(isset($selected[$key2])));
 
 				} else {
-					$key2 = $this->useKeys ? $key2 : $value2;
 					$value2 = $this->translate((string) $value2);
 					$dest->add((string) $option->value($key2)
 						->selected(isset($selected[$key2]))
