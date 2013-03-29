@@ -21,8 +21,9 @@ use Nette,
  * ActiveRow is based on the great library NotORM http://www.notorm.com written by Jakub Vrana.
  *
  * @author     Jakub Vrana
+ * @author     Jan Skrasek
  */
-class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
+class ActiveRow implements \IteratorAggregate, IRow
 {
 	/** @var Selection */
 	private $table;
@@ -59,7 +60,6 @@ class ActiveRow extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 
 	/**
 	 * @internal
-	 * @ignore
 	 */
 	public function getTable()
 	{

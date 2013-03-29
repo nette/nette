@@ -52,7 +52,6 @@ class Connection extends Nette\Object
 	{
 		$this->pdo = $pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$pdo->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
 		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
 		$this->driver = new $driverClass($this, (array) $options);
@@ -156,7 +155,8 @@ class Connection extends Nette\Object
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
-		return $this->pdo->prepare($statement)->execute($params);
+
+		return new Statement($this, $statement, $params);
 	}
 
 
