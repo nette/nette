@@ -413,15 +413,32 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 
 
 	/**
-	 * Sets group clause, more calls rewrite old values.
-	 * @param  string
+	 * Sets group clause, more calls rewrite old value.
 	 * @param  string
 	 * @return Selection provides a fluent interface
 	 */
-	public function group($columns, $having = NULL)
+	public function group($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->setGroup($columns, $having);
+		$this->sqlBuilder->setGroup($columns);
+		if (func_num_args() === 2) {
+			trigger_error('Calling ' . __METHOD__ . '() with second argument is deprecated; use $selection->having() instead.', E_USER_DEPRECATED);
+			$this->having(func_get_arg(1));
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * Sets having clause, more calls rewrite old value.
+	 * @param  string
+	 * @return Selection provides a fluent interface
+	 */
+	public function having($having)
+	{
+		$this->emptyResultSet();
+		$this->sqlBuilder->setHaving($having);
 		return $this;
 	}
 

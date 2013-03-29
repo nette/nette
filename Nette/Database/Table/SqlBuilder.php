@@ -281,10 +281,9 @@ class SqlBuilder extends Nette\Object
 
 
 
-	public function setGroup($columns, $having)
+	public function setGroup($columns)
 	{
 		$this->group = $columns;
-		$this->having = $having;
 	}
 
 
@@ -292,6 +291,13 @@ class SqlBuilder extends Nette\Object
 	public function getGroup()
 	{
 		return $this->group;
+	}
+
+
+
+	public function setHaving($having)
+	{
+		$this->having = $having;
 	}
 
 
