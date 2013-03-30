@@ -94,7 +94,7 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 	/**
 	 * @return int
 	 */
-	public function columnCount()
+	public function getColumnCount()
 	{
 		return $this->pdoStatement->columnCount();
 	}
@@ -104,7 +104,7 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 	/**
 	 * @return int
 	 */
-	public function rowCount()
+	public function getRowCount()
 	{
 		return $this->pdoStatement->rowCount();
 	}
@@ -299,6 +299,24 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 		}
 
 		return $this->results;
+	}
+
+
+
+	/** @deprecated */
+	function columnCount()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getColumnCount() instead.', E_USER_DEPRECATED);
+		return $this->getColumnCount();
+	}
+
+
+
+	/** @deprecated */
+	function rowCount()
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use getRowCount() instead.', E_USER_DEPRECATED);
+		return $this->getRowCount();
 	}
 
 }

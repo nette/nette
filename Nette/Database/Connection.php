@@ -279,9 +279,9 @@ class Connection extends Nette\Object
 	/** @deprecated */
 	function exec($statement)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use query()->rowCount() instead.', E_USER_DEPRECATED);
+		trigger_error(__METHOD__ . '() is deprecated; use query()->getRowCount() instead.', E_USER_DEPRECATED);
 		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->rowCount();
+		return $this->queryArgs(array_shift($args), $args)->getRowCount();
 	}
 
 }

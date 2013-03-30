@@ -66,7 +66,7 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			}
 		}
 		$this->totalTime += $result->getTime();
-		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->rowCount(), $result->getConnection(), $source);
+		$this->queries[] = array($result->queryString, $params, $result->getTime(), $result->getRowCount(), $result->getConnection(), $source);
 	}
 
 

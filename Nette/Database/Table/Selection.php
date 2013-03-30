@@ -728,7 +728,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->checkReferenced = TRUE;
 
 		if (!is_array($data)) {
-			return $return->rowCount();
+			return $return->getRowCount();
 		}
 
 		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->getInsertId($this->getPrimarySequence()))) {
@@ -767,7 +767,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		return $this->connection->queryArgs(
 			$this->sqlBuilder->buildUpdateQuery(),
 			array_merge(array($data), $this->sqlBuilder->getParameters())
-		)->rowCount();
+		)->getRowCount();
 	}
 
 
@@ -778,7 +778,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 */
 	public function delete()
 	{
-		return $this->query($this->sqlBuilder->buildDeleteQuery())->rowCount();
+		return $this->query($this->sqlBuilder->buildDeleteQuery())->getRowCount();
 	}
 
 
