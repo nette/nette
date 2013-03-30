@@ -445,6 +445,14 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	}
 
 
+	public function parameter($key, $value)
+	{
+		if(is_numeric($key)) {
+			throw new Nette\InvalidArgumentException("Numeric parameters are not allowed");
+		}
+		$this->sqlBuilder->addParameter($key, $value);
+		return $this;
+	}
 
 	/********************* aggregations ****************d*g**/
 
