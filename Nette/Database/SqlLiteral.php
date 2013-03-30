@@ -19,16 +19,32 @@ use Nette;
  * SQL literal value.
  *
  * @author     Jakub Vrana
+ * @author     Jan Skrasek
  */
 class SqlLiteral extends Nette\Object
 {
 	/** @var string */
 	private $value = '';
 
+	/** @var array */
+	private $parameters = array();
+
+
 
 	public function __construct($value)
 	{
 		$this->value = (string) $value;
+		$this->parameters = array_slice(func_get_args(), 1);
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->parameters;
 	}
 
 
