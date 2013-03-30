@@ -8,8 +8,7 @@
  */
 
 use Nette\Http,
-	Nette\Forms\Form,
-	Nette\ArrayHash;
+	Nette\Forms\Form;
 
 
 
@@ -86,7 +85,7 @@ $sub->addUpload('avatar', 'Picture:');
 $form->addSubmit('submit1', 'Send');
 
 Assert::true( (bool) $form->isSubmitted() );
-Assert::equal( ArrayHash::from(array(
+Assert::equal( array(
 	'name' => 'invalidutf',
 	'note' => 'invalidutf',
 	'gender' => NULL,
@@ -96,11 +95,11 @@ Assert::equal( ArrayHash::from(array(
 	'password' => '',
 	'avatar' => new Http\FileUpload(array()),
 	'userid' => 'invalidutf',
-	'firstperson' => ArrayHash::from(array(
+	'firstperson' => array(
 		'age' => '',
-	)),
-	'secondperson' => ArrayHash::from(array(
+	),
+	'secondperson' => array(
 		'age' => '',
 		'avatar' => new Http\FileUpload(array()),
-	)),
-), FALSE), $form->getValues() );
+	),
+), $form->getValues(TRUE) );
