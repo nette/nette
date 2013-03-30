@@ -65,7 +65,8 @@ class SelectBox extends BaseControl
 	 */
 	public function getValue()
 	{
-		return is_scalar($this->value) && isset($this->allowed[$this->value]) ? $this->value : NULL;
+		$value = $this->getRawValue();
+		return isset($this->allowed[$value]) ? $value : NULL;
 	}
 
 
@@ -76,7 +77,10 @@ class SelectBox extends BaseControl
 	 */
 	public function getRawValue()
 	{
-		return is_scalar($this->value) ? $this->value : NULL;
+		if (is_scalar($this->value)) {
+			$foo = array($this->value => NULL);
+			return key($foo);
+		}
 	}
 
 

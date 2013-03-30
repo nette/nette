@@ -64,7 +64,8 @@ class RadioList extends BaseControl
 		if ($raw) {
 			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
 		}
-		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		$value = $this->getRawValue();
+		return ($raw || isset($this->items[$value])) ? $value : NULL;
 	}
 
 
@@ -75,7 +76,10 @@ class RadioList extends BaseControl
 	 */
 	public function getRawValue()
 	{
-		return is_scalar($this->value) ? $this->value : NULL;
+		if (is_scalar($this->value)) {
+			$foo = array($this->value => NULL);
+			return key($foo);
+		}
 	}
 
 
