@@ -41,7 +41,6 @@ final class Helpers
 		'replacere' => 'Nette\Utils\Strings::replace',
 		'url' => 'rawurlencode',
 		'striptags' => 'strip_tags',
-		'nl2br' => 'nl2br',
 		'substr' => 'Nette\Utils\Strings::substring',
 		'repeat' => 'str_repeat',
 		'implode' => 'implode',
@@ -291,6 +290,17 @@ final class Helpers
 			$type = Nette\Utils\MimeTypeDetector::fromString($data);
 		}
 		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return string
+	 */
+	public static function nl2br($value)
+	{
+		return nl2br($value, Html::$xhtml);
 	}
 
 
