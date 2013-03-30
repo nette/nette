@@ -12,8 +12,7 @@
 namespace Nette\Database\Table;
 
 use Nette,
-	Nette\Database\ISupplementalDriver,
-	PDO;
+	Nette\Database\ISupplementalDriver;
 
 
 
@@ -26,7 +25,7 @@ use Nette,
  *
  * @property-read string $sql
  */
-class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Countable
+class Selection extends Nette\Object implements \Iterator, IRowContainer, \ArrayAccess, \Countable
 {
 	/** @var Nette\Database\Connection */
 	protected $connection;
@@ -254,8 +253,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns next row of result.
-	 * @return ActiveRow or FALSE if there is no row
+	 * @inheritDoc
 	 */
 	public function fetch()
 	{
@@ -268,18 +266,25 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Returns all rows as associative array.
-	 * @param  string
-	 * @param  string column name used for an array value or NULL for the whole row
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function fetchPairs($key, $value = NULL)
 	{
 		$return = array();
 		foreach ($this as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value ? $row[$value] : $row);
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
 		}
 		return $return;
+	}
+
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function fetchAll()
+	{
+		return iterator_to_array($this);
 	}
 
 
@@ -296,7 +301,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function select($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->addSelect($columns);
+		call_user_func_array(array($this->sqlBuilder, 'addSelect'), func_get_args());
 		return $this;
 	}
 
@@ -373,7 +378,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	public function order($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->addOrder($columns);
+		call_user_func_array(array($this->sqlBuilder, 'addOrder'), func_get_args());
 		return $this;
 	}
 
@@ -408,15 +413,34 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 
 	/**
-	 * Sets group clause, more calls rewrite old values.
-	 * @param  string
+	 * Sets group clause, more calls rewrite old value.
 	 * @param  string
 	 * @return Selection provides a fluent interface
 	 */
-	public function group($columns, $having = NULL)
+	public function group($columns)
 	{
 		$this->emptyResultSet();
-		$this->sqlBuilder->setGroup($columns, $having);
+		if (func_num_args() === 2 && strpos($columns, '?') === FALSE) {
+			trigger_error('Calling ' . __METHOD__ . '() with second argument is deprecated; use $selection->having() instead.', E_USER_DEPRECATED);
+			$this->having(func_get_arg(1));
+			$this->sqlBuilder->setGroup($columns);
+		} else {
+			call_user_func_array(array($this->sqlBuilder, 'setGroup'), func_get_args());
+		}
+		return $this;
+	}
+
+
+
+	/**
+	 * Sets having clause, more calls rewrite old value.
+	 * @param  string
+	 * @return Selection provides a fluent interface
+	 */
+	public function having($having)
+	{
+		$this->emptyResultSet();
+		call_user_func_array(array($this->sqlBuilder, 'setHaving'), func_get_args());
 		return $this;
 	}
 
@@ -522,8 +546,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 
 		$this->rows = array();
 		$usedPrimary = TRUE;
-		$result->setFetchMode(PDO::FETCH_ASSOC);
-		foreach ($result as $key => $row) {
+		foreach ($result->getPdoStatement() as $key => $row) {
 			$row = $this->createRow($result->normalizeRow($row));
 			$primary = $row->getSignature(FALSE);
 			$usedPrimary = $usedPrimary && $primary;
@@ -705,7 +728,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		$this->checkReferenced = TRUE;
 
 		if (!is_array($data)) {
-			return $return->rowCount();
+			return $return->getRowCount();
 		}
 
 		if (!is_array($this->primary) && !isset($data[$this->primary]) && ($id = $this->connection->getInsertId($this->getPrimarySequence()))) {
@@ -744,7 +767,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 		return $this->connection->queryArgs(
 			$this->sqlBuilder->buildUpdateQuery(),
 			array_merge(array($data), $this->sqlBuilder->getParameters())
-		)->rowCount();
+		)->getRowCount();
 	}
 
 
@@ -755,7 +778,7 @@ class Selection extends Nette\Object implements \Iterator, \ArrayAccess, \Counta
 	 */
 	public function delete()
 	{
-		return $this->query($this->sqlBuilder->buildDeleteQuery())->rowCount();
+		return $this->query($this->sqlBuilder->buildDeleteQuery())->getRowCount();
 	}
 
 

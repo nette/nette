@@ -52,7 +52,6 @@ class Connection extends Nette\Object
 	{
 		$this->pdo = $pdo = new PDO($this->dsn = $dsn, $user, $password, $options);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$pdo->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nette\Database\Statement', array($this)));
 
 		$driverClass = $driverClass ?: 'Nette\Database\Drivers\\' . ucfirst(str_replace('sql', 'Sql', $pdo->getAttribute(PDO::ATTR_DRIVER_NAME))) . 'Driver';
 		$this->driver = new $driverClass($this, (array) $options);
@@ -147,20 +146,6 @@ class Connection extends Nette\Object
 
 
 	/**
-	 * Generates and executes SQL query.
-	 * @param  string  statement
-	 * @param  mixed   [parameters, ...]
-	 * @return int     number of affected rows
-	 */
-	public function exec($statement)
-	{
-		$args = func_get_args();
-		return $this->queryArgs(array_shift($args), $args)->rowCount();
-	}
-
-
-
-	/**
 	 * @param  string  statement
 	 * @param  array
 	 * @return Statement
@@ -170,7 +155,8 @@ class Connection extends Nette\Object
 		if ($params) {
 			list($statement, $params) = $this->preprocessor->process($statement, $params);
 		}
-		return $this->pdo->prepare($statement)->execute($params);
+
+		return new Statement($this, $statement, $params);
 	}
 
 
@@ -287,6 +273,15 @@ class Connection extends Nette\Object
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getInsertId() instead.', E_USER_DEPRECATED);
 		return $this->getInsertId($name);
+	}
+
+
+	/** @deprecated */
+	function exec($statement)
+	{
+		trigger_error(__METHOD__ . '() is deprecated; use query()->getRowCount() instead.', E_USER_DEPRECATED);
+		$args = func_get_args();
+		return $this->queryArgs(array_shift($args), $args)->getRowCount();
 	}
 
 }

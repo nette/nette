@@ -57,12 +57,29 @@ class RadioList extends BaseControl
 
 	/**
 	 * Returns selected radio value.
-	 * @param  bool
 	 * @return mixed
 	 */
 	public function getValue($raw = FALSE)
 	{
-		return is_scalar($this->value) && ($raw || isset($this->items[$this->value])) ? $this->value : NULL;
+		if ($raw) {
+			trigger_error(__METHOD__ . '(TRUE) is deprecated; use getRawValue() instead.', E_USER_DEPRECATED);
+		}
+		$value = $this->getRawValue();
+		return ($raw || isset($this->items[$value])) ? $value : NULL;
+	}
+
+
+
+	/**
+	 * Returns selected radio value (not checked).
+	 * @return mixed
+	 */
+	public function getRawValue()
+	{
+		if (is_scalar($this->value)) {
+			$foo = array($this->value => NULL);
+			return key($foo);
+		}
 	}
 
 
@@ -81,11 +98,12 @@ class RadioList extends BaseControl
 	/**
 	 * Sets options from which to choose.
 	 * @param  array
+	 * @param  bool
 	 * @return RadioList  provides a fluent interface
 	 */
-	public function setItems(array $items)
+	public function setItems(array $items, $useKeys = TRUE)
 	{
-		$this->items = $items;
+		$this->items = $useKeys ? $items : array_combine($items, $items);
 		return $this;
 	}
 

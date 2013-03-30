@@ -41,18 +41,13 @@ class MultiSelectBox extends SelectBox
 	 */
 	public function getRawValue()
 	{
-		if (is_scalar($this->value)) {
-			return array($this->value);
-
-		} else {
-			$res = array();
-			foreach ((array) $this->value as $val) {
-				if (is_scalar($val)) {
-					$res[] = $val;
-				}
+		$res = array();
+		foreach (is_array($this->value) ? $this->value : array($this->value) as $val) {
+			if (is_scalar($val)) {
+				$res[$val] = NULL;
 			}
-			return $res;
 		}
+		return array_keys($res);
 	}
 
 
