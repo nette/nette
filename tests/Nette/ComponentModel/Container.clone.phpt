@@ -9,7 +9,8 @@
 
 use Nette\ComponentModel\Container,
 	Nette\Object,
-	Nette\ComponentModel\IContainer;
+	Nette\ComponentModel\IContainer,
+	Nette\ComponentModel\IComponent;
 
 
 
@@ -19,14 +20,14 @@ require __DIR__ . '/../bootstrap.php';
 
 class TestClass extends Container implements ArrayAccess
 {
-	function attached($obj)
+	function attached(IComponent $component)
 	{
-		Notes::add(get_class($this) . '::ATTACHED(' . get_class($obj) . ')');
+		Notes::add(get_class($this) . '::ATTACHED(' . get_class($component) . ')');
 	}
 
-	function detached($obj)
+	function detached(IComponent $component)
 	{
-		Notes::add(get_class($this) . '::detached(' . get_class($obj) . ')');
+		Notes::add(get_class($this) . '::detached(' . get_class($component) . ')');
 	}
 
 	function offsetSet($name, $component)

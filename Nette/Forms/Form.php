@@ -137,9 +137,9 @@ class Form extends Container
 	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($obj)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if ($obj instanceof self) {
+		if ($component instanceof self) {
 			throw new Nette\InvalidStateException('Nested forms are forbidden.');
 		}
 	}

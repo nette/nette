@@ -41,15 +41,15 @@ class UploadControl extends BaseControl
 	 * @param  Nette\ComponentModel\IComponent
 	 * @return void
 	 */
-	protected function attached($form)
+	protected function attached(Nette\ComponentModel\IComponent $component)
 	{
-		if ($form instanceof Nette\Forms\Form) {
-			if ($form->getMethod() !== Nette\Forms\Form::POST) {
+		if ($component instanceof Nette\Forms\Form) {
+			if ($component->getMethod() !== Nette\Forms\Form::POST) {
 				throw new Nette\InvalidStateException('File upload requires method POST.');
 			}
-			$form->getElementPrototype()->enctype = 'multipart/form-data';
+			$component->getElementPrototype()->enctype = 'multipart/form-data';
 		}
-		parent::attached($form);
+		parent::attached($component);
 	}
 
 
