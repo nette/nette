@@ -37,9 +37,7 @@ class FormMacros extends MacroSet
 	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
-		$me->addMacro('form',
-			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
-			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
+		$me->addMacro('form', array($me, 'macroForm'), array($me, 'macroFormEnd'));
 		$me->addMacro('label', array($me, 'macroLabel'), '?></label><?php');
 		$me->addMacro('input', '$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
 		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = (is_object(%node.word) ? %node.word : $_form[%node.word])', '$_form = array_pop($_formStack)');
@@ -48,6 +46,36 @@ class FormMacros extends MacroSet
 
 
 	/********************* macros ****************d*g**/
+
+	/**
+	 * {form ...}
+	 */
+	public function macroForm(MacroNode $node, PhpWriter $writer)
+	{
+		$cmd = 'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array, %var)';
+		if ($node->prefix) {
+			$node->attrCode = $writer->write("<?php $cmd ?>", TRUE);
+		} else {
+			if ($node->isEmpty = (substr($node->args, -1) === '/')) {
+				$node->setArgs(substr($node->args, 0, -1));
+				return $writer->write('$_form = $_control[%node.word]; $_form->getElementPrototype()->addAttributes(%node.array); $_form->render();');
+			}
+			return $writer->write($cmd, FALSE);
+		}
+	}
+
+	public function macroFormEnd(MacroNode $node, PhpWriter $writer)
+	{
+		$cmd = 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form, %var)';
+		if ($node->prefix) {
+			$node->content = substr($node->content, 0, $node->htmlNode->offset) .
+				$writer->write("<?php $cmd ?>", true) .
+				substr($node->content, $node->htmlNode->offset);
+		} else {
+			return $writer->write($cmd, false);
+		}
+	}
+
 
 
 	/**
@@ -88,7 +116,7 @@ class FormMacros extends MacroSet
 	 * Renders form begin.
 	 * @return void
 	 */
-	public static function renderFormBegin(Form $form, array $attrs)
+	public static function renderFormBegin(Form $form, array $attrs, $onlyAttributes)
 	{
 		$el = $form->getElementPrototype();
 		$el->action = $action = (string) $el->action;
@@ -99,7 +127,8 @@ class FormMacros extends MacroSet
 				$el->action .= substr($action, $i);
 			}
 		}
-		echo $el->addAttributes($attrs)->startTag();
+		$el->addAttributes($attrs);
+		echo $onlyAttributes ? $el->attributes() : $el->startTag();
 	}
 
 
@@ -108,7 +137,7 @@ class FormMacros extends MacroSet
 	 * Renders form end.
 	 * @return string
 	 */
-	public static function renderFormEnd(Form $form)
+	public static function renderFormEnd(Form $form, $onlyAttributes)
 	{
 		$s = '';
 		if (strcasecmp($form->getMethod(), 'get') === 0) {
@@ -135,7 +164,7 @@ class FormMacros extends MacroSet
 			$s .= '<!--[if IE]><input type=IEbug disabled style="display:none"><![endif]-->';
 		}
 
-		echo ($s ? "<div>$s</div>\n" : '') . $form->getElementPrototype()->endTag() . "\n";
+		echo ($s ? "<div>$s</div>\n" : '') . ($onlyAttributes ? '' : $form->getElementPrototype()->endTag()) . "\n";
 	}
 
 }
