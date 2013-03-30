@@ -272,7 +272,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	{
 		$return = array();
 		foreach ($this as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value ? $row[$value] : $row);
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
 		}
 		return $return;
 	}

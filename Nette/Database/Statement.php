@@ -281,8 +281,8 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 	public function fetchPairs($key, $value = NULL)
 	{
 		$return = array();
-		foreach ($this as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value ? $row[$value] : $row);
+		foreach ($this->fetchAll() as $row) {
+			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
 		}
 		return $return;
 	}
