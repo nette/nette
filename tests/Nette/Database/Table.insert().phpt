@@ -9,6 +9,8 @@
  * @dataProvider? databases.ini
  */
 
+use Nette\Database\SqlLiteral;
+
 require __DIR__ . '/connect.inc.php'; // create $connection
 
 Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nette_test1.sql");
@@ -17,7 +19,7 @@ Nette\Database\Helpers::loadFromFile($connection, __DIR__ . "/{$driverName}-nett
 
 $connection->table('author')->insert(array(
 	'id' => 14,
-	'name' => 'Eddard Stark',
+	'name' => new SqlLiteral('LOWER(?)', 'Eddard Stark'),
 	'web' => 'http://example.com',
 ));  // INSERT INTO `author` (`id`, `name`, `web`) VALUES (14, 'Eddard Stark', 'http://example.com')
 
@@ -65,7 +67,7 @@ $book3 = $book->insert(array(
 	'author_id' => $connection->table('author')->get(14),  // SELECT * FROM `author` WHERE (`id` = ?)
 ));  // INSERT INTO `book` (`title`, `author_id`) VALUES ('Dragonstone', 14)
 
-Assert::same('Eddard Stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 15))
+Assert::same('eddard stark', $book3->author->name);  // SELECT * FROM `author` WHERE (`author`.`id` IN (11, 15))
 
 
 
