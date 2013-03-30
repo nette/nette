@@ -293,11 +293,18 @@ final class Debugger
 
 		$exceptionFilename = NULL;
 		if ($message instanceof \Exception) {
-			$exception = $message;
-			$message = ($message instanceof Nette\FatalErrorException
-				? 'Fatal error: ' . $exception->getMessage()
-				: get_class($exception) . ": " . $exception->getMessage())
-				. " in " . $exception->getFile() . ":" . $exception->getLine();
+			$currentException = $exception = $message;
+			$message = '';
+			do {
+				if ($currentException !== $exception) {
+					$message .= ', caused by ';
+				}
+
+				$message .= $currentException instanceof Nette\FatalErrorException ? 'Fatal error' : get_class($currentException);
+				$message .= ': ' . $currentException->getMessage();
+				$message .= ' in ' . $currentException->getFile() . ':' . $currentException->getLine();
+			} while (method_exists($currentException, 'getPrevious') && $currentException = $currentException->getPrevious());
+			$message .= '.';
 
 			$hash = md5($exception /*5.2*. (method_exists($exception, 'getPrevious') ? $exception->getPrevious() : (isset($exception->previous) ? $exception->previous : ''))*/);
 			$exceptionFilename = "exception-" . @date('Y-m-d-H-i-s') . "-$hash.html";
