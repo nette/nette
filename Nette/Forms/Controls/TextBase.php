@@ -42,7 +42,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		$this->value = is_array($value) ? '' : (string) $value;
+		$this->value = is_array($value) ? '' : str_replace("\r\n", "\n", $value);
 		return $this;
 	}
 
