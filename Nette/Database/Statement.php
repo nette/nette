@@ -24,7 +24,6 @@ use Nette,
  * @author     Jan Skrasek
  *
  * @property-read Connection $connection
- * @property-write $fetchMode
  */
 class Statement extends Nette\Object implements \Iterator, IRowContainer
 {
@@ -242,8 +241,9 @@ class Statement extends Nette\Object implements \Iterator, IRowContainer
 
 	public function valid()
 	{
-		if ($this->result)
+		if ($this->result) {
 			return TRUE;
+		}
 
 		return $this->fetch() !== FALSE;
 	}

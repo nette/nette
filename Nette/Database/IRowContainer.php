@@ -22,13 +22,13 @@ interface IRowContainer extends \Traversable
 {
 
 	/**
-	 * Fetchs single row object.
+	 * Fetches single row object.
 	 * @return IRow|bool if there is no row
 	 */
 	function fetch();
 
 	/**
-	 * Fetchs all rows as associative array.
+	 * Fetches all rows as associative array.
 	 * @param  string
 	 * @param  string column name used for an array value or NULL for the whole row
 	 * @return array
@@ -36,7 +36,7 @@ interface IRowContainer extends \Traversable
 	function fetchPairs($key, $value = NULL);
 
 	/**
-	 * Fetchs all rows.
+	 * Fetches all rows.
 	 * @return IRow[]
 	 */
 	function fetchAll();

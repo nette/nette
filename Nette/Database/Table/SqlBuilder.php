@@ -330,7 +330,6 @@ class SqlBuilder extends Nette\Object
 
 		} else {
 			$cols = $prefix . '*';
-
 		}
 
 		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();

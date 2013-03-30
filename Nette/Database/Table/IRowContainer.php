@@ -20,8 +20,8 @@ use Nette\Database;
  *
  * @author     Jan Skrasek
  *
- * @method     IRow|bool  fetch() Fetchs single row object.
- * @method     IRow[]     fetchAll() Fetchs all rows.
+ * @method     IRow|bool  fetch() Fetches single row object.
+ * @method     IRow[]     fetchAll() Fetches all rows.
  */
 interface IRowContainer extends Database\IRowContainer
 {
