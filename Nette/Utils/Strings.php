@@ -141,9 +141,7 @@ class Strings
 	 */
 	public static function normalize($s)
 	{
-		// standardize line endings to unix-like
-		$s = str_replace("\r\n", "\n", $s); // DOS
-		$s = strtr($s, "\r", "\n"); // Mac
+		$s = self::normalizeLineEndings($s);
 
 		// remove control characters; leave \t + \n
 		$s = preg_replace('#[\x00-\x08\x0B-\x1F\x7F]+#', '', $s);
@@ -153,6 +151,21 @@ class Strings
 
 		// leading and trailing blank lines
 		$s = trim($s, "\n");
+
+		return $s;
+	}
+
+
+
+	/**
+	 * Standardize line endings to unix-like.
+	 * @param string
+	 * @return string
+	 */
+	public static function normalizeLineEndings($s)
+	{
+		$s = str_replace("\r\n", "\n", $s); // Windows
+		$s = strtr($s, "\r", "\n"); // Mac
 
 		return $s;
 	}
