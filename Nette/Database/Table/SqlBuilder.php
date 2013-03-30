@@ -53,7 +53,13 @@ class SqlBuilder extends Nette\Object
 	protected $conditions = array();
 
 	/** @var array of parameters passed to where conditions */
-	protected $parameters = array();
+	protected $parameters = array(
+		'select' => array(),
+		'where' => array(),
+		'group' => array(),
+		'having' => array(),
+		'order' => array(),
+	);
 
 	/** @var array or columns to order by */
 	protected $order = array();
@@ -107,7 +113,7 @@ class SqlBuilder extends Nette\Object
 	public function importConditions(SqlBuilder $builder)
 	{
 		$this->where = $builder->where;
-		$this->parameters = $builder->parameters;
+		$this->parameters['where'] = $builder->parameters['where'];
 		$this->conditions = $builder->conditions;
 	}
 
@@ -123,6 +129,7 @@ class SqlBuilder extends Nette\Object
 			throw new Nette\InvalidArgumentException('Select column must be a string.');
 		}
 		$this->select[] = $columns;
+		$this->parameters['select'] = array_merge($this->parameters['select'], array_slice(func_get_args(), 1));
 	}
 
 
@@ -182,7 +189,7 @@ class SqlBuilder extends Nette\Object
 
 				if ($this->driverName !== 'mysql') {
 					$replace = 'IN (' . $clone->getSql() . ')';
-					$this->parameters = array_merge($this->parameters, $clone->getSqlBuilder()->getParameters());
+					$this->parameters['where'] = array_merge($this->parameters['where'], $clone->getSqlBuilder()->parameters['where']);
 				} else {
 					$parameter = array();
 					foreach ($clone as $row) {
@@ -193,11 +200,11 @@ class SqlBuilder extends Nette\Object
 						$replace = 'IN (NULL)';
 					}  else {
 						$replace = 'IN (?)';
-						$this->parameters[] = $parameter;
+						$this->parameters['where'][] = $parameter;
 					}
 				}
 			} elseif ($arg instanceof SqlLiteral) {
-				$this->parameters[] = $arg;
+				$this->parameters['where'][] = $arg;
 			} elseif (is_array($arg)) {
 				if ($hasOperator) {
 					if (trim($match[2][0]) !== 'IN') {
@@ -211,7 +218,7 @@ class SqlBuilder extends Nette\Object
 					$replace = $match[2][0] . '(NULL)';
 				} else {
 					$replace = $match[2][0] . '(?)';
-					$this->parameters[] = $arg;
+					$this->parameters['where'][] = $arg;
 				}
 			} else {
 				if ($hasOperator) {
@@ -219,7 +226,7 @@ class SqlBuilder extends Nette\Object
 				} else {
 					$replace = '= ?';
 				}
-				$this->parameters[] = $arg;
+				$this->parameters['where'][] = $arg;
 			}
 
 			if ($replace) {
@@ -248,6 +255,7 @@ class SqlBuilder extends Nette\Object
 	public function addOrder($columns)
 	{
 		$this->order[] = $columns;
+		$this->parameters['order'] = array_merge($this->parameters['order'], array_slice(func_get_args(), 1));
 	}
 
 
@@ -284,6 +292,7 @@ class SqlBuilder extends Nette\Object
 	public function setGroup($columns)
 	{
 		$this->group = $columns;
+		$this->parameters['group'] = array_slice(func_get_args(), 1);
 	}
 
 
@@ -298,6 +307,7 @@ class SqlBuilder extends Nette\Object
 	public function setHaving($having)
 	{
 		$this->having = $having;
+		$this->parameters['having'] = array_slice(func_get_args(), 1);
 	}
 
 
@@ -345,7 +355,13 @@ class SqlBuilder extends Nette\Object
 
 	public function getParameters()
 	{
-		return $this->parameters;
+		return array_merge(
+			$this->parameters['select'],
+			$this->parameters['where'],
+			$this->parameters['group'],
+			$this->parameters['having'],
+			$this->parameters['order']
+		);
 	}
 
 
