@@ -1,0 +1,4 @@
+services:
+	Nette\Latte\Token:
+		class: Nette\Latte\Token
+		run: true
