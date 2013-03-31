@@ -1,2 +1,2 @@
 services:
-	application < application:
+	nette.application < nette.application:

@@ -60,6 +60,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			'macros' => array(),
 		),
 		'container' => array(
+			'compatibility' => TRUE,
 			'debugger' => FALSE,
 		),
 		'debugger' => array(
@@ -92,7 +93,16 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		if (isset($config['xhtml'])) {
 			$config['latte']['xhtml'] = $config['xhtml'];
 		}
-		$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
+
+		if ($config['container']['compatibility']) {
+			$container->addDefinition('nette')->setClass('Nette\Config\Extensions\NetteAccessor', array('@container'));
+			$deprecated = array('cacheStorage', 'httpRequest', 'httpResponse', 'session', 'user', 'application', 'router');
+			foreach ($deprecated as $name) {
+				$container->addDefinition($name)
+					->setFactory($this->prefix('@' . $name))
+					->setAutowired(FALSE);
+			}
+		}
 
 		$this->setupCache($container);
 		$this->setupHttp($container);
@@ -113,7 +123,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition($this->prefix('cacheJournal'))
 			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
 
-		$container->addDefinition('cacheStorage') // no namespace for back compatibility
+		$container->addDefinition($this->prefix('cacheStorage'))
 			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
 
 		$container->addDefinition($this->prefix('templateCacheStorage'))
@@ -133,11 +143,11 @@ class NetteExtension extends Nette\Config\CompilerExtension
 			->setClass('Nette\Http\RequestFactory')
 			->addSetup('setEncoding', array('UTF-8'));
 
-		$container->addDefinition('httpRequest') // no namespace for back compatibility
+		$container->addDefinition($this->prefix('httpRequest'))
 			->setClass('Nette\Http\Request')
 			->setFactory('@Nette\Http\RequestFactory::createHttpRequest');
 
-		$container->addDefinition('httpResponse') // no namespace for back compatibility
+		$container->addDefinition($this->prefix('httpResponse'))
 			->setClass('Nette\Http\Response');
 
 		$container->addDefinition($this->prefix('httpContext'))
@@ -148,7 +158,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	private function setupSession(ContainerBuilder $container, array $config)
 	{
-		$session = $container->addDefinition('session') // no namespace for back compatibility
+		$session = $container->addDefinition($this->prefix('session'))
 			->setClass('Nette\Http\Session');
 
 		if (isset($config['expiration'])) {
@@ -177,7 +187,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		$container->addDefinition($this->prefix('userStorage'))
 			->setClass('Nette\Http\UserStorage');
 
-		$user = $container->addDefinition('user') // no namespace for back compatibility
+		$user = $container->addDefinition($this->prefix('user'))
 			->setClass('Nette\Security\User');
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
@@ -207,7 +217,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	private function setupApplication(ContainerBuilder $container, array $config)
 	{
-		$application = $container->addDefinition('application') // no namespace for back compatibility
+		$application = $container->addDefinition($this->prefix('application'))
 			->setClass('Nette\Application\Application')
 			->addSetup('$catchExceptions', $config['catchExceptions'])
 			->addSetup('$errorPresenter', $config['errorPresenter'])
@@ -230,7 +240,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 
 	private function setupRouting(ContainerBuilder $container, array $config)
 	{
-		$router = $container->addDefinition('router') // no namespace for back compatibility
+		$router = $container->addDefinition($this->prefix('router'))
 			->setClass('Nette\Application\Routers\RouteList');
 
 		foreach ($config['routes'] as $mask => $action) {
@@ -238,7 +248,7 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if ($container->parameters['debugMode'] && $config['debugger']) {
-			$container->getDefinition('application')->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
+			$container->getDefinition($this->prefix('application'))->addSetup('Nette\Diagnostics\Debugger::$bar->addPanel(?)', array(
 				new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
 			));
 		}
@@ -395,9 +405,9 @@ class NetteExtension extends Nette\Config\CompilerExtension
 		}
 
 		if ($config['session']['autoStart'] === 'smart') {
-			$initialize->addBody('$this->session->exists() && $this->session->start();');
+			$initialize->addBody('$this->{\'nette.session\'}->exists() && $this->{\'nette.session\'}->start();');
 		} elseif ($config['session']['autoStart']) {
-			$initialize->addBody('$this->session->start();');
+			$initialize->addBody('$this->{\'nette.session\'}->start();');
 		}
 
 		if (empty($config['latte']['xhtml'])) {

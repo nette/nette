@@ -23,5 +23,5 @@ ini_set('session.save_path', ';;;');
 $container = id(new Nette\Config\Configurator)->setTempDirectory(TEMP_DIR)->createContainer();
 
 Assert::exception(function() use ($container) {
-	$session = $container->session->start();
+	$session = $container->{'nette.session'}->start();
 }, 'Nette\InvalidStateException', "session_start(): session_start(): open(%A%) failed: %a%");
