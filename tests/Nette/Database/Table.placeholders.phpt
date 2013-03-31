@@ -47,9 +47,9 @@ Assert::same((int) date('Y'), $row['col2']);
 $bookTagsCount = array();
 $books = $connection
 	->table('book')
-	->select('book.title, COUNT(DISTINCT book_tag:tag_id) AS tagsCount')
+	->select('book.title, COUNT(DISTINCT :book_tag.tag_id) AS tagsCount')
 	->group('book.title')
-	->having('COUNT(DISTINCT book_tag:tag_id) < ?', 2)
+	->having('COUNT(DISTINCT :book_tag.tag_id) < ?', 2)
 	->order('book.title');
 
 foreach ($books as $book) {
