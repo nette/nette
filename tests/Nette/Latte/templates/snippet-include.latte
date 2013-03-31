@@ -1,0 +1,15 @@
+{snippet hello}Hello{/snippet} world!
+
+{snippet include}
+	{include include3.latte localvar => 'A', hello => 'B'}
+{/snippet}
+
+{snippetRunner array}
+	{foreach [1, 2, 3] as $id}
+		{snippet array-$id}Value {$id}{/snippet}
+	{/foreach}
+{/snippetRunner}
+
+{snippetRunner}
+	{include snippet-included.latte say => 'Hello include snippet'}
+{/snippetRunner}

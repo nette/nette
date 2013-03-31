@@ -52,6 +52,7 @@ class UIMacros extends MacroSet
 		$me->addMacro('#', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('define', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('snippet', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
+		$me->addMacro('snippetRunner', array($me, 'macroBlock'), array($me, 'macroBlockEnd'));
 		$me->addMacro('ifset', array($me, 'macroIfset'), 'endif');
 
 		$me->addMacro('widget', array($me, 'macroControl')); // deprecated - use control
@@ -216,6 +217,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {block [[#]name]}
 	 * {snippet [name [,]] [tag]}
+	 * {snippetRunner [name]}
 	 * {define [#]name}
 	 */
 	public function macroBlock(MacroNode $node, PhpWriter $writer)
@@ -228,15 +230,15 @@ if (!empty($_control->snippetMode)) {
 
 		$node->data->name = $name = ltrim($name, '#');
 		if ($name == NULL) {
-			if ($node->name !== 'snippet') {
+			if ($node->name === 'define') {
 				throw new CompileException("Missing block name.");
 			}
 
 		} elseif (Strings::contains($name, '$')) { // dynamic block/snippet
 			if ($node->name === 'snippet') {
-				for ($parent = $node->parentNode; $parent && $parent->name !== 'snippet'; $parent = $parent->parentNode);
+				for ($parent = $node->parentNode; $parent && !($parent->name === 'snippet' || $parent->name === 'snippetRunner'); $parent = $parent->parentNode);
 				if (!$parent) {
-					throw new CompileException("Dynamic snippets are allowed only inside static snippet.");
+					throw new CompileException("Dynamic snippets are allowed only inside static snippet/snippetRunner.");
 				}
 				$parent->data->dynamic = TRUE;
 				$node->data->leave = TRUE;
@@ -262,20 +264,19 @@ if (!empty($_control->snippetMode)) {
 			}
 		}
 
-		// static block/snippet
-		if ($node->name === 'snippet') {
+		// static snippet/snippetRunner
+		if ($node->name === 'snippet' || $node->name === 'snippetRunner') {
 			$node->data->name = $name = '_' . $name;
 		}
 
 		if (isset($this->namedBlocks[$name])) {
-			throw new CompileException("Cannot redeclare static block '$name'");
+			throw new CompileException("Cannot redeclare static {$node->name} '$name'");
 		}
 
 		$prolog = $this->namedBlocks ? '' : "if (\$_l->extends) { ob_end_clean(); return Nette\\Latte\\Macros\\CoreMacros::includeTemplate(\$_l->extends, get_defined_vars(), \$template)->render(); }\n";
-		$top = empty($node->parentNode);
 		$this->namedBlocks[$name] = TRUE;
 
-		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . ($node->name === 'snippet' ? '$template->getParameters()' : 'get_defined_vars()') . ')';
+		$include = 'call_user_func(reset($_l->blocks[%var]), $_l, ' . (($node->name === 'snippet' || $node->name === 'snippetRunner') ? '$template->getParameters()' : 'get_defined_vars()') . ')';
 		if ($node->modifiers) {
 			$include = "ob_start(); $include; echo %modify(ob_get_clean())";
 		}
@@ -294,7 +295,7 @@ if (!empty($_control->snippetMode)) {
 		} elseif ($node->name === 'define') {
 			return $prolog;
 
-		} else {
+		} else { // block, snippetRunner
 			return $writer->write($prolog . $include, $name);
 		}
 	}
@@ -304,6 +305,7 @@ if (!empty($_control->snippetMode)) {
 	/**
 	 * {/block}
 	 * {/snippet}
+	 * {/snippetRunner}
 	 * {/define}
 	 */
 	public function macroBlockEnd(MacroNode $node, PhpWriter $writer)
@@ -318,8 +320,14 @@ if (!empty($_control->snippetMode)) {
 			}
 
 			if (empty($node->data->leave)) {
+				if ($node->name === 'snippetRunner') {
+					$node->content = "<?php \$_control->snippetMode = TRUE; ?>{$node->content}<?php \$_control->snippetMode = FALSE; ?>";
+				}
 				if (!empty($node->data->dynamic)) {
 					$node->content .= '<?php if (isset($_dynSnippets)) return $_dynSnippets; ?>';
+				}
+				if ($node->name === 'snippetRunner') {
+					$node->content .= '<?php return FALSE; ?>';
 				}
 				$this->namedBlocks[$node->data->name] = $tmp = rtrim(ltrim($node->content, "\n"), " \t");
 				$node->content = substr_replace($node->content, $node->openingCode . "\n", strspn($node->content, "\n"), strlen($tmp));
@@ -494,8 +502,8 @@ if (!empty($_control->snippetMode)) {
 				$function = reset($function);
 				$snippets = $function($local, $params);
 				$payload->snippets[$id = $control->getSnippetId(substr($name, 1))] = ob_get_clean();
-				if ($snippets) {
-					$payload->snippets += $snippets;
+				if ($snippets !== NULL) { // pass FALSE from snippetRunner
+					!$snippets ?: $payload->snippets += $snippets;
 					unset($payload->snippets[$id]);
 				}
 			}
