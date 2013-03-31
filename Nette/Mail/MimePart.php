@@ -138,10 +138,7 @@ class MimePart extends Nette\Object
 			$s = '';
 			foreach ($this->headers[$name] as $email => $name) {
 				if ($name != NULL) { // intentionally ==
-					$s .= self::encodeHeader(
-						strpbrk($name, '.,;<@>()[]"=?') ? '"' . addcslashes($name, '"\\') . '"' : $name,
-						$offset
-					);
+					$s .= self::encodeHeader($name, $offset, strpbrk($name, '.,;<@>()[]"=?'));
 					$email = " <$email>";
 				}
 				$email .= ',';
@@ -316,13 +313,13 @@ class MimePart extends Nette\Object
 
 
 	/**
-	 * Converts a 8 bit header to a quoted-printable string.
-	 * @param  string
+	 * Converts a 8 bit header to a string.
 	 * @param  string
 	 * @param  int
+	 * @param  bool
 	 * @return string
 	 */
-	private static function encodeHeader($s, & $offset = 0)
+	private static function encodeHeader($s, & $offset = 0, $force = FALSE)
 	{
 		$o = '';
 		if ($offset >= 55) { // maximum for iconv_mime_encode
@@ -330,7 +327,7 @@ class MimePart extends Nette\Object
 			$offset = 1;
 		}
 
-		if (strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
+		if (!$force && strspn($s, "!\"#$%&\'()*+,-./0123456789:;<>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^`abcdefghijklmnopqrstuvwxyz{|}=? _\r\n\t") === strlen($s)
 			&& ($offset + strlen($s) <= self::LINE_LENGTH)
 		) {
 			$offset += strlen($s);
