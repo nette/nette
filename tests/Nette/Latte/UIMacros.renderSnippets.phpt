@@ -73,7 +73,10 @@ Assert::same(array(
 		'snippet--array-1' => 'Value 1',
 		'snippet--array-2' => 'Value 2',
 		'snippet--array-3' => 'Value 3',
-		'snippet--' => "<div id=\"snippet--includeSay\">Hello include snippet</div>\n",
+		'snippet--array2-1' => 'Value 1',
+		'snippet--array2-2' => 'Value 2',
+		'snippet--array2-3' => 'Value 3',
+		'snippet--includeSay' => 'Hello include snippet',
 		'snippet-multi-1-includeSay' => 'Hello',
 	),
 ), (array) $presenter->payload);

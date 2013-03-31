@@ -10,6 +10,12 @@
 	{/foreach}
 {/snippet}
 
-{snippet}
+{snippetArea array2}
+	{foreach [1, 2, 3] as $id}
+		{snippet array2-$id}Value {$id}{/snippet}
+	{/foreach}
+{/snippetArea}
+
+{snippetArea}
 	{include snippet-included.latte say => 'Hello include snippet'}
-{/snippet}
+{/snippetArea}
