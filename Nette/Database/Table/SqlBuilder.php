@@ -110,6 +110,63 @@ class SqlBuilder extends Nette\Object
 
 
 
+	/**
+	 * Returns SQL query.
+	 * @param  list of columns
+	 * @return string
+	 */
+	public function buildSelectQuery($columns = NULL)
+	{
+		$queryCondition = $this->buildConditions();
+		$queryEnd       = $this->buildQueryEnd();
+
+		$joins = array();
+		$this->parseJoins($joins, $queryCondition, TRUE);
+		$this->parseJoins($joins, $queryEnd);
+
+		if ($this->select) {
+			$querySelect = $this->buildSelect($this->select);
+			$this->parseJoins($joins, $querySelect);
+
+		} elseif ($columns) {
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$cols = array();
+			foreach ($columns as $col) {
+				$cols[] = $prefix . $col;
+			}
+			$querySelect = $this->buildSelect($cols);
+
+		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
+			$querySelect = $this->buildSelect(array($this->group));
+			$this->parseJoins($joins, $querySelect);
+
+		} else {
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$querySelect = $this->buildSelect(array($prefix . '*'));
+
+		}
+
+		$queryJoins = $this->buildQueryJoins($joins);
+		$query = "{$querySelect} FROM {$this->delimitedTable}{$queryJoins}{$queryCondition}{$queryEnd}";
+
+		return $this->tryDelimite($query);
+	}
+
+
+
+	public function getParameters()
+	{
+		return array_merge(
+			$this->parameters['select'],
+			$this->parameters['where'],
+			$this->parameters['group'],
+			$this->parameters['having'],
+			$this->parameters['order']
+		);
+	}
+
+
+
 	public function importConditions(SqlBuilder $builder)
 	{
 		$this->where = $builder->where;
@@ -320,50 +377,6 @@ class SqlBuilder extends Nette\Object
 
 
 
-	/**
-	 * Returns SQL query.
-	 * @param  list of columns
-	 * @return string
-	 */
-	public function buildSelectQuery($columns = NULL)
-	{
-		$queryCondition = $this->buildConditions();
-		$queryEnd       = $this->buildQueryEnd();
-
-		$joins = array();
-		$this->parseJoins($joins, $queryCondition, TRUE);
-		$this->parseJoins($joins, $queryEnd);
-
-		if ($this->select) {
-			$querySelect = $this->buildSelect($this->select);
-			$this->parseJoins($joins, $querySelect);
-
-		} elseif ($columns) {
-			$prefix = $joins ? "{$this->delimitedTable}." : '';
-			$cols = array();
-			foreach ($columns as $col) {
-				$cols[] = $prefix . $col;
-			}
-			$querySelect = $this->buildSelect($cols);
-
-		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
-			$querySelect = $this->buildSelect(array($this->group));
-			$this->parseJoins($joins, $querySelect);
-
-		} else {
-			$prefix = $joins ? "{$this->delimitedTable}." : '';
-			$querySelect = $this->buildSelect(array($prefix . '*'));
-
-		}
-
-		$queryJoins = $this->buildQueryJoins($joins);
-		$query = "{$querySelect} FROM {$this->delimitedTable}{$queryJoins}{$queryCondition}{$queryEnd}";
-
-		return $this->tryDelimite($query);
-	}
-
-
-
 	protected function buildSelect($columns)
 	{
 		return "SELECT{$this->buildTopClause()} " . implode(', ', $columns);
@@ -421,19 +434,6 @@ class SqlBuilder extends Nette\Object
 		}
 
 		return ($keyMatch['key'] ?: $table) . ".{$match['column']}";
-	}
-
-
-
-	public function getParameters()
-	{
-		return array_merge(
-			$this->parameters['select'],
-			$this->parameters['where'],
-			$this->parameters['group'],
-			$this->parameters['having'],
-			$this->parameters['order']
-		);
 	}
 
 
