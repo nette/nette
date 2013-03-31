@@ -84,7 +84,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 	 */
 	public function toArray()
 	{
-		$this->accessColumn(NULL);
 		return $this->data;
 	}
 
@@ -216,7 +215,6 @@ class ActiveRow implements \IteratorAggregate, IRow
 
 	public function getIterator()
 	{
-		$this->accessColumn(NULL);
 		return new \ArrayIterator($this->data);
 	}
 

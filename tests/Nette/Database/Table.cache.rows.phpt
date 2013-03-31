@@ -47,22 +47,6 @@ Assert::equal(array(
 
 
 
-$bookSelection = $connection->table('book')->order('id');
-$book = $bookSelection->fetch();
-$book->author_id;
-$bookSelection->__destruct();
-
-$bookSelection = $connection->table('book')->order('id');
-$books = array();
-$books[] = $bookSelection->fetch();
-$books[] = $bookSelection->fetch()->toArray();
-$books[] = $bookSelection->fetch()->toArray();
-Assert::equal(1, $books[0]['id']);
-Assert::equal(2, $books[1]['id']);
-Assert::equal(3, $books[2]['id']);
-
-
-
 $row = $connection->table('author')->insert(array(
 	'id' => 14,
 	'name' => 'Eddard Stark',
