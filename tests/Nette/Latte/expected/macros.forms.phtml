@@ -4,7 +4,7 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 <table>
 <?php $iterations = 0; foreach ($form->controls as $name => $field): ?>
 <tr>
-	<th><?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+	<th><?php $_input = is_object($name) ? $name : $_form[$name]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 	<td><?php $_input = (is_object($name) ? $name : $_form[$name]); echo $_input->getControl()->addAttributes(array('title' => 'Hello', 'cols' => 10)) ?></td>
 </tr>
 <?php $iterations++; endforeach ?>

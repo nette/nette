@@ -6,16 +6,16 @@
 Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myForm") ? "myForm" : $_control["myForm"]), array()) ?>
 <table>
 	<tr>
-		<th><?php $_input = is_object("input1") ? "input1" : $_form["input1"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<th><?php $_input = is_object("input1") ? "input1" : $_form["input1"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 		<td><?php $_input = (is_object("input1") ? "input1" : $_form["input1"]); echo $_input->getControl()->addAttributes(array()) ?></td>
 	</tr>
 <?php $_formStack[] = $_form; $formContainer = $_form = (is_object("cont1") ? "cont1" : $_form["cont1"]) ?>
 	<tr>
-		<th><?php $_input = is_object("input2") ? "input2" : $_form["input2"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<th><?php $_input = is_object("input2") ? "input2" : $_form["input2"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 		<td><?php $_input = (is_object("input2") ? "input2" : $_form["input2"]); echo $_input->getControl()->addAttributes(array()) ?></td>
 	</tr>
 	<tr>
-		<th><?php $_input = is_object("input3") ? "input3" : $_form["input3"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<th><?php $_input = is_object("input3") ? "input3" : $_form["input3"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 		<td><?php $_input = (is_object("input3") ? "input3" : $_form["input3"]); echo $_input->getControl()->addAttributes(array()) ?></td>
 	</tr>
 	<tr>
@@ -24,18 +24,18 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object("myFo
 <?php $_formStack[] = $_form; $formContainer = $_form = (is_object("cont2") ? "cont2" : $_form["cont2"]) ?>			<ol>
 <?php $iterations = 0; foreach ($formContainer->controls AS $name => $field): ?>
 				<li><?php $_input = (is_object($field) ? $field : $_form[$field]); echo $_input->getControl()->addAttributes(array()) ?>
- - <?php $_input = is_object($field) ? $field : $_form[$field]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?></li>
+ - <?php $_input = is_object($field) ? $field : $_form[$field]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?></li>
 <?php $iterations++; endforeach ?>			</ol>
 <?php $_form = array_pop($_formStack) ?>
 		</td>
 	</tr>
 	<tr>
-		<th><?php $_input = is_object("input7") ? "input7" : $_form["input7"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<th><?php $_input = is_object("input7") ? "input7" : $_form["input7"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 		<td><?php $_input = (is_object("input7") ? "input7" : $_form["input7"]); echo $_input->getControl()->addAttributes(array()) ?></td>
 	</tr>
 <?php $_form = array_pop($_formStack) ?>
 	<tr>
-		<th><?php $_input = is_object("input8") ? "input8" : $_form["input8"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array()) ?><th>
+		<th><?php $_input = is_object("input8") ? "input8" : $_form["input8"]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(array())  ?><th>
 		<td><?php $_input = (is_object("input8") ? "input8" : $_form["input8"]); echo $_input->getControl()->addAttributes(array()) ?></td>
 	</tr>
 </table>
