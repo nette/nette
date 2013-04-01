@@ -110,6 +110,63 @@ class SqlBuilder extends Nette\Object
 
 
 
+	/**
+	 * Returns SQL query.
+	 * @param  list of columns
+	 * @return string
+	 */
+	public function buildSelectQuery($columns = NULL)
+	{
+		$queryCondition = $this->buildConditions();
+		$queryEnd       = $this->buildQueryEnd();
+
+		$joins = array();
+		$this->parseJoins($joins, $queryCondition, TRUE);
+		$this->parseJoins($joins, $queryEnd);
+
+		if ($this->select) {
+			$querySelect = $this->buildSelect($this->select);
+			$this->parseJoins($joins, $querySelect);
+
+		} elseif ($columns) {
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$cols = array();
+			foreach ($columns as $col) {
+				$cols[] = $prefix . $col;
+			}
+			$querySelect = $this->buildSelect($cols);
+
+		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
+			$querySelect = $this->buildSelect(array($this->group));
+			$this->parseJoins($joins, $querySelect);
+
+		} else {
+			$prefix = $joins ? "{$this->delimitedTable}." : '';
+			$querySelect = $this->buildSelect(array($prefix . '*'));
+
+		}
+
+		$queryJoins = $this->buildQueryJoins($joins);
+		$query = "{$querySelect} FROM {$this->delimitedTable}{$queryJoins}{$queryCondition}{$queryEnd}";
+
+		return $this->tryDelimite($query);
+	}
+
+
+
+	public function getParameters()
+	{
+		return array_merge(
+			$this->parameters['select'],
+			$this->parameters['where'],
+			$this->parameters['group'],
+			$this->parameters['having'],
+			$this->parameters['order']
+		);
+	}
+
+
+
 	public function importConditions(SqlBuilder $builder)
 	{
 		$this->where = $builder->where;
@@ -150,9 +207,6 @@ class SqlBuilder extends Nette\Object
 		}
 
 		$this->conditions[$hash] = $condition;
-		$condition = $this->removeExtraTables($condition);
-		$condition = $this->tryDelimite($condition);
-
 		$placeholderCount = substr_count($condition, '?');
 		if ($placeholderCount > 1 && count($args) === 2 && is_array($parameters)) {
 			$args = $parameters;
@@ -323,80 +377,79 @@ class SqlBuilder extends Nette\Object
 
 
 
-	/**
-	 * Returns SQL query.
-	 * @param  list of columns
-	 * @return string
-	 */
-	public function buildSelectQuery($columns = NULL)
+	protected function buildSelect($columns)
 	{
-		$join = $this->buildJoins(implode(',', $this->conditions), TRUE);
-		$join += $this->buildJoins(implode(',', $this->select) . ",{$this->group},{$this->having}," . implode(',', $this->order));
+		return "SELECT{$this->buildTopClause()} " . implode(', ', $columns);
+	}
 
-		$prefix = $join ? "{$this->delimitedTable}." : '';
-		if ($this->select) {
-			$cols = $this->tryDelimite($this->removeExtraTables(implode(', ', $this->select)));
 
-		} elseif ($columns) {
-			$cols = array_map(array($this->driver, 'delimite'), $columns);
-			$cols = $prefix . implode(', ' . $prefix, $cols);
 
-		} elseif ($this->group && !$this->driver->isSupported(ISupplementalDriver::SUPPORT_SELECT_UNGROUPED_COLUMNS)) {
-			$cols = $this->tryDelimite($this->removeExtraTables($this->group));
+	protected function parseJoins(& $joins, & $query, $inner = FALSE)
+	{
+		$builder = $this;
+		$query = preg_replace_callback('~
+			(?(DEFINE)
+				(?<word> [a-z][\w_]* )
+				(?<del> [.:] )
+				(?<node> (?&del)? (?&word) )
+			)
+			(?<chain> (?!\.) (?&node)*)  \. (?<column> (?&word) | \*  )
+		~xi', function($match) use (& $joins, $inner, $builder) {
+			return $builder->parseJoinsCb($joins, $match, $inner);
+		}, $query);
+	}
 
-		} else {
-			$cols = $prefix . '*';
+
+
+	public function parseJoinsCb(& $joins, $match, $inner)
+	{
+		$chain = $match['chain'];
+		if (!empty($chain[0]) && ($chain[0] !== '.' || $chain[0] !== ':')) {
+			$chain = '.' . $chain;  // unified chain format
 		}
 
-		return "SELECT{$this->buildTopClause()} {$cols} FROM {$this->delimitedTable}" . implode($join) . $this->buildConditions();
-	}
+		$parent = $this->tableName;
+		if ($chain == ".{$parent}") { // case-sensitive
+			return "{$parent}.{$match['column']}";
+		}
 
+		preg_match_all('~
+			(?(DEFINE)
+				(?<word> [a-z][\w_]* )
+			)
+			(?<del> [.:])?(?<key> (?&word))
+		~xi', $chain, $keyMatches, PREG_SET_ORDER);
 
-
-	public function getParameters()
-	{
-		return array_merge(
-			$this->parameters['select'],
-			$this->parameters['where'],
-			$this->parameters['group'],
-			$this->parameters['having'],
-			$this->parameters['order']
-		);
-	}
-
-
-
-	protected function buildJoins($val, $inner = FALSE)
-	{
-		$joins = array();
-		preg_match_all('~\\b([a-z][\\w.:]*[.:])([a-z]\\w*|\*)(\\s+IS\\b|\\s*<=>)?~i', $val, $matches);
-		foreach ($matches[1] as $names) {
-			$parent = $parentAlias = $this->tableName;
-			if ($names !== "$parent.") { // case-sensitive
-				preg_match_all('~\\b([a-z][\\w]*|\*)([.:])~i', $names, $matches, PREG_SET_ORDER);
-				foreach ($matches as $match) {
-					list(, $name, $delimiter) = $match;
-
-					if ($delimiter === ':') {
-						list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $name);
-						$column = $this->databaseReflection->getPrimary($parent);
-					} else {
-						list($table, $column) = $this->databaseReflection->getBelongsToReference($parent, $name);
-						$primary = $this->databaseReflection->getPrimary($table);
-					}
-
-					$joins[$name] = ' '
-						. (!isset($joins[$name]) && $inner && !isset($match[3]) ? 'INNER' : 'LEFT')
-						. ' JOIN ' . $this->driver->delimite($table) . ($table !== $name ? ' AS ' . $this->driver->delimite($name) : '')
-						. ' ON ' . $this->driver->delimite($parentAlias) . '.' . $this->driver->delimite($column)
-						. ' = ' . $this->driver->delimite($name) . '.' . $this->driver->delimite($primary);
-
-					$parent = $table;
-					$parentAlias = $name;
-				}
+		foreach ($keyMatches as $keyMatch) {
+			if ($keyMatch['del'] === ':') {
+				list($table, $primary) = $this->databaseReflection->getHasManyReference($parent, $keyMatch['key']);
+				$column = $this->databaseReflection->getPrimary($parent);
+			} else {
+				list($table, $column) = $this->databaseReflection->getBelongsToReference($parent, $keyMatch['key']);
+				$primary = $this->databaseReflection->getPrimary($table);
 			}
+
+			$joins[$table] = array($table, $keyMatch['key'] ?: $table, $parent, $column, $primary, !isset($joins[$table]) && $inner);
+			$parent = $table;
 		}
-		return $joins;
+
+		return ($keyMatch['key'] ?: $table) . ".{$match['column']}";
+	}
+
+
+
+	protected function buildQueryJoins($joins)
+	{
+		$return = '';
+		foreach ($joins as $join) {
+			list($joinTable, $joinAlias, $table, $tableColumn, $joinColumn, $inner) = $join;
+
+			$return .= ' ' . ($inner ? 'INNER' : 'LEFT')
+				. " JOIN {$joinTable}" . ($joinTable !== $joinAlias ? " AS {$joinAlias}" : '')
+				. " ON {$table}.{$tableColumn} = {$joinAlias}.{$joinColumn}";
+		}
+
+		return $return;
 	}
 
 
@@ -411,14 +464,23 @@ class SqlBuilder extends Nette\Object
 		if ($where) {
 			$return .= ' WHERE (' . implode(') AND (', $where) . ')';
 		}
+
+		return $return;
+	}
+
+
+
+	protected function buildQueryEnd()
+	{
+		$return = '';
 		if ($this->group) {
-			$return .= ' GROUP BY '. $this->tryDelimite($this->removeExtraTables($this->group));
+			$return .= ' GROUP BY '. $this->group;
 		}
 		if ($this->having) {
-			$return .= ' HAVING '. $this->tryDelimite($this->removeExtraTables($this->having));
+			$return .= ' HAVING '. $this->having;
 		}
 		if ($this->order) {
-			$return .= ' ORDER BY ' . $this->tryDelimite($this->removeExtraTables(implode(', ', $this->order)));
+			$return .= ' ORDER BY ' . implode(', ', $this->order);
 		}
 		if ($this->limit !== NULL && $this->driverName !== 'oci' && $this->driverName !== 'dblib') {
 			$return .= " LIMIT $this->limit";
@@ -447,13 +509,6 @@ class SqlBuilder extends Nette\Object
 		return preg_replace_callback('#(?<=[^\w`"\[]|^)[a-z_][a-z0-9_]*(?=[^\w`"(\]]|\z)#i', function($m) use ($driver) {
 			return strtoupper($m[0]) === $m[0] ? $m[0] : $driver->delimite($m[0]);
 		}, $s);
-	}
-
-
-
-	protected function removeExtraTables($expression)
-	{
-		return preg_replace('~(?:\\b[a-z_][a-z0-9_.:]*[.:])?([a-z_][a-z0-9_]*)[.:]([a-z_*])~i', '\\1.\\2', $expression); // rewrite tab1.tab2.col
 	}
 
 }
