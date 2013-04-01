@@ -149,24 +149,22 @@ class RadioList extends BaseControl
 	 */
 	public function getControl($key = NULL)
 	{
-		if ($key === NULL) {
-			$container = clone $this->container;
-			$separator = (string) $this->separator;
+		$value = $this->value === NULL ? NULL : (string) $this->getValue();
+		$control = parent::getControl();
 
-		} elseif (!isset($this->items[$key])) {
-			return NULL;
+		if ($key !== NULL) {
+			$control->id .= '-' . $key;
+			$control->checked = (string) $key === $value;
+			$control->value = $key;
+			return $control;
 		}
 
-		$control = parent::getControl();
 		$id = $control->id;
-		$value = $this->value === NULL ? NULL : (string) $this->getValue();
-		$label = Html::el('label');
+		$container = clone $this->container;
+		$separator = (string) $this->separator;
+		$label = $this->getLabel();
 
 		foreach ($this->items as $k => $val) {
-			if ($key !== NULL && (string) $key !== (string) $k) {
-				continue;
-			}
-
 			$control->id = $label->for = $id . '-' . $k;
 			$control->checked = (string) $k === $value;
 			$control->value = $k;
@@ -175,10 +173,6 @@ class RadioList extends BaseControl
 				$label->setHtml($val);
 			} else {
 				$label->setText($this->translate((string) $val));
-			}
-
-			if ($key !== NULL) {
-				return Html::el()->add($control)->add($label);
 			}
 
 			$container->add((string) $control . (string) $label . $separator);
