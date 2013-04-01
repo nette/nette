@@ -37,12 +37,10 @@ class FormMacros extends MacroSet
 	public static function install(Latte\Compiler $compiler)
 	{
 		$me = new static($compiler);
-		$me->addMacro('form',
-			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = (is_object(%node.word) ? %node.word : $_control[%node.word]), %node.array)',
-			'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
+		$me->addMacro('form', array($me, 'macroForm'), 'Nette\Latte\Macros\FormMacros::renderFormEnd($_form)');
+		$me->addMacro('formContainer', array($me, 'macroFormContainer'), '$_form = array_pop($_formStack)');
 		$me->addMacro('label', array($me, 'macroLabel'), array($me, 'macroLabelEnd'));
-		$me->addMacro('input', '$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%node.array)', NULL, array($me, 'macroAttrInput'));
-		$me->addMacro('formContainer', '$_formStack[] = $_form; $formContainer = $_form = (is_object(%node.word) ? %node.word : $_form[%node.word])', '$_form = array_pop($_formStack)');
+		$me->addMacro('input', array($me, 'macroInput'), NULL, array($me, 'macroAttrInput'));
 	}
 
 
@@ -50,12 +48,57 @@ class FormMacros extends MacroSet
 	/********************* macros ****************d*g**/
 
 
+
+	/**
+	 * {form ...}
+	 */
+	public function macroForm(MacroNode $node, PhpWriter $writer)
+	{
+		$name = $node->tokenizer->fetchWord();
+		if ($name === FALSE) {
+			throw new CompileException("Missing form name in {{$node->name}}.");
+		}
+		$node->tokenizer->reset();
+		return $writer->write(
+			'Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = '
+			. ($name[0] === '$' ? 'is_object(%node.word) ? %node.word : ' : '')
+			. '$_control[%node.word], %node.array)'
+		);
+	}
+
+
+
+	/**
+	 * {formContainer ...}
+	 */
+	public function macroFormContainer(MacroNode $node, PhpWriter $writer)
+	{
+		$name = $node->tokenizer->fetchWord();
+		if ($name === FALSE) {
+			throw new CompileException("Missing form name in {{$node->name}}.");
+		}
+		$node->tokenizer->reset();
+		return $writer->write(
+			'$_formStack[] = $_form; $formContainer = $_form = ' . ($name[0] === '$' ? 'is_object(%node.word) ? %node.word : ' : '') . '$_form[%node.word]'
+		);
+	}
+
+
+
 	/**
 	 * {label ...}
 	 */
 	public function macroLabel(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; if ($_label = $_input->getLabel()) echo $_label->addAttributes(%node.array)');
+		$name = $node->tokenizer->fetchWord();
+		if ($name === FALSE) {
+			throw new CompileException("Missing name in {{$node->name}}.");
+		}
+		$node->tokenizer->reset();
+		return $writer->write(
+			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; if ($_label = $_input->getLabel())' : 'if ($_label = $_form[%node.word]->getLabel())')
+			. ' echo $_label->addAttributes(%node.array)'
+		);
 	}
 
 
@@ -74,15 +117,38 @@ class FormMacros extends MacroSet
 
 
 	/**
+	 * {input ...}
+	 */
+	public function macroInput(MacroNode $node, PhpWriter $writer)
+	{
+		$name = $node->tokenizer->fetchWord();
+		if ($name === FALSE) {
+			throw new CompileException("Missing name in {{$node->name}}.");
+		}
+		$node->tokenizer->reset();
+		return $writer->write(
+			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; echo $_input' : 'echo $_form[%node.word]')
+			. '->getControl()->addAttributes(%node.array)'
+		);
+	}
+
+
+
+	/**
 	 * n:input
 	 */
 	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->htmlNode->attrs) {
-			$reset = array_fill_keys(array_keys($node->htmlNode->attrs), NULL);
-			return $writer->write('$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->addAttributes(%var)->attributes()', $reset);
+		$name = $node->tokenizer->fetchWord();
+		if ($name === FALSE) {
+			throw new CompileException("Missing name in n:input.");
 		}
-		return $writer->write('$_input = (is_object(%node.word) ? %node.word : $_form[%node.word]); echo $_input->getControl()->attributes()');
+		$node->tokenizer->reset();
+		return $writer->write(
+			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; echo $_input' : 'echo $_form[%node.word]')
+			. '->getControl()' . ($node->htmlNode->attrs ? '->addAttributes(%var)' : '') . '->attributes()',
+			array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
+		);
 	}
 
 
