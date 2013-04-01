@@ -188,12 +188,18 @@ class RadioList extends BaseControl
 	/**
 	 * Generates label's HTML element.
 	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 */
-	public function getLabel($caption = NULL)
+	public function getLabel($caption = NULL, $key = NULL)
 	{
-		$label = parent::getLabel($caption);
-		$label->for = NULL;
+		if ($key === NULL) {
+			$label = parent::getLabel($caption);
+			$label->for = NULL;
+		} else {
+			$label = parent::getLabel($caption === NULL ? $this->items[$key] : $caption);
+			$label->for .= '-' . $key;
+		}
 		return $label;
 	}
 
