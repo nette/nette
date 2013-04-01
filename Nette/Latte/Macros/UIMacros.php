@@ -375,7 +375,7 @@ if (!empty($_control->snippetMode)) {
 		return ($name[0] === '$' ? "if (is_object($name)) \$_ctrl = $name; else " : '')
 			. '$_ctrl = $_control->getComponent(' . $name . '); '
 			. 'if ($_ctrl instanceof Nette\Application\UI\IRenderable) $_ctrl->validateControl(); '
-			. "\$_ctrl->$method($param)";
+			. ($node->modifiers === '' ? "\$_ctrl->$method($param)" : $writer->write("ob_start(); \$_ctrl->$method($param); echo %modify(ob_get_clean())"));
 	}
 
 
