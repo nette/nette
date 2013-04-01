@@ -90,14 +90,15 @@ class FormMacros extends MacroSet
 	 */
 	public function macroLabel(MacroNode $node, PhpWriter $writer)
 	{
-		$name = $node->tokenizer->fetchWord();
-		if ($name === FALSE) {
+		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
+		if ($name === '') {
 			throw new CompileException("Missing name in {{$node->name}}.");
 		}
-		$node->tokenizer->reset();
 		return $writer->write(
-			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; if ($_label = $_input->getLabel())' : 'if ($_label = $_form[%node.word]->getLabel())')
-			. ' echo $_label->addAttributes(%node.array)'
+			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; if ($_label = $_input' : 'if ($_label = $_form[%0.word]')
+			. '->getLabel(%1.raw)) echo $_label->addAttributes(%node.array)',
+			$name,
+			isset($pair[1]) ? 'NULL, ' . $writer->formatWord($pair[1]) : ''
 		);
 	}
 
@@ -121,14 +122,15 @@ class FormMacros extends MacroSet
 	 */
 	public function macroInput(MacroNode $node, PhpWriter $writer)
 	{
-		$name = $node->tokenizer->fetchWord();
-		if ($name === FALSE) {
+		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
+		if ($name === '') {
 			throw new CompileException("Missing name in {{$node->name}}.");
 		}
-		$node->tokenizer->reset();
 		return $writer->write(
-			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; echo $_input' : 'echo $_form[%node.word]')
-			. '->getControl()->addAttributes(%node.array)'
+			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
+			. '->getControl(%1.raw)->addAttributes(%node.array)',
+			$name,
+			isset($pair[1]) ? $writer->formatWord($pair[1]) : ''
 		);
 	}
 
@@ -139,14 +141,15 @@ class FormMacros extends MacroSet
 	 */
 	public function macroAttrInput(MacroNode $node, PhpWriter $writer)
 	{
-		$name = $node->tokenizer->fetchWord();
-		if ($name === FALSE) {
+		list($name) = $pair = explode(':', $node->tokenizer->fetchWord(), 2);
+		if ($name === '') {
 			throw new CompileException("Missing name in n:input.");
 		}
-		$node->tokenizer->reset();
 		return $writer->write(
-			($name[0] === '$' ? '$_input = is_object(%node.word) ? %node.word : $_form[%node.word]; echo $_input' : 'echo $_form[%node.word]')
-			. '->getControl()' . ($node->htmlNode->attrs ? '->addAttributes(%var)' : '') . '->attributes()',
+			($name[0] === '$' ? '$_input = is_object(%0.word) ? %0.word : $_form[%0.word]; echo $_input' : 'echo $_form[%0.word]')
+			. '->getControl(%1.raw)' . ($node->htmlNode->attrs ? '->addAttributes(%2.var)' : '') . '->attributes()',
+			$name,
+			isset($pair[1]) ? $writer->formatWord($pair[1]) : '',
 			array_fill_keys(array_keys($node->htmlNode->attrs), NULL)
 		);
 	}

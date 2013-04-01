@@ -13,3 +13,10 @@
 {form myForm}
 	<input value=val type class="hello" n:input="username">
 {/form myForm}
+
+
+{form myForm}
+	{foreach $form[sex]->items as $key => $label}
+		{label sex:$key/}{input sex:$key} {$label}
+	{/foreach}
+{/form myForm}

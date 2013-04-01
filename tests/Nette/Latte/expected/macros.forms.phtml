@@ -18,4 +18,11 @@ Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myFor
   'type' => NULL,
   'class' => NULL,
 ))->attributes() ?>/>
-<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;
+<?php Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ?>
+
+
+<?php Nette\Latte\Macros\FormMacros::renderFormBegin($form = $_form = $_control["myForm"], array()) ;$iterations = 0; foreach ($form['sex']->items as $key => $label): ?>
+		<?php if ($_label = $_form["sex"]->getLabel(NULL, $key)) echo $_label->addAttributes(array()) ; echo $_form["sex"]->getControl($key)->addAttributes(array()) ?>
+ <?php echo Nette\Templating\Helpers::escapeHtml($label, ENT_NOQUOTES) ?>
+
+<?php $iterations++; endforeach ;Nette\Latte\Macros\FormMacros::renderFormEnd($_form) ;

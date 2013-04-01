@@ -23,6 +23,7 @@ require __DIR__ . '/Template.inc';
 $form = new Form;
 $form->addText('username', 'Username:');
 $form->addPassword('password', 'Password:');
+$form->addRadioList('sex', 'Sex:', array('m' => 'male', 'f' => 'female'));
 $form->addSubmit('send', 'Sign in');
 
 $template = new FileTemplate(__DIR__ . '/templates/forms.latte');
