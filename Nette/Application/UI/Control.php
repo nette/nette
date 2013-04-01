@@ -64,30 +64,16 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
 		$presenter = $this->getPresenter(FALSE);
+		$template = $presenter->getContext()->getService('nette.template')->create($class);
 		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 
 		// default parameters
 		$template->control = $template->_control = $this;
-		$template->presenter = $template->_presenter = $presenter;
-		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->{'nette.templateCacheStorage'});
-			$template->user = $presenter->getUser();
-			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
-			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
-			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
-
-			// flash message
-			if ($presenter->hasFlashSession()) {
-				$id = $this->getParameterId('flash');
-				$template->flashes = $presenter->getFlashSession()->$id;
-			}
-		}
-		if (!isset($template->flashes) || !is_array($template->flashes)) {
-			$template->flashes = array();
+		$template->flashes = array();
+		if ($presenter instanceof Presenter && $presenter->hasFlashSession()) {
+			$id = $this->getParameterId('flash');
+			$template->flashes = (array) $presenter->getFlashSession()->$id;
 		}
 
 		return $template;
@@ -102,7 +88,7 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter($this->getPresenter()->getContext()->createNette__Latte());
+
 	}
 
 

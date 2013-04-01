@@ -30,20 +30,6 @@ class Engine extends Nette\Object
 
 
 
-	public function __construct()
-	{
-		$this->parser = new Parser;
-		$this->compiler = new Compiler;
-		$this->compiler->defaultContentType = Compiler::CONTENT_XHTML;
-
-		Macros\CoreMacros::install($this->compiler);
-		$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
-		Macros\UIMacros::install($this->compiler);
-		Macros\FormMacros::install($this->compiler);
-	}
-
-
-
 	/**
 	 * Invokes filter.
 	 * @param  string
@@ -51,7 +37,7 @@ class Engine extends Nette\Object
 	 */
 	public function __invoke($s)
 	{
-		return $this->compiler->compile($this->parser->parse($s));
+		return $this->getCompiler()->compile($this->getParser()->parse($s));
 	}
 
 
@@ -61,6 +47,10 @@ class Engine extends Nette\Object
 	 */
 	public function getParser()
 	{
+		if (!$this->parser) {
+			$this->parser = new Parser;
+		}
+
 		return $this->parser;
 	}
 
@@ -71,6 +61,16 @@ class Engine extends Nette\Object
 	 */
 	public function getCompiler()
 	{
+		if (!$this->compiler) {
+			$this->compiler = new Compiler;
+			$this->compiler->defaultContentType = Compiler::CONTENT_XHTML;
+
+			Macros\CoreMacros::install($this->compiler);
+			$this->compiler->addMacro('cache', new Macros\CacheMacro($this->compiler));
+			Macros\UIMacros::install($this->compiler);
+			Macros\FormMacros::install($this->compiler);
+		}
+
 		return $this->compiler;
 	}
 
