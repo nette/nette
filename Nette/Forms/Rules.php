@@ -233,7 +233,7 @@ final class Rules extends Nette\Object implements \IteratorAggregate
 
 		if (!$this->getCallback($rule)->isCallable()) {
 			$operation = is_scalar($rule->operation) ? " '$rule->operation'" : '';
-			throw new Nette\InvalidArgumentException("Unknown operation$operation for control '{$rule->control->name}'.");
+			throw new Nette\InvalidArgumentException("Unknown operation $operation for control '{$rule->control->name}'.");
 		}
 	}
 
