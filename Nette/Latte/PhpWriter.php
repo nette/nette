@@ -50,14 +50,13 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Expands %node.word, %node.array, %node.args, %escape(), %modify(), %var, %raw in code.
+	 * Expands %node.word, %node.array, %node.args, %escape(), %modify(), %var, %raw, %word in code.
 	 * @param  string
 	 * @return string
 	 */
 	public function write($mask)
 	{
 		$args = func_get_args();
-		array_shift($args);
 		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
 		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
@@ -67,22 +66,31 @@ class PhpWriter extends Nette\Object
 			return $me->formatModifiers(substr($m[1], 1, -1));
 		}/*5.2* )*/);
 
-		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.word|node\.array|node\.args|var|raw)(\?)?(\s*\+\s*)?()#',
+		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.|\d+\.|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
 			/*5.2* new Nette\Callback(*/function($m) use ($me, $word, & $args) {
-			list(, $l, $macro, $cond, $r) = $m;
+			list(, $l, $source, $format, $cond, $r) = $m;
 
-			switch ($macro) {
-			case 'node.word':
-				$code = $me->formatWord($word); break;
-			case 'node.args':
-				$code = $me->formatArgs(); break;
-			case 'node.array':
-				$code = $me->formatArray();
+			switch ($source) {
+			case 'node.':
+				$arg = $word; break;
+			case '':
+				$arg = next($args); break;
+			default:
+				$arg = $args[$source + 1]; break;
+			}
+
+			switch ($format) {
+			case 'word':
+				$code = $me->formatWord($arg); break;
+			case 'args':
+				$code = $me->formatArgs(); break; // TODO: only as node.args
+			case 'array':
+				$code = $me->formatArray(); // TODO: only as node.array
 				$code = $cond && $code === 'array()' ? '' : $code; break;
 			case 'var':
-				$code = var_export(array_shift($args), TRUE); break;
+				$code = var_export($arg, TRUE); break;
 			case 'raw':
-				$code = (string) array_shift($args); break;
+				$code = (string) $arg; break;
 			}
 
 			if ($cond && $code === '') {
