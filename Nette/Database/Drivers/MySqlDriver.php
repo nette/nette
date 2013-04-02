@@ -46,7 +46,10 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 		if (isset($options['sqlmode'])) {
 			$connection->query("SET sql_mode='$options[sqlmode]'");
 		}
-		$connection->query("SET time_zone='" . date('P') . "'");
+
+		// Sync timezone in DB with PHP
+		$connection->query('SET time_zone = ' . $connection->quote(date_default_timezone_get())
+			. "\n-- Read this: http://dev.mysql.com/doc/refman/5.5/en/mysql-tzinfo-to-sql.html");
 	}
 
 
