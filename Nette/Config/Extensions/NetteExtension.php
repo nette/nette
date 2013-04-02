@@ -111,17 +111,17 @@ class NetteExtension extends Nette\Config\CompilerExtension
 	private function setupCache(ContainerBuilder $container)
 	{
 		$container->addDefinition($this->prefix('cacheJournal'))
-			->setClass('Nette\Caching\Storages\FileJournal', array('%tempDir%'));
+			->setClass('Nette\Caching\Storages\FileJournal', array($container->expand('%tempDir%')));
 
 		$container->addDefinition('cacheStorage') // no namespace for back compatibility
-			->setClass('Nette\Caching\Storages\FileStorage', array('%tempDir%/cache'));
+			->setClass('Nette\Caching\Storages\FileStorage', array($container->expand('%tempDir%/cache')));
 
 		$container->addDefinition($this->prefix('templateCacheStorage'))
-			->setClass('Nette\Caching\Storages\PhpFileStorage', array('%tempDir%/cache'))
+			->setClass('Nette\Caching\Storages\PhpFileStorage', array($container->expand('%tempDir%/cache')))
 			->setAutowired(FALSE);
 
 		$container->addDefinition($this->prefix('cache'))
-			->setClass('Nette\Caching\Cache', array(1 => '%namespace%'))
+			->setClass('Nette\Caching\Cache', array(1 => $container::literal('$namespace')))
 			->setParameters(array('namespace' => NULL));
 	}
 
