@@ -56,8 +56,6 @@ class PhpWriter extends Nette\Object
 	 */
 	public function write($mask)
 	{
-		$args = func_get_args();
-		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
 		$me = $this;
 		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', /*5.2* new Nette\Callback(*/function($m) use ($me) {
 			return $me->escape(substr($m[1], 1, -1));
@@ -66,7 +64,11 @@ class PhpWriter extends Nette\Object
 			return $me->formatModifiers(substr($m[1], 1, -1));
 		}/*5.2* )*/);
 
-		return Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.|\d+\.|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
+		$args = func_get_args();
+		$pos = $this->argsTokenizer->position;
+		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->argsTokenizer->fetchWord();
+
+		$code = Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.|\d+\.|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
 			/*5.2* new Nette\Callback(*/function($m) use ($me, $word, & $args) {
 			list(, $l, $source, $format, $cond, $r) = $m;
 
@@ -99,6 +101,9 @@ class PhpWriter extends Nette\Object
 				return $l . $code . $r;
 			}
 		}/*5.2* )*/);
+
+		$this->argsTokenizer->position = $pos;
+		return $code;
 	}
 
 
@@ -152,7 +157,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Formats macro arguments to PHP code.
+	 * Formats macro arguments to PHP code. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
 	public function formatArgs()
@@ -168,7 +173,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Formats macro arguments to PHP array.
+	 * Formats macro arguments to PHP array. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
 	public function formatArray()
@@ -223,7 +228,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Preprocessor for tokens.
+	 * Preprocessor for tokens. (It advances tokenizer to the end as a side effect.)
 	 * @return MacroTokenizer
 	 */
 	public function preprocess(MacroTokenizer $tokenizer = NULL)
