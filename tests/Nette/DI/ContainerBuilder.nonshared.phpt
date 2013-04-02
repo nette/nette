@@ -31,7 +31,7 @@ $builder->addDefinition('one')
 $two = $builder->addDefinition('two')
 	->setParameters(array('foo', 'bar' => FALSE, 'array foobar' => NULL))
 	->setClass('stdClass')
-	->addSetup('$foo', '%foo%');
+	->addSetup('$foo', $builder::literal('$foo'));
 
 $builder->addDefinition('three')
 	->setFactory($two, array('hello'));
